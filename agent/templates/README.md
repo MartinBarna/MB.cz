@@ -27,9 +27,12 @@ Obsahuje:
 > Když si u HTML nejsi jistý, radši zachovej celou kostru a uprav pouze textové uzly
 > s obsahem; nepřepisuj `<a href=…>`, styly ani tabulky patičky.
 
-## Doplnit (volitelně)
+## Další šablony
 
-- `poptavka-template.html` — pokud Martin používá grafickou šablonu i na poptávky.
-- `onboarding-template.html` — uvítací mail „informace na první týden".
+- `onboarding-template.html` — uvítací mail nového klienta („informace na první týden").
+- `poptavka-template.html` — odpověď na poptávku (Gold/Diamond + CTA na hovor/WhatsApp).
 
-Až mi takový mail označíš v Gmailu, vytáhnu z něj kostru stejným způsobem.
+> Obě jsou zatím **čisté verze** (vlastní HTML, ne vytažené z Gmailu). Pro byte-přesnou
+> shodu s Martinovým formátem a jeho trackovanými prokliky nech Martina označit reálný
+> onboarding/poptávkový mail v Gmailu a vytáhni z něj kostru stejně jako u `check-in-template.html`.
+> Placeholdery `{{...}}` agent nahradí obsahem; ceny ber z `../KNOWLEDGE_BASE.md`.
