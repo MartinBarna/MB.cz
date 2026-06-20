@@ -8,7 +8,8 @@ Praktický návod, jak s asistentem pracovat den po dni. Vše běží v režimu
 Martin napíše Claudovi např. **„projdi maily"** a agent:
 
 1. Najde v Gmailu **nezodpovězené** poptávky a check-iny (dotazy níže).
-2. Každou zprávu **zařadí** (poptávka / check-in / WhatsApp / ostatní / eskalace).
+2. Každou zprávu **zařadí** podle [`playbooks/triage.md`](playbooks/triage.md)
+   (šum vs. práce + kontrola kontextu, ať nevznikne duplicita).
 3. Podle playbooku připraví **draft odpovědi** + interní poznámku.
 4. Vlákno **oštítkuje** (viz štítky níže), ať je vidět, co je vyřízené.
 5. Na konci dá Martinovi krátký souhrn: co připraveno, co čeká na ruční vyřízení.

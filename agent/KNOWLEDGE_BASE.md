@@ -40,6 +40,9 @@ chybí, do draftu napiš `>>> DOPLNIT: …` a upozorni Martina.
 
 > Tip k prodeji: u delší spolupráce je výhodnější cena (6 měsíců šetří nejvíc).
 
+**Platba koučingu:** paušálně na 1 / 3 / 6 měsíců, na účet **190979191/0600**, do
+poznámky jméno klienta (ceník vždy na martinbarna.cz/koucing).
+
 ### Videokurz „Flexibilní stravování" (hlavní škálovatelný produkt)
 - **800 Kč** (153 videí, 20+ h, + AI nástroje). V e-mailové sérii akce **599 Kč / 48 h** (kód `START599`).
 
@@ -60,11 +63,14 @@ chybí, do draftu napiš `>>> DOPLNIT: …` a upozorni Martina.
 1. **Poptávka/lead** (formulář z reklamy nebo web) → první kontakt (telefon/WhatsApp).
 2. **Nabídka** v pořadí ideálně Diamond → Gold → videokurz. Platba ideálně předem
    (lepší cena u delší spolupráce), lze rozložit na 2 splátky.
-3. **Onboarding:** vstupní dotazník; Martin vzorcem spočítá výchozí příjem
-   (kcal + bílkoviny/sacharidy/tuky + vláknina). **Začíná se na vyšším příjmu**, ten se
-   pak ladí. Klient dostane makro plán + kalkulačku.
-4. **Týdenní report od klienta:** míry, váha, jak proběhl trénink, plán na další týden;
-   poctivý zápis jídla (vážení).
+3. **Onboarding:** vstupní dotazník → Martin pošle „informace na první týden"
+   (viz `templates/onboarding-template.html`): spočítá výchozí příjem (kcal + B/S/T +
+   vláknina, **začíná se na vyšším příjmu**), klient si zadá cíle na
+   **kaloricketabulky.cz** (v zahraničí MyFitnessPal) a sdílí přístup. Řeší se jen
+   **kalorie, bílkoviny, vláknina** (S/T se ignorují).
+4. **Týdenní report od klienta:** každou **neděli/pondělí ráno** — míry, váha, pohyb
+   (minuty/týden), průměr kroků; tabulka „Report pro Coache" (první stránka).
+   Poctivý zápis jídla (vážení) = priorita.
 5. **Týdenní úprava:** podle dat coach reguluje kcal/makra/kroky tak, aby klient hubl
    **na co nejvyšším příjmu**. Sledují se hlavně **míry > váha** + hlad/únava/síla.
 6. **Měsíční shrnutí** (u Diamondu video call). Proaktivní kontakt min. 1×/týden.

@@ -43,6 +43,7 @@ agent/
 ├── STYLE_GUIDE.md       ← styl psaní Martina
 ├── KNOWLEDGE_BASE.md    ← produkty, ceny, odkazy, časté dotazy
 ├── playbooks/
+│   ├── triage.md        ← třídění pošty: šum vs. práce + kontrola kontextu
 │   ├── poptavka.md      ← jak odpovídat na poptávky
 │   ├── check-in.md      ← jak reagovat na týdenní reporty
 │   └── whatsapp.md      ← jak odpovídat na WhatsApp dotazy

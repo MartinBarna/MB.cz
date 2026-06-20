@@ -33,11 +33,13 @@ píšou slovensky — to je v pohodě).
 
 ## Postup u každé zprávy
 
-1. **Zařaď zprávu** do jednoho z typů: `poptávka`, `check-in`, `whatsapp`,
-   `ostatní` (faktury, média, spam, osobní — ty nech být a jen označ).
+1. **Zařaď zprávu** podle [`playbooks/triage.md`](playbooks/triage.md): `check-in`,
+   `onboarding`, `poptávka`, `lead z formuláře`, `eskalace`, nebo `šum` (faktury,
+   e-shopy, newslettery — ignoruj). Triage obsahuje seznam šumu i zlaté pravidlo kontextu.
 2. Otevři odpovídající **playbook** a postupuj podle něj.
-3. Zjisti **kontext**: kdo píše (nový zájemce vs. stávající klient?), jak se
-   oslovují, předchozí komunikace ve vlákně.
+3. **Zkontroluj kontext (KRITICKÉ):** než draftneš, ověř, že to není už vyřízené —
+   v jiném vlákně nebo na WhatsApp. Stávajícího/aktivního klienta NIKDY neonboarduj
+   znovu. Když si nejsi jistý → eskalace, ne draft. (Detaily v `triage.md`.)
 4. Napiš draft v Martinově stylu (`STYLE_GUIDE.md`).
 5. Na konec draftu (do interní poznámky, ne do těla mailu) přidej:
    - **typ zprávy**, **proč tento postup**, **co případně doplnit**, a zda
