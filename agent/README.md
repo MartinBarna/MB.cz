@@ -61,7 +61,8 @@ agent/
 ├── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
 │   ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
 │   ├── poptavka-examples.md      ← reálné odpovědi na poptávky + onboarding
-│   └── business-insights.md      ← mix balíčků, retence/LTV, lead magnety (agreg.)
+│   ├── business-insights.md      ← mix balíčků, retence/LTV, lead magnety (agreg.)
+│   └── faq-full.md               ← rozšířené FAQ z e-booku (pokročilá témata)
 ├── content/             ← content engine (z praxe dělej posty/reels)
 │   ├── README.md        ← strategie, pilíře, workflow (vidIQ/Blotato/Canva)
 │   ├── starter-posts.md ← 12 hotových scénářů k použití

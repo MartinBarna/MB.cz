@@ -116,8 +116,10 @@ vážit a zapisovat úplně vše (i mléko do kávy, ukusování). Proto sleduje
 
 **Spánek/stres:** 7–8 h, režim, bez obrazovek před spaním; chronický stres zhoršuje apetit.
 
-> Plné FAQ je v e-booku „Nejčastější dotazy klientů" (Drive). Pro hlubší dotazy
-> odkaž klienta na konkrétní materiál/videokurz, nebo eskaluj na Martina.
+> Plné FAQ je v e-booku „Nejčastější dotazy klientů" (Drive). Pokročilá/doplňková témata
+> (svalový růst, načasování jídel, chutě, keto, ovoce vs. cukr, maso vs. protein, masky,
+> hormony/ektomorf, právo volby) jsou zpracovaná v `training-data/faq-full.md`. Pro hlubší
+> dotazy odkaž klienta na konkrétní materiál/videokurz, nebo eskaluj na Martina.
 
 ---
 
