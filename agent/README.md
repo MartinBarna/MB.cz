@@ -59,9 +59,11 @@ agent/
 │   └── business-insights.md      ← mix balíčků, retence/LTV, lead magnety (agreg.)
 ├── content/             ← content engine (z praxe dělej posty/reels)
 │   ├── README.md        ← strategie, pilíře, workflow (vidIQ/Blotato/Canva)
-│   └── starter-posts.md ← 12 hotových scénářů k použití
+│   ├── starter-posts.md ← 12 hotových scénářů k použití
+│   └── canva-designs.md ← log vygenerovaných grafik (odkazy do Canvy)
 └── integrations/        ← plány napojení dalších kanálů
     ├── whatsapp-setup.md            ← WhatsApp Business API (fáze 4)
+    ├── whatsapp-n8n-build.md        ← konkrétní build v n8n (ready k zapnutí)
     └── inbox-cleanup-gmail-filters.md ← Gmail filtry na úklid inboxu
 ```
 
