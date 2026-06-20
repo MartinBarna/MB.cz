@@ -2,9 +2,9 @@
 
 Tenhle repozitář má dvě části:
 
-1. **`index.html`** — on-brand landing page online koučinku Martina Barny
-   (grafit + oranžová, balíčky Gold/Diamond, lead magnet, FAQ, kontakty). Fakta
-   čerpá z `agent/KNOWLEDGE_BASE.md`; při změně cen aktualizuj obojí.
+1. **`index.html`** + **`clanky/`** — on-brand landing page online koučinku Martina Barny
+   (grafit + oranžová, balíčky Gold/Diamond, lead magnet, FAQ, kontakty) a SEO blog
+   články. Fakta čerpá z `agent/KNOWLEDGE_BASE.md`; při změně cen aktualizuj obojí.
 2. **`agent/`** — „mozek" AI asistenta, který za Martina **připravuje koncepty
    odpovědí (drafty)** na e-maily. Tohle je hlavní aktivní práce v repu.
 

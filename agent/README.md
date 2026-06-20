@@ -56,7 +56,8 @@ agent/
 │   ├── poptavka-template.html   ← odpověď na poptávku
 │   ├── retence-prodlouzeni.html ← prodloužení spolupráce
 │   ├── reengagement-poptavka.html ← follow-up zájemce
-│   └── doprodej-videokurz.html  ← doprodej videokurzu (akce)
+│   ├── doprodej-videokurz.html  ← doprodej videokurzu (akce)
+│   └── nurture-series/   ← lead-magnet funnel: vlna 1–4
 ├── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
 │   ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
 │   ├── poptavka-examples.md      ← reálné odpovědi na poptávky + onboarding

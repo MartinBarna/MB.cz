@@ -1,0 +1,27 @@
+:root{--graphite:#1f2733;--graphite-2:#161c25;--orange:#f08a24;--orange-d:#d9760f;--cream:#f6f4ef;--ink:#20262e;--muted:#5d6772;--line:#e7e2d8}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Archivo',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--cream);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.nav{background:var(--graphite)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:0 22px;height:62px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#fff;text-decoration:none;font-weight:900;letter-spacing:.02em}
+.brand span{color:var(--orange);font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;display:block;font-weight:700}
+.nav-inner a.back{color:#cdd5df;text-decoration:none;font-size:.92rem;font-weight:600}
+.nav-inner a.back:hover{color:#fff}
+article{padding:48px 0 20px}
+.eyebrow{color:var(--orange);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:.74rem;margin-bottom:10px}
+h1{font-size:clamp(1.8rem,4.4vw,2.6rem);font-weight:900;line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}
+.meta{color:var(--muted);font-size:.9rem;margin-bottom:30px}
+article h2{font-size:1.4rem;font-weight:800;margin:34px 0 10px;letter-spacing:-.01em}
+article p{margin:0 0 16px;font-size:1.06rem}
+article ul{margin:0 0 16px;padding-left:24px}
+article li{margin-bottom:8px}
+blockquote{border-left:4px solid var(--orange);background:#fff;padding:14px 18px;margin:0 0 18px;border-radius:0 8px 8px 0;color:#39424d;font-style:italic}
+.cta{background:linear-gradient(135deg,#2a3442,var(--graphite-2));color:#fff;border-radius:16px;padding:28px;margin:34px 0}
+.cta h3{font-size:1.3rem;margin-bottom:8px}
+.cta p{color:#c4cdd8;margin-bottom:16px}
+.btn{display:inline-block;background:var(--orange);color:#1b130a;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:999px}
+.btn:hover{background:var(--orange-d)}
+.disc{color:var(--muted);font-size:.85rem;font-style:italic;border-top:1px solid var(--line);padding-top:18px;margin-top:30px}
+footer{background:var(--graphite-2);color:#8d97a3;text-align:center;padding:24px;font-size:.85rem;margin-top:30px}

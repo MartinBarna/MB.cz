@@ -37,6 +37,10 @@ Obsahuje:
 
 (Posledních pět = čisté verze. Použití retence/doprodej viz `../playbooks/retence-doprodej.md`.)
 
+**Nurture série** (`nurture-series/`): 4 vlny lead-magnet funnelu — `vlna-1.html` (doručení
+plánu), `vlna-2.html` (7 chyb + soft videokurz), `vlna-3.html` (kuchařka + 599/48 h),
+`vlna-4.html` (poslední šance + koučing). Placeholdery `{{JMENO}}`, `{{DEADLINE}}`.
+
 > Obě jsou zatím **čisté verze** (vlastní HTML, ne vytažené z Gmailu). Pro byte-přesnou
 > shodu s Martinovým formátem a jeho trackovanými prokliky nech Martina označit reálný
 > onboarding/poptávkový mail v Gmailu a vytáhni z něj kostru stejně jako u `check-in-template.html`.

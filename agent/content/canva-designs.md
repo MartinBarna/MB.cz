@@ -15,6 +15,12 @@ uložená je jedna — další varianty lze dogenerovat.
 | 6 | Bílkoviny = tvůj tajný tip | IG post | https://www.canva.com/d/zUVEC-Qo1lwf6sX |
 | 7 | Myslíš, že jíš málo? (přesnost zápisu) | IG post | https://www.canva.com/d/nH4hAkOwsBSRaoK |
 
+## YouTube thumbnaily
+| Téma | Upravit v Canvě |
+|---|---|
+| Jak zhubnout bez diety | https://www.canva.com/d/ZuRY5Wd885J1XXU |
+| Sacharidy nejsou zlo | https://www.canva.com/d/6VDBwWp5vIBx8yT |
+
 ## Jak dogenerovat další
 Řekni Claudovi „udělej grafiku ke scénáři #X" — vygeneruje 4 varianty v brand barvách
 a uloží vybranou do Canvy. Vhodné scénáře viz `starter-posts.md` (#4 bez výmluv,
