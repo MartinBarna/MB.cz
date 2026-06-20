@@ -66,6 +66,7 @@ agent/
 ├── content/             ← content engine (z praxe dělej posty/reels)
 │   ├── README.md        ← strategie, pilíře, workflow (vidIQ/Blotato/Canva)
 │   ├── starter-posts.md ← 12 hotových scénářů k použití
+│   ├── carousels.md     ← hotové texty slidů pro carousely
 │   ├── content-calendar.md ← 30denní plán (kdy co postovat)
 │   └── canva-designs.md ← log vygenerovaných grafik (odkazy do Canvy)
 └── integrations/        ← plány napojení dalších kanálů
