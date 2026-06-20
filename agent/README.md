@@ -42,6 +42,9 @@ agent/
 │   ├── poptavka.md      ← jak odpovídat na poptávky
 │   ├── check-in.md      ← jak reagovat na týdenní reporty
 │   └── whatsapp.md      ← jak odpovídat na WhatsApp dotazy
+├── templates/           ← přesné HTML kostry mailů (formát + prokliky)
+│   ├── README.md        ← pravidlo: kostru neměnit, měnit jen obsah
+│   └── check-in-template.html
 └── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
     ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
     ├── poptavka-examples.md      ← reálné odpovědi na poptávky + onboarding

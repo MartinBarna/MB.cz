@@ -39,6 +39,12 @@ navrhnout úpravu maker/kroků**. Finální čísla vždy schvaluje Martin.
 6. Krátké „proč" + pozvánka k feedbacku („pokud bys preferoval vyšší hranici, napiš").
 7. Podpis (klientská varianta).
 
+> **DŮLEŽITÉ — formát:** Check-in odpověď generuj z přesné kostry
+> `../templates/check-in-template.html` (`htmlBody`). Zachovej VEŠKERÉ formátování
+> a prokliky (databáze příloh, videa, podcast, sociální sítě) — měň pouze obsah
+> (pozdrav, komentář k datům, nové cíle). Klient pozná agenta, když se kostra změní.
+> Detaily v `../templates/README.md`.
+
 > Všechna navržená čísla v draftu označ jako návrh: na konec přidej interní poznámku
 > `>>> KE SCHVÁLENÍ: kcal/B/S/T/kroky` — ať je Martin vědomě potvrdí.
 
