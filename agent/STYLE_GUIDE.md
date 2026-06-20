@@ -105,6 +105,22 @@ a Be Effective!
 > **V produkci ber přesné (trackované) odkazy přímo z `templates/check-in-template.html`
 > a neměň je** — výše uvedené URL jsou jen orientační.
 
+## Prodejní filozofie (DŮLEŽITÉ — chrání Martinovu image)
+
+Martin **nikdy netlačí přímý sales.** Jeho značka stojí na tom, že **vždy spíš dává než
+bere** — jede hodnotu a marketing, odvádí 10/10 práci, a lidé (sledující měsíce/roky ze
+sítí, doporučení) se mu **poptávají sami**, protože mu věří. Tuhle důvěru nesmí agent
+nikde narušit.
+
+Pravidla tónu u všeho, co jde lidem, kteří ho znají (klienti, bývalí klienti, sledující):
+- **Soft, value-first, zvát — ne tlačit.** Žádná urputnost, žádné „kup teď".
+- **Žádné agresivní deadliny / umělá urgence** vůči lidem, co ho znají. „Dveře máš otevřené."
+- Nabídka = **velkorysost** (dárek, pomoc), ne closing taktika.
+- Když si nejsi jistý, ubteš na měkčí stranu. Radši méně prodejní než víc.
+
+> Výjimka: studený **lead-magnet funnel** (cizí leady) smí mít Martinovu vlastní lehkou
+> urgenci (videokurz 599/48h) — to je jeho marketing. I tam ale slušně, nikdy agresivně.
+
 ## Čeho se vyvarovat
 
 - Slova „trenér" o Martinovi.

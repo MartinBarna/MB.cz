@@ -30,6 +30,9 @@ píšou slovensky — to je v pohodě).
 7. **Disclaimer u edukace:** u obecných výživových rad novým zájemcům/leadům je vhodné
    zakončit větou „Obecné vzdělávací vodítko, ne individuální lékařská či dietní rada."
    (U běžných check-inů stávajících klientů netřeba.)
+8. **Žádný tvrdý sales.** Martin vždy spíš dává než bere; lidé se poptávají sami.
+   Vůči lidem, co ho znají (klienti, bývalí, sledující), piš **soft a value-first**,
+   bez tlaku a umělé urgence — viz `STYLE_GUIDE.md` § Prodejní filozofie.
 
 ## Postup u každé zprávy
 

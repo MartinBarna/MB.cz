@@ -23,11 +23,14 @@ Princip jako všude: **agent připraví, Martin schválí.**
 | # | Kdy | Cíl | Šablona |
 |---|---|---|---|
 | 1 | den 0 | **Znovunavázání** — lidsky, bez nabídky („jak se máš?") | `../templates/win-back-1.html` |
-| 2 | den ~5 | **Nabídka návratu** + speciální dárek pro vracející se | `../templates/win-back-2.html` |
-| 3 | den ~11 | **Poslední šance** (dárek s deadlinem), dveře otevřené | `../templates/win-back-3.html` |
+| 2 | den ~5 | **Měkká nabídka návratu** + dárek (jako velkorysost, ne tlak) | `../templates/win-back-2.html` |
+| 3 | den ~11 | **Hodnota + otevřené dveře** (bez deadlinu, bez tlaku) | `../templates/win-back-3.html` |
 
 - Zastav sekvenci, jakmile klient odpoví (přejdi na osobní domluvu / onboarding).
 - Max tahle jedna sekvence; když nereaguje, nech být (dveře zůstávají otevřené).
+- **Tón = Martinova filozofie:** vždy spíš dávat než brát, zvát ne tlačit, žádná umělá
+  urgence. Chráníme jeho image (viz `../STYLE_GUIDE.md` § Prodejní filozofie). Když máš
+  pochybnost, jdi měkčí cestou — radši méně prodejní.
 
 ## Speciální dárek (definuj reálně)
 `>>> DOPLNIT: {{DAREK}}` — např. bonusový týden zdarma při návratu, sleva na první měsíc,
