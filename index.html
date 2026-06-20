@@ -5,12 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martin Barna — Online výživa a fitness koučink</title>
     <meta name="description" content="Online výživový a fitness koučink od roku 2013. 600+ klientů, vědecky podloženo. Hubnutí, nabírání svalů a výkon bez jojo efektu. Balíčky Gold a Diamond, kalkulačka kalorií zdarma, videokurz.">
+    <meta name="theme-color" content="#2e7d32">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Martin Barna — Online výživa a fitness koučink">
+    <meta property="og:description" content="Zhubni, naber svaly a zvyš výkon — zdravě a natrvalo. Online koučink od roku 2013, 600+ klientů, vědecky podloženo.">
+    <meta property="og:locale" content="cs_CZ">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Martin Barna — Online výživa a fitness koučink">
+    <meta name="twitter:description" content="Zhubni, naber svaly a zvyš výkon — zdravě a natrvalo. Online koučink od roku 2013.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232e7d32'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'>MB</text></svg>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --green:#2e7d32; --green-dark:#1b5e20; --green-light:#e8f5e9; --gold:#f5a623; --ink:#1c2620; }
         * { scroll-behavior:smooth; }
+        html { scroll-padding-top: 80px; }
         body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); }
+
+        /* Plovoucí tlačítka */
+        .fab-wa { position:fixed; right:20px; bottom:20px; width:60px; height:60px; border-radius:50%; background:#25D366;
+            display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); z-index:1050;
+            color:#fff; font-size:1.9rem; text-decoration:none; transition:.2s; }
+        .fab-wa:hover { transform:scale(1.08); color:#fff; }
+        .to-top { position:fixed; right:24px; bottom:92px; width:48px; height:48px; border-radius:50%; background:var(--green-dark);
+            color:#fff; border:none; display:none; align-items:center; justify-content:center; font-size:1.3rem; z-index:1050;
+            box-shadow:0 6px 18px rgba(0,0,0,.22); cursor:pointer; transition:.2s; }
+        .to-top:hover { background:var(--green); }
+        .to-top.show { display:flex; }
         h1,h2,h3 { font-weight:800; }
 
         .navbar-brand { font-weight:800; color:var(--green-dark)!important; font-size:1.4rem; }
@@ -343,8 +364,26 @@
         </div>
     </section>
 
+    <!-- BLOG -->
+    <section id="blog">
+        <div class="container">
+            <div class="section-head">
+                <h2>Z mého blogu</h2>
+                <p>Články o výživě, tréninku a mindsetu — bez mýtů, srozumitelně.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4"><a href="https://www.martinbarna.cz/blog/" target="_blank" rel="noopener" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🧠</div><h5 class="card-title">Mindset &amp; návyky</h5><p class="text-muted mb-0">Proč rozhoduje hlava a jak si udržet motivaci dlouhodobě.</p></div></a></div>
+                <div class="col-md-4"><a href="https://www.martinbarna.cz/spanek/" target="_blank" rel="noopener" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">😴</div><h5 class="card-title">Spánek</h5><p class="text-muted mb-0">Jak spánek ovlivňuje hubnutí, výkon i chuť k jídlu.</p></div></a></div>
+                <div class="col-md-4"><a href="https://www.martinbarna.cz/blog/" target="_blank" rel="noopener" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🥑</div><h5 class="card-title">Výživa v praxi</h5><p class="text-muted mb-0">Tuky, vláknina, kalorický deficit — co opravdu funguje.</p></div></a></div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="https://www.martinbarna.cz/blog/" target="_blank" rel="noopener" class="btn btn-out">Číst celý blog</a>
+            </div>
+        </div>
+    </section>
+
     <!-- JAK TO FUNGUJE -->
-    <section id="jak">
+    <section id="jak" class="bg-soft">
         <div class="container">
             <div class="section-head">
                 <h2>Jak online koučink probíhá</h2>
@@ -360,7 +399,7 @@
     </section>
 
     <!-- REFERENCE -->
-    <section id="reference" class="bg-soft">
+    <section id="reference">
         <div class="container">
             <div class="section-head">
                 <h2>Co říkají klienti</h2>
@@ -376,6 +415,38 @@
                         <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
                             <a class="src-btn" href="https://www.facebook.com/martinbarnaonlinevyzivafitness/reviews" target="_blank" rel="noopener">⭐ Recenze na Facebooku</a>
                             <a class="src-btn" href="https://www.google.com/search?q=Martin+Barna+Online+V%C3%BD%C5%BEiva+a+Fitness+recenze" target="_blank" rel="noopener">⭐ Hodnocení na Google</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="bg-soft">
+        <div class="container">
+            <div class="section-head">
+                <h2>Časté otázky</h2>
+                <p>Nenašel jsi odpověď? Napiš mi a rád ti poradím.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAcc">
+                        <div class="accordion-item mb-3 border-0 rounded-4 shadow-sm">
+                            <h3 class="accordion-header"><button class="accordion-button collapsed rounded-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#q1">Musím držet drastickou dietu?</button></h3>
+                            <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body text-muted">Ne. Učím tě flexibilní stravování — jíš normální jídlo, které tě baví, jen ve správném množství. Žádné hladovění.</div></div>
+                        </div>
+                        <div class="accordion-item mb-3 border-0 rounded-4 shadow-sm">
+                            <h3 class="accordion-header"><button class="accordion-button collapsed rounded-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#q2">Jak rychle uvidím výsledky?</button></h3>
+                            <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body text-muted">Záleží na startu a cíli, ale první změny většinou vidíš během pár týdnů. Jdeme na to udržitelně, ne nárazově.</div></div>
+                        </div>
+                        <div class="accordion-item mb-3 border-0 rounded-4 shadow-sm">
+                            <h3 class="accordion-header"><button class="accordion-button collapsed rounded-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#q3">Co když nevím, jak začít?</button></h3>
+                            <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body text-muted">Od toho jsem tu já. Ozveš se na nezávaznou konzultaci zdarma a společně vymyslíme první krok.</div></div>
+                        </div>
+                        <div class="accordion-item border-0 rounded-4 shadow-sm">
+                            <h3 class="accordion-header"><button class="accordion-button collapsed rounded-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#q4">Je lepší koučink, nebo videokurz?</button></h3>
+                            <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body text-muted">Chceš-li vedení na míru s týdenními úpravami, vyber <a href="#balicky">balíček Gold nebo Diamond</a>. Chceš-li jít sám svým tempem, je ideální <a href="videokurz.html">videokurz</a>.</div></div>
                         </div>
                     </div>
                 </div>
@@ -422,6 +493,12 @@
         <p class="mb-1">&copy; 2026 Martin Barna — Online výživa a fitness. Všechna práva vyhrazena.</p>
         <p class="mb-0"><a href="https://www.martinbarna.cz">martinbarna.cz</a> · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> · +420 603 229 831</p>
     </footer>
+
+    <!-- Plovoucí tlačítka -->
+    <button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Nahoru">↑</button>
+    <a class="fab-wa" href="https://wa.me/420603229831" target="_blank" rel="noopener" aria-label="Napiš na WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.748-.747zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -477,6 +554,23 @@
             window.open(url, '_blank');
             return false;
         }
+
+        // --- Tlačítko nahoru ---
+        var toTop = document.getElementById('toTop');
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 500) { toTop.classList.add('show'); }
+            else { toTop.classList.remove('show'); }
+        });
+
+        // --- Zavři mobilní menu po kliknutí na odkaz ---
+        document.querySelectorAll('#nav .nav-link, #nav .btn').forEach(function (link) {
+            link.addEventListener('click', function () {
+                var nav = document.getElementById('nav');
+                if (nav.classList.contains('show')) {
+                    bootstrap.Collapse.getOrCreateInstance(nav).hide();
+                }
+            });
+        });
     </script>
 </body>
 </html>
