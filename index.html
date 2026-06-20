@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martin Barna — Online výživa a fitness koučink</title>
-    <meta name="description" content="Online výživový a fitness koučink od roku 2013. 600+ klientů, vědecky podloženo. Hubnutí, nabírání svalů a výkon bez jojo efektu. Balíčky Gold a Diamond, jídelníčky na míru, podpora přes WhatsApp.">
+    <meta name="description" content="Online výživový a fitness koučink od roku 2013. 600+ klientů, vědecky podloženo. Hubnutí, nabírání svalů a výkon bez jojo efektu. Balíčky Gold a Diamond, kalkulačka kalorií zdarma, videokurz.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -24,6 +24,8 @@
         .btn-out:hover { background:var(--green); color:#fff; }
         .btn-white { background:#fff; color:var(--green-dark); font-weight:700; padding:14px 38px; border-radius:50px; transition:.2s; }
         .btn-white:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.2); color:var(--green-dark); }
+        .btn-gold { background:var(--gold); border:none; color:#fff; font-weight:700; padding:14px 38px; border-radius:50px; transition:.2s; }
+        .btn-gold:hover { background:#e0941a; transform:translateY(-2px); color:#fff; box-shadow:0 10px 24px rgba(245,166,35,.35); }
 
         .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:140px 0 120px; text-align:center; }
         .hero h1 { font-size:3.2rem; margin-bottom:1.2rem; line-height:1.15; }
@@ -69,6 +71,20 @@
         .feature .ico { width:64px; height:64px; border-radius:50%; background:var(--green-light); color:var(--green-dark);
             display:flex; align-items:center; justify-content:center; font-size:1.7rem; margin:0 auto 1rem; }
 
+        /* Kalkulačka */
+        .calc-wrap { background:#fff; border-radius:22px; box-shadow:0 10px 36px rgba(0,0,0,.09); padding:2.5rem; }
+        .calc-wrap label { font-weight:600; font-size:.9rem; margin-bottom:.3rem; }
+        .calc-wrap .form-control, .calc-wrap .form-select { border-radius:10px; padding:11px; }
+        .result { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; border-radius:18px; padding:2rem; text-align:center; }
+        .result .kcal { font-size:3rem; font-weight:800; line-height:1; }
+        .macro { background:rgba(255,255,255,.15); border-radius:14px; padding:1rem .5rem; }
+        .macro .num { font-size:1.5rem; font-weight:800; }
+        .macro .lbl { font-size:.8rem; opacity:.9; }
+
+        /* Videokurz banner */
+        .vk-banner { background:linear-gradient(135deg,#2b2b35 0%,#11131a 100%); color:#fff; border-radius:24px; overflow:hidden; }
+        .vk-tag { background:var(--gold); color:#fff; font-weight:700; font-size:.8rem; padding:5px 14px; border-radius:50px; display:inline-block; }
+
         .review-box { background:#fff; border-radius:18px; box-shadow:0 8px 28px rgba(0,0,0,.07); padding:2.4rem; }
         .review-box .big { font-size:3rem; font-weight:800; color:var(--green-dark); line-height:1; }
         .stars { color:#ffb300; font-size:1.4rem; }
@@ -80,7 +96,7 @@
         .contact-list a { color:#fff; text-decoration:none; font-weight:600; }
         .contact-list a:hover { text-decoration:underline; }
         .social a { display:inline-flex; width:46px; height:46px; border-radius:50%; background:rgba(255,255,255,.15); color:#fff;
-            align-items:center; justify-content:center; margin-right:10px; text-decoration:none; font-size:1.1rem; transition:.2s; }
+            align-items:center; justify-content:center; margin-right:10px; text-decoration:none; font-size:1.1rem; transition:.2s; font-weight:700; }
         .social a:hover { background:#fff; color:var(--green-dark); }
 
         footer { background:var(--ink); color:#cfd8d2; padding:30px 0; text-align:center; }
@@ -99,7 +115,8 @@
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link" href="#omne">O mně</a></li>
                     <li class="nav-item"><a class="nav-link" href="#balicky">Balíčky</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#jak">Jak to funguje</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kalkulacka">Kalkulačka</a></li>
+                    <li class="nav-item"><a class="nav-link" href="videokurz.html">Videokurz</a></li>
                     <li class="nav-item"><a class="nav-link" href="#reference">Reference</a></li>
                     <li class="nav-item ms-lg-3"><a class="btn btn-grn" href="#kontakt">Konzultace zdarma</a></li>
                 </ul>
@@ -220,6 +237,95 @@
         </div>
     </section>
 
+    <!-- KALKULAČKA -->
+    <section id="kalkulacka" class="bg-soft">
+        <div class="container">
+            <div class="section-head">
+                <h2>Kalkulačka kalorií a maker zdarma</h2>
+                <p>Zjisti během chvilky, kolik kalorií a živin potřebuješ pro svůj cíl. Pak ti pomůžu udělat z čísel reálný jídelníček.</p>
+            </div>
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-7">
+                    <div class="calc-wrap">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label>Pohlaví</label>
+                                <select id="pohlavi" class="form-select">
+                                    <option value="muz">Muž</option>
+                                    <option value="zena">Žena</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label>Věk (let)</label>
+                                <input id="vek" type="number" class="form-control" value="30" min="14" max="100">
+                            </div>
+                            <div class="col-6">
+                                <label>Výška (cm)</label>
+                                <input id="vyska" type="number" class="form-control" value="178" min="120" max="230">
+                            </div>
+                            <div class="col-6">
+                                <label>Váha (kg)</label>
+                                <input id="vaha" type="number" class="form-control" value="80" min="35" max="250">
+                            </div>
+                            <div class="col-12">
+                                <label>Aktivita</label>
+                                <select id="aktivita" class="form-select">
+                                    <option value="1.2">Sedavý (kancelář, minimum pohybu)</option>
+                                    <option value="1.375">Lehká aktivita (1–3× týdně)</option>
+                                    <option value="1.55" selected>Střední aktivita (3–5× týdně)</option>
+                                    <option value="1.725">Vysoká aktivita (6–7× týdně)</option>
+                                    <option value="1.9">Velmi vysoká (fyzická práce / 2× denně)</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label>Tvůj cíl</label>
+                                <select id="cil" class="form-select">
+                                    <option value="hubnuti">Zhubnout (kalorický deficit)</option>
+                                    <option value="udrzeni" selected>Udržet váhu</option>
+                                    <option value="nabirani">Nabrat svaly (mírný přebytek)</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <button onclick="spocitej()" class="btn btn-grn w-100">Spočítat</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="result">
+                        <p class="mb-1" style="opacity:.9;">Tvůj denní příjem pro cíl</p>
+                        <div class="kcal"><span id="r-kcal">—</span> kcal</div>
+                        <div class="row g-2 mt-3">
+                            <div class="col-4"><div class="macro"><div class="num" id="r-bil">—</div><div class="lbl">Bílkoviny (g)</div></div></div>
+                            <div class="col-4"><div class="macro"><div class="num" id="r-tuk">—</div><div class="lbl">Tuky (g)</div></div></div>
+                            <div class="col-4"><div class="macro"><div class="num" id="r-sach">—</div><div class="lbl">Sacharidy (g)</div></div></div>
+                        </div>
+                        <a href="#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
+                        <p class="small mt-3 mb-0" style="opacity:.8;">Orientační výpočet (Mifflin–St Jeor). Přesný plán ti sestavím v rámci koučinku.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIDEOKURZ BANNER -->
+    <section id="videokurz-banner">
+        <div class="container">
+            <div class="vk-banner p-4 p-md-5">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-8">
+                        <span class="vk-tag">🎥 VIDEOKURZ</span>
+                        <h2 class="mt-3 mb-2">Nauč se výživu jednou provždy — sám a svým tempem</h2>
+                        <p class="mb-0" style="opacity:.85;">153 videí, přes 20 hodin obsahu a kalkulačka makroživin. Vše, co potřebuješ vědět o hubnutí, nabírání i flexibilním stravování — vědecky podloženo.</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="videokurz.html" class="btn btn-gold">Zjistit víc o kurzu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- DALŠÍ MOŽNOSTI -->
     <section id="dalsi" class="bg-soft">
         <div class="container">
@@ -228,7 +334,7 @@
                 <p>Nejen koučink — vyber si, co tě posune dál.</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-3 col-6"><div class="feature"><div class="ico">🎥</div><h6 class="fw-bold">Videokurz</h6><p class="text-muted small">153 videí, přes 20 hodin know-how.</p></div></div>
+                <div class="col-md-3 col-6"><a href="videokurz.html" class="text-decoration-none"><div class="feature"><div class="ico">🎥</div><h6 class="fw-bold text-dark">Videokurz</h6><p class="text-muted small">153 videí, přes 20 hodin know-how.</p></div></a></div>
                 <div class="col-md-3 col-6"><div class="feature"><div class="ico">📚</div><h6 class="fw-bold">E-booky &amp; recepty</h6><p class="text-muted small">Tajemství flexibilního stravování a kuchařka.</p></div></div>
                 <div class="col-md-3 col-6"><div class="feature"><div class="ico">🎤</div><h6 class="fw-bold">Přednášky</h6><p class="text-muted small">Pro firmy, skupiny i veřejnost.</p></div></div>
                 <div class="col-md-3 col-6"><div class="feature"><div class="ico">👥</div><h6 class="fw-bold">Workshopy &amp; tréninky</h6><p class="text-muted small">Praktické skupinové akce naživo.</p></div></div>
@@ -298,11 +404,12 @@
                 <div class="col-lg-6">
                     <div class="bg-white p-4 p-md-5 rounded-4 shadow">
                         <h5 class="text-dark fw-bold mb-3">Napiš mi</h5>
-                        <form>
-                            <div class="mb-3"><input type="text" class="form-control bg-light" placeholder="Tvoje jméno"></div>
-                            <div class="mb-3"><input type="email" class="form-control bg-light" placeholder="E-mail"></div>
-                            <div class="mb-3"><textarea class="form-control bg-light" rows="3" placeholder="Co tě trápí / s čím chceš pomoct?"></textarea></div>
-                            <button type="submit" class="btn btn-grn w-100">Odeslat zprávu</button>
+                        <form id="kontaktForm" onsubmit="return odeslatWhatsApp(event)">
+                            <div class="mb-3"><input id="f-jmeno" type="text" class="form-control bg-light" placeholder="Tvoje jméno" required></div>
+                            <div class="mb-3"><input id="f-email" type="email" class="form-control bg-light" placeholder="E-mail (nepovinné)"></div>
+                            <div class="mb-3"><textarea id="f-zprava" class="form-control bg-light" rows="3" placeholder="Co tě trápí / s čím chceš pomoct?" required></textarea></div>
+                            <button type="submit" class="btn btn-grn w-100">📲 Odeslat přes WhatsApp</button>
+                            <p class="small text-muted text-center mt-2 mb-0">Otevře se ti WhatsApp s předvyplněnou zprávou pro Martina.</p>
                         </form>
                     </div>
                 </div>
@@ -316,5 +423,55 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- Kalkulačka kalorií a maker (Mifflin–St Jeor) ---
+        function spocitej() {
+            var pohlavi = document.getElementById('pohlavi').value;
+            var vek = parseFloat(document.getElementById('vek').value);
+            var vyska = parseFloat(document.getElementById('vyska').value);
+            var vaha = parseFloat(document.getElementById('vaha').value);
+            var aktivita = parseFloat(document.getElementById('aktivita').value);
+            var cil = document.getElementById('cil').value;
+
+            if (!vek || !vyska || !vaha) { alert('Vyplň prosím věk, výšku a váhu.'); return; }
+
+            // Bazální metabolismus
+            var bmr = (pohlavi === 'muz')
+                ? 10 * vaha + 6.25 * vyska - 5 * vek + 5
+                : 10 * vaha + 6.25 * vyska - 5 * vek - 161;
+
+            var tdee = bmr * aktivita;
+
+            // Úprava dle cíle
+            if (cil === 'hubnuti') tdee *= 0.80;       // -20 %
+            else if (cil === 'nabirani') tdee *= 1.10;  // +10 %
+
+            var kcal = Math.round(tdee);
+
+            // Makra: bílkoviny 2 g/kg, tuky 1 g/kg, zbytek sacharidy
+            var bilkoviny = Math.round(vaha * 2);
+            var tuky = Math.round(vaha * 1);
+            var zbytekKcal = kcal - (bilkoviny * 4) - (tuky * 9);
+            var sacharidy = Math.max(0, Math.round(zbytekKcal / 4));
+
+            document.getElementById('r-kcal').textContent = kcal.toLocaleString('cs-CZ');
+            document.getElementById('r-bil').textContent = bilkoviny;
+            document.getElementById('r-tuk').textContent = tuky;
+            document.getElementById('r-sach').textContent = sacharidy;
+        }
+
+        // --- Kontaktní formulář → WhatsApp ---
+        function odeslatWhatsApp(e) {
+            e.preventDefault();
+            var jmeno = document.getElementById('f-jmeno').value;
+            var email = document.getElementById('f-email').value;
+            var zprava = document.getElementById('f-zprava').value;
+            var text = 'Ahoj Martine! Jmenuji se ' + jmeno + '.\n\n' + zprava;
+            if (email) text += '\n\nMůj e-mail: ' + email;
+            var url = 'https://wa.me/420603229831?text=' + encodeURIComponent(text);
+            window.open(url, '_blank');
+            return false;
+        }
+    </script>
 </body>
 </html>
