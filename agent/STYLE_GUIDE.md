@@ -59,7 +59,12 @@ www.martinbarna.cz
 Tel/WhatsApp: +420 603229831
 ```
 
-U poptávek se občas podepisuje neformálně:
+U poptávek a leadů se často podepisuje neformálně (z reálných mailů):
+```
+Be Effective
+Tvůj Online Coach Marťas
+```
+nebo
 ```
 Be Effective!
 Coach Marťas
@@ -74,6 +79,40 @@ Tel: +420 603229831
 Facebook: https://www.facebook.com/MartinBarnaOnlinevyzivaafitness
 Instagram: @martinbarnaonlinevyzivafitness
 ```
+
+## Uvítací mail po stažení lead magnetu (PŘESNÝ VZOR z praxe)
+
+Tohle je Martinův **skutečný** mail, kterým posílá 7denní makro plán novým zájemkyním
+(ověřeno 6/2026). Je **krátký, lidský, bez odrážek a bez tvrdého prodeje**. Drž se ho:
+
+- **Plán posílá jako PŘÍLOHU PDF** (z `assets/lead-magnety/`), ne jako odkaz.
+- Oslovení = **zdrobnělina v 5. pádu**: Alčo, Silvo, Ivko, Pájo, Mončo, Věro, Luďko,
+  Katko, Růžo, Lucko, Marcelo, Eliško… (když jméno nejde zdrobnit, klidně „Nazdar,").
+- Otvírač lehce obměňuje lidsky: „Přeju fajn večer a…", „posílám Ti hned po probuzení…",
+  „posílám Ti ještě z fitka…".
+- CTA je **měkké**, schované do nabídky pomoci — žádné „kup koučing Gold/Diamond".
+
+```
+Předmět: 7denní makro plán pro ženy 30+ (zdarma)
+
+Nazdar [Zdrobnělina],
+
+Přeju fajn večer a posílám Ti ten makro plán, najdeš tam i link na mou kalkulačku
+pro individ výpočty.
+
+Věřím, že to pomůže! :)
+
+Pokud budeš potřebovat pomoc, ozvi se na whatsapp 603229831, nebo na tento mail
+a můžeme si domluvit konzultaci a doladit to společně detailně, na míru a s tipy
+navíc z mé praxe!
+
+Be Effective
+Tvůj Online Coach Marťas
+```
+
+> **Pozor na duplicitu:** než tenhle mail nadraftuješ, **zkontroluj Odeslané**
+> (`in:sent "makro plán" to:<adresa>`). Martin tyhle leady často obslouží sám hned
+> z mobilu — když už plán dostali, NEPOSÍLEJ znovu (max nurture krok 2 s odstupem).
 
 ## Patička / branding blok (HTML maily klientům)
 

@@ -14,6 +14,10 @@ Vlákno bez odpovědi „ve vlákně" **neznamená**, že je nevyřízené. Než
 - **Není to vyřízené na WhatsApp?** Hodně věcí (domluva konzultace, termíny, platby,
   média) Martin řeší na WA. Když mail nemá odpověď, ale je to „WA-typ", **flag, nedraftuj**.
 - **Je klient už aktivní?** Pak ho NIKDY neonboarduj znovu.
+- **Neposlal už Martin lead-magnet sám?** U leadů z formuláře vždy zkontroluj
+  **Odeslané** (`in:sent "makro plán" to:<adresa>` nebo dle subjectu). Martin tyhle
+  zájemkyně často obslouží hned z mobilu — pak draft NEDĚLEJ, byl by to duplikát.
+  (Reálný případ 6/2026: 20 „nových" leadů už mělo plán + follow-up odeslaný ručně.)
 
 Když si nejsi jistý → `MB-Agent/Eskalace` + krátká poznámka, ne draft.
 
@@ -33,7 +37,7 @@ Typičtí odesílatelé/vzory k přeskočení:
 | **Check-in** | Stávající klient posílá týdenní report (míry, váha, trénink; často příloha xlsx „Report pro Coache") | Draft dle `check-in.md` + štítek `MB-Agent/Check-in` |
 | **Onboarding** | Nový klient poslal vstupní dotazník / podklady o sobě, ještě nedostal „informace na první týden" | Draft dle `../templates/onboarding-template.html` (ověř kontext!) + štítek `MB-Agent` |
 | **Poptávka (přímá)** | Někdo se ptá na koučing/cenu/spolupráci, „mám zájem", „kolik stojí" | Draft dle `poptavka.md` + štítek `MB-Agent/Poptávka` |
-| **Lead z formuláře** | Lead-magnet formulář („Jméno / Email / Věk / Hlavní cíl …") | Řeší **automatický funnel** (7denní plán + e-mail série). **Nedraftuj** — jen štítek `MB-Agent/Poptávka`. Warm nudge dělej jen na výslovné přání Martina. |
+| **Lead z formuláře** | Lead-magnet formulář („Jméno / Email / Věk / Hlavní cíl …") | **Nejdřív ověř Odeslané** (viz zlaté pravidlo) — Martin posílá plán často sám. Pokud ne, řeší **automatický funnel** (7denní plán + e-mail série). Uvítací mail jen ve stylu `STYLE_GUIDE` „Uvítací mail po stažení lead magnetu" (krátký, PDF v příloze, podpis „Tvůj Online Coach Marťas"). Štítek `MB-Agent/Poptávka`. Warm nudge jen na přání Martina. |
 
 ## ESKALACE — žádný draft, jen flag + štítek `MB-Agent/Eskalace`
 
