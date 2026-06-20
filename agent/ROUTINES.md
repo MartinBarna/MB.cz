@@ -40,5 +40,26 @@ KNOWLEDGE_BASE, playbooks/). Proveď ranní sweep podle playbooks/sync.md a tria
 Potřebuje WhatsApp Business API + automatizační vrstvu — viz `integrations/whatsapp-setup.md`.
 (To je jediná část, kterou Routines/Max samy nepokryjí, protože jde o cizí kanál.)
 
+## Jak Claude pozná, že má být agentem (ne generický Claude)
+
+Není to detekce klíčových slov. Claude se chová jako **tvůj** agent jen když má **načtené
+instrukce z tohoto repa** (`CLAUDE.md` + soubory v `agent/`). Ty obsahují pravidla
+(nikdy neodesílat, ceny jen z KNOWLEDGE_BASE, přesné šablony, soft sell, eskalace) a tvůj
+tón. Bez nich by „obyčejný" Claude maily zvládl taky — ale **genericky a bez mantinelů**
+(může vymyslet cenu, netrefit tón, nepoužít kostru). Proto je důležité, **odkud** ho pustíš:
+
+| Odkud | Načte se agent automaticky? |
+|---|---|
+| **Cowork (claude.ai/code) na tomhle repu** | **ANO** — `CLAUDE.md` se načte sám. Stačí „projdi maily". |
+| **Routine (B)** s připojeným repem | **ANO** — prompt navíc odkazuje na `agent/`. |
+| **Obyčejná Claude appka / chat** (bez repa) | **NE** — je to generický Claude. Musíš mu agenta dodat (viz níže). |
+
+**Doporučení:** dělej režim A i z **Coworku** (má i mobil) — tam se mozek načte sám.
+Pokud chceš jet z běžné Claude appky, založ si v ní **Projekt** a vlož do „custom
+instructions" obsah `AGENT_PROMPT.md` + klíčové z `KNOWLEDGE_BASE.md`/`STYLE_GUIDE.md`;
+pak se každý chat v tom Projektu chová jako agent. (Cowork je ale jednodušší — vše je už tam.)
+
+---
+
 ## Doporučení
 Začni **A** (pár dní si osahej drafty), pak zapni **B** (ranní rutina). C až budeš chtít WhatsApp.
