@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://martinbarna.github.io/MB.cz/sitemap.xml

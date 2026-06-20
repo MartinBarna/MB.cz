@@ -12,9 +12,28 @@
     <meta property="og:locale" content="cs_CZ">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232e7d32'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'>MB</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Videokurz flexibilního stravování",
+      "description": "Kompletní videokurz výživy: 153 videí, přes 20 hodin, kalkulačka makroživin a audiobook. Hubnutí, nabírání i flexibilní stravování — vědecky podloženo. Doživotní přístup.",
+      "provider": { "@type": "Person", "name": "Martin Barna", "url": "https://www.martinbarna.cz" },
+      "offers": {
+        "@type": "Offer",
+        "price": "800",
+        "priceCurrency": "CZK",
+        "availability": "https://schema.org/InStock",
+        "url": "https://www.martinbarna.cz/objednavka-videokurzu/"
+      }
+    }
+    </script>
     <style>
+        @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
         :root { --green:#2e7d32; --green-dark:#1b5e20; --green-light:#e8f5e9; --gold:#f5a623; --ink:#14161c; }
         * { scroll-behavior:smooth; }
         html { scroll-padding-top: 80px; }
@@ -36,8 +55,8 @@
 
         .hero { background:linear-gradient(135deg,#23262f 0%,#0d0f15 100%); color:#fff; padding:130px 0 110px; }
         .hero .tag { background:var(--gold); color:#fff; font-weight:700; font-size:.82rem; padding:6px 16px; border-radius:50px; display:inline-block; letter-spacing:.5px; }
-        .hero h1 { font-size:3.1rem; margin:1.2rem 0; line-height:1.12; }
-        .hero p.lead { font-size:1.25rem; opacity:.9; max-width:620px; }
+        .hero h1 { font-size:3.1rem; margin:1.2rem 0; line-height:1.12; animation:fadeUp .7s ease both; }
+        .hero p.lead { font-size:1.25rem; opacity:.9; max-width:620px; animation:fadeUp .7s ease .15s both; }
         .hero .meta { margin-top:2rem; display:flex; flex-wrap:wrap; gap:1.5rem; }
         .hero .meta div { font-weight:600; }
         .hero .meta span { display:block; font-size:1.8rem; font-weight:800; color:var(--gold); }
