@@ -37,6 +37,9 @@ Obsahuje:
 
 (Posledních pět = čisté verze. Použití retence/doprodej viz `../playbooks/retence-doprodej.md`.)
 
+**Retence/provoz:** `nudge-report.html` (popostrčení na chybějící report),
+`recenze-prubeh.html` a `recenze-konec.html` (sběr recenzí) — viz `../playbooks/`.
+
 **Nurture série** (`nurture-series/`): 4 vlny lead-magnet funnelu — `vlna-1.html` (doručení
 plánu), `vlna-2.html` (7 chyb + soft videokurz), `vlna-3.html` (kuchařka + 599/48 h),
 `vlna-4.html` (poslední šance + koučing). Placeholdery `{{JMENO}}`, `{{DEADLINE}}`.

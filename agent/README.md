@@ -44,8 +44,13 @@ agent/
 ├── KNOWLEDGE_BASE.md    ← produkty, ceny, odkazy, časté dotazy
 ├── playbooks/
 │   ├── triage.md        ← třídění pošty: šum vs. práce + kontrola kontextu
+│   ├── briefing.md      ← ranní souhrn inboxu
 │   ├── poptavka.md      ← jak odpovídat na poptávky
 │   ├── check-in.md      ← jak reagovat na týdenní reporty
+│   ├── report-parsing.md ← čtení Excel reportu z přílohy
+│   ├── nudge-reporty.md ← nudge na chybějící report (retence)
+│   ├── recenze.md       ← sběr recenzí/referencí
+│   ├── lead-pipeline.md ← přehled prodeje (fáze leadů)
 │   ├── whatsapp.md      ← jak odpovídat na WhatsApp dotazy
 │   ├── kalendar.md      ← domluva konzultace (Google Kalendář)
 │   └── retence-doprodej.md ← prodloužení, re-engagement, doprodej
@@ -57,6 +62,9 @@ agent/
 │   ├── retence-prodlouzeni.html ← prodloužení spolupráce
 │   ├── reengagement-poptavka.html ← follow-up zájemce
 │   ├── doprodej-videokurz.html  ← doprodej videokurzu (akce)
+│   ├── nudge-report.html        ← nudge na chybějící report
+│   ├── recenze-prubeh.html      ← žádost o recenzi (po výsledku)
+│   ├── recenze-konec.html       ← reference na konci spolupráce
 │   └── nurture-series/   ← lead-magnet funnel: vlna 1–4
 ├── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
 │   ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
@@ -69,10 +77,18 @@ agent/
 │   ├── carousels.md     ← hotové texty slidů pro carousely
 │   ├── content-calendar.md ← 30denní plán (kdy co postovat)
 │   └── canva-designs.md ← log vygenerovaných grafik (odkazy do Canvy)
-└── integrations/        ← plány napojení dalších kanálů
+├── crm/                 ← klientská paměť (schéma + šablona; data v Sheetu/Notionu)
+│   ├── README.md        ← jak agent pracuje s pamětí + anonymizace
+│   ├── clients-schema.csv ← hlavičky pro Google Sheet
+│   └── client-template.md ← profil klienta (prázdná šablona)
+└── integrations/        ← plány napojení dalších kanálů/služeb
     ├── whatsapp-setup.md            ← WhatsApp Business API (fáze 4)
     ├── whatsapp-n8n-build.md        ← konkrétní build v n8n (ready k zapnutí)
-    └── inbox-cleanup-gmail-filters.md ← Gmail filtry na úklid inboxu
+    ├── inbox-cleanup-gmail-filters.md ← Gmail filtry na úklid inboxu
+    ├── shopify-onboarding.md        ← nová objednávka → onboarding/dodání
+    ├── blotato-publishing.md        ← publikace obsahu (se schválením)
+    ├── fb-ads-monitoring.md         ← sledování výkonu reklam
+    └── vidiq-content-ideas.md       ← YouTube/IG témata, tituly, thumbnaily
 ```
 
 ## Tréninková data (to „natrénování" mými maily/materiály)
