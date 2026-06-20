@@ -14,9 +14,43 @@
     <meta name="twitter:title" content="Martin Barna — Online výživa a fitness koučink">
     <meta name="twitter:description" content="Zhubni, naber svaly a zvyš výkon — zdravě a natrvalo. Online koučink od roku 2013.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232e7d32'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'>MB</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Martin Barna — Online výživa a fitness",
+      "description": "Online výživový a fitness koučink od roku 2013. Hubnutí, nabírání svalů a zvýšení výkonu bez jojo efektu.",
+      "telephone": "+420603229831",
+      "email": "martin@martinbarna.cz",
+      "url": "https://www.martinbarna.cz",
+      "priceRange": "$$",
+      "areaServed": "CZ",
+      "sameAs": [
+        "https://www.instagram.com/martinbarnaonlinevyzivafitness",
+        "https://www.tiktok.com/@martinbarna_cz",
+        "https://www.youtube.com/MartinBarna",
+        "https://www.facebook.com/martinbarnaonlinevyzivafitness"
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type":"Question","name":"Musím držet drastickou dietu?","acceptedAnswer":{"@type":"Answer","text":"Ne. Učím tě flexibilní stravování — jíš normální jídlo, které tě baví, jen ve správném množství. Žádné hladovění."}},
+        {"@type":"Question","name":"Jak rychle uvidím výsledky?","acceptedAnswer":{"@type":"Answer","text":"Záleží na startu a cíli, ale první změny většinou vidíš během pár týdnů. Jdeme na to udržitelně, ne nárazově."}},
+        {"@type":"Question","name":"Co když nevím, jak začít?","acceptedAnswer":{"@type":"Answer","text":"Od toho jsem tu já. Ozveš se na nezávaznou konzultaci zdarma a společně vymyslíme první krok."}},
+        {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Chceš-li vedení na míru s týdenními úpravami, vyber balíček Gold nebo Diamond. Chceš-li jít sám svým tempem, je ideální videokurz."}}
+      ]
+    }
+    </script>
     <style>
+        @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
         :root { --green:#2e7d32; --green-dark:#1b5e20; --green-light:#e8f5e9; --gold:#f5a623; --ink:#1c2620; }
         * { scroll-behavior:smooth; }
         html { scroll-padding-top: 80px; }
@@ -49,9 +83,10 @@
         .btn-gold:hover { background:#e0941a; transform:translateY(-2px); color:#fff; box-shadow:0 10px 24px rgba(245,166,35,.35); }
 
         .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:140px 0 120px; text-align:center; }
-        .hero h1 { font-size:3.2rem; margin-bottom:1.2rem; line-height:1.15; }
-        .hero p { font-size:1.25rem; opacity:.95; max-width:680px; margin:0 auto 2.2rem; }
-        .hero .badges { margin-top:2.5rem; font-size:.95rem; opacity:.9; }
+        .hero h1 { font-size:3.2rem; margin-bottom:1.2rem; line-height:1.15; animation:fadeUp .7s ease both; }
+        .hero p { font-size:1.25rem; opacity:.95; max-width:680px; margin:0 auto 2.2rem; animation:fadeUp .7s ease .15s both; }
+        .hero .btn-white { animation:fadeUp .7s ease .3s both; }
+        .hero .badges { margin-top:2.5rem; font-size:.95rem; opacity:.9; animation:fadeUp .7s ease .45s both; }
         .hero .badges span { margin:0 12px; display:inline-block; }
 
         section { padding:90px 0; }
@@ -129,7 +164,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">Martin Barna</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Otevřít menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="nav">
