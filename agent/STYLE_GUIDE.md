@@ -84,10 +84,12 @@ patičku přidat. Textový ekvivalent obsahu patičky:
 ```
 — — —
 Chceš se dozvědět víc ve video formátu?
-→ Videa pro klienty o výživě a fitness: martinbarna.cz/videokurz
+→ Videa pro klienty (videokurz) — YouTube playlist:
+   youtube.com/playlist?list=PLepdCiScmsedXJGg_L9_SbRs4r78XRvsV…
 
 Máš chvilku se vzdělávat?
-→ Koukni na databázi příloh.
+→ Koukni na databázi příloh — Google Drive:
+   drive.google.com/drive/folders/1l_WkVyNKrv06I1IgQO1ZWBQ6CCmzImj6
 
 Máš dotaz, potřebuješ s něčím poradit?
 Neváhej se na mě obrátit na WhatsApp 603229831 nebo martin@martinbarna.cz
@@ -100,6 +102,8 @@ a Be Effective!
 > Pozn.: skutečné maily používají jednotnou grafickou šablonu (Team Barna). Agent
 > ji může napodobit v `htmlBody`; pokud si nejsi jistý formátováním, použij čistý
 > text + výše uvedený textový blok.
+> **V produkci ber přesné (trackované) odkazy přímo z `templates/check-in-template.html`
+> a neměň je** — výše uvedené URL jsou jen orientační.
 
 ## Čeho se vyvarovat
 
