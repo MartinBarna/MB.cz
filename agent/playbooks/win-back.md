@@ -32,9 +32,21 @@ Princip jako všude: **agent připraví, Martin schválí.**
   urgence. Chráníme jeho image (viz `../STYLE_GUIDE.md` § Prodejní filozofie). Když máš
   pochybnost, jdi měkčí cestou — radši méně prodejní.
 
-## Speciální dárek (definuj reálně)
-`>>> DOPLNIT: {{DAREK}}` — např. bonusový týden zdarma při návratu, sleva na první měsíc,
-dárkový balíček (e-book/recepty). Drž to pravdivé a časově omezené u mailu 3.
+## Dárek = HODNOTA na míru (ne sleva)
+
+V souladu s Martinovou filozofií „vždy spíš dávat než brát" je dárek **hodnota**, ne
+prodejní pobídka. Postup:
+
+1. **Vytáhni z Gmailu historii** klienta z předchozí spolupráce: jeho **cíl**, **kde se
+   sekl / co řešil**, poslední makra, co mu šlo. (Z check-in vláken „Přeju bomba den".)
+2. Do mailu napiš **1–2 věty na míru** (`{{NA_MIRU}}`), které ukážou, že si pamatuješ jeho
+   konkrétní situaci — ne generická šablona.
+3. **Přilož relevantní PDF** z `../assets/lead-magnety/` podle pohlaví:
+   - ženy: `7-chyb-hubnuti-ZENY.pdf` + `kucharka-10jidel-ZENY.pdf` (plán `7denni-makro-plan-ZENY.pdf` dle situace)
+   - muži: `7-chyb-forma-MUZI.pdf` + `kucharka-10rychlovek-MUZI.pdf` (plán `7denni-makro-plan-MUZI.pdf` dle situace)
+   Vyber 1–2 nejrelevantnější k tomu, co klient řešil.
+4. Rámuj to jako **dárek bez háčku** — „pomůže Ti, ať se vrátíš nebo ne". Žádný deadline,
+   žádný tlak (viz `../STYLE_GUIDE.md` § Prodejní filozofie).
 
 ## Po akci
 Zapiš do CRM `win-back: odesláno {{datum}}` / `vrátil se`. Při návratu → onboarding

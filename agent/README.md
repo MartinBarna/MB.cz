@@ -81,6 +81,9 @@ agent/
 │   ├── carousels.md     ← hotové texty slidů pro carousely
 │   ├── content-calendar.md ← 30denní plán (kdy co postovat)
 │   └── canva-designs.md ← log vygenerovaných grafik (odkazy do Canvy)
+├── assets/              ← přílohy k mailům (lead-magnet PDF: plán, 7 chyb, kuchařky)
+│   ├── README.md        ← které PDF komu (ženy/muži) + kdy přikládat
+│   └── lead-magnety/    ← 6 PDF (ženy/muži varianty)
 ├── crm/                 ← klientská paměť (schéma + šablona; data v Sheetu/Notionu)
 │   ├── README.md        ← jak agent pracuje s pamětí + anonymizace
 │   ├── clients-schema.csv ← hlavičky pro Google Sheet
