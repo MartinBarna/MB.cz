@@ -46,6 +46,7 @@ agent/
 │   ├── triage.md        ← třídění pošty: šum vs. práce + kontrola kontextu
 │   ├── briefing.md      ← ranní souhrn inboxu
 │   ├── poptavka.md      ← jak odpovídat na poptávky
+│   ├── namitky.md       ← práce s námitkami (cena, „zvládnu sám"…)
 │   ├── check-in.md      ← jak reagovat na týdenní reporty
 │   ├── report-parsing.md ← čtení Excel reportu z přílohy
 │   ├── nudge-reporty.md ← nudge na chybějící report (retence)
@@ -70,7 +71,8 @@ agent/
 │   ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
 │   ├── poptavka-examples.md      ← reálné odpovědi na poptávky + onboarding
 │   ├── business-insights.md      ← mix balíčků, retence/LTV, lead magnety (agreg.)
-│   └── faq-full.md               ← rozšířené FAQ z e-booku (pokročilá témata)
+│   ├── faq-full.md               ← rozšířené FAQ z e-booku (pokročilá témata)
+│   └── quick-answers.md          ← rychlé odpovědi na časté dotazy (WhatsApp/mail)
 ├── content/             ← content engine (z praxe dělej posty/reels)
 │   ├── README.md        ← strategie, pilíře, workflow (vidIQ/Blotato/Canva)
 │   ├── starter-posts.md ← 12 hotových scénářů k použití

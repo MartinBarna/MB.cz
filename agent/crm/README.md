@@ -33,11 +33,12 @@ si u každého klienta pamatovat kontext. Tohle je návrh struktury + jak s ní 
 3. **Anonymizace:** do repa, contentu ani veřejných výstupů NIKDY nedávej jména/čísla
    klientů. CRM je soukromé (Sheet/Notion s omezeným přístupem).
 
-## Spuštění (až řekneš)
-- Vyber **Google Sheet** (doporučeno) nebo Notion.
-- Agent založí list s hlavičkami z `clients-schema.csv` (prázdný, bez dat).
-- Postupně se plní z onboardingů a check-inů. Není potřeba migrovat 4 roky najednou —
-  CRM roste s aktivními klienty.
+## Živý CRM (HOTOVO ✅)
+- **Google Sheet:** „Team Barna — Klienti CRM"
+  → https://docs.google.com/spreadsheets/d/1NxEdwHTDP_3sYahxfgPoqe4OPwwVMvgRdhbpEIrkPQg/edit
+- Založen prázdný s hlavičkami (vč. sloupce `recenze`). Plní se postupně z onboardingů
+  a check-inů — netřeba migrovat 4 roky najednou, CRM roste s aktivními klienty.
+- Agent ho umí číst i zapisovat přes Google Drive/Sheets nástroje.
 
 ## Per-klient profil (alternativa/rozšíření)
 Pro hlubší poznámky lze u klienta vést i textový profil — šablona `client-template.md`.
