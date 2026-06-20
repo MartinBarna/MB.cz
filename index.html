@@ -296,12 +296,13 @@
                         <p class="mb-1" style="opacity:.9;">Tvůj denní příjem pro cíl</p>
                         <div class="kcal"><span id="r-kcal">—</span> kcal</div>
                         <div class="row g-2 mt-3">
-                            <div class="col-4"><div class="macro"><div class="num" id="r-bil">—</div><div class="lbl">Bílkoviny (g)</div></div></div>
-                            <div class="col-4"><div class="macro"><div class="num" id="r-tuk">—</div><div class="lbl">Tuky (g)</div></div></div>
-                            <div class="col-4"><div class="macro"><div class="num" id="r-sach">—</div><div class="lbl">Sacharidy (g)</div></div></div>
+                            <div class="col-6 col-md-3"><div class="macro"><div class="num" id="r-bil">—</div><div class="lbl">Bílkoviny (g)</div></div></div>
+                            <div class="col-6 col-md-3"><div class="macro"><div class="num" id="r-tuk">—</div><div class="lbl">Tuky (g)</div></div></div>
+                            <div class="col-6 col-md-3"><div class="macro"><div class="num" id="r-sach">—</div><div class="lbl">Sacharidy (g)</div></div></div>
+                            <div class="col-6 col-md-3"><div class="macro"><div class="num" id="r-vlak">—</div><div class="lbl">Vláknina (g)</div></div></div>
                         </div>
                         <a href="#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
-                        <p class="small mt-3 mb-0" style="opacity:.8;">Orientační výpočet (Mifflin–St Jeor). Přesný plán ti sestavím v rámci koučinku.</p>
+                        <p class="small mt-3 mb-0" style="opacity:.8;">Hodnoty jsou orientační startovní bod (Mifflin–St Jeor). Nejsou lékařským doporučením — při zdravotních potížích se poraď s lékařem.</p>
                     </div>
                 </div>
             </div>
@@ -454,10 +455,14 @@
             var zbytekKcal = kcal - (bilkoviny * 4) - (tuky * 9);
             var sacharidy = Math.max(0, Math.round(zbytekKcal / 4));
 
+            // Vláknina: doporučení ~14 g na 1000 kcal
+            var vlaknina = Math.round(kcal / 1000 * 14);
+
             document.getElementById('r-kcal').textContent = kcal.toLocaleString('cs-CZ');
             document.getElementById('r-bil').textContent = bilkoviny;
             document.getElementById('r-tuk').textContent = tuky;
             document.getElementById('r-sach').textContent = sacharidy;
+            document.getElementById('r-vlak').textContent = vlaknina;
         }
 
         // --- Kontaktní formulář → WhatsApp ---
