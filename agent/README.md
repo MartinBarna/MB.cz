@@ -24,6 +24,9 @@ Asistent (Claude s přístupem ke Gmailu a Google Drive) při zpracování zprá
 3. Připraví draft v Gmailu (`mcp__Gmail__create_draft`).
 4. Martin draft zkontroluje → upraví → odešle.
 
+Praktický postup („projdi maily", Gmail dotazy, štítky, kontrola draftů) je v
+[`RUNBOOK.md`](RUNBOOK.md). Rychlý start: Martin napíše Claudovi **„projdi maily"**.
+
 ## „Natrénování" = úprava těchto souborů
 
 Nejde o klasické dotrénování modelu. Tón a znalosti se ladí editací souborů
@@ -35,6 +38,7 @@ výše — je to okamžité, levné a plně pod kontrolou. Když chceš něco zm
 ```
 agent/
 ├── README.md            ← tento soubor
+├── RUNBOOK.md           ← jak agenta reálně spustit (Gmail dotazy, štítky, denní smyčka)
 ├── AGENT_PROMPT.md      ← hlavní instrukce agenta (pravidla + bezpečnost)
 ├── STYLE_GUIDE.md       ← styl psaní Martina
 ├── KNOWLEDGE_BASE.md    ← produkty, ceny, odkazy, časté dotazy
@@ -65,7 +69,7 @@ jsou jen agregovaně.
 | Fáze | Co | Stav |
 |---|---|---|
 | 1 | Asistent připravuje **drafty** v Gmailu, Martin schvaluje | ✅ teď |
-| 2 | Štítkování příchozích (poptávka / check-in / ostatní) + auto-draft | další krok |
+| 2 | Štítkování příchozích (`MB-Agent/*`) + auto-draft — viz `RUNBOOK.md` | další krok |
 | 3 | Auto-odeslání u **jednoznačných rutinních** případů | až po ověření |
 | 4 | **WhatsApp** přes WhatsApp Business API + n8n/Make (24/7) | vyžaduje API |
 
