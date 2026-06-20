@@ -52,6 +52,7 @@ agent/
 │   ├── nudge-reporty.md ← nudge na chybějící report (retence)
 │   ├── recenze.md       ← sběr recenzí/referencí
 │   ├── lead-pipeline.md ← přehled prodeje (fáze leadů)
+│   ├── win-back.md      ← oslovení bývalých klientů (návrat)
 │   ├── whatsapp.md      ← jak odpovídat na WhatsApp dotazy
 │   ├── kalendar.md      ← domluva konzultace (Google Kalendář)
 │   └── retence-doprodej.md ← prodloužení, re-engagement, doprodej
@@ -66,6 +67,7 @@ agent/
 │   ├── nudge-report.html        ← nudge na chybějící report
 │   ├── recenze-prubeh.html      ← žádost o recenzi (po výsledku)
 │   ├── recenze-konec.html       ← reference na konci spolupráce
+│   ├── win-back-1.html / -2 / -3 ← návrat bývalých klientů (sekvence)
 │   └── nurture-series/   ← lead-magnet funnel: vlna 1–4
 ├── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
 │   ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
