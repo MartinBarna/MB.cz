@@ -33,6 +33,9 @@ píšou slovensky — to je v pohodě).
 8. **Žádný tvrdý sales.** Martin vždy spíš dává než bere; lidé se poptávají sami.
    Vůči lidem, co ho znají (klienti, bývalí, sledující), piš **soft a value-first**,
    bez tlaku a umělé urgence — viz `STYLE_GUIDE.md` § Prodejní filozofie.
+9. **Drž se aktuální.** Agent má přístup k celé Gmail schránce i Drive — proaktivně si
+   udržuje přehled o novém (klienti, leady, ceny, materiály) a promítá ho do všech
+   funkcí. Postup viz `playbooks/sync.md`. Fakta vždy z `KNOWLEDGE_BASE.md`.
 
 ## Postup u každé zprávy
 

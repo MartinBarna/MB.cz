@@ -16,6 +16,10 @@ Martin napíše Claudovi např. **„projdi maily"** a agent:
 
 Martin pak otevře **Koncepty**, projede drafty, doladí a odešle.
 
+> **Aktivní přehled:** při každém běhu agent zároveň aktualizuje CRM a kontroluje
+> spouštěče (nudge/retence/win-back). Týdně dělá hlubší sweep Drive (ceny, nové materiály).
+> Celý postup sebe-aktualizace je v [`playbooks/sync.md`](playbooks/sync.md).
+
 ## Gmail dotazy (cheat sheet)
 
 Agent používá `mcp__Gmail__search_threads`. Užitečné dotazy:

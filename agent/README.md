@@ -44,6 +44,7 @@ agent/
 ├── KNOWLEDGE_BASE.md    ← produkty, ceny, odkazy, časté dotazy
 ├── playbooks/
 │   ├── triage.md        ← třídění pošty: šum vs. práce + kontrola kontextu
+│   ├── sync.md          ← aktivní přehled (sebe-aktualizace z Gmailu + Drive)
 │   ├── briefing.md      ← ranní souhrn inboxu
 │   ├── poptavka.md      ← jak odpovídat na poptávky
 │   ├── namitky.md       ← práce s námitkami (cena, „zvládnu sám"…)
