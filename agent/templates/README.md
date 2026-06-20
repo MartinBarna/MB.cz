@@ -31,6 +31,11 @@ Obsahuje:
 
 - `onboarding-template.html` — uvítací mail nového klienta („informace na první týden").
 - `poptavka-template.html` — odpověď na poptávku (Gold/Diamond + CTA na hovor/WhatsApp).
+- `retence-prodlouzeni.html` — prodloužení spolupráce (retence).
+- `reengagement-poptavka.html` — jemný follow-up zájemce, co se neozval.
+- `doprodej-videokurz.html` — doprodej videokurzu (akce 599/48 h) po lead magnetu.
+
+(Posledních pět = čisté verze. Použití retence/doprodej viz `../playbooks/retence-doprodej.md`.)
 
 > Obě jsou zatím **čisté verze** (vlastní HTML, ne vytažené z Gmailu). Pro byte-přesnou
 > shodu s Martinovým formátem a jeho trackovanými prokliky nech Martina označit reálný

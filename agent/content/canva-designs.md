@@ -10,6 +10,10 @@ uložená je jedna — další varianty lze dogenerovat.
 | 1 | Sacharidy tě netloustnou | IG post (1080×1350) | https://www.canva.com/d/Su2veNtlrOZb61A |
 | 2 | Přestaň šílet z váhy (míry > váha) | IG post | https://www.canva.com/d/L7fWQM9aIr7qAh9 |
 | 3 | Neprodám ti rybu (koučing) | IG post | https://www.canva.com/d/5NRTD9oH35LO2-V |
+| 4 | Není to genetika, je to počet kroků | IG post | https://www.canva.com/d/aCeeGqs1qD1DNNx |
+| 5 | Spalovače nefungují | IG post | https://www.canva.com/d/gd-xPxe0TuTkRii |
+| 6 | Bílkoviny = tvůj tajný tip | IG post | https://www.canva.com/d/zUVEC-Qo1lwf6sX |
+| 7 | Myslíš, že jíš málo? (přesnost zápisu) | IG post | https://www.canva.com/d/nH4hAkOwsBSRaoK |
 
 ## Jak dogenerovat další
 Řekni Claudovi „udělej grafiku ke scénáři #X" — vygeneruje 4 varianty v brand barvách

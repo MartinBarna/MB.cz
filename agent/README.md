@@ -47,12 +47,16 @@ agent/
 │   ├── poptavka.md      ← jak odpovídat na poptávky
 │   ├── check-in.md      ← jak reagovat na týdenní reporty
 │   ├── whatsapp.md      ← jak odpovídat na WhatsApp dotazy
-│   └── kalendar.md      ← domluva konzultace (Google Kalendář)
+│   ├── kalendar.md      ← domluva konzultace (Google Kalendář)
+│   └── retence-doprodej.md ← prodloužení, re-engagement, doprodej
 ├── templates/           ← HTML kostry mailů (formát + prokliky)
 │   ├── README.md        ← pravidlo: kostru neměnit, měnit jen obsah
 │   ├── check-in-template.html   ← přesná kostra z Gmailu (check-in)
-│   ├── onboarding-template.html ← čistá verze (uvítací mail)
-│   └── poptavka-template.html   ← čistá verze (odpověď na poptávku)
+│   ├── onboarding-template.html ← uvítací mail (dle reálného znění)
+│   ├── poptavka-template.html   ← odpověď na poptávku
+│   ├── retence-prodlouzeni.html ← prodloužení spolupráce
+│   ├── reengagement-poptavka.html ← follow-up zájemce
+│   └── doprodej-videokurz.html  ← doprodej videokurzu (akce)
 ├── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
 │   ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
 │   ├── poptavka-examples.md      ← reálné odpovědi na poptávky + onboarding
@@ -60,6 +64,7 @@ agent/
 ├── content/             ← content engine (z praxe dělej posty/reels)
 │   ├── README.md        ← strategie, pilíře, workflow (vidIQ/Blotato/Canva)
 │   ├── starter-posts.md ← 12 hotových scénářů k použití
+│   ├── content-calendar.md ← 30denní plán (kdy co postovat)
 │   └── canva-designs.md ← log vygenerovaných grafik (odkazy do Canvy)
 └── integrations/        ← plány napojení dalších kanálů
     ├── whatsapp-setup.md            ← WhatsApp Business API (fáze 4)
