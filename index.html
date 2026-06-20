@@ -3,70 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Martin Barna — Online výživový koučink</title>
-    <meta name="description" content="Online koučink zdravého stravování a budování návyků. Individuální přístup, jídelníčky na míru a podpora přes WhatsApp.">
+    <title>Martin Barna — Online výživa a fitness koučink</title>
+    <meta name="description" content="Online výživový a fitness koučink od roku 2013. Hubnutí, nabírání svalů a zvýšení výkonu bez jojo efektu. Jídelníčky na míru, e-booky, tréninkové plány, přednášky a workshopy.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --green: #2e7d32;
-            --green-dark: #1b5e20;
-            --green-light: #e8f5e9;
-            --ink: #1c2620;
-        }
+        :root { --green:#2e7d32; --green-dark:#1b5e20; --green-light:#e8f5e9; --ink:#1c2620; }
         * { scroll-behavior: smooth; }
-        body { font-family: 'Poppins', Arial, sans-serif; color: var(--ink); }
-        h1,h2,h3 { font-weight: 800; }
+        body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); }
+        h1,h2,h3 { font-weight:800; }
 
-        /* Navbar */
-        .navbar-brand { font-weight: 800; color: var(--green-dark) !important; font-size: 1.4rem; }
-        .navbar { box-shadow: 0 2px 14px rgba(0,0,0,0.06); }
-        .nav-link { font-weight: 600; color: var(--ink) !important; }
-        .nav-link:hover { color: var(--green) !important; }
+        .navbar-brand { font-weight:800; color:var(--green-dark)!important; font-size:1.4rem; }
+        .navbar { box-shadow:0 2px 14px rgba(0,0,0,.06); }
+        .nav-link { font-weight:600; color:var(--ink)!important; }
+        .nav-link:hover { color:var(--green)!important; }
 
-        /* Buttons */
-        .btn-grn { background: var(--green); border: none; color: #fff; font-weight: 600; padding: 13px 34px; border-radius: 50px; transition: .2s; }
-        .btn-grn:hover { background: var(--green-dark); transform: translateY(-2px); color: #fff; box-shadow: 0 10px 24px rgba(46,125,50,.3); }
-        .btn-white { background:#fff; color: var(--green-dark); font-weight:700; padding:14px 38px; border-radius:50px; transition:.2s; }
-        .btn-white:hover { transform: translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.2); color:var(--green-dark); }
+        .btn-grn { background:var(--green); border:none; color:#fff; font-weight:600; padding:13px 34px; border-radius:50px; transition:.2s; }
+        .btn-grn:hover { background:var(--green-dark); transform:translateY(-2px); color:#fff; box-shadow:0 10px 24px rgba(46,125,50,.3); }
+        .btn-out { background:transparent; border:2px solid var(--green); color:var(--green-dark); font-weight:600; padding:11px 30px; border-radius:50px; transition:.2s; }
+        .btn-out:hover { background:var(--green); color:#fff; }
+        .btn-white { background:#fff; color:var(--green-dark); font-weight:700; padding:14px 38px; border-radius:50px; transition:.2s; }
+        .btn-white:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.2); color:var(--green-dark); }
 
-        /* Hero */
-        .hero { background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); color:#fff; padding: 140px 0 120px; text-align:center; }
-        .hero h1 { font-size: 3.2rem; margin-bottom: 1.2rem; line-height:1.15; }
-        .hero p { font-size: 1.25rem; opacity:.95; max-width: 640px; margin:0 auto 2.2rem; }
-        .hero .badges { margin-top: 2.5rem; font-size:.95rem; opacity:.9; }
-        .hero .badges span { margin: 0 12px; display:inline-block; }
+        .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:140px 0 120px; text-align:center; }
+        .hero h1 { font-size:3.2rem; margin-bottom:1.2rem; line-height:1.15; }
+        .hero p { font-size:1.25rem; opacity:.95; max-width:660px; margin:0 auto 2.2rem; }
+        .hero .badges { margin-top:2.5rem; font-size:.95rem; opacity:.9; }
+        .hero .badges span { margin:0 12px; display:inline-block; }
 
-        /* Sections */
-        section { padding: 90px 0; }
-        .section-head { text-align:center; margin-bottom: 3.5rem; }
-        .section-head h2 { color: var(--green-dark); font-size:2.3rem; }
-        .section-head p { color:#5a665e; max-width:620px; margin: .8rem auto 0; }
-        .bg-soft { background: var(--green-light); }
+        section { padding:90px 0; }
+        .section-head { text-align:center; margin-bottom:3.5rem; }
+        .section-head h2 { color:var(--green-dark); font-size:2.3rem; }
+        .section-head p { color:#5a665e; max-width:640px; margin:.8rem auto 0; }
+        .bg-soft { background:var(--green-light); }
 
-        /* Cards */
-        .feature { text-align:center; padding: 2rem 1.2rem; }
+        .stat h3 { color:var(--green-dark); font-size:2.6rem; margin-bottom:.2rem; }
+        .stat p { color:#5a665e; margin:0; font-weight:600; }
+
+        .feature { text-align:center; padding:2rem 1.2rem; }
         .feature .ico { width:72px; height:72px; border-radius:50%; background:var(--green-light); color:var(--green-dark);
             display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 1.2rem; }
-        .card { border:none; border-radius:18px; box-shadow:0 8px 28px rgba(0,0,0,.07); transition:.2s; height:100%; }
-        .card:hover { transform: translateY(-6px); box-shadow:0 16px 38px rgba(0,0,0,.13); }
-        .card-title { font-weight:700; color: var(--green-dark); }
 
-        /* Steps */
+        .card { border:none; border-radius:18px; box-shadow:0 8px 28px rgba(0,0,0,.07); transition:.2s; height:100%; }
+        .card:hover { transform:translateY(-6px); box-shadow:0 16px 38px rgba(0,0,0,.13); }
+        .card-title { font-weight:700; color:var(--green-dark); }
+        .price-tag { font-weight:800; color:var(--green); font-size:1.1rem; }
+        .ribbon { position:absolute; top:18px; right:18px; background:var(--green); color:#fff; font-size:.75rem; font-weight:700; padding:4px 12px; border-radius:50px; }
+
         .step-num { width:54px; height:54px; border-radius:50%; background:var(--green); color:#fff; font-weight:800; font-size:1.3rem;
             display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
 
-        /* Testimonial */
         .quote { background:#fff; border-radius:18px; padding:2rem; box-shadow:0 8px 28px rgba(0,0,0,.07); height:100%; }
         .quote .stars { color:#ffb300; margin-bottom:.6rem; }
 
-        /* CTA / contact */
-        .cta { background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); color:#fff; }
+        .cta { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; }
         .form-control { border-radius:10px; padding:13px; border:none; }
         .contact-list a { color:#fff; text-decoration:none; font-weight:600; }
         .contact-list a:hover { text-decoration:underline; }
 
-        footer { background: var(--ink); color:#cfd8d2; padding: 30px 0; text-align:center; }
+        footer { background:var(--ink); color:#cfd8d2; padding:30px 0; text-align:center; }
     </style>
 </head>
 <body>
@@ -79,11 +74,11 @@
             </button>
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link" href="#sluzby">Co nabízím</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#omne">O mně</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sluzby">Koučink &amp; produkty</a></li>
                     <li class="nav-item"><a class="nav-link" href="#jak">Jak to funguje</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#clanky">Články</a></li>
                     <li class="nav-item"><a class="nav-link" href="#reference">Reference</a></li>
-                    <li class="nav-item ms-lg-3"><a class="btn btn-grn" href="#kontakt">Nezávazná konzultace</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-grn" href="#kontakt">Konzultace zdarma</a></li>
                 </ul>
             </div>
         </div>
@@ -92,40 +87,106 @@
     <!-- HERO -->
     <header class="hero">
         <div class="container">
-            <h1>Zhubni zdravě a natrvalo<br>bez hladovění a diet</h1>
-            <p>Online výživový koučink na míru. Naučím tě jíst tak, abys měl výsledky — a hlavně si je udržel. Žádné zázračné diety, jen návyky, které fungují.</p>
-            <a href="#kontakt" class="btn btn-white">Začni ještě dnes</a>
+            <h1>Zhubni, naber svaly a zvyš výkon<br>— zdravě a natrvalo</h1>
+            <p>Online výživový a fitness koučink od roku 2013. Naučím tě jíst a trénovat tak, abys měl výsledky bez jojo efektu — s plánem na míru a podporou přes WhatsApp.</p>
+            <a href="#kontakt" class="btn btn-white">Nezávazná konzultace zdarma</a>
             <div class="badges">
+                <span>✓ 12+ let zkušeností</span>
                 <span>✓ Jídelníček na míru</span>
-                <span>✓ Podpora přes WhatsApp</span>
-                <span>✓ Bez ztracených výsledků</span>
+                <span>✓ Bez jojo efektu</span>
             </div>
         </div>
     </header>
 
-    <!-- SLUŽBY -->
+    <!-- STATS -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3 stat"><h3>2013</h3><p>Profesionálně v oboru</p></div>
+                <div class="col-6 col-md-3 stat"><h3>12+</h3><p>Let jako fitness trenér</p></div>
+                <div class="col-6 col-md-3 stat"><h3>10+</h3><p>Let ve výživě</p></div>
+                <div class="col-6 col-md-3 stat"><h3>100%</h3><p>Individuální přístup</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- O MNĚ -->
+    <section id="omne" class="bg-soft">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <h2 class="text-success-emphasis mb-3" style="color:var(--green-dark);">Kdo jsem</h2>
+                    <p class="fs-5">Jmenuji se <strong>Martin Barna</strong> a zdravému životnímu stylu, správnému stravování a pohybu se profesionálně věnuji už od roku 2013.</p>
+                    <p class="text-muted">Mám za sebou 12+ let praxe jako fitness trenér, přes 10 let ve výživě, mezinárodní trenérskou certifikaci, certifikaci výživového poradce a pokročilá koučovací studia. Pomáhám lidem zhubnout, vytvarovat postavu, nabrat svaly a zvýšit výkon — udržitelně a bez jojo efektu.</p>
+                    <a href="#sluzby" class="btn btn-out mt-2">Podívej se, jak ti pomůžu</a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row g-3">
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">🎓</div><strong>Certifikovaný</strong><small class="text-muted d-block">trenér i výživový poradce</small></div></div>
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">📊</div><strong>Týdenní úpravy</strong><small class="text-muted d-block">jídelníčku dle pokroku</small></div></div>
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">💬</div><strong>Stálá podpora</strong><small class="text-muted d-block">WhatsApp, e-mail, telefon</small></div></div>
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">🎥</div><strong>Přednášky</strong><small class="text-muted d-block">a workshopy naživo</small></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLUŽBY / PRODUKTY -->
     <section id="sluzby">
         <div class="container">
             <div class="section-head">
-                <h2>S čím ti pomůžu</h2>
-                <p>Individuální přístup od člověka, který tím sám prošel. Žádné šablony — řešíme tvůj život, tvůj jídelníček, tvoje cíle.</p>
+                <h2>Koučink &amp; produkty</h2>
+                <p>Vyber si, co ti sedne — od kompletního vedení na míru až po e-booky, které tě nastartují.</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4"><div class="feature">
-                    <div class="ico">🥗</div>
-                    <h5 class="card-title">Jídelníček na míru</h5>
-                    <p class="text-muted">Sestavím ti jídelníček, který tě baví, zasytí a sedne k tvému dni i rozpočtu.</p>
-                </div></div>
-                <div class="col-md-4"><div class="feature">
-                    <div class="ico">🔁</div>
-                    <h5 class="card-title">Budování návyků</h5>
-                    <p class="text-muted">Naučíš se jíst správně dlouhodobě, ne jen měsíc. Návyky, které ti zůstanou.</p>
-                </div></div>
-                <div class="col-md-4"><div class="feature">
-                    <div class="ico">💬</div>
-                    <h5 class="card-title">Podpora a motivace</h5>
-                    <p class="text-muted">Jsem ti k ruce přes WhatsApp, e-mail i telefon. Když zaváháš, kopnu tě dál.</p>
-                </div></div>
+                <div class="col-md-6 col-lg-4"><div class="card position-relative"><span class="ribbon">Nejoblíbenější</span><div class="card-body p-4">
+                    <div class="fs-1 mb-2">🥗</div>
+                    <h5 class="card-title">Online koučink na míru</h5>
+                    <p class="text-muted">Kompletní vedení — jídelníček upravovaný každý týden dle tvého metabolismu a cílů, plus stálá podpora přes WhatsApp, e-mail nebo telefon.</p>
+                    <p class="price-tag mb-3">Cena na vyžádání</p>
+                    <a href="#kontakt" class="btn btn-grn w-100">Mám zájem</a>
+                </div></div></div>
+
+                <div class="col-md-6 col-lg-4"><div class="card"><div class="card-body p-4">
+                    <div class="fs-1 mb-2">🏋️</div>
+                    <h5 class="card-title">Tréninkové plány</h5>
+                    <p class="text-muted">Tréninkový plán sestavený na tvé cíle, vybavení a časové možnosti — ať trénuješ doma nebo v posilovně.</p>
+                    <p class="price-tag mb-3">Cena na vyžádání</p>
+                    <a href="#kontakt" class="btn btn-out w-100">Chci plán</a>
+                </div></div></div>
+
+                <div class="col-md-6 col-lg-4"><div class="card"><div class="card-body p-4">
+                    <div class="fs-1 mb-2">📚</div>
+                    <h5 class="card-title">E-booky &amp; průvodci</h5>
+                    <p class="text-muted">E-book s nejčastějšími otázkami klientů, průvodce pro začátečníky ve výživě a fitness, recepty a tipy na jídlo.</p>
+                    <p class="price-tag mb-3">Cena na vyžádání</p>
+                    <a href="#kontakt" class="btn btn-out w-100">Chci e-book</a>
+                </div></div></div>
+
+                <div class="col-md-6 col-lg-4"><div class="card"><div class="card-body p-4">
+                    <div class="fs-1 mb-2">🎤</div>
+                    <h5 class="card-title">Přednášky</h5>
+                    <p class="text-muted">Jednorázové přednášky na různá témata z oblasti výživy a fitness — pro firmy, skupiny i veřejnost.</p>
+                    <p class="price-tag mb-3">Cena na vyžádání</p>
+                    <a href="#kontakt" class="btn btn-out w-100">Domluvit přednášku</a>
+                </div></div></div>
+
+                <div class="col-md-6 col-lg-4"><div class="card"><div class="card-body p-4">
+                    <div class="fs-1 mb-2">👥</div>
+                    <h5 class="card-title">Skupinové workshopy</h5>
+                    <p class="text-muted">Praktické skupinové workshopy o výživě, kde si vše vyzkoušíš a odneseš si použitelné know-how.</p>
+                    <p class="price-tag mb-3">Cena na vyžádání</p>
+                    <a href="#kontakt" class="btn btn-out w-100">Přidat se</a>
+                </div></div></div>
+
+                <div class="col-md-6 col-lg-4"><div class="card"><div class="card-body p-4">
+                    <div class="fs-1 mb-2">🤸</div>
+                    <h5 class="card-title">Skupinové tréninky</h5>
+                    <p class="text-muted">Společné tréninky s motivací a správnou technikou pod mým vedením — zábava i výsledky zároveň.</p>
+                    <p class="price-tag mb-3">Cena na vyžádání</p>
+                    <a href="#kontakt" class="btn btn-out w-100">Chci trénovat</a>
+                </div></div></div>
             </div>
         </div>
     </section>
@@ -134,47 +195,20 @@
     <section id="jak" class="bg-soft">
         <div class="container">
             <div class="section-head">
-                <h2>Jak to funguje</h2>
-                <p>Jednoduše a bez stresu. Stačí udělat první krok, o zbytek se postarám.</p>
+                <h2>Jak online koučink probíhá</h2>
+                <p>Jednoduše, bez stresu a hlavně tak, aby ti to vydrželo.</p>
             </div>
             <div class="row g-4 text-center">
-                <div class="col-md-3"><div class="step-num">1</div><h6 class="fw-bold">Ozveš se mi</h6><p class="text-muted">Napíšeš a domluvíme si nezávaznou konzultaci zdarma.</p></div>
-                <div class="col-md-3"><div class="step-num">2</div><h6 class="fw-bold">Probereme cíle</h6><p class="text-muted">Zjistím, kde jsi a kam chceš dojít.</p></div>
-                <div class="col-md-3"><div class="step-num">3</div><h6 class="fw-bold">Dostaneš plán</h6><p class="text-muted">Připravím jídelníček a návyky na míru tobě.</p></div>
-                <div class="col-md-3"><div class="step-num">4</div><h6 class="fw-bold">Jdeme za výsledkem</h6><p class="text-muted">Vedu tě, motivuju a ladíme to za pochodu.</p></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ČLÁNKY -->
-    <section id="clanky">
-        <div class="container">
-            <div class="section-head">
-                <h2>Články o výživě</h2>
-                <p>Tipy a vědomosti, které ti pomůžou rozumět tomu, co jíš.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4"><div class="card"><div class="card-body p-4">
-                    <h5 class="card-title">Nenasycené tuky: zdravá volba</h5>
-                    <p class="text-muted">Proč se tuků nebát a které ti naopak prospívají.</p>
-                    <a href="#" class="btn btn-grn mt-2">Číst více</a>
-                </div></div></div>
-                <div class="col-md-4"><div class="card"><div class="card-body p-4">
-                    <h5 class="card-title">Vláknina: zdraví v každém soustu</h5>
-                    <p class="text-muted">Jak ti vláknina pomáhá s trávením i s hubnutím.</p>
-                    <a href="#" class="btn btn-grn mt-2">Číst více</a>
-                </div></div></div>
-                <div class="col-md-4"><div class="card"><div class="card-body p-4">
-                    <h5 class="card-title">Kalorický deficit v kostce</h5>
-                    <p class="text-muted">Základ hubnutí vysvětlený jednoduše a srozumitelně.</p>
-                    <a href="#" class="btn btn-grn mt-2">Číst více</a>
-                </div></div></div>
+                <div class="col-md-3"><div class="step-num">1</div><h6 class="fw-bold">Ozveš se mi</h6><p class="text-muted">Domluvíme si nezávaznou konzultaci zdarma.</p></div>
+                <div class="col-md-3"><div class="step-num">2</div><h6 class="fw-bold">Zjistím tvé cíle</h6><p class="text-muted">Probereme, kde jsi a kam chceš dojít.</p></div>
+                <div class="col-md-3"><div class="step-num">3</div><h6 class="fw-bold">Plán na míru</h6><p class="text-muted">Dostaneš jídelníček i trénink šitý tobě.</p></div>
+                <div class="col-md-3"><div class="step-num">4</div><h6 class="fw-bold">Týdenní ladění</h6><p class="text-muted">Každý týden upravujeme dle tvého pokroku.</p></div>
             </div>
         </div>
     </section>
 
     <!-- REFERENCE -->
-    <section id="reference" class="bg-soft">
+    <section id="reference">
         <div class="container">
             <div class="section-head">
                 <h2>Co říkají klienti</h2>
@@ -183,34 +217,35 @@
             <div class="row g-4">
                 <div class="col-md-4"><div class="quote">
                     <div class="stars">★★★★★</div>
-                    <p>„Konečně jsem pochopila, jak jíst, aniž bych se trápila. Za 4 měsíce mínus 9 kg a cítím se skvěle."</p>
+                    <p>„Konečně jsem pochopila, jak jíst, aniž bych se trápila. Žádné hladovění, jen jasný plán a parádní podpora."</p>
                     <strong>— Lucie K.</strong>
                 </div></div>
                 <div class="col-md-4"><div class="quote">
                     <div class="stars">★★★★★</div>
-                    <p>„Martin mě nastartoval. Žádné hladovění, jen jasný plán a parádní podpora, když jsem to chtěl vzdát."</p>
+                    <p>„Martin mě nastartoval. Naučil jsem se trénovat správně a konečně vidím výsledky, co mi vydrží."</p>
                     <strong>— Petr M.</strong>
                 </div></div>
                 <div class="col-md-4"><div class="quote">
                     <div class="stars">★★★★★</div>
-                    <p>„Nejlepší investice do sebe. Naučila jsem se návyky, co mi zůstaly i po skončení koučinku."</p>
+                    <p>„Nejlepší investice do sebe. Týdenní úpravy jídelníčku jsou přesně to, co mi dřív chybělo."</p>
                     <strong>— Jana S.</strong>
                 </div></div>
             </div>
         </div>
     </section>
 
-    <!-- KONTAKT / CTA -->
+    <!-- KONTAKT -->
     <section id="kontakt" class="cta">
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-6">
                     <h2 class="mb-3">Pojďme do toho spolu</h2>
-                    <p class="mb-4" style="opacity:.95;">Napiš mi a domluvíme si <strong>nezávaznou konzultaci zdarma</strong>. Společně zjistíme, jak ti dokážu pomoct.</p>
+                    <p class="mb-4" style="opacity:.95;">Napiš mi a domluvíme si <strong>nezávaznou konzultaci zdarma</strong>. Společně zjistíme, jak ti dokážu pomoct k tvým cílům.</p>
                     <ul class="list-unstyled contact-list fs-5">
                         <li class="mb-2">📱 WhatsApp: <a href="https://wa.me/420000000000">+420 000 000 000</a></li>
                         <li class="mb-2">✉️ E-mail: <a href="mailto:info@martinbarna.cz">info@martinbarna.cz</a></li>
                         <li class="mb-2">📞 Telefon: <a href="tel:+420000000000">+420 000 000 000</a></li>
+                        <li class="mb-2">▶️ YouTube: <a href="https://www.youtube.com/MartinBarna">MartinBarna</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-6">
@@ -229,7 +264,7 @@
     </section>
 
     <footer>
-        <p class="mb-0">&copy; 2026 Martin Barna — Online výživový koučink. Všechna práva vyhrazena.</p>
+        <p class="mb-0">&copy; 2026 Martin Barna — Online výživa a fitness. Všechna práva vyhrazena.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
