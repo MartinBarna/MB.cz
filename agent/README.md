@@ -46,16 +46,23 @@ agent/
 │   ├── triage.md        ← třídění pošty: šum vs. práce + kontrola kontextu
 │   ├── poptavka.md      ← jak odpovídat na poptávky
 │   ├── check-in.md      ← jak reagovat na týdenní reporty
-│   └── whatsapp.md      ← jak odpovídat na WhatsApp dotazy
+│   ├── whatsapp.md      ← jak odpovídat na WhatsApp dotazy
+│   └── kalendar.md      ← domluva konzultace (Google Kalendář)
 ├── templates/           ← HTML kostry mailů (formát + prokliky)
 │   ├── README.md        ← pravidlo: kostru neměnit, měnit jen obsah
 │   ├── check-in-template.html   ← přesná kostra z Gmailu (check-in)
 │   ├── onboarding-template.html ← čistá verze (uvítací mail)
 │   └── poptavka-template.html   ← čistá verze (odpověď na poptávku)
-└── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
-    ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
-    ├── poptavka-examples.md      ← reálné odpovědi na poptávky + onboarding
-    └── business-insights.md      ← mix balíčků, retence/LTV, lead magnety (agreg.)
+├── training-data/       ← „tréninková" data vytěžená z Gmailu + Drive
+│   ├── check-in-examples.md      ← reálné dvojice data klienta → úprava maker
+│   ├── poptavka-examples.md      ← reálné odpovědi na poptávky + onboarding
+│   └── business-insights.md      ← mix balíčků, retence/LTV, lead magnety (agreg.)
+├── content/             ← content engine (z praxe dělej posty/reels)
+│   ├── README.md        ← strategie, pilíře, workflow (vidIQ/Blotato/Canva)
+│   └── starter-posts.md ← 12 hotových scénářů k použití
+└── integrations/        ← plány napojení dalších kanálů
+    ├── whatsapp-setup.md            ← WhatsApp Business API (fáze 4)
+    └── inbox-cleanup-gmail-filters.md ← Gmail filtry na úklid inboxu
 ```
 
 ## Tréninková data (to „natrénování" mými maily/materiály)
@@ -74,6 +81,9 @@ jsou jen agregovaně.
 | 1 | Asistent připravuje **drafty** v Gmailu, Martin schvaluje | ✅ teď |
 | 2 | Štítkování příchozích (`MB-Agent/*`) + auto-draft — viz `RUNBOOK.md` | další krok |
 | 3 | Auto-odeslání u **jednoznačných rutinních** případů | až po ověření |
-| 4 | **WhatsApp** přes WhatsApp Business API + n8n/Make (24/7) | vyžaduje API |
+| 4 | **WhatsApp** přes WhatsApp Business API + n8n/Make (24/7) — plán: [`integrations/whatsapp-setup.md`](integrations/whatsapp-setup.md) | vyžaduje účty |
+| 5 | **Content engine** (posty/reels) + **Kalendář** (booking konzultací) | připraveno |
 
-Detaily k WhatsAppu viz [`playbooks/whatsapp.md`](playbooks/whatsapp.md).
+Detaily: WhatsApp [`playbooks/whatsapp.md`](playbooks/whatsapp.md) · úklid inboxu
+[`integrations/inbox-cleanup-gmail-filters.md`](integrations/inbox-cleanup-gmail-filters.md)
+· obsah [`content/README.md`](content/README.md) · kalendář [`playbooks/kalendar.md`](playbooks/kalendar.md).

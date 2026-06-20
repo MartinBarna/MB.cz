@@ -45,6 +45,8 @@ povzbudivě; klientům tyká a oslovuje je zdrobnělinou („Nazdar Kubo!").
 | `agent/playbooks/` | Triage (šum vs. práce) + postup pro poptávku / check-in / WhatsApp |
 | `agent/templates/` | Přesné HTML kostry mailů (formát + prokliky) — **kostru neměnit, měnit jen obsah** |
 | `agent/training-data/` | Destiláty ze 4 let Gmailu + Drive (logika úprav, vzory odpovědí, agregát byznysu) |
+| `agent/content/` | Content engine — strategie + hotové scénáře postů/reels |
+| `agent/integrations/` | Plány napojení: WhatsApp Business API, Gmail filtry na úklid inboxu |
 
 ## Konvence pro práci v tomhle repu
 
