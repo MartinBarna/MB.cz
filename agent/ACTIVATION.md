@@ -10,6 +10,7 @@ Přehled stavu. ✅ = hotové/funkční · 🟡 = připravené, čeká na rozhod
 - ✅ **Klientská paměť (CRM)** — Google Sheet založen:
   https://docs.google.com/spreadsheets/d/1NxEdwHTDP_3sYahxfgPoqe4OPwwVMvgRdhbpEIrkPQg/edit
 - 🟡 Ostrý provoz: napiš **„projdi maily"** → agent připraví drafty + briefing. (Testuj, až budeš mít čas.)
+- 🟡 **Provoz na Claude Max** (bez API): režim A (on-demand) + B (ranní Routine v Coworku) — návod a hotový prompt v `ROUTINES.md`.
 
 ## Web
 - ✅ Landing page + 4 SEO články + sitemap.xml + robots.txt

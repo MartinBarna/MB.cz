@@ -39,6 +39,7 @@ výše — je to okamžité, levné a plně pod kontrolou. Když chceš něco zm
 agent/
 ├── README.md            ← tento soubor
 ├── RUNBOOK.md           ← jak agenta reálně spustit (Gmail dotazy, štítky, denní smyčka)
+├── ROUTINES.md          ← provoz na Claude Max: on-demand + ranní automatika (Routines)
 ├── AGENT_PROMPT.md      ← hlavní instrukce agenta (pravidla + bezpečnost)
 ├── STYLE_GUIDE.md       ← styl psaní Martina
 ├── KNOWLEDGE_BASE.md    ← produkty, ceny, odkazy, časté dotazy
