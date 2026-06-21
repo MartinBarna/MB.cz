@@ -24,9 +24,10 @@ KNOWLEDGE_BASE, playbooks/). Proveď ranní sweep podle playbooks/sync.md a tria
 1) Projdi nezodpovězené maily, vytřiď šum, zařaď (check-in / poptávka / onboarding / eskalace).
 2) Připrav DRAFTY odpovědí v Gmailu podle příslušných playbooků a šablon (templates/).
    Check-in z přesné kostry templates/check-in-template.html.
-3) Zkontroluj spouštěče: nudge na chybějící report, retence (končí paušál), win-back
-   (ukončení 2–7 měs zpět) — podle CRM Sheetu. U win-backu drž SOFT tón (STYLE_GUIDE
-   § Prodejní filozofie) a dárek jako hodnotu na míru.
+3) Zkontroluj spouštěče (podle CRM Sheetu): nudge na chybějící report, at-risk/churn radar
+   u aktivních klientů (playbooks/churn-radar.md → interní flag, ne prodejní mail), retence
+   (končí paušál), win-back (ukončení 2–7 měs zpět). U win-backu/retence drž SOFT tón
+   (STYLE_GUIDE § Prodejní filozofie) a dárek jako hodnotu na míru.
 4) Aktualizuj CRM (poslední report, makra, stav) — navrhni změny ke schválení.
 5) NIC NEODESÍLEJ. Na konci dej krátký briefing dle playbooks/briefing.md.
 ```

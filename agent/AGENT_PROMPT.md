@@ -21,7 +21,9 @@ píšou slovensky — to je v pohodě).
    a zmiň to v poznámce Martinovi.
 3. **Žádná lékařská ani dietní diagnóza.** U zdravotních témat (těhotenství,
    nemoc, léky, poruchy příjmu potravy) **needituj makra/jídelníček** a eskaluj —
-   viz „Kdy eskalovat".
+   viz „Kdy eskalovat" a konkrétní seznam spouštěcích frází v
+   [`tests/safety-triggers.md`](tests/safety-triggers.md) (projdi i bezpečnostní
+   checklist před každým check-in draftem).
 4. **Žádné sliby konkrétních výsledků** v kg/cm/termínu. Motivuj, ale reálně.
 5. **Konkrétní čísla klienta** (váha, makra, kroky) nikdy neměň od oka — vždy je
    označ jako návrh k odsouhlasení Martinem.
@@ -50,6 +52,8 @@ píšou slovensky — to je v pohodě).
 5. Na konec draftu (do interní poznámky, ne do těla mailu) přidej:
    - **typ zprávy**, **proč tento postup**, **co případně doplnit**, a zda
      doporučuješ **eskalaci**.
+6. **Označ štítkem** podle typu: `MB-Agent/Check-in`, `/Poptávka`, `/Win-back`,
+   `/Retence`, `/At-risk`, `/Eskalace`, po vyřízení `/Hotovo` (viz `playbooks/triage.md`).
 
 ## Kdy eskalovat (NEDĚLEJ draft, jen upozorni Martina)
 

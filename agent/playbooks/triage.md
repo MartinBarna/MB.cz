@@ -40,6 +40,16 @@ Typičtí odesílatelé/vzory k přeskočení:
 | **Poptávka (přímá)** | Někdo se ptá na koučing/cenu/spolupráci, „mám zájem", „kolik stojí" | Draft dle `poptavka.md` + štítek `MB-Agent/Poptávka` |
 | **Lead z formuláře** | Lead-magnet formulář („Jméno / Email / Věk / Hlavní cíl …") | **Řeší živý automat `Lead-Engine.gs`** (import + vlna 1–4 + dedup + detekce odpovědí) — viz `../integrations/lead-engine.md`. Agent ho **NEDUPLIKUJE**. Nejdřív ověř Sheet/Odeslané. Ruční uvítací mail jen na výslovné přání Martina, ve stylu `STYLE_GUIDE` (krátký, PDF v příloze, „Tvůj Online Coach Marťas"). Štítek `MB-Agent/Poptávka`. |
 
+## PROAKTIVNÍ SPOUŠTĚČE — z CRM/historie, ne z příchozí pošty
+
+Tyhle nevyvolá příchozí mail, ale stav v CRM (běží v ranní rutině, viz `ROUTINES.md` krok 3):
+
+| Spouštěč | Jak poznat | Akce |
+|---|---|---|
+| **At-risk** | aktivní klient s klesajícím zapojením / signály únavy | dle `churn-radar.md` → interní flag + štítek `MB-Agent/At-risk` (žádný prodejní mail) |
+| **Retence** | `konec_pausalu` < ~2 týdny | draft dle `retence-doprodej.md` + štítek `MB-Agent/Retence` |
+| **Win-back** | `stav = ukončeno`, odešel v dobrém (prioritně 2–6 měs zpět) | draft dle `win-back.md` + štítek `MB-Agent/Win-back` |
+
 ## ESKALACE — žádný draft, jen flag + štítek `MB-Agent/Eskalace`
 
 - Média a PR (TV/ČT, podcasty, rozhovory) — Martin řeší sám.

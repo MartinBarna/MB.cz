@@ -47,6 +47,11 @@ Princip jako všude: **agent připraví, Martin schválí.**
 - **Neprodávej videokurz** — už ho vlastní.
 - **Cíl win-backu = návrat na COACHING.**
 
+**Výjimka — kuchařka jako lehký bonus (rozhodnutí Martina 6/2026):** recepty smí ex-klient
+dostat navíc jako milé gesto („hodil jsem Ti k tomu i rychlou kuchařku"). Jsou to jen recepty,
+nepodceňují. Hlavní dárek ale zůstává **restart na míru** — kuchařka je třešnička, ne náhrada.
+(7-chyb a 7denní makro-plán dál NE — ty jsou pro úplné začátečníky.)
+
 Dárek = personalizovaný **restart na míru** (filozofie „dávat víc, než beru"):
 
 1. **Vytáhni z Gmailu historii** klienta: jeho **cíl**, **kde se sekl / co mu šlo**,
