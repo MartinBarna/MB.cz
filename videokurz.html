@@ -6,7 +6,9 @@
     <title>Videokurz výživy — Martin Barna | 153 videí, 20+ hodin</title>
     <meta name="description" content="Kompletní videokurz výživy od Martina Barny: 153 videí, přes 20 hodin, kalkulačka makroživin a audiobook. Nauč se hubnout, nabírat a jíst flexibilně — vědecky podloženo. Doživotní přístup za 800 Kč.">
     <meta name="theme-color" content="#161616">
+    <link rel="canonical" href="https://web.martinbarna.cz/videokurz.html">
     <meta property="og:type" content="product">
+    <meta property="og:url" content="https://web.martinbarna.cz/videokurz.html">
     <meta property="og:title" content="Videokurz flexibilního stravování — Martin Barna">
     <meta property="og:description" content="153 videí, 20+ hodin a doživotní přístup za 800 Kč. Nauč se výživu jednou provždy.">
     <meta property="og:locale" content="cs_CZ">
@@ -34,6 +36,10 @@
     </script>
     <style>
         @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+        @media (prefers-reduced-motion: no-preference) {
+            html.reveal-on section { opacity:0; transform:translateY(26px); transition:opacity .6s ease, transform .6s ease; }
+            html.reveal-on section.in-view { opacity:1; transform:none; }
+        }
         :root { --green:#ff7a00; --green-dark:#161616; --green-light:#fff4e8; --gold:#ff7a00; --ink:#0d0d0d; }
         * { scroll-behavior:smooth; }
         html { scroll-padding-top: 80px; }
@@ -88,8 +94,21 @@
         .stars { color:#ffb300; }
 
         footer { background:var(--ink); color:#cfd8d2; padding:30px 0; text-align:center; }
-        footer a { color:#9fd3a3; text-decoration:none; }
+        footer a { color:#ffb066; text-decoration:none; }
     </style>
+    <script>
+    (function(){
+        if ('IntersectionObserver' in window && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+            document.documentElement.classList.add('reveal-on');
+            document.addEventListener('DOMContentLoaded', function () {
+                var obs = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); } });
+                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+                document.querySelectorAll('section').forEach(function (s) { obs.observe(s); });
+            });
+        }
+    })();
+    </script>
 </head>
 <body>
     <!-- NAV -->
