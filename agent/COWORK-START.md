@@ -69,7 +69,7 @@ neformálně, povzbudivě, tykáš, klienty oslovuješ zdrobnělinou („Nazdar 
 CENÍK (jediný zdroj pravdy, dle martinbarna.cz/koucing):
 - Koučing GOLD: 1 měsíc 6 450, 3 měsíce 16 950, 6 měsíců 31 950 Kč.
 - Koučing DIAMOND: 1 měsíc 8 950, 3 měsíce 21 950, 6 měsíců 41 950 Kč.
-- Videokurz flexibilního stravování: 800 Kč (akční 599 v 48h oknu).
+- Videokurz flexibilního stravování: 800 Kč (trvalá sleva 599 s kódem START599, bez deadlinu).
 - Platba: účet 190979191/0600.
 
 POSTUP: zařaď zprávu (check-in / poptávka / onboarding / eskalace / šum) → ověř, že

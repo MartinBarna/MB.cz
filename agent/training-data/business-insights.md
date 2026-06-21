@@ -33,7 +33,7 @@
 **Sezónnost / akce:**
 - **Leden** (novoroční předsevzetí) a **září** (po létě) = nejsilnější náběry.
 - **Léto** = pauzy a přerušení (dovolené).
-- Akční páka: časově omezená sleva na **videokurz (cca 599 místo 800 Kč, 48 h)** ve follow-up vlně 3; slevy na coaching jen při delším závazku (6m+).
+- Akční páka: **trvalá zaváděcí sleva na videokurz (599 místo 800 Kč, kód START599)** ve follow-up vlně 3 (bez deadlinu — rozhodnutí 6/2026); slevy na coaching jen při delším závazku (6m+).
 
 ## Co z toho plyne pro odpovědi (na co tlačit)
 
@@ -78,10 +78,10 @@
 |---|---|---|---|---|
 | 1 | Den 0 | Uvítací mail + 7denní plán | Doručit hodnotu | lead magnet PDF |
 | 2 | Den 3–4 | „7 chyb" PDF + soft nabídka videokurzu (plná cena) | Důvěra, autorita | vlna2 PDF (ž/m verze) |
-| 3 | Den 7 | Rychlá kuchařka (10 jídel) + **videokurz 599 Kč / 48 h** + zmínka coachingu | Prodej (deadline/urgence) | vlna3 PDF (ž/m verze) |
-| 4 | Den ~12–14 (volitelná) | Poslední šance / hodnota + pozvánka na coaching | Doprodej + ascension | — |
+| 3 | Den 7 | Rychlá kuchařka (10 jídel) + **videokurz 599 Kč (kód START599, trvale)** + zmínka coachingu | Prodej (bonus, bez urgence) | vlna3 PDF (ž/m verze) |
+| 4 | Den ~12–14 (volitelná) | Hodnota + pozvánka na coaching/videokurz | Doprodej + ascension | — |
 
-- **Strategie:** hlavní prodej = videokurz (vysoká marže, škáluje), coaching = ascension z teplých kupců. Slevová urgence (599/48 h) konvertuje váhavce; eager kupci platí plnou cenu už po vlně 2.
+- **Strategie:** hlavní prodej = videokurz (vysoká marže, škáluje), coaching = ascension z teplých kupců. Trvalá sleva (599, kód START599) sníží bariéru; eager kupci platí plnou cenu už po vlně 2. (Bez falešné urgence — i pozdější nákup = zisk.)
 - Mužská i ženská větev mají vlastní texty i PDF přílohy; jinak shodná logika.
 - Existuje i připravený (nespuštěný) plán FB kampaně, který do tohoto funnelu sype leady; ekonomicky stojí hlavně na tom, že **1 coaching klient** zaplatí test mnohonásobně, videokurz pokryje cenu leadů.
 

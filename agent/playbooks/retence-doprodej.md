@@ -11,8 +11,8 @@ Retence (prodloužení) je nejlevnější růst — udržet klienta je levnějš
 
 ## Zásady
 - **Hodnota před tlakem.** Připomeň přínos a usnadni další krok, netlač.
-- **Pravdivá urgence.** „Noví klienti startují v pondělí" / „akce 48 h" používej, jen když to platí.
-- **Fakta z `../KNOWLEDGE_BASE.md`** (ceny, účet 190979191/0600, akce videokurzu 599/48h, kód START599).
+- **Pravdivá urgence.** „Noví klienti startují v pondělí" používej, jen když to platí. Sleva videokurzu je **trvalá** (žádný umělý deadline).
+- **Fakta z `../KNOWLEDGE_BASE.md`** (ceny, účet 190979191/0600, videokurz 599 Kč s trvalým kódem START599).
 - **Eskalace:** nespokojený klient / stížnost / vrácení peněz → NEposílej doprodej, eskaluj.
 - **Bez slibů** konkrétních kg/termínů; u doprodeje/re-engagementu edukace → disclaimer.
 

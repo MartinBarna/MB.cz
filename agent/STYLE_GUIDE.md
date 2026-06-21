@@ -160,7 +160,7 @@ Pravidla tónu u všeho, co jde lidem, kteří ho znají (klienti, bývalí klie
 > **Výjimka — studený lead-magnet funnel (DŮLEŽITÉ, ať to nepleteš):** lidé, co si přes
 > formulář **samy řekly o něco zdarma**, NEJSOU klienti/ex-klienti/poptávka. Tady jede
 > Martinova strategie **stohování hodnoty**: další dárky zdarma (7 chyb, kuchařka) a
-> k tomu jemné CTA na **videokurz** a slevu (599 Kč/48h). To **NENÍ tlačení** — je to
+> k tomu jemné CTA na **videokurz** a slevu (599 Kč, trvalý kód START599). To **NENÍ tlačení** — je to
 > jeho marketing a oni sami chtěli obsah. Odkaz na videokurz/slevu v těchto mailech je
 > **on-strategy, ne „moc prodejní"**. Sekvence: `templates/nurture-series/vlna-1..4`.
 >

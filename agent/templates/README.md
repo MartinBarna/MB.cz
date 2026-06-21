@@ -33,7 +33,7 @@ Obsahuje:
 - `poptavka-template.html` — odpověď na poptávku (Gold/Diamond + CTA na hovor/WhatsApp).
 - `retence-prodlouzeni.html` — prodloužení spolupráce (retence).
 - `reengagement-poptavka.html` — jemný follow-up zájemce, co se neozval.
-- `doprodej-videokurz.html` — doprodej videokurzu (akce 599/48 h) po lead magnetu.
+- `doprodej-videokurz.html` — doprodej videokurzu (599 Kč, trvalý kód START599) po lead magnetu.
 
 (Posledních pět = čisté verze. Použití retence/doprodej viz `../playbooks/retence-doprodej.md`.)
 
@@ -41,8 +41,8 @@ Obsahuje:
 `recenze-prubeh.html` a `recenze-konec.html` (sběr recenzí) — viz `../playbooks/`.
 
 **Nurture série** (`nurture-series/`): 4 vlny lead-magnet funnelu — `vlna-1.html` (doručení
-plánu), `vlna-2.html` (7 chyb + soft videokurz), `vlna-3.html` (kuchařka + 599/48 h),
-`vlna-4.html` (poslední šance + koučing). Placeholdery `{{JMENO}}`, `{{DEADLINE}}`.
+plánu), `vlna-2.html` (7 chyb + soft videokurz), `vlna-3.html` (kuchařka + videokurz 599 Kč,
+trvalý kód START599), `vlna-4.html` (pozvánka na koučing). Placeholder `{{JMENO}}`.
 
 > Obě jsou zatím **čisté verze** (vlastní HTML, ne vytažené z Gmailu). Pro byte-přesnou
 > shodu s Martinovým formátem a jeho trackovanými prokliky nech Martina označit reálný
