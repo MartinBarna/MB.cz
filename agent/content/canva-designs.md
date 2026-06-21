@@ -26,6 +26,17 @@ uložená je jedna — další varianty lze dogenerovat.
 a uloží vybranou do Canvy. Vhodné scénáře viz `starter-posts.md` (#4 bez výmluv,
 #5 spalovače, #11 „jím málo a nehubnu" jsou silné na reels/IG).
 
+## K dogenerování: dávka Q3 (vidIQ)
+Ke kusům v `batch-2026Q3.md` (jak zhubnout / kalorické tabulky / bílkoviny / sacharidy /
+BCAA) patří nové grafiky — IG posty + 2 YT thumbnaily k titulkům se skóre 91–93. Řekni
+„udělej grafiky k dávce Q3" a agent je vygeneruje v brand barvách.
+
+## Stav / pozn.
+- **Brand Kit:** zatím prázdný (`list-brand-kits` → []). Do té doby agent dává brand barvy
+  (grafit #1f2733 + oranžová #f08a24) přímo do zadání. Až si Brand Kit založíš (loga, fonty),
+  použije se automaticky a grafiky budou konzistentnější.
+- **Kvóta:** generování Canvy může narazit na limit účtu — pak to jen počká, zadání zůstává.
+
 ## Tip
 Až si v Canvě vytvoříš **Brand Kit** (loga, barvy, fonty), grafiky budou ještě
 konzistentnější — agent ho pak použije automaticky (`list-brand-kits`).
