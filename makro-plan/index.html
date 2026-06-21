@@ -151,6 +151,17 @@
         /* tlačítka: klidové pozvednutí + měkčí přechod */
         .btn { transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; box-shadow:0 6px 18px rgba(255,122,0,.22); }
         .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(255,122,0,.38); }
+    
+        /* ===== PREMIUM v3 ===== */
+        body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
+        ::selection { background:#ff7a00; color:#fff; }
+        h1, h2, h3 { letter-spacing:-.015em; }
+        .nav { background:rgba(255,255,255,.78)!important; -webkit-backdrop-filter:saturate(180%) blur(12px); backdrop-filter:saturate(180%) blur(12px); }
+        .btn, .btn-grn, .btn-gold, .btn-ghost, .btn-out, .btn-white { transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+        .btn:active, .btn-grn:active, .btn-gold:active, .btn-ghost:active, .btn-out:active, .btn-white:active { transform:translateY(0); }
+        @media (max-width:575.98px){
+            .btn, .btn-grn, .btn-gold, .btn-ghost, .btn-out, .btn-white { padding-top:13px; padding-bottom:13px; }
+        }
     </style>
     <script type="application/ld+json">
 {
