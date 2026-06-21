@@ -91,6 +91,7 @@ agent/
 │   ├── clients-schema.csv ← hlavičky pro Google Sheet
 │   └── client-template.md ← profil klienta (prázdná šablona)
 └── integrations/        ← plány napojení dalších kanálů/služeb
+    ├── lead-engine.md              ← ŽIVÝ automat lead funnelu (Apps Script) — agent neduplikuje
     ├── whatsapp-setup.md            ← WhatsApp Business API (fáze 4)
     ├── whatsapp-n8n-build.md        ← konkrétní build v n8n (ready k zapnutí)
     ├── inbox-cleanup-gmail-filters.md ← Gmail filtry na úklid inboxu

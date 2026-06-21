@@ -38,7 +38,7 @@ Typičtí odesílatelé/vzory k přeskočení:
 | **Check-in** | Stávající klient posílá týdenní report (míry, váha, trénink; často příloha xlsx „Report pro Coache") | Draft dle `check-in.md` + štítek `MB-Agent/Check-in` |
 | **Onboarding** | Nový klient poslal vstupní dotazník / podklady o sobě, ještě nedostal „informace na první týden" | Draft dle `../templates/onboarding-template.html` (ověř kontext!) + štítek `MB-Agent` |
 | **Poptávka (přímá)** | Někdo se ptá na koučing/cenu/spolupráci, „mám zájem", „kolik stojí" | Draft dle `poptavka.md` + štítek `MB-Agent/Poptávka` |
-| **Lead z formuláře** | Lead-magnet formulář („Jméno / Email / Věk / Hlavní cíl …") | **Nejdřív ověř Odeslané** (viz zlaté pravidlo) — Martin posílá plán často sám. Pokud ne, řeší **automatický funnel** (7denní plán + e-mail série). Uvítací mail jen ve stylu `STYLE_GUIDE` „Uvítací mail po stažení lead magnetu" (krátký, PDF v příloze, podpis „Tvůj Online Coach Marťas"). Štítek `MB-Agent/Poptávka`. Warm nudge jen na přání Martina. |
+| **Lead z formuláře** | Lead-magnet formulář („Jméno / Email / Věk / Hlavní cíl …") | **Řeší živý automat `Lead-Engine.gs`** (import + vlna 1–4 + dedup + detekce odpovědí) — viz `../integrations/lead-engine.md`. Agent ho **NEDUPLIKUJE**. Nejdřív ověř Sheet/Odeslané. Ruční uvítací mail jen na výslovné přání Martina, ve stylu `STYLE_GUIDE` (krátký, PDF v příloze, „Tvůj Online Coach Marťas"). Štítek `MB-Agent/Poptávka`. |
 
 ## ESKALACE — žádný draft, jen flag + štítek `MB-Agent/Eskalace`
 
