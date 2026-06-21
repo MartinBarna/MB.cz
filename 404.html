@@ -22,6 +22,11 @@
         .links a { color:#fff; font-weight:600; text-decoration:none; opacity:.9; border-bottom:2px solid rgba(255,255,255,.5); padding-bottom:2px; }
         .links a:hover { opacity:1; border-color:#fff; }
         a:focus-visible { outline:3px solid #fff; outline-offset:3px; border-radius:4px; }
+    
+        /* ===== přístupnost: respektuj vypnuté animace ===== */
+        @media (prefers-reduced-motion: reduce){
+            *, *::before, *::after { animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; }
+        }
     </style>
 </head>
 <body>
