@@ -14,11 +14,10 @@ neznají). **NEpoužívají se na win-back** — ex-klienti je mají za sebou (v
 | `kucharka-10jidel-ZENY.pdf` | ženy | 10 fit jídel do 15 minut |
 | `kucharka-10rychlovek-MUZI.pdf` | muži | 10 rychlovek (víc bílkovin, větší porce) |
 
-> **Kuchařky — pozor na verzi:** původní PDF mají uvnitř starou větu „599 Kč jen 48 hodin"
-> (už neplatí — sleva je trvalá). Opravené, čisté zdroje jsou vedle jako
-> `kucharka-10jidel-ZENY.html` a `kucharka-10rychlovek-MUZI.html` (trvalý kód START599,
-> bez deadlinu). **Finální PDF:** otevři HTML v prohlížeči → Tisk → Uložit jako PDF, a
-> nahraď jím staré PDF (v repu i v Drive přes „Spravovat verze", ať engine zachová ID).
+> **Kuchařky — opraveno (6/2026):** PDF jsou přegenerované **bez „48 hodin"** (trvalý kód
+> START599, kód „platí pořád"). Editovatelný zdroj je vedle: `kucharka-10jidel-ZENY.html` /
+> `kucharka-10rychlovek-MUZI.html`. V **Drive** (funnel) ještě nahraď staré PDF za tyhle
+> přes „Spravovat verze" (zachová ID → engine jede dál), nebo aktualizuj `pdfVlna3` ID v `Lead-Engine.gs`.
 
 ## Kdy přikládat
 - **Nurture série / studený funnel** (`../templates/nurture-series/`): vlna 1 = makro plán,
