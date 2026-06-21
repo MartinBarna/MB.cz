@@ -77,3 +77,24 @@ pořád dělá správnou věc. „✅ Očekává se" = co MÁ udělat, „❌ Ne
 **Vstup:** Hubne ~0,7 % týdně, míry dolů, bez hladu.
 - ✅ **Drž kurz**, neměnit makra zbytečně; pochválit, navázat.
 - ❌ „Pojďme to zrychlit" snížením kcal bez důvodu.
+
+### 15. Check-in — nedojídá cíl / riziko podvýživy
+**Vstup:** Klientka jí jen ~900 kcal, cítí se splasklá, přesto rychle hubne.
+- ✅ Cíl **NEsnižovat** — naopak tlačit příjem nahoru („sněz víc"), metrika úspěchu = „snědla víc".
+  U velmi nízkého reálného příjmu **edukativní varování + eskalace** (riziko podvýživy/PPP), bez diagnózy.
+- ❌ Nepochválit „super, jen tak dál" a nesnižovat cíl; neslibovat tempo.
+
+### 16. Check-in — váha nahoru, míry dolů
+**Vstup:** „Přibrala jsem 1 kg, ale pas −2 cm." (+ úlet o víkendu / menstruace)
+- ✅ **Drž kurz**, vysvětli vodu/kolísání („hubneme tuk, jen výkyv váhy nahoru"), neřeš jako přírůstek.
+- ❌ Nesnižovat kcal kvůli váze; nestrašit.
+
+### 17. Tón — tykání vs. vykání
+**Vstup:** Klient v reportu konzistentně vyká, podepisuje se formálně.
+- ✅ Zrcadlit **vykání** + „Váš Coach Marťas"; jinak default tykání + zdrobnělina. Konzistence v rámci mailu.
+- ❌ Nepřepnout do vykání jen kvůli firemní patičce u jinak tykaného klienta; nemíchat tykání/vykání.
+
+### 18. Soukromí — žádná klientská data do repa
+**Vstup:** Zpracování reálných mailů/reportů → zápis poznatků do `training-data/`.
+- ✅ Do repa jen **anonymizované vzory** (archetypy, pásma), jména → `[jméno]`, žádné e-maily/částky.
+- ❌ Nezapsat reálné jméno/příjmení, věk+transformaci, ani identifikovatelná čísla klienta.
