@@ -15,18 +15,26 @@ navrhnout úpravu maker/kroků**. Finální čísla vždy schvaluje Martin.
 - **Bílkoviny, vláknina, kroky/pohyb.**
 - **Subjektivní:** hlad, únava, síla, trénink minulý týden + plán na další.
 
-## 2. Logika úpravy (rámec — detaily v training-data)
+## 2. Logika úpravy (rozhodovací tabulka — detaily v training-data)
 
-- Hubne v dobrém tempu (~0,5–1 % váhy nebo ~1 cm na hlavní míře/týden) → **drž kurz**,
-  neměň zbytečně. „Jedeme náš základ co funguje, nekomplikujme to."
-- **Stagnace** při poctivém zápisu → mírně sniž kcal nebo přidej kroky (raději pohyb než
-  hladovění; cíl je hubnout na co nejvyšším příjmu).
-- **Hlad/přejídání nebo více snědeno** → dorovnat v reportu, nekárat; „díky datům to
-  hladce dorovnáme". Zvážit vyšší bílkoviny/vlákninu pro sytost.
-- **Nepřesný zápis** → priorita je přesnost; „čím přesnější zápis, tím vyšší cíl Ti můžu
-  nechat a pořád to půjde dolů".
-- **Rychlý úbytek** → realisticky zarámovat (nebude takhle pokračovat, neděs se výkyvů).
-- Bílkoviny typicky ~1,8–2,2 g/kg; kroky nastavit jako týdenní průměr (např. „13 000/den").
+Nejdřív urči, do které situace klient spadá, a navrhni odpovídající krok. **Default: když si
+nejsi jistý nebo je to hraniční → DRŽ KURZ** (neměň). Méně zásahů = míň přepisování pro Martina.
+
+| Situace (z reportu) | Návrh úpravy |
+|---|---|
+| Hubne v dobrém tempu (~0,5–1 % váhy nebo ~1 cm na hlavní míře/týden) | **Drž kurz**, neměň. „Jedeme náš základ co funguje, nekomplikujme to." |
+| **Stagnace 2+ týdny** při poctivém zápisu | **−100 až −150 kcal** (ze sacharidů) **NEBO +1 000–2 000 kroků/den**. Raději pohyb než hladovění. Naráz měň jen JEDNU páku. |
+| **Hlad / přejídání / víc snědeno** | Makra neškrtej; „díky datům to hladce dorovnáme". Zvaž **+ bílkoviny/vláknina** pro sytost. |
+| **Nepřesný zápis** | Priorita = přesnost, makra neměň. „Čím přesnější zápis, tím vyšší cíl Ti můžu nechat a pořád to půjde dolů." |
+| **Rychlý úbytek** (>1 %/týden dlouhodobě) | Neměň dolů; realisticky zarámuj (kolísání, nebude takhle pořád). |
+| Váha nahoru, ale míry dolů / menstruace / sůl | **Drž kurz**, vysvětli (voda), neřeš jako přírůstek. |
+
+**Mantinely čísel (bezpečnost):**
+- **Nikdy pod ~1 100 kcal (ženy) / ~1 300 kcal (muži)** — pod tím neměň, eskaluj.
+- Jeden krok úpravy ≤ ~150 kcal nebo ~2 000 kroků/týden (žádné velké skoky).
+- **Bílkoviny ~1,8–2,2 g/kg.** Kroky jako týdenní průměr/den (např. „13 000/den").
+- Sacharidy/tuky: „ignoruj kolečko, je nám jedno jak vyjde."
+- Před uložením draftu projeď checklist v `../tests/safety-triggers.md` (sekce B).
 
 ## 3. Struktura draftu (Martinův vzorec)
 

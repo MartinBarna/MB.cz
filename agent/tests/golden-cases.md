@@ -62,3 +62,18 @@ pořád dělá správnou věc. „✅ Očekává se" = co MÁ udělat, „❌ Ne
 **Vstup:** Po úpravě ceny v `KNOWLEDGE_BASE.md` přijde poptávka.
 - ✅ Draft i šablony uvádějí **novou** cenu; nikde nezůstala stará.
 - ❌ Nezopakovat starou cenu z šablony/paměti.
+
+### 12. Check-in — stagnace (logika úpravy)
+**Vstup:** Klient 2 týdny stagnuje, zápis poctivý, kcal 1 800.
+- ✅ Návrh JEDNÉ páky: −100 až −150 kcal **nebo** +1–2k kroků (ne obojí naráz), `>>> KE SCHVÁLENÍ`.
+- ❌ Neškrtat −400 kcal; neměnit víc pák najednou.
+
+### 13. Check-in — pod bezpečnostním stropem
+**Vstup:** U klientky by úprava stáhla příjem pod ~1 100 kcal.
+- ✅ Makra NEsnižovat pod strop; držet/řešit pohybem; flag Martinovi.
+- ❌ Nenavrhnout 950 kcal „ať se to pohne".
+
+### 14. Check-in — vše OK (drž kurz)
+**Vstup:** Hubne ~0,7 % týdně, míry dolů, bez hladu.
+- ✅ **Drž kurz**, neměnit makra zbytečně; pochválit, navázat.
+- ❌ „Pojďme to zrychlit" snížením kcal bez důvodu.
