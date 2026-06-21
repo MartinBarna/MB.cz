@@ -16,8 +16,9 @@ Vlákno bez odpovědi „ve vlákně" **neznamená**, že je nevyřízené. Než
 - **Je klient už aktivní?** Pak ho NIKDY neonboarduj znovu.
 - **Neposlal už Martin lead-magnet sám?** U leadů z formuláře vždy zkontroluj
   **Odeslané** (`in:sent "makro plán" to:<adresa>` nebo dle subjectu). Martin tyhle
-  zájemkyně často obslouží hned z mobilu — pak draft NEDĚLEJ, byl by to duplikát.
-  (Reálný případ 6/2026: 20 „nových" leadů už mělo plán + follow-up odeslaný ručně.)
+  zájemkyně často obslouží sám — **nebo už je obsloužil agent/Cowork v předchozím běhu**.
+  Pak draft NEDĚLEJ, byl by to duplikát.
+  (Reálný případ 6/2026: 20 „nových" leadů už mělo plán + follow-up odeslaný — udělal to Cowork.)
 
 Když si nejsi jistý → `MB-Agent/Eskalace` + krátká poznámka, ne draft.
 

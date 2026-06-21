@@ -54,5 +54,6 @@ Martin občas pošle všem najednou (skrytá kopie) krátký follow-up:
 ## DŮLEŽITÉ — nedělej duplikát
 
 Než tento mail nadraftuješ, zkontroluj **Odeslané** (`in:sent "makro plán" to:<adresa>`).
-Martin tyhle leady často obslouží sám hned z mobilu. Když plán už dostali, neposílej
-znovu — leda nurture krok 2 s odstupem.
+Plán už mohl být odeslán dřív — buď ho poslal Martin sám, **nebo ho v předchozím běhu
+odeslal sám Cowork/agent** (tak vznikly i individuální maily a follow-up „vylepšená
+verze"). Když plán už dostali, neposílej znovu — leda nurture krok 2 s odstupem.
