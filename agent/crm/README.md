@@ -21,7 +21,7 @@ si u každého klienta pamatovat kontext. Tohle je návrh struktury + jak s ní 
 | aktualni_makra | B140/S255/T58, vláknina 29+ | navázání |
 | kroky_cil | 10 000 | navázání |
 | posledni_report | 2026-06-15 | spouští auto-nudge (viz nudge-reporty.md) |
-| stav | aktivní / pauza / ukončeno | filtr |
+| stav | aktivní / pauza / ukončeno / **comeback** | filtr (comeback = vrátil se přes alumni Comeback režim) |
 | poznamka | „má rád jednoduchá jídla, busy s dětmi" | personalizace |
 
 ## Jak agent pracuje s pamětí
@@ -43,6 +43,9 @@ si u každého klienta pamatovat kontext. Tohle je návrh struktury + jak s ní 
   → „Připojit k aktuálnímu listu". (Přímý zápis do buněk Sheetu konektor neumí, proto import.)
   Dotaž se: „vytěž CRM seed aktivních klientů".
 - PII (jména/čísla) **jen v Sheetu**, nikdy do repa.
+- **Comeback tracking:** kdo se vrátí přes alumni WhatsApp vlnu → `stav = comeback`, do
+  `balicek` napiš „Comeback (á 14 dní)", do `poznamka` datum návratu. Po nahození a ascendu
+  na plný tarif přepiš `stav = aktivní` + `balicek = Gold/Diamond`. Viz `../playbooks/comeback-alumni.md`.
 
 ## Per-klient profil (alternativa/rozšíření)
 Pro hlubší poznámky lze u klienta vést i textový profil — šablona `client-template.md`.
