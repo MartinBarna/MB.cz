@@ -90,6 +90,94 @@ ani vytvářet závislost, ale dát klientovi **kontrolu, povědomí a sebevědo
 nástroje, ať se dostane tam, kam sám chce. Žádné zostouzení, žádné nereálné/neudržitelné
 standardy. „Mou prací není dát lidem svaly nebo jim ubrat tuk — je dát jim kontrolu."
 
+## Doplněno z Gmailu (anonymizováno)
+
+Delší vzory odpovědí destilované z reálných check-inů a poptávek (4 roky Gmailu). Anonymizováno —
+žádná jména, e-maily ani konkrétní kg/cm/částky. Slouží jako podklad pro draftování v Martinově
+tónu (tykání, povzbuzení, narovinu, emoji). Tvrdá čísla vždy z `../KNOWLEDGE_BASE.md`.
+
+### Kolísání váhy (nejčastější check-in obava)
+
+**Q: Proč mi tak skáče váha (i o kila během pár hodin/dní)?**
+A: Tohle je úplně normální a Martin to opakuje skoro každému. Váhu rozhýbe voda, glykogen
+(1 g glykogenu váže ~3 g vody), sůl, sacharidy, trávení, u žen cyklus. Typické přirovnání:
+„ber to jak houbu na mytí auta — pořád stejná houba, jen jednou nasáklá, jednou vyždímaná;
+vážit ji po každém utření nedává smysl." Proto: vážit se za stejných podmínek (ráno, nalačno,
+po toaletě), ale hodnotit týdenní trend a hlavně míry, ne jedno číslo. „Vítej v klubu nakamných." :)
+
+### Váha stojí, ale míry/forma se lepší
+
+**Q: Nehubnu na váze, i když makám — co je špatně?**
+A: Většinou nic. Když klient maká, drží makra a hlavně dost bílkovin, může současně nabírat sval
+a spalovat tuk — váha se nehne, ale míry a vizuál jdou nahoru. To je za Martina ta nejlepší možná
+varianta. Argument narovinu: „kdybys nehubnul/a tuk, neviděli bysme takový úbytek na mírách." Řešení
+není panika, ale kontrola přesnosti zápisu a pokračování. Hodnotí se data od měření k měření.
+
+### Skryté / selektivní kalorie v zápisu
+
+**Q: Zapisuju, ale stejně to nejde dolů — proč?**
+A: Skoro vždy je to nepřesnost zápisu, ne „rozbitý metabolismus". Klasický vzor: klient zapisuje
+jen „co se mu chce" a drobnosti (ovoce na procházce, ochutnávání, mléko do kafe, omáčky) pomíjí
+s tím, že „to nic není" — a ono se z toho nasčítají stovky kcal. Martin to říká narovinu, ale bez
+soudu: „super, že si nemažeš med kolem huby." Klíčové: PROČ zapisujeme VŠE — ne abys psal/a do
+tabulek věčně, ale dokud to děláš selektivně, nenaučíš se to a nebudeš mít výsledky. Rámuje to do
+dvou voleb: 1) poctivý zápis → krásný úbytek; 2) spekulace a hledání problému jinde → zabitý čas
+a energie a stejně bez výsledku. „Vyber si moudře, věřím, že na to máš."
+
+### Sezónnost, oslavy a „sociální kalorie"
+
+**Q: Mám sérii oslav/svátků/dovolenou, jak to ustát?**
+A: Martin normalizuje cykly přes rok (Vánoce vs. leden, léto vs. zima). Strategie: počítej s tím
+dopředu — měsíc před a po jeď režim a uděláš si náskok, v období oslav si to klidně povol a víc se
+hýbej (přidej kroky). Filozofie v pozadí: „když chci hubnout, musím si to nejdřív zasloužit tím, že
+tělu dodám živiny — bílkoviny, vlákninu — a až pak mám právo tvořit deficit." Tón odlehčený:
+„kryj si záda, ať tě svátky moc nezbijou :))", „škoda, že neumím online sníst to sladké na stole
+místo tebe :-D". Dovolenou rámuje jako volbu mezi úplným orazem od tabulek a jejich použitím jako
+orientace — obojí je v pořádku, hlavně si to užít, „i to je cenná zkušenost".
+
+### Nemoc a návrat k tréninku
+
+**Q: Onemocněl/a jsem, můžu cvičit / co s režimem?**
+A: Zdraví je priorita — doléčit se je úkol číslo jedna (zdravotní detaily Martin needituje, jen
+podporuje a případně eskaluje). Drž aspoň bílkoviny a kroky, ať udržíš výsledek. Návrat postupně:
+„pianko, ne na doraz, jedeš to pro hlavu a relax." Drobné výkyvy měr (~1-2 cm) jsou normální
+chybovost měření, neřešit. I lehké přibrání = jen data a zkušenost, nic se neděje. Často klienti
+píšou, že „potřebují něco dělat" — Martin to chápe a přesměruje energii do trpělivosti a regenerace.
+
+### Restart po výpadku
+
+**Q: Vypadl/a jsem na pár týdnů, jak začít znovu (a nebát se přibrání)?**
+A: Žádné výčitky — „hlavní je, že jsi zpátky a jedeme dál." Nasadit udržovačku, klidně se trefovat
+i lehce nad ni, a postupně zpět do režimu. Důležité varování dopředu: až se začne zase normálně
+jíst, je úplně normální a fyziologicky žádoucí, že váha trochu poskočí a kolísá (doplnění glykogenu
+a vody) — NENÍ to neúspěch. Martinova metafora dlouhodobosti: „tělo je tvoje nejlepší investiční
+nemovitost, ze které se nedá přestěhovat — investujeme dlouhodobě jako složený úrok, ne honbou za
+rychlými prachy." Udržitelnost dělají návyky a schopnost kriticky hodnotit jídlo, ne rychlost.
+
+### Udržení = úspěch
+
+**Q: Jen jsem udržel/a váhu, nezhubl/a jsem — je to selhání?**
+A: Naopak, někdy je udržení místo přibrání reálný úspěch (zvlášť po slabším období nebo v sezóně
+oslav). Postoj: nevzdat to a „zase tomu šlapat po krku" — nasadit režim a držet cíl striktně, a
+přijdou další úbytky. Cíl většinou není potřeba snižovat, stačí ho dodržet. Pozor na sebeklam typu
+„vždyť jím jen 1100 kcal" — když není zapsáno přesně všechno, nemusí to jít dolů vůbec.
+
+### Vyšší kalorie na přání klienta
+
+**Q: Chci jíst víc, než vyšel výpočet — jde to?**
+A: Jde, je to klientova volba a Martin ji respektuje, ale řekne narovinu svůj názor: „já osobně bych
+mířil níž pro svižnější tempo." Pak nechá nastavenou vyšší hodnotu („jelikož sis to vyloženě přál,
+nechám Ti to tak"). Sledují se data: pokud klient zapisuje přesně a váha/míry nejdou dolů, je to
+signál mířit níž. Doladění v tabulkách nebo na callu. Vždy nechává prostor: „dej vědět, jestli jsi pro."
+
+### Videokurz — kde jsou tabulky a výpočty
+
+**Q: Koupil/a jsem videokurz a nezobrazuje se mi tabulka s výpočty.**
+A: Všechny přílohy i výpočty jsou v odkazu na Google Drive, který zákazník dostal při nákupu —
+Martin ho rovnou pošle znovu. Tabulky nejsou přímo ve videu, jsou ve sdílené složce. Standardní
+podpůrná odpověď, žádná eskalace, jen znovu poslat přístup a nabídnout pomoc, kdyby cokoliv.
+
 ---
-Zdroj: e-book „Nejčastější dotazy klientů" (Google Drive, Martin Barna). Kondenzováno do
-Q&A; bez osobních dat. Plné znění některých sekcí je v e-booku.
+Zdroj: e-book „Nejčastější dotazy klientů" (Google Drive, Martin Barna) + destilát z Gmailu
+(check-iny a poptávky, anonymizováno). Kondenzováno do Q&A; bez osobních dat. Plné znění některých
+sekcí je v e-booku.
