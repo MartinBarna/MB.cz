@@ -134,6 +134,189 @@ podporu „kdykoliv během týdne" a přidává vzdělávací přílohu (studie 
 
 ---
 
+## Hloubková analýza z Gmailu (anonymizováno)
+
+Tato sekce vznikla dodatečným vytěžením většího vzorku Martinových **odeslaných** odpovědí na check-iny
+(období cca jaro 2025 – polovina 2026, podagenti). Cílem je **banka reálných frází** (anonymizovaná —
+žádná jména, e-maily, identifikovatelné částky), aby drafty agenta zněly přesně jako Martin. Jména jsou
+nahrazena `[jméno]` (v praxi Martin **vždy** používá zdrobnělinu — Hani, Kubo, Peťo, Marťas, Denčo, Leni…).
+
+### Anatomie check-in mailu (skoro vždy stejná struktura)
+1. **Tučný web-řádek** nahoře: `www.martinbarna.cz`
+2. **Tučné oslovení 5. pádem se zdrobnělinou** + pozdrav: `Přeju bomba den, [jméno]!`
+3. **Poděkování za report** (+ za nasazení).
+4. **Shrnutí dat tučně** — seznam úbytků mír + řádek `kcal / kroky průměr, min sportu`.
+5. **Krátký komentář k datům** (pochvala, vysvětlení výkyvu).
+6. **Blok cíle / úpravy** (plná makra v ustáleném formátu — viz níže).
+7. **Cíl pohybu do příště** (kroky průměr + minuty).
+8. **Odkaz na call + WA podpora** „kdykoliv během týdne".
+9. **Podpis**: `Tvůj/Váš Coach Marťas` + `Be Effective`.
+
+### Banka frází — OTEVŘENÍ a poděkování
+- `Přeju bomba den, [jméno]!` (nejčastější) · `Přeju super den, [jméno]!` · `Přeju skvělý den, [jméno]!`
+- `Přeju hezký den, [jméno]!` · `Přeju úspěšný den, [jméno]!` · `Krásný den, [jméno]!` · `Zdravím, [jméno]!`
+- `Nazdar [jméno],` · `Čuuus [jméno]!` (neformální start, často u lead-magnet/WA navázání).
+- Hravé varianty u známějších klientů: `Čusheej, díí Frojlajn!` · `Guten Tag, Herr Direktor` (zrcadlí klientův tón).
+- `Pojďme na to kouknout, už jsme zvědavý!` (těsně před výpisem dat)
+- `Děkuji za report i Tvoje/Vaše nasazení :)` · `Děkuji za report i Tvé skvělé nasazení! :)`
+- `Děkuji za report i Tvou trpělivost s odpovědí z mé strany :)` (když odepisuje později)
+- `Dík moc za report :))` · `Díky moc za report i hlasovku! :))` · `Díky za report i call :))`
+- `Děkuji za dlouhodobou důvěru, a posílám report :)`
+- Personalizace tempa: `jestli Ti to vyhovuje, budu zase ve Tvém případě stručnější` (u klientů, co řeší detaily na WA).
+
+### Banka frází — POCHVALA / povzbuzení
+- `Naprosto špičkový start!` / `Naprosto špičkový týden!` · `Krásně to šlo dolů!` · `Luxus!` · `Kráása! :))`
+- `Hmm tak hned první report a můžeme machrovat, že máte krásný úbytek!`
+- `máme luxusní tempo hned od startu.` · `za mě úbytek mega` · `Za mě fakt dělo progress :)) A ne nekecám :-D`
+- `Já jsem na Tebe tak pyšný!` · `To je fakt na pána (teda na paní! :-D) start!`
+- `Jen tak dále!` · `dobré bomby jedete :))` · `REKORDNÍ VÁHA!` · `Ultra mega úbytek!`
+- Hype s humorem: `Pan [jméno] bude mít těžkou konkurenci se obávám hahaaa! A budeš pro něj mega motivace.`
+- Buduje vztah: `Mimochodem díky, že mu/jí tak pomáháš i s tou operativou kolem — vážím si toho.`
+- Aspirace: `úplně vytuníte/změníte oba svůj život! :)` · `Cesta za nejlepší verzí sebe sama`
+- `Vy klienti jste moje PROČ.`
+- `Wow!! Pokračuješ v bombách a očividně neleníš ani druhý týden. Respekt.`
+- `GRATULUJI — jsi chodící příklad toho, že SE TO DÁ NAUČIT, a to i za půl roku.`
+- `Budeš teď známa jako „Chodící reklama", tenhle nick name teď sedí. Děkuji. :-D`
+- `ty bílkoviny máš rekoord!! Skvělá práce ženská :))` · `Bomba práce, pane řediteli!`
+- Hravé titulování (zrcadlí klienta): `pane řediteli`, `paní šéfová`, `Herr Direktor`.
+
+### Banka frází — KOMENTÁŘ K DATŮM (váha vs. míry, výkyvy)
+- Data uvádí tučně jako seznam: `- 1 cm prsa, - 2 cm pas, - 1 cm boky, - 2 cm zadek / - 0,7 kg` a pod tím
+  `1254 kcal / 13 583 kroků průměr, 120 min fitko, 120 min kardio`.
+- Shrnutí pokroku za delší období: `Od měření [datum] máme dole: - 3 cm zadek, - 1–2 cm stehna, - 2 cm prsa…`
+- Uklidnění výkyvu váhy: `tohle bude kolísat, ale postupně kolísat na menších číslech :))`
+- `Pamatuj, nebude to vždy stejné tempo, budou i výkyvy, možná i nahoru — váha/míry, ale jakmile z měsíce
+  na měsíc jdeme dolů, tak je to super! :))`
+- Rekordní váha vždy s pojistkou: `REKORDNÍ VÁHA! (nezapomeň, bude kolísat i tak — musel sem to zas dodat :-D)`
+- Cílové tempo: `tak 0,5 – 1 cm týdně je to, co jsme chtěli.`
+- „1% pravidlo": `když bereme, že 1 % hmotnosti klienta je „max rychlost úbytku týdne" na dobrý poměr tuk vs. svaly`.
+- Spojuje trénink+bílkoviny s kvalitou úbytku: `cvičíš + máš focus na bílkoviny = úbytky by měly být hlavně z tukové tkáně`.
+
+### Banka frází — ÚPRAVA MAKER / KROKŮ
+**Když NEMĚNÍ (drží z minula):**
+- `Navrhuji nechat cíle v tabulkách prozatím stejné. Někdy je nejlepší úprava „neupravit nic" :)`
+- `[jméno] držme se nadále našeho cíle, nemělo by být potřeba ho měnit:`
+- `tohle tedy necháme do těch tabulek i do příště :))` · `cíl necháme, protože očekáváme podobný plán pohybu`
+
+**Když SNIŽUJE (opatrně, rámuje jako vstřícnost ke klientovi):**
+- `Můžu Ti ten cíl snížit, ale mělo by stačit lehce, a i tak platí, že za mě super… dělám to jen ať splním
+  více Tvá očekávání + respektuju zadání klienta:`
+
+**Když ZVYŠUJE / dorovnává na to, co fungovalo:**
+- `Jídlo nastavím jak jsi jedla, funguje to skvěle a jíme „co nejvíce" za udržení námi požadovaného tempa
+  hubnutí, ne „co nejméně", jak většina lidí :)`
+- `Sire nahazujeme teda zase 1700 po diskuzi na WA :)`
+
+**Ustálený blok maker (kopíruje ho prakticky doslova):**
+```
+[X] kcal
+[X] g bílkoviny ([X] kcal) — více je taky OK, tohle je minimum co se chceme naučit najíst
+   = sytost, regenerace, pleť, vlasy, hezčí zadek, imunita
+[X] g sacharidy ([X] kcal)
+[X] g tuky ([X] kcal)
+Vláknina [X] g a více — minerály/vitamíny, trávení, zdraví
+```
+(U mužů / silově trénujících se v řádku bílkovin „hezčí zadek" mění na `udržení / růst svalové hmoty`.)
+
+**Kroky / pohyb:**
+- `Pokračujme v našem plánu pohybu i nadále takto prosím: 12 000 kroků průměr či více + 60 min týdně nasportovat bude fajn bonus!`
+- `zase přes 10 tis kroky, ideálně kolem 12 tis průměr :)`
+- `12 – 13 000 kroky průměr cíl týdne / 60 min fitness — fitness beru 60 min, protože máme 1 trénink`
+- Možnost zrychlit bez snížení jídla: `kdykoliv můžeš dát „bonus kroky", když by sis chtěla pomoct trošku
+  větším spalováním na tempo hubnutí — neříkám, že chodíš málo, jen obecně to takto lze dělat :))`
+- Vyžaduje hlášení pohybu: `je třeba vždy v reportu informovat o jakékoliv změně kroky/aktivity`.
+- `je důležité držet pohyb tak, jak jsme si stanovili, a mít to jako prioritu = nacvičit min. 60 min dokupy
+  + nachodit 9–10 000 kroků průměr každý jediný týden :)`
+
+**Vyžádání souhlasu / interaktivní rámec (časté na konci úpravy):**
+- `Souhlas?` · `Okeej? :))` · `Chápeme se?` · `Chápeš mě?` · `Takto bych pokračoval a jsem otevřen to na WA ještě probrat! :)`
+- `Kdybys s něčím nesouhlasila nebo viděla jinak = klasicky dej echo a dořešíme! :)`
+
+**Nabídka variant (dovolená / rozhodnutí klienta):**
+- `Varianta A) Pokud bys dal úplně oraz od tabulek: …` / `Varianta B) Jedeš dále tabulky: …` → `Vyber si moudře, [jméno]. Věřím, že na to máš.`
+- `Pokud chceš lehce stahovat tuk, jedl bych podobně… Pokud chceš udržovat, pořád platí, že potřebuješ jíst více.`
+
+### Banka frází — STAGNACE / HLAD / NEPŘESNÝ ZÁPIS / NEMOC / SVÁTKY
+- Mantra priorit: `priorita je přesnost, dost bílkovin a vlákniny každý den/každé jídlo a vlézt se v průměru
+  kalorií celého týdne cca do plánu :))`
+- `pamatuj, přesnost dělá hodně` · `hlavní je stále přesnost zohlednění porcí/ingrediencí/vážení`
+- Trik na přesnost (kopíruje doslova): `„než cokoli jím, tak to vždy první zapíšu" = autoregulační efekt…
+  často se pak ukáže, že můžeme mít i ty cíle nakonec o něco vyšší :)`
+- Logika podezřelé stagnace: `Je nemožné, abys přibírala na [X] kcal průměru týdne… pokud to nešlo dolů,
+  jedlo se více a třeba to není zapsané.` · `Buď mi nesedí míry (odchylky měření), nebo nesedí zápis jídla.`
+- Reframe, ať klient nepropadá: `nemáme depku, že „nehubnu ani na 1100 kcal", ale „aha, měla jsem třeba
+  1700 průměr, tak jsem nezhubla, ale aspoň vím, že do XY nepřiberu!"`
+- `Jen nechci, abys měla pocit, že „nehubneš ani na [X] kcal a musíš jíst méně", to je nesmysl.`
+- Upřímnost s polštářem: `To nemyslím jako buzeraci nebo zle, ale jak jsem slíbil na začátku, budu upřímný
+  a budu říkat věci narovinu.` · `i „velký coach a znalec" se na tomhle může spálit.`
+- Po blbém týdnu: `každý má občas blbý týden… nezboří se svět, když občas nebude posun!` · `Neboj, příště
+  zase zkontrolujeme a doladíme!`
+- Svátky: `Byl Silvestr, tak jasné, že to nebylo úplně vše a dle plánu, teď však beru, že se jede fakt na
+  ostro a „bez výmluv", jo?` · doporučuje „povinný oraz" od tabulek a návrat k pevnému datu.
+- Restaurace/dovolená: `raději zapiš přesně a měj třeba lehce přes náš plán, než „tohle už nemá smysl zapisovat".`
+- Žena/perioda: `kolem periody očekávejte více kg i větší míry — je to jen dočasné zavodnění, poté to vždy opadne.`
+- Nemoc/zdravotní kontext → pozastaví úpravu maker, dokud nemá info, zda vůbec hubnout; vyjadřuje plnou podporu
+  (`máš mou plnou podporu! …drž se! To se přečká a budeš good!!`).
+- Když klient **nedojídá** cíl (opačný problém): `Já můžu psát v reportu co chci, ale pokud mi opakovaně nesníš
+  přes 1000 kcal, mohu akorát znovu zopakovat a bude zase na Tobě to sníst.` · `Ale sněz více! Fakt :))`
+- Edukační refrén o nepřesnosti: `je super, že si nemažeš „med kolem huby" a narovinu říkáš, žes jedla
+  o stovky kcal více` · `tohle je to PROČ ZAPISUJEME VŠE`.
+- Edukace o sladidlech (opakovaně): `Sladidlo samo o sobě nehubne. Hubne pořád ten kalorický deficit.
+  Sladidlo je jen nástroj, co ti to usnadní.`
+
+### Banka frází — UZÁVĚR / podpis / WhatsApp
+- `Kdyby cokoliv — jsem na drátě :)` · `Kdyžtak jsem na WA a rád poradím/podpořím! :)`
+- `jsem však neomezeně na WA, takže ptej se na co je třeba kdykoliv a nejen ve dnech reportů!`
+- `Měj super den!` / `Mějte super den` / `Měj fajn den` / `Měj skvělý den!`
+- Akční výzvy: `Jedeme dále!` · `Let´s Go!!` · `To zmákneme` / `my to zmákneme!` · `Jsem tady pro Tebe!`
+- Preference textu na WA: `pro mě je nejlepší ty dotazy na WhatsApp posílat ve formě textu, rychleji to přečtu
+  než poslechnu v hlasovce`.
+- Patička: `Máš dotaz, potřebuješ s něčím poradit? Neváhej se na mě obrátit na whatsapp [tel] nebo [email]`
+- Podpis (dle tykání/vykání): `Tvůj Coach Marťas` / `Váš Coach Marťas`.
+- Brand uzávěr: `Nezapomeňte, že Vy si tvoříte svůj Osud. Jděte si za svým, jděte příkladem ostatním a Be Effective`.
+
+### Emoji / smajlíci
+- Téměř výhradně **ASCII**: `:)` a zdvojené `:))` (zdvojení = extra vřelost, na konci skoro každé věty).
+- Smích `:-D`, popíchnutí `:-P`, hravě `hahaaa` (střídmě, u vtípků). Jediné značkové Unicode: `⚡` u `Be Effective ⚡`.
+- **Důraz dělá VELKÝMI PÍSMENY** místo emoji: `BOMBA`, `PROČ ZAPISUJEME VŠE`, `REKORDNÍ VÁHA`, `HODNĚ PŘI ZEMI`.
+- Klíčové věty (pochvala i pravidla) dává do *kurzívy/tučně*. Frekvence smajlíků je vysoká — změkčují instrukci.
+
+### Opakované metafory a hlášky (catchphrases)
+- **„Be Effective! / Team Barna"** — hlavní motto, vždy se titulu **Coach** (NIKDY trenér), podpis **Marťas/Barna**.
+- **„jíme co nejvíce, ne co nejméně, jak většina lidí"** — podpisová filozofie.
+- **„Někdy je nejlepší úprava ‚neupravit nic'"** — koučovací aforismus.
+- **Tělo jako finanční manažer / spořící účet** — tělo hospodaří s kaloriemi jako s penězi; při tvrdém deficitu
+  „šetří" → únava, hlad; odtud návrh `diet break / pauza od diety`.
+- **„Tělo je MISTR přežití"** — `lidské tělo je doslova MISTR přežití, fascinující organismus`.
+- **„2,5 kg jídla za 1600 kcal"** — ukázka objemného jídla: „brutál sytost i na 1600 kcal" (vyjmenuje gramáže).
+- **„jídlo dělá hubnutí"** (vs. cvičení) + osobní historka: „cvičil jsem 6× týdně 90 minut, ale kašlal na jídlo
+  a přibral za rok asi 15 kg".
+- **„tipsport výsledky"** — slang pro náhodné výsledky, když klient ignoruje metodu.
+- **„zprasit / prasárny"** — hovorové pro přejedení/zneužití flexibility (`vždy s humorem: „sranda musí být!"`).
+- **„jsem na drátě" / „na WA"** — refrén stálé dostupnosti. · **„nasbírat minuty", „bonus kroky"**.
+- **Kolektivní „my/nás"**: `držme se`, `snažíme se vlézt`, `co potřebujeme`, `doladíme si` — sdílená odpovědnost.
+- **Moravismy/hovorovost**: `tož`, `oukej`, `kupa`, `kdyžtak`, `doptej se`, `narovinu`.
+- Řečnické potvrzení: `Chápeme se, paní šéfová? :))` · `jo?` · `Souhlas?` · `Okeej? :))`
+- **„jedem bomby" / „pokračuješ v bombách"** — ústřední slovo pro „jedeš naplno".
+- **„mazat si med kolem huby"** = lhát si do reportu (nelhat = pochvala).
+- **„držet se HODNĚ při zemi"** = opatrný odhad kcal. · **„stahujeme / stáhnout (tuk, míry)"**.
+- **„chodící reklama / chodící příklad"** = úspěšný klient (přezdívka jako pochvala).
+- **„naučit se to udržet i bez tabulek"** = dlouhodobý cíl; `uspěchané proměny se neudrží`.
+
+### Upřesnění logiky úprav (z většího vzorku)
+- **Default je NEMĚNIT.** Pokud data sedí a klient hubne svým tempem, Martin explicitně chválí „neupravit nic"
+  a jen znovu vypíše stejný cíl + zdůrazní přesnost. Změna je výjimka, ne rutina.
+- **Snižuje nerad a málo**, většinou až po vyloučení nepřesného zápisu; i pak „lehce" a rámuje to jako ústupek
+  přání klienta, ne jako nutnost.
+- **Zvyšuje**, když klient (a) hlásí hlad/chutě, (b) nechce hubnout a přesto hubne, (c) si vyšší příjem výslovně
+  přeje — a vždy připojí filozofii „co nejvíce za udržení tempa".
+- **Bez plánu kroků/minut na další týden cíl nenastaví** — opakovaně to v reportu vyžaduje, jinak předpokládá
+  zopakování minulého týdne.
+- **Při neúplném/nepřesném zápisu „nedrbe do cílů"** a nechá minulé nastavení (upravoval by na špatných datech).
+- **Primární metrika jsou míry, ne váha**; rekordní/kolísavou váhu vždy doprovází pojistkou o kolísání.
+
+---
+
 ### Poznámka k limitům sběru
 - Surová data klientů (váhy/míry/kcal po dnech) jsou typicky v Excel/PDF přílohách nebo sdílených tabulkách
   (Google Sheets, SharePoint), které z e-mailu nešlo přečíst. Přesná čísla výše proto pocházejí převážně z toho,
