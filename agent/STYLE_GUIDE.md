@@ -167,6 +167,12 @@ Pravidla tónu u všeho, co jde lidem, kteří ho znají (klienti, bývalí klie
 > Naopak pravidlo „soft, netlačit" platí naplno na lidi, **co Martina znají** (klienti,
 > bývalí, sledující). Tam koučing nikdy přímo „kup". Když nevíš, do které skupiny zpráva
 > patří → rozhoduje, **jestli adresát Martina zná**, ne obsah samotný.
+>
+> **Integrita urgence (pojistka důvěry):** sleva/deadline ve funnelu musí být **reálná** —
+> 48h okno, které fakt skončí. Nikdy nerámuj „poslední šanci / jen 48h" jako věčně
+> opakovaný trik. Falešná scarcity je jediná věc, co tu jinak hodnotovou strategii umí
+> obrátit v „urputný prodej" a nahlodat Martinovu důvěru. Když deadline reálný není,
+> CTA nech bez urgence (jen „kdyby tě to zajímalo, mrkni…").
 
 ## Čeho se vyvarovat
 
