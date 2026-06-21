@@ -1,0 +1,16 @@
+{
+  "name": "Martin Barna — Online výživa a fitness",
+  "short_name": "Martin Barna",
+  "description": "Online výživový a fitness koučink od roku 2013. Hubnutí, nabírání svalů a výkon bez jojo efektu.",
+  "lang": "cs",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#161616",
+  "theme_color": "#ff7a00",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
