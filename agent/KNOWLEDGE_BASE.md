@@ -43,6 +43,17 @@ chybí, do draftu napiš `>>> DOPLNIT: …` a upozorni Martina.
 **Platba koučingu:** paušálně na 1 / 3 / 6 měsíců, na účet **190979191/0600**, do
 poznámky jméno klienta (ceník vždy na martinbarna.cz/koucing).
 
+### Koučing — COMEBACK (alumni · jen pro bývalé klienty · NEVEŘEJNÉ)
+> ⚠️ **Interní/alumni nabídka — necituj veřejně ani novým leadům.** Cena se sděluje jen 1:1
+> v DM, aby nezakotvila nižší úroveň a nenaředila veřejný ceník. Pro absolventy coachingu.
+- **Pro koho:** bývalí klienti, co už znají systém a chtějí návrat / lehčí dohled bez plného tempa.
+- **Co to je:** check-in **á 14 dní** (ne týdně) — „udržovací / comeback" režim, méně práce, nižší cena.
+- **Cena (NÁVRH — Martin potvrď):** ~**4 000 Kč/měs** (≈ 2/3 Gold), ideálně **3měsíční comeback blok ~11 000 Kč**. Účet 190979191/0600.
+- **Pozice:** prémiově „Comeback / Udržovací režim pro absolventy", **NE „levný coaching"**. Lehčí frekvence = feature (systém už umíš), ne sleva.
+- **Účel:** re-entry rampa → po nahození **ascend na plný Gold/Diamond**. Bez falešné urgence (reálná kapacita: „beru pár lidí").
+- **Dárek při návratu:** restart na míru (+ kuchařka jako bonus). NE začátečnické lead-magnety.
+- Playbook: `playbooks/comeback-alumni.md`.
+
 ### Videokurz „Flexibilní stravování" (hlavní škálovatelný produkt)
 - **800 Kč** (153 videí, 20+ h, + AI nástroje). **Trvalá zaváděcí sleva pro e-mailovou
   sérii: 599 Kč** s permanentním kódem `START599` (platí napořád — žádný deadline).

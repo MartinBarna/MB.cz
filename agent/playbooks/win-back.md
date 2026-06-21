@@ -38,6 +38,11 @@ Princip jako všude: **agent připraví, Martin schválí.**
   urgence. Chráníme jeho image (viz `../STYLE_GUIDE.md` § Prodejní filozofie). Když máš
   pochybnost, jdi měkčí cestou — radši méně prodejní.
 
+> **Hromadný alumni kanál (WhatsApp skupina):** pro plošné oslovení ex-klientů přes WA použij
+> `comeback-alumni.md` — „zvedni ruku" zpráva **bez ceny**, nabídka a cena až 1:1 v DM, a jako
+> nabídku nabídni **Comeback tier** (check-in á 14 dní, ~2/3 ceny, jen pro alumni → rampa zpět
+> na plný Gold/Diamond). Win-back e-mailová sekvence výše = pro 1:1 oslovení konkrétních lidí.
+
 ## Dárek = RESTART NA MÍRU (ne lead-magnet PDF, ne videokurz, ne sleva)
 
 **KRITICKÉ — kdo je adresát:** win-back cílí na **bývalé KLIENTY**. Už prošli koučinkem,
