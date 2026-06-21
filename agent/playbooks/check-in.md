@@ -5,7 +5,9 @@ navrhnout úpravu maker/kroků**. Finální čísla vždy schvaluje Martin.
 
 > Klíčový princip: úprava stojí na DATECH klienta z reportu/Excelu. Konkrétní logika
 > úprav (kdy zvednout/snížit kcal, jak reagovat na stagnaci/hlad/nepřesnost) je v
-> `../training-data/check-in-examples.md` — před návrhem maker se do ní podívej.
+> `../training-data/check-in-examples.md`; jak ji **individuálně komunikovat** (triáda
+> data→úprava→komunikace, tykání/vykání, typy klientů) v
+> `../training-data/check-in-data-komunikace.md` — před návrhem maker se do obou podívej.
 
 ## 1. Co z reportu vytáhnout (vstupy)
 
