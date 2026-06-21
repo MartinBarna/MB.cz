@@ -1,7 +1,8 @@
 # Assets — přílohy k mailům
 
-Hodnotové PDF, které agent přikládá (lead magnety, win-back dárek). Jsou to Martinovy
-materiály, ne klientská data.
+Hodnotové PDF, které agent přikládá ve **studeném lead-magnet funnelu**. Jsou to Martinovy
+materiály, ne klientská data. **Pozor:** tyhle PDF jsou pro **studené leady** (lidi, co tě
+neznají). **NEpoužívají se na win-back** — ex-klienti je mají za sebou (viz níže).
 
 ## `lead-magnety/`
 | Soubor | Pro koho | Obsah |
@@ -14,11 +15,11 @@ materiály, ne klientská data.
 | `kucharka-10rychlovek-MUZI.pdf` | muži | 10 rychlovek (víc bílkovin, větší porce) |
 
 ## Kdy přikládat
-- **Win-back dárek** (`../templates/win-back-2.html`): vyber sadu dle pohlaví klienta a
-  přilož relevantní kousek (typicky „7 chyb" + kuchařka; plán dle situace). Personalizuj
-  doprovodný text dle historie klienta z Gmailu — viz `../playbooks/win-back.md`.
-- **Nurture série** (`../templates/nurture-series/`): vlna 1 = makro plán, vlna 2 = 7 chyb,
-  vlna 3 = kuchařka.
+- **Nurture série / studený funnel** (`../templates/nurture-series/`): vlna 1 = makro plán,
+  vlna 2 = 7 chyb, vlna 3 = kuchařka. Jen pro **studené leady** z formuláře.
+- **NE na win-back.** Bývalí klienti videokurz i materiály **mají** (jsou v balíčku).
+  Win-back dárek = **restart na míru** (personalizované nastavení), ne tyhle PDF —
+  viz `../playbooks/win-back.md`.
 
 > Příloha v draftu: Gmail `create_draft` umí `attachments` (base64). Vyber správnou
 > jazykově/pohlavně odpovídající variantu. Nikdy nepřikládej cizí/klientská data.

@@ -32,21 +32,26 @@ Princip jako všude: **agent připraví, Martin schválí.**
   urgence. Chráníme jeho image (viz `../STYLE_GUIDE.md` § Prodejní filozofie). Když máš
   pochybnost, jdi měkčí cestou — radši méně prodejní.
 
-## Dárek = HODNOTA na míru (ne sleva)
+## Dárek = RESTART NA MÍRU (ne lead-magnet PDF, ne videokurz, ne sleva)
 
-V souladu s Martinovou filozofií „vždy spíš dávat než brát" je dárek **hodnota**, ne
-prodejní pobídka. Postup:
+**KRITICKÉ — kdo je adresát:** win-back cílí na **bývalé KLIENTY**. Už prošli koučinkem,
+**videokurz i materiály MAJÍ** (jsou v balíčku). Z toho plyne:
+- **NEPŘIKLÁDEJ lead-magnet PDF** (7denní plán / 7 chyb / kuchařka) — to je pro studené
+  leady; pro ex-klienta je to začátečnické a podceňující.
+- **Neprodávej videokurz** — už ho vlastní.
+- **Cíl win-backu = návrat na COACHING.**
 
-1. **Vytáhni z Gmailu historii** klienta z předchozí spolupráce: jeho **cíl**, **kde se
-   sekl / co řešil**, poslední makra, co mu šlo. (Z check-in vláken „Přeju bomba den".)
-2. Do mailu napiš **1–2 věty na míru** (`{{NA_MIRU}}`), které ukážou, že si pamatuješ jeho
-   konkrétní situaci — ne generická šablona.
-3. **Přilož relevantní PDF** z `../assets/lead-magnety/` podle pohlaví:
-   - ženy: `7-chyb-hubnuti-ZENY.pdf` + `kucharka-10jidel-ZENY.pdf` (plán `7denni-makro-plan-ZENY.pdf` dle situace)
-   - muži: `7-chyb-forma-MUZI.pdf` + `kucharka-10rychlovek-MUZI.pdf` (plán `7denni-makro-plan-MUZI.pdf` dle situace)
-   Vyber 1–2 nejrelevantnější k tomu, co klient řešil.
-4. Rámuj to jako **dárek bez háčku** — „pomůže Ti, ať se vrátíš nebo ne". Žádný deadline,
-   žádný tlak (viz `../STYLE_GUIDE.md` § Prodejní filozofie).
+Dárek = personalizovaný **restart na míru** (filozofie „dávat víc, než beru"):
+
+1. **Vytáhni z Gmailu historii** klienta: jeho **cíl**, **kde se sekl / co mu šlo**,
+   poslední makra. (Z check-in vláken „Přeju bomba den".)
+2. Do mailu napiš **1–2 věty na míru** (`{{NA_MIRU}}`), co ukážou, že si pamatuješ jeho
+   konkrétní situaci — ne generika.
+3. Nabídni **čerstvé nastavení na míru** (aktuální makra/kroky/priority navázané na to, co
+   mu fungovalo) — Martin připraví po krátkém zjištění, kde klient teď je. **Konkrétní
+   čísla NEVYMÝŠLEJ** — vždy jako návrh ke schválení Martinem.
+4. Rámuj jako **dárek bez háčku** + měkká pozvánka zpět ke spolupráci. Žádný deadline, tlak
+   (viz `../STYLE_GUIDE.md` § Prodejní filozofie).
 
 ## Po akci
 Zapiš do CRM `win-back: odesláno {{datum}}` / `vrátil se`. Při návratu → onboarding
