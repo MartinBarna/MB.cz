@@ -115,6 +115,11 @@ váha**. „Lpění na váze je cesta do pekel." Vážit ráno, porovnávat týd
 **Hubnout pomalu** (jojo): rychlá dieta → hlad → přejídání → nabereš víc. „Raději maraton
 než sprint." Cíl: hubnout na co nejvyšším příjmu + návyky.
 
+**Bezpečnostní floor kalorií (závazné):** kalorický cíl nesnižovat pod **~1100 kcal (ženy) /
+~1300 kcal (muži)** — to je absolutní minimum; pod tím agent **needituje a eskaluje na Martina**.
+Cíl ideálně držet **~1200+ (ženy)**; deficit na startu max ~15–20 %. (Stejné hodnoty: `playbooks/check-in.md`,
+`playbooks/macro-calculator.md`, `training-data/check-in-data-komunikace.md`.)
+
 **Reverse dieting** (Layne Norton): po dietě postupně přidávat jídlo, dál cvičit.
 
 **Alkohol:** umírněně a zapsat (7 kcal/g). Nižší voltáž, nemíchat, najedený, hodně vody.

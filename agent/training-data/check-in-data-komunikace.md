@@ -19,7 +19,7 @@ ilustrativní pásma. Coachovské fráze jsou Martinův hlas (vzory k použití)
 | **Nemoc / klidový režim / operace** | **Přepočti na udržovačku** (z deficitu nahoru) | „Neřešíš nic, jedeš intuitivně, kompromisy ok, hlavně spi a dolož se. Máš mou plnou podporu." |
 | **Nedojídá cíl** (reálný příjem hluboko pod cílem) | **Drž/zvyšuj**, NEsnižuj; cíl = vůbec najíst | „Teď je primární sníst, co máš, JAKKOLIV, a na tom hubnout. Až budeš jíst dost, pak bych se rýpal v detailech — a možná ani nebude třeba." Metrika úspěchu = „snědla víc / rekord bílkovin", ne kg. |
 | **Velmi nízký reálný příjem** (riziko podvýživy) | **Zasáhni NAHORU** + edukativní varování + eskalace | „Jíš doslova nedostatečně, směřuje to k podvýživě — vliv na psychiku, kosti, riziko PPP/záchvatového přejídání. Dej si poradit." (Žádná diagnóza, žádné sliby.) |
-| **Klient sám chce nižší kcal** | Vyhov **s disclaimerem**, ale odrazuj výpočty | „Nehubneme proto, že jíš dost přes 2000 — ne proto, že 1500 nefunguje. Můžeme, ale nedoporučuju." Nikdy pod ~1200 kcal. |
+| **Klient sám chce nižší kcal** | Vyhov **s disclaimerem**, ale odrazuj výpočty | „Nehubneme proto, že jíš dost přes 2000 — ne proto, že 1500 nefunguje. Můžeme, ale nedoporučuju." Absolutní floor ~1100 (ž)/~1300 (m) → níž eskalace. |
 | **Dlouholetý drží formu po rozvolnění** | **Neměň** (cíle fungují), otevři psychologii návratu | „Cíle fungovaly, necháváme. Otázka je — najedeš teď na režim tak kvalitně jako dřív, nebo budeš mít problém zase trackovat nadoraz?" |
 | **Rekompozice u udržujícího** (míry/rýsování ↓ i přes pamlsky) | Jídlo drž, tlač **kroky + cvičení doma** | „Nakonec sis zhubla! I s bonbonama a gulášem = rekompozice. Sbírej desítky minut pohybu." |
 | **Dobrý standardní úbytek** | **Drž kurz** | „Jedeme náš základ, co funguje. Nekomplikujme to. Znovu tento cíl." |
@@ -64,7 +64,8 @@ ilustrativní pásma. Coachovské fráze jsou Martinův hlas (vzory k použití)
   doladění odsune na call/WhatsApp, **nikdy reflexivní řez kalorií.**
 - **Stagnace → diagnóza příčiny** (chybějící kroky / selektivní zápis), ne automatické snížení.
 - **Snížení podmiňuje praxí:** nejdřív splnit vlákninu (~24 g+) a bílkoviny, teprve pak deficit.
-- **Bezpečnostní stropy:** nedoporučuje pod ~1200 kcal; nepodhodnocuje příjem pod potřebu aktivit;
+- **Bezpečnostní floor:** cíl ideálně ne pod ~1200 (ženy); absolutní minimum ~1100 (ž)/~1300 (m),
+  níž = eskalace (viz `../KNOWLEDGE_BASE.md`). Nepodhodnocuje příjem pod potřebu aktivit;
   u nedojídání a podvýživy tlačí **nahoru**. Žádné sliby kg/termínů nad rámec cílů klienta.
 
 ## 5. Opakující se nástroje a fráze
