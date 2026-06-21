@@ -55,6 +55,18 @@
         footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
         footer a { color:#ffb066; text-decoration:none; }
         .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
+    
+        /* ===== VIZUÁLNÍ POLISH (rozšíření) ===== */
+        /* hero: jemné prosvětlení */
+        .hero { position:relative; }
+        .hero::before { content:""; position:absolute; inset:0; pointer-events:none;
+            background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
+        .hero > * { position:relative; z-index:1; }
+        /* tlačítka: klidové pozvednutí + měkčí přechod */
+        .btn { transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; box-shadow:0 6px 18px rgba(255,122,0,.22); }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(255,122,0,.38); }
+        /* jemný stín CTA boxu */
+        .cta-box { box-shadow:0 10px 30px rgba(22,22,22,.05); }
     </style>
     <script type="application/ld+json">
 {

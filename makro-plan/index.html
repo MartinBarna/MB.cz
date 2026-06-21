@@ -138,6 +138,19 @@
             .hero-cta .btn { width:100%; }
             .auth .box { flex-direction:column; }
         }
+    
+        /* ===== VIZUÁLNÍ POLISH (rozšíření) ===== */
+        /* hero: jemné prosvětlení */
+        .hero { position:relative; }
+        .hero::before { content:""; position:absolute; inset:0; pointer-events:none;
+            background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
+        .hero > * { position:relative; z-index:1; }
+        /* plynulejší hover karet */
+        .card { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
+        .card:hover { transform:translateY(-8px); box-shadow:0 22px 48px rgba(22,22,22,.12); }
+        /* tlačítka: klidové pozvednutí + měkčí přechod */
+        .btn { transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; box-shadow:0 6px 18px rgba(255,122,0,.22); }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(255,122,0,.38); }
     </style>
     <script type="application/ld+json">
 {
