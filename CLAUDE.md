@@ -39,6 +39,7 @@ povzbudivě; klientům tyká a oslovuje je zdrobnělinou („Nazdar Kubo!").
 |---|---|
 | `agent/README.md` | Přehled + roadmapa |
 | `agent/RUNBOOK.md` | **Jak agenta reálně spustit** (Gmail dotazy, štítky, denní smyčka) |
+| `agent/READY-TO-GO.md` | **Ostrý provoz** — ranní check-in běh, tipy na čtení reportů, checklist, další use-cases |
 | `agent/AGENT_PROMPT.md` | Pravidla a bezpečnost, kdy eskalovat |
 | `agent/STYLE_GUIDE.md` | Tón, oslovení, fráze, podpisy, HTML patička |
 | `agent/KNOWLEDGE_BASE.md` | Produkty, ceny, proces, FAQ, filozofie, interní info |
