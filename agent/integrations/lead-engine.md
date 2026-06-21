@@ -40,15 +40,16 @@ sloupce Vlna 2/3/4/Odpověď → nikdy nepošle 2×.
 Podle **předmětu** Tally mailu: ženy = „pro ženy" (✅ potvrzeno), muži = „pro muže"
 (ověřit u prvního mužského leadu). Když nesedí → skript mail přeskočí („Neznámá forma").
 
-## ⚠️ ROZPOR K VYŘEŠENÍ: deadline vs. trvalá sleva
+## Sleva START599 = TRVALÁ (vyřešeno 21. 6. 2026)
 
-Strategie v Drive (`follow-up-emaily-a-strategie.md`) i `Lead-Engine.gs` mají u **vlny 3**
-zadrátovanou **48h urgenci** („Akce platí jen 48 hodin", deadline = teď + 48 h, „drž deadline").
+Martin rozhodl: sleva **599 / kód `START599` platí NAPOŘÁD, bez 48h deadlinu** (žádná
+falešná urgence — chrání důvěru). Zdroj pravdy = `KNOWLEDGE_BASE.md`.
 
-**ALE Martin 21. 6. 2026 rozhodl: sleva 599 / kód `START599` platí NAPOŘÁD, bez deadlinu.**
-Zdroj pravdy = `KNOWLEDGE_BASE.md`. Repo šablony (`templates/nurture-series/`) už jsou
-srovnané. **Drive engine + strategický doc je potřeba doladit** (vyhodit 48h countdown,
-přerámovat na trvalý bonus) — jinak bude posílat falešnou urgenci, co odporuje značce.
+- Repo šablony (`templates/nurture-series/`) — ✅ srovnané (bez deadlinu).
+- Drive `Lead-Engine.gs` (vlna 3 ženy+muži) — ⚠️ úprava je popsaná v Drive souboru
+  **„OPRAVA — sleva START599 je TRVALÁ (čti).md"** (složka „Email follow-up série").
+  Skript běží v **script.google.com** (ne v Drive) — 3 textové úpravy vkládá Martin tam.
+- Drive `follow-up-emaily-a-strategie.md` — věty o „48 h / poslední šance" jsou superseded.
 
 ## Související v Drive (kontext, ne klientská data)
 - `fb-ads-plan-ekonomika.md` — plán FB testu (200 Kč/den × 14 dní; koučing = skutečný
