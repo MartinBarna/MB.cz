@@ -48,7 +48,7 @@ poznámky jméno klienta (ceník vždy na martinbarna.cz/koucing).
 > v DM, aby nezakotvila nižší úroveň a nenaředila veřejný ceník. Pro absolventy coachingu.
 - **Pro koho:** bývalí klienti, co už znají systém a chtějí návrat / lehčí dohled bez plného tempa.
 - **Co to je:** check-in **á 14 dní** (ne týdně) — „udržovací / comeback" režim, méně práce, nižší cena.
-- **Cena (NÁVRH — Martin potvrď):** ~**4 000 Kč/měs** (≈ 2/3 Gold), ideálně **3měsíční comeback blok ~11 000 Kč**. Účet 190979191/0600.
+- **Cena:** **3 995 Kč / 1 měs** · **9 995 Kč / 3 měs** (≈ 3 332/měs). **Veď rovnou na 3měsíční blok** — za měsíc se nic neudělá a absolvent to ví; 1 měsíc zmiň jen když váhá. Účet 190979191/0600.
 - **Pozice:** prémiově „Comeback / Udržovací režim pro absolventy", **NE „levný coaching"**. Lehčí frekvence = feature (systém už umíš), ne sleva.
 - **Účel:** re-entry rampa → po nahození **ascend na plný Gold/Diamond**. Bez falešné urgence (reálná kapacita: „beru pár lidí").
 - **Dárek při návratu:** restart na míru (+ kuchařka jako bonus). NE začátečnické lead-magnety.
