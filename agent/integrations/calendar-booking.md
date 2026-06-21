@@ -9,7 +9,7 @@ ať žádný klient nepropadne sítem (týdenní check-in připomínky). Napojen
 ## Kalendáře (zjištěno)
 - `fitness.barna@gmail.com` — **primární** (Europe/Prague), tréninky + cally + osobní.
 - „Schůzky z Facebooku pro Martin Barna…" — sem padají **rezervace z FB** (lead už si vybral čas).
-- „App EFT", „České státní svátky", `martaakuba@gmail.com`.
+- „App EFT", „České státní svátky", sdílený rodinný/partnerský kalendář.
 
 ## A) Booking konzultace (nový lead chce call)
 1. **Najdi volno:** `suggest_time` / `list_events` na primárním kalendáři, pracovní okno
