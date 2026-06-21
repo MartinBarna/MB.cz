@@ -11,7 +11,10 @@ chybí, do draftu napiš `>>> DOPLNIT: …` a upozorni Martina.
 - Web: **martinbarna.cz** (`/videokurz`, `/koucing`, lead magnety `/makro-plan/`, `/forma-zpet/`)
 - E-mail: fitness.barna@gmail.com (provoz), martin@martinbarna.cz (schvalování materiálů)
 - Tel/WhatsApp: **+420 603229831**
-- FB: facebook.com/MartinBarnaOnlinevyzivaafitness · IG: @martinbarnaonlinevyzivafitness
+- Sítě (úplné URL pro šablony): FB `facebook.com/MartinBarnaOnlinevyzivaafitness` · IG
+  `instagram.com/martinbarnaonlinevyzivafitness` · TikTok `tiktok.com/@martinbarna_cz` ·
+  YouTube `youtube.com/c/MartinBarna` · Spotify `open.spotify.com/show/32zO7PDBAcHgyAfE6bK24d` ·
+  Apple Podcasts „Podcast s Martinem Barnou"
 - Články: eftm.cz
 
 ---
