@@ -168,11 +168,11 @@ Pravidla tónu u všeho, co jde lidem, kteří ho znají (klienti, bývalí klie
 > bývalí, sledující). Tam koučing nikdy přímo „kup". Když nevíš, do které skupiny zpráva
 > patří → rozhoduje, **jestli adresát Martina zná**, ne obsah samotný.
 >
-> **Integrita urgence (pojistka důvěry):** sleva/deadline ve funnelu musí být **reálná** —
-> 48h okno, které fakt skončí. Nikdy nerámuj „poslední šanci / jen 48h" jako věčně
-> opakovaný trik. Falešná scarcity je jediná věc, co tu jinak hodnotovou strategii umí
-> obrátit v „urputný prodej" a nahlodat Martinovu důvěru. Když deadline reálný není,
-> CTA nech bez urgence (jen „kdyby tě to zajímalo, mrkni…").
+> **Integrita urgence (pojistka důvěry):** videokurz má **trvalou** zaváděcí slevu
+> 599 Kč s permanentním kódem `START599` — **žádný deadline, žádný countdown.** Rámuj
+> ji jako **bonus/poděkování** odběrateli série („kód Ti platí, žádný spěch"), NIKDY
+> jako „poslední šanci / jen 48 h". Falešná scarcity je jediná věc, co tu jinak
+> hodnotovou strategii umí obrátit v „urputný prodej" a nahlodat Martinovu důvěru.
 
 ## Čeho se vyvarovat
 

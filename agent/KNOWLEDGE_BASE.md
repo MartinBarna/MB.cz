@@ -44,7 +44,9 @@ chybí, do draftu napiš `>>> DOPLNIT: …` a upozorni Martina.
 poznámky jméno klienta (ceník vždy na martinbarna.cz/koucing).
 
 ### Videokurz „Flexibilní stravování" (hlavní škálovatelný produkt)
-- **800 Kč** (153 videí, 20+ h, + AI nástroje). V e-mailové sérii akce **599 Kč / 48 h** (kód `START599`).
+- **800 Kč** (153 videí, 20+ h, + AI nástroje). **Trvalá zaváděcí sleva pro e-mailovou
+  sérii: 599 Kč** s permanentním kódem `START599` (platí napořád — žádný deadline).
+  Rámovat jako bonus pro odběratele série, NE jako časově omezenou „poslední šanci".
 
 ### Lead magnet (zdarma)
 - 7denní makro plán: ženy → `/makro-plan/`, muži → `/forma-zpet/`. Obsahuje link na
