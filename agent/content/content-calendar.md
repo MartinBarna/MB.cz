@@ -2,6 +2,10 @@
 
 Plán na 4 týdny, ~5 příspěvků/týden, rotace pilířů (viz `README.md`). Čísla odkazují na
 scénáře v `starter-posts.md`; grafiky v `canva-designs.md`. Uprav dle kapacity a aktuálních témat.
+
+> **Datová dávka:** čerstvé kusy navázané na reálnou CZ poptávku (vidIQ) jsou v
+> [`batch-2026Q3.md`](batch-2026Q3.md) — keywordy „jak zhubnout / kalorické tabulky /
+> bílkoviny / sacharidy / bcaa" + ověřené titulky (skóre 91–93). Zařaď je do rotace níže.
 Pravidlo: **~80 % hodnota/edukace, ~20 % nabídka.** Vždy 1 CTA.
 
 ## Týden 1 — Mýty (autorita)
