@@ -3,6 +3,14 @@
 Skutečné maily Martina novým zájemkyním z formuláře „7denní makro plán pro ženy 30+"
 (vytěženo z Odeslaných, 6/2026). Slouží jako etalon stylu pro agenta.
 
+> **Dvě roviny — neplést:**
+> 1. **Osobní odpověď na lead** (níže verbatim) — krátká, lidská, plán v příloze, měkké
+>    CTA na konzultaci. Tohle je Martinův ruční styl, když odpovídá jednotlivci.
+> 2. **Automatický funnel** (`templates/nurture-series/vlna-1..4`) — stohování hodnoty:
+>    den 0 plán → den ~4 druhý dárek + videokurz → den ~7 kuchařka + sleva → doprodej.
+>    Tady **odkaz na videokurz/slevu PATŘÍ** a NENÍ to „moc prodejní" — leady samy chtěly
+>    obsah zdarma, dostávají další hodnotu. Viz `STYLE_GUIDE` § Prodejní filozofie (výjimka).
+
 ## Co je na nich typické (drž se toho)
 
 - **Krátké** — 4–5 vět, žádné odrážky, žádný „markeťácký" blok.

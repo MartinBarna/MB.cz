@@ -157,8 +157,16 @@ Pravidla tónu u všeho, co jde lidem, kteří ho znají (klienti, bývalí klie
 - Nabídka = **velkorysost** (dárek, pomoc), ne closing taktika.
 - Když si nejsi jistý, ubteš na měkčí stranu. Radši méně prodejní než víc.
 
-> Výjimka: studený **lead-magnet funnel** (cizí leady) smí mít Martinovu vlastní lehkou
-> urgenci (videokurz 599/48h) — to je jeho marketing. I tam ale slušně, nikdy agresivně.
+> **Výjimka — studený lead-magnet funnel (DŮLEŽITÉ, ať to nepleteš):** lidé, co si přes
+> formulář **samy řekly o něco zdarma**, NEJSOU klienti/ex-klienti/poptávka. Tady jede
+> Martinova strategie **stohování hodnoty**: další dárky zdarma (7 chyb, kuchařka) a
+> k tomu jemné CTA na **videokurz** a slevu (599 Kč/48h). To **NENÍ tlačení** — je to
+> jeho marketing a oni sami chtěli obsah. Odkaz na videokurz/slevu v těchto mailech je
+> **on-strategy, ne „moc prodejní"**. Sekvence: `templates/nurture-series/vlna-1..4`.
+>
+> Naopak pravidlo „soft, netlačit" platí naplno na lidi, **co Martina znají** (klienti,
+> bývalí, sledující). Tam koučing nikdy přímo „kup". Když nevíš, do které skupiny zpráva
+> patří → rozhoduje, **jestli adresát Martina zná**, ne obsah samotný.
 
 ## Čeho se vyvarovat
 
