@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://martinbarna.github.io/MB.cz/</loc>
+    <loc>https://web.martinbarna.cz/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://martinbarna.github.io/MB.cz/videokurz.html</loc>
+    <loc>https://web.martinbarna.cz/videokurz.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://martinbarna.github.io/MB.cz/clanky/kaloricky-deficit.html</loc>
+    <loc>https://web.martinbarna.cz/clanky/kaloricky-deficit.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://martinbarna.github.io/MB.cz/clanky/vlaknina.html</loc>
+    <loc>https://web.martinbarna.cz/clanky/vlaknina.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://martinbarna.github.io/MB.cz/clanky/flexibilni-stravovani.html</loc>
+    <loc>https://web.martinbarna.cz/clanky/flexibilni-stravovani.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
