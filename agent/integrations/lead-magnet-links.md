@@ -40,7 +40,9 @@ Příklady:
 ## D) Stav / TODO
 - [ ] Nahrát aktuální PDF na Drive (veřejná složka, „kdokoliv s odkazem").
 - [ ] Vyrobit krátké URL na 4 lead-magnety + kuchařky.
-- [ ] Doplnit UTM do CTA v `templates/nurture-series/*` a `poptavka-template.html`.
+- [x] UTM doplněno do CTA: `nurture-series/vlna-2..4`, `doprodej-videokurz`, `retence-prodlouzeni`
+  (videokurz/koučing odkazy; `utm_source=email`, medium dle kanálu). Zbývá: až budou Drive odkazy
+  na PDF, přidat UTM i k nim a vyměnit přílohy za odkazy.
 - [ ] Sheet „Lead-magnety" s mapou název → odkaz.
 
 Souvislosti: `lead-engine.md` (funnel vlna 1–4), `assets/README.md` (zdroje PDF),
