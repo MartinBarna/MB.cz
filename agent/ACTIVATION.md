@@ -19,7 +19,10 @@ Přehled stavu. ✅ = hotové/funkční · 🟡 = připravené, čeká na rozhod
 ## Obsah
 - ✅ Strategie, 12 scénářů, carousely, 30denní kalendář
 - ✅ 9 Canva grafik + 2 YouTube thumbnaily (zbytek po obnově denní kvóty)
-- 🟡 Publikace přes Blotato (vyber účty/sítě)
+- 🟡 Publikace přes Blotato (vyber účty/sítě) — pozn.: API klíč expirovaný, obnovit
+- 🟡 **DODĚLAT PO OBNOVĚ KVÓTY (Canva/Adobe):** vysázet (1) maintenance PDF „Jak držet
+  formu sám" (zatím brandované HTML na Drive/Klienti platby), (2) grafiky k dávce `content/batch-2026Q3.md`,
+  (3) případně Comeback vizuál. Zadání hotová, čeká jen na kvótu.
 
 ## Čeká na tvoje rozhodnutí / účty
 - 🟡 **Recenze:** pošli odkaz (Google recenze / formulář) → doplním do šablon.
