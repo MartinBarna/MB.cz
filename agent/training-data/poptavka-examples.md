@@ -237,6 +237,68 @@ To je přesně typ tvrzení, které agent dle železných pravidel **NESMÍ psá
 
 ---
 
+## Rozšířený sběr — nové vzory
+
+Další stránkovaný průchod Gmailem (2022–2026). Zachyceny POUZE typy vláken, které dosud
+v souborech nebyly. Vše anonymizováno; konkrétní částky uvedeny jen jako řádový vzor postupu,
+ne jako platný ceník (ten patří do `KNOWLEDGE_BASE.md`).
+
+### A) Reklamace / žádost o vrácení peněz (tvrdý objection)
+**Situace:** Klient zaplatil paušál (např. Diamond na měsíc), ale celé období ignoroval —
+neposílal míry/reporty — a po uplynutí období žádá vrácení s odkazem na „100% záruku vrácení peněz".
+**Jak Martin reaguje:** Věcně, klidně, ale narovinu hájí hranici: „Spolupráce byla ukončena
+uplynutím paušálního období, které jste se rozhodl nevyčerpat a ignorovat. Ač jste věděl, co
+Coaching obnáší." Opírá se o **důkazy** (maily, předchozí stejná spolupráce, historie na WA).
+Aby předešel „další komedii", nakonec **část částky vrátí** (gesto smíru / vyhnutí se sporu),
+i když na to dle něj nárok není. Zbytek si nechává za odvedenou práci/snahu.
+**⚠️ ESKALACE:** Tohle je přesně typ vlákna, které agent NIKDY neřeší sám — reklamace, vrácení
+peněz, spor o paušál → vždy předat Martinovi. Slouží jen jako kontext, jaký tón Martin volí
+(věcný, doložený důkazy, hranice + smírné gesto), NE jako šablona k automatickému odeslání.
+
+### B) B2B / influencer / mediální nabídky spolupráce (příchozí)
+Martinovi chodí nabídky: krabičkové diety/„meal prep" značky chtějí promo v podcastu/stories,
+agentury, teambuilding portály, „odlehčím vám administrativu" služby, fakturační/benefitní
+platformy. **Vzor odpovědi (zdvořilé, stručné NE):**
+- Poděkuje a odmítne s krátkým důvodem: „moc díky za nabídku, nové podcasty už však moc netočím :)"
+- **Pozičně se vymezí:** „Dělám spíše VIP služby pro méně lidí." (nízkoobjemový, prémiový model)
+- Nechá pootevřené dveře, kde to dává smysl: „občas klienti ke coachingu potřebují jídla dovézt,
+  případně je můžu odkázat na Vás" / „třeba se propojíme na jiném projektu v budoucnu".
+- U barteru bez provize (mikro-influencer chce sdílení): klidně sdílí zdarma, jen „označ mě / pošli
+  na IG", bez nároku na odměnu, pokud se mu projekt líbí.
+Tón vždy přátelský, „ať se Vám daří a roste to!". **Agent: tyhle B2B nabídky needitovat do draftu
+sám — předat Martinovi** (rozhodnutí o spolupráci/penězích je na něm); slouží jen jako vzor tónu.
+
+### C) Follow-up na zájemce, který poptal, ale neodpovídá / neposlal dotazník
+Martin po pár dnech zájemce **jemně postrčí**, bez tlaku, s pozitivním rámcem:
+> „Zdravím Vás! Jestli chcete začít makat na své [jarní] formě, můžete během dneška poslat vstupní
+> dotazník, který jsem Vám posílal výše v předchozím mailu :) Přeju fajn den!"
+Pattern: připomene, že stačí poslat dotazník (nízká bariéra), naváže na sezónu/cíl, drží termín
+„noví klienti začínají v pondělí". Když poptávka „nedorazila"/zapadla, omluví se a pošle dotazník
+znovu: „tak to se ke mě nic nedostalo, omlouvám se. Já odpovídám většinou rychle :)".
+
+### D) Sportovec / aktivní člověk jako lead (ne jen „chci zhubnout")
+Objevuje se i poptávka typu „jsem aktivní sportovec, ale nemám v jídle řád, hůř regeneruji a nemám
+výkony". Martin reaguje stejným rámcem (WA, dotazník, start v pondělí), jen cíl posune od hubnutí
+k **výkonu/regeneraci/řádu ve stravě**. Potvrzuje, že coaching není jen o hubnutí.
+
+### E) Zánik produktu / proaktivní férovost u plateb (členská sekce)
+Když Martin **utlumuje produkt** (členská sekce — menší zájem než videokurz), a někdo si ho koupí:
+- Napíše osobně, přizná stav („v současné době dále nerozšiřuji") a nabídne **kompenzaci vyšší
+  hodnoty**: trvalý přístup k videokurzu + kuchařce + e-bookům (jinak ~1200–1300 Kč) místo měsíčního
+  členství. „Je to za Vás fér? :)" + „Pokud by nabídka nevyhovovala, můžu vrátit platbu."
+- **Proaktivně hlídá opakované platby:** předem upozorní „14/6 se Vám strhne další platba… opakované
+  platby musím zrušit ručně" — řeší předem, ať klient neplatí za něco, co nechce.
+Pattern férovosti: raději dát hodnotu navíc / vrátit peníze, než inkasovat za utlumený produkt.
+
+### F) Gesto dobré vůle (emočně silný kontext)
+Když lead/zákazník zaujme lidským příběhem (např. táta řešící stravu pro nemocného/odhodlaného syna),
+Martin pošle **všechny své digitální produkty zdarma jako dárek** (videokurz, audiobook, kuchařka,
+e-booky, tréninky, bonusový 100stránkový e-book) bez ohledu na to, co si koupili. „Na mě zapůsobilo
+nasazení syna… rozhodl jsem se Vám poslat všechny mé elektronické produkty jako dárek." Stejné gesto:
+když si klient coachingu omylem koupí videokurz, který má v ceně coachingu jako dárek → Martin platbu
+**odečte od budoucí spolupráce** nebo vrátí. (Pozn.: rozdávání produktů zdarma = obchodní rozhodnutí
+Martina, agent ho sám nenabízí.)
+
 ## Limity dat
 - Jasné šablony (uvítací mail, onboarding "informace na první týden") jsou silně standardizované
   a vyskytují se desítkykrát — vzorec je velmi spolehlivý.
