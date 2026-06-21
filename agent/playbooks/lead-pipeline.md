@@ -20,14 +20,15 @@ aktualizuje. Žije v Sheetu/Notionu (ne v repu).
 ## Skórování leadů (priorita)
 - 🔥 **HORKÝ** — ptá se na cenu / „jak začít" / chce konzultaci / silný záměr, **nebo čeká
   na odpověď**. Řeš dnes: draft odpovědi + nabídni termín callu (`../integrations/calendar-booking.md`).
-- 🟡 **VLAŽNÝ** — obecný zájem, stáhl lead magnet, ptal se na info bez jasného „chci".
-  Hodnotový follow-up + jemné CTA, zařaď do nurture.
+- 🟡 **VLAŽNÝ** — obecný zájem, ptal se na info bez jasného „chci". Hodnotový follow-up + jemné CTA.
+  ⚠️ **Leady z formuláře (lead magnet) NEDRAFTUJ** — řeší je automat **Lead Engine** (vlna 1–4,
+  dedup), viz `../integrations/lead-engine.md`. Jinak vznikne duplikát (reálně se to už stalo).
 - 🔵 **STUDENÝ** — starý/nejasný/jednorázový dotaz bez reakce. Jeden poslední dotek, pak archiv.
 
 ## Follow-up radar (SLA)
 - **Lead napsal a nemá odpověď** → to je horké, ztracená příležitost, řeš hned.
 - **Martin odepsal, lead mlčí > 5 dní** → jemný nudge draft (max 2×), pak studený.
-- **Po stažení lead magnetu** den 2 / 5 / 12 → hodnotová série (napojení na content/maily).
+- Lead-magnet série (den 0/3/7/12) jede přes **Lead Engine**, ne přes agenta — nezasahuj.
 - Gmail štítky pro vizuální frontu: `Lead/Hot`, `Lead/Warm`, `Lead/Cold`, `Lead/Follow-up`.
 
 ## Routina (týdně, po)
