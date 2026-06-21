@@ -151,6 +151,11 @@
         @media (max-width:575.98px){
             .btn, .btn-grn, .btn-gold, .btn-ghost, .btn-out, .btn-white { padding-top:13px; padding-bottom:13px; }
         }
+    
+        /* ===== přístupnost: respektuj vypnuté animace ===== */
+        @media (prefers-reduced-motion: reduce){
+            *, *::before, *::after { animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; }
+        }
     </style>
     <script type="application/ld+json">
 {
