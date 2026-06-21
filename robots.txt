@@ -1,4 +1,54 @@
+# robots.txt — Martin Barna (web.martinbarna.cz)
+# Web i jeho obsah jsou otevřené pro vyhledávače i AI asistenty.
+# Přehled webu pro LLM: https://web.martinbarna.cz/llms.txt
+
 User-agent: *
+Allow: /
+
+# --- Explicitně vítáme AI / LLM crawlery (vyhledávání i generování odpovědí) ---
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: cohere-ai
 Allow: /
 
 Sitemap: https://web.martinbarna.cz/sitemap.xml
