@@ -6,7 +6,9 @@
     <title>Martin Barna — Online výživa a fitness koučink</title>
     <meta name="description" content="Online výživový a fitness koučink od roku 2013. 600+ klientů, vědecky podloženo. Hubnutí, nabírání svalů a výkon bez jojo efektu. Balíčky Gold a Diamond, kalkulačka kalorií zdarma, videokurz.">
     <meta name="theme-color" content="#ff7a00">
+    <link rel="canonical" href="https://web.martinbarna.cz/">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://web.martinbarna.cz/">
     <meta property="og:title" content="Martin Barna — Online výživa a fitness koučink">
     <meta property="og:description" content="Zhubni, naber svaly a zvyš výkon — zdravě a natrvalo. Online koučink od roku 2013, 600+ klientů, vědecky podloženo.">
     <meta property="og:locale" content="cs_CZ">
@@ -51,6 +53,10 @@
     </script>
     <style>
         @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+        @media (prefers-reduced-motion: no-preference) {
+            html.reveal-on section { opacity:0; transform:translateY(26px); transition:opacity .6s ease, transform .6s ease; }
+            html.reveal-on section.in-view { opacity:1; transform:none; }
+        }
         :root { --green:#ff7a00; --green-dark:#161616; --green-light:#fff4e8; --gold:#ff7a00; --ink:#161616; }
         * { scroll-behavior:smooth; }
         html { scroll-padding-top: 80px; }
@@ -156,8 +162,21 @@
         .social a:hover { background:#fff; color:var(--green-dark); }
 
         footer { background:var(--ink); color:#cfd8d2; padding:30px 0; text-align:center; }
-        footer a { color:#9fd3a3; text-decoration:none; }
+        footer a { color:#ffb066; text-decoration:none; }
     </style>
+    <script>
+    (function(){
+        if ('IntersectionObserver' in window && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+            document.documentElement.classList.add('reveal-on');
+            document.addEventListener('DOMContentLoaded', function () {
+                var obs = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); } });
+                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+                document.querySelectorAll('section').forEach(function (s) { obs.observe(s); });
+            });
+        }
+    })();
+    </script>
 </head>
 <body>
     <!-- NAV -->
@@ -412,7 +431,7 @@
                 <div class="col-md-4"><a href="clanky/flexibilni-stravovani.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🍕</div><h5 class="card-title">Flexibilní stravování</h5><p class="text-muted mb-0">Jak jíst i oblíbená jídla a přitom mít výsledky.</p></div></a></div>
             </div>
             <div class="text-center mt-4">
-                <a href="https://www.martinbarna.cz/blog/" target="_blank" rel="noopener" class="btn btn-out">Číst celý blog</a>
+                <a href="clanky/index.html" class="btn btn-out">Číst celý blog</a>
             </div>
         </div>
     </section>
