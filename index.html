@@ -180,6 +180,41 @@
 
         footer { background:var(--ink); color:#cfd8d2; padding:30px 0; text-align:center; }
         footer a { color:#ffb066; text-decoration:none; }
+
+        /* ===== VIZUÁLNÍ POLISH (CSS-only, bez zásahu do struktury) ===== */
+        /* Hero: jemné prosvětlení + chip badge */
+        .hero { position:relative; overflow:hidden; }
+        .hero::before { content:""; position:absolute; inset:0; pointer-events:none;
+            background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.18), transparent 46%); }
+        .hero .container { position:relative; z-index:1; }
+        .hero .badges span { background:rgba(255,255,255,.12); padding:7px 16px; border-radius:50px; margin:5px 7px; }
+
+        /* Jednotný akcent pod každým nadpisem sekce */
+        .section-head h2 { position:relative; }
+        .section-head h2::after { content:""; display:block; width:56px; height:4px; border-radius:2px;
+            background:linear-gradient(90deg,var(--green),#ffb066); margin:1rem auto 0; }
+
+        /* Plynulejší hover karet s výraznějším pozvednutím */
+        .card, .plan, .calc-wrap, .review-box { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
+        .card { box-shadow:0 10px 30px rgba(22,22,22,.06); }
+        .card:hover { transform:translateY(-8px); box-shadow:0 22px 48px rgba(22,22,22,.12); }
+
+        /* Primární tlačítka: klidové „pozvednutí" + měkčí přechod */
+        .btn-grn, .btn-gold, .btn-white { transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; }
+        .btn-grn { box-shadow:0 6px 18px rgba(255,122,0,.25); }
+        .btn-grn:hover { box-shadow:0 12px 26px rgba(255,122,0,.40); }
+
+        /* Animované podtržení odkazů v menu */
+        .nav-link { position:relative; }
+        .nav-link::after { content:""; position:absolute; left:0; bottom:0; width:0; height:2px;
+            background:var(--green); transition:width .25s ease; }
+        .nav-link:hover::after { width:100%; }
+
+        /* Mikro-pohyb ikon a zdrojových tlačítek */
+        .feature .ico { transition:transform .3s cubic-bezier(.2,.7,.2,1); }
+        .feature:hover .ico { transform:translateY(-3px) scale(1.07); }
+        .src-btn { transition:transform .2s ease, background .2s ease, color .2s ease; }
+        .src-btn:hover { transform:translateY(-2px); }
     </style>
     <script>
     (function(){
