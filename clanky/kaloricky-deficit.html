@@ -18,11 +18,16 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://web.martinbarna.cz/assets/og-default.jpg">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
+        .skip-link{position:absolute;left:-999px;top:0;background:#ff7a00;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+
         :root { --green:#ff7a00; --green-dark:#161616; --green-light:#fff4e8; --gold:#ff7a00; --ink:#161616; }
         * { box-sizing:border-box; scroll-behavior:smooth; }
         a:focus-visible, button:focus-visible { outline:3px solid #ff7a00; outline-offset:2px; border-radius:4px; }
@@ -106,9 +111,10 @@
     </script>
 </head>
 <body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
     <div class="nav"><div class="wrap"><a class="brand" href="../index.html">Martin Barna</a><a class="back" href="index.html">← Zpět na blog</a></div></div>
 
-    <header class="hero">
+    <header class="hero" id="obsah">
         <span class="tag">VÝŽIVA</span>
         <h1>Kalorický deficit v kostce</h1>
     </header>

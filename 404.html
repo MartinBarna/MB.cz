@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stránka nenalezena — Martin Barna</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -14,15 +16,26 @@
             text-align:center; color:#fff; background:linear-gradient(135deg,#ff7a00 0%,#161616 100%); padding:2rem; }
         h1 { font-size:6rem; font-weight:800; margin:0; }
         p { font-size:1.2rem; opacity:.95; max-width:480px; margin:1rem auto 2rem; }
-        a { background:#fff; color:#161616; font-weight:700; padding:14px 38px; border-radius:50px; text-decoration:none; display:inline-block; transition:.2s; }
-        a:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.25); }
+        .btn-main { background:#fff; color:#161616; font-weight:700; padding:14px 38px; border-radius:50px; text-decoration:none; display:inline-block; transition:.2s; }
+        .btn-main:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.25); }
+        .links { margin-top:2rem; display:flex; flex-wrap:wrap; gap:10px 22px; justify-content:center; }
+        .links a { color:#fff; font-weight:600; text-decoration:none; opacity:.9; border-bottom:2px solid rgba(255,255,255,.5); padding-bottom:2px; }
+        .links a:hover { opacity:1; border-color:#fff; }
+        a:focus-visible { outline:3px solid #fff; outline-offset:3px; border-radius:4px; }
     </style>
 </head>
 <body>
     <div>
         <h1>404</h1>
         <p>Jejda, tahle stránka neexistuje. Ale tvoje cesta ke zdravější postavě ano! 💪</p>
-        <a href="/">Zpět na hlavní web</a>
+        <a class="btn-main" href="/">Zpět na hlavní web</a>
+        <nav class="links" aria-label="Užitečné odkazy">
+            <a href="/clanky/">Blog</a>
+            <a href="/videokurz.html">Videokurz</a>
+            <a href="/#kalkulacka">Kalkulačka kalorií</a>
+            <a href="/#balicky">Koučink</a>
+            <a href="/#kontakt">Konzultace zdarma</a>
+        </nav>
     </div>
 </body>
 </html>

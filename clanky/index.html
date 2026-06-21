@@ -18,12 +18,17 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://web.martinbarna.cz/assets/og-default.jpg">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <style>
+        .skip-link{position:absolute;left:-999px;top:0;background:#ff7a00;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+
         :root { --green:#ff7a00; --green-dark:#161616; --green-light:#fff4e8; --ink:#161616; }
         body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); }
         a:focus-visible, button:focus-visible { outline:3px solid #ff7a00; outline-offset:2px; border-radius:4px; }
@@ -112,6 +117,7 @@
     </script>
 </head>
 <body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
         <div class="container">
             <a class="navbar-brand" href="../index.html">Martin Barna</a>
@@ -119,7 +125,7 @@
         </div>
     </nav>
 
-    <header class="hero">
+    <header class="hero" id="obsah">
         <div class="container">
             <h1>Blog o výživě a fitness</h1>
             <p>Články bez mýtů a kategorických zákazů. Srozumitelně, vědecky a tak, abys to dokázal použít hned.</p>
