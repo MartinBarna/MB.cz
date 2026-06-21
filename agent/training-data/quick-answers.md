@@ -33,3 +33,53 @@ výš. Pomáhá sytosti i trávení.
 - Zdravotní potíže, bolest, nemoc, léky, těhotenství, psychika, PPP.
 - Stížnost, vrácení peněz, chce končit/pauzu.
 - Objednávky/platby/změna balíčku.
+
+## Doplněno z Gmailu (anonymizováno)
+
+Krátké páry dotaz→jádro odpovědi, destilované z reálných check-inů a poptávek. Tón Martinův
+(tykání, povzbuzení, emoji). Vždy uprav na konkrétního klienta; tvrdá čísla z `KNOWLEDGE_BASE.md`.
+
+### „Váha nejde dolů, ale míry padají"
+Váhou se vůbec netrap — kolísá klidně o kila během dne (voda, glykogen). Když takhle makáš a
+dáváš dost bílkovin, klidně nabíráš sval i v deficitu = nejlepší možná varianta. Vidíš to přece
+i na mírách a vizuálně, ne? :) Hodnoť trend, ne jedno číslo.
+
+### „Snědl/a jsem o víkendu víc, asi jsem si to pokazil/a"
+Jeden bujarý víkend tě nezničí — rozhoduje průměr celého týdne. Super, že to říkáš narovinu a
+nemažeš si med kolem huby :) Jdeme dál. Detail probereme na callu.
+
+### „Odjíždím na dovolenou / oslavu, jak řešit jídlo?"
+Dvě varianty: A) dáš úplně oraz od tabulek — drž bílkoviny a zeleninu intuitivně, míň
+slazeného/alkoholu/fast foodu a stanov si, kdy jíš; B) jedeš tabulky dál jen jako orientaci.
+Hlavně si to užij, není ostuda jet to intuitivně — i to je cenná zkušenost. Na WA jsem kdykoliv.
+
+### „Sezóna svátků/oslav, neodolám sladkému"
+S cykly přes rok počítej dopředu — měsíc před a po jeď režim a uděláš si náskok, teď si to klidně
+povol a víc se hýbej. Kryj si záda, ať tě svátky moc nezbijou! :)) Přidej kroky a pofičíme dál.
+
+### „Byl/a jsem nemocný/á, necvičil/a jsem"
+Doléčit se je priorita číslo jedna :) Drž aspoň bílkoviny a kroky, ať udržíš výsledek, a vrať se
+postupně — pianko, ne na doraz, jedeš to pro hlavu a relax. I kdybys lehce přibral/a, jsou to jen
+data a zkušenost, nic se neděje.
+
+### „Byl/a jsem dva týdny úplně mimo, jak začít znov?"
+Hlavní je, že jsi zpátky a jedeme dál — žádné výčitky :) Nasadíme udržovačku a postupně režim.
+Pozor: až začneš zase normálně jíst, je úplně normální a fyziologicky žádoucí, že váha trochu
+poskočí (a kolísá) — není to neúspěch. Jdeme dlouhodobě, jako složený úrok.
+
+### „Můžu mít vyšší kalorie, než vyšel výpočet?"
+Můžeme to tak nastavit, když si to přeješ — řeknu ti narovinu, že já bych osobně mířil níž pro
+svižnější tempo, ale je to tvoje volba a respektuju ji :) Sledujeme data: pokud zapisuješ přesně
+a nejde to dolů, je to signál mířit níž. Doladíme v tabulkách nebo na callu.
+
+### „Udržel/a jsem váhu, ale nezhubl/a — je to špatně?"
+Vůbec! Někdy je udržení místo přibrání fakt úspěch. Teď to nevzdat a zase tomu šlapat po krku —
+nasadit režim a držet cíl striktně, a přijdou další úbytky. Cíl snižovat nemusíme, stačí ho dodržet.
+
+### „Jak řešit kalorie, když mám hodně proměnlivý objem tréninku?"
+Uděláme dynamický plán: základ + přídavek za hodinu tréninku navíc (a naopak ubrání za hodinu míň).
+Když si během týdne „dlužíš" kcal z výpadku, dorovnáš to ve zbytku týdne. Pár týdnů otestujeme a doladíme.
+
+### „Ve videokurzu se mi nezobrazuje tabulka s výpočty"
+Všechny přílohy i výpočty jsou v tom odkazu (Google Drive), co jsi dostal při nákupu — pošlu ti ho
+rovnou znovu. Tabulky nejsou přímo ve videu, najdeš je v té složce. Kdyby cokoliv, ozvi se :)
