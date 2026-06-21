@@ -76,6 +76,92 @@ vždy z `KNOWLEDGE_BASE.md`; tady jde o *způsob vedení*, ne o ceník. Žádné
 
 ---
 
+## Kompletní index Team Barna materiálů
+
+Destilát z rekurzivního průchodu sdílenou složkou „Team Barna" na Drive (cca 14 hlavních
+podsložek, desítky dokumentů + rozsáhlé knihovny PDF/audio). Témata → jádro. Osobní data
+(jména, ceny, %) jsou vynechána; ceny patří jen do `KNOWLEDGE_BASE.md`, citlivé prodejní
+a finanční věci do interní sekce níže.
+
+### A) Procesy a standardy vedení (jádro metodiky)
+- **Cesta klienta během coachingu** → 9-krokový proces: úvodní video call (coach má předem
+  vstupní dotazník a data) → týdenní mailové reporty v jednotném templatu → týdenní edukační
+  téma → týdenní analýza kalorických tabulek a úprava maker/pohybu → měsíční shrnutí + call
+  → ≥1× týdně proaktivní WhatsApp kontakt → znalost ACA/IMV psychologie stravování →
+  udržování vztahu → poděkování, výzva k recenzi a pozvánka k návratu. (Plná verze viz
+  sekce „Proces vedení klienta" výše.)
+- **Mailový template pro report** → sjednocená grafika/formát, klient pozná mail na první
+  pohled; patička s odkazy na přílohy, videokurz, kuchařku, ebook, audioknihu a 100+ dalších
+  příloh; mění se jen podpis coache. Standard: „my diktujeme standard", měníme mindset na
+  celý život, nikoli formu na léto; přesah do psychiky se dokazuje činy, ne názvem.
+- **Rozvoj úkoly pro coache** (2 varianty dokumentu) → každý coach co 14 dní vytvoří min.
+  1 ks: vzdělávací/Q&A video, audio, PDF, obecný tréninkový plán, rozbor cviku, recept nebo
+  ukázku jednodenního jídelníčku.
+- **Školení a podpora pro coache** → nárokové školení: základy flexibilního stravování;
+  praktická „cesta klienta" + stínování práce s top klienty; flexibilní stravování pro coache
+  (materiály IMV); Human Behaviour & psychologie stravování. Klíčová metodika nepřesností
+  vážení/zápisu (20-60 % rozdíl mezi nahlášeným a skutečným příjmem) → proč se sledují i míry
+  a pocity hladu/únavy/síly; podpora je mentoring, ne kontrola.
+- **Podklady na VOP pro klienty** (právnička) → okruhy obchodních podmínek: dny příjmu reportů,
+  dovolené coache, automatická návaznost/pokračování coachingu, podmínky a dostupnost WA
+  komunikace. (Hotové VOP nebyly v destilovaných souborech — jen zadání.)
+
+### B) Vzdělávací knihovna pro coache (odborné zdroje, Science Based)
+- **Advanced Coaching Academy (ACA)** → roční kurz Phil Learney Performance Education,
+  rozdělený do týdnů W1–W45. Každý týden = PDF + MP3 audio (EN) + český překlad v Google Docs.
+  Pokrytá témata mj.: Human Anatomy (kosterní/svalový systém, neutrální páteř, biomechanika),
+  Human Behaviour & Psychology (proč lidé jedí bez fyziologického hladu, hédonický hlad,
+  energetická bilance jako 1. zákon termodynamiky, role návyků a prostředí, role coache jako
+  katalyzátoru), Business Acumen (vedení podnikání, USP, demografie — pro rozvoj coache).
+  Toto je hlavní teoretická páteř „psychologie stravování", na kterou metodika odkazuje.
+- **Renaissance Diet 2.0** (Mike Israetel, PhD) → pyramida priorit diety (kalorie → bílkoviny
+  → sacharidy → tuky → načasování → suplementy), optimální rozsahy maker, načasování jídel a
+  bílkovin (FSR/FBR), praktická aplikace flexibilního stravování. Referenční zdroj kvality.
+- **Školení IMV — Flexibilní stravování** (zkratka na složku) → materiály Institutu moderní
+  výživy (Roubík, Šindelář), z nichž Martin školil tým; poznámky ve Wordu k načtení předem.
+- **MMA Sigma / IMV ebook**:
+  - „Moderní výživa v bojových sportech" (IMV: Šindelář, Roubík, Reinders) → nastavení cílů,
+    kalorická bilance, bílkoviny/sacharidy/tuky/hydratace/elektrolyty, optimální shazování
+    hmotnosti, nejčastější chyby. (Specializace — bojové sporty.)
+  - „Sigma Weight Cutting System" (Danny Lennon, MSc) → vědecký protokol shazování váhy pro
+    MMA/box: výběr váhové kategorie, manipulace vody/elektrolytů/glykogenu, rehydratace.
+  - UFC Performance Institute Cross-Sectional Analysis Vol. 2 → datová studie výkonu (referenční).
+- **Vzdělávací materiály klienti** (zkratka) → sdílené úložiště příloh, které dostávají klienti
+  (stejné, jaké používá Martin) — záruka, že coach předává jen ověřené podklady.
+
+### C) Praktické nástroje pro tvorbu jídelníčků
+- **jidelničky** → rozsáhlá knihovna vzorových jídelníčků a podkladů (zdroj receptů a ukázek
+  jednodenních jídelníčků, na které coach odkazuje při úpravě maker; využití pro Diamond návrh
+  jídelníčku sedícího na makra).
+
+### D) Nábor a tým coachů
+- **Požadavky a benefity coachů** → požadavky: notebook, mobil, AJ, fitness/výživový kurz,
+  orientace ve výživě/fitness/psychologii, akčnost a flexibilita, žádná broscience/esoterika.
+  Benefity: přílohy, ověřené procesy a mentoring, know-how, přísun klientů, podpora. (Smluvní
+  zákazy a interní odměňování → interní sekce.)
+- **Potenciální coaches / profily kandidátů** → seznam a hodnocení uchazečů (anonymizováno);
+  kritérium: umí s lidmi, poctivost, vlastní proměna jako příklad.
+- **Pohovory — otázky** (foto) → sada otázek pro výběrové řízení coachů.
+
+### E) Marketing a značka
+- **Profi fotky** (Martin + coaches) → fotky pro web a sociální sítě/FB marketing.
+- **Videa a články o coachích** → podcast/medailonek s každým coachem, edukační videa a články
+  na web od nových coachů.
+- **Podklady na kampaně (formulářová FB kampaň)** → kreativa „Team Martin Barna": A/B/C
+  varianty textů reklamy (důraz „vědecky, žádné zázračné drinky/30denní výzvy/zabijácké diety"),
+  text formuláře, text webové podstránky (positioning „za kvalitu ručí Martin Barna svým
+  jménem", komunikujete s coachem z týmu, stejná kvalita za nižší cenu). Cílení a rozpočet →
+  spíše interní marketingové parametry.
+- **IG / FB / TikTok** + **Logo Team Barna** + **Website** → brandové a webové podklady;
+  positioning coachingu a forem (Gold = mail/WA text, Diamond = WA hlasovky/video cally).
+
+### F) Provoz (mimo přímou práci s klientem — většinou interní/administrativní)
+- **Účetnictví, Právník, Ceny a odměňování, Sales / Call Centre** → finanční, smluvní a
+  prodejní agenda. Klientsky citlivé části (rozdělení zisku, provize, call-centre taktiky,
+  smluvní doložky o konkurenci) → výhradně interní sekce níže.
+
+---
+
 ## INTERNÍ — NIKDY klientovi
 
 Tyto věci se klientovi **nikdy nesdělují** (konzistentní s `KNOWLEDGE_BASE.md` §6). Agent je
@@ -99,5 +185,20 @@ nesmí uvést v draftu odpovědi klientovi ani je nijak nenaznačovat.
     poslední alternativa), interní úvahy o „vytřídění" leadů a efektivitě času — interní,
     nikdy se nepoužije jako argument vůči klientovi.
   - Interní fakturační/platební a předávací postupy mezi call centrem, asistentkou a Coachem.
+- **Lead flow a předávání klienta (interní orchestraceMartinem).** Lead z FB formuláře →
+  sběr do tabulky → volání (call centrum / asistentka) → kvalifikace → Martin přiřadí
+  konkrétního coache (podle obsazenosti, preference muž/žena, sportu) a předá. Důvody, proč
+  platby chodí Martinovi a coach klienty „nepřebírá", jsou interní obchodní logika — klientovi
+  se nikdy nevysvětlují.
+- **Kvalifikační skript call centra** (co se ptá: cíle, preference coache muž/žena, sporty,
+  očekávání; zapisuje do tabulky jako data o klientovi) → interní prodejní nástroj.
+- **Rozdělení zisku z coachingu/videokurzu** mezi call centrum / Martina / coache a mechanika
+  výplaty coachovi (část hned, část po odpracovaných měsících na spokojeném klientovi),
+  odečet DPH, varianty cenotvorby (Gold/Diamond/sjednocená verze) → čistě interní finance,
+  klientovi nikdy. (Konkrétní částky a % jsou jen v interních dokumentech, ne v tomto repu.)
+- **Smluvní doložky pro coache** (zákaz přebírat klienty a po skončení spolupráce konkurovat,
+  zákaz prodávat klientům vlastní suplementy) → interní pracovněprávní vztah, klienta se netýká.
+- **Marketingové parametry kampaní** (lokalita, věk, denní rozpočet, A/B/C testovací logika)
+  → interní, neslouží jako argument vůči klientovi.
 - **Konkrétní osobní data** (jména Coachů, asistentů, call centra, klientů, e-maily, částky,
   % provizí) — do repa ani do draftů nepatří. Zde záměrně anonymizováno.

@@ -87,3 +87,65 @@ ilustrativní pásma. Coachovské fráze jsou Martinův hlas (vzory k použití)
 
 > Pozn. k bezpečnosti: tento destilát je o STYLU a logice, ne o konkrétních lidech. Konkrétní čísla
 > klienta vždy zůstávají **návrhem ke schválení** Martinem; zdravotní témata se eskalují.
+
+## Rozšířený sběr — okrajové vzory
+
+Doplněno po hloubkovém průchodu vlákny napříč **2022–2026** (~300+ check-in vláken prohlédnuto).
+Níže jen to, co **nebylo** v `check-in-examples.md` ani výše. Vše anonymizováno; fráze = Martinův hlas.
+
+### A. Zdravotní okrajové případy (eskalační triáda)
+
+| Situace z reportu | Akce s cíli | Jak to komunikuje |
+|---|---|---|
+| **Těhotenství** (míry rostou, hormony, ranní nevolnost, nechuť k jídlu) | **Necílit úbytek**, sledovat jako kontext; priorita tekutiny + bílkoviny; pohyb dle stavu | „Teď víme, že se míry díky těhotenství budou měnit i nahoru, ale neznamená to, že přibíráš tuk." Odkaz na **odborníka** (lymfo chirurg z podcastu) = „hlavní je dostatek tekutin". Vyloženě se baví o gynekologii jako mimo svou roli (vtip „kdybys byl někdy těhotný…"), zdraví miminka nad data. |
+| **Kojení** | Vyšší/volnější příjem, výkyvy normalizuj | „Šlo to fest, i když se den vynechal — přikládal bych to tomu kojení." |
+| **Operace / pooperační režim** (oko, čípek, rameno) | **Přepni na „zdravotní verzi" cílů** (méně/žádný sport), pošli dvě varianty (zdravý vs. omezený) | „PS: tohle je verze pro ‚zdravého Tebe'. Hlavní je se uzdravit a cíle by se fakt mohly lišit, kdybysme měli ‚o dost méně sportu'." U závažného (psychosomatika, nevolnost před OP): „To je síla, máš mou plnou podporu, drž se! To se přečká." |
+| **Zvracení / nezadržení jídla v reportu** | Bez tlaku na čísla, empatie, eskaluj k lékaři | „Ty dva dny, kde skoro nic nemám — bylo to jediné, co jsem nevyzvracela." → Martin: užívej čekárnu u Dr., já mezitím připravím call. Data sekundární. |
+
+### B. GLP-1 / hubnoucí injekce (Ozempic, Wegovy, Mounjaro) — NOVÉ téma (2026)
+
+- Samostatná **edukační příloha** (10 slidů + studie: West 2026 BMJ, Wilding 2021 NEJM, Jastreboff 2022 NEJM).
+- Rámec: **„žádná cesta není morálně lepší"**, ale důsledky se liší. Po vysazení se váha u většiny
+  vrátí na výchozí během 1,5–2 let („není to selhání vůle, je to fyziologie").
+- Nuance dle profilu: **BMI 35+ / hypertenze / inzulinová rezistence → může být ‚zachránce'**;
+  běžná klientka s 10–20 kg nadváhy → „rychlá cesta s drahým, dlouhým návratem".
+- Coachův úhel: ztráta **svalů + kostí** a problém dotáhnout bílkoviny (1,6–2,2 g/kg) při nulovém
+  apetitu → proto silový trénink + protein. **Žádné odrazování od léku jako diagnóza** — edukace + volba klienta.
+
+### C. Specifické typy klientů / sportů
+
+- **Vytrvalostní sportovec (cyklista, závodník):** report obsahuje hodiny tréninku + termín **závodu**;
+  cíl = „nepřibrat tuk a udržet výkon", úspěch měří i výkonem dle tabulky, ne jen kg. „Vychytali jsme to
+  z hlediska tuku TOP a z hlediska výkonu taky."
+- **Bojovník / extrémní objem (10+ tréninků MMA týdně):** onboarding rovnou stručně, čísla = kcal/
+  bílkoviny/vláknina, nehrotí přesnost při tak vysokém výdeji.
+- **Velmi obézní muž (120 kg+), černý humor o sobě:** zrcadlí jeho drsný tón („dobré jak cyp 125,7 kg"),
+  soustředí se na **mírová tempa místo kolísavé váhy**, dlouhodobé milníky (pokořit 120 kg).
+- **Manželský/firemní pár (oba klienti):** křížově propojuje („spolupráce Olomouc–Ostrava navazuje"),
+  řeší přístupy do tabulek za oba, hecuje je proti sobě i spolu.
+
+### D. Komunikace, konflikt a gamifikace v check-inu
+
+- **Klient si sám snížil kcal** (např. 1200 po kongresu, „bylo to super"): nekárá, ale připomene rámec
+  „jíme co nejvíce, ne co nejméně"; jednorázové OK, **trvale ne** (floor + reverse logika výše).
+- **Znovuotevřená námitka „mám od Barny málo jídla":** nebere osobně, **detailně to rozebere na WA
+  hlasovce**, v mailu jen přepočet maker s vyšším příjmem. Validuje právo se ptát.
+- **Sázka / hra o „týden zdarma":** lehká gamifikace v check-inu („zatím útočíš dobře na naši sázku
+  o týden zdarma haha"), „Vinnetou přísaha" (oblékneme kalhoty/dosáhneme milníku) — buduje závazek.
+- **Stydlivý/sebekritický report** („stydím se, ostuda"): odlehčí („počítali jsme s tím, hlavně žes
+  si to užil!"), drobná symbolická penalizace s nadhledem („7 000 kroků za odměnu za akci :-D").
+- **Citace jako kotva:** opakovaný **Bruce Lee** („Nechtěj lehký život, chtěj sílu odolat životu
+  těžkému") a **Rocky** („Nás nedostanou!") u slabšího týdne / churn-rizika.
+- **Pochvala za proaktivitu v reportu:** když klient sám předepíše plán aktivit / dnešní zápis,
+  výslovně to ocení („+ body, žes mi napsal plán do příště, hned mám lepší pocit z reportu :-D").
+- **Pozdní/neúplný report bez dat:** „posílej jak stíháš, max odpovím další den po trénincích";
+  u chybějících kroků/měr dopočítá z toho, co je, neřeší to jako selhání.
+
+### E. Drobné nové nástroje a hlášky
+
+- **Šlofíky/spánek jako bod v zápisu** (20 min šlofík) — spánek explicitně mezi prioritami reportu.
+- **Nová hláška:** „Ledničku nepřecvičíš" (akcent na to, že strava > sport pro hubnutí).
+- **Reverse/intuitivní režim pro vybrané:** menšina klientů jede „intuitivně" i přes svátky
+  (vyšší cíle, volněji), a stejně mívají úbytky — Martin to vědomě nechává jako jejich režim.
+- **Odchod/ukončení s otevřenými dveřmi:** „tak rychle se mě nezbavíš :-D, máš předplaceno do X,
+  dveře u mě máš vždy otevřené i pro jednorázové konzultace" — žádný tlak, win-back ladně připraven.
