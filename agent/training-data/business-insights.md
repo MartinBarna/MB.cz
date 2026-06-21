@@ -85,5 +85,36 @@
 - Mužská i ženská větev mají vlastní texty i PDF přílohy; jinak shodná logika.
 - Existuje i připravený (nespuštěný) plán FB kampaně, který do tohoto funnelu sype leady; ekonomicky stojí hlavně na tom, že **1 coaching klient** zaplatí test mnohonásobně, videokurz pokryje cenu leadů.
 
+## Z Drive (agregát)
+
+> Zdroj: Google Drive složky s reporty („Report pro Coache" — prázdné šablony i klientské
+> kopie 2021–2026, složky „Report pro Coache – tabulka na sdílení dat", „Bohdanka report",
+> stará verze „Aplikace TvůjCoach"). Níže jen procesní vzorce, žádná osobní data.
+
+**Jak Martin reálně vede klienta (proces vedení, z reportů):**
+- Jádro spolupráce = **standardizovaný tracker „Report pro Coache" (xlsx) na 12 týdnů**
+  = jedna „série" ≈ jeden 3měsíční balíček. Delší spolupráce = další série (číslováno,
+  např. „3. série").
+- Klient **týdně vyplňuje** denní data (váha + míry, kcal/makra, kroky a minuty pohybu,
+  pocitové škály únava/hlad/síla) a posílá report jako přílohu check-in mailu.
+- Šablona počítá **týdenní průměry automaticky** (vzorce); klient plní jen denní buňky.
+  Martin čte hlavně **souhrnný list** (trend váhy/měr + týdenní průměry) a podle něj ladí.
+- Některé verze mají řádek **`Cíl`** (cílová makra zadaná coachem) vedle `Průměr` — tj.
+  coaching = nastavit cíl → klient plní → porovnat průměr vs. cíl → upravit. Přesná
+  struktura: viz `training-data/report-structure.md`.
+- Měřené domény jsou **konzistentní 4 roky** (2022 i 2026 stejná kostra) → systém je
+  zaběhnutý a standardizovaný napříč klienty (muži i ženy, stejná šablona).
+
+**Procesní principy odvozené (agregát):**
+- **„Měř, co řídíš":** váha NENÍ jediná metrika — rovnocenně se sledují **obvody (pas,
+  pupík, boky)** a **subjektivní pocit** (hlad/únava/síla). Rozhodování o makrech tedy
+  zohledňuje i pohodu, ne jen číslo na váze.
+- **Compliance přes jednoduchost:** klient vyplňuje minimum (denní řádky), zbytek dopočítá
+  tabulka → nižší bariéra dodržování reportingu.
+- **Reporty jako jednotka retence:** spolupráce běží v 12týdenních cyklech; konec série =
+  přirozený rozhodovací bod pro pokračování/upsell (navazuje na churn/retenci výše).
+- Existuje i starší/oddělená infrastruktura **„Aplikace TvůjCoach"** (vlastní coaching app
+  + API, loga) — historicky byl tracker i v podobě appky, dnes hlavní nástroj = sdílený xlsx.
+
 ---
 *Pozn.: čísla jsou zaokrouhlené rozsahy a vzorce odvozené z agregace, ne přesné statistiky. Žádná osobní data nejsou v tomto souboru uvedena.*
