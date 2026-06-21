@@ -7,16 +7,22 @@ Princip jako všude: **agent připraví, Martin schválí.**
 ## Koho oslovit (a koho NE)
 
 **Ano (kandidát na win-back):**
-- V CRM `stav = ukončeno`, konec spolupráce zhruba **2–6 měsíců** zpět.
+- V CRM `stav = ukončeno`. **Priorita = konec spolupráce zhruba 2–6 měsíců zpět**
+  (nejvyšší úspěšnost: návyky už povolily, ale vztah/důvěra jsou čerstvé).
+- **Ber i starší ex-klienty (6 měs – roky)**, co odešli v dobrém — pořád tě znají a věří ti,
+  osobní oslovení funguje i po delší době (jen restart bude víc o vřelém navázání než o číslech).
 - Odešel v dobrém / „jen pauza" / život zasáhl (práce, děti) — ne kvůli nespokojenosti.
 - Měl výsledky nebo potenciál (z poznámek/reportů).
 
-**Ne (→ eskalace / vynechat):**
+**Ne (→ eskalace / vynechat / počkat):**
+- **Moc čerstvé ukončení (do ~6 týdnů)** — dej odstup, ať to nepůsobí, že nerespektuješ
+  jeho rozhodnutí/pauzu. (Výjimka: sám naznačil návrat.)
 - Kdo odešel nespokojený, řešil reklamaci/vrácení peněz, nebo výslovně nechtěl pokračovat.
 - Zdravotní důvody ukončení → citlivé, jen ručně.
 
 > Bez CRM: v Gmailu najdi dřívější aktivní klienty (`in:sent "Přeju bomba den"`), u kterých
-> poslední report/komunikace je 2–6 měsíců zpět a vlákno nekončí stížností.
+> poslední komunikace je **víc než ~6 týdnů** zpět a vlákno nekončí stížností. Priorita 2–6 měsíců,
+> ale starší klidně taky — seřaď od nejteplejších (nejnovější konec) po starší.
 
 ## Sekvence (3 maily, ~12 dní)
 
