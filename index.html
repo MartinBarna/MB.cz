@@ -55,7 +55,7 @@
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Martin Barna",
-      "url": "https://web.martinbarna.cz/",
+      "url": "https://www.martinbarna.cz/",
       "image": "https://web.martinbarna.cz/assets/og-default.jpg",
       "jobTitle": "Online výživový a fitness kouč",
       "description": "Online výživový a fitness kouč od roku 2013, přes 600 klientů. Specializace na flexibilní stravování, hubnutí, nabírání svalů a zvýšení výkonu — vědecky podloženě, bez jojo efektu.",
@@ -238,6 +238,36 @@
         .feature:hover .ico { transform:translateY(-3px) scale(1.07); }
         .src-btn { transition:transform .2s ease, background .2s ease, color .2s ease; }
         .src-btn:hover { transform:translateY(-2px); }
+
+        /* ===== PREMIUM DESIGN v2 (Apple vibe) ===== */
+        /* Fluidní, sebevědomá typografie — krásná na desktopu i mobilu */
+        .hero h1 { font-size:clamp(2.1rem, 5.6vw, 3.6rem); letter-spacing:-.025em; line-height:1.08; }
+        .hero p { font-size:clamp(1.04rem, 2.4vw, 1.3rem); }
+        .section-head h2 { font-size:clamp(1.75rem, 4.4vw, 2.5rem); letter-spacing:-.018em; }
+        h1, h2, h3 { letter-spacing:-.015em; }
+        .plan-price, .kcal, .stat h3 { letter-spacing:-.03em; }
+
+        /* Frosted-glass sticky nav (ten Apple pocit) */
+        .navbar.bg-white { background:rgba(255,255,255,.72)!important; -webkit-backdrop-filter:saturate(180%) blur(14px); backdrop-filter:saturate(180%) blur(14px); border-bottom:1px solid rgba(0,0,0,.05); }
+
+        /* Tlačítka: jemný gradient + crisp interakce */
+        .btn-grn { background:linear-gradient(180deg,#ff8a1f 0%, #ff7a00 100%); }
+        .btn-grn:active, .btn-gold:active, .btn-white:active, .btn-out:active { transform:translateY(0); }
+
+        /* Měkčí vrstvené stíny = prémiový pocit hloubky */
+        .card, .plan, .calc-wrap, .review-box { box-shadow:0 1px 2px rgba(22,22,22,.04), 0 14px 34px rgba(22,22,22,.07); }
+
+        /* Konzistentní zaoblení velkých ploch */
+        .result, .vk-banner, .calc-wrap { border-radius:22px; }
+
+        /* Mobil: sevřenější rytmus + pohodlné tap-targety */
+        @media (max-width: 575.98px) {
+            section { padding:62px 0; }
+            .hero { padding:104px 0 76px; }
+            .section-head { margin-bottom:2.4rem; }
+            .btn-grn, .btn-white, .btn-gold, .btn-out, .btn-gold { padding-top:14px; padding-bottom:14px; }
+            .navbar-brand { font-size:1.25rem; }
+        }
     </style>
     <script>
     (function(){
