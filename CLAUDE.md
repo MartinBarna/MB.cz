@@ -42,11 +42,11 @@ povzbudivě; klientům tyká a oslovuje je zdrobnělinou („Nazdar Kubo!").
 | `agent/AGENT_PROMPT.md` | Pravidla a bezpečnost, kdy eskalovat |
 | `agent/STYLE_GUIDE.md` | Tón, oslovení, fráze, podpisy, HTML patička |
 | `agent/KNOWLEDGE_BASE.md` | Produkty, ceny, proces, FAQ, filozofie, interní info |
-| `agent/playbooks/` | Triage (šum vs. práce) + postup pro poptávku / check-in / win-back / churn-radar / WhatsApp |
+| `agent/playbooks/` | Triage + postupy: poptávka, onboarding (+ makro-kalkulačka), check-in, briefing, churn-radar, win-back, retence, recenze, referral, touchpointy, WhatsApp, měsíční audit |
 | `agent/tests/` | Pojistka proti regresím: golden cases + bezpečnostní spouštěče/checklist (anonymizované) |
 | `agent/templates/` | Přesné HTML kostry mailů (formát + prokliky) — **kostru neměnit, měnit jen obsah** |
 | `agent/training-data/` | Destiláty ze 4 let Gmailu + Drive (logika úprav, vzory odpovědí, agregát byznysu) |
-| `agent/content/` | Content engine — strategie + hotové scénáře postů/reels |
+| `agent/content/` | Content engine — strategie, scénáře postů/reels, podcast→obsah, sezónní kampaně, success stories, měsíční recap klienta |
 | `agent/assets/` | Přílohy k mailům (lead-magnet PDF ženy/muži) k přikládání |
 | `agent/crm/` | Klientská paměť (mini-CRM) — schéma + šablona; živá data v Sheetu/Notionu |
 | `agent/integrations/` | Plány napojení: WhatsApp, Gmail filtry, Shopify, Blotato, FB ads, vidIQ |
