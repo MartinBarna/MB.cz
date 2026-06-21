@@ -1,0 +1,94 @@
+<!--
+  MASTER SHELL — značkový e-mail ve stylu web.martinbarna.cz.
+  Z téhle kostry se staví VŠECHNY „čisté" šablony (poptávka, onboarding, retence,
+  reengagement, doprodej, nurture, recenze). Měň jen sloty {{...}}, ne kostru.
+
+  DESIGN TOKENY (z webu): font Archivo · grafit #1f2733 / #161c25 · oranžová #f08a24
+  (tlačítko: oranž bg + text #1b130a) · krém #f6f4ef · text #20262e/#39424d · linka #e7e2d8 · radius 14–16px.
+  Email-safe: tabulky + inline styly (Gmail/Outlook/Apple Mail). Šířka 600 px, responzivní.
+
+  SLOTY:
+  {{PREHEADER}} – skrytý náhledový text (1 věta)
+  {{EYEBROW}}   – malý oranžový nadpis (např. „Nová spolupráce"); lze smazat celý řádek
+  {{HEADLINE}}  – velký titulek; zvýraznění slova: <span style="color:#f08a24;">slovo</span>
+  {{CONTENT}}   – tělo: odstavce / karty / CTA (komponenty viz dole)
+  {{DISCLAIMER}}– řádek s disclaimerem u edukace, jinak smaž
+
+  KOMPONENTY (kopíruj do {{CONTENT}}):
+  • Odstavec:
+    <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#39424d;">…</p>
+  • Pill CTA tlačítko:
+    <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+      <td style="background:#f08a24;border-radius:999px;">
+        <a href="{{ODKAZ}}" style="display:inline-block;padding:15px 34px;font-family:'Archivo',Arial,sans-serif;font-size:16px;font-weight:800;color:#1b130a;">{{TEXT}} →</a>
+      </td></tr></table>
+  • Zvýrazněná karta (box):
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ef;border:1px solid #e7e2d8;border-radius:14px;"><tr><td style="padding:20px;font-size:15px;color:#39424d;">…</td></tr></table>
+-->
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="x-apple-disable-message-reformatting">
+<title>Martin Barna — Be Effective</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;padding:0;background:#f6f4ef;}
+  a{text-decoration:none;}
+  @media (max-width:620px){ .container{width:100% !important;} .px{padding-left:22px !important;padding-right:22px !important;} }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#f6f4ef;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f6f4ef;font-size:1px;line-height:1px;">{{PREHEADER}}</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ef;">
+<tr><td align="center" style="padding:26px 12px;">
+<table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;font-family:'Archivo',Segoe UI,Roboto,Arial,sans-serif;">
+
+  <!-- HEADER -->
+  <tr><td style="background:#1f2733;border-radius:16px 16px 0 0;padding:26px 32px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="color:#ffffff;font-size:22px;font-weight:900;letter-spacing:.5px;">MARTIN&nbsp;BARNA
+        <div style="font-size:11px;font-weight:700;letter-spacing:3px;color:#f08a24;text-transform:uppercase;margin-top:5px;">Online výživa &amp; fitness</div>
+      </td>
+      <td align="right" valign="middle"><span style="display:inline-block;background:rgba(240,138,36,.16);color:#f08a24;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:7px 13px;border-radius:999px;">Be Effective</span></td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="height:4px;background:#f08a24;line-height:4px;font-size:0;">&nbsp;</td></tr>
+
+  <!-- BODY -->
+  <tr><td class="px" style="background:#ffffff;padding:34px 32px 8px;">
+    <div style="color:#f08a24;font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:12px;margin-bottom:10px;">{{EYEBROW}}</div>
+    <h1 style="margin:0 0 18px;font-family:'Archivo',Arial,sans-serif;font-size:26px;line-height:1.15;font-weight:900;color:#20262e;">{{HEADLINE}}</h1>
+    {{CONTENT}}
+  </td></tr>
+
+  <!-- PODPIS -->
+  <tr><td class="px" style="background:#ffffff;padding:18px 32px 28px;">
+    <p style="margin:0 0 14px;font-size:13px;color:#8a8a8a;">{{DISCLAIMER}}</p>
+    <p style="margin:0;font-size:16px;font-weight:900;color:#f08a24;">Be Effective!</p>
+    <p style="margin:2px 0 0;font-size:16px;color:#20262e;">Coach Marťas</p>
+  </td></tr>
+
+  <!-- FOOTER -->
+  <tr><td style="background:#161c25;border-radius:0 0 16px 16px;padding:24px 32px;">
+    <div style="font-size:15px;font-weight:800;color:#ffffff;margin-bottom:8px;">Martin Barna — Online výživa &amp; fitness</div>
+    <div style="font-size:13.5px;color:#c4cdd8;line-height:1.7;">
+      <a href="https://www.martinbarna.cz/" style="color:#f08a24;font-weight:700;">martinbarna.cz</a>&nbsp;·&nbsp;WhatsApp 603&nbsp;229&nbsp;831&nbsp;·&nbsp;
+      <a href="mailto:martin@martinbarna.cz" style="color:#f08a24;font-weight:700;">martin@martinbarna.cz</a>
+    </div>
+    <div style="margin-top:14px;font-size:13px;">
+      <a href="https://www.instagram.com/" style="color:#9aa4b0;font-weight:700;">Instagram</a>&nbsp;&nbsp;
+      <a href="https://www.facebook.com/" style="color:#9aa4b0;font-weight:700;">Facebook</a>&nbsp;&nbsp;
+      <a href="https://www.tiktok.com/" style="color:#9aa4b0;font-weight:700;">TikTok</a>&nbsp;&nbsp;
+      <a href="https://www.youtube.com/" style="color:#9aa4b0;font-weight:700;">YouTube</a>
+    </div>
+    <div style="margin-top:14px;font-size:11px;color:#8d97a3;font-style:italic;letter-spacing:.5px;">Be Effective!</div>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body>
+</html>

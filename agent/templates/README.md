@@ -5,6 +5,20 @@
 > klienty, podcast, sociální sítě). Když se kostra nezachová, klient pozná, že
 > odpovídal agent. **Pravidlo: kostru NIKDY neměň — vyměň jen obsah.**
 
+## Značkový design (`_brand-email.html`) — styl webu
+
+Nové „čisté" šablony používají **master shell `_brand-email.html`** — moderní e-mail
+v duchu **web.martinbarna.cz**: font Archivo, grafit + oranžová, oblé rohy, pill CTA
+tlačítko, hlavička s brandem a oranžovým akcentem, patička se sítěmi. Email-safe
+(tabulky + inline styly → drží v Gmailu/Outlooku/Apple Mailu), šířka 600 px, responzivní.
+
+- **Hotová ukázka:** `poptavka-template.html` (Gold/Diamond karty + WhatsApp CTA).
+- **Jak rozšířit:** zkopíruj shell, vyplň sloty `{{PREHEADER}}/{{EYEBROW}}/{{HEADLINE}}/{{CONTENT}}`,
+  obsahové komponenty (odstavec, CTA, karta) jsou v komentáři shellu. Měň jen obsah, ne kostru.
+- ⚠️ **Výjimka `check-in-template.html`:** ta zůstává **byte-přesná z Gmailu** kvůli Martinovým
+  trackovaným prokliküm (databáze příloh, videa, podcast). Tu novým designem **nepřepisuj** —
+  redesign platí pro čisté šablony (poptávka, onboarding, retence, reengagement, doprodej, nurture, recenze).
+
 ## `check-in-template.html`
 
 Doslovná HTML kostra reálného check-in mailu, vytažená z Gmailu (odeslaná zpráva).
