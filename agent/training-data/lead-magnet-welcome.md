@@ -23,7 +23,7 @@ Skutečné maily Martina novým zájemkyním z formuláře „7denní makro plá
 
 > **Předmět:** 7denní makro plán pro ženy 30+ (zdarma)
 >
-> Nazdar Alčo,
+> Nazdar [jméno],
 >
 > Přeju fajn večer a posílám Ti ten makro plán, najdeš tam i link na mou kalkulačku
 > pro individ výpočty.
@@ -44,8 +44,7 @@ Skutečné maily Martina novým zájemkyním z formuláře „7denní makro plá
 - „posílám Ti ještě z fitka ten makro plán…"
 - „Nazdar, posílám Ti ten makro plán…" (když jméno nejde zdrobnit)
 
-Zdrobněliny z praxe: Alčo, Silvo, Ivko, Pájo, Mončo, Věro, Luďko, Katko, Růžo, Lucko,
-Marcelo, Eliško.
+Oslovení = vždy **zdrobnělina jména v 5. pádu** (když jméno nejde zdrobnit, použij „Nazdar,").
 
 ## Hromadný follow-up (vylepšená verze plánu)
 

@@ -13,7 +13,7 @@ e-mailů (poptávky, onboarding, check-iny).
 
 | Komu | Jak |
 |---|---|
-| Klient / známý zájemce | **„Nazdar Kubo!" / „Nazdar Denčo!"** — 5. pád zdrobněliny, tykání |
+| Klient / známý zájemce | **„Nazdar Kubo!"** — 5. pád zdrobněliny jména, tykání |
 | Více klientů | „Zdravím Vás, dámy," |
 | Neznámý zájemce, B2B, médiá | **„Zdravím Vás," / „Dobrý den,"** — vykání |
 | Slovenští klienti | Píšou slovensky, Martin odpovídá **česky** (je to v pohodě) |
@@ -86,8 +86,7 @@ Tohle je Martinův **skutečný** mail, kterým posílá 7denní makro plán nov
 (ověřeno 6/2026). Je **krátký, lidský, bez odrážek a bez tvrdého prodeje**. Drž se ho:
 
 - **Plán posílá jako PŘÍLOHU PDF** (z `assets/lead-magnety/`), ne jako odkaz.
-- Oslovení = **zdrobnělina v 5. pádu**: Alčo, Silvo, Ivko, Pájo, Mončo, Věro, Luďko,
-  Katko, Růžo, Lucko, Marcelo, Eliško… (když jméno nejde zdrobnit, klidně „Nazdar,").
+- Oslovení = **zdrobnělina jména v 5. pádu** (když jméno nejde zdrobnit, klidně „Nazdar,").
 - Otvírač lehce obměňuje lidsky: „Přeju fajn večer a…", „posílám Ti hned po probuzení…",
   „posílám Ti ještě z fitka…".
 - CTA je **měkké**, schované do nabídky pomoci — žádné „kup koučing Gold/Diamond".
