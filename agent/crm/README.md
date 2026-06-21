@@ -38,7 +38,11 @@ si u každého klienta pamatovat kontext. Tohle je návrh struktury + jak s ní 
   → https://docs.google.com/spreadsheets/d/1NxEdwHTDP_3sYahxfgPoqe4OPwwVMvgRdhbpEIrkPQg/edit
 - Založen prázdný s hlavičkami (vč. sloupce `recenze`). Plní se postupně z onboardingů
   a check-inů — netřeba migrovat 4 roky najednou, CRM roste s aktivními klienty.
-- Agent ho umí číst i zapisovat přes Google Drive/Sheets nástroje.
+- **Seed z Gmailu:** agent umí vytěžit aktuální aktivní klienty (jméno, e-mail, cíl, makra,
+  poslední report, stav) a vrátit **CSV k importu**. V Sheetu: `Soubor → Importovat → Nahrát`
+  → „Připojit k aktuálnímu listu". (Přímý zápis do buněk Sheetu konektor neumí, proto import.)
+  Dotaž se: „vytěž CRM seed aktivních klientů".
+- PII (jména/čísla) **jen v Sheetu**, nikdy do repa.
 
 ## Per-klient profil (alternativa/rozšíření)
 Pro hlubší poznámky lze u klienta vést i textový profil — šablona `client-template.md`.
