@@ -209,6 +209,34 @@ konkrétní data).
 
 ---
 
+## Hloubková analýza z Gmailu (anonymizováno) — doplnění vzorů
+
+Z dalšího vzorku cold-inquiry vláken (zájemci z webového formuláře / FB). Potvrzuje a doplňuje výše:
+
+**Nové/potvrzené verbatim obraty:**
+- **Reframe „najmout si coache je OK":** přirovnání k automechanikovi — „když potřebuju opravit
+  auto, taky volám automechanikovi, a je to naprosto OK :-)". (Odzbrojí stud, že si někoho najímá.)
+- **Decision rule na tarif (čistě):** „Pokud vám pomůže si každý týden volat video/audio + ty
+  další bonusy, tak určitě **Diamond**. Pokud si nerada voláte / nevidíte v tom přínos, tak
+  bych zvolil **Gold** :)" → Diamond = týdenní video/audio cally + bonusy; Gold = bez volání.
+- **Komunita jako hodnota:** „přidám Vás do naší skupiny pro klienty. Super banda lidí se stejným cílem."
+- **Start = commitment device:** poslání vyplněného dotazníku = „beru, že začínáme na ostro a
+  jste rozhodnutá :)"; start fixně neděle/pondělí.
+- **Pochvala akčnosti leada (mirroring):** ocení, že zájemce sleduje data o sobě / „jede na 100 %
+  místo 20 výmluv" — naladí se na jeho energii.
+- **Jádro „rybařit vs. ryby" (delší verze):** „proč jí nedám papír s jídelníčkem? Protože jde
+  i o to, co bude po zhubnutí… aby to mělo přesah… = menší jojo efekt než většina lidí."
+
+**Námitky, které v cold-inquiry mailech reálně řeší** (na rozdíl od ceny/času, co jdou většinou přes WA):
+„nezvládnu to / nepůjde to" · „proč nedostanu hotový jídelníček" · strach z jojo efektu · „který tarif si vybrat".
+
+**⚠️ BEZPEČNOSTNÍ FLAG (pro agenta — NEKOPÍROVAT):** Martin sám občas v prodejním mailu dává
+mírné zdravotní ujištění (např. „diabetes by mělo vyřešit hubnutí", rady na spánek/psychiku).
+To je přesně typ tvrzení, které agent dle železných pravidel **NESMÍ psát** — zdravotní témata
+→ **eskalovat na Martina**, ne replikovat jeho ujištění. Agent drží mantinely, i když je člověk občas přešlápne.
+
+---
+
 ## Limity dat
 - Jasné šablony (uvítací mail, onboarding "informace na první týden") jsou silně standardizované
   a vyskytují se desítkykrát — vzorec je velmi spolehlivý.
