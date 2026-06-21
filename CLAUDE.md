@@ -42,7 +42,7 @@ povzbudivě; klientům tyká a oslovuje je zdrobnělinou („Nazdar Kubo!").
 | `agent/AGENT_PROMPT.md` | Pravidla a bezpečnost, kdy eskalovat |
 | `agent/STYLE_GUIDE.md` | Tón, oslovení, fráze, podpisy, HTML patička |
 | `agent/KNOWLEDGE_BASE.md` | Produkty, ceny, proces, FAQ, filozofie, interní info |
-| `agent/playbooks/` | Triage + postupy: poptávka, onboarding (+ makro-kalkulačka), check-in, briefing, churn-radar, win-back, retence, recenze, referral, touchpointy, WhatsApp, měsíční audit |
+| `agent/playbooks/` | Triage + postupy: poptávka, námitky/call, onboarding (+ makro-kalkulačka), check-in, briefing, dashboard, churn-radar, win-back, retence, upsell, recenze, referral, touchpointy, reklamace, WhatsApp, měsíční audit |
 | `agent/tests/` | Pojistka proti regresím: golden cases + bezpečnostní spouštěče/checklist (anonymizované) |
 | `agent/templates/` | Přesné HTML kostry mailů (formát + prokliky) — **kostru neměnit, měnit jen obsah** |
 | `agent/training-data/` | Destiláty ze 4 let Gmailu + Drive (logika úprav, vzory odpovědí, agregát byznysu) |
