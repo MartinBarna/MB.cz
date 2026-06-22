@@ -86,6 +86,19 @@
         @media (prefers-reduced-motion: reduce){
             *, *::before, *::after { animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; }
         }
+            .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#8a8a8a; }
+        .crumbs a { color:#8a8a8a; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs span { color:var(--ink); }
+        .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
+        .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .author-box img { width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
+        .author-box h4 { margin:0 0 .3rem; color:var(--green-dark); font-weight:800; font-size:1.1rem; }
+        .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
+        .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
+        @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
+        .inline-magnet { background:linear-gradient(135deg,#fff4e8,#ffe7cf); border-radius:18px; padding:1.7rem 1.8rem; margin:2.6rem 0; text-align:center; }
+        .inline-magnet strong { display:block; font-size:1.15rem; color:var(--green-dark); margin-bottom:.2rem; }
+        .inline-magnet a { font-weight:700; color:#fff; background:var(--green); padding:11px 28px; border-radius:50px; text-decoration:none; display:inline-block; margin-top:.8rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -145,10 +158,11 @@
     <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
     <div class="nav"><div class="wrap"><a class="brand" href="../index.html">Martin Barna</a><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="../index.html#balicky">Koučink</a><a class="hide-sm" href="../videokurz.html">Videokurz</a><a class="hide-sm" href="../treninky.html">Tréninky</a><a href="index.html">Blog</a><a class="cta" href="https://form.simpleshop.cz/qG2yO/buy/">Objednat konzultaci</a></nav></div></div>
 
+    <nav class="crumbs" aria-label="Drobečková navigace"><a href="../index.html">Domů</a> › <a href="index.html">Blog</a> › <span>Pitný režim a hubnutí: kolik pít a proč na tom záleží</span></nav>
     <header class="hero" id="obsah">
         <span class="tag">ZDRAVÍ</span>
         <h1>Pitný režim a hubnutí: kolik pít a proč na tom záleží</h1>
-    </header>
+    <p class="hero-meta">📅 červen 2026 · ⏱️ 2 min čtení</p></header>
 
     <div class="wrapc">
         <article>
@@ -199,7 +213,8 @@
                 <li><a href="cheat-day.html">Cheat day, nebo cheat meal? Jak na volnost bez sabotáže</a></li>
 </ul>
 
-            <p class="disclaimer">Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
+            <div class="author-box"><img src="../assets/foto/martin/portret.webp" alt="Martin Barna — online výživový a fitness kouč" loading="lazy" width="84" height="84"><div><h4>Martin Barna</h4><p>Online výživový a fitness kouč. Od roku 2013 pomohl přes 600 lidem zhubnout a získat formu natrvalo — vědecky, bez drastických diet a jojo efektu.</p><a class="btn gold" href="../index.html#balicky">Chci koučink na míru</a></div></div>
+                <p class="disclaimer">Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
         </article>
     </div>
 

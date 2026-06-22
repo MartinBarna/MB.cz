@@ -83,6 +83,19 @@
         @media (prefers-reduced-motion: reduce){
             *, *::before, *::after { animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; }
         }
+            .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#8a8a8a; }
+        .crumbs a { color:#8a8a8a; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs span { color:var(--ink); }
+        .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
+        .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .author-box img { width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
+        .author-box h4 { margin:0 0 .3rem; color:var(--green-dark); font-weight:800; font-size:1.1rem; }
+        .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
+        .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
+        @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
+        .inline-magnet { background:linear-gradient(135deg,#fff4e8,#ffe7cf); border-radius:18px; padding:1.7rem 1.8rem; margin:2.6rem 0; text-align:center; }
+        .inline-magnet strong { display:block; font-size:1.15rem; color:var(--green-dark); margin-bottom:.2rem; }
+        .inline-magnet a { font-weight:700; color:#fff; background:var(--green); padding:11px 28px; border-radius:50px; text-decoration:none; display:inline-block; margin-top:.8rem; }
     </style>
 <script type="application/ld+json">
 {
@@ -141,10 +154,11 @@
 <body>
 <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
 <div class="nav"><div class="wrap"><a class="brand" href="../index.html">Martin Barna</a><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="../index.html#balicky">Koučink</a><a class="hide-sm" href="../videokurz.html">Videokurz</a><a class="hide-sm" href="../treninky.html">Tréninky</a><a href="index.html">Blog</a><a class="cta" href="https://form.simpleshop.cz/qG2yO/buy/">Objednat konzultaci</a></nav></div></div>
-<header class="hero" id="obsah">
+<nav class="crumbs" aria-label="Drobečková navigace"><a href="../index.html">Domů</a> › <a href="index.html">Blog</a> › <span>Kreatin: Nejen pro svaly, ale i pro mozek</span></nav>
+    <header class="hero" id="obsah">
 <span class="tag">VĚDA &amp; VÝŽIVA</span>
 <h1>Kreatin: Nejen pro svaly, ale i pro mozek</h1>
-</header>
+<p class="hero-meta">📅 září 2025 · ⏱️ 5 min čtení</p></header>
 <div class="wrapc"><article>
 <h1><b>Kreatin: Nejen pro svaly, ale i pro mozek</b></h1>
 <p>Kreatin je přírodní sloučenina, kterou tělo produkuje a nachází se v potravinách, jako je maso a ryby. Je známý především jako doplněk stravy pro sportovce, ale nové vědecké poznatky ukazují, že může mít přínosy i pro zdraví mozku a kognitivní funkce. Zde je přehled nejnovějších zjištění, podložených vědeckými studiemi.</p>
@@ -173,6 +187,7 @@
 <li>Kious et al. (2024). Creatine Supplementation in Depression: A Review of Mechanisms, Efficacy, Clinical Outcomes, and Future Directions. <i>Biomolecules</i>.<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11567172/"> https://pmc.ncbi.nlm.nih.gov/articles/PMC11567172/</a></li>
 <li>Kious et al. (2025). Efficacy and safety profile of oral creatine monohydrate in add-on to cognitive-behavioural therapy in depression: An 8-week pilot, double-blind. <i>European Neuropsychopharmacology</i>.<a href="https://www.sciencedirect.com/science/article/pii/S0924977X24007405"> https://www.sciencedirect.com/science/article/pii/S0924977X24007405</a></li>
 </ul>
+<div class="inline-magnet"><strong>🎁 7denní plán na míru — zdarma</strong>Pošlu ti na e-mail hotový plán s makry a tipy na jídla — jez do sytosti a začni měnit formu.<br><a href="/makro-plan/">Chci plán zdarma</a></div>
 <h2><b>Potenciální přínosy u Alzheimerovy choroby</b></h2>
 <p>Předběžné studie naznačují, že kreatin může být slibným terapeutickým prostředkem pro Alzheimerovu chorobu díky své schopnosti zlepšovat energetický metabolismus mozku. Pilotní studie s 20 pacienty s Alzheimerovou chorobou, kteří užívali 20 g kreatinu denně po dobu 8 týdnů, ukázala zvýšení hladiny kreatinu v mozku o 11 % a zlepšení v několika kognitivních testech, včetně pracovní paměti a exekutivních funkcí. Tyto výsledky jsou však předběžné a vyžadují další výzkum v rozsáhlejších studiích [6].</p>
 <p><b>Citace:</b> Smith AN, et al. (2025). Creatine monohydrate pilot in Alzheimer’s: Feasibility, brain creatine, and cognition. <i>Alzheimer’s &amp; Dementia: Translational Research &amp; Clinical Interventions</i>.<a href="https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/trc2.70101"> https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/trc2.70101</a></p>
@@ -243,7 +258,8 @@
                 <li><a href="e-book-nejcastejsi-dotazy-klientu-telo-jako-stroj.html">E-book Nejčastější dotazy klientů – TĚLO JAKO STROJ</a></li>
                 <li><a href="funguje-wobenzym.html">Funguje Wobenzym?</a></li>
 </ul>
-<p class="disclaimer">Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
+<div class="author-box"><img src="../assets/foto/martin/portret.webp" alt="Martin Barna — online výživový a fitness kouč" loading="lazy" width="84" height="84"><div><h4>Martin Barna</h4><p>Online výživový a fitness kouč. Od roku 2013 pomohl přes 600 lidem zhubnout a získat formu natrvalo — vědecky, bez drastických diet a jojo efektu.</p><a class="btn gold" href="../index.html#balicky">Chci koučink na míru</a></div></div>
+                <p class="disclaimer">Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
 </article></div>
 <footer><p>&copy; 2026 Martin Barna — Online výživa a fitness · <a href="../index.html">Hlavní web</a></p></footer>
 <a class="fab-wa" href="https://wa.me/420603229831" target="_blank" rel="noopener" aria-label="WhatsApp">
