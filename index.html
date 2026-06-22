@@ -1022,6 +1022,26 @@
             if (_form) _form.style.display = 'none';
         }
 
+        // --- Kontaktní formulář: AJAX odeslání (návštěvník vidí jen české díky, nikdy stránku FormSubmitu) ---
+        var _kf = document.getElementById('kontaktForm');
+        if (_kf) {
+            _kf.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var btn = _kf.querySelector('button[type="submit"]');
+                var orig = btn ? btn.textContent : '';
+                if (btn) { btn.textContent = 'Odesílám…'; btn.disabled = true; }
+                fetch('https://formsubmit.co/ajax/martin@martinbarna.cz', {
+                    method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(_kf)
+                }).then(function (r) { return r.json(); }).then(function () {
+                    var d = document.getElementById('formDiky'); if (d) d.style.display = 'block';
+                    _kf.style.display = 'none';
+                }).catch(function () {
+                    if (btn) { btn.textContent = orig; btn.disabled = false; }
+                    alert('Něco se nepovedlo, zkus to prosím znovu nebo mi napiš na e-mail martin@martinbarna.cz.');
+                });
+            });
+        }
+
         // --- Tlačítko nahoru ---
         var toTop = document.getElementById('toTop');
         window.addEventListener('scroll', function () {
