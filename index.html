@@ -280,10 +280,12 @@
         .promena { width:100%; height:auto; display:block; }
         /* role-model příběhy */
         .story-card { border:1px solid #f0ece6; box-shadow:0 10px 30px rgba(0,0,0,.06); overflow:hidden; }
-        .story-card img.smed { width:100%; border-radius:12px; display:block; }
-        .story-duo { display:flex; gap:6px; }
-        .story-duo img { width:calc(50% - 3px); border-radius:12px; object-fit:cover; aspect-ratio:4/5; display:block; }
-        .role-badge { display:inline-block; align-self:flex-start; background:var(--green); color:#fff; font-size:.72rem; font-weight:700; padding:3px 11px; border-radius:50px; }
+        .story-card img.smed { width:100%; height:auto; border-radius:12px; display:block; }
+        .rm-media { padding:1rem; }
+        .kuba-img { max-width:300px; margin-left:auto; margin-right:auto; }
+        .story-duo { display:flex; gap:8px; }
+        .story-duo img { width:calc(50% - 4px); height:auto; border-radius:10px; display:block; }
+        .role-badge { display:inline-block; background:var(--green); color:#fff; font-size:.74rem; font-weight:700; padding:4px 12px; border-radius:50px; }
         .yt-thumb { position:relative; display:block; border-radius:10px; overflow:hidden; }
         .yt-thumb img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
         .yt-thumb::after { content:"▶"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.2rem; background:rgba(0,0,0,.28); transition:.2s; }
@@ -644,42 +646,54 @@
             </div>
             <h3 class="text-center fw-bold mb-2" style="font-size:1.55rem; color:var(--green-dark);">Klienti, kteří to drží i roky poté</h3>
             <p class="text-center text-muted mb-4" style="max-width:640px; margin-inline:auto;">Různé životní situace, jedno společné — formu si udrželi i roky po spolupráci. O některých máme i podcast.</p>
-            <div class="row g-4 mb-5 align-items-stretch">
-                <div class="col-lg-4">
-                    <div class="card story-card h-100 p-3 d-flex flex-column">
-                        <div class="story-duo mb-3">
-                            <img src="assets/foto/promeny/andrea-1.jpg" alt="Andrea — proměna z profilu, před a po" width="400" height="500">
-                            <img src="assets/foto/promeny/andrea-2.jpg" alt="Andrea — proměna zepředu, před a po" width="400" height="500">
+            <div class="rm-stories mb-5">
+                <div class="card story-card mb-4">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-md-5 rm-media">
+                            <div class="story-duo">
+                                <img src="assets/foto/promeny/andrea-1.jpg" alt="Andrea — proměna z profilu, před a po" width="400" height="500">
+                                <img src="assets/foto/promeny/andrea-2.jpg" alt="Andrea — proměna zepředu, před a po" width="400" height="500">
+                            </div>
                         </div>
-                        <span class="role-badge mb-2">Maminka po 40</span>
-                        <h5 class="fw-bold mb-1">Andrea</h5>
-                        <p class="text-muted small mb-2">Dvě děti, dva císařské řezy, bez fitka — cvičila doma a běhala. Vybudovala nejlepší formu života (vlastními slovy líp než ve 20) a míry si drží i roky poté. Naučila se, jak to funguje, a je samostatná.</p>
-                        <p class="small fw-semibold mb-2">Na můj podcast chodí 5 let v kuse — a formu má pořád lepší. 💪</p>
-                        <div class="row g-1 mt-auto">
-                            <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=fCRMtbwxK58" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/fCRMtbwxK58/hqdefault.jpg" alt="Podcast s Andreou — 14 měsíců po koučinku" width="480" height="360" loading="lazy"></a></div>
-                            <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=R6gBzr0MVbc" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/R6gBzr0MVbc/hqdefault.jpg" alt="Podcast — jak shodila maminka dvou dětí" width="480" height="360" loading="lazy"></a></div>
-                            <div class="col-4"><a class="yt-thumb" href="https://youtu.be/NXkCLiytfBs" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/NXkCLiytfBs/hqdefault.jpg" alt="Nejnovější podcast s Andreou" width="480" height="360" loading="lazy"></a></div>
+                        <div class="col-md-7 p-4 p-lg-5">
+                            <span class="role-badge">Maminka po 40</span>
+                            <h4 class="fw-bold mt-3 mb-2">Andrea</h4>
+                            <p class="text-muted mb-2">Dvě děti, dva císařské řezy, bez fitka — cvičila doma a běhala. Vybudovala nejlepší formu života (vlastními slovy líp než ve 20) a míry si drží i roky poté. Naučila se, jak to funguje, a je samostatná.</p>
+                            <p class="fw-semibold mb-3">Na můj podcast chodí 5 let v kuse — a formu má pořád lepší. 💪</p>
+                            <div class="row g-2" style="max-width:430px;">
+                                <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=fCRMtbwxK58" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/fCRMtbwxK58/hqdefault.jpg" alt="Podcast s Andreou — 14 měsíců po koučinku" width="480" height="360" loading="lazy"></a></div>
+                                <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=R6gBzr0MVbc" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/R6gBzr0MVbc/hqdefault.jpg" alt="Podcast — jak shodila maminka dvou dětí" width="480" height="360" loading="lazy"></a></div>
+                                <div class="col-4"><a class="yt-thumb" href="https://youtu.be/NXkCLiytfBs" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/NXkCLiytfBs/hqdefault.jpg" alt="Nejnovější podcast s Andreou" width="480" height="360" loading="lazy"></a></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card story-card h-100 p-3 d-flex flex-column">
-                        <img class="smed mb-2" src="assets/foto/promeny/tomas.jpg" alt="Tomáš — proměna před a po" width="848" height="560">
-                        <img class="smed mb-3" src="assets/foto/promeny/katka.jpg" alt="Katka — proměna před a po" width="848" height="560">
-                        <span class="role-badge mb-2">Párová proměna</span>
-                        <h5 class="fw-bold mb-1">Tomáš &amp; Katka</h5>
-                        <p class="text-muted small mb-2">Oba měli zkušenosti s crossfitem, ale postava neodpovídala nasazení. Vyladili jsme trénink i návyky, zhubli a prošli stabilizační fází proti jojo efektu (reverzní dieta).</p>
-                        <p class="text-muted small mb-2">Dnes formu žijí jako pár a 2 roky po spolupráci si ji drží sami. I o tom je náš společný podcast.</p>
-                        <a class="yt-thumb mt-auto" href="https://www.youtube.com/watch?v=YU1Nf_GVU_U" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/YU1Nf_GVU_U/hqdefault.jpg" alt="Podcast s Tomášem a Katkou" width="480" height="360" loading="lazy"></a>
+                <div class="card story-card mb-4">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-md-5 rm-media d-flex flex-column gap-2">
+                            <img class="smed" src="assets/foto/promeny/tomas.jpg" alt="Tomáš — proměna před a po" width="848" height="560">
+                            <img class="smed" src="assets/foto/promeny/katka.jpg" alt="Katka — proměna před a po" width="848" height="560">
+                        </div>
+                        <div class="col-md-7 p-4 p-lg-5">
+                            <span class="role-badge">Párová proměna</span>
+                            <h4 class="fw-bold mt-3 mb-2">Tomáš &amp; Katka</h4>
+                            <p class="text-muted mb-2">Oba měli zkušenosti s crossfitem, ale postava neodpovídala nasazení. Vyladili jsme trénink i návyky, zhubli a prošli stabilizační fází proti jojo efektu (reverzní dieta).</p>
+                            <p class="text-muted mb-3">Dnes formu žijí jako pár a 2 roky po spolupráci si ji drží sami. I o tom je náš společný podcast.</p>
+                            <a class="yt-thumb d-inline-block" style="max-width:300px;" href="https://www.youtube.com/watch?v=YU1Nf_GVU_U" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/YU1Nf_GVU_U/hqdefault.jpg" alt="Podcast s Tomášem a Katkou" width="480" height="360" loading="lazy"></a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card story-card h-100 p-3 d-flex flex-column">
-                        <img class="smed mb-3" src="assets/foto/promeny/kuba.jpg" alt="Kuba Navrátil — proměna před a po" width="466" height="552">
-                        <span class="role-badge mb-2">Vytížený podnikatel</span>
-                        <h5 class="fw-bold mb-1">Kuba Navrátil</h5>
-                        <p class="text-muted small mb-2">Podnikatele netrápily finance, ale čas a zdraví. Zhubli jsme tak, že i lékař podle krevních testů potvrdil znatelné zlepšení zdraví.</p>
-                        <p class="text-muted small mb-0">Hlásí lepší mentální výkon, kondici i sebevědomí — a roky poté dál sportuje a drží formu.</p>
+                <div class="card story-card">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-md-5 rm-media">
+                            <img class="smed kuba-img" src="assets/foto/promeny/kuba.jpg" alt="Kuba Navrátil — proměna před a po" width="466" height="552">
+                        </div>
+                        <div class="col-md-7 p-4 p-lg-5">
+                            <span class="role-badge">Vytížený podnikatel</span>
+                            <h4 class="fw-bold mt-3 mb-2">Kuba Navrátil</h4>
+                            <p class="text-muted mb-2">Podnikatele netrápily finance, ale čas a zdraví. Zhubli jsme tak, že i lékař podle krevních testů potvrdil znatelné zlepšení zdraví.</p>
+                            <p class="text-muted mb-0">Hlásí lepší mentální výkon, kondici i sebevědomí — a roky poté dál sportuje a drží formu.</p>
+                        </div>
                     </div>
                 </div>
             </div>
