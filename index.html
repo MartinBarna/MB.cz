@@ -287,8 +287,8 @@
         .story-duo { display:flex; gap:8px; }
         .story-duo img { width:calc(50% - 4px); height:auto; border-radius:10px; display:block; }
         .role-badge { display:inline-block; background:var(--green); color:#fff; font-size:.74rem; font-weight:700; padding:4px 12px; border-radius:50px; }
-        .yt-thumb { position:relative; display:block; border-radius:10px; overflow:hidden; }
-        .yt-thumb img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; }
+        .yt-thumb { position:relative; display:block; border-radius:10px; overflow:hidden; aspect-ratio:16/9; background:#000; }
+        .yt-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
         .yt-thumb::after { content:"▶"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.2rem; background:rgba(0,0,0,.28); transition:.2s; }
         .yt-thumb:hover::after { background:rgba(0,0,0,.12); }
         @media (min-width:992px){
@@ -317,10 +317,14 @@
         if ('IntersectionObserver' in window && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
             document.documentElement.classList.add('reveal-on');
             document.addEventListener('DOMContentLoaded', function () {
+                var secs = document.querySelectorAll('section');
+                // threshold 0 = odhal hned jak sekce vstoupí do okna (funguje i pro velmi vysoké sekce na mobilu)
                 var obs = new IntersectionObserver(function (entries) {
                     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); } });
-                }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-                document.querySelectorAll('section').forEach(function (s) { obs.observe(s); });
+                }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
+                secs.forEach(function (s) { obs.observe(s); });
+                // pojistka: kdyby observer z jakéhokoli důvodu selhal, po 2,5 s vše odhal
+                setTimeout(function () { secs.forEach(function (s) { s.classList.add('in-view'); }); }, 2500);
             });
         }
     })();
@@ -662,9 +666,9 @@
                             <p class="text-muted mb-2">Dvě děti, dva císařské řezy, bez fitka — cvičila doma a běhala. Vybudovala nejlepší formu života (vlastními slovy líp než ve 20) a míry si drží i roky poté. Naučila se, jak to funguje, a je samostatná.</p>
                             <p class="fw-semibold mb-3">Na můj podcast chodí 5 let v kuse — a formu má pořád lepší. 💪</p>
                             <div class="row g-2" style="max-width:430px;">
-                                <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=fCRMtbwxK58" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/fCRMtbwxK58/hqdefault.jpg" alt="Podcast s Andreou — 14 měsíců po koučinku" width="480" height="360" loading="lazy" decoding="async"></a></div>
-                                <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=R6gBzr0MVbc" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/R6gBzr0MVbc/hqdefault.jpg" alt="Podcast — jak shodila maminka dvou dětí" width="480" height="360" loading="lazy" decoding="async"></a></div>
-                                <div class="col-4"><a class="yt-thumb" href="https://youtu.be/NXkCLiytfBs" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/NXkCLiytfBs/hqdefault.jpg" alt="Nejnovější podcast s Andreou" width="480" height="360" loading="lazy" decoding="async"></a></div>
+                                <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=fCRMtbwxK58" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/fCRMtbwxK58/mqdefault.jpg" alt="Podcast s Andreou — 14 měsíců po koučinku" width="320" height="180" loading="lazy" decoding="async"></a></div>
+                                <div class="col-4"><a class="yt-thumb" href="https://www.youtube.com/watch?v=R6gBzr0MVbc" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/R6gBzr0MVbc/mqdefault.jpg" alt="Podcast — jak shodila maminka dvou dětí" width="320" height="180" loading="lazy" decoding="async"></a></div>
+                                <div class="col-4"><a class="yt-thumb" href="https://youtu.be/NXkCLiytfBs" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/NXkCLiytfBs/mqdefault.jpg" alt="Nejnovější podcast s Andreou" width="320" height="180" loading="lazy" decoding="async"></a></div>
                             </div>
                         </div>
                     </div>
@@ -680,7 +684,7 @@
                             <h4 class="fw-bold mt-3 mb-2">Tomáš &amp; Katka</h4>
                             <p class="text-muted mb-2">Oba měli zkušenosti s crossfitem, ale postava neodpovídala nasazení. Vyladili jsme trénink i návyky, zhubli a prošli stabilizační fází proti jojo efektu (reverzní dieta).</p>
                             <p class="text-muted mb-3">Dnes formu žijí jako pár a 2 roky po spolupráci si ji drží sami. I o tom je náš společný podcast.</p>
-                            <a class="yt-thumb d-inline-block" style="max-width:300px;" href="https://www.youtube.com/watch?v=YU1Nf_GVU_U" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/YU1Nf_GVU_U/hqdefault.jpg" alt="Podcast s Tomášem a Katkou" width="480" height="360" loading="lazy" decoding="async"></a>
+                            <a class="yt-thumb d-inline-block" style="max-width:300px;" href="https://www.youtube.com/watch?v=YU1Nf_GVU_U" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/YU1Nf_GVU_U/mqdefault.jpg" alt="Podcast s Tomášem a Katkou" width="320" height="180" loading="lazy" decoding="async"></a>
                         </div>
                     </div>
                 </div>
