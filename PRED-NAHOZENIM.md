@@ -10,8 +10,11 @@
 
 ## 💳 SimplShop platby (KLÍČOVÉ — testujeme PŘED přepnutím)
 > Důležité: doručení produktů (e-booky, přístup do videokurzu, e-maily) řeší **SimplShop na svých serverech**, ne WordPress. Přesun marketingového webu se fulfillmentu nedotkne.
-- [ ] Od coworka `simplshop-odkazy.csv` = přímé platební odkazy na každý produkt.
-- [ ] Claude napojí objednávková tlačítka na tyhle přímé SimplShop odkazy.
+- [x] Od coworka `simplshop-odkazy.csv` = přímé platební odkazy. ✅
+- [x] Claude napojil objednávková tlačítka na přímé SimplShop odkazy: ✅
+  - Konzultace (vč. VIP upsell ve formuláři) → `form.simpleshop.cz/qG2yO/buy/`
+  - Videokurz 800 Kč → `form.simpleshop.cz/3Vbl/buy/`
+  - **Koučink Gold/Diamond NENÍ v SimplShopu** — platí se převodem (Moneta), vede přes kontaktní/objednávkový formulář (beze změny).
 - [ ] **TESTOVACÍ NÁKUP** přes nový odkaz (test režim SimplShopu nebo produkt za 1 Kč) — ověřit, že:
   - [ ] platba proběhne,
   - [ ] **produkt se reálně doručí** (přijde e-mail / přístup) stejně jako z WordPressu.
@@ -36,4 +39,4 @@
 2. Claude umí vrátit i jakoukoli předchozí verzi nového webu (vše je v historii Gitu + zálohové větve).
 
 ---
-*Stav podkladů: Place ID ✅ · stare-url.csv ⬜ · simplshop-odkazy.csv ⬜*
+*Stav podkladů: Place ID ✅ · simplshop-odkazy.csv ✅ (napojeno) · kompletní stare-url.csv ⬜ (spustit `export-stare-url.ps1`)*
