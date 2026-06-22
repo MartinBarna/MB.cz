@@ -17,9 +17,7 @@
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://web.martinbarna.cz/assets/og-default.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <style>
         .skip-link{position:absolute;left:-999px;top:0;background:#ff7a00;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
         .skip-link:focus{left:0}
@@ -30,15 +28,21 @@
         body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
         a { color:var(--green-dark); }
         .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
-        .nav .wrap { max-width:880px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
+        .nav .wrap { max-width:1120px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
         .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; }
         .nav a.back { text-decoration:none; font-weight:600; color:var(--ink); }
+        .navlinks { display:flex; align-items:center; gap:20px; }
+        .navlinks a { text-decoration:none; font-weight:600; color:var(--ink); font-size:.96rem; }
+        .navlinks a:hover { color:var(--green); }
+        .navlinks a.cta { background:var(--green); color:#fff; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(255,122,0,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+        .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
+        @media (max-width:640px){ .navlinks .hide-sm { display:none; } .navlinks { gap:14px; } .navlinks a.cta { padding:8px 15px; font-size:.88rem; } }
         .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:80px 20px 64px; text-align:center; }
         .hero .tag { background:rgba(255,255,255,.2); padding:5px 14px; border-radius:50px; font-size:.8rem; font-weight:600; }
-        .hero h1 { max-width:780px; margin:1rem auto 0; font-size:2.5rem; font-weight:800; line-height:1.2; }
+        .hero h1 { max-width:820px; margin:1rem auto 0; font-size:clamp(2.1rem, 5vw, 3.2rem); font-weight:800; line-height:1.12; letter-spacing:-.025em; }
         .wrapc { max-width:760px; margin:0 auto; padding:0 20px; }
         article { padding:60px 0; font-size:1.08rem; }
-        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; }
+        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; font-size:clamp(1.55rem, 3.6vw, 2.1rem); letter-spacing:-.018em; line-height:1.2; }
         article ul { padding-left:1.2rem; }
         article li { margin:.4rem 0; }
         .lead { font-size:1.2rem; color:#3a463f; }
@@ -136,7 +140,7 @@
 </head>
 <body>
 <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
-<div class="nav"><div class="wrap"><a class="brand" href="../index.html">Martin Barna</a><a class="back" href="index.html">← Zpět na blog</a></div></div>
+<div class="nav"><div class="wrap"><a class="brand" href="../index.html">Martin Barna</a><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="../index.html#balicky">Koučink</a><a class="hide-sm" href="../videokurz.html">Videokurz</a><a class="hide-sm" href="../treninky.html">Tréninky</a><a href="index.html">Blog</a><a class="cta" href="https://www.martinbarna.cz/objednavka-konzultace/">Objednat konzultaci</a></nav></div></div>
 <header class="hero" id="obsah">
 <span class="tag">VĚDA &amp; VÝŽIVA</span>
 <h1>Plánování jídel pro vytvoření kalorického deficitu: klíč k úspěšnému hubnutí</h1>
@@ -177,9 +181,10 @@
 </div>
 <h2>Mohlo by tě zajímat</h2>
 <ul>
-                <li><a href="e-book-nejcastejsi-dotazy-klientu-co-je-vic-cviceni-nebo-strava.html">E-book Nejčastější dotazy klientů – CO JE VÍC? CVIČENÍ NEBO STRAVA?</a></li>
-                <li><a href="e-book-nejcastejsi-dotazy-klientu-pohybove-aktivity.html">E-book Nejčastější dotazy klientů – POHYBOVÉ AKTIVITY</a></li>
-                <li><a href="e-book-nejcastejsi-dotazy-klientu-pravo-volby.html">E-book Nejčastější dotazy klientů – PRÁVO VOLBY</a></li>
+                <li><a href="kofein-a-jeho-bezpecna-konzumace.html">Kofein a jeho bezpečná konzumace</a></li>
+                <li><a href="flexibilni-stravovani.html">Flexibilní stravování: jez i oblíbená jídla a hubni</a></li>
+                <li><a href="ultra-zpracovane-potraviny-studie.html">Ultra zpracované potraviny studie</a></li>
+                <li><a href="doporuceni-bisglycinatu-horciku-pro-vas-aktivni-zivotni-styl-2.html">Doporučení bisglycinátu hořčíku pro váš aktivní životní styl</a></li>
 </ul>
 <p class="disclaimer">Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
 </article></div>

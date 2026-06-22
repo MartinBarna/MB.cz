@@ -17,9 +17,7 @@
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://web.martinbarna.cz/assets/og-default.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <style>
         .skip-link{position:absolute;left:-999px;top:0;background:#ff7a00;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
         .skip-link:focus{left:0}
@@ -30,15 +28,21 @@
         body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
         a { color:var(--green-dark); }
         .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
-        .nav .wrap { max-width:880px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
+        .nav .wrap { max-width:1120px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
         .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; }
         .nav a.back { text-decoration:none; font-weight:600; color:var(--ink); }
+        .navlinks { display:flex; align-items:center; gap:20px; }
+        .navlinks a { text-decoration:none; font-weight:600; color:var(--ink); font-size:.96rem; }
+        .navlinks a:hover { color:var(--green); }
+        .navlinks a.cta { background:var(--green); color:#fff; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(255,122,0,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+        .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
+        @media (max-width:640px){ .navlinks .hide-sm { display:none; } .navlinks { gap:14px; } .navlinks a.cta { padding:8px 15px; font-size:.88rem; } }
         .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:80px 20px 64px; text-align:center; }
         .hero .tag { background:rgba(255,255,255,.2); padding:5px 14px; border-radius:50px; font-size:.8rem; font-weight:600; }
-        .hero h1 { max-width:780px; margin:1rem auto 0; font-size:2.5rem; font-weight:800; line-height:1.2; }
+        .hero h1 { max-width:820px; margin:1rem auto 0; font-size:clamp(2.1rem, 5vw, 3.2rem); font-weight:800; line-height:1.12; letter-spacing:-.025em; }
         .wrapc { max-width:760px; margin:0 auto; padding:0 20px; }
         article { padding:60px 0; font-size:1.08rem; }
-        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; }
+        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; font-size:clamp(1.55rem, 3.6vw, 2.1rem); letter-spacing:-.018em; line-height:1.2; }
         article ul { padding-left:1.2rem; }
         article li { margin:.4rem 0; }
         .lead { font-size:1.2rem; color:#3a463f; }
@@ -136,7 +140,7 @@
 </head>
 <body>
 <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
-<div class="nav"><div class="wrap"><a class="brand" href="../index.html">Martin Barna</a><a class="back" href="index.html">← Zpět na blog</a></div></div>
+<div class="nav"><div class="wrap"><a class="brand" href="../index.html">Martin Barna</a><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="../index.html#balicky">Koučink</a><a class="hide-sm" href="../videokurz.html">Videokurz</a><a class="hide-sm" href="../treninky.html">Tréninky</a><a href="index.html">Blog</a><a class="cta" href="https://www.martinbarna.cz/objednavka-konzultace/">Objednat konzultaci</a></nav></div></div>
 <header class="hero" id="obsah">
 <span class="tag">VĚDA &amp; VÝŽIVA</span>
 <h1>Protein a mortalita: Mýtus vyvrácen! Další díl série Věda vs. Mýty ve Výživě.</h1>
@@ -152,17 +156,16 @@
 </div>
 
 
-<p><img alt="" decoding="async" loading="lazy" src="https://www.martinbarna.cz/wp-content/uploads/2025/08/529346986_1337034234696308_8695003505464769116_n-1-300x300.jpg"/></p>
-<p>Někdy se mýlí i ti velcí: nová analýza ukazuje žádnou asociaci mezi proteinem a mortalitou.</p>
-<p>Nebudu kritizovat molekulární data v té studii, ale analýza NHANES dat – která vedla k titulkům „Protein je pro tebe stejně špatný jako kouření“ v amerických a britských bulvárech – byla opravdu špatně provedena. Ve skutečnosti ten narativ, že protein tě zabíjí do 65 let a pak tě chrání před smrtí, je pořád populární tagline v podcastech! Lidi si měří IGF-1 úrovně s představou, že to předpovídá riziko rakoviny. Lidská data z té studie se pořád diskutují v úctivém tónu jako ‚fakt‘. Je to špatně! (Díky Dr. Layne Norton @biolayne za uchování toho dopisu). Rychle dodám, že v tom poli je pár dobrých lidí, kteří přidali svá jména k tomu dopisu! Včetně Donalda Laymana, Arne Astrupa, Heather Leidy, Petera Cliftona a zesnulého Douga Paddon-Jonese.</p>
-<p>Velké díky Yanni Papanikolaou a Victoru Fulgoni za jejich leadership a vytrvalost tváří v tvář nějakému ‚zlostnému‘ peer review našeho paperu. No, teď je to venku! Naše studie v Applied Physiology, Nutrition, and Metabolism ukazuje žádnou asociaci mezi celkovým, živočišným nebo rostlinným příjmem proteinu a úmrtím ze všech příčin, kardiovaskulárním nebo rakovinovým. Ve skutečnosti vyšší příjem živočišného proteinu byl mírně ochranný proti rakovinové mortalitě https://cdnsciencepub.com/doi/epdf/10.1139/apnm-2023-0594</p>
+<p>Někdy se mýlí i ti největší: nová analýza neukazuje žádnou souvislost mezi bílkovinami a úmrtností.</p>
+<p>Nebudu kritizovat molekulární data v té studii, ale analýza dat NHANES – která vedla k titulkům „Protein je pro tebe stejně špatný jako kouření“ v amerických a britských bulvárech – byla opravdu špatně provedená. Ta představa, že tě bílkoviny zabíjejí do 65 let a pak tě před smrtí chrání, je přitom pořád populární i v podcastech. Lidé si měří hladiny IGF-1 s vírou, že to předpovídá riziko rakoviny. Data z té studie se dodnes citují v uctivém tónu jako ‚fakt‘. A je to špatně. (Dík Dr. Layne Nortonovi za uchování toho dopisu.) Dodám, že v oboru je pár skvělých lidí, kteří se pod ten dopis podepsali – mimo jiné Donald Layman, Arne Astrup, Heather Leidy, Peter Clifton a zesnulý Doug Paddon-Jones.</p>
+<p>Velké díky Yanni Papanikolaou a Victoru Fulgonimu za jejich odhodlání a vytrvalost tváří v tvář dost „nevrlému“ recenznímu řízení naší studie. Teď je venku! Naše práce v časopise Applied Physiology, Nutrition, and Metabolism neukazuje žádnou souvislost mezi celkovým, živočišným ani rostlinným příjmem bílkovin a úmrtností ze všech příčin, kardiovaskulární ani rakovinovou. Vyšší příjem živočišných bílkovin byl dokonce mírně ochranný proti úmrtnosti na rakovinu: <a href="https://cdnsciencepub.com/doi/epdf/10.1139/apnm-2023-0594">cdnsciencepub.com</a>.</p>
 <p>Věda se sama opravuje – někdy to jen trvá dekádu (nebo víc).</p>
 
 <p><strong>Toto je překlad zajímavého příspěvku od Stuart Phillips Ph.D.</strong>, předního experta na proteinovou metabolismus, svalovou fyziologii a výživu při stárnutí (profesor na McMaster University, autor stovek studií – více na jeho profilu na McMaster nebo PubMed).</p>
 
 <p>A co k tomu říkám já, Martin Barna z Online Výživa a Fitness: Tohle je geniální připomínka, že mýty o proteinech (jako „Vysoký příjem tě zabije!“) často vycházejí z špatných analýz, ale věda je opravuje – a vyšší protein (z masa, vajec, rostlinných zdrojů) ve skutečnosti podporuje svaly, což je základ pro udržitelné hubnutí, stabilizaci inzulinu, lepší energii a metabolické zdraví. V mém koučingu vidím, jak klienti, kteří zvýší protein na 1.6-2.2g/kg, nejen zhubnou tuk, ale i zlepší trávení, libido, vytrvalost, kostní hustotu, mozkové funkce a podporu zdravého stárnutí – bez rizik, pokud je to vyvážené a personalizované. Pokud bojuješ s únavou, stagnací v hubnutí nebo chceš prevenci proti rakovině/CVD, mrkni na můj online koučing na <a href="http://martinbarna.cz/koucing">martinbarna.cz/koucing</a>, pojďme to nastavit dlouhodobě a přinést ti ty výsledky, které změní tvůj život!</p>
 
-<p><strong>Klíčové takeaway pro tvůj trénink a výživu:</strong></p>
+<p><strong>Klíčové shrnutí pro tvůj trénink a výživu:</strong></p>
 <p><strong>Pro hubnutí:</strong> Vyšší protein snižuje chuť k jídlu, chrání svaly a zvyšuje TDEE (celkový výdej energie) – zkuste 30-50g na jídlo (celkový výpočet bílkovin na den vydělte počtem jídel).</p>
 <p><strong>Pro zdravé stárnutí:</strong> IGF-1 není ďábel; soustřeďte se na celkovou stravu, ne na strach z proteinu – pomáhá udržet sílu a vitalitu i v 50+.</p>
 
@@ -175,9 +178,9 @@
 </div>
 <h2>Mohlo by tě zajímat</h2>
 <ul>
-                <li><a href="funguje-wobenzym.html">Funguje Wobenzym?</a></li>
-                <li><a href="stale-si-myslim-ze-kolagen-je-podvod.html">Stále si myslím, že kolagen je PODVOD 👀 😅</a></li>
-                <li><a href="kreatin-nejen-pro-svaly-ale-i-pro-mozek.html">Kreatin: Nejen pro svaly, ale i pro mozek</a></li>
+                <li><a href="meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil.html">Měli byste počítat objem tréninku jako sety nebo opakování? Oboje! Další díl série Věda vs. Mýty v Tréninku.</a></li>
+                <li><a href="bilkoviny.html">Bílkoviny: kolik jich jíst a proč</a></li>
+                <li><a href="cheat-day.html">Cheat day, nebo cheat meal? Jak na volnost bez sabotáže</a></li>
 </ul>
 <p class="disclaimer">Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
 </article></div>
