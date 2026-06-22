@@ -1060,9 +1060,12 @@
             });
         });
 
-        // --- WhatsApp: na PC ukázat QR okénko, na mobilu/dotyku přímý odkaz ---
+        // --- WhatsApp: na PC ukázat QR okénko, na telefonu přímý odkaz na chat ---
         var _waModal = document.getElementById('waModal');
-        var _isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+        // telefon = mobilní UA NEBO úzká obrazovka (ne jen "dotyk" — dotykové notebooky jsou pořád PC)
+        var _ua = navigator.userAgent || '';
+        var _isPhone = /Android.+Mobile|iPhone|iPod|IEMobile|Windows Phone|Opera Mini|BlackBerry/i.test(_ua)
+            || window.matchMedia('(max-width: 820px)').matches;
         function openWaModal() { if (_waModal) _waModal.classList.add('open'); }
         function closeWaModal() { if (_waModal) _waModal.classList.remove('open'); }
         function copyWaNum(btn) {
@@ -1070,7 +1073,7 @@
             var t = btn.textContent; btn.textContent = 'Zkopírováno ✓';
             setTimeout(function () { btn.textContent = t; }, 1800);
         }
-        if (!_isTouch) {
+        if (!_isPhone) {
             document.querySelectorAll('a[href*="wa.me"]').forEach(function (a) {
                 if (a.closest('#waModal')) return; // odkaz uvnitř okénka necháme funkční
                 a.addEventListener('click', function (e) { e.preventDefault(); openWaModal(); });
