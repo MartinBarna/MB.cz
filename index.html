@@ -941,17 +941,12 @@
             document.getElementById('r-vlak').textContent = vlaknina;
         }
 
-        // --- Kontaktní formulář → WhatsApp ---
-        function odeslatWhatsApp(e) {
-            e.preventDefault();
-            var jmeno = document.getElementById('f-jmeno').value;
-            var email = document.getElementById('f-email').value;
-            var zprava = document.getElementById('f-zprava').value;
-            var text = 'Ahoj Martine! Jmenuji se ' + jmeno + '.\n\n' + zprava;
-            if (email) text += '\n\nMůj e-mail: ' + email;
-            var url = 'https://wa.me/420603229831?text=' + encodeURIComponent(text);
-            window.open(url, '_blank');
-            return false;
+        // --- Po odeslání formuláře (FormSubmit redirect ?odeslano=1) zobraz poděkování ---
+        if (location.search.indexOf('odeslano=1') !== -1) {
+            var _diky = document.getElementById('formDiky');
+            var _form = document.getElementById('kontaktForm');
+            if (_diky) _diky.style.display = 'block';
+            if (_form) _form.style.display = 'none';
         }
 
         // --- Tlačítko nahoru ---
