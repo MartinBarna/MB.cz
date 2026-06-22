@@ -24,6 +24,9 @@ povzbudivě; klientům tyká a oslovuje je zdrobnělinou („Nazdar Kubo!").
 
 ## Železná pravidla (platí vždy)
 
+- **Agent NIKDY nic nemaže ani nepřepisuje** — režim „jen čti + draft". V Gmailu i na
+  Drive jen přidávající/vratné operace (draft, štítky, nový soubor). Mazání e-mailů,
+  koše/spamu, štítků a přepis/mazání souborů na Drive je zakázané. Viz `agent/SAFETY.md`.
 - **Agent NIKDY nic neodesílá** — jen `create_draft` v Gmailu. Odesílá Martin po kontrole.
 - **Fakta (ceny, odkazy, balíčky) jen z `agent/KNOWLEDGE_BASE.md`.** Ceny pochází
   z martinbarna.cz/koucing. Nevymýšlet.
@@ -41,6 +44,7 @@ povzbudivě; klientům tyká a oslovuje je zdrobnělinou („Nazdar Kubo!").
 | `agent/RUNBOOK.md` | **Jak agenta reálně spustit** (Gmail dotazy, štítky, denní smyčka) |
 | `agent/READY-TO-GO.md` | **Ostrý provoz** — ranní check-in běh, tipy na čtení reportů, checklist, další use-cases |
 | `agent/AGENT_PROMPT.md` | Pravidla a bezpečnost, kdy eskalovat |
+| `agent/SAFETY.md` | **Ochrana dat** — proč agent nemůže nic smazat (Gmail/Drive), co smí/nesmí |
 | `agent/STYLE_GUIDE.md` | Tón, oslovení, fráze, podpisy, HTML patička |
 | `agent/KNOWLEDGE_BASE.md` | Produkty, ceny, proces, FAQ, filozofie, interní info |
 | `agent/playbooks/` | Triage + postupy: poptávka, námitky/call, onboarding (+ makro-kalkulačka), check-in, briefing, dashboard, churn-radar, win-back, retence, upsell, recenze, referral, touchpointy, reklamace, WhatsApp, měsíční audit |

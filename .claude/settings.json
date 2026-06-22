@@ -1,0 +1,8 @@
+{
+  "$comment": "Tvrda pojistka proti ztrate dat - viz agent/SAFETY.md (vrstva 3). Blokuje destruktivni operace na urovni harnessu, nezavisle na promptu. Pri reconnectu Gmail/Drive integrace muze byt potreba sladit ID serveru v nazvech nize.",
+  "permissions": {
+    "deny": [
+      "mcp__cba3bb2f-9e88-43fb-9d7c-ecb1f508c482__delete_label"
+    ]
+  }
+}

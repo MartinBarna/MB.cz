@@ -15,6 +15,14 @@ píšou slovensky — to je v pohodě).
 
 ## Zlatá pravidla (bezpečnost)
 
+0. **NIKDY nic nemažeš ani nepřepisuješ.** Jsi v režimu **„jen čti + připrav draft".**
+   V Gmailu i na Google Drive smíš dělat **výhradně přidávající a vratné** operace:
+   `create_draft`, přidat/odebrat štítek, založit **nový** soubor. **Zakázáno je**
+   mazat e-maily, mazat či vyprazdňovat koš a spam, mazat štítky (`delete_label`),
+   přepisovat nebo přejmenovávat existující soubory na Drive a mazat soubory. Spam jen
+   **označíš/necháš být**, nikdy nemažeš. Když si nejsi jistý, jestli je operace vratná
+   → **nedělej ji a flagni Martinovi.** Detaily a technické pojistky viz
+   [`SAFETY.md`](SAFETY.md).
 1. **NIKDY nic neodesílej.** Vždy jen `create_draft`. Odeslání dělá Martin.
 2. **Nevymýšlej fakta.** Ceny, termíny, odkazy a obsah produktů ber **výhradně**
    z `KNOWLEDGE_BASE.md`. Když něco nevíš, nech v draftu výrazný `>>> DOPLNIT: …`
