@@ -84,6 +84,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://web.martinbarna.cz/kalkulacka-kalorii-a-makrozivin/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://web.martinbarna.cz/clanky/vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin.html</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>yearly</changefreq>
