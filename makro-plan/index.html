@@ -60,9 +60,10 @@
         .mock { background:#fff; border-radius:20px; box-shadow:0 18px 50px rgba(0,0,0,.12); padding:26px; }
         .mock .mhead { font-weight:800; color:var(--ink); margin-bottom:.3rem; }
         .mock .mtag { color:var(--orange-dark); font-weight:700; font-size:.8rem; }
-        .mock .day { display:flex; justify-content:space-between; gap:10px; padding:11px 0; border-bottom:1px solid #f0ece6; font-size:.95rem; }
-        .mock .day b { color:var(--ink); }
-        .mock .kc { color:#8a8a8a; white-space:nowrap; }
+        .mock .day { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:11px 0; border-bottom:1px solid #f0ece6; font-size:.95rem; }
+        .mock .day .meal-txt { min-width:0; }
+        .mock .day b { color:var(--ink); margin-right:6px; }
+        .mock .kc { color:#8a8a8a; white-space:nowrap; flex:0 0 auto; }
         .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
         .chip { background:var(--cream2); color:var(--orange-dark); font-weight:600; font-size:.8rem; padding:6px 12px; border-radius:50px; }
 
@@ -162,6 +163,16 @@
         @media (max-width:575.98px){
             .btn, .btn-grn, .btn-gold, .btn-ghost, .btn-out, .btn-white { padding-top:13px; padding-bottom:13px; }
         }
+        @media (max-width:560px){
+            .nav .row { gap:8px; }
+            .brand { white-space:nowrap; font-size:1.08rem; flex:0 0 auto; }
+            .nav .right { gap:10px; }
+            .nav .back { font-size:.82rem; }
+            .nav .btn.sm { padding:9px 14px; font-size:.83rem; white-space:nowrap; }
+        }
+        @media (max-width:380px){
+            .nav .back { display:none; }
+        }
     
         /* ===== přístupnost: respektuj vypnuté animace ===== */
         @media (prefers-reduced-motion: reduce){
@@ -211,11 +222,11 @@
                 <div class="mhead">7denní makro plán pro ženy 30+</div>
                 <div class="mtag">ZDARMA</div>
                 <div style="margin-top:14px;">
-                    <div class="day"><b>Po</b> Tvarohová kaše s ovocem <span class="kc">1 500 kcal</span></div>
-                    <div class="day"><b>Út</b> Kuřecí s rýží a zeleninou <span class="kc">1 500 kcal</span></div>
-                    <div class="day"><b>St</b> Omeleta s pečivem a salátem <span class="kc">1 500 kcal</span></div>
-                    <div class="day"><b>Čt</b> Skyr, losos, brambory <span class="kc">1 500 kcal</span></div>
-                    <div class="day"><b>Pá</b> Těstoviny s krůtím masem <span class="kc">1 500 kcal</span></div>
+                    <div class="day"><span class="meal-txt"><b>Po</b> Tvarohová kaše s ovocem</span><span class="kc">1 500 kcal</span></div>
+                    <div class="day"><span class="meal-txt"><b>Út</b> Kuřecí s rýží a zeleninou</span><span class="kc">1 500 kcal</span></div>
+                    <div class="day"><span class="meal-txt"><b>St</b> Omeleta s pečivem a salátem</span><span class="kc">1 500 kcal</span></div>
+                    <div class="day"><span class="meal-txt"><b>Čt</b> Skyr, losos, brambory</span><span class="kc">1 500 kcal</span></div>
+                    <div class="day"><span class="meal-txt"><b>Pá</b> Těstoviny s krůtím masem</span><span class="kc">1 500 kcal</span></div>
                 </div>
                 <div class="chips"><span class="chip">Bílkoviny ✓</span><span class="chip">Nákupní seznam ✓</span><span class="chip">Varianty ✓</span></div>
             </div>
