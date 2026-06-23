@@ -38,6 +38,7 @@ RedirectMatch 301 ^/ebook/?$                 https://martinbarna.cz/videokurz.ht
 RedirectMatch 301 ^/kucharka/?$              https://martinbarna.cz/videokurz.html
 RedirectMatch 301 ^/recepty/?$               https://martinbarna.cz/videokurz.html
 RedirectMatch 301 ^/audiobook/?$             https://martinbarna.cz/videokurz.html
+RedirectMatch 301 ^/audiokniha/?$            https://martinbarna.cz/videokurz.html
 RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz.html
 
 # --- 5) Komprese + cache (rychlost) ---
