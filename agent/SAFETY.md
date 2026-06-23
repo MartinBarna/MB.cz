@@ -49,12 +49,33 @@ Platí jako **Zlaté pravidlo č. 0** (viz `AGENT_PROMPT.md`):
 ## Vrstva 3 — Tvrdá pojistka v harnessu (`.claude/settings.json`)
 
 V kořeni repa je `.claude/settings.json` s blokem `permissions.deny`, který na úrovni
-nástroje **zakazuje** i tu jedinou destruktivnější Gmail akci (`delete_label`).
-Harness ji tím odmítne dřív, než se vůbec spustí — nezávisle na promptu.
+nástroje **zakazuje** destruktivní akce dřív, než se vůbec spustí — nezávisle na promptu:
+- `mcp__Gmail__delete_label` — mazání štítků,
+- `mcp__Google_Calendar__delete_event` / `update_event` — mazání a přepis událostí
+  (Kalendář je nově napojený; číst/navrhovat časy smí, mazat a přepisovat ne).
 
-> ⚠️ **Když se Gmail/Drive integrace někdy odpojí a znovu napojí**, může se změnit
-> interní ID serveru v názvu nástroje. Pak je potřeba `deny` v `settings.json`
-> sladit s aktuálními názvy. Vrstvy 1 a 2 ale platí pořád.
+> ⚠️ **Názvy serverů se můžou změnit při reconnectu integrace.** Reálně se to už stalo:
+> Gmail server byl původně UUID (`cba3bb2f-…`), teď je `Gmail`. Formát je
+> `mcp__<server>__<nástroj>`. Když se něco odpojí a znovu napojí, **ověř, že `deny`
+> v `settings.json` sedí na aktuální názvy** (jinak je pravidlo neúčinné). Vrstvy 1 a 2
+> platí vždy.
+
+## Pozor — širší prostředí má i odchozí a placené nástroje
+
+Kromě Gmailu/Drive bývají v prostředí napojené i nástroje, které **nemažou data, ale
+konají navenek** (a některé stojí peníze). Pro e-mailového asistenta jsou **mimo rozsah**
+— nepoužívá je při draftování odpovědí:
+
+- **Blotato** — `create_post` může **veřejně publikovat** na sociální sítě (svým dopadem
+  jako odeslání mailu). Používá se jen vědomě v rámci `content/` workflow, ne při e-mailech.
+- **Facebook reklamy** — `create/update/delete` kampaní, audiencí, pixelů (mění živé
+  reklamy a utrácí rozpočet).
+- **Shopify** — `update-product`, `bulk-update-product-status`, `create-discount`,
+  `set-inventory` (mění živý e-shop).
+
+Pravidlo: e-mailový asistent dělá **jen draft + štítky + čtení**. Žádný odchozí post,
+změnu reklam ani e-shopu „od oka" — to vždy iniciuje a potvrzuje Martin. Pokud má být
+některý z těchto nástrojů tvrdě zamčený i v harnessu, přidá se do `deny` v `settings.json`.
 
 ---
 
