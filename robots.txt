@@ -1,6 +1,6 @@
-# robots.txt — Martin Barna (web.martinbarna.cz)
+# robots.txt — Martin Barna (martinbarna.cz)
 # Web i jeho obsah jsou otevřené pro vyhledávače i AI asistenty.
-# Přehled webu pro LLM: https://web.martinbarna.cz/llms.txt
+# Přehled webu pro LLM: https://martinbarna.cz/llms.txt
 
 User-agent: *
 Allow: /
@@ -51,4 +51,4 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
-Sitemap: https://web.martinbarna.cz/sitemap.xml
+Sitemap: https://martinbarna.cz/sitemap.xml

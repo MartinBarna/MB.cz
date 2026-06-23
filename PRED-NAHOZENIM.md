@@ -24,7 +24,7 @@
 - [ ] Od coworka `stare-url.csv` = seznam všech starých WP adres.
 - [ ] Claude připraví přesměrování starých URL na nové (ať nic nespadne z Googlu).
 - [ ] Claude přidá soubor `CNAME` pro `martinbarna.cz`.
-- [ ] Claude přepíše kanonické adresy a OG odkazy `web.martinbarna.cz` → `martinbarna.cz`.
+- [ ] Claude přepíše kanonické adresy a OG odkazy `martinbarna.cz` → `martinbarna.cz`.
 
 ## 🧪 Funkční testy (na ostré doméně)
 - [ ] **Google recenze** — tlačítko otevře recenze (čtecí odkaz, Place ID `ChIJQ-8yTbnlE0cRJj3EiDujXRY`).
