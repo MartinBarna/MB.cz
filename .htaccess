@@ -30,13 +30,15 @@ Redirect 301 /martin/                        https://martinbarna.cz/#omne
 Redirect 301 /muj-pribeh/                    https://martinbarna.cz/#omne
 Redirect 301 /team-martin-barna/             https://martinbarna.cz/#omne
 Redirect 301 /videokurz-dekovaci-stranka/    https://martinbarna.cz/videokurz.html
-# kategorie blogu → blog
+# kategorie blogu + starý /blog → nový blog
 RedirectMatch 301 ^/rubrika/.*$              https://martinbarna.cz/clanky/
-# produkty bez samostatné stránky → domů
-Redirect 301 /ebook/                         https://martinbarna.cz/
-Redirect 301 /recepty/                       https://martinbarna.cz/
-Redirect 301 /audiobook/                     https://martinbarna.cz/
-Redirect 301 /clenskasekce/                  https://martinbarna.cz/
+RedirectMatch 301 ^/blog/?$                  https://martinbarna.cz/clanky/
+# staré produktové stránky → videokurz (hlavní low-cost produkt, vše je v něm)
+RedirectMatch 301 ^/ebook/?$                 https://martinbarna.cz/videokurz.html
+RedirectMatch 301 ^/kucharka/?$              https://martinbarna.cz/videokurz.html
+RedirectMatch 301 ^/recepty/?$               https://martinbarna.cz/videokurz.html
+RedirectMatch 301 ^/audiobook/?$             https://martinbarna.cz/videokurz.html
+RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz.html
 
 # --- 5) Komprese + cache (rychlost) ---
 <IfModule mod_deflate.c>
