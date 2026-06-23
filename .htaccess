@@ -15,6 +15,17 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteCond %{HTTP_HOST} ^www\.martinbarna\.cz$ [NC]
 RewriteRule ^ https://martinbarna.cz%{REQUEST_URI} [L,R=301]
 
+# --- 2b) Čisté URL bez .html (sjednocení: /treninky a /videokurz jako ostatní podstránky) ---
+# Staré odkazy s .html → 301 na čistou verzi (jen skutečné požadavky z prohlížeče,
+# proto THE_REQUEST — vnitřní přepis níže se tím nespustí, žádná smyčka).
+RewriteCond %{THE_REQUEST} \s/+treninky\.html[\s?] [NC]
+RewriteRule ^ /treninky [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+videokurz\.html[\s?] [NC]
+RewriteRule ^ /videokurz [R=301,L]
+# Čistou URL interně obsluž ze souboru (.html zůstává na disku, v adrese se neukáže).
+RewriteRule ^treninky/?$   treninky.html   [L]
+RewriteRule ^videokurz/?$  videokurz.html  [L]
+
 # --- 3) Vlastní 404 stránka ---
 ErrorDocument 404 /404.html
 
@@ -29,17 +40,17 @@ Redirect 301 /clenskasekce/objednavka/       https://form.simpleshop.cz/lQoO/buy
 Redirect 301 /martin/                        https://martinbarna.cz/#omne
 Redirect 301 /muj-pribeh/                    https://martinbarna.cz/#omne
 Redirect 301 /team-martin-barna/             https://martinbarna.cz/#omne
-Redirect 301 /videokurz-dekovaci-stranka/    https://martinbarna.cz/videokurz.html
+Redirect 301 /videokurz-dekovaci-stranka/    https://martinbarna.cz/videokurz
 # kategorie blogu + starý /blog → nový blog
 RedirectMatch 301 ^/rubrika/.*$              https://martinbarna.cz/clanky/
 RedirectMatch 301 ^/blog/?$                  https://martinbarna.cz/clanky/
 # staré produktové stránky → videokurz (hlavní low-cost produkt, vše je v něm)
-RedirectMatch 301 ^/ebook/?$                 https://martinbarna.cz/videokurz.html
-RedirectMatch 301 ^/kucharka/?$              https://martinbarna.cz/videokurz.html
-RedirectMatch 301 ^/recepty/?$               https://martinbarna.cz/videokurz.html
-RedirectMatch 301 ^/audiobook/?$             https://martinbarna.cz/videokurz.html
-RedirectMatch 301 ^/audiokniha/?$            https://martinbarna.cz/videokurz.html
-RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz.html
+RedirectMatch 301 ^/ebook/?$                 https://martinbarna.cz/videokurz
+RedirectMatch 301 ^/kucharka/?$              https://martinbarna.cz/videokurz
+RedirectMatch 301 ^/recepty/?$               https://martinbarna.cz/videokurz
+RedirectMatch 301 ^/audiobook/?$             https://martinbarna.cz/videokurz
+RedirectMatch 301 ^/audiokniha/?$            https://martinbarna.cz/videokurz
+RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz
 
 # --- 5) Komprese + cache (rychlost) ---
 <IfModule mod_deflate.c>
@@ -52,4 +63,18 @@ RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz.ht
   ExpiresByType image/webp "access plus 1 month"
   ExpiresByType image/jpeg "access plus 1 month"
   ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# --- 6) Bezpečnostní hlavičky (ochrana návštěvníků i webu) ---
+<IfModule mod_headers.c>
+  # Zákaz „hádání" typu souboru (chrání před útoky přes podvržené soubory)
+  Header always set X-Content-Type-Options "nosniff"
+  # Web nelze vložit do <iframe> cizí stránky (ochrana proti clickjackingu)
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # Kolik informací o odkazující stránce se posílá pryč (šetrné k soukromí)
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Web si nenárokuje přístup ke kameře/mikrofonu/poloze
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  # Po prvním HTTPS přístupu prohlížeč rok chodí už jen přes HTTPS
+  Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on'"
 </IfModule>
