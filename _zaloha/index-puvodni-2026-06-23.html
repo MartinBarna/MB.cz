@@ -363,41 +363,6 @@
         /* ===== PREMIUM v3 ===== */
         body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
         ::selection { background:#ff7a00; color:#fff; }
-
-        /* ===== KONVERZE v4: progress bar + mobilní CTA lišta + hero důvěra ===== */
-        /* Tenký posuvný ukazatel scrollu (prémiový detail) */
-        #scrollProgress { position:fixed; top:0; left:0; height:3px; width:0; z-index:3000;
-            background:linear-gradient(90deg,#ff7a00,#ffb066); box-shadow:0 0 8px rgba(255,122,0,.55);
-            transition:width .08s linear; pointer-events:none; }
-
-        /* Řádek důvěry v heru (hvězdy + Česká televize) */
-        .hero-trust { margin-top:1.15rem; font-size:.95rem; opacity:.97; display:flex; flex-wrap:wrap;
-            gap:.35rem 1rem; align-items:center; animation:fadeUp .7s ease .4s both; }
-        .hero-trust .ht-stars { color:#ffd166; letter-spacing:1px; font-size:1.02rem; }
-        .hero-trust .ht-item { display:inline-flex; align-items:center; gap:.35rem; white-space:nowrap; }
-        .hero-trust b { font-weight:700; }
-        @media (max-width:991px){ .hero-trust { justify-content:center; } }
-
-        /* Lepkavá konverzní lišta (jen mobil/tablet) — vždy po ruce Videokurz i Konzultace */
-        .cta-bar { position:fixed; left:0; right:0; bottom:0; z-index:1100; display:none; gap:10px;
-            padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-            background:rgba(255,255,255,.88); -webkit-backdrop-filter:saturate(180%) blur(14px);
-            backdrop-filter:saturate(180%) blur(14px); border-top:1px solid rgba(0,0,0,.07);
-            box-shadow:0 -8px 26px rgba(0,0,0,.10);
-            transform:translateY(130%); transition:transform .35s cubic-bezier(.2,.7,.2,1); }
-        .cta-bar.show { transform:none; }
-        .cta-bar a { flex:1; text-align:center; padding:13px 8px; border-radius:50px; font-weight:700;
-            font-size:.97rem; text-decoration:none; transition:transform .18s ease; line-height:1.1; }
-        .cta-bar a:active { transform:scale(.97); }
-        .cta-bar .cb-kurz { background:#161616; color:#fff; }
-        .cta-bar .cb-konz { background:linear-gradient(180deg,#ff8a1f,#ff7a00); color:#fff;
-            box-shadow:0 6px 16px rgba(255,122,0,.34); }
-        @media (max-width:991.98px){
-            .cta-bar { display:flex; }
-            /* zvedni plovoucí tlačítka nad lištu, ať se nepřekrývají */
-            .cta-bar.show ~ .fab-wa { bottom:86px; }
-            .cta-bar.show ~ .to-top { bottom:152px; }
-        }
     </style>
     <script>
     (function(){
@@ -419,7 +384,6 @@
     <script defer data-domain="martinbarna.cz" src="https://plausible.io/js/script.js"></script>
 </head>
 <body>
-    <div id="scrollProgress"></div>
     <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
     <!-- NAV -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
@@ -456,10 +420,6 @@
                     </div>
                     <p class="small mt-3 mb-0" style="opacity:.95;">💡 Začneš-li do 14 dní coaching, <strong>cenu konzultace ti odečtu z ceny balíčku.</strong></p>
                     <p class="small mt-1 mb-0" style="opacity:.9;">Jen se chceš zeptat na ceny nebo balíčky? <a href="#kontakt" style="color:#fff; text-decoration:underline;">Napiš mi nezávazně</a> — e-mailem i na WhatsApp.</p>
-                    <div class="hero-trust">
-                        <span class="ht-item"><span class="ht-stars">★★★★★</span> <b>5,0</b> · 100+ recenzí</span>
-                        <span class="ht-item">🎬 z vysílání České televize</span>
-                    </div>
                     <div class="badges">
                         <span>✓ 600+ klientů</span>
                         <span>✓ Vědecky podloženo</span>
@@ -1001,12 +961,6 @@
         <p class="mb-0"><a href="https://martinbarna.cz">martinbarna.cz</a> · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> · +420 603 229 831</p>
     </footer>
 
-    <!-- Lepkavá konverzní lišta (mobil/tablet) -->
-    <div class="cta-bar" id="ctaBar" aria-label="Rychlé objednání">
-        <a class="cb-kurz" href="/videokurz">🎥 Videokurz</a>
-        <a class="cb-konz" href="https://form.simpleshop.cz/qG2yO/buy/">💬 Objednat konzultaci →</a>
-    </div>
-
     <!-- Plovoucí tlačítka -->
     <button class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Nahoru">↑</button>
     <a class="fab-wa" href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20dotaz%20ohledn%C4%9B%20kou%C4%8Dinku" target="_blank" rel="noopener" aria-label="Napiš na WhatsApp">
@@ -1101,22 +1055,12 @@
             });
         }
 
-        // --- Tlačítko nahoru + scroll progress + mobilní CTA lišta ---
+        // --- Tlačítko nahoru ---
         var toTop = document.getElementById('toTop');
-        var _prog = document.getElementById('scrollProgress');
-        var _ctaBar = document.getElementById('ctaBar');
-        function _onScroll() {
-            var st = window.scrollY || document.documentElement.scrollTop;
-            if (st > 500) { toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
-            if (_prog) {
-                var h = document.documentElement.scrollHeight - window.innerHeight;
-                _prog.style.width = (h > 0 ? Math.min(100, st / h * 100) : 0) + '%';
-            }
-            // lišta naskočí po odscrollování herа, ať neruší první dojem
-            if (_ctaBar) { if (st > 560) { _ctaBar.classList.add('show'); } else { _ctaBar.classList.remove('show'); } }
-        }
-        window.addEventListener('scroll', _onScroll, { passive: true });
-        _onScroll();
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 500) { toTop.classList.add('show'); }
+            else { toTop.classList.remove('show'); }
+        });
 
         // --- Zavři mobilní menu po kliknutí na odkaz ---
         document.querySelectorAll('#nav .nav-link, #nav .btn').forEach(function (link) {

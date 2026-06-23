@@ -33,6 +33,7 @@ jobs:
             **/.git*/**
             **/.github/**
             _import/**
+            _zaloha/**
             scripts/**
             **/*.md
             CNAME
