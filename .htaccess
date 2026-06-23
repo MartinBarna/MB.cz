@@ -1,0 +1,52 @@
+# ===== Martin Barna — Apache konfigurace pro Wedos (statický web) =====
+# Soubor je neškodný na GitHub Pages (ignoruje se) a aktivní na Wedos/Apache.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# --- 1) Vynuť HTTPS ---
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# --- 2) Sjednoť na NE-www (kanonická doména = martinbarna.cz) ---
+# Tím se vyřeší i staré cache přesměrování na www: www teď 301 míří na apex,
+# který obsah servíruje (žádná smyčka, žádný timeout).
+RewriteCond %{HTTP_HOST} ^www\.martinbarna\.cz$ [NC]
+RewriteRule ^ https://martinbarna.cz%{REQUEST_URI} [L,R=301]
+
+# --- 3) Vlastní 404 stránka ---
+ErrorDocument 404 /404.html
+
+# --- 4) Přesměrování starých WordPress URL (parita, ať nic nespadne z Googlu) ---
+# produktové/objednávkové stránky → SimpleShop nebo nové stránky
+Redirect 301 /objednavka-konzultace/        https://form.simpleshop.cz/qG2yO/buy/
+Redirect 301 /objednavka-videokurzu/         https://form.simpleshop.cz/3Vbl/buy/
+Redirect 301 /objednavka-ebooku/             https://form.simpleshop.cz/eVJ6/buy/
+Redirect 301 /objednavka-receptu/            https://form.simpleshop.cz/mMB7/buy/
+Redirect 301 /objednavka-audiobooku/         https://form.simpleshop.cz/xl6e/buy/
+Redirect 301 /clenskasekce/objednavka/       https://form.simpleshop.cz/lQoO/buy/
+Redirect 301 /martin/                        https://martinbarna.cz/#omne
+Redirect 301 /muj-pribeh/                    https://martinbarna.cz/#omne
+Redirect 301 /team-martin-barna/             https://martinbarna.cz/#omne
+Redirect 301 /videokurz-dekovaci-stranka/    https://martinbarna.cz/videokurz.html
+# kategorie blogu → blog
+RedirectMatch 301 ^/rubrika/.*$              https://martinbarna.cz/clanky/
+# produkty bez samostatné stránky → domů
+Redirect 301 /ebook/                         https://martinbarna.cz/
+Redirect 301 /recepty/                       https://martinbarna.cz/
+Redirect 301 /audiobook/                     https://martinbarna.cz/
+Redirect 301 /clenskasekce/                  https://martinbarna.cz/
+
+# --- 5) Komprese + cache (rychlost) ---
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/json
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
