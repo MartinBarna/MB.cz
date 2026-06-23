@@ -386,8 +386,9 @@
             box-shadow:0 -8px 26px rgba(0,0,0,.10);
             transform:translateY(130%); transition:transform .35s cubic-bezier(.2,.7,.2,1); }
         .cta-bar.show { transform:none; }
-        .cta-bar a { flex:1; text-align:center; padding:13px 8px; border-radius:50px; font-weight:700;
-            font-size:.97rem; text-decoration:none; transition:transform .18s ease; line-height:1.1; }
+        .cta-bar a { flex:1; display:flex; align-items:center; justify-content:center; gap:5px;
+            text-align:center; padding:12px 8px; border-radius:50px; font-weight:700;
+            font-size:.92rem; text-decoration:none; transition:transform .18s ease; line-height:1; white-space:nowrap; }
         .cta-bar a:active { transform:scale(.97); }
         .cta-bar .cb-kurz { background:#161616; color:#fff; }
         .cta-bar .cb-konz { background:linear-gradient(180deg,#ff8a1f,#ff7a00); color:#fff;
@@ -1008,7 +1009,7 @@
     <!-- Lepkavá konverzní lišta (mobil/tablet) -->
     <div class="cta-bar" id="ctaBar" aria-label="Rychlé objednání">
         <a class="cb-kurz" href="/videokurz">🎥 Videokurz</a>
-        <a class="cb-konz" href="https://form.simpleshop.cz/qG2yO/buy/">💬 Objednat konzultaci →</a>
+        <a class="cb-konz" href="https://form.simpleshop.cz/qG2yO/buy/">💬 Konzultace →</a>
     </div>
 
     <!-- Plovoucí tlačítka -->
