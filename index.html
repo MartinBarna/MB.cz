@@ -395,8 +395,8 @@
         @media (max-width:991.98px){
             .cta-bar { display:flex; }
             /* zvedni plovoucí tlačítka nad lištu, ať se nepřekrývají */
-            .cta-bar.show ~ .fab-wa { bottom:86px; }
-            .cta-bar.show ~ .to-top { bottom:152px; }
+            .cta-bar.show ~ .fab-wa { bottom:calc(94px + env(safe-area-inset-bottom)); }
+            .cta-bar.show ~ .to-top { bottom:calc(160px + env(safe-area-inset-bottom)); }
         }
     </style>
     <script>
