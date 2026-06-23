@@ -1,0 +1,41 @@
+name: Deploy na Wedos (FTP)
+
+# Po každém pushi do main nahraje statický web na Wedos hosting přes FTP.
+# Vyžaduje 3 GitHub secrets (Settings → Secrets and variables → Actions):
+#   FTP_SERVER    – FTP host z Wedosu (např. ftp.martinbarna.cz)
+#   FTP_USERNAME  – FTP login z Wedosu
+#   FTP_PASSWORD  – FTP heslo z Wedosu
+# A jednu volitelnou proměnnou (Variables), pokud webroot není "/www/":
+#   FTP_SERVER_DIR (default /www/)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Nahrát na Wedos přes FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/www/' }}
+          local-dir: ./
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            _import/**
+            scripts/**
+            **/*.md
+            CNAME
+            .nojekyll
