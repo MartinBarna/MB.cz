@@ -1,0 +1,31 @@
+POPISEK — Spánek (citace opravené 19.6.2026)
+Oprava: "Wang 2018, Obesity, DOI 10.1002/oby.22148" -> "Wang 2018, Sleep, DOI 10.1093/sleep/zsy027" (původní DOI patřil jinému článku).
+
+Posuň na slide 4 a uvidíš, co se stalo s tukem.
+
+10 lidí, 14 dní, v laboratoři. Kalorie v deficitu pod přísnou kontrolou, výdej změřený přes doubly-labeled water (a v obou fázích podobný). Měnila se jediná věc: spánek.
+
+Při 8,5 hodinách v posteli shodili 1,4 kg tuku a 1,5 kg svalu. Při 5,5 hodinách? 0,6 kg tuku a 2,4 kg svalu.
+
+Stejné 3 kg dolů. Akorát v úplně jiném poměru.
+
+A to je laboratoř. V reálu se přidá nižší spontánní pohyb, větší únava a často podceněný odhad příjmu, takže problém je ještě větší (slide 5).
+
+Spánek patří do top čtyřky priorit: deficit, bílkoviny, silový trénink, spánek, a teprve potom zbytek.
+
+Pro koho to neplatí extrémně: jedna horší noc dietu nezruinuje, kdo spí 7 až 9 hodin pravidelně, řeší jiné věci, a těch zhruba 5 % lidí s mutací DEC2 (to nejspíš nejsi ty).
+
+Počítání kalorií ti dá přesnost, spánek ti dá to, že plán vůbec udržíš. Jedno bez druhého kulhá.
+
+Spíš pod 7 hodin pravidelně? Co tě v tom nejvíc drží?
+
+#vyziva #fitness #onlinekoucing #flexibilnistravovani #spanek #rekompozice #hubnuti #budovanisvalu
+
+--- PIN COMMENT ---
+Primární zdroje, ať to máš černé na bílém:
+- Nedeltcheva 2010, Annals of Internal Medicine, DOI: 10.7326/0003-4819-153-7-201010050-00006
+- Wang 2018, Sleep (real-world replikace), DOI: 10.1093/sleep/zsy027
+- Tasali 2022, JAMA Internal Medicine (extension trial), DOI: 10.1001/jamainternmed.2021.8098
+- Lamon 2021, Physiological Reports (MPS mechanismus), DOI: 10.14814/phy2.14660
+
+Otevřeno k diskusi, ale prosím nejdřív přečti slide 8. Tam je nuance, která tenhle závěr drží. Definitivní tvrzení „1 noc málo spánku = katastrofa" tady nikde není.
