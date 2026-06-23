@@ -34,6 +34,7 @@ jobs:
             **/.github/**
             _import/**
             _zaloha/**
+            Logo-rebrand/**
             scripts/**
             **/*.md
             CNAME
