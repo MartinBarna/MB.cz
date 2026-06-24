@@ -197,7 +197,7 @@
         .plan-feat li::before { content:"✓"; position:absolute; left:0; color:var(--green); font-weight:800; }
         .plan.featured { border:2px solid var(--gold); }
         .ribbon-top { background:var(--gold); color:#fff; text-align:center; font-weight:700; font-size:.85rem; padding:8px; letter-spacing:.5px; }
-        .plan-microtrust { font-size:.8rem; color:#8a8a8a; text-align:center; margin:.7rem 0 0; }
+        .plan-microtrust { font-size:.8rem; color:#666; text-align:center; margin:.7rem 0 0; }
         .plan-trust { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem 1.6rem; margin-top:2.2rem;
             font-size:.95rem; font-weight:600; color:#5b6660; }
         .plan-trust span { display:inline-flex; align-items:center; gap:.4rem; }
@@ -245,7 +245,7 @@
         .social a:hover { background:#fff; color:var(--green-dark); }
 
         footer { background:var(--ink); color:#cfd8d2; padding:30px 0; text-align:center; }
-        footer a { color:#ffb066; text-decoration:none; }
+        footer a { color:#ffb066; text-decoration:underline; }
 
         /* ===== VIZUÁLNÍ POLISH (CSS-only, bez zásahu do struktury) ===== */
         /* Hero: jemné prosvětlení + chip badge */
@@ -878,26 +878,26 @@
                     <div class="calc-wrap">
                         <div class="row g-3">
                             <div class="col-6">
-                                <label>Pohlaví</label>
+                                <label for="pohlavi">Pohlaví</label>
                                 <select id="pohlavi" class="form-select">
                                     <option value="muz">Muž</option>
                                     <option value="zena">Žena</option>
                                 </select>
                             </div>
                             <div class="col-6">
-                                <label>Věk (let)</label>
+                                <label for="vek">Věk (let)</label>
                                 <input id="vek" type="number" class="form-control" value="30" min="14" max="100">
                             </div>
                             <div class="col-6">
-                                <label>Výška (cm)</label>
+                                <label for="vyska">Výška (cm)</label>
                                 <input id="vyska" type="number" class="form-control" value="178" min="120" max="230">
                             </div>
                             <div class="col-6">
-                                <label>Váha (kg)</label>
+                                <label for="vaha">Váha (kg)</label>
                                 <input id="vaha" type="number" class="form-control" value="80" min="35" max="250">
                             </div>
                             <div class="col-12">
-                                <label>Aktivita</label>
+                                <label for="aktivita">Aktivita</label>
                                 <select id="aktivita" class="form-select">
                                     <option value="1.2">Sedavý (kancelář, minimum pohybu)</option>
                                     <option value="1.375">Lehká aktivita (1–3× týdně)</option>
@@ -907,7 +907,7 @@
                                 </select>
                             </div>
                             <div class="col-12">
-                                <label>Tvůj cíl</label>
+                                <label for="cil">Tvůj cíl</label>
                                 <select id="cil" class="form-select">
                                     <option value="hubnuti">Zhubnout (kalorický deficit)</option>
                                     <option value="udrzeni" selected>Udržet váhu</option>
