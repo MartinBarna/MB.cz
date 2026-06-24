@@ -58,14 +58,14 @@
         .btn.gold { background:var(--gold); } .btn.gold:hover { background:#e0941a; }
         .disclaimer { font-size:.9rem; color:#7a857d; border-top:1px solid #e6ece6; margin-top:2.5rem; padding-top:1.2rem; }
         footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
-        footer a { color:#ffb066; text-decoration:none; }
+        footer a { color:#ffb066; text-decoration:underline; }
         .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
         body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
         ::selection { background:#ff7a00; color:#fff; }
         h1, h2, h3 { letter-spacing:-.015em; }
         @media (prefers-reduced-motion: reduce){ *, *::before, *::after { transition-duration:.001ms!important; scroll-behavior:auto!important; } }
-        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#8a8a8a; }
-        .crumbs a { color:#8a8a8a; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#666; }
+        .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
         .crumbs span { color:var(--ink); }
         .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
         .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
@@ -76,7 +76,7 @@
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
         .info-gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:2.4rem 0 1rem; }
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
-        .gallery-note { text-align:center; color:#8a8a8a; font-size:.9rem; margin:0 0 1rem; }
+        .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
     </style>
     <script type="application/ld+json">
@@ -137,7 +137,7 @@
             <p>Výsledek? Nejzdravější třetina lidí žila skoro o dekádu déle než ta nejméně zdravá. A nebyl to jen čas navíc. Přidaly se i roky bez infarktu, cukrovky, rakoviny nebo demence</p>
             <p>Tady je ta nejdůležitější věc: nejzdravější třetina nebyli žádní askety. Jejich profil je úplně dosažitelný:</p>
             <ul><li>spánek zhruba 7 až 8 hodin</li><li>přes 40 minut svižného pohybu denně (klidně kolo do práce nebo schody)</li><li>dobrá strava, ne stoprocentně perfektní</li></ul>
-            <p>A teď to nejlepší. Kdo je na tom nejhůř, získá nejvíc. Od úplného dna stačí denně přidat pět minut spánku, dvě minuty svižného pohybu a půl porce zeleniny, a je z toho zhruba rok života navíc. Háček: funguje to jen v kombinaci. Doprovodná studie stejného týmu ukázala, že samotná strava na efekt nestačila, ale tři malé změny dohromady ano</p>
+            <p>A teď to nejlepší. Kdo je na tom nejhůř, získá nejvíc. Od úplného dna stačí denně přidat pět minut <a href="spanek-a-hubnuti.html" class="ilink">spánku</a>, dvě minuty svižného pohybu a půl porce zeleniny, a je z toho zhruba rok života navíc. Háček: funguje to jen v kombinaci. Doprovodná studie stejného týmu ukázala, že samotná strava na efekt nestačila, ale tři malé změny dohromady ano</p>
             <p>A není to výstřelek jedné studie. Velká americká práce na 123 000 lidech našla u pěti zdravých návyků o 14 let delší život u žen a o 12 u mužů. Napříč zeměmi i metodami pořád stejný trend</p>
             <p>Ať jsme féroví, ať to nepřeháníme: je to pozorovací studie, takže ukazuje souvislost, ne stoprocentní příčinu. Zdravější lidé se liší i jinak (kouření, příjem, vzdělání). Kvalitu stravy navíc zjišťovali jen dotazníkem, takže je to z těch tří věcí nejslabší článek. A roky navíc pro tebe nejsou garance, ale modelové odhady</p>
             <p>Pointa: nemusíš překopat život ani být dokonalý. Stačí být konzistentní. A právě v té vytrvalosti se schovávají roky navíc. Čas, co dáš spánku, pohybu a lepšímu jídlu, je dobře investovaný. Vrátí se ti i s úroky</p>
@@ -145,7 +145,7 @@
 
             <div class="cta-box">
                 <h3>Chceš to mít nastavené na míru?</h3>
-                <p>V koučinku ti poskládám jídelníček i trénink přesně na tvůj život — vědecky, bez extrémů a bez jojo efektu.</p>
+                <p>V koučinku ti poskládám jídelníček i trénink přesně na tvůj život — vědecky, bez extrémů a bez <a href="jojo-efekt.html" class="ilink">jojo efektu</a>.</p>
                 <a class="btn" href="../index.html#kalkulacka">Kalkulačka kalorií</a>
                 <a class="btn gold" href="../videokurz">Videokurz za 800 Kč</a>
                 <a class="btn gold" href="../index.html#balicky">Koučink na míru</a>

@@ -58,14 +58,14 @@
         .btn.gold { background:var(--gold); } .btn.gold:hover { background:#e0941a; }
         .disclaimer { font-size:.9rem; color:#7a857d; border-top:1px solid #e6ece6; margin-top:2.5rem; padding-top:1.2rem; }
         footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
-        footer a { color:#ffb066; text-decoration:none; }
+        footer a { color:#ffb066; text-decoration:underline; }
         .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
         body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
         ::selection { background:#ff7a00; color:#fff; }
         h1, h2, h3 { letter-spacing:-.015em; }
         @media (prefers-reduced-motion: reduce){ *, *::before, *::after { transition-duration:.001ms!important; scroll-behavior:auto!important; } }
-        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#8a8a8a; }
-        .crumbs a { color:#8a8a8a; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#666; }
+        .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
         .crumbs span { color:var(--ink); }
         .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
         .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
@@ -76,7 +76,7 @@
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
         .info-gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:2.4rem 0 1rem; }
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
-        .gallery-note { text-align:center; color:#8a8a8a; font-size:.9rem; margin:0 0 1rem; }
+        .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
     </style>
     <script type="application/ld+json">
@@ -137,18 +137,18 @@
             <ul><li>️ Na hubnutí rozhoduje deficit, ne pivo samo o sobě. Velké přehledy studií se shodují, že lehká až střední konzumace se nespojuje s přibíráním. Sklenka k večeři párkrát týdně je něco jiného než šest piv v pátek</li><li>️ Háček je v tom, co se k pití váže. Alkohol zvedne chuť a sníží zábrany. Sníš víc a tělo si to z piva nijak neodečte. Kebab cestou domů nadělá víc než drink samotný</li><li>️ A pak je tu věc, co s váhou nesouvisí: zdraví. Ať zhubneš jakkoli, WHO v roce 2023 řekla natvrdo, že žádná dávka alkoholu není pro zdraví bezpečná. Je to karcinogen nejvyšší kategorie a je návykový. To deficit nepřebije</li></ul>
             <p>Takže žádná démonizace, ale ani „makra sedí, tak je to jedno". Pár sklenek týdně, započítaných do dne, hubnutí ani formu nerozbije. Pravidelné nasávání brzdí kalorie, chuť, spánek i sval naráz</p>
             <p>Pivo se vejde. Drama ne. Ulož si to a příště se rozhodni vědomě. 💪</p>
-            <p>━━━ Chceš stavět jídelníček, kam se sklenka vína vejde, a výsledky tím nezabrzdit? V koučingu tě učím systém, který utáhneš roky, ne dva týdny → odkaz v biu. Základy najdeš ve videokurzu Flexibilní stravování (800 Kč)</p>
+            <p>━━━ Chceš stavět jídelníček, kam se sklenka vína vejde, a výsledky tím nezabrzdit? V koučingu tě učím systém, který utáhneš roky, ne dva týdny → odkaz v biu. Základy najdeš ve videokurzu <a href="flexibilni-stravovani.html" class="ilink">Flexibilní stravování</a> (800 Kč)</p>
             <p>📚 Zdroje, ať si to ověříš:</p>
             <p>1) Lehká konzumace se nespojuje s přibíráním (přehled): Traversy G, Chaput JP. Alcohol Consumption and Obesity: An Update. Curr Obes Rep. 2015;4(1):122–130. DOI: 10.1007/s13679-014-0129-4 | PMID: 25741455</p>
             <p>2) Po alkoholu sníš víc a nekompenzuješ (meta-analýza 22 studií): Kwok A, et al. Effect of alcohol consumption on food energy intake. Br J Nutr. 2019;121(5):481–495. DOI: 10.1017/S0007114518003677 | PMID: 30630543 (Jídla navíc v průměru +343 kJ ≈ +82 kcal, bez kompenzace.)</p>
             <p>3) Tlumení stavby svalů (i s proteinem): Parr EB, et al. Alcohol Ingestion Impairs Maximal Post-Exercise Rates of Myofibrillar Protein Synthesis. PLoS One. 2014;9(2):e88384. DOI: 10.1371/journal.pone.0088384 (−24 % i s proteinem. Pozor: dávka byla ~12 drinků, tedy opíjení, ne sklenka.)</p>
-            <p>4) Narušení spánku a REM (přehled + meta-analýza): • Nutrients. 2026;18(4):585. DOI: 10.3390/nu18040585 • Gardiner C, et al. Sleep Med Rev. 2025;80:102030. DOI: 10.1016/j.smrv.2024.102030 (REM suprese a fragmentace, hlavně druhá půlka noci.)</p>
+            <p>4) Narušení <a href="spanek-a-hubnuti.html" class="ilink">spánku</a> a REM (přehled + meta-analýza): • Nutrients. 2026;18(4):585. DOI: 10.3390/nu18040585 • Gardiner C, et al. Sleep Med Rev. 2025;80:102030. DOI: 10.1016/j.smrv.2024.102030 (REM suprese a fragmentace, hlavně druhá půlka noci.)</p>
             <p>5) Žádná dávka není pro zdraví bezpečná (WHO): Anderson BO, et al. Lancet Public Health. 2023;8(1):e6–e7. DOI: 10.1016/S2468-2667(22)00317-6</p>
             <p>6) Karcinogen skupiny 1, 7 druhů rakoviny: Rumgay H, et al. Lancet Oncol. 2021;22(8):1071–1080. DOI: 10.1016/S1470-2045(21)00279-5 | PMID: 34270924</p>
 
             <div class="cta-box">
                 <h3>Chceš to mít nastavené na míru?</h3>
-                <p>V koučinku ti poskládám jídelníček i trénink přesně na tvůj život — vědecky, bez extrémů a bez jojo efektu.</p>
+                <p>V koučinku ti poskládám jídelníček i trénink přesně na tvůj život — vědecky, bez extrémů a bez <a href="jojo-efekt.html" class="ilink">jojo efektu</a>.</p>
                 <a class="btn" href="../index.html#kalkulacka">Kalkulačka kalorií</a>
                 <a class="btn gold" href="../videokurz">Videokurz za 800 Kč</a>
                 <a class="btn gold" href="../index.html#balicky">Koučink na míru</a>

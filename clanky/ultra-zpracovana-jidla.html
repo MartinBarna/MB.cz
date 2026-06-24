@@ -58,14 +58,14 @@
         .btn.gold { background:var(--gold); } .btn.gold:hover { background:#e0941a; }
         .disclaimer { font-size:.9rem; color:#7a857d; border-top:1px solid #e6ece6; margin-top:2.5rem; padding-top:1.2rem; }
         footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
-        footer a { color:#ffb066; text-decoration:none; }
+        footer a { color:#ffb066; text-decoration:underline; }
         .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
         body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
         ::selection { background:#ff7a00; color:#fff; }
         h1, h2, h3 { letter-spacing:-.015em; }
         @media (prefers-reduced-motion: reduce){ *, *::before, *::after { transition-duration:.001ms!important; scroll-behavior:auto!important; } }
-        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#8a8a8a; }
-        .crumbs a { color:#8a8a8a; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#666; }
+        .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
         .crumbs span { color:var(--ink); }
         .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
         .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
@@ -76,7 +76,7 @@
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
         .info-gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:2.4rem 0 1rem; }
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
-        .gallery-note { text-align:center; color:#8a8a8a; font-size:.9rem; margin:0 0 1rem; }
+        .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
     </style>
     <script type="application/ld+json">
@@ -134,18 +134,18 @@
             </div>
 
             <p>Co říkají pozorovací data. Meta-analýza z roku 2024 (18 studií, 1,15 milionu lidí) našla u lidí s nejvyšším příjmem UPF o 15 % vyšší riziko úmrtí. Každých 10 % UPF ve stravě navíc znamenalo zhruba o 10 % vyšší riziko</p>
-            <p>Co ukázal kontrolovaný experiment. Hall a spol. (2019, Cell Metabolism) zavřeli 20 lidí na dva týdny na kliniku. Jednou jedli ultra-zpracovaně, podruhé celistvou stravu. Obojí mělo stejné kalorie, makra, cukr, tuk, sůl i vlákninu. Jedli, kolik chtěli</p>
+            <p>Co ukázal kontrolovaný experiment. Hall a spol. (2019, Cell Metabolism) zavřeli 20 lidí na dva týdny na kliniku. Jednou jedli ultra-zpracovaně, podruhé celistvou stravu. Obojí mělo stejné kalorie, makra, cukr, tuk, sůl i <a href="vlaknina.html" class="ilink">vlákninu</a>. Jedli, kolik chtěli</p>
             <p>Výsledek? Na UPF snědli o 508 kcal denně víc a za dva týdny přibrali skoro kilo. Na celistvé stravě naopak kilo shodili</p>
             <p>Proč to tak je. UPF jídlo lidi jedli rychleji, asi 48 kcal za minutu proti 31 u celistvého (Forde a kol.). Měkká textura a vysoká energetická hustota způsobí, že mozek nestihne zaregistrovat sytost. Než si řekne dost, máš v sobě o stovky kalorií víc</p>
             <p>Ať jsme féroví, termodynamika neselhává. Lidé ve studii jedli volně, bez počítání. Když kalorie hlídáš a držíš deficit, z UPF nepřibereš. Netloustne tě kvůli zpracování, ale proto, že tě nutí sníst víc, když nehlídáš</p>
             <p>A pozor, ne každé zpracování je špatné. Med, syrovátkový protein, olej, jogurt nebo šunka nejsou UPF. Klasifikace NOVA má čtyři kategorie a „ultra-zpracované" je až ta čtvrtá (limonády, sušenky, instantní jídla)</p>
-            <p>Kde je u UPF reálný háček: snadno se přejíš (textura a hustota), bývá v něm míň bílkovin (horší sytost i regenerace) a míň vlákniny a mikroživin</p>
+            <p>Kde je u UPF reálný háček: snadno se přejíš (textura a hustota), bývá v něm míň <a href="bilkoviny.html" class="ilink">bílkovin</a> (horší sytost i regenerace) a míň vlákniny a mikroživin</p>
             <p>Flexibilní rámec, co používám s klienty: zhruba 80 % stravy postav na celistvém jídle, bílkoviny 1,6 až 2,2 g/kg denně, vláknina 25 až 35 g denně a UPF nech jako těch 20 %, co se vejde, ne jako hlavní zdroj kalorií</p>
             <p>Bez extrémů, s kontextem</p>
             <p>Zdroje: Hall et al. (2019) Cell Metabolism. Liang et al. (2025) Systematic Reviews</p>
             <p>Co je pro tebe těžší, držet 80 % celistvého jídla, nebo dotáhnout 1,6 g bílkovin na kilo? Napiš do komentáře</p>
             <p>Online koučing: martinbarna.cz/koucing</p>
-            <p>Videokurz flexibilního stravování: martinbarna.cz/videokurz</p>
+            <p>Videokurz <a href="flexibilni-stravovani.html" class="ilink">flexibilního stravování</a>: martinbarna.cz/videokurz</p>
 
             <div class="cta-box">
                 <h3>Chceš to mít nastavené na míru?</h3>
