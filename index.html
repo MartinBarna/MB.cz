@@ -26,7 +26,6 @@
     <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
     <link rel="preload" as="image" href="assets/foto/martin/hero.webp" fetchpriority="high">
     <link href="/assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link rel="preload" as="image" href="assets/foto/martin/hero.webp" fetchpriority="high">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -173,7 +172,7 @@
         .section-head p { color:#5a665e; max-width:660px; margin:.8rem auto 0; }
         .bg-soft { background:var(--green-light); }
 
-        .stat h3 { color:var(--green); font-size:2.6rem; margin-bottom:.2rem; }
+        .stat h3 { color:var(--green); font-size:clamp(1.95rem, 5.2vw, 2.6rem); margin-bottom:.2rem; }
         .stat p { color:#5a665e; margin:0; font-weight:600; }
 
         .card { border:none; border-radius:18px; box-shadow:0 8px 28px rgba(0,0,0,.07); transition:.2s; height:100%; }
@@ -186,7 +185,7 @@
         .plan-head { padding:2rem 2rem 1rem; }
         .plan-name { font-weight:800; font-size:1.6rem; }
         .plan-sub { color:#7a857d; font-size:.95rem; }
-        .plan-price { font-size:2.6rem; font-weight:800; color:var(--ink); }
+        .plan-price { font-size:clamp(2.1rem, 5vw, 2.6rem); font-weight:800; color:var(--ink); }
         .plan-price small { font-size:1rem; font-weight:600; color:#7a857d; }
         .plan-body { padding:0 2rem 2rem; }
         .plan-terms { background:#f6f9f6; border-radius:14px; padding:1rem 1.2rem; margin-bottom:1.4rem; font-size:.95rem; }
@@ -205,12 +204,17 @@
         .feature .ico { width:64px; height:64px; border-radius:50%; background:var(--green-light); color:var(--green-dark);
             display:flex; align-items:center; justify-content:center; font-size:1.7rem; margin:0 auto 1rem; }
 
+        /* SVG ikony — jednotná brand sada místo emoji */
+        .mb-ico { display:inline-flex; align-items:center; justify-content:center; line-height:0; vertical-align:-.15em; }
+        .mb-ico svg { width:1em; height:1em; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; fill:none; }
+        #blog .card .ico { font-size:2.1rem; color:var(--green-dark); display:block; margin-bottom:.7rem; line-height:0; }
+
         /* Kalkulačka */
         .calc-wrap { background:#fff; border-radius:22px; box-shadow:0 10px 36px rgba(0,0,0,.09); padding:2.5rem; }
         .calc-wrap label { font-weight:600; font-size:.9rem; margin-bottom:.3rem; }
         .calc-wrap .form-control, .calc-wrap .form-select { border-radius:10px; padding:11px; }
         .result { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; border-radius:18px; padding:2rem; text-align:center; }
-        .result .kcal { font-size:3rem; font-weight:800; line-height:1; }
+        .result .kcal { font-size:clamp(2.4rem, 7vw, 3rem); font-weight:800; line-height:1; }
         .macro { background:rgba(255,255,255,.15); border-radius:14px; padding:1rem .5rem; }
         .macro .num { font-size:1.5rem; font-weight:800; }
         .macro .lbl { font-size:.8rem; opacity:.9; }
@@ -220,7 +224,7 @@
         .vk-tag { background:var(--gold); color:#fff; font-weight:700; font-size:.8rem; padding:5px 14px; border-radius:50px; display:inline-block; }
 
         .review-box { background:#fff; border-radius:18px; box-shadow:0 8px 28px rgba(0,0,0,.07); padding:2.4rem; }
-        .review-box .big { font-size:3rem; font-weight:800; color:var(--green); line-height:1; }
+        .review-box .big { font-size:clamp(2.2rem, 6vw, 3rem); font-weight:800; color:var(--green); line-height:1; }
         .stars { color:#ffb300; font-size:1.4rem; }
         .src-btn { display:inline-flex; align-items:center; gap:8px; background:#f6f9f6; border-radius:50px; padding:10px 20px; font-weight:600; color:var(--ink); text-decoration:none; transition:.2s; }
         .src-btn:hover { background:var(--green); color:#fff; }
@@ -310,6 +314,14 @@
         .promeny-grid { columns:3; column-gap:1.5rem; }
         .promeny-grid > .card { break-inside:avoid; width:100%; margin-bottom:1.5rem; }
         .promena { width:100%; height:auto; display:block; }
+        /* výsledkové odznaky + interakce na kartách proměn */
+        .promeny-grid > .card { position:relative; transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease; }
+        .promeny-grid > .card:hover { transform:translateY(-4px); box-shadow:0 20px 46px rgba(0,0,0,.15); }
+        .metric-badge { position:absolute; top:12px; left:12px; z-index:2; color:#fff; font-weight:800;
+            font-size:.92rem; line-height:1; padding:7px 13px; border-radius:50px; letter-spacing:-.01em;
+            box-shadow:0 6px 18px rgba(0,0,0,.28); }
+        .metric-badge.kg { background:linear-gradient(180deg,#ff8a1f,#ff7a00); }
+        .metric-badge.time { background:rgba(20,38,26,.86); }
         /* role-model příběhy */
         .story-card { border:1px solid #f0ece6; box-shadow:0 10px 30px rgba(0,0,0,.06); overflow:hidden; }
         .story-card img.smed { width:100%; height:auto; border-radius:12px; display:block; }
@@ -420,6 +432,25 @@
     <script defer src="/assets/analytics.js"></script>
 </head>
 <body>
+    <!-- SVG ikony (sprite) — schované, referují se přes <use> -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <symbol id="ic-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6.5l-5.2 8.4A2 2 0 0 0 6.5 21h11a2 2 0 0 0 1.7-3.1L14 9.5V3"/><path d="M7.5 14.5h9"/></symbol>
+        <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M6 21V11M12 21V5M18 21v-8"/></symbol>
+        <symbol id="ic-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12Z"/></symbol>
+        <symbol id="ic-play" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M11 9.3 15 12l-4 2.7Z" fill="currentColor" stroke="none"/></symbol>
+        <symbol id="ic-trophy" viewBox="0 0 24 24"><path d="M7 4h10v4.5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4"/><path d="M12 13.5V17"/><path d="M8.5 21h7l-1-4h-5Z"/></symbol>
+        <symbol id="ic-book" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h12v16H7a2 2 0 0 0-2 2V4Z"/><path d="M19 18H7a2 2 0 0 0-2 2"/></symbol>
+        <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/></symbol>
+        <symbol id="ic-dumbbell" viewBox="0 0 24 24"><path d="M3 9v6M6 6.5v11M18 6.5v11M21 9v6M6 12h12"/></symbol>
+        <symbol id="ic-scale" viewBox="0 0 24 24"><path d="M12 3v17M8 20.5h8M5.5 6.5 18.5 5"/><path d="M5.5 6.5 2.8 13a2.8 2.8 0 0 0 5.4 0L5.5 6.5Z"/><path d="M18.5 5 15.8 11.5a2.8 2.8 0 0 0 5.4 0L18.5 5Z"/></symbol>
+        <symbol id="ic-leaf" viewBox="0 0 24 24"><path d="M4 20C2.8 13.5 6 4 20 4c.4 12-8 16-14 16-1 0-2-.2-2-.2Z"/><path d="M4 20c2-6.5 6.3-9.7 11-11"/></symbol>
+        <symbol id="ic-utensils" viewBox="0 0 24 24"><path d="M5 2.5v6.5a2.2 2.2 0 0 0 4.4 0V2.5M7.2 9v12.5M16.5 2.5c-1.6 0-2.7 2.2-2.7 5.3s1.1 4.2 2.7 4.2m0-9.5v19"/></symbol>
+        <symbol id="ic-phone" viewBox="0 0 24 24"><path d="M5 2.5h3.4l1.7 4.3-2.2 1.4a11 11 0 0 0 5 5l1.4-2.2 4.3 1.7V19a2.5 2.5 0 0 1-2.7 2.5A16.5 16.5 0 0 1 2.5 5.2 2.5 2.5 0 0 1 5 2.5Z"/></symbol>
+        <symbol id="ic-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
+        <symbol id="ic-link" viewBox="0 0 24 24"><path d="M10.5 13.5a4 4 0 0 0 6 .4l2.8-2.8a4 4 0 1 0-5.7-5.7l-1.5 1.5"/><path d="M13.5 10.5a4 4 0 0 0-6-.4L4.7 12.9a4 4 0 1 0 5.7 5.7l1.5-1.5"/></symbol>
+      </defs>
+    </svg>
     <div id="scrollProgress"></div>
     <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
     <!-- NAV -->
@@ -548,19 +579,19 @@
             </div>
             <h3 class="text-center fw-bold mb-4" style="font-size:1.55rem; color:var(--green-dark);">Další reálné proměny</h3>
             <div class="promeny-grid">
-                <div class="card overflow-hidden">
+                <div class="card overflow-hidden"><span class="metric-badge kg">−20 kg</span>
                     <img class="promena" src="assets/foto/promeny/klientka-64.webp" alt="Klientka 64 let — −20 kg za 12 týdnů s Martinem Barnou" width="619" height="1100" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">Klientka · 64 let, −20 kg</h6><p class="text-muted small mb-0">−20 kg za 12 týdnů jen chůzí a kvalitní stravou. Bez suplementů, bez zákazů.</p></div>
                 </div>
-                <div class="card overflow-hidden">
+                <div class="card overflow-hidden"><span class="metric-badge time">7 měsíců</span>
                     <img class="promena" src="assets/foto/promeny/libor.webp" alt="Libor — proměna za 7 měsíců s Martinem Barnou" width="1100" height="945" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">Libor · 7 měsíců</h6><p class="text-muted small mb-0">Sebevědomí i forma zpátky během sedmi měsíců spolupráce.</p></div>
                 </div>
-                <div class="card overflow-hidden">
+                <div class="card overflow-hidden"><span class="metric-badge kg">−12 kg</span>
                     <img class="promena" src="assets/foto/promeny/muz-97-85.webp" alt="Proměna −12 kg, ze 97 na 85 kg, s Martinem Barnou" width="1100" height="982" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">−12 kg · 97 → 85 kg</h6><p class="text-muted small mb-0">Postupná a udržitelná proměna bez drastických diet a hladovění.</p></div>
                 </div>
-                <div class="card overflow-hidden">
+                <div class="card overflow-hidden"><span class="metric-badge kg">−6 kg</span>
                     <img class="promena" src="assets/foto/promeny/zena-62kg.webp" alt="Proměna −6 kg a vyrýsování, z 68,5 na 62,3 kg, s Martinem Barnou" width="1100" height="1100" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">−6 kg a vyrýsování</h6><p class="text-muted small mb-0">Z 68,5 na 62,3 kg — pevnější, silnější a viditelně vyrýsovaná postava.</p></div>
                 </div>
@@ -568,7 +599,7 @@
                     <img class="promena" src="assets/foto/promeny/bezkyne.webp" alt="Z běhu pro radost k životní formě, proměna s Martinem Barnou" width="932" height="1100" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">Z běhu k životní formě</h6><p class="text-muted small mb-0">Od běhání pro radost k silné a vyrýsované postavě, kterou si drží.</p></div>
                 </div>
-                <div class="card overflow-hidden">
+                <div class="card overflow-hidden"><span class="metric-badge time">8 měsíců</span>
                     <img class="promena" src="assets/foto/promeny/8-mesicu.webp" alt="Proměna za 8 měsíců spolupráce s Martinem Barnou" width="792" height="991" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">Proměna za 8 měsíců</h6><p class="text-muted small mb-0">Osm měsíců spolupráce a úplně jiný pocit ze sebe sama.</p></div>
                 </div>
@@ -576,7 +607,7 @@
                     <img class="promena" src="assets/foto/promeny/brezen-srpen.webp" alt="Proměna od jara do léta s Martinem Barnou" width="1100" height="1088" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">Od jara do léta</h6><p class="text-muted small mb-0">Pár měsíců disciplíny u jídla a pohybu — a výsledek je vidět.</p></div>
                 </div>
-                <div class="card overflow-hidden">
+                <div class="card overflow-hidden"><span class="metric-badge time">2,5 roku</span>
                     <img class="promena" src="assets/foto/promeny/plonka.webp" alt="Martin P. — proměna za 2,5 roku s Martinem Barnou" width="482" height="1100" loading="lazy" decoding="async">
                     <div class="card-body p-4"><h6 class="card-title mb-1">Martin P. · 2,5 roku</h6><p class="text-muted small mb-0">Vytrvalá cesta krok za krokem — důkaz, že to jde dotáhnout.</p></div>
                 </div>
@@ -621,7 +652,7 @@
                     <div class="card-body p-4"><h6 class="card-title mb-1">Kompletní proměna postavy</h6><p class="text-muted small mb-0">Méně tuku a pevnější tvar — výsledek ze všech úhlů.</p></div>
                 </div>
                 <div class="card overflow-hidden align-items-center justify-content-center text-center p-4" style="background:linear-gradient(160deg,#fff4e8,#ffe6cc);">
-                    <div><div class="fs-1 mb-2">🏆</div><h6 class="card-title mb-1">600+ proměn</h6><p class="text-muted small mb-3">A tahle další může být tvoje.</p><a href="#kontakt" class="btn btn-grn btn-sm">Chci být další</a></div>
+                    <div><div class="fs-1 mb-2" style="color:var(--gold)"><span class="mb-ico"><svg><use href="#ic-trophy"/></svg></span></div><h6 class="card-title mb-1">600+ proměn</h6><p class="text-muted small mb-3">A tahle další může být tvoje.</p><a href="#kontakt" class="btn btn-grn btn-sm">Chci být další</a></div>
                 </div>
             </div>
             <div class="text-center mt-4">
@@ -659,10 +690,10 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="row g-3">
-                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">🔬</div><strong>Science based</strong><small class="text-muted d-block">vědecky podložený přístup</small></div></div>
-                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">📊</div><strong>Týdenní úpravy</strong><small class="text-muted d-block">jídelníčku dle pokroku</small></div></div>
-                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">💬</div><strong>Stálá podpora</strong><small class="text-muted d-block">WhatsApp, e-mail, telefon</small></div></div>
-                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2">🎥</div><strong>Videokurz</strong><small class="text-muted d-block">153 videí · 20+ hodin</small></div></div>
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2" style="color:var(--green-dark)"><span class="mb-ico"><svg><use href="#ic-flask"/></svg></span></div><strong>Science based</strong><small class="text-muted d-block">vědecky podložený přístup</small></div></div>
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2" style="color:var(--green-dark)"><span class="mb-ico"><svg><use href="#ic-chart"/></svg></span></div><strong>Týdenní úpravy</strong><small class="text-muted d-block">jídelníčku dle pokroku</small></div></div>
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2" style="color:var(--green-dark)"><span class="mb-ico"><svg><use href="#ic-chat"/></svg></span></div><strong>Stálá podpora</strong><small class="text-muted d-block">WhatsApp, e-mail, telefon</small></div></div>
+                        <div class="col-6"><div class="card p-3 text-center"><div class="fs-2" style="color:var(--green-dark)"><span class="mb-ico"><svg><use href="#ic-play"/></svg></span></div><strong>Videokurz</strong><small class="text-muted d-block">153 videí · 20+ hodin</small></div></div>
                     </div>
                 </div>
             </div>
@@ -900,10 +931,10 @@
                 <p>Nejen koučink — vyber si, co tě posune dál.</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-3 col-6"><a href="videokurz" class="text-decoration-none"><div class="feature"><div class="ico">🎥</div><h6 class="fw-bold text-dark">Videokurz</h6><p class="text-muted small">153 videí, přes 20 hodin know-how.</p></div></a></div>
-                <div class="col-md-3 col-6"><div class="feature"><div class="ico">📚</div><h6 class="fw-bold">E-booky &amp; recepty</h6><p class="text-muted small">Tajemství flexibilního stravování a kuchařka.</p></div></div>
-                <div class="col-md-3 col-6"><a href="/prednasky/" class="text-decoration-none"><div class="feature"><div class="ico">🎤</div><h6 class="fw-bold text-dark">Přednášky &amp; workshopy</h6><p class="text-muted small">Pro firmy, skupiny i veřejnost.</p></div></a></div>
-                <div class="col-md-3 col-6"><a href="treninky" class="text-decoration-none"><div class="feature"><div class="ico">🏋️</div><h6 class="fw-bold text-dark">Osobní tréninky</h6><p class="text-muted small">1 na 1 ve fitku — technika a plán na míru.</p></div></a></div>
+                <div class="col-md-3 col-6"><a href="videokurz" class="text-decoration-none"><div class="feature"><div class="ico"><span class="mb-ico"><svg><use href="#ic-play"/></svg></span></div><h6 class="fw-bold text-dark">Videokurz</h6><p class="text-muted small">153 videí, přes 20 hodin know-how.</p></div></a></div>
+                <div class="col-md-3 col-6"><div class="feature"><div class="ico"><span class="mb-ico"><svg><use href="#ic-book"/></svg></span></div><h6 class="fw-bold">E-booky &amp; recepty</h6><p class="text-muted small">Tajemství flexibilního stravování a kuchařka.</p></div></div>
+                <div class="col-md-3 col-6"><a href="/prednasky/" class="text-decoration-none"><div class="feature"><div class="ico"><span class="mb-ico"><svg><use href="#ic-mic"/></svg></span></div><h6 class="fw-bold text-dark">Přednášky &amp; workshopy</h6><p class="text-muted small">Pro firmy, skupiny i veřejnost.</p></div></a></div>
+                <div class="col-md-3 col-6"><a href="treninky" class="text-decoration-none"><div class="feature"><div class="ico"><span class="mb-ico"><svg><use href="#ic-dumbbell"/></svg></span></div><h6 class="fw-bold text-dark">Osobní tréninky</h6><p class="text-muted small">1 na 1 ve fitku — technika a plán na míru.</p></div></a></div>
             </div>
         </div>
     </section>
@@ -916,9 +947,9 @@
                 <p>Články o výživě, tréninku a mindsetu — bez mýtů, srozumitelně.</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4"><a href="clanky/kaloricky-deficit.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">⚖️</div><h5 class="card-title">Kalorický deficit v kostce</h5><p class="text-muted mb-0">Základ hubnutí srozumitelně — co je deficit a jak ho nastavit.</p></div></a></div>
-                <div class="col-md-4"><a href="clanky/vlaknina.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🥦</div><h5 class="card-title">Vláknina: zdraví v každém soustu</h5><p class="text-muted mb-0">Jak ti vláknina pomáhá s hubnutím i trávením a kolik jí jíst.</p></div></a></div>
-                <div class="col-md-4"><a href="clanky/flexibilni-stravovani.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🍕</div><h5 class="card-title">Flexibilní stravování</h5><p class="text-muted mb-0">Jak jíst i oblíbená jídla a přitom mít výsledky.</p></div></a></div>
+                <div class="col-md-4"><a href="clanky/kaloricky-deficit.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico"><span class="mb-ico"><svg><use href="#ic-scale"/></svg></span></div><h5 class="card-title">Kalorický deficit v kostce</h5><p class="text-muted mb-0">Základ hubnutí srozumitelně — co je deficit a jak ho nastavit.</p></div></a></div>
+                <div class="col-md-4"><a href="clanky/vlaknina.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico"><span class="mb-ico"><svg><use href="#ic-leaf"/></svg></span></div><h5 class="card-title">Vláknina: zdraví v každém soustu</h5><p class="text-muted mb-0">Jak ti vláknina pomáhá s hubnutím i trávením a kolik jí jíst.</p></div></a></div>
+                <div class="col-md-4"><a href="clanky/flexibilni-stravovani.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico"><span class="mb-ico"><svg><use href="#ic-utensils"/></svg></span></div><h5 class="card-title">Flexibilní stravování</h5><p class="text-muted mb-0">Jak jíst i oblíbená jídla a přitom mít výsledky.</p></div></a></div>
             </div>
             <div class="text-center mt-4">
                 <a href="clanky/index.html" class="btn btn-out">Číst celý blog</a>
@@ -966,9 +997,9 @@
                     <h2 class="mb-3">Pojďme do toho spolu</h2>
                     <p class="mb-4" style="opacity:.95;">Napiš mi a domluvíme si <strong>konzultaci na míru</strong>. Společně zjistíme, který balíček ti sedne a jak tě dostanu k cíli.</p>
                     <ul class="list-unstyled contact-list fs-5 mb-4">
-                        <li class="mb-2">📱 WhatsApp / telefon: <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20dotaz%20ohledn%C4%9B%20kou%C4%8Dinku">+420 603 229 831</a></li>
-                        <li class="mb-2">✉️ E-mail: <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></li>
-                        <li class="mb-2">🔗 Vše na jednom místě: <a href="https://linktr.ee/MartinBarnaCoach" target="_blank" rel="noopener">linktr.ee/MartinBarnaCoach</a></li>
+                        <li class="mb-2"><span class="mb-ico me-2"><svg><use href="#ic-phone"/></svg></span>WhatsApp / telefon: <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20dotaz%20ohledn%C4%9B%20kou%C4%8Dinku">+420 603 229 831</a></li>
+                        <li class="mb-2"><span class="mb-ico me-2"><svg><use href="#ic-mail"/></svg></span>E-mail: <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></li>
+                        <li class="mb-2"><span class="mb-ico me-2"><svg><use href="#ic-link"/></svg></span>Vše na jednom místě: <a href="https://linktr.ee/MartinBarnaCoach" target="_blank" rel="noopener">linktr.ee/MartinBarnaCoach</a></li>
                     </ul>
                     <div class="social">
                         <a href="https://www.instagram.com/martinbarnaonlinevyzivafitness" target="_blank" rel="noopener" title="Instagram">IG</a>
@@ -1008,8 +1039,8 @@
 
     <!-- Lepkavá konverzní lišta (mobil/tablet) -->
     <div class="cta-bar" id="ctaBar" aria-label="Rychlé objednání">
-        <a class="cb-kurz" href="/videokurz">🎥 Videokurz</a>
-        <a class="cb-konz" href="https://form.simpleshop.cz/qG2yO/buy/">💬 Konzultace →</a>
+        <a class="cb-kurz" href="/videokurz"><span class="mb-ico"><svg><use href="#ic-play"/></svg></span> Videokurz</a>
+        <a class="cb-konz" href="https://form.simpleshop.cz/qG2yO/buy/"><span class="mb-ico"><svg><use href="#ic-chat"/></svg></span> Konzultace →</a>
     </div>
 
     <!-- Plovoucí tlačítka -->
