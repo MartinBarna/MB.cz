@@ -58,7 +58,7 @@
       '<div style="font-weight:700;margin-bottom:.3rem">🍪 Cookies</div>' +
       '<div style="color:#444">Používáme anonymní statistiku návštěvnosti (Google Analytics), abychom web vylepšovali. Žádné reklamní sledování.</div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
-        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:#ff7a00;color:#fff;font-weight:700;padding:10px 12px;border-radius:50px">Přijmout</button>' +
+        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:#ff7a00;color:#161616;font-weight:700;padding:10px 12px;border-radius:50px">Přijmout</button>' +
         '<button id="mb-c-no" style="flex:1;border:1.5px solid #ddd;cursor:pointer;background:#fff;color:#161616;font-weight:700;padding:10px 12px;border-radius:50px">Odmítnout</button>' +
       '</div>';
     document.body.appendChild(box);
