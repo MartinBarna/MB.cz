@@ -48,9 +48,47 @@
     window.fbq('track', 'PageView');
   }
 
+  // ===== Konverzní eventy (Meta Pixel + GA4) — aby se reklamy učily a retargetovaly =====
+  function onReady(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  // Která konverze patří k aktuální stránce
+  function pageConv() {
+    var p = location.pathname;
+    if (/dekuji-videokurz/.test(p)) return { kind: 'purchase', name: 'Videokurz výživy', value: 800 };
+    if (/videokurz/.test(p))        return { kind: 'view',     name: 'Videokurz výživy', value: 800 };
+    return null;
+  }
+  function fireConvFB() {
+    var c = pageConv(); if (!c || !window.fbq) return;
+    if (c.kind === 'purchase') fbq('track', 'Purchase', { content_name: c.name, content_type: 'product', value: c.value, currency: 'CZK' });
+    else fbq('track', 'ViewContent', { content_name: c.name, content_type: 'product', value: c.value, currency: 'CZK' });
+  }
+  function fireConvGA() {
+    var c = pageConv(); if (!c || !window.gtag) return;
+    if (c.kind === 'purchase') gtag('event', 'purchase', { transaction_id: 'vk-' + new Date().getTime(), value: c.value, currency: 'CZK', items: [{ item_name: c.name, price: c.value }] });
+    else gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_name: c.name, price: c.value }] });
+  }
+  function loadMetaPixelAndConvert() { loadMetaPixel(); fireConvFB(); }
+  function wireConversions() {
+    // Klik na nákup (SimpleShop) → InitiateCheckout / begin_checkout
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest ? e.target.closest('a[href*="simpleshop.cz"]') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      var isKurz = href.indexOf('3Vbl') !== -1;
+      var val = isKurz ? 800 : (href.indexOf('qG2yO') !== -1 ? 1990 : 0);
+      var name = isKurz ? 'Videokurz výživy' : 'Konzultace';
+      if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: name, value: val, currency: 'CZK' });
+      if (window.gtag) gtag('event', 'begin_checkout', { value: val, currency: 'CZK', items: [{ item_name: name, price: val }] });
+    }, true);
+    // Odeslání kontaktního formuláře → Lead
+    var kf = document.getElementById('kontaktForm');
+    if (kf) kf.addEventListener('submit', function () { if (window.fbq) fbq('track', 'Lead'); if (window.gtag) gtag('event', 'generate_lead'); });
+  }
+  onReady(function () { wireConversions(); fireConvGA(); });
+
   var saved;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (saved === 'granted') { applyConsent(true); loadMetaPixel(); return; }
+  if (saved === 'granted') { applyConsent(true); loadMetaPixelAndConvert(); return; }
   if (saved === 'denied') { applyConsent(false); return; }
 
   // --- cookie lišta (karta vlevo dole, ať nekoliduje s CTA lištou) ---
@@ -77,7 +115,7 @@
     document.body.appendChild(box);
     document.getElementById('mb-c-ok').onclick = function () {
       try { localStorage.setItem(KEY, 'granted'); } catch (e) {}
-      applyConsent(true); loadMetaPixel(); box.remove();
+      applyConsent(true); loadMetaPixelAndConvert(); box.remove();
     };
     document.getElementById('mb-c-no').onclick = function () {
       try { localStorage.setItem(KEY, 'denied'); } catch (e) {}
