@@ -75,6 +75,13 @@
         .vk-trust { display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:1.4rem; font-size:.92rem; opacity:.95; }
         .vk-trust span { display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap; }
         .vk-trust b { font-weight:700; }
+        .vk-hero-guar { margin-top:.9rem; font-size:.9rem; opacity:.92; display:inline-flex; align-items:center; gap:.45rem; }
+        .vk-hero-guar svg { width:18px; height:18px; color:#7CFFA0; flex-shrink:0; }
+        /* Záruka vrácení peněz u nákupu — sundává riziko, zvedá konverzi */
+        .vk-guarantee { display:flex; align-items:center; gap:13px; text-align:left; background:#f2faf4;
+            border:1px solid #cfe9d5; border-radius:14px; padding:14px 16px; margin-top:16px; font-size:.93rem; color:#2c5538; line-height:1.45; }
+        .vk-guarantee svg { width:30px; height:30px; flex-shrink:0; color:#34a853; }
+        .vk-guarantee strong { color:#1d7a3c; }
         @media (max-width:600px) { .vk-bb-text { display:none; } .vk-buybar-in { justify-content:center; } .vk-bb-cta { width:100%; justify-content:center; } .vk-buybar .btn-gold { flex:1; text-align:center; } }
         h1,h2,h3 { font-weight:800; }
 
@@ -255,6 +262,10 @@
                         <span>600+ klientů od roku 2013</span>
                         <span>z vysílání České televize</span>
                     </div>
+                    <div class="vk-hero-guar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                        <span>14denní záruka vrácení peněz — koupě bez rizika</span>
+                    </div>
                 </div>
                 <div class="col-lg-5">
                     <div class="play-card">
@@ -348,6 +359,10 @@
                             <p class="text-muted mt-2 mb-0">Jednorázová platba · doživotní přístup. Na objednávce si můžeš přidat e-booky, recepty i osobní konzultaci.</p>
                         </div>
                         <a href="https://form.simpleshop.cz/3Vbl/buy/" class="btn btn-gold w-100">🛒 Koupit za 800 Kč</a>
+                        <div class="vk-guarantee">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                            <span><strong>14denní záruka vrácení peněz.</strong> Nesedne ti to? Peníze zpátky <strong>jediným klikem</strong> přímo po koupi — bez psaní e-mailů, bez vysvětlování. Riziko neseš ty žádné.</span>
+                        </div>
                         <p class="small text-muted mt-3 mb-0">Bezpečná objednávka na martinbarna.cz · Google Pay, Apple Pay i kartou</p>
                     </div>
                 </div>
