@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moje studium — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; --ink:#161616; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#161616; background:#f6f1ea; }
+  a { color:inherit; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:1080px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; }
+  .brand .mark { width:30px; height:30px; border-radius:8px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.9rem; }
+  .top a.out { color:#bbb; text-decoration:none; font-size:.88rem; }
+  .wrap { max-width:1080px; margin:0 auto; padding:28px 18px 60px; }
+
+  .hello { background:linear-gradient(135deg,#262626,#0d0d0d); color:#fff; border-radius:22px; padding:28px 26px; position:relative; overflow:hidden; }
+  .hello h1 { font-size:1.7rem; margin-bottom:.3rem; }
+  .hello p { color:#cfcabf; }
+  .prog { margin-top:1.2rem; background:rgba(255,255,255,.12); border-radius:50px; height:12px; overflow:hidden; max-width:520px; }
+  .prog span { display:block; height:100%; background:linear-gradient(90deg,#ff8a1f,#ff7a00); border-radius:50px; transition:width .6s ease; }
+  .prog-lbl { margin-top:.5rem; font-size:.85rem; color:#cfcabf; }
+
+  .modules { margin-top:26px; display:grid; gap:18px; }
+  .mod { background:#fff; border:1px solid #ece3d8; border-radius:18px; overflow:hidden; }
+  .mod-h { display:flex; align-items:center; gap:14px; padding:18px 20px; }
+  .mod-h .ix { width:40px; height:40px; border-radius:12px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .mod-h h3 { font-size:1.1rem; } .mod-h p { color:#8a8073; font-size:.85rem; }
+  .mod-h .pct { margin-left:auto; font-weight:700; color:var(--gold); font-size:.9rem; white-space:nowrap; }
+  .lessons { border-top:1px solid #f1eadf; }
+  .les { display:flex; align-items:center; gap:13px; padding:13px 20px; text-decoration:none; border-top:1px solid #f6f1ea; transition:background .15s; }
+  .les:first-child { border-top:none; }
+  .les:hover { background:#fbf7f1; }
+  .les .ck { width:24px; height:24px; border-radius:50%; border:2px solid #d8cdbe; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.8rem; color:#fff; }
+  .les.done .ck { background:#34a853; border-color:#34a853; }
+  .les.locked { opacity:.55; cursor:default; pointer-events:none; }
+  .les .t { font-weight:600; font-size:.96rem; }
+  .les .s { color:#a89c8c; font-size:.8rem; margin-left:auto; white-space:nowrap; }
+  .badge-soon { background:#f0e7da; color:#9a8b73; font-size:.7rem; font-weight:700; padding:2px 9px; border-radius:50px; margin-left:auto; }
+
+  .cert-card { margin-top:24px; background:#fff; border:2px dashed #e2c79f; border-radius:18px; padding:24px; text-align:center; }
+  .cert-card.ready { border:2px solid var(--gold); background:#fff8f0; }
+  .cert-card h3 { font-size:1.2rem; } .cert-card p { color:#8a8073; font-size:.92rem; margin:.4rem auto 0; max-width:480px; }
+  .btn { display:inline-block; background:var(--gold); color:#161616; font-weight:700; padding:12px 28px; border-radius:50px; text-decoration:none; margin-top:1rem; border:none; cursor:pointer; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.dis { background:#e6ddd0; color:#a89c8c; cursor:not-allowed; }
+  .demo-note { text-align:center; color:#a89c8c; font-size:.8rem; margin-top:22px; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="out" href="/akademie/">Odhlásit</a>
+  </div></div>
+
+  <div class="wrap">
+    <div class="hello">
+      <h1>Vítej zpátky 👋</h1>
+      <p>Pokračuj tam, kde jsi přestal. Každá lekce tě posune blíž k certifikaci.</p>
+      <div class="prog"><span id="progBar" style="width:0%"></span></div>
+      <div class="prog-lbl" id="progLbl">0 % dokončeno</div>
+    </div>
+
+    <div class="modules" id="modules"></div>
+
+    <div class="cert-card" id="certCard">
+      <h3>🏅 Certifikát Barna Academy</h3>
+      <p id="certMsg">Dokonči všechny lekce a slož závěrečný test, a odemkneš si prestižní certifikát.</p>
+      <a class="btn dis" id="certBtn" href="#">Závěrečný test (zamčeno)</a>
+    </div>
+
+    <p class="demo-note">Ukázka studijního prostředí. Přihlašování, ukládání postupu a odemčení po koupi napojíme přes Supabase. (Postup se teď ukládá jen v tomto prohlížeči.)</p>
+  </div>
+
+  <script>
+    // Osnova (snadno rozšiřitelná). available:true = lekce je hotová a otevřená.
+    var CURRICULUM = [
+      { t:"Psychologie a chování kolem jídla", d:"Základ, na kterém stojí každá proměna", lessons:[
+        { id:"m1-l1", t:"Proč lidé jedí, i když nemají hlad", available:true, href:"/akademie/studium/m1-l1/" },
+        { id:"m1-l2", t:"Psychofyziologie příjmu potravy", available:false },
+        { id:"m1-l3", t:"Návyky, spouštěče a změna chování", available:false }
+      ]},
+      { t:"Anatomie a pohyb", d:"Jak tělo tvoří pohyb", lessons:[
+        { id:"m2-l1", t:"Kosterní systém — základ pohybu", available:true, href:"/akademie/studium/m1-l1/" },
+        { id:"m2-l2", t:"Svalový systém a produkce síly", available:false },
+        { id:"m2-l3", t:"Postura a posturální odchylky", available:false }
+      ]},
+      { t:"Výživa a energie", d:"Makra, výdej, sytost", lessons:[
+        { id:"m3-l1", t:"Energetická bilance v praxi", available:false },
+        { id:"m3-l2", t:"Makroživiny a sytost", available:false }
+      ]},
+      { t:"Programování tréninku", d:"Tréninky na míru klientovi", lessons:[
+        { id:"m4-l1", t:"Principy programování", available:false }
+      ]},
+      { t:"Práce s klientem & koučink", d:"Vedení, motivace, výsledky", lessons:[
+        { id:"m5-l1", t:"Mapa prostředí a první konzultace", available:false }
+      ]},
+      { t:"Byznys pro trenéry a poradce", d:"Udržitelný byznys a klienti", lessons:[
+        { id:"m6-l1", t:"USP a cílová skupina", available:false }
+      ]}
+    ];
+    var KEY = 'ba_progress_v1';
+    function getDone(){ try { return JSON.parse(localStorage.getItem(KEY)||'{}'); } catch(e){ return {}; } }
+    var done = getDone();
+    var totalAvail = 0, completed = 0;
+    var html = '';
+    CURRICULUM.forEach(function(m, mi){
+      var lz = '', mDone = 0, mAvail = 0;
+      m.lessons.forEach(function(l){
+        var isDone = !!done[l.id];
+        if (l.available){ totalAvail++; mAvail++; if(isDone){ completed++; mDone++; } }
+        if (l.available){
+          lz += '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
+        } else {
+          lz += '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
+        }
+      });
+      var pct = mAvail? Math.round(mDone/mAvail*100) : 0;
+      html += '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(mAvail?'<span class="pct">'+pct+' %</span>':'<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>';
+    });
+    document.getElementById('modules').innerHTML = html;
+    var overall = totalAvail? Math.round(completed/totalAvail*100) : 0;
+    document.getElementById('progBar').style.width = overall+'%';
+    document.getElementById('progLbl').textContent = completed+' z '+totalAvail+' dostupných lekcí · '+overall+' % dokončeno';
+    // Certifikát/test odemčení (demo: po dokončení všech DOSTUPNÝCH lekcí)
+    if (totalAvail>0 && completed===totalAvail){
+      var cc = document.getElementById('certCard'); cc.classList.add('ready');
+      document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
+      var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
+    }
+  </script>
+</body>
+</html>
