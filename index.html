@@ -1298,12 +1298,41 @@
             if (bP) requestAnimationFrame(function () { bP.style.width = (pCal / tot * 100) + '%'; bC.style.width = (cCal / tot * 100) + '%'; bF.style.width = (fCal / tot * 100) + '%'; });
         }
 
+        // --- Mikro-odměna: konfety při úspěšném odeslání formuláře (bez knihovny) ---
+        function mbConfetti() {
+            if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+            var colors = ['#ff7a00', '#ffd166', '#ffffff', '#ff8a3d', '#161616'];
+            var ox = window.innerWidth / 2, oy = window.innerHeight * 0.35;
+            var box = document.getElementById('formDiky');
+            if (box) { var r = box.getBoundingClientRect(); if (r.width) { ox = r.left + r.width / 2; oy = r.top + 8; } }
+            for (var i = 0; i < 48; i++) {
+                (function (idx) {
+                    var el = document.createElement('div');
+                    var w = 6 + Math.random() * 7;
+                    el.style.cssText = 'position:fixed;z-index:4000;pointer-events:none;border-radius:2px;will-change:transform,opacity;' +
+                        'width:' + w.toFixed(1) + 'px;height:' + (w * 0.6).toFixed(1) + 'px;background:' + colors[idx % colors.length] +
+                        ';left:' + ox.toFixed(0) + 'px;top:' + oy.toFixed(0) + 'px;';
+                    document.body.appendChild(el);
+                    var ang = Math.random() * Math.PI * 2, vel = 4 + Math.random() * 7;
+                    var vx = Math.cos(ang) * vel, vy = Math.sin(ang) * vel - (3 + Math.random() * 4);
+                    var rot = Math.random() * 360, vr = (Math.random() - 0.5) * 24, x = 0, y = 0, t = 0;
+                    (function frame() {
+                        t++; vy += 0.32; x += vx; y += vy; rot += vr;
+                        el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + rot.toFixed(0) + 'deg)';
+                        el.style.opacity = String(Math.max(0, 1 - t / 90));
+                        if (t < 90) requestAnimationFrame(frame); else el.remove();
+                    })();
+                })(i);
+            }
+        }
+
         // --- Po odeslání formuláře (FormSubmit redirect ?odeslano=1) zobraz poděkování ---
         if (location.search.indexOf('odeslano=1') !== -1) {
             var _diky = document.getElementById('formDiky');
             var _form = document.getElementById('kontaktForm');
             if (_diky) _diky.style.display = 'block';
             if (_form) _form.style.display = 'none';
+            if (_diky) { _diky.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(mbConfetti, 450); }
         }
 
         // --- Kontaktní formulář: AJAX odeslání (návštěvník vidí jen české díky, nikdy stránku FormSubmitu) ---
@@ -1319,6 +1348,8 @@
                 }).then(function (r) { return r.json(); }).then(function () {
                     var d = document.getElementById('formDiky'); if (d) d.style.display = 'block';
                     _kf.style.display = 'none';
+                    if (d) { d.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+                    setTimeout(mbConfetti, 250);
                 }).catch(function () {
                     if (btn) { btn.textContent = orig; btn.disabled = false; }
                     alert('Něco se nepovedlo, zkus to prosím znovu nebo mi napiš na e-mail martin@martinbarna.cz.');
