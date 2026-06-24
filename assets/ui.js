@@ -132,6 +132,7 @@
     document.body.style.overflow = 'hidden';
     lb.querySelector('.mb-lb-close').focus();
     document.addEventListener('keydown', onKey);
+    if (window.gtag) gtag('event', 'galerie_zvetseni');
   }
   function close() {
     if (!lb) return;
