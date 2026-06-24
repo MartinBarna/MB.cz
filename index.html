@@ -491,6 +491,34 @@
         .macro-leg { display:flex; gap:16px; justify-content:center; font-size:.74rem; opacity:.95; }
         .macro-leg i { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; vertical-align:middle; }
         .macro-leg .d-p { background:#ffd166; } .macro-leg .d-c { background:#fff; } .macro-leg .d-f { background:#ff8a3d; }
+
+        /* ===== High-end pass: typografie, frosted nav, detaily ===== */
+        ::selection { background:var(--green); color:#fff; }
+        ::-moz-selection { background:var(--green); color:#fff; }
+        h1, h2, h3, h4, .plan-name, .section-head h2 { text-wrap:balance; }
+        h2, h3 { letter-spacing:-.018em; }
+        section p, .hero p, .lead, .card-text { text-wrap:pretty; }
+        /* Slim značkový scrollbar (desktop) */
+        @media (min-width:992px) {
+            html { scrollbar-width:thin; scrollbar-color:#ff7a00 #f1e9df; }
+            ::-webkit-scrollbar { width:11px; }
+            ::-webkit-scrollbar-track { background:#f4ede3; }
+            ::-webkit-scrollbar-thumb { background:linear-gradient(#ff8a1f,#ff7a00); border-radius:50px; border:2px solid #f4ede3; }
+            ::-webkit-scrollbar-thumb:hover { background:linear-gradient(#ff7a00,#e86f00); }
+        }
+        /* Frosted, scroll-aware navbar */
+        .navbar.sticky-top { transition:background .35s ease, box-shadow .35s ease, padding .35s ease; }
+        .navbar.sticky-top.scrolled { background:rgba(255,255,255,.72)!important; -webkit-backdrop-filter:saturate(170%) blur(14px); backdrop-filter:saturate(170%) blur(14px); box-shadow:0 6px 26px rgba(0,0,0,.10); padding-top:.4rem; padding-bottom:.4rem; }
+        /* Animovaná linka pod odkazy v navigaci (desktop) */
+        @media (min-width:992px) {
+            .navbar .nav-link { position:relative; }
+            .navbar .nav-link::after { content:""; position:absolute; left:.6rem; right:.6rem; bottom:.2rem; height:2px; border-radius:2px; background:var(--green); transform:scaleX(0); transform-origin:left; transition:transform .28s cubic-bezier(.2,.7,.2,1); }
+            .navbar .nav-link:hover::after { transform:scaleX(1); }
+        }
+        /* Plynulé hloubkové efekty (tilt/magnet) — jen jemně, řízeno JS */
+        @media (hover:hover) and (pointer:fine) {
+            .plan, .card { transition:transform .3s ease, box-shadow .3s ease; }
+        }
     </style>
     <script>
     (function(){
@@ -1320,9 +1348,11 @@
         var toTop = document.getElementById('toTop');
         var _prog = document.getElementById('scrollProgress');
         var _ctaBar = document.getElementById('ctaBar');
+        var _navbar = document.querySelector('.navbar.sticky-top');
         function _onScroll() {
             var st = window.scrollY || document.documentElement.scrollTop;
             if (st > 500) { toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
+            if (_navbar) { if (st > 24) { _navbar.classList.add('scrolled'); } else { _navbar.classList.remove('scrolled'); } }
             if (_prog) {
                 var h = document.documentElement.scrollHeight - window.innerHeight;
                 _prog.style.width = (h > 0 ? Math.min(100, st / h * 100) : 0) + '%';
@@ -1412,6 +1442,36 @@
             _waModal.addEventListener('click', function (e) { if (e.target === _waModal) closeWaModal(); });
             document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeWaModal(); });
         }
+
+        // --- High-end hloubka: jemný 3D tilt karet + magnetická CTA (jen myš na PC) ---
+        (function () {
+            if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+            if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+            var raf;
+            // Magnetická tlačítka
+            document.querySelectorAll('.btn-grn, .btn-white, .btn-gold').forEach(function (btn) {
+                btn.addEventListener('mousemove', function (e) {
+                    var r = btn.getBoundingClientRect();
+                    var mx = e.clientX - (r.left + r.width / 2), my = e.clientY - (r.top + r.height / 2);
+                    var cap = function (v) { return Math.max(-9, Math.min(9, v)); };
+                    btn.style.transform = 'translate(' + cap(mx * 0.16).toFixed(1) + 'px,' + cap(my * 0.26).toFixed(1) + 'px)';
+                });
+                btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+            });
+            // Jemný 3D náklon karet
+            document.querySelectorAll('.plan, .card').forEach(function (card) {
+                card.addEventListener('mousemove', function (e) {
+                    if (raf) cancelAnimationFrame(raf);
+                    raf = requestAnimationFrame(function () {
+                        var r = card.getBoundingClientRect();
+                        var px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+                        card.style.transition = 'transform .08s linear';
+                        card.style.transform = 'perspective(900px) rotateX(' + (-py * 4.5).toFixed(2) + 'deg) rotateY(' + (px * 4.5).toFixed(2) + 'deg) translateY(-6px)';
+                    });
+                });
+                card.addEventListener('mouseleave', function () { card.style.transition = 'transform .35s ease, box-shadow .35s ease'; card.style.transform = ''; });
+            });
+        })();
     </script>
 </body>
 </html>
