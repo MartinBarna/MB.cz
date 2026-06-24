@@ -463,6 +463,24 @@
         .fab-wa::before { content:""; position:absolute; inset:0; border-radius:50%; background:#25D366; z-index:-1; }
         @media (prefers-reduced-motion: no-preference) { .fab-wa::before { animation:fabPulse 2.6s ease-out infinite; } }
         @keyframes fabPulse { 0% { transform:scale(1); opacity:.55; } 70% { transform:scale(1.7); opacity:0; } 100% { opacity:0; } }
+
+        /* 7) Kvíz „Najdi svou cestu" */
+        .quiz { max-width:680px; margin:0 auto; background:#fff; border-radius:22px; box-shadow:0 14px 44px rgba(0,0,0,.09); padding:2rem 2rem 1.6rem; }
+        .quiz-bar { height:6px; background:#eee; border-radius:50px; overflow:hidden; margin-bottom:1.7rem; }
+        .quiz-bar span { display:block; height:100%; width:0; background:linear-gradient(90deg,#ff8a1f,#ff7a00); transition:width .4s ease; }
+        .quiz-step { display:none; }
+        .quiz-step.in { display:block; animation:fadeUp .4s ease both; }
+        .quiz-step h3 { font-weight:800; font-size:1.2rem; margin-bottom:1.1rem; color:var(--green-dark); }
+        .quiz-opts { display:flex; flex-direction:column; gap:11px; }
+        .quiz-opts button { text-align:left; background:#faf7f3; border:1.5px solid #efe7dd; border-radius:14px; padding:15px 18px; font-weight:600; font-size:1rem; cursor:pointer; transition:transform .18s ease, border-color .18s ease, background .18s ease; color:var(--ink); }
+        .quiz-opts button:hover { border-color:var(--green); background:var(--green-light); transform:translateY(-2px); }
+        .quiz-result { text-align:center; }
+        .quiz-rtag { display:inline-block; background:var(--green-light); color:var(--green-dark); font-weight:700; font-size:.8rem; padding:5px 14px; border-radius:50px; margin-bottom:.7rem; }
+        .quiz-result h3 { font-weight:800; font-size:1.55rem; margin-bottom:.6rem; }
+        .quiz-result p { color:#555; max-width:530px; margin:0 auto 1.4rem; }
+        .quiz-rbtns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+        .quiz-restart { display:block; margin:1.1rem auto 0; background:none; border:none; color:#9a9a9a; font-weight:600; cursor:pointer; font-size:.9rem; }
+        .quiz-restart:hover { color:var(--green); }
     </style>
     <script>
     (function(){
@@ -783,6 +801,44 @@
                         <div class="col-6"><div class="card p-3 text-center"><div class="fs-2" style="color:var(--green-dark)"><span class="mb-ico"><svg><use href="#ic-play"/></svg></span></div><strong>Videokurz</strong><small class="text-muted d-block">153 videí · 20+ hodin</small></div></div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KVÍZ: Najdi svou cestu -->
+    <section id="kviz">
+        <div class="container">
+            <div class="section-head">
+                <h2>Nevíš, kde začít?</h2>
+                <p>30 sekund a doporučím ti přesně to, co ti sedne.</p>
+            </div>
+            <div class="quiz" id="quiz">
+                <div class="quiz-bar"><span id="quizBar"></span></div>
+                <div class="quiz-step in" data-q="1">
+                    <h3>1. Co je tvůj hlavní cíl?</h3>
+                    <div class="quiz-opts">
+                        <button type="button" data-k="cil" data-v="zhubnout">Zhubnout a vytvarovat postavu</button>
+                        <button type="button" data-k="cil" data-v="svaly">Nabrat svaly a sílu</button>
+                        <button type="button" data-k="cil" data-v="zdravi">Udržet formu, energii a zdraví</button>
+                    </div>
+                </div>
+                <div class="quiz-step" data-q="2">
+                    <h3>2. Jak to chceš dělat?</h3>
+                    <div class="quiz-opts">
+                        <button type="button" data-k="how" data-v="koucink">Chci vedení na míru — ať mě někdo provede</button>
+                        <button type="button" data-k="how" data-v="kurz">Zvládnu sám svým tempem — jen mě nauč jak</button>
+                        <button type="button" data-k="how" data-v="zdarma">Zatím jen chci nezávazně začít zdarma</button>
+                    </div>
+                </div>
+                <div class="quiz-step" data-q="3">
+                    <h3>3. Kolik máš zkušeností?</h3>
+                    <div class="quiz-opts">
+                        <button type="button" data-k="exp" data-v="zacatecnik">Začátečník — začínám od nuly</button>
+                        <button type="button" data-k="exp" data-v="neco">Něco už jsem zkoušel/a</button>
+                        <button type="button" data-k="exp" data-v="pokrocily">Pokročilý/á — chci to doladit</button>
+                    </div>
+                </div>
+                <div class="quiz-result" id="quizResult" hidden></div>
             </div>
         </div>
     </section>
@@ -1250,15 +1306,61 @@
         window.addEventListener('scroll', _onScroll, { passive: true });
         _onScroll();
 
-        // --- Zavři mobilní menu po kliknutí na odkaz ---
+        // --- Zavři mobilní menu po kliknutí na odkaz (vanilla, bez Bootstrap JS) ---
         document.querySelectorAll('#nav .nav-link, #nav .btn').forEach(function (link) {
             link.addEventListener('click', function () {
                 var nav = document.getElementById('nav');
-                if (nav.classList.contains('show')) {
-                    bootstrap.Collapse.getOrCreateInstance(nav).hide();
+                if (nav && nav.classList.contains('show')) {
+                    nav.classList.remove('show');
+                    var tg = document.querySelector('.navbar-toggler');
+                    if (tg) { tg.classList.add('collapsed'); tg.setAttribute('aria-expanded', 'false'); }
                 }
             });
         });
+
+        // --- Kvíz „Najdi svou cestu" ---
+        (function () {
+            var quiz = document.getElementById('quiz');
+            if (!quiz) return;
+            var steps = quiz.querySelectorAll('.quiz-step');
+            var bar = document.getElementById('quizBar');
+            var result = document.getElementById('quizResult');
+            var total = steps.length, cur = 0, ans = {};
+            function show(i) { steps.forEach(function (s, idx) { s.classList.toggle('in', idx === i); }); if (bar) bar.style.width = (i / total * 100) + '%'; }
+            function card(t, d, c1, h1, c2, h2) {
+                return '<div class="quiz-rtag">Doporučuju ti</div><h3>' + t + '</h3><p>' + d + '</p>' +
+                    '<div class="quiz-rbtns"><a class="btn btn-grn" href="' + h1 + '">' + c1 + '</a>' +
+                    '<a class="btn btn-out" href="' + h2 + '">' + c2 + '</a></div>' +
+                    '<button type="button" class="quiz-restart" id="quizRestart">↺ Spustit znovu</button>';
+            }
+            function finish() {
+                if (bar) bar.style.width = '100%';
+                steps.forEach(function (s) { s.classList.remove('in'); });
+                var cil = { zhubnout: 'zhubnout a vytvarovat postavu', svaly: 'nabrat svaly a sílu', zdravi: 'udržet formu a zdraví' }[ans.cil] || 'dosáhnout cíle';
+                var html;
+                if (ans.how === 'koucink') {
+                    html = card('🎯 Koučink na míru',
+                        'Chceš ' + cil + ' s někým, kdo tě provede krok za krokem? Pak ti sedne <strong>online koučink</strong> — jídelníček na míru, týdenní úpravy a stálá podpora. Začni konzultací (cenu ti odečtu z balíčku).',
+                        'Objednat konzultaci za 1 990 Kč →', 'https://form.simpleshop.cz/qG2yO/buy/', 'Mrknout na balíčky', '#balicky');
+                } else if (ans.how === 'kurz') {
+                    html = card('🎥 Videokurz',
+                        'Chceš ' + cil + ' sám svým tempem? <strong>Videokurz</strong> tě naučí výživu jednou provždy — 153 videí, doživotní přístup. Nejlevnější způsob, jak začít správně.',
+                        'Chci videokurz za 800 Kč →', '/videokurz', 'Nebo zkus koučink', '#balicky');
+                } else {
+                    html = card('🎁 Plán zdarma',
+                        'Chceš ' + cil + ' a zatím to zkusit nezávazně? Stáhni si <strong>7denní makro plán zdarma</strong> — konkrétní jídla a porce. Bez závazku, na e-mail.',
+                        'Chci plán zdarma →', '#plan-zdarma', 'Co dál nabízím', '#dalsi');
+                }
+                result.innerHTML = html;
+                result.hidden = false;
+                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            quiz.addEventListener('click', function (e) {
+                var b = e.target.closest('.quiz-opts button');
+                if (b) { ans[b.getAttribute('data-k')] = b.getAttribute('data-v'); cur++; if (cur < total) show(cur); else finish(); return; }
+                if (e.target.id === 'quizRestart') { ans = {}; cur = 0; result.hidden = true; result.innerHTML = ''; show(0); quiz.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            });
+        })();
 
         // --- WhatsApp: na PC ukázat QR okénko, na telefonu přímý odkaz na chat ---
         var _waModal = document.getElementById('waModal');
