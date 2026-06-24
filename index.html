@@ -422,12 +422,72 @@
             .cta-bar.show ~ .fab-wa { bottom:calc(94px + env(safe-area-inset-bottom)); }
             .cta-bar.show ~ .to-top { bottom:calc(160px + env(safe-area-inset-bottom)); }
         }
+
+        /* ===== Návykové prvky ===== */
+        /* Bez vodorovného posunu (clip nezakládá scroll-kontejner → nerozbije sticky nav) */
+        html { overflow-x: clip; }
+        /* 1) Živý hero — plovoucí akcentní koule */
+        .hero-orbs { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+        .hero-orbs span { position:absolute; border-radius:50%; filter:blur(46px); opacity:.55; }
+        .hero-orbs span:nth-child(1) { width:300px; height:300px; background:rgba(255,138,31,.5); top:-70px; left:-50px; }
+        .hero-orbs span:nth-child(2) { width:360px; height:360px; background:rgba(255,122,0,.38); bottom:-110px; right:-70px; }
+        .hero-orbs span:nth-child(3) { width:220px; height:220px; background:rgba(255,255,255,.12); top:38%; left:52%; }
+
+        /* 3) Pruh social proof (nekonečný marquee) */
+        .proof-marquee { overflow:hidden; background:var(--green-light); border-top:1px solid #ffe0c2; border-bottom:1px solid #ffe0c2; padding:11px 0; }
+        .pm-track { display:inline-flex; white-space:nowrap; will-change:transform; }
+        .pm-track span { display:inline-flex; align-items:center; gap:7px; padding:0 26px; font-weight:600; color:var(--green-dark); font-size:.95rem; }
+        .pm-track span b { color:#ffb300; letter-spacing:1px; font-size:.82rem; }
+
+        /* 2) Postupné odhalování karet (stagger) — výchozí stav je viditelný, JS přidá .reveal-card */
+        @media (prefers-reduced-motion: no-preference) {
+            html.reveal-on .reveal-card { opacity:0; transform:translateY(22px); transition:opacity .6s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1); }
+            html.reveal-on .reveal-card.in { opacity:1; transform:none; }
+            .proof-marquee .pm-track { animation:pmScroll 48s linear infinite; }
+            .proof-marquee:hover .pm-track { animation-play-state:paused; }
+            .hero-orbs span:nth-child(1) { animation:orbDrift1 19s ease-in-out infinite alternate; }
+            .hero-orbs span:nth-child(2) { animation:orbDrift2 24s ease-in-out infinite alternate; }
+            .hero-orbs span:nth-child(3) { animation:orbDrift3 16s ease-in-out infinite alternate; }
+        }
+        @keyframes pmScroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+        @keyframes orbDrift1 { from { transform:translate(0,0) scale(1); } to { transform:translate(46px,34px) scale(1.08); } }
+        @keyframes orbDrift2 { from { transform:translate(0,0) scale(1); } to { transform:translate(-54px,-30px) scale(1.12); } }
+        @keyframes orbDrift3 { from { transform:translate(0,0) scale(1); } to { transform:translate(26px,-28px) scale(1.18); } }
     </style>
     <script>
     (function(){
         if ('IntersectionObserver' in window && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
             document.documentElement.classList.add('reveal-on');
             document.addEventListener('DOMContentLoaded', function () {
+                // b) naskakující čísla ve statistikách
+                function countUp(el){
+                    var m = el.textContent.trim().match(/^(\d+)([\s\S]*)$/);
+                    if(!m) return;
+                    var target = parseInt(m[1],10), suffix = m[2], dur = 1200, t0 = null;
+                    function step(ts){ if(!t0) t0 = ts; var p = Math.min((ts-t0)/dur,1);
+                        el.textContent = Math.floor((1 - Math.pow(1-p,3)) * target) + suffix;
+                        if(p<1) requestAnimationFrame(step); else el.textContent = target + suffix; }
+                    requestAnimationFrame(step);
+                }
+                var nObs = new IntersectionObserver(function(entries){
+                    entries.forEach(function(e){ if(e.isIntersecting){ countUp(e.target); nObs.unobserve(e.target); } });
+                }, { threshold: 0.6 });
+                document.querySelectorAll('.stat h3').forEach(function(n){ nObs.observe(n); });
+
+                // c) postupné odhalování karet (stagger)
+                var cObs = new IntersectionObserver(function(entries){
+                    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); cObs.unobserve(e.target); } });
+                }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+                document.querySelectorAll('.promeny-grid, #reference .row.g-4, #balicky .row.g-4, #dalsi .row.g-4, #blog .row.g-4, #omne .row.g-3').forEach(function(g){
+                    Array.prototype.forEach.call(g.children, function(card, i){
+                        card.classList.add('reveal-card');
+                        card.style.transitionDelay = Math.min(i,8)*70 + 'ms';
+                        cObs.observe(card);
+                    });
+                });
+                setTimeout(function(){ document.querySelectorAll('.reveal-card').forEach(function(c){ c.classList.add('in'); }); }, 4000);
+
+                // a) sekce fade-up
                 var secs = document.querySelectorAll('section');
                 // threshold 0 = odhal hned jak sekce vstoupí do okna (funguje i pro velmi vysoké sekce na mobilu)
                 var obs = new IntersectionObserver(function (entries) {
@@ -488,6 +548,7 @@
 
     <!-- HERO -->
     <header class="hero" id="obsah">
+        <div class="hero-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-7">
@@ -527,6 +588,14 @@
             </div>
         </div>
     </section>
+
+    <!-- SOCIAL PROOF MARQUEE -->
+    <div class="proof-marquee" role="img" aria-label="Pět hvězd od desítek spokojených klientů">
+        <div class="pm-track">
+            <span><b>★★★★★</b> Soňa</span><span><b>★★★★★</b> Pavel</span><span><b>★★★★★</b> Helena</span><span><b>★★★★★</b> Marek</span><span><b>★★★★★</b> Sebastian</span><span><b>★★★★★</b> Adéla</span><span><b>★★★★★</b> Lukáš</span><span><b>★★★★★</b> Renáta</span><span><b>★★★★★</b> Kačenka</span><span><b>★★★★★</b> Iveta</span><span><b>★★★★★</b> Martina</span><span><b>★★★★★</b> Tereza</span><span><b>★★★★★</b> Daniela</span><span><b>★★★★★</b> Maxmilián</span><span><b>★★★★★</b> Michaela</span><span><b>★★★★★</b> Hana</span>
+            <span><b>★★★★★</b> Soňa</span><span><b>★★★★★</b> Pavel</span><span><b>★★★★★</b> Helena</span><span><b>★★★★★</b> Marek</span><span><b>★★★★★</b> Sebastian</span><span><b>★★★★★</b> Adéla</span><span><b>★★★★★</b> Lukáš</span><span><b>★★★★★</b> Renáta</span><span><b>★★★★★</b> Kačenka</span><span><b>★★★★★</b> Iveta</span><span><b>★★★★★</b> Martina</span><span><b>★★★★★</b> Tereza</span><span><b>★★★★★</b> Daniela</span><span><b>★★★★★</b> Maxmilián</span><span><b>★★★★★</b> Michaela</span><span><b>★★★★★</b> Hana</span>
+        </div>
+    </div>
 
     <!-- VÝSLEDKY -->
     <section id="vysledky" class="bg-soft">

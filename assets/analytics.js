@@ -35,9 +35,22 @@
     });
   }
 
+  // Meta (Facebook) Pixel — načte se a odpálí AŽ po souhlasu (kvůli GDPR).
+  var PIXEL_ID = '277526073774099';
+  function loadMetaPixel() {
+    if (window.fbq) return;
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+      t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+    }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', PIXEL_ID);
+    window.fbq('track', 'PageView');
+  }
+
   var saved;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (saved === 'granted') { applyConsent(true); return; }
+  if (saved === 'granted') { applyConsent(true); loadMetaPixel(); return; }
   if (saved === 'denied') { applyConsent(false); return; }
 
   // --- cookie lišta (karta vlevo dole, ať nekoliduje s CTA lištou) ---
@@ -56,7 +69,7 @@
       'font-size:.92rem;line-height:1.5;';
     box.innerHTML =
       '<div style="font-weight:700;margin-bottom:.3rem">🍪 Cookies</div>' +
-      '<div style="color:#444">Používáme anonymní statistiku návštěvnosti (Google Analytics), abychom web vylepšovali. Žádné reklamní sledování.</div>' +
+      '<div style="color:#444">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem.</div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
         '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:#ff7a00;color:#161616;font-weight:700;padding:10px 12px;border-radius:50px">Přijmout</button>' +
         '<button id="mb-c-no" style="flex:1;border:1.5px solid #ddd;cursor:pointer;background:#fff;color:#161616;font-weight:700;padding:10px 12px;border-radius:50px">Odmítnout</button>' +
@@ -64,7 +77,7 @@
     document.body.appendChild(box);
     document.getElementById('mb-c-ok').onclick = function () {
       try { localStorage.setItem(KEY, 'granted'); } catch (e) {}
-      applyConsent(true); box.remove();
+      applyConsent(true); loadMetaPixel(); box.remove();
     };
     document.getElementById('mb-c-no').onclick = function () {
       try { localStorage.setItem(KEY, 'denied'); } catch (e) {}
