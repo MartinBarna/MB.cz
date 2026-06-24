@@ -50,22 +50,36 @@
 
   // ===== Konverzní eventy (Meta Pixel + GA4) — aby se reklamy učily a retargetovaly =====
   function onReady(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  // Unikátní eventID pro deduplikaci s budoucím serverovým CAPI.
+  // U Purchase použije ID objednávky z URL (pokud ho SimpleShop přidá), jinak náhodné.
+  function rnd() { return new Date().getTime().toString(36) + Math.random().toString(36).slice(2, 10); }
+  function evId(prefix) {
+    if (prefix === 'purchase') {
+      var qs; try { qs = new URLSearchParams(location.search); } catch (e) { qs = null; }
+      var oid = qs && (qs.get('order') || qs.get('orderId') || qs.get('id'));
+      var id = 'purchase-' + (oid || rnd());
+      window.__mbPurchaseEventId = id; // ať si ho server pro CAPI může vyzvednout
+      return id;
+    }
+    return prefix + '-' + rnd();
+  }
   // Která konverze patří k aktuální stránce
   function pageConv() {
     var p = location.pathname;
-    if (/dekuji-videokurz/.test(p)) return { kind: 'purchase', name: 'Videokurz výživy', value: 800 };
-    if (/videokurz/.test(p))        return { kind: 'view',     name: 'Videokurz výživy', value: 800 };
+    if (/dekuji-videokurz/.test(p)) return { kind: 'purchase', name: 'Videokurz výživy', id: 'videokurz', value: 800 };
+    if (/videokurz/.test(p))        return { kind: 'view',     name: 'Videokurz výživy', id: 'videokurz', value: 800 };
     return null;
   }
   function fireConvFB() {
     var c = pageConv(); if (!c || !window.fbq) return;
-    if (c.kind === 'purchase') fbq('track', 'Purchase', { content_name: c.name, content_type: 'product', value: c.value, currency: 'CZK' });
-    else fbq('track', 'ViewContent', { content_name: c.name, content_type: 'product', value: c.value, currency: 'CZK' });
+    var params = { content_name: c.name, content_type: 'product', content_ids: [c.id], value: c.value, currency: 'CZK' };
+    if (c.kind === 'purchase') { params.num_items = 1; fbq('track', 'Purchase', params, { eventID: evId('purchase') }); }
+    else fbq('track', 'ViewContent', params, { eventID: evId('view') });
   }
   function fireConvGA() {
     var c = pageConv(); if (!c || !window.gtag) return;
-    if (c.kind === 'purchase') gtag('event', 'purchase', { transaction_id: 'vk-' + new Date().getTime(), value: c.value, currency: 'CZK', items: [{ item_name: c.name, price: c.value }] });
-    else gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_name: c.name, price: c.value }] });
+    if (c.kind === 'purchase') gtag('event', 'purchase', { transaction_id: (window.__mbPurchaseEventId || 'vk-' + rnd()), value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
+    else gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
   }
   function loadMetaPixelAndConvert() { loadMetaPixel(); fireConvFB(); }
   function wireConversions() {
@@ -76,13 +90,14 @@
       var href = a.getAttribute('href') || '';
       var isKurz = href.indexOf('3Vbl') !== -1;
       var val = isKurz ? 800 : (href.indexOf('qG2yO') !== -1 ? 1990 : 0);
+      var id = isKurz ? 'videokurz' : 'konzultace';
       var name = isKurz ? 'Videokurz výživy' : 'Konzultace';
-      if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: name, value: val, currency: 'CZK' });
-      if (window.gtag) gtag('event', 'begin_checkout', { value: val, currency: 'CZK', items: [{ item_name: name, price: val }] });
+      if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: name, content_type: 'product', content_ids: [id], value: val, currency: 'CZK' }, { eventID: evId('checkout') });
+      if (window.gtag) gtag('event', 'begin_checkout', { value: val, currency: 'CZK', items: [{ item_id: id, item_name: name, price: val }] });
     }, true);
     // Odeslání kontaktního formuláře → Lead
     var kf = document.getElementById('kontaktForm');
-    if (kf) kf.addEventListener('submit', function () { if (window.fbq) fbq('track', 'Lead'); if (window.gtag) gtag('event', 'generate_lead'); });
+    if (kf) kf.addEventListener('submit', function () { if (window.fbq) fbq('track', 'Lead', {}, { eventID: evId('lead') }); if (window.gtag) gtag('event', 'generate_lead'); });
   }
   onReady(function () { wireConversions(); fireConvGA(); });
 
