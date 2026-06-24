@@ -80,3 +80,72 @@
     card.addEventListener('mouseleave', function () { card.style.transition = 'transform .35s ease, box-shadow .35s ease'; card.style.transform = ''; });
   });
 })();
+
+/* Lightbox pro galerie (proměny, recenze) — klik/Enter → fotka přes celou obrazovku,
+   šipky/swipe pro listování, Esc zavře. Funguje na každé stránce s galerijními fotkami. */
+(function () {
+  var imgs = Array.prototype.slice.call(document.querySelectorAll('.promeny-grid img, .story-duo img, img.js-zoom'));
+  if (!imgs.length) return;
+  var lb, lbImg, lbCap, btnPrev, btnNext, idx = 0, lastFocus = null;
+
+  function build() {
+    lb = document.createElement('div');
+    lb.className = 'mb-lb';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.setAttribute('aria-label', 'Náhled fotky');
+    lb.innerHTML =
+      '<button type="button" class="mb-lb-btn mb-lb-close" aria-label="Zavřít náhled">×</button>' +
+      '<button type="button" class="mb-lb-btn mb-lb-prev" aria-label="Předchozí fotka">‹</button>' +
+      '<figure><img alt=""><figcaption></figcaption></figure>' +
+      '<button type="button" class="mb-lb-btn mb-lb-next" aria-label="Další fotka">›</button>';
+    document.body.appendChild(lb);
+    lbImg = lb.querySelector('img');
+    lbCap = lb.querySelector('figcaption');
+    btnPrev = lb.querySelector('.mb-lb-prev');
+    btnNext = lb.querySelector('.mb-lb-next');
+    lb.querySelector('.mb-lb-close').addEventListener('click', close);
+    btnPrev.addEventListener('click', function (e) { e.stopPropagation(); go(-1); });
+    btnNext.addEventListener('click', function (e) { e.stopPropagation(); go(1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb || e.target.tagName === 'FIGURE') close(); });
+    var sx = 0;
+    lb.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) { var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); });
+  }
+
+  function show(i) {
+    idx = (i + imgs.length) % imgs.length;
+    var src = imgs[idx].currentSrc || imgs[idx].src;
+    lbImg.src = src;
+    lbImg.alt = imgs[idx].alt || '';
+    lbCap.textContent = imgs[idx].alt || '';
+    var multi = imgs.length > 1;
+    btnPrev.style.display = multi ? '' : 'none';
+    btnNext.style.display = multi ? '' : 'none';
+  }
+  function onKey(e) { if (e.key === 'Escape') close(); else if (e.key === 'ArrowLeft') go(-1); else if (e.key === 'ArrowRight') go(1); }
+  function open(i) {
+    if (!lb) build();
+    lastFocus = document.activeElement;
+    show(i);
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lb.querySelector('.mb-lb-close').focus();
+    document.addEventListener('keydown', onKey);
+  }
+  function close() {
+    if (!lb) return;
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function go(d) { show(idx + d); }
+
+  imgs.forEach(function (im, i) {
+    im.setAttribute('tabindex', '0');
+    im.setAttribute('role', 'button');
+    im.addEventListener('click', function () { open(i); });
+    im.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); } });
+  });
+})();
