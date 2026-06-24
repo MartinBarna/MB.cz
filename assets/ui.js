@@ -34,3 +34,49 @@
     });
   });
 })();
+
+/* High-end vrstva: frosted navbar při scrollu + jemný 3D tilt karet + magnetická CTA.
+   Idempotentní (běží jen jednou), aby se to nesrazilo s případným inline kódem. */
+(function () {
+  if (window.__mbHighEnd) return;
+  window.__mbHighEnd = true;
+
+  // Frosted navbar — funguje na všech stránkách se sticky navbarem
+  var navbar = document.querySelector('.navbar.sticky-top');
+  if (navbar) {
+    var onScroll = function () {
+      var st = window.scrollY || document.documentElement.scrollTop;
+      navbar.classList.toggle('scrolled', st > 24);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // Tilt + magnet jen pro myš na PC a když uživatel nepožaduje omezení pohybu
+  if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+
+  var cap = function (v) { return Math.max(-9, Math.min(9, v)); };
+  document.querySelectorAll('.btn-grn, .btn-white, .btn-gold').forEach(function (btn) {
+    btn.addEventListener('mousemove', function (e) {
+      var r = btn.getBoundingClientRect();
+      var mx = e.clientX - (r.left + r.width / 2), my = e.clientY - (r.top + r.height / 2);
+      btn.style.transform = 'translate(' + cap(mx * 0.16).toFixed(1) + 'px,' + cap(my * 0.26).toFixed(1) + 'px)';
+    });
+    btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+  });
+
+  var raf;
+  document.querySelectorAll('.plan, .card').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(function () {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transition = 'transform .08s linear';
+        card.style.transform = 'perspective(900px) rotateX(' + (-py * 4.5).toFixed(2) + 'deg) rotateY(' + (px * 4.5).toFixed(2) + 'deg) translateY(-6px)';
+      });
+    });
+    card.addEventListener('mouseleave', function () { card.style.transition = 'transform .35s ease, box-shadow .35s ease'; card.style.transform = ''; });
+  });
+})();

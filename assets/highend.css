@@ -1,0 +1,48 @@
+/* Martin Barna — high-end vrstva (sdílená napříč webem).
+   Generická prémiová finesa: typografie, frosted navbar, detaily.
+   Pravidla se uplatní jen tam, kde selektory existují → bezpečné na všech stránkách.
+   Interakce (tilt/magnet/nav-frosting) řídí assets/ui.js. */
+
+/* Výběr textu ve značkové barvě */
+::selection { background:#ff7a00; color:#fff; }
+::-moz-selection { background:#ff7a00; color:#fff; }
+
+/* Typografická finesa */
+h1, h2, h3, h4, .plan-name, .section-head h2 { text-wrap:balance; }
+h2, h3 { letter-spacing:-.018em; }
+section p, .hero p, .lead, .card-text { text-wrap:pretty; }
+
+/* Slim značkový scrollbar (desktop) */
+@media (min-width:992px) {
+  html { scrollbar-width:thin; scrollbar-color:#ff7a00 #f1e9df; }
+  ::-webkit-scrollbar { width:11px; }
+  ::-webkit-scrollbar-track { background:#f4ede3; }
+  ::-webkit-scrollbar-thumb { background:linear-gradient(#ff8a1f,#ff7a00); border-radius:50px; border:2px solid #f4ede3; }
+  ::-webkit-scrollbar-thumb:hover { background:linear-gradient(#ff7a00,#e86f00); }
+}
+
+/* Frosted, scroll-aware navbar */
+.navbar.sticky-top { transition:background .35s ease, box-shadow .35s ease, padding .35s ease; }
+.navbar.sticky-top.scrolled {
+  background:rgba(255,255,255,.72)!important;
+  -webkit-backdrop-filter:saturate(170%) blur(14px);
+  backdrop-filter:saturate(170%) blur(14px);
+  box-shadow:0 6px 26px rgba(0,0,0,.10);
+  padding-top:.4rem; padding-bottom:.4rem;
+}
+
+/* Animovaná linka pod odkazy v navigaci (desktop) */
+@media (min-width:992px) {
+  .navbar .nav-link { position:relative; }
+  .navbar .nav-link::after {
+    content:""; position:absolute; left:.6rem; right:.6rem; bottom:.2rem; height:2px;
+    border-radius:2px; background:#ff7a00; transform:scaleX(0); transform-origin:left;
+    transition:transform .28s cubic-bezier(.2,.7,.2,1);
+  }
+  .navbar .nav-link:hover::after { transform:scaleX(1); }
+}
+
+/* Hloubkové efekty (tilt/magnet) — plynulý návrat; aktivuje JS jen pro myš na PC */
+@media (hover:hover) and (pointer:fine) {
+  .plan, .card { transition:transform .3s ease, box-shadow .3s ease; }
+}
