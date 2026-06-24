@@ -51,17 +51,24 @@
   // ===== Konverzní eventy (Meta Pixel + GA4) — aby se reklamy učily a retargetovaly =====
   function onReady(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
   // Unikátní eventID pro deduplikaci s budoucím serverovým CAPI.
-  // U Purchase použije ID objednávky z URL (pokud ho SimpleShop přidá), jinak náhodné.
   function rnd() { return new Date().getTime().toString(36) + Math.random().toString(36).slice(2, 10); }
-  function evId(prefix) {
-    if (prefix === 'purchase') {
-      var qs; try { qs = new URLSearchParams(location.search); } catch (e) { qs = null; }
-      var oid = qs && (qs.get('order') || qs.get('orderId') || qs.get('id'));
-      var id = 'purchase-' + (oid || rnd());
-      window.__mbPurchaseEventId = id; // ať si ho server pro CAPI může vyzvednout
-      return id;
-    }
-    return prefix + '-' + rnd();
+  function evId(prefix) { return prefix + '-' + rnd(); }
+  // Purchase: spočítej JEN JEDNOU (ochrana proti dvojímu započtení při obnovení/návratu
+  // na děkovací stránku). Klíč = ID objednávky z URL (pokud ho SimpleShop přidá), jinak
+  // jednou za relaci prohlížeče. Memoizováno na window, ať FB i GA dostanou stejný výsledek.
+  function purchaseInfo() {
+    if (window.__mbPurchase) return window.__mbPurchase;
+    var qs; try { qs = new URLSearchParams(location.search); } catch (e) { qs = null; }
+    var oid = qs && (qs.get('order') || qs.get('orderId') || qs.get('id'));
+    var fired = false;
+    try {
+      if (oid) { fired = !!localStorage.getItem('mb_p_' + oid); if (!fired) localStorage.setItem('mb_p_' + oid, '1'); }
+      else { fired = !!sessionStorage.getItem('mb_p'); if (!fired) sessionStorage.setItem('mb_p', '1'); }
+    } catch (e) {}
+    var info = { ok: !fired, id: 'purchase-' + (oid || rnd()) };
+    window.__mbPurchase = info;
+    window.__mbPurchaseEventId = info.id; // ať si ho server pro CAPI může vyzvednout
+    return info;
   }
   // Která konverze patří k aktuální stránce
   function pageConv() {
@@ -73,12 +80,12 @@
   function fireConvFB() {
     var c = pageConv(); if (!c || !window.fbq) return;
     var params = { content_name: c.name, content_type: 'product', content_ids: [c.id], value: c.value, currency: 'CZK' };
-    if (c.kind === 'purchase') { params.num_items = 1; fbq('track', 'Purchase', params, { eventID: evId('purchase') }); }
+    if (c.kind === 'purchase') { var pi = purchaseInfo(); if (!pi.ok) return; params.num_items = 1; fbq('track', 'Purchase', params, { eventID: pi.id }); }
     else fbq('track', 'ViewContent', params, { eventID: evId('view') });
   }
   function fireConvGA() {
     var c = pageConv(); if (!c || !window.gtag) return;
-    if (c.kind === 'purchase') gtag('event', 'purchase', { transaction_id: (window.__mbPurchaseEventId || 'vk-' + rnd()), value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
+    if (c.kind === 'purchase') { var pi = purchaseInfo(); if (!pi.ok) return; gtag('event', 'purchase', { transaction_id: pi.id, value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] }); }
     else gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
   }
   function loadMetaPixelAndConvert() { loadMetaPixel(); fireConvFB(); }
