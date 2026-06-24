@@ -1296,6 +1296,8 @@
             var pCal = bilkoviny * 4, cCal = sacharidy * 4, fCal = tuky * 9, tot = (pCal + cCal + fCal) || 1;
             var bP = document.getElementById('bar-bil'), bC = document.getElementById('bar-sach'), bF = document.getElementById('bar-tuk');
             if (bP) requestAnimationFrame(function () { bP.style.width = (pCal / tot * 100) + '%'; bC.style.width = (cCal / tot * 100) + '%'; bF.style.width = (fCal / tot * 100) + '%'; });
+            // analytika: kalkulačka použita (s cílem)
+            if (window.gtag) gtag('event', 'kalkulacka_pouzita', { cil: cil });
         }
 
         // --- Mikro-odměna: konfety při úspěšném odeslání formuláře (bez knihovny) ---
@@ -1422,6 +1424,8 @@
                 result.innerHTML = html;
                 result.hidden = false;
                 result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // analytika: kterou cestu člověk zvolil (cíl / doporučení / zkušenost)
+                if (window.gtag) gtag('event', 'kviz_dokoncen', { cil: ans.cil, cesta: ans.how, zkusenost: ans.exp });
             }
             quiz.addEventListener('click', function (e) {
                 var b = e.target.closest('.quiz-opts button');
