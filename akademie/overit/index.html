@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ověření certifikátu — Barna Academy</title>
+<meta name="description" content="Ověř pravost certifikátu Barna Academy. Zadej ID certifikátu a zjisti, zda je držitel skutečně certifikovaný trenér nebo výživový poradce.">
+<link rel="canonical" href="https://martinbarna.cz/akademie/overit/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#161616; background:linear-gradient(135deg,#262626,#0d0d0d); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .card { background:#fff; border-radius:24px; box-shadow:0 24px 70px rgba(0,0,0,.3); max-width:560px; width:100%; padding:40px 34px; text-align:center; }
+  .logo { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:.4rem; }
+  .logo .mark { width:38px; height:38px; border-radius:9px; background:#161616; color:var(--gold); font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .logo b { font-size:1.05rem; letter-spacing:.5px; }
+  h1 { font-size:1.5rem; margin:.6rem 0 .3rem; }
+  p.sub { color:#777; font-size:.95rem; margin-bottom:1.4rem; }
+  .row { display:flex; gap:8px; }
+  input { flex:1; border:1.5px solid #e0d8cd; border-radius:50px; padding:13px 20px; font-size:1rem; font-family:inherit; outline:none; }
+  input:focus { border-color:var(--gold); }
+  button { background:var(--gold); color:#161616; border:none; font-weight:700; padding:13px 26px; border-radius:50px; cursor:pointer; font-size:1rem; }
+  button:hover { background:#161616; color:#fff; }
+  .result { margin-top:1.4rem; border-radius:16px; padding:20px; display:none; text-align:left; }
+  .result.ok { display:block; background:#f2faf4; border:1px solid #cfe9d5; }
+  .result.bad { display:block; background:#fdf2f2; border:1px solid #f2cfcf; }
+  .result h3 { font-size:1.15rem; margin-bottom:.4rem; }
+  .result.ok h3 { color:#1d7a3c; } .result.bad h3 { color:#b3261e; }
+  .result .meta { color:#444; font-size:.95rem; line-height:1.7; }
+  .result a { display:inline-block; margin-top:.8rem; color:var(--gold); font-weight:700; text-decoration:none; }
+  .foot { margin-top:1.4rem; font-size:.85rem; color:#999; }
+  .foot a { color:var(--gold); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo"><span class="mark">MB</span><b>BARNA ACADEMY</b></div>
+    <h1>Ověření certifikátu</h1>
+    <p class="sub">Zadej ID certifikátu a zjisti, zda je jeho držitel skutečně certifikovaný v Barna Academy.</p>
+    <form id="f" class="row">
+      <input id="q" type="text" placeholder="např. BA-2026-0001" autocomplete="off" aria-label="ID certifikátu">
+      <button type="submit">Ověřit</button>
+    </form>
+    <div id="res" class="result"></div>
+    <p class="foot">Barna Academy — škola pro trenéry a výživové poradce · <a href="/akademie/">Zpět na Academy</a></p>
+  </div>
+
+  <script>
+    var res = document.getElementById('res');
+    document.getElementById('f').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var id = document.getElementById('q').value.trim().toUpperCase();
+      if (!id) return;
+      res.className = 'result'; res.innerHTML = 'Ověřuji…'; res.style.display = 'block';
+      fetch('/akademie/certifikaty.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (list) {
+        var c = (list || []).find(function (x) { return (x.id || '').toUpperCase() === id; });
+        if (c) {
+          res.className = 'result ok';
+          res.innerHTML = '<h3>✅ Platný certifikát</h3><div class="meta"><strong>Držitel:</strong> ' + esc(c.jmeno) +
+            '<br><strong>ID:</strong> ' + esc(c.id) + '<br><strong>Vydáno:</strong> ' + esc(c.datum) +
+            (c.program ? '<br><strong>Program:</strong> ' + esc(c.program) : '') + '</div>' +
+            '<a href="/akademie/certifikat/?jmeno=' + encodeURIComponent(c.jmeno) + '&id=' + encodeURIComponent(c.id) + '&datum=' + encodeURIComponent(c.datum) + '">Zobrazit certifikát →</a>';
+        } else {
+          res.className = 'result bad';
+          res.innerHTML = '<h3>❌ Certifikát nenalezen</h3><div class="meta">ID <strong>' + esc(id) + '</strong> jsme v registru nenašli. Zkontroluj přesné znění ID, nebo napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>.</div>';
+        }
+      }).catch(function () {
+        res.className = 'result bad';
+        res.innerHTML = '<h3>Chyba ověření</h3><div class="meta">Zkus to prosím znovu za chvíli.</div>';
+      });
+    });
+    function esc(s){ return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); }
+  </script>
+</body>
+</html>
