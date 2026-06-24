@@ -3,6 +3,17 @@
    Pravidla se uplatní jen tam, kde selektory existují → bezpečné na všech stránkách.
    Interakce (tilt/magnet/nav-frosting) řídí assets/ui.js. */
 
+/* ===== Tvrdá pojistka proti vodorovnému posunu na mobilu =====
+   iOS rozšíří layout viewport, jakmile cokoliv přeteče přes šířku → stránka
+   pak „klouže" do strany místo nahoru/dolů. Řešíme u kořene i pojistkou. */
+html, body { overflow-x: clip; max-width: 100%; }
+/* Bootstrap .row.g-5 má gutter 3rem (okraje −24px), ale .container má jen 12px
+   padding → řádek přetéká o 12px. Na menších displejích srovnáme horizontální
+   gutter (vertikální mezery zůstávají, sloupce jsou stejně pod sebou). */
+@media (max-width: 991.98px) {
+  .row.g-5, .row.gx-5 { --bs-gutter-x: 1.5rem; }
+}
+
 /* Výběr textu ve značkové barvě */
 ::selection { background:#ff7a00; color:#fff; }
 ::-moz-selection { background:#ff7a00; color:#fff; }
