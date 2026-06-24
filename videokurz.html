@@ -55,6 +55,7 @@
         a:focus-visible, button:focus-visible, .navbar-toggler:focus-visible {
             outline:3px solid #ff7a00; outline-offset:2px; border-radius:4px;
         }
+        html { overflow-x: clip; }
         body { font-family:'Poppins',Arial,sans-serif; color:#161616; }
         .fab-wa { position:fixed; right:20px; bottom:20px; width:60px; height:60px; border-radius:50%; background:#25D366;
             display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); z-index:1050; color:#fff; text-decoration:none; transition:.2s; }
@@ -138,7 +139,7 @@
     
         /* ===== VIZUÁLNÍ POLISH (rozšíření) ===== */
         /* hero: jemné prosvětlení */
-        .hero { position:relative; }
+        .hero { position:relative; overflow:hidden; }
         .hero::before { content:""; position:absolute; inset:0; pointer-events:none;
             background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
         .hero > * { position:relative; z-index:1; }
@@ -253,8 +254,8 @@
                         <div><span>20+</span> hodin obsahu</div>
                         <div><span>∞</span> doživotní přístup</div>
                     </div>
-                    <div class="mt-4">
-                        <a href="https://form.simpleshop.cz/3Vbl/buy/" class="btn btn-gold me-2">Chci videokurz za 800 Kč</a>
+                    <div class="mt-4 d-flex flex-wrap gap-2">
+                        <a href="https://form.simpleshop.cz/3Vbl/buy/" class="btn btn-gold">Chci videokurz za 800 Kč</a>
                         <a href="#obsah" class="btn btn-ghost">Co se naučím?</a>
                     </div>
                     <div class="vk-trust">
