@@ -7,6 +7,10 @@
    iOS rozšíří layout viewport, jakmile cokoliv přeteče přes šířku → stránka
    pak „klouže" do strany místo nahoru/dolů. Řešíme u kořene i pojistkou. */
 html, body { overflow-x: clip; max-width: 100%; }
+/* Zastav horizontální „pružení" (rubber-band) při doteku na iOS — to způsobuje
+   pocit, že web „kýve / uhýbá doprava" při svislém scrollu. Nezasahuje do zoomu. */
+html { overscroll-behavior-x: none; }
+body { overscroll-behavior-x: none; }
 /* Bootstrap .row.g-5 má gutter 3rem (okraje −24px), ale .container má jen 12px
    padding → řádek přetéká o 12px. Na menších displejích srovnáme horizontální
    gutter (vertikální mezery zůstávají, sloupce jsou stejně pod sebou). */

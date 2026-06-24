@@ -70,11 +70,14 @@
     window.__mbPurchaseEventId = info.id; // ať si ho server pro CAPI může vyzvednout
     return info;
   }
-  // Která konverze patří k aktuální stránce
+  // Která konverze patří k aktuální stránce.
+  // POZN.: Purchase se měří SERVEROVĚ přes Meta CAPI + GA4 (SimpleShop webhook → Cloudflare
+  // Worker, dedup přes event_id = číslo objednávky). Klientský Purchase proto ZÁMĚRNĚ
+  // neodpalujeme — jinak by se nákup dubloval. Děkovací stránka neměří nic.
   function pageConv() {
     var p = location.pathname;
-    if (/dekuji-videokurz/.test(p)) return { kind: 'purchase', name: 'Videokurz výživy', id: 'videokurz', value: 800 };
-    if (/videokurz/.test(p))        return { kind: 'view',     name: 'Videokurz výživy', id: 'videokurz', value: 800 };
+    if (/dekuji/.test(p))    return null; // /dekuji-videokurz: Purchase řeší server-side CAPI
+    if (/videokurz/.test(p)) return { kind: 'view', name: 'Videokurz výživy', id: 'videokurz', value: 800 };
     return null;
   }
   function fireConvFB() {
