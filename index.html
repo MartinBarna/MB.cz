@@ -453,6 +453,16 @@
         @keyframes orbDrift1 { from { transform:translate(0,0) scale(1); } to { transform:translate(46px,34px) scale(1.08); } }
         @keyframes orbDrift2 { from { transform:translate(0,0) scale(1); } to { transform:translate(-54px,-30px) scale(1.12); } }
         @keyframes orbDrift3 { from { transform:translate(0,0) scale(1); } to { transform:translate(26px,-28px) scale(1.18); } }
+
+        /* 5) Lesklý přejezd po oranžových tlačítkách při najetí */
+        .btn-grn, .btn-gold { position:relative; overflow:hidden; }
+        .btn-grn::after, .btn-gold::after { content:""; position:absolute; top:0; left:-120%; width:55%; height:100%;
+            background:linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent); transform:skewX(-18deg); pointer-events:none; transition:left .6s ease; }
+        .btn-grn:hover::after, .btn-gold:hover::after { left:135%; }
+        /* 6) Jemný pulz u WhatsApp tlačítka — přitáhne oko ke kontaktu */
+        .fab-wa::before { content:""; position:absolute; inset:0; border-radius:50%; background:#25D366; z-index:-1; }
+        @media (prefers-reduced-motion: no-preference) { .fab-wa::before { animation:fabPulse 2.6s ease-out infinite; } }
+        @keyframes fabPulse { 0% { transform:scale(1); opacity:.55; } 70% { transform:scale(1.7); opacity:0; } 100% { opacity:0; } }
     </style>
     <script>
     (function(){
