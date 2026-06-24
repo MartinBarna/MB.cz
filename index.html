@@ -481,6 +481,16 @@
         .quiz-rbtns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
         .quiz-restart { display:block; margin:1.1rem auto 0; background:none; border:none; color:#9a9a9a; font-weight:600; cursor:pointer; font-size:.9rem; }
         .quiz-restart:hover { color:var(--green); }
+
+        /* 8) Vizuální výsledek kalkulačky — pruh rozložení maker */
+        .macro-bar { display:flex; height:12px; border-radius:50px; overflow:hidden; margin:1.2rem 0 .55rem; background:rgba(255,255,255,.18); }
+        .macro-bar span { height:100%; width:0; transition:width .85s cubic-bezier(.2,.7,.2,1); }
+        .macro-bar .mb-p { background:#ffd166; }
+        .macro-bar .mb-c { background:rgba(255,255,255,.92); }
+        .macro-bar .mb-f { background:#ff8a3d; }
+        .macro-leg { display:flex; gap:16px; justify-content:center; font-size:.74rem; opacity:.95; }
+        .macro-leg i { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+        .macro-leg .d-p { background:#ffd166; } .macro-leg .d-c { background:#fff; } .macro-leg .d-f { background:#ff8a3d; }
     </style>
     <script>
     (function(){
@@ -1067,6 +1077,8 @@
                             <div class="col-6 col-md-3"><div class="macro"><div class="num" id="r-sach">—</div><div class="lbl">Sacharidy (g)</div></div></div>
                             <div class="col-6 col-md-3"><div class="macro"><div class="num" id="r-vlak">—</div><div class="lbl">Vláknina (g)</div></div></div>
                         </div>
+                        <div class="macro-bar" aria-hidden="true"><span class="mb-p" id="bar-bil"></span><span class="mb-c" id="bar-sach"></span><span class="mb-f" id="bar-tuk"></span></div>
+                        <div class="macro-leg"><span><i class="d-p"></i>Bílkoviny</span><span><i class="d-c"></i>Sacharidy</span><span><i class="d-f"></i>Tuky</span></div>
                         <a href="#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
                         <p class="small mt-3 mb-0" style="opacity:.8;">Hodnoty jsou orientační startovní bod (Mifflin–St Jeor). Nejsou lékařským doporučením — při zdravotních potížích se poraď s lékařem.</p>
                     </div>
@@ -1254,11 +1266,26 @@
             // Vláknina: doporučení ~14 g na 1000 kcal
             var vlaknina = Math.round(kcal / 1000 * 14);
 
-            document.getElementById('r-kcal').textContent = kcal.toLocaleString('cs-CZ');
-            document.getElementById('r-bil').textContent = bilkoviny;
-            document.getElementById('r-tuk').textContent = tuky;
-            document.getElementById('r-sach').textContent = sacharidy;
-            document.getElementById('r-vlak').textContent = vlaknina;
+            var canAnim = ('requestAnimationFrame' in window) && window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+            function setNum(id, target, loc) {
+                var el = document.getElementById(id); if (!el) return;
+                if (!canAnim) { el.textContent = loc ? target.toLocaleString('cs-CZ') : target; return; }
+                var dur = 850, t0 = null;
+                (function step(ts) { if (!t0) t0 = ts; var p = Math.min((ts - t0) / dur, 1);
+                    var v = Math.round((1 - Math.pow(1 - p, 3)) * target);
+                    el.textContent = loc ? v.toLocaleString('cs-CZ') : v;
+                    if (p < 1) requestAnimationFrame(step); else el.textContent = loc ? target.toLocaleString('cs-CZ') : target;
+                })(performance.now());
+            }
+            setNum('r-kcal', kcal, true);
+            setNum('r-bil', bilkoviny);
+            setNum('r-tuk', tuky);
+            setNum('r-sach', sacharidy);
+            setNum('r-vlak', vlaknina);
+            // pruh rozložení maker (podle kalorií: B 4, S 4, T 9 kcal/g)
+            var pCal = bilkoviny * 4, cCal = sacharidy * 4, fCal = tuky * 9, tot = (pCal + cCal + fCal) || 1;
+            var bP = document.getElementById('bar-bil'), bC = document.getElementById('bar-sach'), bF = document.getElementById('bar-tuk');
+            if (bP) requestAnimationFrame(function () { bP.style.width = (pCal / tot * 100) + '%'; bC.style.width = (cCal / tot * 100) + '%'; bF.style.width = (fCal / tot * 100) + '%'; });
         }
 
         // --- Po odeslání formuláře (FormSubmit redirect ?odeslano=1) zobraz poděkování ---
