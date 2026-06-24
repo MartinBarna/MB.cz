@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barna Academy — škola pro trenéry a výživové poradce | Martin Barna</title>
+    <meta name="description" content="Barna Academy — vzdělávací program pro trenéry a výživové poradce. Vědecky podložená výživa, psychologie chování, anatomie i byznys — v češtině, autorsky zpracováno Martinem Barnou. Doživotní přístup, kvízy, certifikát.">
+    <meta name="theme-color" content="#161616">
+    <link rel="canonical" href="https://martinbarna.cz/akademie/">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://martinbarna.cz/akademie/">
+    <meta property="og:title" content="Barna Academy — škola pro trenéry a výživové poradce">
+    <meta property="og:description" content="Vědecky podložená výživa, psychologie chování, anatomie i byznys — v češtině, autorsky od Martina Barny. Doživotní přístup, kvízy, certifikát.">
+    <meta property="og:image" content="https://martinbarna.cz/assets/og/default.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="cs_CZ">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <link rel="stylesheet" href="/assets/highend.css">
+    <link href="/assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --green:#ff7a00; --green-dark:#161616; --green-light:#fff4e8; --gold:#ff7a00; --ink:#161616; }
+        html { overflow-x: clip; scroll-padding-top:80px; }
+        * { scroll-behavior:smooth; }
+        body { font-family:'Poppins',Arial,sans-serif; color:#161616; }
+        h1,h2,h3 { font-weight:800; letter-spacing:-.02em; }
+        a:focus-visible, button:focus-visible { outline:3px solid #ff7a00; outline-offset:2px; border-radius:4px; }
+        .skip-link{position:absolute;left:-999px;top:0;background:#ff7a00;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+        @keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+
+        /* Top bar */
+        .ac-top { position:sticky; top:0; z-index:1000; background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); }
+        .ac-top .inner { max-width:1140px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+        .ac-brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:#161616; font-weight:800; font-size:1.15rem; }
+        .ac-brand img { height:30px; width:auto; }
+        .btn-gold { background:var(--gold); border:none; color:#161616; font-weight:700; padding:13px 30px; border-radius:50px; transition:transform .2s ease, box-shadow .2s ease, background .2s ease; box-shadow:0 6px 18px rgba(255,122,0,.22); text-decoration:none; display:inline-block; }
+        .btn-gold:hover { background:#161616; color:#fff; transform:translateY(-2px); box-shadow:0 12px 26px rgba(0,0,0,.22); }
+        .btn-ghost { background:transparent; border:2px solid #fff; color:#fff; font-weight:600; padding:12px 26px; border-radius:50px; text-decoration:none; display:inline-block; transition:.2s; }
+        .btn-ghost:hover { background:#fff; color:#161616; }
+        .btn-dark { background:#161616; color:#fff; border:none; font-weight:700; padding:13px 30px; border-radius:50px; text-decoration:none; display:inline-block; transition:.2s; }
+        .btn-dark:hover { background:var(--gold); color:#161616; transform:translateY(-2px); }
+
+        /* Hero */
+        .ac-hero { position:relative; overflow:hidden; background:linear-gradient(135deg,#262626 0%,#000 100%); color:#fff; padding:96px 0 88px; }
+        .ac-hero::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode:soft-light;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size:130px 130px; }
+        .ac-hero .container { position:relative; z-index:1; }
+        .ac-tag { display:inline-block; background:var(--gold); color:#161616; font-weight:700; font-size:.8rem; letter-spacing:.5px; padding:6px 16px; border-radius:50px; }
+        .ac-hero h1 { font-size:clamp(2.1rem, 5.6vw, 3.4rem); line-height:1.1; margin:1.1rem 0; animation:fadeUp .7s ease both; }
+        .ac-hero .lead { font-size:clamp(1.05rem,2.4vw,1.3rem); opacity:.92; max-width:680px; animation:fadeUp .7s ease .15s both; }
+        .ac-trust { display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:1.4rem; font-size:.92rem; opacity:.95; }
+        .ac-trust span { display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap; }
+        .ac-meta { display:flex; flex-wrap:wrap; gap:1.6rem; margin-top:2rem; }
+        .ac-meta div span { display:block; font-size:1.7rem; font-weight:800; color:var(--gold); }
+
+        section { padding:80px 0; }
+        .sec-head { text-align:center; max-width:720px; margin:0 auto 3rem; }
+        .sec-head h2 { font-size:clamp(1.7rem,4.4vw,2.4rem); color:#161616; }
+        .sec-head h2::after { content:""; display:block; width:56px; height:4px; border-radius:2px; background:linear-gradient(90deg,var(--green),#ffb066); margin:1rem auto 0; }
+        .sec-head p { color:#5a5650; margin-top:.8rem; }
+        .bg-soft { background:var(--green-light); }
+        .card-ac { background:#fff; border:1px solid #f0e7dc; border-radius:18px; padding:1.6rem; height:100%; box-shadow:0 8px 28px rgba(0,0,0,.05); }
+        .card-ac h3, .card-ac h5 { color:#161616; }
+        .mod { display:flex; gap:14px; align-items:flex-start; background:#fff; border:1px solid #f0e7dc; border-radius:16px; padding:1.3rem 1.4rem; height:100%; }
+        .mod .num { flex-shrink:0; width:40px; height:40px; border-radius:12px; background:var(--green-light); color:var(--green); font-weight:800; display:flex; align-items:center; justify-content:center; }
+        .mod h5 { margin:0 0 .3rem; font-size:1.05rem; }
+        .mod p { margin:0; color:#5a5650; font-size:.93rem; }
+        .feature-ac { text-align:center; }
+        .feature-ac .ic { width:54px; height:54px; border-radius:14px; background:var(--green-light); color:var(--green); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-size:1.5rem; }
+
+        /* Ukázka */
+        .sample { background:#fff; border:1px solid #eee; border-radius:18px; box-shadow:0 14px 40px rgba(0,0,0,.07); padding:2rem; max-width:760px; margin:0 auto; }
+        .sample .badge-s { display:inline-block; background:var(--green-light); color:var(--green-dark); font-weight:700; font-size:.78rem; padding:5px 12px; border-radius:50px; }
+        .sample blockquote { border-left:4px solid var(--green); margin:1.2rem 0; padding:.4rem 0 .4rem 1.2rem; color:#333; font-style:italic; }
+
+        /* FAQ */
+        .faq-item { background:#fff; border:1px solid #eee; border-radius:14px; margin-bottom:12px; overflow:hidden; }
+        .faq-item button { width:100%; text-align:left; background:none; border:none; padding:18px 20px; font-weight:700; color:#161616; cursor:pointer; display:flex; justify-content:space-between; gap:12px; font-size:1rem; }
+        .faq-item .a { padding:0 20px; max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease; color:#555; }
+        .faq-item.open .a { max-height:400px; padding:0 20px 18px; }
+        .faq-item button .chev { transition:transform .3s ease; }
+        .faq-item.open button .chev { transform:rotate(180deg); }
+
+        /* Cena / CTA */
+        .pricebox { background:linear-gradient(135deg,#262626,#0d0d0d); color:#fff; border-radius:24px; padding:2.6rem 2rem; text-align:center; max-width:620px; margin:0 auto; box-shadow:0 24px 60px rgba(0,0,0,.18); }
+        .pricebox .soon { display:inline-block; background:rgba(255,122,0,.18); color:#ffb066; font-weight:700; font-size:.8rem; padding:6px 16px; border-radius:50px; }
+        .pricebox ul { list-style:none; padding:0; margin:1.4rem auto; max-width:420px; text-align:left; }
+        .pricebox li { padding:7px 0; display:flex; gap:10px; }
+        .pricebox li::before { content:"✓"; color:var(--gold); font-weight:800; }
+        .vk-guarantee { display:flex; align-items:center; gap:13px; text-align:left; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:14px 16px; margin-top:18px; font-size:.92rem; color:#e8e6e3; }
+        .footer-ac { background:#0d0d0d; color:#bbb; text-align:center; padding:36px 18px; font-size:.9rem; }
+        .footer-ac a { color:#ff8a3d; }
+        .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); z-index:1050; color:#fff; text-decoration:none; }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Barna Academy — škola pro trenéry a výživové poradce",
+      "description": "Vzdělávací program pro trenéry a výživové poradce: vědecky podložená výživa, psychologie chování, anatomie a byznys. V češtině, autorsky zpracováno Martinem Barnou.",
+      "provider": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz" },
+      "inLanguage": "cs"
+    }
+    </script>
+    <script defer src="/assets/analytics.js"></script>
+</head>
+<body>
+    <a href="#obsah" class="skip-link">Přeskočit na obsah</a>
+
+    <div class="ac-top">
+        <div class="inner">
+            <a class="ac-brand" href="/"><img src="/assets/brand/mb-mark.png" alt="Martin Barna" width="65" height="30"><span>Barna Academy</span></a>
+            <a href="#zajem" class="btn-gold" style="padding:9px 22px">Chci být u spuštění</a>
+        </div>
+    </div>
+
+    <header class="ac-hero" id="obsah">
+        <div class="container">
+            <span class="ac-tag">🎓 PŘIPRAVUJEME · VZDĚLÁVACÍ PROGRAM</span>
+            <h1>Staň se trenérem a&nbsp;výživovým poradcem, kterému klienti věří</h1>
+            <p class="lead">Barna Academy je škola, kde tě naučím to, co fakt funguje — vědecky podloženou výživu, psychologii chování, anatomii i byznys. Žádné mýty a zázračné diety. Jen know-how, se kterým získáš výsledky u klientů a vybuduješ si jméno.</p>
+            <div class="mt-4 d-flex flex-wrap gap-2">
+                <a href="#zajem" class="btn-gold">Chci být u spuštění →</a>
+                <a href="#moduly" class="btn-ghost">Co se naučím?</a>
+            </div>
+            <div class="ac-trust">
+                <span><strong style="color:#ffd166">★★★★★</strong> <b>5,0</b> · 100+ recenzí</span>
+                <span>600+ klientů od roku 2013</span>
+                <span>z vysílání České televize</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- PRO KOHO -->
+    <section id="prokoho">
+        <div class="container">
+            <div class="sec-head">
+                <h2>Pro koho je Barna Academy</h2>
+                <p>Ať začínáš, nebo už nějaký ten pátek v oboru jsi — tady najdeš hloubku, kterou jinde nedostaneš.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4"><div class="card-ac"><div class="feature-ac"><div class="ic">🌱</div></div><h5 class="fw-bold text-center">Začínající trenéři</h5><p class="text-muted mb-0 text-center">Chceš pevný základ a jistotu, že radíš správně — od fyziologie po práci s klientem.</p></div></div>
+                <div class="col-md-4"><div class="card-ac"><div class="feature-ac"><div class="ic">💪</div></div><h5 class="fw-bold text-center">Zkušení, co chtějí víc</h5><p class="text-muted mb-0 text-center">Máš praxi, ale chybí ti hloubka a systém? Posuneš svoje výsledky i ceny na novou úroveň.</p></div></div>
+                <div class="col-md-4"><div class="card-ac"><div class="feature-ac"><div class="ic">🥗</div></div><h5 class="fw-bold text-center">Výživoví poradci</h5><p class="text-muted mb-0 text-center">Naučíš se spojit vědu o výživě s reálným chováním lidí — a dotáhnout klienty k výsledku.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULY -->
+    <section id="moduly" class="bg-soft">
+        <div class="container">
+            <div class="sec-head">
+                <h2>Co tě naučím</h2>
+                <p>Kompletní program rozdělený do modulů — od základů chování až po byznys. Vědecky podloženo a v češtině.</p>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-6"><div class="mod"><div class="num">1</div><div><h5>Psychologie a chování kolem jídla</h5><p>Proč lidé jedí i bez hladu, energetická bilance, faktory výběru jídla a jak měnit chování udržitelně.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">2</div><div><h5>Anatomie a pohyb</h5><p>Kosterní a svalový systém, neutrální páteř, jak tělo tvoří pohyb a co z toho plyne pro trénink.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">3</div><div><h5>Výživa a energie</h5><p>Makroživiny, energetický výdej, sytost, praktické nastavení jídelníčku bez hladovění a jojo.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">4</div><div><h5>Programování tréninku</h5><p>Jak skládat tréninky pro hubnutí, nárůst i výkon — na míru reálnému klientovi.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">5</div><div><h5>Práce s klientem &amp; koučink</h5><p>Vedení, motivace, mapa prostředí, spouštěče, jak stavět chování s pocitem úspěchu.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">6</div><div><h5>Byznys pro trenéry a poradce</h5><p>Jak vybudovat udržitelný byznys, najít cílovku, USP a získat (a udržet) klienty.</p></div></div></div>
+            </div>
+            <p class="text-center text-muted mt-4 mb-0" style="font-size:.9rem;">Přesná struktura a počet lekcí finalizujeme — moduly se postupně rozbalují s každou novou lekcí.</p>
+        </div>
+    </section>
+
+    <!-- JAK TO FUNGUJE -->
+    <section id="jak">
+        <div class="container">
+            <div class="sec-head"><h2>Jak Academy funguje</h2></div>
+            <div class="row g-4">
+                <div class="col-md-3"><div class="feature-ac"><div class="ic">📖</div><h5 class="fw-bold">Psané lekce</h5><p class="text-muted small">Srozumitelně, do hloubky, s vědeckými zdroji. Studuj svým tempem.</p></div></div>
+                <div class="col-md-3"><div class="feature-ac"><div class="ic">✅</div><h5 class="fw-bold">Kvízy a úkoly</h5><p class="text-muted small">Po každé lekci si ověříš pochopení a převedeš to do praxe.</p></div></div>
+                <div class="col-md-3"><div class="feature-ac"><div class="ic">∞</div><h5 class="fw-bold">Doživotní přístup</h5><p class="text-muted small">Vracej se k obsahu, kdykoliv budeš chtít. Aktualizace zdarma.</p></div></div>
+                <div class="col-md-3"><div class="feature-ac"><div class="ic">🏅</div><h5 class="fw-bold">Certifikát</h5><p class="text-muted small">Po dokončení získáš certifikát Barna Academy.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROČ -->
+    <section class="bg-soft">
+        <div class="container">
+            <div class="sec-head"><h2>Proč zrovna Barna Academy</h2></div>
+            <div class="row g-4">
+                <div class="col-md-4"><div class="card-ac"><h5 class="fw-bold">Praxe od roku 2013</h5><p class="text-muted mb-0">600+ klientů, stovky proměn, které drží roky. Nejde o teorii z učebnice — je to ověřené v reálu.</p></div></div>
+                <div class="col-md-4"><div class="card-ac"><h5 class="fw-bold">Vědecky podloženo</h5><p class="text-muted mb-0">Každá lekce stojí na vědeckých zdrojích — a je převedená do srozumitelné, použitelné podoby.</p></div></div>
+                <div class="col-md-4"><div class="card-ac"><h5 class="fw-bold">Česky a bez balastu</h5><p class="text-muted mb-0">Žádné mýty, žádné zázračné diety. Jen to, co funguje — řečí, které rozumíš.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UKÁZKA -->
+    <section id="ukazka">
+        <div class="container">
+            <div class="sec-head"><h2>Ukázka z lekce</h2><p>Takhle vypadá obsah uvnitř — věda převedená do tvého jazyka.</p></div>
+            <div class="sample">
+                <span class="badge-s">Modul 1 · Lekce 1 — Psychologie a chování kolem jídla</span>
+                <h3 class="mt-3" style="font-size:1.4rem;">Proč lidé jedí, i když nemají hlad</h3>
+                <p class="text-muted">Výživa není problém znalostí. Je to problém chování. Skoro každý člověk už ví, že má jíst víc zeleniny a míň sladkého. Vědět ale neznamená dělat…</p>
+                <blockquote>„Tělo není rozbité. Jen je teď rovnice nakloněná. Pojďme zjistit proč — a srovnat ji tak, aby ti to šlo udržet." — tím sundáš z klienta vinu a dáš naději.</blockquote>
+                <p class="mb-0 text-muted small">Každá lekce obsahuje praktické boxy „V praxi", shrnutí, kvíz a úkol — plus vědecké zdroje.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="bg-soft" id="faq">
+        <div class="container" style="max-width:760px;">
+            <div class="sec-head"><h2>Časté otázky</h2></div>
+            <div class="faq-item"><button type="button">Potřebuju předchozí vzdělání? <span class="chev">⌄</span></button><div class="a"><p>Ne. Academy tě provede od základů, takže zvládneš i jako úplný začátečník. A pokud už praxi máš, dostaneš hloubku a systém, který ti chyběl.</p></div></div>
+            <div class="faq-item"><button type="button">V jaké formě je obsah? <span class="chev">⌄</span></button><div class="a"><p>Prémiové psané lekce s kvízy a úkoly, ke kterým máš doživotní přístup. Audio a video plánujeme přidat jako bonusovou nástavbu.</p></div></div>
+            <div class="faq-item"><button type="button">Je to vědecky podložené? <span class="chev">⌄</span></button><div class="a"><p>Ano. Každá lekce stojí na vědeckých zdrojích, které jsou v textu odcitované — a převedené do srozumitelné, použitelné podoby.</p></div></div>
+            <div class="faq-item"><button type="button">Kdy se Academy spouští a kolik bude stát? <span class="chev">⌄</span></button><div class="a"><p>Finalizujeme obsah. Nech mi na sebe kontakt níže — dám ti vědět jako prvnímu a lidé na seznamu dostanou zvýhodněnou cenu při spuštění.</p></div></div>
+        </div>
+    </section>
+
+    <!-- ZÁJEM / CTA -->
+    <section id="zajem">
+        <div class="container">
+            <div class="sec-head"><h2>Chceš být u spuštění?</h2><p>Academy se připravuje. Přihlas se do seznamu zájemců — dáme ti vědět jako prvnímu a získáš <strong>zvýhodněnou cenu při startu</strong>.</p></div>
+            <div class="pricebox">
+                <span class="soon">PŘIPRAVUJEME · EARLY ACCESS</span>
+                <h3 class="mt-3 mb-1" style="color:#fff;">Barna Academy</h3>
+                <p style="opacity:.8;">Škola pro trenéry a výživové poradce</p>
+                <ul>
+                    <li>Kompletní program v modulech (výživa, chování, anatomie, trénink, byznys)</li>
+                    <li>Kvízy a úkoly do praxe u každé lekce</li>
+                    <li>Doživotní přístup + aktualizace zdarma</li>
+                    <li>Certifikát Barna Academy po dokončení</li>
+                </ul>
+                <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20z%C3%A1jem%20o%20Barna%20Academy%20-%20dej%20v%C4%9Bd%C4%9Bt%20p%C5%99i%20spu%C5%A1t%C4%9Bn%C3%AD" target="_blank" rel="noopener" class="btn-gold w-100" style="max-width:420px;">Chci být u spuštění (WhatsApp) →</a>
+                <p class="mt-3 mb-0" style="opacity:.7; font-size:.9rem;">Nebo napiš na <a href="mailto:martin@martinbarna.cz?subject=Z%C3%A1jem%20o%20Barna%20Academy" style="color:#ff8a3d;">martin@martinbarna.cz</a></p>
+                <div class="vk-guarantee">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#34a853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;flex-shrink:0;" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    <span>Při spuštění bude Academy krytá <strong style="color:#fff;">zárukou vrácení peněz</strong> — stejně jako videokurz. Žádné riziko.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer-ac">
+        <p class="mb-1"><strong style="color:#fff;">Barna Academy</strong> — Martin Barna · Online výživa a fitness</p>
+        <p class="mb-0">© 2026 · <a href="/">Hlavní web</a> · <a href="/videokurz">Videokurz</a> · martin@martinbarna.cz</p>
+    </footer>
+
+    <a class="fab-wa" href="https://wa.me/420603229831" target="_blank" rel="noopener" aria-label="Napiš na WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.748-.747zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+    </a>
+
+    <script>
+        // FAQ accordion (vlastní, lehké)
+        document.querySelectorAll('.faq-item button').forEach(function (b) {
+            b.addEventListener('click', function () { b.parentElement.classList.toggle('open'); });
+        });
+    </script>
+</body>
+</html>
