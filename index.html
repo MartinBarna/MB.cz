@@ -197,6 +197,12 @@
         .plan-feat li::before { content:"✓"; position:absolute; left:0; color:var(--green); font-weight:800; }
         .plan.featured { border:2px solid var(--gold); }
         .ribbon-top { background:var(--gold); color:#fff; text-align:center; font-weight:700; font-size:.85rem; padding:8px; letter-spacing:.5px; }
+        .plan-microtrust { font-size:.8rem; color:#8a8a8a; text-align:center; margin:.7rem 0 0; }
+        .plan-trust { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem 1.6rem; margin-top:2.2rem;
+            font-size:.95rem; font-weight:600; color:#5b6660; }
+        .plan-trust span { display:inline-flex; align-items:center; gap:.4rem; }
+        .plan-trust .ht-stars { color:#ffb300; letter-spacing:1px; }
+        .plan-trust .mb-ico { color:var(--gold); font-size:1.1rem; }
 
         .step-num { width:54px; height:54px; border-radius:50%; background:var(--green); color:#fff; font-weight:800; font-size:1.3rem;
             display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
@@ -739,6 +745,7 @@
                                 <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
                             </ul>
                             <a href="#kontakt" class="btn btn-out w-100">Chci Gold</a>
+                            <p class="plan-microtrust">Nezávazně — nejdřív si napíšeme a doladíme detaily.</p>
                         </div>
                     </div>
                 </div>
@@ -765,11 +772,18 @@
                                 <li>1 hovor (Skype / telefon) každý týden</li>
                             </ul>
                             <a href="#kontakt" class="btn btn-grn w-100">Chci Diamond</a>
+                            <p class="plan-microtrust">Nezávazně — nejdřív si napíšeme a doladíme detaily.</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <p class="text-center text-muted mt-4">Nevíš, který balíček je pro tebe ten pravý? <a href="#kontakt" style="color:var(--green-dark); font-weight:600;">Napiš mi a poradím ti zdarma.</a></p>
+            <div class="plan-trust" role="note">
+                <span><span class="mb-ico"><svg><use href="#ic-trophy"/></svg></span> 600+ klientů</span>
+                <span><span class="ht-stars">★★★★★</span> 100+ recenzí</span>
+                <span>v oboru od roku 2013</span>
+                <span>bez jojo efektu</span>
+            </div>
+            <p class="text-center text-muted mt-3">Nevíš, který balíček je pro tebe ten pravý? <a href="#kontakt" style="color:var(--green-dark); font-weight:600;">Napiš mi a poradím ti zdarma.</a></p>
         </div>
     </section>
 
