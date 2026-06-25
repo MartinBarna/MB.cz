@@ -57,7 +57,7 @@ const BUCKET = 'videokurz-materialy';
 const MATERIALS = [
   { ico: '🍳', t: 'Kuchařka — 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'kucharka-recepty.pdf' },
   { ico: '🎧', t: 'Audiokniha o hubnutí', d: 'Kompletní audiokniha (ZIP)', file: 'audiokniha.zip' },
-  { ico: '🧮', t: 'Kalkulačka kalorií a makroživin', d: 'Online kalkulačka', link: '/kalkulacka-kalorii-a-makrozivin/' },
+  { ico: '🧮', t: 'Kalkulačka kalorií a makroživin', d: 'Online kalkulačka přímo v kurzu', link: '/akademie/videokurz/kalkulacka/' },
   { ico: '📄', t: 'Výpočty hubnutí a nabírání', d: 'Tahák s výpočty (PDF)', file: 'vypocty.pdf' },
   { ico: '📄', t: 'Videokurz — výpočty a přílohy', d: 'Doprovodné PDF', file: 'videokurz-prilohy.pdf' },
   { ico: '📊', t: 'Report pro coache', d: 'Šablona s grafem (Excel)', file: 'report-coache.xlsx' },
