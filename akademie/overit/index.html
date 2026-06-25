@@ -47,15 +47,34 @@
     <p class="foot">Barna Academy — škola pro trenéry a výživové poradce · <a href="/akademie/">Zpět na Academy</a></p>
   </div>
 
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
   <script>
     var res = document.getElementById('res');
+    function esc(s){ return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); }
+    function fmtDate(d){ if(!d) return ''; try{ var p=String(d).slice(0,10).split('-'); return p.length===3? (parseInt(p[2],10)+'. '+parseInt(p[1],10)+'. '+p[0]) : String(d); }catch(e){ return String(d); } }
+
+    // Vyhledání certifikátu: live → Supabase RPC, demo/fallback → statický JSON.
+    function lookup(id){
+      var live = window.BA && window.BA.mode === 'live';
+      if (live){
+        return window.BA.verifyCertificate(id).then(function(row){
+          if (row) return { jmeno: row.full_name, id: row.cert_id, datum: fmtDate(row.issued_at), program: row.program };
+          return null;
+        });
+      }
+      return fetch('/akademie/certifikaty.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(list){
+        return (list || []).find(function(x){ return (x.id || '').toUpperCase() === id; }) || null;
+      });
+    }
+
     document.getElementById('f').addEventListener('submit', function (e) {
       e.preventDefault();
       var id = document.getElementById('q').value.trim().toUpperCase();
       if (!id) return;
       res.className = 'result'; res.innerHTML = 'Ověřuji…'; res.style.display = 'block';
-      fetch('/akademie/certifikaty.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (list) {
-        var c = (list || []).find(function (x) { return (x.id || '').toUpperCase() === id; });
+      var start = window.BA ? window.BA.ready : Promise.resolve();
+      start.then(function(){ return lookup(id); }).then(function(c){
         if (c) {
           res.className = 'result ok';
           res.innerHTML = '<h3>✅ Platný certifikát</h3><div class="meta"><strong>Držitel:</strong> ' + esc(c.jmeno) +
@@ -71,7 +90,6 @@
         res.innerHTML = '<h3>Chyba ověření</h3><div class="meta">Zkus to prosím znovu za chvíli.</div>';
       });
     });
-    function esc(s){ return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); }
   </script>
 </body>
 </html>

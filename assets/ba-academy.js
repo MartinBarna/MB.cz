@@ -124,6 +124,15 @@
       });
     },
 
+    // Veřejné ověření certifikátu přes RPC. Live → řádek {cert_id, full_name,
+    // program, issued_at, valid} nebo null. Demo → null (volající fallne na JSON).
+    verifyCertificate: function (certId) {
+      if (!LIVE) return Promise.resolve(null);
+      return client.rpc("verify_certificate", { p_cert_id: certId })
+        .then(function (r) { if (r.error) return null; return (r.data && r.data[0]) || null; })
+        .catch(function () { return null; });
+    },
+
     // Pohodlný gate pro stránku: když není přihlášen / nemá přístup, přesměruje.
     // V demo režimu nedělá nic (vše dostupné).
     requireAccess: function (product, redirectTo) {
