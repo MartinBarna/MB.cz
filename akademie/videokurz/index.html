@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videokurz — Martin Barna</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.6; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:900px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .wrap { max-width:880px; margin:0 auto; padding:28px 18px 80px; }
+  .hero h1 { font-size:1.7rem; letter-spacing:-.01em; }
+  .hero p { color:#6f655a; margin-top:.3rem; }
+  .bigbar { height:9px; background:#e7ddcf; border-radius:9px; margin:16px 0 6px; overflow:hidden; }
+  .bigbar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .bigpct { font-size:.85rem; color:#6f655a; margin-bottom:8px; }
+  .module { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:6px 18px 10px; margin:16px 0; }
+  .mhead { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0 8px; border-bottom:1px solid #f1eadf; }
+  .mhead h2 { font-size:1.08rem; }
+  .mhead .cnt { color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .lessons { list-style:none; }
+  .lesson a { display:flex; align-items:center; gap:12px; padding:12px 4px; text-decoration:none; color:#1d1a16; border-bottom:1px solid #f6f1ea; }
+  .lesson:last-child a { border-bottom:none; }
+  .lesson .chk { width:20px; height:20px; border-radius:50%; border:2px solid #d8cab6; flex-shrink:0; }
+  .lesson.done .chk { background:#34a853; border-color:#34a853; position:relative; }
+  .lesson.done .chk::after { content:"✓"; color:#fff; font-size:.72rem; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .lesson .lt { flex:1; }
+  .lesson.done .lt { color:#8a8073; }
+  .lesson .go { color:var(--gold); font-weight:700; font-size:.85rem; white-space:nowrap; }
+  .note { text-align:center; color:#a89c8c; font-size:.8rem; margin-top:22px; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span> Videokurz</a>
+    <a class="back" href="/akademie/">← Členská sekce</a>
+  </div></div>
+
+  <div class="wrap">
+    <div class="hero">
+      <h1>Videokurz o hubnutí, nabírání a fitness</h1>
+      <p>182 video lekcí — od základů výživy přes tréninky až po livestreamy a bonusy.</p>
+      <div class="bigbar"><span id="bigbar"></span></div>
+      <div class="bigpct" id="bigpct">Tvůj postup: 0 / 182 zhlédnuto</div>
+    </div>
+
+    <div class="module">
+      <div class="mhead"><h2>Modul 1 — Základy výživy</h2><span class="cnt">13 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-T5T2iJXq32U"><a href="/akademie/videokurz/v001/"><span class="chk"></span><span class="lt">Co jsou to kalorie</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-8W5b0OJCvfg"><a href="/akademie/videokurz/v002/"><span class="chk"></span><span class="lt">Co jsou to bílkoviny</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-o1eQuhnDdwk"><a href="/akademie/videokurz/v003/"><span class="chk"></span><span class="lt">Co jsou to tuky</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-TqJ9TtK5lZc"><a href="/akademie/videokurz/v004/"><span class="chk"></span><span class="lt">Co jsou to sacharidy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-xiekGwfCt6o"><a href="/akademie/videokurz/v005/"><span class="chk"></span><span class="lt">Co je to vláknina</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-BbDBVXwl37I"><a href="/akademie/videokurz/v006/"><span class="chk"></span><span class="lt">Přijem a výdej</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-m0wUfeG3kTE"><a href="/akademie/videokurz/v007/"><span class="chk"></span><span class="lt">JoJo EFEKT</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nzNUaRqsT40"><a href="/akademie/videokurz/v008/"><span class="chk"></span><span class="lt">Priority</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-hLCfNoEh9iU"><a href="/akademie/videokurz/v009/"><span class="chk"></span><span class="lt">Kolik jídel denně</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nYFiIzVUjEQ"><a href="/akademie/videokurz/v010/"><span class="chk"></span><span class="lt">Fyzické aktivity</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-jdPfqq1ulTM"><a href="/akademie/videokurz/v011/"><span class="chk"></span><span class="lt">Rozložení kalorií</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-3GlXiZBr9AQ"><a href="/akademie/videokurz/v012/"><span class="chk"></span><span class="lt">Vážení potravin</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-s8gi1GDA4TY"><a href="/akademie/videokurz/v013/"><span class="chk"></span><span class="lt">Makroživiny sacharidy</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Modul 2 — Výpočet jídelníčku</h2><span class="cnt">6 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-p6-v_eul58Y"><a href="/akademie/videokurz/v014/"><span class="chk"></span><span class="lt">Výpočet kcal</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-hcjEgedZO9w"><a href="/akademie/videokurz/v015/"><span class="chk"></span><span class="lt">Výpočet bílkovin</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Rn0zz3cSFDY"><a href="/akademie/videokurz/v016/"><span class="chk"></span><span class="lt">Výpočet sacharidů</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-khdyS0Zt6nE"><a href="/akademie/videokurz/v017/"><span class="chk"></span><span class="lt">Výpočet tuků</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-A0hdYFWWUro"><a href="/akademie/videokurz/v018/"><span class="chk"></span><span class="lt">Výpočet vlákniny</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-u5uP4HAMigc"><a href="/akademie/videokurz/v019/"><span class="chk"></span><span class="lt">Příjem Tuku</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Modul 3 — Trénink</h2><span class="cnt">6 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-1eqY73zNIPc"><a href="/akademie/videokurz/v020/"><span class="chk"></span><span class="lt">důvody PROČ se Vám vyplatí CVIČIT</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nmNZ_Na_Y8k"><a href="/akademie/videokurz/v021/"><span class="chk"></span><span class="lt">Trenik vs. strava</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-LLKv29TpU5Q"><a href="/akademie/videokurz/v022/"><span class="chk"></span><span class="lt">Fitnes trénink</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-tuCKpi-xNNc"><a href="/akademie/videokurz/v023/"><span class="chk"></span><span class="lt">Aerobka</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-QBq2zjKlVtg"><a href="/akademie/videokurz/v024/"><span class="chk"></span><span class="lt">Hiit</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-X83D5t5x8SU"><a href="/akademie/videokurz/v025/"><span class="chk"></span><span class="lt">Periodizace tréninkového plánu</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Modul 4 — Úpravy plánu a pokrok</h2><span class="cnt">7 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-QD4xrM1A9eo"><a href="/akademie/videokurz/v026/"><span class="chk"></span><span class="lt">Míry a jejich měření</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-2smu-xDdtnI"><a href="/akademie/videokurz/v027/"><span class="chk"></span><span class="lt">Jak upravovat plán co týden - dieta</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-VyHo6wFnu0k"><a href="/akademie/videokurz/v028/"><span class="chk"></span><span class="lt">Jak upravovat plán co týden - objem/nabírání</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-vsGdHHX4dDk"><a href="/akademie/videokurz/v029/"><span class="chk"></span><span class="lt">Reverse dieting</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-ewiqFzFy7pw"><a href="/akademie/videokurz/v030/"><span class="chk"></span><span class="lt">Dorovnávání kalorií</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-XzOulZrfpGA"><a href="/akademie/videokurz/v031/"><span class="chk"></span><span class="lt">Úpravy kalorií</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-mpmUdcdhoYw"><a href="/akademie/videokurz/v032/"><span class="chk"></span><span class="lt">Sacharidové vlny</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Modul 5 — Suplementy</h2><span class="cnt">3 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-HOBhSib2DBQ"><a href="/akademie/videokurz/v033/"><span class="chk"></span><span class="lt">Úvod do suplementů</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-ixgUU09VlKk"><a href="/akademie/videokurz/v034/"><span class="chk"></span><span class="lt">Bcaa</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-2p4_QMnjcns"><a href="/akademie/videokurz/v035/"><span class="chk"></span><span class="lt">Creatine</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Modul 6 — Stravovací strategie</h2><span class="cnt">3 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-d9c55pCE_eU"><a href="/akademie/videokurz/v036/"><span class="chk"></span><span class="lt">Snídaně</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-SEFkmj6GL3c"><a href="/akademie/videokurz/v037/"><span class="chk"></span><span class="lt">Více jídel = rychlejší spalování ?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-mpSPrsoFyUs"><a href="/akademie/videokurz/v038/"><span class="chk"></span><span class="lt">Typy diet a proč fungují</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Modul 7 — Kalorické tabulky</h2><span class="cnt">3 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-mBM-d9YLrLU"><a href="/akademie/videokurz/v039/"><span class="chk"></span><span class="lt">Úvod do kalorických tabulek</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-zvQ7Vb24Wgs"><a href="/akademie/videokurz/v040/"><span class="chk"></span><span class="lt">Registrace do kalorických tabulek</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Ry-MqgtANsg"><a href="/akademie/videokurz/v041/"><span class="chk"></span><span class="lt">Jak přidat jídlo do kalorických tabulek</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Modul 8 — Udržení formy a mindset</h2><span class="cnt">4 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-Bd4Y4u_bUWs"><a href="/akademie/videokurz/v042/"><span class="chk"></span><span class="lt">Lidé umí zhubnout, ale ne formu udržet</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-69wjtb7ea80"><a href="/akademie/videokurz/v043/"><span class="chk"></span><span class="lt">Hubneme díky kaloriím a vytvoření kalorického deficitu, ne kvůli zvolené formě stravování</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-sxp-qC_u6CE"><a href="/akademie/videokurz/v044/"><span class="chk"></span><span class="lt">Bílkoviny pomáhají hubnutí</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-q_BQjpdxhuo"><a href="/akademie/videokurz/v045/"><span class="chk"></span><span class="lt">Vaše váha buded vždy kolísat</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Cvičební technika</h2><span class="cnt">14 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-_DmLKhXVNEU"><a href="/akademie/videokurz/v046/"><span class="chk"></span><span class="lt">Nováčci poprvé ve fitku</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-gJPqKkdZ4Gw"><a href="/akademie/videokurz/v047/"><span class="chk"></span><span class="lt">Nováčci zahřívačka</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-B-1NcX5tXTs"><a href="/akademie/videokurz/v048/"><span class="chk"></span><span class="lt">Rozdělení tréninku a priority</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-CZuGx7YfDpQ"><a href="/akademie/videokurz/v049/"><span class="chk"></span><span class="lt">Jak efektivně nastavit série, opakování a váhy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-x1egf49tFuo"><a href="/akademie/videokurz/v050/"><span class="chk"></span><span class="lt">Rozbor Těla a Jak Svaly Pracují</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk--BkVc69bHpc"><a href="/akademie/videokurz/v051/"><span class="chk"></span><span class="lt">Držení těla a priority ve fitku</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-a8gg1cA_BFA"><a href="/akademie/videokurz/v052/"><span class="chk"></span><span class="lt">Greatest legs Golden Era Bodybuilder TOM PLATZ Interview (CZ Titulky)</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-p7B_sAqmDJI"><a href="/akademie/videokurz/v053/"><span class="chk"></span><span class="lt">S tímhle TRENÉREM byste asi cvičit nechtěli</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-C4HBZiXm3aU"><a href="/akademie/videokurz/v054/"><span class="chk"></span><span class="lt">Sezení v autě a bolesti zad</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-WpaySOlAWr8"><a href="/akademie/videokurz/v055/"><span class="chk"></span><span class="lt">Jak začít cvičit</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Tj3Gwl-6ZwI"><a href="/akademie/videokurz/v056/"><span class="chk"></span><span class="lt">Jak mít správné držení těla</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-ymIG60CMYMc"><a href="/akademie/videokurz/v057/"><span class="chk"></span><span class="lt">Opakování v rezervě</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-MsPq9nUVTv4"><a href="/akademie/videokurz/v058/"><span class="chk"></span><span class="lt">Progresivní přetížení</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Gm2QHnJRyKA"><a href="/akademie/videokurz/v059/"><span class="chk"></span><span class="lt">Fitness trénink - Opakování v rezervě (Reps In Reserve)</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Cviky na biceps — videoukázky</h2><span class="cnt">17 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-wvymFsLTl5A"><a href="/akademie/videokurz/v060/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Kladivový úchop</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-AHi7KnPGxiY"><a href="/akademie/videokurz/v061/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Kladka rovná tyč</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-BrTEy-6Gh8I"><a href="/akademie/videokurz/v062/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Kladka lomená tyč široký úchop</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Wm_vnEhsI-8"><a href="/akademie/videokurz/v063/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Kladka nadhmat</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-NCiG2pGVleI"><a href="/akademie/videokurz/v064/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Kladka provazy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-SEaTniP4-Yc"><a href="/akademie/videokurz/v065/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Kladka široký kladivový úchop</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-MuYC2R2NrGw"><a href="/akademie/videokurz/v066/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Rovná tyč</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-l3niOe3XTJE"><a href="/akademie/videokurz/v067/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Jednoručky kladivový úchop</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-HqSHfpGhWIs"><a href="/akademie/videokurz/v068/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Jednoručky s rotací</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-vMNXEaRzdUg"><a href="/akademie/videokurz/v069/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Jednoručky základ</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-cvUPCLQdVwc"><a href="/akademie/videokurz/v070/"><span class="chk"></span><span class="lt">Jak procvičit biceps - V prodloužení</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-dpY8lic8J_E"><a href="/akademie/videokurz/v071/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Scottova lavice kladivový úchop</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-P1VlCAxBTJw"><a href="/akademie/videokurz/v072/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Scottova lavice základy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-5TZHaSokI54"><a href="/akademie/videokurz/v073/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Scottova lavice rovná tyč</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-_AbaIf4rEzU"><a href="/akademie/videokurz/v074/"><span class="chk"></span><span class="lt">Jak Správně Procvičit Biceps</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-MexkWU6KjFI"><a href="/akademie/videokurz/v075/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Lomená tyč široký úchop</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-lRYiCoX9Piw"><a href="/akademie/videokurz/v076/"><span class="chk"></span><span class="lt">Jak procvičit biceps - Lomená tyč úzký úchop</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Domácí tréninky</h2><span class="cnt">12 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-X5mxDSmMGO8"><a href="/akademie/videokurz/v077/"><span class="chk"></span><span class="lt">Domácí intervalový trénink na celé tělo</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-ScTnC2p5kwg"><a href="/akademie/videokurz/v078/"><span class="chk"></span><span class="lt">Domácí kruháč s Natálkou</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-zYc-De_eo0k"><a href="/akademie/videokurz/v079/"><span class="chk"></span><span class="lt">Domácí kruháč nohy a břicho</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-lsqCIIMmywU"><a href="/akademie/videokurz/v080/"><span class="chk"></span><span class="lt">Domácí kruháč nohy a střed</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk--F6V7nlYsz4"><a href="/akademie/videokurz/v081/"><span class="chk"></span><span class="lt">Domácí kruháč celé tělo</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-QLUTLHVzf2M"><a href="/akademie/videokurz/v082/"><span class="chk"></span><span class="lt">Domácí trénink vršek těla</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-uDMGe9YjXOQ"><a href="/akademie/videokurz/v083/"><span class="chk"></span><span class="lt">Domácí kruháč nohy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nYqmn-1ZN88"><a href="/akademie/videokurz/v084/"><span class="chk"></span><span class="lt">Domácí trénink břicho</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-9NiwzDSuIjw"><a href="/akademie/videokurz/v085/"><span class="chk"></span><span class="lt">Domácí trénínky úvod</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-oaBxpKlMPWI"><a href="/akademie/videokurz/v086/"><span class="chk"></span><span class="lt">Domácí trénink - BŘICHO</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-A3eZ4b9RV4s"><a href="/akademie/videokurz/v087/"><span class="chk"></span><span class="lt">Domácí trénink - NOHY</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-L83N25-svw4"><a href="/akademie/videokurz/v088/"><span class="chk"></span><span class="lt">Kruhový trénink na doma 1</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Bloncka se ptá Coache</h2><span class="cnt">14 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-tB1EHgtZjTk"><a href="/akademie/videokurz/v089/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Potřebuji přerušované hladovění, abych zhubla?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-WTVKXnWKQkY"><a href="/akademie/videokurz/v090/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Proč nehubnu, i když jím zdravě</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-aqvkEiRN6b4"><a href="/akademie/videokurz/v091/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Úvod</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-2VXE7IpgIeU"><a href="/akademie/videokurz/v092/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Potřebuji kupovat BIO/Fit potraviny?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Ysv9FaOAzu8"><a href="/akademie/videokurz/v093/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Potřebuji k hubnutí spalovače?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-u7UF9cEftu4"><a href="/akademie/videokurz/v094/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Rychlé hubnutí před dovolenou</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-42wgUAyTMRw"><a href="/akademie/videokurz/v095/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Jaké sportovní aktivity jsou nejefektivnější pro hubnutí?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-JfVqnfPv8b0"><a href="/akademie/videokurz/v096/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Jak zpevnit postavu?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-FmIu7IQQZU8"><a href="/akademie/videokurz/v097/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Mají muži lepší dispozice pro nabírání svalů než ženy?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nsJpnshhnPE"><a href="/akademie/videokurz/v098/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Jak vybrat nejlepšího trenéra?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-_DdjaHsucfg"><a href="/akademie/videokurz/v099/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Proč mám velké nohy?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-7cPgfQ0N9xc"><a href="/akademie/videokurz/v100/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Jak cvičit doma?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-X4wr6B5imzg"><a href="/akademie/videokurz/v101/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Jak mít hezké břicho?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-dLB8HU-stB0"><a href="/akademie/videokurz/v102/"><span class="chk"></span><span class="lt">Bloncka se ptá Coache - Jak cvičit s artrózou?</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Rozhovory a studie</h2><span class="cnt">11 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-H0DS7056DK8"><a href="/akademie/videokurz/v103/"><span class="chk"></span><span class="lt">Rozhovor - Institut Moderní Výživy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-SOFJ3_yH8qc"><a href="/akademie/videokurz/v104/"><span class="chk"></span><span class="lt">Rozhovor - Miloslav Šindelář (Institut Moderní Výživy)</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-mFgtqzFLe2U"><a href="/akademie/videokurz/v105/"><span class="chk"></span><span class="lt">Rozhovor - Lukáš Roubík (Institut Moderní Výživy)</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Cr18TQ77aa8"><a href="/akademie/videokurz/v106/"><span class="chk"></span><span class="lt">Rozhovor s klienty - Rozhovor s Matěj Misař</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-4qQEkwnMlj4"><a href="/akademie/videokurz/v107/"><span class="chk"></span><span class="lt">Rozhovor - MUDr. Marie Skalská</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-5WexzPAf8AY"><a href="/akademie/videokurz/v108/"><span class="chk"></span><span class="lt">Rozhovor - Mgr. Ing. Tereza Vágnerová</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-7rEDRsyNwEE"><a href="/akademie/videokurz/v109/"><span class="chk"></span><span class="lt">Studie: Přerušované hubnutí</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-IQ2XtPr7tMs"><a href="/akademie/videokurz/v110/"><span class="chk"></span><span class="lt">Studie: Alkohol a atletický výkon</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-MiIGjV-F830"><a href="/akademie/videokurz/v111/"><span class="chk"></span><span class="lt">Studie: Strava a záněty</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-ka5hmu7lcDg"><a href="/akademie/videokurz/v112/"><span class="chk"></span><span class="lt">Studie: Rozdělení bílkovin do jídel a svaly</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-m_zIXC8OWTo"><a href="/akademie/videokurz/v113/"><span class="chk"></span><span class="lt">Studie: Keto dieta vs Vysokosacharidová dieta</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Nákupy chytře (Lidl, JIP, Tesco)</h2><span class="cnt">5 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-v4kJlTfcKmA"><a href="/akademie/videokurz/v114/"><span class="chk"></span><span class="lt">Jak nakoupit DIETNĚ a FITNESS v LIDL</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-6ydMPGvF_hU"><a href="/akademie/videokurz/v115/"><span class="chk"></span><span class="lt">Jak nakoupit DIETNĚ a FITNESS v JIP 1. díl</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-xRUZBLxtAUY"><a href="/akademie/videokurz/v116/"><span class="chk"></span><span class="lt">Jak nakoupit DIETNĚ a FITNESS v JIP - Verze pro klienty :)</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-sdAiDTcI68w"><a href="/akademie/videokurz/v117/"><span class="chk"></span><span class="lt">Jak nakoupit DIETNĚ a FITNESS v JIP 2. díl</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-EPk1_CwG5ZI"><a href="/akademie/videokurz/v118/"><span class="chk"></span><span class="lt">Jak co NEJLEVNĚJI nakoupit DIETNÍ jídla v Tesco</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Livestreamy členské sekce</h2><span class="cnt">22 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-fOCvcMPU7vo"><a href="/akademie/videokurz/v119/"><span class="chk"></span><span class="lt">1. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-1PlbJ547sU8"><a href="/akademie/videokurz/v120/"><span class="chk"></span><span class="lt">2. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Hqc4rZ3PUpE"><a href="/akademie/videokurz/v121/"><span class="chk"></span><span class="lt">3. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-gj8-8refQJA"><a href="/akademie/videokurz/v122/"><span class="chk"></span><span class="lt">4. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-3jCP7D54Z3g"><a href="/akademie/videokurz/v123/"><span class="chk"></span><span class="lt">5. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-_jDaJCV_xc8"><a href="/akademie/videokurz/v124/"><span class="chk"></span><span class="lt">6. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-wkYq6IAVca8"><a href="/akademie/videokurz/v125/"><span class="chk"></span><span class="lt">7. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-DTPYlQttluE"><a href="/akademie/videokurz/v126/"><span class="chk"></span><span class="lt">8. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Li41_Z33hOE"><a href="/akademie/videokurz/v127/"><span class="chk"></span><span class="lt">9. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-q7srTq1Tsuw"><a href="/akademie/videokurz/v128/"><span class="chk"></span><span class="lt">10. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-3K5Mhogpx_4"><a href="/akademie/videokurz/v129/"><span class="chk"></span><span class="lt">11. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-YFXtGc-ALXI"><a href="/akademie/videokurz/v130/"><span class="chk"></span><span class="lt">12. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-fLpIhaI01us"><a href="/akademie/videokurz/v131/"><span class="chk"></span><span class="lt">13. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-_-k0h2XY-FM"><a href="/akademie/videokurz/v132/"><span class="chk"></span><span class="lt">14. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-fXVdyDBZnYw"><a href="/akademie/videokurz/v133/"><span class="chk"></span><span class="lt">15. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-CesDR676vfI"><a href="/akademie/videokurz/v134/"><span class="chk"></span><span class="lt">16. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Mh4IzV3dI3s"><a href="/akademie/videokurz/v135/"><span class="chk"></span><span class="lt">17. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nkcY-A0fxnY"><a href="/akademie/videokurz/v136/"><span class="chk"></span><span class="lt">18. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-AYsaEcAe3iM"><a href="/akademie/videokurz/v137/"><span class="chk"></span><span class="lt">19. Livestream členská sekce</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-J_C5iUsJBxE"><a href="/akademie/videokurz/v138/"><span class="chk"></span><span class="lt">LIVESTREAM ZDARMA PRO ZÁKAZNÍKY a KLIENTY martinbarna.cz</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-lo8H7Am_9YA"><a href="/akademie/videokurz/v139/"><span class="chk"></span><span class="lt">Livestream Členská Sekce 01/2025</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Y9qgJ7KsMLM"><a href="/akademie/videokurz/v140/"><span class="chk"></span><span class="lt">Livestream Členská Sekce 02/2025</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+    <div class="module">
+      <div class="mhead"><h2>Doplňková videa a novinky</h2><span class="cnt">42 videí · <b class="pct">0 %</b></span></div>
+      <ul class="lessons">
+        <li class="lesson" data-lid="vk-y04TC-ve5d8"><a href="/akademie/videokurz/v141/"><span class="chk"></span><span class="lt">Můžu pít alkohol a hubnout?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-140jr0lRNe4"><a href="/akademie/videokurz/v142/"><span class="chk"></span><span class="lt">denní výzvy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-iXCVJDk8-TY"><a href="/akademie/videokurz/v143/"><span class="chk"></span><span class="lt">Bcaa</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-qvUmWPjOgx0"><a href="/akademie/videokurz/v144/"><span class="chk"></span><span class="lt">Ketogenní dieta a maximalizace svalového růstu</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-hO4Zu7AhBCs"><a href="/akademie/videokurz/v145/"><span class="chk"></span><span class="lt">Proč vám nefungují vypočtené kcal cíle / nepřesnosti vážení a zapisování jídel</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-L6KP3Jes_sQ"><a href="/akademie/videokurz/v146/"><span class="chk"></span><span class="lt">Záznam live streamu na závodech s klientkou Verčou Bikini Fitness, 1. Místo ženy, 1. místo juniorky</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-l_2VPypWLXk"><a href="/akademie/videokurz/v147/"><span class="chk"></span><span class="lt">Kalorie a jejich role v našem životě</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-f6FIw2XHyR4"><a href="/akademie/videokurz/v148/"><span class="chk"></span><span class="lt">Update členská sekce: pravidelné maily a týdenní úkoly</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-AP8HgHmbTFI"><a href="/akademie/videokurz/v149/"><span class="chk"></span><span class="lt">Makroživiny a mikroživiny</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-4Gl_piQr6RM"><a href="/akademie/videokurz/v150/"><span class="chk"></span><span class="lt">Bílkoviny a cvičení</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Rg2HO63aDcg"><a href="/akademie/videokurz/v151/"><span class="chk"></span><span class="lt">Cheat day / cheat meal v praxi</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-N3DIVoyZedw"><a href="/akademie/videokurz/v152/"><span class="chk"></span><span class="lt">Klíč k hubnutí</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-KEi1NSRniW0"><a href="/akademie/videokurz/v153/"><span class="chk"></span><span class="lt">Složení jídelníčku</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nJZijxAG9oc"><a href="/akademie/videokurz/v154/"><span class="chk"></span><span class="lt">Termický Efekt Jídla = Ztráty energie při trávení</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-rAbX5H0s1cs"><a href="/akademie/videokurz/v155/"><span class="chk"></span><span class="lt">2. Mail členská sekce - týdenní úkoly</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-sM0wAjTk81c"><a href="/akademie/videokurz/v156/"><span class="chk"></span><span class="lt">Období po dietě / reverzní dieta / přechod na intuitivní stravování / nabírání svalů s minimem tuků</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-CZgFrmfNNJ4"><a href="/akademie/videokurz/v157/"><span class="chk"></span><span class="lt">Jojo efekt</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-NHxYKYkQEvA"><a href="/akademie/videokurz/v158/"><span class="chk"></span><span class="lt">Načasování jídel</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Kc0g5Bu_HAg"><a href="/akademie/videokurz/v159/"><span class="chk"></span><span class="lt">Jak mít pravidelné výsledky?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-3j1SPGqvoMc"><a href="/akademie/videokurz/v160/"><span class="chk"></span><span class="lt">Analogie na hubnutí</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-w4IuZdO23pw"><a href="/akademie/videokurz/v161/"><span class="chk"></span><span class="lt">Jak funguje můj online coaching pro hubnutí?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-JSJDgQN-xPI"><a href="/akademie/videokurz/v162/"><span class="chk"></span><span class="lt">Alkohol a hubnutí</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-jv6IX7tMp_U"><a href="/akademie/videokurz/v163/"><span class="chk"></span><span class="lt">Ovoce vs sušenka / zpracované vs čerstvé potraviny</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-J9CkUn7Pc-s"><a href="/akademie/videokurz/v164/"><span class="chk"></span><span class="lt">Jak funguje můj online coaching pro hubnutí</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-7hGViNRKZPA"><a href="/akademie/videokurz/v165/"><span class="chk"></span><span class="lt">Maso vs proteinový prášek</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-WCiyKX6vqiU"><a href="/akademie/videokurz/v166/"><span class="chk"></span><span class="lt">Jak nemít chutě</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-YwDub73D-js"><a href="/akademie/videokurz/v167/"><span class="chk"></span><span class="lt">Dieta a záněty</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-hhkk4AWIKaw"><a href="/akademie/videokurz/v168/"><span class="chk"></span><span class="lt">Ketogenní dieta vs sacharidy</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Sn5mRQZCjGc"><a href="/akademie/videokurz/v169/"><span class="chk"></span><span class="lt">Jak poznat že cvičím až moc často?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-OjSYhrf7_4I"><a href="/akademie/videokurz/v170/"><span class="chk"></span><span class="lt">Proč hubnu v různých fázích diety na různém množství kcal?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-o4CphPZuFpA"><a href="/akademie/videokurz/v171/"><span class="chk"></span><span class="lt">Způsobuje aspartam rakovinu?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-jGxlOUx5_qo"><a href="/akademie/videokurz/v172/"><span class="chk"></span><span class="lt">Praktické tipy a otázky klientů 1</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-xqXu0S8PGrM"><a href="/akademie/videokurz/v173/"><span class="chk"></span><span class="lt">Reels 27 Nevzdávej se</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nTd4_gS-KG8"><a href="/akademie/videokurz/v174/"><span class="chk"></span><span class="lt">Praktické tipy a otázky klientů 2</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk--_BBISP5QYc"><a href="/akademie/videokurz/v175/"><span class="chk"></span><span class="lt">Ukázka z mé přednášky v kině 🎤</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-m8lAjdQmiAA"><a href="/akademie/videokurz/v176/"><span class="chk"></span><span class="lt">Jak překonat stagnaci při hubnutí a udržet motivaci.</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-rh75bQm5L6U"><a href="/akademie/videokurz/v177/"><span class="chk"></span><span class="lt">Návštěva České televize Jak si správně vybrat trenéra</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-sQ40sVlPu8Q"><a href="/akademie/videokurz/v178/"><span class="chk"></span><span class="lt">Návštěva České televize Jak si správně vybrat trenéra 2</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-rRIFwyoJr78"><a href="/akademie/videokurz/v179/"><span class="chk"></span><span class="lt">Přerušované hladovění vs jiné formy stravování</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-nx-pGOny5tI"><a href="/akademie/videokurz/v180/"><span class="chk"></span><span class="lt">Lze hubnout i s ALKOHOLEM a SLADKÝM?</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-r173RlSl3v8"><a href="/akademie/videokurz/v181/"><span class="chk"></span><span class="lt">NOVĚ! AI APLIKACE ve VIDEOKURZU</span><span class="go">Otevřít →</span></a></li>
+        <li class="lesson" data-lid="vk-Y0S9_VPWBxM"><a href="/akademie/videokurz/v182/"><span class="chk"></span><span class="lt">Jak zvýšit množství vlákniny v dietním jídelníčku?</span><span class="go">Otevřít →</span></a></li>
+      </ul>
+    </div>
+
+    <p class="note" id="modeNote">Ukázka prostředí. Přihlášení a uložení postupu se aktivuje po koupi (Supabase).</p>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    var TOTAL=182;
+    function render(done){
+      done=done||{};
+      var cnt=0;
+      document.querySelectorAll('.lesson').forEach(function(li){
+        var d=!!done[li.getAttribute('data-lid')];
+        li.classList.toggle('done', d); if(d) cnt++;
+      });
+      document.querySelectorAll('.module').forEach(function(mod){
+        var ls=mod.querySelectorAll('.lesson'), dn=mod.querySelectorAll('.lesson.done').length;
+        var p=ls.length?Math.round(dn/ls.length*100):0;
+        var el=mod.querySelector('.pct'); if(el) el.textContent=p+' %';
+      });
+      var pct=TOTAL?Math.round(cnt/TOTAL*100):0;
+      document.getElementById('bigbar').style.width=pct+'%';
+      document.getElementById('bigpct').textContent='Tvůj postup: '+cnt+' / '+TOTAL+' zhlédnuto ('+pct+' %)';
+    }
+    function boot(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){
+            window.BA.requireAccess('videokurz').then(function(ok){
+              if(!ok) return;
+              var n=document.getElementById('modeNote'); if(n) n.textContent='Tvůj postup se ukládá k účtu a synchronizuje se napříč zařízeními.';
+              window.BA.getProgress().then(render);
+            });
+          } else { window.BA.getProgress().then(render); }
+        });
+      } else { try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); } }
+    }
+    boot();
+  </script>
+</body>
+</html>
