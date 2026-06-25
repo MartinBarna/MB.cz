@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Měření a ukazování pokroku — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 3 — Práce s klientem a koučink</div>
+    <h1>Měření a ukazování pokroku</h1>
+
+    <p class="lead"><strong>Když klient sleduje jen váhu, jezdí na horské dráze — jeden den nadšení, druhý zklamání z vody, která s tukem nemá nic společného.</strong> Tvojí prací je měřit chytře a hlavně ten pokrok klientovi ukázat, aby ho viděl i ve dnech, kdy váha „stojí“. Měření, které neukážeš, klientovi nepomůže; měření, které ukážeš dobře, ho udrží.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je samotná váha zavádějící a co všechno ji rozkolísá.</li>
+        <li>Sadu ukazatelů, které dohromady dávají pravdivý obraz pokroku.</li>
+        <li>Jak číst ukazatele dohromady — v trendu, ne podle jednoho dne.</li>
+        <li>Jak pokrok klientovi ukázat tak, aby ho motivoval a udržel v kurzu.</li>
+        <li>Jak měření nastavit, aby klienta neposedlo ani nestresovalo.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč samotná váha klame</h2>
+    <p>Tělesná hmotnost kolísá ze dne na den z důvodů, které s tukem nemají nic společného: voda (sůl, sacharidy, hormonální cyklus, stres, vedro), obsah trávicího traktu (kolik a kdy klient jedl, vláknina) a glykogen i s vodou, kterou na sebe váže.</p>
+    <p>Klient může za den „přibrat“ kilo vody a vyděsit se, přestože tuku ve skutečnosti ubývá. Váha je proto sama o sobě hlučný signál — užitečná jen jako trend v čase, nikdy jako jednodenní verdikt.</p>
+
+    <h2>2) Sada ukazatelů pro pravdivý obraz</h2>
+    <p>Měř víc věcí najednou — dohromady řeknou pravdu, kterou váha sama neukáže:</p>
+    <div class="card">
+      <ul style="margin-left:1.1rem;">
+        <li><strong>Váha jako trend</strong> — průměr za týden, ne jeden den (dolů / nahoru / stabilní).</li>
+        <li><strong>Obvody (míry)</strong> — pas, boky, stehno, paže. Ukážou změnu složení i při stabilní váze.</li>
+        <li><strong>Fotky</strong> — pravidelně, stejné světlo a pozice. Často odhalí změnu, kterou váha schová.</li>
+        <li><strong>Výkon v tréninku</strong> — síla, opakování. Roste výkon = v deficitu zachovaný sval.</li>
+        <li><strong>Pocit hladu, energie a síly</strong> — subjektivní, ale klíčové signály.</li>
+        <li><strong>Návyky a dodržení</strong> — kolik tréninků, kroků a jídel dle plánu klient splnil (procesní cíle).</li>
+        <li><strong>Spánek a nálada</strong> — ukazatele celkové zátěže a udržitelnosti.</li>
+      </ul>
+    </div>
+
+    <h2>3) Čti ukazatele dohromady, v trendu</h2>
+    <p>Síla je v kombinaci. Žádné číslo nečteš izolovaně — vždy se díváš na trend za týdny:</p>
+    <p>Váha stojí, ale míry klesají, fotky se lepší a roste síla → výborný pokrok, mění se složení těla, jen to váha neukazuje. Klienta uklidni a pochval. Naopak váha klesá rychle, ale padá síla a je velký hlad a únava → možná příliš velký deficit, je čas přehodnotit. A když váha i míry stojí, ale hlad i energie jsou v pohodě → spíš nepřesnosti v zápisu nebo vyšší příjem, než se zdá.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům říkám: „Váha je jen jeden hlas v porotě, a navíc ten nejhlučnější. Posloucháme celou porotu — míry, fotky, sílu, hlad, energii.“ Když váha stojí a klient by jinak zpanikařil, ukážu mu klesající míry a lepší fotku — a rázem vidí, že to funguje.</div>
+
+    <h2>4) Jak pokrok ukázat, aby motivoval</h2>
+    <p>Měření, které klient nevidí nebo nechápe, nemá hodnotu. Ukazuj ho pravidelně a srozumitelně — krátké shrnutí „kde jsme byli → kde jsme teď“ (trend váhy, změna měr, lepší fotka, vyšší výkon). Pojmenuj a oslav výhry, i ty malé: lepší spánek, víc energie, zvládnutá technika. Úspěch živí motivaci a víru.</p>
+    <p>Přerámuj „špatné“ týdny — když váha vyletí vodou, vysvětli proč a ukaž stabilní trend; tím zabráníš panice a odchodu. A vždy propoj pokrok s cílem: ukaž, jak dnešní krok souvisí s tím, proč to klient vlastně dělá.</p>
+    <blockquote>Lidé zůstávají tam, kde vidí, že se posouvají. Viditelný pokrok je jedna z nejsilnějších retenčních pák, jakou máš.</blockquote>
+
+    <h2>5) Měření bez posedlosti</h2>
+    <p>Pozor i na opačný extrém — měření nesmí klienta stresovat. Drž přiměřenou frekvenci: vážení klidně víckrát týdně, ale počítej průměr (ne se hroutit z jednoho čísla); míry a fotky stačí jednou za dva až čtyři týdny. Dávej vždy kontext — uč klienta, že kolísání je normální a číslo není verdikt o jeho hodnotě.</p>
+    <p>U citlivých klientů uber na váze a víc se opři o míry, fotky, výkon a pocit; pro někoho je denní vážení vyloženě kontraproduktivní. Cíl je objektivní zpětná vazba, ne úzkost.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Měření neděláme proto, abychom klienta soudili. Děláme ho proto, abychom mu ukázali pravdu — a ta ho udrží v kurzu i ve dnech, kdy má váha náladu.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je samotná váha zavádějící? <span class="tg">odpověď ▾</span></div><div class="aa">Kolísá kvůli vodě, obsahu trávicího traktu a glykogenu — nesouvisí to s tukem. Spolehlivá je pouze jako trend v čase, ne jako jednodenní číslo.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj čtyři ukazatele pokroku mimo váhu. <span class="tg">odpověď ▾</span></div><div class="aa">Míry (obvody), fotky, výkon v tréninku, pocit hladu/energie/síly, dodržení návyků a spánek či nálada — stačí libovolné čtyři.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co znamená „čti ukazatele dohromady a v trendu“? <span class="tg">odpověď ▾</span></div><div class="aa">Hodnotit kombinaci ukazatelů za více týdnů, ne jediné číslo z jednoho dne. Teprve souhra signálů řekne, co se s tělem opravdu děje.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je ukazování pokroku silná retenční páka? <span class="tg">odpověď ▾</span></div><div class="aa">Lidé zůstávají tam, kde vidí, že se posouvají. Viditelný pokrok drží motivaci a víru — i ve dnech, kdy by je samotná váha odradila.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak měřit tak, aby to klienta neposedlo? <span class="tg">odpověď ▾</span></div><div class="aa">Přiměřená frekvence a práce s průměry, vždy s kontextem (kolísání je normální). U citlivých klientů méně vážit a víc se opřít o míry, fotky, výkon a pocit.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Navrhni pro klienta jednoduchý „měřicí systém“ — co bude měřit, jak často a jak mu to budeš pravidelně ukazovat. Pak napiš modelovou krátkou zprávu pro týden, kdy váha stojí, ale míry a výkon se zlepšily, tak, aby ho to namotivovalo, ne demotivovalo.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Helms ER, et al. Recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014.</li>
+        <li>Bhutani S, et al. Frequency of self-weighing and weight loss. Obesity (sebemonitoring a výsledky).</li>
+        <li>Hall KD, et al. Energy balance and its components. Am J Clin Nutr. 2012;95(4):989–994.</li>
+        <li>Navazuje na lekce M7·L2 (čtení dat klienta), M5·L2 (cíle) a M6·L9 (retence).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
