@@ -67,8 +67,8 @@
     <div class="matcard">
       <h2>📎 Materiály ke stažení</h2>
       <ul class="mats">
-        <li class="mat"><span class="mico">🍳</span><span class="minfo"><b>Kuchařka — 40+ receptů</b><small>Sbírka receptů (PDF)</small></span><button class="mbtn" type="button" data-file="Kucharka 40 + receptu.pdf">Stáhnout ↓</button></li>
         <li class="mat"><span class="mico">🧮</span><span class="minfo"><b>Kalkulačka kalorií a makroživin</b><small>Online kalkulačka přímo v kurzu</small></span><a class="mbtn" href="/akademie/videokurz/kalkulacka/">Otevřít →</a></li>
+        <li class="mat"><span class="mico">🍳</span><span class="minfo"><b>Kuchařka — 40+ receptů</b><small>Sbírka receptů (PDF)</small></span><button class="mbtn" type="button" data-file="Kucharka 40 + receptu.pdf">Stáhnout ↓</button></li>
         <li class="mat"><span class="mico">📄</span><span class="minfo"><b>Výpočty hubnutí a nabírání</b><small>Tahák s výpočty (PDF)</small></span><button class="mbtn" type="button" data-file="Vypoctyhubnutianabirani.pdf">Stáhnout ↓</button></li>
         <li class="mat"><span class="mico">🥗</span><span class="minfo"><b>Doporučené potraviny</b><small>Seznam vhodných potravin (PDF)</small></span><button class="mbtn" type="button" data-file="doporucene potraviny (1).pdf">Stáhnout ↓</button></li>
         <li class="mat"><span class="mico">🌾</span><span class="minfo"><b>Zdroje vlákniny</b><small>Přehled zdrojů vlákniny (PDF)</small></span><button class="mbtn" type="button" data-file="Zdroje vlakniny.docx.pdf">Stáhnout ↓</button></li>
@@ -382,14 +382,16 @@
       document.querySelectorAll('.mbtn[data-file]').forEach(function(btn){
         btn.addEventListener('click', function(){
           var file=btn.getAttribute('data-file');
-          if(!window.BA){ alert('Materiály jsou dostupné po přihlášení.'); return; }
+          if(!window.BA || typeof window.BA.materialUrl!=='function'){ alert('Obnov prosím stránku (Ctrl+F5) a zkus to znovu.'); return; }
+          var w = window.open('', '_blank');           // otevři kartu HNED (kvůli popup blokeru)
           var orig=btn.textContent; btn.textContent='Připravuji…'; btn.disabled=true;
-          window.BA.ready.then(function(){
-            window.BA.materialUrl(BUCKET, file).then(function(url){
-              btn.textContent=orig; btn.disabled=false;
-              if(url){ window.open(url, '_blank'); }
-              else { alert('Soubor zatím není dostupný nebo nemáš aktivní přístup. Pokud jsi právě zaplatil, zkus to za chvíli.'); }
-            });
+          window.BA.ready.then(function(){ return window.BA.materialUrl(BUCKET, file); }).then(function(url){
+            btn.textContent=orig; btn.disabled=false;
+            if(url){ if(w){ w.location.href=url; } else { location.href=url; } }
+            else { if(w){ w.close(); } alert('Soubor „'+file+'" se nepodařilo otevřít. Zkontroluj, že je v Supabase Storage nahraný přesně pod tímhle názvem a že máš aktivní přístup k videokurzu.'); }
+          }).catch(function(e){
+            btn.textContent=orig; btn.disabled=false; if(w){ w.close(); }
+            alert('Stažení selhalo: '+((e&&e.message)||e)+'. Zkus obnovit stránku (Ctrl+F5).');
           });
         });
       });
