@@ -134,3 +134,60 @@
   if (document.body) showBanner();
   else document.addEventListener('DOMContentLoaded', showBanner);
 })();
+
+/* ===== WhatsApp na počítači → QR popup =====================================
+   Problém: klik na wa.me na PC je k ničemu (otevře přihlášení do WhatsApp Webu).
+   Řešení: na desktopu klik na jakýkoli WhatsApp odkaz NEnaviguje, ale ukáže QR
+   (naskenuješ mobilem → otevře se chat s předvyplněnou zprávou). Na mobilu se
+   odkaz chová normálně (otevře appku se zprávou) — tam QR netřeba. */
+(function () {
+  var PHONE = '420603229831';
+  function isDesktop() {
+    var coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+    var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent || '');
+    return !coarse && !mobileUA;
+  }
+  function textOf(href) { try { return new URL(href, location.href).searchParams.get('text') || ''; } catch (e) { return ''; } }
+  function qrFileFor(href) {
+    var t = textOf(href);
+    if (/Academy/i.test(t)) return '/assets/qr/wa-academy.svg';
+    if (/osobn|tr[ée]nink/i.test(t)) return '/assets/qr/wa-trenink.svg';
+    if (/kou[cč]ink/i.test(t)) return '/assets/qr/wa-koucink.svg';
+    return '/assets/qr/wa-chat.svg';
+  }
+  function webHref(href) {
+    var t = textOf(href);
+    return 'https://web.whatsapp.com/send?phone=' + PHONE + (t ? '&text=' + encodeURIComponent(t) : '');
+  }
+  var openEl = null;
+  function onKey(e) { if (e.key === 'Escape' || e.keyCode === 27) closeQR(); }
+  function closeQR() { if (openEl) { openEl.remove(); openEl = null; document.removeEventListener('keydown', onKey); } }
+  function openQR(href) {
+    closeQR();
+    var wrap = document.createElement('div');
+    wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-label', 'WhatsApp QR kód');
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Poppins,Arial,sans-serif;';
+    wrap.innerHTML =
+      '<div style="background:#fff;color:#161616;border-radius:18px;max-width:340px;width:100%;padding:24px 22px 20px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35);position:relative;">' +
+        '<button type="button" aria-label="Zavřít" data-x style="position:absolute;top:8px;right:12px;border:none;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer;color:#9a948c;">×</button>' +
+        '<div style="display:flex;align-items:center;justify-content:center;gap:9px;font-weight:800;font-size:1.08rem;margin-bottom:.3rem;"><span style="width:13px;height:13px;border-radius:50%;background:#25D366;display:inline-block;"></span>WhatsApp</div>' +
+        '<p style="margin:.2rem 0 1rem;color:#5a5045;font-size:.9rem;line-height:1.45;">Naskenuj QR kód mobilem — otevře se ti chat se mnou i s předvyplněnou zprávou. Nebo napiš na <b>+420&nbsp;603&nbsp;229&nbsp;831</b>.</p>' +
+        '<img src="' + qrFileFor(href) + '" alt="WhatsApp QR kód" width="210" height="210" style="width:210px;height:210px;display:block;margin:0 auto;border:1px solid #eee;border-radius:10px;padding:8px;background:#fff;">' +
+        '<a href="' + webHref(href) + '" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;background:#25D366;color:#fff;font-weight:700;text-decoration:none;padding:11px 22px;border-radius:50px;font-size:.92rem;">Otevřít WhatsApp Web</a>' +
+        '<div style="margin-top:10px;"><a href="' + href + '" target="_blank" rel="noopener" style="color:#9a948c;font-size:.82rem;">Mám appku v počítači → otevřít rovnou</a></div>' +
+      '</div>';
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) closeQR(); });
+    wrap.querySelector('[data-x]').addEventListener('click', closeQR);
+    document.body.appendChild(wrap);
+    document.addEventListener('keydown', onKey);
+    openEl = wrap;
+  }
+  document.addEventListener('click', function (e) {
+    if (!isDesktop()) return;
+    if (document.getElementById('waModal')) return; // stránka má vlastní WhatsApp okénko (homepage)
+    var a = e.target.closest ? e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]') : null;
+    if (!a) return;
+    e.preventDefault();
+    openQR(a.getAttribute('href') || ('https://wa.me/' + PHONE));
+  }, false);
+})();
