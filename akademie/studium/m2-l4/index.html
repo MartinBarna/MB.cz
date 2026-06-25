@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nervový systém a posturální odchylky — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 4 — Anatomie a pohyb</div>
+    <h1>Nervový systém a posturální odchylky</h1>
+
+    <p class="lead">Sval se sám od sebe nestáhne — <strong>pohyb je souhra nervového systému a pohybového aparátu</strong>. A držení těla? To je dlouhý příběh psaný roky sezení, telefonem a botama, ne hodina denně v posilovně.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Klasifikaci nervového systému (CNS vs. PNS) a role jeho částí.</li>
+        <li>Roli mozečku, thalamu a hypotalamu v pohybu a homeostáze.</li>
+        <li>Co je sympatikus, parasympatikus a enterický systém — a proč nás zajímají.</li>
+        <li>Proč „ideální postura“ není jednoznačně daná a co o tom říká výzkum.</li>
+        <li>Jak sezení mění flexory kyčle a sklon pánve — a proč hodnotíme ve stoji.</li>
+      </ul>
+    </div>
+
+    <h2>1) Nervový systém — dvě větve</h2>
+    <p>Nervový systém je složitá síť nervů a specializovaných buněk — neuronů. Funguje jako kabeláž počítače: umožňuje buňkám komunikovat přes mozek a míchu a podle přijatých signálů spouštět akce.</p>
+    <p>Dělí se na dvě složky. <strong>Centrální nervový systém (CNS)</strong> tvoří mozek a mícha. <strong>Periferní nervový systém (PNS)</strong> zahrnuje somatickou a autonomní část. CNS řídí, PNS přenáší a vykonává.</p>
+
+    <h2>2) Centrální nervový systém</h2>
+    <p>V mozku nás zvlášť zajímají dvě oblasti. První je <strong>mozeček (cerebellum)</strong> — obsahuje přes 50 % všech neuronů mozku. Řídí a upravuje motorické povely, spravuje kompenzační posuny polohy a postury, které denně děláme, a koordinuje náborové vzorce, aby svaly „pálily“ ve správném pořadí, sledu a se správnou silou. Zjednodušeně jim říká, kdy tlačit, kdy táhnout a jak moc.</p>
+    <p>Mozeček hraje velkou roli v hrubé i jemné motorice. Hrubá motorika zapojuje větší svalové skupiny a vyžaduje míň jemného ladění; jemná motorika jsou přesné pohyby (psaní). V tréninku se hranice mezi nimi projeví třeba při přechodu ze stroje na jednoručky.</p>
+    <p>Druhou oblastí je <strong>diencephalon</strong>, který obsahuje thalamus a hypotalamus. <strong>Thalamus</strong> funguje jako pošta pro nervové vzruchy — třídí je a posílá do správných oblastí mozku. <strong>Hypotalamus</strong> udržuje vnitřní podmínky těla (homeostáza): reguluje a uvolňuje hormony a řídí hlad, žízeň, náladu, teplotu, libido i tělesnou hmotnost. Nastavuje takzvané set pointy a podle potřeby je upravuje.</p>
+    <p><strong>Mícha</strong> má 31 segmentů a párů míšních nervů vystupujících mezi obratli. Je komunikační dálnicí k mozku i od něj.</p>
+
+    <h2>3) Periferní nervový systém</h2>
+    <p>Větve vystupující z míchy jsou periferní nervy. PNS zahrnuje motorické i senzorické nervy a dělí se na dvě části.</p>
+    <p><strong>Somatický nervový systém (volní)</strong> ovládá veškeré volní svalstvo a reflexní oblouky. Periferní vlákna nesou vzruchy mezi CNS a kosterními svaly, kůží a smyslovými orgány.</p>
+    <p><strong>Autonomní nervový systém (mimovolní)</strong> je řízen hypotalamem a má tři části. <strong>Sympatikus</strong> spouští reakci „bojuj, nebo uteč“ — dřeň nadledvin vyplaví katecholaminy (adrenalin, noradrenalin, dopamin). Pro nás je důležitý kvůli zvýšení tepu, krevního tlaku, stažení cév a následnému růstu metabolismu a lipolýzy. <strong>Parasympatikus</strong> je opak: navozuje klid, cholinergní nervy uvolňují acetylcholin a obnovují běžnou homeostázu — při kompoziční změně stejně důležitý. <strong>Enterický systém</strong> řídí trávicí trakt a koordinuje signály hormonů a chemických poslů, kteří zásadně ovlivňují příjem jídla a pocit sytosti.</p>
+
+    <h2>4) Posturální odchylky — co věda opravdu ví</h2>
+    <p>Vrať se k sagitální rovnováze — rovnováze mezi přední a zadní muskulaturou a mechanikou.</p>
+    <blockquote>V dokonale vzpřímené poloze trupu (nezaměňuj s napřímenou) pracuje končetinový skelet nejefektivněji a přenáší sílu nejúsporněji.</blockquote>
+    <p>A teď upřímně: neexistuje univerzální shoda na tom, co je „ideální“ či „optimální“ postura — podle současného výzkumu je hodně případově specifická. Výrazné odchylky od optima mohou být esteticky nepříjemné, zhoršit efektivitu svalů a predisponovat k muskuloskeletálním či neurologickým potížím (Novak &amp; Mackinnon 1997).</p>
+    <p>Zároveň nám chybí průkazné důkazy, že lze posturu spolehlivě „opravit“. Rozšířená víra, že za držení postury můžou hlavně svalové síly a slabiny, je stále neprůkazná a o nervové složce máme málo dat. Jedním z největších problémů studií je jejich délka.</p>
+    <blockquote>Struktura svalu se může přizpůsobit chronické změně funkčního nároku. — Csapo et al. (2010)</blockquote>
+    <p>Klíčové slovo je <strong>chronické</strong>. Velká část posturálních odchylek vzniká chronickými vzorci za celý život — nadměrné sezení, technologie, nošení podpatků. Tvrdit, že to vyrušíš hodinou denně v posilovně, prostě neobstojí. Průměrná studie trvá asi 12 týdnů, a právě tady jsou limity dat.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Pozor i na rámec srovnání. Na sociálních sítích vidíš jen ty nejlepší fotky postav — tím se zkresluje představa, co je dosažitelné, a pro mnohé se cíl zdá děsivě daleko. V kognitivní psychologii se tomu říká range-frequency theory. Jako kouč máš obrovský vliv na psychiku lidí: buď povzbuzující a inspirativní a vztahuj věci k průměrnému rámci své cílové skupiny. Jak říká Jim Rohn: „Jsi průměrem pěti lidí, se kterými trávíš nejvíc času.“ Změň rámec srovnání a posuneš si branky.</div>
+
+    <h2>5) Pánev, kyčle a sklon pánve</h2>
+    <p>CNS se naučí koordinovat svaly a přizpůsobit se tomu, co děláme dlouhodobě. Když celý život sedíš u stolu s vnitřně rotovanými rameny, svaly se naučí pracovat „bezpečně“ právě v těchto polohách. Lidé v běžném pracovním týdnu prosedí u stolu v průměru 5 hodin 41 minut denně a dalších 7 hodin prospí.</p>
+    <p>Při sezení se <strong>flexory kyčle</strong> (iliopsoas — psoas major a iliacus) časem zkrátí, jak se přizpůsobí poloze.</p>
+    <div class="card"><strong>Psoas major</strong> — origo: T12 a bederní obratle; inserce: malý trochanter femuru (sdílí šlachu s iliakem); akce: při fixovaném origu flexe kyčle, při fixované inserci táhne za páteř a zvyšuje bederní lordózu, jednostranně pomáhá laterální flexi trupu a stabilizuje bederní páteř.<br><br><strong>Iliacus</strong> — origo: horní dvě třetiny jámy kyčelní na vnitřní straně ilia; inserce: malý trochanter femuru (sdílí šlachu s psoasem); akce: stejné jako u psoasu.</div>
+    <p>Když je kyčel ohnutá na 90° a zůstává tak 5–6 hodin denně, dochází k adaptivnímu zkrácení. Při sezení se navíc pánev posteriorně sklápí, podsazuje se, oplošťuje bederní páteř a vzniká klasické zakulacené „kancelářské“ držení s nadměrnou hrudní flexí. Po postavení pak chronicky zkrácené flexory táhnou za femur, kyčel a bederní páteř a sklápí pánev anteriorně, tedy dopředu.</p>
+    <p><strong>Sklon pánve hodnotíme vždy ze stoje.</strong> Co je tedy ideál? Opět nic jednoznačného. Verkhoshansky a Siff (2009) se shodli, že v sedu, stoji i při chůzi nabízí neutrální sklon pánve nejméně stresující polohu — ale ne pod zátěží. McGill (2009) tvrdí, že neutrální páteř a pánev jsou optimální vždy, i v dynamickém pohybu.</p>
+
+    <h2>6) Shrnutí</h2>
+    <p>Pohyb je souhra nervového a pohybového systému; bez nervové části jen hádáš. CNS (mozek a mícha) řídí, PNS (somatický a autonomní) přenáší a vykonává. Sympatikus znamená boj nebo útěk, parasympatikus klid, enterický systém trávení a sytost.</p>
+    <p>„Ideální postura“ není jednoznačně daná a odchylky jsou chronické — hodina v posilovně je nevyruší. Sezení zkracuje flexory kyčle a mění sklon pánve; hodnoť proto vždy ze stoje.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Z čeho se skládá CNS a z čeho PNS? <span class="tg">odpověď ▾</span></div><div class="aa">CNS tvoří mozek a mícha. PNS se skládá ze somatického a autonomního systému.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaká je hlavní role mozečku v pohybu? <span class="tg">odpověď ▾</span></div><div class="aa">Řídí a upravuje motorické povely, spravuje kompenzační posuny postury a koordinuje náborové vzorce — tedy sled, pořadí a sílu zapojení svalů.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co řídí hypotalamus? <span class="tg">odpověď ▾</span></div><div class="aa">Homeostázu: uvolňuje hormony a reguluje hlad, žízeň, teplotu, náladu a tělesnou hmotnost. Nastavuje a upravuje set pointy.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Čím se liší sympatikus a parasympatikus? <span class="tg">odpověď ▾</span></div><div class="aa">Sympatikus spouští reakci boj/útěk (katecholaminy, vyšší tep, lipolýza). Parasympatikus navozuje klid a obnovuje homeostázu (acetylcholin).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč nelze posturu „opravit“ hodinou denně v posilovně? <span class="tg">odpověď ▾</span></div><div class="aa">Odchylky jsou chronické — vznikají za celý život sezením a technologiemi. Hodina denně proti zbylým 23 hodinám matematicky nevyrovná chronický funkční nárok.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U jednoho klienta, který hodně sedí, popiš: které flexory kyčle pravděpodobně adaptivně zkrátil, jaký sklon pánve bys u něj čekal ve stoji a jednu úpravu životního stylu mimo posilovnu, která by měla větší dopad než samotný trénink. Buď konkrétní.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Novak CB, Mackinnon SE. Repetitive use and static postures: a source of nerve compression and pain. J Hand Ther. 1997;10:151–159.</li>
+        <li>Csapo R, et al. On muscle, tendon and high heels. J Exp Biol. 2010;213(15):2582–2588.</li>
+        <li>Hrysomallis C, Goodman C. A review of resistance exercise and posture realignment. J Strength Cond Res. 2001;15(3):385–390.</li>
+        <li>Verkhoshansky Y, Siff MC. Supertraining. 6th ed. 2009.</li>
+        <li>McGill S. Ultimate Back Fitness and Performance. Backfitpro Inc; 2009.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

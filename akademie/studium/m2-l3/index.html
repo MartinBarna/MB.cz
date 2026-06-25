@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kloubní akce a klasifikace pohybu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 3 — Anatomie a pohyb</div>
+    <h1>Kloubní akce a klasifikace pohybu</h1>
+
+    <p class="lead">Když dva trenéři mluví o „flexi v kyčli“, musí mít oba na mysli přesně totéž. <strong>Anatomická terminologie není akademická buzerace — je to společný jazyk pohybu.</strong> Bez něj nepřečteš odbornou literaturu, nedomluvíš se s fyzioterapeutem klienta a hlavně nedokážeš popsat, co přesně chceš tréninkem trénovat.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je anatomická poloha a proč je referenčním bodem všeho.</li>
+        <li>Slovník kloubních akcí — flexe, extenze, abdukce, rotace a další.</li>
+        <li>Směrové a polohové termíny: anteriorní, mediální, proximální…</li>
+        <li>Co je třírovinný pohyb a proč je dynamická stabilizace klíčová.</li>
+        <li>Rozdíl mezi otevřeným (OKC) a uzavřeným (CKC) kinetickým řetězcem.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč popisovat pohyb přesně</h2>
+    <p>Abys porozuměl literatuře, kterou používáš jako referenci, musíš zvládnout standardní terminologii kloubních akcí a pohybových rovin. Tyhle pojmy se čím dál víc objevují i v běžných programech — a to ti umožní nejen chápat mechaniku pohybů, ale i zaměnitelně je trénovat a předepisovat. To je k nezaplacení, když máš omezené vybavení nebo potřebuješ změnit důraz cviku.</p>
+    <p>U výkonnostního tréninku je specifičnost cviku a jeho parametry důležitější než u čistě kompozičního tréninku, kde je prioritou estetika (forma) a funkce s výkonem jdou stranou podle potřeby.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Cíle klienta mají být prioritou jen tehdy, když plně chápe úpravy, které musí v jedné oblasti svého života udělat, aby získal v jiné. Spousta neúspěchů pramení z toho, že klient nepochopil, co se po něm bude chtít — nebo z toho, že mu trenér řekl, ať udělá přehnané, nepřirozené a neudržitelné změny. Hubnutí se často prodává s minimem obětí, protože lidé milují představu, že získají, aniž by něco ztratili. Dobrý trenér přitom skoro vždy zlepší celkové zdraví, výkon, držení těla i kompozici — jako vedlejší efekt integrovaného programu.</div>
+
+    <h2>2) Anatomická poloha a roviny</h2>
+    <p>Základem každého anatomického pojmenování je referenční pozice — <strong>anatomická poloha</strong> (vzpřímený postoj, dlaně vpřed). Vůči ní popisujeme všechno ostatní.</p>
+    <p>Hrubé pohyby (ty, co zapojují více končetin) se obvykle popisují dominantní rovinou, do které spadají:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Sagitální</strong> (předozadní) — flexe a extenze.</p>
+      <p><strong>Koronální / frontální</strong> — abdukce, addukce a úklony.</p>
+      <p style="margin-bottom:0"><strong>Transverzální / horizontální</strong> — rotace.</p>
+    </div>
+
+    <h2>3) Slovník kloubních akcí a směrových termínů</h2>
+    <p>Tohle je tvůj pracovní slovník. Nemusíš ho odříkat zpaměti, ale musíš v něm umět rychle číst — když popisuješ cvik nebo čteš studii, vracíš se právě sem.</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Flexe</strong> — úhel mezi dvěma kostmi se zmenšuje. <strong>Extenze</strong> — úhel se zvětšuje. <strong>Hyperextenze</strong> — rozšíření kloubu za základní anatomickou polohu.</p>
+      <p><strong>Abdukce</strong> — pohyb od střední linie těla (do strany). <strong>Addukce</strong> — pohyb ke střední linii. <strong>Laterální flexe</strong> — úklon páteře do strany od střední linie.</p>
+      <p><strong>Rotace</strong> — otáčivý pohyb kolem podélné osy kosti. <strong>Mediální (vnitřní)</strong> — přední část segmentu se otáčí ke střední linii; <strong>laterální (zevní)</strong> — od ní. <strong>Cirkumdukce</strong> — kruhový pohyb spojující flexi, extenzi, addukci a abdukci, kloub slouží jako osa.</p>
+      <p><strong>Lopatka:</strong> protrakce (vpřed, zakulacená ramena), retrakce (vzad, stažení k sobě), elevace (nahoru), deprese (dolů).</p>
+      <p><strong>Předloktí / dlaň:</strong> supinace (zevní rotace, dlaň nahoru/vpřed), pronace (vnitřní rotace, dlaň dolů/vzad).</p>
+      <p style="margin-bottom:0"><strong>Chodidlo:</strong> plantární flexe (špička dolů), dorsiflexe (špička nahoru), everze (otočení ven), inverze (otočení dovnitř).</p>
+    </div>
+    <p>Vedle akcí potřebuješ i <strong>směrové a polohové termíny</strong>, kterými popisuješ, kde se struktura nachází:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Anteriorní / posteriorní</strong> — vpředu / vzadu. <strong>Superiorní / inferiorní</strong> — k hlavě / k dolní části.</p>
+      <p><strong>Mediální / laterální</strong> — ke střední linii / od ní.</p>
+      <p style="margin-bottom:0"><strong>Proximální / distální</strong> — blíž k počátku či referenčnímu bodu / dál od něj. <strong>Povrchový / hluboký</strong> — na povrchu těla / dál pod ním.</p>
+    </div>
+
+    <h2>4) Třírovinný pohyb a dynamická stabilizace</h2>
+    <p>V hrubém pohybu je sice nejvíc vidět jedna dominantní rovina, ale ve skutečnosti se účastní všechny tři — poskytují motorickou kontrolu, stabilitu a vnitřní momenty kloubů, které umožňují řízení směru. Tomu říkáme <strong>třírovinný pohyb</strong>: tři složky sloučené do jediného pohybu.</p>
+    <p>Z praktického a programovacího hlediska je řízení tří rovin výraznější u volných vah a otevřených řetězců (OKC) než u strojových pohybů uzavřeného řetězce (CKC). Kdybys programoval pro atletický výkon čistě na strojích, nerozvinul bys měřitelnou dynamickou stabilizaci.</p>
+    <blockquote>Čím víc víceroviných pohybů člověk dostane a čím víc sil jeho tělo přemáhá, tím důležitější je dynamická stabilizace — je to vedlejší produkt právě těchhle hrubých, víceroviných vzorů.</blockquote>
+    <p>Debata „forma vs. funkce“ se nakonec vždy vrátí k individuálním cílům klienta. Každý ale potřebuje základní funkčnost a motorickou kontrolu — ať míří na zdraví, výkon, nebo postavu. Integrované pohyby umožňují snížit stres na jednotlivých strukturách a rovnoměrně rozložit sílu napříč tělesnými segmenty.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> U lidí, kteří přehánějí izolaci a snaží se držet zátěž na jednotlivých segmentech, typicky vidím nerovnováhy v síle i svalové hmotě. Výsledkem bývají zranění, pod- i přerostlé okolní tkáně a narušené náborové vzorce. Když rozumíš fyziologickému hodnocení a pohybovým vzorům, programuješ bezpečněji a efektivněji — řešíš nerovnováhy a chápeš mechanické odchylky na několika úrovních. Dopad na celkové zdraví klienta je velký.</div>
+
+    <h2>5) Otevřený vs. uzavřený kinetický řetězec</h2>
+    <p><strong>Otevřený kinetický řetězec (OKC):</strong> ruka nebo noha se během cviku volně pohybuje. Tyhle cviky obvykle izolují jednotlivé klouby nebo svalové skupiny — klasika kulturistických programů. Otevřenému řetězci chybí stabilizace, takže vytváří smykovou sílu na zapojeném kloubu; bylo navrženo, že OKC může zvyšovat riziko poranění.</p>
+    <p><strong>Uzavřený kinetický řetězec (CKC):</strong> ruka nebo noha je pevně fixovaná v prostoru a zůstává v kontaktu s pevným povrchem, typicky se zemí.</p>
+    <div class="card"><strong>Co říká výzkum:</strong> Mikkelsen a kol. po zranění zjistili, že kombinace uzavřeného a otevřeného řetězce vedla k většímu návratu síly kvadricepsu a rychlejšímu návratu ke sportu než samotný CKC. Současný výzkum tak podporuje použití OKC i CKC — pro rozvoj i pro rehabilitaci. Není to „buď, anebo“, je to nástroj a kontext.</div>
+
+    <h2>6) Shrnutí</h2>
+    <p>Anatomická poloha je referenční bod, vůči kterému popisuješ veškerý pohyb. Kloubní akce a směrové termíny jsou společný jazyk — bez něj nepřečteš literaturu. Hrubé pohyby jsou třírovinné a dominantní rovina je jen ta nejvíc viditelná. Víceroviné, volné pohyby rozvíjejí dynamickou stabilizaci, kterou stroje nedají. A OKC i CKC mají své místo — výzkum podporuje jejich kombinaci. Až tohle budeš mít pod kůží, přestaneš cviky jen „dělat“ a začneš je číst.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je flexe a co extenze? <span class="tg">odpověď ▾</span></div><div class="aa">Flexe je zmenšení úhlu mezi dvěma kostmi, extenze je jeho zvětšení.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Do které roviny spadá rotace? <span class="tg">odpověď ▾</span></div><div class="aa">Do transverzální (horizontální) roviny.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co znamená „proximální“ a „distální“? <span class="tg">odpověď ▾</span></div><div class="aa">Proximální je blíž k počátku či referenčnímu bodu, distální je dál od něj.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Čím se liší otevřený a uzavřený kinetický řetězec? <span class="tg">odpověď ▾</span></div><div class="aa">OKC má volně se pohybující končetinu (izolace, smyková síla na kloubu); CKC má končetinu fixovanou v kontaktu s pevným povrchem.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč nelze dynamickou stabilizaci plně rozvinout čistě na strojích? <span class="tg">odpověď ▾</span></div><div class="aa">Protože dynamická stabilizace je vedlejším produktem hrubých, víceroviných volných pohybů. Stroje (CKC) požadavky na řízení všech tří rovin výrazně omezují.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vezmi tři cviky, které běžně předepisuješ (např. dřep, tlak nad hlavu, veslování), a u každého urči dominantní rovinu, hlavní kloubní akce a zda jde o OKC nebo CKC. Pak u jednoho z nich navrhni variantu, kterou změníš důraz pouhou změnou roviny nebo řetězce.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>McGinnis PM. Biomechanics of Sport and Exercise. Champaign, IL: Human Kinetics; 1999.</li>
+        <li>Graham VL, Gehlsen GM, Edwards JA. Electromyographic evaluation of closed and open kinetic chain knee rehabilitation exercises. J Athl Train. 1993;28(1):23–30.</li>
+        <li>Blackburn JR, Morrissey MC. The relationship between open and closed kinetic chain strength of the lower limb and jumping performance. J Orthop Sports Phys Ther. 1998;27(6):430–5.</li>
+        <li>Mikkelsen C, Werner S, Eriksson E. Closed kinetic chain alone compared to combined open and closed kinetic chain exercises for quadriceps strengthening after ACL reconstruction. Knee Surg Sports Traumatol Arthrosc. 2000;8(6):337–342.</li>
+        <li>Wawrzyniak JR, et al. Effect of Closed Chain Exercise on Quadriceps Femoris Peak Torque and Functional Performance. J Athl Train. 1996;31(4):335–340.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
