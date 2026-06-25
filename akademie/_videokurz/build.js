@@ -55,8 +55,8 @@ const SECTIONS = [
 // 'link' = otevře web (kalkulačka), 'file' = stáhne přes podepsanou URL.
 const BUCKET = 'videokurz-materialy';
 const MATERIALS = [
-  { ico: '🍳', t: 'Kuchařka — 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'Kucharka 40 + receptu.pdf' },
   { ico: '🧮', t: 'Kalkulačka kalorií a makroživin', d: 'Online kalkulačka přímo v kurzu', link: '/akademie/videokurz/kalkulacka/' },
+  { ico: '🍳', t: 'Kuchařka — 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'Kucharka 40 + receptu.pdf' },
   { ico: '📄', t: 'Výpočty hubnutí a nabírání', d: 'Tahák s výpočty (PDF)', file: 'Vypoctyhubnutianabirani.pdf' },
   { ico: '🥗', t: 'Doporučené potraviny', d: 'Seznam vhodných potravin (PDF)', file: 'doporucene potraviny (1).pdf' },
   { ico: '🌾', t: 'Zdroje vlákniny', d: 'Přehled zdrojů vlákniny (PDF)', file: 'Zdroje vlakniny.docx.pdf' },
@@ -320,14 +320,16 @@ ${modulesHtml}
       document.querySelectorAll('.mbtn[data-file]').forEach(function(btn){
         btn.addEventListener('click', function(){
           var file=btn.getAttribute('data-file');
-          if(!window.BA){ alert('Materiály jsou dostupné po přihlášení.'); return; }
+          if(!window.BA || typeof window.BA.materialUrl!=='function'){ alert('Obnov prosím stránku (Ctrl+F5) a zkus to znovu.'); return; }
+          var w = window.open('', '_blank');           // otevři kartu HNED (kvůli popup blokeru)
           var orig=btn.textContent; btn.textContent='Připravuji…'; btn.disabled=true;
-          window.BA.ready.then(function(){
-            window.BA.materialUrl(BUCKET, file).then(function(url){
-              btn.textContent=orig; btn.disabled=false;
-              if(url){ window.open(url, '_blank'); }
-              else { alert('Soubor zatím není dostupný nebo nemáš aktivní přístup. Pokud jsi právě zaplatil, zkus to za chvíli.'); }
-            });
+          window.BA.ready.then(function(){ return window.BA.materialUrl(BUCKET, file); }).then(function(url){
+            btn.textContent=orig; btn.disabled=false;
+            if(url){ if(w){ w.location.href=url; } else { location.href=url; } }
+            else { if(w){ w.close(); } alert('Soubor „'+file+'" se nepodařilo otevřít. Zkontroluj, že je v Supabase Storage nahraný přesně pod tímhle názvem a že máš aktivní přístup k videokurzu.'); }
+          }).catch(function(e){
+            btn.textContent=orig; btn.disabled=false; if(w){ w.close(); }
+            alert('Stažení selhalo: '+((e&&e.message)||e)+'. Zkus obnovit stránku (Ctrl+F5).');
           });
         });
       });
