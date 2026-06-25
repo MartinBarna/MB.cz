@@ -77,6 +77,8 @@
     <p class="demo-note">Ukázka studijního prostředí. Přihlašování, ukládání postupu a odemčení po koupi napojíme přes Supabase. (Postup se teď ukládá jen v tomto prohlížeči.)</p>
   </div>
 
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
   <script>
     // Osnova (snadno rozšiřitelná). available:true = lekce je hotová a otevřená.
     var CURRICULUM = [
@@ -217,35 +219,50 @@
         { id:"m9-l8", t:"Roční plán: jak složit periodizaci dohromady", available:false }
       ]}
     ];
-    var KEY = 'ba_progress_v1';
-    function getDone(){ try { return JSON.parse(localStorage.getItem(KEY)||'{}'); } catch(e){ return {}; } }
-    var done = getDone();
-    var totalAvail = 0, completed = 0;
-    var html = '';
-    CURRICULUM.forEach(function(m, mi){
-      var lz = '', mDone = 0, mAvail = 0;
-      m.lessons.forEach(function(l){
-        var isDone = !!done[l.id];
-        if (l.available){ totalAvail++; mAvail++; if(isDone){ completed++; mDone++; } }
-        if (l.available){
-          lz += '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
-        } else {
-          lz += '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
-        }
+    function render(done){
+      done = done || {};
+      var totalAvail = 0, completed = 0;
+      var html = '';
+      CURRICULUM.forEach(function(m, mi){
+        var lz = '', mDone = 0, mAvail = 0;
+        m.lessons.forEach(function(l){
+          var isDone = !!done[l.id];
+          if (l.available){ totalAvail++; mAvail++; if(isDone){ completed++; mDone++; } }
+          if (l.available){
+            lz += '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
+          } else {
+            lz += '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
+          }
+        });
+        var pct = mAvail? Math.round(mDone/mAvail*100) : 0;
+        html += '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(mAvail?'<span class="pct">'+pct+' %</span>':'<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>';
       });
-      var pct = mAvail? Math.round(mDone/mAvail*100) : 0;
-      html += '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(mAvail?'<span class="pct">'+pct+' %</span>':'<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>';
-    });
-    document.getElementById('modules').innerHTML = html;
-    var overall = totalAvail? Math.round(completed/totalAvail*100) : 0;
-    document.getElementById('progBar').style.width = overall+'%';
-    document.getElementById('progLbl').textContent = completed+' z '+totalAvail+' dostupných lekcí · '+overall+' % dokončeno';
-    // Certifikát/test odemčení (demo: po dokončení všech DOSTUPNÝCH lekcí)
-    if (totalAvail>0 && completed===totalAvail){
-      var cc = document.getElementById('certCard'); cc.classList.add('ready');
-      document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
-      var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
+      document.getElementById('modules').innerHTML = html;
+      var overall = totalAvail? Math.round(completed/totalAvail*100) : 0;
+      document.getElementById('progBar').style.width = overall+'%';
+      document.getElementById('progLbl').textContent = completed+' z '+totalAvail+' dostupných lekcí · '+overall+' % dokončeno';
+      if (totalAvail>0 && completed===totalAvail){
+        var cc = document.getElementById('certCard'); cc.classList.add('ready');
+        document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
+        var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
+      }
     }
+    // Postup z členské sekce (live: Supabase, demo: localStorage). V live režimu
+    // navíc vyžaduje přihlášení + přístup k Akademii.
+    function boot(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode === 'live'){
+            window.BA.requireAccess('academy').then(function(ok){ if(ok) window.BA.getProgress().then(render); });
+          } else {
+            window.BA.getProgress().then(render);
+          }
+        });
+      } else {
+        try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
+      }
+    }
+    boot();
   </script>
 </body>
 </html>
