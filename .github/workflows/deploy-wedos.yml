@@ -37,6 +37,8 @@ jobs:
             _zdroje/**
             Logo-rebrand/**
             scripts/**
+            akademie/_pdf/**
+            akademie/_supabase/**
             **/*.md
             CNAME
             .nojekyll
