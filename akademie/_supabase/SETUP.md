@@ -41,19 +41,35 @@ A na stránky členské sekce přidej před `ba-academy.js`:
 > nedávej na web — používá se jen server-side (krok 5).
 
 ## 5) SimpleShop webhook → přístup (server-side)
-Po zaplacení musí server nastavit přístup k zakoupenému produktu. Možnosti:
-- **Supabase Edge Function** (doporučeno) nebo Cloudflare Worker.
-- Webhook ze SimpleShopu volá funkci s tajným podpisem; funkce se **service_role**
-  klíčem najde/uloží uživatele dle e-mailu a vloží řádek do `entitlements`
-  (`product = 'academy'` nebo `'videokurz'`).
-- Tělo (pseudokód):
-  ```
-  user = auth.admin.getUserByEmail(email) || auth.admin.createUser(email)
-  insert into entitlements (user_id, product, source) values (user.id, product, 'simpleshop')
-  ```
-- Mapování: produkt SimpleShopu → `'academy'` / `'videokurz'`.
-> Tuto funkci nasazuješ ty (vyžaduje tvůj Supabase účet a service_role klíč).
-> Návrh kódu funkce doplníme, až bude projekt založený.
+Hotová Edge Function je v repu: `akademie/_supabase/functions/simpleshop-webhook/index.ts`.
+Po zaplacení zapíše přístup do `entitlements` podle **e-mailu** (přístup funguje hned,
+jak se zákazník přihlásí stejným e-mailem — i když si účet založí až po platbě).
+
+Nasazení (Supabase CLI):
+```bash
+# jednorázově
+npm i -g supabase
+supabase login
+supabase link --project-ref <PROJECT_REF>
+
+# tajemství (Functions → Secrets)
+supabase secrets set SIMPLESHOP_WEBHOOK_SECRET="<silný-náhodný-řetězec>"
+# volitelně mapování produktů SimpleShopu → 'academy'/'videokurz':
+supabase secrets set PRODUCT_MAP='{"barna-academy":"academy","videokurz":"videokurz"}'
+# (SUPABASE_URL a SUPABASE_SERVICE_ROLE_KEY jsou ve funkcích dostupné automaticky)
+
+# nasazení funkce
+supabase functions deploy simpleshop-webhook --no-verify-jwt
+```
+Funkce poběží na URL:
+`https://<PROJECT_REF>.functions.supabase.co/simpleshop-webhook?secret=<TAJEMSTVÍ>`
+
+V **SimpleShopu** nastav notifikaci/webhook po zaplacení na tuto URL (s `?secret=`).
+Pak v `index.ts` zkontroluj/uprav názvy polí (`email`, `product`, `status`) podle
+skutečného payloadu SimpleShopu — funkce už defenzivně zkouší běžné názvy.
+
+> Funkci nasazuješ ty (vyžaduje tvůj Supabase účet). service_role klíč zůstává
+> jen na serveru, NIKDY ve frontendu.
 
 ## 6) Videokurz v členské sekci
 - Videa zůstávají na **YouTube (unlisted)** a vkládají se (embed) do naší stránky

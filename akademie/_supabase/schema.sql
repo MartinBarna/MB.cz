@@ -45,32 +45,36 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- 2) ENTITLEMENTS (per-produkt přístup) ----------------------
--- Jeden řádek = uživatel má zaplacený přístup k danému produktu.
+-- 2) ENTITLEMENTS (per-produkt přístup, klíčem E-MAIL) -------
+-- Jeden řádek = e-mail má zaplacený přístup k danému produktu.
 -- product ∈ ('academy','videokurz'). Nastavuje SimpleShop webhook (server).
+-- Klíčem je e-mail (ne user_id) ZÁMĚRNĚ: zákazník typicky nejdřív zaplatí
+-- (webhook udělí přístup e-mailu) a teprve potom si založí účet se stejným
+-- e-mailem → přístup funguje hned po přihlášení, bez ručního párování.
 create table if not exists public.entitlements (
-  user_id     uuid not null references auth.users(id) on delete cascade,
+  email       text not null,
   product     text not null check (product in ('academy','videokurz')),
   active      boolean not null default true,
   source      text,                              -- např. 'simpleshop'
   granted_at  timestamptz not null default now(),
-  primary key (user_id, product)
+  primary key (email, product)
 );
 
 alter table public.entitlements enable row level security;
 
--- Uživatel VIDÍ svoje entitlements (čte je frontend pro gating). Měnit je
--- může jen server (service_role obchází RLS) — žádná insert/update policy.
+-- Uživatel VIDÍ entitlements svého e-mailu. Měnit je může jen server
+-- (service_role obchází RLS) — žádná insert/update policy pro klienty.
 drop policy if exists "entitlements_select_own" on public.entitlements;
 create policy "entitlements_select_own" on public.entitlements
-  for select using (auth.uid() = user_id);
+  for select using (lower(email) = lower(auth.jwt() ->> 'email'));
 
 -- Pomocná funkce pro gating (volá frontend i RLS jiných tabulek).
 create or replace function public.has_entitlement(p_product text)
 returns boolean language sql stable security definer set search_path = public as $$
   select exists (
     select 1 from public.entitlements
-    where user_id = auth.uid() and product = p_product and active = true
+    where lower(email) = lower(auth.jwt() ->> 'email')
+      and product = p_product and active = true
   );
 $$;
 grant execute on function public.has_entitlement(text) to authenticated;
