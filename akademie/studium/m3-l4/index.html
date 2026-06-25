@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tuky: esenciální, ne volitelné — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 3 · Lekce 4 — Výživa a energie</div>
+    <h1>Tuky: esenciální, ne volitelné</h1>
+
+    <p class="lead">Tuky to po letech démonizace schytaly podobně jako sacharidy — jen z opačné strany. Pravda je uprostřed: část tuků je <strong>esenciální</strong> a tělo bez nich nefunguje, zároveň jsou ale energeticky nejhustší makroživina, takže s nimi jde snadno přestřelit kalorie. V téhle lekci dostaneš rovnováhu — proč je klient potřebovat musí, kolik, jakého druhu a jak je řídit, aby nesabotovaly deficit.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč jsou tuky esenciální — hormony, vstřebávání vitaminů, buňky, zdraví.</li>
+        <li>Proč jsou energeticky nejhustší a co to znamená pro deficit.</li>
+        <li>Typy tuků (nasycené, nenasycené, omega-3, trans) a co u nich vlastně řešit.</li>
+        <li>Praktické rozmezí příjmu tuků a spodní hranici, pod kterou nejít.</li>
+        <li>Jak tuky řídit prakticky podle konkrétního klienta.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč jsou tuky esenciální</h2>
+    <p>Na rozdíl od sacharidů mají tuky část, kterou tělo nutně potřebuje a neumí si ji samo vyrobit — esenciální mastné kyseliny (omega-3 a omega-6). Musí přijít zvenčí, ze stravy.</p>
+    <p>Tuky obecně plní v těle úkoly, které žádná jiná makroživina nezastoupí: jsou nutné pro tvorbu <strong>hormonů</strong> včetně pohlavních (dlouhodobě příliš nízký tuk může narušit hormonální zdraví, zvlášť u žen), umožňují <strong>vstřebávání vitaminů rozpustných v tucích</strong> (A, D, E, K), tvoří buněčné membrány a nervovou tkáň a podporují sytost i chuťovost jídla. Proto tuky nejsou „volitelné". Pod určitou hranicí si klient škodí, i kdyby kalorie seděly na gram přesně.</p>
+
+    <h2>2) Energeticky nejhustší — pozor na přebytek</h2>
+    <p>Tuk má zhruba <strong>9 kcal na gram</strong>, zatímco bílkoviny a sacharidy kolem 4 kcal/g. To je víc než dvojnásobek. Praktický dopad: malé množství tuku znamená hodně kalorií. Lžíce oleje, hrst ořechů, kus sýra — všechno chutné, ale kalorie naskáčou rychle a tuk přitom zasytí na kalorii méně než bílkovina.</p>
+    <p>Proto v deficitu tuky často <strong>kontrolujeme, ne vyřazujeme</strong> — jsou nejsnazší cestou, jak nechtěně přestřelit energii. Zároveň ale nikdy nejdeme pod zdravou spodní hranici.</p>
+
+    <h2>3) Typy tuků — co skutečně řešit</h2>
+    <div class="card">
+      <p style="margin-top:0"><strong>Nenasycené (mono- a poly-)</strong> — olivový olej, avokádo, ořechy, semínka, ryby. Obecně prospěšné, tvoří základ příjmu tuků.</p>
+      <p><strong>Omega-3</strong> (zvlášť z tučných ryb) — protizánětlivé, prospěšné pro srdce a mozek. Většina lidí jich má málo, takže stojí za to je cílit: ryby zhruba 2× týdně, případně doplněk.</p>
+      <p><strong>Nasycené</strong> (živočišné tuky, máslo, kokos) — nejsou „jed", jak se dřív tvrdilo. V rozumném množství v rámci vyvážené stravy jsou v pořádku; není důvod je honit ani z nich panikařit.</p>
+      <p style="margin-bottom:0"><strong>Trans tuky</strong> (průmyslově ztužené) — jediné, kterým se vyplatí vyhýbat; čím méně, tím líp. V moderních potravinách jich naštěstí výrazně ubylo.</p>
+    </div>
+    <p>Praktika je jednoduchá: většina tuků z nenasycených zdrojů, cíleně přidávat omega-3, nasycené v míře, trans minimalizovat. Žádná posedlost, jen rozumný poměr.</p>
+
+    <h2>4) Kolik tuků</h2>
+    <p>Praktické rozmezí je zhruba <strong>0,8–1,2 g tuku na kilogram tělesné hmotnosti denně</strong>, případně přibližně 20–35 % z celkového energetického příjmu. Tři věci, které je dobré držet v hlavě:</p>
+    <div class="points">
+      <ul>
+        <li><strong>Spodní hranice:</strong> nejdi dlouhodobě výrazně pod ~0,5–0,8 g/kg — pod tím hrozí dopad na hormony a vstřebávání vitaminů. Extrémně nízkotučné diety nejsou pro většinu lidí dobrý nápad.</li>
+        <li><strong>Horní část rozmezí</strong> vyhovuje těm, kdo preferují víc tuku a méně sacharidů a cítí se tak líp.</li>
+        <li>Po nastavení bílkovin a tuků <strong>doplní zbytek energie sacharidy</strong> (z minulé lekce).</li>
+      </ul>
+    </div>
+
+    <h2>5) Jak řídit tuky prakticky</h2>
+    <p>Nastav rozumnou spodní hranici a od ní stav nahoru — tuky nikdy nevyřazuj. Hlídej <strong>„skrytý" tuk</strong>: oleje na vaření, dresinky, ořechy a sýry jsou chutné a kaloricky husté, a právě tady se nejčastěji nechtěně přestřelí. Vyvažuj podle preference klienta — někdo má radši víc tuku a méně sacharidů, jiný opačně, a obojí funguje, pokud sedí bílkovina a celková bilance. A nezapomeň cílit omega-3: ryby 2× týdně nebo doplněk.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Tuky vysvětluju jako „nutné, ale snadno přehnatelné". Klient je nesmí vyřadit — jsou v sázce hormony a zdraví — ale taky nesmí zapomenout, jak rychle z nich naskáčou kalorie. Hrst ořechů a lžíce oleje navíc denně dokážou potichu vymazat celý deficit. Tak je nevyřazuju, jen hlídám: rozumná spodní hranice, většina z dobrých zdrojů, omega-3 navíc, a pozor na „skrytý" tuk v dresincích a olejích.</div>
+
+    <blockquote>Tuky nejsou nepřítel ani amulet. Jsou nutné, jen jich je v jídle míň, než se zdá — proto je řídíš, ne škrtáš.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč jsou tuky esenciální? <span class="tg">odpověď ▾</span></div><div class="aa">Jsou nutné pro tvorbu hormonů (včetně pohlavních), pro vstřebávání vitaminů A, D, E a K, tvoří buněčné membrány a nervovou tkáň a obsahují esenciální mastné kyseliny (omega-3 a omega-6), které si tělo neumí vyrobit.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolik kcal má gram tuku a co z toho plyne? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 9 kcal/g, tedy víc než dvojnásobek oproti bílkovinám a sacharidům (~4 kcal/g). Malé množství tuku znamená hodně kalorií, takže se s ním v deficitu snadno přestřelí.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Kterým tukům se vyplatí vyhýbat a které naopak cílit? <span class="tg">odpověď ▾</span></div><div class="aa">Vyhýbat se vyplatí trans tukům (průmyslově ztužené). Cíleně přidávat omega-3 z tučných ryb, kterých má většina lidí málo. Nenasycené tuky tvoří základ, nasycené jsou v míře v pořádku.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaké je praktické rozmezí příjmu tuků a proč nejít pod spodní hranici? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 0,8–1,2 g/kg tělesné hmotnosti (20–35 % energie). Dlouhodobě výrazně pod spodní hranici (~0,5–0,8 g/kg) jít nechceš, protože hrozí dopad na hormony a na vstřebávání vitaminů rozpustných v tucích.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kde se nejčastěji „skrývá" nechtěný tuk? <span class="tg">odpověď ▾</span></div><div class="aa">V olejích na vaření, v dresincích, v ořeších a v sýrech — chutné a kaloricky husté zdroje, kde se nejčastěji nenápadně přestřelí energie.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Pro modelového klienta v deficitu nastav cílový příjem tuků (v g/kg i % energie) a urči spodní hranici, pod kterou nepůjdeš. Pak najdi v jeho běžném dni dva zdroje „skrytého" tuku, kde by se dalo nenápadně ušetřit, aniž bys vyřadil zdravé tuky.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Liu AG, et al. A healthy approach to dietary fats: understanding the science and taking action. Nutr J. 2017;16(1):53.</li>
+        <li>Calder PC. Omega-3 fatty acids and inflammatory processes. Nutrients. 2010;2(3):355–374.</li>
+        <li>Mensink RP, et al. Effects of dietary fatty acids and carbohydrates on the ratio of serum total to HDL cholesterol. Am J Clin Nutr. 2003;77(5):1146–1155.</li>
+        <li>Aragon AA, et al. International society of sports nutrition position stand: diets and body composition. J Int Soc Sports Nutr. 2017;14:16.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m3-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
