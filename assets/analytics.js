@@ -53,43 +53,27 @@
   // Unikátní eventID pro deduplikaci s budoucím serverovým CAPI.
   function rnd() { return new Date().getTime().toString(36) + Math.random().toString(36).slice(2, 10); }
   function evId(prefix) { return prefix + '-' + rnd(); }
-  // Purchase: spočítej JEN JEDNOU (ochrana proti dvojímu započtení při obnovení/návratu
-  // na děkovací stránku). Klíč = ID objednávky z URL (pokud ho SimpleShop přidá), jinak
-  // jednou za relaci prohlížeče. Memoizováno na window, ať FB i GA dostanou stejný výsledek.
-  function purchaseInfo() {
-    if (window.__mbPurchase) return window.__mbPurchase;
-    var qs; try { qs = new URLSearchParams(location.search); } catch (e) { qs = null; }
-    var oid = qs && (qs.get('order') || qs.get('orderId') || qs.get('id'));
-    var fired = false;
-    try {
-      if (oid) { fired = !!localStorage.getItem('mb_p_' + oid); if (!fired) localStorage.setItem('mb_p_' + oid, '1'); }
-      else { fired = !!sessionStorage.getItem('mb_p'); if (!fired) sessionStorage.setItem('mb_p', '1'); }
-    } catch (e) {}
-    var info = { ok: !fired, id: 'purchase-' + (oid || rnd()) };
-    window.__mbPurchase = info;
-    window.__mbPurchaseEventId = info.id; // ať si ho server pro CAPI může vyzvednout
-    return info;
-  }
   // Která konverze patří k aktuální stránce.
-  // POZN.: Purchase se měří SERVEROVĚ přes Meta CAPI + GA4 (SimpleShop webhook → Cloudflare
-  // Worker, dedup přes event_id = číslo objednávky). Klientský Purchase proto ZÁMĚRNĚ
-  // neodpalujeme — jinak by se nákup dubloval. Děkovací stránka neměří nic.
+  // DŮLEŽITÉ: Purchase se měří VÝHRADNĚ SERVEROVĚ přes Meta CAPI + GA4 MP
+  // (SimpleShop produkt 42679 → webhook → Cloudflare Worker „ss-capi", dedup přes
+  // event_id = číslo objednávky). Klientský Purchase tady ZÁMĚRNĚ NEEXISTUJE — jinak
+  // by se nákup dubloval a rozbil dedup s CAPI. Děkovací stránky (/dekuji-*) neměří nic.
+  // Kdyby kdy přibyl client-side Purchase, MUSÍ mít eventID = pouze order_number.
   function pageConv() {
     var p = location.pathname;
-    if (/dekuji/.test(p))    return null; // /dekuji-videokurz: Purchase řeší server-side CAPI
+    if (/dekuji/.test(p))    return null; // Purchase řeší výhradně server-side CAPI
     if (/videokurz/.test(p)) return { kind: 'view', name: 'Videokurz výživy', id: 'videokurz', value: 800 };
     return null;
   }
   function fireConvFB() {
     var c = pageConv(); if (!c || !window.fbq) return;
-    var params = { content_name: c.name, content_type: 'product', content_ids: [c.id], value: c.value, currency: 'CZK' };
-    if (c.kind === 'purchase') { var pi = purchaseInfo(); if (!pi.ok) return; params.num_items = 1; fbq('track', 'Purchase', params, { eventID: pi.id }); }
-    else fbq('track', 'ViewContent', params, { eventID: evId('view') });
+    // Pouze ViewContent (horní trychtýř) — žádný client-side Purchase.
+    fbq('track', 'ViewContent', { content_name: c.name, content_type: 'product', content_ids: [c.id], value: c.value, currency: 'CZK' }, { eventID: evId('view') });
   }
   function fireConvGA() {
     var c = pageConv(); if (!c || !window.gtag) return;
-    if (c.kind === 'purchase') { var pi = purchaseInfo(); if (!pi.ok) return; gtag('event', 'purchase', { transaction_id: pi.id, value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] }); }
-    else gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
+    // Pouze view_item — purchase posílá do GA4 server-side (Measurement Protocol).
+    gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
   }
   function loadMetaPixelAndConvert() { loadMetaPixel(); fireConvFB(); }
   function wireConversions() {
