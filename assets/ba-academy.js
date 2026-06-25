@@ -133,6 +133,15 @@
         .catch(function () { return null; });
     },
 
+    // Podepsaná (dočasná) URL k souboru v Supabase Storage — jen pro přihlášené
+    // s přístupem (gating řeší RLS politika bucketu). Demo → null.
+    materialUrl: function (bucket, path) {
+      if (!LIVE) return Promise.resolve(null);
+      return client.storage.from(bucket).createSignedUrl(path, 300)
+        .then(function (r) { return (r && r.data && r.data.signedUrl) || null; })
+        .catch(function () { return null; });
+    },
+
     // Pohodlný gate pro stránku: když není přihlášen / nemá přístup, přesměruje.
     // V demo režimu nedělá nic (vše dostupné).
     requireAccess: function (product, redirectTo) {

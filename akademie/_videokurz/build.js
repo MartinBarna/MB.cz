@@ -51,6 +51,18 @@ const SECTIONS = [
   { key: 'live', name: 'Livestreamy členské sekce' },
   { key: 'doplnkova', name: 'Doplňková videa a novinky' },
 ];
+// Materiály ke stažení (hostované v Supabase Storage bucketu 'videokurz-materialy').
+// 'link' = otevře web (kalkulačka), 'file' = stáhne přes podepsanou URL.
+const BUCKET = 'videokurz-materialy';
+const MATERIALS = [
+  { ico: '🍳', t: 'Kuchařka — 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'kucharka-recepty.pdf' },
+  { ico: '🎧', t: 'Audiokniha o hubnutí', d: 'Kompletní audiokniha (ZIP)', file: 'audiokniha.zip' },
+  { ico: '🧮', t: 'Kalkulačka kalorií a makroživin', d: 'Online kalkulačka', link: '/kalkulacka-kalorii-a-makrozivin/' },
+  { ico: '📄', t: 'Výpočty hubnutí a nabírání', d: 'Tahák s výpočty (PDF)', file: 'vypocty.pdf' },
+  { ico: '📄', t: 'Videokurz — výpočty a přílohy', d: 'Doprovodné PDF', file: 'videokurz-prilohy.pdf' },
+  { ico: '📊', t: 'Report pro coache', d: 'Šablona s grafem (Excel)', file: 'report-coache.xlsx' },
+];
+
 function assign(v) {
   const ni = numinfo(v.title);
   if (ni && ni.mod >= 1 && ni.mod <= 8) return 'm' + ni.mod;
@@ -183,6 +195,13 @@ ${items}
     </div>`;
   }).join('\n');
 
+  const materialsHtml = MATERIALS.map(m => {
+    const action = m.link
+      ? `<a class="mbtn" href="${m.link}">Otevřít →</a>`
+      : `<button class="mbtn" type="button" data-file="${m.file}">Stáhnout ↓</button>`;
+    return `        <li class="mat"><span class="mico">${m.ico}</span><span class="minfo"><b>${esc(m.t)}</b><small>${esc(m.d)}</small></span>${action}</li>`;
+  }).join('\n');
+
   return `<!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -222,6 +241,17 @@ ${items}
   .lesson.done .lt { color:#8a8073; }
   .lesson .go { color:var(--gold); font-weight:700; font-size:.85rem; white-space:nowrap; }
   .note { text-align:center; color:#a89c8c; font-size:.8rem; margin-top:22px; }
+  .matcard { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:6px 18px 12px; margin:16px 0; }
+  .matcard h2 { font-size:1.08rem; padding:12px 0 8px; border-bottom:1px solid #f1eadf; }
+  .mats { list-style:none; }
+  .mat { display:flex; align-items:center; gap:12px; padding:12px 4px; border-bottom:1px solid #f6f1ea; }
+  .mat:last-child { border-bottom:none; }
+  .mico { font-size:1.3rem; width:30px; text-align:center; flex-shrink:0; }
+  .minfo { flex:1; display:flex; flex-direction:column; }
+  .minfo small { color:#8a8073; font-size:.8rem; }
+  .mbtn { background:var(--gold); color:#161616; font-weight:700; padding:9px 16px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.85rem; white-space:nowrap; }
+  .mbtn:hover { background:#161616; color:#fff; }
+  .mbtn[disabled] { opacity:.5; cursor:default; }
 </style>
 </head>
 <body>
@@ -236,6 +266,13 @@ ${items}
       <p>${ordered.length} video lekcí — od základů výživy přes tréninky až po livestreamy a bonusy.</p>
       <div class="bigbar"><span id="bigbar"></span></div>
       <div class="bigpct" id="bigpct">Tvůj postup: 0 / ${ordered.length} zhlédnuto</div>
+    </div>
+
+    <div class="matcard">
+      <h2>📎 Materiály ke stažení</h2>
+      <ul class="mats">
+${materialsHtml}
+      </ul>
     </div>
 
 ${modulesHtml}
@@ -276,6 +313,24 @@ ${modulesHtml}
         });
       } else { try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); } }
     }
+    var BUCKET='${BUCKET}';
+    function wireMaterials(){
+      document.querySelectorAll('.mbtn[data-file]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var file=btn.getAttribute('data-file');
+          if(!window.BA){ alert('Materiály jsou dostupné po přihlášení.'); return; }
+          var orig=btn.textContent; btn.textContent='Připravuji…'; btn.disabled=true;
+          window.BA.ready.then(function(){
+            window.BA.materialUrl(BUCKET, file).then(function(url){
+              btn.textContent=orig; btn.disabled=false;
+              if(url){ window.open(url, '_blank'); }
+              else { alert('Soubor zatím není dostupný nebo nemáš aktivní přístup. Pokud jsi právě zaplatil, zkus to za chvíli.'); }
+            });
+          });
+        });
+      });
+    }
+    wireMaterials();
     boot();
   </script>
 </body>
