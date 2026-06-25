@@ -39,6 +39,7 @@ jobs:
             scripts/**
             akademie/_pdf/**
             akademie/_supabase/**
+            akademie/_videokurz/**
             **/*.md
             CNAME
             .nojekyll
