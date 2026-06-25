@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hormony a endokrinní systém — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 15 — Anatomie a pohyb</div>
+    <h1>Hormony a endokrinní systém</h1>
+
+    <p class="lead">Hormony jsou chemičtí poslové, kteří reagují na to, jak člověk žije — ne kouzlo a u většiny lidí ani „rozbitý systém“. <strong>Tvoje práce kouče je rozumět základům natolik, abys oddělil skutečnost od hype a věděl, kde končí životospráva a začíná lékař.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co jsou hormony a jak ovlivňují složení těla, hlad a regeneraci.</li>
+        <li>Klíčové hormony pro kouče — inzulín, kortizol, testosteron, leptin/ghrelin, štítná žláza a růstový hormon.</li>
+        <li>Co s hormony reálně dělá spánek, trénink, strava a stres.</li>
+        <li>Jak rozpoznat hype a mýty o „hormonální optimalizaci“.</li>
+        <li>Kde je hranice role kouče vůči lékaři a endokrinologovi.</li>
+      </ul>
+    </div>
+
+    <h2>1) Hormony jsou poslové, ne kouzlo</h2>
+    <p>Hormony jsou látky, které tělo vyplavuje do krve, aby řídilo procesy jako růst, metabolismus, hlad, regeneraci, reprodukci nebo reakci na stres. Ve fitness se kolem nich točí spousta marketingu — „nakopni si testosteron“, „zablokuj kortizol“, „resetuj metabolismus“. Realita je střízlivější.</p>
+    <p>Pro naprostou většinu lidí nejsou hormony „rozbité“ a nepotřebují žádné triky. Reagují na to, jak člověk jí, spí, trénuje a zvládá stres. Když se postará o základ, hormony se většinou postarají samy.</p>
+    <blockquote>Hormony nejsou samostatný problém k vyřešení — jsou zrcadlo životosprávy.</blockquote>
+
+    <h2>2) Klíčové hormony pro kouče</h2>
+    <p><strong>Inzulín.</strong> Vyplavuje se po jídle a pomáhá ukládat živiny do buněk. Je nezbytný a NENÍ to „hormon tloustnutí“, jak se straší. Klíčová je dlouhodobá citlivost na inzulín — trénink a rozumná hmotnost ji zlepšují, nadbytek tuku a nečinnost zhoršují (cesta k inzulínové rezistenci a diabetu 2. typu). Pomáhá pohyb, silový trénink, rozumný příjem, dostatek vlákniny a bílkovin a hubnutí přebytečného tuku.</p>
+    <p><strong>Kortizol.</strong> „Stresový hormon“, ale ne nepřítel — mobilizuje energii a má přirozený denní rytmus (ráno vysoký, večer nízký). Problém je chronicky zvýšený kortizol z dlouhodobého stresu, nedostatku spánku a přetížení. Řešením není „blokátor kortizolu“, ale řízení stresu, spánku a tréninkové zátěže.</p>
+    <p><strong>Testosteron.</strong> Klíčový anabolický hormon (víc u mužů, ale důležitý i u žen v menším množství) — podporuje budování svalu, regeneraci, libido a náladu. Přirozeně ho podporuje silový trénink, dostatek spánku, rozumný tělesný tuk a dostatek energie. Klesá při chronickém stresu, nedostatku spánku, velkém deficitu a s věkem. Běžné „testo boostery“ mají většinou minimální reálný efekt.</p>
+    <p><strong>Leptin a ghrelin.</strong> Hormony sytosti a hladu: leptin signalizuje dostatek energie (z tukové tkáně), ghrelin signalizuje hlad (ze žaludku). V dietě leptin klesá a ghrelin roste — tělo „křičí“, abys jedl víc.</p>
+    <p><strong>Štítná žláza.</strong> Řídí rychlost metabolismu. Při dlouhém velkém deficitu se hormony mohou mírně snižovat jako součást metabolické adaptace. Skutečná porucha (např. hypotyreóza) je ale lékařská diagnóza, ne něco, co „spravíš detoxem“.</p>
+    <p><strong>Růstový hormon.</strong> Podporuje regeneraci a metabolismus, nejvíc se vyplavuje během hlubokého spánku. Praktický závěr není „jak si nakopnout růsťák“, ale prostě: kvalitní spánek je nejlepší přirozená podpora regenerace.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient v dietě píše, že má pořád hlad a cítí se „slabý“, nevykládám mu, že selhal silou vůle. Vysvětlím mu leptin a ghrelin — že tělo dělá přesně to, co má, a žene ho jíst víc. Z hladu se rázem stane fyziologie, se kterou umíme pracovat: sytá jídla, víc bílkovin a vlákniny, občasný diet break. Pochopení sníží frustraci víc než jakákoli „silná vůle“.</div>
+
+    <h2>3) Co s hormony reálně dělá životospráva</h2>
+    <p>Místo honby za triky veď klienta k základům, které mají na hormony největší a podložený dopad:</p>
+    <div class="card">
+      <p><strong>Spánek.</strong> Nejvíc podceňovaná páka. Nedostatek spánku zhoršuje citlivost na inzulín, zvyšuje hlad, zvyšuje kortizol a snižuje testosteron. Kvalitní spánek je hormonální „údržba zdarma“.</p>
+      <p><strong>Trénink.</strong> Silový trénink zlepšuje citlivost na inzulín a podporuje zdravou regulaci. Pohyb je lék.</p>
+      <p><strong>Výživa a složení těla.</strong> Rozumná hmotnost a kvalitní strava (bílkoviny, vláknina, dost mikroživin) udržují rovnováhu. Extrémy — hladovění i obezita — ji narušují.</p>
+      <p><strong>Řízení stresu.</strong> Chronický stres znamená chronicky vyšší kortizol s dopadem na vše výše. Zvládání stresu a odpočinek jsou hormonální nástroj.</p>
+    </div>
+
+    <h2>4) Hype a mýty, které odmítnout</h2>
+    <p><strong>„Resetuj/nakopni metabolismus za X dní.“</strong> Marketing. Hormony se řídí dlouhodobou životosprávou, ne zázračným protokolem.</p>
+    <p><strong>„Inzulín za všechno může / sacharidy večer ničí hormony.“</strong> Přehnané. Rozhoduje celkový příjem a životní styl, ne jednotlivý hormon nebo čas jídla.</p>
+    <p><strong>„Testo boostery / detox kortizolu.“</strong> Většinou neúčinné nebo zbytečné. Základ má mnohonásobně větší efekt.</p>
+    <p><strong>„Mám pomalý metabolismus / rozbité hormony.“</strong> U většiny lidí mýtus nebo nadsázka; skutečné poruchy patří k lékaři, ne k samoléčbě.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Buď ten klidný, věcný hlas, který nestraší a neslibuje zázraky. Když klient přijde s článkem o „resetu hormonů za 7 dní“, neřeším boj. Zeptám se, jak spí, kolik trénuje a jak se stravuje — a ukáže se, že tam je 90 % řešení. Důvěru si nezískáš strašením, ale tím, že nasměruješ pozornost na to, co opravdu funguje.</div>
+
+    <h2>5) Hranice role kouče</h2>
+    <p>Jako kouč pracuješ s životosprávou, která hormony přirozeně podporuje. Neděláš diagnostiku hormonálních poruch (štítná žláza, PCOS, nízký testosteron jako diagnóza), neinterpretuješ krevní testy a nepředepisuješ medikaci ani žádné rady ohledně zakázaných látek.</p>
+    <p>Při varovných signálech — extrémní únava, nevysvětlitelné změny váhy, ztráta menstruace, příznaky poruchy štítné žlázy, problémy s plodností nebo libidem — odešli klienta k lékaři. Ideál je spolupráce: ty řešíš životosprávu, lékař medicínu.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Je inzulín „hormon tloustnutí“, jak se často tvrdí? <span class="tg">odpověď ▾</span></div><div class="aa">Ne. Inzulín je nezbytný hormon, který pomáhá ukládat živiny do buněk. Rozhodující je dlouhodobá citlivost na inzulín — tu zlepšuje pohyb, silový trénink a rozumná hmotnost, zhoršuje ji nadbytek tuku a nečinnost.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je skutečným problémem u kortizolu? <span class="tg">odpověď ▾</span></div><div class="aa">Ne kortizol sám o sobě — má přirozený denní rytmus a pomáhá zvládat zátěž. Problém je chronicky zvýšený kortizol z dlouhodobého stresu, nedostatku spánku a přetížení. Řešením je řízení stresu, spánku a tréninkové zátěže, ne „blokátor“.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč je dieta z hlediska hormonů těžká? <span class="tg">odpověď ▾</span></div><div class="aa">V dietě klesá leptin (signál sytosti) a roste ghrelin (signál hladu), takže tělo žene člověka jíst víc. Hlad v dietě tak není selhání vůle, ale fyziologie — dá se s ní pracovat sytými jídly, bílkovinami, vlákninou a diet breaky.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Které čtyři faktory mají na hormony největší reálný dopad? <span class="tg">odpověď ▾</span></div><div class="aa">Spánek, trénink, výživa a složení těla, a řízení stresu. Tyto základy mají mnohonásobně větší efekt než boostery, detoxy nebo „resetovací“ protokoly.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kde končí role kouče a začíná lékař? <span class="tg">odpověď ▾</span></div><div class="aa">Kouč pracuje s životosprávou, která hormony přirozeně podporuje. Nediagnostikuje poruchy, neinterpretuje krevní testy ani nepředepisuje léčbu. Při varovných signálech (extrémní únava, nevysvětlitelné změny váhy, ztráta menstruace, problémy s plodností) odešle klienta k lékaři.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U jednoho svého klienta projdi čtyři hormonální páky — spánek, trénink, výživu a stres — a urči, která je nejslabší. Navrhni mu jednu konkrétní změnu právě v této oblasti místo jakéhokoli doplňku nebo „triku“.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Hackney AC. Hormonal mechanisms in exercise and training. (přehled endokrinních reakcí na zátěž).</li>
+        <li>Leproult R, Van Cauter E. Effect of sleep loss on testosterone and metabolic hormones. JAMA / Sleep.</li>
+        <li>Trexler ET, et al. Metabolic adaptation to weight loss. J Int Soc Sports Nutr. 2014.</li>
+        <li>Schoenfeld BJ. The role of hormones in muscle hypertrophy (kritický pohled na akutní hormonální výkyvy z tréninku).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l15', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
