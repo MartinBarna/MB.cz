@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energetická bilance — zákon, který platí vždy — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 3 · Lekce 1 — Výživa a energie</div>
+    <h1>Energetická bilance — zákon, který platí vždy</h1>
+
+    <p class="lead">Tohle je nejdůležitější lekce celého výživového modulu — a zároveň ta, kolem které je nejvíc mýtů. <strong>Energetická bilance je fyzikální zákon, ne dieta ani názor.</strong> Ať klient drží jakýkoli „směr“, funguje jen tehdy, když přes něj nastaví správnou bilanci — a tu umíš řídit lidsky, ne jen přes appku.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je energetická bilance a proč rozhoduje o hmotnosti nade vším ostatním.</li>
+        <li>Z čeho se skládá energetický výdej — BMR, NEAT, TEF a cílený pohyb.</li>
+        <li>Proč „kalorie z různých jídel“ nejsou stejně užitečné, i když bilance platí.</li>
+        <li>Praktické cesty, jak bilanci řídit BEZ posedlého počítání.</li>
+        <li>Proč je odhad výdeje z kalkulaček jen startovní bod, ne svatá pravda.</li>
+      </ul>
+    </div>
+
+    <h2>1) Zákon: energie dovnitř vs. energie ven</h2>
+    <p>Tělo se řídí termodynamikou. Když dlouhodobě přijímáš víc energie, než vydáš, ukládáš a přibíráš. Když míň, čerpáš z rezerv a hubneš. Když stejně, držíš. Přebytek znamená nárůst hmotnosti, deficit úbytek, rovnováha udržení.</p>
+    <p>Tohle platí vždy. Žádná potravina ani načasování tenhle zákon neobejde. Proto když klient „nehubne“, neznamená to, že má rozbitý metabolismus — skoro vždy to znamená, že bilance není tam, kde si myslí. Nejčastěji jde o podhodnocený příjem nebo nadhodnocený výdej.</p>
+    <blockquote>Zákon platí, ale lidé nejsou laboratoř. Příjem i výdej kolísají, odhady jsou nepřesné, voda mate váhu. Proto bilanci řídíme přes trendy v čase, ne přes jeden den.</blockquote>
+
+    <h2>2) Z čeho se skládá výdej</h2>
+    <p>Celkový denní výdej (TDEE) má čtyři složky a jejich poměr překvapí většinu lidí:</p>
+    <div class="card">
+      <p><strong>BMR / klidový výdej (~60–70 %):</strong> energie na základní fungování — orgány, dýchání. Největší kus, daný hlavně tělesnou a beztukovou hmotou.</p>
+      <p><strong>NEAT (~15–30 %):</strong> pohyb mimo cílený trénink — chůze, stání, fidgeting, běžné úkony. Obrovsky variabilní a podceňovaný; při dietě klesá, protože tělo „šetří“.</p>
+      <p><strong>TEF (~10 %):</strong> termický efekt jídla, tedy energie na trávení. Nejvyšší TEF mají bílkoviny.</p>
+      <p><strong>Cílený pohyb / trénink (variabilní):</strong> u většiny lidí menší kus, než si myslí.</p>
+    </div>
+    <p>Praktický důsledek: trénink je skvělý pro zdraví, sílu a sval, ale samotné „spalování v posilovně“ je malý kousek výdeje. Často víc změní NEAT a celkový jídelníček než hodina kardia.</p>
+
+    <h2>3) „Kalorie je kalorie“ — ano i ne</h2>
+    <p>Tady se to často zamotá, tak pozor. Pro <strong>hmotnost</strong> (kolik vážíš) rozhoduje bilance — v deficitu zhubneš i na „nezdravém“ jídle, v přebytku přibereš i na „zdravém“. Pro <strong>kvalitu výsledku, zdraví a udržitelnost</strong> ale na složení záleží hodně.</p>
+    <p>Bílkoviny chrání sval a víc zasytí; vláknina a celistvá jídla zasytí na méně kalorií; mikroživiny drží zdraví; hyperchutná jídla snadno přejíš. Obě věty jsou proto pravdivé: bilance řídí hmotnost A zároveň záleží, odkud kalorie pocházejí.</p>
+    <blockquote>Tohle propojení — sytost ← hustota jídla ← dodržení deficitu — je jádro celého výživového modulu.</blockquote>
+
+    <h2>4) Jak řídit bilanci bez posedlého počítání</h2>
+    <p>Počítání kalorií je jeden nástroj, ne jediný. Vyber podle toho, co klient dlouhodobě utáhne:</p>
+    <div class="card">
+      <p><strong>Kroky a porce</strong> (pro většinu lidí): řízení velikosti porcí, talířová metoda (půl talíře zelenina, čtvrt bílkovina, čtvrt sacharid), dostatek bílkovin a denní kroky. Žádná appka.</p>
+      <p><strong>Ruka jako míra:</strong> dlaň = porce bílkovin, pěst = zelenina, hrst = sacharidy, palec = tuky. Jednoduché a přenosné.</p>
+      <p><strong>Tracking</strong> (pro ty, komu sedí čísla): vážení a appka — skvělé pro edukaci a přesné cíle, ale ne pro každého a ne navždy.</p>
+      <p><strong>Změna prostředí a návyků:</strong> často nejúčinnější — méně tekutých kalorií, méně hyperchutných jídel doma, víc sytých celistvých jídel.</p>
+    </div>
+    <p>Pravidlo zní: nejlepší metoda je ta, kterou klient dlouhodobě udrží a která ho dovede k cíli. Posedlé počítání, které vede k záchvatům nebo úzkosti, je horší než hrubý, ale udržitelný odhad.</p>
+
+    <h2>5) Odhad výdeje je startovní bod</h2>
+    <p>Kalkulačky i naše vlastní vzorce dávají jen <strong>odhad</strong> výdeje. Realita se liší klient od klienta — genetika, NEAT, historie diet, hormony. Proto postupuj v krocích: spočítej startovní odhad, nastav rozumný cíl (deficit či přebytek, ne extrém), sleduj trend 2–3 týdny (hmotnost v čase, míry, fotky, výkon, energie) a uprav podle reality, ne podle tabulky.</p>
+    <blockquote>Čísla z kalkulačky nejsou pravda o klientovi — jsou hypotéza, kterou ověříš v praxi.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům říkám: „Kalorie nejsou trest, je to jednotka energie. A nemusíš je počítat, abys je řídil.“ U někoho nasadím tracking na pár týdnů jako učební nástroj, ať vidí realitu porcí, pak ho sundáme. U jiného jedeme jen talíř, bílkovinu a kroky. Cíl je vždycky stejný: nastavit správnou bilanci způsobem, který ten konkrétní člověk utáhne celé roky.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co rozhoduje o změně tělesné hmotnosti nade vším ostatním? <span class="tg">odpověď ▾</span></div><div class="aa">Energetická bilance — tedy přebytek, deficit, nebo rovnováha mezi přijatou a vydanou energií.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj čtyři složky energetického výdeje. <span class="tg">odpověď ▾</span></div><div class="aa">BMR / klidový výdej, NEAT (pohyb mimo trénink), TEF (termický efekt jídla) a cílený pohyb / trénink.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> V jakém smyslu „kalorie je kalorie“ platí a v jakém ne? <span class="tg">odpověď ▾</span></div><div class="aa">Pro hmotnost platí — bilance rozhoduje. Pro kvalitu, zdraví a udržitelnost ne, protože složení jídla ovlivňuje sytost, sval, zdraví a to, jak snadno bilanci vůbec udržíš.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj dvě cesty řízení bilance bez počítání kalorií. <span class="tg">odpověď ▾</span></div><div class="aa">Například talířová metoda a porce, ruka jako míra, nebo změna prostředí a návyků (stačí dvě z nich).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč je číslo z kalkulačky jen startovní bod? <span class="tg">odpověď ▾</span></div><div class="aa">Je to jen odhad — realita se liší dle klienta (genetika, NEAT, historie diet, hormony). Proto sleduj trend v čase a uprav podle praxe, ne podle tabulky.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U modelového klienta spočítej startovní odhad výdeje libovolným zavedeným vzorcem, navrhni rozumný deficit a hlavně napiš, kterou metodu řízení bilance bys u něj zvolil a proč (počítání vs. porce/ruka/prostředí). Pak popiš, jak budeš po 2–3 týdnech vyhodnocovat trend a upravovat.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Hall KD, et al. Energy balance and its components: implications for body weight regulation. Am J Clin Nutr. 2012;95(4):989–994.</li>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+        <li>Westerterp KR. Diet induced thermogenesis. Nutr Metab (Lond). 2004;1(1):5.</li>
+        <li>Hall KD, Guo J. Obesity Energetics: Body Weight Regulation and the Effects of Diet Composition. Gastroenterology. 2017;152(7):1718–1727.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m3-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
