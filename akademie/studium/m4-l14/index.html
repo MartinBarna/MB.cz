@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trénink dětí a dospívajících — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 4 · Lekce 14 — Programování tréninku</div>
+    <h1>Trénink dětí a dospívajících</h1>
+
+    <p class="lead"><strong>„Posilování zastaví růst“ je jeden z nejhouževnatějších mýtů ve fitness — a je vědecky neopodstatněný. Vhodně vedený silový trénink je pro děti a dospívající bezpečný i prospěšný. V této lekci si ujasníme, jak ho dělat zodpovědně a jak uklidnit vystrašené rodiče fakty.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je strach ze silového tréninku u dětí mýtus a co skutečně způsobuje úrazy mladých.</li>
+        <li>Co pohyb a posilování mladým reálně přináší — a proč u dětí nečekáme svalovou hmotu.</li>
+        <li>Jak vést trénink podle věku a vyspělosti, s pravidlem „technika před zátěží“.</li>
+        <li>Na co dát pozor: dohled, progrese, raná specializace, regenerace, psychika a tlak.</li>
+        <li>Jak komunikovat s mladým klientem i s jeho rodiči a kdy znát své hranice.</li>
+      </ul>
+    </div>
+
+    <h2>1) Rozbijme největší mýtus</h2>
+    <p>„Posilování zastaví růst.“ „Děti by neměly zvedat činky.“ Tyhle věty slyšel skoro každý — a nemají oporu v důkazech. Odborné společnosti se shodují, že vhodně vedený silový trénink je pro děti a dospívající bezpečný a prospěšný, pokud je správně dávkovaný a vedený. Představa, že zátěž poškodí růstové ploténky, neodpovídá datům.</p>
+    <p>Realita je vlastně opačná: nejčastější příčinou úrazů u mladých není řízené posilování, ale nekontrolovaný pohyb, špatná technika bez dohledu a přetížení z jednostranného sportu. Jako kouč budeš mladé klienty — sportovce i „obyčejné“ děti — řešit čím dál častěji, takže tenhle rámec se ti bude hodit.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když za mnou přijde nervózní rodič, neargumentuju emocemi, ale klidem a fakty. Řeknu rovnou: „Růst to nezastaví, naopak — silnější tělo se hůř zraní. A vidíte to vy sami: budeme učit pohyb správně, žádné maximálky.“ Transparentnost obavu skoro vždy rozpustí.</p></div>
+
+    <h2>2) Co pohyb a posilování mladým reálně dává</h2>
+    <p>Přínosy jdou daleko za samotnou sílu. Silnější svaly, šlachy, kosti a klouby znamenají lepší ochranu před úrazy — ve sportu i v běžném životě. K tomu se přidávají lepší pohybové dovednosti, koordinace a držení těla, zdravější vztah k pohybu a tělu, sebevědomí i sociální rozměr. U sportujících dětí navíc roste výkon a odolnost vůči přetížení z jejich sportu a předchází se problémům z nečinnosti.</p>
+    <blockquote>Před pubertou děti silově reagují hlavně nervově — lepší koordinací a zapojením svalů, ne výrazným nárůstem hmoty. Chybí na to hormonální prostředí, a to je naprosto v pořádku.</blockquote>
+    <p>Cíl u dětí proto není „nabírat svaly“, ale naučit se pohyb, sílit funkčně a vybudovat zdravý návyk. Když tohle pochopíš ty i rodič, zmizí zbytečný tlak na čísla.</p>
+
+    <h2>3) Zásady podle věku a vyspělosti</h2>
+    <p>Ber věk jen orientačně — vždy rozhoduje individuální vyspělost, ne číslo v občance.</p>
+    <div class="card">
+      <p><strong>Mladší děti:</strong> důraz na hru, pestrý pohyb a základní pohybové dovednosti (běh, skok, hod, šplh, kotoul) — tělesnou gramotnost. Posilování formou vlastní váhy a hry, ne strukturovaný „gym“ plán. Cílem je radost z pohybu a široký pohybový základ.</p>
+      <p><strong>Starší děti / předpuberta:</strong> lze zařadit lehký strukturovaný silový trénink s důrazem na techniku a lehkou až střední zátěž (často vlastní váha, lehké náčiní). Učíme správné vzorce — dřep, tah, tlak — s minimální zátěží. Stále pestrost a zábava.</p>
+      <p><strong>Dospívající (puberta a po ní):</strong> s nástupem hormonálních změn roste schopnost budovat sval i sílu. Lze postupně přidávat strukturovanější trénink s progresí, stále s perfektní technikou před zátěží. Blížíme se „dospělému“ tréninku, ale opatrněji a s respektem k vývoji.</p>
+    </div>
+    <p>Průřezové pravidlo platí v každém věku: <strong>technika a kontrola před zátěží</strong>. Naučit pohyb správně je důležitější než kolik kil se zvedne.</p>
+
+    <h2>4) Na co si dát pozor</h2>
+    <p>Bezpečí stojí na několika mantinelech. Mladí potřebují <strong>kvalifikovaný dohled</strong> a učení techniky — žádné experimentování s těžkými vahami bez vedení. Zátěž a progrese musí být přiměřené: žádné maximálky ani ego-lifting, jen postupné přidávání v dobré technice.</p>
+    <p>Zásadní je rozlišit zdroj rizika. Časté úrazy mladých sportovců pramení z objemu a opakování jednoho sportu — z rané specializace bez dostatku regenerace a pestrosti, ne z posilování. Doplňkové posilování naopak pomáhá. Proto se rané specializaci vyhýbej: pestrost více pohybů a sportů je v dětství zdravější a dlouhodobě výhodnější.</p>
+    <p>Mladé tělo roste a potřebuje spánek, výživu a odpočinek — hlídej únavu a nepřetěžuj. A pozor na psychiku: nezdravý tlak na výkon nebo vzhled (od rodičů, trenérů, sociálních sítí) je reálný problém. U dospívajících sleduj signály nezdravého vztahu k jídlu a tělu; při podezření odešli klienta k odborníkovi.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> U mladých sportovců se ptám nejdřív na to, kolik už toho mají — kolik tréninků jejich sportu, kolik zápasů, kolik spánku. Většinou nepřidávám zátěž, ale ubírám objem a doplňuju chybějící pohyby. Posilovna tu není navíc — je to pojistka proti přetížení z jejich hlavního sportu.</p></div>
+
+    <h2>5) Komunikace s klientem a rodiči</h2>
+    <p>S rodiči očekávej obavy a uklidni je fakty: při správném vedení je silový trénink bezpečný a prospěšný a „zastavení růstu“ je mýtus. Buď transparentní v tom, jak trénink vedeš a proč. S dítětem nebo teenagerem dělej z pohybu radost, ne dřinu — buduj pozitivní vztah k tělu a pohybu, což je dar na celý život, a vyhni se srovnávání a tlaku.</p>
+    <p>U mladých nehraješ o rychlý výsledek, ale o základ, návyk a zdraví na desítky let dopředu — trpělivost a radost váží víc než krátkodobý výkon. A znej hranice: u zdravotních otázek, výrazných potíží nebo nezdravých vzorců spolupracuj s pediatrem či jiným odborníkem. Bezpečí mladého klienta je vždy na prvním místě.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Je pravda, že silový trénink u dětí zastaví růst? <span class="tg">odpověď ▾</span></div><div class="aa">Ne, je to mýtus bez opory v důkazech. Vhodně vedený silový trénink je pro děti a dospívající bezpečný a prospěšný. Představa o poškození růstových plotének neodpovídá datům.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je nejčastější skutečnou příčinou úrazů u mladých? <span class="tg">odpověď ▾</span></div><div class="aa">Nekontrolovaný pohyb, špatná technika bez dohledu a přetížení z jednostranného sportu (raná specializace) — nikoli řízené posilování. Doplňkové posilování naopak riziko snižuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč u dětí před pubertou nečekáme výrazný nárůst svalové hmoty? <span class="tg">odpověď ▾</span></div><div class="aa">Chybí hormonální prostředí pro budování hmoty. Děti reagují hlavně nervově — lepší koordinací a zapojením svalů. Cílem proto není „nabírat svaly“, ale učit se pohyb a budovat zdravý návyk.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaké je průřezové pravidlo platné v každém věku? <span class="tg">odpověď ▾</span></div><div class="aa">Technika a kontrola pohybu vždy před zátěží. Naučit pohyb správně je důležitější než kolik kil se zvedne — žádné maximálky ani ego-lifting.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak přistupovat k nervóznímu rodiči? <span class="tg">odpověď ▾</span></div><div class="aa">Klidem a fakty: vysvětlit, že při správném vedení je trénink bezpečný a prospěšný a že „zastavení růstu“ je mýtus. Být transparentní v tom, jak a proč trénink vedeš, a myslet dlouhodobě.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Připrav si jednoduchý třívětný „skript“ pro nervózního rodiče dítěte, který klidně a fakticky vysvětlí, proč je vhodně vedený silový trénink bezpečný, jak ho povedeš (technika před zátěží, žádné maximálky) a proč myslíš dlouhodobě. Nahlas si ho vyzkoušej, ať ti zní přirozeně.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Lloyd RS, et al. National Strength and Conditioning Association Position Statement on Long-Term Athletic Development. J Strength Cond Res. 2016.</li>
+        <li>Faigenbaum AD, et al. Youth resistance training: position statement. J Strength Cond Res.</li>
+        <li>Bergeron MF, et al. International Olympic Committee consensus statement on youth athletic development. Br J Sports Med. 2015.</li>
+        <li>Myer GD, et al. Sports specialization, part of a healthy lifestyle or increased injury risk? Sports Health.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m4-l14', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

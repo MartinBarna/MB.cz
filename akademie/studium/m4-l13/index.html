@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trénink doma a s minimem vybavení — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 4 · Lekce 13 — Programování tréninku</div>
+    <h1>Trénink doma a s minimem vybavení</h1>
+
+    <p class="lead"><strong>Spousta klientů se do posilovny nedostane — kvůli času, penězům, ostychu nebo péči o děti. Když pro ně umíš postavit kvalitní plán, otevíráš si velký trh a pomáháš lidem, které by jinak nikdo neobsloužil. A domácí trénink rozhodně není náhražka pro lenochy: svaly nereagují na činku, ale na napětí, blízkost selhání a progresivní přetížení — a to vytvoříš i bez vybavené posilovny.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak postavit funkční celotělový plán jen s vlastní vahou nebo minimem náčiní.</li>
+        <li>Jak tvořit progresivní přetížení, i když nemáš těžší činky.</li>
+        <li>Jak pokrýt všechny pohybové vzory doma a kde leží reálné limity (dolní polovina, záda).</li>
+        <li>Kdy domácí trénink bohatě stačí a kdy je čas poctivě doporučit posilovnu.</li>
+        <li>Jak z domácího tréninku udělat hodnotnou, prodejnou službu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Princip nad vybavením</h2>
+    <p>Než začneš řešit, jaké náčiní klientovi chybí, vrať se k principu. Sval neví, jestli na něj tlačí osmdesátikilová činka nebo tvoje vlastní váha v těžké variantě cviku. Reaguje na mechanické napětí, na práci blízko selhání a na to, že podnět v čase roste. Tohle je dobrá zpráva: všechny tři páky umíš ovládat i v obýváku.</p>
+    <p>Domácí trénink s vlastní vahou dokáže u většiny lidí — hlavně u začátečníků a středně pokročilých — přinést skutečné výsledky: sílu, svaly, kondici i zdraví. Není to ústupek, je to plnohodnotná cesta, jen jdeš jinými dveřmi než přes nakládací činky.</p>
+    <blockquote>Svaly nereagují na „činku“, ale na napětí, blízkost selhání a progresivní přetížení.</blockquote>
+
+    <h2>2) Jak tvořit progresi bez těžkých vah</h2>
+    <p>Nejčastější obava zní: „Jak budu přidávat, když nemám těžší činky?“ Kilogramy jsou ale jen jedna z mnoha pák. Progresivní přetížení doma stavíš takto:</p>
+    <p><strong>Přidání opakování a sérií</strong> — nejjednodušší cesta: v čase prostě uděláš víc práce. <strong>Ztížení varianty cviku</strong> — postupuj od lehčí k těžší verzi téhož pohybu (klik na kolenou → klik → klik s nohama výš → klik jednoruč; dřep → výpad → bulharský dřep → dřep na jedné noze). Tohle je hlavní motor progrese u vlastní váhy. <strong>Zpomalení tempa</strong> — pomalá excentrická fáze a pauzy v napětí dramaticky zvyšují náročnost bez jediného kila navíc. <strong>Zkrácení odpočinku</strong>, <strong>zvětšení rozsahu pohybu</strong> a <strong>přiblížení k selhání</strong> doplňují arzenál.</p>
+    <p>Výzkum (Schoenfeld) přitom potvrzuje, že i nízká zátěž blízko selhání staví sval srovnatelně s vyšší zátěží. Tyto nástroje ti stačí na měsíce smysluplné progrese, aniž bys sáhl po jediné čince.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Nepiš klientovi do plánu jen „3× klik“. Napiš mu jasné pravidlo pro postup: „Až zvládneš 3× 12 kliků v čisté technice, příští blok přejdi na kliky s nohama na židli.“ Klient pak ví, kdy a kam posunout — a progrese běží sama, i když u toho nestojíš.</div>
+
+    <h2>3) Levné vybavení, které posune možnosti</h2>
+    <p>Pár kousků za málo peněz výrazně rozšíří, co s klientem můžeš dělat. <strong>Odporové gumy</strong> jsou levné, skladné a přidají odpor k tahům, tlakům i dřepům — hlavně zachrání záda, která se doma pokrývají nejhůř. <strong>Hrazda do dveří</strong> odemyká shyby a přítahy, tedy klíčový tahový vzor pro horní polovinu. <strong>Nastavitelné jednoručky nebo kettlebell</strong> obrovsky rozšíří progresi u tahů, dřepů, tlaků i swingů. A když nic z toho není, poslouží <strong>batoh se zátěží</strong> (knihy, lahve s vodou) a běžný nábytek — <strong>židle, gauč, schody</strong> — pro výšky, výpady, dipy a step-upy.</p>
+    <p>Pravidlo: i s pouhou gumou, hrazdou a improvizovanou zátěží sestavíš plnohodnotný celotělový plán.</p>
+
+    <h2>4) Pokrytí pohybových vzorů doma</h2>
+    <p>Stejně jako v posilovně i doma pokryj základní pohybové vzory, ať plán nemá díry:</p>
+    <div class="card">
+      <ul style="margin-left:1.1rem;">
+        <li><strong>Dolní (dřep):</strong> dřepy, výpady, bulharské dřepy, dřep na jedné noze, step-upy, výskoky.</li>
+        <li><strong>Kyčelní záklon / zadní řetězec:</strong> hip thrust o gauč, mrtvý tah s gumou či zátěží, „good morning“ s gumou, asistovaný nordic curl.</li>
+        <li><strong>Horizontální tlak:</strong> kliky a jejich varianty (sklon, úzké, archerské, jednoruč).</li>
+        <li><strong>Horizontální tah:</strong> veslování s gumou, „inverted row“ pod stolem či tyčí.</li>
+        <li><strong>Vertikální tlak:</strong> pike push-up, tlak s gumou nad hlavu, práce ve stoji na rukou u pokročilých.</li>
+        <li><strong>Vertikální tah:</strong> shyby a přítahy na hrazdě, stahování gumy.</li>
+        <li><strong>Core a nošení:</strong> plank a jeho varianty, dead bug, nošení improvizované zátěže.</li>
+      </ul>
+    </div>
+    <p>Buď přitom upřímný k limitům. Největší slabinou domácího tréninku je těžké zatížení dolní poloviny a zad. Pokročilý klient časem přeroste možnosti vlastní váhy u nohou — jednonohé dřepy pomohou, ale i ty mají strop — a těžký tah či dřep doma plně nenahradíš. Právě tady se rodí rozhodnutí, jestli přidat náčiní, nebo zamířit do fitka.</p>
+
+    <h2>5) Kdy doma stačí a kdy doporučit posilovnu</h2>
+    <p><strong>Doma bohatě stačí</strong> začátečníkovi a středně pokročilému se širokým cílem (zdraví, kondice, hubnutí, základní svaly a síla). Stačí i klientovi, který by jinak necvičil vůbec — domácí trénink, který reálně dělá, vždycky porazí posilovnu, kam nikdy nepůjde. A stačí ve fázích života, kde na fitko není čas (malé děti, časté cestování).</p>
+    <p><strong>Čas zvážit posilovnu nebo víc zátěže</strong> nastává u pokročilého klienta, který přerostl progresi vlastní vahou (zvlášť nohy a záda), u cíle výrazného nárůstu síly či svalové hmoty u trénovaného člověka a u specifických cílů jako silový sport nebo soutěžní kulturistika.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Buď v tomhle poctivý na obě strany. Neslibuj, že doma s gumou uděláš z pokročilého klienta silového rekordmana — to je nefér. Ale stejně tak nepodceňuj, kolik se doma dá dokázat. Pro většinu běžné populace je dobře vedený domácí plán naprosto dostatečný a tvoje upřímnost ti dlouhodobě buduje důvěru.</div>
+
+    <h2>6) Jak z toho udělat hodnotnou službu</h2>
+    <p>Doma klient cvičí sám, bez tvojí okamžité opravy techniky — proto hodnotu nedělá jen samotný plán, ale způsob, jak ho předáš. Investuj do <strong>jasných instrukcí a videí</strong> a přesných variant podle úrovně. Dej <strong>zvládnutelnou progresi na papíře</strong> s jednoznačným pravidlem, kdy přejít na těžší variantu. Posiluj <strong>motivaci a kontrolu</strong> — domácí trénink má vyšší riziko polevení, protože nikoho v posilovně nečekáš, takže buduj návyk, check-iny a komunitu. A vždy <strong>přizpůsob plán prostředí</strong>: zjisti, co klient reálně má — prostor, náčiní, čas — a postav trénink na realitu, ne na ideál.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Na co svaly skutečně reagují, když není k dispozici těžká činka? <span class="tg">odpověď ▾</span></div><div class="aa">Na mechanické napětí, práci blízko selhání a progresivní přetížení. Činka je jen jeden ze způsobů, jak tyto podněty vytvořit — doma je nahradíš jinými cestami.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj alespoň tři způsoby, jak tvořit progresi bez přidání kilogramů. <span class="tg">odpověď ▾</span></div><div class="aa">Přidání opakování a sérií, ztížení varianty cviku (lehčí → těžší verze pohybu), zpomalení tempa, zkrácení odpočinku, zvětšení rozsahu pohybu a přiblížení k selhání. Hlavním motorem u vlastní váhy je ztížení varianty cviku.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Které levné náčiní nejvíc pomůže pokrýt záda, jež jsou doma nejtěžší? <span class="tg">odpověď ▾</span></div><div class="aa">Odporové gumy a hrazda do dveří. Gumy přidají odpor k tahovým pohybům, hrazda odemyká shyby a přítahy — klíčový tahový vzor pro horní polovinu těla.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Kde leží hlavní limity domácího tréninku? <span class="tg">odpověď ▾</span></div><div class="aa">U těžkého zatížení dolní poloviny a zad. Pokročilý klient časem přeroste možnosti vlastní váhy u nohou (i jednonohé dřepy mají strop) a těžký tah či dřep doma plně nenahradíš.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co dělá z domácího plánu skutečně hodnotnou službu? <span class="tg">odpověď ▾</span></div><div class="aa">Jasné instrukce a videa, zvládnutelná progrese na papíře s pravidlem pro postup, podpora návyku a kontrola (check-iny, komunita) a přizpůsobení plánu reálnému prostředí klienta, ne ideálu.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Sestav jednoduchý celotělový domácí plán pro modelového začátečníka, který má doma jen odporovou gumu, hrazdu do dveří a batoh. Pokryj všech sedm pohybových vzorů jedním cvikem na každý a ke každému připiš konkrétní pravidlo progrese (například „až zvládneš 3× 12 v čisté technice, přejdi na těžší variantu“).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Schoenfeld BJ, et al. Strength and Hypertrophy Adaptations Between Low- vs. High-Load Resistance Training: A Systematic Review and Meta-analysis. J Strength Cond Res. 2017.</li>
+        <li>Counts BR, et al. The acute and chronic effects of „NO LOAD“ resistance training. Physiol Behav. 2016.</li>
+        <li>Kikuchi N, Nakazato K. Low-load bench press and push-up induce similar muscle hypertrophy and strength gain. J Exerc Sci Fit. 2017.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m4-l13', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
