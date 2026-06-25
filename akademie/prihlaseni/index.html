@@ -119,7 +119,24 @@
         if (window.BA.mode === 'demo') {
           document.getElementById('demoNote').style.display = 'block';
         } else {
-          window.BA.getUser().then(function (u) { if (u) location.href = nextUrl; });
+          window.BA.getUser().then(function (u) {
+            if (!u) return;
+            // Přihlášený a NEbyl odmítnut pro chybějící přístup → pusť ho dál.
+            if (!need) { location.href = nextUrl; return; }
+            // Přihlášený, ale nemá přístup k 'need' produktu → NEpřesměrovávej
+            // (jinak vznikne nekonečná smyčka login ↔ obsah). Ukaž zprávu + odhlášení.
+            var n = document.getElementById('needNote');
+            n.style.display = 'block';
+            n.innerHTML = (need === 'videokurz'
+              ? 'Jsi přihlášený jako <b>' + (u.email || '') + '</b>, ale tenhle účet nemá přístup k videokurzu. '
+              : 'Jsi přihlášený jako <b>' + (u.email || '') + '</b>, ale tenhle účet nemá přístup k této části Akademie. ')
+              + 'Získej přístup na <a href="/akademie/">stránce Akademie</a>, nebo se <a href="#" id="logoutLink">odhlas</a> a přihlas jiným účtem.';
+            var ll = document.getElementById('logoutLink');
+            if (ll) ll.addEventListener('click', function (e) {
+              e.preventDefault();
+              window.BA.signOut().then(function () { location.href = '/akademie/prihlaseni/'; });
+            });
+          });
         }
       });
 
