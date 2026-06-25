@@ -74,7 +74,7 @@
       <a class="btn dis" id="certBtn" href="#">Závěrečný test (zamčeno)</a>
     </div>
 
-    <p class="demo-note">Ukázka studijního prostředí. Přihlašování, ukládání postupu a odemčení po koupi napojíme přes Supabase. (Postup se teď ukládá jen v tomto prohlížeči.)</p>
+    <p class="demo-note" id="modeNote">Ukázka studijního prostředí. Přihlašování, ukládání postupu a odemčení po koupi napojíme přes Supabase. (Postup se teď ukládá jen v tomto prohlížeči.)</p>
   </div>
 
   <script src="/assets/ba-config.js"></script>
@@ -253,7 +253,12 @@
       if (window.BA){
         window.BA.ready.then(function(){
           if (window.BA.mode === 'live'){
-            window.BA.requireAccess('academy').then(function(ok){ if(ok) window.BA.getProgress().then(render); });
+            window.BA.requireAccess('academy').then(function(ok){
+              if(!ok) return;
+              var note = document.getElementById('modeNote');
+              if (note) note.textContent = 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.';
+              window.BA.getProgress().then(render);
+            });
           } else {
             window.BA.getProgress().then(render);
           }
