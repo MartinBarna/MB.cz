@@ -55,11 +55,14 @@ const SECTIONS = [
 // 'link' = otevře web (kalkulačka), 'file' = stáhne přes podepsanou URL.
 const BUCKET = 'videokurz-materialy';
 const MATERIALS = [
-  { ico: '🍳', t: 'Kuchařka — 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'kucharka-recepty.pdf' },
+  { ico: '🍳', t: 'Kuchařka — 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'Kucharka 40 + receptu.pdf' },
   { ico: '🧮', t: 'Kalkulačka kalorií a makroživin', d: 'Online kalkulačka přímo v kurzu', link: '/akademie/videokurz/kalkulacka/' },
-  { ico: '📄', t: 'Výpočty hubnutí a nabírání', d: 'Tahák s výpočty (PDF)', file: 'vypocty.pdf' },
-  { ico: '📄', t: 'Videokurz — výpočty a přílohy', d: 'Doprovodné PDF', file: 'videokurz-prilohy.pdf' },
-  { ico: '📊', t: 'Report pro coache', d: 'Šablona s grafem (Excel)', file: 'report-coache.xlsx' },
+  { ico: '📄', t: 'Výpočty hubnutí a nabírání', d: 'Tahák s výpočty (PDF)', file: 'Vypoctyhubnutianabirani.pdf' },
+  { ico: '🥗', t: 'Doporučené potraviny', d: 'Seznam vhodných potravin (PDF)', file: 'doporucene potraviny (1).pdf' },
+  { ico: '🌾', t: 'Zdroje vlákniny', d: 'Přehled zdrojů vlákniny (PDF)', file: 'Zdroje vlakniny.docx.pdf' },
+  { ico: '🧺', t: 'Nákupní košík', d: 'Vzorový nákup (obrázek)', file: 'nakupni kosik.png' },
+  { ico: '⚖️', t: 'Proč trénovat vážení jídla', d: 'Infografika (obrázek)', file: 'proc trenovat vazeni jidla.jpg' },
+  { ico: '📊', t: 'Report pro coache', d: 'Šablona s grafem (Excel)', file: 'Report tabulka.xlsx' },
 ];
 
 function assign(v) {
