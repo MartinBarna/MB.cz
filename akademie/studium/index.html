@@ -50,6 +50,11 @@
   .btn:hover { background:#161616; color:#fff; }
   .btn.dis { background:#e6ddd0; color:#a89c8c; cursor:not-allowed; }
   .demo-note { text-align:center; color:#a89c8c; font-size:.8rem; margin-top:22px; }
+  .bonus { background:#fff8f0; border:1px solid #f3dcbd; border-radius:18px; padding:18px 20px; margin-top:24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .bonus .bico { font-size:1.9rem; }
+  .bonus .btxt { flex:1; min-width:200px; } .bonus .btxt b { display:block; font-size:1.02rem; } .bonus .btxt span { color:#8a7a64; font-size:.88rem; }
+  .bonus .bbtn { background:var(--gold); color:#161616; font-weight:700; padding:11px 22px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.92rem; white-space:nowrap; }
+  .bonus .bbtn:hover { background:#161616; color:#fff; }
 </style>
 </head>
 <body>
@@ -67,6 +72,12 @@
     </div>
 
     <div class="modules" id="modules"></div>
+
+    <div class="bonus" id="bonusCard">
+      <span class="bico">🍳</span>
+      <div class="btxt"><b>Bonus: Kuchařka — 40+ fit receptů</b><span>Sbírka receptů s vypočítanými nutričními hodnotami. Tvůj bonus ke studiu.</span></div>
+      <button class="bbtn" type="button" id="kucharkaBtn" data-file="Kucharka 40 + receptu.pdf">Stáhnout ↓</button>
+    </div>
 
     <div class="cert-card" id="certCard">
       <h3>🏅 Certifikát Barna Academy</h3>
@@ -267,6 +278,20 @@
         try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
       }
     }
+    // Bonus kuchařka — stáhne se z videokurz-materialy (Academy student má přístup přes balíček academy→videokurz).
+    (function(){
+      var btn=document.getElementById('kucharkaBtn'); if(!btn) return;
+      btn.addEventListener('click', function(){
+        var file=btn.getAttribute('data-file');
+        if(!window.BA || typeof window.BA.materialUrl!=='function'){ alert('Obnov prosím stránku (Ctrl+F5) a zkus to znovu.'); return; }
+        var w=window.open('','_blank'); var orig=btn.textContent; btn.textContent='Připravuji…'; btn.disabled=true;
+        window.BA.ready.then(function(){ return window.BA.materialUrl('videokurz-materialy', file); }).then(function(url){
+          btn.textContent=orig; btn.disabled=false;
+          if(url){ if(w){ w.location.href=url; } else { location.href=url; } }
+          else { if(w){ w.close(); } alert('Kuchařku se nepodařilo otevřít. Zkus to za chvíli, nebo napiš na martin@martinbarna.cz.'); }
+        }).catch(function(e){ btn.textContent=orig; btn.disabled=false; if(w){ w.close(); } alert('Stažení selhalo: '+((e&&e.message)||e)); });
+      });
+    })();
     boot();
   </script>
 </body>
