@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typy klientů a jak ke každému přistupovat — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 10 — Práce s klientem a koučink</div>
+    <h1>Typy klientů a jak ke každému přistupovat</h1>
+
+    <p class="lead"><strong>Dva klienti můžou mít úplně stejný cíl a přesto potřebovat naprosto odlišný přístup. Schopnost číst člověka a přizpůsobit mu komunikaci — ne vědu, ale její podání — je jedna z nejvíc podceňovaných dovedností kouče.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč „jeden styl koučování pro všechny“ nefunguje a jak stejný cíl může vyžadovat jiný přístup.</li>
+        <li>Pět nejčastějších typů klientů — co každý potřebuje a čeho se vyvarovat.</li>
+        <li>Jak v praxi rozpoznat, s kým máš tu čest, a přizpůsobit komunikaci.</li>
+        <li>Kde leží hranice flexibility — co se přizpůsobuje a co zůstává pevné.</li>
+        <li>Jak ti tahle dovednost zlepší výsledky i retenci klientů.</li>
+      </ul>
+    </div>
+
+    <h2>1) Stejný obsah, jiné podání</h2>
+    <p>Představ si dva klienty se stejným cílem — zhubnout 10 kilo. Jeden chce přesná čísla a strukturu, druhý se v číslech ztrácí a potřebuje jednoduchost a povzbuzení. Když na oba použiješ jeden a tentýž styl, jednomu pomůžeš a druhého ztratíš. Věda zůstává stejná. Mění se způsob, jakým ji podáš a jak člověka vedeš.</p>
+    <p>Pozor na jednu věc: nejde o škatulkování ani o psychologickou diagnostiku. Tyhle „typy“ jsou zjednodušené vzory, které ti pomůžou rychleji se zorientovat. Skutečný člověk je vždycky mix a v čase se mění. Ber to jako mapu, ne jako krabičky, do kterých lidi natlačíš.</p>
+
+    <h2>2) Analytik a pohodář — data versus jednoduchost</h2>
+    <p><strong>Analytik</strong> se ptá na detaily, čísla a „proč“. Chce přesné makro, tabulky a vysvětlení mechanismu — cítí se bezpečně, když rozumí logice. Dej mu strukturu a fakta, ale hlídej, aby se neutopil v perfekcionismu. Analytik má sklon přeoptimalizovat a stresovat se maličkostmi, na kterých ve skutečnosti tolik nezáleží (třeba načasováním jídel). Tvoje práce je dát mu data <em>a zároveň</em> ho učit, kde si může oddechnout. Nikdy ho neodbývej „prostě mi věř“ — okamžitě ztratí důvěru.</p>
+    <p><strong>Pohodář</strong> je z čísel a tabulek nervózní nebo unuděný. Chce vědět „co mám prostě dělat“ a přílišná složitost ho odradí. Zjednodušuj: místo počítání makra dej praktická pravidla (talíř, porce, návyky). Méně je víc. Drž ho u pár klíčových věcí, na kterých opravdu záleží, a nezahlcuj ho vědou, kterou nechce. Tvoje znalosti slouží jemu, ne tvému egu.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když dám klientovi tabulku a on se rozzáří — mám před sebou analytika. Když znervózní nebo zeskelnatí — pohodář. Tahle jedna reakce mi řekne víc než půlhodina dotazníků. A řídím se reakcí, ne prvním dojmem z toho, jak člověk vypadá.</div>
+
+    <h2>3) Netrpělivec — krotit tempo, sytit malými výhrami</h2>
+    <p>Netrpělivec chce výsledky hned, ptá se „jak rychle“ a má sklon k extrémům — přehnaně tvrdá dieta, příliš mnoho tréninku. Když to nejde rychle, snadno ztrácí motivaci. Klíč je nastavit realistická očekávání hned na začátku a pak ho sytit rychlými, viditelnými „malými výhrami“: non-scale victories, zlepšení síly, víc energie. Vysvětli mu, proč pomalu znamená trvale — pomáhá analogie investice versus sázka. Tvým úkolem je chránit ho před vlastní netrpělivostí, která vede přímo k jojo efektu.</p>
+    <blockquote>Když mu slíbíš rychlost, kterou nedodržíš, ztratíš ho. Radši slibuj realisticky a pak ho mile překvap.</blockquote>
+
+    <h2>4) Sebekritik a skeptik — práce s hlavou a důvěrou</h2>
+    <p><strong>Sebekritik</strong> mluví o sobě tvrdě („zase jsem selhal“), má sklon k vině a vše-nebo-nic myšlení. Jeden horší den bere jako celkový neúspěch. Tady je obrovská část práce mimo jídlo a trénink — je v hlavě. Buď laskavý, ale pevný: normalizuj výkyvy („jeden den nic nezkazí“), uč ho soustředit se na trend místo na výkyvy a oslavuj proces a snahu, ne jen výsledky. Když ale sebekritika přechází v hlubší problém (poruchy příjmu potravy, deprese), to je hranice, kde odkazuješ na odborníka.</p>
+    <p><strong>Skeptik</strong> už zkoušel spoustu věcí, nic „nefungovalo“ a k tobě přistupuje s nedůvěrou — testuje tě. Nesnaž se ho přesvědčit silou. Buď věcný, čestný, přiznej, co nevíš, a nech mluvit výsledky. Malé sliby, které dodržíš, budují důvěru víc než velká slova. Když časem uvidí, že jsi jiný než ti předtím, skeptik se často stane tvým nejvěrnějším klientem. Jen neber jeho skepsi osobně — není to o tobě, je to o jeho zklamáních.</p>
+
+    <h2>5) Jak číst klienta v praxi</h2>
+    <p>Typ klienta nepoznáš z dotazníku, ale z rozhovoru. Poslouchej víc, než mluvíš — všímej si, na co klade důraz, čeho se bojí a jak mluví o své minulosti. Ptej se otevřenými otázkami: „Co od spolupráce čekáš?“, „Co ti v minulosti nefungovalo a proč?“, „Jak se cítíš, když se nedaří?“ Odpovědi ti řeknou typ. A nakonec se klidně zeptej přímo: „Chceš spíš přesná čísla, nebo jednoduchá pravidla?“ Většina lidí ti to ráda řekne sama.</p>
+
+    <h2>6) Hranice přizpůsobení</h2>
+    <p>Přizpůsobuješ <em>podání</em> a <em>komunikaci</em>, ne vědecké základy a bezpečnost. Netrpělivci nedáš nebezpečně agresivní dietu jen proto, že ji chce. Skeptikovi nezačneš slibovat zázraky, jen abys ho přesvědčil. Sebekritikovi neuhneš od potřeby řešit psychiku, i když by radši jen „makra“.</p>
+    <div class="card"><strong>Měkne styl, ne podstata.</strong> Tvoje integrita a odbornost zůstávají pevné. Právě tohle je klíčový rozdíl mezi přizpůsobivým profesionálem a člověkem, který lidem jen říká, co chtějí slyšet. Tahle dovednost přitom zlepšuje nejen výsledky, ale i retenci — lidé zůstávají u kouče, který jim rozumí.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč nestačí mít jeden styl koučování pro všechny klienty? <span class="tg">odpověď ▾</span></div><div class="aa">Protože stejný cíl může u různých lidí vyžadovat odlišný přístup. Jeden klient potřebuje čísla a strukturu, druhý jednoduchost a povzbuzení. Jeden styl jednomu pomůže a druhého ztratí — schopnost číst člověka a přizpůsobit mu podání proto přímo ovlivňuje výsledky i to, zda klient zůstane.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak poznáš analytika a co u něj nejvíc hlídat? <span class="tg">odpověď ▾</span></div><div class="aa">Analytik se ptá na detaily, čísla a „proč“, chce přesné makro a vysvětlení mechanismu. Hlídej, aby se neutopil v perfekcionismu a paralýze z analýzy — dej mu data, ale zároveň ho uč, kde na detailech (třeba na načasování) tolik nezáleží. Nikdy ho neodbývej „prostě mi věř“.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co potřebuje netrpělivec, aby u tebe vydržel? <span class="tg">odpověď ▾</span></div><div class="aa">Realistická očekávání nastavená hned na začátku a pak časté, viditelné malé výhry — non-scale victories, zlepšení síly a energie. Krotíš tempo, vysvětluješ, proč pomalu znamená trvale, a chráníš ho před vlastní netrpělivostí, která vede k jojo efektu. Nikdy mu neslibuj rychlost, kterou nedodržíš.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Kde je u sebekritika hranice tvojí role kouče? <span class="tg">odpověď ▾</span></div><div class="aa">Pomáháš mu normalizovat výkyvy, soustředit se na trend místo na jednotlivé dny a oslavovat proces a snahu. Ale když sebekritika přechází v hlubší problém — poruchy příjmu potravy, deprese — to je hranice, kde zůstáváš v roli kouče a odkazuješ na odborníka.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co se při přizpůsobování klientovi nikdy nemění? <span class="tg">odpověď ▾</span></div><div class="aa">Vědecké základy a bezpečnost. Přizpůsobuješ pouze podání a komunikaci — styl měkne, podstata zůstává pevná. Netrpělivci nedáš nebezpečnou dietu, skeptikovi neslíbíš zázraky, sebekritikovi neuhneš od práce s psychikou. V tom je rozdíl mezi profesionálem a člověkem, který říká, co lidé chtějí slyšet.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyber si jednoho ze svých klientů (nebo někoho z okolí) a zkus ho zařadit k jednomu z pěti typů. Napiš si, podle jakých signálů jsi tak usoudil, co tento člověk od tebe nejvíc potřebuje a jednu konkrétní věc, kterou bys u něj v komunikaci změnil. Při příští interakci to vyzkoušej a všímej si reakce.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Miller WR, Rollnick S. Motivational Interviewing: Helping People Change. Guilford Press 2013.</li>
+        <li>Rogers CR. On Becoming a Person. Houghton Mifflin 1961.</li>
+        <li>Prochaska JO, DiClemente CC. The Transtheoretical Model of Behavior Change. American Journal of Health Promotion 1997.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

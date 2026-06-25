@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krizová komunikace, stížnosti a reklamace — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 7 · Lekce 8 — Praktické vedení klienta</div>
+    <h1>Krizová komunikace, stížnosti a reklamace</h1>
+
+    <p class="lead">Dříve nebo později přijde nespokojený klient, negativní recenze nebo situace, kdy něco selže. To není známka, že jsi špatný kouč — je to nevyhnutelná součást podnikání. <strong>Co tě odliší, není to, že krize nikdy nepřijdou, ale to, jak je zvládneš.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je způsob řešení stížnosti důležitější než samotná stížnost.</li>
+        <li>Jasný postup, jak zvládnout nespokojeného klienta krok za krokem.</li>
+        <li>Jak reagovat na negativní recenze a veřejnou kritiku — když se na tebe dívají všichni.</li>
+        <li>Jak řešit citlivé situace: chyba na tvé straně, nereálný požadavek, vrácení peněz.</li>
+        <li>Jak z dobře zvládnuté krize udělat silnější vztah i lepší pověst.</li>
+      </ul>
+    </div>
+
+    <h2>1) Stížnost je dar, ne útok</h2>
+    <p>Klient, který si stěžuje, ti dává možnost věc spravit. Mnohem horší je klient, který mlčky odejde a řekne to deseti dalším. Stížnost ber jako <strong>informaci, co zlepšit, a šanci napravit vztah</strong>.</p>
+    <p>Dvě věci si u toho hlídej. Za prvé: neber to osobně. Útok na službu nebo na situaci není útok na tebe jako člověka — a tvoje emoční reakce (obrana, naštvání) krizi jen zhorší. Tvůj klid je půlka řešení. Za druhé: cílem není mít pravdu, ale věc vyřešit. I když máš fakticky pravdu, vyhrát hádku a ztratit klienta i pověst je prohra.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi přijde podrážděná zpráva, dám si vědomě pauzu, než odpovím. Naučil jsem se, že první věta, která mi naskočí, je obvykle obranná — a tu nikdy neposílám. Místo „ale vždyť jsem ti psal, že…“ začínám tím, že klienta vyslechnu. Devětkrát z deseti se napětí rozpustí dřív, než vůbec dojde na řešení.</p></div>
+
+    <h2>2) Postup řešení stížnosti krok za krokem</h2>
+    <p>Když přijde stížnost, nepostupuj náhodně. Drž se sedmi kroků — v tomto pořadí:</p>
+    <div class="card">
+      <ol style="margin-left:1.1rem;">
+        <li><strong>Naslouchej a nech klienta domluvit.</strong> Nepřerušuj, neobhajuj se hned. Klient potřebuje být slyšen; už samotné vyslechnutí často polovinu napětí rozpustí.</li>
+        <li><strong>Potvrď a projev porozumění.</strong> „Chápu, že tě to frustruje, a děkuju, že mi to říkáš.“ Uznání pocitu není přiznání viny — je to lidská reakce, která deeskaluje.</li>
+        <li><strong>Zeptej se a ujasni.</strong> Doptej se na detaily, ať přesně rozumíš, co a proč klienta trápí. Nepředpokládej — ověř.</li>
+        <li><strong>Omluv se, kde je to na místě.</strong> Pokud je chyba na tvé straně, upřímná omluva bez výmluv. „Tohle jsem podcenil, omlouvám se“ má obrovskou sílu.</li>
+        <li><strong>Nabídni řešení.</strong> Konkrétní krok, jak to napravit. Pokud to jde, zapoj klienta: „Co by pro tebe byla dobrá náprava?“</li>
+        <li><strong>Jednej a dotáhni.</strong> Slíbené řešení skutečně proveď, a to rychle. Pak se ozvi, jestli je klient spokojený. Dotažení odlišuje slova od skutků.</li>
+        <li><strong>Pouč se.</strong> Zaznamenej, co se stalo, a uprav procesy, ať se to neopakuje.</li>
+      </ol>
+    </div>
+    <blockquote>Lidé odpouštějí chyby. Neodpouštějí aroganci.</blockquote>
+
+    <h2>3) Citlivé situace a jak na ně</h2>
+    <p><strong>Chyba je na tvé straně.</strong> Přiznej ji, omluv se, naprav. Snaha to zakrýt nebo svalit vinu na klienta zničí důvěru víc než původní chyba. Poctivost při vlastní chybě paradoxně buduje respekt.</p>
+    <p><strong>Klient má nereálný požadavek nebo očekávání.</strong> Empaticky, ale jasně vysvětli realitu: „Rozumím, že jsi čekal rychlejší výsledky. Pojďme se podívat, co je reálné a proč.“ Nepodléhej tlaku slíbit nemožné, jen abys uklidnil — to problém jen odloží a zvětší.</p>
+    <p><strong>Požadavek na vrácení peněz.</strong> Měj předem jasná, férová a transparentní pravidla a komunikuj je už při nástupu. Drž se jich konzistentně. U oprávněné nespokojenosti zvaž, že férové vyřešení — i vrácení — bývá levnější než špatná pověst. U zákonných nároků (například lhůty na odstoupení u online produktů) je dodržení zákona samozřejmost.</p>
+    <p><strong>Emočně vyhrocená situace.</strong> Zachovej klid, sniž tempo, nech klienta „vypustit páru“ a nevracej emoci emocí. Pokud klient opakovaně překračuje hranice slušnosti, je v pořádku rozhovor ukončit a vrátit se k němu, až se situace zklidní — slušně, ale pevně.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Nejdražší chyba, kterou jsem v začátcích dělal, bylo slibování nemožného, jen abych měl klid. „Jasně, za měsíc to zlomíme.“ Tím jsem si jen nakoupil větší krizi za čtyři týdny. Dnes raději řeknu nepříjemnou pravdu hned a s empatií — krátkodobě to víc bolí, dlouhodobě to zachrání vztah i moje jméno.</p></div>
+
+    <h2>4) Negativní recenze a veřejná kritika</h2>
+    <p>Veřejná negativní recenze bolí, ale způsob reakce vidí všichni potenciální klienti — a právě ten je klíčový. Čtenáři posuzují tvůj klid, ne jen recenzi.</p>
+    <p>Reaguj klidně a profesionálně, nikdy ne obranně či agresivně. Poděkuj za zpětnou vazbu, projev porozumění a nabídni řešení offline: „Mrzí mě, že jsi nebyl spokojený. Rád to s tebou probereme napřímo — napiš mi prosím na…“ Nehádej se veřejně a neřeš detaily klienta na očích ostatních — diskrétnost je součást profesionality. I z veřejné kritiky se pouč; někdy v ní je pravdivé jádro. A i u falešných nebo nespravedlivých recenzí reaguj věcně — čtenáři kultivovanou reakci od emoční snadno poznají.</p>
+    <blockquote>Dobře zvládnutá reakce na kritiku může působit důvěryhodněji než samé chvály.</blockquote>
+
+    <h2>5) Nejlepší krizová komunikace je ta, kterou nepotřebuješ</h2>
+    <p>Většina krizí pramení z nenaplněných nebo nevyjasněných očekávání — a ta máš z velké části ve své moci. Předejít jim můžeš čtyřmi věcmi: <strong>jasnými očekáváními od začátku</strong> (co služba je a co není, jak rychle přijdou výsledky, jaká platí pravidla), <strong>průběžnou komunikací</strong> (drobná nespokojenost se řeší snadno, nahromaděná exploduje), <strong>proaktivním zachytáváním signálů</strong> (klesající aktivita, kratší odpovědi — zeptej se „je všechno ok?“ dřív, než se z toho stane stížnost) a <strong>transparentností</strong> u peněz, pravidel a hranic.</p>
+
+    <h2>6) Service recovery paradox</h2>
+    <p>Výzkum i praxe ukazují zajímavou věc: klient, jehož problém vyřešíš dobře, bývá nakonec <strong>loajálnější než klient, který nikdy problém neměl</strong>. Odborně se tomu říká service recovery paradox. Krize tedy není konec vztahu — je to zkouška, ze které můžeš vyjít silnější. Stížnost je příležitost, ne jen hrozba.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je cílem při řešení stížnosti — mít pravdu, nebo věc vyřešit? <span class="tg">odpověď ▾</span></div><div class="aa">Cílem je věc vyřešit, ne mít pravdu. I když máš fakticky pravdu, vyhrát hádku a ztratit klienta i pověst je prohra. Hledej řešení, ne vítězství.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaký je první krok postupu, když ti klient sdělí stížnost? <span class="tg">odpověď ▾</span></div><div class="aa">Naslouchej a nech klienta domluvit. Nepřerušuj, neobhajuj se hned — klient potřebuje být slyšen a samotné vyslechnutí často rozpustí polovinu napětí. Teprve pak přichází porozumění, ujasnění, případná omluva, řešení, dotažení a poučení.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak se zachovat, když je chyba prokazatelně na tvé straně? <span class="tg">odpověď ▾</span></div><div class="aa">Přiznej ji, upřímně se omluv bez výmluv a naprav. Snaha chybu zakrýt nebo svalit vinu na klienta zničí důvěru víc než původní chyba. Poctivost při vlastní chybě paradoxně buduje respekt.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak reagovat na negativní veřejnou recenzi? <span class="tg">odpověď ▾</span></div><div class="aa">Klidně a profesionálně, nikdy obranně či agresivně. Poděkuj za zpětnou vazbu, projev porozumění a nabídni řešení offline. Nehádej se veřejně a neřeš detaily klienta na očích ostatních. Čtenáři posuzují tvůj klid, ne jen recenzi.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená service recovery paradox? <span class="tg">odpověď ▾</span></div><div class="aa">Klient, jehož problém vyřešíš dobře, bývá nakonec loajálnější než klient, který nikdy žádný problém neměl. Dobře zvládnutá stížnost tedy může vztah posílit — krize je příležitost, ne jen hrozba.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vzpomeň si na poslední nespokojenost klienta (nebo si představ pravděpodobnou) a napiš si konkrétní odpovědi pro všech sedm kroků postupu. Zároveň zformuluj jednu připravenou, klidnou reakci na hypotetickou negativní recenzi, kterou bys mohl použít okamžitě.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Stone D, Patton B, Heen S. Difficult Conversations. Penguin 1999.</li>
+        <li>Tax SS, Brown SW. Recovering and Learning from Service Failure. MIT Sloan Management Review 1998.</li>
+        <li>Carnegie D. How to Win Friends and Influence People. Simon &amp; Schuster 1936.</li>
+        <li>Praktické procesy Team Barna — komunikační standardy a řešení situací s klientem. 2026.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m7-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

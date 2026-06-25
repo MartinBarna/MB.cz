@@ -12,11 +12,14 @@
     <meta property="og:url" content="https://martinbarna.cz/akademie/">
     <meta property="og:title" content="Barna Academy — škola pro trenéry a výživové poradce">
     <meta property="og:description" content="Vědecky podložená výživa, psychologie chování, anatomie i byznys — v češtině, autorsky od Martina Barny. Doživotní přístup, kvízy, certifikát.">
-    <meta property="og:image" content="https://martinbarna.cz/assets/og/default.jpg">
+    <meta property="og:image" content="https://martinbarna.cz/assets/og/akademie.png">
+    <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Barna Academy — škola pro trenéry a výživové poradce">
     <meta property="og:locale" content="cs_CZ">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://martinbarna.cz/assets/og/akademie.png">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
@@ -94,6 +97,23 @@
         .pricebox li { padding:7px 0; display:flex; gap:10px; }
         .pricebox li::before { content:"✓"; color:var(--gold); font-weight:800; }
         .vk-guarantee { display:flex; align-items:center; gap:13px; text-align:left; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:14px 16px; margin-top:18px; font-size:.92rem; color:#e8e6e3; }
+        /* Formulář zájemce + QR */
+        .ac-form { max-width:420px; margin:1.4rem auto 0; text-align:left; }
+        .ac-form input, .ac-form select { width:100%; border:1.5px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:#fff; border-radius:12px; padding:12px 15px; font-size:1rem; font-family:inherit; margin-bottom:10px; outline:none; }
+        .ac-form input::placeholder { color:#9a948c; }
+        .ac-form input:focus, .ac-form select:focus { border-color:var(--gold); }
+        .ac-form select { appearance:none; -webkit-appearance:none; cursor:pointer; }
+        .ac-form option { color:#161616; }
+        .ac-form .btn-gold { margin-top:4px; }
+        .ac-diky { background:rgba(52,168,83,.15); border:1px solid rgba(52,168,83,.4); color:#dff5e4; border-radius:12px; padding:14px 16px; text-align:center; max-width:420px; margin:1.4rem auto 0; }
+        .ac-alt { opacity:.72; font-size:.9rem; margin-top:.9rem; }
+        .ac-alt a { color:#ff8a3d; font-weight:600; }
+        .ac-qr { display:none; }
+        @media (min-width:768px){
+          .ac-qr { display:flex; align-items:center; gap:16px; justify-content:flex-start; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:14px 16px; margin:16px auto 0; max-width:420px; text-align:left; }
+          .ac-qr img { width:92px; height:92px; border-radius:8px; background:#fff; padding:6px; flex-shrink:0; }
+          .ac-qr span { font-size:.85rem; color:#e8e6e3; line-height:1.45; }
+        }
         .footer-ac { background:#0d0d0d; color:#bbb; text-align:center; padding:36px 18px; font-size:.9rem; }
         .footer-ac a { color:#ff8a3d; }
         .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); z-index:1050; color:#fff; text-decoration:none; }
@@ -166,8 +186,11 @@
                 <div class="col-md-6"><div class="mod"><div class="num">4</div><div><h5>Programování tréninku</h5><p>Jak skládat tréninky pro hubnutí, nárůst i výkon — na míru reálnému klientovi.</p></div></div></div>
                 <div class="col-md-6"><div class="mod"><div class="num">5</div><div><h5>Práce s klientem &amp; koučink</h5><p>Vedení, motivace, mapa prostředí, spouštěče, jak stavět chování s pocitem úspěchu.</p></div></div></div>
                 <div class="col-md-6"><div class="mod"><div class="num">6</div><div><h5>Byznys pro trenéry a poradce</h5><p>Jak vybudovat udržitelný byznys, najít cílovku, USP a získat (a udržet) klienty.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">7</div><div><h5>Praktické vedení klienta (procesy)</h5><p>Klient od A do Z — můj reálný systém Team Barna: cesta klienta, reporty, čtení dat a řešení situací z praxe.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">8</div><div><h5>Příprava bojovníků a úpolové sporty</h5><p>Silová a kondiční příprava, energetické systémy a plánování přípravy na zápas.</p></div></div></div>
+                <div class="col-md-6"><div class="mod"><div class="num">9</div><div><h5>Periodizace a plánování</h5><p>Jak plánovat trénink v čase, řídit únavu a stavět bloky, deload a taper.</p></div></div></div>
             </div>
-            <p class="text-center text-muted mt-4 mb-0" style="font-size:.9rem;">Přesná struktura a počet lekcí finalizujeme — moduly se postupně rozbalují s každou novou lekcí.</p>
+            <p class="text-center text-muted mt-4 mb-0" style="font-size:.9rem;">Devět modulů od psychologie a výživy přes anatomii a trénink až po byznys a praktické procesy. Moduly se postupně rozbalují s každou novou lekcí.</p>
         </div>
     </section>
 
@@ -255,8 +278,32 @@
                     <li>Doživotní přístup + aktualizace zdarma</li>
                     <li>Certifikát Barna Academy po dokončení</li>
                 </ul>
-                <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20z%C3%A1jem%20o%20Barna%20Academy%20-%20dej%20v%C4%9Bd%C4%9Bt%20p%C5%99i%20spu%C5%A1t%C4%9Bn%C3%AD" target="_blank" rel="noopener" class="btn-gold w-100" style="max-width:420px;">Chci být u spuštění (WhatsApp) →</a>
-                <p class="mt-3 mb-0" style="opacity:.7; font-size:.9rem;">Nebo napiš na <a href="mailto:martin@martinbarna.cz?subject=Z%C3%A1jem%20o%20Barna%20Academy" style="color:#ff8a3d;">martin@martinbarna.cz</a></p>
+                <!-- Formulář zájemce → chodí na e-mail (FormSubmit), AJAX -->
+                <div id="acDiky" class="ac-diky" style="display:none;">Díky! Jsi na seznamu — ozvu se ti jako jednomu z prvních při spuštění a získáš zvýhodněnou cenu. 🙌</div>
+                <form id="acForm" class="ac-form" action="https://formsubmit.co/martin@martinbarna.cz" method="POST">
+                    <input type="hidden" name="_subject" value="Nový zájemce — Barna Academy">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_next" value="https://martinbarna.cz/akademie/?odeslano=1#zajem">
+                    <input type="text" name="_honey" style="display:none">
+                    <input name="Jméno" type="text" placeholder="Tvoje jméno" autocomplete="name" required>
+                    <input name="E-mail" type="email" placeholder="Tvůj e-mail" autocomplete="email" required>
+                    <select name="Kdo jsi" required aria-label="Co tě nejvíc vystihuje">
+                        <option value="" disabled selected>Co tě nejvíc vystihuje?</option>
+                        <option>Osobní trenér / trenérka</option>
+                        <option>Výživový poradce / poradkyně</option>
+                        <option>Trenér i poradce</option>
+                        <option>Začínám v oboru</option>
+                        <option>Nadšenec / jiné</option>
+                    </select>
+                    <button type="submit" class="btn-gold w-100">Chci být u spuštění →</button>
+                </form>
+                <p class="ac-alt mb-0">Radši napřímo? <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20z%C3%A1jem%20o%20Barna%20Academy%20-%20dej%20v%C4%9Bd%C4%9Bt%20p%C5%99i%20spu%C5%A1t%C4%9Bn%C3%AD" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:martin@martinbarna.cz?subject=Z%C3%A1jem%20o%20Barna%20Academy">martin@martinbarna.cz</a></p>
+                <!-- QR pro počítač (na mobilu skryto, tam stačí tlačítko/odkaz) -->
+                <div class="ac-qr">
+                    <img src="/assets/qr-whatsapp.svg" alt="QR kód pro WhatsApp chat s Martinem Barnou" width="92" height="92" loading="lazy">
+                    <span><strong style="color:#fff;">Jsi na počítači?</strong><br>Naskenuj QR mobilem a napiš mi rovnou na WhatsApp — nebo vyplň formulář výš a ozvu se na e-mail.</span>
+                </div>
                 <div class="vk-guarantee">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#34a853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;flex-shrink:0;" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                     <span>Při spuštění bude Academy krytá <strong style="color:#fff;">zárukou vrácení peněz</strong> — stejně jako videokurz. Žádné riziko.</span>
@@ -279,6 +326,27 @@
         document.querySelectorAll('.faq-item button').forEach(function (b) {
             b.addEventListener('click', function () { b.parentElement.classList.toggle('open'); });
         });
+
+        // Formulář zájemce — AJAX odeslání (návštěvník vidí jen české díky, nikdy stránku FormSubmitu)
+        var _acf = document.getElementById('acForm');
+        if (_acf) {
+            _acf.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var btn = _acf.querySelector('button[type="submit"]');
+                var orig = btn ? btn.textContent : '';
+                if (btn) { btn.textContent = 'Odesílám…'; btn.disabled = true; }
+                fetch('https://formsubmit.co/ajax/martin@martinbarna.cz', {
+                    method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(_acf)
+                }).then(function (r) { return r.json(); }).then(function () {
+                    var d = document.getElementById('acDiky'); if (d) d.style.display = 'block';
+                    _acf.style.display = 'none';
+                    if (d) d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }).catch(function () {
+                    if (btn) { btn.textContent = orig; btn.disabled = false; }
+                    alert('Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.');
+                });
+            });
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online vs. osobní koučink — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 8 — Práce s klientem a koučink</div>
+    <h1>Online vs. osobní koučink</h1>
+
+    <p class="lead"><strong>Online koučink není „osobní trénink přes telefon“ — je to jiný formát s jinými silnými a slabými stránkami. Kdo to nepochopí, buď online podcení, nebo se zbytečně drží jen osobního. Cílem je z každého formátu vytěžit přesně to, v čem je silný.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Silné a slabé stránky osobního i online koučinku — bez idealizace.</li>
+        <li>Jak online chytře kompenzovat chybějící fyzickou přítomnost.</li>
+        <li>Proč je u online ještě důležitější edukace, komunikace a samostatnost klienta.</li>
+        <li>Jak vybrat — nebo zkombinovat — formát podle klienta a podle svého byznysu.</li>
+        <li>Proč klient, který se naučí vést sám sebe, drží výsledky déle.</li>
+      </ul>
+    </div>
+
+    <h2>1) Osobní koučink — co umí a kde naráží</h2>
+    <p>Osobní trénink má tři jasné přednosti: <strong>okamžitou korekci techniky</strong> (vidíš pohyb naživo, opravuješ v reálném čase, můžeš i dopomoct), <strong>přímý lidský kontakt</strong>, kde vztah a motivace „tváří v tvář“ fungují silně, a <strong>okamžitou zpětnou vazbu na všechno</strong>.</p>
+    <p>Slabiny jsou ale strukturální. Dosah je omezený — pomáháš jen lidem, co fyzicky dojdou za tebou, a tvůj čas je strop. Jste oba vázaní časem i místem: musíte být ve stejnou dobu na stejném místě. A je tu skrytá past — klient se může začít spoléhat, že „to za něj odmyslíš“, a méně se osamostatní.</p>
+
+    <h2>2) Online koučink — jiný nástroj, ne horší náhrada</h2>
+    <p>Online má vlastní přednosti, ne jen „minus přítomnost“. <strong>Dosah bez hranic</strong> — pomáháš komukoli kdekoli, byznys není limitovaný lokalitou. <strong>Škálovatelnost</strong> — uneseš víc klientů, můžeš stavět sekundární produkty, využíváš čas efektivněji. <strong>Buduje samostatnost</strong> — klient se učí rozhodovat sám, naučí se „rybařit“. A <strong>flexibilita</strong> — klient cvičí, kdy mu to vyhovuje, komunikace běží asynchronně.</p>
+    <p>Cena za to je reálná: nevidíš pohyb živě, takže korekce techniky je nepřímá a pomalejší. Fyzická přítomnost je slabší, takže vztah a motivaci musíš budovat jinými prostředky. A celé to vyžaduje větší samostatnost a kázeň na straně klienta.</p>
+
+    <h2>3) Jak online nahradit chybějící přítomnost</h2>
+    <p>Online nemá fyzickou přítomnost — tak ji nahraď systémem a komunikací, ne výmluvami. Čtyři páky fungují nejlépe dohromady:</p>
+    <p><strong>Videa techniky.</strong> Klient natáčí cviky, ty dáváš zpětnou vazbu. Dej mu jasné pokyny, jak natáčet — úhel, světlo, vzdálenost. Bonus: učí ho to sebepozorování. <strong>Silná edukace.</strong> Uč principy, ne příkazy — edukovaný klient se online vede z velké části sám. <strong>Strukturovaná komunikace.</strong> Pravidelné reporty, rychlé odpovědi a proaktivní check-iny nahrazují „osobní“ kontakt. <strong>Lidskost přes obrazovku.</strong> Videohovory a hlasové zprávy přenesou osobnost a vztah mnohem líp než suchý text.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Online neberu jako horší náhradu osobního tréninku — beru ho jako jiný nástroj s vlastními přednostmi: dosah, škálování a hlavně to, že klienta naučím vést sám sebe. Chybějící přítomnost nahrazuju silnou edukací, videi techniky a proaktivní, lidskou komunikací.</div>
+
+    <h2>4) U online je edukace a samostatnost klíč</h2>
+    <p>Hlavní rozdíl je v tom, na koho se klient spoléhá. U osobního stojíš vedle něj v sále. U online musí umět jednat sám v čase <em>mezi</em> vašimi kontakty. Proto je online ještě víc o tom klienta naučit — ne ho jen vést.</p>
+    <p>Tři věci rozhodují. <strong>Proč, ne jen co</strong> — když klient rozumí principu, poradí si i v situaci, kterou jste spolu nikdy neprobrali. <strong>Samostatná rozhodnutí</strong> — veď ho, aby uměl upravit jídlo na akci, vybrat náhradu cviku nebo nepanikařit z běžného kolísání váhy. <strong>Návyky a prostředí</strong> — online úspěch stojí na tom, jak má klient nastavený den a okolí, protože nad ním nikdo nestojí v sále.</p>
+
+    <blockquote>Paradoxně je tohle i největší výhoda online: klient, který se naučí vést sám, má trvalejší výsledky než ten, kdo je závislý na tvé přítomnosti.</blockquote>
+
+    <h2>5) Jak formát vybrat — nebo chytře zkombinovat</h2>
+    <p>Není „lepší“ formát. Je formát vhodnější pro daného klienta a tvůj cíl. Rozhoduj podle dvou os.</p>
+    <p><strong>Podle klienta:</strong> úplný začátečník, který potřebuje hodně korekce techniky, často těží z osobního startu; samostatnější a zaneprázdněný klient vytěží z online flexibility. <strong>Podle tvého byznysu:</strong> chceš škálovat a nebýt vázaný lokalitou → online; miluješ práci v sále a osobní kontakt → osobní. Obojí má své místo.</p>
+
+    <div class="card"><strong>Hybrid často vyhrává.</strong> Kombinace funguje skvěle: osobní nácvik techniky na startu plus online vedení dál — nebo převážně online spolupráce s občasným osobním „laděním“. Nemusíš si vybrat jednou provždy.</div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klient, kterého naučím rozumět principům a stavět návyky, si výsledky udrží i potom, co spolupráci skončíme — a to je vlastně ten největší cíl. Vyber formát podle klienta a svého byznysu a z každého vytěž to, v čem je silný.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jmenuj jednu silnou a jednu slabou stránku osobního koučinku. <span class="tg">odpověď ▾</span></div><div class="aa">Silná: okamžitá korekce techniky a přímý lidský kontakt. Slabá: omezený dosah a vázanost časem/místem, plus riziko, že se klient stane závislým na tvé přítomnosti.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj jednu silnou a jednu slabou stránku online koučinku. <span class="tg">odpověď ▾</span></div><div class="aa">Silná: dosah bez hranic, škálovatelnost, flexibilita a budování samostatnosti klienta. Slabá: nepřímá a pomalejší korekce techniky, slabší fyzická přítomnost a nutnost větší kázně klienta.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak online kompenzovat chybějící fyzickou přítomnost? <span class="tg">odpověď ▾</span></div><div class="aa">Videi techniky se zpětnou vazbou (s jasnými pokyny k natáčení), silnou edukací, strukturovanou a proaktivní komunikací (reporty, check-iny) a lidskostí přes obrazovku — videohovory a hlasovkami místo suchého textu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je u online edukace a samostatnost klienta klíčová? <span class="tg">odpověď ▾</span></div><div class="aa">Protože klient musí umět jednat sám v čase mezi vašimi kontakty. Když rozumí „proč“ a má nastavené návyky i prostředí, vede sám sebe i v situacích, které jste neprobrali — a výsledky jsou trvalejší.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Podle čeho formát vybrat nebo zkombinovat? <span class="tg">odpověď ▾</span></div><div class="aa">Podle potřeb klienta (začátečník vs. samostatný, lokální vs. vzdálený) a podle cíle tvého byznysu (osobní kontakt vs. škálování). Hybrid — osobní start techniky plus online vedení dál — často funguje nejlépe.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Rozhodni, jaký formát (osobní, online, hybrid) bys nabídl třem různým klientům — úplnému začátečníkovi, zaneprázdněnému samostatnému klientovi a klientovi v jiném městě — a každou volbu zdůvodni. Pak napiš tři konkrétní věci, kterými bys u online klienta nahradil chybějící fyzickou přítomnost.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Barna, M. Online vs. osobní koučink. Barna Academy, Modul 5 · Lekce 8, 2026.</li>
+        <li>Barna, M. Motivační rozhovor a edukace klienta. Barna Academy, Modul 5 · Lekce 4, 2026.</li>
+        <li>Barna, M. Procesy a komunikace s klientem. Barna Academy, Modul 7 · Lekce 1 a 3, 2026.</li>
+        <li>Barna, M. Dosah, nabídka a poptávka. Barna Academy, Modul 6 · Lekce 3, 2026.</li>
+        <li>Barna, M. Návyky a prostředí klienta. Barna Academy, Modul 1 · Lekce 7–8, 2026.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

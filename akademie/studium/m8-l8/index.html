@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kondiční příprava a regenerace bojovníka — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 8 · Lekce 8 — Příprava bojovníků a úpolové sporty</div>
+    <h1>Kondiční příprava a regenerace bojovníka</h1>
+
+    <p class="lead">Ve světě úpolových sportů platí, že <strong>únava dělá zbabělce z nás všech</strong> — sebelepší technika je k ničemu, když bojovník v posledním kole nezvedne ruce. Tvým úkolem jako kondičního kouče je vybudovat kapacitu, která vydrží do gongu, a přitom řídit únavu tak chytře, aby kondice technický trénink doplňovala, ne aby s ním soupeřila.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jaké energetické nároky má úpolový sport a proč potřebuješ trénovat všechny tři systémy</li>
+        <li>Jak stavět kondici od obecné aerobní základny ke specifické kolové zátěži</li>
+        <li>Jak skloubit sílu, kondici a techniku, aniž se navzájem „požerou“</li>
+        <li>Proč je regenerace půlka přípravy a jak ji prakticky řídit</li>
+        <li>Jak periodizovat kemp od budování přes intenzifikaci až po taper</li>
+      </ul>
+    </div>
+
+    <h2>1) Kondice vyhrává zápasy</h2>
+    <p>Kondice je schopnost podávat vysoký výkon opakovaně po celé trvání zápasu — a často právě ona rozhoduje, ne technika sama o sobě. Tahle lekce navazuje na silově-kondiční základy a výživu bojovníka. Tady se soustředíme na kondici a na regeneraci, protože u vysokého objemu úpolového kempu je řízení únavy půlka celého úspěchu.</p>
+    <blockquote>Únava dělá zbabělce z nás všech. Když dojde palivo, technika zmizí jako první.</blockquote>
+
+    <h2>2) Energetické nároky úpolového sportu</h2>
+    <p>Zápas je svou povahou intervalový: výbuchy maximální intenzity — výměny, scrambly, kombinace — prokládané kratšími úseky nižší aktivity, a to opakovaně po několik kol. To zapojuje všechny tři energetické systémy:</p>
+    <div class="card">
+      <p><strong>Anaerobní alaktátový (ATP-CP)</strong> — krátké explozivní akce: úder, sprint do clinche, hod.</p>
+      <p><strong>Anaerobní glykolytický</strong> — intenzivní výměny trvající desítky sekund; produkuje únavu, kterou je třeba snášet a „pufrovat“.</p>
+      <p><strong>Aerobní (oxidativní)</strong> — základ, který umožňuje rychlejší zotavení mezi výbuchy a výdrž po celý zápas. Často podceňovaný, přitom klíčový.</p>
+    </div>
+    <p>Praktický důsledek: bojovník potřebuje obojí — explozivní výkon a opakovatelnost z anaerobních systémů <em>i</em> silnou aerobní základnu, která dovolí se mezi výbuchy rychle zotavit a vydržet do konce. Trénink jen jednoho z nich je neúplný.</p>
+
+    <h2>3) Jak stavět kondici: od základny ke specifičnosti</h2>
+    <p>Osvědčená logika jde od obecného ke specifickému, postupně v čase:</p>
+    <div class="card">
+      <p><strong>1. Aerobní základna</strong> (dál od zápasu) — vybuduj široký aerobní základ, schopnost zotavovat se a dlouho pracovat. Převážně nižší až střední intenzita, větší objem. Tahle „nuda“ je fundament, na kterém stojí vše ostatní.</p>
+      <p><strong>2. Anaerobní a intervalový rozvoj</strong> (blíž k zápasu) — přidávej intervaly napodobující nároky zápasu: vysoká intenzita s neúplným zotavením, opakovaně. Trénuješ schopnost opakovaných výbuchů a snášení únavy.</p>
+      <p><strong>3. Specifická kondice</strong> (nejblíž zápasu) — kondice „v rukavicích“: kolová struktura odpovídající délce kol a pauz, sparring, drilová zátěž. Co nejblíž realitě boje.</p>
+    </div>
+    <p>Princip specifičnosti: čím blíž zápasu, tím víc má kondice připomínat samotný zápas — délku kol, typ zátěže i pohyby. Obecná kondice tvoří základ, specifická ji doladí do soutěžní podoby.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když přebírám bojovníka osm týdnů před zápasem, neženu ho hned do „zápasových“ intervalů. První dva tři týdny stavím aerobní základnu, kterou většina lidí nesnáší, protože to není „cool“. Ale právě ta rozhoduje o tom, jak rychle se mu vrátí dech mezi výměnami ve třetím kole. Specifickou kondici v rukavicích řadím až do druhé poloviny kempu, kdy už má motor postavený.</p></div>
+
+    <h2>4) Skloubit sílu, kondici a techniku</h2>
+    <p>Největší výzva: bojovník má omezenou regenerační kapacitu a do ní se musí vejít technika, sparring, síla <em>i</em> kondice. Když se to nekoordinuje, jednotlivé složky se „požerou“ (interferenční efekt) a unavený bojovník trénuje techniku špatně. Zásady:</p>
+    <div class="points">
+      <ul>
+        <li><strong>Technika a sparring mají prioritu.</strong> To je jádro sportu. Sílu a kondici plánuj tak, aby tomu sloužily, ne aby je sabotovaly.</li>
+        <li><strong>Řaď zátěž chytře.</strong> Těžkou kondici ani sílu neklaď těsně před klíčový technický trénink nebo sparring — unavený bojovník znamená horší techniku a vyšší riziko zranění.</li>
+        <li><strong>Sílu udržuj efektivně.</strong> V kempu obvykle stačí menší objem silového tréninku na udržení síly a výbušnosti, ne na maximální nárůst. Šetříš regeneraci pro sport.</li>
+        <li><strong>Hlídej celkový pohár únavy.</strong> Sečti všechno — techniku, sparring, S&amp;C, váhový deficit i život mimo gym. Když je toho moc, něco musí ubrat, jinak přijde přetížení, nemoc nebo zranění.</li>
+      </ul>
+    </div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Nejčastější chyba, kterou u bojovníků vidím, je „hrdinský“ silák těsně před tvrdým sparringem. Pak jdou do výměn s vybitýma nohama, dostávají zbytečně zásahy a učí se špatné vzorce. U mě platí jednoduché pravidlo: nejtěžší kondiční den nikdy nesedí na den, kdy chci kvalitní sparring. Pohár únavy mám pořád v hlavě — a počítám do něj i shazování váhy a stres z práce.</p></div>
+
+    <h2>5) Regenerace: polovina přípravy</h2>
+    <p>U vysokého objemu úpolového kempu rozhoduje regenerace stejně jako trénink. Bez ní se zátěž nemění v adaptaci, ale v přetížení. Priority:</p>
+    <div class="card">
+      <p><strong>Spánek</strong> — nejmocnější regenerační nástroj, tečka. Nedostatek zhoršuje výkon, regeneraci, imunitu, reakční čas i riziko zranění. U bojovníka v kempu je spánek vrcholná priorita.</p>
+      <p><strong>Výživa a hydratace</strong> — dost energie, bílkovin a sacharidů na doplnění a opravu. Podvýživa znamená nemožnou regeneraci.</p>
+      <p><strong>Řízení zátěže a deload</strong> — plánované lehčí dny a týdny, aby se nahromaděná únava odmazala. Kemp bez odlehčení vede do zdi.</p>
+      <p><strong>Aktivní regenerace a péče o tělo</strong> — lehký pohyb, mobilita, péče o tkáně, případně fyzioterapie. Prevence drobných zranění, která by jinak narostla.</p>
+      <p><strong>Monitoring únavy</strong> — sleduj signály přetížení: pokles výkonu, špatný spánek, podrážděnost, nemoc, vyšší klidový tep, ztrátu motivace. Včasná reakce je prevence vážnějšího problému.</p>
+    </div>
+    <p>Důležité: více tréninku není vždy lepší. Přetrénovaný a nemocný bojovník nenastoupí v top formě, i kdyby „dřel“ sebevíc. Umění je natrénovat tak akorát a dorazit na zápas svěží a nabitý.</p>
+
+    <h2>6) Periodizace kempu (hrubý rámec)</h2>
+    <div class="card">
+      <p><strong>Začátek kempu</strong> (dál od zápasu) — budování: aerobní základna, síla, objem techniky. Vyšší celkový objem, nižší specifičnost.</p>
+      <p><strong>Střed kempu</strong> — intenzifikace: víc specifické kondice, sparring, intervalová práce. Vrchol tvrdé práce.</p>
+      <p><strong>Konec kempu (taper)</strong> — snižování objemu, doladění, ostření, regenerace a řízení váhy. Cíl: dorazit svěží, ostrý a ve formě, ne vyčerpaný z posledního hrdinského týdne.</p>
+    </div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je aerobní systém pro bojovníka tak důležitý, i když zápas vypadá hlavně „explozivně“? <span class="tg">odpověď ▾</span></div><div class="aa">Protože aerobní (oxidativní) systém zajišťuje rychlejší zotavení mezi explozivními výbuchy a výdrž po celý zápas. Bez silné aerobní základny se bojovník mezi výměnami nestihne zotavit a v posledních kolech mu dojde palivo — i kdyby měl výbornou výbušnost.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> V jakém pořadí se logicky staví kondice během přípravy? <span class="tg">odpověď ▾</span></div><div class="aa">Od obecného ke specifickému: nejprve aerobní základna (dál od zápasu), pak anaerobní a intervalový rozvoj (blíž k zápasu) a nakonec specifická kondice „v rukavicích“ s kolovou strukturou napodobující reálný zápas (nejblíž zápasu).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co znamená „interferenční efekt“ a jak mu předcházet? <span class="tg">odpověď ▾</span></div><div class="aa">Je to situace, kdy se jednotlivé složky tréninku (technika, sparring, síla, kondice) navzájem „požerou“, protože bojovník má omezenou regenerační kapacitu. Předcházíme mu chytrým řazením zátěže: technika a sparring mají prioritu, sílu a kondici plánujeme tak, aby jim sloužily, a hlídáme celkový pohár únavy.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč v kempu obvykle stačí menší objem silového tréninku? <span class="tg">odpověď ▾</span></div><div class="aa">Protože cílem v kempu je sílu a výbušnost udržet, ne maximálně budovat. Menší objem šetří regenerační kapacitu pro to podstatné — techniku a sparring — a snižuje riziko, že se silový trénink „požere“ s technickým.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Která regenerační priorita je nejmocnější a co sleduješ jako varovné signály přetížení? <span class="tg">odpověď ▾</span></div><div class="aa">Nejmocnějším regeneračním nástrojem je spánek. Mezi varovné signály přetížení patří pokles výkonu, špatný spánek, podrážděnost, nemoc, vyšší klidový tep a ztráta motivace. Včasná reakce na ně je prevence vážnějšího problému.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vezmi jednoho svého (nebo modelového) bojovníka a rozvrhni mu týden kempu: do kalendáře umísti techniku, sparring, sílu a kondici tak, aby nejtěžší kondiční den nesedl na den klíčového sparringu, a u každého dne si poznač, kam se vejde regenerace.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Turner AN. The Science and Practice of Periodization: A Brief Review. Strength &amp; Conditioning Journal.</li>
+        <li>Franchini E, et al. Physiological responses and performance in combat sports (přehledy ke kondici úpolových sportů).</li>
+        <li>Issurin VB. Block periodization. Sports Medicine. 2010.</li>
+        <li>Kellmann M, et al. Recovery and Performance in Sport: Consensus Statement. International Journal of Sports Physiology and Performance. 2018.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m8-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

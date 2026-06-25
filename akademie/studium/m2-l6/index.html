@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Můžeme s posturou něco udělat? (část 1) — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 6 — Anatomie a pohyb</div>
+    <h1>Můžeme s posturou něco udělat? (část 1)</h1>
+
+    <p class="lead">Místo slibů o „napravení každé postury“ chci být upřímný: <strong>většinu posturálních problémů tvoří chronický návyk, ne hodina v posilovně</strong>. Tahle lekce ukáže, co o korekci postury věda opravdu podloží — a kde je skutečná, poctivá role kouče.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je „grooving“ pohybu a proč chronický vzorec přebije hodinu v posilovně (poměr 5/163).</li>
+        <li>Co dělá telefon krční páteři, kolik to ročně dělá hodin a co je „text neck“.</li>
+        <li>Proč se při návratu do stoje musí přizpůsobit celá páteř, pánev i nohy.</li>
+        <li>Co o korekci postury věda zatím (ne)ví — a past „korelace ≠ kauzalita“.</li>
+        <li>Kde je reálná role kouče: cue, ergonomie, měkké tkáně a case-specific přístup.</li>
+      </ul>
+    </div>
+
+    <h2>1) „Grooving“ a poměr 5/163</h2>
+    <p>V síle a kondici se mluví o „groovingu“ pohybu — o tom, jak se i složitý vzorec zažere tak hluboko, že je druhou přirozeností, podobně jako jízda na kole. Háček je v tom, že běžná populace „groovuje“ špatné posturální a pohybové vzorce mnohem déle, než je stihneme korigovat. Tělo sbírá data přes centrální nervovou soustavu a adaptuje se na ten nejčastější podnět.</p>
+    <p>Spočítej si poměr: zhruba <strong>5 hodin týdně v posilovně proti 163 hodinám mimo ni</strong>. Většinu chronických dysfunkcí přitom tvoří svalové nerovnováhy — jeden sval je silnější než jeho protihráč, nebo se liší jejich délka a tonus. Tonus se mění, aby udržel „bezpečnou“ posturu vzniklou opakovaným podnětem.</p>
+    <div class="card">Drobná, ale důležitá poznámka k cílům: „chci úzký pas“ jde často přerámovat na „chci <em>vzhled</em> úzkého pasu“. U člověka se širší pánví totiž zúžení pasu nevyhnutelně způsobí, že pánev bude vypadat výrazně větší. Je to žádaný výsledek, nebo přehlédnutý důsledek? Jako kouč jsi tak trochu interiérový designér — klient zatím nevidí tvou vizi, ale po realizaci „to chápe“.</div>
+
+    <h2>2) Telefon a „text neck“</h2>
+    <p>Vezmi do ruky telefon. Podle Hansraje (2014) tráví lidé v průměru 2–4 hodiny denně hlavou skloněnou nad displejem — kumulativně <strong>700 až 1400 hodin ročně</strong>. Pro srovnání: pět tréninků týdně dělá zhruba 260 hodin za rok. Tady je jádro celého problému korekce.</p>
+    <p>Hlava dospělého váží v neutrální poloze asi 4,5–5,5 kg. Jakmile se naklání dopředu, síly na krk prudce rostou — při náklonu 30–40° působí na krční páteř přes 18 kg.</p>
+    <p>Co to dělá se svaly: hluboké krční extenzory (vzpřimovače, semispinalis capitis a cervicis, splenius capitis) se prodlouží a oslabí. Jejich práci přebírá povrchový horní trapéz a zdvihač lopatky — stávají se kompenzátory, jsou hypertonní a v trvalém napětí. Neznamená to nutně, že jsou „dominantní“; jsou jen přetížené a dělají práci, kterou by dělat neměly. A pozor — platí to <strong>jen</strong> tehdy, když je skloněná samotná hlava.</p>
+
+    <h2>3) Proč se přizpůsobí celé tělo</h2>
+    <p>Vyzkoušej si to: seď rovně a skloň jen hlavu k telefonu při vzpřímeném trupu. Pak to udělej, jak to děláš normálně — většina lidí se zhroutí v břiše, spadne do bederní kyfózy a pánev se sklopí dozadu. Chiropraktici tomuto držení říkají „rovný krk“, tedy ztráta přirozené krční křivky.</p>
+    <p>Když se pak postavíme a chceme se dívat před sebe, musí se přizpůsobit celá páteř, pánev i nohy, abychom neupadli:</p>
+    <div class="card">
+      <p style="margin-top:0">• Jak jde hlava dopředu, horní tělo se posune dozadu jako kompenzace → větší hrudní kyfóza.</p>
+      <p>• To tlačí krční páteř do extenze a lordózy (opak toho, co dělá samotný předklon krku).</p>
+      <p style="margin-bottom:0">• Přidá se anteriorní sklon pánve, doplněný flexí nebo extenzí kolen podle vzorce zatížení.</p>
+    </div>
+    <blockquote>„Když se jeden tělesný segment dostane mimo zarovnání, sousední segment se pohne opačným směrem, aby udržel těžnici nad opěrnou bází.“ — Norris (2000)</blockquote>
+    <p>Jakákoli změna polohy skeletu mění funkční kapacitu jinde — a všechno v zájmu rovnováhy a vzpřímeného stoje.</p>
+
+    <h2>4) Poctivá pravda: co věda (ne)ví</h2>
+    <p>Přes skvělou práci lidí jako Janda nebo Myers v oblasti korekce postury stále chybí pevná shoda. Existuje spousta teorií a protokolů a věda opakovaně ukazuje na klíčovou roli centrální nervové soustavy ve funkci tkání — ale jednotnou odpověď zatím nemáme.</p>
+    <p>Zajímavý příklad: studie augmentace i redukce prsou ukázaly, že <strong>oba</strong> zákroky měly pozitivní vliv na posturu. Vysvětlení není mechanické, ale psychologické — snaha „skrývat“ to, co člověk vnímá jako abnormalitu, souvisí s nadměrnou kyfózou. Po operaci se zlepšilo sebevědomí a tělesný obraz a právě to, ne změna hmotnosti, bylo největším faktorem zlepšení. Když jsme v byznysu zlepšování sebevědomí a tělesného obrazu, nestáváme se mimoděk experty na posturu?</p>
+    <div class="card"><strong>Pozor na klam „korelace ≠ kauzalita“</strong> (post hoc ergo propter hoc — „po tom, tedy kvůli tomu“). To, že po korekčním cviku přišlo zlepšení, neznamená, že ho ten cvik způsobil. Při absenci shody se můžeme opřít o zkušenost těch, kdo metody aplikují a vidí „často“ zlepšení — ale ber to jako to, čím to je: zčásti fakt, zčásti spekulace.</div>
+
+    <h2>5) Kde je reálná role kouče</h2>
+    <p>Korekce v posilovně je podle mě hlavně o úspěšném groovingu lepších vzorců a o posílení cue, které se přenesou do těch 163 hodin venku. Ne o nucení lidí do „dokonalých“ pozic.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Posturální a mechanický screening by měl být case-specific. Většina funkčních testů stojí na obecném atletickém výkonu a ignoruje individuální prostředí člověka. Potřebuje kancelářský pracovník mířící na kompozici dělat overhead dřepy nebo „velkou trojku“? Jako nutnost to vidím sporně. Vždy se ptej v tomto pořadí: nutnost → rizika → kýžený vs. skutečný výsledek.</div>
+    <div class="card">
+      <p style="margin-top:0"><strong>Čtyři reálné páky mimo „nucení do pozic“:</strong></p>
+      <p>• Edukuj klienta k hands-free zařízením a lepší ergonomii pracoviště.</p>
+      <p>• Ptej se na polohu při spaní a řeš ji jako svalovou nerovnováhu v tréninku.</p>
+      <p>• Podporuj pravidelnou práci s měkkými tkáněmi pro úlevu od bolesti.</p>
+      <p style="margin-bottom:0">• Posiluj lepší pohyb a používej cue vhodné pro danou situaci — pro jednoho funguje „hrudník nahoru“, pro jiného líp „stáhni lopatky“.</p>
+    </div>
+    <p>A pravidlo nade vše: jako kouč nikomu posturu nezhoršíš — vždy ji jen postupně zlepšuješ nebo přizpůsobuješ jeho situaci. Manuální terapeut patří do tvého okruhu spolupracovníků pro dlouhodobé řešení chronických problémů. Cílem je dostat lidi pod kontrolu vlastního těla a zmocnit je fungovat líp.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co znamená poměr 5/163? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 5 hodin týdně v posilovně proti 163 hodinám mimo ni. Chronický podnět z těch 163 hodin přebije hodinu cílené korekce — tělo se adaptuje na nejčastější vzorec.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolik hodin ročně tráví průměrný člověk hlavou nad telefonem (dle Hansraje)? <span class="tg">odpověď ▾</span></div><div class="aa">Přibližně 700 až 1400 hodin ročně — pro srovnání, pět tréninků týdně dělá jen okolo 260 hodin za rok.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co se stane s hlubokými krčními extenzory a horním trapézem při „text neck“? <span class="tg">odpověď ▾</span></div><div class="aa">Hluboké krční extenzory se prodlouží a oslabí; horní trapéz a zdvihač lopatky jejich roli přeberou, přetíží se a stanou se hypertonními (v trvalém napětí).</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co je klam „post hoc ergo propter hoc“ v kontextu korekce postury? <span class="tg">odpověď ▾</span></div><div class="aa">„Po tom, tedy kvůli tomu.“ To, že po korekčním cviku přišlo zlepšení, neznamená, že ho ten cvik způsobil — korelace není kauzalita.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jmenuj tři reálné páky kouče mimo „nucení do pozic“. <span class="tg">odpověď ▾</span></div><div class="aa">Ergonomie a hands-free zařízení, řešení polohy při spaní a pravidelná práce s měkkými tkáněmi (plus vhodné cue a grooving lepších vzorců).</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U jednoho klienta, který hodně sedí a používá telefon, navrhni „163hodinovou strategii“: tři konkrétní změny mimo posilovnu (ergonomie, hands-free, spánek, měkké tkáně) plus jedno cue, které budeš zdůrazňovat v tréninku — a žádné „nucení do pozice“.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Norris CM. Back Stability. Champaign, IL: Human Kinetics; 2000.</li>
+        <li>Hansraj KK. Assessment of stresses in the cervical spine caused by posture and position of the head. Surg Technol Int. 2014;25:277-9.</li>
+        <li>Black KM, McClure P, Polansky M. The influence of different sitting positions on cervical and lumbar posture. Spine. 1996;21(1):65-70.</li>
+        <li>Janda V. Muscles and Cervicogenic Pain Syndromes. In: Physical Therapy of the Cervical and Thoracic Spine. Churchill Livingstone; 1988:153-166.</li>
+        <li>Myers TW. Anatomy Trains: Myofascial Meridians for Manual and Movement Therapists. Edinburgh: Churchill Livingstone; 2001.</li>
+        <li>Mazzocchi M, et al. A study of postural changes after breast augmentation. Aesthetic Plast Surg. 2012;36(3):570-7.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

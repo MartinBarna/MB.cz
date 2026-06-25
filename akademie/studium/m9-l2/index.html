@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloky, deload a taper — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 9 · Lekce 2 — Periodizace a plánování</div>
+    <h1>Bloky, deload a taper</h1>
+
+    <p class="lead">Teorii periodizace teď převedeme do praxe: jak postavit reálný plán z <strong>bloků</strong>, kdy a jak zařadit lehčí týden (<strong>deload</strong>) a jak vyladit formu před důležitou událostí (<strong>taper</strong>). Žádná raketová věda — jednoduchý funkční plán, který klient uveze.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak postavit blok (mezocyklus) se zaměřením a logickou návazností.</li>
+        <li>Kdy a jak zařadit deload — a jak poznat, že je potřeba dřív.</li>
+        <li>Jak vyladit formu taperem před akcí nebo testem.</li>
+        <li>Jak na sebe bloky navazovat v delším plánu (makrocyklus).</li>
+        <li>Jak plán upravovat podle reality, ne ho držet na papíře za každou cenu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Stavba bloku (mezocyklu)</h2>
+    <p>Blok je několik týdnů — typicky zhruba 3 až 6 — soustředěných na jedno konkrétní zaměření. Drž se jednoho hlavního cíle na blok: objem a hypertrofie, technika a budování báze, nebo síla. Uvnitř bloku postupně přidávej zátěž, opakování i kvalitu přes progresivní přetížení, aby měl blok vzestupnou tendenci.</p>
+    <p>Ke konci bloku bývá zátěž nejvyšší — pak přichází lehčí týden, který adaptaci dotáhne. A bloky stav na sebe smysluplně: nejdřív budování objemu a techniky, pak blok síly, který staví na vybudované bázi.</p>
+
+    <h2>2) Deload — kdy a jak</h2>
+    <p>Deload je plánovaný lehčí týden, který dá tělu dohnat regeneraci a posunout se výš. Plánovaně ho zařaď typicky na konec bloku, případně po několika týdnech progresivní zátěže. Dřív ho zařaď podle signálů: kupí se únava, stagnuje výkon, klesá motivace, zhoršuje se spánek. Tělo říká „potřebuju pauzu“ dřív, než velí kalendář.</p>
+    <p>Jak na to: sniž objem nebo intenzitu — méně sérií, nižší zátěž, dál od selhání. Trénink zůstává, jen je výrazně lehčí. Není to týden nicnedělání, je to řízené odlehčení.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Deload klientovi nikdy neprodávám jako „lenost“ ani ztrátu času — je to součást toho, proč plán vůbec funguje. Vysvětlím mu to dopředu, ať lehčí týden nebere jako selhání, ale jako důvod, proč příští blok pojede dál.</div>
+
+    <h2>3) Taper — ladění formy před akcí</h2>
+    <p>Taper je cílené snížení zátěže v posledních dnech či týdnech před důležitou událostí — závodem, focením, zápasem, testem maxima — aby byl klient odpočatý a podal špičkový výkon. Objem sniž výrazně, ale udrž určitou intenzitu a ostrost, aby tělo „nezlenivělo“.</p>
+    <blockquote>Formu si necháš dojít tím, že ubereš nahromaděnou únavu, ne kondici.</blockquote>
+    <p>Délka taperu se řídí situací — od pár dní po pár týdnů u větších akcí. Rozdíl od deloadu: deload je pravidelná údržba uvnitř plánu, taper je jednorázové vyladění před vrcholem.</p>
+
+    <h2>4) Navazování bloků (makrocyklus)</h2>
+    <p>Delší plán je řada bloků směřujících k cíli. Plánuj shora dolů: kam míříme a kdy (cíl nebo akce) → jaké bloky nás tam dovedou → konkrétní týdny. Mezi bloky střídej důraz — objem, síla, ladění — ať se rozvíjí víc schopností a nehromadí se jednostranná únava.</p>
+    <p>Pravidelně zařazuj odlehčení (deloady) a před vrcholem taper. A nech v plánu rezervu: plán není beton, počítej s tím, že život — nemoc, stres, cesta — občas zasáhne.</p>
+
+    <h2>5) Upravuj podle reality</h2>
+    <p>Nejlepší plán je ten, který přežije kontakt s realitou klienta. Sleduj odezvu: výkon, únavu, spánek, motivaci. Plán je hypotéza, kterou ověřuješ — stejně jako u výživy. Když klient nestíhá regenerovat nebo mu zasáhl život, uber nebo posuň. Tvrdohlavé držení plánu vede k přetížení nebo k tomu, že to klient vzdá.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Periodizaci u běžných klientů stavím jednoduše: bloky po několika týdnech s jasným zaměřením, uvnitř progrese, na konci lehčí týden, před důležitou událostí taper. A hlavně to upravuju podle toho, jak klient reaguje — plán je nástroj, ne svatý text. Krása periodizace není ve složitosti, ale v tom, že klient stabilně roste a přitom nevyhoří. Plánuj, sleduj, uprav.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak postavit blok (mezocyklus)? <span class="tg">odpověď ▾</span></div><div class="aa">Několik týdnů (cca 3–6) s jedním zaměřením, vnitřní progresí přes progresivní přetížení a vyvrcholením následovaným odlehčením na konci. Bloky na sebe logicky navazují — např. nejdřív objem a technika, pak síla na vybudované bázi.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kdy zařadit deload — plánovaně i dřív? <span class="tg">odpověď ▾</span></div><div class="aa">Plánovaně na konci bloku (případně po několika týdnech progresivní zátěže). Dřív podle signálů: kupící se únava, stagnace výkonu, pokles motivace, zhoršený spánek.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je rozdíl mezi deloadem a taperem? <span class="tg">odpověď ▾</span></div><div class="aa">Deload je pravidelná údržba uvnitř plánu — lehčí týden, který dotáhne regeneraci. Taper je jednorázové vyladění formy před vrcholem: výrazně sníž objem, ale udrž ostrost, abys odplavil únavu a zachoval připravenost.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak skládat bloky v makrocyklu? <span class="tg">odpověď ▾</span></div><div class="aa">Shora dolů: cíl/akce → jaké bloky tam vedou → konkrétní týdny. Mezi bloky střídej důraz (objem → síla → ladění), zařaď pravidelné deloady a před cílem taper, a nech v plánu rezervu na zásahy života.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč plán upravovat podle reality? <span class="tg">odpověď ▾</span></div><div class="aa">Plán je hypotéza. Podle odezvy (výkon, únava, spánek, motivace, životní okolnosti) je třeba ho upravit — jinak hrozí přetížení nebo to, že klient odejde. Jednoduchost přitom vyhrává nad komplikovaným modelem, který nikdo neudrží.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Naplánuj konkrétní 12týdenní makrocyklus pro klienta na kompozici (4 dny/týden) — rozděl ho do bloků se zaměřením, urči, kde budou deloady, a kdyby na konci byl „test“ (focení/měření), naplánuj krátký taper. Pak napiš dva signály, podle kterých bys deload zařadil dřív.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Bompa TO, Buzzichelli C. Periodization: Theory and Methodology of Training. Human Kinetics.</li>
+        <li>Issurin VB. Benefits and limitations of block periodized training approaches. Sports Med. 2010;40(3):189–206.</li>
+        <li>Bosquet L, et al. Effects of tapering on performance: a meta-analysis. Med Sci Sports Exerc. 2007;39(8):1358–1365.</li>
+        <li>Pritchard H, et al. Effects and mechanisms of tapering in maximizing muscular strength. Strength Cond J. 2015.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m9-l2', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

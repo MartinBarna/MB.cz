@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vůle, sebeovládání a změna chování — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; }
+  .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 3 — Psychologie a chování kolem jídla</div>
+    <h1>Vůle, sebeovládání a změna chování</h1>
+
+    <p class="lead">„Já prostě nemám vůli." Tuhle větu uslyšíš pořád. A je postavená na omylu. <strong>Vůle není povahová vlastnost, kterou někdo má a někdo ne — je to palivo. A jako každé palivo dochází.</strong> Když to pochopíš, přestaneš lidi soudit za „selhání" a začneš jim stavět prostředí, kde vůli skoro nepotřebují.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je touha po rychlých výsledcích tak silná — a jak ji použít poctivě.</li>
+        <li>Co přesně je vůle a proč je to vyčerpatelný zdroj.</li>
+        <li>Jak hladina krevního cukru řídí sebeovládání (biologie).</li>
+        <li>Jak víra klienta ve vlastní vůli mění jeho skutečný výkon (psychologie).</li>
+        <li>Tři páky, kterými klientovi „přidáš vůli" bez kázání o disciplíně.</li>
+      </ul>
+    </div>
+
+    <h2>1) Touha po rychlých výsledcích</h2>
+    <p>Vidina rychlé a snadné změny je přitažlivá pro každého. Proto jsou titulky vždy s časovým rámcem — „Břišní svaly za 6 týdnů". Firmy vydělávají na touze po rychlém řešení. Tvoje role je opačná: nastavit realistické očekávání podle toho, kde klient je, ne podle univerzální tabulky.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Marketing tě jen dostane „ke dveřím" a dá šanci nabídnout správné řešení. Zbytek odpracuje kvalita služby. Prodej není sprosté slovo, pokud za ním stojí skutečná pomoc.</div>
+
+    <h2>2) Co lidem reálně brání (data)</h2>
+    <p>Průzkumy trhu ukazují konkrétní překážky: zhruba pětina lidí říká, že nemá vůli dietu dlouhodobě udržet; velká část neví, jak jíst zdravě mimo domov; část má příliš hektický život. To jsou přesně oblasti tvojí práce — porozumět vůli, vyřešit stravování venku a najít, co v životě klienta brání plnit plán.</p>
+
+    <h2>3) Co je vůle a proč dochází</h2>
+    <p>Sebeovládání (vůle, disciplína) je podle výzkumu omezený zdroj, který se v průběhu dne vyčerpává. Každé rozhodnutí a každé odolání pokušení ubírá z „nádrže". Proto nejtěžší volby (dát si zacvičit, nemlsat) padají často večer, kdy je nádrž nejprázdnější — a člověk „povolí". Není to slabost charakteru, je to fyziologie.</p>
+
+    <h2>4) Biologie: hladina krevního cukru</h2>
+    <p>Sebeovládání má hmatatelný biologický základ — souvisí s dostupností energie (glukózy) pro mozek. Když hladina cukru kolísá do extrémů (např. při nadměrném deficitu nebo dlouhém hladovění), schopnost ovládat se klesá. Praktický důsledek: <strong>extrémní dieta nezhoršuje jen náladu, ale i samotnou vůli.</strong> Stabilnější energie z rozumného příjmu a sytých jídel drží sebeovládání nahoře.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> U klienta, který „se neudrží", nejdřív zkontroluju, jestli nehladoví. Často stačí zvednout příjem a přidat bílkoviny — a „vůle" se zázračně vrátí. Nebojuju s charakterem, srovnávám biologii.</div>
+
+    <h2>5) Psychologie: víra ve vlastní vůli</h2>
+    <p>Druhá vrstva je přesvědčení. To, jestli klient věří, že vůli „má", reálně ovlivňuje jeho výkon. Kdo se vidí jako „člověk bez vůle", vzdá to dřív. Kdo vidí sebeovládání jako trénovatelnou dovednost, vydrží víc. Tvoje slova a rámování proto nejsou kosmetika — mění skutečný výsledek.</p>
+
+    <h2>6) Tři páky koučinku</h2>
+    <div class="card">
+      <p style="margin-top:0"><strong>1. Hladina cukru / energie</strong> — nehnat klienta do extrémního deficitu; sytá jídla, dost bílkovin, pravidelnost. Chrání sebeovládání.<br>
+      <strong>2. Víra v úspěch</strong> — rámuj vůli jako dovednost, oslavuj malé výhry, nedovol klientovi vidět se jako „beznadějný případ".<br>
+      <strong>3. Motivace + monitoring</strong> — silné „proč" plus sledování pokroku. Co se měří a vidí, to se snáz drží.</p>
+    </div>
+    <p>Nejmocnější páka ale stojí mimo vůli úplně: <strong>systém a prostředí</strong>, kde správná volba nevyžaduje skoro žádné sebeovládání (probíráme dál v modulu). Amatér spoléhá na vůli; profík staví systém, který ji šetří.</p>
+    <blockquote>Nepotřebuješ víc vůle. Potřebuješ jí potřebovat míň.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Vůle je nejlépe popsána jako…? <span class="tg">odpověď ▾</span></div><div class="aa">Vyčerpatelný zdroj („palivo"), který se během dne spotřebovává — ne pevná povahová vlastnost.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak extrémní deficit ovlivňuje sebeovládání? <span class="tg">odpověď ▾</span></div><div class="aa">Zhoršuje ho — kolísání/nízká dostupnost energie pro mozek snižuje schopnost ovládat se. Proto nehladovět.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč záleží na klientově víře ve vlastní vůli? <span class="tg">odpověď ▾</span></div><div class="aa">Přesvědčení mění skutečný výkon — kdo se vidí jako „bez vůle", vzdá to dřív; vůle jako dovednost vydrží víc.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři páky koučinku pro „přidání vůle". <span class="tg">odpověď ▾</span></div><div class="aa">Hladina cukru/energie (nehladovět), víra v úspěch (rámování, malé výhry), motivace + monitoring.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co vůli šetří nejvíc? <span class="tg">odpověď ▾</span></div><div class="aa">Systém a prostředí, kde správná volba nevyžaduje skoro žádné sebeovládání — ne „mít víc vůle".</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Najdi u sebe nebo u klienta denní dobu, kdy nejčastěji „povolíš". Polož si: měl/a jsem tehdy hlad nebo vyčerpání? Navrhni jednu úpravu (jídlo s bílkovinou dřív, příprava předem), která tu chvíli odlehčí — bez spoléhání na vůli.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Baumeister RF, Tierney J. Willpower: Rediscovering the Greatest Human Strength.</li>
+        <li>Gailliot MT, Baumeister RF. The physiology of willpower: linking blood glucose to self-control. Pers Soc Psychol Rev. 2007.</li>
+        <li>Job V, Dweck CS, Walton GM. Implicit theories about willpower affect self-regulation. Psychol Sci. 2010.</li>
+        <li>Hagger MS, et al. Ego depletion and the strength model of self-control: a meta-analysis. Psychol Bull. 2010.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

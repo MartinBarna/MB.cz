@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relaps a návrat po výpadku — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 6 — Práce s klientem a koučink</div>
+    <h1>Relaps a návrat po výpadku</h1>
+
+    <p class="lead"><strong>Každý klient dřív nebo později „spadne“ — vynechá týden tréninků, projí dovolenou, vrátí se ke starým návykům. To není selhání, ale normální součást procesu. O výsledku nerozhoduje samotný výpadek, ale to, co přijde po něm.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je relaps normální a očekávatelný — ne důkaz selhání.</li>
+        <li>Proč je nebezpečnější vina po výpadku než výpadek sám.</li>
+        <li>Jak pomoct klientovi vrátit se rychle a bez dramatu.</li>
+        <li>Jak z relapsu udělat užitečné poučení místo katastrofy.</li>
+        <li>Jak relapsům předcházet nastavením očekávání předem.</li>
+      </ul>
+    </div>
+
+    <h2>1) Relaps je normální</h2>
+    <p>Změna chování není přímka. Je to klikatá cesta s vrcholy i propady — výpadky patří k procesu u úplně každého, i u tebe. Když to klient ví předem, nebere první zaváhání jako důkaz, že „to nezvládne“. Když to neví, jeden špatný týden ho může psychicky položit.</p>
+    <p>Tvoje první věta po relapsu má proto být uklidňující, ne kárající: „Stalo se, je to úplně normální, jdeme dál.“ Tím klientovi odebereš jeho nejnebezpečnější reakci — vinu.</p>
+
+    <h2>2) Vina je nebezpečnější než výpadek</h2>
+    <p>Sám o sobě jeden týden mimo plán fyzicky skoro nic neudělá. Nebezpečná je psychologická reakce, která po něm přichází:</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem"><strong>„Už jsem to stejně zkazil“</strong> → přístup „co už“ → další jedení a nečinnost.</li>
+        <li style="margin-left:1.1rem"><strong>Vina a stud</strong> → klient se vyhýbá kontaktu, přestane reportovat a postupně zmizí.</li>
+        <li style="margin-left:1.1rem"><strong>Černobílé myšlení</strong> („buď to dělám dokonale, nebo vůbec“) → po prvním zaváhání to vzdá.</li>
+      </ul>
+    </div>
+    <p>Spirála viny položí víc klientů než jakýkoli „špatný týden“. Tvoje práce je tu spirálu zastavit — klidem, ne dalším tlakem.</p>
+
+    <h2>3) Jak pomoct s rychlým návratem</h2>
+    <p>Cílem není dohánět ztracené ani trestat. Cílem je hladký návrat zpět do rutiny:</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem"><strong>Normalizuj a odeber vinu</strong> — „stane se každému, není to konec, neměníme nic dramatického.“</li>
+        <li style="margin-left:1.1rem"><strong>Malý první krok</strong> — nezačínej návrat extrémem („teď to dvojnásob naženeme“). Jeden snadný krok zpátky (jeden trénink, jedno dobré jídlo) obnoví pohyb i víru.</li>
+        <li style="margin-left:1.1rem"><strong>Vrať se k základu, ne k trestu</strong> — žádné kompenzační hladovění ani extra dřina za pokání. To jen posiluje nezdravý vztah k jídlu a tréninku.</li>
+        <li style="margin-left:1.1rem"><strong>Připomeň skutečnou motivaci</strong> — proč to klient dělá. Smysl ho vrátí líp než výčitka.</li>
+      </ul>
+    </div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient po výpadku napíše s ostychem „promiň, zkazil jsem to“, moje reakce nikdy není zklamání — je to klid: „Vůbec nic se neděje, tohle patří k procesu, jdeme dál jedním malým krokem.“ Paradox je, že čím míň klienta za prošvih peskuju, tím rychleji se vrací a tím míň prošvihů má.</div>
+
+    <h2>4) Z relapsu udělej poučení</h2>
+    <p>Výpadek je cenná informace, ne jen „chyba“. Až po uklidnění — nikdy v momentě viny — se s klientem podívej, co ho vlastně vykolejilo:</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem">Co se dělo předtím? (stres, akce, cesta, nemoc, špatný spánek)</li>
+        <li style="margin-left:1.1rem">Byl spouštěč ve fyzickém prostředí?</li>
+        <li style="margin-left:1.1rem">Byl plán neudržitelný nebo příliš přísný? Pokud ano, uprav ho směrem k větší flexibilitě.</li>
+        <li style="margin-left:1.1rem">Co příště uděláte jinak, aby vás stejná situace nevykolejila?</li>
+      </ul>
+    </div>
+    <p>Tím se z relapsu stávají data pro lepší plán. Klient se učí, že výpadek se dá ustát a zpracovat — že není důkazem jeho selhání, ale součástí učení.</p>
+
+    <h2>5) Předcházej relapsům předem</h2>
+    <p>Nejlepší práce s relapsem je ta, kterou uděláš dřív, než vůbec nastane:</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem"><strong>Nastav očekávání na startu</strong> — „výpadky přijdou a jsou normální; rozhoduje, jak se vrátíš, ne jestli zakolísáš.“</li>
+        <li style="margin-left:1.1rem"><strong>Stav udržitelný plán</strong> — čím méně extrémní a rigidní, tím méně „pádů“.</li>
+        <li style="margin-left:1.1rem"><strong>Připrav plán na rizikové situace</strong> — dovolená, akce, stresové období. Domluvte předem flexibilní režim; i „udržovací“ je vítězství.</li>
+        <li style="margin-left:1.1rem"><strong>Drž kontakt v riziku</strong> — když vidíš varovné signály, ozvi se dřív, než klient zmizí.</li>
+      </ul>
+    </div>
+
+    <blockquote>Výsledky nedělá dokonalost. Dělá je schopnost vrátit se — a tu klienta musíš naučit.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je relaps normální? <span class="tg">odpověď ▾</span></div><div class="aa">Změna chování není přímka — je to klikatá cesta s vrcholy i propady a výpadky patří k procesu u každého. Když to klient ví předem, nebere první zaváhání jako důkaz, že to nezvládne.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč je vina nebezpečnější než samotný výpadek? <span class="tg">odpověď ▾</span></div><div class="aa">Jeden týden mimo plán fyzicky skoro nic neudělá. Vina ale spouští přístup „co už“, vyhýbání se kontaktu a černobílé myšlení — a právě tahle spirála vede k tomu, že to klient nakonec vzdá.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak vypadá dobrý návrat po výpadku? <span class="tg">odpověď ▾</span></div><div class="aa">Normalizovat a odebrat vinu, udělat jeden malý krok zpět do rutiny, žádné tresty ani kompenzace a připomenout klientovi jeho skutečnou motivaci — proč to celé dělá.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak z relapsu udělat poučení? <span class="tg">odpověď ▾</span></div><div class="aa">Až po uklidnění (ne v momentě viny) společně zjistit, co výpadek spustilo — stres, prostředí, příliš přísný plán — a domluvit se, co příště uděláte jinak. Z výpadku se tak stanou data pro lepší plán.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak relapsům předcházet? <span class="tg">odpověď ▾</span></div><div class="aa">Nastavit očekávání hned na startu, stavět udržitelný (ne rigidní) plán, předem připravit režim pro rizikové situace a držet kontakt, jakmile se objeví varovné signály.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Klient se po týdnu úplného výpadku ozve s omluvou a studem. Napiš mu odpověď, která odebere vinu, nabídne jeden konkrétní malý krok zpět a navrhne, jak se v klidu (později) podívat na to, co výpadek spustilo — bez jakéhokoli kárání.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Marlatt GA, Donovan DM. Relapse Prevention. 2nd ed. Guilford Press; 2005.</li>
+        <li>Polivy J, Herman CP. Dieting and binging: A causal analysis (efekt „co už“). American Psychologist.</li>
+        <li>Barna Academy. Modul 1 — Návyky, restrikce a emoční jedení. Interní studijní text.</li>
+        <li>Barna Academy. Modul 6 — Retence a varovné signály. Interní studijní text.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

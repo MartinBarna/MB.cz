@@ -5,42 +5,151 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Přihlášení — Barna Academy</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <style>
-  :root { --gold:#ff7a00; }
+  :root { --gold:#ff7a00; --ink:#161616; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'Poppins',Arial,sans-serif; color:#161616; background:linear-gradient(135deg,#262626,#0d0d0d); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
-  .card { background:#fff; border-radius:24px; box-shadow:0 24px 70px rgba(0,0,0,.3); max-width:420px; width:100%; padding:38px 32px; text-align:center; }
-  .logo { display:flex; align-items:center; justify-content:center; gap:9px; margin-bottom:1.4rem; }
-  .logo .mark { width:36px; height:36px; border-radius:9px; background:#161616; color:var(--gold); font-weight:800; display:flex; align-items:center; justify-content:center; }
-  .logo b { font-size:1.05rem; letter-spacing:.5px; }
-  h1 { font-size:1.35rem; margin-bottom:.3rem; }
-  p.sub { color:#888; font-size:.92rem; margin-bottom:1.4rem; }
-  label { display:block; text-align:left; font-size:.85rem; font-weight:600; margin:.7rem 0 .3rem; color:#555; }
-  input { width:100%; border:1.5px solid #e0d8cd; border-radius:12px; padding:12px 16px; font-size:1rem; font-family:inherit; outline:none; }
-  input:focus { border-color:var(--gold); }
-  .btn { width:100%; background:var(--gold); color:#161616; border:none; font-weight:700; padding:13px; border-radius:50px; cursor:pointer; font-size:1rem; margin-top:1.2rem; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#161616; background:#f6f1ea; line-height:1.6; }
+  .top { background:#161616; color:#fff; }
+  .top .in { max-width:960px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .wrap { max-width:440px; margin:0 auto; padding:42px 18px 70px; }
+  .hero { text-align:center; margin-bottom:22px; }
+  .hero .mark { width:56px; height:56px; border-radius:15px; background:var(--gold); color:#161616; font-weight:800; font-size:1.4rem; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
+  .hero h1 { font-size:1.5rem; }
+  .hero p { color:#6f655a; font-size:.94rem; margin-top:.3rem; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:18px; padding:24px; }
+  .tabs { display:flex; gap:6px; background:#f3ece2; border-radius:12px; padding:5px; margin-bottom:18px; }
+  .tabs button { flex:1; border:none; background:transparent; padding:10px; border-radius:9px; font-weight:700; cursor:pointer; color:#7a6f61; font-family:inherit; font-size:.92rem; }
+  .tabs button.on { background:#fff; color:#161616; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  label { display:block; font-size:.85rem; font-weight:600; color:#5a5045; margin:12px 0 5px; }
+  input { width:100%; padding:12px 14px; border:1px solid #e2d6c6; border-radius:11px; font-family:inherit; font-size:.95rem; background:#fdfbf8; }
+  input:focus { outline:none; border-color:var(--gold); }
+  .btn { width:100%; margin-top:18px; background:var(--gold); color:#161616; font-weight:700; padding:13px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:1rem; }
   .btn:hover { background:#161616; color:#fff; }
-  .alt { margin-top:1rem; font-size:.88rem; color:#888; }
-  .alt a { color:var(--gold); font-weight:600; text-decoration:none; }
-  .note { margin-top:1.4rem; font-size:.78rem; color:#aaa; background:#faf7f2; border-radius:10px; padding:.7rem; }
+  .btn[disabled] { opacity:.6; cursor:default; }
+  .msg { margin-top:14px; padding:11px 14px; border-radius:11px; font-size:.9rem; display:none; }
+  .msg.err { display:block; background:#fdeceb; color:#b3261e; border:1px solid #f4cfcb; }
+  .msg.ok { display:block; background:#eaf6ec; color:#1e7a32; border:1px solid #c7e7cd; }
+  .note { display:block; background:#fff8f0; color:#a4641b; border:1px solid #f0d8b8; margin-bottom:18px; padding:11px 14px; border-radius:11px; font-size:.88rem; }
+  .note a { color:#a4641b; font-weight:700; }
+  .foot { text-align:center; color:#a89c8c; font-size:.82rem; margin-top:20px; }
+  .foot a { color:#a4641b; }
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="logo"><span class="mark">MB</span><b>BARNA ACADEMY</b></div>
-    <h1>Přihlášení do studia</h1>
-    <p class="sub">Vítej zpátky. Pokračuj ve svém vzdělávání.</p>
-    <form onsubmit="event.preventDefault(); location.href='/akademie/studium/';">
-      <label for="em">E-mail</label>
-      <input id="em" type="email" placeholder="tvuj@email.cz" autocomplete="email">
-      <label for="pw">Heslo</label>
-      <input id="pw" type="password" placeholder="••••••••" autocomplete="current-password">
-      <button class="btn" type="submit">Přihlásit se</button>
-    </form>
-    <p class="alt">Ještě nemáš přístup? <a href="/akademie/">Získej Barna Academy →</a></p>
-    <div class="note">Ukázka přihlášení. Skutečné přihlašování a placený přístup napojíme přes Supabase. Tlačítko teď vede rovnou do ukázky studia.</div>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/">← Zpět</a>
+  </div></div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="mark">MB</div>
+      <h1>Členská sekce</h1>
+      <p>Přihlas se ke svému studiu — lekce, videa i certifikace na jednom místě.</p>
+    </div>
+
+    <div class="note" id="demoNote" style="display:none;">Členská sekce se právě spouští. Zatím si můžeš projít <a href="/akademie/studium/">ukázkové lekce</a>; přihlášení bude aktivní po startu.</div>
+    <div class="note" id="needNote" style="display:none;"></div>
+
+    <div class="card">
+      <div class="tabs">
+        <button id="tabIn" class="on" type="button">Přihlásit se</button>
+        <button id="tabUp" type="button">Vytvořit účet</button>
+      </div>
+
+      <form id="form" novalidate>
+        <div id="nameRow" style="display:none;">
+          <label for="fname">Jméno a příjmení</label>
+          <input id="fname" type="text" autocomplete="name" placeholder="Jan Novák">
+        </div>
+        <label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="email" placeholder="tvuj@email.cz" required>
+        <label for="pass">Heslo</label>
+        <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6">
+        <button class="btn" id="submit" type="submit">Přihlásit se</button>
+        <div class="msg" id="msg"></div>
+      </form>
+    </div>
+
+    <p class="foot">Ještě nemáš přístup? <a href="/akademie/">Získej Barna Academy →</a><br>Problém s přihlášením? <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
   </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    (function () {
+      var mode = 'in';
+      var tabIn = document.getElementById('tabIn'), tabUp = document.getElementById('tabUp');
+      var nameRow = document.getElementById('nameRow'), submit = document.getElementById('submit');
+      var msg = document.getElementById('msg'), form = document.getElementById('form');
+      var emailEl = document.getElementById('email'), passEl = document.getElementById('pass'), fnameEl = document.getElementById('fname');
+
+      function qs(k) { try { return new URLSearchParams(location.search).get(k); } catch (e) { return null; } }
+      var nextUrl = qs('next') || '/akademie/studium/';
+      var need = qs('need');
+      if (need) {
+        var n = document.getElementById('needNote');
+        n.style.display = 'block';
+        n.textContent = need === 'videokurz'
+          ? 'K videokurzu potřebuješ zakoupený přístup. Po přihlášení a zakoupení se odemkne.'
+          : 'K této části Akademie potřebuješ zakoupený přístup. Po přihlášení a zakoupení se odemkne.';
+      }
+
+      function setMode(m) {
+        mode = m;
+        tabIn.classList.toggle('on', m === 'in');
+        tabUp.classList.toggle('on', m === 'up');
+        nameRow.style.display = m === 'up' ? 'block' : 'none';
+        submit.textContent = m === 'up' ? 'Vytvořit účet' : 'Přihlásit se';
+        passEl.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
+        msg.className = 'msg'; msg.textContent = '';
+      }
+      tabIn.addEventListener('click', function () { setMode('in'); });
+      tabUp.addEventListener('click', function () { setMode('up'); });
+
+      function show(kind, text) { msg.className = 'msg ' + kind; msg.textContent = text; }
+
+      window.BA.ready.then(function () {
+        if (window.BA.mode === 'demo') {
+          document.getElementById('demoNote').style.display = 'block';
+        } else {
+          window.BA.getUser().then(function (u) { if (u) location.href = nextUrl; });
+        }
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = emailEl.value.trim(), pass = passEl.value, fname = fnameEl.value.trim();
+        if (!email || pass.length < 6) { show('err', 'Vyplň e-mail a heslo (min. 6 znaků).'); return; }
+        submit.disabled = true; show('', '');
+
+        window.BA.ready.then(function () {
+          if (window.BA.mode === 'demo') {
+            show('ok', 'Členská sekce zatím běží v ukázkovém režimu — přihlášení bude aktivní po spuštění. Mezitím si projdi ukázkové lekce.');
+            submit.disabled = false;
+            return;
+          }
+          if (mode === 'up') {
+            window.BA.signUp(email, pass, fname).then(function (r) {
+              submit.disabled = false;
+              if (r.ok) show('ok', 'Účet vytvořen. Pokud je zapnuté ověření e-mailu, potvrď ho a pak se přihlas.');
+              else show('err', r.error || 'Registrace se nezdařila.');
+            });
+          } else {
+            window.BA.signIn(email, pass).then(function (r) {
+              if (r.ok) { location.href = nextUrl; }
+              else { submit.disabled = false; show('err', r.error || 'Přihlášení se nezdařilo.'); }
+            });
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

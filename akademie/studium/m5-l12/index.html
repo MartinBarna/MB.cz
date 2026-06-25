@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online koučink: vedení na dálku — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 12 — Práce s klientem a koučink</div>
+    <h1>Online koučink: vedení na dálku</h1>
+
+    <p class="lead"><strong>Online koučink není „horší verze“ osobního tréninku — je to jiný formát s vlastními silnými i slabými stránkami. Otevírá ti obrovský trh a možnost škálovat, ale vyžaduje jiné dovednosti: nemůžeš klienta fyzicky opravit, nevidíš ho denně, spoléháš na to, co ti pošle a napíše.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>V čem se online koučink liší od osobního a jaké má silné a slabé stránky.</li>
+        <li>Jak chytře nahradit to, co na dálku chybí — opravu techniky i osobní kontakt.</li>
+        <li>Jak předem nastavit komunikaci, check-iny a očekávání, aby vztah fungoval.</li>
+        <li>Jak budovat důvěru a vztah přes obrazovku.</li>
+        <li>Časté chyby online koučů a jak se jim vyhnout.</li>
+      </ul>
+    </div>
+
+    <h2>1) Jiný kanál, stejný cíl</h2>
+    <p>Online koučink ti umožní pomáhat lidem kdekoli, škálovat podnikání a nabídnout flexibilitu sobě i klientovi. Není to ústup z kvality — je to jiný řemeslný formát. Kdo zvládne specifika dálkového vedení, otevírá si trh, na který by osobním tréninkem nikdy nedosáhl. Kdo je podcení, diví se, proč mu klienti „mizí“.</p>
+    <p>Klíč je v jednom posunu myšlení: na dálku nepracuješ s tím, co vidíš, ale s tím, co ti klient pošle a napíše. Celá dovednost je v tom, jak tento rozdíl chytře pokrýt.</p>
+
+    <h2>2) Silné a slabé stránky formátu</h2>
+    <p>Silné stránky jsou jasné: dosah (klient odkudkoli, ty nejsi vázán na jedno město ani fitko), flexibilita v časech a místě, škálovatelnost a — což se často přehlíží — že klient se učí <strong>samostatnosti</strong>. Nestojí a nepadá s tvou fyzickou přítomností, což je z dlouhodobého hlediska cenné.</p>
+    <p>Slabé stránky nejsou důvod formát zavrhnout — jsou seznam toho, co musíš aktivně řešit: nevidíš techniku naživo (riziko špatného provedení a zranění), máš slabší osobní kontakt (těžší vztah a motivace), spoléháš na to, co klient nahlásí (riziko nepřesných dat) a klient má nižší okamžitou zodpovědnost (snáz „vypadne“).</p>
+    <blockquote>Celá dovednost online koučinku je v tom, jak slabiny formátu chytře kompenzovat — ne v tom, předstírat, že neexistují.</blockquote>
+
+    <h2>3) Jak nahradit, co na dálku chybí</h2>
+    <p><strong>Oprava techniky:</strong> vyžaduj videa cviků a dávej k nim konkrétní zpětnou vazbu. Dej klientovi jasné instrukce i referenční videa správného provedení. Začni s jednoduššími, bezpečnějšími variantami a náročné cviky odemykej postupně — až podle videí uvidíš, že techniku zvládá. A uč ho sebe-kontrolu: na co si má u sebe sám dávat pozor.</p>
+    <p><strong>Osobní kontakt a vztah:</strong> pravidelné video hovory (ne jen text) budují vztah mnohem víc než zprávy. Pamatuj si detaily ze života klienta, ptej se, zajímej se — na dálku se vřelost musí vytvářet vědomě. Rychlá a spolehlivá reakce zajistí, že klient nemá pocit, že je jen „číslo v appce“.</p>
+    <p><strong>Zodpovědnost a data:</strong> nastav jasnou strukturu check-inů (váha, fotky, míry, tréninkový záznam, jak se cítí), využij nástroje, které sběr dat usnadní (appka, tabulka, formulář), a aktivně oslovuj při poklesu aktivity. Na dálku klient „zmizí“ snadno, když ho nedržíš.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> S novým online klientem nikdy nezačínám plnou paletou cviků. První dva až tři týdny jedou jen základní, bezpečné varianty a u každého chci video. Teprve když na záznamu vidím, že drží neutrální páteř a dotahuje rozsah, odemknu mu těžší tah nebo dřep. Působí to pomaleji — ve skutečnosti tím ušetřím týdny, které bych jinak strávil opravováním zafixované špatné techniky.</div>
+
+    <h2>4) Nastavení komunikace a očekávání</h2>
+    <p>Online vztah stojí a padá na jasných pravidlech od začátku. Čtyři věci nastav předem, ne až ve chvíli, kdy začnou problémy:</p>
+    <p><strong>Kanály</strong> — kde spolu komunikujete (appka, e-mail, WhatsApp) a kde ne. Bez toho se komunikace roztříští a ztratíš přehled. <strong>Čas odezvy</strong> — kdy a jak rychle odpovídáš. „Odpovídám v pracovní dny do 24 hodin“ je férové, udržitelné a chrání tvoje hranice. <strong>Formát a frekvence check-inů</strong> — co klient posílá, jak často a v jaké podobě; předvídatelná struktura znamená, že klient ví, co se od něj čeká, a ty máš data. <strong>Rozsah podpory</strong> — co je a co není součástí, aby nedošlo k bezbřehému vyžadování.</p>
+    <blockquote>Jasná pravidla nejsou odměřenost — jsou základ funkčního a udržitelného vztahu na dálku.</blockquote>
+
+    <h2>5) Budování důvěry přes obrazovku</h2>
+    <p>Důvěra se na dálku buduje hůř, a o to víc na ní záleží. Drží ji pět věcí. <strong>Konzistence a spolehlivost</strong> — dělej, co slíbíš, kdy slíbíš; spolehlivost je na dálku hlavní měna důvěry. <strong>Proaktivita</strong> — nečekej jen na klientovy zprávy, ozvi se sám, všimni si pokroku, připomeň se. <strong>Ukazování pokroku</strong> — na dálku klient snadno ztratí přehled, jestli to funguje, tak mu ukazuj data, srovnání a výsledky. <strong>Osobní dotek</strong> — video zprávy, oslovení jménem, reakce na jeho život. A <strong>otevřenost</strong> — přiznej, co nevíš, buď autentický; faleš lidé poznají i přes obrazovku.</p>
+
+    <h2>6) Časté chyby online koučů</h2>
+    <p>Nejčastější past je <strong>„pošlu plán a hotovo“</strong>. Prodej PDF není koučink — bez vedení, kontroly a vztahu klient odpadne a výsledky nepřijdou. Koučink je proces, ne dokument. Dál: <strong>žádná kontrola techniky</strong> (nevyžadovat videa = riziko zranění a špatných výsledků), <strong>pomalá či nespolehlivá komunikace</strong> (nejrychlejší způsob, jak ztratit důvěru), <strong>žádné hranice</strong> (dostupnost 24/7 vede k vyhoření a k tomu, že si tě klient neváží), <strong>zanedbání vztahu</strong> (soustředit se jen na čísla a zapomenout na člověka) a <strong>nedržet klienta při poklesu</strong> aktivity, takže tiše zmizí.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Hranice mi paradoxně zvedly respekt klientů. Dřív jsem odepisoval i v deset večer a o víkendu — a čím dostupnější jsem byl, tím méně si toho lidé vážili. Dnes mám jasně řečeno, že odpovídám v pracovní dny do 24 hodin, a klienti to oceňují víc než nepřetržitý servis. Profesionál má hranice; právě ty z tebe dělají někoho, koho berou vážně.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Proč je chyba dívat se na online koučink jako na „horší verzi“ osobního tréninku? <span class="tg">odpověď ▾</span></div><div class="aa">Je to jiný formát, ne nižší kvalita. Má vlastní silné stránky — dosah, flexibilitu, škálovatelnost a to, že vede klienta k samostatnosti — i vlastní slabiny, které stačí vědomě kompenzovat. Kdo ho odbude jako náhražku, podcení dovednosti, které vyžaduje.</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Jak na dálku nahradíš to, že nevidíš techniku klienta naživo? <span class="tg">odpověď ▾</span></div><div class="aa">Vyžaduješ videa cviků a dáváš ke každému konkrétní zpětnou vazbu, dodáš referenční videa správného provedení, začínáš s bezpečnějšími variantami a náročné cviky odemykáš postupně podle videí. Zároveň učíš klienta sebe-kontrole — na co si má sám dávat pozor.</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Které čtyři věci je potřeba nastavit předem, aby online komunikace fungovala? <span class="tg">odpověď ▾</span></div><div class="aa">Kanály (kde a kde ne komunikujete), čas odezvy (kdy a jak rychle odpovídáš), formát a frekvence check-inů (co klient posílá a jak často) a rozsah podpory (co je a není součástí). Jasná pravidla nejsou odměřenost — jsou základ udržitelného vztahu.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Čím se na dálku buduje důvěra? <span class="tg">odpověď ▾</span></div><div class="aa">Konzistencí a spolehlivostí (dělej, co slíbíš, kdy slíbíš), proaktivitou (ozvi se sám, nečekej jen na zprávy), ukazováním pokroku (data a výsledky drží motivaci), osobním dotekem (video zprávy, oslovení jménem) a otevřeností (přiznej, co nevíš). Spolehlivost je na dálku hlavní měna důvěry.</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Proč jsou jasné hranice (např. čas odezvy) projevem profesionality, ne odměřenosti? <span class="tg">odpověď ▾</span></div><div class="aa">Dostupnost 24/7 vede k vyhoření a k tomu, že si tě klient přestane vážit. Jasně daný čas odezvy chrání tvoje hranice a zároveň dává klientovi jistotu, kdy se mu ozveš. Hranice z tebe dělají profesionála, kterého klient bere vážně.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Sepiš si vlastní „pravidla spolupráce“ pro online klienty — na jednu stránku jasně definuj kanály, čas odezvy, formát a frekvenci check-inů a rozsah podpory. Tenhle dokument pak pošli každému novému klientovi hned na začátku spolupráce.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+<li>Praktické procesy Team Barna — online vedení klienta, check-iny a struktura spolupráce.</li>
+<li>Miller WR, Rollnick S. Motivational Interviewing. Guilford Press 2013.</li>
+<li>American College of Sports Medicine. ACSM's Guidelines for Exercise Testing and Prescription. Wolters Kluwer 2021.</li>
+<li>National Strength and Conditioning Association. NSCA's Essentials of Personal Training. Human Kinetics 2021.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l12', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Souběžný trénink: síla a vytrvalost — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 9 · Lekce 7 — Periodizace a plánování</div>
+    <h1>Souběžný trénink: síla a vytrvalost</h1>
+
+    <p class="lead">Skoro každý klient chce <strong>obojí najednou</strong> — být silnější, vypadat líp a mít kondici. Tahle lekce ti dá realistický pohled na takzvaný <strong>interferenční efekt</strong> a praktický návod, jak sílu a vytrvalost skloubit chytře, místo abys klienta zbytečně strašil.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je interferenční efekt a proč se ho většina klientů reálně bát nemusí.</li>
+        <li>Jak řadit silový a vytrvalostní trénink, aby se co nejméně rušily.</li>
+        <li>Jak nastavit priority podle hlavního cíle klienta.</li>
+        <li>Konkrétní doporučení pro tři nejčastější typy klientů.</li>
+        <li>Jak o souběžném tréninku mluvit, aby klient nedostal zbytečný strach.</li>
+      </ul>
+    </div>
+
+    <h2>1) Většina klientů chce obojí</h2>
+    <p>Málokdo přijde s čistým cílem „jen síla“ nebo „jen kondice“. Typický klient chce být silnější A vypadat líp A mít kondici A být zdravý — tedy souběžně rozvíjet vlastnosti, které jdou do jisté míry proti sobě. Tomu se říká <strong>souběžný (concurrent) trénink</strong>: rozvoj síly a hypertrofie společně s vytrvalostí.</p>
+    <p>Kolem toho panuje hodně strachu typu „kardio ti sežere svaly“. Ten je z velké části přehnaný. Cílem není mezi sílu a kondici stavět zeď, ale naučit se, jak víc cílů koexistuje v jednom plánu.</p>
+
+    <h2>2) Interferenční efekt: co to je a jak moc se bát</h2>
+    <p>Interferenční efekt znamená, že intenzivní vytrvalostní trénink může do jisté míry tlumit adaptace na silový trénink — tedy zisky síly a svalu — když se obojí dělá souběžně ve velkém objemu. Existuje reálně, ale jeho velikost se v praxi často přehání. Co o něm víme (mimo jiné z metaanalýzy Wilson et al., 2012):</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem;">Týká se hlavně <strong>vysokého objemu a intenzity</strong> vytrvalosti (časté dlouhé či tvrdé kardio), ne rozumného množství kondice.</li>
+        <li style="margin-left:1.1rem;">Nejvíc ovlivňuje <strong>explozivní a maximální sílu</strong>; hypertrofie bývá zasažena méně.</li>
+        <li style="margin-left:1.1rem;">Záleží na <strong>modalitě</strong> — běh interferuje víc než kolo (kvůli excentrické zátěži a poškození svalu); kolo a veslo bývají k nohám šetrnější.</li>
+        <li style="margin-left:1.1rem;">Pro běžného klienta s rozumným objemem kardia je interference malá a prakticky zanedbatelná oproti přínosům kondice pro zdraví a regeneraci.</li>
+      </ul>
+    </div>
+    <blockquote>Většina klientů se interferenčního efektu bát nemusí. Reálným problémem se stává hlavně u sportovců na vrcholu, kteří zároveň maximalizují sílu i vysoký objem vytrvalosti. Pro „chci být silný a fit“ je to detail, ne překážka.</blockquote>
+
+    <h2>3) Jak řadit sílu a kardio</h2>
+    <p>Konflikt obvykle nepramení z „kardia jako takového“, ale z toho, že je všeho dohromady moc bez dostatku regenerace. Pár pravidel, jak nechat obojí koexistovat s minimem rušení:</p>
+    <p><strong>Odděl je v čase, když to jde.</strong> Ideálně silový a tvrdý vytrvalostní trénink v různé dny, nebo aspoň s odstupem hodin. Dáš tělu prostor a oba tréninky budou kvalitnější.</p>
+    <p><strong>Prioritní trénink dělej načerstvo.</strong> Co je pro klienta důležitější, to zařaď, když je svěží. Při cíli síla neunav nohy tvrdým během těsně před dřepem; při cíli kondice naopak.</p>
+    <p><strong>V jedné jednotce obvykle síla před kardiem</strong> (při cíli síla a svaly). Těžký silový trénink na čerstvo, kardio až po něm — unavené svaly z kardia zhorší silový výkon i techniku víc než naopak.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když klient cílí na sílu a svaly nohou, volím pro kondici šetrnější modalitu — kolo, veslo nebo chůzi do kopce — místo dlouhého běhu. Běh dává smysl jen tehdy, když je sám o sobě cílem. A pořád hlídám „pohár únavy“: dokud se nepřelévá přes okraj, obojí spolu žije bez problémů.</div>
+
+    <h2>4) Nastavení priorit podle cíle</h2>
+    <p>Klíč je rozhodnout, co je hlavní cíl, a tomu podřídit strukturu. „Trochu všeho naplno“ nefunguje — něco musí vést.</p>
+    <p><strong>Cíl hlavně síla a svaly</strong> (kondice jako doplněk): priorita silovému tréninku — načerstvo, dost objemu, progrese. Kardio v rozumném množství pro zdraví a regeneraci, šetrnější modality, oddělené v čase.</p>
+    <p><strong>Cíl hlavně kondice a vytrvalost</strong> (síla jako doplněk): priorita vytrvalostnímu tréninku. Silový trénink zhruba 2× týdně na udržení síly a prevenci zranění — efektivně, s menším objemem a velkými cviky. Síla pomáhá i vytrvalcům: lepší ekonomika pohybu a odolnost.</p>
+    <p><strong>Cíl hubnutí, zdraví a postava</strong> (nejčastější běžný klient): silový trénink jako základ, který chrání sval v deficitu a tvaruje postavu; kardio a NEAT jako nástroj výdeje a zdraví v rozumné dávce. Interference je tady prakticky bezvýznamná.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Běžnému klientovi, který chce zhubnout a vypadat líp, klidně řeknu na rovinu: „Kardio ti svaly nesežere.“ Silovka a rozumná kondice spolu fungují skvěle a strach z interference mu jen brání hýbat se zdravě.</div>
+
+    <h2>5) Komunikace a realistická očekávání</h2>
+    <p><strong>Nestraš klienta interferencí.</strong> Pro většinu lidí je obava přehnaná a brání jim dělat zdravou kondici. <strong>Rozhodni prioritu a řekni ji nahlas</strong> — „teď stavíme hlavně sílu, kondici držíme v rozumné míře“. Jasná priorita předchází zklamání z pomalejšího pokroku v té vedlejší vlastnosti.</p>
+    <p>Když chce klient maximalizovat obojí naplno zároveň, vysvětli férově, že obojí poroste o něco pomaleji, než kdyby šel po jednom cíli. A místo „všechno pořád“ často nejlíp funguje <strong>periodizace v čase</strong>: blok s důrazem na sílu, pak blok s důrazem na kondici.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je interferenční efekt a koho se reálně týká nejvíc? <span class="tg">odpověď ▾</span></div><div class="aa">Je to tlumení adaptací na silový trénink (zisky síly a svalu) intenzivní vytrvalostí prováděnou souběžně ve velkém objemu. Reálným problémem je hlavně u vrcholových sportovců, kteří současně maximalizují sílu i vysoký objem vytrvalosti. Pro běžného klienta je prakticky zanedbatelný.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Která složka výkonu je interferencí zasažena nejvíc a která nejméně? <span class="tg">odpověď ▾</span></div><div class="aa">Nejvíc bývá ovlivněna explozivní a maximální síla. Hypertrofie (růst svalu) bývá zasažena výrazně méně — proto se klient cílící na postavu interference téměř bát nemusí.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč běh interferuje víc než kolo nebo veslo? <span class="tg">odpověď ▾</span></div><div class="aa">Kvůli vyšší excentrické zátěži a většímu poškození svalu. Kolo a veslo jsou k nohám šetrnější, proto je u klientů cílících na sílu a svaly nohou volím přednostně, pokud běh sám není cílem.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Pokud musí být síla i kardio v jedné jednotce a cílem je síla, co zařadit dřív a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Obvykle silový trénink před kardiem. Těžkou silovku chceš dělat načerstvo — unavené svaly z předchozího kardia zhorší silový výkon i techniku víc, než kdyby bylo kardio až po silovce.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Klient chce maximalizovat sílu i vytrvalost naplno zároveň. Jak postupovat? <span class="tg">odpověď ▾</span></div><div class="aa">Nastav realistická očekávání: obojí poroste o něco pomaleji, než kdyby šel po jednom cíli. Lepší řešení je často periodizace v čase — střídat bloky s důrazem na sílu a bloky s důrazem na kondici místo „všechno pořád naplno“.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyber jednoho svého klienta, urči jeho hlavní cíl (síla, kondice, nebo hubnutí a postava) a podle něj naplánuj jeho týden — kam dáš silovku, kam kardio, jakou modalitu zvolíš a jak je oddělíš v čase.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Wilson JM, et al. Concurrent training: a meta-analysis examining interference of aerobic and resistance exercises. J Strength Cond Res. 2012.</li>
+        <li>Hickson RC. Interference of strength development by simultaneously training for strength and endurance. Eur J Appl Physiol. 1980.</li>
+        <li>Schumann M, Rønnestad BR (eds). Concurrent Aerobic and Strength Training. Springer. 2019.</li>
+        <li>Fyfe JJ, et al. Interference between concurrent resistance and endurance exercise: molecular bases and the role of individual training variables. Sports Med. 2014.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m9-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

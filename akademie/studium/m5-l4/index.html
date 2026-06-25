@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motivační rozhovor a aktivní naslouchání — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 4 — Práce s klientem a koučink</div>
+    <h1>Motivační rozhovor a aktivní naslouchání</h1>
+
+    <p class="lead"><strong>Klient se nezmění proto, že mu to nařídíš — změní se, když si změnu zdůvodní sám. Tahle lekce ti dá základy motivačního rozhovoru a naučí tě naslouchat tak, aby klient sám vyslovil své důvody i svůj první krok.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč přednáška a tlak často vyvolají odpor, ne změnu.</li>
+        <li>Co je motivační rozhovor a jeho duch: partnerství místo nadřazenosti.</li>
+        <li>Jak klást otevřené otázky, které klienta posouvají k akci.</li>
+        <li>Jak aktivně naslouchat — a proč je to víc než „být zticha“.</li>
+        <li>Jak pracovat s ambivalencí a odporem, místo abys je přebíjel.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč přednáška nefunguje</h2>
+    <p>Když klientovi řekneš „musíš jíst víc bílkovin a přestat pít alkohol“, děláš dvě věci najednou: dáváš informaci, kterou už obvykle zná, a tlačíš. A tlak u lidí typicky vyvolá odpor — začnou hájit svůj současný stav („ale já nemám čas vařit“, „víno mi pomáhá vypnout“). Čím víc tlačíš na jednu stranu, tím víc klient přitlačí na druhou. Tomu se říká reaktance.</p>
+    <p>Paradox koučinku zní: argumenty pro změnu má vyslovovat klient, ne ty. Když je vysloví sám, věří jim. Když je vyslovuješ ty a on jen oponuje, utvrzuje se v setrvání. Tvoje role není přesvědčovat — je pomoct klientovi přesvědčit sám sebe.</p>
+
+    <h2>2) Duch motivačního rozhovoru</h2>
+    <p>Motivační rozhovor není technika manipulace. Je to způsob vedení založený na několika postojích, které samy o sobě sníží obranu klienta a otevřou prostor pro upřímnost:</p>
+    <div class="card">
+      <ul style="margin-left:1.1rem;">
+        <li><strong>Partnerství</strong> — jste tým, ne expert a žák. Klient je expert na svůj život, ty na metodu. Spolupracujete.</li>
+        <li><strong>Respekt k autonomii</strong> — rozhodnutí je klientovo. Nemůžeš a nemáš ho nutit; můžeš mu pomoct rozhodnout se dobře.</li>
+        <li><strong>Vyvolávání, ne vkládání</strong> — motivaci v klientovi vyvoláváš otázkami, ne do něj cpeš přednáškou.</li>
+        <li><strong>Přijetí a empatie</strong> — snažíš se klientovi skutečně rozumět, ne ho soudit.</li>
+      </ul>
+    </div>
+
+    <h2>3) Otevřené otázky, které posouvají</h2>
+    <p>Uzavřené otázky (ano/ne) konverzaci zastaví. Otevřené ji otevřou a nutí klienta přemýšlet a formulovat. Všimni si, že tyhle otázky nechávají klienta vyslovit argumenty pro změnu i vlastní řešení:</p>
+    <p>• „Co tě na téhle změně láká?“ — vyvolává důvody pro změnu z úst klienta.<br>
+    • „Co ti zatím stálo v cestě?“ — mapuje překážky.<br>
+    • „Jak by se tvůj život změnil, kdyby se to povedlo?“ — napojuje na motivaci.<br>
+    • „Co by byl malý první krok, který by ti přišel zvládnutelný?“ — posouvá k akci, klientovou volbou.<br>
+    • „Na škále 1–10, jak moc je to pro tebe teď důležité?“ a pak „proč ne míň?“ — klient si sám zdůvodní, proč mu na tom záleží.</p>
+
+    <h2>4) Aktivní naslouchání</h2>
+    <p>Naslouchání není čekání, až klient domluví, abys mohl mluvit ty. Je to nejúčinnější nástroj, jaký jako kouč máš — a zároveň ten nejvíc podceňovaný. Aktivní naslouchání znamená:</p>
+    <p>• <strong>Reflektuj</strong> — vlastními slovy zopakuj, co klient řekl: „Takže tě nejvíc trápí, že večer po práci nemáš energii vařit, je to tak?“ Klient cítí, že mu rozumíš, a často to ještě rozvine.<br>
+    • <strong>Shrnuj</strong> — čas od času shrň, co zaznělo. Ukazuje pozornost a třídí to.<br>
+    • <strong>Ptej se dál místo radění</strong> — když klient něco nakousne, jdi hloub otázkou, ne hned řešením.<br>
+    • <strong>Mlč a dej prostor</strong> — ticho po otázce nech být. Klient potřebuje čas přemýšlet; když ho zaplníš, vezmeš mu prostor odpovědět upřímně.<br>
+    • <strong>Všímej si „řeči změny“</strong> — když klient sám řekne „chtěl bych“, „mohl bych“, „vadí mi, že…“, to jsou semínka motivace. Posiluj je dalšími otázkami.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Aktivní naslouchání zní jednoduše, dokud ho nezkusíš dělat naplno. Většina trenérů jen čeká na mezeru, aby naskočili s radou. Když ale místo toho jen zopakuješ klientovi jeho vlastní slova a počkáš, stane se něco zvláštního — on sám pokračuje a dostane se k jádru, ke kterému by ho žádná tvoje rada nedovedla.</div>
+
+    <h2>5) Práce s ambivalencí a odporem</h2>
+    <p>Klient skoro vždy změnu chce a zároveň nechce — chce zhubnout, ale nechce se vzdát večerního mlsání. Tahle ambivalence je normální, ne selhání. Když na ambivalentního klienta zatlačíš, postaví se na stranu setrvání. Místo toho:</p>
+    <p>• <strong>Přijmi obě strany</strong> — „Chápu, že tě láká výsledek, a zároveň ti to mlsání teď něco dává. Obojí dává smysl.“<br>
+    • <strong>Nech klienta zvážit</strong> — „Co mluví pro a co proti?“ Ať si plusy a minusy vysloví sám.<br>
+    • <strong>Posiluj stranu změny</strong> jeho vlastními slovy, neoponuj té druhé.<br>
+    • <strong>Na odpor netlač</strong> — když přijde, ustup a zeptej se. Odpor je signál, že tlačíš moc; přepni z přesvědčování zpět na naslouchání.</p>
+
+    <blockquote>Čím víc tlačíš na jednu stranu, tím víc klient přitlačí na druhou. Nejsilnější věta kouče často není rada, ale otázka.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Dřív jsem klientům házel řešení dřív, než stačili domluvit. Dnes vím, že nejsilnější věta, co můžu říct, často není rada, ale otázka. Když se klient sám slyší říct „vlastně mi nejvíc vadí, že nemám energii na děti“, má to desetkrát větší sílu, než kdybych mu to řekl já. Moje práce není klienta přemluvit. Je pomoct mu najít jeho vlastní důvod a jeho vlastní první krok. Pak se nemění kvůli mně — mění se kvůli sobě, a to vydrží.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč přednáška a tlak často nevedou ke změně? <span class="tg">odpověď ▾</span></div><div class="aa">Vyvolávají odpor (reaktanci) — klient začne hájit setrvání. Argumenty pro změnu mají vyjít z úst klienta, protože jen těm věří. Když je vyslovuje kouč a klient oponuje, utvrzuje se ve svém současném stavu.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj dva postoje („ducha“) motivačního rozhovoru. <span class="tg">odpověď ▾</span></div><div class="aa">Stačí dva z: partnerství (jste tým, ne expert a žák), respekt k autonomii (rozhodnutí je klientovo), vyvolávání místo vkládání (motivaci vyvoláváš otázkami), přijetí a empatie (snažíš se rozumět, ne soudit).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je rozdíl mezi otevřenou a uzavřenou otázkou? <span class="tg">odpověď ▾</span></div><div class="aa">Uzavřená otázka se dá zodpovědět ano/ne a hovor zastaví. Otevřená otázka nutí klienta přemýšlet a formulovat — a tím i vyslovit vlastní důvody pro změnu a vlastní řešení.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co je aktivní naslouchání? Jmenuj dva prvky. <span class="tg">odpověď ▾</span></div><div class="aa">Stačí dva z: reflexe (zopakovat vlastními slovy, co klient řekl), shrnutí, mlčení a dání prostoru, ptaní se dál místo radění, všímání si „řeči změny“ (chtěl bych, mohl bych, vadí mi…).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak pracovat s ambivalencí klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Přijmout obě strany, nechat klienta zvážit pro a proti, posilovat stranu změny jeho vlastními slovy a na odpor netlačit — ustoupit a zeptat se. Ambivalence je normální, ne selhání.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vezmi situaci, kdy bys klientovi normálně něco „nařídil“ (např. víc bílkovin). Přepiš to na tři otevřené otázky, kterými ho dovedeš k tomu, aby důvod a první krok vyslovil sám. Pak napiš jednu reflexi, kterou bys mu ukázal, že ho posloucháš.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Miller WR, Rollnick S. Motivational Interviewing: Helping People Change. 3rd ed. Guilford Press, 2013.</li>
+        <li>Rollnick S, Miller WR, Butler CC. Motivational Interviewing in Health Care. Guilford Press, 2008.</li>
+        <li>Brehm JW. A Theory of Psychological Reactance. Academic Press, 1966.</li>
+        <li>Navazuje na M5·L1 (konzultace), M5·L2 (cíle) a M1·L4 (přesvědčení a mindset).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

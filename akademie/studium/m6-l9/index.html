@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retence: jak si klienta udržet — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 9 — Byznys pro trenéry a poradce</div>
+    <h1>Retence: jak si klienta udržet</h1>
+
+    <p class="lead">Většina trenérů je posedlá sháněním nových klientů. Jenže největší páka byznysu je jinde: v <strong>udržení těch, které už máš</strong>. Retence není „prodávat víc“ — je to sloužit tak dobře, že klient nemá důvod odejít.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je retence finančně silnější než akvizice (celoživotní hodnota klienta).</li>
+        <li>Pět nejčastějších důvodů, proč klienti odcházejí — a kolik z nich máš ve své moci.</li>
+        <li>Jak nastavit očekávání hned na startu, aby klient nezklamal sám sebe.</li>
+        <li>Systém „malých výher“ a komunikace, který drží motivaci a vztah.</li>
+        <li>Jak podchytit blížící se odchod dřív, než k němu dojde.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč retence vyhrává nad akvizicí</h2>
+    <p>Spočítej si <strong>celoživotní hodnotu klienta</strong> — kolik u tebe utratí za celou dobu spolupráce. Klient, který zůstane dvanáct měsíců, má pro tebe mnohonásobně vyšší hodnotu než ten, co odejde po měsíci, a navíc tě znovu nestál náklady ani čas na získání.</p>
+    <p>Dlouhodobý klient přináší tři tiché výhody: stabilní a předvídatelný příjem, lepší výsledky (skutečná proměna chce čas, a tím i silnější reference) a doporučení — spokojený klient ti přivádí další zadarmo.</p>
+    <blockquote>Sháněním pořád nových klientů místo udržení stávajících naléváš vodu do děravého kbelíku. Nejdřív zalep díry, pak přilévej.</blockquote>
+
+    <h2>2) Proč klienti odcházejí</h2>
+    <p>Pět hlavních důvodů, proč ti klient zmizí:</p>
+    <div class="card">
+      <p><strong>1. Nevidí pokrok.</strong> Buď ho reálně nemají (špatně nastavený plán), nebo ho mají, ale nevidí ho (neměříš a neukazuješ). Obojí řeší tvoje práce.</p>
+      <p><strong>2. Nereálná očekávání.</strong> Čekali „břišáky za šest týdnů“, realita je jiná → zklamání. Vzniká už při prodeji, když přeslibuješ.</p>
+      <p><strong>3. Chybí vztah a pocit, že na nich záleží.</strong> Klient je číslo, ne člověk. Lidé zůstávají u lidí, ne u tabulek.</p>
+      <p><strong>4. Plán je neudržitelný.</strong> Příliš tvrdě, příliš rychle → klient „spadne“ a zmizí ze studu.</p>
+      <p><strong>5. Životní okolnosti.</strong> Práce, rodina, peníze. Tohle úplně neovlivníš, ale dobrý vztah a flexibilita rozhodují, jestli se vrátí.</p>
+    </div>
+    <p>Všimni si jedné věci: <strong>čtyři z pěti důvodů máš z velké části ve své moci.</strong></p>
+
+    <h2>3) Začíná to na startu: očekávání</h2>
+    <p>Nejlepší retence se dělá ještě před první lekcí — správným nastavením očekávání. Při onboardingu klientovi otevřeně řekni realistické tempo a co se v jednotlivých fázích bude a nebude dít, že přijdou týdny, kdy se na váze „nic neděje“ (a proč), co po něm budeš chtít a proč to bude občas nepohodlné, a jak budete měřit pokrok — ne jen váhu, ale i fotky, míry, výkon, energii a návyky.</p>
+    <p>Klient, který ví, co čekat, nezpanikaří u prvního zaváhání váhy. Klient, kterému jsi přeslíbil, u prvního odejde. Poctivý start je nejlevnější retence, jakou znám.</p>
+
+    <h2>4) Systém, který drží klienta</h2>
+    <p>Udržení není náhoda ani charisma — je to systém pěti návyků:</p>
+    <div class="card">
+      <p><strong>A) Ukazuj pokrok, i ten malý.</strong> Měř víc než jen váhu (fotky, míry, síla, opakování, energie, spánek, návyky) a pravidelně pokrok pojmenuj a oslav. Lidé zůstávají tam, kde cítí, že se posouvají.</p>
+      <p><strong>B) Plánuj malé výhry.</strong> Stav program tak, aby klient brzy a opakovaně něco zvládl. Rychlé výhry na začátku budují víru ve vlastní schopnost.</p>
+      <p><strong>C) Komunikuj mezi lekcemi.</strong> Krátký check-in („jak šel týden?“), reakce na zprávu, povzbuzení. Právě tady spousta trenérů ztrácí klienty mlčením.</p>
+      <p><strong>D) Buď člověk, ne tabulka.</strong> Pamatuj si kontext klientova života (děti, práce, akce). Když se přizpůsobíš realitě, klient cítí, že na něm záleží.</p>
+      <p><strong>E) Pravidelný „reset“.</strong> Každých pár týdnů krátké ohlédnutí: co funguje, co ne, co upravíme. Klient vidí, že to žije a reaguje na něj.</p>
+    </div>
+
+    <h2>5) Podchyť odchod dřív, než nastane</h2>
+    <p>Klienti málokdy odejdou „z čistého nebe“. Obvykle jsou varovné signály: ruší lekce, přestávají psát, ochabne nadšení, vynechávají úkoly. Sleduj je a reaguj <strong>dřív</strong>. Při poklesu aktivity se ozvi sám a zeptej se otevřeně, jak se klient cítí a co mu stojí v cestě. Když narazíš na neudržitelnost, uber a uprav — radši pomalejší tempo a klient, který zůstane, než dokonalý plán a klient, který zmizí. A když přijdou životní okolnosti, nabídni flexibilní řešení (pauza, online, méně častý kontakt) místo úplného konce — udržíš vztah pro budoucí návrat.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Nejlepší marketing, jaký mám, jsou moji stávající klienti a jejich výsledky. Proto neřeším jen „jak sehnat dalšího“, ale „jak ten současný zůstane spokojený a uvidí pokrok“. Spokojený dlouhodobý klient ti udělá víc než deset reklam — protože přivede další lidi, kterým o tobě řekne. Retence není měkká věc navíc. Je to tvrdý byznys.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je retence finančně silnější než akvizice? <span class="tg">odpověď ▾</span></div><div class="aa">Dlouhodobý klient má vyšší celoživotní hodnotu a nestojí tě opakované náklady ani čas na získání. Navíc přináší stabilní příjem, lepší výsledky (a tím silnější reference) a doporučení dalších lidí zadarmo.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj tři z pěti hlavních důvodů, proč klienti odcházejí. <span class="tg">odpověď ▾</span></div><div class="aa">Stačí tři z: nevidí pokrok, nereálná očekávání, chybí vztah, neudržitelný plán, životní okolnosti.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč je nastavení očekávání na startu klíčové pro udržení? <span class="tg">odpověď ▾</span></div><div class="aa">Klient s realistickými očekáváními nezpanikaří u prvního zaváhání váhy a ví, co a proč ho čeká. Klient, kterému jsi přeslíbil, odejde u prvního zklamání.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři prvky systému, který drží klienta. <span class="tg">odpověď ▾</span></div><div class="aa">Stačí tři z: ukazuj pokrok, plánuj malé výhry, komunikuj mezi lekcemi, buď člověk (ne tabulka), pravidelný reset.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak podchytit odchod dřív, než nastane? <span class="tg">odpověď ▾</span></div><div class="aa">Sleduj varovné signály (rušení lekcí, mlčení, pokles nadšení, vynechané úkoly) a reaguj dřív — ozvi se sám, uprav neudržitelný plán a nabídni flexibilní řešení místo úplného konce.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vytvoř pro své (i modelové) klienty jednoduchý retenční systém — jak a jak často budeš měřit a ukazovat pokrok, jak budeš komunikovat mezi lekcemi a jaké tři varovné signály odchodu budeš hlídat. Pak popiš svůj onboarding a co v něm řekneš o realistických očekáváních.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Reichheld FF. The Loyalty Effect — koncept hodnoty udržení zákazníka. Harvard Business School Press 1996.</li>
+        <li>Gupta S, Lehmann DR. Customer Lifetime Value a řízení vztahů se zákazníky. Journal of Marketing 2005.</li>
+        <li>Reichheld FF, Sasser WE. Zero Defections: Quality Comes to Services. Harvard Business Review 1990.</li>
+        <li>Barna Academy. Navazující principy odměny a „malých výher“ z modulu Psychologie a nastavení očekávání z lekcí o udržitelnosti. Interní materiál 2026.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l9', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

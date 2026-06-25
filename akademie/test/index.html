@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Závěrečná zkouška — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; --ink:#161616; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#161616; background:#f6f1ea; }
+  a { color:inherit; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:1000px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; }
+  .brand .mark { width:30px; height:30px; border-radius:8px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.9rem; }
+  .top a.out { color:#bbb; text-decoration:none; font-size:.88rem; }
+  .wrap { max-width:1000px; margin:0 auto; padding:28px 18px 70px; }
+
+  .hero { background:linear-gradient(135deg,#262626,#0d0d0d); color:#fff; border-radius:22px; padding:34px 28px; position:relative; overflow:hidden; }
+  .hero .seal { font-size:2.2rem; }
+  .hero h1 { font-size:1.9rem; margin:.4rem 0 .4rem; }
+  .hero p { color:#cfcabf; max-width:640px; }
+  .kicker { display:inline-block; background:rgba(255,122,0,.18); color:#ffb066; font-weight:700; font-size:.78rem; letter-spacing:1px; padding:6px 15px; border-radius:50px; text-transform:uppercase; }
+
+  .steps { margin-top:26px; display:grid; gap:16px; }
+  @media (min-width:780px){ .steps { grid-template-columns:repeat(3,1fr); } }
+  .step { background:#fff; border:1px solid #ece3d8; border-radius:18px; padding:22px; position:relative; }
+  .step .n { width:38px; height:38px; border-radius:11px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+  .step h3 { font-size:1.1rem; margin-bottom:.4rem; }
+  .step p { color:#6f655a; font-size:.92rem; }
+  .step .meta { margin-top:10px; font-size:.82rem; color:#a8907a; font-weight:600; }
+
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:18px; padding:26px; margin-top:22px; }
+  .card h2 { font-size:1.25rem; margin-bottom:.7rem; }
+  .card ul { margin:.4rem 0 0 1.1rem; color:#5a5045; }
+  .card li { padding:4px 0; }
+  .pill { display:inline-block; background:#fff8f0; border:1px solid #f0d8b8; color:#a4641b; font-weight:700; font-size:.82rem; padding:5px 13px; border-radius:50px; margin:3px 4px 0 0; }
+
+  .gate { background:#fffaf3; border:2px solid var(--gold); border-radius:18px; padding:24px; margin-top:22px; text-align:center; }
+  .gate h2 { font-size:1.2rem; }
+  .gate p { color:#7a6a55; max-width:560px; margin:.5rem auto 0; font-size:.94rem; }
+  .btn { display:inline-block; background:var(--gold); color:#161616; font-weight:700; padding:13px 30px; border-radius:50px; text-decoration:none; margin-top:1rem; border:none; cursor:pointer; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #d8cdbe; color:#161616; }
+  .btn.ghost:hover { background:#161616; color:#fff; border-color:#161616; }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .note { text-align:center; color:#a89c8c; font-size:.82rem; margin-top:24px; }
+  .rubric { width:100%; border-collapse:collapse; margin-top:.6rem; font-size:.9rem; }
+  .rubric td { padding:8px 10px; border-bottom:1px solid #f1eadf; color:#5a5045; }
+  .rubric td:last-child { text-align:right; white-space:nowrap; color:#a4641b; font-weight:700; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="out" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+
+  <div class="wrap">
+    <div class="hero">
+      <span class="kicker">Certifikace</span>
+      <div class="seal">🏅</div>
+      <h1>Závěrečná zkouška Barna Academy</h1>
+      <p>Certifikát není papír za zhlédnutí lekcí — je to <strong style="color:#fff;">validace tvojí kvality</strong>. Aby ho člověk získal, musí projít třemi kroky. Právě proto má váhu.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>Lekce a kvízy</h3>
+        <p>Dokončit všechny lekce a jejich krátké kvízy — průběžné ověření porozumění.</p>
+        <div class="meta">Podmínka vstupu k testu</div>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>Písemný test</h3>
+        <p>Komplexní test napříč moduly (výživa, psychologie, anatomie, byznys). Pro splnění je potřeba <strong>min. 80 %</strong>.</p>
+        <div class="meta">Opakování možné po 7 dnech</div>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>Praktický úkol</h3>
+        <p>Zpracování reálné případové studie klienta. Tohle odlišuje „znám teorii" od „umím to použít".</p>
+        <div class="meta">Hodnotí lektor podle rubriky</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📝 Písemný test — co tě čeká</h2>
+      <p style="color:#5a5045;">Kombinace výběru z možností, pravda/nepravda a krátkých otevřených odpovědí. Otázky propojují všechny moduly — nejde o memorování, ale o pochopení souvislostí.</p>
+      <div style="margin-top:12px;">
+        <span class="pill">Psychologie & chování</span>
+        <span class="pill">Anatomie & pohyb</span>
+        <span class="pill">Výživa & energie</span>
+        <span class="pill">Práce s klientem</span>
+        <span class="pill">Byznys</span>
+      </div>
+      <ul style="margin-top:14px;">
+        <li>Hranice úspěšnosti: <strong>80 % správných odpovědí.</strong></li>
+        <li>Při neúspěchu lze test opakovat po 7 dnech (jiná varianta otázek).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🎯 Praktický úkol — případová studie</h2>
+      <p style="color:#5a5045;">Zpracuješ reálného (nebo modelového) klienta a ukážeš, že teorii umíš <strong>použít</strong>. Doporučený rozsah 1 500–2 500 slov. Case study musí obsahovat:</p>
+      <ul>
+        <li><strong>Profil klienta</strong> — výchozí stav, cíl, životní situace, spánek, stres, prostředí.</li>
+        <li><strong>Analýza</strong> — co klienta brzdí (psychologicky, biologicky, posturálně), přesvědčení a spouštěče.</li>
+        <li><strong>Plán</strong> — realistické tempo, udržitelná výživa s prvkem „like", logika tréninku, úpravy prostředí a spánku, návykové „kontext → akce".</li>
+        <li><strong>Komunikace a retence</strong> — nastavení očekávání, měření a ukazování pokroku.</li>
+        <li><strong>Etika a hranice</strong> — kde končí role kouče a kdy odkázat na odborníka.</li>
+      </ul>
+      <h2 style="font-size:1.05rem; margin-top:18px;">Rubrika hodnocení (min. 14 z 20 bodů)</h2>
+      <table class="rubric">
+        <tr><td>Pochopení příčin (propojení psychologie / biologie / postury)</td><td>0–4</td></tr>
+        <tr><td>Realističnost a udržitelnost plánu</td><td>0–4</td></tr>
+        <tr><td>Individualizace (plán sedí klientovi, ne šabloně)</td><td>0–4</td></tr>
+        <tr><td>Komunikace, očekávání a retence</td><td>0–4</td></tr>
+        <tr><td>Etika, bezpečnost a hranice role</td><td>0–4</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>🏅 Po splnění</h2>
+      <p style="color:#5a5045;">Po úspěšném testu (≥ 80 %) i schváleném praktickém úkolu (≥ 14/20) ti vydáme <strong>prestižní certifikát Barna Academy</strong> s unikátním ID. Každý certifikát je dohledatelný k ověření pravosti — funguje jako pečeť kvality „vyškolil mě Barna".</p>
+      <div class="actions" style="justify-content:flex-start; margin-top:6px;">
+        <a class="btn ghost" href="/akademie/overit/">Jak funguje ověření →</a>
+      </div>
+    </div>
+
+    <div class="gate" id="gate">
+      <h2>Spustit závěrečnou zkoušku</h2>
+      <p id="gateMsg">Zkouška se odemkne po dokončení všech dostupných lekcí. Pokračuj ve studiu — každá lekce tě posune blíž.</p>
+      <div class="actions">
+        <a class="btn" id="startBtn" href="/akademie/studium/">Zpět do studia</a>
+      </div>
+    </div>
+
+    <p class="note">Spuštění testu a odevzdání praktického úkolu přímo na webu napojíme přes členskou sekci (Supabase). Praktický úkol vždy schvaluje člověk — to drží prestiž certifikátu.</p>
+  </div>
+
+  <script>
+    // Odemčení podle demo postupu (stejný klíč jako studijní nástěnka)
+    (function () {
+      var KEY = 'ba_progress_v1';
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+      // Dostupné (available:true) lekce v demu: zatím m1-l1. Až přibudou web verze, doplní se sem.
+      var AVAILABLE = ['m1-l1', 'm1-l2'];
+      var allDone = AVAILABLE.length > 0 && AVAILABLE.every(function (id) { return !!done[id]; });
+      if (allDone) {
+        document.getElementById('gateMsg').textContent =
+          'Skvělá práce! Máš hotové všechny dostupné lekce. Po finálním napojení testu (Tally / členská sekce) tě tady pustíme do písemné části.';
+        var b = document.getElementById('startBtn');
+        b.textContent = 'Mám hotovo — co dál?';
+        b.href = '/akademie/studium/';
+      }
+    })();
+  </script>
+</body>
+</html>

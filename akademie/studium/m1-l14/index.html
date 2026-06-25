@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stres a zvládání zátěže: skrytý hráč ve výsledcích — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 14 — Psychologie a chování kolem jídla</div>
+    <h1>Stres a zvládání zátěže: skrytý hráč ve výsledcích</h1>
+
+    <p class="lead">Když klientovi nejdou výsledky, většina koučů kouká jen na jídlo a trénink. <strong>Často je ale skrytým viníkem stres</strong> — ovlivňuje hlad, spánek, regeneraci, hormony i chování a dokáže zabrzdit i jinak perfektní plán.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak stres ovlivňuje hubnutí, regeneraci, hlad a chování.</li>
+        <li>Rozdíl mezi akutním (užitečným) a chronickým (škodlivým) stresem.</li>
+        <li>Proč „pohár stresu“ rozhoduje o tom, kolik zátěže klient unese.</li>
+        <li>Praktické, nemedicínské nástroje na řízení stresu, které můžeš nabídnout.</li>
+        <li>Kde je hranice mezi koučováním a prací psychologa.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč stres patří do fitness</h2>
+    <p>Ignorovat stres znamená ignorovat velký kus skládačky. Chronický stres zasahuje hlad, regeneraci, spánek, hormony i chování — zajídání, vynechané tréninky, vyčerpanou vůli. Dokud ho nevezmeš v potaz, často prostě „nedává smysl“, proč to klientovi nejde, i když má dobře nastavené jídlo i trénink.</p>
+    <p>Tahle lekce navazuje na spánek, emoční jedení i motivaci — všechno se stresem úzce souvisí. Tady to spojíme do jednoho uceleného pohledu.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient po měsících píše, že se „nic neděje“, neptám se nejdřív na makra. Ptám se, jak spí, co se děje v práci a doma. Devětkrát z deseti se ukáže, že problém není v plánu — plán jen narazil na přeplněný život.</div>
+
+    <h2>2) Akutní vs. chronický stres</h2>
+    <p>Stres sám o sobě není nepřítel. Je to přirozená reakce těla na zátěž a v krátkém rozsahu je užitečný. <b>Akutní stres</b> mobilizuje energii, zostřuje pozornost a pomáhá podat výkon. Trénink je mimochodem také forma užitečného stresu — zátěž, na kterou se tělo adaptuje. Po akutním stresu se tělo vrací do klidu.</p>
+    <p><b>Chronický stres</b> je jiná liga: tělo je pořád zapnuté a nedostává se do klidu. Tady začínají potíže — zhoršená regenerace, narušený spánek, chronicky zvýšený kortizol, větší hlad a chutě, podrážděnost, vyčerpání.</p>
+    <blockquote>Rozdíl není v tom, jestli stres je, ale jestli má tělo šanci se z něj zotavit. Cílem není život bez stresu, ale rovnováha mezi zátěží a zotavením.</blockquote>
+
+    <h2>3) Jak stres brzdí výsledky</h2>
+    <p>Stres má přímý, hmatatelný dopad na výsledky — není to „měkké téma“ mimo fitness. Působí na několika frontách současně:</p>
+    <div class="card">
+      <p><b>Hlad a chutě.</b> Stres zvyšuje chuť na kaloricky vydatná „pohodlná“ jídla (sladké, tučné) — biologicky řízené zajídání — plus emoční jedení jako zvládací mechanismus.</p>
+      <p><b>Spánek.</b> Stres zhoršuje usínání i kvalitu spánku, a špatný spánek zase zvyšuje hlad a stres. Bludný kruh.</p>
+      <p><b>Regenerace a trénink.</b> Pod chronickým stresem se tělo hůř zotavuje; stejný trénink „sedí“ jinak ve stresu než v klidu a snadno přetěžuje.</p>
+      <p><b>Chování a motivace.</b> Vyčerpaný člověk častěji vynechá trénink a sáhne po pohodlném jídle — vůle je vyčerpaná.</p>
+      <p><b>Hormony.</b> Chronicky zvýšený kortizol ovlivňuje chuť k jídlu, spánek, náladu i regeneraci.</p>
+    </div>
+
+    <h2>4) Koncept „poháru stresu“</h2>
+    <p>Užitečný model pro tebe i klienta: každý má pomyslný pohár, do kterého se sčítají <b>všechny</b> zdroje stresu — práce, vztahy, finance, nedostatek spánku, ale i trénink, dieta a kalorický deficit. Tělo nerozlišuje „dobrý“ a „špatný“ stres v tom smyslu, že všechno padá do jednoho poháru.</p>
+    <p>Praktické důsledky jsou jasné. Když je pohár plný z práce a života, zbývá méně prostoru na stres z tréninku a diety — stejný plán, který by jindy fungoval, klienta v náročném období přetíží. Proto v takových fázích dává smysl <b>ubrat</b> tam, kde to jde: mírnější trénink, méně agresivní dieta, větší důraz na regeneraci. Naopak v klidném období klient unese víc.</p>
+    <blockquote>Tohle vysvětluje, proč „univerzální plán“ selhává — nepočítá s tím, co je v klientově poháru právě teď.</blockquote>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientce se rozpadalo manželství a já jí v tu chvíli nepřitvrdil deficit — naopak jsem kalorie zvedl skoro na udržovací a zjemnil tréninky. Zní to kontraintuitivně, ale pohár byl plný. Až se život uklidnil, vrátili jsme se k práci a šlo to samo.</div>
+
+    <h2>5) Nástroje na řízení stresu</h2>
+    <p>Nejsi terapeut, ale můžeš klientovi nabídnout praktické, nemedicínské nástroje, které pohár pomáhají vyprázdnit:</p>
+    <div class="card">
+      <p><b>Spánek na prvním místě.</b> Nejúčinnější „lék“ na stres. Pracuj na spánkové hygieně — vrací se to ve všem ostatním.</p>
+      <p><b>Pohyb jako ventil.</b> Přiměřený pohyb stres tlumí. Pozor ale: extrémní trénink ve vysokém stresu pohár jen přeplní.</p>
+      <p><b>Dech a relaxace.</b> Jednoduché techniky (pomalý prodloužený výdech) aktivují uklidňující část nervového systému. Praktické a zdarma.</p>
+      <p><b>Úprava zátěže podle období.</b> V náročných fázích vědomě ubrat. Flexibilita místo „musíš makat za každou cenu“.</p>
+      <p><b>Hranice a regenerace.</b> Pomoz klientovi vidět odpočinek a hranice jako součást výkonu, ne slabost.</p>
+      <p><b>Perspektiva a realistická očekávání.</b> Snižuj zbytečný stres z fitness samotného — perfekcionismus a vinu z „prohřešků“. Často jsi pro klienta zdrojem klidu, ne dalšího tlaku.</p>
+    </div>
+
+    <h2>6) Hranice: kouč vs. psycholog</h2>
+    <p>Pracuješ s běžným životním stresem a jeho praktickým řízením v kontextu zdraví a tréninku. <b>Nepracuješ</b> s klinickými stavy — úzkostné a depresivní poruchy, trauma, klinické vyhoření, závislosti. To patří psychologovi, psychoterapeutovi nebo lékaři.</p>
+    <p>Když vidíš, že stres klienta přesahuje běžnou zátěž (dlouhodobé zahlcení, beznaděj, panika, neschopnost fungovat), citlivě doporuč odbornou pomoc.</p>
+    <blockquote>Doporučit odborníka není přesah ani selhání — je to projev skutečné péče.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je klíčový rozdíl mezi akutním a chronickým stresem? <span class="tg">odpověď ▾</span></div><div class="aa">Akutní stres je krátkodobý a užitečný — mobilizuje energii a po odeznění se tělo vrací do klidu. Chronický stres je neustávající: tělo se nedostane do klidu, což vede ke zhoršené regeneraci, narušenému spánku, zvýšenému kortizolu a hladu. Rozdíl není v tom, jestli stres je, ale jestli se z něj tělo stíhá zotavit.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co znamená koncept „poháru stresu“ a proč je důležitý? <span class="tg">odpověď ▾</span></div><div class="aa">Do pomyslného poháru se sčítají všechny zdroje stresu — práce, vztahy, finance, spánek, ale i trénink, dieta a deficit. Když je pohár plný z života, zbývá méně prostoru na zátěž z tréninku a diety. Vysvětluje to, proč univerzální plán selhává a proč je v náročných obdobích rozumné ubrat.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jmenuj alespoň tři způsoby, jak stres brzdí výsledky. <span class="tg">odpověď ▾</span></div><div class="aa">Zvyšuje hlad a chutě na pohodlná jídla, zhoršuje spánek (a tím i hlad a regeneraci), zhoršuje zotavení z tréninku, oslabuje motivaci a sebeovládání a přes zvýšený kortizol ovlivňuje chuť, náladu i regeneraci.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaké nemedicínské nástroje může kouč klientovi nabídnout? <span class="tg">odpověď ▾</span></div><div class="aa">Spánek na prvním místě, přiměřený pohyb jako ventil, dechové a relaxační techniky, úpravu zátěže podle období, nastavení hranic a regenerace a realistická očekávání, která snižují zbytečný stres z fitness samotného.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy má kouč klienta odkázat na odborníka? <span class="tg">odpověď ▾</span></div><div class="aa">Když stres přesahuje běžnou zátěž — dlouhodobé zahlcení, beznaděj, panika, neschopnost fungovat — nebo jde o klinické stavy (úzkost, deprese, trauma, vyhoření, závislosti). To patří psychologovi či lékaři. Doporučit odborníka je projev péče, ne selhání.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U jednoho klienta, kterému zrovna nejdou výsledky, projdi spolu „pohár stresu“ — vypište všechny zdroje zátěže včetně tréninku a diety. Na základě toho navrhni jednu konkrétní úpravu, kterou tento týden ubereš.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Sapolsky RM. Why Zebras Don't Get Ulcers. Henry Holt and Company, 2004.</li>
+        <li>McEwen BS. Stress, adaptation, and disease: allostasis and allostatic load. Ann N Y Acad Sci. 1998.</li>
+        <li>Stults-Kolehmainen MA, Sinha R. The effects of stress on physical activity and exercise. Sports Med. 2014.</li>
+        <li>Epel ES, et al. Stress and body shape: stress-induced cortisol secretion is consistently greater among women with central fat. Psychosom Med. 2000.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l14', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

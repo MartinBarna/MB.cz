@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soutěžní příprava A–Z — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 8 · Lekce 4 — Příprava bojovníků a úpolové sporty</div>
+    <h1>Soutěžní příprava A–Z</h1>
+
+    <p class="lead">Peak week je jen třešnička — <strong>95 % výsledku na pódiu udělá dlouhá, poctivá příprava</strong>. V téhle lekci couvneme od finálního týdne a projdeme celý oblouk cesty na pódium: proč musí být forma hotová dřív, než přijde poslední týden, a hlavně <strong>proč</strong> je každá fáze taková, jaká je.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Fáze soutěžní přípravy a jak na sebe logicky navazují.</li>
+        <li>Proč „formu bereme jako hotovou“ 1–2 týdny před závody.</li>
+        <li>Jak řídit shoz tuku při zachování svalu — a kde je hranice.</li>
+        <li>Proč rozhoduje soubor dat v čase, ne jedno číslo na váze ani pocit.</li>
+        <li>Jak číst individuální typ postavy a nepanikařit, když „něco jde pomaleji“.</li>
+        <li>Proč je post-show stejně důležitý jako samotná příprava.</li>
+      </ul>
+    </div>
+
+    <h2>1) Fáze přípravy — velký obraz</h2>
+    <p>Soutěžní příprava je dlouhá hra, kterou plánujeme zpětně od data soutěže. Hrubě se dělí na pět fází, kde špatné načasování jedné rozhází všechny ostatní:</p>
+    <p><strong>Základ / off-season</strong> — budování svalu a síly při rozumné hladině tuku, aby cesta dolů nebyla extrémně dlouhá ani drastická. Čím líp je závodník připravený v základu, tím lidštější je celá příprava.<br>
+    <strong>Redukční fáze</strong> — postupný, řízený kalorický deficit, který shazuje tuk a přitom chrání sval (dost bílkovin, silový trénink, ne příliš agresivní tempo). Délka se plánuje tak, aby forma byla hotová s rezervou.<br>
+    <strong>Finalizace formy</strong> — poslední 1–2 týdny, kdy je tuková forma v podstatě daná.<br>
+    <strong>Peak week</strong> — finální optické vyladění.<br>
+    <strong>Post-show</strong> — řízený návrat (viz dál).</p>
+
+    <h2>2) „Formu bereme jako hotovou“ 1–2 týdny předem</h2>
+    <p>Tohle je princip, který odlišuje klidnou, řízenou přípravu od paniky na poslední chvíli. Cílem je dostat tuk tam, kde ho chceme, <strong>s rezervou</strong> — mít formu „tukově finální“ zhruba 1–2 týdny, nejpozději týden, před závody. Důvody jsou tři:</p>
+    <p><strong>Žádné hubnutí na poslední chvíli.</strong> Peak week není od shazování tuku. Když musíš poslední týden ještě „honit tuk“, něco se podcenilo a riskuješ, že přijdeš na pódium vyčerpaný a plochý.<br>
+    <strong>Čas na nasycení a ladění.</strong> Když je tuk hotový dřív, máš v peak weeku klid soustředit se na nasycení svalu a optické doladění, ne na záchranu formy.<br>
+    <strong>Menší riziko.</strong> Rezerva znamená, že drobné odchylky — zadržení vody před periodou, jeden špatný den — výsledek nezničí.</p>
+    <p>Jakmile je forma „hotová“, přepneme z režimu „hubnutí“ do režimu „nasycení a ladění“.</p>
+
+    <h2>3) Shoz tuku při zachování svalu</h2>
+    <p>Celá redukční fáze stojí na jedné rovnováze: shodit co nejvíc tuku a přitom ztratit co nejmíň svalu — protože právě sval se na pódiu hodnotí. Páky, kterými to řídíme:</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem"><strong>Rozumné tempo deficitu</strong> — prudší shoz znamená víc rizika ztráty svalu a vyhoření. Pomalejší, řízený deficit chrání sval a je udržitelnější.</li>
+        <li style="margin-left:1.1rem"><strong>Dost bílkovin</strong> — klíčové pro ochranu svalu v deficitu; v závodní přípravě spíš k horní hranici.</li>
+        <li style="margin-left:1.1rem"><strong>Silový trénink</strong> — udržuje signál „sval si nech“. Objem se řídí regenerací, která v hlubokém deficitu klesá.</li>
+        <li style="margin-left:1.1rem"><strong>Diet breaky a úpravy</strong> — u dlouhé přípravy strategické pauzy a řízení adaptace výdeje, aby vydrželo tělo i hlava.</li>
+        <li style="margin-left:1.1rem"><strong>Hlídání adaptace</strong> — jak hmotnost klesá, klesá i výdej a spontánní pohyb (NEAT). Deficit se proto musí průběžně přehodnocovat podle dat, ne držet fixní číslo.</li>
+      </ul>
+    </div>
+
+    <h2>4) Rozhodují data — ne jedno číslo a ne pocity</h2>
+    <p>Soutěžní přípravu řídíš jako vědec: podle souboru dat v čase, ne podle jednoho čísla ani podle nálady. Sledujeme čtyři vrstvy najednou:</p>
+    <p><strong>Váhu jako trend</strong> (ne jako jeden den) — kolísá vodou, glykogenem, trávením, cyklem.<br>
+    <strong>Míry (obvody)</strong> — ukazují změnu i ve chvíli, kdy váha skáče.<br>
+    <strong>Fotky za stejných podmínek</strong> — často nejvěrnější obraz formy; podle nich se v peak weeku ladí.<br>
+    <strong>Pocity</strong> — hlad, energie, síla, „zalitost“ versus žilnatost.</p>
+    <blockquote>Když data ukazují, že se forma „zalívá“ — víc vody, menší žilnatost — víš, že je čas s něčím pohnout. A víš to z dat, ne z paniky. Tohle čtení je jádro toho, proč jsme science-based.</blockquote>
+
+    <h2>5) Individuální typ postavy</h2>
+    <p>Každý ukládá a ztrácí tuk jinak a v jiném pořadí — a dobrý kouč to ví předem, aby zbytečně nepanikařil. „Pomaleji“ neznamená „špatně“: u některých partií to tak prostě je. Znalost typu postavy ti dovolí zůstat klidný a nesabotovat formu zbytečnými zásahy.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> U svěřenkyně jsem věděl, že má spíš genoidní typ — víc tuku na nohách a hýždích — takže právě tyhle partie půjdou znatelně až úplně na konec přípravy. A přesně to data v posledních dvou týdnech potvrdila. Kdybych to nevěděl, mohl bych zbytečně utahovat deficit ve chvíli, kdy stačilo počkat, protože ta oblast prostě jde poslední.</div>
+
+    <h2>6) Po soutěži (post-show) — neméně důležité</h2>
+    <p>Příprava nekončí pódiem. Po soutěži je tělo v hlubokém deficitu, hladové a zranitelné vůči rychlému návratu tuku i psychickému pádu. Proto k němu přistupujeme stejně pečlivě jako k přípravě:</p>
+    <p><strong>Řízený návrat (reverzní dieta)</strong> — postupné navyšování kalorií místo skoku na hory jídla, aby si závodník výsledek udržel a nepřibral zpět nárazově.<br>
+    <strong>Psychika</strong> — po měsících disciplíny a po vrcholu může přijít útlum („post-show blues“). Očekávej ho, mluv o něm dopředu, drž kontakt a podporu; u známek vážnějších potíží odkaž na odborníka.<br>
+    <strong>Zdraví a regenerace</strong> — spánek, rozumný trénink, návrat chuti a energie. Cílem je vrátit se zdravě k udržitelnému životu, ne zůstat v extrému.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Závodní přípravu plánuju zpětně od data soutěže a všechno podřizuju jednomu: mít formu hotovou s rezervou a sbírat čistá data, abych se rozhodoval podle reality, ne podle pocitů. Vím, kde klient drží tuk a co půjde poslední, takže nepanikařím. Forma je hotová 1–2 týdny předem, pak už jen nasycuju a ladím. A po soutěži řeším návrat stejně pečlivě jako přípravu — protože zlato je skvělé, ale zdraví a udržitelnost klienta jsou důležitější. Chytře, podle dat, s rezervou. Tak se vyhrává.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaké jsou hlavní fáze soutěžní přípravy a jak jdou za sebou? <span class="tg">odpověď ▾</span></div><div class="aa">Základ / off-season → redukční fáze → finalizace formy → peak week → post-show. Plánují se zpětně od data soutěže a každá fáze navazuje na předchozí; špatné načasování jedné rozhází všechny ostatní.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč bereme formu jako „hotovou“ už 1–2 týdny předem? <span class="tg">odpověď ▾</span></div><div class="aa">Aby se netuhlo na poslední chvíli — peak week je na nasycení a optické ladění, ne na hubnutí. Rezerva navíc kryje drobné odchylky (voda, špatný den), takže forma nestojí na jednom týdnu.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak shazovat tuk a přitom chránit sval? <span class="tg">odpověď ▾</span></div><div class="aa">Rozumné tempo deficitu, dost bílkovin (spíš k horní hranici), silový trénink jako signál „sval si nech“, strategické diet breaky a řízení adaptace, a průběžné přehodnocování deficitu podle dat místo fixního čísla.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Podle čeho řídíš přípravu místo jednoho čísla na váze? <span class="tg">odpověď ▾</span></div><div class="aa">Podle souboru dat v čase: váha jako trend, míry (obvody), fotky za stejných podmínek a pocity (hlad, energie, síla, zalitost vs. žilnatost). Teprve jejich kombinace ukáže, zda se forma zlepšuje, nebo zalívá.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč je důležité znát individuální typ postavy? <span class="tg">odpověď ▾</span></div><div class="aa">Každý ztrácí tuk v jiném pořadí. Znalost typu (např. genoidního) nastaví reálná očekávání a zabrání zbytečnému utahování deficitu ve chvíli, kdy daná partie jde prostě poslední. „Pomaleji“ tu neznamená „špatně“.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Naplánuj hrubý časový oblouk přípravy pro modelového závodníka se soutěží za 20 týdnů — rozvrhni fáze, urči, kdy chceš mít formu „hotovou“, popiš sledovaná data a jak podle nich budeš rozhodovat, a doplň, jak nastavíš očekávání u klienta s genoidním typem postavy.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Barna M. Autorská soutěžní příprava (3 zlaté medaile) — reálná data, reporty a korespondence.</li>
+        <li>Helms ER, et al. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20.</li>
+        <li>Helms ER, et al. Recommendations for resistance training during contest preparation. J Sports Med Phys Fitness. 2015.</li>
+        <li>Trexler ET, et al. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014;11(1):7.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m8-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

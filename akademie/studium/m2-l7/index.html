@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korekce postury (část 2): evoluce a praxe — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 7 — Anatomie a pohyb</div>
+    <h1>Korekce postury (část 2): evoluce a praxe</h1>
+
+    <p class="lead">Chronickým sezením nás tělo vrací k jakémusi „opičímu“ vzorci — skrčená kyčel, skrčené koleno — a stejné důsledky pak řešíme, když se narovnáme. <strong>Tahle lekce propojuje evoluční mechaniku s konkrétní korekční prací: jak „nastavit“ rameno a proč na tom stojí všechno ostatní.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Evoluční rozdíly v postuře primátů a člověka (páteř, pánev, hýždě, těžiště).</li>
+        <li>Proč dlouhé sezení „vypíná“ hýždě (reciproční inhibice) a zvyšuje stres na koleni.</li>
+        <li>Vývojový slovník: hypotonie/hypertonie, hypotrofie/hypertrofie, hypo/hyperaktivita.</li>
+        <li>Princip „protáhni a posiluj“ + „aktivuj a rozvíjej“ — proč nestačí jen protáhnout.</li>
+        <li>Konkrétní korekci horního zkříženého syndromu přes nastavení lopatky a ramene.</li>
+      </ul>
+    </div>
+
+    <h2>1) Evoluce: člověk vs. primát</h2>
+    <p>V posilovně nás často učí honit „technickou dokonalost“ z učebnic. Bezpečnost u pravidel nikdy nepodceňuj — ale spousta „pravidel“ vznikla ze skupinového cvičení jako nejbezpečnější rada pro celý dav. Klasika: „koleno nesmí před špičku“, přestože koleno před špičku je základní funkční požadavek lidského pohybu. Odtud i běžné vzorce přetížení kolene a beder.</p>
+    <p>Naším cílem není diagnostikovat ani léčit, ale rozumět mechanice a líp ji využít — aby byl předpis cviku korekční, bezpečný a vedl k cíli. Připomeň si dělení svalů: tonické (flexe, postura, stabilita) vs. fázické (extenze, dynamika). Fázické svaly nás evolučně „vytáhly“ do vzpřímeného bipedálního stoje, stejně jako dítě přechází z fetální polohy přes lezení do stoje. Sval a nervstvo se adaptují bez současné adaptace skeletu — ta by trvala tisíce až miliony let.</p>
+    <div class="card"><strong>Klíčové rozdíly:</strong>
+      <ul>
+        <li><b>Páteř:</b> lidská je do „S“ s bederní lordózou, která tlumí hmotnost a umožňuje flexi/extenzi; opičí je obloukovitá, bez lordózy → omezená pohyblivost beder.</li>
+        <li><b>Těžiště:</b> u člověka centrálně nad kyčlemi; u primáta vede střední čarou horního trupu.</li>
+        <li><b>Hýždě:</b> u opice fungují jako hlavní extenzor kyčle; u člověka řídí extenzi gluteus maximus a hamstringy.</li>
+        <li><b>Úhel stehno–trup:</b> u opice zkrácený → typická chůze „skrčená kyčel–skrčené koleno“.</li>
+      </ul>
+    </div>
+    <p>A teď pointa: chronickým sezením získáváme adaptaci „skrčená kyčel–skrčené koleno“ podobnou té opičí. Jakmile se pak narovnáme, řešíme úplně stejné důsledky.</p>
+
+    <h2>2) Sezení, reciproční inhibice a koleno</h2>
+    <p>Opice se hýžděmi jako extenzorem kyčle „vytáhne“ nahoru. Náš problém: hlavní extenzory kyčle jsou gluteus maximus a hamstringy (dlouhá hlava biceps femoris, semimembranosus, semitendinosus). Při dlouhém sezení se hamstringy zkrátí a oslabí a gluteus maximus se „vypne“ — zčásti kvůli napjatým, přetíženým flexorům kyčle. Tomu se říká <strong>reciproční inhibice</strong>.</p>
+    <p>Slabé, napjaté a utlumené hamstringy přitom výrazně zvyšují stres na kolenním kloubu a riziko zranění. Proto vždy zvažuj formu i funkci. Většina klientů (kromě těch, kdo míří na specifický atletický výkon nebo management bolesti) řeší obojí — a formu mnohdy víc než funkci.</p>
+    <blockquote>Neřeš „forma vs. funkce“. Když budeš řešit jen formu, vyrobíš dysfunkci. Když jen funkci, vyrobíš svalový vývoj, který klient možná nechce. Tvoje práce není vnucovat — je ptát se a co nejlíp poradit.</blockquote>
+
+    <h2>3) Vývojové pojmy (slovník)</h2>
+    <p>Než půjdeme do korekce, ujasníme si jazyk. Tyhle pojmy ti umožní přesně popsat, co se ve svalu děje, a vybrat odpovídající zásah.</p>
+    <div class="card">
+      <ul>
+        <li><b>Hypotonie</b> — abnormálně snížené napětí; kloub poddajný, hypermobilní, náchylný k luxaci.</li>
+        <li><b>Hypertonie</b> — abnormálně zvýšené napětí; sval rigidní, omezená schopnost protáhnout se.</li>
+        <li><b>Hypotrofie (atrofie)</b> — úbytek svalu nedostatkem užívání nebo špatnou výživou.</li>
+        <li><b>Hypertrofie</b> — zvětšení svalové tkáně růstem buněk.</li>
+        <li><b>Hypoaktivní / hyperaktivní</b> — abnormálně neaktivní (podaktivní), resp. abnormálně aktivní (přeaktivní).</li>
+        <li><b>Slabost vs. síla</b> — neschopnost, resp. schopnost vyvinout dostatečnou sílu vůči protilehlým svalům; obojí v nerovnováze může vést k nestabilitě kloubu.</li>
+      </ul>
+    </div>
+    <p>Pozor na „instruktážní bias“: terapeut často nabízí řešení podle svého skillsetu — jen protahuje, nebo jen posiluje — bez ohledu na cíl klienta. Jen protáhnout = větší rozsah, ale pořád slabý sval. Jen posílit = silný, ale pořád zkrácený a utlumený sval. Proto kombinuj „protáhni a posiluj“ (lengthen and strengthen) <strong>plus</strong> „aktivuj a rozvíjej“ (facilitate and develop): hypotonní a utlumené svaly aktivuj a posiluj, hypertonní a přetížené uvolňuj a tlum (měkké tkáně + statický strečink).</p>
+
+    <h2>4) Korekce horního zkříženého syndromu</h2>
+    <p>(Jde o zjednodušený biomechanický výklad; etiologie bolesti ramene může být složitější.) Horní zkřížený syndrom vyrobí předsun hlavy a vnitřní rotaci ramenního (glenohumerálního, GH) kloubu. Prsní svaly a sternocleidomastoideus táhnou kloub dopředu, přední deltový sval se dostává do dominance → špatné postavení GH kloubu i lopatky.</p>
+    <div class="card"><strong>Co se kde děje:</strong>
+      <ul>
+        <li><b>Prsní svaly:</b> přetížené a napjaté, ale dominance předního deltu jim brzdí hypertrofii — proto řada „hrudníkových“ cviků cílový sval netrefí.</li>
+        <li><b>Horní trapéz:</b> hypertrofovaný a v nadměrném napětí; přebral váhu hlavy od přetažených, neaktivních hlubokých vzpřimovačů (hrudní kyfóza).</li>
+        <li><b>Zadní a střední deltový sval:</b> nedovyvinuté nedostatkem užívání; lopatka v trvalé elevaci a protrakci.</li>
+        <li><b>Dolní trapéz, serratus anterior a romboidy:</b> hypotonní a slabé. Špatné postavení paží favorizuje pronaci — silné svaly sílí, problém se prohlubuje.</li>
+      </ul>
+    </div>
+    <p>Korekce stojí na nastavení GH kloubu. „Nastav“ rameno přes lopatku — stáhni lopatky dolů a „do zadních kapes“. Tahle akce zároveň zvedá hrudník a posouvá páteř do lepšího „S“. Pokud to brzdí napjatá přední linie, pomůže protažení prsou a ramen plus měkká práce na SCM, horním trapézu a zdvihači lopatky.</p>
+    <p>Klíčová je silová nerovnováha mezi svaly táhnoucími rameno dopředu a dozadu: supraspinatus, infraspinatus, teres minor a major rotují rameno vzad; dolní/střední trapéz a romboidy stahují a retrahují lopatku. Slabé nebo unavené retraktory lopatky snižují produkci síly rotátorové manžety, a tím i stabilitu GH kloubu. Protože pronace tyhle pohyby brzdí, takový klient udělá líp většinu tahů a rehab pohybů v supinaci či semi-supinaci a vyhne se nadměrné pronaci.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Zkus to hned vsedě — stáhni lopatky dolů a „do zadních kapes“. Uvidíš, že se ti zvedne hrudník, narovná páteř a dokonce se ti upraví i postavení pánve. Pak dej ruce nad hlavu a stáhni lopatku jednou v pronaci, jednou v supinaci; totéž zopakuj s rukama před sebou. Rozdíl v zapojení ucítíš okamžitě — a přesně na tom postavíš výběr cviků pro klienta.</div>
+    <p>Rozvoj nedovyvinutých prsou stojí na postavení lopatky a GH kloubu. U skutečné slabosti (nízká produkce síly) vol zátěž opatrně, ať se nejdřív „usadíš“ do správné pozice. A nezapomeň: statický strečink dočasně snižuje produkci síly — proto se předtréninkový statický strečink už nedoporučuje.</p>
+
+    <h2>5) Shrnutí</h2>
+    <div class="card">
+      <ul>
+        <li>Sezení nás vrací k „opičímu“ vzorci (skrčená kyčel/koleno); skelet se neadaptuje, sval ano.</li>
+        <li>Reciproční inhibice: napjaté flexory kyčle „vypínají“ hýždě; slabé hamstringy zatěžují koleno.</li>
+        <li>Neřeš „forma vs. funkce“ — řeš obojí podle cíle klienta a nevnucuj.</li>
+        <li>Kombinuj „protáhni a posiluj“ + „aktivuj a rozvíjej“, ne jen jedno.</li>
+        <li>Korekce horního zkříženého syndromu stojí na nastavení lopatky a GH kloubu; u tahů preferuj supinaci.</li>
+      </ul>
+    </div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Čím se liší lidská a opičí páteř a pánev? <span class="tg">odpověď ▾</span></div><div class="aa">Lidská páteř je do „S“ s bederní lordózou, která tlumí hmotnost a umožňuje flexi/extenzi; opičí je obloukovitá, bez lordózy, s omezenou pohyblivostí beder. Lidské těžiště je centrálně nad kyčlemi, opičí vede střední čarou horního trupu.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je reciproční inhibice při dlouhém sezení? <span class="tg">odpověď ▾</span></div><div class="aa">Napjaté a přetížené flexory kyčle „vypnou“ gluteus maximus, zatímco hamstringy se zkrátí a oslabí. Hlavní extenzory kyčle tak přestávají správně fungovat.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč nestačí utlumený sval jen protáhnout? <span class="tg">odpověď ▾</span></div><div class="aa">Protažením získáš rozsah, ale sval zůstane slabý (často ještě slabší). Je potřeba ho i aktivovat a posílit — tedy přidat „aktivuj a rozvíjej“ (facilitate and develop) k „protáhni a posiluj“.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Na čem stojí korekce horního zkříženého syndromu? <span class="tg">odpověď ▾</span></div><div class="aa">Na nastavení GH kloubu a lopatky — stáhnout lopatky dolů a „do zadních kapes“ — spolu s uvolněním přední linie (prsa, SCM, horní trapéz) a posílením retraktorů lopatky. U tahů preferuj supinaci místo pronace.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč se nedoporučuje předtréninkový statický strečink? <span class="tg">odpověď ▾</span></div><div class="aa">Statický strečink dočasně snižuje produkci síly, takže těsně před silovým tréninkem zhoršuje výkon. Hodí se spíš jako prostředek ke ztlumení hypertonních, přetížených svalů.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U klienta s předsunutou hlavou a kulatými rameny vyzkoušej „nastavení lopatky“ (stáhnout dolů a k sobě) a popiš, co to udělalo s hrudníkem a pánví. Pak vyber jeden tahový cvik, který bys u něj dělal v supinaci místo pronace, a zdůvodni proč.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Lovejoy CO. The natural history of human gait and posture, Part 1. Gait &amp; Posture 2005.</li>
+        <li>Whitcome KK, et al. Fetal load and the evolution of lumbar lordosis in bipedal hominins. Nature 2007.</li>
+        <li>Janda V. Muscles and Cervicogenic Pain Syndromes. In: Physical Therapy of the Cervical and Thoracic Spine. Churchill Livingstone 1988.</li>
+        <li>Tyler T, et al. The Effect of Scapular-Retractor Fatigue on Rotation in Internal Impingement. J Sport Rehabil 2009.</li>
+        <li>Mihata T, et al. Effect of Rotator Cuff Muscle Imbalance on Forceful Internal Impingement. Am J Sports Med 2009.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

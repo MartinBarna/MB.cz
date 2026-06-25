@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Výživové mýty: toxiny, detox a strašení — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 3 · Lekce 12 — Výživa a energie</div>
+    <h1>Výživové mýty: toxiny, detox a strašení</h1>
+
+    <p class="lead"><strong>Jako kouč budeš čelit záplavě strachu, který klienti chytí na sociálních sítích — „sladidla způsobují rakovinu“, „rostliny jsou plné jedů“, „všechno je otrávené pesticidy“. Tvojí prací je oddělit reálné riziko od přehnaného strachu a uklidnit fakty, ne přiživovat paniku. Tahle lekce ti dá rámec kritického myšlení a projde nejčastější mýty očima vědy.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Rámec, jak kriticky hodnotit výživová tvrzení — dávka, kontext, kvalita důkazů.</li>
+        <li>Proč je u většiny „toxinových“ obav strach výrazně přehnaný.</li>
+        <li>Co věda skutečně říká o umělých sladidlech a dietních nápojích.</li>
+        <li>Proč je „rostliny jsou plné jedů“ zavádějící (dávka, hormeze).</li>
+        <li>Na co reálně zaměřit klienta místo honby za strašáky.</li>
+      </ul>
+    </div>
+
+    <h2>1) Rámec kritického myšlení</h2>
+    <p>Než uvěříš (nebo necháš klienta uvěřit) výživovému tvrzení, polož si čtyři otázky. Tenhle jednoduchý filtr odhalí drtivou většinu paniky na sítích jako přehnanou.</p>
+    <p><strong>Dávka dělá jed.</strong> Skoro všechno je „toxické“ v dostatečné dávce — i voda, kyslík, sůl. Otázka nikdy nezní „obsahuje to látku X?“, ale „v jakém množství a je to reálně škodlivé v běžné konzumaci?“.</p>
+    <p><strong>Kontext celé stravy.</strong> Jedna potravina ani jedna látka nerozhodne — rozhoduje celkový vzorec toho, co jíš.</p>
+    <p><strong>Kvalita důkazů.</strong> Strašák z jednoho titulku nebo studie na buňkách v misce a na zvířatech v obřích dávkách neznamená dopad na člověka v reálné porci. Hledej lidské studie a souhrnné (meta)analýzy.</p>
+    <p><strong>Kdo a proč to říká.</strong> Prodává ti ten člověk „detox“, strach nebo zázračný produkt?</p>
+
+    <h2>2) „Toxiny“ v jídle — strach vs. realita</h2>
+    <p>Nejčastější obavy a co k nim říká věda:</p>
+    <p><strong>Pesticidy</strong> jsou v moderních zemích (EU, USA) přísně kontrolované — drtivá většina potravin má rezidua hluboko pod bezpečnými limity. <strong>Umělá sladidla</strong> (aspartam, sukralóza…) jsou schválená EFSA, FDA i WHO a bezpečná v rámci přijatelného denního příjmu; „problémy“ se objevují jen při nereálně extrémních dávkách. <strong>GMO</strong> patří k nejvíc testovaným potravinám — desítky let bez důkazu škodlivosti. <strong>Konzervanty a aditiva</strong> představují reálné riziko jen při dlouhodobé vysoké konzumaci ultra-zpracovaných potravin; občasný hot dog nikoho nezabije. <strong>Fluorid, mikroplasty, barviva</strong> jsou buď bezpečné v běžných koncentracích, nebo (mikroplasty) zatím bez známých dopadů a beztak nevyhnutelné.</p>
+    <blockquote>Skutečné velké hrozby pro zdraví nejsou stopová rezidua v jablku. Jsou to nadváha, málo pohybu, špatný spánek, chronický stres, kouření a nadměrný alkohol — tam směřuj pozornost.</blockquote>
+
+    <h2>3) Sladidla a dietní nápoje</h2>
+    <p>Klasická oblast zbytečného strachu. Co ukazují lidské studie: <strong>nahrazení slazených nápojů dietními</strong> pomáhá lidem přijímat méně cukru a zhubnout — často víc než přechod na samotnou vodu, protože je to udržitelnější. <strong>Mikrobiom</strong> aspartam ani Ace-K v běžných dávkách podle randomizovaných lidských studií nenarušují. A strašáky o „chutích a rakovině“ z dietních nápojů nemají oporu v lidských datech při běžné konzumaci.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Dietní nápoj místo slazeného je pro klienta, který bojuje s cukrem, rozumný nástroj — ne „menší zlo“, kvůli kterému by měl mít špatné svědomí. Není to zázrak, ale ani strašák. Když pomůže snížit příjem cukru a udrží se u toho, je to win.</div>
+
+    <h2>4) „Rostliny jsou plné jedů“</h2>
+    <p>Tohle tvrzení (oblíbené v carnivore kruzích) je zavádějící. Ano, rostliny obsahují obranné látky — lektiny, fytáty, oxaláty, polyfenoly. Ale v běžném množství fungují mnohé z nich jako <strong>mírný stresor, na který tělo reaguje posílením (hormeze)</strong> — nejde o otravu. Velké analýzy navíc spojují vyšší příjem ovoce a zeleniny s nižším rizikem úmrtí, srdečních chorob i rakoviny a s lepším metabolickým zdravím. Reálný problém je přitom přesně opačný: většina lidí (i v ČR) jí zeleniny a ovoce málo, ne moc. Strach z rajčete je vedle; chybějící zelenina na talíři je skutečný problém.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientovi neříkám „neboj se“, říkám mu PROČ se nemusí bát — ukážu mu rámec (dávka, kontext, kvalita důkazů) a konkrétní fakta. Tím ho neučím jen jeden fakt, ale schopnost příště rozpoznat nesmysl sám. A vždycky to otočím k tomu, co reálně rozhoduje: jíš převážně minimálně zpracované potraviny, cvičíš, spíš, zvládáš stres? Tohle ti dá nesrovnatelně větší návratnost než vyhýbání se 0,0003 mg pesticidu v jablku. Be Effective znamená i nepálit energii na strašáky.</div>
+
+    <h2>5) Co říct klientovi místo strachu</h2>
+    <p>Když klient přijde s mýtem, neodbyj ho výsměchem — využij to k edukaci. <strong>Uklidni fakty</strong> („chápu, proč to lidi straší, pojďme se na to podívat“). <strong>Dej rámec</strong> (dávka, kontext, důkazy), ať si příště poradí sám. <strong>Přesměruj na velké kameny</strong> — 80–90 % stravy z minimálně zpracovaných potravin, dost bílkovin a zeleniny, pohyb, spánek, zvládání stresu; tam je výsledek. A <strong>žádný „detox“</strong> — tělo má játra a ledviny, prodej detoxu je marketing.</p>
+
+    <div class="card"><strong>Shrnutí:</strong> Dávka dělá jed, rozhoduje kontext celé stravy a kvalita lidských důkazů. Většina „toxinových“ obav (pesticidy, sladidla, GMO, barviva) je výrazně přehnaná. Dietní nápoje místo slazených jsou rozumný nástroj — lidské studie strašené škody neukazují. „Rostliny jsou plné jedů“ je zavádějící: dávka a hormeze, a reálný problém je nedostatek zeleniny. Klienta přesměruj na velké kameny, ne na strašáky.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jmenuj otázky rámce kritického myšlení o výživovém tvrzení. <span class="tg">odpověď ▾</span></div><div class="aa">Jakou dávkou (dávka dělá jed), v jakém kontextu celé stravy, jaká je kvalita důkazů (lidské studie a meta-analýzy) — a kdo a proč to tvrzení šíří.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaké je hlavní poselství u „toxinových“ obav? <span class="tg">odpověď ▾</span></div><div class="aa">Většina z nich je výrazně přehnaná. Skutečné velké hrozby pro zdraví jsou nadváha, málo pohybu, špatný spánek, chronický stres, kouření a nadměrný alkohol.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co říkají lidské studie o dietních nápojích? <span class="tg">odpověď ▾</span></div><div class="aa">Nahrazení slazených nápojů dietními pomáhá snížit příjem cukru a zhubnout. Běžné dávky sladidel podle randomizovaných studií nenarušují střevní mikrobiom a strašáky o rakovině nemají oporu v lidských datech.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je „rostliny jsou plné jedů“ zavádějící? <span class="tg">odpověď ▾</span></div><div class="aa">Kvůli dávce a hormezi — v běžném množství obranné látky nepůsobí jako otrava, ale jako mírný stresor, na který tělo reaguje posílením. Celkový efekt zeleniny a ovoce je pozitivní a reálný problém je jejich nedostatek.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Na co přesměrovat klienta místo honby za strašáky? <span class="tg">odpověď ▾</span></div><div class="aa">Na velké kameny: minimálně zpracovaná strava, dost bílkovin a zeleniny, pohyb, spánek a zvládání stresu. Žádný „detox“ — tělo má na to játra a ledviny.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Klient ti pošle vyděšený příspěvek „sladidla způsobují rakovinu, nepij Colu Zero“. Napiš mu odpověď, která ho uklidní fakty, dá mu rámec kritického myšlení (dávka, kontext, kvalita důkazů) a přesměruje na to, co reálně rozhoduje — bez výsměchu a bez přiživování paniky.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Barna, M. Autorské materiály: „Toxiny v jídle“, „Rostliny jsou plné jedů“, „Je Cola Zero horší než obyčejná Cola“. Barna Academy.</li>
+        <li>EFSA, FDA, WHO. Regulační stanoviska k aspartamu a aditivům (bezpečnost v rámci ADI).</li>
+        <li>Aune D, et al. Fruit and vegetable intake and the risk of mortality and disease: meta-analysis. International Journal of Epidemiology 2017.</li>
+        <li>Přehledy humánních RCT: umělá sladidla a střevní mikrobiom (bez konzistentního negativního efektu při běžných dávkách).</li>
+        <li>Norton, L. Evidence-based shrnutí k výživovým mýtům a kritickému hodnocení důkazů.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m3-l12', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

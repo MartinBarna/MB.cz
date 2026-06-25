@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svalová kontrakce a typy vláken — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 11 — Anatomie a pohyb</div>
+    <h1>Svalová kontrakce a typy vláken</h1>
+
+    <p class="lead">Když rozumíš tomu, jak sval vyvíjí sílu a jaké má uvnitř „typy motorů“, <strong>líp vybíráš zátěž, opakování i tempo</strong> — a líp vysvětlíš klientovi, proč trénujete tak, jak trénujete. Tahle lekce ti dá fyziologii přeloženou do praxe, ne do šuplíku.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak vzniká svalová kontrakce — zjednodušený mechanismus posuvu aktinu a myozinu.</li>
+        <li>Co je motorická jednotka a princip jejich postupného zapojování (nábor).</li>
+        <li>Tři typy svalových vláken (I, IIa, IIx) a jejich vlastnosti.</li>
+        <li>Tři typy kontrakce — koncentrická, excentrická, izometrická — a jejich využití.</li>
+        <li>Co z toho plyne pro výběr zátěže, opakování a tempa u tvých klientů.</li>
+      </ul>
+    </div>
+
+    <h2>1) Jak vzniká kontrakce (zjednodušeně)</h2>
+    <p>Sval se skládá z vláken, ta z myofibril a ty z opakujících se jednotek — sarkomer. Uvnitř se po sobě posouvají dvě bílkovinná vlákna: aktin a myozin. Když přijde nervový signál, myozinové „háčky“ se zachytí o aktin a přitáhnou ho — sarkomera se zkrátí a sval táhne. Tomuhle se říká teorie kluzných vláken. K akci je potřeba energie (ATP) a vápník jako spouštěč.</p>
+    <p>Pro tebe je důležitý princip: kontrakce je řízena nervovým systémem a stojí na opakovaném „chytání a tažení“ mezi aktinem a myozinem. Síla svalu závisí mimo jiné na tom, kolik vláken zapojíš a jak.</p>
+
+    <h2>2) Motorická jednotka a nábor</h2>
+    <p>Sval neovládáš „po jednom vláknu“. Nervová buňka (motoneuron) a všechna svalová vlákna, která ovládá, tvoří dohromady motorickou jednotku. Když potřebuješ víc síly, mozek zapojuje víc motorických jednotek — tomu se říká nábor (recruitment).</p>
+    <div class="card"><strong>Velikostní princip:</strong> Tělo zapojuje motorické jednotky postupně — od menších (slabších, vytrvalejších) k větším (silnějším, výbušnějším) podle nároku. Lehká zátěž zapojí jen menší jednotky; těžká zátěž nebo úsilí blízko selhání zapojí i ty velké. Proto se k největším, silovým vláknům „dostaneš“ jen dostatečně těžkou zátěží nebo prací blízko k selhání.</div>
+
+    <h2>3) Tři typy svalových vláken</h2>
+    <p>Vlákna se klasicky dělí podle svých vlastností:</p>
+    <p><strong>Typ I (pomalá, oxidativní)</strong> — vytrvalá, odolná vůči únavě, menší síla a pomalejší kontrakce. Dominují u vytrvalostních a posturálních úkolů.<br>
+    <strong>Typ IIa (rychlá, oxidativně-glykolytická)</strong> — kompromis: slušná síla i odolnost vůči únavě.<br>
+    <strong>Typ IIx (rychlá, glykolytická)</strong> — největší síla a rychlost, ale rychle unaví. Dominují u výbušných, maximálních akcí.</p>
+    <p>Většina svalů je směs typů. Poměr je z velké části dán geneticky, ale tréninkem ovlivníš jejich vlastnosti a velikost. Pro praxi stačí vědět: některé svaly a úkoly jsou víc „vytrvalostní“, jiné víc „výbušné“ — a podle toho volíš podnět.</p>
+
+    <h2>4) Tři typy kontrakce</h2>
+    <p>Stejný sval může pracovat třemi způsoby:</p>
+    <p><strong>Koncentrická</strong> — sval se zkracuje a vyvíjí sílu (zvedání zátěže nahoru, „pozitivní“ fáze).<br>
+    <strong>Excentrická</strong> — sval se prodlužuje pod napětím a brzdí (spouštění zátěže dolů, „negativní“ fáze). Vytváří velké napětí a je silným podnětem pro růst i pro svalovou bolest po tréninku.<br>
+    <strong>Izometrická</strong> — sval vyvíjí sílu beze změny délky (držení pozice, plank, bracing).</p>
+    <blockquote>Kontrolovaná excentrická fáze — nepouštět zátěž volným pádem — je nejlevnější způsob, jak z cviku vytěžit víc. Víc času pod napětím, vyšší kvalita podnětu.</blockquote>
+
+    <h2>5) Co z toho plyne pro trénink</h2>
+    <p>Tahle fyziologie není teorie do šuplíku — řídí konkrétní rozhodnutí:</p>
+    <p><strong>Zátěž a blízkost k selhání:</strong> abys zapojil a rozvíjel i velké, silné motorické jednotky, potřebuješ buď těžší zátěž, nebo jít blízko k selhání.<br>
+    <strong>Tempo a kontrola:</strong> kontrolovaná excentrická fáze zvyšuje napětí a podnět; nepouštět zátěž „padákem“.<br>
+    <strong>Opakování dle cíle:</strong> nižší opakování s vyšší zátěží pro sílu, širší rozmezí pro sval (pokud jdeš dost blízko k selhání).<br>
+    <strong>Klientovi to vysvětli jednoduše:</strong> „tělo zapojuje silné motory, až když je to dost těžké nebo blízko selhání“ pomůže pochopit, proč netrénujete jen nalehko pro pohodlí.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientovi nevykládám učebnici, ale princip využívám v každém plánu. Vím, že abych zasáhl ty silné, velké motorické jednotky, musí být zátěž dost těžká nebo jdeme blízko k selhání — proto netrénujeme jen „nalehko a pohodlně“. Vím, že kontrolované spouštění (excentrika) je levný způsob, jak z cviku vytěžit víc. A vím, že některé partie snesou víc opakování a jiné jsou na výbuch. Fyziologii nepotřebuju recitovat — potřebuju ji použít.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak zjednodušeně vzniká svalová kontrakce? <span class="tg">odpověď ▾</span></div><div class="aa">Posuvem aktinu a myozinu po sobě (teorie kluzných vláken) po nervovém signálu, za pomoci ATP a vápníku. Myozin se zachytí o aktin a přitáhne ho — sarkomera se zkrátí a sval táhne.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je motorická jednotka a velikostní princip? <span class="tg">odpověď ▾</span></div><div class="aa">Motorická jednotka = motoneuron a všechna svalová vlákna, která ovládá. Velikostní princip: tělo zapojuje jednotky postupně od menších (vytrvalých) k větším (silným) podle nároku.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jmenuj tři typy svalových vláken a jejich vlastnosti. <span class="tg">odpověď ▾</span></div><div class="aa">Typ I (pomalá, vytrvalá, menší síla), typ IIa (rychlá, kompromis síly a odolnosti) a typ IIx (rychlá, největší síla, ale rychle unaví).</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři typy kontrakce a co dělají. <span class="tg">odpověď ▾</span></div><div class="aa">Koncentrická (zkrácení, zvedání zátěže), excentrická (prodloužení pod napětím, brzdění, silný podnět) a izometrická (beze změny délky, držení pozice).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co z náboru motorických jednotek plyne pro volbu zátěže? <span class="tg">odpověď ▾</span></div><div class="aa">Pro zapojení velkých, silných jednotek je potřeba dostatečně těžká zátěž nebo jít blízko k selhání — s lehkou zátěží daleko od selhání se k nim „nedostaneš“.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyber jeden cvik a popiš jeho koncentrickou, excentrickou a izometrickou fázi. Pak vysvětli jednou větou jazykem pro klienta, proč u něj nebudete trénovat jen s lehkou zátěží daleko od selhání, když je cílem rozvoj svalu a síly.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Huxley AF. Muscle structure and theories of contraction. Prog Biophys Biophys Chem. 1957;7:255–318.</li>
+        <li>Henneman E, et al. Functional significance of cell size in spinal motoneurons. J Neurophysiol. 1965;28:560–580.</li>
+        <li>Schoenfeld BJ. The mechanisms of muscle hypertrophy and their application to resistance training. J Strength Cond Res. 2010;24(10):2857–2872.</li>
+        <li>Wilk M, et al. The effects of eccentric tempo on muscle activity and training adaptations. Front Physiol. 2020.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l11', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

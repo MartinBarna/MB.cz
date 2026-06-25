@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Škálování: od sólo kouče k týmu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 15 — Byznys pro trenéry a poradce</div>
+    <h1>Škálování: od sólo kouče k týmu</h1>
+
+    <p class="lead">Sólo kouč prodává svůj čas — a ten má tvrdý strop. V téhle lekci si projdeme, jak ten strop překročit přes <strong>tři cesty růstu: vyšší hodnotu, škálovatelné produkty a tým</strong>, aniž bys ztratil to, kvůli čemu k tobě lidi chodí.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč naráží model „čas za peníze“ na přirozený strop a co s tím.</li>
+        <li>Tři cesty růstu — vyšší cena, škálovatelné produkty, tým — a jak je kombinovat.</li>
+        <li>Proč jsou zdokumentované systémy a procesy základem každého škálování.</li>
+        <li>Kdy a koho najmout jako prvního člověka do týmu.</li>
+        <li>Jak při růstu uhlídat kvalitu, svůj otisk v metodice a osobní dotek.</li>
+      </ul>
+    </div>
+
+    <h2>1) Strop prodeje vlastního času</h2>
+    <p>Sólo koučink je krásný v tom, že začneš hned a bez nákladů. Má ale tvrdou hranici: den má 24 hodin a ty zvládneš jen určitý počet klientů, než vyhoříš. Jakmile máš plno, jediný způsob, jak vydělat víc, je zvednout cenu — a i ta má strop. Není to selhání, je to přirozená hranice modelu „čas za peníze“.</p>
+    <p>Důležité: škálování není povinnost. Někdo je nejšťastnější jako špičkový sólo kouč s pár prémiovými klienty a to je naprosto legitimní cíl. Škáluj jen tehdy, když to chceš — kvůli většímu dopadu, větší svobodě nebo vyššímu příjmu — ne proto, že „se to má“.</p>
+
+    <h2>2) Tři cesty růstu</h2>
+    <p><strong>Zvýšit hodnotu a cenu</strong> — jít výš, ne šíř. Místo více klientů měj méně klientů, kterým dáváš víc a kteří platí víc. Prémiový model vyžaduje silnou značku, výsledky a důvěru. Výhodou je jednoduchost a hloubka práce; limitem to, že pořád prodáváš čas, jen dráž.</p>
+    <p><strong>Postavit škálovatelné produkty</strong> — oddělit příjem od hodin. Skupinové programy, online kurzy, členská sekce, e-booky, šablony. Vytvoříš jednou, prodáváš mnohokrát. Příjem pak neroste přímo s tvým časem; vyžaduje to ale umět tvořit produkt a dělat marketing.</p>
+    <p><strong>Postavit tým</strong> — znásobit se přes lidi. Najmeš a vyškolíš další kouče, kteří pracují pod tvojí značkou a metodikou. Posouváš se od „dělám koučink“ k „vedu lidi, kteří dělají koučink“. Je to největší potenciál růstu, ale i nejnáročnější na řízení, systémy a vedení lidí.</p>
+    <blockquote>Cesty se nevylučují — nejsilnější podniky je kombinují. Ale ber je postupně. Škálování chaosu = větší chaos.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Nejdřív zvládni perfektně jednu rovnici — jeden klient, jeden výsledek. Teprve když ti tahle funguje pokaždé stejně dobře, máš co znásobovat. Když škáluješ něco, co ještě pořádně nestojí, jen rozmnožíš svoje slabiny.</div>
+
+    <h2>3) Základ všeho: systémy a procesy</h2>
+    <p>Než najmeš člověka nebo postavíš produkt, musíš mít zachycené, JAK pracuješ. Pokud všechno žije jen v tvojí hlavě, nedá se to předat ani zopakovat. Systém je prostě zapsaný, opakovatelný způsob, jak něco děláš pokaždé stejně dobře.</p>
+    <div class="card"><strong>Co si sepsat do provozního manuálu:</strong>
+      <ul>
+        <li><b>Onboarding klienta</b> — krok za krokem od platby po první trénink.</li>
+        <li><b>Vstupní konzultace a anamnéza</b> — jaké otázky, v jakém pořadí, co s odpověďmi.</li>
+        <li><b>Tvorba plánu</b> — tvůj konkrétní postup.</li>
+        <li><b>Check-in a měsíční review</b> — co se hlásí a jak se to vyhodnocuje.</li>
+        <li><b>Komunikační standardy</b> — jak rychle odpovídáš, jakým tónem, jaké kanály.</li>
+        <li><b>Řešení typických situací</b> — stagnace, relaps, odhlášení.</li>
+      </ul>
+    </div>
+    <p>Je nuda to psát, ale přesně tohle odlišuje podnik (běží i bez tebe) od práce na volné noze (stojí a padá s tebou). Bonus: samotné sepsání ti zlepší konzistenci, i kdybys nikoho nikdy nenajal.</p>
+
+    <h2>4) Kdy a koho najmout jako prvního</h2>
+    <p>Signály, že je čas: máš trvale plno a odmítáš zájemce, trávíš spoustu času činnostmi, které tě neživí (administrativa, fakturace, jednoduché odpovědi) místo koučinku, a máš zdokumentované procesy, které se dají předat.</p>
+    <p>První člověk často NENÍ další kouč, ale někdo na podporu — administrativa, péče o klienty, sociální sítě — kdo ti uvolní čas na to, co umíš nejlíp. Až teprve potom kouč. Postupuj podle toho, co tě nejvíc brzdí.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Kouče vybírej hlavně podle charakteru, souladu s hodnotami a ochoty učit se tvojí metodice. Odbornost se dá doučit, přístup ke klientovi hůř. Nový kouč musí projít tvým systémem a držet tvůj standard — pracuje pod tvojí značkou. Jeden špatný kouč v týmu poškodí pověst, kterou jsi budoval roky.</div>
+
+    <h2>5) Jak při růstu neztratit kvalitu</h2>
+    <p>Největší riziko škálování je zředění toho, co tě dělá výjimečným. Klient chodí za výsledky <em>a</em> za zážitek — za pocit, že je o něj postaráno. Když rosteš, aktivně hlídej čtyři věci:</p>
+    <p><strong>Standard kvality</strong> — definuj, co znamená „dobře odvedená práce“, a kontroluj to (náhodná kontrola, zpětná vazba, mentoring koučů). <strong>Svůj otisk v metodice</strong> — to, co tě odlišuje, musí být v systému, ne jen v tobě; trénuj lidi v tom, „jak to děláme my“. <strong>Osobní dotek</strong> — i při růstu hledej, kde zachovat lidskost, ať lidé necítí, že se z nich stalo číslo. <strong>Zpětnou vazbu od klientů</strong> — pravidelně se ptej, jestli kvalita drží. Růst, který zhorší zážitek klienta, je krátkozraký.</p>
+
+    <h2>6) Mění se i tvoje role</h2>
+    <p>Při škálování se mění, co vlastně děláš. Z „nejlepšího kouče“ se stáváš „člověkem, který staví prostředí, kde můžou ostatní koučovat skvěle“. To je jiná sada dovedností: vedení lidí, tvorba systémů, rozhodování, delegování. Mnoho skvělých koučů tady naráží — neumí pustit kontrolu a chtějí dělat všechno sami.</p>
+    <p>A pozor — ne každý tuhle změnu chce. Je naprosto v pořádku zjistit, že tě baví samotné koučování víc než řízení firmy, a zůstat u menšího, kvalitního modelu. Úspěch není jen velikost. Úspěch je podnik, který ti dává život, jaký chceš.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč naráží sólo kouč na strop, i když zvedne ceny? <span class="tg">odpověď ▾</span></div><div class="aa">Protože pořád prodává svůj čas a den má jen 24 hodin. Zvednutí ceny strop posune, ale i cena má svůj limit. Je to přirozená hranice modelu „čas za peníze“, ne selhání.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Které jsou tři cesty růstu a co je na nich společné? <span class="tg">odpověď ▾</span></div><div class="aa">Zvýšit hodnotu a cenu, postavit škálovatelné produkty a postavit tým. Společné je, že se nevylučují — nejsilnější podniky je kombinují. Brát je ale postupně, ne všechny najednou.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč jsou zdokumentované systémy podmínkou škálování? <span class="tg">odpověď ▾</span></div><div class="aa">Co žije jen v tvojí hlavě, se nedá předat ani zopakovat. Systém je zapsaný, opakovatelný způsob práce — bez něj nepostavíš produkt ani tým. Navíc zlepší konzistenci, i když nikoho nenajmeš.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Koho najmout jako prvního a podle čeho vybírat kouče? <span class="tg">odpověď ▾</span></div><div class="aa">Často nejdřív podporu (administrativa, péče o klienty, sítě), aby ti uvolnila čas na koučink — podle toho, co tě nejvíc brzdí. Kouče pak vybírej hlavně podle charakteru a souladu s hodnotami; odbornost se dá doučit.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jaké je největší riziko růstu a jak ho ošetřit? <span class="tg">odpověď ▾</span></div><div class="aa">Zředění toho, co tě dělá výjimečným. Ošetříš to definovaným standardem kvality a kontrolou, přenesením svého otisku do metodiky, zachováním osobního doteku a pravidelnou zpětnou vazbou od klientů.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyber jeden proces, který dnes děláš jen z hlavy (např. onboarding klienta), a sepiš ho krok za krokem tak, aby ho podle něj zvládl odvést i někdo jiný. Tím založíš svůj provozní manuál.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Gerber ME. The E-Myth Revisited. HarperBusiness 1995.</li>
+        <li>Collins J. Good to Great. HarperBusiness 2001.</li>
+        <li>Hormozi A. $100M Services / $100M Leads. Acquisition.com 2023.</li>
+        <li>Carnegie D. How to Win Friends and Influence People. Simon &amp; Schuster 1936.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l15', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

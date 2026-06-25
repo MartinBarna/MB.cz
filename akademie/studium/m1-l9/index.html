@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emoční jedení a stres — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 9 — Psychologie a chování kolem jídla</div>
+    <h1>Emoční jedení a stres</h1>
+
+    <p class="lead">Jeden z nejčastějších důvodů, proč klientovi „nejde" jíst podle plánu, i když ho umí odříkat zpaměti. Není to o znalosti — je to o emocích. Spousta jedení neřeší hlad, ale <strong>stres, nudu, samotu nebo únavu.</strong> A pozor: vina je palivo dalšího emočního jedení — tahle smyčka položila víc diet než jakákoli „špatná makra".</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Rozdíl mezi fyzickým a emočním hladem (a jak ho poznat).</li>
+        <li>Proč stres a kortizol mění chuť ke sladkému a tučnému.</li>
+        <li>Smyčku „stres → jídlo → vina → větší stres" a jak ji rozbít.</li>
+        <li>Techniky: pauza, náhradní akce, řešení skutečné potřeby.</li>
+        <li>Kdy to jde za hranici koučinku a je čas na odborníka.</li>
+      </ul>
+    </div>
+
+    <h2>1) Fyzický vs. emoční hlad</h2>
+    <div class="card">
+      <p style="margin-top:0"><strong>Fyzický hlad</strong> — přichází postupně, ohlásí se v těle, je trpělivý, spokojí se s různými jídly, po jídle sytost bez viny.<br>
+      <strong>Emoční hlad</strong> — přichází náhle a naléhavě, „v hlavě", chce konkrétní jídlo (sladké/tučné/slané), nepočká, a po jídle často zůstává pocit „nebylo to ono" plus vina.</p>
+    </div>
+    <p>Jednoduchý test pro klienta: <em>„Měl bys teď chuť na obyčejné jablko nebo kuřecí prsa? Pokud ne a chceš jen čokoládu, nejspíš to není fyzický hlad."</em></p>
+
+    <h2>2) Stres, kortizol a chuť</h2>
+    <p>Akutní stres chuť spíš tlumí, ale <strong>chronický stres ji zvyšuje</strong> a posouvá ke kaloricky hutným jídlům. Ta krátkodobě aktivují systém odměny a uleví — proto „comfort food". Mozek si zapamatuje: stres → jídlo → úleva (přesně kontext → akce z lekce o návycích). Není to slabost charakteru — je to naučená, hormonálně podpořená reakce. Když to klient pochopí, ubereš mu obrovský kus viny.</p>
+
+    <h2>3) Smyčka viny (a jak ji rozbít)</h2>
+    <p>Cyklus: stres → emoční jedení → <strong>vina</strong> a „už jsem to stejně zkazil" → větší stres → další jedení. Rozbít ji můžeš na dvou místech:</p>
+    <div class="points">
+      <ul>
+        <li><strong>Před jídlem</strong> — vlož pauzu a nabídni náhradní akci.</li>
+        <li><strong>Po jídle</strong> — odeber vinu. Jedna epizoda nic nezkazí. Věta klientovi: „Stalo se, není to konec světa, neměníme nic dramatického, jen pokračujeme." Klid po epizodě smyčku zastaví.</li>
+      </ul>
+    </div>
+
+    <h2>4) Techniky do praxe</h2>
+    <p><strong>Pauza (10 minut).</strong> Když přijde emoční chuť, dej 10 minut, než cokoli sníš — chuť přichází ve vlnách a často odezní. Není to zákaz, je to odklad, který vrátí volbu z impulzivního systému (S1) do uvážlivého (S2).</p>
+    <p><strong>Pojmenuj potřebu.</strong> „Mám fakt hlad, nebo jsem ve stresu / unavený / znuděný / osamělý?" Pak řeš skutečnou potřebu: stres → procházka, dech, hovor; únava → spánek (ne cukr); nuda → činnost; samota → kontakt s člověkem.</p>
+    <p><strong>Náhradní akce předem.</strong> Připrav konkrétní „když–pak": „Když přijde večerní chuť ze stresu, tak (čaj / teplá sprcha / procházka / hovor)." Předpřipravená akce poráží rozhodování na místě.</p>
+    <p><strong>Nevyřazuj, reguluj.</strong> Úplný zákaz zvyšuje přitažlivost (bílý medvěd). Lepší je vědomé, plánované zařazení v rozumné míře.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když klient řekne „večer se neudržím", neřeším makra — ptám se, co se děje předtím. Většinou je tam stres nebo únava. Pak nestavím zákaz, ale připravenou náhradní akci a klid bez viny, když to jednou nevyjde. Paradox: čím míň klienta za prošvih trestám, tím míň prošvihů má. Vina krmí smyčku; klid ji láme.</div>
+
+    <h2>5) Kde končí koučink</h2>
+    <p>Buď upřímný k hranicím role. Emoční jedení jako běžný vzorec koučovat můžeš. Ale když narazíš na známky poruchy příjmu potravy (záchvatovité přejídání s pocitem ztráty kontroly, kompenzační chování, výrazná úzkost kolem jídla, tajné jedení, jídlo jako jediný zvládací mechanismus), je to za hranicí koučinku — citlivě doporuč odborníka (psycholog/psychoterapeut, lékař). Není to selhání, je to péče.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak poznáš emoční hlad od fyzického? <span class="tg">odpověď ▾</span></div><div class="aa">Emoční: náhlý, „v hlavě", chce konkrétní jídlo, nepočká, vina. Fyzický: postupný, v těle, trpělivý, spokojí se s běžným jídlem.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co dělá chronický stres s chutí? <span class="tg">odpověď ▾</span></div><div class="aa">Zvyšuje ji a posouvá ke kaloricky hutným „comfort" jídlům přes systém odměny — naučený vzorec, ne slabost.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak rozbít smyčku viny? <span class="tg">odpověď ▾</span></div><div class="aa">Před jídlem pauza + náhradní akce; po jídle odebrat vinu (klid, „pokračujeme dál").</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co dělá 10minutová pauza? <span class="tg">odpověď ▾</span></div><div class="aa">Odloží volbu, nechá chuť odeznít a vrátí rozhodování z impulzivního S1 do uvážlivého S2.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy odkázat na odborníka? <span class="tg">odpověď ▾</span></div><div class="aa">Při známkách poruchy příjmu potravy (ztráta kontroly, kompenzace, úzkost, tajné jedení) — to je za hranicí koučinku.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Připrav si (nebo s klientem) jednu konkrétní „když–pak" náhradní akci pro nejčastější emoční spouštěč. Zapiš ji a měj připravenou dřív, než spouštěč příště přijde.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Adam TC, Epel ES. Stress, eating and the reward system. Physiol Behav. 2007.</li>
+        <li>Dallman MF, et al. Chronic stress and comfort foods. Proc Natl Acad Sci. 2003.</li>
+        <li>Macht M. How emotions affect eating: A five-way model. Appetite. 2008.</li>
+        <li>Neff KD. Self-compassion and adaptive functioning (vina vs. soucit).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l9', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

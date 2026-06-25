@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spánek: skrytá páka hladu a hubnutí — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 10 — Psychologie a chování kolem jídla</div>
+    <h1>Spánek: skrytá páka hladu a hubnutí</h1>
+
+    <p class="lead">Můžeš mít dokonalý jídelníček i trénink, ale když klient spí pět hodin, <strong>hraješ proti přesile.</strong> Spánek je nejvíc podceňovaná páka v koučinku — ovlivňuje hlad, chutě, sebeovládání i to, jestli v deficitu klient pálí tuk, nebo sval.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak nedostatek spánku posouvá hormony hladu (ghrelin nahoru, leptin dolů).</li>
+        <li>Proč po probdělé noci táhne ruka ke sladkému (odměna + sebeovládání).</li>
+        <li>Vliv spánku na poměr ztráty tuku vs. svalu v deficitu.</li>
+        <li>Praktické pilíře spánkové hygieny.</li>
+        <li>Jak spánek zařadit do koučinku, aniž z toho děláš vědu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Spánek a hormony hladu</h2>
+    <div class="card">
+      <p style="margin-top:0"><strong>Ghrelin</strong> (hormon hladu) — po nedostatku spánku stoupá → větší hlad.<br>
+      <strong>Leptin</strong> (signál sytosti) — po nedostatku spánku klesá → horší pocit sytosti.</p>
+    </div>
+    <p>Nevyspaný člověk má silnější hlad a slabší sytost i při stejném jídle. Není to slabá vůle, je to posunutá signalizace. K tomu únava snižuje chuť se hýbat (méně spontánního pohybu přes den).</p>
+
+    <h2>2) Proč po probdělé noci táhne ruka ke sladkému</h2>
+    <p>Dva mechanismy se sčítají do <strong>dvojitého zásahu</strong>: (1) systém odměny je po nevyspání citlivější na hutná, sladká a tučná jídla — mozek hledá rychlou odměnu; (2) sebeovládání (prefrontální „brzda") je oslabené — ráno řekne „ne", po probdělé noci slaběji. Nevyspaný klient tedy víc chce hutné jídlo A hůř odolává. A pak si to vyčítá — zpět u smyčky viny.</p>
+
+    <h2>3) Spánek a kvalita hubnutí</h2>
+    <p>Zásadní argument: v deficitu nerozhoduje jen <em>kolik</em> klient zhubne, ale <em>co</em>. Při nedostatku spánku tělo ztrácí <strong>větší podíl svalu a menší podíl tuku</strong> oproti vyspanému stavu (při jinak stejné dietě). Špatný spánek tak sabotuje tvou práci v posilovně. Navíc spánek řídí regeneraci a adaptaci na trénink — bez něj horší výkon a kupící se únava. Spánek je součást plánu, ne bonus.</p>
+
+    <h2>4) Pilíře spánkové hygieny</h2>
+    <div class="points">
+      <ul>
+        <li><strong>Pravidelnost</strong> — chodit spát a vstávat ve stejnou dobu, i o víkendu.</li>
+        <li><strong>Dostatek</strong> — mířit na ~7–9 hodin (individuální).</li>
+        <li><strong>Tma a chlad</strong> — temná, chladnější ložnice.</li>
+        <li><strong>Denní světlo</strong> — ráno na světlo (nastaví vnitřní hodiny).</li>
+        <li><strong>Obrazovky a kofein</strong> — omezit jasné obrazovky před spaním; kofein neposouvat do odpoledne (dlouhý poločas).</li>
+        <li><strong>Alkohol</strong> — uspí rychleji, ale zhoršuje kvalitu spánku (druhá půlka noci).</li>
+        <li><strong>Rutina na usínání</strong> — pár klidných minut jako signál „jdeme spát".</li>
+      </ul>
+    </div>
+    <p>Nenakládej všechno najednou — vyber s klientem jeden, dva pilíře a postav z nich návyk (kontext → akce), jako u čehokoli jiného.</p>
+
+    <h2>5) Jak spánek zařadit do koučinku</h2>
+    <div class="praxe"><b>V praxi (Martin):</b> Na spánek se ptám hned na vstupní konzultaci. Když klient řekne „spím pět hodin a pořád mám večer hlad", vím, kde je půlka problému, ještě než otevřu jídelníček. Nedělám přednášku — vyberu jeden posun (pravidelný čas usínání nebo kofein jen do oběda) a sleduju, co to udělá s hladem a energií. Často je to nejrychlejší výhra, jakou klient zažije — a posílí jeho víru, že to zvládne.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co dělá nedostatek spánku s ghrelinem a leptinem? <span class="tg">odpověď ▾</span></div><div class="aa">Ghrelin nahoru (větší hlad), leptin dolů (slabší sytost) — i při stejném jídle.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč po probdělé noci táhne ruka ke sladkému? <span class="tg">odpověď ▾</span></div><div class="aa">Dvojitý zásah: silnější odměna z hutných jídel + oslabené sebeovládání.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak špatný spánek ovlivní složení úbytku? <span class="tg">odpověď ▾</span></div><div class="aa">Zhoršuje poměr — větší podíl ztráty svalu a menší tuku oproti vyspanému stavu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři pilíře spánkové hygieny. <span class="tg">odpověď ▾</span></div><div class="aa">Pravidelnost, dostatek (~7–9 h), tma a chlad, denní světlo ráno, omezit obrazovky a kofein večer.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč se na spánek ptát hned na startu? <span class="tg">odpověď ▾</span></div><div class="aa">Často je to půlka problému s hladem a energií — a nejrychlejší výhra, která posílí klientovu víru.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Zjisti u sebe nebo klienta aktuální spánek (hodiny, pravidelnost, kvalita). Vyber JEDEN pilíř k úpravě a postav z něj návyk na týden. Sleduj, co to udělá s večerním hladem.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Spiegel K, et al. Brief communication: sleep curtailment in healthy young men. Ann Intern Med. 2004 (ghrelin/leptin).</li>
+        <li>Greer SM, et al. The impact of sleep deprivation on food desire in the human brain. Nat Commun. 2013.</li>
+        <li>Nedeltcheva AV, et al. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010 (sval vs. tuk).</li>
+        <li>Walker M. Why We Sleep. (Přehled významu spánku.)</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

@@ -77,62 +77,192 @@
     <p class="demo-note">Ukázka studijního prostředí. Přihlašování, ukládání postupu a odemčení po koupi napojíme přes Supabase. (Postup se teď ukládá jen v tomto prohlížeči.)</p>
   </div>
 
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
   <script>
     // Osnova (snadno rozšiřitelná). available:true = lekce je hotová a otevřená.
     var CURRICULUM = [
       { t:"Psychologie a chování kolem jídla", d:"Základ, na kterém stojí každá proměna", lessons:[
         { id:"m1-l1", t:"Proč lidé jedí, i když nemají hlad", available:true, href:"/akademie/studium/m1-l1/" },
-        { id:"m1-l2", t:"Psychofyziologie příjmu potravy", available:false },
-        { id:"m1-l3", t:"Návyky, spouštěče a změna chování", available:false }
+        { id:"m1-l2", t:"Mechanismus jídla a psychofyziologie příjmu", available:true, href:"/akademie/studium/m1-l2/" },
+        { id:"m1-l3", t:"Vůle, sebeovládání a změna chování", available:true, href:"/akademie/studium/m1-l3/" },
+        { id:"m1-l4", t:"Mindset, přesvědčení a dietní restrikce", available:true, href:"/akademie/studium/m1-l4/" },
+        { id:"m1-l5", t:"Hormony, inzulin a chuť k jídlu", available:true, href:"/akademie/studium/m1-l5/" },
+        { id:"m1-l6", t:"Centrum odměny: mít rád, chtít a dopamin", available:true, href:"/akademie/studium/m1-l6/" },
+        { id:"m1-l7", t:"Tvorba návyků: kontext, akce a malá změna", available:true, href:"/akademie/studium/m1-l7/" },
+        { id:"m1-l8", t:"Prostředí jako tichý kouč", available:true, href:"/akademie/studium/m1-l8/" },
+        { id:"m1-l9", t:"Emoční jedení a stres", available:true, href:"/akademie/studium/m1-l9/" },
+        { id:"m1-l10", t:"Spánek: skrytá páka hladu a hubnutí", available:true, href:"/akademie/studium/m1-l10/" },
+        { id:"m1-l11", t:"Proč pomalu: tělo jako investice", available:true, href:"/akademie/studium/m1-l11/" },
+        { id:"m1-l12", t:"Identita: změna na úrovni „kým jsem“", available:true, href:"/akademie/studium/m1-l12/" },
+        { id:"m1-l13", t:"Motivace vs. sebekázeň", available:true, href:"/akademie/studium/m1-l13/" },
+        { id:"m1-l14", t:"Stres a zvládání zátěže", available:true, href:"/akademie/studium/m1-l14/" },
+        { id:"m1-l15", t:"Perfekcionismus a myšlení „všechno nebo nic“", available:true, href:"/akademie/studium/m1-l15/" }
       ]},
-      { t:"Anatomie a pohyb", d:"Jak tělo tvoří pohyb", lessons:[
-        { id:"m2-l1", t:"Kosterní systém — základ pohybu", available:true, href:"/akademie/studium/m1-l1/" },
-        { id:"m2-l2", t:"Svalový systém a produkce síly", available:false },
-        { id:"m2-l3", t:"Postura a posturální odchylky", available:false }
+      { t:"Anatomie a pohyb", d:"Jak tělo tvoří a řídí pohyb", lessons:[
+        { id:"m2-l1", t:"Kosterní systém — základ pohybu", available:true, href:"/akademie/studium/m2-l1/" },
+        { id:"m2-l2", t:"Biomechanika a páky", available:true, href:"/akademie/studium/m2-l2/" },
+        { id:"m2-l3", t:"Kloubní akce a klasifikace pohybu", available:true, href:"/akademie/studium/m2-l3/" },
+        { id:"m2-l4", t:"Nervový systém a posturální odchylky", available:true, href:"/akademie/studium/m2-l4/" },
+        { id:"m2-l5", t:"Posturální svaly a zkřížené syndromy", available:true, href:"/akademie/studium/m2-l5/" },
+        { id:"m2-l6", t:"Můžeme s posturou něco udělat? (1)", available:true, href:"/akademie/studium/m2-l6/" },
+        { id:"m2-l7", t:"Korekce postury (2): evoluce a praxe", available:true, href:"/akademie/studium/m2-l7/" },
+        { id:"m2-l8", t:"Dech, nitrobřišní tlak a stabilita středu", available:true, href:"/akademie/studium/m2-l8/" },
+        { id:"m2-l9", t:"Mobilita, rozsah pohybu a příprava na pohyb", available:true, href:"/akademie/studium/m2-l9/" },
+        { id:"m2-l10", t:"Adaptace, progresivní přetížení a regenerace", available:true, href:"/akademie/studium/m2-l10/" },
+        { id:"m2-l11", t:"Svalová kontrakce a typy vláken", available:true, href:"/akademie/studium/m2-l11/" },
+        { id:"m2-l12", t:"Energetické systémy", available:true, href:"/akademie/studium/m2-l12/" },
+        { id:"m2-l13", t:"Kardiovaskulární a dýchací systém", available:true, href:"/akademie/studium/m2-l13/" },
+        { id:"m2-l14", t:"Nervová soustava a motorické učení", available:true, href:"/akademie/studium/m2-l14/" },
+        { id:"m2-l15", t:"Hormony a endokrinní systém", available:true, href:"/akademie/studium/m2-l15/" }
       ]},
-      { t:"Výživa a energie", d:"Makra, výdej, sytost", lessons:[
-        { id:"m3-l1", t:"Energetická bilance v praxi", available:false },
-        { id:"m3-l2", t:"Makroživiny a sytost", available:false }
+      { t:"Výživa a energie", d:"Makra, výdej, sytost, suplementy", lessons:[
+        { id:"m3-l1", t:"Energetická bilance — zákon, který platí vždy", available:true, href:"/akademie/studium/m3-l1/" },
+        { id:"m3-l2", t:"Bílkoviny: nejdůležitější makroživina", available:true, href:"/akademie/studium/m3-l2/" },
+        { id:"m3-l3", t:"Sacharidy: palivo, ne nepřítel", available:true, href:"/akademie/studium/m3-l3/" },
+        { id:"m3-l4", t:"Tuky: esenciální, ne volitelné", available:true, href:"/akademie/studium/m3-l4/" },
+        { id:"m3-l5", t:"Sytost a energetická hustota", available:true, href:"/akademie/studium/m3-l5/" },
+        { id:"m3-l6", t:"Vláknina, mikroživiny a střevní zdraví", available:true, href:"/akademie/studium/m3-l6/" },
+        { id:"m3-l7", t:"Tekutiny, hydratace a elektrolyty", available:true, href:"/akademie/studium/m3-l7/" },
+        { id:"m3-l8", t:"Alkohol z hlediska výživy a kompozice", available:true, href:"/akademie/studium/m3-l8/" },
+        { id:"m3-l9", t:"Suplementy: co funguje a co je marketing", available:true, href:"/akademie/studium/m3-l9/" },
+        { id:"m3-l10", t:"Tvorba jídelníčku v praxi", available:true, href:"/akademie/studium/m3-l10/" },
+        { id:"m3-l11", t:"Diet breaks a flexibilní přístup", available:true, href:"/akademie/studium/m3-l11/" },
+        { id:"m3-l12", t:"Výživové mýty: toxiny, detox a strašení", available:true, href:"/akademie/studium/m3-l12/" },
+        { id:"m3-l13", t:"Specifika výživy žen a menstruační cyklus", available:true, href:"/akademie/studium/m3-l13/" },
+        { id:"m3-l14", t:"Výživa kolem tréninku: nutrient timing", available:true, href:"/akademie/studium/m3-l14/" },
+        { id:"m3-l15", t:"Kritické čtení studií", available:true, href:"/akademie/studium/m3-l15/" }
       ]},
       { t:"Programování tréninku", d:"Tréninky na míru klientovi", lessons:[
-        { id:"m4-l1", t:"Principy programování", available:false }
+        { id:"m4-l1", t:"Principy programování", available:true, href:"/akademie/studium/m4-l1/" },
+        { id:"m4-l2", t:"Výběr cviků a pohybové vzory", available:true, href:"/akademie/studium/m4-l2/" },
+        { id:"m4-l3", t:"Objem, intenzita a frekvence", available:true, href:"/akademie/studium/m4-l3/" },
+        { id:"m4-l4", t:"Technika a cueing: jak učit pohyb", available:true, href:"/akademie/studium/m4-l4/" },
+        { id:"m4-l5", t:"Sestavení tréninkového splitu", available:true, href:"/akademie/studium/m4-l5/" },
+        { id:"m4-l6", t:"Kardio a NEAT", available:true, href:"/akademie/studium/m4-l6/" },
+        { id:"m4-l7", t:"Funkční trénink vs. síla", available:true, href:"/akademie/studium/m4-l7/" },
+        { id:"m4-l8", t:"Realistická očekávání: kolik svalu a síly", available:true, href:"/akademie/studium/m4-l8/" },
+        { id:"m4-l9", t:"Sestavení tréninkového plánu krok za krokem", available:true, href:"/akademie/studium/m4-l9/" },
+        { id:"m4-l10", t:"Trénink žen: cyklus, těhotenství, poporodní", available:true, href:"/akademie/studium/m4-l10/" },
+        { id:"m4-l11", t:"Trénink seniorů", available:true, href:"/akademie/studium/m4-l11/" },
+        { id:"m4-l12", t:"Bolesti zad a běžné potíže", available:true, href:"/akademie/studium/m4-l12/" },
+        { id:"m4-l13", t:"Trénink doma a s minimem vybavení", available:true, href:"/akademie/studium/m4-l13/" },
+        { id:"m4-l14", t:"Trénink dětí a dospívajících", available:true, href:"/akademie/studium/m4-l14/" },
+        { id:"m4-l15", t:"Návrat do tréninku po zranění", available:true, href:"/akademie/studium/m4-l15/" }
       ]},
       { t:"Práce s klientem & koučink", d:"Vedení, motivace, výsledky", lessons:[
-        { id:"m5-l1", t:"Mapa prostředí a první konzultace", available:false }
+        { id:"m5-l1", t:"Vstupní konzultace — základ spolupráce", available:true, href:"/akademie/studium/m5-l1/" },
+        { id:"m5-l2", t:"Cíle a realistická očekávání", available:true, href:"/akademie/studium/m5-l2/" },
+        { id:"m5-l3", t:"Měření a ukazování pokroku", available:true, href:"/akademie/studium/m5-l3/" },
+        { id:"m5-l4", t:"Motivační rozhovor a aktivní naslouchání", available:true, href:"/akademie/studium/m5-l4/" },
+        { id:"m5-l5", t:"Řešení stagnace (plateau)", available:true, href:"/akademie/studium/m5-l5/" },
+        { id:"m5-l6", t:"Relaps a návrat po výpadku", available:true, href:"/akademie/studium/m5-l6/" },
+        { id:"m5-l7", t:"Hranice a etika koučovské role", available:true, href:"/akademie/studium/m5-l7/" },
+        { id:"m5-l8", t:"Online vs. osobní koučink", available:true, href:"/akademie/studium/m5-l8/" },
+        { id:"m5-l9", t:"Skupinový koučink a budování komunity", available:true, href:"/akademie/studium/m5-l9/" },
+        { id:"m5-l10", t:"Typy klientů a jak ke každému přistupovat", available:true, href:"/akademie/studium/m5-l10/" },
+        { id:"m5-l11", t:"Práce s odporujícím a náročným klientem", available:true, href:"/akademie/studium/m5-l11/" },
+        { id:"m5-l12", t:"Online koučink: vedení na dálku", available:true, href:"/akademie/studium/m5-l12/" },
+        { id:"m5-l13", t:"Citlivá témata a zranitelní klienti", available:true, href:"/akademie/studium/m5-l13/" },
+        { id:"m5-l14", t:"Koučovská mentalita: průvodce, ne diktátor", available:true, href:"/akademie/studium/m5-l14/" },
+        { id:"m5-l15", t:"Rozvoj kouče: sebereflexe a prevence vyhoření", available:true, href:"/akademie/studium/m5-l15/" }
       ]},
-      { t:"Byznys pro trenéry a poradce", d:"Udržitelný byznys a klienti", lessons:[
-        { id:"m6-l1", t:"USP a cílová skupina", available:false }
+      { t:"Byznys pro trenéry a poradce", d:"Udržitelný a ziskový byznys", lessons:[
+        { id:"m6-l1", t:"Kdo jsi a kdo je tvůj klient", available:true, href:"/akademie/studium/m6-l1/" },
+        { id:"m6-l2", t:"Psychografie cílové skupiny", available:true, href:"/akademie/studium/m6-l2/" },
+        { id:"m6-l3", t:"Fitness průmysl, nabídka a poptávka", available:true, href:"/akademie/studium/m6-l3/" },
+        { id:"m6-l4", t:"Analýza značky, publikum a SWOT", available:true, href:"/akademie/studium/m6-l4/" },
+        { id:"m6-l5", t:"Osobní značka I: vzhled a první dojem", available:true, href:"/akademie/studium/m6-l5/" },
+        { id:"m6-l6", t:"Osobní značka II: osobnost a důvěra", available:true, href:"/akademie/studium/m6-l6/" },
+        { id:"m6-l7", t:"Právní forma podnikání a finanční výhled", available:true, href:"/akademie/studium/m6-l7/" },
+        { id:"m6-l8", t:"Obsah a marketingový trychtýř", available:true, href:"/akademie/studium/m6-l8/" },
+        { id:"m6-l9", t:"Retence: jak si klienta udržet", available:true, href:"/akademie/studium/m6-l9/" },
+        { id:"m6-l10", t:"Reference, doporučení a sociální důkaz", available:true, href:"/akademie/studium/m6-l10/" },
+        { id:"m6-l11", t:"Cenotvorba a balíčky služeb", available:true, href:"/akademie/studium/m6-l11/" },
+        { id:"m6-l12", t:"Onboarding nového klienta", available:true, href:"/akademie/studium/m6-l12/" },
+        { id:"m6-l13", t:"Sociální sítě a tvorba obsahu", available:true, href:"/akademie/studium/m6-l13/" },
+        { id:"m6-l14", t:"Produkty a sekundární zdroje příjmu", available:true, href:"/akademie/studium/m6-l14/" },
+        { id:"m6-l15", t:"Škálování: od sólo kouče k týmu", available:true, href:"/akademie/studium/m6-l15/" }
+      ]},
+      { t:"Praktické vedení klienta (procesy)", d:"Klient od A do Z — systém Team Barna", lessons:[
+        { id:"m7-l1", t:"Cesta klienta od A do Z", available:true, href:"/akademie/studium/m7-l1/" },
+        { id:"m7-l2", t:"Když klient nehubne na očekávaných kaloriích", available:true, href:"/akademie/studium/m7-l2/" },
+        { id:"m7-l3", t:"Komunikace a reporty s klientem", available:true, href:"/akademie/studium/m7-l3/" },
+        { id:"m7-l4", t:"Měsíční review a vyhodnocení", available:true, href:"/akademie/studium/m7-l4/" },
+        { id:"m7-l5", t:"Vstupní příručka klienta", available:true, href:"/akademie/studium/m7-l5/" },
+        { id:"m7-l6", t:"Tarify a cenové úrovně služby", available:true, href:"/akademie/studium/m7-l6/" },
+        { id:"m7-l7", t:"Ukončení spolupráce, offboarding a retence", available:true, href:"/akademie/studium/m7-l7/" },
+        { id:"m7-l8", t:"Krizová komunikace, stížnosti a reklamace", available:true, href:"/akademie/studium/m7-l8/" },
+        { id:"m7-l9", t:"Právní a etický rámec: data, smlouvy, odpovědnost", available:true, href:"/akademie/studium/m7-l9/" },
+        { id:"m7-l10", t:"Data klienta a sledování pokroku", available:true, href:"/akademie/studium/m7-l10/" }
+      ]},
+      { t:"Příprava bojovníků a úpolové sporty", d:"Síla, kondice a příprava na zápas", lessons:[
+        { id:"m8-l1", t:"Silová a kondiční příprava pro bojovníka", available:true, href:"/akademie/studium/m8-l1/" },
+        { id:"m8-l2", t:"Weight cut: bezpečné shazování váhy", available:true, href:"/akademie/studium/m8-l2/" },
+        { id:"m8-l3", t:"Peak week a superkompenzace", available:true, href:"/akademie/studium/m8-l3/" },
+        { id:"m8-l4", t:"Soutěžní příprava A–Z", available:true, href:"/akademie/studium/m8-l4/" },
+        { id:"m8-l5", t:"Mentální příprava závodníka", available:true, href:"/akademie/studium/m8-l5/" },
+        { id:"m8-l6", t:"Příprava na estetické kategorie (bikini, physique)", available:true, href:"/akademie/studium/m8-l6/" },
+        { id:"m8-l7", t:"Výživa bojovníka", available:true, href:"/akademie/studium/m8-l7/" },
+        { id:"m8-l8", t:"Kondiční příprava a regenerace bojovníka", available:true, href:"/akademie/studium/m8-l8/" },
+        { id:"m8-l9", t:"Prevence zranění", available:true, href:"/akademie/studium/m8-l9/" },
+        { id:"m8-l10", t:"Dlouhodobý rozvoj sportovce a kariéra", available:true, href:"/akademie/studium/m8-l10/" }
+      ]},
+      { t:"Periodizace a plánování", d:"Jak plánovat trénink v čase", lessons:[
+        { id:"m9-l1", t:"Co je periodizace a proč ji potřebuješ", available:true, href:"/akademie/studium/m9-l1/" },
+        { id:"m9-l2", t:"Bloky, deload a taper", available:true, href:"/akademie/studium/m9-l2/" },
+        { id:"m9-l3", t:"Modely periodizace v praxi", available:true, href:"/akademie/studium/m9-l3/" },
+        { id:"m9-l4", t:"Deload a taper: umění subtrakce", available:true, href:"/akademie/studium/m9-l4/" },
+        { id:"m9-l5", t:"Periodizace výživy", available:true, href:"/akademie/studium/m9-l5/" },
+        { id:"m9-l6", t:"Autoregulace: RPE, RIR a poslouchání těla", available:true, href:"/akademie/studium/m9-l6/" },
+        { id:"m9-l7", t:"Souběžný trénink: síla a vytrvalost", available:true, href:"/akademie/studium/m9-l7/" },
+        { id:"m9-l8", t:"Roční plán: jak složit periodizaci dohromady", available:true, href:"/akademie/studium/m9-l8/" }
       ]}
     ];
-    var KEY = 'ba_progress_v1';
-    function getDone(){ try { return JSON.parse(localStorage.getItem(KEY)||'{}'); } catch(e){ return {}; } }
-    var done = getDone();
-    var totalAvail = 0, completed = 0;
-    var html = '';
-    CURRICULUM.forEach(function(m, mi){
-      var lz = '', mDone = 0, mAvail = 0;
-      m.lessons.forEach(function(l){
-        var isDone = !!done[l.id];
-        if (l.available){ totalAvail++; mAvail++; if(isDone){ completed++; mDone++; } }
-        if (l.available){
-          lz += '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
-        } else {
-          lz += '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
-        }
+    function render(done){
+      done = done || {};
+      var totalAvail = 0, completed = 0;
+      var html = '';
+      CURRICULUM.forEach(function(m, mi){
+        var lz = '', mDone = 0, mAvail = 0;
+        m.lessons.forEach(function(l){
+          var isDone = !!done[l.id];
+          if (l.available){ totalAvail++; mAvail++; if(isDone){ completed++; mDone++; } }
+          if (l.available){
+            lz += '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
+          } else {
+            lz += '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
+          }
+        });
+        var pct = mAvail? Math.round(mDone/mAvail*100) : 0;
+        html += '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(mAvail?'<span class="pct">'+pct+' %</span>':'<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>';
       });
-      var pct = mAvail? Math.round(mDone/mAvail*100) : 0;
-      html += '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(mAvail?'<span class="pct">'+pct+' %</span>':'<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>';
-    });
-    document.getElementById('modules').innerHTML = html;
-    var overall = totalAvail? Math.round(completed/totalAvail*100) : 0;
-    document.getElementById('progBar').style.width = overall+'%';
-    document.getElementById('progLbl').textContent = completed+' z '+totalAvail+' dostupných lekcí · '+overall+' % dokončeno';
-    // Certifikát/test odemčení (demo: po dokončení všech DOSTUPNÝCH lekcí)
-    if (totalAvail>0 && completed===totalAvail){
-      var cc = document.getElementById('certCard'); cc.classList.add('ready');
-      document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
-      var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
+      document.getElementById('modules').innerHTML = html;
+      var overall = totalAvail? Math.round(completed/totalAvail*100) : 0;
+      document.getElementById('progBar').style.width = overall+'%';
+      document.getElementById('progLbl').textContent = completed+' z '+totalAvail+' dostupných lekcí · '+overall+' % dokončeno';
+      if (totalAvail>0 && completed===totalAvail){
+        var cc = document.getElementById('certCard'); cc.classList.add('ready');
+        document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
+        var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
+      }
     }
+    // Postup z členské sekce (live: Supabase, demo: localStorage). V live režimu
+    // navíc vyžaduje přihlášení + přístup k Akademii.
+    function boot(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode === 'live'){
+            window.BA.requireAccess('academy').then(function(ok){ if(ok) window.BA.getProgress().then(render); });
+          } else {
+            window.BA.getProgress().then(render);
+          }
+        });
+      } else {
+        try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
+      }
+    }
+    boot();
   </script>
 </body>
 </html>

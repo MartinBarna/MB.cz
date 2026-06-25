@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kardiovaskulární a dýchací systém — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 13 — Anatomie a pohyb</div>
+    <h1>Kardiovaskulární a dýchací systém</h1>
+
+    <p class="lead">Většina klientů přijde kvůli postavě nebo síle, ale <strong>srdce a plíce jsou základ, na kterém všechno ostatní stojí</strong> — od zvládání tréninků přes regeneraci až po dlouhověkost. Tahle lekce ti dá rámec, abys o kondici mluvil chytře a nešel jen po povrchu „dělej kardio“.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak srdce, cévy a krev reagují na zátěž a jak se na trénink adaptují</li>
+        <li>Proč při cvičení zrychluje dýchání — a co ho ve skutečnosti řídí</li>
+        <li>Co znamená VO2max, tepová frekvence a srdeční zóny</li>
+        <li>Jak řídit intenzitu kardia bez drahé technologie</li>
+        <li>Jak tyhle znalosti převést do praktických doporučení klientovi</li>
+      </ul>
+    </div>
+
+    <h2>1) Srdce: pumpa, kterou lze trénovat</h2>
+    <p>Srdce je sval, který pumpuje krev do celého těla. Při zátěži musí dodat víc kyslíku a živin pracujícím svalům a zároveň odvádět zplodiny (CO2, teplo). Dělá to dvěma způsoby: zvýší <strong>tepovou frekvenci</strong> (počet úderů za minutu) a <strong>tepový objem</strong> (množství krve vypuzené jedním úderem). Jejich součin je <strong>srdeční výdej</strong> — kolik krve srdce přečerpá za minutu. V klidu je to řádově 5 litrů za minutu, při intenzivní zátěži u trénovaného člověka i 20–25 litrů.</p>
+    <p>Klíčová adaptace: pravidelný vytrvalostní trénink zvětší a zesílí levou komoru, takže srdce vypudí víc krve jedním úderem. Důsledek? Trénovaný člověk má <strong>nižší klidovou tepovou frekvenci</strong> — srdce nemusí tepat tak často, aby dodalo stejné množství krve.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Klidový tep kolem 50 u vytrvalce není známka nemoci, ale efektivity. Beru to jako hmatatelný důkaz, že trénink mění fyziologii, a jako skvělý motivační ukazatel pro klienta: „tvoje srdce začalo pracovat efektivněji“.</div>
+
+    <h2>2) Cévy a krev</h2>
+    <p>Krev rozvádí kyslík (vázaný na hemoglobin v červených krvinkách) a živiny ke tkáním a odvádí odpadní látky. Cévy se při zátěži přizpůsobují: ve svalech se rozšiřují (vazodilatace), aby propustily víc krve tam, kde je potřeba, a jinde se zúží, aby krev směřovala k pracujícím svalům. Proto máš při tréninku „napumpované“ svaly — proudí do nich víc krve.</p>
+    <p>Dlouhodobě trénink podporuje tvorbu nových <strong>kapilár</strong> (drobných cév) ve svalech, takže se zlepší jejich zásobení kyslíkem. Zlepšuje se i pružnost cév a regulace krevního tlaku. To je jeden z důvodů, proč pohyb chrání před kardiovaskulárními chorobami.</p>
+
+    <h2>3) Dýchání při zátěži</h2>
+    <p>Plíce zajišťují výměnu plynů: přijímají kyslík ze vzduchu a odvádějí oxid uhličitý. Při zátěži roste poptávka po kyslíku i produkce CO2, takže roste <strong>dechová frekvence</strong> (počet nádechů za minutu) i <strong>dechový objem</strong> (množství vzduchu na jeden nádech).</p>
+    <blockquote>Hlavním spouštěčem zrychleného dýchání není ani tak nedostatek kyslíku, jako spíš nárůst oxidu uhličitého v krvi. Tělo velmi citlivě hlídá hladinu CO2 a podle ní řídí dech — proto se zadýcháš dřív, než ti reálně dojde kyslík.</blockquote>
+    <p>U zdravého člověka nejsou plíce obvykle limitujícím faktorem výkonu — limitem bývá spíš schopnost srdce a svalů kyslík zpracovat. To pomáhá nastavit realistické očekávání: „zadýchání“ na začátku programu je nejčastěji otázka kondice srdce a svalů, ne „slabých plic“.</p>
+
+    <h2>4) VO2max a tepové zóny</h2>
+    <p><strong>VO2max</strong> je maximální množství kyslíku, které tělo dokáže přijmout, transportovat a využít za minutu při maximální zátěži. Je to nejlepší jednotlivý ukazatel aerobní kondice a silně koreluje s dlouhověkostí. Ovlivňují ho tři věci: srdeční výdej, schopnost krve nést kyslík a schopnost svalů kyslík využít — a trénink zlepšuje všechny tři. Dobrá zpráva pro klienty: VO2max se dá tréninkem výrazně zvýšit, zvlášť u netrénovaných lidí, a posouvá ho nahoru i pravidelná střední intenzita.</p>
+    <p>Pro řízení kardia se používají <strong>tepové zóny</strong> — pásma odpovídající různým intenzitám:</p>
+    <div class="card">
+      <p><strong>Nízká intenzita</strong> (zóna 1–2, ~50–70 % max. tepu): „konverzační“ tempo, u kterého dokážeš mluvit. Buduje aerobní základ, je šetrné ke kloubům a snadno se regeneruje — tady leží velká část objemu chytrého kardia.</p>
+      <p><strong>Střední intenzita</strong> (zóna 3, ~70–80 %): tempo, kde se „dá mluvit jen po větách“.</p>
+      <p><strong>Vysoká intenzita</strong> (zóna 4–5, ~80–95 %+): intervaly, HIIT, těžké dýchání — nedá se u toho mluvit. Vysoký podnět, ale i vysoká zátěž na regeneraci, proto v menším objemu.</p>
+    </div>
+    <div class="praxe"><b>V praxi (Martin):</b> Vzorec 220 − věk je jen hrubé vodítko s velkou individuální odchylkou. Nejjednodušší nástroj bez jakékoli technologie je „talk test“ — schopnost mluvit během zátěže ti o intenzitě řekne překvapivě hodně. A nezapomeň: chytré kardio je z velké části pohodlné, nemusí se ničit při každém tréninku.</div>
+
+    <h2>5) Adaptace po týdnech a měsících</h2>
+    <p>Když klient pravidelně trénuje kondici, postupně klesá klidová tepová frekvence, roste tepový objem a srdeční výdej, přibývají kapiláry a mitochondrie ve svalech, roste VO2max, rychleji se zotavuje tep po zátěži a snižuje se klidový krevní tlak i zlepšuje citlivost na inzulín.</p>
+    <p>Pro klienta to znamená konkrétní věci: schody, které ho dřív zadýchaly, zvládne v pohodě; mezi sériemi v posilovně se zotaví rychleji; má víc energie přes den. Tohle jsou hmatatelné, motivující změny — ne každý ukazatel pokroku musí být na váze nebo v zrcadle.</p>
+
+    <h2>6) Jak to převést do praxe s klientem</h2>
+    <p>Zařaď kondici i u klientů zaměřených na postavu — kvůli zdraví, regeneraci a kapacitě zvládnout tréninkový objem. Nepřeháněj intenzitu: hodně lidí má pocit, že kardio „musí bolet“, ale velkou hodnotu má pohodlný, nízkointenzivní pohyb, který se dá dělat často. Kondiční ukazatele (klidový tep, rychlost zotavení, „zvládnu schody bez zadýchání“) používej jako motivaci — jsou to skvělé non-scale victories.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> U klientů s kardiovaskulárními riziky buď opatrný. Při varovných příznacích — bolest na hrudi, nezvyklá dušnost, závratě — patří klient k lékaři, ne na intervaly. Hranice role kouče platí i tady.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Z čeho se skládá srdeční výdej a kolik činí v klidu? <span class="tg">odpověď ▾</span></div><div class="aa">Srdeční výdej je součin tepové frekvence a tepového objemu — kolik krve srdce přečerpá za minutu. V klidu je to řádově 5 litrů za minutu, při intenzivní zátěži u trénovaného člověka i 20–25 litrů.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč má vytrvalostně trénovaný člověk nižší klidový tep? <span class="tg">odpověď ▾</span></div><div class="aa">Trénink zvětší a zesílí levou komoru, takže srdce vypudí víc krve jedním úderem (vyšší tepový objem). Nemusí proto tepat tak často, aby dodalo stejné množství krve — klidový tep klesá. Je to známka efektivity, ne nemoci.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co je hlavním spouštěčem zrychleného dýchání při zátěži? <span class="tg">odpověď ▾</span></div><div class="aa">Není to ani tak nedostatek kyslíku, jako spíš nárůst oxidu uhličitého (CO2) v krvi. Tělo citlivě hlídá hladinu CO2 a podle ní řídí dech, proto se zadýcháš dřív, než ti reálně dojde kyslík.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co vyjadřuje VO2max a co ho ovlivňuje? <span class="tg">odpověď ▾</span></div><div class="aa">VO2max je maximální množství kyslíku, které tělo přijme, transportuje a využije za minutu při maximální zátěži — nejlepší ukazatel aerobní kondice. Ovlivňuje ho srdeční výdej, schopnost krve nést kyslík a schopnost svalů kyslík využít. Trénink zlepšuje všechny tři.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak odhadnout intenzitu kardia bez technologie? <span class="tg">odpověď ▾</span></div><div class="aa">Pomocí „talk testu“ — schopnost mluvit během zátěže prozradí o intenzitě překvapivě hodně. U nízké intenzity dokážeš normálně mluvit, u střední jen po větách, u vysoké se mluvit nedá. Vzorec 220 − věk je jen hrubé orientační vodítko.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U jednoho klienta zaměřeného na postavu zařaď tento týden jednu nízkointenzivní kardio jednotku a řiď ji „talk testem“ — má u ní dokázat plynule mluvit. Zaznamenej mu klidový tep jako výchozí motivační ukazatel, ke kterému se budete vracet.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>McArdle WD, Katch FI, Katch VL. Exercise Physiology: Nutrition, Energy, and Human Performance. Wolters Kluwer.</li>
+        <li>Mandsager K, et al. Association of Cardiorespiratory Fitness With Long-term Mortality. JAMA Network Open. 2018;1(6):e183605.</li>
+        <li>Bassett DR, Howley ET. Limiting factors for maximum oxygen uptake. Med Sci Sports Exerc. 2000;32(1):70-84.</li>
+        <li>ACSM's Guidelines for Exercise Testing and Prescription. American College of Sports Medicine.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l13', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modely periodizace v praxi — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 9 · Lekce 3 — Periodizace a plánování</div>
+    <h1>Modely periodizace v praxi</h1>
+
+    <p class="lead">Existují tři hlavní modely periodizace — <strong>lineární, undulační a blokový</strong> — a každý se hodí na jiného klienta a jiný cíl. Ještě předtím ale musíš mít jasno v jedné věci: u většiny lidí nerozhoduje model, ale jestli v čase přidávají zátěž.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Tři hlavní modely periodizace a jak se od sebe liší.</li>
+        <li>Pro koho a kdy se každý model reálně hodí.</li>
+        <li>Konkrétní příklad každého modelu v praxi.</li>
+        <li>Proč u většiny klientů rozhoduje progresivní přetížení, ne volba modelu.</li>
+        <li>Jak vybrat model podle úrovně a cíle klienta.</li>
+      </ul>
+    </div>
+
+    <h2>1) Než řešíš model: základ je progresivní přetížení</h2>
+    <p>Řeknu to na rovinu, protože jinak by tě tahle lekce mohla svést na scestí. Pro naprostou většinu klientů — začátečníky, mírně pokročilé, lidi, co cvičí pro postavu a zdraví — není rozhodující volba periodizačního modelu. Rozhodující je, jestli v čase přidávají zátěž: váhu, opakování, kvalitu provedení. To je progresivní přetížení a je to motor celého tréninku.</p>
+    <p>Začátečník, který každý týden přidá kilo nebo opakování, poroste skvěle úplně bez „periodizačního modelu“. Sofistikované modely začínají dávat reálný smysl až tehdy, když klient pokročí natolik, že lineární přidávání přestane fungovat a tělo potřebuje chytřejší střídání podnětů a regenerace. Pořadí je jasné: nejdřív zvládni základ, pak řeš modely.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi přijde klient po roce tréninku a chce „nějakou pořádnou periodizaci“, první otázka je, jestli ještě roste z prostého přidávání zátěže. Pokud ano, žádný složitý model nepotřebuje — jen poctivý zápisník a kuráž přidat. Komplikaci nasazuju až ve chvíli, kdy jednoduchá progrese opravdu narazí na strop.</p>
+
+    <h2>2) Lineární periodizace</h2>
+    <p>Princip je postupná změna jedním směrem v čase. Klasicky se začíná vyšším objemem a nižší intenzitou (více opakování, nižší váha) a postupně se přechází k nižšímu objemu a vyšší intenzitě (méně opakování, vyšší váha). Příklad zjednodušeného 12týdenního cyklu: týdny 1–4 jedeš 4 série × 10–12 (objem, technika, hypertrofie), týdny 5–8 přejdeš na 4 × 6–8 (přechod k síle) a týdny 9–12 na 4–5 × 3–5 (maximální síla).</p>
+    <p>Hodí se pro začátečníky a mírně pokročilé, kteří potřebují jednoduchost a předvídatelnost, a pro sportovce mířící k jednomu vrcholu (třeba silový závod na konci cyklu). Výhodou je snadné pochopení, plánování i sledování pokroku. Nevýhodou je, že u pokročilých může docházet k „detréninku“ vlastností, které se zrovna netrénují — při dlouhé silové fázi se ztrácí část vytrvalostní adaptace — a model je málo flexibilní vůči dennímu rozpoložení klienta.</p>
+
+    <h2>3) Undulační (vlnová) periodizace</h2>
+    <p>Tady se proměnné — objem a intenzita — mění často, klidně i v rámci jednoho týdne. Místo dlouhých bloků se typy zátěže střídají velmi rychle, podněty se vlní nahoru a dolů, odtud „vlnová“. Typický příklad denní undulační periodizace (DUP) v jednom týdnu: pondělí 4 × 10–12 (hypertrofie), středa 5 × 3–5 (síla), pátek 3 × 6–8 (smíšeně).</p>
+    <p>Sedne pokročilejším klientům, kteří už nereagují na jednoduchou lineární progresi a profitují z pestřejších podnětů, a lidem, kteří chtějí rozvíjet více vlastností současně. Výhodou je časté střídání podnětů, méně monotónnosti a dobrý souběžný rozvoj síly i hypertrofie. Nevýhodou je náročnější plánování a řízení regenerace — pro úplného začátečníka je to zbytečně složité.</p>
+    <blockquote>Výzkum (Rhea et al., 2002) naznačil u některých populací lepší silové přírůstky DUP oproti lineární periodizaci, i když data nejsou jednoznačná napříč všemi situacemi.</blockquote>
+
+    <h2>4) Bloková periodizace</h2>
+    <p>Trénink se rozdělí do soustředěných bloků, z nichž každý rozvíjí jednu dominantní schopnost, a bloky na sebe navazují tak, aby se adaptace z jednoho „přenášela“ do výkonu v dalším. Typicky jde o akumulační blok (vysoký objem, budování kapacity a hypertrofie), transmutační čili intenzifikační blok (převod nabraného objemu do specifické síly a výkonu, vyšší intenzita) a realizační blok (snížení objemu, vyladění formy taperem, vrchol výkonu).</p>
+    <p>Je to model pro pokročilé a výkonnostní sportovce s konkrétním cílem nebo soutěží, kde je potřeba být ve formě v přesný čas, a pro silové a kondiční trenéry připravující sportovce na sezónu. Výhodou je vysoká specifičnost, řízené směřování k vrcholu a koncentrovaná zátěž. Nevýhodou je nárok na pokročilé plánování a dobré pochopení adaptací — pro běžného klienta v posilovně je to overkill.</p>
+
+    <h2>5) Jak vybrat model podle klienta</h2>
+    <p>Praktický rozhodovací rámec podle úrovně a cíle: <strong>začátečník</strong> (do zhruba 6–12 měsíců smysluplného tréninku) nepotřebuje složitý model — stačí lineární progrese ve stylu „přidávej zátěž, jak jen to jde“. <strong>Mírně pokročilý</strong> (cca 1–3 roky) sáhne po lineární nebo jednoduché undulační periodizaci, protože lineární přidávání se mu začíná zpomalovat. <strong>Pokročilý a výkonnostní</strong> volí undulační nebo blokovou periodizaci podle cíle — tady už struktura reálně rozhoduje a regeneraci je třeba řídit cíleně. A <strong>cíl s termínem</strong> (soutěž, focení, závod) volá po blokové periodizaci s taperem směřujícím k vrcholu v přesný čas.</p>
+    <div class="card"><strong>Společné jmenovatele všech modelů:</strong> Progresivní přetížení je motor, model je jen způsob, jak ho zorganizovat. Regenerace a deload jsou součást plánu, ne jeho selhání — bez zotavení není adaptace. Sleduj a zaznamenávej, protože bez dat nepoznáš, jestli model funguje. A buď připravený upravit: plán je hypotéza, kterou realita testuje.</div>
+    <div class="praxe"><b>V praxi (Martin):</b> Nejlepší model je ten, který klient skutečně dodrží a u kterého umím sledovat a řídit progresi. Elegantní plán, který klient nestíhá nebo nechápe, je horší než jednoduchý plán, který poctivě plní. U běžné klientely to platí dvojnásob — adherence poráží teoretickou optimalizaci.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co rozhoduje o pokroku u naprosté většiny běžných klientů? <span class="tg">odpověď ▾</span></div><div class="aa">Progresivní přetížení — tedy jestli v čase přidávají zátěž (váhu, opakování, kvalitu provedení). Volba periodizačního modelu je u běžné klientely druhořadá; model je jen způsob, jak progresivní přetížení zorganizovat.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak se v čase mění proměnné u lineární periodizace? <span class="tg">odpověď ▾</span></div><div class="aa">Postupně jedním směrem: klasicky od vyššího objemu a nižší intenzity (více opakování, nižší váha) k nižšímu objemu a vyšší intenzitě (méně opakování, vyšší váha). Typicky přes fáze hypertrofie → přechod k síle → maximální síla.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Čím je charakteristická undulační (vlnová) periodizace? <span class="tg">odpověď ▾</span></div><div class="aa">Častým střídáním objemu a intenzity, klidně i v rámci jednoho týdne. Místo dlouhých bloků se typy zátěže střídají rychle (DUP — denní undulační periodizace, např. po–hypertrofie, st–síla, pá–smíšeně). Hodí se pokročilejším, kteří chtějí rozvíjet více vlastností současně.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Z jakých typických bloků se skládá bloková periodizace a komu slouží? <span class="tg">odpověď ▾</span></div><div class="aa">Z akumulačního (vysoký objem, kapacita, hypertrofie), transmutačního/intenzifikačního (převod objemu do specifické síly a výkonu) a realizačního (snížení objemu, taper, vrchol formy). Slouží pokročilým a výkonnostním sportovcům s cílem nebo soutěží v přesný čas.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Podle čeho poznáš „nejlepší“ model pro konkrétního klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Nejlepší je ten, který klient skutečně dodrží a u kterého umíš sledovat a řídit progresi. U běžné klientely adherence poráží teoretickou optimalizaci — jednoduchý plán, který klient plní, je lepší než elegantní plán, který nechápe nebo nestíhá.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyber jednoho svého klienta, zařaď ho do správné úrovně (začátečník / mírně pokročilý / pokročilý / cíl s termínem) a napiš, jaký model bys u něj zvolil a proč. Pak ověř, zda u něj vůbec ještě funguje prosté progresivní přetížení — a podle toho rozhodni, jestli komplikaci skutečně potřebuje.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Rhea MR, et al. A comparison of linear and daily undulating periodized programs. J Strength Cond Res. 2002;16(2):250-255.</li>
+        <li>Issurin VB. New horizons for the methodology and physiology of training periodization. Sports Med. 2010;40(3):189-206.</li>
+        <li>Williams TD, et al. Comparison of Periodized and Non-Periodized Resistance Training on Maximal Strength: A Meta-Analysis. Sports Med. 2017.</li>
+        <li>Helms E, et al. The Muscle and Strength Pyramid: Training. 2015.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m9-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

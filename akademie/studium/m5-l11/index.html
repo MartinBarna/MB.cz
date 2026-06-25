@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Práce s odporujícím a náročným klientem — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 11 — Práce s klientem a koučink</div>
+    <h1>Práce s odporujícím a náročným klientem</h1>
+
+    <p class="lead"><strong>Dřív nebo později narazíš na klienta, který vzdoruje, vymlouvá se nebo prostě testuje tvoje nervy. Začínající kouč to bere osobně. Zkušený ví, že odpor je informace — a tu se v téhle lekci naučíš číst a pracovat s ní.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč odpor klienta není útok, ale informace o tom, co se v něm děje</li>
+        <li>Jak rozpoznat různé druhy „náročných“ klientů a co za jejich chováním stojí</li>
+        <li>Konkrétní techniky práce s odporem, výmluvami a ambivalencí</li>
+        <li>Jak zůstat klidný a profesionální, i když je to těžké</li>
+        <li>Kde je hranice — kdy je v pořádku spolupráci ukončit</li>
+      </ul>
+    </div>
+
+    <h2>1) Odpor není nepřítel</h2>
+    <p>Odpor je informace, ne útok. Říká ti něco o tom, co se v klientovi odehrává — skoro vždy se pod ním skrývá strach, ambivalence, špatná zkušenost, nedůvěra nebo nevyřčená potřeba. Tvoje práce není odpor „přemoct“, ale porozumět mu a pracovat s ním.</p>
+    <p>Když nereaguješ na povrch (chování), ale na příčinu (potřebu a strach pod ním), máš klíč k celé situaci. To je rozdíl mezi koučem, který se s klientem pere, a koučem, který ho vede.</p>
+
+    <h2>2) Druhy „náročných“ klientů a co za nimi stojí</h2>
+    <p>Stejné chování má různé příčiny. Když je rozpoznáš, víš, na co reagovat:</p>
+    <div class="card">
+      <p><b>Výmluvář.</b> „Neměl jsem čas, bylo to náročné.“ Za výmluvami často není lenost, ale strach ze selhání, přetížení v životě nebo cíl, který klientovi nesedí. Výmluva je obrana.</p>
+      <p><b>Zpochybňovač / skeptik.</b> Hádá se, „ví to líp“, testuje tě. Vzadu bývá zklamání z minulosti, potřeba kontroly nebo strach svěřit se a být zase zklamán.</p>
+      <p><b>Pasivní.</b> Souhlasí se vším, ale nic nedělá. Často nemá skutečnou vnitřní motivaci (dělá to „pro někoho“) nebo se bojí říct nahlas, co opravdu chce.</p>
+      <p><b>Náročný na pozornost.</b> Hodně píše, vyžaduje neúměrně mnoho, testuje hranice. Může jít o úzkost, osamělost nebo nejasně nastavené mantinely.</p>
+      <p><b>Agresivní / neuctivý.</b> Překračuje hranice slušnosti. Tady odliš jednorázové vykolejení (stres) od opakovaného vzorce, který je důvodem ke konci.</p>
+    </div>
+
+    <h2>3) Nejdřív porozumění, pak řešení</h2>
+    <p>Když klient klade odpor, instinkt velí tlačit víc, přesvědčovat, „dokázat“, že máš pravdu. To odpor skoro vždy zesílí — lidé se brání, když cítí tlak. Funguje opak:</p>
+    <p><strong>Nejdřív naslouchej a pojmenuj.</strong> „Slyším, že tě to frustruje / že na to teď nemáš prostor.“ Když se klient cítí slyšen, odpor klesá. Nemůžeš řešit, co jsi nepochopil.</p>
+    <p><strong>Nehádej se, ptej se.</strong> Místo protiargumentů otevřené otázky: „Co ti v tom brání? Co by ti pomohlo? Jak to vidíš ty?“ Odpovědi ti dají řešení a klient zůstane v rozhovoru, ne v obraně.</p>
+    <p><strong>Pracuj s ambivalencí.</strong> Klient často chce i nechce zároveň — chce výsledek, nechce oběť. To je normální. Pomoz mu prozkoumat obě strany místo tlačení jen na jednu.</p>
+    <blockquote>Tlak odpor zesiluje. Porozumění ho rozpouští.</blockquote>
+
+    <h2>4) Konkrétní techniky</h2>
+    <p><strong>Odraz odporu, neprotlačuj.</strong> Když klient vzdoruje, nejdi proti zdi — uhni a zeptej se: „Vidím, že tenhle přístup ti nesedí. Co by sedělo líp?“ Děláš z něj spolutvůrce řešení, ne odpůrce toho tvého.</p>
+    <p><strong>Zmenši krok.</strong> Odpor často znamená, že je laťka moc vysoko. Sniž ji na zvládnutelné minimum: „Zkusme tenhle týden jen jednu věc.“ Malý úspěch poráží velký odpor.</p>
+    <p><strong>Přenes odpovědnost na klienta.</strong> „Tohle je tvoje cesta, já jsem průvodce. Co jsi ochotný udělat ty?“ Lidé brání cizí plány, ale plní vlastní rozhodnutí.</p>
+    <p><strong>Pojmenuj vzorec nahlas — citlivě.</strong> „Všiml jsem si, že se nám tahle věc opakuje. Můžeme se na to společně podívat?“ Bez obvinění, jako pozorování a pozvánka.</p>
+    <p><strong>Nastav jasné hranice u náročnosti.</strong> U klienta, který přetěžuje (nonstop zprávy, vyžadování), laskavě a jasně nastav mantinely: „Odpovídám v pracovní dny do večera.“ Hranice nejsou nevstřícnost — chrání kvalitu i vztah.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient po týdnu řekne „nestihl jsem to“, dřív jsem honem dával nový plán. Dneska se nejdřív zeptám: „Co se stalo, že to nešlo?“ Pětkrát z deseti vyjde najevo, že laťka byla moc vysoko, nebo že ho ten cíl ve skutečnosti vůbec netáhne. To je informace, kterou bych přejel, kdybych jen přitlačil.</div>
+
+    <h2>5) Jak zůstat klidný a profesionální</h2>
+    <p>Náročný klient prověří tvoje nervy. Pár zásad, jak nevyhořet a nereagovat emocionálně:</p>
+    <p><strong>Neber to osobně.</strong> Klientův odpor je obvykle o něm — o jeho strachu, historii — ne o tobě. Tohle přerámování tě ochrání před zbytečným zraněním ega.</p>
+    <p><strong>Odděl chování od člověka.</strong> Můžeš mít rád člověka a nesouhlasit s jeho chováním. Pracuješ s chováním, neodsuzuješ člověka.</p>
+    <p><strong>Pečuj o sebe.</strong> Náročná klientela vyčerpává. Hlídej si vlastní hranice, energii a případně supervizi nebo konzultaci s kolegou. Vyhořelý kouč nikomu nepomůže.</p>
+    <p><strong>Zachovej profesionalitu i v napětí.</strong> Tvůj klid je nákazlivý a často klienta zklidní. Reagovat naštváním na naštvání jen přilévá olej do ohně.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Naučil jsem se jednu věc: než odepíšu na nepříjemnou zprávu, dám si pauzu. Ne aby si klient počkal, ale aby ze mě nemluvilo ego. Pár minut odstupu a z „obrany“ se stane normální profesionální odpověď. Můj klid skoro vždy zklidní i toho druhého.</div>
+
+    <h2>6) Hranice: kdy ukončit spolupráci</h2>
+    <p>Ne každý klient ti sedne a ne každou spolupráci máš za každou cenu držet. Je v pořádku — a profesionální — ukončit ji, když:</p>
+    <div class="card">
+      <p>klient <b>opakovaně</b> překračuje hranice slušnosti nebo respektu (vzorec, ne jednorázové vykolejení);</p>
+      <p>je dlouhodobě toxický a vysává tvoji energii natolik, že to škodí tobě i ostatním klientům;</p>
+      <p>zásadně nesdílíte hodnoty nebo klient vyžaduje něco proti tvé etice a odbornosti (nebezpečné praktiky, zázraky, zakázané látky);</p>
+      <p>spolupráce prostě nefunguje a klientovi by líp posloužil někdo jiný — pak je férové to říct a doporučit dál.</p>
+    </div>
+    <p>Ukončení dělej profesionálně — slušně, jasně, bez emocí a pokud možno s návrhem alternativy. Mít právo říct „tahle spolupráce nefunguje“ je součást zdravého podnikání, ne selhání.</p>
+    <p>A pozor na hranici s psychologií: pokud za náročností stojí zjevně hlubší problém (psychické onemocnění, závislost, porucha příjmu potravy), to není věc, kterou „ukoučuješ“ — citlivě nasměruj klienta k odborné pomoci.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Co znamená věta „odpor je informace“ a jak mění tvůj přístup ke klientovi? <span class="tg">odpověď ▾</span></div><div class="aa">Odpor není útok na tebe, ale signál o tom, co se v klientovi děje — strach, ambivalence, špatná zkušenost nebo nevyřčená potřeba. Místo abys odpor přemáhal, snažíš se mu porozumět. Reaguješ na příčinu (potřebu pod chováním), ne na povrch (samotné chování).</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Proč přitlačení a přesvědčování obvykle odpor zesílí? <span class="tg">odpověď ▾</span></div><div class="aa">Lidé se přirozeně brání, když cítí tlak. Čím víc dokazuješ, že máš pravdu, tím víc se klient zakope do obrany. Funkční je opak — nejdřív naslouchat a pojmenovat to, co prožívá, a místo protiargumentů klást otevřené otázky. Když se klient cítí slyšen, odpor klesá.</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Klient potřetí přijde s tím, že „neměl čas“. Jak zareaguješ podle této lekce? <span class="tg">odpověď ▾</span></div><div class="aa">Výmluva je obrana — za ní bývá strach ze selhání, přetížení nebo cíl, který klientovi nesedí. Místo nového plánu se zeptáš, co mu v tom brání. Často je řešením zmenšit krok („zkusme tenhle týden jen jednu věc“), protože laťka byla moc vysoko. Případně citlivě pojmenuješ vzorec, který se opakuje.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Co znamená „přenést odpovědnost na klienta“ a proč to funguje? <span class="tg">odpověď ▾</span></div><div class="aa">Znamená to dát mu najevo, že tohle je jeho cesta a ty jsi průvodce: „Co jsi ochotný udělat ty?“ Funguje to proto, že lidé brání cizí plány, ale plní vlastní rozhodnutí. Když je řešení klientovo, není proti čemu klást odpor.</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Kdy je v pořádku spolupráci ukončit a jak to udělat? <span class="tg">odpověď ▾</span></div><div class="aa">Když klient opakovaně překračuje hranice respektu, je dlouhodobě toxický, zásadně nesdílíte hodnoty nebo spolupráce prostě nefunguje. Ukončit dělej profesionálně — slušně, jasně, bez emocí a pokud možno s návrhem alternativy. Pokud za náročností stojí hlubší problém (onemocnění, závislost), nasměruj klienta k odborné pomoci, není to věc, kterou „ukoučuješ“.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vzpomeň si na jednoho klienta, který ti aktuálně klade odpor nebo je „náročný“. Napiš si, do které kategorie patří a jakou potřebu nebo strach pod jeho chováním tušíš. Pak si připrav jednu otevřenou otázku, kterou se ho při příští příležitosti zeptáš místo toho, abys přitlačil.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Miller WR, Rollnick S. Motivational Interviewing. Guilford Press 2013.</li>
+        <li>Rogers CR. On Becoming a Person. Houghton Mifflin 1961.</li>
+        <li>Stone D, Patton B, Heen S. Difficult Conversations. Penguin 1999.</li>
+        <li>Rosenberg MB. Nonviolent Communication. PuddleDancer Press 2015.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l11', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osobní značka I: vzhled a první dojem — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 5 — Byznys pro trenéry a poradce</div>
+    <h1>Osobní značka I: vzhled a první dojem</h1>
+
+    <p class="lead">V jádru každé spotřebitelské značky je produkt — ale v jádru osobní značky stojíš <strong>TY</strong>. Tahle lekce ti řekne nepříjemnou pravdu: tvoje postava není tvoje značka, a „vypadám dobře, tak musím být dobrý“ je past.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Rozdíl mezi prodejem služby a produktu — a proč jsi právě teď vzácná komodita.</li>
+        <li>Čtyři pilíře osobní značky: vzhled, osobnost, kompetence a odlišení.</li>
+        <li>Proč fyzička skoro nikdy neuživí byznys sama o sobě — a kdy dokonce odrazuje.</li>
+        <li>Jak stereotypy a „nálepky“ formují to, jak tě trh vnímá.</li>
+        <li>Jak rychle vzniká první dojem a proč rozhoduje o všem dalším.</li>
+      </ul>
+    </div>
+
+    <h2>1) Služba vs. produkt — a proč jsi komodita</h2>
+    <p>Celý náš byznys stojí na lidech a na tom sloužit jim líp. Nikoho nemusíš přemlouvat, aby se vzdal peněz nebo času, pokud mu nabízíš něco hodnotného a užitečného. (Není náhoda, jak moc se obsah z modulu Psychologie potkává s byznysem — pořád jde o lidi.)</p>
+    <p>Většina z vás dnes prodává <strong>službu</strong>, ne produkt. Produkt je jednotné řešení problému: identické nebo mírně upravené verze stejné věci pro mnoho lidí se stejnou potřebou — dá se „vzít do ruky“ a porovnat podle dat. Služba je tvoje kvalifikace, dovednosti, znalosti, zkušenost, expertíza a zčásti i tvoje osobnost.</p>
+    <p>Buď upřímný: byznysové, time-managementové a marketingové dovednosti ti nejspíš ještě chybí. Ale kvalifikaci, expertízu, rostoucí zkušenost a soubor dovedností, za které ti tvoje cílovka ráda zaplatí, už máš teď. Není to špatný start — <strong>jsi vzácná komodita</strong>.</p>
+    <blockquote>„V byznysu je každý placen dvěma mincemi: hotovostí a zkušeností. Ber nejdřív zkušenost, hotovost přijde později.“ — Harold Geneen</blockquote>
+
+    <h2>2) Čtyři pilíře osobní značky</h2>
+    <p>Definice tvojí osobní značky musí vycházet z <strong>faktů</strong> o tvém byznysu, ne z toho, čemu o něm věříš. Neříkej mi, že máš univerzální apel, a pak na tvých sítích zjistím, že nemáš. Atributy značky rozdělíme do čtyř sekcí:</p>
+    <div class="card">
+      <ul style="margin-left:1.1rem;">
+        <li><strong>Vzhled</strong> — fyzično, řeč těla, oblečení.</li>
+        <li><strong>Osobnost</strong> — chování, komunikace, postoje a přesvědčení.</li>
+        <li><strong>Kompetence</strong> — dovednosti, znalosti, oblasti expertízy.</li>
+        <li><strong>Odlišení</strong> — čím se lišíš od ostatních; co ti dává jedinečný, ideálně zapamatovatelný otisk.</li>
+      </ul>
+    </div>
+    <p>Konzistence je klíč. Nemůžeš týden odpovídat na každou zprávu a pak tři týdny nic. Lidé si podle značky vytvoří očekávání — a jakmile je nesplníš, utrpí značka i důvěra v ni. A buď trpělivý: budování značky chce čas.</p>
+    <blockquote>„Pokud přijmeš očekávání druhých, zvlášť ta negativní, nikdy nezměníš výsledek.“ — Michael Jordan</blockquote>
+
+    <h2>3) Vzhled a fyzička — menší páka, než si myslíš</h2>
+    <p>Fyzička je v našem oboru to, co se lidé snaží zhodnotit nejvíc: „vypadám dobře, tak musím být dobrý.“ Polož si ale otázky: Jak moc je tvoje postava reálně součástí značky? Používáš ji jako hlavní marketingový nástroj? Je pro tvou cílovku aspirativní, nebo spíš zastrašující?</p>
+    <p>Málokdo postaví úspěšný byznys jen na fyzičce. Podívej se pozorně na fitness svět — i u těch, kdo vypadají „jen o postavě“, je toho mnohem víc: image, endorsementy, sponzoři, partnerství, asociace značek. Vezmi profesionální cyklisty: jejich byznys stojí na výkonu a značky (pláště, komponenty, rámy) se na ten výkon „nalepí“.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Buď k sobě upřímný. Znám ve svém okolí lidi s „neprodejnou“ fyzičkou — ne že by na ní nebylo co chválit, ale seděla menšímu vkusu, než by jejich byznysu prospělo. Proto ji drželi stranou: jejich byznys stojí na vzdělání, kde fyzička není podstatná a vytvořila by stereotyp, který se s jejich značkou neslučuje. Poučení pro tebe: jako obor vidíme to, co vidí obor — kolem sebe lidi se stejnými cíli. Zapomínáme, že běžný klient reaguje na „nadupanou“ postavu opačně než my. Pořád věří, že po činkách bude „moc velký“, že „moc vyrýsovat“ jde a že je to zastrašující. Ať se ti to líbí nebo ne, ty a tvoje image můžete být jeden z důvodů, proč tihle lidé do posilovny nejdou — a proč nepřijdou za tebou.</div>
+
+    <h2>4) Kredibilita, soutěže a nálepky</h2>
+    <p>Chceš jít na fyzičkovou nebo figure soutěž kvůli byznysu? Nezavrhuj to, ale pořádně to promysli. Jmenuj mi vítěze všech kategorií loňské Olympie a Arnolda — i u největších soutěží světa zná jejich jména mimo soutěžící, fanoušky a porotce v oboru jen málokdo. A k číslům: i kdybys vyhrál Mr. Olympia, je to jednorázově zhruba 272 000 liber; jedenáctá nejlepší postava světa nedostane nic. Jmenuj pět nejlepších crossfitterů světa — zase to zná jen hrstka.</p>
+    <p>Pokud tvůj byznys nestojí přímo na téhle úzké cílovce, dobře zvaž, jak se „nálepkuješ“ — zaškatulkuješ si tím cílovku. Co děláš jako koníček, je jiné než to, co jsi jako byznys. Překrývá se to, ale není to totéž. Pro většinu z vás platí: jste <strong>koučové</strong> — to je byznys. Je tvůj byznys kulturistika? Pak ti být kulturista možná pomáhá. Crossfit? Pak možná crossfitter. Ale rozhodni se: jsi crossfitter, který kóučuje, nebo kouč, který crossfituje? Pokud je fyzička součástí tvé image, musí být i součástí tvého brandingu a jeho realizace — fyzička bez paralelní image se prodává ještě hůř.</p>
+
+    <h2>5) Image a první dojem</h2>
+    <p>Tvoje image určuje, jaký dopad má tvůj vzhled na druhé. Podle imageové poradkyně Judith Rasband to, co nosíme a jak vypadáme, ovlivňuje, jak myslíme, cítíme, jednáme — a jak na nás druzí reagují.</p>
+    <p>A teď tvrdé číslo: první dojem o člověku si podle výzkumu uděláme z obličeje za méně než vteřinu (organizujeme to do tzv. sociálního schématu). Když je první dojem pozitivní, pozdější nepříznivé chování lidé často „omluví“. Když je negativní, naopak diskreditují i pozdější pozitivní informace. Na sítích to vidíš pořád — lidé staví budoucí názory na minulých dojmech.</p>
+    <p>K tomu máme předem dané představy o skupinách lidí (stereotypy), které první dojem ovlivňují. Když se vizuálně zařadíš do nějaké skupiny, neseš si i běžnou kognitivní tendenci stereotypizace. Někteří z vás to znají z té nechuti říct „jsem osobní trenér“ — ta nálepka nese konotace a stereotyp. Buď si toho vědom.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Udělej si dvě cvičení hned teď. (1) Projdi si návrhy přátel na sítích a na pár slov popiš svůj první dojem z cizích lidí — uvidíš, jak rychle a silně to jede. (2) Podívej se na svou vlastní profilovku a zeptej se: „Jaký dojem o mně dává?“ To, co uvidíš, je první dojem, který děláš na potenciální klienty.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je rozdíl mezi prodejem služby a produktu? <span class="tg">odpověď ▾</span></div><div class="aa">Produkt je jednotné, porovnatelné řešení prodávané mnoha lidem se stejnou potřebou. Služba je tvoje kvalifikace, dovednosti, znalosti, expertíza — a zčásti i tvoje osobnost.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Vyjmenuj čtyři pilíře osobní značky. <span class="tg">odpověď ▾</span></div><div class="aa">Vzhled, osobnost, kompetence a odlišení. A nad nimi vším drží značku konzistence.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč fyzička obvykle neuživí byznys sama o sobě? <span class="tg">odpověď ▾</span></div><div class="aa">Úspěch stojí na image, asociacích a kompetenci. Samotná postava může běžnou cílovku dokonce odrazovat — působí zastrašujícím dojmem na lidi, kteří do posilovny teprve váhají jít.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak rychle vzniká první dojem a proč na něm záleží? <span class="tg">odpověď ▾</span></div><div class="aa">Pod jednu vteřinu, z obličeje. První dojem „barví“ interpretaci všeho dalšího: pozitivní omlouvá chyby, negativní diskredituje i pozdější pozitiva.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená „odděl koníček od byznysu“? <span class="tg">odpověď ▾</span></div><div class="aa">Co děláš jako koníček (kulturistika, crossfit) není totéž co tvůj byznys (koučink). Nálepkou si zužuješ cílovku — rozhodni se, jestli jsi sportovec, který kóučuje, nebo kouč, který sportuje.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Najdi pět lidí v oboru, jejichž osobní značce se ta tvoje nejvíc podobá, a vypiš je. Pak se podívej na svou profilovku a jednou větou napiš první dojem, který dává — a jestli sedí značce, kterou chceš budovat.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Rasband J. The Power of Personal Appearance. Conselle Institute of Image Management.</li>
+        <li>Willis J, Todorov A. First Impressions: Making Up Your Mind After a 100-Ms Exposure to a Face. Psychol Sci. 2006;17:592–598.</li>
+        <li>Gilron R, Gutchess AH. Remembering first impressions. Cogn Affect Behav Neurosci. 2012;12(1):85–98.</li>
+        <li>Zebrowitz LA, Montepare JM. Social Psychological Face Perception: Why Appearance Matters. Soc Personal Psychol Compass. 2008;2(3):1497.</li>
+        <li>Aronson E, Wilson TD, Akert RM. Social Psychology. 5th ed. Prentice-Hall; 2005.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

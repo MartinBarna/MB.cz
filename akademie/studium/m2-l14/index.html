@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nervová soustava a motorické učení — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 14 — Anatomie a pohyb</div>
+    <h1>Nervová soustava a motorické učení</h1>
+
+    <p class="lead">Sval sám o sobě nic neudělá — je to jen nástroj, který poslouchá příkazy nervové soustavy. <strong>Síla a technika vznikají v mozku a míše, ne ve svalu.</strong> Když to pochopíš, dají najednou smysl jevy, které jinak vypadají jako záhada: proč začátečník rychle sílí bez viditelného růstu svalu a proč je „cit pro sval“ reálná věc, ne fráze.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak nervová soustava řídí sval — motorické jednotky, nábor a koordinace.</li>
+        <li>Proč na začátku tréninku rychle rosteš na síle, aniž bys rostl na svalu.</li>
+        <li>Tři fáze motorického učení a jak v každé z nich vést klienta.</li>
+        <li>Praktická pravidla pro učení techniky, která reálně urychlí pokrok.</li>
+        <li>Kdy „mysl–sval spojení“ funguje a kdy je naopak lepší fokus na provedení.</li>
+      </ul>
+    </div>
+
+    <h2>1) Sval je jen vykonavatel</h2>
+    <p>Každý pohyb, každá kontrakce začíná v mozku a míše a putuje nervy do svalu. Sval je nástroj — rozhodnutí, kolik síly a jak přesně se vyvine, padá výš, v nervové soustavě. Tahle perspektiva propojuje anatomii s každodenní prací kouče: technika přestává být „talent“ a stává se dovedností, kterou se klient učí jako kteroukoli jinou.</p>
+    <p>Z toho plyne jeden princip, který se vyplatí mít stále na mysli: technika i „cit pro sval“ jsou výsledkem nervového řízení. Trénujeme tedy nejen sval, ale i nervovou soustavu, která ho ovládá.</p>
+
+    <h2>2) Jak nervová soustava řídí sval</h2>
+    <p>Čtyři mechanismy stojí za tím, kolik síly sval vyvine a jak hladce se pohyb provede:</p>
+    <div class="card">
+      <p><b>Motorická jednotka</b> — jeden motoneuron a všechna svalová vlákna, která ovládá. Sval se „zapíná“ tím, že nervová soustava aktivuje motorické jednotky.</p>
+      <p><b>Nábor (rekrutace)</b> — pro slabší úsilí se zapojí málo a menších jednotek; s rostoucí silou se přidávají další a větší (silová vlákna). Tělo zapojuje jen tolik, kolik úkol vyžaduje.</p>
+      <p><b>Frekvence pálení</b> — nervová soustava může do svalu posílat signály rychleji, čímž zvyšuje sílu kontrakce.</p>
+      <p><b>Koordinace</b> — do hladkého pohybu musí být sladěny svaly, které pohyb provádějí (agonisté), které ho brzdí (antagonisté) i které stabilizují. To je věc nervového řízení, ne „síly svalu“.</p>
+    </div>
+    <p>Klíčový závěr: sílu neurčuje jen velikost svalu, ale i to, jak <strong>dobře</strong> ho nervová soustava umí ovládat a zapojit. Trénink zlepšuje obojí.</p>
+
+    <h2>3) Proč začátečník sílí bez růstu svalu</h2>
+    <p>Patří to k nejdůležitějším poznatkům pro práci s klientem. Když začátečník začne trénovat, v prvních týdnech (řádově zhruba 4–8 týdnů a déle) rychle přibývá na síle, ale sval viditelně neroste. Důvod je v tom, že většina počátečních zisků je <strong>nervová</strong> (neurální adaptace), ne svalová:</p>
+    <p>Nervová soustava se učí lépe a více zapojovat existující svalová vlákna, zlepšuje se koordinace a technika (méně „plýtvání“ silou) a klesá ochranná inhibice — tělo si postupně „dovolí“ vyvinout víc síly. Teprve později začne převažovat skutečný růst svalu (hypertrofie).</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Tohle klientovi vysvětluji hned na začátku, aby měl realistická očekávání. Říkám mu zhruba: „První zlepšení je hlavně o tom, že se tvůj mozek učí ovládat svaly. Sval poroste o něco později — ale ta síla a kontrola, co teď získáváš, je základ pro všechno další.“ Chrání ho to před frustrací typu „zvedám víc, ale nevidím změnu“ a zároveň využije fakt, že počáteční pokrok v síle je motivačně rychlý.</div>
+
+    <h2>4) Motorické učení: tři fáze</h2>
+    <p>Učení nového pohybu — dřep, mrtvý tah, jakákoli dovednost — probíhá v rozpoznatelných fázích podle klasického modelu Fittse a Posnera:</p>
+    <p><strong>1. Kognitivní fáze (začátek).</strong> Pohyb vyžaduje plné vědomé soustředění, je trhaný, nekonzistentní, plný chyb. Klient musí přemýšlet o každém detailu a rychle se unaví i mentálně. Tady je nejvíc potřeba jasných, jednoduchých instrukcí a oprav.</p>
+    <p><strong>2. Asociativní fáze (procvičování).</strong> Pohyb se zpřesňuje, chyb ubývá, je plynulejší. Klient už nemusí myslet na všechno a začíná „cítit“, co je správně. Ladí se detaily a buduje se konzistence opakováním.</p>
+    <p><strong>3. Autonomní fáze (zvládnutí).</strong> Pohyb je automatický a plynulý, klient ho zvládá bez vědomé pozornosti a může se soustředit na zátěž nebo výkon. Dovednost je „zabudovaná“.</p>
+    <blockquote>Posun mezi fázemi vyžaduje opakování s kvalitní zpětnou vazbou. Nejde to uspěchat — mozek potřebuje čas a počet kvalitních opakování, aby si pohyb „zadrátoval“.</blockquote>
+
+    <h2>5) Jak to využít při učení techniky</h2>
+    <p>Z fází motorického učení plyne pět praktických pravidel, která reálně mění tempo pokroku:</p>
+    <div class="card">
+      <p><b>Méně instrukcí najednou.</b> V kognitivní fázi je klient zahlcený. Dej jeden nebo dva klíčové pokyny, ne deset. Oprav jednu věc, zafixuj ji, pak přidej další.</p>
+      <p><b>Kvalitní opakování &gt; množství.</b> Špatně opakovaný pohyb učí špatný vzorec. Radši méně opakování v dobré technice než hodně v chaosu — nervová soustava se učí to, co opakuje, včetně chyby.</p>
+      <p><b>Progrese od jednoduššího.</b> Začni s variantou, kterou klient zvládne čistě (regrese cviku), a postupně přidávej náročnost. Učit těžkou verzi v kognitivní fázi znamená stavět na chaosu.</p>
+      <p><b>Zpětná vazba včas a konkrétně.</b> Mozek se učí z informace o tom, co bylo jinak. Jasná, konkrétní a včasná zpětná vazba urychluje učení; postupně ji ubírej, ať se klient učí cítit sám (autoregulace).</p>
+      <p><b>Trpělivost.</b> Dovednost se buduje v čase. Nečekej dokonalost hned a nestresuj klienta, že to „nejde“. Jde — jen prochází fázemi.</p>
+    </div>
+    <div class="praxe"><b>V praxi (Martin):</b> Když učím nový cvik, první lekci si dávám za cíl jediné: aby klient odešel s jedním vzorcem, který umí zopakovat čistě. Žádný progres v zátěži, žádných deset cueů. Když odejde s pocitem „tohle umím“, vrací se s vybudovaným základem, na který se dá v dalších týdnech bezpečně přidávat.</div>
+
+    <h2>6) Mysl–sval spojení: víc než fráze</h2>
+    <p>„Spojení mysli a svalu“ — vědomé soustředění na zapojení cílového svalu — zní jako kulturistické klišé, ale má reálný základ. Výzkum (mimo jiné Schoenfeld a kol.) ukazuje, že vědomé soustředění na pracující sval může zvýšit jeho aktivaci a u některých cviků podpořit růst, zvlášť při nižších až středních zátěžích a u izolovaných pohybů.</p>
+    <p>U izolačních cviků (biceps, hýždě, záda) tedy veď klienta, aby se soustředil na cílový sval a „cítil ho pracovat“, ne jen přesouval váhu. U těžkých vícekloubových cviků (těžký dřep, tah) je naopak často lepší soustředit se na provedení pohybu a cíl — zvednout váhu technicky — než na jednotlivý sval. Vnější fokus na pohyb a výsledek tu bývá efektivnější.</p>
+    <blockquote>Vědět, kdy použít který typ pozornosti, je známka pokročilého kouče — vnitřní fokus na izolacích, vnější fokus na těžkých komplexech.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč začátečník v prvních týdnech rychle sílí, aniž by mu rostl sval? <span class="tg">odpověď ▾</span></div><div class="aa">Většina počátečních zisků je nervová (neurální adaptace): nervová soustava se učí lépe zapojovat existující vlákna, zlepšuje se koordinace a technika a klesá ochranná inhibice. Skutečný růst svalu (hypertrofie) převáží až později.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je motorická jednotka a jak souvisí s nárůstem síly? <span class="tg">odpověď ▾</span></div><div class="aa">Motorická jednotka je jeden motoneuron a všechna svalová vlákna, která ovládá. Sílu zvyšuje nábor dalších a větších jednotek a vyšší frekvence pálení — tedy lepší nervové řízení, ne jen velikost svalu.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Vyjmenuj tři fáze motorického učení podle Fittse a Posnera. <span class="tg">odpověď ▾</span></div><div class="aa">Kognitivní (vědomé soustředění, trhaný pohyb, mnoho chyb), asociativní (zpřesňování, ubývání chyb, klient začíná cítit správné provedení) a autonomní (automatický, plynulý pohyb bez vědomé pozornosti).</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč platí „kvalitní opakování &gt; množství“ a jak dávkovat instrukce? <span class="tg">odpověď ▾</span></div><div class="aa">Nervová soustava se učí to, co opakuje — i chybu. Špatně opakovaný pohyb fixuje špatný vzorec, proto raději méně opakování v dobré technice. V kognitivní fázi dej jen jeden až dva klíčové pokyny, oprav jednu věc, zafixuj a teprve pak přidej další.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy použít vnitřní fokus (mysl–sval) a kdy vnější fokus na provedení? <span class="tg">odpověď ▾</span></div><div class="aa">Vnitřní fokus na cílový sval pomáhá u izolačních cviků při nižších až středních zátěžích. U těžkých vícekloubových cviků je efektivnější vnější fokus na provedení a výsledek — zvednout váhu technicky.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Při nejbližší lekci vyber jeden nový cvik a uč ho s jediným pravidlem: maximálně dva cuey a žádné navyšování zátěže, dokud klient neprovede čistou sérii. Poznamenej si, kolik kvalitních opakování to zabralo, než pohyb začal být plynulý.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Fitts PM, Posner MI. Human Performance. Brooks/Cole 1967.</li>
+        <li>Schoenfeld BJ, et al. Differential effects of attentional focus strategies during resistance training. European Journal of Sport Science 2018.</li>
+        <li>Wulf G. Attentional focus and motor learning: a review of 15 years. International Review of Sport and Exercise Psychology 2013.</li>
+        <li>Sale DG. Neural adaptation to resistance training. Medicine &amp; Science in Sports &amp; Exercise 1988.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l14', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biomechanika a páky — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 2 — Anatomie a pohyb</div>
+    <h1>Biomechanika a páky</h1>
+
+    <p class="lead">„Biomechanika“ zní jako hodina fyziky, ze které tě bolela hlava — ale uděláme ji s minimem matiky a maximem praxe. <strong>Když pochopíš, že tělo je soustava pák, přestaneš dávat cviky „od oka“ a začneš chápat, PROČ jeden úchop bolí a druhý ne.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Pochopíš klasifikaci pák — prvního, druhého a třetího řádu.</li>
+        <li>Pochopíš moment a proč delší rameno znamená větší zátěž.</li>
+        <li>Pochopíš zákon rovnováhy a co s ním v tréninku.</li>
+        <li>Spojíš si páky se sagitální rovnováhou z minulé lekce.</li>
+        <li>Naučíš se měnit zátěž a řešit bolest úpravou ramene momentu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Páky, klouby a síly</h2>
+    <p>Biomechanika není nic jiného než aplikace mechanických zákonů na živé tělo — souhra kostry, svalů a kloubů. Mechanika je přitom jednoduchá: kosti tvoří páky, vazy kolem kloubů tvoří „závěs“ (samotný kloub) a svaly vyrábějí sílu, která pohyb zahájí.</p>
+    <p>Tři pojmy, na kterých stojí celá lekce:</p>
+    <div class="card">
+      <p><strong>Síla (F)</strong> — místo, kde působí síla; u nás stah svalu.</p>
+      <p><strong>Odpor (R)</strong> — místo zátěže, kterou je třeba přemístit.</p>
+      <p><strong>Osa (A)</strong> — pevný bod (opěrný bod, fulcrum), kolem kterého se páka otáčí.</p>
+    </div>
+    <p>Podle vzájemné polohy síly, osy a odporu pak páky dělíme do tří řádů.</p>
+
+    <h2>2) Tři řády pák</h2>
+    <p><strong>Páka prvního řádu (F–A–R):</strong> osa je uprostřed, mezi silou a odporem. Klasická houpačka. V těle takhle fungují například jednotlivé obratle.</p>
+    <p><strong>Páka druhého řádu (A–R–F):</strong> odpor je uprostřed. Sem patří kliky, „landmine“ cviky nebo mrtvý tah s oporou o zem.</p>
+    <p><strong>Páka třetího řádu (A–F–R):</strong> síla je uprostřed. Je to vůbec nejčastější páka v lidském těle — takhle pracuje většina pohybů končetin.</p>
+
+    <h2>3) Moment — proč delší rameno znamená větší zátěž</h2>
+    <p>Rameno momentu je kolmá vzdálenost od osy ke směru působící síly. A platí jednoduchá pravda: čím delší rameno momentu, tím větší zátěž jde přes páku. Odborně: <strong>točivý moment = síla × délka ramene momentu</strong>.</p>
+    <blockquote>Vzpomeň, jak povoluješ utažený šroub — delším klíčem zvládneš stejnou věc menší silou. To je celá podstata momentu.</blockquote>
+    <p>Pro trenéra je to zlato. Tím, že posuneš odpor (třeba polohu činky vůči kloubu) nebo zkrátíš či prodloužíš rameno, měníš, jak je zátěž rozložena přes svaly a klouby. Proto stejný cvik s jiným nastavením zatěžuje úplně jinak.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když klienta bolí rameno v tlaku, často stačí změnit dráhu nebo úchop — a tím rameno momentu — a bolest je pryč, aniž bych ubral jediné kilo. Tohle je rozdíl mezi „dělej to takhle“ a skutečným pochopením, proč to děláš.</div>
+
+    <h2>4) Zákon rovnováhy</h2>
+    <p>Páka je v rovnováze, když se síla a odpor vyváží. Pravidlo zní: <strong>síla × její vzdálenost od osy = odpor × jeho vzdálenost od osy.</strong></p>
+    <p>Konkrétně: 10 kg síly působící 1,5 m od osy zvedne 50 kg odporu vzdáleného 0,3 m od osy. Právě proto pákou zvedneš mnohem víc, než bys uzvedl přímo — a právě proto na poloze zátěže vůči kloubu tolik záleží.</p>
+
+    <h2>5) Zpět k sagitální rovnováze</h2>
+    <p>Vzpomeň z minula: když se těžiště posune dopředu vůči kyčlím a pánvi, zádové svaly se musí stahovat a kolena ohýbat, aby tělo zůstalo vzpřímené. To nejen mění ramena momentu, ale klade obří zátěž na pohybový aparát a klouby.</p>
+    <p>Každý obratel přitom funguje jako páka prvního řádu. Při předklonu páteře roste odpor na přední straně obratlů a vzpřimovače se zadními svaly musí pořád dřít, aby udržely rovnováhu. Pánev to kompenzuje „kyvadlovým“ nakláněním. Proto je korekce držení těla tak důležitá — a proč ji čteš dřív, než klient vůbec začne cvičit.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Boxeři si balí zápěstí přesně proto, aby nevzniklo „rameno navíc“ v ohnutém zápěstí a síla šla rovně do úderu. Stejný princip hlídám u klientů — neutrální zápěstí, lokty a páteř znamenají, že síla jde tam, kam má, a klouby netrpí.</div>
+
+    <h2>6) Shrnutí pro trenéra</h2>
+    <div class="card">
+      <p>Kosti jsou páky, klouby jsou závěsy a svaly jsou síla. V těle převažuje páka třetího řádu (A–F–R).</p>
+      <p>Delší rameno momentu znamená větší zátěž přes páku — moment je síla × rameno.</p>
+      <p>Zákon rovnováhy: síla × vzdálenost = odpor × vzdálenost.</p>
+      <p>Posunem odporu nebo délky ramene měníš zatížení svalů a kloubů. Tím laděj cviky a řeš bolest, aniž bys nutně ubíral váhu.</p>
+    </div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je v biomechanice síla (F), odpor (R) a osa (A)? <span class="tg">odpověď ▾</span></div><div class="aa">F je místo působení síly (stah svalu), R je místo zátěže, kterou přemísťujeme, a A je pevný bod otáčení neboli opěrný bod (fulcrum).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Vyjmenuj tři řády pák a u každého polohu prvků. <span class="tg">odpověď ▾</span></div><div class="aa">1. řád F–A–R (osa uprostřed, např. obratle), 2. řád A–R–F (odpor uprostřed, např. kliky), 3. řád A–F–R (síla uprostřed, nejčastější páka v těle).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co je rameno momentu a jak ovlivňuje zátěž? <span class="tg">odpověď ▾</span></div><div class="aa">Je to kolmá vzdálenost od osy ke směru působící síly. Čím delší rameno, tím větší zátěž jde přes páku — moment = síla × rameno.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Vyslov zákon rovnováhy. <span class="tg">odpověď ▾</span></div><div class="aa">Síla × její vzdálenost od osy = odpor × jeho vzdálenost od osy. Když se obě strany vyrovnají, páka je v rovnováze.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak může změna ramene momentu pomoct s bolestí kloubu při cviku? <span class="tg">odpověď ▾</span></div><div class="aa">Úpravou dráhy nebo úchopu změníš rameno momentu a tím rozložení zátěže, takže kloubu uleví, aniž bys musel ubrat váhu.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyber jeden cvik, který klienta (nebo tebe) „nesedí“ nebo bolí. Změň jednu věc, která upraví rameno momentu — úchop, dráhu, polohu činky vůči kloubu nebo neutrální zápěstí a páteř — srovnej pocit a zapiš, co se změnilo.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Hall SJ. Basic Biomechanics. McGraw-Hill, 8. vydání 2018 (pákové systémy, točivý moment, rameno momentu).</li>
+        <li>Morris JM, Lucas DB, Bresler B. Role of the trunk in stability of the spine. J Bone Joint Surg. 1961;43:327–351.</li>
+        <li>Boulay C, et al. Sagittal alignment of spine and pelvis. Eur Spine J. 2006;15(4):415–422.</li>
+        <li>Schwab F, et al. Sagittal plane considerations and the pelvis. Spine. 2009;34(17):1828–1833.</li>
+        <li>Glassman SD, et al. Impact of positive sagittal balance in adult spinal deformity. Spine. 2005;30(18):2024–2029.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l2', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
