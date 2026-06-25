@@ -1,8 +1,7 @@
 /* Barna Academy — Supabase konfigurace.
-   PLACEHOLDER = web jede v "demo" režimu (postup v localStorage, vše odemčeno).
-   Pro spuštění členské sekce nahraď hodnoty z Supabase (Project URL + anon key).
-   Sem patří JEN anon (public) klíč, NIKDY service_role / secret klíč! */
+   Tady patří JEN VEŘEJNÝ klíč (publishable / anon) — NIKDY secret / service_role!
+   Veřejný klíč je bezpečné mít ve webu: data chrání RLS pravidla v databázi. */
 window.BA_CONFIG = {
-  url: "https://YOUR-PROJECT.supabase.co",
-  anonKey: "YOUR-ANON-PUBLIC-KEY"
+  url: "https://uhmrpfsdcujbhbtumqye.supabase.co",
+  anonKey: "sb_publishable_JLQ6JzSORraAnjl-R319KQ_X2BSqiCI"
 };
