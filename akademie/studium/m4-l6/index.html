@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kardio a NEAT — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 4 · Lekce 6 — Programování tréninku</div>
+    <h1>Kardio a NEAT</h1>
+
+    <p class="lead"><strong>Když klient chce zhubnout, první nápad je „musím víc kardit“. Jenže kardio je hlavně nástroj zdraví a kondice — na výdej energie je často mnohem silnější obyčejný každodenní pohyb. Tomu se říká NEAT a je to jedna z nejpodceňovanějších pák, jaké máš k dispozici.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>K čemu kardio skutečně slouží (zdraví, kondice, výdej) — a k čemu ne.</li>
+        <li>Co je NEAT a proč bývá silnější páka na výdej než cílené kardio.</li>
+        <li>Proč NEAT v dietě nevědomky klesá a jak to ohlídat.</li>
+        <li>Rozdíl mezi nízkou a vysokou intenzitou kardia a kdy které.</li>
+        <li>Jak kardio a kroky zařadit, aniž bys obral silový trénink a regeneraci.</li>
+      </ul>
+    </div>
+
+    <h2>1) K čemu kardio slouží (a k čemu ne)</h2>
+    <p>Vytrvalostní aktivita má reálné a důležité přínosy. Pro zdraví srdce a cév, aerobní kapacitu, kondici a náladu je kardio skvělé a má smysl pro každého. Co se týče výdeje energie, kardio kalorie spálí — ale často míň, než si lidé myslí. Navíc se na něj tělo adaptuje: zvyšuje hlad a potichu snižuje jiný pohyb během dne.</p>
+    <p>Klíčové je vědět, k čemu kardio <em>není</em>. Není to kouzlo na hubnutí, které by obešlo celkovou energetickou bilanci. Klient, který si po hodině na páse „zaslouží“ velkou odměnu v jídle, snadno smaže celý vydaný výdej. Kardio ber jako nástroj zdraví a kondice a jako doplněk výdeje — ne jako jádro hubnutí.</p>
+
+    <h2>2) NEAT — tichý obr výdeje</h2>
+    <p>NEAT (non-exercise activity thermogenesis) je veškerý pohyb mimo cílený trénink: chůze, stání, schody, úklid, vrtění se na židli, běžné úkony dne. U mnoha lidí je NEAT mnohem větší a hlavně variabilnější složkou denního výdeje než jedna hodina v posilovně nebo na páse.</p>
+    <p>Praktický důsledek je zásadní: zvýšit denní kroky a běžnou aktivitu bývá účinnější a udržitelnější páka na výdej než přidávat vyčerpávající kardio. Kroky navíc skoro neunaví, takže nezasahují do regenerace na silový trénink, jdou snadno zařadit do dne (procházka, schody místo výtahu, zaparkovat dál) a dají se měřit a postupně navyšovat — což klientovi dává jasný a motivující cíl.</p>
+
+    <h2>3) Proč NEAT v dietě klesá</h2>
+    <p>Tady je past, na kterou musíš klienta předem upozornit. Když je člověk v deficitu, tělo se brání — nevědomky snižuje spontánní pohyb. Klient je míň aktivní, víc sedí, míň se vrtí. Tím klesá výdej a deficit se tiše zmenšuje, aniž si toho kdokoli všimne.</p>
+    <p>Jak to ohlídat: sleduj kroky a denní aktivitu jako ukazatel. Když v dietě kroky potichu klesnou, je to často skrytá příčina zpomalení pokroku. Řešením přitom obvykle není přidávat kardio ani řezat kalorie — stačí vědomě udržet (nebo lehce zvýšit) denní pohyb.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Sleduj kroky jako diagnostiku, ne jen jako cíl. Když se klientovi zastaví váha, první otázka nezní „kolik máme ubrat z jídla“, ale „spadly ti kroky?“. Devětkrát z deseti se ukáže, že průměr za poslední dva týdny tiše klesl o pár tisíc kroků denně — a to je celá příčina stagnace.</div>
+
+    <h2>4) Nízká vs. vysoká intenzita</h2>
+    <p>Když už kardio zařadíš, vyber intenzitu podle cíle a podle toho, kolik regenerace si můžeš dovolit obětovat. Nízká intenzita (svižná chůze, lehké kolo) zatěžuje regeneraci minimálně, dá se dělat často a je dobrá pro výdej i zdraví bez zásahu do silového tréninku. Pro většinu klientů, kteří řeší kompozici, je to ideální „pracant“.</p>
+    <p>Vysoká intenzita (intervaly, HIIT) je časově efektivní a dobrá pro kondici, ale víc zatěžuje a hůř se regeneruje. Ve velkém objemu může přímo konkurovat silovému tréninku (tzv. interference). Používej ji proto uváženě a v menším množství.</p>
+    <blockquote>Většinu „kardio“ objemu klientů na kompozici udělá nízká intenzita a kroky. Vysokou intenzitu zařaď cíleně a střídmě, ne plošně.</blockquote>
+
+    <h2>5) Jak to zařadit bez škody</h2>
+    <p>Aby kardio a kroky pomáhaly, ne škodily, drž se jasné hierarchie. Pro kompozici je základ silový trénink (chrání a staví sval) a denní pohyb (výdej) — kardio je až doplněk. Nepřebíjej regeneraci: příliš kardia, zvlášť intenzivního, ubere energii i regeneraci na silový trénink, takže dávkuj adekvátně, ne na maximum. Kde to jde, odděl náročné kardio od náročné síly časem, abys minimalizoval interferenci.</p>
+    <p>A hlavně: u většiny klientů začni kroky, ne pásem. První páka zní „přidej a udrž denní kroky“, ne „přidej hodinu kardia“.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když klient chce zhubnout, neposílám ho hned hodinu na pás. Nejdřív řeším jídlo, silový trénink a kroky — protože obyčejný pohyb přes den často spálí víc a neunaví tak, aby trpěla síla. Kardio přidávám pro zdraví a kondici a jako doplněk výdeje, ne jako jádro hubnutí. Méně mučení na páse, víc chytrého pohybu přes den.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> K čemu kardio slouží a k čemu ne? <span class="tg">odpověď ▾</span></div><div class="aa">Slouží pro zdraví srdce a cév, kondici, aerobní kapacitu a náladu a doplňuje energetický výdej. Není to ale kouzlo na hubnutí, které by obešlo celkovou energetickou bilanci — po náročném kardiu se snadno přijí zpět víc, než se vydalo.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je NEAT a proč bývá silnější páka než kardio? <span class="tg">odpověď ▾</span></div><div class="aa">NEAT je veškerý pohyb mimo cílený trénink — chůze, stání, schody, úklid, vrtění se. U mnoha lidí je větší a variabilnější složkou denního výdeje než hodina v posilovně, a navíc neunaví tak jako kardio, takže nebere energii silovému tréninku.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co se děje s NEAT v dietě a jak to ohlídat? <span class="tg">odpověď ▾</span></div><div class="aa">V deficitu tělo nevědomky snižuje spontánní pohyb — klient víc sedí a míň se vrtí, takže výdej klesá a deficit se tiše zmenšuje. Ohlídáš to sledováním kroků: když průměr potichu spadne, je to skrytá příčina stagnace a řešením je pohyb vědomě udržet.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Kdy nízká a kdy vysoká intenzita kardia? <span class="tg">odpověď ▾</span></div><div class="aa">Nízká intenzita (chůze, lehké kolo) je „pracant“ pro výdej a zdraví bez zásahu do regenerace a tvoří většinu objemu. Vysokou intenzitu (intervaly, HIIT) zařaď cíleně a střídmě — je dobrá pro kondici, ale víc zatěžuje a ve velkém objemu konkuruje silovému tréninku.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jaká je priorita pro klienta na kompozici? <span class="tg">odpověď ▾</span></div><div class="aa">Základ tvoří silový trénink (chrání a staví sval) a denní kroky (výdej). Kardio je doplněk — zařazuje se adekvátně, ne na úkor regenerace, aby nebralo energii síle.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Pro klienta na hubnutí navrhni „pohybový plán mimo silový trénink“: cílový počet kroků za den, zda a jaké kardio zařadíš a proč, a jak budeš hlídat, aby mu v dietě kroky nespadly. Jednou větou vysvětli, proč nezačínáš hodinou kardia.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+        <li>Levine JA, et al. Interindividual variation in posture allocation: possible role in human obesity. Science. 2005;307(5709):584–586.</li>
+        <li>Foright RM, et al. Is regular exercise an effective strategy for weight loss maintenance? Physiol Behav. 2018;188:86–93.</li>
+        <li>Swift DL, et al. The role of exercise and physical activity in weight loss and maintenance. Prog Cardiovasc Dis. 2014;56(4):441–447.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m4-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

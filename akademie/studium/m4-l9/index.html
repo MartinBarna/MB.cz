@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sestavení tréninkového plánu krok za krokem — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 4 · Lekce 9 — Programování tréninku</div>
+    <h1>Sestavení tréninkového plánu krok za krokem</h1>
+
+    <p class="lead"><strong>Dobrý plán není ten nejchytřejší na papíře, ale ten, který klient skutečně odcvičí a u kterého poroste.</strong> V téhle lekci poskládáme všechny stavební kameny z předchozích lekcí do jednoho opakovatelného postupu — takového, podle kterého sestavíš plán pro jakéhokoli klienta na základě logiky, ne pocitu.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jasný postup, jak z čistého papíru sestavit funkční tréninkový plán</li>
+        <li>Jaké otázky si položit ještě dřív, než napíšeš první cvik</li>
+        <li>Jak poskládat split, cviky, série, opakování a frekvenci do smysluplného celku</li>
+        <li>Jak plán zapsat tak, aby mu klient rozuměl a uměl podle něj přidávat</li>
+        <li>Jak plán v čase sledovat a ladit podle reality</li>
+      </ul>
+    </div>
+
+    <h2>1) Krok 0: Zjisti výchozí stav, než začneš psát</h2>
+    <p>Než napíšeš jediný cvik, potřebuješ odpovědi na šest otázek: <strong>cíl</strong> (hubnutí, síla, svaly, zdraví, výkon?), <strong>úroveň</strong> (kolik má klient za sebou smysluplného tréninku?), <strong>čas a frekvence</strong> (kolikrát týdně reálně může a chce cvičit?), <strong>vybavení</strong> (fitko, domácí činky, jen vlastní váha?), <strong>zdraví a omezení</strong> (zranění, bolesti, co se musí upravit) a <strong>zkušenost a preference</strong> (co technicky umí a co ho baví?).</p>
+    <p>Bez těchto odpovědí píšeš plán naslepo. Tahle fáze je přímo spojená se vstupní konzultací a anamnézou — plán je její výstup, ne nezávislý dokument.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> U času buď nemilosrdně realistický. Radši napíšu 3 dny, které klient opravdu dodrží, než 5 dní, které po třech týdnech vzdá. Nejčastější chyba začínajícího kouče je psát plán pro ideálního klienta, který neexistuje — místo pro toho, který sedí přede mnou.</div>
+
+    <h2>2) Krok 1: Urči frekvenci a strukturu (split)</h2>
+    <p>Strukturu vybírej podle dostupných dní. Při <strong>2–3 dnech</strong> týdně obvykle full body (celé tělo každý trénink) — nejlepší poměr efektu a času pro většinu lidí, zvlášť začátečníky, protože každá partie je trénovaná vícekrát týdně. Při <strong>3–4 dnech</strong> full body nebo upper/lower. Při <strong>4–5 dnech</strong> upper/lower nebo push/pull/legs.</p>
+    <p>Vůdčí princip: každou svalovou skupinu zasáhni ideálně <strong>2× týdně</strong>. Při stejném týdenním objemu to bývá pro růst svalů lepší než klasický „bro split“, kde jde partie 1× týdně. U běžných klientů se proto bro splitu vyhni — je to méně efektivní využití frekvence.</p>
+
+    <h2>3) Krok 2: Vyber základní cviky (páteř plánu)</h2>
+    <p>Páteří každého tréninku jsou velké vícekloubové (komplexní) cviky — zapojí nejvíc svalů a dají největší efekt za jednotku času. Pokrýt chceš základní pohybové vzory:</p>
+    <div class="card">
+      <ul>
+        <li>Tlak dolními — dřep a varianty</li>
+        <li>Tah od země / kyčelní záklon — mrtvý tah, hip thrust, RDL</li>
+        <li>Horizontální tlak — bench press, kliky, tlaky</li>
+        <li>Horizontální tah — přítahy, veslování</li>
+        <li>Vertikální tlak — tlak nad hlavu</li>
+        <li>Vertikální tah — shyby, stahování kladky</li>
+      </ul>
+    </div>
+    <p>Pro každý vzor vyber jeden hlavní cvik, který klient technicky zvládne. Tohle je kostra. Začátečník nepotřebuje nic víc než dobře provedené základy.</p>
+
+    <h2>4) Krok 3: Doplň izolované a pomocné cviky</h2>
+    <p>Na kostru z velkých cviků navěs menší, izolované cviky podle cíle a slabin. Pro <strong>postavu a hypertrofii</strong> doplň partie, které klient chce rozvíjet nebo které velké cviky dost nezasáhnou — biceps, triceps, lýtka, zadní delty, břicho. Pro <strong>sílu</strong> méně izolace a víc práce na hlavních cvicích a jejich pomocných variantách.</p>
+    <blockquote>Pravidlo pořadí: velké a technicky náročné cviky dřív, dokud je klient svěží. Únava patří na konec, ne na začátek těžkého dřepu.</blockquote>
+
+    <h2>5) Krok 4: Nastav objem, opakování a intenzitu</h2>
+    <p><strong>Objem:</strong> u běžného klienta je rozumné rozpětí zhruba 10–20 pracovních sérií na svalovou skupinu za týden — začátečník u spodní hranice, pokročilý výš. Nezačínej s maximem, nech si prostor, kam přidávat. <strong>Opakování:</strong> svaly rostou v širokém rozpětí (cca 5–30), pokud se trénuje blízko selhání; praktické rozpětí pro hypertrofii je zhruba 6–15, pro sílu níž (3–6), pro výdrž výš. <strong>Intenzita (blízkost selhání):</strong> pracuj obvykle s 1–3 opakováními v rezervě (RIR) — blízkost selhání stačí pro růst a šetří regeneraci.</p>
+
+    <h2>6) Krok 5: Naplánuj progresi</h2>
+    <p>Plán bez progrese je jen seznam cviků. Motorem výsledků je progresivní přetížení — v čase přidávej zátěž. Začátečník přidává váhu nebo opakování prakticky každý týden, dokud to jde. U pokročilejšího je progrese pomalejší a je potřeba ji plánovat (přidat opakování, pak váhu, využít deload).</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Vždycky klientovi zapíšu konkrétní pravidlo, KDY a JAK přidat. Třeba: „Když uděláš horní hranici opakování ve všech sériích s čistou technikou, příště přidej váhu.“ Bez tohohle pravidla klient měsíce visí na stejných číslech a diví se, proč neroste.</div>
+
+    <h2>7) Krok 6: Zařaď rozcvičení, kardio a regeneraci</h2>
+    <p><strong>Rozcvičení:</strong> krátká obecná příprava (rozhýbání, zvýšení tepu) plus specifické náběhové série u prvního těžkého cviku — statický strečink před silovým tréninkem nepřeháněj. <strong>Kardio:</strong> zařaď podle cíle; nemusí být součástí každé jednotky, klidně samostatně. <strong>Regenerace:</strong> naplánuj dny volna. Adaptace se děje při zotavení, ne při tréninku — plán bez odpočinku je plán k vyhoření a zranění.</p>
+
+    <h2>8) Krok 7–8: Zapiš plán srozumitelně a pak ho laď</h2>
+    <p>Plán, kterému klient nerozumí, je k ničemu. Zapiš ho přehledně: cvik, série × opakování, cílovou zátěž nebo RIR, poznámku k technice, jasně očíslované pořadí a sekce „jak přidávat“ a „co dělat, když…“. Mysli na to, že plán čte klient, ne kolega kouč — méně žargonu, víc srozumitelnosti.</p>
+    <p>A pak ho testuj realitou. Plní klient tréninky? Roste zátěž v čase? Necítí bolest nebo přetížení? Podle odpovědí uber objem, zjednoduš nebo uprav cviky. Plán nikdy není „hotový“ — neustálé drobné ladění podle dat a zpětné vazby je přesně ten rozdíl mezi prodejem PDF a skutečným koučinkem.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co musíš zjistit dřív, než napíšeš první cvik? <span class="tg">odpověď ▾</span></div><div class="aa">Cíl klienta, jeho úroveň, reálný čas a frekvenci, dostupné vybavení, zdraví a omezení, a jeho zkušenost i preference. Bez těchto odpovědí píšeš plán naslepo — plán je výstupem vstupní konzultace a anamnézy.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jakou strukturu zvolíš pro klienta, který reálně zvládne 2–3 tréninky týdně, a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Obvykle full body. Má nejlepší poměr efektu a času a zajistí, že je každá svalová partie trénovaná vícekrát týdně — což je při stejném objemu lepší pro růst než zasáhnout partii jen 1× týdně.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč tvoří páteř plánu velké vícekloubové cviky a v jakém pořadí je zařazuješ? <span class="tg">odpověď ▾</span></div><div class="aa">Protože zapojí nejvíc svalů a dají největší efekt za jednotku času — pokrývají hlavní pohybové vzory. Zařazují se na začátek tréninku, dokud je klient svěží; izolace a méně náročné cviky patří na konec, kde už nevadí únava.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co znamená pracovat s 1–3 opakováními „v rezervě“ (RIR) a proč to stačí? <span class="tg">odpověď ▾</span></div><div class="aa">Znamená to skončit sérii s odhadem 1–3 opakování do svalového selhání, tedy v rozumné blízkosti selhání, ne nutně v něm. Tato blízkost stačí pro růst svalu a zároveň šetří regeneraci oproti tréninku vždy do úplného selhání.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč není plán nikdy „hotový“? <span class="tg">odpověď ▾</span></div><div class="aa">Protože plán je jen hypotéza, kterou testuje realita. Sleduješ, zda klient tréninky plní, zda roste zátěž a zda necítí bolest či přetížení, a podle dat plán průběžně ladíš. Právě toto neustálé ladění odlišuje skutečný koučink od prodeje statického PDF.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyber si jednoho konkrétního (klidně smyšleného) klienta — urči mu cíl, úroveň, počet tréninkových dní a vybavení. Projdi krok po kroku celý postup z této lekce a sestav mu kompletní týdenní plán: split, hlavní cviky pro každý pohybový vzor, izolace, objem, opakování, RIR a jasné pravidlo progrese. Plán zapiš tak, aby mu rozuměl klient, ne kolega kouč.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Schoenfeld BJ, et al. Effects of Resistance Training Frequency on Measures of Muscle Hypertrophy: A Systematic Review and Meta-Analysis. Sports Med. 2016.</li>
+        <li>Schoenfeld BJ, et al. Dose-response relationship between weekly resistance training volume and increases in muscle mass. J Sports Sci. 2017.</li>
+        <li>Helms E, Morgan A, Valdez A. The Muscle and Strength Pyramid: Training.</li>
+        <li>ACSM. Progression Models in Resistance Training for Healthy Adults. Med Sci Sports Exerc. (position stand).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m4-l9', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
