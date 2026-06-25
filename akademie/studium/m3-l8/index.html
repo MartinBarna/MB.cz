@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alkohol z hlediska výživy a kompozice — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 3 · Lekce 8 — Výživa a energie</div>
+    <h1>Alkohol z hlediska výživy a kompozice</h1>
+
+    <p class="lead">Alkohol je téma, kde klienti čekají buď zákaz, nebo výmluvu — realita je uprostřed. Cílem není alkohol zakázat (to obvykle nevydrží a přidá jen vinu), ale <strong>naučit klienta s ním pracovat</strong> tak, aby nesaboval cíl a aby si zároveň udržel společenský život.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Kolik energie má alkohol (~7 kcal/g) a proč jsou to „prázdné“ kalorie téměř bez sytosti.</li>
+        <li>Proč jsou nepřímé efekty alkoholu často větší problém než jeho samotné kalorie.</li>
+        <li>Jak alkohol ovlivňuje spánek, regeneraci a budování svalu.</li>
+        <li>Praktické strategie pro společenské akce bez sabotáže pokroku.</li>
+        <li>Jak to klientovi podat bez zákazu a bez démonizace.</li>
+      </ul>
+    </div>
+
+    <h2>1) Alkohol a kalorie</h2>
+    <p>Alkohol má zhruba <strong>7 kcal na gram</strong> — víc než sacharidy a bílkoviny (4 kcal), méně než tuk (9 kcal). Navíc jsou to „prázdné“ kalorie: energie bez bílkovin, vlákniny a mikroživin, a hlavně téměř bez sytosti. Drinky se tak snadno „nasčítají“, aniž by měl klient pocit, že vlastně něco snědl.</p>
+    <p>Tělo navíc dává zpracování alkoholu prioritu — vnímá ho jako toxin, který chce odbourat, a dočasně tím upozadí spalování tuků, dokud alkohol nezpracuje. Z jednoho večera to samo o sobě tuk neudělá, ale je to součást celkového obrazu.</p>
+
+    <h2>2) Nepřímé efekty — větší problém než kalorie</h2>
+    <p>Pro většinu klientů není hlavní problém energie ze samotného alkoholu, ale to, co alkohol spouští kolem sebe:</p>
+    <div class="card">
+      <ul style="margin-left:1.1rem;">
+        <li><strong>Ztráta zábran</strong> — alkohol oslabuje sebeovládání (které je samo o sobě vyčerpatelný zdroj). Klient pak sní i to, co by střízlivý nedal — a často hyperchutné, kalorické jídlo.</li>
+        <li><strong>Jídlo k pití a po pití</strong> — pivo nese chuť na slané, noční pizza po baru. Tyhle „přílohy“ mívají víc kalorií než samotný alkohol.</li>
+        <li><strong>Horší další den</strong> — kocovina znamená méně pohybu, horší chutě a vynechaný trénink.</li>
+      </ul>
+    </div>
+    <p>Souhrnně: kalorie z drinků + jídlo navíc + horší následující den dělají z alkoholu větší faktor, než říká etiketa.</p>
+
+    <h2>3) Regenerace, spánek a sval</h2>
+    <p>Alkohol negativně ovlivňuje i to, co klient pracně buduje v posilovně:</p>
+    <p><strong>Spánek</strong> — možná uspí rychleji, ale zhoršuje kvalitu spánku, zvlášť v jeho druhé půlce. Špatný spánek pak znamená větší hlad a horší regeneraci. <strong>Regenerace a sval</strong> — vyšší dávky alkoholu mohou zhoršit zotavení a svalovou syntézu, zvlášť načasované kolem tréninku. <strong>Hydratace</strong> — alkohol odvodňuje, což přispívá ke kocovině i ke kolísání váhy na váze.</p>
+    <blockquote>Jednorázově nic z toho cíl nezničí. Ale pravidelný alkohol potichu brzdí pokrok ze všech těchhle stran najednou.</blockquote>
+
+    <h2>4) Praktické strategie pro akce</h2>
+    <p>Místo zákazu dej klientovi plán, jak si akci užít a neshodit pokrok:</p>
+    <div class="card">
+      <ul style="margin-left:1.1rem;">
+        <li><strong>Plánuj předem, s chladnou hlavou</strong> — rozhodnutí udělané dopředu poráží rozhodování na místě. „Dám si X drinků a u jídla zvolím Y.“</li>
+        <li><strong>Hlídej bílkovinu a jídlo přes den</strong> — přijď na akci najedený slušnou porcí bílkoviny a zeleniny, ne hladový. Hladový plus alkohol je katastrofa pro sebeovládání.</li>
+        <li><strong>Vybírej chytřeji</strong> — méně kalorické volby (čistý destilát s nízkokalorickým mixérem oproti sladkým koktejlům či pivu ve velkém) a střídej s vodou. Zpomalíš tempo i ztráty tekutin.</li>
+        <li><strong>Počítej s tím v bilanci</strong> — když klient o akci ví předem, lze přes den či týden vědomě trochu ubrat jinde — ne hladověním.</li>
+        <li><strong>Žádná vina potom</strong> — jeden večer nic nezkazí. Druhý den se prostě vrátí k plánu, bez spirály „co už“.</li>
+      </ul>
+    </div>
+
+    <h2>5) Jak to podat klientovi</h2>
+    <div class="praxe"><b>V praxi (Martin):</b> Alkohol klientům nezakazuju — zákaz nevydrží a přidá jen vinu. Místo toho vysvětlím dvě věci. Za prvé: hlavní problém většinou nejsou kalorie z drinků, ale to, co kolem nich sníme a jak dopadne další den. Za druhé: dá se to zvládnout plánem. Domluvíme se předem, klient přijde najedený, vybere chytřeji, prokládá vodou a druhý den se bez dramatu vrátí k plánu. Tím si užije život i drží pokrok — a to je celý smysl udržitelného přístupu. Nejde o dokonalost, jde o to, aby klient uměl žít a zároveň jít za cílem.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kolik kcal má gram alkoholu a proč jsou to „prázdné“ kalorie? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 7 kcal/g. „Prázdné“ jsou proto, že nenesou bílkoviny, vlákninu ani mikroživiny a navíc skoro nesytí — drinky se tak snadno nasčítají, aniž by měl klient pocit, že něco snědl.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč jsou nepřímé efekty často větší problém než kalorie z alkoholu? <span class="tg">odpověď ▾</span></div><div class="aa">Alkohol oslabuje sebeovládání → jídlo navíc, často hyperchutné, plus horší následující den (méně pohybu, horší chutě, vynechaný trénink). To dohromady zpravidla převýší kalorie ze samotných drinků.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak alkohol ovlivňuje spánek a regeneraci? <span class="tg">odpověď ▾</span></div><div class="aa">Zhoršuje kvalitu spánku (zvlášť jeho druhou půlku), může zhoršit zotavení a svalovou syntézu a tělo odvodňuje. Špatný spánek pak znamená větší hlad a horší regeneraci.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři strategie pro společenskou akci. <span class="tg">odpověď ▾</span></div><div class="aa">Například: plánovat předem, přijít najedený (slušná porce bílkoviny), vybírat méně kalorické volby a prokládat vodou, počítat s tím v bilanci, žádná vina druhý den. Stačí tři.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč alkohol nezakazovat? <span class="tg">odpověď ▾</span></div><div class="aa">Zákaz obvykle nevydrží a přidá jen vinu, která spouští spirálu „co už“. Lepší je naučit klienta s alkoholem pracovat pomocí předem domluveného plánu.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Napiš klientovi „plán na akci“ — co udělá přes den před akcí, kolik a jakých drinků si dá, jak je proloží vodou a co udělá druhý den. Pak jednou větou vysvětli, proč hlavní riziko nejsou kalorie z alkoholu samotného.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Yeomans MR. Alcohol, appetite and energy balance: is alcohol intake a risk factor for obesity? Physiol Behav. 2010;100(1):82-89.</li>
+        <li>Parr EB, et al. Alcohol ingestion impairs maximal post-exercise rates of myofibrillar muscle protein synthesis. PLoS One. 2014;9(2):e88384.</li>
+        <li>Ebrahim IO, et al. Alcohol and sleep: effects on normal sleep. Alcohol Clin Exp Res. 2013;37(4):539-549.</li>
+        <li>Traversy G, Chaput JP. Alcohol Consumption and Obesity: An Update. Curr Obes Rep. 2015;4(1):122-130.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m3-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
