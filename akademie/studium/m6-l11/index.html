@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cenotvorba a balíčky služeb — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 11 — Byznys pro trenéry a poradce</div>
+    <h1>Cenotvorba a balíčky služeb</h1>
+
+    <p class="lead">Cena není jen číslo — je to <strong>sdělení o hodnotě</strong>. Říká klientovi, jak si vážíš vlastní práce, a filtruje, jaké klienty přitáhneš. V téhle lekci dostaneš praktický rámec, jak službu nacenit podle hodnoty a poskládat ji do balíčků, které dávají smysl tobě i klientovi.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je cena signál hodnoty, ne jen náklad pro klienta.</li>
+        <li>Tři přístupy k tvorbě ceny — náklady, konkurence, hodnota — a který preferovat.</li>
+        <li>Jak postavit balíčky (tiery) a proč „jeden balíček“ prodává hůř.</li>
+        <li>Proč nízká cena přitahuje horší klienty a víc práce.</li>
+        <li>Jak komunikovat cenu sebejistě a kdy ji zvednout.</li>
+      </ul>
+    </div>
+
+    <h2>1) Cena je signál</h2>
+    <p>Lidé bez dalších informací používají cenu jako vodítko kvality. Příliš nízká cena paradoxně budí nedůvěru („proč je to tak levné?“) a přitahuje klienty, kteří hledají hlavně levno — ne výsledek. Vyšší cena podložená hodnotou naopak signalizuje kvalitu a přitahuje klienty, kteří berou spolupráci vážně.</p>
+    <p>Cena navíc ovlivňuje, jak si klient služby váží: za co zaplatí víc, to bere vážněji a víc dodržuje. To není manipulace — je to lidská psychologie. Vědomě nastavená cena tak slouží i výsledkům klienta.</p>
+
+    <h2>2) Tři přístupy k ceně</h2>
+    <p><strong>Podle nákladů</strong> — spočítáš náklady a přidáš marži. Užitečné jako spodní hranice (pod ni nejdi), ale samo o sobě hodnotu podceňuje.</p>
+    <p><strong>Podle konkurence</strong> — koukneš, co berou ostatní. Jen referenční bod vůči úrovni služby a lokalitě — ne návod. Když je tvoje služba lepší, nemáš důvod vejít se do průměru.</p>
+    <p><strong>Podle hodnoty</strong> — nacení podle toho, jakou hodnotu klientovi reálně přinášíš: výsledek, čas, jistotu, péči. Tohle preferuj. Hodnota proměny — zdraví, sebevědomí, energie, výsledky — je pro klienta mnohem vyšší než „hodina tvého času“.</p>
+    <blockquote>Drž si nákladovou spodní hranici, konkurenci ber jen jako kontext, a cenu stav na hodnotě, kterou reálně dodáváš.</blockquote>
+
+    <h2>3) Balíčky (tiery) místo jedné ceny</h2>
+    <p>Nabízet jen jednu možnost prodává hůř, protože klient se rozhoduje „ano/ne“. Když nabídneš víc úrovní, rozhoduje se „kterou“ — a to prodává líp. Klasicky fungují tři tiery.</p>
+    <div class="card">
+      <p><strong>Základní</strong> — nižší cena, jádro služby (např. plán a písemná komunikace).</p>
+      <p><strong>Střední („nejoblíbenější“)</strong> — víc kontaktu a péče; tahle úroveň bývá záměrně nejlákavější a nejčastěji volená.</p>
+      <p><strong>Prémiový</strong> — nejvyšší péče (časté videohovory, hlasové zprávy, maximální dostupnost) za vyšší cenu.</p>
+    </div>
+    <p>Vyšší tiery nejen víc vydělají, ale dají klientovi volbu a kotvu: prémiový balíček zvyšuje vnímanou hodnotu středního. Drž ale sliby udržitelné — vyšší tier znamená víc péče, kterou musíš reálně zvládnout u všech klientů.</p>
+
+    <h2>4) Proč nízká cena pálí</h2>
+    <p>Honba za nízkou cenou „abych získal klienty“ se vymstí hned několika způsoby. <strong>Přitáhne cenově citlivé klienty</strong> — ti odejdou ke komukoli levnějšímu a často hůř dodržují. <strong>Víc práce za méně</strong> — abys vydělal, vezmeš víc klientů, zahltíš se, klesne kvalita služby a vyhoříš. <strong>Podkope značku</strong> — levná cena říká „průměr“, i když tvoje práce průměrná není.</p>
+    <p>Lepší je méně klientů za vyšší cenu s vyšší péčí než hromada levných, kterým nestíháš dávat kvalitu.</p>
+
+    <h2>5) Jak cenu komunikovat a kdy ji zvednout</h2>
+    <p><strong>Mluv o ceně sebejistě</strong> — když ji řekneš s omluvou v hlase, klient ucítí pochybnost. Řekni cenu jasně a hned navaž hodnotou, kterou klient dostane. <strong>Prodávej hodnotu, ne hodiny</strong> — nemluv o „hodině“, mluv o výsledku, jistotě a péči (proměna, ne minuty). <strong>Neomlouvej se a neslevuj ze strachu</strong> — když klient řekne „je to drahé“, neznamená to vždy „ne“; znamená to „ukaž mi hodnotu“. <strong>Zvedni cenu</strong>, když poptávka převyšuje nabídku — to je signál, že je podhodnocená.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Cenu jsem se dlouho bál nastavit výš a držel ji dole „ze strachu“. Když jsem ji zvedl a postavil na hodnotě, stalo se přesně to, co teorie říká: přišli klienti, kteří to berou vážně, víc dodržují, mají lepší výsledky a zůstávají déle. Méně klientů, vyšší cena, vyšší péče, lepší výsledky — a paradoxně víc spokojenosti na obou stranách. Cena není o tom, co si troufneš vzít. Je to sdělení o hodnotě, kterou dáváš. Nastav ji vědomě.</div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>Shrnutí:</strong> Cena je signál hodnoty; příliš nízká budí nedůvěru a přitahuje špatné klienty. Z tří přístupů preferuj cenu podle hodnoty (náklady = spodní hranice, konkurence = jen kontext). Nabízej balíčky místo jediné ceny, vyhni se pasti nízké ceny a komunikuj cenu sebejistě — prodávej hodnotu, ne hodiny.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je cena signálem, ne jen nákladem? <span class="tg">odpověď ▾</span></div><div class="aa">Lidé používají cenu jako vodítko kvality. Ovlivňuje tedy, jaké klienty přitáhneš a jak si klient služby váží — za co zaplatí víc, to bere vážněji a víc dodržuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaké jsou tři přístupy k tvorbě ceny a který preferovat? <span class="tg">odpověď ▾</span></div><div class="aa">Podle nákladů (jen spodní hranice), podle konkurence (jen kontext) a podle hodnoty. Preferuj cenu podle hodnoty, kterou klientovi reálně dodáváš.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč nabízet tiery místo jedné ceny? <span class="tg">odpověď ▾</span></div><div class="aa">Klient se pak rozhoduje „kterou“ místo „ano/ne“. Vyšší tier navíc funguje jako kotva a zvyšuje vnímanou hodnotu středního, nejčastěji voleného balíčku, a dává klientovi volbu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaké jsou nevýhody příliš nízké ceny? <span class="tg">odpověď ▾</span></div><div class="aa">Přitahuje cenově citlivé klienty, nutí tě brát jich víc (zahlcení, pokles kvality, vyhoření) a podkopává značku, protože levná cena signalizuje „průměr“.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená, když klient řekne „je to drahé“? <span class="tg">odpověď ▾</span></div><div class="aa">Často ne „ne“, ale „ukaž mi hodnotu“. Reaguj hodnotou, kterou klient dostane, a neslevuj z paniky — sleva má být vědomé rozhodnutí, ne reakce ze strachu.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Navrhni tři balíčky své služby (základní / střední / prémiový): co každý obsahuje, komu je určen a orientačně jak se liší cenou — a u středního napiš, čím ho uděláš „nejoblíbenějším“. Pak zformuluj dvě věty, kterými cenu sebejistě sdělíš a hned navážeš hodnotou.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Ariely D. Predictably Irrational. HarperCollins 2008 (cenová signalizace, kotvení a decoy efekt).</li>
+        <li>Cialdini RB. Influence: The Psychology of Persuasion. Harper Business 2006 (vnímaná hodnota a kontrast).</li>
+        <li>Barna Academy. M6·L3 — Nabídka a poptávka. Interní studijní materiál.</li>
+        <li>Barna Academy. M6·L5–L6 — Osobní značka a udržitelnost slibů. Interní studijní materiál.</li>
+        <li>Barna Academy. M6·L9 — Retence klientů. Interní studijní materiál.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l11', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

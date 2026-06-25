@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silová a kondiční příprava pro bojovníka — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 8 · Lekce 1 — Příprava bojovníků a úpolové sporty</div>
+    <h1>Silová a kondiční příprava pro bojovníka</h1>
+
+    <p class="lead">Příprava bojovníka není trénink na postavu. Nejde o to, jak vypadáš, ale <strong>co dokážeš v páté minutě</strong>, kdy je únava nejvyšší. Silová a kondiční příprava (S&amp;C) je tu od toho, aby podpořila techniku a taktiku — <strong>ne aby je nahradila</strong>.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jaké fyzické schopnosti bojovník skutečně potřebuje — a v jakém poměru.</li>
+        <li>Tři energetické systémy a proč v zápase běží všechny současně.</li>
+        <li>Co je souběžný (concurrent) trénink a jak řešit jeho interference efekt.</li>
+        <li>Jak poskládat S&amp;C vedle technického tréninku bez přetížení sportovce.</li>
+        <li>Princip „S&amp;C slouží sportu“ — proč nikdy nepřebíjet techniku kondičkou.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co bojovník skutečně potřebuje</h2>
+    <p>Bojovník nepotřebuje maximální hodnoty v jediné věci. Potřebuje chytrou kombinaci schopností, kde každá slouží výkonu v kleci nebo na tatami:</p>
+    <p><strong>Síla a výbušnost (power)</strong> — schopnost vyvinout sílu rychle: úder, hod, výbuch z pozice. Síla je základ, ze kterého výbušnost teprve staví. <strong>Silová vytrvalost</strong> — udržet kvalitu pohybu a síly i v únavě (klinč, scramble, závěr kola). <strong>Kondice / opakovaná výbušnost</strong> — opakovat výbušné akce s krátkým zotavením po celý zápas. <strong>Robustnost a prevence zranění</strong> — silné šlachy, vazy, krk a střed těla, odolnost vůči nárazu. <strong>Mobilita specifická pro sport</strong> — rozsah potřebný pro kopy a pozice na zemi.</p>
+    <p>Co bojovník naopak <strong>nepotřebuje</strong>: nafukovat svalovou hmotu nad rámec své váhové kategorie ani honit objemový trénink na úkor regenerace na techniku. Sval, který nezlepší výkon, je v zápase přítěž — váha i vyšší kyslíkový nárok.</p>
+
+    <h2>2) Tři energetické systémy</h2>
+    <p>V reálném zápase běží všechny tři systémy současně, jen se mění jejich vzájemný podíl:</p>
+    <div class="card">
+      <p><strong>ATP-CP (alaktátový)</strong> — okamžitá energie pro krátké výbuchy (úder, sprint, výbuch z pozice). Trvá pár sekund, doplňuje se rychle.</p>
+      <p><strong>Glykolytický (laktátový)</strong> — energie pro intenzivní úsilí v řádu desítek sekund (intenzivní výměna, scramble). Je to systém, který produkuje únavu.</p>
+      <p><strong>Oxidativní (aerobní)</strong> — vytrvalostní základ, který dodává energii mezi výbuchy a hlavně umožňuje zotavení mezi nimi i mezi koly.</p>
+    </div>
+    <p>Praktický důsledek: dobrý aerobní základ není „kardio pro vytrvalce“. Je to motor, který bojovníkovi umožní rychleji se zotavit mezi výbušnými akcemi a udržet kvalitu do konce. Vedle něj je ale potřeba trénovat i schopnost opakovat výbušné akce intervalově — protože přesně tak vypadá reálný zápas.</p>
+
+    <h2>3) Souběžný (concurrent) trénink</h2>
+    <p>Bojovník rozvíjí zároveň sílu i vytrvalost — tomu se říká souběžný trénink. Má jedno známé úskalí: rozvoj vytrvalosti může do jisté míry tlumit rozvoj síly a svalu (tzv. <strong>interference efekt</strong>), pokud se obojí dělá ve velkém objemu blízko u sebe.</p>
+    <p>V praxi to řeším třemi pravidly. <strong>Odděluj podněty časem</strong> — náročnou sílu a náročnou vytrvalost ideálně do jiných dnů, nebo aspoň pár hodin od sebe. <strong>Prioritizuj podle fáze a slabin</strong> — mimo zápas víc síly, v ostré přípravě víc specifické kondice. <strong>Hlídej celkový objem</strong> — bojovník už má hodně práce z techniky a sparringů, takže S&amp;C má doplňovat, ne přidávat únavu, kterou nezvládne zregenerovat.</p>
+
+    <h2>4) Jak poskládat S&amp;C vedle techniky</h2>
+    <p>Technický a sparringový trénink má prioritu — bojovníka dělá bojovníkem technika, ne posilovna. S&amp;C se skládá kolem ní podle čtyř zásad:</p>
+    <p><strong>Méně je často víc.</strong> Dvě až tři kvalitní silové či kondiční jednotky týdně obvykle stačí; objem se řídí tím, kolik sportovec zvládne vedle techniky zregenerovat. <strong>Těžké k těžkému.</strong> Náročné silové dny dávej blízko k náročným technickým dnům (a lehké k lehkým), aby zbyly skutečně lehké dny na regeneraci — místo aby byl každý den středně těžký. <strong>Výbušnost načerstvo.</strong> Výbušné a silové věci dělej, když je sportovec relativně čerstvý; tady platí kvalita nad kvantitou. <strong>Nepřetáhni před zápasem.</strong> V týdnech před zápasem objem S&amp;C klesá (taper), aby šel sportovec do klece odpočatý a ostrý.</p>
+
+    <h2>5) Princip: S&amp;C slouží sportu</h2>
+    <p>Nejčastější chyba je přebít technický trénink kondičkou — „unavit bojovníka v posilovně“, aby to vypadalo tvrdě. To je špatně. S&amp;C má sportovce udělat silnějším, výbušnějším a odolnějším, aby líp prováděl techniku a vydržel do konce — ne ho vyčerpat tak, že technický trénink trpí.</p>
+    <blockquote>Vždy se ptej: zlepší tahle jednotka výkon v zápase, nebo jen přidá únavu? Pokud to druhé, je špatně.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> U bojovníka platí dvojnásob „adekvátně je líp, ne víc je líp“. Má plný týden tvrdé práce na technice a sparringu. Moje S&amp;C má být chytrý doplněk, který ho udělá pevnějším a kondičně připravenějším — ne další zdroj únavy. Stavím to kolem jeho techniky, prioritizuju podle fáze přípravy a před zápasem ubírám, ať jde do klece odpočatý a ostrý. Síla a kondice jsou nástroj. Mistrem ho dělá technika.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaké fyzické schopnosti bojovník skutečně potřebuje? <span class="tg">odpověď ▾</span></div><div class="aa">Sílu a výbušnost, silovou vytrvalost, kondici / opakovanou výbušnost, robustnost a prevenci zranění a specifickou mobilitu — chytře poskládané dohromady, ne maximum v jediné z nich.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj tři energetické systémy a jejich roli. <span class="tg">odpověď ▾</span></div><div class="aa">ATP-CP (alaktátový) pro krátké výbuchy, glykolytický (laktátový) pro intenzivní úsilí v řádu desítek sekund a oxidativní (aerobní), který tvoří vytrvalostní základ a umožňuje zotavení mezi výbuchy i koly.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co je interference efekt a jak ho zmírnit? <span class="tg">odpověď ▾</span></div><div class="aa">Vytrvalostní trénink může tlumit rozvoj síly a svalu, když se obojí dělá ve velkém objemu blízko u sebe. Zmírníš ho oddělením podnětů časem, prioritizací podle fáze přípravy a hlídáním celkového objemu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak poskládat S&amp;C vedle technického tréninku? <span class="tg">odpověď ▾</span></div><div class="aa">Technika má prioritu a S&amp;C se skládá kolem ní: 2–3 kvalitní jednotky týdně, těžké k těžkému (a lehké k lehkým), výbušnost načerstvo a před zápasem snížení objemu (taper).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená „S&amp;C slouží sportu“? <span class="tg">odpověď ▾</span></div><div class="aa">S&amp;C má zlepšit výkon a odolnost pro provedení techniky, ne sportovce vyčerpat na úkor technického tréninku. Nikdy nepřebíjej techniku kondičkou jen proto, aby to vypadalo tvrdě.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Pro modelového bojovníka (zápas za 8 týdnů, 4 technické tréninky + 2 sparringy týdně) navrhni, kolik a jakých S&amp;C jednotek zařadíš a kam je v týdnu umístíš vzhledem k technice. Popiš, jak upravíš objem v posledních dvou týdnech před zápasem a proč.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Turner A, et al. Strength and conditioning for combat sports. Strength &amp; Conditioning Journal.</li>
+        <li>Hickson RC. Interference of strength development by simultaneously training for strength and endurance. Eur J Appl Physiol. 1980;45(2-3):255-263.</li>
+        <li>Coffey VG, Hawley JA. Concurrent exercise training: do opposites distract? J Physiol. 2017;595(9):2883-2896.</li>
+        <li>Gastin PB. Energy system interaction and relative contribution during maximal exercise. Sports Med. 2001;31(10):725-741.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m8-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

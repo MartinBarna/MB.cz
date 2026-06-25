@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Výživa bojovníka — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 8 · Lekce 7 — Příprava bojovníků a úpolové sporty</div>
+    <h1>Výživa bojovníka</h1>
+
+    <p class="lead">Bojovník trénuje často <strong>dvakrát denně</strong>, kombinuje sílu, kondici, techniku i sparring — a navíc musí trefit <strong>váhovou kategorii</strong>. Výživa proto musí palit výkon a regeneraci při vysokém objemu a zároveň postupně směřovat k cílové váze. To je náročnější rovnováha než u běžného silového klienta.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Čím se výživa bojovníka liší od běžného klienta v posilovně.</li>
+        <li>Jak nastavit energii a živiny pro vysoký objem tréninku v kempu.</li>
+        <li>Jak řešit palivo pro dvě tréninkové jednotky denně.</li>
+        <li>Jak řídit váhu postupně přes celý kemp, ne nárazově na konci.</li>
+        <li>Jak najíst den zápasu — bez experimentů a trávicích katastrof.</li>
+      </ul>
+    </div>
+
+    <h2>1) Jiné nároky, jiná strava</h2>
+    <p>Bojovník — ať už jde o MMA, box, thaibox, grappling nebo jakýkoli úpolový sport — má jiné nároky než klient, který chodí čtyřikrát týdně do posilovny pro postavu. Vysoký energetický výdej, kombinace silových, kondičních i technických jednotek a k tomu váhové kategorie dohromady tvoří rovnici, kterou nejde vyřešit jednoduchou redukční dietou.</p>
+    <p>Tato lekce navazuje na téma kondiční přípravy bojovníka a akutního shazování váhy. Tady se soustředíme na samotné jídlo — od běžného tréninkového kempu po dny kolem zápasu. Akutní manipulaci váhy v posledním týdnu řešíme samostatně; tady jde o výživovou strategii celého bloku.</p>
+
+    <h2>2) Základ: energie pro vysoký objem</h2>
+    <p>Bojovník v kempu spaluje hodně. Podcenění příjmu znamená pokles výkonu, špatnou regeneraci, ztrátu svalu a síly a vyšší riziko nemoci i zranění. Klíčové zásady:</p>
+    <p><strong>Dostatek celkové energie.</strong> V kempu není čas na agresivní dietu — palivo musí stačit na tvrdé tréninky a regeneraci. Hubnutí k váze se řeší postupně a s předstihem, ne hladověním uprostřed náročného bloku.</p>
+    <p><strong>Sacharidy jako hlavní palivo.</strong> Úpolové sporty jsou intervalové a vysoce intenzivní, takže silně závisí na svalovém glykogenu. Dostatek sacharidů je klíč k výkonu i k tomu, aby technika a sparring „šly“. Nízkosacharidové experimenty uprostřed kempu výkonu obvykle škodí.</p>
+    <p><strong>Dost bílkovin a kvalitní zbytek.</strong> Bílkoviny v horním pásmu doporučení pro sportovce chrání sval při vysokém objemu a mírném deficitu. K tomu dost zdravých tuků pro hormony a pestrost pro vitaminy, minerály a imunitu — nemoc v kempu znamená ztracený trénink.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> První věc, kterou u bojovníka řeším, není „kolik shodit“, ale jestli vůbec jí dost na to, co od těla v kempu chce. Vybitý borec s prázdným glykogenem odsparuje slabě, hůř se učí techniku a první se sebere chřipku. Energii a sacharidy stavím nahoru a teprve pak ladím trend váhy.</div>
+
+    <h2>3) Palivo pro dvě jednotky denně</h2>
+    <p>Když bojovník trénuje dopoledne i odpoledne, načasování živin tady reálně hraje roli — jde o výkon a rychlé doplnění mezi jednotkami:</p>
+    <p><strong>Před tréninkem</strong> stravitelné sacharidy pro energii, ale nezatěžovat žaludek, zvlášť před sparringem nebo kondicí. <strong>Mezi jednotkami</strong> rychlé doplnění glykogenu sacharidy plus bílkoviny pro regeneraci — tady je „okno“ reálně užitečné, protože druhý trénink přijde brzy. <strong>Po poslední jednotce</strong> plnohodnotné jídlo s bílkovinami i sacharidy pro noční regeneraci. A k tomu po celý den <strong>hydratace a elektrolyty</strong> — pocení v úpolových sportech je vysoké.</p>
+    <blockquote>Cíl je jednoduchý: přijít na každý trénink natankovaný a mezi jednotkami se efektivně doplnit, aby kvalita neklesala.</blockquote>
+
+    <h2>4) Řízení váhy během kempu</h2>
+    <p>Nejčastější a nejnebezpečnější chyba je nechat váhu na poslední dny a pak zoufale shazovat. Profesionální přístup je opačný — řízený a postupný:</p>
+    <p><strong>Znát výchozí a cílovou váhu s předstihem.</strong> Plánuj tak, aby na akutní manipulaci váhy zbývalo co nejméně — většina rozdílu se má sundat postupně v průběhu kempu mírným deficitem, ne nárazově. Tento <strong>mírný deficit</strong> chrání sval, sílu i kvalitu tréninku; velký deficit ve fázi tvrdého sparringu je katastrofa pro výkon i regeneraci. Drž oddělené „dlouhodobé zhubnutí“ (postupně přes kemp) od „akutního cutu“ (manipulace vody a glykogenu v posledním týdnu) — ten má být co nejmenší a nejbezpečnější. A průběžně <strong>vážit a sledovat trend</strong>, aby nepřišlo nemilé překvapení.</p>
+    <div class="card" style="background:#fbf7f1;"><strong>Zdraví nad váhu:</strong> Extrémní a opakované rychlé shazování poškozuje výkon, zdraví i dlouhodobou kariéru. Pokud se musí pokaždé shazovat extrémně, je špatně vybraná kategorie. Zodpovědný tým plánuje váhu tak, aby byla cílová kategorie reálná bez drastických cutů.</div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> S bojovníkem si dávno před zápasem řekneme, na jakou váhu reálně dokáže nastoupit silný, ne vybitý. Když vidím, že borec musí pokaždé sundávat extrém, neřeším lepší cut — řeším, jestli nemá jít o kategorii výš. Váha je provozní veličina, kterou řídíš průběžně, ne kterou kontroluješ až v pátek na váze.</div>
+
+    <h2>5) Den zápasu a kolem něj</h2>
+    <p>Při typickém vážení den před zápasem (uprav podle pravidel dané organizace) je <strong>po vážení</strong> cílem co nejlepší rehydratace a doplnění glykogenu: postupně vracet tekutiny s elektrolyty a sacharidy, stravitelná jídla, nic nového ani rizikového pro trávení. Tahle fáze rozhoduje, jestli bojovník nastoupí plný a silný, nebo vybitý.</p>
+    <p>V <strong>den zápasu</strong> jen stravitelná, ozkoušená jídla, dostatek sacharidů a načasování tak, aby žaludek nebyl plný v době boje. A platí železné pravidlo: <strong>nic nového v den D.</strong> Cokoli bojovník v den zápasu jí nebo pije, musí mít vyzkoušené z kempu — nové jídlo nebo doplněk je riziko trávicích potíží v nejhorší možnou chvíli.</p>
+
+    <h2>6) Hranice a spolupráce</h2>
+    <p>Vážná manipulace váhy a zdraví bojovníka je týmová práce — ideálně ve spolupráci s lékařem nebo odborníkem na výživu sportovce, zvlášť u velkých cutů. Hlídej signály problémů: extrémní únavu, závratě, opakovanou nemoc, narušený vztah k jídlu. Drž integritu, žádné rizikové „zázračné“ praktiky pro váhu. Zdraví a dlouhodobá kariéra mají přednost před jedním zápasem.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Proč jsou sacharidy pro bojovníka hlavním palivem? <span class="tg">odpověď ▾</span></div><div class="aa">Úpolové sporty jsou intervalové a vysoce intenzivní, takže silně závisejí na svalovém glykogenu. Dostatek sacharidů drží výkon i kvalitu techniky a sparringu; nízkosacharidové experimenty uprostřed kempu obvykle výkonu škodí.</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Jak má vypadat řízení váhy během kempu? <span class="tg">odpověď ▾</span></div><div class="aa">Postupně a řízeně: znát výchozí i cílovou váhu s předstihem a většinu rozdílu sundat během kempu mírným deficitem, který nebourá výkon. Akutní manipulaci vody a glykogenu v posledním týdnu drž co nejmenší. Nikdy nenechávat váhu na poslední dny a pak nárazově shazovat.</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Proč je při dvou jednotkách denně načasování živin reálně důležité? <span class="tg">odpověď ▾</span></div><div class="aa">Protože druhý trénink přijde brzy. Před jednotkou stravitelné sacharidy, mezi jednotkami rychlé doplnění glykogenu plus bílkoviny, po poslední jednotce plnohodnotné jídlo na noční regeneraci. Cíl je přijít na každý trénink natankovaný a kvalita nesmí klesat.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Co znamená pravidlo „nic nového v den D“? <span class="tg">odpověď ▾</span></div><div class="aa">Cokoli bojovník v den zápasu jí nebo pije, musí mít vyzkoušené z kempu. Nové jídlo nebo doplněk je riziko trávicích potíží v nejhorší možnou chvíli, proto se v den zápasu sahá jen po odzkoušených věcech.</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Kdy je vhodné zvážit jinou váhovou kategorii? <span class="tg">odpověď ▾</span></div><div class="aa">Když se bojovník musí pokaždé shazovat extrémně. Opakované rychlé shazování poškozuje výkon, zdraví i dlouhodobou kariéru — pokud je drastický cut pravidlem, je špatně vybraná kategorie a bezpečí má přednost před krátkodobým výsledkem.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U jednoho ze svých sportovců (nebo modelově) rozepiš na papír plán váhy na celý kemp — výchozí váha, cílová kategorie a postupný trend mírného deficitu — a odděl ho od minimálního akutního cutu v posledním týdnu.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+<li>Reale R, Slater G, Burke LM. Acute-Weight-Loss Strategies for Combat Sports. Int J Sport Nutr Exerc Metab. 2017.</li>
+<li>Thomas DT, Erdman KA, Burke LM. Nutrition and Athletic Performance. ACSM Position Stand. Med Sci Sports Exerc. 2016.</li>
+<li>Kerksick CM, et al. ISSN Exercise & Sports Nutrition Review Update. J Int Soc Sports Nutr. 2018.</li>
+<li>Burke LM, et al. Nutrition for Athletics. IAAF Consensus 2019.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m8-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

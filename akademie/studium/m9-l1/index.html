@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co je periodizace a proč ji potřebuješ — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 9 · Lekce 1 — Periodizace a plánování</div>
+    <h1>Co je periodizace a proč ji potřebuješ</h1>
+
+    <p class="lead">Periodizace zní akademicky, ale je to jednoduchá myšlenka: <strong>trénink se v čase plánovitě mění</strong>, aby vedl k cíli a aby se tělo stíhalo adaptovat a regenerovat. Bez ní lidé buď dělají pořád to samé a přestanou růst, nebo pořád zabírají naplno a vyhoří. Tady ji dostaneš tak, abys ji uměl použít u běžného klienta — ne jen u olympionika.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je periodizace a proč funguje — adaptace plus řízení únavy.</li>
+        <li>Tři úrovně plánování v čase: makro, mezo a mikro.</li>
+        <li>Hlavní modely: lineární a undulační (vlnitá) periodizace.</li>
+        <li>Co je blok a co znamená taper a deload v rámci plánu.</li>
+        <li>Jak periodizaci použít prakticky u běžného klienta, bez zbytečných komplikací.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je periodizace a proč funguje</h2>
+    <p>Periodizace je plánovité členění tréninku v čase do fází s různým zaměřením a náročností. Stojí na dvou věcech, které už znáš. <strong>Adaptace je specifická a má svůj čas</strong> — nelze rozvíjet všechno naplno najednou. A <strong>únava se hromadí</strong> — když pořád zabíráš naplno bez střídání zátěže, předběhneš regeneraci a dostaneš se do přetížení.</p>
+    <p>Periodizace řeší obojí najednou: střídá fáze a náročnost tak, aby se rozvíjelo to podstatné, únava se řídila a tělo se stíhalo zotavit nad původní úroveň (superkompenzace, M2·L10). Jednoduše řečeno dává tréninku směr a rytmus.</p>
+
+    <h2>2) Tři úrovně plánování</h2>
+    <p>Periodizace se obvykle popisuje ve třech vnořených úrovních. <strong>Makrocyklus</strong> je dlouhý horizont — třeba půl roku až rok, nebo celá příprava k cíli či akci. Velký obraz. <strong>Mezocyklus</strong> jsou bloky o délce zhruba 3–6 týdnů, každý s konkrétním zaměřením (blok hypertrofie, blok síly), zakončené lehčím týdnem. <strong>Mikrocyklus</strong> je obvykle týden — konkrétní rozložení tréninků a náročnosti uvnitř bloku.</p>
+    <p>Prakticky plánuješ shora dolů: kam míříme (makro) → jaké bloky nás tam dovedou (mezo) → jak vypadá konkrétní týden (mikro).</p>
+
+    <h2>3) Hlavní modely: lineární vs. undulační</h2>
+    <p><strong>Lineární periodizace</strong> je postupná změna v jednom směru v čase. Klasicky se v průběhu bloků zvyšuje zátěž a snižuje objem — od více opakování s lehčí zátěží k méně opakováním s těžší. Je jednoduchá, přehledná a dobrá pro začátečníky a jasné cíle.</p>
+    <p><strong>Undulační (vlnitá) periodizace</strong> mění náročnost a zaměření častěji, klidně den ode dne nebo týden od týdne — jeden den těžší s nízkými opakováními, jiný lehčí s vyššími. Umožňuje rozvíjet více schopností souběžně a často líp sedne běžnému životu klienta. Pro středně pokročilé a výš bývá velmi praktická.</p>
+    <blockquote>U běžného klienta není ani tak důležité, který model zvolíš, jako to, že vůbec plánuješ, progreduješ a řídíš únavu. Modely jsou nástroje, ne dogma.</blockquote>
+
+    <h2>4) Bloky, taper a deload</h2>
+    <p><strong>Blok</strong> (mezocyklus) je pár týdnů soustředěných na konkrétní cíl — technika, hypertrofie, síla. Bloky stavěj na sebe logicky: nejdřív objem a technika, pak síla. <strong>Deload</strong> je plánované snížení objemu a intenzity na konci bloku nebo když se kupí únava; umožní tělu dohnat regeneraci a posune tě výš. <strong>Taper</strong> je cílené snížení zátěže před důležitou akcí nebo testem — závod, focení, zápas — aby byl klient odpočatý a podal špičkový výkon.</p>
+    <div class="card"><strong>Pamatuj:</strong> tyhle „odlehčovací“ prvky nejsou ztráta času. Jsou součást toho, proč periodizace vůbec funguje. Pokrok se děje v regeneraci, ne v nekonečné dřině.</div>
+
+    <h2>5) Periodizace u běžného klienta (prakticky)</h2>
+    <p>Nepotřebuješ na běžného klienta složitý vědecký model. Stačí jednoduchý rytmus. Pracuj v <strong>blocích</strong> — třeba 4–6 týdnů s jasným zaměřením a progresí, zakončených lehčím týdnem. <strong>Progreduj</strong> uvnitř bloku (dvojitá progrese, M4·L1) a měň důraz mezi bloky — jednou víc objemu, jindy víc zátěže. <strong>Řiď únavu</strong>: sleduj výkon, spánek a motivaci; když se kupí signály, zařaď deload (M2·L10). A <strong>přizpůsob plán životu</strong> klienta — má sednout do jeho reality (práce, stres, dovolená), ne naopak.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Periodizaci nedělám proto, aby plán vypadal složitě. Dělám ji, aby klient nezasekl na místě a zároveň nevyhořel. Pracuju v blocích s jasným cílem, uvnitř progreduju, mezi bloky měním důraz a pravidelně zařadím lehčí týden. Před důležitou událostí ubereme, aby byl klient odpočatý. To je celé. Pro 95 % lidí je „jednoduchá, ale skutečně dodržená a řízená“ periodizace lepší než dokonalý model na papíře, který nikdo neudrží.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Na jakých dvou principech stojí periodizace? <span class="tg">odpověď ▾</span></div><div class="aa">Na tom, že adaptace je specifická a má svůj čas (nelze rozvíjet vše najednou), a na tom, že se únava hromadí a je třeba ji řídit, aby nepředběhla regeneraci.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj tři úrovně plánování a jejich délku. <span class="tg">odpověď ▾</span></div><div class="aa">Makrocyklus (měsíce až rok, velký obraz), mezocyklus (bloky zhruba 3–6 týdnů s jedním zaměřením) a mikrocyklus (obvykle týden).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Čím se liší lineární a undulační periodizace? <span class="tg">odpověď ▾</span></div><div class="aa">Lineární mění zátěž postupně jedním směrem (typicky rostoucí zátěž a klesající objem). Undulační střídá náročnost a zaměření častěji — den ode dne nebo týden od týdne.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> K čemu slouží deload a taper? <span class="tg">odpověď ▾</span></div><div class="aa">Deload je plánovaný lehčí týden, který dožene regeneraci a posune klienta výš. Taper je snížení zátěže před důležitou akcí, aby byl klient odpočatý a podal špičkový výkon.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co je u běžného klienta důležitější než výběr modelu? <span class="tg">odpověď ▾</span></div><div class="aa">Že vůbec plánuješ, progreduješ a řídíš únavu — a hlavně že je plán reálně dodržitelný. Model je jen nástroj, ne cíl.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Naplánuj zjednodušený 12týdenní makrocyklus pro klienta na kompozici: rozděl ho do bloků s jasným zaměřením, urči, kde budou deload týdny, a popiš, jak se mezi bloky změní důraz (objem vs. zátěž) a podle čeho poznáš, že je čas deload zařadit dřív.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Bompa TO, Buzzichelli C. Periodization: Theory and Methodology of Training. Human Kinetics.</li>
+        <li>Williams TD, et al. Comparison of Periodized and Non-Periodized Resistance Training on Maximal Strength: A Meta-Analysis. Sports Med. 2017;47(10):2083–2100.</li>
+        <li>Rhea MR, et al. A comparison of linear and daily undulating periodized programs. J Strength Cond Res. 2002;16(2):250–255.</li>
+        <li>Issurin VB. Benefits and limitations of block periodized training approaches. Sports Med. 2010;40(3):189–206.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m9-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

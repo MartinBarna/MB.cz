@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analýza značky, publikum a SWOT — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 4 — Byznys pro trenéry a poradce</div>
+    <h1>Analýza značky, publikum a SWOT</h1>
+
+    <p class="lead">Kdo jsou tvoji lidé, kde je najdeš a — to se nejčastěji zapomíná — <strong>kdo jsi vlastně TY jako značka</strong>. A na konci poctivá SWOT analýza, jejíž nejtěžší část je být k sobě upřímný.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak segmentovat publikum a vztáhnout nákupní chování ke své cílovce.</li>
+        <li>Proč je komerční fitko zlatý důl leadů a kde publikum vlastně hledat.</li>
+        <li>Pravidlo „nejdřív čas, pak peníze“ a proč jsou interakce důležitější než lajky.</li>
+        <li>Co tvoří konzistentní značku: hlas, vizuál a udržitelné služby.</li>
+        <li>Jak udělat upřímnou SWOT analýzu a proč si vážit kritiky.</li>
+      </ul>
+    </div>
+
+    <h2>1) Kdo jsou tvoji zákazníci</h2>
+    <p>Na první pohled vypadá cílová skupina jednolitě. Jakmile se ale ponoříš do dat, uvidíš trendy a způsoby, jak lidi segmentovat podle různých kritérií. Chceš-li produkt strategicky umístit, musíš znát svůj trh.</p>
+    <p>Začni u sebe — jak nakupuješ ty? Co tě táhne: styl a vzhled, funkce a technologie, image, který produkt nese, nebo loajalita ke značce? Co v tobě budí emoční reakci — apel osobní, sociální, strachový, humorný? Jak je věc orientovaná: reálný život, zdraví, rodina, hodnoty, aspirace? Všechny tyhle motivy umíš vztáhnout ke své cílové skupině. Každý zákazník má jedinečnou „stopu“, která určuje, jak ho oslovit, zaujmout, obsloužit a nakonec mu nabídnout.</p>
+
+    <h2>2) Kde najdeš své publikum</h2>
+    <p>Pracuješ v soukromém zařízení? Máš jen své klienty a jsi plně závislý na doporučeních. Výjimkou jsou jen vzácná místa s takovou reputací, že lidi táhne značka, ne trenér — tam ti diář naplní samo.</p>
+    <p>V komerčním zařízení máš naopak často tisíce potenciálních zákazníků, kteří chtějí přesně to, co nabízíš. Spousta trenérů tam ale diář nenaplní a svádí to na prostředí a „typ“ klienta. Problém ale není ani klient, ani prostředí.</p>
+    <blockquote>Pokud poptávka po tvé službě převyšuje nabídku — hodiny, které odpracuješ bez ztráty kvality — tvoje komodita roste na ceně.</blockquote>
+    <p>Specifické publikum velikosti toho, co chodí do komerčních posiloven, je v marketingu zlato: obklopí tě lidmi, kteří chtějí přesně tvoje služby. Každý malý byznys se proto musí soustředit na tržní dosah — dostat lidi ze své demografie do svého publika, komunikovat s nimi a dát jim hodnotu. Kvalita obsahu (příspěvky, videa, blogy) je pro úspěch zásadní.</p>
+
+    <h2>3) Nejdřív čas, pak peníze</h2>
+    <p>Lidé před každým rozhodnutím váží náklady a přínosy — a to znamená čas i peníze. Požádat o čas (sledovat video, přečíst blog) je menší žádost než žádat někoho o těžce vydělané peníze. A s obsahem přichází důvěra a vztah.</p>
+    <blockquote>Nejdřív žádej lidi o ČAS. Pokud jim nedáváš dost hodnoty, aby ti ho výměnou za tvou nabídku dali, je malá až nulová šance, že budou ochotni platit.</blockquote>
+    <p>Není to soutěž popularity. Člověk s víc sledujícími nebo lajky není úspěšnější než ty — klíčem jsou <strong>interakce</strong>, ne čísla. Vezmi si Facebook: tvé stránce rozumí podle zapojení, ne podle lajků. Když obsah nemá zapojení (je nudný a publiku ukradený), osekne ti organický dosah — a ty pak platíš za reklamu lidem, které ty ani tvůj produkt vůbec nezajímáš. Je to jako stát na autosalonu a propagovat osobní trénink.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Zjisti, kde se tvoje publikum schází — komentáře na sítích a fórech ti často samy řeknou, co od tebe lidé chtějí. Sleduj klíčová slova a hashtagy své demografie. Je to vlastně billboardový marketing: kdybys měl fitko u hlavní silnice, dáš billboard před sjezd a vsadíš, že 10–15 % projíždějících řeší kondici. A nadevše — buď upřímný, otevřený, pokorný, lidský a skutečný a buduj vztah.</div>
+
+    <h2>4) Kdo jsi TY — značka</h2>
+    <p>Tak dlouho jsme řešili publikum, až se zapomnělo na jednu věc: kdo jsi TY a jakou zkušenost u tebe zákazník dostane. Tvoje <strong>značka</strong>. Musíš vědět, co přinášíš, abys pochopil, jak se posouvat dál. Konzistenci značky tvoří tři věci:</p>
+    <div class="card">
+      <p><strong>Hlas:</strong> tvá formulace, způsob psaní i mluvy, tón. Pokud najmeš někoho, kdo píše „tvým“ tónem, ale nekopíruje to tebe jako osobu v čele značky, stává se to klamavým a ztrácíš osobní vztah. Psaní se může vyvíjet — ať publikum tu evoluci vidí.</p>
+      <p><strong>Vizuál:</strong> konzistence obrázků, typografie, logo a jeho umístění, kam dáváš kontakty. Buduje povědomí — lidé po čase poznají, že obrázek je tvůj.</p>
+      <p><strong>Služby:</strong> pokud slibuješ určitou úroveň, musí být udržitelná. Trenéři často nastaví laťku vysoko a pak ji shodí tím, že berou víc a víc hodin — poptávka přeroste nabídku a kvantita přebije kvalitu.</p>
+    </div>
+    <p>Jakmile máš značku definovanou, ať je zákazník svědkem každé změny a evoluce. Spousta firem si rebrandingem ublížila — a spousta jím naopak vykvetla. Možná i ty potřebuješ rebranding: špatný obraz značky, repozicování, měnící se publikum, zastaralost nebo špatná pověst.</p>
+
+    <h2>5) SWOT analýza</h2>
+    <p>SWOT — stejně jako vstupní hodnocení klienta — identifikuje silné stránky, slabiny, příležitosti a hrozby, tentokrát tvého byznysu. Existujícímu byznysu zhodnotí prostředí, novému dá směr.</p>
+    <p>Nejtěžší část, pokud jsi na to sám: dát nestranný, upřímný názor na vlastní byznys. Být kritický k něčemu, co je ti drahé, je těžší, než to zní. Musíš být otevřený kritice — ideálně ať se na to podívá víc lidí s různými názory; brainstorming funguje skvěle. Není to ale výmluva, aby ses urazil a hádal se zaměstnanci. Pokud nejsi připraven slyšet věci, které se ti nelíbí, pak jsi TY důvod, proč se byznys nehýbe vpřed.</p>
+    <div class="card">
+      <p><strong>Síly a slabiny (vnitřní):</strong> vztahy s klienty a komunikace, lokalita, vzdělání a certifikáty, přítomnost na trhu (články, blogy, web, podcasty), odborné znalosti, zkušenosti a důvěryhodnost, míra expozice, rozmanitost klientů, konzistence služeb, cashflow, reputace, schopnost outsourcovat, jedinečnost služby. Co něco vyžaduje, ale není to tvá silná stránka, označ jako slabinu.</p>
+      <p><strong>Příležitosti (vnější):</strong> zlepšení vztahů přes technologie, přemístění či lepší zacílení lokality, investice a partneři, oslovení místních médií, průběžné vzdělávání, testimoniály, nevyužité demografie, rozšíření či franšíza.</p>
+      <p><strong>Hrozby (vnější):</strong> změny trendů a vkusu, maximální pracovní zátěž, omezený čas, konkurence, limity trhu, ekonomické podmínky, cílená negativní pozornost, vnímání, že trénuješ jen profíky či úzkou skupinu.</p>
+    </div>
+    <p>Klíčové kroky pak jsou jasné: buduj a zvyšuj síly, řeš a snižuj slabiny, využívej a rozšiřuj příležitosti, vyhýbej se a překonávej hrozby.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Važ si kritiky — bez ní neodstraníš nedostatky. Pozor ale na rozdíl mezi konstruktivní a destruktivní kritikou a na to, čí názory vážíš. Zpětná vazba od zákazníků je konstruktivní; už ti dali důvěru. Poděkuj za ni, zvaž ji, a pokud to jde, vysvětli výsledek i důvody svého rozhodnutí.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Proč je komerční zařízení tak cenné pro získávání klientů? <span class="tg">odpověď ▾</span></div><div class="aa">Soustřeďuje tisíce potenciálních klientů, kteří už chtějí přesně tvoje služby. Specifické publikum té velikosti je v marketingu zlato — obklopí tě lidmi z tvé demografie.</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Co znamená pravidlo „nejdřív čas, pak peníze“? <span class="tg">odpověď ▾</span></div><div class="aa">Nejdřív dej hodnotu zdarma (obsah) a žádej o čas — sledovat video, přečíst blog. Bez toho nemá člověk důvod platit; s obsahem přichází důvěra a vztah.</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Proč jsou interakce důležitější než počet lajků? <span class="tg">odpověď ▾</span></div><div class="aa">Algoritmy (Facebook) i reálný vztah stojí na zapojení, ne na číslech. Lajky bez interakce dosah neudrží a ty pak musíš platit za reklamu lidem mimo cílovku.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři pilíře konzistentní značky. <span class="tg">odpověď ▾</span></div><div class="aa">Hlas (tón a způsob komunikace), vizuál (obrázky, typografie, logo) a služby (udržitelná, slíbená úroveň kvality).</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Co jsou v SWOT vnitřní a co vnější faktory? <span class="tg">odpověď ▾</span></div><div class="aa">Vnitřní = síly a slabiny (vzdělání, lokalita, cashflow, reputace…). Vnější = příležitosti a hrozby (trendy, konkurence, ekonomika), které nemáš plně pod kontrolou.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vyplň kompletní SWOT analýzu svého byznysu — síly, slabiny, příležitosti a hrozby. Ideálně formou brainstormingu s někým blízkým byznysu, kdo ti dá upřímný pohled, a hotovou SWOT odevzdej přes zadání úkolu.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+<li>Doyle, P. Marketing Management and Strategy — marketing jako filozofie stavějící zákazníka do středu. Pearson 2008.</li>
+<li>Kotler, P.; Keller, K. L. Marketing Management — segmentace trhu, cílení a brand identity. Pearson 2016.</li>
+<li>Helms, M. M.; Nixon, J. Exploring SWOT analysis — strategický rámec silných a slabých stránek, příležitostí a hrozeb. Journal of Strategy and Management 2010.</li>
+<li>Aaker, D. A. Building Strong Brands — hlas, vizuál a konzistence značky. Free Press 1996.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Komunikace a reporty s klientem — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 7 · Lekce 3 — Praktické vedení klienta</div>
+    <h1>Komunikace a reporty s klientem</h1>
+
+    <p class="lead">Komunikace není vedlejší věc kolem „skutečné“ práce — <strong>komunikace JE velká část služby</strong>. Klient nehodnotí jen plán, ale hlavně to, jak se s ním jedná: jak rychle odpovídáš, jak přehledný máš report, jestli se ozveš sám. Tady ti předám standard, který roky používáme v Team Barna.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je komunikace součástí služby, ne nadstavbou.</li>
+        <li>Jak nastavit jednotný, přehledný formát reportů.</li>
+        <li>Standard rychlosti a proaktivity — ohromit, ne jen uspokojit.</li>
+        <li>Jak pevně poskládat týdenní report, abys na nic nezapomněl.</li>
+        <li>Jak komunikací budovat důvěru, retenci a doporučení.</li>
+      </ul>
+    </div>
+
+    <h2>1) Komunikace je služba, ne kulisa</h2>
+    <p>Klient s tebou stráví pár hodin, ale tvoje zprávy a reporty ho provázejí celý týden. Právě podle nich z velké části hodnotí kvalitu spolupráce. Skvělý plán podaný v chaotické, pomalé komunikaci působí amatérsky; i jednoduchý plán podaný v jasné, rychlé a lidské komunikaci působí profesionálně.</p>
+    <blockquote>Komunikace není „kolem“ služby — je to služba samotná.</blockquote>
+
+    <h2>2) Jednotný a přehledný formát</h2>
+    <p>Drž jednotný formát reportů a komunikace. Připrav si grafiku a šablonu jednou a používej ji u všech klientů — ušetří čas a drží standard. Funguje to ze čtyř důvodů:</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem"><strong>Pozná tě na první pohled</strong> — sjednocená grafika, struktura a tón znamenají, že klient zprávu okamžitě identifikuje a ví, že je od tebe.</li>
+        <li style="margin-left:1.1rem"><strong>Přehlednost</strong> — pevná struktura znamená, že klient vždy ví, kde co najde a co se po něm chce.</li>
+        <li style="margin-left:1.1rem"><strong>Důvěryhodnost</strong> — konzistentní formát působí profesionálně a buduje povědomí o značce.</li>
+        <li style="margin-left:1.1rem"><strong>Dostupnost podkladů</strong> — na konci reportu měj odkazy na vzdělávací přílohy (videokurz, kuchařka, e-book, články), aby se klient mohl kdykoli doptat a vzdělávat samostatně.</li>
+      </ul>
+    </div>
+
+    <h2>3) Rychlost a proaktivita</h2>
+    <p>Tohle je standard, který tě odliší od průměru:</p>
+    <p><strong>Rychlost</strong> — na zprávy odpovídej svižně, maximálně do 24 hodin. Pomalá odezva podkopává důvěru, i kdyby byl obsah skvělý.</p>
+    <p><strong>Proaktivita</strong> — nečekej jen na dotazy. Sám se klientovi ozvi, jak se má a jak to jde (minimálně jednou týdně krátký check-in). Tahle iniciativa je jedna z nejlevnějších a nejúčinnějších věcí pro vztah.</p>
+    <p><strong>Cíl: ohromit, ne jen uspokojit</strong> — nechceš klienta „odbavit“. Chceš, aby měl pocit výjimečné péče, zůstal co nejdéle, napsal referenci a doporučil tě.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Proaktivní zpráva uprostřed týdne stojí minutu a klientovi udělá obrovský rozdíl. „Ahoj, jak to dneska šlo v posilce? Držím palce na zítřejší trénink.“ Nečekám, až se mě někdo na něco zeptá — iniciativu beru na sebe. Právě tahle drobnost odděluje tým, na který se klient spolehne, od trenéra, který jen reaguje.</div>
+
+    <h2>4) Struktura týdenního reportu</h2>
+    <p>Týdenní report drž přehledný a vždy stejně poskládaný. Pevná kostra znamená, že klient ví, co čekat, a ty na nic nezapomeneš. Osvědčená kostra:</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem"><strong>Data a tabulka</strong> — váha (trend), míry, pocit hladu, únavy a síly. Krátký pohled na čísla.</li>
+        <li style="margin-left:1.1rem"><strong>Zhodnocení pokroku</strong> — co se daří, pojmenuj a pochval. Úspěch živí motivaci.</li>
+        <li style="margin-left:1.1rem"><strong>Zpětná vazba ke stravě</strong> — konkrétně: jak doplnit bílkoviny a vlákninu, jaké recepty a potraviny, pestrost, posun k více zelenině a méně zpracovaným.</li>
+        <li style="margin-left:1.1rem"><strong>Co zlepšit a jak</strong> — jedna až dvě konkrétní věci, formulované jako příležitost, ne výtka.</li>
+        <li style="margin-left:1.1rem"><strong>Nové téma / edukace</strong> — týdenní vzdělávací kousek.</li>
+        <li style="margin-left:1.1rem"><strong>Povzbuzení a další krok</strong> — jasné, lidské, motivační uzavření.</li>
+      </ul>
+    </div>
+
+    <h2>5) Komunikací se buduje důvěra</h2>
+    <p>Skvělá komunikace nakonec dělá tři věci najednou: buduje důvěru, drží klienta v péči déle (retence) a přináší doporučení. Je to konkurenční výhoda, kterou většina trenérů podceňuje — a přesně proto se vyplatí ji držet jako standard.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Komunikaci beru stejně vážně jako plán. Klient má z každého reportu odejít s pocitem, že má přehled, vidí pokrok a že mě zajímá. Proto držím jednotný formát, odpovídám do 24 hodin a sám se ozývám i bez vyzvání. Nestojím o to klienta „obsloužit“ — chci ho ohromit, protože ohromený klient zůstává, doporučuje a píše reference. Drž standard a budeš ten, ke komu ostatní vzhlíží.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je komunikace součástí služby? <span class="tg">odpověď ▾</span></div><div class="aa">Zprávy a reporty provázejí klienta celý týden a právě podle nich z velké části hodnotí kvalitu celé spolupráce. Komunikace tedy není kulisa, ale samotná služba.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaké výhody má jednotný formát reportů? <span class="tg">odpověď ▾</span></div><div class="aa">Klient zprávu pozná na první pohled, má přehled (ví, kde co najde), formát působí profesionálně a buduje značku, a klient má po ruce odkazy na vzdělávací podklady.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je standard rychlosti a proč proaktivita? <span class="tg">odpověď ▾</span></div><div class="aa">Odpovídat maximálně do 24 hodin. Proaktivně se ozvat (alespoň jednou týdně krátký check-in) je jedna z nejlevnějších a nejúčinnějších věcí pro vztah, spokojenost a retenci.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj čtyři části týdenního reportu. <span class="tg">odpověď ▾</span></div><div class="aa">Data a tabulka, zhodnocení pokroku, zpětná vazba ke stravě, co zlepšit a jak, nové téma / edukace, povzbuzení a další krok (stačí čtyři z této kostry).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jaký je rozdíl mezi „uspokojit“ a „ohromit“? <span class="tg">odpověď ▾</span></div><div class="aa">Uspokojit znamená klienta jen odbavit. Ohromit znamená dát mu pocit výjimečné péče — což vede k tomu, že zůstane déle, napíše referenci a doporučí tě dál.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Navrhni vlastní šablonu týdenního reportu — vypiš jeho části v pevném pořadí a u každé napiš jednu větu, co do ní patří. Pak stanov svůj komunikační standard (do kdy odpovídáš, jak často se sám ozveš) a napiš jednu proaktivní zprávu, kterou pošleš klientovi uprostřed týdne.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Barna, M. Komunikační a reportovací procesy Team Barna. Interní materiál Barna Academy 2026.</li>
+        <li>Barna, M. Cesta klienta a týdenní edukace (M7·L1). Barna Academy 2026.</li>
+        <li>Barna, M. Měření a čtení dat klienta (M5·L3, M7·L2). Barna Academy 2026.</li>
+        <li>Barna, M. Retence, reference a doporučení (M6·L9–L10). Barna Academy 2026.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m7-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>

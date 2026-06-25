@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodizace výživy — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 9 · Lekce 5 — Periodizace a plánování</div>
+    <h1>Periodizace výživy</h1>
+
+    <p class="lead">Výživa není jeden neměnný stav, ale <strong>sled fází v čase</strong>, které na sebe navazují a slouží různým cílům. Stejně jako trénink se dá periodizovat i strava — a když to klient pochopí, přestane vnímat jídlo jako věčný boj.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč na výživu myslet jako na film, ne na fotku — fáze místo trvalé „diety“.</li>
+        <li>Čtyři základní energetické fáze: redukce, budování, udržování, diet break — a reverzní dietu jako most z deficitu.</li>
+        <li>Jak fáze logicky navazují a podle čeho poznáš, kdy z jedné přejít do druhé.</li>
+        <li>Jak sladit periodizaci výživy s periodizací tréninku, aby táhly za jeden provaz.</li>
+        <li>Nejčastější chyby — od nekonečné diety po hype kolem „metabolických triků“.</li>
+      </ul>
+    </div>
+
+    <h2>1) Výživa je film, ne fotka</h2>
+    <p>Lidé typicky přemýšlejí o stravě jako o jednom stavu: „jsem na dietě“, nebo „nejsem na dietě“. Profesionál to vidí jinak — jako sled fází, které na sebe navazují a slouží různým cílům v různém čase. Stejně jako trénink se periodizuje, dá se periodizovat i výživa.</p>
+    <p>Když to klient pochopí, jídlo přestane být věčný boj a stane se nástrojem, který se mění podle toho, o co zrovna jde. Tahle lekce spojuje energetickou bilanci, makra a diet breaks do jedné strategie v čase.</p>
+
+    <h2>2) Čtyři základní energetické fáze</h2>
+    <p><strong>Redukce</strong> (kalorický deficit) cílí na ztrátu tuku: příjem pod výdejem, vysoké bílkoviny pro ochranu svalu a silový trénink jako signál „sval potřebuju“. Klíč je mírný, udržitelný deficit, ne hladovění — a časově ohraničená fáze, ne trvalý stav.</p>
+    <p><strong>Budování</strong> (mírný přebytek) cílí na nárůst svalu a síly: příjem mírně nad výdejem, dost bílkovin, progresivní trénink. Mírný přebytek minimalizuje nárůst tuku a přitom podporuje růst svalu.</p>
+    <p><strong>Udržování</strong> (kalorie kolem výdeje) přináší stabilitu, zdravější vztah k jídlu a konsolidaci výsledků. Podceňovaná, ale klíčová fáze — místo, kde se „usadí“ to, čeho jsi dosáhl, a kde si tělo i hlava odpočinou od extrémů.</p>
+    <p><strong>Diet break</strong> je krátké udržování uvnitř delší redukce: úleva od deficitu fyzicky (hormony, hlad) i psychicky, bez ztráty dlouhodobého pokroku.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Udržování není „nuda mezi dietami“. Pro spoustu lidí je to ta nejzdravější a nejlegitimnější fáze vůbec — místo, kde se výsledky stabilizují a kde se hlava resetuje. Pokud klient skáče jen mezi redukcí a přebytkem a nikdy si „nesedne“ na udržování, dřív nebo později to schytá psychika i výkon.</div>
+
+    <h2>3) Reverzní dieta: most z deficitu zpět</h2>
+    <p>Reverzní dieta je řízené, postupné navyšování příjmu po skončení redukce (po dietě nebo po soutěži) místo nárazového skoku zpět k vysokému příjmu. Cílem je vrátit příjem na udržování či do přebytku postupně, minimalizovat rychlý návrat tuku a otoky, dát tělu i hlavě řízený přechod z restrikce do normálu a předejít „odbrzdění“ po dietě, které u mnoha lidí vede k nekontrolovanému nabrání.</p>
+    <blockquote>Část tvrzení o reverzní dietě — zázračné „nakopnutí metabolismu“ — je přehnaná a vědecky slabě podložená. Reálná hodnota je praktická a psychologická: řízený, postupný návrat je pro většinu lidí zvládnutelnější než nárazové „pustit se ze řetězu“.</blockquote>
+
+    <h2>4) Jak fáze navazují (logika v čase)</h2>
+    <p>Smysluplné sekvence vypadají typicky takto. Klient chce zhubnout: <strong>redukce → (případně diet break uprostřed) → reverzní dieta → udržování</strong>, a teprve pak případně budování. Klient chce nabrat sval: <strong>budování → udržování → (případně mírná redukce k „odhalení“ nabraného)</strong> — cyklus „lean bulk → mini cut“. U začátečníka často stačí dlouhodobé udržování s vysokými bílkovinami a tréninkem; sval staví i bez výrazného přebytku.</p>
+    <p><strong>Klíčové pravidlo:</strong> žádná agresivní fáze — ani hluboká redukce, ani výrazný přebytek — nemá trvat věčně. Nekonečná dieta vede k vyhoření, ztrátě svalu a narušenému vztahu k jídlu; nekonečný „bulk“ k zbytečnému tuku. Přechody plánuj dopředu.</p>
+
+    <h2>5) Kdy přejít z fáze do fáze</h2>
+    <p>Z <strong>redukce</strong> ven, když byl dosažen cíl; nebo se objeví silná únava, hlad, pokles výkonu, špatná nálada, u žen ztráta menstruace (varovný signál — RED-S); nebo dieta běží už dlouho a je potřeba pauza. Z <strong>budování</strong> ven, když byl nabrán cílový sval, přibývá nepřiměřeně tuku, nebo je čas pokrok „odhalit“ mírnou redukcí. Do <strong>udržování</strong> vždy, když klient potřebuje stabilizovat, oddechnout si od extrémů nebo prostě žít bez aktivní fáze.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Rozhoduj podle dat (váha, výkon, fotky, míry) i subjektivního stavu (energie, spánek, nálada, hlad) — ne podle kalendáře. Periodizace výživy je řízený proces, ne slepé dodržování jednoho nastavení. A u žen ber ztrátu menstruace vždy vážně: je to červená vlajka, ne detail.</div>
+
+    <h2>6) Sladění s tréninkem a časté chyby</h2>
+    <p>Výživové a tréninkové fáze by měly hrát do noty. <strong>Budovací blok</strong> (objem, hypertrofie) ladí s kalorickým přebytkem — je to palivo pro růst i regeneraci. <strong>Redukce</strong> ladí s důrazem na udržení síly (těžší trénink, případně nižší objem) — chráníš sval, zatímco shazuješ tuk. <strong>Taper a udržování příjmu</strong> si často sednou. Když fáze táhnou za jeden provaz, výsledky jsou lepší; když jdou proti sobě (tvrdá dieta v objemovém bloku), trpí oboje.</p>
+    <div class="card"><strong>Pět nejčastějších chyb:</strong>
+      <ul style="margin:.5rem 0 0 1.1rem;">
+        <li><strong>Nekončící dieta</strong> — nejškodlivější ze všech. Ztráta svalu, adaptace, vyhoření. Plánuj konec a pauzy.</li>
+        <li><strong>Skok místo přechodu</strong> — nárazový návrat k obrovskému příjmu znamená otoky a rychlý tuk. Použij postupný/reverzní přechod.</li>
+        <li><strong>Ignorování udržování</strong> — skákání mezi extrémy bez odpočinkové fáze.</li>
+        <li><strong>Přehnaný přebytek při budování</strong> — „jím všechno, vždyť nabírám“ končí zbytečným tukem. Mírný přebytek stačí.</li>
+        <li><strong>Hype místo poctivosti</strong> — neprodávej reverzní dietu ani „metabolické triky“ jako zázrak. Střízlivě a podle důkazů.</li>
+      </ul>
+    </div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je lepší vnímat výživu jako „film, ne fotku“? <span class="tg">odpověď ▾</span></div><div class="aa">Protože strava není jeden neměnný stav, ale sled fází v čase, které na sebe navazují a slouží různým cílům. Klient tak přestane vnímat jídlo jako věčný boj a začne ho chápat jako nástroj, který se mění podle aktuálního záměru.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Vyjmenuj čtyři základní energetické fáze a jejich cíl. <span class="tg">odpověď ▾</span></div><div class="aa">Redukce (kalorický deficit → ztráta tuku), budování (mírný přebytek → nárůst svalu a síly), udržování (kalorie kolem výdeje → stabilita a konsolidace) a diet break (krátké udržování uvnitř delší redukce → úleva od deficitu bez ztráty pokroku).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaká je reálná hodnota reverzní diety — a co je naopak přehnané? <span class="tg">odpověď ▾</span></div><div class="aa">Reálná hodnota je praktická a psychologická: řízený, postupný návrat příjmu po dietě je zvládnutelnější a vede k lepšímu udržení výsledků než nárazové „pustit se ze řetězu“. Přehnané a vědecky slabě podložené je tvrzení o zázračném „nakopnutí metabolismu“.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Podle čeho rozhodovat o přechodu z fáze do fáze? <span class="tg">odpověď ▾</span></div><div class="aa">Podle dat (váha, výkon, fotky, míry) i subjektivního stavu (energie, spánek, nálada, hlad), ne podle kalendáře. Z redukce ven při dosažení cíle nebo varovných signálech (silná únava, pokles výkonu, u žen ztráta menstruace — RED-S). Udržování nasadit vždy, když je potřeba stabilita a odpočinek od extrémů.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jaká je nejčastější a nejškodlivější chyba v periodizaci výživy? <span class="tg">odpověď ▾</span></div><div class="aa">Nekončící dieta. Vede ke ztrátě svalu, metabolické adaptaci, vyhoření a narušenému vztahu k jídlu. Žádná agresivní fáze nemá trvat věčně — konec a periody udržování je potřeba plánovat dopředu.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> U jednoho svého klienta (nebo u sebe) si rozkresli posloupnost fází na nejbližší 3–6 měsíců — kde je teď, kam míří a kde plánovaně zařadíš udržování či reverzní přechod. Ke každému přechodu si poznamenej konkrétní signál (data i pocit), podle kterého ho spustíš.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014.</li>
+        <li>Helms ER, et al. Evidence-based recommendations for natural bodybuilding contest preparation. J Int Soc Sports Nutr. 2014.</li>
+        <li>Iraki J, et al. Nutrition Recommendations for Bodybuilders in the Off-Season. Sports. 2019.</li>
+        <li>Peos JJ, et al. Intermittent Dieting: Theoretical Considerations for the Athlete. Sports. 2019.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m9-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
