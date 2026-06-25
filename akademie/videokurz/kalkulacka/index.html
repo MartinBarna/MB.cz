@@ -9,38 +9,42 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <style>
-  :root { --gold:#ff7a00; }
+  :root { --gold:#ff7a00; --ink:#161616; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.6; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#161616; background:#f6f1ea; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3 { font-weight:800; letter-spacing:-.015em; }
   .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
-  .top .in { max-width:880px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .top .in { max-width:940px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
   .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
   .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
-  .wrap { max-width:880px; margin:0 auto; padding:28px 18px 80px; }
-  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
-  h1 { font-size:1.55rem; line-height:1.25; margin:.4rem 0 .4rem; letter-spacing:-.01em; }
-  .lead { color:#6f655a; margin-bottom:18px; }
-  .grid { display:grid; gap:18px; grid-template-columns:1fr; }
-  @media(min-width:760px){ .grid { grid-template-columns:1.2fr 1fr; align-items:start; } }
-  .calc { background:#fff; border:1px solid #ece3d8; border-radius:18px; padding:22px; }
-  .row { display:grid; gap:12px; grid-template-columns:1fr 1fr; }
+  .hero { position:relative; overflow:hidden; background:linear-gradient(135deg,var(--gold) 0%,var(--ink) 100%); color:#fff; text-align:center; padding:46px 18px 40px; }
+  .hero::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
+  .hero > * { position:relative; z-index:1; }
+  .hero h1 { font-size:clamp(1.7rem,4.5vw,2.4rem); line-height:1.14; margin-bottom:.5rem; }
+  .hero p { opacity:.95; max-width:560px; margin:0 auto; font-size:1.04rem; }
+  .wrap { max-width:940px; margin:0 auto; padding:0 18px 80px; }
+  .panel { margin-top:-26px; }
+  .grid { display:grid; gap:22px; grid-template-columns:1fr; }
+  @media(min-width:820px){ .grid { grid-template-columns:1.25fr 1fr; align-items:start; } }
+  .calc-wrap { background:#fff; border-radius:22px; box-shadow:0 10px 36px rgba(0,0,0,.09); padding:2.2rem; }
+  .row { display:grid; gap:16px; grid-template-columns:1fr 1fr; }
   .field.full { grid-column:1 / -1; }
-  label { display:block; font-weight:600; font-size:.85rem; color:#5a5045; margin-bottom:5px; }
-  input, select { width:100%; padding:11px 13px; border:1px solid #e2d6c6; border-radius:11px; font-family:inherit; font-size:.95rem; background:#fdfbf8; color:#1d1a16; }
-  input:focus, select:focus { outline:none; border-color:var(--gold); }
-  .btn { width:100%; margin-top:4px; background:var(--gold); color:#161616; font-weight:700; padding:13px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:1rem; }
-  .btn:hover { background:#161616; color:#fff; }
-  .result { background:linear-gradient(135deg,#222,#0d0d0d); color:#fff; border-radius:18px; padding:24px; text-align:center; }
-  .result .lblsm { opacity:.85; font-size:.9rem; }
-  .result .kcal { font-size:2.8rem; font-weight:800; line-height:1; margin:.2rem 0 .2rem; }
-  .result .kcal small { font-size:1.1rem; font-weight:700; opacity:.8; }
-  .macros { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px; }
-  .macro { background:rgba(255,255,255,.12); border-radius:12px; padding:12px 6px; }
-  .macro .num { font-size:1.4rem; font-weight:800; }
-  .macro .lbl { font-size:.76rem; opacity:.9; }
-  .disc { font-size:.78rem; opacity:.8; margin-top:14px; }
-  .tip { margin-top:18px; color:#6f655a; font-size:.9rem; }
+  label { display:block; font-weight:600; font-size:.9rem; margin-bottom:.35rem; color:#3a352e; }
+  input, select { width:100%; padding:12px 14px; border:1px solid #e4dccf; border-radius:11px; font-family:inherit; font-size:.97rem; background:#fff; color:#161616; }
+  input:focus, select:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(255,122,0,.12); }
+  .btn-grn { width:100%; background:var(--gold); border:none; color:#161616; font-weight:700; padding:14px; border-radius:50px; cursor:pointer; font-family:inherit; font-size:1rem; box-shadow:0 6px 18px rgba(255,122,0,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+  .btn-grn:hover { background:var(--ink); color:#fff; transform:translateY(-2px); box-shadow:0 12px 26px rgba(255,122,0,.38); }
+  .result { background:linear-gradient(135deg,var(--gold) 0%,var(--ink) 100%); color:#fff; border-radius:20px; padding:2rem 1.6rem; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.12); }
+  .result .lblsm { opacity:.92; font-size:.95rem; }
+  .result .kcal { font-size:3rem; font-weight:800; line-height:1; margin:.25rem 0 .1rem; }
+  .result .kcal small { font-size:1.1rem; font-weight:700; opacity:.85; }
+  .macros { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+  .macro { background:rgba(255,255,255,.15); border-radius:14px; padding:1rem .5rem; }
+  .macro .num { font-size:1.55rem; font-weight:800; }
+  .macro .lbl { font-size:.78rem; opacity:.9; }
+  .disc { font-size:.8rem; opacity:.85; margin-top:16px; }
+  .tip { text-align:center; color:#6f655a; font-size:.95rem; margin-top:26px; }
   .tip a { color:#c45e00; font-weight:600; }
 </style>
 </head>
@@ -50,13 +54,14 @@
     <a class="back" href="/akademie/videokurz/">← Přehled videokurzu</a>
   </div></div>
 
-  <div class="wrap">
-    <div class="crumb">Nástroj · Materiály</div>
+  <header class="hero">
     <h1>Kalkulačka kalorií a makroživin</h1>
-    <p class="lead">Spočítej si denní příjem kalorií a živin podle svého cíle (metoda Mifflin–St Jeor). Ve videokurzu se pak naučíš s čísly reálně pracovat.</p>
+    <p>Zjisti, kolik kalorií a živin potřebuješ pro svůj cíl (Mifflin–St Jeor). Ve videokurzu se pak naučíš s čísly reálně pracovat.</p>
+  </header>
 
-    <div class="grid">
-      <div class="calc">
+  <div class="wrap">
+    <div class="panel grid">
+      <div class="calc-wrap">
         <div class="row">
           <div class="field">
             <label for="pohlavi">Pohlaví</label>
@@ -93,7 +98,7 @@
             </select>
           </div>
           <div class="field full">
-            <button class="btn" id="calcBtn" type="button">Spočítat</button>
+            <button class="btn-grn" id="calcBtn" type="button">Spočítat</button>
           </div>
         </div>
       </div>
@@ -111,7 +116,7 @@
       </div>
     </div>
 
-    <p class="tip">Jak s čísly pracovat naplno (vlny, úpravy, kalorické tabulky) najdeš v <a href="/akademie/videokurz/">modulech videokurzu</a>.</p>
+    <p class="tip">Jak s čísly pracovat naplno (sacharidové vlny, úpravy, kalorické tabulky) najdeš v <a href="/akademie/videokurz/">modulech videokurzu</a>.</p>
   </div>
 
   <script>
