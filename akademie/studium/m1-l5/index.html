@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hormony, inzulin a chuť k jídlu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
+  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
+  .top .in { max-width:820px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .bar { height:5px; background:#e7ddcf; } .bar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
+  .wrap { max-width:760px; margin:0 auto; padding:30px 20px 80px; }
+  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
+  h1 { font-size:1.95rem; line-height:1.2; margin:.4rem 0 1.2rem; letter-spacing:-.02em; }
+  h2 { font-size:1.3rem; margin:2rem 0 .6rem; }
+  p { margin:.7rem 0; }
+  .lead { font-size:1.08rem; color:#3a352e; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe { background:#fff8f0; border:1px solid #f3dcbd; border-radius:14px; padding:1.1rem 1.3rem; margin:1.2rem 0; }
+  .praxe b { color:#c45e00; }
+  .points { background:#fff; border-radius:14px; border:1px solid #ece3d8; padding:1.1rem 1.3rem; }
+  .points li { margin:.35rem 0 .35rem 1.1rem; }
+  blockquote { border-left:4px solid var(--gold); padding:.3rem 0 .3rem 1.1rem; color:#5a5045; font-style:italic; margin:1rem 0; }
+  .quiz { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:1.4rem; margin-top:2rem; }
+  .quiz h3 { font-size:1.15rem; margin-bottom:.3rem; }
+  .q { border-top:1px solid #f1eadf; padding:14px 0; } .q:first-of-type { border-top:none; }
+  .q .qq { font-weight:600; cursor:pointer; display:flex; gap:10px; }
+  .q .qq .n { color:var(--gold); font-weight:800; }
+  .q .aa { display:none; margin-top:.6rem; color:#4a443c; background:#f9f5ef; border-radius:10px; padding:.7rem .9rem; font-size:.95rem; }
+  .q.open .aa { display:block; }
+  .q .qq .tg { margin-left:auto; color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .done-row { margin-top:2rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:var(--gold); color:#161616; font-weight:700; padding:13px 28px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn:hover { background:#161616; color:#fff; }
+  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
+  .btn.is-done { background:#34a853; color:#fff; }
+  .src { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .src summary { cursor:pointer; font-weight:700; color:#5a5045; }
+  .src ol { margin:.6rem 0 0 1.1rem; } .src li { margin:.2rem 0; }
+</style>
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span> Barna Academy</a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 5 — Psychologie a chování kolem jídla</div>
+    <h1>Hormony, inzulin a chuť k jídlu</h1>
+
+    <p class="lead">Tahle lekce je víc „pod kapotou" — ale po ní úplně jinak pochopíš, proč má někdo hlad, i když právě dojedl. <strong>Není to o vůli. Je to o hormonech a o tom, jak mozek čte (nebo špatně čte) signály z těla.</strong> Až to pochopíš, přestaneš lidi soudit a začneš jim rozumět.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak hypotalamus řídí hlad, sytost a chutě.</li>
+        <li>Co dělá inzulin nejen ve svalu, ale i v mozku.</li>
+        <li>Jak vzniká „falešný hlad" u inzulinové rezistence.</li>
+        <li>Proč je to signalizace, ne slabost charakteru.</li>
+        <li>Kde je hranice toho, co kouč zvládne (a co ne).</li>
+      </ul>
+    </div>
+
+    <h2>1) Co kouč zvládne (a co ne)</h2>
+    <p>Chuť a přejídání řídí složitý zpětnovazebný systém — prostředí, chování i biologie. Ignorovat kterýkoli by byla chyba; myslet si, že to celé ovládneme, taky. Co reálně zvládneš: vnést do mechanismů řád, pomoct klientovi rozpoznat vlastní návyky, odučit škodlivé a doučit prospěšné. Za touhle hranicí jsme vydáni neovladatelným dějům uvnitř těla. <strong>Pokora i kompetence zároveň.</strong></p>
+
+    <h2>2) Hypotalamus — velín chuti</h2>
+    <p>Hormony jsou poslové mezi buňkami. Centrum chuti sídlí v hypotalamu:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Laterální hypotalamus (LH)</strong> — stimuluje příjem („jez").<br>
+      <strong>Ventromediální hypotalamus (VMH)</strong> — tlumí chuť („dost").<br>
+      <strong>Paraventrikulární jádro</strong> — podílí se na tom, jaké konkrétní jídlo chceme (naše „chutě").</p>
+    </div>
+    <p>Tato centra komunikují s tělem i přes <strong>vagovou signalizaci</strong> (bloudivý nerv mezi mozkem a střevem). Prázdný žaludek signalizuje „jez", plný „dost" — a spouští sytost, vyšší výdej i oxidaci tuků.</p>
+
+    <h2>3) Inzulin — nejen ve svalu, ale i v mozku</h2>
+    <p>Inzulin vyloučí slinivka po jídle (hlavně po sacharidech a bílkovinách), naváže se na živiny a dá buňkám signál „otevři bránu a pusť živinu dovnitř". Méně se ví, že <strong>mozek je orgán citlivý na inzulin</strong> — má inzulinové receptory hlavně v hypotalamu. V modelech inzulin v mozku snižuje příjem potravy. Inzulin tedy není jen „skladovací" hormon, ale i součást signalizace sytosti v mozku.</p>
+
+    <h2>4) Jak vzniká „falešný hlad"</h2>
+    <p>U člověka s nadváhou a sníženou citlivostí na inzulin (inzulinová rezistence) je signalizace narušená. Buňky jsou „plné"/rezistentní, glukóza i inzulin zůstávají dlouhodobě vysoké — a trvale zvýšený inzulin paradoxně mozku signalizuje „jez (sacharidy)", i když tělo energii nepotřebuje. Vzniká tak <strong>falešný hlad</strong>: člověk má chuť a hlad navzdory dostatku energie. Není to slabost vůle — je to rozbitá signalizace.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Tohle vysvětluje, proč klient s nadváhou „pořád má hlad". Řešení nezačíná kázáním o vůli, ale zlepšením citlivosti na inzulin — hubnutím přebytečného tuku, pohybem (zvlášť silovým), dostatkem bílkovin a vlákniny, kvalitním spánkem. Jak signalizace ozdravuje, hlad se zklidňuje.</p>
+
+    <h2>5) Souvislost s náladou a chováním</h2>
+    <p>Mozková inzulinová rezistence se pojí i s drahami odměny (dopamin), náladou a chováním kolem jídla. To je další důvod, proč je přejídání u některých lidí houževnaté — bojují s biologií, ne jen se zvykem. Pro tebe to znamená: víc soucitu, méně soudů, a soustředění na páky, které signalizaci reálně zlepšují.</p>
+    <blockquote>Klient nemá „slabou vůli". Má rozbitou signalizaci — a tu umíme životosprávou ozdravit.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Která centra hypotalamu řídí „jez" a „dost"? <span class="tg">odpověď ▾</span></div><div class="aa">LH (laterální) stimuluje příjem; VMH (ventromediální) tlumí chuť (sytost).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co dělá inzulin v mozku? <span class="tg">odpověď ▾</span></div><div class="aa">Mozek má inzulinové receptory (hypotalamus); inzulin se podílí na signalizaci sytosti — v modelech snižuje příjem potravy.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak vzniká „falešný hlad"? <span class="tg">odpověď ▾</span></div><div class="aa">Při inzulinové rezistenci jsou glukóza i inzulin trvale vysoké; zvýšený inzulin signalizuje „jez", i když tělo energii nepotřebuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co falešný hlad reálně zlepší? <span class="tg">odpověď ▾</span></div><div class="aa">Lepší citlivost na inzulin: hubnutí tuku, pohyb (silový), bílkoviny, vláknina, spánek — ne kázání o vůli.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kde je hranice role kouče? <span class="tg">odpověď ▾</span></div><div class="aa">Můžeme vnést řád a měnit návyky/životosprávu; diagnostika a léčba poruch (hormony, metabolismus) patří lékaři.</div></div>
+    </div>
+
+    <div class="card" style="background:#fbf7f1;"><strong>📌 Úkol do praxe:</strong> Vysvětli vlastními slovy (jako bys mluvil ke klientovi) rozdíl mezi „nemáš vůli" a „máš rozbitou signalizaci hladu, kterou společně ozdravíme". Najdi formulaci, která sundá vinu a dá naději.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Morton GJ, et al. Central nervous system control of food intake and body weight. Nature. 2006.</li>
+        <li>Schwartz MW, et al. Central nervous system control of food intake. Nature. 2000.</li>
+        <li>Kullmann S, et al. Brain insulin resistance at the crossroads of metabolic and cognitive disorders. Physiol Rev. 2016.</li>
+        <li>Ahima RS, Antwi DA. Brain regulation of appetite and satiety. Endocrinol Metab Clin North Am. 2008.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+</body>
+</html>
