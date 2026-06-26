@@ -260,7 +260,7 @@ ${items}
 <body>
   <div class="top"><div class="in">
     <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span> Videokurz</a>
-    <a class="back" href="/akademie/">← Členská sekce</a>
+    <a class="back" href="/akademie/moje/">← Barna Academy</a>
   </div></div>
 
   <div class="wrap">
