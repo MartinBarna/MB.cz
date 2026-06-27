@@ -113,6 +113,17 @@
         .faq details[open] summary::after { content:"–"; }
         .faq p { color:#5d5d5d; margin:0 0 16px; }
 
+        /* Social proof (reálné recenze) */
+        .proof { background:#fff; }
+        .proof .rate { display:inline-flex; align-items:center; gap:10px; margin-top:.6rem; font-weight:700; color:var(--ink); }
+        .proof .grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; max-width:1000px; margin:0 auto; }
+        .proof figure { margin:0; background:var(--cream); border:1px solid #f1ece6; border-radius:18px; padding:24px; box-shadow:0 8px 26px rgba(0,0,0,.05); display:flex; flex-direction:column; }
+        .proof .st { color:#ff9d00; letter-spacing:2px; font-size:1.05rem; }
+        .proof blockquote { margin:.7rem 0 1rem; font-size:.98rem; line-height:1.6; color:#33302c; }
+        .proof figcaption { margin-top:auto; font-weight:700; color:var(--ink); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+        .proof figcaption .src { font-weight:600; font-size:.78rem; color:#8a8178; background:#fff; border:1px solid #ece3d8; padding:3px 10px; border-radius:50px; }
+        .proof .more { text-align:center; margin-top:2rem; }
+
         /* Form embed */
         .form-sec { background:var(--cream); }
         .form-card { max-width:720px; margin:0 auto; background:#fff; border-radius:20px; box-shadow:0 14px 40px rgba(0,0,0,.08); padding:30px; }
@@ -306,6 +317,33 @@
             <details><summary>Co se stane po vyplnění?</summary><p>Plán ti pošlu na e-mail, pak občas přidám tip. Odhlásit se můžeš jedním klikem.</p></details>
             <details><summary>Je to jen pro ženy po 30?</summary><p>Je laděný pro ženy 30+, ale klidně poslouží i mladším nebo partnerovi.</p></details>
         </div>
+    </div></section>
+
+    <!-- SOCIAL PROOF (reálné recenze klientek) -->
+    <section class="proof"><div class="wrap">
+        <div class="sh">
+            <h2>Co říkají ženy, které to zkusily</h2>
+            <p>Reálné recenze z Googlu a Facebooku — žádné placené ohlasy.</p>
+            <div class="rate"><span class="st">★★★★★</span> 5,0 z 65 recenzí</div>
+        </div>
+        <div class="grid3">
+            <figure>
+                <div class="st">★★★★★</div>
+                <blockquote>„Jsem maminka dvou malých dětí, je mi 36… Myslela jsem, že nemám čas, že to nedám. S Martinem jsem zhubla 20 kg, z velikosti 44 na 36. Naučila jsem se v každodenním shonu najít čas i pro sebe."</blockquote>
+                <figcaption>Andrea Šotolová<span class="src">Google</span></figcaption>
+            </figure>
+            <figure>
+                <div class="st">★★★★★</div>
+                <blockquote>„Neprodává ryby, ale učí rybařit. Nejedu striktně podle jídelníčku — naučil mě, jak si ho sama poskládám z toho, co mi chutná a na co mám rozpočet (kalorií). Vše funguje tak, jak má."</blockquote>
+                <figcaption>Monika Černiaková<span class="src">Google</span></figcaption>
+            </figure>
+            <figure>
+                <div class="st">★★★★★</div>
+                <blockquote>„Jednoduše a prakticky umí vysvětlit návyky pro stravování. Osvojíte si principy a myšlenky, které pak umíte používat sami. Což je velmi efektivní a udržitelné."</blockquote>
+                <figcaption>Jana Kahajová<span class="src">Google</span></figcaption>
+            </figure>
+        </div>
+        <div class="more"><a class="btn sm dark" href="/reference/">Přečíst všech 65 recenzí →</a></div>
     </div></section>
 
     <!-- FORMULÁŘ (Tally embed) -->
