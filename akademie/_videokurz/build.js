@@ -181,17 +181,12 @@ function videoPage(v) {
 
 // ---- nástěnka ----
 function dashboard() {
-  let modulesHtml = SECTIONS.filter(s => s.list.length).map(s => {
-    const items = s.list.map(v =>
-      `        <li class="lesson" data-lid="${v.lid}"><a href="/akademie/videokurz/${v.slug}/"><span class="chk"></span><span class="lt">${esc(v.disp)}</span><span class="go">Otevřít →</span></a></li>`
-    ).join('\n');
-    return `    <div class="module">
-      <div class="mhead"><h2>${esc(s.name)}</h2><span class="cnt">${s.list.length} videí · <b class="pct">0 %</b></span></div>
-      <ul class="lessons">
-${items}
-      </ul>
-    </div>`;
-  }).join('\n');
+  // Data sekcí pro klientský sekční router (přehled ↔ fokus na sekci).
+  const secsData = SECTIONS.filter(s => s.list.length).map(s => ({
+    name: s.name,
+    videos: s.list.map(v => ({ lid: v.lid, disp: v.disp, slug: v.slug }))
+  }));
+  const secsJson = JSON.stringify(secsData);
 
   const materialsHtml = MATERIALS.map(m => {
     const action = m.link
@@ -249,6 +244,33 @@ ${items}
   .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(255,122,0,.6); transition:transform .2s; }
   .mbtn:hover { transform:translateY(-1px); }
   .mbtn[disabled] { opacity:.5; cursor:default; transform:none; }
+
+  /* ---- sekční navigace (#33): přehled sekcí → fokus na sekci ---- */
+  .modgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-top:8px; }
+  .modcard { text-align:left; cursor:pointer; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:11px; transition:transform .2s,border-color .2s,box-shadow .2s; color:inherit; text-decoration:none; }
+  .modcard:hover { transform:translateY(-4px); border-color:rgba(255,122,0,.35); box-shadow:0 24px 46px -28px rgba(255,122,0,.28); }
+  .modcard .top { display:flex; align-items:center; gap:12px; }
+  .modcard .ix { width:36px; height:36px; border-radius:11px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; font-size:.92rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modcard h3 { font-size:1rem; color:#fff; line-height:1.25; }
+  .modcard .mbar { height:6px; background:rgba(255,255,255,.08); border-radius:50px; overflow:hidden; }
+  .modcard .mbar span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); border-radius:50px; }
+  .modcard .mfoot { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .modcard .cnt { font-size:.8rem; color:var(--muted-2); font-weight:600; }
+  .modcard .pct { font-size:.74rem; color:var(--gold-soft); font-weight:700; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:3px 10px; border-radius:50px; }
+  .modcard.done-all { border-color:rgba(47,174,87,.45); }
+  .modcard.done-all .pct { color:#86e29a; background:rgba(47,174,87,.12); border-color:rgba(47,174,87,.3); }
+  .backlink { display:inline-flex; align-items:center; gap:7px; color:var(--muted-2); text-decoration:none; font-weight:600; font-size:.9rem; margin-bottom:16px; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:9px 16px; border-radius:50px; transition:.2s; }
+  .backlink:hover { border-color:rgba(255,122,0,.4); color:#fff; }
+  .secnav { display:flex; align-items:stretch; gap:12px; margin-top:24px; flex-wrap:wrap; }
+  .secnav a { flex:1; min-width:210px; text-decoration:none; border-radius:16px; padding:16px 20px; display:flex; flex-direction:column; gap:3px; border:1px solid var(--line); transition:transform .2s,border-color .2s,box-shadow .2s; }
+  .secnav .lbl { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .secnav .nm { font-weight:700; color:#fff; font-size:.96rem; }
+  .secnav .prev { background:rgba(255,255,255,.03); }
+  .secnav .next { background:linear-gradient(145deg,rgba(255,122,0,.16),rgba(255,122,0,.05)); border-color:rgba(255,122,0,.35); text-align:right; align-items:flex-end; }
+  .secnav .next .nm { color:var(--gold-soft); }
+  .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(255,122,0,.35); border-color:rgba(255,122,0,.5); }
+  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; text-decoration:none; }
+  .contbtn:hover { transform:translateY(-2px); }
 </style>
 </head>
 <body class="ba">
@@ -276,7 +298,7 @@ ${materialsHtml}
       </ul>
     </div>
 
-${modulesHtml}
+    <div id="modules"></div>
 
     <p class="note" id="modeNote">Ukázka prostředí. Přihlášení a uložení postupu se aktivuje po koupi (Supabase).</p>
   </div>
@@ -287,22 +309,42 @@ ${modulesHtml}
   <script>
     (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
     var TOTAL=${ordered.length};
+    var SECS=${secsJson};
+    var DONE={};
+    function secDone(s){ var d=0; s.videos.forEach(function(v){ if(DONE[v.lid]) d++; }); return d; }
+    function lessonLi(v){ var dn=!!DONE[v.lid]; return '<li class="lesson'+(dn?' done':'')+'" data-lid="'+v.lid+'"><a href="/akademie/videokurz/'+v.slug+'/"><span class="chk"></span><span class="lt">'+v.disp+'</span><span class="go">Otevřít →</span></a></li>'; }
+    function renderOverview(){
+      var h='<div class="modgrid">';
+      SECS.forEach(function(s,i){ var d=secDone(s), t=s.videos.length, p=t?Math.round(d/t*100):0;
+        h+='<a class="modcard'+(t&&d===t?' done-all':'')+'" href="#s'+(i+1)+'"><div class="top"><span class="ix">'+(i+1)+'</span><h3>'+s.name+'</h3></div><div class="mbar"><span style="width:'+p+'%"></span></div><div class="mfoot"><span class="cnt">'+t+' videí</span><span class="pct">'+p+' %</span></div></a>';
+      });
+      h+='</div>'; document.getElementById('modules').innerHTML=h;
+    }
+    function renderSection(i){
+      var s=SECS[i]; if(!s){ location.hash=''; return; }
+      var d=secDone(s), t=s.videos.length, p=t?Math.round(d/t*100):0;
+      var li=''; s.videos.forEach(function(v){ li+=lessonLi(v); });
+      var nav='<div class="secnav">';
+      if(i>0) nav+='<a class="prev" href="#s'+i+'"><span class="lbl">← Předchozí sekce</span><span class="nm">'+SECS[i-1].name+'</span></a>';
+      if(i<SECS.length-1) nav+='<a class="next" href="#s'+(i+2)+'"><span class="lbl">Další sekce →</span><span class="nm">'+SECS[i+1].name+'</span></a>';
+      nav+='</div>';
+      document.getElementById('modules').innerHTML='<a class="backlink" href="#prehled">← Všechny sekce</a><div class="module"><div class="mhead"><h2>'+s.name+'</h2><span class="cnt">'+t+' videí · <b>'+p+' %</b></span></div><ul class="lessons">'+li+'</ul></div>'+nav;
+      try{ window.scrollTo(0,0); }catch(e){}
+    }
+    function firstUnfinished(){ for(var i=0;i<SECS.length;i++){ if(secDone(SECS[i])<SECS[i].videos.length) return i; } return -1; }
+    function route(){ var hsh=(location.hash||'').replace('#',''); var m=hsh.match(/^s(\\d+)$/); if(m) renderSection(parseInt(m[1],10)-1); else renderOverview(); }
     function render(done){
-      done=done||{};
-      var cnt=0;
-      document.querySelectorAll('.lesson').forEach(function(li){
-        var d=!!done[li.getAttribute('data-lid')];
-        li.classList.toggle('done', d); if(d) cnt++;
-      });
-      document.querySelectorAll('.module').forEach(function(mod){
-        var ls=mod.querySelectorAll('.lesson'), dn=mod.querySelectorAll('.lesson.done').length;
-        var p=ls.length?Math.round(dn/ls.length*100):0;
-        var el=mod.querySelector('.pct'); if(el) el.textContent=p+' %';
-      });
+      DONE=done||{};
+      var cnt=0; SECS.forEach(function(s){ cnt+=secDone(s); });
       var pct=TOTAL?Math.round(cnt/TOTAL*100):0;
       document.getElementById('bigbar').style.width=pct+'%';
       document.getElementById('bigpct').textContent='Tvůj postup: '+cnt+' / '+TOTAL+' zhlédnuto ('+pct+' %)';
+      var hero=document.querySelector('.hero'), cb=document.getElementById('contBtn'), fi=firstUnfinished();
+      if(!cb&&hero){ cb=document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
+      if(cb){ if(fi>=0){ cb.style.display='inline-flex'; cb.textContent='Pokračovat: '+SECS[fi].name+' →'; cb.href='#s'+(fi+1); } else { cb.style.display='none'; } }
+      route();
     }
+    window.addEventListener('hashchange', route);
     function boot(){
       if (window.BA){
         window.BA.ready.then(function(){
