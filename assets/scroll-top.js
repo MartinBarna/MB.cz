@@ -10,12 +10,14 @@
       + 'transition:opacity .25s,transform .25s,visibility .25s;-webkit-tap-highlight-color:transparent;}'
       + '#baToTop.show{opacity:1;visibility:visible;transform:translateY(0);}'
       + '#baToTop:hover{transform:translateY(-3px);box-shadow:0 16px 32px -6px rgba(255,122,0,.7);}'
-      + '@media(max-width:600px){#baToTop{right:14px;bottom:16px;width:44px;height:44px;font-size:1.3rem;}}';
+      + '#baToTop.wa{bottom:96px;}'
+      + '@media(max-width:600px){#baToTop{right:14px;bottom:16px;width:44px;height:44px;font-size:1.3rem;}#baToTop.wa{bottom:84px;}}';
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
     var b = document.createElement('button');
     b.id = 'baToTop'; b.type = 'button'; b.setAttribute('aria-label', 'Nahoru'); b.innerHTML = '&#8593;';
     document.body.appendChild(b);
+    if (document.querySelector('.fab-wa')) b.classList.add('wa'); // nad WhatsApp tlačítkem, ať se nepřekrývají
 
     function smooth() {
       var de = document.documentElement, prev = de.style.scrollBehavior;
