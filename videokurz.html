@@ -169,6 +169,58 @@
         @media (max-width:575.98px){
             .btn, .btn-grn, .btn-gold, .btn-ghost, .btn-out, .btn-white { padding-top:13px; padding-bottom:13px; }
         }
+
+        /* ===================== DARK-LUXE THEME (videokurz) ===================== */
+        :root { --gold-2:#ff9d3c; --gold-soft:#ffb066; --bd-muted:#9d938a; --bd-line:rgba(255,255,255,.08); }
+        html, body { background:#0a0908; }
+        body {
+            color:#f0eadf;
+            background:
+                radial-gradient(900px 540px at 88% -6%, rgba(255,122,0,.16), transparent 60%),
+                radial-gradient(720px 480px at -6% 14%, rgba(255,122,0,.06), transparent 55%),
+                linear-gradient(180deg,#100e0c 0%, #0a0908 100%);
+            background-attachment:fixed;
+        }
+        /* navbar → tmavé sklo (přebíjí bg-white i frosted-white z highend.css) */
+        .navbar.bg-white, .navbar.sticky-top.scrolled { background:rgba(12,11,10,.78)!important;
+            -webkit-backdrop-filter:saturate(160%) blur(14px); backdrop-filter:saturate(160%) blur(14px);
+            border-bottom:1px solid var(--bd-line); box-shadow:0 6px 26px rgba(0,0,0,.45); }
+        .navbar-brand, .navbar-brand span { color:#fff!important; }
+        .nav-link { color:#cabfb4!important; }
+        .nav-link:hover, .nav-link.active { color:#fff!important; }
+        .navbar-toggler { border-color:rgba(255,255,255,.18); }
+        .navbar-toggler-icon { filter:invert(1) brightness(1.6); }
+
+        section { padding:78px 0; }
+        .bg-soft { background:rgba(255,255,255,.028); border-top:1px solid var(--bd-line); border-bottom:1px solid var(--bd-line); }
+        .section-head h2, h2[style*="--green-dark"], .pricebox h3, .faq-q { color:#fff!important; }
+        .section-head p { color:var(--bd-muted); }
+        .text-muted { color:var(--bd-muted)!important; }
+
+        .card { background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important;
+            border:1px solid var(--bd-line)!important; box-shadow:0 24px 50px -34px rgba(0,0,0,.9); color:#f0eadf; }
+        .card:hover { border-color:rgba(255,122,0,.32)!important; box-shadow:0 30px 60px -30px rgba(255,122,0,.18); }
+        .card h5, .card h6, .card .fw-bold { color:#fff; }
+        .ico { background:linear-gradient(145deg,rgba(255,122,0,.22),rgba(255,122,0,.05)); border:1px solid rgba(255,122,0,.3); color:var(--gold-soft); }
+
+        .module { border-bottom:1px solid var(--bd-line); }
+        .module h6 { color:#fff; }
+        .module .n { background:linear-gradient(145deg,var(--gold-2),#ff7a00); color:#160d04; box-shadow:0 8px 18px -6px rgba(255,122,0,.5); }
+
+        .check li { color:#f0eadf; }
+        .check li::before { color:var(--gold-soft); }
+
+        .pricebox { background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02))!important;
+            border:1.5px solid rgba(255,122,0,.5)!important; box-shadow:0 40px 90px -40px rgba(255,122,0,.32); }
+        .pricebox .now { color:#fff; }
+        .pricebox .old { color:var(--bd-muted); }
+
+        .vk-guarantee { background:rgba(47,174,87,.1); border:1px solid rgba(47,174,87,.32); color:#bfe9cb; }
+        .vk-guarantee strong { color:#86e29a; }
+        .vk-guarantee svg { color:#5fd07e; }
+
+        .btn-ghost { border-color:rgba(255,255,255,.55); }
+        footer { background:#070605; border-top:1px solid var(--bd-line); }
     </style>
     <script>
     (function(){
