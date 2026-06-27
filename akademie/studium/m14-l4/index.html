@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beta-alanin a soda: kdy a komu reálně pomůžou — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 14 · Lekce 4 — Suplementace podle důkazů</div>
+    <h1>Beta-alanin a soda: kdy a komu reálně pomůžou</h1>
+
+    <p class="lead">Kreatin a kofein zná každý. Beta-alanin a jedlá soda (hydrogenuhličitan sodný) jsou další dva doplňky, které <strong>mají skutečné důkazy</strong> — ale jen v hodně úzkém okénku zátěže. Když je nasadíš správnému klientovi a správně načasuješ, dají reálných pár procent navíc. Když je doporučíš plošně, jen vyhodíš peníze klienta a kus své důvěryhodnosti. Tahle lekce ti dá rozhodovací rámec: <strong>komu, kdy, kolik a s jakým reálným očekáváním.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak oba doplňky fungují — beta-alanin uvnitř svalu, soda v krvi — a proč to není totéž.</li>
+        <li>Přesné „okno zátěže“ (~zhruba 0,5–10 min vysoké intenzity), kde jako jediné dávají smysl.</li>
+        <li>Konkrétní dávkování, načasování a jak obejít hlavní nežádoucí účinky (brnění a žaludek).</li>
+        <li>Kde tyhle doplňky v hierarchii důkazů reálně stojí — a komu je nedoporučíš vůbec.</li>
+        <li>Jak o nich mluvit s klientem, aby čekal pár procent, ne zázrak.</li>
+      </ul>
+    </div>
+
+    <h2>1) Dva různé nástroje na stejný problém: kyselost</h2>
+    <p>Při tvrdé sérii kolem minuty až několika minut svaly vyrábějí vodíkové ionty rychleji, než je tělo stíhá pufrovat. Prostředí ve svalu i v krvi se okyseluje a to přispívá k pocitu „zalévání“ a ke konci výkonu. Beta-alanin i soda útočí přesně na tenhle problém — ale z jiné strany.</p>
+    <div class="card">
+      <p><strong>Beta-alanin = vnitřní pufr.</strong> Je to stavební kámen <em>karnosinu</em>, který sedí přímo ve svalu a tlumí pokles pH zevnitř. Pravidelným braním po týdny zvedneš zásoby svalového karnosinu a sval „vydrží kyselejší prostředí“ déle.</p>
+      <p><strong>Soda = vnější pufr.</strong> Hydrogenuhličitan sodný zvedne pufrovací kapacitu <em>krve</em>. Vytvoří větší gradient mezi svalem a krví, takže se vodíkové ionty rychleji odvádějí ze svalu pryč. Je to akutní efekt jedné dávky před výkonem.</p>
+    </div>
+    <p>Klíčový rozdíl pro praxi: beta-alanin je <strong>dlouhodobý projekt</strong> (nasytíš sval za týdny a žádná jednorázová dávka před tréninkem nic neudělá), zatímco soda je <strong>jednorázová předzávodní taktika</strong>. To samo o sobě určuje, komu co dává smysl nasadit.</p>
+
+    <h2>2) Okno zátěže — bez něj nemá smysl řešit dávku</h2>
+    <p>Tohle je nejdůležitější odstavec celé lekce. Oba doplňky pomáhají skoro výhradně u zátěže, kterou limituje právě okyselení — tedy <strong>vysoká intenzita trvající zhruba 0,5 až 10 minut</strong>. Meta-analýzy u beta-alaninu opakovaně ukazují největší efekt v pásmu zhruba 1–4 minuty a žádný spolehlivý přínos pod ~60 sekund ani u dlouhého vytrvalostního úsilí.</p>
+    <div class="eq">Efekt ≈ ano, jen když: vysoká intenzita × trvání ~0,5–10 min</div>
+    <p>Co to znamená v praxi? Pomůže to veslaři na 2000 m, plavci na 100–200 m, sprinterovi na 400–800 m, bojovníkovi, CrossFitterovi v kratším metconu, cyklistovi v opakovaných tvrdých intervalech. <strong>Nepomůže</strong> to čistě silovému tréninku o pár opakováních (limituje ho síla, ne kyselost), maratonci, ani „běžnému klientovi“, co chce zhubnout a třikrát týdně cvičí. Tam je efekt na úrovni měřicí chyby.</p>
+    <blockquote>Než vůbec začneš řešit značku nebo dávku, zeptej se: trvá ten limitující výkon klienta zhruba půl minuty až deset minut a je opravdu tvrdý? Pokud ne, končíme tady a šetříme klientovi peníze.</blockquote>
+
+    <h2>3) Beta-alanin: dávkování, brnění a trpělivost</h2>
+    <p>Beta-alanin funguje přes naplnění svalových zásob karnosinu, což trvá. Pozičně se opírá o dávku <strong>4–6 g denně po dobu nejméně 2–4 týdnů</strong>, často se cílí na celkovou „nasycovací“ dávku kolem 179 g a více nasbíranou za období suplementace. Načasování během dne je jedno — záleží jen na tom, že to bereš denně a dost dlouho.</p>
+    <div class="card">
+      <p><strong>Dávka:</strong> 4–6 g/den, rozdělená do menších dávek (např. 2× 2 g) kvůli komfortu.</p>
+      <p><strong>Doba:</strong> minimálně 2–4 týdny do nástupu efektu; zásoby pak drží a postupně klesají po vysazení.</p>
+      <p><strong>Načasování v rámci dne:</strong> nepodstatné — není to „pre-workout“ věc.</p>
+      <p><strong>Hlavní nežádoucí účinek:</strong> <em>parestezie</em> — brnění/štípání kůže (obličej, ruce). Je neškodné a přechodné. Obejdeš ho rozdělením do menších dávek nebo formou s postupným uvolňováním.</p>
+    </div>
+    <p>Reálné očekávání: meta-analýzy dávají průměrný efekt na výkon v řádu jednotek procent (typicky se uvádí střední velikost účinku kolem ~0,2–0,4). To je pro vrcholového sportovce v úzkém okně cenné, pro rekreačního cvičence skoro neviditelné. Mluv s klientem v procentech, ne v příbězích.</p>
+
+    <h2>4) Soda: jak dostat dávku do těla, aniž skončíš na záchodě</h2>
+    <p>U sody je problém opačný — funguje hned, ale klasická dávka umí pořádně rozhodit žaludek. Pozičně se pracuje s dávkou zhruba <strong>0,2–0,4 g/kg tělesné hmotnosti</strong>, podanou přibližně <strong>60–180 minut před výkonem</strong> (optimální okno je individuální a vyplatí se ho otestovat).</p>
+    <div class="eq">Dávka sody ≈ 0,2–0,4 g × hmotnost (kg), ~60–180 min předem</div>
+    <p>Pro 80 kg klienta to znamená zhruba 16–32 g hydrogenuhličitanu sodného. To je hodně a hlavní limit není účinnost, ale <strong>gastrointestinální diskomfort</strong> — nadýmání, křeče, průjem. Proto:</p>
+    <div class="card">
+      <p><strong>Nikdy nepoužívej poprvé „naostro“.</strong> Vždy odzkoušej na tréninku, ne v den závodu.</p>
+      <p><strong>Začni nižší dávkou</strong> (~0,2 g/kg) a sleduj snášenlivost, teprve pak případně zvyšuj.</p>
+      <p><strong>Rozděl dávku</strong> do menších porcí a zapíjej dostatkem vody; podání s malým jídlem (sacharidy) snáší většina lidí lépe.</p>
+      <p><strong>Zvaž enterosolventní (potahované) kapsle</strong> — výrazně snižují žaludeční potíže.</p>
+      <p><strong>Pozor na sodík:</strong> je to vysoká nálož sodíku, relevantní u klientů hlídajících krevní tlak.</p>
+    </div>
+    <p>Efekt sody je akutní a opět v řádu nízkých jednotek procent v tom správném okně zátěže (např. veslo 2000 m, opakované sprinty, bojové sporty). Mimo okno a u člověka s citlivým žaludkem je čistá ztráta.</p>
+
+    <h2>5) Kam to patří v hierarchii důkazů — a komu říct ne</h2>
+    <p>Drž v hlavě jednoduché pořadí. Nejdřív základ, který rozhoduje o 95 % výsledku: <strong>energetická bilance, dost bílkovin, progresivní trénink, spánek, konzistence.</strong> Pak doplňky s nejsilnějšími důkazy napříč situacemi: <strong>kreatin a kofein.</strong> A teprve potom, jako úzce cílené nástroje, beta-alanin a soda — a to jen u klienta, jehož limituje výkon v okně 0,5–10 min vysoké intenzity.</p>
+    <div class="card">
+      <p><strong>Zvaž beta-alanin/sodu, když:</strong> klient soutěží nebo trénuje opravdu tvrdě v daném časovém okně a základ už má vyřešený.</p>
+      <p><strong>Nedoporučuj je, když:</strong> jde o čistě silový low-rep trénink, dlouhý vytrvalostní výkon, nebo „hubnoucího“ rekreanta. Tam efekt prakticky není.</p>
+      <p><strong>Kombinace:</strong> beta-alanin + soda spolu mohou dávat smysl (vnitřní + vnější pufr), ale není to magie — efekty se nesčítají lineárně a komfort sody zůstává limitem.</p>
+    </div>
+    <p>A nejdůležitější věta pro klienta: tyhle doplňky <strong>nenahradí trénink ani jídelníček</strong>. Jsou to poslední procenta na vrcholu pyramidy, ne její základ.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když se mě někdo zeptá na beta-alanin nebo sodu, první otázka nezní „jakou značku“, ale „co tě v tréninku reálně limituje a jak dlouho ta série trvá“. U silového klienta s pětkami to zabalím hned — limituje ho síla, ne kyselost. U veslaře na 2000 m nebo u kluka, co dělá tvrdé metcony, dává smysl obojí: beta-alanin nasadím na týdny dopředu, sodu zkoušíme nejdřív na tréninku a v nízké dávce, ať víme, jak na ni jeho žaludek reaguje. A vždycky říkám nahlas: čekej pár procent, ne zázrak. Kdo nemá srovnaný základ, tomu doplněk neprodám.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je zásadní rozdíl v mechanismu mezi beta-alaninem a sodou? <span class="tg">odpověď ▾</span></div><div class="aa">Beta-alanin je vnitřní pufr — přes karnosin tlumí pokles pH přímo uvnitř svalu a buduje se týdny. Soda je vnější pufr — akutně zvyšuje pufrovací kapacitu krve a podává se jednorázově před výkonem.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> V jakém „okně zátěže“ oba doplňky reálně pomáhají? <span class="tg">odpověď ▾</span></div><div class="aa">U vysoce intenzivního úsilí trvajícího zhruba 0,5 až 10 minut (nejsilněji kolem 1–4 min). Mimo to — u čisté síly o pár opakováních i u dlouhé vytrvalosti — spolehlivý efekt není.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak se dávkuje beta-alanin a jaký je jeho hlavní nežádoucí účinek? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 4–6 g denně po dobu minimálně 2–4 týdnů (načasování v rámci dne je jedno). Hlavní vedlejší účinek je parestezie — neškodné brnění kůže, které zmírníš rozdělením do menších dávek.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak podat sodu, aby nezničila žaludek? <span class="tg">odpověď ▾</span></div><div class="aa">Dávka ~0,2–0,4 g/kg podaná ~60–180 min předem, ale vždy nejdřív odzkoušet na tréninku, ne na závodě. Začít nižší dávkou, rozdělit, zapíjet vodou, případně použít potahované kapsle a podat s trochou sacharidů.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kam beta-alanin a soda patří v hierarchii a komu je nedoporučíš? <span class="tg">odpověď ▾</span></div><div class="aa">Až na vrchol pyramidy — po základu (bilance, bílkoviny, trénink, spánek) a po kreatinu a kofeinu. Nedoporučíš je u čistě silového low-rep tréninku, dlouhé vytrvalosti a u rekreačního „hubnoucího“ klienta.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber dva své (i modelové) klienty — jednoho, komu beta-alanin nebo soda dává smysl, a jednoho, komu ne. U každého napiš: čím je limitovaný a jak dlouho trvá jeho klíčové úsilí, jestli má srovnaný základ, a u toho vhodného navrhni konkrétní protokol (dávku, dobu/načasování, jak ošetříš brnění nebo žaludek a jaký reálný efekt klientovi slíbíš). U nevhodného jednou větou vysvětli, proč to není ono.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Trexler ET, Smith-Ryan AE, Stout JR, et al. International society of sports nutrition position stand: Beta-Alanine. J Int Soc Sports Nutr. 2015;12:30.</li>
+        <li>Grgic J, Pedisic Z, Saunders B, et al. International Society of Sports Nutrition position stand: sodium bicarbonate and exercise performance. J Int Soc Sports Nutr. 2021;18(1):61.</li>
+        <li>Saunders B, Elliott-Sale K, Artioli GG, et al. β-alanine supplementation to improve exercise capacity and performance: a systematic review and meta-analysis. Br J Sports Med. 2017;51(8):658–669.</li>
+        <li>Hobson RM, Saunders B, Ball G, Harris RC, Sale C. Effects of β-alanine supplementation on exercise performance: a meta-analysis. Amino Acids. 2012;43(1):25–37.</li>
+        <li>Carr AJ, Hopkins WG, Gore CJ. Effects of acute alkalosis and acidosis on performance: a meta-analysis. Sports Med. 2011;41(10):801–814.</li>
+        <li>Grgic J, Garofolini A, Pickering C, et al. Effects of sodium bicarbonate supplementation on exercise performance: an umbrella review. Sports Med. 2021;51(11):2373–2393.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m14-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

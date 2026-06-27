@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stres, kortizol a regenerace: jak to celé propojit — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 10 — Spánek, stres a regenerace</div>
+    <h1>Stres, kortizol a regenerace: jak to celé propojit</h1>
+
+    <p class="lead">Trénink je jen podnět — adaptace se děje v regeneraci. A regenerace stojí na dvou pilířích, které spolu mluví víc, než si lidé myslí: <strong>spánku a zvládnutém stresu.</strong> Když jeden z nich dlouhodobě pokulhává, klient může trénovat sebepoctivěji a stejně nepostupuje, hůř hubne, hůř drží sval a častěji se zraní. Tahle lekce ti dá rámec, jak spánek, kortizol a celkovou zátěž řídit prakticky — ne strašením, ale srozumitelnými pákami.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč spánek řídí dva nezávislé systémy (adenosin a cirkadiánní rytmus) a jak toho využít.</li>
+        <li>Co kortizol opravdu dělá — a proč „vysoký kortizol“ není samo o sobě nepřítel.</li>
+        <li>Jak nedostatek spánku konkrétně sabotuje hubnutí, sval a chuť k jídlu (s čísly ze studií).</li>
+        <li>Že stres je jedna nádrž — trénink, práce i nevyspání čerpají ze stejné kapacity.</li>
+        <li>Praktický rámec spánkové hygieny a řízení zátěže, který klient reálně utáhne.</li>
+        <li>Jak poznat, kdy ubrat, a kdy je únava jen „normální tréninková“.</li>
+      </ul>
+    </div>
+
+    <h2>1) Dva systémy, které řídí spánek</h2>
+    <p>Jestli chceš klientovi srozumitelně vysvětlit, proč usíná nebo ne, stačí mu popsat dva nezávislé procesy, které se sčítají. Tomu se říká dvouprocesový model spánku.</p>
+    <div class="card">
+      <p><strong>Spánkový tlak (proces S):</strong> celý den, co jsi vzhůru, se ti v mozku hromadí <em>adenosin</em> — vedlejší produkt energetického provozu buněk. Čím déle bdíš, tím vyšší tlak ke spánku. Spánkem se adenosin „uklidí“ a tlak se vynuluje. Mimochodem: kofein tenhle tlak necítíš ne proto, že by zmizel, ale protože kofein blokuje adenosinové receptory. Jakmile vyprchá, tlak udeří najednou.</p>
+      <p><strong>Cirkadiánní rytmus (proces C):</strong> vnitřní 24hodinové hodiny řízené z mozku (nucleus suprachiasmaticus), kalibrované hlavně světlem. Říkají tělu, kdy „má být“ den a kdy noc — nezávisle na tom, jak dlouho jsi vzhůru.</p>
+    </div>
+    <p>Praktický důsledek: nejlíp se usíná, když je <strong>vysoký spánkový tlak A zároveň cirkadiánní rytmus volá po spánku.</strong> Proto polední šlofík přes hodinu „ukradne“ tlak a večer se pak nespí. A proto je ranní světlo a stabilní čas vstávání tak mocná páka — kalibruje hodiny, ne jen tlak.</p>
+    <blockquote>Klientovi, co „nemůže usnout“, často nechybí lék na spánek — chybí mu dost nahromaděného tlaku a stabilní hodiny. Obojí se dá ovlivnit chováním přes den, ne jen večer v posteli.</blockquote>
+
+    <h2>2) Co kortizol opravdu dělá</h2>
+    <p>Kortizol má v populární řeči nálepku „stresového hormonu, co tě ničí“. Realita je jiná a pro trenéra zásadní: <strong>kortizol je hormon mobilizace a probuzení, ne nepřítel.</strong> Má vlastní denní rytmus — vrcholí ráno (pomáhá tě nastartovat, tzv. cortisol awakening response) a k večeru klesá, aby tělo mohlo do klidu a spánku.</p>
+    <p>Problém nevzniká z toho, že kortizol stoupne při tréninku nebo v náročný den — to je zdravá, funkční reakce. Problém je, když je <strong>chronicky zvednutý a hlavně když nepadá večer.</strong> Právě tady vstupuje spánek: i jediná noc se zkráceným spánkem zvedne hladiny kortizolu příští podvečer řádově o 37–45 % a oddálí klidovou fázi jeho sekrece minimálně o hodinu. Tělo pak jde do noci „nabuzené“, hůř usíná — a kruh se točí.</p>
+    <div class="card">
+      <p><strong>Zdravý rytmus:</strong> ranní vrchol → postupný pokles → večerní minimum → noční dno. Akutní špička z tréninku je v pořádku a do hodin opadne.</p>
+      <p><strong>Rozbitý vzorec:</strong> nízký ranní vrchol (chronická únava), večerní hladina, která nepadá, narušený spánek. Tohle, ne jednorázová špička, koreluje s horší regenerací, ukládáním tuku v oblasti břicha a katabolismem.</p>
+    </div>
+    <p>Pozor na časté nedorozumění: kortizol neměříme rutinně a „adrenální únava“ není uznaná diagnóza. Pro praxi nás nezajímá číslo — zajímá nás <strong>vzorec chování a regenerace</strong>, který ten rytmus buď podporuje, nebo rozbíjí.</p>
+
+    <h2>3) Jak nevyspání sabotuje hubnutí a sval</h2>
+    <p>Tady přestává jít o pocity a začínají tvrdá data — tohle si zaslouží znát každý trenér, protože to změní, jak mluvíš o spánku s klientem na dietě.</p>
+    <p>Slavná studie nechala dospělé v mírném kalorickém deficitu spát buď 8,5 hodiny, nebo jen 5,5 hodiny po dobu dvou týdnů. <strong>Zhubli stejně na váze — ale složení úbytku bylo dramaticky jiné.</strong> Při krátkém spánku přišlo o 55 % méně úbytku z tuku a o 60 % víc z beztukové hmoty (svalu). Jinak řečeno: nevyspaný klient na dietě hubne víc sval než tuk. To je přesný opak toho, co chceme.</p>
+    <div class="eq">stejný kalorický deficit + málo spánku = méně ztraceného tuku, víc ztraceného svalu</div>
+    <p>K tomu se přidává chuť k jídlu. Když se zdraví mladí muži omezili na 4 hodiny spánku dvě noci, klesl jim <strong>leptin</strong> (hormon sytosti) o ~18 %, stoupl <strong>ghrelin</strong> (hormon hladu) o ~28 % a subjektivní hlad i chuť o ~23–24 % — s konkrétní touhou po kaloricky hutných sladkých a slaných jídlech. Nevyspaný klient tedy není „slabý“, když večer sní celou tabuli; má posunutou hormonální regulaci apetitu proti sobě.</p>
+    <blockquote>Než klientovi sebereš dalších 200 kcal, zeptej se, kolik spí. Často je „nedodržování diety“ jen důsledek nevyspání, ne nedostatek vůle.</blockquote>
+
+    <h2>4) Stres je jedna nádrž</h2>
+    <p>Tělo neumí rozlišit „dobrý“ tréninkový stres od „špatného“ životního. Fyziologicky čerpají ze stejné kapacity na adaptaci a regeneraci. Užitečná představa je <strong>jedna nádrž stresu</strong>: trénink, práce, deadliny, vztahy, nemoc i nevyspání z ní všechny ubírají. Adaptace nastane jen tehdy, když má tělo zbylou kapacitu se s podnětem vyrovnat.</p>
+    <p>Proto stejný tréninkový plán, který klient zvládal v klidném období, ho v období stěhování, nemocného dítěte a tří nocí po čtyřech hodinách spánku najednou „přetěžuje“. Plán se nezměnil — změnila se zbylá kapacita nádrže.</p>
+    <div class="card">
+      <p><strong>Co plní nádrž (stresory):</strong> objem a intenzita tréninku, pracovní a osobní stres, nedostatek spánku, kalorický deficit, nemoc, alkohol, příliš mnoho kofeinu pozdě.</p>
+      <p><strong>Co nádrž vyprazdňuje (regenerace):</strong> kvalitní a dostatečný spánek, dny volna a deload, dostatek bílkovin a energie, procházky a nízká zátěž, denní světlo, sociální kontakt a zvládání stresu.</p>
+    </div>
+    <p>Praktický důsledek pro programování: v období vysokého životního stresu <strong>neškálujeme plán nahoru, ale dolů.</strong> Není to slabost, je to řízení kapacity. Trenér, který umí ubrat ve správný čas, dostane klienta dál než ten, co tlačí pořád na plyn.</p>
+
+    <h2>5) Páky spánkové hygieny a regenerace</h2>
+    <p>Spánek je nejsilnější regenerační nástroj, který máme — a na rozdíl od doplňků zadarmo. Opačný experiment to potvrzuje: když basketbalisté prodloužili spánek na 10 hodin v posteli po dobu několika týdnů, zrychlil se jim sprint, zlepšila se přesnost střelby o ~9 % a klesla únava. Spánek tedy nejen brzdí škody — aktivně zvyšuje výkon. Tady jsou páky seřazené podle dopadu.</p>
+    <div class="card">
+      <p><strong>1. Stabilní čas vstávání (i o víkendu):</strong> nejúčinnější jedna věc. Kotví cirkadiánní hodiny víc než čas usnutí.</p>
+      <p><strong>2. Ranní světlo, večerní šero:</strong> denní světlo brzy po probuzení a tlumené světlo 1–2 h před spaním. Kalibruje proces C a melatonin.</p>
+      <p><strong>3. Kofein s rozumem:</strong> poslední dávka ideálně 8–10 h před spaním (poločas ~5–6 h). Blokuje adenosin, který potřebuješ na usnutí.</p>
+      <p><strong>4. Chladná, tmavá, tichá ložnice:</strong> pokles tělesné teploty je signál ke spánku; světlo a teplo ho ruší.</p>
+      <p><strong>5. Alkohol a pozdní velká jídla zpět:</strong> alkohol uspí, ale ničí kvalitu (zvlášť REM); těžké jídlo pozdě ruší usínání.</p>
+      <p><strong>6. Cílit na 7–9 hodin reálného spánku:</strong> ne v posteli — spánku. To je u většiny dospělých pásmo, kde regenerace funguje.</p>
+    </div>
+    <p>U klientů, kteří „nemají čas spát“, nejde o přednášku, ale o jednu malou změnu týdně: nejdřív pevné vstávání, pak kofeinové okno, pak večerní šero. Návyk po návyku.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když klient stagnuje a tlačí na mě „přidej trénink“, nejdřív se ptám na spánek a životní zátěž, ne na plán. Mám jednoduché pravidlo: dva týdny po sobě průměr pod 6 hodin spánku = neřešíme nový PR, řešíme regeneraci. Nikdy klienta nestrašim kortizolem. Říkám mu: „Spánek je tvůj nejlevnější anabolikum a nejlepší appka na hlad. Když ho srovnáme, půlka tvých problémů s dietou zmizí sama.“ A funguje to líp než jakýkoli další zákaz v jídelníčku.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Které dva nezávislé procesy řídí spánek a co je „palivem“ spánkového tlaku? <span class="tg">odpověď ▾</span></div><div class="aa">Spánkový tlak (proces S), který pohání hromadění adenosinu během bdění, a cirkadiánní rytmus (proces C) řízený vnitřními hodinami a kalibrovaný světlem. Nejlíp se usíná, když oba volají po spánku zároveň.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč „vysoký kortizol“ není sám o sobě problém? <span class="tg">odpověď ▾</span></div><div class="aa">Kortizol je hormon mobilizace s vlastním denním rytmem — ráno vrcholí, večer klesá. Akutní špička z tréninku je zdravá. Problém je chronicky zvednutý kortizol, který nepadá večer; to koreluje s horší regenerací a narušeným spánkem.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak nedostatek spánku ovlivní složení úbytku hmotnosti při stejném kalorickém deficitu? <span class="tg">odpověď ▾</span></div><div class="aa">Váhový úbytek může být stejný, ale při krátkém spánku přijde výrazně méně z tuku a víc ze svalu (ve studii o ~55 % méně tuku a o ~60 % víc beztukové hmoty). Nevyspaný klient na dietě hubne víc sval než tuk.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co znamená „stres je jedna nádrž“ pro programování tréninku? <span class="tg">odpověď ▾</span></div><div class="aa">Trénink, práce, životní stres i nevyspání čerpají ze stejné kapacity na regeneraci. V období vysokého životního stresu se plán neškáluje nahoru, ale dolů — adaptace nastane jen, když má tělo zbylou kapacitu.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jmenuj nejúčinnější jedinou páku spánkové hygieny a vysvětli proč. <span class="tg">odpověď ▾</span></div><div class="aa">Stabilní čas vstávání i o víkendu. Kotví cirkadiánní hodiny (proces C) silněji než čas usnutí a podporuje ranní vrchol kortizolu i konzistentní spánkový tlak.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta, který stagnuje, udělej audit „nádrže stresu“: zapiš odhad spánku za poslední dva týdny, hlavní životní stresory a aktuální tréninkový objem. Pak rozhodni, jestli je správný krok přidat trénink/ubrat kalorie, nebo nejdřív srovnat regeneraci. Navrhni JEDNU konkrétní spánkovou změnu na příští týden a popiš, jak po 2–3 týdnech vyhodnotíš dopad (energie, hlad, výkon, trend hmotnosti).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Nedeltcheva AV, Kilkus JM, Imperial J, Schoeller DA, Penev PD. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010;153(7):435–441.</li>
+        <li>Spiegel K, Tasali E, Penev P, Van Cauter E. Brief communication: Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite. Ann Intern Med. 2004;141(11):846–850.</li>
+        <li>Leproult R, Copinschi G, Buxton O, Van Cauter E. Sleep loss results in an elevation of cortisol levels the next evening. Sleep. 1997;20(10):865–870.</li>
+        <li>Mah CD, Mah KE, Kezirian EJ, Dement WC. The effects of sleep extension on the athletic performance of collegiate basketball players. Sleep. 2011;34(7):943–950.</li>
+        <li>Vitale KC, Owens R, Hopkins SR, Malhotra A. Sleep hygiene for optimizing recovery in athletes: review and recommendations. Int J Sports Med. 2019;40(8):535–543.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

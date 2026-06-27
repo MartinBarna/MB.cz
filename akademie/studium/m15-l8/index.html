@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep extension: spánek jako trénovatelná výkonnostní proměnná — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 8 — Spánek, stres a regenerace</div>
+    <h1>Sleep extension: spánek jako trénovatelná výkonnostní proměnná</h1>
+
+    <p class="lead">Většina lidí bere spánek jako něco, co se „prostě stane“ — kolik zbude, tolik se vyspím. Tahle lekce to obrací: <strong>spánek je proměnná, kterou umíš cíleně programovat stejně jako objem tréninku nebo příjem bílkovin.</strong> A když ho navíc <em>natáhneš nad svůj obvyklý strop</em> (sleep extension), nejde jen o to být míň unavený — měřitelně se zvedne výkon, regenerace, chuť k jídlu i riziko zranění klesne. Pro tebe jako trenéra je to nejlevnější „doplněk“, který klient má, a přitom ho skoro nikdo neřídí.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je spánek řiditelná proměnná, ne náhodný zbytek dne.</li>
+        <li>Jak funguje architektura spánku a dvě páky, které ji řídí — adenosin a cirkadiánní rytmus.</li>
+        <li>Co konkrétně dělá deficit spánku s výkonem, svalem, hladem a zraněním (s čísly ze studií).</li>
+        <li>Co je sleep extension a proč „banking“ hodin před zátěží reálně funguje.</li>
+        <li>Praktický framework, jak u klienta natáhnout spánek bez magie a bez prášků.</li>
+        <li>Jak spánek měřit a vyhodnocovat, aniž by z toho byla další posedlost.</li>
+      </ul>
+    </div>
+
+    <h2>1) Spánek jako proměnná, ne náhoda</h2>
+    <p>Když řešíš s klientem výkon a složení těla, řídíš objem, intenzitu, příjem, bílkoviny. Spánek přitom sedí ve stejné rovnici — jen ho nikdo neplánuje. A to je chyba, protože dotahuje skoro všechno ostatní: regeneraci, sílu, chuť k jídlu, náladu, motivaci jít trénovat.</p>
+    <p>Společné odborné stanovisko Americké akademie spánkové medicíny a Sleep Research Society doporučuje dospělým <strong>7 a více hodin spánku za noc</strong> pro optimální zdraví — pod 6 hodin se konzistentně pojí se zhoršenými výstupy. To není wellness fráze, je to konsenzus postavený na strukturovaném hodnocení důkazů. Tvůj úkol je tohle číslo přetavit do klientova týdne: kdy chodí spát, kolik má reálně času v posteli, co mu ho krade.</p>
+    <blockquote>Spánek je jediná „intervence“, kterou klient dělá každý den, ať chce nebo ne. Otázka není, jestli ho řešit — ale jestli ho necháš náhodě, nebo ho naprogramuješ.</blockquote>
+
+    <h2>2) Architektura spánku a dvě páky, které ji řídí</h2>
+    <p>Spánek není jednolitý blok bezvědomí. Probíhá v cyklech zhruba po 90 minutách, ve kterých se střídá lehký spánek, hluboký spánek (NREM, fáze N3) a REM. Každá fáze dělá něco jiného:</p>
+    <div class="card">
+      <p><strong>Hluboký spánek (NREM N3):</strong> fyzická regenerace — vrcholí sekrece růstového hormonu, probíhá oprava tkání, ukládá se „faktická“ paměť. Koncentruje se hlavně do první poloviny noci.</p>
+      <p><strong>REM spánek:</strong> emoční zpracování, motorické učení, konsolidace dovedností. Přibývá ho ve druhé polovině noci — proto když si ukrojíš poslední dvě hodiny ranním vstáváním, okrádáš se nepoměrně o REM.</p>
+      <p><strong>Cykly:</strong> za noc jich proběhne 4–6. Zkrácená noc neubere rovnoměrně — ubere z konce, a tím nejvíc z REM a regenerace dovedností.</p>
+    </div>
+    <p>Kdy a jak tvrdě usneš, řídí dvě nezávislé páky. <strong>Spánkový tlak</strong> je dán adenosinem — během bdění se hromadí jako vedlejší produkt energetického metabolismu a vytváří rostoucí „dluh“, který tě tlačí ke spánku (kofein blokuje právě jeho receptory, proto maskuje únavu). <strong>Cirkadiánní rytmus</strong> je vnitřní 24hodinové hodiny řízené hlavně světlem, které určují, kdy má tělo být vzhůru a kdy spát, nezávisle na tom, jak dlouho už jsi vzhůru.</p>
+    <div class="eq">Kvalita usnutí ≈ adenosinový tlak × správné okno cirkadiánního rytmu</div>
+    <p>Praktický důsledek: dobře se vyspíš, jen když se obě páky potkají. Hodně nahromaděného adenosinu (dlouho vzhůru, žádné odpolední dřímání) ve správném okně (tma, večerní pokles teploty, návyk) = rychlé usnutí a hluboký spánek. Když jednu páku rozbiješ — odpolední šlofík, modré světlo a kofein večer, ponocování o víkendu — usínání i hloubka se sypou, i když „čas v posteli“ formálně sedí.</p>
+
+    <h2>3) Co dělá deficit spánku — s čísly</h2>
+    <p>Tady přestává být spánek „příjemný bonus“ a stává se z něj limit výkonu a regenerace. Pár dat, která stojí za to znát zpaměti, protože klienta přesvědčí víc než obecné „spi víc“:</p>
+    <div class="card">
+      <p><strong>Hlad a chutě:</strong> u zdravých mladých mužů stačila dvě dny zkráceného spánku, aby klesl sytostní hormon leptin (≈ −18 %), stoupl „hladový“ ghrelin a vystřelila chuť k jídlu — hlavně na kalorické, sladké a škrobové (Spiegel 2004). Spánkový deficit doslova posune chuťové preference špatným směrem.</p>
+      <p><strong>Hubnutí a sval:</strong> při stejné kalorické restrikci skupina spící 5,5 h místo 8,5 h ztratila o <strong>55 % méně tuku</strong> a o <strong>60 % více beztukové hmoty</strong> (Nedeltcheva 2010). Stejná dieta, jiný spánek — a klient místo tuku ztrácí sval.</p>
+      <p><strong>Zranění:</strong> dospívající sportovci spící méně než 8 h měli zhruba <strong>1,7× vyšší riziko zranění</strong> (Milewski 2014). Spánek je tedy i prevence úrazu, ne jen výkonová páka.</p>
+      <p><strong>Síla a regenerace:</strong> nedostatek spánku zvedá katabolický kortizol, tlumí anabolické prostředí a zhoršuje neuromuskulární koordinaci — výsledkem je nižší výkon, pomalejší zotavení a vyšší vnímaná námaha.</p>
+    </div>
+    <p>Spojíš-li to dohromady: klient v deficitu spánku má větší hlad na horší jídla, hůř drží dietu, ztrácí víc svalu, hůř regeneruje a má vyšší šanci se zranit. Žádný doplněk tohle nevykompenzuje.</p>
+
+    <h2>4) Sleep extension a „banking“ spánku</h2>
+    <p>Otočme to do pozitivu. Sleep extension znamená záměrně strávit v posteli víc času, než je tvůj zvyk — typicky cílit na <strong>9–10 hodin příležitosti ke spánku</strong> — po několik týdnů. Nejde o jednu delší noc, ale o systematické navýšení.</p>
+    <p>Klasická studie Mah a kol. (2011) nechala vysokoškolské basketbalisty natáhnout spánek na ≥ 10 h v posteli po dobu 5–7 týdnů. Reálná doba spánku stoupla z ~6,5 na ~8,5 h a výsledky byly výrazné:</p>
+    <div class="card">
+      <p><strong>Sprint:</strong> čas na trati klesl (rychlejší) z 16,2 na 15,5 s.</p>
+      <p><strong>Přesnost:</strong> úspěšnost trestných hodů +9 %, trojek +9,2 %.</p>
+      <p><strong>Reakce a nálada:</strong> kratší reakční čas, méně denní ospalosti, vyšší vigor, nižší únava.</p>
+    </div>
+    <p>To je zásadní obrat v myšlení: spánek nad rámec „dost“ není plýtvání, ale aktivní zlepšení výkonu. A funguje i preventivně — strategie zvaná <em>sleep banking</em>, tedy nahromadění spánku v dnech před očekávaným deficitem (závod, náročný blok, cestování), zmírňuje pokles výkonu, který by jinak nevyspání způsobilo. Spánek se nedá „uložit do zásoby“ donekonečna, ale vstoupit do zátěže s plnou nádrží místo s dluhem je prokazatelně lepší.</p>
+    <blockquote>Většina klientů nemá problém „spát špatně“ — má chronický mírný dluh. Sleep extension není léčba poruchy, je to doplnění proměnné, kterou roky drželi pod optimem.</blockquote>
+
+    <h2>5) Framework: jak spánek u klienta naprogramovat</h2>
+    <p>Teorie je hezká, ale klient potřebuje kroky. Tady je postup, který funguje bez prášků a bez magie — řídíš obě páky z části 2 a dáváš tělu podmínky:</p>
+    <div class="card">
+      <p><strong>1. Stanov cílové okno v posteli.</strong> Spočítej zpětně od vstávání: chce-li 8 h spánku a vstává v 6:00, musí být v posteli ve 21:30 (počítej ~30 min na usnutí). Pro extension přidej 30–60 min navíc.</p>
+      <p><strong>2. Fixuj vstávání, ne usínání.</strong> Stálý čas vstávání kotví cirkadiánní rytmus silněji než snaha „usnout dřív“. I o víkendu drž odchylku do ~1 h.</p>
+      <p><strong>3. Ranní světlo, večerní tma.</strong> Pár minut denního světla brzy ráno seřídí hodiny; tlumené teplé světlo a méně obrazovek hodinu před spaním pomůže usnout.</p>
+      <p><strong>4. Hlídej páky.</strong> Poslední kofein ~8–10 h před spaním (blokuje adenosin), žádný dlouhý odpolední šlofík (vypouští spánkový tlak), alkohol večer minimalizovat (drtí REM a hluboký spánek).</p>
+      <p><strong>5. Chladno, tma, ticho.</strong> Pokles tělesné teploty spouští usínání — chladnější ložnice a teplá sprcha před spaním paradoxně pomáhají.</p>
+      <p><strong>6. Banking před zátěží.</strong> Před náročným blokem, závodem nebo cestou přidej pár nocí navíc; nečekej, až přijde deficit.</p>
+    </div>
+    <p>Měření drž jednoduché. Hodinky a prsteny ukazují trend, ne lékařskou pravdu — ber je jako „kalkulačku“ z prvního modulu, tedy hypotézu, ne verdikt. Nejlepší metriky jsou levné: <strong>jak dlouho jsi reálně spal, jak ses cítil po probuzení a v odpolední krizi, jaký byl výkon v tréninku</strong>. Když data z hodinek vyvolávají úzkost (orthosomnie), klidně je sundej a jeď podle pocitu a výkonu.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient řekne, že „nemá čas spát“, neřeším nejdřív ložnici, ale matiku jeho dne. Spočítáme zpětně od vstávání cílové okno a najdeme, co mu posledních 90 minut večera krade — skoro vždycky je to telefon a pozdní serial. Nasadím jednu věc: fixní vstávání každý den, i o víkendu. Teprve když tohle drží, přidáváme extension — „zkus měsíc chodit do postele o 45 minut dřív a uvidíme tvoje čísla v tréninku.“ A před náročným blokem nebo závodem klientovi vyloženě naordinuju pár nocí spánku navíc. Dělám to schválně tak, aby spánek byl součást plánu, ne to, na co dojde, když zbude čas.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Které dvě páky řídí, kdy a jak tvrdě usneš? <span class="tg">odpověď ▾</span></div><div class="aa">Spánkový tlak daný hromaděním adenosinu během bdění a cirkadiánní rytmus (vnitřní 24hodinové hodiny řízené hlavně světlem). Dobře usneš, jen když se obě potkají.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co se stalo se ztrátou tuku a svalu při dietě s méně spánkem ve studii Nedeltcheva 2010? <span class="tg">odpověď ▾</span></div><div class="aa">Při stejné kalorické restrikci skupina spící 5,5 h místo 8,5 h ztratila o ~55 % méně tuku a o ~60 % více beztukové (svalové) hmoty. Stejná dieta, horší výsledek kvůli spánku.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co je sleep extension a jaký měla efekt u basketbalistů (Mah 2011)? <span class="tg">odpověď ▾</span></div><div class="aa">Záměrné prodloužení času v posteli (cíl ≥ 10 h) po několik týdnů. Vedlo k rychlejšímu sprintu, vyšší přesnosti střelby (trestné +9 %, trojky +9,2 %), kratšímu reakčnímu času a lepší náladě.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč ranní vstávání nepoměrně okrádá o REM spánek? <span class="tg">odpověď ▾</span></div><div class="aa">REM přibývá ve druhé polovině noci. Když si ukrojíš poslední hodiny brzkým vstáváním, neubereš rovnoměrně — ztratíš hlavně REM a s ním konsolidaci dovedností a emoční zpracování.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Která jedna návyková změna nejvíc kotví cirkadiánní rytmus? <span class="tg">odpověď ▾</span></div><div class="aa">Fixní čas vstávání každý den (i o víkendu). Kotví hodiny silněji než snaha „usnout dřív“ a je to první páka, kterou u klienta nasaď.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta zjisti jeho obvyklý čas vstávání a reálnou dobu spánku. Spočítej zpětně cílové okno v posteli pro 8 h spánku a navrhni 30–60 min extension. Pak vypiš dvě konkrétní páky, které mu spánek kradou (např. večerní telefon, pozdní kofein), a první jednu změnu, kterou nasadíš. Nakonec popiš, jak budeš po 2–3 týdnech vyhodnocovat efekt — kterými levnými metrikami (doba spánku, pocit po probuzení, odpolední krize, výkon v tréninku).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Mah CD, Mah KE, Kezirian EJ, Dement WC. The effects of sleep extension on the athletic performance of collegiate basketball players. Sleep. 2011;34(7):943–950.</li>
+        <li>Nedeltcheva AV, Kilkus JM, Imperial J, Schoeller DA, Penev PD. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010;153(7):435–441.</li>
+        <li>Spiegel K, Tasali E, Penev P, Van Cauter E. Brief communication: Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite. Ann Intern Med. 2004;141(11):846–850.</li>
+        <li>Milewski MD, Skaggs DL, Bishop GA, et al. Chronic lack of sleep is associated with increased sports injuries in adolescent athletes. J Pediatr Orthop. 2014;34(2):129–133.</li>
+        <li>Watson NF, Badr MS, Belenky G, et al. Recommended amount of sleep for a healthy adult: a joint consensus statement of the American Academy of Sleep Medicine and Sleep Research Society. J Clin Sleep Med. 2015;11(6):591–592.</li>
+        <li>Walker MP. Why We Sleep: Unlocking the Power of Sleep and Dreams. New York: Scribner; 2017.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

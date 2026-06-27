@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wearables a HRV: jak číst data a nezbláznit se z nich — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 11 — Spánek, stres a regenerace</div>
+    <h1>Wearables a HRV: jak číst data a nezbláznit se z nich</h1>
+
+    <p class="lead">Prsten, hodinky, pásek na hrudi — klienti dnes chodí ovešení čidly a každé ráno čekají na „skóre připravenosti“, jako by jim mělo říct, jestli žít. <strong>HRV je opravdu mocný ukazatel autonomního nervového systému — ale jen tehdy, když rozumíš tomu, co měří a co ne.</strong> Tahle lekce tě naučí číst data jako trend, ne jako věštbu, a hlavně bránit klienta před tím, aby ho jedno červené ráno hodilo do paniky.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co HRV doopravdy měří — a proč „vyšší = lepší“ platí jen u sebe sama, ne mezi lidmi.</li>
+        <li>Proč se nikdy nedíváš na jedno číslo, ale na sedmidenní klouzavý průměr a jeho rozptyl.</li>
+        <li>Jak přesné (a nepřesné) jsou prsteny a hodinky proti EKG — a kdy datům věřit.</li>
+        <li>Jednoduchý rozhodovací rámec: kdy podle HRV trénink upravit a kdy ho ignorovat.</li>
+        <li>Jak nastavit klienta tak, aby ho appka nezotročila, ale posloužila.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co HRV vlastně je a co měří</h2>
+    <p>HRV (variabilita srdeční frekvence) není tep. Je to <strong>kolísání času mezi jednotlivými údery</strong> — rozdíly mezi po sobě jdoucími R-R intervaly v milisekundách. Zdravé srdce nebije jako metronom; mezi údery se neustále drobně zrychluje a zpomaluje podle toho, jak se přetahuje sympatikus (plyn) s parasympatikem (brzda, bloudivý nerv).</p>
+    <p>Vyšší HRV obvykle znamená silnější parasympatickou aktivitu — tělo je v „odpočinkovém a regeneračním“ módu. Nízká HRV znamená převahu sympatiku — stres, únava, nemoc, nedostatek spánku, alkohol. Nejčastější metrika ve wearables je <strong>RMSSD</strong> (často v podobě jeho přirozeného logaritmu, lnRMSSD), protože dobře odráží právě parasympatickou aktivitu.</p>
+    <div class="eq">RMSSD = odmocnina z průměru čtverců rozdílů sousedních R-R intervalů</div>
+    <p>Klíčová věc, kterou musí pochopit každý klient: <strong>HRV je extrémně individuální.</strong> Normy jsou široké — co je u jednoho člověka „nízkých“ 40 ms, je u jiného úplně normální základ. Proto nikdy neporovnávej HRV mezi lidmi. Porovnáváš vždy člověka jen sama se sebou v čase.</p>
+    <blockquote>HRV ti neříká, jak „dobrý“ klient je. Říká, jak daleko je dneska od svého vlastního normálu.</blockquote>
+
+    <h2>2) Proč jedno číslo nic neznamená</h2>
+    <p>Tohle je nejdražší chyba, kterou klienti dělají: ráno vyskočí 38 místo obvyklých 55, oni zpanikaří a zruší trénink. Jenže denní HRV přirozeně kolísá ze dne na den klidně o desítky procent — kvůli pozici těla při měření, dechu, plnému měchýři, pozdní večeři, sklence vína. <strong>Jediné ráno je šum, ne signál.</strong></p>
+    <p>Smysluplný obraz dává až <strong>trend</strong>. V literatuře pro sportovce se osvědčil sedmidenní klouzavý průměr lnRMSSD a sledování jeho <strong>rozptylu</strong> (variační koeficient, CV). Klesající průměr i rostoucí rozptyl ukazují směrem k narůstající únavě či nefunkčnímu přetížení; stabilní vysoký průměr s nízkým rozptylem znamená dobře zvládnutou adaptaci.</p>
+    <div class="card">
+      <p><strong>Sedmidenní klouzavý průměr:</strong> tlumí denní šum a ukáže skutečný směr. Sleduješ ho, ne jednotlivý den.</p>
+      <p><strong>Rozptyl (CV) průměru:</strong> roste, když je organismus rozhozený. Stabilní úzké pásmo = pod kontrolou.</p>
+      <p><strong>Tvoje osobní pásmo:</strong> po pár týdnech měření zjistíš „normální“ rozsah daného klienta. Až výrazný a vytrvalý úkrok z něj je signál.</p>
+      <p><strong>Frekvence:</strong> ideálně denní nebo skoro denní měření za standardních podmínek (ráno po probuzení, vleže, stejně). Pár náhodných měření týdně je nutné minimum pro smysluplný průměr.</p>
+    </div>
+    <p>Pozor i na opačný extrém: u dobře trénovaných vytrvalců se HRV při těžké zátěži paradoxně může „saturovat“ a přestat dál stoupat — proto se u nich někdy sleduje poměr lnRMSSD/RR. U běžného klienta to řešit nemusíš, ale věz, že vyšší není donekonečna lepší.</p>
+
+    <h2>3) Jak přesná data ten náramek vůbec dává</h2>
+    <p>Než budeš data interpretovat, musíš vědět, jak věrohodná jsou. Zlatý standard je EKG; wearables měří optikou (fotopletysmografie, PPG) přes prokrvení kůže, což je principiálně méně přesné a citlivé na pohyb. Dobrá zpráva: <strong>v klidu, hlavně v noci, jsou špičková zařízení dnes překvapivě dobrá.</strong></p>
+    <div class="card">
+      <p><strong>Nejpřesnější v nedávných validacích:</strong> prsteny Oura (generace 3 a 4) a pásek/náramek WHOOP 4.0 vykazovaly v noci nejvyšší shodu s EKG u klidového tepu i HRV.</p>
+      <p><strong>Nižší shoda:</strong> řada zápěstních hodinek (Garmin, Polar) měla u HRV slabší korelaci — k orientaci stačí, na jemné rozdíly méně.</p>
+      <p><strong>Háček s daty:</strong> většina aplikací ti dá jen jedno denní „skóre“ a neukáže surová R-R data. Nemůžeš tedy vždy ověřit kvalitu měření ani si spočítat vlastní metriku.</p>
+    </div>
+    <p>Praktický závěr: ber konkrétní číslo s rezervou, ale věř <strong>směru a opakovatelnosti</strong>. Zařízení je obvykle konzistentní samo se sebou — i když je absolutní hodnota lehce mimo, trend zachytí spolehlivě. A to je přesně to, co potřebuješ.</p>
+
+    <h2>4) Pomáhá HRV-řízený trénink vůbec?</h2>
+    <p>Tady buď upřímný. Existují studie i protokoly, kde se denní trénink řídil podle ranního HRV — když je nízko, dá se lehčí den; když vysoko, jede se tvrdě. Logika sedí a u některých vytrvalců to přineslo srovnatelné nebo lepší výsledky než pevný plán, protože zátěž lépe sedla na aktuální stav.</p>
+    <p>Ale: efekt není zázračný ani univerzální. U aerobně velmi trénovaných nemusí být snížené HRV citlivý ukazatel, jiné populace reagují jinak a kvalita důkazů je smíšená. <strong>HRV je jeden vstup do rozhodnutí, ne autopilot.</strong> Vždycky ho čteš spolu se subjektivními signály — kvalita spánku, nálada, bolavost svalů, chuť trénovat.</p>
+    <div class="eq">Rozhodnutí = trend HRV + subjektivní pocit + kontext (život, nemoc, plán)</div>
+    <p>Když si HRV a pocit odporují, vyhrává obvykle zdravý rozum a kontext. Náramek neví, že klient měl dusno v ložnici nebo dvě piva — ty to víš.</p>
+
+    <h2>5) Rozhodovací rámec do praxe</h2>
+    <p>Aby z toho nebyla věda pro vědu, dej klientovi jednoduchý semafor postavený na trendu, ne na jednom ránu:</p>
+    <div class="card">
+      <p><strong>🟢 Zelená — trend v normě nebo nad ním, rozptyl nízký:</strong> jeď podle plánu. Klidně i tvrdý den.</p>
+      <p><strong>🟡 Žlutá — jeden den výrazně dole, ale týdenní trend drží:</strong> nic neměň kvůli jednomu ránu. Sleduj, jak se měření zachová zítra.</p>
+      <p><strong>🟠 Oranžová — trend klesá několik dní a/nebo roste rozptyl:</strong> uber objem či intenzitu, přidej spánek a jídlo, vyřaď stresory. Ne nutně volno, ale lehčí týden.</p>
+      <p><strong>🔴 Červená — výrazný a vytrvalý propad + mizerný pocit, nebo příznaky nemoci:</strong> regeneruj, případně odpočinek. Tady náramek a tělo mluví zajedno.</p>
+    </div>
+    <p>Všimni si, že na jediné číslo nikdy nereagujeme drastickou změnou. Reagujeme na <strong>opakovaný směr</strong>, a navíc vždy s ohledem na to, jak se klient cítí. Tím se vyhneš tomu nejhoršímu — že se z nástroje pro regeneraci stane zdroj úzkosti.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům, co panikaří z červeného rána, říkám jednu větu: „Náramek čte minulou noc, ne tvoje schopnosti.“ První dva týdny po nasazení čidla zakážu se na denní skóre vůbec koukat — jen ať sbírá data, abychom poznali jeho normál. Pak se díváme společně, a to výhradně na sedmidenní trend. Když mi někdo řekne „mám špatnou HRV“, první otázka je: „A jak ses vyspal a jak se cítíš?“ V devíti z deseti případů to data jen potvrdí to, co tělo už dávno vědělo.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co přesně HRV měří a co to odráží? <span class="tg">odpověď ▾</span></div><div class="aa">Kolísání času mezi po sobě jdoucími údery srdce (R-R intervaly). Odráží rovnováhu autonomního nervstva — vyšší HRV obvykle znamená převahu parasympatiku (regenerace), nižší převahu sympatiku (stres, únava, nemoc).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč nelze porovnávat HRV mezi dvěma lidmi? <span class="tg">odpověď ▾</span></div><div class="aa">Protože HRV je extrémně individuální a normy jsou široké. Stejná hodnota může být u jednoho nízká a u druhého normální. Porovnává se vždy člověk jen sám se sebou v čase.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Na co se díváš místo jednoho denního čísla? <span class="tg">odpověď ▾</span></div><div class="aa">Na sedmidenní klouzavý průměr lnRMSSD a na jeho rozptyl (variační koeficient). Klesající trend nebo rostoucí rozptyl ukazuje na narůstající únavu; jedno ráno je jen šum.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak přesná jsou data z wearables a kterým věřit nejvíc? <span class="tg">odpověď ▾</span></div><div class="aa">Proti EKG jsou nejpřesnější v klidu/v noci prsteny Oura (gen 3 a 4) a WHOOP 4.0; část zápěstních hodinek má u HRV slabší shodu. Konkrétní číslo ber s rezervou, ale věř směru a opakovatelnosti — zařízení bývá konzistentní samo se sebou.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Když si HRV a subjektivní pocit odporují, čím se řídíš? <span class="tg">odpověď ▾</span></div><div class="aa">Kontextem a zdravým rozumem. HRV je jen jeden vstup do rozhodnutí, ne autopilot — čteš ho spolu se spánkem, náladou, bolavostí a životní situací, které náramek nezná.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi sebe nebo modelového klienta a popiš protokol pro první měsíc s HRV: jakým zařízením a za jakých podmínek se bude měřit, jak dlouho budete jen sbírat data pro určení „normálu“, a jak pak nastavíš semafor (zelená/žlutá/oranžová/červená) na základě sedmidenního trendu. Doplň jednu větu, kterou klientovi řekneš, až ho vyděsí jedno červené ráno.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Shaffer F, Ginsberg JP. An Overview of Heart Rate Variability Metrics and Norms. Front Public Health. 2017;5:258.</li>
+        <li>Plews DJ, Laursen PB, Stanley J, Kilding AE, Buchheit M. Training adaptation and heart rate variability in elite endurance athletes: opening the door to effective monitoring. Sports Med. 2013;43(9):773–781.</li>
+        <li>Plews DJ, Laursen PB, Kilding AE, Buchheit M. Heart rate variability in elite triathletes, is variation in variability the key to effective training? A case comparison. Eur J Appl Physiol. 2012;112(11):3729–3741.</li>
+        <li>Carrasco-Poyatos M, González-Quílez A, Martínez-González-Moro I, Granero-Gallegos A. HRV-Guided Training for Professional Endurance Athletes: A Protocol for a Cluster-Randomized Controlled Trial. Int J Environ Res Public Health. 2020;17(15):5465.</li>
+        <li>Dial MB, et al. Validation of nocturnal resting heart rate and heart rate variability in consumer wearables. Physiol Rep. 2025;13(15):e70527.</li>
+        <li>Mishica C, et al. Monitoring Training Adaptation and Recovery Status in Athletes Using Heart Rate Variability via Mobile Devices: A Narrative Review. Sensors. 2026;26(1):3.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l11', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

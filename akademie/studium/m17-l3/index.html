@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P-value vs. effect size: proč „statisticky významné" nestačí — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 17 · Lekce 3 — Jak číst vědu a nenaletět</div>
+    <h1>P-value vs. effect size: proč „statisticky významné" nestačí</h1>
+
+    <p class="lead">Když uvidíš v titulku studie nebo na slidu influencera slovo „statisticky významné", máš pocit, že jde o tvrdý důkaz. Jenže <strong>p-value ti neříká, jestli je efekt velký, užitečný, ani jestli je pravdivý</strong> — říká jen něco hodně úzkého o pravděpodobnosti dat. Tahle lekce tě naučí oddělit „významné" od „důležité", číst effect size a nenaletět na čísla, která zní přesvědčivě, ale prakticky nic neznamenají.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co p-value doopravdy měří — a čtyři věci, které lidé do něj mylně promítají.</li>
+        <li>Co je effect size a proč rozhoduje o tom, jestli tě výsledek má zajímat.</li>
+        <li>Proč velké vzorky dělají „významným" i triviální nesmysl.</li>
+        <li>Jak hranice p &lt; 0,05 přispěla k replikační krizi ve vědě.</li>
+        <li>Praktický postup, jak číst abstrakt studie a hned poznat, jestli stojí za pozornost.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co p-value vlastně je (a co není)</h2>
+    <p>P-value je odpověď na jednu velmi konkrétní otázku: <strong>kdyby ve skutečnosti žádný efekt neexistoval (platila by nulová hypotéza), jak pravděpodobné by bylo naměřit data aspoň tak extrémní, jako jsou ta naše?</strong> Nic víc. Malé p (typicky &lt; 0,05) znamená, že taková data by za „žádného efektu" byla dost překvapivá — proto je bereme jako signál, že tam něco být může.</p>
+    <p>Problém je, že lidé do p-value cpou významy, které tam nejsou. Americká statistická asociace kvůli tomu vydala v roce 2016 vůbec své první oficiální stanovisko k jednomu statistickému nástroji — právě k p-value. Pojďme si pojmenovat nejčastější omyly:</p>
+    <div class="card">
+      <p><strong>Mýtus: „p = 0,03 znamená 3% šanci, že je výsledek náhoda."</strong> Ne. P-value předpokládá, že nulová hypotéza platí — neměří pravděpodobnost, že platí. To jsou dvě různé věci.</p>
+      <p><strong>Mýtus: „p &lt; 0,05 znamená, že efekt je velký / důležitý."</strong> Vůbec. P-value neříká nic o velikosti efektu. Triviální rozdíl může mít p &lt; 0,001.</p>
+      <p><strong>Mýtus: „p = 0,06 znamená, že efekt neexistuje."</strong> Hranice 0,05 je konvence, ne přírodní zákon. 0,049 a 0,051 jsou prakticky totéž.</p>
+      <p><strong>Mýtus: „významný výsledek se určitě zopakuje."</strong> Statistická významnost není záruka replikace ani spolehlivosti.</p>
+    </div>
+    <blockquote>P-value je detektor kouře, ne hasič. Řekne ti „možná tu něco hoří", ale ne jak velký je to požár ani jestli stojí za to vyběhnout z domu.</blockquote>
+
+    <h2>2) Effect size: otázka, která tě má zajímat</h2>
+    <p>Zatímco p-value odpovídá na „je tam vůbec nějaký efekt?", <strong>effect size (velikost účinku) odpovídá na „jak velký ten efekt je?"</strong> — a to je pro praxi ta podstatnější otázka. Tréninkový zásah, který sice „statisticky funguje", ale přidá za 12 týdnů 0,3 kg svalu navíc oproti placebu, je vědecky zajímavý a prakticky skoro k ničemu.</p>
+    <p>Nejběžnější standardizovaná míra je <strong>Cohenovo d</strong> — rozdíl mezi průměry dvou skupin vydělený sdruženou směrodatnou odchylkou. Říká, o kolik „odchylek" se skupiny liší, takže se dá srovnávat napříč studiemi a používá se v meta-analýzách.</p>
+    <div class="eq">Cohenovo d = (průměr A − průměr B) / sdružená SD</div>
+    <p>Cohen sám navrhl orientační hranice — ale neochotně a záměrně mlhavě, protože nechtěl, aby z nich lidé dělali další tvrdou čáru:</p>
+    <div class="card">
+      <p><strong>d ≈ 0,2 — malý efekt.</strong> Reálný, ale v praxi často přehlušený šumem každodenního života.</p>
+      <p><strong>d ≈ 0,5 — střední efekt.</strong> Většinou už pozorovatelný „pouhým okem".</p>
+      <p><strong>d ≈ 0,8 — velký efekt.</strong> Nápadný rozdíl, o jaký nám obvykle jde.</p>
+      <p><em>Pozor: ve fitness kontextu jsou i menší d často relevantní — záleží, jestli je to jediná proměnná na stole, nebo jen třešnička na dortu, který už dělá trénink a strava.</em></p>
+    </div>
+    <p>Pokud studie hlásí p-value, ale zamlčuje effect size a konfidenční intervaly, je to varovný signál. Bez velikosti efektu nevíš, jestli „funguje" znamená „změní ti to život", nebo „změří se to jen v laboratoři".</p>
+
+    <h2>3) Velký vzorek udělá „významným" i nesmysl</h2>
+    <p>Tady je past, na kterou naletí i chytří lidé. <strong>P-value silně závisí na velikosti vzorku.</strong> Čím víc lidí ve studii, tím menší (a klidně i naprosto triviální) rozdíl projde přes hranici 0,05. Při deseti tisících účastníků může být „statisticky vysoce významný" rozdíl, který je v reálu zanedbatelný.</p>
+    <p>A naopak: u malých studií — což je v silovém a fitness výzkumu běžné — může reálný a důležitý efekt p-value „nepřekročit" jen proto, že na něj nebylo dost lidí. Malé vzorky navíc nadhodnocují velikost efektu: když už něco „vyjde", bývá to přehnaně velké.</p>
+    <blockquote>Statistická významnost = velikost efektu × velikost vzorku × štěstí. Když ti chybí kontext o vzorku, samotné „p &lt; 0,05" je skoro bezcenné.</blockquote>
+    <p>Praktický důsledek pro trenéra: u obří populační studie se ptej hlavně „a jak velký je ten efekt v praxi?". U mrňavé studie (n = 12) se ptej „není ten efekt jen náhoda, kterou se nepodařilo statisticky vyloučit?". Obě otázky míří mimo p-value — do effect size a do velikosti vzorku.</p>
+
+    <h2>4) Jak hranice 0,05 nakrmila replikační krizi</h2>
+    <p>Když věda odměňuje „významné" výsledky publikací a granty, vzniká tlak honit p &lt; 0,05 za každou cenu. To vede k <strong>p-hackingu</strong> (testuju spoustu věcí a publikuju jen tu, co „vyšla") a k <strong>publikační předpojatosti</strong> (negativní výsledky se nepublikují). Výsledek je literatura plná efektů, které tam reálně být nemusí.</p>
+    <p>Že nejde o teorii, ukázal slavný Reprodukční projekt: tým kolem Briana Noseka zkusil zopakovat 100 psychologických studií. <strong>Replikovat se podařilo jen kolem 36 % výsledků a průměrná velikost efektu při opakování klesla zhruba na polovinu</strong> oproti originálu. Už dřív John Ioannidis matematicky argumentoval, proč je u mnoha designů pravděpodobnější, že publikovaný „nález" je falešný — hlavně u malých vzorků, malých efektů a velké flexibility v analýze.</p>
+    <div class="card">
+      <p><strong>Co z toho plyne pro čtení studií:</strong></p>
+      <p>• Jedna „významná" studie není důkaz — je to hypotéza čekající na replikaci.</p>
+      <p>• Víc vážíš <strong>meta-analýzy a systematické přehledy</strong>, které skládají efekty napříč studiemi, než jeden senzační titulek.</p>
+      <p>• Předregistrované studie a sdílená data jsou důvěryhodnější než ty, kde si autor mohl analýzu „doladit".</p>
+      <p>• Velký efekt z malé studie ber s rezervou — bývá nadhodnocený.</p>
+    </div>
+
+    <h2>5) Korelace, kauzalita a čtení abstraktu za 60 sekund</h2>
+    <p>Poslední past není o p-value, ale chodí s ní ruku v ruce: <strong>významná korelace neznamená příčinu.</strong> „Lidé, co jedí víc bílkovin, mají víc svalů" může znamenat, že bílkoviny stavějí sval — nebo že lidé, co cvičí, prostě jedí víc bílkovin. Bez randomizace a kontroly nevíš směr ani jestli za to nemůže třetí faktor.</p>
+    <p>Dej dohromady všechno z lekce do rychlého filtru, kterým prohnat každý abstrakt nebo příspěvek, co tvrdí „věda dokázala":</p>
+    <div class="card">
+      <p><strong>1. Jak velký je efekt?</strong> Hledej d, procenta, kilogramy — ne jen „významné".</p>
+      <p><strong>2. Kolik bylo lidí?</strong> n = 8 a n = 8000 čteš úplně jinak.</p>
+      <p><strong>3. Je to RCT, nebo jen korelace?</strong> Pozorovací data nedokazují příčinu.</p>
+      <p><strong>4. Jedna studie, nebo meta-analýza?</strong> Trend napříč studiemi &gt; jeden výstřel.</p>
+      <p><strong>5. Komu měřili a na kom to chceš použít?</strong> Myši, netrénovaní, elitní sportovci — to nejsou tvoji klienti.</p>
+    </div>
+    <p>Když tohle máš v hlavě, přestaneš naskakovat na každý titulek a začneš odhadovat, jestli za daným tvrzením stojí reálný, opakovatelný a prakticky užitečný efekt — nebo jen šťastné p-value.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient pošle „četl jsem studii, že tenhle doplněk funguje", první co dělám, není hádka. Otevřu abstrakt a ptám se nahlas: „Kolik to přidalo? Na kolika lidech? Bylo to RCT? A je na to víc studií?" Většinou se ukáže, že efekt byl titěrný, vzorek mrňavý a šlo o jednu studii sponzorovanou výrobcem. Neříkám klientovi, že je hloupý — učím ho ten filtr používat sám. Trenér, který umí číst effect size, ušetří klientovi spoustu peněz i zklamání.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Na jakou otázku p-value odpovídá — a na jakou ne? <span class="tg">odpověď ▾</span></div><div class="aa">Odpovídá na: „kdyby žádný efekt neexistoval, jak pravděpodobná by byla aspoň tak extrémní data?". Neodpovídá na to, jak velký efekt je, jestli je důležitý, ani jak pravděpodobné je, že nulová hypotéza platí.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je effect size a proč je pro praxi často důležitější než p-value? <span class="tg">odpověď ▾</span></div><div class="aa">Velikost účinku (např. Cohenovo d) říká, jak velký ten rozdíl je. Pro praxi rozhoduje, jestli efekt stojí za pozornost — „významný", ale titěrný efekt je prakticky k ničemu.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč velký vzorek může udělat „statisticky významným" i triviální rozdíl? <span class="tg">odpověď ▾</span></div><div class="aa">P-value závisí na velikosti vzorku. Čím víc lidí, tím menší a klidně zanedbatelný rozdíl překročí hranici 0,05. Proto se u velkých studií ptej hlavně na velikost efektu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak souvisí honba za p &lt; 0,05 s replikační krizí? <span class="tg">odpověď ▾</span></div><div class="aa">Tlak publikovat „významné" výsledky vede k p-hackingu a publikační předpojatosti. Reprodukční projekt zopakoval jen ~36 % studií a efekty klesly zhruba na polovinu — jedna „významná" studie tedy není důkaz.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jmenuj aspoň tři otázky z rychlého filtru na čtení studie. <span class="tg">odpověď ▾</span></div><div class="aa">Jak velký je efekt? Kolik bylo lidí? Je to RCT nebo jen korelace? Jedna studie nebo meta-analýza? Komu měřili a na kom to chci použít? (Stačí tři.)</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Najdi si jeden fitness titulek nebo příspěvek typu „studie dokázala, že…" a dohledej tu studii. Projeď ji rychlým filtrem z páté sekce: zapiš velikost efektu (číslo, ne „významné"), velikost vzorku, jestli šlo o RCT nebo korelaci, jestli existuje meta-analýza a na kom byl výzkum dělaný. Na závěr napiš jednou větou, jestli bys podle toho zásah klientovi doporučil — a proč.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Wasserstein RL, Lazar NA. The ASA's Statement on p-Values: Context, Process, and Purpose. The American Statistician. 2016;70(2):129–133.</li>
+        <li>Open Science Collaboration. Estimating the reproducibility of psychological science. Science. 2015;349(6251):aac4716.</li>
+        <li>Ioannidis JPA. Why Most Published Research Findings Are False. PLoS Medicine. 2005;2(8):e124.</li>
+        <li>Cohen J. Statistical Power Analysis for the Behavioral Sciences. 2nd ed. Hillsdale, NJ: Lawrence Erlbaum Associates; 1988.</li>
+        <li>Lohse KR, et al. The bias for statistical significance in sport and exercise medicine. J Sci Med Sport. 2023;26(6):305–311.</li>
+        <li>Sullivan GM, Feinn R. Using Effect Size—or Why the P Value Is Not Enough. J Grad Med Educ. 2012;4(3):279–282.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m17-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

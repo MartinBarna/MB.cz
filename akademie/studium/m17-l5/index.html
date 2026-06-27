@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meta-analýzy: zlatý standard a jeho limity — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 17 · Lekce 5 — Jak číst vědu a nenaletět</div>
+    <h1>Meta-analýzy: zlatý standard a jeho limity</h1>
+
+    <p class="lead">Když chceš v hádce o tréninku „vytáhnout těžký kalibr“, sáhneš po meta-analýze — a právem. Sedí na vrcholu hierarchie důkazů a shrne desítky studií do jednoho čísla. <strong>Jenže meta-analýza není kouzlo: je jen tak dobrá jako studie, které do ní vstoupí.</strong> Tahle lekce tě naučí číst ji jako trenér, ne jako fanoušek titulku — poznat, kdy jí věřit, a kdy ti přes kabát prodává nejistotu jako jistotu.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co meta-analýza vlastně dělá a proč stojí na vrcholu hierarchie důkazů.</li>
+        <li>Pravidlo „garbage in, garbage out“ — proč slabé studie zkazí i nejlepší syntézu.</li>
+        <li>Jak číst velikost účinku a interval spolehlivosti místo lovu na p&nbsp;&lt;&nbsp;0,05.</li>
+        <li>Co je publikační zkreslení a jak ho meta-analýzy zkoušejí odhalit.</li>
+        <li>Proč heterogenita rozhoduje, jestli se výsledek dá vůbec zprůměrovat.</li>
+        <li>Praktický postup, jak meta-analýzu přečíst za pět minut a nenaletět.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč je meta-analýza na vrcholu pyramidy</h2>
+    <p>Jedna studie je jeden vzorek lidí, v jedné laboratoři, za jedněch podmínek. Druhá studie na stejné téma může vyjít trochu jinak — ne proto, že někdo lhal, ale protože náhoda, velikost vzorku a kontext nikdy nesedí na sto procent. <strong>Meta-analýza vezme všechny dostupné studie k jedné otázce a statisticky je spojí do jednoho souhrnného odhadu.</strong> Tím získává mnohem větší celkový vzorek a stabilnější obrázek, než dá kterákoli jednotlivá studie sama.</p>
+    <p>Proto v hierarchii důkazů — od kazuistik a názoru experta dole po randomizované kontrolované studie nahoře — sedí na samém vrcholu dobře provedený systematický přehled s meta-analýzou. Klíčové slovo je ale „dobře provedený“. Pyramida neříká „meta-analýza vždy vyhraje nad RCT“; říká „pečlivá syntéza dobrých RCT je tvoje nejlepší dostupná evidence“.</p>
+    <blockquote>Hierarchie důkazů ti říká, kde začít hledat — ne kdy přestat myslet. Špatná meta-analýza je pořád špatná, i když visí nejvýš.</blockquote>
+
+    <h2>2) Garbage in, garbage out</h2>
+    <p>Tohle je věta, kterou si máš tetovat na předloktí. Meta-analýza nedokáže vyrobit kvalitu, kterou vstupní studie nemají. Pokud spojíš deset malých, špatně zaslepených studií s nejasným měřením, dostaneš velmi přesně vypadající průměr nesmyslu. Syntéza je spolehlivá jen tak, jako primární studie, které do ní vstoupily.</p>
+    <div class="card">
+      <p><strong>Na co se u vstupů dívat:</strong></p>
+      <p><strong>Design:</strong> jsou to randomizované kontrolované studie, nebo jen pozorovací data? Kauzalitu unesou jen randomizované.</p>
+      <p><strong>Velikost a počet:</strong> meta-analýza z osmi studií po dvanácti lidech není totéž co z dvaceti studií po stovkách.</p>
+      <p><strong>Hodnocení rizika zkreslení:</strong> seriózní přehled zkoumá kvalitu každé studie (zaslepení, dropout, registrace předem) — hledej tabulku „risk of bias“.</p>
+      <p><strong>Trénovaná vs. pozorovaná populace:</strong> meta-analýza na netrénovaných nováčcích ti o pokročilém klientovi řekne málo.</p>
+    </div>
+    <p>Praktický důsledek: než uvěříš souhrnnému číslu, podívej se, z čeho je složené. Dobrý systematický přehled ti to neschovává — naopak to rozepisuje, protože ví, že to je jeho slabina i síla.</p>
+
+    <h2>3) Velikost účinku &gt; p-hodnota</h2>
+    <p>Začátečník v četbě vědy loví větu „statisticky významné (p&nbsp;&lt;&nbsp;0,05)“ a má hotovo. Jenže p-hodnota ti říká jen, jak je nepravděpodobné, že bys data viděl, kdyby účinek byl nulový — neříká, jak <strong>velký</strong> ten účinek je ani jestli tě v praxi zajímá. S dostatečně velkým vzorkem je „významný“ i účinek, který je v reálu zanedbatelný.</p>
+    <p>Proto čteš dvě věci: <strong>velikost účinku</strong> (effect size — třeba o kolik kilo navíc, nebo standardizovaně Cohenovo&nbsp;d) a <strong>interval spolehlivosti</strong> (rozpětí, kde se pravá hodnota nejspíš nachází). Úzký interval daleko od nuly = silný, jistý nález. Široký interval, který přejíždí nulu = „možná něco, možná nic“.</p>
+    <div class="eq">malý ≈ 0,2 · střední ≈ 0,5 · velký ≈ 0,8 &nbsp;(Cohenovo d)</div>
+    <p>Tyhle hranice ber jako orientační, ne jako posvátné. U někoho je „malý“ účinek na síle za pár měsíců pořád užitečný; jinde je i „střední“ účinek v praxi k ničemu, když stojí třikrát víc úsilí. Effect size ti dá otázku „stojí mi to za to?“ — p-hodnota ji ani nepoloží.</p>
+    <blockquote>P&nbsp;&lt;&nbsp;0,05 znamená „nejspíš to není čistá náhoda“. Neznamená „je to velké“, „je to důležité“ ani „bude to platit u mého klienta“.</blockquote>
+
+    <h2>4) Publikační zkreslení: co se nedostalo ven</h2>
+    <p>Tady je tichý zabiják. Časopisy a autoři ráji publikují „pozitivní“ výsledky, kde něco vyšlo. Studie, kde nevyšlo nic, často skončí v šuplíku (proto „file-drawer problem“). Když pak meta-analýza sečte jen to, co bylo publikováno, může nadhodnotit účinek — prostě proto, že nuly nikdy neuviděla.</p>
+    <p>Dobré meta-analýzy to testují. Nejčastější nástroj je <strong>funnel plot</strong> (trychtýřový graf): vynese účinek proti přesnosti studie. Bez zkreslení vznikne symetrický trychtýř. Když chybí jedna strana (typicky malé studie s nulovým výsledkem), graf je asymetrický a podezření na publikační zkreslení roste; formálně se to testuje třeba Eggerovým testem.</p>
+    <div class="card">
+      <p><strong>Jak velký problém to je?</strong> V přehledu meta-analýz z předních medicínských časopisů byla asymetrie trychtýřového grafu nalezena zhruba v <strong>38&nbsp;%</strong> případů. To není okraj — to je každá třetí až druhá. Proto: pokud meta-analýza vůbec neřeší publikační zkreslení, ber její souhrnné číslo jako možná nadhodnocené.</p>
+    </div>
+    <p>Pro trenéra to znamená zdravou skepsi vůči „zázračným“ účinkům doplňků a metod, kde existuje hromada malých nadšených studií a žádný velký pokus, který by je potvrdil.</p>
+
+    <h2>5) Heterogenita: dá se to vůbec sčítat?</h2>
+    <p>Meta-analýza dává smysl, jen když studie měří dost podobnou věc. Pokud jedna trénuje 2× týdně, druhá 6×, jedna na nováčcích, druhá na sportovcích — průměr z nich je jako spočítat průměrnou teplotu pacientů v nemocnici. Číslo vyjde, ale neznamená nic.</p>
+    <p>Tomuhle rozptylu se říká <strong>heterogenita</strong> a měří se statistikou <strong>I²</strong> (kolik procent rozdílů mezi studiemi není náhoda). Hrubě: pod ~25&nbsp;% nízká, kolem 50&nbsp;% střední, nad ~75&nbsp;% vysoká heterogenita. Vysoké I² je varování — souhrnné číslo pak zakrývá víc, než ukazuje, a důležitější je ptát se „pro koho a za jakých podmínek to platí?“.</p>
+    <div class="eq">vysoké I² → neptej se „kolik“, ptej se „pro koho a kdy“</div>
+    <p>Dobré přehledy na heterogenitu reagují — dělají podskupinové analýzy (zvlášť nováčci, zvlášť pokročilí; zvlášť objem A, zvlášť objem B). Tam je často víc užitečné informace než v jednom celkovém průměru.</p>
+
+    <h2>6) Replikační krize a zdravá pokora</h2>
+    <p>Proč tohle všechno tak hrotíme? Protože věda má reálný problém s opakovatelností. Když tým zopakoval 100 publikovaných psychologických studií, statisticky významný výsledek ve stejném směru se podařilo zreplikovat zhruba u <strong>třetiny až poloviny</strong> z nich a průměrná velikost účinku byla zhruba poloviční oproti originálu. A už dřív zaznělo provokativní, ale matematicky podložené varování, že velká část publikovaných nálezů je nejspíš nepravdivá — hlavně tam, kde jsou malé vzorky, malé účinky a velká volnost v analýze.</p>
+    <p>To není důvod házet vědu přes palubu. Je to důvod milovat právě meta-analýzy a replikace — protože jediná obrana proti jednomu šťastnému výsledku je: zopakovat to a sečíst víc pokusů. Skepse není cynismus; je to nástroj, jak nenaletět.</p>
+    <blockquote>Jedna studie je drb. Zreplikovaná studie je svědek. Meta-analýza dobrých replikovaných studií je důkaz — ale i ten čteš s otevřenýma očima.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi někdo pošle „studie říká…“, dělám vždycky čtyři kroky. Jedna: je to vůbec meta-analýza nebo systematický přehled, nebo jedna malá studie? Dva: na kom to bylo — sedí to na mého klienta? Tři: jak velký je ten účinek a je interval spolehlivosti daleko od nuly, nebo přes ni přejíždí? Čtyři: řeší autoři publikační zkreslení a heterogenitu? Když projdou všechny čtyři, beru to vážně. Když na první otázce padnu na „jedna studie na dvanácti myších“, usmívám se a jedu dál. Tohle ti ušetří roky honění se za každým novým „zázrakem“ z titulků.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč meta-analýza stojí na vrcholu hierarchie důkazů? <span class="tg">odpověď ▾</span></div><div class="aa">Statisticky spojí všechny dostupné studie k jedné otázce do jednoho souhrnného odhadu, čímž získá větší celkový vzorek a stabilnější obrázek než jedna jednotlivá studie. Platí to ale jen pro dobře provedený přehled kvalitních studií.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co znamená „garbage in, garbage out“ u meta-analýzy? <span class="tg">odpověď ▾</span></div><div class="aa">Syntéza je jen tak spolehlivá jako primární studie, které do ní vstoupily. Ze slabých, zkreslených studií vznikne přesně vypadající, ale nedůvěryhodný průměr — meta-analýza kvalitu nevyrobí.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč čteš velikost účinku a interval spolehlivosti, ne jen p-hodnotu? <span class="tg">odpověď ▾</span></div><div class="aa">P-hodnota říká jen, jak nepravděpodobný by byl výsledek při nulovém účinku — neříká, jak je účinek velký ani prakticky důležitý. Velikost účinku (např. Cohenovo d) a interval spolehlivosti ti řeknou, jak silný a jak jistý nález je.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co je publikační zkreslení a jak se hledá? <span class="tg">odpověď ▾</span></div><div class="aa">Tendence publikovat hlavně pozitivní výsledky, kvůli čemuž může meta-analýza nadhodnotit účinek (nuly zůstaly v šuplíku). Hledá se třeba trychtýřovým grafem (funnel plot) — asymetrie naznačuje zkreslení — a Eggerovým testem.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená vysoká heterogenita (vysoké I²) a jak na ni reagovat? <span class="tg">odpověď ▾</span></div><div class="aa">Že se studie hodně liší a souhrnný průměr může být zavádějící. Místo otázky „kolik“ se ptáš „pro koho a za jakých podmínek“ a hledáš podskupinové analýzy.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Najdi jednu meta-analýzu na téma, které tě zajímá (např. objem tréninku a hypertrofie). Projdi mých pět kroků a napiš: kolik studií a na jaké populaci do ní vstoupilo, jak velký je souhrnný účinek a jaký má interval spolehlivosti, zda autoři řešili publikační zkreslení a jaká byla heterogenita (I²). Na závěr v jedné větě formuluj, jak moc bys jejímu závěru u svého klienta věřil — a proč.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Gosall NK, Gosall GS. A brief overview of systematic reviews and meta-analyses. Indian J Anaesth (a obdobné přehledy hierarchie důkazů). 2016;60(9):686–688.</li>
+        <li>Egger M, Davey Smith G, Schneider M, Minder C. Bias in meta-analysis detected by a simple, graphical test. BMJ. 1997;315(7109):629–634.</li>
+        <li>Open Science Collaboration. Estimating the reproducibility of psychological science. Science. 2015;349(6251):aac4716.</li>
+        <li>Ioannidis JPA. Why Most Published Research Findings Are False. PLoS Med. 2005;2(8):e124.</li>
+        <li>Egger M, Smith GD. Meta-analysis: potentials and promise / bias in location and selection of studies. BMJ. 1998;316(7124):61–66 (limity agregovaných dat a publikační zkreslení).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m17-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hierarchie důkazů: od kazuistiky po meta-analýzu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 17 · Lekce 1 — Jak číst vědu a nenaletět</div>
+    <h1>Hierarchie důkazů: od kazuistiky po meta-analýzu</h1>
+
+    <p class="lead">Každý týden potkáš nový „zázračný“ poznatek — někdo zhubl na intervalovém půstu, jedna studie ukázala, že kreatin „nefunguje“, influencer cituje „výzkum“. Jako trenér potřebuješ filtr, který oddělí signál od šumu. <strong>Ten filtr je hierarchie důkazů: ne všechny studie váží stejně.</strong> Když pochopíš, kde leží jaký typ důkazu, přestaneš naletět na jednu efektní studii a začneš stavět doporučení na tom, co opravdu drží.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak vypadá hierarchie důkazů od názoru a kazuistiky po systematické review a meta-analýzu.</li>
+        <li>Proč jedna studie skoro nikdy nestačí — a co je replikační krize.</li>
+        <li>Rozdíl mezi statistickou významností (p-value) a velikostí efektu (effect size).</li>
+        <li>Proč korelace není kauzalita a jak tě tahle záměna dostane.</li>
+        <li>Že i meta-analýza může být špatná — „garbage in, garbage out“.</li>
+        <li>Praktický postup, jak za pět minut posoudit, jestli tvrzení stojí za změnu tréninku.</li>
+      </ul>
+    </div>
+
+    <h2>1) Hierarchie: ne všechny důkazy váží stejně</h2>
+    <p>Když někdo řekne „studie ukázala“, první otázka zní: <strong>jaká studie?</strong> Existuje žebříček síly důkazů a každý stupeň má jinou váhu, protože jinak kontroluje zkreslení a náhodu.</p>
+    <div class="card">
+      <p><strong>Názor a zkušenost expertů (nejníž):</strong> užitečné pro hypotézy a praxi, ale plné zkreslení. „Mně to funguje“ není důkaz.</p>
+      <p><strong>Kazuistika / série případů:</strong> popis jednoho nebo pár klientů. Generuje nápady, nedokáže nic.</p>
+      <p><strong>Observační studie (kohortové, případ-kontrola):</strong> sledují, co se děje, bez zásahu. Ukazují souvislosti, ne příčiny.</p>
+      <p><strong>Randomizovaná kontrolovaná studie (RCT):</strong> lidé jsou náhodně rozděleni do skupin. Náhoda vyrovná rušivé faktory — tady poprvé můžeš mluvit o příčině.</p>
+      <p><strong>Systematické review a meta-analýza (nejvýš):</strong> systematicky posbírají a sečtou všechny relevantní studie. Větší vzorek, méně šumu.</p>
+    </div>
+    <p>Klasický obrázek je pyramida. Novější pohled (Murad a kol., 2016) ji ale zjemnil: hranice mezi stupni nejsou ostré čáry, ale rozmazané vlny — kvalitní RCT může převážit mizernou meta-analýzu. A systematické review s meta-analýzou se z pyramidy vyčleňují stranou jako <em>nástroj</em>, kterým ostatní důkazy hodnotíme, ne jako automatická „pravda navrch“.</p>
+    <blockquote>Hierarchie ti neříká „tohle ignoruj a tohle ber jako evangelium“. Říká: čím níž, tím víc pochybuj a tím méně sázej na to, že závěr přežije čas.</blockquote>
+
+    <h2>2) Jedna studie nestačí — replikační krize</h2>
+    <p>Tohle je nejdražší lekce v celém modulu. <strong>Jedna izolovaná studie je hypotéza, ne závěr.</strong> Ioannidis (2005) ve slavném textu „Why Most Published Research Findings Are False“ ukázal, proč: u malých vzorků, malých efektů, velké volnosti v designu a silných zájmů je u řady oborů pravděpodobnější, že publikovaný „nález“ je falešně pozitivní než pravdivý.</p>
+    <p>A není to jen teorie. Když Open Science Collaboration (2015) zopakovala 100 studií z prestižních psychologických časopisů, statisticky významný výsledek se podařilo zreplikovat jen u zhruba <strong>36 %</strong> — přitom v originálech bylo „významných“ 97 %. Průměrná velikost efektu při replikaci klesla zhruba na polovinu. Tomu se říká replikační krize.</p>
+    <p>Pro tebe z toho plyne jediné praktické pravidlo: novou efektní studii ber jako zajímavý vstup, ne jako důvod přepsat klientům trénink. Měň praxi, až když se nález <strong>opakovaně</strong> potvrdí napříč týmy a designy.</p>
+    <blockquote>Nadšení z jedné studie je nejrychlejší cesta, jak vypadat moderně dnes a hloupě za rok.</blockquote>
+
+    <h2>3) P-value vs. velikost efektu</h2>
+    <p>Dvě čísla, která se pletou nejvíc. <strong>P-value</strong> (statistická významnost) odpovídá zhruba na otázku „jak nepravděpodobný by byl takhle velký rozdíl, kdyby ve skutečnosti žádný nebyl?“. <strong>Effect size</strong> (velikost efektu) odpovídá na úplně jinou — a důležitější — otázku: „jak velký ten rozdíl vlastně je?“</p>
+    <p>Americká statistická asociace (Wasserstein & Lazar, 2016) to řekla natvrdo: p-value <em>neměří</em> pravděpodobnost, že je hypotéza pravdivá, ani důležitost výsledku. Hranice p &lt; 0,05 není svatá. Sullivan & Feinn (2012) k tomu dodávají větu, kterou si zapamatuj: <strong>velmi malý rozdíl může být statisticky významný, a přitom v praxi úplně bezvýznamný.</strong></p>
+    <div class="eq">významné ≠ velké · p &lt; 0,05 neříká, jak moc to zabralo</div>
+    <p>Příklad z praxe: doplněk „statisticky významně“ zvýší výkon o 0,3 %. Při dost velkém vzorku vyjde p malé, titulek křičí, ale ten rozdíl klient nikdy nepocítí. Vždycky se ptej na číslo efektu (kolik kilo, kolik procent, jak velký Cohenovo d), ne jen jestli je výsledek „významný“.</p>
+
+    <h2>4) Korelace není kauzalita</h2>
+    <p>Observační studie nacházejí souvislosti — a média z nich dělají příčiny. „Lidé, co jedí X, žijí déle“ neznamená, že X prodlužuje život. Možná lidé jedící X i víc cvičí, míň kouří a chodí k lékaři. Tomu se říká <strong>zavádějící proměnná</strong> (confounder).</p>
+    <div class="card">
+      <p><strong>Proč to vzniká:</strong> v observační studii si lidé chování vybírají sami. Kdo drží „zdravý“ návyk, drží jich obvykle víc — a ty se ti slijí do jednoho efektu.</p>
+      <p><strong>Jak to věda řeší:</strong> randomizací. Když přiřadíš skupiny náhodně (RCT), rušivé faktory se rozprostřou rovnoměrně a to, co zbude, je už příčina.</p>
+      <p><strong>Klasický test zdravého rozumu:</strong> dává směr smysl biologicky? A nemohl by jít opačně (nemoc způsobí chování, ne chování nemoc)?</p>
+    </div>
+    <p>Pro trenéra je to štít proti polovině internetových panik. Když uvidíš titulek „X souvisí s Y“, automaticky si doplň: <em>souvisí</em> — to ještě neznamená <em>způsobuje</em>.</p>
+
+    <h2>5) I meta-analýza může být špatná</h2>
+    <p>Meta-analýza stojí navrchu pyramidy, ale není kouzelná. Sečíst dvacet slabých studií ti nedá jednu silnou — dá ti přesněji změřený průměr možná pochybných dat. Platí <strong>„garbage in, garbage out“</strong>: kvalita výstupu nikdy nepřekročí kvalitu vstupů.</p>
+    <div class="card">
+      <p><strong>Heterogenita:</strong> když studie míchají dohromady začátečníky i pokročilé, různé protokoly a délky, průměr nemusí platit pro nikoho konkrétního.</p>
+      <p><strong>Publikační zkreslení:</strong> pozitivní výsledky se publikují snáz než nulové. Meta-analýza pak sčítá nadhodnocený obrázek.</p>
+      <p><strong>Výběr studií:</strong> kdo a podle jakých kritérií studie zařadil? Jiný filtr, jiný závěr.</p>
+    </div>
+    <p>Dobrý příklad smysluplné syntézy je dávkově-odpovědní vztah objemu tréninku a hypertrofie (Schoenfeld a kol., 2017): meta-analýza ukázala, že víc týdenních sérií obecně znamená víc svalu — ale i tady autoři upozorňují na heterogenitu a hranice zobecnění. Číst meta-analýzu tedy znamená číst i to, <em>co do ní vešlo</em>, ne jen tučný závěr v abstraktu.</p>
+
+    <h2>6) Pětiminutový filtr pro praxi</h2>
+    <p>Nemusíš být statistik. Stačí projít pár otázek, než kvůli „studii“ cokoli změníš:</p>
+    <div class="card">
+      <p><strong>1. Jaký typ důkazu to je?</strong> Názor, observace, RCT, nebo review? Čím níž, tím opatrněji.</p>
+      <p><strong>2. Replikovalo se to?</strong> Je to ojedinělý nález, nebo to vidíme opakovaně?</p>
+      <p><strong>3. Jak velký je efekt?</strong> Ne „je významný“, ale „o kolik“. Stojí to vůbec za úsilí?</p>
+      <p><strong>4. Korelace, nebo kauzalita?</strong> Byl tam zásah a randomizace, nebo jen pozorování?</p>
+      <p><strong>5. Na kom to bylo a kdo to platil?</strong> Myši ≠ lidé, začátečníci ≠ pokročilí, výrobce doplňku ≠ neutrální zdroj.</p>
+    </div>
+    <p>Když tvrzení projde všemi pěti, máš slušný důvod ho brát vážně. Když padne hned na první, klidně přikývni a nech klientův trénink být.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům i začínajícím trenérům říkám: „Nehádej se s jednou studií, hádej se s tělem těch studií.“ Když mi někdo pošle titulek, neřeším, jestli je z časopisu — ptám se, jestli to vidíme opakovaně a jak velký je ten efekt v reálu. Většina „převratných“ nálezů jsou drobné efekty z malých vzorků, co se příští rok neopakují. Já stavím doporučení na věcech, které přežily roky a desítky studií — a teprve okraje dolaďuju podle nového výzkumu.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Seřaď od nejslabšího po nejsilnější důkaz: RCT, názor experta, meta-analýza, observační studie. <span class="tg">odpověď ▾</span></div><div class="aa">Názor experta → observační studie → RCT → meta-analýza / systematické review. Pozor: novější pohled (Murad 2016) bere hranice jako rozmazané — kvalitní RCT může převážit slabou meta-analýzu.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč jedna efektní studie nestačí ke změně tréninku? <span class="tg">odpověď ▾</span></div><div class="aa">Kvůli replikační krizi — velká část publikovaných nálezů se neopakuje (v psychologii se zreplikovalo jen ~36 %). Jedna studie je hypotéza; měň praxi, až když se nález opakovaně potvrdí.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je rozdíl mezi p-value a velikostí efektu? <span class="tg">odpověď ▾</span></div><div class="aa">P-value říká, jak nepravděpodobný by byl takový rozdíl, kdyby žádný nebyl (statistická významnost). Velikost efektu říká, jak velký ten rozdíl je. Malý rozdíl může být významný, a přitom prakticky bezvýznamný.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč „korelace není kauzalita“? <span class="tg">odpověď ▾</span></div><div class="aa">Souvislost mezi dvěma věcmi může způsobovat třetí, skrytá proměnná (confounder), nebo může jít vztah opačným směrem. Příčinu spolehlivě ukáže až randomizovaný zásah (RCT), ne pozorování.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená „garbage in, garbage out“ u meta-analýzy? <span class="tg">odpověď ▾</span></div><div class="aa">Meta-analýza je jen tak dobrá jako studie, které do ní vešly. Slabé, heterogenní nebo publikačním zkreslením zatížené vstupy dají nespolehlivý průměr — proto čteme i to, co do analýzy bylo zařazeno, ne jen závěr.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Najdi jeden „výživový/tréninkový“ titulek ze sítí nebo médií, který něco tvrdí o příčině. Projej ho pětiminutovým filtrem z lekce: napiš, jaký typ důkazu za ním stojí, jestli jde o korelaci nebo kauzalitu, zda znáš velikost efektu a kdo studii financoval. Na závěr rozhodni: změnil bys kvůli tomu doporučení klientovi — a proč ano/ne?</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Murad MH, Asi N, Alsawas M, Alahdab F. New evidence pyramid. BMJ Evidence-Based Medicine. 2016;21(4):125–127.</li>
+        <li>Ioannidis JPA. Why Most Published Research Findings Are False. PLoS Medicine. 2005;2(8):e124.</li>
+        <li>Open Science Collaboration. Estimating the reproducibility of psychological science. Science. 2015;349(6251):aac4716.</li>
+        <li>Wasserstein RL, Lazar NA. The ASA's Statement on p-Values: Context, Process, and Purpose. The American Statistician. 2016;70(2):129–133.</li>
+        <li>Sullivan GM, Feinn R. Using Effect Size—or Why the P Value Is Not Enough. Journal of Graduate Medical Education. 2012;4(3):279–282.</li>
+        <li>Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: A systematic review and meta-analysis. Journal of Sports Sciences. 2017;35(11):1073–1082.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m17-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

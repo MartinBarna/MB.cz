@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protein a EAA: kdy má suplement smysl nad rámec stravy — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 14 · Lekce 5 — Suplementace podle důkazů</div>
+    <h1>Protein a EAA: kdy má suplement smysl nad rámec stravy</h1>
+
+    <p class="lead">Proteinový prášek je nejprodávanější suplement na trhu — a zároveň ten nejvíc nepochopený. <strong>Protein není „zázračný anabolik“, je to jen pohodlná forma jídla.</strong> Pravda je nudná, ale osvobozující: jakmile klient dosáhne svého denního cíle bílkovin z normální stravy, prášek mu nedá nic navíc. Tahle lekce ti dá rámec, kdy suplement skutečně řeší problém — a kdy jen prodáváš drahou potravinu.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Kolik bílkovin denně klient reálně potřebuje a kde je strop, za kterým přidávání nedává smysl.</li>
+        <li>Proč o anabolickou odpověď rozhodují esenciální aminokyseliny (EAA) a zejména leucin, ne celkové „gramy proteinu“.</li>
+        <li>Jak rozdělit příjem do dne tak, aby každé jídlo spustilo svalovou proteosyntézu.</li>
+        <li>Konkrétní situace, kdy má proteinový prášek nebo EAA smysl nad rámec stravy — a kdy ne.</li>
+        <li>Proč je u BCAA samotných důkazní podpora slabá a co místo nich.</li>
+        <li>Jak o suplementaci mluvit s klientem tak, aby neutrácel zbytečně.</li>
+      </ul>
+    </div>
+
+    <h2>1) Nejdřív cíl: kolik bílkovin denně</h2>
+    <p>Než vůbec řešíš jakýkoli prášek, musí být jasné celkové denní množství. Pro člověka, který silově trénuje a chce budovat nebo udržet sval, se konsenzus pohybuje kolem <strong>1,4–2,0 g bílkovin na kilogram tělesné hmotnosti denně</strong>. V redukci (deficitu), kdy chceš maximálně chránit sval, se vyplatí jít k horní hranici, klidně k 2,2–2,4 g/kg u trénovaných a štíhlých jedinců.</p>
+    <p>Klíčové číslo: meta-analýza s metaregresí ukázala, že přínos přidávání bílkovin pro nárůst svalové hmoty se <strong>vyrovná zhruba kolem 1,6 g/kg/den</strong> (horní hranice intervalu spolehlivosti sahá k ~2,2 g/kg). Nad tímto bodem už další gramy nepřidávají měřitelný sval — jen kalorie a sytost.</p>
+    <div class="card">
+      <p><strong>Praktické rozpětí denního příjmu:</strong></p>
+      <p>• Udržení / běžný silový trénink: <strong>1,4–1,8 g/kg</strong></p>
+      <p>• Budování svalu (objemovka): <strong>1,6–2,0 g/kg</strong></p>
+      <p>• Agresivní redukce u štíhlého klienta: <strong>2,0–2,4 g/kg</strong></p>
+      <p>Počítej z reálné tělesné hmotnosti; u velmi obézních klientů z cílové nebo beztukové hmoty, ať číslo nevyletí nesmyslně vysoko.</p>
+    </div>
+    <p>Důsledek pro suplementaci je zásadní: prášek je tu od toho, aby ti pomohl <em>dosáhnout</em> tohohle čísla, ne ho překročit. Pokud klient cíl trefí z masa, ryb, vajec, mléčných výrobků a luštěnin, prášek nepotřebuje.</p>
+
+    <h2>2) Proč rozhodují EAA a leucin, ne „gramy proteinu“</h2>
+    <p>Svalová proteosyntéza (MPS) se nespouští celkovým množstvím bílkoviny obecně — spouští ji <strong>devět esenciálních aminokyselin (EAA)</strong>, tedy těch, které si tělo neumí vyrobit. Klasická studie ukázala, že samotné EAA stimulují čistou svalovou bilanci stejně jako kompletní protein; neesenciální aminokyseliny k tomu nejsou nutné.</p>
+    <p>Mezi EAA má výsadní postavení <strong>leucin</strong> — funguje jako „spínač“, který přes signální dráhu mTOR nastartuje stavbu svalu. Proto kvalitní protein nepoznáš podle celkových gramů, ale podle obsahu leucinu a kompletního spektra EAA. Syrovátka (whey) je etalon: má vysoký obsah leucinu a rychlou kinetiku.</p>
+    <div class="eq">Spuštění MPS ≈ dostatek EAA + překročení leucinového prahu (~0,7–3 g leucinu/dávka)</div>
+    <p>Position stand ISSN doporučuje, aby anabolická dávka proteinu obsahovala zhruba <strong>700–3000 mg leucinu</strong> spolu s vyváženým spektrem EAA. Praktický překlad: ~20–40 g kvalitní bílkoviny v jednom jídle tenhle práh u většiny dospělých spolehlivě překročí.</p>
+    <blockquote>Rostlinné proteiny mají typicky méně leucinu a chybějící některé EAA. Neznamená to, že nefungují — jen jich musíš sníst víc, kombinovat zdroje, nebo dávku posílit (např. izolátem nebo cíleně leucinem).</blockquote>
+
+    <h2>3) Rozdělení do dne: čtyři okna místo jednoho nárazu</h2>
+    <p>Celkový denní příjem je král, ale rozdělení je užitečná koruna. Existuje praktický strop toho, kolik bílkoviny jedna dávka maximálně využije pro stavbu svalu. Doporučení vychází z cíle <strong>~0,4 g/kg na jídlo</strong> rozloženého do minimálně čtyř jídel, čímž se zároveň pohodlně trefíš do denních 1,6 g/kg.</p>
+    <div class="card">
+      <p><strong>Modelový klient 80 kg, cíl 1,6 g/kg = 128 g/den:</strong></p>
+      <p>• 4 jídla × ~32 g bílkovin (≈ 0,4 g/kg)</p>
+      <p>• rozestup zhruba každé 3–4 hodiny</p>
+      <p>• každé jídlo překročí leucinový práh → 4× spuštěná MPS za den</p>
+    </div>
+    <p>Tohle je místo, kde má prášek smysl i u člověka, který celkové číslo zvládá: pokud má klient snídani chudou na bílkoviny nebo dlouhý den bez možnosti uvařit, jedna odměrka whey snadno „dorovná“ chybějící okno. Není to o magii po tréninku — staré pravidlo úzkého „anabolického okna“ těsně po cvičení je dnes překonané, počítá se celý den.</p>
+    <blockquote>U starších klientů (50+) je MPS odolnější vůči stimulaci — tzv. anabolická rezistence. Tady dává smysl jít na vyšší dávku na jídlo (~0,4–0,6 g/kg) a hlídat leucin; právě u nich může mít EAA/leucin reálný přínos.</blockquote>
+
+    <h2>4) Kdy má suplement smysl nad rámec stravy</h2>
+    <p>Teď to jádro lekce. Proteinový prášek ani EAA nejsou „lepší jídlo“ — jsou to nástroje pro konkrétní problém. Rozhodovací rámec:</p>
+    <div class="card">
+      <p><strong>Whey / kompletní protein dává smysl, když:</strong></p>
+      <p>• klient nedosahuje denního cíle z běžné stravy (nestíhá, nemá chuť, jí málo),</p>
+      <p>• potřebuje dorovnat slabé bílkovinné okno (snídaně, cesty, práce),</p>
+      <p>• preferuje pohodlí a chuť — je to legitimní důvod, pokud sedí do rozpočtu.</p>
+      <p style="margin-top:.8rem"><strong>EAA dávají smysl spíš výjimečně, když:</strong></p>
+      <p>• jde o staršího klienta s anabolickou rezistencí a nízkým příjmem,</p>
+      <p>• je rostlinný jídelníček chudý na leucin a nelze ho navýšit jídlem,</p>
+      <p>• jde o trénink nalačno, kde se nehodí plná dávka jídla (okrajový benefit).</p>
+      <p style="margin-top:.8rem"><strong>Suplement NEpotřebuje, když:</strong> klient pohodlně trefuje cíl z normální stravy. Pak je whey jen drahá náhrada jídla, ne výhoda.</p>
+    </div>
+    <p>Pořadí v praxi je vždycky stejné: <strong>nejdřív strava, pak prášek.</strong> Suplement je doplněk (proto „suplement“), ne základ.</p>
+
+    <h2>5) BCAA — proč ne, a co místo nich</h2>
+    <p>BCAA (leucin, izoleucin, valin) jsou tři ze tří větvených aminokyselin, ale obsahují jen 3 z 9 esenciálních. Sám leucin sice MPS „spustí“, ale bez ostatních EAA chybí stavební materiál, takže se proteosyntéza nedokáže udržet. Proto je důkazní podpora samotných BCAA pro nárůst svalu u člověka s rozumným příjmem bílkovin <strong>slabá</strong> — prakticky vždy je překoná buď celý protein, nebo kompletní EAA.</p>
+    <div class="card">
+      <p><strong>Stručně:</strong></p>
+      <p>• Máš dost bílkovin v jídle? → BCAA jsou zbytečné.</p>
+      <p>• Chceš cíleně stimulovat MPS mimo jídlo? → vyber kompletní EAA, ne BCAA.</p>
+      <p>• Nejlevnější a nejúčinnější varianta pro většinu lidí? → prostě jídlo nebo whey.</p>
+    </div>
+    <p>BCAA jsou učebnicový příklad suplementu, který přežívá hlavně díky marketingu a setrvačnosti, ne díky datům. Klientovi ušetříš peníze, když mu to vysvětlíš.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient řekne „jaký protein si mám koupit“, první otázka je: „Kolik bílkovin teď reálně sníš za den?“ U většiny zjistíme, že problém není značka prášku, ale že snídaně je rohlík a večeře těstoviny bez masa. Nejdřív tedy přidáme vejce, tvaroh, kuře — a teprve když ani potom nestíhá cíl nebo má slabé okno přes den, nasadím jednu odměrku whey jako berličku. EAA a BCAA u běžného klienta neřeším skoro nikdy; výjimka jsou starší lidé s malou chutí k jídlu. Pravidlo zní: prášek kupuju proto, abych dorovnal číslo, ne abych si koupil výsledek.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kolem jaké denní dávky bílkovin se přínos pro nárůst svalu prakticky vyrovná? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba kolem 1,6 g/kg/den (horní hranice intervalu spolehlivosti sahá k ~2,2 g/kg). Nad tímto bodem už další gramy nepřidávají měřitelný sval, jen kalorie a sytost.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co fyzicky spouští svalovou proteosyntézu — celkové gramy proteinu, nebo něco konkrétnějšího? <span class="tg">odpověď ▾</span></div><div class="aa">Esenciální aminokyseliny (EAA), a zejména leucin jako spínač přes dráhu mTOR. Neesenciální aminokyseliny k samotnému spuštění nejsou nutné.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak rozumně rozdělit denní bílkoviny do dne? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 0,4 g/kg na jídlo, minimálně 4 jídla s rozestupem 3–4 hodiny, aby každé jídlo překročilo leucinový práh a spustilo MPS. Tím se zároveň trefíš do denních ~1,6 g/kg.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Uveď situaci, kdy má whey prášek smysl nad rámec stravy, a kdy ne. <span class="tg">odpověď ▾</span></div><div class="aa">Smysl má, když klient nedosahuje denního cíle z běžné stravy nebo má slabé bílkovinné okno (snídaně, cesty). Nepotřebuje ho, když cíl pohodlně trefuje z jídla — pak je whey jen drahá náhrada jídla.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč je důkazní podpora samotných BCAA pro nárůst svalu slabá? <span class="tg">odpověď ▾</span></div><div class="aa">BCAA obsahují jen 3 z 9 EAA. Leucin sice MPS spustí, ale bez ostatních esenciálních aminokyselin chybí stavební materiál a proteosyntéza se neudrží. Kompletní protein nebo EAA je vždy překoná.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelového klienta (zvol hmotnost a cíl) a spočítej jeho denní cíl bílkovin v g/kg. Rozděl příjem do 4 jídel po ~0,4 g/kg a u každého jídla navrhni konkrétní zdroj. Pak rozhodni: potřebuje tenhle klient proteinový prášek, nebo ne? Zdůvodni odpovědí na otázku, zda cíl trefí z běžné stravy, a pokud ano, kde by prášek reálně něco vyřešil (slabé okno) — a kde by byl jen zbytečný výdaj.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Jäger R, Kerksick CM, Campbell BI, et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20.</li>
+        <li>Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? Implications for daily protein distribution. J Int Soc Sports Nutr. 2018;15:10.</li>
+        <li>Tipton KD, Ferrando AA, Phillips SM, et al. Postexercise net protein synthesis in human muscle from orally administered amino acids. Am J Physiol Endocrinol Metab. 1999;276(4):E628–E634.</li>
+        <li>Phillips SM, Van Loon LJC. Dietary protein for athletes: from requirements to optimum adaptation. J Sports Sci. 2011;29(Suppl 1):S29–S38.</li>
+        <li>Devries MC, McGlory C, Bolster DR, et al. Leucine, not total protein, content of a supplement is the primary determinant of muscle protein anabolic responses in healthy older women. J Nutr. 2018;148(7):1088–1095.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m14-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
