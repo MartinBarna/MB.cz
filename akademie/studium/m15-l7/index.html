@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spánek chrání sval: Nedeltcheva framework pro klienta na dietě — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 7 — Spánek, stres a regenerace</div>
+    <h1>Spánek chrání sval: Nedeltcheva framework pro klienta na dietě</h1>
+
+    <p class="lead">Postavíš klientovi perfektní deficit, naženeš mu bílkoviny, naladíš trénink — a pak to celé sabotuje šest hodin spánku. <strong>Spánek není „bonus k regeneraci“, je to páka, která rozhoduje, jestli se z deficitu odbourá tuk, nebo sval.</strong> Tahle lekce ti dá konkrétní čísla a rámec, jak spánek řídit stejně cíleně jako kalorie.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč stejný deficit při krátkém spánku okrade klienta o svalovou hmotu (Nedeltcheva framework).</li>
+        <li>Jak spánkový dluh zvedá hlad přes ghrelin a leptin — a proč klient „nemá vůli“.</li>
+        <li>Jak funguje architektura spánku (cykly, hluboký spánek, REM) a kdy probíhá oprava svalu.</li>
+        <li>Dvě páky regulace spánku — adenosinový tlak a cirkadiánní rytmus — a jak je řídit.</li>
+        <li>Že prodloužení spánku zvedá výkon, ne jen náladu (Mah).</li>
+        <li>Praktický minimální standard a checklist, který dáš každému klientovi.</li>
+      </ul>
+    </div>
+
+    <h2>1) Nedeltcheva framework: stejný deficit, jiný výsledek</h2>
+    <p>Tohle je studie, kterou by měl znát každý trenér. Nedeltcheva a kol. (2010) vzali deset lidí s nadváhou, dali jim identický mírný kalorický deficit na 14 dní a lišili je jen v jedné věci: jedna fáze měla <strong>8,5 hodiny</strong> spánku, druhá jen <strong>5,5 hodiny</strong>. Stejné jídlo, stejný deficit, jiný spánek.</p>
+    <p>Celkový úbytek hmotnosti byl podobný. Ale <strong>složení toho úbytku se rozjelo na opačné strany.</strong> A o to nám jde — klient nehubne pro číslo na váze, hubne kvůli zrcadlu a síle.</p>
+    <div class="card">
+      <p><strong>8,5 h spánku:</strong> z úbytku tvořil tuk velkou většinu — sval byl chráněný.</p>
+      <p><strong>5,5 h spánku:</strong> podíl tuku na úbytku klesl o <strong>~55 %</strong> a ztráta beztukové hmoty (sval) vzrostla o <strong>~60 %</strong>.</p>
+      <p><strong>Navíc:</strong> krátký spánek zvýšil hlad a posunul metabolismus tak, že tělo pálilo méně tuku jako palivo.</p>
+    </div>
+    <p>Přelož si to do praxe: ve spánkovém deficitu klient odbourává to, co jste spolu těžce budovali, a šetří přesně to, čeho se chce zbavit. Deficit funguje — ale rozhoduje, <em>odkud</em> tělo bere energii. A to se ladí spánkem, ne dalším kardiem.</p>
+    <blockquote>Deficit určuje, kolik klient ztratí. Spánek do velké míry určuje, jestli to bude tuk, nebo sval.</blockquote>
+
+    <h2>2) Proč klient „nemá vůli“: ghrelin a leptin</h2>
+    <p>Když ti klient na dietě hlásí, že večer „nemá kontrolu“ a sjíždí spíž, nehledej hned chybu v charakteru. Hledej, kolik spal. Spiegel a kol. (2004) drželi zdravé muže ve dvou režimech — krátký a dlouhý spánek — při stejném jídle a pohybu, a měřili hormony hladu.</p>
+    <div class="card">
+      <p><strong>Leptin</strong> (hormon sytosti, „mám dost“) klesl o <strong>~18 %</strong>.</p>
+      <p><strong>Ghrelin</strong> (hormon hladu, „sněz něco“) vzrostl o <strong>~28 %</strong>.</p>
+      <p><strong>Poměr ghrelin/leptin</strong> po krátkém spánku vyletěl, subjektivní hlad a chuť šly nahoru — a nejvíc rostla chuť právě na sladké a kalorické jídlo.</p>
+    </div>
+    <p>Tělo nedostatek spánku vyhodnocuje jako stres a posílá signál „sháněj energii“. Klient pak v deficitu bojuje proti vlastní biochemii — a my jsme mu řekli jen „mysli na to víc“. To je nefér a hlavně neúčinné. Spravit spánek je často účinnější „dieta na chutě“ než jakákoli silová vůle.</p>
+    <blockquote>Než klientovi vyčteš nedodržený plán, zeptej se na poslední tři noci. Hlad ze spánkového dluhu se neprolomí disciplínou.</blockquote>
+
+    <h2>3) Architektura spánku: kdy se opravuje sval</h2>
+    <p>Spánek není jeden homogenní blok. Probíhá v cyklech zhruba po <strong>90 minutách</strong>, kterými se opakovaně střídá hluboký spánek (NREM, hlavně N3) a REM spánek. Za noc jich proběhne čtyři až šest.</p>
+    <div class="card">
+      <p><strong>Hluboký spánek (N3):</strong> dominuje v první polovině noci. Tady vrcholí pulzy růstového hormonu a probíhá fyzická obnova — proto je tak důležitý pro regeneraci tkání.</p>
+      <p><strong>REM spánek:</strong> přibývá ve druhé polovině noci. Konsolidace paměti, učení pohybu, regulace emocí a stresu.</p>
+    </div>
+    <p>Důsledek je zásadní: když klient ukrojí dvě hodiny ze <strong>začátku</strong> noci (pozdě usne), nejvíc poškodí hluboký spánek a regeneraci. Když ukrojí z <strong>konce</strong> (brzo budík), připraví se hlavně o REM. Dattilo a kol. (2011) shrnuli mechanismus: nedostatek spánku tlumí pulzy růstového hormonu a zvedá katabolickou aktivitu (kortizol), což posouvá rovnováhu od stavby svalu k jeho odbourávání. Tohle je biologický důvod, proč v lekci 1 viděná Nedeltcheva čísla vznikají.</p>
+
+    <h2>4) Dvě páky: adenosinový tlak a cirkadiánní rytmus</h2>
+    <p>Kvalitu spánku řídí dva nezávislé systémy. Když je klient sladíš, usíná snadno a spí hluboko. Když je rozhodíš, ležíš utahaný a nemůžeš usnout.</p>
+    <div class="card">
+      <p><strong>Spánkový tlak (adenosin):</strong> jak jsi vzhůru, v mozku se hromadí adenosin a roste chuť spát. Spánek ho vyplaví. <strong>Kofein</strong> blokuje adenosinové receptory — tlak se nezruší, jen ho přestaneš cítit, a po odeznění se vrátí najednou.</p>
+      <p><strong>Cirkadiánní rytmus (vnitřní hodiny):</strong> ~24h cyklus laděný hlavně světlem. Ranní denní světlo hodiny „seřídí“ a načasuje večerní melatonin; večerní jasné světlo je naopak posouvá a oddaluje usnutí.</p>
+    </div>
+    <p>Praktický překlad těch dvou pák je jednoduchý a dáš ho každému klientovi:</p>
+    <div class="eq">Brzká ranní expozice světlu + kofeinová uzávěrka ~8–10 h před spánkem = snadné usnutí ve správný čas</div>
+    <p>Když klient pije kávu v 16:00 a usíná ve 22:00, polovina dávky kofeinu mu pořád koluje v krvi a ředí hluboký spánek — i když „usne v pohodě“. Proto neřešíme jen <em>jestli</em> usne, ale <em>jak kvalitně</em> spí.</p>
+
+    <h2>5) Spánek navíc = výkon navíc, ne jen lepší nálada</h2>
+    <p>Spánek se často bere jako defenziva — „ať se neunavím“. Mah a kol. (2011) ukázali ofenzivní stranu. Hráči basketbalu na Stanfordu si po týdnech běžného spánku prodloužili dobu v posteli na cíl ~10 hodin. Výsledek po pár týdnech prodlouženého spánku:</p>
+    <div class="card">
+      <p><strong>Sprint na 282 stop:</strong> zrychlení z 16,2 na 15,5 s.</p>
+      <p><strong>Úspěšnost střelby:</strong> trestné hody i trojky nahoru o <strong>~9 %</strong>.</p>
+      <p><strong>Reakční čas, vitalita a nálada</strong> se zlepšily, únava klesla.</p>
+    </div>
+    <p>To není o nemocné populaci, to jsou trénovaní sportovci, kteří přidali jen spánek. Pro tvého klienta to znamená, že prodloužení spánku není „odpočinkový luxus“, ale legální nástroj výkonu — víc síly v sérii, lepší technika, vyšší objem, který tělo uzvedne a zregeneruje.</p>
+    <p>A kde nastavit laťku? Společné stanovisko AASM a Sleep Research Society (Watson a kol., 2015) je jasné: dospělý potřebuje pravidelně <strong>7 a více hodin</strong>; šest a méně nestačí na udržení zdraví. Tohle je naše minimální, ne ideální hodnota.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když Martin přišel, že se „zasekl“ na dietě a večer to nezvládá, neřešil jsem mu makra. Zeptal jsem se na spánek — chodil spát po půlnoci a vstával v 6. Dohodli jsme tři věci: ráno jít hned ven na světlo, poslední kávu v 13:00 a budík „jdi spát“ ve 22:30. Žádná změna jídelníčku. Za tři týdny přestaly večerní záchvaty, váha se zase pohnula a v posilovně přidal na hlavních cvicích. Spánek byl ta chybějící proměnná, ne další deficit.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co se podle Nedeltcheva frameworku stane se stejným deficitem při 5,5 h spánku oproti 8,5 h? <span class="tg">odpověď ▾</span></div><div class="aa">Celkový úbytek je podobný, ale jeho složení se obrátí: podíl tuku na úbytku klesne (~55 %) a ztráta svalu / beztukové hmoty vzroste (~60 %). Krátký spánek okrádá klienta o sval.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak krátký spánek mění hormony hladu a co z toho plyne pro chování klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Klesá leptin (sytost, ~18 %) a roste ghrelin (hlad, ~28 %), takže klient má větší hlad a chuť hlavně na sladké a kalorické. Není to o vůli, ale o biochemii spánkového dluhu.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Ve které fázi a části noci probíhá hlavně fyzická obnova a pulzy růstového hormonu? <span class="tg">odpověď ▾</span></div><div class="aa">V hlubokém spánku (NREM, N3), který dominuje v první polovině noci. Proto pozdní usnutí poškodí regeneraci nejvíc, kdežto brzký budík ukrojí spíš REM.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj dvě páky, které řídí spánek, a jednu praktickou radu ke každé. <span class="tg">odpověď ▾</span></div><div class="aa">Adenosinový tlak (řešení: kofeinová uzávěrka ~8–10 h před spánkem, kofein tlak jen maskuje) a cirkadiánní rytmus (řešení: ranní expozice dennímu světlu, večer tlumit jasné světlo).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co ukázala studie Mah a kol. o prodloužení spánku a jaký je minimální standard pro dospělého? <span class="tg">odpověď ▾</span></div><div class="aa">Prodloužení spánku zlepšilo sportovcům sprint, úspěšnost střelby (~9 %), reakční čas i náladu — spánek je nástroj výkonu, ne jen regenerace. Minimum dle AASM/SRS je 7 a více hodin.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta na dietě navrhni konkrétní „spánkový protokol“: minimální cílovou dobu v posteli (vyjdi ze 7+ h), čas poslední kávy, ranní expozici světlu a fixní čas usnutí. Napiš, kterými dvěma signály (váha/složení, večerní hlad, výkon v posilovně) budeš po 2–3 týdnech ověřovat, jestli zafungoval — a vysvětli klientovi jednou větou, proč spánek chrání jeho sval.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Nedeltcheva AV, Kilkus JM, Imperial J, Schoeller DA, Penev PD. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010;153(7):435–441.</li>
+        <li>Spiegel K, Tasali E, Penev P, Van Cauter E. Brief communication: Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite. Ann Intern Med. 2004;141(11):846–850.</li>
+        <li>Dattilo M, Antunes HKM, Medeiros A, et al. Sleep and muscle recovery: endocrinological and molecular basis for a new and promising hypothesis. Med Hypotheses. 2011;77(2):220–222.</li>
+        <li>Mah CD, Mah KE, Kezirian EJ, Dement WC. The effects of sleep extension on the athletic performance of collegiate basketball players. Sleep. 2011;34(7):943–950.</li>
+        <li>Watson NF, Badr MS, Belenky G, et al. Recommended amount of sleep for a healthy adult: A joint consensus statement of the American Academy of Sleep Medicine and Sleep Research Society. Sleep. 2015;38(6):843–844.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

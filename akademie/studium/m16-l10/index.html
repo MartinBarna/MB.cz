@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citlivá témata: body image, vztah k jídlu, kdy odkázat dál — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 16 · Lekce 10 — Umění koučovat compliance</div>
+    <h1>Citlivá témata: body image, vztah k jídlu, kdy odkázat dál</h1>
+
+    <p class="lead">Dřív nebo později se ti to stane: klient se rozpláče nad váhou, přizná se k záchvatovému přejídání, nebo řekne větu, ze které ti zatrne. <strong>V té chvíli nejsi od toho, abys „opravil jídelníček“ — jsi od toho, abys neublížil a věděl, kam sahá tvoje kompetence.</strong> Tahle lekce tě naučí mluvit o těle a o jídle tak, aby ses nezamotal do něčeho, co patří psychologovi nebo lékaři — a hlavně poznat, kdy je čas říct: „Tohle už není moje parketa, pojďme za odborníkem.“</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je vztah k tělu a k jídlu citlivější téma než tréninkový plán — a co tím riskuješ.</li>
+        <li>Jak mluvit o váze a postavě, aby ses vyhnul jazyku, který škodí (weight stigma).</li>
+        <li>Konkrétní varovné signály narušeného vztahu k jídlu, kterých si máš všímat.</li>
+        <li>Jednoduchý nástroj (SCOFF) jako orientační kompas — ne diagnózu.</li>
+        <li>Jasné pravidlo, KDY a JAK klienta citlivě odkázat na odborníka mimo tvůj obor.</li>
+        <li>Jak vést rozhovor o změně, aniž bys klienta tlačil nebo soudil (motivační přístup).</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč je tohle jiná liga než plán tréninku</h2>
+    <p>Trenér i výživový poradce běžně pracuje s tělem a s jídlem — jenže právě to z něj dělá člověka, kterému klient řekne věci, které neřekne nikomu jinému. To je důvěra a zároveň zodpovědnost. Body image (vnímání vlastního těla) a vztah k jídlu sahají hluboko do sebehodnoty, identity, často i do traumatu. Jedna neopatrná věta o „pneumatikách na bocích“ může spustit u citlivého člověka spirálu, kterou neuvidíš.</p>
+    <p>Klíčový princip celé lekce zní: <strong>tvoje role je podpora chování, ne léčba psychiky.</strong> Můžeš učit návyky, nastavovat porce, stavět trénink a být lidskou oporou. Nesmíš diagnostikovat poruchu příjmu potravy, „léčit“ úzkost kolem jídla ani řešit hluboký odpor k vlastnímu tělu. To je práce pro klinické odborníky a snaha to suplovat je rizikem pro klienta i pro tebe.</p>
+    <blockquote>Hranice oboru není slabost. Trenér, který ví, kdy předat dál, je profesionálnější než ten, kdo si myslí, že zvládne všechno.</blockquote>
+
+    <h2>2) Jazyk, kterým o těle mluvíš (a kterým ne)</h2>
+    <p>Způsob, jakým mluvíš o váze, není kosmetika — má měřitelný dopad. Přehledy ukazují, že stigmatizace kvůli hmotnosti (weight stigma) je spojená s vyšší mírou depresivních a úzkostných symptomů, horším vztahem k tělu, narušeným jídelním chováním a paradoxně i s horší motivací ke zdravým návykům. Jinými slovy: „motivovat“ klienta studem o jeho tělo funguje přesně opačně, než si lidé myslí.</p>
+    <div class="card">
+      <p><strong>Místo:</strong> „Musíme se zbavit těch tukových polštářů.“ &nbsp;→&nbsp; <strong>Radši:</strong> „Pojďme zapracovat na síle a energii — postava se posune s tím.“</p>
+      <p><strong>Místo:</strong> „Tohle jídlo je hřích / zlobivé.“ &nbsp;→&nbsp; <strong>Radši:</strong> „Žádné jídlo není zakázané, řešíme jen množství a frekvenci.“</p>
+      <p><strong>Místo:</strong> „Jsi nedisciplinovaný.“ &nbsp;→&nbsp; <strong>Radši:</strong> „Co tenhle týden stálo v cestě a jak to příště usnadníme?“</p>
+      <p><strong>Místo:</strong> komentování těla jiných klientů či své vlastní „nenávisti“ k partiím. &nbsp;→&nbsp; <strong>Radši:</strong> řeč o funkci, výkonu, zdraví a chování.</p>
+    </div>
+    <p>Praktické pravidlo: mluv o <strong>chování a schopnostech</strong> (kroky, síla, spánek, porce), ne o <strong>morálce a vzhledu</strong> (hubený = hodný, tlustý = líný). První buduje, druhé živí stud.</p>
+
+    <h2>3) Varovné signály narušeného vztahu k jídlu</h2>
+    <p>Nejsi diagnostik, ale máš být všímavý. Tyhle signály neznamenají, že má klient poruchu — znamenají, že je čas zpozornět, jemně se doptat a zvážit předání dál:</p>
+    <div class="card">
+      <p><strong>Jazyk a myšlení:</strong> jídlo rozdělené na „čisté“ a „špinavé“, intenzivní vina po jídle, posedlost čísly (kalorie, váha několikrát denně), strach z celých skupin potravin.</p>
+      <p><strong>Chování:</strong> záchvaty přejídání, kompenzace (zvracení, projímadla, „odcvičení“ jídla), tajné jedení, vynechávání společných jídel, rituály.</p>
+      <p><strong>Tělesné a emoční:</strong> rychlý úbytek hmotnosti, vynechání menstruace, závratě, výrazné výkyvy nálady navázané na váhu, extrémní strach z přibrání i o pár deka.</p>
+      <p><strong>Vztah k tréninku:</strong> cvičení jako trest, neschopnost vynechat trénink i při nemoci nebo zranění, panika z „prošvihnutého“ dne.</p>
+    </div>
+    <p>Důležité: intuitivní a méně restriktivní přístup k jídlu je v intervencích spojený s nižší mírou narušeného jídelního chování a lepším vztahem k tělu. Takže pokud u klienta vidíš rigidní pravidla a vinu, často je léčebnější uvolnit kontrolu než přitvrdit.</p>
+
+    <h2>4) SCOFF — orientační kompas, ne diagnóza</h2>
+    <p>SCOFF je krátký, validovaný screeningový nástroj z primární péče (5 otázek). Není diagnóza a ty s ním nikoho „neoznačuješ“ — slouží jen jako strukturovaná pomůcka, kdy se víc zamyslet a kdy doporučit odborníka. V primární péči měl ve validační studii vysokou citlivost i specificitu, ale je to nástroj orientační, ne rozhodující.</p>
+    <div class="eq">2 a více „ANO“ z 5 otázek → zvaž odkázání k odborníkovi</div>
+    <div class="card">
+      <p><strong>S</strong>ick — Vyvoláváš si někdy zvracení, protože se cítíš nepříjemně přejedený?</p>
+      <p><strong>C</strong>ontrol — Bojíš se, že jsi ztratil kontrolu nad tím, kolik jíš?</p>
+      <p><strong>O</strong>ne stone — Zhubl jsi v poslední době hodně (řádově 6+ kg) v krátkém čase?</p>
+      <p><strong>F</strong>at — Připadáš si tlustý/á, i když ti okolí říká opak?</p>
+      <p><strong>F</strong>ood — Ovládá jídlo tvůj život?</p>
+    </div>
+    <p>Pozor na rámec: tyhle otázky nepokládáš jako kvíz. Vnímej je jako mapu varovných témat. Pokud z rozhovoru vyplyne, že by klient na dvě a víc odpověděl „ano“, je to signál — ne verdikt — že tohle přesahuje koučink návyků.</p>
+
+    <h2>5) Kdy a jak odkázat dál</h2>
+    <p>Předání dál není selhání ani „shození problému“. Je to nejodbornější věc, kterou v dané chvíli umíš udělat. Odkazuj, když: vidíš signály poruchy příjmu potravy nebo SCOFF naznačuje riziko; klient řeší depresi, úzkost, sebepoškozování, trauma; jde o zdravotní stav (hormony, GIT, vymizelá menstruace, rychlý nevysvětlený úbytek); nebo když prostě cítíš, že jsi za hranou své kompetence.</p>
+    <div class="card">
+      <p><strong>Kam odkazovat:</strong> praktický lékař (vstupní brána a zdravotní vyšetření), klinický psycholog / psychoterapeut se specializací na poruchy příjmu potravy, psychiatr, klinický nutriční terapeut, specializovaná centra pro PPP.</p>
+      <p><strong>Jak to říct:</strong> klidně, bez dramatizace a bez diagnózy. „Všiml jsem si, že kolem jídla je toho na tebe hodně. To není věc tréninku a chci, aby ses měl/a o koho opřít — pojďme to probrat s někým, kdo se tomu věnuje. Já u tebe zůstávám u tréninku a podpory.“</p>
+      <p><strong>Co NEdělat:</strong> neříkat „myslím, že máš anorexii“, nestrašit, nenechat klienta v pocitu, že ho odkopáváš. Odkaz = rozšíření týmu, ne konec spolupráce.</p>
+    </div>
+    <blockquote>Nikdy nediagnostikuj. Popisuj, co vidíš (chování, čísla, slova), a navrhni další krok. Diagnóza je práce někoho jiného.</blockquote>
+
+    <h2>6) Jak vést rozhovor, aby pomohl (motivační přístup)</h2>
+    <p>Když narazíš na citlivé téma, nejhorší, co můžeš udělat, je tlačit a poučovat. Motivační rozhovor — přístup s nejlepší oporou v datech pro změnu chování ve zdravotní péči — staví na tom, že člověk se víc změní, když se sám slyší mluvit o důvodech ke změně, než když ho někdo přesvědčuje. Meta-analýzy ukazují malý až střední, ale konzistentní efekt na změnu chování.</p>
+    <div class="card">
+      <p><strong>Otevřené otázky:</strong> „Jak ti teď je kolem jídla?“ místo „Přejídáš se, viď?“</p>
+      <p><strong>Reflexe (zrcadlení):</strong> „Slyším, že po sladkém přijde silná vina.“ — klient cítí, že rozumíš.</p>
+      <p><strong>Oceňování:</strong> všimni si snahy, ne jen výsledku na váze.</p>
+      <p><strong>Souhrny:</strong> shrň, co řekl, a nech ho pojmenovat další krok.</p>
+      <p><strong>Žádné „měl bys“:</strong> autonomie klienta je palivo, ne překážka. Ptej se „co by ti dávalo smysl zkusit?“</p>
+    </div>
+    <p>Tenhle styl je užitečný i u úplně běžných témat compliance — ale u citlivých témat je přímo nutný, protože tlak a stud tady škodí nejvíc.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Měl jsem klientku, která po každém „nepovoleném“ jídle dvě hodiny běhala jako trest. Neřešil jsem makra. Sedl jsem si s ní a řekl: „Všiml jsem si, že trénink u tebe občas vypadá jako pokuta za jídlo. To mě zajímá víc než tvoje váha.“ Nešel jsem do diagnóz. Popsal jsem, co vidím, zeptal se, jak to ona vnímá, a společně jsme se domluvili, že to probereme i s psychoterapeutkou, na kterou jsem ji odkázal. Zůstal jsem jejím trenérem. A právě to, že jsem nepřekročil svoji roli, jí podle jejích slov pomohlo nejvíc.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kde je hranice role trenéra u témat těla a jídla? <span class="tg">odpověď ▾</span></div><div class="aa">Trenér podporuje chování a návyky (porce, trénink, oporu), ale nediagnostikuje ani neléčí poruchy příjmu potravy, úzkost či trauma. To patří klinickým odborníkům.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč je „motivace studem“ o těle kontraproduktivní? <span class="tg">odpověď ▾</span></div><div class="aa">Weight stigma je spojená s vyšší úzkostí, depresí, horším vztahem k tělu, narušeným jídelním chováním a paradoxně i horší motivací ke zdravým návykům. Stud nepomáhá, škodí.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> K čemu slouží SCOFF a co rozhodně není? <span class="tg">odpověď ▾</span></div><div class="aa">Je to krátký orientační screeningový nástroj (5 otázek), který pomáhá rozpoznat riziko a kdy odkázat dál. NENÍ to diagnóza — tu trenér nikdy nestanovuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři varovné signály narušeného vztahu k jídlu. <span class="tg">odpověď ▾</span></div><div class="aa">Například: dělení jídla na „čisté/špinavé“ a silná vina, kompenzace (zvracení, „odcvičení“ jídla), trénink jako trest, tajné jedení, panika z přibrání i o pár deka (stačí tři).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak citlivě odkázat klienta na odborníka? <span class="tg">odpověď ▾</span></div><div class="aa">Klidně, bez dramatizace a bez diagnózy: popsat, co vidíš (chování, slova), nabídnout to jako rozšíření týmu, ne konec spolupráce, a zdůraznit, že u tréninku a podpory zůstáváš.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Napiš si vlastní „skript“ pro tři situace: (1) klient se rozpláče nad svou postavou, (2) přizná záchvatové přejídání a kompenzaci, (3) mluví o jídle jen v kategoriích „čisté/špinavé“. U každé situace napiš, co řekneš (jazykem chování, ne morálky), jaké signály bys sledoval a zda a kam bys odkázal dál. Zároveň si připrav seznam konkrétních odborníků/center ve svém okolí, kam můžeš reálně poslat.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Morgan JF, Reid F, Lacey JH. The SCOFF questionnaire: a new screening tool for eating disorders. BMJ. 1999;319(7223):1467–1468.</li>
+        <li>Puhl RM, Heuer CA. The Stigma of Obesity: A Review and Update. Obesity (Silver Spring). 2009;17(5):941–964.</li>
+        <li>Hazzard VM, et al. (Babbott KM, et al.) Outcomes of intuitive eating interventions: a systematic review and meta-analysis. Eat Disord. 2023;31(1):33–63.</li>
+        <li>Lundahl B, et al. Motivational interviewing in medical care settings: a systematic review and meta-analysis of randomized controlled trials. Patient Educ Couns. 2013;93(2):157–168.</li>
+        <li>Kutz AM, et al. Eating Disorder Screening: a Systematic Review and Meta-analysis of Diagnostic Test Characteristics of the SCOFF. J Gen Intern Med. 2020;35(3):885–893.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m16-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

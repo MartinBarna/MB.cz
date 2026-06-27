@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frekvence a rozložení objemu přes týden — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 13 · Lekce 6 — Hypertrofie pro naturály</div>
+    <h1>Frekvence a rozložení objemu přes týden</h1>
+
+    <p class="lead">O tom, kolik svalů narosteš, rozhoduje hlavně <strong>týdenní objem tvrdé práce na sval</strong> — ne to, jestli ho odmakáš jednou, nebo třikrát týdně. Frekvence není kouzlo, je to <strong>nástroj, jak ten objem rozumně rozprostřít</strong>, aby ses dal každou sérii poctivě do práce a stihl to zregenerovat. V téhle lekci si ukážeme, jak objem rozložit přes týden tak, aby na něm naturál opravdu rostl a netonul v únavě.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je hlavním motorem růstu týdenní objem (série na sval) a ne samotná frekvence.</li>
+        <li>Co znamenají orientační hodnoty MEV a MRV a jak v tomhle pásmu pracovat.</li>
+        <li>Jak frekvence funguje při rovnaném objemu — a kdy ti vyšší frekvence reálně pomůže.</li>
+        <li>Jak blízko k selhání jet, aby série „počítaly“, ale nezničily regeneraci.</li>
+        <li>Hotové frameworky rozdělení (full body, upper/lower, push/pull/legs) a kdy který sedne.</li>
+        <li>Jak objem v čase řídit přes progresivní přetížení místo skoku do maxima.</li>
+      </ul>
+    </div>
+
+    <h2>1) Hlavní motor je objem, ne frekvence</h2>
+    <p>Začneme od správného konce. Mezi nábor série v posilovně a velikost svalu stojí jedna proměnná, kterou máš pod kontrolou nejvíc: <strong>počet tvrdých sérií na svalovou partii za týden</strong>. Meta-analýza Schoenfelda a kol. ukázala zhruba lineární vztah — víc týdenních sérií znamená víc růstu, a pásmo kolem <strong>10+ sérií na partii týdně</strong> bývá spojené s výrazně lepší hypertrofií než velmi nízký objem.</p>
+    <p>Frekvence (kolikrát do týdne sval potrénuješ) je oproti tomu spíš logistika. Když porovnáš programy se <strong>stejným týdenním objemem</strong> a lišíš jen frekvenci, rozdíly v růstu jsou malé až zanedbatelné. Frekvence tedy primárně slouží k tomu, abys daný objem dokázal odvést kvalitně.</p>
+    <blockquote>Frekvence nepřidává sval sama o sobě. Přidává ti prostor rozprostřít objem tak, aby každá série byla tvrdá a regenerace stíhala. To je celý její trik.</blockquote>
+
+    <h2>2) MEV a MRV — pásmo, ve kterém se pohybuješ</h2>
+    <p>Aby objem nebyl jen abstraktní číslo, používáme dva orientační body, které zpopularizoval Mike Israetel a tým RP:</p>
+    <div class="card">
+      <p><strong>MEV (minimum effective volume):</strong> nejnižší objem, který ještě spolehlivě staví sval. Pod ním spíš jen udržuješ. U většiny partií u trénovaného naturála startuje řádově kolem <strong>8–10 sérií týdně</strong>.</p>
+      <p><strong>MRV (maximum recoverable volume):</strong> nejvyšší objem, který ještě dokážeš zregenerovat a přetavit v růst. Nad ním už se hromadí únava rychleji, než stíháš adaptovat. Orientačně bývá u řady partií v pásmu <strong>cca 18–22+ sérií týdně</strong>, hodně individuálně.</p>
+      <p><strong>Mezi nimi je tvůj pracovní prostor:</strong> u většiny lidí dává smysl většinu času žít v rozumném pásmu zhruba <strong>10–20 sérií na partii týdně</strong> a objem postupně zvyšovat, ne začínat na stropě.</p>
+    </div>
+    <p>Důležité varování: tahle čísla nejsou přesné fyziologické konstanty, jsou to <strong>praktické značky na mapě</strong>. Slouží k tomu, abys nezačal na dvou sériích ani neskočil rovnou na třicet. Reálnou hodnotu ti řekne až výkon, regenerace a růst v čase.</p>
+    <div class="eq">objem partie = počet tvrdých sérií × frekvence partie / týden</div>
+
+    <h2>3) Frekvence při rovnaném objemu</h2>
+    <p>Teď to spojme. Když je týdenní objem dán, jak ho rozdělit? Tady je klíčový poznatek: <strong>při stejném objemu frekvence růst zásadně nemění</strong>. Můžeš 12 sérií na záda dát do jednoho dne, nebo je rozdělit do dvou tréninků po šesti — výsledek na hypertrofii bude podobný.</p>
+    <p>Vyšší frekvence ale dává <strong>nepřímou výhodu</strong>, a to ze tří praktických důvodů:</p>
+    <div class="card">
+      <p><strong>1. Kvalita sérií:</strong> 6 sérií najednou znamená, že posledních pár jede unavený sval s horší technikou. Rozdělíš-li je, každá série je svěžejší a tvrdší — a tvrdé série jsou ty, co počítají.</p>
+      <p><strong>2. Strop objemu:</strong> chceš-li dělat hodně sérií na partii (např. 16–20), do jednoho dne se to nevejde rozumně. Vyšší frekvence ti umožní vyšší týdenní objem vůbec uzvednout.</p>
+      <p><strong>3. Stravitelnost tréninku:</strong> kratší, častější tréninky se líp vejdou do života a líp se na ně soustředíš než na dvouhodinové maratony.</p>
+    </div>
+    <p>Praktické pravidlo: trénuj každou partii <strong>zhruba 2× týdně</strong> jako rozumný default. Není to proto, že 2× je magicky lepší než 1×, ale proto, že ti to obvykle umožní odvést potřebný objem v kvalitě. Při velmi vysokém objemu pak dává smysl jít na 3×.</p>
+
+    <h2>4) Jak blízko k selhání — aby série „počítaly“</h2>
+    <p>Objem má smysl jen tehdy, když jsou série dost tvrdé. Série ukončená 8 opakování před selháním je pro růst skoro k ničemu, i kdybys jich nasázel deset. Proto pracujeme s pojmem <strong>RIR (repetitions in reserve)</strong> — kolik opakování ti v dané sérii ještě zbývalo do selhání.</p>
+    <p>Data ukazují, že <strong>trénink blízko selhání</strong> (řádově do 0–3 opakování v rezervě) přináší velmi podobnou hypertrofii jako trénink přímo do selhání — výhoda úplného selhání pro růst je malá, ale za cenu výrazně vyšší únavy. Pro naturála to znamená jasnou strategii:</p>
+    <div class="card">
+      <p><strong>Většinu pracovních sérií:</strong> jeď na <strong>1–3 RIR</strong>. Dost blízko, aby série stavěla sval, dost daleko, aby ses neunavil do dna a udržel objem i kvalitu příští dny.</p>
+      <p><strong>Selhání:</strong> šetři si ho spíš na izolace a poslední série, kde je technické riziko nízké. U těžkých vícekloubových cviků (dřep, mrtvý tah) je opakované selhání zbytečně drahé na regeneraci.</p>
+      <p><strong>Sebehodnocení RIR:</strong> trénovaní lidé odhadují zbývající opakování překvapivě přesně. Je to dovednost — čím víc ji používáš, tím líp kalibruješ intenzitu.</p>
+    </div>
+    <blockquote>Tvrdá série není o grimasách. Je o tom, že posledních pár opakování zpomalí a zbývá ti reálně jen pár do selhání. Tohle je vstupenka, aby objem vůbec počítal.</blockquote>
+
+    <h2>5) Hotové frameworky rozdělení</h2>
+    <p>Spojme objem, frekvenci a regeneraci do konkrétních split formátů. Volíme podle počtu tréninků týdně a podle toho, kolik objemu chce daný člověk uzvednout.</p>
+    <div class="card">
+      <p><strong>Full body (2–3× týdně):</strong> každá partie 2–3× týdně, ideální pro začátečníky a vytížené lidi. Málo objemu na trénink, vysoká frekvence, skvělá kvalita sérií. Limit: do jednoho dne se nevejde vysoký objem na partii.</p>
+      <p><strong>Upper / Lower (4× týdně):</strong> každá partie 2× týdně, zlatý standard pro středně pokročilé. Rozumný objem na trénink, dobrá regenerace, snadná organizace.</p>
+      <p><strong>Push / Pull / Legs (5–6× týdně):</strong> každá partie zhruba 2× týdně při šestidenním provedení, prostor pro vysoký objem. Pro pokročilé, kteří potřebují a uzvednou hodně sérií. Nárok na čas a regeneraci.</p>
+      <p><strong>„Bro split“ (každá partie 1× týdně):</strong> funguje, ale jen když do jednoho dne nacpeš celý týdenní objem kvalitně — což u 16+ sérií bývá problém. Proto pro většinu naturálů není první volba.</p>
+    </div>
+    <p>Žádný split není „nejlepší“ v absolutním smyslu. Nejlepší je ten, který danému člověku umožní odvést potřebný týdenní objem v kvalitě, vejde se mu do života a dokáže ho zregenerovat.</p>
+
+    <h2>6) Objem v čase: progresivní přetížení, ne skok na strop</h2>
+    <p>Poslední díl skládačky je čas. Objem není konstanta, kterou nastavíš jednou — je to proměnná, kterou v rámci bloku <strong>postupně zvyšuješ</strong>. Klasický postup: začni bloku spíš u dolní hranice pásma (blízko MEV), v dalších týdnech přidávej série nebo opakování, blížíš se k MRV, a než se začneš dusit únavou, zařaď <strong>odlehčení (deload)</strong> a začni další blok zase níž.</p>
+    <p>Tenhle „pilovitý“ průběh má smysl, protože pořád níž = pořád prostor přidávat. Kdybys začal na stropě, nemáš kam růst a jen se dřív zavalíš únavou. Progresivní přetížení proto neřešíš jen přidáváním kilogramů na ose, ale i <strong>chytrým přidáváním objemu</strong> v čase.</p>
+    <blockquote>Objem je páka, ne cíl. Smysl má jen tolik objemu, kolik dokážeš zregenerovat a přetavit v lepší výkon. Víc sérií než tohle není odvaha, je to jen únava navíc.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Většině klientů nastavuju upper/lower 4× týdně a každou partii vidíme 2× za týden — ne proto, že by dvojka byla svatá, ale protože tak v klidu uzvednou 10–16 kvalitních sérií na partii bez toho, aby poslední série jely na trosky. RIR držíme na 1–3 a selhání si schováváme na bicepsy a poslední sérii. Začínáme bloku schválně níž, pak série přidáváme týden po týdnu a před tím, než to začne skřípat, dáme lehčí týden. Pořád opakuju: „Nehoníme nejvyšší číslo sérií, honíme nejvyšší číslo, které ještě zregeneruješ.“</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je hlavním motorem hypertrofie — frekvence, nebo týdenní objem? <span class="tg">odpověď ▾</span></div><div class="aa">Týdenní objem tvrdých sérií na svalovou partii. Při rovnaném objemu má samotná frekvence na růst malý až zanedbatelný vliv; vztah mezi počtem sérií a růstem je zhruba lineární.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co znamenají zkratky MEV a MRV? <span class="tg">odpověď ▾</span></div><div class="aa">MEV = minimální efektivní objem (nejnižší objem, který ještě spolehlivě staví sval). MRV = maximální zregenerovatelný objem (nejvyšší objem, který ještě dokážeš zregenerovat a přetavit v růst). Mezi nimi je tvůj pracovní prostor.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč vyšší frekvence pomáhá, i když sama o sobě růst nepřidává? <span class="tg">odpověď ▾</span></div><div class="aa">Umožní rozprostřít objem do svěžejších, kvalitnějších sérií, uzvednout vyšší celkový týdenní objem a vejít trénink lépe do života. Je to nástroj na doručení objemu, ne kouzlo navíc.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak blízko k selhání má jít většina pracovních sérií a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba na 1–3 RIR. Je to dost blízko, aby série stavěla sval (trénink blízko selhání dává podobnou hypertrofii jako selhání), ale dost daleko, aby nedrtila regeneraci a neničila objem v dalších dnech.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak řídíš objem v čase v rámci tréninkového bloku? <span class="tg">odpověď ▾</span></div><div class="aa">Začneš spíš u dolní hranice pásma (blízko MEV), postupně přidáváš série/opakování směrem k MRV, a než tě zavalí únava, zařadíš deload a další blok začneš zase níž. Progresivní přetížení tak řešíš i přes objem, ne jen přes kila.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Pro modelového klienta, který může trénovat 4× týdně, navrhni upper/lower split a rozepiš týdenní objem (počet sérií) pro 3–4 hlavní partie tak, aby každá padla do pásma cca 10–16 sérií a viděla se 2× týdně. K tomu napiš, na jaké RIR pojedete pracovní série a u kterých cviků případně povolíš selhání. Nakonec popiš, jak budeš objem v rámci 5–6týdenního bloku navyšovat a kdy zařadíš deload.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: A systematic review and meta-analysis. J Sports Sci. 2017;35(11):1073–1082.</li>
+        <li>Schoenfeld BJ, Grgic J, Krieger J. How many times per week should a muscle be trained to maximize muscle hypertrophy? A systematic review and meta-analysis of studies examining the effects of resistance training frequency. J Sports Sci. 2019;37(11):1286–1295.</li>
+        <li>Schoenfeld BJ, Ogborn D, Krieger JW. Effects of resistance training frequency on measures of muscle hypertrophy: A systematic review and meta-analysis. Sports Med. 2016;46(11):1689–1697.</li>
+        <li>Refalo MC, Helms ER, Trexler ET, Hamilton DL, Fyfe JJ. Influence of resistance training proximity-to-failure on skeletal muscle hypertrophy: A systematic review with meta-analysis. Sports Med. 2023;53(3):649–665.</li>
+        <li>Robinson ZP, Pelland JC, Remmert JF, et al. Exploring the dose-response relationship between estimated resistance training proximity to failure, strength gain, and muscle hypertrophy: A series of meta-regressions. Sports Med. 2024;54(9):2209–2231.</li>
+        <li>Helms ER, Cronin J, Storey A, Zourdos MC. Application of the repetitions in reserve-based rating of perceived exertion scale for resistance training. Strength Cond J. 2016;38(4):42–49.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m13-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

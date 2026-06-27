@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jak metabolismus adaptuje na dietu (a co s tím) — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 10 · Lekce 7 — Metabolismus a TDEE do hloubky</div>
+    <h1>Jak metabolismus adaptuje na dietu (a co s tím)</h1>
+
+    <p class="lead">Klient hubne, drží deficit, a po pár týdnech se váha zasekne — i když „dělá všechno správně“. Tady přichází okamžik, kdy spousta trenérů sáhne po čím dál tvrdším deficitu nebo dvou hodinách kardia denně. <strong>Metabolická adaptace ale není porucha ani výmluva — je to normální, předvídatelná reakce těla na dlouhý energetický deficit.</strong> Když jí rozumíš, přestaneš panikařit a začneš ji řídit.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co přesně je metabolická adaptace (adaptivní termogeneze) a proč vzniká.</li>
+        <li>Které složky TDEE klesají nejvíc — a proč je NEAT největší tichý zloděj.</li>
+        <li>Jak velkou adaptaci čekat reálně podle čísel z výzkumu, ne z mýtů.</li>
+        <li>Roli leptinu, hormonů štítné žlázy a nervového systému v „zpomalení“.</li>
+        <li>Praktické nástroje: diet breaky, refeedy, energy flux a reverzní strategie.</li>
+        <li>Jak odlišit skutečnou adaptaci od obyčejně podhodnoceného příjmu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je adaptivní termogeneze (a co není)</h2>
+    <p>Adaptivní termogeneze je pokles energetického výdeje, který je <strong>větší, než by odpovídalo samotné ztrátě hmotnosti</strong>. Když zhubneš 10 kg, výdej logicky klesne — menší tělo potřebuje míň energie na provoz i pohyb. To je očekávaná složka. Adaptace je ten <em>navíc</em> pokles, který přesahuje matematickou predikci z nové hmotnosti a složení těla.</p>
+    <p>V deficitu tělo „šetří“: snižuje klidový výdej i ne-klidové složky pod predikovanou hodnotu. Při přejídání naopak výdej stoupá nad predikci. Je to obousměrný regulační systém, jehož cílem je bránit tukové zásoby — evolučně logická pojistka proti hladovění.</p>
+    <blockquote>Metabolismus se „nerozbije“. Adaptuje. To je zásadní rozdíl — rozbitá věc nejde řídit, adaptovaný systém ano.</blockquote>
+
+    <h2>2) Které složky TDEE klesají</h2>
+    <p>Připomeň si rozklad celkového denního výdeje (TDEE) — BMR/RMR, TEF, NEAT a EAT (cílený trénink). Adaptace nezasáhne všechny složky stejně:</p>
+    <div class="card">
+      <p><strong>RMR / klidový výdej:</strong> klesá částečně nad rámec ztráty beztukové hmoty — typicky o desítky až pár set kcal. Měřitelné, ale ne dramatické.</p>
+      <p><strong>NEAT (největší podíl adaptace):</strong> tady se schová nejvíc. Klient v deficitu nevědomky méně chodí, méně gestikuluje, sedí klidněji, vyhýbá se schodům. Levine ukázal, že NEAT vysvětlil <strong>většinu</strong> rozdílů ve výdeji při přejídání — a stejně variabilní je v deficitu.</p>
+      <p><strong>TEF:</strong> klesá úměrně menšímu příjmu jídla — méně jíš, méně trávíš. Logický, ne „extra“ pokles.</p>
+      <p><strong>EAT / trénink:</strong> stejný objem práce stojí o něco méně energie (lehčí tělo, vyšší ekonomika pohybu) a navíc klesá spontánní intenzita.</p>
+    </div>
+    <p>Praktický důsledek: největší část „zpomalení“ není záhadný klidový metabolismus, ale to, že se klient prostě méně hýbe — často aniž by to tušil. Tahle složka je naštěstí i nejlépe ovlivnitelná.</p>
+
+    <h2>3) Kolik adaptace reálně čekat</h2>
+    <p>Tady končí mýty a začínají čísla. U běžné, mírné redukce mluvíme o adaptaci v řádu <strong>desítek až ~150 kcal/den</strong> nad rámec očekávaného poklesu. To je relevantní, ale řešitelné. Extrémní případy jsou jiná liga.</p>
+    <div class="eq">Naměřená adaptace = (skutečný výdej) − (predikovaný výdej z nové hmotnosti a složení)</div>
+    <p>Slavná studie účastníků <em>The Biggest Loser</em> (Fothergill, 2016) ukázala extrém: po 30 týdnech masivního deficitu a tréninku byl RMR ~610 kcal/den pod startem, a po 6 letech — i přes výrazný návrat váhy — zůstal ~700 kcal/den pod startem, s adaptací kolem −500 kcal/den. To je ale výsledek brutálního, neudržitelného protokolu, ne běžné rozumné diety.</p>
+    <p>Systematické přehledy potvrzují, že adaptace existuje, ale její velikost se mezi studiemi i lidmi výrazně liší a metodicky se těžko měří. Pointa pro praxi: <strong>počítej s ní jako s reálnou silou, ale neraď z ní katastrofu.</strong> Čím agresivnější a delší deficit, tím větší adaptace — a tím horší následný návrat.</p>
+
+    <h2>4) Co se děje pod kapotou — hormony a nervstvo</h2>
+    <p>Adaptace není „síla vůle“, je to měřitelná fyziologie. Když klesá tuková tkáň a příjem energie, klesá i <strong>leptin</strong> — hormon, který mozku signalizuje dostatek energie. Nízký leptin spustí kaskádu: víc hladu, méně sytosti, nižší spontánní aktivita.</p>
+    <div class="card">
+      <p><strong>Leptin ↓:</strong> mozek čte „je málo paliva“ → roste chuť k jídlu, klesá NEAT.</p>
+      <p><strong>Hormony štítné žlázy (T3) ↓:</strong> mírný pokles klidového výdeje.</p>
+      <p><strong>Sympatický tonus ↓ / parasympatický ↑:</strong> tělo přepne do „úsporného režimu“.</p>
+      <p><strong>Důsledek:</strong> nižší výdej a vyšší hlad <em>zároveň</em> — dvojitý protitlak proti deficitu.</p>
+    </div>
+    <p>Rosenbaum a Leibel ukázali, že část těchto adaptací jde zvrátit doplněním leptinu — důkaz, že za „zpomalením“ stojí konkrétní signál, ne lenost. V praxi leptin nedoplňuješ, ale můžeš ho ovlivnit periodickým zvýšením příjmu (refeed, diet break) a tím systému připomenout, že palivo je.</p>
+    <blockquote>Klient, který je v dlouhém deficitu unavený, mrzutý a pořád hladový, není slabý. Jeho leptin je na dně a tělo dělá přesně to, k čemu je naprogramované.</blockquote>
+
+    <h2>5) Nástroje: jak adaptaci řídit</h2>
+    <p>Nejde adaptaci „vypnout“, ale dá se zpomalit, zmírnit a využít. Tady jsou ověřené páky:</p>
+    <div class="card">
+      <p><strong>Rozumný deficit:</strong> 15–25 % pod TDEE místo hladovění. Mírnější deficit = menší adaptace a lepší retence svalu.</p>
+      <p><strong>Diet break:</strong> 1–2 týdny na úrovni udržení každých pár měsíců diety. Dá hlavě i fyziologii pauzu a často zlepší dlouhodobé dodržení.</p>
+      <p><strong>Refeed:</strong> 1–2 dny vyššího příjmu (hlavně sacharidů) — krátkodobá podpora výkonu a sytosti.</p>
+      <p><strong>Hlídání NEAT:</strong> denní cíl kroků (např. 8–10 tis.) drží největší unikající složku výdeje pod kontrolou.</p>
+      <p><strong>Energy flux:</strong> řídit deficit spíš víc jídla + víc pohybu než málo jídla + málo pohybu. Vyšší „obrat“ energie udrží výdej i sytost výš.</p>
+      <p><strong>Dost bílkovin a silový trénink:</strong> chrání beztukovou hmotu — a tedy i klidový výdej.</p>
+    </div>
+    <p>Pozor na nejčastější chybu v terénu: než prohlásíš „adaptaci“, ověř data. Většina „zaseknutých“ klientů ve skutečnosti jedí víc, než hlásí, a hýbou se méně, než si myslí. Reálná adaptace bývá menší než chyba v odhadu příjmu.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když se klientka „zasekne“, neřežu hned kalorie. Nejdřív se ptám na kroky (skoro vždy spadly), na spánek a na poctivost trackingu. Často nasadím týdenní diet break na udržení — váha se srovná, hlava si odpočine a pokračujeme s čistou hlavou. Klientům říkám: „Tvoje tělo není pokažené, jen šetří. My mu připomeneme, že paliva je dost, a pak jedeme dál — chytře, ne tvrdě.“</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak se přesně definuje adaptivní termogeneze? <span class="tg">odpověď ▾</span></div><div class="aa">Je to pokles energetického výdeje, který je větší, než by odpovídalo samotné ztrátě hmotnosti a beztukové hmoty — tedy pokles „nad rámec“ matematické predikce z nového těla.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Která složka TDEE se na adaptaci podílí nejvíc a proč je zrádná? <span class="tg">odpověď ▾</span></div><div class="aa">NEAT — pohyb mimo trénink. Klient v deficitu nevědomky chodí a hýbe se méně, takže výdej klesá, aniž by si toho byl vědom. Zároveň je ale nejlépe ovlivnitelná (cíl kroků).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak velkou adaptaci čekat u běžné mírné redukce vs. v extrému? <span class="tg">odpověď ▾</span></div><div class="aa">U mírné diety řádově desítky až ~150 kcal/den nad očekávaný pokles. Extrém (Biggest Loser) ukázal stovky kcal/den přetrvávající roky — ale to je důsledek brutálního, neudržitelného protokolu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jakou roli hraje leptin v metabolické adaptaci? <span class="tg">odpověď ▾</span></div><div class="aa">S poklesem tuku a příjmu klesá leptin, který mozku signalizuje dostatek energie. Nízký leptin zvýší hlad, sníží sytost a NEAT a spustí úsporný režim. Doplnění leptinu část adaptací zvrátí — důkaz, že jde o fyziologii, ne o slabou vůli.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jmenuj tři nástroje, kterými adaptaci zmírníš nebo využiješ. <span class="tg">odpověď ▾</span></div><div class="aa">Například: rozumný deficit (15–25 %), diet break (1–2 týdny na udržení), refeed, hlídání kroků/NEAT, energy flux (víc jídla + víc pohybu) nebo dost bílkovin a silový trénink (stačí tři).</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber modelového klienta, který se po 8 týdnech diety „zasekl“. Napiš diagnostický postup: jaké tři věci ověříš dřív, než prohlásíš adaptaci (příjem, kroky/NEAT, spánek). Pak navrhni konkrétní zásah — diet break, úpravu kroků nebo energy flux — a zdůvodni, proč právě ten, místo dalšího řezání kalorií.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Levine JA, Eberhardt NL, Jensen MD. Role of nonexercise activity thermogenesis in resistance to fat gain in humans. Science. 1999;283(5399):212–214.</li>
+        <li>Fothergill E, Guo J, Howard L, et al. Persistent metabolic adaptation 6 years after "The Biggest Loser" competition. Obesity (Silver Spring). 2016;24(8):1612–1619.</li>
+        <li>Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55.</li>
+        <li>Nunes CL, et al. Does adaptive thermogenesis occur after weight loss in adults? A systematic review. Br J Nutr. 2022;127(3):451–469.</li>
+        <li>Rosenbaum M, Goldsmith R, Bloomfield D, et al. Low-dose leptin reverses skeletal muscle, autonomic, and neuroendocrine adaptations to maintenance of reduced weight. J Clin Invest. 2005;115(12):3579–3586.</li>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m10-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

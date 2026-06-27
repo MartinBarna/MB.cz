@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSPA: od cílů přes dovednosti a praktiky k denním akcím — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 16 · Lekce 6 — Umění koučovat compliance</div>
+    <h1>GSPA: od cílů přes dovednosti a praktiky k denním akcím</h1>
+
+    <p class="lead">Většina klientů ti nepřijde s problémem „nevím, co dělat“. Přijdou s problémem „vím, co mám dělat, a stejně to nedělám“. <strong>GSPA je rámec, který tuhle propast přemostí</strong> — vezme velký, vágní cíl a přeloží ho na jednu konkrétní akci, kterou klient zvládne udělat i ve špatném týdnu. Tahle lekce je o tom, jak velkou touhu rozdrobit na něco tak malého, že selhání skoro nepřipadá v úvahu.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co znamená GSPA (Goals → Skills → Practices → Actions) a proč se kouč pohybuje shora dolů.</li>
+        <li>Proč samotný cíl nikdy nestačí a kde se rozbíjí motivace.</li>
+        <li>Pět vlastností dobré praktiky a „test sebedůvěry 9–10“ pro denní akci.</li>
+        <li>Jak akci ukotvit přes implementační záměr (kdy, kde, jak).</li>
+        <li>Jak GSPA zapojit do týdenní check-in smyčky a měnit podle reality.</li>
+        <li>Proč je tohle nástroj na compliance, ne jen na plánování.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je GSPA a proč shora dolů</h2>
+    <p>GSPA je koučovací rámec popsaný týmem Precision Nutrition. Zkratka stojí za čtyři úrovně: <strong>Goal</strong> (cíl), <strong>Skill</strong> (dovednost), <strong>Practice</strong> (praktika) a <strong>Action</strong> (akce). Logika je jednoduchá: cíl rozdrobíš na dovednosti, které pro něj potřebuješ, dovednosti buduješ skrz praktiky a praktiky vykonáváš jako malé denní akce.</p>
+    <div class="card">
+      <p><strong>Goal (cíl):</strong> co klient doopravdy chce a proč. „Zhubnout 10 kg a cítit se ve svém těle líp.“ Široké, hodnotové, vzdálené.</p>
+      <p><strong>Skill (dovednost):</strong> schopnost, kterou pro cíl potřebuje vybudovat. „Umět jíst do sytosti, ne do prasknutí.“</p>
+      <p><strong>Practice (praktika):</strong> opakovaná aktivita, která tu dovednost trénuje. „Jíst pomalu a přestat na ~80 % sytosti.“</p>
+      <p><strong>Action (akce):</strong> jedna konkrétní věc na zítřek. „U večeře odložím příbor mezi sousty a u jednoho jídla denně skončím, když přestanu mít hlad.“</p>
+    </div>
+    <p>Klíčové je, že přemýšlíš <strong>shora dolů</strong> (cíl → akce), ale klient žije <strong>zdola nahoru</strong> (akce ho dovedou k cíli). Trenéři začátečníci uvíznou nahoře — domluví cíl a pak čekají zázrak. Dobrý kouč sjede až dolů k jediné akci, kterou klient udělá zítra ráno.</p>
+
+    <h2>2) Proč cíl sám nestačí</h2>
+    <p>Cíle jsou nutné — dávají směr a smysl. Ale výzkum je v tomhle nemilosrdný: silný úmysl („chci zhubnout!“) sám o sobě nezaručuje výsledek, protože lidé selhávají v sebe-regulaci během cesty, ne v rozhodnutí. Mezi „chci“ a „dělám“ je propast, kterou cíl nepřekročí.</p>
+    <p>Proto GSPA neutíká od cíle k motivaci, ale od cíle ke <strong>struktuře</strong>. Místo „jak ti dodám víc vůle“ se ptá „jakou nejmenší věc můžeš dělat tak spolehlivě, že vůli vůbec nepotřebuješ“. To je posun od spoléhání na disciplínu k designu chování.</p>
+    <blockquote>Motivace je počasí — přijde a odejde. GSPA staví systém, který funguje i ve dnech, kdy žádnou motivaci nemáš.</blockquote>
+
+    <h2>3) Dobrá praktika a test sebedůvěry</h2>
+    <p>Mezi dovedností a akcí stojí praktika — a tady se nejvíc chybuje. Precision Nutrition popisuje vlastnosti dobré praktiky, které si zapamatuj jako filtr. Praktika má být:</p>
+    <div class="card">
+      <p><strong>Jednoduchá</strong> — tak malá, že nepotřebuje plán B.</p>
+      <p><strong>Dílčí</strong> (segmentální) — část většího procesu, ne celá změna najednou.</p>
+      <p><strong>Sekvenční</strong> — zařazená ve správném pořadí; nejdřív základ, pak nadstavba.</p>
+      <p><strong>Strategická</strong> — řeší to, co klienta právě teď brzdí nejvíc, ne to nejhezčí na papíře.</p>
+    </div>
+    <p>A teď ta nejpraktičtější věc z celé lekce — <strong>test sebedůvěry</strong>. Když navrhneš denní akci, zeptej se klienta: „Na škále 0 až 10, jak jistě tuhle akci zvládneš dělat každý den příští dva týdny?“ Pokud odpoví míň než 9, akce je moc velká. Zmenši ji, dokud nedostaneš 9 nebo 10.</p>
+    <div class="eq">Sebedůvěra &lt; 9/10 → akci zmenši, dokud není 9–10</div>
+    <p>Většina trenérů dělá pravý opak — tlačí akci nahoru, protože „malá změna přece nic neudělá“. Jenže malá akce, kterou klient skutečně dělá, porazí velkou akci, kterou nedělá. Compliance bije teorii.</p>
+
+    <h2>4) Ukotvení akce: kdy, kde, jak</h2>
+    <p>I akce s důvěrou 9/10 se ztratí, když není ukotvená v čase a prostoru. Tady pomáhá <strong>implementační záměr</strong> — formát „když nastane situace Y, pak udělám X“. Meta-analýza 94 testů ukázala, že tahle formulace má na dosažení cíle středně až silný efekt (d ≈ 0,65), protože spojí spouštěč se zamýšleným chováním a to pak naskočí skoro automaticky.</p>
+    <p>Prakticky: nenech klienta odejít s akcí „budu jíst víc bílkovin“. Odchází s „<strong>až si ráno udělám kávu, dám si k ní řecký jogurt</strong>“. Existující návyk (káva) je spouštěč, nová akce na něj nasedá.</p>
+    <div class="card">
+      <p><strong>Slabá akce:</strong> „Budu víc chodit.“ — žádný spouštěč, žádné místo, žádný čas.</p>
+      <p><strong>Ukotvená akce:</strong> „Když odešlu poslední dopolední mail, vstanu a 10 minut se projdu kolem bloku.“ — spouštěč + místo + délka.</p>
+    </div>
+    <blockquote>Dobrá akce nepotřebuje, aby si na ni klient vzpomněl. Vzpomene si za něj prostředí.</blockquote>
+
+    <h2>5) GSPA v týdenní check-in smyčce</h2>
+    <p>GSPA není jednorázové sezení, ale opakovaná smyčka. Na check-inu se neptáš „splnil jsi cíl?“, ale „jak ti šla ta jedna akce?“. A podle odpovědi řídíš obtížnost — přesně jako progresivní přetížení v tréninku, jen v chování.</p>
+    <div class="card">
+      <p><strong>Šlo to (≈90 %+ dní):</strong> dovednost roste, akci můžeš mírně ztížit nebo přidat další úroveň.</p>
+      <p><strong>Šlo to napůl (~50–80 %):</strong> akce je akorát na hraně — nech ji běžet další týden, ať se usadí.</p>
+      <p><strong>Nešlo to (&lt;50 %):</strong> akce byla moc velká nebo špatně ukotvená. Nezvyšuj vůli — zmenši akci a znovu otestuj sebedůvěru.</p>
+    </div>
+    <p>Tohle je zároveň jádro koučování compliance: nízké plnění není selhání klienta, ale informace pro tebe, že je akce špatně nastavená. Místo kárání ladíš design. A způsob, jak se ptáš, rozhoduje — otevřené, na klienta zaměřené otázky v duchu motivačního rozhovoru vedou k větší změně chování a lepšímu hubnutí než pouhé udílení rad.</p>
+    <p>Self-monitoring sem zapadá jako palivo smyčky: systematický přehled ukázal, že lidé, kteří si chování (jídlo, pohyb, váhu) konzistentně zaznamenávají, hubnou lépe než ti, kteří ne — proto bývá jednou z prvních praktik vůbec.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient řekne „chci konečně zhubnout“, neřeším makra první hodinu. Ptám se: „Co je ta jediná věc, kterou kdybys dělal každý den, by se nejvíc pohnula?“ Vybereme jednu, ukotvíme ji na něco, co už dělá, a uděláme test 9/10. Když řekne sedmička, smlouvám dolů, ne nahoru. Radši odejde s akcí, která vypadá směšně malá, než s plánem, který vypadá skvěle a vydrží do středy. Velké výsledky mám z malých akcí, které nikdo nevynechal.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co znamenají čtyři písmena GSPA a jak na sebe navazují? <span class="tg">odpověď ▾</span></div><div class="aa">Goal (cíl) → Skill (dovednost) → Practice (praktika) → Action (akce). Cíl rozdrobíš na potřebné dovednosti, ty buduješ přes praktiky a praktiky vykonáváš jako malé denní akce.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč samotný cíl nestačí k dosažení výsledku? <span class="tg">odpověď ▾</span></div><div class="aa">Protože silný úmysl nezaručuje chování — lidé selhávají v sebe-regulaci během cesty, ne v rozhodnutí. Mezi „chci“ a „dělám“ je propast, kterou cíl nepřekročí; musíš ji přemostit strukturou a malou akcí.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaké jsou vlastnosti dobré praktiky? <span class="tg">odpověď ▾</span></div><div class="aa">Jednoduchá, dílčí (segmentální), sekvenční a strategická — tedy malá, je součástí většího procesu, je ve správném pořadí a řeší to, co klienta právě teď nejvíc brzdí.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak funguje test sebedůvěry a co děláš při hodnotě pod 9? <span class="tg">odpověď ▾</span></div><div class="aa">Zeptáš se klienta, jak jistě (0–10) zvládne akci dělat každý den příští dva týdny. Pod 9 znamená, že je akce moc velká — zmenšuješ ji, dokud nedostaneš 9 nebo 10.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co děláš na check-inu, když klient akci plnil z méně než poloviny? <span class="tg">odpověď ▾</span></div><div class="aa">Nezvyšuješ tlak ani nekáráš. Bereš to jako informaci, že akce byla moc velká nebo špatně ukotvená — zmenšíš ji, líp ji navážeš na spouštěč a znovu otestuješ sebedůvěru.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi jednoho modelového klienta a projeď celé GSPA: napiš jeho cíl, vyber jednu dovednost, z ní jednu praktiku a z praktiky jednu denní akci. Akci ukotvi formátem „když… pak…“ na nějaký existující návyk a doplň, jakou hodnotu sebedůvěry bys u ní chtěl slyšet, než klienta pustíš domů. Nakonec popiš, jak akci upravíš ve třech scénářích check-inu (plnil &gt;90 %, ~50–80 %, &lt;50 %).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Gollwitzer PM, Sheeran P. Implementation intentions and goal achievement: a meta-analysis of effects and processes. Adv Exp Soc Psychol. 2006;38:69–119.</li>
+        <li>Burke LE, Wang J, Sevick MA. Self-monitoring in weight loss: a systematic review of the literature. J Am Diet Assoc. 2011;111(1):92–102.</li>
+        <li>Barnes RD, Ivezaj V. A systematic review of motivational interviewing for weight loss among adults in primary care. Obes Rev. 2015;16(4):304–318.</li>
+        <li>Lundahl B, Moleni T, Burke BL, et al. Motivational interviewing in medical care settings: a systematic review and meta-analysis of randomized controlled trials. Patient Educ Couns. 2013;93(2):157–168.</li>
+        <li>Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m16-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

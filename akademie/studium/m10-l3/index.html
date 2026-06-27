@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEF: termický efekt jídla a proč na proteinu (i tady) záleží — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 10 · Lekce 3 — Metabolismus a TDEE do hloubky</div>
+    <h1>TEF: termický efekt jídla a proč na proteinu (i tady) záleží</h1>
+
+    <p class="lead">TEF je nejmenší, nejpřehlíženější — a zároveň nejvíc přeceňovaný kousek výdeje. <strong>Trávení samo o sobě tě nezhubne</strong>, ale ukrývá v sobě jeden z nejsilnějších argumentů, proč protein patří do každého jídelníčku: bílkovina má z makroživin daleko nejvyšší termický efekt a zároveň nejvíc zasytí. V téhle lekci si TEF rozebereš na čísla, oddělíš mýtus od reality a naučíš se ho používat jako argument, ne jako trik na zázračné spalování.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co přesně je TEF a kde sedí v rozkladu TDEE (BMR/RMR + TEF + NEAT + EAT).</li>
+        <li>Konkrétní čísla termického efektu pro bílkoviny, sacharidy a tuky.</li>
+        <li>Proč „metabolická výhoda“ proteinu existuje, ale je menší, než internet slibuje.</li>
+        <li>Jak TEF a sytost společně rozhodují o tom, jestli klient deficit vůbec utáhne.</li>
+        <li>Proč na frekvenci jídel a „rozproudění metabolismu malými jídly“ TEF nezáleží.</li>
+        <li>Jak TEF prakticky využít při skládání jídelníčku — bez fanatismu kolem čísel.</li>
+      </ul>
+    </div>
+
+    <h2>1) Kde TEF sedí v rozkladu výdeje</h2>
+    <p>Celkový denní výdej (TDEE) se skládá ze čtyř složek. Pojďme si je urovnat, protože bez toho TEF nedává smysl:</p>
+    <div class="card">
+      <p><strong>BMR / RMR — klidový výdej (~60–70 %):</strong> energie na základní chod těla — orgány, dýchání, udržení teploty. Zdaleka největší kus, daný hlavně beztukovou hmotou.</p>
+      <p><strong>TEF — termický efekt jídla (~8–15 %):</strong> energie spotřebovaná na trávení, vstřebání a zpracování přijatého jídla. Téma téhle lekce.</p>
+      <p><strong>NEAT — pohyb mimo trénink (~15–30 %, obrovsky variabilní):</strong> chůze, stání, fidgeting, běžné úkony. Při dietě klesá, protože tělo „šetří“.</p>
+      <p><strong>EAT — cílený trénink (variabilní):</strong> u většiny lidí menší kus, než si myslí.</p>
+    </div>
+    <p>TEF je u běžné smíšené stravy přibližně <strong>10 % denního výdeje</strong> — u člověka s výdejem 2 500 kcal jde zhruba o 200–250 kcal denně. Je to malý, ale stabilní krajíc. A na rozdíl od BMR ho do jisté míry ovlivníš tím, <em>z čeho</em> jídelníček poskládáš.</p>
+    <blockquote>TEF nepřevrátí bilanci. Ale je to jediná složka výdeje, kterou přímo řídíš výběrem jídla — a to z něj dělá užitečný argument, ne zázračnou páku.</blockquote>
+
+    <h2>2) Čísla: kolik energie „spálí“ trávení podle makroživiny</h2>
+    <p>Tady leží jádro lekce. Termický efekt se obvykle vyjadřuje jako procento energie přijaté z dané makroživiny, kterou tělo „utratí“ na její zpracování. A rozdíly jsou velké:</p>
+    <div class="card">
+      <p><strong>Bílkoviny: ~20–30 %</strong> — zdaleka nejvyšší. Trávení, deaminace a syntéza bílkovin jsou metabolicky drahé procesy.</p>
+      <p><strong>Sacharidy: ~5–10 %</strong> — střední hodnota.</p>
+      <p><strong>Tuky: ~0–3 %</strong> — nejnižší. Tuk se ukládá energeticky nejlevněji.</p>
+      <p><strong>Alkohol: ~10–30 %</strong> — pro úplnost; pořadí podle „nákladnosti“ je alkohol, bílkovina, sacharid, tuk.</p>
+    </div>
+    <p>Praktický příklad: 100 kcal z bílkoviny ti reálně „dodá“ zhruba 70–80 kcal po odečtení TEF, zatímco 100 kcal z tuku ti dodá skoro celých 100. Není to argument démonizovat tuky — tuky jsou potřeba a jsou hutné na chuť — ale ilustruje to, proč diety s vyšším podílem bílkovin mají při stejné „papírové“ energii o něco vyšší skutečný výdej.</p>
+    <div class="eq">TEF ≈ 0,25 × kcal<sub>protein</sub> + 0,08 × kcal<sub>sacharid</sub> + 0,02 × kcal<sub>tuk</sub></div>
+    <p>Tenhle hrubý odhad není nástroj na počítání do jídelníčku — je to jen ukázka, jak se podíl makroživin propíše do TEF. V kontrolovaných měřeních v respirační komoře vyšla strava s vyšším podílem bílkovin a sacharidů na 24h termický efekt kolem 14,6 %, zatímco vysokotuková strava jen kolem 10,5 %. Rozdíl reálný, ale řádově desítky kcal denně — ne stovky.</p>
+
+    <h2>3) „Metabolická výhoda“ proteinu: existuje, ale buďme upřímní o velikosti</h2>
+    <p>Na sítích se TEF prodává jako tajná zbraň: „jez víc proteinu a spal víc, aniž bys cokoli dělal“. Část pravdy v tom je — vyšší příjem bílkovin opravdu zvedá denní výdej proti nízkobílkovinné stravě o stejné energii. Ale rozsah je třeba zarámovat střízlivě.</p>
+    <p>Když si spočítáš rozdíl pro reálného klienta: posun z ~15 % na ~30 % energie z bílkovin při výdeji 2 500 kcal přidá na TEF zhruba 50–100 kcal denně. To je užitečné, ne magické. Kdo čeká, že protein „nahradí“ deficit, bude zklamaný. Kdo ho bere jako jeden z několika malých proudů ve prospěch hubnutí, má pravdu.</p>
+    <blockquote>Skutečná síla proteinu v dietě není TEF. Je to kombinace: ochrana svalu v deficitu, vysoká sytost na málo kalorií a ano — i o něco vyšší termický efekt. TEF je třešnička, ne dort.</blockquote>
+    <p>Důležitá poznámka pro tvou odbornou hlavu: studie spíš nepodporují, že by se TEF z bílkovin nějak „přizpůsoboval“ a v čase oslaboval. Termický efekt proteinu vychází napříč pracemi konzistentně — což je dobrá zpráva pro dlouhodobost.</p>
+
+    <h2>4) TEF + sytost: proč tahle dvojka rozhoduje o dodržení diety</h2>
+    <p>Tady se TEF protíná s tím, co klient reálně udrží. Bílkovina nebodu­je jen vyšším termickým efektem — ve většině studií jasně nejvíc zasytí na jednotku energie. A sytost je v deficitu rozhodující proměnná: hladový klient deficit neutáhne, ať mu tabulka říká cokoli.</p>
+    <div class="card">
+      <p><strong>Řetězec, který chceš mít na paměti:</strong></p>
+      <p>1. Víc bílkovin → vyšší sytost → snazší dodržení deficitu.</p>
+      <p>2. Víc bílkovin → vyšší TEF → o něco vyšší skutečný výdej.</p>
+      <p>3. Víc bílkovin → ochrana svalu → lepší složení těla a vyšší BMR do budoucna.</p>
+      <p>Tři efekty, jeden tah. Proto je dostatek bílkovin defaultem prakticky každého plánu.</p>
+    </div>
+    <p>A ještě jeden pojem, který sem patří — <strong>energy flux</strong> (energetický tok). Stejnou bilanci můžeš držet při nízkém příjmu i výdeji, nebo při vysokém příjmu i výdeji. Vyšší energetický tok (víc pohybu, víc jídla, vč. víc bílkovin) bývá spojený s lepší regulací chuti a snazší údržbou po dietě — a vyšší TEF je jeho přirozenou součástí, protože při větším objemu jídla je i absolutní termický efekt vyšší.</p>
+
+    <h2>5) Mýtus „malá jídla rozproudí metabolismus“</h2>
+    <p>Tohle uslyšíš od klientů často, tak buď připravený. Logika zní: každé jídlo nastartuje TEF, takže víc jídel = víc spalování. Háček je v tom, že <strong>TEF je proporční k množství a složení snědené energie, ne k počtu jídel.</strong></p>
+    <p>Sníš-li 2 000 kcal ve třech jídlech, nebo v šesti, sečtený termický efekt za den je prakticky stejný — jen rozkouskovaný na víc menších dávek. Frekvence jídel sama o sobě metabolismus „nerozproudí“. Co rozhoduje, je celkový příjem, podíl bílkovin a kvalita jídla, ne magické pětkrát denně.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient řekne „jím malé porce pětkrát denně, abych nakopl metabolismus“, neberu mu to silou. Zeptám se: „A drží tě to syté a sedí ti to do dne?“ Když ano, super — frekvence ať si zvolí podle života. Ale narovnám očekávání: spalování ti zvedne víc to, že do každého jídla dáš pořádnou porci bílkoviny, než to, na kolik jídel si den rozkrájíš. TEF řídíš výběrem, ne rozkladem hodin.</div>
+
+    <h2>6) Jak TEF prakticky využít — bez fanatismu kolem čísel</h2>
+    <p>TEF nepočítáš do jídelníčku po kaloriích. Využíváš ho jako jeden z důvodů, proč nastavit makroživiny chytře:</p>
+    <div class="card">
+      <p><strong>Postav protein jako základ:</strong> cíl ~1,6–2,2 g/kg tělesné hmotnosti pro většinu sportujících klientů. Tím zinkasuješ TEF, sytost i ochranu svalu naráz.</p>
+      <p><strong>Bílkovina do každého jídla:</strong> dlaň masa/ryby/tvarohu na talíř. Rozprostřená přes den drží sytost stabilněji.</p>
+      <p><strong>Neřeš TEF u jednotlivého jídla:</strong> rozdíly jsou v desítkách kcal denně. Energie je v celkové bilanci a v dodržení, ne v termické bonusu jednoho oběda.</p>
+      <p><strong>Vyšší tok místo tvrdšího deficitu:</strong> kde to jde, přidej spíš pohyb (a tím i prostor na jídlo včetně bílkovin) než aby ses zařízl ještě hlouběji do příjmu.</p>
+    </div>
+    <p>Shrnuto: TEF je malý, ale poctivý spojenec. Nepřeceňuj ho jako trik na spalování a nepodceňuj jako jeden z důvodů, proč je protein král. Klientovi nikdy neprodávej „bílkovina spálí dietu za tebe“ — prodávej „bílkovina ti dietu udělá snesitelnou a o kousek výhodnější“.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kolik procent denního výdeje typicky tvoří TEF u smíšené stravy? <span class="tg">odpověď ▾</span></div><div class="aa">Přibližně 8–15 %, nejčastěji se uvádí kolem 10 % celkového denního výdeje (TDEE).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Seřaď makroživiny podle velikosti termického efektu. <span class="tg">odpověď ▾</span></div><div class="aa">Bílkoviny (~20–30 %) > sacharidy (~5–10 %) > tuky (~0–3 %). Bílkovina má z makroživin zdaleka nejvyšší TEF.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Je „metabolická výhoda“ proteinu reálná a jak velká? <span class="tg">odpověď ▾</span></div><div class="aa">Reálná je — vyšší příjem bílkovin zvedá denní výdej proti nízkobílkovinné stravě. Ale řádově jen o desítky kcal denně (zhruba 50–100 kcal), ne o stovky. Je to třešnička, ne dort.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč „malá jídla pětkrát denně“ samo o sobě nerozproudí metabolismus? <span class="tg">odpověď ▾</span></div><div class="aa">Protože TEF je proporční k množství a složení snědené energie, ne k počtu jídel. Sečtený termický efekt za den je při stejném příjmu prakticky stejný, ať jíš třikrát nebo šestkrát.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jmenuj tři efekty dostatku bílkovin v dietě (kromě bilance). <span class="tg">odpověď ▾</span></div><div class="aa">Vyšší sytost (snazší dodržení deficitu), vyšší termický efekt (o něco vyšší skutečný výdej) a ochrana svalu (lepší složení těla i BMR do budoucna).</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta s výdejem cca 2 500 kcal spočítej hrubý rozdíl v denním TEF mezi jídelníčkem s 15 % a s 30 % energie z bílkovin (použij hrubé koeficienty z lekce). Pak napiš dvě věty, jak tenhle rozdíl klientovi podáš tak, abys ho nepřeprodal — a jak místo „spalování proteinem“ zarámuješ skutečné benefity bílkoviny (sytost, ochrana svalu, mírný TEF). Nakonec navrhni, jak rozložíš bílkovinu do dne.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Westerterp KR. Diet induced thermogenesis. Nutr Metab (Lond). 2004;1(1):5.</li>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+        <li>Calcagno M, et al. The Thermic Effect of Food: A Review. J Am Coll Nutr. 2019;38(6):547–551.</li>
+        <li>Sutton EF, et al. No evidence for metabolic adaptation in thermic effect of food by dietary protein. Obesity (Silver Spring). 2016;24(8):1639–1642.</li>
+        <li>Melby CL, Paris HL, Sayer RD, Bell C, Hill JO. Increasing Energy Flux to Maintain Diet-Induced Weight Loss. Nutrients. 2019;11(10):2533.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m10-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

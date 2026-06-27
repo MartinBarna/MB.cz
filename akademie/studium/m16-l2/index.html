@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Připravenost ke změně: jak ji poznat a podle ní programovat — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 16 · Lekce 2 — Umění koučovat compliance</div>
+    <h1>Připravenost ke změně: jak ji poznat a podle ní programovat</h1>
+
+    <p class="lead">Většina trenérů selhává ne proto, že by dali špatný plán, ale proto, že dali <strong>správný plán nepřipravenému člověku</strong>. Připravenost ke změně není měkká psychologie navíc — je to první proměnná, kterou bys měl změřit dřív, než vůbec otevřeš tabulku s tréninkem. Když ji čteš správně, programuješ podle reálného člověka, ne podle ideálu z učebnice. A právě tady se láme dlouhodobá compliance.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je připravenost ke změně a proč rozhoduje o úspěchu víc než samotný plán.</li>
+        <li>Stadia změny (TTM) a jak v každém z nich vypadá správný trenérský zásah.</li>
+        <li>Jak připravenost rychle „změřit“ jednoduchými otázkami v úvodním rozhovoru.</li>
+        <li>Proč autonomní motivace drží adherenci, kdežto tlak a strach ji rozbíjejí.</li>
+        <li>Základní nástroje motivačního rozhovoru, které posunou člověka o stadium dál.</li>
+        <li>Jak nastavit velikost prvního kroku podle připravenosti, ne podle ambice.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč připravenost rozhoduje víc než plán</h2>
+    <p>Adherence — tedy to, jestli klient plán skutečně dlouhodobě dělá — je nejsilnější prediktor výsledku, často silnější než samotný obsah plánu. Ve studiích hubnutí platí, že <strong>míra dodržení rozhoduje o úspěchu víc než typ diety</strong>; low-carb, středomořská i nízkotučná dieta dávají podobné výsledky, pokud je člověk skutečně drží. Plán, který klient nedělá, má účinnost nula — bez ohledu na to, jak je „optimální“.</p>
+    <p>A jestli klient plán dělat bude, závisí hlavně na tom, v jaké je startovní fázi. Když člověku, který ještě jen tak nezávazně uvažuje, naservíruješ pětidenní split a vážení jídla, nedostaneš adherenci — dostaneš výmluvy a tiché zmizení. Připravenost ti říká, <strong>jak velký krok ten člověk právě teď unese</strong>.</p>
+    <blockquote>Nejlepší plán není ten nejoptimálnější na papíře. Je to ten, který konkrétní člověk ve své konkrétní fázi skutečně udělá — a zopakuje příští týden.</blockquote>
+
+    <h2>2) Stadia změny: mapa, ve které se klient zrovna nachází</h2>
+    <p>Transteoretický model (Prochaska a DiClemente) popisuje změnu jako pohyb přes stadia, ne jako jeden skok. Tvoje práce je poznat, kde člověk je, a posunout ho o jedno dál — ne ho přetáhnout přes tři najednou.</p>
+    <div class="card">
+      <p><strong>Prekontemplace:</strong> „Já vlastně problém nemám.“ Nezvažuje změnu. Tlak a rady tu kontraproduktivně tvrdí odpor. Cíl: zasít pochybnost, otevřít téma bez kázání.</p>
+      <p><strong>Kontemplace:</strong> „Asi bych měl, ale…“ Vidí pro i proti a uvázl v ambivalenci. Cíl: pomoct vyvážit misky vah ve prospěch změny, ne přesvědčovat silou.</p>
+      <p><strong>Příprava:</strong> „Chci s tím začít, brzo.“ Plánuje, hledá první kroky. Cíl: společně postavit konkrétní, malý a zvládnutelný start.</p>
+      <p><strong>Akce:</strong> „Dělám to.“ Aktivně mění chování. Cíl: stavět dovednosti, řešit překážky, posilovat dílčí výhry.</p>
+      <p><strong>Udržení:</strong> „Je to součást mě.“ Drží novou rutinu měsíce. Cíl: prevence relapsu, automatizace návyku, plán pro výpadky.</p>
+    </div>
+    <p>Relaps není selhání, je to normální součást cyklu — člověk se obvykle vrátí o stadium zpět, ne na úplný start. Trenér, který relaps bere jako data a ne jako morální prohru, drží klienty mnohem déle.</p>
+
+    <h2>3) Jak připravenost rychle změřit</h2>
+    <p>Nepotřebuješ dotazník na deset stran. Stačí pár cílených otázek v úvodním rozhovoru a dvě jednoduché škály, které člověka nechají mluvit za sebe.</p>
+    <div class="card">
+      <p><strong>Škála důležitosti (1–10):</strong> „Jak moc je pro tebe ta změna teď důležitá?“ Měří, jestli vůbec chce.</p>
+      <p><strong>Škála sebedůvěry (1–10):</strong> „Jak si věříš, že to zvládneš, kdyby ses rozhodl?“ Měří, jestli věří, že může.</p>
+      <p><strong>Otevírací otázky:</strong> „Co tě přivedlo zrovna teď?“, „Co by se muselo stát, aby ses do toho opřel?“, „Co tě zatím zastavuje?“</p>
+    </div>
+    <p>Klíčový trik se škálami: když řekne třeba 6, neptej se „Proč ne víc?“ — to ho stáhne k argumentům proti. Zeptej se <strong>„Proč 6 a ne 3?“</strong>. Tím ho vlastně necháš, aby ti sám vyjmenoval důvody pro změnu. Tomu se říká vyvolávání change talk a je to motor celého motivačního rozhovoru.</p>
+    <blockquote>Nízká důležitost a vysoká sebedůvěra = člověk umí, ale nechce. Vysoká důležitost a nízká sebedůvěra = chce, ale bojí se. Každý typ potřebuje úplně jiný zásah.</blockquote>
+
+    <h2>4) Autonomní motivace drží, tlak rozbíjí</h2>
+    <p>Teorie sebeurčení (self-determination theory) rozlišuje motivaci řízenou zvenčí (musím, jinak…) a motivaci autonomní (chci, protože to dává smysl mně). Přehledy ukazují, že <strong>autonomní motivace předpovídá dlouhodobou adherenci</strong> k pohybu i jídlu, kdežto motivace z tlaku, viny nebo strachu drží jen krátce a pak se hroutí.</p>
+    <p>Prakticky to znamená tři věci, které jako trenér dodáváš: <strong>autonomii</strong> (klient má volbu a spolurozhoduje), <strong>kompetenci</strong> (zažívá, že to umí a daří se mu) a <strong>vztah</strong> (cítí, že mu fandíš, ne že ho soudíš). Když chybí autonomie, i sebelepší plán působí jako trest.</p>
+    <div class="eq">Adherence ≈ Motivace (chci) × Sebedůvěra (zvládnu) × Malé tření</div>
+    <p>Z téhle „rovnice“ plyne celá praxe: nemá smysl tlačit na výkon, dokud nezvedneš důvod a důvěru. A i když obojí sedí, zabije tě tření — moc složitý plán, moc velký první krok, moc pravidel naráz.</p>
+
+    <h2>5) Nástroje motivačního rozhovoru</h2>
+    <p>Motivační rozhovor (MI) je způsob vedení, který v metaanalýzách funguje napříč oblastmi — od pohybu a stravy po odvykání. Není to manipulace; je to pomoc člověku najít vlastní důvody pro změnu. Čtyři praktické nástroje, které zvládneš hned zítra:</p>
+    <div class="card">
+      <p><strong>Otevřené otázky:</strong> místo „Budeš chodit 3× týdně?“ raději „Jak by mohl vypadat tvůj reálný týden?“. Necháváš ho mluvit a slyšet vlastní plán.</p>
+      <p><strong>Reflexe:</strong> zopakuj jeho slova jinak — „Takže tě láká výsledek, ale děsí, že na to nebude čas.“ Cítí se pochopen a otevře se víc.</p>
+      <p><strong>Afirmace:</strong> oceň konkrétní úsilí, ne osobu — „To, že jsi tři týdny chodil i přes shony, je síla.“ Stavíš kompetenci.</p>
+      <p><strong>Sumarizace:</strong> shrň, co zaznělo, a zakonči change talkem — „Říkáš, že chceš mít energii na děti a věříš si u chůze. Začneme tam?“</p>
+    </div>
+    <p>Zlaté pravidlo MI: <strong>vyhýbej se nápravnému reflexu</strong> — tomu nutkání hned opravovat a radit. Čím víc tlačíš správné řešení, tím víc klient hájí status quo. Tvoje role je vyvolávat jeho vlastní argumenty pro změnu, ne dodávat svoje.</p>
+
+    <h2>6) Programuj podle připravenosti, ne podle ambice</h2>
+    <p>Tady všechno spojíš dohromady. Velikost a tvar prvního kroku nastavuješ podle stadia, ne podle toho, co by „mělo“ být optimální.</p>
+    <div class="card">
+      <p><strong>Prekontemplace / kontemplace:</strong> žádný tréninkový plán. Pracuj s důvodem a ambivalencí. Maximálně jeden směšně malý návyk (sklenice vody ráno, 10 minut chůze).</p>
+      <p><strong>Příprava:</strong> jeden konkrétní, malý a měřitelný start. Spíš 2 tréninky, které stoprocentně udělá, než 4 ideální, které neudělá.</p>
+      <p><strong>Akce:</strong> teď můžeš stavět strukturu, progresi a dovednosti. Řeš překážky, ne dokonalost. Drž „minimální verzi“ pro špatné dny.</p>
+      <p><strong>Udržení:</strong> automatizace, prevence relapsu, plán B pro nemoc, dovolenou, krizi. Méně dohledu, víc samostatnosti.</p>
+    </div>
+    <p>Vědomě podstřeluj první krok. Lepší je, když klient skončí týden s pocitem „to bylo lehké, zvládl jsem to“ (a roste mu sebedůvěra), než s pocitem „nedal jsem to“ (a klesá motivace). Malé vyhrané týdny se sčítají do velkých změn — velké prohrané týdny do odchodu.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Na první schůzce neřeším split ani makra. Ptám se: „Na škále 1–10, jak je to pro tebe teď důležité?“ a „Jak si věříš, že to zvládneš?“ Z těch dvou čísel poznám víc než z jakéhokoli dotazníku. Když mi řekne osm na důležitosti a tři na sebedůvěře, vím, že nesmím přidávat objem — musím přidávat výhry. Tak nasadím dva tréninky tak jednoduché, že je nejde nezvládnout, a tři týdny stavím jen sebedůvěru. Plán mám v hlavě připravený celý rok dopředu — ale otevřu ho až ve chvíli, kdy je člověk ve fázi, kdy ho unese.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je v dlouhodobém hubnutí silnější prediktor úspěchu — typ diety, nebo adherence? <span class="tg">odpověď ▾</span></div><div class="aa">Adherence, tedy míra dodržení. Studie ukazují podobné výsledky napříč typy diet, pokud je člověk skutečně drží — rozhoduje dodržení, ne macro-složení samo o sobě.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj stadia změny podle transteoretického modelu a jeden vhodný zásah pro prekontemplaci. <span class="tg">odpověď ▾</span></div><div class="aa">Prekontemplace, kontemplace, příprava, akce, udržení (plus relaps jako součást cyklu). V prekontemplaci nedávat plán ani tlak — zasít pochybnost a otevřít téma bez kázání, případně jeden směšně malý návyk.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Klient dá na škále důležitosti 6. Jak se zeptáš, abys vyvolal change talk? <span class="tg">odpověď ▾</span></div><div class="aa">„Proč 6 a ne 3?“ — necháš ho samotného vyjmenovat důvody pro změnu. Otázka „Proč ne víc?“ by ho naopak stáhla k argumentům proti.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč autonomní motivace drží adherenci líp než tlak a strach? <span class="tg">odpověď ▾</span></div><div class="aa">Autonomní motivace (chci, protože to dává smysl mně) předpovídá dlouhodobé udržení chování, kdežto motivace z tlaku, viny či strachu funguje jen krátce a pak se hroutí. Dodáváš autonomii, kompetenci a vztah.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co je „nápravný reflex“ a proč se mu v motivačním rozhovoru vyhnout? <span class="tg">odpověď ▾</span></div><div class="aa">Nutkání hned opravovat a radit správné řešení. Čím víc trenér tlačí řešení, tím víc klient hájí status quo. Role trenéra je vyvolávat klientovy vlastní argumenty pro změnu, ne dodávat svoje.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta proveď úvodní „měření připravenosti“: napiš jeho odhadované stadium změny, polož mu škálu důležitosti a sebedůvěry (1–10) a navrhni doplňující otevřenou otázku. Podle výsledku pak nastav PRVNÍ krok — schválně tak malý, aby ho nešlo nezvládnout — a zdůvodni, proč zrovna takhle velký a proč ne celý tréninkový plán hned. Nakonec připiš jednu reflexi a jednu afirmaci, kterou bys při rozhovoru použil.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Prochaska JO, Velicer WF. The Transtheoretical Model of health behavior change. Am J Health Promot. 1997;12(1):38–48.</li>
+        <li>Rubak S, Sandbæk A, Lauritzen T, Christensen B. Motivational interviewing: a systematic review and meta-analysis. Br J Gen Pract. 2005;55(513):305–312.</li>
+        <li>Teixeira PJ, Carraça EV, Markland D, Silva MN, Ryan RM. Exercise, physical activity, and self-determination theory: a systematic review. Int J Behav Nutr Phys Act. 2012;9:78.</li>
+        <li>Ng JYY, Ntoumanis N, Thøgersen-Ntoumani C, et al. Self-Determination Theory Applied to Health Contexts: A Meta-Analysis. Perspect Psychol Sci. 2012;7(4):325–340.</li>
+        <li>Dansinger ML, Gleason JA, Griffith JL, Selker HP, Schaefer EJ. Comparison of the Atkins, Ornish, Weight Watchers, and Zone diets for weight loss and heart disease risk reduction. JAMA. 2005;293(1):43–53.</li>
+        <li>Frost H, Campbell P, Maxwell M, et al. Effectiveness of Motivational Interviewing on adult behaviour change in health and social care settings: A systematic review of reviews. PLoS One. 2018;13(10):e0204890.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m16-l2', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

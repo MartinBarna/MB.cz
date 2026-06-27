@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spánek a hubnutí: ghrelin, leptin a proč málo spánku = větší hlad — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 6 — Spánek, stres a regenerace</div>
+    <h1>Spánek a hubnutí: ghrelin, leptin a proč málo spánku = větší hlad</h1>
+
+    <p class="lead">Můžeš mít perfektně nastavené kalorie, makra i tréninkový plán — a stejně to nepůjde, pokud klient spí pět hodin. <strong>Spánek není „bonus k regeneraci“, je to páka, která přímo posouvá hlad, chuť a to, kolik svalu si v dietě udržíš.</strong> Tahle lekce ti dá fyziologii za tím, proč nevyspaný člověk bojuje s appetitem, kterému nerozumí — a co s tím můžeš jako trenér reálně dělat.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak spánek řídí dva klíčové hormony hladu — ghrelin (zvyšuje hlad) a leptin (signál sytosti).</li>
+        <li>Proč málo spánku posune chuť k hyperchutným, kalorickým jídlům, i když bilance „má sedět“.</li>
+        <li>Co ukázala Nedeltcheva 2010: stejný deficit, ale méně spánku = víc ztraceného svalu, méně tuku.</li>
+        <li>Jak fungují adenosin a cirkadiánní rytmus a proč rozhodují o kvalitě, ne jen délce spánku.</li>
+        <li>Že prodloužení spánku (sleep extension) samo o sobě snižuje denní příjem kalorií.</li>
+        <li>Konkrétní spánkové páky, které u klienta nasadíš dřív než další škrtání kalorií.</li>
+      </ul>
+    </div>
+
+    <h2>1) Dva hormony hladu — a spánek mezi nimi</h2>
+    <p>Apetit není jen „vůle“. Z velké části ho řídí dvojice hormonů. <strong>Ghrelin</strong> se uvolňuje hlavně ze žaludku, signalizuje mozku „máme hlad, sháněj jídlo“ a zároveň tlumí výdej energie. <strong>Leptin</strong> produkuje tuková tkáň a posílá opačnou zprávu — „energie je dost, můžeš přestat jíst“. Když tahle dvojice funguje, hlad a sytost se přirozeně střídají.</p>
+    <p>Spánek do téhle rovnováhy zasahuje překvapivě tvrdě. V kontrolované studii, kde zdravé mladé muže omezili na čtyři hodiny spánku po dvě noci, klesla hladina leptinu o 18 % a ghrelin vzrostl o 28 % — a co je důležité, ruku v ruce s tím šel nahoru subjektivní hlad a chuť, nejvíc právě na kaloricky hustá jídla.</p>
+    <blockquote>Nevyspaný klient nemá „slabou vůli“. Má hormonálně přenastavený apetit. To je obrovský rozdíl v tom, jak s ním budeš mluvit a co mu poradíš.</blockquote>
+
+    <h2>2) Proč nevyspaný člověk sahá po sladkém a tučném</h2>
+    <p>Posun není jen v tom, kolik toho člověk sní, ale i v tom <em>po čem</em> sáhne. Krátký spánek zvyšuje ghrelin, oslabuje leptinový signál sytosti a navíc tlumí oblasti prefrontálního kortexu, které drží rozhodování pod kontrolou. Výsledek: silnější tah na rychlé sacharidy a tuky a slabší brzdu, která by řekla „dost“.</p>
+    <div class="card">
+      <p><strong>Vyšší ghrelin →</strong> intenzivnější pocit hladu i krátce po jídle.</p>
+      <p><strong>Nižší leptin →</strong> slabší signál sytosti, jíš dál, i když energeticky není potřeba.</p>
+      <p><strong>Oslabená prefrontální kontrola →</strong> impulzivnější volba jídla, hůř se odolává hyperchutným potravinám.</p>
+      <p><strong>Více času vzhůru →</strong> prostě víc příležitostí (a ujídacích oken), kdy se dá jíst.</p>
+    </div>
+    <p>Tohle dohromady vysvětluje, proč klient po probdělém týdnu „záhadně“ přibere nebo se zasekne, přestože si je jistý, že jí stejně. Apetit i prostředí pracují proti němu.</p>
+
+    <h2>3) Stejný deficit, jiný výsledek — co ukázala Nedeltcheva</h2>
+    <p>Klíčová studie z roku 2010 (Nedeltcheva a kol.) vzala dospělé s nadváhou a dala všem stejný mírný kalorický deficit. Jediný rozdíl: jedna fáze se spánkovým oknem 8,5 hodiny, druhá jen 5,5 hodiny. Hmotnostní úbytek byl podobný — <strong>ale složení toho úbytku se dramaticky lišilo</strong>.</p>
+    <div class="card">
+      <p><strong>8,5 h spánku:</strong> z úbytku připadala větší část na tuk (≈ 1,4 kg tuku).</p>
+      <p><strong>5,5 h spánku:</strong> podíl tuku na úbytku klesl o ~55 % (≈ 0,6 kg tuku) a o ~60 % vzrostla ztráta beztukové hmoty — tedy hlavně svalu.</p>
+      <p><strong>Navíc:</strong> při krátkém spánku produkovali účastníci více ghrelinu, hlásili silnější hlad a tělo se posunulo k „šetřícímu“ režimu.</p>
+    </div>
+    <p>Praktický překlad pro trenéra: spánek rozhoduje o tom, <em>z čeho</em> tělo v deficitu ubírá. Málo spánku okrádá klienta právě o sval, který se v dietě snaží zachránit — a zhoršuje výsledek na váze i v zrcadle, i když na papíře „dieta sedí“.</p>
+
+    <h2>4) Adenosin a cirkadián — proč nejde jen o počet hodin</h2>
+    <p>Spánkový tlak řídí mimo jiné <strong>adenosin</strong> — látka, která se hromadí v mozku po celou dobu bdění a vytváří rostoucí potřebu spánku. Kofein blokuje adenosinové receptory, takže únavu „přebije“, ale adenosin se přitom dál hromadí; když kofein odezní, dorazí únava často zesílená. Proto pozdní odpolední káva umí kvalitu spánku potichu rozbít, i když člověk usne.</p>
+    <p>Druhý systém je <strong>cirkadiánní rytmus</strong> — vnitřní 24hodinové hodiny laděné hlavně světlem. Ranní denní světlo je nastaví a večerní tlumené světlo s nástupem melatoninu signalizuje „čas spát“. Když jdou tyhle dva systémy proti sobě (vysoký adenosin, ale rozhozený cirkadián — typicky modré světlo a obrazovky pozdě večer), spánek je roztříštěný a méně regenerační, i když v posteli strávíš osm hodin.</p>
+    <blockquote>Délka spánku je jen polovina příběhu. Druhá polovina je načasování a kvalita — a ty řídíš světlem, kofeinem a pravidelností, ne jen „chozením dřív do postele“.</blockquote>
+
+    <h2>5) Druhá strana mince: víc spánku jako nástroj hubnutí</h2>
+    <p>Když málo spánku škodí, dá se z toho udělat páka i opačným směrem. V randomizované studii z roku 2022 (Tasali a kol.) dostali dospělí s nadváhou, kteří běžně spali méně než 6,5 hodiny, jen jednu personalizovanou konzultaci spánkové hygieny. Prodloužili si spánek v průměru o ~1,2 hodiny za noc — a <strong>aniž by cokoli jiného měnili, snížili denní příjem zhruba o 270 kcal</strong>. Výdej se nezměnil, takže vznikl spontánní deficit.</p>
+    <p>Spánek navíc není jen o apetitu. U sportovců prokázalo prodloužení spánku (Mah a kol., Stanford) lepší výkon — rychlejší sprinty, vyšší úspěšnost střelby, kratší reakční čas a lepší náladu. A na populační úrovni meta-analýzy konzistentně spojují krátký spánek s vyšším rizikem obezity. Proto odborná doporučení (konsensus AASM a Sleep Research Society) míří na <strong>7 a více hodin spánku za noc</strong> pro zdravé dospělé.</p>
+    <div class="eq">Méně spánku → ↑ ghrelin, ↓ leptin → ↑ hlad → snazší přejídání</div>
+    <p>Není to zázračná dieta — je to odstranění brzdy. U klienta, který chronicky spí málo, často udělá víc dobrého přidaná hodina spánku než další utažený deficit.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient hlásí „mám pořád hlad a nezvládám večery“, ptám se nejdřív na spánek, ne na kalorie. Když spí pět šest hodin, vím, že proti němu jedou hormony, a nemá smysl mu utahovat dietu — to by ho jen zlomilo. Nasadíme jednu věc: pevný čas vstávání, ranní světlo ven a žádná káva po druhé odpoledne. Apetit se po dvou třech týdnech zklidní sám a teprve pak řešíme jídelníček. Spánek je první páka, ne poslední.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co dělá ghrelin a co leptin a jak na ně působí málo spánku? <span class="tg">odpověď ▾</span></div><div class="aa">Ghrelin zvyšuje hlad (a tlumí výdej), leptin signalizuje sytost. Krátký spánek ghrelin zvyšuje a leptin snižuje — tedy posouvá člověka směrem k většímu hladu a slabší sytosti.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč nevyspaný klient častěji sahá po sladkém a tučném? <span class="tg">odpověď ▾</span></div><div class="aa">Vyšší ghrelin a nižší leptin zesílí hlad a oslabí sytost, navíc se tlumí prefrontální kontrola rozhodování — výsledkem je silnější tah na kaloricky hustá jídla a slabší brzda.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co ukázala studie Nedeltcheva 2010 při stejném deficitu, ale různém spánku? <span class="tg">odpověď ▾</span></div><div class="aa">Úbytek hmotnosti byl podobný, ale při krátkém spánku (5,5 h) klesl podíl ztraceného tuku zhruba o 55 % a o ~60 % vzrostla ztráta svalu (beztukové hmoty). Málo spánku okrádá klienta o sval.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč nejde jen o počet hodin spánku, ale i o kvalitu a načasování? <span class="tg">odpověď ▾</span></div><div class="aa">Spánkový tlak řídí adenosin (kofein ho jen maskuje) a načasování řídí cirkadiánní rytmus laděný světlem. Když jdou proti sobě (např. obrazovky a káva večer), spánek je roztříštěný a méně regenerační, i když je dost dlouhý.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak může delší spánek pomoct hubnutí (Tasali 2022)? <span class="tg">odpověď ▾</span></div><div class="aa">Prodloužení spánku o ~1,2 h za noc snížilo denní příjem zhruba o 270 kcal bez jiných změn, takže vznikl spontánní deficit. Víc spánku tedy odstraňuje brzdu apetitu — někdy účinněji než další škrtání kalorií.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta, který spí kolem 5–6 hodin a stěžuje si na hlad a večerní přejídání, napiš, proč mu nejdřív neutáhneš kalorie. Navrhni tři konkrétní spánkové páky (např. pevný čas vstávání, ranní světlo, kofeinové okno, večerní rutina) a popiš, jak po 2–3 týdnech vyhodnotíš změnu apetitu i hmotnosti — a kdy teprve začneš řešit jídelníček.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Spiegel K, Tasali E, Penev P, Van Cauter E. Brief communication: Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite. Ann Intern Med. 2004;141(11):846–850.</li>
+        <li>Nedeltcheva AV, Kilkus JM, Imperial J, Schoeller DA, Penev PD. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010;153(7):435–441.</li>
+        <li>Tasali E, Wroblewski K, Kahn E, Kilkus J, Schoeller DA. Effect of sleep extension on objectively assessed energy intake among adults with overweight in real-life settings: A randomized clinical trial. JAMA Intern Med. 2022;182(4):365–374.</li>
+        <li>Mah CD, Mah KE, Kezirian EJ, Dement WC. The effects of sleep extension on the athletic performance of collegiate basketball players. Sleep. 2011;34(7):943–950.</li>
+        <li>Cappuccio FP, Taggart FM, Kandala NB, et al. Meta-analysis of short sleep duration and obesity in children and adults. Sleep. 2008;31(5):619–626.</li>
+        <li>Watson NF, Badr MS, Belenky G, et al. Recommended amount of sleep for a healthy adult: A joint consensus statement of the American Academy of Sleep Medicine and Sleep Research Society. Sleep. 2015;38(6):843–844.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

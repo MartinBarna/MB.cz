@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kofein: výkon, dávkování a timing — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 14 · Lekce 3 — Suplementace podle důkazů</div>
+    <h1>Kofein: výkon, dávkování a timing</h1>
+
+    <p class="lead">Kofein je jeden z mála doplňků, u kterého je důkazní základna tak silná, že se o jeho účinku už prakticky nehádá. <strong>Funguje na sílu, vytrvalost, sprinty i hlavu — a stojí pár korun.</strong> Háček je v detailech: kolik, kdy a komu. Špatná dávka nebo špatný timing umí slibný „cheat code“ proměnit v rozbitý spánek a horší výkon. Tahle lekce ti dá rámec, který klientovi nastavíš s jistotou a bez mýtů.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč kofein patří mezi nejlépe doložené ergogenní látky a co konkrétně zlepšuje.</li>
+        <li>Jak nastavit dávku podle hmotnosti klienta (rámec 3–6 mg/kg) a kdy víc neznamená líp.</li>
+        <li>Jak časovat příjem před tréninkem podle formy (kapsle vs. káva vs. předtréninkovka).</li>
+        <li>Proč jsou genetika a tolerance důvod, proč jeden „letí“ a druhý nic necítí.</li>
+        <li>Jak kofein nerozbít spánek — pravidlo poločasu a bezpečného okna.</li>
+        <li>Kdy kofein vysadit, kontraindikace a férové hranice bezpečnosti.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč kofein funguje a co zlepšuje</h2>
+    <p>Kofein blokuje adenosinové receptory v mozku. Adenosin se přes den hromadí a tlačí tě k únavě — kofein mu „obsadí parkovací místo“, takže klesá vnímaná námaha a roste bdělost a soustředění. Není to falešná energie ani spalovač tuků; je to látka, která mění to, jak těžce ti práce <em>připadá</em>.</p>
+    <p>Pozice International Society of Sports Nutrition (ISSN) je v tomhle jednoznačná: kofein spolehlivě zlepšuje výkon napříč disciplínami. Funguje na vytrvalost a časovky, na týmové a vysoce intenzivní sporty, ale i na silový a odporový trénink — meta-analýzy ukazují malý až střední efekt na maximální sílu a hlavně na svalovou sílu a rychlost pohybu při zvedání.</p>
+    <div class="card">
+      <p><strong>Co kofein doloženě zlepšuje:</strong></p>
+      <p>• <strong>Vytrvalost</strong> — výdrž i časovkový výkon, v průměru kolem 2–4 % zlepšení výkonu.</p>
+      <p>• <strong>Sílu a sval</strong> — vyšší maximální síla horní části těla, vyšší rychlost zdvihu a více opakování do selhání.</p>
+      <p>• <strong>Sprinty a intenzitu</strong> — opakované sprinty, týmové sporty, krátké výbušné úseky.</p>
+      <p>• <strong>Hlavu</strong> — bdělost, soustředění a výkon při spánkové deprivaci.</p>
+    </div>
+    <blockquote>Kofein nepřidá sílu, kterou nemáš — odemkne výkon, který v tobě je, tím, že sníží pocit námahy. To je obrovský rozdíl pro trénink i závod.</blockquote>
+
+    <h2>2) Dávkování: rámec 3–6 mg/kg</h2>
+    <p>Tady je nejpraktičtější číslo celé lekce. Účinná dávka se neudává v „šálcích kávy“, ale na kilogram tělesné hmotnosti. Konsenzus i meta-analýzy se shodují na pásmu <strong>3–6 mg/kg</strong> — to je zóna, kde efekt spolehlivě nastupuje.</p>
+    <div class="eq">dávka (mg) = 3 až 6 mg × tělesná hmotnost (kg)</div>
+    <p>Pro 80kg klienta to znamená zhruba <strong>240–480 mg</strong>. Začni vždycky na spodním okraji (3 mg/kg) — efekt bývá podobný jako u vyšších dávek, ale s menším rizikem nervozity, bušení srdce a rozhozeného spánku. Minimální účinná dávka může být u někoho i nižší, kolem 2 mg/kg.</p>
+    <p>Důležité: <strong>víc neznamená líp.</strong> Vysoké dávky (≥ 9 mg/kg) nepřinášejí další zlepšení výkonu, zato spolehlivě přidají vedlejší účinky. Strop nahoře není o výkonu, ale o nepohodlí a bezpečnosti.</p>
+    <div class="card">
+      <p><strong>Orientační obsah kofeinu:</strong></p>
+      <p>• Espresso ~ 60–80 mg • Filtrovaná káva (velký hrnek) ~ 100–160 mg</p>
+      <p>• Kofeinová tableta/kapsle ~ 100–200 mg • Předtréninkovka (porce) ~ 150–300 mg</p>
+      <p>Anhydrózní kofein (kapsle, prášek) má navíc oproti kávě mírně vyšší a spolehlivější ergogenní efekt — dávku přesně odměříš a nezávisí na druhu zrna a přípravě.</p>
+    </div>
+
+    <h2>3) Timing: kdy ho dát před výkon</h2>
+    <p>Kofein se vstřebává a vrcholí v krvi přibližně <strong>30–60 minut</strong> po požití (u kapslí spíš 45–60 min). Proto klasické pravidlo zní: vzít ho zhruba <strong>45–60 minut před</strong> klíčovou částí tréninku nebo před závodem, ne až v šatně.</p>
+    <p>Forma mění rychlost nástupu. Tekuté formy (káva, nápoj) bývají o něco rychlejší než kapsle; žvýkačky a ústní formy nastupují nejrychleji. Pokud klient řeší ranní trénink nalačno, efekt přijde dřív a silněji, protože nesoutěží s trávením jídla.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> S klienty to řeším jednoduše: „Vezmi to, až vyrazíš z domu nebo si sedneš do auta, ne až rozcvičíš.“ Pro silový trénink nebo časovku to vyjde tak akorát — dorazíš na první těžkou sérii s plnou hlavou. A vždycky to nejdřív vyzkoušíme na běžném tréninku, ne na závodě. Závodní den není den na experimenty s žaludkem.</div>
+    <blockquote>Načasování není o minutě přesně — je o tom, aby vrchol účinku padl na nejtěžší část výkonu, ne na zahřátí nebo na cestu domů.</blockquote>
+
+    <h2>4) Proč jeden „letí“ a druhý necítí nic</h2>
+    <p>Odpověď na kofein je hodně individuální a má dvě hlavní příčiny: genetiku a toleranci.</p>
+    <p><strong>Genetika.</strong> Kofein odbourává v játrech enzym kódovaný genem <em>CYP1A2</em>. „Rychlí metabolizéři“ (genotyp AA) z kofeinu výkonnostně těží nejvíc — ve studii s časovkou na kole měli při 4 mg/kg zlepšení i přes 6 %, zatímco u „pomalých“ metabolizérů efekt chyběl nebo se výkon dokonce mírně zhoršil. Genetiku klienta neznáš, ale vysvětluje, proč nelze slíbit stejný účinek všem.</p>
+    <p><strong>Tolerance.</strong> Kdo pije kofein denně, má slabší akutní efekt. Neznamená to, že přestane fungovat úplně, ale „wow“ pocit u pravidelných konzumentů klesá. Proto někteří sportovci dělají pár dní před závodem <em>deload</em> kofeinu — sníží nebo vysadí příjem, aby se citlivost vrátila.</p>
+    <div class="card">
+      <p><strong>Praktický důsledek pro trenéra:</strong></p>
+      <p>• Netvrď klientovi konkrétní procento zlepšení — slib rámec, ne zázrak.</p>
+      <p>• Otestuj reakci na tréninku: někdo bude nadšený, jiný nervózní a bez efektu.</p>
+      <p>• U silných konzumentů zvaž krátký deload (24–96 h) před klíčovým výkonem.</p>
+    </div>
+
+    <h2>5) Kofein a spánek: pravidlo poločasu</h2>
+    <p>Tady se nejčastěji chybuje. Kofein má <strong>poločas rozpadu zhruba 4–6 hodin</strong> (rozpětí napříč lidmi je ale velké, klidně 2–10 hodin). To znamená, že za poločas se v těle rozloží jen polovina dávky — zbytek dál koluje a hlídá adenosin.</p>
+    <p>Meta-analýza ukázala, že i odpolední/večerní dávka před tréninkem dokáže zhoršit následný spánek: zkracuje celkový spánek a prodlužuje usínání. Aby se klient vyhnul narušení spánku, měl by standardní dávku dát s dostatečným odstupem před spaním — orientačně přes 8–9 hodin u menší porce a klidně 12–13 hodin u silné předtréninkovky.</p>
+    <div class="card">
+      <p><strong>Jednoduché pravidlo pro klienty:</strong></p>
+      <p>• Trénuješ ráno nebo brzy odpoledne? Kofein řeš normálně.</p>
+      <p>• Trénuješ večer? Buď zvol nižší dávku, nebo kofein vynech a vsaď na rozcvičku a hudbu — rozbitý spánek po večerní dávce ti sebere víc, než ti kofein dal.</p>
+      <p>• Citlivý spánek = poslední kofein nejlépe nejpozději brzy odpoledne.</p>
+    </div>
+    <blockquote>Spánek je nejsilnější „doplněk“ na regeneraci, jaký máš. Když kvůli kofeinu obětuješ spánek, prohraješ obchod, i kdyby trénink vyšel skvěle.</blockquote>
+
+    <h2>6) Bezpečnost a hranice</h2>
+    <p>Kofein je pro většinu zdravých dospělých bezpečný do zhruba <strong>400 mg denně</strong> (běžně uváděná hranice u zdravé populace). Akutní výkonnostní dávky 3–6 mg/kg se do toho vejdou, ale připomeň klientovi, že kofein z předtréninkovky, kávy i energetických nápojů se <strong>sčítá</strong>.</p>
+    <div class="card">
+      <p><strong>Na co dát pozor:</strong></p>
+      <p>• <strong>Vedlejší účinky:</strong> nervozita, bušení srdce, třes, žaludeční nevolnost, úzkost — častěji u vyšších dávek a u citlivých lidí.</p>
+      <p>• <strong>Opatrnost:</strong> těhotenství a kojení (nižší limity), úzkostné poruchy, nekontrolovaný vysoký tlak, srdeční arytmie, citlivost na spánek.</p>
+      <p>• <strong>Není to recept ani diagnóza:</strong> u zdravotních potíží patří rozhodnutí k lékaři, ne k trenérovi.</p>
+    </div>
+    <p>A jedno poctivé připomenutí: kofein je nadstavba, ne základ. Funguje nejlíp tam, kde už stojí spánek, jídlo a smysluplný trénink. Klientovi, který chronicky nespí a jí chaoticky, nepomůže silnější předtréninkovka — pomůže pořádek v základech.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaké je doporučené dávkovací pásmo kofeinu pro výkon a kolik to dělá u 80kg klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Pásmo 3–6 mg/kg tělesné hmotnosti. U 80kg klienta to je zhruba 240–480 mg. Začínáme na spodním okraji (3 mg/kg).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč „víc kofeinu“ neznamená lepší výkon? <span class="tg">odpověď ▾</span></div><div class="aa">Vysoké dávky (≥ 9 mg/kg) už nepřinášejí další zlepšení výkonu, zato spolehlivě přidávají vedlejší účinky — nervozitu, bušení srdce a horší spánek. Strop nahoře je o bezpečnosti, ne o výkonu.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Kdy kofein vzít před výkonem a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 45–60 minut před klíčovou částí, protože kofein vrcholí v krvi 30–60 minut po požití. Cílem je, aby vrchol účinku padl na nejtěžší část výkonu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč někdo cítí silný efekt a jiný skoro nic? <span class="tg">odpověď ▾</span></div><div class="aa">Hlavně kvůli genetice (gen CYP1A2 — „rychlí“ metabolizéři s genotypem AA těží nejvíc) a kvůli toleranci (pravidelní konzumenti mají slabší akutní efekt).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak kofein nerozbít spánek? <span class="tg">odpověď ▾</span></div><div class="aa">Počítej s poločasem rozpadu ~4–6 hodin a dej dostatečný odstup před spaním (orientačně 8–9 h u menší dávky, 12–13 h u silné předtréninkovky). U večerního tréninku zvol nižší dávku nebo kofein vynech.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta (zadej si hmotnost a čas tréninku) navrhni konkrétní kofeinový protokol: spočítej dávku v pásmu 3–6 mg/kg, urči formu (káva / kapsle / předtréninkovka) a přesný čas příjmu před výkonem. Pak doplň, jak ošetříš spánek podle pravidla poločasu a co bys klientovi řekl, kdyby trénoval v 19:00. Nakonec popiš, jak reakci nejdřív otestuješ na běžném tréninku.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Guest NS, VanDusseldorp TA, Nelson MT, et al. International society of sports nutrition position stand: caffeine and exercise performance. J Int Soc Sports Nutr. 2021;18(1):1.</li>
+        <li>Goldstein ER, Ziegenfuss T, Kalman D, et al. International society of sports nutrition position stand: caffeine and performance. J Int Soc Sports Nutr. 2010;7(1):5.</li>
+        <li>Grgic J, Trexler ET, Lazinica B, Pedisic Z. Effects of caffeine intake on muscle strength and power: a systematic review and meta-analysis. J Int Soc Sports Nutr. 2018;15:11.</li>
+        <li>Guest N, Corey P, Vescovi J, El-Sohemy A. Caffeine, CYP1A2 Genotype, and Endurance Performance in Athletes. Med Sci Sports Exerc. 2018;50(8):1570–1578.</li>
+        <li>Gardiner C, Weakley J, Burke LM, et al. The effect of caffeine on subsequent sleep: A systematic review and meta-analysis. Sleep Med Rev. 2023;69:101764.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m14-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

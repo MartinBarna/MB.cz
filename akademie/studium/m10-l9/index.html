@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praktická kalkulace pro klienta: od váhy a aktivity k číslům — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 10 · Lekce 9 — Metabolismus a TDEE do hloubky</div>
+    <h1>Praktická kalkulace pro klienta: od váhy a aktivity k číslům</h1>
+
+    <p class="lead">Teorii o metabolismu už máš za sebou. Teď přijde to, co reálně použiješ na první konzultaci: <strong>jak z váhy, výšky, věku a životního stylu klienta dostat smysluplné kalorické číslo</strong> — a hlavně jak ho nepovažovat za svaté. Naučíš se postavit odhad rozumně, vědět, kde se pleteš, a jak číslo opravit podle toho, co váha a klient skutečně dělají.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak spočítat klidový výdej (BMR/RMR) zavedeným vzorcem a proč zrovna tímhle.</li>
+        <li>Jak na BMR navázat aktivitu a dostat se k TDEE — dvěma cestami, ne jen násobkem.</li>
+        <li>Proč je NEAT největší proměnná celé rovnice a jak ho odhadnout realisticky.</li>
+        <li>Jak z TDEE nastavit cílový příjem pro hubnutí, nabírání i udržení.</li>
+        <li>Koncept energy flux — proč „víc dovnitř i ven“ často klientovi sedne líp.</li>
+        <li>Jak číslo po 2–3 týdnech zkontrolovat a překalibrovat podle reality.</li>
+      </ul>
+    </div>
+
+    <h2>1) Začni klidovým výdejem (BMR/RMR)</h2>
+    <p>Základ celé kalkulace je klidový výdej — kolik energie tělo spálí, kdyby klient celý den jen ležel. V praxi se potkáš se dvěma pojmy: <strong>BMR</strong> (bazální, měřeno za přísně standardizovaných podmínek) a <strong>RMR</strong> (klidový, o pár procent vyšší a praktičtější). Pro naše účely je rozdíl zanedbatelný — kalkulačky stejně dávají odhad, ne měření.</p>
+    <p>Z desítek rovnic doporučuju jednu: <strong>Mifflin–St Jeor</strong>. Systematický přehled od Frankenfielda ji vyhodnotil jako nejpřesnější — u nejvíce lidí (štíhlých i obézních) trefí skutečný klidový výdej do 10 % oproti měření indirektní kalorimetrií. Stará Harris–Benedictova rovnice nadhodnocuje, Mifflin sedí líp na dnešní populaci.</p>
+    <div class="eq">Muž: BMR = 10·váha(kg) + 6,25·výška(cm) − 5·věk + 5<br>Žena: BMR = 10·váha(kg) + 6,25·výška(cm) − 5·věk − 161</div>
+    <div class="card">
+      <p><strong>Příklad — žena, 70 kg, 168 cm, 35 let:</strong></p>
+      <p>BMR = 10·70 + 6,25·168 − 5·35 − 161 = 700 + 1050 − 175 − 161 = <strong>≈ 1414 kcal/den</strong>.</p>
+      <p>To je „motor na volnoběh“. Sám o sobě nepoužitelný jako cíl příjmu — je to jen první cihla.</p>
+    </div>
+    <blockquote>Vzorec ti dá číslo na desetinu přesně. To je past. Přesnost zápisu není totéž co přesnost odhadu — reálná chyba klidového výdeje mezi dvěma lidmi stejných parametrů může být klidně ±10 %.</blockquote>
+
+    <h2>2) Od BMR k TDEE — dvě cesty</h2>
+    <p>Klidový výdej je jen ~60–70 % celku. Abys dostal <strong>TDEE</strong> (celkový denní výdej), musíš přidat aktivitu. Jsou dvě cesty a každá má své místo.</p>
+    <div class="card">
+      <p><strong>Cesta A — aktivitní faktor (rychlá):</strong> BMR vynásobíš koeficientem podle životního stylu. Je to hrubé, ale na start stačí.</p>
+      <p>• 1,2 — sedavý, žádný cílený pohyb<br>
+         • 1,375 — lehká aktivita, 1–3 tréninky/týden<br>
+         • 1,55 — střední, 3–5 tréninků/týden<br>
+         • 1,725 — vysoká, 6–7 tréninků nebo fyzická práce<br>
+         • 1,9 — velmi vysoká, těžká manuální práce + trénink</p>
+      <p><strong>Cesta B — sčítání složek (přesnější):</strong> TDEE = BMR + TEF + NEAT + EAT. Sečteš jednotlivé kusy zvlášť. Vyžaduje víc informací o klientovi, ale líp odhalí, kde je proměnná.</p>
+    </div>
+    <div class="eq">TDEE = BMR + TEF + NEAT + EAT</div>
+    <p>Kde <strong>TEF</strong> je termický efekt jídla (~10 % příjmu, nejvyšší u bílkovin), <strong>NEAT</strong> je pohyb mimo trénink (chůze, stání, fidgeting) a <strong>EAT</strong> je cílený trénink. Pro naši ženu z příkladu: pokud chodí 3× týdně cvičit a jinak sedí v kanceláři, faktor ~1,375 → TDEE ≈ 1414 · 1,375 = <strong>≈ 1944 kcal/den</strong>.</p>
+    <p>Pozor na nejčastější chybu: klient si vybere faktor o stupeň výš, než realita je. Tři tréninky týdně ze sedavého kancelářského života nedělají „střední aktivitu 1,55“ — pořád je to spíš 1,375. Když si nejsi jistý, zvol nižší faktor a doplň deficit/přebytek až podle trendu.</p>
+
+    <h2>3) NEAT — největší a nejpodceňovanější proměnná</h2>
+    <p>Tady se rozhoduje, proč dva lidé se stejným BMR a stejným tréninkem mají úplně jiný výdej. <strong>NEAT je nejvariabilnější složka rovnice.</strong> Levine ukázal, že rozdíl v NEAT mezi jednotlivci může činit stovky až přes tisíc kalorií denně — víc, než spálí typický trénink.</p>
+    <div class="card">
+      <p><strong>Co všechno je NEAT:</strong> chůze, stání, schody, nošení, gestikulace, fidgeting, domácí práce, hraní s dětmi — prostě veškerý pohyb, který není cílený trénink.</p>
+      <p><strong>Proč na tom záleží pro trenéra:</strong> NEAT klesá při dietě (tělo „šetří“, klient se nevědomky míň hýbe) a roste, když ho podpoříš. Proto je v deficitu řízení kroků často účinnější páka než přidat další kardio.</p>
+    </div>
+    <p>Praktický odhad: nemáš jak NEAT změřit, ale umíš se zeptat. Profese (řidič vs. číšník vs. programátor), denní kroky z telefonu, jak tráví večery a víkendy. Tyhle otázky ti řeknou víc než jakákoli kalkulačka. Pokud klient „nehubne na 1944 kcal“, první podezřelý není rozbitý metabolismus — je to nadhodnocený NEAT v odhadu.</p>
+    <blockquote>NEAT je důvod, proč je každé číslo z kalkulačky jen hypotéza. Nedokážeš ho předem zadat přesně — můžeš ho jen odhadnout, sledovat a aktivně ovlivňovat.</blockquote>
+
+    <h2>4) Od TDEE k cílovému příjmu</h2>
+    <p>TDEE je výdej na udržení. Cíl klienta z něj odvodíš úpravou:</p>
+    <div class="card">
+      <p><strong>Hubnutí:</strong> deficit ~10–20 % TDEE. Pro naši ženu (TDEE 1944): mírný deficit 15 % → ≈ 1650 kcal/den. To je rozumný start, ne hladovka.</p>
+      <p><strong>Udržení:</strong> drž se TDEE a sleduj, zda váha v čase stojí. Pokud klesá nebo roste, odhad TDEE byl mimo — oprav ho.</p>
+      <p><strong>Nabírání:</strong> přebytek ~5–15 % TDEE → ≈ 2050–2230 kcal/den. Větší přebytek = víc tuku, ne víc svalu.</p>
+    </div>
+    <p>Praktické pravidlo na deficit: cílit zhruba na 0,5–1 % tělesné hmotnosti úbytku týdně. Rychleji ano výjimečně, ale za cenu většího rizika ztráty svalu a hladu. Nezapomeň, že <strong>bílkovinu drž vysoko</strong> nezávisle na cílových kaloriích — chrání sval a má nejvyšší TEF, takže ti i mírně zvedne výdej.</p>
+
+    <h2>5) Energy flux — proč „víc dovnitř i ven“ často vyhrává</h2>
+    <p>Stejný deficit jde nastavit dvěma způsoby. Klient může jíst málo a hýbat se málo (<strong>nízký flux</strong>), nebo jíst víc a hýbat se víc při zachování stejného deficitu (<strong>vysoký flux</strong>). Melby a kolegové shrnuli, že vyšší energy flux může zlepšit regulaci chuti k jídlu a podpořit udržení váhy po dietě.</p>
+    <div class="card">
+      <p><strong>Proč to klientovi sedne:</strong> při vysokém fluxu má víc jídla na talíři při stejném deficitu → líp se to drží, méně hladu, lepší výkon v tréninku, víc prostoru pro bílkoviny a mikroživiny.</p>
+      <p><strong>Jak to v praxi udělat:</strong> místo „sniž příjem na 1500“ raději „zvedni kroky na 9–10 tisíc a drž 1700“. Stejný deficit, ale udržitelnější.</p>
+    </div>
+    <p>Tohle není výmluva pro neomezené jídlo — bilance pořád musí sedět. Je to ale praktická volba, jak deficit poskládat tak, aby ho člověk utáhl měsíce, ne dny.</p>
+
+    <h2>6) Číslo je hypotéza — ověř a překalibruj</h2>
+    <p>Žádný vzorec nezná NEAT, historii diet ani adaptace konkrétního klienta. Proto výsledek kalkulace ber jako <strong>startovní hypotézu</strong>, kterou ověříš v reálu.</p>
+    <div class="card">
+      <p><strong>Postup po nastavení:</strong></p>
+      <p>1. Nasaď spočítaný cíl a drž ho konzistentně 2–3 týdny.<br>
+         2. Sleduj <strong>trend</strong>, ne jeden den — průměr hmotnosti za týden, k tomu míry, fotky, výkon, energie, spánek.<br>
+         3. Porovnej s cílem (~0,5–1 % týdně).<br>
+         4. Pokud se nehýbe žádaným směrem, uprav příjem o ~5–10 % nebo zaber na NEAT/krocích — ne obojí najednou, ať víš, co zabralo.</p>
+    </div>
+    <blockquote>Dobrý trenér nehádá lépe — rychleji a klidněji opravuje. Kalkulačka tě dostane do správné čtvrti města; adresu najdeš až podle trendu.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Na první konzultaci spočítám Mifflina a hrubý faktor přede všema, ať klient vidí, odkud číslo je — sundá to mýtus „trenér má tajný vzorec“. Pak ale hned řeknu: „Tohle je odhad, ne diagnóza. Za tři týdny ho podle váhy a tvého života upravíme.“ U sedavých lidí skoro vždycky volím spíš nižší faktor a doháním to kroky, ne hladovkou — energy flux mi dlouhodobě drží lidi líp na deficitu než suchý low-cal plán. A když někdo „nehubne“, neřeším metabolismus, ptám se na NEAT a poctivost záznamu.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kterou rovnici pro klidový výdej doporučujeme a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Mifflin–St Jeor. Systematický přehled (Frankenfield) ji vyhodnotil jako nejpřesnější — u nejvíce lidí, štíhlých i obézních, trefí skutečný klidový výdej do 10 % oproti měření indirektní kalorimetrií.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak ze BMR dostaneš TDEE a jaké jsou dvě cesty? <span class="tg">odpověď ▾</span></div><div class="aa">Musíš přidat aktivitu. Cesta A: BMR vynásobíš aktivitním faktorem (1,2 až 1,9). Cesta B: sečteš složky TDEE = BMR + TEF + NEAT + EAT.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč je NEAT v kalkulaci tak důležitý? <span class="tg">odpověď ▾</span></div><div class="aa">Je to nejvariabilnější složka výdeje — rozdíl mezi lidmi může být stovky až přes tisíc kalorií denně (Levine). V dietě navíc klesá. Často je to skutečný důvod, proč klient „nehubne“, ne rozbitý metabolismus.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak z TDEE nastavíš cíl pro hubnutí? <span class="tg">odpověď ▾</span></div><div class="aa">Deficit zhruba 10–20 % TDEE, cílící na úbytek ~0,5–1 % tělesné hmotnosti týdně, s vysokým příjmem bílkovin. Ne extrémní hladovka.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená vyšší energy flux a proč ho zvážit? <span class="tg">odpověď ▾</span></div><div class="aa">Pairování vyššího příjmu s vyšším výdejem při zachování stejného deficitu (víc dovnitř i ven). Může zlepšit regulaci chuti a udržitelnost (Melby) — klient má víc jídla na talíři při stejném deficitu.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelového klienta (zvol váhu, výšku, věk, pohlaví a životní styl). Spočítej BMR podle Mifflin–St Jeor, urči aktivitní faktor a dostaň TDEE. Pak nastav cílový příjem pro hubnutí včetně rozumného deficitu. Nakonec napiš dvě věci: jak bys u něj odhadl a podpořil NEAT, a jak bys po 2–3 týdnech vyhodnotil trend a překalibroval číslo. Bonus: navrhni, jak by šel stejný deficit postavit jako vyšší energy flux.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Mifflin MD, St Jeor ST, Hill LA, Scott BJ, Daugherty SA, Koh YO. A new predictive equation for resting energy expenditure in healthy individuals. Am J Clin Nutr. 1990;51(2):241–247.</li>
+        <li>Frankenfield D, Roth-Yousey L, Compher C. Comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults: a systematic review. J Am Diet Assoc. 2005;105(5):775–789.</li>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+        <li>Levine JA, Vander Weg MW, Hill JO, Klesges RC. Non-exercise activity thermogenesis: the crouching tiger hidden dragon of societal weight gain (NEAT: environment and biology). Am J Physiol Endocrinol Metab. 2004;286(5):E675–E685.</li>
+        <li>Melby CL, Paris HL, Sayer RD, Bell C, Hill JO. Increasing energy flux to maintain diet-induced weight loss. Nutrients. 2019;11(10):2533.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m10-l9', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

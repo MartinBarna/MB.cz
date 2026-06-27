@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEAT: skrytá páka, která rozhoduje o hubnutí víc než kardio — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 10 · Lekce 4 — Metabolismus a TDEE do hloubky</div>
+    <h1>NEAT: skrytá páka, která rozhoduje o hubnutí víc než kardio</h1>
+
+    <p class="lead">Většina lidí si myslí, že o hubnutí rozhoduje hodina na běžícím pásu. Realita je jinde: <strong>energie spálená běžným pohybem během dne — NEAT — bývá několikanásobně větší kus výdeje než celý trénink.</strong> A na rozdíl od tréninku ji většina klientů vůbec neřídí. Když pochopíš, jak NEAT funguje a proč se při dietě tiše propadá, získáš nejsilnější a nejpřehlíženější páku celého TDEE.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co přesně je NEAT a kde sedí v rozkladu celkového denního výdeje (TDEE).</li>
+        <li>Proč se NEAT mezi dvěma lidmi stejné velikosti může lišit i o stovky až tisíce kalorií denně.</li>
+        <li>Proč NEAT v dietě klesá sám od sebe a jak ten propad rozpoznáš dřív, než klient zasekne.</li>
+        <li>Jak NEAT cíleně řídit kroky a návyky — bez další hodiny kardia navíc.</li>
+        <li>Co je „energy flux“ a proč vyšší obrat energie pomáhá udržet hubnutí i chuť k jídlu pod kontrolou.</li>
+      </ul>
+    </div>
+
+    <h2>1) Kde NEAT sedí v rozkladu TDEE</h2>
+    <p>Celkový denní energetický výdej (TDEE) se skládá ze čtyř složek. Pořadí jejich velikosti většinu lidí překvapí:</p>
+    <div class="card">
+      <p><strong>BMR / RMR — klidový výdej (~60–70 %):</strong> energie na základní fungování těla. Největší kus, daný hlavně beztukovou hmotou. Řídí se pomalu a hlavně přes svalovou hmotu, ne přes „nakopnutí“.</p>
+      <p><strong>NEAT — pohyb mimo trénink (~15 % a klidně i přes 30 %):</strong> chůze, stání, nošení, úklid, fidgeting, schody, hraní si s dětmi. Nejvariabilnější složka ze všech.</p>
+      <p><strong>TEF — termický efekt jídla (~10 %):</strong> energie na trávení a zpracování jídla. Nejvyšší u bílkovin.</p>
+      <p><strong>EAT — cílený trénink (často jen ~5 %):</strong> u běžného klienta nejmenší kus celého koláče.</p>
+    </div>
+    <p>Klíčové číslo: NEAT se mezi dvěma lidmi podobné velikosti může lišit až o zhruba <strong>2000 kcal denně</strong> jen kvůli odlišnému zaměstnání a způsobu života. Žádná hodina kardia takový rozdíl nevytvoří. Proto když si dva klienti drží „stejný“ jídelníček a jeden hubne a druhý ne, odpověď bývá schovaná právě tady — v tom, kolik se mimo trénink hýbe.</p>
+    <blockquote>Trénink je nenahraditelný pro sílu, sval a zdraví. Ale jako nástroj na „spalování“ je malý hráč. Velký balík kalorií se odehraje v tom, co klient dělá zbylých 23 hodin dne.</blockquote>
+
+    <h2>2) Proč je NEAT tak obrovsky variabilní</h2>
+    <p>NEAT není drobnost. V klasické studii Levina a kolegů přibrali dobrovolníci, kteří 8 týdnů jedli o 1000 kcal denně navíc, velmi nerovnoměrně — a <strong>právě změny v NEAT vysvětlovaly až desetinásobné rozdíly v tom, kolik tuku si kdo uložil</strong>. Lidé, jejichž tělo přebytek „proházelo“ do pohybu, jeho velkou část rozptýlili jako teplo místo do tuku.</p>
+    <div class="eq">přebytek energie → ↑ NEAT (u někoho) → méně uloženého tuku</div>
+    <p>Praktický překlad: někdo má geneticky i návykově „neklidné“ tělo — pořád něco dělá, přešlapuje, gestikuluje, vstává. Někdo má tělo, které přebytek raději uloží. Ani jedno není morální selhání, ale obojí mění, kolik kalorií klient za den reálně spálí. A protože NEAT z velké části běží podvědomě, klient si jeho propad ani nevšimne — jen najednou „nějak víc sedí“.</p>
+
+    <h2>3) Tichý propad NEAT během diety</h2>
+    <p>Tohle je důvod, proč klienti zasekávají častěji, než by čísla na papíře čekala. Když tělo dlouhodobě dostává míň energie, brání se — a jedna z prvních věcí, kterou utlumí, je NEAT. Začne se míň hýbat, aniž by si to klient uvědomil: méně kroků, méně gest, delší sezení, „nějaká únava“.</p>
+    <p>Tomuto jevu se říká <strong>adaptivní termogeneze</strong> — pokles výdeje větší, než by odpovídalo samotnému úbytku hmoty. U NEAT může jít řádově o <strong>300–500 kcal denně</strong>, které tiše zmizí z výdeje. To samo dokáže smazat celý vytvořený deficit, i když klient „nic nezměnil“.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když klient v dietě po pár týdnech zasekne, neřežu hned kalorie. Nejdřív se ptám na kroky. Skoro pokaždé zjistím, že z 9 000 kroků je rázem 5 000 — aniž by si toho všiml. Místo dalšího kreslení deficitu prostě vrátíme pohyb: pevný cíl kroků, krátké procházky po jídle, stání u práce. Často se váha zase rozjede bez jediné kalorie dolů.</div>
+    <blockquote>Zaseknutí na dietě skoro nikdy neznamená „rozbitý metabolismus“. Mnohem častěji je to spadlý NEAT, který nikdo neměřil.</blockquote>
+
+    <h2>4) Jak NEAT cíleně řídit</h2>
+    <p>Dobrá zpráva: NEAT je páka, kterou umíš ovládat jednoduše a měřitelně — a hlavně bez přidávání další únavné dřiny do tréninku. Nejlepší metr je počet kroků, protože je hmatatelný a klient ho vidí v telefonu.</p>
+    <div class="card">
+      <p><strong>Daj si cílový počet kroků:</strong> ne dogmatických „10 000“, ale o 2 000–3 000 nad současný průměr klienta. Změř týden bez zásahu, pak teprve nastav cíl.</p>
+      <p><strong>Procházky po jídle:</strong> 10–15 minut po obědě a večeři. Zvedne NEAT i pomůže s glykemií a trávením.</p>
+      <p><strong>Útok na sezení:</strong> stání u části práce, hovory ve stoje nebo v chůzi, schody místo výtahu, parkování dál.</p>
+      <p><strong>Návyk navázaný na spouštěč:</strong> „po každém telefonátu se projdu“, „dokud se vaří voda, uklízím“. NEAT se buduje skrz drobné, opakované rutiny, ne skrz jedno hrdinství.</p>
+    </div>
+    <p>Pravidlo zní: kroky řídíme dřív než kardio. Hodina běhu jednou týdně je z hlediska týdenního výdeje hluk; o 2 500 kroků víc každý den je signál, který se sčítá po celý rok.</p>
+
+    <h2>5) Energy flux — proč chceš výdej spíš nahoře</h2>
+    <p>Existuje ještě jeden důvod, proč preferovat „víc pohybu a víc jídla“ před „málo pohybu a málo jídla“ při stejné bilanci. Říká se mu <strong>energy flux</strong> — obrat energie, tedy kolik energie systémem celkově protéká.</p>
+    <p>Při <strong>vysokém energy flux</strong> (vyšší výdej i příjem) tělo lépe trefuje rovnováhu a <strong>lépe reguluje chuť k jídlu</strong> — pohyb „táhne“ apetit za sebou. Naopak nízký obrat energie (málo se hýbu, málo jím) je spojený s horší regulací sytosti a větším tahem k přejídání. Pro klienta to znamená: dohnat deficit spíš pohybem než drastickým ořezáním porcí často znamená míň hladu a větší dlouhodobou udržitelnost.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Radši klienta dostanu na 10 000 kroků a o trochu vyšší příjem než na 4 000 kroků a hladový talíř při stejné bilanci. Výsledek na váze je podobný, ale ten první to utáhne měsíce — má víc jídla, míň hladu a líp spí. Energy flux je důvod, proč „jez míň“ není vždy nejchytřejší rada.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je NEAT a kam patří v rozkladu TDEE? <span class="tg">odpověď ▾</span></div><div class="aa">NEAT je energie spálená veškerým pohybem mimo cílený trénink (chůze, stání, úklid, fidgeting). Je to nejvariabilnější složka TDEE, typicky ~15 % i přes 30 %, a u běžného člověka bývá výrazně větší než samotný trénink (EAT).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak velký může být rozdíl v NEAT mezi dvěma podobně velkými lidmi? <span class="tg">odpověď ▾</span></div><div class="aa">Až přibližně 2000 kcal denně, hlavně kvůli odlišnému zaměstnání a životnímu stylu. Žádná hodina kardia takový rozdíl nevytvoří.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč klient v dietě často zasekne, i když „nic nezměnil“? <span class="tg">odpověď ▾</span></div><div class="aa">Protože při deficitu klesá NEAT (adaptivní termogeneze) — tělo se podvědomě méně hýbe, řádově o 300–500 kcal denně. To smaže deficit, aniž si toho klient všimne.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj dvě konkrétní cesty, jak NEAT zvednout. <span class="tg">odpověď ▾</span></div><div class="aa">Například cíl kroků o 2 000–3 000 nad současný průměr, krátké procházky po jídle, omezení sezení (stání u práce, schody), nebo návyk navázaný na spouštěč. Stačí dvě.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená energy flux a proč ho chceš spíš nahoře? <span class="tg">odpověď ▾</span></div><div class="aa">Energy flux je celkový obrat energie (příjem i výdej). Při vysokém fluxu tělo lépe reguluje chuť k jídlu a sytost, takže dohnat deficit pohybem místo drastického ořezání porcí bývá udržitelnější a méně hladové.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta změř (nebo odhadni) jeho současný denní průměr kroků. Navrhni konkrétní cílový počet kroků a dva návyky, kterými ho zvedneš bez přidání kardia. Pak popiš, jak poznáš během diety propad NEAT a jak na něj zareaguješ — dřív, než sáhneš po dalším řezání kalorií.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Levine JA, Eberhardt NL, Jensen MD. Role of Nonexercise Activity Thermogenesis in Resistance to Fat Gain in Humans. Science. 1999;283(5399):212–214.</li>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+        <li>Levine JA. Nonexercise activity thermogenesis — liberating the life-force. J Intern Med. 2007;262(3):273–287.</li>
+        <li>von Loeffelholz C, Birkenfeld AL. Non-Exercise Activity Thermogenesis in Human Energy Homeostasis. Endotext [Internet]. South Dartmouth (MA): MDText.com; 2022.</li>
+        <li>Melby CL, Paris HL, Sayer RD, et al. Increasing Energy Flux to Maintain Diet-Induced Weight Loss. Nutrients. 2019;11(10):2533.</li>
+        <li>Müller MJ, Enderle J, Bosy-Westphal A. Changes in Energy Expenditure with Weight Gain and Weight Loss in Humans. Curr Obes Rep. 2016;5(4):413–423.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m10-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

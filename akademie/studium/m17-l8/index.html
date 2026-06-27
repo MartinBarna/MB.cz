@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jak poznat broscience od evidence-based — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 17 · Lekce 8 — Jak číst vědu a nenaletět</div>
+    <h1>Jak poznat broscience od evidence-based</h1>
+
+    <p class="lead">Každý druhý influencer se dnes ohání „studiemi“. Problém je, že <strong>slovo „studie“ samo o sobě nic neznamená</strong> — záleží, jaká studie, na kom, jak velká a jestli ji někdo zopakoval. Tahle lekce ti dá filtr, kterým prožene jakékoli tvrzení o tréninku a výživě dřív, než ho předáš klientovi. Cílem není stát se vědcem, ale přestat naletět hezky znějícím nesmyslům — a poznat, kdy „evidence-based“ je jen marketingová nálepka.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je hierarchie důkazů a proč jedna studie nikdy nestačí.</li>
+        <li>Proč i recenzovaná věda selhává — replikační krize jednoduše.</li>
+        <li>Rozdíl mezi „statisticky významné“ (p-value) a „prakticky důležité“ (effect size).</li>
+        <li>Proč korelace není kauzalita a jak na to influenceři sázejí.</li>
+        <li>Praktický checklist, jak za 60 sekund odhalit broscience.</li>
+        <li>Jak komunikovat nejistotu klientovi, aniž bys ztratil autoritu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Hierarchie důkazů — ne každá „studie“ váží stejně</h2>
+    <p>Broscience zní často takhle: „Kámoš to zkusil a funguje to.“ Evidence-based myšlení nahrazuje anekdotu strukturou. Ne všechny důkazy mají stejnou váhu — existuje pyramida, od nejslabšího po nejsilnější.</p>
+    <div class="card">
+      <p><strong>Spodek pyramidy (slabé):</strong> osobní zkušenost, názor experta, „dává mi to smysl“. Užitečné pro nápady, ne pro závěry.</p>
+      <p><strong>Střed:</strong> jednotlivé studie — nejdřív na zvířatech a in vitro, pak observační (pozorovací) studie na lidech, nahoře randomizované kontrolované experimenty (RCT).</p>
+      <p><strong>Vrchol (nejsilnější):</strong> systematické přehledy a meta-analýzy, které slévají mnoho kvalitních studií dohromady. Sem míří i formální systémy hodnocení jako <strong>GRADE</strong>, které vědě přiřazují jistotu od „vysoké“ po „velmi nízkou“.</p>
+    </div>
+    <p>Praktický důsledek: když ti někdo mává jednou studií na 12 lidech jako „důkazem“, je to střed pyramidy v lepším případě. Důvěru si zaslouží spíš tvrzení podepřené více nezávislými studiemi, které ukazují stejným směrem.</p>
+    <blockquote>Jedna studie není fakt. Je to jeden datový bod. Věda je o tom, kam ukazuje souhrn důkazů — ne o tom, najít jednu studii, která potvrdí, co už si myslíš.</blockquote>
+
+    <h2>2) Replikační krize — i recenzovaná věda se mýlí</h2>
+    <p>Tady přichází nepříjemná pravda, kterou ti broscience nikdy neřekne: <strong>velká část publikovaných výsledků se nedá zopakovat.</strong> Když vědci v roce 2015 zkusili znovu provést 100 psychologických studií, statisticky významný výsledek se podařilo zopakovat jen u zhruba 36 % z nich — a velikost efektu byla v průměru poloviční oproti originálu.</p>
+    <p>John Ioannidis to v roce 2005 shrnul provokativním titulkem „Proč je většina publikovaných výsledků nepravdivá“. Důvody: malé vzorky, malé efekty, flexibilita v analýze, tlak publikovat „pozitivní“ výsledek a finanční zájmy. To neznamená, že věda je k ničemu — znamená to, že <strong>jednotlivá novinková studie je nejistá, dokud ji někdo nezopakuje.</strong></p>
+    <p>Pro tebe jako trenéra z toho plyne pokora: čerstvá studie, kterou včera sdílel influencer, je hypotéza, ne pravda. Počkej, až ji potvrdí další tým. Trénink a výživa nejsou výjimkou — i tady platí, že robustní jsou věci opakovaně ověřené, ne ty nejnovější a nejvíc virální.</p>
+
+    <h2>3) p-value vs. effect size — „významné“ neznamená „důležité“</h2>
+    <p>Tohle plete i lidi, co studie čtou. „Statisticky významné“ (typicky p &lt; 0,05) říká jen jednu věc: <strong>je nepravděpodobné, že by se výsledek objevil čistě náhodou.</strong> Neříká, že efekt je velký, ani že je v praxi důležitý. Sama Americká statistická asociace v roce 2016 vydala stanovisko, že p-hodnota neměří pravděpodobnost, že je hypotéza pravdivá, ani jak je efekt velký.</p>
+    <div class="eq">p-value = „není to náhoda?“ &nbsp;≠&nbsp; effect size = „jak moc to změní?“</div>
+    <p>Příklad z praxe: doplněk může „statisticky významně“ zvýšit sílu — a přitom jde o 0,5 % rozdíl, který v posilovně nikdy nepoznáš. U velkých vzorků vyleze „významné“ skoro cokoli. Proto vždycky hledej <strong>velikost efektu</strong>: o kolik kilo, o kolik procent, o kolik centimetrů. Malý efekt u drahého doplňku je v praxi k ničemu, i kdyby měl tři hvězdičky významnosti.</p>
+    <blockquote>Vždycky se ptej dvě otázky za sebou: „Je to reálné?“ (p-value) a teprve pak „Stojí mi to za to?“ (effect size). Broscience i přehnaný hype se obvykle zlomí na té druhé.</blockquote>
+
+    <h2>4) Korelace není kauzalita — past nutričních titulků</h2>
+    <p>Nejčastější trik, na který lidé naletí: pozorovací studie najde, že lidé jedící X mají méně nemoci Y — a titulek z toho udělá „X chrání před Y“. Jenže pozorování ukazuje jen <strong>souvislost</strong>, ne příčinu. Lidé jedící víc zeleniny taky často víc cvičí, míň kouří a víc spí. Co z toho vlastně zabralo?</p>
+    <p>Jak křehké tohle pole je, krásně ukázali Schoenfeld a Ioannidis: vzali 50 náhodných ingrediencí z kuchařky a u 80 % z nich našli studii, která je spojuje se vznikem nebo prevencí rakoviny — často v protichůdných směrech. Když „je se vším spojené všechno“, jednotlivá asociace skoro nic neznamená.</p>
+    <div class="card">
+      <p><strong>Co posiluje příčinnost:</strong> kontrolovaný experiment (RCT), kde se mění jen jedna proměnná; dávková závislost (víc X → víc efektu); biologicky věrohodný mechanismus; konzistence napříč studiemi.</p>
+      <p><strong>Co je jen korelace:</strong> dotazníky „co jste jedl posledních 10 let“, srovnání populací, jeden vztah bez experimentu. Užitečné pro generování hypotéz, slabé pro rady jednotlivci.</p>
+    </div>
+    <p>Pravidlo pro klienta: než přijmeš tvrzení typu „potravina X dělá Y“, zjisti, jestli to vychází z experimentu, kde to opravdu vyzkoušeli — nebo jen z pozorování, kde to spolu náhodou chodilo.</p>
+
+    <h2>5) Praktický filtr — broscience detektor za 60 sekund</h2>
+    <p>Nepotřebuješ titul, abys většinu nesmyslů odhalil. Stačí projet tvrzení tímhle checklistem. Čím víc „ano“ na varovné signály, tím opatrněji.</p>
+    <div class="card">
+      <p><strong>🚩 Varovné signály broscience:</strong> mluví v absolutních jistotách („tohle VŽDY funguje“); slibuje rychlé/extrémní výsledky; opírá se o jednu studii nebo o „věřte mi“; prodává přesně to, o čem mluví; útočí na „mainstream“ místo na data; ignoruje velikost efektu.</p>
+      <p><strong>✅ Znaky evidence-based přístupu:</strong> mluví v pravděpodobnostech a rozsazích („u většiny lidí, zhruba o…“); odkazuje na meta-analýzy a přehledy, ne jen na jeden článek; přizná nejistotu a výjimky; rozliší, co je ověřené a co spekulace; baví se o velikosti efektu, ne jen že „efekt existuje“.</p>
+    </div>
+    <p>Konkrétně u tréninkového objemu máš krásný příklad funkční evidence: meta-analýza Schoenfelda a kol. ukázala dávkovou závislost — víc týdenních sérií obecně znamená víc růstu svalu, s rozumným minimem kolem deseti sérií na sval týdně. To je tvrzení podepřené souhrnem studií a dávkovou logikou, ne jednou anekdotou. Přesně takhle vypadá důkaz, kterému můžeš věřit.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient přinese „zázrak“ z reelka, neutrhnu mu hlavu. Řeknu: „Hezký, pojďme to proklepnout.“ Ptám se na tři věci: Kdo to tvrdí a prodává on sám zrovna tohle? Je za tím víc studií, nebo jedna? A jak velký je ten efekt v reálu? Devětkrát z deseti se nálepka „podloženo vědou“ rozpadne už na té první otázce. A klientovi to neberu autoritativně — učím ho ten filtr používat sám, ať mu příště nenaletí beze mě.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co stojí na vrcholu hierarchie důkazů a co na jejím spodku? <span class="tg">odpověď ▾</span></div><div class="aa">Na vrcholu jsou systematické přehledy a meta-analýzy (souhrn mnoha kvalitních studií), pod nimi RCT. Na spodku je osobní zkušenost, anekdota a názor experta — užitečné pro nápady, slabé pro závěry.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je replikační krize a co z ní plyne pro čerstvou studii? <span class="tg">odpověď ▾</span></div><div class="aa">Velká část publikovaných výsledků se nedá zopakovat (u 100 psychologických studií se to povedlo jen u ~36 %). Plyne z toho, že novinková studie je hypotéza, ne pravda — věř spíš opakovaně ověřeným věcem.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je rozdíl mezi p-value a effect size? <span class="tg">odpověď ▾</span></div><div class="aa">P-value říká jen „je nepravděpodobné, že to byla náhoda“. Effect size říká, jak velký a prakticky důležitý efekt je. Statisticky významné ≠ v praxi důležité — vždy hledej velikost efektu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč „korelace není kauzalita“ a kdy je tvrzení o příčině silnější? <span class="tg">odpověď ▾</span></div><div class="aa">Pozorovací studie ukazuje jen souvislost — proměnné mohou jen chodit spolu (jiný životní styl atd.). Příčinnost posiluje kontrolovaný experiment (RCT), dávková závislost, věrohodný mechanismus a konzistence napříč studiemi.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jmenuj dva varovné signály broscience. <span class="tg">odpověď ▾</span></div><div class="aa">Například: absolutní jistoty („vždy funguje“), sliby rychlých/extrémních výsledků, opora o jedinou studii nebo „věřte mi“, prodej přesně toho produktu, o kterém mluví, nebo ignorování velikosti efektu (stačí dva).</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Najdi jedno konkrétní tvrzení o tréninku nebo výživě z internetu (ideálně z reelka nebo titulku). Prožeň ho filtrem z páté sekce: Kdo to tvrdí a má z toho zisk? Jde o jednu studii, nebo souhrn? Je to RCT, nebo jen korelace? A jak velký je efekt v reálných číslech? Napiš krátký závěr, jestli bys to klientovi doporučil, doporučil s výhradou, nebo odmítl — a proč.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Ioannidis JPA. Why Most Published Research Findings Are False. PLoS Med. 2005;2(8):e124.</li>
+        <li>Open Science Collaboration. Estimating the reproducibility of psychological science. Science. 2015;349(6251):aac4716.</li>
+        <li>Wasserstein RL, Lazar NA. The ASA's Statement on p-Values: Context, Process, and Purpose. Am Stat. 2016;70(2):129–133.</li>
+        <li>Schoenfeld JD, Ioannidis JPA. Is everything we eat associated with cancer? A systematic cookbook review. Am J Clin Nutr. 2013;97(1):127–134.</li>
+        <li>Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: a systematic review and meta-analysis. J Sports Sci. 2017;35(11):1073–1082.</li>
+        <li>Guyatt GH, et al. GRADE: an emerging consensus on rating quality of evidence and strength of recommendations. BMJ. 2008;336(7650):924–926.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m17-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Management únavy a kdy zařadit deload — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 13 · Lekce 9 — Hypertrofie pro naturály</div>
+    <h1>Management únavy a kdy zařadit deload</h1>
+
+    <p class="lead">Naturál nemá nekonečnou regeneraci — a právě regenerace je u tebe i u klientů ten limit, který rozhoduje, jestli objem tréninku roste sval, nebo tě jen kope do země. <strong>Únava se hromadí potichu a deload není slabost, ale nástroj.</strong> V téhle lekci se naučíš poznat, kdy už máš příliš naloženo, jak řídit blízkost k selhání a kdy stáhnout plyn, abys ze stejné dřiny dostal víc svalu.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč objem sval roste, ale jen do bodu, kde ho regenerace ještě utáhne (MEV–MAV–MRV).</li>
+        <li>Co je akutní únava vs. nahromaděná únava a proč je nebezpečná hlavně ta druhá.</li>
+        <li>Jak blízkost k selhání (RIR) ovlivňuje sval i to, jak rychle se únava plní.</li>
+        <li>Konkrétní signály, podle kterých poznáš, že je čas na deload — bez hádání.</li>
+        <li>Jak deload prakticky postavit (objem vs. intenzita) a jak často ho plánovat.</li>
+        <li>Proč naturál řeší únavu jinak než člověk na látkách a co z toho plyne pro programy.</li>
+      </ul>
+    </div>
+
+    <h2>1) Objem roste sval — ale jen co regenerace utáhne</h2>
+    <p>Týdenní objem (počet pracovních sérií na svalovou partii) je nejsilnější tréninková páka pro hypertrofii. Vztah je dávkově závislý: víc sérií = víc růstu, zhruba v řádu desetin procenta nárůstu na každou sérii navíc. Jenže ta křivka není přímka donekonečna — má klesající výnosy a nakonec se zlomí, protože regenerace nestíhá.</p>
+    <p>Proto pracujeme s objemovými mezníky. <strong>MEV</strong> (minimální efektivní objem) je nejnižší dávka, která ještě staví sval. <strong>MAV</strong> je pásmo, kde dostaneš nejvíc růstu za rozumnou únavu. <strong>MRV</strong> (maximální regenerovatelný objem) je strop — víc sérií už neregeneruješ a začneš se vrtat do díry. Cíl není trénovat na MRV pořád, ale pohybovat se ve smysluplném pásmu a strop respektovat.</p>
+    <div class="card">
+      <p><strong>Orientační pásma na partii a týden</strong> (hrubý odhad, individuální):</p>
+      <p><strong>MEV ≈ 6–10 sérií</strong> — udržovací až lehce růstové minimum.</p>
+      <p><strong>MAV ≈ 10–20 sérií</strong> — produktivní jádro, kde tráví většina lidí blok.</p>
+      <p><strong>MRV ≈ 20+ sérií</strong> — individuální strop, který se dá překročit jen krátkodobě.</p>
+      <p>Čísla ber jako startovní hypotézu, ne dogma — liší se partii od partie a člověk od člověka.</p>
+    </div>
+    <p>Klíčová myšlenka pro naturála: růst nelimituje to, kolik objemu <em>zvládneš odmakat</em>, ale kolik ho <em>zregeneruješ</em>. A to je přesně to, co deload chrání.</p>
+
+    <h2>2) Akutní vs. nahromaděná únava</h2>
+    <p>Únava není jeden jev. <strong>Akutní únava</strong> přijde po tvrdé sérii nebo tréninku, do pár dní odezní a je normální — bez ní není adaptace. Problém dělá <strong>nahromaděná únava</strong>: když po sobě nakládáš objem a intenzitu rychleji, než stíháš mazat, fatigue se sčítá napříč týdny. Sval i nervosvalový systém zůstávají potlačené, výkon klesá a růstový stimul z dalších sérií se zmenšuje.</p>
+    <p>Tréninkový stres tělo vždycky balancuje mezi zatížením, únavou a regenerací. Dokud regenerace stíhá, fitness roste. Jakmile přestane stíhat, hromadíš únavu, která ti maskuje skutečnou formu — jsi silnější, než vypadáš na štanze, jen to nemůžeš ukázat, protože jsi „zaplaveny“.</p>
+    <blockquote>Únava je jako úvěr. Krátkodobě ti dovolí makat tvrději, než na co máš. Ale úroky platíš výkonem, kvalitou sérií a nakonec i rizikem zranění — a jednou ten úvěr musíš splatit.</blockquote>
+
+    <h2>3) Blízkost k selhání: kolik je dost</h2>
+    <p>Jak blízko jdeš k selhání (vyjádřeno přes RIR — opakování v záloze), rozhoduje o dvou věcech najednou: o růstovém stimulu i o tom, jak rychle plníš nádrž únavy. Meta-regrese ukazují, že trénink blíž k selhání hypertrofii lehce prospívá, ale výhoda se zplošťuje — nad zhruba 1–2 RIR už přidaná blízkost přináší jen málo navíc a hlavně neúměrně víc únavy.</p>
+    <p>Praktický překlad: většinu pracovních sérií veď do pásma <strong>0–3 RIR</strong>, s těžištěm kolem <strong>1–2 RIR</strong>. Selhání není zakázané, ale je to drahý nástroj — používej ho cíleně (izolace, poslední série, konec bloku), ne plošně na všech vícekloubech, kde technika a únava cena rostou nejrychleji.</p>
+    <div class="card">
+      <p><strong>Hrubé vodítko podle cviku:</strong></p>
+      <p><strong>Velké vícekloubové (dřep, mrtvý tah, benč):</strong> spíš 1–3 RIR — selhání zde stojí nejvíc únavy a rizika.</p>
+      <p><strong>Stroje a izolace (kladky, extenze, biceps):</strong> klidně 0–1 RIR — levné na regeneraci, bezpečné.</p>
+      <p>Čím blíž k selhání plošně jedeš, tím dřív narazíš na MRV a tím dřív budeš potřebovat deload.</p>
+    </div>
+
+    <h2>4) Signály, že je čas na deload</h2>
+    <p>Deload nečasuj jen podle kalendáře — čti tělo i čísla. Když se sejde víc z těchto signálů, je čas stáhnout:</p>
+    <div class="card">
+      <p><strong>Výkon:</strong> stejná zátěž jde na míň opakování, váhy stagnují nebo klesají několik tréninků po sobě.</p>
+      <p><strong>Regenerace:</strong> svalovka trvá déle, klouby a šlachy „brní“, ranní tep a spánek se zhoršují.</p>
+      <p><strong>Psychika a motivace:</strong> chuť do tréninku padá, do posilovny se nutíš, podrážděnost.</p>
+      <p><strong>Technika:</strong> rozjíždí se ti provedení, série jsou „uondané“ i při rozumném RIR.</p>
+      <p><strong>Kontext:</strong> dlouhý blok bez úlevy, dietní deficit, stres a málo spánku mimo tréninky.</p>
+    </div>
+    <p>Jeden signál ještě nic neznamená — špatná noc se stane. Ale tři a víc dohromady, držící se přes víc tréninků, je jasný pokyn. U naturála v deficitu se tyhle signály objevují dřív a sčítají rychleji, protože regenerační kapacita je nižší.</p>
+
+    <h2>5) Jak deload prakticky postavit</h2>
+    <p>Deload není týden gaučování. Je to plánované snížení tréninkové zátěže, jehož cílem není zvýšit výkon, ale srazit nahromaděnou únavu, aby ses mohl vrátit a trénovat naplno. Stáhni jednu nebo obě hlavní páky:</p>
+    <div class="card">
+      <p><strong>Snížit objem:</strong> uber počet pracovních sérií zhruba na 40–60 %. Nejúčinnější páka, protože objem žene únavu nejvíc.</p>
+      <p><strong>Snížit intenzitu / blízkost k selhání:</strong> drž zátěž kolem 70–90 % obvyklé a přidej RIR (klidně 3–4+), aby série nebyly tvrdé.</p>
+      <p><strong>Délka:</strong> typicky 1 týden; podle hloubky únavy stačí pár tréninků, jindy je potřeba 1–2 týdny.</p>
+      <p><strong>Frekvenci nech být:</strong> choď dál do gymu, jen lehčeji — udržíš návyk i technický vzorec.</p>
+    </div>
+    <p>Jednoduchý recept pro většinu lidí: <em>polovina sérií, váhy nech, ale zastav o pár opakování dřív</em>. Cítíš se po něm svěží, ne „odpočatě rozsypaný“.</p>
+    <div class="eq">Deload ≈ objem na 40–60 % • intenzita 70–90 % • RIR +2 až +4</div>
+    <p>Jak často? Naplánuj deload zhruba každých <strong>4–8 týdnů</strong> podle toho, jak agresivní je blok, plus kdykoli to vyžádají signály z bodu 4. Lepší zařadit o jeden navíc, než dojet blok na trosky a začít další už unavený.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům říkám: „Deload není odměna za to, že jsi rozbitý — je to nástroj, abys rozbitý nebyl.“ Naturálovi plánuju odlehčení proaktivně, nejčastěji po 5–6 týdnech tlaku, a sahám po něm dřív, když jedeme rýsovačku. Nejčastější chyba, kterou vidím, je hrdinství — lidi makají na MRV měsíce, diví se, že stagnují, a přitom jim chybí jediný týden, kdy by ze sebe nahromaděnou únavu sundali. Stáhneš objem na půlku, váhy necháš, zastavíš dřív — a za týden přidáváš na štanze, ne ubíráš.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co znamenají zkratky MEV, MAV a MRV? <span class="tg">odpověď ▾</span></div><div class="aa">MEV = minimální efektivní objem (nejnižší dávka, co ještě staví sval), MAV = pásmo nejlepšího poměru růst/únava, MRV = maximální regenerovatelný objem (strop, který už neregeneruješ). Pohybuj se hlavně v MAV a strop respektuj.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaký je rozdíl mezi akutní a nahromaděnou únavou? <span class="tg">odpověď ▾</span></div><div class="aa">Akutní únava přijde po tréninku, do pár dní odezní a je normální. Nahromaděná únava se sčítá napříč týdny, když nakládáš rychleji, než stíháš regenerovat — maskuje skutečnou formu a brzdí růst. Nebezpečná je hlavně ta druhá.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Do jakého pásma RIR vést většinu pracovních sérií a proč ne plošně do selhání? <span class="tg">odpověď ▾</span></div><div class="aa">Většinou 0–3 RIR, těžiště kolem 1–2 RIR. Nad 1–2 RIR k selhání přidaná blízkost přináší jen málo růstu navíc, ale neúměrně víc únavy — proto selhání používej cíleně (izolace, poslední série), ne plošně na velkých vícekloubech.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři signály, že je čas na deload. <span class="tg">odpověď ▾</span></div><div class="aa">Například: pokles výkonu (míň opakování na stejné zátěži), zhoršená regenerace (dlouhá svalovka, brnící klouby, horší spánek), padající motivace, rozjíždějící se technika. Jeden signál nic neznamená — rozhoduje souběh tří a víc přes víc tréninků.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak prakticky postavit deload a jak často ho plánovat? <span class="tg">odpověď ▾</span></div><div class="aa">Sniž objem na zhruba 40–60 % a/nebo srazi intenzitu na 70–90 % s přidaným RIR (+2 až +4), typicky na 1 týden, frekvenci nech být. Plánuj zhruba každých 4–8 týdnů plus kdykoli to vyžádají signály únavy. U naturála (a hlavně v deficitu) spíš dřív.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi reálný (nebo modelový) tréninkový blok klienta-naturála. Odhadni týdenní objem na 2–3 hlavní partie a zařaď ho do pásem MEV/MAV/MRV. Pak napiš, po kolika týdnech bys naplánoval deload, jak konkrétně by vypadal (kolik % objemu, jaká intenzita, jaké RIR, jak dlouho) a které 3 signály bys u klienta sledoval, aby ses rozhodl, jestli ho případně zařadit dřív.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: A systematic review and meta-analysis. J Sports Sci. 2017;35(11):1073–1082.</li>
+        <li>Robinson ZP, Pelland JC, Remmert JF, Refalo MC, Jukic I, Steele J, Zourdos MC. Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions. Sports Med. 2024;54(9):2209–2231.</li>
+        <li>Refalo MC, Helms ER, Trexler ET, Hamilton DL, Fyfe JJ. Influence of Resistance Training Proximity-to-Failure on Skeletal Muscle Hypertrophy: A Systematic Review with Meta-analysis. Sports Med. 2023;53(3):649–665.</li>
+        <li>Morton RW, Murphy KT, McKellar SR, Schoenfeld BJ, Henselmans M, Helms E, Aragon AA, Devries MC, Banfield L, Krieger JW, Phillips SM. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Bell L, Nolan D, Immonen V, Helms E, Dallamore J, Wolf M, Androulakis Korakakis P. "You can't shoot another bullet until you've reloaded the gun": Coaches' perceptions, practices and experiences of deloading in strength and physique sports. Front Sports Act Living. 2022;4:1073223.</li>
+        <li>Bartolomei S, Hoffman JR, Merni F, Stout JR. A Comparison of Traditional and Block Periodized Strength Training Programs in Trained Athletes. J Strength Cond Res. 2014;28(4):990–997.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m13-l9', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

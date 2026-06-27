@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confidence intervals a šum: jak číst nejistotu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 17 · Lekce 4 — Jak číst vědu a nenaletět</div>
+    <h1>Confidence intervals a šum: jak číst nejistotu</h1>
+
+    <p class="lead">Většina lidí čte studii jako titulek: „kreatin zvedl sílu“, „tahle dieta funguje“. Jenže každý výsledek je <strong>odhad s nejistotou</strong> — a tu nejistotu nese confidence interval. Když ho umíš přečíst, přestaneš naletět na efektní čísla a začneš poznávat, kdy je výsledek pevný a kdy je to jen <strong>šum, který se vydává za signál</strong>. Tahle dovednost odděluje trenéra, který slepě sdílí každý nový „průlom“, od toho, který klientovi řekne, na čem se dá stavět.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je confidence interval (CI) a co ti reálně říká o nejistotě výsledku.</li>
+        <li>Proč je šířka intervalu důležitější než to, jestli „protíná nulu“.</li>
+        <li>Rozdíl mezi statistickou významností (p-value) a praktickou velikostí efektu.</li>
+        <li>Jak číst forest plot v meta-analýze a poznat slabou studii od silné.</li>
+        <li>Proč malé vzorky, šum a publikační tlak plodí „výsledky“, které se nezreplikují.</li>
+        <li>Praktický filtr, jak hodnotit nový „průlom“ dřív, než ho předáš klientovi.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co confidence interval doopravdy je</h2>
+    <p>Když studie naměří, že nějaký doplněk zvedl sílu „o 4 %“, to číslo je <strong>bodový odhad</strong> — nejlepší jednotlivý tip. Ale kdybys ten samý experiment zopakoval, dostaneš trochu jiné číslo, protože tě zradí náhoda: jiní lidé, jiný den, šum v měření. Confidence interval je pásmo, které tuhle nejistotu vyjadřuje: <strong>rozsah hodnot, který je se zjištěnými daty slučitelný.</strong></p>
+    <p>95% CI typu „+4 % (95% CI: +1 % až +7 %)“ čteme prakticky takto: pravdivý efekt leží pravděpodobně někde v tomhle rozsahu, a kdybychom experiment opakovali pořád dokola, 95 % takto spočtených intervalů by ten pravdivý efekt obsahovalo. Pozor — neznamená to „je 95% šance, že pravda je přesně 4 %“. Bodový odhad je jen střed pásma nejistoty, ne svatá pravda <a href="https://link.springer.com/article/10.1007/s10654-016-0149-3">[1]</a>.</p>
+    <blockquote>Bodový odhad je nadpis. Confidence interval je celý článek. Číst jen nadpis a ignorovat pásmo nejistoty je první krok k tomu naletět.</blockquote>
+
+    <h2>2) Šířka intervalu &gt; „protíná nulu?“</h2>
+    <p>Většina lidí se u CI ptá jen na jednu věc: protíná nulu, nebo ne? Když ne, prohlásí to za „funguje“. To je ale jen převlečené p-value a zahazuje to nejcennější informaci — <strong>jak je interval široký</strong>. Šířka ti říká, jak moc si výsledkem můžeš být jistý.</p>
+    <div class="card">
+      <p><strong>Úzký interval kolem smysluplného efektu</strong> (např. +4 %, CI +3 % až +5 %): pevný, použitelný výsledek. Tady stojí za to jednat.</p>
+      <p><strong>Široký interval</strong> (např. +4 %, CI −2 % až +10 %): data připouští, že efekt je nulový i obrovský. „Nevíme.“ Takový výsledek nepředávej jako jistotu.</p>
+      <p><strong>Úzký interval kolem nuly</strong> (např. +0,2 %, CI −0,5 % až +0,9 %): tohle je cenné — slušně přesvědčivý důkaz, že velký efekt tam <em>není</em>. Negativní výsledek s úzkým CI je často silnější informace než „pozitivní“ s širokým.</p>
+    </div>
+    <p>Proto dvě studie se stejným bodovým odhadem mohou znamenat úplně něco jiného. Šířka intervalu skoro vždy roste tím, čím menší byl vzorek — a malé vzorky jsou v silovém a hypertrofickém výzkumu pravidlo, ne výjimka. Ber to jako výchozí předpoklad: malá studie = široký interval = drž odstup.</p>
+
+    <h2>3) Významnost ≠ velikost efektu</h2>
+    <p>Tady padá nejvíc lidí. <strong>P-value</strong> ti říká jen to, jak nepravděpodobná by byla naměřená (nebo extrémnější) data, kdyby pravdivý efekt byl nulový. Neříká, jak je efekt velký, ani jak je důležitý, ani jaká je pravděpodobnost, že hypotéza platí. „Statisticky významné“ (p &lt; 0,05) neznamená „velké“ ani „v praxi zajímavé“ <a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2016.1154108">[2]</a>.</p>
+    <p>S dostatečně velkým vzorkem je významný i nepatrný rozdíl. A naopak, reálný a užitečný efekt nemusí významnosti dosáhnout, pokud byl vzorek malý. Proto se ptáme na <strong>effect size</strong> — kolik to dělá v reálných jednotkách nebo ve standardizované velikosti (Cohenovo d). Greg Nuckols ze Stronger by Science kvůli tomu razí jednoduchá vodítka pro interpretaci velikosti efektů v síle a hypertrofii, místo aby se vše vyhodnocovalo přes „je to významné?“ <a href="https://www.strongerbyscience.com/heuristics-effect-sizes/">[3]</a>.</p>
+    <div class="eq">co tě zajímá = velikost efektu + jeho confidence interval &nbsp;(ne samotné p)</div>
+    <p>Praktický filtr má dvě otázky položené ve správném pořadí: <strong>(1) Jak velký je efekt?</strong> (effect size) a <strong>(2) Jak jistý si tou velikostí můžu být?</strong> (šířka CI). Teprve když oboje sedí, má smysl řešit, jestli to vůbec použiju u klienta. P-value je až třetí v řadě, ne první.</p>
+
+    <h2>4) Jak číst forest plot v meta-analýze</h2>
+    <p>Meta-analýza spojí výsledky více studií a dá jim větší celkovou váhu — proto stojí v hierarchii důkazů výš než jednotlivá studie. Zobrazuje se forest plotem a ten se naučíš číst za pár minut.</p>
+    <div class="card">
+      <p><strong>Čtverec</strong> = bodový odhad jedné studie. Jeho velikost odráží váhu studie (větší vzorek = větší čtverec).</p>
+      <p><strong>Vodorovné čáry</strong> = confidence interval té studie. Dlouhé čáry = nejistota.</p>
+      <p><strong>Diamant dole</strong> = souhrnný (pooled) odhad přes všechny studie i s jeho CI. Tohle je hlavní číslo.</p>
+      <p><strong>Svislá čára nuly</strong>: když ji diamant protíná, souhrnný efekt nedosáhl významnosti. Ale i tady se dívej na šířku — úzký diamant kolem nuly je jiná zpráva než široký.</p>
+    </div>
+    <p>Pozor na dvě věci. Za prvé, meta-analýza je jen tak dobrá, jak studie, které spojuje — „garbage in, garbage out“. Za druhé, velký rozptyl mezi studiemi (heterogenita) znamená, že studie si protiřečí; souhrnný průměr pak může zakrývat, že efekt je hodně závislý na kontextu. V silovém výzkumu narazíš na meta-analýzy, kde jsou efekty malé a téměř všechny intervaly protínají nulu — i to je poctivá odpověď: „rozdíl je malý nebo žádný“ <a href="https://www.strongerbyscience.com/training-frequency/">[4]</a>.</p>
+
+    <h2>5) Šum, malé vzorky a replikační krize</h2>
+    <p>Proč tolik „průlomů“ tiše zmizí? Protože jednotlivá studie je hlučná. Když je vzorek malý, efekt malý a tlak publikovat velký, roste šance, že „pozitivní“ výsledek je náhoda převlečená za objev. Ioannidis ve své slavné práci ukázal, že za běžných podmínek může být <strong>většina publikovaných nálezů spíš nepravdivá než pravdivá</strong> — tím víc, čím menší studie, čím menší efekty a čím větší flexibilita v analýze <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.0020124">[5]</a>.</p>
+    <p>Že nejde o teorii, ukázal masivní replikační projekt v psychologii: tým zopakoval 100 publikovaných studií a přesvědčivě se podařilo zopakovat zhruba třetinu, přičemž zopakované efekty byly v průměru zhruba poloviční oproti originálu <a href="https://www.science.org/doi/10.1126/science.aac4716">[6]</a>. Výživa a trénink nejsou imunní — taky tu vládnou malé vzorky a publikační tlak.</p>
+    <p>Praktický důsledek: <strong>jedna studie není pravda, je to datový bod.</strong> Když uvidíš ohromující výsledek z malého vzorku, výchozí sázka je, že efekt bude v replikaci menší, nebo zmizí (regrese k průměru). A pamatuj na rozdíl <strong>korelace vs. kauzalita</strong> — pozorovací studie ukazuje souvislost, ne příčinu; za zdánlivým vztahem se často skrývá třetí, matoucí proměnná.</p>
+    <blockquote>Mimořádné tvrzení potřebuje mimořádný důkaz. Jeden hlučný výsledek z malého vzorku je signál „zajímavé, sleduj dál“ — ne „změň klientům program“.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi někdo pošle „nová studie dokázala, že…“, mám rituál o čtyřech otázkách. Kolik bylo lidí? (malý vzorek = široký interval, drž odstup) Jak velký je efekt v reálných číslech? (ne jen „významný“) Jak je široký confidence interval? (kdyby ho neuvedli, je to varování) A je to jedna studie, nebo to sedí s celkem důkazů? Teprve když projde všemi čtyřmi, vůbec uvažuju, jestli to u někoho zkusím. U klienta nikdy nestavím na jediném efektním titulku — stavím na tom, co se opakovaně potvrzuje.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co ti říká 95% confidence interval u nějakého efektu? <span class="tg">odpověď ▾</span></div><div class="aa">Rozsah hodnot slučitelný s daty — pásmo nejistoty kolem bodového odhadu. Při opakování experimentu by 95 % takto spočtených intervalů obsahovalo pravdivý efekt. Neznamená to, že pravda je přesně bodový odhad.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč je šířka intervalu důležitější než to, jestli „protíná nulu“? <span class="tg">odpověď ▾</span></div><div class="aa">Šířka říká, jak jistý si výsledkem můžeš být. Široký interval znamená „nevíme“ (efekt může být nulový i velký). Úzký interval kolem nuly je naopak silný důkaz, že velký efekt tam není. „Protíná nulu?“ je jen převlečené p-value a tuhle informaci zahazuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je rozdíl mezi statistickou významností a velikostí efektu? <span class="tg">odpověď ▾</span></div><div class="aa">Významnost (p-value) říká jen, jak nepravděpodobná by byla data, kdyby efekt byl nulový — ne jak je velký nebo důležitý. Velikost efektu (effect size, Cohenovo d) říká, kolik to reálně dělá. S velkým vzorkem je významný i nepatrný rozdíl, proto se ptáme primárně na velikost efektu a jeho CI.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co v forest plotu znamená diamant a co dlouhé vodorovné čáry? <span class="tg">odpověď ▾</span></div><div class="aa">Diamant dole je souhrnný (pooled) odhad přes všechny studie i s jeho confidence intervalem — hlavní číslo. Dlouhé vodorovné čáry u jednotlivých studií = široké CI = velká nejistota (typicky malý vzorek).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč nestavět trénink klienta na jediné efektní studii? <span class="tg">odpověď ▾</span></div><div class="aa">Jednotlivá studie je hlučná. Při malém vzorku, malém efektu a publikačním tlaku je velká šance, že jde o náhodu — replikace ukazují, že hodně nálezů se nezopakuje a efekty bývají menší. Jedna studie je datový bod, ne pravda. Stav na tom, co se opakovaně potvrzuje.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Najdi si jednu studii nebo meta-analýzu k tématu, které řešíš s klienty (např. kreatin, frekvence tréninku, počet sérií). Zapiš: kolik bylo účastníků, jaký je bodový odhad efektu, jaký je jeho confidence interval (a jestli je vůbec uvedený), jak je široký a jestli protíná nulu. Pak jednou větou napiš, jak bys výsledek poctivě podal klientovi — bez nadsázky, ale i bez zbytečného shazování.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Greenland S, Senn SJ, Rothman KJ, Carlin JB, Poole C, Goodman SN, Altman DG. Statistical tests, P values, confidence intervals, and power: a guide to misinterpretations. Eur J Epidemiol. 2016;31(4):337–350.</li>
+        <li>Wasserstein RL, Lazar NA. The ASA's Statement on p-Values: Context, Process, and Purpose. Am Stat. 2016;70(2):129–133.</li>
+        <li>Nuckols G. Rough Heuristics for Interpreting Strength and Hypertrophy Effect Sizes. Stronger by Science. (online článek.)</li>
+        <li>Nuckols G. Training Frequency for Strength Development: What the Data Say. Stronger by Science. (online článek.)</li>
+        <li>Ioannidis JPA. Why Most Published Research Findings Are False. PLoS Med. 2005;2(8):e124.</li>
+        <li>Open Science Collaboration. Estimating the reproducibility of psychological science. Science. 2015;349(6251):aac4716.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m17-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

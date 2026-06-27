@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spánková hygiena: konkrétní zásady, co reálně funguje — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 3 — Spánek, stres a regenerace</div>
+    <h1>Spánková hygiena: konkrétní zásady, co reálně funguje</h1>
+
+    <p class="lead">Můžeš mít perfektní trénink i jídelníček, ale když klient spí pět hodin, pracuješ proti silnému proudu. <strong>Spánek není „odpočinek navíc“ — je to čas, kdy se výsledky tréninku a diety teprve zapisují do těla.</strong> Špatný spánek ti rozhází hlad, sytost, vůli i regeneraci zároveň. Dobrá zpráva: spánková hygiena je sada konkrétních, naučitelných návyků — a v týhle lekci si projdeme jen ty, co mají reálnou oporu, ne wellness fráze.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč spánek řídí dva systémy zároveň — adenosinový tlak a vnitřní hodiny — a jak toho využít.</li>
+        <li>Co se stane s hubnutím, hladem a svalem, když klient spí málo (a čísla, ne dojmy).</li>
+        <li>Konkrétní páky spánkové hygieny seřazené podle síly efektu, ne podle popularity.</li>
+        <li>Jak řešit kofein, světlo a teplotu prakticky — kolik hodin, kolik luxů, kolik stupňů.</li>
+        <li>Proč pravidelnost (stejné vstávání) často přebije i samotnou délku spánku.</li>
+        <li>Jak se spánkem pracovat s klientem citlivě, bez vyvolávání úzkosti z „nedostatečného“ spánku.</li>
+      </ul>
+    </div>
+
+    <h2>1) Dvě páky, které řídí spánek</h2>
+    <p>Než začneme s tipy, musíš rozumět motoru. Spánek řídí dva nezávislé systémy, které spolu hrají. První je <strong>homeostatický tlak (spánkový dluh)</strong>: jak jsi vzhůru, hromadí se ti v mozku adenosin a tlak na spánek roste. Čím déle bdíš, tím větší tlak — a spánek ho zase „smyje“. Proto je dlouhý odpolední šlofík nebo pozdní kofein problém: oba ten tlak sníží zrovna ve chvíli, kdy ho večer potřebuješ co nejvyšší.</p>
+    <p>Druhá páka je <strong>cirkadiánní rytmus</strong> — vnitřní hodiny, které řídí, <em>kdy</em> má přijít ospalost, nezávisle na tom, jak dlouho jsi vzhůru. Tyhle hodiny seřizuje hlavně světlo. Ráno ti ranní světlo posune rytmus „dopředu“ a nastaví večerní ospalost ve správný čas; večerní jasné světlo naopak hodiny brzdí a posouvá usínání do noci.</p>
+    <blockquote>Dobrý spánek = vysoký adenosinový tlak ve správný cirkadiánní čas. Většina problémů s usínáním je rozladění jedné z těchto dvou pák — málo nashromážděného tlaku, nebo hodiny posunuté do noci.</blockquote>
+
+    <h2>2) Co se stane, když klient spí málo</h2>
+    <p>Tohle je část, kterou by měl slyšet každý, kdo „nemá čas spát“. Krátký spánek nesabotuje výsledky vágně — sabotuje je měřitelně a hned na několika frontách.</p>
+    <div class="card">
+      <p><strong>Hubnutí jde do svalu, ne do tuku:</strong> v řízené studii dospělí v kalorickém deficitu zhubli stejně při 5,5 i 8,5 hodinách spánku — ale při krátkém spánku tvořil tuk jen ~čtvrtinu úbytku místo poloviny. Ztráta tukuprosté hmoty (svalu) vzrostla o ~60 %. Stejná dieta, horší složení výsledku.</p>
+      <p><strong>Hlad a chutě rostou:</strong> už po dvou nocích zkráceného spánku klesá leptin (sytost) a roste ghrelin (hlad), subjektivní chuť k jídlu stoupá a mění se i výběr — víc se „chce“ sladké a kalorické jídlo.</p>
+      <p><strong>Výkon a hlava trpí:</strong> klesá reakční doba, soustředění, nálada a tolerance ke stresu — tedy přesně to, co drží klienta u plánu.</p>
+    </div>
+    <p>Praktický překlad: krátký spánek nezhorší jen „kondičku“, ale přímo podkope deficit (větší hlad, horší dodržení) i kvalitu výsledku (víc svalu pryč). Spánek proto neřešíme jako bonus — řešíme ho jako podmínku, aby zbytek plánu vůbec zabral.</p>
+
+    <h2>3) Páky spánkové hygieny — seřazené podle síly</h2>
+    <p>Spánková hygiena má desítky tipů, ale nemají stejnou váhu. Tady jsou seřazené tak, jak bych je nasazoval — od největšího dopadu k jemnému doladění.</p>
+    <div class="card">
+      <p><strong>1. Pravidelný čas vstávání (i o víkendu):</strong> nejsilnější jedna páka. Stálé vstávání ukotví cirkadiánní hodiny a tím i večerní ospalost. Víkendové „dospávání“ rytmus posune a v neděli večer klient neusne — klasický „sociální jetlag“.</p>
+      <p><strong>2. Ranní světlo:</strong> 10–30 minut venkovního světla brzy po probuzení posílí ranní signál a pomáhá usnout včas večer. I zataženo venku je řádově silnější než interiér.</p>
+      <p><strong>3. Tlumení večerního světla:</strong> hodinu až dvě před spaním ztlumit a teplé světlo. I běžné pokojové osvětlení dokáže potlačit melatonin a zkrátit „noc“, kterou tělo vnímá.</p>
+      <p><strong>4. Kofein s časovým stropem:</strong> poslední dávka cca 8–10 h před spaním (viz sekce 4).</p>
+      <p><strong>5. Chladná, tmavá, tichá ložnice:</strong> teplota okolo 18–19 °C, zatemnění, klid. Tělo k usnutí potřebuje pokles tělesné teploty.</p>
+      <p><strong>6. Konzistentní rituál a „buffer zóna“:</strong> 30–60 minut na zklidnění (žádná práce a doomscrolling v posteli). Postel = spánek, ne kancelář.</p>
+    </div>
+    <p>Všimni si, že nejsilnější páky (vstávání, světlo) nejsou ty, o kterých se nejvíc mluví (matrace, doplňky). To je typické: největší efekt má nuda, kterou klient skutečně utáhne každý den.</p>
+
+    <h2>4) Kofein, světlo a teplota — konkrétně</h2>
+    <p>Tři nejčastější „neviditelné“ rušiče. Pojďme do čísel, ať máš co říct klientovi.</p>
+    <p><strong>Kofein.</strong> Má dlouhý poločas — řádově ~5–6 hodin. To znamená, že odpolední káva ti v půlnoci pořád sedí v krvi v polovičním množství a tiše blokuje adenosin, tedy ten spánkový tlak z první sekce. V kontrolované studii i dávka kofeinu 6 hodin před spaním měřitelně zkrátila celkový spánek. Praktické pravidlo:</p>
+    <div class="eq">poslední kofein ≈ čas vstávání + (16 − poločas) → prakticky 8–10 h před spaním</div>
+    <p>U citlivějšího klienta klidně dřív. A pozor: kofein často „nepoznají“ ne proto, že na ně neúčinkuje, ale proto, že posune spánek do lehčí, méně regenerující podoby.</p>
+    <p><strong>Světlo.</strong> Ráno chceš co nejvíc, večer co nejmíň. Ranní venkovní světlo má tisíce luxů i pod mrakem; interiér jen stovky. Večer ten poměr obrať — tlumené, teplé světlo, jas displejů dolů. Nejde o démonizaci „modrého světla“, ale o <em>množství</em> světla v nesprávný čas.</p>
+    <p><strong>Teplota.</strong> Usnutí spouští pokles tělesné teploty. Proto pomáhá chladnější ložnice (~18–19 °C) a proč teplá sprcha ~1–2 h před spaním paradoxně pomáhá — rozšíří cévy, tělo pak odvede teplo a ochladí se.</p>
+    <blockquote>Spánková hygiena nemění chemii spánku magicky. Jen odstraňuje překážky, aby dva přirozené systémy z první sekce mohly dělat svou práci.</blockquote>
+
+    <h2>5) Pravidelnost vs. délka — a „sleep extension“</h2>
+    <p>Klient se často ptá: „Kolik hodin musím spát?“ Odpověď je pro většinu dospělých 7–9 hodin, ale je tu nuance, kterou trenéři podceňují. Vztah délky spánku a zdraví je <strong>do U</strong> — riziko roste u krátkého i extrémně dlouhého spánku. Cílem proto není „co nejvíc“, ale dostatek a hlavně <strong>pravidelně</strong>.</p>
+    <p>A pravidelnost není jen o číslech ve zdraví — je to páka výkonu. U sportovců, kteří si cíleně <strong>prodloužili spánek</strong> (sleep extension, cíl ~10 h v posteli) na několik týdnů, se zlepšil sprint, přesnost, reakční doba i nálada. To není o jedné „dohnané“ noci — je to o dlouhodobém splacení skrytého spánkového dluhu.</p>
+    <div class="card">
+      <p><strong>Pro klienta v deficitu:</strong> chraň spánek stejně jako bílkoviny — drží sval a krotí hlad.</p>
+      <p><strong>Pro sportovce a nárůst formy:</strong> zkus 2–4 týdny přidat 30–60 min spánku navíc a sleduj výkon a regeneraci.</p>
+      <p><strong>Pro každého:</strong> pravidelné vstávání je důležitější než dokonalý počet hodin. Stálost &gt; jeden dlouhý víkendový spánek.</p>
+    </div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> S klientem nikdy nezačínám „spi 8 hodin“ — to je gól, ne plán. Vyberu jednu páku a tu zafixujeme: většinou stejný čas vstávání sedm dní v týdnu a ranní světlo cestou ven. Teprve když tohle drží, řešíme kofeinový strop a tlumení večerního světla. A důležité: spánek nikdy nepodávám jako další zdroj viny. Když někdo má malé děti nebo směny, nemá smysl mu vyčítat „špatnou hygienu“ — tam hledáme realistické maximum, ne ideál z učebnice.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Které dva systémy řídí spánek a co je seřizuje? <span class="tg">odpověď ▾</span></div><div class="aa">Homeostatický tlak (spánkový dluh přes hromadění adenosinu, čím déle bdíš) a cirkadiánní rytmus (vnitřní hodiny určující, kdy přijde ospalost). Hodiny seřizuje hlavně světlo — ráno posiluje, večer brzdí.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co se stane se složením úbytku hmotnosti při dietě, když klient spí málo? <span class="tg">odpověď ▾</span></div><div class="aa">Při stejném celkovém úbytku jde větší část na úkor svalu (tukuprosté hmoty) a menší na tuk. Krátký spánek tak zhorší kvalitu výsledku, i když číslo na váze klesá stejně.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak krátký spánek ovlivní hlad a sytost? <span class="tg">odpověď ▾</span></div><div class="aa">Klesá leptin (sytost) a roste ghrelin (hlad), zvyšuje se chuť k jídlu a posouvá se výběr směrem k sladkému a kalorickému. Tím se hůř drží deficit.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Která jedna páka spánkové hygieny má největší dopad a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Pravidelný čas vstávání každý den včetně víkendu — ukotví cirkadiánní hodiny a tím i večerní ospalost. Víkendové dospávání rytmus posune (sociální jetlag) a v neděli večer se hůř usíná.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč řešíme poslední kofein už 8–10 hodin před spaním? <span class="tg">odpověď ▾</span></div><div class="aa">Kofein má dlouhý poločas (~5–6 h), takže odpolední dávka v noci pořád blokuje adenosin a snižuje spánkový tlak. I dávka 6 h před spaním měřitelně zkracuje spánek a posouvá ho do lehčí, méně regenerující podoby.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta navrhni „spánkový protokol“ na 2 týdny: vyber JEDNU hlavní páku, kterou zafixujete jako první (a zdůvodni proč právě ji), nastav konkrétní kofeinový strop podle jeho času vstávání a popiš dvě úpravy večerního světla. Pak napiš, jak budeš efekt vyhodnocovat — co se klient bude ptát sám sebe ráno (energie, usínání, počet probuzení), aby šlo o trend, ne o honbu za dokonalou nocí.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Nedeltcheva AV, Kilkus JM, Imperial J, Schoeller DA, Penev PD. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010;153(7):435–441.</li>
+        <li>Spiegel K, Tasali E, Penev P, Van Cauter E. Brief communication: Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite. Ann Intern Med. 2004;141(11):846–850.</li>
+        <li>Mah CD, Mah KE, Kezirian EJ, Dement WC. The effects of sleep extension on the athletic performance of collegiate basketball players. Sleep. 2011;34(7):943–950.</li>
+        <li>Drake C, Roehrs T, Shambroom J, Roth T. Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed. J Clin Sleep Med. 2013;9(11):1195–1200.</li>
+        <li>Gooley JJ, Chamberlain K, Smith KA, et al. Exposure to room light before bedtime suppresses melatonin onset and shortens melatonin duration in humans. J Clin Endocrinol Metab. 2011;96(3):E463–E472.</li>
+        <li>Cappuccio FP, D'Elia L, Strazzullo P, Miller MA. Sleep duration and all-cause mortality: a systematic review and meta-analysis of prospective studies. Sleep. 2010;33(5):585–592.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

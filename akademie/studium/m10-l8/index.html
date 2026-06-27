@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Výpočet udržovacího příjmu a maker krok za krokem — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 10 · Lekce 8 — Metabolismus a TDEE do hloubky</div>
+    <h1>Výpočet udržovacího příjmu a maker krok za krokem</h1>
+
+    <p class="lead">Udržovací příjem je číslo, kolem kterého se točí celá výživa klienta — bez něj nevíš, kde je nula, a tudíž ani jak velký deficit či přebytek vlastně nastavuješ. <strong>V téhle lekci si projdeme přesný postup: od odhadu klidového výdeje, přes aktivitní faktor, až k rozpočítání maker.</strong> Naučíš se to spočítat za pět minut tužkou na papíře — a co je důležitější, naučíš se to číslo brát jako hypotézu, kterou ověříš v praxi, ne jako verdikt z kalkulačky.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak se TDEE rozkládá na BMR/RMR, TEF, NEAT a EAT — a proč to rozhoduje o tom, kde hledat páky.</li>
+        <li>Konkrétní postup výpočtu udržovacího příjmu Mifflinovou–St Jeorovou rovnicí + aktivitní faktor.</li>
+        <li>Jak z udržovacího příjmu rozpočítat bílkoviny, tuky a sacharidy v gramech.</li>
+        <li>Proč je NEAT největší skrytá proměnná a co znamená koncept „energy flux“.</li>
+        <li>Jak číslo z kalkulačky validovat na reálném klientovi za 2–3 týdny a kdy ho upravit.</li>
+        <li>Nejčastější chyby, kvůli kterým výpočet „nesedí“ — a jak se jim vyhnout.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je udržovací příjem a z čeho se skládá výdej</h2>
+    <p>Udržovací příjem (maintenance) je takový denní příjem energie, při kterém klient dlouhodobě drží hmotnost — přesně se kryje s jeho celkovým denním výdejem, tedy <strong>TDEE</strong> (Total Daily Energy Expenditure). Abys mohl s číslem pracovat, musíš rozumět, z čeho se skládá. TDEE má čtyři složky:</p>
+    <div class="card">
+      <p><strong>BMR / RMR — klidový výdej (~60–70 %):</strong> energie na základní fungování těla v klidu (dýchání, srdce, orgány, udržení tělesné teploty). BMR se měří přísně nalačno v termoneutrálním prostředí, RMR (klidový metabolismus) je v praxi mírně vyšší a pro trenéra použitelnější. Největší kus výdeje, daný hlavně beztukovou hmotou.</p>
+      <p><strong>TEF — termický efekt jídla (~10 %):</strong> energie spotřebovaná na trávení a zpracování potravy. Nejvyšší u bílkovin (cca 20–30 % jejich energie), nižší u sacharidů (5–10 %) a nejnižší u tuků (0–3 %).</p>
+      <p><strong>NEAT — pohyb mimo trénink (~15 % i mnohem víc):</strong> chůze, stání, fidgeting, domácí práce, gesta. Nejvariabilnější složka vůbec — mezi lidmi se může lišit i o stovky kilokalorií denně.</p>
+      <p><strong>EAT — cílený trénink (variabilní):</strong> energie spálená strukturovaným cvičením. U většiny klientů menší kus, než si představují.</p>
+    </div>
+    <p>Praktický důsledek: dvě složky umíš dobře odhadnout (BMR, TEF), dvě jsou divoké (NEAT, EAT). Proto je každý výpočet jen odhad — a proto ho budeme validovat.</p>
+    <blockquote>Když klient tvrdí, že „má pomalý metabolismus“, skoro nikdy nejde o BMR. Jde o NEAT, který v dietě tiše klesá, a o podhodnocený příjem. To jsou páky, ne genetická prokletí.</blockquote>
+
+    <h2>2) Krok za krokem: výpočet klidového výdeje</h2>
+    <p>Začneme od největšího kusu — klidového výdeje. Použijeme <strong>Mifflinovu–St Jeorovu rovnici</strong>, kterou Americká akademie výživy a dietetiky označila za evidence-based standard pro odhad RMR u zdravé populace. Existují i jiné (Harris–Benedict, Cunningham přes beztukovou hmotu), ale Mifflin–St Jeor je dobrý výchozí kompromis přesnosti a jednoduchosti.</p>
+    <div class="eq">Muži: RMR = 10 × hmotnost(kg) + 6,25 × výška(cm) − 5 × věk + 5</div>
+    <div class="eq">Ženy: RMR = 10 × hmotnost(kg) + 6,25 × výška(cm) − 5 × věk − 161</div>
+    <p>Konkrétně: muž, 35 let, 85 kg, 182 cm. RMR = 10 × 85 + 6,25 × 182 − 5 × 35 + 5 = 850 + 1137,5 − 175 + 5 = <strong>~1817 kcal</strong>. Tohle je jeho klidový výdej — kolik spálí, kdyby celý den ležel.</p>
+    <p>Pozor: rovnice je odvozená z populačního průměru zdravých dospělých. U velmi svalnatého klienta podhodnocuje (víc beztukové hmoty = vyšší skutečný RMR), u jedince s vysokým podílem tuku naopak nadhodnocuje. Proto je to odhad, ne osobní pravda.</p>
+
+    <h2>3) Z RMR na TDEE: aktivitní faktor</h2>
+    <p>RMR teď vynásobíme aktivitním faktorem (PAL — physical activity level), který zahrnuje NEAT, EAT i TEF dohromady. Tady dělá většina lidí největší chybu: nadhodnotí aktivitu. Realisticky vybírej spíš níž.</p>
+    <div class="card">
+      <p><strong>1,2 — sedavý:</strong> kancelář, žádný strukturovaný trénink, málo kroků.</p>
+      <p><strong>1,375 — lehce aktivní:</strong> lehký pohyb 1–3× týdně, slušné denní kroky.</p>
+      <p><strong>1,55 — středně aktivní:</strong> trénink 3–5× týdně, aktivnější den.</p>
+      <p><strong>1,725 — velmi aktivní:</strong> tvrdý trénink 6–7× týdně nebo fyzická práce.</p>
+      <p><strong>1,9 — extrémně aktivní:</strong> fyzická práce + denní trénink (vzácné).</p>
+    </div>
+    <p>Náš muž trénuje 4× týdně a má sedavou práci → faktor 1,55. TDEE = 1817 × 1,55 = <strong>~2816 kcal</strong>. To je jeho odhadovaný udržovací příjem.</p>
+    <div class="eq">TDEE (udržovací příjem) = RMR × aktivitní faktor (PAL)</div>
+    <blockquote>Když si nejsi jistý mezi dvěma faktory, vždycky volím ten nižší. Lépe začít s konzervativnějším číslem a po pár týdnech přidat, než klienta hned přecpat a divit se, že nehubne.</blockquote>
+
+    <h2>4) Rozpočítání maker z udržovacího příjmu</h2>
+    <p>Máme udržovací příjem v kaloriích. Teď z něj uděláme gramy bílkovin, tuků a sacharidů. Pořadí je důležité: <strong>nejdřív bílkoviny, pak tuky, sacharidy doplní zbytek.</strong></p>
+    <p><strong>1) Bílkoviny.</strong> Pro klienta v silovém tréninku cílíme cca 1,6–2,2 g/kg tělesné hmotnosti. Metaanalýza Mortona a kol. ukázala, že přínos pro nárůst beztukové hmoty se vyrovnává zhruba u 1,6 g/kg/den; v deficitu sázíme spíš na horní hranici kvůli ochraně svalu. Vezmeme 1,8 g/kg → 85 × 1,8 = <strong>153 g bílkovin</strong> (= 612 kcal).</p>
+    <p><strong>2) Tuky.</strong> Minimum pro hormonální zdraví je cca 0,6–1,0 g/kg, běžně volíme 0,8–1,0 g/kg. Vezmeme 0,9 g/kg → 85 × 0,9 = <strong>77 g tuků</strong> (= 689 kcal).</p>
+    <p><strong>3) Sacharidy.</strong> Doplní zbytek. 2816 − 612 − 689 = 1515 kcal ÷ 4 = <strong>~379 g sacharidů</strong>.</p>
+    <div class="card">
+      <p><strong>Převodní hodnoty (zapamatuj si):</strong></p>
+      <p>1 g bílkovin = 4 kcal · 1 g sacharidů = 4 kcal · 1 g tuku = 9 kcal · 1 g alkoholu = 7 kcal</p>
+      <p><strong>Výsledek modelového klienta na udržovacím příjmu:</strong> ~2816 kcal — B 153 g / T 77 g / S 379 g.</p>
+    </div>
+    <p>Pro deficit nebo přebytek pak upravíš primárně sacharidy (a částečně tuky), bílkoviny necháváš stabilní. Klasický deficit je 15–20 % pod udržovací příjem, mírný přebytek 5–15 % nad.</p>
+
+    <h2>5) NEAT, energy flux a proč číslo „nesedí“</h2>
+    <p>Tady přichází nejdůležitější pochopení celé lekce. NEAT je největší skrytá proměnná v TDEE a v dietě se chová proradně: jak klesá příjem, tělo nevědomky šetří pohybem — méně gestikulujete, víc sedíte, sníží se spontánní aktivita. James Levine ukázal, že NEAT se aktivně moduluje energetickou bilancí: při přejídání roste, při podjídání klesá. To je častý důvod, proč „spočítaný deficit“ v praxi vyhubne pomaleji, než tabulka slibovala — výdej se posunul.</p>
+    <p>Z toho plyne koncept <strong>energy flux</strong> (energetický tok): klient, který jí hodně A hodně se hýbe, drží stejnou hmotnost jako klient, který jí málo A málo se hýbe — ale ten první má vyšší obrat, lepší chuť k jídlu pod kontrolou, víc prostoru pro úpravy a obvykle lepší adherenci. Proto v praxi často radši zvedneme výdej (kroky, NEAT) než dál řezat příjem.</p>
+    <blockquote>Když se hubnutí zastaví, první otázka není „uberme kalorie“, ale „kde nám utekl výdej?“. Většinou v krocích a v NEAT, ne v rovnici.</blockquote>
+
+    <h2>6) Validace: číslo z kalkulačky je hypotéza</h2>
+    <p>Spočítané číslo není pravda o klientovi — je to startovní hypotéza, kterou musíš ověřit v reálu. Postup je vždy stejný:</p>
+    <div class="card">
+      <p><strong>1. Nastav startovní cíl</strong> podle výpočtu (udržení, nebo deficit/přebytek dle záměru).</p>
+      <p><strong>2. Drž ho konzistentně 2–3 týdny</strong> — kratší okno mate kvůli vodě, glykogenu a trávení.</p>
+      <p><strong>3. Sleduj trend, ne jeden den:</strong> ranní hmotnost (průměr za týden), míry, fotky, výkon v posilovně, energie, hlad, spánek.</p>
+      <p><strong>4. Uprav podle reality:</strong> drží hmotnost při zamýšleném udržení? Číslo sedělo. Hubne/přibírá jinak, než jsi chtěl? Uprav o ~5–10 % a opakuj.</p>
+    </div>
+    <p>Tohle je rozdíl mezi trenérem a kalkulačkou. Kalkulačka ti dá odhad; trenér ho zvaliduje na živém člověku a doladí. Žádná rovnice neumí předpovědět konkrétní NEAT, historii diet ani hormonální kontext daného klienta.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když přijde nový klient, spočítám mu TDEE Mifflinem za pár minut, ale nahlas mu řeknu: „Tohle je jen odhad, za tři týdny ho přepíšeme podle toho, co ukáže váha a zrcadlo.“ Sundá to z čísla tlak. Bílkoviny mu zafixuju nahoře, tuky rozumně, sacharidy jsou moje páka. A když se progress zasekne, nejdřív koukám na kroky — devětkrát z deseti klesly z osmi tisíc na čtyři, aniž by si toho všiml. Vrátíme kroky a deficit se „magicky“ obnoví, bez řezání jídla.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jmenuj čtyři složky TDEE a řekni, která je nejvariabilnější. <span class="tg">odpověď ▾</span></div><div class="aa">BMR/RMR (klidový výdej, ~60–70 %), TEF (termický efekt jídla, ~10 %), NEAT (pohyb mimo trénink) a EAT (cílený trénink). Nejvariabilnější je NEAT — mezi lidmi i v čase se liší o stovky kilokalorií.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Spočítej RMR Mifflinem–St Jeorem pro ženu, 30 let, 65 kg, 168 cm. <span class="tg">odpověď ▾</span></div><div class="aa">RMR = 10 × 65 + 6,25 × 168 − 5 × 30 − 161 = 650 + 1050 − 150 − 161 = ~1389 kcal.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> V jakém pořadí rozpočítáváš makra a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Nejdřív bílkoviny (cca 1,6–2,2 g/kg, chrání sval a sytí), pak tuky (cca 0,8–1,0 g/kg pro hormonální zdraví), a sacharidy doplní zbytek kalorií. Bílkoviny i tuky mají fyziologické minimum, sacharidy jsou flexibilní páka.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč se „spočítaný deficit“ v praxi často projeví pomaleji? <span class="tg">odpověď ▾</span></div><div class="aa">Protože v dietě klesá NEAT — tělo nevědomky šetří spontánním pohybem (méně kroků, gest, stání). Výdej se sníží, deficit se zmenší. Levine ukázal, že NEAT se aktivně moduluje energetickou bilancí.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená energy flux a proč ho v praxi preferujeme? <span class="tg">odpověď ▾</span></div><div class="aa">Energy flux je celkový energetický obrat. Při stejné bilanci je lepší vyšší tok (hodně jíst i hodně se hýbat) než nízký — dává víc prostoru pro úpravy, lepší adherenci a kontrolu chuti. Proto často radši zvedneme výdej (kroky, NEAT) než dál řežeme příjem.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si modelového klienta (vymysli věk, pohlaví, hmotnost, výšku, aktivitu). Spočítej mu krok za krokem RMR Mifflinem–St Jeorem, vynásob aktivitním faktorem na TDEE, a z udržovacího příjmu rozpočítej bílkoviny, tuky a sacharidy v gramech. Pak nastav 15–20% deficit a popiš, jak budeš po 2–3 týdnech vyhodnocovat trend a co uděláš, když se hubnutí zastaví (nápověda: nejdřív koukni na kroky a NEAT, ne na rovnici).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Mifflin MD, St Jeor ST, Hill LA, Scott BJ, Daugherty SA, Koh YO. A new predictive equation for resting energy expenditure in healthy individuals. Am J Clin Nutr. 1990;51(2):241–247.</li>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+        <li>Levine JA, Vander Weg MW, Hill JO, Klesges RC. Non-exercise activity thermogenesis (NEAT): environment and biology. Am J Physiol Endocrinol Metab. 2004;286(5):E675–E685.</li>
+        <li>Westerterp KR. Diet induced thermogenesis. Nutr Metab (Lond). 2004;1(1):5.</li>
+        <li>Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m10-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architektura spánku: NREM, REM a proč na fázích záleží — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 1 — Spánek, stres a regenerace</div>
+    <h1>Architektura spánku: NREM, REM a proč na fázích záleží</h1>
+
+    <p class="lead">Spánek není „vypnutí“ — je to nejaktivnější regenerační proces, jaký tělo má. Během noci běží přesně řízený cyklus fází, ve kterých se opravuje sval, ladí hormony, čistí mozek a ukládá to, co ses naučil. <strong>Když klientovi rozpadneš spánek, nepokazíš mu jen „náladu“ — sabotuješ trénink, hubnutí i hlavu.</strong> Jako trenér nepředepisuješ prášky na spaní, ale architekturu spánku potřebuješ chápat, abys uměl poradit chytře a ne jen „spi víc“.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak vypadá spánkový cyklus a co se děje v jednotlivých fázích NREM a REM.</li>
+        <li>Proč hluboký NREM stojí za fyzickou regenerací a REM za hlavou a učením.</li>
+        <li>Dva motory, které řídí, kdy a jak tvrdě usneš — adenosin a vnitřní hodiny.</li>
+        <li>Co se stane s hladem, svalem a výkonem, když spánek osekáš.</li>
+        <li>Proč na pořadí a celistvosti cyklů záleží stejně jako na počtu hodin.</li>
+        <li>Jak z toho udělat praktická doporučení, která klient reálně utáhne.</li>
+      </ul>
+    </div>
+
+    <h2>1) Spánek jede v cyklech, ne v jednom kuse</h2>
+    <p>Noc se neskládá z jednoho dlouhého „spánku“, ale z opakovaných cyklů. Jeden cyklus trvá zhruba <strong>90 minut</strong> a za noc jich proběhne čtyři až šest. Každý cyklus prochází lehkým NREM, hlubokým NREM a nakonec REM fází — ale poměr fází se v průběhu noci dramaticky mění.</p>
+    <div class="card">
+      <p><strong>NREM 1 (přechod):</strong> pár minut mezi bděním a spánkem. Lehké, snadno se z něj probudíš a často si ho ani neuvědomíš.</p>
+      <p><strong>NREM 2 (lehký spánek):</strong> tvoří zhruba <strong>45–55 %</strong> noci. Klesá tep i teplota, objevují se spánková vřeténka, která chrání spánek před vyrušením a podílejí se na ukládání paměti.</p>
+      <p><strong>NREM 3 (hluboký spánek, slow-wave):</strong> nejhlubší fáze s pomalými delta vlnami. Nejvíc ho je v <strong>první polovině noci</strong>. Tady jede fyzická regenerace.</p>
+      <p><strong>REM (paradoxní spánek):</strong> aktivní mozek, rychlé pohyby očí, živé sny a útlum svalů. Nejvíc ho je v <strong>druhé polovině noci</strong>, k ránu.</p>
+    </div>
+    <p>Praktický důsledek tohohle rozložení je zásadní: když si klient ukrojí spánek z konce — pozdě vstává do práce, budík o dvě hodiny dřív — neořeže všechny fáze rovnoměrně. <strong>Připraví se hlavně o REM</strong>, protože ten se koncentruje k ránu. A naopak ten, kdo chodí spát hluboko po půlnoci, přijde o velkou porci hlubokého NREM z první půlky noci.</p>
+    <blockquote>Spánek není homogenní tekutina, kterou nalejeme do osmihodinové sklenice. Je to sled fází se svým pořadím — a to, kterou část noci osekneš, rozhoduje o tom, o jakou funkci se připravíš.</blockquote>
+
+    <h2>2) Hluboký NREM = tělo, REM = hlava</h2>
+    <p>Zjednodušení, které drží: <strong>hluboký NREM regeneruje tělo, REM ladí mozek.</strong> Není to absolutní, ale jako mentální model pro klienta funguje skvěle.</p>
+    <p>Během hlubokého NREM vrcholí parasympatikus, klesá tep a krevní tlak, a vyplavuje se největší pulz <strong>růstového hormonu</strong> za celý den. Tady probíhá oprava tkání, konsolidace adaptací na trénink a „úklid“ mozku — glymfatický systém vyplavuje metabolický odpad, který se přes den nahromadil. Pro trénujícího člověka je hluboký NREM ta nejdražší měna noci.</p>
+    <p>REM má jinou roli. Posiluje synaptická spojení, organizuje paměť, propojuje nové dovednosti s tím, co už umíš, a zpracovává emoce. Spánek pomáhá přesouvat paměťové stopy z dočasného úložiště do dlouhodobého a chrání je před vzájemným rušením — slow-wave NREM stojí hlavně za systémovou konsolidací, REM za jejím dolaďováním a emoční regulací <a href="https://www.nature.com/articles/nrn2762">[4]</a>.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientovi, který se učí nový pohyb — třeba trh nebo složitější dřep — říkám, že polovina práce se odehraje v posteli. Naučíš se vzorec na tréninku, ale „zapíše“ se přes noc. Když po náročném technickém tréninku ošidíš spánek, druhý den se ti často zdá, že to umíš hůř. Není to náhoda, je to chybějící konsolidace.</div>
+
+    <h2>3) Dva motory spánku: adenosin a vnitřní hodiny</h2>
+    <p>Proč vůbec večer usneš a ráno se probudíš? Stojí za tím dva nezávislé systémy, které se výborně popisují přes <strong>dvouprocesový model</strong> spánku <a href="http://www.chronobiology.ch/wp-content/uploads/2019/05/Borb%C3%A9lyJSR2016.pdf">[1]</a>.</p>
+    <div class="card">
+      <p><strong>Proces S — spánkový tlak (homeostatický):</strong> čím déle bdíš, tím víc se v mozku hromadí <strong>adenosin</strong>, vedlejší produkt energetického metabolismu. Roste „chuť spát“. Spánek adenosin zase vyplaví. Mimochodem kofein funguje tak, že adenosinové receptory blokuje — tlak tam pořád je, jen ho dočasně necítíš.</p>
+      <p><strong>Proces C — cirkadiánní rytmus (vnitřní hodiny):</strong> zhruba 24hodinový oscilátor řízený světlem, který určuje, kdy je tělo „naladěné“ na spánek a kdy na bdění. Řídí melatonin, teplotu jádra i bdělost nezávisle na tom, jak dlouho jsi vzhůru.</p>
+    </div>
+    <p>Spánek přijde tehdy, když se oba motory potkají: vysoký spánkový tlak (hodně adenosinu) a cirkadiánní okno pro spánek. Proto je tak mizerné usínat „proti hodinám“ — po noční směně máš sice obrovský spánkový tlak, ale cirkadiánní signál křičí „den“, a spánek je krátký a roztříštěný.</p>
+    <div class="eq">spánek nastává, když: vysoký Proces S (adenosin) × otevřené okno Procesu C (hodiny)</div>
+    <p>Pro klienta z toho plynou dvě páky, které opravdu fungují: <strong>nehasit spánkový tlak</strong> kofeinem nebo odpoledním šlofíkem příliš pozdě a <strong>stabilizovat hodiny</strong> ranním světlem a pravidelným časem vstávání. Pravidelnost často změní víc než jakýkoli „spánkový hack“.</p>
+    <blockquote>Nejvíc lidem nekazí spánek to, že nevědí „triky“ — kazí jim ho rozhozené hodiny a kofein v nesprávný čas. Dva motory, dvě jednoduché páky.</blockquote>
+
+    <h2>4) Co se stane, když spánek osekáš</h2>
+    <p>Tady přestává jít o teorii a začíná byznys trenéra. Nedostatek spánku přímo útočí na všechno, na čem s klientem pracuješ — na hlad, na sval i na výkon.</p>
+    <p><strong>Hlad a chutě.</strong> Už dvě noci zkráceného spánku u zdravých mladých mužů snížily leptin (hormon sytosti) a zvýšily ghrelin (hormon hladu) — a subjektivně vzrostl hlad i chuť, nejvíc na kalorické, sacharidové jídlo <a href="https://www.acpjournals.org/doi/10.7326/0003-4819-141-11-200412070-00008">[2]</a>. Klient v deficitu, který málo spí, to nemá těžké „v hlavě“ — má proti sobě hormonální vítr.</p>
+    <p><strong>Složení úbytku při hubnutí.</strong> Tohle je nejsilnější číslo celé lekce. Když dieteři spali 5,5 místo 8,5 hodiny, zhubli stejně kilogramů — ale podíl tuku na úbytku klesl o <strong>55 %</strong> a ztráta beztukové hmoty (svalu) vzrostla o <strong>60 %</strong> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2951287/">[3]</a>. Stejný deficit, dramaticky horší výsledek. Málo spánku doslova přesměruje hubnutí z tuku do svalu.</p>
+    <div class="card">
+      <p><strong>Shrnutí dopadů osekaného spánku:</strong></p>
+      <p>• ↑ ghrelin, ↓ leptin → víc hladu a chutí na kalorické jídlo</p>
+      <p>• v deficitu: méně tuku a víc svalu na úbytku → horší kvalita postavy</p>
+      <p>• ↓ regenerace (méně hlubokého NREM, nižší pulz růstového hormonu)</p>
+      <p>• ↓ výkon, reakce a koncentrace → horší trénink, vyšší riziko zranění</p>
+      <p>• ↑ vnímaná námaha → stejný trénink se zdá těžší</p>
+    </div>
+    <p>Opačný směr potvrzuje, že nejde o pouhou korelaci: když basketbalisté prodloužili spánek na minimálně 10 hodin v posteli po dobu několika týdnů, <strong>zrychlili sprinty, zlepšili přesnost střelby i reakční čas</strong> a cítili se méně ospalí <a href="https://pubmed.ncbi.nlm.nih.gov/21731144/">[5]</a>. Spánek je výkonnostní nástroj, ne luxus.</p>
+
+    <h2>5) Kolik a jak — od počtu hodin k celistvosti cyklů</h2>
+    <p>Otázka „kolik mám spát“ má jasný výchozí rámec. Konsenzuální doporučení panelu expertů uvádí pro dospělé <strong>7–9 hodin</strong>, pro mladší dospělé spíš horní polovinu rozmezí <a href="https://www.sleephealthjournal.org/article/S2352-7218(15)00015-7/fulltext">[6]</a>. Pro trénujícího člověka v deficitu nebo v náročném objemu ber spíš horní hranici — regenerační nároky jsou vyšší.</p>
+    <p>Počet hodin je ale jen půlka příběhu. Stejně záleží na tom, aby cykly proběhly <strong>celistvě a ve správném pořadí</strong>. Pět hodin roztříštěných probouzením nedá tělu plný hluboký NREM ani souvislý REM — i kdyby ses druhý den „dospal“ na osm hodin v součtu. Fragmentace ničí architekturu, i když číslo na hodinkách vypadá v pořádku.</p>
+    <div class="card">
+      <p><strong>Trenérský checklist pro architekturu spánku:</strong></p>
+      <p><strong>Pravidelnost:</strong> stejný čas vstávání ±30 min, i o víkendu. Stabilizuje Proces C víc než cokoli jiného.</p>
+      <p><strong>Ranní světlo:</strong> denní světlo brzy po probuzení ukotví hodiny a večerní melatonin.</p>
+      <p><strong>Kofein s respektem:</strong> poslední dávka ideálně 8–10 hodin před spaním — chrání spánkový tlak (Proces S).</p>
+      <p><strong>Tma a chlad:</strong> chladná, tmavá ložnice podporuje pokles teploty jádra, který spánek nastartuje.</p>
+      <p><strong>Souvislé okno:</strong> cílit na neprerušený blok, ne na „dospávání“ přes den.</p>
+    </div>
+    <blockquote>„Spi víc“ je špatná rada, protože neříká jak. „Vstávej každý den ve stejný čas, jdi po probuzení na světlo a poslední kafe dej do oběda“ — to je rada, kterou klient může zítra použít.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když klient stagnuje a přitom „dělá všechno správně“ s jídlem i tréninkem, ptám se na spánek dřív než na makra. Hodně nehubne nebo nepřibírá sval ne proto, že má špatný plán, ale proto, že spí šest hodin roztrhaných na kusy. Spánek je první páka, kterou kontroluju, ne poslední — protože když je rozbitý, sabotuje všechno ostatní.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak dlouho trvá jeden spánkový cyklus a jak se mění poměr fází přes noc? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 90 minut, za noc proběhne 4–6 cyklů. Hluboký NREM dominuje první polovině noci, REM se koncentruje k ránu. Proto osekání konce noci ubírá hlavně REM, zatímco pozdní usínání ubírá hluboký NREM.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Která fáze stojí za fyzickou regenerací a která za hlavou a učením? <span class="tg">odpověď ▾</span></div><div class="aa">Hluboký NREM (slow-wave) = tělo: vrcholí růstový hormon, parasympatikus, oprava tkání a úklid mozku. REM = hlava: konsolidace paměti, učení pohybů, emoční regulace.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jmenuj dva motory, které řídí spánek, a co je pohání. <span class="tg">odpověď ▾</span></div><div class="aa">Proces S — spánkový tlak, hnaný hromaděním adenosinu během bdění. Proces C — cirkadiánní rytmus, vnitřní ~24h hodiny řízené světlem. Spánek přijde, když se vysoký tlak potká s otevřeným cirkadiánním oknem.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co se stane se složením úbytku, když dieter málo spí? <span class="tg">odpověď ▾</span></div><div class="aa">Při stejném kalorickém deficitu, ale kratším spánku zhubne stejně kilogramů, ale výrazně menší podíl tvoří tuk a větší podíl sval (v dané studii pokles podílu tuku o 55 % a nárůst ztráty svalu o 60 %). Navíc roste hlad přes vyšší ghrelin a nižší leptin.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč nestačí dívat se jen na počet hodin spánku? <span class="tg">odpověď ▾</span></div><div class="aa">Protože záleží i na celistvosti a pořadí cyklů. Fragmentovaný spánek nedá plný hluboký NREM ani souvislý REM, i když součet hodin vypadá dobře. Pravidelný čas vstávání, ranní světlo a souvislé okno jsou proto stejně důležité jako počet hodin.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta, který „dělá všechno správně“, ale stagnuje, sestav jednoduchý spánkový audit: zjisti čas usínání a vstávání (i o víkendu), pravidelnost, čas poslední kávy a kvalitu (probouzení v noci). Pak navrhni tři konkrétní, zvládnutelné kroky — vždy s odůvodněním přes Proces S nebo Proces C — a popiš, jak po 2–3 týdnech vyhodnotíš, zda se hlad, regenerace a výkon zlepšily.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Borbély AA, Daan S, Wirz-Justice A, Deboer T. The two-process model of sleep regulation: a reappraisal. J Sleep Res. 2016;25(2):131–143.</li>
+        <li>Spiegel K, Tasali E, Penev P, Van Cauter E. Brief Communication: Sleep Curtailment in Healthy Young Men Is Associated with Decreased Leptin Levels, Elevated Ghrelin Levels, and Increased Hunger and Appetite. Ann Intern Med. 2004;141(11):846–850.</li>
+        <li>Nedeltcheva AV, Kilkus JM, Imperial J, Schoeller DA, Penev PD. Insufficient Sleep Undermines Dietary Efforts to Reduce Adiposity. Ann Intern Med. 2010;153(7):435–441.</li>
+        <li>Diekelmann S, Born J. The memory function of sleep. Nat Rev Neurosci. 2010;11(2):114–126.</li>
+        <li>Mah CD, Mah KE, Kezirian EJ, Dement WC. The effects of sleep extension on the athletic performance of collegiate basketball players. Sleep. 2011;34(7):943–950.</li>
+        <li>Hirshkowitz M, Whiton K, Albert SM, et al. National Sleep Foundation's sleep time duration recommendations: methodology and results summary. Sleep Health. 2015;1(1):40–43.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
