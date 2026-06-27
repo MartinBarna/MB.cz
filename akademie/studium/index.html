@@ -49,6 +49,34 @@
   .bonus .btxt { flex:1; min-width:200px; } .bonus .btxt b { display:block; font-size:1.02rem; color:#fff; } .bonus .btxt span { color:var(--muted); font-size:.88rem; }
   .bonus .bbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:11px 22px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.92rem; white-space:nowrap; box-shadow:0 10px 22px -8px rgba(255,122,0,.55); transition:transform .2s; }
   .bonus .bbtn:hover { transform:translateY(-1px); }
+
+  /* ---- sekční navigace (#33): přehled modulů → fokus na modul ---- */
+  .modgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px; margin-top:8px; }
+  .modcard { text-align:left; cursor:pointer; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:11px; transition:transform .2s,border-color .2s,box-shadow .2s; color:inherit; text-decoration:none; }
+  .modcard:hover { transform:translateY(-4px); border-color:rgba(255,122,0,.35); box-shadow:0 24px 46px -28px rgba(255,122,0,.28); }
+  .modcard .top { display:flex; align-items:center; gap:12px; }
+  .modcard .ix { width:38px; height:38px; border-radius:12px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modcard h3 { font-size:1.02rem; color:#fff; line-height:1.25; }
+  .modcard p { color:var(--muted); font-size:.85rem; line-height:1.45; flex:1; margin:0; }
+  .modcard .mbar { height:6px; background:rgba(255,255,255,.08); border-radius:50px; overflow:hidden; }
+  .modcard .mbar span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); border-radius:50px; }
+  .modcard .mfoot { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .modcard .cnt { font-size:.8rem; color:var(--muted-2); font-weight:600; }
+  .modcard .pct { font-size:.74rem; color:var(--gold-soft); font-weight:700; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:3px 10px; border-radius:50px; }
+  .modcard.done-all { border-color:rgba(47,174,87,.45); }
+  .modcard.done-all .pct { color:#86e29a; background:rgba(47,174,87,.12); border-color:rgba(47,174,87,.3); }
+  .backlink { display:inline-flex; align-items:center; gap:7px; color:var(--muted-2); text-decoration:none; font-weight:600; font-size:.9rem; margin-bottom:16px; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:9px 16px; border-radius:50px; transition:.2s; }
+  .backlink:hover { border-color:rgba(255,122,0,.4); color:#fff; }
+  .secnav { display:flex; align-items:stretch; gap:12px; margin-top:24px; flex-wrap:wrap; }
+  .secnav a { flex:1; min-width:210px; text-decoration:none; border-radius:16px; padding:16px 20px; display:flex; flex-direction:column; gap:3px; border:1px solid var(--line); transition:transform .2s,border-color .2s,box-shadow .2s; }
+  .secnav .lbl { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .secnav .nm { font-weight:700; color:#fff; font-size:.98rem; }
+  .secnav .prev { background:rgba(255,255,255,.03); }
+  .secnav .next { background:linear-gradient(145deg,rgba(255,122,0,.16),rgba(255,122,0,.05)); border-color:rgba(255,122,0,.35); text-align:right; align-items:flex-end; }
+  .secnav .next .nm { color:var(--gold-soft); }
+  .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(255,122,0,.35); border-color:rgba(255,122,0,.5); }
+  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; text-decoration:none; position:relative; }
+  .contbtn:hover { transform:translateY(-2px); }
 </style>
 </head>
 <body class="ba">
@@ -323,34 +351,64 @@
         { id:"m17-l9", t:"Jak sledovat výzkum, aniž bys propadl každému headlinu", available:true, href:"/akademie/studium/m17-l9/" }
       ]}
     ];
-    function render(done){
-      done = done || {};
-      var totalAvail = 0, completed = 0;
-      var html = '';
+    // ----- Sekční nástěnka (#33): přehled modulů → fokus na jeden modul -----
+    var DONE = {};
+    function mc(m){ var a=0,d=0; m.lessons.forEach(function(l){ if(l.available){ a++; if(DONE[l.id]) d++; } }); return {a:a,d:d}; }
+    function lessonRow(l){
+      var isDone = !!DONE[l.id];
+      if (l.available) return '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
+      return '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
+    }
+    function renderOverview(){
+      var html = '<div class="modgrid">';
       CURRICULUM.forEach(function(m, mi){
-        var lz = '', mDone = 0, mAvail = 0;
-        m.lessons.forEach(function(l){
-          var isDone = !!done[l.id];
-          if (l.available){ totalAvail++; mAvail++; if(isDone){ completed++; mDone++; } }
-          if (l.available){
-            lz += '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
-          } else {
-            lz += '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
-          }
-        });
-        var pct = mAvail? Math.round(mDone/mAvail*100) : 0;
-        html += '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(mAvail?'<span class="pct">'+pct+' %</span>':'<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>';
+        var c = mc(m), pct = c.a? Math.round(c.d/c.a*100) : 0;
+        html += '<a class="modcard'+(c.a && c.d===c.a ? ' done-all':'')+'" href="#m'+(mi+1)+'">'
+          + '<div class="top"><span class="ix">'+(mi+1)+'</span><h3>'+m.t+'</h3></div>'
+          + '<p>'+m.d+'</p>'
+          + (c.a? '<div class="mbar"><span style="width:'+pct+'%"></span></div>' : '')
+          + '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'+(c.a? '<span class="pct">'+pct+' %</span>' : '')+'</div>'
+          + '</a>';
       });
+      html += '</div>';
       document.getElementById('modules').innerHTML = html;
-      var overall = totalAvail? Math.round(completed/totalAvail*100) : 0;
+    }
+    function renderModule(mi){
+      var m = CURRICULUM[mi];
+      if (!m){ location.hash = ''; return; }
+      var c = mc(m), pct = c.a? Math.round(c.d/c.a*100) : 0;
+      var lz = ''; m.lessons.forEach(function(l){ lz += lessonRow(l); });
+      var nav = '<div class="secnav">';
+      if (mi>0){ var p = CURRICULUM[mi-1]; nav += '<a class="prev" href="#m'+mi+'"><span class="lbl">← Předchozí modul</span><span class="nm">'+p.t+'</span></a>'; }
+      if (mi<CURRICULUM.length-1){ var n = CURRICULUM[mi+1]; nav += '<a class="next" href="#m'+(mi+2)+'"><span class="lbl">Další modul →</span><span class="nm">'+n.t+'</span></a>'; }
+      nav += '</div>';
+      document.getElementById('modules').innerHTML =
+        '<a class="backlink" href="#prehled">← Všechny moduly</a>'
+        + '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(c.a? '<span class="pct">'+pct+' %</span>' : '<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>'
+        + nav;
+      try { window.scrollTo(0,0); } catch(e){}
+    }
+    function firstUnfinished(){ for (var i=0;i<CURRICULUM.length;i++){ var c=mc(CURRICULUM[i]); if (c.a && c.d<c.a) return i; } return -1; }
+    function route(){
+      var h = (location.hash||'').replace('#',''); var m = h.match(/^m(\d+)$/);
+      if (m) renderModule(parseInt(m[1],10)-1); else renderOverview();
+    }
+    function paintProgress(){
+      var ta=0, co=0; CURRICULUM.forEach(function(m){ var c=mc(m); ta+=c.a; co+=c.d; });
+      var overall = ta? Math.round(co/ta*100) : 0;
       document.getElementById('progBar').style.width = overall+'%';
-      document.getElementById('progLbl').textContent = completed+' z '+totalAvail+' dostupných lekcí · '+overall+' % dokončeno';
-      if (totalAvail>0 && completed===totalAvail){
+      document.getElementById('progLbl').textContent = co+' z '+ta+' dostupných lekcí · '+overall+' % dokončeno';
+      var hero = document.querySelector('.hello'), cb = document.getElementById('contBtn'), fi = firstUnfinished();
+      if (!cb && hero){ cb = document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
+      if (cb){ if (fi>=0){ cb.style.display='inline-flex'; cb.textContent='Pokračovat: '+CURRICULUM[fi].t+' →'; cb.href='#m'+(fi+1); } else { cb.style.display='none'; } }
+      if (ta>0 && co===ta){
         var cc = document.getElementById('certCard'); cc.classList.add('ready');
         document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
         var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
       }
     }
+    function render(done){ DONE = done || {}; paintProgress(); route(); }
+    window.addEventListener('hashchange', route);
     // Postup z členské sekce (live: Supabase, demo: localStorage). V live režimu
     // navíc vyžaduje přihlášení + přístup k Akademii.
     function boot(){
