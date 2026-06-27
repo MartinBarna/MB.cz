@@ -117,6 +117,9 @@ th, td { border-color:var(--bd-line)!important; color:var(--bd-ink)!important; }
 th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
 .hero .sub, .hero p { color:var(--bd-muted2)!important; }
 .chip { color:var(--bd-gold-soft)!important; }
+/* obsahové textové třídy s tmavou barvou → čitelné na dark (přednášky .lead-p ad.) */
+.lead-p, .meta, .a, .note-p, .intro-p { color:var(--bd-muted2)!important; }
+.lead-p strong, .lead-p b { color:#fff!important; }
 /* inline světlé sekce/karty (např. background:#f6f7f8 / #f6f9f6 / #faf…) */
 [style*="background:#f6f7f8"], [style*="background: #f6f7f8"],
 [style*="background:#f6f9f6"], [style*="background:#fafafa"], [style*="background:#faf7f3"] { background:rgba(255,255,255,.03)!important; }
