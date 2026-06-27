@@ -40,6 +40,17 @@
   .note a{color:#fff;font-weight:700;}
   .afoot{text-align:center;color:var(--muted);font-size:.84rem;margin-top:22px;}
   .afoot a{color:var(--gold-soft);font-weight:600;}
+  .buy{margin-top:24px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:20px;padding:20px;}
+  .buy-h{font-weight:700;color:#fff;text-align:center;font-size:1.02rem;}
+  .buy-sub{text-align:center;color:var(--muted);font-size:.84rem;margin:3px 0 16px;}
+  .buy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:440px){.buy-grid{grid-template-columns:1fr;}}
+  .buy-card{display:block;padding:17px 14px;border-radius:15px;background:rgba(255,255,255,.03);border:1px solid var(--line);text-align:center;transition:transform .2s,border-color .2s,background .2s;}
+  .buy-card:hover{border-color:rgba(255,122,0,.4);transform:translateY(-3px);background:rgba(255,122,0,.05);}
+  .buy-card .bi{font-size:1.6rem;}
+  .buy-card b{display:block;color:#fff;margin-top:7px;font-size:.95rem;}
+  .buy-card .d{color:var(--muted);font-size:.78rem;}
+  .buy-card .price{color:var(--gold-soft);font-weight:700;font-size:.82rem;margin-top:8px;display:block;}
 </style>
 </head>
 <body class="ba">
@@ -78,7 +89,20 @@
       </form>
     </div>
 
-    <p class="afoot">Ještě nemáš přístup? <a href="/akademie/">Získej Barna Academy →</a><br>Problém s přihlášením? <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
+    <div class="buy">
+      <div class="buy-h">Nemáš ještě přístup?</div>
+      <div class="buy-sub">Vyber si a získej přístup hned po zaplacení.</div>
+      <div class="buy-grid">
+        <a class="buy-card" href="/videokurz">
+          <div class="bi">🎬</div><b>Videokurz výživy</b><div class="d">182 videí + materiály</div><span class="price">od 800 Kč →</span>
+        </a>
+        <a class="buy-card" href="/akademie/">
+          <div class="bi">🎓</div><b>Akademie pro trenéry</b><div class="d">118 lekcí + certifikace</div><span class="price">Zjistit víc →</span>
+        </a>
+      </div>
+    </div>
+
+    <p class="afoot">Problém s přihlášením? <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
   </div>
 
   <script src="/assets/ba-config.js"></script>
