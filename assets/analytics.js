@@ -92,6 +92,21 @@
     // Odeslání kontaktního formuláře → Lead
     var kf = document.getElementById('kontaktForm');
     if (kf) kf.addEventListener('submit', function () { if (window.fbq) fbq('track', 'Lead', {}, { eventID: evId('lead') }); if (window.gtag) gtag('event', 'generate_lead'); });
+    // Lead magnet (Tally embed) odeslán → Lead / generate_lead.
+    // Tally posílá z iframe postMessage „Tally.FormSubmitted" do parent okna.
+    // Díky tomu může FB optimalizovat reklamu na „Leads", ne jen na prokliky.
+    // (Když návštěvník odmítl cookies, fbq neexistuje → do Meta se nic nepošle; GA4 v consent
+    //  mode pošle cookieless ping. To je správné GDPR chování.)
+    window.addEventListener('message', function (e) {
+      var d = e.data;
+      var isSubmit =
+        (typeof d === 'string' && d.indexOf('Tally.FormSubmitted') !== -1) ||
+        (d && typeof d === 'object' && (d.event === 'Tally.FormSubmitted' ||
+          (typeof d.type === 'string' && d.type.indexOf('FormSubmitted') !== -1)));
+      if (!isSubmit) return;
+      if (window.fbq)  fbq('track', 'Lead', { content_name: 'Lead magnet' }, { eventID: evId('lead') });
+      if (window.gtag) gtag('event', 'generate_lead', { method: 'lead_magnet' });
+    });
   }
   onReady(function () { wireConversions(); fireConvGA(); });
 
