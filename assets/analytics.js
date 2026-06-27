@@ -111,15 +111,16 @@
     box.setAttribute('role', 'dialog');
     box.setAttribute('aria-label', 'Souhlas s cookies');
     box.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:3000;max-width:360px;' +
-      'background:#fff;color:#161616;border:1px solid #eee;border-radius:16px;' +
-      'box-shadow:0 18px 50px rgba(0,0,0,.22);padding:18px 18px 16px;font-family:Poppins,Arial,sans-serif;' +
+      'background:linear-gradient(180deg,#16130f,#100d0a);color:#ece4d9;border:1px solid rgba(255,255,255,.1);border-radius:16px;' +
+      '-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);' +
+      'box-shadow:0 18px 50px rgba(0,0,0,.55);padding:18px 18px 16px;font-family:Poppins,Arial,sans-serif;' +
       'font-size:.92rem;line-height:1.5;';
     box.innerHTML =
-      '<div style="font-weight:700;margin-bottom:.3rem">🍪 Cookies</div>' +
-      '<div style="color:#444">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem.</div>' +
+      '<div style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
+      '<div style="color:#a89f94">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem.</div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
-        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:#ff7a00;color:#161616;font-weight:700;padding:10px 12px;border-radius:50px">Přijmout</button>' +
-        '<button id="mb-c-no" style="flex:1;border:1.5px solid #ddd;cursor:pointer;background:#fff;color:#161616;font-weight:700;padding:10px 12px;border-radius:50px">Odmítnout</button>' +
+        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:linear-gradient(145deg,#ff9d3c,#ff7a00);color:#160d04;font-weight:700;padding:10px 12px;border-radius:50px">Přijmout</button>' +
+        '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:50px">Odmítnout</button>' +
       '</div>';
     document.body.appendChild(box);
     document.getElementById('mb-c-ok').onclick = function () {

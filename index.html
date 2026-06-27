@@ -551,6 +551,29 @@
     })();
     </script>
     <script defer src="/assets/analytics.js"></script>
+    <link rel="stylesheet" href="/assets/marketing-dark.css">
+    <style id="hp-dark">
+      /* Homepage — doladění dark-luxe (přebíjí stránkové světlé prvky) */
+      .proof-marquee { background:rgba(255,122,0,.06)!important; border-color:rgba(255,122,0,.18)!important; }
+      .pm-track span { color:#cabfb4!important; }
+      h3[style*="--green-dark"], h2[style*="--green-dark"] { color:#fff!important; }
+      .review-box, .calc-wrap, .quiz {
+        background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important;
+        box-shadow:0 24px 50px -34px rgba(0,0,0,.9)!important; color:#ece4d9!important;
+      }
+      .review-box p, .calc-wrap p, .quiz p { color:#cabfb4!important; }
+      .plan-terms, .src-btn { background:rgba(255,255,255,.04)!important; color:#cabfb4!important; }
+      .quiz-opts button { background:rgba(255,255,255,.04)!important; border-color:rgba(255,255,255,.1)!important; color:#e9e1d7!important; }
+      .quiz-opts button:hover { border-color:rgba(255,122,0,.4)!important; background:rgba(255,122,0,.06)!important; }
+      .quiz-rtag, .save { background:rgba(255,122,0,.14)!important; color:#ffb066!important; }
+      /* inline bílé recenzní karty → tmavé sklo (ne tlačítka) */
+      div[style*="background:#fff"]:not(.btn) {
+        background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important;
+        border:1px solid rgba(255,255,255,.08)!important; box-shadow:0 24px 50px -34px rgba(0,0,0,.9)!important;
+      }
+      [style*="color:#333"] { color:#cabfb4!important; }
+      div[style*="color:#161616"] { color:#fff!important; }
+    </style>
 </head>
 <body>
     <!-- SVG ikony (sprite) — schované, referují se přes <use> -->
