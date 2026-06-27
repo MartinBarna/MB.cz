@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High-load vs low-load: proč lehčí váhy rostou stejně jako těžké — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 13 · Lekce 5 — Hypertrofie pro naturály</div>
+    <h1>High-load vs low-load: proč lehčí váhy rostou stejně jako těžké</h1>
+
+    <p class="lead">„Pod osmičku to nemá smysl, jinak svaly nerostou.“ Tuhle větu jsi slyšel stokrát — a je vedle. Když dnešní data sečteš dohromady, vyjde jasná zpráva: <strong>pro objem svalu nerozhoduje, jestli zvedáš těžkou, nebo lehkou váhu, ale jestli jdeš dost blízko k selhání a naděláš dost sérií.</strong> To je obrovsky osvobozující — protože ti to otevírá cesty, jak růst budovat i s bolavým ramenem, doma s gumou nebo u klienta, který těžkou jednorepku nikdy nezvládne čistě.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč lehké váhy (do selhání) rostou sval stejně jako těžké — a kde je hranice.</li>
+        <li>Rozdíl mezi hypertrofií a silou: na co těžkou váhu vážně potřebuješ.</li>
+        <li>Co je opravdový spouštěč růstu — blízkost k selhání, ne číslo na ose.</li>
+        <li>Proč objem (série za týden) řídí výsledek víc než samotná zátěž.</li>
+        <li>Jak to prakticky využít: kdy nasadit lehčí, kdy těžší práci a proč.</li>
+        <li>Kde má lehká práce limity (čas, diskomfort, technika) a jak je obejít.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co vlastně data říkají</h2>
+    <p>Po letech dohadů máme tvrdá čísla. Schoenfeld a Grgic shrnuli studie, které srovnávaly trénink s nízkou zátěží (zhruba do 60 % maxima, tedy 15+ opakování) proti vysoké zátěži (nad 60 %, klasických 6–12 reps). Závěr je jednoznačný: <strong>pokud obě skupiny jdou do selhání, přírůstek svalové hmoty je v podstatě stejný.</strong> Rozdíl je až u maximální síly — tu vyhrává těžká váha.</p>
+    <p>Nejčistší jednotlivá studie je Mortonova z McMaster University: 49 trénovaných mužů, 12 týdnů, jedna skupina jela 8–12 reps na 75–90 %, druhá 20–25 reps na 30–50 %. Obojí do selhání. Výsledek? V nárůstu svalu žádný rozdíl. Síla v jednorepmaxu byla mírně vyšší u těžké skupiny, ale objem svalu rostl identicky.</p>
+    <blockquote>Sval nepočítá kila na ose. Vnímá mechanické napětí ve svých vláknech a počet těžce odpracovaných opakování blízko selhání. K tomu se dá dojít zespoda i shora.</blockquote>
+
+    <h2>2) Proč to funguje: nábor vláken a blízkost k selhání</h2>
+    <p>Klíč je v tom, jak tělo zapojuje svalová vlákna. Při lehké váze na začátku série pracují hlavně menší, vytrvalostní jednotky. Jak se ale série táhne a unaví, mozek musí postupně přibírat velké, rychlé (vysokoprahové) motorické jednotky — ty s největším potenciálem růst. <strong>Tahle vysokoprahová vlákna se zapojí naplno až v posledních pár opakováních těsně před selháním.</strong></p>
+    <p>U těžké váhy je naverbuješ hned od první repky. U lehké až na konci dlouhé série. Ale výsledek je tentýž: vlákno dostane podnět, jen cesta k němu je delší. Proto u lehkých vah platí nemilosrdné pravidlo — <strong>bez blízkosti k selhání to nefunguje.</strong> Tři reps v rezervě s činkou na 70 % ještě růst dají, ale tři reps v rezervě s gumou na 40 % nechají polovinu velkých vláken nedotčenou.</p>
+    <div class="card">
+      <p><strong>Pravidlo blízkosti podle zátěže:</strong></p>
+      <p><strong>Těžká práce (6–12 reps, 70–85 %):</strong> velká vlákna naběhnou brzy, takže si můžeš dovolit zastavit 2–3 reps před selháním a růst zůstane skoro stejný.</p>
+      <p><strong>Lehká práce (15–30 reps, 30–50 %):</strong> velká vlákna naskočí až nakonec, takže musíš jít opravdu blízko — 0–1 reps v rezervě, jinak série mine cíl.</p>
+    </div>
+
+    <h2>3) Hypertrofie ≠ síla: nepleť si dvě věci</h2>
+    <p>Tady musí být trenér přesný, jinak udělá z lekce nesmysl. <strong>Pro objem svalu</strong> je zátěž z velké míry jedno. <strong>Pro maximální sílu</strong> ne — síla je z velké části dovednost zvednout těžké břemeno, a tu trénuješ jen tím, že těžká břemena vážně zvedáš. Specifika rozhoduje.</p>
+    <p>Greg Nuckols to popisuje jako dvě překrývající se, ale oddělené adaptace: kontinuum opakování není „buď síla, nebo masa“, ale spíš dvě osy. Síla má ostrý vrchol u nízkých opakování, hypertrofie je naopak roztažená přes široké pásmo zátěží. Proto powerlifter musí pod osmičku, ale kulturista nebo běžný klient, který chce „víc svalu“, vůbec nemusí.</p>
+    <blockquote>Když klient řekne „chci být silnější“, ptej se silnější v čem. Silnější na jednorepku? Těžká práce. Mít víc svalu a vypadat nadřeně? Skoro libovolné pásmo, hlavně dost objemu blízko selhání.</blockquote>
+
+    <h2>4) Skutečný řidič výsledku je objem</h2>
+    <p>Když zátěž nerozhoduje, co tedy? Z velké části <strong>objem — počet tvrdých sérií na svalovou partii za týden.</strong> Schoenfeldova meta-analýza dávkové závislosti ukázala gradovaný vztah: víc týdenních sérií, větší nárůst svalu (zhruba do bodu, kde se to láme). Mike Israetel z toho udělal praktický jazyk landmarků, který se ti hodí v hlavě:</p>
+    <div class="card">
+      <p><strong>MV (maintenance volume):</strong> minimum sérií, co udrží sval. Hodí se v deloadu nebo dietě.</p>
+      <p><strong>MEV (minimum effective volume):</strong> nejnižší objem, který ještě dává růst — orientačně kolem 8–10 sérií na partii týdně.</p>
+      <p><strong>MAV (maximum adaptive volume):</strong> sladké pásmo, kde roste nejvíc — pro většinu naturálů zhruba 10–20 sérií.</p>
+      <p><strong>MRV (maximum recoverable volume):</strong> strop, za kterým se už nestíháš zotavit a růst klesá — často nad 20+ sérií.</p>
+    </div>
+    <p>Tady se obě témata propojí: <strong>lehká i těžká práce jen plní stejnou nádobu objemu.</strong> Můžeš jet 14 tvrdých sérií na záda s činkou, nebo 14 tvrdých sérií se strojem a vyšším počtem reps — pro sval je to srovnatelný podnět. Eric Helms tomu říká „dělej tolik kvalitního objemu, kolik utáhneš a zotavíš“ — zátěž je jen nástroj, jak ten objem doručit.</p>
+    <p>Jednoduchá heuristika, kterou dávám trenérům do hlavy, vypadá takhle:</p>
+    <div class="eq">RŮST ≈ TÝDENNÍ OBJEM × BLÍZKOST K SELHÁNÍ × ZOTAVENÍ</div>
+
+    <h2>5) Jak to využít v praxi</h2>
+    <p>Z toho všeho plyne přístup, který je flexibilní a přitom přesný. Zátěž si vybíráš podle cviku, cíle a kontextu — ne podle dogmatu.</p>
+    <div class="card">
+      <p><strong>Velké vícekloubové cviky (dřep, mrtvý tah, tlaky):</strong> drž je spíš v těžším pásmu (5–10 reps). Nejen pro sílu, ale i proto, že 25 reps v dřepu je peklo na kardio a techniku dřív, než unavíš sval.</p>
+      <p><strong>Izolace a stroje (kladky, rozpažky, biceps, lýtka):</strong> ideální kandidáti na lehčí, vyšší opakování (12–25). Bezpečné, snadná blízkost k selhání, méně kloubového stresu.</p>
+      <p><strong>Bolavý kloub nebo rehab:</strong> sjeď zátěž a zvedni opakování. Lehká váha do selhání dá růst a šetří kloub — přesně tohle z těch dat plyne.</p>
+      <p><strong>Doma / s gumou / minimální vybavení:</strong> funguje, ale musíš tlačit blízko k selhání a hlídat, aby série byla vážně tvrdá, ne jen dlouhá.</p>
+    </div>
+    <p>A pozor na limity lehké práce: dlouhé série jsou <strong>časově náročné</strong>, hůř se na nich odhaduje rezerva (těžko poznáš, kdy jsi vážně blízko) a hodně lidí je psychicky nesnáší — pálení v 25. repce odradí. Proto u většiny lidí jedu mix: těžší základ na velkých cvicích, lehčí „pumpa“ na izolacích.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientce po operaci ramene jsme nemohli k ničemu těžkému. Místo abychom čekali, jsme jeli lehké kladky a stroje na 15–20 reps blízko k selhání — a rameno rostlo dál, aniž by ji to bolelo. Naopak chlapovi, co chtěl být silný na bench, jsem žádné „lehké pumpování do selhání“ nedával — tam jedeme těžké pětky a šestky, protože sílu na jednorepku trénuje jen těžká váha. Pravidlo, které opakuju pořád: vyber zátěž, kterou ten konkrétní cvik a člověk utáhne tvrdě a bezpečně — a pak nasbírej dost sérií.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Roste sval víc po těžké, nebo lehké váze — a za jaké podmínky? <span class="tg">odpověď ▾</span></div><div class="aa">Roste v podstatě stejně, pokud obě varianty jdou dostatečně blízko k selhání. Pro objem svalu nerozhoduje zátěž, ale tvrdá práce. Rozdíl je až u maximální síly, kterou vyhrává těžká váha.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč lehká váha musí jít blíž k selhání než těžká? <span class="tg">odpověď ▾</span></div><div class="aa">Protože velká (vysokoprahová) vlákna s největším potenciálem růstu se u lehké zátěže zapojí až v posledních opakováních těsně před selháním. U těžké váhy naskočí hned, takže si lze dovolit pár reps v rezervě.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je rozdíl mezi tréninkem na hypertrofii a na sílu z hlediska zátěže? <span class="tg">odpověď ▾</span></div><div class="aa">Hypertrofie funguje přes široké pásmo zátěží (lehká i těžká). Maximální síla je z velké části dovednost a vyžaduje specificky těžké váhy a nízká opakování — proto powerlifter jede těžké, kdežto na „víc svalu“ stačí skoro libovolné pásmo.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co je hlavní řidič nárůstu svalu, když ne zátěž? <span class="tg">odpověď ▾</span></div><div class="aa">Týdenní objem — počet tvrdých sérií na partii za týden, blízko k selhání. Existuje gradovaný vztah: víc objemu, víc růstu (do bodu zlomu). Pomáhají landmarky MEV / MAV / MRV.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jmenuj dva limity lehké práce a jak je obejít. <span class="tg">odpověď ▾</span></div><div class="aa">Časová náročnost dlouhých sérií a horší odhad blízkosti k selhání (plus diskomfort z pálení). Řeší se mixem: těžší práce na velkých vícekloubových cvicích, lehčí vysokoopakovací práce na izolacích a strojích.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelového klienta s bolavým loktem, který chce silnější a větší ruce. Napiš mu týdenní plán na biceps a triceps: kolik tvrdých sérií celkem (uveď, kam v rozmezí MEV–MAV míříš), které cviky pojedeš lehce a vysokoopakovačně blízko k selhání a proč, a jestli (a kde) zařadíš nějakou těžší práci. Zdůvodni výběr zátěže odkazem na nábor vláken a blízkost k selhání.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Schoenfeld BJ, Grgic J, Ogborn D, Krieger JW. Strength and Hypertrophy Adaptations Between Low- vs. High-Load Resistance Training: A Systematic Review and Meta-analysis. J Strength Cond Res. 2017;31(12):3508–3523.</li>
+        <li>Morton RW, Oikawa SY, Wavell CG, et al. Neither load nor systemic hormones determine resistance training-mediated hypertrophy or strength gains in resistance-trained young men. J Appl Physiol. 2016;121(1):129–138.</li>
+        <li>Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: A systematic review and meta-analysis. J Sports Sci. 2017;35(11):1073–1082.</li>
+        <li>Refalo MC, Helms ER, Trexler ET, et al. Influence of Resistance Training Proximity-to-Failure on Skeletal Muscle Hypertrophy: A Systematic Review with Meta-analysis. Sports Med. 2023;53(3):649–665.</li>
+        <li>Robinson ZP, Pelland JC, Remmert JF, et al. Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions. Sports Med. 2024;54(9):2209–2231.</li>
+        <li>Grgic J, Schoenfeld BJ. Are the Hypertrophic Adaptations to High and Low-Load Resistance Training Muscle Fiber Type Specific? Front Physiol. 2018;9:402.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m13-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
