@@ -116,32 +116,26 @@ function videoPage(v) {
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
 <style>
-  :root { --gold:#ff7a00; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.65; }
-  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
-  .top .in { max-width:900px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
-  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
-  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
-  .wrap { max-width:880px; margin:0 auto; padding:26px 18px 80px; }
-  .crumb { color:#a89c8c; font-size:.82rem; font-weight:600; letter-spacing:.3px; text-transform:uppercase; }
-  h1 { font-size:1.55rem; line-height:1.25; margin:.4rem 0 1rem; letter-spacing:-.01em; }
-  .video { position:relative; padding-top:56.25%; background:#000; border-radius:14px; overflow:hidden; border:1px solid #e7ddcf; }
+  .wrap { max-width:880px; margin:0 auto; padding:30px 18px 80px; }
+  .crumb { color:var(--gold-soft); font-size:.74rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+  h1 { font-size:clamp(1.5rem,3.5vw,2rem); line-height:1.2; color:#fff; margin:.5rem 0 1.3rem; letter-spacing:-.02em; }
+  .video { position:relative; padding-top:56.25%; background:#000; border-radius:18px; overflow:hidden; border:1px solid var(--line); box-shadow:0 30px 60px -30px rgba(0,0,0,.9); }
   .video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
-  .done-row { margin-top:1.6rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-  .btn { background:var(--gold); color:#161616; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; }
-  .btn:hover { background:#161616; color:#fff; }
-  .btn.ghost { background:transparent; border:1.5px solid #cdbfad; color:#5a5045; }
-  .btn.is-done { background:#34a853; color:#fff; }
-  .nav { margin-top:1.4rem; display:flex; justify-content:space-between; gap:10px; }
-  .foot { margin-top:2rem; font-size:.8rem; color:#9a8f7e; }
+  .done-row { margin-top:1.7rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:13px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn.ghost { background:rgba(255,255,255,.05); border:1px solid var(--line-2); color:var(--muted-2); box-shadow:none; }
+  .btn.ghost:hover { border-color:rgba(255,122,0,.4); color:#fff; transform:none; }
+  .btn.is-done { background:linear-gradient(145deg,#2fae57,#1f9647); color:#fff; box-shadow:0 12px 26px -8px rgba(47,174,87,.5); }
+  .nav { margin-top:1.5rem; display:flex; justify-content:space-between; gap:10px; }
+  .foot { margin-top:2rem; font-size:.8rem; color:var(--muted); }
 </style>
 </head>
-<body>
+<body class="ba">
   <div class="top"><div class="in">
-    <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span> Videokurz</a>
+    <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span><span><b>Videokurz</b><span class="tag">Barna Academy</span></span></a>
     <a class="back" href="/akademie/videokurz/">← Přehled videokurzu</a>
   </div></div>
 
@@ -215,53 +209,50 @@ ${items}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
 <style>
-  :root { --gold:#ff7a00; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'Poppins',Arial,sans-serif; color:#1d1a16; background:#f6f1ea; line-height:1.6; }
-  .top { position:sticky; top:0; z-index:50; background:#161616; color:#fff; }
-  .top .in { max-width:900px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
-  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
-  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
-  .top a.back, .top a.out { color:#bbb; text-decoration:none; font-size:.86rem; cursor:pointer; }
-  .top a.out:hover, .top a.back:hover { color:#fff; }
-  .top .topr { display:flex; align-items:center; gap:16px; }
-  .wrap { max-width:880px; margin:0 auto; padding:28px 18px 80px; }
-  .hero h1 { font-size:1.7rem; letter-spacing:-.01em; }
-  .hero p { color:#6f655a; margin-top:.3rem; }
-  .bigbar { height:9px; background:#e7ddcf; border-radius:9px; margin:16px 0 6px; overflow:hidden; }
-  .bigbar span { display:block; height:100%; width:0; background:var(--gold); transition:width .3s; }
-  .bigpct { font-size:.85rem; color:#6f655a; margin-bottom:8px; }
-  .module { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:6px 18px 10px; margin:16px 0; }
-  .mhead { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0 8px; border-bottom:1px solid #f1eadf; }
-  .mhead h2 { font-size:1.08rem; }
-  .mhead .cnt { color:#a89c8c; font-size:.82rem; white-space:nowrap; }
+  .wrap { max-width:900px; }
+  .hero .kick { margin-bottom:14px; }
+  .hero h1 { font-size:clamp(1.7rem,4vw,2.4rem); color:#fff; letter-spacing:-.02em; margin-bottom:8px; }
+  .hero p { color:var(--muted); max-width:620px; }
+  .bigbar { height:10px; background:rgba(255,255,255,.07); border:1px solid var(--line); border-radius:10px; margin:20px 0 8px; overflow:hidden; }
+  .bigbar span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); transition:width .5s; }
+  .bigpct { font-size:.85rem; color:var(--muted-2); font-weight:600; margin-bottom:8px; }
+
+  .matcard, .module { background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:20px; padding:8px 22px 16px; margin:18px 0; box-shadow:0 24px 50px -34px rgba(0,0,0,.9); }
+  .mhead { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 0 12px; border-bottom:1px solid var(--line); }
+  .mhead h2, .matcard h2 { color:#fff; font-size:1.12rem; letter-spacing:-.01em; }
+  .matcard h2 { padding:16px 0 12px; border-bottom:1px solid var(--line); margin-bottom:6px; }
+  .mhead .cnt { color:var(--gold-soft); font-size:.76rem; font-weight:700; white-space:nowrap; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:4px 11px; border-radius:50px; }
   .lessons { list-style:none; }
-  .lesson a { display:flex; align-items:center; gap:12px; padding:12px 4px; text-decoration:none; color:#1d1a16; border-bottom:1px solid #f6f1ea; }
+  .lesson a { display:flex; align-items:center; gap:13px; padding:13px 8px; text-decoration:none; color:var(--ink); border-bottom:1px solid rgba(255,255,255,.05); border-radius:11px; transition:background .2s, padding .2s; }
   .lesson:last-child a { border-bottom:none; }
-  .lesson .chk { width:20px; height:20px; border-radius:50%; border:2px solid #d8cab6; flex-shrink:0; }
-  .lesson.done .chk { background:#34a853; border-color:#34a853; position:relative; }
-  .lesson.done .chk::after { content:"✓"; color:#fff; font-size:.72rem; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  .lesson .lt { flex:1; }
-  .lesson.done .lt { color:#8a8073; }
-  .lesson .go { color:var(--gold); font-weight:700; font-size:.85rem; white-space:nowrap; }
-  .note { text-align:center; color:#a89c8c; font-size:.8rem; margin-top:22px; }
-  .matcard { background:#fff; border:1px solid #ece3d8; border-radius:16px; padding:6px 18px 12px; margin:16px 0; }
-  .matcard h2 { font-size:1.08rem; padding:12px 0 8px; border-bottom:1px solid #f1eadf; }
-  .mats { list-style:none; }
-  .mat { display:flex; align-items:center; gap:12px; padding:12px 4px; border-bottom:1px solid #f6f1ea; }
-  .mat:last-child { border-bottom:none; }
-  .mico { font-size:1.3rem; width:30px; text-align:center; flex-shrink:0; }
-  .minfo { flex:1; display:flex; flex-direction:column; }
-  .minfo small { color:#8a8073; font-size:.8rem; }
-  .mbtn { background:var(--gold); color:#161616; font-weight:700; padding:9px 16px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.85rem; white-space:nowrap; }
-  .mbtn:hover { background:#161616; color:#fff; }
-  .mbtn[disabled] { opacity:.5; cursor:default; }
+  .lesson a:hover { background:rgba(255,122,0,.07); padding-left:14px; }
+  .lesson .chk { width:21px; height:21px; border-radius:50%; border:2px solid rgba(255,255,255,.22); flex-shrink:0; transition:.2s; }
+  .lesson.done .chk { background:linear-gradient(145deg,var(--gold-2),var(--gold)); border-color:var(--gold); position:relative; }
+  .lesson.done .chk::after { content:"✓"; color:#160d04; font-weight:800; font-size:.72rem; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .lesson .lt { flex:1; font-size:.96rem; }
+  .lesson.done .lt { color:var(--muted); }
+  .ba .lesson .go { color:var(--gold-soft); background:none; border:none; box-shadow:none; padding:0; transform:none; font-weight:700; font-size:.82rem; white-space:nowrap; }
+  .ba .lesson a:hover .go { transform:none; text-decoration:underline; }
+  .note { text-align:center; color:var(--muted); font-size:.8rem; margin-top:24px; }
+
+  .mats { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px; }
+  @media(max-width:680px){ .mats { grid-template-columns:1fr; } }
+  .mat { display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:14px; background:rgba(255,255,255,.03); border:1px solid var(--line); transition:border-color .2s, transform .2s; }
+  .mat:hover { border-color:rgba(255,122,0,.3); transform:translateY(-2px); }
+  .mico { font-size:1.35rem; width:30px; text-align:center; flex-shrink:0; }
+  .minfo { flex:1; display:flex; flex-direction:column; min-width:0; }
+  .minfo b { color:#fff; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .minfo small { color:var(--muted); font-size:.78rem; }
+  .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(255,122,0,.6); transition:transform .2s; }
+  .mbtn:hover { transform:translateY(-1px); }
+  .mbtn[disabled] { opacity:.5; cursor:default; transform:none; }
 </style>
 </head>
-<body>
+<body class="ba">
   <div class="top"><div class="in">
-    <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span> Videokurz</a>
+    <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span><span><b>Videokurz</b><span class="tag">Barna Academy</span></span></a>
     <span class="topr">
       <a class="back" href="/akademie/moje/">← Barna Academy</a>
       <a class="out" id="logout">Odhlásit</a>
@@ -270,6 +261,7 @@ ${items}
 
   <div class="wrap">
     <div class="hero">
+      <span class="kick"><span class="dot"></span> Videokurz výživy</span>
       <h1>Videokurz o hubnutí, nabírání a fitness</h1>
       <p>${ordered.length} video lekcí — od základů výživy přes tréninky až po livestreamy a bonusy.</p>
       <div class="bigbar"><span id="bigbar"></span></div>
