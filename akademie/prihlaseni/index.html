@@ -116,7 +116,8 @@
       var emailEl = document.getElementById('email'), passEl = document.getElementById('pass'), fnameEl = document.getElementById('fname');
 
       function qs(k) { try { return new URLSearchParams(location.search).get(k); } catch (e) { return null; } }
-      var nextUrl = qs('next') || '/akademie/moje/';
+      // Po přihlášení vždy na rozcestník (hub), ať si uživatel vybere Academy / Videokurz.
+      var nextUrl = '/akademie/moje/';
       var need = qs('need');
       if (need) {
         var n = document.getElementById('needNote');
