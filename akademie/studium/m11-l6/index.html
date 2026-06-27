@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reverse dieting: jak po dietě navyšovat kalorie bez nabrání tuku — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 11 · Lekce 6 — Věda o hubnutí: adaptace, refeeds a reverse dieting</div>
+    <h1>Reverse dieting: jak po dietě navyšovat kalorie bez nabrání tuku</h1>
+
+    <p class="lead">Většina lidí umí zhubnout — málokdo umí zhubnuté udržet. Po měsících deficitu se tělo brání: výdej klesl víc, než odpovídá ztracené hmotnosti, hlad je nahoře a chuť na jídlo neúprosná. <strong>Reverse dieting je řízený návrat z deficitu — pomalé navyšování kalorií tak, aby se metabolismus a hormony vzpamatovaly dřív, než klient zbytečně nabere tuk.</strong> V téhle lekci ti ukážu, co na tom věda skutečně potvrzuje, kde je hype, a jak to vést u reálného klienta.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je metabolická adaptace (adaptivní termogeneze) a proč po dietě výdej klesá víc, než „má“.</li>
+        <li>Jak refeeds a diet breaks tlumí adaptaci a chrání svalovou hmotu — a co o tom říkají RCT.</li>
+        <li>Co reverse dieting je a co není — a kde studie jeho výhody nepotvrzují.</li>
+        <li>Konkrétní framework: o kolik kalorií týdně přidávat a jak dlouho.</li>
+        <li>Jak poznat, kdy je klient zpět na maintenance a kdy je čas přestat „reversovat“.</li>
+        <li>Proč je hlavní benefit psychologický a behaviorální, ne magie metabolismu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Metabolická adaptace: proč se tělo po dietě brání</h2>
+    <p>Když dlouhodobě jíš v deficitu, klesne hmotnost — a s ní i výdej, protože menší tělo potřebuje míň energie. To je čekané. Problém je, že výdej klesne <strong>víc</strong>, než odpovídá ztracené hmotě a beztukové hmotě. Tomuhle „nadbytečnému“ poklesu se říká <strong>metabolická adaptace</strong> nebo <strong>adaptivní termogeneze</strong> — a je to obranný mechanismus proti hubnutí.</p>
+    <p>Stojí za ní pokles leptinu a dalších hormonů (T3, inzulin, testosteron, vzestup ghrelinu), zvýšená účinnost mitochondrií i pokles NEAT — člověk v deficitu se nevědomky míň hýbe, je línější, méně gestikuluje. Rosenbaum a Leibel ukázali, že tahle obrana je z velké části řízená právě leptinem a že přispívá k vysoké míře návratu k původní hmotnosti.</p>
+    <blockquote>Adaptace není „rozbitý metabolismus“. Je to dočasná, řízená úspora energie, kterou tělo nasadí, dokud trvá deficit a nízká hladina leptinu. Po návratu k jídlu z velké části odezní — jen ne ze dne na den.</blockquote>
+    <p>Jak velká ta adaptace je a jak dlouho drží, ukazuje slavná data ze studie účastníků <em>The Biggest Loser</em>: 6 let po extrémním hubnutí měli klidový výdej v průměru o ~700 kcal/den níž než na začátku — a adaptace přetrvávala i přesto, že většina hmotnost nabrala zpět. To je krajní případ (brutální deficit, masivní úbytek), ale princip platí i v menším měřítku.</p>
+
+    <h2>2) Refeeds a diet breaks: tlumení adaptace s důkazy</h2>
+    <p>Než se dostaneme k samotnému reverse dietingu, je potřeba rozumět jeho „bratrancům“ — strukturovanému přerušování deficitu. <strong>Refeed</strong> je krátké (1–2 dny) navýšení kalorií, hlavně ze sacharidů, na úroveň zhruba udržovacího příjmu. <strong>Diet break</strong> je delší (1–2 týdny) návrat na maintenance uprostřed diety.</p>
+    <div class="card">
+      <p><strong>MATADOR (Byrne, 2018):</strong> muži s obezitou hubli buď souvislým 16týdenním deficitem, nebo intermitentně — 2 týdny deficit, 2 týdny maintenance. Intermitentní skupina zhubla víc tuku a hlavně lépe udržela výsledek, protože diet breaky tlumily kompenzační pokles výdeje.</p>
+      <p><strong>ICECAP (Peos, 2021):</strong> u silově trénovaných dospělých intermitentní dieta (2 týdny deficit / 2 týdny maintenance) přinesla podobnou ztrátu tuku jako souvislá, ale s tendencí lépe chránit beztukovou hmotu.</p>
+      <p><strong>Refeed u trénovaných žen (2023):</strong> diet breaky během 25% deficitu pomohly udržet klidový výdej a beztukovou hmotu lépe než souvislá restrikce.</p>
+    </div>
+    <p>Logika je jednoduchá: zvednutím energie a sacharidů na pár dní/týdnů částečně obnovíš leptin a glykogen, zatlumíš adaptaci a dáš klientovi mentální pauzu. Pozor ale na to, že celkově se tím dieta protáhne — za nižší metabolickou cenu vyměníš delší čas.</p>
+
+    <h2>3) Co reverse dieting je — a co není</h2>
+    <p>Reverse dieting je <strong>pomalé, stupňovité navyšování kalorií po skončení diety</strong>, typicky o 50–100 kcal týdně, dokud se klient nedostane zpět na (nový, vyšší) udržovací příjem. Teorie říká: když přidáváš energii postupně a kopíruješ tím zotavující se metabolismus, restartuješ hormony a výdej, ale nedáš tělu takový přebytek, aby ukládalo tuk.</p>
+    <p>Co reverse dieting <strong>není</strong>: není to způsob, jak „nakopnout metabolismus“ donekonečna, ani trik, jak jíst 3000 kcal a nepřibrat zázrakem. Není to ani povinnost — pro řadu lidí je rychlejší a stejně bezpečné vrátit se rovnou na odhadnutý maintenance.</p>
+    <p>A teď k poctivosti, kterou od nás akademie čeká: <strong>přímý důkaz, že reverse dieting předchází návratu tuku lépe než prostý návrat na maintenance, zatím chybí.</strong> Trexler ve svém review (kde je spoluautorem Layne Norton) popisuje reverse dieting jako teoreticky smysluplný, ale výslovně dodává, že chybí výzkum. Předběžná randomizovaná studie z roku 2025 (49 trénovaných osob) nenašla významný rozdíl v návratu hmotnosti mezi reverse dietingem, skokovým návratem na maintenance a kontrolou.</p>
+    <blockquote>Neprodávej klientovi reverse dieting jako kouzlo na metabolismus. Prodávej ho jako řízený, klidný most z deficitu zpět do života — strukturu, která drží návyky a hlavu pod kontrolou v nejrizikovějším okně.</blockquote>
+
+    <h2>4) Framework: jak to nastavit krok za krokem</h2>
+    <p>I když chybí silný důkaz o metabolické nadřazenosti, struktura reverse dietingu má jasnou praktickou hodnotu — předvídatelnost a kontrolu. Takhle ho stavím:</p>
+    <div class="card">
+      <p><strong>1. Výchozí bod:</strong> kalorie, na kterých klient dietu skončil (často hluboko pod maintenance).</p>
+      <p><strong>2. Cíl:</strong> odhadnutý nový udržovací příjem pro nižší hmotnost (kalkulačka jako hypotéza, ne pravda).</p>
+      <p><strong>3. Krok:</strong> +50–100 kcal/týden, primárně ze sacharidů a trochu tuků. Bílkoviny už máš nastavené z diety, ty drž.</p>
+      <p><strong>4. Tempo:</strong> agresivnější (+100–150) u lidí s výrazně potlačeným výdejem a vysokým NEAT; konzervativnější (+30–50) u těch, kdo snadno přibírají nebo mají úzkost z jídla.</p>
+      <p><strong>5. Délka:</strong> typicky 4–10 týdnů — dokud nedosáhneš maintenance a hmotnost se nestabilizuje.</p>
+    </div>
+    <p>Jednoduché pravidlo pro odhad cílového přírůstku za týden si můžeš zapsat takhle:</p>
+    <div class="eq">přidej kcal/týden ≈ (cílový maintenance − aktuální příjem) ÷ počet týdnů</div>
+    <p>Pokud rozdíl mezi „konec diety“ a „maintenance“ vyjde třeba 600 kcal a chceš to rozložit do 8 týdnů, přidáváš ~75 kcal týdně. Žádná raketová věda — jen disciplína a sledování trendu.</p>
+
+    <h2>5) Čtení signálů: kdy přidat, kdy zastavit</h2>
+    <p>Reverse dieting se neřídí tabulkou, ale tělem klienta. Každý týden sleduješ trend hmotnosti (průměr za týden, ne jeden den), míry, výkon v posilovně, spánek, náladu a hlad. Podle toho rozhoduješ.</p>
+    <div class="card">
+      <p><strong>Hmotnost stabilní nebo lehce klesá + přidal jsi kalorie:</strong> super, metabolismus „bere“ energii — pokračuj v navyšování.</p>
+      <p><strong>Hmotnost mírně roste (do ~0,2–0,3 % týdně) z větší části jako voda/glykogen:</strong> v pořádku, čekané po doplnění sacharidů. Drž kurz.</p>
+      <p><strong>Hmotnost roste konzistentně víc týdnů po sobě:</strong> jsi na maintenance nebo nad ním. Zpomal krok nebo zastav — cíl reverse dietingu byl dosažen.</p>
+      <p><strong>Vrací se únava, padá výkon, mizí menstruace, šílí hlad:</strong> přidávej rychleji, ne pomaleji. Tohle nejsou důvody zůstat nízko.</p>
+    </div>
+    <p>Cílem není reverse-dietovat věčně. Jakmile je klient na zdravém udržovacím příjmu, stabilní a cítí se dobře, práce je hotová — buď přejde do udržování, nebo se vědomě rozhodne pro lean bulk.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientce po contest prepu jsem nedovolil skočit z 1500 zpátky na 2400 ze dne na den — ne kvůli metabolismu, ale kvůli hlavě a vodě. Skok by znamenal pár kilo vody a otoků přes noc, ona by zpanikařila a vrátila se do deficitu. Místo toho jsme přidávali ~80 kcal týdně, hlavně rýži a ovoce. Za 7 týdnů byla na 2050, výkon i nálada nahoře, váha skoro stabilní. Klíč nebyl ve vzorci — klíč byl, že měla každý týden malý jasný úkol a neztratila kontrolu v nejnebezpečnějším období po dietě.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je metabolická adaptace a proč vzniká? <span class="tg">odpověď ▾</span></div><div class="aa">Pokles energetického výdeje při dietě, který je větší, než odpovídá ztracené hmotnosti. Vzniká jako obrana proti hubnutí — přes pokles leptinu a dalších hormonů, vyšší účinnost mitochondrií a nižší NEAT.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaký je rozdíl mezi refeedem a diet breakem? <span class="tg">odpověď ▾</span></div><div class="aa">Refeed je krátké (1–2 dny) navýšení kalorií, hlavně ze sacharidů, na úroveň maintenance. Diet break je delší (1–2 týdny) návrat na udržovací příjem uprostřed diety. Oba tlumí adaptaci a dávají mentální pauzu.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Potvrzuje výzkum, že reverse dieting předchází návratu tuku lépe než návrat rovnou na maintenance? <span class="tg">odpověď ▾</span></div><div class="aa">Ne. Přímý důkaz chybí — Trexler popisuje reverse dieting jako teoreticky smysluplný, ale neověřený, a předběžná RCT z 2025 nenašla významný rozdíl v návratu hmotnosti oproti skokovému návratu na maintenance.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> O kolik kalorií týdně se při reverse dietingu typicky přidává a odkud? <span class="tg">odpověď ▾</span></div><div class="aa">Typicky +50–100 kcal týdně, primárně ze sacharidů a trochu tuků. Bílkoviny se drží na úrovni z diety. Tempo se upraví podle reakce klienta.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Podle čeho poznáš, že je čas reverse dieting ukončit? <span class="tg">odpověď ▾</span></div><div class="aa">Když je klient na zdravém udržovacím příjmu, hmotnost se stabilizovala (případně roste konzistentně víc týdnů), výkon a nálada jsou nahoře. Pak přechází do udržování nebo vědomého lean bulku.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta po 12týdenní dietě (skončil na 1600 kcal, odhadnutý nový maintenance 2200 kcal) navrhni kompletní plán reverse dietingu: o kolik kalorií týdně budeš přidávat, z jakých živin, jak dlouho to potrvá a jaké tři signály budeš každý týden sledovat. Pak napiš dvě věty, jak klientovi vysvětlíš, že reverse dieting není „kouzlo na metabolismus“, ale řízený most zpět na maintenance.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014;11(1):7.</li>
+        <li>Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55.</li>
+        <li>Fothergill E, Guo J, Howard L, et al. Persistent metabolic adaptation 6 years after "The Biggest Loser" competition. Obesity (Silver Spring). 2016;24(8):1612–1619.</li>
+        <li>Byrne NM, Sainsbury A, King NA, et al. Intermittent energy restriction improves weight loss efficiency in obese men: the MATADOR study. Int J Obes (Lond). 2018;42(2):129–138.</li>
+        <li>Peos JJ, Helms ER, Fournier PA, et al. Continuous versus Intermittent Dieting for Fat Loss and Fat-Free Mass Retention in Resistance-trained Adults: The ICECAP Trial. Med Sci Sports Exerc. 2021;53(8):1685–1698.</li>
+        <li>Rodriguez Da Silva V, Muniz M, Shelton G, et al. The effects of reverse dieting on mitigating weight regain after a caloric deficit: a preliminary analysis. J Int Soc Sports Nutr. 2025;22(sup2):2550185.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m11-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

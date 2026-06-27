@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refeed: krátkodobé navýšení sacharidů a kdy ho nasadit — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 11 · Lekce 3 — Věda o hubnutí: adaptace, refeeds a reverse dieting</div>
+    <h1>Refeed: krátkodobé navýšení sacharidů a kdy ho nasadit</h1>
+
+    <p class="lead">„Refeed“ zní jako trik na zrychlení metabolismu — a přesně proto se kolem něj nahromadilo tolik nesmyslů. <strong>Refeed není kouzlo ani povolení k mlsání. Je to nástroj na řízení adaptace, výkonu a hlavně psychiky během delšího deficitu.</strong> V téhle lekci se naučíš, co refeed skutečně dělá (a co ne), jak ho odlišit od diet breaku a cheat mealu, a podle jakého rámce ho u klienta nasadit, aby pomohl místo aby uškodil.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je refeed přesně a jak se liší od diet breaku, cheat mealu a reverse dietingu.</li>
+        <li>Co refeed fyziologicky dělá — glykogen, leptin, výkon, NEAT — a co je naopak mýtus.</li>
+        <li>Co o refeedech a periodizaci deficitu opravdu říkají kontrolované studie.</li>
+        <li>Konkrétní rámec: u koho, kdy a jak velký refeed nasadit (čísla, ne dojmy).</li>
+        <li>Kdy refeed nedávat — a kdy je lepší rovnou diet break nebo reverse diet.</li>
+        <li>Jak refeed nasadit tak, aby nespustil záchvatovité přejídání.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je refeed a co rozhodně není</h2>
+    <p>Refeed je <strong>plánované, krátkodobé navýšení energetického příjmu — typicky 1 až 2 dny — primárně přes sacharidy, zpravidla zhruba na úroveň udržení</strong>. Není to volný den bez pravidel. Je to řízený zásah do jinak běžícího deficitu, který má konkrétní cíl a konkrétní čísla.</p>
+    <p>Aby v tom byl pořádek, je dobré rozlišit čtyři pojmy, které se v praxi pletou:</p>
+    <div class="card">
+      <p><strong>Refeed:</strong> 1–2 dny navýšení (hlavně sacharidy) na úroveň udržení nebo mírně nad ni. Krátké, časté, naplánované.</p>
+      <p><strong>Diet break:</strong> delší pauza, obvykle 1–2 týdny na úrovni udržení. Cílí na adaptaci, hormony a hlavně psychickou regeneraci.</p>
+      <p><strong>Cheat meal:</strong> neřízené jedno jídlo „na co mám chuť“. Bez čísel, často přestřelí příjem o tisíce kcal. Nástroj, který nedoporučuji.</p>
+      <p><strong>Reverse dieting:</strong> postupné, pomalé navyšování příjmu PO skončení diety. Jiná lekce, jiný cíl — návrat z deficitu.</p>
+    </div>
+    <p>Rozdíl mezi refeedem a cheat mealem je zásadní. Refeed je nástroj trenéra — má rozpočet, strukturu a důvod. Cheat meal je většinou výmluva, která rozbije týdenní bilanci a u řady lidí spustí cyklus „povolím si – přejím se – mám vinu – přitvrdím“. Tomu se chceme vyhnout.</p>
+    <blockquote>Refeed neměří úspěch tím, kolik toho sníš, ale tím, jestli trefíš naplánované číslo. Je to disciplína navýšení, ne odměna za hladovění.</blockquote>
+
+    <h2>2) Co refeed fyziologicky dělá (a co je mýtus)</h2>
+    <p>Začneme tím, co refeed reálně umí. Sacharidy doplní <strong>svalový glykogen</strong>, který v delším deficitu klesá. Plnější glykogen znamená lepší objem tréninku, vyšší výkon a často i lepší pocit ze svalu — a s vodou navázanou na glykogen i „plnější“ vzhled. To je hmatatelný, krátkodobý efekt.</p>
+    <p>Druhá rovina je hormonální. Při deficitu klesá <strong>leptin</strong> — hormon, který mozku signalizuje dostatek energie. Pokles leptinu je jedním z motorů adaptace: roste hlad, klesá spontánní pohyb (NEAT) a tělo „šetří“. Sacharidy a celkový příjem leptin krátkodobě zvedají, proto je logika refeedu zaměřená právě na ně.</p>
+    <p>A teď mýty, které musíš umět klientovi vyvrátit:</p>
+    <div class="card">
+      <p><strong>Mýtus „refeed nakopne metabolismus“:</strong> jednodenní navýšení leptin krátce zvedne, ale nestihne zvrátit adaptaci, která se buduje týdny. Žádné trvalé „rozpálení“ z jednoho dne nečekej.</p>
+      <p><strong>Mýtus „refeed = volno“:</strong> refeed bez čísel je cheat meal. Když přestřelíš, smažeš si týdenní deficit a stojíš na místě.</p>
+      <p><strong>Mýtus „refeed spaluje tuk“:</strong> refeed je den nad deficitem nebo na udržení — sám o sobě tuk nepálí. Pomáhá nepřímo: udrží výkon, NEAT a hlavně to, že klient dietu vůbec dotáhne.</p>
+    </div>
+    <p>Klíčová pointa: hlavní hodnota refeedu je <strong>výkonová a psychická udržitelnost</strong>, ne magická změna metabolismu. To je poctivý, evidence-based postoj.</p>
+
+    <h2>3) Co o tom říká věda</h2>
+    <p>Tady je dobré být upřímný — důkazy jsou slibné, ale ne jednoznačné. Pojďme po pořádku.</p>
+    <p>Asi nejcitovanější je <strong>Campbellova studie z roku 2020</strong>: 27 silově trénovaných mužů a žen na 7 týdnů v deficitu. Jedna skupina jela kontinuální deficit, druhá zařadila 2 dny sacharidového refeedu týdně (a o to víc šetřila zbylých 5 dní, takže <em>týdenní</em> bilance byla stejná). Refeed skupina lépe udržela beztukovou hmotu a klidový výdej při srovnatelném úbytku tuku. Pozor ale — pozdější reanalýza upřesnila, že rozdíl byl statisticky čistý hlavně u „suché“ beztukové hmoty, takže efekt na sval je třeba brát opatrně, ne jako zaručený.</p>
+    <p>Širší kontext dává výzkum periodizace deficitu. <strong>Studie MATADOR</strong> (Byrne, 2018) u mužů s obezitou ukázala, že střídání 2týdenních bloků deficitu s 2týdenními bloky na udržení vedlo k většímu úbytku tuku, menšímu poklesu klidového výdeje a lepšímu udržení váhy po půl roce než kontinuální deficit. To je ale <em>diet break</em>, ne refeed — a u nesportovní populace.</p>
+    <p>Na druhou stranu řada studií s trénovanými lidmi (přehled i RCT od skupiny kolem <strong>Peose a Helmse</strong>) nenašla mezi kontinuálním a přerušovaným deficitem velký rozdíl v konečném složení těla, zato často hlásí lepší zvládání hladu a chutí v přerušované variantě. A proč adaptaci vůbec řešíme, vysvětluje <strong>Trexler</strong> (2014) a klasický výzkum <strong>Rosenbauma a Leibela</strong>: deficit spouští pokles výdeje, hormonů a NEAT, který přetrvává a brání hubnutí i udržení.</p>
+    <blockquote>Poctivý souhrn: refeed/diet break spolehlivě pomáhá psychice a často výkonu; přímý důkaz, že zachrání sval nebo zázračně zrychlí metabolismus, je zatím slabý. Prodávej refeed jako nástroj udržitelnosti, ne jako spalovač.</blockquote>
+
+    <h2>4) Rámec: u koho, kdy a kolik</h2>
+    <p>Tohle je jádro lekce. Refeed nedávej plošně — má smysl tam, kde je deficit dlouhý nebo agresivní a kde už se hlásí adaptace. Použij jednoduchý filtr:</p>
+    <div class="card">
+      <p><strong>Komu dává smysl:</strong> klient v delším deficitu (řekněme 6+ týdnů), relativně štíhlý, silově trénující, padá mu výkon, hlad a nálada. Čím štíhlejší a delší dieta, tím větší smysl.</p>
+      <p><strong>Komu zatím ne:</strong> klient s vyšším procentem tuku na začátku diety, krátce v deficitu, bez příznaků adaptace. Tady refeed jen zpomalí postup. Nejdřív ať deficit pár týdnů poctivě běží.</p>
+      <p><strong>Frekvence:</strong> typicky 1–2 dny týdně, často umístěné na nejtěžší tréninkové dny (nohy, velké partie).</p>
+      <p><strong>Velikost:</strong> cíl je dostat se na <em>úroveň udržení</em> (TDEE), ne nad ni. Navýšení jde primárně přes sacharidy, bílkoviny drž stabilní, tuky spíš nech níž.</p>
+    </div>
+    <p>Praktický výpočet je jednoduchý. Sacharidy mají ~4 kcal/g, takže rozdíl mezi dietním a refeed dnem v sacharidech spočítáš takto:</p>
+    <div class="eq">Δ sacharidy (g) = (TDEE − dietní příjem) ÷ 4</div>
+    <p>Příklad: klient jede dietně na 1900 kcal, jeho udržení je 2600 kcal. Rozdíl je 700 kcal, vydělíme čtyřmi — refeed den přidá zhruba <strong>175 g sacharidů</strong> navíc, při zachovaných bílkovinách a spíš nižších tucích. Žádné „jím, co chci“. Konkrétní gramy.</p>
+    <p>A nezapomeň klienta předem varovat před váhou: po refeedu váha skočí nahoru o klidně 1–2 kg vody (glykogen + sodík). <strong>Není to tuk.</strong> Za pár dní spadne. Když to klient čeká, nezpanikaří.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> U klienta, co je v dietě dva měsíce a začíná být „mimo“ — padá síla, je protivný, pořád myslí na jídlo — nasadím jeden refeed na den nohou. Spočítám konkrétní gramy sacharidů na udržení, bílkovinu nechám, tuky stáhnu. Předem mu řeknu: „Příští ráno tě váha vyděsí o kilo a půl nahoru, je to voda, ignoruj to.“ Devětkrát z deseti se vrátí s tím, že měl nejlepší trénink za měsíc a v hlavě má klid. To je celý smysl refeedu — ne zázrak na metabolismus, ale palivo a psychika, díky kterým dietu dotáhne.</div>
+
+    <h2>5) Jak refeed nasadit, aby nespustil přejídání</h2>
+    <p>Tady je největší riziko. U člověka s historií záchvatovitého jedení nebo silným „all-or-nothing“ myšlením může i dobře míněný refeed otevřít stavidla. Proto pravidla:</p>
+    <div class="card">
+      <p><strong>Drž strukturu:</strong> refeed má jídelníček a gramy stejně jako dietní den. Jen jiná čísla. „Volno bez plánu“ neexistuje.</p>
+      <p><strong>Vybírej syté, celistvé sacharidy:</strong> rýže, brambory, ovoce, ovesné vločky. Ne litry limonády a hromada sušenek — z těch se snadno přestřelí a hůř se zasytíš.</p>
+      <p><strong>Pojmenuj to jako nástroj, ne odměnu:</strong> jazyk „zasloužil sis to“ posiluje vztah jídlo = odměna za utrpení. Mluv o palivu a regeneraci.</p>
+      <p><strong>Sleduj signály:</strong> když refeed pravidelně končí ztrátou kontroly, není to nástroj pro tohoto klienta. Zvol radši pravidelnější, mírnější příjem nebo delší diet break.</p>
+    </div>
+    <p>A rozhodovací pravidlo na závěr: <strong>pokud klient potřebuje hlavně fyziologickou a psychickou pauzu, často je lepší jeden delší diet break než časté refeedy.</strong> Pokud potřebuje udržet výkon v tvrdém tréninku a zvládnout chutě, sedí spíš pravidelný refeed. A pokud je dieta u konce, neřešíš ani jedno — přichází reverse dieting. Nástroj vybírej podle cíle, ne podle módy.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Čím se liší refeed od cheat mealu? <span class="tg">odpověď ▾</span></div><div class="aa">Refeed je plánované, strukturované navýšení (hlavně sacharidy) na konkrétní číslo, typicky na úroveň udržení, 1–2 dny. Cheat meal je neřízené jídlo „na co mám chuť“, bez čísel, které snadno přestřelí týdenní bilanci.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co refeed fyziologicky dělá a co je naopak mýtus? <span class="tg">odpověď ▾</span></div><div class="aa">Reálně: doplní svalový glykogen (lepší výkon a objem tréninku), krátkodobě zvedne leptin. Mýtus: že jeden den „nakopne metabolismus“ nebo sám o sobě spaluje tuk — adaptace se buduje týdny a refeed je den na udržení/nad deficitem.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co ukázala Campbellova studie z roku 2020 a jaká je výhrada? <span class="tg">odpověď ▾</span></div><div class="aa">Skupina se 2 dny sacharidového refeedu týdně lépe udržela beztukovou hmotu a klidový výdej při srovnatelném úbytku tuku oproti kontinuálnímu deficitu. Výhrada: pozdější reanalýza upřesnila, že čistý rozdíl byl hlavně u „suché“ beztukové hmoty, takže efekt na sval je nutné brát opatrně.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> U koho má refeed smysl a u koho zatím ne? <span class="tg">odpověď ▾</span></div><div class="aa">Smysl: štíhlejší, silově trénující klient v delším/agresivním deficitu, kterému padá výkon, hlad a nálada. Zatím ne: klient s vyšším procentem tuku, krátce v deficitu, bez příznaků adaptace — tam by refeed jen zpomalil postup.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Klient jede na 1800 kcal, jeho udržení je 2600 kcal. Kolik gramů sacharidů navíc přidá refeed den? <span class="tg">odpověď ▾</span></div><div class="aa">Rozdíl je 800 kcal; sacharidy mají ~4 kcal/g, takže 800 ÷ 4 = 200 g sacharidů navíc, při zachovaných bílkovinách a spíš nižších tucích.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber modelového klienta v 8. týdnu deficitu (uveď jeho dietní příjem a odhad udržení). Rozhodni, zda nasadit refeed, diet break, nebo nic — a zdůvodni proč. Pokud refeed, spočítej konkrétní gramy sacharidů navíc podle vzorce, urči den a frekvenci a napiš dvě věty, kterými klienta předem připravíš na skok váhy a na to, že má jíst syté celistvé sacharidy podle plánu, ne neřízeně.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Campbell BI, Aguilar D, Colenso-Semple LM, et al. Intermittent Energy Restriction Attenuates the Loss of Fat Free Mass in Resistance Trained Individuals. A Randomized Controlled Trial. J Funct Morphol Kinesiol. 2020;5(1):19.</li>
+        <li>Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014;11(1):7.</li>
+        <li>Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55.</li>
+        <li>Byrne NM, Sainsbury A, King NA, Hills AP, Wood RE. Intermittent energy restriction improves weight loss efficiency in obese men: the MATADOR study. Int J Obes (Lond). 2018;42(2):129–138.</li>
+        <li>Peos JJ, Norton LE, Helms ER, Galpin AJ, Fournier P. Intermittent Dieting: Theoretical Considerations for the Athlete. Sports (Basel). 2019;7(1):22.</li>
+        <li>Peos JJ, Helms ER, Fournier PA, et al. The Effects of Intermittent Diet Breaks during 25% Energy Restriction on Body Composition and Resting Metabolic Rate in Resistance-Trained Females: A Randomized Controlled Trial. J Hum Kinet. 2023;86:117–132.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m11-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

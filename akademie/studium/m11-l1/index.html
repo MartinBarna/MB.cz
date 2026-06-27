@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanika fat loss: co se reálně děje, když hubneš tuk — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 11 · Lekce 1 — Věda o hubnutí: adaptace, refeeds a reverse dieting</div>
+    <h1>Mechanika fat loss: co se reálně děje, když hubneš tuk</h1>
+
+    <p class="lead">Energetická bilance řekne, <em>jestli</em> tuk půjde dolů. Tahle lekce řeší to, co bilance neřekne: <strong>jak se tělo proti deficitu brání</strong> — zpomalí výdej, zvedne hlad, sníží spontánní pohyb. Není to porucha ani zrada metabolismu. Je to čekaná, měřitelná a předvídatelná reakce. Když ji chápeš, přestaneš panikařit z plató a začneš deficit řídit chytře — přes adaptaci, ne proti ní.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je adaptivní termogeneze a o kolik kalorií reálně jde.</li>
+        <li>Proč se výdej v deficitu snižuje víc, než odpovídá samotnému úbytku hmoty.</li>
+        <li>Jak hlad, hormony (leptin, T3) a NEAT táhnou klienta zpátky k jídlu.</li>
+        <li>Co skutečně umí (a neumí) refeed a diet break — a kdy je nasadit.</li>
+        <li>Co je reverse dieting, kde dává smysl a kde je to jen marketingový pojem.</li>
+        <li>Jak z toho všeho poskládat dietu, kterou klient ufází bez vyhoření.</li>
+      </ul>
+    </div>
+
+    <h2>1) Adaptivní termogeneze: tělo zpomalí víc, než „má“</h2>
+    <p>Když hubneš, výdej klesá už proto, že menší tělo potřebuje míň energie. To je čekané a samozřejmé. Problém je, že u řady lidí klesá <strong>víc, než by odpovídalo ztracené hmotě</strong>. Tomuhle „nadbytečnému“ poklesu se říká adaptivní termogeneze (metabolická adaptace) — tělo aktivně škrtá náklady, aby deficit zmenšilo.</p>
+    <p>Rosenbaum a Leibel ukázali, že po 10% úbytku hmotnosti je klidový i celkový výdej nižší, než predikuje samotná změna složení těla — a tenhle efekt přetrvává i u lidí, kteří si sníženou váhu drží přes rok. Není to dočasný úlek, ale dlouhodobé nastavení.</p>
+    <div class="card">
+      <p><strong>Kde se ta energie „ušetří“:</strong></p>
+      <p><strong>Klidový výdej (RMR):</strong> svalová práce na buněčné úrovni se zefektivní, mění se hormonální signály — výdej v klidu klesá nad rámec úbytku hmoty.</p>
+      <p><strong>NEAT:</strong> spontánní pohyb (chůze, gesta, neposednost) tiše klesá. Často největší a nejhůř viditelný kus adaptace.</p>
+      <p><strong>Termický efekt pohybu:</strong> pohyb je v lehčím těle levnější, plus se mírně zefektivní.</p>
+    </div>
+    <blockquote>Adaptace není známka „rozbitého metabolismu“. Je to úspěšná obrana zdravého systému, který tě po většinu evoluce držel naživu. Bojuje proti tvému cíli, ne proti tvému zdraví.</blockquote>
+
+    <h2>2) O kolik kalorií reálně jde</h2>
+    <p>Konkrétní čísla pomáhají, aby z toho nebyl strašák. U běžné, rozumné diety se adaptivní složka pohybuje řádově v <strong>desítkách až nižších stovkách kcal/den</strong> nad rámec úbytku hmoty. Velká není u každého a roste s hloubkou a délkou deficitu.</p>
+    <div class="card">
+      <p><strong>Extrémní příklad — „Biggest Loser“ (Fothergill, 2016):</strong> po 30 týdnech velmi agresivní diety klesl klidový výdej účastníků o ~610 kcal/den, z čehož adaptivní (nevysvětlená hmotou) část byla ~−275 kcal/den. Po 6 letech — i přes znovunabrání části váhy — adaptace <em>narostla</em> na ~−499 kcal/den.</p>
+      <p><strong>Co si z toho vzít:</strong> tohle je krajní scénář (obrovský deficit, dramatický úbytek). U klienta, který hubne ~0,5–1 % hmotnosti týdně s dostatkem bílkovin a silovým tréninkem, je adaptace mnohem menší. Ale směr je vždy stejný — výdej se posouvá dolů.</p>
+    </div>
+    <p>Praktický důsledek: čím déle a agresivněji se hubne, tím víc „kalkulačka“ ze začátku diety nadhodnocuje aktuální výdej. Plató často není o tom, že klient přestal hubnout — ale o tom, že deficit se mezitím zmenšil sám od sebe.</p>
+
+    <h2>3) Hlad a hormony: druhá polovina obrany</h2>
+    <p>Adaptace není jen o výdeji. Tělo tlačí i na <strong>příjem</strong> — zvyšuje chuť k jídlu a snižuje sytost. MacLean to popsal jako komplexní, vytrvalou a redundantní reakci, kde se sčítá hned několik mechanismů, jejichž souhrnným cílem je vrátit hmotnost zpět.</p>
+    <div class="card">
+      <p><strong>Leptin:</strong> klesá s úbytkem tuku (a navíc nepřímo úměrně příjmu). Nižší leptin = silnější hlad, slabší sytost a část poklesu výdeje.</p>
+      <p><strong>Trijodtyronin (T3):</strong> štítná žláza v deficitu lehce přiškrtí, T3 klesá a s ním klidový metabolismus — Trexler to popisuje jako jeden z motorů adaptace u sportovců.</p>
+      <p><strong>Ghrelin nahoru, sytostní signály dolů:</strong> hlad sílí přesně ve chvíli, kdy je vůle nejslabší.</p>
+    </div>
+    <p>Proto je dlouhá dieta tak často prohraná „silou vůle“ — nejde o charakter, ale o biologii táhnoucí klienta zpět. Trenérská práce je tuhle sílu zmenšit (dost bílkovin, objemná jídla, spánek, rozumné tempo), ne ji ignorovat a moralizovat.</p>
+    <blockquote>Hlad není slabost. Je to signál systému, který dělá přesně to, k čemu byl stvořen. Plánuj dietu tak, abys ten signál držel zvládnutelný.</blockquote>
+
+    <h2>4) Refeed a diet break: co umí a co ne</h2>
+    <p>Tady je nejvíc mýtů, tak rovnou na rovinu. <strong>Refeed</strong> = krátké (1–2 dny) zvednutí příjmu, hlavně sacharidů, do okolí udržení. <strong>Diet break</strong> = delší pauza (typicky 1–2 týdny) na úrovni udržovacího příjmu, kdy se aktivně nehubne.</p>
+    <div class="card">
+      <p><strong>Co reálně dělají:</strong></p>
+      <p><strong>Psychika a dodržení:</strong> největší doložená výhoda. Pauza dá klientovi nadech, vrátí flexibilitu, sníží riziko záchvatovitého přejídání. Udržitelnost &gt; teoretická metabolická finta.</p>
+      <p><strong>Výkon a doplnění glykogenu:</strong> refeed sacharidy doplní glykogen, často zvedne výkon v tréninku i náladu.</p>
+      <p><strong>Metabolická adaptace:</strong> přerušovaný přístup ji <em>může</em> mírnit. Studie MATADOR (Byrne, 2017) ukázala u obézních mužů, že 2týdenní bloky deficitu střídané 2týdenní pauzou vedly k efektivnějšímu hubnutí a menšímu poklesu výdeje než nepřetržitá dieta. Pozor: byla to specifická populace a velmi strukturovaný protokol.</p>
+    </div>
+    <p>Co refeed/diet break <strong>není</strong>: není to nutný „restart metabolismu“ každý víkend, není to povolenka k nekontrolovanému přejídání a u mírného deficitu nepřináší žádný zázrak. Čím hlubší a delší dieta, tím víc dávají smysl. U klienta v lehkém deficitu po pár týdnech jsou spíš zbytečné.</p>
+
+    <div class="eq">Refeed = 1–2 dny · Diet break = 1–2 týdny · oba na ~udržení, ne nad něj</div>
+
+    <h2>5) Reverse dieting: realita vs. mýtus</h2>
+    <p>Reverse dieting = po skončení diety se příjem zvyšuje <strong>postupně</strong> (po malých krocích týden co týden) místo skoku rovnou na vyšší hodnotu. Cíl: vyjet z deficitu, minimalizovat nárůst tuku a dát výdeji čas „dohnat“ vyšší příjem.</p>
+    <div class="card">
+      <p><strong>Co na tom sedí:</strong> po dietě se RMR a hlavně NEAT mohou s rostoucím příjmem částečně vrátit nahoru. Postupné navyšování je psychicky bezpečnější — klient neskočí z 1700 na 2800 kcal přes noc, kdy by snadno přibral a vyděsil se.</p>
+      <p><strong>Kde je mýtus:</strong> reverse dieting <em>trvale nezvýší</em> tvůj metabolismus nad to, co odpovídá tvé hmotě a aktivitě. Není to způsob, jak „jíst víc a nepřibírat navždy“. Část lidí prostě jen pomalu doputuje zpět na svůj reálný udržovací příjem.</p>
+    </div>
+    <p>Aragon a Schoenfeld v pozičním stanovisku ISSN připomínají, že o hmotnosti i po dietě nadále rozhoduje bilance — reverse dieting je <strong>nástroj řízení přechodu</strong> z deficitu do udržení, ne kouzlo obcházející termodynamiku. Pro sportovce s nízkým tukem a dlouhou dietou je užitečný; pro netrpělivého klienta, který chce hlavně přestat hladovět, někdy stačí jednoduše přejít na vypočítané udržení a sledovat trend.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům na začátku diety říkám rovnou: „Za pár týdnů zpomalíš, zhorší se ti chuť k jídlu a budeš mít míň energie. Není to selhání, je to plán.“ Tím vezmu adaptaci její sílu — nikdo nepanikaří z něčeho, co jsme předpověděli. Diet break nasazuju hlavně podle hlavy, ne podle tabulky: když vidím, že klient bojuje s dodržením nebo padá výkon, dám 1–2 týdny na udržení. A reverse dieting nepředávám jako kouzlo — je to způsob, jak slušně vyjet z díry, ne jak oblafnout fyziku.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je adaptivní termogeneze (metabolická adaptace)? <span class="tg">odpověď ▾</span></div><div class="aa">Pokles energetického výdeje v deficitu, který je <em>větší</em>, než by odpovídalo samotnému úbytku tělesné hmoty. Tělo aktivně škrtá náklady (RMR, NEAT), aby zmenšilo deficit.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj dva hormony, které v deficitu táhnou klienta zpět k jídlu nebo dolů s výdejem. <span class="tg">odpověď ▾</span></div><div class="aa">Leptin (klesá → silnější hlad, slabší sytost, část poklesu výdeje) a trijodtyronin T3 (klesá → nižší klidový metabolismus). Bonus: ghrelin roste a zvyšuje hlad.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaká je největší doložená výhoda diet breaku? <span class="tg">odpověď ▾</span></div><div class="aa">Psychika a dodržení — pauza sníží riziko záchvatovitého přejídání a zvýší šanci, že klient dietu vůbec dotáhne. Metabolický efekt je menší a nejistější než tahle výhoda.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co reverse dieting NEumí? <span class="tg">odpověď ▾</span></div><div class="aa">Trvale zvednout metabolismus nad úroveň danou hmotou a aktivitou. Neobchází bilanci — je to jen postupný, bezpečnější přechod z deficitu do udržení, ne způsob „jíst víc a nikdy nepřibírat“.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč „kalkulačka“ ze začátku diety po čase nadhodnocuje výdej? <span class="tg">odpověď ▾</span></div><div class="aa">Protože s úbytkem hmoty a s adaptivní termogenezí klesá skutečný výdej. Deficit se tak časem sám zmenšuje — proto je často potřeba příjem nebo aktivitu po pár týdnech upravit podle trendu.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelového klienta v 10. týdnu diety, který narazil na plató. Napiš: (1) které dva mechanismy adaptace u něj nejspíš hrají roli a proč, (2) jak rozhodneš mezi „přitlačit deficit“ vs. „dát diet break“ — podle jakých signálů, a (3) jak bys s ním po skončení diety provedl přechod do udržení (skok vs. reverse dieting) a jak to vysvětlíš, aby z navyšování příjmu nepanikařil.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55.</li>
+        <li>Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014;11(1):7.</li>
+        <li>MacLean PS, Bergouignan A, Cornier MA, Jackman MR. Biology's response to dieting: the impetus for weight regain. Am J Physiol Regul Integr Comp Physiol. 2011;301(3):R581–R600.</li>
+        <li>Fothergill E, Guo J, Howard L, et al. Persistent metabolic adaptation 6 years after "The Biggest Loser" competition. Obesity (Silver Spring). 2016;24(8):1612–1619.</li>
+        <li>Byrne NM, Sainsbury A, King NA, Hills AP, Wood RE. Intermittent energy restriction improves weight loss efficiency in obese men: the MATADOR study. Int J Obes (Lond). 2018;42(2):129–138.</li>
+        <li>Aragon AA, Schoenfeld BJ, Wildman R, et al. International society of sports nutrition position stand: diets and body composition. J Int Soc Sports Nutr. 2017;14:16.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m11-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

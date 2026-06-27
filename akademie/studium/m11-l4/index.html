@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diet break: plánovaná pauza v dietě a rozdíl oproti refeedu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 11 · Lekce 4 — Věda o hubnutí: adaptace, refeeds a reverse dieting</div>
+    <h1>Diet break: plánovaná pauza v dietě a rozdíl oproti refeedu</h1>
+
+    <p class="lead">Dlouhý nepřetržitý deficit není zadarmo — tělo se brání. Klesá klidový výdej, padá NEAT, roste hlad a klient se zasekne na váze i přes „dokonalý“ jídelníček. <strong>Diet break je naplánovaná pauza v deficitu, ne selhání ani „cheat“.</strong> Když ji umíš použít, udržíš klienta v procesu déle, ochráníš sval i hlavu a často zhubne víc, ne míň. Tahle lekce ti dá jasno v tom, co je diet break, jak se liší od refeedu a kdy který nasadit.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je metabolická adaptace a proč „zaseknutí“ na váze není výmluva, ale fyziologie.</li>
+        <li>Co přesně je diet break — délka, kalorie, frekvence — a co od něj čekat.</li>
+        <li>Jasný rozdíl mezi <strong>diet break</strong> a <strong>refeed</strong>: kdy který a proč.</li>
+        <li>Co o tom říkají data (MATADOR, ICECAP) a kde je hranice mezi vědou a marketingem.</li>
+        <li>Kde končí diet break a začíná reverse dieting — a proč si je neplést.</li>
+        <li>Praktický rámec, jak pauzu naplánovat tak, aby klient nezhltl celý deficit zpátky.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč se tělo brání: metabolická adaptace</h2>
+    <p>Když držíš deficit dlouho, tělo nesedí pasivně. Spustí sadu obranných reakcí, kterým se říká <strong>metabolická adaptace</strong> (adaptivní termogeneze). Klesne klidový výdej víc, než by odpovídalo samotnému úbytku hmoty, spadne NEAT (víc sedíš, míň gestikuluješ, šetříš pohybem), zhorší se „pracovní efektivita“ svalu a stoupne hlad. Hnacím motorem je hlavně pokles leptinu, který mozku signalizuje hladovění a zapne úsporný režim.</p>
+    <p>Trexler a kol. to shrnují jasně: energetická restrikce vede ke změnám hormonů, mitochondriální efektivity a výdeje, jejichž jediný úkol je <em>zmenšit deficit, zpomalit hubnutí a podpořit zpětný nárůst</em>. Rosenbaum a Leibel ukázali, že část tohoto poklesu výdeje je „nad rámec“ ztráty hmoty a u zhubnutého člověka přetrvává — což vysvětluje, proč je víc než 80 % lidí náchylných k jojo efektu.</p>
+    <blockquote>Adaptace není defekt klienta. Je to dobře fungující záchranný systém z dob, kdy hladovění znamenalo smrt. Tvojí prací je s ním pracovat, ne ho ignorovat.</blockquote>
+
+    <h2>2) Co je diet break (a co od něj čekat)</h2>
+    <p>Diet break je <strong>plánované, dočasné zvednutí kalorií na úroveň udržení</strong> (maintenance) na souvislé období — typicky 1 až 2 týdny — uprostřed delší diety. Cílem není „odměna“, ale dát fyziologii i hlavě pauzu: zvednout leptin a chuti k jídlu zpět blíž k normálu, obnovit část klidového výdeje a NEAT, doplnit glykogen a hlavně udržet klienta v dlouhodobém procesu.</p>
+    <div class="card">
+      <p><strong>Délka:</strong> nejčastěji 7–14 dní vcelku. Kratší než týden už je spíš refeed (viz dál).</p>
+      <p><strong>Kalorie:</strong> nahoru na <em>odhadované udržení</em> — ne nad něj. Není to bujará hostina, je to návrat na nulovou bilanci.</p>
+      <p><strong>Bílkoviny:</strong> drž je vysoko jako v dietě (~1,8–2,2 g/kg), navyšuj hlavně sacharidy a trochu tuků.</p>
+      <p><strong>Frekvence:</strong> orientačně každých 6–12 týdnů souvislé diety, dřív u agresivnějšího deficitu nebo štíhlejších klientů.</p>
+      <p><strong>Co čekat na váze:</strong> krátkodobý nárůst (voda + glykogen + obsah střev), který po návratu do deficitu z velké části zmizí. Klient na to musí být připravený, jinak zpanikaří.</p>
+    </div>
+    <p>Klíčové slovo je <strong>plánovaný</strong>. Pauza, kterou si trenér s klientem dohodli dopředu a má jasný start i konec, je nástroj. Tři dny ujetých kdykoli to klapne, není diet break — to je jen ztracený deficit.</p>
+
+    <h2>3) Diet break vs. refeed — neplést</h2>
+    <p>Tohle si lidé pletou nejčastěji, tak pomalu. Oba zvyšují příjem, ale liší se délkou, hloubkou i účelem.</p>
+    <div class="card">
+      <p><strong>Refeed:</strong> krátké (1–2 dny) zvýšení příjmu, prakticky vždy přes <em>sacharidy</em>, často jen na úroveň udržení nebo lehce nad. Účel je hlavně doplnit svalový glykogen, krátce zvednout leptin a podpořit výkon v tréninku. Zapadá do týdenní struktury (např. dva vyšší dny u dlouhého běhu nebo silového bloku).</p>
+      <p><strong>Diet break:</strong> delší (7–14 dní) souvislý návrat na udržení. Účel je systémový — víc psychologický a regenerační reset než jen doplnění glykogenu. Použiješ ho, když klient v dietě jede dlouho a začíná se to lámat.</p>
+    </div>
+    <p>Jednoduchá pomůcka: <strong>refeed je den, diet break je týden.</strong> Refeed ladí výkon a glykogen v rámci týdne; diet break dává oddech celému systému a hlavě v rámci měsíců. Nejsou to konkurenti — chytrý plán často používá oba: refeedy průběžně, diet break jednou za pár měsíců.</p>
+    <blockquote>Refeed je čárka ve větě. Diet break je nový odstavec. Reverse dieting (sekce 5) je konec kapitoly.</blockquote>
+
+    <h2>4) Co o tom říkají data</h2>
+    <p>Nejcitovanější je <strong>studie MATADOR</strong> (Byrne a kol., 2018). Muži s obezitou drželi stejný celkový deficit buď nepřetržitě, nebo přerušovaně — 2 týdny deficitu střídaly 2 týdny na udržení. Přerušovaná skupina zhubla <strong>víc tuku, lépe si udržela klidový výdej a po půl roce si výsledek lépe podržela</strong>. Z hlediska bilance fascinující: stejný „dluh“ kalorií, lepší výsledek, protože adaptace byla menší.</p>
+    <div class="eq">stejný kumulovaný deficit + menší adaptace = víc tuku dolů</div>
+    <p>U trénovaných lidí je obraz opatrnější. <strong>Studie ICECAP</strong> (Campbell a kol., 2020) porovnávala nepřetržitou dietu vs. dietu s pravidelnými 2denními refeedy u silově trénovaných. Skupina s refeedy si lépe udržela „suchou“ beztukovou hmotu a část výdeje — ale následná reanalýza ukázala, že rozdíl nebyl tak jednoznačný, jak zněl titulek. Závěr pro praxi: diet breaks a refeedy <strong>pomáhají</strong>, hlavně s adherencí a regenerací, ale nejsou kouzlo, které poruší bilanci.</p>
+    <p>Poctivá věta pro klienta: diet break ti nezrychlí hubnutí přes noc. Pomáhá ti <em>vydržet</em> a zmenšuje brzdu, kterou na sebe tělo v dlouhém deficitu nasadí. To je dlouhodobě víc, než zní.</p>
+
+    <h2>5) Kde končí diet break a začíná reverse dieting</h2>
+    <p>Diet break je <strong>pauza uprostřed</strong> diety — pak se vracíš do deficitu. <strong>Reverse dieting</strong> je něco jiného: postupné, řízené navyšování kalorií <em>po skončení</em> diety, jehož cílem je dostat se zpět na udržení (nebo výš) s co nejmenším nabráním tuku a dát výdeji čas se zotavit.</p>
+    <div class="card">
+      <p><strong>Diet break:</strong> uprostřed diety, skok rovnou na udržení, 1–2 týdny, pak zpět dolů.</p>
+      <p><strong>Reverse dieting:</strong> po dietě, postupné přidávání (orientačně +5–10 % kalorií týdně, hlavně sacharidy), týdny až měsíce, cíl je vystoupit z deficitu nadobro.</p>
+    </div>
+    <p>Trexler a kol. v kazuistice naturálního kulturisty popsali, jak po skončení soutěžní diety klidový výdej během několika týdnů vystoupal nad predikci, jakmile vzrostl příjem — což je přesně logika, na které reverse dieting stojí. Pozor ale na marketing: reverse dieting <strong>není „zrychlení metabolismu“ ani trik na hubnutí během jezení víc</strong>. Je to způsob, jak ukončit dietu kontrolovaně a nepřejet rovnou do nekontrolovaného přibírání. Část návratu výdeje je prosté zotavení adaptace, ne magie.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Diet break klientům „prodávám“ dopředu jako součást plánu, ne jako úlevu, když už nemůžou. Řeknu rovnou: „Za pár týdnů si dáme týden na udržení. Váha krátce nahoru poletí — je to voda a glykogen, ne tuk, nepanikař.“ Bílkoviny držíme stejně vysoko, přidáváme hlavně rýži, ovoce, brambory. Refeedy používám průběžně u lidí, co tvrdě makají v posilce. A jakmile dieta skončí, nikdy nedávám skok zpět na „normál“ — jedeme reverse: po troškách nahoru, ať se výdej i hlava srovnají a klient si výsledek udrží. Cíl je vždy stejný: dotáhnout dietu tak, aby z ní šlo bezpečně vystoupit.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je metabolická adaptace a jak se projeví u klienta v dlouhém deficitu? <span class="tg">odpověď ▾</span></div><div class="aa">Sada obranných reakcí na restrikci: pokles klidového výdeje (nad rámec ztráty hmoty), pokles NEAT, vyšší hlad a horší efektivita pohybu — řízeno hlavně poklesem leptinu. Projeví se zaseknutím na váze i přes dodržovaný jídelníček.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak dlouho trvá diet break a na jaké kalorie se jde? <span class="tg">odpověď ▾</span></div><div class="aa">Typicky 7–14 dní vcelku, návrat na úroveň udržení (maintenance) — ne nad něj. Bílkoviny zůstávají vysoko, navyšují se hlavně sacharidy a část tuků.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je hlavní rozdíl mezi diet break a refeedem? <span class="tg">odpověď ▾</span></div><div class="aa">Refeed je krátký (1–2 dny), hlavně přes sacharidy, cílí na glykogen a výkon v rámci týdne. Diet break je delší (7–14 dní) souvislý návrat na udržení s psychologickým a regeneračním účelem. Refeed = den, diet break = týden.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co ukázala studie MATADOR? <span class="tg">odpověď ▾</span></div><div class="aa">Přerušovaná restrikce (2 týdny deficit / 2 týdny udržení) vedla při stejném celkovém deficitu k většímu úbytku tuku, lepšímu udržení klidového výdeje a lepšímu podržení výsledku po 6 měsících oproti nepřetržité dietě.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Čím se liší reverse dieting od diet break? <span class="tg">odpověď ▾</span></div><div class="aa">Diet break je pauza uprostřed diety, po které se vracíš do deficitu. Reverse dieting je postupné navyšování kalorií po skončení diety s cílem dostat se na udržení (nebo výš) s minimem tuku a dát výdeji čas se zotavit. Není to trik na hubnutí ani „zrychlení metabolismu“.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta, který drží deficit 10 týdnů a zasekl se na váze, naplánuj diet break: napiš jeho délku, na jaké kalorie ho posadíš, jak nastavíš makra (zvlášť bílkoviny) a jak klientovi dopředu vysvětlíš krátký nárůst na váze, aby nepanikařil. Pak v jedné větě popiš, čím by se lišil tvůj plán, kdyby místo zaseknutí klient dietu právě <em>končil</em> (tedy reverse dieting místo diet break).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Byrne NM, Sainsbury A, King NA, Hills AP, Wood RE. Intermittent energy restriction improves weight loss efficiency in obese men: the MATADOR study. Int J Obes (Lond). 2018;42(2):129–138.</li>
+        <li>Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014;11(1):7.</li>
+        <li>Campbell BI, Aguilar D, Conlin L, et al. Intermittent Energy Restriction Attenuates the Loss of Fat-Free Mass in Resistance Trained Individuals: A Randomized Controlled Trial. J Funct Morphol Kinesiol. 2020;5(1):19.</li>
+        <li>Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55.</li>
+        <li>Trexler ET, Hirsch KR, Campbell BI, Smith-Ryan AE. Physiological Changes Following Competition in Male and Female Physique Athletes: A Pilot Study. Int J Sport Nutr Exerc Metab. 2017;27(5):458–466.</li>
+        <li>Müller MJ, Bosy-Westphal A. Adaptive thermogenesis with weight loss in humans. Obesity (Silver Spring). 2013;21(2):218–228.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m11-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
