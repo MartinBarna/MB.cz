@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MPS: jak vlastně sval roste a co ho spouští — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 12 · Lekce 2 — Proteinova veda do detailu</div>
+    <h1>MPS: jak vlastně sval roste a co ho spouští</h1>
+
+    <p class="lead">Sval není kámen, který jednou postavíš a hotovo. Je to <strong>stavba, kterou tělo nepřetržitě bourá a znovu staví</strong> — každý den, ať trénuješ nebo ne. Jestli na konci dne přibude víc cihel, než kolik jich spadlo, sval roste. Ten klíčový proces se jmenuje syntéza svalových bílkovin (MPS) a v téhle lekci se podíváme přesně na to, co ho spouští, jak dlouho běží a jak ho přes jídlo a trénink řídit — abys klientovi neradil podle pocitu, ale podle toho, jak to ve svalu opravdu funguje.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je MPS a MPB a proč o růstu svalu rozhoduje jejich rozdíl (čistá bilance bílkovin).</li>
+        <li>Dva hlavní spouštěče MPS — trénink a příjem bílkovin — a jak se navzájem násobí.</li>
+        <li>Proč existuje „leucinový spínač“ a kolik bílkovin na jedno jídlo dává smysl.</li>
+        <li>Jak rozložit bílkoviny přes den, aby MPS běžel co nejčastěji.</li>
+        <li>Proč při hubnutí jdou bílkoviny nahoru, ne dolů.</li>
+        <li>Jestli „rostlinné vs. živočišné“ opravdu rozhoduje, nebo je to spíš detail.</li>
+      </ul>
+    </div>
+
+    <h2>1) MPS minus MPB = jestli sval roste</h2>
+    <p>Tvůj sval je v neustálém koloběhu. Pořád probíhají dva protichůdné děje: <strong>MPS</strong> (muscle protein synthesis, tvorba nových svalových bílkovin) a <strong>MPB</strong> (muscle protein breakdown, jejich odbourávání). To, jestli svalová hmota přibývá, ubývá, nebo se drží, rozhoduje rozdíl mezi nimi — takzvaná čistá bilance bílkovin.</p>
+    <div class="eq">Čistá bilance = MPS − MPB</div>
+    <p>Když je MPS dlouhodobě vyšší než MPB, sval roste. Když je to naopak, sval ubývá. A tady je pointa, kterou hodně lidí mine: u zdravého trénujícího člověka je hlavní pákou <strong>zvedání MPS</strong>, ne snaha brzdit odbourávání. Odbourávání je do velké míry přirozený údržbový proces — a paradoxně právě díky němu se ze svalu odklízí poškozený materiál. Proto se v tréninku a výživě soustředíme hlavně na to, jak co nejčastěji a co nejvýš zvednout syntézu.</p>
+    <blockquote>Růst svalu není jeden velký okamžik. Je to součet desítek malých „nadhozů“ MPS po jídlech a trénincích, nasčítaných přes týdny a měsíce.</blockquote>
+
+    <h2>2) Dva spouštěče: trénink a bílkovina — a jak se násobí</h2>
+    <p>MPS spolehlivě nakopnou dvě věci. Každá funguje i sama, ale dohromady dají nejvíc:</p>
+    <div class="card">
+      <p><strong>Silový trénink:</strong> mechanické napětí ve svalu zvýší citlivost svalu na bílkoviny a sám o sobě nadhodí MPS na mnoho hodin po tréninku. Tahle „zvýšená citlivost“ může u natrénovaného svalu vydržet i den a víc.</p>
+      <p><strong>Příjem bílkovin (hlavně esenciální aminokyseliny):</strong> jídlo s dostatkem bílkovin nadhodí MPS i bez tréninku. Klíčové jsou esenciální aminokyseliny, z nich má výsadní roli <strong>leucin</strong>.</p>
+    </div>
+    <p>To zajímavé je jejich součin. Bílkovina po tréninku zvedne MPS víc než stejná bílkovina v klidový den, protože trénink mezitím sval „naladil“ na příjem. Proto neřešíme trénink a jídlo zvlášť — řešíme je jako jeden systém. Trénink připraví půdu, bílkovina dodá materiál.</p>
+    <p>Praktický důsledek pro tvého klienta: nemá smysl mít perfektní jídelníček a špatný trénink, ani naopak. Růst stojí na obojím dohromady — a oboje musí být dost dlouho dost konzistentní, aby se ty malé nadhozy MPS nasčítaly do viditelného svalu.</p>
+
+    <h2>3) Leucinový spínač a kolik bílkovin na jedno jídlo</h2>
+    <p>MPS se nezvedá plynule s každým dalším gramem bílkoviny — chová se spíš jako <strong>spínač s prahem</strong>. Aby se naplno zapnul, potřebuje jídlo dodat dost esenciálních aminokyselin, hlavně leucinu. Pod prahem se moc neděje, nad prahem skočí MPS nahoru — a další a další gramy už ho výrazně nezvednou.</p>
+    <p>Z klasické studie dávkování vyšlo, že po silovém tréninku <strong>zhruba 20 g kvalitní bílkoviny</strong> stačí u mladších lidí k téměř maximálnímu nadhození MPS; 40 g přidá málo a víc se přepálí na oxidaci. Novější práce ale ukazují, že u celotělového tréninku, u větších a starších lidí a u pomalejších bílkovin v rámci celého jídla má smysl mířit výš.</p>
+    <div class="card">
+      <p><strong>Praktický cíl na jedno jídlo:</strong> okolo <strong>0,4 g bílkoviny na kilo tělesné hmotnosti</strong> — pro 80kg člověka tedy zhruba 30–35 g.</p>
+      <p><strong>U sportovců a vyšších denních cílů</strong> klidně <strong>0,55 g/kg na jídlo</strong> (~45 g u 80 kg), zvlášť ze smíšeného jídla s tukem a vlákninou.</p>
+      <p><strong>Zdroj musí mít dost leucinu:</strong> u rostlinných a méně kvalitních zdrojů potřebuješ porci o něco větší, aby ses přes práh dostal.</p>
+    </div>
+    <div class="eq">Cíl na jídlo ≈ 0,4 g/kg · hmotnost</div>
+    <p>Pozor na zkratku „víc bílkoviny v jednom jídle = víc svalu“. Z hlediska jednoho nadhození MPS to neplatí — nadbytek se z velké části spálí nebo využije jinde. Smysl má spíš <strong>rozprostřít</strong> bílkoviny do víc jídel, o čemž je další sekce.</p>
+
+    <h2>4) Rozložení přes den: nadhazuj MPS víckrát</h2>
+    <p>Když MPS funguje jako spínač, který po jídle naskočí a po pár hodinách zase opadne, dává smysl ho přes den zapnout vícekrát. Tomu odpovídá i klasická distribuční studie: stejných 80 g bílkoviny za 12 hodin po tréninku stimulovalo MPS nejlíp tehdy, když se rozdělilo do <strong>4 dávek po 20 g každé 3 hodiny</strong> — líp než 8 malých dávek po 10 g i líp než 2 velké dávky po 40 g.</p>
+    <div class="card">
+      <p><strong>Praktická šablona pro klienta:</strong> 3–4 jídla s dostatkem bílkovin, rozložená přibližně rovnoměrně, každé nad leucinovým prahem (cca 0,4 g/kg).</p>
+      <p><strong>Krajnosti, které nesedí:</strong> celý denní protein v jednom obřím jídle, nebo naopak ujídání po troškách bez jediné pořádné porce.</p>
+      <p><strong>Bílkovina před spánkem:</strong> pomalejší zdroj (např. tvaroh) může podpořit noční regeneraci, ale je to třešnička, ne základ.</p>
+    </div>
+    <p>Realisticky: pořadí důležitosti je <strong>celkový denní příjem bílkovin → rozumné rozdělení do 3–4 jídel → drobné ladění času</strong>. Když klient nestíhá dokonalé rozložení, ale trefí denní cíl, je 90 % práce hotových. Distribuce je optimalizace navrch, ne podmínka.</p>
+    <blockquote>Nejdřív se postarej, aby klient denní bílkovinu vůbec dal. Teprve pak řeš, jestli ji má rozdělenou na čtyři jídla místo dvou.</blockquote>
+
+    <h2>5) Bílkoviny v deficitu: chrání to, co jsi vydřel</h2>
+    <p>Když klient hubne, intuitivně by čekal, že „omezit jídlo“ znamená omezit i bílkoviny. Opak je pravda. V kalorickém deficitu tělo víc sahá na bílkoviny jako na zdroj a klesá schopnost udržet sval — proto jdou bílkoviny <strong>nahoru, ne dolů</strong>. Jsou tím, co v deficitu chrání svalovou hmotu, drží sytost a pomáhá, aby z váhy ubýval hlavně tuk.</p>
+    <p>Pěkně to ukázala studie, kde muži v <strong>tvrdém 40% deficitu</strong> trénovali a polovina jedla <strong>2,4 g/kg/den</strong>, druhá jen 1,2 g/kg/den. Skupina s vyšším příjmem za 4 týdny dokonce <strong>nabrala svalovou hmotu a ztratila víc tuku</strong> — i v deficitu. Nižší skupina o sval nepřišla, ale ani nepřibrala.</p>
+    <div class="card">
+      <p><strong>Udržování / lehký nadbytek:</strong> orientačně 1,6 g/kg/den pokrývá většinu trénujících (nad to už se hypertrofie dál nezvedá).</p>
+      <p><strong>Deficit / rýsování:</strong> klidně 1,8–2,4 g/kg/den, hlavně u štíhlejších a agresivnějších diet.</p>
+      <p><strong>Praktická pomůcka:</strong> v dietě bílkovinu spíš přidej a uber jinde (tuky/sacharidy podle preferencí klienta).</p>
+    </div>
+
+    <h2>6) Rostlinné vs. živočišné: rozhoduje to, nebo ne?</h2>
+    <p>Tady chci utnout zbytečnou paniku. Ano, kvalita zdroje hraje roli — živočišné bílkoviny mívají kompletnější profil aminokyselin a víc leucinu, takže na gram nadhodí MPS o něco víc. V přímém srovnání jednorázových dávek se stejným obsahem aminokyselin nadhodila syrovátka MPS výrazně víc než sója a casein.</p>
+    <p>Jenže to byly malé, vyrovnané dávky v laboratoři. V reálu řeší většinu rozdílu dvě jednoduché věci: <strong>o něco větší porce</strong> u rostlinného zdroje a <strong>kombinování</strong> zdrojů přes den. Kdo jí dost a pestře, dožene profil bez problémů.</p>
+    <div class="card">
+      <p><strong>Když klient jí maso/mléko/vejce:</strong> profil je vyřešený, řeš jen množství a rozložení.</p>
+      <p><strong>Když je rostlinný:</strong> trochu vyšší celkový příjem, kombinuj zdroje (luštěniny + obiloviny), zvaž kvalitní rostlinný protein s navýšeným leucinem.</p>
+      <p><strong>Co neřešit:</strong> ideologické války. Sval roste na obojím, když sedí množství, leucinový práh a trénink.</p>
+    </div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům to říkám obrazem: „MPS je jako světlo, co se po jídle s bílkovinou rozsvítí a za pár hodin zhasne. Tvůj úkol není ho jednou pořádně rozsvítit, ale rozsvěcet ho každý den vícekrát.“ V praxi to znamená banální věci — k snídani vejce nebo tvaroh, k obědu pořádná porce masa nebo luštěnin, k večeři zase bílkovina. Žádná magie, žádné okénko „30 minut po tréninku, jinak je vše ztracené“. Denní celek a pár pořádných porcí přebijí každý chytrý trik.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co rozhoduje o tom, jestli svalová hmota přibývá? <span class="tg">odpověď ▾</span></div><div class="aa">Čistá bilance bílkovin — tedy rozdíl mezi syntézou (MPS) a odbouráváním (MPB). Když je MPS dlouhodobě vyšší než MPB, sval roste. Hlavní pákou u zdravého trénujícího je zvedání MPS.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Které dva spouštěče MPS se navzájem násobí a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Silový trénink a příjem bílkovin. Trénink zvýší citlivost svalu na bílkoviny, takže stejná porce po tréninku nadhodí MPS víc než v klidový den. Proto trénink a jídlo řešíme jako jeden systém.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Kolik bílkoviny na jedno jídlo dává praktický smysl a proč ne víc? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 0,4 g/kg na jídlo (u sportovců až ~0,55 g/kg). MPS se chová jako spínač s leucinovým prahem — nad práh skočí, ale další gramy ho už výrazně nezvednou a z velké části se přepálí na oxidaci. Smysl má spíš bílkoviny rozprostřít.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak nejlépe rozložit bílkoviny přes den? <span class="tg">odpověď ▾</span></div><div class="aa">Do 3–4 jídel, každé nad leucinovým prahem, přibližně rovnoměrně — v distribuční studii vyhrály 4 dávky po 20 g každé 3 hodiny nad jednou velkou i nad mnoha drobnými. Priorita je ale celkový denní příjem; distribuce je optimalizace navrch.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč v kalorickém deficitu bílkoviny zvyšujeme, ne snižujeme? <span class="tg">odpověď ▾</span></div><div class="aa">V deficitu tělo víc sahá na bílkoviny a hůř drží sval. Vyšší příjem (cca 1,8–2,4 g/kg/den) chrání svalovou hmotu, drží sytost a pomáhá, aby z váhy ubýval hlavně tuk. Ve studii muži ve 40% deficitu na 2,4 g/kg dokonce nabrali sval.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta (uveď hmotnost a cíl — nabírání nebo dieta) spočítej denní cíl bílkovin v g/kg, rozděl ho do 3–4 jídel a u každého ukaž, že je nad ~0,4 g/kg na jídlo. Pak napiš, jak bys cíl upravil, kdyby šel klient do výrazného deficitu, a jednou větou vysvětli, proč zrovna tak.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Morton RW, Murphy KT, McKellar SR, Schoenfeld BJ, Henselmans M, Helms E, Aragon AA, Devries MC, Banfield L, Krieger JW, Phillips SM. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Moore DR, Robinson MJ, Fry JL, Tang JE, Glover EI, Wilkinson SB, Prior T, Tarnopolsky MA, Phillips SM. Ingested protein dose response of muscle and albumin protein synthesis after resistance exercise in young men. Am J Clin Nutr. 2009;89(1):161–168.</li>
+        <li>Areta JL, Burke LM, Ross ML, Camera DM, West DWD, Broad EM, Jeacocke NA, Moore DR, Stellingwerff T, Phillips SM, Hawley JA, Coffey VG. Timing and distribution of protein ingestion during prolonged recovery from resistance exercise alters myofibrillar protein synthesis. J Physiol. 2013;591(9):2319–2331.</li>
+        <li>Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? Implications for daily protein distribution. J Int Soc Sports Nutr. 2018;15:10.</li>
+        <li>Longland TM, Oikawa SY, Mitchell CJ, Devries MC, Phillips SM. Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial. Am J Clin Nutr. 2016;103(3):738–746.</li>
+        <li>Tang JE, Moore DR, Kujbida GW, Tarnopolsky MA, Phillips SM. Ingestion of whey hydrolysate, casein, or soy protein isolate: effects on mixed muscle protein synthesis at rest and following resistance exercise in young men. J Appl Physiol. 2009;107(3):987–992.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m12-l2', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

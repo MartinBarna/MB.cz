@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whey, kasein a kdy mají suplementy smysl — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 12 · Lekce 8 — Proteinová věda do detailu</div>
+    <h1>Whey, kasein a kdy mají suplementy smysl</h1>
+
+    <p class="lead">Proteinový prášek je nejprodávanější suplement na trhu — a zároveň ten, kolem kterého je nejvíc marketingových keců. <strong>Pravda je nudnější a osvobozující zároveň: o svalu rozhoduje hlavně celkový denní příjem bílkovin, ne značka prášku ani „anabolické okno“.</strong> Až pochopíš, co whey a kasein skutečně umí a co je jen etiketa, přestaneš klientům prodávat naději v dóze a začneš jim stavět jídelníček, který funguje.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Že o nárůstu svalu rozhoduje hlavně denní dávka bílkovin — a kde leží její strop.</li>
+        <li>Kolik bílkovin tělo využije v jednom jídle a proč má smysl je rozložit do dne.</li>
+        <li>Čím se liší whey od kaseinu — rychlost trávení, leucin, a kdy to vůbec hraje roli.</li>
+        <li>Jak je na tom rostlinná bílkovina proti živočišné a jak ten rozdíl chytře dorovnat.</li>
+        <li>Proč jsou bílkoviny ještě důležitější v deficitu než v přebytku.</li>
+        <li>Kdy prášek dává reálný smysl a kdy je to jen drahá náhrada za jídlo.</li>
+      </ul>
+    </div>
+
+    <h2>1) Nejdřív celková dávka, pak všechno ostatní</h2>
+    <p>Než začneme řešit whey vs. kasein nebo načasování, musí být jasné jedno: nejsilnější páka je <strong>celkový denní příjem bílkovin</strong>. Velká meta-analýza 49 studií ukázala, že suplementace bílkovin zlepšuje nárůst beztukové hmoty a síly u silově trénujících — ale efekt navíc plateauje zhruba kolem <strong>1,6 g bílkovin na kilogram tělesné hmotnosti za den</strong>. Nad tuhle hodnotu už průměrně další gainy nepřibývaly.</p>
+    <div class="eq">cíl ≈ 1,6 g bílkovin / kg / den (rozumný strop pro většinu ~2,2 g/kg/den)</div>
+    <p>To je zásadní rámec do praxe. Klient, který má 80 kg, potřebuje zhruba 130 g bílkovin denně, ne 250 g. A je úplně jedno, jestli těch 130 g dorazí z kuřete, tvarohu, nebo prášku — sval pozná gram bílkoviny, ne značku na sáčku.</p>
+    <blockquote>Suplement není kouzlo, je to logistika. Whey neřeší, jestli rosteš — řeší, jestli se ti pohodlně podaří doplnit gramy, které bys jinak z jídla nedal.</blockquote>
+
+    <h2>2) Kolik bílkovin tělo zvládne na jedno jídlo</h2>
+    <p>Tady padá oblíbený mýtus „tělo vstřebá jen 30 g bílkovin naráz“. To je nepřesné — vstřebá v podstatě všechno, jen ne všechno použije přímo na stavbu svalu. Pro <strong>maximální stimulaci svalové proteosyntézy</strong> platí dávka kolem <strong>0,4 g bílkovin / kg tělesné hmotnosti na jedno jídlo</strong>. U 80kg klienta to vychází zhruba na 32 g kvalitní bílkoviny v porci.</p>
+    <div class="card">
+      <p><strong>Praktický výpočet (klient 80 kg):</strong></p>
+      <p><strong>Strop na jídlo:</strong> 0,4 × 80 = ~32 g bílkovin pro maximální anabolickou odpověď.</p>
+      <p><strong>Denní cíl:</strong> 1,6 × 80 = ~128 g bílkovin.</p>
+      <p><strong>Rozložení:</strong> 128 ÷ ~32 = minimálně 4 jídla po ~30 g, ať každé jídlo „nakopne“ proteosyntézu.</p>
+    </div>
+    <p>Doporučení z odborné literatury proto zní: dej si zhruba <strong>0,4 g/kg na jídlo napříč nejméně čtyřmi jídly</strong>, ať se dostaneš na denní 1,6 g/kg. Nejde o to počítat na desetiny — jde o návyk, že každé hlavní jídlo má rozpoznatelný zdroj bílkovin.</p>
+
+    <h2>3) Načasování a rozložení — záleží, ale míň, než slyšíš</h2>
+    <p>Klasický experiment Arety a kol. dal trénovaným mužům stejných 80 g whey během 12 hodin třemi způsoby: po malých dávkách často (8× 10 g), středně (4× 20 g každé 3 h), nebo nárazově (2× 40 g). Vítězem pro svalovou proteosyntézu byla <strong>střední cesta — ~20 g každé 3 hodiny</strong>. Příliš malé dávky sval dostatečně nenakoply, příliš velké nárazové dávky zase nechaly dlouhá „prázdná okna“.</p>
+    <p>Pro praxi z toho plyne uklidňující závěr: nemusíš honit „okno po tréninku“ na minuty. Pravidelné rozumné dávky bílkovin přes den (zhruba každé 3–4 hodiny) jsou lepší strategie než stres z toho, že shake nedorazil do 30 minut po posledním sérii.</p>
+    <blockquote>Anabolické okno není dveře, co se zabouchnou. Je to spíš celý den, kdy průběžně dodáváš svalu stavební materiál.</blockquote>
+
+    <h2>4) Whey vs. kasein — rychlost a leucin</h2>
+    <p>Teď k tomu, proč vůbec existují dva typy. Liší se rychlostí trávení a obsahem leucinu — aminokyseliny, která funguje jako „spínač“ proteosyntézy.</p>
+    <div class="card">
+      <p><strong>Whey (syrovátka):</strong> rychle stravitelná, vysoký obsah leucinu, prudce zvedne hladinu aminokyselin v krvi. Ve studii Tanga a kol. stimuloval whey svalovou proteosyntézu výrazně víc než kasein (a o něco víc než sója) — efekt se připisuje právě rychlosti a leucinu. Ideál kolem tréninku a do snídaně.</p>
+      <p><strong>Kasein:</strong> tráví se pomalu, uvolňuje aminokyseliny postupně po několik hodin. Logická volba, když má následovat dlouhá pauza bez jídla — typicky před spaním nebo jako sytá svačina, která vydrží.</p>
+    </div>
+    <p>Ale pozor na proporce. Tyhle rozdíly se měří v akutních laboratorních studiích na proteosyntéze za pár hodin. V <strong>dlouhodobém nárůstu svalu</strong> u běžného klienta, který má vyřešený celkový příjem, je rozdíl mezi whey a kaseinem malý. Takže: whey je praktická default volba (chuť, cena, univerzálnost), kasein je nika pro konkrétní situace, ne nutnost.</p>
+
+    <h2>5) Rostlinná vs. živočišná bílkovina</h2>
+    <p>Rostlinné bílkoviny mívají nižší skóre kvality (DIAAS) — hůř pokrývají potřebu některých esenciálních aminokyselin a často mají méně leucinu. Proto v akutních studiích sója nakopla proteosyntézu o něco méně než whey. Neznamená to ale, že rostlinná strava „nestaví sval“ — znamená to jen, že se to musí postavit chytřeji.</p>
+    <div class="card">
+      <p><strong>Jak dorovnat rostlinnou bílkovinu:</strong></p>
+      <p><strong>Dej víc gramů:</strong> nižší kvalitu dorovnáš vyšší dávkou — klidně cílit k horní hranici příjmu.</p>
+      <p><strong>Kombinuj zdroje:</strong> luštěniny + obiloviny se doplňují v aminokyselinovém profilu.</p>
+      <p><strong>Hlídej leucin:</strong> sója, hrachový izolát a seitan ho mají rozumně; doplň, kde je ho málo.</p>
+      <p><strong>Prášek jako pojistka:</strong> kvalitní hrachový nebo sójový izolát srovná rozdíl proti whey velmi slušně.</p>
+    </div>
+    <p>Závěr pro klienta na rostlinné stravě: ano, postavíš sval i bez živočišných bílkovin. Jen buď trochu velkorysejší v gramech a pestřejší ve zdrojích.</p>
+
+    <h2>6) Proč bílkoviny rozhodují hlavně v deficitu</h2>
+    <p>Když klient hubne, je v energetickém deficitu — a tělo v deficitu rádo sahá i po svalu, ne jen po tuku. Tady se z bílkovin stává ochranný štít. Longland a kol. nechali muže držet drsný 40% deficit při intenzivním tréninku a porovnali příjem <strong>1,2 vs. 2,4 g/kg/den</strong>. Skupina s vyšším příjmem bílkovin <strong>nabrala svalovou hmotu a zároveň ztratila víc tuku</strong>, zatímco skupina s nižším příjmem o sval jen nepřišla.</p>
+    <div class="eq">v deficitu cílit výš: ~1,8–2,4 g bílkovin / kg / den</div>
+    <p>Praktický důsledek: zatímco v udržování či mírném přebytku stačí ~1,6 g/kg, <strong>při hubnutí příjem bílkovin zvedni</strong>. Chrání to sval, víc zasytí (takže se deficit líp drží) a vede k lepší kompozici těla. Tohle je často moment, kdy proteinový prášek najednou dává největší smysl — v deficitu se gramy shánějí hůř.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient řekne, že si koupil „ten nejlepší anabolický whey“, ptám se ho na jednu věc: kolik bílkovin denně reálně sníš? Většinou neví. Tak to nejdřív spočítáme z jídla. Pokud se z jídla pohodlně dostane na cíl, prášek mu klidně rozmluvím — ušetří peníze. Pokud nedává gramy, zvlášť při hubnutí nebo když nestíhá vařit, nasadím whey jako praktický nástroj, ne jako kouzlo. Kasein řeším u hrstky lidí, co mají večer dlouhou pauzu. A klientům na rostlinné stravě jen řeknu: ber o trochu víc a střídej zdroje. Žádná magie, jen logistika gramů.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kolem jaké denní dávky bílkovin plateauje nárůst svalu u silově trénujících? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba kolem 1,6 g bílkovin na kilogram tělesné hmotnosti za den; nad tuto hodnotu už průměrně další gainy nepřibývaly (rozumný strop bývá uváděn do ~2,2 g/kg/den).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolik bílkovin na jedno jídlo maximalizuje svalovou proteosyntézu a co z toho plyne pro rozložení? <span class="tg">odpověď ▾</span></div><div class="aa">Asi 0,4 g/kg na jídlo (u 80kg klienta ~32 g). Proto má smysl rozložit příjem do nejméně čtyř jídel, ať každé „nakopne“ proteosyntézu a zároveň se dostaneš na denní cíl.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Čím se liší whey od kaseinu a kdy se každý hodí? <span class="tg">odpověď ▾</span></div><div class="aa">Whey se tráví rychle a má hodně leucinu — akutně víc stimuluje proteosyntézu, hodí se kolem tréninku a do snídaně. Kasein se tráví pomalu a uvolňuje aminokyseliny postupně — hodí se před delší pauzu bez jídla, typicky na noc. V dlouhodobém nárůstu svalu je rozdíl při vyřešeném celkovém příjmu malý.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak dorovnat nižší kvalitu rostlinné bílkoviny? <span class="tg">odpověď ▾</span></div><div class="aa">Dát víc gramů, kombinovat zdroje (luštěniny + obiloviny), hlídat dostatek leucinu a případně použít kvalitní rostlinný izolát (hrách, sója). Sval postavíš i bez živočišných bílkovin, jen velkorysejším a pestřejším přístupem.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč jsou bílkoviny ještě důležitější v energetickém deficitu? <span class="tg">odpověď ▾</span></div><div class="aa">V deficitu tělo sahá i po svalu. Vyšší příjem bílkovin (cca 1,8–2,4 g/kg) sval chrání, víc zasytí a vede k lepší kompozici — ve studii vyšší příjem dokonce umožnil nárůst svalu a větší ztrátu tuku zároveň při deficitu.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelového klienta (zadej hmotnost a cíl — hubnutí vs. nabírání). Spočítej jeho denní cíl bílkovin a strop na jedno jídlo dle vzorců z lekce, rozvrhni příjem do konkrétních jídel a rozhodni, jestli a kde nasadíš whey nebo kasein — a hlavně zdůvodni, proč prášek u něj dává nebo nedává smysl. Pokud je na rostlinné stravě, popiš, jak dorovnáš kvalitu bílkoviny.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Morton RW, Murphy KT, McKellar SR, Schoenfeld BJ, Henselmans M, Helms E, Aragon AA, Devries MC, Banfield L, Krieger JW, Phillips SM. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Moore DR, Robinson MJ, Fry JL, Tang JE, Glover EI, Wilkinson SB, Prior T, Tarnopolsky MA, Phillips SM. Ingested protein dose response of muscle and albumin protein synthesis after resistance exercise in young men. Am J Clin Nutr. 2009;89(1):161–168.</li>
+        <li>Areta JL, Burke LM, Ross ML, Camera DM, West DWD, Broad EM, Jeacocke NA, Moore DR, Stellingwerff T, Phillips SM, Hawley JA, Coffey VG. Timing and distribution of protein ingestion during prolonged recovery from resistance exercise alters myofibrillar protein synthesis. J Physiol. 2013;591(9):2319–2331.</li>
+        <li>Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? Implications for daily protein distribution. J Int Soc Sports Nutr. 2018;15:10.</li>
+        <li>Tang JE, Moore DR, Kujbida GW, Tarnopolsky MA, Phillips SM. Ingestion of whey hydrolysate, casein, or soy protein isolate: effects on mixed muscle protein synthesis at rest and following resistance exercise in young men. J Appl Physiol. 2009;107(3):987–992.</li>
+        <li>Longland TM, Oikawa SY, Mitchell CJ, Devries MC, Phillips SM. Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial. Am J Clin Nutr. 2016;103(3):738–746.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m12-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

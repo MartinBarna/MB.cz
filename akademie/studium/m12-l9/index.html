@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protein v deficitu: jak při hubnutí ochránit (a budovat) sval — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 12 · Lekce 9 — Proteinová věda do detailu</div>
+    <h1>Protein v deficitu: jak při hubnutí ochránit (a budovat) sval</h1>
+
+    <p class="lead">V kalorickém deficitu tělo nemá důvod si držet sval — naopak, je to drahá tkáň, kterou rádo obětuje, když není proč. <strong>Protein je tvoje hlavní páka, jak tělu ten důvod dát.</strong> Správně nastavené bílkoviny rozhodují o tom, jestli klient po dietě vypadá vyrýsovaně a silně, nebo jen „menší a měkký“. A v určitých případech jde i v deficitu sval reálně přibrat — ukážeme si, kdy a jak.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je protein v deficitu důležitější než v udržení nebo nabírání.</li>
+        <li>Kolik bílkovin reálně nastavit — konkrétní rozsahy v g/kg pro fázi hubnutí.</li>
+        <li>Proč „recompozice“ (sval nahoru, tuk dolů zároveň) v deficitu existuje a u koho.</li>
+        <li>Jak protein rozdělit do dne a kolik dát na jedno jídlo, ať z toho tělo něco má.</li>
+        <li>Jak na kvalitu zdroje — živočišný vs. rostlinný a co to znamená v praxi.</li>
+        <li>Proč protein navíc v dietě pomáhá i přes sytost, ne jen přes sval.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč je v deficitu protein nejdůležitější</h2>
+    <p>V kalorickém přebytku má tělo energie nazbyt a stavební procesy běží snadno. V deficitu je to obráceně: tělo je v „úsporném režimu“, syntéza svalové bílkoviny klesá a odbourávání naopak roste. Pokud nedodáš dost bílkovin a nedáš svalu signál, že je potřeba (trénink), tělo část svalové hmoty obětuje jako zdroj energie a aminokyselin.</p>
+    <p>Klidová syntéza svalové bílkoviny v deficitu měřitelně padá — ale je možné ji „zachránit“ kombinací silového tréninku a dostatečné dávky proteinu. Jinými slovy: čím větší deficit a čím déle trvá, tím víc bílkovin a tím důležitější je odporový trénink, aby si klient sval udržel.</p>
+    <blockquote>Hubnutí bez dostatku bílkovin a bez silového tréninku není „rýsování“ — je to úbytek hmotnosti, ze kterého jde kus na úkor svalu. Váha klesá, ale postava se nezlepšuje tak, jak by mohla.</blockquote>
+
+    <h2>2) Kolik bílkovin v dietě nastavit</h2>
+    <p>Tady jsou skutečná čísla, ne dojmy. Pro běžnou populaci a sportovce v udržení stačí na maximalizaci adaptace zhruba <strong>1,6 g/kg/den</strong> — meta-analýza ukázala, že nad touto hranicí už další gramy nepřinášejí víc beztukové hmoty. V deficitu ale potřebu zvedáme, protože bílkoviny mají navíc chránit sval proti odbourávání.</p>
+    <div class="eq">cíl v deficitu ≈ 1,8–2,7 g bílkovin / kg tělesné hmotnosti / den</div>
+    <p>Čím hlubší deficit, čím vyšší trénovanost a čím nižší procento tuku, tím blíž horní hranici. Štíhlý, trénovaný klient v agresivní rýsovací fázi může jet i k 2,7 g/kg; obéznější začátečník v mírném deficitu vystačí spíš s 1,8 g/kg. U velmi obézních klientů je rozumnější počítat protein z cílové (nebo beztukové) hmotnosti, ne z aktuální váhy, aby čísla nebyla zbytečně vysoká.</p>
+    <div class="card">
+      <p><strong>Mírný deficit, vyšší % tuku:</strong> ~1,8 g/kg — bohatě chrání sval, snadno se dodrží.</p>
+      <p><strong>Standardní hubnutí, trénovaný klient:</strong> ~2,0–2,2 g/kg — bezpečný „default“ pro většinu.</p>
+      <p><strong>Agresivní deficit, štíhlý a trénovaný:</strong> ~2,3–2,7 g/kg — maximální ochrana svalu, výhoda i v sytosti.</p>
+    </div>
+
+    <h2>3) Recompozice: sval nahoru, tuk dolů zároveň</h2>
+    <p>„V deficitu nejde nabrat sval“ je oblíbené tvrzení, které ale není přesné. V kontrolované studii muži v <strong>40% kalorickém deficitu</strong> po čtyři týdny při šestidenním tréninku týdně a příjmu <strong>2,4 g/kg/den</strong> bílkovin přibrali ~1,2 kg beztukové hmoty a zhubli ~4,8 kg tuku — zatímco skupina na ~1,2 g/kg sval jen udržela a tuku ztratila o něco méně. Vyšší protein tedy v deficitu nejen chránil, ale i budoval.</p>
+    <p>Pozor na realistická očekávání: tahle „recompozice“ funguje nejvýrazněji u tří skupin — začátečníci, lidé s vyšším procentem tuku a ti, kdo se ke svalu vracejí po pauze (muscle memory). U pokročilého štíhlého klienta v hlubokém deficitu je reálný cíl sval <em>udržet</em>, ne přibírat. To je naprosto v pořádku — udržení svalu v dietě je samo o sobě úspěch.</p>
+    <blockquote>Recompozice není trik ani zázrak — je to výsledek dvou silných signálů (dostatek bílkovin + tvrdý odporový trénink), které tělu řeknou „sval potřebujeme, energii vezmi z tuku“.</blockquote>
+
+    <h2>4) Rozložení proteinu do dne</h2>
+    <p>Záleží nejen kolik, ale i jak to rozdělíš. Syntéza svalové bílkoviny po jídle se „nasytí“ — nad určitou dávkou na jedno jídlo už extra gramy nestimulují víc. Praktická hranice je zhruba <strong>0,4 g/kg na jídlo</strong> (u typického klienta cca 20–40 g kvalitního proteinu), což maximálně nakopne syntézu.</p>
+    <div class="eq">~0,4 g/kg na jídlo × 3–5 jídel za den</div>
+    <p>Studie distribuce ukázala, že 20 g whey každé 3 hodiny dalo lepší celodenní odezvu syntézy než stejné množství v málo velkých dávkách nebo v mnoha drobných. Praktický překlad: rozděl denní protein do <strong>3–5 jídel</strong> po zhruba stejných porcích, místo aby klient snědl většinu večer.</p>
+    <div class="card">
+      <p><strong>Default pro většinu:</strong> 4 jídla, v každém 0,4 g/kg bílkovin.</p>
+      <p><strong>Kolem tréninku:</strong> mít jedno solidní bílkovinné jídlo v rozumném okně před/po — okno není tak úzké, jak se říká, ale jistota neuškodí.</p>
+      <p><strong>Na noc:</strong> poslední jídlo s pomalejší bílkovinou (tvaroh, kasein) je rozumný bonus, ne povinnost.</p>
+    </div>
+    <p>Nepřeháněj to s detaily. Celkový denní příjem a trénink rozhodují nejvíc; rozložení je jemné doladění, ne základ.</p>
+
+    <h2>5) Kvalita zdroje: živočišný vs. rostlinný</h2>
+    <p>Ne všechny gramy bílkovin jsou stejně „použitelné“. Kvalitu řeší obsah esenciálních aminokyselin (hlavně <strong>leucinu</strong>, který spouští syntézu) a stravitelnost. Živočišné zdroje — vejce, maso, ryby, mléčné — jsou kompletní a mají vysokou stravitelnost. Rostlinné bývají chudší na některé aminokyseliny (např. luštěniny na methionin, obiloviny na lysin) a hůř stravitelné.</p>
+    <p>Praktický důsledek pro klienta na rostlinné stravě: nemusí to být horší, ale chce to dvě úpravy — celkový protein nastavit spíš k <strong>horní hranici</strong> rozsahu a kombinovat zdroje (luštěniny + obiloviny, kvalitní izoláty jako sójový či hrachový). Tím se chybějící aminokyseliny doplní a odezva se přiblíží živočišným zdrojům.</p>
+    <blockquote>Vegan, který jí dost bílkovin a chytře kombinuje zdroje, sval v dietě udrží stejně dobře jako masožravec. „Rostlinné = slabší“ platí jen pro lajdácky postavený jídelníček.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> S klientem v dietě řeším protein jako první, ne poslední. Říkám mu: „Bílkovina je v deficitu tvoje pojistka — drží ti sval, zasytí tě a tělo z ní udělá nejmíň tuku.“ U většiny lidí jedeme 2 g/kg a dělíme to do čtyř jídel po dlani masa/ryby/tvarohu. Štíhlým, kdo finišují rýsování, zvednu protein výš a hlídám trénink, ať mají svalu důvod zůstat. A vždycky zdůrazním sytost: po vyšším proteinu mívají klienti míň hladu, takže se jim deficit drží sám.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je protein v deficitu důležitější než v udržení? <span class="tg">odpověď ▾</span></div><div class="aa">V deficitu klesá syntéza svalové bílkoviny a roste odbourávání — tělo je v úsporném režimu a sval rádo obětuje. Vyšší protein (a silový trénink) tělu dají signál sval si udržet, případně budovat.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaký rozsah bílkovin v g/kg nastavit v deficitu a co rozhoduje, kde v něm být? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 1,8–2,7 g/kg/den. Blíž horní hranici při hlubším deficitu, vyšší trénovanosti a nižším procentu tuku; blíž spodní u mírného deficitu a vyššího % tuku.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> U koho reálně funguje nabírání svalu v deficitu (recompozice)? <span class="tg">odpověď ▾</span></div><div class="aa">Nejvíc u začátečníků, lidí s vyšším % tuku a u návratu po pauze (muscle memory). U pokročilého štíhlého klienta v hlubokém deficitu je reálným cílem sval udržet, ne přibírat.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Kolik proteinu na jedno jídlo a jak ho rozdělit do dne? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 0,4 g/kg na jídlo (cca 20–40 g kvalitního proteinu), rozdělené do 3–5 jídel po dni. Rovnoměrné rozložení dá lepší celodenní odezvu než většina proteinu večer.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co poradíš klientovi na rostlinné stravě, aby sval v dietě neztratil? <span class="tg">odpověď ▾</span></div><div class="aa">Nastavit celkový protein spíš k horní hranici rozsahu a kombinovat zdroje (luštěniny + obiloviny, kvalitní izoláty), aby se doplnily chybějící aminokyseliny a stravitelnost se přiblížila živočišným zdrojům.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta v dietě (uveď pohlaví, hmotnost, % tuku, trénovanost a hloubku deficitu) nastav konkrétní denní cíl bílkovin v gramech, zdůvodni, proč jsi zvolil dané místo v rozsahu 1,8–2,7 g/kg, a rozepiš ho do 3–5 jídel po ~0,4 g/kg. Pak napiš, jestli u něj čekáš spíš udržení svalu, nebo recompozici, a proč.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Morton RW, Murphy KT, McKellar SR, Schoenfeld BJ, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Longland TM, Oikawa SY, Mitchell CJ, Devries MC, Phillips SM. Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial. Am J Clin Nutr. 2016;103(3):738–746.</li>
+        <li>Moore DR, Robinson MJ, Fry JL, et al. Ingested protein dose response of muscle and albumin protein synthesis after resistance exercise in young men. Am J Clin Nutr. 2009;89(1):161–168.</li>
+        <li>Areta JL, Burke LM, Ross ML, et al. Timing and distribution of protein ingestion during prolonged recovery from resistance exercise alters myofibrillar protein synthesis. J Physiol. 2013;591(9):2319–2331.</li>
+        <li>Phillips SM, Van Loon LJC. Dietary protein for athletes: from requirements to optimum adaptation. J Sports Sci. 2011;29(Suppl 1):S29–S38.</li>
+        <li>Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m12-l9', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
