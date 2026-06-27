@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMR a RMR: kolik spálíš jen tím, že žiješ — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 10 · Lekce 2 — Metabolismus a TDEE do hloubky</div>
+    <h1>BMR a RMR: kolik spálíš jen tím, že žiješ</h1>
+
+    <p class="lead">Většina lidí si myslí, že kalorie pálí hlavně v posilovně. Pravda je opačná: <strong>největší část energie spálíš, aniž bys hnul prstem.</strong> Srdce, mozek, ledviny, dýchání, udržení teploty — to běží 24 hodin denně a žere zdaleka nejvíc. Když pochopíš, co je BMR a RMR a z čeho se skládá zbytek výdeje, přestaneš věřit pohádkám o „rozbitém metabolismu“ a začneš řídit hubnutí i nabírání s chladnou hlavou.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co přesně znamená BMR a RMR a proč to nejsou úplně stejná čísla.</li>
+        <li>Jak BMR zapadá do celkového výdeje (TDEE) vedle TEF, NEAT a tréninku.</li>
+        <li>Proč je beztuková hmota hlavní „motor“ klidového výdeje — a co z toho plyne pro trénink.</li>
+        <li>Jak BMR spočítat vzorcem a proč je to jen odhad, ne přesné měření.</li>
+        <li>Co je adaptivní termogeneze a proč při dietě výdej klesá víc, než čekáš.</li>
+        <li>Jak tahle čísla použít s klientem v praxi, ne jen v kalkulačce.</li>
+      </ul>
+    </div>
+
+    <h2>1) BMR vs. RMR — dvojčata, ne jeden člověk</h2>
+    <p><strong>BMR (bazální metabolismus)</strong> je nejnižší množství energie, které tělo potřebuje k holému přežití v klidu: udržet v chodu orgány, mozek, dýchání, oběh, tělesnou teplotu. Měří se za přísných podmínek — vleže, po probuzení, nalačno (12 hodin bez jídla), v termoneutrálním prostředí, bez stresu a pohybu. To je laboratorní ideál, který v běžném životě skoro nikdy nenastane.</p>
+    <p><strong>RMR (klidový metabolismus)</strong> je to samé, ale měřené za méně přísných podmínek — člověk je vzhůru, v klidu sedí, nemusí být dokonale nalačno. Proto bývá RMR zpravidla o pár procent vyšší než „čistý“ BMR. V praxi se obě zkratky používají skoro zaměnitelně a většina kalkulaček i vzorců odhaduje něco mezi tím. Pro tebe jako trenéra je důležité vědět, že rozdíl existuje, ale prakticky řešíš jedno číslo: <strong>kolik tělo spálí v klidu.</strong></p>
+    <blockquote>BMR je „motor na volnoběh“. RMR je ten samý motor, jen měřený, když člověk sedí a žije — proto o chlup vyšší. Pro řízení diety je rozdíl mezi nimi šum.</blockquote>
+
+    <h2>2) Kam BMR patří v celkovém výdeji</h2>
+    <p>Celkový denní výdej (TDEE) má čtyři složky a klidový metabolismus je z nich daleko největší. U běžně aktivního člověka vypadá rozdělení zhruba takto:</p>
+    <div class="card">
+      <p><strong>BMR / RMR (~60–70 %):</strong> energie na holé fungování. Největší díl koláče — a paradoxně ten, který v posilovně neovlivníš ze dne na den.</p>
+      <p><strong>NEAT (~15–30 %):</strong> veškerý pohyb mimo trénink — chůze, stání, úklid, vrtění se. Nejvariabilnější složka vůbec; mezi dvěma lidmi podobné velikosti se může lišit i o stovky až tisíc kcal denně.</p>
+      <p><strong>TEF (~10 %):</strong> termický efekt jídla — energie na trávení a zpracování potravy. Nejvyšší ho mají bílkoviny (zhruba 20–30 % jejich energie), pak sacharidy, nejméně tuky.</p>
+      <p><strong>Trénink / cílený pohyb (variabilní, často 5–15 %):</strong> u většiny rekreantů menší díl, než se čeká. Hodina v posilovně je menší kousek koláče než celodenní NEAT.</p>
+    </div>
+    <p>Praktický důsledek: když chce klient ovlivnit výdej, největší páky nejsou v tom „víc se zničit na tréninku“, ale v <strong>udržení svalů (drží BMR nahoře)</strong> a v <strong>každodenním pohybu (NEAT)</strong>. Trénink je nenahraditelný kvůli síle, svalu a zdraví — ale jako přímý „spalovač kalorií“ je překvapivě malý.</p>
+
+    <h2>3) Beztuková hmota je hlavní motor klidového výdeje</h2>
+    <p>Proč má velký a svalnatý člověk vyšší BMR než drobná osoba? Protože klidový výdej táhne hlavně <strong>beztuková hmota (FFM)</strong> — svaly, orgány, kosti, voda. Tuková tkáň je metabolicky relativně líná, kdežto orgány a sval spalují energii pořád. Beztuková hmota je proto nejsilnějším jednotlivým prediktorem klidového výdeje napříč studiemi.</p>
+    <p>To má dva praktické dopady. Za prvé: <strong>silový trénink a dostatek bílkovin</strong>, které chrání nebo budují sval, pomáhají držet BMR „nahoře“ — hlavně v deficitu, kde hrozí ztráta svalu. Za druhé: pozor na přehnaná očekávání. Přidání pár kilogramů svalu nezvedne BMR o stovky kcal denně, jak slibují reklamy — efekt je reálný, ale skromný. Hlavní benefit svalu je funkční a zdravotní, ne to, že by z tebe udělal „spalovací pec“.</p>
+    <blockquote>Sval ti neudělá z metabolismu výheň. Ale udržuje motor klidového výdeje větší a chrání tě před tím, aby ti při dietě výdej spadl na dno.</blockquote>
+
+    <h2>4) Jak BMR odhadnout — a proč je to jen hypotéza</h2>
+    <p>BMR se dá změřit přesně jen nepřímou kalorimetrií v laboratoři. V praxi používáme vzorce. Nejrozšířenější a v populaci nejpřesnější je <strong>Mifflin–St Jeor</strong> (z roku 1990), který pracuje s hmotností, výškou, věkem a pohlavím:</p>
+    <div class="eq">RMR (muž) = 10 × kg + 6,25 × cm − 5 × věk + 5<br>RMR (žena) = 10 × kg + 6,25 × cm − 5 × věk − 161</div>
+    <p>Výsledný RMR pak vynásobíš faktorem aktivity (zhruba 1,2 u sedavého člověka až ~1,7+ u velmi aktivního), abys dostal odhad TDEE. Existují i vzorce počítající přímo s beztukovou hmotou (např. Cunningham), které jsou přesnější u lidí se známým složením těla — ale potřebuješ k nim změřenou FFM.</p>
+    <p>Klíčové je slovo <strong>odhad</strong>. I „nejlepší“ vzorec se u konkrétního člověka může splést o stovky kcal denně oběma směry — kvůli genetice, množství svalu, historii diet, hormonům a hlavně kvůli obrovsky variabilnímu NEAT. Číslo z kalkulačky proto ber jako startovní hypotézu, kterou ověříš tím, jak klient reálně reaguje na nastavený příjem za 2–3 týdny.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientovi nikdy neříkám „tvůj výdej je 2 340 kcal“ s vážnou tváří. Říkám: „Vzorec hádá kolem 2 300, tak na tom postavíme start a za tři týdny se podíváme, jestli se váha v čase hýbe tak, jak chceme.“ Vzorec je odrazový můstek, ne diagnóza. Kdo to bere jako svatou pravdu, ten se diví, proč mu „matematika nesedí“ — a obviňuje metabolismus místo nepřesného odhadu.</div>
+
+    <h2>5) Adaptivní termogeneze — proč výdej v dietě klesá víc, než čekáš</h2>
+    <p>Když klient hubne, jeho výdej klesá ze dvou důvodů. Jeden je samozřejmý: <strong>menší tělo spálí míň</strong> — méně hmoty znamená nižší BMR. Druhý je zákeřnější a jmenuje se <strong>adaptivní termogeneze</strong>: výdej klesne <em>víc</em>, než by odpovídalo samotné ztrátě hmoty. Tělo se brání hladovění tím, že „přitáhne ruční brzdu“ — sníží náklady na klidové funkce a hlavně podvědomě sníží NEAT (méně pohybu, méně vrtění, méně energie do běžného dne).</p>
+    <p>Tenhle efekt je dobře doložený a u některých lidí přetrvává i poté, co si redukovanou váhu drží delší dobu — což je jeden z důvodů, proč je udržení hmotnosti tak těžké a proč se váha ráda vrací. Pro tebe to znamená: <strong>diety s konce „čekej, že se výdej časem sníží“</strong>, a počítej s tím v plánu — diet break, refeed, návrat na udržovací příjem, důraz na bílkoviny a silový trénink kvůli ochraně svalu, a hlavně realistické tempo, aby brzda nedosedla úplně.</p>
+    <blockquote>Adaptivní termogeneze není „rozbitý metabolismus“. Je to chytrá obrana těla proti hladu. Nedá se obejít, ale dá se s ní počítat — pomalejším tempem, dost bílkovinami a periodickými pauzami.</blockquote>
+
+    <h2>6) Energy flux — víc dovnitř i ven jako lepší stav</h2>
+    <p>Existuje dva způsoby, jak držet stejnou energetickou bilanci. Buď málo jíš a málo se hýbeš (<strong>nízký flux</strong>), nebo hodně jíš a hodně se hýbeš (<strong>vysoký flux</strong>) — v obou případech může vyjít bilance na nulu. Vysoký flux je ale obvykle příjemnější a zdravější stav: víc jídla znamená víc živin a lepší dodržení, víc pohybu drží NEAT a chuť k jídlu lépe v souladu s výdejem.</p>
+    <p>Pro klienta to v praxi znamená: než aby seděl na dietě 1 400 kcal a nehýbal se, je často lepší zvednout denní pohyb (kroky, NEAT, trénink) a jíst o něco víc při stejné bilanci. Vyšší výdej dává prostor jíst dost bílkovin a vlákniny, udržuje pocit energie a usnadňuje to, aby plán šel utáhnout dlouhodobě.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je rozdíl mezi BMR a RMR? <span class="tg">odpověď ▾</span></div><div class="aa">BMR se měří za přísných podmínek (vleže, nalačno, po probuzení, v klidu), RMR za méně přísných (vzhůru, vsedě, nemusí být dokonale nalačno). RMR proto bývá o pár procent vyšší. V praxi se používají skoro zaměnitelně.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak velký díl TDEE tvoří klidový výdej a proč je to důležité? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 60–70 % celkového výdeje. Je to největší složka — proto největší páky výdeje nejsou v tréninku, ale v udržení svalu (drží BMR) a v každodenním pohybu (NEAT).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co je hlavním prediktorem klidového výdeje a co z toho plyne pro trénink? <span class="tg">odpověď ▾</span></div><div class="aa">Beztuková hmota (svaly, orgány). Proto silový trénink a dost bílkovin chrání sval a drží BMR nahoře — hlavně v deficitu. Efekt přidaného svalu na BMR je ale reálný, ne dramatický.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je číslo z BMR kalkulačky jen startovní hypotéza? <span class="tg">odpověď ▾</span></div><div class="aa">Vzorec je odhad, který se u konkrétního člověka může splést i o stovky kcal (genetika, sval, historie diet, hormony, hlavně variabilní NEAT). Ověřuje se reálnou reakcí na příjem za 2–3 týdny.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co je adaptivní termogeneze a proč na ni myslet při dietě? <span class="tg">odpověď ▾</span></div><div class="aa">Pokles výdeje, který je větší, než odpovídá samotné ztrátě hmoty — tělo se brání hladu a snižuje hlavně NEAT. Proto je udržení váhy těžké; počítej s pomalejším tempem, dost bílkovinami, silovým tréninkem a periodickými pauzami.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelového klienta spočítej RMR vzorcem Mifflin–St Jeor, vynásob ho faktorem aktivity a urči odhad TDEE. Pak rozepiš, jakou část výdeje tvoří klidový metabolismus a jak bys u tohoto klienta chránil beztukovou hmotu během deficitu. Nakonec popiš, jak budeš reagovat, až se po pár týdnech projeví adaptivní termogeneze (úprava příjmu, pohybu, nebo zařazení pauzy).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Mifflin MD, St Jeor ST, Hill LA, Scott BJ, Daugherty SA, Koh YO. A new predictive equation for resting energy expenditure in healthy individuals. Am J Clin Nutr. 1990;51(2):241–247.</li>
+        <li>Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702.</li>
+        <li>Westerterp KR. Diet induced thermogenesis. Nutr Metab (Lond). 2004;1(1):5.</li>
+        <li>Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55.</li>
+        <li>Leibel RL, Rosenbaum M, Hirsch J. Changes in energy expenditure resulting from altered body weight. N Engl J Med. 1995;332(10):621–628.</li>
+        <li>Rosenbaum M, Hirsch J, Gallagher DA, Leibel RL. Long-term persistence of adaptive thermogenesis in subjects who have maintained a reduced body weight. Am J Clin Nutr. 2008;88(4):906–912.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m10-l2', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
