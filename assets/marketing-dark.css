@@ -4,7 +4,9 @@
    světlý motiv (Bootstrap + highend.css + inline pravidla stránek).
    Obsah/markup se nemění — jen barevná vrstva.
    ============================================================ */
-:root { --bd-gold:#ff7a00; --bd-gold2:#ff9d3c; --bd-gold-soft:#ffb066; --bd-ink:#f0eadf; --bd-muted:#9d938a; --bd-muted2:#cabfb4; --bd-line:rgba(255,255,255,.08); }
+:root { --bd-gold:#ff7a00; --bd-gold2:#ff9d3c; --bd-gold-soft:#ffb066; --bd-ink:#f0eadf; --bd-muted:#9d938a; --bd-muted2:#cabfb4; --bd-line:rgba(255,255,255,.08);
+  /* přebití světlých proměnných stránek (makro/forma) na tmavé tóny */
+  --cream:#100d0a!important; --cream2:#17130f!important; --green-light:rgba(255,122,0,.08)!important; }
 
 html, body { background:#0a0908; }
 body {
@@ -77,6 +79,55 @@ a { color:inherit; }
 /* ---------- footer ---------- */
 footer { background:#070605!important; border-top:1px solid var(--bd-line); color:#cfc6bb!important; }
 footer a { color:var(--bd-gold-soft)!important; }
+
+/* ---------- stránkové komponenty (články, reference, tréninky, …) ---------- */
+/* články: vlastní navbar/breadcrumb, nadpisy, CTA a author box */
+.nav { background:rgba(12,11,10,.82)!important; border-bottom:1px solid var(--bd-line)!important; }
+.nav a, .nav a.back { color:#cabfb4!important; }
+article h2, article h3, .post h2, .post h3 { color:#fff!important; }
+article p, .post p, article li, .post li { color:var(--bd-muted2)!important; }
+/* ghost nadpisy s inline tmavou barvou (color:var(--green-dark)/#161616) */
+h2[style*="--green-dark"], h3[style*="--green-dark"],
+h2[style*="#161616"], h3[style*="#161616"] { color:#fff!important; }
+.cta-box, .author-box, .price-card, .rev {
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important;
+  border:1px solid var(--bd-line)!important;
+  box-shadow:0 24px 50px -34px rgba(0,0,0,.9)!important; color:var(--bd-ink)!important;
+}
+.cta-box h2, .cta-box h3, .author-box h3, .author-box h4, .price-card .qty, .rev figcaption { color:#fff!important; }
+.cta-box p, .author-box p, .price-card .per, .rev blockquote { color:var(--bd-muted2)!important; }
+.price-card.featured, .price-card.best { border-color:rgba(255,122,0,.5)!important; box-shadow:0 40px 90px -40px rgba(255,122,0,.3)!important; }
+.price-card .total { color:#fff!important; }
+.rev .stars, .stars { color:#ffb300!important; }
+
+/* formuláře, FAQ, kalkulačka, badge pilulky, tabulky */
+.mock, .form-card, .calc-card, .calc-wrap, .auth .box, .faq details {
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important;
+  border:1px solid var(--bd-line)!important; box-shadow:0 24px 50px -34px rgba(0,0,0,.9)!important; color:var(--bd-ink)!important;
+}
+.faq summary, .faq details { color:var(--bd-ink)!important; }
+.calc-wrap label, .form-card label { color:var(--bd-muted2)!important; }
+.eyebrow, .pill { background:rgba(255,122,0,.12)!important; color:var(--bd-gold-soft)!important; border-color:rgba(255,122,0,.28)!important; box-shadow:none!important; }
+input, textarea, select, .form-control, .form-select {
+  background:rgba(0,0,0,.28)!important; color:var(--bd-ink)!important; border-color:rgba(255,255,255,.14)!important;
+}
+input::placeholder, textarea::placeholder { color:#7b7064!important; }
+table { background:rgba(255,255,255,.03)!important; color:var(--bd-ink)!important; border:1px solid var(--bd-line)!important; }
+th, td { border-color:var(--bd-line)!important; color:var(--bd-ink)!important; }
+th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
+.hero .sub, .hero p { color:var(--bd-muted2)!important; }
+.chip { color:var(--bd-gold-soft)!important; }
+/* inline světlé sekce/karty (např. background:#f6f7f8 / #f6f9f6 / #faf…) */
+[style*="background:#f6f7f8"], [style*="background: #f6f7f8"],
+[style*="background:#f6f9f6"], [style*="background:#fafafa"], [style*="background:#faf7f3"] { background:rgba(255,255,255,.03)!important; }
+/* makro/forma sekce & seznamy s literálním #f6f7f8 (ne přes proměnnou) */
+.auth { background:transparent!important; }
+.auth .box strong, .auth strong { color:#fff!important; }
+.reco li { background:rgba(255,255,255,.04)!important; border:1px solid var(--bd-line)!important; color:var(--bd-ink)!important; }
+.steps h3 { color:#fff!important; }
+/* inline tmavé textové barvy → světlé (makro/forma/karty) */
+[style*="color:#5d5d5d"], [style*="color:#5D5D5D"], [style*="color:#4a4a4a"],
+[style*="color:#6a6a6a"], [style*="color:#444"], [style*="color:#555"] { color:var(--bd-muted2)!important; }
 
 /* slim scrollbar do tmava (override highend.css) */
 @media (min-width:992px){
