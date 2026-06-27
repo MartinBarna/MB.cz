@@ -223,7 +223,9 @@ ${items}
   .top .in { max-width:900px; margin:0 auto; padding:11px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
   .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
-  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .top a.back, .top a.out { color:#bbb; text-decoration:none; font-size:.86rem; cursor:pointer; }
+  .top a.out:hover, .top a.back:hover { color:#fff; }
+  .top .topr { display:flex; align-items:center; gap:16px; }
   .wrap { max-width:880px; margin:0 auto; padding:28px 18px 80px; }
   .hero h1 { font-size:1.7rem; letter-spacing:-.01em; }
   .hero p { color:#6f655a; margin-top:.3rem; }
@@ -260,7 +262,10 @@ ${items}
 <body>
   <div class="top"><div class="in">
     <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span> Videokurz</a>
-    <a class="back" href="/akademie/moje/">← Barna Academy</a>
+    <span class="topr">
+      <a class="back" href="/akademie/moje/">← Barna Academy</a>
+      <a class="out" id="logout">Odhlásit</a>
+    </span>
   </div></div>
 
   <div class="wrap">
@@ -286,6 +291,7 @@ ${modulesHtml}
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js"></script>
   <script>
+    (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
     var TOTAL=${ordered.length};
     function render(done){
       done=done||{};
