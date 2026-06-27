@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perimenopauza a menopauza — co se reálně mění — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 18 · Lekce 4 — Ženské zdraví</div>
+    <h1>Perimenopauza a menopauza — co se reálně mění</h1>
+
+    <p class="lead">Dřív nebo později ti přijde klientka kolem padesátky, která řekne: „Dělám to samé co loni a najednou to nefunguje.“ Nešílí. <strong>Pokles estrogenu mění tělo i to, jak reaguje na trénink a jídlo.</strong> Tahle lekce ti dá klid v hlavě i v hlase — abys věděl, co se opravdu děje, co je mýtus a kde jsou ty hlavní páky, na které máš sáhnout.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Rozdíl mezi perimenopauzou a menopauzou a co se v každé fázi děje s estrogenem.</li>
+        <li>Jak pokles estrogenu mění kompozici, sval, kosti, spánek a termoregulaci.</li>
+        <li>Proč je silový trénink hlavní páka, ne kardio navíc.</li>
+        <li>Kolik bílkovin a proč jich klientka v tomhle období potřebuje víc.</li>
+        <li>Jak o tom mluvit realisticky — bez strašení, ale i bez bagatelizace.</li>
+      </ul>
+    </div>
+
+    <h2>1) Perimenopauza vs. menopauza — co je co</h2>
+    <p>Lidi to házejí do jednoho pytle, ty bys neměl. <strong>Perimenopauza</strong> je přechodová fáze, typicky mezi 40. a 50. rokem, kdy hladiny estrogenu i progesteronu začnou kolísat — jednou nahoře, pak prudce dolů. Cyklus se rozhází, přijdou návaly, horší spánek, výkyvy nálady. Trvá to klidně 4–8 let.</p>
+    <p><strong>Menopauza</strong> je jeden konkrétní bod: 12 měsíců bez menstruace. Všechno po něm je postmenopauza, kdy estrogen zůstává trvale nízko. Většina potíží, kvůli kterým klientka přijde, spadá právě do perimenopauzy a raných let po ní.</p>
+    <blockquote>Estrogen není „jen“ pohlavní hormon. Sahá na svaly, kosti, cévy, mozek i ukládání tuku. Proto když klesne, klientka cítí změnu na víc frontách najednou.</blockquote>
+
+    <h2>2) Co se mění s tělem</h2>
+    <p>Pokles estrogenu nese pár předvídatelných změn. Není to konec světa, ale je dobré je znát dopředu:</p>
+    <div class="card">
+      <p><strong>Kompozice a viscerální tuk:</strong> tělo začne tuk ukládat víc do oblasti břicha — i bez velkého nárůstu váhy. Tenhle viscerální tuk je metabolicky aktivnější a hůř se ho zbavuje. Klientka často přibere „v pase“, i když na váze skoro nic.</p>
+      <p><strong>Svalová hmota:</strong> klesá rychleji (sarkopenie se zrychluje). S ní klesá síla, klidový výdej i citlivost na inzulin. Tohle je ta nejcennější věc, kterou jde tréninkem bránit.</p>
+      <p><strong>Kostní hustota:</strong> estrogen chrání kost. Po menopauze je ztráta kosti nejrychlejší v prvních letech — proto roste riziko osteoporózy a zlomenin.</p>
+      <p><strong>Spánek a termoregulace:</strong> návaly horka a noční pocení rozbíjejí spánek. Špatný spánek pak zhoršuje hlad, regeneraci i náladu — a roztáčí se kruh.</p>
+    </div>
+    <p>Důležitý praktický závěr: hodně z toho, co klientka přičítá „pomalému metabolismu“, je ve skutečnosti úbytek svalu plus horší spánek plus přesun tuku. A na to máš nástroje.</p>
+
+    <h2>3) Silový trénink je hlavní páka</h2>
+    <p>Pokud máš vybrat jednu věc, která tady dělá nejvíc, je to silový trénink. Drží svalovou hmotu, zatěžuje kost (a tím ji nutí zůstat hustá), zlepšuje citlivost na inzulin a pomáhá s kompozicí líp než hodiny kardia.</p>
+    <p>Prakticky: 2–3 silové tréninky týdně, progresivní zátěž, velké vícekloubové cviky (dřep, výpady, tlaky, tahy, mrtvý tah v rozumné variantě). Kardio a kroky jsou skvělé pro srdce a hlavu, ale nenahradí činku. Klientky se často bojí „zmohutnět“ — to se nestane, na to estrogen padá špatným směrem. Zmohutní leda síla a držení těla.</p>
+    <blockquote>Zátěž, kterou kost a sval cítí, je signál „ještě tě potřebuju“. Bez něj tělo škrtá rozpočet tam, kde se mu to v tomhle období hodí — ve svalu a v kosti.</blockquote>
+
+    <h2>4) Bílkoviny — víc, ne míň</h2>
+    <p>Se stárnutím klesá citlivost svalu na bílkovinu (tzv. anabolická rezistence). Stejná porce proteinu jako ve třiceti spustí míň stavby svalu než dřív. Řešení je jednoduché: dát víc a rozložit to.</p>
+    <div class="card">
+      <p><strong>Kolik:</strong> cílit zhruba na 1,4–2,0 g bílkovin na kilo tělesné hmotnosti denně, k hornímu okraji při dietě a aktivním tréninku.</p>
+      <p><strong>Jak rozložit:</strong> 3–4 dávky po cca 25–40 g, ne všechno k večeři. Každé jídlo s pořádnou porcí bílkoviny líp stimuluje svalovou stavbu.</p>
+      <p><strong>Proč to sedí s tréninkem:</strong> bílkovina + silový podnět = nejlepší obrana svalu a kosti, jakou v lekci máme. Jedno bez druhého kulhá.</p>
+    </div>
+    <p>Bonus: bílkovina nejvíc zasytí a má nejvyšší termický efekt. V období, kdy se hůř drží váha a snadno klesá svalová hmota, hraje pro tebe na obou stranách.</p>
+
+    <h2>5) Jak o tom mluvit — realisticky</h2>
+    <p>Tón rozhoduje o tom, jestli ti klientka uvěří a zůstane. Strašení („teď už to bude jen horší“) ji položí. Bagatelizace („to je normální, vydrž“) ji naštve, protože ty potíže jsou reálné. Trefit se chceš někam mezi.</p>
+    <p>Pojmenuj, co se děje, normalizuj to a hned ukaž páky, které máš v ruce: silový trénink, dost bílkovin, spánková hygiena, kroky, případně konzultace lékaře nebo gynekologa ohledně hormonální terapie (to není tvoje pole, ale máš na to umět odkázat). Klientka potřebuje slyšet, že má vliv — jen se posunula pravidla hry.</p>
+    <blockquote>Cíl není vrátit tělo do třiceti. Cíl je nejsilnější, nejstabilnější verze klientky pro tu dekádu, ve které právě je.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientkám v přechodu říkám narovinu: „Tělo nezlobí, jen změnilo nastavení — a my ho přečteme.“ První věc, kterou hlídám, není váha, ale jestli zvedá těžší činku než minulý měsíc a jestli dá svoje bílkoviny každý den. Spánek řešíme jako trénink — má svoje pravidlo a čas. A když přijde věta „přibrala jsem v pase, i když dělám všechno stejně“, vždycky se zeptám na sval a spánek dřív než na kalorie. Devětkrát z deseti je páka tam :) Be Effective.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je rozdíl mezi perimenopauzou a menopauzou? <span class="tg">odpověď ▾</span></div><div class="aa">Perimenopauza je přechodová fáze (typicky 40–50 let), kdy estrogen a progesteron kolísají a objevují se potíže. Menopauza je jeden bod — 12 měsíců bez menstruace; po něm zůstává estrogen trvale nízko (postmenopauza).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak pokles estrogenu mění tělesnou kompozici? <span class="tg">odpověď ▾</span></div><div class="aa">Tuk se přesouvá víc do oblasti břicha (viscerální tuk), často i bez velkého nárůstu váhy. Zároveň se zrychluje úbytek svalové hmoty a zhoršuje citlivost na inzulin.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč je silový trénink hlavní páka v tomhle období? <span class="tg">odpověď ▾</span></div><div class="aa">Drží svalovou hmotu, zatěžuje a chrání kost (proti osteoporóze), zlepšuje citlivost na inzulin a pomáhá s kompozicí líp než kardio. Kardio nenahradí silový podnět.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Kolik bílkovin cílit a proč rozkládat do dávek? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 1,4–2,0 g/kg/den, k hornímu okraji při dietě a tréninku. Rozkládat do 3–4 dávek po ~25–40 g, protože s věkem roste anabolická rezistence — sval potřebuje větší podnět a pravidelně.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jaký tón zvolit, když o přechodu mluvíš s klientkou? <span class="tg">odpověď ▾</span></div><div class="aa">Realistický — ani strašení, ani bagatelizace. Pojmenuj změnu, normalizuj ji a hned ukaž páky (silový trénink, bílkoviny, spánek, kroky, případně odkaz na lékaře). Klientka potřebuje slyšet, že má vliv.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelovou klientku ve věku 49 let v perimenopauze (stěžuje si na přírůstek v pase a horší spánek). Napiš, jak nastavíš silový trénink (frekvence + typ cviků), kolik bílkovin jí dáš a jak je rozložíš do dne, a jednu úpravu spánkového režimu. Doplň, jak jí celou situaci vysvětlíš jedním až dvěma odstavci tak, abys nestrašil ani nebagatelizoval.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Davis SR, et al. Menopause. Nat Rev Dis Primers. 2015;1:15004.</li>
+        <li>Greendale GA, et al. Changes in body composition and weight during the menopause transition. JCI Insight. 2019;4(5):e124865.</li>
+        <li>Khosla S, Oursler MJ, Monroe DG. Estrogen and the skeleton. Trends Endocrinol Metab. 2012;23(11):576–581.</li>
+        <li>Phillips SM, Chevalier S, Leidy HJ. Protein "requirements" beyond the RDA: implications for optimizing health. Appl Physiol Nutr Metab. 2016;41(5):565–572.</li>
+        <li>Watson SL, et al. High-Intensity Resistance and Impact Training Improves Bone Mineral Density and Physical Function in Postmenopausal Women (LIFTMOR). J Bone Miner Res. 2018;33(2):211–220.</li>
+        <li>"The 2022 Hormone Therapy Position Statement of The North American Menopause Society" Advisory Panel. Menopause. 2022;29(7):767–794.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m18-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

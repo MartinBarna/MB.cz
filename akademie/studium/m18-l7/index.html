@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bílkoviny a výživa žen napříč životem — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 18 · Lekce 7 — Ženské zdraví</div>
+    <h1>Bílkoviny a výživa žen napříč životem</h1>
+
+    <p class="lead">Bílkovinová věda z modulu M12 platí pro ženy stejně jako pro muže — <strong>jen ji většina žen v praxi nedotahuje.</strong> Podjídají bílkoviny, bojí se „nabrat objem“ a v každé životní fázi mají jiné potřeby, o kterých jim nikdo neřekl. Tahle lekce ti dá konkrétní čísla a citlivost, abys to u klientek nastavil dobře.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč ženy bílkoviny systematicky podjídají a jak to poznáš v reportu.</li>
+        <li>Konkrétní cíle v g/kg pro mladou sportovkyni, těhotnou, ženu v menopauze a seniorku.</li>
+        <li>Jak rozložit bílkovinu do dne, aby pracovala pro sval, ne jen pro tabulku.</li>
+        <li>Co se mění v menopauze a proč jde bílkovina nahoru, ne dolů.</li>
+        <li>Jak to celé říct klientce, aby se nebála jíst víc.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč ženy podjídají bílkoviny</h2>
+    <p>Když si projedeš reporty klientek, vidíš to pořád dokola. Snídaně bez bílkoviny, oběd „salát“, večeře malá porce. Denní příjem často sedí kolem 0,8–1,0 g/kg, někdy ještě níž. To je úroveň, která stačí na to, abys nezemřel — ne na to, abys udržel sval, sytost a sílu.</p>
+    <p>Důvody jsou tři druhy. Strach z „nabrání objemu“ a z toho, že maso a vejce „přiberou“. Dietní historie plná zákazů, kde bílkovina vypadla spolu se vším ostatním. A prosté nezvyk — nikdo ji to neukázal. K tomu menší porce a méně chuti k jídlu při deficitu. Výsledek: žena drží dietu, hubne, ale ztrácí sval a vypadá „skinny fat“ místo pevně.</p>
+    <blockquote>Bílkovina není pro ženy „mužská“ živina. Je to ochrana svalu, kosti, sytosti a metabolismu. Čím větší deficit nebo čím starší klientka, tím víc na ní záleží.</blockquote>
+
+    <h2>2) Kolik bílkoviny — cíle v g/kg</h2>
+    <p>Vědecký základ je stejný jako v M12: meta-analýza Mortona ukázala, že příjem nad zhruba 1,6 g/kg už silový trénink dál výrazně nepodpoří, ale spodní hranice pro aktivního člověka leží jasně nad doporučenou denní dávkou 0,8 g/kg. ISSN drží rozmezí 1,4–2,0 g/kg pro aktivní lidi. Pro ženu v praxi z toho udělej tohle:</p>
+    <div class="card">
+      <p><strong>Aktivní žena / silový trénink:</strong> 1,6–2,0 g/kg. V deficitu jdi spíš k horní hranici, protože bílkovina v dietě chrání sval nejvíc.</p>
+      <p><strong>Mladá sportovkyně:</strong> 1,6–2,2 g/kg podle objemu tréninku. Hlídej i celkový energetický příjem — nízká dostupnost energie u sportovkyň ničí cyklus i kost (relativní energetický deficit, RED-S).</p>
+      <p><strong>Menopauza a po ní:</strong> 1,6–2,2 g/kg. S poklesem estrogenu klesá citlivost svalu na bílkovinu i trénink — potřebuje víc podnětu, ne míň.</p>
+      <p><strong>Seniorka (65+):</strong> minimálně 1,2–1,5 g/kg, klidně víc. Cíl je brzdit sarkopenii a udržet sílu a samostatnost.</p>
+    </div>
+    <p>Počítej z aktuální tělesné hmotnosti, u výrazné nadváhy spíš z cílové nebo z beztukové hmoty, ať číslo nevyletí zbytečně vysoko. U klientek, co bílkovinu nikdy nejedly, nezačínej maximem — zvedni příjem postupně, jinak to neutáhnou.</p>
+
+    <h2>3) Rozložení do dne</h2>
+    <p>Nestačí trefit denní součet. Sval reaguje na jednotlivé dávky bílkoviny, a tělo dokáže z jedné porce smysluplně využít zhruba 0,4 g/kg na podporu svalové syntézy. Proto má smysl rozdělit příjem do 3–4 jídel po ~25–40 g bílkoviny místo jednoho velkého masa večer.</p>
+    <div class="card">
+      <p><strong>Snídaně:</strong> nejčastější díra. Vejce, tvaroh, skyr, proteinový shake — cokoli, co zvedne snídani z 5 na 25+ g.</p>
+      <p><strong>Kolem tréninku:</strong> slušná dávka před nebo po, ať má sval z čeho stavět. Přesné načasování řeš až po celkovém příjmu.</p>
+      <p><strong>Večer:</strong> pomalejší zdroj (tvaroh, kasein) pomáhá regeneraci přes noc, hlavně u starších klientek.</p>
+    </div>
+    <p>Pro starší ženy je rozložení ještě důležitější — svaly hůř reagují, takže každé jídlo potřebuje dost bílkoviny, aby vůbec „spustilo“ stavbu. Malá porce se u nich ztratí.</p>
+
+    <h2>4) Co řeší jednotlivé fáze</h2>
+    <p>Bílkovina je páteř, ale kontext se mění. Krátce a přehledově:</p>
+    <div class="card">
+      <p><strong>Mladá sportovkyně:</strong> hlavní riziko je málo energie celkově, ne málo bílkoviny. Ztráta menstruace, únava, časté zranění = červená vlajka. Posílej k odborníkovi, neřeš jen makra.</p>
+      <p><strong>Těhotenství (jen rámcově):</strong> potřeba bílkoviny i energie roste, hlavně ve druhé půlce. Tady nejsi sám za sebe — výživu těhotné vede lékař a klinický nutriční terapeut, ty doplňuješ pohyb a návyky.</p>
+      <p><strong>Menopauza:</strong> klesá estrogen, mění se rozložení tuku, snáz ubývá sval a kost. Odpověď je víc bílkoviny, silový trénink a dost vápníku a vitaminu D — ne další dieta.</p>
+      <p><strong>Seniorka:</strong> priorita číslo jedna je sval a síla. Bílkovina plus odporový trénink jsou nejlepší obrana proti křehkosti a pádům.</p>
+    </div>
+
+    <h2>5) Jak to říct klientce</h2>
+    <p>Číslo v g/kg si přelož do porcí, ne do gramů na váze. „Ke každému jídlu dej dlaň bílkoviny“ funguje líp než „jez 110 gramů proteinu denně“. Ukaž jí, že bílkovina zasytí, takže paradoxně usnadní deficit, ne ztíží.</p>
+    <p>A sundej z ní strach z objemu. Ženy nemají hormonální výbavu na to, aby „zmohutněly“ od bílkoviny nebo od činek. Co dostanou, je pevnější, silnější tělo a méně hladu. Tohle jí řekni narovinu a klidně několikrát.</p>
+    <blockquote>Cíl není „dietní“ žena, co se bojí jíst. Cíl je silná žena, co ví, kolik bílkoviny potřebuje, a dá si ji bez pocitu viny.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Skoro každá nová klientka má v reportu stejnou díru — snídani bez bílkoviny. Začínám vždycky tam: „Hele, jen tahle jedna změna ti zvedne sytost na celé dopoledne.“ Místo gramů jí dám obrázek talíře — dlaň bílkoviny ke každému jídlu. A pořád opakuju jednu větu: „Od bílkoviny ani od činek nezmohutníš, zpevníš.“ Musím to říct klidně třikrát, než tomu uvěří :) Ale jakmile uvidí, že je sytá a váha jde dolů, je vyhráno. Be Effective.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč ženy bílkoviny často podjídají? <span class="tg">odpověď ▾</span></div><div class="aa">Kombinace strachu z „nabrání objemu“, dietní historie plné zákazů a prostého nezvyku — k tomu menší porce a nižší chuť k jídlu v deficitu. Příjem často sedí jen kolem 0,8–1,0 g/kg.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaký cíl v g/kg dáš aktivní ženě, která drží deficit? <span class="tg">odpověď ▾</span></div><div class="aa">1,6–2,0 g/kg, v deficitu spíš k horní hranici — bílkovina v dietě nejvíc chrání sval. Podle Mortona nad ~1,6 g/kg už silový trénink výrazně víc nepodpoří, ISSN drží 1,4–2,0 g/kg.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč jde bílkovina v menopauze nahoru, ne dolů? <span class="tg">odpověď ▾</span></div><div class="aa">S poklesem estrogenu klesá citlivost svalu na bílkovinu i na trénink, snáz ubývá sval a kost. Sval potřebuje větší podnět — tedy víc bílkoviny (1,6–2,2 g/kg) a silový trénink.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč záleží na rozložení bílkoviny do dne? <span class="tg">odpověď ▾</span></div><div class="aa">Sval reaguje na jednotlivé dávky a z jedné porce využije zhruba 0,4 g/kg na podporu svalové syntézy. Proto 3–4 jídla po ~25–40 g fungují líp než jedno velké maso večer — hlavně u starších žen.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co je hlavní riziko u mladé sportovkyně? <span class="tg">odpověď ▾</span></div><div class="aa">Málo energie celkově (nízká energetická dostupnost, RED-S), ne málo bílkoviny. Ztráta menstruace, únava a častá zranění jsou červená vlajka — patří k odborníkovi, ne jen k úpravě maker.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelovou klientku (urči fázi života a hmotnost), spočítej její cíl bílkoviny v gramech a převeď ho na konkrétní porce do 3–4 jídel. Napiš, kde má v běžném dni nejspíš díru a jednu jedinou změnu, kterou bys nasadil první. Na závěr formuluj jednu větu, kterou jí vysvětlíš, proč se nemá bát jíst víc bílkoviny.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Morton RW, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Jäger R, et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20.</li>
+        <li>Phillips SM, Van Loon LJC. Dietary protein for athletes: from requirements to optimum adaptation. J Sports Sci. 2011;29(Suppl 1):S29–S38.</li>
+        <li>Moore DR, et al. Protein ingestion to stimulate myofibrillar protein synthesis requires greater relative protein intakes in healthy older versus younger men. J Gerontol A Biol Sci Med Sci. 2015;70(1):57–62.</li>
+        <li>Mountjoy M, et al. International Olympic Committee (IOC) consensus statement on Relative Energy Deficiency in Sport (RED-S): 2018 update. Br J Sports Med. 2018;52(11):687–697.</li>
+        <li>Bauer J, et al. Evidence-based recommendations for optimal dietary protein intake in older people: a position paper from the PROT-AGE Study Group. J Am Med Dir Assoc. 2013;14(8):542–559.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m18-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
