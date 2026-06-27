@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agresivní vs. konzervativní deficit: kdy se vyplatí který — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 11 · Lekce 10 — Věda o hubnutí: adaptace, refeeds a reverse dieting</div>
+    <h1>Agresivní vs. konzervativní deficit: kdy se vyplatí který</h1>
+
+    <p class="lead">„Kolik mám klientovi ubrat?“ je otázka, na kterou většina lidí odpoví číslem z hlavy — a tím to odbude. Přitom <strong>velikost deficitu rozhoduje o tom, jestli klient zhubne tuk a udrží sval, nebo jen ztratí váhu a do půl roku ji vrátí.</strong> Agresivní i konzervativní deficit mají své místo. Umění trenéra je vědět, kdy nasadit který — podle tělesného tuku, cíle, časového tlaku a hlavně podle toho, co ten člověk psychicky a tréninkově utáhne.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co přesně znamená „agresivní“ a „konzervativní“ deficit v číslech, ne v pocitech.</li>
+        <li>Proč rychlejší hubnutí stojí víc svalu a výkonu — a kdy se ta cena přesto vyplatí.</li>
+        <li>Jak tělesný tuk klienta posouvá rozumnou rychlost hubnutí nahoru i dolů.</li>
+        <li>Co je metabolická adaptace a proč agresivní deficit její projevy zhoršuje.</li>
+        <li>Jak velikost deficitu ovlivňuje hlad, dodržení a riziko jojo efektu.</li>
+        <li>Praktický rámec, jak vybrat deficit pro konkrétního klienta a kdy ho v čase měnit.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je agresivní a co konzervativní deficit</h2>
+    <p>Nejčistší způsob, jak deficit změřit, není v kaloriích, ale v <strong>rychlosti úbytku hmotnosti za týden, vyjádřené v procentech tělesné hmotnosti</strong>. Proč procenta? Protože stejný deficit 500 kcal znamená u stokilového muže něco úplně jiného než u padesátikilové ženy. Procenta to srovnají.</p>
+    <div class="card">
+      <p><strong>Konzervativní deficit:</strong> zhruba <strong>0,5–0,7 % tělesné hmotnosti týdně</strong>. U 80kg klienta tedy ~0,4–0,55 kg/týden. Pomalejší, šetří sval a výkon, snáz se drží.</p>
+      <p><strong>Mírně agresivní:</strong> ~<strong>0,7–1,0 %</strong> týdně. Stále obhajitelné u většiny lidí s vyšším tukem.</p>
+      <p><strong>Agresivní deficit:</strong> <strong>nad ~1 % týdně</strong>. Rychlé, ale roste cena na svalu, výkonu, hladu a riziku jojo efektu. Místo má jen ve specifických situacích.</p>
+    </div>
+    <p>Eric Helms a kolegové ve svém přehledu pro přípravu naturálních kulturistů doporučují tempo zhruba <strong>0,5–1 % hmotnosti týdně</strong> právě proto, aby se maximálně zachoval sval. To je rozumný výchozí rozsah i pro běžného klienta — agresivnější tempo není „lepší“, je jen rychlejší a dražší.</p>
+    <blockquote>Rychlost hubnutí není měřítkem šikovnosti trenéra. Měřítkem je, kolik tuku klient ztratí na kilogram celkové váhy — a jestli ten výsledek udrží.</blockquote>
+
+    <h2>2) Cena rychlosti: sval a výkon</h2>
+    <p>Tady máme jeden z nejhezčích přímých experimentů v oboru. Garthe a kolegové vzali elitní sportovce a rozdělili je do dvou skupin, které měly zhubnout stejně — ale jedna pomalu (0,7 % týdně), druhá rychle (1,4 % týdně). Obě poctivě silově trénovaly.</p>
+    <div class="card">
+      <p><strong>Pomalá skupina (0,7 %/týden):</strong> přidala beztukovou hmotu (~+2,1 %) a zvýšila sílu v 1RM. Tuk ubyl, sval narostl.</p>
+      <p><strong>Rychlá skupina (1,4 %/týden):</strong> beztuková hmota se prakticky nezměnila a silové přírůstky byly menší. Stejný úbytek váhy, horší složení.</p>
+    </div>
+    <p>Závěr je praktický: když chce klient během hubnutí <strong>udržet nebo budovat sval a sílu</strong>, pomalejší tempo kolem 0,7 % týdně mu dá lepší výsledek. Čím rychleji ho ženeš, tím větší podíl ztracené váhy tvoří sval a voda místo tuku.</p>
+
+    <h2>3) Kde tělesný tuk mění pravidla</h2>
+    <p>Pravidlo „pomaleji je lépe“ má důležitou výjimku: <strong>kolik tuku klient vůbec má</strong>. Tukové zásoby fungují jako pojistka — čím jich je víc, tím snáz z nich tělo pokryje deficit, aniž by sahalo po svalu.</p>
+    <div class="eq">Max. rozumný deficit ∝ množství tělesného tuku</div>
+    <p>U klienta s vyšším procentem tuku (řekněme muž 30 %+, žena 38 %+) tělo unese i agresivnější tempo bez velké ztráty svalu, protože má z čeho brát — a často je i zdravotně žádoucí hubnout svižněji. Naopak u člověka, který už je vyrýsovaný a chce „dotáhnout břišáky“, je každé rychlé tempo trestáno ztrátou svalu, protože pojistka došla. Helms to formuluje jasně: <strong>čím nižší tuk, tím opatrnější deficit</strong> a tím vyšší bílkoviny na ochranu svalu.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> První věc, na kterou u rychlosti koukám, není cíl, ale výchozí tuk. Klientovi se 100 kg a velkou nadváhou klidně nastavím tempo blízko 1 % — má z čeho ubírat a rychlý progres ho drží v motivaci. U někoho, kdo už je „skoro tam“, jdu naopak dolů na 0,5 % a radši přidám týdny, protože poslední kila jsou ta, kde se nejvíc kazí sval. Stejný nástroj, opačné nastavení.</div>
+
+    <h2>4) Metabolická adaptace: proč tělo „šetří“</h2>
+    <p>Když dlouho jíš míň, tělo nezůstane pasivní. Spustí sérii obranných reakcí, kterým se říká <strong>metabolická adaptace</strong> (přesněji adaptivní termogeneze). Trexler, Smith-Ryan a Norton ji v přehledu pro sportovce popisují jako soubor změn, které mají deficit zmenšit, zpomalit úbytek a podpořit návrat váhy.</p>
+    <div class="card">
+      <p><strong>Klesá klidový výdej</strong> víc, než by odpovídalo samotnému úbytku hmoty.</p>
+      <p><strong>Padá NEAT</strong> — klient se nevědomky míň hýbe, míň gestikuluje, víc sedí.</p>
+      <p><strong>Mění se hormony</strong> — leptin dolů (větší hlad), štítná žláza a sympatikus tlumeny.</p>
+      <p><strong>Roste hlad a chuť</strong>, klesá pocit sytosti i chuť do pohybu.</p>
+    </div>
+    <p>Rosenbaum a Leibel ukázali, že část tohoto poklesu výdeje <strong>přetrvává roky</strong> i u lidí, kteří si sníženou váhu udrželi přes rok — a právě tahle „úspornost“ stojí za vysokou mírou návratu váhy. Důležitý bod pro trenéra: agresivní deficit a velmi nízký tuk tyto adaptace <strong>prohlubují</strong>. Čím tvrději a déle tlačíš, tím víc se tělo brání — proto má smysl tlak občas povolit (refeed, diet break) a nedržet hluboký deficit donekonečna.</p>
+
+    <h2>5) Hlad, hlava a dodržení</h2>
+    <p>Nejlepší deficit na papíře je k ničemu, když ho klient nedodrží. A právě dodržení je místo, kde agresivní deficit nejčastěji prohrává. Větší hlad, nízká energie, podrážděnost a chutě vedou k mikrovýpadkům, které celý hluboký deficit „rozředí“ zpátky k nule — a klient pak nechápe, proč nehubne, i když „skoro nejí“.</p>
+    <p>Studie MATADOR (Byrne a kol.) to ukázala elegantně: skupina, která střídala dva týdny deficitu a dva týdny na udržovacím příjmu, zhubla <strong>víc tuku</strong> a líp si váhu <strong>udržela po půl roce</strong> než skupina s nepřetržitým deficitem — přestože v deficitu strávila stejně „dávek“. Pauzy zmírnily pokles výdeje a usnadnily dodržení. Pro praxi to znamená, že delší konzervativní cesta s plánovanými pauzami často porazí krátký agresivní nájezd.</p>
+    <div class="card" style="background:rgba(255,122,0,.06);">
+      <p><strong>Kdy se agresivní deficit přesto vyplatí:</strong></p>
+      <p>• Vysoký výchozí tuk a zdravotní důvody k rychlejšímu pohybu.</p>
+      <p>• Tvrdá deadline (focení, soutěž, akce) a klient vědomě přijímá cenu.</p>
+      <p>• Krátký, ohraničený „kick-start“ na pár týdnů pro rychlou motivaci — pak zpomalit.</p>
+      <p><strong>Kdy konzervativní:</strong> nízký až střední tuk, cíl udržet sval a výkon, sklon k jojo efektu, dlouhý horizont, náročný trénink nebo život pod stresem.</p>
+    </div>
+    <blockquote>Agresivní deficit je sprint, konzervativní je tempo na maraton. Většina klientů běží maraton — i když si myslí, že chce sprintovat.</blockquote>
+
+    <h2>6) Jak vybrat deficit pro konkrétního klienta</h2>
+    <p>Spoj si to do jednoduchého rozhodovacího rámce. Nejdřív urči výchozí tuk a cíl, z toho zvol tempo v procentech, dopočítej deficit a pak ho <strong>ověř v praxi</strong> přes trend váhy v čase.</p>
+    <div class="eq">cílový týdenní úbytek (kg) = hmotnost × zvolené % ÷ 100</div>
+    <p>Příklad: 90kg klient s vyšším tukem, tempo 0,8 % → 0,72 kg/týden → orientačně ~750 kcal deficit denně. Nastavíš, sleduješ 2–3 týdny reálný trend a podle něj upravuješ — číslo z kalkulačky je hypotéza, ne pravda. A vždycky drž <strong>dost bílkovin</strong> (orientačně ~1,6–2,2 g/kg, u nízkého tuku spíš horní hranice) a <strong>silový trénink</strong>, protože to jsou dvě páky, které ochrání sval bez ohledu na to, jaké tempo zvolíš.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Mám na to jednu větu pro klienty: „Budeme hubnout tak rychle, jak rychle to ještě nestojí sval, spánek a hlavu.“ To okamžitě sundá tlak po rychlosti za každou cenu. Začnu konzervativněji, než kam bych si troufl — protože zrychlit jde vždycky snadno, ale dohnat ztracený sval po zbytečně agresivní dietě trvá měsíce.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> V čem se nejlépe měří velikost deficitu a proč ne v kaloriích? <span class="tg">odpověď ▾</span></div><div class="aa">V procentech tělesné hmotnosti za týden (zhruba konzervativní 0,5–0,7 %, agresivní nad ~1 %). Procenta srovnají různě těžké klienty — stejných 500 kcal znamená u 100kg a 50kg člověka úplně jinou rychlost.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co ukázala Gartheova studie o pomalém vs. rychlém hubnutí? <span class="tg">odpověď ▾</span></div><div class="aa">Při stejném úbytku váhy si pomalá skupina (0,7 %/týden) přidala beztukovou hmotu a zvýšila sílu, zatímco rychlá skupina (1,4 %/týden) sval prakticky nezískala. Rychlejší tempo = horší složení výsledku.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak tělesný tuk klienta ovlivňuje rozumnou rychlost hubnutí? <span class="tg">odpověď ▾</span></div><div class="aa">Čím víc tuku, tím snáz z něj tělo pokryje deficit bez ztráty svalu — vyšší tuk unese agresivnější tempo. Čím nižší tuk, tím opatrnější deficit a vyšší bílkoviny, protože „pojistka“ dochází a začíná se obětovat sval.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co je metabolická adaptace a jak ji agresivní deficit ovlivňuje? <span class="tg">odpověď ▾</span></div><div class="aa">Soubor obranných reakcí na deficit — pokles klidového výdeje a NEAT, změny hormonů (leptin dolů), víc hladu. Agresivní a dlouhý deficit tyto adaptace prohlubuje a část poklesu výdeje může přetrvávat roky, což živí návrat váhy.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy se vyplatí agresivní deficit a kdy konzervativní? <span class="tg">odpověď ▾</span></div><div class="aa">Agresivní: vysoký výchozí tuk, zdravotní důvody, tvrdá deadline nebo krátký kick-start. Konzervativní: nízký až střední tuk, cíl udržet sval a výkon, sklon k jojo efektu, dlouhý horizont a náročný trénink či stres.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi dva modelové klienty — jednoho s vysokým tukem (cíl: rozhýbat váhu) a jednoho téměř vyrýsovaného (cíl: dotáhnout formu a udržet sval). U každého zvol tempo v % hmotnosti týdně, dopočítej cílový týdenní úbytek a orientační denní deficit, a hlavně písemně zdůvodni, proč jsi u koho zvolil rychlejší/pomalejší cestu. Pak popiš, podle čeho po 2–3 týdnech tempo upravíš a kdy bys nasadil refeed nebo diet break.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Garthe I, Raastad T, Refsnes PE, Koivisto A, Sundgot-Borgen J. Effect of two different weight-loss rates on body composition and strength and power-related performance in elite athletes. Int J Sport Nutr Exerc Metab. 2011;21(2):97–104.</li>
+        <li>Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20.</li>
+        <li>Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014;11:7.</li>
+        <li>Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55.</li>
+        <li>Byrne NM, Sainsbury A, King NA, Hills AP, Wood RE. Intermittent energy restriction improves weight loss efficiency in obese men: the MATADOR study. Int J Obes (Lond). 2018;42(2):129–138.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m11-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
