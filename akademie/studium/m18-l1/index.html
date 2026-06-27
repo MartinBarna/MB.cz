@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menstruační cyklus, výkon a výživa — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 18 · Lekce 1 — Ženské zdraví</div>
+    <h1>Menstruační cyklus, výkon a výživa</h1>
+
+    <p class="lead">Půlka tvých klientek má cyklus a většina trenérů ho úplně ignoruje. Druhá půlka zase přepálí opačný extrém a chce trénovat „přesně podle fáze“ na den. <strong>Pravda je někde mezi a hlavně střízlivější, než zní na Instagramu.</strong> V téhle lekci ti řeknu, co o cyklu a výkonu reálně víme, co jsou jen mýty, a jak to u klientky zohlednit, aniž bys z toho udělal vědu.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak vypadají dvě hlavní fáze cyklu a co v nich dělají estrogen a progesteron.</li>
+        <li>Co data opravdu říkají o vlivu cyklu na sílu a výkon — a jak malý ten vliv v průměru je.</li>
+        <li>Proč se mění chutě, energie a termoregulace v luteální fázi.</li>
+        <li>Jak fázi zohlednit v praxi bez posedlého mikromanagementu tréninku.</li>
+        <li>Kdy už nejde o „normální cyklus“, ale o varovný signál (chybějící menstruace).</li>
+      </ul>
+    </div>
+
+    <h2>1) Dvě fáze, dva hlavní hráči</h2>
+    <p>Cyklus si rozdělíme na dvě poloviny, protože pro tebe jako kouče to stačí. <strong>Folikulární fáze</strong> jde od prvního dne menstruace zhruba po ovulaci. <strong>Luteální fáze</strong> je ta druhá půlka, od ovulace po další menstruaci.</p>
+    <p>V první půlce stoupá estrogen a vrcholí kolem ovulace. Estrogen má anabolický a regenerační nádech, podporuje náladu i citlivost na inzulin. Ve druhé půlce nastupuje progesteron. Ten lehce zvedá klidovou tělesnou teplotu, ovlivňuje zadržování vody a u řady žen mění chuť k jídlu a spánek. Před menstruací oba hormony spadnou dolů, a právě ten propad bývá za horší náladou a PMS.</p>
+    <blockquote>Pro praxi ti stačí myslet ve dvou polovinách: „před ovulací“ a „po ovulaci“. Den po dni to nikdo z nás v terénu spolehlivě neměří.</blockquote>
+
+    <h2>2) Cyklus a výkon — co data fakt říkají</h2>
+    <p>Tady čekáš velký efekt. Realita ho zatím nepodporuje. Velká meta-analýza McNultyho z roku 2020 prošla dostupné studie a závěr je střízlivý: výkon je v luteální fázi <em>v průměru</em> možná lehce nižší, ale efekt je malý a důkazy slabé a nekonzistentní.</p>
+    <p>Co to znamená pro tebe? Že stavět celý plán na „v téhle fázi makáme na sílu, v téhle šetříme“ stojí na hodně tenkém ledě. Mezi ženami jsou obrovské rozdíly. Jedna klientka se v luteální fázi cítí mizerně, druhá tam dává osobáky. Skupinový průměr o konkrétní klientce neřekne skoro nic.</p>
+    <div class="card">
+      <p><strong>Co stojí pevně:</strong> hormony se přes cyklus mění a u některých žen to ovlivní pocit, energii i chuť trénovat.</p>
+      <p><strong>Co je vratké:</strong> že existuje univerzální „periodizace podle fáze“, kterou bys nasadil každé klientce stejně.</p>
+    </div>
+
+    <h2>3) Chutě, energie a termoregulace</h2>
+    <p>Tohle klientky řeší víc než výkon, tak to umět vysvětlit. V luteální fázi často stoupne klidový výdej o pár desítek až nižší stovky kalorií a s ním i hlad. Chutě na sladké a kalorické jídlo nejsou slabá vůle, je to fyziologie. Když to klientka ví dopředu, líp to ustojí a nezhroutí se z toho psychicky.</p>
+    <p>Progesteron zvedá tělesnou teplotu zhruba o tři až pět desetin stupně. Trénink v horku nebo dlouhé kardio v luteální fázi proto může být subjektivně těžší. Zadržování vody pak posune čísla na váze nahoru, aniž by přibyl gram tuku. Tohle klientce opakuj pořád dokola, jinak ji jedno „špatné“ vážení rozhodí na celý týden.</p>
+
+    <h2>4) Jak to zohlednit v praxi bez mikromanagementu</h2>
+    <p>Princip je jednoduchý: neplánuj podle kalendáře, reaguj na klientku. Místo rigidní periodizace nech trénink autoregulační a dej jí mantinely.</p>
+    <div class="card">
+      <p><strong>Autoregulace místo dogmatu:</strong> nech ji jet podle pocitu v daný den. Cítí se silná, jede plný objem. Je v luteální fázi rozbitá, ubereme váhu nebo sérii. Plán to ustojí.</p>
+      <p><strong>Edukace o váze:</strong> vysvětli kolísání kvůli vodě dopředu. Ať se v premenstruační týden neváží každý den a nepanikaří.</p>
+      <p><strong>Bílkoviny a sytost v luteální fázi:</strong> když přijde hlad, řeš ho objemnými a sytými jídly, ne zákazy. Víc bílkovin a vlákniny pomůže udržet deficit.</p>
+      <p><strong>Trackuj symptomy, ne fáze na den:</strong> ať si pár cyklů zapisuje energii, spánek a náladu. Po dvou třech měsících uvidíš JEJÍ vzorec, ne učebnicový průměr.</p>
+    </div>
+    <p>Cíl je dát klientce kontrolu a klid, ne další tabulku, kterou musí hlídat. Většina žen ocení spíš „chápu, proč se tak cítím“ než „teď musíš podle plánu makat na maximum“.</p>
+
+    <h2>5) Kdy zpozornost přitvrdit</h2>
+    <p>Jedna věc není „fáze cyklu“, ale rovnou červená vlajka: <strong>chybějící menstruace</strong> u klientky, která netěhotní ani není v menopauze. U sportujících a hubnoucích žen to často signalizuje nedostatek dostupné energie, tedy moc málo jídla na množství tréninku. Dlouhodobě to ničí kosti, hormony i výkon a spadá to pod RED-S.</p>
+    <p>Tohle není věc, kterou jako trenér řešíš plánem. Když klientka přestane menstruovat, posíláš ji k lékaři a sám zvedáš příjem a ubíráš objem. Není to detail k přehlédnutí.</p>
+    <blockquote>Pravidelná menstruace je u sportující ženy známka, že tělo má dost energie. Když zmizí, je to zpráva, ne kosmetika.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientkám říkám narovinu: „Tvůj cyklus není chyba v systému, kterou musíme obejít. Je to informace.“ :) Nenutím nikoho trénovat podle fáze na den, to je věda pro výkonnostní sport, ne pro normální holku, co chce být fit. Co fakt funguje: pár měsíců si zapisuj energii a náladu, a ono ti to samo ukáže tvůj vzorec. A na to věčné „přibrala jsem kilo před menstruací“ mám stálou odpověď — to je voda, ne tuk, příští týden je pryč, věř mi. :) A jakmile někomu zmizí menstruace při dietě, vždycky brzdím a posílám k doktorovi. Zdraví je nad estetikou, vždycky.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Které dva hormony hrají hlavní roli ve folikulární a luteální fázi? <span class="tg">odpověď ▾</span></div><div class="aa">Ve folikulární fázi dominuje estrogen (vrcholí kolem ovulace), v luteální fázi nastupuje progesteron. Před menstruací oba spadnou dolů.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co o vlivu cyklu na výkon ukazuje meta-analýza McNulty 2020? <span class="tg">odpověď ▾</span></div><div class="aa">Výkon je v luteální fázi v průměru možná lehce nižší, ale efekt je malý a důkazy slabé a nekonzistentní. Univerzální „trénink podle fáze“ tím nelze opřít.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč klientce stoupne v luteální fázi hlad a chuť na kalorické jídlo? <span class="tg">odpověď ▾</span></div><div class="aa">Je to fyziologie — v luteální fázi lehce stoupá klidový výdej a chutě. Není to slabá vůle. Když to ví dopředu, líp to ustojí.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč se klientka nemá před menstruací vážit každý den? <span class="tg">odpověď ▾</span></div><div class="aa">Progesteron zvyšuje zadržování vody, takže váha jde nahoru bez nárůstu tuku. Jedno „špatné“ vážení by ji zbytečně rozhodilo.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená chybějící menstruace u hubnoucí sportovkyně a co s tím? <span class="tg">odpověď ▾</span></div><div class="aa">Často signál nedostatku dostupné energie (RED-S) — moc málo jídla na množství tréninku. Posíláš ji k lékaři, zvedáš příjem a ubíráš objem.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U modelové klientky (rekreační sport, cíl hubnutí) napiš, jak jí vysvětlíš kolísání váhy v premenstruačním týdnu a jak nastavíš vážení. Pak navrhni jednoduchý způsob, jak si bude pár cyklů zapisovat energii, spánek a náladu, a popiš, podle čeho poznáš, že je čas zpomalit a poslat ji k lékaři.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>McNulty KL, et al. The Effects of Menstrual Cycle Phase on Exercise Performance in Eumenorrheic Women: A Systematic Review and Meta-Analysis. Sports Med. 2020;50(10):1813–1827.</li>
+        <li>Elliott-Sale KJ, et al. Methodological Considerations for Studies in Sport and Exercise Science with Women as Participants: A Working Guide for Standards of Practice for Research on Women. Sports Med. 2021;51(5):843–861.</li>
+        <li>Sims ST, Heather AK. Myths and Methodologies: Reducing scientific design ambiguity in studies comparing sexes and/or menstrual cycle phases. Exp Physiol. 2018;103(10):1309–1317.</li>
+        <li>Mountjoy M, et al. 2023 International Olympic Committee's consensus statement on Relative Energy Deficiency in Sport (REDs). Br J Sports Med. 2023;57(17):1073–1097.</li>
+        <li>Oosthuyse T, Bosch AN. The effect of the menstrual cycle on exercise metabolism: implications for exercise performance in eumenorrhoeic women. Sports Med. 2010;40(3):207–227.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m18-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

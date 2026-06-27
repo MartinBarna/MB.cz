@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RED-S a nízká dostupnost energie — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 18 · Lekce 6 — Ženské zdraví</div>
+    <h1>RED-S a nízká dostupnost energie</h1>
+
+    <p class="lead">Tahle lekce je o tom, co se stane, když tělo dlouhodobě nedostane dost energie na to, aby vůbec fungovalo — natož trénovalo. <strong>RED-S není „jen“ problém vrcholových sportovkyň.</strong> Potkáš ho i u rekreační klientky, která chce zhubnout a u toho moc maká a moc málo jí. A většinou o tom ani neví.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je nízká dostupnost energie (LEA) a proč je to spouštěč celého problému.</li>
+        <li>Jak se z „Female Athlete Triad“ stal širší koncept RED-S.</li>
+        <li>Které systémy tělo poškozuje jako první — menstruace, kosti, výkon, hormony.</li>
+        <li>Jak poznat varovné signály u klientky dřív, než z toho bude škoda.</li>
+        <li>Proč „víc deficitu“ nikdy není „líp“ a kde je rozumná hranice.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je dostupnost energie a kde vzniká problém</h2>
+    <p>Dostupnost energie (energy availability, EA) je energie, která tělu zbyde na fungování poté, co se odečte to, co spálí trénink. Nepleť si to s celkovým příjmem. Klientka může jíst „dost“ na papíře, ale když přes to natrénuje 800 kcal, na běh organismu zbyde málo.</p>
+    <div class="eq">EA = (příjem energie − energie spálená cvičením) / kg beztukové hmoty</div>
+    <p>Loucks ukázala, že pod hranicí zhruba <strong>30 kcal na kilo beztukové hmoty za den</strong> se začnou rozbíjet hormonální a metabolické funkce. Zdravé pásmo je kolem 45 kcal/kg FFM. Tělo není hloupé — když nemá energii, přestane utrácet za věci, které ho zrovna nedrží naživu. A reprodukce s pevnými kostmi jsou přesně to, co se obětuje první.</p>
+    <blockquote>LEA může být záměrná (dieta, restrikce, porucha příjmu potravy) i nechtěná — klientka prostě nestíhá doplnit, kolik vydá. Trenér vidí druhý případ častěji, než si myslí.</blockquote>
+
+    <h2>2) Od triády k RED-S</h2>
+    <p>Dřív se mluvilo o „Female Athlete Triad“ — trojici nízká EA, menstruační dysfunkce, oslabené kosti. ACSM to popsal už v roce 2007 (Nattiv a kol.). Funkční model, ale úzký. Ukázalo se, že nízká dostupnost energie sahá mnohem dál než na tři systémy, a netýká se jen žen.</p>
+    <p>Proto MOV v roce 2014 zavedl pojem <strong>RED-S</strong> — Relative Energy Deficiency in Sport (Mountjoy a kol.). Stejný kořen, širší dopad: imunita, trávení, kardiovaskulární zdraví, psychika, růst, metabolismus. Konsenzus se pak aktualizoval 2018 a znovu 2023, jak přibývala data. Triáda v tom modelu nezmizela, je to její jádro — RED-S kolem ní jen dokreslil zbytek těla.</p>
+
+    <h2>3) Co tělo poškozuje a v jakém pořadí</h2>
+    <p>U klientek v dlouhodobé LEA se obvykle objeví tahle kaskáda:</p>
+    <div class="card">
+      <p><strong>Menstruační cyklus:</strong> první a nejviditelnější varování. Vynechané periody (amenorea) nebo nepravidelný cyklus znamenají, že mozek utlumil pohlavní osu, protože šetří energii. Bere se to jako „normální při tréninku“ — není to normální, je to signál.</p>
+      <p><strong>Kosti:</strong> nízký estrogen plus málo energie = horší novotvorba kosti. Tady je zrada: ztracená kostní hustota se dohání těžko a roky. Stresové zlomeniny u jinak zdravé klientky jsou červená vlajka.</p>
+      <p><strong>Výkon:</strong> paradox, kvůli kterému to klientky tak dlouho ignorují. Chvíli to jede, pak přijde stagnace, únava, časté nemoci a pády formy. Tělo v deficitu nestaví sval ani neopravuje.</p>
+      <p><strong>Hormony a hlava:</strong> štítná žláza zpomalí, klesá nálada, spánek, libido, chuť na trénink. Často to splývá s „jsem prostě unavená“.</p>
+    </div>
+    <p>Pořadí se klientka od klientky liší, ale menstruace bývá ten budík, který zazvoní nejdřív. Když přestane chodit, neber to jako detail.</p>
+
+    <h2>4) Jak rozpoznat varovné signály</h2>
+    <p>Nediagnostikuješ — to nechej lékaři. Ale jako trenér nebo výživář jsi často první, kdo si toho všimne. Na co koukat:</p>
+    <div class="card">
+      <p><strong>Cyklus:</strong> vynechané nebo nepravidelné periody, hlavně po zhubnutí nebo navýšení objemu tréninku.</p>
+      <p><strong>Příjem vs. výdej:</strong> nízký příjem při vysokém tréninkovém zatížení, strach z jídla, vynechávání jídel okolo tréninku, posedlost „čistotou“.</p>
+      <p><strong>Tělo a výkon:</strong> opakované zranění nebo stresové zlomeniny, časté nachlazení, stagnace formy navzdory dřině, věčná zima na rukou.</p>
+      <p><strong>Hlava:</strong> podrážděnost, výkyvy nálad, úzkost kolem jídla a váhy, ztráta radosti z pohybu.</p>
+    </div>
+    <p>Když vidíš víc bodů najednou, je čas zpomalit, narovinu to pojmenovat a poslat klientku k lékaři. Tvoje práce není „dotlačit deficit“, ale ohlídat, aby z hubnutí nebyla zdravotní díra.</p>
+
+    <h2>5) Proč „víc deficitu“ není líp</h2>
+    <p>Logika klientek bývá: když mírný deficit funguje, větší zafunguje rychleji. Nezafunguje. Pod hranicí dostupnosti energie tělo zpomalí výdej, sníží NEAT, rozhodí hormony a začne brát ze svalu a z kostí. Výsledek je pomalejší metabolismus, horší výkon a často i váha, která se zasekne.</p>
+    <p>Rozumný deficit drží dostupnost energie nad kritickou hranicí. To znamená u sportujících klientek hlídat hlavně bílkoviny, doplňovat energii kolem tréninku a netlačit příjem na dno. Cílem je hubnout tak, aby cyklus chodil, kosti držely a výkon rostl. Pomalejší a celé je vždycky lepší než rychlé a rozbité.</p>
+    <blockquote>RED-S se nevyřeší appkou ani novým tréninkem. Vyřeší se tím, že klientka začne jíst dost vzhledem k tomu, co vydá — někdy to znamená přidat jídlo, ne ubrat.</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Měl jsem klientku, co perfektně trénovala, jedla „zdravě“ a nehnula se z místa měsíce. Když jsme to rozebrali, jedla kolem 1300 kcal a u toho dělala pět tréninků týdně. Perioda jí dávno nechodila a brala to jako bonus. Řekl jsem jí narovinu: „Tohle není výhra, tohle je signál, že je tělo na suchu.“ Přidali jsme jídlo, ubrali jeden trénink — a ona se po pár týdnech POSUNULA dolů na váze i v mírách. Pamatuj: někdy je řešení přidat, ne ubrat. A ztracená perioda není detail, je to budík. 🙂</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je dostupnost energie (EA) a čím se liší od celkového příjmu? <span class="tg">odpověď ▾</span></div><div class="aa">Je to energie, která tělu zbyde na fungování po odečtení toho, co spálí trénink, vztažená na kilo beztukové hmoty. Liší se tím, že klientka může jíst „dost“, ale při velkém tréninku jí na běh organismu reálně zbyde málo.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolem jaké hranice EA se začnou rozbíjet hormonální funkce? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba pod 30 kcal na kilo beztukové hmoty za den (Loucks). Zdravé pásmo je kolem 45 kcal/kg FFM.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Čím se liší RED-S od původní „Female Athlete Triad“? <span class="tg">odpověď ▾</span></div><div class="aa">Triáda zahrnovala nízkou EA, menstruační dysfunkci a oslabené kosti. RED-S (MOV 2014, aktualizace 2018 a 2023) je širší koncept zahrnující i imunitu, trávení, kardiovaskulární a psychické zdraví, metabolismus a růst — a netýká se jen žen.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Který signál bývá u klientky nejčastěji prvním budíkem? <span class="tg">odpověď ▾</span></div><div class="aa">Vynechaná nebo nepravidelná menstruace, hlavně po zhubnutí nebo navýšení tréninku. Není to „normální při tréninku“, je to varování.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč „víc deficitu“ nevede k lepšímu výsledku? <span class="tg">odpověď ▾</span></div><div class="aa">Pod hranicí EA tělo zpomalí výdej a NEAT, rozhodí hormony a bere ze svalu i kostí. Výsledek je pomalejší metabolismus, horší výkon a často zaseknutá váha. Rozumný deficit drží EA nad kritickou hranicí.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelovou sportující klientku (např. 60 kg, 48 kg beztukové hmoty, 5 tréninků týdně). Odhadni její dostupnost energie při zadaném příjmu a tréninkovém výdeji a urči, jestli je nad nebo pod kritickou hranicí. Pak napiš tři varovné signály RED-S, na které se budeš ptát, a navrhni, co bys konkrétně upravil v jídle a tréninku, aby se EA dostala do bezpečného pásma.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Mountjoy M, et al. The IOC consensus statement: beyond the Female Athlete Triad—Relative Energy Deficiency in Sport (RED-S). Br J Sports Med. 2014;48(7):491–497.</li>
+        <li>Mountjoy M, et al. IOC consensus statement on Relative Energy Deficiency in Sport (RED-S): 2018 update. Br J Sports Med. 2018;52(11):687–697.</li>
+        <li>Mountjoy M, et al. 2023 International Olympic Committee's (IOC) consensus statement on Relative Energy Deficiency in Sport (REDs). Br J Sports Med. 2023;57(17):1073–1097.</li>
+        <li>Loucks AB, Kiens B, Wright HH. Energy availability in athletes. J Sports Sci. 2011;29(Suppl 1):S7–S15.</li>
+        <li>Loucks AB, Thuma JR. Luteinizing hormone pulsatility is disrupted at a threshold of energy availability in regularly menstruating women. J Clin Endocrinol Metab. 2003;88(1):297–311.</li>
+        <li>Nattiv A, et al. American College of Sports Medicine position stand: The female athlete triad. Med Sci Sports Exerc. 2007;39(10):1867–1882.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m18-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>

@@ -126,6 +126,13 @@ th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
 .faq-item button { color:#fff!important; }
 .faq-item .a, .faq-item .a p { color:var(--bd-muted2)!important; }
 .faq-item .chev { color:var(--bd-gold-soft)!important; }
+/* lead-magnet landingy (makro-plan/forma-zpet): světlé inline barvy textu zůstaly tmavé na dark.
+   Pozor: .btn/.skip-link/.stepn mají oranžové pozadí + tmavý text → ZÁMĚRNĚ neměnit. */
+.mock, .mock .mhead, .mock .day b { color:#fff!important; }
+.mock .kc, .mock .day { color:var(--bd-muted2)!important; }
+.card p, .faq p, .form-fallback, .auth .stats span, .calc-card label, .meal .name { color:var(--bd-muted2)!important; }
+.proof figcaption, .proof .rate { color:#fff!important; }
+.proof blockquote { color:var(--bd-muted2)!important; }
 /* inline světlé sekce/karty (např. background:#f6f7f8 / #f6f9f6 / #faf…) */
 [style*="background:#f6f7f8"], [style*="background: #f6f7f8"],
 [style*="background:#f6f9f6"], [style*="background:#fafafa"], [style*="background:#faf7f3"] { background:rgba(255,255,255,.03)!important; }
