@@ -118,8 +118,14 @@ th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
 .hero .sub, .hero p { color:var(--bd-muted2)!important; }
 .chip { color:var(--bd-gold-soft)!important; }
 /* obsahové textové třídy s tmavou barvou → čitelné na dark (přednášky .lead-p ad.) */
-.lead-p, .meta, .a, .note-p, .intro-p { color:var(--bd-muted2)!important; }
+.lead-p, .meta, .a, .a p, .note-p, .intro-p,
+.sh p, .sec-head p, .section-head p, .micro, .note, .fine, .sub { color:var(--bd-muted2)!important; }
 .lead-p strong, .lead-p b { color:#fff!important; }
+/* FAQ „akordeon" z landing pages (.faq-item = bílá karta ve světlém designu) → tmavá karta + světlý text */
+.faq-item { background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important; border:1px solid var(--bd-line)!important; }
+.faq-item button { color:#fff!important; }
+.faq-item .a, .faq-item .a p { color:var(--bd-muted2)!important; }
+.faq-item .chev { color:var(--bd-gold-soft)!important; }
 /* inline světlé sekce/karty (např. background:#f6f7f8 / #f6f9f6 / #faf…) */
 [style*="background:#f6f7f8"], [style*="background: #f6f7f8"],
 [style*="background:#f6f9f6"], [style*="background:#fafafa"], [style*="background:#faf7f3"] { background:rgba(255,255,255,.03)!important; }
