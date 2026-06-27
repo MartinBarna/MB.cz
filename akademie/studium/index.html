@@ -16,7 +16,9 @@
   .top .in { max-width:1080px; margin:0 auto; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; }
   .brand .mark { width:30px; height:30px; border-radius:8px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.9rem; }
-  .top a.out { color:#bbb; text-decoration:none; font-size:.88rem; }
+  .top a.out, .top a.back { color:#bbb; text-decoration:none; font-size:.88rem; cursor:pointer; }
+  .top a.out:hover, .top a.back:hover { color:#fff; }
+  .top .topr { display:flex; align-items:center; gap:16px; }
   .wrap { max-width:1080px; margin:0 auto; padding:28px 18px 60px; }
 
   .hello { background:linear-gradient(135deg,#262626,#0d0d0d); color:#fff; border-radius:22px; padding:28px 26px; position:relative; overflow:hidden; }
@@ -59,8 +61,11 @@
 </head>
 <body>
   <div class="top"><div class="in">
-    <a class="brand" href="/akademie/"><span class="mark">MB</span> Barna Academy</a>
-    <a class="out" href="/akademie/">Odhlásit</a>
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span> Barna Academy</a>
+    <span class="topr">
+      <a class="back" href="/akademie/moje/">← Barna Academy</a>
+      <a class="out" id="logout">Odhlásit</a>
+    </span>
   </div></div>
 
   <div class="wrap">
@@ -91,6 +96,7 @@
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js"></script>
   <script>
+    (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
     // Osnova (snadno rozšiřitelná). available:true = lekce je hotová a otevřená.
     var CURRICULUM = [
       { t:"Psychologie a chování kolem jídla", d:"Základ, na kterém stojí každá proměna", lessons:[
