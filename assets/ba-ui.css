@@ -1,0 +1,115 @@
+/* ===========================================================
+   Barna Academy — sdílený "dark-luxe" UI systém (členská sekce)
+   Používá se na: hub, videokurz nástěnka, studium, lekce, přihlášení.
+   =========================================================== */
+
+:root{
+  --gold:#ff7a00; --gold-2:#ff9d3c; --gold-soft:#ffb066;
+  --bg:#0c0b0a; --ink:#f6f2ec; --muted:#9d938a; --muted-2:#cabfb4;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --card:rgba(255,255,255,.04);
+  --radius:24px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body.ba{
+  font-family:'Poppins',system-ui,-apple-system,Arial,sans-serif;
+  color:var(--ink); line-height:1.55; -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  background:
+    radial-gradient(900px 520px at 88% -8%, rgba(255,122,0,.18), transparent 60%),
+    radial-gradient(700px 480px at -6% 12%, rgba(255,122,0,.06), transparent 55%),
+    linear-gradient(180deg,#100e0c 0%, #0a0908 100%);
+  background-attachment:fixed;
+}
+.ba a{text-decoration:none;color:inherit;}
+.ba ::selection{background:rgba(255,122,0,.3);color:#fff;}
+
+/* ---------- top bar ---------- */
+.ba .top{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(12,11,10,.55);border-bottom:1px solid var(--line);}
+.ba .top .in{max-width:1080px;margin:0 auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.ba .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.01em;color:#fff;}
+.ba .brand .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,var(--gold-2),var(--gold));
+  color:#160d04;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.86rem;box-shadow:0 6px 18px rgba(255,122,0,.35);}
+.ba .brand b{font-size:1rem;line-height:1.05;display:block;}
+.ba .brand .tag{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);font-weight:700;}
+.ba .topr{display:flex;align-items:center;gap:20px;}
+.ba .topr a{color:#a89e94;font-size:.85rem;font-weight:500;transition:color .2s;cursor:pointer;}
+.ba .topr a:hover{color:#fff;}
+
+/* ---------- layout ---------- */
+.ba .wrap{max-width:1080px;margin:0 auto;padding:52px 22px 90px;}
+
+/* ---------- hero / headings ---------- */
+.ba .kick{display:inline-flex;align-items:center;gap:9px;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold-soft);font-weight:700;background:rgba(255,122,0,.08);border:1px solid rgba(255,122,0,.22);padding:7px 15px;border-radius:50px;}
+.ba .kick .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(255,122,0,.18);}
+.ba h1{font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.05;letter-spacing:-.025em;font-weight:800;margin:20px 0 10px;color:#fff;}
+.ba h1 .hl{background:linear-gradient(100deg,var(--gold-2),var(--gold-soft));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.ba .lead{color:var(--muted);font-size:1.05rem;max-width:580px;}
+
+/* ---------- pills / meta ---------- */
+.ba .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
+.ba .pill{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted-2);background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:50px;}
+.ba .pill b{color:#fff;font-weight:700;}
+.ba .pill .g{color:var(--gold-soft);}
+
+/* ---------- premium cards ---------- */
+.ba .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:38px;}
+@media(max-width:760px){.ba .grid{grid-template-columns:1fr;}}
+.ba .card{position:relative;display:block;border-radius:var(--radius);padding:30px 28px 26px;overflow:hidden;color:var(--ink);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border:1px solid var(--line);box-shadow:0 30px 60px -30px rgba(0,0,0,.8);
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s;}
+.ba .card::before{content:"";position:absolute;inset:0;border-radius:var(--radius);padding:1px;
+  background:linear-gradient(140deg,rgba(255,122,0,.5),rgba(255,255,255,.06) 40%,transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.7;transition:opacity .35s;pointer-events:none;}
+.ba .card::after{content:"";position:absolute;right:-60px;top:-70px;width:230px;height:230px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,122,0,.22),transparent 65%);opacity:0;transition:opacity .4s;pointer-events:none;}
+.ba .card:hover{transform:translateY(-6px);border-color:rgba(255,122,0,.35);
+  box-shadow:0 40px 80px -30px rgba(255,122,0,.25),0 30px 60px -30px rgba(0,0,0,.85);}
+.ba .card:hover::after{opacity:1;}.ba .card:hover::before{opacity:1;}
+
+.ba .ico{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,rgba(255,122,0,.22),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.3);margin-bottom:20px;}
+.ba .ico svg{width:28px;height:28px;stroke:var(--gold-soft);}
+.ba .card h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:#fff;}
+.ba .card .desc{color:var(--muted);font-size:.95rem;margin-top:7px;min-height:44px;}
+
+.ba .chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 22px;}
+.ba .chip{font-size:.76rem;color:var(--muted-2);background:rgba(255,255,255,.04);border:1px solid var(--line);padding:6px 12px;border-radius:50px;}
+
+/* CTA button */
+.ba .go{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:.95rem;color:#160d04;
+  background:linear-gradient(145deg,var(--gold-2),var(--gold));padding:13px 22px;border-radius:50px;
+  box-shadow:0 12px 26px -8px rgba(255,122,0,.6);transition:transform .25s,box-shadow .25s;border:none;cursor:pointer;font-family:inherit;}
+.ba .card:hover .go{transform:translateX(3px);}
+.ba .go svg{width:16px;height:16px;stroke:#160d04;stroke-width:2.5;}
+.ba .go.ghost{background:rgba(255,255,255,.06);color:var(--muted-2);box-shadow:none;border:1px solid var(--line);}
+.ba .go.ghost svg{stroke:var(--muted-2);}
+
+/* locked variant */
+.ba .card.locked{opacity:.92;}
+.ba .card.locked .ico{background:rgba(255,255,255,.04);border-color:var(--line);}
+.ba .card.locked .ico svg{stroke:#8a8078;}
+.ba .card.locked .go{background:rgba(255,255,255,.06);color:var(--muted-2);box-shadow:none;border:1px solid var(--line);}
+.ba .card.locked .go svg{stroke:var(--muted-2);}
+.ba .lockbadge{position:absolute;top:22px;right:22px;display:inline-flex;align-items:center;gap:7px;font-size:.72rem;font-weight:600;
+  color:#c9bdae;background:rgba(0,0,0,.35);border:1px solid var(--line);padding:6px 12px;border-radius:50px;}
+.ba .lockbadge svg{width:13px;height:13px;stroke:#c9bdae;}
+.ba .card:not(.locked) .lockbadge{display:none;}
+
+/* progress */
+.ba .prog{display:flex;align-items:center;gap:13px;margin:0 0 22px;color:var(--muted);font-size:.82rem;}
+.ba .bar{flex:1;height:7px;border-radius:7px;background:rgba(255,255,255,.07);overflow:hidden;}
+.ba .bar i{display:block;height:100%;border-radius:7px;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .5s;}
+
+/* empty / note */
+.ba .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;color:var(--muted-2);}
+.ba .panel a{color:var(--gold-soft);font-weight:700;}
+
+.ba .foot{margin-top:42px;color:#6f665d;font-size:.82rem;text-align:center;}
+.ba .foot a{color:#8a8078;}
