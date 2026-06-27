@@ -131,14 +131,14 @@
         body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); }
 
         /* Plovoucí tlačítka */
-        .fab-wa { position:fixed; right:20px; bottom:20px; width:60px; height:60px; border-radius:50%; background:#25D366;
+        .fab-wa { position:fixed; right:20px; bottom:20px; width:60px; height:60px; border-radius:50%; background:#ff7a00;
             display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); z-index:1050;
             color:#fff; font-size:1.9rem; text-decoration:none; transition:.2s; }
         .fab-wa:hover { transform:scale(1.08); color:#fff; }
-        .to-top { position:fixed; right:24px; bottom:92px; width:48px; height:48px; border-radius:50%; background:var(--green-dark);
-            color:#fff; border:none; display:none; align-items:center; justify-content:center; font-size:1.3rem; z-index:1050;
-            box-shadow:0 6px 18px rgba(0,0,0,.22); cursor:pointer; transition:.2s; }
-        .to-top:hover { background:var(--green); }
+        .to-top { position:fixed; right:24px; bottom:92px; width:48px; height:48px; border-radius:50%; background:linear-gradient(145deg,#ff9d3c,#ff7a00);
+            color:#160d04; border:none; display:none; align-items:center; justify-content:center; font-size:1.3rem; font-weight:800; z-index:1050;
+            box-shadow:0 10px 26px -6px rgba(255,122,0,.6); cursor:pointer; transition:.2s; }
+        .to-top:hover { transform:translateY(-3px); }
         .to-top.show { display:flex; }
         h1,h2,h3 { font-weight:800; }
 
@@ -382,7 +382,7 @@
         .wa-close { position:absolute; top:10px; right:16px; background:none; border:none; font-size:1.7rem; line-height:1; color:#aaa; cursor:pointer; }
         .wa-close:hover { color:#666; }
         .wa-head { font-weight:800; font-size:1.3rem; color:var(--green-dark); display:flex; align-items:center; justify-content:center; gap:8px; }
-        .wa-head .wa-ic { color:#25D366; flex:0 0 auto; }
+        .wa-head .wa-ic { color:#ff7a00; flex:0 0 auto; }
         .wa-sub { color:#5a665e; font-size:.95rem; margin:.7rem 0 1.2rem; line-height:1.55; }
         .wa-qr { width:190px; height:190px; border:1px solid #eee; border-radius:14px; padding:6px; background:#fff; }
         .wa-num { font-size:1.3rem; margin:1rem 0 0; letter-spacing:.02em; color:var(--ink); }
@@ -391,8 +391,8 @@
             text-decoration:none; cursor:pointer; border:none; transition:transform .2s ease, background .2s ease; font-size:1rem; }
         .btn-wa-copy { background:#f0f2f0; color:var(--ink); }
         .btn-wa-copy:hover { background:#e6e9e6; }
-        .btn-wa-open { background:#25D366; color:#fff; }
-        .btn-wa-open:hover { background:#1da851; color:#fff; transform:translateY(-2px); }
+        .btn-wa-open { background:#ff7a00; color:#fff; }
+        .btn-wa-open:hover { background:#e85d00; color:#fff; transform:translateY(-2px); }
 
         /* ===== PREMIUM v3 ===== */
         body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
@@ -471,7 +471,7 @@
             background:linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent); transform:skewX(-18deg); pointer-events:none; transition:left .6s ease; }
         .btn-grn:hover::after, .btn-gold:hover::after { left:135%; }
         /* 6) Jemný pulz u WhatsApp tlačítka — přitáhne oko ke kontaktu */
-        .fab-wa::before { content:""; position:absolute; inset:0; border-radius:50%; background:#25D366; z-index:-1; }
+        .fab-wa::before { content:""; position:absolute; inset:0; border-radius:50%; background:#ff7a00; z-index:-1; }
         @media (prefers-reduced-motion: no-preference) { .fab-wa::before { animation:fabPulse 2.6s ease-out infinite; } }
         @keyframes fabPulse { 0% { transform:scale(1); opacity:.55; } 70% { transform:scale(1.7); opacity:0; } 100% { opacity:0; } }
 
