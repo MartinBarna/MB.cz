@@ -159,6 +159,7 @@ function videoPage(v) {
 
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js"></script>
+  <script src="/assets/scroll-top.js" defer></script>
   <script>
     var LID='${v.lid}', PRODUCT='videokurz', state={done:false};
     var btn=document.getElementById('doneBtn');
@@ -282,6 +283,7 @@ ${modulesHtml}
 
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js"></script>
+  <script src="/assets/scroll-top.js" defer></script>
   <script>
     (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
     var TOTAL=${ordered.length};
