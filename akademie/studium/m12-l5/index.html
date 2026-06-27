@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dávka 0,4 g/kg na jídlo a distribuce přes den — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 12 · Lekce 5 — Proteinova veda do detailu</div>
+    <h1>Dávka 0,4 g/kg na jídlo a distribuce přes den</h1>
+
+    <p class="lead">Většina lidí řeší jen jedno číslo — kolik bílkovin za den. To je správný začátek, ale ne celý příběh. <strong>Jak ten denní cíl rozložíš do jídel, rozhoduje o tom, kolik z něj se reálně přemění v sval.</strong> V téhle lekci se naučíš pracovat s dávkou na jedno jídlo, počtem jídel a rozložením přes den tak, abys z klientových bílkovin vytěžil maximum — bez fanatismu a bez zbytečných hodinek na ruce.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč existuje „strop“ syntézy svalových bílkovin na jedno jídlo a kde leží.</li>
+        <li>Jak z laboratorních 20 g udělat praktickou dávku 0,4 g/kg na jídlo.</li>
+        <li>Proč rovnoměrné rozložení do 3–4 jídel poráží jeden velký nářez bílkovin.</li>
+        <li>Jak to celé zapadá do denního cíle (1,6–2,2 g/kg) a kdy na distribuci nezáleží.</li>
+        <li>Proč v deficitu a u rostlinných zdrojů dávku spíš zvyšuješ.</li>
+        <li>Jednoduchý rámec pro praxi, který klient utáhne i bez appky.</li>
+      </ul>
+    </div>
+
+    <h2>1) Strop na jedno jídlo: co se opravdu děje</h2>
+    <p>Když sníš bílkovinu, svalová syntéza (MPS) vyletí nahoru — ale ne donekonečna. Po určité dávce už víc bílkovin syntézu dál nezvedne; přebytek se z velké části přepálí na energii nebo přemění na močovinu. Klasické laboratorní studie u mladých mužů našly tenhle „plný plyn“ kolem <strong>20 g rychlé bílkoviny</strong> po tréninku — víc už přineslo jen málo.</p>
+    <p>Pozor ale na nuance. Není to tvrdá hradba typu „nad 20 g se nic nevstřebá“ — to je mýtus. Vstřebá se prakticky všechno; jen ta část navíc nejde primárně do stavby svalu. A strop se posouvá s tělesnou hmotností, věkem, typem bílkoviny i tím, jestli šlo o trénink celého těla.</p>
+    <blockquote>„20 gramů“ není zákon přírody — je to průměr z konkrétní studie na konkrétních lidech. Pro praxi potřebuješ číslo, které škáluje s velikostí klienta.</blockquote>
+
+    <h2>2) Z gramů na g/kg: dávka 0,4 g/kg</h2>
+    <p>Sedmdesátikilový a stokilový člověk nepotřebují stejnou porci. Proto vědci dávku přepočítali na tělesnou hmotnost. Moore et al. ukázali, že maximální stimulace MPS nastává zhruba u <strong>0,24 g/kg na jídlo u mladých</strong> a vyšší u starších. Schoenfeld a Aragon pak pro praxi doporučili počítat s rezervou nahoru — cílit na <strong>0,4 g/kg na jídlo</strong>, aby se trefil i horní okraj individuální variability.</p>
+
+    <div class="eq">dávka na jídlo ≈ 0,4 g × tělesná hmotnost (kg)</div>
+
+    <div class="card">
+      <p><strong>60 kg:</strong> ~24 g bílkovin na jídlo</p>
+      <p><strong>75 kg:</strong> ~30 g bílkovin na jídlo</p>
+      <p><strong>90 kg:</strong> ~36 g bílkovin na jídlo</p>
+      <p><strong>110 kg:</strong> ~44 g bílkovin na jídlo</p>
+    </div>
+    <p>Tohle je „rozumný spodní práh“ pro jedno plnohodnotné jídlo, ne maximum. Klidně sníš víc — neuškodí to a u starších nebo v deficitu je vyšší dávka spíš výhodou. 0,4 g/kg ber jako cíl, pod který se snažíš u hlavních jídel neklesnout.</p>
+
+    <h2>3) Distribuce: 3–4 jídla poráží extrémy</h2>
+    <p>Tady přichází nejhezčí kus důkazů. Areta et al. dali třem skupinám stejných 80 g bílkovin za 12 hodin, ale různě rozložených: 8× 10 g po 1,5 h, <strong>4× 20 g po 3 h</strong>, nebo 2× 40 g po 6 h. Vyhrálo prostřední schéma — čtyři dávky po 20 g daly nejvyšší svalovou syntézu. Malé časté dávky strop nepřekročily, velké řídké dávky zase nechaly dlouhá „hluchá okna“.</p>
+    <p>Praktický překlad: nejde jen o to, kolik bílkovin sníš, ale jak často spustíš anabolickou odpověď. Proto Schoenfeld s Aragonem shrnuli, že ideál je rozložit denní cíl zhruba do <strong>4 jídel</strong> po dávkách kolem 0,4 g/kg.</p>
+    <div class="card">
+      <p><strong>Typický špatný den:</strong> snídaně 5 g (rohlík s máslem), oběd 25 g, večeře 70 g. Dvě jídla pod prahem, jedno přeplněné.</p>
+      <p><strong>Lepší den (75 kg, cíl ~135 g):</strong> snídaně 35 g, oběd 35 g, svačina 30 g, večeře 35 g. Čtyři spouštěče, každý nad prahem.</p>
+    </div>
+    <blockquote>Sval se nestaví z celkového čísla na konci dne — staví se z opakovaných podnětů během dne. Rozložení je páka, kterou máš zdarma.</blockquote>
+
+    <h2>4) Jak to zapadá do denního cíle</h2>
+    <p>Distribuce nikdy nestojí sama. Sedí nad denním cílem, který je z hlediska výsledku pořád to nejdůležitější. Meta-analýza Mortona a Phillipse (kde byl spoluautorem i Schoenfeld a Aragon) ukázala, že příjem nad zhruba <strong>1,6 g/kg/den</strong> už další nárůst svalu v průměru nepřináší; horní rozumná hranice pro optimalizaci je kolem <strong>2,2 g/kg/den</strong>.</p>
+
+    <div class="eq">denní cíl 1,6–2,2 g/kg ÷ 4 jídla ≈ 0,4–0,55 g/kg na jídlo</div>
+
+    <p>Všimni si, jak hezky to do sebe zapadá: když vezmeš rozumný denní cíl a podělíš ho čtyřmi jídly, sám od sebe ti vyjde dávka kolem 0,4 g/kg na jídlo. Distribuce a denní cíl tedy nejsou dvě soupeřící pravidla — jsou to dvě strany téhož.</p>
+    <p>A kdy na distribuci nezáleží? Když je celkový příjem nízký nebo když klient bojuje vůbec cokoliv dojíst. Tam neřeš sekundy mezi jídly — řeš, ať se vůbec dostane na denní cíl. Distribuce je doladění pro lidi, co základ už mají.</p>
+
+    <h2>5) Deficit a rostlinné zdroje: kdy přidat</h2>
+    <p>Dvě situace dávku zvyšují. <strong>Za prvé deficit.</strong> Longland et al. nechali mladé muže ve výrazném 40% deficitu trénovat a skupina s vysokým příjmem bílkovin (~2,4 g/kg) nejen udržela, ale i přibrala svalovou hmotu a ztratila víc tuku než skupina s nižším příjmem. Při hubnutí je bílkovina ochranný štít svalu — tady se nebojíš jít na horní hranici a hlídáš každé jídlo, ať je nad prahem.</p>
+    <p><strong>Za druhé rostlinné zdroje.</strong> Rostlinné bílkoviny mají v průměru nižší kvalitu (DIAAS), horší stravitelnost a méně leucinu — spouštěče anabolismu. Proto u převážně rostlinného jídelníčku doporučuje Phillips zvednout dávku i celkový příjem zhruba o pětinu, kombinovat zdroje (luštěniny + obiloviny) a u hlavních jídel jít spíš na 0,5 g/kg než na 0,4.</p>
+    <div class="card">
+      <p><strong>Praktická úprava dávky na jídlo:</strong></p>
+      <p>Standard (mladý, smíšená strava): 0,4 g/kg</p>
+      <p>V deficitu / starší klient: 0,4–0,5 g/kg, hlídat každé jídlo</p>
+      <p>Převážně rostlinná strava: 0,5 g/kg + kombinovat zdroje</p>
+    </div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> S klienty to nepřeháním na gramy. Řeknu: „Ke každému hlavnímu jídlu si dej porci bílkoviny velkou jak tvoje dlaň — a takhle čtyřikrát za den.“ U sedmdesátníka nebo u někoho v dietě přidám pátou porci nebo večerní tvaroh. Nikdo si u mě nestopuje jídla po minutách. Cíl je jednoduchý: čtyři slušné dávky bílkoviny rozprostřené přes den, ne jeden masakr u večeře a hladový zbytek dne.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co znamená „strop“ svalové syntézy na jedno jídlo a platí, že se nad ním bílkovina nevstřebá? <span class="tg">odpověď ▾</span></div><div class="aa">Strop je dávka, nad kterou už další bílkovina nezvedne svalovou syntézu (MPS). Nevstřebatelnost je mýtus — vstřebá se prakticky všechno, jen ta část navíc nejde primárně do stavby svalu, ale na energii či močovinu.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak spočítáš praktickou dávku bílkovin na jídlo a kolik to je u 90kg klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 0,4 g/kg tělesné hmotnosti na jídlo. U 90 kg to dělá přibližně 36 g bílkovin na jídlo.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co ukázala Areta et al. o rozložení 80 g bílkovin přes den? <span class="tg">odpověď ▾</span></div><div class="aa">Nejvyšší svalovou syntézu daly 4 dávky po 20 g každé 3 hodiny — porazily jak 8 malých dávek po 10 g, tak 2 velké dávky po 40 g. Rovnoměrné rozložení do ~4 jídel je optimální.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak spolu souvisí denní cíl a dávka na jídlo? <span class="tg">odpověď ▾</span></div><div class="aa">Denní cíl (1,6–2,2 g/kg) podělený zhruba 4 jídly sám vyjde na dávku kolem 0,4–0,55 g/kg na jídlo. Distribuce a denní cíl jsou dvě strany téhož, ne soupeřící pravidla.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Ve kterých dvou situacích dávku spíš zvyšuješ a proč? <span class="tg">odpověď ▾</span></div><div class="aa">V deficitu (bílkovina chrání sval — Longland ukázal udržení i nárůst svalu při vysokém příjmu) a u rostlinné stravy (nižší kvalita, stravitelnost a leucin — Phillips doporučuje zvednout příjem ~o pětinu a kombinovat zdroje).</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber modelového klienta (uveď hmotnost a cíl). Spočítej jeho denní cíl bílkovin v rozmezí 1,6–2,2 g/kg, urči dávku 0,4 g/kg na jídlo a navrhni konkrétní rozložení do 3–4 jídel tak, aby každé hlavní jídlo bylo nad prahem. Pak napiš, jak bys plán upravil, kdyby šel do deficitu nebo jedl převážně rostlinně.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Moore DR, Robinson MJ, Fry JL, et al. Ingested protein dose response of muscle and albumin protein synthesis after resistance exercise in young men. Am J Clin Nutr. 2009;89(1):161–168.</li>
+        <li>Areta JL, Burke LM, Ross ML, et al. Timing and distribution of protein ingestion during prolonged recovery from resistance exercise alters myofibrillar protein synthesis. J Physiol. 2013;591(9):2319–2331.</li>
+        <li>Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? Implications for daily protein distribution. J Int Soc Sports Nutr. 2018;15:10.</li>
+        <li>Morton RW, Murphy KT, McKellar SR, Schoenfeld BJ, Henselmans M, Helms E, Aragon AA, Devries MC, Banfield L, Krieger JW, Phillips SM. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Longland TM, Oikawa SY, Mitchell CJ, Devries MC, Phillips SM. Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial. Am J Clin Nutr. 2016;103(3):738–746.</li>
+        <li>van Vliet S, Burd NA, van Loon LJC. The skeletal muscle anabolic response to plant- versus animal-based protein consumption. J Nutr. 2015;145(9):1981–1991.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m12-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
