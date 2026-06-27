@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protein a stárnutí: anabolická rezistence a sarkopenie — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 12 · Lekce 10 — Proteinová věda do detailu</div>
+    <h1>Protein a stárnutí: anabolická rezistence a sarkopenie</h1>
+
+    <p class="lead">Sval, který klient budoval celý život, po čtyřicítce začne tiše ubývat — a po šedesátce může ten úbytek rozhodnout o tom, jestli zvládne vstát ze židle bez opory. <strong>Stárnoucí sval hůř slyší stejný signál, který u dvacetiletého spustí stavbu.</strong> Říká se tomu anabolická rezistence a je to jeden z mála jevů ve výživě, kde dělá protein opravdu měřitelný rozdíl. V téhle lekci pochopíš, proč starší klient potřebuje víc bílkovin, lépe rozložených a chytře natrénovaných — a jak mu to nastavit prakticky, ne jen na papíře.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je sarkopenie a proč nejde jen o „méně svalu“, ale o ztrátu soběstačnosti.</li>
+        <li>Co je anabolická rezistence a proč stejná porce proteinu udělá u staršího člověka menší práci.</li>
+        <li>Proč u seniorů zvedáme dávku proteinu na jídlo i denní příjem — a o kolik.</li>
+        <li>Jakou roli hraje leucin, „práh“ a kvalita zdroje (DIAAS, rostlinné vs. živočišné).</li>
+        <li>Proč je silový trénink nepostradatelný partner proteinu, ne alternativa.</li>
+        <li>Jak to celé poskládat do jídelníčku, který starší klient reálně sní.</li>
+      </ul>
+    </div>
+
+    <h2>1) Sarkopenie — tichý úbytek, který se počítá</h2>
+    <p>Sarkopenie je věkem podmíněná ztráta svalové hmoty, síly a funkce. Začíná dřív, než si většina lidí myslí: úbytek svalu lze měřit už od třetí dekády a po šedesátce se tempo zrychluje. Není to kosmetický problém — méně svalu znamená nižší klidový výdej, horší citlivost na inzulin, vyšší riziko pádů, zlomenin a ztráty samostatnosti.</p>
+    <p>Klíčové je nezaměňovat <strong>svalovou hmotu</strong> a <strong>svalovou sílu</strong>. Síla a funkce klesají rychleji než samotná hmota a předpovídají budoucí problémy líp. Proto u staršího klienta nesledujeme jen číslo na váze nebo obvod stehna, ale to, jestli zvládne dřep, schody, nákup a vstávání ze země.</p>
+    <blockquote>Trénink a protein u seniora nehoní estetiku — honí soběstačnost. To je rámec, který klientovi i jeho rodině dává smysl víc než „nabrat sval“.</blockquote>
+
+    <h2>2) Anabolická rezistence — proč stejná porce stačí míň</h2>
+    <p>Tady je jádro celé lekce. U mladého člověka spustí jídlo bohaté na bílkoviny svalovou proteosyntézu (MPS) ochotně — sval „naskočí“. Se stárnutím se tahle odpověď otupuje: stejná dávka aminokyselin vyvolá menší nárůst syntézy. Tomu se říká <strong>anabolická rezistence</strong>. Sval není rozbitý, jen hluchý k slabšímu signálu — a potřebuje hlasitější vstup, aby reagoval stejně.</p>
+    <p>Praktický důsledek: malá porce proteinu, která mladému stačí na rozjetí syntézy, u seniora často nestačí. Zhoršuje to každé období nečinnosti — nemoc, hospitalizace, pár dní na gauči po operaci. Dva týdny snížené aktivity dokážou u staršího člověka „anabolickou rezistenci“ ještě prohloubit a urychlit úbytek svalu. Proto u seniorů nečinnost není neutrální pauza, ale aktivní ztráta.</p>
+    <div class="card">
+      <p><strong>Co rezistenci zhoršuje:</strong> nedostatečná porce proteinu, nízká celková aktivita, klid na lůžku, zánět a chronická onemocnění.</p>
+      <p><strong>Čím ji obcházíme:</strong> vyšší dávka kvalitního proteinu na jídlo (hlasitější signál), pravidelný silový trénink (zvyšuje citlivost svalu) a co nejmenší pasivita.</p>
+    </div>
+
+    <h2>3) Kolik proteinu a jak ho rozložit</h2>
+    <p>U běžné dospělé populace bez intenzivního tréninku stačí o dost méně, ale stárnoucí sval a sval v zátěži patří do jiné kategorie. Pro starší dospělé se z odborných doporučení vžil rozsah, který je výrazně nad oficiálním minimem pro mladé.</p>
+    <div class="eq">starší dospělí: ≈ 1,0–1,2 g bílkovin / kg / den<br>(při nemoci či úbytku svalu klidně 1,2–1,5 g/kg/den)</div>
+    <p>Stejně důležité jako celkový součet je <strong>rozložení</strong>. Stárnoucí sval potřebuje na jednom jídle vyšší dávku, aby překonal práh anabolické rezistence. Zatímco u mladého se odpověď syntézy „nasytí“ kolem 0,24 g/kg na jídlo, u staršího člověka je ten bod posunutý výš — řádově ke 0,4 g/kg na jídlo.</p>
+    <div class="eq">dávka na jídlo (senior): ≈ 0,4 g bílkovin / kg<br>≈ 30–40 g kvalitního proteinu na hlavní jídlo</div>
+    <p>Proto cílíme na <strong>tři až čtyři jídla s dostatkem bílkovin</strong>, ne na jednu velkou večerní porci a zbytek dne skoro nic. Klasický český problém je tady snídaně: rohlík s marmeládou má bílkovin minimum a ráno tak sval celé hodiny „spí“. Posílit snídani je často největší jediná páka.</p>
+
+    <h2>4) Kvalita zdroje, leucin a práh</h2>
+    <p>Nejde jen o gramy, ale i o to, <strong>co</strong> ty gramy obsahují. Klíčovým spínačem syntézy je aminokyselina <strong>leucin</strong>: aby u staršího člověka spolehlivě „překlopila“ sval do stavby, bývá potřeba zhruba 3 g leucinu na jídlo. To je další důvod pro větší porce — menší dávka práh nepřekoná.</p>
+    <p>Zdroje se liší kvalitou, kterou popisuje skóre DIAAS (stravitelnost a profil esenciálních aminokyselin). Živočišné bílkoviny — syrovátka, mléko, vejce, maso, ryby — mají vysoké DIAAS a hodně leucinu, takže práh překonají menším objemem. Rostlinné zdroje mají typicky nižší DIAAS a méně leucinu na gram.</p>
+    <div class="card">
+      <p><strong>Co to znamená prakticky:</strong> rostlinný jídelníček není pro seniora překážka, jen vyžaduje <strong>vyšší celkové gramy</strong> a <strong>kombinování zdrojů</strong> (luštěniny + obiloviny, sója, tofu, případně rostlinná proteinová směs), aby porce dodala dost leucinu.</p>
+      <p><strong>Praktický tahák zdrojů:</strong> syrovátka a tvaroh řeší práh nejsnáz; vejce a ryby jsou skvělé hlavní porce; u rostlinné stravy mysli na sóju a kombinace a klidně přidej o porci navíc.</p>
+    </div>
+    <blockquote>U mladého, zdravého a hodně jedoucího klienta se rozdíly mezi zdroji dlouhodobě stírají. U seniora s nízkou chutí k jídlu a malými porcemi ale kvalita a leucin rozhodují víc — protože každé jídlo se musí „počítat“.</blockquote>
+
+    <h2>5) Protein bez tréninku je půlka řešení</h2>
+    <p>Tady se nedá uhnout: protein a silový trénink jsou partneři, ne náhradníci. Samotné zvýšení bílkovin udrží trochu víc svalu, ale skutečný obrat přijde, až se přidá <strong>odporové cvičení</strong>. Pohyb totiž svalu vrací citlivost — dělá ho znovu „slyšícím“ na aminokyseliny a leucin.</p>
+    <p>Z analýz tréninkových studií navíc vyplývá, že vyšší příjem bílkovin zesiluje přírůstky síly a beztukové hmoty z odporového tréninku, přičemž přínos přidaného proteinu se v průměru vyrovnává zhruba kolem <strong>1,6 g/kg/den</strong>. U seniora je proto cílem zkombinovat obojí: dostatek dobře rozloženého kvalitního proteinu A pravidelný silový trénink, byť v rozumné, bezpečné dávce.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> S klienty kolem šedesátky a výš jedu jednoduchou matematiku: ke každému hlavnímu jídlu „dlaň bílkoviny navíc“ a snídani povýšíme z pečiva na vejce, tvaroh nebo skyr. K tomu dvakrát týdně silový trénink se základními pohyby — dřep ze židle, tlaky, taháky, nošení. Neřeším u nich poslední gram ani fancí doplněk; řeším, aby každé jídlo mělo svou porci bílkovin a aby se ten člověk pravidelně hýbal proti odporu. Tahle nudná kombinace dělá zázraky, které žádný prášek nedožene.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je sarkopenie a proč u ní sledujeme i sílu, ne jen hmotu? <span class="tg">odpověď ▾</span></div><div class="aa">Sarkopenie je věkem podmíněná ztráta svalové hmoty, síly a funkce. Síla a funkce klesají rychleji než hmota a líp předpovídají riziko pádů a ztráty soběstačnosti — proto sledujeme i výkon (dřep, schody, vstávání), ne jen číslo na váze.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co znamená anabolická rezistence? <span class="tg">odpověď ▾</span></div><div class="aa">Stárnoucí sval reaguje na stejnou dávku bílkovin (aminokyselin) menším nárůstem svalové proteosyntézy než sval mladý. Potřebuje „hlasitější“ signál — větší a kvalitnější porci — aby zareagoval stejně.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jakou dávku proteinu na jídlo a jaký denní příjem cílíme u staršího klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 0,4 g/kg na jídlo (cca 30–40 g kvalitního proteinu na hlavní jídlo) a celkový denní příjem řádově 1,0–1,2 g/kg, při nemoci nebo úbytku svalu i 1,2–1,5 g/kg. Důležité je rozložit to do tří až čtyř jídel.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč u seniorů řešíme leucin a kvalitu zdroje (DIAAS) víc než u mladých? <span class="tg">odpověď ▾</span></div><div class="aa">Aby porce překonala práh anabolické rezistence, potřebuje dost leucinu (cca 3 g na jídlo). Živočišné zdroje mají vysoké DIAAS a hodně leucinu, takže práh překonají menším objemem; rostlinné vyžadují vyšší gramy a kombinování. U seniora s malými porcemi se každé jídlo musí „počítat“.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč nestačí jen zvýšit protein, ale musí se přidat silový trénink? <span class="tg">odpověď ▾</span></div><div class="aa">Odporový trénink vrací svalu citlivost na aminokyseliny — dělá ho znovu „slyšícím“. Vyšší příjem bílkovin navíc zesiluje přírůstky síly a beztukové hmoty z tréninku. Protein a trénink jsou partneři, ne náhradníci.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelového klienta ve věku 65 let, 75 kg, s nízkou chutí k jídlu. Spočítej jeho cílový denní příjem bílkovin i orientační dávku na jídlo, rozvrhni je do tří až čtyř jídel a ke každému navrhni konkrétní zdroj (počítej s leucinem a kvalitou). Zvlášť vyřeš snídani, pokud dnes jí jen pečivo. Nakonec připoj jednoduchý dvoufázový silový plán na týden a napiš, jak budeš po měsíci hodnotit pokrok (síla a funkce, ne jen váha).</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Bauer J, Biolo G, Cederholm T, et al. Evidence-based recommendations for optimal dietary protein intake in older people: a position paper from the PROT-AGE Study Group. J Am Med Dir Assoc. 2013;14(8):542–559.</li>
+        <li>Moore DR, Churchward-Venne TA, Witard O, et al. Protein ingestion to stimulate myofibrillar protein synthesis requires greater relative protein intakes in healthy older versus younger men. J Gerontol A Biol Sci Med Sci. 2015;70(1):57–62.</li>
+        <li>Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Wall BT, Gorissen SH, Pennings B, et al. Aging is accompanied by a blunted muscle protein synthetic response to protein ingestion. PLoS One. 2015;10(11):e0140903.</li>
+        <li>Breen L, Stokes KA, Churchward-Venne TA, et al. Two weeks of reduced activity decreases leg lean mass and induces "anabolic resistance" of myofibrillar protein synthesis in healthy elderly. J Clin Endocrinol Metab. 2013;98(6):2604–2612.</li>
+        <li>Pinckaers PJM, Trommelen J, Snijders T, van Loon LJC. The anabolic response to plant-based protein ingestion. Sports Med. 2021;51(Suppl 1):59–74.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m12-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
