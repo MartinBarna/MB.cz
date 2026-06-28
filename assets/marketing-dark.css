@@ -141,7 +141,7 @@ th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
 .card p, .faq p, .form-fallback, .auth .stats span, .calc-card label, .meal .name { color:var(--bd-muted2)!important; }
 /* .proof sekce má v page CSS background:#fff (světlý design) → ztmavit celou sekci,
    jinak by bílá jména recenzí byla bílá na bílé. Karty pak tmavé, text světlý. */
-.proof { background:transparent!important; }
+.proof, .form-sec { background:transparent!important; }
 .proof figure { background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important; border-color:var(--bd-line)!important; }
 .proof figcaption, .proof .rate { color:#fff!important; }
 .proof blockquote { color:var(--bd-muted2)!important; }
