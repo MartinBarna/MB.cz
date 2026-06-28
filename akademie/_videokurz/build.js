@@ -306,6 +306,11 @@ ${materialsHtml}
       </ul>
     </div>
 
+    <a href="/akademie/" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span style="min-width:240px;flex:1;"><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Posuň se dál — Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Když chceš za výživou a tréninkem vidět i celou vědu (18 modulů, 203 lekcí) a umět to vysvětlit klientům — Academy je další krok.</span></span>
+      <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
+    </a>
+
     <div id="modules"></div>
 
     <p class="note" id="modeNote">Ukázka prostředí. Přihlášení a uložení postupu se aktivuje po koupi (Supabase).</p>
