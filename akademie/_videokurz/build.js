@@ -64,6 +64,14 @@ const MATERIALS = [
   { ico: '⚖️', t: 'Proč vážit jídlo', d: 'Infografika (PDF)', file: 'Proc vazit jidlo.pdf' },
   { ico: '🧺', t: 'Nákupní košík', d: 'Vzorový nákup (obrázek)', file: 'nakupni kosik.png' },
   { ico: '📊', t: 'Report pro coache', d: 'Šablona s grafem (Excel)', file: 'Report tabulka.xlsx' },
+  // --- NOVÉ bonusové materiály (token-driven, hostované staticky na /materialy/pdf/) ---
+  { ico: '😴', t: 'Spánek & regenerace', d: 'NOVÉ — průvodce pro klienty (PDF)', link: '/materialy/pdf/spanek-a-regenerace.pdf' },
+  { ico: '✋', t: 'Porce bez vážení', d: 'NOVÉ — porcování rukou (PDF)', link: '/materialy/pdf/porce-bez-vazeni.pdf' },
+  { ico: '✅', t: 'Deník návyků', d: 'NOVÉ — týdenní tracker (PDF)', link: '/materialy/pdf/denik-navyku.pdf' },
+  { ico: '📦', t: 'Uvítací balíček', d: 'NOVÉ — onboarding klienta (PDF)', link: '/materialy/pdf/uvitaci-balicek.pdf' },
+  { ico: '🍕', t: 'Flexibilní stravování', d: 'NOVÉ — průvodce pro klienty (PDF)', link: '/materialy/pdf/flexibilni-strava.pdf' },
+  { ico: '🍳', t: 'High-protein receptář', d: 'NOVÉ — 12 receptů s makry (PDF)', link: '/materialy/pdf/high-protein-recepty.pdf' },
+  { ico: '🏋️', t: 'Tréninkový plán (full-body)', d: 'NOVÉ — 3denní plán pro začátečníky (PDF)', link: '/materialy/pdf/treninkovy-plan.pdf' },
 ];
 
 function assign(v) {
