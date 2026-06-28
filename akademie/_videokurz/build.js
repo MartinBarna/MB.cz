@@ -72,6 +72,12 @@ const MATERIALS = [
   { ico: '🍕', t: 'Flexibilní stravování', d: 'NOVÉ — průvodce pro klienty (PDF)', link: '/materialy/pdf/flexibilni-strava.pdf' },
   { ico: '🍳', t: 'High-protein receptář', d: 'NOVÉ — 12 receptů s makry (PDF)', link: '/materialy/pdf/high-protein-recepty.pdf' },
   { ico: '🏋️', t: 'Tréninkový plán (full-body)', d: 'NOVÉ — 3denní plán pro začátečníky (PDF)', link: '/materialy/pdf/treninkovy-plan.pdf' },
+  { ico: '💊', t: 'Suplementy — co funguje', d: 'NOVÉ — evidence-based průvodce (PDF)', link: '/materialy/pdf/suplementy-co-funguje.pdf' },
+  { ico: '💧', t: 'Hydratace a pitný režim', d: 'NOVÉ — kolik pít a proč (PDF)', link: '/materialy/pdf/hydratace-pitny-rezim.pdf' },
+  { ico: '🍽️', t: 'Jídlo v restauraci a na cestách', d: 'NOVÉ — forma i venku (PDF)', link: '/materialy/pdf/jidlo-v-restauraci.pdf' },
+  { ico: '🚶', t: 'Kroky, NEAT a cardio', d: 'NOVÉ — kolik a kdy (PDF)', link: '/materialy/pdf/kroky-a-cardio.pdf' },
+  { ico: '🧘', t: 'Stres, kortizol a hubnutí', d: 'NOVÉ — mýtus vs realita (PDF)', link: '/materialy/pdf/stres-a-kortizol.pdf' },
+  { ico: '🔬', t: 'Jak číst vědecké studie', d: 'NOVÉ — hierarchie důkazů (PDF)', link: '/materialy/pdf/jak-cist-studie.pdf' },
 ];
 
 function assign(v) {
