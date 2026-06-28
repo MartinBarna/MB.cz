@@ -96,45 +96,59 @@
       '</g>' +
     '</svg>',
 
-  // KOSTRA — zjednodušený přehled hlavních kostí
+  // KOSTRA — axiální vs apendikulární (čistá infografika, ne realistická kresba)
   'skeleton':
-    '<svg viewBox="0 0 600 320" role="img" aria-label="Kosterní systém — hlavní kosti">' +
-      '<text x="300" y="24" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">KOSTERNÍ SYSTÉM — opora pohybu</text>' +
-      '<g transform="translate(300,0)" stroke="'+GS+'" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
-      '<circle cx="0" cy="58" r="22" fill="rgba(255,255,255,.05)"/>' +              // lebka
-      '<line x1="0" y1="80" x2="0" y2="200"/>' +                                     // páteř
-      '<path d="M-30 110 H30 M-34 126 H34 M-32 142 H32 M-26 158 H26"/>' +           // žebra
-      '<line x1="-52" y1="100" x2="52" y2="100"/>' +                                 // klíční/ramena
-      '<line x1="-52" y1="100" x2="-66" y2="170"/><line x1="-66" y1="170" x2="-60" y2="232"/>' + // L paže
-      '<line x1="52" y1="100" x2="66" y2="170"/><line x1="66" y1="170" x2="60" y2="232"/>' +     // P paže
-      '<path d="M-30 200 H30 L26 222 H-26 Z" fill="rgba(255,255,255,.05)"/>' +       // pánev
-      '<line x1="-16" y1="222" x2="-22" y2="300"/><line x1="16" y1="222" x2="22" y2="300"/>' +   // nohy
+    '<svg viewBox="0 0 600 340" role="img" aria-label="Kosterní systém — stavba">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">KOSTERNÍ SYSTÉM</text>' +
+      '<text x="300" y="46" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11.5px">206 kostí · pasivní opora, na kterou táhnou svaly</text>' +
+      bodyMap(true) +
+      // legenda axiální / apendikulární
+      '<g transform="translate(58,300)" style="'+F+'">' +
+      '<rect x="0" y="0" width="13" height="13" rx="3" fill="'+G+'"/><text x="20" y="11" fill="'+W+'" font-size="11.5" font-weight="700">Axiální</text><text x="84" y="11" fill="'+M+'" font-size="10.5">lebka · páteř · hrudník</text>' +
+      '<rect x="300" y="0" width="13" height="13" rx="3" fill="'+BL+'"/><text x="320" y="11" fill="'+W+'" font-size="11.5" font-weight="700">Apendikulární</text><text x="420" y="11" fill="'+M+'" font-size="10.5">končetiny · pletence</text>' +
       '</g>' +
-      '<g style="'+F+'" fill="'+M+'" font-size="11.5">' +
-      label(196,62,'Lebka',1)+ label(196,118,'Žebra (hrudník)',1)+ label(196,180,'Páteř',1)+ label(196,214,'Pánev',1)+
-      label(404,104,'Ramenní pletenec',0)+ label(404,176,'Kosti paže',0)+ label(404,290,'Stehenní kost',0)+
+      // skeleton overlay zones drawn inside bodyMap; labels:
+      '<g style="'+F+'" fill="'+M+'" font-size="11px">' +
+      leader(244,84,300,72,'Lebka',1)+ leader(244,150,278,140,'Páteř a žebra',1)+ leader(244,196,288,196,'Pánev',1)+
+      leader(356,120,322,118,'Pletenec ramenní',0)+ leader(356,168,330,170,'Kosti paže',0)+ leader(356,250,316,250,'Kosti nohy',0)+
       '</g>' +
     '</svg>',
 
-  // SVALY ZEPŘEDU
+  // SVALY ZEPŘEDU — barevně odlišené skupiny na čisté siluetě
   'muscles-front':
-    '<svg viewBox="0 0 600 330" role="img" aria-label="Hlavní svalové skupiny zepředu">' +
-      '<text x="300" y="24" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">SVALY — pohled zepředu</text>' +
-      bodySilhouette() +
-      '<g style="'+F+'" fill="'+M+'" font-size="11.5">' +
-      label(196,96,'Ramena (deltové)',1)+ label(196,132,'Prsní svaly',1)+ label(196,176,'Břišní svaly',1)+ label(196,230,'Čtyřhlavý stehna',1)+
-      label(404,150,'Biceps',0)+ label(404,196,'Předloktí',0)+ label(404,290,'Holenní sval',0)+
+    '<svg viewBox="0 0 600 360" role="img" aria-label="Hlavní svalové skupiny zepředu">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">SVALY — pohled zepředu</text>' +
+      bodyMap(false) +
+      // přední svalové zóny
+      '<g opacity="0.85">' +
+      mz('M276 96 a16 12 0 0 1 -22 6 a14 14 0 0 1 22 -6',G)+ mz('M324 96 a16 12 0 0 0 22 6 a14 14 0 0 0 -22 -6',G)+ // delty
+      mz('M278 108 q22 -4 22 16 q0 12 -22 12 q-16 0 -16 -16 q0 -10 16 -12',GS)+ mz('M322 108 q-22 -4 -22 16 q0 12 22 12 q16 0 16 -16 q0 -10 -16 -12',GS)+ // prsa
+      mz('M288 142 h24 v52 q0 8 -12 8 q-12 0 -12 -8 z',GR)+ // břicho
+      mz('M256 116 q-10 18 -6 40 q8 -2 10 -20 q1 -14 -4 -20',BL)+ mz('M344 116 q10 18 6 40 q-8 -2 -10 -20 q-1 -14 4 -20',BL)+ // biceps
+      mz('M286 210 q-6 40 -2 70 q12 -2 14 -34 q1 -22 -12 -36',G)+ mz('M314 210 q6 40 2 70 q-12 -2 -14 -34 q-1 -22 12 -36',G)+ // kvadricepsy
+      '</g>' +
+      '<g style="'+F+'" fill="'+M+'" font-size="11px">' +
+      leader(244,98,266,98,'Ramena (delty)',1)+ leader(244,128,278,124,'Prsní svaly',1)+ leader(244,168,288,168,'Břišní svaly',1)+ leader(244,240,288,236,'Čtyřhlavý stehna',1)+
+      leader(356,134,338,128,'Biceps',0)+ leader(356,300,322,300,'Holenní sval',0)+
       '</g>' +
     '</svg>',
 
-  // SVALY ZEZADU
+  // SVALY ZEZADU — barevně odlišené skupiny
   'muscles-back':
-    '<svg viewBox="0 0 600 330" role="img" aria-label="Hlavní svalové skupiny zezadu">' +
-      '<text x="300" y="24" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">SVALY — pohled zezadu</text>' +
-      bodySilhouette() +
-      '<g style="'+F+'" fill="'+M+'" font-size="11.5">' +
-      label(196,96,'Trapéz',1)+ label(196,140,'Široký sval zádový',1)+ label(196,210,'Hýžďové svaly',1)+ label(196,250,'Hamstringy',1)+
-      label(404,150,'Triceps',0)+ label(404,292,'Lýtka',0)+
+    '<svg viewBox="0 0 600 360" role="img" aria-label="Hlavní svalové skupiny zezadu">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">SVALY — pohled zezadu</text>' +
+      bodyMap(false) +
+      '<g opacity="0.85">' +
+      mz('M282 92 h36 l-8 18 h-20 z',G)+ // trapéz
+      mz('M278 116 q22 6 22 40 q0 14 -16 14 q-12 0 -14 -24 q-1 -20 8 -30',GS)+ mz('M322 116 q-22 6 -22 40 q0 14 16 14 q12 0 14 -24 q1 -20 -8 -30',GS)+ // lats
+      mz('M256 118 q-10 18 -6 40 q8 -2 10 -20 q1 -14 -4 -20',BL)+ mz('M344 118 q10 18 6 40 q-8 -2 -10 -20 q-1 -14 4 -20',BL)+ // triceps
+      mz('M286 188 q-6 0 -8 18 q-1 12 12 12 q8 0 8 -14 q0 -14 -12 -16',G)+ mz('M314 188 q6 0 8 18 q1 12 -12 12 q-8 0 -8 -14 q0 -14 12 -16',G)+ // hýždě
+      mz('M286 220 q-6 30 -2 56 q12 -2 13 -28 q1 -18 -11 -28',GR)+ mz('M314 220 q6 30 2 56 q-12 -2 -13 -28 q-1 -18 11 -28',GR)+ // hamstringy
+      mz('M288 288 q-4 24 0 40 q9 -2 9 -22 q0 -12 -9 -18',GS)+ mz('M312 288 q4 24 0 40 q-9 -2 -9 -22 q0 -12 9 -18',GS)+ // lýtka
+      '</g>' +
+      '<g style="'+F+'" fill="'+M+'" font-size="11px">' +
+      leader(244,100,282,98,'Trapéz',1)+ leader(244,140,278,140,'Záda (lats)',1)+ leader(244,200,288,198,'Hýždě',1)+ leader(244,244,290,240,'Hamstringy',1)+
+      leader(356,134,338,128,'Triceps',0)+ leader(356,304,318,300,'Lýtka',0)+
       '</g>' +
     '</svg>',
 
@@ -340,12 +354,57 @@
     var tx = right ? x : x;
     return '<text x="'+tx+'" y="'+y+'" text-anchor="'+anchor+'">'+txt+'</text>';
   }
-  function bodySilhouette(){
-    return '<g transform="translate(300,40)" fill="rgba(255,122,0,.13)" stroke="'+G+'" stroke-width="2">' +
-      '<circle cx="0" cy="22" r="18"/>' +
-      '<path d="M-30 48 Q0 40 30 48 L40 120 Q42 150 34 185 L24 250 L8 250 L4 150 L-4 150 L-8 250 L-24 250 L-34 185 Q-42 150 -40 120 Z"/>' +
-      '<path d="M-30 52 L-58 130 L-50 150 Z"/><path d="M30 52 L58 130 L50 150 Z"/>' +
-      '</g>';
+  // čistý „mannequin" model těla (hlava + trup + zaoblené končetiny)
+  function bodyMap(skel){
+    var bf = 'rgba(255,255,255,.05)', bs = 'rgba(255,255,255,.16)';
+    var s = '<g>' +
+      '<ellipse cx="300" cy="62" rx="17" ry="20" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4"/>' +
+      '<rect x="293" y="78" width="14" height="12" rx="4" fill="'+bf+'"/>' +
+      // trup (zaoblený lichoběžník ramena→pas)
+      '<path d="M262 96 Q300 88 338 96 L330 168 Q300 178 270 168 Z" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4"/>' +
+      // pánev
+      '<path d="M272 166 Q300 176 328 166 L322 202 Q300 210 278 202 Z" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4"/>' +
+      // delty (ramena)
+      '<circle cx="264" cy="100" r="13" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4"/><circle cx="336" cy="100" r="13" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4"/>' +
+      // paže
+      '<rect x="247" y="104" width="17" height="108" rx="8.5" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4" transform="rotate(7 255 104)"/>' +
+      '<rect x="336" y="104" width="17" height="108" rx="8.5" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4" transform="rotate(-7 345 104)"/>' +
+      // nohy
+      '<rect x="276" y="198" width="20" height="132" rx="10" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4"/>' +
+      '<rect x="304" y="198" width="20" height="132" rx="10" fill="'+bf+'" stroke="'+bs+'" stroke-width="1.4"/>';
+    if (skel){
+      // axiální (gold): lebka, páteř, žebra, hrudní kost
+      s += '<g fill="none" stroke-linecap="round">' +
+        '<line x1="300" y1="92" x2="300" y2="168" stroke="'+G+'" stroke-width="3"/>' +
+        '<g stroke="'+G+'" stroke-width="1.6">' +
+        '<line x1="300" y1="104" x2="300" y2="104"/>' +
+        '<path d="M300 110 q-22 4 -26 22"/><path d="M300 110 q22 4 26 22"/>' +
+        '<path d="M300 122 q-24 4 -28 24"/><path d="M300 122 q24 4 28 24"/>' +
+        '<path d="M300 134 q-24 5 -27 24"/><path d="M300 134 q24 5 27 24"/>' +
+        '</g>' +
+        // appendikulární (modrá): pletenec, paže, pánev, nohy
+        '<g stroke="'+BL+'" stroke-width="2.4">' +
+        '<line x1="270" y1="98" x2="330" y2="98"/>' +              // klíční/pletenec
+        '<line x1="262" y1="104" x2="256" y2="160"/><line x1="256" y1="160" x2="258" y2="206"/>' +
+        '<line x1="338" y1="104" x2="344" y2="160"/><line x1="344" y1="160" x2="342" y2="206"/>' +
+        '<path d="M276 172 Q300 184 324 172" fill="none"/>' +      // pánev
+        '<line x1="288" y1="200" x2="285" y2="322"/><line x1="312" y1="200" x2="315" y2="322"/>' +
+        '</g>' +
+        // klouby
+        '<g fill="'+W+'" stroke="none">' +
+        '<circle cx="262" cy="104" r="3"/><circle cx="338" cy="104" r="3"/><circle cx="256" cy="160" r="2.6"/><circle cx="344" cy="160" r="2.6"/>' +
+        '<circle cx="288" cy="200" r="3"/><circle cx="312" cy="200" r="3"/><circle cx="285" cy="262" r="2.6"/><circle cx="315" cy="262" r="2.6"/>' +
+        '</g></g>';
+    }
+    s += '</g>';
+    return s;
+  }
+  function mz(d,col){ return '<path d="'+d+'" fill="'+col+'" stroke="'+col+'" stroke-width="1" stroke-opacity="0.55"/>'; }
+  function leader(x,y,tx,ty,txt,leftSide){
+    var anchor = leftSide ? 'end' : 'start';
+    var ls = leftSide ? x+6 : x-6;
+    return '<line x1="'+ls+'" y1="'+(y-4)+'" x2="'+tx+'" y2="'+ty+'" stroke="rgba(255,255,255,.22)" stroke-width="1"/>' +
+      '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'">'+txt+'</text>';
   }
   function sysBar(y,name,time,desc,col,w){
     return '<g transform="translate(0,'+y+')">' +
