@@ -115,7 +115,7 @@ h2[style*="#161616"], h3[style*="#161616"] { color:#fff!important; }
 }
 .faq summary, .faq details { color:var(--bd-ink)!important; }
 .calc-wrap label, .form-card label { color:var(--bd-muted2)!important; }
-.eyebrow, .pill { background:rgba(255,122,0,.12)!important; color:var(--bd-gold-soft)!important; border-color:rgba(255,122,0,.28)!important; box-shadow:none!important; }
+.eyebrow, .pill, .chip { background:rgba(255,122,0,.12)!important; color:var(--bd-gold-soft)!important; border:1px solid rgba(255,122,0,.28)!important; box-shadow:none!important; }
 input, textarea, select, .form-control, .form-select {
   background:rgba(0,0,0,.28)!important; color:var(--bd-ink)!important; border-color:rgba(255,255,255,.14)!important;
 }
@@ -190,6 +190,9 @@ select option, select optgroup { color:#161616; background:#fff; }
 
 /* feature ikony: page CSS dává color:#161616 (tmavá ikona) → na dark mizí; přebij na zlatou */
 .feature .ico, .feature .ico .mb-ico, #blog .card .ico { color:var(--bd-gold-soft)!important; }
+/* Blog ikony na homepage = prosté emoji, ne boxík. (line-height:0 + oranžový box výše
+   srazil ikonu na tenkou linku a emoji pak přetékalo přes nadpis.) */
+#blog .card .ico { background:none!important; border:none!important; line-height:1!important; }
 .feature .ico { background:linear-gradient(145deg,rgba(255,122,0,.2),rgba(255,122,0,.05))!important; border:1px solid rgba(255,122,0,.28)!important; }
 
 /* Bootstrap accordion (homepage FAQ) — nebyl pokrytý → bílá karta + faint text */

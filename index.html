@@ -552,7 +552,7 @@
     })();
     </script>
     <script defer src="/assets/analytics.js"></script>
-    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260708">
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260709">
     <style id="hp-dark">
       /* Homepage — doladění dark-luxe (přebíjí stránkové světlé prvky) */
       .proof-marquee { background:rgba(255,122,0,.06)!important; border-color:rgba(255,122,0,.18)!important; }
@@ -717,7 +717,7 @@
                             <h4 class="fw-bold mt-3 mb-2">Tomáš &amp; Katka</h4>
                             <p class="text-muted mb-2">Oba měli zkušenosti s crossfitem, ale postava neodpovídala nasazení. Vyladili jsme trénink i návyky, zhubli a prošli stabilizační fází proti jojo efektu (reverzní dieta).</p>
                             <p class="text-muted mb-3">Dnes formu žijí jako pár a 2 roky po spolupráci si ji drží sami. I o tom je náš společný podcast.</p>
-                            <a class="yt-thumb d-inline-block" style="width:300px;max-width:100%;" href="https://www.youtube.com/watch?v=YU1Nf_GVU_U" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/YU1Nf_GVU_U/mqdefault.jpg" alt="Podcast s Tomášem a Katkou" width="320" height="180" loading="lazy" decoding="async"></a>
+                            <a class="yt-thumb d-block mx-auto" style="width:300px;max-width:100%;" href="https://www.youtube.com/watch?v=YU1Nf_GVU_U" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/YU1Nf_GVU_U/mqdefault.jpg" alt="Podcast s Tomášem a Katkou" width="320" height="180" loading="lazy" decoding="async"></a>
                         </div>
                     </div>
                 </div>
@@ -1422,9 +1422,12 @@
         var toTop = document.getElementById('toTop');
         var _prog = document.getElementById('scrollProgress');
         var _ctaBar = document.getElementById('ctaBar');
+        var _wa = document.querySelector('.fab-wa'), _waIdle = null;
         function _onScroll() {
             var st = window.scrollY || document.documentElement.scrollTop;
             if (st > 500) { toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
+            // WhatsApp se při scrollu zprůhlední, ať nezakrývá obsah (fotky atd.); po zastavení se vrátí.
+            if (_wa) { _wa.style.transition = 'opacity .2s'; _wa.style.opacity = '.16'; if (_waIdle) clearTimeout(_waIdle); _waIdle = setTimeout(function () { _wa.style.opacity = '1'; }, 550); }
             if (_prog) {
                 var h = document.documentElement.scrollHeight - window.innerHeight;
                 _prog.style.width = (h > 0 ? Math.min(100, st / h * 100) : 0) + '%';
