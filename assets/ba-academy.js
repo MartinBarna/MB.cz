@@ -87,6 +87,19 @@
       return client.auth.signOut().then(function () { return { ok: true }; });
     },
 
+    // Magic-link / OTP přihlášení BEZ hesla — pošle přihlašovací odkaz na e-mail.
+    // shouldCreateUser:true → rovnou registruje nového uživatele (free funnel, min. tření).
+    signInWithOtp: function (email, redirectTo) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      return client.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: redirectTo || (location.origin + "/akademie/moje/")
+        }
+      }).then(function (r) { return { ok: !r.error, error: r.error && r.error.message }; });
+    },
+
     // Má uživatel zaplacený přístup k produktu? ('academy' | 'videokurz')
     // Demo režim vrací true (kvůli vývoji).
     hasEntitlement: function (product) {
