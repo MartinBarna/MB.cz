@@ -11,6 +11,15 @@ html, body { overflow-x: clip; max-width: 100%; }
    pocit, že web „kýve / uhýbá doprava" při svislém scrollu. Nezasahuje do zoomu. */
 html { overscroll-behavior-x: none; }
 body { overscroll-behavior-x: none; }
+/* Zámek gest: dotyk dělá VÝHRADNĚ svislý posun (+ zachová pinch-zoom kvůli přístupnosti).
+   Tím zmizí boční „ujíždění" prstem i nejednoznačnost gest, která zdržuje první klik. */
+html, body { touch-action: pan-y pinch-zoom; }
+/* Rychlejší reakce tlačítek/odkazů na dotyk (bez 300ms / double-tap-zoom prodlevy). */
+a, button, .btn, .btn-gold, .btn-grn, .btn-out, .btn-white, [role="button"], input[type="submit"] { touch-action: manipulation; }
+/* Na dotykových zařízeních vypni 3D tilt/náklon karet, ať nezůstanou „nakřivo". */
+@media (hover: none), (pointer: coarse) {
+  .plan, .card, .promeny-grid > .card, .story-card, .yt-thumb { transform: none !important; }
+}
 /* Bootstrap .row.g-5 má gutter 3rem (okraje −24px), ale .container má jen 12px
    padding → řádek přetéká o 12px. Na menších displejích srovnáme horizontální
    gutter (vertikální mezery zůstávají, sloupce jsou stejně pod sebou). */
