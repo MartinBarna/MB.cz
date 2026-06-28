@@ -140,7 +140,7 @@
       </div>
     </div>
 
-    <p class="note">Spuštění testu a odevzdání praktického úkolu přímo na webu napojíme přes členskou sekci (Supabase). Praktický úkol vždy schvaluje člověk — to drží prestiž certifikátu.</p>
+    <p class="note">Spuštění testu a odevzdání praktického úkolu přímo na webu napojíme po přihlášení (Supabase). Praktický úkol vždy schvaluje člověk — to drží prestiž certifikátu.</p>
   </div>
 
   <script>
@@ -154,7 +154,7 @@
       var allDone = AVAILABLE.length > 0 && AVAILABLE.every(function (id) { return !!done[id]; });
       if (allDone) {
         document.getElementById('gateMsg').textContent =
-          'Skvělá práce! Máš hotové všechny dostupné lekce. Po finálním napojení testu (Tally / členská sekce) tě tady pustíme do písemné části.';
+          'Skvělá práce! Máš hotové všechny dostupné lekce. Po finálním napojení testu (Tally / účet) tě tady pustíme do písemné části.';
         var b = document.getElementById('startBtn');
         b.textContent = 'Mám hotovo — co dál?';
         b.href = '/akademie/studium/';
