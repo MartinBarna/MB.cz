@@ -31,8 +31,8 @@ Deno.serve(async (req) => {
       { auth: { persistSession: false } },
     );
     const { error } = await supa.from("leads").insert({
-      email, name, segment, source,
-      meta: { goal, age, phone },
+      email, name, segment, source, phone,   // phone -> vlastni sloupec (Cowork migrace add_phone_to_leads)
+      meta: { goal, age },
       next_send_at: new Date().toISOString(),
     });
     // 23505 = unique violation (e-mail uz je v seznamu) -> bereme jako uspech (idempotentni)
@@ -40,6 +40,10 @@ Deno.serve(async (req) => {
     if (error && !duplicate) {
       console.error("lead-capture insert error", error);
       return json({ ok: false, error: "db" }, 500);
+    }
+    // u duplicitniho e-mailu doplnime telefon, jen kdyz v existujicim leadu chybi (neprepisujeme)
+    if (duplicate && phone) {
+      await supa.from("leads").update({ phone }).eq("email", email).is("phone", null);
     }
 
     // OKAMZITE odeslani uvitaciho mailu: spust drip-send rovnou (nove leady maji
