@@ -115,7 +115,7 @@ h2[style*="#161616"], h3[style*="#161616"] { color:#fff!important; }
 }
 .faq summary, .faq details { color:var(--bd-ink)!important; }
 .calc-wrap label, .form-card label { color:var(--bd-muted2)!important; }
-.eyebrow, .pill { background:rgba(255,122,0,.12)!important; color:var(--bd-gold-soft)!important; border-color:rgba(255,122,0,.28)!important; box-shadow:none!important; }
+.eyebrow, .pill, .chip { background:rgba(255,122,0,.12)!important; color:var(--bd-gold-soft)!important; border:1px solid rgba(255,122,0,.28)!important; box-shadow:none!important; }
 input, textarea, select, .form-control, .form-select {
   background:rgba(0,0,0,.28)!important; color:var(--bd-ink)!important; border-color:rgba(255,255,255,.14)!important;
 }

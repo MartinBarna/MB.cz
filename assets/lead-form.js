@@ -23,6 +23,7 @@
         var data = {
           name: (form.name && form.name.value || '').trim(),
           email: email,
+          phone: (form.phone && form.phone.value || '').trim(),
           age: (form.age && form.age.value || ''),
           goal: (form.goal && form.goal.value || ''),
           segment: seg, source: src
