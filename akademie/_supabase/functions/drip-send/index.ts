@@ -135,13 +135,14 @@ function renderEmail(tpl: Tpl, seg: Seg, v: Record<string, string>, footer: { ht
   return { subject, html, text };
 }
 
-async function sendViaResend(to: string, subject: string, html: string, text: string, unsub: string): Promise<string> {
+async function sendViaResend(to: string, subject: string, html: string, text: string, unsub: string, replyTo: string): Promise<string> {
   if (!RESEND_KEY) throw new Error('missing_RESEND_API_KEY');
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: FROM, to: [to], subject, html, text,
+      reply_to: replyTo || undefined,
       headers: { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
     }),
   });
@@ -166,9 +167,10 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
+  const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
 
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
@@ -191,7 +193,7 @@ Deno.serve(async (req: Request) => {
     try {
       const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op');
       const m = renderEmail(tpl, seg, v, footer);
-      const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url);
+      const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo);
       await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } });
       return json({ ok: true, mode: 'test', provider_id: id, track, step });
     } catch (e) {
@@ -199,12 +201,14 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // due leady
+  // due leady (only_email = zpracuj jen jeden konkretni lead -> bezpecny instant-send bez zavodu)
   const limit = Number(body.limit ?? 200);
-  const { data: due, error: dueErr } = await admin.from('leads')
+  const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : '';
+  let dueQ = admin.from('leads')
     .select('id,email,name,segment,track,step,unsubscribe_token')
-    .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso)
-    .order('next_send_at', { ascending: true }).limit(limit);
+    .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso);
+  if (onlyEmail) dueQ = dueQ.eq('email', onlyEmail);
+  const { data: due, error: dueErr } = await dueQ.order('next_send_at', { ascending: true }).limit(limit);
   if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500);
   const leads = due ?? [];
 
@@ -252,7 +256,7 @@ Deno.serve(async (req: Request) => {
     try {
       const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token);
       const m = renderEmail(tpl, seg, v, footer);
-      const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url);
+      const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo);
       const { error: logErr } = await admin.from('email_events')
         .insert({ lead_id: l.id, step: l.step, type: 'sent', provider_id: id, detail: { track: l.track, key: tpl.key } });
       if (logErr && !String(logErr.code).includes('23505')) throw new Error('log:' + logErr.message);
