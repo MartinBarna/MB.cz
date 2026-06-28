@@ -192,7 +192,7 @@
             window.BA.signInWithOtp(email, dest).then(function (r) {
               submit.disabled = false;
               if (r.ok) { if (window.mbTrackLead) window.mbTrackLead('registrace_magic_link', { value: 0, currency: 'CZK' }); show('ok', '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho (mrkni i do spamu) a jsi uvnitř.'); }
-              else show('err', r.error || 'Odkaz se nepodařilo odeslat, zkus to prosím znovu.');
+              else show('err', r.error || 'E-mail s odkazem se teď nepodařilo odeslat. Zkus to prosím za chvíli (mrkni i do spamu), nebo napiš na martin@martinbarna.cz.');
             });
           } else if (mode === 'up') {
             window.BA.signUp(email, pass, fname).then(function (r) {

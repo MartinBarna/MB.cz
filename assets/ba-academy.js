@@ -97,7 +97,18 @@
           shouldCreateUser: true,
           emailRedirectTo: redirectTo || (location.origin + "/akademie/moje/")
         }
-      }).then(function (r) { return { ok: !r.error, error: r.error && r.error.message }; });
+      }).then(function (r) {
+        if (r.error) { try { console.error("signInWithOtp error:", r.error, JSON.stringify(r.error)); } catch (e) {} }
+        var m = r.error && (r.error.message || r.error.error_description || r.error.msg || "");
+        // Supabase při selhání odeslání mailu vrací prázdné tělo → message bývá "{}" nebo "".
+        if (m === "{}" || m === "[object Object]" || (m && m.trim() === "")) m = null;
+        var status = r.error && (r.error.status || r.error.code);
+        if (!m && status) m = "Server vrátil chybu " + status + " při odesílání e-mailu.";
+        return { ok: !r.error, error: m };
+      }).catch(function (e) {
+        try { console.error("signInWithOtp exception:", e); } catch (_) {}
+        return { ok: false, error: null };
+      });
     },
 
     // Má uživatel zaplacený přístup k produktu? ('academy' | 'videokurz')
