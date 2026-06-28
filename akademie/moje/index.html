@@ -85,7 +85,14 @@
           if(window.BA.mode!=='live'){ document.getElementById('who').textContent='ukázkový režim'; showTiles(true,true); return; }
           if(lg) lg.addEventListener('click', function(e){ e.preventDefault(); window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); });
           window.BA.getUser().then(function(u){
-            if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/'); return; }
+            if(!u){
+              // Možná právě dorazil magic-link a session se teprve ustavuje z URL —
+              // počkej na auth event místo okamžitého odskoku (jinak vzniká smyčka login ↔ hub).
+              var settled=false;
+              window.BA.onAuth(function(uu){ if(uu && !settled){ settled=true; location.reload(); } });
+              setTimeout(function(){ if(!settled){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/'); } }, 2500);
+              return;
+            }
             document.getElementById('who').textContent=u.email||'';
             Promise.all([window.BA.hasEntitlement('academy'), window.BA.hasEntitlement('videokurz')])
               .then(function(r){ showTiles(!!r[0], !!r[1]); });
