@@ -233,6 +233,96 @@
       blockBar(330,'REALIZACE','výkon',G,130) +
       blockBar(470,'DELOAD','regenerace',BL,80) +
       '<text x="300" y="190" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">Místo „pořád stejně“ stavíš ve vlnách → větší pokrok, menší riziko přetížení.</text>' +
+    '</svg>',
+
+  // MAKRO ROZLOŽENÍ — kolik z čeho
+  'macro-split':
+    '<svg viewBox="0 0 600 210" role="img" aria-label="Doporučené rozložení makroživin">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">JAK NASTAVIT MAKRA (vodítko)</text>' +
+      '<g transform="translate(60,46)">' +
+      '<rect width="480" height="34" rx="8" fill="rgba(255,255,255,.06)"/>' +
+      '<rect width="144" height="34" rx="8" fill="'+GR+'" opacity="0.85"/>' +
+      '<rect x="144" width="216" height="34" fill="'+GS+'" opacity="0.85"/>' +
+      '<rect x="360" width="120" height="34" rx="8" fill="'+G+'" opacity="0.85"/>' +
+      '<text x="72" y="22" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">30 %</text>' +
+      '<text x="252" y="22" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">45 %</text>' +
+      '<text x="420" y="22" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">25 %</text>' +
+      '</g>' +
+      '<g transform="translate(60,104)" style="'+F+'">' +
+      '<rect x="0" y="0" width="14" height="14" rx="3" fill="'+GR+'"/><text x="22" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Bílkoviny</text><text x="22" y="28" fill="'+M+'" font-size="10.5">~1,6–2,2 g/kg — drž napevno</text>' +
+      '<rect x="190" y="0" width="14" height="14" rx="3" fill="'+GS+'"/><text x="212" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Sacharidy</text><text x="212" y="28" fill="'+M+'" font-size="10.5">palivo pro výkon, flexibilní</text>' +
+      '<rect x="380" y="0" width="14" height="14" rx="3" fill="'+G+'"/><text x="402" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Tuky</text><text x="402" y="28" fill="'+M+'" font-size="10.5">min. ~0,8 g/kg</text>' +
+      '</g>' +
+      '<text x="300" y="170" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">Nejdřív kalorie, pak bílkovina. Zbytek (sacharidy/tuky) podle chuti a typu tréninku.</text>' +
+      '<text x="300" y="190" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10px">Orientační rozmezí — vždy uprav podle cíle a jednotlivce.</text>' +
+    '</svg>',
+
+  // ČASOVÁNÍ ŽIVIN KOLEM TRÉNINKU
+  'nutrient-timing':
+    '<svg viewBox="0 0 600 210" role="img" aria-label="Výživa kolem tréninku">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">VÝŽIVA KOLEM TRÉNINKU</text>' +
+      '<line x1="60" y1="120" x2="540" y2="120" stroke="'+LN+'" stroke-width="2"/>' +
+      '<circle cx="300" cy="120" r="8" fill="'+G+'"/>' +
+      '<text x="300" y="146" text-anchor="middle" fill="'+G+'" style="'+F+';font-weight:800;font-size:12px">TRÉNINK</text>' +
+      '<g transform="translate(150,80)"><rect x="-70" y="0" width="140" height="30" rx="8" fill="rgba(90,169,230,.18)" stroke="'+BL+'" stroke-width="1.5"/><text x="0" y="20" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:700;font-size:11px">PŘED</text></g>' +
+      '<text x="150" y="160" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10.5px">sacharidy + bílkovina,</text>' +
+      '<text x="150" y="174" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10.5px">1–3 h předem = energie</text>' +
+      '<g transform="translate(450,80)"><rect x="-70" y="0" width="140" height="30" rx="8" fill="rgba(47,174,87,.18)" stroke="'+GR+'" stroke-width="1.5"/><text x="0" y="20" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:700;font-size:11px">PO</text></g>' +
+      '<text x="450" y="160" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10.5px">bílkovina + sacharidy,</text>' +
+      '<text x="450" y="174" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10.5px">obnova a růst</text>' +
+      '<text x="300" y="196" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">„Anabolické okno“ je široké — důležitější je celkový denní příjem a bílkoviny.</text>' +
+    '</svg>',
+
+  // RPE / RIR škála
+  'rpe-rir':
+    '<svg viewBox="0 0 600 210" role="img" aria-label="RPE a RIR škála úsilí">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">JAK TĚŽKÉ TO BYLO? (RPE / RIR)</text>' +
+      rpeRow(56,'10','0','selhání — nezvládneš další opakování',G) +
+      rpeRow(86,'9','1','zbýval 1 opakování v záloze',GS) +
+      rpeRow(116,'8','2','zbývaly 2 — ideál pro růst svalu',GR) +
+      rpeRow(146,'6–7','3–4','technika, rozcvičení, objem',BL) +
+      '<text x="300" y="196" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">RIR = kolik opakování ti zbývá „v záloze“. Většinu práce dělej v RPE 7–9.</text>' +
+    '</svg>',
+
+  // HYPERTROFIE — co spouští růst svalu
+  'hypertrophy':
+    '<svg viewBox="0 0 600 200" role="img" aria-label="Co spouští růst svalu">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">CO SPOUŠTÍ RŮST SVALU</text>' +
+      driver(110,'Mechanické napětí','dostatečná zátěž blízko selhání','NEJDŮLEŽITĚJŠÍ',G) +
+      driver(300,'Objem v čase','dost sérií týdně, progrese',' ',GS) +
+      driver(490,'Regenerace','spánek, bílkovina, jídlo',' ',BL) +
+      '<text x="300" y="186" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">Bez progrese a regenerace sval neporoste, ať trénuješ jakkoliv tvrdě.</text>' +
+    '</svg>',
+
+  // TEPOVÉ ZÓNY
+  'hr-zones':
+    '<svg viewBox="0 0 600 210" role="img" aria-label="Tepové zóny">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">TEPOVÉ ZÓNY (% max. tepu)</text>' +
+      hrZone(54,'Zóna 1–2','50–70 %','regenerace, „lehko“',GR,210) +
+      hrZone(92,'Zóna 3','70–80 %','vytrvalost, „svižně“',GS,210) +
+      hrZone(130,'Zóna 4–5','80–100 %','intervaly, výkon',G,210) +
+      '<text x="300" y="196" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">Většina objemu nízko (Z1–2), malá část tvrdě (Z4–5). Pásmo 3 nepřeceňuj.</text>' +
+    '</svg>',
+
+  // VLÁKNINA A STŘEVO
+  'fiber-gut':
+    '<svg viewBox="0 0 600 195" role="img" aria-label="Vláknina a střevní zdraví">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">VLÁKNINA — proč na ní záleží</text>' +
+      benefit(95,'🥦','Sytost','zaplní, zasytí na míň kalorií') +
+      benefit(245,'📉','Stabilní energie','zpomalí vstřebávání cukru') +
+      benefit(395,'🦠','Zdravé střevo','krmí prospěšné bakterie') +
+      '<rect x="60" y="150" width="480" height="30" rx="8" fill="rgba(47,174,87,.12)" stroke="'+GR+'" stroke-width="1"/>' +
+      '<text x="300" y="170" text-anchor="middle" fill="'+W+'" style="'+F+';font-size:11.5px">Cíl: ~25–35 g denně — zelenina, ovoce, luštěniny, celozrnné.</text>' +
+    '</svg>',
+
+  // MARKETINGOVÝ TRYCHTÝŘ
+  'funnel':
+    '<svg viewBox="0 0 600 230" role="img" aria-label="Marketingový trychtýř klienta">' +
+      '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">CESTA KLIENTA — TRYCHTÝŘ</text>' +
+      funnelRow(50,520,'POVĚDOMÍ','někdo tě poprvé uvidí (obsah, reklama)',GR) +
+      funnelRow(94,400,'ZÁJEM','sleduje tě, čte, věří ti',GS) +
+      funnelRow(138,280,'ROZHODNUTÍ','koupí službu / produkt',G) +
+      funnelRow(182,160,'VĚRNOST','zůstává, doporučuje dál',BL) +
     '</svg>'
 
   };
@@ -289,6 +379,41 @@
       '<rect x="0" y="'+y+'" width="120" height="'+h+'" rx="8" fill="'+col+'" opacity="0.8"/>' +
       '<text x="60" y="'+(y+h/2)+'" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:11.5px">'+title+'</text>' +
       '<text x="60" y="166" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10.5px">'+sub+'</text></g>';
+  }
+  function rpeRow(y,rpe,rir,desc,col){
+    return '<g transform="translate(0,'+y+')">' +
+      '<rect x="60" y="-14" width="58" height="26" rx="6" fill="'+col+'" opacity="0.85"/>' +
+      '<text x="89" y="4" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">'+rpe+'</text>' +
+      '<text x="134" y="-2" fill="'+M+'" style="'+F+';font-size:10px">RIR '+rir+'</text>' +
+      '<text x="134" y="11" fill="'+W+'" style="'+F+';font-size:11.5px">'+desc+'</text></g>';
+  }
+  function driver(x,title,sub,tag,col){
+    return '<g transform="translate('+x+',0)">' +
+      '<rect x="-82" y="46" width="164" height="86" rx="12" fill="'+col+'" opacity="0.13" stroke="'+col+'" stroke-width="1.5"/>' +
+      (tag.trim()? '<text x="0" y="42" text-anchor="middle" fill="'+col+'" style="'+F+';font-weight:800;font-size:9.5px">'+tag+'</text>':'') +
+      '<text x="0" y="80" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:12.5px">'+title+'</text>' +
+      '<text x="0" y="104" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10px">'+sub.split(',')[0]+'</text>' +
+      '<text x="0" y="118" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10px">'+(sub.split(',')[1]||'')+'</text></g>';
+  }
+  function hrZone(y,name,pct,desc,col,w){
+    return '<g transform="translate(0,'+y+')">' +
+      '<rect x="60" y="0" width="'+w+'" height="28" rx="7" fill="'+col+'" opacity="0.8"/>' +
+      '<text x="72" y="19" fill="#160d04" style="'+F+';font-weight:800;font-size:11.5px">'+name+' · '+pct+'</text>' +
+      '<text x="'+(70+w)+'" y="19" fill="'+M+'" style="'+F+';font-size:10.5px">'+desc+'</text></g>';
+  }
+  function benefit(x,ico,title,desc){
+    return '<g transform="translate('+x+',0)">' +
+      '<text x="0" y="64" text-anchor="middle" style="font-size:26px">'+ico+'</text>' +
+      '<text x="0" y="94" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:700;font-size:12px">'+title+'</text>' +
+      '<text x="0" y="116" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10px">'+desc.split(' ').slice(0,3).join(' ')+'</text>' +
+      '<text x="0" y="130" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10px">'+desc.split(' ').slice(3).join(' ')+'</text></g>';
+  }
+  function funnelRow(y,w,title,desc,col){
+    var x = 300 - w/2;
+    return '<g transform="translate(0,'+y+')">' +
+      '<rect x="'+x+'" y="0" width="'+w+'" height="34" rx="6" fill="'+col+'" opacity="0.82"/>' +
+      '<text x="300" y="16" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">'+title+'</text>' +
+      '<text x="300" y="29" text-anchor="middle" fill="#160d04" style="'+F+';font-size:9.5px">'+desc+'</text></g>';
   }
 
   function ensureStyle(){
