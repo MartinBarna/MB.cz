@@ -120,6 +120,8 @@
         .form-card { max-width:720px; margin:0 auto; background:#fff; border-radius:20px; box-shadow:0 14px 40px rgba(0,0,0,.08); padding:30px; }
         .form-card h2 { text-align:center; }
         .form-fallback { text-align:center; font-size:.9rem; color:#6a6a6a; margin-top:10px; }
+        .lead-form label { display:block; font-weight:600; font-size:.9rem; margin:13px 0 4px; }
+        .lead-form input, .lead-form select { width:100%; padding:12px 14px; border-radius:11px; font-family:inherit; font-size:1rem; }
 
         .final { background:linear-gradient(135deg,var(--orange) 0%,var(--orange-dark) 100%); color:#fff; text-align:center; }
         .final h2 { font-size:2.2rem; }
@@ -336,12 +338,19 @@
         <div class="more"><a class="btn sm dark" href="/reference/">Přečíst všech 65 recenzí →</a></div>
     </div></section>
 
-    <!-- FORMULÁŘ (Tally embed) -->
+    <!-- FORMULÁŘ (vlastní → Supabase lead-capture) -->
     <section class="form-sec" id="formular"><div class="wrap">
         <div class="form-card">
             <h2>Vyplň a plán ti pošlu na e-mail</h2>
-            <iframe data-tally-src="https://tally.so/embed/b5Aby2?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="420" frameborder="0" marginheight="0" marginwidth="0" title="7denní makro plán pro muže 35+"></iframe>
-            <p class="form-fallback">Nenačítá se formulář? <a href="https://tally.so/r/b5Aby2" target="_blank" rel="noopener">Otevři ho zde →</a></p>
+            <form data-lead-form data-segment="muzi" data-source="forma-zpet" data-pdf="/download/forma-zpet-muzi.pdf" class="lead-form">
+                <label>Jméno <input name="name" type="text" required autocomplete="given-name" placeholder="Jak ti mám říkat?"></label>
+                <label>E-mail <input name="email" type="email" required autocomplete="email" placeholder="Kam ti mám poslat plán?"></label>
+                <label>Věk <select name="age"><option value="">— vyber —</option><option>30–35</option><option>36–40</option><option>41–45</option><option>46–50</option><option>51+</option></select></label>
+                <label>Hlavní cíl <select name="goal"><option value="">— vyber —</option><option>Dostat se zpátky do formy</option><option>Víc energie a síly</option><option>Zhubnout břicho a udržet to</option></select></label>
+                <button type="submit" class="btn" style="width:100%;margin-top:10px;">Ano, chci svůj plán zdarma →</button>
+                <p data-msg style="font-size:.86rem;margin:8px 0 0;text-align:center;"></p>
+                <p style="font-size:.76rem;color:#8a8073;margin:8px 0 0;text-align:center;">Odesláním souhlasíš se zasláním plánu a občasných tipů. Odhlásit se můžeš kdykoli.</p>
+            </form>
         </div>
     </div></section>
 
@@ -358,7 +367,7 @@
         &copy; 2026 Martin Barna — Online výživa a fitness · <a href="../index.html">Hlavní web</a>
     </footer>
 
-    <script async src="https://tally.so/widgets/embed.js"></script>
+    <script src="/assets/lead-form.js" defer></script>
   <script src="/assets/scroll-top.js" defer></script>
 </body>
 </html>
