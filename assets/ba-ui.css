@@ -113,3 +113,8 @@ body.ba{
 
 .ba .foot{margin-top:42px;color:#6f665d;font-size:.82rem;text-align:center;}
 .ba .foot a{color:#8a8078;}
+
+/* Academy diagramy (ba-diagrams.js) */
+.ba-fig{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:16px;padding:1.15rem 1.2rem .9rem;margin:1.5rem 0;}
+.ba-fig svg{display:block;width:100%;height:auto}
+.ba-fig figcaption{margin-top:.7rem;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.4}
