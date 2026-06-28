@@ -179,21 +179,29 @@ function videoPage(v) {
   <script src="/assets/ba-academy.js"></script>
   <script src="/assets/scroll-top.js" defer></script>
   <script>
-    var LID='${v.lid}', PRODUCT='videokurz', FREE=${v.free ? 'true' : 'false'}, state={done:false};
+    var LID='${v.lid}', PRODUCT='videokurz', FREE=${v.free ? 'true' : 'false'}, GUEST=false, state={done:false};
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
+    function lsDone(){ try{ return !!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){ return false; } }
+    function lsSet(d){ try{ var o=JSON.parse(localStorage.getItem('ba_progress_v1')||'{}'); if(d) o[LID]=true; else delete o[LID]; localStorage.setItem('ba_progress_v1', JSON.stringify(o)); }catch(e){} }
     function load(){
       if (window.BA){
         window.BA.ready.then(function(){
           if (window.BA.mode==='live'){
-            if (FREE) { window.BA.getUser().then(function(u){ if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname); return; } window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+            if (FREE) {
+              // Ochutnávka zdarma: lekce je veřejná, hrá i bez přihlášení (žádný redirect-loop).
+              window.BA.getUser().then(function(u){
+                if(!u){ GUEST=true; state.done=lsDone(); paint(); return; }
+                window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); });
+              });
+            }
             else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
           }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
-      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+      } else { state.done=lsDone(); paint(); }
     }
-    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } });
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(GUEST){ lsSet(state.done); } else if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } else { lsSet(state.done); } });
     load();
   </script>
 </body>
@@ -340,7 +348,7 @@ ${materialsHtml}
     </div>
 
     <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
-      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(255,122,0,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (18 modulů, 203 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
+      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(255,122,0,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (19 modulů, 211 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
       <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
     </a>
 
@@ -412,7 +420,14 @@ ${materialsHtml}
         window.BA.ready.then(function(){
           if (window.BA.mode==='live'){
             window.BA.getUser().then(function(u){
-              if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname); return; }
+              if(!u){
+                // Nepřihlášený návštěvník → ochutnávka zdarma (žádný redirect na přihlášení).
+                FREEMODE = true; applyFreeMode();
+                var n0=document.getElementById('modeNote');
+                if(n0) n0.textContent='Máš ochutnávku zdarma — pár úvodních lekcí je odemčených. Zbytek kurzu odemkneš jednorázovou koupí.';
+                try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); }
+                return;
+              }
               window.BA.hasEntitlement('videokurz').then(function(has){
                 if(!has) FREEMODE = true;          // přihlášený bez nákupu → ochutnávka + upsell
                 applyFreeMode();
