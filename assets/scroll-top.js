@@ -1,6 +1,34 @@
 /* Barna — sdílené plovoucí tlačítko "nahoru" (funguje na jakékoli stránce).
    Umístění: nad případnou spodní lištou (koupit) a POD WhatsApp tlačítkem,
    aby se nic nepřekrývalo. Pozice se počítá měřením, ne pevnými offsety. */
+/* Okamžitá reakce dotyku na plovoucí/fixní tlačítka i během setrvačného scrollu.
+   iOS jinak první ťuknutí „spotřebuje" jen na zastavení scrollu → reagujeme na touchend. */
+(function () {
+  var SEL = '.fab-wa, #baToTop, #toTop, .to-top, .cta-bar a, .vk-buybar a, .buybar a';
+  var sx = 0, sy = 0, t0 = 0, moved = false, active = null;
+  document.addEventListener('touchstart', function (e) {
+    active = e.target.closest ? e.target.closest(SEL) : null;
+    if (!active) return;
+    var p = e.touches[0]; sx = p.clientX; sy = p.clientY; t0 = e.timeStamp; moved = false;
+  }, { passive: true });
+  document.addEventListener('touchmove', function (e) {
+    if (!active) return;
+    var p = e.touches[0];
+    if (Math.abs(p.clientX - sx) > 10 || Math.abs(p.clientY - sy) > 10) moved = true;
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    var t = active; active = null;
+    if (!t || moved || (e.timeStamp - t0) > 700) return;
+    if (e.cancelable) e.preventDefault(); // potlač synteticky klik, ať akce neproběhne dvakrát
+    if (t.tagName === 'A') {
+      var href = t.getAttribute('href') || '';
+      if (!href || href.charAt(0) === '#') { t.click(); return; }
+      if (t.getAttribute('target') === '_blank') window.open(t.href, '_blank', 'noopener');
+      else window.location.href = t.href;
+    } else { t.click(); }
+  }, { passive: false });
+})();
+
 (function () {
   if (document.getElementById('toTop') || document.getElementById('baToTop')) return; // stránka už nějaké má
   function ready(fn) { document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
