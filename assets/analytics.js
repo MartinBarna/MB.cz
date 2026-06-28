@@ -144,7 +144,7 @@
       'font-size:.92rem;line-height:1.5;';
     box.innerHTML =
       '<div style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
-      '<div style="color:#d8cec1">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem.</div>' +
+      '<div style="color:#f3ece2">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem.</div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
         '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:linear-gradient(145deg,#ff9d3c,#ff7a00);color:#160d04;font-weight:700;padding:10px 12px;border-radius:50px">Přijmout</button>' +
         '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:50px">Odmítnout</button>' +
