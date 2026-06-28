@@ -201,12 +201,14 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  // due leady
+  // due leady (only_email = zpracuj jen jeden konkretni lead -> bezpecny instant-send bez zavodu)
   const limit = Number(body.limit ?? 200);
-  const { data: due, error: dueErr } = await admin.from('leads')
+  const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : '';
+  let dueQ = admin.from('leads')
     .select('id,email,name,segment,track,step,unsubscribe_token')
-    .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso)
-    .order('next_send_at', { ascending: true }).limit(limit);
+    .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso);
+  if (onlyEmail) dueQ = dueQ.eq('email', onlyEmail);
+  const { data: due, error: dueErr } = await dueQ.order('next_send_at', { ascending: true }).limit(limit);
   if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500);
   const leads = due ?? [];
 

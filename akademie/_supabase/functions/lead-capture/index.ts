@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
           const p = fetch(SUPABASE_URL + "/functions/v1/drip-send", {
             method: "POST",
             headers: { "Content-Type": "application/json", "x-drip-secret": secret },
-            body: JSON.stringify({ limit: 50 }),
+            body: JSON.stringify({ only_email: email }),   // jen tenhle novy lead -> bez duplicit pri navalu
           }).catch((e) => console.error("drip trigger fetch failed", e));
           // @ts-ignore EdgeRuntime background task (dorucit i po odeslani odpovedi)
           if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) EdgeRuntime.waitUntil(p);
