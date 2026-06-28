@@ -176,6 +176,7 @@
         .section-head p { color:#5a665e; max-width:660px; margin:.8rem auto 0; }
         .bg-soft { background:var(--green-light); }
 
+        .stat { text-align:center; }
         .stat h3 { color:var(--green); font-size:clamp(1.95rem, 5.2vw, 2.6rem); margin-bottom:.2rem; }
         .stat p { color:#5a665e; margin:0; font-weight:600; }
 
@@ -551,7 +552,7 @@
     })();
     </script>
     <script defer src="/assets/analytics.js"></script>
-    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260705">
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260708">
     <style id="hp-dark">
       /* Homepage — doladění dark-luxe (přebíjí stránkové světlé prvky) */
       .proof-marquee { background:rgba(255,122,0,.06)!important; border-color:rgba(255,122,0,.18)!important; }
@@ -1160,9 +1161,9 @@
                 <p>Články o výživě, tréninku a mindsetu — bez mýtů, srozumitelně.</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4"><a href="clanky/hydratace-deti-sport.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">💧</div><h5 class="card-title">Hydratace dětí ve sportu</h5><p class="text-muted mb-0">Kdy stačí voda a kdy ne — přesná čísla i recept na domácí ionťák.</p></div></a></div>
-                <div class="col-md-4"><a href="clanky/vyziva-sportujiciho-ditete.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">⚽</div><h5 class="card-title">Výživa sportujícího dítěte</h5><p class="text-muted mb-0">Trénuje skoro každý den? Nepotřebuje vitamíny, ale dost energie a bílkovin.</p></div></a></div>
-                <div class="col-md-4"><a href="clanky/vyziva-deti.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🍎</div><h5 class="card-title">Výživa dětí A–Z</h5><p class="text-muted mb-0">Talíř podle věku, cukr, pití, vybíravost i doplňky — prakticky a bez strašení.</p></div></a></div>
+                <div class="col-md-4"><a href="clanky/kaloricky-deficit.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">⚖️</div><h5 class="card-title">Kalorický deficit srozumitelně</h5><p class="text-muted mb-0">Jediné pravidlo, na kterém hubnutí opravdu stojí — a jak ho udržet bez hladovění.</p></div></a></div>
+                <div class="col-md-4"><a href="clanky/jojo-efekt.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🔁</div><h5 class="card-title">Jak se zbavit jojo efektu</h5><p class="text-muted mb-0">Proč se kila vrací a co dělat jinak, aby ti výsledek konečně zůstal.</p></div></a></div>
+                <div class="col-md-4"><a href="clanky/flexibilni-stravovani.html" class="text-decoration-none"><div class="card p-4 h-100"><div class="ico">🍕</div><h5 class="card-title">Flexibilní stravování</h5><p class="text-muted mb-0">Jak jíst i oblíbená jídla a stejně hubnout. Žádné zakázané potraviny.</p></div></a></div>
             </div>
             <div class="text-center mt-4">
                 <a href="clanky/index.html" class="btn btn-out">Číst celý blog</a>
@@ -1464,20 +1465,25 @@
             function finish() {
                 if (bar) bar.style.width = '100%';
                 steps.forEach(function (s) { s.classList.remove('in'); });
-                var cil = { zhubnout: 'zhubnout a vytvarovat postavu', svaly: 'nabrat svaly a sílu', zdravi: 'udržet formu a zdraví' }[ans.cil] || 'dosáhnout cíle';
+                var cil = { zhubnout: 'zhubnout a vytvarovat postavu', svaly: 'nabrat svaly a sílu', zdravi: 'udržet formu, energii a zdraví' }[ans.cil] || 'dosáhnout cíle';
+                var exp = { zacatecnik: ' Začínáš od nuly, tak tě vezmu pěkně od základů.', neco: ' Něco už máš za sebou — navážeme a doladíme detaily.', pokrocily: ' Jsi pokročilý/á, takže půjde hlavně o jemné doladění.' }[ans.exp] || '';
                 var html;
                 if (ans.how === 'koucink') {
                     html = card('🎯 Koučink na míru',
-                        'Chceš ' + cil + ' s někým, kdo tě provede krok za krokem? Pak ti sedne <strong>online koučink</strong> — jídelníček na míru, týdenní úpravy a stálá podpora. Začni konzultací (cenu ti odečtu z balíčku).',
+                        'Chceš ' + cil + ' s někým, kdo tě provede krok za krokem? Pak ti sedne <strong>online koučink</strong> — jídelníček na míru, týdenní úpravy a stálá podpora.' + exp + ' Začni konzultací (cenu ti pak odečtu z balíčku).',
                         'Objednat konzultaci za 1 990 Kč →', 'https://form.simpleshop.cz/qG2yO/buy/', 'Mrknout na balíčky', '#balicky');
+                } else if (ans.how === 'kurz' && ans.cil === 'svaly') {
+                    html = card('🎥 Videokurz + tréninkové plány',
+                        'Chceš ' + cil + ' svým tempem? Výživa je 70 % výsledku, tak začni <strong>videokurzem</strong> — a přidej k němu <strong>tréninkové plány</strong>, ať víš, jak cvičit pro růst.' + exp,
+                        'Chci videokurz za 800 Kč →', '/videokurz', 'Tréninkové plány', '/treninky');
                 } else if (ans.how === 'kurz') {
                     html = card('🎥 Videokurz',
-                        'Chceš ' + cil + ' sám svým tempem? <strong>Videokurz</strong> tě naučí výživu jednou provždy — 182 videí, doživotní přístup. Nejlevnější způsob, jak začít správně.',
+                        'Chceš ' + cil + ' sám svým tempem? <strong>Videokurz</strong> tě naučí výživu jednou provždy — 182 videí, doživotní přístup.' + exp + ' Nejlevnější způsob, jak začít správně.',
                         'Chci videokurz za 800 Kč →', '/videokurz', 'Nebo zkus koučink', '#balicky');
                 } else {
-                    html = card('🎁 Plán zdarma',
-                        'Chceš ' + cil + ' a zatím to zkusit nezávazně? Stáhni si <strong>7denní makro plán zdarma</strong> — konkrétní jídla a porce. Bez závazku, na e-mail.',
-                        'Chci plán zdarma →', '#plan-zdarma', 'Co dál nabízím', '#dalsi');
+                    html = card('🎁 Začni zdarma',
+                        'Chceš ' + cil + ' a zatím nezávazně? Stáhni si <strong>7denní plán zdarma</strong> — konkrétní jídla a porce.' + exp + ' A rovnou si pusť první lekce videokurzu, taky zdarma.',
+                        'Chci plán zdarma →', '#plan-zdarma', 'Videokurz zdarma', '/akademie/videokurz/?preview=free');
                 }
                 result.innerHTML = html;
                 result.hidden = false;
