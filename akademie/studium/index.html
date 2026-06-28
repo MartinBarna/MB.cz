@@ -117,7 +117,7 @@
       .les.lockbuy .s.buy{color:var(--gold-soft);font-weight:700}
       .les.isfree .s{color:var(--gold-soft);font-weight:700}
     </style>
-    <a class="freebanner" id="freeBanner" href="https://form.simpleshop.cz/Xgl8g/buy/">
+    <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
       <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (211 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
       <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
     </a>
@@ -396,7 +396,7 @@
       ]}
     ];
     // ----- Free-preview (#35): ochutnávka pro nepřihlášené/nekupující + upsell -----
-    var BUY_URL = 'https://form.simpleshop.cz/Xgl8g/buy/';
+    var BUY_URL = '/akademie/objednavka/';
     var FREE = {'m1-l1':1,'m1-l2':1,'m1-l3':1,'m2-l1':1,'m3-l1':1,'m6-l1':1}; // ukázkové lekce napříč moduly
     var FREEMODE = /[?&]preview=free/.test(location.search);
     function applyFreeMode(){ if(FREEMODE){ document.body.classList.add('freemode'); var b=document.getElementById('freeBanner'); if(b) b.style.display='flex'; } }
