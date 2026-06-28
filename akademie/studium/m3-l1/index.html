@@ -60,6 +60,7 @@
 
   <div class="wrap">
     <div class="crumb">Modul 3 · Lekce 1 — Výživa a energie</div>
+    <div style="background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.3);border-radius:14px;padding:13px 18px;margin:0 0 1.2rem;font-size:.93rem;color:#e9e2d8;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between;"><span>🔓 <b style="color:#fff">Ochutnávka zdarma</b> — tahle lekce je ukázka z Barna Academy.</span><a href="/akademie/" style="color:var(--gold-soft);font-weight:700;white-space:nowrap;">Odemknout celou Academy →</a></div>
     <h1>Energetická bilance — zákon, který platí vždy</h1>
 
     <p class="lead">Tohle je nejdůležitější lekce celého výživového modulu — a zároveň ta, kolem které slýchám nejvíc nesmyslů. <strong>Energetická bilance je fyzikální zákon, ne dieta a ne názor.</strong> Ať tvůj klient drží jakýkoli „směr“, zafunguje mu jen tehdy, když přes něj nastaví správnou bilanci. A tu umíš řídit lidsky, ne jen tím, že mu hodíš appku a popřeješ hodně štěstí.</p>
@@ -150,7 +151,7 @@
     function load(){
       if (window.BA){
         window.BA.ready.then(function(){
-          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          if (window.BA.mode==='live'){ Promise.resolve(true).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
       } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
