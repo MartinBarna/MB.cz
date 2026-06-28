@@ -71,7 +71,8 @@
 
     <div class="acard">
       <div class="tabs">
-        <button id="tabIn" class="on" type="button">Přihlásit se</button>
+        <button id="tabOtp" class="on" type="button">✨ Bez hesla</button>
+        <button id="tabIn" type="button">Heslem</button>
         <button id="tabUp" type="button">Vytvořit účet</button>
       </div>
 
@@ -82,10 +83,13 @@
         </div>
         <label for="email">E-mail</label>
         <input id="email" type="email" autocomplete="email" placeholder="tvuj@email.cz" required>
-        <label for="pass">Heslo</label>
-        <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6">
-        <button class="btn" id="submit" type="submit">Přihlásit se</button>
+        <div id="passRow" style="display:none;">
+          <label for="pass">Heslo</label>
+          <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" minlength="6">
+        </div>
+        <button class="btn" id="submit" type="submit">Poslat přihlašovací odkaz →</button>
         <div class="msg" id="msg"></div>
+        <p id="otpHint" style="font-size:.82rem;color:#9a948c;margin:.6rem 0 0;text-align:center;line-height:1.45;">Pošleme ti přihlašovací odkaz do e-mailu — klikneš a jsi uvnitř. Bez hesla, bez karty.</p>
       </form>
     </div>
 
@@ -109,9 +113,9 @@
   <script src="/assets/ba-academy.js"></script>
   <script>
     (function () {
-      var mode = 'in';
-      var tabIn = document.getElementById('tabIn'), tabUp = document.getElementById('tabUp');
-      var nameRow = document.getElementById('nameRow'), submit = document.getElementById('submit');
+      var mode = 'otp';
+      var tabOtp = document.getElementById('tabOtp'), tabIn = document.getElementById('tabIn'), tabUp = document.getElementById('tabUp');
+      var nameRow = document.getElementById('nameRow'), passRow = document.getElementById('passRow'), otpHint = document.getElementById('otpHint'), submit = document.getElementById('submit');
       var msg = document.getElementById('msg'), form = document.getElementById('form');
       var emailEl = document.getElementById('email'), passEl = document.getElementById('pass'), fnameEl = document.getElementById('fname');
 
@@ -129,13 +133,17 @@
 
       function setMode(m) {
         mode = m;
+        tabOtp.classList.toggle('on', m === 'otp');
         tabIn.classList.toggle('on', m === 'in');
         tabUp.classList.toggle('on', m === 'up');
         nameRow.style.display = m === 'up' ? 'block' : 'none';
-        submit.textContent = m === 'up' ? 'Vytvořit účet' : 'Přihlásit se';
+        passRow.style.display = m === 'otp' ? 'none' : 'block';
+        otpHint.style.display = m === 'otp' ? 'block' : 'none';
+        submit.textContent = m === 'otp' ? 'Poslat přihlašovací odkaz →' : (m === 'up' ? 'Vytvořit účet' : 'Přihlásit se');
         passEl.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
         msg.className = 'msg'; msg.textContent = '';
       }
+      tabOtp.addEventListener('click', function () { setMode('otp'); });
       tabIn.addEventListener('click', function () { setMode('in'); });
       tabUp.addEventListener('click', function () { setMode('up'); });
 
@@ -169,7 +177,8 @@
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var email = emailEl.value.trim(), pass = passEl.value, fname = fnameEl.value.trim();
-        if (!email || pass.length < 6) { show('err', 'Vyplň e-mail a heslo (min. 6 znaků).'); return; }
+        if (!email || email.indexOf('@') < 1) { show('err', 'Zadej prosím platný e-mail.'); return; }
+        if (mode !== 'otp' && pass.length < 6) { show('err', 'Vyplň heslo (min. 6 znaků).'); return; }
         submit.disabled = true; show('', '');
 
         window.BA.ready.then(function () {
@@ -178,7 +187,14 @@
             submit.disabled = false;
             return;
           }
-          if (mode === 'up') {
+          if (mode === 'otp') {
+            var dest = location.origin + (need === 'videokurz' ? '/akademie/videokurz/' : nextUrl);
+            window.BA.signInWithOtp(email, dest).then(function (r) {
+              submit.disabled = false;
+              if (r.ok) show('ok', '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho (mrkni i do spamu) a jsi uvnitř.');
+              else show('err', r.error || 'Odkaz se nepodařilo odeslat, zkus to prosím znovu.');
+            });
+          } else if (mode === 'up') {
             window.BA.signUp(email, pass, fname).then(function (r) {
               submit.disabled = false;
               if (r.ok) show('ok', 'Účet vytvořen. Pokud je zapnuté ověření e-mailu, potvrď ho a pak se přihlas.');
