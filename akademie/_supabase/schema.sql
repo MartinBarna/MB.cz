@@ -69,12 +69,14 @@ create policy "entitlements_select_own" on public.entitlements
   for select using (lower(email) = lower(auth.jwt() ->> 'email'));
 
 -- Pomocná funkce pro gating (volá frontend i RLS jiných tabulek).
+-- POZN.: 'academy' automaticky uděluje i přístup k 'videokurz' (videokurz je v ceně Academy).
 create or replace function public.has_entitlement(p_product text)
 returns boolean language sql stable security definer set search_path = public as $$
   select exists (
     select 1 from public.entitlements
     where lower(email) = lower(auth.jwt() ->> 'email')
-      and product = p_product and active = true
+      and active = true
+      and (product = p_product or (p_product = 'videokurz' and product = 'academy'))
   );
 $$;
 grant execute on function public.has_entitlement(text) to authenticated;
