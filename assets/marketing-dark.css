@@ -4,7 +4,7 @@
    světlý motiv (Bootstrap + highend.css + inline pravidla stránek).
    Obsah/markup se nemění — jen barevná vrstva.
    ============================================================ */
-:root { --bd-gold:#ff7a00; --bd-gold2:#ff9d3c; --bd-gold-soft:#ffb066; --bd-ink:#f0eadf; --bd-muted:#9d938a; --bd-muted2:#cabfb4; --bd-line:rgba(255,255,255,.08);
+:root { --bd-gold:#ff7a00; --bd-gold2:#ff9d3c; --bd-gold-soft:#ffb066; --bd-ink:#f0eadf; --bd-muted:#b3a89c; --bd-muted2:#dad0c5; --bd-line:rgba(255,255,255,.08);
   /* přebití světlých proměnných stránek (makro/forma) na tmavé tóny */
   --cream:#100d0a!important; --cream2:#17130f!important; --green-light:rgba(255,122,0,.08)!important; }
 
@@ -111,7 +111,7 @@ h2[style*="#161616"], h3[style*="#161616"] { color:#fff!important; }
 input, textarea, select, .form-control, .form-select {
   background:rgba(0,0,0,.28)!important; color:var(--bd-ink)!important; border-color:rgba(255,255,255,.14)!important;
 }
-input::placeholder, textarea::placeholder { color:#7b7064!important; }
+input::placeholder, textarea::placeholder { color:#9a8f82!important; }
 table { background:rgba(255,255,255,.03)!important; color:var(--bd-ink)!important; border:1px solid var(--bd-line)!important; }
 th, td { border-color:var(--bd-line)!important; color:var(--bd-ink)!important; }
 th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
@@ -158,3 +158,42 @@ th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
 
 /* native <select> dropdown — čitelné možnosti (tmavý text na bílém) napříč tématy */
 select option, select optgroup { color:#161616; background:#fff; }
+
+/* ============================================================
+   SYSTÉMOVÁ OPRAVA KONTRASTU (28.6.) — oranžové sekce nebyly ztmavené,
+   takže světlý/muted text na nich byl nečitelný. Ztmavíme je jednotně.
+   ============================================================ */
+/* hero / cta / result / page-hero: oranžový gradient → dark-luxe s oranžovým nádechem */
+.hero, section.cta, .cta, .result, .page-hero, .ph-hero {
+  background:
+    radial-gradient(760px 460px at 82% 12%, rgba(255,122,0,.16), transparent 60%),
+    linear-gradient(135deg,#1d1a16 0%, #0b0a09 100%)!important;
+}
+.hero, .cta, .result { color:var(--bd-ink)!important; }
+.hero h1, .hero h2, .cta h1, .cta h2, .result h1, .result h2 { color:#fff!important; }
+.hero p, .hero .sub, .hero .lead, .cta p, .result p, .hero-trust, .hero .badges,
+.hero-meta, .ph-hero p, .page-hero p { color:var(--bd-muted2)!important; }
+.hero .crumbs, .crumbs { color:var(--bd-muted)!important; }
+.hero strong, .hero b, .cta strong, .result strong { color:#fff!important; }
+
+/* feature ikony: page CSS dává color:#161616 (tmavá ikona) → na dark mizí; přebij na zlatou */
+.feature .ico, .feature .ico .mb-ico, #blog .card .ico { color:var(--bd-gold-soft)!important; }
+.feature .ico { background:linear-gradient(145deg,rgba(255,122,0,.2),rgba(255,122,0,.05))!important; border:1px solid rgba(255,122,0,.28)!important; }
+
+/* Bootstrap accordion (homepage FAQ) — nebyl pokrytý → bílá karta + faint text */
+.accordion, .accordion-item { background:transparent!important; }
+.accordion-item { background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important; border:1px solid var(--bd-line)!important; }
+.accordion-button { background:transparent!important; color:#fff!important; box-shadow:none!important; }
+.accordion-button:not(.collapsed) { background:rgba(255,122,0,.1)!important; color:#fff!important; }
+.accordion-button:focus { box-shadow:none!important; border-color:var(--bd-line)!important; }
+.accordion-button::after { filter:invert(1) brightness(1.8); }
+.accordion-body { color:var(--bd-muted2)!important; }
+
+/* bílé karty (Bootstrap .bg-white) v tmavých sekcích — text-dark se přebíjí na světlý → mizel na bílé.
+   Ztmavíme kartu, ať světlý text čte. (kontaktní formulář, apod.) */
+.cta .bg-white, section.cta .bg-white, .bg-white.rounded-4, .bg-white.shadow {
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02))!important;
+  border:1px solid var(--bd-line)!important;
+}
+.cta .bg-white .text-dark, .bg-white.shadow .text-dark { color:#fff!important; }
+.alert-success { background:rgba(47,174,87,.14)!important; color:#bfe9cb!important; border-color:rgba(47,174,87,.34)!important; }
