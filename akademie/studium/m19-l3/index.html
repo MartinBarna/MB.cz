@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Po dietě: jak udržet formu a nevrátit kila — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%23161616%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2754%27 font-family=%27Arial%27 font-weight=%27bold%27 fill=%27%23ff7a00%27 text-anchor=%27middle%27%3EMB%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 19 · Praxe a pokročilá aplikace · Lekce 3</div>
+    <h1>Po dietě: jak udržet formu a nevrátit kila</h1>
+
+    <p class="lead">Nejtěžší část diety přichází až po ní. Tělo po deficitu tlačí na příjem a metabolismus je přiškrcený. Bez plánu se kila vrací. Tady je řízený přechod z deficitu, který tomu předejde.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč po dietě hrozí rebound (a co se v těle děje).</li>
+        <li>Co je reverzní dieta a jak ji nastavit.</li>
+        <li>Rozdíl mezi udržením a „pustil jsem to".</li>
+        <li>Jak klienta provést psychicky, ne jen čísly.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč se kila vrací</h2>
+    <p>Po delším deficitu klesá výdej (adaptivní termogeneze), roste hlad (ghrelin↑, leptin↓) a klient je natěšený na jídlo [1,2]. Skok z deficitu do starého režimu = přestřelení a návrat kil, často s úroky. Není to slabost, je to fyziologie.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům říkám: dieta není cíl, je to fáze. Cíl je umět žít na udržovacích kaloriích bez hladu a vin. Na to se musíme připravit, ne to nechat náhodě.</div>
+    <h2>2) Reverzní dieta — postupný návrat</h2>
+    <p>Místo skoku přidávám kalorie <strong>postupně</strong> (orientačně +5–10 % týdně, hlavně sacharidy a trochu tuků) a sleduju váhu a míry. Cíl: dostat klienta na udržovací příjem s minimem návratu tuku a s lepší energií, tréninkem i náladou [3].</p>
+    <h2>3) Udržení není „pustil jsem to"</h2>
+    <p>Udržení je aktivní dovednost: znáš udržovací příjem, držíš bílkoviny a pohyb, vážíš se průběžně a máš plán pro výkyvy. „Pustil jsem to" je absence systému — tam jojo začíná.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Nastavím klientovi strop — třeba +2 kg od cíle. Když ho překročí, vrátí se na pár týdnů k mírnému deficitu. Žádná panika, jen údržba.</div>
+    <h2>4) Hlava je půlka práce</h2>
+    <p>Po dietě přijde past „už jsem hotový". Pomáhá překlopit cíl z výsledku (kg) na proces (návyky napořád) a rámovat konec diety jako start nové fáze, ne finiš.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč hrozí po dietě rebound? <span class="tg">odpověď ▾</span></div><div class="aa">Klesá výdej, roste hlad (ghrelin↑, leptin↓). Skok do starého režimu = přestřelení a návrat kil.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je reverzní dieta? <span class="tg">odpověď ▾</span></div><div class="aa">Postupné navyšování kalorií (~+5–10 % týdně) z deficitu na udržovací s minimem návratu tuku.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Rozdíl mezi udržením a „pustil jsem to"? <span class="tg">odpověď ▾</span></div><div class="aa">Udržení je aktivní systém (příjem, bílkoviny, pohyb, vážení). „Pustil jsem to" je absence systému.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co je adaptivní termogeneze? <span class="tg">odpověď ▾</span></div><div class="aa">Pokles výdeje nad rámec úbytku hmotnosti — tělo po deficitu šetří energií.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak pomoct klientovi psychicky po dietě? <span class="tg">odpověď ▾</span></div><div class="aa">Překlopit cíl z kg na proces/návyky a rámovat konec diety jako start nové fáze.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Odhadni udržovací příjem a navrhni 4týdenní reverzní plán: o kolik a čeho přidávat každý týden a jaké 2 metriky budeš sledovat.</div>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje (3)</summary>
+      <ol>
+        <li>Rosenbaum M, Leibel RL. Int J Obes. 2010;34:S47–55.</li>
+        <li>Sumithran P, et al. N Engl J Med. 2011;365:1597–1604.</li>
+        <li>Trexler ET, et al. J Int Soc Sports Nutr. 2014;11:7.</li>
+      </ol>
+      <p style="margin-top:.6rem">Autorské zpracování: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar=document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m19-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){ if(window.BA){ window.BA.ready.then(function(){ window.BA.getProgress().then(function(dd){ state.done=!!dd[LID]; paint(); }); }); } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); } }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js" defer></script>
+</body>
+</html>
