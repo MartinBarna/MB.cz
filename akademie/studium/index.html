@@ -19,6 +19,16 @@
   .prog { margin-top:1.3rem; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:50px; height:12px; overflow:hidden; max-width:520px; position:relative; }
   .prog span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); border-radius:50px; transition:width .6s ease; }
   .prog-lbl { margin-top:.55rem; font-size:.85rem; color:var(--muted-2); font-weight:600; position:relative; }
+  .lsearch { margin-top:1.1rem; width:100%; max-width:520px; display:block; border:1.5px solid var(--line-2); background:rgba(0,0,0,.25); color:var(--ink); font-family:inherit; font-weight:600; font-size:.96rem; padding:12px 18px; border-radius:50px; outline:none; transition:border-color .2s, background .2s; }
+  .lsearch::placeholder { color:#8a8073; font-weight:500; }
+  .lsearch:focus { border-color:var(--gold); background:rgba(0,0,0,.35); }
+  .searchres { display:grid; gap:10px; }
+  .searchres a { display:flex; align-items:center; gap:12px; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:14px; padding:13px 18px; text-decoration:none; color:var(--ink); transition:border-color .2s, transform .2s; }
+  .searchres a:hover { border-color:rgba(255,122,0,.4); transform:translateY(-2px); }
+  .searchres a .sm { color:var(--gold-soft); font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; flex-shrink:0; }
+  .searchres a .st { font-weight:600; }
+  .searchres a .sd { margin-left:auto; color:#2fae57; font-size:.85rem; flex-shrink:0; }
+  .searchempty { color:var(--muted-2); padding:1.6rem 0; font-weight:600; }
 
   .modules { margin-top:26px; display:grid; gap:16px; }
   .mod { background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:20px; overflow:hidden; box-shadow:0 24px 50px -34px rgba(0,0,0,.9); }
@@ -95,6 +105,7 @@
       <p>Pokračuj tam, kde jsi přestal. Každá lekce tě posune blíž k certifikaci.</p>
       <div class="prog"><span id="progBar" style="width:0%"></span></div>
       <div class="prog-lbl" id="progLbl">0 % dokončeno</div>
+      <input id="lessonSearch" class="lsearch" type="search" placeholder="🔍 Hledat lekci… (např. spánek, bílkoviny, peak week)" aria-label="Hledat lekci" autocomplete="off">
     </div>
 
     <div class="modules" id="modules"></div>
@@ -417,7 +428,31 @@
       return null;
     }
     function startedAny(){ for (var k in DONE){ if (DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
+    // #34 vyhledávání lekcí napříč moduly (bez diakritiky)
+    function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+    function searchLessons(q){
+      var nq = norm(q), res = [];
+      CURRICULUM.forEach(function(m, mi){
+        m.lessons.forEach(function(l){
+          if (l.available && norm(l.t).indexOf(nq) !== -1) res.push({ mi:mi, l:l });
+        });
+      });
+      var html;
+      if (!res.length) {
+        html = '<p class="searchempty">Pro „'+q+'" jsem nic nenašel. Zkus jiné slovo (např. spánek, protein, dieta).</p>';
+      } else {
+        html = '<div class="searchres">';
+        res.forEach(function(r){
+          var dn = DONE[r.l.id];
+          html += '<a href="'+r.l.href+'"><span class="sm">M'+(r.mi+1)+'</span><span class="st">'+r.l.t+'</span>'+(dn?'<span class="sd">✓ hotovo</span>':'<span class="sd" style="color:var(--gold-soft)">Otevřít →</span>')+'</a>';
+        });
+        html += '</div>';
+      }
+      document.getElementById('modules').innerHTML = html;
+    }
     function route(){
+      var sb = document.getElementById('lessonSearch');
+      if (sb && sb.value.trim()) { searchLessons(sb.value.trim()); return; }
       var h = (location.hash||'').replace('#',''); var m = h.match(/^m(\d+)$/);
       if (m) renderModule(parseInt(m[1],10)-1); else renderOverview();
     }
@@ -477,6 +512,11 @@
           else { if(w){ w.close(); } alert('Kuchařku se nepodařilo otevřít. Zkus to za chvíli, nebo napiš na martin@martinbarna.cz.'); }
         }).catch(function(e){ btn.textContent=orig; btn.disabled=false; if(w){ w.close(); } alert('Stažení selhalo: '+((e&&e.message)||e)); });
       });
+    })();
+    // #34 vyhledávání — při psaní přepni na výsledky, po smazání zpět na přehled/modul
+    (function(){
+      var sb=document.getElementById('lessonSearch'); if(!sb) return;
+      sb.addEventListener('input', function(){ route(); });
     })();
     boot();
   </script>
