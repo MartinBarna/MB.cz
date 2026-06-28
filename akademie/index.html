@@ -175,6 +175,14 @@
         </div>
     </header>
 
+    <!-- UPSELL pro majitele videokurzu (#38) — aktivuje se přes ?from=videokurz -->
+    <div id="vkUpsell" style="display:none;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.05));border-bottom:1px solid rgba(255,122,0,.3);">
+        <div class="container" style="padding:16px 12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;text-align:center;">
+            <span style="font-size:1rem;line-height:1.5;"><b style="color:#ff7a00;">Máš videokurz? Skvělé.</b> Jako majitel videokurzu máš u spuštění Academy <b>přednost a speciální podmínky</b>. Přidej se na seznam a dám ti vědět první.</span>
+            <a href="#zajem" class="btn-gold" style="padding:9px 22px;white-space:nowrap;">Chci přednostní místo →</a>
+        </div>
+    </div>
+
     <!-- PRO KOHO -->
     <section id="prokoho">
         <div class="container">
@@ -419,6 +427,13 @@
                     alert('Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.');
                 });
             });
+        }
+    </script>
+    <script>
+        // #38 Upsell: majitel videokurzu přišel přes dashboard (?from=videokurz) → ukaž mu přednostní banner
+        if (/[?&]from=videokurz/.test(location.search)) {
+            var _vk = document.getElementById('vkUpsell');
+            if (_vk) _vk.style.display = 'block';
         }
     </script>
   <script src="/assets/scroll-top.js" defer></script>
