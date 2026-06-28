@@ -74,6 +74,11 @@
         @media (prefers-reduced-motion: reduce){
             *, *::before, *::after { animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; }
         }
+            .blogsearch-wrap { max-width:540px; margin:0 auto 1.3rem; }
+        .blogsearch { width:100%; border:1.5px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05); color:#f0eadf; font-family:inherit; font-weight:600; font-size:1rem; padding:13px 22px; border-radius:50px; outline:none; transition:border-color .2s, background .2s; }
+        .blogsearch::placeholder { color:#b3a89c; font-weight:500; }
+        .blogsearch:focus { border-color:var(--green); background:rgba(255,255,255,.08); }
+        .blog-nores { display:none; text-align:center; color:#cabfb4; padding:2.4rem 1rem; font-weight:600; font-size:1.05rem; }
             .blogfilter { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:2.4rem; }
         .blogfilter button { border:2px solid #f0e0d0; background:#fff; color:var(--green-dark); font-weight:700; font-size:.92rem; padding:9px 20px; border-radius:50px; cursor:pointer; transition:.2s; }
         .blogfilter button:hover { border-color:var(--green); }
@@ -165,7 +170,7 @@
 }
     </script>
     <script defer src="/assets/analytics.js"></script>
-    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260703">
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260704">
 </head>
 <body>
     <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
@@ -201,6 +206,7 @@
 
     <section class="py-5">
         <div class="container">
+            <div class="blogsearch-wrap"><input id="blogSearch" class="blogsearch" type="search" placeholder="🔍 Hledat článek… (např. spánek, bílkoviny, kofein)" aria-label="Hledat článek" autocomplete="off"></div>
             <div class="blogfilter" role="tablist" aria-label="Filtr článků">
                 <button class="active" data-filter="all">Vše</button>
                 <button data-filter="top">⭐ Nejčtenější</button>
@@ -305,6 +311,7 @@
                 <div class="col-md-6 col-lg-4 blog-card" data-cat="vyziva" data-top="1"><a href="pitny-rezim.html" class="text-decoration-none"><div class="card p-4"><div class="ico">💧</div><div class="tagp">ZDRAVÍ</div><h5 class="card-title mt-1">Pitný režim a hubnutí</h5><p class="text-muted mb-0">Kolik pít, proč na tom záleží a jak tě tekuté kalorie brzdí.</p></div></a></div>
                 <div class="col-md-6 col-lg-4"><div class="card p-4 h-100 d-flex flex-column justify-content-center text-center" style="background:var(--green-light);"><h5 class="card-title">Chceš poradit osobně?</h5><p class="text-muted">Napiš mi nezávazně.</p><a href="../index.html#kontakt" class="btn btn-grn mx-auto">Napiš mi</a></div></div>
             </div>
+            <p class="blog-nores" id="blogNoRes">Pro tvůj dotaz jsem nic nenašel 🤔 Zkus jiné slovo (např. „spánek", „bílkoviny", „kofein") nebo zruš filtr výše.</p>
         </div>
     </section>
 
@@ -322,14 +329,28 @@
     (function(){
       var btns=document.querySelectorAll('.blogfilter button');
       var cards=document.querySelectorAll('.blog-card');
+      var search=document.getElementById('blogSearch');
+      var nores=document.getElementById('blogNoRes');
+      var curFilter='all';
+      // bez diakritiky + malými písmeny, ať „spanek" najde „spánek"
+      function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+      function apply(){
+        var q=norm(search ? search.value.trim() : '');
+        var shown=0;
+        cards.forEach(function(c){
+          var passCat = curFilter==='all' || (curFilter==='top' ? c.hasAttribute('data-top') : c.getAttribute('data-cat')===curFilter);
+          var passQ = !q || norm(c.textContent).indexOf(q)!==-1;
+          var show = passCat && passQ;
+          c.style.display = show ? '' : 'none';
+          if (show) shown++;
+        });
+        if (nores) nores.style.display = shown ? 'none' : 'block';
+      }
       btns.forEach(function(b){ b.addEventListener('click', function(){
         btns.forEach(function(x){x.classList.remove('active');}); b.classList.add('active');
-        var fl=b.getAttribute('data-filter');
-        cards.forEach(function(c){
-          var show = fl==='all' || (fl==='top' ? c.hasAttribute('data-top') : c.getAttribute('data-cat')===fl);
-          c.style.display = show ? '' : 'none';
-        });
+        curFilter=b.getAttribute('data-filter'); apply();
       });});
+      if (search) search.addEventListener('input', apply);
     })();
     </script>
   <script src="/assets/scroll-top.js" defer></script>

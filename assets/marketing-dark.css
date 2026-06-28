@@ -4,7 +4,7 @@
    světlý motiv (Bootstrap + highend.css + inline pravidla stránek).
    Obsah/markup se nemění — jen barevná vrstva.
    ============================================================ */
-:root { --bd-gold:#ff7a00; --bd-gold2:#ff9d3c; --bd-gold-soft:#ffb066; --bd-ink:#f0eadf; --bd-muted:#b3a89c; --bd-muted2:#dad0c5; --bd-line:rgba(255,255,255,.08);
+:root { --bd-gold:#ff7a00; --bd-gold2:#ff9d3c; --bd-gold-soft:#ffb066; --bd-ink:#f0eadf; --bd-muted:#cabfb1; --bd-muted2:#ebe3d8; --bd-line:rgba(255,255,255,.08);
   /* přebití světlých proměnných stránek (makro/forma) na tmavé tóny */
   --cream:#100d0a!important; --cream2:#17130f!important; --green-light:rgba(255,122,0,.08)!important; }
 
@@ -61,7 +61,11 @@ a { color:inherit; }
 .pricebox { box-shadow:0 40px 90px -40px rgba(255,122,0,.3)!important; }
 .plan, .plan-body, .plan-head { background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important; border-color:var(--bd-line)!important; color:var(--bd-ink); }
 .plan-name, .plan-price, .plan h3, .plan h4 { color:#fff!important; }
-.plan-sub, .plan-terms, .plan-microtrust, .plan-feat { color:var(--bd-muted2)!important; }
+.plan-sub, .plan-terms, .plan-microtrust { color:var(--bd-muted2)!important; }
+/* .plan-feat li má v základním CSS natvrdo tmavou barvu (#3a463f) pro světlé pozadí →
+   na tmavé kartě byl popis coachingu skoro neviditelný. Přepiš na čitelný světlý tón. */
+.plan-feat, .plan-feat li, .plan ul li, .pkg-feat li { color:#ece4d9!important; }
+.plan-feat li strong, .plan-feat li b { color:#fff!important; }
 .plan.featured, .plan-featured { border-color:rgba(255,122,0,.5)!important; box-shadow:0 40px 90px -40px rgba(255,122,0,.3)!important; }
 
 /* ---------- kroky / číslované ---------- */
@@ -89,12 +93,15 @@ article p, .post p, article li, .post li { color:var(--bd-muted2)!important; }
 /* ghost nadpisy s inline tmavou barvou (color:var(--green-dark)/#161616) */
 h2[style*="--green-dark"], h3[style*="--green-dark"],
 h2[style*="#161616"], h3[style*="#161616"] { color:#fff!important; }
-.cta-box, .author-box, .price-card, .rev, .recipe {
+.cta-box, .author-box, .price-card, .rev, .recipe, .sample, .sample-card {
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important;
   border:1px solid var(--bd-line)!important;
   box-shadow:0 24px 50px -34px rgba(0,0,0,.9)!important; color:var(--bd-ink)!important;
 }
 .cta-box h2, .cta-box h3, .author-box h3, .author-box h4, .price-card .qty, .rev figcaption, .recipe h3 { color:#fff!important; }
+/* bílá ukázková karta lekce (Academy landing) — text byl světlý na bílé = neviditelný */
+.sample p, .sample li, .sample blockquote { color:var(--bd-muted2)!important; }
+.sample strong, .sample b, .sample h3, .sample h4 { color:#fff!important; }
 .cta-box p, .author-box p, .price-card .per, .rev blockquote, .recipe li { color:var(--bd-muted2)!important; }
 .recipe h3 span { color:var(--bd-muted2)!important; }
 .price-card.featured, .price-card.best { border-color:rgba(255,122,0,.5)!important; box-shadow:0 40px 90px -40px rgba(255,122,0,.3)!important; }
