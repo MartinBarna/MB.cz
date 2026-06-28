@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jak číst vědecké studie — průvodce</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENY (přepisují se z URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#ff7a00; --brand2:#ff9d3c; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* hlavička */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#fff;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* titul */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#fff;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* lišta nástrojů (na obrazovce, ne v tisku) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:linear-gradient(145deg,var(--brand2),var(--brand));color:#160d04;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:26px 30px;} @page{size:A4;margin:12mm;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Stáhnout / Tisk do PDF</button>
+    <a href="/materialy/rebrand/">← Přebrandovat tento materiál</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online výživa &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Průvodce pro klienty</div>
+    </div>
+
+    <h1>Jak číst vědecké studie</h1>
+    <p class="lead">Než něčemu uvěříš — ať je to nový „zázračný" doplněk, dietní trik z reelu nebo titulek „věda dokázala" — vyplatí se umět odlišit silný důkaz od slabého. Tady je střízlivý návod, jak se vyznat ve studiích, poznat hype a nenechat se vodit za nos. Prakticky, kolega kolegovi.</p>
+
+    <h2>Proč potřebuješ hierarchii důkazů</h2>
+    <p>Ne každý „důkaz" váží stejně. Medicína založená na důkazech stojí na jednoduché myšlence: tvrzení posuzuj podle <b>kvality a typu</b> dat, která za ním stojí, ne podle toho, jak sebevědomě zní [5]. Jeden tweet, jedna myší studie a jedna metaanalýza nejsou tři rovnocenné názory — jsou to tři velmi odlišné úrovně jistoty.</p>
+    <p>Proto existuje <b>pyramida (hierarchie) důkazů</b>: čím výš, tím líp je riziko omylu pod kontrolou [1]. Není to dogma — i špatně udělaná RCT může být slabší než dobře udělaná observační studie [2] — ale jako kompas to funguje skvěle. Drž se pravidla: čím závažnější tvrzení, tím silnější důkaz bys měl chtít.</p>
+
+    <div class="callout"><b>Hlavní věc:</b> Neptej se jen „co studie zjistila", ale <b>„jaký to byl typ studie a jak dobře byla udělaná"</b>. Síla závěru se řídí kvalitou důkazu, ne hlasitostí, s jakou se prezentuje [3,5].</div>
+
+    <h2>Pyramida důkazů: od nejslabšího po nejsilnější</h2>
+    <p>Projdi to zdola nahoru. Každý stupeň přidává kontrolu nad zkreslením a náhodou [1,2]:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Osobní zkušenost / anekdota</b><br><small>„Mně to funguje." Jeden člověk, žádná kontrola, plno zkreslení. Užitečné jako podnět k otázce, nikdy jako důkaz.</small></div>
+      <div class="step"><b><span class="n">2</span>Kazuistika (case report)</b><br><small>Pečlivý popis jednoho či pár případů. Umí upozornit na nový jev, ale neumí dokázat příčinu.</small></div>
+      <div class="step"><b><span class="n">3</span>Observační studie</b><br><small>Sleduje skupiny bez zásahu (kohortové, případ-kontrola). Najde <b>souvislosti</b>, ne nutně příčinu — viz korelace vs. kauzalita.</small></div>
+      <div class="step"><b><span class="n">4</span>RCT (randomizovaná kontrolovaná studie)</b><br><small>Lidé jsou náhodně rozděleni do skupin (zásah vs. kontrola/placebo). Randomizace vyrovná rušivé vlivy — proto je to zlatý standard pro otázku „funguje to?" [1].</small></div>
+      <div class="step"><b><span class="n">5</span>Systematický přehled</b><br><small>Strukturovaně shromáždí <b>všechny</b> kvalitní studie k otázce podle předem daného protokolu, ne jen ty, co se hodí [6].</small></div>
+      <div class="step"><b><span class="n">6</span>Metaanalýza</b><br><small>Statisticky spojí výsledky více studií do jednoho odhadu. Nejvyšší patro — pokud jsou vstupní studie kvalitní (jinak „odpad dovnitř, odpad ven") [2,6].</small></div>
+    </div>
+    <div class="callout"><b>Pozor:</b> Pozici ve standardní pyramidě je vždy potřeba korigovat <b>kvalitou provedení</b>. Moderní přístup (např. GRADE) hodnotí jistotu důkazu i podle rizika zkreslení, konzistence a velikosti efektu, ne jen podle „nálepky" typu studie [2,3].</div>
+
+    <h2>Proč „mně to funguje" není důkaz</h2>
+    <p>Osobní zkušenost je k nezaplacení pro motivaci, ale jako důkaz účinnosti je nespolehlivá — a to nezáleží na tom, jak upřímně to cítíš. Tři tiché pasti:</p>
+    <ul class="check">
+      <li><b>Placebo efekt.</b> Samo očekávání zlepšení dokáže snížit vnímanou bolest, únavu i chuť k jídlu. Proto dobré RCT srovnávají zásah proti placebu — bez kontroly nevíš, jestli zabralo „to", nebo „očekávání" [1].</li>
+      <li><b>Regrese k průměru.</b> K doplňku nebo dietě saháme typicky, když je nám nejhůř. Stav se pak často zlepší sám, prostě návratem k normálu — a my to omylem připíšeme zásahu.</li>
+      <li><b>Zkreslení (bias).</b> Pamatujeme si trefy, zapomínáme propadáky (konfirmační zkreslení). Hledáme, co potvrzuje, co už si myslíme. To je přesně to, co metodika studie potlačuje.</li>
+    </ul>
+    <p>Jeden člověk navíc nemá kontrolní skupinu. Nikdy nevíš, co by se stalo, kdybys to <b>neudělal</b>. Právě tu odpověď ti dává kontrolovaná studie — a proto jeden zázrak z příběhu neporazí dobře udělaný experiment [5].</p>
+
+    <h2>Korelace není kauzalita</h2>
+    <p>Tohle je nejčastější logická chyba v titulcích. To, že dvě věci jdou spolu, neznamená, že jedna způsobuje druhou. Observační studie najde <b>souvislost</b> — a to z dobrého důvodu nestačí:</p>
+    <ul class="check">
+      <li><b>Zaměněná příčina (matoucí proměnná).</b> Lidé jedící víc ryb bývají zdravější — ale taky častěji víc cvičí, míň kouří a mají vyšší příjem. Co z toho je ta příčina?</li>
+      <li><b>Obrácený směr.</b> Souvisí deprese s nižší pohybovou aktivitou, protože pohyb chrání náladu — nebo proto, že deprese bere energii hýbat se? Korelace to nerozliší.</li>
+      <li><b>Náhoda.</b> Při dost velkém počtu porovnání se nějaká „souvislost" objeví čistě náhodou [4].</li>
+    </ul>
+    <p>Praktické pravidlo: když čteš „X souvisí s Y", v duchu si doplň <b>„souvisí, ale nemusí to způsobovat"</b>. K závěru o příčině potřebuješ zpravidla randomizovaný experiment [1].</p>
+
+    <h2>In vitro, myši a velikost vzorku</h2>
+    <p>Než si přečteš závěr, podívej se na <b>kdo a kolik</b>. Tady padá nejvíc hype:</p>
+    <ul class="check">
+      <li><b>In vitro (ve zkumavce) a zvířecí modely.</b> Co funguje na buňkách v misce nebo na myších, často <b>nefunguje u lidí</b> — nebo v dávkách, které by člověk nikdy nereálně přijal. Je to nezbytný první krok výzkumu, ne důkaz pro tvého klienta.</li>
+      <li><b>Velikost vzorku.</b> Studie na 12 lidech je signál, ne závěr. Malé vzorky dávají nestabilní, snadno přehnané výsledky a hůř se opakují [4].</li>
+      <li><b>Reprodukovatelnost.</b> Jeden „objev" může být náhoda nebo metodická chyba. Věř spíš tomu, co se opakovaně potvrdilo napříč studiemi [4,6].</li>
+    </ul>
+    <div class="callout"><b>Rychlý filtr:</b> Uvidíš-li v titulku zázračný účinek, najdi, jestli šlo o lidi, nebo o myši/buňky, a na kolika lidech. Hodně „převratných" zpráv zhasne hned na téhle jediné otázce.</div>
+
+    <h2>p-hodnota, velikost efektu a praktická významnost</h2>
+    <p>„Statisticky významné" zní silně, ale znamená míň, než si lidé myslí. <b>p-hodnota</b> říká zhruba: jak pravděpodobné by bylo vidět takový (nebo extrémnější) výsledek, kdyby zásah ve skutečnosti <b>nefungoval</b>. Co p-hodnota <u>není</u>:</p>
+    <ul class="check">
+      <li><b>Není to pravděpodobnost, že máš pravdu.</b> p &lt; 0,05 neznamená „95% jistota, že to funguje" — to je nejčastější mýtus o p-hodnotě [7].</li>
+      <li><b>Není to velikost ani důležitost efektu.</b> Při dost velkém vzorku vyjde „významný" i nepatrný, prakticky bezcenný rozdíl [7].</li>
+      <li><b>Práh 0,05 je dohoda, ne přírodní zákon.</b> p = 0,049 a p = 0,051 jsou v praxi totéž; honba za „hvězdičkou" vede ke zkresleným výsledkům [4,7].</li>
+    </ul>
+    <p>Proto se ptej po <b>velikosti efektu</b> (o kolik se to reálně změnilo) a po <b>praktické významnosti</b>: „Zhubli o 0,4 kg za rok navíc oproti kontrole" může být statisticky významné a přitom pro tvého klienta úplně jedno. Vždy hledej i <b>interval spolehlivosti</b> — ukáže rozpětí, ve kterém se pravda nejspíš pohybuje, a tím i nejistotu.</p>
+
+    <h2>Konflikt zájmů, predátorské časopisy a hype</h2>
+    <p>Studie nevzniká ve vakuu. Než výsledku uvěříš, prověř kontext:</p>
+    <ul class="check">
+      <li><b>Financování a konflikt zájmů.</b> Studii o doplňku platí jeho výrobce? Nemusí to být podvod, ale je to důvod ke zvýšené opatrnosti. Hledej sekci „funding" a „conflict of interest" — seriózní studie ji uvádí.</li>
+      <li><b>Predátorské časopisy.</b> Existují „časopisy", které za poplatek otisknou cokoli bez skutečné recenze. Citace „bylo to publikováno" sama o sobě nestačí — záleží, <b>kde</b> a zda prošlo recenzním řízením.</li>
+      <li><b>Mediální a sociální hype.</b> Titulek nadsadí, vynechá „u myší", zamlčí velikost vzorku a udělá z korelace příčinu. Vždy se snaž dohledat <b>původní studii</b>, ne jen článek o článku o ní.</li>
+    </ul>
+    <p>Zdravý reflex: čím senzačnější tvrzení a čím víc na něm někdo vydělává, tím tvrdší důkaz si vyžádej, než ho předáš dál [3,5].</p>
+
+    <h2>Kde hledat a checklist, než něčemu uvěříš</h2>
+    <p>Kvalitní zdroje místo náhodného Googlu: <b>PubMed</b> (databáze biomedicínských studií), <b>Cochrane</b> (systematické přehledy nejvyšší kvality) [6] a klasická příručka <b>„How to read a paper"</b>, pokud se chceš v metodice zlepšit [8]. A než něčemu uvěříš nebo to dáš klientovi, projeď tenhle checklist:</p>
+    <ul class="check">
+      <li><b>Jaký typ studie to je?</b> Anekdota, observační, RCT, metaanalýza — kde je v pyramidě [1,2]?</li>
+      <li><b>Lidé, nebo myši/buňky?</b> A kolik jich bylo? Malý vzorek = opatrnost [4].</li>
+      <li><b>Korelace, nebo kauzalita?</b> Byl tam skutečný zásah a kontrolní skupina, nebo jen pozorování?</li>
+      <li><b>Jak velký je efekt v praxi?</b> Ne „je to významné", ale „o kolik a komu to pomůže" [7].</li>
+      <li><b>Kdo to platil a kde to vyšlo?</b> Konflikt zájmů, recenzovaný časopis, nebo predátor?</li>
+      <li><b>Potvrdilo se to víckrát?</b> Jeden výsledek je hypotéza; shoda více studií je síla [6].</li>
+      <li><b>Sedí titulek se studií?</b> Dohledej originál — hype bývá v překladu do médií [3].</li>
+    </ul>
+
+    <div class="callout"><b>Akční krok na závěr:</b> Příště, než sdílíš nebo nasadíš nějaké „věda říká", projdi jen <b>tři otázky</b>: (1) jaký typ studie, (2) lidé nebo myši a kolik, (3) jak velký je efekt v praxi. Tyhle tři filtry odchytí většinu nesmyslů dřív, než se dostanou ke klientovi. Be Effective!</div>
+
+    <div class="foot">
+      <div>© <span class="brandName2">Martin Barna</span> — průvodce pro klienty. Sdílej jen se svolením autora.</div>
+      <div><a id="brandWeb" href="https://www.martinbarna.cz">martinbarna.cz</a></div>
+    </div>
+    <p class="src"><b>Zdroje:</b> [1] OCEBM Levels of Evidence Working Group. The Oxford 2011 Levels of Evidence. Oxford Centre for Evidence-Based Medicine. [2] Murad MH, Asi N, Alsawas M, Alahdab F. New evidence pyramid. BMJ Evid Based Med. 2016;21(4):125–127. [3] Guyatt GH, et al. GRADE: an emerging consensus on rating quality of evidence and strength of recommendations. BMJ. 2008;336(7650):924–926. [4] Ioannidis JPA. Why most published research findings are false. PLoS Med. 2005;2(8):e124. [5] Sackett DL, Rosenberg WM, Gray JA, Haynes RB, Richardson WS. Evidence based medicine: what it is and what it isn't. BMJ. 1996;312(7023):71–72. [6] Higgins JPT, Thomas J, et al. (eds). Cochrane Handbook for Systematic Reviews of Interventions. Cochrane, 2019. [7] Nuzzo R. Scientific method: statistical errors. Nature. 2014;506(7487):150–152. [8] Greenhalgh T. How to read a paper: the basics of evidence-based medicine. BMJ Books.</p>
+  </div></div>
+
+<script>
+  // Přebrandování z URL parametrů (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' — Jak číst studie';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+</body>
+</html>
