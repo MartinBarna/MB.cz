@@ -105,6 +105,10 @@ SECTIONS.forEach(s => {
 });
 // přiřaď výsledné pořadové číslo + slug složky
 ordered.forEach((v, i) => { v.n = i + 1; v.slug = 'v' + String(i + 1).padStart(3, '0'); v.lid = 'vk-' + v.id; });
+// Free tier (#35/#37): prvních pár lekcí zdarma jako ochutnávka pro registrované bez nákupu → upsell na koupi.
+const FREE_COUNT = 4;
+const BUY_URL = 'https://form.simpleshop.cz/3Vbl/buy/';
+ordered.forEach((v, i) => { v.free = i < FREE_COUNT; });
 
 function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -139,6 +143,10 @@ function videoPage(v) {
   .btn.is-done { background:linear-gradient(145deg,#2fae57,#1f9647); color:#fff; box-shadow:0 12px 26px -8px rgba(47,174,87,.5); }
   .nav { margin-top:1.5rem; display:flex; justify-content:space-between; gap:10px; }
   .foot { margin-top:2rem; font-size:.8rem; color:var(--muted); }
+  .upsell { display:block; margin-top:1.6rem; text-decoration:none; background:linear-gradient(135deg,rgba(255,122,0,.18),rgba(255,122,0,.05)); border:1px solid rgba(255,122,0,.4); border-radius:16px; padding:16px 20px; color:var(--muted-2); font-size:.95rem; line-height:1.55; transition:transform .2s,border-color .2s; }
+  .upsell:hover { transform:translateY(-2px); border-color:rgba(255,122,0,.7); }
+  .upsell b { color:#fff; }
+  .upsell .go2 { display:block; margin-top:8px; color:var(--gold-soft); font-weight:700; }
 </style>
 </head>
 <body class="ba">
@@ -162,20 +170,25 @@ function videoPage(v) {
 
     <div class="nav">${navPrev || '<span></span>'}${navNext || '<span></span>'}</div>
 
-    <p class="foot">© Videokurz Martin Barna — členská sekce. Video je dostupné jen přihlášeným s aktivním přístupem.</p>
+    ${v.free ? `<a class="upsell" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz — 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců) — odemkneš jednorázově za 800 Kč. Doživotně.<span class="go2">Odemknout celý kurz za 800 Kč →</span></a>` : ''}
+
+    <p class="foot">© Videokurz Martin Barna — členská sekce.${v.free ? ' Tato lekce je dostupná zdarma jako ochutnávka.' : ' Video je dostupné jen přihlášeným s aktivním přístupem.'}</p>
   </div>
 
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js"></script>
   <script src="/assets/scroll-top.js" defer></script>
   <script>
-    var LID='${v.lid}', PRODUCT='videokurz', state={done:false};
+    var LID='${v.lid}', PRODUCT='videokurz', FREE=${v.free ? 'true' : 'false'}, state={done:false};
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
     function load(){
       if (window.BA){
         window.BA.ready.then(function(){
-          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          if (window.BA.mode==='live'){
+            if (FREE) { window.BA.getUser().then(function(u){ if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname); return; } window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+            else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
       } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
@@ -192,7 +205,7 @@ function dashboard() {
   // Data sekcí pro klientský sekční router (přehled ↔ fokus na sekci).
   const secsData = SECTIONS.filter(s => s.list.length).map(s => ({
     name: s.name,
-    videos: s.list.map(v => ({ lid: v.lid, disp: v.disp, slug: v.slug }))
+    videos: s.list.map(v => ({ lid: v.lid, disp: v.disp, slug: v.slug, free: !!v.free }))
   }));
   const secsJson = JSON.stringify(secsData);
 
@@ -279,6 +292,21 @@ function dashboard() {
   .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(255,122,0,.35); border-color:rgba(255,122,0,.5); }
   .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; text-decoration:none; }
   .contbtn:hover { transform:translateY(-2px); }
+  /* free tier (ochutnávka) */
+  .freebanner { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; text-decoration:none; background:linear-gradient(135deg,rgba(255,122,0,.2),rgba(255,122,0,.05)); border:1px solid rgba(255,122,0,.45); border-radius:18px; padding:18px 22px; margin:8px 0 4px; transition:transform .2s,border-color .2s; }
+  .freebanner:hover { transform:translateY(-2px); border-color:rgba(255,122,0,.75); }
+  .freebanner .fb-txt { display:flex; flex-direction:column; gap:3px; min-width:240px; flex:1; }
+  .freebanner .fb-txt b { color:#fff; font-size:1.06rem; }
+  .freebanner .fb-txt span { color:var(--muted-2); font-size:.9rem; }
+  .freebanner .fb-cta { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 22px; border-radius:50px; white-space:nowrap; }
+  .lesson.locked .lockrow { display:flex; align-items:center; gap:13px; padding:13px 8px; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.05); border-radius:11px; transition:background .2s; }
+  .lesson.locked:last-child .lockrow { border-bottom:none; }
+  .lesson.locked .lockrow:hover { background:rgba(255,122,0,.07); }
+  .lesson.locked .chk.lock { width:21px; height:21px; border:none; background:none; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; opacity:.7; }
+  .lesson.locked .lt { flex:1; font-size:.96rem; color:var(--muted); }
+  .lesson.locked .go.buy { color:var(--gold-soft); font-weight:700; font-size:.82rem; white-space:nowrap; }
+  .freetag { display:inline-block; font-size:.64rem; font-weight:800; letter-spacing:.04em; color:#160d04; background:var(--gold-soft); padding:1px 8px; border-radius:50px; margin-left:7px; vertical-align:middle; text-transform:uppercase; }
+  body.freemode .matcard { display:none; }
 </style>
 </head>
 <body class="ba">
@@ -298,6 +326,11 @@ function dashboard() {
       <div class="bigbar"><span id="bigbar"></span></div>
       <div class="bigpct" id="bigpct">Tvůj postup: 0 / ${ordered.length} zhlédnuto</div>
     </div>
+
+    <a id="freeBanner" class="freebanner" href="${BUY_URL}" style="display:none;">
+      <span class="fb-txt"><b>🎁 Máš ochutnávku zdarma</b><span>Pár úvodních lekcí je odemčených. Celý kurz — 182 videí + všechny bonusy — odemkneš jednorázově za 800 Kč. Doživotně, bez měsíčních poplatků.</span></span>
+      <span class="fb-cta">Odemknout celý kurz za 800 Kč →</span>
+    </a>
 
     <div class="matcard">
       <h2>📎 Materiály ke stažení</h2>
@@ -324,8 +357,17 @@ ${materialsHtml}
     var TOTAL=${ordered.length};
     var SECS=${secsJson};
     var DONE={};
+    var BUY_URL='${BUY_URL}';
+    var FREEMODE = /[?&]preview=free/.test(location.search);  // živě: zapne se i pro přihlášené bez nákupu
+    function applyFreeMode(){ if(FREEMODE){ document.body.classList.add('freemode'); var b=document.getElementById('freeBanner'); if(b) b.style.display='flex'; } }
     function secDone(s){ var d=0; s.videos.forEach(function(v){ if(DONE[v.lid]) d++; }); return d; }
-    function lessonLi(v){ var dn=!!DONE[v.lid]; return '<li class="lesson'+(dn?' done':'')+'" data-lid="'+v.lid+'"><a href="/akademie/videokurz/'+v.slug+'/"><span class="chk"></span><span class="lt">'+v.disp+'</span><span class="go">Otevřít →</span></a></li>'; }
+    function lessonLi(v){
+      var dn=!!DONE[v.lid];
+      if (FREEMODE && !v.free) {
+        return '<li class="lesson locked"><a class="lockrow" href="'+BUY_URL+'"><span class="chk lock">🔒</span><span class="lt">'+v.disp+'</span><span class="go buy">Odemknout →</span></a></li>';
+      }
+      return '<li class="lesson'+(dn?' done':'')+'" data-lid="'+v.lid+'"><a href="/akademie/videokurz/'+v.slug+'/"><span class="chk"></span><span class="lt">'+v.disp+(v.free?'<span class="freetag">zdarma</span>':'')+'</span><span class="go">'+(v.free?'Přehrát zdarma →':'Otevřít →')+'</span></a></li>';
+    }
     function renderOverview(){
       var h='<div class="modgrid">';
       SECS.forEach(function(s,i){ var d=secDone(s), t=s.videos.length, p=t?Math.round(d/t*100):0;
@@ -362,14 +404,21 @@ ${materialsHtml}
       if (window.BA){
         window.BA.ready.then(function(){
           if (window.BA.mode==='live'){
-            window.BA.requireAccess('videokurz').then(function(ok){
-              if(!ok) return;
-              var n=document.getElementById('modeNote'); if(n) n.textContent='Tvůj postup se ukládá k účtu a synchronizuje se napříč zařízeními.';
-              window.BA.getProgress().then(render);
+            window.BA.getUser().then(function(u){
+              if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname); return; }
+              window.BA.hasEntitlement('videokurz').then(function(has){
+                if(!has) FREEMODE = true;          // přihlášený bez nákupu → ochutnávka + upsell
+                applyFreeMode();
+                var n=document.getElementById('modeNote');
+                if(n) n.textContent = has
+                  ? 'Tvůj postup se ukládá k účtu a synchronizuje se napříč zařízeními.'
+                  : 'Máš ochutnávku zdarma — pár úvodních lekcí je odemčených. Zbytek kurzu odemkneš jednorázovou koupí.';
+                window.BA.getProgress().then(render);
+              });
             });
-          } else { window.BA.getProgress().then(render); }
+          } else { applyFreeMode(); window.BA.getProgress().then(render); }
         });
-      } else { try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); } }
+      } else { applyFreeMode(); try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); } }
     }
     var BUCKET='${BUCKET}';
     function wireMaterials(){
