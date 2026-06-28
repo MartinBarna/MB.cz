@@ -172,7 +172,7 @@ function videoPage(v) {
 
     ${v.free ? `<a class="upsell" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz — 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců) — odemkneš jednorázově za 800 Kč. Doživotně.<span class="go2">Odemknout celý kurz za 800 Kč →</span></a>` : ''}
 
-    <p class="foot">© Videokurz Martin Barna — členská sekce.${v.free ? ' Tato lekce je dostupná zdarma jako ochutnávka.' : ' Video je dostupné jen přihlášeným s aktivním přístupem.'}</p>
+    <p class="foot">© Videokurz Martin Barna.${v.free ? ' Tato lekce je dostupná zdarma jako ochutnávka.' : ' Video je dostupné jen přihlášeným s aktivním přístupem.'}</p>
   </div>
 
   <script src="/assets/ba-config.js"></script>
