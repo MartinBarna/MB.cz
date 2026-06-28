@@ -59,21 +59,29 @@
   <script src="/assets/ba-academy.js"></script>
   <script src="/assets/scroll-top.js" defer></script>
   <script>
-    var LID='vk-2VXE7IpgIeU', PRODUCT='videokurz', FREE=false, state={done:false};
+    var LID='vk-2VXE7IpgIeU', PRODUCT='videokurz', FREE=false, GUEST=false, state={done:false};
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
+    function lsDone(){ try{ return !!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){ return false; } }
+    function lsSet(d){ try{ var o=JSON.parse(localStorage.getItem('ba_progress_v1')||'{}'); if(d) o[LID]=true; else delete o[LID]; localStorage.setItem('ba_progress_v1', JSON.stringify(o)); }catch(e){} }
     function load(){
       if (window.BA){
         window.BA.ready.then(function(){
           if (window.BA.mode==='live'){
-            if (FREE) { window.BA.getUser().then(function(u){ if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname); return; } window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+            if (FREE) {
+              // Ochutnávka zdarma: lekce je veřejná, hrá i bez přihlášení (žádný redirect-loop).
+              window.BA.getUser().then(function(u){
+                if(!u){ GUEST=true; state.done=lsDone(); paint(); return; }
+                window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); });
+              });
+            }
             else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
           }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
-      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+      } else { state.done=lsDone(); paint(); }
     }
-    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } });
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(GUEST){ lsSet(state.done); } else if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } else { lsSet(state.done); } });
     load();
   </script>
 </body>

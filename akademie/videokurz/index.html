@@ -209,7 +209,14 @@
         window.BA.ready.then(function(){
           if (window.BA.mode==='live'){
             window.BA.getUser().then(function(u){
-              if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname); return; }
+              if(!u){
+                // Nepřihlášený návštěvník → ochutnávka zdarma (žádný redirect na přihlášení).
+                FREEMODE = true; applyFreeMode();
+                var n0=document.getElementById('modeNote');
+                if(n0) n0.textContent='Máš ochutnávku zdarma — pár úvodních lekcí je odemčených. Zbytek kurzu odemkneš jednorázovou koupí.';
+                try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); }
+                return;
+              }
               window.BA.hasEntitlement('videokurz').then(function(has){
                 if(!has) FREEMODE = true;          // přihlášený bez nákupu → ochutnávka + upsell
                 applyFreeMode();
