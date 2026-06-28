@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="cs"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7denní makro plán pro ženy 30+ — Martin Barna</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+:root{--brand:#ff7a00;--brand2:#ff9d3c;--ink:#1a1714;--muted:#5d564d;--soft:#fff6ec;--line:#efe5d8;--paper:#fff;--b:#ff7a00;--s:#2e8be6;--t:#e0a020;}
+*{box-sizing:border-box;}html,body{margin:0;}
+body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#e9e7e4;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.sheet{max-width:840px;margin:24px auto;background:var(--paper);box-shadow:0 18px 50px rgba(0,0,0,.13);}
+.pad{padding:46px 52px;}
+.toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:12px;align-items:center;justify-content:center;padding:10px;font-size:.9rem;}
+.toolbar button{background:linear-gradient(145deg,var(--brand2),var(--brand));color:#160d04;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+.toolbar a{color:#cfc6bb;text-decoration:none;}
+/* hero */
+.head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:16px;}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand .mk{width:46px;height:46px;border-radius:12px;background:var(--brand);color:#fff;font-weight:800;font-size:1.15rem;display:flex;align-items:center;justify-content:center;}
+.brand .who{font-weight:800;font-size:1.05rem;line-height:1.15;}
+.brand .who small{display:block;font-weight:600;font-size:.72rem;color:var(--muted);letter-spacing:.03em;}
+.kick{text-align:right;font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);}
+h1{font-size:2.05rem;line-height:1.12;margin:22px 0 8px;letter-spacing:-.02em;}
+.lead{font-size:1.04rem;color:var(--muted);margin:0;}
+.kcalbadge{display:inline-block;margin-top:14px;background:var(--soft);border:1px solid var(--line);border-radius:50px;padding:7px 16px;font-weight:700;font-size:.92rem;}
+.kcalbadge b{color:var(--brand);}
+h2{font-size:1.28rem;margin:30px 0 12px;position:relative;padding-left:16px;}
+h2::before{content:"";position:absolute;left:0;top:.16em;bottom:.16em;width:5px;border-radius:3px;background:var(--brand);}
+p{margin:.5rem 0;}
+/* CTA banner (kalkulačka) */
+.cta-calc{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,#1a1714,#332b22);color:#fff;border-radius:18px;padding:20px 24px;margin:20px 0;}
+.cta-calc .ct{flex:1;min-width:220px;}
+.cta-calc .ct b{font-size:1.08rem;display:block;}
+.cta-calc .ct span{color:#d9cfc2;font-size:.9rem;}
+.cta-calc a{background:linear-gradient(145deg,var(--brand2),var(--brand));color:#160d04;font-weight:800;padding:13px 24px;border-radius:50px;text-decoration:none;white-space:nowrap;}
+/* makra */
+.macros{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:12px 0;}
+.mrow{display:grid;grid-template-columns:1.1fr 1.2fr 2fr;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);font-size:.92rem;align-items:center;}
+.mrow:last-child{border-bottom:none;}
+.mrow:nth-child(odd){background:var(--soft);}
+.mrow .ml{font-weight:700;}.mrow .mv{color:var(--brand);font-weight:700;}.mrow .mp{color:var(--muted);font-size:.86rem;}
+/* day card */
+.day{border:1px solid var(--line);border-radius:16px;margin:14px 0;overflow:hidden;break-inside:avoid;page-break-inside:avoid;}
+.dhead{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--soft);padding:12px 18px;border-bottom:1px solid var(--line);}
+.dl{display:flex;align-items:center;gap:10px;}
+.dname{font-weight:800;font-size:1.08rem;}
+.dtag{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 10px;border-radius:50px;}
+.t-train{background:#ffe8d2;color:#bb5a00;}.t-flex{background:#dcf3e4;color:#1f7a44;}.t-box{background:#e3edfb;color:#1f5fa6;}
+.dsum{font-size:.82rem;font-weight:700;color:var(--muted);text-align:right;}
+.meal{display:flex;align-items:flex-start;gap:13px;padding:12px 18px;border-bottom:1px solid var(--line);}
+.meal:last-child{border-bottom:none;}
+.meal .mi{font-size:1.2rem;width:26px;text-align:center;flex-shrink:0;}
+.meal .mc{flex:1;min-width:0;}
+.meal .mn{font-weight:700;font-size:.93rem;}
+.meal .md{color:var(--muted);font-size:.86rem;}
+.meal .mm{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0;}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:600;color:#fff;padding:2px 8px;border-radius:50px;white-space:nowrap;}
+.chip b{font-weight:800;}
+.chip.b{background:var(--b);}.chip.s{background:var(--s);}.chip.t{background:var(--t);}
+.chip.kcal{background:#3a322a;}
+.mm .chip{min-width:54px;justify-content:center;}
+.note{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:12px 16px;margin:14px 0;font-size:.9rem;}
+.note b{color:var(--brand);}
+/* shopping */
+.shop{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0;}
+.scol{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+.scol h4{margin:0 0 8px;font-size:.92rem;color:var(--brand);}
+.scol ul{list-style:none;padding:0;margin:0;}
+.scol li{padding:3px 0 3px 20px;position:relative;font-size:.86rem;}
+.scol li::before{content:"☐";position:absolute;left:0;color:var(--brand);}
+/* variants table */
+table.var{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;}
+table.var td{border:1px solid var(--line);padding:9px 12px;vertical-align:top;}
+table.var .vk{font-weight:700;width:34%;background:var(--soft);}
+/* lists */
+ul.check{list-style:none;padding:0;margin:.4rem 0;}
+ul.check li{padding:5px 0 5px 26px;position:relative;font-size:.92rem;}
+ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+ul.check.warn li::before{content:"⚠";color:#d98300;}
+ol.scale{margin:.4rem 0;padding-left:20px;}ol.scale li{padding:4px 0;font-size:.92rem;}
+/* next steps */
+.steps{display:grid;gap:10px;margin:12px 0;}
+.step{display:flex;align-items:center;gap:14px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-decoration:none;color:inherit;transition:border-color .2s;}
+.step:hover{border-color:var(--brand);}
+.step .si{width:42px;height:42px;border-radius:11px;background:var(--brand);color:#fff;font-size:1.25rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step .st{flex:1;}.step .st b{display:block;font-size:.97rem;}.step .st span{color:var(--muted);font-size:.85rem;}
+.step .sgo{color:var(--brand);font-weight:800;white-space:nowrap;font-size:.9rem;}
+.step.hot{background:linear-gradient(135deg,#fff1e2,#ffe3c7);border-color:var(--brand);}
+.foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;font-size:.82rem;color:var(--muted);}
+.foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+.disc{font-size:.72rem;color:#9b948b;margin-top:8px;}
+@media print{body{background:#fff;}.toolbar{display:none;}.sheet{box-shadow:none;margin:0;max-width:none;}.pad{padding:24px 28px;}@page{size:A4;margin:11mm;}h2{page-break-after:avoid;}}
+@media(max-width:680px){.pad{padding:28px 22px;}.shop{grid-template-columns:1fr;}.mrow{grid-template-columns:1fr;gap:2px;}.meal{flex-wrap:wrap;}.meal .mm{flex-direction:row;align-items:center;width:100%;}h1{font-size:1.55rem;}}
+</style></head>
+<body>
+<div class="toolbar"><button id="dl">⬇ Stáhnout / Tisk do PDF</button><a href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin/" target="_blank">🧮 Spočítat svá makra</a></div>
+<div class="sheet"><div class="pad">
+  <div class="head">
+    <div class="brand"><span class="mk">MB</span><span class="who">Martin Barna<small>Online výživa &amp; fitness</small></span></div>
+    <div class="kick">7DENNÍ MAKRO PLÁN · ŽENY 30+</div>
+  </div>
+  <h1>7denní makro plán pro ženy 30+</h1>
+  <p class="lead">Hotový týdenní jídelníček s přesnými porcemi a makry, nákupním seznamem a variantami. Jez chutně, do sytosti a hubni — bez hladovění a bez jojo efektu.</p>
+  <span class="kcalbadge">Start: <b>~1 500 kcal/den</b> · doškáluj podle kalkulačky</span>
+
+  <div class="note"><b>Jak plán používat (přečti jako první):</b> Plán je rozumný start. Není to dogma — svá přesná čísla si spočítáš za minutu v kalkulačce a podle nich plán jen doškáluješ (návod „jak zvětšit/zmenšit\" je níž). Hodnoty maker jsou zaokrouhlené a orientační — důležitý je směr, ne desetiny gramu.</div>
+
+  <h2>Proč makra fungují (a diety ne)</h2>
+  <p>Většina žen po třicítce už vyzkoušela desítky diet — keto, 1200 kcal, detoxy, „jen zelenina&quot;. Po každé se váha vrátila výš, protože restrikce ignoruje realitu: stres, hormony, děti, práci, spánek. Tělo se brání, metabolismus zpomalí a po návratu k „normálu&quot; jde váha nahoru. Řešení není další dieta, ale systém, který dodržíš i při stresu, dětech a občasné pizze. Místo počítání každého sousta hlídáš tři živiny.</p>
+
+  <div class="cta-calc"><div class="ct"><b>🧮 Nejdřív si spočítej svá čísla</b><span>Plán doladíš za minutu — kalorie a makra přímo na tebe.</span></div><a href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin/" target="_blank">Otevřít kalkulačku →</a></div>
+
+  <h2>Tvoje makra — základní vodítka</h2>
+  <div class="macros"><div class="mrow"><div class="ml">Bílkoviny</div><div class="mv">1,6–2,2 g / kg váhy</div><div class="mp">Sytost a udržení svalů (vyšší při hubnutí a tréninku)</div></div><div class="mrow"><div class="ml">Tuky</div><div class="mv">min. 0,8–1 g / kg</div><div class="mp">Hormony — po 30. roce klíčové</div></div><div class="mrow"><div class="ml">Sacharidy</div><div class="mv">zbytek do kalorií</div><div class="mp">Energie pro trénink, mozek a náladu</div></div><div class="mrow"><div class="ml">Pravidlo 80/20</div><div class="mv">80 % kvalitně, 20 % volně</div><div class="mp">Udržitelnost — pizza i víno se vejdou</div></div></div>
+
+  <h2>7denní jídelníček s porcemi a makry</h2>
+  <p class="disc">B = bílkoviny (g) · S = sacharidy (g) · T = tuky (g). Porce v syrovém stavu, není-li uvedeno jinak. Denní souhrn je orientační.</p>
+  <div class="day">
+      <div class="dhead"><div class="dl"><span class="dname">Pondělí</span><span class="dtag t-train">tréninkový den</span></div><div class="dsum">Σ ~1480 kcal · B 118 · S 146 · T 42</div></div>
+      <div class="meal"><div class="mi">🌅</div><div class="mc"><div class="mn">Snídaně</div><div class="md">Ovesná kaše: 50 g ovesných vloček + 25 g syrovátkový protein + 150 ml polotučné mléko + 100 g borůvek</div></div><div class="mm"><span class="chip b">B<b>32</b></span><span class="chip s">S<b>50</b></span><span class="chip t">T<b>8</b></span><span class="chip kcal">400<b>kcal</b></span></div></div><div class="meal"><div class="mi">☕</div><div class="mc"><div class="mn">Svačina</div><div class="md">150 g řecký jogurt (do 5 % tuku) + 15 g mandlí</div></div><div class="mm"><span class="chip b">B<b>17</b></span><span class="chip s">S<b>9</b></span><span class="chip t">T<b>11</b></span><span class="chip kcal">200<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍽️</div><div class="mc"><div class="mn">Oběd</div><div class="md">Kuřecí stir-fry: 130 g kuřecí prsa + 60 g rýže + 200 g zeleniny + 5 g oleje</div></div><div class="mm"><span class="chip b">B<b>38</b></span><span class="chip s">S<b>52</b></span><span class="chip t">T<b>9</b></span><span class="chip kcal">460<b>kcal</b></span></div></div><div class="meal"><div class="mi">🌙</div><div class="mc"><div class="mn">Večeře</div><div class="md">120 g losos + 150 g batáty + 150 g brokolice</div></div><div class="mm"><span class="chip b">B<b>31</b></span><span class="chip s">S<b>35</b></span><span class="chip t">T<b>14</b></span><span class="chip kcal">420<b>kcal</b></span></div></div>
+    </div><div class="day">
+      <div class="dhead"><div class="dl"><span class="dname">Úterý</span></div><div class="dsum">Σ ~1460 kcal · B 118 · S 135 · T 51</div></div>
+      <div class="meal"><div class="mi">🌅</div><div class="mc"><div class="mn">Snídaně</div><div class="md">Omeleta ze 3 vajec + 50 g špenát + 20 g eidam + 1 krajíc (40 g) celozrnného chleba</div></div><div class="mm"><span class="chip b">B<b>28</b></span><span class="chip s">S<b>22</b></span><span class="chip t">T<b>22</b></span><span class="chip kcal">400<b>kcal</b></span></div></div><div class="meal"><div class="mi">☕</div><div class="mc"><div class="mn">Svačina</div><div class="md">Proteinový shake (30 g protein) + banán (120 g)</div></div><div class="mm"><span class="chip b">B<b>28</b></span><span class="chip s">S<b>30</b></span><span class="chip t">T<b>3</b></span><span class="chip kcal">250<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍽️</div><div class="mc"><div class="mn">Oběd</div><div class="md">Quinoa salát: 60 g quinoa + 100 g tuňák ve vlastní šťávě + ½ avokáda (70 g) + zelenina</div></div><div class="mm"><span class="chip b">B<b>32</b></span><span class="chip s">S<b>45</b></span><span class="chip t">T<b>16</b></span><span class="chip kcal">450<b>kcal</b></span></div></div><div class="meal"><div class="mi">🌙</div><div class="mc"><div class="mn">Večeře</div><div class="md">120 g libové hovězí + 200 g brambor + zelenina</div></div><div class="mm"><span class="chip b">B<b>30</b></span><span class="chip s">S<b>38</b></span><span class="chip t">T<b>10</b></span><span class="chip kcal">360<b>kcal</b></span></div></div>
+    </div><div class="day">
+      <div class="dhead"><div class="dl"><span class="dname">Středa</span></div><div class="dsum">Σ ~1430 kcal · B 122 · S 137 · T 39</div></div>
+      <div class="meal"><div class="mi">🌅</div><div class="mc"><div class="mn">Snídaně</div><div class="md">200 g řecký jogurt + 30 g granola + 100 g ovoce</div></div><div class="mm"><span class="chip b">B<b>22</b></span><span class="chip s">S<b>45</b></span><span class="chip t">T<b>8</b></span><span class="chip kcal">340<b>kcal</b></span></div></div><div class="meal"><div class="mi">☕</div><div class="mc"><div class="mn">Svačina</div><div class="md">200 g cottage + 100 g ovoce</div></div><div class="mm"><span class="chip b">B<b>24</b></span><span class="chip s">S<b>16</b></span><span class="chip t">T<b>5</b></span><span class="chip kcal">200<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍽️</div><div class="mc"><div class="mn">Oběd</div><div class="md">Kuřecí wrap: celozrnná tortilla (60 g) + 120 g kuřecí + 30 g hummus + zelenina</div></div><div class="mm"><span class="chip b">B<b>38</b></span><span class="chip s">S<b>44</b></span><span class="chip t">T<b>14</b></span><span class="chip kcal">460<b>kcal</b></span></div></div><div class="meal"><div class="mi">🌙</div><div class="mc"><div class="mn">Večeře</div><div class="md">150 g pečené kuře + 150 g batáty + velký salát</div></div><div class="mm"><span class="chip b">B<b>40</b></span><span class="chip s">S<b>32</b></span><span class="chip t">T<b>12</b></span><span class="chip kcal">420<b>kcal</b></span></div></div>
+    </div><div class="day">
+      <div class="dhead"><div class="dl"><span class="dname">Čtvrtek</span><span class="dtag t-train">tréninkový den</span></div><div class="dsum">Σ ~1490 kcal · B 123 · S 148 · T 45</div></div>
+      <div class="meal"><div class="mi">🌅</div><div class="mc"><div class="mn">Snídaně</div><div class="md">Proteinové palačinky: 1 vejce + 30 g protein + 40 g ovesná mouka + 100 g ovoce</div></div><div class="mm"><span class="chip b">B<b>35</b></span><span class="chip s">S<b>40</b></span><span class="chip t">T<b>9</b></span><span class="chip kcal">380<b>kcal</b></span></div></div><div class="meal"><div class="mi">☕</div><div class="mc"><div class="mn">Svačina</div><div class="md">1 proteinová tyčinka + 15 g mandlí</div></div><div class="mm"><span class="chip b">B<b>20</b></span><span class="chip s">S<b>20</b></span><span class="chip t">T<b>12</b></span><span class="chip kcal">270<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍽️</div><div class="mc"><div class="mn">Oběd</div><div class="md">Lososový salát: 120 g losos + 50 g quinoa + zelenina + 5 g olivový olej</div></div><div class="mm"><span class="chip b">B<b>30</b></span><span class="chip s">S<b>38</b></span><span class="chip t">T<b>18</b></span><span class="chip kcal">440<b>kcal</b></span></div></div><div class="meal"><div class="mi">🌙</div><div class="mc"><div class="mn">Večeře</div><div class="md">130 g krůtí maso + 60 g rýže + zelenina</div></div><div class="mm"><span class="chip b">B<b>38</b></span><span class="chip s">S<b>50</b></span><span class="chip t">T<b>6</b></span><span class="chip kcal">410<b>kcal</b></span></div></div>
+    </div><div class="day">
+      <div class="dhead"><div class="dl"><span class="dname">Pátek</span></div><div class="dsum">Σ ~1430 kcal · B 100 · S 130 · T 55</div></div>
+      <div class="meal"><div class="mi">🌅</div><div class="mc"><div class="mn">Snídaně</div><div class="md">Vaječná míchanice: 3 vejce + ½ avokáda (70 g) + 1 krajíc (40 g) celozrnného chleba</div></div><div class="mm"><span class="chip b">B<b>24</b></span><span class="chip s">S<b>22</b></span><span class="chip t">T<b>24</b></span><span class="chip kcal">400<b>kcal</b></span></div></div><div class="meal"><div class="mi">☕</div><div class="mc"><div class="mn">Svačina</div><div class="md">150 g bílý jogurt + 100 g ovoce</div></div><div class="mm"><span class="chip b">B<b>10</b></span><span class="chip s">S<b>22</b></span><span class="chip t">T<b>3</b></span><span class="chip kcal">150<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍽️</div><div class="mc"><div class="mn">Oběd</div><div class="md">70 g celozrnné těstoviny + 120 g mleté hovězí (10 %) + rajčatová omáčka + zelenina</div></div><div class="mm"><span class="chip b">B<b>38</b></span><span class="chip s">S<b>55</b></span><span class="chip t">T<b>14</b></span><span class="chip kcal">500<b>kcal</b></span></div></div><div class="meal"><div class="mi">🌙</div><div class="mc"><div class="mn">Večeře</div><div class="md">120 g grilovaný losos + 150 g batáty</div></div><div class="mm"><span class="chip b">B<b>28</b></span><span class="chip s">S<b>31</b></span><span class="chip t">T<b>14</b></span><span class="chip kcal">380<b>kcal</b></span></div></div>
+    </div><div class="day">
+      <div class="dhead"><div class="dl"><span class="dname">Sobota</span><span class="dtag t-flex">flex den</span></div><div class="dsum">Σ ~1500 kcal · drž bílkoviny, zbytek volněji</div></div>
+      <div class="meal"><div class="mi">🌅</div><div class="mc"><div class="mn">Snídaně</div><div class="md">150 g tvaroh + 100 g ovoce + 10 g med</div></div><div class="mm"><span class="chip b">B<b>25</b></span><span class="chip s">S<b>25</b></span><span class="chip t">T<b>2</b></span><span class="chip kcal">230<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍽️</div><div class="mc"><div class="mn">Oběd</div><div class="md">Velký kuřecí salát: 150 g kuřecí + zelenina + 50 g pečivo</div></div><div class="mm"><span class="chip b">B<b>40</b></span><span class="chip s">S<b>30</b></span><span class="chip t">T<b>10</b></span><span class="chip kcal">360<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍕</div><div class="mc"><div class="mn">Večeře (volnější)</div><div class="md">2 kousky pizzy (~250 g) — vychutnej si to bez výčitek</div></div><div class="mm"><span class="chip b">B<b>24</b></span><span class="chip s">S<b>60</b></span><span class="chip t">T<b>24</b></span><span class="chip kcal">540<b>kcal</b></span></div></div><div class="meal"><div class="mi">☕</div><div class="mc"><div class="mn">Svačina</div><div class="md">Proteinový shake (25 g protein)</div></div><div class="mm"><span class="chip b">B<b>25</b></span><span class="chip s">S<b>5</b></span><span class="chip t">T<b>2</b></span><span class="chip kcal">150<b>kcal</b></span></div></div>
+    </div><div class="day">
+      <div class="dhead"><div class="dl"><span class="dname">Neděle</span></div><div class="dsum">Σ ~1450 kcal · B 130 · S 120 · T 48</div></div>
+      <div class="meal"><div class="mi">🌅</div><div class="mc"><div class="mn">Snídaně</div><div class="md">Omeleta ze 3 vajec + 30 g sýr + zelenina</div></div><div class="mm"><span class="chip b">B<b>28</b></span><span class="chip s">S<b>6</b></span><span class="chip t">T<b>24</b></span><span class="chip kcal">350<b>kcal</b></span></div></div><div class="meal"><div class="mi">☕</div><div class="mc"><div class="mn">Svačina</div><div class="md">Proteinový pudink: 200 ml mléko + 25 g protein</div></div><div class="mm"><span class="chip b">B<b>28</b></span><span class="chip s">S<b>18</b></span><span class="chip t">T<b>4</b></span><span class="chip kcal">230<b>kcal</b></span></div></div><div class="meal"><div class="mi">🍽️</div><div class="mc"><div class="mn">Oběd</div><div class="md">Kuřecí vývar + salát s tuňákem (100 g tuňák + zelenina + 40 g pečivo)</div></div><div class="mm"><span class="chip b">B<b>35</b></span><span class="chip s">S<b>28</b></span><span class="chip t">T<b>8</b></span><span class="chip kcal">330<b>kcal</b></span></div></div><div class="meal"><div class="mi">🌙</div><div class="mc"><div class="mn">Večeře</div><div class="md">150 g pečené kuře + 150 g batáty + 150 g brokolice</div></div><div class="mm"><span class="chip b">B<b>42</b></span><span class="chip s">S<b>38</b></span><span class="chip t">T<b>12</b></span><span class="chip kcal">440<b>kcal</b></span></div></div>
+    </div>
+  <div class="note">Flex den = ventil, ne polštář. Drž bílkoviny vysoko a dej si JEDNO volnější jídlo, ne celý volný den.</div>
+
+  <h2>Nákupní seznam na týden</h2>
+  <div class="shop"><div class="scol"><h4>Bílkoviny</h4><ul><li>Kuřecí prsa — 700 g</li><li>Krůtí maso — 150 g</li><li>Libové + mleté hovězí (10 %) — 250 g</li><li>Losos — 360 g</li><li>Tuňák ve vlastní šťávě — 2 plechovky</li><li>Vejce — 14 ks</li><li>Syrovátkový protein — balení</li><li>Proteinová tyčinka — 1 ks</li></ul></div><div class="scol"><h4>Mléčné</h4><ul><li>Řecký jogurt — 550 g</li><li>Bílý jogurt — 150 g</li><li>Tvaroh — 150 g · Cottage — 200 g</li><li>Polotučné mléko — 1 l</li><li>Eidam / sýr — 70 g</li></ul></div><div class="scol"><h4>Sacharidy</h4><ul><li>Ovesné vločky — 100 g + ovesná mouka 40 g</li><li>Rýže — 120 g · Quinoa — 110 g</li><li>Batáty — 600 g · Brambory — 200 g</li><li>Celozrnné těstoviny — 70 g</li><li>Celozrnný chléb / pečivo — ½ bochníku</li><li>Celozrnná tortilla — 1 ks · Granola — 30 g</li></ul></div><div class="scol"><h4>Tuky · zelenina · ovoce</h4><ul><li>Mandle — 60 g · Avokádo — 2 ks</li><li>Olivový / řepkový olej · Hummus — 30 g</li><li>Brokolice, špenát + mix zeleniny na týden</li><li>Ovoce: borůvky, banány, jablka dle chuti</li><li>Rajčatová omáčka / passata — 1 ks · med</li></ul></div></div>
+
+  <h2>Varianty — zaměň, co ti nechutná</h2>
+  <p class="disc">Nemusíš jíst přesně tohle. Drž porci dané kategorie a vyměň potravinu kus za kus (makra zůstanou ±stejná).</p>
+  <table class="var"><tr><td class="vk">Bílkovina (~130 g masa)</td><td>kuřecí prsa ↔ krůtí ↔ libové hovězí ↔ ryba (losos/treska/tuňák) ↔ tofu/tempeh ↔ 150 g tvarohu/cottage ↔ 3 vejce + 30 g sýr</td></tr><tr><td class="vk">Sacharid (~50 g syrového)</td><td>rýže ↔ brambory ↔ batáty ↔ celozrnné těstoviny ↔ quinoa ↔ kuskus ↔ 2 krajíce celozrnného chleba ↔ velká tortilla</td></tr><tr><td class="vk">Tuk</td><td>15 g mandlí ↔ 15 g jiných ořechů ↔ ½ avokáda ↔ 1 lžíce olivového oleje ↔ 1 lžíce arašídového másla</td></tr><tr><td class="vk">Zelenina</td><td>libovolná: brokolice, špenát, papriky, cuketa, rajčata, salát, lilek — bez omezení</td></tr><tr><td class="vk">Snídaně</td><td>ovesná kaše ↔ proteinové palačinky ↔ jogurt s granolou ↔ vaječná omeleta ↔ tvaroh s ovocem</td></tr><tr><td class="vk">Svačina</td><td>jogurt + ořechy ↔ protein. shake + ovoce ↔ cottage ↔ tvaroh ↔ proteinová tyčinka</td></tr></table>
+
+  <h2>Jak si plán zvětšit nebo zmenšit</h2>
+  <ol class="scale"><li><b>Potřebuješ víc (+200–300 kcal)</b> — Přidej 1 porci sacharidu navíc (např. +40 g rýže/ovsa nebo +1 kus pečiva) a 1 ovoce.</li><li><b>Potřebuješ míň (−200–300 kcal)</b> — Uber polovinu sacharidu u 1–2 jídel a vynech přidané tuky (olej, ořechy).</li><li><b>Trénuješ?</b> — Dej víc sacharidů kolem tréninku (před + po).</li><li><b>Bílkoviny</b> — Drž vždy nahoře — klíč k sytosti a udržení svalů.</li></ol>
+
+  <h2>5 pravidel, bez kterých to nepojede</h2>
+  <ul class="check"><li>Pij 2,5–3 l vody denně.</li><li>Spi 7–8 hodin — bez spánku makra nefungují tak dobře.</li><li>Trénuj 3–4× týdně (síla + případně cardio).</li><li>1× týdně flex den — pomáhá psychicky i metabolicky.</li><li>Nebuď perfektní, buď konzistentní 80 % času.</li></ul>
+  
+
+  <h2>Tvůj další krok</h2>
+  <div class="steps">
+    <a class="step" href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin/" target="_blank"><span class="si">🧮</span><span class="st"><b>Spočítej si přesná makra</b><span>Čísla přímo na tebe — minuta práce.</span></span><span class="sgo">Kalkulačka →</span></a>
+    <a class="step hot" href="https://www.martinbarna.cz/videokurz#zdarma" target="_blank"><span class="si">🎬</span><span class="st"><b>Vyzkoušej videokurz ZDARMA</b><span>Zaregistruj se a prvních pár lekcí máš zdarma — jak jíst, počítat makra a hubnout bez jojo. Bez karty.</span></span><span class="sgo">Spustit zdarma →</span></a>
+    <a class="step" href="https://form.simpleshop.cz/3Vbl/buy/" target="_blank"><span class="si">💪</span><span class="st"><b>Chceš celý systém?</b><span>Videokurz výživy — 182 videí + bonusy, doživotně. Vše, co učím klienty.</span></span><span class="sgo">Videokurz →</span></a>
+    <a class="step" href="https://wa.me/420603229831" target="_blank"><span class="si">📞</span><span class="st"><b>Chceš to na míru?</b><span>Napiš mi „CALL\" na WhatsApp a domluvíme krátký hovor zdarma.</span></span><span class="sgo">WhatsApp →</span></a>
+  </div>
+
+  <div class="foot">
+    <b>Martin Barna</b> · <a href="https://www.martinbarna.cz">martinbarna.cz</a> · @martinbarnaonlinevyzivafitness · Be Effective!
+    <div class="disc">Tento materiál je obecné vzdělávací vodítko, ne individuální lékařská či dietní rada.</div>
+  </div>
+</div></div>
+<script>document.getElementById('dl').addEventListener('click',function(){window.print();});</script>
+</body></html>
