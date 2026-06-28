@@ -468,7 +468,11 @@
         html = '<div class="searchres">';
         res.forEach(function(r){
           var dn = DONE[r.l.id];
-          html += '<a href="'+r.l.href+'"><span class="sm">M'+(r.mi+1)+'</span><span class="st">'+r.l.t+'</span>'+(dn?'<span class="sd">✓ hotovo</span>':'<span class="sd" style="color:var(--gold-soft)">Otevřít →</span>')+'</a>';
+          if (FREEMODE && !FREE[r.l.id]) {
+            html += '<a href="'+BUY_URL+'"><span class="sm">M'+(r.mi+1)+'</span><span class="st">'+r.l.t+'</span><span class="sd buy" style="color:var(--gold-soft)">🔒 Odemknout →</span></a>';
+          } else {
+            html += '<a href="'+r.l.href+'"><span class="sm">M'+(r.mi+1)+'</span><span class="st">'+r.l.t+'</span>'+(dn?'<span class="sd">✓ hotovo</span>':'<span class="sd" style="color:var(--gold-soft)">'+(FREEMODE&&FREE[r.l.id]?'🔓 Zdarma →':'Otevřít →')+'</span>')+'</a>';
+          }
         });
         html += '</div>';
       }
