@@ -36,8 +36,10 @@
         }).then(function (r) { return r.json().catch(function () { return { ok: r.ok }; }); })
           .then(function (res) {
             if (res && res.ok) {
-              try { if (window.fbq) fbq('track', 'Lead', { content_name: 'Lead magnet' }); } catch (e) {}
-              try { if (window.gtag) gtag('event', 'generate_lead', { method: 'lead_magnet' }); } catch (e) {}
+              try {
+                if (window.mbTrackLead) window.mbTrackLead('lead_magnet', { segment: seg, lead_source: src });
+                else { if (window.fbq) fbq('track', 'Lead', { content_name: 'Lead magnet' }); if (window.gtag) gtag('event', 'generate_lead', { method: 'lead_magnet' }); }
+              } catch (e) {}
               var dl = pdf ? '<a class="btn" href="' + pdf + '" target="_blank" rel="noopener" style="margin-top:12px;display:inline-block">Stáhnout plán (PDF) →</a>' : '';
               form.innerHTML =
                 '<div style="text-align:center;padding:14px 6px;">' +

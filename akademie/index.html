@@ -136,7 +136,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="/"><img src="/assets/brand/mb-mark.png" alt="Martin Barna — logo" height="32" width="65" style="display:block;height:32px;width:auto;aspect-ratio:194/96;flex-shrink:0"><span>Barna Academy</span></a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/"><img src="/assets/brand/mb-mark.png" alt="Martin Barna — logo" height="32" width="65" style="display:block;height:32px;width:auto;aspect-ratio:194/96;flex-shrink:0" decoding="async"><span>Barna Academy</span></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Otevřít menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -382,7 +382,7 @@
                 <p class="ac-alt mb-0">Radši napřímo? <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20z%C3%A1jem%20o%20Barna%20Academy%20-%20dej%20v%C4%9Bd%C4%9Bt%20p%C5%99i%20spu%C5%A1t%C4%9Bn%C3%AD" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:martin@martinbarna.cz?subject=Z%C3%A1jem%20o%20Barna%20Academy">martin@martinbarna.cz</a></p>
                 <!-- QR pro počítač (na mobilu skryto, tam stačí tlačítko/odkaz) -->
                 <div class="ac-qr">
-                    <img src="/assets/qr/wa-academy.svg" alt="QR kód pro WhatsApp chat s Martinem Barnou" width="92" height="92" loading="lazy">
+                    <img src="/assets/qr/wa-academy.svg" alt="QR kód pro WhatsApp chat s Martinem Barnou" width="92" height="92" loading="lazy" decoding="async">
                     <span><strong style="color:#fff;">Jsi na počítači?</strong><br>Naskenuj QR mobilem a napiš mi rovnou na WhatsApp — nebo vyplň formulář výš a ozvu se na e-mail.</span>
                 </div>
                 <div class="vk-guarantee">
@@ -419,6 +419,7 @@
                 fetch('https://formsubmit.co/ajax/martin@martinbarna.cz', {
                     method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(_acf)
                 }).then(function (r) { return r.json(); }).then(function () {
+                    if (window.mbTrackLead) window.mbTrackLead('akademie_cekaci_listina');
                     var d = document.getElementById('acDiky'); if (d) d.style.display = 'block';
                     _acf.style.display = 'none';
                     if (d) d.scrollIntoView({ behavior: 'smooth', block: 'center' });

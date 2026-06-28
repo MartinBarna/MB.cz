@@ -76,6 +76,18 @@
     gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
   }
   function loadMetaPixelAndConvert() { loadMetaPixel(); fireConvFB(); }
+  // Veřejný helper, ať i appka (registrace magic-link, čekací listina Academy) hlásí Lead
+  // konzistentně do Meta i GA4. Když návštěvník odmítl cookies, fbq neexistuje → do Meta nic,
+  // GA4 v consent mode pošle cookieless ping. To je správné GDPR chování.
+  function trackLead(method, extra) {
+    var props = extra || {};
+    var fbProps = { content_name: method || 'lead' };
+    var gaProps = { method: method || 'lead' };
+    for (var k in props) { if (props.hasOwnProperty(k)) { fbProps[k] = props[k]; gaProps[k] = props[k]; } }
+    if (window.fbq)  fbq('track', 'Lead', fbProps, { eventID: evId('lead') });
+    if (window.gtag) gtag('event', 'generate_lead', gaProps);
+  }
+  window.mbTrackLead = trackLead;
   function wireConversions() {
     // Klik na nákup (SimpleShop) → InitiateCheckout / begin_checkout
     document.addEventListener('click', function (e) {
