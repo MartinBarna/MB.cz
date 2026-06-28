@@ -184,6 +184,13 @@
       try{ window.scrollTo(0,0); }catch(e){}
     }
     function firstUnfinished(){ for(var i=0;i<SECS.length;i++){ if(secDone(SECS[i])<SECS[i].videos.length) return i; } return -1; }
+    // #34 „Pokračovat, kde jsi skončil" — první nedokončené a přístupné video (deep-link do lekce).
+    function nextVideo(){
+      for(var i=0;i<SECS.length;i++){ var vs=SECS[i].videos;
+        for(var j=0;j<vs.length;j++){ var v=vs[j]; if(!DONE[v.lid] && (!FREEMODE || v.free)) return v; } }
+      return null;
+    }
+    function startedAny(){ for(var k in DONE){ if(DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
     function route(){ var hsh=(location.hash||'').replace('#',''); var m=hsh.match(/^s(\d+)$/); if(m) renderSection(parseInt(m[1],10)-1); else renderOverview(); }
     function render(done){
       DONE=done||{};
@@ -191,9 +198,9 @@
       var pct=TOTAL?Math.round(cnt/TOTAL*100):0;
       document.getElementById('bigbar').style.width=pct+'%';
       document.getElementById('bigpct').textContent='Tvůj postup: '+cnt+' / '+TOTAL+' zhlédnuto ('+pct+' %)';
-      var hero=document.querySelector('.hero'), cb=document.getElementById('contBtn'), fi=firstUnfinished();
+      var hero=document.querySelector('.hero'), cb=document.getElementById('contBtn'), nv=nextVideo();
       if(!cb&&hero){ cb=document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
-      if(cb){ if(fi>=0){ cb.style.display='inline-flex'; cb.textContent='Pokračovat: '+SECS[fi].name+' →'; cb.href='#s'+(fi+1); } else { cb.style.display='none'; } }
+      if(cb){ if(nv){ cb.style.display='inline-flex'; cb.textContent=(startedAny()?'▶ Pokračovat: ':'▶ Začít: ')+nv.disp; cb.href='/akademie/videokurz/'+nv.slug+'/'; } else { cb.style.display='none'; } }
       route();
     }
     window.addEventListener('hashchange', route);

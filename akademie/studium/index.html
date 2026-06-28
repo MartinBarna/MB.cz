@@ -398,6 +398,15 @@
       try { window.scrollTo(0,0); } catch(e){}
     }
     function firstUnfinished(){ for (var i=0;i<CURRICULUM.length;i++){ var c=mc(CURRICULUM[i]); if (c.a && c.d<c.a) return i; } return -1; }
+    // #34 „Pokračovat, kde jsi skončil" — najdi přesně první dostupnou nedokončenou lekci (ne jen modul).
+    function nextLesson(){
+      for (var i=0;i<CURRICULUM.length;i++){
+        var ls=CURRICULUM[i].lessons;
+        for (var j=0;j<ls.length;j++){ if (ls[j].available && !DONE[ls[j].id]) return { mi:i, l:ls[j] }; }
+      }
+      return null;
+    }
+    function startedAny(){ for (var k in DONE){ if (DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
     function route(){
       var h = (location.hash||'').replace('#',''); var m = h.match(/^m(\d+)$/);
       if (m) renderModule(parseInt(m[1],10)-1); else renderOverview();
@@ -407,9 +416,16 @@
       var overall = ta? Math.round(co/ta*100) : 0;
       document.getElementById('progBar').style.width = overall+'%';
       document.getElementById('progLbl').textContent = co+' z '+ta+' dostupných lekcí · '+overall+' % dokončeno';
-      var hero = document.querySelector('.hello'), cb = document.getElementById('contBtn'), fi = firstUnfinished();
+      var hero = document.querySelector('.hello'), cb = document.getElementById('contBtn'), nx = nextLesson();
       if (!cb && hero){ cb = document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
-      if (cb){ if (fi>=0){ cb.style.display='inline-flex'; cb.textContent='Pokračovat: '+CURRICULUM[fi].t+' →'; cb.href='#m'+(fi+1); } else { cb.style.display='none'; } }
+      if (cb){
+        if (nx){
+          cb.style.display='inline-flex';
+          // přeskoč přímo do lekce, kde návštěvník skončil (ne jen do modulu)
+          cb.textContent = (startedAny()? '▶ Pokračovat: ' : '▶ Začít: ') + nx.l.t;
+          cb.href = nx.l.href;
+        } else { cb.style.display='none'; }
+      }
       if (ta>0 && co===ta){
         var cc = document.getElementById('certCard'); cc.classList.add('ready');
         document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
