@@ -105,10 +105,17 @@ SECTIONS.forEach(s => {
 });
 // přiřaď výsledné pořadové číslo + slug složky
 ordered.forEach((v, i) => { v.n = i + 1; v.slug = 'v' + String(i + 1).padStart(3, '0'); v.lid = 'vk-' + v.id; });
-// Free tier (#35/#37): prvních pár lekcí zdarma jako ochutnávka pro registrované bez nákupu → upsell na koupi.
-const FREE_COUNT = 4;
+// Free tier (#35/#37): ochutnávka napříč kurzem — Modul 1 první 4 lekce + první lekce
+// z každého dalšího modulu (m2–m8), ať návštěvník vidí šíři kurzu → silnější upsell na koupi.
 const BUY_URL = 'https://form.simpleshop.cz/3Vbl/buy/';
-ordered.forEach((v, i) => { v.free = i < FREE_COUNT; });
+const _secSeen = {};
+ordered.forEach((v) => {
+  const k = v.sec; _secSeen[k] = (_secSeen[k] || 0) + 1; const idx = _secSeen[k];
+  if (k === 'm1') v.free = idx <= 4;
+  else if (/^m[2-8]$/.test(k)) v.free = idx <= 1;
+  else v.free = false;
+});
+const FREE_COUNT = ordered.filter((v) => v.free).length;
 
 function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -336,7 +343,7 @@ function dashboard() {
     </div>
 
     <a id="freeBanner" class="freebanner" href="${BUY_URL}" style="display:none;">
-      <span class="fb-txt"><b>🎁 Máš ochutnávku zdarma</b><span>Pár úvodních lekcí je odemčených. Celý kurz — 182 videí + všechny bonusy — odemkneš jednorázově za 800 Kč, s kódem ZACNI15 jen 680 Kč. Doživotně, bez měsíčních poplatků.</span></span>
+      <span class="fb-txt"><b>🎁 Máš ochutnávku zdarma</b><span>Odemčené máš ukázky napříč všemi moduly — vidíš, co tě v kurzu čeká. Celý kurz — 182 videí + všechny bonusy — odemkneš jednorázově za 800 Kč, s kódem ZACNI15 jen 680 Kč. Doživotně, bez měsíčních poplatků.</span></span>
       <span class="fb-cta">Odemknout — 680 Kč s ZACNI15 →</span>
     </a>
 
@@ -424,7 +431,7 @@ ${materialsHtml}
                 // Nepřihlášený návštěvník → ochutnávka zdarma (žádný redirect na přihlášení).
                 FREEMODE = true; applyFreeMode();
                 var n0=document.getElementById('modeNote');
-                if(n0) n0.textContent='Máš ochutnávku zdarma — pár úvodních lekcí je odemčených. Zbytek kurzu odemkneš jednorázovou koupí.';
+                if(n0) n0.textContent='Máš ochutnávku zdarma — odemčené máš ukázky napříč všemi moduly. Zbytek kurzu odemkneš jednorázovou koupí.';
                 try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); }
                 return;
               }
@@ -434,7 +441,7 @@ ${materialsHtml}
                 var n=document.getElementById('modeNote');
                 if(n) n.textContent = has
                   ? 'Tvůj postup se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Máš ochutnávku zdarma — pár úvodních lekcí je odemčených. Zbytek kurzu odemkneš jednorázovou koupí.';
+                  : 'Máš ochutnávku zdarma — odemčené máš ukázky napříč všemi moduly. Zbytek kurzu odemkneš jednorázovou koupí.';
                 window.BA.getProgress().then(render);
               });
             });
