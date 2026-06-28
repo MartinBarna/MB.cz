@@ -10,8 +10,8 @@
 |---|-----|------|-----|
 | 1 | 0 (ihned) | doručení | předat lead magnet, nastavit očekávání |
 | 2 | +2 | hodnota | důvěra — nejčastější chyba |
-| 3 | +4 | hodnota | důvěra — jak jíst flexibilně + soft zmínka kurzu |
-| 4 | +6 | **course offer** | nabídka videokurzu 800 Kč |
+| 3 | +4 | hodnota + free | jak jíst flexibilně + **ochutnávka videokurzu zdarma** (registrace → pár lekcí) |
+| 4 | +6 | **course offer** | nabídka videokurzu 800 Kč (navazuje na ochutnávku) |
 | 5 | +9 | **discount** | sleva na kurz (jen kdo neklikl/nekoupil) |
 | 6 | +14 | **affiliate** | doporučení + komunita |
 
@@ -83,7 +83,11 @@ Funguje to jednoduše — **neprodávám ryby, učím rybařit**. Místo striktn
 2. **Nejdřív zelenina a bílkovina, pak zbytek** — automaticky sníš míň, bez hladu.
 3. **Plánuj dopředu** — méně rozhodování = víc úspěchu.
 
-Tohle všechno (a mnohem víc do hloubky) Tě krok za krokem provedu ve svém **videokurzu**. Ale o tom víc příště — dnes si vyzkoušej ten bod 1 ✅
+Tohle všechno (a mnohem víc) Tě krok za krokem provedu ve videokurzu — a **první lekce si můžeš pustit zdarma**. Stačí se zaregistrovat, žádná karta:
+
+👉 **[Pustit první lekce videokurzu zdarma](https://www.martinbarna.cz/videokurz#zdarma)**
+
+Mrkni, jak to vypadá uvnitř. Dneska ale hlavně zkus ten bod 1 ✅ — a jestli Ti ochutnávka sedne, o celém kurzu si řekneme příště.
 
 **Be Effective!**
 Martin
@@ -96,7 +100,7 @@ Martin
 
 Ahoj {{first_name}},
 
-Plán máš. Pár principů taky. Jestli chceš **celý systém** — ne jen ochutnávku — mám pro Tebe **Videokurz výživy**.
+Plán máš, pár principů taky a třeba sis pustil{a} i první lekce videokurzu zdarma. Jestli chceš **celý systém** — ne jen ochutnávku — mám pro Tebe celý **Videokurz výživy**.
 
 Je to všechno, co roky učím své klienty za tisíce korun měsíčně, sepsané a natočené tak, aby to pochopil úplný začátečník:
 - jak si **sám{a} sestavíš jídelníček**, který Tě baví a funguje
