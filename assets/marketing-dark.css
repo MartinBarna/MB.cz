@@ -190,6 +190,9 @@ select option, select optgroup { color:#161616; background:#fff; }
 
 /* feature ikony: page CSS dává color:#161616 (tmavá ikona) → na dark mizí; přebij na zlatou */
 .feature .ico, .feature .ico .mb-ico, #blog .card .ico { color:var(--bd-gold-soft)!important; }
+/* Blog ikony na homepage = prosté emoji, ne boxík. (line-height:0 + oranžový box výše
+   srazil ikonu na tenkou linku a emoji pak přetékalo přes nadpis.) */
+#blog .card .ico { background:none!important; border:none!important; line-height:1!important; }
 .feature .ico { background:linear-gradient(145deg,rgba(255,122,0,.2),rgba(255,122,0,.05))!important; border:1px solid rgba(255,122,0,.28)!important; }
 
 /* Bootstrap accordion (homepage FAQ) — nebyl pokrytý → bílá karta + faint text */
