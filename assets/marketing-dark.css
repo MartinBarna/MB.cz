@@ -89,13 +89,14 @@ article p, .post p, article li, .post li { color:var(--bd-muted2)!important; }
 /* ghost nadpisy s inline tmavou barvou (color:var(--green-dark)/#161616) */
 h2[style*="--green-dark"], h3[style*="--green-dark"],
 h2[style*="#161616"], h3[style*="#161616"] { color:#fff!important; }
-.cta-box, .author-box, .price-card, .rev {
+.cta-box, .author-box, .price-card, .rev, .recipe {
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))!important;
   border:1px solid var(--bd-line)!important;
   box-shadow:0 24px 50px -34px rgba(0,0,0,.9)!important; color:var(--bd-ink)!important;
 }
-.cta-box h2, .cta-box h3, .author-box h3, .author-box h4, .price-card .qty, .rev figcaption { color:#fff!important; }
-.cta-box p, .author-box p, .price-card .per, .rev blockquote { color:var(--bd-muted2)!important; }
+.cta-box h2, .cta-box h3, .author-box h3, .author-box h4, .price-card .qty, .rev figcaption, .recipe h3 { color:#fff!important; }
+.cta-box p, .author-box p, .price-card .per, .rev blockquote, .recipe li { color:var(--bd-muted2)!important; }
+.recipe h3 span { color:var(--bd-muted2)!important; }
 .price-card.featured, .price-card.best { border-color:rgba(255,122,0,.5)!important; box-shadow:0 40px 90px -40px rgba(255,122,0,.3)!important; }
 .price-card .total { color:#fff!important; }
 .rev .stars, .stars { color:#ffb300!important; }

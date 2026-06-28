@@ -605,7 +605,13 @@
   </url>
   <url>
     <loc>https://martinbarna.cz/clanky/vyziva-sportujiciho-ditete.html</loc>
-    <lastmod>2026-06-27</lastmod>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://martinbarna.cz/clanky/hydratace-deti-sport.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
