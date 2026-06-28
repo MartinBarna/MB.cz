@@ -223,6 +223,7 @@ function dashboard() {
     videos: s.list.map(v => ({ lid: v.lid, disp: v.disp, slug: v.slug, free: !!v.free }))
   }));
   const secsJson = JSON.stringify(secsData);
+  const matsJson = JSON.stringify(MATERIALS.map(m => ({ ico: m.ico, t: m.t, d: m.d, link: m.link || '', file: m.file || '' })));
 
   const materialsHtml = MATERIALS.map(m => {
     const action = m.link
@@ -347,13 +348,6 @@ function dashboard() {
       <span class="fb-cta">Odemknout — 680 Kč s ZACNI15 →</span>
     </a>
 
-    <div class="matcard">
-      <h2>📎 Materiály ke stažení</h2>
-      <ul class="mats">
-${materialsHtml}
-      </ul>
-    </div>
-
     <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
       <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(255,122,0,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (19 modulů, 211 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
       <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
@@ -371,6 +365,7 @@ ${materialsHtml}
     (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
     var TOTAL=${ordered.length};
     var SECS=${secsJson};
+    var MATS=${matsJson};
     var DONE={};
     var BUY_URL='${BUY_URL}';
     var FREEMODE = /[?&]preview=free/.test(location.search);  // živě: zapne se i pro přihlášené bez nákupu
@@ -388,7 +383,25 @@ ${materialsHtml}
       SECS.forEach(function(s,i){ var d=secDone(s), t=s.videos.length, p=t?Math.round(d/t*100):0;
         h+='<a class="modcard'+(t&&d===t?' done-all':'')+'" href="#s'+(i+1)+'"><div class="top"><span class="ix">'+(i+1)+'</span><h3>'+s.name+'</h3></div><div class="mbar"><span style="width:'+p+'%"></span></div><div class="mfoot"><span class="cnt">'+t+' videí</span><span class="pct">'+p+' %</span></div></a>';
       });
+      // Přílohy jako sekce ve stylu modulů (klik → seznam materiálů). Ve free režimu = zamčená lákavka.
+      h+='<a class="modcard matcard-tile" href="#materialy"><div class="top"><span class="ix">📎</span><h3>Přílohy ke stažení</h3></div><div class="mfoot"><span class="cnt">'+MATS.length+' materiálů</span><span class="pct">'+(FREEMODE?'🔒 v ceně kurzu':'Otevřít →')+'</span></div></a>';
       h+='</div>'; document.getElementById('modules').innerHTML=h;
+    }
+    function renderMaterials(){
+      var li='';
+      MATS.forEach(function(m){
+        var label='<span class="lt">'+m.ico+'&nbsp; '+m.t+'<br><small style="color:var(--muted);font-weight:400">'+m.d+'</small></span>';
+        if(FREEMODE){
+          li+='<li class="lesson locked"><a class="lockrow" href="'+BUY_URL+'"><span class="chk lock">🔒</span>'+label+'<span class="go buy">V ceně kurzu →</span></a></li>';
+        } else if(m.link){
+          li+='<li class="lesson"><a href="'+m.link+'"><span class="chk" style="visibility:hidden"></span>'+label+'<span class="go">Otevřít →</span></a></li>';
+        } else {
+          li+='<li class="lesson"><div class="lockrow" style="cursor:default"><span class="chk" style="visibility:hidden"></span>'+label+'<button class="mbtn" type="button" data-file="'+m.file+'">Stáhnout ↓</button></div></li>';
+        }
+      });
+      document.getElementById('modules').innerHTML='<a class="backlink" href="#prehled">← Všechny sekce</a><div class="module"><div class="mhead"><h2>📎 Přílohy ke stažení</h2><span class="cnt">'+MATS.length+' materiálů'+(FREEMODE?' · <b>v ceně kurzu</b>':'')+'</span></div><ul class="lessons">'+li+'</ul></div>';
+      if(!FREEMODE) wireMaterials();
+      try{ window.scrollTo(0,0); }catch(e){}
     }
     function renderSection(i){
       var s=SECS[i]; if(!s){ location.hash=''; return; }
@@ -409,7 +422,7 @@ ${materialsHtml}
       return null;
     }
     function startedAny(){ for(var k in DONE){ if(DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
-    function route(){ var hsh=(location.hash||'').replace('#',''); var m=hsh.match(/^s(\\d+)$/); if(m) renderSection(parseInt(m[1],10)-1); else renderOverview(); }
+    function route(){ var hsh=(location.hash||'').replace('#',''); if(hsh==='materialy'){ renderMaterials(); return; } var m=hsh.match(/^s(\\d+)$/); if(m) renderSection(parseInt(m[1],10)-1); else renderOverview(); }
     function render(done){
       DONE=done||{};
       var cnt=0; SECS.forEach(function(s){ cnt+=secDone(s); });
