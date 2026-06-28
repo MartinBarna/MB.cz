@@ -122,6 +122,8 @@
   PRESETS.forEach(function(c){ var d=document.createElement('div'); d.className='swatch'; d.style.background=c; d.title=c; d.addEventListener('click',function(){ $('color').value=c; $('colorHex').value=c; markSwatch(); refresh(); }); sw.appendChild(d); });
   function markSwatch(){ var cur=$('colorHex').value.toLowerCase(); Array.prototype.forEach.call(sw.children,function(d){ d.classList.toggle('on', d.title.toLowerCase()===cur); }); }
   $('resetBtn').addEventListener('click',function(){ ['name','tag','logo','web'].forEach(function(id){$(id).value='';}); $('color').value='#ff7a00'; $('colorHex').value='#ff7a00'; markSwatch(); refresh(); });
+  // předvybrat materiál z ?mat= (deep-link z katalogu)
+  (function(){ var m=new URLSearchParams(location.search).get('mat'); if(m){ var opt=Array.prototype.find.call($('mat').options,function(o){return o.value===m;}); if(opt) $('mat').value=m; } })();
   markSwatch(); refresh();
 </script>
 </body>
