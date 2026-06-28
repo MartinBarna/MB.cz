@@ -170,7 +170,7 @@ function videoPage(v) {
 
     <div class="nav">${navPrev || '<span></span>'}${navNext || '<span></span>'}</div>
 
-    ${v.free ? `<a class="upsell" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz — 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců) — odemkneš jednorázově za 800 Kč. Doživotně.<span class="go2">Odemknout celý kurz za 800 Kč →</span></a>` : ''}
+    ${v.free ? `<a class="upsell" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz — 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců) — odemkneš jednorázově za 800 Kč, s kódem <b>ZACNI15</b> jen 680 Kč. Doživotně.<span class="go2">Odemknout celý kurz — 680 Kč s ZACNI15 →</span></a>` : ''}
 
     <p class="foot">© Videokurz Martin Barna.${v.free ? ' Tato lekce je dostupná zdarma jako ochutnávka.' : ' Video je dostupné jen přihlášeným s aktivním přístupem.'}</p>
   </div>
@@ -336,8 +336,8 @@ function dashboard() {
     </div>
 
     <a id="freeBanner" class="freebanner" href="${BUY_URL}" style="display:none;">
-      <span class="fb-txt"><b>🎁 Máš ochutnávku zdarma</b><span>Pár úvodních lekcí je odemčených. Celý kurz — 182 videí + všechny bonusy — odemkneš jednorázově za 800 Kč. Doživotně, bez měsíčních poplatků.</span></span>
-      <span class="fb-cta">Odemknout celý kurz za 800 Kč →</span>
+      <span class="fb-txt"><b>🎁 Máš ochutnávku zdarma</b><span>Pár úvodních lekcí je odemčených. Celý kurz — 182 videí + všechny bonusy — odemkneš jednorázově za 800 Kč, s kódem ZACNI15 jen 680 Kč. Doživotně, bez měsíčních poplatků.</span></span>
+      <span class="fb-cta">Odemknout — 680 Kč s ZACNI15 →</span>
     </a>
 
     <div class="matcard">

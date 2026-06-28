@@ -43,7 +43,7 @@
     if (!LIVE) { readyResolve(); return; }
     loadSdk().then(function () {
       client = window.supabase.createClient(cfg.url, cfg.anonKey, {
-        auth: { persistSession: true, autoRefreshToken: true }
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
       });
       client.auth.onAuthStateChange(function (_e, session) {
         authCbs.forEach(function (cb) { try { cb(session ? session.user : null); } catch (e) {} });
@@ -91,11 +91,14 @@
     // shouldCreateUser:true → rovnou registruje nového uživatele (free funnel, min. tření).
     signInWithOtp: function (email, redirectTo) {
       if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      // Kanonický non-www cíl: web 301 přesměrovává www→non-www a session (localStorage)
+      // je per-origin — kdyby odkaz skončil na www, session by se po přeskoku ztratila ("přihlásí a vyhodí").
+      var dest = (redirectTo || (location.origin + "/akademie/moje/")).replace("://www.", "://");
       return client.auth.signInWithOtp({
         email: email,
         options: {
           shouldCreateUser: true,
-          emailRedirectTo: redirectTo || (location.origin + "/akademie/moje/")
+          emailRedirectTo: dest
         }
       }).then(function (r) {
         if (r.error) { try { console.error("signInWithOtp error:", r.error, JSON.stringify(r.error)); } catch (e) {} }
