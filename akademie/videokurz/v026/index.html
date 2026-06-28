@@ -50,16 +50,16 @@
 
     <div class="nav"><a class="btn ghost" href="/akademie/videokurz/v025/">← Předchozí</a><a class="btn ghost" href="/akademie/videokurz/v027/">Další →</a></div>
 
-    
+    <a class="upsell" href="https://form.simpleshop.cz/3Vbl/buy/"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz — 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců) — odemkneš jednorázově za 800 Kč, s kódem <b>ZACNI15</b> jen 680 Kč. Doživotně.<span class="go2">Odemknout celý kurz — 680 Kč s ZACNI15 →</span></a>
 
-    <p class="foot">© Videokurz Martin Barna. Video je dostupné jen přihlášeným s aktivním přístupem.</p>
+    <p class="foot">© Videokurz Martin Barna. Tato lekce je dostupná zdarma jako ochutnávka.</p>
   </div>
 
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js"></script>
-  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/scroll-top.js" defer></script>
   <script>
-    var LID='vk-QD4xrM1A9eo', PRODUCT='videokurz', FREE=false, GUEST=false, state={done:false};
+    var LID='vk-QD4xrM1A9eo', PRODUCT='videokurz', FREE=true, GUEST=false, state={done:false};
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
     function lsDone(){ try{ return !!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){ return false; } }
