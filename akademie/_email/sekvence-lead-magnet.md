@@ -123,7 +123,7 @@ Ahoj {{first_name}},
 
 Vím, jak to chodí — „udělám to později". A později nikdy nepřijde :)
 
-Ať Tě nakopnu: na **Videokurz výživy** Ti dávám **slevu -{{discount_pct}} %** s kódem **`{{discount_code}}`**. Platí **do {{discount_deadline}}**.
+Ať Tě nakopnu: na **Videokurz výživy** Ti dávám **slevu 15 %** s kódem **`ZACNI15`** — z 800 Kč je **680 Kč**. Kód je jen pro Tebe (1× na e-mail).
 
 👉 **[Odemknout kurz se slevou]({{course_url}})**
 
@@ -159,8 +159,13 @@ Martin
 > Nechceš už e-maily? **[Odhlásit se]({{unsubscribe_url}})** — jedním klikem, bez urážky :)
 > Martin Barna — online výživový Coach · martinbarna.cz
 
-### Otevřené proměnné (dodá Cowork/Martin)
-- `{{course_url}}` — SimpleShop odkaz na videokurz (znám 800 Kč produkt; potřebuju finální URL)
-- `{{discount_code}}` + `{{discount_pct}}` + `{{discount_deadline}}` — SimpleShop slevový kód
-- `{{lead_magnet_url}}` — hostované PDF plánu (ženy / muži) — kde leží?
-- frekvence/časování dnů lze doladit (default výše)
+### Slevové kódy — ŽIVÉ (SimpleShop, ověřené 28. 6. 2026)
+- **`ZACNI15`** → 15 % (800 → **680 Kč**) — použito v Mailu 5.
+- **`JESTE20`** → 20 % (800 → **640 Kč**) — eskalace: pošli jen tomu, kdo ani po Mailu 5 nekoupil (návrh Mail 5b, den +12), nebo přes dynamickou slevu (#36).
+- Podmínky obou: 1× na e-mail, jen na videokurz (produkt 42679), evergreen, neomezený celkový počet. **NEPOUŽÍVAT testovací `hackerman` (100 %).**
+
+### Vyřešené proměnné
+- `{{course_url}}` = `https://form.simpleshop.cz/3Vbl/buy/` (videokurz 800 Kč).
+- `{{lead_magnet_url}}` = `https://martinbarna.cz/download/makro-plan-zeny.pdf` (ženy) / `…/forma-zpet-muzi.pdf` (muži).
+- `{{course_url}}` pro slevu: stejná URL — kód `ZACNI15` zadá zákazník v košíku.
+- frekvence/časování dnů lze doladit (default výše).
