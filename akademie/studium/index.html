@@ -108,6 +108,20 @@
       <input id="lessonSearch" class="lsearch" type="search" placeholder="🔍 Hledat lekci… (např. spánek, bílkoviny, peak week)" aria-label="Hledat lekci" autocomplete="off">
     </div>
 
+    <style>
+      .freebanner{display:none;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.04));border:1px solid rgba(255,122,0,.4);border-radius:16px;padding:14px 20px;margin:0 0 18px;text-decoration:none;color:var(--muted-2)}
+      .freebanner .fb-txt b{color:#fff;display:block;margin-bottom:2px}
+      .freebanner .fb-txt > span > span{font-size:.9rem;line-height:1.5;display:block}
+      .freebanner .fb-cta{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:800;padding:11px 20px;border-radius:50px;white-space:nowrap;font-size:.92rem}
+      .les.lockbuy .t{color:var(--muted)}
+      .les.lockbuy .s.buy{color:var(--gold-soft);font-weight:700}
+      .les.isfree .s{color:var(--gold-soft);font-weight:700}
+    </style>
+    <a class="freebanner" id="freeBanner" href="https://form.simpleshop.cz/Xgl8g/buy/">
+      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (211 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
+      <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
+    </a>
+
     <div class="modules" id="modules"></div>
 
     <div class="bonus" id="bonusCard">
@@ -381,12 +395,22 @@
         { id:"m19-l8", t:"Meal prep: systém, který drží formu za tebe", available:true, href:"/akademie/studium/m19-l8/" }
       ]}
     ];
+    // ----- Free-preview (#35): ochutnávka pro nepřihlášené/nekupující + upsell -----
+    var BUY_URL = 'https://form.simpleshop.cz/Xgl8g/buy/';
+    var FREE = {'m1-l1':1,'m1-l2':1,'m1-l3':1,'m2-l1':1,'m3-l1':1,'m6-l1':1}; // ukázkové lekce napříč moduly
+    var FREEMODE = /[?&]preview=free/.test(location.search);
+    function applyFreeMode(){ if(FREEMODE){ document.body.classList.add('freemode'); var b=document.getElementById('freeBanner'); if(b) b.style.display='flex'; } }
     // ----- Sekční nástěnka (#33): přehled modulů → fokus na jeden modul -----
     var DONE = {};
     function mc(m){ var a=0,d=0; m.lessons.forEach(function(l){ if(l.available){ a++; if(DONE[l.id]) d++; } }); return {a:a,d:d}; }
     function lessonRow(l){
       var isDone = !!DONE[l.id];
-      if (l.available) return '<a class="les'+(isDone?' done':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':'')+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':'Otevřít →')+'</span></a>';
+      if (l.available && FREEMODE && !FREE[l.id])
+        return '<a class="les lockbuy" href="'+BUY_URL+'"><span class="ck">🔒</span><span class="t">'+l.t+'</span><span class="s buy">Odemknout →</span></a>';
+      if (l.available) {
+        var freeBadge = (FREEMODE && FREE[l.id]);
+        return '<a class="les'+(isDone?' done':'')+(freeBadge?' isfree':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':(freeBadge?'🔓':''))+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':(freeBadge?'Zdarma →':'Otevřít →'))+'</span></a>';
+      }
       return '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
     }
     function renderOverview(){
@@ -485,17 +509,33 @@
       if (window.BA){
         window.BA.ready.then(function(){
           if (window.BA.mode === 'live'){
-            window.BA.requireAccess('academy').then(function(ok){
-              if(!ok) return;
-              var note = document.getElementById('modeNote');
-              if (note) note.textContent = 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.';
-              window.BA.getProgress().then(render);
+            // NEPŘESMĚROVÁVÁME nepřihlášené/nekoupivší — místo toho ukážeme
+            // free ochutnávku (FREEMODE) a upsell na koupi celé Academy.
+            window.BA.getUser().then(function(u){
+              if(!u){
+                FREEMODE = true; applyFreeMode();
+                var n0 = document.getElementById('modeNote');
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 211 lekcím odemkni celou Academy.';
+                try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
+                return;
+              }
+              window.BA.hasEntitlement('academy').then(function(has){
+                if(!has){ FREEMODE = true; }
+                applyFreeMode();
+                var note = document.getElementById('modeNote');
+                if (note) note.textContent = has
+                  ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
+                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 211 lekcím odemkni celou Academy.';
+                window.BA.getProgress().then(render);
+              });
             });
           } else {
+            applyFreeMode();
             window.BA.getProgress().then(render);
           }
         });
       } else {
+        applyFreeMode();
         try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
       }
     }
