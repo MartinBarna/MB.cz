@@ -1,4 +1,13 @@
-# Proč nechodí lead-magnet e-maily — diagnóza + aktivace (pro Cowork)
+# Lead-magnet e-maily — diagnóza + provoz (pro Cowork)
+
+> ✅ **VYŘEŠENO (28.6.):** Pipeline JE živá — funkce nasazené, RESEND_API_KEY
+> nastaven, doména ověřená, cron aktivní. 35 reálných leadů dostalo e-mail
+> (Resend provider IDs). Martinův test „nedorazil", protože jeho e-mail má
+> aktivní entitlement → systém ho správně bere jako zákazníka a prodejní sérii
+> mu PŘESKAKUJE (`skip_purchased`). Na test lead-magnetu použij e-mail bez
+> nákupu. Navíc: lead-capture upraven tak, že uvítací mail chodí OKAMŽITĚ
+> (spustí drip-send rovnou po uložení leadu), ne až hodinovým cronem.
+> Níže ponecháno jako referenční runbook + test příkazy.
 
 ## Co se děje (test: vyplněn formulář muž+žena, nepřišel mail)
 
