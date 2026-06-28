@@ -155,3 +155,6 @@ th { background:rgba(255,122,0,.1)!important; color:#fff!important; }
   ::-webkit-scrollbar-track { background:#15110e; }
   ::-webkit-scrollbar-thumb { border-color:#15110e; }
 }
+
+/* native <select> dropdown — čitelné možnosti (tmavý text na bílém) napříč tématy */
+select option, select optgroup { color:#161616; background:#fff; }
