@@ -23,6 +23,10 @@
   .btn.is-done { background:linear-gradient(145deg,#2fae57,#1f9647); color:#fff; box-shadow:0 12px 26px -8px rgba(47,174,87,.5); }
   .nav { margin-top:1.5rem; display:flex; justify-content:space-between; gap:10px; }
   .foot { margin-top:2rem; font-size:.8rem; color:var(--muted); }
+  .upsell { display:block; margin-top:1.6rem; text-decoration:none; background:linear-gradient(135deg,rgba(255,122,0,.18),rgba(255,122,0,.05)); border:1px solid rgba(255,122,0,.4); border-radius:16px; padding:16px 20px; color:var(--muted-2); font-size:.95rem; line-height:1.55; transition:transform .2s,border-color .2s; }
+  .upsell:hover { transform:translateY(-2px); border-color:rgba(255,122,0,.7); }
+  .upsell b { color:#fff; }
+  .upsell .go2 { display:block; margin-top:8px; color:var(--gold-soft); font-weight:700; }
 </style>
 </head>
 <body class="ba">
@@ -46,6 +50,8 @@
 
     <div class="nav"><a class="btn ghost" href="/akademie/videokurz/v119/">← Předchozí</a><a class="btn ghost" href="/akademie/videokurz/v121/">Další →</a></div>
 
+    
+
     <p class="foot">© Videokurz Martin Barna — členská sekce. Video je dostupné jen přihlášeným s aktivním přístupem.</p>
   </div>
 
@@ -53,13 +59,16 @@
   <script src="/assets/ba-academy.js"></script>
   <script src="/assets/scroll-top.js" defer></script>
   <script>
-    var LID='vk-1PlbJ547sU8', PRODUCT='videokurz', state={done:false};
+    var LID='vk-1PlbJ547sU8', PRODUCT='videokurz', FREE=false, state={done:false};
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
     function load(){
       if (window.BA){
         window.BA.ready.then(function(){
-          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          if (window.BA.mode==='live'){
+            if (FREE) { window.BA.getUser().then(function(u){ if(!u){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname); return; } window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+            else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
       } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
