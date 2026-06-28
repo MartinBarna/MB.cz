@@ -59,6 +59,7 @@
 
   <div class="wrap">
     <div class="crumb">Modul 1 · Lekce 2 — Psychologie a chování kolem jídla</div>
+    <div style="background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.3);border-radius:14px;padding:13px 18px;margin:0 0 1.2rem;font-size:.93rem;color:#e9e2d8;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between;"><span>🔓 <b style="color:#fff">Ochutnávka zdarma</b> — tahle lekce je ukázka z Barna Academy.</span><a href="/akademie/" style="color:var(--gold-soft);font-weight:700;white-space:nowrap;">Odemknout celou Academy →</a></div>
     <h1>Mechanismus jídla: hlad, sytost a jak to v těle funguje</h1>
 
     <p class="lead">Minule jsme řešili, <em>proč</em> lidé jedí. Teď se podíváme pod kapotu. Co v těle spustí hlad a co ti dá vědět, že už máš dost? Doktora z tebe neudělám, neboj. Ale jakmile tomuhle rozumíš, přestaneš klienta soudit za „slabou vůli" a začneš pracovat s biologií, kterou stejně pod kontrolou nemá.</p>
@@ -157,7 +158,7 @@
     function load(){
       if (window.BA){
         window.BA.ready.then(function(){
-          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          if (window.BA.mode==='live'){ Promise.resolve(true).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
       } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
