@@ -16,7 +16,7 @@
   {"t":"p","html":"<strong>Jak se dostaneš dovnitř</strong> (minuta práce): klikni níž, dej <strong>„Vytvořit účet"</strong> a zaregistruj se <strong>stejným e-mailem, na který Ti přišel tenhle mail</strong> — podle něj Tě systém pozná. Vytvoříš si heslo a jsi uvnitř."},
   {"t":"btn","text":"Vytvořit přístup do videokurzu","href":"https://www.martinbarna.cz/akademie/prihlaseni/?tab=register"},
   {"t":"p","html":"Kdyby cokoliv nešlo, napiš mi — ozvu se a vyřešíme to. <strong>Be Effective!</strong><br>Martin"},
-  {"t":"ps","html":"P.S. Důležité: registruj se e-mailem, kterým jsi kurz kupoval[a]. Na jiný Tě systém nepozná."}
+  {"t":"ps","html":"P.S. Důležité: použij stejný e-mail jako u koupě kurzu — podle něj Tě systém pozná. Na jiný se nechytí."}
 ]
 ```
 
@@ -26,7 +26,7 @@
 ```json
 [
   {"t":"p","html":"Ahoj{{fn_space}},"},
-  {"t":"p","html":"dělal jsem na webu velký kus práce a <strong>kompletně předělal členskou sekci</strong>. Chci, abys to měl[a] jako jeden z prvních — a něco Ti k tomu přidávám."},
+  {"t":"p","html":"dělal jsem na webu velký kus práce a <strong>kompletně předělal členskou sekci</strong>. Ať to máš jako jeden z prvních — a něco Ti k tomu přidávám."},
   {"t":"p","html":"Jako můj klient máš teď <strong>Videokurz výživy v ceně</strong> — všech 182 lekcí o tom, jak jíst, počítat makra a udržet si formu. Kdykoliv se k tomu budeš chtít vrátit, máš to po ruce."},
   {"t":"p","html":"<strong>Jak dovnitř</strong> (minuta): klikni níž, dej <strong>„Vytvořit účet"</strong> a zaregistruj se <strong>stejným e-mailem, na který Ti přišel tenhle mail</strong>. Vytvoříš si heslo a jsi uvnitř."},
   {"t":"btn","text":"Vytvořit přístup","href":"https://www.martinbarna.cz/akademie/prihlaseni/?tab=register"},
