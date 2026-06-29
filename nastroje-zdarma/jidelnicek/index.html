@@ -145,15 +145,28 @@
       <!-- UPSELL + LEAD CAPTURE do Academy -->
       <div class="upsell" id="upsell">
         <h2>🔓 Chceš z toho celý systém, ne jen jeden den?</h2>
-        <p>Tohle byla ochutnávka. V <b>Barna Academy</b> má stejný generátor plnou sílu — a navíc generátor tréninků. Nech mi e-mail a pošlu ti přístup do bezplatné ochutnávky Academy (pár lekcí + jak to celé funguje).</p>
-        <ul class="ulist">
-          <li>Celý týdenní jídelníček, ne jen den</li>
-          <li>Generátor tréninků (fitko / doma / hřiště)</li>
-          <li>Export do PDF</li>
-          <li>Rebrand pod tvým jménem (pro trenéry)</li>
-          <li>224 lekcí o výživě a tréninku</li>
-          <li>Audio verze lekcí</li>
-        </ul>
+        <p>Lite verze ti spočítá makra a poskládá <b>jeden den</b> — fajn na vyzkoušení. Plná verze v <b>Barna Academy</b> je ale úplně jiná liga: celý týden, nákupní seznam, rebrand pod tvým jménem a export do PDF pro klienty. Tady je rozdíl černé na bílém:</p>
+        <style>
+          .cmp{display:grid;grid-template-columns:1.7fr .85fr 1.05fr;gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:14px;overflow:hidden;margin:0 0 1.3rem;font-size:.9rem;}
+          .cmp>span{background:#161310;padding:10px 13px;color:#e9e2d8;display:flex;align-items:center;}
+          .cmp .h{font-weight:800;color:#fff;background:#211b14;}
+          .cmp .h.full{color:#ff9d3c;}
+          .cmp .y{color:#7bd88f;font-weight:700;justify-content:center;}
+          .cmp .n{color:#7a736a;justify-content:center;}
+          .cmp .full{justify-content:center;font-weight:700;color:#ff9d3c;}
+          .cmp .lite{justify-content:center;color:#cbbfae;}
+          @media(max-width:520px){.cmp{font-size:.8rem;grid-template-columns:1.5fr .8fr 1fr;}.cmp>span{padding:9px 8px;}}
+        </style>
+        <div class="cmp">
+          <span class="h">Co dostaneš</span><span class="h">Lite (zdarma)</span><span class="h full">Plná v Academy</span>
+          <span>Výpočet kalorií + maker</span><span class="y">✓</span><span class="y">✓</span>
+          <span>Hotový jídelníček</span><span class="lite">1 den</span><span class="full">celý týden</span>
+          <span>Nákupní seznam</span><span class="n">–</span><span class="y">✓</span>
+          <span>Rebrand — tvoje jméno, logo, barvy</span><span class="n">–</span><span class="y">✓</span>
+          <span>Export do PDF pro klienta</span><span class="n">–</span><span class="y">✓</span>
+          <span>Generátor tréninků</span><span class="n">–</span><span class="y">✓</span>
+          <span>224 lekcí + audio + certifikace</span><span class="n">–</span><span class="y">✓</span>
+        </div>
         <form data-lead-form data-segment="academy-jidelnicek" data-source="nastroj-jidelnicek-zdarma" class="lead-form">
           <div class="grid">
             <div><label>Jméno</label><input name="name" type="text" autocomplete="given-name" placeholder="Jak ti mám říkat?"></div>
@@ -168,6 +181,10 @@
           <a class="btn ghost" href="/akademie/">Prohlédnout celou Academy →</a>
         </div>
       </div>
+    </div>
+    <div style="text-align:center;margin-top:1.8rem;display:flex;gap:22px;justify-content:center;flex-wrap:wrap;">
+      <a href="/" style="color:#a89e94;text-decoration:none;font-size:.9rem;">← Zpět na web</a>
+      <a href="/akademie/" style="color:var(--gold-soft);text-decoration:none;font-size:.9rem;font-weight:700;">Zpět do Academy →</a>
     </div>
   </div>
 
