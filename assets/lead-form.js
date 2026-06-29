@@ -48,6 +48,7 @@
                   '<h3 style="color:#fff;margin:.5rem 0 .3rem;">Díky' + (data.name ? ', ' + data.name : '') + '!</h3>' +
                   '<p style="color:#cabfb4;margin:.2rem 0;">Plán ti posíláme na e-mail. ' + (pdf ? 'Nebo si ho stáhni rovnou:' : '') + '</p>' +
                   dl +
+                  '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">Chceš se v tom naučit chodit sám/sama? Mrkni na <a href="/videokurz" style="color:#ff9d3c;text-decoration:underline;">videokurz výživy</a>.</p>' +
                 '</div>';
             } else {
               btn.disabled = false; btn.textContent = orig;
