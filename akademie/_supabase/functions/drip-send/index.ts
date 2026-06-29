@@ -135,14 +135,18 @@ function renderEmail(tpl: Tpl, seg: Seg, v: Record<string, string>, footer: { ht
   return { subject, html, text };
 }
 
-async function sendViaResend(to: string, subject: string, html: string, text: string, unsub: string, replyTo: string): Promise<string> {
+async function sendViaResend(to: string, subject: string, html: string, text: string, unsub: string, replyTo: string, archiveBcc: string): Promise<string> {
   if (!RESEND_KEY) throw new Error('missing_RESEND_API_KEY');
+  // archiveBcc = skryta kopie na Martinuv mail (app_config archive_bcc), at vidi vse co odejde.
+  // Nikdy neBCCujeme prijemce sameho na sebe (kdyby si Martin stahl vlastni lead-magnet).
+  const bcc = archiveBcc && archiveBcc.toLowerCase() !== to.toLowerCase() ? [archiveBcc] : undefined;
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: FROM, to: [to], subject, html, text,
       reply_to: replyTo || undefined,
+      bcc,
       headers: { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
     }),
   });
@@ -167,10 +171,11 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
+  const archiveBcc = fMap.archive_bcc ?? '';   // skryta kopie vsech ostrych sendu na Martinuv mail (prazdne = vypnuto)
 
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
@@ -193,7 +198,7 @@ Deno.serve(async (req: Request) => {
     try {
       const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op');
       const m = renderEmail(tpl, seg, v, footer);
-      const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo);
+      const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
       await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } });
       return json({ ok: true, mode: 'test', provider_id: id, track, step });
     } catch (e) {
@@ -256,7 +261,7 @@ Deno.serve(async (req: Request) => {
     try {
       const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token);
       const m = renderEmail(tpl, seg, v, footer);
-      const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo);
+      const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);
       const { error: logErr } = await admin.from('email_events')
         .insert({ lead_id: l.id, step: l.step, type: 'sent', provider_id: id, detail: { track: l.track, key: tpl.key } });
       if (logErr && !String(logErr.code).includes('23505')) throw new Error('log:' + logErr.message);
