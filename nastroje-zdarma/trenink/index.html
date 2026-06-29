@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generátor tréninku zdarma — plán na míru (fitko, doma, hřiště) | Martin Barna</title>
+<meta name="description" content="Zadáš, kde cvičíš, s čím a na jaké jsi úrovni, a generátor ti zdarma poskládá tréninkový plán s cviky, sériemi i opakováními. Bez registrace, výsledek hned.">
+<meta name="theme-color" content="#161616">
+<link rel="canonical" href="https://martinbarna.cz/nastroje-zdarma/trenink/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://martinbarna.cz/nastroje-zdarma/trenink/">
+<meta property="og:title" content="Generátor tréninku zdarma — plán na míru (fitko, doma, hřiště)">
+<meta property="og:description" content="Zadáš místo, vybavení a úroveň a systém ti hned poskládá tréninkový plán s cviky, sériemi a opakováními. Zdarma, bez registrace.">
+<meta property="og:image" content="https://martinbarna.cz/assets/og-makro-plan.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap{max-width:900px;margin:0 auto;padding:30px 20px 90px;}
+  .kick{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.8rem,4.4vw,2.4rem);color:#fff;margin:.4rem 0 .5rem;letter-spacing:-.02em;}
+  .lead{color:#cfc6b8;font-size:1.08rem;max-width:660px;}
+  .ticks{list-style:none;padding:0;margin:1.1rem 0 0;display:flex;flex-wrap:wrap;gap:8px 20px;font-weight:600;font-size:.92rem;color:#cfc6b8;}
+  .ticks li::before{content:"✓ ";color:var(--gold-soft);font-weight:800;}
+  .panel{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.4rem 1.5rem;margin:1.4rem 0;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;}
+  label{display:block;font-size:.82rem;color:var(--muted-2);font-weight:600;margin:0 0 5px;}
+  body{color-scheme:dark;}
+  .ba input,.ba select{width:100%;background-color:rgba(0,0,0,.45)!important;border:1px solid var(--line-2)!important;border-radius:11px;color:#fff!important;padding:11px 12px;font-family:inherit;font-size:.96rem;color-scheme:dark;}
+  .ba input:not([type=color]),.ba select{-webkit-appearance:none;appearance:none;}
+  .ba select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ff9d3c' stroke-width='3' stroke-linecap='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;}
+  .ba select option{background:#161310;color:#fff;}
+  .ba input:focus,.ba select:focus{outline:none;border-color:rgba(255,122,0,.6)!important;}
+  .ba input::placeholder{color:var(--muted);}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:800;padding:14px 30px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;font-size:1rem;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;text-decoration:none;display:inline-block;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;font-weight:700;}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:1.1rem;}
+  .brandline{color:var(--muted);font-size:.85rem;}
+  .note{color:var(--muted);font-size:.82rem;margin-top:.7rem;line-height:1.5;}
+  .hidden{display:none;}
+  .day{border:1px solid var(--line);border-radius:14px;margin:0 0 12px;overflow:hidden;}
+  .day h3{margin:0;background:rgba(255,122,0,.08);color:#fff;font-size:1.05rem;padding:11px 16px;box-shadow:inset 4px 0 0 #ff7a00;display:flex;justify-content:space-between;align-items:center;}
+  .day h3 small{color:var(--muted-2);font-weight:600;font-size:.78rem;}
+  .day table{width:100%;border-collapse:collapse;}
+  .day td{padding:10px 16px;border-top:1px solid var(--line);color:var(--ink);font-size:.95rem;vertical-align:top;}
+  .day td.sr{color:var(--gold-soft);white-space:nowrap;text-align:right;font-weight:700;}
+  .day .tip{display:block;color:var(--muted);font-size:.8rem;margin-top:2px;}
+  /* upsell + lead-capture do Academy */
+  .upsell{background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.04));border:1px solid rgba(255,122,0,.4);border-radius:18px;padding:1.6rem 1.6rem;margin:1.4rem 0;}
+  .upsell h2{color:#fff;font-size:1.35rem;margin:0 0 .4rem;letter-spacing:-.01em;}
+  .upsell p{color:#e9e2d8;font-size:.98rem;margin:0 0 1rem;line-height:1.55;}
+  .ulist{list-style:none;padding:0;margin:0 0 1.1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px;}
+  .ulist li{color:#e9e2d8;font-size:.94rem;padding-left:26px;position:relative;}
+  .ulist li::before{content:"🔓";position:absolute;left:0;}
+  .lead-form label{margin:12px 0 4px;}
+  .form-fine{font-size:.76rem;color:#8a8073;margin:10px 0 0;text-align:center;}
+  .seg{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.8rem;margin:1.2rem 0 0;}
+  .seg::before,.seg::after{content:"";flex:1;height:1px;background:var(--line);}
+  @media print{
+    .top,.actions,.no-print,.upsell,.ticks,.lead{display:none!important;}
+    body{background:#fff!important;color:#161616!important;}
+    .panel,.day{border-color:#ddd!important;background:#fff!important;color:#161616!important;}
+    .day h3{background:#f3ede4!important;color:#161616!important;} .day td{color:#222!important;} .day .tip{color:#666!important;}
+    h1,.day h3 small{color:#161616!important;}
+  }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+ {"@type":"ListItem","position":1,"name":"Domů","item":"https://martinbarna.cz/"},
+ {"@type":"ListItem","position":2,"name":"Generátor tréninku zdarma","item":"https://martinbarna.cz/nastroje-zdarma/trenink/"}]}
+</script>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/"><span class="mark">MB</span><span><b>Martin Barna</b><span class="tag">Generátor tréninku zdarma</span></span></a>
+    <a class="back" href="/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Zpět na web</a>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Zdarma · bez registrace · výsledek hned</span>
+    <h1>Generátor tréninku — plán na míru, ať cvičíš kdekoli</h1>
+    <p class="lead">Zadáš, kde cvičíš (fitko / doma / hřiště), s čím a na jaké jsi úrovni, a systém ti hned poskládá tréninkový plán s cviky, sériemi i opakováními. Stejný engine, který v Barna Academy používají trenéři pro klienty.</p>
+    <ul class="ticks"><li>Fitko, doma i venku</li><li>Podle úrovně a cíle</li><li>Série, opakování i tipy k technice</li></ul>
+
+    <div class="panel" id="form">
+      <div class="grid">
+        <div><label>Kde cvičíš</label><select id="location">
+          <option value="fitko">Fitko (posilovna)</option>
+          <option value="doma">Doma</option>
+          <option value="hriste">Venku / workout hřiště</option>
+        </select></div>
+        <div><label>Vybavení</label><select id="equip">
+          <option value="vse">Plně vybaveno</option>
+          <option value="cinky">Jednoručky / kettlebell</option>
+          <option value="telo">Jen vlastní tělo</option>
+        </select></div>
+        <div><label>Úroveň</label><select id="level">
+          <option value="zacatecnik">Začátečník</option>
+          <option value="pokrocily" selected>Pokročilý</option>
+          <option value="zkuseny">Zkušený</option>
+        </select></div>
+        <div><label>Cíl</label><select id="goal">
+          <option value="svaly" selected>Svaly (hypertrofie)</option>
+          <option value="sila">Síla</option>
+          <option value="kondice">Hubnutí / kondice</option>
+          <option value="vydrz">Vytrvalost / tonus</option>
+        </select></div>
+        <div><label>Dní v týdnu</label><select id="daysCount"><option>2</option><option>3</option><option selected>4</option><option>5</option></select></div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="gen">Poskládat tréninkový plán →</button>
+        <span class="brandline" id="dbstate">Načítám databázi cviků…</span>
+      </div>
+    </div>
+
+    <div id="result" class="hidden">
+      <div class="panel">
+        <div id="resHead" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+          <h2 style="margin:0;color:#fff;font-size:1.3rem;">Tvůj tréninkový plán</h2>
+          <span class="brandline" id="byline"></span>
+        </div>
+        <div id="days"></div>
+        <p class="note" id="restnote"></p>
+        <div class="actions no-print">
+          <button class="btn ghost" id="regen">↻ Vygenerovat jinak</button>
+        </div>
+      </div>
+
+      <!-- UPSELL + LEAD CAPTURE do Academy -->
+      <div class="upsell" id="upsell">
+        <h2>🔓 Chceš z toho celý systém, ne jen jeden plán?</h2>
+        <p>Tohle byla ochutnávka. V <b>Barna Academy</b> má stejný generátor plnou sílu — a navíc generátor jídelníčků. Nech mi e-mail a pošlu ti přístup do bezplatné ochutnávky Academy (pár lekcí + jak to celé funguje).</p>
+        <ul class="ulist">
+          <li>Generátor jídelníčků (kalorie + makra)</li>
+          <li>Plán pro fitko, doma i hřiště</li>
+          <li>Export do PDF</li>
+          <li>Rebrand pod tvým jménem (pro trenéry)</li>
+          <li>224 lekcí o výživě a tréninku</li>
+          <li>Audio verze lekcí</li>
+        </ul>
+        <form data-lead-form data-segment="academy-trenink" data-source="nastroj-trenink-zdarma" class="lead-form">
+          <div class="grid">
+            <div><label>Jméno</label><input name="name" type="text" autocomplete="given-name" placeholder="Jak ti mám říkat?"></div>
+            <div><label>E-mail</label><input name="email" type="email" required autocomplete="email" placeholder="Kam ti mám poslat přístup?"></div>
+          </div>
+          <button type="submit" class="btn" style="width:100%;margin-top:14px;">Chci přístup do Academy zdarma →</button>
+          <p data-msg style="font-size:.86rem;margin:8px 0 0;text-align:center;"></p>
+          <p class="form-fine">Odesláním souhlasíš se zasláním přístupu a občasných tipů. Odhlásit se můžeš jedním klikem.</p>
+        </form>
+        <div class="seg">nebo</div>
+        <div class="actions" style="margin-top:1rem;justify-content:center;">
+          <a class="btn ghost" href="/akademie/">Prohlédnout celou Academy →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/workout-gen.js?v=20260629"></script>
+  <script>
+  (function(){
+    var DB=null, seed=0;
+    var $=function(id){return document.getElementById(id);};
+    function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+
+    fetch('/assets/exercise-db.json').then(function(r){return r.json();}).then(function(d){
+      DB=d; $('dbstate').textContent=d.length+' cviků připraveno';
+    }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
+
+    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed }; }
+
+    function render(plan){
+      var html='';
+      plan.days.forEach(function(d){
+        html+='<div class="day"><h3>'+d.day+'. '+d.name+' <small>'+d.exercises.length+' cviků</small></h3><table>';
+        d.exercises.forEach(function(it){
+          html+='<tr><td>'+esc(it.ex.name)+(it.ex.tip?'<span class="tip">💡 '+esc(it.ex.tip)+'</span>':'')+'</td><td class="sr">'+it.sets+' × '+it.reps+'</td></tr>';
+        });
+        html+='</table></div>';
+      });
+      $('days').innerHTML=html;
+      $('restnote').textContent='Pauza mezi sériemi ~'+plan.rest+'. Cíl: '+plan.goal.label+'. Plán je výchozí bod — uprav podle sebe, techniky a regenerace. Postupně přidávej zátěž nebo opakování (progresivní přetížení).';
+      $('byline').textContent=plan.goal.label;
+      $('result').classList.remove('hidden');
+      $('result').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    function generate(newSeed){
+      if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
+      if(newSeed) seed++;
+      var plan=window.WorkoutGen.buildPlan(DB, opts());
+      if(!plan.poolSize){ $('dbstate').textContent='Pro tuhle kombinaci místa a vybavení nemám dost cviků — zkus jiné vybavení.'; return; }
+      render(plan);
+    }
+    $('gen').addEventListener('click',function(){ generate(false); });
+    $('regen').addEventListener('click',function(){ generate(true); });
+  })();
+  </script>
+  <script src="/assets/lead-form.js?v=20260629b" defer></script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>
