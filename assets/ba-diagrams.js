@@ -11,24 +11,24 @@
 
   // ENERGETICKÁ BILANCE — váha příjem vs výdej + tři stavy
   'energy-balance':
-    '<svg viewBox="0 0 600 250" role="img" aria-label="Energetická bilance">' +
+    '<svg viewBox="0 0 600 262" role="img" aria-label="Energetická bilance">' +
       '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">ENERGETICKÁ BILANCE</text>' +
       // beam
       '<line x1="120" y1="80" x2="480" y2="80" stroke="'+G+'" stroke-width="5" stroke-linecap="round"/>' +
       '<polygon points="300,80 288,118 312,118" fill="'+G+'"/>' +
       '<rect x="294" y="118" width="12" height="40" fill="'+G+'"/>' +
-      // left pan IN
+      // left pan IN — popisek je UNDER miskou, ať se nepřekrývá
       '<line x1="120" y1="80" x2="120" y2="120" stroke="'+M+'" stroke-width="2"/>' +
-      '<path d="M70 120 h100 a50 30 0 0 1 -100 0 z" fill="rgba(255,122,0,.18)" stroke="'+G+'" stroke-width="2"/>' +
-      '<text x="120" y="150" text-anchor="middle" fill="'+GS+'" style="'+F+';font-weight:800;font-size:14px">PŘÍJEM</text>' +
-      '<text x="120" y="168" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">jídlo &amp; pití</text>' +
+      '<path d="M70 120 h100 a50 28 0 0 1 -100 0 z" fill="rgba(255,122,0,.18)" stroke="'+G+'" stroke-width="2"/>' +
+      '<text x="120" y="172" text-anchor="middle" fill="'+GS+'" style="'+F+';font-weight:800;font-size:14px">PŘÍJEM</text>' +
+      '<text x="120" y="189" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">jídlo &amp; pití</text>' +
       // right pan OUT
       '<line x1="480" y1="80" x2="480" y2="120" stroke="'+M+'" stroke-width="2"/>' +
-      '<path d="M430 120 h100 a50 30 0 0 1 -100 0 z" fill="rgba(90,169,230,.16)" stroke="'+BL+'" stroke-width="2"/>' +
-      '<text x="480" y="150" text-anchor="middle" fill="'+BL+'" style="'+F+';font-weight:800;font-size:14px">VÝDEJ</text>' +
-      '<text x="480" y="168" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">BMR + pohyb + trávení</text>' +
+      '<path d="M430 120 h100 a50 28 0 0 1 -100 0 z" fill="rgba(90,169,230,.16)" stroke="'+BL+'" stroke-width="2"/>' +
+      '<text x="480" y="172" text-anchor="middle" fill="'+BL+'" style="'+F+';font-weight:800;font-size:14px">VÝDEJ</text>' +
+      '<text x="480" y="189" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">BMR + pohyb + trávení</text>' +
       // three states
-      '<g transform="translate(0,196)">' +
+      '<g transform="translate(0,222)">' +
       '<text x="120" y="0" text-anchor="middle" fill="'+GR+'" style="'+F+';font-weight:700;font-size:12px">PŘÍJEM &lt; VÝDEJ</text>' +
       '<text x="120" y="16" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">→ hubnutí</text>' +
       '<text x="300" y="0" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:700;font-size:12px">PŘÍJEM = VÝDEJ</text>' +
@@ -180,7 +180,7 @@
       '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">ENERGETICKÉ SYSTÉMY — podle délky zátěže</text>' +
       sysBar(60,'ATP-CP','0–10 s','výbuch, max síla',G,150) +
       sysBar(110,'Glykolytický','10 s – 2 min','intenzivní série',GS,300) +
-      sysBar(160,'Aerobní','2 min a víc','vytrvalost',BL,470) +
+      sysBar(160,'Aerobní','2 min a víc','vytrvalost',BL,430) +
       '<line x1="60" y1="195" x2="540" y2="195" stroke="'+LN+'" stroke-width="1"/>' +
       '<text x="60" y="210" fill="'+M+'" style="'+F+';font-size:10px">0 s</text>' +
       '<text x="300" y="210" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10px">délka úsilí →</text>' +
@@ -204,9 +204,9 @@
   'deficit-surplus':
     '<svg viewBox="0 0 600 200" role="img" aria-label="Deficit, udržení, přebytek">' +
       '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">TŘI REŽIMY ENERGIE</text>' +
-      stateCol(110,'DEFICIT','jíš míň, než vydáš','→ hubneš',GR,80) +
-      stateCol(300,'UDRŽENÍ','příjem = výdej','→ držíš váhu',W,110) +
-      stateCol(490,'PŘEBYTEK','jíš víc, než vydáš','→ nabíráš',GS,140) +
+      stateCol(110,'DEFICIT','jíš míň, než vydáš','→ hubneš',GR,130) +
+      stateCol(300,'UDRŽENÍ','příjem = výdej','→ držíš váhu',W,130) +
+      stateCol(490,'PŘEBYTEK','jíš víc, než vydáš','→ nabíráš',GS,130) +
     '</svg>',
 
   // SYTOST MAKER
@@ -242,10 +242,10 @@
   'periodization':
     '<svg viewBox="0 0 600 200" role="img" aria-label="Periodizace tréninku">' +
       '<text x="300" y="26" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:17px">PERIODIZACE — stavba v čase</text>' +
-      blockBar(50,'AKUMULACE','objem',GR,130) +
-      blockBar(190,'INTENZIFIKACE','zátěž',GS,130) +
-      blockBar(330,'REALIZACE','výkon',G,130) +
-      blockBar(470,'DELOAD','regenerace',BL,80) +
+      blockBar(50,'AKUMULACE','objem',GR,100) +
+      blockBar(190,'INTENZIFIKACE','zátěž',GS,100) +
+      blockBar(330,'REALIZACE','výkon',G,100) +
+      blockBar(470,'DELOAD','regenerace',BL,100) +
       '<text x="300" y="190" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">Místo „pořád stejně“ stavíš ve vlnách → větší pokrok, menší riziko přetížení.</text>' +
     '</svg>',
 
