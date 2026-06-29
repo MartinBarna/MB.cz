@@ -92,7 +92,7 @@ module.exports = [
   id: 'm20-l5',
   title: 'Check-iny: co sleduješ týdně a jak upravuješ',
   prevHref: '/akademie/studium/m20-l1/', prevLabel: 'Veď klienta k samostatnosti',
-  nextHref: '/akademie/studium/#m20', nextLabel: 'Zpět na Modul 20',
+  nextHref: '/akademie/studium/m20-l6/', nextLabel: 'Časté chyby klientů',
   body: `    <p class="lead">Check-in jede <strong>každý týden</strong> (klient nečeká, optimalizujeme včas), ale <strong>rozhoduje se podle 2–3týdenního trendu</strong> (posuzovací okno = 21 dní). Jeden špatný víkend check-in nerozhodí.</p>
 
     <div class="points"><strong>Co si z lekce odneseš:</strong>
@@ -126,6 +126,112 @@ module.exports = [
     { q: 'Jak komunikuješ úpravu klientovi?', a: 'Nikdy „appka řekla". Vezmeš faktory → přeložíš do lidské řeči → dáš jeden krok. Úprava max ±10 % kcal/týden.' },
     { q: 'Jak má vypadat pochvala?', a: 'Vždy na konkrétní fakt: „pod 70 kg, paráda", „tři týdny úbytků, respekt". Ne prázdné „skvělá práce".' },
     { q: 'Co engine vytáhne sám a co doplní klient?', a: 'Engine: trend váhy, příjem, adherence, trend měr, BMR. Klient: reálná aktivita, subjektivní škály (únava/hlad/síla), plán, poznámka.' },
+  ],
+},
+
+// ── §6 ─────────────────────────────────────────────────────────────────────
+{
+  id: 'm20-l6',
+  title: 'Časté chyby klientů a jak je řešíš',
+  prevHref: '/akademie/studium/m20-l5/', prevLabel: 'Check-iny',
+  nextHref: '/akademie/studium/m20-l7/', nextLabel: 'Startovací cíle & makra',
+  body: `    <p class="lead">Tyhle chyby uvidíš u většiny klientů. Nejsou to selhání — jsou to předvídatelné reakce laika. Tvoje práce není kárat, ale přerámovat. Když je čekáš, zvládneš je klidně a klient u tebe zůstane.</p>
+
+    <div class="points"><strong>Šest nejčastějších a jak na ně:</strong>
+      <ul>
+        <li><strong>Panika z jednoho vážení.</strong> Klient vidí ráno +1,5 kg a chce zařezat. „Koukáme na klouzavý průměr, ne na jedno číslo. Voda, glykogen a sůl hýbou váhou o 1–3 kg ze dne na den. Ten průměr je o 0,4 kg dolů — to ráno byla voda."</li>
+        <li><strong>Podhodnocený log.</strong> Nejčastější „relaps". Zapíše málo, tělo stojí, chce ubrat. NEsnižuješ cíl, koučuješ přesnost (olej na pánvi, doslazené kafe, ochutnávky při vaření).</li>
+        <li><strong>„Kosmeticky hezký" log.</strong> Nezapisuje pivo a olej, aby vypadal dobře. „Engine počítá z reality. Co tam nedáš, to tě připraví o správnou úpravu — škodíš jen sobě."</li>
+        <li><strong>Hubnutí za každou cenu.</strong> Chce řezat víc a rychleji. Severka: udržení &gt; rychlé shození. Tempo je ohraničené na 0,5–1 %/týden záměrně.</li>
+        <li><strong>Honění váhy, ignorování měr a fotek.</strong> Při recompu nebo platu váha lže. Přepni pozornost na obvody a fotky.</li>
+        <li><strong>Strach z jídla / zakázané potraviny.</strong> Žádná démonizace. Flexibilní přístup, žádné „sacharidy večer tloustnou".</li>
+      </ul>
+    </div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientka v rekompozici panikaří, že tři týdny stojí na váze. Otevřu míry: pas −0,9 cm, váha flat. „Tohle je přesně to, co chceme. Hubneš tuk a držíš sval, váha to neukáže. Deficit nepřidáváme, držíme kurz."</div>`,
+  task: 'Vyber dvě chyby z výčtu, na které u klientů narazíš nejčastěji. Napiš si u každé jednu větu „přerámování" tak, jak ji řekneš naživo — klidně, bez kárání.',
+  quiz: [
+    { q: 'Klient vidí ráno +1,5 kg a chce zařezat. Co mu řekneš?', a: 'Hodnotíme klouzavý průměr, ne jedno číslo. Voda/glykogen/sůl hýbou váhou o 1–3 kg za den. Trend jde dolů, to ráno byla voda.' },
+    { q: 'Klient málo zapisuje, tělo stojí, chce ubrat kalorie. Tvůj krok?', a: 'Nesnižuješ cíl — koučuješ přesnost zápisu. Podhodnocený log je nejčastější „relaps", ne důvod jíst míň.' },
+    { q: 'Při recompu/platu klient honí jen váhu. Co uděláš?', a: 'Přepneš jeho pozornost na obvody a fotky — váha tam lže (drží sval, hubne tuk).' },
+    { q: 'Jaká je severka u klienta, co chce hubnout za každou cenu?', a: 'Udržení > rychlé shození. Tempo je záměrně ohraničené na 0,5–1 %/týden.' },
+    { q: 'Jak řešíš strach z „zakázaných" potravin?', a: 'Žádná démonizace. Flexibilní přístup, žádné mýty typu „sacharidy večer tloustnou".' },
+  ],
+},
+
+// ── §7 ─────────────────────────────────────────────────────────────────────
+{
+  id: 'm20-l7',
+  title: 'Startovací cíle a makra do hloubky',
+  prevHref: '/akademie/studium/m20-l6/', prevLabel: 'Časté chyby klientů',
+  nextHref: '/akademie/studium/m20-l8/', nextLabel: 'Měření pokroku',
+  body: `    <p class="lead">Tohle je STARTOVACÍ odhad — výchozí čísla, ze kterých klient vyjede. Adaptivní úprava z reálné bilance je samostatná věc (check-iny). Tady je přesně, jak se startovní cíle počítají a v jakém pořadí se skládají makra.</p>
+
+    <h2>Od BMR k cíli</h2>
+    <div class="points">
+      <ul>
+        <li><strong>BMR (Mifflin-St Jeor):</strong> 10 × váha(kg) + 6,25 × výška(cm) − 5 × věk; muž <strong>+5</strong>, žena <strong>−161</strong>.</li>
+        <li><strong>TDEE</strong> = BMR × násobič aktivity (1,2 / 1,375 / 1,55 / 1,725 / 1,9).</li>
+        <li><strong>Kalorický cíl z tempa:</strong> cut = TDEE − (tempo_kg × 7700)/7; bulk = TDEE + (tempo_kg × 7700)/7. 1 kg ≈ 7700 kcal.</li>
+        <li><strong>Tempo se ořezává tvrdě:</strong> hubnutí 0,5–1,0 %/týden, nabírání max 0,5 kg/týden — i kdyby UI poslalo víc.</li>
+        <li><strong>Kalorická podlaha startu:</strong> žena 1200, muž 1500 — níž startovní cíl nikdy.</li>
+      </ul>
+    </div>
+
+    <h2>Makra v pořadí priority</h2>
+    <div class="steps">
+      <div class="row"><div class="num"></div><div class="b"><b>Bílkoviny</b><span>Default 1,8 g/kg (rozmezí 1,6–2,2). Mají přednost, nehýbou se.</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Tuk</b><span>Cíl 0,8 g/kg (podlaha 0,6), ALE smí klesnout, aby se makra vešla do kcal — nikdy ne pod <strong>22 % kalorií</strong>. Warning pod 20 %.</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Sacharidy</b><span>Zbytek do kalorií.</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Vláknina</b><span>13 g / 1000 kcal, strop 60 g.</span></div></div>
+    </div>
+    <p><strong>Fat floor 22 % = hormony.</strong> Dlouhodobě moc nízký tuk sahá na tvorbu pohlavních hormonů a vstřebávání vitaminů rozpustných v tuku. Proto je to v kódu, ne na klientovi.</p>
+    <p><strong>Precizní režim</strong> přidává tvrdé cíle na sacharidy a tuky. Většině klientů ho NEZAPÍNEJ — jen je stresuje a tempo stejně diktují kalorie. Nech ho pro soutěžní přípravu nebo lidi, co fakt chtějí ladit.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Muž 82 kg, 178 cm, 30 let, střední aktivita, hubnutí svižně (1 %). BMR = 1787,5, TDEE ≈ 2771 kcal, deficit ≈ 900 kcal/den → cíl ≈ 1869 kcal, bílkoviny ≈ 148 g, vláknina ≈ 24 g. Appka to spočítá za vteřinu — ty to klientovi jen vysvětlíš.</div>`,
+  task: 'Spočítej startovní cíle pro modelového klienta (vyber váhu, výšku, věk, aktivitu, tempo): BMR → TDEE → kalorický cíl → bílkoviny (1,8 g/kg) → vláknina. Ověř, že tuk nepadl pod 22 % kalorií.',
+  quiz: [
+    { q: 'Jak spočítáš BMR podle Mifflin-St Jeor?', a: '10 × váha(kg) + 6,25 × výška(cm) − 5 × věk; muž +5, žena −161. Pak TDEE = BMR × násobič aktivity.' },
+    { q: 'Jaká je default a rozmezí bílkovin?', a: 'Default 1,8 g/kg, rozmezí 1,6–2,2 g/kg. Mají přednost a nehýbou se.' },
+    { q: 'Proč nesmí tuk klesnout pod 22 % kalorií?', a: 'Hormony — dlouhodobě moc nízký tuk sahá na tvorbu pohlavních hormonů a vstřebávání vitaminů rozpustných v tuku. Proto je to v kódu.' },
+    { q: 'Komu (NE)zapínat Precizní režim?', a: 'Většině NE — jen stresuje a tempo stejně diktují kalorie. Jen soutěžní příprava nebo lidi, co fakt chtějí ladit.' },
+    { q: 'Kolik je kalorická podlaha startu?', a: 'Žena 1200, muž 1500 kcal — níž startovní cíl nikdy nejde.' },
+  ],
+},
+
+// ── §8 ─────────────────────────────────────────────────────────────────────
+{
+  id: 'm20-l8',
+  title: 'Měření pokroku: čtyři okna, čtyři rychlosti',
+  prevHref: '/akademie/studium/m20-l7/', prevLabel: 'Startovací cíle & makra',
+  nextHref: '/akademie/studium/#m20', nextLabel: 'Zpět na Modul 20',
+  body: `    <p class="lead">Jedna věta na všechno: <strong>hodnotíme trend, ne jedno číslo.</strong> Klientova práce je logovat hustě a poctivě, tvoje práce je číst směr. Každá metrika má svoje okno a svoji rychlost.</p>
+
+    <table>
+      <tr><th>Metrika</th><th>Okno trendu</th><th>Proč ne jedno číslo</th></tr>
+      <tr><td>Váha</td><td>klouzavý průměr 7 dní</td><td>voda/glykogen/sůl ±1–3 kg/den</td></tr>
+      <tr><td>Tělesné míry</td><td>~21 dní (3 týdny)</td><td>pomalá změna + nepřesnost metru</td></tr>
+      <tr><td>Síla (1RM)</td><td>trend z ≥ 2 tréninků na cvik</td><td>jeden špatný den ≠ ztráta síly</td></tr>
+      <tr><td>Fotky</td><td>1× za 2–4 týdny</td><td>vizuální změna je pozvolná</td></tr>
+    </table>
+
+    <h2>Váha: čteš čáru, ne ranní číslo</h2>
+    <p>Velké číslo na obrazovce NENÍ dnešní vážení — je to klouzavý průměr za 7 dní. Nauč klienta vážit se ráno, po záchodě, nalačno, vždy stejně, ideálně denně (min. 3–4×/týden — průměr je tak silný, jak hustý je log).</p>
+
+    <h2>Míry: když váha lže</h2>
+    <p>Obvody (hrudník, pas, boky, zadek, stehno) se mění pomaleji, okno 3 týdny. Na míry spoléháš, když <strong>váha lže</strong> — rekompozice (pas dolů, zadek/stehno nahoru), začátečnice v objemu, plató. Čtení podle pohlaví: muž primárně váha + pas, u ženy je pokles prsou/obvodů validní signál tuku. Kdo nechce na váhu vůbec, může jet čistě na obvodech.</p>
+
+    <h2>Fotky: pomalé, ale nejvíc vidět</h2>
+    <p>1× za 2–4 týdny, stejné světlo a póza (zepředu / z boku / zezadu). Soukromé úložiště, podepsané URL na 1 hodinu — vidí je jen klient a ty. Řekni to klientovi nahlas, buduje to důvěru.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klient přijde vyděšený, že za noc nabral 2 kg. Otevřu graf klouzavého průměru: „Vidíš tu přímku? Ta jde dolů. To, co tě vyděsilo ráno, je sůl z včerejší pizzy a voda. Hodnotíme tuhle čáru, ne ranní číslo."</div>`,
+  task: 'U jednoho klienta urči, která metrika je pro něj teď hlavní (váha vs. míry vs. fotky) a proč. Pokud je v recompu nebo platu, naplánuj, jak přesměruješ jeho pozornost z váhy na obvody.',
+  quiz: [
+    { q: 'Jaké je okno trendu pro váhu a proč?', a: 'Klouzavý průměr 7 dní — voda, glykogen a sůl hýbou váhou o 1–3 kg ze dne na den, jedno vážení nic neřekne.' },
+    { q: 'Kdy se spoléháš na míry místo váhy?', a: 'Když váha lže — rekompozice, začátečnice v objemu, plató. Obvody ukážou změnu, kterou váha schová.' },
+    { q: 'Jak často a jak se dělají fotky pokroku?', a: '1× za 2–4 týdny, stejné světlo a póza (zepředu/z boku/zezadu). Soukromé, podepsané URL — vidí je jen klient a ty.' },
+    { q: 'Jak silný je klouzavý průměr váhy?', a: 'Tak silný, jak hustý je log. Proto klient váží ráno, nalačno, stejně, ideálně denně (min. 3–4×/týden).' },
+    { q: 'Jaké je čtení měr podle pohlaví?', a: 'Muž primárně váha + pas. U ženy je pokles prsou a obvodů validní signál úbytku tuku.' },
   ],
 },
 

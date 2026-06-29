@@ -119,7 +119,7 @@
       .les.isfree .s{color:var(--gold-soft);font-weight:700}
     </style>
     <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
-      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (216 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
+      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (219 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
       <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
     </a>
 
@@ -400,7 +400,10 @@
         { id:"m20-l3", t:"Rozhodovací pravidla: pořadí pák je svaté", available:true, href:"/akademie/studium/m20-l3/" },
         { id:"m20-l4", t:"Onboarding klienta: první týden", available:true, href:"/akademie/studium/m20-l4/" },
         { id:"m20-l1", t:"Veď klienta k samostatnosti (a získej z něj reklamu)", available:true, href:"/akademie/studium/m20-l1/" },
-        { id:"m20-l5", t:"Check-iny: co sleduješ týdně a jak upravuješ", available:true, href:"/akademie/studium/m20-l5/" }
+        { id:"m20-l5", t:"Check-iny: co sleduješ týdně a jak upravuješ", available:true, href:"/akademie/studium/m20-l5/" },
+        { id:"m20-l6", t:"Časté chyby klientů a jak je řešíš", available:true, href:"/akademie/studium/m20-l6/" },
+        { id:"m20-l7", t:"Startovací cíle a makra do hloubky", available:true, href:"/akademie/studium/m20-l7/" },
+        { id:"m20-l8", t:"Měření pokroku: čtyři okna, čtyři rychlosti", available:true, href:"/akademie/studium/m20-l8/" }
       ]}
     ];
     // ----- Free-preview (#35): ochutnávka pro nepřihlášené/nekupující + upsell -----
@@ -527,7 +530,7 @@
               if(!u){
                 FREEMODE = true; applyFreeMode();
                 var n0 = document.getElementById('modeNote');
-                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 216 lekcím odemkni celou Academy.';
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 219 lekcím odemkni celou Academy.';
                 try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
                 return;
               }
@@ -537,7 +540,7 @@
                 var note = document.getElementById('modeNote');
                 if (note) note.textContent = has
                   ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 216 lekcím odemkni celou Academy.';
+                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 219 lekcím odemkni celou Academy.';
                 window.BA.getProgress().then(render);
               });
             });
