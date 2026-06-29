@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding klienta: první týden — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.92rem;}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;color:var(--ink);}
+  th{background:rgba(255,122,0,.08);color:#fff;font-weight:700;}
+  .steps{counter-reset:s;margin:1.2rem 0;}
+  .steps .row{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 10px;}
+  .steps .row .num{counter-increment:s;flex:none;width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .steps .row .num::before{content:counter(s);}
+  .steps .row .b{flex:1;}.steps .row b{color:#fff;}.steps .row span{display:block;color:var(--muted-2);font-size:.94rem;margin-top:2px;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}.q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .lesson-nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:2.4rem;}
+  .lesson-nav a{flex:1;min-width:200px;text-decoration:none;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:14px 18px;color:#cfc6b8;}
+  .lesson-nav a .s{display:block;color:var(--muted);font-size:.82rem;margin-top:2px;}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src p{margin:.6rem 0 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/studium/">← Moje studium</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 20 — Martinův systém v praxi</div>
+    <h1>Onboarding klienta: první týden</h1>
+
+    <p class="lead">Onboarding má tři kroky a jedinou úlohu: posbírat minimum dat a hned spočítat startovní čísla. První věta klientovi je <strong>„Pojďme nastavit start. Pár údajů, ať umíme spočítat tvoje startovací cíle."</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Tři kroky onboardingu a co v nich měřit.</li>
+        <li>Proč nechat klienta vybrat aktivitu <strong>konzervativně</strong>.</li>
+        <li>Že tvoje práce v prvním týdnu je poctivost logu, ne ladění kalkulačky.</li>
+      </ul>
+    </div>
+
+    <h2>Tři kroky</h2>
+    <div class="steps">
+      <div class="row"><div class="num"></div><div class="b"><b>Měříš</b><span>Jméno, pohlaví, výška, váha, věk, aktivita (5 stupňů: sedavý ×1,2 / lehká ×1,375 / střední ×1,55 / aktivní ×1,725 / velmi aktivní ×1,9).</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Cíl a tempo</b><span>Hubnutí / udržení / nabírání / rekompozice. U hubnutí default „Střední" (0,75 %/týden) — „Bez extrémů. Rozumné tempo je 0,5–1,0 % tělesné hmotnosti týdně." U nabírání default 0,25 kg/týden, strop 0,5.</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Startovní čísla</b><span>Denní cíl (kcal + makra) a odhad výdeje. Spočítá se z Mifflin-St Jeor → TDEE → cíl podle tempa.</span></div></div>
+    </div>
+
+    <h2>Konzervativní start, realita doladí</h2>
+    <p><strong>Aktivitu nech vybrat konzervativně.</strong> Posun o stupeň je rozdíl stovek kalorií. Reálný log to za pár týdnů stejně dorovná. A hlavně: <strong>tvoje práce v prvním týdnu je dotáhnout poctivost logu, ne ladit kalkulačku.</strong> Mifflin je jen odhad — nehádej se s klientem o „správné" číslo.</p>
+
+    <p>Větu na konci onboardingu musí umět každý trenér zopakovat vlastními slovy:</p>
+    <blockquote>„Tohle jsou startovní čísla, ne dogma. Až budeš pár týdnů logovat jídlo, vážit se a měřit obvody, cíle se samy doladí podle reality."</blockquote>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klient u onboardingu váhá mezi „lehká" a „střední" aktivita. Řeknu mu: „Vyber radši nižší. Když podstřelíš, appka to za dva tři týdny dorovná podle toho, co reálně sníš a jak se hýbe váha. Když přestřelíš, budeš se ptát, proč to nejde." Konzervativní start, realita doladí.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaké tři kroky má onboarding? <span class="tg">odpověď ▾</span></div><div class="aa">1) Měříš (pohlaví, výška, váha, věk, aktivita), 2) cíl a tempo, 3) startovní čísla (kcal + makra + odhad výdeje z Mifflin-St Jeor).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč nechat klienta vybrat aktivitu spíš nižší? <span class="tg">odpověď ▾</span></div><div class="aa">Posun o stupeň = stovky kalorií. Když podstřelíš, reálný log to za pár týdnů dorovná. Když přestřelíš, klient se diví, proč to nejde.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co je tvoje hlavní práce v prvním týdnu? <span class="tg">odpověď ▾</span></div><div class="aa">Dotáhnout poctivost logu, ne ladit kalkulačku. Mifflin je jen odhad, realita ho doladí.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaké je rozumné tempo hubnutí, které klientovi nastavíš? <span class="tg">odpověď ▾</span></div><div class="aa">0,5–1,0 % tělesné hmotnosti týdně. Bez extrémů — udržení je víc než rychlé shození.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak klientovi vysvětlíš startovní čísla? <span class="tg">odpověď ▾</span></div><div class="aa">„Tohle jsou startovní čísla, ne dogma. Až budeš pár týdnů logovat a měřit se, cíle se samy doladí podle reality."</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Naonboarduj (klidně na papíře) modelového klienta: posbírej 3 kroky, vyber konzervativně aktivitu a napiš tu závěrečnou větu „startovní čísla, ne dogma" vlastními slovy tak, jak bys ji řekl naživo.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-mod" href="/akademie/studium/m20-l3/">← Rozhodovací pravidla</a>
+      <a class="lnav-next" href="/akademie/studium/m20-l1/">Veď klienta k samostatnosti →</a>
+    </nav>
+
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroj a zpracování</summary>
+      <p>Lekce vychází z koučovacího systému Martina Barny, který je zhmotněný v jeho appce („Tvůj Coach") a ověřený 15 lety praxe na 600+ klientech. Čísla a pravidla odpovídají logice enginu appky. Autorské zpracování: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m20-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){ window.BA.ready.then(function(){ window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+      else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260628a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629"></script>
+</body>
+</html>
