@@ -78,6 +78,14 @@
         .macro { background:rgba(255,255,255,.15); border-radius:14px; padding:1rem .5rem; }
         .macro .num { font-size:1.5rem; font-weight:800; }
         .macro .lbl { font-size:.8rem; opacity:.9; }
+        .freeplan { margin:2.4rem auto 0; max-width:840px; background:var(--green-light); border:1px solid rgba(255,122,0,.32); border-radius:18px; padding:26px 28px; }
+        .freeplan .fp-inner { display:flex; align-items:center; gap:26px; flex-wrap:wrap; justify-content:space-between; }
+        .freeplan .fp-txt { flex:1; min-width:260px; }
+        .freeplan .fp-kick { display:inline-block; background:rgba(255,122,0,.14); border:1px solid rgba(255,122,0,.4); color:#b85600; font-weight:700; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; padding:4px 12px; border-radius:50px; }
+        .freeplan h3 { font-size:1.32rem; font-weight:800; color:var(--ink); margin:.65rem 0 .4rem; }
+        .freeplan p { color:#444; margin:0; font-size:.96rem; line-height:1.5; }
+        .freeplan .fp-btn { white-space:nowrap; }
+        @media(max-width:560px){ .freeplan .fp-btn { width:100%; text-align:center; } }
         .crumbs { font-size:.85rem; color:#666; padding:14px 0 0; }
         .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
         footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:28px 0; }
@@ -185,6 +193,17 @@
                     </div>
                 </div>
             </div>
+            <!-- Kontextová free nabídka — odemkne se po výpočtu -->
+            <div id="freeplan-cta" class="freeplan d-none">
+                <div class="fp-inner">
+                    <div class="fp-txt">
+                        <span class="fp-kick">Zdarma · bez závazku</span>
+                        <h3>Chceš hotový jídelníček přesně na tahle čísla?</h3>
+                        <p>Spočítané makra jsou jen start. Pošlu ti <strong>7denní jídelníček</strong>, který je trefuje — jasné porce, běžné potraviny, žádné vážení. Rovnou na e-mail.</p>
+                    </div>
+                    <a id="freeplan-btn" href="/makro-plan/" class="btn btn-grn fp-btn">Stáhnout plán zdarma →</a>
+                </div>
+            </div>
             <p class="text-center text-muted mt-4 mb-0">Chceš se naučit s čísly pracovat naplno? Mrkni na <a href="/videokurz">videokurz</a> nebo si nech sestavit <a href="/#balicky">jídelníček na míru v koučinku</a>.</p>
         </div>
     </section>
@@ -224,6 +243,12 @@
             document.getElementById('r-tuk').textContent = tuky;
             document.getElementById('r-sach').textContent = sacharidy;
             document.getElementById('r-vlak').textContent = vlaknina;
+            // Odemkni kontextovou free nabídku + naroutuj podle pohlaví (žena → makro plán, muž → forma zpět)
+            var fp = document.getElementById('freeplan-cta');
+            if (fp) {
+                fp.classList.remove('d-none');
+                document.getElementById('freeplan-btn').href = (pohlavi === 'zena') ? '/makro-plan/' : '/forma-zpet/';
+            }
         }
     </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
