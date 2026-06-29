@@ -151,8 +151,8 @@
     function fmt(n){return Math.round(n);}
     function macros(m){return 'B '+fmt(m.p)+' · S '+fmt(m.c)+' · T '+fmt(m.f)+' · '+fmt(m.kcal)+' kcal';}
     function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
-    function saveBrand(){ try{ localStorage.setItem('ba_meal_brand', JSON.stringify({t:$('trainer').value,a:$('accent').value,l:$('logo').value,c:$('contact').value})); }catch(e){} }
-    function loadBrand(){ try{ var b=JSON.parse(localStorage.getItem('ba_meal_brand')||'{}'); if(b.t)$('trainer').value=b.t; if(b.a)$('accent').value=b.a; if(b.l)$('logo').value=b.l; if(b.c)$('contact').value=b.c; if(b.t||b.l)$('brandbox').open=true; }catch(e){} }
+    function saveBrand(){ try{ localStorage.setItem('ba_trainer_brand', JSON.stringify({t:$('trainer').value,a:$('accent').value,l:$('logo').value,c:$('contact').value})); }catch(e){} }
+    function loadBrand(){ try{ var b=JSON.parse(localStorage.getItem('ba_trainer_brand')||'{}'); if(b.t)$('trainer').value=b.t; if(b.a)$('accent').value=b.a; if(b.l)$('logo').value=b.l; if(b.c)$('contact').value=b.c; if(b.t||b.l)$('brandbox').open=true; }catch(e){} }
 
     fetch('/assets/food-db.json').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
