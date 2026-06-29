@@ -75,6 +75,17 @@
   .modcard .pct { font-size:.74rem; color:var(--gold-soft); font-weight:700; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:3px 10px; border-radius:50px; }
   .modcard.done-all { border-color:rgba(47,174,87,.45); }
   .modcard.done-all .pct { color:#86e29a; background:rgba(47,174,87,.12); border-color:rgba(47,174,87,.3); }
+  /* free vs. zamčeno na přehledu (#36): odemčené moduly svítí, zamčené ztmavnou */
+  .modcard.has-free { border-color:rgba(255,122,0,.5); background:linear-gradient(180deg,rgba(255,122,0,.1),rgba(255,255,255,.02)); box-shadow:0 0 0 1px rgba(255,122,0,.22),0 22px 46px -26px rgba(255,122,0,.42); }
+  .modcard.has-free .ix { box-shadow:0 0 18px -2px rgba(255,122,0,.75); }
+  .modcard.mod-locked { opacity:.52; filter:grayscale(.4); }
+  .modcard.mod-locked:hover { opacity:.82; transform:translateY(-3px); box-shadow:none; border-color:rgba(255,122,0,.25); }
+  .modcard .mfree { font-size:.74rem; color:#160d04; font-weight:800; background:linear-gradient(145deg,var(--gold-2),var(--gold)); padding:3px 11px; border-radius:50px; white-space:nowrap; }
+  .modcard .mlock { font-size:.74rem; color:var(--muted); font-weight:700; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:3px 10px; border-radius:50px; white-space:nowrap; }
+  .modlegend { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 15px; font-size:.82rem; font-weight:600; }
+  .modlegend span { display:inline-flex; align-items:center; gap:6px; padding:6px 13px; border-radius:50px; border:1px solid var(--line); }
+  .modlegend .lg-free { color:var(--gold-soft); background:rgba(255,122,0,.08); border-color:rgba(255,122,0,.3); }
+  .modlegend .lg-lock { color:var(--muted); background:rgba(255,255,255,.03); }
   .backlink { display:inline-flex; align-items:center; gap:7px; color:var(--muted-2); text-decoration:none; font-weight:600; font-size:.9rem; margin-bottom:16px; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:9px 16px; border-radius:50px; transition:.2s; }
   .backlink:hover { border-color:rgba(255,122,0,.4); color:#fff; }
   .secnav { display:flex; align-items:stretch; gap:12px; margin-top:24px; flex-wrap:wrap; }
@@ -419,6 +430,7 @@
     // ----- Sekční nástěnka (#33): přehled modulů → fokus na jeden modul -----
     var DONE = {};
     function mc(m){ var a=0,d=0; m.lessons.forEach(function(l){ if(l.available){ a++; if(DONE[l.id]) d++; } }); return {a:a,d:d}; }
+    function freeCount(m){ var n=0; m.lessons.forEach(function(l){ if(l.available && FREE[l.id]) n++; }); return n; }
     function lessonRow(l){
       var isDone = !!DONE[l.id];
       if (l.available && FREEMODE && !FREE[l.id])
@@ -430,14 +442,28 @@
       return '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
     }
     function renderOverview(){
-      var html = '<div class="modgrid">';
+      var html = '';
+      if (FREEMODE) html += '<div class="modlegend"><span class="lg-free">🔓 Můžeš číst zdarma</span><span class="lg-lock">🔒 Odemkneš s Academy</span></div>';
+      html += '<div class="modgrid">';
       CURRICULUM.forEach(function(m, mi){
         var c = mc(m), pct = c.a? Math.round(c.d/c.a*100) : 0;
-        html += '<a class="modcard'+(c.a && c.d===c.a ? ' done-all':'')+'" href="#m'+(mi+1)+'">'
+        var fc = FREEMODE ? freeCount(m) : 0;
+        var cls = 'modcard';
+        if (FREEMODE) cls += fc>0 ? ' has-free' : ' mod-locked';
+        else if (c.a && c.d===c.a) cls += ' done-all';
+        var foot;
+        if (FREEMODE){
+          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'
+            + (fc>0 ? '<span class="mfree">🔓 '+fc+' zdarma</span>' : (c.a? '<span class="mlock">🔒 Zamčeno</span>' : ''))
+            + '</div>';
+        } else {
+          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'+(c.a? '<span class="pct">'+pct+' %</span>' : '')+'</div>';
+        }
+        html += '<a class="'+cls+'" href="#m'+(mi+1)+'">'
           + '<div class="top"><span class="ix">'+(mi+1)+'</span><h3>'+m.t+'</h3></div>'
           + '<p>'+m.d+'</p>'
-          + (c.a? '<div class="mbar"><span style="width:'+pct+'%"></span></div>' : '')
-          + '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'+(c.a? '<span class="pct">'+pct+' %</span>' : '')+'</div>'
+          + (!FREEMODE && c.a? '<div class="mbar"><span style="width:'+pct+'%"></span></div>' : '')
+          + foot
           + '</a>';
       });
       html += '</div>';
