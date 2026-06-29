@@ -51,7 +51,7 @@
 
     var st = document.createElement('style');
     st.textContent =
-      '.la-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:-.4rem 0 1.6rem}' +
+      '.la-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:1rem 0 1.7rem}' +
       '.la-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(145deg,var(--gold-2,#ff9d3c),var(--gold,#ff7a00));color:#160d04;border:none;font-weight:700;font-size:.92rem;padding:10px 18px;border-radius:50px;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .15s;box-shadow:0 6px 16px rgba(255,122,0,.18)}' +
       '.la-btn:hover{transform:translateY(-1px)}.la-btn.on{box-shadow:0 0 0 3px rgba(255,122,0,.22)}' +
       '.la-note{font-size:.78rem;color:var(--muted,#9a948c);max-width:340px;line-height:1.4}';
