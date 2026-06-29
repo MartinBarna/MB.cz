@@ -16,7 +16,7 @@
 --    Puvodni text "stahl sis plan zdarma" nesedi pro registrovane cleny ->
 --    menime na neutralni a pravdive zneni (legalne staci viditelny odhl. odkaz).
 insert into public.app_config (key, value) values
-('footer_html', $f$Tento e-mail jsi dostal[a], protože ses přihlásil[a] k odběru nebo registroval[a] na martinbarna.cz.<br>Nechceš už e-maily? <a href="{{unsubscribe_url}}" style="color:#999">Odhlásit se</a> — jedním klikem, bez urážky :)<br>Martin Barna — online výživový Coach · <a href="https://martinbarna.cz" style="color:#999">martinbarna.cz</a>$f$),
+('footer_html', $f$Tento e-mail jsi dostal[a], protože ses přihlásil[a] k odběru nebo registroval[a] na martinbarna.cz.<br>Nechceš už e-maily? <a href="{{unsubscribe_url}}" style="color:#999">Odhlásit se</a> můžeš kdykoliv jedním klikem.<br>Martin Barna — online výživový Coach · <a href="https://martinbarna.cz" style="color:#999">martinbarna.cz</a>$f$),
 ('footer_text', $f$Tento e-mail jsi dostal[a], protože ses přihlásil[a] k odběru nebo registroval[a] na martinbarna.cz.
 Odhlásit se: {{unsubscribe_url}}
 Martin Barna — online výživový Coach · martinbarna.cz$f$)
