@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doporuč a získej kredit — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .ref-code{display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;margin:1.2rem 0 .4rem}
+  .ref-code b{font-size:clamp(1.6rem,6vw,2.4rem);letter-spacing:.08em;color:#ff9d3c;font-weight:800;background:rgba(255,122,0,.1);border:1px dashed rgba(255,122,0,.45);border-radius:14px;padding:10px 22px}
+  .ref-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:1rem 0 0}
+  .ref-btns a,.ref-btns button{cursor:pointer;border:none;font-family:inherit;font-weight:700;font-size:.95rem;padding:12px 20px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s,opacity .15s}
+  .ref-btns a:hover,.ref-btns button:hover{transform:translateY(-2px)}
+  .b-wa{background:#25D366;color:#06281a}
+  .b-copy{background:#ff7a00;color:#1a1208}
+  .b-ghost{background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.16)!important}
+  .ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1.6rem 0}
+  .ref-stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px 10px;text-align:center}
+  .ref-stats .s b{display:block;font-size:1.7rem;color:#ff9d3c;font-weight:800;line-height:1}
+  .ref-stats .s span{font-size:.78rem;color:#b7ab9b}
+  @media(max-width:520px){.ref-stats{grid-template-columns:1fr 1fr}}
+  .ref-how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:1.4rem 0}
+  .ref-how .h{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 16px}
+  .ref-how .h .n{width:30px;height:30px;border-radius:50%;background:#ff7a00;color:#1a1208;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+  .ref-how .h b{color:#fff;display:block;margin-bottom:4px}
+  .ref-how .h p{color:#b7ab9b;font-size:.9rem;margin:0;line-height:1.5}
+  @media(max-width:640px){.ref-how{grid-template-columns:1fr}}
+  .ref-terms{font-size:.86rem;color:#9b8e7d;line-height:1.6;border-top:1px solid rgba(255,255,255,.08);margin-top:2rem;padding-top:1.2rem}
+  .ref-terms b{color:#cbbfae}
+  .copied{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1a130c;border:1px solid #3a2c1c;color:#ffb066;padding:10px 20px;border-radius:50px;font-weight:700;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9999}
+  .copied.on{opacity:1}
+  #refLoad,#refErr,#refGate{text-align:center;color:#b7ab9b;padding:2rem 0}
+  #refErr a,#refGate a{color:#ff9d3c}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Doporučení</span></span></a>
+    <div class="topr"><a href="/akademie/moje/">Zpět na nástěnku</a><a id="logout">Odhlásit</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Program doporučení</span>
+    <h1>Doporuč a <span class="hl">získej kredit</span></h1>
+    <p class="lead">Líbí se ti, co tu máš? Pošli to dál. Kamarád dostane slevu, ty kredit na svůj další nákup. Férový deal pro oba.</p>
+
+    <div id="refLoad">Načítám tvůj kód…</div>
+
+    <div id="refMain" style="display:none;">
+      <div class="panel" style="text-align:center;">
+        <div style="color:#b7ab9b;font-size:.92rem;">Tvůj osobní kód</div>
+        <div class="ref-code"><b id="refCodeVal">BARNA-····</b><button class="b-ghost" id="copyCode" style="padding:10px 16px;border-radius:50px;">Kopírovat kód</button></div>
+        <div style="color:#8a7e6d;font-size:.82rem;word-break:break-all;" id="refLink">martinbarna.cz/?ref=…</div>
+        <div class="ref-btns">
+          <a class="b-wa" id="shareWa" target="_blank" rel="noopener">Poslat přes WhatsApp</a>
+          <button class="b-copy" id="copyLink">Kopírovat odkaz</button>
+        </div>
+      </div>
+
+      <div class="ref-stats">
+        <div class="s"><b id="stConf">0</b><span>přivedených kamarádů</span></div>
+        <div class="s"><b id="stPend">0</b><span>čeká na potvrzení</span></div>
+        <div class="s"><b id="stCredit">0 Kč</b><span>kredit k dispozici</span></div>
+      </div>
+
+      <h2 style="margin-top:2rem;">Jak to funguje</h2>
+      <div class="ref-how">
+        <div class="h"><div class="n">1</div><b>Pošli svůj kód</b><p>Hoď kamarádovi svůj kód nebo odkaz. Klidně přes WhatsApp jedním klikem.</p></div>
+        <div class="h"><div class="n">2</div><b>Kamarád ho zadá u objednávky</b><p>Při nákupu videokurzu nebo Academy zadá tvůj kód jako slevový kupón a hned vidí nižší cenu.</p></div>
+        <div class="h"><div class="n">3</div><b>Tobě naskočí kredit</b><p>Jakmile nákup projde a uplyne vratná lhůta, připíšu ti kredit. Uplatníš ho na svůj další nákup.</p></div>
+      </div>
+
+      <div class="ref-terms">
+        <b>Kolik dostaneš (a kamarád ušetří):</b><br>
+        • <b>Videokurz výživy:</b> kamarád −150 Kč, ty 150 Kč kredit.<br>
+        • <b>Academy:</b> kamarád −20 % z první platby, ty 300 Kč kredit.<br><br>
+        Kredit se připíše po zaplacení a uplynutí 14denní vratné lhůty. Platí 1× na kupujícího,
+        nelze použít na vlastní nákup, kredit má platnost 12 měsíců. Program lze kdykoliv upravit.
+        Otázka nebo nesedí ti stav? Napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>.
+      </div>
+    </div>
+
+    <div id="refGate" style="display:none;">
+      Program doporučení je pro zákazníky Academy nebo videokurzu. Jakmile máš přístup, najdeš tu svůj kód.<br><br>
+      <a href="/videokurz">Videokurz za 800 Kč</a> · <a href="/akademie/">Academy</a>
+    </div>
+    <div id="refErr" style="display:none;">
+      Něco se nepovedlo načíst. Zkus to za chvíli, nebo napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>.
+    </div>
+
+    <p class="foot">Barna Academy — Martin Barna · online výživa a fitness</p>
+  </div>
+
+  <div class="copied" id="toast">Zkopírováno ✓</div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){
+    var FN = 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1';
+    var $ = function(id){ return document.getElementById(id); };
+    function show(id){ ['refLoad','refMain','refGate','refErr'].forEach(function(x){ $(x).style.display = (x===id?'':'none'); }); }
+    function toast(){ var t=$('toast'); t.classList.add('on'); setTimeout(function(){ t.classList.remove('on'); }, 1400); }
+    function copy(txt){ (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(toast).catch(function(){
+      var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); toast(); }catch(e){} document.body.removeChild(ta);
+    }); }
+
+    if(!window.BA_CONFIG || !window.supabase){ show('refErr'); return; }
+    var sb = window.supabase.createClient(window.BA_CONFIG.url, window.BA_CONFIG.anonKey, { auth:{ persistSession:true, autoRefreshToken:true } });
+
+    var lg=$('logout'); if(lg) lg.addEventListener('click', function(e){ e.preventDefault(); sb.auth.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); });
+
+    sb.auth.getSession().then(function(res){
+      var session = res && res.data && res.data.session;
+      if(!session){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/doporuc/'); return; }
+      var token = session.access_token;
+      fetch(FN+'/referral-code', { headers:{ Authorization:'Bearer '+token } })
+        .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, status:r.status, j:j }; }); })
+        .then(function(out){
+          if(out.status===403 || (out.j && out.j.error==='no_entitlement')){ show('refGate'); return; }
+          if(!out.ok || !out.j || !out.j.code){ show('refErr'); return; }
+          var code = out.j.code, link = out.j.share_url || ('https://martinbarna.cz/?ref='+code);
+          var st = out.j.status || {};
+          $('refCodeVal').textContent = code;
+          $('refLink').textContent = link.replace(/^https?:\/\//,'');
+          $('stConf').textContent = (st.referrals_confirmed||0);
+          $('stPend').textContent = (st.referrals_pending||0);
+          $('stCredit').textContent = (st.credit_confirmed||0)+' Kč';
+          var msg = 'Čau! Mrkni na výživový videokurz a Academy od Martina Barny — s mým kódem '+code+' máš slevu: '+link;
+          $('shareWa').href = 'https://wa.me/?text='+encodeURIComponent(msg);
+          $('copyCode').addEventListener('click', function(){ copy(code); });
+          $('copyLink').addEventListener('click', function(){ copy(link); });
+          show('refMain');
+        })
+        .catch(function(){ show('refErr'); });
+    }).catch(function(){ show('refErr'); });
+  })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>
