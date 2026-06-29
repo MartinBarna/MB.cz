@@ -25,7 +25,7 @@ Pozn.: tohle nasadit AŽ ve chvíli, kdy šablony existují v DB — jinak by le
 ```json
 [
   {"t":"p","html":"Ahoj{{fn_space}},"},
-  {"t":"p","html":"díky, že sis vygeneroval[a] plán přes můj <strong>generátor zdarma</strong>. Není to hračka pro efekt — počítá s reálnými makry a dává rozumný základ, ze kterého se dá rovnou jet."},
+  {"t":"p","html":"díky, že sis vygeneroval[a] plán přes můj <strong>generátor zdarma</strong>. Není to hračka na efekt, fakt počítá s reálnými makry a dá Ti rozumný základ, ze kterýho se dá rovnou jet."},
   {"t":"p","html":"Ať to nezůstane u jednoho: na stránce máš <strong>dva nástroje</strong> — jídelníček i trénink. Jestli sis pustil[a] zatím jen jeden, mrkni i na ten druhý:"},
   {"t":"btn","text":"Oba generátory zdarma","href":"https://martinbarna.cz/nastroje-zdarma/"},
   {"t":"p","html":"Jak z toho vytěžit maximum:"},
@@ -37,13 +37,13 @@ Pozn.: tohle nasadit AŽ ve chvíli, kdy šablony existují v DB — jinak by le
 ```
 
 ## Step 1 — Hodnota/edukace · wait_days: 3
-**subject:** `Proč Ti makra „nesedí" (a jak to spravit)`
+**subject:** `Proč Ti makra po pár týdnech přestanou sedět`
 **preheader:** `Nejčastější chyba, na které lidi i trenéři shoří.`
 ```json
 [
   {"t":"p","html":"Ahoj{{fn_space}},"},
   {"t":"p","html":"generátor Ti dal čísla. Ale čísla samotná nikoho nezformovala. Tady je věc, kterou vidím pořád dokola — u lidí, co makají pro sebe, i u trenérů:"},
-  {"t":"p","html":"<strong>Makra nastavíš jednou a pak je půl roku neměníš.</strong> Tělo se ale adaptuje. Co fungovalo na startu, za pár týdnů přestane. Není to selhání vůle — je to fyziologie."},
+  {"t":"p","html":"<strong>Makra nastavíš jednou a pak je půl roku neměníš.</strong> Tělo se ale adaptuje. Co fungovalo na startu, za pár týdnů přestane. Není to o vůli, prostě fyziologie."},
   {"t":"p","html":"Co s tím prakticky:"},
   {"t":"bullets","items":["Drž <strong>bílkovinu vysoko a stabilně</strong> (zhruba 1,6–2 g na kg) — to je páka, na kterou se nešahá.","Hýbej hlavně <strong>sacharidy a tuky</strong> podle toho, jak reaguje váha a zrcadlo — podle <strong>týdenního průměru</strong>, ne jednoho dne.","U tréninku stejně: <strong>progresivní přetížení</strong>. Když týdny zvedáš pořád stejně, tělo nemá důvod se měnit."]},
   {"t":"p","html":"Tohle je rozdíl mezi „mám plán" a „umím plán řídit". To druhé je dovednost — a přesně tu učím v <strong>Barna Academy</strong> krok za krokem. Dnes stačí pohlídat bílkovinu a sledovat průměr."},
@@ -52,7 +52,7 @@ Pozn.: tohle nasadit AŽ ve chvíli, kdy šablony existují v DB — jinak by le
 ```
 
 ## Step 2 — Co je Academy + value stack · wait_days: 4
-**subject:** `Co celé je Barna Academy (a pro koho)`
+**subject:** `Co všechno je Barna Academy`
 **preheader:** `Generátory v plné verzi, klientské materiály, audio, certifikace.`
 ```json
 [
@@ -80,7 +80,7 @@ Pozn.: tohle nasadit AŽ ve chvíli, kdy šablony existují v DB — jinak by le
   {"t":"bullets","items":["<strong>224 lekcí ve 20 modulech</strong> + generátory v plné verzi","<strong>Přebrandovatelné klientské materiály</strong> — okamžitě použitelné","<strong>Audio lekce, certifikace, videokurz</strong>","<strong>Doživotní přístup</strong> — zaplatíš jednou, máš napořád, včetně aktualizací"]},
   {"t":"p","html":"Spočítej si to: jestli to děláš pro klienty, vrátí se Ti to na jednom dvou. Jestli pro sebe, je to zlomek toho, co stojí roky tápání a vyhozených peněz za nefunkční rady."},
   {"t":"btn","text":"Vzít Academy za 8 900 Kč","href":"https://martinbarna.cz/akademie/"},
-  {"t":"p","html":"Nečekej na „ideální pondělí" — to nepřijde. Buď do toho jdeš teď za zaváděcí cenu, nebo Ti budu fandit z dálky. Ale věřím, že to dáš. 💪"},
+  {"t":"p","html":"Žádný „ideální pondělí" nebude. Buď do toho jdeš teď za zaváděcí cenu, nebo Ti budu fandit z dálky. Ale věřím, že to dáš. 💪"},
   {"t":"p","html":"<strong>Be Effective!</strong><br>Martin"},
   {"t":"ps","html":"P.S. Máš dotaz, jestli se Ti to vyplatí? Napiš mi jednou větou, co řešíš, a řeknu Ti narovinu, jestli do toho jít."}
 ]

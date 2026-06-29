@@ -3,7 +3,7 @@
 Pro: všechny lead-magnet leady (track `lead-magnet`), kdo ještě nekoupil videokurz (skip buyers řeší engine).
 Jednorázový broadcast (ne drip krok). Test-first na `fitness.barna@gmail.com` (obě varianty), pak po „pošli ostro" ostro.
 
-**Subject:** `Zkus videokurz zadarmo — a rozhodni se, až budeš chtít`
+**Subject:** `Zkus videokurz zadarmo, bez závazku`
 **Preheader:** `Pár lekcí zdarma, bez karty. A když si vezmeš celý, máš 15 %.`
 
 ```json

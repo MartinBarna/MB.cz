@@ -23,7 +23,7 @@
 ---
 
 ## Mail 1 — Doručení (den 0, ihned po odeslání formuláře)
-**Subject:** Tady máš svůj plán, {{first_name}} 💪
+**Subject:** Tvůj plán je tady, {{first_name}}
 **Preheader:** Otevři, stáhni a rovnou se do toho dáme.
 
 Ahoj {{first_name}}!
@@ -35,7 +35,7 @@ Tak jak jsem slíbil — přece sis nemyslel{a}, že Ti nepošlu aspoň příloh
 Co s tím:
 - Otevři ho ještě dnes a mrkni na **den 1** — žádná věda, jasné porce, běžné potraviny.
 - Nemusíš nic vážit ani počítat. Stačí jet podle plánu.
-- Nejde o dokonalost. Jde o to **začít** a být v tom poctivý sám k sobě.
+- Nemusí to být dokonalý. Hlavně **začni** a buď k sobě poctivej.
 
 Příští dny Ti pošlu pár věcí, co dělají u mých klientů největší rozdíl — krátce a k věci, žádné romány.
 
@@ -50,7 +50,7 @@ Martin
 **Subject:** Chyba č. 1, na které lidi shoří
 **Preheader:** A není to „málo silné vůle".
 
-Ahoj {{first_name}},
+Nazdar {{first_name}},
 
 Za roky praxe a 600+ proměn vidím pořád dokola jednu věc: lidi to vzdají **po prvním malém úspěchu**. Zhubnou dvě kila, uchlácholí se — a vrátí se do starých kolejí.
 
@@ -76,7 +76,7 @@ Ahoj {{first_name}},
 
 Nejčastější mýtus: „abych zhubl{a}, musím vyřadit X". Nemusíš.
 
-Funguje to jednoduše — **neprodávám ryby, učím rybařit**. Místo striktního jídelníčku Tě naučím, jak si jídlo poskládáš sám{a} z toho, co Ti chutná a na co máš „rozpočet" (kalorií a bílkovin). Pak si dáš i pizzu a pořád jedeš dolů.
+**Neprodávám ryby, učím rybařit.** Místo striktního jídelníčku Tě naučím, jak si jídlo poskládáš sám{a} z toho, co Ti chutná a na co máš „rozpočet" (kalorií a bílkovin). Pak si dáš i pizzu a pořád jedeš dolů.
 
 3 věci, co fungují hned:
 1. **Bílkovina v každém jídle** — zasytí a drží svaly.
@@ -95,7 +95,7 @@ Martin
 ---
 
 ## Mail 4 — Nabídka videokurzu (den +6) · COURSE OFFER
-**Subject:** Chceš to celé, krok za krokem?
+**Subject:** Chceš to celý, ne jen ochutnávku?
 **Preheader:** Videokurz výživy — všechno, co učím klienty, na jednom místě.
 
 Ahoj {{first_name}},
@@ -123,7 +123,7 @@ Martin
 **Subject:** {{first_name}}, mám pro Tebe -{{discount_pct}} %
 **Preheader:** Krátké okno, ať Tě to nakopne.
 
-Ahoj {{first_name}},
+Čus {{first_name}},
 
 Vím, jak to chodí — „udělám to později". A později nikdy nepřijde :)
 
@@ -142,9 +142,9 @@ Martin
 **Subject:** Znáš někoho, kdo to taky řeší?
 **Preheader:** Pošli to dál — vyhrajete oba.
 
-Ahoj {{first_name}},
+Tak co, {{first_name}},
 
-Ať už ses do toho pustil{a} naplno, nebo zatím jedeš podle plánu — díky, že jsi tady.
+ať už ses do toho pustil{a} naplno, nebo zatím jen koukáš podle plánu — každopádně díky, že to čteš.
 
 Jednu prosbu i nabídku: **znáš někoho**, kdo se trápí se stravou a pořád to vzdává? Pošli mu tenhle odkaz na plán zdarma:
 
