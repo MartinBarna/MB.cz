@@ -212,3 +212,16 @@ select option, select optgroup { color:#161616; background:#fff; }
 }
 .cta .bg-white .text-dark, .bg-white.shadow .text-dark { color:#fff!important; }
 .alert-success { background:rgba(47,174,87,.14)!important; color:#bfe9cb!important; border-color:rgba(47,174,87,.34)!important; }
+
+/* === Kontrast: zbytky světlého motivu, které zůstaly tmavé na tmavém pozadí ===
+   --green-light se výše přebíjí na tmavou (faint-orange), ale text stylovaný přes
+   třídy (ne inline atributem) zůstal #161616/var(--ink) → na tmavé kartě mizel.
+   (audit vizuálního renderu 2026-06-29: reference, přednášky, kalkulačka, akademie) */
+.cta-strip h2 { color:#fff!important; }
+.cta-strip p { color:var(--bd-muted2)!important; }
+.vid-cap { color:#cbbfae!important; }
+.freeplan h3 { color:#fff!important; }
+.freeplan p { color:var(--bd-muted2)!important; }
+.freeplan .fp-kick { color:var(--bd-gold-soft)!important; }
+/* zvýrazněný text s inline tmavou barvou na tmavé sekci → čitelná zlatá */
+strong[style*="--ink"], b[style*="--ink"], strong[style*="#161616"], em[style*="--ink"] { color:var(--bd-gold-soft)!important; }
