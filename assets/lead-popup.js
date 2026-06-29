@@ -81,7 +81,7 @@
     }
 
     // Triggery: čas (18 s), scroll 45 %, exit-intent (desktop). Co dřív.
-    var timer = setTimeout(show, 18000);
+    var timer;
     function onScroll() {
       var h = document.documentElement.scrollHeight - window.innerHeight;
       if (h > 0 && window.scrollY / h > 0.45) { show(); cleanup(); }
@@ -92,7 +92,27 @@
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('mouseout', onExit);
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    if (!('ontouchstart' in window)) document.addEventListener('mouseout', onExit);
+    function armTriggers() {
+      timer = setTimeout(show, 18000);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      if (!('ontouchstart' in window)) document.addEventListener('mouseout', onExit);
+    }
+
+    // GDPR: cookie lišta (mb_consent_v1) má přednost. Lead pop-up (celoobrazovkový
+    // overlay) nesmí zakrýt souhlas s cookies — počkáme, až ho návštěvník vyřeší.
+    // Fail-safe: kdyby se analytics.js nenačetl, po 60 s pop-up nasadíme tak jako tak.
+    function consentDecided() {
+      try { var v = localStorage.getItem('mb_consent_v1'); return v === 'granted' || v === 'denied'; }
+      catch (e) { return true; }
+    }
+    if (consentDecided()) {
+      armTriggers();
+    } else {
+      var waited = 0;
+      var iv = setInterval(function () {
+        waited += 600;
+        if (consentDecided() || waited >= 60000) { clearInterval(iv); armTriggers(); }
+      }, 600);
+    }
   } catch (e) { /* fail-safe: pop-up nikdy nesmí shodit stránku */ }
 })();
