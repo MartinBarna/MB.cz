@@ -160,7 +160,7 @@ Martin
 
 ### Patička (každý mail)
 > Tento e-mail jsi dostal{a}, protože sis stáhl{a} plán zdarma na martinbarna.cz.
-> Nechceš už e-maily? **[Odhlásit se]({{unsubscribe_url}})** — jedním klikem, bez urážky :)
+> Nechceš už e-maily? **[Odhlásit se]({{unsubscribe_url}})** můžeš kdykoliv jedním klikem.
 > Martin Barna — online výživový Coach · martinbarna.cz
 
 ### Slevové kódy — ŽIVÉ (SimpleShop, ověřené 28. 6. 2026)

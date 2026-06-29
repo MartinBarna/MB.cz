@@ -319,7 +319,7 @@ ol.scale{{margin:.4rem 0;padding-left:20px;}}ol.scale li{{padding:4px 0;font-siz
   <p class="lead">{lead}</p>
   <span class="kcalbadge">Start: <b>{kcal}</b> · doškáluj podle kalkulačky</span>
 
-  <div class="note"><b>Jak plán používat (přečti jako první):</b> Plán je rozumný start. Není to dogma — svá přesná čísla si spočítáš za minutu v kalkulačce a podle nich plán jen doškáluješ (návod „jak zvětšit/zmenšit\" je níž). Hodnoty maker jsou zaokrouhlené a orientační — důležitý je směr, ne desetiny gramu.</div>
+  <div class="note"><b>Jak plán používat (přečti jako první):</b> Plán je rozumný start. Není to dogma — svá přesná čísla si spočítáš za minutu v kalkulačce a podle nich plán jen doškáluješ (návod „jak zvětšit/zmenšit" je níž). Hodnoty maker jsou zaokrouhlené a orientační — důležitý je směr, ne desetiny gramu.</div>
 
   <h2>{intro_h}</h2>
   <p>{intro_p}</p>
@@ -353,7 +353,7 @@ ol.scale{{margin:.4rem 0;padding-left:20px;}}ol.scale li{{padding:4px 0;font-siz
     <a class="step" href="{CALC}" target="_blank"><span class="si">🧮</span><span class="st"><b>Spočítej si přesná makra</b><span>Čísla přímo na tebe — minuta práce.</span></span><span class="sgo">Kalkulačka →</span></a>
     <a class="step hot" href="{VK_FREE}" target="_blank"><span class="si">🎬</span><span class="st"><b>Vyzkoušej videokurz ZDARMA</b><span>Zaregistruj se a prvních pár lekcí máš zdarma — jak jíst, počítat makra a hubnout bez jojo. Bez karty.</span></span><span class="sgo">Spustit zdarma →</span></a>
     <a class="step" href="{BUY}" target="_blank"><span class="si">💪</span><span class="st"><b>Chceš celý systém?</b><span>Videokurz výživy — 182 videí + bonusy, doživotně. Vše, co učím klienty.</span></span><span class="sgo">Videokurz →</span></a>
-    <a class="step" href="{WA}" target="_blank"><span class="si">📞</span><span class="st"><b>Chceš to na míru?</b><span>Napiš mi „CALL\" na WhatsApp a domluvíme krátký hovor zdarma.</span></span><span class="sgo">WhatsApp →</span></a>
+    <a class="step" href="{WA}" target="_blank"><span class="si">📞</span><span class="st"><b>Chceš to na míru?</b><span>Napiš mi „CALL" na WhatsApp a domluvíme krátký hovor zdarma.</span></span><span class="sgo">WhatsApp →</span></a>
   </div>
 
   <div class="foot">
