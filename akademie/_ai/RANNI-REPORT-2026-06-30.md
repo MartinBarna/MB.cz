@@ -43,13 +43,23 @@ Oboustranný „give-get" pro **Academy i videokurz**: kamarád dostane slevu, T
 
 ---
 
-## 3) Obsah — 13 nových vědeckých „mýtus" článků (nasazeno)
+## 3) Obsah — 17 nových vědeckých „mýtus" článků (nasazeno) + SEO rozcestník
 
 Kardio nalačno · Kolik vajec a cholesterol · Frekvence jídel (5–6× denně) · Tuky a „light" ·
 Pocení a spalování tuku · Bolavé svaly (DOMS) · Protahování před tréninkem · Glykemický index ·
-Clean eating · Tuk vs sval (přeměna) · Kardio a svaly (interference) · Hnědý cukr a med · Fat burning zone.
+Clean eating · Tuk vs sval (přeměna) · Kardio a svaly (interference) · Hnědý cukr a med · Fat burning zone ·
+Pomalý metabolismus · Superpotraviny · Ovoce a cukr · BCAA/aminokyseliny.
 
-Všechny v Tvém stylu, s kartami a JSON-LD schématem na `/clanky/`, 0 broken linků, OG obrázky sedí.
+Všechny v Tvém stylu, s kartami a JSON-LD na `/clanky/`, 0 broken linků, OG sedí.
+
+**Nový SEO rozcestník `/myty/`** — „Fitness a výživové mýty", sbírá všech **26 mýtus-článků** na jednu
+indexovatelnou stránku (cíl: ranking na „fitness mýty"). Banner z blogu, doplněno do `sitemap.xml`.
+
+## 3b) Check-in systém (#67) — návrh hotový, čeká na Tvé OK
+
+`akademie/_ai/checkin-system-design.md`: týdenní dotazník (8 otázek, ~90 s), **nabíhající sleva**
++2 %/týden do stropu 20 % (měkký reset při vynechání), DB schéma/RLS/RPC, edge funkce, MVP scope.
+**→ TY:** odsouhlas 8 rozhodnutí (otázky finálně, čísla slevy) → postavím to test-ready jako affiliate.
 
 ---
 
