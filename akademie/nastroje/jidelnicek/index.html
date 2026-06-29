@@ -17,7 +17,10 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;}
   label{display:block;font-size:.82rem;color:var(--muted-2);font-weight:600;margin:0 0 5px;}
   body{color-scheme:dark;}
-  .ba input,.ba select{width:100%;background:rgba(0,0,0,.35)!important;border:1px solid var(--line-2)!important;border-radius:11px;color:#fff!important;padding:11px 12px;font-family:inherit;font-size:.96rem;color-scheme:dark;}
+  .ba input,.ba select{width:100%;background-color:rgba(0,0,0,.45)!important;border:1px solid var(--line-2)!important;border-radius:11px;color:#fff!important;padding:11px 12px;font-family:inherit;font-size:.96rem;color-scheme:dark;}
+  .ba input:not([type=color]),.ba select{-webkit-appearance:none;appearance:none;}
+  .ba select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ff9d3c' stroke-width='3' stroke-linecap='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;}
+  .ba input[type=color]{height:44px;padding:4px;cursor:pointer;background-color:rgba(0,0,0,.45)!important;}
   .ba select option{background:#161310;color:#fff;}
   .ba input:focus,.ba select:focus{outline:none;border-color:rgba(255,122,0,.6)!important;}
   .ba input::placeholder{color:var(--muted);}
@@ -44,6 +47,17 @@
   .note{color:var(--muted);font-size:.82rem;margin-top:.7rem;line-height:1.5;}
   .hidden{display:none;}
   .lock{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:14px;padding:1rem 1.3rem;color:#e9e2d8;}
+  .brandbox{margin:14px 0 2px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:rgba(255,255,255,.02);}
+  .brandbox summary{cursor:pointer;color:#cfc6b8;font-weight:600;font-size:.92rem;}
+  .ba input[type=color]{height:44px;padding:4px;cursor:pointer;}
+  #result{--acc:#ff7a00;}
+  #result .tcard{border-color:var(--acc);}
+  #result .meal h3{box-shadow:inset 4px 0 0 var(--acc);}
+  .brandhead{display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--acc);padding:0 0 12px;margin:0 0 16px;}
+  .brandhead img{max-height:44px;max-width:150px;object-fit:contain;}
+  .brandhead .bn{color:#fff;font-weight:800;font-size:1.1rem;letter-spacing:-.01em;}
+  .brandhead .bc{color:var(--muted);font-size:.82rem;margin-left:auto;text-align:right;line-height:1.3;}
+  .brandhead.empty{display:none;}
   @media print{
     body{background:#fff!important;color:#161616!important;}
     .top,.actions,.no-print{display:none!important;}
@@ -93,6 +107,15 @@
         <label class="chip"><input type="checkbox" id="vegetarian"> Vegetariánský</label>
         <label class="chip"><input type="checkbox" id="nodairy"> Bez mléčných výrobků</label>
       </div>
+      <details class="brandbox" id="brandbox">
+        <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">— projeví se ve výstupu i v PDF (uloží se ti)</span></summary>
+        <div class="grid" style="margin-top:12px;">
+          <div><label>Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková — výživa"></div>
+          <div><label>Akcentová barva</label><input id="accent" type="color" value="#ff7a00"></div>
+          <div><label>Logo (URL, volitelné)</label><input id="logo" type="url" placeholder="https://…/logo.png"></div>
+          <div><label>Kontakt (web / e-mail, volitelné)</label><input id="contact" type="text" placeholder="jana@example.cz"></div>
+        </div>
+      </details>
       <div class="actions">
         <button class="btn" id="gen">Vygenerovat jídelníček</button>
         <span class="brandline" id="dbstate">Načítám databázi potravin…</span>
@@ -101,6 +124,7 @@
 
     <div id="result" class="hidden">
       <div class="panel">
+        <div class="brandhead empty" id="brandhead"></div>
         <div id="resHead" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
           <h2 style="margin:0;color:#fff;font-size:1.3rem;">Denní jídelníček</h2>
           <span class="brandline" id="byline"></span>
@@ -126,10 +150,14 @@
     var $=function(id){return document.getElementById(id);};
     function fmt(n){return Math.round(n);}
     function macros(m){return 'B '+fmt(m.p)+' · S '+fmt(m.c)+' · T '+fmt(m.f)+' · '+fmt(m.kcal)+' kcal';}
+    function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+    function saveBrand(){ try{ localStorage.setItem('ba_trainer_brand', JSON.stringify({t:$('trainer').value,a:$('accent').value,l:$('logo').value,c:$('contact').value})); }catch(e){} }
+    function loadBrand(){ try{ var b=JSON.parse(localStorage.getItem('ba_trainer_brand')||'{}'); if(b.t)$('trainer').value=b.t; if(b.a)$('accent').value=b.a; if(b.l)$('logo').value=b.l; if(b.c)$('contact').value=b.c; if(b.t||b.l)$('brandbox').open=true; }catch(e){} }
 
     fetch('/assets/food-db.json').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
+    loadBrand();
 
     function inputs(){
       return { sex:$('sex').value, age:$('age').value, weight:$('weight').value, height:$('height').value,
@@ -160,7 +188,18 @@
       $('meals').innerHTML=html;
       $('daytot').textContent=macros(plan.totals);
       var c=$('client').value.trim();
-      $('byline').textContent=(c?('Pro: '+c+' · '):'')+'cíl: '+t.goalLabel;
+      // branding (trenér)
+      var tn=$('trainer').value.trim(), ac=$('accent').value, lg=$('logo').value.trim(), ct=$('contact').value.trim();
+      saveBrand();
+      var bh=$('brandhead');
+      if(tn||lg){
+        bh.classList.remove('empty');
+        bh.innerHTML=(lg?('<img src="'+esc(lg)+'" alt="logo" onerror="this.style.display=\'none\'">'):'')+
+          (tn?('<span class="bn">'+esc(tn)+'</span>'):'')+
+          (ct?('<span class="bc">'+esc(ct)+'</span>'):'');
+      } else { bh.classList.add('empty'); bh.innerHTML=''; }
+      $('result').style.setProperty('--acc', /^#[0-9a-fA-F]{6}$/.test(ac)?ac:'#ff7a00');
+      $('byline').textContent=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'')+' · cíl: '+t.goalLabel;
       $('result').classList.remove('hidden');
       $('result').scrollIntoView({behavior:'smooth',block:'start'});
     }
