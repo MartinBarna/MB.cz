@@ -13,7 +13,7 @@
   'use strict';
   var CFG = {
     ENABLED: false,                 // ← true, až bude backend
-    ENDPOINT: '',                   // ← URL edge funkce ai-martin
+    ENDPOINT: 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/ai-martin',  // edge funkce ai-martin
     GREETING: 'Ahoj! Jsem AI Martin — natrénovaný na tom, jak reálně koučuju. Zeptej se na výživu, trénink nebo jak začít. (Nejsem lékař, u zdravotních věcí běž za odborníkem.)',
     PLACEHOLDER: 'Napiš dotaz… např. „kolik bílkovin denně?"'
   };
