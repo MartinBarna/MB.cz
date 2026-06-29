@@ -76,7 +76,8 @@
         var ta=document.getElementById('tileAcademy'), tv=document.getElementById('tileVideo'), tt=document.getElementById('tileTools');
         if(!hasA) lock(ta, '/akademie/', 'Získat přístup');
         if(!hasV) lock(tv, '/videokurz', 'Získat přístup');
-        if(tt && !hasA) lock(tt, '/akademie/', 'Získat přístup'); // nástroje = Academy feature
+        // nástroje: plný má Academy verzi, free dostane lite veřejnou verzi (ne hard lock)
+        if(tt && !hasA){ tt.setAttribute('href', '/nastroje-zdarma/'); var ttl=tt.querySelector('.go .lbl'); if(ttl) ttl.textContent='Vyzkoušet lite verzi'; }
         var n=(hasA?1:0)+(hasV?1:0);
         if(n>0){ document.getElementById('cnt').textContent=n; document.getElementById('cntPill').style.display=''; }
         if(!hasA && !hasV){ grid.style.display='none'; empty.style.display=''; }

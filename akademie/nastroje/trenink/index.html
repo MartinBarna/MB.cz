@@ -178,8 +178,9 @@
     $('regen').addEventListener('click',function(){ generate(true); });
     $('print').addEventListener('click',function(){ window.print(); });
 
+    // Bez přístupu → přesměruj na lite veřejnou verzi (označená jako lite + co navíc dává plná).
     if(window.BA){ window.BA.ready.then(function(){
-      if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){ if(!ok){ $('lock').classList.remove('hidden'); } }); }
+      if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){ if(!ok){ location.replace('/nastroje-zdarma/trenink/?from=academy'); } }); }
     }); }
   })();
   </script>
