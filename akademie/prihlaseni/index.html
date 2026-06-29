@@ -90,6 +90,7 @@
         <div class="msg" id="msg"></div>
         <p id="otpHint" style="font-size:.82rem;color:#9a948c;margin:.6rem 0 0;text-align:center;line-height:1.45;">Hlásíš se poprvé po koupi? Dej <strong>„Vytvořit účet"</strong> a použij stejný e-mail jako u platby.</p>
       </form>
+      <a href="/akademie/navod/" style="display:block;text-align:center;margin:14px 0 0;font-size:.86rem;color:#ffb061;text-decoration:none;font-weight:600;">📖 Nevíš si rady? Návod krok za krokem →</a>
     </div>
 
     <div class="buy">
@@ -143,6 +144,19 @@
       }
       tabIn.addEventListener('click', function () { setMode('in'); });
       tabUp.addEventListener('click', function () { setMode('up'); });
+
+      // Deep-link z onboarding e-mailu: ?tab=up otevře rovnou registraci,
+      // ?email= předvyplní e-mail přístupu (zabrání nejčastější chybě — registraci jiným e-mailem).
+      var qTab = qs('tab');
+      if (qTab === 'up' || qTab === 'register') setMode('up');
+      var qEmail = qs('email');
+      if (qEmail && qEmail.indexOf('@') > 0) {
+        emailEl.value = qEmail;
+        var hint = document.createElement('p');
+        hint.style.cssText = 'font-size:.8rem;color:#ffb061;margin:6px 0 0;line-height:1.45;';
+        hint.innerHTML = '✓ Tohle je e-mail tvého přístupu k videokurzu — nech ho tak, jak je.';
+        emailEl.parentNode.insertBefore(hint, emailEl.nextSibling);
+      }
 
       function show(kind, text) { msg.className = 'msg ' + kind; msg.textContent = text; }
 
