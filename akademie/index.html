@@ -273,30 +273,31 @@
     <!-- VYZKOUŠEJ ZDARMA -->
     <section class="bg-soft" id="zdarma">
         <div class="container">
-            <div class="sec-head"><h2>Vyzkoušej 3 lekce zdarma</h2><p>Žádná registrace, žádná karta. Otevři si ukázku a podívej se, jak Academy vypadá uvnitř.</p></div>
-            <div class="row g-3 justify-content-center">
-                <div class="col-md-4"><a class="mod" style="text-decoration:none;" href="/akademie/studium/m1-l1/"><div class="num">1</div><div><h5>Proč lidé jedí, i&nbsp;když nemají hlad</h5><p>Psychologie chování kolem jídla — základ každé proměny.</p><span style="color:var(--green);font-weight:700;font-size:.9rem;">Číst zdarma →</span></div></a></div>
-                <div class="col-md-4"><a class="mod" style="text-decoration:none;" href="/akademie/studium/m1-l2/"><div class="num">2</div><div><h5>Mechanismus jídla a&nbsp;příjmu</h5><p>Jak tělo i hlava řídí, kdy a kolik jíme.</p><span style="color:var(--green);font-weight:700;font-size:.9rem;">Číst zdarma →</span></div></a></div>
-                <div class="col-md-4"><a class="mod" style="text-decoration:none;" href="/akademie/studium/m3-l1/"><div class="num">3</div><div><h5>Energetická bilance — zákon, který platí vždy</h5><p>Nejdůležitější lekce výživy, bez mýtů.</p><span style="color:var(--green);font-weight:700;font-size:.9rem;">Číst zdarma →</span></div></a></div>
-            </div>
+            <div class="sec-head"><h2>Mrkni dovnitř Academy</h2><p>Tohle všechno je uvnitř. Klikni a vyber si sám, na co se chceš podívat — část obsahu si projdeš zdarma, bez karty.</p></div>
             <style>
-              .zstack{max-width:820px;margin:1.6rem auto 0;}
-              .zstack .zhead{color:var(--green-dark);font-weight:800;font-size:1.05rem;margin-bottom:.9rem;}
-              .zchips{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-bottom:1.3rem;}
-              .zchip{background:#fff;border:1px solid #ece3d8;border-radius:50px;padding:9px 16px;font-size:.9rem;font-weight:600;color:#33302c;box-shadow:0 4px 12px rgba(0,0,0,.04);}
-              .zchip b{color:var(--green);}
+              #zdarma .acards{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;max-width:1000px;margin:0 auto;}
+              #zdarma .acard{display:flex;gap:14px;align-items:flex-start;text-decoration:none;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px 20px;transition:transform .2s,border-color .2s,box-shadow .2s;}
+              #zdarma .acard:hover{transform:translateY(-4px);border-color:rgba(255,122,0,.5);box-shadow:0 20px 44px -26px rgba(255,122,0,.45);}
+              #zdarma .acard .ai{font-size:1.7rem;line-height:1;flex-shrink:0;}
+              #zdarma .acard h5{color:#fff;font-size:1.02rem;margin:0 0 .25rem;font-weight:700;letter-spacing:-.01em;}
+              #zdarma .acard p{color:#c7cbd0;font-size:.89rem;margin:0 0 .45rem;line-height:1.45;}
+              #zdarma .acard .ago{color:#ff9d3c;font-weight:700;font-size:.85rem;}
+              #zdarma .zcta{text-align:center;margin-top:1.9rem;}
+              #zdarma .zcta .btn-see{display:inline-block;background:linear-gradient(145deg,#ffb066,#ff7a00);color:#161616;font-weight:800;padding:15px 32px;border-radius:50px;text-decoration:none;box-shadow:0 14px 30px -8px rgba(255,122,0,.55);font-size:1.02rem;transition:transform .2s;}
+              #zdarma .zcta .btn-see:hover{transform:translateY(-2px);}
+              #zdarma .zcta .price-link{display:inline-block;margin-top:1rem;color:#ffb066;font-weight:700;font-size:.98rem;text-decoration:underline;}
             </style>
-            <div class="zstack text-center">
-                <p class="zhead">Tohle jsou 3 z 224 lekcí — a lekce jsou jen začátek. Uvnitř odemkneš celý systém:</p>
-                <div class="zchips">
-                    <span class="zchip">🥗 <b>Generátor jídelníčků</b></span>
-                    <span class="zchip">🏋️ <b>Generátor tréninků</b></span>
-                    <span class="zchip">🎨 Rebrandovatelné <b>science-based přílohy</b></span>
-                    <span class="zchip">🔊 <b>Audio verze</b> lekcí</span>
-                    <span class="zchip">📚 <b>224 lekcí</b> ve 20 modulech</span>
-                    <span class="zchip">🏅 Certifikace + <b>videokurz v ceně</b></span>
-                </div>
-                <a href="#cena" class="btn btn-grn">Chci celý systém — mrkni na cenu →</a>
+            <div class="acards">
+                <a class="acard" href="/akademie/studium/"><span class="ai">🥗</span><span><h5>Generátor jídelníčků</h5><p>Spočítá makra a poskládá hotový jídelníček klientovi na míru.</p><span class="ago">Otevřít v Academy →</span></span></a>
+                <a class="acard" href="/akademie/studium/"><span class="ai">🏋️</span><span><h5>Generátor tréninků</h5><p>Plán na míru — fitko, doma i workout hřiště, podle úrovně a cíle.</p><span class="ago">Otevřít v Academy →</span></span></a>
+                <a class="acard" href="/akademie/studium/"><span class="ai">🎨</span><span><h5>Rebrandovatelné science-based přílohy</h5><p>Profi PDF pod tvým jménem a logem — dáš je klientům za svoje.</p><span class="ago">Otevřít v Academy →</span></span></a>
+                <a class="acard" href="/akademie/studium/"><span class="ai">🔊</span><span><h5>Audio verze lekcí</h5><p>Poslouchej v autě, na procházce nebo v posilce.</p><span class="ago">Otevřít v Academy →</span></span></a>
+                <a class="acard" href="/akademie/studium/"><span class="ai">📚</span><span><h5>224 lekcí ve 20 modulech</h5><p>Výživa, trénink, práce s klientem, byznys i věda — od základů po pokročilé.</p><span class="ago">Otevřít v Academy →</span></span></a>
+                <a class="acard" href="/akademie/studium/"><span class="ai">🏅</span><span><h5>Certifikace + videokurz v ceně</h5><p>Certifikát na konci a celý videokurz výživy jako součást balíčku.</p><span class="ago">Otevřít v Academy →</span></span></a>
+            </div>
+            <div class="zcta">
+                <a class="btn-see" href="/akademie/studium/">Podívej se dovnitř Academy →</a>
+                <br><a class="price-link" href="#cena">Chci celý systém — mrkni na cenu →</a>
             </div>
         </div>
     </section>
