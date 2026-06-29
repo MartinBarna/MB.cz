@@ -214,10 +214,11 @@
     $('regen').addEventListener('click',function(){ generate(true); });
     $('print').addEventListener('click',function(){ window.print(); });
 
-    // Gating: plná verze pro Academy. V demo/bez BA běží taky (MVP).
+    // Gating: plná verze jen pro Academy. Bez přístupu → přesměruj na lite veřejnou verzi
+    // (tam je jasně označená jako lite + co navíc dává plná). Demo/bez BA běží (MVP).
     if(window.BA){ window.BA.ready.then(function(){
       if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){
-        if(!ok){ $('lock').classList.remove('hidden'); }
+        if(!ok){ location.replace('/nastroje-zdarma/jidelnicek/?from=academy'); }
       }); }
     }); }
   })();

@@ -136,6 +136,28 @@
 
     <div class="modules" id="modules"></div>
 
+    <style>
+      .tools-head{margin:30px 0 4px;color:#fff;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;}
+      .tools-sub{color:var(--muted);font-size:.9rem;margin:0 0 14px;}
+      .bonus .litebadge{display:inline-block;background:rgba(255,122,0,.16);border:1px solid rgba(255,122,0,.4);color:var(--gold-soft);font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:50px;margin-left:8px;vertical-align:middle;}
+      .bonus.islite{opacity:.96;}
+      .bonus.islite .bbtn{background:rgba(255,255,255,.06);color:var(--gold-soft);border:1px solid rgba(255,122,0,.4);box-shadow:none;}
+    </style>
+    <h3 class="tools-head">🛠️ Nástroje pro trenéry</h3>
+    <p class="tools-sub" id="toolsSub">Generátory, které ti spočítají a poskládají plán na míru klienta — a dáš mu ho pod svým jménem.</p>
+
+    <a class="bonus" id="toolMeal" href="/akademie/nastroje/jidelnicek/" style="text-decoration:none;">
+      <span class="bico">🥗</span>
+      <div class="btxt"><b>Generátor jídelníčků<span class="litebadge" id="mealBadge" style="display:none;">Lite</span></b><span id="mealDesc">Zadáš údaje klienta, systém spočítá kalorie i makra a poskládá hotový denní jídelníček z běžných potravin. Rebrand + export do PDF.</span></div>
+      <span class="bbtn" id="mealBtn">Otevřít generátor →</span>
+    </a>
+
+    <a class="bonus" id="toolWorkout" href="/akademie/nastroje/trenink/" style="text-decoration:none;">
+      <span class="bico">🏋️</span>
+      <div class="btxt"><b>Generátor tréninků<span class="litebadge" id="workoutBadge" style="display:none;">Lite</span></b><span id="workoutDesc">Fitko, doma i venku — podle vybavení, úrovně a cíle poskládá týdenní plán se sériemi, opakováními i tipy. Rebrand + export do PDF.</span></div>
+      <span class="bbtn" id="workoutBtn">Otevřít generátor →</span>
+    </a>
+
     <a class="bonus" href="/materialy/" style="text-decoration:none;">
       <span class="bico">🎨</span>
       <div class="btxt"><b>Materiály pro klienty — přebrandovatelné</b><span>16 hotových PDF (výživa, trénink, spánek, suplementy, plató…). Dej jim svoje jméno, barvu a logo a posílej klientům jako součást služby.</span></div>
@@ -426,7 +448,37 @@
     var BUY_URL = '/akademie/objednavka/';
     var FREE = {'m1-l1':1,'m1-l2':1,'m1-l3':1,'m2-l1':1,'m3-l1':1,'m6-l1':1}; // ukázkové lekce napříč moduly
     var FREEMODE = /[?&]preview=free/.test(location.search);
-    function applyFreeMode(){ if(FREEMODE){ document.body.classList.add('freemode'); var b=document.getElementById('freeBanner'); if(b) b.style.display='flex'; } }
+    function applyFreeMode(){ if(FREEMODE){ document.body.classList.add('freemode'); var b=document.getElementById('freeBanner'); if(b) b.style.display='flex'; } gateTools(FREEMODE); }
+    // Nástroje (generátory): free → lite veřejná verze + jasné označení, plný → plná verze v Academy.
+    function gateTools(free){
+      var tools=[
+        {card:'toolMeal', badge:'mealBadge', desc:'mealDesc', btn:'mealBtn', full:'/akademie/nastroje/jidelnicek/', lite:'/nastroje-zdarma/jidelnicek/?from=academy',
+         fullDesc:'Zadáš údaje klienta, systém spočítá kalorie i makra a poskládá hotový denní jídelníček z běžných potravin. Rebrand + export do PDF.',
+         liteDesc:'Lite verzi máš zdarma — spočítá makra a poskládá jeden den. Plná verze v Academy přidá celý týden, rebrand pod tvým jménem i export do PDF.'},
+        {card:'toolWorkout', badge:'workoutBadge', desc:'workoutDesc', btn:'workoutBtn', full:'/akademie/nastroje/trenink/', lite:'/nastroje-zdarma/trenink/?from=academy',
+         fullDesc:'Fitko, doma i venku — podle vybavení, úrovně a cíle poskládá týdenní plán se sériemi, opakováními i tipy. Rebrand + export do PDF.',
+         liteDesc:'Lite verzi máš zdarma — poskládá plán podle místa a úrovně. Plná verze v Academy přidá rebrand pod tvým jménem i export do PDF.'}
+      ];
+      tools.forEach(function(t){
+        var card=document.getElementById(t.card); if(!card) return;
+        var badge=document.getElementById(t.badge), desc=document.getElementById(t.desc), btn=document.getElementById(t.btn);
+        if(free){
+          card.setAttribute('href', t.lite); card.classList.add('islite');
+          if(badge) badge.style.display='inline-block';
+          if(desc) desc.textContent=t.liteDesc;
+          if(btn) btn.textContent='Vyzkoušet lite verzi →';
+        } else {
+          card.setAttribute('href', t.full); card.classList.remove('islite');
+          if(badge) badge.style.display='none';
+          if(desc) desc.textContent=t.fullDesc;
+          if(btn) btn.textContent='Otevřít generátor →';
+        }
+      });
+      var sub=document.getElementById('toolsSub');
+      if(sub) sub.textContent = free
+        ? 'Lite verze máš zdarma — vyzkoušej, jak fungují. Plná verze (celý týden, rebrand pod tvým jménem, export do PDF) se odemkne s Academy.'
+        : 'Generátory, které ti spočítají a poskládají plán na míru klienta — a dáš mu ho pod svým jménem.';
+    }
     // ----- Sekční nástěnka (#33): přehled modulů → fokus na jeden modul -----
     var DONE = {};
     function mc(m){ var a=0,d=0; m.lessons.forEach(function(l){ if(l.available){ a++; if(DONE[l.id]) d++; } }); return {a:a,d:d}; }
