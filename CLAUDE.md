@@ -42,6 +42,17 @@ Před deployem ověř render lokálně (chromium + lokální server na :8099), 0
 - Veřejné JS smí mít jen **anon** Supabase klíč; service_role / Resend klíč nikdy do repa.
 - Patička marketingových mailů vždy s odhlášením (`unsubscribe` edge funkce).
 
+## ⚠️ STANDING RULE: rozesílka e-mailů — VŽDY nejdřív TEST na Martina
+
+Před **každým** ostrým/hromadným odesláním (i když Martin řekne „pošli to finálně"):
+1. **Nejdřív pošli TEST verzi na `fitness.barna@gmail.com`** (obě varianty, pokud jich je víc).
+2. Počkej, až Martin **výslovně potvrdí „pošli ostro"**.
+3. Teprve pak odešli na seznam.
+
+Nikdy neposílej na ostro bez předchozího test-mailu, který Martin viděl. (Je občas uspěchaný —
+tohle ho donutí zkontrolovat a chrání to u stovek příjemců.) České znaky v edge funkcích piš
+jako **reálné UTF-8**, ne `\u` kódy — překlep `ď`(ď)→`ğ`(ğ) udělal „teď" → „teğ".
+
 ## Supabase (projekt „Barna Academy", ref uhmrpfsdcujbhbtumqye)
 
 - Přístup = `public.entitlements` (email, product `academy`|`videokurz`, active). RPC `has_entitlement`
