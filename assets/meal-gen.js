@@ -57,10 +57,21 @@
     });
   }
 
-  // vyber položku z kategorie, rotuj podle seedu (variabilita mezi generacemi)
-  function pick(db, cat, seed) {
+  // vhodnost potravin do snídaně / svačiny (ať nevyjde kuřecí prsa k snídani)
+  var BREAKFAST_PROT = /vejce|bilek|tvaroh|skyr|cottage|syrovatkovy-protein|sunka/;
+  var SNACK_PROT     = /tvaroh|skyr|cottage|syrovatkovy-protein|recky-jogurt|bily-jogurt|sunka/;
+  var BREAKFAST_CARB = /ovesne-vlocky|chleb|musli|knackebrot|tousty|rohlik|houska/;
+  var MAIN_CARB      = /ryze|brambory|bataty|testoviny|kuskus|bulgur|quinoa|pohanka|jahly|kukurice|tortilla|ryzove-nudle/;
+
+  // vyber položku z kategorie, rotuj podle seedu (variabilita mezi generacemi).
+  // prefer = volitelný regex na id: nejdřív zkus vhodnou podmnožinu, jinak celá kategorie.
+  function pick(db, cat, seed, prefer) {
     var list = db.filter(function (f) { return f.cat === cat; });
     if (!list.length) return null;
+    if (prefer) {
+      var sub = list.filter(function (f) { return prefer.test(f.id); });
+      if (sub.length) list = sub;
+    }
     return list[(seed % list.length + list.length) % list.length];
   }
 
@@ -75,7 +86,7 @@
     // rozložení kalorií do jídel
     var dist;
     if (meals === 3) dist = [0.30, 0.40, 0.30];
-    else if (meals === 4) dist = [0.25, 0.32, 0.28, 0.15];
+    else if (meals === 4) dist = [0.28, 0.34, 0.13, 0.25]; // svačina = malá (snack), ne druhý oběd
     else dist = [0.22, 0.10, 0.30, 0.10, 0.28];
     var names = meals === 3 ? ['Snídaně','Oběd','Večeře']
             : meals === 4 ? ['Snídaně','Oběd','Svačina','Večeře']
@@ -86,19 +97,21 @@
       var mKcal = targets.kcal * dist[i];
       var mProt = targets.protein * dist[i];
       var mFat = targets.fat * dist[i];
+      var isSnack = dist[i] < 0.18;
       var items = [];
 
       // 1) bílkovinný základ — dávkuj na bílkovinný cíl jídla
-      var prot = pick(db, 'protein', seed + i) || pick(db, 'dairy', seed + i);
+      // snídaně/svačina dostanou vhodnější zdroj (vejce, tvaroh, skyr…), ne kuřecí prsa
+      var protPrefer = (i === 0) ? BREAKFAST_PROT : (isSnack ? SNACK_PROT : null);
+      var prot = pick(db, 'protein', seed + i, protPrefer) || pick(db, 'dairy', seed + i, protPrefer);
       if (prot) {
         var pg = round((mProt / (prot.per100.p || 1)) * 100, 10);
         pg = Math.min(pg, prot.cat === 'protein' ? 260 : 300);
         items.push({ food: prot, grams: Math.max(30, pg) });
       }
       // 2) sacharidová příloha (ne u poslední menší svačiny)
-      var isSnack = dist[i] < 0.18;
       if (!isSnack || i === 0) {
-        var carb = (i === 0) ? (pick(db, 'carb', seed + i + 7)) : pick(db, 'carb', seed + i + 3);
+        var carb = (i === 0) ? (pick(db, 'carb', seed + i + 7, BREAKFAST_CARB)) : pick(db, 'carb', seed + i + 3, MAIN_CARB);
         if (carb) {
           // dopočítej gramy sacharidů zbývající po proteinu
           var usedC = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).c; }, 0);
@@ -109,7 +122,7 @@
       }
       // 3) zelenina pro objem (u hlavních jídel)
       if (dist[i] >= 0.2) {
-        var veg = pick(db, 'veg', seed + i + 5);
+        var veg = pick(db, 'veg', seed + i + 5, (i === 0) ? /rajce|okurka|paprika|spenat/ : null);
         if (veg) items.push({ food: veg, grams: 150 });
       }
       // 4) ovoce u snídaně/svačin
