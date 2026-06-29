@@ -69,7 +69,7 @@
         '<span class="kick">🎓 Pro majitele videokurzu</span>' +
         '<h3>Videokurz tě naučil <b>jak</b>. Academy ti ukáže <b>proč</b>.</h3>' +
         '<p>Posuň se z „umím si poradit" na „umím to vést u klientů". Barna Academy je celá věda za výživou, tréninkem i chováním — a certifikace.</p>' +
-        '<ul><li>20 modulů a 216 lekcí + diagramy a kvízy</li><li>Certifikát Barna Academy</li><li>Doživotní přístup, i budoucí obsah</li></ul>' +
+        '<ul><li>20 modulů a 219 lekcí + diagramy a kvízy</li><li>Certifikát Barna Academy</li><li>Doživotní přístup, i budoucí obsah</li></ul>' +
         '<p class="price">Zaváděcí cena <s>12 900 Kč</s> → <b>8 900 Kč</b> (nebo 3× 2 990).</p>' +
         '<a class="cta" href="/akademie/#cena">Prohlédnout Academy →</a>' +
         '<button class="later" type="button">Teď ne, díky</button>' +

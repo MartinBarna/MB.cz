@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Check-iny: co sleduješ týdně a jak upravuješ — Barna Academy</title>
+<title>Startovací cíle a makra do hloubky — Barna Academy</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
@@ -69,50 +69,48 @@
 
   <div class="wrap">
     <div class="crumb">Modul 20 — Martinův systém v praxi</div>
-    <h1>Check-iny: co sleduješ týdně a jak upravuješ</h1>
+    <h1>Startovací cíle a makra do hloubky</h1>
 
-    <p class="lead">Check-in jede <strong>každý týden</strong> (klient nečeká, optimalizujeme včas), ale <strong>rozhoduje se podle 2–3týdenního trendu</strong> (posuzovací okno = 21 dní). Jeden špatný víkend check-in nerozhodí.</p>
+    <p class="lead">Tohle je STARTOVACÍ odhad — výchozí čísla, ze kterých klient vyjede. Adaptivní úprava z reálné bilance je samostatná věc (check-iny). Tady je přesně, jak se startovní cíle počítají a v jakém pořadí se skládají makra.</p>
 
-    <div class="points"><strong>Co si z lekce odneseš:</strong>
+    <h2>Od BMR k cíli</h2>
+    <div class="points">
       <ul>
-        <li>Co engine vytáhne sám z dat a co klient doplní ručně.</li>
-        <li>Co je <strong>adherence gate</strong> a proč při děravém logu neměníš cíle.</li>
-        <li>Jak komunikovat úpravu a pochvalu.</li>
+        <li><strong>BMR (Mifflin-St Jeor):</strong> 10 × váha(kg) + 6,25 × výška(cm) − 5 × věk; muž <strong>+5</strong>, žena <strong>−161</strong>.</li>
+        <li><strong>TDEE</strong> = BMR × násobič aktivity (1,2 / 1,375 / 1,55 / 1,725 / 1,9).</li>
+        <li><strong>Kalorický cíl z tempa:</strong> cut = TDEE − (tempo_kg × 7700)/7; bulk = TDEE + (tempo_kg × 7700)/7. 1 kg ≈ 7700 kcal.</li>
+        <li><strong>Tempo se ořezává tvrdě:</strong> hubnutí 0,5–1,0 %/týden, nabírání max 0,5 kg/týden — i kdyby UI poslalo víc.</li>
+        <li><strong>Kalorická podlaha startu:</strong> žena 1200, muž 1500 — níž startovní cíl nikdy.</li>
       </ul>
     </div>
 
-    <h2>Co engine vytáhne sám vs. co doplní klient</h2>
-    <table>
-      <tr><th>Engine sám z dat</th><th>Klient doplní ručně</th></tr>
-      <tr><td>Trend váhy (regrese, jen při ≥ 4 váženích a rozpětí ≥ 10 dní)</td><td>Reálná aktivita (kroky/den, intenzivní minuty)</td></tr>
-      <tr><td>Průměrný zalogovaný příjem + adherence</td><td>Subjektivní škály 1–5 (únava / hlad / síla)</td></tr>
-      <tr><td>Trend měr (cm/týden) a přepočítané BMR</td><td>Plán na příští týden + volitelná poznámka</td></tr>
-    </table>
+    <h2>Makra v pořadí priority</h2>
+    <div class="steps">
+      <div class="row"><div class="num"></div><div class="b"><b>Bílkoviny</b><span>Default 1,8 g/kg (rozmezí 1,6–2,2). Mají přednost, nehýbou se.</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Tuk</b><span>Cíl 0,8 g/kg (podlaha 0,6), ALE smí klesnout, aby se makra vešla do kcal — nikdy ne pod <strong>22 % kalorií</strong>. Warning pod 20 %.</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Sacharidy</b><span>Zbytek do kalorií.</span></div></div>
+      <div class="row"><div class="num"></div><div class="b"><b>Vláknina</b><span>13 g / 1000 kcal, strop 60 g.</span></div></div>
+    </div>
+    <p><strong>Fat floor 22 % = hormony.</strong> Dlouhodobě moc nízký tuk sahá na tvorbu pohlavních hormonů a vstřebávání vitaminů rozpustných v tuku. Proto je to v kódu, ne na klientovi.</p>
+    <p><strong>Precizní režim</strong> přidává tvrdé cíle na sacharidy a tuky. Většině klientů ho NEZAPÍNEJ — jen je stresuje a tempo stejně diktují kalorie. Nech ho pro soutěžní přípravu nebo lidi, co fakt chtějí ladit.</p>
 
-    <h2>Adherence gate: děravý log = neměníš</h2>
-    <p>Pod ~70 % dní se zápisem (pod 5/7) engine cíle <strong>NEMĚNÍ</strong>. Děravý log = nedůvěryhodný odhad, a měnit cíle z něj je hádání, ne adaptace. Řekneš to klientovi v klidu: „Tenhle týden mám jen pár dní se zápisem, na spolehlivou úpravu to nestačí. Cíle nechávám a pojďme nejdřív na konzistenci."</p>
-
-    <h2>Jak komunikovat úpravu a pochvalu</h2>
-    <p><strong>Karta „Proč (faktory)" je tvůj scénář.</strong> Neříkej „appka řekla". Vezmi faktory a přelož je do lidské řeči: „Máš zalogováno jen 60 % dní a TDEE mi vychází pod BMR, takže nejdřív dotáhneme zápis, kalorie nesahám." Úprava je vždy mírná — jedna změna max ±10 % kcal/týden, a klient/ty ji potvrzuje, nic se neděje automaticky.</p>
-    <p><strong>Pochvala vždy na konkrétní fakt</strong> („pod 70 kg, paráda", „tři týdny pravidelných úbytků, respekt"). Žádné prázdné „skvělá práce".</p>
-
-    <div class="praxe"><b>V praxi (Martin):</b> Check-in ukáže pákový badge „Přidat aktivitu" a faktory: přesnost OK, ale aktivita pod stropem. Komentář klientovi: „Zápis máš poctivý, to se počítá. Tělo zatím stojí, tak než budeme sahat na jídlo, přidáme zhruba jednu silovou jednotku týdně. Kalorie neřežeme. Be Effective."</div>
+    <div class="praxe"><b>V praxi (Martin):</b> Muž 82 kg, 178 cm, 30 let, střední aktivita, hubnutí svižně (1 %). BMR = 1787,5, TDEE ≈ 2771 kcal, deficit ≈ 900 kcal/den → cíl ≈ 1869 kcal, bílkoviny ≈ 148 g, vláknina ≈ 24 g. Appka to spočítá za vteřinu — ty to klientovi jen vysvětlíš.</div>
 
     <div class="quiz" id="quiz">
       <h3>Kvíz — ověř si pochopení</h3>
       <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
-      <div class="q"><div class="qq"><span class="n">1.</span> Jak často jede check-in a podle čeho se rozhoduje? <span class="tg">odpověď ▾</span></div><div class="aa">Každý týden, ale rozhoduje se podle 2–3týdenního trendu (okno 21 dní). Jeden špatný víkend nerozhodí.</div></div>
-      <div class="q"><div class="qq"><span class="n">2.</span> Co je adherence gate? <span class="tg">odpověď ▾</span></div><div class="aa">Pod ~70 % dní se zápisem (5/7) engine cíle nemění. Děravý log = nedůvěryhodný odhad, měnit cíle by bylo hádání.</div></div>
-      <div class="q"><div class="qq"><span class="n">3.</span> Jak komunikuješ úpravu klientovi? <span class="tg">odpověď ▾</span></div><div class="aa">Nikdy „appka řekla". Vezmeš faktory → přeložíš do lidské řeči → dáš jeden krok. Úprava max ±10 % kcal/týden.</div></div>
-      <div class="q"><div class="qq"><span class="n">4.</span> Jak má vypadat pochvala? <span class="tg">odpověď ▾</span></div><div class="aa">Vždy na konkrétní fakt: „pod 70 kg, paráda", „tři týdny úbytků, respekt". Ne prázdné „skvělá práce".</div></div>
-      <div class="q"><div class="qq"><span class="n">5.</span> Co engine vytáhne sám a co doplní klient? <span class="tg">odpověď ▾</span></div><div class="aa">Engine: trend váhy, příjem, adherence, trend měr, BMR. Klient: reálná aktivita, subjektivní škály (únava/hlad/síla), plán, poznámka.</div></div>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak spočítáš BMR podle Mifflin-St Jeor? <span class="tg">odpověď ▾</span></div><div class="aa">10 × váha(kg) + 6,25 × výška(cm) − 5 × věk; muž +5, žena −161. Pak TDEE = BMR × násobič aktivity.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaká je default a rozmezí bílkovin? <span class="tg">odpověď ▾</span></div><div class="aa">Default 1,8 g/kg, rozmezí 1,6–2,2 g/kg. Mají přednost a nehýbou se.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč nesmí tuk klesnout pod 22 % kalorií? <span class="tg">odpověď ▾</span></div><div class="aa">Hormony — dlouhodobě moc nízký tuk sahá na tvorbu pohlavních hormonů a vstřebávání vitaminů rozpustných v tuku. Proto je to v kódu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Komu (NE)zapínat Precizní režim? <span class="tg">odpověď ▾</span></div><div class="aa">Většině NE — jen stresuje a tempo stejně diktují kalorie. Jen soutěžní příprava nebo lidi, co fakt chtějí ladit.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kolik je kalorická podlaha startu? <span class="tg">odpověď ▾</span></div><div class="aa">Žena 1200, muž 1500 kcal — níž startovní cíl nikdy nejde.</div></div>
     </div>
 
-    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Připrav si „check-in scénář": vyber jeden pákový stav (např. přidat aktivitu) a napiš komentář klientovi, který (1) pochválí konkrétní fakt, (2) přeloží faktory do lidské řeči, (3) dá jeden krok — bez věty „appka řekla".</div>
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Spočítej startovní cíle pro modelového klienta (vyber váhu, výšku, věk, aktivitu, tempo): BMR → TDEE → kalorický cíl → bílkoviny (1,8 g/kg) → vláknina. Ověř, že tuk nepadl pod 22 % kalorií.</div>
 
     <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
-      <a class="lnav-mod" href="/akademie/studium/m20-l1/">← Veď klienta k samostatnosti</a>
-      <a class="lnav-next" href="/akademie/studium/m20-l6/">Časté chyby klientů →</a>
+      <a class="lnav-mod" href="/akademie/studium/m20-l6/">← Časté chyby klientů</a>
+      <a class="lnav-next" href="/akademie/studium/m20-l8/">Měření pokroku →</a>
     </nav>
 
     <div class="done-row">
@@ -131,7 +129,7 @@
     document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
     var rbar = document.getElementById('rbar');
     window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
-    var LID='m20-l5', PRODUCT='academy', state={done:false};
+    var LID='m20-l7', PRODUCT='academy', state={done:false};
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
     function load(){
