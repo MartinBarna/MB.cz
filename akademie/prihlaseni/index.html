@@ -160,6 +160,22 @@
 
       function show(kind, text) { msg.className = 'msg ' + kind; msg.textContent = text; }
 
+      // Přelož časté (anglické) chyby Supabase do srozumitelné češtiny pro laiky.
+      function friendlyErr(e) {
+        var s = (e || '').toLowerCase();
+        if (s.indexOf('invalid login') >= 0 || s.indexOf('invalid credentials') >= 0)
+          return 'E-mail nebo heslo nesedí. Zkontroluj překlepy. Hlásíš se poprvé po koupi? Dej „Vytvořit účet".';
+        if (s.indexOf('already registered') >= 0 || s.indexOf('already been registered') >= 0 || s.indexOf('user already') >= 0)
+          return 'Na tenhle e-mail už účet existuje — přepni nahoře na „Přihlásit se" a zadej heslo.';
+        if (s.indexOf('password') >= 0 && s.indexOf('6') >= 0)
+          return 'Heslo musí mít aspoň 6 znaků.';
+        if (s.indexOf('not confirmed') >= 0 || s.indexOf('email not confirmed') >= 0)
+          return 'Účet ještě není potvrzený. Mrkni do e-mailu (i do spamu), nebo napiš na martin@martinbarna.cz.';
+        if (s.indexOf('rate limit') >= 0 || s.indexOf('too many') >= 0)
+          return 'Moc pokusů po sobě. Dej tomu chvilku a zkus to znovu.';
+        return e || 'Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.';
+      }
+
       window.BA.ready.then(function () {
         if (window.BA.mode === 'demo') {
           document.getElementById('demoNote').style.display = 'block';
@@ -207,14 +223,19 @@
             });
           } else if (mode === 'up') {
             window.BA.signUp(email, pass, fname).then(function (r) {
-              submit.disabled = false;
-              if (r.ok) { if (window.mbTrackLead) window.mbTrackLead('registrace', { value: 0, currency: 'CZK' }); show('ok', 'Účet vytvořen. Pokud je zapnuté ověření e-mailu, potvrď ho a pak se přihlas.'); }
-              else show('err', r.error || 'Registrace se nezdařila.');
+              if (!r.ok) { submit.disabled = false; show('err', r.error || 'Registrace se nezdařila.'); return; }
+              if (window.mbTrackLead) window.mbTrackLead('registrace', { value: 0, currency: 'CZK' });
+              // Autoconfirm: po registraci je uživatel rovnou přihlášený → pusť ho dovnitř bez druhého kroku.
+              // (Kdyby bylo ověření e-mailu zapnuté, getUser vrátí null → ukáž instrukci k přihlášení.)
+              window.BA.getUser().then(function (u) {
+                if (u) { show('ok', '✅ Hotovo! Otevírám tvoje studium…'); location.href = nextUrl; }
+                else { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď klikni na „Přihlásit se" — e-mail a heslo už máš vyplněné.'); }
+              }).catch(function () { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď se přihlas stejným e-mailem a heslem.'); });
             });
           } else {
             window.BA.signIn(email, pass).then(function (r) {
               if (r.ok) { location.href = nextUrl; }
-              else { submit.disabled = false; show('err', r.error || 'Přihlášení se nezdařilo.'); }
+              else { submit.disabled = false; show('err', friendlyErr(r.error)); }
             });
           }
         });
