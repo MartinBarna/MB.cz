@@ -44,6 +44,15 @@
         <span class="go"><span class="lbl">Otevřít videokurz</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
+      <a class="card" id="tileTools" href="/akademie/nastroje/jidelnicek/">
+        <span class="lockbadge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Uzamčeno</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h7M15 18h5"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="13" cy="18" r="2"/></svg></div>
+        <h2>Nástroje pro trenéry</h2>
+        <p class="desc">Generátor jídelníčků na míru klienta — spočítá makra a poskládá hotový den. Dáš ho klientovi pod svým jménem.</p>
+        <div class="chips"><span class="chip">Jídelníček</span><span class="chip">Export PDF</span><span class="chip">Brzy i tréninky</span></div>
+        <span class="go"><span class="lbl">Otevřít nástroje</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
     </div>
 
     <div class="panel" id="empty" style="display:none;">
@@ -64,9 +73,10 @@
         var lbl=card.querySelector('.go .lbl'); if(lbl) lbl.textContent=label;
       }
       function showTiles(hasA, hasV){
-        var ta=document.getElementById('tileAcademy'), tv=document.getElementById('tileVideo');
+        var ta=document.getElementById('tileAcademy'), tv=document.getElementById('tileVideo'), tt=document.getElementById('tileTools');
         if(!hasA) lock(ta, '/akademie/', 'Získat přístup');
         if(!hasV) lock(tv, '/videokurz', 'Získat přístup');
+        if(tt && !hasA) lock(tt, '/akademie/', 'Získat přístup'); // nástroje = Academy feature
         var n=(hasA?1:0)+(hasV?1:0);
         if(n>0){ document.getElementById('cnt').textContent=n; document.getElementById('cntPill').style.display=''; }
         if(!hasA && !hasV){ grid.style.display='none'; empty.style.display=''; }
