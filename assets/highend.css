@@ -95,3 +95,12 @@ section p, .hero p, .lead, .card-text { text-wrap:pretty; }
 .mb-lb-close { top:18px; right:18px; left:auto; width:46px; height:46px; transform:none; font-size:1.5rem; }
 @media (max-width:600px) { .mb-lb-prev { left:6px; } .mb-lb-next { right:6px; } .mb-lb-btn { width:44px; height:44px; } }
 
+/* Nav: v pásmu 1200–1319px (těsně po přepnutí z hamburgeru na plné menu) se
+   9 odkazů + dlouhé CTA nevešlo do containeru a „Objednat konzultaci" se ořezávalo.
+   Zmenšíme samotné CTA tlačítko + jeho odsazení (link padding je v navbaru ~0,
+   takže ho neřešíme). (audit 2026-06-29) */
+@media (min-width:1200px) and (max-width:1319.98px){
+  .navbar-expand-xl .navbar-nav .nav-item.ms-lg-3{ margin-left:.25rem!important; }
+  .navbar-expand-xl .navbar-nav .nav-item.ms-lg-3 .btn{ padding:8px 15px!important; font-size:.92rem!important; }
+  .navbar-expand-xl .navbar-nav .nav-link{ font-size:.93rem; }
+}
