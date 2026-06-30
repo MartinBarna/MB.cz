@@ -167,7 +167,7 @@ function videoPage(v) {
 <body class="ba">
   <div class="top"><div class="in">
     <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span><span><b>Videokurz</b><span class="tag">Barna Academy</span></span></a>
-    <a class="back" href="/akademie/moje/">← Barna Academy</a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
   </div></div>
 
   <div class="wrap">
@@ -338,7 +338,7 @@ function dashboard() {
   <div class="top"><div class="in">
     <a class="brand" href="/akademie/videokurz/"><span class="mark">MB</span><span><b>Videokurz</b><span class="tag">Barna Academy</span></span></a>
     <span class="topr">
-      <a class="back" href="/akademie/moje/">← Barna Academy</a>
+      <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
       <a class="out" id="logout">Odhlásit</a>
     </span>
   </div></div>

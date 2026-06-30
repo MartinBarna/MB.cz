@@ -15,8 +15,16 @@
   .ref-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:1rem 0 0}
   .ref-btns a,.ref-btns button{cursor:pointer;border:none;font-family:inherit;font-weight:700;font-size:.95rem;padding:12px 20px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s,opacity .15s}
   .ref-btns a:hover,.ref-btns button:hover{transform:translateY(-2px)}
-  .b-wa{background:#25D366;color:#06281a}
+  .ref-btns a.b-wa{background:#128C7E;color:#fff}
+  .ref-btns a.b-wa:hover{color:#fff}
+  .b-wa svg{fill:#fff}
   .b-copy{background:#ff7a00;color:#1a1208}
+  .ref-deal{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1.4rem 0 .2rem}
+  .ref-deal .d{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.28);border-radius:16px;padding:16px 14px;text-align:center}
+  .ref-deal .d .tit{font-size:.78rem;color:#b7ab9b;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+  .ref-deal .d .big{font-size:1.5rem;font-weight:800;color:#ff9d3c;line-height:1.1}
+  .ref-deal .d .sub{font-size:.82rem;color:#9b8e7d;margin-top:4px}
+  @media(max-width:520px){.ref-deal{grid-template-columns:1fr}}
   .b-ghost{background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.16)!important}
   .ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1.6rem 0}
   .ref-stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px 10px;text-align:center}
@@ -40,7 +48,7 @@
 <body class="ba">
   <div class="top"><div class="in">
     <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Doporučení</span></span></a>
-    <div class="topr"><a href="/akademie/moje/">Zpět na nástěnku</a><a id="logout">Odhlásit</a></div>
+    <div class="topr"><a href="/akademie/moje/">Zpět na Academy</a><a id="logout">Odhlásit</a></div>
   </div></div>
 
   <div class="wrap">
@@ -58,6 +66,19 @@
         <div class="ref-btns">
           <a class="b-wa" id="shareWa" target="_blank" rel="noopener">Poslat přes WhatsApp</a>
           <button class="b-copy" id="copyLink">Kopírovat odkaz</button>
+        </div>
+      </div>
+
+      <div class="ref-deal">
+        <div class="d">
+          <div class="tit">Videokurz výživy</div>
+          <div class="big">kamarád −150 Kč</div>
+          <div class="sub">ty získáš 150 Kč kredit</div>
+        </div>
+        <div class="d">
+          <div class="tit">Academy pro trenéry</div>
+          <div class="big">kamarád −20 %</div>
+          <div class="sub">ty získáš 300 Kč kredit</div>
         </div>
       </div>
 
