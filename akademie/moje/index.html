@@ -82,7 +82,7 @@
       }
       function showTiles(hasA, hasV){
         var ta=document.getElementById('tileAcademy'), tv=document.getElementById('tileVideo'), tt=document.getElementById('tileTools');
-        if(!hasA) lock(ta, '/akademie/', 'Získat přístup');
+        if(!hasA){ lock(ta, '/akademie/studium/?preview=free', 'Prohlédnout zdarma'); var _lb=ta.querySelector('.lockbadge'); if(_lb) _lb.textContent='🎁 Ochutnávka zdarma'; }
         if(!hasV) lock(tv, '/videokurz', 'Získat přístup');
         // nástroje: plný má Academy verzi, free dostane lite veřejnou verzi (ne hard lock)
         if(tt && !hasA){ tt.setAttribute('href', '/nastroje-zdarma/'); var ttl=tt.querySelector('.go .lbl'); if(ttl) ttl.textContent='Vyzkoušet lite verzi'; }
