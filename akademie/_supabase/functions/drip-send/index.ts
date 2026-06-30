@@ -238,10 +238,20 @@ Deno.serve(async (req: Request) => {
     return json({ ok: true, mode: 'dry', due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, by_step: byStep });
   }
 
+  // DENNÍ STROP: rezerva pod Resend limitem (100/den) pro transakční maily.
+  // drip-send (vč. onboardingu) pošle max DAILY_CAP/den; zbytek zůstane due a dojde další den.
+  const DAILY_CAP = 75;
+  const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
+  const { count: sentToday } = await admin.from('email_events')
+    .select('id', { count: 'exact', head: true })
+    .eq('type', 'sent').gte('created_at', dayStart.toISOString());
+  const remaining = Math.max(0, DAILY_CAP - (sentToday ?? 0));
+
   // LIVE
-  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0;
+  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, capped = false;
   const byStep: Record<string, number> = {};
   for (const l of leads) {
+    if (sent >= remaining) { capped = true; break; }
     const seg = normSeg(l.segment);
     const tpl = await getTpl(l.track, l.step);
     if (!tpl) { await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue; }
@@ -281,5 +291,5 @@ Deno.serve(async (req: Request) => {
       await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
     }
   }
-  return json({ ok: true, mode: 'live', due: leads.length, sent, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, by_step: byStep });
+  return json({ ok: true, mode: 'live', due: leads.length, sent, daily_cap: DAILY_CAP, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, by_step: byStep });
 });
