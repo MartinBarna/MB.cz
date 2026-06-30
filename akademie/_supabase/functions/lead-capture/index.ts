@@ -46,25 +46,26 @@ Deno.serve(async (req) => {
       await supa.from("leads").update({ phone }).eq("email", email).is("phone", null);
     }
 
-    // OKAMZITE odeslani uvitaciho mailu: spust drip-send rovnou (nove leady maji
-    // next_send_at=now() -> jsou hned 'due'). drip-send resi render, skip-purchased,
-    // idempotenci i posun kroku. Nova registrace tak dostane mail hned, ne az za hodinu.
-    // Fire-and-forget; pripadna chyba neovlivni odpoved (lead je ulozeny).
+    // OKAMZITE uvitaci mail: spust drip-send JEN pro tenhle novy lead, ale NIKDY neblokuj odpoved.
+    // (Driv bezel 'await' -> nova registrace cekala na drip-send/Resend a formular "zatuhl",
+    //  zatimco existujici e-mail tenhle blok preskocil a odpovedel hned. Ted cely drip trigger
+    //  vcetne cteni secretu bezi na POZADI pres EdgeRuntime.waitUntil; kdyz neni k dispozici,
+    //  fire-and-forget. Fallback: hodinovy cron stejne projede leady s next_send_at=now().)
     if (!duplicate) {
-      try {
-        const { data: cfg } = await supa.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
-        const secret = cfg?.value;
-        if (secret) {
-          const p = fetch(SUPABASE_URL + "/functions/v1/drip-send", {
+      const drip = (async () => {
+        try {
+          const { data: cfg } = await supa.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
+          const secret = cfg?.value;
+          if (!secret) return;
+          await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
             method: "POST",
             headers: { "Content-Type": "application/json", "x-drip-secret": secret },
             body: JSON.stringify({ only_email: email }),   // jen tenhle novy lead -> bez duplicit pri navalu
-          }).catch((e) => console.error("drip trigger fetch failed", e));
-          // @ts-ignore EdgeRuntime background task (dorucit i po odeslani odpovedi)
-          if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) EdgeRuntime.waitUntil(p);
-          else await p;
-        }
-      } catch (e) { console.error("drip trigger error", e); }
+          });
+        } catch (e) { console.error("drip trigger error", e); }
+      })();
+      // @ts-ignore EdgeRuntime background task (dobehne i po odeslani odpovedi, neblokuje klienta)
+      if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) EdgeRuntime.waitUntil(drip);
     }
 
     return json({ ok: true, duplicate });
