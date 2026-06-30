@@ -225,9 +225,11 @@ Deno.serve(async (req: Request) => {
     const byStep: Record<string, number> = {};
     let would = 0, bought = 0, invalid = 0;
     for (const l of leads) {
-      // onboarding tracky cili PRAVE na zakazniky -> nepreskakuj je (jinak skip jako u nabidek)
+      // onboarding tracky cili PRAVE na zakazniky -> nepreskakuj.
+      // Krok 0 = uvitaci/freebie mail -> posli i majitelum (chteli ten plan).
+      // Az pozdejsi PRODEJNI kroky (>0) majitelum preskakujeme.
       const onbDry = String(l.track || '').indexOf('onboarding') === 0;
-      if (!onbDry && buyers.has(String(l.email).toLowerCase())) { bought++; continue; }
+      if (!onbDry && l.step > 0 && buyers.has(String(l.email).toLowerCase())) { bought++; continue; }
       const tpl = await getTpl(l.track, l.step);
       if (!tpl) { invalid++; continue; }
       const key = l.track + '/step' + l.step + ':' + tpl.key;
@@ -243,9 +245,10 @@ Deno.serve(async (req: Request) => {
     const seg = normSeg(l.segment);
     const tpl = await getTpl(l.track, l.step);
     if (!tpl) { await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue; }
-    // onboarding tracky cili PRAVE na zakazniky -> nepreskakuj je
+    // onboarding tracky cili PRAVE na zakazniky -> nepreskakuj.
+    // Krok 0 = uvitaci/freebie mail -> posli i majitelum; pozdejsi prodejni kroky (>0) skip.
     const onb = String(l.track || '').indexOf('onboarding') === 0;
-    if (!onb && buyers.has(String(l.email).toLowerCase())) {
+    if (!onb && l.step > 0 && buyers.has(String(l.email).toLowerCase())) {
       await admin.from('leads').update({ status: 'purchased', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
       await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_purchased', detail: { track: l.track } });
       stopped++; continue;
