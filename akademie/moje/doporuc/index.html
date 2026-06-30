@@ -56,17 +56,11 @@
     <h1>Doporuč a <span class="hl">získej kredit</span></h1>
     <p class="lead">Líbí se ti, co tu máš? Pošli to dál. Kamarád dostane slevu, ty kredit na svůj další nákup. Férový deal pro oba.</p>
 
-    <div id="refLoad">Načítám tvůj kód…</div>
-
-    <div id="refMain" style="display:none;">
+    <div id="refMain">
       <div class="panel" style="text-align:center;">
-        <div style="color:#b7ab9b;font-size:.92rem;">Tvůj osobní kód</div>
-        <div class="ref-code"><b id="refCodeVal">BARNA-····</b><button class="b-ghost" id="copyCode" style="padding:10px 16px;border-radius:50px;">Kopírovat kód</button></div>
-        <div style="color:#8a7e6d;font-size:.82rem;word-break:break-all;" id="refLink">martinbarna.cz/?ref=…</div>
-        <div class="ref-btns">
-          <a class="b-wa" id="shareWa" target="_blank" rel="noopener">Poslat přes WhatsApp</a>
-          <button class="b-copy" id="copyLink">Kopírovat odkaz</button>
-        </div>
+        <div class="ref-code" style="justify-content:center;"><b style="opacity:.45;letter-spacing:.18em;">BRZY</b></div>
+        <div style="color:#ffb066;font-weight:800;font-size:1.05rem;margin:.2rem 0 .3rem;">🔧 Připravujeme — spustíme to už brzy</div>
+        <p style="color:#b7ab9b;max-width:460px;margin:.2rem auto 0;line-height:1.6;">Doporučovací program ještě ladíme, ať šlape na jedničku. Jakmile bude hotový, najdeš tu svůj <strong>osobní kód</strong> a pošleš ho kamarádům jedním klikem. Dám ti vědět.</p>
       </div>
 
       <div class="ref-deal">
@@ -82,16 +76,10 @@
         </div>
       </div>
 
-      <div class="ref-stats">
-        <div class="s"><b id="stConf">0</b><span>přivedených kamarádů</span></div>
-        <div class="s"><b id="stPend">0</b><span>čeká na potvrzení</span></div>
-        <div class="s"><b id="stCredit">0 Kč</b><span>kredit k dispozici</span></div>
-      </div>
-
-      <h2 style="margin-top:2rem;">Jak to funguje</h2>
+      <h2 style="margin-top:2rem;">Jak to bude fungovat</h2>
       <div class="ref-how">
-        <div class="h"><div class="n">1</div><b>Pošli svůj kód</b><p>Hoď kamarádovi svůj kód nebo odkaz. Klidně přes WhatsApp jedním klikem.</p></div>
-        <div class="h"><div class="n">2</div><b>Kamarád ho zadá u objednávky</b><p>Při nákupu videokurzu nebo Academy zadá tvůj kód jako slevový kupón a hned vidí nižší cenu.</p></div>
+        <div class="h"><div class="n">1</div><b>Pošleš svůj kód</b><p>Hodíš kamarádovi svůj osobní kód nebo odkaz. Klidně přes WhatsApp jedním klikem.</p></div>
+        <div class="h"><div class="n">2</div><b>Kamarád ho zadá u objednávky</b><p>Při nákupu videokurzu nebo Academy zadá tvůj kód jako slevu a hned vidí nižší cenu.</p></div>
         <div class="h"><div class="n">3</div><b>Tobě naskočí kredit</b><p>Jakmile nákup projde a uplyne vratná lhůta, připíšu ti kredit. Uplatníš ho na svůj další nákup.</p></div>
       </div>
 
@@ -105,14 +93,6 @@
       </div>
     </div>
 
-    <div id="refGate" style="display:none;">
-      Program doporučení je pro zákazníky Academy nebo videokurzu. Jakmile máš přístup, najdeš tu svůj kód.<br><br>
-      <a href="/videokurz">Videokurz za 800 Kč</a> · <a href="/akademie/">Academy</a>
-    </div>
-    <div id="refErr" style="display:none;">
-      Něco se nepovedlo načíst. Zkus to za chvíli, nebo napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>.
-    </div>
-
     <p class="foot">Barna Academy — Martin Barna · online výživa a fitness</p>
   </div>
 
@@ -122,44 +102,16 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
   (function(){
-    var FN = 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1';
+    // Doporučovací program je dočasně ve stavu „připravujeme" — žádný kód se
+    // negeneruje ani nesdílí, dokud nebude napojení na SimpleShop hotové.
     var $ = function(id){ return document.getElementById(id); };
-    function show(id){ ['refLoad','refMain','refGate','refErr'].forEach(function(x){ $(x).style.display = (x===id?'':'none'); }); }
-    function toast(){ var t=$('toast'); t.classList.add('on'); setTimeout(function(){ t.classList.remove('on'); }, 1400); }
-    function copy(txt){ (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(toast).catch(function(){
-      var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
-      try{ document.execCommand('copy'); toast(); }catch(e){} document.body.removeChild(ta);
-    }); }
-
-    if(!window.BA_CONFIG || !window.supabase){ show('refErr'); return; }
+    if(!window.BA_CONFIG || !window.supabase){ return; }
     var sb = window.supabase.createClient(window.BA_CONFIG.url, window.BA_CONFIG.anonKey, { auth:{ persistSession:true, autoRefreshToken:true } });
-
     var lg=$('logout'); if(lg) lg.addEventListener('click', function(e){ e.preventDefault(); sb.auth.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); });
-
     sb.auth.getSession().then(function(res){
       var session = res && res.data && res.data.session;
-      if(!session){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/doporuc/'); return; }
-      var token = session.access_token;
-      fetch(FN+'/referral-code', { headers:{ Authorization:'Bearer '+token } })
-        .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, status:r.status, j:j }; }); })
-        .then(function(out){
-          if(out.status===403 || (out.j && out.j.error==='no_entitlement')){ show('refGate'); return; }
-          if(!out.ok || !out.j || !out.j.code){ show('refErr'); return; }
-          var code = out.j.code, link = out.j.share_url || ('https://martinbarna.cz/?ref='+code);
-          var st = out.j.status || {};
-          $('refCodeVal').textContent = code;
-          $('refLink').textContent = link.replace(/^https?:\/\//,'');
-          $('stConf').textContent = (st.referrals_confirmed||0);
-          $('stPend').textContent = (st.referrals_pending||0);
-          $('stCredit').textContent = (st.credit_confirmed||0)+' Kč';
-          var msg = 'Čau! Mrkni na výživový videokurz a Academy od Martina Barny — s mým kódem '+code+' máš slevu: '+link;
-          $('shareWa').href = 'https://wa.me/?text='+encodeURIComponent(msg);
-          $('copyCode').addEventListener('click', function(){ copy(code); });
-          $('copyLink').addEventListener('click', function(){ copy(link); });
-          show('refMain');
-        })
-        .catch(function(){ show('refErr'); });
-    }).catch(function(){ show('refErr'); });
+      if(!session){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/doporuc/'); }
+    }).catch(function(){});
   })();
   </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
