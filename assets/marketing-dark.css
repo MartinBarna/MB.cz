@@ -187,6 +187,9 @@ select option, select optgroup { color:#161616; background:#fff; }
 /* navigační CTA tlačítko musí zůstat oranžové a čitelné (regrese z .cta darkeningu) */
 .nav a.cta, .navlinks a.cta { background:linear-gradient(145deg,var(--bd-gold2),var(--bd-gold))!important; color:#161616!important; }
 .nav a.cta:hover, .navlinks a.cta:hover { background:var(--bd-gold)!important; color:#161616!important; }
+/* lead-magnet / marketing nav tlačítko používá třídu .btn (ne .cta) — zajisti čitelný tmavý text na oranžové (jinak zdědí béžovou z .nav a !important) */
+.nav a.btn { color:#161616!important; }
+.nav a.btn:hover { color:#fff!important; }
 
 /* feature ikony: page CSS dává color:#161616 (tmavá ikona) → na dark mizí; přebij na zlatou */
 .feature .ico, .feature .ico .mb-ico, #blog .card .ico { color:var(--bd-gold-soft)!important; }
