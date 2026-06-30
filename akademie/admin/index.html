@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Barna Academy</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap{max-width:1200px;}
+  .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:1.4rem 0}
+  .stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 12px;text-align:center}
+  .stats .s b{display:block;font-size:1.6rem;color:#ff9d3c;font-weight:800;line-height:1}
+  .stats .s span{font-size:.74rem;color:#b7ab9b}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(3,1fr)}}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:1rem 0}
+  .toolbar input[type=search]{flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 14px;color:#fff;font-family:inherit;font-size:.95rem}
+  .toolbar select{background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 12px;color:#ece4d9;font-family:inherit;font-size:.9rem}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+  th{color:#b7ab9b;font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0;background:#140d06}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:rgba(255,255,255,.04)}
+  .badge{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:50px;margin:1px}
+  .b-ok{background:rgba(60,200,120,.16);color:#5fe0a0}
+  .b-no{background:rgba(255,255,255,.06);color:#8a7e6d}
+  .b-tag{background:rgba(255,122,0,.14);color:#ff9d3c}
+  .tcount{color:#cbbfae;font-variant-numeric:tabular-nums}
+  .muted{color:#8a7e6d}
+  #det{position:fixed;top:0;right:0;height:100vh;width:min(520px,94vw);background:#140d06;border-left:1px solid rgba(255,255,255,.12);box-shadow:-12px 0 40px rgba(0,0,0,.5);transform:translateX(100%);transition:transform .25s;overflow-y:auto;z-index:60;padding:22px}
+  #det.on{transform:translateX(0)}
+  #det h2{margin:.2rem 0}
+  #det .close{position:absolute;top:14px;right:16px;cursor:pointer;color:#b7ab9b;font-size:1.4rem;background:none;border:none}
+  .det-act{display:flex;gap:8px;flex-wrap:wrap;margin:1rem 0}
+  .det-act button{cursor:pointer;border:none;font-family:inherit;font-weight:700;font-size:.8rem;padding:8px 13px;border-radius:50px;background:rgba(255,255,255,.07);color:#ece4d9;border:1px solid rgba(255,255,255,.14)}
+  .det-act button.on{background:#ff7a00;color:#1a1208;border-color:#ff7a00}
+  .det-act button.danger{color:#ff8b6b}
+  .tl{margin:1rem 0;border-top:1px solid rgba(255,255,255,.08);padding-top:.8rem}
+  .tl .ev{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem}
+  .tl .ev .t{color:#cbbfae}
+  .tl .ev .d{color:#8a7e6d;white-space:nowrap}
+  .ev-sent{color:#5fe0a0}.ev-error{color:#ff8b6b}.ev-skip{color:#b7ab9b}.ev-open{color:#7db8ff}
+  #gate,#load{text-align:center;color:#b7ab9b;padding:3rem 0}
+  #gate a{color:#ff9d3c}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1a130c;border:1px solid #3a2c1c;color:#ffb066;padding:10px 20px;border-radius:50px;font-weight:700;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:99}
+  .toast.on{opacity:1}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Admin</span></span></a>
+    <div class="topr"><a href="/akademie/moje/">Zpět na Academy</a><a id="logout">Odhlásit</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <div id="load">Načítám admin…</div>
+
+    <div id="gate" style="display:none;">
+      Tahle stránka je jen pro administrátora.<br><br>
+      <a href="/akademie/prihlaseni/?next=%2Fakademie%2Fadmin%2F">Přihlásit se</a>
+    </div>
+
+    <div id="app" style="display:none;">
+      <span class="kick"><span class="dot"></span> CRM &amp; mailing</span>
+      <h1>Přehled <span class="hl">kontaktů</span></h1>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="Hledat e-mail nebo jméno…" autocomplete="off">
+        <select id="filt">
+          <option value="">Všichni</option>
+          <option value="coaching">Coaching klienti</option>
+          <option value="videokurz">Má videokurz</option>
+          <option value="academy">Má Academy</option>
+          <option value="lead">Lead-magnet (bez koupě)</option>
+          <option value="registered">Registrovaní</option>
+          <option value="unregistered">Neregistrovaní</option>
+        </select>
+        <span class="muted" id="count"></span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr>
+            <th>E-mail</th><th>Jméno</th><th>Segment</th>
+            <th>Academy</th><th>Videokurz</th><th>Účet</th><th>Mailů</th><th>Poslední mail</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="foot" style="margin-top:1.6rem">Barna Academy — admin · data jen pro tebe · <span id="meta"></span></p>
+    </div>
+  </div>
+
+  <div id="det">
+    <button class="close" id="detClose">×</button>
+    <div id="detBody"></div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){
+    var FN='https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/admin-api';
+    var $=function(id){return document.getElementById(id);};
+    var sb=null, token=null, ALL=[];
+    function show(id){ ['load','gate','app'].forEach(function(x){ $(x).style.display=(x===id?'':'none'); }); }
+    function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on');},1600); }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function fmtDate(s){ if(!s) return '—'; var d=new Date(s); return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); }
+    function fmtDay(s){ if(!s) return '—'; return new Date(s).toLocaleDateString('cs-CZ'); }
+    function api(payload){ return fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)}).then(function(r){ return r.json().then(function(j){return {status:r.status,j:j};}); }); }
+
+    if(!window.BA_CONFIG||!window.supabase){ show('gate'); return; }
+    sb=window.supabase.createClient(window.BA_CONFIG.url,window.BA_CONFIG.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
+    var lg=$('logout'); if(lg) lg.addEventListener('click',function(e){e.preventDefault();sb.auth.signOut().then(function(){location.href='/akademie/prihlaseni/';});});
+
+    sb.auth.getSession().then(function(res){
+      var s=res&&res.data&&res.data.session;
+      if(!s){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'); return; }
+      token=s.access_token;
+      Promise.all([api({action:'stats'}),api({action:'overview'})]).then(function(out){
+        var st=out[0], ov=out[1];
+        if(st.status===403||ov.status===403){ show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return; }
+        if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
+        renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app');
+        $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
+      }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
+    });
+
+    function renderStats(s){
+      var items=[['Kontaktů',s.contacts],['Academy',s.academy],['Videokurz',s.videokurz],['Coaching',s.coaching],['Registrovaní',s.registered],['Mailů odesláno',s.sent_total]];
+      $('stats').innerHTML=items.map(function(i){return '<div class="s"><b>'+i[1]+'</b><span>'+i[0]+'</span></div>';}).join('');
+    }
+    function passFilter(r,f){
+      if(f==='coaching') return (r.tags||[]).some(function(t){return String(t).indexOf('coaching')===0;});
+      if(f==='videokurz') return r.has_videokurz;
+      if(f==='academy') return r.has_academy;
+      if(f==='lead') return !r.has_academy&&!r.has_videokurz;
+      if(f==='registered') return r.registered;
+      if(f==='unregistered') return !r.registered;
+      return true;
+    }
+    function renderRows(){
+      var q=($('q').value||'').toLowerCase().trim(), f=$('filt').value;
+      var list=ALL.filter(function(r){
+        if(!passFilter(r,f)) return false;
+        if(q && (r.email||'').toLowerCase().indexOf(q)<0 && (r.name||'').toLowerCase().indexOf(q)<0) return false;
+        return true;
+      });
+      $('count').textContent=list.length+' / '+ALL.length;
+      $('rows').innerHTML=list.slice(0,500).map(function(r){
+        var seg=(r.tags||[]).map(function(t){return '<span class="badge b-tag">'+esc(t)+'</span>';}).join('')||'<span class="muted">—</span>';
+        return '<tr data-email="'+esc(r.email)+'">'+
+          '<td>'+esc(r.email)+'</td>'+
+          '<td>'+esc(r.name||'—')+'</td>'+
+          '<td>'+seg+'</td>'+
+          '<td>'+(r.has_academy?'<span class="badge b-ok">ANO</span>':'<span class="badge b-no">ne</span>')+'</td>'+
+          '<td>'+(r.has_videokurz?'<span class="badge b-ok">ANO</span>':'<span class="badge b-no">ne</span>')+'</td>'+
+          '<td>'+(r.registered?'<span class="badge b-ok">účet</span>':'<span class="badge b-no">ne</span>')+'</td>'+
+          '<td class="tcount">'+(r.sent_count||0)+'</td>'+
+          '<td class="muted">'+fmtDay(r.last_sent_at)+'</td>'+
+        '</tr>';
+      }).join('');
+      Array.prototype.forEach.call($('rows').querySelectorAll('tr'),function(tr){ tr.addEventListener('click',function(){ openDetail(tr.getAttribute('data-email')); }); });
+    }
+    $('q').addEventListener('input',renderRows); $('filt').addEventListener('change',renderRows);
+
+    function openDetail(email){
+      $('detBody').innerHTML='<p class="muted">Načítám…</p>'; $('det').classList.add('on');
+      api({action:'contact',email:email}).then(function(out){
+        if(!out.j.ok){ $('detBody').innerHTML='<p class="muted">Nepovedlo se načíst.</p>'; return; }
+        var d=out.j, c=d.contact||{}, ents=d.entitlements||[];
+        var hasA=ents.some(function(e){return e.product==='academy'&&e.active;});
+        var hasV=ents.some(function(e){return e.product==='videokurz'&&e.active;});
+        var tags=(c.tags||[]);
+        var tl=(d.timeline||[]).map(function(ev){
+          var cls=ev.type==='sent'?'ev-sent':ev.type==='error'?'ev-error':ev.type==='open'?'ev-open':'ev-skip';
+          var track=(ev.detail&&ev.detail.track)||'';
+          return '<div class="ev"><span class="t '+cls+'">'+esc(ev.type)+(track?' · '+esc(track)+' #'+esc(ev.step):'')+'</span><span class="d">'+fmtDate(ev.created_at)+'</span></div>';
+        }).join('')||'<p class="muted">Zatím žádné e-maily.</p>';
+        $('detBody').innerHTML=
+          '<h2>'+esc(email)+'</h2>'+
+          '<p class="muted">'+esc(c.name||'')+(c.status?' · '+esc(c.status):'')+'</p>'+
+          '<div class="det-act">'+
+            '<button data-a="academy" class="'+(hasA?'on':'')+'">Academy: '+(hasA?'ANO':'ne')+'</button>'+
+            '<button data-a="videokurz" class="'+(hasV?'on':'')+'">Videokurz: '+(hasV?'ANO':'ne')+'</button>'+
+            '<button data-a="unsub" class="danger">Odhlásit z mailů</button>'+
+          '</div>'+
+          '<div class="det-act" id="tagWrap">'+tags.map(function(t){return '<button data-tag="'+esc(t)+'" class="on">'+esc(t)+' ✕</button>';}).join('')+
+            '<button id="addTag">+ tag</button></div>'+
+          '<div class="tl"><b style="color:#cbbfae;font-size:.8rem;">Historie e-mailů</b>'+tl+'</div>';
+        // akce
+        Array.prototype.forEach.call($('detBody').querySelectorAll('[data-a]'),function(btn){
+          btn.addEventListener('click',function(){
+            var a=btn.getAttribute('data-a');
+            if(a==='unsub'){ if(!confirm('Odhlásit '+email+' z mailingu?')) return; api({action:'unsubscribe',email:email}).then(function(){toast('Odhlášeno');}); return; }
+            var nowOn=!btn.classList.contains('on');
+            api({action:'set_access',email:email,product:a,active:nowOn}).then(function(o){ if(o.j.ok){ btn.classList.toggle('on'); btn.textContent=(a==='academy'?'Academy: ':'Videokurz: ')+(nowOn?'ANO':'ne'); toast('Uloženo'); refreshRow(email,a,nowOn);} else toast('Chyba'); });
+          });
+        });
+        Array.prototype.forEach.call($('detBody').querySelectorAll('[data-tag]'),function(btn){
+          btn.addEventListener('click',function(){ var t=btn.getAttribute('data-tag'); api({action:'set_tag',email:email,tag:t,op:'remove'}).then(function(){ btn.remove(); toast('Tag odebrán'); }); });
+        });
+        var at=$('addTag'); if(at) at.addEventListener('click',function(){ var t=prompt('Nový tag (např. coaching-active, manual-add):'); if(!t) return; api({action:'set_tag',email:email,tag:t.trim(),op:'add'}).then(function(){ toast('Tag přidán'); openDetail(email); }); });
+      });
+    }
+    function refreshRow(email,product,active){
+      var r=ALL.filter(function(x){return x.email===email;})[0]; if(!r) return;
+      if(product==='academy') r.has_academy=active; if(product==='videokurz') r.has_videokurz=active; renderRows();
+    }
+    $('detClose').addEventListener('click',function(){ $('det').classList.remove('on'); });
+  })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>
