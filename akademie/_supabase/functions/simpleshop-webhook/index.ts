@@ -75,10 +75,20 @@ async function parseBody(req: Request): Promise<Record<string, unknown>> {
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return json({ error: "method-not-allowed" }, 405);
 
+  const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
+
+  // Secret: prednostne z app_config (lze nastavit pres SQL bez redeploye, stejne jako
+  // drip_invoke_secret u drip-send), fallback na env SIMPLESHOP_WEBHOOK_SECRET.
+  let secret = WEBHOOK_SECRET;
+  try {
+    const { data } = await admin.from("app_config").select("value").eq("key", "simpleshop_webhook_secret").maybeSingle();
+    if (data?.value) secret = String(data.value);
+  } catch { /* fallback na env */ }
+
   // Ověření tajemství (z query ?secret= nebo hlavičky X-Webhook-Secret).
   const url = new URL(req.url);
   const provided = url.searchParams.get("secret") || req.headers.get("x-webhook-secret") || "";
-  if (!WEBHOOK_SECRET || provided !== WEBHOOK_SECRET) {
+  if (!secret || provided !== secret) {
     return json({ error: "unauthorized" }, 401);
   }
 
@@ -98,8 +108,7 @@ Deno.serve(async (req: Request) => {
   const product = resolveProduct(rawProduct);
   if (!product) return json({ error: "unknown-product", rawProduct }, 422);
 
-  // Zápis entitlementu (service_role obchází RLS).
-  const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
+  // Zápis entitlementu (service_role obchází RLS; admin klient vytvořen nahoře).
   const { error } = await admin.from("entitlements").upsert(
     { email, product, active: true, source: "simpleshop", granted_at: new Date().toISOString() },
     { onConflict: "email,product" },
