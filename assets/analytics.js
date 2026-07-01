@@ -27,11 +27,14 @@
   document.head.appendChild(g);
 
   function applyConsent(granted) {
+    // Lišta žádá souhlas se statistikou I měřením reklam najednou — po „Přijmout"
+    // povolujeme i ad_* signály (Google Ads konverze + remarketing), jinak zůstává vše denied.
+    var v = granted ? 'granted' : 'denied';
     gtag('consent', 'update', {
-      analytics_storage: granted ? 'granted' : 'denied',
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied'
+      analytics_storage: v,
+      ad_storage: v,
+      ad_user_data: v,
+      ad_personalization: v
     });
   }
 
@@ -62,7 +65,8 @@
   function pageConv() {
     var p = location.pathname;
     if (/dekuji/.test(p))    return null; // Purchase řeší výhradně server-side CAPI
-    if (/videokurz/.test(p)) return { kind: 'view', name: 'Videokurz výživy', id: 'videokurz', value: 800 };
+    if (/^\/videokurz/.test(p)) return { kind: 'view', name: 'Videokurz výživy', id: 'videokurz', value: 800 };
+    if (/^\/akademie\/(objednavka\/?)?(index\.html)?$/.test(p)) return { kind: 'view', name: 'Barna Academy', id: 'academy', value: 8900 };
     return null;
   }
   function fireConvFB() {
@@ -94,31 +98,16 @@
       var a = e.target.closest ? e.target.closest('a[href*="simpleshop.cz"]') : null;
       if (!a) return;
       var href = a.getAttribute('href') || '';
-      var isKurz = href.indexOf('3Vbl') !== -1;
-      var val = isKurz ? 800 : (href.indexOf('qG2yO') !== -1 ? 1990 : 0);
-      var id = isKurz ? 'videokurz' : 'konzultace';
-      var name = isKurz ? 'Videokurz výživy' : 'Konzultace';
-      if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: name, content_type: 'product', content_ids: [id], value: val, currency: 'CZK' }, { eventID: evId('checkout') });
-      if (window.gtag) gtag('event', 'begin_checkout', { value: val, currency: 'CZK', items: [{ item_id: id, item_name: name, price: val }] });
+      var c = href.indexOf('3Vbl') !== -1  ? { id: 'videokurz',  name: 'Videokurz výživy', val: 800 }
+            : href.indexOf('Xgl8g') !== -1 ? { id: 'academy',    name: 'Barna Academy',    val: 8900 }
+            : href.indexOf('qG2yO') !== -1 ? { id: 'konzultace', name: 'Konzultace',       val: 1990 }
+            :                                { id: 'simpleshop-other', name: 'SimpleShop', val: 0 };
+      if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: c.name, content_type: 'product', content_ids: [c.id], value: c.val, currency: 'CZK' }, { eventID: evId('checkout') });
+      if (window.gtag) gtag('event', 'begin_checkout', { value: c.val, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.val }] });
     }, true);
     // Odeslání kontaktního formuláře → Lead
     var kf = document.getElementById('kontaktForm');
     if (kf) kf.addEventListener('submit', function () { if (window.fbq) fbq('track', 'Lead', {}, { eventID: evId('lead') }); if (window.gtag) gtag('event', 'generate_lead'); });
-    // Lead magnet (Tally embed) odeslán → Lead / generate_lead.
-    // Tally posílá z iframe postMessage „Tally.FormSubmitted" do parent okna.
-    // Díky tomu může FB optimalizovat reklamu na „Leads", ne jen na prokliky.
-    // (Když návštěvník odmítl cookies, fbq neexistuje → do Meta se nic nepošle; GA4 v consent
-    //  mode pošle cookieless ping. To je správné GDPR chování.)
-    window.addEventListener('message', function (e) {
-      var d = e.data;
-      var isSubmit =
-        (typeof d === 'string' && d.indexOf('Tally.FormSubmitted') !== -1) ||
-        (d && typeof d === 'object' && (d.event === 'Tally.FormSubmitted' ||
-          (typeof d.type === 'string' && d.type.indexOf('FormSubmitted') !== -1)));
-      if (!isSubmit) return;
-      if (window.fbq)  fbq('track', 'Lead', { content_name: 'Lead magnet' }, { eventID: evId('lead') });
-      if (window.gtag) gtag('event', 'generate_lead', { method: 'lead_magnet' });
-    });
   }
   onReady(function () { wireConversions(); fireConvGA(); });
 
