@@ -120,8 +120,11 @@
       var emailEl = document.getElementById('email'), passEl = document.getElementById('pass'), fnameEl = document.getElementById('fname');
 
       function qs(k) { try { return new URLSearchParams(location.search).get(k); } catch (e) { return null; } }
-      // Po přihlášení vždy na rozcestník (hub), ať si uživatel vybere Academy / Videokurz.
+      // Cíl po přihlášení: parametr ?next= (jen interní cesty /akademie/...), jinak rozcestník.
+      // Kupující z děkovačky tak přistane rovnou ve videokurzu, ne na rozcestníku.
       var nextUrl = '/akademie/moje/';
+      var nextQ = qs('next');
+      if (nextQ && /^\/akademie\//.test(nextQ)) nextUrl = nextQ;
       var need = qs('need');
       if (need) {
         var n = document.getElementById('needNote');

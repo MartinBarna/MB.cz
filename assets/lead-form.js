@@ -28,6 +28,7 @@
           phone: (form.phone && form.phone.value || '').trim(),
           age: (form.age && form.age.value || ''),
           goal: (form.goal && form.goal.value || ''),
+          website: (form.website && form.website.value || ''),
           segment: seg, source: src
         };
         var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Odesílám…';

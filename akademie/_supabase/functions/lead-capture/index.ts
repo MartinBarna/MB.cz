@@ -14,6 +14,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ ok: false, error: "method" }, 405);
   try {
     const body = await req.json().catch(() => ({}));
+    // Honeypot: pole "website" je skryte, clovek ho nevyplni. Bot ano -> tichy uspech bez zapisu i mailu.
+    if (String(body.website || "").trim()) return json({ ok: true });
     const email = String(body.email || "").trim().toLowerCase();
     const name = String(body.name || "").trim().slice(0, 120);
     const segRaw = String(body.segment || "other");
