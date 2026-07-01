@@ -171,11 +171,14 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
   const archiveBcc = fMap.archive_bcc ?? '';   // skryta kopie vsech ostrych sendu na Martinuv mail (prazdne = vypnuto)
+  // BRANA: follow-up/transakcni tracky (non-onboarding) se posilaji jen kdyz je followups_enabled='true'.
+  // Absence/jina hodnota = drzet (test-first). Prepnuti ostro = 1 SQL update, bez redeploye.
+  const followupsEnabled = (fMap.followups_enabled ?? '') === 'true';
 
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
@@ -209,13 +212,29 @@ Deno.serve(async (req: Request) => {
   // due leady (only_email = zpracuj jen jeden konkretni lead -> bezpecny instant-send bez zavodu)
   const limit = Number(body.limit ?? 200);
   const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : '';
-  let dueQ = admin.from('leads')
-    .select('id,email,name,segment,track,step,unsubscribe_token')
-    .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso);
-  if (onlyEmail) dueQ = dueQ.eq('email', onlyEmail);
-  const { data: due, error: dueErr } = await dueQ.order('next_send_at', { ascending: true }).limit(limit);
-  if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500);
-  const leads = due ?? [];
+  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token';
+  const dueBase = () => admin.from('leads').select(FIELDS)
+    .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso)
+    .order('next_send_at', { ascending: true }).limit(limit);
+  // deno-lint-ignore no-explicit-any
+  let leads: any[] = [];
+  if (onlyEmail) {
+    const { data: due, error: dueErr } = await dueBase().eq('email', onlyEmail);
+    if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500);
+    leads = due ?? [];
+  } else {
+    // PRIORITA: follow-up/transakcni tracky (non-onboarding) PRED onboarding bulkem, aby je bulk
+    // nehladovel pod dennim stropem. Follow-upy jdou jen kdyz je otevrena BRANA (followupsEnabled).
+    const { data: onb, error: e1 } = await dueBase().ilike('track', 'onboarding%');
+    if (e1) return json({ error: 'db_due', detail: e1.message }, 500);
+    let nonOnb: any[] = [];   // deno-lint-ignore no-explicit-any
+    if (followupsEnabled) {
+      const { data: no, error: e2 } = await dueBase().not('track', 'ilike', 'onboarding%');
+      if (e2) return json({ error: 'db_due', detail: e2.message }, 500);
+      nonOnb = no ?? [];
+    }
+    leads = [...nonOnb, ...(onb ?? [])];   // follow-upy prvni, pak onboarding bulk
+  }
 
   const { data: buyersRows } = await admin.from('entitlements').select('email').eq('product', 'videokurz').eq('active', true);
   const buyers = new Set((buyersRows ?? []).map((b: { email: string }) => b.email.toLowerCase()));
@@ -235,18 +254,16 @@ Deno.serve(async (req: Request) => {
       const key = l.track + '/step' + l.step + ':' + tpl.key;
       byStep[key] = (byStep[key] ?? 0) + 1; would++;
     }
-    return json({ ok: true, mode: 'dry', due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, by_step: byStep });
+    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, by_step: byStep });
   }
 
-  // DENNÍ STROP: rezerva pod Resend limitem (100/den) pro transakční maily.
-  // drip-send (vč. onboardingu) pošle max DAILY_CAP/den; zbytek zůstane due a dojde další den.
-  const DAILY_CAP = 75;
+  // DENNI STROP: rezerva pod Resend limitem (100/den) pro transakcni maily.
+  // drip-send (vc. onboardingu) posle max DAILY_CAP/den; zbytek zustane due a dojde dalsi den.
+  const DAILY_CAP = 50;
   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
   const { count: sentToday } = await admin.from('email_events')
     .select('id', { count: 'exact', head: true })
     .eq('type', 'sent').gte('created_at', dayStart.toISOString());
-  // Individualni uvitaci mail (only_email z formulare) jde VZDY - strop plati jen pro bulk cron rozesilku.
-  // Rezerva pod Resend limitem je prave PRO tyhle transakcni uvitacky, nesmi je blokovat.
   const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
 
   // LIVE
@@ -293,5 +310,5 @@ Deno.serve(async (req: Request) => {
       await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
     }
   }
-  return json({ ok: true, mode: 'live', due: leads.length, sent, daily_cap: DAILY_CAP, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, by_step: byStep });
+  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, by_step: byStep });
 });

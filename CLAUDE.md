@@ -78,6 +78,10 @@ jako **reálné UTF-8**, ne `\u` kódy — překlep `ď`(ď)→`ğ`(ğ) udělal 
 - Marketingové kontakty = `public.customer_contacts` (oddělené od `leads`). Segmenty přes `tags`:
   `early-customer` (WordPress kupci), `manual-add`, `coaching-active`, `coaching-ex`.
   Pojistka proti duplicitám mailů: `onboarding_sent_at`.
-- Edge funkce: `lead-capture`, `drip-send`, `unsubscribe`, `videokurz-onboarding`.
-- Registrace je autoconfirm (bez potvrzování e-mailu). Auth SMTP je rozbité (reset hesla /
-  magic-link nefungují, dokud se nenahradí SMTP creds) — neblokuje onboarding (signup heslem).
+- Edge funkce: `lead-capture`, `drip-send`, `unsubscribe`, `videokurz-onboarding`, `simpleshop-webhook`,
+  `referral-code`, `referral-click`, `referral-webhook`, `admin-api`, `ai-martin`.
+  ⚠️ Nasazená verze může být NOVĚJŠÍ než repo (editovalo se přes MCP) — před úpravou funkce vždy
+  `get_edge_function` a porovnej s repem; po deployi commitni nasazený stav zpět do repa.
+- Registrace je autoconfirm (bez potvrzování e-mailu). Auth SMTP jede přes Resend
+  (smtp.resend.com:465, sender news@martinbarna.cz) — od 2026-06-29 funkční, šablony česky.
+  POZOR: auth maily sdílí Resend kvótu (free 100/den) s drip enginem.
