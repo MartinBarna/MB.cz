@@ -69,6 +69,20 @@
   .tbox h4{margin:0 0 .5rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}
   .tbar{display:flex;justify-content:space-between;font-size:.82rem;color:#ece4d9;padding:3px 0}
   .tbar .v{color:#b7ab9b;font-variant-numeric:tabular-nums}
+  .mlogbtn{cursor:pointer;border:1px solid rgba(255,122,0,.3);background:rgba(255,122,0,.08);color:#ff9d3c;font-family:inherit;font-weight:700;font-size:.85rem;padding:9px 14px;border-radius:10px;white-space:nowrap}
+  .mlogbtn:hover{background:rgba(255,122,0,.16)}
+  .ovl{position:fixed;inset:0;z-index:70;background:rgba(8,6,4,.74);display:none;align-items:flex-start;justify-content:center;padding:22px 12px;overflow-y:auto}
+  .ovl.on{display:flex}
+  .ovl .box{background:#140d06;border:1px solid rgba(255,255,255,.12);border-radius:16px;width:100%;max-width:920px;padding:20px 22px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+  #mprev .box{max-width:700px}
+  .ovl .x{position:absolute;top:12px;right:16px;cursor:pointer;color:#b7ab9b;font-size:1.5rem;background:none;border:none;line-height:1;z-index:2}
+  .ovl h2{margin:.1rem 0 .2rem;color:#fff;font-size:1.2rem}
+  .mprev-frame{width:100%;height:56vh;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#fff;margin-top:.7rem}
+  .mlog-row{cursor:pointer}
+  .mlog-row:hover{background:rgba(255,255,255,.05)}
+  .att a,.mprev-meta a{display:inline-block;margin:.3rem .4rem 0 0;font-size:.82rem;color:#ff9d3c;background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.28);border-radius:50px;padding:6px 12px;text-decoration:none}
+  .tl .ev.clk{cursor:pointer;border-radius:6px;margin:0 -6px;padding-left:6px;padding-right:6px}
+  .tl .ev.clk:hover{background:rgba(255,255,255,.05)}
 </style>
 </head>
 <body class="ba">
@@ -118,6 +132,7 @@
           <option value="unregistered">Neregistrovaní</option>
         </select>
         <span class="muted" id="count"></span>
+        <button class="mlogbtn" id="mlogBtn">📧 Odeslané e-maily</button>
       </div>
 
       <div style="overflow-x:auto;">
@@ -137,6 +152,24 @@
     <button class="close" id="detClose">×</button>
     <div id="detBody"></div>
   </div>
+
+  <div class="ovl" id="mlog"><div class="box">
+    <button class="x" id="mlogX">×</button>
+    <h2>📧 Odeslané e-maily</h2>
+    <div style="display:flex;gap:8px;margin:.7rem 0;">
+      <input type="search" id="mlogQ" placeholder="Hledat podle e-mailu…" autocomplete="off" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+    </div>
+    <div style="overflow-x:auto;max-height:66vh;overflow-y:auto;">
+      <table><thead><tr><th>Datum</th><th>E-mail</th><th>Který mail</th><th>Stav</th></tr></thead><tbody id="mlogRows"></tbody></table>
+    </div>
+    <p class="muted" id="mlogFoot" style="margin-top:.8rem;"></p>
+  </div></div>
+
+  <div class="ovl" id="mprev"><div class="box">
+    <button class="x" id="mprevX">×</button>
+    <div id="mprevBody"><p class="muted">Načítám…</p></div>
+  </div></div>
+
   <div class="toast" id="toast"></div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
@@ -289,7 +322,8 @@
         var tl=(d.timeline||[]).map(function(ev){
           var cls=ev.type==='sent'?'ev-sent':ev.type==='error'?'ev-error':ev.type==='open'?'ev-open':'ev-skip';
           var track=(ev.detail&&ev.detail.track)||'';
-          return '<div class="ev"><span class="t '+cls+'">'+esc(ev.type)+(track?' · '+esc(track)+' #'+esc(ev.step):'')+'</span><span class="d">'+fmtDate(ev.created_at)+'</span></div>';
+          var canOpen=(ev.type==='sent'||ev.type==='test')&&track;
+          return '<div class="ev'+(canOpen?' clk':'')+'"'+(canOpen?' data-track="'+esc(track)+'" data-step="'+esc(ev.step)+'"':'')+'><span class="t '+cls+'">'+esc(ev.type)+(track?' · '+esc(track)+' #'+esc(ev.step):'')+(canOpen?' 🔍':'')+'</span><span class="d">'+fmtDate(ev.created_at)+'</span></div>';
         }).join('')||'<p class="muted">Zatím žádné e-maily.</p>';
         $('detBody').innerHTML=
           '<h2>'+esc(email)+'</h2>'+
@@ -302,6 +336,10 @@
           '<div class="det-act" id="tagWrap">'+tags.map(function(t){return '<button data-tag="'+esc(t)+'" class="on">'+esc(t)+' ✕</button>';}).join('')+
             '<button id="addTag">+ tag</button></div>'+
           '<div class="tl"><b style="color:#cbbfae;font-size:.8rem;">Historie e-mailů</b>'+tl+'</div>';
+        // klikací řádky historie e-mailů → náhled obsahu
+        Array.prototype.forEach.call($('detBody').querySelectorAll('.ev.clk'),function(row){
+          row.addEventListener('click',function(){ openMailPreview(row.getAttribute('data-track'),row.getAttribute('data-step'),email); });
+        });
         // akce
         Array.prototype.forEach.call($('detBody').querySelectorAll('[data-a]'),function(btn){
           btn.addEventListener('click',function(){
@@ -322,6 +360,55 @@
       if(product==='academy') r.has_academy=active; if(product==='videokurz') r.has_videokurz=active; renderRows();
     }
     $('detClose').addEventListener('click',function(){ $('det').classList.remove('on'); });
+
+    // ---- Odeslané e-maily: globální log + náhled obsahu (+ příloha) ----
+    var TRACK_NAMES={ 'lead-magnet':'Lead magnet (jídelníček)','existing-leadmagnet':'Starý lead → videokurz','onboarding-videokurz':'Onboarding videokurz','onboarding-coaching':'Onboarding coaching' };
+    function trackName(t){ return TRACK_NAMES[t]||t||'—'; }
+    var mlogAll=[];
+    function openMailLog(){
+      $('mlog').classList.add('on'); $('mlogRows').innerHTML=''; $('mlogFoot').textContent='Načítám…';
+      api({action:'email_log',limit:300}).then(function(o){
+        if(o&&o.j&&o.j.ok&&o.j.rows){ mlogAll=o.j.rows; renderMailLog(); }
+        else { $('mlogFoot').innerHTML='Globální log („email_log") ještě čeká na backend od Code vedle. Zatím historii uvidíš u konkrétního kontaktu — rozklikni řádek → Historie e-mailů → klikni na 🔍.'; }
+      }).catch(function(){ $('mlogFoot').textContent='Chyba spojení.'; });
+    }
+    function renderMailLog(){
+      var q=($('mlogQ').value||'').toLowerCase().trim();
+      var list=mlogAll.filter(function(r){ return !q || (r.email||'').toLowerCase().indexOf(q)>=0; });
+      $('mlogRows').innerHTML=list.slice(0,300).map(function(r){
+        var st=r.type==='sent'?'<span class="badge b-ok">odesláno</span>':r.type==='error'?'<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">chyba</span>':'<span class="badge b-no">'+esc(r.type)+'</span>';
+        var name=r.subject?esc(r.subject):(trackName(r.track)+' #'+esc(r.step));
+        return '<tr class="mlog-row" data-track="'+esc(r.track)+'" data-step="'+esc(r.step)+'" data-email="'+esc(r.email)+'"><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'—')+'</td><td>'+name+'</td><td>'+st+'</td></tr>';
+      }).join('')||'<tr><td colspan="4" class="muted" style="padding:1rem;">Nic nenalezeno.</td></tr>';
+      $('mlogFoot').textContent=list.length+' záznamů';
+      Array.prototype.forEach.call($('mlogRows').querySelectorAll('.mlog-row'),function(tr){
+        tr.addEventListener('click',function(){ openMailPreview(tr.getAttribute('data-track'),tr.getAttribute('data-step'),tr.getAttribute('data-email')); });
+      });
+    }
+    function openMailPreview(track,step,email){
+      $('mprev').classList.add('on'); $('mprevBody').innerHTML='<p class="muted">Načítám náhled…</p>';
+      api({action:'email_preview',track:track,step:step,email:email||null}).then(function(o){
+        var d=o&&o.j&&o.j.ok?o.j:null;
+        if(!d||(!d.html&&!d.subject&&!d.text)){
+          $('mprevBody').innerHTML='<h2>Náhled e-mailu</h2><p class="muted">'+trackName(track)+' #'+esc(step)+(email?' · '+esc(email):'')+'</p><p class="muted" style="margin-top:.7rem;">Náhled obsahu („email_preview") ještě čeká na backend od Code vedle — prompt už má. Jakmile nasadí, otevře se tu přesný text mailu i s přílohou.</p>';
+          return;
+        }
+        var att=(d.attachments||[]).map(function(a){ return '<a href="'+esc(a.url)+'" target="_blank" rel="noopener">📎 '+esc(a.name||'příloha')+'</a>'; }).join('');
+        $('mprevBody').innerHTML='<h2>'+esc(d.subject||trackName(track))+'</h2>'+
+          '<div class="mprev-meta muted" style="font-size:.85rem;">'+trackName(track)+' #'+esc(step)+(email?' · '+esc(email):'')+'</div>'+
+          (att?'<div class="att">'+att+'</div>':'')+
+          (d.html?'<iframe class="mprev-frame" sandbox=""></iframe>':'')+
+          (d.text&&!d.html?'<pre style="white-space:pre-wrap;color:#ece4d9;font-family:inherit;font-size:.9rem;margin-top:.7rem;">'+esc(d.text)+'</pre>':'');
+        if(d.html){ var f=$('mprevBody').querySelector('iframe'); if(f) f.srcdoc=d.html; }
+      }).catch(function(){ $('mprevBody').innerHTML='<p class="muted">Chyba spojení.</p>'; });
+    }
+    var _ml=$('mlogBtn'); if(_ml) _ml.addEventListener('click',openMailLog);
+    var _mlx=$('mlogX'); if(_mlx) _mlx.addEventListener('click',function(){ $('mlog').classList.remove('on'); });
+    var _mpx=$('mprevX'); if(_mpx) _mpx.addEventListener('click',function(){ $('mprev').classList.remove('on'); });
+    var _mlq=$('mlogQ'); if(_mlq) _mlq.addEventListener('input',renderMailLog);
+    $('mlog').addEventListener('click',function(e){ if(e.target===$('mlog')) $('mlog').classList.remove('on'); });
+    $('mprev').addEventListener('click',function(e){ if(e.target===$('mprev')) $('mprev').classList.remove('on'); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ $('mlog').classList.remove('on'); $('mprev').classList.remove('on'); } });
   })();
   </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
