@@ -523,7 +523,7 @@
                 var nObs = new IntersectionObserver(function(entries){
                     entries.forEach(function(e){ if(e.isIntersecting){ countUp(e.target); nObs.unobserve(e.target); } });
                 }, { threshold: 0.6 });
-                document.querySelectorAll('.stat h3').forEach(function(n){ nObs.observe(n); });
+                document.querySelectorAll('.stat h3').forEach(function(n){ if(n.textContent.trim() !== '2013') nObs.observe(n); }); // letopočet neanimovat
 
                 // c) postupné odhalování karet (stagger)
                 var cObs = new IntersectionObserver(function(entries){
@@ -990,7 +990,7 @@
                 <div class="col-md-4"><div style="background:#fff;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.07);padding:1.8rem;height:100%"><div style="color:#ff7a00;letter-spacing:2px">★★★★★</div><p style="color:#333;margin:.7rem 0 1rem">„Díky Martinovi jsem zhubla 10 kg za tři měsíce — bez drahých doplňků a bez diety. Skvěle mě naučil, jak správně jíst."</p><div style="font-weight:700;color:#161616">Katy</div></div></div>
                 <div class="col-md-4"><div style="background:#fff;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.07);padding:1.8rem;height:100%"><div style="color:#ff7a00;letter-spacing:2px">★★★★★</div><p style="color:#333;margin:.7rem 0 1rem">„Celý život bojuji s nadváhou. Martin je skvělý trenér i člověk, všechno pěkně vysvětlí. Kdo se do teď bál, ať jde do toho."</p><div style="font-weight:700;color:#161616">Soňa Brožová</div></div></div>
             </div>
-            <div class="text-center mb-5"><a href="/reference/" class="btn btn-out">Přečíst všech 65 recenzí →</a></div>
+            <div class="text-center mb-5"><a href="/reference/" class="btn btn-out">Přečíst 65 vybraných recenzí →</a></div>
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="review-box text-center">
@@ -1053,7 +1053,9 @@
                         <p class="mb-0" style="opacity:.85;">Nechceš zatím koučink na míru? Začni tady. 182 videí, přes 20 hodin obsahu a kalkulačka makroživin — vše o hubnutí, nabírání i flexibilním stravování, vědecky podloženo. Doživotní přístup, kdykoliv se k tomu vrátíš.</p>
                     </div>
                     <div class="col-lg-4 text-lg-end">
-                        <a href="videokurz" class="btn btn-gold">Zjistit víc o kurzu</a>
+                        <div style="font-weight:800;font-size:1.35rem;margin-bottom:.35rem;">800 Kč <span style="font-weight:600;font-size:.85rem;opacity:.75;">· jednorázově, doživotní přístup</span></div>
+                        <a href="/videokurz" class="btn btn-gold">Chci kurz za 800 Kč →</a>
+                        <div style="font-size:.83rem;opacity:.75;margin-top:.45rem;">🎁 11 lekcí si pustíš zdarma</div>
                     </div>
                 </div>
             </div>
@@ -1256,6 +1258,7 @@
         <img src="/assets/brand/logo-full-orange.png" alt="Martin Barna — Online výživa a fitness" width="230" height="114" style="height:auto;max-width:230px;margin-bottom:1.1rem" decoding="async">
         <p class="mb-1">&copy; 2026 Martin Barna — Online výživa a fitness. Všechna práva vyhrazena.</p>
         <p class="mb-0"><a href="https://martinbarna.cz">martinbarna.cz</a> · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> · +420 603 229 831</p>
+        <p class="mb-0" style="margin-top:.35rem">Martin Barna · IČO 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice</p>
         <p class="mb-0" style="margin-top:.5rem"><a href="/obchodni-podminky/">Obchodní podmínky</a> · <a href="/zasady-ochrany-osobnich-udaju/">Zásady ochrany osobních údajů</a></p>
     </footer>
 

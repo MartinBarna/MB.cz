@@ -22,9 +22,12 @@ RewriteCond %{THE_REQUEST} \s/+treninky\.html[\s?] [NC]
 RewriteRule ^ /treninky [R=301,L]
 RewriteCond %{THE_REQUEST} \s/+videokurz\.html[\s?] [NC]
 RewriteRule ^ /videokurz [R=301,L]
+# Varianta s lomítkem → 301 na verzi bez lomítka (interní přepis by rozbil relativní assety).
+RewriteRule ^treninky/$   /treninky   [R=301,L]
+RewriteRule ^videokurz/$  /videokurz  [R=301,L]
 # Čistou URL interně obsluž ze souboru (.html zůstává na disku, v adrese se neukáže).
-RewriteRule ^treninky/?$   treninky.html   [L]
-RewriteRule ^videokurz/?$  videokurz.html  [L]
+RewriteRule ^treninky$   treninky.html   [L]
+RewriteRule ^videokurz$  videokurz.html  [L]
 
 # --- 3) Vlastní 404 stránka ---
 ErrorDocument 404 /404.html
@@ -62,6 +65,9 @@ RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz
   ExpiresByType application/javascript "access plus 1 month"
   ExpiresByType image/webp "access plus 1 month"
   ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
   ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
 
@@ -77,4 +83,8 @@ RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz
   Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
   # Po prvním HTTPS přístupu prohlížeč rok chodí už jen přes HTTPS
   Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on'"
+  # PDF (lead magnety a členské materiály) nemají být v Googlu
+  <FilesMatch "\.pdf$">
+    Header set X-Robots-Tag "noindex, nofollow"
+  </FilesMatch>
 </IfModule>

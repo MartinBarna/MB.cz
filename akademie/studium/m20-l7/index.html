@@ -133,7 +133,7 @@
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
     function load(){
-      if (window.BA){ window.BA.ready.then(function(){ window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+      if (window.BA){ window.BA.ready.then(function(){ if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); } else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); } }); }
       else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
     }
     btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
