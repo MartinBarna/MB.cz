@@ -228,3 +228,12 @@ select option, select optgroup { color:#161616; background:#fff; }
 .freeplan .fp-kick { color:var(--bd-gold-soft)!important; }
 /* zvýrazněný text s inline tmavou barvou na tmavé sekci → čitelná zlatá */
 strong[style*="--ink"], b[style*="--ink"], strong[style*="#161616"], em[style*="--ink"] { color:var(--bd-gold-soft)!important; }
+
+/* === Články: .pull citace a .keytab tabulka měly text přes třídu color:var(--green-dark)
+   na faint-orange pozadí (--green-light přebité na tmavé) → tmavý na tmavém, nečitelné.
+   (audit 2026-07-01: jak-zhubnout a všechny články s .pull/.keytab) === */
+.pull { color:var(--bd-ink)!important; background:rgba(255,122,0,.08)!important; }
+.pull strong, .pull b { color:var(--bd-gold-soft)!important; }
+.keytab th { color:var(--bd-gold-soft)!important; background:rgba(255,122,0,.1)!important; }
+.keytab td { color:var(--bd-ink)!important; }
+.keytab th, .keytab td { border-color:var(--bd-line)!important; }
