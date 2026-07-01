@@ -222,7 +222,7 @@
             window.BA.signInWithOtp(email, dest).then(function (r) {
               submit.disabled = false;
               if (r.ok) { if (window.mbTrackLead) window.mbTrackLead('registrace_magic_link', { value: 0, currency: 'CZK' }); show('ok', '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho (mrkni i do spamu) a jsi uvnitř.'); }
-              else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí — <a href="/akademie/videokurz/?preview=free" style="color:#ffb061;font-weight:700;text-decoration:underline;">pusť si 4 lekce zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#ffb061;">martin@martinbarna.cz</a>.'; }
+              else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí — <a href="/akademie/videokurz/?preview=free" style="color:#ffb061;font-weight:700;text-decoration:underline;">pusť si 11 lekcí zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#ffb061;">martin@martinbarna.cz</a>.'; }
             });
           } else if (mode === 'up') {
             window.BA.signUp(email, pass, fname).then(function (r) {
