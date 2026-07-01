@@ -245,7 +245,9 @@ Deno.serve(async (req: Request) => {
   const { count: sentToday } = await admin.from('email_events')
     .select('id', { count: 'exact', head: true })
     .eq('type', 'sent').gte('created_at', dayStart.toISOString());
-  const remaining = Math.max(0, DAILY_CAP - (sentToday ?? 0));
+  // Individualni uvitaci mail (only_email z formulare) jde VZDY - strop plati jen pro bulk cron rozesilku.
+  // Rezerva pod Resend limitem je prave PRO tyhle transakcni uvitacky, nesmi je blokovat.
+  const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
 
   // LIVE
   let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, capped = false;
