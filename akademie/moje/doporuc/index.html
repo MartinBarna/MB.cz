@@ -57,10 +57,35 @@
     <p class="lead">Líbí se ti, co tu máš? Pošli to dál. Kamarád dostane slevu, ty kredit na svůj další nákup. Férový deal pro oba.</p>
 
     <div id="refMain">
-      <div class="panel" style="text-align:center;">
-        <div class="ref-code" style="justify-content:center;"><b style="opacity:.45;letter-spacing:.18em;">BRZY</b></div>
-        <div style="color:#ffb066;font-weight:800;font-size:1.05rem;margin:.2rem 0 .3rem;">🔧 Připravujeme — spustíme to už brzy</div>
-        <p style="color:#b7ab9b;max-width:460px;margin:.2rem auto 0;line-height:1.6;">Doporučovací program ještě ladíme, ať šlape na jedničku. Jakmile bude hotový, najdeš tu svůj <strong>osobní kód</strong> a pošleš ho kamarádům jedním klikem. Dám ti vědět.</p>
+      <div id="refLoad" class="panel" style="text-align:center;">Načítám tvůj kód…</div>
+
+      <div id="refGate" class="panel" style="display:none;text-align:center;">
+        <div class="ref-code" style="justify-content:center;"><b style="opacity:.45;letter-spacing:.16em;">🔒</b></div>
+        <p style="color:#b7ab9b;max-width:460px;margin:.4rem auto 0;line-height:1.6;">Doporučovací program je pro majitele <b>videokurzu</b> nebo <b>Academy</b>. Jakmile budeš mít přístup, najdeš tu svůj osobní kód a pošleš ho kamarádům jedním klikem.</p>
+        <div style="margin-top:1rem;"><a class="btn" href="/akademie/">Prohlédnout Academy →</a></div>
+      </div>
+
+      <div id="refErr" class="panel" style="display:none;text-align:center;">
+        <p style="color:#b7ab9b;">Kód se teď nepodařilo načíst. Zkus obnovit stránku za chvíli, nebo napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>.</p>
+      </div>
+
+      <div id="refActive" style="display:none;">
+        <div class="panel" style="text-align:center;">
+          <div style="color:#b7ab9b;font-size:.86rem;text-transform:uppercase;letter-spacing:.05em;">Tvůj osobní kód</div>
+          <div class="ref-code" style="justify-content:center;"><b id="refCode">—</b></div>
+          <p style="color:#9b8e7d;font-size:.9rem;margin:.2rem 0 0;">Kamarád ho zadá u objednávky — dostane slevu, tobě naskočí kredit.</p>
+          <div class="ref-btns">
+            <button class="b-copy" id="btnCopyCode">📋 Zkopírovat kód</button>
+            <button class="b-ghost" id="btnCopyLink">🔗 Zkopírovat odkaz</button>
+            <a class="b-wa" id="btnWa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="17" height="17"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.01c-.24.68-1.42 1.31-1.95 1.36-.5.05-1.13.07-1.83-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.79-4.17-4.94-4.37-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.65.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.29.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.69-.81.88-1.09.19-.29.38-.24.64-.14.26.09 1.66.78 1.94.93.28.14.47.21.54.33.07.11.07.68-.17 1.36z" fill="#fff"/></svg> Poslat přes WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="ref-stats">
+          <div class="s"><b id="stRefC">0</b><span>potvrzených doporučení</span></div>
+          <div class="s"><b id="stRefP">0</b><span>čeká na potvrzení</span></div>
+          <div class="s"><b id="stCredit">0 Kč</b><span>tvůj kredit</span></div>
+        </div>
       </div>
 
       <div class="ref-deal">
@@ -76,7 +101,7 @@
         </div>
       </div>
 
-      <h2 style="margin-top:2rem;">Jak to bude fungovat</h2>
+      <h2 style="margin-top:2rem;">Jak to funguje</h2>
       <div class="ref-how">
         <div class="h"><div class="n">1</div><b>Pošleš svůj kód</b><p>Hodíš kamarádovi svůj osobní kód nebo odkaz. Klidně přes WhatsApp jedním klikem.</p></div>
         <div class="h"><div class="n">2</div><b>Kamarád ho zadá u objednávky</b><p>Při nákupu videokurzu nebo Academy zadá tvůj kód jako slevu a hned vidí nižší cenu.</p></div>
@@ -102,16 +127,45 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
   (function(){
-    // Doporučovací program je dočasně ve stavu „připravujeme" — žádný kód se
-    // negeneruje ani nesdílí, dokud nebude napojení na SimpleShop hotové.
     var $ = function(id){ return document.getElementById(id); };
     if(!window.BA_CONFIG || !window.supabase){ return; }
     var sb = window.supabase.createClient(window.BA_CONFIG.url, window.BA_CONFIG.anonKey, { auth:{ persistSession:true, autoRefreshToken:true } });
     var lg=$('logout'); if(lg) lg.addEventListener('click', function(e){ e.preventDefault(); sb.auth.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); });
+
+    function show(id){ ['refLoad','refGate','refErr','refActive'].forEach(function(x){ var e=$(x); if(e) e.style.display = (x===id)?'':'none'; }); }
+    function toast(msg){ var t=$('toast'); if(!t) return; t.textContent=msg; t.classList.add('on'); setTimeout(function(){ t.classList.remove('on'); }, 1600); }
+    function copy(t){ try{ navigator.clipboard.writeText(t); }catch(e){ var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); }catch(_){} document.body.removeChild(ta); } }
+
     sb.auth.getSession().then(function(res){
       var session = res && res.data && res.data.session;
-      if(!session){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/doporuc/'); }
-    }).catch(function(){});
+      if(!session){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/doporuc/'); return; }
+      load();
+    }).catch(function(){ show('refErr'); });
+
+    function load(){
+      show('refLoad');
+      sb.functions.invoke('referral-code').then(function(r){
+        var d = r && r.data ? r.data : null;
+        if(r && r.error && !d){ show('refErr'); return; }
+        if(!d || d.error==='no_entitlement'){ show('refGate'); return; }
+        if(d.error || !d.code){ show('refErr'); return; }
+        render(d);
+      }).catch(function(){ show('refErr'); });
+    }
+
+    function render(d){
+      $('refCode').textContent = d.code;
+      var link = d.share_url || (location.origin + '/?ref=' + d.code);
+      var st = d.status || {};
+      $('stRefC').textContent = st.referrals_confirmed || 0;
+      $('stRefP').textContent = st.referrals_pending || 0;
+      $('stCredit').textContent = (st.credit_confirmed || 0) + ' Kč';
+      var msg = 'Ahoj! Mrkni na Barna Academy / videokurz výživy od Martina Barny — s mým kódem ' + d.code + ' máš slevu. ' + link;
+      var wa = $('btnWa'); if(wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+      var bc = $('btnCopyCode'); if(bc) bc.addEventListener('click', function(){ copy(d.code); toast('Kód zkopírován ✓'); });
+      var bl = $('btnCopyLink'); if(bl) bl.addEventListener('click', function(){ copy(link); toast('Odkaz zkopírován ✓'); });
+      show('refActive');
+    }
   })();
   </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
