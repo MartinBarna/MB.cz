@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databáze cviků — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap{max-width:1080px;margin:0 auto;padding:30px 20px 90px;}
+  .kick{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.2rem);color:#fff;margin:.4rem 0 .5rem;letter-spacing:-.02em;}
+  .lead{color:#cfc6b8;font-size:1.05rem;max-width:680px;}
+  body{color-scheme:dark;}
+  .tools{position:sticky;top:0;z-index:5;background:rgba(20,13,6,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:14px 0;margin:1.2rem 0 .6rem;border-bottom:1px solid var(--line);}
+  .searchrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .ba input,.ba select{background-color:rgba(0,0,0,.45)!important;border:1px solid var(--line-2)!important;border-radius:11px;color:#fff!important;padding:11px 12px;font-family:inherit;font-size:.95rem;-webkit-appearance:none;appearance:none;}
+  .ba input:focus,.ba select:focus{outline:none;border-color:rgba(255,122,0,.6)!important;}
+  .ba input::placeholder{color:var(--muted);}
+  #q{flex:1;min-width:200px;}
+  .ba select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ff9d3c' stroke-width='3' stroke-linecap='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;}
+  .ba select option{background:#161310;color:#fff;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:.7rem 0 0;}
+  .chip{cursor:pointer;border:1px solid var(--line-2);background:rgba(255,255,255,.04);color:#cfc6b8;font-weight:700;font-size:.8rem;padding:7px 14px;border-radius:50px;transition:.15s;}
+  .chip:hover{border-color:rgba(255,122,0,.5);}
+  .chip.on{background:#ff7a00;color:#160d04;border-color:#ff7a00;}
+  .count{color:var(--muted);font-size:.85rem;margin:.6rem 2px 0;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:1rem;}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .15s,border-color .15s;display:flex;flex-direction:column;}
+  .card:hover{transform:translateY(-3px);border-color:rgba(255,122,0,.4);}
+  .thumb{aspect-ratio:4/3;background:#191510;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .thumb .ph{color:#5f574c;font-size:2.4rem;}
+  .thumb .plvl{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.55);color:#e9e2d8;font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:50px;}
+  .card .cb{padding:11px 13px 13px;flex:1;display:flex;flex-direction:column;gap:5px;}
+  .card .nm{color:#fff;font-weight:700;font-size:.95rem;line-height:1.25;}
+  .card .mt{display:flex;gap:6px;flex-wrap:wrap;}
+  .bdg{font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:50px;background:rgba(255,122,0,.14);color:#ff9d3c;}
+  .bdg.g{background:rgba(255,255,255,.06);color:#a89e94;}
+  .card .tp{color:var(--muted);font-size:.78rem;line-height:1.4;margin-top:2px;}
+  .empty{color:var(--muted);text-align:center;padding:3rem 0;}
+  /* detail modal */
+  #ov{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none;align-items:center;justify-content:center;padding:20px;}
+  #ov.on{display:flex;}
+  .modal{background:#160f08;border:1px solid var(--line-2);border-radius:20px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;position:relative;}
+  .modal .x{position:absolute;top:12px;right:14px;cursor:pointer;color:#cfc6b8;font-size:1.5rem;background:none;border:none;z-index:2;}
+  .modal .mimg{aspect-ratio:16/10;background:#191510;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:20px 20px 0 0;}
+  .modal .mimg img{width:100%;height:100%;object-fit:cover;}
+  .modal .mimg .ph{color:#5f574c;font-size:3.4rem;}
+  .mbody{padding:20px 22px 26px;}
+  .mbody h2{color:#fff;margin:.1rem 0 .5rem;font-size:1.4rem;}
+  .mmeta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:1rem;}
+  .mbody h4{color:var(--gold-soft);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin:1.1rem 0 .4rem;}
+  .mbody p{color:var(--ink);font-size:.96rem;line-height:1.6;margin:.2rem 0;}
+  .mbody .cues li{color:#e9d9cf;font-size:.92rem;line-height:1.5;margin:.25rem 0;}
+  .soon{color:var(--muted);font-style:italic;font-size:.9rem;}
+  .foot{color:var(--muted);font-size:.82rem;margin-top:2rem;text-align:center;}
+  .foot a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Databáze cviků</span></span></a>
+    <a class="back" href="/akademie/moje/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Zpět na Academy</a>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Knihovna cviků</span>
+    <h1>Databáze cviků</h1>
+    <p class="lead">Prohledej a filtruj cviky podle partie, vybavení a úrovně. U každého najdeš provedení krok za krokem a nejčastější chyby. Postupně doplňujeme fotky i detailní popisy.</p>
+
+    <div class="tools">
+      <div class="searchrow">
+        <input type="search" id="q" placeholder="Hledat cvik podle názvu…" autocomplete="off">
+        <select id="fEquip"><option value="">Vybavení: vše</option></select>
+        <select id="fLevel"><option value="">Úroveň: vše</option></select>
+        <select id="fLoc"><option value="">Místo: vše</option></select>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div class="count" id="count"></div>
+    <div class="cards" id="cards"></div>
+    <div class="empty" id="empty" style="display:none;">Nic nenalezeno — zkus jiný filtr nebo hledaný výraz.</div>
+
+    <p class="foot">Databáze cviků je součást <a href="/akademie/">Barna Academy</a>. Chceš z nich rovnou sestavit plán? Zkus <a href="/akademie/nastroje/trenink/">generátor tréninků</a>.</p>
+  </div>
+
+  <div id="ov"><div class="modal"><button class="x" id="mx">×</button><div id="mc"></div></div></div>
+
+  <script>
+  (function(){
+    var $=function(id){return document.getElementById(id);};
+    var DB=[], muscle='';
+    var MUS={nohy:'Nohy',prsa:'Prsa',zada:'Záda',ramena:'Ramena',biceps:'Biceps',triceps:'Triceps',bricho:'Břicho',hyzde:'Hýždě',lytka:'Lýtka',full:'Celé tělo / kondice'};
+    var EQ={telo:'Vlastní váha','velka-cinka':'Velká činka',cinky:'Jednoručky',kettlebell:'Kettlebell',guma:'Guma',stroj:'Stroj',kladka:'Kladka',hrazda:'Hrazda',lavka:'Lavička',trx:'TRX'};
+    var LVL={zacatecnik:'Začátečník',pokrocily:'Pokročilý',zkuseny:'Zkušený'};
+    var LOC={fitko:'Fitko',doma:'Doma',hriste:'Hřiště'};
+    function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    function label(map,v){return map[v]||v;}
+    function img(e){return '/assets/cviky/'+e.id+'.webp';}
+
+    fetch('/assets/exercise-db.json').then(function(r){return r.json();}).then(function(d){
+      DB=d; buildFilters(); render();
+    }).catch(function(){ $('count').textContent='⚠️ Databázi cviků se nepodařilo načíst.'; });
+
+    function uniq(arr){var s={},o=[];arr.forEach(function(x){if(x&&!s[x]){s[x]=1;o.push(x);}});return o;}
+    function buildFilters(){
+      // partie chips
+      var muscles=uniq(DB.map(function(e){return e.muscle;}));
+      var ch='<span class="chip on" data-m="">Vše</span>'+muscles.map(function(m){return '<span class="chip" data-m="'+m+'">'+esc(label(MUS,m))+'</span>';}).join('');
+      $('chips').innerHTML=ch;
+      Array.prototype.forEach.call($('chips').querySelectorAll('.chip'),function(c){c.addEventListener('click',function(){
+        muscle=c.getAttribute('data-m');
+        Array.prototype.forEach.call($('chips').children,function(x){x.classList.remove('on');}); c.classList.add('on'); render();
+      });});
+      // equip select (z dat)
+      var eq=uniq([].concat.apply([],DB.map(function(e){return e.equip||[];})));
+      eq.forEach(function(x){var o=document.createElement('option');o.value=x;o.textContent=label(EQ,x);$('fEquip').appendChild(o);});
+      Object.keys(LVL).forEach(function(x){var o=document.createElement('option');o.value=x;o.textContent=label(LVL,x);$('fLevel').appendChild(o);});
+      Object.keys(LOC).forEach(function(x){var o=document.createElement('option');o.value=x;o.textContent=label(LOC,x);$('fLoc').appendChild(o);});
+      $('q').addEventListener('input',render); $('fEquip').addEventListener('change',render);
+      $('fLevel').addEventListener('change',render); $('fLoc').addEventListener('change',render);
+    }
+
+    function render(){
+      var q=($('q').value||'').toLowerCase().trim(), eq=$('fEquip').value, lv=$('fLevel').value, lo=$('fLoc').value;
+      var list=DB.filter(function(e){
+        if(muscle && e.muscle!==muscle) return false;
+        if(eq && (e.equip||[]).indexOf(eq)<0) return false;
+        if(lv && e.level!==lv) return false;
+        if(lo && (e.location||[]).indexOf(lo)<0) return false;
+        if(q && (e.name||'').toLowerCase().indexOf(q)<0) return false;
+        return true;
+      });
+      $('count').textContent=list.length+' cviků';
+      $('empty').style.display=list.length?'none':'';
+      $('cards').innerHTML=list.map(function(e){
+        return '<div class="card" data-id="'+esc(e.id)+'">'+
+          '<div class="thumb"><img src="'+img(e)+'" alt="'+esc(e.name)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'\';"><span class="ph" style="display:none">🏋️</span>'+
+            (e.level?'<span class="plvl">'+esc(label(LVL,e.level))+'</span>':'')+'</div>'+
+          '<div class="cb"><div class="nm">'+esc(e.name)+'</div>'+
+            '<div class="mt"><span class="bdg">'+esc(label(MUS,e.muscle))+'</span>'+((e.equip&&e.equip[0])?'<span class="bdg g">'+esc(label(EQ,e.equip[0]))+'</span>':'')+'</div>'+
+            (e.tip?'<div class="tp">💡 '+esc(e.tip)+'</div>':'')+
+          '</div></div>';
+      }).join('');
+      Array.prototype.forEach.call($('cards').querySelectorAll('.card'),function(c){c.addEventListener('click',function(){openDetail(c.getAttribute('data-id'));});});
+    }
+
+    function openDetail(id){
+      var e=DB.filter(function(x){return x.id===id;})[0]; if(!e) return;
+      var meta='<span class="bdg">'+esc(label(MUS,e.muscle))+'</span>'+
+        (e.equip||[]).map(function(x){return '<span class="bdg g">'+esc(label(EQ,x))+'</span>';}).join('')+
+        (e.level?'<span class="bdg g">'+esc(label(LVL,e.level))+'</span>':'')+
+        (e.location||[]).map(function(x){return '<span class="bdg g">'+esc(label(LOC,x))+'</span>';}).join('');
+      var body='<div class="mimg"><img src="'+img(e)+'" alt="'+esc(e.name)+'" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'\';"><span class="ph" style="display:none">🏋️</span></div>'+
+        '<div class="mbody"><h2>'+esc(e.name)+'</h2><div class="mmeta">'+meta+'</div>';
+      if(e.desc){ body+='<h4>Provedení</h4><p>'+esc(e.desc)+'</p>'; }
+      if(e.cues&&e.cues.length){ body+='<h4>Na co dávat pozor</h4><ul class="cues">'+e.cues.map(function(c){return '<li>❌ '+esc(c)+'</li>';}).join('')+'</ul>'; }
+      if(e.tip){ body+='<h4>Tip</h4><p>💡 '+esc(e.tip)+'</p>'; }
+      if(!e.desc && !(e.cues&&e.cues.length)){ body+='<p class="soon">Detailní popis provedení a foto k tomuto cviku průběžně doplňujeme.</p>'; }
+      body+='</div>';
+      $('mc').innerHTML=body; $('ov').classList.add('on');
+    }
+    $('mx').addEventListener('click',function(){$('ov').classList.remove('on');});
+    $('ov').addEventListener('click',function(e){if(e.target===$('ov'))$('ov').classList.remove('on');});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')$('ov').classList.remove('on');});
+  })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>
