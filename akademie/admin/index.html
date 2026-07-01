@@ -52,6 +52,23 @@
   #gate a{color:#ff9d3c}
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1a130c;border:1px solid #3a2c1c;color:#ffb066;padding:10px 20px;border-radius:50px;font-weight:700;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:99}
   .toast.on{opacity:1}
+  .traf{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px 18px;margin:1.4rem 0}
+  .traf h3{margin:0 0 .2rem;color:#fff;font-size:1.05rem}
+  .traf .sub{color:#8a7e6d;font-size:.8rem}
+  .tgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:1rem 0 .4rem}
+  .tgrid .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 10px;text-align:center}
+  .tgrid .s b{display:block;font-size:1.3rem;color:#ff9d3c;font-weight:800;line-height:1}
+  .tgrid .s span{font-size:.7rem;color:#b7ab9b}
+  @media(max-width:760px){.tgrid{grid-template-columns:repeat(3,1fr)}}
+  .traf-links{display:flex;gap:8px;flex-wrap:wrap;margin:.6rem 0}
+  .traf-links a{font-size:.82rem;font-weight:700;color:#ff9d3c;text-decoration:none;background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.28);border-radius:50px;padding:7px 13px}
+  .traf-note{color:#8a7e6d;font-size:.82rem;line-height:1.55;margin:.7rem 0 0}
+  .twrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:.6rem}
+  @media(max-width:640px){.twrap{grid-template-columns:1fr}}
+  .tbox{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px}
+  .tbox h4{margin:0 0 .5rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}
+  .tbar{display:flex;justify-content:space-between;font-size:.82rem;color:#ece4d9;padding:3px 0}
+  .tbar .v{color:#b7ab9b;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body class="ba">
@@ -73,6 +90,12 @@
       <h1>Přehled <span class="hl">kontaktů</span></h1>
 
       <div class="stats" id="stats"></div>
+
+      <div class="traf" id="traf" style="display:none;">
+        <h3>📊 Statistiky návštěvnosti</h3>
+        <div class="sub" id="trafSub">Google Analytics 4 · G-P0GTB23JP9 · posledních 28 dní</div>
+        <div id="trafBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
 
       <div class="qg">
         <span class="lbl">Rychlé udělení přístupu:</span>
@@ -155,7 +178,7 @@
           show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return;
         }
         if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
-        renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app');
+        renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app'); loadTraf();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -164,6 +187,47 @@
     function renderStats(s){
       var items=[['Kontaktů',s.contacts],['Academy',s.academy],['Videokurz',s.videokurz],['Coaching',s.coaching],['Registrovaní',s.registered],['Mailů odesláno',s.sent_total]];
       $('stats').innerHTML=items.map(function(i){return '<div class="s"><b>'+i[1]+'</b><span>'+i[0]+'</span></div>';}).join('');
+    }
+
+    // Statistiky návštěvnosti z GA4 (přes admin-api action 'ga_stats' → GA4 Data API).
+    // Dokud není backend napojený, ukáže se stav "nastavení" s odkazy do GA4.
+    function loadTraf(){
+      $('traf').style.display='';
+      api({action:'ga_stats',range:'28d'}).then(function(o){
+        if(o&&o.j&&o.j.ok&&o.j.data){ renderTraf(o.j.data); } else { trafSetup(); }
+      }).catch(function(){ trafSetup(); });
+    }
+    function num(n){ return (n==null?'—':Number(n).toLocaleString('cs-CZ')); }
+    function dur(sec){ if(sec==null) return '—'; sec=Math.round(sec); var m=Math.floor(sec/60), s=sec%60; return m+'m '+s+'s'; }
+    function distBox(title,arr){
+      if(!arr||!arr.length) return '';
+      var tot=arr.reduce(function(a,x){return a+(Number(x.v)||0);},0)||1;
+      var rows=arr.slice(0,6).map(function(x){ var pct=Math.round((Number(x.v)||0)/tot*100); return '<div class="tbar"><span>'+esc(x.k||'—')+'</span><span class="v">'+pct+' %</span></div>'; }).join('');
+      return '<div class="tbox"><h4>'+esc(title)+'</h4>'+rows+'</div>';
+    }
+    function renderTraf(d){
+      d=d||{};
+      var tiles=[['Návštěvníci',num(d.users)],['Návštěvy',num(d.sessions)],['Zobrazení',num(d.pageviews)],['Ø doba na webu',dur(d.avg_engagement_sec)],['Noví',num(d.new_users)],['Míra odchodů',(d.bounce_rate!=null?Math.round(d.bounce_rate*100)+' %':'—')]];
+      var pages=(d.pages||[]).slice(0,6).map(function(p){return '<div class="tbar"><span>'+esc(p.path)+'</span><span class="v">'+num(p.views)+'</span></div>';}).join('')||'<span class="muted">—</span>';
+      $('trafBody').innerHTML=
+        '<div class="tgrid">'+tiles.map(function(t){return '<div class="s"><b>'+t[1]+'</b><span>'+t[0]+'</span></div>';}).join('')+'</div>'+
+        '<div class="twrap">'+
+          '<div class="tbox"><h4>Nejnavštěvovanější stránky</h4>'+pages+'</div>'+
+          distBox('Zařízení',d.devices)+
+          distBox('Pohlaví',d.gender)+
+          distBox('Věk',d.age)+
+          distBox('Země',d.countries)+
+          distBox('Zdroje návštěv',d.sources)+
+        '</div>';
+    }
+    function trafSetup(){
+      $('trafBody').innerHTML=
+        '<div class="traf-links">'+
+          '<a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">Otevřít GA4 →</a>'+
+          '<a href="https://analytics.google.com/analytics/web/#/p/realtime/overview" target="_blank" rel="noopener">V reálném čase →</a>'+
+          '<a href="https://business.facebook.com/events_manager2/list/pixel/277526073774099/overview" target="_blank" rel="noopener">Meta Pixel →</a>'+
+        '</div>'+
+        '<p class="traf-note">GA4 už na webu běží a sbírá data (návštěvnost, doba na webu, zařízení, země). Aby čísla — včetně <b>% muži/ženy a věk</b> — naskákala rovnou sem do adminu, chybí dvě jednorázové věci: zapnout <b>Google Signals</b> v GA4 (kvůli demografii) a vytvořit <b>service account</b> pro GA4 Data API. Pak se to napojí a tenhle box se sám naplní živými čísly.</p>';
     }
     function passFilter(r,f){
       if(f==='coaching') return (r.tags||[]).some(function(t){return String(t).indexOf('coaching')===0;});
