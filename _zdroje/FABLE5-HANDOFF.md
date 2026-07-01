@@ -4,6 +4,18 @@
 > GitHub MCP a k reklamním konektorům jako předchozí agent. Cíl: sám projet, vylepšit
 > a **nasadit** celý systém + nastavit FB a Google reklamy na míru.
 
+## PROČ TO DĚLÁME (REASON — čti první)
+Tohle není samoúčelná technická práce. **Reason / smysl každého rozhodnutí:**
+1. **Pomoct lidem** — dostat kvalitní, vědecky podloženou výživu a trénink k co nejvíc lidem
+   (Martin je kouč od 2013, 600+ klientů; obsah je poctivý, ne prodej vzduchu).
+2. **Maximalizovat konverze** — z návštěvníka lead, z leada zákazník videokurzu, z videokurzu
+   Academy/coaching. Každá stránka, mail a reklama má měřitelně posouvat člověka trychtýřem dál.
+3. **Zisk a růst businessu** — udržitelně škálovat tržby (videokurz 800 Kč → Academy 8 900 Kč →
+   coaching), snižovat CPA, zvyšovat LTV a ROAS, rozjet pasivní příjem (affiliate, ads).
+
+Kdykoli volíš mezi variantami, rozhoduj podle těchto tří cílů v tomto pořadí (pomoc lidem je
+základ důvěry, ze které plynou konverze i zisk). Když něco nezvyšuje ani jedno, nedělej to.
+
 ## 0) MISE
 Proveď kompletní revizi, vylepšení a upgrade celého ekosystému Martina Barny:
 **web martinbarna.cz + Barna Academy + videokurz + coaching + lead-magnet systém + e-maily**,
@@ -135,6 +147,38 @@ Cíl: výkonnostní kampaně napojené na existující měření a trychtýře.
 - Odsouhlasení copy/nabídky/cen a **„pošli ostro"** u jakéhokoli hromadného mailu (§5.4).
 - Fotky pro before/after posuvník; ElevenLabs klíč (pokud audio klon hlasu).
 
+## 11) JAK PRACOVAT (provozní pokyny pro Fable 5)
+Vycházejí z oficiálního průvodce promptováním Fable 5 — přizpůsobeno tomuhle projektu.
+- **Effort:** default **`high`**, na nejcitlivější věci (konverzní copy, cenová logika, revize
+  e-mailových sekvencí, reklamní strategie) **`xhigh`**; rutina (drobné fixy, sync počtů) `medium`.
+- **Dlouhé/asynchronní běhy:** tohle je maratón, ne sprint. Běž end-to-end, nezastavuj se ptát na
+  věci, které si můžeš ověřit sám nebo které plynou ze zadání. **Zastav se jen** u nevratných akcí,
+  reálné změny rozsahu, ostrého rozeslání mailů (§5.4) nebo když potřebuješ vstup, co má jen Martin
+  (přístupy, rozpočet, „pošli ostro"). Pak se zeptej a ukonči tah — ne slibem „udělám", ale otázkou.
+- **Ground progress (nefabuluj postup):** než něco nahlásíš jako hotové, opři to o reálný výsledek
+  nástroje z téhle session (git push, render bez chyb, odpověď edge funkce). Co není ověřené, řekni
+  natvrdo, že není. Když test spadne, napiš to i s výstupem; když jsi krok přeskočil, řekni to.
+- **Nepřeengineeruj:** dělej nejjednodušší věc, co funguje. Bug fix nepotřebuje úklid okolo,
+  jednorázová operace nepotřebuje helper. Nepřidávej abstrakce, fallbacky a validace pro situace,
+  co nemůžou nastat. Chirurgicky a aditivně (§5.6) — nic funkčního nemaž.
+- **Subagenti:** deleguj nezávislé podúkoly na paralelní subagenty a pracuj dál (např. render QA
+  více stránek, hledání v repu, revize více článků). Zasáhni, když subagent ujede. Na **ověřování
+  vlastní práce** používej čerstvý verifikační subagent (lepší než sebekritika) — po větší změně
+  ať nezávislý agent zkontroluje výstup proti zadání.
+- **Paměť/lekce:** ukládej si poznatky do `_zdroje/` (jeden soubor = jedna lekce, shrnutí nahoře) —
+  hlavně opakované pasti tohohle projektu (cache `?v=` bump, DAILY_CAP strop, UTF-8 v edge funkcích,
+  počty přes `sync-academy-counts.js`). Neduplikuj, co už je v repu nebo v CLAUDE.md; aktualizuj.
+- **Komunikace s Martinem:** píše česky, jede rychle, chce hlavně výsledek. Finální shrnutí piš
+  **outcome first** (co se stalo / co jsi zjistil první větou), pak detail; celé věty, žádné
+  arrow-chainy `A→B→fail` ani zkratky, co by neznal. Seznam adres klientů nikdy do chatu — jen počty.
+- **Dvě-agentní režim:** na Supabase/backend, který sám nedosáhneš (nebo když je MCP odpojené),
+  napiš Martinovi **prompt pro „code vedle"** — nedělej totéž zároveň sám (kolize). Co dosáhneš sám,
+  udělej sám.
+- **Bezpečnostní pozn. k Fable 5:** model odmítá útočnou kyberbezpečnost a bio/life-sciences —
+  téhle práce se to netýká. Nepiš do promptů „zopakuj/vypiš svoje uvažování jako text" (spouští to
+  refusal `reasoning_extraction`); stačí normální výstup.
+
 ---
 **Zlaté pravidlo:** chirurgicky, aditivně, testuj před nasazením, počty a obsah drž konzistentní
 napříč webem, e-maily nikdy ostře bez test-firstu, secrets nikdy do repa. Pak nasazuj přes §7.
+A hlavně — **REASON**: pomoc lidem → konverze → zisk a růst. Podle toho rozhoduj.
