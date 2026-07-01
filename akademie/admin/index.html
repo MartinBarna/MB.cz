@@ -80,6 +80,12 @@
   .mprev-frame{width:100%;height:56vh;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#fff;margin-top:.7rem}
   .mlog-row{cursor:pointer}
   .mlog-row:hover{background:rgba(255,255,255,.05)}
+  .mlog-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:.6rem 0 .2rem}
+  .mlog-sum .sc{cursor:pointer;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 12px}
+  .mlog-sum .sc.on{border-color:rgba(255,122,0,.5);background:rgba(255,122,0,.1)}
+  .mlog-sum .sc .n{font-size:1.2rem;font-weight:800;color:#fff}
+  .mlog-sum .sc .l{font-size:.72rem;color:#b8ad9e;line-height:1.25;margin-top:2px}
+  .mlog-sum .sc .sub{font-size:.68rem;color:#8f8778;margin-top:2px}
   .att a,.mprev-meta a{display:inline-block;margin:.3rem .4rem 0 0;font-size:.82rem;color:#ff9d3c;background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.28);border-radius:50px;padding:6px 12px;text-decoration:none}
   .tl .ev.clk{cursor:pointer;border-radius:6px;margin:0 -6px;padding-left:6px;padding-right:6px}
   .tl .ev.clk:hover{background:rgba(255,255,255,.05)}
@@ -156,10 +162,24 @@
   <div class="ovl" id="mlog"><div class="box">
     <button class="x" id="mlogX">×</button>
     <h2>📧 Odeslané e-maily</h2>
-    <div style="display:flex;gap:8px;margin:.7rem 0;">
-      <input type="search" id="mlogQ" placeholder="Hledat podle e-mailu…" autocomplete="off" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+    <div id="mlogSum" class="mlog-sum"></div>
+    <div style="display:flex;gap:8px;margin:.7rem 0;flex-wrap:wrap;">
+      <input type="search" id="mlogQ" placeholder="Hledat podle e-mailu…" autocomplete="off" style="flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+      <select id="mlogTrack" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+        <option value="">Všechny sekvence</option>
+        <option value="lead-magnet">Lead magnet (jídelníček)</option>
+        <option value="existing-leadmagnet">Starý lead → videokurz</option>
+        <option value="onboarding-videokurz">Onboarding videokurz</option>
+        <option value="onboarding-coaching">Onboarding coaching</option>
+      </select>
+      <select id="mlogType" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+        <option value="">Vše</option>
+        <option value="sent">Jen odeslané</option>
+        <option value="error">Jen chyby</option>
+        <option value="test">Jen testy</option>
+      </select>
     </div>
-    <div style="overflow-x:auto;max-height:66vh;overflow-y:auto;">
+    <div style="overflow-x:auto;max-height:56vh;overflow-y:auto;">
       <table><thead><tr><th>Datum</th><th>E-mail</th><th>Který mail</th><th>Stav</th></tr></thead><tbody id="mlogRows"></tbody></table>
     </div>
     <p class="muted" id="mlogFoot" style="margin-top:.8rem;"></p>
@@ -365,17 +385,46 @@
     var TRACK_NAMES={ 'lead-magnet':'Lead magnet (jídelníček)','existing-leadmagnet':'Starý lead → videokurz','onboarding-videokurz':'Onboarding videokurz','onboarding-coaching':'Onboarding coaching' };
     function trackName(t){ return TRACK_NAMES[t]||t||'—'; }
     var mlogAll=[];
+    // sekvence, které chceme mít v souhrnu vždy vidět (i s nulou), ať Martin pozná, že nechodí
+    var MLOG_TRACKS=['lead-magnet','existing-leadmagnet','onboarding-videokurz','onboarding-coaching'];
     function openMailLog(){
-      $('mlog').classList.add('on'); $('mlogRows').innerHTML=''; $('mlogFoot').textContent='Načítám…';
-      api({action:'email_log',limit:300}).then(function(o){
-        if(o&&o.j&&o.j.ok&&o.j.rows){ mlogAll=o.j.rows; renderMailLog(); }
+      $('mlog').classList.add('on'); $('mlogRows').innerHTML=''; $('mlogSum').innerHTML=''; $('mlogFoot').textContent='Načítám…';
+      // limit:2000 → stáhni CELÝ log, ať onboarding blast nepřebije lead-magnet/follow-up řádky
+      api({action:'email_log',limit:2000}).then(function(o){
+        if(o&&o.j&&o.j.ok&&o.j.rows){ mlogAll=o.j.rows; renderMailSummary(); renderMailLog(); }
         else { $('mlogFoot').innerHTML='Globální log („email_log") ještě čeká na backend od Code vedle. Zatím historii uvidíš u konkrétního kontaktu — rozklikni řádek → Historie e-mailů → klikni na 🔍.'; }
       }).catch(function(){ $('mlogFoot').textContent='Chyba spojení.'; });
     }
+    function renderMailSummary(){
+      var by={}; MLOG_TRACKS.forEach(function(t){ by[t]={sent:0,err:0,test:0,tot:0}; });
+      mlogAll.forEach(function(r){
+        var t=r.track||'—'; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0};
+        by[t].tot++;
+        if(r.type==='sent') by[t].sent++; else if(r.type==='error') by[t].err++; else if(r.type==='test') by[t].test++;
+      });
+      var cur=($('mlogTrack').value||'');
+      var keys=MLOG_TRACKS.concat(Object.keys(by).filter(function(k){return MLOG_TRACKS.indexOf(k)<0;}));
+      $('mlogSum').innerHTML=keys.map(function(t){
+        var s=by[t]||{sent:0,err:0,test:0,tot:0};
+        var sub=[]; if(s.err) sub.push(s.err+' chyb'); if(s.test) sub.push(s.test+' testů');
+        return '<div class="sc'+(cur===t?' on':'')+'" data-track="'+esc(t)+'"><div class="n">'+s.sent+'</div>'+
+          '<div class="l">'+esc(trackName(t))+'</div>'+
+          '<div class="sub">'+(sub.length?sub.join(' · '):(s.sent?'odesláno':'zatím 0 – nechodí?'))+'</div></div>';
+      }).join('');
+      Array.prototype.forEach.call($('mlogSum').querySelectorAll('.sc'),function(c){
+        c.addEventListener('click',function(){ var t=c.getAttribute('data-track'); $('mlogTrack').value=($('mlogTrack').value===t?'':t); renderMailSummary(); renderMailLog(); });
+      });
+    }
     function renderMailLog(){
       var q=($('mlogQ').value||'').toLowerCase().trim();
-      var list=mlogAll.filter(function(r){ return !q || (r.email||'').toLowerCase().indexOf(q)>=0; });
-      $('mlogRows').innerHTML=list.slice(0,300).map(function(r){
+      var ft=($('mlogTrack').value||''), fy=($('mlogType').value||'');
+      var list=mlogAll.filter(function(r){
+        if(q && (r.email||'').toLowerCase().indexOf(q)<0) return false;
+        if(ft && (r.track||'')!==ft) return false;
+        if(fy && (r.type||'')!==fy) return false;
+        return true;
+      });
+      $('mlogRows').innerHTML=list.slice(0,500).map(function(r){
         var st=r.type==='sent'?'<span class="badge b-ok">odesláno</span>':r.type==='error'?'<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">chyba</span>':'<span class="badge b-no">'+esc(r.type)+'</span>';
         var name=r.subject?esc(r.subject):(trackName(r.track)+' #'+esc(r.step));
         return '<tr class="mlog-row" data-track="'+esc(r.track)+'" data-step="'+esc(r.step)+'" data-email="'+esc(r.email)+'"><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'—')+'</td><td>'+name+'</td><td>'+st+'</td></tr>';
