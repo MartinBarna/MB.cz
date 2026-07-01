@@ -194,7 +194,7 @@
       plan.days.forEach(function(d){
         html+='<div class="day"><h3>'+d.day+'. '+d.name+' <small>'+d.exercises.length+' cviků</small></h3><table>';
         d.exercises.forEach(function(it){
-          html+='<tr><td>'+esc(it.ex.name)+(it.ex.tip?'<span class="tip">💡 '+esc(it.ex.tip)+'</span>':'')+'</td><td class="sr">'+it.sets+' × '+it.reps+'</td></tr>';
+          html+='<tr><td><div style="display:flex;gap:11px;align-items:flex-start"><img class="no-print" src="/assets/cviky/'+esc(it.ex.id)+'.jpg" alt="" loading="lazy" onerror="this.remove()" style="width:62px;height:46px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#191510;margin-top:2px"><div>'+esc(it.ex.name)+(it.ex.tip?'<span class="tip">💡 '+esc(it.ex.tip)+'</span>':'')+'</div></div></td><td class="sr">'+it.sets+' × '+it.reps+'</td></tr>';
         });
         html+='</table></div>';
       });
