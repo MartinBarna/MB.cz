@@ -1,8 +1,8 @@
-/* Martin Barna — GA4 (G-P0GTB23JP9) s Google Consent Mode v2 + jednoduchá cookie lišta.
+/* Martin Barna — GA4 (G-C3JC8G3FS0) s Google Consent Mode v2 + jednoduchá cookie lišta.
    Měření je defaultně VYPNuté (analytics_storage: denied) a zapne se až po souhlasu.
    Sdílený soubor — odkazuje se z každé stránky jedním <script defer src="/assets/analytics.js">. */
 (function () {
-  var GA_ID = 'G-P0GTB23JP9';
+  var GA_ID = 'G-C3JC8G3FS0';
   var KEY = 'mb_consent_v1';
 
   window.dataLayer = window.dataLayer || [];
