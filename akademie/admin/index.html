@@ -129,22 +129,37 @@
     function fmtDay(s){ if(!s) return '—'; return new Date(s).toLocaleDateString('cs-CZ'); }
     function api(payload){ return fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)}).then(function(r){ return r.json().then(function(j){return {status:r.status,j:j};}); }); }
 
-    if(!window.BA_CONFIG||!window.supabase){ show('gate'); return; }
-    sb=window.supabase.createClient(window.BA_CONFIG.url,window.BA_CONFIG.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
-    var lg=$('logout'); if(lg) lg.addEventListener('click',function(e){e.preventDefault();sb.auth.signOut().then(function(){location.href='/akademie/prihlaseni/';});});
-
-    sb.auth.getSession().then(function(res){
-      var s=res&&res.data&&res.data.session;
-      if(!s){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'); return; }
-      token=s.access_token;
+    // ROBUSTNÍ GATE: počkej na knihovny (ba-config + supabase CDN) i na session; nerozhoduj
+    // "nejsi admin" na přechodně prázdném stavu (fix async race — admin se zamykal ven po reloadu).
+    var booted=false;
+    function boot(tries){
+      tries=tries||0;
+      if(!window.BA_CONFIG||!window.supabase){ if(tries<40){ return setTimeout(function(){boot(tries+1);},150); } show('gate'); return; }
+      if(booted) return; booted=true;
+      sb=window.supabase.createClient(window.BA_CONFIG.url,window.BA_CONFIG.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
+      var lg=$('logout'); if(lg) lg.addEventListener('click',function(e){e.preventDefault();sb.auth.signOut().then(function(){location.href='/akademie/prihlaseni/';});});
+      getSessionRetry(0);
+    }
+    function getSessionRetry(tries){
+      sb.auth.getSession().then(function(res){
+        var s=res&&res.data&&res.data.session;
+        if(!s){ if(tries<6){ return setTimeout(function(){getSessionRetry(tries+1);},350); } location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'); return; }
+        token=s.access_token; load(true);
+      });
+    }
+    function load(allowRefresh){
       Promise.all([api({action:'stats'}),api({action:'overview'})]).then(function(out){
         var st=out[0], ov=out[1];
-        if(st.status===403||ov.status===403){ show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return; }
+        if(st.status===403||ov.status===403){
+          if(allowRefresh){ return sb.auth.refreshSession().then(function(r){ var s=r&&r.data&&r.data.session; if(s&&s.access_token){ token=s.access_token; } load(false); }).catch(function(){ load(false); }); }
+          show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return;
+        }
         if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
         renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
-    });
+    }
+    boot();
 
     function renderStats(s){
       var items=[['Kontaktů',s.contacts],['Academy',s.academy],['Videokurz',s.videokurz],['Coaching',s.coaching],['Registrovaní',s.registered],['Mailů odesláno',s.sent_total]];

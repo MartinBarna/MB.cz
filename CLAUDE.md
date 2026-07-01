@@ -27,6 +27,24 @@ node scripts/sync-academy-counts.js
 - Materiály (počet PDF) skript zatím neřeší — při změně počtu materiálů zkontroluj ručně
   i `materialy/index.html`, `materialy/rebrand/index.html` a zmínky „X PDF" v Academy copy.
 
+## ⚠️ STANDING RULE: obsah Academy → aktualizuj zmínky VŠUDE (nejen počty)
+
+Kdykoliv přidáš do Academy **nový modul, nástroj, sekci nebo velký kus obsahu**
+(např. databáze cviků, generátory, nový modul lekcí), **automaticky (bez připomenutí)
+aktualizuj i VÝČET obsahu** — co Academy nabízí — na všech prodejních/landing/promo
+místech plošně: `akademie/index.html` (landing), homepage karta v `index.html`,
+`akademie/objednavka/`, `akademie/moje/`, upsell texty (`assets/academy-upsell.js`),
+videokurz→Academy promo. Ať prodejní stránky vždy odrážejí realitu obsahu.
+**POZOR:** úpravy landingu dělej **chirurgicky a jen aditivně** — nikdy nemaž formulář,
+patičku ani nepřestavuj strukturu; jen přidej zmínku do výčtu funkcí.
+
+## ⚠️ STANDING RULE: affiliate / doporučení = pro Academy I VIDEOKURZ klienty
+
+Referral (kód `DOPORUC10` = −10 % pro kamaráda, jednorázově na e-mail, platí na videokurz
+i Academy) a odměna referrerovi **musí jít nejen Academy klientům, ale i videokurz klientům**
+(těch je víc). Je jedno, kdo doporučí — pro nás pasivní zisk tak či tak. Doporuc stránka +
+tracking = dostupné majitelům videokurzu i Academy.
+
 ## Deploy (každá hotová změna)
 
 1. commit na `claude/learn-claude-code-tay5rb` → push
