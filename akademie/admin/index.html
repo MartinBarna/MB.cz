@@ -93,7 +93,7 @@
 
       <div class="traf" id="traf" style="display:none;">
         <h3>📊 Statistiky návštěvnosti</h3>
-        <div class="sub" id="trafSub">Google Analytics 4 · G-P0GTB23JP9 · posledních 28 dní</div>
+        <div class="sub" id="trafSub">Google Analytics 4 · G-C3JC8G3FS0 · posledních 28 dní</div>
         <div id="trafBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
@@ -103,6 +103,7 @@
         <button id="qgVid">+ Videokurz</button>
         <button id="qgAca">+ Academy</button>
         <button id="qgRm" class="rm">− Odebrat videokurz</button>
+        <button id="qgRmA" class="rm">− Odebrat Academy</button>
       </div>
 
       <div class="toolbar">
@@ -275,6 +276,7 @@
     var _qv=$('qgVid'); if(_qv)_qv.addEventListener('click',function(){qg('videokurz',true);});
     var _qa=$('qgAca'); if(_qa)_qa.addEventListener('click',function(){qg('academy',true);});
     var _qr=$('qgRm'); if(_qr)_qr.addEventListener('click',function(){qg('videokurz',false);});
+    var _qra=$('qgRmA'); if(_qra)_qra.addEventListener('click',function(){qg('academy',false);});
 
     function openDetail(email){
       $('detBody').innerHTML='<p class="muted">Načítám…</p>'; $('det').classList.add('on');
