@@ -160,7 +160,7 @@
 
     <header class="ac-hero" id="obsah">
         <div class="container">
-            <span class="ac-tag">🎓 PŘIPRAVUJEME · VZDĚLÁVACÍ PROGRAM</span>
+            <span class="ac-tag">🎓 VZDĚLÁVACÍ PROGRAM PRO TRENÉRY · SPUŠTĚNO</span>
             <h1>Staň se trenérem a&nbsp;výživovým poradcem, kterému klienti věří</h1>
             <p class="lead">Barna Academy je škola, kde tě naučím to, co fakt funguje — vědecky podloženou výživu, psychologii chování, anatomii i byznys. Žádné mýty a zázračné diety. Jen know-how, se kterým získáš výsledky u klientů a vybuduješ si jméno.</p>
             <div class="mt-4 d-flex flex-wrap gap-2">
@@ -179,7 +179,7 @@
     <!-- UPSELL pro majitele videokurzu (#38) — aktivuje se přes ?from=videokurz -->
     <div id="vkUpsell" style="display:none;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.05));border-bottom:1px solid rgba(255,122,0,.3);">
         <div class="container" style="padding:16px 12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;text-align:center;">
-            <span style="font-size:1rem;line-height:1.5;"><b style="color:#ff7a00;">Máš videokurz? Skvělé.</b> Jako majitel videokurzu máš u spuštění Academy <b>přednost a speciální podmínky</b>. Přidej se na seznam a dám ti vědět první.</span>
+            <span style="font-size:1rem;line-height:1.5;"><b style="color:#ff7a00;">Máš videokurz? Skvělé.</b> Videokurz výživy máš v Academy <b>v ceně</b> a přístup dostaneš <b>hned po zaplacení</b>.</span>
             <a href="/akademie/objednavka/" class="btn-gold" style="padding:9px 22px;white-space:nowrap;">Chci Academy →</a>
         </div>
     </div>
@@ -452,9 +452,9 @@
     <!-- ZÁJEM / CTA -->
     <section id="zajem">
         <div class="container">
-            <div class="sec-head"><h2>Staň se zakládajícím členem</h2><p>Spouštíme. Zakládající členové mají <strong>zaváděcí cenu 8 900 Kč</strong> (místo 12 900) — nech mi kontakt a ozvu se ti s přístupem a platbou (jednorázově i na splátky).</p></div>
+            <div class="sec-head"><h2>Začni ještě dnes</h2><p>Barna Academy je <strong>spuštěná a otevřená</strong>. Zaváděcí cena <strong>8 900 Kč</strong> (místo 12 900) — doživotní přístup ke všemu i budoucímu obsahu, videokurz výživy v ceně. Přístup máš <strong>hned po zaplacení</strong>.</p></div>
             <div class="pricebox">
-                <span class="soon">PŘIPRAVUJEME · EARLY ACCESS</span>
+                <span class="soon" style="background:rgba(52,168,83,.15);color:#5fe0a0;border-color:rgba(52,168,83,.45);">✅ SPUŠTĚNO · ZAVÁDĚCÍ CENA</span>
                 <h3 class="mt-3 mb-1" style="color:#fff;">Barna Academy</h3>
                 <p style="opacity:.8;">Škola pro trenéry a výživové poradce</p>
                 <ul>
@@ -464,35 +464,14 @@
                     <li>Přístup do affiliate programu — vydělávej doporučením</li>
                     <li>Certifikát Barna Academy po dokončení</li>
                 </ul>
-                <!-- Formulář zájemce → chodí na e-mail (FormSubmit), AJAX -->
-                <div id="acDiky" class="ac-diky" style="display:none;">Díky! Jsi na seznamu — ozvu se ti jako jednomu z prvních při spuštění a získáš zvýhodněnou cenu. 🙌</div>
-                <form id="acForm" class="ac-form" action="https://formsubmit.co/martin@martinbarna.cz" method="POST">
-                    <input type="hidden" name="_subject" value="Nový zájemce — Barna Academy">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_template" value="table">
-                    <input type="hidden" name="_next" value="https://martinbarna.cz/akademie/?odeslano=1#zajem">
-                    <input type="text" name="_honey" style="display:none">
-                    <input name="Jméno" type="text" placeholder="Tvoje jméno" autocomplete="name" required>
-                    <input name="E-mail" type="email" placeholder="Tvůj e-mail" autocomplete="email" required>
-                    <select name="Kdo jsi" required aria-label="Co tě nejvíc vystihuje">
-                        <option value="" disabled selected>Co tě nejvíc vystihuje?</option>
-                        <option>Osobní trenér / trenérka</option>
-                        <option>Výživový poradce / poradkyně</option>
-                        <option>Trenér i poradce</option>
-                        <option>Začínám v oboru</option>
-                        <option>Nadšenec / jiné</option>
-                    </select>
-                    <button type="submit" class="btn-gold w-100">Chci být u spuštění →</button>
-                </form>
-                <p class="ac-alt mb-0">Radši napřímo? <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20z%C3%A1jem%20o%20Barna%20Academy%20-%20dej%20v%C4%9Bd%C4%9Bt%20p%C5%99i%20spu%C5%A1t%C4%9Bn%C3%AD" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:martin@martinbarna.cz?subject=Z%C3%A1jem%20o%20Barna%20Academy">martin@martinbarna.cz</a></p>
-                <!-- QR pro počítač (na mobilu skryto, tam stačí tlačítko/odkaz) -->
-                <div class="ac-qr">
-                    <img src="/assets/qr/wa-academy.svg" alt="QR kód pro WhatsApp chat s Martinem Barnou" width="92" height="92" loading="lazy" decoding="async">
-                    <span><strong style="color:#fff;">Jsi na počítači?</strong><br>Naskenuj QR mobilem a napiš mi rovnou na WhatsApp — nebo vyplň formulář výš a ozvu se na e-mail.</span>
+                <div class="mt-3 d-flex flex-column gap-2">
+                    <a href="/akademie/objednavka/" class="btn-gold w-100">Koupit Academy — 8 900 Kč →</a>
+                    <a href="/akademie/prihlaseni/?tab=register&amp;next=%2Fakademie%2Fstudium%2F" class="btn-ghost w-100" style="text-align:center;">Nejdřív vyzkoušet zdarma →</a>
                 </div>
+                <p class="ac-alt mb-0">Radši napřímo? <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20z%C3%A1jem%20o%20Barna%20Academy" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:martin@martinbarna.cz?subject=Z%C3%A1jem%20o%20Barna%20Academy">martin@martinbarna.cz</a></p>
                 <div class="vk-guarantee">
                     <svg viewBox="0 0 24 24" fill="none" stroke="#34a853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;flex-shrink:0;" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                    <span>Při spuštění bude Academy krytá <strong style="color:#fff;">zárukou vrácení peněz</strong> — stejně jako videokurz. Žádné riziko.</span>
+                    <span>Academy je krytá <strong style="color:#fff;">zárukou vrácení peněz do 14 dní</strong> — stejně jako videokurz. Žádné riziko.</span>
                 </div>
             </div>
         </div>
