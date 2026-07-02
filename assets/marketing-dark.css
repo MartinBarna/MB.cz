@@ -243,3 +243,9 @@ strong[style*="--ink"], b[style*="--ink"], strong[style*="#161616"], em[style*="
 .keytab th { color:var(--bd-gold-soft)!important; background:rgba(255,122,0,.1)!important; }
 .keytab td { color:var(--bd-ink)!important; }
 .keytab th, .keytab td { border-color:var(--bd-line)!important; }
+
+/* === Zvýrazněné karty s inline border-color (akademie: Nové nástroje, modul 20, členství) —
+   výše .feature-ac{border:none!important} a .mod/.card-ac shorthand border!important je přebíjely,
+   takže zamýšlené oranžové orámování se nikdy nevykreslilo. (audit 2026-07-03) */
+.feature-ac[style*="border-color"] { border:1px solid rgba(255,122,0,.4)!important; border-radius:16px; padding:1.1rem; }
+.mod[style*="border-color"], .card-ac[style*="border-color"] { border-color:rgba(255,122,0,.45)!important; }
