@@ -137,13 +137,13 @@
     <div class="modules" id="modules"></div>
 
     <style>
-      .tools-head{margin:30px 0 4px;color:#fff;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;}
+      .tools-head{margin:30px 0 4px;color:#fff;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;scroll-margin-top:90px;}
       .tools-sub{color:var(--muted);font-size:.9rem;margin:0 0 14px;}
       .bonus .litebadge{display:inline-block;background:rgba(255,122,0,.16);border:1px solid rgba(255,122,0,.4);color:var(--gold-soft);font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:50px;margin-left:8px;vertical-align:middle;}
       .bonus.islite{opacity:.96;}
       .bonus.islite .bbtn{background:rgba(255,255,255,.06);color:var(--gold-soft);border:1px solid rgba(255,122,0,.4);box-shadow:none;}
     </style>
-    <h3 class="tools-head">🛠️ Nástroje pro trenéry</h3>
+    <h3 class="tools-head" id="nastroje">🛠️ Nástroje pro trenéry</h3>
     <p class="tools-sub" id="toolsSub">Generátory, které ti spočítají a poskládají plán na míru klienta — a dáš mu ho pod svým jménem.</p>
 
     <a class="bonus" id="toolMeal" href="/akademie/nastroje/jidelnicek/" style="text-decoration:none;">
@@ -605,7 +605,7 @@
         var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
       }
     }
-    function render(done){ DONE = done || {}; paintProgress(); route(); }
+    function render(done){ DONE = done || {}; paintProgress(); route(); hashScrollOnce(); }
     window.addEventListener('hashchange', route);
     // Postup z členské sekce (live: Supabase, demo: localStorage). V live režimu
     // navíc vyžaduje přihlášení + přístup k Akademii.
@@ -649,6 +649,14 @@
       sb.addEventListener('input', function(){ route(); });
     })();
     boot();
+    // re-scroll na statickou kotvu (např. #nastroje) — moduly se renderují asynchronně a kotvu odsunou;
+    // hashe routeru (#mN, #prehled) nechává být
+    var _hashScrolled = false;
+    function hashScrollOnce(){
+      if(_hashScrolled || !location.hash || /^#(m\d+|prehled)?$/.test(location.hash)) return;
+      var t=null; try { t=document.querySelector(location.hash); } catch(e){}
+      if(t){ _hashScrolled = true; setTimeout(function(){ t.scrollIntoView(); }, 50); }
+    }
   </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
 </body>
