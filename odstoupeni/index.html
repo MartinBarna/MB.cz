@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odstoupení od smlouvy online — Martin Barna</title>
+<meta name="description" content="Odstoupení od smlouvy do 14 dnů — jednoduše online. Vyplň formulář, potvrzení ti přijde e-mailem.">
+<link rel="canonical" href="https://martinbarna.cz/odstoupeni/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root { --gold:#ff7a00; --ink:#161616; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Poppins',Arial,sans-serif; color:#23211d; background:#f7f3ec; line-height:1.65; }
+  .top { background:#161616; color:#fff; }
+  .top .in { max-width:640px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; font-size:.95rem; }
+  .brand .mark { width:28px; height:28px; border-radius:7px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.82rem; }
+  .top a.back { color:#bbb; text-decoration:none; font-size:.86rem; }
+  .wrap { max-width:640px; margin:0 auto; padding:36px 20px 80px; }
+  h1 { font-size:1.75rem; letter-spacing:-.02em; margin-bottom:.4rem; }
+  .lead { color:#6b6152; font-size:.97rem; margin-bottom:22px; }
+  .card { background:#fff; border:1px solid #ece3d8; border-radius:18px; padding:26px 24px; box-shadow:0 14px 40px rgba(0,0,0,.05); }
+  label { display:block; font-size:.85rem; font-weight:600; color:#5d5546; margin:16px 0 6px; }
+  label:first-child { margin-top:0; }
+  input, select, textarea { width:100%; padding:12px 14px; border:1px solid #d9cdba; border-radius:11px; font-family:inherit; font-size:.96rem; background:#fdfbf7; color:var(--ink); }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(255,122,0,.14); }
+  textarea { min-height:88px; resize:vertical; }
+  .hint { font-size:.78rem; color:#9a8f7d; margin-top:4px; }
+  .btn { width:100%; margin-top:22px; background:var(--ink); color:#fff; font-weight:700; padding:15px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:1rem; transition:.2s; }
+  .btn:hover { background:#000; transform:translateY(-1px); }
+  .btn[disabled] { opacity:.55; cursor:default; transform:none; }
+  .msg { margin-top:15px; padding:12px 15px; border-radius:12px; font-size:.9rem; display:none; }
+  .msg.err { display:block; background:#fdecea; color:#a3352b; border:1px solid #f2c4bf; }
+  .ok-card { display:none; background:#fff; border:1px solid #cfe6d2; border-radius:18px; padding:30px 26px; text-align:center; box-shadow:0 14px 40px rgba(0,0,0,.05); }
+  .ok-card .tick { width:64px; height:64px; border-radius:50%; background:#e7f5e9; color:#2c7a39; font-size:1.9rem; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
+  .ok-card h2 { font-size:1.3rem; margin-bottom:8px; }
+  .ok-card p { color:#5d5546; font-size:.94rem; margin:.4rem 0; }
+  .note { background:#fff8f0; border:1px solid #f3dcbd; border-radius:12px; padding:12px 15px; font-size:.86rem; color:#7a5a2a; margin-top:20px; }
+  .note a { color:#c45e00; }
+  .hp { position:absolute; left:-9999px; top:-9999px; }
+  footer { background:#0d0d0d; color:#bbb; text-align:center; padding:26px 18px; font-size:.85rem; margin-top:48px; }
+  footer a { color:#ffb066; }
+</style>
+  <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260702b">
+</head>
+<body>
+  <div class="top"><div class="in">
+    <a class="brand" href="/"><span class="mark">MB</span> Martin Barna</a>
+    <a class="back" href="/">← Zpět na web</a>
+  </div></div>
+
+  <div class="wrap">
+    <h1>Odstoupení od smlouvy</h1>
+    <p class="lead">Nesedlo ti to? V pořádku. Do <strong>14 dnů od nákupu</strong> můžeš odstoupit od smlouvy tady online — bez vysvětlování a bez dopisů. Peníze vrátím nejpozději do 14 dnů stejnou cestou, jakou jsi platil(a).</p>
+
+    <form class="card" id="wform" novalidate>
+      <label for="email">E-mail použitý při nákupu *</label>
+      <input id="email" type="email" autocomplete="email" placeholder="tvuj@email.cz" required>
+
+      <label for="order">Číslo objednávky</label>
+      <input id="order" type="text" placeholder="např. 2026123">
+      <div class="hint">Najdeš ho v potvrzovacím e-mailu ze SimpleShopu. Když ho nemůžeš najít, nevadí — dohledám objednávku podle e-mailu.</div>
+
+      <label for="product">Čeho se odstoupení týká *</label>
+      <select id="product" required>
+        <option value="videokurz">Videokurz výživy</option>
+        <option value="academy">Barna Academy</option>
+        <option value="konzultace">Konzultace / koučink</option>
+        <option value="jine">Jiný produkt</option>
+      </select>
+
+      <label for="message">Zpráva (nepovinné)</label>
+      <textarea id="message" placeholder="Klidně mi napiš, co nesedlo — pomůže mi to zlepšovat se. Ale nemusíš."></textarea>
+
+      <input class="hp" id="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <button class="btn" id="submit" type="submit">Odstoupit od smlouvy</button>
+      <div class="msg" id="msg"></div>
+    </form>
+
+    <div class="ok-card" id="okcard">
+      <div class="tick">✓</div>
+      <h2>Odstoupení přijato</h2>
+      <p id="okwhen"></p>
+      <p>Potvrzení s obsahem podání ti právě letí na e-mail. Peníze vrátím <strong>nejpozději do 14 dnů</strong> stejným způsobem, jakým platba proběhla.</p>
+      <p style="margin-top:14px;font-size:.86rem;">Kdyby cokoliv, napiš mi na <a href="mailto:martin@martinbarna.cz" style="color:#c45e00;">martin@martinbarna.cz</a>.</p>
+    </div>
+
+    <div class="note">Odstoupení můžeš podat i e-mailem na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>. Podrobnosti o lhůtách a vracení peněz najdeš v <a href="/obchodni-podminky/">obchodních podmínkách</a> (čl. 7).</div>
+  </div>
+
+  <footer>
+    &copy; 2026 Martin Barna — Online výživa a fitness · <a href="/obchodni-podminky/">Obchodní podmínky</a> · <a href="/">martinbarna.cz</a>
+  </footer>
+
+  <script>
+    (function () {
+      var FN = 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/withdrawal';
+      var form = document.getElementById('wform'), msg = document.getElementById('msg'), btn = document.getElementById('submit');
+
+      // Predvyplneni z odkazu (dekovacka / e-mail): ?product=videokurz&email=...&order=...
+      function qs(k) { try { return new URLSearchParams(location.search).get(k) || ''; } catch (e) { return ''; } }
+      var qp = qs('product'); if (qp && document.querySelector('#product option[value="' + qp + '"]')) document.getElementById('product').value = qp;
+      var qe = qs('email'); if (qe.indexOf('@') > 0) document.getElementById('email').value = qe;
+      var qo = qs('order'); if (qo) document.getElementById('order').value = qo;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('email').value.trim();
+        if (!email || email.indexOf('@') < 1) { msg.className = 'msg err'; msg.textContent = 'Zadej prosím e-mail, který jsi použil(a) při nákupu.'; return; }
+        btn.disabled = true; msg.className = 'msg'; msg.textContent = '';
+        fetch(FN, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            order_number: document.getElementById('order').value.trim(),
+            product: document.getElementById('product').value,
+            message: document.getElementById('message').value.trim(),
+            website: document.getElementById('website').value
+          })
+        }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (res) {
+            if (!res.ok || !res.d.ok) throw new Error(res.d && res.d.error || 'err');
+            form.style.display = 'none';
+            document.getElementById('okwhen').innerHTML = 'Datum a čas podání: <strong>' + (res.d.when || '') + '</strong>';
+            document.getElementById('okcard').style.display = 'block';
+            try { if (window.gtag) gtag('event', 'withdrawal_submitted'); } catch (e2) {}
+          })
+          .catch(function () {
+            btn.disabled = false;
+            msg.className = 'msg err';
+            msg.innerHTML = 'Odeslání se nepovedlo. Zkus to prosím za chvíli znovu, nebo napiš odstoupení e-mailem na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> — platí úplně stejně.';
+          });
+      });
+    })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+    <script defer src="/assets/analytics.js?v=20260702a"></script>
+</body>
+</html>

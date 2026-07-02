@@ -112,7 +112,7 @@ function wrapHtml(preheader: string, body: string, footerHtml: string): string {
     `<div style='font-size:12px;line-height:1.5;color:#999'>${footerHtml}</div></div></body></html>`;
 }
 
-function buildVars(name: string, seg: Seg, unsub: string): Record<string, string> {
+function buildVars(name: string, seg: Seg, unsub: string, email: string): Record<string, string> {
   // jmeno leada je user input: pryc s HTML a tokenovymi znaky, at nerozbije render ani markup
   const BADCH = '{}[]<>&' + DQ + String.fromCharCode(39);
   let clean = '';
@@ -130,6 +130,7 @@ function buildVars(name: string, seg: Seg, unsub: string): Record<string, string
     course_price: String(COURSE_PRICE), discount_pct: String(DISCOUNT_PCT),
     discount_price: String(dprice), discount_code: DISCOUNT_CODE,
     discount2_pct: String(DISCOUNT2_PCT), discount2_price: String(d2price), discount2_code: DISCOUNT2_CODE,
+    email: email, email_url: encodeURIComponent(email),
     unsubscribe_url: unsub,
   };
 }
@@ -209,7 +210,7 @@ Deno.serve(async (req: Request) => {
     const tpl = await getTpl(track, step);
     if (!tpl) return json({ ok: false, mode: 'test', error: 'no_template:' + track + ':' + step }, 400);
     try {
-      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op');
+      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email));
       const m = renderEmail(tpl, seg, v, footer);
       const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
       await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } });
@@ -306,7 +307,7 @@ Deno.serve(async (req: Request) => {
     };
     if (already) { await advance(); skippedAlready++; continue; }
     try {
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token);
+      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email));
       const m = renderEmail(tpl, seg, v, footer);
       const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);
       const { error: logErr } = await admin.from('email_events')
