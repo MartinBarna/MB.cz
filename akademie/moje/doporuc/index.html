@@ -62,7 +62,7 @@
       <div id="refGate" class="panel" style="display:none;text-align:center;">
         <div class="ref-code" style="justify-content:center;"><b style="opacity:.45;letter-spacing:.16em;">🔒</b></div>
         <p style="color:#b7ab9b;max-width:460px;margin:.4rem auto 0;line-height:1.6;">Doporučovací program je pro majitele <b>videokurzu</b> nebo <b>Academy</b>. Jakmile budeš mít přístup, najdeš tu svůj osobní kód a pošleš ho kamarádům jedním klikem.</p>
-        <div style="margin-top:1rem;"><a class="btn" href="/akademie/">Prohlédnout Academy →</a></div>
+        <div style="margin-top:1rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><a class="btn" href="/videokurz">Koupit videokurz — 800 Kč →</a><a class="btn" style="background:rgba(255,255,255,.06);color:#e8e0d5;box-shadow:none;border:1px solid rgba(255,255,255,.18);" href="/akademie/">Prohlédnout Academy →</a></div>
       </div>
 
       <div id="refErr" class="panel" style="display:none;text-align:center;">
@@ -146,7 +146,12 @@
       show('refLoad');
       sb.functions.invoke('referral-code').then(function(r){
         var d = r && r.data ? r.data : null;
-        if(r && r.error && !d){ show('refErr'); return; }
+        if(r && r.error && !d){
+          // 403 = přihlášený bez nákupu → gate (program je pro majitele), ne obecná chyba
+          var st = r.error.context && r.error.context.status;
+          if(st === 403){ show('refGate'); return; }
+          show('refErr'); return;
+        }
         if(!d || d.error==='no_entitlement'){ show('refGate'); return; }
         if(d.error || !d.code){ show('refErr'); return; }
         render(d);

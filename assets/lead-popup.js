@@ -70,12 +70,16 @@
         '</div>';
       document.body.appendChild(ov);
       requestAnimationFrame(function () { ov.classList.add('on'); });
+      try { if (window.gtag) gtag('event', 'lead_popup_shown'); } catch (e) {}
       ov.querySelector('.x').addEventListener('click', function () { close(7); });
       ov.querySelector('.later').addEventListener('click', function () { close(7); });
       ov.addEventListener('click', function (e) { if (e.target === ov) close(3); });
       // klik na výběr = konverze (delší pauza), pak nech proklik proběhnout
       Array.prototype.forEach.call(ov.querySelectorAll('.ba-lp-btns a'), function (a) {
-        a.addEventListener('click', function () { mark(14); });
+        a.addEventListener('click', function () {
+          mark(14);
+          try { if (window.gtag) gtag('event', 'lead_popup_click', { choice: (a.getAttribute('href') || '').indexOf('forma-zpet') !== -1 ? 'muzi' : 'zeny' }); } catch (e) {}
+        });
       });
       document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { close(7); document.removeEventListener('keydown', esc); } });
     }
