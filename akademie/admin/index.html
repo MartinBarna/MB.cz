@@ -121,6 +121,12 @@
         <div id="pulseBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+      <div class="traf" id="prog" style="display:none;">
+        <h3>📈 Progres klientů</h3>
+        <div class="sub" id="progSub">Kolik lekcí mají členové za sebou (videokurz / Academy)</div>
+        <div id="progBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
       <div class="traf" id="traf" style="display:none;">
         <h3>📊 Statistiky návštěvnosti</h3>
         <div class="sub" id="trafSub">Google Analytics 4 · G-C3JC8G3FS0 · posledních 28 dní</div>
@@ -242,7 +248,7 @@
           show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return;
         }
         if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
-        renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app'); loadTraf(); loadPulse();
+        renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -279,6 +285,42 @@
             (e.last_error?' · Poslední chyba: <span style="color:#ffb061">'+esc(e.last_error)+'</span>':'')+'</p>';
           $('pulse').style.display='';
         }).catch(function(){ $('pulse').style.display='none'; });
+    }
+
+    // 📈 Progres klientů — kolik lekcí mají členové splněno (autoplay je dopisuje automaticky)
+    function loadProgress(){
+      api({action:'progress_overview'}).then(function(r){
+        var p=r.j;
+        if(!p||!p.ok){ $('prog').style.display='none'; return; }
+        var rows=p.rows||[];
+        if(!rows.length){ $('progBody').innerHTML='<p class="muted" style="padding:.8rem 0;">Zatím žádný zaznamenaný progres.</p>'; $('prog').style.display=''; return; }
+        var now=Date.now(), d7=7*864e5, d14=14*864e5;
+        var akt7=0, spici=0, nezacali=0;
+        var bar=function(done,total){
+          var pct=total?Math.min(100,Math.round(done*100/total)):0;
+          var col=pct>=100?'#7bd88f':(pct>=50?'#ffb061':'#ff9d3c');
+          return '<div style="display:flex;align-items:center;gap:8px;min-width:150px;"><div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:4px;"></div></div><span style="font-size:.78rem;color:#cabfb1;white-space:nowrap;">'+done+' ('+pct+'%)</span></div>';
+        };
+        var trs=rows.map(function(x){
+          var la=x.last_activity?new Date(x.last_activity).getTime():0;
+          var badge;
+          if(!la){ badge='<span style="color:#8a7e6d;">— nezačal(a)</span>'; nezacali++; }
+          else if(now-la<d7){ badge='<span style="color:#7bd88f;">🔥 aktivní</span>'; akt7++; }
+          else if(now-la>d14){ badge='<span style="color:#ff9c93;">💤 '+Math.round((now-la)/864e5)+' dní</span>'; spici++; }
+          else badge='<span style="color:#cabfb1;">'+Math.round((now-la)/864e5)+' dní</span>';
+          return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);">'
+            +'<td style="padding:7px 10px;font-size:.85rem;">'+esc(x.email)+'</td>'
+            +'<td style="padding:7px 10px;">'+(x.has_videokurz?bar(x.vk_done,p.vk_total):'<span class="muted" style="font-size:.78rem;">—</span>')+'</td>'
+            +'<td style="padding:7px 10px;">'+(x.has_academy?bar(x.ac_done,p.ac_total):'<span class="muted" style="font-size:.78rem;">—</span>')+'</td>'
+            +'<td style="padding:7px 10px;font-size:.82rem;white-space:nowrap;">'+badge+'</td></tr>';
+        }).join('');
+        $('progSub').textContent='Členů: '+rows.length+' · 🔥 aktivní 7 dní: '+akt7+' · 💤 spí 14+ dní: '+spici+' · nezačali: '+nezacali;
+        $('progBody').innerHTML='<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">'
+          +'<thead><tr style="text-align:left;color:#8a7e6d;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;">'
+          +'<th style="padding:7px 10px;">E-mail</th><th style="padding:7px 10px;">Videokurz /'+p.vk_total+'</th><th style="padding:7px 10px;">Academy /'+p.ac_total+'</th><th style="padding:7px 10px;">Aktivita</th></tr></thead>'
+          +'<tbody>'+trs+'</tbody></table></div>';
+        $('prog').style.display='';
+      }).catch(function(){ $('prog').style.display='none'; });
     }
 
     function renderStats(s){
