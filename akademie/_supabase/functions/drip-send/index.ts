@@ -2,7 +2,7 @@
 // Copy zije v DB (email_templates + app_config footer_*), aby sla menit bez redeploye.
 // Gender tokeny v copy: [[zena||muz]] a [a]. Merge: dvojite-slozene-zavorky key. Viz README.md.
 // Rezimy POST JSON: dry:true | test_email+track+step+segment+name | prazdne (ostry beh).
-// Auth: x-drip-secret (nebo ?secret=) == app_config drip_invoke_secret. Klice jen z env.
+// Auth: hlavicka x-drip-secret == app_config drip_invoke_secret. Klice jen z env.
 // Pozn.: zdrojak je zamerne bez znaku uvozovek a zpetnych lomitek (kvuli snadnemu deployi).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
@@ -15,10 +15,13 @@ const RESEND_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
 const FROM = 'Martin Barna <news@martinbarna.cz>';
 const SITE = 'https://martinbarna.cz';
 const COURSE_URL = 'https://form.simpleshop.cz/3Vbl/buy/';
-const FREE_LESSONS_URL = 'https://www.martinbarna.cz/videokurz#zdarma';
+const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
 const COURSE_PRICE = 800;
 const DISCOUNT_CODE = 'ZACNI15';
 const DISCOUNT_PCT = 15;
+// druha (posledni) sleva - drzet v sablonach pres {{discount2_*}}, ne natvrdo
+const DISCOUNT2_CODE = 'JESTE20';
+const DISCOUNT2_PCT = 20;
 
 type Seg = 'zeny' | 'muzi' | 'other';
 const isFem = (seg: Seg) => seg === 'zeny';
@@ -110,17 +113,24 @@ function wrapHtml(preheader: string, body: string, footerHtml: string): string {
 }
 
 function buildVars(name: string, seg: Seg, unsub: string): Record<string, string> {
-  const parts = (name || '').trim().split(' ').filter((x) => x.length > 0);
+  // jmeno leada je user input: pryc s HTML a tokenovymi znaky, at nerozbije render ani markup
+  const BADCH = '{}[]<>&' + DQ + String.fromCharCode(39);
+  let clean = '';
+  for (const ch of (name || '')) clean += BADCH.includes(ch) ? ' ' : ch;
+  const parts = clean.trim().split(' ').filter((x) => x.length > 0);
   const t = parts[0] || '';
   const fn = t ? t.charAt(0).toUpperCase() + t.slice(1) : '';
   const dprice = Math.round(COURSE_PRICE * (1 - DISCOUNT_PCT / 100));
+  const d2price = Math.round(COURSE_PRICE * (1 - DISCOUNT2_PCT / 100));
   return {
     first_name: fn, fn_space: fn ? ' ' + fn : '', fn_suffix: fn ? ', ' + fn : '', fn_prefix: fn ? fn + ', ' : '',
     lead_magnet_url: seg === 'muzi' ? SITE + '/download/forma-zpet-muzi.pdf' : SITE + '/download/makro-plan-zeny.pdf',
     plan_page_url: seg === 'muzi' ? SITE + '/forma-zpet' : SITE + '/makro-plan',
     course_url: COURSE_URL, free_lessons_url: FREE_LESSONS_URL,
     course_price: String(COURSE_PRICE), discount_pct: String(DISCOUNT_PCT),
-    discount_price: String(dprice), discount_code: DISCOUNT_CODE, unsubscribe_url: unsub,
+    discount_price: String(dprice), discount_code: DISCOUNT_CODE,
+    discount2_pct: String(DISCOUNT2_PCT), discount2_price: String(d2price), discount2_code: DISCOUNT2_CODE,
+    unsubscribe_url: unsub,
   };
 }
 
@@ -165,7 +175,7 @@ Deno.serve(async (req: Request) => {
 
   const { data: cfg } = await admin.from('app_config').select('value').eq('key', 'drip_invoke_secret').maybeSingle();
   const expected = cfg?.value ?? '';
-  const provided = req.headers.get('x-drip-secret') || new URL(req.url).searchParams.get('secret') || '';
+  const provided = req.headers.get('x-drip-secret') || '';   // jen hlavicka; ?secret= by koncil v lozich
   if (!expected || provided !== expected) return json({ error: 'unauthorized' }, 401);
 
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
@@ -283,7 +293,8 @@ Deno.serve(async (req: Request) => {
       stopped++; continue;
     }
     const { data: already } = await admin.from('email_events')
-      .select('id').eq('lead_id', l.id).eq('step', l.step).eq('type', 'sent').maybeSingle();
+      .select('id').eq('lead_id', l.id).eq('step', l.step).eq('type', 'sent')
+      .eq('detail->>track', l.track).maybeSingle();   // dedupe per track (pri prerazeni leadu jinam se kroky nepreskakuji)
     const advance = async () => {
       const ns = l.step + 1;
       if (tpl.wait_days == null) {

@@ -19,6 +19,12 @@ body {
 }
 ::selection { background:#ff7a00; color:#fff; }
 
+/* Inline color:var(--green-dark) ze světlé šablony = neviditelný text na tmavém pozadí.
+   Plošné přebití; nadpisy h2/h3 řeší specifičtější pravidla níže (zůstávají #fff). */
+[style*="color:var(--green-dark)"] { color:var(--bd-muted2)!important; }
+a[style*="color:var(--green-dark)"] { color:var(--bd-gold2)!important; }
+[style*="border-color:var(--green-dark)"] { border-color:var(--bd-gold2)!important; }
+
 /* ---------- navbar ---------- */
 .navbar.bg-white, .navbar.sticky-top.scrolled, .navbar.bg-light {
   background:rgba(12,11,10,.78)!important;
