@@ -37,14 +37,15 @@ Deno.serve(async (req) => {
     const d30 = new Date(now.getTime() - 30 * 86400000).toISOString();
     const nowI = now.toISOString();
 
-    const [evToday, gate, due, leads7, ents, refs, credit] = await Promise.all([
+    const [evToday, gate, due, leads7, ents, refs, credit, wdr] = await Promise.all([
       admin.from("email_events").select("type,detail,created_at").gte("created_at", dayStart.toISOString()),
       admin.from("app_config").select("value").eq("key", "followups_enabled").maybeSingle(),
       admin.from("leads").select("track").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", nowI),
       admin.from("leads").select("source,created_at").gte("created_at", d7),
-      admin.from("entitlements").select("product,active,granted_at").eq("active", true),
+      admin.from("entitlements").select("product,active,granted_at,source").eq("active", true),
       admin.from("referrals").select("status"),
       admin.from("referral_credit").select("credit_confirmed,credit_pending"),
+      admin.from("withdrawals").select("status"),
     ]);
 
     const em = { sent: 0, test: 0, error: 0, resend429: 0, last_error: "" };
@@ -75,18 +76,24 @@ Deno.serve(async (req) => {
       }
     }
 
+    // 7d/30d pocitame JEN source='simpleshop' (realne prodeje) — wordpress-import ma
+    // granted_at = datum importu (29. 6.) a cisla by nesmyslne nafoukl.
     const sales = { videokurz_7d: 0, videokurz_30d: 0, academy_30d: 0, academy_total: 0, videokurz_total: 0 };
     for (const e of ents.data ?? []) {
       const g = String(e.granted_at ?? "");
+      const real = e.source === "simpleshop";
       if (e.product === "videokurz") {
         sales.videokurz_total++;
-        if (g >= d7) sales.videokurz_7d++;
-        if (g >= d30) sales.videokurz_30d++;
+        if (real && g >= d7) sales.videokurz_7d++;
+        if (real && g >= d30) sales.videokurz_30d++;
       } else if (e.product === "academy") {
         sales.academy_total++;
-        if (g >= d30) sales.academy_30d++;
+        if (real && g >= d30) sales.academy_30d++;
       }
     }
+
+    const withdrawals = { pending: 0, total: (wdr.data ?? []).length };
+    for (const w of wdr.data ?? []) if (w.status === "pending") withdrawals.pending++;
 
     const referral = { confirmed: 0, pending: 0, credit_confirmed: 0, credit_pending: 0 };
     for (const r of refs.data ?? []) {
@@ -105,6 +112,7 @@ Deno.serve(async (req) => {
       leads: { days, today_by_source: todayBySource },
       sales,
       referral,
+      withdrawals,
     });
   } catch (e) {
     return json({ error: "server", detail: String(e).slice(0, 300) }, 500);

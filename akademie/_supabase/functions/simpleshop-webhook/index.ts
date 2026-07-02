@@ -263,7 +263,8 @@ Deno.serve(async (req: Request) => {
       const capiDocId = pick(body, ["doc_id", "id"]);
       const capiVal = pick(body, ["amount", "total"]);
       await fetch("https://ss-capi.fitness-barna.workers.dev/?order=" + encodeURIComponent(capiNumber)
-        + "&order_number=" + encodeURIComponent(capiDocId) + "&value=" + encodeURIComponent(capiVal)).catch(() => null);
+        + "&order_number=" + encodeURIComponent(capiDocId) + "&value=" + encodeURIComponent(capiVal)
+        + "&currency=CZK&email=" + encodeURIComponent(email) + "&product=" + product).catch(() => null);
     }
   } catch { /* CAPI je best-effort */ }
 
