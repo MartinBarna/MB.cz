@@ -123,6 +123,16 @@
         .catch(function () { return false; });
     },
 
+    // YouTube ID lekce videokurzu z manifestu v DB. RLS: free lekce čte kdokoliv,
+    // placené jen přihlášený s aktivním přístupem (has_entitlement) — ID placených
+    // videí tak nejsou ve statickém HTML.
+    getVideoId: function (slug) {
+      if (!LIVE) return Promise.resolve(null);
+      return client.from("videokurz_manifest").select("youtube_id").eq("slug", slug).maybeSingle()
+        .then(function (r) { return (r.data && r.data.youtube_id) || null; })
+        .catch(function () { return null; });
+    },
+
     // Postup: vrací objekt {lesson_id: true, ...}
     getProgress: function () {
       if (!LIVE) return Promise.resolve(lsGet());

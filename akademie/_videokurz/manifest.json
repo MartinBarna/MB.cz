@@ -4,1273 +4,1455 @@
     "slug": "v001",
     "id": "T5T2iJXq32U",
     "sec": "m1",
-    "title": "Co jsou to kalorie"
+    "title": "Co jsou to kalorie",
+    "free": true
   },
   {
     "n": 2,
     "slug": "v002",
     "id": "8W5b0OJCvfg",
     "sec": "m1",
-    "title": "Co jsou to bílkoviny"
+    "title": "Co jsou to bílkoviny",
+    "free": true
   },
   {
     "n": 3,
     "slug": "v003",
     "id": "o1eQuhnDdwk",
     "sec": "m1",
-    "title": "Co jsou to tuky"
+    "title": "Co jsou to tuky",
+    "free": true
   },
   {
     "n": 4,
     "slug": "v004",
     "id": "TqJ9TtK5lZc",
     "sec": "m1",
-    "title": "Co jsou to sacharidy"
+    "title": "Co jsou to sacharidy",
+    "free": true
   },
   {
     "n": 5,
     "slug": "v005",
     "id": "xiekGwfCt6o",
     "sec": "m1",
-    "title": "Co je to vláknina"
+    "title": "Co je to vláknina",
+    "free": false
   },
   {
     "n": 6,
     "slug": "v006",
     "id": "BbDBVXwl37I",
     "sec": "m1",
-    "title": "Přijem a výdej"
+    "title": "Přijem a výdej",
+    "free": false
   },
   {
     "n": 7,
     "slug": "v007",
     "id": "m0wUfeG3kTE",
     "sec": "m1",
-    "title": "JoJo EFEKT"
+    "title": "JoJo EFEKT",
+    "free": false
   },
   {
     "n": 8,
     "slug": "v008",
     "id": "nzNUaRqsT40",
     "sec": "m1",
-    "title": "Priority"
+    "title": "Priority",
+    "free": false
   },
   {
     "n": 9,
     "slug": "v009",
     "id": "hLCfNoEh9iU",
     "sec": "m1",
-    "title": "Kolik jídel denně"
+    "title": "Kolik jídel denně",
+    "free": false
   },
   {
     "n": 10,
     "slug": "v010",
     "id": "nYFiIzVUjEQ",
     "sec": "m1",
-    "title": "Fyzické aktivity"
+    "title": "Fyzické aktivity",
+    "free": false
   },
   {
     "n": 11,
     "slug": "v011",
     "id": "jdPfqq1ulTM",
     "sec": "m1",
-    "title": "Rozložení kalorií"
+    "title": "Rozložení kalorií",
+    "free": false
   },
   {
     "n": 12,
     "slug": "v012",
     "id": "3GlXiZBr9AQ",
     "sec": "m1",
-    "title": "Vážení potravin"
+    "title": "Vážení potravin",
+    "free": false
   },
   {
     "n": 13,
     "slug": "v013",
     "id": "s8gi1GDA4TY",
     "sec": "m1",
-    "title": "Makroživiny sacharidy"
+    "title": "Makroživiny sacharidy",
+    "free": false
   },
   {
     "n": 14,
     "slug": "v014",
     "id": "p6-v_eul58Y",
     "sec": "m2",
-    "title": "Výpočet kcal"
+    "title": "Výpočet kcal",
+    "free": true
   },
   {
     "n": 15,
     "slug": "v015",
     "id": "hcjEgedZO9w",
     "sec": "m2",
-    "title": "Výpočet bílkovin"
+    "title": "Výpočet bílkovin",
+    "free": false
   },
   {
     "n": 16,
     "slug": "v016",
     "id": "Rn0zz3cSFDY",
     "sec": "m2",
-    "title": "Výpočet sacharidů"
+    "title": "Výpočet sacharidů",
+    "free": false
   },
   {
     "n": 17,
     "slug": "v017",
     "id": "khdyS0Zt6nE",
     "sec": "m2",
-    "title": "Výpočet tuků"
+    "title": "Výpočet tuků",
+    "free": false
   },
   {
     "n": 18,
     "slug": "v018",
     "id": "A0hdYFWWUro",
     "sec": "m2",
-    "title": "Výpočet vlákniny"
+    "title": "Výpočet vlákniny",
+    "free": false
   },
   {
     "n": 19,
     "slug": "v019",
     "id": "u5uP4HAMigc",
     "sec": "m2",
-    "title": "Příjem Tuku"
+    "title": "Příjem Tuku",
+    "free": false
   },
   {
     "n": 20,
     "slug": "v020",
     "id": "1eqY73zNIPc",
     "sec": "m3",
-    "title": "důvody PROČ se Vám vyplatí CVIČIT"
+    "title": "důvody PROČ se Vám vyplatí CVIČIT",
+    "free": true
   },
   {
     "n": 21,
     "slug": "v021",
     "id": "nmNZ_Na_Y8k",
     "sec": "m3",
-    "title": "Trenik vs. strava"
+    "title": "Trenik vs. strava",
+    "free": false
   },
   {
     "n": 22,
     "slug": "v022",
     "id": "LLKv29TpU5Q",
     "sec": "m3",
-    "title": "Fitnes trénink"
+    "title": "Fitnes trénink",
+    "free": false
   },
   {
     "n": 23,
     "slug": "v023",
     "id": "tuCKpi-xNNc",
     "sec": "m3",
-    "title": "Aerobka"
+    "title": "Aerobka",
+    "free": false
   },
   {
     "n": 24,
     "slug": "v024",
     "id": "QBq2zjKlVtg",
     "sec": "m3",
-    "title": "Hiit"
+    "title": "Hiit",
+    "free": false
   },
   {
     "n": 25,
     "slug": "v025",
     "id": "X83D5t5x8SU",
     "sec": "m3",
-    "title": "Periodizace tréninkového plánu"
+    "title": "Periodizace tréninkového plánu",
+    "free": false
   },
   {
     "n": 26,
     "slug": "v026",
     "id": "QD4xrM1A9eo",
     "sec": "m4",
-    "title": "Míry a jejich měření"
+    "title": "Míry a jejich měření",
+    "free": true
   },
   {
     "n": 27,
     "slug": "v027",
     "id": "2smu-xDdtnI",
     "sec": "m4",
-    "title": "Jak upravovat plán co týden - dieta"
+    "title": "Jak upravovat plán co týden - dieta",
+    "free": false
   },
   {
     "n": 28,
     "slug": "v028",
     "id": "VyHo6wFnu0k",
     "sec": "m4",
-    "title": "Jak upravovat plán co týden - objem/nabírání"
+    "title": "Jak upravovat plán co týden - objem/nabírání",
+    "free": false
   },
   {
     "n": 29,
     "slug": "v029",
     "id": "vsGdHHX4dDk",
     "sec": "m4",
-    "title": "Reverse dieting"
+    "title": "Reverse dieting",
+    "free": false
   },
   {
     "n": 30,
     "slug": "v030",
     "id": "ewiqFzFy7pw",
     "sec": "m4",
-    "title": "Dorovnávání kalorií"
+    "title": "Dorovnávání kalorií",
+    "free": false
   },
   {
     "n": 31,
     "slug": "v031",
     "id": "XzOulZrfpGA",
     "sec": "m4",
-    "title": "Úpravy kalorií"
+    "title": "Úpravy kalorií",
+    "free": false
   },
   {
     "n": 32,
     "slug": "v032",
     "id": "mpmUdcdhoYw",
     "sec": "m4",
-    "title": "Sacharidové vlny"
+    "title": "Sacharidové vlny",
+    "free": false
   },
   {
     "n": 33,
     "slug": "v033",
     "id": "HOBhSib2DBQ",
     "sec": "m5",
-    "title": "Úvod do suplementů"
+    "title": "Úvod do suplementů",
+    "free": true
   },
   {
     "n": 34,
     "slug": "v034",
     "id": "ixgUU09VlKk",
     "sec": "m5",
-    "title": "Bcaa"
+    "title": "Bcaa",
+    "free": false
   },
   {
     "n": 35,
     "slug": "v035",
     "id": "2p4_QMnjcns",
     "sec": "m5",
-    "title": "Creatine"
+    "title": "Creatine",
+    "free": false
   },
   {
     "n": 36,
     "slug": "v036",
     "id": "d9c55pCE_eU",
     "sec": "m6",
-    "title": "Snídaně"
+    "title": "Snídaně",
+    "free": true
   },
   {
     "n": 37,
     "slug": "v037",
     "id": "SEFkmj6GL3c",
     "sec": "m6",
-    "title": "Více jídel = rychlejší spalování ?"
+    "title": "Více jídel = rychlejší spalování ?",
+    "free": false
   },
   {
     "n": 38,
     "slug": "v038",
     "id": "mpSPrsoFyUs",
     "sec": "m6",
-    "title": "Typy diet a proč fungují"
+    "title": "Typy diet a proč fungují",
+    "free": false
   },
   {
     "n": 39,
     "slug": "v039",
     "id": "mBM-d9YLrLU",
     "sec": "m7",
-    "title": "Úvod do kalorických tabulek"
+    "title": "Úvod do kalorických tabulek",
+    "free": true
   },
   {
     "n": 40,
     "slug": "v040",
     "id": "zvQ7Vb24Wgs",
     "sec": "m7",
-    "title": "Registrace do kalorických tabulek"
+    "title": "Registrace do kalorických tabulek",
+    "free": false
   },
   {
     "n": 41,
     "slug": "v041",
     "id": "Ry-MqgtANsg",
     "sec": "m7",
-    "title": "Jak přidat jídlo do kalorických tabulek"
+    "title": "Jak přidat jídlo do kalorických tabulek",
+    "free": false
   },
   {
     "n": 42,
     "slug": "v042",
     "id": "Bd4Y4u_bUWs",
     "sec": "m8",
-    "title": "Lidé umí zhubnout, ale ne formu udržet"
+    "title": "Lidé umí zhubnout, ale ne formu udržet",
+    "free": true
   },
   {
     "n": 43,
     "slug": "v043",
     "id": "69wjtb7ea80",
     "sec": "m8",
-    "title": "Hubneme díky kaloriím a vytvoření kalorického deficitu, ne kvůli zvolené formě stravování"
+    "title": "Hubneme díky kaloriím a vytvoření kalorického deficitu, ne kvůli zvolené formě stravování",
+    "free": false
   },
   {
     "n": 44,
     "slug": "v044",
     "id": "sxp-qC_u6CE",
     "sec": "m8",
-    "title": "Bílkoviny pomáhají hubnutí"
+    "title": "Bílkoviny pomáhají hubnutí",
+    "free": false
   },
   {
     "n": 45,
     "slug": "v045",
     "id": "q_BQjpdxhuo",
     "sec": "m8",
-    "title": "Vaše váha buded vždy kolísat"
+    "title": "Vaše váha buded vždy kolísat",
+    "free": false
   },
   {
     "n": 46,
     "slug": "v046",
     "id": "_DmLKhXVNEU",
     "sec": "techt",
-    "title": "Nováčci poprvé ve fitku"
+    "title": "Nováčci poprvé ve fitku",
+    "free": false
   },
   {
     "n": 47,
     "slug": "v047",
     "id": "gJPqKkdZ4Gw",
     "sec": "techt",
-    "title": "Nováčci zahřívačka"
+    "title": "Nováčci zahřívačka",
+    "free": false
   },
   {
     "n": 48,
     "slug": "v048",
     "id": "B-1NcX5tXTs",
     "sec": "techt",
-    "title": "Rozdělení tréninku a priority"
+    "title": "Rozdělení tréninku a priority",
+    "free": false
   },
   {
     "n": 49,
     "slug": "v049",
     "id": "CZuGx7YfDpQ",
     "sec": "techt",
-    "title": "Jak efektivně nastavit série, opakování a váhy"
+    "title": "Jak efektivně nastavit série, opakování a váhy",
+    "free": false
   },
   {
     "n": 50,
     "slug": "v050",
     "id": "x1egf49tFuo",
     "sec": "techt",
-    "title": "Rozbor Těla a Jak Svaly Pracují"
+    "title": "Rozbor Těla a Jak Svaly Pracují",
+    "free": false
   },
   {
     "n": 51,
     "slug": "v051",
     "id": "-BkVc69bHpc",
     "sec": "techt",
-    "title": "Držení těla a priority ve fitku"
+    "title": "Držení těla a priority ve fitku",
+    "free": false
   },
   {
     "n": 52,
     "slug": "v052",
     "id": "a8gg1cA_BFA",
     "sec": "techt",
-    "title": "Greatest legs Golden Era Bodybuilder TOM PLATZ Interview (CZ Titulky)"
+    "title": "Greatest legs Golden Era Bodybuilder TOM PLATZ Interview (CZ Titulky)",
+    "free": false
   },
   {
     "n": 53,
     "slug": "v053",
     "id": "p7B_sAqmDJI",
     "sec": "techt",
-    "title": "S tímhle TRENÉREM byste asi cvičit nechtěli"
+    "title": "S tímhle TRENÉREM byste asi cvičit nechtěli",
+    "free": false
   },
   {
     "n": 54,
     "slug": "v054",
     "id": "C4HBZiXm3aU",
     "sec": "techt",
-    "title": "Sezení v autě a bolesti zad"
+    "title": "Sezení v autě a bolesti zad",
+    "free": false
   },
   {
     "n": 55,
     "slug": "v055",
     "id": "WpaySOlAWr8",
     "sec": "techt",
-    "title": "Jak začít cvičit"
+    "title": "Jak začít cvičit",
+    "free": false
   },
   {
     "n": 56,
     "slug": "v056",
     "id": "Tj3Gwl-6ZwI",
     "sec": "techt",
-    "title": "Jak mít správné držení těla"
+    "title": "Jak mít správné držení těla",
+    "free": false
   },
   {
     "n": 57,
     "slug": "v057",
     "id": "ymIG60CMYMc",
     "sec": "techt",
-    "title": "Opakování v rezervě"
+    "title": "Opakování v rezervě",
+    "free": false
   },
   {
     "n": 58,
     "slug": "v058",
     "id": "MsPq9nUVTv4",
     "sec": "techt",
-    "title": "Progresivní přetížení"
+    "title": "Progresivní přetížení",
+    "free": false
   },
   {
     "n": 59,
     "slug": "v059",
     "id": "Gm2QHnJRyKA",
     "sec": "techt",
-    "title": "Fitness trénink - Opakování v rezervě (Reps In Reserve)"
+    "title": "Fitness trénink - Opakování v rezervě (Reps In Reserve)",
+    "free": false
   },
   {
     "n": 60,
     "slug": "v060",
     "id": "wvymFsLTl5A",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Kladivový úchop"
+    "title": "Jak procvičit biceps - Kladivový úchop",
+    "free": false
   },
   {
     "n": 61,
     "slug": "v061",
     "id": "AHi7KnPGxiY",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Kladka rovná tyč"
+    "title": "Jak procvičit biceps - Kladka rovná tyč",
+    "free": false
   },
   {
     "n": 62,
     "slug": "v062",
     "id": "BrTEy-6Gh8I",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Kladka lomená tyč široký úchop"
+    "title": "Jak procvičit biceps - Kladka lomená tyč široký úchop",
+    "free": false
   },
   {
     "n": 63,
     "slug": "v063",
     "id": "Wm_vnEhsI-8",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Kladka nadhmat"
+    "title": "Jak procvičit biceps - Kladka nadhmat",
+    "free": false
   },
   {
     "n": 64,
     "slug": "v064",
     "id": "NCiG2pGVleI",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Kladka provazy"
+    "title": "Jak procvičit biceps - Kladka provazy",
+    "free": false
   },
   {
     "n": 65,
     "slug": "v065",
     "id": "SEaTniP4-Yc",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Kladka široký kladivový úchop"
+    "title": "Jak procvičit biceps - Kladka široký kladivový úchop",
+    "free": false
   },
   {
     "n": 66,
     "slug": "v066",
     "id": "MuYC2R2NrGw",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Rovná tyč"
+    "title": "Jak procvičit biceps - Rovná tyč",
+    "free": false
   },
   {
     "n": 67,
     "slug": "v067",
     "id": "l3niOe3XTJE",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Jednoručky kladivový úchop"
+    "title": "Jak procvičit biceps - Jednoručky kladivový úchop",
+    "free": false
   },
   {
     "n": 68,
     "slug": "v068",
     "id": "HqSHfpGhWIs",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Jednoručky s rotací"
+    "title": "Jak procvičit biceps - Jednoručky s rotací",
+    "free": false
   },
   {
     "n": 69,
     "slug": "v069",
     "id": "vMNXEaRzdUg",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Jednoručky základ"
+    "title": "Jak procvičit biceps - Jednoručky základ",
+    "free": false
   },
   {
     "n": 70,
     "slug": "v070",
     "id": "cvUPCLQdVwc",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - V prodloužení"
+    "title": "Jak procvičit biceps - V prodloužení",
+    "free": false
   },
   {
     "n": 71,
     "slug": "v071",
     "id": "dpY8lic8J_E",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Scottova lavice kladivový úchop"
+    "title": "Jak procvičit biceps - Scottova lavice kladivový úchop",
+    "free": false
   },
   {
     "n": 72,
     "slug": "v072",
     "id": "P1VlCAxBTJw",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Scottova lavice základy"
+    "title": "Jak procvičit biceps - Scottova lavice základy",
+    "free": false
   },
   {
     "n": 73,
     "slug": "v073",
     "id": "5TZHaSokI54",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Scottova lavice rovná tyč"
+    "title": "Jak procvičit biceps - Scottova lavice rovná tyč",
+    "free": false
   },
   {
     "n": 74,
     "slug": "v074",
     "id": "_AbaIf4rEzU",
     "sec": "biceps",
-    "title": "Jak Správně Procvičit Biceps"
+    "title": "Jak Správně Procvičit Biceps",
+    "free": false
   },
   {
     "n": 75,
     "slug": "v075",
     "id": "MexkWU6KjFI",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Lomená tyč široký úchop"
+    "title": "Jak procvičit biceps - Lomená tyč široký úchop",
+    "free": false
   },
   {
     "n": 76,
     "slug": "v076",
     "id": "lRYiCoX9Piw",
     "sec": "biceps",
-    "title": "Jak procvičit biceps - Lomená tyč úzký úchop"
+    "title": "Jak procvičit biceps - Lomená tyč úzký úchop",
+    "free": false
   },
   {
     "n": 77,
     "slug": "v077",
     "id": "X5mxDSmMGO8",
     "sec": "doma",
-    "title": "Domácí intervalový trénink na celé tělo"
+    "title": "Domácí intervalový trénink na celé tělo",
+    "free": false
   },
   {
     "n": 78,
     "slug": "v078",
     "id": "ScTnC2p5kwg",
     "sec": "doma",
-    "title": "Domácí kruháč s Natálkou"
+    "title": "Domácí kruháč s Natálkou",
+    "free": false
   },
   {
     "n": 79,
     "slug": "v079",
     "id": "zYc-De_eo0k",
     "sec": "doma",
-    "title": "Domácí kruháč nohy a břicho"
+    "title": "Domácí kruháč nohy a břicho",
+    "free": false
   },
   {
     "n": 80,
     "slug": "v080",
     "id": "lsqCIIMmywU",
     "sec": "doma",
-    "title": "Domácí kruháč nohy a střed"
+    "title": "Domácí kruháč nohy a střed",
+    "free": false
   },
   {
     "n": 81,
     "slug": "v081",
     "id": "-F6V7nlYsz4",
     "sec": "doma",
-    "title": "Domácí kruháč celé tělo"
+    "title": "Domácí kruháč celé tělo",
+    "free": false
   },
   {
     "n": 82,
     "slug": "v082",
     "id": "QLUTLHVzf2M",
     "sec": "doma",
-    "title": "Domácí trénink vršek těla"
+    "title": "Domácí trénink vršek těla",
+    "free": false
   },
   {
     "n": 83,
     "slug": "v083",
     "id": "uDMGe9YjXOQ",
     "sec": "doma",
-    "title": "Domácí kruháč nohy"
+    "title": "Domácí kruháč nohy",
+    "free": false
   },
   {
     "n": 84,
     "slug": "v084",
     "id": "nYqmn-1ZN88",
     "sec": "doma",
-    "title": "Domácí trénink břicho"
+    "title": "Domácí trénink břicho",
+    "free": false
   },
   {
     "n": 85,
     "slug": "v085",
     "id": "9NiwzDSuIjw",
     "sec": "doma",
-    "title": "Domácí trénínky úvod"
+    "title": "Domácí trénínky úvod",
+    "free": false
   },
   {
     "n": 86,
     "slug": "v086",
     "id": "oaBxpKlMPWI",
     "sec": "doma",
-    "title": "Domácí trénink - BŘICHO"
+    "title": "Domácí trénink - BŘICHO",
+    "free": false
   },
   {
     "n": 87,
     "slug": "v087",
     "id": "A3eZ4b9RV4s",
     "sec": "doma",
-    "title": "Domácí trénink - NOHY"
+    "title": "Domácí trénink - NOHY",
+    "free": false
   },
   {
     "n": 88,
     "slug": "v088",
     "id": "L83N25-svw4",
     "sec": "doma",
-    "title": "Kruhový trénink na doma 1"
+    "title": "Kruhový trénink na doma 1",
+    "free": false
   },
   {
     "n": 89,
     "slug": "v089",
     "id": "tB1EHgtZjTk",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Potřebuji přerušované hladovění, abych zhubla?"
+    "title": "Bloncka se ptá Coache - Potřebuji přerušované hladovění, abych zhubla?",
+    "free": false
   },
   {
     "n": 90,
     "slug": "v090",
     "id": "WTVKXnWKQkY",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Proč nehubnu, i když jím zdravě"
+    "title": "Bloncka se ptá Coache - Proč nehubnu, i když jím zdravě",
+    "free": false
   },
   {
     "n": 91,
     "slug": "v091",
     "id": "aqvkEiRN6b4",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Úvod"
+    "title": "Bloncka se ptá Coache - Úvod",
+    "free": false
   },
   {
     "n": 92,
     "slug": "v092",
     "id": "2VXE7IpgIeU",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Potřebuji kupovat BIO/Fit potraviny?"
+    "title": "Bloncka se ptá Coache - Potřebuji kupovat BIO/Fit potraviny?",
+    "free": false
   },
   {
     "n": 93,
     "slug": "v093",
     "id": "Ysv9FaOAzu8",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Potřebuji k hubnutí spalovače?"
+    "title": "Bloncka se ptá Coache - Potřebuji k hubnutí spalovače?",
+    "free": false
   },
   {
     "n": 94,
     "slug": "v094",
     "id": "u7UF9cEftu4",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Rychlé hubnutí před dovolenou"
+    "title": "Bloncka se ptá Coache - Rychlé hubnutí před dovolenou",
+    "free": false
   },
   {
     "n": 95,
     "slug": "v095",
     "id": "42wgUAyTMRw",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Jaké sportovní aktivity jsou nejefektivnější pro hubnutí?"
+    "title": "Bloncka se ptá Coache - Jaké sportovní aktivity jsou nejefektivnější pro hubnutí?",
+    "free": false
   },
   {
     "n": 96,
     "slug": "v096",
     "id": "JfVqnfPv8b0",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Jak zpevnit postavu?"
+    "title": "Bloncka se ptá Coache - Jak zpevnit postavu?",
+    "free": false
   },
   {
     "n": 97,
     "slug": "v097",
     "id": "FmIu7IQQZU8",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Mají muži lepší dispozice pro nabírání svalů než ženy?"
+    "title": "Bloncka se ptá Coache - Mají muži lepší dispozice pro nabírání svalů než ženy?",
+    "free": false
   },
   {
     "n": 98,
     "slug": "v098",
     "id": "nsJpnshhnPE",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Jak vybrat nejlepšího trenéra?"
+    "title": "Bloncka se ptá Coache - Jak vybrat nejlepšího trenéra?",
+    "free": false
   },
   {
     "n": 99,
     "slug": "v099",
     "id": "_DdjaHsucfg",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Proč mám velké nohy?"
+    "title": "Bloncka se ptá Coache - Proč mám velké nohy?",
+    "free": false
   },
   {
     "n": 100,
     "slug": "v100",
     "id": "7cPgfQ0N9xc",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Jak cvičit doma?"
+    "title": "Bloncka se ptá Coache - Jak cvičit doma?",
+    "free": false
   },
   {
     "n": 101,
     "slug": "v101",
     "id": "X4wr6B5imzg",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Jak mít hezké břicho?"
+    "title": "Bloncka se ptá Coache - Jak mít hezké břicho?",
+    "free": false
   },
   {
     "n": 102,
     "slug": "v102",
     "id": "dLB8HU-stB0",
     "sec": "bloncka",
-    "title": "Bloncka se ptá Coache - Jak cvičit s artrózou?"
+    "title": "Bloncka se ptá Coache - Jak cvičit s artrózou?",
+    "free": false
   },
   {
     "n": 103,
     "slug": "v103",
     "id": "H0DS7056DK8",
     "sec": "rozhovory",
-    "title": "Rozhovor - Institut Moderní Výživy"
+    "title": "Rozhovor - Institut Moderní Výživy",
+    "free": false
   },
   {
     "n": 104,
     "slug": "v104",
     "id": "SOFJ3_yH8qc",
     "sec": "rozhovory",
-    "title": "Rozhovor - Miloslav Šindelář (Institut Moderní Výživy)"
+    "title": "Rozhovor - Miloslav Šindelář (Institut Moderní Výživy)",
+    "free": false
   },
   {
     "n": 105,
     "slug": "v105",
     "id": "mFgtqzFLe2U",
     "sec": "rozhovory",
-    "title": "Rozhovor - Lukáš Roubík (Institut Moderní Výživy)"
+    "title": "Rozhovor - Lukáš Roubík (Institut Moderní Výživy)",
+    "free": false
   },
   {
     "n": 106,
     "slug": "v106",
     "id": "Cr18TQ77aa8",
     "sec": "rozhovory",
-    "title": "Rozhovor s klienty - Rozhovor s Matěj Misař"
+    "title": "Rozhovor s klienty - Rozhovor s Matěj Misař",
+    "free": false
   },
   {
     "n": 107,
     "slug": "v107",
     "id": "4qQEkwnMlj4",
     "sec": "rozhovory",
-    "title": "Rozhovor - MUDr. Marie Skalská"
+    "title": "Rozhovor - MUDr. Marie Skalská",
+    "free": false
   },
   {
     "n": 108,
     "slug": "v108",
     "id": "5WexzPAf8AY",
     "sec": "rozhovory",
-    "title": "Rozhovor - Mgr. Ing. Tereza Vágnerová"
+    "title": "Rozhovor - Mgr. Ing. Tereza Vágnerová",
+    "free": false
   },
   {
     "n": 109,
     "slug": "v109",
     "id": "7rEDRsyNwEE",
     "sec": "rozhovory",
-    "title": "Studie: Přerušované hubnutí"
+    "title": "Studie: Přerušované hubnutí",
+    "free": false
   },
   {
     "n": 110,
     "slug": "v110",
     "id": "IQ2XtPr7tMs",
     "sec": "rozhovory",
-    "title": "Studie: Alkohol a atletický výkon"
+    "title": "Studie: Alkohol a atletický výkon",
+    "free": false
   },
   {
     "n": 111,
     "slug": "v111",
     "id": "MiIGjV-F830",
     "sec": "rozhovory",
-    "title": "Studie: Strava a záněty"
+    "title": "Studie: Strava a záněty",
+    "free": false
   },
   {
     "n": 112,
     "slug": "v112",
     "id": "ka5hmu7lcDg",
     "sec": "rozhovory",
-    "title": "Studie: Rozdělení bílkovin do jídel a svaly"
+    "title": "Studie: Rozdělení bílkovin do jídel a svaly",
+    "free": false
   },
   {
     "n": 113,
     "slug": "v113",
     "id": "m_zIXC8OWTo",
     "sec": "rozhovory",
-    "title": "Studie: Keto dieta vs Vysokosacharidová dieta"
+    "title": "Studie: Keto dieta vs Vysokosacharidová dieta",
+    "free": false
   },
   {
     "n": 114,
     "slug": "v114",
     "id": "v4kJlTfcKmA",
     "sec": "nakupy",
-    "title": "Jak nakoupit DIETNĚ a FITNESS v LIDL"
+    "title": "Jak nakoupit DIETNĚ a FITNESS v LIDL",
+    "free": false
   },
   {
     "n": 115,
     "slug": "v115",
     "id": "6ydMPGvF_hU",
     "sec": "nakupy",
-    "title": "Jak nakoupit DIETNĚ a FITNESS v JIP 1. díl"
+    "title": "Jak nakoupit DIETNĚ a FITNESS v JIP 1. díl",
+    "free": false
   },
   {
     "n": 116,
     "slug": "v116",
     "id": "xRUZBLxtAUY",
     "sec": "nakupy",
-    "title": "Jak nakoupit DIETNĚ a FITNESS v JIP - Verze pro klienty :)"
+    "title": "Jak nakoupit DIETNĚ a FITNESS v JIP - Verze pro klienty :)",
+    "free": false
   },
   {
     "n": 117,
     "slug": "v117",
     "id": "sdAiDTcI68w",
     "sec": "nakupy",
-    "title": "Jak nakoupit DIETNĚ a FITNESS v JIP 2. díl"
+    "title": "Jak nakoupit DIETNĚ a FITNESS v JIP 2. díl",
+    "free": false
   },
   {
     "n": 118,
     "slug": "v118",
     "id": "EPk1_CwG5ZI",
     "sec": "nakupy",
-    "title": "Jak co NEJLEVNĚJI nakoupit DIETNÍ jídla v Tesco"
+    "title": "Jak co NEJLEVNĚJI nakoupit DIETNÍ jídla v Tesco",
+    "free": false
   },
   {
     "n": 119,
     "slug": "v119",
     "id": "fOCvcMPU7vo",
     "sec": "live",
-    "title": "1. Livestream členská sekce"
+    "title": "1. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 120,
     "slug": "v120",
     "id": "1PlbJ547sU8",
     "sec": "live",
-    "title": "2. Livestream členská sekce"
+    "title": "2. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 121,
     "slug": "v121",
     "id": "Hqc4rZ3PUpE",
     "sec": "live",
-    "title": "3. Livestream členská sekce"
+    "title": "3. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 122,
     "slug": "v122",
     "id": "gj8-8refQJA",
     "sec": "live",
-    "title": "4. Livestream členská sekce"
+    "title": "4. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 123,
     "slug": "v123",
     "id": "3jCP7D54Z3g",
     "sec": "live",
-    "title": "5. Livestream členská sekce"
+    "title": "5. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 124,
     "slug": "v124",
     "id": "_jDaJCV_xc8",
     "sec": "live",
-    "title": "6. Livestream členská sekce"
+    "title": "6. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 125,
     "slug": "v125",
     "id": "wkYq6IAVca8",
     "sec": "live",
-    "title": "7. Livestream členská sekce"
+    "title": "7. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 126,
     "slug": "v126",
     "id": "DTPYlQttluE",
     "sec": "live",
-    "title": "8. Livestream členská sekce"
+    "title": "8. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 127,
     "slug": "v127",
     "id": "Li41_Z33hOE",
     "sec": "live",
-    "title": "9. Livestream členská sekce"
+    "title": "9. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 128,
     "slug": "v128",
     "id": "q7srTq1Tsuw",
     "sec": "live",
-    "title": "10. Livestream členská sekce"
+    "title": "10. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 129,
     "slug": "v129",
     "id": "3K5Mhogpx_4",
     "sec": "live",
-    "title": "11. Livestream členská sekce"
+    "title": "11. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 130,
     "slug": "v130",
     "id": "YFXtGc-ALXI",
     "sec": "live",
-    "title": "12. Livestream členská sekce"
+    "title": "12. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 131,
     "slug": "v131",
     "id": "fLpIhaI01us",
     "sec": "live",
-    "title": "13. Livestream členská sekce"
+    "title": "13. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 132,
     "slug": "v132",
     "id": "_-k0h2XY-FM",
     "sec": "live",
-    "title": "14. Livestream členská sekce"
+    "title": "14. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 133,
     "slug": "v133",
     "id": "fXVdyDBZnYw",
     "sec": "live",
-    "title": "15. Livestream členská sekce"
+    "title": "15. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 134,
     "slug": "v134",
     "id": "CesDR676vfI",
     "sec": "live",
-    "title": "16. Livestream členská sekce"
+    "title": "16. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 135,
     "slug": "v135",
     "id": "Mh4IzV3dI3s",
     "sec": "live",
-    "title": "17. Livestream členská sekce"
+    "title": "17. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 136,
     "slug": "v136",
     "id": "nkcY-A0fxnY",
     "sec": "live",
-    "title": "18. Livestream členská sekce"
+    "title": "18. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 137,
     "slug": "v137",
     "id": "AYsaEcAe3iM",
     "sec": "live",
-    "title": "19. Livestream členská sekce"
+    "title": "19. Livestream členská sekce",
+    "free": false
   },
   {
     "n": 138,
     "slug": "v138",
     "id": "J_C5iUsJBxE",
     "sec": "live",
-    "title": "LIVESTREAM ZDARMA PRO ZÁKAZNÍKY a KLIENTY martinbarna.cz"
+    "title": "LIVESTREAM ZDARMA PRO ZÁKAZNÍKY a KLIENTY martinbarna.cz",
+    "free": false
   },
   {
     "n": 139,
     "slug": "v139",
     "id": "lo8H7Am_9YA",
     "sec": "live",
-    "title": "Livestream Členská Sekce 01/2025"
+    "title": "Livestream Členská Sekce 01/2025",
+    "free": false
   },
   {
     "n": 140,
     "slug": "v140",
     "id": "Y9qgJ7KsMLM",
     "sec": "live",
-    "title": "Livestream Členská Sekce 02/2025"
+    "title": "Livestream Členská Sekce 02/2025",
+    "free": false
   },
   {
     "n": 141,
     "slug": "v141",
     "id": "y04TC-ve5d8",
     "sec": "doplnkova",
-    "title": "Můžu pít alkohol a hubnout?"
+    "title": "Můžu pít alkohol a hubnout?",
+    "free": false
   },
   {
     "n": 142,
     "slug": "v142",
     "id": "140jr0lRNe4",
     "sec": "doplnkova",
-    "title": "denní výzvy"
+    "title": "denní výzvy",
+    "free": false
   },
   {
     "n": 143,
     "slug": "v143",
     "id": "iXCVJDk8-TY",
     "sec": "doplnkova",
-    "title": "Bcaa"
+    "title": "Bcaa",
+    "free": false
   },
   {
     "n": 144,
     "slug": "v144",
     "id": "qvUmWPjOgx0",
     "sec": "doplnkova",
-    "title": "Ketogenní dieta a maximalizace svalového růstu"
+    "title": "Ketogenní dieta a maximalizace svalového růstu",
+    "free": false
   },
   {
     "n": 145,
     "slug": "v145",
     "id": "hO4Zu7AhBCs",
     "sec": "doplnkova",
-    "title": "Proč vám nefungují vypočtené kcal cíle / nepřesnosti vážení a zapisování jídel"
+    "title": "Proč vám nefungují vypočtené kcal cíle / nepřesnosti vážení a zapisování jídel",
+    "free": false
   },
   {
     "n": 146,
     "slug": "v146",
     "id": "L6KP3Jes_sQ",
     "sec": "doplnkova",
-    "title": "Záznam live streamu na závodech s klientkou Verčou Bikini Fitness, 1. Místo ženy, 1. místo juniorky"
+    "title": "Záznam live streamu na závodech s klientkou Verčou Bikini Fitness, 1. Místo ženy, 1. místo juniorky",
+    "free": false
   },
   {
     "n": 147,
     "slug": "v147",
     "id": "l_2VPypWLXk",
     "sec": "doplnkova",
-    "title": "Kalorie a jejich role v našem životě"
+    "title": "Kalorie a jejich role v našem životě",
+    "free": false
   },
   {
     "n": 148,
     "slug": "v148",
     "id": "f6FIw2XHyR4",
     "sec": "doplnkova",
-    "title": "Update členská sekce: pravidelné maily a týdenní úkoly"
+    "title": "Update členská sekce: pravidelné maily a týdenní úkoly",
+    "free": false
   },
   {
     "n": 149,
     "slug": "v149",
     "id": "AP8HgHmbTFI",
     "sec": "doplnkova",
-    "title": "Makroživiny a mikroživiny"
+    "title": "Makroživiny a mikroživiny",
+    "free": false
   },
   {
     "n": 150,
     "slug": "v150",
     "id": "4Gl_piQr6RM",
     "sec": "doplnkova",
-    "title": "Bílkoviny a cvičení"
+    "title": "Bílkoviny a cvičení",
+    "free": false
   },
   {
     "n": 151,
     "slug": "v151",
     "id": "Rg2HO63aDcg",
     "sec": "doplnkova",
-    "title": "Cheat day / cheat meal v praxi"
+    "title": "Cheat day / cheat meal v praxi",
+    "free": false
   },
   {
     "n": 152,
     "slug": "v152",
     "id": "N3DIVoyZedw",
     "sec": "doplnkova",
-    "title": "Klíč k hubnutí"
+    "title": "Klíč k hubnutí",
+    "free": false
   },
   {
     "n": 153,
     "slug": "v153",
     "id": "KEi1NSRniW0",
     "sec": "doplnkova",
-    "title": "Složení jídelníčku"
+    "title": "Složení jídelníčku",
+    "free": false
   },
   {
     "n": 154,
     "slug": "v154",
     "id": "nJZijxAG9oc",
     "sec": "doplnkova",
-    "title": "Termický Efekt Jídla = Ztráty energie při trávení"
+    "title": "Termický Efekt Jídla = Ztráty energie při trávení",
+    "free": false
   },
   {
     "n": 155,
     "slug": "v155",
     "id": "rAbX5H0s1cs",
     "sec": "doplnkova",
-    "title": "2. Mail členská sekce - týdenní úkoly"
+    "title": "2. Mail členská sekce - týdenní úkoly",
+    "free": false
   },
   {
     "n": 156,
     "slug": "v156",
     "id": "sM0wAjTk81c",
     "sec": "doplnkova",
-    "title": "Období po dietě / reverzní dieta / přechod na intuitivní stravování / nabírání svalů s minimem tuků"
+    "title": "Období po dietě / reverzní dieta / přechod na intuitivní stravování / nabírání svalů s minimem tuků",
+    "free": false
   },
   {
     "n": 157,
     "slug": "v157",
     "id": "CZgFrmfNNJ4",
     "sec": "doplnkova",
-    "title": "Jojo efekt"
+    "title": "Jojo efekt",
+    "free": false
   },
   {
     "n": 158,
     "slug": "v158",
     "id": "NHxYKYkQEvA",
     "sec": "doplnkova",
-    "title": "Načasování jídel"
+    "title": "Načasování jídel",
+    "free": false
   },
   {
     "n": 159,
     "slug": "v159",
     "id": "Kc0g5Bu_HAg",
     "sec": "doplnkova",
-    "title": "Jak mít pravidelné výsledky?"
+    "title": "Jak mít pravidelné výsledky?",
+    "free": false
   },
   {
     "n": 160,
     "slug": "v160",
     "id": "3j1SPGqvoMc",
     "sec": "doplnkova",
-    "title": "Analogie na hubnutí"
+    "title": "Analogie na hubnutí",
+    "free": false
   },
   {
     "n": 161,
     "slug": "v161",
     "id": "w4IuZdO23pw",
     "sec": "doplnkova",
-    "title": "Jak funguje můj online coaching pro hubnutí?"
+    "title": "Jak funguje můj online coaching pro hubnutí?",
+    "free": false
   },
   {
     "n": 162,
     "slug": "v162",
     "id": "JSJDgQN-xPI",
     "sec": "doplnkova",
-    "title": "Alkohol a hubnutí"
+    "title": "Alkohol a hubnutí",
+    "free": false
   },
   {
     "n": 163,
     "slug": "v163",
     "id": "jv6IX7tMp_U",
     "sec": "doplnkova",
-    "title": "Ovoce vs sušenka / zpracované vs čerstvé potraviny"
+    "title": "Ovoce vs sušenka / zpracované vs čerstvé potraviny",
+    "free": false
   },
   {
     "n": 164,
     "slug": "v164",
     "id": "J9CkUn7Pc-s",
     "sec": "doplnkova",
-    "title": "Jak funguje můj online coaching pro hubnutí"
+    "title": "Jak funguje můj online coaching pro hubnutí",
+    "free": false
   },
   {
     "n": 165,
     "slug": "v165",
     "id": "7hGViNRKZPA",
     "sec": "doplnkova",
-    "title": "Maso vs proteinový prášek"
+    "title": "Maso vs proteinový prášek",
+    "free": false
   },
   {
     "n": 166,
     "slug": "v166",
     "id": "WCiyKX6vqiU",
     "sec": "doplnkova",
-    "title": "Jak nemít chutě"
+    "title": "Jak nemít chutě",
+    "free": false
   },
   {
     "n": 167,
     "slug": "v167",
     "id": "YwDub73D-js",
     "sec": "doplnkova",
-    "title": "Dieta a záněty"
+    "title": "Dieta a záněty",
+    "free": false
   },
   {
     "n": 168,
     "slug": "v168",
     "id": "hhkk4AWIKaw",
     "sec": "doplnkova",
-    "title": "Ketogenní dieta vs sacharidy"
+    "title": "Ketogenní dieta vs sacharidy",
+    "free": false
   },
   {
     "n": 169,
     "slug": "v169",
     "id": "Sn5mRQZCjGc",
     "sec": "doplnkova",
-    "title": "Jak poznat že cvičím až moc často?"
+    "title": "Jak poznat že cvičím až moc často?",
+    "free": false
   },
   {
     "n": 170,
     "slug": "v170",
     "id": "OjSYhrf7_4I",
     "sec": "doplnkova",
-    "title": "Proč hubnu v různých fázích diety na různém množství kcal?"
+    "title": "Proč hubnu v různých fázích diety na různém množství kcal?",
+    "free": false
   },
   {
     "n": 171,
     "slug": "v171",
     "id": "o4CphPZuFpA",
     "sec": "doplnkova",
-    "title": "Způsobuje aspartam rakovinu?"
+    "title": "Způsobuje aspartam rakovinu?",
+    "free": false
   },
   {
     "n": 172,
     "slug": "v172",
     "id": "jGxlOUx5_qo",
     "sec": "doplnkova",
-    "title": "Praktické tipy a otázky klientů 1"
+    "title": "Praktické tipy a otázky klientů 1",
+    "free": false
   },
   {
     "n": 173,
     "slug": "v173",
     "id": "xqXu0S8PGrM",
     "sec": "doplnkova",
-    "title": "Reels 27 Nevzdávej se"
+    "title": "Reels 27 Nevzdávej se",
+    "free": false
   },
   {
     "n": 174,
     "slug": "v174",
     "id": "nTd4_gS-KG8",
     "sec": "doplnkova",
-    "title": "Praktické tipy a otázky klientů 2"
+    "title": "Praktické tipy a otázky klientů 2",
+    "free": false
   },
   {
     "n": 175,
     "slug": "v175",
     "id": "-_BBISP5QYc",
     "sec": "doplnkova",
-    "title": "Ukázka z mé přednášky v kině 🎤"
+    "title": "Ukázka z mé přednášky v kině 🎤",
+    "free": false
   },
   {
     "n": 176,
     "slug": "v176",
     "id": "m8lAjdQmiAA",
     "sec": "doplnkova",
-    "title": "Jak překonat stagnaci při hubnutí a udržet motivaci."
+    "title": "Jak překonat stagnaci při hubnutí a udržet motivaci.",
+    "free": false
   },
   {
     "n": 177,
     "slug": "v177",
     "id": "rh75bQm5L6U",
     "sec": "doplnkova",
-    "title": "Návštěva České televize Jak si správně vybrat trenéra"
+    "title": "Návštěva České televize Jak si správně vybrat trenéra",
+    "free": false
   },
   {
     "n": 178,
     "slug": "v178",
     "id": "sQ40sVlPu8Q",
     "sec": "doplnkova",
-    "title": "Návštěva České televize Jak si správně vybrat trenéra 2"
+    "title": "Návštěva České televize Jak si správně vybrat trenéra 2",
+    "free": false
   },
   {
     "n": 179,
     "slug": "v179",
     "id": "rRIFwyoJr78",
     "sec": "doplnkova",
-    "title": "Přerušované hladovění vs jiné formy stravování"
+    "title": "Přerušované hladovění vs jiné formy stravování",
+    "free": false
   },
   {
     "n": 180,
     "slug": "v180",
     "id": "nx-pGOny5tI",
     "sec": "doplnkova",
-    "title": "Lze hubnout i s ALKOHOLEM a SLADKÝM?"
+    "title": "Lze hubnout i s ALKOHOLEM a SLADKÝM?",
+    "free": false
   },
   {
     "n": 181,
     "slug": "v181",
     "id": "r173RlSl3v8",
     "sec": "doplnkova",
-    "title": "NOVĚ! AI APLIKACE ve VIDEOKURZU"
+    "title": "NOVĚ! AI APLIKACE ve VIDEOKURZU",
+    "free": false
   },
   {
     "n": 182,
     "slug": "v182",
     "id": "Y0S9_VPWBxM",
     "sec": "doplnkova",
-    "title": "Jak zvýšit množství vlákniny v dietním jídelníčku?"
+    "title": "Jak zvýšit množství vlákniny v dietním jídelníčku?",
+    "free": false
   }
 ]

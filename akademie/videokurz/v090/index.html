@@ -8,13 +8,16 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
-<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<link rel="stylesheet" href="/assets/ba-ui.css">
 <style>
   .wrap { max-width:880px; margin:0 auto; padding:30px 18px 80px; }
   .crumb { color:var(--gold-soft); font-size:.74rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
   h1 { font-size:clamp(1.5rem,3.5vw,2rem); line-height:1.2; color:#fff; margin:.5rem 0 1.3rem; letter-spacing:-.02em; }
   .video { position:relative; padding-top:56.25%; background:#000; border-radius:18px; overflow:hidden; border:1px solid var(--line); box-shadow:0 30px 60px -30px rgba(0,0,0,.9); }
   .video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .vlock { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:var(--muted-2); }
+  .vlock-ico { font-size:2rem; opacity:.8; }
+  .vlock p { font-size:.92rem; margin:0; }
   .done-row { margin-top:1.7rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
   .btn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:13px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; }
   .btn:hover { transform:translateY(-2px); }
@@ -39,9 +42,7 @@
     <div class="crumb">Bloncka se ptá Coache · Video 90 / 182</div>
     <h1>Bloncka se ptá Coache - Proč nehubnu, i když jím zdravě</h1>
 
-    <div class="video">
-      <iframe src="https://www.youtube-nocookie.com/embed/WTVKXnWKQkY?rel=0&modestbranding=1" title="Bloncka se ptá Coache - Proč nehubnu, i když jím zdravě" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
+    <div class="video" id="vidbox"><div class="vlock"><span class="vlock-ico">🔒</span><p>Video se načítá po ověření přístupu…</p></div></div>
 
     <div class="done-row">
       <button class="btn" id="doneBtn">Označit jako zhlédnuté ✓</button>
@@ -55,12 +56,26 @@
     <p class="foot">© Videokurz Martin Barna. Video je dostupné jen přihlášeným s aktivním přístupem.</p>
   </div>
 
-  <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260628b"></script>
-<script src="/assets/academy-upsell.js?v=20260629" defer></script>
-  <script src="/assets/scroll-top.js?v=20260628b" defer></script>
+  <script src="/assets/ba-config.js"></script>
+  <script src="/assets/ba-academy.js?v=20260702c"></script>
+  <script src="/assets/academy-upsell.js" defer></script>
+  <script src="/assets/scroll-top.js" defer></script>
   <script>
-    var LID='vk-WTVKXnWKQkY', PRODUCT='videokurz', FREE=false, GUEST=false, state={done:false};
+    var LID='vk-v090', SLUG='v090', PRODUCT='videokurz', FREE=false, GUEST=false, state={done:false};
+    // Placené video: YouTube ID není v HTML — načte se z DB manifestu až po ověření přístupu (RLS).
+    function mountVideo(){
+      if (FREE || !window.BA || typeof window.BA.getVideoId !== 'function') return;
+      window.BA.getVideoId(SLUG).then(function(id){
+        if (!id) return;
+        var box = document.getElementById('vidbox'); if (!box) return;
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1';
+        f.title = document.querySelector('h1') ? document.querySelector('h1').textContent : 'Video';
+        f.loading = 'lazy'; f.allowFullscreen = true;
+        f.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        box.innerHTML = ''; box.appendChild(f);
+      });
+    }
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
     function lsDone(){ try{ return !!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){ return false; } }
@@ -76,7 +91,7 @@
                 window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); });
               });
             }
-            else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+            else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; mountVideo(); window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
           }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
