@@ -195,6 +195,23 @@ Deno.serve(async (req: Request) => {
     if (k !== "secret" && String(v).trim() !== "") body[k] = v;
   }
 
+  // Rozpracovana objednavka (produkt -> Webhook po objednani, ?event=order): JEN zapis
+  // do pending_orders — zadny grant, plati se az potom. Kdyz platba nedorazi, posle
+  // order-rescue jednu pripominku; platba niz oznaci completed.
+  if (pick(body, ["event"]).toLowerCase() === "order") {
+    const oEmail = pick(body, ["email", "mail"]).toLowerCase();
+    const oProduct = resolveProduct(pick(body, ["product", "produkt"]));
+    const oId = pick(body, ["order_id", "order_number", "number", "id"]);
+    if (oEmail.includes("@") && oProduct && oId) {
+      const oName = (pick(body, ["firstname", "customer_firstname"]) + " " + pick(body, ["lastname", "customer_lastname"])).trim();
+      await admin.from("pending_orders").upsert(
+        { order_id: oId, email: oEmail, product: oProduct, name: oName || null },
+        { onConflict: "order_id" },
+      );
+    }
+    return json({ ok: true, pending: true }, 200);
+  }
+
   // Stav platby.
   const status = pick(body, ["status", "stav", "payment_status", "state"]).toLowerCase();
   const flags = Number(pick(body, ["flags"])) || 0;
@@ -243,6 +260,9 @@ Deno.serve(async (req: Request) => {
     { onConflict: "email,product" },
   );
   if (error) return json({ error: "db", detail: error.message }, 500);
+
+  // Zaplaceno -> rozpracovane objednavky zakaznika na tento produkt uz nepripominat.
+  try { await admin.from("pending_orders").update({ completed: true }).eq("email", email).eq("product", product); } catch { /* best-effort */ }
 
   // Uvitaci e-mail (jen pri prvnim udeleni) — best-effort, nikdy neshodi grant.
   const name = (pick(body, ["firstname", "customer_firstname", "jmeno"]) + " " + pick(body, ["lastname", "customer_lastname", "prijmeni"])).trim();
