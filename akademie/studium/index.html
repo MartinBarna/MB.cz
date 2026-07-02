@@ -655,7 +655,15 @@
     function hashScrollOnce(){
       if(_hashScrolled || !location.hash || /^#(m\d+|prehled)?$/.test(location.hash)) return;
       var t=null; try { t=document.querySelector(location.hash); } catch(e){}
-      if(t){ _hashScrolled = true; setTimeout(function(){ t.scrollIntoView(); }, 50); }
+      if(!t) return;
+      _hashScrolled = true;
+      var go = function(){ t.scrollIntoView(); };
+      if(document.visibilityState === 'hidden'){
+        // tab na pozadí (ctrl+klik) — Chrome scroll potlačí, doscrolluj po zviditelnění
+        document.addEventListener('visibilitychange', function h(){
+          if(document.visibilityState === 'visible'){ document.removeEventListener('visibilitychange', h); setTimeout(go, 50); }
+        });
+      } else { setTimeout(go, 50); }
     }
   </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
