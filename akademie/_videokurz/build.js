@@ -112,7 +112,9 @@ SECTIONS.forEach(s => {
   list.forEach(v => ordered.push(v));
 });
 // přiřaď výsledné pořadové číslo + slug složky
-ordered.forEach((v, i) => { v.n = i + 1; v.slug = 'v' + String(i + 1).padStart(3, '0'); v.lid = 'vk-' + v.id; });
+// LID je slug-based ('vk-v001'), NE YouTube ID — ID placených videí nesmí být ve statickém
+// HTML (nástěnka, progress klíče). Stará data progressu zmigrována v DB (vk-<ytid> → vk-v###).
+ordered.forEach((v, i) => { v.n = i + 1; v.slug = 'v' + String(i + 1).padStart(3, '0'); v.lid = 'vk-' + v.slug; });
 // Free tier (#35/#37): ochutnávka napříč kurzem — Modul 1 první 4 lekce + první lekce
 // z každého dalšího modulu (m2–m8), ať návštěvník vidí šíři kurzu → silnější upsell na koupi.
 const BUY_URL = 'https://form.simpleshop.cz/3Vbl/buy/';
@@ -150,6 +152,9 @@ function videoPage(v) {
   h1 { font-size:clamp(1.5rem,3.5vw,2rem); line-height:1.2; color:#fff; margin:.5rem 0 1.3rem; letter-spacing:-.02em; }
   .video { position:relative; padding-top:56.25%; background:#000; border-radius:18px; overflow:hidden; border:1px solid var(--line); box-shadow:0 30px 60px -30px rgba(0,0,0,.9); }
   .video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .vlock { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:var(--muted-2); }
+  .vlock-ico { font-size:2rem; opacity:.8; }
+  .vlock p { font-size:.92rem; margin:0; }
   .done-row { margin-top:1.7rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
   .btn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:13px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; }
   .btn:hover { transform:translateY(-2px); }
@@ -174,9 +179,9 @@ function videoPage(v) {
     <div class="crumb">${esc(secName)} · Video ${v.n} / ${ordered.length}</div>
     <h1>${esc(v.disp)}</h1>
 
-    <div class="video">
-      <iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0&modestbranding=1" title="${esc(v.disp)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
+    ${v.free
+      ? `<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0&modestbranding=1" title="${esc(v.disp)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
+      : `<div class="video" id="vidbox"><div class="vlock"><span class="vlock-ico">🔒</span><p>Video se načítá po ověření přístupu…</p></div></div>`}
 
     <div class="done-row">
       <button class="btn" id="doneBtn">Označit jako zhlédnuté ✓</button>
@@ -191,11 +196,25 @@ function videoPage(v) {
   </div>
 
   <script src="/assets/ba-config.js"></script>
-  <script src="/assets/ba-academy.js"></script>
+  <script src="/assets/ba-academy.js?v=20260702c"></script>
   <script src="/assets/academy-upsell.js" defer></script>
   <script src="/assets/scroll-top.js" defer></script>
   <script>
-    var LID='${v.lid}', PRODUCT='videokurz', FREE=${v.free ? 'true' : 'false'}, GUEST=false, state={done:false};
+    var LID='${v.lid}', SLUG='${v.slug}', PRODUCT='videokurz', FREE=${v.free ? 'true' : 'false'}, GUEST=false, state={done:false};
+    // Placené video: YouTube ID není v HTML — načte se z DB manifestu až po ověření přístupu (RLS).
+    function mountVideo(){
+      if (FREE || !window.BA || typeof window.BA.getVideoId !== 'function') return;
+      window.BA.getVideoId(SLUG).then(function(id){
+        if (!id) return;
+        var box = document.getElementById('vidbox'); if (!box) return;
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1';
+        f.title = document.querySelector('h1') ? document.querySelector('h1').textContent : 'Video';
+        f.loading = 'lazy'; f.allowFullscreen = true;
+        f.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        box.innerHTML = ''; box.appendChild(f);
+      });
+    }
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
     function lsDone(){ try{ return !!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){ return false; } }
@@ -211,7 +230,7 @@ function videoPage(v) {
                 window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); });
               });
             }
-            else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+            else { window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; mountVideo(); window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
           }
           else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
         });
@@ -368,7 +387,7 @@ function dashboard() {
   </div>
 
   <script src="/assets/ba-config.js"></script>
-  <script src="/assets/ba-academy.js"></script>
+  <script src="/assets/ba-academy.js?v=20260702c"></script>
   <script src="/assets/academy-upsell.js" defer></script>
   <script src="/assets/scroll-top.js" defer></script>
   <script>
@@ -511,4 +530,4 @@ fs.writeFileSync(path.join(OUT, 'index.html'), dashboard());
 const counts = SECTIONS.filter(s => s.list.length).map(s => '  ' + s.name + ': ' + s.list.length);
 console.log('Vygenerováno ' + ordered.length + ' videí + nástěnka.');
 console.log(counts.join('\n'));
-fs.writeFileSync(path.join(__dirname, 'manifest.json'), JSON.stringify(ordered.map(v => ({ n: v.n, slug: v.slug, id: v.id, sec: v.sec, title: v.disp })), null, 2));
+fs.writeFileSync(path.join(__dirname, 'manifest.json'), JSON.stringify(ordered.map(v => ({ n: v.n, slug: v.slug, id: v.id, sec: v.sec, title: v.disp, free: !!v.free })), null, 2));
