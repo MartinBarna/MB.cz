@@ -182,7 +182,7 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
@@ -190,6 +190,10 @@ Deno.serve(async (req: Request) => {
   // BRANA: follow-up/transakcni tracky (non-onboarding) se posilaji jen kdyz je followups_enabled='true'.
   // Absence/jina hodnota = drzet (test-first). Prepnuti ostro = 1 SQL update, bez redeploye.
   const followupsEnabled = (fMap.followups_enabled ?? '') === 'true';
+  // DENNI STROP: rezerva pod Resend limitem (100/den) pro instantni uvitacky (mimo strop),
+  // transakcni maily (rescue/milniky/digest) a Auth SMTP. Cti z app_config drip_daily_cap
+  // (zmena = 1 SQL update bez redeploye); fallback 60.
+  const DAILY_CAP = Math.max(1, Number(fMap.drip_daily_cap ?? '') || 60);
 
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
@@ -223,12 +227,13 @@ Deno.serve(async (req: Request) => {
   // due leady (only_email = zpracuj jen jeden konkretni lead -> bezpecny instant-send bez zavodu)
   const limit = Number(body.limit ?? 200);
   const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : '';
-  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token';
+  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token,next_send_at';
   const dueBase = () => admin.from('leads').select(FIELDS)
     .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso)
     .order('next_send_at', { ascending: true }).limit(limit);
   // deno-lint-ignore no-explicit-any
   let leads: any[] = [];
+  let poolInfo: Record<string, number> = {};
   if (onlyEmail) {
     const { data: due, error: dueErr } = await dueBase().eq('email', onlyEmail);
     if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500);
@@ -244,7 +249,15 @@ Deno.serve(async (req: Request) => {
       if (e2) return json({ error: 'db_due', detail: e2.message }, 500);
       nonOnb = no ?? [];
     }
-    leads = [...nonOnb, ...(onb ?? [])];   // follow-upy prvni, pak onboarding bulk
+    // CERSTVE splatne onboarding kroky (48 h) pred starym backlogem: follow-upy novych leadu
+    // (z kampani) odchazeji vcas i behem doposilani fronty; zbytek denniho stropu dobira
+    // backlog od nejstarsiho. Bez toho by novy krok cekal za celou frontou.
+    const freshCut = Date.now() - 2 * 86400000;
+    const onbAll = onb ?? [];
+    const freshOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() >= freshCut);
+    const staleOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() < freshCut);
+    poolInfo = { followups: nonOnb.length, fresh_onboarding: freshOnb.length, backlog_onboarding: staleOnb.length };
+    leads = [...nonOnb, ...freshOnb, ...staleOnb];
   }
 
   const { data: buyersRows } = await admin.from('entitlements').select('email').eq('product', 'videokurz').eq('active', true);
@@ -265,12 +278,9 @@ Deno.serve(async (req: Request) => {
       const key = l.track + '/step' + l.step + ':' + tpl.key;
       byStep[key] = (byStep[key] ?? 0) + 1; would++;
     }
-    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, by_step: byStep });
+    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, by_step: byStep });
   }
 
-  // DENNI STROP: rezerva pod Resend limitem (100/den) pro transakcni maily.
-  // drip-send (vc. onboardingu) posle max DAILY_CAP/den; zbytek zustane due a dojde dalsi den.
-  const DAILY_CAP = 50;
   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
   const { count: sentToday } = await admin.from('email_events')
     .select('id', { count: 'exact', head: true })
@@ -322,5 +332,5 @@ Deno.serve(async (req: Request) => {
       await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
     }
   }
-  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, by_step: byStep });
+  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, by_step: byStep });
 });
