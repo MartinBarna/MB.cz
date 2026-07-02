@@ -37,9 +37,9 @@ Deno.serve(async (req) => {
     const d30 = new Date(now.getTime() - 30 * 86400000).toISOString();
     const nowI = now.toISOString();
 
-    const [evToday, gate, due, leads7, ents, refs, credit, wdr] = await Promise.all([
+    const [evToday, gateCfg, due, leads7, ents, refs, credit, wdr] = await Promise.all([
       admin.from("email_events").select("type,detail,created_at").gte("created_at", dayStart.toISOString()),
-      admin.from("app_config").select("value").eq("key", "followups_enabled").maybeSingle(),
+      admin.from("app_config").select("key,value").in("key", ["followups_enabled", "drip_daily_cap"]),
       admin.from("leads").select("track").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", nowI),
       admin.from("leads").select("source,created_at").gte("created_at", d7),
       admin.from("entitlements").select("product,active,granted_at,source").eq("active", true),
@@ -47,6 +47,10 @@ Deno.serve(async (req) => {
       admin.from("referral_credit").select("credit_confirmed,credit_pending"),
       admin.from("withdrawals").select("status"),
     ]);
+
+    // strop fronty z app_config (drip_daily_cap; autotune cron ho zvedne po dojeti backlogu)
+    const gmap = Object.fromEntries((gateCfg.data ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
+    const dailyCap = Math.max(1, Number(gmap.drip_daily_cap ?? "") || 60);
 
     const em = { sent: 0, test: 0, error: 0, resend429: 0, last_error: "" };
     for (const e of evToday.data ?? []) {
@@ -107,8 +111,8 @@ Deno.serve(async (req) => {
 
     return json({
       ok: true,
-      emails_today: { ...em, daily_cap: 50, resend_limit: 100 },
-      queue: { due_now: (due.data ?? []).length, by_track: queueByTrack, followups_enabled: (gate.data?.value ?? "") === "true" },
+      emails_today: { ...em, daily_cap: dailyCap, resend_limit: 100 },
+      queue: { due_now: (due.data ?? []).length, by_track: queueByTrack, followups_enabled: (gmap.followups_enabled ?? "") === "true" },
       leads: { days, today_by_source: todayBySource },
       sales,
       referral,

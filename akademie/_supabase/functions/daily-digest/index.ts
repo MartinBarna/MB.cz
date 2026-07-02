@@ -16,11 +16,13 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled"]);
+  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "drip_daily_cap"]);
   const cmap = Object.fromEntries((cfg ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const provided = req.headers.get("x-drip-secret") || "";
   if (!cmap.drip_invoke_secret || provided !== cmap.drip_invoke_secret) return json({ error: "unauthorized" }, 401);
   const to = String(cmap.admin_emails || "fitness.barna@gmail.com").split(",")[0].trim();
+  // strop fronty z app_config (autotune cron ho zvedne po dojeti backlogu); Resend limit 100/den je pevny
+  const cap = Math.max(1, Number(cmap.drip_daily_cap ?? "") || 60);
 
   const now = new Date();
   const dayStart = new Date(now); dayStart.setUTCHours(0, 0, 0, 0);
@@ -75,7 +77,7 @@ Deno.serve(async (req) => {
     `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
     row("Nové leady", String(leadsYc) + (leadsYc ? " (" + Object.entries(bySrc).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
     row("Prodeje (SimpleShop)", String(salesYc) + (salesYc ? " (" + Object.entries(salesY).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
-    row("Odeslané e-maily", String(sent) + " / cap 50") +
+    row("Odeslané e-maily", String(sent) + " · strop fronty " + cap + " · Resend max 100/den") +
     row("Fronta e-mailů teď", String((due.data ?? []).length)) +
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
     row("Affiliate čeká na potvrzení", String(refPending)) +

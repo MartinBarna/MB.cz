@@ -271,7 +271,7 @@
           var days7 = dayKeys.map(function(k){ return '<span style="display:inline-block;margin-right:10px;color:#b7ab9b;">'+k.slice(8,10)+'.'+k.slice(5,7)+'.&nbsp;<b style="color:#ff9d3c">'+p.leads.days[k]+'</b></span>'; }).join('');
           $('pulseBody').innerHTML =
             '<div class="stats" style="margin:.8rem 0 0;">'+
-              '<div class="s"><b'+capW+'>'+e.sent+'</b><span>mailů dnes / cap '+e.daily_cap+'</span></div>'+
+              '<div class="s"><b'+capW+'>'+e.sent+'</b><span>mailů dnes · strop fronty '+e.daily_cap+' · Resend max '+(e.resend_limit||100)+'</span></div>'+
               '<div class="s"><b>'+q.due_now+'</b><span>ve frontě k odeslání</span></div>'+
               '<div class="s"><b>'+leadsToday+'</b><span>leadů dnes</span></div>'+
               '<div class="s"><b>'+s.videokurz_30d+'</b><span>prodeje videokurz 30 dní</span></div>'+
