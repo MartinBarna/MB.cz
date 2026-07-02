@@ -205,7 +205,8 @@
         .cap-note { display:inline-flex; align-items:center; gap:.5rem; margin-top:1rem; font-size:.95rem;
             color:var(--green-dark); background:var(--green-light); border:1px solid #ffe0c2;
             padding:9px 18px; border-radius:50px; }
-        .cap-note .mb-ico { color:var(--gold); font-size:1.05rem; }
+        .cap-note .mb-ico { color:var(--gold); font-size:1.05rem; flex-shrink:0; }
+        @media (max-width:576px) { .cap-note { border-radius:18px; text-align:left; } }
         .plan-trust { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem 1.6rem; margin-top:2.2rem;
             font-size:.95rem; font-weight:600; color:#5b6660; }
         .plan-trust span { display:inline-flex; align-items:center; gap:.4rem; }
@@ -553,7 +554,7 @@
     </script>
     <script defer src="/assets/analytics.js?v=20260702a"></script><script defer src="/assets/referral.js?v=20260701"></script>
 <script defer src="/assets/lead-popup.js?v=20260629e"></script>
-    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260701c">
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260702b">
     <style id="hp-dark">
       /* Homepage — doladění dark-luxe (přebíjí stránkové světlé prvky) */
       .proof-marquee { background:rgba(255,122,0,.06)!important; border-color:rgba(255,122,0,.18)!important; }
@@ -900,13 +901,13 @@
             <div class="section-head">
                 <h2>Vyber si svůj balíček</h2>
                 <p>Online koučink na míru s týdenním vedením. Čím déle jdeme společně, tím víc ušetříš.</p>
-                <p class="cap-note"><span class="mb-ico"><svg><use href="#ic-trophy"/></svg></span> Koučink beru jen v <strong>omezeném počtu</strong> — aby měl každý klient mou plnou pozornost a výsledky.</p>
+                <p class="cap-note"><span class="mb-ico"><svg><use href="#ic-trophy"/></svg></span><span>Koučink beru jen v <strong>omezeném počtu</strong> — aby měl každý klient mou plnou pozornost a výsledky.</span></p>
             </div>
             <div class="text-center mb-5">
                 <div class="d-inline-block px-4 py-4 rounded-4 text-center" style="background:var(--green-light); border:1.5px dashed var(--green); max-width:780px;">
-                    <span class="fw-bold d-block mb-1" style="color:var(--green-dark);">🎁 Konzultace 1 990 Kč — a fakticky zdarma, když to myslíš vážně.</span>
+                    <span class="fw-bold d-block mb-1" style="color:var(--gold);">🎁 Konzultace 1 990 Kč — a fakticky zdarma, když to myslíš vážně.</span>
                     <span class="text-muted">Objednáš-li si do <strong>14 dní</strong> po konzultaci online coaching, <strong>cenu konzultace (1 990 Kč) ti odečtu z ceny balíčku</strong>. Buď je to start tvé proměny, nebo férová cena za můj čas. Plán, který si odneseš, ti zůstává tak jako tak.</span>
-                    <div class="mt-3"><a href="https://form.simpleshop.cz/qG2yO/buy/" class="btn btn-grn">Objednat konzultaci za 1 990 Kč →</a></div>
+                    <div class="mt-3"><a href="https://form.simpleshop.cz/qG2yO/buy/" class="btn btn-grn">Objednat konzultaci →</a></div>
                 </div>
             </div>
             <div class="row g-4 justify-content-center">
