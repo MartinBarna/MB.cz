@@ -255,9 +255,10 @@
         .then(function(r){ return r.json(); })
         .then(function(p){
           if(!p||!p.ok){ $('pulse').style.display='none'; return; }
-          var e=p.emails_today, q=p.queue, s=p.sales, rf=p.referral;
+          var e=p.emails_today, q=p.queue, s=p.sales, rf=p.referral, wd=p.withdrawals||{pending:0};
           var capW = e.sent >= e.daily_cap ? ' style="color:#ffb061"' : '';
           var err429 = e.resend429 ? '<div class="s"><b style="color:#ff6b6b">'+e.resend429+'</b><span>Resend 429 dnes ⚠️</span></div>' : '';
+          var wdW = wd.pending ? '<div class="s"><b style="color:#ff6b6b">'+wd.pending+'</b><span>odstoupení čeká ⚠️</span></div>' : '';
           var srcs = Object.keys(p.leads.today_by_source||{}).map(function(k){ return esc(k)+': '+p.leads.today_by_source[k]; }).join(' · ') || '—';
           var dayKeys = Object.keys(p.leads.days||{}).sort();
           var leadsToday = p.leads.days[dayKeys[dayKeys.length-1]] || 0;
@@ -267,10 +268,10 @@
               '<div class="s"><b'+capW+'>'+e.sent+'</b><span>mailů dnes / cap '+e.daily_cap+'</span></div>'+
               '<div class="s"><b>'+q.due_now+'</b><span>ve frontě k odeslání</span></div>'+
               '<div class="s"><b>'+leadsToday+'</b><span>leadů dnes</span></div>'+
-              '<div class="s"><b>'+s.videokurz_30d+'</b><span>videokurz +30 dní</span></div>'+
-              '<div class="s"><b>'+s.academy_total+'</b><span>Academy celkem</span></div>'+
+              '<div class="s"><b>'+s.videokurz_30d+'</b><span>prodeje videokurz 30 dní</span></div>'+
+              '<div class="s"><b>'+s.academy_30d+'</b><span>prodeje Academy 30 dní</span></div>'+
               '<div class="s"><b>'+rf.credit_confirmed+'&nbsp;Kč</b><span>affiliate kredit</span></div>'+
-              err429 +
+              wdW + err429 +
             '</div>'+
             '<p class="muted" style="margin:.9rem 0 0;font-size:.82rem;">Leadi 7 dní: '+days7+'</p>'+
             '<p class="muted" style="margin:.35rem 0 0;font-size:.82rem;">Dnešní leadi podle zdroje: '+srcs+
