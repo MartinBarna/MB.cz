@@ -36,8 +36,10 @@
   save(st);
 
   function eligible() {
-    if (FORCE) return true;
+    // FORCE (?offer=test) je jen nahled pro Martina — NIKDY nesmi obejit vypnutou akci,
+    // jinak by verejna URL ukazovala falesnou slevu s neexistujicim kodem.
     if (!CFG.ENABLED || !CFG.CODE) return false;
+    if (FORCE) return true;
     if (st.dismissed) return false;
     if ((st.n || 0) < CFG.MIN_VISITS) return false;
     if (now - (st.first || now) < CFG.MIN_DAYS * 24 * HOUR) return false;
