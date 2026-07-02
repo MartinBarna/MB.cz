@@ -6,6 +6,22 @@ Předchůdce: Claude Fable 5 (session „Barna Academy system review and ads set
 + index `MEMORY.md`) — načte se ti automaticky, VĚŘ MU, je udržovaný po každém milníku.
 Tento dokument je runbook: jak se tu pracuje, co běží samo a co zbývá.
 
+## Hlavní cíl (Martin, 3. 7.): dotáhnout **Barna Academy na 10/10** a **web na 10/10**
+ve všem, co jde. To je důvod, proč tu jsme. Vše ostatní (reklamy, maily) už běží
+samo — viz Provoz bez Clauda níže.
+
+## Martinova záměrná rozhodnutí (NEMĚNIT bez jeho pokynu)
+- **Free ochutnávka Academy i videokurzu je BEZ registrace, schválně** — registrace
+  by lidi odradila; účet si tvoří až při koupi. Neopravovat „zpět" na registrační zeď.
+- Splátky neexistují a nikde se nezmiňují; slevy jen automatické akce v mailech.
+- Resend zůstává na free plánu (100/den) — strop fronty řeší autotune cron.
+
+## Provoz bez Clauda (vše běží samo na Supabase, Claude je potřeba jen na změny)
+Sběr leadů → instantní uvítačka s magnetem; hodinový cron rozesílá frontu;
+autotune cron hlídá denní strop; ranní digest Martinovi 7:30; milníky 8:15;
+záchrana objednávek co 2 h; SimpleShop webhook sám odemyká přístupy po nákupu
+a řeší affiliate. Nic z toho nezávisí na běžící session.
+
 ## Mise
 Kompletní revize+upgrade martinbarna.cz (web, Barna Academy, videokurz, lead magnety,
 e-mail engine) + Meta a Google reklamy. Hierarchie cílů: (1) pomoct lidem,
