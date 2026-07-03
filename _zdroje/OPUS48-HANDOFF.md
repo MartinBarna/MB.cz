@@ -117,16 +117,17 @@ p-hodnota dle ASA; rozbité HTML m9-l3; překlepy). **LEKCE: strukturální nál
 typu „chybí výčet za dvojtečkou" měly VYSOKOU míru falešných poplachů** (modul 6:
 5 nálezů = 5× obsah tam ve skutečnosti byl kompletní) — u obsahových nálezů VŽDY
 ověř v souboru před opravou; faktické nálezy (anatomie/čísla/citace) byly správné.
+HOTOVO 3.7. večer (PR #351): m12-l10 protein seniorů sladěn s per-meal matematikou
+(1,2–1,6 g/kg trénující, 1,0–1,2 minimum netrénující); m17-l2 position stands
+vyndány z číslované pyramidy (byly nad RCT) → zvláštní kategorie, přečíslováno.
 Zbylé JEMNÉ body (nízké riziko, neblokují 10/10 — dořešit s klidem, ověřit v souboru):
-m14-l4 dávka sody 0,2–0,4 vs l7/l8 0,2–0,3 (sjednotit horní hranici); m5-l12
-z velké části duplikuje m5-l8 (přerámovat perex na „jdeme do hloubky"); m5-l8
-cituje ve Zdrojích sama sebe (nahradit externími); m12-l10 protein seniorů
-1,0–1,2 g/kg vs per-meal 0,4×3–4 (sladit); m17-l2 řadí position stands NAD RCT
-(v rozporu s l1/l8/l9 — přesunout mimo číslovanou pyramidu); m20 pořadí lekcí
-v navigaci (l2 mluví o „minulé lekci", ale v řetězci je l1 až čtvrtá — text jsem
-změkčil na „v modulu", ale pořadí chainu by chtělo srovnat). m6-l3: Martinův
-příběh měl „před 15 lety / £/hod" (britský zbytek) → přepsáno obecně; ideálně
-ať Martin doplní svou reálnou historku.
+m14-l4 dávka sody 0,2–0,4 vs l7/l8 0,2–0,3 (sjednotit horní hranici — pozn.: 0,2–0,4
+je vědecky OK, jde jen o konzistenci); m5-l12 z velké části duplikuje m5-l8
+(přerámovat perex na „jdeme do hloubky"); m5-l8 cituje ve Zdrojích sama sebe
+(nahradit externími); m20 pořadí lekcí v navigaci (l2 mluví o „minulé lekci", ale
+v řetězci je l1 až čtvrtá — text změkčen na „v modulu", pořadí chainu by chtělo
+srovnat). m6-l3: Martinův příběh měl „před 15 lety / £/hod" (britský zbytek) →
+přepsáno obecně; ideálně ať Martin doplní svou reálnou historku.
 
 ## Co zbývá z mise (stav 3. 7.)
 1. GA4 generate_lead → Ads konverze (task #15, čeká na sync).
