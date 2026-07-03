@@ -37,6 +37,7 @@ jobs:
             _zdroje/**
             Logo-rebrand/**
             scripts/**
+            akademie/_ai/**
             akademie/_pdf/**
             akademie/_supabase/**
             akademie/_videokurz/**
