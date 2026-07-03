@@ -424,10 +424,20 @@
     function qg(product,active){
       var em=($('qgEmail').value||'').trim().toLowerCase();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast('Zadej platný e-mail'); return; }
+      var btns=[$('qgVid'),$('qgAca'),$('qgRm'),$('qgRmA')];
+      btns.forEach(function(b){ if(b) b.disabled=true; });
       api({action:'set_access',email:em,product:product,active:active}).then(function(o){
-        if(o.j&&o.j.ok){ toast((active?'Přístup udělen: ':'Přístup odebrán: ')+product+' · '+em); if(active)$('qgEmail').value=''; }
-        else toast('Chyba: '+((o.j&&o.j.error)||o.status));
-      }).catch(function(){ toast('Chyba spojení'); });
+        btns.forEach(function(b){ if(b) b.disabled=false; });
+        if(o.j&&o.j.ok){
+          toast((active?'✓ Přístup udělen: ':'Přístup odebrán: ')+product+' · '+em);
+          // hned aktualizuj tabulku, ať je vidět, že se to povedlo (dřív se nerefreshla → vypadalo to jako by nic)
+          var row=(ALL||[]).filter(function(r){ return r.email===em; })[0];
+          if(row){ if(product==='videokurz') row.has_videokurz=active; if(product==='academy') row.has_academy=active; renderRows(); }
+          else if(active){ load(true); }  // nový kontakt, který ještě není v tabulce → načti znovu
+        } else {
+          toast('Chyba: '+((o.j&&o.j.error)||o.status));
+        }
+      }).catch(function(){ btns.forEach(function(b){ if(b) b.disabled=false; }); toast('Chyba spojení'); });
     }
     var _qv=$('qgVid'); if(_qv)_qv.addEventListener('click',function(){qg('videokurz',true);});
     var _qa=$('qgAca'); if(_qa)_qa.addEventListener('click',function(){qg('academy',true);});
