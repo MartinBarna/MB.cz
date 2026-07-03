@@ -153,6 +153,24 @@
   }
   function closePanel() { OPEN = false; panel.style.display = 'none'; btn.style.display = 'flex'; }
 
+  // Posadí bublinu (i panel) NAD plovoucí WhatsApp + šipku „nahoru", ať se nic nepřekrývá.
+  // Pozici počítá měřením (reaguje na scroll, spodní lištu i skrytou šipku), ne pevným offsetem.
+  function placeBtn() {
+    var base = window.innerWidth <= 600 ? 16 : 22, gap = 12, b = base;
+    function consider(el) {
+      if (!el) return;
+      var cs = window.getComputedStyle(el);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) return;
+      var r = el.getBoundingClientRect(); if (!r.height) return;
+      var cand = (window.innerHeight - r.bottom) + r.height + gap;   // sedni si nad tenhle prvek
+      if (cand > b) b = cand;
+    }
+    consider(document.querySelector('.fab-wa, a[aria-label="WhatsApp"]'));
+    consider(document.getElementById('baToTop') || document.getElementById('toTop'));
+    var px = Math.round(b) + 'px';
+    btn.style.bottom = px; panel.style.bottom = px;
+  }
+
   function mount() {
     document.body.appendChild(btn); document.body.appendChild(panel);
     btn.addEventListener('click', openPanel);
@@ -163,6 +181,10 @@
       if (isMember) { access = true; unlockUI(); }
       else { lockUI(); }
     });
+    placeBtn();
+    window.addEventListener('scroll', placeBtn, { passive: true });
+    window.addEventListener('resize', placeBtn);
+    setTimeout(placeBtn, 400); setTimeout(placeBtn, 1200);   // dozbírej později vytvořené prvky (WhatsApp/šipka)
   }
   if (document.readyState !== 'loading') mount();
   else document.addEventListener('DOMContentLoaded', mount);
