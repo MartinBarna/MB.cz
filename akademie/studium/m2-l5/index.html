@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Posturální svaly a zkřížené syndromy — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 5 — Anatomie a pohyb</div>
+    <h1>Posturální svaly a zkřížené syndromy</h1>
+
+    <p class="lead">Klient s tebou stráví 4–5 hodin týdně. Zbylých 163 hodin žije svůj život — sedí, spí na svém polštáři, kouká do telefonu. <strong>Posturu mu jednou hodinou v posilce nepřepíšeš. Co můžeš, je rozumět tomu, které svaly se zkracují a které ochabují, stavět trénink na jeho cíl — a posturu zlepšit jako vedlejší efekt.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Rozdíl mezi tonickými a fázickými svaly (Janda) a jak reagují na sezení.</li>
+        <li>Proč „stres v kříži“ často není slabá záda, ale chybný vzorec zatížení.</li>
+        <li>Logiku „cíl klienta první, korekce postury jako vedlejší efekt“.</li>
+        <li>Horní zkřížený syndrom (UCS) — jak vzniká a podle čeho ho poznáš.</li>
+        <li>Dolní zkřížený syndrom (LCS) — dva podtypy a jak je rozlišíš.</li>
+      </ul>
+    </div>
+    <figure class="ba-fig" data-fig="muscles-front"><figcaption>Hlavní svalové skupiny, které v tréninku cílíš — pohled zepředu.</figcaption></figure>
+    <figure class="ba-fig" data-fig="muscles-back"><figcaption>Hlavní svalové skupiny — pohled zezadu.</figcaption></figure>
+
+    <h2>1) Kolik času s klientem reálně máš</h2>
+    <p>Posturální odchylky vznikají změnou normálního zakřivení páteře spolu s posunem sklonu pánve. Každá taková dysfunkce vytváří omezení, nerovnováhy a špatné zarovnání, čímž zhoršuje efektivitu pohybu i estetiku těla. Posturu lze hodnotit staticky i dynamicky, jenže limity obojího jsou pro praktikujícího kouče zřejmé: orientovat se v kostěných bodech, měkkých tkáních a svalovém tonu bývá nad rámec běžného vzdělání trenéra.</p>
+    <p>Většina naší cílovky míří hlavně na estetiku (tuk, svaly, proporce), částečně na výkon a možná na zvládání bolesti. Máš s ním nejvýš 4–5 hodin týdně na úpravu postury, která se chronicky přizpůsobila zbylým 163 hodinám v jeho prostředí — polštáři, způsobu spaní, tvrdosti matrace. Když je některý segment těla dlouho mimo zarovnání, svaly se přizpůsobí: zkrátí se, prodlouží, nebo změní míru aktivity. Jinak to tělo neumí.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Řeknu to narovinu. Měli bychom trávit MÍŇ času snahou nacpat lidi do neznámých posturálních pozic a VÍC času hledáním cviků, které sedí jejich současné postuře i jejich cíli — a u toho cueovat a posilovat správné neuromuskulární vzorce. Trávit 12 týdnů zadním dřepem, abys člověka dostal do „hezkého dřepu“, když jeho cílem je spálit palivo nebo zapojit stehna? Většinou špatně investovaný čas. Viděl jsem spoustu lidí, co chtěli zhubnout, a kouč je nahnal do silových, korekčních nebo „core“ programů podle svého přesvědčení — a jejich skutečný cíl úplně ignoroval. A pak se ti samí koučové diví, proč nemají výsledky a proč jim klienti utíkají :) Přitom když řešíš nerovnováhy a slabiny, mechaniku pohybu zlepšíš tak jako tak — jako sekundární věc v honbě za hlavním cílem klienta.</div>
+
+    <h2>2) Tonické vs. fázické svaly (Janda)</h2>
+    <p>„Ideální“ postura není jednoznačně daná — podle výzkumu je hodně případově specifická. Svaly, které drží posturu a stabilitu, klasifikujeme jinak než svaly pro dynamický pohyb. Janda (1987) je rozdělil do dvou skupin podle vývoje:</p>
+    <div class="card">
+      <p><strong>Tonické svaly</strong> — mají na starost flexi, posturu a stabilitu. Vysoký práh únavy, sklon ke zkracování a ztuhnutí při přetížení, nedostatečném užívání i traumatu. Umějí se stahovat trvale, jsou to klasicky pomalá vlákna, méně pružná kvůli koncentraci fascie.</p>
+      <p><strong>Fázické svaly</strong> — mají na starost extenzi a dynamický pohyb. Aktivují se krátce po narození, aby nás proti gravitaci dostaly do vzpřímené polohy. Sklon k ochabnutí a útlumu, pružnější, nízký práh únavy, spíš rychlá vlákna.</p>
+    </div>
+    <p>Nejsou to rigidní škatulky, ale dají ti dobrou představu o tom, co klasicky vidíme. Vezmi typické sedavé západní držení: tělo je adaptivní, a když celý den sedíš, přizpůsobí se chybným vzorcům zatížení — tonické svaly se zkrátí a přetíží, fázické ochabnou a utlumí se.</p>
+    <p><strong>Koleno</strong> stabilizují hlavně hamstringy (tonické). Sezením se zkrátí a ztuhnou, takže při dřepu vzniká chybný vzorec: koleno putuje dopředu a zatěžuje nestabilní kloub. <strong>Záda:</strong> sezením ochabnou hýždě (fázické), zatímco hamstringy, vzpřimovače páteře a flexory kyčle (psoas, iliacus) — všechno tonické — se zkrátí. Při postavení flexory táhnou za femur a bederní páteř, pánev se sklopí dopředu (anteriorní sklon) a roste bederní lordóza. K tomu hypertonní spodní záda berou nápor zátěže.</p>
+    <blockquote>Proto lidé mylně spojují „stres“ v kříži se slabými zády — přitom je to jen chybný vzorec zatížení, který přetěžuje vzpřimovače a nevyužívá nečinné hýždě a hamstringy.</blockquote>
+
+    <h2>3) Horní zkřížený syndrom (UCS)</h2>
+    <p>Janda (1988) popsal dva typy postury — horní a dolní zkřížený syndrom. UCS je nerovnováha svalstva kolem hlavy a krku, nejčastěji u lidí, co chronicky sedí u stolu. Vzadu jsou horní trapéz a zdvihač lopatky zkrácené a přetížené, vpředu totéž platí pro prsní svaly a sternocleidomastoideus. Naopak slabé a utlumené bývají hluboké flexory krku (vpředu) zkříženě se slabým dolním trapézem, serratus anterior a rombickými svaly (vzadu).</p>
+    <p>Může způsobit kloubní dysfunkci hlavně v atlanto-okcipitálním kloubu, segmentu C4–C5, cervikothorakálním přechodu, ramenním kloubu a segmentu T4–T5.</p>
+    <div class="card"><strong>Jak ho poznáš:</strong>
+      <ul>
+        <li style="margin:.35rem 0 .35rem 1.1rem;">Předsunuté držení hlavy — ucho je před ramenem (odhaduje se u 66–90 % populace).</li>
+        <li style="margin:.35rem 0 .35rem 1.1rem;">Elevace a protrakce ramen — ramena se kulatí dopředu, lopatky se vzdalují od páteře a stoupají k uším.</li>
+        <li style="margin:.35rem 0 .35rem 1.1rem;">Zvýšená krční lordóza a hrudní kyfóza — zakulacená, téměř hrbatá horní záda.</li>
+        <li style="margin:.35rem 0 .35rem 1.1rem;">Dysrytmie lopatky (odstávání / abdukce) kvůli dysfunkci serratu a trapézu.</li>
+      </ul>
+    </div>
+
+    <h2>4) Dolní zkřížený syndrom (LCS)</h2>
+    <p>Říká se mu taky pánevní nebo distální zkřížený syndrom — nerovnováha kolem kyčlí, zase u lidí, co dlouho sedí a mají slabou stabilitu páteře. Vzadu jsou zkrácené a přetížené vzpřimovače páteře a slabé, utlumené hýždě; vpředu slabé a utlumené břišní svaly a zkrácený, přetížený iliopsoas a rectus femoris. Kloubní dysfunkce se objevuje hlavně v segmentech L4–L5 a L5–S1, v SI kloubu a v kyčli.</p>
+    <p><strong>A) Zadní pánevní zkřížený syndrom</strong> („kachní“ pozice) — dominují axiální extenzory: anteriorní sklon pánve (zkrácený iliopsoas, rectus femoris a vzpřimovače), pánev se posouvá vzad a hrudník vpřed, vzniká hyperlordóza beder a thorakolumbální hyperkyfóza, kolena a kyčle jsou mírně flektovaná.</p>
+    <p><strong>B) Přední pánevní zkřížený syndrom</strong> — utlumené břišní svaly (posun k axiální flexi): předsunutá hlava, hyperlordóza beder a hyperkyfóza hrudní páteře, ještě větší anteriorní sklon pánve a kolena v hyperextenzi.</p>
+
+    <h2>5) Shrnutí pro praxi</h2>
+    <div class="praxe"><b>V praxi (Martin):</b> Ignorovat bezpečné mechanické pozice by byla hloupost — ale umět je vplést do programu, který jde za cílem klienta, musí zvládnout každý dobrý kouč. Neřeš posturu izolovaně. Najdi cviky, co sedí cíli klienta i jeho současné postuře, a přes ně cíleně zapoj ochablé skupiny. Mechaniku tím vyčistíš jako vedlejší produkt — aniž bys obětoval to, kvůli čemu k tobě klient přišel. Be Effective 💪</div>
+    <p>Stručně: s klientem máš 4–5 hodin týdně proti jeho 163 hodinám života. Tonické svaly se zkracují, fázické ochabují a sezení tenhle vzorec prohlubuje. „Stres v kříži“ je často chybný vzorec zatížení, ne slabá záda. UCS je nerovnováha kolem hlavy a krku (předsun hlavy, kulatá ramena), LCS nerovnováha kolem pánve (anteriorní sklon, hyperlordóza) se dvěma podtypy.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Čím se liší tonické a fázické svaly? <span class="tg">odpověď ▾</span></div><div class="aa">Tonické svaly zajišťují flexi, posturu a stabilitu, mají vysoký práh únavy a sklon ke zkracování (pomalá vlákna). Fázické zajišťují extenzi a dynamický pohyb, mají nízký práh únavy a sklon k ochabnutí (rychlá vlákna).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co se sezením stane s hamstringy a vzpřimovači páteře? <span class="tg">odpověď ▾</span></div><div class="aa">Hamstringy (fázické) ochabnou a utlumí se, zatímco vzpřimovače páteře (tonické) se zkrátí a ztuhnou.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč není „stres v kříži“ obvykle známkou slabých zad? <span class="tg">odpověď ▾</span></div><div class="aa">Je to chybný vzorec zatížení, který přetěžuje vzpřimovače a nevyužívá ochablé hýždě a hamstringy — ne prostá slabost zad.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jmenuj tři znaky horního zkříženého syndromu. <span class="tg">odpověď ▾</span></div><div class="aa">Předsun hlavy, elevace a protrakce ramen, zvýšená krční lordóza s hrudní kyfózou (případně odstávání lopatky).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co charakterizuje dolní zkřížený syndrom vpředu a vzadu? <span class="tg">odpověď ▾</span></div><div class="aa">Vpředu slabé břišní svaly a zkrácený iliopsoas i rectus femoris; vzadu zkrácené vzpřimovače páteře a slabé hýždě.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U jednoho sedavého klienta urči, jestli vidíš spíš UCS, LCS, nebo oba. Vyjmenuj 2 svaly, které čekáš zkrácené, a 2 ochablé, a pak navrhni jeden cvik, který sedí jeho cíli a zároveň zapojí ochablou skupinu — bez nucení do nepřirozené pozice.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m2-l4/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m2">⬑ Zpět na Modul 2<span class="s">Anatomie a pohyb</span></a>
+      <a class="lnav-next" href="/akademie/studium/m2-l6/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Jull G, Janda V. Muscles and Motor Control in Low Back Pain. In: Physical Therapy for the Low Back. Churchill-Livingstone; 1987.</li>
+        <li>Janda V. Muscles and Cervicogenic Pain Syndromes. In: Physical Therapy of the Cervical and Thoracic Spine. Churchill Livingstone; 1988:153–166.</li>
+        <li>Hrysomallis C, Goodman C. A review of resistance exercise and posture realignment. J Strength Cond Res. 2001;15(3):385–390.</li>
+        <li>Griegel-Morris P, et al. Incidence of Common Postural Abnormalities. Phys Ther. 1992;72(6):425–431.</li>
+        <li>Gracovetsky S. The Spinal Engine. New York: Springer-Verlag Wien; 1988.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

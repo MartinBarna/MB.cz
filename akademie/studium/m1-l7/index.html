@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tvorba návyků: kontext, akce a malá změna — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 7 — Psychologie a chování kolem jídla</div>
+    <h1>Tvorba návyků: kontext, akce a malá změna</h1>
+
+    <p class="lead">Nejpraktičtější lekce celého modulu. A hned na úvod si zapamatuj jednu věc: <strong>návyk nikdy nepostavíš na tom, že něco NEDĚLÁŠ.</strong> Seznam „co nesmím“ se návykem nestane nikdy. Návyk je akce, kterou spustí kontext. Takže neřešíme „přestaň jíst zmrzlinu“ — řešíme, čím tu akci ve stejné situaci nahradíš.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč prudší tempo hubnutí vyžaduje drastičtější a hůř udržitelné změny.</li>
+        <li>Proč je „21 dní na návyk“ mýtus (studie Lallyové: průměr 66 dní).</li>
+        <li>Dvojí mysl: intuitivní systém S1 vs. analytický systém S2.</li>
+        <li>Princip „malé změny“ a tři fáze tvorby návyku.</li>
+        <li>Jak najít dvojici kontext → akce a přepsat ji, místo abys zakazoval.</li>
+      </ul>
+    </div>
+
+    <h2>1) Čím prudší tempo, tím drastičtější změny</h2>
+    <p>Platí jednoduchá věc: čím rychleji chce klient shodit, tím dramatičtější a hůř udržitelné změny chování to po něm chce. Kdo chce 10 kg za 12 týdnů, musí zavést mnohem tvrdší úpravy než ten, kdo na to má 24 týdnů. Proto stavíme na tom, co drží chování dlouhodobě — na návycích, ne na vůli. Vůle ti jednou dojde, návyk zůstane.</p>
+
+    <h2>2) Mýtus 21 dní</h2>
+    <p>„Návyk se vytvoří za 21 dní“ pochází z knihy plastického chirurga Maxwella Maltze (50. léta). Maltz popsal, že pacientům trvalo <em>minimálně</em> zhruba 21 dní zvyknout si na nové rysy. Přes self-help literaturu se z téhle opatrné věty stal „fakt“. Žádná statistika to není — je to přesvědčení, které se opakováním usadilo lidem v hlavě. My to děláme jinak: ptáme se a stavíme na datech.</p>
+
+    <h2>3) Pravda: studie Lallyové</h2>
+    <p>Lally a kol. (2010) sledovali 96 lidí po dobu 84 dní. Každý si navázal nějaké zdravé chování na denní podnět (třeba „sklenice vody po snídani“). <strong>Návyk vznikl v průměru za 66 dní</strong> — jenže rozptyl byl obrovský, od 18 dní po odhadem 254. A čím jednodušší chování, tím rychleji se zautomatizovalo. Co si z toho vzít pro klienta? Nestresuj se časem, drž konzistenci a začni něčím malým a jednoduchým.</p>
+
+    <h2>4) Dvojí mysl (S1 vs. S2)</h2>
+    <div class="card">
+      <p style="margin-top:0"><strong>Intuitivní systém (S1)</strong> — rychlý, emocionální, impulzivní, nevědomý, řízený minulou zkušeností. Je to výchozí nastavení; u jídla jedeme většinou právě na S1.<br>
+      <strong>Analytický systém (S2)</strong> — pomalý, logický, reflektivní, vědomý, náročný na úsilí. Tlumí ten první.</p>
+    </div>
+    <p>Klasická rada „mysli na dlouhodobé cíle a odolej“ cílí na S2 — a s impulzivním S1 prohraje. Proto nestačí jen „chtít“ rozumem. Musíme upravit podněty a prostředí, které ten S1 vůbec spouští.</p>
+
+    <h2>5) Jak přepsat návyk (a nezakazovat)</h2>
+    <p>Návyk = akce, kterou spustí kontextový podnět (cue). Když to opakuješ se stejným podnětem, akce se časem zautomatizuje. Jak na přepsání:</p>
+    <div class="points">
+      <ul>
+        <li><strong>Najdi dvojici kontext → akce.</strong> Kdy a kde se to nežádoucí chování spouští? (třeba „večer + únava + gauč → mlsání“)</li>
+        <li><strong>Nech kontext, vyměň akci.</strong> Místo zákazu nabídni náhradní akci ve stejné situaci (čaj a ovoce), nebo odeber spouštěč z dosahu.</li>
+        <li><strong>Malá změna.</strong> Laťku dej tak nízko, ať ji dáš i v ten nejhorší den. Malý úspěch, který se opravdu stane, porazí velký, který se nestane.</li>
+        <li><strong>Opakuj a vydrž.</strong> Konzistence v čase (klidně 2–3 měsíce) udělá z akce automatismus.</li>
+      </ul>
+    </div>
+    <div class="praxe"><b>V praxi (Martin):</b> Seznam zákazů klientovi nedávám nikdy. Místo toho spolu najdeme jeden spouštěč a jednu náhradní akci. „Po večeři místo mlsání u telky uvařím čaj a dám si připravené ovoce.“ Konkrétní situace → konkrétní akce → opakování. A pak to jen drž. Takhle se chování fakt mění — ne přes vůli a zákazy, ale přes to, co děláš automaticky. Be Effective! :)</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč nejde postavit návyk na „co nedělám“? <span class="tg">odpověď ▾</span></div><div class="aa">Návyk je AKCE, kterou spustí kontext; zákaz žádnou akci nemá. Místo zákazu měň akci v daném kontextu.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolik dní vychází tvorba návyku podle Lallyové? <span class="tg">odpověď ▾</span></div><div class="aa">Průměr ~66 dní (velký rozptyl 18–254); 21 dní je mýtus. Jednodušší chování se zautomatizuje rychleji.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Čím se liší systém S1 a S2? <span class="tg">odpověď ▾</span></div><div class="aa">S1 = rychlý, impulzivní, emocionální, nevědomý (výchozí); S2 = pomalý, logický, vědomý, náročný (tlumí ten první).</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak přepsat nežádoucí návyk? <span class="tg">odpověď ▾</span></div><div class="aa">Najdi kontext → akci, nech kontext a vyměň akci za náhradní; malá změna; opakuj a vydrž.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč prudké hubnutí škodí udržitelnosti? <span class="tg">odpověď ▾</span></div><div class="aa">Vyžaduje dramatičtější, hůř udržitelné změny chování, které se těžko mění v návyk a snáz se vzdají.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si jeden nežádoucí návyk (svůj nebo klientův). Napiš jeho dvojici kontext → akce. Pak navrhni náhradní akci ve stejné situaci a zmenši ji na minimum, které dáš i v ten nejhorší den.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m1-l6/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m1">⬑ Zpět na Modul 1<span class="s">Psychologie a chování kolem jídla</span></a>
+      <a class="lnav-next" href="/akademie/studium/m1-l8/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Lally P, et al. How are habits formed: Modelling habit formation in the real world. Eur J Soc Psychol. 2010.</li>
+        <li>Wood W, Rünger D. Psychology of Habit. Annu Rev Psychol. 2016.</li>
+        <li>Epstein S. Integration of the cognitive and the psychodynamic unconscious. Am Psychol. 1994 (S1/S2).</li>
+        <li>Clear J. Atomic Habits. (Praktický rámec malých návyků a kontextu.)</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

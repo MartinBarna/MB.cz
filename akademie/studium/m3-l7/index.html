@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tekutiny, hydratace a elektrolyty — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 3 · Lekce 7 — Výživa a energie</div>
+    <h1>Tekutiny, hydratace a elektrolyty</h1>
+
+    <p class="lead">Kolem hydratace je plno mýtů — od „musíš vypít tři litry denně“ až po drahé elektrolytové zázraky. Naštěstí je pravda jednoduchá. <strong>Tělo si vodu řídí chytřeji, než si většina lidí myslí.</strong> V téhle lekci dostaneš čistý praktický přehled: kolik pít, jak poznáš, že seš dobře hydratovaný, a kdy mají elektrolyty smysl.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč voda žene spoustu procesů a co s tebou udělá i mírná dehydratace.</li>
+        <li>Kolik reálně pít — a proč „univerzální litry“ nesedí nikomu.</li>
+        <li>Jak jednoduše poznáš dobrou hydrataci, bez počítání mililitrů.</li>
+        <li>Kdy mají elektrolyty smysl a kdy je to jen marketing.</li>
+        <li>Jak hydratace souvisí s kolísáním váhy a se sytostí klienta.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč na vodě záleží</h2>
+    <p>Voda je prostředí, ve kterém běží skoro všechno: termoregulace (pocení), transport živin, trávení, funkce kloubů i samotný výkon. I mírná dehydratace ti dokáže shodit výkon v tréninku, koncentraci a náladu a nahnat únavu.</p>
+    <p>Dobrá zpráva je, že tělo si hladinu vody hlídá hodně přesně. Hlavní signál je žízeň — a u zdravého člověka je to spolehlivý ukazatel, na který dáš víc než na nějaké „univerzální“ číslo.</p>
+
+    <h2>2) Kolik pít — zapomeň na univerzální litry</h2>
+    <p>Žádné jedno „správné“ číslo pro všechny neexistuje. Potřeba se mění podle hmotnosti, aktivity, toho jak moc se potíš, počasí i stravy — zelenina a ovoce ti vodu dodají taky. Praktický přístup stojí na pár bodech:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Řiď se žízní</strong> jako základem — u zdravého člověka funguje výborně.</p>
+      <p><strong>Přidej</strong> při tréninku, v horku a když se potíš; ztráty potem jsou ta hlavní proměnná.</p>
+      <p><strong>Orientačně</strong> se u dospělých mluví zhruba o 30–40 ml na kilogram hmotnosti denně z celkového příjmu tekutin (i toho z jídla). Ber to jako vodítko, ne dogma: aktivní člověk v horku potřebuje víc, sedavý v zimě míň.</p>
+      <p style="margin-bottom:0">„Osm sklenic“ ani „tři litry pro každého“ nejsou pravidla — jsou to zjednodušení, který někomu sednou a jinému ne.</p>
+    </div>
+    <p>Pozor i na druhý extrém: pít přehnaně „pro jistotu“ ti nic navíc nedá a ve fakt vzácných případech to může i uškodit. Cíl je dobrá hydratace, ne co nejvíc nalitý litrů.</p>
+
+    <h2>3) Jak poznat dobrou hydrataci</h2>
+    <p>Nemusíš počítat mililitry. Většině lidí stačí tři jednoduchá vodítka:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Barva moči</strong> — světle žlutá je v pohodě; tmavá ti říká, že je čas se napít (ráno bývá přirozeně tmavší).</p>
+      <p><strong>Žízeň</strong> — výrazná, opakovaná žízeň je jasný signál: pij víc.</p>
+      <p style="margin-bottom:0"><strong>Pocit a výkon</strong> — únava, bolest hlavy a pokles výkonu můžou (mimo jiné) signalizovat, že seš podhydratovaný.</p>
+    </div>
+
+    <h2>4) Elektrolyty — kdy ano a kdy jen marketing</h2>
+    <p>Elektrolyty (hlavně sodík, draslík a hořčík) řídí hospodaření s vodou i nervové a svalové funkce. Otázka nestojí tak, jestli je tělo potřebuje, ale jestli je potřebuješ cíleně doplňovat.</p>
+    <p><strong>Kdy dávají smysl:</strong> při velkých ztrátách potem — dlouhý nebo intenzivní trénink, vedro, lidi co se hodně potí. Tady má doplnění sodíku (klidně jen solí v jídle nebo iontovým nápojem) reálný smysl. Druhý případ je nízkosacharidová nebo hodně „čistá“ strava, kde někomu sodík chybí; běžná strava ho přitom má dost.</p>
+    <p><strong>Kdy je to spíš marketing:</strong> pro běžného, mírně aktivního člověka s pestrou stravou jsou drahé elektrolytové produkty zbytečné. Sodík, draslík i hořčík bereš z jídla — ze soli, zeleniny, ovoce, ořechů. „Detox“ a zázračné hydratační prášky, co slibujou víc než pití vody a slušná strava, nepotřebuješ.</p>
+    <blockquote>Většina lidí vyřeší elektrolyty pestrou stravou. Cíleně je doplňuj při velkém pocení nebo specifické dietě — ne ze zásady.</blockquote>
+
+    <h2>5) Hydratace, váha a sytost v praxi</h2>
+    <p>Dvě praktické věci, které se vyplatí klientovi vysvětlit:</p>
+    <p><strong>Váha.</strong> Voda je hlavní důvod, proč váha den ode dne skáče — sůl, sacharidy, menstruační cyklus, vedro. Když se klient vyděsí, že přes noc „přibral“ kilo, drží v rukou skoro vždycky vodu, ne tuk. Proto měříme trend, ne jeden den.</p>
+    <p><strong>Sytost.</strong> Sklenice vody před jídlem a obecně dobrá hydratace ti můžou se sytostí trochu pomoct; lidi navíc občas pletou žízeň s hladem. Zázrak na hubnutí to není, ale je to drobná užitečná páka.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Hydrataci klientům říkám co nejjednodušeji: „Pij, když máš žízeň, přidej při tréninku a v horku a koukej na barvu moči — světle žlutá je super.“ Žádné odměřování litrů, žádné drahé prášky. Elektrolyty řeším jen tam, kde se člověk fakt hodně potí nebo jede low-carb. A když mi klient panikaří z náhlého „přírůstku“, skoro pokaždé mu ukážu, že je to jen voda — a hned se mu uleví. :) Klid a jednoduchost: tělo to v řízení vody umí samo líp, než většina mýtů tvrdí.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Proč je „univerzální“ počet litrů nesmysl? <span class="tg">odpověď ▾</span></div><div class="aa">Potřeba tekutin se liší podle hmotnosti, aktivity, toho jak moc se potíš, počasí a stravy. Jedno číslo proto nesedí všem — aktivní člověk v horku potřebuje výrazně víc než sedavý v zimě.</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Jak jednoduše poznat dobrou hydrataci? <span class="tg">odpověď ▾</span></div><div class="aa">Podle tří vodítek: barva moči (světle žlutá je v pohodě), žízeň a celkový pocit s výkonem. Mililitry počítat nemusíš.</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Kdy mají elektrolyty smysl a kdy jsou jen marketing? <span class="tg">odpověď ▾</span></div><div class="aa">Smysl dávají při velkých ztrátách potem (intenzivní trénink, horko) nebo u low-carb a hodně čisté stravy. Pro běžného člověka s pestrou stravou a u „detox“ produktů jde spíš o marketing — vše pokryje jídlo.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Jak hydratace souvisí s kolísáním váhy? <span class="tg">odpověď ▾</span></div><div class="aa">Voda (sůl, sacharidy, cyklus, vedro) je hlavní příčina denního kolísání hmotnosti. Náhlý „přírůstek“ přes noc je skoro vždycky voda, ne tuk — proto sledujeme trend, ne jeden den.</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Co je nejjednodušší vodítko, kolik pít? <span class="tg">odpověď ▾</span></div><div class="aa">Řídit se žízní a přidat při tréninku a v horku, s kontrolou podle barvy moči. U zdravého člověka je to spolehlivější než nějaké univerzální číslo.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Napiš klientovi jednoduché doporučení k hydrataci na míru, bez odměřování litrů — podle čeho se má řídit, kdy přidat a jak pozná, že je dobře hydratovaný. Pak jednou větou vysvětli, proč se nemá lekat, když mu váha přes noc „vyletí“ o kilo.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m3-l6/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m3">⬑ Zpět na Modul 3<span class="s">Výživa a energie</span></a>
+      <a class="lnav-next" href="/akademie/studium/m3-l8/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Sawka MN, et al. American College of Sports Medicine position stand: Exercise and fluid replacement. Med Sci Sports Exerc. 2007.</li>
+        <li>Armstrong LE, Johnson EC. Water Intake, Water Balance, and the Elusive Daily Water Requirement. Nutrients. 2018.</li>
+        <li>EFSA Panel. Scientific Opinion on Dietary Reference Values for water. EFSA Journal. 2010.</li>
+        <li>Cheuvront SN, Kenefick RW. Dehydration: physiology, assessment, and performance effects. Compr Physiol. 2014.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m3-l7', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cíle a realistická očekávání — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 2 — Práce s klientem a koučink</div>
+    <h1>Cíle a realistická očekávání</h1>
+
+    <p class="lead"><strong>Špatně nastavený cíl je jako navigace zadaná na špatnou adresu — klient může jet sebelíp a stejně dojede jinam, než chtěl.</strong> Většina selhání nezačíná u tréninku ani u jídla. Začíná u cíle a očekávání, která jsi s klientem na začátku špatně nastavil. V téhle lekci ti ukážu, jak nastavit cíl, který klienta táhne dopředu, místo aby ho frustroval.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Rozdíl mezi cílem výsledku a cílem procesu — a proč potřebuješ oba.</li>
+        <li>Jak nastavit cíl konkrétně a měřitelně (rámec SMART lidsky).</li>
+        <li>Jak napojit cíl na skutečnou motivaci klienta, ne jen na číslo.</li>
+        <li>Jak nastavit realistické tempo a očekávání bez ztráty motivace.</li>
+        <li>Jak velký cíl rozdělit na milníky a malé výhry.</li>
+      </ul>
+    </div>
+
+    <h2>1) Cíl výsledku vs. cíl procesu</h2>
+    <p>Cíle mají dvě roviny a ty potřebuješ obě. <strong>Cíl výsledku</strong> říká, kam chce klient dojít — „zhubnout 8 kg“, „udělat 5 shybů“. Dává směr a smysl. Má ale jeden háček: klient ho ze dne na den přímo neovládá. Váha kolísá, výsledek přichází se zpožděním.</p>
+    <p><strong>Cíl procesu</strong> je naopak to, co klient <em>dělá</em> — „3× týdně trénink“, „2 g bílkovin na kilo“, „10 000 kroků“, „spát 7,5 hodiny“. Tohle klient ovládá každý den. A přesně tyhle procesní cíle vedou k výsledku.</p>
+    <p>Nastav tedy cíl výsledku pro směr, ale denně koučuj a měř proces. Když klient plní proces, výsledek přijde sám. A klient má pocit kontroly a úspěchu i ve dnech, kdy se na váze „nic neděje“. Přesně tím mu chráníš motivaci.</p>
+
+    <h2>2) Konkrétně a měřitelně (SMART lidsky)</h2>
+    <p>Mlhavý cíl typu „chci být ve formě“ nesplníš a ani nezměříš. Dobrý cíl je <strong>konkrétní</strong> (co přesně — „zhubnout 6 kg tuku“, ne jen „zhubnout“), <strong>měřitelný</strong> (váha, míry, fotky, výkon), <strong>dosažitelný</strong> v možnostech klientova života, <strong>relevantní</strong> vůči tomu, co klient doopravdy chce, a <strong>časově zasazený</strong> do reálného horizontu — ne „do léta zázrak“.</p>
+    <p>Slovo „SMART“ klientovi recitovat nemusíš. Stačí, když ho otázkami dovedeš ke konkrétnímu, měřitelnému a reálnému cíli, který je opravdu jeho.</p>
+
+    <h2>3) Napoj cíl na skutečnou motivaci</h2>
+    <p>Cíl bez osobního „proč“ je slabý. Ze vstupní konzultace už víš, co klienta opravdu žene — to, co leží pod povrchovým „chci zhubnout“: cítit se zase sám sebou, mít energii na děti, být zdravý. Napoj cíl rovnou na tohle.</p>
+    <blockquote>Místo „zhubnout 8 kg“ → „zhubnout 8 kg, abych se cítil zase sebejistě a měl energii na děti.“</blockquote>
+    <p>To „proč“ je palivo, ke kterému se klient vrací, když přijde těžký týden. Holé číslo motivuje slabě. Smysl za tím číslem táhne mnohem silněji.</p>
+
+    <h2>4) Realistické tempo a očekávání</h2>
+    <p>Tady porazíš zklamání dřív, než vůbec stačí vzniknout. Řekni klientovi narovinu, co je reálné. Změna těla je věc měsíců, ne týdnů — nepřeslibuj. Prudší tempo znamená drastičtější změny, které se hůř drží, plus větší riziko, že klient ztratí sval. Rozumné, udržitelné tempo vyhrává dlouhodobě. Váha kolísá, přijdou týdny, kdy se „nic neděje“ (voda a další faktory) — proto měříme víc věcí najednou. A pokrok nikdy nejde po přímce: přijdou vrcholy i roviny.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Poctivost klienta nedemotivuje, věř mi. Klient, který ví, co ho čeká, ustojí zaváhání, které by ho s nereálnou představou položilo na lopatky. Co fakt demotivuje, jsou falešné sliby a to zklamání, co po nich přijde. Já radši slíbím míň a doručím víc. Říkám věci narovinu — a klienti to nakonec ocení. :)</div>
+
+    <h2>5) Rozděl cíl na milníky a malé výhry</h2>
+    <p>Velký cíl je daleko a umí klienta zahltit. Tak ho rozděl. <strong>Milníky</strong> jsou mezizastávky na cestě — první 2 kg, první shyb, první měsíc bez vynechaného tréninku. <strong>Malé výhry</strong> jsou rychlé úspěchy hlavně na začátku: lepší spánek, víc energie, zvládnutá technika. Budují klientovu víru, že na to má — a s ní i jeho chuť pokračovat.</p>
+    <p>A pak to <strong>oslav</strong>. Pokrok, který nahlas pojmenuješ a oceníš, drží motivaci. Lidi zůstávají tam, kde cítí, že se posouvají.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient napíše „chci zhubnout do léta“, první věc, co dělám, je přerámování. Ptám se: na co měřitelného vlastně míříme, proč to pro tebe doopravdy chceš a co reálně zvládneme v tom čase? Pak nastavím procesní cíle, které má každý den ve svých rukou, a cestu rozsekám na milníky. Klient pak nekouká na vzdálený vrchol, ale na konkrétní další krok — a u každého kroku cítí výhru. To ho udrží mnohem víc než jedno velké číslo někde na obzoru. Be Effective! 💪</div>
+
+    <div class="card"><strong>Shrnutí:</strong> Potřebuješ cíl výsledku (směr) i cíl procesu (co klient denně ovládá). Cíl ať je konkrétní, měřitelný, dosažitelný, relevantní a časově zasazený. Napoj ho na skutečnou motivaci — smysl táhne víc než číslo. Nastav reálné tempo a očekávání: poctivost klienta udrží, falešné sliby ho položí. A celou cestu rozděl na milníky a malé výhry, které pak oslavíš.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je rozdíl mezi cílem výsledku a cílem procesu? <span class="tg">odpověď ▾</span></div><div class="aa">Cíl výsledku říká, kam chce klient dojít (směr), ale klient ho denně přímo neovládá. Cíl procesu je to, co klient dělá každý den — trénink, bílkoviny, kroky, spánek — tohle má v rukou a právě to vede k výsledku.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co dělá cíl „dobrým“ (jmenuj tři vlastnosti)? <span class="tg">odpověď ▾</span></div><div class="aa">Dobrý cíl je konkrétní, měřitelný, dosažitelný, relevantní a časově zasazený (stačí jmenovat tři). Mlhavý cíl jako „chci být ve formě“ nesplníš ani nezměříš.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč napojit cíl na skutečnou motivaci klienta? <span class="tg">odpověď ▾</span></div><div class="aa">„Proč“ je palivo, ke kterému se klient vrací v těžkých chvílích. Smysl za cílem — cítit se sám sebou, energie na děti, zdraví — táhne mnohem silněji než holé číslo.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč jsou realistická očekávání klíčová? <span class="tg">odpověď ▾</span></div><div class="aa">Klient s realistickými očekáváními ustojí zaváhání a roviny, které by ho s nereálnou představou položily. Falešné sliby a zklamání po nich demotivují mnohem víc než poctivost na začátku.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> K čemu slouží milníky a malé výhry? <span class="tg">odpověď ▾</span></div><div class="aa">Rozdělují vzdálený cíl na zvládnutelné kroky, budují klientovu víru, že na to má, a drží motivaci pravidelnými úspěchy. Pojmenovaný a oceněný pokrok udrží klienta u věci.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi mlhavý cíl klienta („chci být ve formě“) a přepiš ho na konkrétní, měřitelný cíl výsledku plus tři procesní cíle, které klient ovládá denně. Napoj ho na skutečnou motivaci jednou větou a rozděl cestu na tři milníky.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m5-l1/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m5">⬑ Zpět na Modul 5<span class="s">Práce s klientem a koučink</span></a>
+      <a class="lnav-next" href="/akademie/studium/m5-l3/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Locke EA, Latham GP. Building a practically useful theory of goal setting and task motivation. American Psychologist 2002;57(9):705–717.</li>
+        <li>Doran GT. There's a S.M.A.R.T. way to write management's goals and objectives. Management Review 1981.</li>
+        <li>Miller WR, Rollnick S. Motivational Interviewing. Guilford Press.</li>
+        <li>Navazuje na vstupní konzultaci (M5·L1), retenci (M6·L9) a psychologii odměny (M1·L6).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l2', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

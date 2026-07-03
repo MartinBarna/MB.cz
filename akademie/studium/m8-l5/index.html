@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentální příprava závodníka — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 8 · Lekce 5 — Příprava bojovníků a úpolové sporty</div>
+    <h1>Mentální příprava závodníka</h1>
+
+    <p class="lead">Na vrcholu mají soupeři podobnou fyzičku. Rozdíl v den D dělá <strong>hlava</strong>. A dobrá zpráva pro tebe jako kouče: výkon pod tlakem se dá trénovat stejně cíleně jako síla nebo kondice. Máš na to konkrétní, ověřené nástroje.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč o vrcholných výkonech rozhoduje hlava stejně jako tělo.</li>
+        <li>Jak přerámovat nervozitu a trefit správnou hladinu nabuzení.</li>
+        <li>Čtyři praktické nástroje: rutina, vizualizace, self-talk, dýchání.</li>
+        <li>Jak uhlídat psychiku v soutěžní dietě a tlaku váhové kategorie.</li>
+        <li>Kde končí tvoje role kouče a začíná práce klinického odborníka.</li>
+      </ul>
+    </div>
+
+    <h2>1) Posledních 10 % se hraje v hlavě</h2>
+    <p>Tam, kde se rozhoduje o medailích, jsou soupeři fyzicky vyrovnaní. O rozdíl se postará schopnost podat výkon pod tlakem, ustát nervozitu a neutopit se ve vlastních očekáváních. Hlava není doplněk fyzického tréninku. U vrcholového závodníka je to klidně polovina práce.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Vedl jsem závodnici k opakovaným vítězstvím a hlavu jsem u ní řešil úplně stejně systematicky jako objem tréninku. Bez té práce by tři zlata nepřišla. Fyzicky byla nachystaná, ale o medaile rozhodlo, jestli ustojí den D. :)</p>
+
+    <h2>2) Tlak a nervozita: nepřítel, nebo palivo?</h2>
+    <p>Nervozita před výkonem není chyba. Je to přirozená reakce těla, které se chystá na něco důležitého. Zrychlený tep, napětí, zostřené vnímání. Tvůj úkol není „zbavit závodníka nervozity“. Tvůj úkol je naučit ho ji přerámovat a řídit.</p>
+    <p>Stejné příznaky — bušení srdce, motýli v břiše — si můžeš vyložit dvěma způsoby. Buď „mám strach, jsem v ohrožení“, nebo „jsem nabuzený, tělo se chystá podat výkon“. Brooks (2014) ukázala, že přerámování úzkosti na „vzrušení a připravenost“ zvedne výkon víc než snaha se uklidnit. Tak uč svého závodníka říkat si „jsem připravený“, ne „musím se uklidnit“.</p>
+    <p>Každý má navíc svoje „sladké místo“ nabuzení. Málo znamená vlažnost, moc znamená paniku a ztuhnutí. Cílem je trefit hladinu, při které tvůj svěřenec jede nejlíp. U někoho je to klid, u jiného pořádná nažhavenost. Poznej svého člověka.</p>
+
+    <h2>3) Čtyři nástroje, které se trénují předem</h2>
+    <p><strong>Předzávodní rutina.</strong> Pevná, nacvičená rutina je kotva v chaosu závodu. Naplánuj konkrétní kroky — čas příchodu, rozcvičení, hudbu, jídlo, dýchání, poslední slova k sobě — a piluj je na trénincích a menších závodech. Ne až na velké akci. A měj plán B pro zpoždění nebo změnu pořadí. Flexibilita uvnitř struktury.</p>
+    <p><strong>Vizualizace.</strong> Mozek z velké části nerozezná živě představovaný nácvik od skutečného. Představa nahodí podobné nervové dráhy jako reálný pohyb. Nech závodníka pravidelně v duchu prožívat úspěšný výkon z pohledu první osoby, se všemi smysly. Vizualizuj i to, jak zvládne potíž (něco se pokazí → klid → řešení), ne jen ideální scénář. Krátké, časté dávky fungují líp než jednorázové dlouhé sezení.</p>
+    <p><strong>Vnitřní řeč (self-talk).</strong> Co si závodník říká v hlavě, přímo ovlivňuje výkon. Přepni katastrofickou řeč („zkazím to“) na věcnou a podporující („drž techniku“, „jeden krok po druhém“). Připrav krátká klíčová slova pro klíčové momenty — jedno slovo, které spustí správné nastavení („silně“, „klid“, „teď“). A drž pozornost na procesu, ne na výsledku. „Udělej svůj pohyb dobře“ je řiditelné. „Musím vyhrát“ jenom svazuje.</p>
+    <p><strong>Dýchání.</strong> Dech je nejrychlejší cesta k nervovému systému. Pomalý, prodloužený výdech nahodí parasympatikus a stáhne přehnanou stresovou reakci. Nauč závodníka jednoduchou techniku (delší výdech než nádech nebo box breathing 4-4-4-4) a slep ji s rutinou a klíčovými slovy do jednoho zvládacího balíčku.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Rutinu, kterou závodník dělá pod tlakem poprvé, rovnou škrtni. Nefunguje. Všechny čtyři nástroje testuju měsíce dopředu na menších startech, aby na hlavní akci běžely samy a nestály ani gram pozornosti navíc. Pod tlakem totiž drží jen to, co máš v ruce stokrát zažité. 💪</p>
+
+    <h2>4) Psychika soutěžní diety a váhy</h2>
+    <p>Tohle je specifikum úpolových a fyzických sportů: dlouhá tvrdá dieta a shazování váhy zatáhnou psychiku pořádně dolů. A ty to musíš aktivně řídit, ne před tím zavírat oči.</p>
+    <p>Hluboký deficit zhorší náladu, soustředění, spánek i motivaci. Řekni to závodníkovi dopředu („tohle k tomu patří a je to dočasné“), aby si nemyslel, že selhává. Soutěžní příprava taky umí nastartovat nebo prohloubit nezdravý vztah k jídlu a tělu, tak sleduj varovné signály: posedlost, vinu, extrémy, ztrátu menstruace, skrývání. Už samotný stres z „dostat se na váhu“ je zátěž, tak plánuj weight cut zvládnutelně a vyzařuj klid a kontrolu. A v nejtěžších fázích diety drž závodníkovi morálku: připomínej „proč“, ukazuj pokrok, buď opora. Kouč je tady i psychická kotva.</p>
+    <blockquote>Tady se hranice s klinickou oblastí stírá nejrychleji. Když vidíš signály poruchy příjmu potravy, neřeš to sám — propoj.</blockquote>
+
+    <h2>5) Den soutěže a fáze po ní</h2>
+    <p>V den D se spolehni na nacvičené rutiny, drž závodníka v procesu a tlum kolem něj chaos. Tvůj klid se na něj přenese, tak buď ten stabilní bod. Po soutěži pak hlídej „post-competition blues“: propad po dlouhém směřování k jedinému cíli, hlavně po dietě a vrcholu. Naplánuj návrat — jídlo, trénink, psychiku — a nový smysl. Tahle fáze se hodně podceňuje a umí být fakt tvrdá. A ať to dopadlo jakkoli, projděte výkon spolu věcně, s odstupem: co fungovalo, co příště jinak. Hodnotu člověka oddělte od výsledku závodu.</p>
+
+    <h2>6) Hranice: kouč vs. sportovní psycholog</h2>
+    <p>Ty pracuješ s běžnou výkonnostní psychologií — rutiny, nastavení, motivace, zvládání stresu. Klinické stavy nech klinikům. Pošli závodníka k odborníkovi (sportovní psycholog, psychoterapeut, lékař), když vidíš známky poruchy příjmu potravy, úzkostnou nebo depresivní poruchu nebo paralyzující výkonnostní úzkost, na kterou tvoje běžné nástroje nestačí. Spolupráce se sportovním psychologem není přiznání slabosti. U vážných závodníků je to standard. Tvoje role je rozpoznat, podpořit a propojit.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je cíl práce s nervozitou před výkonem? <span class="tg">odpověď ▾</span></div><div class="aa">Ne zbavit se jí, ale přerámovat ji a řídit. Stejné příznaky (bušení srdce) si vyložíme jako „jsem nabuzený, připravený“ místo „mám strach“. Přerámování na vzrušení/připravenost zlepšuje výkon víc než snaha se uklidnit.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je „optimální hladina nabuzení“ a proč na ní záleží? <span class="tg">odpověď ▾</span></div><div class="aa">Individuální „sladké místo“ mezi vlažností (málo nabuzení) a panikou či ztuhnutím (příliš). U někoho je to klid, u jiného vyšší nažhavenost. Cíl je trefit hladinu, při které konkrétní závodník podává nejlepší výkon.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč se musí předzávodní rutina nacvičovat předem? <span class="tg">odpověď ▾</span></div><div class="aa">Protože rutina, kterou děláš poprvé pod tlakem, nefunguje. Předvídatelnost snižuje stres a dává kontrolu v chaosu závodu. Nacvičuje se na trénincích a menších startech, plus se připraví plán B pro nečekané situace.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak by měl vypadat užitečný self-talk a zaměření pozornosti? <span class="tg">odpověď ▾</span></div><div class="aa">Věcná, podporující řeč místo katastrofické („drž techniku“ místo „zkazím to“), krátká klíčová slova pro klíčové momenty („klid“, „teď“) a soustředění na proces, ne na výsledek — „udělej svůj pohyb dobře“ je řiditelné, „musím vyhrát“ svazuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy má kouč odeslat závodníka ke klinickému odborníkovi? <span class="tg">odpověď ▾</span></div><div class="aa">Při známkách poruchy příjmu potravy, úzkostné či depresivní poruše nebo paralyzující výkonnostní úzkosti, kterou běžné nástroje neřeší. Kouč pracuje s výkonnostní psychologií, ne s klinickými stavy — jeho role je rozpoznat, podpořit a propojit.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Sestav se svým závodníkem (nebo sám pro sebe) písemnou předzávodní rutinu krok za krokem a jednou ji nanečisto otestuj na menším startu nebo modelovém tréninku — včetně dýchání, klíčových slov a plánu B.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m8-l4/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m8">⬑ Zpět na Modul 8<span class="s">Příprava bojovníků a úpolové sporty</span></a>
+      <a class="lnav-next" href="/akademie/studium/m8-l6/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Brooks AW. Get excited: reappraising pre-performance anxiety as excitement. Journal of Experimental Psychology: General 2014.</li>
+        <li>Weinberg RS, Gould D. Foundations of Sport and Exercise Psychology. Human Kinetics.</li>
+        <li>Driskell JE, et al. Does mental practice enhance performance? A meta-analysis. Journal of Applied Psychology.</li>
+        <li>Mountjoy M, et al. IOC consensus statement: Relative Energy Deficiency in Sport (RED-S). British Journal of Sports Medicine.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m8-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

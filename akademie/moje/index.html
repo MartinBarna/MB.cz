@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barna Academy — moje studium</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Studium</span></span></a>
+    <div class="topr"><a href="mailto:martin@martinbarna.cz">Nápověda</a><a id="logout" href="#" role="button">Odhlásit</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Vítej zpět</span>
+    <h1>Tvoje <span class="hl">Barna Academy</span></h1>
+    <p class="lead">Pokračuj tam, kde jsi přestal. Všechno tvé studium, videa i materiály na jednom místě.</p>
+    <div class="meta">
+      <span class="pill" id="cntPill" style="display:none;"><span class="g">●</span> aktivní přístupy:&nbsp;<b id="cnt">0</b></span>
+      <span class="pill">Přihlášen jako&nbsp;<b id="who">…</b></span>
+    </div>
+
+    <div class="grid" id="grid">
+      <a class="card" id="tileAcademy" href="/akademie/studium/">
+        <span class="lockbadge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Uzamčeno</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.5 2.5 6 2.5s6-1.5 6-2.5v-5"/><path d="M22 10v6"/></svg></div>
+        <h2>Akademie pro trenéry</h2>
+        <p class="desc">Online škola pro trenéry a výživové poradce — od základů po certifikaci.</p>
+        <div class="chips"><span class="chip">224 lekcí</span><span class="chip">20 modulů</span><span class="chip">Certifikace</span></div>
+        <span class="go"><span class="lbl">Pokračovat ve studiu</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="card" id="tileVideo" href="/akademie/videokurz/">
+        <span class="lockbadge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Uzamčeno</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3V9Z" fill="currentColor" stroke="none"/></svg></div>
+        <h2>Videokurz výživy</h2>
+        <p class="desc">182 video lekcí o hubnutí, nabírání a fitness + všechny přílohy ke stažení.</p>
+        <div class="chips"><span class="chip">182 videí</span><span class="chip">20+ hodin</span><span class="chip">Materiály</span></div>
+        <span class="go"><span class="lbl">Otevřít videokurz</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="card" id="tileTools" href="/akademie/nastroje/">
+        <span class="lockbadge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Uzamčeno</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h7M15 18h5"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="13" cy="18" r="2"/></svg></div>
+        <h2>Nástroje pro trenéry</h2>
+        <p class="desc">Generátory jídelníčků a tréninků na míru klienta — spočítají makra i plán a dáš to klientovi pod svým jménem.</p>
+        <div class="chips"><span class="chip">Jídelníček</span><span class="chip">Tréninky</span><span class="chip">Rebrand + PDF</span></div>
+        <span class="go"><span class="lbl">Otevřít nástroje</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="card" id="tileRef" href="/akademie/moje/doporuc/">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg></div>
+        <h2>Doporuč a získej kredit</h2>
+        <p class="desc">Pošleš svůj osobní kód kamarádům — oni dostanou slevu, ty kredit na další nákup. Férový deal pro oba.</p>
+        <div class="chips"><span class="chip">Tvůj kód</span><span class="chip">Sleva pro kamaráda</span><span class="chip">Kredit pro tebe</span></div>
+        <span class="go"><span class="lbl">Otevřít doporučení</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+    </div>
+
+    <div class="panel" id="empty" style="display:none;">
+      Zatím tu nevidím žádný aktivní přístup k tvému e-mailu. Pokud jsi právě zaplatil, dej tomu pár minut a obnov stránku — nebo napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>.<br><br>
+      Získej přístup: <a href="/akademie/">Akademie pro trenéry</a> · <a href="/videokurz">Videokurz</a>
+    </div>
+
+    <p class="foot" id="foot">Barna Academy — Martin Barna · online výživa a fitness</p>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    (function(){
+      var grid=document.getElementById('grid'), empty=document.getElementById('empty');
+      function lock(card, href, label){
+        card.classList.add('locked'); card.setAttribute('href', href);
+        var lbl=card.querySelector('.go .lbl'); if(lbl) lbl.textContent=label;
+      }
+      function showTiles(hasA, hasV){
+        var ta=document.getElementById('tileAcademy'), tv=document.getElementById('tileVideo'), tt=document.getElementById('tileTools');
+        if(!hasA){ lock(ta, '/akademie/studium/?preview=free', 'Prohlédnout zdarma'); var _lb=ta.querySelector('.lockbadge'); if(_lb) _lb.textContent='🎁 Ochutnávka zdarma'; }
+        if(!hasV) lock(tv, '/videokurz', 'Získat přístup');
+        // nástroje: plný má Academy verzi, free dostane lite veřejnou verzi (ne hard lock)
+        if(tt && !hasA){ tt.setAttribute('href', '/nastroje-zdarma/'); var ttl=tt.querySelector('.go .lbl'); if(ttl) ttl.textContent='Vyzkoušet lite verzi'; }
+        var n=(hasA?1:0)+(hasV?1:0);
+        if(n>0){ document.getElementById('cnt').textContent=n; document.getElementById('cntPill').style.display=''; }
+        if(!hasA && !hasV){ grid.style.display='none'; empty.style.display=''; }
+      }
+      function boot(){
+        var lg=document.getElementById('logout');
+        if(!window.BA){ document.getElementById('who').textContent='ukázkový režim'; return; }
+        window.BA.ready.then(function(){
+          if(window.BA.mode!=='live'){ document.getElementById('who').textContent='ukázkový režim'; showTiles(true,true); return; }
+          if(lg) lg.addEventListener('click', function(e){ e.preventDefault(); window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); });
+          window.BA.getUser().then(function(u){
+            if(!u){
+              // Možná právě dorazil magic-link a session se teprve ustavuje z URL —
+              // počkej na auth event místo okamžitého odskoku (jinak vzniká smyčka login ↔ hub).
+              var settled=false;
+              window.BA.onAuth(function(uu){ if(uu && !settled){ settled=true; location.reload(); } });
+              setTimeout(function(){ if(!settled){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/moje/'); } }, 2500);
+              return;
+            }
+            document.getElementById('who').textContent=u.email||'';
+            Promise.all([window.BA.hasEntitlement('academy'), window.BA.hasEntitlement('videokurz')])
+              .then(function(r){ showTiles(!!r[0], !!r[1]); });
+          });
+        });
+      }
+      boot();
+    })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Barna Academy</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap{max-width:1200px;}
+  .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:1.4rem 0}
+  .stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 12px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+  .stats .s:hover{border-color:rgba(255,157,60,.5);background:rgba(255,122,0,.08)}
+  .stats .s.on{border-color:rgba(255,157,60,.65);background:rgba(255,122,0,.12)}
+  .stats .s b{display:block;font-size:1.6rem;color:#ff9d3c;font-weight:800;line-height:1}
+  .stats .s span{font-size:.74rem;color:#b7ab9b}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(3,1fr)}}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:1rem 0}
+  .toolbar input[type=search]{flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 14px;color:#fff;font-family:inherit;font-size:.95rem}
+  .toolbar select{background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 12px;color:#ece4d9;font-family:inherit;font-size:.9rem}
+  .qg{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:12px;padding:12px 14px;margin:1.1rem 0}
+  .qg .lbl{font-size:.84rem;color:#ffb98a;font-weight:700}
+  .qg input{flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem}
+  .qg button{cursor:pointer;border:none;font-family:inherit;font-weight:700;font-size:.82rem;padding:9px 16px;border-radius:50px;background:#ff7a00;color:#1a1208}
+  .qg button:hover{background:#ff9d3c}
+  .qg .rm{background:rgba(255,255,255,.08);color:#ffb59a}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+  th{color:#b7ab9b;font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0;background:#140d06}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:rgba(255,255,255,.04)}
+  .badge{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:50px;margin:1px}
+  .b-ok{background:rgba(60,200,120,.16);color:#5fe0a0}
+  .b-no{background:rgba(255,255,255,.06);color:#8a7e6d}
+  .b-tag{background:rgba(255,122,0,.14);color:#ff9d3c}
+  .tcount{color:#cbbfae;font-variant-numeric:tabular-nums}
+  .muted{color:#8a7e6d}
+  #det{position:fixed;top:0;right:0;height:100vh;width:min(520px,94vw);background:#140d06;border-left:1px solid rgba(255,255,255,.12);box-shadow:-12px 0 40px rgba(0,0,0,.5);transform:translateX(100%);transition:transform .25s;overflow-y:auto;z-index:60;padding:22px}
+  #det.on{transform:translateX(0)}
+  #det h2{margin:.2rem 0}
+  #det .close{position:absolute;top:14px;right:16px;cursor:pointer;color:#b7ab9b;font-size:1.4rem;background:none;border:none}
+  .det-act{display:flex;gap:8px;flex-wrap:wrap;margin:1rem 0}
+  .det-act button{cursor:pointer;border:none;font-family:inherit;font-weight:700;font-size:.8rem;padding:8px 13px;border-radius:50px;background:rgba(255,255,255,.07);color:#ece4d9;border:1px solid rgba(255,255,255,.14)}
+  .det-act button.on{background:#ff7a00;color:#1a1208;border-color:#ff7a00}
+  .det-act button.danger{color:#ff8b6b}
+  .tl{margin:1rem 0;border-top:1px solid rgba(255,255,255,.08);padding-top:.8rem}
+  .tl .ev{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem}
+  .tl .ev .t{color:#cbbfae}
+  .tl .ev .d{color:#8a7e6d;white-space:nowrap}
+  .ev-sent{color:#5fe0a0}.ev-error{color:#ff8b6b}.ev-skip{color:#b7ab9b}.ev-open{color:#7db8ff}
+  #gate,#load{text-align:center;color:#b7ab9b;padding:3rem 0}
+  #gate a{color:#ff9d3c}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1a130c;border:1px solid #3a2c1c;color:#ffb066;padding:10px 20px;border-radius:50px;font-weight:700;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:99}
+  .toast.on{opacity:1}
+  .traf{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px 18px;margin:1.4rem 0}
+  .traf h3{margin:0 0 .2rem;color:#fff;font-size:1.05rem}
+  .traf .sub{color:#8a7e6d;font-size:.8rem}
+  .tgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:1rem 0 .4rem}
+  .tgrid .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 10px;text-align:center}
+  .tgrid .s b{display:block;font-size:1.3rem;color:#ff9d3c;font-weight:800;line-height:1}
+  .tgrid .s span{font-size:.7rem;color:#b7ab9b}
+  @media(max-width:760px){.tgrid{grid-template-columns:repeat(3,1fr)}}
+  .traf-links{display:flex;gap:8px;flex-wrap:wrap;margin:.6rem 0}
+  .traf-links a{font-size:.82rem;font-weight:700;color:#ff9d3c;text-decoration:none;background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.28);border-radius:50px;padding:7px 13px}
+  .traf-note{color:#8a7e6d;font-size:.82rem;line-height:1.55;margin:.7rem 0 0}
+  .twrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:.6rem}
+  @media(max-width:640px){.twrap{grid-template-columns:1fr}}
+  .tbox{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px}
+  .tbox h4{margin:0 0 .5rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}
+  .tbar{display:flex;justify-content:space-between;font-size:.82rem;color:#ece4d9;padding:3px 0}
+  .tbar .v{color:#b7ab9b;font-variant-numeric:tabular-nums}
+  .mlogbtn{cursor:pointer;border:1px solid rgba(255,122,0,.3);background:rgba(255,122,0,.08);color:#ff9d3c;font-family:inherit;font-weight:700;font-size:.85rem;padding:9px 14px;border-radius:10px;white-space:nowrap}
+  .mlogbtn:hover{background:rgba(255,122,0,.16)}
+  .ovl{position:fixed;inset:0;z-index:70;background:rgba(8,6,4,.74);display:none;align-items:flex-start;justify-content:center;padding:22px 12px;overflow-y:auto}
+  .ovl.on{display:flex}
+  .ovl .box{background:#140d06;border:1px solid rgba(255,255,255,.12);border-radius:16px;width:100%;max-width:920px;padding:20px 22px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+  #mprev .box{max-width:700px}
+  .ovl .x{position:absolute;top:12px;right:16px;cursor:pointer;color:#b7ab9b;font-size:1.5rem;background:none;border:none;line-height:1;z-index:2}
+  .ovl h2{margin:.1rem 0 .2rem;color:#fff;font-size:1.2rem}
+  .mprev-frame{width:100%;height:56vh;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#fff;margin-top:.7rem}
+  .mlog-row{cursor:pointer}
+  .mlog-row:hover{background:rgba(255,255,255,.05)}
+  .mlog-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:.6rem 0 .2rem}
+  .mlog-sum .sc{cursor:pointer;text-align:left;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 12px}
+  .mlog-sum .sc.on{border-color:rgba(255,122,0,.5);background:rgba(255,122,0,.1)}
+  .mlog-sum .sc .n{font-size:1.2rem;font-weight:800;color:#fff}
+  .mlog-sum .sc .l{font-size:.72rem;color:#b8ad9e;line-height:1.25;margin-top:2px}
+  .mlog-sum .sc .sub{font-size:.68rem;color:#8f8778;margin-top:2px}
+  select{cursor:pointer}
+  select option{background:#1a1712;color:#f3ede3}
+  .att a,.mprev-meta a{display:inline-block;margin:.3rem .4rem 0 0;font-size:.82rem;color:#ff9d3c;background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.28);border-radius:50px;padding:6px 12px;text-decoration:none}
+  .tl .ev.clk{cursor:pointer;border-radius:6px;margin:0 -6px;padding-left:6px;padding-right:6px}
+  .tl .ev.clk:hover{background:rgba(255,255,255,.05)}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Admin</span></span></a>
+    <div class="topr"><a href="/akademie/moje/">Zpět na Academy</a><a id="logout">Odhlásit</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <div id="load">Načítám admin…</div>
+
+    <div id="gate" style="display:none;">
+      Tahle stránka je jen pro administrátora.<br><br>
+      <a href="/akademie/prihlaseni/?next=%2Fakademie%2Fadmin%2F">Přihlásit se</a>
+    </div>
+
+    <div id="app" style="display:none;">
+      <span class="kick"><span class="dot"></span> CRM &amp; mailing</span>
+      <h1>Přehled <span class="hl">kontaktů</span></h1>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="traf" id="pulse" style="display:none;">
+        <h3>🩺 Dnešní puls</h3>
+        <div class="sub">Maily, fronta dripu, leadi a prodeje — živě z databáze</div>
+        <div id="pulseBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+      <div class="traf" id="prog" style="display:none;">
+        <h3>📈 Progres klientů</h3>
+        <div class="sub" id="progSub">Kolik lekcí mají členové za sebou (videokurz / Academy)</div>
+        <div id="progBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+      <div class="traf" id="traf" style="display:none;">
+        <h3>📊 Statistiky návštěvnosti</h3>
+        <div class="sub" id="trafSub">Google Analytics 4 · G-C3JC8G3FS0 · posledních 28 dní</div>
+        <div id="trafBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+      <div class="qg">
+        <span class="lbl">Rychlé udělení přístupu:</span>
+        <input type="email" id="qgEmail" placeholder="e-mail klienta (i takového, co ještě není v tabulce)…" autocomplete="off">
+        <button id="qgVid">+ Videokurz</button>
+        <button id="qgAca">+ Academy</button>
+        <button id="qgRm" class="rm">− Odebrat videokurz</button>
+        <button id="qgRmA" class="rm">− Odebrat Academy</button>
+      </div>
+
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="Hledat e-mail nebo jméno…" autocomplete="off">
+        <select id="filt">
+          <option value="">Všichni</option>
+          <option value="coaching">Coaching klienti</option>
+          <option value="videokurz">Má videokurz</option>
+          <option value="academy">Má Academy</option>
+          <option value="lead">Lead-magnet (bez koupě)</option>
+          <option value="registered">Registrovaní</option>
+          <option value="unregistered">Neregistrovaní</option>
+        </select>
+        <span class="muted" id="count"></span>
+        <button class="mlogbtn" id="mlogBtn">📧 Odeslané e-maily</button>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr>
+            <th>E-mail</th><th>Jméno</th><th>Segment</th>
+            <th>Academy</th><th>Videokurz</th><th>Účet</th><th>Mailů</th><th>Poslední mail</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="foot" style="margin-top:1.6rem">Barna Academy — admin · data jen pro tebe · <span id="meta"></span></p>
+    </div>
+  </div>
+
+  <div id="det">
+    <button class="close" id="detClose">×</button>
+    <div id="detBody"></div>
+  </div>
+
+  <div class="ovl" id="mlog"><div class="box">
+    <button class="x" id="mlogX">×</button>
+    <h2>📧 Odeslané e-maily</h2>
+    <div id="mlogSum" class="mlog-sum"></div>
+    <div style="display:flex;gap:8px;margin:.7rem 0;flex-wrap:wrap;">
+      <input type="search" id="mlogQ" placeholder="Hledat podle e-mailu…" autocomplete="off" style="flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+      <select id="mlogTrack" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+        <option value="">Všechny sekvence</option>
+        <option value="lead-magnet">Lead magnet (jídelníček)</option>
+        <option value="existing-leadmagnet">Starý lead → videokurz</option>
+        <option value="onboarding-videokurz">Onboarding videokurz</option>
+        <option value="onboarding-coaching">Onboarding coaching</option>
+      </select>
+      <select id="mlogType" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+        <option value="">Vše</option>
+        <option value="sent">Jen odeslané</option>
+        <option value="error">Jen chyby</option>
+        <option value="test">Jen testy</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto;max-height:56vh;overflow-y:auto;">
+      <table><thead><tr><th>Datum</th><th>E-mail</th><th>Který mail</th><th>Stav</th></tr></thead><tbody id="mlogRows"></tbody></table>
+    </div>
+    <p class="muted" id="mlogFoot" style="margin-top:.8rem;"></p>
+  </div></div>
+
+  <div class="ovl" id="mprev"><div class="box">
+    <button class="x" id="mprevX">×</button>
+    <div id="mprevBody"><p class="muted">Načítám…</p></div>
+  </div></div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){
+    var FN='https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/admin-api';
+    var $=function(id){return document.getElementById(id);};
+    var sb=null, token=null, ALL=[];
+    function show(id){ ['load','gate','app'].forEach(function(x){ $(x).style.display=(x===id?'':'none'); }); }
+    function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on');},1600); }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function fmtDate(s){ if(!s) return '—'; var d=new Date(s); return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); }
+    function fmtDay(s){ if(!s) return '—'; return new Date(s).toLocaleDateString('cs-CZ'); }
+    function api(payload){ return fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)}).then(function(r){ return r.json().then(function(j){return {status:r.status,j:j};}); }); }
+
+    // ROBUSTNÍ GATE: počkej na knihovny (ba-config + supabase CDN) i na session; nerozhoduj
+    // "nejsi admin" na přechodně prázdném stavu (fix async race — admin se zamykal ven po reloadu).
+    var booted=false;
+    function boot(tries){
+      tries=tries||0;
+      if(!window.BA_CONFIG||!window.supabase){ if(tries<40){ return setTimeout(function(){boot(tries+1);},150); } show('gate'); return; }
+      if(booted) return; booted=true;
+      sb=window.supabase.createClient(window.BA_CONFIG.url,window.BA_CONFIG.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
+      var lg=$('logout'); if(lg) lg.addEventListener('click',function(e){e.preventDefault();sb.auth.signOut().then(function(){location.href='/akademie/prihlaseni/';});});
+      getSessionRetry(0);
+    }
+    function getSessionRetry(tries){
+      sb.auth.getSession().then(function(res){
+        var s=res&&res.data&&res.data.session;
+        if(!s){ if(tries<6){ return setTimeout(function(){getSessionRetry(tries+1);},350); } location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'); return; }
+        token=s.access_token; load(true);
+      });
+    }
+    function load(allowRefresh){
+      Promise.all([api({action:'stats'}),api({action:'overview'})]).then(function(out){
+        var st=out[0], ov=out[1];
+        if(st.status===403||ov.status===403){
+          if(allowRefresh){ return sb.auth.refreshSession().then(function(r){ var s=r&&r.data&&r.data.session; if(s&&s.access_token){ token=s.access_token; } load(false); }).catch(function(){ load(false); }); }
+          show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return;
+        }
+        if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
+        renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress();
+        $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
+      }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
+    }
+    boot();
+
+    // 🩺 Dnešní puls — admin-pulse edge funkce (maily/fronta/leadi/prodeje/affiliate)
+    function loadPulse(){
+      var PULSE_FN = FN.replace('admin-api','admin-pulse');
+      fetch(PULSE_FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:'{}'})
+        .then(function(r){ return r.json(); })
+        .then(function(p){
+          if(!p||!p.ok){ $('pulse').style.display='none'; return; }
+          var e=p.emails_today, q=p.queue, s=p.sales, rf=p.referral, wd=p.withdrawals||{pending:0};
+          var capW = e.sent >= e.daily_cap ? ' style="color:#ffb061"' : '';
+          var err429 = e.resend429 ? '<div class="s"><b style="color:#ff6b6b">'+e.resend429+'</b><span>Resend 429 dnes ⚠️</span></div>' : '';
+          var wdW = wd.pending ? '<div class="s"><b style="color:#ff6b6b">'+wd.pending+'</b><span>odstoupení čeká ⚠️</span></div>' : '';
+          var srcs = Object.keys(p.leads.today_by_source||{}).map(function(k){ return esc(k)+': '+p.leads.today_by_source[k]; }).join(' · ') || '—';
+          var dayKeys = Object.keys(p.leads.days||{}).sort();
+          var leadsToday = p.leads.days[dayKeys[dayKeys.length-1]] || 0;
+          var days7 = dayKeys.map(function(k){ return '<span style="display:inline-block;margin-right:10px;color:#b7ab9b;">'+k.slice(8,10)+'.'+k.slice(5,7)+'.&nbsp;<b style="color:#ff9d3c">'+p.leads.days[k]+'</b></span>'; }).join('');
+          $('pulseBody').innerHTML =
+            '<div class="stats" style="margin:.8rem 0 0;">'+
+              '<div class="s"><b'+capW+'>'+e.sent+'</b><span>mailů dnes · strop fronty '+e.daily_cap+' · Resend max '+(e.resend_limit||100)+'</span></div>'+
+              '<div class="s"><b>'+q.due_now+'</b><span>ve frontě k odeslání</span></div>'+
+              '<div class="s"><b>'+leadsToday+'</b><span>leadů dnes</span></div>'+
+              '<div class="s"><b>'+s.videokurz_30d+'</b><span>prodeje videokurz 30 dní</span></div>'+
+              '<div class="s"><b>'+s.academy_30d+'</b><span>prodeje Academy 30 dní</span></div>'+
+              '<div class="s"><b>'+rf.credit_confirmed+'&nbsp;Kč</b><span>affiliate kredit</span></div>'+
+              wdW + err429 +
+            '</div>'+
+            '<p class="muted" style="margin:.9rem 0 0;font-size:.82rem;">Leadi 7 dní: '+days7+'</p>'+
+            '<p class="muted" style="margin:.35rem 0 0;font-size:.82rem;">Dnešní leadi podle zdroje: '+srcs+
+            ' · Follow-upy: '+(q.followups_enabled?'<b style="color:#7bd88f">zapnuté</b>':'<b style="color:#ff6b6b">vypnuté</b>')+
+            (e.last_error?' · Poslední chyba: <span style="color:#ffb061">'+esc(e.last_error)+'</span>':'')+'</p>';
+          $('pulse').style.display='';
+        }).catch(function(){ $('pulse').style.display='none'; });
+    }
+
+    // 📈 Progres klientů — kolik lekcí mají členové splněno (autoplay je dopisuje automaticky)
+    function loadProgress(){
+      api({action:'progress_overview'}).then(function(r){
+        var p=r.j;
+        if(!p||!p.ok){ $('prog').style.display='none'; return; }
+        var rows=p.rows||[];
+        if(!rows.length){ $('progBody').innerHTML='<p class="muted" style="padding:.8rem 0;">Zatím žádný zaznamenaný progres.</p>'; $('prog').style.display=''; return; }
+        var now=Date.now(), d7=7*864e5, d14=14*864e5;
+        var akt7=0, spici=0, nezacali=0;
+        var bar=function(done,total){
+          var pct=total?Math.min(100,Math.round(done*100/total)):0;
+          var col=pct>=100?'#7bd88f':(pct>=50?'#ffb061':'#ff9d3c');
+          return '<div style="display:flex;align-items:center;gap:8px;min-width:150px;"><div style="flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:4px;"></div></div><span style="font-size:.78rem;color:#cabfb1;white-space:nowrap;">'+done+' ('+pct+'%)</span></div>';
+        };
+        var trs=rows.map(function(x){
+          var la=x.last_activity?new Date(x.last_activity).getTime():0;
+          var badge;
+          if(!la){ badge='<span style="color:#8a7e6d;">— nezačal(a)</span>'; nezacali++; }
+          else if(now-la<d7){ badge='<span style="color:#7bd88f;">🔥 aktivní</span>'; akt7++; }
+          else if(now-la>d14){ badge='<span style="color:#ff9c93;">💤 '+Math.round((now-la)/864e5)+' dní</span>'; spici++; }
+          else badge='<span style="color:#cabfb1;">'+Math.round((now-la)/864e5)+' dní</span>';
+          return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);">'
+            +'<td style="padding:7px 10px;font-size:.85rem;">'+esc(x.email)+'</td>'
+            +'<td style="padding:7px 10px;">'+(x.has_videokurz?bar(x.vk_done,p.vk_total):'<span class="muted" style="font-size:.78rem;">—</span>')+'</td>'
+            +'<td style="padding:7px 10px;">'+(x.has_academy?bar(x.ac_done,p.ac_total):'<span class="muted" style="font-size:.78rem;">—</span>')+'</td>'
+            +'<td style="padding:7px 10px;font-size:.82rem;white-space:nowrap;">'+badge+'</td></tr>';
+        }).join('');
+        $('progSub').textContent='Členů: '+rows.length+' · 🔥 aktivní 7 dní: '+akt7+' · 💤 spí 14+ dní: '+spici+' · nezačali: '+nezacali;
+        $('progBody').innerHTML='<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">'
+          +'<thead><tr style="text-align:left;color:#8a7e6d;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;">'
+          +'<th style="padding:7px 10px;">E-mail</th><th style="padding:7px 10px;">Videokurz /'+p.vk_total+'</th><th style="padding:7px 10px;">Academy /'+p.ac_total+'</th><th style="padding:7px 10px;">Aktivita</th></tr></thead>'
+          +'<tbody>'+trs+'</tbody></table></div>';
+        $('prog').style.display='';
+      }).catch(function(){ $('prog').style.display='none'; });
+    }
+
+    function renderStats(s){
+      // třetí prvek = na co karta filtruje (prázdné = Všichni; '@maillog' = otevře e-mail log)
+      var items=[['Kontaktů',s.contacts,''],['Academy',s.academy,'academy'],['Videokurz',s.videokurz,'videokurz'],['Coaching',s.coaching,'coaching'],['Registrovaní',s.registered,'registered'],['Mailů odesláno',s.sent_total,'@maillog']];
+      $('stats').innerHTML=items.map(function(i){return '<div class="s" data-filt="'+i[2]+'"><b>'+i[1]+'</b><span>'+i[0]+'</span></div>';}).join('');
+      Array.prototype.forEach.call($('stats').querySelectorAll('.s'),function(c){
+        c.addEventListener('click',function(){
+          var f=c.getAttribute('data-filt');
+          if(f==='@maillog'){ openMailLog(); return; }
+          $('filt').value=f; renderRows(); syncStatCards();
+          var tb=document.querySelector('.toolbar'); if(tb) tb.scrollIntoView({behavior:'smooth',block:'center'});
+        });
+      });
+      syncStatCards();
+    }
+    // zvýrazni kartu odpovídající aktuálnímu filtru (drží synchron i při změně selectu)
+    function syncStatCards(){
+      var f=$('filt')?$('filt').value:'';
+      Array.prototype.forEach.call(document.querySelectorAll('#stats .s'),function(c){
+        var df=c.getAttribute('data-filt');
+        c.classList.toggle('on', df!=='@maillog' && df===f);
+      });
+    }
+
+    // Statistiky návštěvnosti z GA4 (přes admin-api action 'ga_stats' → GA4 Data API).
+    // Dokud není backend napojený, ukáže se stav "nastavení" s odkazy do GA4.
+    function loadTraf(){
+      $('traf').style.display='';
+      api({action:'ga_stats',range:'28d'}).then(function(o){
+        if(o&&o.j&&o.j.ok&&o.j.data){ renderTraf(o.j.data); } else { trafSetup(); }
+      }).catch(function(){ trafSetup(); });
+    }
+    function num(n){ return (n==null?'—':Number(n).toLocaleString('cs-CZ')); }
+    function dur(sec){ if(sec==null) return '—'; sec=Math.round(sec); var m=Math.floor(sec/60), s=sec%60; return m+'m '+s+'s'; }
+    function distBox(title,arr){
+      if(!arr||!arr.length) return '';
+      var tot=arr.reduce(function(a,x){return a+(Number(x.v)||0);},0)||1;
+      var rows=arr.slice(0,6).map(function(x){ var pct=Math.round((Number(x.v)||0)/tot*100); return '<div class="tbar"><span>'+esc(x.k||'—')+'</span><span class="v">'+pct+' %</span></div>'; }).join('');
+      return '<div class="tbox"><h4>'+esc(title)+'</h4>'+rows+'</div>';
+    }
+    function renderTraf(d){
+      d=d||{};
+      var tiles=[['Návštěvníci',num(d.users)],['Návštěvy',num(d.sessions)],['Zobrazení',num(d.pageviews)],['Ø doba na webu',dur(d.avg_engagement_sec)],['Noví',num(d.new_users)],['Míra odchodů',(d.bounce_rate!=null?Math.round(d.bounce_rate*100)+' %':'—')]];
+      var pages=(d.pages||[]).slice(0,6).map(function(p){return '<div class="tbar"><span>'+esc(p.path)+'</span><span class="v">'+num(p.views)+'</span></div>';}).join('')||'<span class="muted">—</span>';
+      $('trafBody').innerHTML=
+        '<div class="tgrid">'+tiles.map(function(t){return '<div class="s"><b>'+t[1]+'</b><span>'+t[0]+'</span></div>';}).join('')+'</div>'+
+        '<div class="twrap">'+
+          '<div class="tbox"><h4>Nejnavštěvovanější stránky</h4>'+pages+'</div>'+
+          distBox('Zařízení',d.devices)+
+          distBox('Pohlaví',d.gender)+
+          distBox('Věk',d.age)+
+          distBox('Země',d.countries)+
+          distBox('Zdroje návštěv',d.sources)+
+        '</div>';
+    }
+    function trafSetup(){
+      $('trafBody').innerHTML=
+        '<div class="traf-links">'+
+          '<a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">Otevřít GA4 →</a>'+
+          '<a href="https://analytics.google.com/analytics/web/#/p/realtime/overview" target="_blank" rel="noopener">V reálném čase →</a>'+
+          '<a href="https://business.facebook.com/events_manager2/list/pixel/277526073774099/overview" target="_blank" rel="noopener">Meta Pixel →</a>'+
+        '</div>'+
+        '<p class="traf-note">GA4 už na webu běží a sbírá data (návštěvnost, doba na webu, zařízení, země). Aby čísla — včetně <b>% muži/ženy a věk</b> — naskákala rovnou sem do adminu, chybí dvě jednorázové věci: zapnout <b>Google Signals</b> v GA4 (kvůli demografii) a vytvořit <b>service account</b> pro GA4 Data API. Pak se to napojí a tenhle box se sám naplní živými čísly.</p>';
+    }
+    function passFilter(r,f){
+      if(f==='coaching') return (r.tags||[]).some(function(t){return String(t).indexOf('coaching')===0;});
+      if(f==='videokurz') return r.has_videokurz;
+      if(f==='academy') return r.has_academy;
+      if(f==='lead') return !r.has_academy&&!r.has_videokurz;
+      if(f==='registered') return r.registered;
+      if(f==='unregistered') return !r.registered;
+      return true;
+    }
+    function renderRows(){
+      var q=($('q').value||'').toLowerCase().trim(), f=$('filt').value;
+      var list=ALL.filter(function(r){
+        if(!passFilter(r,f)) return false;
+        if(q && (r.email||'').toLowerCase().indexOf(q)<0 && (r.name||'').toLowerCase().indexOf(q)<0) return false;
+        return true;
+      });
+      $('count').textContent=list.length+' / '+ALL.length;
+      $('rows').innerHTML=list.slice(0,500).map(function(r){
+        var seg=(r.tags||[]).map(function(t){return '<span class="badge b-tag">'+esc(t)+'</span>';}).join('')||'<span class="muted">—</span>';
+        return '<tr data-email="'+esc(r.email)+'">'+
+          '<td>'+esc(r.email)+'</td>'+
+          '<td>'+esc(r.name||'—')+'</td>'+
+          '<td>'+seg+'</td>'+
+          '<td>'+(r.has_academy?'<span class="badge b-ok">ANO</span>':'<span class="badge b-no">ne</span>')+'</td>'+
+          '<td>'+(r.has_videokurz?'<span class="badge b-ok">ANO</span>':'<span class="badge b-no">ne</span>')+'</td>'+
+          '<td>'+(r.registered?'<span class="badge b-ok">účet</span>':'<span class="badge b-no">ne</span>')+'</td>'+
+          '<td class="tcount">'+(r.sent_count||0)+'</td>'+
+          '<td class="muted">'+fmtDay(r.last_sent_at)+'</td>'+
+        '</tr>';
+      }).join('');
+      Array.prototype.forEach.call($('rows').querySelectorAll('tr'),function(tr){ tr.addEventListener('click',function(){ openDetail(tr.getAttribute('data-email')); }); });
+    }
+    $('q').addEventListener('input',renderRows); $('filt').addEventListener('change',function(){ renderRows(); syncStatCards(); });
+
+    // Rychlé udělení/odebrání přístupu podle e-mailu (funguje i pro kontakt, který ještě není v tabulce)
+    function qg(product,active){
+      var em=($('qgEmail').value||'').trim().toLowerCase();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast('Zadej platný e-mail'); return; }
+      var btns=[$('qgVid'),$('qgAca'),$('qgRm'),$('qgRmA')];
+      btns.forEach(function(b){ if(b) b.disabled=true; });
+      api({action:'set_access',email:em,product:product,active:active}).then(function(o){
+        btns.forEach(function(b){ if(b) b.disabled=false; });
+        if(o.j&&o.j.ok){
+          toast((active?'✓ Přístup udělen: ':'Přístup odebrán: ')+product+' · '+em);
+          // hned aktualizuj tabulku, ať je vidět, že se to povedlo (dřív se nerefreshla → vypadalo to jako by nic)
+          var row=(ALL||[]).filter(function(r){ return r.email===em; })[0];
+          if(row){ if(product==='videokurz') row.has_videokurz=active; if(product==='academy') row.has_academy=active; renderRows(); }
+          else if(active){ load(true); }  // nový kontakt, který ještě není v tabulce → načti znovu
+        } else {
+          toast('Chyba: '+((o.j&&o.j.error)||o.status));
+        }
+      }).catch(function(){ btns.forEach(function(b){ if(b) b.disabled=false; }); toast('Chyba spojení'); });
+    }
+    var _qv=$('qgVid'); if(_qv)_qv.addEventListener('click',function(){qg('videokurz',true);});
+    var _qa=$('qgAca'); if(_qa)_qa.addEventListener('click',function(){qg('academy',true);});
+    var _qr=$('qgRm'); if(_qr)_qr.addEventListener('click',function(){qg('videokurz',false);});
+    var _qra=$('qgRmA'); if(_qra)_qra.addEventListener('click',function(){qg('academy',false);});
+
+    function openDetail(email){
+      $('detBody').innerHTML='<p class="muted">Načítám…</p>'; $('det').classList.add('on');
+      api({action:'contact',email:email}).then(function(out){
+        if(!out.j.ok){ $('detBody').innerHTML='<p class="muted">Nepovedlo se načíst.</p>'; return; }
+        var d=out.j, c=d.contact||{}, ents=d.entitlements||[];
+        var hasA=ents.some(function(e){return e.product==='academy'&&e.active;});
+        var hasV=ents.some(function(e){return e.product==='videokurz'&&e.active;});
+        var tags=(c.tags||[]);
+        var tl=(d.timeline||[]).map(function(ev){
+          var cls=ev.type==='sent'?'ev-sent':ev.type==='error'?'ev-error':ev.type==='open'?'ev-open':'ev-skip';
+          var track=(ev.detail&&ev.detail.track)||'';
+          var canOpen=(ev.type==='sent'||ev.type==='test')&&track;
+          return '<div class="ev'+(canOpen?' clk':'')+'"'+(canOpen?' data-track="'+esc(track)+'" data-step="'+esc(ev.step)+'"':'')+'><span class="t '+cls+'">'+esc(ev.type)+(track?' · '+esc(track)+' #'+esc(ev.step):'')+(canOpen?' 🔍':'')+'</span><span class="d">'+fmtDate(ev.created_at)+'</span></div>';
+        }).join('')||'<p class="muted">Zatím žádné e-maily.</p>';
+        $('detBody').innerHTML=
+          '<h2>'+esc(email)+'</h2>'+
+          '<p class="muted">'+esc(c.name||'')+(c.status?' · '+esc(c.status):'')+'</p>'+
+          '<div class="det-act">'+
+            '<button data-a="academy" class="'+(hasA?'on':'')+'">Academy: '+(hasA?'ANO':'ne')+'</button>'+
+            '<button data-a="videokurz" class="'+(hasV?'on':'')+'">Videokurz: '+(hasV?'ANO':'ne')+'</button>'+
+            '<button data-a="unsub" class="danger">Odhlásit z mailů</button>'+
+          '</div>'+
+          '<div class="det-act" id="tagWrap">'+tags.map(function(t){return '<button data-tag="'+esc(t)+'" class="on">'+esc(t)+' ✕</button>';}).join('')+
+            '<button id="addTag">+ tag</button></div>'+
+          '<div class="tl"><b style="color:#cbbfae;font-size:.8rem;">Historie e-mailů</b>'+tl+'</div>';
+        // klikací řádky historie e-mailů → náhled obsahu
+        Array.prototype.forEach.call($('detBody').querySelectorAll('.ev.clk'),function(row){
+          row.addEventListener('click',function(){ openMailPreview(row.getAttribute('data-track'),row.getAttribute('data-step'),email); });
+        });
+        // akce
+        Array.prototype.forEach.call($('detBody').querySelectorAll('[data-a]'),function(btn){
+          btn.addEventListener('click',function(){
+            var a=btn.getAttribute('data-a');
+            if(a==='unsub'){ if(!confirm('Odhlásit '+email+' z mailingu?')) return; api({action:'unsubscribe',email:email}).then(function(){toast('Odhlášeno');}); return; }
+            var nowOn=!btn.classList.contains('on');
+            api({action:'set_access',email:email,product:a,active:nowOn}).then(function(o){ if(o.j.ok){ btn.classList.toggle('on'); btn.textContent=(a==='academy'?'Academy: ':'Videokurz: ')+(nowOn?'ANO':'ne'); toast('Uloženo'); refreshRow(email,a,nowOn);} else toast('Chyba'); });
+          });
+        });
+        Array.prototype.forEach.call($('detBody').querySelectorAll('[data-tag]'),function(btn){
+          btn.addEventListener('click',function(){ var t=btn.getAttribute('data-tag'); api({action:'set_tag',email:email,tag:t,op:'remove'}).then(function(){ btn.remove(); toast('Tag odebrán'); }); });
+        });
+        var at=$('addTag'); if(at) at.addEventListener('click',function(){ var t=prompt('Nový tag (např. coaching-active, manual-add):'); if(!t) return; api({action:'set_tag',email:email,tag:t.trim(),op:'add'}).then(function(){ toast('Tag přidán'); openDetail(email); }); });
+      });
+    }
+    function refreshRow(email,product,active){
+      var r=ALL.filter(function(x){return x.email===email;})[0]; if(!r) return;
+      if(product==='academy') r.has_academy=active; if(product==='videokurz') r.has_videokurz=active; renderRows();
+    }
+    $('detClose').addEventListener('click',function(){ $('det').classList.remove('on'); });
+
+    // ---- Odeslané e-maily: globální log + náhled obsahu (+ příloha) ----
+    var TRACK_NAMES={ 'lead-magnet':'Lead magnet (jídelníček)','existing-leadmagnet':'Starý lead → videokurz','onboarding-videokurz':'Onboarding videokurz','onboarding-coaching':'Onboarding coaching' };
+    function trackName(t){ return TRACK_NAMES[t]||t||'—'; }
+    var mlogAll=[];
+    // sekvence, které chceme mít v souhrnu vždy vidět (i s nulou), ať Martin pozná, že nechodí
+    var MLOG_TRACKS=['lead-magnet','existing-leadmagnet','onboarding-videokurz','onboarding-coaching'];
+    function openMailLog(){
+      $('mlog').classList.add('on'); $('mlogRows').innerHTML=''; $('mlogSum').innerHTML=''; $('mlogFoot').textContent='Načítám…';
+      // limit:2000 → stáhni CELÝ log, ať onboarding blast nepřebije lead-magnet/follow-up řádky
+      api({action:'email_log',limit:2000}).then(function(o){
+        if(o&&o.j&&o.j.ok&&o.j.rows){ mlogAll=o.j.rows; renderMailSummary(); renderMailLog(); }
+        else { $('mlogFoot').innerHTML='Globální log („email_log") ještě čeká na backend od Code vedle. Zatím historii uvidíš u konkrétního kontaktu — rozklikni řádek → Historie e-mailů → klikni na 🔍.'; }
+      }).catch(function(){ $('mlogFoot').textContent='Chyba spojení.'; });
+    }
+    function renderMailSummary(){
+      var by={}; MLOG_TRACKS.forEach(function(t){ by[t]={sent:0,err:0,test:0,tot:0}; });
+      mlogAll.forEach(function(r){
+        var t=r.track||'—'; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0};
+        by[t].tot++;
+        if(r.type==='sent') by[t].sent++; else if(r.type==='error') by[t].err++; else if(r.type==='test') by[t].test++;
+      });
+      var cur=($('mlogTrack').value||'');
+      var keys=MLOG_TRACKS.concat(Object.keys(by).filter(function(k){return MLOG_TRACKS.indexOf(k)<0;}));
+      $('mlogSum').innerHTML=keys.map(function(t){
+        var s=by[t]||{sent:0,err:0,test:0,tot:0};
+        var sub=[]; if(s.err) sub.push(s.err+' chyb'); if(s.test) sub.push(s.test+' testů');
+        return '<div class="sc'+(cur===t?' on':'')+'" data-track="'+esc(t)+'"><div class="n">'+s.sent+'</div>'+
+          '<div class="l">'+esc(trackName(t))+'</div>'+
+          '<div class="sub">'+(sub.length?sub.join(' · '):(s.sent?'odesláno':'zatím 0 – nechodí?'))+'</div></div>';
+      }).join('');
+      Array.prototype.forEach.call($('mlogSum').querySelectorAll('.sc'),function(c){
+        c.addEventListener('click',function(){ var t=c.getAttribute('data-track'); $('mlogTrack').value=($('mlogTrack').value===t?'':t); renderMailSummary(); renderMailLog(); });
+      });
+    }
+    function renderMailLog(){
+      var q=($('mlogQ').value||'').toLowerCase().trim();
+      var ft=($('mlogTrack').value||''), fy=($('mlogType').value||'');
+      var list=mlogAll.filter(function(r){
+        if(q && (r.email||'').toLowerCase().indexOf(q)<0) return false;
+        if(ft && (r.track||'')!==ft) return false;
+        if(fy && (r.type||'')!==fy) return false;
+        return true;
+      });
+      $('mlogRows').innerHTML=list.slice(0,500).map(function(r){
+        var st=r.type==='sent'?'<span class="badge b-ok">odesláno</span>':r.type==='error'?'<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">chyba</span>':'<span class="badge b-no">'+esc(r.type)+'</span>';
+        var name=r.subject?esc(r.subject):(trackName(r.track)+' #'+esc(r.step));
+        return '<tr class="mlog-row" data-track="'+esc(r.track)+'" data-step="'+esc(r.step)+'" data-email="'+esc(r.email)+'"><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'—')+'</td><td>'+name+'</td><td>'+st+'</td></tr>';
+      }).join('')||'<tr><td colspan="4" class="muted" style="padding:1rem;">Nic nenalezeno.</td></tr>';
+      $('mlogFoot').textContent=list.length+' záznamů';
+      Array.prototype.forEach.call($('mlogRows').querySelectorAll('.mlog-row'),function(tr){
+        tr.addEventListener('click',function(){ openMailPreview(tr.getAttribute('data-track'),tr.getAttribute('data-step'),tr.getAttribute('data-email')); });
+      });
+    }
+    function openMailPreview(track,step,email){
+      $('mprev').classList.add('on'); $('mprevBody').innerHTML='<p class="muted">Načítám náhled…</p>';
+      api({action:'email_preview',track:track,step:step,email:email||null}).then(function(o){
+        var d=o&&o.j&&o.j.ok?o.j:null;
+        if(!d||(!d.html&&!d.subject&&!d.text)){
+          $('mprevBody').innerHTML='<h2>Náhled e-mailu</h2><p class="muted">'+trackName(track)+' #'+esc(step)+(email?' · '+esc(email):'')+'</p><p class="muted" style="margin-top:.7rem;">Náhled obsahu („email_preview") ještě čeká na backend od Code vedle — prompt už má. Jakmile nasadí, otevře se tu přesný text mailu i s přílohou.</p>';
+          return;
+        }
+        var att=(d.attachments||[]).map(function(a){ return '<a href="'+esc(a.url)+'" target="_blank" rel="noopener">📎 '+esc(a.name||'příloha')+'</a>'; }).join('');
+        $('mprevBody').innerHTML='<h2>'+esc(d.subject||trackName(track))+'</h2>'+
+          '<div class="mprev-meta muted" style="font-size:.85rem;">'+trackName(track)+' #'+esc(step)+(email?' · '+esc(email):'')+'</div>'+
+          (att?'<div class="att">'+att+'</div>':'')+
+          (d.html?'<iframe class="mprev-frame" sandbox=""></iframe>':'')+
+          (d.text&&!d.html?'<pre style="white-space:pre-wrap;color:#ece4d9;font-family:inherit;font-size:.9rem;margin-top:.7rem;">'+esc(d.text)+'</pre>':'');
+        if(d.html){ var f=$('mprevBody').querySelector('iframe'); if(f) f.srcdoc=d.html; }
+      }).catch(function(){ $('mprevBody').innerHTML='<p class="muted">Chyba spojení.</p>'; });
+    }
+    var _ml=$('mlogBtn'); if(_ml) _ml.addEventListener('click',openMailLog);
+    var _mlx=$('mlogX'); if(_mlx) _mlx.addEventListener('click',function(){ $('mlog').classList.remove('on'); });
+    var _mpx=$('mprevX'); if(_mpx) _mpx.addEventListener('click',function(){ $('mprev').classList.remove('on'); });
+    var _mlq=$('mlogQ'); if(_mlq) _mlq.addEventListener('input',renderMailLog);
+    var _mlt=$('mlogTrack'); if(_mlt) _mlt.addEventListener('change',function(){ renderMailSummary(); renderMailLog(); });
+    var _mly=$('mlogType'); if(_mly) _mly.addEventListener('change',renderMailLog);
+    $('mlog').addEventListener('click',function(e){ if(e.target===$('mlog')) $('mlog').classList.remove('on'); });
+    $('mprev').addEventListener('click',function(e){ if(e.target===$('mprev')) $('mprev').classList.remove('on'); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ $('mlog').classList.remove('on'); $('mprev').classList.remove('on'); } });
+  })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>

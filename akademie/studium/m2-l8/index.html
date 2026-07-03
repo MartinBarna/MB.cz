@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dech, nitrobřišní tlak a stabilita středu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 8 — Anatomie a pohyb</div>
+    <h1>Dech, nitrobřišní tlak a stabilita středu</h1>
+
+    <p class="lead">Probrali jsme kostru, páky, kloubní akce, nervstvo i posturu. Teď přidáme vrstvu, kterou většina lidí v posilovně přeskočí. A pak se diví, proč je bolí záda. <strong>Dech a stabilitu středu musí klient zvládnout dřív, než mu dáš do ruky činku.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je „core“ doopravdy — ne jen břišní svaly, ale celý válec kolem páteře.</li>
+        <li>Jak vzniká nitrobřišní tlak (IAP) a proč chrání bederní páteř.</li>
+        <li>Rozdíl mezi bráničním dechem a horním (hrudním) dechem.</li>
+        <li>Jak nacvičit brániční dech a zpevnění („bracing“) krok za krokem.</li>
+        <li>Kdy zpevnit naplno a kdy jen jemně — podle náročnosti cviku.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je „core“ doopravdy</h2>
+    <p>Když většina lidí řekne „core“, vybaví si six-pack, tedy přímý břišní sval. Jenže stabilitu středu těla dělá celý válec kolem páteře. Bránice je jeho vrchní víko, svaly pánevního dna spodní dno. Přední a boční stěnu tvoří příčný břišní sval (transversus abdominis), šikmé a přímý břišní sval. Zadní stěnu pak hluboké zádové svaly (multifidy) a vzpřimovače páteře.</p>
+    <p>Tyhle svaly nemakají jako izolovaná partie pro vzhled. Pracují jako tým — stabilizují páteř a přenášejí sílu mezi horní a dolní polovinou těla.</p>
+    <blockquote>Slabý nebo špatně koordinovaný střed je jako snažit se vystřelit z kanónu postaveného na kánoi: síla uniká a páteř to odnáší.</blockquote>
+
+    <h2>2) Nitrobřišní tlak (IAP) — vnitřní korzet</h2>
+    <p>Když se nadechneš do břicha a zpevníš stěny válce, vzduch a obsah břicha vytvoří tlak — nitrobřišní tlak (intra-abdominal pressure, IAP). Ten zevnitř podpírá bederní páteř, jako by ses obtočil pevným pásem zevnitř. Proto siloví atleti při těžkém zvednutí „naberou dech do břicha a drží“ (tzv. Valsalvův manévr).</p>
+    <div class="card"><strong>Princip ve třech krocích:</strong>
+      <p style="margin:.5rem 0 0">1. Nádech bránicí dolů do břicha — ne ramena nahoru. 2. Zpevnění stěn válce do 360°, jako bys čekal lehké šťouchnutí do břicha. 3. Tlak podpírá páteř → stabilní, bezpečný střed při zátěži.</p>
+    </div>
+    <p>Pozor na jednu věc: dlouhé maximální zadržení dechu žene nahoru krevní tlak. U běžné populace, starších lidí a u kardiaků proto sáhneme po jemnější verzi a dech nedržíme na desítky sekund. U lehčí zátěže ti stačí jemné zpevnění a klidně dýchej dál.</p>
+
+    <h2>3) Brániční vs. hrudní dech</h2>
+    <p>Tady bývá zakopaný pes. Spousta lidí dýchá „nahoru“ — zvednou ramena a klíční kosti a bránice skoro nepracuje. To je nouzový, stresový vzorec (sympatikus, vzpomeň na nervstvo z dřívější lekce). Pro stabilitu i regeneraci chceme brániční dech: nádech jde dolů, břicho a spodní žebra se rozšíří do všech stran a ramena zůstanou v klidu.</p>
+    <p>Jak vzorec u klienta poznáš: jednu ruku mu polož na hrudník, druhou na břicho. Co se hýbe první a víc? Když hrudník, máme co učit.</p>
+
+    <h2>4) Nácvik krok za krokem</h2>
+    <p><strong>Krok 1 — brániční dech vleže:</strong> klient leží na zádech, kolena pokrčená, jedna ruka na břiše. Nádech nosem „do ruky na břiše“ tak, aby se zvedla ona, ne hrudník. Výdech pomalu ústy, 5–10 dechů. Cíl: cítit, jak se břicho a spodní žebra rozšiřují do 360°.</p>
+    <p><strong>Krok 2 — přidat pánevní dno a stěny:</strong> při nádechu nech břicho rozšířit a představ si, že 360° kolem pasu tlačíš ven proti pomyslnému pásu. Ne „vtáhnout břicho dovnitř“ — tím válec zploštíš a tlak ti uteče.</p>
+    <p><strong>Krok 3 — zpevnění („bracing“):</strong> nadechni do břicha, jemně zpevni stěny (jako bys čekal šťouchanec) a v tom napětí udělej pohyb. U lehčího cviku dýchej plynule přes zpevněný střed. U těžkého opakování krátce přidrž dech v nejnáročnější fázi a vydechni za nejtěžším bodem.</p>
+    <p><strong>Krok 4 — přenos do cviků:</strong> stejné zpevnění dej do dřepu, mrtvého tahu, tlaků nad hlavu i do běžných věcí (zvedneš dítě, tašky z auta). Cíl je, aby to zpevnění naskočilo automaticky před každou zátěží.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> U klienta, co si stěžuje na záda při dřepu nebo tahu, skoro vždycky chybí dvě věci — brániční dech a zpevnění. Než přidám kilo, naučím ho ten válec. Cue, které funguje skoro každému: „Nadechni do břicha, zpevni, jako bych tě chtěl šťouchnout, a teď zvedni.“ Spousta těch „slabých zad“ jsou ve skutečnosti záda, která se nikdy nenaučila držet. A to se naučit dá :)</div>
+
+    <h2>5) Kdy naplno a kdy jemně</h2>
+    <p>Míra zpevnění má sedět na zátěž. Nebudeš přece chodit životem s maximálně staženým břichem — to je únavné a zbytečné. U lehké aktivity, mobility a chůze ti stačí jemný tonus a klidný dech. U střední zátěže (tedy většina tréninku běžné populace) sáhneme po středním zpevnění a dýcháme plynule přes zpevněný střed. U maxima (těžké basy, silový trénink) přidáme plné zpevnění a krátké přidržení dechu v nejtěžší fázi — vždycky s ohledem na to, co klientovo zdraví unese.</p>
+    <blockquote>Princip úměrné zpevnosti je stejný jako všude v koučinku: tolik, kolik je třeba, ne víc.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Které svaly tvoří „válec“ středu těla? <span class="tg">odpověď ▾</span></div><div class="aa">Bránice (víko), svaly pánevního dna (dno), transversus abdominis se šikmými a přímým břišním svalem (přední a boční stěna) a multifidy se vzpřimovači páteře (zadní stěna).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je nitrobřišní tlak a k čemu je dobrý? <span class="tg">odpověď ▾</span></div><div class="aa">Tlak v dutině břišní vzniklý nádechem do břicha a zpevněním stěn válce. Zevnitř podpírá bederní páteř — funguje jako vnitřní korzet a stabilizuje páteř při zátěži.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak u klienta poznáš hrudní vs. brániční dech? <span class="tg">odpověď ▾</span></div><div class="aa">Polož klientovi jednu ruku na hrudník, druhou na břicho a sleduj, co se hýbe první a víc. Pohyb hrudníku nahoru a zvedání ramen značí hrudní (stresový) dech; rozšíření břicha a spodních žeber do stran je dech brániční.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč „vtáhni břicho dovnitř“ není dobrý pokyn pro stabilitu? <span class="tg">odpověď ▾</span></div><div class="aa">Vtažení válec zploští a sníží nitrobřišní tlak. Chceme opak — zpevnění 360° ven proti pomyslnému pásu, které tlak udrží a páteř podepře.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak velká má být míra zpevnění? <span class="tg">odpověď ▾</span></div><div class="aa">Úměrná zátěži: jemný tonus u lehké aktivity a chůze, střední zpevnění s plynulým dechem u běžného tréninku, plné zpevnění s krátkým přidržením dechu jen u maximální zátěže — opatrně u rizikových klientů.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Nacvič si sám čtyři kroky (dech vleže → stěny → bracing → přenos do dřepu). Pak u jednoho klienta sáhni rukama na hrudník a břicho, otestuj jeho dechový vzorec a poznamenej si, co jsi zjistil a jaké první cue jsi zvolil.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m2-l7/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m2">⬑ Zpět na Modul 2<span class="s">Anatomie a pohyb</span></a>
+      <a class="lnav-next" href="/akademie/studium/m2-l9/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Hodges PW, Richardson CA. Contraction of the abdominal muscles associated with movement of the lower limb. Phys Ther. 1997;77(2):132–142.</li>
+        <li>Cholewicki J, McGill SM. Mechanical stability of the in vivo lumbar spine. Clin Biomech. 1996;11(1):1–15.</li>
+        <li>McGill SM. Low Back Disorders: Evidence-Based Prevention and Rehabilitation. Human Kinetics; 2015.</li>
+        <li>Kolář P, et al. Postural function of the diaphragm. J Orthop Sports Phys Ther. 2012;42(4):352–362.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

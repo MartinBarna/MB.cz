@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vstupní příručka klienta — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 7 · Lekce 5 — Praktické vedení klienta</div>
+    <h1>Vstupní příručka klienta</h1>
+
+    <p class="lead">U mě klient něco <strong>dělá</strong> a hlavně <strong>ví, proč to dělá</strong>. Vstupní příručka je dokument, který každý klient dostane hned na startu. Je to místo, kam se kdykoli vrátí, když potřebuje princip nebo kontext, ne jen suché číslo. A klient, který chápe, je samostatnější a vydrží u tebe dýl.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč dát klientovi vstupní příručku a co do ní patří.</li>
+        <li>Co znamená „klient ví, proč to dělá“ a jak to zavést hned od prvního dne.</li>
+        <li>Jak lidsky vysvětlit základy: flexibilní stravování, váha vs. míry, reporty.</li>
+        <li>Proč začít na vyšším příjmu a teprve pak ladit.</li>
+        <li>Jak ti edukace klienta buduje samostatnost, motivaci i důvěru.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč vstupní příručka</h2>
+    <p>Vstupní příručka je dokument, který klient dostane na začátku spolupráce a ke kterému se kdykoli vrátí. Dělá ti hned několik věcí najednou. <strong>Dává kontext</strong>, takže klient nečte jen „jez tohle“, ale rozumí, proč to dělá. <strong>Snižuje nejistotu</strong>, protože vše podstatné má na jednom místě. <strong>Šetří ti čas</strong>, opakující se základy vysvětlíš jednou a pořádně. A <strong>buduje důvěru</strong>, protože srozumitelný materiál ukazuje, že víš, co děláš.</p>
+    <p>Klient se příručku nemusí učit nazpaměť. Nikdo ho z ní zkoušet nebude. Stačí, když ví, že odpovědi tam jsou, a že se kdykoli může doptat.</p>
+
+    <h2>2) „Klient ví, proč to dělá“</h2>
+    <p>Tohle není dokument, je to spíš způsob přemýšlení. Klient může jet čistě podle čísel, kolik kalorií, kolik bílkovin. Jenže teprve když chápe souvislosti, je celá cesta s flexibilním stravováním opravdu snazší a udržitelná. Porozumění totiž spustí řetězovku.</p>
+    <p><strong>Porozumění → samostatnost.</strong> Klient, který chápe princip, si poradí i v situaci, kterou jste spolu neprobírali. Na akci, na cestě, ve stresu. Nepotřebuje tě u každého rozhodnutí. <strong>Porozumění → motivace.</strong> Když ví, proč něco dělá, snáz to dodrží, než když jen slepě plní příkaz. <strong>Porozumění → důvěra.</strong> Klient, kterému vysvětlíš souvislosti, ti víc věří a míň naletí mýtům z internetu.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> U každého důležitého kroku přihoď krátké „proč“. Žádná přednáška, žádná učebnice :) Jen tolik, aby klient chápal smysl toho, co po něm chceš. Věř mi, mezi „dělej to“ a „dělej to, protože…“ je obrovský rozdíl.</div>
+
+    <h2>3) Základy, které vysvětlit — lidsky</h2>
+    <p>Co by měla příručka srozumitelně pokrýt. <strong>Flexibilní stravování</strong>: žádné rigidní jídelníčky, klient si v rozumných mantinelech skládá vlastní jídelníček a jí i to, co má rád, ne „za trest“. <strong>Váha vs. míry</strong>: váha kolísá kvůli vodě, glykogenu, trávení i cyklu, takže lpět na jediném čísle vede akorát do pekel. Spolehlivější jsou míry a trend. <strong>Reporty a data</strong>: jednou týdně klient pošle míry, váhu, jak šel trénink a plán na další týden, a podle reakce těla se vše doladí. <strong>Proč bílkoviny a trénink</strong>: bílkovina ke každému jídlu kvůli sytosti a svalu, cvičení ne kvůli vzhledu, ale kvůli svalům, regeneraci a zdraví. A nakonec <strong>proč pomalu a udržitelně</strong>.</p>
+    <p>Glykogen na sebe váže vodu zhruba v poměru 1 g : 3 g vody. Jenom tahle jedna věc umí na váze udělat výkyv o kila během pár dní. Když to klient ví dopředu, nepanikaří a nevzdá to.</p>
+    <blockquote>Bod „váha vs. míry“ je jeden z nejdůležitějších v celé příručce. Chrání klienta před panikou a předčasným vzdáním.</blockquote>
+    <p>Mluv k tomu jako kámoš, který klientovi vysvětluje jeho vlastní tělo. Ne jako učebnice.</p>
+
+    <h2>4) Začínat na vyšším příjmu</h2>
+    <p>Praktický princip, který se vyplatí vysvětlit klientovi i sobě: začínáme radši na <strong>vyšším</strong> množství jídla a postupně ubíráme (nebo i přidáváme), místo abychom startovali na málu. Má to svoje důvody. <strong>Prostor pro úpravu</strong>: když začneš nízko, nemáš kam ubrat, jakmile se tělo adaptuje. Když začneš výš, máš rezervu a deficit vytvoříš postupně. <strong>Udržitelnost a regenerace</strong>: vyšší startovní příjem znamená míň hladu, lepší tréninky a regeneraci, protože svalová proteinová syntéza se řídí mimo jiné příjmem energie a bílkovin. <strong>Psychika</strong>: startovat v hojnosti a pak ladit je prostě snazší, než hned naskočit do restrikce.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientovi to docvakne, když mu řekneš narovinu, že cílem není ho vyhladovět. Cílem je najít <em>nejmenší potřebnou úpravu</em>, která ho dovede k výsledku. Čím míň musíš ubrat, tím dýl to klient udrží. Tak to prostě je :)</div>
+
+    <h2>5) Edukací buduješ samostatnost a věrnost</h2>
+    <p>Moje klienty nepoznáš podle toho, že odříkají čísla. Poznáš je podle toho, že rozumějí svému tělu. Edukace dělá několik věcí naráz: klient je <strong>samostatnější</strong>, poradí si i beze mě, <strong>motivovanější</strong>, protože chápe smysl, a <strong>věrnější</strong>, protože mi věří a nenaletí nesmyslům z internetu.</p>
+    <p>A teď to nejlepší: čím samostatnějšího klienta vychovám, tím dýl u mě zůstává a tím líp o mně mluví. Edukace není „něco navíc“. Je to jádro toho, co dělám. Be Effective.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Proč dát klientovi vstupní příručku? <span class="tg">odpověď ▾</span></div><div class="aa">Dává kontext a „proč“, snižuje nejistotu, šetří ti čas a buduje důvěru. Klient se k ní kdykoli vrátí a nemusí se ji učit nazpaměť. Stačí, že ví, kde odpovědi najde.</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Co znamená „klient ví, proč to dělá“ a co ti to přinese? <span class="tg">odpověď ▾</span></div><div class="aa">Klient chápe souvislosti, ne jen čísla. To vede k samostatnosti (poradí si sám i v neprobrané situaci), motivaci (snáz to dodrží, když zná důvod) a důvěře (míň naletí mýtům z internetu).</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Proč je bod „váha vs. míry“ tak důležitý? <span class="tg">odpověď ▾</span></div><div class="aa">Váha přirozeně kolísá: voda, glykogen (1 g : 3 g vody), trávení, cyklus. Když tohle klient chápe, chrání ho to před panikou a předčasným vzdáním. Spolehlivější ukazatel jsou míry a dlouhodobý trend.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Proč začínat na vyšším příjmu a postupně ubírat? <span class="tg">odpověď ▾</span></div><div class="aa">Máš rezervu, kam postupně ubírat, jakmile se tělo adaptuje. Vyšší start znamená míň hladu, lepší tréninky a regeneraci. A psychicky je snazší startovat v hojnosti než hned v restrikci. Cílem je nejmenší potřebná úprava, ne hladovění.</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Jak edukace souvisí s tím, jak dlouho ti klient zůstane? <span class="tg">odpověď ▾</span></div><div class="aa">Edukovaný, samostatný klient je motivovanější a věrnější. Zůstává u tebe dýl a líp tě doporučuje. Takže tě samostatnost klienta nepřipraví o práci, naopak ti staví dlouhodobý vztah.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Sestav si osnovu vlastní vstupní příručky. Vypiš 5–7 témat a u každého jednu větu „proč to klient potřebuje vědět“. A zvlášť napiš, jak klientovi lidsky vysvětlíš, proč váha kolísá a proč se nemá řídit jediným číslem.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m7-l4/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m7">⬑ Zpět na Modul 7<span class="s">Praktické vedení klienta</span></a>
+      <a class="lnav-next" href="/akademie/studium/m7-l6/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+<li>Martin Barna. Vstupní příručka klienta — procesy Team Barna. Autorské materiály Barna Academy.</li>
+<li>Martin Barna. Jak hubnout efektivně (ebook). Barna Academy.</li>
+<li>Modul 6, Lekce 12 — Onboarding klienta. Barna Academy.</li>
+<li>Modul 7, Lekce 1 a 3 — Cesta klienta a komunikace. Barna Academy.</li>
+<li>Modul 5, Lekce 3 a 4 — Měření pokroku a motivační rozhovor. Barna Academy.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m7-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

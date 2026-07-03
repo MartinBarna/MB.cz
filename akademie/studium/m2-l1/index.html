@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kosterní systém — základ pohybu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 1 — Anatomie a pohyb</div>
+    <h1>Kosterní systém — základ pohybu</h1>
+
+    <p class="lead">Spousta trenérů anatomii proletí. A pak dá všem stejné cviky a diví se, že to někoho bolí. Přitom je to jednoduché: <strong>než pochopíš sval, musíš pochopit kostru.</strong> Kostra rozhoduje o tom, jak se člověk vůbec může hýbat. Jak má dlouhé páky, jak má tvarované klouby, jak mu stojí páteř. Když tohle umíš přečíst ze stoje klienta ještě dřív, než zvedne první činku, jsi napřed před většinou oboru.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Pochopíš, k čemu nám kostra je a proč jí říkáme „pasivní“ systém.</li>
+        <li>Rozlišíš osovou (axiální) a končetinovou (appendikulární) kostru.</li>
+        <li>Pochopíš neutrální páteř a sagitální rovnováhu. A proč to u klienta čteš dřív, než vůbec začne cvičit.</li>
+        <li>Poznáš pět typů kostí a tři typy kloubů.</li>
+        <li>Naučíš se dávat pokyny ke cvikům podle toho, jak je daný člověk postavený.</li>
+      </ul>
+    </div>
+    <figure class="ba-fig" data-fig="skeleton"><figcaption>Kostra je pasivní opora pohybu. Upínají se na ni svaly, které pohyb vytvářejí.</figcaption></figure>
+
+    <h2>1) K čemu nám kostra je</h2>
+    <p>Kostra dělá pět věcí. Drží tělo vzpřímené (struktura), umožňuje pohyb (funguje jako páky proti tahu svalů), chrání orgány, tvoří krvinky a skladuje minerály (hlavně vápník a fosfor) pro homeostázu.</p>
+    <p>Tady si dej pozor: kostra sama o sobě sílu <strong>nevyrobí</strong>. Je pasivní. Představ si tuhou kostru praku. Sílu udělá až sval s pojivovou tkání, který se napne proti té tuhé struktuře a zase uvolní (síla = hmotnost × zrychlení). Kostra dodá jen páky.</p>
+    <p>A teď to nejdůležitější. Každý člověk má jinou kostru. Jinak dlouhé páky, jinak tvarované kosti, jinak postavené klouby. Tyhle rozdíly ti přímo míchají výkonem, zdravím i tím, jak člověk vypadá. Proto žádný „jeden správný dřep pro všechny“ neexistuje.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi dva klienti dřepují jinak, neznamená to, že jeden z nich dřepuje blbě :) Prostě mají jinak dlouhou stehenní kost a jinak postavené kyčle. Moje práce není narvat je do polohy z učebnice. Moje práce je najít variantu, která je pro jejich tělo bezpečná a funguje.</div>
+
+    <h2>2) Osová a končetinová kostra</h2>
+    <p>Dospělý člověk má 206 kostí a dělí se na dvě části:</p>
+    <div class="card">
+      <p><strong>Osová (axiální) kostra — 80 kostí:</strong> hlava, krk, trup. Centrální osa těla. Chrání nervovou soustavu a dává plochu, na kterou se upínají svaly. Z hrudního koše se navíc řídí dýchání, takže kdejaká odchylka v horní části zad ti zasáhne i do dechu.</p>
+      <p><strong>Končetinová (appendikulární) kostra — 126 kostí:</strong> horní a dolní končetiny plus pánevní a ramenní pletenec, které je připojují k ose. Oproti ose je „rozpojenější“, a proto má větší rozsah pohybu.</p>
+    </div>
+    <div class="praxe"><b>V praxi (Martin):</b> Zaoblená horní záda (hrudní kyfóza) nejsou jen o tom, jak člověk vypadá. Hůř se mu dýchá. Vyzkoušej si to: sedni si zpříma a zhluboka se nadechni. Pak záda zakulať, přitáhni hrudník k pupku a nadechni se stejně. Cítíš ten rozdíl? Přesně tohle ukážu i klientovi a hned mu docvakne, proč na postuře záleží.</div>
+
+    <h2>3) Neutrální páteř a sagitální rovnováha</h2>
+    <p>Sagitální rovina je svislá rovina, která dělí tělo na levou a pravou půlku. Pohyb v ní je třeba předklon a záklon páteře. A tahle část je z celé lekce ta nejdůležitější.</p>
+    <p>Každý člověk má svou „neutrální“ polohu páteře. Je to rovnováha mezi přední a zadní muskulaturou. Pozor ale: neutrální <strong>neznamená „úplně rovná“</strong>. V téhle poloze ti kostra pracuje nejefektivněji a nejlíp přenáší sílu. Proto při práci s činkou většinou mezi bederní páteří a lavicí zůstává mezera (pokud zrovna flexi nechceš).</p>
+    <p>Kde přesně ten „neutrál“ je, se liší člověk od člověka. Je to genetika kostí. Tvoje práce je najít, co je pro daného člověka normální a hlavně bezpečné. Když má páteř zakřivení mimo, okolní svaly musí pořád dřít, aby tělo udržely vzpřímené. A odtud pak ta únava a bolest. Pánev k tomu funguje jako kyvadlo. Naklání se dopředu a dozadu a kompenzuje pohyb páteře, aby ses při předklonu nesložil jako prkno.</p>
+    <blockquote>Postavení pánve, zakřivení páteře a poloha končetin ti dají náznak mechanické dysfunkce ještě před prvním cvikem. Při úvodu a základním hodnocení tohle sleduješ a podle toho volíš cviky i pokyny.</blockquote>
+    <div class="praxe"><b>V praxi (Martin):</b> Půlku „špatné techniky“ vyřeším dřív, než klient zvedne zátěž. Stačí, že si u vstupního hodnocení přečtu, jak stojí a jak sedí.</div>
+
+    <h2>4) Pozor na pokyny (a na hypermobilitu)</h2>
+    <p>Pokyny ke cvikům musíš dávat vybíravě a podle konkrétního člověka. Univerzální povel jako „zvedni hrudník nahoru“ může jednoho srovnat a druhého z přílišné flexe překlopit rovnou do hyperextenze.</p>
+    <p>Hypermobilita bývá často stejný problém jako málo pohyblivosti. Vzniká ze čtyř věcí: stavba kolagenu a bílkovin (genetika), tvar konců kostí, svalový tonus (klidový odpor svalu) a propriocepce (vnímání pohybu kloubů).</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Žádný pokyn nedávám plošně. Co jednoho srovná, druhého rozhodí. Vždycky koukám, co ten pokyn s konkrétním tělem udělá, a podle toho ho upravím.</div>
+
+    <h2>5) Pět typů kostí</h2>
+    <div class="card">
+      <p><strong>Dlouhé</strong> — končetiny a prsty. Nosí váhu a fungují jako páky (stehenní, pažní, holenní). Konec = epifýza (kloubní chrupavka, co tlumí nárazy), střed = diafýza.</p>
+      <p><strong>Krátké</strong> — krychlové, stejně dlouhé jako široké. Dávají stabilitu a jen malý pohyb (zápěstí, kotník).</p>
+      <p><strong>Ploché</strong> — chrání orgány jako štíty a nabízejí velkou plochu pro úpony (pánev, žebra, lopatky, hrudní kost). To se ti hodí u pokynů i postury.</p>
+      <p><strong>Nepravidelné</strong> — složitý tvar, který nezapadá jinam. Chrání orgány a slouží pro úpony (obratle, kosti pánve).</p>
+      <p><strong>Sésamové</strong> — malé kosti uložené ve šlachách v místech, kde je stres a tření. Chrání šlachu (největší je čéška).</p>
+    </div>
+
+    <h2>6) Tři typy kloubů</h2>
+    <div class="card">
+      <p><strong>Synartrodické (fibrózní)</strong> — nehybné, spojené vazivem (švy lebky).</p>
+      <p><strong>Amfiartrodické (chrupavčité)</strong> — malý víceosý pohyb (mezi obratli, sakroiliakální kloub).</p>
+      <p><strong>Diartrodické (synoviální)</strong> — velký rozsah pohybu, nejčastější typ (klouby končetin). Mají hyalinní chrupavku (beztřecí povrch), kloubní pouzdro se synoviální tekutinou (mazivo) a drží je vazy, pojivová a svalová tkáň.</p>
+    </div>
+    <blockquote>Kostra je pasivní. Dává páky, sílu vyrábí až sval. Každá kostra je jiná, takže žádná univerzální technika není. Neutrální páteř není rovná páteř. A sagitální rovnováhu si u klienta přečteš dřív, než zvedne zátěž.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč kostře říkáme „pasivní systém“? <span class="tg">odpověď ▾</span></div><div class="aa">Sama sílu nevyrobí. Slouží jen jako tuhé páky, proti kterým táhnou svaly. Sílu udělá až sval s pojivovou tkání.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolik kostí má dospělý člověk a jak se dělí? <span class="tg">odpověď ▾</span></div><div class="aa">206 kostí: 80 osových (hlava, krk, trup) a 126 končetinových (končetiny plus pánevní a ramenní pletenec).</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co znamená „neutrální páteř“ a proč to není totéž co „rovná“? <span class="tg">odpověď ▾</span></div><div class="aa">Je to rovnováha přední a zadní muskulatury, kde kostra nejefektivněji přenáší sílu. Nejsou to rovná záda, ale to optimální zakřivení pro daného člověka, které se liší kus od kusu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč nejde dát pokyn ke cviku všem stejně? <span class="tg">odpověď ▾</span></div><div class="aa">Lidé mají jinou stavbu kostí, jinou mobilitu i propriocepci. Stejný povel jednoho srovná a druhého překlopí do hyperextenze.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Vyjmenuj pět typů kostí a u každého jednu funkci nebo příklad. <span class="tg">odpověď ▾</span></div><div class="aa">Dlouhé (páky — stehenní), krátké (stabilita — zápěstí), ploché (ochrana a úpony — lopatka), nepravidelné (obratle), sésamové (čéška).</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U příštího klienta (nebo na sobě před zrcadlem) si při vstupním hodnocení všimni postavení pánve (předozadní sklon), zakřivení páteře a postavení ramen. Zapiš si, co vidíš, ještě než dotyčný zacvičí. A podle toho navrhni jeden cvik nebo pokyn, který bys upravil.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m1-l15/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m2">⬑ Zpět na Modul 2<span class="s">Anatomie a pohyb</span></a>
+      <a class="lnav-next" href="/akademie/studium/m2-l2/">Další lekce →</a>
+    </nav>
+    <a class="ba-upsell" href="/akademie/objednavka/" style="display:block;margin:1.8rem 0 .2rem;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.18),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.4);border-radius:16px;padding:18px 22px;color:#cfc6b8;font-size:.97rem;line-height:1.55;">      <b style="color:#fff;">🎁 Tahle lekce je ochutnávka Academy zdarma.</b> Celá Barna Academy — 224 lekcí napříč 20 moduly, certifikace i videokurz v ceně — odemkneš jednorázově za <b style="color:#fff;">8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.      <span style="display:block;margin-top:8px;color:#f0b46b;font-weight:700;">Odemknout celou Academy — 8 900 Kč →</span>    </a>    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Rubin C, Rubin J. Biomechanics and Mechanobiology of Bone. SUNY Stony Brook / UNC-Chapel Hill.</li>
+        <li>Culham EG, Jimenez HA, King CE. Thoracic kyphosis, rib mobility, and lung volumes. Spine. 1994;19(11):1250–5.</li>
+        <li>Morris JM, Lucas DB, Bresler B. Role of the trunk in stability of the spine. J Bone Joint Surg. 1961;43:327–51.</li>
+        <li>Boulay C, et al. Sagittal alignment of spine and pelvis regulated by pelvic incidence. Eur Spine J. 2006;15(4):415–22.</li>
+        <li>Vizniak NA. Quick Reference Clinical Consultant — Muscle Manual. Professional Health Systems; 2008.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ Promise.resolve(true).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

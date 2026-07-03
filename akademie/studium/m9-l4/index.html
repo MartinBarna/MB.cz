@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deload a taper: umění subtrakce — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 9 · Lekce 4 — Periodizace a plánování</div>
+    <h1>Deload a taper: umění subtrakce</h1>
+
+    <p class="lead">Tělo neroste při tréninku. Roste, když se po něm zotavíš. <strong>Plánované odlehčení</strong> není krok zpět. Je to nástroj, jak z odmakané práce konečně vytěžit zisk. Deload a taper jsou dvě verze stejného řemesla: ubrat ve správnou chvíli, schválně.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč výkon = fitness mínus únava a co z toho plyne pro plánování.</li>
+        <li>Čím se liší deload a taper a kde si je lidi pletou.</li>
+        <li>Jak deload prakticky provést a podle čeho ho zařadit reaktivně.</li>
+        <li>Jak vyladit taper před výkonem nebo soutěží na den D.</li>
+        <li>Jak odpočinek vysvětlit klientovi, co má pocit, že „lenoší“.</li>
+      </ul>
+    </div>
+
+    <h2>1) Víc neznamená líp</h2>
+    <p>Většina lidí, a popravdě i dost koučů, bere pokrok jako „přidávat, přidávat, přidávat“. Jenže adaptace přijde až při regeneraci. Když na sebe zátěž kupíš a nedáš tělu dohnat zotavení, výkon se v jednu chvíli zastaví a klidně se i zhorší. Odlehčení tomu předejde a navíc ti dovolí sklidit, cos do tréninku nasypal.</p>
+
+    <h2>2) Únava, fitness a superkompenzace</h2>
+    <p>Po tréninku se ti v těle skládají dvě věci. <strong>Fitness</strong> je dlouhodobá adaptace. Roste pomalu, ale drží dlouho. <strong>Únava</strong> je akutní vyčerpání. Naskočí rychle a stejně rychle odejde. Tvůj aktuální výkon je prostě rozdíl těch dvou: fitness mínus únava.</p>
+    <p>Když dlouho tvrdě maká, fitness ti roste. Jenže s ním roste i únava, a ta ten zisk schová. Ubereš v pravou chvíli a únava se vypaří dřív než fitness. Pod ní se vynoří forma, co tam celou dobu byla. Tomuhle vyplavání se říká superkompenzace a deload i taper jsou způsob, jak si ho pohlídat.</p>
+    <figure class="ba-fig" data-fig="periodization"><figcaption>Deload uvnitř bloků a taper před vrcholem jsou plánovaná odlehčení, která řídí únavu v čase.</figcaption></figure>
+
+    <h2>3) Deload: údržbové odlehčení</h2>
+    <p>Deload je naplánované období nižší zátěže (typicky zhruba 3–7 dní, často jako „deload týden“). Necháš tělo dohnat regeneraci, aniž bys přišel o adaptaci. Je to údržbová pauza uvnitř dlouhodobého tréninku, ne konec sezóny. Provést ho jde třemi cestami a klidně je můžeš míchat: ubrat objem (míň sérií, nejčastější a obvykle nejúčinnější), ubrat intenzitu (nižší váhy, dál od selhání) nebo ubrat frekvenci (míň tréninků v týdnu).</p>
+    <p>Pohyb obvykle úplně nevysazuješ. Lehčí trénink ti udrží návyk i „cit“, jen výrazně sundá zátěž. Deload zařadíš buď <strong>plánovaně</strong> (pravidelně po 3–6 týdnech progrese), nebo <strong>reaktivně</strong> podle signálů: výkon stojí nebo padá, pořád jsi unavený a špatně spíš, nemáš chuť trénovat, bolí klouby a šlachy, jsi podrážděný, vyšší klidový tep.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Deload vyjde vždycky levněji než vynucená pauza ze zranění nebo z vyhoření. Jakmile u klienta vidím dva tři tyhle signály najednou, neřeším, jestli „si to zaslouží“. Předřadím deload týden a k progresi se vracíme svěží. Chci, aby z deloadu odešel natěšený, ne otrávený z nicnedělání. Proto lehký trénink nechávám, jenom mu seškrtám série. :)</p></div>
+
+    <h2>4) Taper: vyladění na vrchol</h2>
+    <p>Taper je postupné snižování zátěže v období <em>před</em> konkrétním výkonem nebo soutěží. Cíl je dostat klienta na den D maximálně svěžího a ve špičkové formě. Oproti deloadu, což je údržba uprostřed přípravy, taper míří na jeden vrchol v přesný čas.</p>
+    <p>Podle výzkumu (mj. Bosquet et al., 2007) taper hlavně <strong>výrazně sundá objem</strong>, často o 40–60 % podle sportu a délky, protože objem je hlavní zdroj únavy. Intenzitu naopak <strong>držíš nebo ji snížíš jen mírně</strong>. Vysoká intenzita v malých dávkách udrží „ostří“ i adaptaci. Kdybys shodil i ji, forma by spíš opadla. Frekvenci spíš zkracuješ, než úplně vynecháváš, a celé to obvykle běží řádově 1–2 týdny.</p>
+    <blockquote>Uber množství, ne kvalitu. Smaž únavu a podrž fitness — výkon v den D pak bude co nejvyšší.</blockquote>
+
+    <h2>5) Deload vs. taper — v čem se liší</h2>
+    <p>Oba stojí na stejné fyziologii: smazat únavu rychleji, než odejde fitness. Rozdíl je v účelu a načasování. <strong>Deload</strong> je pravidelná nebo reaktivní údržbová pauza uvnitř tréninku. Po ní se vracíš k normální práci. <strong>Taper</strong> je cílené vyladění před vrcholem. Po něm přijde výkon nebo soutěž, ne další blok stejné dřiny.</p>
+    <div class="card"><strong>Zkratka pro paměť:</strong> Deload pokračuje (návrat k tréninku). Taper kulminuje (následuje den D). Obojí je úmyslné ubírání.</div>
+
+    <h2>6) Jak o odpočinku mluvit s klientem</h2>
+    <p>Motivovaný a netrpělivý klient bere odlehčení jako „lenošení“ nebo „krok zpět“. A tady je tvoje práce mu to vysvětlit jinak. Deload není pauza od pokroku, je jeho součástí. Teď se sklízí, co se natrénovalo. Tělo neroste v posilovně, roste, když se zotaví. U úzkostnějšího klienta zdůrazni, že jde o krátké, naplánované období a že síla nikam nezmizí. Naopak se vyjeví.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Mně osobně sedí obraz luku. Napínat ho donekonečna znamená, že praskne. Povolit ve správnou chvíli znamená vystřelit dál. Regeneraci klientům popisuju jako úroky z nasbírané práce, fakt to tak vidím. A naučit někoho respektovat zotavení? To je jedna z nejcennějších věcí, co pro jeho dlouhodobý a bezpečný pokrok můžeš udělat. 💪</p></div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak vyjádříš aktuální výkon vzhledem k fitness a únavě? <span class="tg">odpověď ▾</span></div><div class="aa">Výkon = fitness mínus únava. Fitness roste pomalu a vydrží dlouho, únava naskočí i odejde rychle. Když ubereš zátěž, únava zmizí dřív než fitness a „pod ní“ se vyjeví forma (superkompenzace).</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> V čem se účelem hlavně liší deload a taper? <span class="tg">odpověď ▾</span></div><div class="aa">Deload je údržbová pauza uvnitř dlouhodobého tréninku, po ní se vracíš k normální práci. Taper je cílené vyladění před konkrétním vrcholem, po něm přijde výkon nebo soutěž. Stejná fyziologie, jiný účel a načasování.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Který parametr u taperu sundáš nejvíc a co naopak podržíš? <span class="tg">odpověď ▾</span></div><div class="aa">Výrazně sundáš objem (často o 40–60 %), protože je hlavním zdrojem únavy. Intenzitu držíš nebo ji snížíš jen mírně, vysoká intenzita v malých dávkách udrží „ostří“ i adaptaci. Princip: uber množství, ne kvalitu.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Podle čeho poznáš, že je čas zařadit deload reaktivně? <span class="tg">odpověď ▾</span></div><div class="aa">Výkon stojí nebo padá, pořád jsi unavený a špatně spíš, nemáš chuť trénovat, bolí klouby a šlachy, jsi podrážděný, vyšší klidový tep. Jsou to předzvěsti přetížení a deload vyjde levněji než pauza ze zranění.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak vysvětlíš odpočinek klientovi, co to bere jako „lenošení“? <span class="tg">odpověď ▾</span></div><div class="aa">Řekni mu, že odlehčení je součást pokroku, ne jeho opak. Tělo roste při zotavení. Pomáhá obraz luku (napínat donekonečna = praskne; povolit ve správnou chvíli = vystřelíš dál) a důraz na to, že jde o krátké naplánované období a síla nezmizí, naopak se vyjeví.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si jednoho klienta a na příští mikrocyklus mu naplánuj konkrétní deload. Urči, který parametr seškrtáš (objem, intenzitu, nebo frekvenci) a o kolik. A připrav si jednu větu, kterou mu odlehčení podáš jako součást pokroku, ne jako pauzu.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m9-l3/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m9">⬑ Zpět na Modul 9<span class="s">Periodizace a plánování</span></a>
+      <a class="lnav-next" href="/akademie/studium/m9-l5/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Bosquet L, et al. Effects of tapering on performance: a meta-analysis. Med Sci Sports Exerc. 2007.</li>
+        <li>Mujika I, Padilla S. Scientific bases for precompetition tapering strategies. Med Sci Sports Exerc. 2003.</li>
+        <li>Pritchard H, et al. Effects and Mechanisms of Tapering in Maximizing Muscular Strength. Strength Cond J. 2015.</li>
+        <li>Bell L, et al. Overreaching and overtraining in strength sports and resistance training (přehled k únavě a regeneraci).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m9-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

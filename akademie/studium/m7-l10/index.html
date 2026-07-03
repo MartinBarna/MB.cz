@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data klienta a sledování pokroku — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 7 · Lekce 10 — Praktické vedení klienta</div>
+    <h1>Data klienta a sledování pokroku</h1>
+
+    <p class="lead">Koučink bez evidence je jenom <strong>hádání</strong>. Profík se neřídí dojmy. Vede si záznamy a rozhoduje podle nich. Data ti řeknou, jestli plán funguje, kdy zasáhnout a čím klienta nakopnout.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč tě poctivá evidence odliší od amatéra.</li>
+        <li>Jaká data sbírat a co je jenom šum, co tebe i klienta zbytečně zatěžuje.</li>
+        <li>Jak z dat udělat lepší rozhodnutí a zároveň jimi klienta hecnout.</li>
+        <li>Jak si držet přehled o všech klientech, aby ti nikdo „nepropadl sítem“.</li>
+        <li>Jak nezahltit sebe ani klienta a chránit jeho soukromí.</li>
+      </ul>
+    </div>
+
+    <h2>1) Bez dat jen hádáš</h2>
+    <p>„Myslím, že mu to jde.“ „Asi přibral sílu.“ „Nějak mu to vázne.“ To není koučink, to je věštění z koule. Profík si vede záznamy, protože dojem klame a paměť selhává. A přehled o všech klientech naráz ti navíc pohlídá, že ti nikdo nevypadne zrovna ve chvíli, kdy potřebuje, abys zasáhl.</p>
+    <p>Tahle lekce sešívá dohromady věci, co už znáš. Měsíční review, měření, nepřesnosti v zápisu. Dáme z toho jeden praktický systém evidence, který drží celé vedení klienta pohromadě.</p>
+
+    <h2>2) Jaká data sbírat (a co je jen šum)</h2>
+    <p>Nejde o to sbírat <strong>všechno</strong>, ale to <strong>užitečné</strong>. Já si data dělím na dvě party, které spolu musí makat.</p>
+    <p><strong>Objektivní data (tvrdá čísla):</strong> hmotnost — vždycky jako trend, ne denní výkyvy; míry a fotky (silný ukazatel hlavně u rekompozice); tréninkový výkon — zvednuté váhy, opakování, progrese v čase, to je nejjasnější důkaz, že trénink zabírá; klidně i kondiční ukazatele jako klidový tep.</p>
+    <p><strong>Subjektivní data (jak se klient má):</strong> energie, nálada, spánek, hlad, stres, jak drží trénink i jídelníček, pocit z těla, motivace. Tahle „měkká“ data jsou stejně cenná jako čísla. Často ti totiž vysvětlí, <em>proč</em> ta čísla vypadají, jak vypadají. Váha stojí, stres vysoký, spánek mizerný — to je úplně jiný příběh než váha stojí u člověka, co má všechno v pohodě.</p>
+    <div class="card"><strong>Pozor na šum:</strong> denní výkyvy váhy (voda, jídlo, hormony) brané jako trend a hromada metrik, které klienta jenom stresují a nic nemění. Sbírej to, co reálně použiješ k rozhodnutí. Zbytek je jen zátěž navíc.</div>
+
+    <h2>3) Jak data využít k rozhodování</h2>
+    <p>Data nejsou na ozdobu, jsou na lepší rozhodnutí. Koukej na <strong>trend, ne na jednotlivé body</strong> — jeden údaj ti neřekne nic, směr v čase ti řekne všechno. Spojuj objektivní a subjektivní data, protože každé zvlášť klame a dohromady dají příběh. A rozhoduj se podle vzorců: „tři týdny stojí váha, výkon klesá, spánek za nic“ není náhoda, to je jasný signál přetížení nebo stresu.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient pošle jedno blbé vážení a začne panikařit, plán neměním. To je přesně ten šum, na který nesmíš skočit. Dám tomu čas a koukám na čtyřtýdenní trend. Ale když vidím vzorec — váha stojí, výkon padá, spánek v háji — tam zasáhnu hned, protože tohle už není náhoda. To už jsou data, co mi říkají, že tělo nestíhá regenerovat. :)</div>
+
+    <h2>4) Data jako nástroj motivace</h2>
+    <p>Evidence není jen pro tebe, je to skvělý hecovák pro klienta. Lidi rychle zapomenou, odkud vyšli, tak jim <strong>ukazuj pokrok, který sami nevidí</strong>: graf síly, srovnání fotek, vývoj měr. To je hmatatelný důkaz, že to funguje. A přesně tohle ti klienty drží.</p>
+    <p>Když váha stojí, sáhni po jiných ukazatelích — síla, míry, energie, jak sedí oblečení. Slav s ním milníky, protože data ti přesně řeknou, kdy něčeho dosáhl. A hlavně: nauč klienta číst vlastní data, ať chápe trend a nepanikaří z každého výkyvu. Klient, který tomu rozumí, je samostatnější a míň naštvaný.</p>
+
+    <h2>5) Přehled o všech klientech</h2>
+    <p>Jak ti přibývají klienti, potřebuješ systém, ať ti nikdo neunikne. O <strong>každém klientovi si veď záznam</strong>: cíle, výchozí stav, zdravotní omezení, historie, co funguje a co ne, důležité věci z jeho života. Příště pak navážeš jako profík, ne jako někdo, kdo zapomněl, o čem jste mluvili.</p>
+    <p>Sleduj stav a aktivitu — kdo jede a kdo začíná „tichnout“. Ticho je totiž signál, že klient možná odchází, a včasný zásah to dokáže otočit. Nástrojem může být koučovací appka, obyčejná tabulka nebo CRM. Důležitý je <strong>systém, ne software</strong>. Začni jednoduše a přidávej, až to budeš potřebovat. Dobře vedená data jsou páteř toho, jak rosteš.</p>
+    <blockquote>Důležitý je systém, ne konkrétní software. Začni s tabulkou, kterou fakt používáš — ne s nástrojem, do kterého se už nikdy nepodíváš.</blockquote>
+
+    <h2>6) Nezahltit sebe ani klienta a chránit soukromí</h2>
+    <p>Víc dat není automaticky líp. Po klientovi chtěj jen to, co reálně použiješ. Záplava hlášení unaví, vystresuje (hlavně perfekcionisty a úzkostnější typy) a sníží adherenci. A sám sbírej jen tolik, kolik zvládneš pořádně zpracovat. Přizpůsob se člověku: analytik ocení víc čísel, pohodář chce minimum.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Data klientů jsou citlivka — zdraví, fotky, osobní údaje. Sbírám jen to potřebné, zabezpečím to a nedržím to déle, než musím. Fotky a citlivé věci jenom se souhlasem a nikdy je nezveřejním bez výslovného svolení. Vždycky vím, kde data leží a jak jsou chráněná. Když klient ví, že s jeho daty zacházím slušně, věří mi. A to je kus profesionality. Be Effective! 💪</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Proč by se měl trenér řídit daty a ne dojmy? <span class="tg">odpověď ▾</span></div><div class="aa">Dojem klame a paměť selhává. Záznamy ti narovinu řeknou, jestli plán funguje, kdy zasáhnout a čím klienta hecnout. Bez evidence koučink jen hádá. Profík se rozhoduje podle dat.</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Jaký je rozdíl mezi objektivními a subjektivními daty a proč potřebuješ obojí? <span class="tg">odpověď ▾</span></div><div class="aa">Objektivní data jsou tvrdá čísla (váha-trend, míry, fotky, tréninkový výkon). Subjektivní jsou pocity klienta (energie, spánek, stres, jak drží plán). Měkká data ti často vysvětlí, proč čísla vypadají, jak vypadají. Každé zvlášť klame, dohromady dají příběh.</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Proč se má sledovat trend, a ne jednotlivé body? <span class="tg">odpověď ▾</span></div><div class="aa">Jeden údaj ti neřekne nic. Denní výkyvy váhy jsou jen šum (voda, jídlo, hormony). Smysl dává směr v čase. Měnit plán kvůli jednomu blbému vážení znamená skočit na šum, a to spíš uškodí.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Jak může evidence sloužit jako motivační nástroj pro klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Ukazuje pokrok, který klient sám nevidí (graf síly, srovnání fotek, vývoj měr). Když váha stojí, sáhneš po jiných ukazatelích. Pomáhá slavit milníky a naučit klienta číst vlastní data, aby nepanikařil z výkyvů.</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Co znamená „nezahltit“ a jak se to týká soukromí klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Chtěj jen data, která reálně použiješ. Záplava měření klienta unaví a sníží adherenci. Sám sbírej jen tolik, kolik zpracuješ. Citlivá data (zdraví, fotky) sbírej minimálně, zabezpeč je, používej jen se souhlasem a nezveřejňuj bez svolení.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si jednoho klienta a postav mu jednoduchou evidenci, tabulka úplně stačí. Vedle váhy-trendu a výkonu přidej aspoň tři subjektivní ukazatele (spánek, stres, jak drží plán). Po měsíci se mrkni, jestli ti spojení tvrdých a měkkých dat ukázalo vzorec, který by ti jinak utekl.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m7-l9/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m7">⬑ Zpět na Modul 7<span class="s">Praktické vedení klienta</span></a>
+      <a class="lnav-next" href="/akademie/studium/m8-l1/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+<li>Team Barna. Praktické procesy vedení klienta — evidence, check-iny, sledování pokroku. Interní materiály 2026.</li>
+<li>Helms E, Valdez A, Morgan A. The Muscle and Strength Pyramid — Training &amp; Nutrition. 2nd ed. 2019.</li>
+<li>Úřad pro ochranu osobních údajů. Zásady zpracování osobních údajů (GDPR). ÚOOÚ 2024.</li>
+<li>Barna Academy. Modul 7, Lekce 9 — Právní a etický rámec. 2026.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m7-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

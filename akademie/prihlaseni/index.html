@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Přihlášení — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .auth{max-width:440px;margin:0 auto;padding:44px 22px 80px;}
+  .ahero{text-align:center;margin-bottom:26px;}
+  .ahero .mark{width:62px;height:62px;border-radius:18px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;
+    font-weight:800;font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 14px 34px -6px rgba(255,122,0,.55);}
+  .ahero h1{font-size:1.7rem;color:#fff;letter-spacing:-.02em;}
+  .ahero p{color:var(--muted);font-size:.95rem;margin-top:.4rem;}
+  .acard{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);
+    border-radius:22px;padding:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.8);}
+  .tabs{display:flex;gap:5px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:14px;padding:5px;margin-bottom:20px;}
+  .tabs button{flex:1;border:none;background:transparent;padding:11px;border-radius:10px;font-weight:700;cursor:pointer;color:var(--muted);
+    font-family:inherit;font-size:.92rem;transition:.2s;}
+  .tabs button.on{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;box-shadow:0 8px 18px -6px rgba(255,122,0,.5);}
+  label{display:block;font-size:.82rem;font-weight:600;color:var(--muted-2);margin:14px 0 6px;}
+  input{width:100%;padding:13px 15px;border:1px solid var(--line-2);border-radius:12px;font-family:inherit;font-size:.96rem;
+    background:rgba(0,0,0,.25);color:var(--ink);transition:.2s;}
+  input::placeholder{color:#6f665d;}
+  input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,122,0,.15);background:rgba(0,0,0,.35);}
+  .btn{width:100%;margin-top:20px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;
+    padding:14px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;font-size:1rem;
+    box-shadow:0 14px 30px -8px rgba(255,122,0,.55);transition:transform .2s,box-shadow .2s;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 18px 38px -8px rgba(255,122,0,.7);}
+  .btn[disabled]{opacity:.55;cursor:default;transform:none;}
+  .msg{margin-top:15px;padding:12px 15px;border-radius:12px;font-size:.9rem;display:none;}
+  .msg.err{display:block;background:rgba(179,38,30,.15);color:#ff9c93;border:1px solid rgba(179,38,30,.4);}
+  .msg.ok{display:block;background:rgba(30,122,50,.15);color:#86e29a;border:1px solid rgba(30,122,50,.4);}
+  .note{display:block;background:rgba(255,122,0,.08);color:var(--gold-soft);border:1px solid rgba(255,122,0,.25);
+    margin-bottom:18px;padding:12px 15px;border-radius:12px;font-size:.88rem;}
+  .note a{color:#fff;font-weight:700;}
+  .afoot{text-align:center;color:var(--muted);font-size:.84rem;margin-top:22px;}
+  .afoot a{color:var(--gold-soft);font-weight:600;}
+  .buy{margin-top:24px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:20px;padding:20px;}
+  .buy-h{font-weight:700;color:#fff;text-align:center;font-size:1.02rem;}
+  .buy-sub{text-align:center;color:var(--muted);font-size:.84rem;margin:3px 0 16px;}
+  .buy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:440px){.buy-grid{grid-template-columns:1fr;}}
+  .buy-card{display:block;padding:17px 14px;border-radius:15px;background:rgba(255,255,255,.03);border:1px solid var(--line);text-align:center;transition:transform .2s,border-color .2s,background .2s;}
+  .buy-card:hover{border-color:rgba(255,122,0,.4);transform:translateY(-3px);background:rgba(255,122,0,.05);}
+  .buy-card .bi{font-size:1.6rem;}
+  .buy-card b{display:block;color:#fff;margin-top:7px;font-size:.95rem;}
+  .buy-card .d{color:var(--muted);font-size:.78rem;}
+  .buy-card .price{color:var(--gold-soft);font-weight:700;font-size:.82rem;margin-top:8px;display:block;}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Přihlášení</span></span></a>
+    <div class="topr"><a href="/akademie/">← Zpět</a></div>
+  </div></div>
+
+  <div class="auth">
+    <div class="ahero">
+      <div class="mark">MB</div>
+      <h1>Barna Academy</h1>
+      <p>Přihlas se ke svému studiu — lekce, videa i certifikace na jednom místě.</p>
+    </div>
+
+    <div class="note" id="demoNote" style="display:none;">Barna Academy se právě spouští. Zatím si můžeš projít <a href="/akademie/studium/">ukázkové lekce</a>; přihlášení bude aktivní po startu.</div>
+    <div class="note" id="needNote" style="display:none;"></div>
+
+    <div class="acard">
+      <div class="tabs">
+        <button id="tabIn" class="on" type="button">Přihlásit se</button>
+        <button id="tabUp" type="button">Vytvořit účet</button>
+      </div>
+
+      <form id="form" novalidate>
+        <div id="nameRow" style="display:none;">
+          <label for="fname">Jméno a příjmení</label>
+          <input id="fname" type="text" autocomplete="name" placeholder="Jan Novák">
+        </div>
+        <label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="email" placeholder="tvuj@email.cz" required>
+        <div id="passRow">
+          <label for="pass">Heslo</label>
+          <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" minlength="6">
+        </div>
+        <button class="btn" id="submit" type="submit">Přihlásit se</button>
+        <div class="msg" id="msg"></div>
+        <p id="otpHint" style="font-size:.82rem;color:#9a948c;margin:.6rem 0 0;text-align:center;line-height:1.45;">Hlásíš se poprvé po koupi? Dej <strong>„Vytvořit účet"</strong> a použij stejný e-mail jako u platby.</p>
+      </form>
+      <a href="/akademie/navod/" style="display:block;text-align:center;margin:14px 0 0;font-size:.86rem;color:#ffb061;text-decoration:none;font-weight:600;">📖 Nevíš si rady? Návod krok za krokem →</a>
+    </div>
+
+    <div class="buy">
+      <div class="buy-h">Nemáš ještě přístup?</div>
+      <div class="buy-sub">Vyber si a získej přístup hned po zaplacení.</div>
+      <div class="buy-grid">
+        <a class="buy-card" href="/videokurz">
+          <div class="bi">🎬</div><b>Videokurz výživy</b><div class="d">182 videí + materiály</div><span class="price">od 800 Kč →</span>
+        </a>
+        <a class="buy-card" href="/akademie/">
+          <div class="bi">🎓</div><b>Akademie pro trenéry</b><div class="d">224 lekcí + certifikace</div><span class="price">Zjistit víc →</span>
+        </a>
+      </div>
+    </div>
+
+    <p class="afoot">Problém s přihlášením? <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    (function () {
+      var mode = 'in';
+      var tabIn = document.getElementById('tabIn'), tabUp = document.getElementById('tabUp');
+      var nameRow = document.getElementById('nameRow'), passRow = document.getElementById('passRow'), otpHint = document.getElementById('otpHint'), submit = document.getElementById('submit');
+      var msg = document.getElementById('msg'), form = document.getElementById('form');
+      var emailEl = document.getElementById('email'), passEl = document.getElementById('pass'), fnameEl = document.getElementById('fname');
+
+      function qs(k) { try { return new URLSearchParams(location.search).get(k); } catch (e) { return null; } }
+      // Cíl po přihlášení: parametr ?next= (jen interní cesty /akademie/...), jinak rozcestník.
+      // Kupující z děkovačky tak přistane rovnou ve videokurzu, ne na rozcestníku.
+      var nextUrl = '/akademie/moje/';
+      var nextQ = qs('next');
+      if (nextQ && /^\/akademie\//.test(nextQ)) nextUrl = nextQ;
+      var need = qs('need');
+      if (need) {
+        var n = document.getElementById('needNote');
+        n.style.display = 'block';
+        n.textContent = need === 'videokurz'
+          ? 'K videokurzu potřebuješ zakoupený přístup. Po přihlášení a zakoupení se odemkne.'
+          : 'K této části Akademie potřebuješ zakoupený přístup. Po přihlášení a zakoupení se odemkne.';
+      }
+
+      function setMode(m) {
+        mode = m;
+        tabIn.classList.toggle('on', m === 'in');
+        tabUp.classList.toggle('on', m === 'up');
+        nameRow.style.display = m === 'up' ? 'block' : 'none';
+        passRow.style.display = 'block';
+        otpHint.style.display = m === 'up' ? 'none' : 'block';
+        submit.textContent = m === 'up' ? 'Vytvořit účet' : 'Přihlásit se';
+        passEl.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
+        msg.className = 'msg'; msg.textContent = '';
+      }
+      tabIn.addEventListener('click', function () { setMode('in'); });
+      tabUp.addEventListener('click', function () { setMode('up'); });
+
+      // Deep-link z onboarding e-mailu: ?tab=up otevře rovnou registraci,
+      // ?email= předvyplní e-mail přístupu (zabrání nejčastější chybě — registraci jiným e-mailem).
+      var qTab = qs('tab');
+      if (qTab === 'up' || qTab === 'register') setMode('up');
+      var qEmail = qs('email');
+      if (qEmail && qEmail.indexOf('@') > 0) {
+        emailEl.value = qEmail;
+        var hint = document.createElement('p');
+        hint.style.cssText = 'font-size:.8rem;color:#ffb061;margin:6px 0 0;line-height:1.45;';
+        hint.innerHTML = '✓ Tohle je e-mail tvého přístupu k videokurzu — nech ho tak, jak je.';
+        emailEl.parentNode.insertBefore(hint, emailEl.nextSibling);
+      }
+
+      function show(kind, text) { msg.className = 'msg ' + kind; msg.textContent = text; }
+
+      // Přelož časté (anglické) chyby Supabase do srozumitelné češtiny pro laiky.
+      function friendlyErr(e) {
+        var s = (e || '').toLowerCase();
+        if (s.indexOf('invalid login') >= 0 || s.indexOf('invalid credentials') >= 0)
+          return 'E-mail nebo heslo nesedí. Zkontroluj překlepy. Hlásíš se poprvé po koupi? Dej „Vytvořit účet".';
+        if (s.indexOf('already registered') >= 0 || s.indexOf('already been registered') >= 0 || s.indexOf('user already') >= 0)
+          return 'Na tenhle e-mail už účet existuje — přepni nahoře na „Přihlásit se" a zadej heslo.';
+        if (s.indexOf('password') >= 0 && s.indexOf('6') >= 0)
+          return 'Heslo musí mít aspoň 6 znaků.';
+        if (s.indexOf('not confirmed') >= 0 || s.indexOf('email not confirmed') >= 0)
+          return 'Účet ještě není potvrzený. Mrkni do e-mailu (i do spamu), nebo napiš na martin@martinbarna.cz.';
+        if (s.indexOf('rate limit') >= 0 || s.indexOf('too many') >= 0)
+          return 'Moc pokusů po sobě. Dej tomu chvilku a zkus to znovu.';
+        return e || 'Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.';
+      }
+
+      window.BA.ready.then(function () {
+        if (window.BA.mode === 'demo') {
+          document.getElementById('demoNote').style.display = 'block';
+        } else {
+          window.BA.getUser().then(function (u) {
+            if (!u) return;
+            // Přihlášený a NEbyl odmítnut pro chybějící přístup → pusť ho dál.
+            if (!need) { location.href = nextUrl; return; }
+            // Přihlášený, ale nemá přístup k 'need' produktu → NEpřesměrovávej
+            // (jinak vznikne nekonečná smyčka login ↔ obsah). Ukaž zprávu + odhlášení.
+            var n = document.getElementById('needNote');
+            n.style.display = 'block';
+            n.innerHTML = (need === 'videokurz'
+              ? 'Jsi přihlášený jako <b>' + (u.email || '') + '</b>, ale tenhle účet nemá přístup k videokurzu. '
+              : 'Jsi přihlášený jako <b>' + (u.email || '') + '</b>, ale tenhle účet nemá přístup k této části Akademie. ')
+              + 'Získej přístup na <a href="/akademie/">stránce Akademie</a>, nebo se <a href="#" id="logoutLink">odhlas</a> a přihlas jiným účtem.';
+            var ll = document.getElementById('logoutLink');
+            if (ll) ll.addEventListener('click', function (e) {
+              e.preventDefault();
+              window.BA.signOut().then(function () { location.href = '/akademie/prihlaseni/'; });
+            });
+          });
+        }
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = emailEl.value.trim(), pass = passEl.value, fname = fnameEl.value.trim();
+        if (!email || email.indexOf('@') < 1) { show('err', 'Zadej prosím platný e-mail.'); return; }
+        if (pass.length < 6) { show('err', 'Vyplň heslo (min. 6 znaků).'); return; }
+        submit.disabled = true; show('', '');
+
+        window.BA.ready.then(function () {
+          if (window.BA.mode === 'demo') {
+            show('ok', 'Barna Academy zatím běží v ukázkovém režimu — přihlášení bude aktivní po spuštění. Mezitím si projdi ukázkové lekce.');
+            submit.disabled = false;
+            return;
+          }
+          if (mode === 'otp') {
+            var dest = location.origin + (need === 'videokurz' ? '/akademie/videokurz/' : nextUrl);
+            window.BA.signInWithOtp(email, dest).then(function (r) {
+              submit.disabled = false;
+              if (r.ok) { if (window.mbTrackLead) window.mbTrackLead('registrace_magic_link', { value: 0, currency: 'CZK' }); show('ok', '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho (mrkni i do spamu) a jsi uvnitř.'); }
+              else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí — <a href="/akademie/videokurz/?preview=free" style="color:#ffb061;font-weight:700;text-decoration:underline;">pusť si 11 lekcí zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#ffb061;">martin@martinbarna.cz</a>.'; }
+            });
+          } else if (mode === 'up') {
+            window.BA.signUp(email, pass, fname).then(function (r) {
+              if (!r.ok) { submit.disabled = false; show('err', r.error || 'Registrace se nezdařila.'); return; }
+              if (window.mbTrackLead) window.mbTrackLead('registrace', { value: 0, currency: 'CZK' });
+              // Autoconfirm: po registraci je uživatel rovnou přihlášený → pusť ho dovnitř bez druhého kroku.
+              // (Kdyby bylo ověření e-mailu zapnuté, getUser vrátí null → ukáž instrukci k přihlášení.)
+              window.BA.getUser().then(function (u) {
+                if (u) { show('ok', '✅ Hotovo! Otevírám tvoje studium…'); location.href = nextUrl; }
+                else { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď klikni na „Přihlásit se" — e-mail a heslo už máš vyplněné.'); }
+              }).catch(function () { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď se přihlas stejným e-mailem a heslem.'); });
+            });
+          } else {
+            window.BA.signIn(email, pass).then(function (r) {
+              if (r.ok) { location.href = nextUrl; }
+              else { submit.disabled = false; show('err', friendlyErr(r.error)); }
+            });
+          }
+        });
+      });
+    })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+    <script defer src="/assets/analytics.js?v=20260702a"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koučovská mentalita: průvodce, ne diktátor — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 14 — Práce s klientem a koučink</div>
+    <h1>Koučovská mentalita: průvodce, ne diktátor</h1>
+
+    <p class="lead"><strong>Hodně lidí v branži si plete koučování s diktováním. „Dělej tohle, jez tamto, nediskutuj.“ Jenže dobrý kouč nepředává rozkazy. Vede klienta k tomu, aby nakonec uměl jít sám. Tahle lekce drží celý modul koučinku pohromadě. Je o tom, kým pro klienta vlastně jsi.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Rozdíl mezi „dávat příkazy“ a skutečným koučováním.</li>
+        <li>Proč chceš klienta osamostatnit, a ne ho na sobě držet závislého.</li>
+        <li>Jak vést klienta otázkami místo rozkazů. A kdy to naopak nestačí.</li>
+        <li>Jak srovnat odbornou autoritu s partnerstvím.</li>
+        <li>Jak tenhle postoj ovlivní výsledky, to, jak dlouho ti klient zůstane, i tvoji pověst.</li>
+      </ul>
+    </div>
+
+    <h2>1) Diktátor vs. průvodce</h2>
+    <p><strong>Diktátor</strong> dává příkazy a všechny odpovědi si drží u sebe. Klient jen poslouchá. Neví proč, jen plní. A tak vzniká závislost. Když kouč zmizí, klient je ztracený. Krátkodobě to vypadá jako poslušnost, jenže žádnou skutečnou změnu ani samostatnost to nepostaví.</p>
+    <p><strong>Průvodce</strong> vede klienta k pochopení a k tomu, aby se rozhodoval sám. Učí ho „proč“, ne jen „co“. Klient postupně rozumí a umí se rozhodnout. Když kouč odejde, klient jede dál, protože to umí a chápe.</p>
+    <blockquote>Nejlepší kouč dělá sám sebe postupně nepotřebným.</blockquote>
+    <p>Zní to jako špatný byznys, ale je to přesně naopak. Tvůj úspěch není v tom, že tě klient potřebuje navždy. Je v tom, že ho naučíš postarat se o sebe sám. Lidi, které opravdu osamostatníš, jsou tvoji nejlepší ambasadoři. Vracejí se s novými výzvami a posílají ti další.</p>
+
+    <h2>2) Proč osamostatnit, ne připoutat</h2>
+    <p><strong>Trvalé výsledky.</strong> Klient, který jen plnil příkazy, po konci spolupráce spadne zpátky. Neumí to sám. Ten, který pochopil, si výsledky udrží. Tobě jde o trvalou změnu, ne o dočasnou poslušnost.</p>
+    <p><strong>Důvěra a respekt.</strong> Lidi cítí rozdíl mezi „rozkazuje mi“ a „vede mě a já tomu rozumím“. To druhé buduje mnohem hlubší vztah.</p>
+    <p><strong>Etika.</strong> Schválně držet klienta v závislosti kvůli penězům je manipulace. Opravdová péče znamená chtít pro klienta to nejlepší. I když to znamená, že tě jednou přestane potřebovat.</p>
+    <p><strong>Paradox.</strong> Klient, kterému dáváš reálnou hodnotu a samostatnost, ti zůstane déle. Vrací se a doporučuje tě, protože vidí, že ti o něj jde. Když se ho naopak snažíš držet závislého, časem ti uteče.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Jakmile si tohle srovnáš v hlavě, přestaneš se bát, že klienta „naučíš až moc“ :) Pravda je přesně opačná. Lidi, kterým jsem dal pochopení a vrátil jim kontrolu nad jejich stravou a tréninkem, se mi za ty roky vraceli pořád dokola. Jeden mi přivedl skoro půlku své party. Závislí klienti odcházejí potichu. Ti osamostatnění se vracejí hrdě.</div>
+
+    <h2>3) Veď otázkami, ne rozkazy</h2>
+    <p>Podstata koučování je pomoct klientovi přijít na věci pokud možno sám, místo abys mu je nadiktoval. K čemu člověk dojde vlastní hlavou, toho si víc váží a líp se toho drží.</p>
+    <p><strong>Místo příkazu otázka.</strong> Místo „musíš jíst víc bílkovin“ zkus „Co myslíš, že by ti pomohlo cítit se sytější a líp regenerovat?“ A pak doplníš svou znalost. Klient se stává spolutvůrcem.</p>
+    <p><strong>Ptej se na překážky a řešení.</strong> „Co ti v tom brání? Co bys mohl zkusit?“ Když klient navrhne vlastní řešení, splní ho spíš než cizí příkaz.</p>
+    <p><strong>Uč „proč“.</strong> Vysvětluj principy, ne jen instrukce. Kdo rozumí proč, rozhodne se i v situaci, kterou plán nepokryl.</p>
+    <p><strong>Pozor, není to alibi.</strong> Vést otázkami neznamená nemít názor nebo nechat klienta tápat. Máš odbornost a vedeš. Jen formou, která zapojuje a učí, místo aby umlčovala. Když je potřeba poradit jasně, třeba u bezpečnosti nebo zásadního rozhodnutí, tak poradíš jasně.</p>
+
+    <h2>4) Rovnováha: autorita i partnerství</h2>
+    <p>Dobré koučování není diktát, ale ani „kámoš, co se přizpůsobí všemu“. Je to rovnováha mezi dvěma rolemi.</p>
+    <p><strong>Máš odbornou autoritu.</strong> Klient ti platí za znalosti a vedení. Buď sebevědomý a jasný. A v zásadních věcech pevný. Bezpečnost, hranice, realita.</p>
+    <p><strong>Zároveň jednáš jako partner.</strong> Je to jeho cesta a jeho život. Respektuješ jeho rozhodnutí, hodnoty i tempo. Vedeš ho, ale nevlastníš.</p>
+    <p>Přizpůsobuj podání, ne podstatu. Někdo chce víc vedení, někdo víc volnosti. Čteš člověka a dávkuješ podle něj. Buď <strong>pevný v principech a měkký v přístupu</strong>. Na vědě a bezpečnosti neslevíš, ve formě jsi flexibilní a lidský.</p>
+
+    <h2>5) Jak tuhle mentalitu žít každý den</h2>
+    <p><strong>Oslavuj klientovu samostatnost.</strong> Když se rozhodne dobře sám, pochval ho. Posiluješ tím, že to umí.</p>
+    <p><strong>Postupně předávej otěže.</strong> Jak klient roste, dávej mu víc prostoru rozhodovat a méně ho „řiď“. Od vedení k partnerství až k samostatnosti.</p>
+    <p><strong>Neboj se říct „nevím“.</strong> Autorita není vševědoucnost. Poctivé „zjistím to“ nebo „to už je mimo moji roli“ ti vybuduje víc důvěry než předstírání.</p>
+    <p><strong>Měj radost z jejich růstu.</strong> Ať máš dobrý pocit z toho, že klient rozkvétá a osamostatňuje se. Ne z toho, že tě potřebuje. To je jádro koučovské mentality.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Nastav si jeden zvyk. Na konci spolupráce se zeptej sám sebe: „Zvládl by to teď beze mě?“ Když je odpověď ne, neodvedl jsem svoji práci dobře. Jen jsem ho na sobě držel. Můj cíl u každého klienta je, aby ode mě odešel chytřejší, ne jen hubenější :) Be Effective!</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je hlavní rozdíl mezi diktátorem a průvodcem v roli kouče? <span class="tg">odpověď ▾</span></div><div class="aa">Diktátor dává příkazy a odpovědi si drží u sebe. Tím si vytváří závislého klienta, který neví proč. Průvodce vede k pochopení a k vlastnímu rozhodování. Buduje samostatnost. Když kouč odejde, klient jede dál, protože to umí a chápe.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč je „dělat sám sebe postupně nepotřebným“ ve skutečnosti dobrý byznys? <span class="tg">odpověď ▾</span></div><div class="aa">Protože osamostatnění klienti jsou tvoji nejlepší ambasadoři. Udrží si výsledky, cítí, že ti o ně jde, zůstanou ti déle, vracejí se s novými výzvami a doporučují tě dál. Snaha držet klienta závislého ti ho naopak časem odežene.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak vypadá vedení otázkami v praxi místo příkazu „musíš jíst víc bílkovin“? <span class="tg">odpověď ▾</span></div><div class="aa">Zeptáš se: „Co myslíš, že by ti pomohlo cítit se sytější a líp regenerovat?“ A pak doplníš svou znalost. Klient se stává spolutvůrcem řešení. Víc mu rozumí a spíš ho splní, protože k němu došel sám.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Znamená „vést otázkami“, že kouč nemá mít vlastní názor? <span class="tg">odpověď ▾</span></div><div class="aa">Ne. Není to alibi. Máš odbornost a vedeš. Jen formou, která klienta zapojuje a učí, místo aby umlčovala. Kde jde o bezpečnost nebo zásadní rozhodnutí, poradíš jasně a pevně.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená být „pevný v principech, měkký v přístupu“? <span class="tg">odpověď ▾</span></div><div class="aa">Na vědě, bezpečnosti a zásadních hranicích neslevíš a jsi jasný. Ve formě, tempu a způsobu podání jsi flexibilní a lidský. Přizpůsobuješ podání konkrétnímu člověku, ne podstatu věci.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si u jednoho klienta jednu věc, kterou bys mu normálně nadiktoval. Tenhle týden ji místo příkazu otevři otázkou. „Co myslíš, že by ti v tomhle pomohlo? Co ti v tom brání?“ Nech ho navrhnout řešení, doplň svou znalost a všimni si, o kolik ochotněji plán dodrží, když je jeho spolutvůrcem.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m5-l13/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m5">⬑ Zpět na Modul 5<span class="s">Práce s klientem a koučink</span></a>
+      <a class="lnav-next" href="/akademie/studium/m5-l15/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Whitmore J. Coaching for Performance. Nicholas Brealey 2017.</li>
+        <li>Miller WR, Rollnick S. Motivational Interviewing. Guilford Press 2013.</li>
+        <li>Deci EL, Ryan RM. Self-Determination Theory. Guilford Press 2017.</li>
+        <li>Rogers CR. On Becoming a Person. Houghton Mifflin 1961.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l14', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

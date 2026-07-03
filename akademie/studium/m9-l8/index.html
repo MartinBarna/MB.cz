@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roční plán: jak složit periodizaci dohromady — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 9 · Lekce 8 — Periodizace a plánování</div>
+    <h1>Roční plán: jak složit periodizaci dohromady</h1>
+
+    <p class="lead">Celý modul jsme rozebírali jednotlivé stavební kameny periodizace. Teď je poskládáme do <strong>jednoho ročního plánu</strong>, který klienta vede v horizontu měsíců. Ber tuhle lekci jako finále modulu — ukážu ti, jak z teorie uděláš praktický roční rámec, se kterým reálně pracuješ.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak poskládáš všechny prvky periodizace do jednoho ročního plánu.</li>
+        <li>Hierarchii plánování: makrocyklus, mezocyklus, mikrocyklus.</li>
+        <li>Jak postavíš roční plán pro běžného klienta i pro sportovce s termínem.</li>
+        <li>Jak udržíš plán živý, ať ho průběžně vyhodnocuješ a ladíš.</li>
+        <li>Konkrétní příklad, jak může vypadat celý rok.</li>
+      </ul>
+    </div>
+
+    <h2>1) Od jednotlivých dílů k celku</h2>
+    <p>Bloky, deload, taper, modely, autoregulace, periodizace výživy, souběžný trénink. Každý z těch nástrojů jsi se naučil zvlášť. Sám o sobě ti ale plán neudělá. Teprve když je propojíš do jednoho směru, vznikne něco, co klienta opravdu někam vede.</p>
+    <p>A hned na začátek jedna věc, kterou ti budu opakovat pořád: <strong>složitost plánu má sloužit cíli, ne tvému egu</strong>. Pro běžného klienta je nejlepší roční plán často ten nejjednodušší. Vyšperkovaná periodizace dává smysl tam, kde ji fakt potřebuješ, u pokročilých a u sportovců, co jedou na termín. Pro zbytek to nepřekombinuj.</p>
+
+    <h2>2) Hierarchie plánování: makro, mezo, mikro</h2>
+    <p>Periodizace se tradičně dělí na tři úrovně. Představ si matrjošku, jednu vrstvu vnořenou do druhé:</p>
+    <div class="card">
+      <p><strong>Makrocyklus (velký obraz).</strong> Nejdelší horizont, typicky rok, nebo celý cyklus k velkému cíli či soutěži. Určuje hlavní směr a velké fáze.</p>
+      <p><strong>Mezocyklus (bloky).</strong> Střední úsek, většinou pár týdnů (třeba 3–6), zaměřený na jeden rozvojový cíl: hypertrofie, síla, kondice. Z navazujících mezocyklů se skládá makrocyklus.</p>
+      <p><strong>Mikrocyklus (týden).</strong> Nejmenší jednotka, obvykle jeden tréninkový týden. Konkrétní rozvržení jednotek, zátěže a regenerace. Z mikrocyklů se skládá mezocyklus.</p>
+    </div>
+    <blockquote>Rozhoduješ se shora dolů: kam míříme za rok, jaké bloky nás tam dovedou, jak vypadá ten konkrétní týden. A vyhodnocuješ zdola nahoru: jak šel týden, drží blok směr, jsme na cestě k ročnímu cíli.</blockquote>
+    <figure class="ba-fig" data-fig="periodization"><figcaption>Roční plán je vnořená struktura: makrocyklus se skládá z mezocyklů (bloků) a ty z mikrocyklů (týdnů).</figcaption></figure>
+
+    <h2>3) Krok za krokem: stavba ročního plánu</h2>
+    <p>Vždycky postupuješ shora dolů. Začni velkým obrazem a postupně se propracuj ke konkrétnímu týdnu:</p>
+    <div class="card">
+      <p><strong>1. Urči hlavní cíl a horizont.</strong> Kam má klient za rok dojít? Je tam pevný termín (soutěž, focení, závod), nebo jde o průběžný rozvoj bez deadlinu? Tohle ti určí celou strukturu.</p>
+      <p><strong>2. Rozvrhni velké fáze (makrocyklus).</strong> Rozděl rok podle cíle. U klienta na postavu střídáš budování, redukci a udržování. U sportovce jedeš off-season → předsezona → vrchol → regenerace.</p>
+      <p><strong>3. Naplň fáze bloky (mezocykly).</strong> Každou velkou fázi rozsekej na bloky s konkrétním zaměřením (hypertrofie → síla → deload), které na sebe logicky navazují.</p>
+      <p><strong>4. Zabuduj odlehčení.</strong> Deloady mezi bloky a taper před vrcholem si naplánuj <em>předem</em>, ne až podle toho, jak klient vyhoří. Regenerace patří do plánu, není to jeho selhání.</p>
+      <p><strong>5. Rozpracuj týdny (mikrocykly).</strong> Pro aktuální blok rozvrhni konkrétní tréninkový týden: jednotky, split, rozložení zátěže a regenerace.</p>
+      <p><strong>6. Propoj s výživou a kondicí.</strong> Slaď výživové fáze a souběžný trénink s tréninkovými bloky, ať táhnou za jeden provaz.</p>
+      <p><strong>7. Nech prostor pro autoregulaci.</strong> Plán je rámec, ne diktát. Denní zátěž dolaď podle toho, jak na tom klient zrovna je.</p>
+    </div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Plánuju vždycky shora dolů, ale do detailu rozkreslím jen to nejbližší. Roční rámec si načrtnu hrubě, jen velké fáze a kam míříme. Pořádně rozpracuju aktuální blok a nejbližší týdny, víc ne. Fakt nemá smysl pilovat trénink na listopad :) Stejně ho po dvou špatně zregenerovaných týdnech celý přepíšu. Hrubá mapa nahoře, ostrý detail dole, a klid v hlavě.</div>
+
+    <h2>4) Příklad: roční rámec běžného klienta</h2>
+    <p>Vezmu klienta typu „chci být silnější, vypadat líp a být fit“, bez termínu. Ber to jako ukázku logiky, ne jako předpis na okopírování:</p>
+    <div class="card">
+      <p><strong>Q1 (zima):</strong> blok budování síly a svalu, kalorie na udržování až mírném přebytku, kondice v rozumné míře. Deload každých zhruba 4–6 týdnů.</p>
+      <p><strong>Q2 (jaro):</strong> blok mírné redukce, ať se nabrané odhalí. Deficit, silový trénink na udržení síly, kardio a NEAT jako nástroj. Uprostřed diet break.</p>
+      <p><strong>Q3 (léto):</strong> udržování. Stabilizace, užít si výsledky, lehčí flexibilní režim, reverzní návrat na udržování.</p>
+      <p><strong>Q4 (podzim):</strong> další blok budování, vyšší objem, progrese síly.</p>
+    </div>
+    <p>Celý rok prokládáš deloady a doceluješ autoregulací. Jednoduché, udržitelné, funguje to a většina klientů nic složitějšího nepotřebuje. U <strong>sportovce s termínem</strong> míří makrocyklus k soutěži: off-season → specifická příprava → taper a peaking na termín → regenerace. Tady už bloková periodizace a přesné řízení formy ke konkrétnímu dni dávají smysl.</p>
+
+    <h2>5) Plán jako živý dokument</h2>
+    <p>Roční plán není vytesaný do kamene. Je to tvoje hypotéza a mapa směru, kterou realita průběžně testuje a podle které ji upravuješ:</p>
+    <div class="card">
+      <p><strong>Průběžně vyhodnocuj.</strong> Sleduj data, výkon, váhu, fotky, jak se klient cítí, a porovnávej s plánem. Jdeme tam, kam jsme chtěli?</p>
+      <p><strong>Upravuj podle reality.</strong> Když klient nereaguje, jak jsi čekal, nebo přijde nemoc, životní zlom či stagnace, plán uprav. Držet se papíru proti realitě je chyba.</p>
+      <p><strong>Drž směr, měň detaily.</strong> Velký cíl zůstává, konkrétní bloky a týdny se přizpůsobí. Flexibilita uvnitř pevné struktury.</p>
+    </div>
+
+    <h2>6) Nejčastější chyby</h2>
+    <p>Problém číhá na obou koncích. Tyhle pasti vídám nejčastěji:</p>
+    <div class="card">
+      <p><strong>Překombinovaný plán</strong> pro klienta, který potřebuje jednoduchost. Složitost se nerovná kvalitě.</p>
+      <p><strong>Žádný plán nebo náhodný trénink.</strong> Bez směru a progrese se klient zasekne. Druhý extrém.</p>
+      <p><strong>Chybějící regenerace.</strong> Plán bez deloadů a regenerace tě dovede rovnou k přetížení.</p>
+      <p><strong>Rigidnost.</strong> Plán, který neupravuješ podle reality, dřív nebo později selže.</p>
+      <p><strong>Odtržení od života klienta.</strong> Plán musí počítat s časem, stresem a možnostmi klienta, ne s ideálem.</p>
+    </div>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi nový trenér ukáže nádherně barevný roční plán s deseti typy bloků pro klientku, která má dvě malé děti a zvládne tři tréninky týdně, hned vím, kde je problém. Není v klientce, je v hlavě trenéra :) Nejlepší plán je ten, který klient reálně dodrží. Jednoduchý a splnitelný vždycky porazí dokonalý na papíře. Be Effective.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Seřaď tři úrovně periodizace od nejdelší po nejkratší a popiš, co každá určuje. <span class="tg">odpověď ▾</span></div><div class="aa">Makrocyklus (rok / cíl) drží hlavní směr a velké fáze. Mezocyklus (bloky, pár týdnů) má konkrétní rozvojové zaměření. Mikrocyklus (týden) rozvrhuje jednotky, zátěž a regeneraci. Makrocyklus se skládá z mezocyklů, ty z mikrocyklů.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co znamená „plánovat shora dolů, vyhodnocovat zdola nahoru“? <span class="tg">odpověď ▾</span></div><div class="aa">Rozhoduješ se od velkého obrazu k detailu: kam míříme za rok → jaké bloky nás tam dovedou → jak vypadá konkrétní týden. A kontroluješ to opačně: jak šel týden → drží blok směr → jsme na cestě k ročnímu cíli.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč se deload a taper plánují předem, a ne až podle potřeby? <span class="tg">odpověď ▾</span></div><div class="aa">Protože regenerace patří do plánu, není to jeho selhání. Když čekáš, až přijde vyhoření, reaguješ pozdě a riskuješ přetížení. Naplánované odlehčení udrží progresi dlouhodobě udržitelnou.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je u běžného klienta často lepší jednoduchý plán než propracovaná periodizace? <span class="tg">odpověď ▾</span></div><div class="aa">Složitost má sloužit cíli, ne egu trenéra. Většina klientů dojde k výsledku jednoduchým, flexibilním a udržitelným rámcem, který reálně dodrží. Vyšperkovaná periodizace dává smysl jen tam, kde ji fakt potřebuješ, u pokročilých a sportovců s termínem.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená, že roční plán je „živý dokument“? <span class="tg">odpověď ▾</span></div><div class="aa">Plán je hypotéza a mapa směru, ne dogma. Průběžně vyhodnocuješ data a porovnáváš je s plánem, upravuješ podle reality, ale držíš velký směr a měníš jen detaily. Rok plánuješ hrubě dopředu, do detailu rozpracováváš jen nejbližší blok.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si jednoho svého klienta a načrtni mu hrubý roční makrocyklus, velké fáze rozdělené do čtyř kvartálů. Do detailu rozpracuj jen aktuální blok a nejbližší tréninkový týden. Víc teď nepotřebuješ.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m9-l7/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m9">⬑ Zpět na Modul 9<span class="s">Periodizace a plánování</span></a>
+      <a class="lnav-next" href="/akademie/studium/m10-l1/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Bompa TO, Buzzichelli C. Periodization: Theory and Methodology of Training. Human Kinetics.</li>
+        <li>Issurin VB. Block periodization versus traditional training theory: a review. J Sports Med Phys Fitness.</li>
+        <li>Helms E, et al. The Muscle and Strength Pyramid: Training.</li>
+        <li>Turner A. The Science and Practice of Periodization: A Brief Review. Strength Cond J.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m9-l8', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

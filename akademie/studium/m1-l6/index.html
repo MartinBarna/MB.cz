@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centrum odměny: mít rád, chtít a dopamin — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 6 — Psychologie a chování kolem jídla</div>
+    <h1>Centrum odměny: mít rád, chtít a dopamin</h1>
+
+    <p class="lead">Tohle používám u každého klienta. Když se tě někdo u jídelníčku zeptá <em>„a kdy z toho můžu ven?“</em>, právě ti řekl, že ten plán je pro něj <strong>neudržitelný</strong>. A neudržitelný plán ho dřív nebo později položí. Pojď stavět plány, které lidé mají rádi. Protože jen ty pak fakt chtějí.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je hédonické jídlo a jak přebíjí homeostatickou kontrolu.</li>
+        <li>Tři složky odměny: „mít rád“ (liking), „chtít“ (wanting), „učit se“.</li>
+        <li>Co dělá dopamin. Jde víc o motivaci než o slast.</li>
+        <li>Proč u obezity klesají dopaminové (D2) receptory.</li>
+        <li>Jak stavět plány, kde klientovi zůstává „like“. A proč sytost sama nestačí.</li>
+      </ul>
+    </div>
+
+    <h2>1) Jídlo jako odměna</h2>
+    <p>Nutkání jíst patří k těm nejsilnějším, co v člověku jsou. Postav ho do prostředí plného vysoce chutných (hédonických) jídel a okruhy odměny <strong>přebijí homeostatickou kontrolu příjmu</strong>. Proto i člověk, který „nemá hlad“, klidně jí dál. Hubnutí pořád stojí a padá na příjmu a výdeji kalorií. Ale abys postavil plán, co drží, musíš rozumět i odměně.</p>
+
+    <h2>2) „Mít rád“ (liking)</h2>
+    <p>„Mít rád“ je hédonický dopad jídla. Ta slast, ta chutnost (palatabilita). Část máme <strong>vrozenou</strong> (sladká, slaná chuť). Část <strong>naučenou</strong> (hořké, kyselé, alkohol si oblíbíme až po opakované expozici, často mezi lidmi). A preference jdou měnit. Jídlo umíš „odpojit“ (spojit s něčím nepříjemným) i „připoutat“ (vůně toastu, a najednou jsi doma).</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Sám jsem to dřív klientovi řekl. „Ty to prostě nechceš dost.“ Hloupost. „Mít rád“ teprve vytváří „chtít“. Když mu předepíšeš samé věci, co ho jen porážejí a nemá je rád, ubíráš mu chuť jít za původním cílem. Tak oslov to jeho „like“ :) Dej do plánu oblíbená jídla, ať vidí úspěch, dej mu uznání, ideálně i partu. Dieta sama doma u ledničky žádnou pochvalu nedá. A chtění vyšumí.</div>
+
+    <h2>3) „Chtít“ (wanting) a dopamin</h2>
+    <p>„Chtít“ je touha to jídlo získat. Je naučená a posiluje ji „mít rád“. A řídí ji dopamin. Tady pozor na rozšířený omyl. Dopamin není tak moc hormon slasti, je to spíš <strong>hormon motivace</strong>. Ochoty pro něco makat. Lidé, co jsou na odměnu citlivější, mívají vyšší BMI a silněji reagují na potravní podněty, na vůni nebo vzhled jídla.</p>
+    <blockquote>„Nízký dopamin způsobuje, že lidé jsou méně ochotní pro něco pracovat — jde víc o motivaci než o slast.“ — John Salamone</blockquote>
+
+    <h2>4) Dopamin a obezita</h2>
+    <p>Studie ukazují, že s rostoucí obezitou <strong>klesá počet dopaminových (D2) receptorů</strong>. A protože dopamin ladí motivaci a odměnu, tenhle deficit může člověka tlačit k tomu, aby „honil“ silnější podněty. Tedy kaloricky vydatnější jídla, aby si sáhl na stejnou odměnu. Takže znovu. Tvůj klient nebojuje jen se zvykem, ale s vlastní biologií. Měj s ním víc soucitu a míň ho suď.</p>
+
+    <h2>5) Stav plány, které lidé chtějí</h2>
+    <p>Sytost z minulé lekce je nutná, ale sama nestačí. Sytý člověk pořád může jíst z odměny. Proto musí mít plán i to <strong>„like“</strong>. Oblíbená jídla, co se vejdou do kalorií, viditelný pokrok (úspěch = odměna), uznání a nejlíp i partu kolem. Plán, který má klient rád, je plán, který vydrží. A když přijde otázka „kdy z toho ven?“, je to jasný signál. „Like“ chybí a je čas plán předělat.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaké tři složky odměny z jídla věda rozlišuje? <span class="tg">odpověď ▾</span></div><div class="aa">„Mít rád“ (liking), „chtít“ (wanting) a „učit se“.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co řídí dopamin podle moderního výkladu? <span class="tg">odpověď ▾</span></div><div class="aa">Hlavně motivaci a ochotu pro odměnu makat. Ne čistě slast.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co se děje s D2 receptory u obezity? <span class="tg">odpověď ▾</span></div><div class="aa">Klesá jejich počet. Člověk pak honí silnější podněty, tedy vydatnější jídla.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> O čem svědčí otázka „kdy z toho můžu ven?“ <span class="tg">odpověď ▾</span></div><div class="aa">Že plán je pro klienta neudržitelný a chybí v něm „like“. Je čas ho předělat.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč sytost sama nestačí? <span class="tg">odpověď ▾</span></div><div class="aa">I sytý člověk jí z odměny; plán potřebuje i „like“ (oblíbená jídla, úspěch, uznání, komunitu).</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi jeden „nudný“ plán a dostaň do něj tři prvky „like“, aniž rozbiješ kalorie. Oblíbené jídlo v porci, viditelný ukazatel pokroku a jednu formu uznání nebo podpory. Pak sleduj, jak se klientovo „chtění“ zvedne.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m1-l5/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m1">⬑ Zpět na Modul 1<span class="s">Psychologie a chování kolem jídla</span></a>
+      <a class="lnav-next" href="/akademie/studium/m1-l7/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Berridge KC, Robinson TE. Liking, wanting, and the incentive-salience theory of reward. Am Psychol. 2016.</li>
+        <li>Salamone JD, Correa M. The mysterious motivational functions of mesolimbic dopamine. Neuron. 2012.</li>
+        <li>Wang GJ, et al. Brain dopamine and obesity. Lancet. 2001.</li>
+        <li>Franken IHA, Muris P. Individual differences in reward sensitivity and food intake. Appetite. 2005.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produkty a sekundární zdroje příjmu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 14 — Byznys pro trenéry a poradce</div>
+    <h1>Produkty a sekundární zdroje příjmu</h1>
+
+    <p class="lead">Dokud prodáváš jenom svůj čas, narazíš na strop. Den má 24 hodin a víc jich nevyčaruješ. Produkty a sekundární příjmy ti dovolí <strong>vydělávat i mimo přímý čas s klientem</strong>. V téhle lekci ti ukážu, jaké možnosti máš, jak je stavět s hlavou a hlavně KDY do toho jít.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jaký je rozdíl mezi prodejem času (služba) a škálovatelným produktem.</li>
+        <li>Hlavní typy sekundárních příjmů a komu sedí.</li>
+        <li>Proč platí „nejdřív základ, pak produkty“ a jak poznáš, že jsi připravený.</li>
+        <li>Co jsou white-label materiály a proč je to chytrý model.</li>
+        <li>Jak produkt navázat na svůj trychtýř a publikum, co už máš.</li>
+      </ul>
+    </div>
+
+    <h2>1) Čas vs. škálovatelný produkt</h2>
+    <p>Tvoje 1:1 služba je svázaná s časem. Vyděláš, jen když zrovna pracuješ, a počet hodin máš daný. Produkt funguje jinak. Vytvoříš ho <strong>jednou</strong> a prodáš <strong>mnohokrát</strong>, aniž bys u toho úměrně přidával svůj čas.</p>
+    <p><strong>Služba (čas):</strong> osobní nebo online koučink 1:1. Vysoká hodnota, ale strop daný hodinami. <strong>Produkt (škálovatelný):</strong> e-book, videokurz, šablony, členská sekce. Uděláš jednou, prodáváš pořád. <strong>Hybrid:</strong> skupinový koučink a kohortové programy, kde vedeš víc lidí najednou za nižší cenu na hlavu.</p>
+    <p>Nejde o to službu opustit. Ta ti často buduje důvěru i expertízu. Jde o to postavit nad ni patra, která vydělávají, i když zrovna nesedíš s klientem.</p>
+
+    <h2>2) Hlavní typy sekundárních příjmů</h2>
+    <p>Možností je víc a každá sedí někomu jinému. Pojď si je projít:</p>
+    <div class="points">
+      <ul>
+        <li><strong>Digitální produkty</strong> — e-booky, videokurzy, tréninkové plány, jídelníčkové šablony. Kopie tě skoro nic nestojí a škálují krásně.</li>
+        <li><strong>Skupinový / kohortový koučink</strong> — vedeš víc lidí najednou. Nižší cena na hlavu, ale za tvůj čas vyděláš víc. A vznikne komunita.</li>
+        <li><strong>Členská sekce / předplatné</strong> — opakovaný příjem za průběžný obsah a podporu.</li>
+        <li><strong>White-label materiály</strong> — profesionální podklady, které prodáš jiným trenérům pod jejich jménem (víc v sekci 4).</li>
+        <li><strong>Afiliace / spolupráce</strong> — doporučuješ produkty, kterým fakt věříš. Hlídej si čistotu značky, doporuč jen to, za co se nestydíš.</li>
+        <li><strong>Semináře / webináře / přednášky</strong> — jednorázové i opakované.</li>
+      </ul>
+    </div>
+    <p>Vyber podle toho, co ti jde. Umíš psát? Dej e-book. Umíš mluvit? Natoč video nebo udělej seminář. A vždycky koukej na to, co sedí tvému publiku.</p>
+
+    <h2>3) Nejdřív základ, pak produkty</h2>
+    <p>Tohle pořadí spousta lidí splete a pak na to doplatí. Než se pustíš do produktů, potřebuješ tři věci. Vyladěnou službu a reputaci (umíš dodat výsledek a máš reference). Publikum a dosah (lidi, kterým produkt prodáš, protože bez publika ho nikdo nekoupí, i kdyby byl sebelepší). A udržitelný základní příjem, abys měl z čeho a kdy produkt vůbec tvořit.</p>
+    <blockquote>Podle čeho poznáš, že jsi připravený? Máš plný diář (poptávka &gt; nabídka), publikum ti roste a ptá se, a reputace prodává za tebe. Teprve pak má smysl sednout si k tvorbě produktu.</blockquote>
+
+    <h2>4) White-label materiály — chytrý model</h2>
+    <p>Tohle je model, který mám fakt rád. Vytvoříš profesionální, kvalitní materiály (jídelníčkové průvodce, kuchařky, tréninkové plány, šablony) a prodáš je jiným trenérům a poradcům. Ti si je <strong>přebrandují</strong> svým jménem a logem a dají je svým klientům.</p>
+    <p><strong>Pro kupujícího (trenéra):</strong> má jistotu kvalitního, science-based materiálu pro klienty, ušetří čas tvorby a je to „jeho“, pod jeho značkou. <strong>Pro tebe (tvůrce):</strong> uděláš jednou, prodáš mnohokrát. Navíc to můžeš nabídnout dvěma způsoby. Buď materiál s „brand placeholderem“, kam si trenér značku doplní sám, nebo službu „přebrandujeme ti to za poplatek“.</p>
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>Pozor na kvalitu a licenci:</strong> za tím materiálem je tvoje jméno, i když půjde pod cizí značku. Drž laťku. A buď jasný v licenci: napiš černé na bílém, jak smí kupující materiál používat.</div>
+
+    <h2>5) Navaž produkt na trychtýř a publikum</h2>
+    <p>Produkt nestojí ve vzduchoprázdnu, zapadá do tvého trychtýře. Obsah přivede publikum (vrchol), pak roste důvěra (střed) a produkt je nabídka (spodek). Levnější produkt jako e-book může být první krok důvěry, dražší věci (koučink, kurz) přijdou potom. Klient se tak prokousává hodnotou přes celou škálu nabídek.</p>
+    <p>Tvůj nejlepší trh je publikum, co už máš. Lidem, kteří ti věří a jsou ve tvojí databázi, prodáš nejsnáz. A nejlepší produkt řeší <strong>konkrétní problém, který tvoje publikum prokazatelně má</strong>. Ne to, co se zrovna zdá zajímavé tobě.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Sekundární příjmy beru jako patra nad pevným základem, ne jako útěk od práce s klienty. Nejdřív musí stát služba, reputace a publikum. Pak teprve dává smysl tvořit produkt, protože ho máš komu prodat. White-label model mám fakt rád: připravím poctivé, science-based materiály a jiní trenéři je dají svým klientům pod svým jménem. Oni mají jistotu kvality, já škáluju za hranici svého času. Uděláš jednou, posloužíš mnohokrát :) Ale to pořadí si pamatuj jako vlastní jméno — nejdřív základ, pak teprve stavíš patra. Be Effective!</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je rozdíl mezi prodejem času a škálovatelným produktem? <span class="tg">odpověď ▾</span></div><div class="aa">U služby (času) vyděláš, jen když zrovna pracuješ, a máš strop daný počtem hodin. Produkt uděláš jednou a prodáš ho mnohokrát, aniž bys úměrně přidával svůj čas. Proto ten časový strop překračuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj tři typy sekundárních příjmů. <span class="tg">odpověď ▾</span></div><div class="aa">Třeba digitální produkty (e-book, kurz, plány), skupinový či kohortový koučink, členská sekce / předplatné, white-label materiály, afiliace nebo semináře. Stačí tři.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co musí stát, než se pustíš do produktů? <span class="tg">odpověď ▾</span></div><div class="aa">Vyladěná služba a reputace, publikum a dosah a udržitelný základní příjem. Že jsi připravený poznáš tak, že poptávka převyšuje nabídku (plný diář) a publikum ti roste a zajímá se.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je white-label model výhodný pro obě strany? <span class="tg">odpověď ▾</span></div><div class="aa">Kupující (trenér) má jistotu kvalitního, science-based materiálu pod svým jménem a ušetří čas tvorby. Ty jako tvůrce uděláš materiál jednou a prodáš ho mnohokrát, buď s brand placeholderem, nebo jako přebrandování za poplatek.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jak produkt navázat na publikum? <span class="tg">odpověď ▾</span></div><div class="aa">Přes trychtýř (obsah → důvěra → nabídka) a škálu nabídek od levnějšího po dražší. Prodávej hlavně publiku a databázi, co už máš, a řeš reálnou, prokazatelnou potřebu.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Navrhni svůj první sekundární produkt. Co to bude, jakou konkrétní potřebu publika řeší, komu ho prodáš a jak ho navážeš na svůj trychtýř. Pak si na rovinu řekni, jestli už máš základ (služba, reputace, publikum), nebo na něm ještě musíš zamakat.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m6-l13/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m6">⬑ Zpět na Modul 6<span class="s">Byznys pro trenéry a poradce</span></a>
+      <a class="lnav-next" href="/akademie/studium/m6-l15/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Barna, Martin. Modul 6 — Byznys pro trenéry a poradce, Lekce 14. Barna Academy 2026.</li>
+        <li>Principy škálování služby vs. produktu a „1:many“ modelů (digitální produkty, membership). Přehledové zdroje k online podnikání.</li>
+        <li>Koncept white-label / private-label v podnikání. Úvodní literatura k licencování obsahu.</li>
+        <li>Návaznost v rámci modulu: M6·L1 (potřeba trhu), M6·L3 (nabídka a poptávka), M6·L8 (trychtýř), M6·L11 (cenotvorba a tiery), M6·L13 (kanály a databáze).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l14', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

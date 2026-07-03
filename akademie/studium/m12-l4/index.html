@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muscle-full effect: proč nemá smysl „přejíst“ protein v jednom jídle — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 12 · Lekce 4 — Proteinová věda do detailu</div>
+    <h1>Muscle-full effect: proč nemá smysl „přejíst“ protein v jednom jídle</h1>
+
+    <p class="lead">Skoro každý klient ti někdy řekne: „nacpu si do jednoho jídla co nejvíc bílkovin a mám to vyřešený.“ Jenže tělo to tak nebere. Sval má na jedno jídlo svůj <strong>strop</strong>. Jakmile ho dosáhne, přestane na bílkovinu reagovat, i když máš aminokyselin v krvi pořád dost. Říká se tomu <strong>muscle-full effect</strong>. Když tohle pochopíš, přestaneš honit „mega proteinová“ jídla a začneš řešit věc, na které fakt záleží: kolik bílkovin sníš za celý den a jak si je rozložíš.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je muscle-full effect a proč svalová syntéza po jídle „vypne“.</li>
+        <li>Kolik bílkovin dát na jedno jídlo — dávka 0,4 g/kg a proč zrovna tahle.</li>
+        <li>Proč ti celodenní příjem (~1,6 g/kg) rozhodne víc než jedno jídlo.</li>
+        <li>Proč 3–5 jídel porazí jak „pastvu“, tak dvě obří jídla.</li>
+        <li>Proč v deficitu laťku na protein naopak zvedáš, ne snižuješ.</li>
+        <li>Jak z toho uděláš jednoduché pravidlo pro klienta místo tabulky do excelu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co se v těle děje po proteinovém jídle</h2>
+    <p>Sníš kvalitní bílkovinu a aminokyseliny (hlavně leucin) nastartují svalovou proteosyntézu, tedy stavbu svalové bílkoviny. Jenže tahle reakce nejede donekonečna. Syntéza se s malým zpožděním vyhoupne zhruba na trojnásobek, vrcholí kolem 1,5–2 hodin a pak <strong>spadne zpátky na klid</strong>. A to i ve chvíli, kdy máš aminokyselin v krvi pořád dost. Sval je „plný“ a chvíli prostě nereaguje. To je ten muscle-full effect.</p>
+    <p>Co z toho plyne pro praxi? Zalít sval aminokyselinami z jednoho obřího jídla ti syntézu nahoře neudrží o nic déle. Strop je strop. Posune ho dál jediná věc, a tou je <strong>silový trénink</strong>. Po něm zůstává sval na bílkovinu citlivější klidně celých 24 hodin.</p>
+    <blockquote>Bílkovina nefunguje jako balónek, kde víc vzduchu = větší balónek. Je to spíš vypínač: nad určitou dávku už se víc nerozsvítí, jen přepneš přebytek na energii.</blockquote>
+
+    <h2>2) Kolik bílkovin na jedno jídlo dává smysl</h2>
+    <p>Klasická data říkají, že u mladších lidí nakopne svalovou syntézu po tréninku nejvíc zhruba <strong>20–25 g</strong> kvalitní bílkoviny. Nad tím už syntéza moc neroste a přebytek se z velké části spálí na energii. Jenže každý vážíme jinak, takže to dává větší smysl počítat <strong>na kilo</strong>.</p>
+    <div class="eq">dávka na jídlo ≈ 0,4 g bílkovin × tělesná hmotnost (kg)</div>
+    <p>U 80kg chlapa to vychází na zhruba 32 g na jídlo, u 60kg klientky na cca 24 g. Pozor na jednu věc: tahle čísla vyšla hlavně z rychlých, čistých zdrojů, jako je syrovátka. U normálního jídla s tukem a vlákninou se vstřebávání rozloží v čase, takže o žádný „limit na jedno jídlo“ se stresovat nemusíš. Ber to jako rozumný cíl, ne jako tvrdou čáru, za kterou se ti bílkovina „ztrácí“.</p>
+    <div class="card">
+      <p><strong>Spodní práh (~0,4 g/kg/jídlo):</strong> minimum, které u většiny lidí svalovou syntézu slušně nasytí.</p>
+      <p><strong>Nad tím:</strong> anabolicky už přidáš málo. Extra bílkovina není vyhozená (zasytí, má termický efekt, pomůže ti dotáhnout denní cíl), ale na čistou stavbu svalu z toho jednoho jídla už moc nepřihodí.</p>
+      <p><strong>Praktická zóna:</strong> u běžných jídel míříme spíš na 0,4–0,55 g/kg, ať denní cíl naplníš snadno a bez počítání každého gramu.</p>
+    </div>
+
+    <h2>3) Proč rozhoduje denní příjem, ne jednotlivé jídlo</h2>
+    <p>Tohle je věta, kterou si z celé lekce zapamatuj: jedno jídlo je detail, <strong>hlavní páka je celodenní příjem</strong>. Velká meta-analýza ukázala, že přidání bílkovin k silovému tréninku zvedne nárůst svalu i síly, ale vyplácí se to zhruba do <strong>1,6 g/kg/den</strong>. Nad tím už průměrně víc svalu nepřibude. V praxi se u trénujících lidí pohybuj v pásmu zhruba 1,6–2,2 g/kg/den.</p>
+    <div class="eq">denní cíl ≈ 1,6–2,2 g bílkovin × tělesná hmotnost (kg)</div>
+    <p>Spoj si to s předchozí sekcí a máš jednoduchou logiku: vezmi denní cíl a rozsekej ho do jídel tak, aby každé sedlo někam k 0,4 g/kg. Nehážeš 80 g do oběda a pak celý den nic. Jde o to, aby ti <strong>seděl součet za den</strong> a byl rozumně rozprostřený.</p>
+
+    <h2>4) Rozložení do dne: 3–5 jídel je sladký bod</h2>
+    <p>Když vědci testovali, jak rozložit stejných 80 g bílkovin během 12 hodin po tréninku, vyhrálo rozdělení na <strong>4 dávky po 20 g každé 3 hodiny</strong>. Pro srovnání: „pastva“ (8× 10 g každou 1,5 h) jela na moc malé dávky, které sval pořádně nenastartují. A dvě velká jídla (2× 40 g po 6 h) zase nechala mezi dávkami moc dlouhou pauzu. Stejné množství, jiný výsledek. Rozhodlo rozložení.</p>
+    <figure class="ba-fig" data-fig="nutrient-timing"><figcaption>Stejný denní protein rozhozený do 3–5 jídel nakopne syntézu víckrát než dvě velká jídla nebo ujídání po troškách.</figcaption></figure>
+    <div class="card">
+      <p><strong>Cíl:</strong> 3–5 jídel denně, každé s dávkou bílkovin kolem 0,4 g/kg.</p>
+      <p><strong>Vyhni se „pastvě“:</strong> drobné svačinky s 5–10 g bílkovin samy o sobě svalovou syntézu pořádně nenakopnou.</p>
+      <p><strong>Vyhni se i moc dlouhým pauzám:</strong> jedno mega jídlo a pak 8 hodin nic není pro stavbu svalu žádná výhra.</p>
+      <p><strong>Praktický odhad:</strong> 80kg klient = cca 4× 30–35 g bílkovin = ~130–140 g/den (~1,7 g/kg).</p>
+    </div>
+    <blockquote>Nejde o stopky a budík každé tři hodiny. Jde o to, aby v běžném dni mělo každé hlavní jídlo pořádnou porci bílkovin a večeře nebyla „salátek bez ničeho“.</blockquote>
+
+    <h2>5) V deficitu se laťka zvedá</h2>
+    <p>Když klient hubne, hlava mu napovídá „jím míň, tak dám i míň bílkovin“. Jenže je to přesně naopak. V deficitu má tělo větší tendenci odbourávat sval, takže <strong>vyšší protein ti svalovou hmotu chrání</strong>. V jednom kontrolovaném pokusu drželi muži tvrdý deficit a zároveň tvrdě trénovali. Skupina s ~2,4 g/kg/den bílkovin sval dokonce <strong>nabrala</strong> a ztratila víc tuku, zatímco skupina s ~1,2 g/kg sval „jen“ udržela. Vyšší protein vyhrál na obou frontách.</p>
+    <p>Proto u hubnoucích klientů protein spíš <strong>přitvrdím</strong>. Rozumné pásmo bývá 1,8–2,4 g/kg/den. A bonus navrch: bílkovina zasytí nejvíc a má nejvyšší termický efekt, takže ti pomáhá deficit vůbec ustát.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům to říkám narovinu: „Přestaň hledat to jedno zázračné proteinové jídlo dne. Radši si do každého hlavního jídla dej pořádnou bílkovinu — dlaň masa, rybu, tvaroh, vejce, klidně odměrku syrovátky — a součet za den ti sedne sám od sebe.“ U 80kg chlapa to v reálu vypadá jako čtyři jídla po zhruba 30–35 g. A když hubneme? Protein neškrtám, naopak ho držím nahoře. Je to moje pojistka, že klient shodí tuk a ne sval. Funguje to, věř mi :) Be Effective!</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je muscle-full effect? <span class="tg">odpověď ▾</span></div><div class="aa">Svalová proteosyntéza po jídle vyskočí, vrcholí kolem 1,5–2 h a pak spadne zpátky na klid, i když aminokyseliny v krvi zůstávají vysoko. Sval je chvíli „plný“ a přestane reagovat, takže další bílkovina navíc v tom jídle už syntézu nezvedne.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolik bílkovin dát na jedno jídlo a podle čeho to počítáš? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 0,4 g na kilo tělesné hmotnosti na jídlo, tedy zhruba 28–32 g u běžně velkého člověka (~20–25 g je absolutní dávka z původních studií na mladých mužích). Počítáš to na kilo, ne fixní gramy pro všechny.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co rozhodne o nárůstu svalu víc — jedno velké proteinové jídlo, nebo celodenní příjem? <span class="tg">odpověď ▾</span></div><div class="aa">Celodenní příjem. Přidávání bílkovin se vyplácí zhruba do 1,6 g/kg/den (rozumné pásmo 1,6–2,2 g/kg). Jedno jídlo je detail; rozhoduje, aby seděl součet za den.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je 3–5 jídel lepší než „pastva“ nebo dvě obří jídla? <span class="tg">odpověď ▾</span></div><div class="aa">Při stejném množství vyhrálo rozdělení na ~4 dávky každé 3 h. Drobné svačinky (5–10 g) syntézu pořádně nenakopnou a moc dlouhé pauzy ji zase nechají dlouho dole. Sladký bod je dávka ~0,4 g/kg v každém hlavním jídle.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co se děje s potřebou bílkovin v kalorickém deficitu? <span class="tg">odpověď ▾</span></div><div class="aa">Zvedá se. V deficitu vyšší protein chrání sval — v pokusu skupina s ~2,4 g/kg dokonce nabrala sval a ztratila víc tuku než skupina s ~1,2 g/kg. U hubnoucích proto protein spíš přitvrdíš (často 1,8–2,4 g/kg/den).</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi si modelového klienta (napiš jeho hmotnost a cíl — nabírá, nebo hubne). Spočítej mu denní cíl bílkovin v g/kg, rozsekej ho do 3–5 jídel tak, aby každé sedlo kolem 0,4 g/kg, a ke každému jídlu dopiš konkrétní zdroj bílkovin. Nakonec jednou větou vysvětli, proč by nedávalo smysl nacpat celý denní cíl do jednoho obřího jídla.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m12-l3/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m12">⬑ Zpět na Modul 12<span class="s">Proteinová věda do detailu</span></a>
+      <a class="lnav-next" href="/akademie/studium/m12-l5/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Atherton PJ, Smith K. Muscle protein synthesis in response to nutrition and exercise. J Physiol. 2012;590(5):1049–1057.</li>
+        <li>Moore DR, Robinson MJ, Fry JL, et al. Ingested protein dose response of muscle and albumin protein synthesis after resistance exercise in young men. Am J Clin Nutr. 2009;89(1):161–168.</li>
+        <li>Areta JL, Burke LM, Ross ML, et al. Timing and distribution of protein ingestion during prolonged recovery from resistance exercise alters myofibrillar protein synthesis. J Physiol. 2013;591(9):2319–2331.</li>
+        <li>Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? Implications for daily protein distribution. J Int Soc Sports Nutr. 2018;15:10.</li>
+        <li>Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376–384.</li>
+        <li>Longland TM, Oikawa SY, Mitchell CJ, et al. Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial. Am J Clin Nutr. 2016;103(3):738–746.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m12-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

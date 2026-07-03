@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hormony, inzulin a chuť k jídlu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 5 — Psychologie a chování kolem jídla</div>
+    <h1>Hormony, inzulin a chuť k jídlu</h1>
+
+    <p class="lead">Tahle lekce je trochu víc „pod kapotou“. Ale slibuju, že po ní úplně jinak pochopíš, proč má někdo hlad, i když zrovna dojedl. <strong>Za tím nestojí slabá vůle, ale hormony a to, jak mozek čte signály z těla — někdy správně, někdy úplně mimo.</strong> Až ti to docvakne, přestaneš lidi soudit a začneš jim rozumět.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak hypotalamus řídí hlad, sytost a chutě.</li>
+        <li>Co dělá inzulin nejen ve svalu, ale i v hlavě.</li>
+        <li>Jak u inzulinové rezistence vzniká „falešný hlad“.</li>
+        <li>Proč jde o signalizaci, ne o slabý charakter.</li>
+        <li>Kde končí to, co kouč zvládne — a začíná práce lékaře.</li>
+      </ul>
+    </div>
+    <figure class="ba-fig" data-fig="sleep-hormones"><figcaption>Málo spánku rozhodí hormony hladu a sytosti → větší chuť, hlavně na sladké.</figcaption></figure>
+
+    <h2>1) Co kouč zvládne (a co ne)</h2>
+    <p>Chuť a přejídání řídí zpětnovazebný systém, do kterého mluví prostředí, chování i biologie. Žádnou z těch věcí nemůžeš škrtnout. Zároveň si nenamlouvej, že to celé ovládneš. Co reálně zvládneš ty? Vnést do toho řád, pomoct klientovi všimnout si vlastních návyků a postupně ho odnaučit ty škodlivé a naučit lepší. Za tou hranicí už běží děje v těle, na které prostě nesáhneš. <strong>Drž si pokoru a kompetenci najednou.</strong></p>
+
+    <h2>2) Hypotalamus — velín chuti</h2>
+    <p>Hormony jsou poslové, co roznášejí zprávy mezi buňkami. Centrum chuti najdeš v hypotalamu:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Laterální hypotalamus (LH)</strong> — stimuluje příjem („jez“).<br>
+      <strong>Ventromediální hypotalamus (VMH)</strong> — tlumí chuť („dost“).<br>
+      <strong>Paraventrikulární jádro</strong> — podílí se na tom, jaké konkrétní jídlo chceme (naše „chutě“).</p>
+    </div>
+    <p>Tahle centra si s tělem povídají i přes <strong>vagovou signalizaci</strong> (bloudivý nerv mezi mozkem a střevem). Prázdný žaludek hlásí „jez“, plný „dost“. Plný žaludek navíc spouští sytost, vyšší výdej a oxidaci tuků.</p>
+
+    <h2>3) Inzulin — nejen ve svalu, ale i v mozku</h2>
+    <p>Inzulin vyloučí slinivka po jídle, hlavně po sacharidech a bílkovinách. Naváže se na živiny a dá buňkám pokyn „otevři bránu a pusť živinu dovnitř“. Co se ví míň: <strong>i mozek je na inzulin citlivý</strong> a má inzulinové receptory hlavně v hypotalamu. V modelech inzulin v mozku snižuje příjem potravy. Takže to není jen „skladovací“ hormon, ale i kus signalizace sytosti přímo v hlavě.</p>
+
+    <h2>4) Jak vzniká „falešný hlad“</h2>
+    <p>U člověka s nadváhou a sníženou citlivostí na inzulin (tomu se říká inzulinová rezistence) je tahle signalizace rozhozená. Buňky jsou „plné“ a rezistentní, glukóza i inzulin zůstávají dlouhodobě nahoře. Signál sytosti (leptin i inzulin v mozku) přestává fungovat, jak má — mozek dostává slabší „mám dost“ a chuť přetrvává. Tak vzniká <strong>falešný hlad</strong>: člověk má chuť a hlad, i když má energie dost. Není to slabá vůle, je to rozbitá signalizace.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Přesně tohle stojí za tím, proč klient s nadváhou „pořád má hlad“ a má z toho v hlavě, že je sebranec bez vůle. Není. Já v takovou chvíli nezačínám kázáním, ale prací na citlivosti na inzulin: shodit přebytečný tuk, hýbat se (hlavně silově), dát dost bílkovin a vlákniny, vyspat se. Jak se signalizace srovnává, hlad se zklidní sám. Viděl jsem to u klientů mockrát :)</p>
+
+    <h2>5) Souvislost s náladou a chováním</h2>
+    <p>Mozková inzulinová rezistence sahá i do drah odměny (dopamin), do nálady a do chování kolem jídla. Proto je u některých lidí přejídání tak tvrdohlavé. Nebojují jen se zvykem, bojují s vlastní biologií. Pro tebe z toho plyne jasná věc: víc soucitu, míň soudů a soustředit se na páky, co tu signalizaci fakt zlepší.</p>
+    <blockquote>Klient nemá „slabou vůli“. Má rozbitou signalizaci, a tu umíme životosprávou srovnat.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Která centra hypotalamu hlásí „jez“ a „dost“? <span class="tg">odpověď ▾</span></div><div class="aa">LH (laterální) pobízí k jídlu; VMH (ventromediální) chuť tlumí a hlásí sytost.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co dělá inzulin v mozku? <span class="tg">odpověď ▾</span></div><div class="aa">Mozek má inzulinové receptory (v hypotalamu) a inzulin se podílí na signalizaci sytosti. V modelech snižuje příjem potravy.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak vzniká „falešný hlad“? <span class="tg">odpověď ▾</span></div><div class="aa">Při inzulinové rezistenci jsou glukóza i inzulin trvale nahoře. Zvýšený inzulin hlásí „jez“, i když tělo energii nepotřebuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co s falešným hladem reálně pohne? <span class="tg">odpověď ▾</span></div><div class="aa">Lepší citlivost na inzulin: shodit tuk, hýbat se (silově), dost bílkovin, vláknina, spánek. Ne kázání o vůli.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kde končí role kouče? <span class="tg">odpověď ▾</span></div><div class="aa">Můžeš vnést řád a měnit návyky a životosprávu. Diagnostika a léčba poruch (hormony, metabolismus) patří lékaři.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Řekni vlastními slovy, jako bys to říkal klientovi naživo, rozdíl mezi „nemáš vůli“ a „máš rozbitou signalizaci hladu, kterou spolu srovnáme“. Hledej formulaci, co z něj sundá vinu a dá mu naději.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m1-l4/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m1">⬑ Zpět na Modul 1<span class="s">Psychologie a chování kolem jídla</span></a>
+      <a class="lnav-next" href="/akademie/studium/m1-l6/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Morton GJ, et al. Central nervous system control of food intake and body weight. Nature. 2006.</li>
+        <li>Schwartz MW, et al. Central nervous system control of food intake. Nature. 2000.</li>
+        <li>Kullmann S, et al. Brain insulin resistance at the crossroads of metabolic and cognitive disorders. Physiol Rev. 2016.</li>
+        <li>Ahima RS, Antwi DA. Brain regulation of appetite and satiety. Endocrinol Metab Clin North Am. 2008.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

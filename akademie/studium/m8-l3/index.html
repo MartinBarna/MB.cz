@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peak week a superkompenzace — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 8 · Lekce 3 — Příprava bojovníků a úpolové sporty</div>
+    <h1>Peak week a superkompenzace</h1>
+
+    <p class="lead">Peak week je poslední týden před závody. A taky týden, kdy se dělá nejvíc chyb. Nejdeš v něm zhubnout na poslední chvíli. Jdeš chytře nasytit formu, kterou už máš hotovou, aby na pódiu vypadala plně a co nejlíp. Celé to jedeme science-based, ne podle „bro-vědy“.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je peak week a co je (a není) jeho cílem.</li>
+        <li>Co je superkompenzace glykogenu a proč v ní voda hraje hlavní roli.</li>
+        <li>Princip sacharidové přední zátěže (carb front-loading) a proč funguje.</li>
+        <li>Proč NEdělat extrémy s vodou a sodíkem — homeostáza a aldosteron.</li>
+        <li>Roli vlákniny, sodíku v den D a individuálního typu postavy; kdy má superkompenzace smysl a kdy ne.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co je peak week a co je jeho cílem</h2>
+    <p>Peak week je posledních zhruba 5–7 dní před soutěží, kdy ladíš finální vzhled postavy. Stavím na jednom principu: tuková forma je „hotová“ už 1–2 týdny před závody, nejpozději týden předem. V peak weeku už tuk nehubneš. Jenom opticky ladíš formu, kterou máš.</p>
+    <p>Cíl je dostat sval do stavu „plný“. Ne „plochý“ (vyčerpaný glykogen, sval vypadá splasklý) a ne „přelitý“ (voda v podkoží zastírá rýsování). Trefuješ to akorát mezi tím: plné, nasycené svaly s dobrou separací a žilnatostí. Když někdo poslední týden pořád ještě „shazuje“ tuk, něco se podcenilo dřív. Peak week není záchranná brzda, je to finální ladění.</p>
+
+    <h2>2) Superkompenzace glykogenu a voda</h2>
+    <p>Superkompenzace je princip, kdy po fázi relativního vyčerpání naplníš zásoby glykogenu nad běžnou úroveň. Sval nacpaný glykogenem vypadá plnější. Jedno číslo si zapamatuj napevno: <strong>na 1 g glykogenu tělo ukládá zhruba 3 g vody</strong>.</p>
+    <p>Nasycení svalu glykogenem táhne vodu <strong>dovnitř</strong> svalové buňky. A přesně tuhle vodu chceš (intracelulární = plný vzhled). Co nechceš, je voda mimo buňky (extracelulární, v podkoží = „přelitý“, rozmazané rýsování). Orientačně má „průměrný“ člověk kolem 350 g glykogenu ve svalech a 100 g v játrech (každý je jiný). Spočítej si, kolik to s navázanou vodou dělá, a hned je jasné, proč se peak weekem dá s plností svalu reálně hýbat.</p>
+    <blockquote>Část teorie o „přesném“ řízení intra- vs. extracelulární vody je nejistá. Tělo drží tekutiny vždycky v určitém poměru. Beru to v potaz, ale nedělám z toho dogma ani extrémy.</blockquote>
+
+    <h2>3) Sacharidová přední zátěž (carb front-loading)</h2>
+    <p>Tohle je jádro toho, jak nasycuju. Místo abych nechával velké sacharidové „nalití“ na poslední den, dávám největší dávku sacharidů na <strong>začátek</strong> peak weeku a pak ji během týdne postupně osekávám podle toho, jak postava reaguje.</p>
+    <p>Proč to funguje? Máš <strong>čas na korekci</strong>. Když to se sacharidy přeženeš a začneš zadržovat vodu (jsi „přelitý“), zhoršíš definici. Ale když nasytíš brzy, zbývá ti dost dní sacharidy stáhnout a vodu zase srovnat. To je <strong>menší riziko</strong>, než nechat všechno na poslední den, kdy už nic neopravíš. A celé je to <strong>iterativní</strong>: nasytíš, mrkneš na fotky a vzhled, upravíš. Žádné „naplánuju jedno číslo a modlím se“.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Nejdřív naloaduju kalorie a sacharidy do bodu, kdy se s klientem shodnem, že je to akorát nasycené (ne „přelité“). Pak to držím nebo jemně dolaďuju osekáváním podle vzhledu, ať to sedne na den D. Věř mi, je lepší to brzy lehce „přepálit“ a mít čas to osekat, než to nechat na poslední den a klepat se :)</div>
+
+    <h2>4) Proč NEdělat extrémy s vodou a sodíkem</h2>
+    <p>Nejčastější a nejnebezpečnější chyba „bro“ přípravy je drastické omezování vody a sodíku v posledním týdnu. Proč to neděláme?</p>
+    <p><strong>Homeostáza.</strong> Tělo si brutálně hlídá vnitřní rovnováhu. Tekutiny se sodíkem jsou pro přežití kritické. Existují data (třeba studie na vojácích), kde hladina sodíku v krvi zůstala stabilní i několik dní poté, co ho přestali přijímat. Tělo si to prostě dorovná.</p>
+    <p><strong>Aldosteron.</strong> Jakýkoli extrém kolem vody a sodíku zvýší expresi aldosteronu (steroidní hormon z kůry nadledvin), který řídí zpětné vstřebávání vody a sodíku v ledvinách. Jednoduše řečeno <strong>zadržuje vodu</strong>. Když omezíš vodu nebo sodík ve snaze „vysušit se“, tělo zareaguje přesně opačně a začne vodu zadržovat ještě víc. Často právě v podkoží.</p>
+    <p><strong>Svalová voda.</strong> Když odebereš vodu, velká část (kolem 70 %) jde ze svalů. Tím si podkopáváš to nejdůležitější: nasycení a plnost (pump). A sodík navíc podporuje vstřebávání sacharidů ve střevě (sodíko-glukózový kotransport). Odebereš ho, zhoršíš nasycování svalu.</p>
+    <blockquote>Vodu i sodík držíš podobně jako během přípravy. Piješ podle žízně, sodík necháváš zhruba stejný. A zapamatuj si jednu věc: když máš pocit, že musíš týden před soutěží omezovat vodu, spíš nemáš dost shozený tuk a měl jsi držet dietu déle.</blockquote>
+
+    <h2>5) Vláknina, sodík v den D a typ postavy</h2>
+    <p><strong>Vláknina.</strong> Během přípravy ji držíš normálně. Ke konci peak weeku (třeba od čtvrtka před sobotní soutěží) ji skoro úplně minimalizuju. Ne proto, že by „škodila“, ale protože váže vodu a vyplňuje střevo. Posledních pár dní chceš střevo spíš „prázdné a ploché“, kvůli vzhledu pasu a třeba kvůli tomu, abys na pódiu zvládl „vacuum“.</p>
+    <p><strong>Sodík v den soutěže.</strong> V den D sodík mírně navýšíš, třeba o ~35 %, čistě pro lepší pump. Ale ne tolik, aby to rozhodilo homeostázu tekutin. Je to jemné doladění, ne extrém.</p>
+    <p><strong>Individuální typ postavy.</strong> Tady krásně vidíš, k čemu je sledování dat. U Veroniky jsem dopředu věděl, že má spíš genoidní typ (víc tuku na nohách a hýždích), takže tyhle partie půjdou znatelně až úplně na konec. A přesně to se na datech a fotkách ukázalo. Jakmile se nohy nasytí a přijde pump, zlepší se i separace svalů. Když znáš typ postavy klienta, nepanikaříš, když „něco jde pomaleji“. Víš totiž, že to tak má být.</p>
+
+    <h2>6) Kdy má superkompenzace smysl (a kdy ne)</h2>
+    <p>Buď k sobě i ke klientovi upřímný. U <strong>nedostatečně vysekaného</strong> závodníka superkompenzace nemá smysl. Není co zvýraznit a voda jen rozmaže to málo rýsování, co tam je. U <strong>velmi vysekaného</strong> má pořád jen malý vliv, i když se povede skvěle. A <strong>špatně provedená</strong> dokáže dobrou formu pěkně pokazit (přelití, ztráta definice).</p>
+    <p>Proto dělej peak week konzervativně a chytře, ne agresivně. Většinu výsledku už udělala dlouhá poctivá příprava. Peak week je třešnička, ne dort.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Celý můj peak week stojí na jedné filozofii. Nejdřív nasytit (front-load) do stavu „plný, ne přelitý“, a pak iterativně ladit podle fotek a vzhledu, ať na den D trefím to akorát. Vodu a sodík držím v homeostáze, vlákninu na konci minimalizuju, v den D sodík lehce zvednu pro pump. Žádné drastické vysoušení. To je past, na kterou tělo odpoví aldosteronem a zadrží vodu. A na pátek se sobotou mám vždycky připravené krabičky s jídly navíc a napsanými makry, abychom mohli akutně reagovat „dej si jídlo navíc“ podle toho, jak postava vypadá. Jedeme na jistotu nasycení, ne na hazard. Be Effective! 💪</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a ukáže se ti vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kdy bereš formu jako „tukově hotovou“ a co je cílem peak weeku? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 1–2 týdny před závody, nejpozději týden předem. Cílem je opticky nasytit už hotovou formu do stavu „plný“. Ne „plochý“ ani „přelitý“. A rozhodně ne hubnout tuk.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Kolik vody táhne 1 g glykogenu a proč na tom záleží? <span class="tg">odpověď ▾</span></div><div class="aa">Zhruba 3 g vody. Glykogen táhne vodu do svalové buňky (plnost). A přesně tuhle intracelulární vodu chceš, ne vodu v podkoží (extracelulární), která rozmazává rýsování.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč funguje sacharidová přední zátěž (front-loading)? <span class="tg">odpověď ▾</span></div><div class="aa">Nasytíš brzy a pak máš dost dní opravit případné „přelití“ osekáním sacharidů a stažením vody. To je menší riziko, než nechat všechno na poslední den, a navíc to umožňuje iterativně ladit podle fotek.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč NEdělat extrémy s vodou a sodíkem? Jmenuj mechanismus. <span class="tg">odpověď ▾</span></div><div class="aa">Tělo brání homeostázu. Extrémy zvednou aldosteron, který zadržuje vodu (přesný opak toho, co chceš). A odebrání vody nebo sodíku k tomu zhorší nasycení svalu (pump). Kolem 70 % odebrané vody jde ze svalů a sodík pomáhá dopravit sacharidy do buněk.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy má superkompenzace smysl a kdy ne? <span class="tg">odpověď ▾</span></div><div class="aa">Smysl má jen u velmi vysekaných závodníků, a i tam je vliv malý. U nedostatečně vysekaných nemá smysl, voda jen rozmaže to málo rýsování. Špatně provedená dobrou formu pokazí. Proto konzervativně.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi si modelovou závodnici (vysekaná, soutěž v sobotu) a rozepiš jí plán peak weeku. Jak nastavíš sacharidovou přední zátěž od začátku týdne, jak budeš ladit podle fotek a co uděláš s vlákninou, vodou a sodíkem (a proč to NEbudou extrémy), včetně úpravy sodíku v den D. Každý krok zdůvodni mechanismem (glykogen/voda, homeostáza, aldosteron).</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m8-l2/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m8">⬑ Zpět na Modul 8<span class="s">Příprava bojovníků a úpolové sporty</span></a>
+      <a class="lnav-next" href="/akademie/studium/m8-l4/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Escalante G, et al. Peak week recommendations for bodybuilders: an evidence-based approach. BMC Sports Sci Med Rehabil. 2021;13(1):68.</li>
+        <li>Chappell AJ, et al. Nutritional strategies of natural bodybuilders during contest preparation. J Int Soc Sports Nutr. 2018.</li>
+        <li>Fyziologie glykogenu a hydratace svalu; renin-angiotenzin-aldosteronový systém (RAAS) a regulace sodíku a vody. Učebnicové zdroje.</li>
+        <li>Martin Barna. Autorská soutěžní příprava a vlastní „Peak Week“ materiály (3 zlaté medaile). Barna Academy 2026.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m8-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

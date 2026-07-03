@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanismus jídla: hlad, sytost a jak to v těle funguje — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 2 — Psychologie a chování kolem jídla</div>
+    <div style="background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.3);border-radius:14px;padding:13px 18px;margin:0 0 1.2rem;font-size:.93rem;color:#e9e2d8;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between;"><span>🔓 <b style="color:#fff">Ochutnávka zdarma</b> — tahle lekce je ukázka z Barna Academy.</span><a href="/akademie/" style="color:var(--gold-soft);font-weight:700;white-space:nowrap;">Odemknout celou Academy →</a></div>
+    <h1>Mechanismus jídla: hlad, sytost a jak to v těle funguje</h1>
+
+    <p class="lead">Minule jsme řešili, <em>proč</em> lidé jedí. Teď se podíváme pod kapotu. Co v těle spustí hlad a co ti dá vědět, že už máš dost? Doktora z tebe neudělám, neboj. Ale jakmile tomuhle rozumíš, přestaneš klienta soudit za „slabou vůli“ a začneš pracovat s biologií, kterou stejně pod kontrolou nemá.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Homeostáza a proč si tělo pořád hlídá rovnováhu.</li>
+        <li>„Centrum hladu“ a „centrum sytosti“ v mozku.</li>
+        <li>Rozdíl mezi satiací (sytost při jídle) a sytostí (mezi jídly).</li>
+        <li>Jakou roli hraje glukóza v krvi coby hlavní páka hladu.</li>
+      </ul>
+    </div>
+
+    <h2>1) Homeostáza — tělo chce rovnováhu</h2>
+    <p>Člověk je <strong>homeostatický</strong>. Jsme stavění na provoz ve stálé rovnováze. Tělo má vrozené mechanismy, které poznají, že je něco mimo. Málo energie, málo živin. A hned ti pošlou signál, ať to spravíš.</p>
+    <p>Proto rada „prostě jez míň“ dlouhodobě naráží. Tělo si o energii řekne, ať chceš nebo ne. Tvoje práce je jet s tímhle systémem, ne proti němu.</p>
+
+    <h2>2) Centrum hladu a centrum sytosti</h2>
+    <p>V mozku máme dvě hlavní centra [2,3,4]:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Laterální hypotalamus (LH)</strong> — „zapínač“ jídla. Naskočí, když máme hlad.<br>
+      <strong>Ventromediální hypotalamus (VMH)</strong> — „vypínač“. Naskočí, když jsme sytí, a zastaví další jezení.</p>
+    </div>
+    <p>Tahle centra sbírají data z celého těla a řídí je spousta neurotransmiterů. Některé chuť k jídlu zvyšují (třeba neuropeptid Y), jiné ji tlumí (třeba cholecystokinin nebo serotonin). A teď to hlavní, co si z toho vezmi: <strong>hlad a chuť jsou z velké části nevědomé a řízené chemií. Vůlí je donekonečna nepřemůžeš.</strong></p>
+
+    <h2>3) Satiace vs. sytost (a fakt je v tom rozdíl!)</h2>
+    <p>Plnost má dva odborné termíny [6]:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Satiace</strong> — pocit, který máš <em>během</em> jídla a který tě zastaví („už jsem plný“).<br>
+      <strong>Sytost</strong> — pocit <em>mezi</em> jídly, který tě drží a brání, abys hned sháněl další jídlo.</p>
+    </div>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientovi stavím jídelníček tak, aby ho dobře držela sytost MEZI jídly. Pak nehladoví a snáz se na plánu udrží. A vzpomeň si z minula: nejvíc zasytí bílkoviny. Proto je dávám do základu. :)</div>
+
+    <h2>4) Jak tělo signalizuje (zjednodušeně)</h2>
+    <p>Tělo používá dva druhy signálů. <strong>Epizodické</strong> řídí jedno konkrétní jídlo („najez se“, „jsi plný“). <strong>Tonické</strong> hlásí mozku, kolik máš celkově uložené energie, a ten epizodický signál tlumí. Kolem jídla probíhají fáze:</p>
+    <div class="card">
+      <p style="margin-top:0"><strong>Cefalická</strong> — start ještě před jídlem: pohledem, vůní, myšlenkou, chutí.<br>
+      <strong>Gastrointestinální</strong> — žvýkání, polykání, rozklad v žaludku a střevech (spousta hormonálních dějů).<br>
+      <strong>Substrátová</strong> — vstřebání živin do krve a jejich využití nebo uložení.</p>
+    </div>
+
+    <h2>5) Glukóza — hlavní páka hladu a sytosti</h2>
+    <p>Nejsilněji ti hlad a sytost ovlivňuje hladina glukózy v krvi. Po jídle glukóza stoupne, naskočí VMH a ty se cítíš sytý a přestaneš jíst. Po delším půstu nebo po tréninku, kdy se glukóza spotřebuje, hladina klesne, naskočí LH a ty cítíš hlad a sháníš jídlo.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Přesně proto s klientem řeším pravidelnost a složení jídel. Stabilnější energie znamená míň extrémních výkyvů hladu a míň „přepadů“ na sladké. Nebojuju s jeho vůlí, srovnávám mu biologii. Be Effective. :)</div>
+
+    <h2>Shrnutí</h2>
+    <div class="points">
+      <ul>
+        <li>Tělo je homeostatické. Hlídá si rovnováhu a o energii si řekne.</li>
+        <li>LH = zapínač hladu, VMH = vypínač (sytost). Řídí to chemie, ne vůle.</li>
+        <li>Satiace = sytost při jídle; sytost = mezi jídly (na tu stav jídelníček).</li>
+        <li>Glukóza v krvi je hlavní páka hladu a sytosti.</li>
+      </ul>
+    </div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co znamená, že je člověk „homeostatický“? <span class="tg">odpověď ▾</span></div><div class="aa">Je stavěn na provoz ve stálé rovnováze; tělo pozná, kde má nedostatek, a samo si řekne o nápravu.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaká dvě centra v mozku řídí hlad a sytost a co dělají? <span class="tg">odpověď ▾</span></div><div class="aa">LH (laterální hypotalamus) spouští hlad; VMH (ventromediální) signalizuje sytost a zastaví jezení.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaký je rozdíl mezi satiací a sytostí? <span class="tg">odpověď ▾</span></div><div class="aa">Satiace = pocit plnosti během jídla (zastaví ho); sytost = pocit mezi jídly (oddálí další).</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak glukóza v krvi ovlivňuje hlad a sytost? <span class="tg">odpověď ▾</span></div><div class="aa">Vysoká glukóza po jídle → VMH → sytost; nízká po půstu/cvičení → LH → hlad.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč je užitečné vědět, že hlad a chuť jsou z velké části nevědomé? <span class="tg">odpověď ▾</span></div><div class="aa">Přestaneš klienta soudit za „slabou vůli“ a začneš pracovat s biologií — pravidelností, složením jídel a sytostí.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U sebe nebo u klienta sleduj jeden den hlad na škále 1–10 před každým jídlem a 1 hodinu po něm. Najdi, po kterém jídle drží sytost nejdél — a co měla ta jídla společného (nejspíš víc bílkovin a objemu).</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m1-l1/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m1">⬑ Zpět na Modul 1<span class="s">Psychologie a chování kolem jídla</span></a>
+      <a class="lnav-next" href="/akademie/studium/m1-l3/">Další lekce →</a>
+    </nav>
+    <a class="ba-upsell" href="/akademie/objednavka/" style="display:block;margin:1.8rem 0 .2rem;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.18),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.4);border-radius:16px;padding:18px 22px;color:#cfc6b8;font-size:.97rem;line-height:1.55;">      <b style="color:#fff;">🎁 Tahle lekce je ochutnávka Academy zdarma.</b> Celá Barna Academy — 224 lekcí napříč 20 moduly, certifikace i videokurz v ceně — odemkneš jednorázově za <b style="color:#fff;">8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.      <span style="display:block;margin-top:8px;color:#f0b46b;font-weight:700;">Odemknout celou Academy — 8 900 Kč →</span>    </a>    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje</summary>
+      <ol>
+        <li>Ogden J. The Psychology of Eating. Wiley-Blackwell; 2010.</li>
+        <li>Stellar E. The physiology of motivation. Psychol Rev. 1954;61(1):5–22.</li>
+        <li>Anand BK, Brobeck JR. Hypothalamic control of food intake. Yale J Biol Med. 1951;24(2):123–140.</li>
+        <li>Berthoud HR. Metabolic and hedonic drives in the neural control of appetite. Obes Rev. 2002.</li>
+        <li>Morton GJ, et al. Central nervous system control of food intake and body weight. Nature. 2006;443:289–295.</li>
+        <li>Blundell JE, et al. Appetite control: methodological aspects of satiety. Obes Rev. 2010;11(3):251–270.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    // Postup přes členskou sekci (live: Supabase, demo: localStorage).
+    var LID='m1-l2', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ Promise.resolve(true).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

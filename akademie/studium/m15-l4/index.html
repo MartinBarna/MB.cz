@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Světlo jako nástroj: ranní slunce a večerní tma — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 15 · Lekce 4 — Spánek, stres a regenerace</div>
+    <h1>Světlo jako nástroj: ranní slunce a večerní tma</h1>
+
+    <p class="lead">Spánek nezačíná večer na polštáři. Začíná ráno u okna. <strong>Světlo je ten nejsilnější signál, kterým si nastavuješ vnitřní hodiny.</strong> A většina lidí to dělá přesně naopak: ráno sedí ve tmě a večer si doma rozsvítí jako na operačním sále. Pak se diví, že nemůžou usnout. V téhle lekci ti ukážu, proč na pořadí světla záleží a jak z toho udělat návyk, který klientovi opraví spánek rychleji než jakákoli kapsle melatoninu.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak světlo přes oči řídí cirkadiánní rytmus a kdy ho posouvá dopředu nebo dozadu.</li>
+        <li>Proč ranní jasné světlo „nastartuje hodiny“ a posílí večerní spánek.</li>
+        <li>Jak večerní světlo brzdí a zkracuje melatonin — a o kolik reálně jde.</li>
+        <li>Konkrétní protokol: ranní expozice, denní dávka, večerní tma — v luxech a minutách.</li>
+        <li>Jak rozdíl mezi venkem a interiérem mění všechno (a proč okno nestačí).</li>
+        <li>Jak z toho udělat návyk, který klient udrží i v zimě a na ranní směně.</li>
+      </ul>
+    </div>
+
+    <h2>1) Vnitřní hodiny a hlavní vypínač</h2>
+    <p>V mozku máš jádro, kterému se říká suprachiasmatické jádro. Sedí v něm hlavní hodiny, co srovnají skoro každou buňku v těle do zhruba 24hodinového rytmu. Tyhle hodiny nezajímá čas na mobilu. Řídí se světlem, které ti dopadá na sítnici. Hlavní práci tu odvádí speciální buňky v oku (ipRGC) citlivé hlavně na modrou složku světla. Ty hodinám hlásí „je den“, nebo „je noc“.</p>
+    <p>Důležitý je, že stejné světlo posune hodiny pokaždé jinak podle toho, <strong>kdy</strong> dopadne. Říká se tomu fázová odezvová křivka. Světlo v pozdním večeru a na začátku noci hodiny <strong>zpožďuje</strong>, takže se ti chce spát později. Světlo v pozdní noci a ráno je naopak <strong>posouvá dopředu</strong>, chce se ti pak spát i vstávat dřív. Mírná tma uprostřed dne na rytmus skoro nepůsobí. Rozhoduje, co se děje na okrajích dne.</p>
+    <blockquote>Nejde o víc světla obecně. Jde o správné světlo ve správný čas: hodně ráno, málo večer.</blockquote>
+
+    <h2>2) Ranní světlo: nastav hodiny a zaplať si večer</h2>
+    <p>Ranní jasné světlo zvládne dvě věci naráz. Posune fázi hodin dopředu, takže se ospalost večer dostaví v rozumný čas. A zároveň ti „otužuje“ systém proti večernímu světlu: když si ráno dáš pořádnou dávku, večerní světlo už ti melatonin tak snadno nepotlačí. Zkrátka kdo ráno zatáhne za tuhle páku, ten si večer melatonin tak lehko nerozbije.</p>
+    <div class="card">
+      <p><strong>Kdy:</strong> co nejdřív po probuzení, nejlíp v první hodině.</p>
+      <p><strong>Kolik:</strong> venku za jasného dne 10 000–100 000 luxů, i pod mrakem klidně 1 000–10 000 luxů. Pro srovnání: běžný interiér dá jen 100–300 luxů. Proto „mám rozsvíceno doma“ nestačí.</p>
+      <p><strong>Jak dlouho:</strong> za jasného rána 5–10 minut, pod mrakem nebo v zimě 15–30 minut. Když má klient ranní směnu nebo je temná zima, klidně sáhni po lampě na světelnou terapii (~10 000 luxů na ~20–30 minut).</p>
+      <p><strong>Jak:</strong> ven, bez slunečních brýlí, oči otevřené (ale nedívej se přímo do slunce). Stačí procházka, kafe na balkoně, vyvenčit psa.</p>
+    </div>
+    <p>Žádná magie ani „ranní rituál podle gurua“. Tohle je nejlevnější věc na spánek, jakou klientovi dáš. A bonusem ti zvedne ranní bdělost a náladu.</p>
+
+    <h2>3) Večerní světlo: tichý zloděj melatoninu</h2>
+    <p>Tady se to láme. Lidi večer rozsvítí strop, telefon u nosu, a pak se diví, že „nemůžou usnout“. Přitom běžné pokojové světlo před spaním <strong>oddálí nástup melatoninu a zkrátí dobu, po kterou ho tělo vyrábí</strong>, oproti slabému tlumenému světlu. Tělo si prostě myslí, že je pořád den, a usínání se odsouvá.</p>
+    <p>Hodiny navíc reagují na večerní světlo nelineárně. Už dost malý jas melatonin tlumí a horní hranice potlačení se „nasytí“ docela brzy. Přeloženo do praxe: neřeš, jestli máš večer 200 nebo 400 luxů. Řeš, jestli se dostaneš dolů pod úroveň, kde tělo pochopí, že je noc.</p>
+    <div class="eq">cíl večer: jas dolů + modrá pryč → melatonin smí nastoupit</div>
+    <p>Takže večer netlumíme kvůli atmosféře, ale kvůli biologii. Tlumené, teplé, nízko umístěné světlo říká hodinám „noc“. Jasný studený strop říká „den“.</p>
+    <blockquote>Hodina jasného večerního světla ti neukradne spánek tím, že tě udrží vzhůru. Ukradne ho tím, že posune celý systém později.</blockquote>
+
+    <h2>4) Denní dávka: světlo přes den jako ochrana</h2>
+    <p>Mezi ránem a večerem je ještě jeden pilíř, na který se zapomíná: kolik světla klient nabere za celý den. Lidi, co pracují u okna a mají vyšší denní dávku, mívají lepší spánek a spí v průměru i znatelně déle než kolegové bez denního světla. Vyšší denní dávka ti navíc <strong>sníží, jak moc na tebe večer zapůsobí umělé světlo</strong>. Funguje jako nárazník.</p>
+    <div class="card">
+      <p><strong>Princip:</strong> velký kontrast den vs. noc = silné hodiny. Jasný den a tmavá noc dají hodinám jasný signál. Šedý den u monitoru a svítící večer ten kontrast smažou.</p>
+      <p><strong>Co s tím:</strong> sedni si k oknu, dej si oběd nebo kafe ven, prokládej den krátkými procházkami. I 10–15 minut venku v poledne se počítá.</p>
+      <p><strong>Pravidlo palce:</strong> nejde o jedno „dokonalé“ okno, ale o součet venkovních minut za den.</p>
+    </div>
+    <p>Stojí za to to říct nahlas, protože „seď u okna“ zní banálně. Jenže rozdíl mezi člověkem u okna a v koutě bez denního světla bývá v délce spánku desítky minut. To není kosmetika.</p>
+
+    <h2>5) Venku vs. interiér: čísla, která mění hru</h2>
+    <p>Klienti se nejčastěji seknou na tom, že interiér „je přece taky světlý“. Oko se přizpůsobí, takže ti pokoj a zataženo venku připadají podobné. Jenže hodiny počítají luxy, ne dojem. A rozdíly jsou řádové:</p>
+    <div class="card">
+      <p><strong>Jasný letní den, přímé slunce:</strong> ~100 000 luxů</p>
+      <p><strong>Zataženo, venku ve dne:</strong> ~1 000–10 000 luxů</p>
+      <p><strong>Dobře osvětlená kancelář:</strong> ~300–500 luxů</p>
+      <p><strong>Obývák večer:</strong> ~100–200 luxů</p>
+      <p><strong>Tlumené světlo / svíčky před spaním:</strong> ~10–50 luxů</p>
+    </div>
+    <p>Z toho plynou dvě věci. Ráno jdi <strong>ven</strong>, protože i zataženo venku překoná každou kancelář o řád. Večer jdi s jasem <strong>dolů</strong>, co nejblíž tlumenému světlu. U obrazovek pomáhá teplý/noční režim a oddálit displej od očí. Ne proto, že by modrá byla „toxická“, ale protože celkový jas a modrá složka říkají hodinám, kolik je „hodin“.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> S klientem nezačínám žádnou appkou ani doplňkem. Začínám oknem. :) Říkám mu: „Ráno do deseti minut po probuzení vystrč hlavu ven, bez brýlí, klidně jen s kafem. A večer udělej z bytu jeskyni: strop zhasni, rozsviť lampičku u země a dej teplé světlo.“ Tohle jednoduché „ráno ven, večer dolů“ mi opravilo víc spánků než cokoliv z lékárny. Když má klient ranní směnu nebo venku temno do tří odpoledne, přihodím světelnou lampu na dvacet minut k snídani. A vím, proč to lidi fakt vydrží: je to zadarmo, dá se to opakovat každý den a nejde to pokazit. Be Effective! 💪</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co nastavuje vnitřní hodiny v suprachiasmatickém jádru nejsilněji? <span class="tg">odpověď ▾</span></div><div class="aa">Světlo dopadající na sítnici, hlavně jeho modrá složka přes speciální buňky (ipRGC). Hodiny se neřídí časem na hodinkách, ale světlem.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč stejné světlo posune hodiny jednou dopředu a jindy dozadu? <span class="tg">odpověď ▾</span></div><div class="aa">Kvůli fázové odezvové křivce, záleží na čase expozice. Světlo v pozdním večeru a na začátku noci hodiny zpožďuje, světlo v pozdní noci a ráno je posouvá dopředu.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Co dělá ranní jasné světlo navíc, kromě posunu hodin dopředu? <span class="tg">odpověď ▾</span></div><div class="aa">„Otužuje“ systém, oslabuje, jak moc ti večerní světlo potlačí melatonin. Ranní dávka tak chrání večerní nástup spánku.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak večerní pokojové světlo zhoršuje usínání? <span class="tg">odpověď ▾</span></div><div class="aa">Oddálí nástup melatoninu a zkrátí dobu jeho produkce oproti tlumenému světlu, takže posune celý rytmus později. Tělo si myslí, že je pořád den.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč „mám doma rozsvíceno“ ráno nestačí? <span class="tg">odpověď ▾</span></div><div class="aa">Hodiny počítají luxy, ne dojem. Interiér dá jen ~100–500 luxů, kdežto venku i zataženo je ~1 000–10 000 luxů a na slunci až ~100 000. Rozdíl je řádový, proto se musí ven.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi modelového klienta a napiš jeho aktuální „světelný den“: kdy a kde nabírá světlo ráno, přes den a večer. Najdi v něm dvě největší chyby. Pak mu navrhni konkrétní protokol: ranní expozici (kdy, kde, jak dlouho a co dělat v zimě nebo na ranní směně), denní dávku a večerní tlumení (co přesně vypnout nebo ztlumit a od kolika hodin). Vše vyčísli v minutách a přibližných luxech. A na závěr popiš, jak po dvou týdnech poznáš, jestli to zabralo.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m15-l3/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m15">⬑ Zpět na Modul 15<span class="s">Spánek, stres a regenerace</span></a>
+      <a class="lnav-next" href="/akademie/studium/m15-l5/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Zeitzer JM, Dijk DJ, Kronauer RE, Brown EN, Czeisler CA. Sensitivity of the human circadian pacemaker to nocturnal light: melatonin phase resetting and suppression. J Physiol. 2000;526(Pt 3):695–702.</li>
+        <li>Khalsa SBS, Jewett ME, Cajochen C, Czeisler CA. A phase response curve to single bright light pulses in human subjects. J Physiol. 2003;549(Pt 3):945–952.</li>
+        <li>Gooley JJ, Chamberlain K, Smith KA, et al. Exposure to room light before bedtime suppresses melatonin onset and shortens melatonin duration in humans. J Clin Endocrinol Metab. 2011;96(3):E463–E472.</li>
+        <li>Boubekri M, Cheung IN, Reid KJ, Wang CH, Zee PC. Impact of windows and daylight exposure on overall health and sleep quality of office workers: a case-control pilot study. J Clin Sleep Med. 2014;10(6):603–611.</li>
+        <li>St Hilaire MA, Gooley JJ, Khalsa SBS, et al. Human phase response curve to a 1 h pulse of bright white light. J Physiol. 2012;590(13):3035–3045.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m15-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

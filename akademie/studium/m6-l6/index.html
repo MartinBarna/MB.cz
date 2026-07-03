@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osobní značka II: osobnost a důvěra — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 6 — Byznys pro trenéry a poradce</div>
+    <h1>Osobní značka II: osobnost a důvěra</h1>
+
+    <p class="lead">Minule jsme řešili vzhled a první dojem. Dneska jdeme do zbylých tří pilířů osobní značky: osobnost, kompetence, odlišení. A do toho, co celý byznys drží pohromadě — <strong>důvěry</strong>. Řeknu ti to narovinu: lidi si tě nekoupí, dokud ti nevěří.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč osobnost otevírá dveře k důvěře a proč jsou klienti (a ty taky) skeptici.</li>
+        <li>Past „čekatelů“ vs. „dělačů“ a proč se nevyplácí hrát na okamžité ROI.</li>
+        <li>Kompetence: mluvíš k publiku, nebo k oboru? Jak to říct tak, ať se nikdo necítí blbě.</li>
+        <li>Odlišení (USP) a varování před narcismem a egem v našem oboru.</li>
+        <li>Jak vědomě stavět brand asociace a 8 bodů, co shrnou celou osobní značku.</li>
+      </ul>
+    </div>
+
+    <h2>1) Osobnost = důvěra</h2>
+    <p>Fyzično, styl a image si umíme dost dobře pohlídat. Jenže lidem neprodáváš jen lepší zdraví a postavu. Prodáváš i to sebevědomí, co s tím přijde. Proto nemám rád frázi „tvoje postava je tvá vizitka“. U někoho to platí, ale chladná pravda je, že pro spoustu klientů tvoje fyzička odradí stejně lidí, kolik jich přitáhne.</p>
+    <p>Pochop i sám sebe. Jsi vážný typ? Vtipálek? Kreativec? Energický, přátelský, sebejistý? Tohle všechno vyleze ven ve chvíli, kdy zůstaneš sám sebou a dáš značce lidskou tvář. Lidi chtějí vědět, kdo jsi. Tvoje nedokonalosti, tvůj pohled na svět, co máš za sebou. Video proto dneska tak funguje — přenese osobnost a lidi mají pocit, že tě potkali naživo. Upřímnost, zápal a um se přes papír předávají těžko. Naživo to jde snadno, a dneska můžeš „mluvit“ k tisícům lidí na jeden klik.</p>
+    <blockquote>Osobnost je k nezaplacení pro důvěru. Bez důvěry si tě, tvou značku ani produkty nikdo nekoupí.</blockquote>
+
+    <h2>2) Skeptici, čekatelé a dělači</h2>
+    <p>Tvoji zákazníci jsou skeptici. Měli za sebou špatné kouče, blbé koncepty, suplementy, sliby, co nikdo nesplnil. A vidí to ego, co lítá po sítích. Volně podle Jacka Ma: požádáš je o čas → „nemám čas“. Dáš info zdarma → „to je past“. Doporučíš suplement → „chtějí jen vydělat“. Dáš plán → „to už jsem zkoušel“. Radši se zeptají Googlu a kamarádů, co řeší to samé. Moc přemýšlejí, a tak neudělají nic. Tvůj úkol je získat jejich důvěru, aby ses jim v hlavě dostal nad Google i nad jejich kámoše.</p>
+    <p>Ale ruku na srdce, skeptik jsi i ty. Někdo ti nabídne radu zdarma → past. Někdo chce, ať vložíš 10 Kč a vrátí se ti 11 → „to je málo“ (přitom víš, jak parádní je 10% ROI?). Pak řekneš, že na těch deset nemáš. Ať napíšeš článek → „nemám zkušenost“. Ať dřeš víc → „je to těžké“. Ať změníš model → „nebude to fungovat“. Posloucháš všechny okolo… a pak neuděláš nic.</p>
+    <blockquote>„Když slyším lidi řešit ROI sociálních sítí, připomene mi to, proč tolik firem padá. Většina nehraje maraton, hraje sprint.“ — Gary Vaynerchuk</blockquote>
+    <p>Lidi, kterým to nevyšlo, mají jedno společné. Celý život čekají. Na 100% ROI, na jistotu, až zákazníci přijdou sami, až je někdo naučí kouzelný vzorec. Za rok budou čekat dál. Jedni čekají, druzí dělají. Buď dělač.</p>
+
+    <h2>3) Kompetence — mluvíš k publiku, nebo k oboru?</h2>
+    <p>Stavíš značku hodně na vzdělávání a jde ti to? Být chytrý nestačí. Když ti chybí komunikace, dostat se k publiku je problém. Umět vyjít s lidmi musíš. A hlavně se zeptej sám sebe: mluvíš jako fitko pořád jen k fitku? Chápe tvoje běžné publikum ty zkratky a vědu, kterou ho zasypeš?</p>
+    <p>Obsah musí zaujmout. Nikdo se nechce „cítit blbě“. Jakmile začneš sypat hodně složité pojmy, lidi se odpojí. Většina má radši krátké „soundbity“, má krátkou pozornost a je zahlcená informacemi víc než kdy dřív. Zamysli se, proč k tobě lidi chodí. Za vzděláním, motivací, inspirací, srandou, kontroverzí? Umíš to „vysvětlit pětiletýmu“? Tak to přizpůsob věku a vzdělání svého publika.</p>
+
+    <h2>4) Odlišení (USP) a varování před egem</h2>
+    <p>Odlišení znamená: proč zrovna ty. Tvoje expertíza je páka, ale prodávej ji jen těm, kdo o ni stojí. Dělal jsi MMA? Může tě to zaškatulkovat, tak tím miř na lidi, které to nakopne. A znovu: jsi „bojovník, co kóučuje“, nebo „kouč, co dělá MMA“? Záleží na pořadí.</p>
+    <div class="card">Dej si bacha na <strong>narcismus a ego</strong>. Náš obor je jich plný a dělají problémy:
+      <ul style="margin:.5rem 0 0 1.1rem;">
+        <li>Naslibují, co nedodrží, jen aby lidi koupili. Po nákupu mají „hotovo“ a úroveň služby je v háji.</li>
+        <li>Skamarádí se s tebou, ať se cítíš výjimečně. Jakmile dosloužíš, nemáš pro ně cenu.</li>
+        <li>Jsou posedlí sebou a potřebují se pořád nafukovat.</li>
+      </ul>
+    </div>
+    <p>Jde ego zpeněžit? Jde. Ale ne v oboru, který není o tobě, ale o lidech, kterým pomáháš. A když ses „showpiece“ stal teprve teď, díky vlastnímu hubnutí nebo úspěchu, ať ti to nepřevrátí identitu. Místo „wow, to je působivé“ hledej „wow, díky, žes mi pomohl“. Tak nakrmíš ego a fakt pomůžeš.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Nehoň se za partnerstvím nebo sponzoringem jen proto, abys ušetřil pár korun. Většinou to značce uškodí víc, než ti ty peníze pomůžou. Každá asociace musí být plus pro tvůj byznys. Když není, drž se od ní dál. Sám jsem odmítl spolupráce, co k mojí značce neseděly — i pár fakt známých jmen :) Kontroverze v byznysu místo má, protože zaujme. Ale používej ji s hlavou a vždycky ji podlož obsahem.</div>
+
+    <h2>5) Shrnutí osobní značky v 8 bodech</h2>
+    <p>Když si projedeš všechny tyhle věci, vyleze ti z toho jasná definice osobní značky. Dej do obsahu kus sebe, ale vždycky ho stav tak, aby zaujal zrovna tvoje publikum.</p>
+    <div class="points">
+      <ul>
+        <li>Znej sám sebe.</li>
+        <li>Měj jasno v cíli značky.</li>
+        <li>Rozuměj tomu, ke komu mluvíš — kdo je tvé publikum.</li>
+        <li>Vybírej média, která ti k nim nejlíp slouží.</li>
+        <li>Definuj, jak tě publikum identifikuje — co je na tobě konzistentní.</li>
+        <li>Definuj svá „teritoria“ — kde se tvoji zákazníci a partneři scházejí.</li>
+        <li>Pečuj o vztahy se zákazníky, zájemci i partnery.</li>
+        <li>Drž integritu, identitu a konzistenci značky.</li>
+      </ul>
+    </div>
+    <blockquote>„Osobní značka je to, co o tobě lidé říkají, když odejdeš z místnosti.“ — Jeff Bezos</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč je osobnost klíčová pro byznys? <span class="tg">odpověď ▾</span></div><div class="aa">Dá značce lidskou tvář a buduje důvěru. Bez důvěry si tě, tvou značku ani produkty nikdo nekoupí.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co mají podle Jacka Ma společného neúspěšní lidé? <span class="tg">odpověď ▾</span></div><div class="aa">Celý život čekají. Na jistotu, na 100% ROI, až zákazníci přijdou sami. Místo aby dělali. Za rok budou čekat dál.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaká je hlavní chyba při komunikaci kompetence k běžnému publiku? <span class="tg">odpověď ▾</span></div><div class="aa">Zasypat lidi složitými pojmy a vědou. Cítí se blbě a odpojí se. Musíš mluvit k jejich úrovni, ne k oboru.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaké jsou tři znaky narcistního či egoistického chování v oboru? <span class="tg">odpověď ▾</span></div><div class="aa">Naslibují a nedodrží službu, kamarádí se s tebou jen dokud tě potřebují, a jsou posedlí sebou s potřebou se pořád nafukovat.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co je hlavní pravidlo při výběru brand asociací? <span class="tg">odpověď ▾</span></div><div class="aa">Každá asociace musí být plus pro tvůj byznys. Nikdy ji neber jen kvůli úspoře peněz. Uškodí víc, než ti ušetří.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Dopiš definici své osobní značky podle 8 bodů a u „odlišení“ napiš jednou větou svoje USP — proč zrovna ty. Pak buď k sobě upřímný: vypíchni jednu věc, kde ti hrozí ego, a napiš, jak ji obrátíš ve „díky, žes mi pomohl“.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m6-l5/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m6">⬑ Zpět na Modul 6<span class="s">Byznys pro trenéry a poradce</span></a>
+      <a class="lnav-next" href="/akademie/studium/m6-l7/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Jack Ma. Výroky o čekatelích a dělačích. Alibaba Group.</li>
+        <li>Gary Vaynerchuk. O ROI sociálních sítí a dlouhodobé hodnotě. VaynerMedia.</li>
+        <li>Jeff Bezos. O osobní značce a reputaci. Amazon.</li>
+        <li>Navazuje na principy z modulu Psychologie (přesvědčení, důvěra, odměna) a na definici značky z lekcí W4–W5.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l6', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

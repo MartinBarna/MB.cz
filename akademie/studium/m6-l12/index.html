@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding nového klienta — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 6 · Lekce 12 — Byznys pro trenéry a poradce</div>
+    <h1>Onboarding nového klienta</h1>
+
+    <p class="lead">Klient ti právě zaplatil. Je natěšený, ale v koutku duše nervózní, jestli neudělal chybu. <strong>A jsou to první dny, co tuhle nervozitu buď přebijou nadšením, nebo ji potvrdí a sklouznou do tichého zklamání.</strong> Onboarding je tvoje šance ukázat hned na začátku, že to byla správná volba.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč prvních pár dní rozhoduje o celé spolupráci.</li>
+        <li>Co má dobrý onboarding obsahovat — přivítání, jasno a první kroky.</li>
+        <li>Jak hned snížit nejistotu klienta a posílit jeho rozhodnutí.</li>
+        <li>Jak naplánovat „rychlou výhru“ už v prvním týdnu.</li>
+        <li>Jak onboardingem nastavit standard celé služby.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč první dny rozhodují</h2>
+    <p>Po nákupu se v klientovi perou dvě věci najednou. Nadšení a pochybnost: „Udělal jsem dobře?“ A teď je to na tobě. Když dostane jasné přivítání, ví, co se děje, a brzo zažije malý úspěch, nadšení převáží a důvěra roste. Když místo toho dostane suchý plán a pak ticho, pochybnost se rozjede naplno, motivace klesá a klient může litovat dřív, než vůbec stihne začít.</p>
+    <p>První dojem ze služby přepíšeš jen těžko. Tak ho udělej silný hned napoprvé.</p>
+
+    <h2>2) Co má dobrý onboarding obsahovat</h2>
+    <p>Dobrý onboarding stojí na třech věcech, co na sebe navazují.</p>
+    <div class="card">
+      <p><strong>Přivítání a lidský kontakt.</strong> Osobní uvítání — ideálně videohovor, klidně i jen zpráva nebo hlasovka — poděkuj za důvěru a řekni, jak to spolu pojedete. Klient má cítit, že za tím stojí člověk, ne automat.</p>
+      <p><strong>Jasno a struktura.</strong> Co se bude dít, jak a jak často spolu budete v kontaktu, co od něj potřebuješ a kde najde podklady. Čím víc jasna, tím míň nejistoty.</p>
+      <p><strong>První konkrétní kroky.</strong> Ne mu hodit na hlavu celý plán, ale srozumitelné „co udělat teď“. Začni jednoduše, ať klient hned ví, čím začít.</p>
+    </div>
+
+    <h2>3) Sniž nejistotu a posil rozhodnutí</h2>
+    <p>Klient potřebuje hned cítit, že se rozhodl dobře. Co mu to dá:</p>
+    <p><strong>Potvrď mu jeho rozhodnutí</strong> — „udělal jsi skvělý krok, jsem v tom s tebou a projdeme to spolu.“ <strong>Zopakuj realistická očekávání</strong> — připomeň, že je to běh na delší trať, jak budete měřit pokrok a že zaváhání k tomu patří. Ušetříš si tím pozdější zklamání. A <strong>buď k mání, když se ptá</strong> — na startu má klient otázek nejvíc a rychlá, vlídná odpověď buduje důvěru jako nic jiného.</p>
+
+    <h2>4) Naplánuj rychlou výhru</h2>
+    <p>Nejlepší, co pro nového klienta uděláš, je dostat ho k rychlé výhře už v prvním týdnu. Vyber něco snadného a jistého — co zvládne a co je hmatatelně cítit: líp se vyspí po jedné změně, sedne technika cviku, poprvé dá celý týden bílkoviny, má víc energie. A pak to oslav. Pojmenuj to a pochval ho, protože úspěch živí víru a motivaci. Nakonec mu ukaž, že tahle malá výhra je první krůček k tomu, proč to vlastně celé dělá.</p>
+    <blockquote>Rychlá výhra v prvním týdnu promění nákup v přesvědčení „tohle funguje a byla to dobrá volba“ — a na tom stojí dlouhá spolupráce i to, že tě klient doporučí dál.</blockquote>
+
+    <h2>5) Onboarding nastavuje standard</h2>
+    <p>Prvních pár dní není jen formalita. Nasazuješ jimi laťku pro celou spolupráci. Dej ji vysoko a klient ti zůstane, věří ti a řekne o tobě dál.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Onboarding beru jako nejdůležitější týden celé spolupráce. Klient mi právě zaplatil, tak mu hned ukážu, že to byla ta nejlepší investice — osobně ho přivítám, vysvětlím, jak to pojedeme, a hlavně mu naplánuju rychlou výhru, kterou pak spolu oslavíme. :) Co nikdy neudělám? Vezmu peníze a pošlu suchý plán s tichem. To je nejrychlejší cesta, jak si vyrobit zklamaného klienta. První dojem ze služby uděláš jen jednou — tak ať stojí za to. Be Effective!</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč rozhodují první dny spolupráce? <span class="tg">odpověď ▾</span></div><div class="aa">V klientovi se pere nadšení s pochybností. První dny tu pochybnost buď rozptýlí (a důvěra roste), nebo potvrdí (a klient lituje). A první dojem ze služby pak těžko přepíšeš.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaké tři věci má obsahovat dobrý onboarding? <span class="tg">odpověď ▾</span></div><div class="aa">Lidské přivítání a kontakt, jasno a strukturu (co, jak a kdy) a první konkrétní kroky — ne celý plán naráz.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak hned snížit nejistotu klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Potvrď mu jeho rozhodnutí, zopakuj realistická očekávání a buď k mání, když se ptá.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč naplánovat rychlou výhru v prvním týdnu? <span class="tg">odpověď ▾</span></div><div class="aa">Promění nákup v přesvědčení „funguje to a byla to dobrá volba“. Živí víru, drží klienta a přivede doporučení.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jaká je nejčastější chyba v onboardingu? <span class="tg">odpověď ▾</span></div><div class="aa">Vzít peníze a poslat jen suchý plán s tichem — žádné přivítání, žádná rychlá výhra.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Navrhni si vlastní onboarding pro nového klienta. Co pošleš a uděláš hned v den nákupu, co v prvních dnech a jakou konkrétní „rychlou výhru“ mu naplánuješ na první týden. A napiš i uvítací zprávu — takovou, co mu potvrdí, že se rozhodl dobře, a řekne, jak to spolu pojedete.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m6-l11/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m6">⬑ Zpět na Modul 6<span class="s">Byznys pro trenéry a poradce</span></a>
+      <a class="lnav-next" href="/akademie/studium/m6-l13/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Kahneman, D. Myšlení rychlé a pomalé — princip „peak-end“ a vliv prvního a posledního dojmu na zákaznickou zkušenost. 2011.</li>
+        <li>Godin, S. This Is Marketing — důvěra a očekávání v dlouhodobém vztahu se zákazníkem. 2018.</li>
+        <li>Hyken, S. The Amazement Revolution — první dojem a standard služby jako základ retence. 2011.</li>
+        <li>Barna Academy. Navazující lekce: cesta klienta, konzultace a cíle, první dojem a retence.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m6-l12', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

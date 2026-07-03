@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sestavení tréninkového splitu — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 4 · Lekce 5 — Programování tréninku</div>
+    <h1>Sestavení tréninkového splitu</h1>
+
+    <p class="lead"><strong>Split je prostě to, jak si rozházíš trénink do dní v týdnu. Většina trenérů to dělá pozpátku: stáhnou hotový split z internetu a pak ho narvou klientovi do života. Otoč to. Postav split podle toho, kolik dní klient opravdu přijde do fitka. Ten nejlepší split je ten, který klient fakt odtrénuje.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Co je split a podle čeho ho volit — dny, úroveň, cíl, regenerace.</li>
+        <li>Hlavní typy splitů a komu sedí — full body, upper/lower, push/pull/legs.</li>
+        <li>Proč u začátečníků a zaneprázdněných lidí často vyhrává full body.</li>
+        <li>Jak uvnitř splitu rozložit objem a frekvenci.</li>
+        <li>Jak split přizpůsobit reálnému životu klienta a mít záložní plán.</li>
+      </ul>
+    </div>
+
+    <h2>1) Podle čeho split volit</h2>
+    <p>Split nevybíráš podle toho, co letí, ale podle čtyř věcí. Ta hlavní je jednoduchá: <strong>kolik dní klient reálně a dlouhodobě přijde</strong>. Ne kolik by si přál, ale kolik fakt zvládne. Od toho se pak odvíjí zbytek.</p>
+    <p>Pak koukáš na <strong>úroveň</strong> klienta (začátečník nebo pokročilý), <strong>cíl</strong> (kompozice, síla, zdraví) a na <strong>regeneraci</strong> i to, co má kolem tréninku za život — spánek, stres, práci. Pokaždé začni otázkou „kolik dní týdně reálně?“ a teprve od ní stav.</p>
+
+    <h2>2) Hlavní typy splitů a komu sedí</h2>
+    <p><strong>Full body</strong> (celé tělo každý trénink) je ideál na 2–3 dny týdně. Každý trénink ti zabere hlavní svaly a pohybové vzory, takže i při pár dnech má každá partie slušnou frekvenci. Paráda pro začátečníky a pro lidi, co toho mají moc.</p>
+    <p><strong>Upper / lower</strong> (horní a dolní půlka) sedí na 4 dny týdně. Každou půlku odtrénuješ 2× týdně a nacpeš do ní víc objemu než u full body. Dobrá volba pro středně pokročilé. <strong>Push / pull / legs</strong> (tlaky, tahy, nohy) sedí ideálně na 6 dní (každý blok 2× týdně). Na 3 dnech ti sráží frekvenci na 1× týdně na partii — tam je většinou lepší full body nebo upper/lower. Frčí u pokročilejších, kteří unesou víc objemu a vyšší frekvenci.</p>
+    <p>Takzvaný <strong>„bro split“</strong> (jedna partie denně) býval populární, ale pro většinu lidí se nehodí. Každá partie jen 1× týdně znamená nízkou frekvenci. U běžného klienta to skoro nikdy není nejlepší volba.</p>
+    <div class="card"><strong>Pravidlo palce:</strong> čím míň dní, tím víc to táhni do full-body, ať frekvence na sval zůstane slušná. Čím víc dní, tím víc můžeš trénink dělit.</div>
+
+    <h2>3) Proč u začátečníků a zaneprázdněných vyhrává full body</h2>
+    <p>U většiny běžných klientů a skoro u všech začátečníků je full body 2–3× týdně super volba. Hned ze tří důvodů. <strong>Vysoká frekvence na vzor</strong> — každý hlavní pohyb trénuješ víckrát týdně, takže máš víc příležitostí učit techniku a posouvat se. <strong>Odolnost vůči vynechání</strong> — když klient jeden trénink vypustí, pořád zasáhl celé tělo. U „partie denně“ by mu celá partie vypadla. A <strong>časová efektivita</strong> — pár dní týdně, a podnět dostane kompletní.</p>
+    <p>Začátečník nepotřebuje žádný vychytaný split. Potřebuje chodit pravidelně a posouvat se v základních vzorech (viz M4·L1 a M4·L2).</p>
+
+    <h2>4) Objem a frekvence uvnitř splitu</h2>
+    <p>Split je jenom rámec. Uvnitř něj ještě musíš rozložit objem a frekvenci (navazuje na M4·L3). Spočítej <strong>týdenní objem na svalovou skupinu</strong> a rozhoď ho do dní, co ti split dává. Hlídej, ať každý sval a vzor dostane slušnou <strong>frekvenci</strong> — u běžných cílů ideálně aspoň 2× týdně u většiny skupin.</p>
+    <p>Rozkládej to tak, ať každý trénink zůstane kvalitní. Nemá cenu nacpat všechno do jednoho vyčerpávajícího dne. A řaď náročné a lehčí dny s hlavou — těžké k těžkému, ať ti pak zbydou opravdu lehké dny na regeneraci.</p>
+
+    <h2>5) Přizpůsob split životu klienta</h2>
+    <p>Nejhezčí split na papíře je k ničemu, když ho klient neodtrénuje. Tak <strong>počítej s realitou</strong> — kolik dní, jak dlouhé tréninky, kdy má vůbec čas. Plán se ohne podle života, ne naopak.</p>
+    <p>A měj vždycky <strong>záložní plán</strong>. Když klient stihne místo 4 dní jenom 2, ať ví, co dělat — třeba dva full-body tréninky místo upper/lower. Flexibilita ti drží konzistenci. A radši začni <strong>míň a udržitelně</strong>: lepší 3 dny, co vydrží roky, než 5 dní, co vydrží měsíc.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Split nevybírám podle toho, co je „nejlepší“ v nějakém článku. Vybírám ho podle toho, kolik dní klient reálně a dlouhodobě přijde do fitka. U většiny lidí a u všech začátečníků jedu full body dva až tři dny týdně — vysoká frekvence, odolné vůči vynechání, časově to sedí. Když má klient víc dní a něco za sebou, přehodím ho na upper/lower nebo push/pull/legs. A vždycky mám po ruce záložní verzi pro ten týden, kdy se všechno sype. Pamatuj: plán, který klient nedodrží, je jen hezky vypadající papír. Be Effective! :)</div>
+
+    <blockquote>Nejlepší split je ten, který klient fakt odtrénuje. Všechno ostatní je jen teorie.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je hlavní proměnná při volbě splitu? <span class="tg">odpověď ▾</span></div><div class="aa">Kolik dní týdně klient reálně a dlouhodobě přijde. Od toho se odvíjí volba typu splitu i rozložení objemu.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaký split sedí na 2–3 dny a jaký na 4 dny? <span class="tg">odpověď ▾</span></div><div class="aa">2–3 dny → full body; 4 dny → upper/lower. Push/pull/legs sedí na 3 nebo 6 dní.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč u začátečníků a zaneprázdněných vyhrává full body? <span class="tg">odpověď ▾</span></div><div class="aa">Vysoká frekvence na vzor, odolnost vůči vynechání (vynechaný trénink pořád zasáhl celé tělo) a časová efektivita. Začátečník navíc potřebuje hlavně chodit pravidelně a posouvat se v základních vzorech.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaká frekvence na svalovou skupinu je u běžných cílů žádoucí? <span class="tg">odpověď ▾</span></div><div class="aa">Ideálně aspoň 2× týdně u většiny svalových skupin.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč mít záložní verzi splitu? <span class="tg">odpověď ▾</span></div><div class="aa">Aby klient v hektickém týdnu věděl, co dělat — třeba dva full-body tréninky místo 4dílného splitu — a udržel konzistenci i ve stresu.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi tři klienty (2 dny, 4 dny a 6 dní týdně, všichni s cílem kompozice) a každému vyber vhodný split. U toho se 4 dny napiš, jak rozhodíš frekvenci hlavních svalových skupin, a u toho se 2 dny dopiš záložní plán pro týden, kdy stihne jen 1 trénink.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m4-l4/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m4">⬑ Zpět na Modul 4<span class="s">Programování tréninku</span></a>
+      <a class="lnav-next" href="/akademie/studium/m4-l6/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Schoenfeld BJ, et al. Effects of resistance training frequency on measures of muscle hypertrophy: a systematic review and meta-analysis. Sports Med. 2016;46(11):1689–1697.</li>
+        <li>Grgic J, et al. Effects of resistance training frequency on muscle hypertrophy. Sports Med. 2018;48(5):1207–1220.</li>
+        <li>American College of Sports Medicine. Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009;41(3):687–708.</li>
+        <li>Barna Academy. Navazuje na M4·L1 (principy), M4·L2 (výběr cviků) a M4·L3 (objem, intenzita, frekvence).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m4-l5', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

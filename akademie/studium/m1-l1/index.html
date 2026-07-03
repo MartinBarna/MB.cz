@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proč lidé jedí, i když nemají hlad — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 1 — Psychologie a chování kolem jídla</div>
+    <div style="background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.3);border-radius:14px;padding:13px 18px;margin:0 0 1.2rem;font-size:.93rem;color:#e9e2d8;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between;"><span>🔓 <b style="color:#fff">Ochutnávka zdarma</b> — tahle lekce je ukázka z Barna Academy.</span><a href="/akademie/" style="color:var(--gold-soft);font-weight:700;white-space:nowrap;">Odemknout celou Academy →</a></div>
+    <h1>Proč lidé jedí, i když nemají hlad</h1>
+
+    <p class="lead">Než se vrhneme na makra a jídelníčky, chci ti říct jednu věc, kterou většina trenérů přeskočí. A pak kroutí hlavou, proč jim klienti „nedrží dietu“. Přitom je to jednoduché: <strong>výživa není problém znalostí. Je to problém chování.</strong></p>
+    <p>Skoro každý ví, že má jíst víc zeleniny a míň sladkého. Jenže vědět neznamená dělat. Tvoje práce nezačíná u tabulky kalorií. Začíná tím, že pochopíš, proč člověk jí tak, jak jí.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč lidé jedí, i když fyzický hlad nemají (tzv. hédonický hlad).</li>
+        <li>Jak klientovi vysvětlit energetickou bilanci tak, aby ji fakt pochopil.</li>
+        <li>Co doopravdy řídí výběr jídla — a proč v tom vůle většinou nehraje skoro žádnou roli.</li>
+        <li>Jakou roli máš jako kouč: nelámat lidi, ale stavět chování, ze kterého mají pocit úspěchu.</li>
+      </ul>
+    </div>
+    <figure class="ba-fig" data-fig="energy-balance"><figcaption>Hubnutí, udržení i nabírání = výsledek bilance mezi přijatou a vydanou energií.</figcaption></figure>
+
+    <h2>1) Proč řešíme chování dřív než výživu</h2>
+    <p>Lidé nejedí jen z hladu. Jedí ve stresu, při oslavě, z nudy, kvůli okolí, vůni nebo prostě ze zvyku. Říká se tomu <strong>hédonický hlad</strong> — jíš, i když tělo žádnou energii nepotřebuje [1].</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient napíše „večer u televize se prostě neudržím“, neřeším s ním kalorie. Ptám se po spouštěči — večer, únava, blikající obrazovka. A koukám na prostředí, třeba na otevřenou skříňku se sušenkama na dosah ruky. Sušenky uklidíme z očí, večerní rituál trochu předěláme, a najednou je půlka té „slabé vůle“ pryč. Be Effective :)</div>
+
+    <h2>2) Základ všeho: energetická bilance</h2>
+    <p>Ať je psychologie kolem jídla jakkoliv zamotaná, jeden fakt platí vždycky: hubnutí i přibírání je výsledek rovnováhy mezi tím, kolik energie přijmeš a kolik vydáš.</p>
+    <div class="eq">ZMĚNA TUKOVÉ HMOTY = ENERGIE PŘIJATÁ − ENERGIE VYDANÁ</div>
+    <p>Ale pozor na jednu věc. Neznamená to, že stačí klientovi říct „jez míň, hýbej se víc“. Pravda to je, ale jako rada k ničemu. Asi jako poradit nešťastnému člověku, ať je šťastný. Regulovat energii v reálu je skoro vždycky o dost víc než napsat číslo kalorií na papír.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům to říkám narovinu: „Tvoje tělo není rozbité. Jen máš teď rovnici nakloněnou na jednu stranu. Pojďme zjistit proč a srovnat ji tak, abys to dlouhodobě zvládl.“ Tím z člověka sundáš vinu a dáš mu naději. A to je půlka úspěchu :)</div>
+
+    <h2>3) Tělo neoklameš</h2>
+    <p>Jídlo je základní biologická potřeba. V rozumném deficitu člověk šlape skvěle. Ale zažeň ho do extrému a přijdou důsledky. Záchvaty, jojo efekt, ztráta kontroly. Většina „selhání diet“ není o slabé vůli. Je to obrana těla proti extrému, do kterého ho někdo nahnal.</p>
+
+    <h2>4) Co řídí výběr jídla</h2>
+    <div class="card">
+      <p style="margin-top:0"><strong>Biologické</strong> — hlad (glukóza) vs. chuť (vůně, vzhled); z velké části nevědomé. Bílkoviny zasytí nejvíc [9,10,11].<br>
+      <strong>Ekonomické</strong> — energeticky hutné jídlo bývá nejlevnější a nejmíň zasytí; obezita je vyšší u nižších příjmů [12,13,14].<br>
+      <strong>Dostupnost</strong> — co má člověk po ruce v práci/doma často rozhodne dřív než vůle.<br>
+      <strong>Sociální</strong> — ve skupině sníme víc; okolí ovlivňuje i to, co jíme o samotě [15,16].<br>
+      <strong>Psychologické</strong> — stres a emoce řídí rozhodování. Pozor: klinické poruchy příjmu potravy patří odborníkovi, ne kouči [17].</p>
+    </div>
+    <div class="praxe"><b>V praxi (Martin):</b> Než někomu vůbec dám jídelníček, vyptám se ho na jeho život. Práci, rodinu, rozpočet, spánek, stres, co má doma v lednici. Bez téhle mapy je každý plán střelba naslepo. A to si u svých klientů dovolit nemůžu.</div>
+
+    <h2>5) Tvoje role: nelámat, ale stavět</h2>
+    <p>Náš obor má jeden ošklivý nešvar. Rozbíjet lidi a hnát je do extrémů. Přitom funguje pravý opak. Hledej a posiluj chování, ze kterého má klient <strong>pocit úspěchu</strong>. Malé výhry mu budují kontrolu. A z toho informačního chaosu, kterým je zahlcený, mu udělej pár jasných kroků, co reálně zvládne.</p>
+    <blockquote>„Nemusíš být skvělý, abys začal, ale musíš začít, abys se stal skvělým.“ — Zig Ziglar</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co je hédonický hlad? <span class="tg">odpověď ▾</span></div><div class="aa">Jedení bez fyziologického hladu. Jíš z potěšení, ze stresu, ze zvyku nebo kvůli prostředí kolem sebe.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč je „jez míň, hýbej se víc“ pravdivá, ale špatná rada? <span class="tg">odpověď ▾</span></div><div class="aa">Neříká klientovi JAK na to a ignoruje chování, prostředí a emoce, které jeho příjem i výdej řídí.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč extrémní deficit vede k horšímu chování? <span class="tg">odpověď ▾</span></div><div class="aa">Tělo se proti extrému brání. Přijdou záchvaty, ztráta kontroly, jojo. Je to fyziologie, ne slabá vůle.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Uveď tři různé faktory výběru jídla. <span class="tg">odpověď ▾</span></div><div class="aa">Třeba biologické (hlad a chuť), ekonomické (cena jídla), sociální (okolí) nebo psychologické (stres).</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Co znamená „stavět chování s pocitem úspěchu“? <span class="tg">odpověď ▾</span></div><div class="aa">Hledat a posilovat malé úspěšné kroky, ze kterých si klient buduje kontrolu. Místo toho, abys ho zahltil pravidly, ve kterých stejně selže.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U příštího klienta (nebo klidně u sebe) sepiš mapu prostředí (práce, rodina, rozpočet, spánek, stres, co má po ruce). Najdi jeden spouštěč přejídání a navrhni jednu změnu prostředí, která ho oslabí.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-mod" href="/akademie/studium/#m1">⬑ Zpět na Modul 1<span class="s">Psychologie a chování kolem jídla</span></a>
+      <a class="lnav-next" href="/akademie/studium/m1-l2/">Další lekce →</a>
+    </nav>
+    <a class="ba-upsell" href="/akademie/objednavka/" style="display:block;margin:1.8rem 0 .2rem;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.18),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.4);border-radius:16px;padding:18px 22px;color:#cfc6b8;font-size:.97rem;line-height:1.55;">      <b style="color:#fff;">🎁 Tahle lekce je ochutnávka Academy zdarma.</b> Celá Barna Academy — 224 lekcí napříč 20 moduly, certifikace i videokurz v ceně — odemkneš jednorázově za <b style="color:#fff;">8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.      <span style="display:block;margin-top:8px;color:#f0b46b;font-weight:700;">Odemknout celou Academy — 8 900 Kč →</span>    </a>    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Vědecké zdroje (17)</summary>
+      <ol>
+        <li>Ogden J. The Psychology of Eating. Wiley-Blackwell; 2010.</li>
+        <li>Kemps E, Tiggemann M, Marshall K. Appetite. 2005;45(3):287–94.</li>
+        <li>EUFIC (2011). The Determinants of Food Choice.</li>
+        <li>Dover TM. Eating Behaviour. Open University Press; 2010.</li>
+        <li>Nestle M, et al. Nutrition Reviews. 1998;56(5):S50–S64.</li>
+        <li>Prochaska JO, et al. American Psychologist. 1992;47:1102–1114.</li>
+        <li>Steptoe A, et al. Appetite. 1995;25(3):267–284.</li>
+        <li>Yudkin J. Lancet. 1956;270(6924):645–9.</li>
+        <li>Ahima RS, Antwi DA. Endocrinol Metab Clin North Am. 2008;37(4):811–823.</li>
+        <li>Blundell JE, et al. Handbook of Psychophysiology of Human Eating. 1989.</li>
+        <li>Stubbs RJ, et al. Eur J Clin Nutr. 1996;50:409–17.</li>
+        <li>Drewnowski A, Darmon N. J Nutr. 2005;135(4):900–904.</li>
+        <li>Paeratakul S, et al. Int J Obes. 2002;26:1205–1210.</li>
+        <li>Flegal KM, et al. JAMA. 2002;288:1723–1727.</li>
+        <li>Feunekes GIJ, et al. Prev Med. 1998;27:645–656.</li>
+        <li>De Castro JM. Br J Nutr. 1997;77(S1):S39–54.</li>
+        <li>Kelly C, Mac Evilly C. Nutrition Bulletin. 2001;26:325–329.</li>
+      </ol>
+      <p style="margin-top:.6rem">Inspirace: Advanced Coaching Academy, Phil Learney Performance Education Ltd. Autorské zpracování: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    // Kvíz — rozbalení odpovědí
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    // Progress bar dle scrollu
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    // Dokončení přes členskou sekci (live: Supabase, demo: localStorage).
+    var LID='m1-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ Promise.resolve(true).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

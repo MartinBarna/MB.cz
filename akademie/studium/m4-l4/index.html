@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technika a cueing: jak učit pohyb — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 4 · Lekce 4 — Programování tréninku</div>
+    <h1>Technika a cueing: jak učit pohyb</h1>
+
+    <p class="lead"><strong>Umět cvik sám je jedna věc. Naučit ho někoho jiného je úplně jiná dovednost.</strong> Tohle tě odliší od kamaráda s videem z internetu. Dobrý kouč neopravuje deset věcí naráz. Najde tu jednu, co rozhodne, a na ni dá jedno jasné cue.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak nového klienta naučit cvik krok za krokem.</li>
+        <li>Rozdíl mezi interním a externím cue a proč externí často funguje líp.</li>
+        <li>Princip „jedno cue, jedna oprava“ a proč zahlcení korekcemi škodí.</li>
+        <li>Jak vybrat tu nejdůležitější chybu k opravě.</li>
+        <li>Kdy je lepší regulovat zátěž nebo variantu místo opravování technikou.</li>
+      </ul>
+    </div>
+
+    <h2>1) Jak představit nový cvik</h2>
+    <p>Učení pohybu má svoje pořadí a vyplatí se ho držet. Nejdřív <strong>krátce vysvětli a ukaž</strong>. Pár vět k tomu, na co cvik je, a názorná ukázka. Míň slov, víc ukazování. Pohyb se učíme hlavně tím, že ho vidíme a děláme, ne tím, že o něm posloucháme přednášku. Pak <strong>nech klienta zkusit nalehko</strong>, bez zátěže nebo s minimální, ať si vzorec osahá. <strong>Zátěž přidávej</strong> teprve ve chvíli, kdy vzorec sedí (rozcvičovací série, ramping, viz M4·L1). A pamatuj, že <strong>vzorec buduje opakování</strong> kvalitního provedení, ne jeden hezký výklad.</p>
+    <p>Cíl první lekce cviku není těžká váha. Cíl je, aby klient odešel s pohybem, který umí a sám si ho zopakuje.</p>
+
+    <h2>2) Interní vs. externí cue</h2>
+    <p>Cue je krátká instrukce, která navede pohyb. <strong>Interní cue</strong> obrací pozornost dovnitř těla („stáhni lopatky“, „zatni hýždě“). Hodí se, když chceš, aby si klient uvědomil konkrétní sval nebo polohu. <strong>Externí cue</strong> míří ven, na výsledek nebo okolí („odtlač podlahu“, „roztrhni tyč“, „hlavou ke stropu“). Externí cue často vede k plynulejšímu a efektivnějšímu pohybu. Tělo si samo poradí, jak toho dosáhnout, a nemusí přitom hlídat každý sval zvlášť.</p>
+    <p>Měj v zásobě obojí. Pro plynulost a výkon zkus nejdřív externí. Když potřebuješ cíleně zapojit sval nebo srovnat konkrétní polohu, sáhni po interním.</p>
+    <blockquote>Cue, co sedne jednomu, nemusí sednout druhému. Jsi překladatel, ne magnetofon.</blockquote>
+
+    <h2>3) Jedno cue, jedna oprava</h2>
+    <p>Nejčastější chyba začínajícího trenéra: vidí pět chyb a všech pět naráz vychrlí. Klient se zahltí, ztuhne a neudělá pořádně ani jednu. Pozornost a pracovní paměť při učení pohybu zvládnou jednu věc, ne pět.</p>
+    <p>Tak <strong>vyber jednu věc</strong> na opravu, tu nejdůležitější (jak ji najít, máš v dalším bodě), a dej <strong>jedno jasné cue</strong>. <strong>Nech klienta</strong> udělat sérii právě s tím jedním cue. A <strong>až se zlepší, vezmi další</strong>. Po vrstvách, ne všechno naráz.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Míň instrukcí, víc zopakování. Někdy klientovi nejvíc pomůže ticho, ať to cue vůbec stihne vstřebat. Když do něj pořád mluvím, nemá kdy ten pohyb vůbec cítit. Zkus to, držet pusu je těžší, než to zní :)</div>
+
+    <h2>4) Jak vybrat nejdůležitější chybu</h2>
+    <p>Když vidíš víc chyb najednou, polož si pár otázek a podle nich si je seřaď. Začni bezpečností. <strong>Co klienta nejvíc ohrožuje?</strong> Třeba kulatící se záda v tahu pod zátěží. To řeš hned. Pak hledej <strong>kořenovou chybu</strong>, tedy tu, co způsobuje ostatní. Často stačí srovnat jednu věc (třeba nastavení jádra nebo lopatek) a tři další „chyby“ zmizí samy. Hledej příčinu, ne příznaky. Nakonec se podívej, <strong>co nejvíc rozhoduje o výsledku</strong> cviku vzhledem k tomu, o co klientovi jde.</p>
+    <p>Oprav bezpečnost, pak kořenovou chybu, a spousta „chyb“ zmizí sama od sebe.</p>
+
+    <h2>5) Kdy místo opravování raději regulovat</h2>
+    <p>Někdy chyba není o tom, že by klient „neposlouchal cue“. Je o tom, že ten cvik nebo ta zátěž jsou na něj zatím moc. Tehdy neopakuj donekonečna stejnou větu, ale uprav samotnou úlohu. <strong>Zjednoduš variantu</strong> na stabilnější a snazší verzi, kde klient dobrý vzorec zvládne (M4·L2). <strong>Uber zátěž.</strong> S lehčí vahou se technika často srovná sama. <strong>Zkrať rozsah</strong> dočasně na ten, který klient ovládne, a postupně ho zase rozšiřuj. A <strong>řeš omezení.</strong> Když brání mobilita nebo postura, vyber variantu, co sedí (M2·L7, M2·L9), místo abys ho cpal do pozice, na kterou nemá.</p>
+    <div class="card"><strong>Pravidlo:</strong> Chytrá úprava úlohy často udělá víc než deset cue. Slova klientovi nedodají rozsah ani sílu, kterou zatím nemá.</div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když učím cvik, mluvím míň, než lidi čekají, a ukazuju víc. Vidím pět chyb? Neopravuju pět. Najdu tu jednu, kořenovou nebo bezpečnostní, a dám jedno cue, klidně externí typu „odtlač podlahu“. Hodněkrát se tím srovná i zbytek a sám koukám :) A když to pořád nejde, nemelu pořád dokola stejnou větu, ale radši zjednoduším variantu nebo uberu váhu. Učím vzorec, ne přednášku. Klient má odejít s pocitem „tohle umím“, ne „je toho na mě moc“. Be Effective!</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> V jakém pořadí učit nový cvik? <span class="tg">odpověď ▾</span></div><div class="aa">Krátce vysvětli a ukaž → nech zkusit nalehko → postupně přidej zátěž → opakuj, dokud vzorec nesedí. Cílem první lekce není těžká váha, ale pohyb, který klient umí a sám si ho zopakuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jaký je rozdíl mezi interním a externím cue a které často funguje líp pro plynulost? <span class="tg">odpověď ▾</span></div><div class="aa">Interní cue obrací pozornost dovnitř těla („zatni hýždě“), externí míří ven na výsledek nebo okolí („odtlač podlahu“). Pro plynulost a výkon často líp funguje externí. Tělo si samo poradí, jak pohybu dosáhnout.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Proč neopravovat víc věcí najednou? <span class="tg">odpověď ▾</span></div><div class="aa">Pozornost a pracovní paměť při učení pohybu zvládnou jednu věc, ne pět. Když klienta zahltíš korekcemi, ztuhne a neudělá pořádně ani jednu. Oprav po vrstvách.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Podle čeho vybrat nejdůležitější chybu k opravě? <span class="tg">odpověď ▾</span></div><div class="aa">Nejdřív bezpečnost, pak kořenová chyba (ta, co způsobuje ostatní), pak to, co nejvíc rozhoduje o výsledku vzhledem k cíli klienta. Oprava kořenové příčiny často vyřeší víc „chyb“ naráz.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy místo opravování technikou raději regulovat úlohu? <span class="tg">odpověď ▾</span></div><div class="aa">Když je cvik nebo zátěž na klienta zatím moc. Pak zjednoduš variantu, uber zátěž, zkrať rozsah nebo řeš omezení (mobilita, postura), místo abys donekonečna opakoval stejná slova.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si jeden cvik a vypiš tři chyby, co u něj klienti dělají nejčastěji. Ke každé napiš jedno cue (aspoň jedno zkus externí). Pak urči, kterou chybu bys řešil první a proč (bezpečnost / kořenová příčina), a co bys udělal, kdyby cue nezabralo.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m4-l3/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m4">⬑ Zpět na Modul 4<span class="s">Programování tréninku</span></a>
+      <a class="lnav-next" href="/akademie/studium/m4-l5/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Wulf G. Attentional focus and motor learning: a review of 15 years. Int Rev Sport Exerc Psychol. 2013;6(1):77–104.</li>
+        <li>Benz A, et al. Coaching instructions and cues for enhancing sport performance. Strength Cond J. 2016.</li>
+        <li>Schmidt RA, Lee TD. Motor Learning and Performance. Human Kinetics.</li>
+        <li>Navazuje na M4·L1 (programování), M4·L2 (výběr cviků), M2·L7 a M2·L9 (postura, mobilita).</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m4-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

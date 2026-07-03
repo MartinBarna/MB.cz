@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prevence zranění — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 8 · Lekce 9 — Příprava bojovníků a úpolové sporty</div>
+    <h1>Prevence zranění</h1>
+
+    <p class="lead">Sebelepší plán je k ničemu, když ti sportovec leží zraněný. <strong>Prevence zranění není bonus navíc, je to podmínka pokroku.</strong> Nejlepší program totiž není ten nejtvrdší. Je to ten, který sportovec utáhne dlouhodobě, aniž by se rozbil.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč je prevence podmínkou výkonu i dlouhé kariéry, ne nadstavbou.</li>
+        <li>Že většina zranění pramení z přetížení — a je tedy předvídatelná a ovlivnitelná.</li>
+        <li>Čtyři pilíře prevence: řízení zátěže, silné tělo, technika, regenerace.</li>
+        <li>Jak číst varovné signály a reagovat dřív, než se z přetížení stane zranění.</li>
+        <li>Kde je hranice mezi prací kouče (prevence) a odborníka (diagnostika a léčba).</li>
+      </ul>
+    </div>
+
+    <h2>1) Odkud zranění reálně pramení</h2>
+    <p>Většina lidí si představuje zranění jako smůlu. Jeden špatný pohyb a je to. Jenže ono to tak většinou není. Velký kus zranění — hlavně v tréninku a sportu — vychází z <strong>přetížení</strong>. Tělo prostě dostane víc, než zrovna unese. Nejčastěji za to může moc rychlý nárůst zátěže, na který se tkáně nestihly připravit. Přidej k tomu málo regenerace, špatnou techniku pod zátěží a nějaké to slabé místo, na které nikdo nemyslel.</p>
+    <p>V úpolech k tomu samozřejmě patří i akutní úraz — úder, pád, páka. To se řeší přípravou těla, technikou a ochranou. Ale hlavní věc, kterou si odnes, zní takhle: <strong>většina netraumatických zranění se dá předvídat a ovlivnit chytrým řízením zátěže.</strong> A to je dobrá zpráva, protože to máš z velké části ve svých rukou.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když ke mně přijde bojovník s natrženým tříslem nebo bolavým ramenem, neptám se nejdřív „co se stalo“. Ptám se „co se ti v posledních týdnech změnilo“. A skoro vždycky najdeme nějaký skok — nový tábor, najednou dvoufázové dny, návrat po nemoci rovnou naplno. To zranění nespadlo z nebe :) Vyskočilo z účtu, který se přetáhl.</p>
+
+    <h2>2) Princip č. 1: Řízení zátěže</h2>
+    <p>Řízení zátěže je tvůj nejdůležitější nástroj. Tělo se adaptuje na <strong>postupně</strong> rostoucí zátěž a zraní se ve chvíli, kdy přidáš moc rychle na to, jak je zrovna připravené. Takže přidávej objem a intenzitu s rozumem, ne skokem. „Pomalu a jistě“ tady doslova chrání tkáně.</p>
+    <p>Dej si pozor na náhlé špičky. Velký jednorázový skok po pauze nebo zapálený „makač“ týden — přesně tohle je riziko. Mezi tvrdými dávkami nech tělu dost prostoru na regeneraci. Deload a lehčí dny nejsou slabota, to je prevence. A koukej na <strong>celkovou</strong> zátěž: sečti úplně všechno, co tělo zatěžuje — trénink, sparring, kondici, ale i práci, spánek a dietu. Když je toho moc, riziko letí nahoru a je čas ubrat.</p>
+
+    <blockquote>Konzistence poražená zraněním je nula. Levnější je uvolnit plyn než řešit vynucenou pauzu.</blockquote>
+
+    <h2>3) Princip č. 2: Silné a připravené tělo</h2>
+    <p>Silnější a dobře připravená tkáň snese víc a hůř se zraní. Proto je silový trénink jeden z nejlepších <strong>preventivních</strong> nástrojů, co máš — ne riziko, jak se to občas mylně traduje. Buduj sílu po celém těle. Silné svaly, šlachy i kosti jsou prostě odolnější. A cíleně posiluj místa, která to v dané disciplíně nejčastěji odnesou — krk, ramena, kyčle, kolena.</p>
+    <p>Důležité je, aby tělo drželo přes celý rozsah pohybu, i v těch krajních polohách. Právě v nečekané pozici se v úpolech zraňuje nejvíc. A nezapomeň na kondici. Unavený sportovec ztrácí kontrolu i techniku, a riziko jde nahoru. Dobrá kondice oddálí únavu, a tím tě kryje.</p>
+
+    <h2>4) Princip č. 3: Technika a pohybová kvalita</h2>
+    <p>Špatně opakovaný pohyb pod zátěží je vlastně opakovaná mikrozátěž na špatné místo. Proto uč a hlídej kvalitní techniku — a nikdy ji neobětuj egu. „Ještě jednu přes sílu“ v rozpadlé technice je učebnicová cesta ke zranění. Sportovce musíš naučit, kdy ustoupit. Patří k tomu i dost mobility a kontroly v klíčových kloubech dané disciplíny. Žádná posedlost protahováním, jen funkční pohyblivost tam, kde ji fakt potřebuješ.</p>
+
+    <h2>5) Princip č. 4: Regenerace a monitoring</h2>
+    <p>Prevence se neděje jenom v tréninku. <strong>Spánek je tvůj nejsilnější preventivní faktor</strong> — nevyspalý sportovec má horší kontrolu, pomalejší reakce i regeneraci. Přidej výživu a hydrataci na opravu tkání, péči o tělo a hlavně naslouchání. Drobná bolest je varování, ne detail, který přejdeš.</p>
+    <p>Vedle toho sleduj varovné signály přetížení — bolest, co nemizí, pokles výkonu, špatný spánek, podrážděnost, opakovanou nemoc, vyšší klidový tep, ten pocit „jsem rozlámaný“. Reaguj včas: uber a uprav dřív, než se z přetížení stane zranění. A zapisuj si to. Záznam o zátěži a reakcích ti odhalí vzorce a pomůže rizika vidět dopředu.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> U svěřenců vedu jednoduchý ranní záznam — spánek, klidový tep, jak se cítí na škále 1–10. Nic vědeckého, dvě minuty a hotovo. Ale když mi tři dny po sobě naskočí horší spánek, vyšší tep a „cítím se rozlámaně“, neřeším, jestli to ten den ještě dá. Prostě ubereme. Tahle dvouminutovka mi za ty roky ušetřila víc vynucených pauz než jakákoliv mast 💪</p>
+
+    <h2>6) Hranice: prevence vs. léčba</h2>
+    <p>Jako kouč děláš <strong>prevenci</strong> — řízení zátěže, sílu, techniku, regeneraci — a vedeš návrat ve chvíli, kdy odborník dá zelenou. Neděláš diagnostiku ani léčbu zranění. Když už zranění vznikne: akutní nebo vážné patří k lékaři nebo fyzioterapeutovi, bolest, co nepřechází nebo se zhoršuje, taky k odborníkovi. A když si nejseš jistý, platí jednoduché pravidlo — odešli. Fyzioterapeut je tvůj nejcennější spojenec, ne konkurence. Tvoje role je držet sportovce zdravého chytrým tréninkem a vědět, kdy předat dál.</p>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+<div class="q"><div class="qq"><span class="n">1.</span> Z čeho pramení většina netraumatických zranění a proč je to vlastně dobrá zpráva? <span class="tg">odpověď ▾</span></div><div class="aa">Z přetížení — z nepoměru mezi tím, co tělo unese, a tím, co po něm chceme; nejčastěji z příliš rychlého nárůstu zátěže. Dobrá zpráva je, že taková zranění jsou předvídatelná a ovlivnitelná chytrým řízením zátěže, takže je máš z velké části ve své moci.</div></div>
+<div class="q"><div class="qq"><span class="n">2.</span> Co znamená „monitorovat celkovou zátěž“ a proč nestačí sledovat jen trénink? <span class="tg">odpověď ▾</span></div><div class="aa">Znamená to sečíst všechno, co tělo zatěžuje — trénink, sparring, kondici, ale i práci, stres, spánek a dietu. Tělo nerozlišuje zdroj únavy; když je součet příliš vysoký, riziko roste bez ohledu na to, kolik z toho byl „trénink“. Proto je potřeba dívat se na celek a podle něj ubírat.</div></div>
+<div class="q"><div class="qq"><span class="n">3.</span> Je silový trénink pro bojovníka riziko, nebo prevence? Zdůvodni. <span class="tg">odpověď ▾</span></div><div class="aa">Prevence. Silnější a dobře připravená tkáň — svaly, šlachy, kosti — snese víc a hůř se zraní, zvlášť je-li síla a kontrola udržena přes celý rozsah pohybu včetně krajních poloh, kde se v úpolech zraňuje nejčastěji. Mýtus o „riziku“ se týká jen špatně řízeného tréninku, ne síly jako takové.</div></div>
+<div class="q"><div class="qq"><span class="n">4.</span> Jaké varovné signály přetížení bys měl sledovat a jak na ně reagovat? <span class="tg">odpověď ▾</span></div><div class="aa">Přetrvávající bolest, pokles výkonu, špatný spánek, podrážděnost, opakovaná nemoc, vyšší klidový tep, pocit „rozbitosti“. Reakce: ubrat a upravit zátěž a dopřát regeneraci dřív, než se z přetížení stane zranění. Levnější je uvolnit plyn než řešit vynucenou pauzu.</div></div>
+<div class="q"><div class="qq"><span class="n">5.</span> Kde je hranice mezi rolí kouče a rolí odborníka při zranění? <span class="tg">odpověď ▾</span></div><div class="aa">Kouč dělá prevenci (řízení zátěže, síla, technika, regenerace) a vede návrat po uvolnění od odborníka. Nedělá diagnostiku ani léčbu. Akutní či vážné zranění patří k lékaři/fyzioterapeutovi, přetrvávající nebo zhoršující se bolest k odborníkovi, a při nejistotě platí: odešli a spolupracuj.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Zaveď u jednoho svěřence jednoduchý ranní záznam (spánek, klidový tep, subjektivní pocit 1–10) a po týdnu se podívej, zda signály odpovídají tomu, jak zvládal zátěž — a podle toho uprav jeden trénink.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m8-l8/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m8">⬑ Zpět na Modul 8<span class="s">Příprava bojovníků a úpolové sporty</span></a>
+      <a class="lnav-next" href="/akademie/studium/m8-l10/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+<li>Gabbett TJ. The training-injury prevention paradox. British Journal of Sports Medicine 2016.</li>
+<li>Soligard T, et al. How much is too much? IOC consensus statement on load in sport and risk of injury. British Journal of Sports Medicine 2016.</li>
+<li>Lauersen JB, et al. The effectiveness of exercise interventions to prevent sports injuries: a meta-analysis. British Journal of Sports Medicine 2014.</li>
+<li>Kellmann M, et al. Recovery and Performance in Sport: Consensus Statement. International Journal of Sports Physiology and Performance 2018.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m8-l9', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

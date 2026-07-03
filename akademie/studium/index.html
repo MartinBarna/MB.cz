@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moje studium — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap { max-width:1080px; margin:0 auto; padding:30px 18px 70px; }
+
+  .hello { background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02)); border:1px solid var(--line); color:#fff; border-radius:24px; padding:30px 28px; position:relative; overflow:hidden; box-shadow:0 30px 60px -34px rgba(0,0,0,.9); }
+  .hello::after { content:""; position:absolute; right:-70px; top:-80px; width:260px; height:260px; border-radius:50%; background:radial-gradient(circle,rgba(255,122,0,.2),transparent 65%); }
+  .hello .kick { margin-bottom:14px; }
+  .hello h1 { font-size:clamp(1.7rem,4vw,2.3rem); color:#fff; letter-spacing:-.02em; margin-bottom:.4rem; position:relative; }
+  .hello p { color:var(--muted); position:relative; max-width:560px; }
+  .prog { margin-top:1.3rem; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:50px; height:12px; overflow:hidden; max-width:520px; position:relative; }
+  .prog span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); border-radius:50px; transition:width .6s ease; }
+  .prog-lbl { margin-top:.55rem; font-size:.85rem; color:var(--muted-2); font-weight:600; position:relative; }
+  .lsearch { margin-top:1.1rem; width:100%; max-width:520px; display:block; border:1.5px solid var(--line-2); background:rgba(0,0,0,.25); color:var(--ink); font-family:inherit; font-weight:600; font-size:.96rem; padding:12px 18px; border-radius:50px; outline:none; transition:border-color .2s, background .2s; }
+  .lsearch::placeholder { color:#8a8073; font-weight:500; }
+  .lsearch:focus { border-color:var(--gold); background:rgba(0,0,0,.35); }
+  .searchres { display:grid; gap:10px; }
+  .searchres a { display:flex; align-items:center; gap:12px; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:14px; padding:13px 18px; text-decoration:none; color:var(--ink); transition:border-color .2s, transform .2s; }
+  .searchres a:hover { border-color:rgba(255,122,0,.4); transform:translateY(-2px); }
+  .searchres a .sm { color:var(--gold-soft); font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; flex-shrink:0; }
+  .searchres a .st { font-weight:600; }
+  .searchres a .sd { margin-left:auto; color:#2fae57; font-size:.85rem; flex-shrink:0; }
+  .searchempty { color:var(--muted-2); padding:1.6rem 0; font-weight:600; }
+
+  .modules { margin-top:26px; display:grid; gap:16px; }
+  .mod { background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:20px; overflow:hidden; box-shadow:0 24px 50px -34px rgba(0,0,0,.9); }
+  .mod-h { display:flex; align-items:center; gap:14px; padding:18px 22px; }
+  .mod-h .ix { width:42px; height:42px; border-radius:13px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 8px 18px -6px rgba(255,122,0,.5); }
+  .mod-h h3 { font-size:1.1rem; color:#fff; } .mod-h p { color:var(--muted); font-size:.85rem; }
+  .mod-h .pct { margin-left:auto; font-weight:700; color:var(--gold-soft); font-size:.78rem; white-space:nowrap; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:4px 11px; border-radius:50px; }
+  .lessons { border-top:1px solid var(--line); }
+  .les { display:flex; align-items:center; gap:13px; padding:13px 22px; text-decoration:none; border-top:1px solid rgba(255,255,255,.05); transition:background .15s, padding .15s; color:var(--ink); }
+  .les:first-child { border-top:none; }
+  .les:hover { background:rgba(255,122,0,.07); padding-left:26px; }
+  .les .ck { width:24px; height:24px; border-radius:50%; border:2px solid rgba(255,255,255,.22); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.76rem; color:#160d04; font-weight:800; }
+  .les.done .ck { background:linear-gradient(145deg,var(--gold-2),var(--gold)); border-color:var(--gold); }
+  .les.locked { opacity:.4; cursor:default; pointer-events:none; }
+  .les .t { font-weight:600; font-size:.96rem; }
+  .les .s { color:var(--muted); font-size:.8rem; margin-left:auto; white-space:nowrap; }
+  .badge-soon { background:rgba(255,255,255,.06); color:var(--muted); font-size:.7rem; font-weight:700; padding:3px 10px; border-radius:50px; margin-left:auto; border:1px solid var(--line); }
+
+  .cert-card { margin-top:24px; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1.5px dashed rgba(255,122,0,.4); border-radius:20px; padding:26px; text-align:center; }
+  .cert-card.ready { border:1.5px solid var(--gold); background:rgba(255,122,0,.06); }
+  .cert-card h3 { font-size:1.2rem; color:#fff; } .cert-card p { color:var(--muted); font-size:.92rem; margin:.4rem auto 0; max-width:480px; }
+  .btn { display:inline-block; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:13px 28px; border-radius:50px; text-decoration:none; margin-top:1rem; border:none; cursor:pointer; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn.dis { background:rgba(255,255,255,.06); color:var(--muted); cursor:not-allowed; box-shadow:none; border:1px solid var(--line); }
+  .demo-note { text-align:center; color:var(--muted); font-size:.8rem; margin-top:22px; }
+  .bonus { background:rgba(255,122,0,.06); border:1px solid rgba(255,122,0,.25); border-radius:20px; padding:18px 22px; margin-top:24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .bonus .bico { font-size:1.9rem; }
+  .bonus .btxt { flex:1; min-width:200px; } .bonus .btxt b { display:block; font-size:1.02rem; color:#fff; } .bonus .btxt span { color:var(--muted); font-size:.88rem; }
+  .bonus .bbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:11px 22px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.92rem; white-space:nowrap; box-shadow:0 10px 22px -8px rgba(255,122,0,.55); transition:transform .2s; }
+  .bonus .bbtn:hover { transform:translateY(-1px); }
+
+  /* ---- sekční navigace (#33): přehled modulů → fokus na modul ---- */
+  .modgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px; margin-top:8px; }
+  .modcard { text-align:left; cursor:pointer; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:11px; transition:transform .2s,border-color .2s,box-shadow .2s; color:inherit; text-decoration:none; }
+  .modcard:hover { transform:translateY(-4px); border-color:rgba(255,122,0,.35); box-shadow:0 24px 46px -28px rgba(255,122,0,.28); }
+  .modcard .top { display:flex; align-items:center; gap:12px; }
+  .modcard .ix { width:38px; height:38px; border-radius:12px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modcard h3 { font-size:1.02rem; color:#fff; line-height:1.25; }
+  .modcard p { color:var(--muted); font-size:.85rem; line-height:1.45; flex:1; margin:0; }
+  .modcard .mbar { height:6px; background:rgba(255,255,255,.08); border-radius:50px; overflow:hidden; }
+  .modcard .mbar span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); border-radius:50px; }
+  .modcard .mfoot { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .modcard .cnt { font-size:.8rem; color:var(--muted-2); font-weight:600; }
+  .modcard .pct { font-size:.74rem; color:var(--gold-soft); font-weight:700; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:3px 10px; border-radius:50px; }
+  .modcard.done-all { border-color:rgba(47,174,87,.45); }
+  .modcard.done-all .pct { color:#86e29a; background:rgba(47,174,87,.12); border-color:rgba(47,174,87,.3); }
+  /* free vs. zamčeno na přehledu (#36): odemčené moduly svítí, zamčené ztmavnou */
+  .modcard.has-free { border-color:rgba(255,122,0,.5); background:linear-gradient(180deg,rgba(255,122,0,.1),rgba(255,255,255,.02)); box-shadow:0 0 0 1px rgba(255,122,0,.22),0 22px 46px -26px rgba(255,122,0,.42); }
+  .modcard.has-free .ix { box-shadow:0 0 18px -2px rgba(255,122,0,.75); }
+  .modcard.mod-locked { opacity:.52; filter:grayscale(.4); }
+  .modcard.mod-locked:hover { opacity:.82; transform:translateY(-3px); box-shadow:none; border-color:rgba(255,122,0,.25); }
+  .modcard .mfree { font-size:.74rem; color:#160d04; font-weight:800; background:linear-gradient(145deg,var(--gold-2),var(--gold)); padding:3px 11px; border-radius:50px; white-space:nowrap; }
+  .modcard .mlock { font-size:.74rem; color:var(--muted); font-weight:700; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:3px 10px; border-radius:50px; white-space:nowrap; }
+  .modlegend { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 15px; font-size:.82rem; font-weight:600; }
+  .modlegend span { display:inline-flex; align-items:center; gap:6px; padding:6px 13px; border-radius:50px; border:1px solid var(--line); }
+  .modlegend .lg-free { color:var(--gold-soft); background:rgba(255,122,0,.08); border-color:rgba(255,122,0,.3); }
+  .modlegend .lg-lock { color:var(--muted); background:rgba(255,255,255,.03); }
+  .backlink { display:inline-flex; align-items:center; gap:7px; color:var(--muted-2); text-decoration:none; font-weight:600; font-size:.9rem; margin-bottom:16px; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:9px 16px; border-radius:50px; transition:.2s; }
+  .backlink:hover { border-color:rgba(255,122,0,.4); color:#fff; }
+  .secnav { display:flex; align-items:stretch; gap:12px; margin-top:24px; flex-wrap:wrap; }
+  .secnav a { flex:1; min-width:210px; text-decoration:none; border-radius:16px; padding:16px 20px; display:flex; flex-direction:column; gap:3px; border:1px solid var(--line); transition:transform .2s,border-color .2s,box-shadow .2s; }
+  .secnav .lbl { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .secnav .nm { font-weight:700; color:#fff; font-size:.98rem; }
+  .secnav .prev { background:rgba(255,255,255,.03); }
+  .secnav .next { background:linear-gradient(145deg,rgba(255,122,0,.16),rgba(255,122,0,.05)); border-color:rgba(255,122,0,.35); text-align:right; align-items:flex-end; }
+  .secnav .next .nm { color:var(--gold-soft); }
+  .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(255,122,0,.35); border-color:rgba(255,122,0,.5); }
+  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; text-decoration:none; position:relative; }
+  .contbtn:hover { transform:translateY(-2px); }
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <span class="topr">
+      <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+      <a class="out" id="logout">Odhlásit</a>
+    </span>
+  </div></div>
+
+  <div class="wrap">
+    <div class="hello">
+      <span class="kick"><span class="dot"></span> Akademie pro trenéry</span>
+      <h1>Vítej zpátky 👋</h1>
+      <p>Pokračuj tam, kde jsi přestal. Každá lekce tě posune blíž k certifikaci.</p>
+      <div class="prog"><span id="progBar" style="width:0%"></span></div>
+      <div class="prog-lbl" id="progLbl">0 % dokončeno</div>
+      <input id="lessonSearch" class="lsearch" type="search" placeholder="🔍 Hledat lekci… (např. spánek, bílkoviny, peak week)" aria-label="Hledat lekci" autocomplete="off">
+    </div>
+
+    <style>
+      .freebanner{display:none;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.04));border:1px solid rgba(255,122,0,.4);border-radius:16px;padding:14px 20px;margin:0 0 18px;text-decoration:none;color:var(--muted-2)}
+      .freebanner .fb-txt b{color:#fff;display:block;margin-bottom:2px}
+      .freebanner .fb-txt > span > span{font-size:.9rem;line-height:1.5;display:block}
+      .freebanner .fb-cta{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:800;padding:11px 20px;border-radius:50px;white-space:nowrap;font-size:.92rem}
+      @media(max-width:430px){.freebanner{padding:14px 16px}.freebanner .fb-cta{width:100%;text-align:center;white-space:normal}}
+      .les.lockbuy .t{color:var(--muted)}
+      .les.lockbuy .s.buy{color:var(--gold-soft);font-weight:700}
+      .les.isfree .s{color:var(--gold-soft);font-weight:700}
+    </style>
+    <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
+      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (224 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
+      <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
+    </a>
+
+    <div class="modules" id="modules"></div>
+
+    <style>
+      .tools-head{margin:30px 0 4px;color:#fff;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;scroll-margin-top:90px;}
+      .tools-sub{color:var(--muted);font-size:.9rem;margin:0 0 14px;}
+      .bonus .litebadge{display:inline-block;background:rgba(255,122,0,.16);border:1px solid rgba(255,122,0,.4);color:var(--gold-soft);font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:50px;margin-left:8px;vertical-align:middle;}
+      .bonus.islite{opacity:.96;}
+      .bonus.islite .bbtn{background:rgba(255,255,255,.06);color:var(--gold-soft);border:1px solid rgba(255,122,0,.4);box-shadow:none;}
+    </style>
+    <h3 class="tools-head" id="nastroje">🛠️ Nástroje pro trenéry</h3>
+    <p class="tools-sub" id="toolsSub">Generátory, které ti spočítají a poskládají plán na míru klienta — a dáš mu ho pod svým jménem.</p>
+
+    <a class="bonus" id="toolMeal" href="/akademie/nastroje/jidelnicek/" style="text-decoration:none;">
+      <span class="bico">🥗</span>
+      <div class="btxt"><b>Generátor jídelníčků<span class="litebadge" id="mealBadge" style="display:none;">Lite</span></b><span id="mealDesc">Zadáš údaje klienta, systém spočítá kalorie i makra a poskládá hotový denní jídelníček z běžných potravin. Rebrand + export do PDF.</span></div>
+      <span class="bbtn" id="mealBtn">Otevřít generátor →</span>
+    </a>
+
+    <a class="bonus" id="toolWorkout" href="/akademie/nastroje/trenink/" style="text-decoration:none;">
+      <span class="bico">🏋️</span>
+      <div class="btxt"><b>Generátor tréninků<span class="litebadge" id="workoutBadge" style="display:none;">Lite</span></b><span id="workoutDesc">Fitko, doma i venku — podle vybavení, úrovně a cíle poskládá týdenní plán se sériemi, opakováními i tipy. Rebrand + export do PDF.</span></div>
+      <span class="bbtn" id="workoutBtn">Otevřít generátor →</span>
+    </a>
+
+    <a class="bonus" href="/akademie/cviky/" style="text-decoration:none;">
+      <span class="bico">📚</span>
+      <div class="btxt"><b>Databáze cviků<span class="litebadge" style="display:inline-block;">Zdarma</span></b><span>120 cviků s fotkami, provedením krok za krokem a nejčastějšími chybami. Hledej a filtruj podle partie, vybavení i úrovně — a rovnou z nich skládej plány.</span></div>
+      <span class="bbtn">Otevřít databázi →</span>
+    </a>
+
+    <a class="bonus" href="/materialy/" style="text-decoration:none;">
+      <span class="bico">🎨</span>
+      <div class="btxt"><b>Materiály pro klienty — přebrandovatelné</b><span>19 hotových materiálů (výživa, trénink, spánek, suplementy…) — nově i <b style="color:#ffb066;">šablony pro praxi</b>: vstupní dotazník, týdenní check-in a skript první konzultace. Dej jim svoje jméno, barvu a logo a posílej klientům jako součást služby.</span></div>
+      <span class="bbtn">Otevřít knihovnu →</span>
+    </a>
+
+    <div class="cert-card" id="certCard">
+      <h3>🏅 Certifikát Barna Academy</h3>
+      <p id="certMsg">Dokonči všechny lekce a slož závěrečný test, a odemkneš si prestižní certifikát.</p>
+      <a class="btn dis" id="certBtn" href="#">Závěrečný test (zamčeno)</a>
+    </div>
+
+    <p class="demo-note" id="modeNote">Ukázka studijního prostředí. Přihlašování, ukládání postupu a odemčení po koupi napojíme přes Supabase. (Postup se teď ukládá jen v tomto prohlížeči.)</p>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
+    // Osnova (snadno rozšiřitelná). available:true = lekce je hotová a otevřená.
+    var CURRICULUM = [
+      { t:"Psychologie a chování kolem jídla", d:"Základ, na kterém stojí každá proměna", lessons:[
+        { id:"m1-l1", t:"Proč lidé jedí, i když nemají hlad", available:true, href:"/akademie/studium/m1-l1/" },
+        { id:"m1-l2", t:"Mechanismus jídla a psychofyziologie příjmu", available:true, href:"/akademie/studium/m1-l2/" },
+        { id:"m1-l3", t:"Vůle, sebeovládání a změna chování", available:true, href:"/akademie/studium/m1-l3/" },
+        { id:"m1-l4", t:"Mindset, přesvědčení a dietní restrikce", available:true, href:"/akademie/studium/m1-l4/" },
+        { id:"m1-l5", t:"Hormony, inzulin a chuť k jídlu", available:true, href:"/akademie/studium/m1-l5/" },
+        { id:"m1-l6", t:"Centrum odměny: mít rád, chtít a dopamin", available:true, href:"/akademie/studium/m1-l6/" },
+        { id:"m1-l7", t:"Tvorba návyků: kontext, akce a malá změna", available:true, href:"/akademie/studium/m1-l7/" },
+        { id:"m1-l8", t:"Prostředí jako tichý kouč", available:true, href:"/akademie/studium/m1-l8/" },
+        { id:"m1-l9", t:"Emoční jedení a stres", available:true, href:"/akademie/studium/m1-l9/" },
+        { id:"m1-l10", t:"Spánek: skrytá páka hladu a hubnutí", available:true, href:"/akademie/studium/m1-l10/" },
+        { id:"m1-l11", t:"Proč pomalu: tělo jako investice", available:true, href:"/akademie/studium/m1-l11/" },
+        { id:"m1-l12", t:"Identita: změna na úrovni „kým jsem“", available:true, href:"/akademie/studium/m1-l12/" },
+        { id:"m1-l13", t:"Motivace vs. sebekázeň", available:true, href:"/akademie/studium/m1-l13/" },
+        { id:"m1-l14", t:"Stres a zvládání zátěže", available:true, href:"/akademie/studium/m1-l14/" },
+        { id:"m1-l15", t:"Perfekcionismus a myšlení „všechno nebo nic“", available:true, href:"/akademie/studium/m1-l15/" }
+      ]},
+      { t:"Anatomie a pohyb", d:"Jak tělo tvoří a řídí pohyb", lessons:[
+        { id:"m2-l1", t:"Kosterní systém — základ pohybu", available:true, href:"/akademie/studium/m2-l1/" },
+        { id:"m2-l2", t:"Biomechanika a páky", available:true, href:"/akademie/studium/m2-l2/" },
+        { id:"m2-l3", t:"Kloubní akce a klasifikace pohybu", available:true, href:"/akademie/studium/m2-l3/" },
+        { id:"m2-l4", t:"Nervový systém a posturální odchylky", available:true, href:"/akademie/studium/m2-l4/" },
+        { id:"m2-l5", t:"Posturální svaly a zkřížené syndromy", available:true, href:"/akademie/studium/m2-l5/" },
+        { id:"m2-l6", t:"Můžeme s posturou něco udělat? (1)", available:true, href:"/akademie/studium/m2-l6/" },
+        { id:"m2-l7", t:"Korekce postury (2): evoluce a praxe", available:true, href:"/akademie/studium/m2-l7/" },
+        { id:"m2-l8", t:"Dech, nitrobřišní tlak a stabilita středu", available:true, href:"/akademie/studium/m2-l8/" },
+        { id:"m2-l9", t:"Mobilita, rozsah pohybu a příprava na pohyb", available:true, href:"/akademie/studium/m2-l9/" },
+        { id:"m2-l10", t:"Adaptace, progresivní přetížení a regenerace", available:true, href:"/akademie/studium/m2-l10/" },
+        { id:"m2-l11", t:"Svalová kontrakce a typy vláken", available:true, href:"/akademie/studium/m2-l11/" },
+        { id:"m2-l12", t:"Energetické systémy", available:true, href:"/akademie/studium/m2-l12/" },
+        { id:"m2-l13", t:"Kardiovaskulární a dýchací systém", available:true, href:"/akademie/studium/m2-l13/" },
+        { id:"m2-l14", t:"Nervová soustava a motorické učení", available:true, href:"/akademie/studium/m2-l14/" },
+        { id:"m2-l15", t:"Hormony a endokrinní systém", available:true, href:"/akademie/studium/m2-l15/" }
+      ]},
+      { t:"Výživa a energie", d:"Makra, výdej, sytost, suplementy", lessons:[
+        { id:"m3-l1", t:"Energetická bilance — zákon, který platí vždy", available:true, href:"/akademie/studium/m3-l1/" },
+        { id:"m3-l2", t:"Bílkoviny: nejdůležitější makroživina", available:true, href:"/akademie/studium/m3-l2/" },
+        { id:"m3-l3", t:"Sacharidy: palivo, ne nepřítel", available:true, href:"/akademie/studium/m3-l3/" },
+        { id:"m3-l4", t:"Tuky: esenciální, ne volitelné", available:true, href:"/akademie/studium/m3-l4/" },
+        { id:"m3-l5", t:"Sytost a energetická hustota", available:true, href:"/akademie/studium/m3-l5/" },
+        { id:"m3-l6", t:"Vláknina, mikroživiny a střevní zdraví", available:true, href:"/akademie/studium/m3-l6/" },
+        { id:"m3-l7", t:"Tekutiny, hydratace a elektrolyty", available:true, href:"/akademie/studium/m3-l7/" },
+        { id:"m3-l8", t:"Alkohol z hlediska výživy a kompozice", available:true, href:"/akademie/studium/m3-l8/" },
+        { id:"m3-l9", t:"Suplementy: co funguje a co je marketing", available:true, href:"/akademie/studium/m3-l9/" },
+        { id:"m3-l10", t:"Tvorba jídelníčku v praxi", available:true, href:"/akademie/studium/m3-l10/" },
+        { id:"m3-l11", t:"Diet breaks a flexibilní přístup", available:true, href:"/akademie/studium/m3-l11/" },
+        { id:"m3-l12", t:"Výživové mýty: toxiny, detox a strašení", available:true, href:"/akademie/studium/m3-l12/" },
+        { id:"m3-l13", t:"Specifika výživy žen a menstruační cyklus", available:true, href:"/akademie/studium/m3-l13/" },
+        { id:"m3-l14", t:"Výživa kolem tréninku: nutrient timing", available:true, href:"/akademie/studium/m3-l14/" },
+        { id:"m3-l15", t:"Kritické čtení studií", available:true, href:"/akademie/studium/m3-l15/" }
+      ]},
+      { t:"Programování tréninku", d:"Tréninky na míru klientovi", lessons:[
+        { id:"m4-l1", t:"Principy programování", available:true, href:"/akademie/studium/m4-l1/" },
+        { id:"m4-l2", t:"Výběr cviků a pohybové vzory", available:true, href:"/akademie/studium/m4-l2/" },
+        { id:"m4-l3", t:"Objem, intenzita a frekvence", available:true, href:"/akademie/studium/m4-l3/" },
+        { id:"m4-l4", t:"Technika a cueing: jak učit pohyb", available:true, href:"/akademie/studium/m4-l4/" },
+        { id:"m4-l5", t:"Sestavení tréninkového splitu", available:true, href:"/akademie/studium/m4-l5/" },
+        { id:"m4-l6", t:"Kardio a NEAT", available:true, href:"/akademie/studium/m4-l6/" },
+        { id:"m4-l7", t:"Funkční trénink vs. síla", available:true, href:"/akademie/studium/m4-l7/" },
+        { id:"m4-l8", t:"Realistická očekávání: kolik svalu a síly", available:true, href:"/akademie/studium/m4-l8/" },
+        { id:"m4-l9", t:"Sestavení tréninkového plánu krok za krokem", available:true, href:"/akademie/studium/m4-l9/" },
+        { id:"m4-l10", t:"Trénink žen: cyklus, těhotenství, poporodní", available:true, href:"/akademie/studium/m4-l10/" },
+        { id:"m4-l11", t:"Trénink seniorů", available:true, href:"/akademie/studium/m4-l11/" },
+        { id:"m4-l12", t:"Bolesti zad a běžné potíže", available:true, href:"/akademie/studium/m4-l12/" },
+        { id:"m4-l13", t:"Trénink doma a s minimem vybavení", available:true, href:"/akademie/studium/m4-l13/" },
+        { id:"m4-l14", t:"Trénink dětí a dospívajících", available:true, href:"/akademie/studium/m4-l14/" },
+        { id:"m4-l15", t:"Návrat do tréninku po zranění", available:true, href:"/akademie/studium/m4-l15/" }
+      ]},
+      { t:"Práce s klientem & koučink", d:"Vedení, motivace, výsledky", lessons:[
+        { id:"m5-l1", t:"Vstupní konzultace — základ spolupráce", available:true, href:"/akademie/studium/m5-l1/" },
+        { id:"m5-l2", t:"Cíle a realistická očekávání", available:true, href:"/akademie/studium/m5-l2/" },
+        { id:"m5-l3", t:"Měření a ukazování pokroku", available:true, href:"/akademie/studium/m5-l3/" },
+        { id:"m5-l4", t:"Motivační rozhovor a aktivní naslouchání", available:true, href:"/akademie/studium/m5-l4/" },
+        { id:"m5-l5", t:"Řešení stagnace (plateau)", available:true, href:"/akademie/studium/m5-l5/" },
+        { id:"m5-l6", t:"Relaps a návrat po výpadku", available:true, href:"/akademie/studium/m5-l6/" },
+        { id:"m5-l7", t:"Hranice a etika koučovské role", available:true, href:"/akademie/studium/m5-l7/" },
+        { id:"m5-l8", t:"Online vs. osobní koučink", available:true, href:"/akademie/studium/m5-l8/" },
+        { id:"m5-l9", t:"Skupinový koučink a budování komunity", available:true, href:"/akademie/studium/m5-l9/" },
+        { id:"m5-l10", t:"Typy klientů a jak ke každému přistupovat", available:true, href:"/akademie/studium/m5-l10/" },
+        { id:"m5-l11", t:"Práce s odporujícím a náročným klientem", available:true, href:"/akademie/studium/m5-l11/" },
+        { id:"m5-l12", t:"Online koučink: vedení na dálku", available:true, href:"/akademie/studium/m5-l12/" },
+        { id:"m5-l13", t:"Citlivá témata a zranitelní klienti", available:true, href:"/akademie/studium/m5-l13/" },
+        { id:"m5-l14", t:"Koučovská mentalita: průvodce, ne diktátor", available:true, href:"/akademie/studium/m5-l14/" },
+        { id:"m5-l15", t:"Rozvoj kouče: sebereflexe a prevence vyhoření", available:true, href:"/akademie/studium/m5-l15/" }
+      ]},
+      { t:"Byznys pro trenéry a poradce", d:"Udržitelný a ziskový byznys", lessons:[
+        { id:"m6-l1", t:"Kdo jsi a kdo je tvůj klient", available:true, href:"/akademie/studium/m6-l1/" },
+        { id:"m6-l2", t:"Psychografie cílové skupiny", available:true, href:"/akademie/studium/m6-l2/" },
+        { id:"m6-l3", t:"Fitness průmysl, nabídka a poptávka", available:true, href:"/akademie/studium/m6-l3/" },
+        { id:"m6-l4", t:"Analýza značky, publikum a SWOT", available:true, href:"/akademie/studium/m6-l4/" },
+        { id:"m6-l5", t:"Osobní značka I: vzhled a první dojem", available:true, href:"/akademie/studium/m6-l5/" },
+        { id:"m6-l6", t:"Osobní značka II: osobnost a důvěra", available:true, href:"/akademie/studium/m6-l6/" },
+        { id:"m6-l7", t:"Právní forma podnikání a finanční výhled", available:true, href:"/akademie/studium/m6-l7/" },
+        { id:"m6-l8", t:"Obsah a marketingový trychtýř", available:true, href:"/akademie/studium/m6-l8/" },
+        { id:"m6-l9", t:"Retence: jak si klienta udržet", available:true, href:"/akademie/studium/m6-l9/" },
+        { id:"m6-l10", t:"Reference, doporučení a sociální důkaz", available:true, href:"/akademie/studium/m6-l10/" },
+        { id:"m6-l11", t:"Cenotvorba a balíčky služeb", available:true, href:"/akademie/studium/m6-l11/" },
+        { id:"m6-l12", t:"Onboarding nového klienta", available:true, href:"/akademie/studium/m6-l12/" },
+        { id:"m6-l13", t:"Sociální sítě a tvorba obsahu", available:true, href:"/akademie/studium/m6-l13/" },
+        { id:"m6-l14", t:"Produkty a sekundární zdroje příjmu", available:true, href:"/akademie/studium/m6-l14/" },
+        { id:"m6-l15", t:"Škálování: od sólo kouče k týmu", available:true, href:"/akademie/studium/m6-l15/" }
+      ]},
+      { t:"Praktické vedení klienta (procesy)", d:"Klient od A do Z — systém Team Barna", lessons:[
+        { id:"m7-l1", t:"Cesta klienta od A do Z", available:true, href:"/akademie/studium/m7-l1/" },
+        { id:"m7-l2", t:"Když klient nehubne na očekávaných kaloriích", available:true, href:"/akademie/studium/m7-l2/" },
+        { id:"m7-l3", t:"Komunikace a reporty s klientem", available:true, href:"/akademie/studium/m7-l3/" },
+        { id:"m7-l4", t:"Měsíční review a vyhodnocení", available:true, href:"/akademie/studium/m7-l4/" },
+        { id:"m7-l5", t:"Vstupní příručka klienta", available:true, href:"/akademie/studium/m7-l5/" },
+        { id:"m7-l6", t:"Tarify a cenové úrovně služby", available:true, href:"/akademie/studium/m7-l6/" },
+        { id:"m7-l7", t:"Ukončení spolupráce, offboarding a retence", available:true, href:"/akademie/studium/m7-l7/" },
+        { id:"m7-l8", t:"Krizová komunikace, stížnosti a reklamace", available:true, href:"/akademie/studium/m7-l8/" },
+        { id:"m7-l9", t:"Právní a etický rámec: data, smlouvy, odpovědnost", available:true, href:"/akademie/studium/m7-l9/" },
+        { id:"m7-l10", t:"Data klienta a sledování pokroku", available:true, href:"/akademie/studium/m7-l10/" }
+      ]},
+      { t:"Příprava bojovníků a úpolové sporty", d:"Síla, kondice a příprava na zápas", lessons:[
+        { id:"m8-l1", t:"Silová a kondiční příprava pro bojovníka", available:true, href:"/akademie/studium/m8-l1/" },
+        { id:"m8-l2", t:"Weight cut: bezpečné shazování váhy", available:true, href:"/akademie/studium/m8-l2/" },
+        { id:"m8-l3", t:"Peak week a superkompenzace", available:true, href:"/akademie/studium/m8-l3/" },
+        { id:"m8-l4", t:"Soutěžní příprava A–Z", available:true, href:"/akademie/studium/m8-l4/" },
+        { id:"m8-l5", t:"Mentální příprava závodníka", available:true, href:"/akademie/studium/m8-l5/" },
+        { id:"m8-l6", t:"Příprava na estetické kategorie (bikini, physique)", available:true, href:"/akademie/studium/m8-l6/" },
+        { id:"m8-l7", t:"Výživa bojovníka", available:true, href:"/akademie/studium/m8-l7/" },
+        { id:"m8-l8", t:"Kondiční příprava a regenerace bojovníka", available:true, href:"/akademie/studium/m8-l8/" },
+        { id:"m8-l9", t:"Prevence zranění", available:true, href:"/akademie/studium/m8-l9/" },
+        { id:"m8-l10", t:"Dlouhodobý rozvoj sportovce a kariéra", available:true, href:"/akademie/studium/m8-l10/" }
+      ]},
+      { t:"Periodizace a plánování", d:"Jak plánovat trénink v čase", lessons:[
+        { id:"m9-l1", t:"Co je periodizace a proč ji potřebuješ", available:true, href:"/akademie/studium/m9-l1/" },
+        { id:"m9-l2", t:"Bloky, deload a taper", available:true, href:"/akademie/studium/m9-l2/" },
+        { id:"m9-l3", t:"Modely periodizace v praxi", available:true, href:"/akademie/studium/m9-l3/" },
+        { id:"m9-l4", t:"Deload a taper: umění subtrakce", available:true, href:"/akademie/studium/m9-l4/" },
+        { id:"m9-l5", t:"Periodizace výživy", available:true, href:"/akademie/studium/m9-l5/" },
+        { id:"m9-l6", t:"Autoregulace: RPE, RIR a poslouchání těla", available:true, href:"/akademie/studium/m9-l6/" },
+        { id:"m9-l7", t:"Souběžný trénink: síla a vytrvalost", available:true, href:"/akademie/studium/m9-l7/" },
+        { id:"m9-l8", t:"Roční plán: jak složit periodizaci dohromady", available:true, href:"/akademie/studium/m9-l8/" }
+      ]},
+      { t:"Metabolismus a TDEE do hloubky", d:"Rozlož energetický výdej na součástky a pracuj s ním jako profík", lessons:[
+        { id:"m10-l1", t:"Co je TDEE a proč „kalorie ven“ není jedno číslo", available:true, href:"/akademie/studium/m10-l1/" },
+        { id:"m10-l2", t:"BMR a RMR: kolik spálíš jen tím, že žiješ", available:true, href:"/akademie/studium/m10-l2/" },
+        { id:"m10-l3", t:"TEF: termický efekt jídla a proč na proteinu záleží", available:true, href:"/akademie/studium/m10-l3/" },
+        { id:"m10-l4", t:"NEAT: skrytá páka, která rozhoduje o hubnutí víc než kardio", available:true, href:"/akademie/studium/m10-l4/" },
+        { id:"m10-l5", t:"EAT: kolik reálně spálíš tréninkem (a proč míň, než si myslíš)", available:true, href:"/akademie/studium/m10-l5/" },
+        { id:"m10-l6", t:"Energy flux: proč „jíst víc a hýbat se víc“ funguje lépe", available:true, href:"/akademie/studium/m10-l6/" },
+        { id:"m10-l7", t:"Jak metabolismus adaptuje na dietu (a co s tím)", available:true, href:"/akademie/studium/m10-l7/" },
+        { id:"m10-l8", t:"Výpočet udržovacího příjmu a maker krok za krokem", available:true, href:"/akademie/studium/m10-l8/" },
+        { id:"m10-l9", t:"Praktická kalkulace pro klienta: od váhy a aktivity k číslům", available:true, href:"/akademie/studium/m10-l9/" }
+      ]},
+      { t:"Věda o hubnutí: adaptace, refeeds a reverse dieting", d:"Pokročilé nástroje, díky kterým klient zhubne a hubnutí si udrží", lessons:[
+        { id:"m11-l1", t:"Mechanika fat loss: co se reálně děje, když hubneš tuk", available:true, href:"/akademie/studium/m11-l1/" },
+        { id:"m11-l2", t:"Metabolická adaptace: proč se hubnutí zastaví a co to (ne)znamená", available:true, href:"/akademie/studium/m11-l2/" },
+        { id:"m11-l3", t:"Refeed: krátkodobé navýšení sacharidů a kdy ho nasadit", available:true, href:"/akademie/studium/m11-l3/" },
+        { id:"m11-l4", t:"Diet break: plánovaná pauza v dietě a rozdíl oproti refeedu", available:true, href:"/akademie/studium/m11-l4/" },
+        { id:"m11-l5", t:"Refeed vs. diet break: rozhodovací framework podle cíle a klienta", available:true, href:"/akademie/studium/m11-l5/" },
+        { id:"m11-l6", t:"Reverse dieting: jak po dietě navyšovat kalorie bez nabrání tuku", available:true, href:"/akademie/studium/m11-l6/" },
+        { id:"m11-l7", t:"Recovery Diet: bezpečný návrat do růstové fáze po dietě/soutěži", available:true, href:"/akademie/studium/m11-l7/" },
+        { id:"m11-l8", t:"Rate of weight loss: optimální tempo hubnutí podle situace", available:true, href:"/akademie/studium/m11-l8/" },
+        { id:"m11-l9", t:"Udržení váhy: proč většina jojo efektů začíná tady", available:true, href:"/akademie/studium/m11-l9/" },
+        { id:"m11-l10", t:"Agresivní vs. konzervativní deficit: kdy se vyplatí který", available:true, href:"/akademie/studium/m11-l10/" }
+      ]},
+      { t:"Proteinová věda do detailu", d:"Vše o bílkovinách na úrovni nejcitovanějšího proteinového vědce světa", lessons:[
+        { id:"m12-l1", t:"Kolik proteinu reálně potřebuješ: proč RDA 0,8 g/kg je jen minimum", available:true, href:"/akademie/studium/m12-l1/" },
+        { id:"m12-l2", t:"MPS: jak vlastně sval roste a co ho spouští", available:true, href:"/akademie/studium/m12-l2/" },
+        { id:"m12-l3", t:"Leucinový práh: spínač, který rozhoduje o anabolické odpovědi", available:true, href:"/akademie/studium/m12-l3/" },
+        { id:"m12-l4", t:"Muscle-full effect: proč nemá smysl „přejíst“ protein v jednom jídle", available:true, href:"/akademie/studium/m12-l4/" },
+        { id:"m12-l5", t:"Dávka 0,4 g/kg na jídlo a distribuce přes den", available:true, href:"/akademie/studium/m12-l5/" },
+        { id:"m12-l6", t:"Kvalita proteinu: DIAAS vs PDCAAS a co znamená pro klienta", available:true, href:"/akademie/studium/m12-l6/" },
+        { id:"m12-l7", t:"Rostlinné vs. živočišné bílkoviny: jak vyrovnat rozdíl", available:true, href:"/akademie/studium/m12-l7/" },
+        { id:"m12-l8", t:"Whey, kasein a kdy mají suplementy smysl", available:true, href:"/akademie/studium/m12-l8/" },
+        { id:"m12-l9", t:"Protein v deficitu: jak při hubnutí ochránit (a budovat) sval", available:true, href:"/akademie/studium/m12-l9/" },
+        { id:"m12-l10", t:"Protein a stárnutí: anabolická rezistence a sarkopenie", available:true, href:"/akademie/studium/m12-l10/" }
+      ]},
+      { t:"Hypertrofie pro naturály", d:"Evidence-based budování svalů pro klienty bez podpůrných látek", lessons:[
+        { id:"m13-l1", t:"Co skutečně řídí růst svalu (a co jsou jen mýty)", available:true, href:"/akademie/studium/m13-l1/" },
+        { id:"m13-l2", t:"Hierarchie priorit: čím se zabývat dřív než tempem a pauzami", available:true, href:"/akademie/studium/m13-l2/" },
+        { id:"m13-l3", t:"Objem jako hlavní driver: kolik sérií na sval a týden", available:true, href:"/akademie/studium/m13-l3/" },
+        { id:"m13-l4", t:"Proximity to failure: jak blízko selhání trénovat", available:true, href:"/akademie/studium/m13-l4/" },
+        { id:"m13-l5", t:"High-load vs low-load: proč lehčí váhy rostou stejně jako těžké", available:true, href:"/akademie/studium/m13-l5/" },
+        { id:"m13-l6", t:"Frekvence a rozložení objemu přes týden", available:true, href:"/akademie/studium/m13-l6/" },
+        { id:"m13-l7", t:"Progresivní přetížení v praxi pro naturála", available:true, href:"/akademie/studium/m13-l7/" },
+        { id:"m13-l8", t:"Výběr cviků pro maximální stimul a minimum únavy", available:true, href:"/akademie/studium/m13-l8/" },
+        { id:"m13-l9", t:"Management únavy a kdy zařadit deload", available:true, href:"/akademie/studium/m13-l9/" },
+        { id:"m13-l10", t:"Realistická očekávání: kolik svalu lze nabrat za rok bez látek", available:true, href:"/akademie/studium/m13-l10/" }
+      ]},
+      { t:"Suplementace podle důkazů", d:"Co funguje, co je hype a v jakých dávkách — podle ISSN", lessons:[
+        { id:"m14-l1", t:"Jak vůbec hodnotit doplněk: hierarchie důkazů ISSN", available:true, href:"/akademie/studium/m14-l1/" },
+        { id:"m14-l2", t:"Kreatin: nejlépe prozkoumaný doplněk a jak ho dávkovat", available:true, href:"/akademie/studium/m14-l2/" },
+        { id:"m14-l3", t:"Kofein: výkon, dávkování a timing", available:true, href:"/akademie/studium/m14-l3/" },
+        { id:"m14-l4", t:"Beta-alanin a soda: kdy a komu reálně pomůžou", available:true, href:"/akademie/studium/m14-l4/" },
+        { id:"m14-l5", t:"Protein a EAA: kdy má suplement smysl nad rámec stravy", available:true, href:"/akademie/studium/m14-l5/" },
+        { id:"m14-l6", t:"Omega-3, vitamín D a „zdravotní“ doplňky", available:true, href:"/akademie/studium/m14-l6/" },
+        { id:"m14-l7", t:"HMB, BCAA a další: na co reálně nemá cenu utrácet", available:true, href:"/akademie/studium/m14-l7/" },
+        { id:"m14-l8", t:"Doplňky podle cíle: hubnutí, hypertrofie, výkon", available:true, href:"/akademie/studium/m14-l8/" },
+        { id:"m14-l9", t:"Bezpečnost, čistota a „banned substances“ u klientů", available:true, href:"/akademie/studium/m14-l9/" }
+      ]},
+      { t:"Spánek, stres a regenerace", d:"Nejpodceňovanější páka výkonu, hubnutí i zdraví", lessons:[
+        { id:"m15-l1", t:"Architektura spánku: NREM, REM a proč na fázích záleží", available:true, href:"/akademie/studium/m15-l1/" },
+        { id:"m15-l2", t:"Dva regulátory spánku: adenosin a cirkadiánní rytmus", available:true, href:"/akademie/studium/m15-l2/" },
+        { id:"m15-l3", t:"Spánková hygiena: konkrétní zásady, co reálně funguje", available:true, href:"/akademie/studium/m15-l3/" },
+        { id:"m15-l4", t:"Světlo jako nástroj: ranní slunce a večerní tma", available:true, href:"/akademie/studium/m15-l4/" },
+        { id:"m15-l5", t:"Kofein a alkohol: jak ti kradou regeneraci", available:true, href:"/akademie/studium/m15-l5/" },
+        { id:"m15-l6", t:"Spánek a hubnutí: ghrelin, leptin a proč málo spánku = větší hlad", available:true, href:"/akademie/studium/m15-l6/" },
+        { id:"m15-l7", t:"Spánek chrání sval: Nedeltcheva framework pro klienta na dietě", available:true, href:"/akademie/studium/m15-l7/" },
+        { id:"m15-l8", t:"Sleep extension: spánek jako trénovatelná výkonnostní proměnná", available:true, href:"/akademie/studium/m15-l8/" },
+        { id:"m15-l9", t:"NSDR a napping: rychlá regenerace mezi tréninky", available:true, href:"/akademie/studium/m15-l9/" },
+        { id:"m15-l10", t:"Stres, kortizol a regenerace: jak to celé propojit", available:true, href:"/akademie/studium/m15-l10/" },
+        { id:"m15-l11", t:"Wearables a HRV: jak číst data a nezbláznit se z nich", available:true, href:"/akademie/studium/m15-l11/" }
+      ]},
+      { t:"Umění koučovat compliance", d:"Nejlepší plán je k ničemu, když ho klient nedodrží", lessons:[
+        { id:"m16-l1", t:"Adherence jako dovednost: proč rozhoduje víc než dokonalý plán", available:true, href:"/akademie/studium/m16-l1/" },
+        { id:"m16-l2", t:"Připravenost ke změně: jak ji poznat a podle ní programovat", available:true, href:"/akademie/studium/m16-l2/" },
+        { id:"m16-l3", t:"Management hladu: praktické nástroje pro klienta na dietě", available:true, href:"/akademie/studium/m16-l3/" },
+        { id:"m16-l4", t:"Flexibilní vs. rigidní přístup a udržitelnost diety", available:true, href:"/akademie/studium/m16-l4/" },
+        { id:"m16-l5", t:"Deep Health: koučovat celého člověka, ne jen makra", available:true, href:"/akademie/studium/m16-l5/" },
+        { id:"m16-l6", t:"GSPA: od cílů přes dovednosti a praktiky k denním akcím", available:true, href:"/akademie/studium/m16-l6/" },
+        { id:"m16-l7", t:"Bariéry klienta: jak najít, co ho doopravdy brzdí", available:true, href:"/akademie/studium/m16-l7/" },
+        { id:"m16-l8", t:"Jazyk, který buduje důvěru a vede ke změně", available:true, href:"/akademie/studium/m16-l8/" },
+        { id:"m16-l9", t:"Relaps a „all-or-nothing“ myšlení: jak je řešit", available:true, href:"/akademie/studium/m16-l9/" },
+        { id:"m16-l10", t:"Citlivá témata: body image, vztah k jídlu, kdy odkázat dál", available:true, href:"/akademie/studium/m16-l10/" }
+      ]},
+      { t:"Jak číst vědu a nenaletět", d:"Páteř důvěryhodnosti každého science-based kouče", lessons:[
+        { id:"m17-l1", t:"Hierarchie důkazů: od kazuistiky po meta-analýzu", available:true, href:"/akademie/studium/m17-l1/" },
+        { id:"m17-l2", t:"Replikační krize: proč spoustě publikovaných nálezů nevěřit", available:true, href:"/akademie/studium/m17-l2/" },
+        { id:"m17-l3", t:"P-value vs. effect size: proč „statisticky významné“ nestačí", available:true, href:"/akademie/studium/m17-l3/" },
+        { id:"m17-l4", t:"Confidence intervals a šum: jak číst nejistotu", available:true, href:"/akademie/studium/m17-l4/" },
+        { id:"m17-l5", t:"Meta-analýzy: zlatý standard a jeho limity", available:true, href:"/akademie/studium/m17-l5/" },
+        { id:"m17-l6", t:"Effect size v praxi: převést výsledek studie na realitu", available:true, href:"/akademie/studium/m17-l6/" },
+        { id:"m17-l7", t:"Korelace vs. kauzalita a běžné statistické pasti", available:true, href:"/akademie/studium/m17-l7/" },
+        { id:"m17-l8", t:"Jak poznat broscience od evidence-based", available:true, href:"/akademie/studium/m17-l8/" },
+        { id:"m17-l9", t:"Jak sledovat výzkum, aniž bys propadl každému headlinu", available:true, href:"/akademie/studium/m17-l9/" }
+      ]},
+      { t:"Ženské zdraví", d:"Cyklus, hormony, PCOS, menopauza a specifika tréninku žen", lessons:[
+        { id:"m18-l1", t:"Menstruační cyklus, výkon a výživa", available:true, href:"/akademie/studium/m18-l1/" },
+        { id:"m18-l2", t:"Hormonální antikoncepce, kompozice a výkon", available:true, href:"/akademie/studium/m18-l2/" },
+        { id:"m18-l3", t:"PCOS — výživa, inzulinová rezistence a trénink", available:true, href:"/akademie/studium/m18-l3/" },
+        { id:"m18-l4", t:"Perimenopauza a menopauza — co se reálně mění", available:true, href:"/akademie/studium/m18-l4/" },
+        { id:"m18-l5", t:"Silový trénink a kostní zdraví žen 40+", available:true, href:"/akademie/studium/m18-l5/" },
+        { id:"m18-l6", t:"RED-S a nízká dostupnost energie", available:true, href:"/akademie/studium/m18-l6/" },
+        { id:"m18-l7", t:"Bílkoviny a výživa žen napříč životem", available:true, href:"/akademie/studium/m18-l7/" }
+      ]},
+      { t:"Praxe a pokročilá aplikace", d:"Jak to celé použít v reálu — flexi dieta, kvalita jídla, udržení po dietě, energy flux, peak week, chaos, porce bez vážení, meal prep", lessons:[
+        { id:"m19-l1", t:"Flexibilní dieta v praxi (IIFYM bez chaosu)", available:true, href:"/akademie/studium/m19-l1/" },
+        { id:"m19-l2", t:"Kvalita jídla: co to vlastně znamená", available:true, href:"/akademie/studium/m19-l2/" },
+        { id:"m19-l3", t:"Po dietě: jak udržet formu a nevrátit kila", available:true, href:"/akademie/studium/m19-l3/" },
+        { id:"m19-l4", t:"Energy flux: jíst víc a hýbat se víc", available:true, href:"/akademie/studium/m19-l4/" },
+        { id:"m19-l5", t:"Peak week: vyladění formy na focení/soutěž", available:true, href:"/akademie/studium/m19-l5/" },
+        { id:"m19-l6", t:"Chaotický režim: jíst dobře při směnách a cestování", available:true, href:"/akademie/studium/m19-l6/" },
+        { id:"m19-l7", t:"Porce bez vážení: hand portioning", available:true, href:"/akademie/studium/m19-l7/" },
+        { id:"m19-l8", t:"Meal prep: systém, který drží formu za tebe", available:true, href:"/akademie/studium/m19-l8/" }
+      ]},
+      { t:"Martinův systém v praxi", d:"Jak reálně pracuju s klienty — celý můj systém z praxe od roku 2013 a 600+ klientů, zhmotněný v appce. Pořadí pák, check-iny, makra, samostatnost. Modul postupně roste.", lessons:[
+        { id:"m20-l2", t:"5 priorit v praxi: jak je u klienta nastavit a hlídat", available:true, href:"/akademie/studium/m20-l2/" },
+        { id:"m20-l3", t:"Rozhodovací pravidla: pořadí pák je svaté", available:true, href:"/akademie/studium/m20-l3/" },
+        { id:"m20-l4", t:"Onboarding klienta: první týden", available:true, href:"/akademie/studium/m20-l4/" },
+        { id:"m20-l1", t:"Veď klienta k samostatnosti (a získej z něj reklamu)", available:true, href:"/akademie/studium/m20-l1/" },
+        { id:"m20-l5", t:"Check-iny: co sleduješ týdně a jak upravuješ", available:true, href:"/akademie/studium/m20-l5/" },
+        { id:"m20-l6", t:"Časté chyby klientů a jak je řešíš", available:true, href:"/akademie/studium/m20-l6/" },
+        { id:"m20-l7", t:"Startovací cíle a makra do hloubky", available:true, href:"/akademie/studium/m20-l7/" },
+        { id:"m20-l8", t:"Měření pokroku: čtyři okna, čtyři rychlosti", available:true, href:"/akademie/studium/m20-l8/" },
+        { id:"m20-l9", t:"Proč trénink nepatří do kalorického enginu", available:true, href:"/akademie/studium/m20-l9/" },
+        { id:"m20-l10", t:"Logování bez výmluv: čtyři vrstvy zápisu", available:true, href:"/akademie/studium/m20-l10/" },
+        { id:"m20-l11", t:"Safety a hranice: kdy mlčíš a předáš dál", available:true, href:"/akademie/studium/m20-l11/" },
+        { id:"m20-l12", t:"Trenérský rámec: jak systém učit, ne jen aplikovat", available:true, href:"/akademie/studium/m20-l12/" },
+        { id:"m20-l13", t:"Zlaté hlášky a tahák-karta", available:true, href:"/akademie/studium/m20-l13/" }
+      ]}
+    ];
+    // ----- Free-preview (#35): ochutnávka pro nepřihlášené/nekupující + upsell -----
+    var BUY_URL = '/akademie/objednavka/';
+    var FREE = {'m1-l1':1,'m1-l2':1,'m1-l3':1,'m2-l1':1,'m3-l1':1,'m6-l1':1}; // ukázkové lekce napříč moduly
+    var FREEMODE = /[?&]preview=free/.test(location.search);
+    function applyFreeMode(){ if(FREEMODE){ document.body.classList.add('freemode'); var b=document.getElementById('freeBanner'); if(b) b.style.display='flex'; } gateTools(FREEMODE); }
+    // Nástroje (generátory): free → lite veřejná verze + jasné označení, plný → plná verze v Academy.
+    function gateTools(free){
+      var tools=[
+        {card:'toolMeal', badge:'mealBadge', desc:'mealDesc', btn:'mealBtn', full:'/akademie/nastroje/jidelnicek/', lite:'/nastroje-zdarma/jidelnicek/?from=academy',
+         fullDesc:'Zadáš údaje klienta, systém spočítá kalorie i makra a poskládá hotový denní jídelníček z běžných potravin. Rebrand + export do PDF.',
+         liteDesc:'Lite verzi máš zdarma — spočítá makra a poskládá jeden den. Plná verze v Academy přidá celý týden, rebrand pod tvým jménem i export do PDF.'},
+        {card:'toolWorkout', badge:'workoutBadge', desc:'workoutDesc', btn:'workoutBtn', full:'/akademie/nastroje/trenink/', lite:'/nastroje-zdarma/trenink/?from=academy',
+         fullDesc:'Fitko, doma i venku — podle vybavení, úrovně a cíle poskládá týdenní plán se sériemi, opakováními i tipy. Rebrand + export do PDF.',
+         liteDesc:'Lite verzi máš zdarma — poskládá plán podle místa a úrovně. Plná verze v Academy přidá rebrand pod tvým jménem i export do PDF.'}
+      ];
+      tools.forEach(function(t){
+        var card=document.getElementById(t.card); if(!card) return;
+        var badge=document.getElementById(t.badge), desc=document.getElementById(t.desc), btn=document.getElementById(t.btn);
+        if(free){
+          card.setAttribute('href', t.lite); card.classList.add('islite');
+          if(badge) badge.style.display='inline-block';
+          if(desc) desc.textContent=t.liteDesc;
+          if(btn) btn.textContent='Vyzkoušet lite verzi →';
+        } else {
+          card.setAttribute('href', t.full); card.classList.remove('islite');
+          if(badge) badge.style.display='none';
+          if(desc) desc.textContent=t.fullDesc;
+          if(btn) btn.textContent='Otevřít generátor →';
+        }
+      });
+      var sub=document.getElementById('toolsSub');
+      if(sub) sub.textContent = free
+        ? 'Lite verze máš zdarma — vyzkoušej, jak fungují. Plná verze (celý týden, rebrand pod tvým jménem, export do PDF) se odemkne s Academy.'
+        : 'Generátory, které ti spočítají a poskládají plán na míru klienta — a dáš mu ho pod svým jménem.';
+    }
+    // ----- Sekční nástěnka (#33): přehled modulů → fokus na jeden modul -----
+    var DONE = {};
+    function mc(m){ var a=0,d=0; m.lessons.forEach(function(l){ if(l.available){ a++; if(DONE[l.id]) d++; } }); return {a:a,d:d}; }
+    function freeCount(m){ var n=0; m.lessons.forEach(function(l){ if(l.available && FREE[l.id]) n++; }); return n; }
+    function lessonRow(l){
+      var isDone = !!DONE[l.id];
+      if (l.available && FREEMODE && !FREE[l.id])
+        return '<a class="les lockbuy" href="'+BUY_URL+'"><span class="ck">🔒</span><span class="t">'+l.t+'</span><span class="s buy">Odemknout →</span></a>';
+      if (l.available) {
+        var freeBadge = (FREEMODE && FREE[l.id]);
+        return '<a class="les'+(isDone?' done':'')+(freeBadge?' isfree':'')+'" href="'+l.href+'"><span class="ck">'+(isDone?'✓':(freeBadge?'🔓':''))+'</span><span class="t">'+l.t+'</span><span class="s">'+(isDone?'Dokončeno':(freeBadge?'Zdarma →':'Otevřít →'))+'</span></a>';
+      }
+      return '<div class="les locked"><span class="ck"></span><span class="t">'+l.t+'</span><span class="badge-soon">Připravujeme</span></div>';
+    }
+    function renderOverview(){
+      var html = '';
+      if (FREEMODE) html += '<div class="modlegend"><span class="lg-free">🔓 Můžeš číst zdarma</span><span class="lg-lock">🔒 Odemkneš s Academy</span></div>';
+      html += '<div class="modgrid">';
+      CURRICULUM.forEach(function(m, mi){
+        var c = mc(m), pct = c.a? Math.round(c.d/c.a*100) : 0;
+        var fc = FREEMODE ? freeCount(m) : 0;
+        var cls = 'modcard';
+        if (FREEMODE) cls += fc>0 ? ' has-free' : ' mod-locked';
+        else if (c.a && c.d===c.a) cls += ' done-all';
+        var foot;
+        if (FREEMODE){
+          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'
+            + (fc>0 ? '<span class="mfree">🔓 '+fc+' zdarma</span>' : (c.a? '<span class="mlock">🔒 Zamčeno</span>' : ''))
+            + '</div>';
+        } else {
+          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'+(c.a? '<span class="pct">'+pct+' %</span>' : '')+'</div>';
+        }
+        html += '<a class="'+cls+'" href="#m'+(mi+1)+'">'
+          + '<div class="top"><span class="ix">'+(mi+1)+'</span><h3>'+m.t+'</h3></div>'
+          + '<p>'+m.d+'</p>'
+          + (!FREEMODE && c.a? '<div class="mbar"><span style="width:'+pct+'%"></span></div>' : '')
+          + foot
+          + '</a>';
+      });
+      html += '</div>';
+      document.getElementById('modules').innerHTML = html;
+    }
+    function renderModule(mi){
+      var m = CURRICULUM[mi];
+      if (!m){ location.hash = ''; return; }
+      var c = mc(m), pct = c.a? Math.round(c.d/c.a*100) : 0;
+      var lz = ''; m.lessons.forEach(function(l){ lz += lessonRow(l); });
+      var nav = '<div class="secnav">';
+      if (mi>0){ var p = CURRICULUM[mi-1]; nav += '<a class="prev" href="#m'+mi+'"><span class="lbl">← Předchozí modul</span><span class="nm">'+p.t+'</span></a>'; }
+      if (mi<CURRICULUM.length-1){ var n = CURRICULUM[mi+1]; nav += '<a class="next" href="#m'+(mi+2)+'"><span class="lbl">Další modul →</span><span class="nm">'+n.t+'</span></a>'; }
+      nav += '</div>';
+      document.getElementById('modules').innerHTML =
+        '<a class="backlink" href="#prehled">← Všechny moduly</a>'
+        + '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(c.a? '<span class="pct">'+pct+' %</span>' : '<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>'
+        + nav;
+      try { window.scrollTo(0,0); } catch(e){}
+    }
+    function firstUnfinished(){ for (var i=0;i<CURRICULUM.length;i++){ var c=mc(CURRICULUM[i]); if (c.a && c.d<c.a) return i; } return -1; }
+    // #34 „Pokračovat, kde jsi skončil" — najdi přesně první dostupnou nedokončenou lekci (ne jen modul).
+    function nextLesson(){
+      for (var i=0;i<CURRICULUM.length;i++){
+        var ls=CURRICULUM[i].lessons;
+        for (var j=0;j<ls.length;j++){ if (ls[j].available && !DONE[ls[j].id]) return { mi:i, l:ls[j] }; }
+      }
+      return null;
+    }
+    function startedAny(){ for (var k in DONE){ if (DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
+    // #34 vyhledávání lekcí napříč moduly (bez diakritiky)
+    function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+    function searchLessons(q){
+      var nq = norm(q), res = [];
+      CURRICULUM.forEach(function(m, mi){
+        m.lessons.forEach(function(l){
+          if (l.available && norm(l.t).indexOf(nq) !== -1) res.push({ mi:mi, l:l });
+        });
+      });
+      var html;
+      if (!res.length) {
+        html = '<p class="searchempty">Pro „'+q+'" jsem nic nenašel. Zkus jiné slovo (např. spánek, protein, dieta).</p>';
+      } else {
+        html = '<div class="searchres">';
+        res.forEach(function(r){
+          var dn = DONE[r.l.id];
+          if (FREEMODE && !FREE[r.l.id]) {
+            html += '<a href="'+BUY_URL+'"><span class="sm">M'+(r.mi+1)+'</span><span class="st">'+r.l.t+'</span><span class="sd buy" style="color:var(--gold-soft)">🔒 Odemknout →</span></a>';
+          } else {
+            html += '<a href="'+r.l.href+'"><span class="sm">M'+(r.mi+1)+'</span><span class="st">'+r.l.t+'</span>'+(dn?'<span class="sd">✓ hotovo</span>':'<span class="sd" style="color:var(--gold-soft)">'+(FREEMODE&&FREE[r.l.id]?'🔓 Zdarma →':'Otevřít →')+'</span>')+'</a>';
+          }
+        });
+        html += '</div>';
+      }
+      document.getElementById('modules').innerHTML = html;
+    }
+    function route(){
+      var sb = document.getElementById('lessonSearch');
+      if (sb && sb.value.trim()) { searchLessons(sb.value.trim()); return; }
+      var h = (location.hash||'').replace('#',''); var m = h.match(/^m(\d+)$/);
+      if (m) renderModule(parseInt(m[1],10)-1); else renderOverview();
+    }
+    function paintProgress(){
+      var ta=0, co=0; CURRICULUM.forEach(function(m){ var c=mc(m); ta+=c.a; co+=c.d; });
+      var overall = ta? Math.round(co/ta*100) : 0;
+      document.getElementById('progBar').style.width = overall+'%';
+      document.getElementById('progLbl').textContent = co+' z '+ta+' dostupných lekcí · '+overall+' % dokončeno';
+      var hero = document.querySelector('.hello'), cb = document.getElementById('contBtn'), nx = nextLesson();
+      if (!cb && hero){ cb = document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
+      if (cb){
+        if (nx){
+          cb.style.display='inline-flex';
+          // přeskoč přímo do lekce, kde návštěvník skončil (ne jen do modulu)
+          cb.textContent = (startedAny()? '▶ Pokračovat: ' : '▶ Začít: ') + nx.l.t;
+          cb.href = nx.l.href;
+        } else { cb.style.display='none'; }
+      }
+      if (ta>0 && co===ta){
+        var cc = document.getElementById('certCard'); cc.classList.add('ready');
+        document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
+        var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
+      }
+    }
+    function render(done){ DONE = done || {}; paintProgress(); route(); hashScrollOnce(); }
+    window.addEventListener('hashchange', route);
+    // Postup z členské sekce (live: Supabase, demo: localStorage). V live režimu
+    // navíc vyžaduje přihlášení + přístup k Akademii.
+    function boot(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode === 'live'){
+            // NEPŘESMĚROVÁVÁME nepřihlášené/nekoupivší — místo toho ukážeme
+            // free ochutnávku (FREEMODE) a upsell na koupi celé Academy.
+            window.BA.getUser().then(function(u){
+              if(!u){
+                FREEMODE = true; applyFreeMode();
+                var n0 = document.getElementById('modeNote');
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 224 lekcím odemkni celou Academy.';
+                try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
+                return;
+              }
+              window.BA.hasEntitlement('academy').then(function(has){
+                if(!has){ FREEMODE = true; }
+                applyFreeMode();
+                var note = document.getElementById('modeNote');
+                if (note) note.textContent = has
+                  ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
+                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 224 lekcím odemkni celou Academy.';
+                window.BA.getProgress().then(render);
+              });
+            });
+          } else {
+            applyFreeMode();
+            window.BA.getProgress().then(render);
+          }
+        });
+      } else {
+        applyFreeMode();
+        try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
+      }
+    }
+    // #34 vyhledávání — při psaní přepni na výsledky, po smazání zpět na přehled/modul
+    (function(){
+      var sb=document.getElementById('lessonSearch'); if(!sb) return;
+      sb.addEventListener('input', function(){ route(); });
+    })();
+    boot();
+    // re-scroll na statickou kotvu (např. #nastroje) — moduly se renderují asynchronně a kotvu odsunou;
+    // hashe routeru (#mN, #prehled) nechává být
+    var _hashScrolled = false;
+    function hashScrollOnce(){
+      if(_hashScrolled || !location.hash || /^#(m\d+|prehled)?$/.test(location.hash)) return;
+      var t=null; try { t=document.querySelector(location.hash); } catch(e){}
+      if(!t) return;
+      _hashScrolled = true;
+      var go = function(){ t.scrollIntoView(); };
+      if(document.visibilityState === 'hidden'){
+        // tab na pozadí (ctrl+klik) — Chrome scroll potlačí, doscrolluj po zviditelnění
+        document.addEventListener('visibilitychange', function h(){
+          if(document.visibilityState === 'visible'){ document.removeEventListener('visibilitychange', h); setTimeout(go, 50); }
+        });
+      } else { setTimeout(go, 50); }
+    }
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>

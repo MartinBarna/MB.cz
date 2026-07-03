@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adaptace, progresivní přetížení a regenerace — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 2 · Lekce 10 — Anatomie a pohyb</div>
+    <h1>Adaptace, progresivní přetížení a regenerace</h1>
+
+    <p class="lead">Tahle lekce je most mezi anatomií a tréninkem. Než se pustíš do programování, chci, abys pochopil jednu věc: <strong>trénink sám o sobě tělo nezlepšuje — je to jen podnět. Skutečná změna se děje až potom, při regeneraci.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Princip adaptace (SAID / GAS) — proč se tělo mění jen tomu, co po něm chceš.</li>
+        <li>Co je progresivní přetížení a jak ho v praxi řídit — cest je víc než jen přidat kilo.</li>
+        <li>Proč výsledek „dělá“ regenerace, spánek a výživa, ne samotný trénink.</li>
+        <li>Co je přetrénování, nedostatečná regenerace a jak ji poznáš.</li>
+        <li>Princip individuality a postupnosti — proč „víc není vždy líp“.</li>
+      </ul>
+    </div>
+    <figure class="ba-fig" data-fig="progressive-overload"><figcaption>Sval roste, jen když ho postupně nutíš zvládat víc než minule.</figcaption></figure>
+
+    <h2>1) Adaptace: tělo se mění tomu, co po něm chceš</h2>
+    <p>Tělo je adaptační stroj. Dáš mu podnět a ono se na něj do budoucna připraví. Stojí za tím dva principy, které musíš znát.</p>
+    <p><strong>SAID</strong> (Specific Adaptation to Imposed Demands) — specifická adaptace na uložený nárok. Tělo se přizpůsobí přesně tomu, co po něm opakovaně chceš. Chceš sílu? Trénuj sílu. Chceš vytrvalost? Trénuj vytrvalost. Proto musí trénink vždycky sedět na cíl.</p>
+    <p><strong>GAS</strong> (General Adaptation Syndrome) — obecný adaptační syndrom. Po podnětu přijde nejdřív dočasné zhoršení, ta známá únava. A teprve při regeneraci přichází nadhodnota — tělo se zotaví o kousek výš, než bylo předtím. Tomu se říká superkompenzace. Když dáš další podnět ve správný čas, stavíš výš a výš. Když moc brzy nebo moc tvrdě a bez regenerace, jen se kopeš do díry.</p>
+    <blockquote>Trénink je podnět, ne výsledek. Výsledek je adaptace, která přijde potom.</blockquote>
+
+    <h2>2) Progresivní přetížení: motor pokroku</h2>
+    <p>Aby se tělo dál měnilo, musíš mu postupně přidávat nárok. Děláš pořád to samé? Tělo nemá důvod se měnit — prostě si zvyklo. Tomuhle se říká progresivní přetížení a je to ten nejdůležitější princip celého tréninku.</p>
+    <p>Pozor na jeden rozšířený omyl — že „přetížit“ znamená jen „přidat kilo“. Způsobů, jak postupně zvyšovat nárok, je celá řada.</p>
+    <div class="card">
+      <ul>
+        <li style="margin-left:1.1rem">Větší zátěž — těžší činka.</li>
+        <li style="margin-left:1.1rem">Víc opakování nebo sérií — větší objem.</li>
+        <li style="margin-left:1.1rem">Lepší technika a větší rozsah pohybu.</li>
+        <li style="margin-left:1.1rem">Kratší pauzy a vyšší hustota práce.</li>
+        <li style="margin-left:1.1rem">Pomalejší tempo a větší kontrola — víc času pod napětím.</li>
+        <li style="margin-left:1.1rem">Vyšší frekvence — častější kvalitní podnět.</li>
+      </ul>
+    </div>
+    <p>U začátečníka stačí málo a pokrok jde rychle. U pokročilého musíš být chytřejší a trpělivější — progres se zpomaluje a chce plánovat. Klíč? Přetěžuj postupně, ne skokově. Jinak předběhneš to, co tělo stihne zregenerovat.</p>
+
+    <h2>3) Regenerace dělá výsledek</h2>
+    <p>Tady spousta lidí šlápne vedle: myslí si, že výsledek dělá dřina v posilovně. Nedělá. Dřina je jen podnět. Sval, síla a kondice vznikají až tehdy, když se tělo z podnětu zotaví a adaptuje. Stojí to na třech pilířích.</p>
+    <p><strong>Spánek</strong> je tvůj hlavní regenerační nástroj. Bez něj se adaptace prostě nedostaví. <strong>Výživa</strong> dodá dost bílkovin a energie — stavební materiál a palivo. <strong>Čas a řízení zátěže</strong> — dny volna, lehčí týdny, střídání náročnosti — dají tělu prostor zotavit se nad původní úroveň.</p>
+    <p>Když podnět trvale převyšuje to, co tělo stihne zregenerovat, nestavíš výš — kopeš se dolů. Víc tréninku není automaticky líp. Líp je tolik tréninku, kolik klient dokáže zregenerovat.</p>
+
+    <h2>4) Když chybí regenerace</h2>
+    <p>Že podnět převyšuje regeneraci a hrozí přetrénování, poznáš podle jasných signálů: výkon stagnuje nebo padá navzdory snaze, klient je pořád unavený a špatně spí, je podrážděný, ztrácí motivaci i chuť trénovat, sype se na drobné bolístky, je často „nemocný“ a má horší náladu.</p>
+    <p>Řešení obvykle není „zaber víc“, ale naopak ubrat: zařadit lehčí týden (deload), víc spánku, víc jídla, na chvíli míň objemu. Dobrý kouč pozná, kdy klient potřebuje zatlačit a kdy povolit. A přesně tady se láme „dřina pro dřinu“ a chytrý trénink.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientům říkám narovinu: „V posilovně si jen objednáš změnu. Doručí ti ji spánek, jídlo a čas.“ :) Když mi někdo stagnuje, nekoukám hned na to, jak přitvrdit. Nejdřív se ptám, jestli vůbec stíhá regenerovat — spí? Jí dost bílkovin? Nemá toho v životě zrovna moc? Hodněkrát je řešení paradoxně ubrat a dospat, ne přidat. Víc není líp. Adekvátně je líp. 💪</div>
+
+    <h2>5) Individualita a postupnost</h2>
+    <p>Dva poslední principy ti drží celé téma pohromadě. <strong>Individualita</strong> znamená, že každý reaguje jinak — vstupuje do toho genetika, věk, zkušenost, spánek, stres i celá životní situace. Plán stažený z internetu o tvém klientovi neví vůbec nic. Programuj pro člověka, kterého máš před sebou, ne pro nějaký průměr.</p>
+    <p><strong>Postupnost</strong> znamená, že adaptace chce čas. Nejlepší program je ten, který klient dlouhodobě udrží a po malých krocích v něm posune dál.</p>
+    <blockquote>Trpělivá konzistence poráží nárazovou intenzitu — stejně jako v byznysu i v návycích.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Co říká princip SAID? <span class="tg">odpověď ▾</span></div><div class="aa">Tělo se specificky adaptuje na uložený nárok — přizpůsobí se přesně tomu, co po něm opakovaně chceš a trénuješ. Proto musí trénink sedět na cíl.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co je superkompenzace (GAS)? <span class="tg">odpověď ▾</span></div><div class="aa">Po tréninkovém podnětu a zotavení se tělo dostane nad původní úroveň — vznikne dočasná nadhodnota, na které dál stavíš dalším podnětem ve správný čas.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jmenuj tři způsoby progresivního přetížení mimo „přidat kilo“. <span class="tg">odpověď ▾</span></div><div class="aa">Víc opakování nebo sérií, lepší technika a větší rozsah pohybu, kratší pauzy, pomalejší tempo (víc času pod napětím), vyšší frekvence. Stačí uvést tři.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč je regenerace, a ne trénink, tím, co dělá výsledek? <span class="tg">odpověď ▾</span></div><div class="aa">Trénink je jen podnět. Sval, síla a kondice vznikají až při zotavení a adaptaci, kterou zajišťuje spánek, výživa a čas. Bez regenerace se adaptace nedostaví.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Jaké jsou tři známky, že chybí regenerace? <span class="tg">odpověď ▾</span></div><div class="aa">Stagnace nebo pokles výkonu, trvalá únava a špatný spánek, ztráta motivace, časté drobné bolesti a „nemocnost“. Stačí uvést tři.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi si jeden cvik a naplánuj, jak v něm budeš 4 týdny progresivně přetěžovat — ale jen jednou proměnnou (třeba opakováními), ne vším najednou. Pak napiš, podle jakých dvou signálů poznáš, že je čas zařadit lehčí (deload) týden.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m2-l9/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m2">⬑ Zpět na Modul 2<span class="s">Anatomie a pohyb</span></a>
+      <a class="lnav-next" href="/akademie/studium/m2-l11/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Selye H. The General Adaptation Syndrome and the Diseases of Adaptation. J Clin Endocrinol Metab. 1946;6:117–230.</li>
+        <li>Kraemer WJ, Ratamess NA. Fundamentals of Resistance Training: Progression and Exercise Prescription. Med Sci Sports Exerc. 2004;36(4):674–688.</li>
+        <li>Schoenfeld BJ. The Mechanisms of Muscle Hypertrophy and Their Application to Resistance Training. J Strength Cond Res. 2010;24(10):2857–2872.</li>
+        <li>American College of Sports Medicine. Progression Models in Resistance Training for Healthy Adults. Med Sci Sports Exerc. 2009;41(3):687–708.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m2-l10', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Návrat do tréninku po zranění — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 4 · Lekce 15 — Programování tréninku</div>
+    <h1>Návrat do tréninku po zranění</h1>
+
+    <p class="lead"><strong>Dřív nebo později ti přijde klient, co se vrací po zranění. Fyzioterapeut nejsi a být nemusíš. Ale ty jsi ten, kdo ho dostane z „už mě to nebolí“ zpátky k „zase trénuju naplno“. Tahle část je čistě tvoje práce.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jasnou hranici: kde končí fyzioterapie a kde začíná práce kouče.</li>
+        <li>Princip řízeného postupného zatěžování (load management).</li>
+        <li>Praktický postup, jak klienta bezpečně vrátit k plnému tréninku.</li>
+        <li>Jak pracovat se strachem z pohybu a rozlišovat bezpečnou a varovnou bolest.</li>
+        <li>Proč je síť fyzioterapeutů jedna z nejcennějších investic v kariéře kouče.</li>
+      </ul>
+    </div>
+
+    <h2>1) Tvoje role má jasné mantinely</h2>
+    <p>Natažený sval. Operované koleno. Bolavé rameno. Záda po úrazu. Takovým situacím se v praxi nevyhneš. A je dobré vědět, kde přesně stojíš. Nediagnostikuješ, neléčíš čerstvé zranění, nesupluješ rehabilitaci. Tohle není tvoje práce a hlavně ne tvoje odpovědnost.</p>
+    <p>Co ale děláš: dostaneš klienta cestu zpátky k plnému tréninku a připravíš ho tak, aby se mu zranění už nevrátilo. A přesně tenhle kus práce za tebe nikdo jiný neudělá líp.</p>
+
+    <h2>2) Kdo dělá co — a zlaté pravidlo</h2>
+    <p><strong>Fyzioterapeut nebo lékař</strong> má na starost diagnostiku, akutní fázi, léčbu i rehabilitaci samotného zranění. A taky řekne, kdy je klient připravený přidávat zátěž. Jejich „zelená“ je startovní čára, od které se odpíchneš ty.</p>
+    <p><strong>Kouč</strong> přebírá štafetu až potom, co odborník dá souhlas. Postupně klienta vracíš k běžnému tréninku, buduješ sílu a kapacitu kolem místa, které bylo zraněné, upravuješ program podle toho, co klient zvládne, a hlídáš, aby se to neopakovalo. Děláš to navázaný na odborníka, ne místo něj.</p>
+    <blockquote>Nikdy si klienta neber z akutní fáze ani bez jasného souhlasu, že může přidávat zátěž. Když si nejsi jistý, couvni a odešli ho dál. Přes bolest, kterou neumíš posoudit, se netlačí.</blockquote>
+
+    <h2>3) Princip: řízené postupné zatěžování</h2>
+    <p>Celé to stojí na load managementu, tedy na řízení zátěže. Cílem je dávkovat to tak, aby tkáň postupně sbírala kapacitu, ale nepřetížila se. Tkáň se na postupnou zátěž umí adaptovat. Po zranění je oblast odvyklá a slabší a právě řízené zatěžování ji zase posílí. Úplný klid to dělá obráceně, oslabuje a návrat ti jen natáhne.</p>
+    <p>Nejčastější chyba? Chtít hned tam, kde klient byl před zraněním. Příliš rychlý skok v zátěži je rovnou jízdenka k recidivě. Proto začni radši pod hranicí, se zátěží, kterou oblast snese bez zhoršení, a přidávej po malých krocích. Objem dřív, intenzitu až potom.</p>
+    <div class="card"><strong>Pravidlo přijatelné odezvy:</strong> Mírné nepohodlí, které se po cvičení a ani druhý den nezhoršuje, je obvykle v pohodě. Ostrá, narůstající nebo přetrvávající bolest je signál couvnout. A když je potřeba, zpátky k fyzioterapeutovi.</div>
+
+    <h2>4) Praktický postup návratu</h2>
+    <p><strong>Zjisti stav a omezení.</strong> Co se stalo, co na to říká fyzioterapeut nebo lékař, co klient smí a co ne, kde je hranice bolesti. Nejlíp si rovnou pokecej přímo s jeho terapeutem.</p>
+    <p><strong>Uprav program kolem omezení.</strong> Zbytek těla většinou trénuješ úplně normálně. Zraněné rameno přece neznamená, že nemůžeš makat na nohách. Drž trénink tam, kde to jde, kvůli fyzičce i hlavě.</p>
+    <p><strong>Zraněnou oblast rozjeď opatrně a postupně přidávej.</strong> Vyber cviky a rozsahy, které klient dá bez zhoršení. Lehčí varianty, kontrolované tempo, na začátku menší rozsah. Pak přidávej po kouskách a sleduj odezvu během tréninku i den po něm.</p>
+    <p><strong>Buduj nad původní úroveň a piš si to.</strong> Cíl není jen „vrátit se“. Chceš tu oblast udělat silnější a odolnější, než byla. To je ta nejlepší prevence, aby se zranění nevrátilo. Drž si přehled o tom, co klient zvládá a jak reaguje. Když se to zhorší, uber.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi přijde klient po operovaném koleni se zelenou od fyzioterapeuta, první trénink dřep přes koleno vůbec neřeším. Makáme na horní půlce, na core, na druhé noze. Zraněnou stranu rozjíždím lehkými, kontrolovanými variantami v menším rozsahu a koukám jen na jednu věc: jak se cítí druhý den. Stejné nebo lepší? Příště přidám kousek. Trpělivost tady fakt není slabost, je to přímo součást bezpečnosti. :)</div>
+
+    <h2>5) Bolest a strach z pohybu</h2>
+    <p>Po zranění se často objeví strach z pohybu, odborně kineziofobie. Klient se bojí, že si zase ublíží, tak se pohybu radši vyhne. A tenhle strach návrat brzdí často víc než samotné zranění.</p>
+    <p>Důvěru budeš stavět postupně. Každý pohyb, který klient v klidu zvládne, mu ukrojí kus strachu. Veď ho od menšího jistého úspěchu k většímu, ať na vlastní kůži cítí, že tělo zátěž unese. A dej si pozor i na to, jak mluvíš. Věty typu „opatrně, ať si to nerozbiješ“ strach jen přiživují. Radši řekni: „tělo se ti zahojilo a teď ho spolu postupně posílíme, aby bylo silnější než předtím“.</p>
+    <p>A nauč klienta rozlišovat bolest. „Nepříjemné, ale bezpečné“ proti „ostré, varovné“. Díky tomu nepropadá panice z každého píchnutí a zároveň pozná, kdy fakt couvnout.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Strach z lidí nedostanu tím, že je pořád uklidňuju. Dostanu ho tím, že je nechám něco zvládnout. Když klient po zádech poprvé v klidu zvedne lehkou činku ze země a druhý den je úplně v pohodě, v hlavě se posune víc než po deseti mých ujišťováních. Úspěch je prostě nejlepší lék na kineziofobii. 💪</div>
+
+    <h2>6) Fyzioterapeuti jsou tvůj nejlepší spojenec</h2>
+    <p>Síť dobrých fyzioterapeutů a dalších odborníků je jedna z nejcennějších věcí, co si jako kouč vybuduješ. Klientovi to zařídí hladký a bezpečný přechod z rehabilitace do tréninku. Tobě to dá důvěryhodnost, protože klient vidí profíka, který spolupracuje, ne někoho, kdo si hraje na vševěda. A k tomu ti to vrací klienty zpátky a hlavně máš klid, protože vždycky víš, na koho se obrátit.</p>
+    <p>Jak na to? Seznam se s pár fyzioterapeuty u sebe v okolí, navaž s nimi vztah, posílej jim klienty, když je potřeba, a bavte se o společných případech (samozřejmě vždycky se souhlasem klienta). Důvěra a doporučení rostou časem.</p>
+    <blockquote>Odeslat klienta dál a spolupracovat není slabost, ale známka vyspělosti. Kouč, který zná svoje hranice a umí pracovat s ostatními, působí o dost profesionálněji než ten, co předstírá, že zvládne úplně všechno sám.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Kde přesně leží hranice mezi rolí fyzioterapeuta a rolí kouče? <span class="tg">odpověď ▾</span></div><div class="aa">Fyzioterapeut nebo lékař má na starost diagnostiku, akutní fázi, léčbu a rehabilitaci a říká, kdy klient může přidávat zátěž. Kouč nastupuje až po jejich souhlasu. Řeší postupný návrat k tréninku, budování síly kolem zraněné oblasti a dlouhodobou prevenci. Děláš to navázaný na odborníka, ne místo něj.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co znamená load management a proč je úplný klid kontraproduktivní? <span class="tg">odpověď ▾</span></div><div class="aa">Load management je řízení zátěže tak, aby tkáň postupně sbírala kapacitu, ale nepřetížila se. Tkáň se na postupnou zátěž adaptuje a sílí. Úplný klid to dělá obráceně, oslabuje a návrat zpomaluje. Proto se zatěžuje řízeně, ne že se nedělá vůbec nic.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jak poznáš, že je odezva na zátěž ještě přijatelná? <span class="tg">odpověď ▾</span></div><div class="aa">Mírné nepohodlí, které se po cvičení a ani druhý den nezhoršuje, je obvykle v pohodě. Ostrá, narůstající nebo přetrvávající bolest je naopak signál couvnout a podle potřeby se vrátit k fyzioterapeutovi.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Co je kineziofobie a jak s ní pracovat? <span class="tg">odpověď ▾</span></div><div class="aa">Kineziofobie je strach z pohybu po zranění. Klient se bojí, že si zase ublíží, a často brzdí návrat víc než samotné zranění. Pracuješ s ní tak, že postupně buduješ důvěru (od menšího jistého úspěchu k většímu), mluvíš nestrašícím jazykem a učíš klienta rozlišovat bezpečnou a varovnou bolest.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Proč je spolupráce s fyzioterapeuty výhodná i pro tebe jako kouče? <span class="tg">odpověď ▾</span></div><div class="aa">Klientovi zajistí bezpečný přechod z rehabilitace do tréninku. Tobě dává důvěryhodnost (spolupráce působí profesionálněji než hraní na vševěda), vrací klienty (fyzioterapeuti posílají lidi zpátky k pohybu) a klid, protože víš, na koho se obrátit. Odeslat klienta dál není slabost, ale známka vyspělosti.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber si jednoho fyzioterapeuta u sebe v okolí, kterého ještě neznáš, a tenhle týden mu napiš nebo se zajdi představit. Nejde o to hned něco urvat, ale o začátek vztahu. Řekni mu, jak pracuješ, a nabídni, že rád navážeš na jeho klienty po rehabilitaci. A zapiš si, s kým chceš svoji síť spojenců začít budovat.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m4-l14/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m4">⬑ Zpět na Modul 4<span class="s">Programování tréninku</span></a>
+      <a class="lnav-next" href="/akademie/studium/m5-l1/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Gabbett TJ. The training-injury prevention paradox: should athletes be training smarter and harder? Br J Sports Med 2016.</li>
+        <li>Blanchard S, Glasgow P. A theoretical model to describe progressions and regressions for exercise rehabilitation. Phys Ther Sport 2014.</li>
+        <li>Vlaeyen JWS, Linton SJ. Fear-avoidance and its consequences in chronic musculoskeletal pain. Pain 2000.</li>
+        <li>Buckthorpe M, et al. Recommendations for return to sport after ACL injury. Sports Med 2019.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m4-l15', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

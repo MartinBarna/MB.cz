@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vstupní konzultace — základ spolupráce — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 5 · Lekce 1 — Práce s klientem a koučink</div>
+    <h1>Vstupní konzultace — základ spolupráce</h1>
+
+    <p class="lead"><strong>Vstupní konzultace je nejdůležitější hodina celé spolupráce. Prvních šedesát minut rozhodne víc než kterýkoli trénink. Tady se láme, jestli ti klient zůstane, jestli má realistická očekávání a jestli vůbec pochopíš, co ho doopravdy brzdí.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Proč vstupní konzultace rozhoduje o tom, jestli ti klient zůstane i jaké bude mít výsledky.</li>
+        <li>Jak se dostat ke skutečné motivaci, která se schovává pod povrchovým „chci zhubnout“.</li>
+        <li>Co všechno si zmapovat: cíl, životosprávu, historii, prostředí i to, čemu klient o sobě věří.</li>
+        <li>Jak hned na startu nastavit realistická očekávání tak, aby tě klient neopustil u prvního zaváhání.</li>
+        <li>Jak konzultaci uzavřít jasnou dohodou a jedním malým krokem do příště.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč na ní tolik záleží</h2>
+    <p>Vstupní konzultace ti zařídí tři věci najednou. Posbíráš data, takže klientovi postavíš plán na míru a ne ze šablony. Nastavíš očekávání, aby klient nezklamal sám sebe nějakou nereálnou představou. A nastartuješ vztah a důvěru, protože lidi zůstávají u lidí, kterým věří a u kterých cítí, že na nich někomu záleží.</p>
+    <p>Většina odchodů má kořen už tady. Buď jsi něco přeslíbil, nebo měl klient pocit, že je jen číslo v tabulce. Dobrá konzultace je proto ta nejlevnější retence, jakou máš po ruce. Hodina dobré práce na startu ti ušetří měsíce hašení požárů.</p>
+
+    <h2>2) Dostaň se ke skutečné motivaci</h2>
+    <p>Klient ti skoro nikdy neřekne svůj opravdový důvod hned. Řekne to, co považuje za přijatelné. „Chci zhubnout.“ „Chci být zdravější.“ Tvoje práce je dostat se hlouběji, protože skutečná motivace je palivo, co ho udrží i v týdnu, kdy se mu nechce.</p>
+    <p>Technika je jednoduchá. Ptej se pořád dokola „a proč je to pro tebe důležité?“. Jemně, ne jako u výslechu. „Chci zhubnout.“ → „A proč zrovna teď?“ → „Abych se cítil líp.“ → „A co by se ti v životě změnilo, kdyby se to povedlo?“ → „Hrál bych si s dětmi a nezadýchal se, cítil bych se zase sám sebou…“ A tady to je. Tohle je ta skutečná motivace.</p>
+    <blockquote>„Vzpomeň si, proč jsme do toho šli“ zabere líp než „makej“. Tu opravdovou motivaci si zapiš a vracej se k ní pokaždé, když klient zakolísá.</blockquote>
+
+    <h2>3) Co zmapovat — mapa klienta</h2>
+    <p>Projdi to systematicky, ale lidsky. Veď rozhovor, neodpálkuj klienta dotazníkem za minutu. Co potřebuješ vědět: cíl konkrétně a měřitelně, i se skutečnou motivací pod ním. Zdraví a historii včetně omezení, bolestí a léků (a hlavně kde končí tvoje role a začíná lékař). Tréninkovou historii, tedy co fungovalo, co ne a co ho baví. Životosprávu, kde je spánek úplně první věc, pak stres, práce a kolik reálně má času. Výživu a jeho vztah k jídlu. Prostředí a okolí, kdo mu fandí a kdo ho sabotuje. Čemu o sobě věří („nemám vůli“, „mně to nikdy nešlo“). A praktickou realitu, tedy kolik dní opravdu přijde, jaký má rozpočet a jak daleko to k tobě má.</p>
+    <p>Z téhle mapy ti vyskočí, kde jsou skutečné páky. Často zjistíš, že půlka problému je spánek, stres nebo prostředí. Ne „špatná makra“.</p>
+
+    <h2>4) Nastav realistická očekávání</h2>
+    <p>Tady porazíš budoucí zklamání ještě dřív, než vůbec vznikne. Řekni klientovi narovinu, jak rychle to půjde a co se v jednotlivých fázích bude a nebude dít. Připrav ho, že přijdou týdny, kdy se váha nehne (voda a podobně) a že pokrok budete měřit víc věcmi než jen váhou. Fotkami, mírami, výkonem, energií, návyky. Řekni mu, co po něm budeš chtít a proč to bude občas nepříjemné. A nakonec to nejdůležitější: proměna je proces, ne šestitýdenní zázrak. Nepřeslibuj.</p>
+    <p>Klient, který ví, do čeho jde, nezpanikaří u prvního zaváhání. Poctivost na startu tě o klienta nepřipraví. Právě naopak, udrží ti ho.</p>
+
+    <h2>5) Uzavři dohodou a prvním krokem</h2>
+    <p>Nenech konzultaci vyšumět do ztracena. Shrň, co jsi slyšel, tedy skutečný cíl a největší překážky. Načrtni plán v hrubých obrysech a vysvětli, proč zrovna takhle. Dej klientovi jeden malý krok do příště, klidně z oblasti životosprávy nebo prostředí. Něco, co rychle vyhraje a co mu zvedne víru v sebe. A domluvte se jasně: jak často, jak budete komunikovat a jak měřit pokrok.</p>
+    <p>První rychlá výhra na startu buduje klientovu víru ve vlastní síly. A s ní roste i jeho vůle. Naplánuj ji vědomě, nenechávej ji na náhodě.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Na vstupní konzultaci mluvím míň, než by lidi čekali. Hlavně se ptám a poslouchám :) Když pak vstanu od stolu, mám v hlavě i v poznámkách celého člověka. Proč to dělá, co ho brzdí, co utáhne. Z toho mu pak postavím plán, co sedí přesně jemu. A nikdy neodejdeme bez jedné malé výhry do příště a bez jasné dohody. Ten první týden má klient pocit „aha, tohle dává smysl a já to dávám“. A přesně tím začíná dlouhá spolupráce. Be Effective! 💪</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Které tři věci ti vstupní konzultace zařídí najednou? <span class="tg">odpověď ▾</span></div><div class="aa">Posbíráš data pro plán na míru, nastavíš realistická očekávání a nastartuješ vztah a důvěru. Tahle trojice rozhoduje o tom, jestli ti klient zůstane.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jak se dostaneš ke skutečné motivaci klienta? <span class="tg">odpověď ▾</span></div><div class="aa">Ptáš se pořád dokola a jemně „a proč je to pro tebe důležité?“, dokud se nedostaneš pod povrchovou odpověď („chci zhubnout“) k tomu pravému důvodu. Třeba hrát si s dětmi a nezadýchat se.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jmenuj čtyři oblasti, které si máš zmapovat. <span class="tg">odpověď ▾</span></div><div class="aa">Stačí čtyři z těchto: cíl, zdraví a historie, tréninková historie, životospráva (spánek a stres), výživa a vztah k jídlu, prostředí a okolí, přesvědčení o sobě, praktická realita.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Proč nastavit realistická očekávání hned na startu? <span class="tg">odpověď ▾</span></div><div class="aa">Klient, který ví, do čeho jde, nezpanikaří u prvního zaváhání. Přeslíbený klient odejde. Poctivost na startu tě o klienta nepřipraví, naopak ti ho udrží.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Čím má konzultace skončit? <span class="tg">odpověď ▾</span></div><div class="aa">Shrnutím toho, co jsi slyšel, hrubým plánem, jednou rychlou výhrou jako prvním krokem a jasnou dohodou o tom, jak často, jak budete komunikovat a jak měřit pokrok.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Připrav si vlastní strukturu vstupní konzultace. Vypiš oblasti, které projdeš, a u každé si nachystej 1–2 konkrétní otázky. Zvlášť napiš tři otázky, kterými se dostaneš ke skutečné motivaci pod povrchem, a jednu větu, kterou klientovi nastavíš realistická očekávání ohledně tempa.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m4-l15/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m5">⬑ Zpět na Modul 5<span class="s">Práce s klientem a koučink</span></a>
+      <a class="lnav-next" href="/akademie/studium/m5-l2/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Miller WR, Rollnick S. Motivational Interviewing: Helping People Change. Guilford Press 2013.</li>
+        <li>Doran GT. There's a S.M.A.R.T. way to write management's goals. Management Review 1981.</li>
+        <li>Dweck CS. Mindset: The New Psychology of Success. Random House 2006.</li>
+        <li>Barna Academy. Navazující lekce o přesvědčení, prostředí a retenci. Interní materiál 2026.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m5-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>

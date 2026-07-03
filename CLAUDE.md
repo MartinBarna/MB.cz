@@ -98,7 +98,9 @@ ZNALOSTNÍ BÁZE (v tomto repu, cesty relativní ke kořeni):
   NENAČÍTEJ všech 224 lekcí naráz; ber jen ty relevantní (grep podle tématu).
 === KONEC PERSONY ===
 
-**Pozn. o stavu prostředí (není součást persony):** znalostní báze `akademie/studium/` zatím
-v tomhle repu fyzicky NENÍ (working tree ani git ji neobsahují). Dokud se `akademie/studium/`
-do repa nedostane, dohledávání lekcí grepem nefunguje — do té doby odpovídej z persony a
-z `agent/KNOWLEDGE_BASE.md` a u konkrétních lekcí to přiznej a odkaž na Academy/videokurz/Martina.
+**Pozn. o stavu prostředí (není součást persony):** znalostní báze `akademie/studium/` už
+v repu JE — **20 modulů, 224 lekcí** (`akademie/studium/index.html` = pole `CURRICULUM`,
+plný text lekce v `akademie/studium/<id>/index.html`, např. `m3-l1`). Dohledávání grepem
+funguje. Pozn.: kanonicky akademie žije na větvi `main`; sem (`claude/email-whatsapp-response-agent-h678qg`)
+byla přenesena identickými blobmy, takže merge do `main` je čistý. Pozor: `CLAUDE.md` se mezi
+`main` (# Barna Academy — pracovní pravidla) a touhle větví liší — sjednocení nechávám na Martinovi.

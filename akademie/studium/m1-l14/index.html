@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stres a zvládání zátěže: skrytý hráč ve výsledcích — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 1 · Lekce 14 — Psychologie a chování kolem jídla</div>
+    <h1>Stres a zvládání zátěže: skrytý hráč ve výsledcích</h1>
+
+    <p class="lead">Klientovi nejdou výsledky a ty koukáš jen na jídlo a trénink? Hodně koučů se zasekne přesně tady. <strong>Často za tím přitom stojí stres.</strong> Ovlivňuje hlad, spánek, regeneraci, hormony, chování — a dokáže zabrzdit i jinak skvěle nastavený plán.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak stres tahá za nitky kolem hubnutí, regenerace, hladu a chování.</li>
+        <li>Čím se liší akutní (užitečný) a chronický (škodlivý) stres.</li>
+        <li>Proč „pohár stresu“ rozhoduje o tom, kolik toho klient unese.</li>
+        <li>Praktické nemedicínské nástroje na stres, které klientovi rovnou nabídneš.</li>
+        <li>Kde končí kouč a začíná psycholog.</li>
+      </ul>
+    </div>
+
+    <h2>1) Proč stres patří do fitness</h2>
+    <p>Když stres přehlížíš, přehlížíš pořádný kus skládačky. Chronický stres sahá na hlad, regeneraci, spánek, hormony i chování. Z toho ti vypadne zajídání, vynechané tréninky a vůle na nule. Dokud ho nevezmeš v potaz, klidně budeš koukat na perfektně nastavené jídlo a trénink a stejně ti nebude dávat smysl, proč to klientovi nejede.</p>
+    <p>Tahle lekce navazuje na spánek, emoční jedení i motivaci. Všechno to se stresem souvisí. Tady si to spojíme dohromady.</p>
+    <div class="praxe"><b>V praxi (Martin):</b> Když mi klient po pár měsících napíše, že se „nic neděje“, neptám se nejdřív na makra. Ptám se, jak spí a co se děje v práci a doma. A nelžu ti, devětkrát z deseti se ukáže, že plán je v pohodě — jen narazil na přeplněný život. :)</div>
+
+    <h2>2) Akutní vs. chronický stres</h2>
+    <p>Stres není nepřítel. Je to přirozená reakce těla na zátěž a v malé dávce ti pomáhá. <b>Akutní stres</b> nažene energii, zaostří pozornost a vykopne tě k výkonu. I trénink je vlastně užitečný stres — zátěž, na kterou se tělo adaptuje. Po akutním stresu se tělo zase zklidní.</p>
+    <p><b>Chronický stres</b> je úplně jiná liga. Tělo zůstává pořád zapnuté a nestíhá vypnout. A tady začíná průšvih: horší regenerace, rozbitý spánek, dlouhodobě nahoře kortizol, větší hlad a chutě, podrážděnost, vyčerpání.</p>
+    <blockquote>Nejde o to, jestli stres je. Jde o to, jestli má tělo šanci se z něj vyhrabat. Nechceš život úplně bez stresu — chceš rovnováhu mezi zátěží a zotavením.</blockquote>
+
+    <h2>3) Jak stres brzdí výsledky</h2>
+    <p>Stres není žádné „měkké téma“ mimo fitness. Dopadá na výsledky úplně konkrétně a hned na několika místech najednou:</p>
+    <div class="card">
+      <p><b>Hlad a chutě.</b> Ve stresu jdeš po kaloricky vydatných „pohodlných“ jídlech (sladké, tučné). Část je biologicky řízené zajídání, část emoční jedení jako způsob, jak se uklidnit.</p>
+      <p><b>Spánek.</b> Stres ti rozhází usínání i kvalitu spánku. A špatný spánek zase nažene hlad a stres. Pěkně se to točí dokola.</p>
+      <p><b>Regenerace a trénink.</b> Pod chronickým stresem se tělo hůř zotavuje. Stejný trénink ti ve stresu sedne jinak než v klidu a snadno přetížíš.</p>
+      <p><b>Chování a motivace.</b> Vyšťavený člověk spíš vynechá trénink a sáhne po pohodlném jídle. Vůle je prostě vybitá.</p>
+      <p><b>Hormony.</b> Dlouhodobě zvýšený kortizol ti hraje s chutí k jídlu, spánkem, náladou i regenerací.</p>
+    </div>
+
+    <h2>4) Koncept „poháru stresu“</h2>
+    <p>Tohle si zamiluješ ty i klient. Každý má pomyslný pohár a do něj se sčítají <b>všechny</b> zdroje stresu. Práce, vztahy, finance, málo spánku, ale i trénink, dieta a kalorický deficit. Tělo neřeší, jestli je stres „dobrý“ nebo „špatný“ — všechno teče do jednoho poháru.</p>
+    <p>A teď to praktické. Když je pohár plný z práce a života, zbývá málo místa na stres z tréninku a diety. Stejný plán, který by jindy zabral, klienta v náročném období prostě přetíží. Proto v takových fázích dává smysl tam, kde to jde, <b>ubrat</b>: mírnější trénink, klidnější dieta, víc prostoru na regeneraci. A naopak — když je v životě klid, klient unese mnohem víc.</p>
+    <blockquote>Tady máš důvod, proč „univerzální plán“ tak často selže. Nepočítá s tím, co má klient v poháru zrovna teď.</blockquote>
+    <div class="praxe"><b>V praxi (Martin):</b> Klientce se rozpadalo manželství a já jsem v tu chvíli deficit nepřitvrdil. Naopak — kalorie jsem zvedl skoro na udržovák a tréninky zjemnil. Zní to možná naruby, ale pohár byl plný až po okraj. Jakmile se život uklidnil, vrátili jsme se k práci a šlo to samo. :)</div>
+
+    <h2>5) Nástroje na řízení stresu</h2>
+    <p>Terapeut nejsi, ale pár praktických nemedicínských nástrojů klientovi v klidu nabídneš. Pomůžou pohár vyprázdnit:</p>
+    <div class="card">
+      <p><b>Spánek na prvním místě.</b> Nejlepší „lék“ na stres, jaký znám. Zaměř se na spánkovou hygienu a vrátí se ti to ve všem ostatním.</p>
+      <p><b>Pohyb jako ventil.</b> Rozumný pohyb stres tlumí. Ale pozor — když do vysokého stresu nasypeš extrémní trénink, pohár jen přeteče.</p>
+      <p><b>Dech a relaxace.</b> Pár jednoduchých technik (pomalý dlouhý výdech) nakopne uklidňující část nervstva. Funguje to a je to zdarma.</p>
+      <p><b>Úprava zátěže podle období.</b> V náročných fázích vědomě ubrat. Buď flexibilní, ne „musíš makat za každou cenu“.</p>
+      <p><b>Hranice a regenerace.</b> Ukaž klientovi, že odpočinek a hranice nejsou slabost, ale součást výkonu.</p>
+      <p><b>Perspektiva a realistická očekávání.</b> Sundej z klienta zbytečný stres z fitka samotného — perfekcionismus a vinu z „prohřešků“. Často jsi ty ten, kdo mu dodá klid, ne další tlak.</p>
+    </div>
+
+    <h2>6) Hranice: kouč vs. psycholog</h2>
+    <p>Tvoje parketa je běžný životní stres a jak ho prakticky zvládat kolem zdraví a tréninku. S čím nehýbeš, jsou klinické stavy — úzkostné a depresivní poruchy, trauma, klinické vyhoření, závislosti. To patří psychologovi, psychoterapeutovi nebo lékaři.</p>
+    <p>Když vidíš, že stres klienta přerůstá běžnou zátěž (dlouhodobé zahlcení, beznaděj, panika, neschopnost fungovat), citlivě ho pošli za odborníkem.</p>
+    <blockquote>Doporučit odborníka není žádné selhání. Je to projev toho, že ti na klientovi fakt záleží.</blockquote>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jaký je klíčový rozdíl mezi akutním a chronickým stresem? <span class="tg">odpověď ▾</span></div><div class="aa">Akutní stres je krátký a užitečný. Nažene energii a po odeznění se tělo zase zklidní. Chronický stres nepolevuje — tělo se nedostane do klidu, a to vede k horší regeneraci, rozbitému spánku, zvýšenému kortizolu a většímu hladu. Nejde o to, jestli stres je. Jde o to, jestli se z něj tělo stíhá vyhrabat.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Co znamená koncept „poháru stresu“ a proč je důležitý? <span class="tg">odpověď ▾</span></div><div class="aa">Do pomyslného poháru se sčítají všechny zdroje stresu — práce, vztahy, finance, spánek, ale i trénink, dieta a deficit. Když je pohár plný z života, zbývá málo místa na zátěž z tréninku a diety. Proto univerzální plán často selže a proto je v náročných obdobích rozumné ubrat.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jmenuj alespoň tři způsoby, jak stres brzdí výsledky. <span class="tg">odpověď ▾</span></div><div class="aa">Žene hlad a chutě na pohodlná jídla, kazí spánek (a tím i hlad a regeneraci), zhoršuje zotavení z tréninku, podráží motivaci a sebeovládání a přes zvýšený kortizol ti hraje s chutí, náladou i regenerací.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jaké nemedicínské nástroje může kouč klientovi nabídnout? <span class="tg">odpověď ▾</span></div><div class="aa">Spánek na prvním místě, rozumný pohyb jako ventil, dechové a relaxační techniky, úpravu zátěže podle období, nastavení hranic a regenerace a realistická očekávání, která sundají zbytečný stres z fitka samotného.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kdy má kouč klienta odkázat na odborníka? <span class="tg">odpověď ▾</span></div><div class="aa">Když stres přerůstá běžnou zátěž — dlouhodobé zahlcení, beznaděj, panika, neschopnost fungovat — nebo jde o klinické stavy (úzkost, deprese, trauma, vyhoření, závislosti). To patří psychologovi či lékaři. Poslat klienta za odborníkem je projev péče, ne selhání.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vyber jednoho klienta, kterému to zrovna nejede, a projděte spolu „pohár stresu“. Sepište všechny zdroje zátěže včetně tréninku a diety. Pak navrhni jednu konkrétní věc, kterou mu tenhle týden ubereš. Be Effective! 💪</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m1-l13/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m1">⬑ Zpět na Modul 1<span class="s">Psychologie a chování kolem jídla</span></a>
+      <a class="lnav-next" href="/akademie/studium/m1-l15/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Sapolsky RM. Why Zebras Don't Get Ulcers. Henry Holt and Company, 2004.</li>
+        <li>McEwen BS. Stress, adaptation, and disease: allostasis and allostatic load. Ann N Y Acad Sci. 1998.</li>
+        <li>Stults-Kolehmainen MA, Sinha R. The effects of stress on physical activity and exercise. Sports Med. 2014.</li>
+        <li>Epel ES, et al. Stress and body shape: stress-induced cortisol secretion is consistently greater among women with central fat. Psychosom Med. 2000.</li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m1-l14', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+</body>
+</html>
