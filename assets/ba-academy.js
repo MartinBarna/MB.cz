@@ -123,6 +123,14 @@
         .catch(function () { return false; });
     },
 
+    // Přihlašovací token (JWT) pro autorizované volání edge funkcí (např. AI Martin).
+    getToken: function () {
+      if (!LIVE) return Promise.resolve(null);
+      return client.auth.getSession()
+        .then(function (r) { return (r && r.data && r.data.session && r.data.session.access_token) || null; })
+        .catch(function () { return null; });
+    },
+
     // YouTube ID lekce videokurzu z manifestu v DB. RLS: free lekce čte kdokoliv,
     // placené jen přihlášený s aktivním přístupem (has_entitlement) — ID placených
     // videí tak nejsou ve statickém HTML.
