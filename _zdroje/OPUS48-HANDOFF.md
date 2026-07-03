@@ -120,11 +120,14 @@ ověř v souboru před opravou; faktické nálezy (anatomie/čísla/citace) byly
 HOTOVO 3.7. večer (PR #351): m12-l10 protein seniorů sladěn s per-meal matematikou
 (1,2–1,6 g/kg trénující, 1,0–1,2 minimum netrénující); m17-l2 position stands
 vyndány z číslované pyramidy (byly nad RCT) → zvláštní kategorie, přečíslováno.
-Zbylé JEMNÉ body (nízké riziko, neblokují 10/10 — dořešit s klidem, ověřit v souboru):
-m14-l4 dávka sody 0,2–0,4 vs l7/l8 0,2–0,3 (sjednotit horní hranici — pozn.: 0,2–0,4
-je vědecky OK, jde jen o konzistenci); m5-l12 z velké části duplikuje m5-l8
-(přerámovat perex na „jdeme do hloubky"); m5-l8 cituje ve Zdrojích sama sebe
-(nahradit externími); m20 pořadí lekcí v navigaci (l2 mluví o „minulé lekci", ale
+HOTOVO 3.7. (PR #356, živě ověřeno): dávka sody sjednocena na 0,2–0,4 g/kg
+(m14-l7 2×, m14-l8); m5-l12 perex přerámován jako prohloubení lekce 8;
+m5-l8 citace sebe sama odstraněna ze Zdrojů.
+Dále HOTOVO 3.7.: FAQPage JSON-LD na /videokurz + /akademie/ a WebApplication
+JSON-LD na /nastroje-zdarma/ (PR #355); SEO trim title/desc 8 stránek (PR #353–354);
+celoplošný linkcheck 0 rozbitých; proaktivní audit (zakázané fráze, sitemap 147 URL
+vše existuje, robots+404+favicon+og:image OK) — nálezy jen legitimní kontexty.
+Zbylý JEMNÝ bod (nízké riziko): m20 pořadí lekcí v navigaci (l2 mluví o „minulé lekci", ale
 v řetězci je l1 až čtvrtá — text změkčen na „v modulu", pořadí chainu by chtělo
 srovnat). m6-l3: Martinův příběh měl „před 15 lety / £/hod" (britský zbytek) →
 přepsáno obecně; ideálně ať Martin doplní svou reálnou historku.
