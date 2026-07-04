@@ -120,6 +120,19 @@
     </div>
 
     <style>
+      .badges{display:none;margin:0 0 18px;}
+      .badges .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 10px;}
+      .badges .bh b{color:#fff;font-size:1rem;} .badges .bh span{color:var(--muted);font-size:.85rem;}
+      .badges .row{display:flex;gap:9px;flex-wrap:wrap;}
+      .bdg{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:50px;padding:7px 14px 7px 10px;font-size:.85rem;background:rgba(255,255,255,.03);color:var(--muted);}
+      .bdg .ic{font-size:1.15rem;filter:grayscale(1) opacity(.5);}
+      .bdg.on{border-color:rgba(255,122,0,.5);background:rgba(255,122,0,.1);color:#fff;font-weight:600;}
+      .bdg.on .ic{filter:none;}
+      .bdg.mod{border-color:rgba(47,174,87,.4);background:rgba(47,174,87,.1);color:#bfe9cb;font-weight:700;}
+    </style>
+    <div class="badges" id="badges"></div>
+
+    <style>
       .freebanner{display:none;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.04));border:1px solid rgba(255,122,0,.4);border-radius:16px;padding:14px 20px;margin:0 0 18px;text-decoration:none;color:var(--muted-2)}
       .freebanner .fb-txt b{color:#fff;display:block;margin-bottom:2px}
       .freebanner .fb-txt > span > span{font-size:.9rem;line-height:1.5;display:block}
@@ -458,6 +471,12 @@
         { id:"m21-l3", t:"Jak fungují algoritmy (IG, TikTok, FB, YouTube)", available:true, href:"/akademie/studium/m21-l3/" },
         { id:"m21-l4", t:"Hooky a storytelling: jak zastavit palec", available:true, href:"/akademie/studium/m21-l4/" },
         { id:"m21-l5", t:"Etický marketing a 30denní rozjezd", available:true, href:"/akademie/studium/m21-l5/" }
+      ]},
+      { t:"Trénování a vedení žen (praxe)", d:"Ženská specifika, která běžný trenér neřeší a přitom rozhodují: hormonální antikoncepce, perimenopauza a menopauza, nízká energetická dostupnost (RED-S) a citlivá komunikace o váze. Evidence-based, s jasnou hranicí, kdy odkázat na lékaře.", lessons:[
+        { id:"m22-l1", t:"Hormonální antikoncepce: co má trenér vědět", available:true, href:"/akademie/studium/m22-l1/" },
+        { id:"m22-l2", t:"Perimenopauza a menopauza: trénink, bílkoviny, kosti", available:true, href:"/akademie/studium/m22-l2/" },
+        { id:"m22-l3", t:"RED-S a nízká energetická dostupnost: varovné signály", available:true, href:"/akademie/studium/m22-l3/" },
+        { id:"m22-l4", t:"Body image, váha a citlivá komunikace se ženami", available:true, href:"/akademie/studium/m22-l4/" }
       ]}
     ];
     // ----- Free-preview (#35): ochutnávka pro nepřihlášené/nekupující + upsell -----
@@ -594,11 +613,27 @@
       var h = (location.hash||'').replace('#',''); var m = h.match(/^m(\d+)$/);
       if (m) renderModule(parseInt(m[1],10)-1); else renderOverview();
     }
+    // Gamifikace: odznaky za milníky a zvládnuté moduly (počítá se z DONE + CURRICULUM).
+    function paintBadges(co, ta){
+      var el=document.getElementById('badges'); if(!el) return;
+      if(co<1){ el.style.display='none'; return; }
+      var modsMastered=0, modsTotal=0;
+      CURRICULUM.forEach(function(m){ var c=mc(m); if(c.a>0){ modsTotal++; if(c.d===c.a) modsMastered++; } });
+      var mile=[{k:1,ic:'🌱',n:'První krok'},{k:10,ic:'🔥',n:'Rozjezd'},{k:25,ic:'⚡',n:'25 lekcí'},{k:50,ic:'💪',n:'50 lekcí'},{k:100,ic:'🏆',n:'100 lekcí'},{k:150,ic:'🎓',n:'150 lekcí'}];
+      var pills='';
+      mile.forEach(function(b){ var on=co>=b.k; pills+='<span class="bdg'+(on?' on':'')+'" title="'+(on?'Získáno':'Zbývá '+(b.k-co)+' lekcí')+'"><span class="ic">'+b.ic+'</span>'+b.n+'</span>'; });
+      var allOn = ta>0 && co>=ta;
+      pills+='<span class="bdg'+(allOn?' on':'')+'" title="Dokonči všechny lekce"><span class="ic">👑</span>Vše hotovo</span>';
+      pills+='<span class="bdg mod" title="Moduly, kde máš hotové všechny lekce"><span class="ic">🥇</span>Moduly: '+modsMastered+' / '+modsTotal+'</span>';
+      el.innerHTML='<div class="bh"><b>🏅 Tvoje odznaky</b><span>'+co+' lekcí hotovo · '+modsMastered+' modulů zvládnuto</span></div><div class="row">'+pills+'</div>';
+      el.style.display='block';
+    }
     function paintProgress(){
       var ta=0, co=0; CURRICULUM.forEach(function(m){ var c=mc(m); ta+=c.a; co+=c.d; });
       var overall = ta? Math.round(co/ta*100) : 0;
       document.getElementById('progBar').style.width = overall+'%';
       document.getElementById('progLbl').textContent = co+' z '+ta+' dostupných lekcí · '+overall+' % dokončeno';
+      paintBadges(co, ta);
       var hero = document.querySelector('.hello'), cb = document.getElementById('contBtn'), nx = nextLesson();
       if (!cb && hero){ cb = document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
       if (cb){

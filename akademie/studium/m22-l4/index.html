@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Body image, váha a citlivá komunikace se ženami — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  ul,ol{color:var(--ink);} li{margin:.35rem 0 .35rem 1.1rem;}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .warn{background:rgba(220,80,60,.1);border:1px solid rgba(220,80,60,.4);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .warn b{color:#ff9d7a;}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.82rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.35rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 22 · Lekce 4 — Trénování a vedení žen</div>
+    <h1>Body image, váha a citlivá komunikace se ženami</h1>
+
+    <p class="lead">Váha je pro spoustu žen nejcitlivější číslo v celém tréninku — a jedna nešikovná věta od tebe umí spustit víc škody než měsíc špatně napsaného plánu. Tvoje role trenéra tady není hubnout klientku za každou cenu, ale <strong>vést ji tak, aby zhubla (nebo zesílila) a přitom si nerozbila vztah k jídlu ani k vlastnímu tělu</strong>. V téhle lekci se naučíš mluvit o váze jako o datu, ne jako o hodnotě člověka, měřit pokrok víc způsoby než jen vahou, vyházet z pusy diet-culture bulšit a fat-shaming — a hlavně <strong>rozpoznat varovné signály narušeného vztahu k jídlu a včas odkázat na odborníka</strong>. Protože trenér, který přehlédne rozjíždějící se poruchu příjmu potravy, nadělá víc škody než užitku.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul><li>Váha není číslo tvé klientky — je to jeden zašuměný datový bod, který kolísá o půl kila (a u žen s cyklem i víc) ze dne na den i bez jakékoli změny tuku.</li><li>Jak mluvit o těle a váze tak, abys motivoval a nezpůsobil stud — a proč fat-shaming a diet-culture jazyk dlouhodobě sabotuje výsledky.</li><li>Měřit pokrok víc kanály: obvody, fotky, síla, energie, spánek, chuť k jídlu, ne jen ranní číslo na váze.</li><li>Rozpoznat varovné signály narušeného vztahu k jídlu (a poruchy příjmu potravy) a vědět, KDY a KAM klientku odkázat.</li><li>Kde přesně končí role trenéra a začíná doména lékaře, psychologa a nutričního terapeuta — tuhle hranici nepřekračuj.</li></ul>
+    </div>
+
+    <h2>Váha je zašuměné číslo, ne verdikt</h2>
+    <p>První věc, kterou musíš klientce vysvětlit dřív, než jí vůbec doporučíš se vážit: <strong>tělesná hmotnost normálně kolísá o zhruba půl kila ze dne na den</strong>, aniž by se změnil jediný gram tuku. Za tím kolísáním stojí voda, obsah střev, glykogen, sůl v jídle, spánek a u žen navíc menstruační cyklus (retence vody v luteální fázi klidně přidá i kilo a víc). Podle práce v <em>Int J Sport Nutr Exerc Metab</em> (PubMed) i u aktivních mužů s pečlivě řízeným pitným režimem denní variabilita 1. ranní hmotnosti činila v průměru asi 0,5 kg (variační koeficient kolem 0,66 %, tj. méně než 1 % tělesné hmotnosti) — a u žen s cyklem je rozptyl ještě větší.</p><div class="eq">Jedno ranní číslo neměří tuk. Měří tuk + vodu + jídlo ve střevech + hormony. Trend za 2–4 týdny měří tuk.</div><p>Praktický dopad: klientku uč <strong>dívat se na klouzavý průměr za týden, ne na denní skok</strong>. Když se váží denně, ať to bere jako sbírání dat pro průměr, ne jako každodenní soud. A když se z čísla propadá do úzkosti, klidně jí vážení úplně vezmi a jeď na obvodech a fotkách. Váha je nástroj — a nástroj, který ubližuje, se odloží.</p>
+
+    <h2>Rámuj váhu jako data, ne jako hodnotu člověka</h2>
+    <p>Rozdíl mezi „jsi na 68, to je moc, musíme dolů" a „koukám, že týdenní průměr je 68 — pojďme se podívat, co nám to říká o tvém příjmu a jak dál" je propastný. První věta říká <em>jsi špatná</em>. Druhá říká <em>máme informaci a plán</em>. Číslo na váze nikdy nespojuj s hodnotou, disciplínou ani charakterem klientky.</p><div class="card"><p><strong>Konkrétně přeformuluj:</strong> místo „přibrala jsi" → „průměr se posunul nahoru, mrkneme na příjem a spánek". Místo „musíš zhubnout" → „tvůj cíl je X, jdeme k němu tímhle tempem". Místo „to jsi neuhlídala" → „co ti minulý týden házelo klacky pod nohy?". Vždycky útoč na proces a proměnné, nikdy na člověka.</p></div><p>Tohle není měkkost pro měkkost. Stud a strach z čísla vedou k vyhýbání, zatajování jídla a odchodu klientky — ne k lepším výsledkům.</p>
+
+    <h2>Fat-shaming a diet-culture jazyk sabotují výsledky</h2>
+    <p>Není to jen otázka slušnosti — je to evidence. Podle přehledu v <em>Obesity Reviews</em> (PubMed) váhové stigma a předsudky v péči zhoršují kvalitu péče i výsledky: lidé, kteří zažijí posuzování kvůli váze, mají vyšší stres, míň důvěřují, hůř dodržují doporučení a péči se spíš vyhýbají. Mezinárodní konsenzus v <em>Nature Medicine</em> jde ještě dál — váhové stigma podle dostupné evidence poškozuje fyzické i psychické zdraví a je potřeba ho z komunikace odborníků vymýtit.</p><p>Prakticky to znamená vyházet z pusy tyhle věci: <strong>morální nálepky na jídlo</strong> („zakázané", „hříšné", „čisté vs. špinavé jídlo"), <strong>tresty a odčiňování</strong> („to si musíš odběhat", „zasloužíš si to, protože…"), <strong>strašení a bodyshaming</strong> („takhle to nikam nedotáhneš", komentáře o „problémových partiích"). Diet-culture jazyk vytváří vinu, vina vede k restrikci, restrikce k přejídání — a jsi zpátky na začátku, jen s klientkou, která se stydí.</p><div class="eq">Jídlo není morálka. Je to palivo a data. Mluv o něm jako inženýr, ne jako kazatel.</div>
+
+    <h2>Měř pokrok víc kanály než jen vahou</h2>
+    <p>Váha je jeden kanál a navíc zašuměný. Dobrý trenér měří pokrok <strong>portfoliem ukazatelů</strong> — jednak proto, že to dává přesnější obraz, jednak proto, že to odvádí pozornost od jednoho děsivého čísla a ukazuje klientce úspěchy, které by jinak neviděla.</p><div class="card"><p><strong>Co sleduj vedle váhy:</strong> obvody (pas, boky, stehno, paže), fotky za stejných podmínek jednou za 2–4 týdny, výkon v posilovně (víc kil, víc opakování), energie přes den, kvalita spánku, chuť k jídlu a hlad, nálada, jak sedí oblečení, pravidelnost tréninků a jídelníčku. U žen navíc pravidelnost menstruačního cyklu — vynechání menstruace je varovný signál, který patří k lékaři, ne signál k oslavě.</p></div><p>Když klientka „nezhubla", ale zvedla o 10 kg víc, spí líp a přestala mít odpolední hladové výkyvy, <strong>udělala obrovský pokrok</strong> — jen ne na váze. Tvoje práce je jí to ukázat.</p>
+
+    <h2>Podpoř zdravý vztah k jídlu</h2>
+    <p>Cíl není jen dostat klientku k číslu, ale nechat ji tam udržitelně a bez toho, že by z jídla měla peklo. Zdravý vztah k jídlu stavíš tím, že <strong>nic striktně nezakazuješ</strong> (flexibilita > perfekcionismus), učíš porce a kontext místo „hodných a zlých" potravin, a normalizuješ, že občasné přejedení nebo volnější víkend není selhání, ale běžná součást života.</p><p>Pozor na sociální sítě jako spouštěč. Podle studie v <em>Journal of the Academy of Nutrition and Dietetics</em> (PubMed) je vyšší používání sociálních médií u mladých dospělých spojeno s významně vyšší mírou obav o jídlo a tělo (zhruba dvojnásobná pravděpodobnost u nejaktivnějších uživatelů; jde o průřezovou souvislost, ne prokázanou příčinu). Když ti klientka nosí „ideály" z Instagramu, je to moment, kdy máš zasáhnout kontextem: co vidí, je kurátorované, nasvícené a často upravené.</p><div class="eq">Cíl: klientka, která umí sníst dort na oslavě bez viny a druhý den normálně pokračuje. To je výhra, ne selhání plánu.</div>
+
+    <h2>Rozpoznej varovné signály a včas odkaž</h2>
+    <p>Tohle je nejdůležitější sekce lekce. <strong>Ty poruchu příjmu potravy neléčíš ani nediagnostikuješ — rozpoznáš signály a odkážeš.</strong> Poruchy příjmu potravy (mentální anorexie, bulimie, záchvatovité přejídání) jsou vážná onemocnění s reálnou úmrtností a patří do rukou lékaře, psychiatra/psychologa a nutričního terapeuta.</p><div class="card"><p><strong>Varovné signály, které tě mají zpozornit:</strong> posedlost jídlem, kaloriemi nebo váhou, která přebíjí život; strach z jídla a velké skupiny „zakázaných" potravin; tajné jídlo nebo naopak vynechávání; zmínky o zvracení, projímadlech nebo trestání se cvičením za jídlo; kompulzivní cvičení i přes nemoc/zranění; extrémní nespokojenost s tělem neodpovídající realitě; vynechání menstruace; rychlý neplánovaný úbytek; sociální izolace kvůli jídlu.</p></div><p>Jako pomůcka existuje krátký screeningový dotazník <strong>SCOFF</strong> (5 otázek). Podle metaanalýzy v <em>Journal of General Internal Medicine</em> (PubMed) má napříč studiemi vysokou citlivost i specificitu, přičemž nejlépe funguje u mladých žen s anorexií a bulimií (u širšího spektra poruch v komunitě je jeho výtěžnost nižší) — ale <strong>je to nástroj pro zvýšení bdělosti, ne diagnóza</strong>. Pozitivní SCOFF (2+ „ano") = signál odkázat na odborníka, ne verdikt. Ať je výsledek jakýkoli, diagnózu a léčbu nechává trenér výhradně na lékaři a specialistovi.</p>
+
+    <div class="warn"><b>⚠️ Kde končí role trenéra</b>
+    <p><strong>Kde končí tvoje role trenéra:</strong> Jsi trenér, ne lékař ani terapeut. Můžeš vzdělávat o výživě a tréninku, nastavovat cíle, měřit pokrok a citlivě komunikovat. <strong>Nesmíš diagnostikovat poruchu příjmu potravy, léčit ji ani „napravovat" psychický vztah k jídlu terapeutickými technikami.</strong></p><p><strong>Kdy okamžitě odkázat na odborníka (lékař, psychiatr/psycholog, nutriční terapeut):</strong> při podezření na poruchu příjmu potravy (zvracení, projímadla, kompulzivní cvičení, extrémní restrikce, tajné jídlo), při vynechání menstruace, rychlém neplánovaném úbytku hmotnosti, sebepoškozování nebo zmínkách o beznaději. Nečekej, až si budeš „jistý" — na jistotu je tu lékař.</p><p><strong>Co nikdy neděláš:</strong> nepředepisuješ ani neřešíš léky, hormony, antikoncepci ani hormonální léčbu; neinterpretuješ lékařské diagnózy; nedáváš klientce lékařské rady. Screeningový nástroj jako SCOFF slouží jen ke zvýšení tvé bdělosti — pozitivní výsledek znamená „odkaž", ne „diagnostikuj". V pochybnostech vždycky posílej dál.</p></div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Za ty roky, co koučuju holky, jsem se naučil jednu věc: <strong>čím míň dělám z váhy drama, tím líp klientky trénují.</strong> Já sám s novou klientkou hned na začátku srovnám očekávání — vysvětlím jí, že ranní číslo skáče o půl kila nahoru dolů kvůli vodě, soli a cyklu, a že mě zajímá trend za měsíc, ne dnešek. Když vidím, že se holka z čísla propadá do úzkosti, vezmu jí váhu úplně a jedeme na obvodech, fotkách a síle v posilce — a světe div se, výsledky jsou často lepší, protože zmizí stres. Nikdy neřeknu „přibrala jsi", řeknu „průměr se pohnul, pojďme se mrknout proč". A hlídám signály: když někdo začne mluvit o jídle jako o hříchu, tajit ho nebo se trestat cvičením, zpozorním a nebojím se říct „tohle už je nad rámec toho, co ti jako trenér můžu řešit, pojďme na to vzít odborníka". Radši jednou odkážu zbytečně, než abych přehlédl něco vážného. Tvoje pusa je nástroj — používej ji tak, aby stavěla, ne bourala. Be Effective. 💪</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Klientka ti napíše zoufalá, že za noc přibrala 1,2 kg. Co jí odpovíš? <span class="tg">odpověď ▾</span></div><div class="aa">Uklidním ji, že tělesná hmotnost normálně kolísá ze dne na den kvůli vodě, soli, jídlu ve střevech, spánku a u žen navíc cyklu — a že jediné číslo neměří tuk. Nasměruju ji na týdenní klouzavý průměr místo denního skoku, případně navrhnu na chvíli vážení vysadit a jet na obvodech a fotkách.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč je fat-shaming a diet-culture jazyk kontraproduktivní, i kdyby tě k němu lákala 'motivace tvrdou láskou'? <span class="tg">odpověď ▾</span></div><div class="aa">Protože podle evidence váhové stigma zhoršuje výsledky, ne zlepšuje — zvyšuje stres, snižuje důvěru a dodržování doporučení a vede k vyhýbání se péči, zatajování jídla a odchodu klientky. Stud spouští restrikci a přejídání. Útočit se má na proces a proměnné (příjem, spánek, konzistence), nikdy na hodnotu člověka.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Klientka za měsíc nezhubla ani gram. Znamená to, že plán nefunguje? <span class="tg">odpověď ▾</span></div><div class="aa">Ne nutně. Váha je jen jeden zašuměný kanál. Když zároveň zvedla víc v posilovně, spí líp, má stabilnější energii a hlad, sedí jí líp oblečení a má pravidelný cyklus, udělala reálný pokrok — jen ne na váze. Pokrok se měří portfoliem ukazatelů, ne jedním číslem.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Všimneš si, že klientka mluví o jídle jako o 'hříchu', tajně vynechává jídla a zmiňuje, že se za přejedení 'odběhává'. Co uděláš? <span class="tg">odpověď ▾</span></div><div class="aa">Zpozorním — tohle jsou varovné signály narušeného vztahu k jídlu. Nediagnostikuji a neléčím to. Citlivě klientce sdělím, že tohle je nad rámec role trenéra, a odkážu ji na odborníka (lékař, psycholog/psychiatr, nutriční terapeut). Radši odkážu 'zbytečně', než abych přehlédl něco vážného.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U tří svých klientek projdi, jak s nimi komunikuješ o váze a pokroku. 1) Nastav jim (nebo zkontroluj) sledování pokroku aspoň třemi kanály navíc k váze — obvody, fotky za stejných podmínek, výkon v posilovně, energie/spánek, u žen pravidelnost cyklu. 2) Projdi si vlastní posledních 10 zpráv každé z nich a vyškrtej z nich jakýkoli diet-culture jazyk (morální nálepky na jídlo, tresty, bodyshaming) — a přepiš je do jazyka procesu a dat. 3) Sepiš si vlastní krátký seznam varovných signálů PPP a jméno konkrétního odborníka (nutriční terapeut / psycholog), na kterého v případě potřeby odkážeš — ať to nehledáš, až to bude potřeba.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m22-l3/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m22">⬑ Modul 22<span class="s">Trénování a vedení žen</span></a>
+      <a class="lnav-next" href="/akademie/studium/">Přehled modulů →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol><li>Rubino F, Puhl RM, Cummings DE, et al. (2020). Joint international consensus statement for ending stigma of obesity. Nature Medicine 26(4):485-497. (PubMed, PMID 32127716) <a href="https://doi.org/10.1038/s41591-020-0803-x" target="_blank" rel="noopener">DOI</a></li><li>Phelan SM, Burgess DJ, Yeazel MW, et al. (2015). Impact of weight bias and stigma on quality of care and outcomes for patients with obesity. Obesity Reviews 16(4):319-326. (PubMed, PMID 25752756) <a href="https://doi.org/10.1111/obr.12266" target="_blank" rel="noopener">DOI</a></li><li>Kutz AM, Marsh AG, Gunderson CG, et al. (2020). Eating Disorder Screening: a Systematic Review and Meta-analysis of Diagnostic Test Characteristics of the SCOFF. Journal of General Internal Medicine 35(3):885-893. (PubMed, PMID 31705473) <a href="https://doi.org/10.1007/s11606-019-05478-6" target="_blank" rel="noopener">DOI</a></li><li>Cheuvront SN, Carter R, Montain SJ, Sawka MN (2004). Daily body mass variability and stability in active men undergoing exercise-heat stress. Int J Sport Nutr Exerc Metab 14(5):532-540. (PubMed, PMID 15673099) <a href="https://doi.org/10.1123/ijsnem.14.5.532" target="_blank" rel="noopener">DOI</a></li><li>Sidani JE, Shensa A, Hoffman B, et al. (2016). The Association between Social Media Use and Eating Concerns among US Young Adults. Journal of the Academy of Nutrition and Dietetics 116(9):1465-1472. (PubMed, PMID 27161027) <a href="https://doi.org/10.1016/j.jand.2016.03.021" target="_blank" rel="noopener">DOI</a></li><li>Teede HJ, Tay CT, Laven JJE, et al. (2023). Recommendations From the 2023 International Evidence-based Guideline for the Assessment and Management of Polycystic Ovary Syndrome (awareness of weight stigma). J Clin Endocrinol Metab 108(10):2447-2469. (PubMed, PMID 37580314) <a href="https://doi.org/10.1210/clinem/dgad463" target="_blank" rel="noopener">DOI</a></li></ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna. Odborné tvrzení opřené o citované studie (PubMed / DOI). Lekce vzdělává trenéra, není lékařská rada.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260704"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m22-l4', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+  <script src="/assets/ai-martin.js?v=20260703b" defer></script>
+</body>
+</html>
