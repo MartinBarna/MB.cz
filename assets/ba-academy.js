@@ -190,6 +190,34 @@
       }).catch(function (e) { return { ok: false, error: String(e && e.message || e) }; });
     },
 
+    // Admin (Martin) vystaví certifikát studentovi po schválení Mistrovské pečeti.
+    // Live → {ok, cert_id, full_name, issued_at} nebo {ok:false, error}.
+    adminIssueCertificate: function (userId, email, fullName) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true, cert_id: "BA-DEMO-0001" });
+      return client.rpc("admin_issue_certificate", { p_user_id: userId, p_email: email, p_full_name: fullName }).then(function (r) {
+        if (r.error) return { ok: false, error: r.error.message };
+        var row = (r.data && r.data[0]) || null;
+        return row ? { ok: true, cert_id: row.cert_id, full_name: row.full_name, issued_at: row.issued_at } : { ok: false, error: "no-row" };
+      }).catch(function (e) { return { ok: false, error: String(e && e.message || e) }; });
+    },
+
+    // Uloží pokus o závěrečný test (skóre + konkrétní odpovědi) pro učitelský detail.
+    // data: { score, total, passed, answers:[{q,a,correct,ok}], full_name }. Best-effort.
+    saveTestAttempt: function (data) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      return client.rpc("save_test_attempt", {
+        p_score: data.score, p_total: data.total, p_passed: !!data.passed,
+        p_answers: data.answers || [], p_full_name: data.full_name || null
+      }).then(function (r) { return { ok: !r.error, id: r.data, error: r.error && r.error.message }; })
+        .catch(function (e) { return { ok: false, error: String(e && e.message || e) }; });
+    },
+    // Admin (Martin): všechny pokusy o test přes RLS admin-policy. Ostatním prázdno.
+    getTestAttempts: function () {
+      if (!LIVE) return Promise.resolve([]);
+      return client.from("test_attempts").select("*").order("created_at", { ascending: false })
+        .then(function (r) { return r.data || []; }).catch(function () { return []; });
+    },
+
     // Podepsaná (dočasná) URL k souboru v Supabase Storage — jen pro přihlášené
     // s přístupem (gating řeší RLS politika bucketu). Demo → null.
     materialUrl: function (bucket, path) {

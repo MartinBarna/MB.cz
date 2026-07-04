@@ -77,6 +77,14 @@
         <span class="go"><span class="lbl">Otevřít přehled</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
+      <a class="card" id="tileTests" href="/akademie/moje/testy/" style="display:none;">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h2>Výsledky závěrečných testů</h2>
+        <p class="desc">Kdo test dělal, jak dopadl a co přesně odpověděl. Rozklikneš detail a ozveš se studentovi osobně. Jen pro tebe.</p>
+        <div class="chips"><span class="chip">Admin</span><span class="chip">Skóre</span><span class="chip">Odpovědi</span></div>
+        <span class="go"><span class="lbl">Otevřít výsledky</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
     </div>
 
     <div class="panel" id="empty" style="display:none;">
@@ -126,7 +134,7 @@
               .then(function(r){
                 showTiles(!!r[0], !!r[1]);
                 if(r[2]){ var tc=document.getElementById('tileCheckin'); if(tc) tc.style.display=''; }
-                if(['martin@martinbarna.cz','fitness.barna@gmail.com'].indexOf((u.email||'').toLowerCase())>-1){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; }
+                if(['martin@martinbarna.cz','fitness.barna@gmail.com'].indexOf((u.email||'').toLowerCase())>-1){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; var tt=document.getElementById('tileTests'); if(tt) tt.style.display=''; }
               });
           });
         });
