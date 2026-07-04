@@ -143,7 +143,7 @@
       .les.isfree .s{color:var(--gold-soft);font-weight:700}
     </style>
     <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
-      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (224 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
+      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (236 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
       <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
     </a>
 
@@ -664,7 +664,7 @@
               if(!u){
                 FREEMODE = true; applyFreeMode();
                 var n0 = document.getElementById('modeNote');
-                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 224 lekcím odemkni celou Academy.';
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 236 lekcím odemkni celou Academy.';
                 try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
                 return;
               }
@@ -674,7 +674,7 @@
                 var note = document.getElementById('modeNote');
                 if (note) note.textContent = has
                   ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 224 lekcím odemkni celou Academy.';
+                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 236 lekcím odemkni celou Academy.';
                 window.BA.getProgress().then(render);
               });
             });
