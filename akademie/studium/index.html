@@ -120,6 +120,20 @@
     </div>
 
     <style>
+      .ranktier{display:none;margin:0 0 14px;border:1px solid var(--line-2);border-radius:16px;padding:14px 18px;background:linear-gradient(135deg,rgba(255,122,0,.10),rgba(255,255,255,.02));}
+      .ranktier .rt-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+      .ranktier .rt-ic{font-size:1.9rem;line-height:1;}
+      .ranktier .rt-name{color:#fff;font-weight:800;font-size:1.08rem;letter-spacing:-.01em;display:block;}
+      .ranktier .rt-sub{color:var(--muted);font-size:.84rem;margin-top:1px;display:block;}
+      .ranktier .rt-next{margin-left:auto;text-align:right;color:var(--muted-2);font-size:.82rem;}
+      .ranktier .rt-next b{color:var(--gold-soft);}
+      .ranktier .rt-bar{height:6px;border-radius:6px;background:rgba(255,255,255,.06);margin-top:11px;overflow:hidden;}
+      .ranktier .rt-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .4s;}
+      @media(max-width:520px){.ranktier .rt-next{margin-left:0;text-align:left;width:100%;}}
+    </style>
+    <div class="ranktier" id="ranktier"></div>
+
+    <style>
       .badges{display:none;margin:0 0 18px;}
       .badges .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 10px;}
       .badges .bh b{color:#fff;font-size:1rem;} .badges .bh span{color:var(--muted);font-size:.85rem;}
@@ -631,6 +645,37 @@
       var h = (location.hash||'').replace('#',''); var m = h.match(/^m(\d+)$/);
       if (m) renderModule(parseInt(m[1],10)-1); else renderOverview();
     }
+    // Gamifikace: profesní úroveň trenéra (počítá se z počtu dokončených lekcí).
+    var RANKS=[
+      {k:1,ic:'🌱',n:'Nováček',d:'Začínáš svou cestu trenéra'},
+      {k:15,ic:'📘',n:'Učeň',d:'Základy máš v malíku'},
+      {k:40,ic:'⚡',n:'Praktik',d:'Teorie se mění v praxi'},
+      {k:80,ic:'💪',n:'Zkušený trenér',d:'Vedeš klienty s jistotou'},
+      {k:140,ic:'🧠',n:'Pokročilý trenér',d:'Rozumíš i nuancím'},
+      {k:200,ic:'🥇',n:'Expert',d:'Špička ve svém oboru'}
+    ];
+    function paintRank(co, ta){
+      var el=document.getElementById('ranktier'); if(!el) return;
+      if(co<1){ el.style.display='none'; return; }
+      var master = ta>0 && co>=ta;
+      var cur=RANKS[0], curFloor=RANKS[0].k, next=null, nextK=ta;
+      if(master){
+        cur={ic:'👑',n:'Mistr Barna Academy',d:'Máš hotové všechny lekce'};
+      } else {
+        for(var i=0;i<RANKS.length;i++){ if(co>=RANKS[i].k){ cur=RANKS[i]; curFloor=RANKS[i].k; } }
+        for(var j=0;j<RANKS.length;j++){ if(RANKS[j].k>co){ next=RANKS[j]; nextK=RANKS[j].k; break; } }
+        if(!next){ next={ic:'👑',n:'Mistr'}; nextK=ta; }
+      }
+      var html='<div class="rt-top"><span class="rt-ic">'+cur.ic+'</span><span><span class="rt-name">Tvá úroveň: '+cur.n+'</span><span class="rt-sub">'+cur.d+'</span></span>';
+      if(!master){
+        var span=nextK-curFloor, into=co-curFloor, pct=(span>0?Math.max(4,Math.min(100,Math.round(into/span*100))):100);
+        html+='<span class="rt-next">Ještě <b>'+(nextK-co)+'</b> lekcí do: '+next.ic+' '+next.n+'</span></div>';
+        html+='<div class="rt-bar"><span style="width:'+pct+'%"></span></div>';
+      } else {
+        html+='<span class="rt-next">🎓 Nejvyšší úroveň dosažena</span></div>';
+      }
+      el.innerHTML=html; el.style.display='block';
+    }
     // Gamifikace: odznaky za milníky a zvládnuté moduly (počítá se z DONE + CURRICULUM).
     function paintBadges(co, ta){
       var el=document.getElementById('badges'); if(!el) return;
@@ -651,6 +696,7 @@
       var overall = ta? Math.round(co/ta*100) : 0;
       document.getElementById('progBar').style.width = overall+'%';
       document.getElementById('progLbl').textContent = co+' z '+ta+' dostupných lekcí · '+overall+' % dokončeno';
+      paintRank(co, ta);
       paintBadges(co, ta);
       var hero = document.querySelector('.hello'), cb = document.getElementById('contBtn'), nx = nextLesson();
       if (!cb && hero){ cb = document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
