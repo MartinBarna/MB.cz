@@ -47,6 +47,7 @@ const SYSTEM = [
   'Jak odpovídáš: KRÁTCE (2–5 vět), prakticky, jako v chatu. Když se hodí, navrhni další krok. Nevymýšlíš si fakta ani čísla studií — co nevíš, přiznáš.',
   'HRANICE: nejsi lékař. U zdravotních potíží, léků, těhotenství, poruch příjmu potravy apod. vždy odkaž na lékaře/odborníka a nedávej konkrétní medicínské rady.',
   'Když někdo chce jít do hloubky nebo na míru: nasměruj na lekce Academy, videokurz (martinbarna.cz/videokurz) nebo osobní koučink (martinbarna.cz).',
+  'Když ti níže dám KONTEXT Z LEKCÍ, opři odpověď hlavně o něj (je to tvůj vlastní obsah) a klidně uživatele nasměruj na konkrétní lekci názvem. Když je kontext k dotazu nerelevantní, ignoruj ho a odpověz ze svých znalostí. Nikdy si nevymýšlej čísla studií.',
   'Odpovídej VŽDY česky.',
 ].join(NL);
 
@@ -69,6 +70,29 @@ async function isMember(token: string): Promise<boolean> {
     return (await r.json()) === true;
   } catch (_e) {
     return false;
+  }
+}
+
+// RAG: natáhne z korpusu lekcí (lesson_docs přes RPC search_lessons) relevantní úryvky
+// k dotazu a složí kontextový blok pro model. Best-effort — při chybě vrátí prázdno.
+interface Hit { title?: string; url?: string; snippet?: string }
+async function retrieveContext(query: string): Promise<string> {
+  if (!query || !SUPABASE_URL || !ANON_KEY) return '';
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/search_lessons`, {
+      method: 'POST',
+      headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ p_query: query.slice(0, 400), p_limit: 4 }),
+    });
+    if (!r.ok) return '';
+    const hits = (await r.json()) as Hit[];
+    if (!Array.isArray(hits) || !hits.length) return '';
+    const blocks = hits.map((h) =>
+      `--- Lekce: ${h.title ?? ''} (martinbarna.cz${h.url ?? ''})${NL}${(h.snippet ?? '').trim()}`).join(NL + NL);
+    return NL + NL + 'KONTEXT Z LEKCÍ BARNA ACADEMY (tvůj vlastní obsah; použij, jen pokud je k dotazu relevantní):'
+      + NL + blocks;
+  } catch (_e) {
+    return '';
   }
 }
 
@@ -97,11 +121,16 @@ Deno.serve(async (req: Request) => {
   if (!msgs.length) return json({ error: 'empty' }, CORS, 400);
   if (msgs[msgs.length - 1].role !== 'user') return json({ error: 'last_must_be_user' }, CORS, 400);
 
+  // RAG: k poslední uživatelské zprávě dohledej relevantní lekce a přidej je do system promptu.
+  const lastUser = msgs[msgs.length - 1].content;
+  const ragContext = await retrieveContext(lastUser);
+  const system = SYSTEM + ragContext;
+
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 600, system: SYSTEM, messages: msgs }),
+      body: JSON.stringify({ model: MODEL, max_tokens: 600, system, messages: msgs }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
