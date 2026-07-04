@@ -130,8 +130,22 @@
       .ranktier .rt-bar{height:6px;border-radius:6px;background:rgba(255,255,255,.06);margin-top:11px;overflow:hidden;}
       .ranktier .rt-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .4s;}
       @media(max-width:520px){.ranktier .rt-next{margin-left:0;text-align:left;width:100%;}}
-    </style>
+      .rt-share{margin-top:12px;background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);font-family:inherit;font-weight:700;font-size:.82rem;padding:8px 16px;border-radius:50px;cursor:pointer;transition:all .2s;}
+      .rt-share:hover{background:rgba(255,122,0,.14);border-color:rgba(255,122,0,.5);color:#fff;}
+      .modcert{display:inline-block;margin:2px 0 0;background:linear-gradient(145deg,rgba(47,174,87,.16),rgba(47,174,87,.06));border:1px solid rgba(47,174,87,.45);color:#bfe9cb;font-family:inherit;font-weight:700;font-size:.85rem;padding:10px 18px;border-radius:50px;cursor:pointer;transition:transform .2s;}
+      .modcert:hover{transform:translateY(-2px);}
+      .habit{display:none;gap:10px;flex-wrap:wrap;margin:0 0 16px;}
+      .habit .hpill{display:flex;align-items:center;gap:11px;border:1px solid var(--line-2);border-radius:14px;padding:11px 16px;background:rgba(255,255,255,.03);}
+      .habit .hpill .hic{font-size:1.4rem;line-height:1;}
+      .habit .hpill .ht{color:#fff;font-weight:700;font-size:.92rem;display:block;}
+      .habit .hpill .hs{color:var(--muted);font-size:.78rem;display:block;}
+      .habit .hpill.streak{border-color:rgba(255,122,0,.4);background:rgba(255,122,0,.09);}
+      .habit .hpill.goal.done{border-color:rgba(47,174,87,.45);background:rgba(47,174,87,.1);}
+      .habit .hbar{height:5px;border-radius:5px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden;width:130px;}
+      .habit .hbar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .4s;}
+</style>
     <div class="ranktier" id="ranktier"></div>
+    <div class="habit" id="habit"></div>
 
     <style>
       .badges{display:none;margin:0 0 18px;}
@@ -219,7 +233,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260704g"></script>
   <script>
     (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
     // Osnova (snadno rozšiřitelná). available:true = lekce je hotová a otevřená.
@@ -593,13 +607,14 @@
       if (!m){ location.hash = ''; return; }
       var c = mc(m), pct = c.a? Math.round(c.d/c.a*100) : 0;
       var lz = ''; m.lessons.forEach(function(l){ lz += lessonRow(l); });
+      var certBtn = (c.a>0 && c.d===c.a) ? '<div style="margin-top:16px"><button type="button" class="modcert" data-share="module" data-mi="'+mi+'">🥇 Sdílet mini-certifikát modulu</button></div>' : '';
       var nav = '<div class="secnav">';
       if (mi>0){ var p = CURRICULUM[mi-1]; nav += '<a class="prev" href="#m'+mi+'"><span class="lbl">← Předchozí modul</span><span class="nm">'+p.t+'</span></a>'; }
       if (mi<CURRICULUM.length-1){ var n = CURRICULUM[mi+1]; nav += '<a class="next" href="#m'+(mi+2)+'"><span class="lbl">Další modul →</span><span class="nm">'+n.t+'</span></a>'; }
       nav += '</div>';
       document.getElementById('modules').innerHTML =
         '<a class="backlink" href="#prehled">← Všechny moduly</a>'
-        + '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(c.a? '<span class="pct">'+pct+' %</span>' : '<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div></div>'
+        + '<div class="mod"><div class="mod-h"><span class="ix">'+(mi+1)+'</span><div><h3>'+m.t+'</h3><p>'+m.d+'</p></div>'+(c.a? '<span class="pct">'+pct+' %</span>' : '<span class="badge-soon">Brzy</span>')+'</div><div class="lessons">'+lz+'</div>'+certBtn+'</div>'
         + nav;
       try { window.scrollTo(0,0); } catch(e){}
     }
@@ -646,6 +661,34 @@
       if (m) renderModule(parseInt(m[1],10)-1); else renderOverview();
     }
     // Gamifikace: profesní úroveň trenéra (počítá se z počtu dokončených lekcí).
+    var SHARE_NAME='';
+    var ACT_DATES=[];
+    var WEEKLY_GOAL=3;
+    // Gamifikace C+D: studijní série (streak) + týdenní cíl lekcí.
+    function weekIdx(dstr){ var t=Date.parse(dstr+'T00:00:00Z'); return isNaN(t)?0:Math.floor((t/86400000 + 3)/7); } // týden láme v pondělí
+    function paintHabit(){
+      var el=document.getElementById('habit'); if(!el) return;
+      var dates=ACT_DATES||[];
+      if(!dates.length){ el.style.display='none'; return; }
+      var weeks={}; dates.forEach(function(d){ weeks[weekIdx(d)]=true; });
+      var nowW=weekIdx(new Date().toISOString().slice(0,10));
+      var startW = weeks[nowW]?nowW:(weeks[nowW-1]?nowW-1:null);
+      var streak=0; if(startW!=null){ var w=startW; while(weeks[w]){ streak++; w--; } }
+      var thisWeek=0; dates.forEach(function(d){ if(weekIdx(d)===nowW) thisWeek++; });
+      var goalDone = thisWeek>=WEEKLY_GOAL;
+      var goalPct = Math.min(100, Math.round(thisWeek/WEEKLY_GOAL*100));
+      var html='';
+      if(streak>=1){
+        var wl = streak===1?'týden':(streak>=2&&streak<=4?'týdny':'týdnů');
+        html+='<div class="hpill streak"><span class="hic">🔥</span><span><span class="ht">'+streak+' '+wl+' v řadě</span><span class="hs">Učíš se pravidelně — jen tak dál</span></span></div>';
+      }
+      html+='<div class="hpill goal'+(goalDone?' done':'')+'"><span class="hic">'+(goalDone?'✅':'🎯')+'</span><span><span class="ht">'+(goalDone?'Týdenní cíl splněn!':'Tento týden: '+thisWeek+' / '+WEEKLY_GOAL+' lekce')+'</span><span class="hs">'+(goalDone?'Super, '+thisWeek+' lekcí tento týden':'Cíl: '+WEEKLY_GOAL+' lekce týdně')+'</span><span class="hbar"><span style="width:'+goalPct+'%"></span></span></span></div>';
+      el.innerHTML=html; el.style.display='flex';
+    }
+    function loadHabit(){
+      if(window.BA && window.BA.getActivityDates){ window.BA.getActivityDates().then(function(d){ ACT_DATES=d||[]; paintHabit(); }); }
+      else { try{ ACT_DATES=JSON.parse(localStorage.getItem('ba_activity_v1')||'[]'); }catch(e){ ACT_DATES=[]; } paintHabit(); }
+    }
     var RANKS=[
       {k:1,ic:'🌱',n:'Nováček',d:'Začínáš svou cestu trenéra'},
       {k:15,ic:'📘',n:'Učeň',d:'Základy máš v malíku'},
@@ -674,6 +717,7 @@
       } else {
         html+='<span class="rt-next">🎓 Nejvyšší úroveň dosažena</span></div>';
       }
+      html+='<button type="button" class="rt-share" data-share="rank" data-rank="'+cur.n+'">📣 Sdílet svůj postup</button>';
       el.innerHTML=html; el.style.display='block';
     }
     // Gamifikace: odznaky za milníky a zvládnuté moduly (počítá se z DONE + CURRICULUM).
@@ -714,8 +758,23 @@
         var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
       }
     }
-    function render(done){ DONE = done || {}; paintProgress(); route(); hashScrollOnce(); }
+    function render(done){ DONE = done || {}; paintProgress(); route(); hashScrollOnce(); loadHabit(); }
     window.addEventListener('hashchange', route);
+    // Gamifikace A+B: sdílení postupu / mini-certifikátu jako PNG karty.
+    document.addEventListener('click', function(e){
+      var el = e.target && e.target.closest ? e.target.closest('[data-share]') : null;
+      if(!el || !window.BAShare) return;
+      e.preventDefault();
+      var kind = el.getAttribute('data-share');
+      if(kind==='rank'){
+        var ta=0,co=0; CURRICULUM.forEach(function(m){ var c=mc(m); ta+=c.a; co+=c.d; });
+        var pct = ta? Math.round(co/ta*100) : 0;
+        BAShare.open({ type:(ta>0 && co>=ta ? 'master':'rank'), rankName: el.getAttribute('data-rank')||'Trenér', pct:pct, done:co, total:ta, name:SHARE_NAME });
+      } else if(kind==='module'){
+        var mi=parseInt(el.getAttribute('data-mi'),10); var m=CURRICULUM[mi];
+        if(m) BAShare.open({ type:'module', moduleTitle:m.t, moduleNum:mi+1, name:SHARE_NAME });
+      }
+    });
     // Postup z členské sekce (live: Supabase, demo: localStorage). V live režimu
     // navíc vyžaduje přihlášení + přístup k Akademii.
     function boot(){
@@ -725,6 +784,7 @@
             // NEPŘESMĚROVÁVÁME nepřihlášené/nekoupivší — místo toho ukážeme
             // free ochutnávku (FREEMODE) a upsell na koupi celé Academy.
             window.BA.getUser().then(function(u){
+              if(u && u.user_metadata){ SHARE_NAME = u.user_metadata.full_name || u.user_metadata.name || ''; }
               if(!u){
                 FREEMODE = true; applyFreeMode();
                 var n0 = document.getElementById('modeNote');
@@ -775,6 +835,7 @@
       } else { setTimeout(go, 50); }
     }
   </script>
+  <script src="/assets/ba-share-card.js?v=20260704"></script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
   <script src="/assets/ai-martin.js?v=20260703b" defer></script>
 </body>

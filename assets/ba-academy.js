@@ -24,6 +24,10 @@
   // ---- demo (localStorage) helpers --------------------------------
   function lsGet() { try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}"); } catch (e) { return {}; } }
   function lsSet(o) { try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(o)); } catch (e) {} }
+  // Aktivita pro gamifikaci (streak / týdenní cíl): pole dat "YYYY-MM-DD".
+  var ACT_KEY = "ba_activity_v1";
+  function actGet() { try { return JSON.parse(localStorage.getItem(ACT_KEY) || "[]"); } catch (e) { return []; } }
+  function actStamp() { try { var a = actGet(); var d = new Date().toISOString().slice(0, 10); if (a.indexOf(d) < 0) { a.push(d); localStorage.setItem(ACT_KEY, JSON.stringify(a)); } } catch (e) {} }
 
   // ---- načtení supabase-js (jen live) -----------------------------
   function loadSdk() {
@@ -154,9 +158,21 @@
       });
     },
 
+    // Data studijní aktivity ("YYYY-MM-DD") pro streak + týdenní cíl.
+    // Live → z progress.completed_at; demo → z localStorage ba_activity_v1.
+    getActivityDates: function () {
+      if (!LIVE) return Promise.resolve(actGet());
+      return BA.getUser().then(function (u) {
+        if (!u) return actGet();
+        return client.from("progress").select("completed_at").eq("user_id", u.id)
+          .then(function (r) { var out = []; (r.data || []).forEach(function (row) { if (row.completed_at) out.push(String(row.completed_at).slice(0, 10)); }); return out; })
+          .catch(function () { return []; });
+      });
+    },
+
     // Označit lekci jako hotovou/nehotovou. product: 'academy'|'videokurz'.
     setDone: function (product, lessonId, done) {
-      if (!LIVE) { var o = lsGet(); if (done) o[lessonId] = true; else delete o[lessonId]; lsSet(o); return Promise.resolve({ ok: true }); }
+      if (!LIVE) { var o = lsGet(); if (done) { o[lessonId] = true; actStamp(); } else delete o[lessonId]; lsSet(o); return Promise.resolve({ ok: true }); }
       return BA.getUser().then(function (u) {
         if (!u) return { ok: false, error: "not-signed-in" };
         if (done) {
