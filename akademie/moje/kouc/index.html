@@ -62,7 +62,7 @@
   <script src="/assets/ba-academy.js?v=20260704"></script>
   <script>
     (function () {
-      var ADMIN = 'martin@martinbarna.cz';
+      var ADMINS = ['martin@martinbarna.cz', 'fitness.barna@gmail.com'];
       var dash = document.getElementById('dash'), gate = document.getElementById('gate');
       function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
       function isoWeek() { return window.BA._isoWeek(); }
@@ -134,7 +134,7 @@
         if (window.BA.mode !== 'live') { gate.style.display = ''; gate.textContent = 'Ukázkový režim — přehled běží jen naostro.'; return; }
         window.BA.getUser().then(function (u) {
           if (!u) { location.href = '/akademie/prihlaseni/?next=' + encodeURIComponent('/akademie/moje/kouc/'); return; }
-          if ((u.email || '').toLowerCase() !== ADMIN) { gate.style.display = ''; gate.textContent = 'Tento přehled je jen pro kouče.'; return; }
+          if (ADMINS.indexOf((u.email || '').toLowerCase()) === -1) { gate.style.display = ''; gate.textContent = 'Tento přehled je jen pro kouče.'; return; }
           window.BA.getAllCheckins().then(function (rows) {
             var byUser = {};
             rows.forEach(function (r) { (byUser[r.user_id] = byUser[r.user_id] || []).push(r); });

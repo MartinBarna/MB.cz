@@ -126,7 +126,7 @@
               .then(function(r){
                 showTiles(!!r[0], !!r[1]);
                 if(r[2]){ var tc=document.getElementById('tileCheckin'); if(tc) tc.style.display=''; }
-                if((u.email||'').toLowerCase()==='martin@martinbarna.cz'){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; }
+                if(['martin@martinbarna.cz','fitness.barna@gmail.com'].indexOf((u.email||'').toLowerCase())>-1){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; }
               });
           });
         });
