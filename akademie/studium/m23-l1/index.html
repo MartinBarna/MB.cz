@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitamin D a doplňky u rizikových klientů — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  ul,ol{color:var(--ink);} li{margin:.35rem 0 .35rem 1.1rem;}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .warn{background:rgba(220,80,60,.1);border:1px solid rgba(220,80,60,.4);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .warn b{color:#ff9d7a;}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.82rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.35rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 23 · Lekce 1 — Zdravotní specifika a stárnutí</div>
+    <h1>Vitamin D a doplňky u rizikových klientů</h1>
+
+    <p class="lead"><p>Vitamin D je zároveň nejvíc přeceňovaný i nejvíc podceňovaný doplněk. Přeceňovaný, protože se z něj stal zázrak na imunitu, hubnutí i výkon — a to velká data nedrží. Podceňovaný, protože u konkrétních <strong>rizikových skupin</strong> deficit reálně existuje a stojí za to ho řešit. Tvoje role jako trenéra ale není hádat hladinu, předepisovat dávky ani hrát na doktora. Tvoje role je poznat, kdo je v riziku, mluvit o důkazech bez bulšitu a ve správnou chvíli klienta poslat na test k lékaři. V téhle lekci si to srovnáme.</p></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul><li>Deficit se reálně týká úzkých rizikových skupin (senioři, tmavá pleť, zahalení, málo slunce v zimě, obezita, malabsorpce) — ne každého klienta plošně.</li><li>Kosti a svaly: benefit suplementace je hlavně u prokázaného deficitu a v kombinaci s tréninkem a bílkovinou. U zdravých seniorů plošná suplementace celkové zlomeniny nesnižuje.</li><li>Imunita a výkon: velký hype, data slabá a rozporuplná. Neslibuj klientovi, že mu déčko zvedne imunitu nebo výkon.</li><li>Dávkuje se v IU (typicky 600–2000 IU/den dle lékaře), ne v gramech. Víc není líp — platí U-křivka a vysoké nárazové dávky mohou i škodit.</li><li>Trenér neměří, nediagnostikuje, nepředepisuje. Doporučí test 25(OH)D u lékaře a dávkování nechá na něm.</li></ul>
+    </div>
+
+    <h2>Koho se deficit reálně týká (a koho ne)</h2>
+    <p>Nejčastější chyba je strašit déčkem úplně každého klienta. Realita je užší. Zvýšené riziko deficitu mají hlavně:</p><ul><li><strong>Senioři</strong> — kůže tvoří déčko ze slunce hůř a tráví se míň času venku. U multimorbidních starších pacientů je přitom situace obojaká: velká evropská analýza (Moutzouri, 2025) ukázala, že zhruba třetina je nedosupplementovaná, ale zhruba desetina naopak přesupplementovaná — čili plošné dávkování všem není řešení, cílit se má na toho, kdo to potřebuje.</li><li><strong>Tmavá pleť a lidé, kteří jsou z náboženských/kulturních důvodů zahalení</strong> — víc melaninu a míň exponované kůže znamená míň tvorby déčka ze slunce.</li><li><strong>Minimum slunce v zimě</strong> — v našich zeměpisných šířkách (ČR) je od podzimu do jara slunce na tvorbu déčka slabé. Kdo navíc pracuje v hale nebo kanceláři, dostane ho ještě míň.</li><li><strong>Obezita</strong> — déčko se rozpouští v tuku a část se "schová" v tukové tkáni, takže v krvi ho bývá méně.</li><li><strong>Malabsorpce</strong> (Crohn, celiakie, stav po bariatrické operaci) — střevo déčko hůř vstřebá. Tohle je čistě lékařská doména, ty jen zbystříš, když to klient zmíní.</li></ul><div class="eq">Zdravý dospělý, který chodí ven a jí normálně, není automaticky v deficitu. Rizikový je ten, kdo spadá do jedné z těch škatulek nahoře.</div><p>Prakticky: v hlavě si drž tenhle filtr. Když klient nepadá do žádné rizikové skupiny, nemáš důvod z déčka dělat téma. Když padá, otevřeš řeč o testu — ne o kapslích.</p>
+
+    <h2>Na co má a nemá smysl — kosti, pády, svaly vs. imunita a hype</h2>
+    <p>Tady je potřeba oddělit, co data drží, a co je marketing.</p><p><strong>Kosti a zlomeniny.</strong> Zní to logicky — déčko a kosti patří k sobě. Jenže velká data jsou střízlivější: metaanalýza sedmi randomizovaných studií na téměř 72 000 zdravých seniorů (de Souza, 2024) <em>nenašla</em> snížení celkových zlomenin při plošné suplementaci. U žen navíc vysoké nárazové dávky bez vápníku riziko zlomeniny kyčle spíš zvyšovaly. Pointa: déčko není samo o sobě "prášek na kosti" pro každého. Dává smysl tam, kde je prokázaný deficit, a řeší se komplexně (vápník, bílkovina, silový trénink), ne kapslí navíc.</p><p><strong>Svaly a síla (sarkopenie u seniorů).</strong> Tady je souvislost reálnější. Nízká hladina 25(OH)D konzistentně souvisí s nižší svalovou silou a horším fyzickým výkonem u starších (Fuentes-Barría, 2025) — ale benefit doplňku je vidět hlavně u těch, kdo <em>vycházejí z deficitu</em>, a to v kombinaci s bílkovinou a silovým tréninkem. Čili: déčko není náhrada za činku. Je to jeden díl skládačky u deficientního seniora.</p><p><strong>Imunita a výkon — tady začíná hype.</strong> Marketing tvrdí, že déčko zvedne imunitu a výkon. Data jsou slabá a rozporuplná. Metaanalýza prenatální suplementace (Shen, 2025) třeba <em>nenašla</em> významný vliv na respirační infekce ani alergie u dětí. U COVIDu naopak jedna metaanalýza (Sartini, 2024) naznačila ochranný efekt na výskyt i příjem na JIP — ale jde o pozorování s omezenou kvalitou a téma zůstává sporné. Vezmi si z toho jedno: neslibuj klientovi, že mu déčko "nakopne imunitu" nebo zlepší výkon. To bys prodával naději, ne pevnou evidenci.</p><div class="card"><p>Trenérská zkratka: <strong>kosti a svaly = smysl hlavně u prokázaného deficitu a v kombinaci s tréninkem/bílkovinou. Imunita a výkon = hype, neslibuj to.</strong></p></div>
+
+    <h2>Rozumné dávkování — v IU, ne v gramech (a U-křivka)</h2>
+    <p>Pozor na jednotky, tohle laici pletou pořád. Vitamin D se dávkuje v <strong>IU (mezinárodních jednotkách)</strong>, ne v gramech. Když někdo řekne "dám si 14 gramů déčka", je to nesmysl — to není 14 g, běžné denní dávky se pohybují řádově ve <strong>stovkách až nižších tisících IU</strong>, obvykle 600–2000 IU/den, a přesné číslo patří lékaři podle naměřené hladiny. Ty to číslo neurčuješ.</p><p><strong>Víc není líp — platí U-křivka.</strong> Představ si to jako U ležící dnem dolů: příliš málo škodí (deficit), ale i příliš mnoho škodí. Nejde o to naládovat co nejvíc. Vysoké nárazové "bolusové" dávky (statisíce IU najednou) jsou v literatuře opakovaně spojované s <em>víc</em> pády a zlomeninami; studie, která hledala vysvětlení (Bowles, 2024), přitom neukázala, že by za to mohl vysoký vápník v krvi — mechanismus zatím není úplně objasněný. Jedno je ale jasné: extrémní předávkování dokáže zvednout vápník v krvi (hyperkalcémie), což je zdravotní problém, který řeší lékař.</p><ul><li>Jednotky jsou <strong>IU</strong>, ne gramy.</li><li>Běžné rozmezí je nízké (stovky–nižší tisíce IU/den), ne megadávky.</li><li>Nárazové mega-bolusy = spíš riziko než výhra.</li><li>Přesnou dávku i formu (denní vs. týdenní) určuje lékař podle hladiny, ne trenér a ne influencer.</li></ul><div class="eq">Cíl není "co nejvíc déčka". Cíl je dostat člověka z deficitu do normy — a tam ho nechat.</div>
+
+    <h2>Kde přesně končí trenér a začíná lékař</h2>
+    <p>Tohle je nejdůležitější věta celé lekce: <strong>ty neměříš, nediagnostikuješ a nepředepisuješ.</strong> Neposíláš klienta koupit konkrétní kapsle v konkrétní dávce. To dělá lékař na základě krevního testu.</p><p>Co dělá trenér správně:</p><ul><li>Rozpozná, že klient spadá do rizikové skupiny.</li><li>Vysvětlí srozumitelně, proč by test dával smysl — bez strašení a bez slibů.</li><li>Doporučí, ať si nechá u lékaře změřit hladinu <strong>25(OH)D</strong> (to je ten správný ukazatel) a probere s ním, jestli a jak suplementovat.</li><li>Když už klient déčko od lékaře bere, respektuje to a nedodává vlastní "bonusové" dávky navrch.</li></ul><p>Co trenér nedělá: neinterpretuje krevní výsledky, nenastavuje dávky, nemíchá to s klientovými léky a rozhodně klientovi neříká, ať kvůli déčku něco ze své medikace mění nebo vysadí. Jakmile jsou ve hře léky, diagnózy, těhotenství nebo porucha příjmu potravy — mlčíš o dávkování a posíláš k lékaři. Tvoje síla je v tom, že klienta nasměruješ ke správnému člověku, ne v tom, že si na toho člověka budeš hrát.</p>
+
+    <div class="warn"><b>⚠️ Kde končí role trenéra</b>
+    <p><strong>Kde končí role trenéra:</strong> Tahle lekce tě jako trenéra vzdělává o tématu — <strong>není to lékařská rada pro klienta a nenahrazuje vyšetření u lékaře.</strong> Jako trenér <strong>neměříš hladiny vitaminu D, nediagnostikuješ deficit, neinterpretuješ krevní testy a nepředepisuješ ani nedoporučuješ konkrétní dávky</strong> vitaminu D ani jiných doplňků. Konkrétní dávka, forma i vhodnost patří výhradně lékaři na základě testu 25(OH)D. <strong>Vždy klienta odkaž na lékaře, když:</strong> spadá do rizikové skupiny a chce řešit suplementaci; bere jakékoli léky; má zdravotní diagnózu; je těhotná nebo kojící; má v anamnéze poruchu příjmu potravy; má malabsorpci nebo problém se vstřebáváním; nebo když se řeší cokoli nad rámec běžné výživy. <strong>Nikdy</strong> klientovi neříkej, ať kvůli doplňku mění, vysazuje nebo upravuje své léky — to je výhradně věc jeho lékaře. Když klient popisuje příznaky nebo zdravotní potíže, nehodnoť je a pošli ho k lékaři.</p></div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> <p><strong>V praxi (Martin):</strong> Já to s klienty držím jednoduše. Nezačínám větou "kup si déčko". Začínám otázkou: chodíš přes zimu ven na slunce? Kolik ti je? Nemáš problém se vstřebáváním? Když z toho vypadne, že je v riziku, řeknu narovinu: "Tohle já ti neměřím ani nepředepisuju — ale dává smysl, ať si u doktora necháš zkontrolovat hladinu vitaminu D a probereš s ním, jestli něco brát." A tím to pro mě končí. Nehraju si na laborku a nehraju si na doktora. Co ale dělám vždycky — narovnám mýty. Když mi někdo řekne, že bere megadávky, protože "víc je líp", zastavím ho: víc není líp, u déčka existuje strop a nárazové mega-dávky spíš škodí. A když čekáš, že ti déčko zvedne imunitu nebo výkon, tak tě zklamu — na to data nejsou. Silový trénink, bílkovina a spánek ti udělají mnohem víc než jakákoli kapsle. Déčko řeš jenom tehdy, když jsi reálně v riziku, a řeš ho přes doktora, ne přes mě. Be Effective. 💪</p></div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Klient je 35letý zdravý muž, chodí běhat ven, jí pestře. Kolega ti radí, ať mu "pro jistotu" napíšeš megadávku déčka. Co uděláš? <span class="tg">odpověď ▾</span></div><div class="aa">Nic takového. Nespadá do rizikové skupiny a plošné megadávky nejsou na místě — navíc dávku nepředepisuje trenér. Když by chtěl mít jistotu, ať si nechá hladinu změřit u lékaře.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Klient řekne: "Slyšel jsem, že si dám 14 gramů déčka a bude mi líp." Kde je chyba? <span class="tg">odpověď ▾</span></div><div class="aa">V jednotkách i v logice. Vitamin D se dávkuje v IU, ne v gramech — běžně stovky až nižší tisíce IU/den. A víc není líp: platí U-křivka, kde i příliš vysoké dávky škodí. Konkrétní dávku určí lékař podle hladiny.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Seniorka v riziku deficitu se ptá, jestli jí déčko zaručí silnější kosti a lepší imunitu. Jak odpovíš poctivě? <span class="tg">odpověď ▾</span></div><div class="aa">Že samo o sobě to není zázrak. U kostí velká data plošný benefit u zdravých seniorů neukazují a imunitní efekty jsou slabé a rozporuplné. Doporučím jí test 25(OH)D u lékaře a případnou suplementaci nechám na něm — spolu se silovým tréninkem a bílkovinou.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Kdy nejpozději musíš přestat řešit dávkování a poslat klienta k lékaři? <span class="tg">odpověď ▾</span></div><div class="aa">Jakmile jsou ve hře léky, zdravotní diagnóza, těhotenství/kojení, porucha příjmu potravy nebo malabsorpce. Trenér neměří, neinterpretuje testy a nepředepisuje — nasměruje k lékaři a nikdy neřeší úpravu klientových léků.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi 3 svoje klienty a udělej u každého rychlou rizikovou triáž vitaminu D: napiš, jestli spadá do rizikové skupiny (senior 65+, tmavá pleť, zahalení, minimum slunce v zimě, obezita, malabsorpce). U toho, kdo do rizika spadá, naformuluj přesně jednu větu, kterou mu řekneš a která ho pošle na test 25(OH)D k lékaři — aniž bys cokoli diagnostikoval nebo předepisoval dávku. Tu větu si ulož jako svou šablonu do budoucna.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      
+      <a class="lnav-mod" href="/akademie/studium/#m23">⬑ Modul 23<span class="s">Zdravotní specifika a stárnutí</span></a>
+      <a class="lnav-next" href="/akademie/studium/m23-l2/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol><li>de Souza MM, et al. Vitamin D Supplementation and the Incidence of Fractures in the Elderly Healthy Population: A Meta-analysis of Randomized Controlled Trials. J Gen Intern Med. 2024;39(14):2829–2836 (PubMed, PMID 38997531). <a href="https://doi.org/10.1007/s11606-024-08933-1" target="_blank" rel="noopener">DOI</a></li><li>Bowles SD, et al. Effects of High Dose Bolus Cholecalciferol on Free Vitamin D Metabolites, Bone Turnover Markers and Physical Function. Nutrients. 2024;16(17):2888 (PubMed, PMID 39275206). <a href="https://doi.org/10.3390/nu16172888" target="_blank" rel="noopener">DOI</a></li><li>Fuentes-Barría H, et al. Vitamin D and Sarcopenia: Implications for Muscle Health. Biomedicines. 2025;13(8):1863 (PubMed, PMID 40868119). <a href="https://doi.org/10.3390/biomedicines13081863" target="_blank" rel="noopener">DOI</a></li><li>Shen J, et al. Association between prenatal vitamin D supplementation and respiratory diseases in children: a systematic review and meta-analysis. BMC Pediatr. 2025;25(1):915 (PubMed, PMID 41204244). <a href="https://doi.org/10.1186/s12887-025-06268-2" target="_blank" rel="noopener">DOI</a></li><li>Sartini M, et al. Preventive Vitamin D Supplementation and Risk for COVID-19 Infection: A Systematic Review and Meta-Analysis. Nutrients. 2024;16(5):679 (PubMed, PMID 38474807). <a href="https://doi.org/10.3390/nu16050679" target="_blank" rel="noopener">DOI</a></li><li>Moutzouri E, et al. Inappropriate vitamin D supplementation among multimorbid older patients: a multicountry analysis. BMC Geriatr. 2025;25(1):541 (PubMed, PMID 40684074). <a href="https://doi.org/10.1186/s12877-025-06189-w" target="_blank" rel="noopener">DOI</a></li></ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna. Odborné tvrzení opřené o citované studie (PubMed / DOI). Lekce vzdělává trenéra, není lékařská rada.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260704"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m23-l1', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+  <script src="/assets/ai-martin.js?v=20260703b" defer></script>
+</body>
+</html>

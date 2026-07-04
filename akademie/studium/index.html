@@ -143,7 +143,7 @@
       .les.isfree .s{color:var(--gold-soft);font-weight:700}
     </style>
     <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
-      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (236 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
+      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (240 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
       <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
     </a>
 
@@ -489,6 +489,12 @@
         { id:"m22-l2", t:"Perimenopauza a menopauza: trénink, bílkoviny, kosti", available:true, href:"/akademie/studium/m22-l2/" },
         { id:"m22-l3", t:"RED-S a nízká energetická dostupnost: varovné signály", available:true, href:"/akademie/studium/m22-l3/" },
         { id:"m22-l4", t:"Body image, váha a citlivá komunikace se ženami", available:true, href:"/akademie/studium/m22-l4/" }
+      ]},
+      { t:"Zdravotní specifika a stárnutí", d:"Situace, kde klientovi rozhoduje věda i hranice: vitamin D a doplňky u rizikových, sarkopenie po 50, inzulinová rezistence a cholesterol. Co trenér zvládne životním stylem — a kdy jednoznačně odkázat na lékaře.", lessons:[
+        { id:"m23-l1", t:"Vitamin D a doplňky u rizikových klientů", available:true, href:"/akademie/studium/m23-l1/" },
+        { id:"m23-l2", t:"Sarkopenie: jak u klienta 50+ chránit svaly", available:true, href:"/akademie/studium/m23-l2/" },
+        { id:"m23-l3", t:"Inzulinová rezistence a prediabetes: role životního stylu", available:true, href:"/akademie/studium/m23-l3/" },
+        { id:"m23-l4", t:"Cholesterol a lipidy: co zvládne strava a pohyb", available:true, href:"/akademie/studium/m23-l4/" }
       ]}
     ];
     // ----- Free-preview (#35): ochutnávka pro nepřihlášené/nekupující + upsell -----
@@ -676,7 +682,7 @@
               if(!u){
                 FREEMODE = true; applyFreeMode();
                 var n0 = document.getElementById('modeNote');
-                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 236 lekcím odemkni celou Academy.';
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 240 lekcím odemkni celou Academy.';
                 try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
                 return;
               }
@@ -686,7 +692,7 @@
                 var note = document.getElementById('modeNote');
                 if (note) note.textContent = has
                   ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 236 lekcím odemkni celou Academy.';
+                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 240 lekcím odemkni celou Academy.';
                 window.BA.getProgress().then(render);
               });
             });
