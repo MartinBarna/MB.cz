@@ -178,6 +178,18 @@
         .catch(function () { return null; });
     },
 
+    // Vystavení certifikátu přihlášenému členovi (RPC ověří přístup + dokončení
+    // server-side, 1 certifikát/uživatele, idempotentní). Live → {ok, cert_id,
+    // full_name, issued_at} nebo {ok:false, error}. Demo → simulovaný náhled.
+    issueCertificate: function (fullName) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true, cert_id: "BA-DEMO-0001", full_name: fullName || "Jméno Příjmení", issued_at: new Date().toISOString() });
+      return client.rpc("issue_certificate", { p_full_name: fullName }).then(function (r) {
+        if (r.error) return { ok: false, error: r.error.message };
+        var row = (r.data && r.data[0]) || null;
+        return row ? { ok: true, cert_id: row.cert_id, full_name: row.full_name, issued_at: row.issued_at } : { ok: false, error: "no-row" };
+      }).catch(function (e) { return { ok: false, error: String(e && e.message || e) }; });
+    },
+
     // Podepsaná (dočasná) URL k souboru v Supabase Storage — jen pro přihlášené
     // s přístupem (gating řeší RLS politika bucketu). Demo → null.
     materialUrl: function (bucket, path) {

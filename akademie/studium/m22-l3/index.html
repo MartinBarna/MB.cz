@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RED-S a nízká energetická dostupnost: varovné signály — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  ul,ol{color:var(--ink);} li{margin:.35rem 0 .35rem 1.1rem;}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .warn{background:rgba(220,80,60,.1);border:1px solid rgba(220,80,60,.4);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .warn b{color:#ff9d7a;}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.82rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.35rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 22 · Lekce 3 — Trénování a vedení žen</div>
+    <h1>RED-S a nízká energetická dostupnost: varovné signály</h1>
+
+    <p class="lead">Když klientka pořád tvrdě maká, jí čím dál míň a přitom se cítí hůř, výkon jde dolů a menstruace zmizí, není to „konečně zabraný přístup" — je to <strong>červená vlajka</strong>. Nízká energetická dostupnost (LEA) a její důsledek <strong>RED-S</strong> (Relative Energy Deficiency in Sport) jsou dnes nejlíp zdokumentovaný způsob, jak si žena tréninkem a dietou reálně poškodí zdraví. Tvoje práce jako trenéra není tohle léčit — je to <strong>rozpoznat brzy a odkázat na správného odborníka</strong>. Tahle lekce ti dá oči na to, čeho si všímat, a jasnou hranici, kde tvoje role končí.</p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul><li>Co je energetická dostupnost (EA) a proč je LEA kořen problému, ne důsledek</li><li>RED-S není jen ženská věc a není to jen o menstruaci — sahá na kosti, výkon, hlavu i imunitu</li><li>Konkrétní varovné signály u klientky, kterých si jako trenér reálně všimneš</li><li>Trenér RED-S NELÉČÍ — rozpozná a odkáže (lékař, sportovní lékař, nutriční terapeut, u PPP psycholog)</li><li>Jak o tom s klientkou mluvit, aniž ji vyděsíš nebo naopak přehlédneš vážný problém</li></ul>
+    </div>
+
+    <h2>Co je energetická dostupnost a nízká EA (LEA)</h2>
+    <p>Energetická dostupnost (energy availability, EA) je jednoduchá myšlenka: kolik energie zbyde tělu na to, aby vůbec fungovalo, <strong>po odečtení energie spálené tréninkem</strong>. Tělo neřeší jen „kolik jím", ale „kolik mi zbyde na provoz, když si nejdřív vezme daň trénink" — na hormony, kosti, imunitu, opravu tkání.</p><div class="card"><p><strong>LEA nastane, když klientka jí příliš málo vzhledem k tomu, kolik odtrénuje.</strong> Nemusí být hubená ani mít podváhu. Ve studii elitních vytrvalkyň mělo nízkou nebo sníženou EA <strong>63 % žen, přestože jejich průměrné BMI bylo v normě</strong>, a 60 % mělo poruchu menstruace. To je pro tebe zásadní: normální váha problém nevyloučí.</p></div><p>Klíčové je, že LEA je <strong>příčina</strong>, ne příznak. Když ji nepodchytíš, jde po ní celá kaskáda potíží — a ta se jmenuje RED-S.</p>
+
+    <h2>Co je RED-S a jaké má důsledky</h2>
+    <p>RED-S (dřív se tomu říkalo „triáda sportovkyň") je zastřešující pojem od Mezinárodního olympijského výboru. Popisuje, že jeden kořen — nízká EA — rozhází <strong>celou řadu tělesných systémů najednou</strong>, ne jen tři. Podle konsenzu IOC z roku 2023 sem patří dopady na metabolismus, menstruaci, kosti, imunitu, tvorbu bílkovin, srdce i psychiku.</p><p>Tři nejdůležitější důsledky, které musíš znát:</p><div class="card"><p><strong>1. Menstruační dysfunkce až amenorea (vymizení menstruace).</strong> Tělo v deficitu „vypne" reprodukci, protože ji vyhodnotí jako luxus. Chybějící nebo nepravidelná menstruace je jeden z nejsilnějších varovných signálů LEA — a není normální, ani u tvrdě trénující ženy.</p><p><strong>2. Zhoršení zdraví kostí.</strong> Nízký estrogen + energetický deficit = kosti řídnou. Výsledek jsou únavové (stresové) zlomeniny a dlouhodobě riziko osteoporózy. V citované studii mělo <strong>45 % vytrvalkyň zhoršené zdraví kostí</strong>.</p><p><strong>3. Pokles výkonu.</strong> Paradox, který klientce otevře oči: méně energie neznamená lepší formu. Klesá vytrvalost, síla, schopnost regenerace, roste nemocnost a zranění. Tvrdší dřina v deficitu vede k horším, ne lepším výsledkům.</p></div>
+
+    <h2>Varovné signály u klientky — čeho si všímat</h2>
+    <p>Tohle je tvoje hlavní práce: <strong>nebýt diagnostik, ale mít radar</strong>. Žádný jednotlivý signál nic „nedokazuje", ale když se jich sejde víc, je čas jednat. Prevenční doporučení IOC zdůrazňují, že trenéři a okolí sportovkyně mají zůstat ostražití právě k raným příznakům.</p><div class="card"><p><strong>Fyzické:</strong> ztráta nebo nepravidelnost menstruace; opakovaná zranění a únavové zlomeniny; časté nachlazení a nemoci; pořád je jí zima; padání vlasů; zácpa; stagnace nebo neplánovaný pokles váhy.</p><p><strong>Výkon a energie:</strong> chronická únava, „ploché" tréninky, výkon dlouhodobě klesá i přes objem; špatná regenerace; nespavost.</p><p><strong>Chování a hlava:</strong> posedlost jídlem, počítáním kalorií nebo „čistotou" stravy; strach z konkrétních potravin; vyčerpávající objem cardia navíc; cvičení i při nemoci/zranění; podrážděnost, uzavřenost, nízká nálada; vynechávání jídel před tréninkem.</p></div><div class="eq">Jeden signál = zvýšená pozornost. Několik signálů najednou = zastav a odkaž.</div>
+
+    <h2>Kde končí trenér a začíná lékař</h2>
+    <p>Tady musím být úplně natvrdo, protože je to bezpečnostně kritické. <strong>RED-S a poruchy příjmu potravy nejsou tvoje kompetence k léčbě.</strong> Nejsi lékař, nejsi nutriční terapeut, nejsi psycholog. Tvoje role má tři kroky a ani o krok dál:</p><div class="card"><p><strong>1. Rozpoznej</strong> — všimni si vzorce signálů výše.</p><p><strong>2. Otevři téma</strong> — s respektem, bez nálepkování a bez diagnózy.</p><p><strong>3. Odkaž</strong> — na lékaře / sportovního lékaře (menstruace, kosti, krevní testy, hormony), na nutričního terapeuta (řešení příjmu), a při podezření na poruchu příjmu potravy na psychologa/psychiatra.</p></div><p>Co <strong>NEDĚLÁŠ nikdy:</strong> nediagnostikuješ RED-S ani PPP, neřešíš léky, hormony, antikoncepci ani HRT, nepředepisuješ „léčebný" jídelníček na amenoreu. To všechno je výhradně doména lékaře. Ty jen pomůžeš klientce dojít ke správným dveřím — a mezitím <strong>přestaneš tlačit deficit a objem</strong>, protože bys jinak škodu prohluboval.</p>
+
+    <h2>Jak o tom mluvit, aniž bys uškodil</h2>
+    <p>Špatně vedený rozhovor umí klientku zahnat do kouta nebo naopak bagatelizovat vážnou věc. Drž se tří zásad. Za prvé: <strong>mluv o zdraví a výkonu, ne o vzhledu a váze.</strong> Prevenční doporučení IOC přímo radí odklonit důraz od hmotnosti a štíhlosti. Za druhé: <strong>popisuj, co vidíš, ne co si myslíš.</strong> „Všiml jsem si, že ti výkon už dva měsíce klesá a zmínila jsi, že nemáš menstruaci" je lepší než „myslím, že máš RED-S".</p><blockquote>„Nejsem lékař a tohle nechci odhadovat. Ale to, co vidím, si zaslouží, aby se na to podíval odborník. Pomůžu ti najít, na koho se obrátit — a mezitím zpomalíme, ať tělu nepřitěžujeme."</blockquote><p>Za třetí: <strong>ber to vážně a nenech to vyšumět.</strong> Když klientka odmítne, netlač, ale téma neopouštěj — vrať se k němu a dej najevo, že ti jde o ni, ne o čísla na váze.</p>
+
+    <div class="warn"><b>⚠️ Kde končí role trenéra</b>
+    <p><strong>Hranice tvojí role jako trenéra.</strong> Tato lekce tě vzdělává o RED-S a nízké energetické dostupnosti. NEDĚLÁ z tebe zdravotníka a nedává podklad k tomu, abys cokoli léčil, diagnostikoval nebo předepisoval.</p><p><strong>Nikdy:</strong> nediagnostikuj RED-S ani poruchu příjmu potravy, neřeš léky, hormony, antikoncepci ani HRT, nepředepisuj „léčebný" postup na vymizelou menstruaci nebo řídnutí kostí. To vše je výhradně doménou lékaře.</p><p><strong>Odkaž na odborníka</strong>, jakmile vidíš vzorec signálů — zejména vymizení/nepravidelnost menstruace, opakovaná zranění nebo únavové zlomeniny, chronickou únavu s klesajícím výkonem, nebo posedlost jídlem a cvičením:</p><p>• <strong>Lékař / sportovní lékař</strong> — menstruace, kosti, krevní obraz, hormony.<br>• <strong>Nutriční terapeut</strong> — úprava příjmu.<br>• <strong>Psycholog / psychiatr</strong> — při podezření na poruchu příjmu potravy.</p><p>Do doby, než se klientka dostane k odborníkovi, <strong>přestaň tlačit kalorický deficit a tréninkový objem</strong> — jinak bys škodu prohluboval. Trenér RED-S neléčí. Rozpozná a odkáže.</p></div>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Za ty roky jsem se naučil jednu věc: nejnebezpečnější klientka není ta, co to vzdává — je to ta „hodná a zabraná", co udělá všechno, co jí řekneš, a ještě si přidá. Ta si RED-S vypěstuje potichu, protože maká a hubne, a všichni ji chválí. Proto se u žen ptám na menstruaci úplně normálně jako na součást vstupního dotazníku, stejně jako na spánek nebo zranění — není to intimní tabu, je to vitální ukazatel. Když mi řekne, že „to nějak vynechává", nezačnu jí upravovat makra. Řeknu jí narovinu, že tohle je věc pro doktora, a pomůžu jí ho najít. Radši budu ten trenér, co poslal klientku k lékaři zbytečně, než ten, co půl roku tlačil deficit u někoho, kdo si ničil kosti. Tvoje reputace se nepostaví na tom, kolik kilo klientka shodila — postaví se na tom, že u tebe byla v bezpečí. Be Effective. 💪</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Proč nemůžu vyloučit RED-S jen proto, že klientka má normální váhu a nevypadá hubeně? <span class="tg">odpověď ▾</span></div><div class="aa">Protože kořenem je nízká energetická dostupnost (příjem minus energie spálená tréninkem), ne hmotnost. Ve studii elitních vytrvalkyň mělo nízkou/sníženou EA 63 % žen s průměrným BMI v normě a 60 % mělo poruchu menstruace. Normální váha problém nevylučuje.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Jmenuj tři hlavní zdravotní důsledky RED-S. <span class="tg">odpověď ▾</span></div><div class="aa">1) Menstruační dysfunkce až amenorea (vymizení menstruace); 2) zhoršení zdraví kostí — únavové zlomeniny, riziko osteoporózy; 3) pokles výkonu — vytrvalosti, síly, regenerace, s vyšší nemocností a zraněními.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Klientka vynechává menstruaci a měla dvě únavové zlomeniny za rok. Co uděláš? <span class="tg">odpověď ▾</span></div><div class="aa">Nediagnostikuji ani neupravuji makra na vlastní pěst. Popíšu jí, co vidím, otevřu téma bez nálepkování a odkážu ji na lékaře / sportovního lékaře. Mezitím přestanu tlačit deficit a objem. Trenér neléčí — rozpozná a odkáže.</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak vést rozhovor, aby klientce spíš pomohl než uškodil? <span class="tg">odpověď ▾</span></div><div class="aa">Mluvit o zdraví a výkonu, ne o vzhledu a váze; popisovat, co vidím, ne co si myslím (žádná diagnóza); brát to vážně, netlačit, ale téma neopouštět. A jasně říct, že posouzení patří odborníkovi, a pomoct ho najít.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> U všech svých trénujících klientek si projdi vstupní dotazník a doplň (pokud tam chybí) neutrální otázku na menstruační cyklus — pravidelnost a případné vynechávání — jako standardní zdravotní ukazatel vedle spánku a zranění. U jedné konkrétní klientky, u které tušíš aspoň dva varovné signály z lekce, si připrav 3 věty, kterými bez nálepkování otevřeš téma a nabídneš odkaz na lékaře.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m22-l2/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m22">⬑ Modul 22<span class="s">Trénování a vedení žen</span></a>
+      <a class="lnav-next" href="/akademie/studium/m22-l4/">Další lekce →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol><li>Mountjoy M, et al. (2023). 2023 International Olympic Committee's (IOC) consensus statement on Relative Energy Deficiency in Sport (REDs). British Journal of Sports Medicine 57(17):1073-1097. <a href="https://doi.org/10.1136/bjsports-2023-106994" target="_blank" rel="noopener">DOI</a></li><li>Torstveit MK, et al. (2023). Primary, secondary and tertiary prevention of Relative Energy Deficiency in Sport (REDs): a narrative review by a subgroup of the IOC consensus on REDs. British Journal of Sports Medicine 57(17):1119-1126. <a href="https://doi.org/10.1136/bjsports-2023-106932" target="_blank" rel="noopener">DOI</a></li><li>Mountjoy M, et al. (2014). The IOC consensus statement: beyond the Female Athlete Triad — Relative Energy Deficiency in Sport (RED-S). British Journal of Sports Medicine 48(7):491-497. <a href="https://doi.org/10.1136/bjsports-2014-093502" target="_blank" rel="noopener">DOI</a></li><li>Melin A, et al. (2015). Energy availability and the female athlete triad in elite endurance athletes. Scandinavian Journal of Medicine & Science in Sports 25(5):610-622. <a href="https://doi.org/10.1111/sms.12261" target="_blank" rel="noopener">DOI</a></li><li>Angelidi AM, et al. (2024). Relative Energy Deficiency in Sport (REDs): Endocrine Manifestations, Pathophysiology and Treatments. Endocrine Reviews 45(5):676-708. <a href="https://doi.org/10.1210/endrev/bnae011" target="_blank" rel="noopener">DOI</a></li><li>Mountjoy M, et al. (2018). International Olympic Committee (IOC) Consensus Statement on Relative Energy Deficiency in Sport (RED-S): 2018 Update. International Journal of Sport Nutrition and Exercise Metabolism 28(4):316-331. <a href="https://doi.org/10.1123/ijsnem.2018-0136" target="_blank" rel="noopener">DOI</a></li></ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna. Odborné tvrzení opřené o citované studie (PubMed / DOI). Lekce vzdělává trenéra, není lékařská rada.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260704"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m22-l3', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+  <script src="/assets/ai-martin.js?v=20260703b" defer></script>
+</body>
+</html>
