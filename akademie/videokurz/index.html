@@ -115,9 +115,22 @@
     </a>
 
     <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
-      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(255,122,0,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (22 modulů, 236 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
+      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(255,122,0,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (23 modulů, 240 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
       <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
     </a>
+
+    <style>
+      .vk-badges{display:none;margin:2px 0 6px;}
+      .vk-badges .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 10px;}
+      .vk-badges .bh b{color:#fff;font-size:1rem;} .vk-badges .bh span{color:var(--muted);font-size:.85rem;}
+      .vk-badges .row{display:flex;gap:9px;flex-wrap:wrap;}
+      .vkb{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:50px;padding:7px 14px 7px 10px;font-size:.85rem;background:rgba(255,255,255,.03);color:var(--muted);}
+      .vkb .ic{font-size:1.15rem;filter:grayscale(1) opacity(.5);}
+      .vkb.on{border-color:rgba(255,122,0,.5);background:rgba(255,122,0,.1);color:#fff;font-weight:600;}
+      .vkb.on .ic{filter:none;}
+      .vkb.sec{border-color:rgba(47,174,87,.4);background:rgba(47,174,87,.1);color:#bfe9cb;font-weight:700;}
+    </style>
+    <div class="vk-badges" id="vkBadges"></div>
 
     <div id="modules"></div>
 
@@ -190,12 +203,26 @@
     }
     function startedAny(){ for(var k in DONE){ if(DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
     function route(){ var hsh=(location.hash||'').replace('#',''); if(hsh==='materialy'){ renderMaterials(); return; } var m=hsh.match(/^s(\d+)$/); if(m) renderSection(parseInt(m[1],10)-1); else renderOverview(); }
+    // Gamifikace: odznaky za zhlédnutá videa a kompletní sekce.
+    function paintBadges(cnt){
+      var el=document.getElementById('vkBadges'); if(!el) return;
+      if(cnt<1){ el.style.display='none'; return; }
+      var secMastered=0; SECS.forEach(function(s){ if(s.videos.length>0 && secDone(s)===s.videos.length) secMastered++; });
+      var mile=[{k:1,ic:'🌱',n:'První video'},{k:10,ic:'🔥',n:'Rozkoukáno'},{k:25,ic:'⚡',n:'25 videí'},{k:50,ic:'💪',n:'50 videí'},{k:100,ic:'🏆',n:'100 videí'},{k:150,ic:'🎓',n:'150 videí'}];
+      var pills='';
+      mile.forEach(function(b){ var on=cnt>=b.k; pills+='<span class="vkb'+(on?' on':'')+'" title="'+(on?'Získáno':'Zbývá '+(b.k-cnt)+' videí')+'"><span class="ic">'+b.ic+'</span>'+b.n+'</span>'; });
+      pills+='<span class="vkb'+(cnt>=TOTAL?' on':'')+'" title="Zhlédni celý kurz"><span class="ic">👑</span>Celý kurz</span>';
+      pills+='<span class="vkb sec" title="Sekce, kde máš zhlédnutá všechna videa"><span class="ic">🥇</span>Sekce: '+secMastered+' / '+SECS.length+'</span>';
+      el.innerHTML='<div class="bh"><b>🏅 Tvoje odznaky</b><span>'+cnt+' videí zhlédnuto · '+secMastered+' sekcí kompletních</span></div><div class="row">'+pills+'</div>';
+      el.style.display='block';
+    }
     function render(done){
       DONE=done||{};
       var cnt=0; SECS.forEach(function(s){ cnt+=secDone(s); });
       var pct=TOTAL?Math.round(cnt/TOTAL*100):0;
       document.getElementById('bigbar').style.width=pct+'%';
       document.getElementById('bigpct').textContent='Tvůj postup: '+cnt+' / '+TOTAL+' zhlédnuto ('+pct+' %)';
+      paintBadges(cnt);
       var hero=document.querySelector('.hero'), cb=document.getElementById('contBtn'), nv=nextVideo();
       if(!cb&&hero){ cb=document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
       if(cb){ if(nv){ cb.style.display='inline-flex'; cb.textContent=(startedAny()?'▶ Pokračovat: ':'▶ Začít: ')+nv.disp; cb.href='/akademie/videokurz/'+nv.slug+'/'; } else { cb.style.display='none'; } }
