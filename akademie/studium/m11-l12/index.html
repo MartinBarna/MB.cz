@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLP-1 (Ozempic, Mounjaro): jak vést klienta na lécích na hubnutí — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .bar{height:5px;background:rgba(255,255,255,.06);}
+  .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .3s;}
+  .top a.back{color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;}
+  .top a.back:hover{color:#fff;}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 20px 80px;}
+  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.1rem);line-height:1.18;color:#fff;margin:.5rem 0 1.3rem;letter-spacing:-.02em;}
+  h2{font-size:1.3rem;color:#fff;margin:2.1rem 0 .6rem;letter-spacing:-.01em;}
+  p{margin:.75rem 0;color:var(--ink);}
+  .lead{font-size:1.1rem;color:#e9e2d8;}
+  strong,b{color:#fff;}
+  em{color:var(--muted-2);}
+  .wrap a{color:var(--gold-soft);}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe b{color:var(--gold-soft);}
+  .warn{background:rgba(220,80,60,.1);border:1px solid rgba(220,80,60,.4);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .warn b{color:#ff9d7a;}
+  .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
+  .points li{margin:.4rem 0 .4rem 1.1rem;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
+  .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
+  .quiz h3{font-size:1.15rem;color:#fff;margin-bottom:.3rem;}
+  .q{border-top:1px solid var(--line);padding:14px 0;}
+  .q:first-of-type{border-top:none;}
+  .q .qq{font-weight:600;cursor:pointer;display:flex;gap:10px;color:var(--ink);}
+  .q .qq .n{color:var(--gold-soft);font-weight:800;}
+  .q .aa{display:none;margin-top:.6rem;color:var(--muted-2);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:11px;padding:.8rem 1rem;font-size:.95rem;}
+  .q.open .aa{display:block;}
+  .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
+  .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
+  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
+  .src{margin-top:2.2rem;font-size:.8rem;color:var(--muted);}
+  .src summary{cursor:pointer;font-weight:700;color:var(--muted-2);}
+  .src ol{margin:.6rem 0 0 1.1rem;}.src li{margin:.2rem 0;}
+  .src a{color:var(--gold-soft);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Akademie pro trenéry</span></span></a>
+    <a class="back" href="/akademie/moje/">← Zpět na Academy</a>
+  </div></div>
+  <div class="bar"><span id="rbar"></span></div>
+
+  <div class="wrap">
+    <div class="crumb">Modul 11 · Lekce 12 — Věda o hubnutí</div>
+    <h1>GLP-1 (Ozempic, Mounjaro): jak vést klienta na lécích na hubnutí</h1>
+
+    <p class="lead">Léky na hubnutí ze skupiny GLP-1 (semaglutid — Ozempic, Wegovy; tirzepatid — Mounjaro) jsou nejrychleji rostoucí trend v hubnutí za poslední dekádu. Ať si o nich myslíš cokoliv, jako trenér se s klienty, co je berou, budeš potkávat čím dál častěji. A tady je věc, kterou většina lidí kolem těch léků neřeší a která je <strong>přesně tvoje parketa</strong>: rychlé hubnutí na GLP-1 s sebou bere velký kus svalů. V téhle lekci se naučíš, <strong>jak takového klienta vést, jak mu ochránit svaly a zdraví, a hlavně kde je hranice mezi tvou prací a prací lékaře.</strong></p>
+
+    <div class="points"><strong>Co si z lekce odneseš:</strong>
+      <ul>
+        <li>Jak GLP-1 léky fungují a kolik váhy reálně shodí.</li>
+        <li>Skrytý háček: kolik z té váhy je sval, ne tuk — a proč je to problém.</li>
+        <li>Tvoje dvě hlavní páky, jak svaly ochránit: silový trénink a bílkoviny.</li>
+        <li>Jak klientovi pomoct dostat dost bílkovin, když skoro nemá chuť k jídlu.</li>
+        <li>Kde jsou tvoje mantinely — co smíš a co patří výhradně lékaři.</li>
+        <li>Proč to, co postavíš teď, rozhodne o tom, co se stane po vysazení.</li>
+      </ul>
+    </div>
+
+    <h2>1) Co GLP-1 léky jsou a co umí</h2>
+    <p>GLP-1 je hormon, který tělo přirozeně vyplavuje po jídle — tlumí chuť, zpomaluje vyprazdňování žaludku a navozuje pocit sytosti. Léky jako semaglutid a tirzepatid tenhle signál napodobují a drží ho vysoko. Výsledek: klient má výrazně menší hlad, sní míň a zhubne. A ne málo — v randomizovaných studiích to dělá <strong>zhruba 15 až 24 % tělesné hmotnosti</strong>, což je magnituda, kterou samotnou dietou skoro nikdo nedá.</p>
+    <p>Z pohledu bilance to není žádné kouzlo. Lék jen mnohem snáz vytvoří velký <a href="/akademie/studium/#m11">kalorický deficit</a> tím, že klient prostě nemá hlad. Pořád platí, že o hubnutí rozhoduje bilance — GLP-1 je jen velmi silný nástroj, jak ji srazit.</p>
+
+    <h2>2) Skrytý háček: mizí i svaly</h2>
+    <p>Tohle je jádro celé lekce. Když hubneš rychle a hodně, netratíš jen tuk. Velký kus úbytku jde na účet <strong>svalové (a kostní) hmoty</strong> — a u GLP-1 je to obzvlášť výrazné, protože hubnutí je rychlé a klient často nejí dost bílkovin.</p>
+    <div class="card">
+      <p><strong>Kolik svalů:</strong> přehled dat ukazuje, že GLP-1 léky mohou srazit beztukovou hmotu řádově o <strong>~10 %, tedy klidně 6 kg svalů</strong> — což odpovídá deseti i více letům stárnutí, zhuštěným do pár měsíců.</p>
+      <p><strong>Podíl na úbytku:</strong> velká meta-analýza (20 studií, přes 15 000 lidí) našla, že <strong>25 až 39 % shozené váhy tvoří beztuková hmota</strong>. U semaglutidu kolem 35 %, u tirzepatidu kolem 25 %.</p>
+      <p><strong>Proč tě to má zajímat:</strong> ztráta svalu znamená slabost, křehkost, horší metabolismus a v dlouhém horizontu vyšší riziko sarkopenie. Zhubnout a přitom „zestárnout o deset let“ ve svalech není výhra.</p>
+    </div>
+    <blockquote>Klient přijde nadšený, že mu jde váha dolů. Tvoje práce je zajistit, aby dolů šel hlavně tuk — a svaly zůstaly. Přesně tady trenér přidává hodnotu, kterou lék sám nedá.</blockquote>
+
+    <h2>3) Tvoje páka č. 1: silový trénink</h2>
+    <p>Nejsilnější nástroj, jak svaly během hubnutí na GLP-1 ochránit, máš přímo v ruce. Data jsou jednoznačná: dieta plus <strong>silový trénink</strong> dává výrazně příznivější složení úbytku než dieta samotná — v meta-analýze klesl podíl svalů na úbytku na zhruba <strong>17,5 %</strong> (oproti 25–39 % bez tréninku). Dohlížený silový program delší než 10 týdnů umí přidat řádově <strong>~3 kg beztukové hmoty a ~25 % síly</strong>.</p>
+    <div class="eq">GLP-1 + silový trénink = hubne tuk, drží sval</div>
+    <div class="card">
+      <p><strong>Priorita:</strong> silový trénink není doplněk, je to hlavní ochrana svalu. U klienta na GLP-1 ho postav jako nepodkročitelné minimum.</p>
+      <p><strong>Frekvence a forma:</strong> 2–3× týdně, velké svalové skupiny, progresivní zátěž. Nemusí to být masakr — konzistentní kvalitní silový podnět stačí.</p>
+      <p><strong>Realita nízké energie:</strong> klient má často míň energie a hůř regeneruje (jí toho málo). Objem drž rozumný, kvalitu a progresi hlídej.</p>
+    </div>
+
+    <h2>4) Tvoje páka č. 2: dost bílkovin (i bez chuti)</h2>
+    <p>Druhá páka je bílkovina. Silový trénink svalu dá signál „zůstaň“, ale musí mít z čeho stavět. Tady narazíš na paradox GLP-1: klient <strong>nemá hlad</strong>, takže sníst dost bílkovin je pro něj těžké — a přitom je právě teď potřebuje nejvíc.</p>
+    <div class="eq">Cíl bílkovin ≈ 1,6–2,2 g / kg / den — priorita č. 1 v talíři</div>
+    <div class="card">
+      <p><strong>Bílkovina jako první.</strong> Když má klient v žaludku místo jen na pár soust, ať jsou to sousta bílkovinná. Maso, ryby, vejce, mléčné, luštěniny — a klidně protein jako pojistka.</p>
+      <p><strong>Menší, hutnější jídla.</strong> Při rychlé sytosti fungují menší porce s vysokou hustotou bílkovin líp než velké talíře.</p>
+      <p><strong>Tekuté bílkoviny pomáhají.</strong> Když pevné jídlo „nejde“, proteinový nápoj nebo řecký jogurt dostanou bílkovinu dovnitř snáz.</p>
+      <p><strong>Hlídej i celkovou kvalitu:</strong> vláknina, zelenina, dost tekutin — nízká chuť svádí k tomu jíst „skoro nic“, což zhoršuje regeneraci i trávení.</p>
+    </div>
+
+    <h2>5) Mantinely: co je tvoje a co lékaře</h2>
+    <p>Tohle si zapamatuj úplně přesně, protože tady se rozhoduje o tvé důvěryhodnosti i bezpečí klienta. <strong>GLP-1 je lék na předpis.</strong> To znamená jasnou dělicí čáru.</p>
+    <div class="warn">
+      <p><b>NIKDY</b> jako trenér nedoporučuješ začít brát GLP-1, neupravuješ dávku, neradíš přestat ani neřešíš vedlejší účinky jako zdravotní problém. To všechno patří <strong>výhradně lékaři</strong>, který lék předepsal.</p>
+      <p><b>Tvoje role</b> je podpora tréninkem a výživou tak, aby klient při hubnutí ochránil svaly a zdraví — a odkázat všechny medicínské otázky (nevolnost, dávkování, vhodnost léku) zpět na lékaře.</p>
+    </div>
+    <p>Když ti klient řekne o vážnějších potížích (silná nevolnost, zvracení, bolesti břicha), tvoje jediná správná věta je: <em>„Tohle prober se svým lékařem.“</em> Ne diagnóza, ne rada k léku. Typicky je taky vhodné, aby ti klient vůbec dal vědět, že GLP-1 bere — ať víš, s čím pracuješ.</p>
+
+    <h2>6) Po vysazení: proč stavíš svaly už teď</h2>
+    <p>A poslední díl skládačky, který dělá z krátkodobého úspěchu dlouhodobý. Řada lidí lék dřív nebo později vysadí (cena, dostupnost, plán). Problém je, že <strong>váha se pak často vrací — a vrací se hlavně jako tuk.</strong> Když klient během léčby přišel o svaly, vrací se do horšího složení těla, než z jakého vyšel.</p>
+    <p>Proto všechno výše nedělá jen „lepší postavu teď“. Svaly, které klientovi pomůžeš udržet, jsou jeho <strong>pojistka pro chvíli, kdy lék skončí</strong> — drží mu metabolismus, sílu a schopnost udržet výsledek. Tohle je argument, kterým klienta u tréninku a bílkovin udržíš, i když „už přece hubne sám“.</p>
+
+    <div class="praxe"><b>V praxi (Martin):</b> Když ke mně přijde klient na Ozempicu nebo Mounjaru, neřeším ten lék — to je věc jeho a jeho doktora. Řeším to, co je moje: ať z něj nezmizí svaly. Postavím mu silový trénink jako nepodkročitelný základ a bílkoviny jako prioritu č. 1 v talíři, i když skoro nemá hlad — často přes menší hutná jídla a proteinový nápoj. A vždycky mu řeknu narovinu: „Ten lék ti sráží váhu, ale moje práce je, aby dolů šel tuk a ne svaly. To, co spolu teď postavíme, tě podrží, až lék jednou vysadíš.“ A jakmile se objeví cokoliv zdravotního, posílám ho za lékařem. Be Effective.</div>
+
+    <div class="quiz" id="quiz">
+      <h3>Kvíz — ověř si pochopení</h3>
+      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
+      <div class="q"><div class="qq"><span class="n">1.</span> Jak GLP-1 léky vedou k hubnutí? <span class="tg">odpověď ▾</span></div><div class="aa">Napodobují hormon GLP-1 — tlumí chuť, zpomalují vyprazdňování žaludku a navozují sytost. Klient má výrazně menší hlad, sní míň a vytvoří velký kalorický deficit (řádově 15–24 % hmotnosti). Není to kouzlo, je to silný nástroj na bilanci.</div></div>
+      <div class="q"><div class="qq"><span class="n">2.</span> Proč je u GLP-1 velký problém úbytek svalů? <span class="tg">odpověď ▾</span></div><div class="aa">Hubnutí je rychlé a klient často nejí dost bílkovin, takže 25–39 % shozené váhy tvoří beztuková hmota (~10 %, klidně 6 kg svalů). To znamená slabost, horší metabolismus a riziko sarkopenie — „zestárnutí ve svalech“ za pár měsíců.</div></div>
+      <div class="q"><div class="qq"><span class="n">3.</span> Jaké jsou dvě hlavní páky, jak svaly ochránit? <span class="tg">odpověď ▾</span></div><div class="aa">Silový trénink (2–3× týdně, progresivní, velké svaly) a dostatek bílkovin (~1,6–2,2 g/kg/den). Dieta + silový trénink sráží podíl svalů na úbytku zhruba na 17,5 % (oproti 25–39 % bez tréninku).</div></div>
+      <div class="q"><div class="qq"><span class="n">4.</span> Jak pomůžeš klientovi dostat dost bílkovin, když nemá chuť? <span class="tg">odpověď ▾</span></div><div class="aa">Bílkovina jako první sousto, menší hutná jídla, tekuté zdroje (protein, řecký jogurt) když pevné nejde. A hlídat i celkovou kvalitu — vláknina, zelenina, tekutiny — aby klient nejedl „skoro nic“.</div></div>
+      <div class="q"><div class="qq"><span class="n">5.</span> Kde je hranice mezi tebou a lékařem? <span class="tg">odpověď ▾</span></div><div class="aa">Nedoporučuješ začít/přestat brát GLP-1, neupravuješ dávku, neřešíš vedlejší účinky jako zdravotní problém — to patří výhradně lékaři. Tvoje role je trénink a výživa na ochranu svalů a zdraví, a odkázat medicínské otázky na lékaře.</div></div>
+    </div>
+
+    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Představ si klienta, který ti řekne, že začal brát semaglutid a za měsíc shodil 5 kg. Napiš: jaké tři věci mu okamžitě nastavíš (trénink, bílkoviny, monitoring), jednu konkrétní strategii, jak mu pomoct dostat bílkoviny při nízké chuti, a přesnou větu, kterou reaguješ, když si postěžuje na silnou nevolnost. Na závěr jednou větou vysvětli, proč je pro něj klíčové udržet svaly právě teď.</div>
+
+    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
+      <a class="lnav-prev" href="/akademie/studium/m11-l11/">← Předchozí lekce</a>
+      <a class="lnav-mod" href="/akademie/studium/#m11">⬑ Zpět na Modul 11<span class="s">Věda o hubnutí</span></a>
+      <a class="lnav-next" href="/akademie/studium/">Přehled modulů →</a>
+    </nav>
+    <div class="done-row">
+      <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
+      <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
+    </div>
+
+    <details class="src"><summary>Zdroje</summary>
+      <ol>
+        <li>Locatelli JC, Costa JG, Haynes A, et al. Incretin-Based Weight Loss Pharmacotherapy: Can Resistance Exercise Optimize Changes in Body Composition? Diabetes Care. 2024;47(10):1718–1730. <a href="https://doi.org/10.2337/dci23-0100" target="_blank" rel="noopener">doi:10.2337/dci23-0100</a></li>
+        <li>Eisa N, Barood O. Lean Mass Changes With Incretin Therapy Versus Lifestyle Intervention: A Systematic Review and Meta-Analysis of Randomised Controlled Trials. Diabetes Obes Metab. 2026;28(6):4818–4827. <a href="https://doi.org/10.1111/dom.70666" target="_blank" rel="noopener">doi:10.1111/dom.70666</a></li>
+        <li>Bosomworth NJ. New drugs for weight loss: Why change in body composition matters and why nutrition and exercise remain paramount. Can Fam Physician. 2025;71(11-12):705–714. <a href="https://doi.org/10.46747/cfp.711112705" target="_blank" rel="noopener">doi:10.46747/cfp.711112705</a></li>
+      </ol>
+      <p style="margin-top:.6rem">© Barna Academy — původní text. Autor: Martin Barna.</p>
+    </details>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script>
+    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+    var rbar = document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    var LID='m11-l12', PRODUCT='academy', state={done:false};
+    var btn=document.getElementById('doneBtn');
+    function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
+    function load(){
+      if (window.BA){
+        window.BA.ready.then(function(){
+          if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+          else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+        });
+      } else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    }
+    btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
+    load();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/lesson-audio.js?v=20260629c"></script>
+  <script src="/assets/ai-martin.js?v=20260703b" defer></script>
+</body>
+</html>
