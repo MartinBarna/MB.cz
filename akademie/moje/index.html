@@ -61,6 +61,22 @@
         <span class="go"><span class="lbl">Otevřít doporučení</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
+      <a class="card" id="tileCheckin" href="/akademie/moje/check-in/" style="display:none;">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg></div>
+        <h2>Týdenní check-in</h2>
+        <p class="desc">Tvoje váha, energie, spánek a tréninky za týden. Čím pravidelněji vyplňuješ, tím větší věrnostní sleva — a tím líp tě vedu.</p>
+        <div class="chips"><span class="chip">2 minuty týdně</span><span class="chip">Věrnostní sleva</span><span class="chip">Vidí to Martin</span></div>
+        <span class="go"><span class="lbl">Vyplnit check-in</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
+      <a class="card" id="tileCoach" href="/akademie/moje/kouc/" style="display:none;">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-6"/></svg></div>
+        <h2>Kouč — přehled klientů</h2>
+        <p class="desc">Souhrn check-inů všech klientů: trendy váhy, energie, adherence a flagy, u koho hoří. Jen pro tebe.</p>
+        <div class="chips"><span class="chip">Admin</span><span class="chip">Flagy</span><span class="chip">Věrnost</span></div>
+        <span class="go"><span class="lbl">Otevřít přehled</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
     </div>
 
     <div class="panel" id="empty" style="display:none;">
@@ -72,7 +88,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260704"></script>
   <script>
     (function(){
       var grid=document.getElementById('grid'), empty=document.getElementById('empty');
@@ -106,8 +122,12 @@
               return;
             }
             document.getElementById('who').textContent=u.email||'';
-            Promise.all([window.BA.hasEntitlement('academy'), window.BA.hasEntitlement('videokurz')])
-              .then(function(r){ showTiles(!!r[0], !!r[1]); });
+            Promise.all([window.BA.hasEntitlement('academy'), window.BA.hasEntitlement('videokurz'), window.BA.hasEntitlement('coaching')])
+              .then(function(r){
+                showTiles(!!r[0], !!r[1]);
+                if(r[2]){ var tc=document.getElementById('tileCheckin'); if(tc) tc.style.display=''; }
+                if((u.email||'').toLowerCase()==='martin@martinbarna.cz'){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; }
+              });
           });
         });
       }

@@ -188,15 +188,15 @@
     </div>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260629d"></script>
+  <script src="/assets/meal-gen.js?v=20260704"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null;
     var $=function(id){return document.getElementById(id);};
     function fmt(n){return Math.round(n);}
-    function macros(m){return 'B '+fmt(m.p)+' · S '+fmt(m.c)+' · T '+fmt(m.f)+' · '+fmt(m.kcal)+' kcal';}
+    function macros(m){return 'B '+fmt(m.p)+' · S '+fmt(m.c)+' · T '+fmt(m.f)+' · Vl '+fmt(m.fib)+' · '+fmt(m.kcal)+' kcal';}
 
-    fetch('/assets/food-db.json').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/food-db.json?v=20260704').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
 
@@ -216,7 +216,8 @@
         '<div class="tcard"><b>'+t.kcal+'</b><span>kcal</span></div>'+
         '<div class="tcard"><b>'+t.protein+' g</b><span>Bílkoviny</span></div>'+
         '<div class="tcard"><b>'+t.carbs+' g</b><span>Sacharidy</span></div>'+
-        '<div class="tcard"><b>'+t.fat+' g</b><span>Tuky</span></div>';
+        '<div class="tcard"><b>'+t.fat+' g</b><span>Tuky</span></div>'+
+        '<div class="tcard"><b>'+t.fiber+' g</b><span>Vláknina</span></div>';
       var html='';
       plan.meals.forEach(function(m){
         html+='<div class="meal"><h3>'+m.name+' <small>'+fmt(m.totals.kcal)+' kcal</small></h3><table>';

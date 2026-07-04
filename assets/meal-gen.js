@@ -31,7 +31,9 @@
     var carbs = Math.max(40, Math.round(carbsKcal / 4)); // g, pojistka
     // dorovnej kcal po zaokrouhlení
     kcal = protein * 4 + carbs * 4 + fat * 9;
-    return { kcal: kcal, protein: protein, carbs: carbs, fat: fat,
+    // Cílová vláknina: 14 g / 1000 kcal (US Dietary Guidelines), min. 25 g pro dospělého.
+    var fiber = Math.max(25, Math.round(kcal / 1000 * 14));
+    return { kcal: kcal, protein: protein, carbs: carbs, fat: fat, fiber: fiber,
              bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label };
   }
 
@@ -40,7 +42,8 @@
     var k = grams / 100;
     return {
       kcal: food.per100.kcal * k, p: food.per100.p * k,
-      c: food.per100.c * k, f: food.per100.f * k
+      c: food.per100.c * k, f: food.per100.f * k,
+      fib: (food.per100.fib || 0) * k
     };
   }
 
@@ -177,12 +180,12 @@
     out.forEach(function (m) {
       m.totals = m.items.reduce(function (s, it) {
         var mm = macrosFor(it.food, it.grams);
-        s.kcal += mm.kcal; s.p += mm.p; s.c += mm.c; s.f += mm.f; return s;
-      }, { kcal:0, p:0, c:0, f:0 });
+        s.kcal += mm.kcal; s.p += mm.p; s.c += mm.c; s.f += mm.f; s.fib += mm.fib; return s;
+      }, { kcal:0, p:0, c:0, f:0, fib:0 });
     });
     var dayTot = out.reduce(function (s, m) {
-      s.kcal += m.totals.kcal; s.p += m.totals.p; s.c += m.totals.c; s.f += m.totals.f; return s;
-    }, { kcal:0, p:0, c:0, f:0 });
+      s.kcal += m.totals.kcal; s.p += m.totals.p; s.c += m.totals.c; s.f += m.totals.f; s.fib += m.totals.fib; return s;
+    }, { kcal:0, p:0, c:0, f:0, fib:0 });
 
     return { meals: out, totals: dayTot, targets: targets };
   }

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Týdenní check-in — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap{max-width:640px;}
+  .ci-loyal{background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);border-radius:16px;padding:1rem 1.3rem;margin:1.2rem 0 1.6rem;display:flex;align-items:center;gap:14px;}
+  .ci-loyal .big{font-size:2rem;font-weight:800;color:var(--gold-soft);line-height:1;}
+  .ci-loyal .lt{color:var(--muted-2);font-size:.9rem;}
+  .ci-loyal .lt b{color:#fff;}
+  .fld{margin:1.3rem 0;}
+  .fld > label{display:block;font-weight:700;color:#fff;margin-bottom:.5rem;}
+  .fld .hint{color:var(--muted);font-size:.82rem;font-weight:400;}
+  .num{width:100%;background:rgba(0,0,0,.4);border:1px solid var(--line-2);border-radius:12px;color:#fff;padding:12px 14px;font-family:inherit;font-size:1rem;outline:none;}
+  .num:focus{border-color:rgba(255,122,0,.5);}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;}
+  .pills button{flex:1;min-width:52px;background:rgba(255,255,255,.05);border:1px solid var(--line-2);border-radius:12px;color:var(--muted-2);padding:12px 0;font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;transition:.15s;}
+  .pills button.on{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;border-color:transparent;}
+  .pillscap{display:flex;justify-content:space-between;color:var(--muted);font-size:.76rem;margin-top:.35rem;}
+  .rng{width:100%;accent-color:var(--gold);}
+  .rngval{font-weight:800;color:var(--gold-soft);}
+  .wk{display:flex;align-items:center;gap:10px;}
+  .wk input{width:74px;text-align:center;}
+  .wk span{color:var(--muted-2);}
+  textarea.num{min-height:64px;resize:vertical;}
+  .ci-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.6rem;align-items:center;}
+  .btn.sm{padding:10px 18px;font-size:.9rem;}
+  .msg{margin-top:1.4rem;border-radius:14px;padding:1rem 1.3rem;display:none;}
+  .msg.ok{display:block;background:rgba(47,174,87,.12);border:1px solid rgba(47,174,87,.4);color:#bfe9cb;}
+  .msg.err{display:block;background:rgba(220,80,60,.12);border:1px solid rgba(220,80,60,.4);color:#ff9d7a;}
+  .msg b{color:#fff;}
+  .gate{color:var(--muted-2);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Check-in</span></span></a>
+    <a class="back" href="/akademie/moje/" style="color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;">← Zpět</a>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Koučink</span>
+    <h1>Týdenní <span class="hl">check-in</span></h1>
+    <p class="lead">Zabere ti to devadesát sekund a mně dá přesně to, co potřebuju vidět, abych ti mohl týden správně nastavit. Vyplň prosím jednou týdně.</p>
+
+    <div id="app" style="display:none;">
+      <div class="ci-loyal">
+        <div class="big" id="loyPct">0 %</div>
+        <div class="lt">Tvoje věrnostní sleva<br><b id="loyStreak">—</b></div>
+      </div>
+
+      <form id="ciForm" autocomplete="off">
+        <div class="fld">
+          <label>Váha <span class="hint">(kg, tvé jediné tvrdé číslo)</span></label>
+          <input class="num" id="weight" type="number" step="0.1" min="30" max="300" inputmode="decimal" placeholder="např. 78,4" required>
+        </div>
+
+        <div class="fld">
+          <label>Dodržení plánu: <span class="rngval" id="adhVal">50</span> %</label>
+          <input class="rng" id="adh" type="range" min="0" max="100" step="5" value="50">
+          <div class="pillscap"><span>vůbec</span><span>napůl</span><span>na 100 %</span></div>
+        </div>
+
+        <div class="fld">
+          <label>Energie</label>
+          <div class="pills" data-name="energy">
+            <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3" class="on">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+          </div>
+          <div class="pillscap"><span>na dně</span><span>plný šťávy</span></div>
+        </div>
+
+        <div class="fld">
+          <label>Spánek</label>
+          <div class="pills" data-name="sleep">
+            <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3" class="on">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+          </div>
+          <div class="pillscap"><span>mizerný</span><span>skvělý</span></div>
+        </div>
+
+        <div class="fld">
+          <label>Chutě a hlad</label>
+          <div class="pills" data-name="cravings">
+            <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3" class="on">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+          </div>
+          <div class="pillscap"><span>klid</span><span>boj s chutěmi</span></div>
+        </div>
+
+        <div class="fld">
+          <label>Tréninky <span class="hint">(splněno z plánovaných)</span></label>
+          <div class="wk">
+            <input class="num" id="wDone" type="number" min="0" max="21" inputmode="numeric" value="0"> <span>z</span>
+            <input class="num" id="wPlan" type="number" min="0" max="21" inputmode="numeric" value="3">
+            <span>tréninků</span>
+          </div>
+        </div>
+
+        <div class="fld">
+          <label>Co se ti povedlo? <span class="hint">(jedna věta, nepovinné)</span></label>
+          <textarea class="num" id="win" maxlength="280" placeholder="např. Dodržel jsem bílkoviny každý den."></textarea>
+        </div>
+
+        <div class="fld">
+          <label>Kde to drhne? <span class="hint">(jedna věta, sem míří moje reakce)</span></label>
+          <textarea class="num" id="struggle" maxlength="280" placeholder="např. O víkendu mi ujíždí večerní mlsání."></textarea>
+        </div>
+
+        <div class="ci-actions">
+          <button class="btn" type="submit" id="saveBtn">Odeslat check-in ✓</button>
+          <button class="btn ghost sm" type="button" id="copyBtn">Zkopírovat z minula</button>
+        </div>
+      </form>
+
+      <div class="msg" id="msg"></div>
+    </div>
+
+    <div id="gate" class="panel gate" style="display:none;">Načítám…</div>
+    <p class="foot">Barna Academy — Martin Barna · online výživa a fitness</p>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260704"></script>
+  <script>
+    (function () {
+      var app = document.getElementById('app'), gate = document.getElementById('gate');
+      var picks = { energy: 3, sleep: 3, cravings: 3 };
+      // pill výběry
+      document.querySelectorAll('.pills').forEach(function (grp) {
+        var name = grp.getAttribute('data-name');
+        grp.querySelectorAll('button').forEach(function (b) {
+          b.addEventListener('click', function () {
+            grp.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+            b.classList.add('on'); picks[name] = +b.getAttribute('data-v');
+          });
+        });
+      });
+      function setPill(name, v) {
+        if (!v) return; picks[name] = v;
+        var grp = document.querySelector('.pills[data-name="' + name + '"]');
+        grp.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', +x.getAttribute('data-v') === v); });
+      }
+      var adh = document.getElementById('adh'), adhVal = document.getElementById('adhVal');
+      adh.addEventListener('input', function () { adhVal.textContent = adh.value; });
+      function paintLoyalty(l) {
+        document.getElementById('loyPct').textContent = (l.loyalty_pct || 0) + ' %';
+        var s = l.streak || 0;
+        document.getElementById('loyStreak').textContent = s > 0 ? (s + ' ' + (s === 1 ? 'týden' : (s < 5 ? 'týdny' : 'týdnů')) + ' v řadě 🔥') : 'začni ještě dnes';
+      }
+      function prefill(c) {
+        if (!c) return;
+        if (c.weight_kg != null) document.getElementById('weight').value = c.weight_kg;
+        if (c.plan_adherence_pct != null) { adh.value = c.plan_adherence_pct; adhVal.textContent = c.plan_adherence_pct; }
+        setPill('energy', c.energy); setPill('sleep', c.sleep); setPill('cravings', c.cravings);
+        if (c.workouts_done != null) document.getElementById('wDone').value = c.workouts_done;
+        if (c.workouts_planned != null) document.getElementById('wPlan').value = c.workouts_planned;
+        document.getElementById('win').value = c.win_text || '';
+        document.getElementById('struggle').value = c.struggle_text || '';
+      }
+      // „Zkopírovat z minula" (kromě váhy a vět)
+      document.getElementById('copyBtn').addEventListener('click', function () {
+        window.BA.getCheckins(1).then(function (arr) {
+          var c = arr[0]; if (!c) { flash('Zatím nemáš předchozí check-in.', false); return; }
+          if (c.plan_adherence_pct != null) { adh.value = c.plan_adherence_pct; adhVal.textContent = c.plan_adherence_pct; }
+          setPill('energy', c.energy); setPill('sleep', c.sleep); setPill('cravings', c.cravings);
+          if (c.workouts_planned != null) document.getElementById('wPlan').value = c.workouts_planned;
+          flash('Hodnoty z minula natažené — uprav váhu a odešli.', true);
+        });
+      });
+      function flash(text, ok) {
+        var m = document.getElementById('msg'); m.className = 'msg ' + (ok ? 'ok' : 'err'); m.innerHTML = text;
+      }
+      document.getElementById('ciForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = document.getElementById('saveBtn');
+        var w = parseFloat((document.getElementById('weight').value || '').replace(',', '.'));
+        if (!(w > 0)) { flash('Zadej prosím váhu.', false); return; }
+        var data = {
+          weight_kg: w, plan_adherence_pct: +adh.value,
+          energy: picks.energy, sleep: picks.sleep, cravings: picks.cravings,
+          workouts_done: +document.getElementById('wDone').value || 0,
+          workouts_planned: +document.getElementById('wPlan').value || 0,
+          win_text: document.getElementById('win').value.trim(),
+          struggle_text: document.getElementById('struggle').value.trim()
+        };
+        btn.disabled = true; btn.textContent = 'Ukládám…';
+        window.BA.saveCheckin(data).then(function (r) {
+          btn.disabled = false; btn.textContent = 'Odeslat check-in ✓';
+          if (!r.ok) { flash('Uložení se nepovedlo: ' + (r.error || 'zkus to prosím znovu'), false); return; }
+          window.BA.getLoyalty().then(function (l) {
+            paintLoyalty(l);
+            flash('<b>Hotovo, díky!</b> Check-in za tento týden je uložený. Tvoje věrnostní sleva: <b>' + (l.loyalty_pct || 0) + ' %</b>. Be Effective! 💪', true);
+            document.getElementById('msg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+        });
+      });
+      // boot: gate na koučink + prefill tohoto týdne + loyalty
+      if (!window.BA) { gate.style.display = ''; gate.textContent = 'Tato stránka funguje jen po přihlášení.'; return; }
+      window.BA.ready.then(function () {
+        if (window.BA.mode !== 'live') { app.style.display = ''; return; }  // demo/preview
+        window.BA.requireAccess('coaching', '/akademie/prihlaseni/').then(function (ok) {
+          if (!ok) return;   // requireAccess přesměruje
+          app.style.display = '';
+          window.BA.getLoyalty().then(paintLoyalty);
+          window.BA.getCheckins(1).then(function (arr) {
+            var c = arr[0];
+            if (c && c.iso_week === window.BA._isoWeek()) { prefill(c); flash('Tento týden už máš check-in vyplněný — klidně ho uprav a ulož znovu.', true); }
+          });
+        });
+      });
+    })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>

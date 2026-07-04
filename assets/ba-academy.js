@@ -198,6 +198,57 @@
           return true;
         });
       });
+    },
+
+    // ---- Týdenní check-in (koučovací klienti): 1 záznam/ISO-týden, věrnostní sleva ----
+    _isoWeek: function () {
+      var dt = new Date();
+      var d = new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()));
+      var dayNum = (d.getUTCDay() + 6) % 7;            // Po=0 … Ne=6
+      d.setUTCDate(d.getUTCDate() - dayNum + 3);       // nejbližší čtvrtek určuje ISO rok
+      var firstThu = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+      var w = 1 + Math.round(((d - firstThu) / 864e5 - 3 + ((firstThu.getUTCDay() + 6) % 7)) / 7);
+      return d.getUTCFullYear() + "-W" + (w < 10 ? "0" + w : "" + w);
+    },
+    // Uloží/aktualizuje check-in za aktuální ISO-týden (upsert dle user_id+iso_week).
+    saveCheckin: function (data) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      return BA.getUser().then(function (u) {
+        if (!u) return { ok: false, error: "not-signed-in" };
+        var row = {
+          user_id: u.id, email: u.email, iso_week: BA._isoWeek(),
+          weight_kg: data.weight_kg, plan_adherence_pct: data.plan_adherence_pct,
+          energy: data.energy, sleep: data.sleep, cravings: data.cravings,
+          workouts_done: data.workouts_done, workouts_planned: data.workouts_planned,
+          win_text: data.win_text || null, struggle_text: data.struggle_text || null,
+          updated_at: new Date().toISOString()
+        };
+        return client.from("checkins").upsert(row, { onConflict: "user_id,iso_week" })
+          .then(function (r) { return { ok: !r.error, error: r.error && r.error.message }; });
+      });
+    },
+    // Posledních N vlastních check-inů (pro trend a „zkopírovat z minula").
+    getCheckins: function (limit) {
+      if (!LIVE) return Promise.resolve([]);
+      return BA.getUser().then(function (u) {
+        if (!u) return [];
+        return client.from("checkins").select("*").eq("user_id", u.id)
+          .order("created_at", { ascending: false }).limit(limit || 12)
+          .then(function (r) { return r.data || []; }).catch(function () { return []; });
+      });
+    },
+    // Streak + věrnostní sleva (RPC počítá logiku; bez argumentu = přihlášený uživatel).
+    getLoyalty: function () {
+      if (!LIVE) return Promise.resolve({ streak: 0, loyalty_pct: 0, weeks_total: 0 });
+      return client.rpc("checkin_loyalty").then(function (r) {
+        return (!r.error && r.data && r.data[0]) || { streak: 0, loyalty_pct: 0, weeks_total: 0 };
+      }).catch(function () { return { streak: 0, loyalty_pct: 0, weeks_total: 0 }; });
+    },
+    // Admin (Martin): všechny check-iny přes RLS admin-policy. Ostatním vrátí prázdno.
+    getAllCheckins: function () {
+      if (!LIVE) return Promise.resolve([]);
+      return client.from("checkins").select("*").order("created_at", { ascending: false })
+        .then(function (r) { return r.data || []; }).catch(function () { return []; });
     }
   };
 
