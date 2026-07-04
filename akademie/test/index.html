@@ -67,7 +67,7 @@
     <div class="steps">
       <div class="st"><div class="n">1</div><h3>Lekce a kvízy</h3><p>Dokončit všechny lekce a jejich kvízy — průběžné ověření porozumění.</p><div class="meta">Podmínka vstupu</div></div>
       <div class="st"><div class="n">2</div><h3>Písemný test</h3><p>15 otázek napříč moduly. Pro splnění potřebuješ min. 80 % (12/15).</p><div class="meta">Auto-hodnocení tady</div></div>
-      <div class="st"><div class="n">3</div><h3>Certifikát</h3><p>Po složení testu ti hned vystavíme certifikát s ověřitelným ID.</p><div class="meta">Automaticky</div></div>
+      <div class="st"><div class="n">3</div><h3>Mistrovská pečeť</h3><p>Po testu pošleš případovou studii. Martin ji osobně projde a po schválení ti vystaví certifikát.</p><div class="meta">Schvaluje Martin</div></div>
     </div>
 
     <div id="gate" class="panel gate" style="display:none;">Načítám…</div>
@@ -90,7 +90,7 @@
       </div>
 
       <div class="dist">
-        <b>🏅 Mistrovská pečeť (volitelně):</b> Chceš k certifikátu i osobní zpětnou vazbu? Zpracuj případovou studii reálného klienta (profil, analýza, plán, komunikace, etika a hranice) a pošli mi ji na <a href="mailto:martin@martinbarna.cz" style="color:var(--gold-soft)">martin@martinbarna.cz</a>. Projdu ji s tebou osobně — to odliší „znám teorii" od „umím to použít".
+        <b>🏅 Poslední krok — Mistrovská pečeť:</b> Certifikát není jen za test. Po jeho složení zpracuj <b>případovou studii reálného klienta</b> (profil, analýza, plán, komunikace, etika a hranice) a pošli mi ji na <a href="mailto:martin@martinbarna.cz?subject=Barna%20Academy%20—%20case%20study%20k%20certifik%C3%A1tu" style="color:var(--gold-soft)">martin@martinbarna.cz</a>. Osobně ji projdu a po schválení ti certifikát vystavím — právě to mu dává váhu.
       </div>
     </div>
 
@@ -98,7 +98,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260704b"></script>
+  <script src="/assets/ba-academy.js?v=20260704c"></script>
   <script>
   (function(){
     var QUESTIONS = [
@@ -163,34 +163,19 @@
       var res=$('result'), passed=score>=PASS;
       res.className='result show '+(passed?'pass':'fail');
       $('submitBtn').style.display='none'; $('retryBtn').style.display='inline-block';
+      // ulož pokus (skóre + konkrétní odpovědi) pro učitelský detail v adminu
+      if (window.BA){ try { window.BA.saveTestAttempt({ score:score, total:QUESTIONS.length, passed:passed, full_name:name,
+        answers: QUESTIONS.map(function(q,i){ return { q:q.q, a:(answered[i]!=null?q.o[answered[i]]:'—'), correct:q.o[q.c], ok:answered[i]===q.c }; }) }); } catch(e){} }
       if (passed){
-        res.innerHTML='<div class="big">'+score+' / '+QUESTIONS.length+' ✅</div><p>Složeno! Vystavuji tvůj certifikát…</p>';
         try{ localStorage.setItem('ba_cert_name', name); }catch(e){}
-        issue(name);
+        res.innerHTML='<div class="big">'+score+' / '+QUESTIONS.length+' ✅</div>'
+          + '<p><b style="color:#fff;">Písemný test máš složený!</b> Poslední krok k certifikátu je <b style="color:#fff;">Mistrovská pečeť</b> — zpracuj případovou studii reálného klienta a pošli mi ji na '
+          + '<a href="mailto:martin@martinbarna.cz?subject=Barna%20Academy%20—%20case%20study%20k%20certifik%C3%A1tu&amp;body='+encodeURIComponent('Jméno: '+name)+'" style="color:var(--gold-soft);">martin@martinbarna.cz</a>. '
+          + 'Osobně ji projdu a po schválení ti certifikát vystavím a pošlu. Právě to mu dává váhu. 💪</p>';
       } else {
         res.innerHTML='<div class="big">'+score+' / '+QUESTIONS.length+'</div><p>Ještě to nestačilo (potřebuješ '+PASS+'). Projdi si vysvětlení u otázek, mrkni zpět do lekcí a zkus to znovu.</p>';
       }
       res.scrollIntoView({behavior:'smooth', block:'center'});
-    }
-
-    function fmtDate(iso){ try{ var d=new Date(iso); return d.getDate()+'. '+(d.getMonth()+1)+'. '+d.getFullYear(); }catch(e){ return ''; } }
-    function issue(name){
-      if (!window.BA){ certLink(name, 'BA-DEMO-0001', fmtDate(new Date().toISOString())); return; }
-      window.BA.issueCertificate(name).then(function(r){
-        if (r && r.ok){ certLink(r.full_name||name, r.cert_id, fmtDate(r.issued_at)); }
-        else {
-          var msg = r && r.error==='not-completed' ? 'Certifikát se vystaví po dokončení všech lekcí Academy. Dodělej zbývající lekce a vrať se — test už máš složený.'
-                  : r && r.error==='no-academy-access' ? 'Certifikát je pro členy Academy.'
-                  : 'Certifikát se teď nepodařilo vystavit. Zkus to za chvíli, nebo napiš na martin@martinbarna.cz.';
-          $('result').innerHTML += '<p style="color:#ffd7a8;margin-top:.6rem;">'+msg+'</p>';
-        }
-      });
-    }
-    function certLink(name, id, datum){
-      var href='/akademie/certifikat/?jmeno='+encodeURIComponent(name)+'&id='+encodeURIComponent(id)+'&datum='+encodeURIComponent(datum);
-      $('result').innerHTML += '<p style="margin-top:1rem;"><a class="btn" href="'+href+'">🏅 Zobrazit a stáhnout certifikát →</a></p>'
-        + '<p class="hint" style="margin-top:.6rem;">ID certifikátu: <b style="color:#fff;">'+id+'</b> · kdokoliv ho ověří na martinbarna.cz/akademie/overit</p>';
-      setTimeout(function(){ location.href=href; }, 2400);
     }
 
     $('submitBtn').addEventListener('click', grade);

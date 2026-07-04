@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kouč — výsledky testů — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap{max-width:900px;}
+  .sum{display:flex;gap:12px;flex-wrap:wrap;margin:1rem 0 1.6rem;}
+  .sum .box{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:.8rem 1.2rem;}
+  .sum .box b{display:block;font-size:1.5rem;color:var(--gold-soft);line-height:1.1;}
+  .sum .box span{color:var(--muted);font-size:.8rem;}
+  .att{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1rem 1.2rem;margin:.8rem 0;}
+  .att .h{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .att .em{font-weight:700;color:#fff;}
+  .att .who{color:var(--muted-2);font-size:.85rem;}
+  .att .when{color:var(--muted);font-size:.8rem;}
+  .score{margin-left:auto;font-weight:800;font-size:.9rem;padding:4px 12px;border-radius:50px;}
+  .score.pass{background:rgba(47,174,87,.14);border:1px solid rgba(47,174,87,.4);color:#bfe9cb;}
+  .score.fail{background:rgba(220,80,60,.14);border:1px solid rgba(220,80,60,.4);color:#ff9d7a;}
+  .att .tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:.7rem;align-items:center;}
+  .att .tools a,.att .tools button{font-size:.82rem;text-decoration:none;font-family:inherit;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);border-radius:50px;padding:6px 14px;}
+  .att .tools a:hover,.att .tools button:hover{border-color:rgba(255,122,0,.4);color:#fff;}
+  .detail{display:none;margin-top:.9rem;border-top:1px solid var(--line);padding-top:.8rem;}
+  .att.open .detail{display:block;}
+  .qa{padding:.6rem 0;border-top:1px dashed var(--line);}
+  .qa:first-child{border-top:none;}
+  .qa .q{color:#fff;font-weight:600;font-size:.9rem;margin-bottom:.3rem;}
+  .qa .a{font-size:.86rem;margin:.15rem 0;}
+  .qa .a .lbl{color:var(--muted);}
+  .qa.ok .a.mine{color:#bfe9cb;} .qa.bad .a.mine{color:#ff9d7a;}
+  .qa .a.corr{color:var(--muted-2);}
+  .qa .mark{font-weight:800;margin-right:6px;} .qa.ok .mark{color:#2fae57;} .qa.bad .mark{color:#d64545;}
+  .gate{color:var(--muted-2);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Kouč · testy</span></span></a>
+    <a class="back" href="/akademie/moje/" style="color:#a89e94;text-decoration:none;font-size:.85rem;font-weight:500;">← Zpět</a>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Přehled pro kouče</span>
+    <h1>Výsledky <span class="hl">závěrečných testů</span></h1>
+    <p class="lead">Kdo test dělal, jak dopadl a co přesně odpověděl. Rozklikni detail a ozvi se studentovi osobně — třeba k otázkám, které mu nesedly.</p>
+
+    <div id="dash" style="display:none;">
+      <div class="sum">
+        <div class="box"><b id="sAtt">0</b><span>pokusů</span></div>
+        <div class="box"><b id="sPeople">0</b><span>lidí</span></div>
+        <div class="box"><b id="sPass">0</b><span>složilo</span></div>
+      </div>
+      <div id="list"></div>
+    </div>
+
+    <div id="gate" class="panel gate" style="display:none;">Načítám…</div>
+    <p class="foot">Barna Academy — přehled pro kouče</p>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260704c"></script>
+  <script>
+    (function () {
+      var ADMINS = ['martin@martinbarna.cz', 'fitness.barna@gmail.com'];
+      var dash = document.getElementById('dash'), gate = document.getElementById('gate');
+      function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]; }); }
+      function fmtDate(iso) { try { var d = new Date(iso); return d.getDate()+'. '+(d.getMonth()+1)+'. '+d.getFullYear()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); } catch (e) { return ''; } }
+
+      function render(rows) {
+        var people = {}; rows.forEach(function (r) { people[r.email || r.user_id] = 1; });
+        var passCnt = rows.filter(function (r) { return r.passed; }).length;
+        document.getElementById('sAtt').textContent = rows.length;
+        document.getElementById('sPeople').textContent = Object.keys(people).length;
+        document.getElementById('sPass').textContent = passCnt;
+
+        var html = '';
+        rows.forEach(function (r, idx) {
+          var ans = Array.isArray(r.answers) ? r.answers : [];
+          var detail = ans.map(function (a) {
+            var ok = !!a.ok;
+            return '<div class="qa ' + (ok ? 'ok' : 'bad') + '">' +
+              '<div class="q"><span class="mark">' + (ok ? '✓' : '✗') + '</span>' + esc(a.q) + '</div>' +
+              '<div class="a mine"><span class="lbl">Odpověď:</span> ' + esc(a.a) + '</div>' +
+              (ok ? '' : '<div class="a corr"><span class="lbl">Správně:</span> ' + esc(a.correct) + '</div>') +
+              '</div>';
+          }).join('');
+          var mail = (r.email || '').indexOf('@') > -1 ? r.email : '';
+          html += '<div class="att" id="att' + idx + '">' +
+            '<div class="h">' +
+              '<span class="em">' + esc(r.full_name || '(bez jména)') + '</span>' +
+              '<span class="who">' + esc(r.email || '') + '</span>' +
+              '<span class="when">· ' + fmtDate(r.created_at) + '</span>' +
+              '<span class="score ' + (r.passed ? 'pass' : 'fail') + '">' + r.score + ' / ' + r.total + (r.passed ? ' ✅' : '') + '</span>' +
+            '</div>' +
+            '<div class="tools">' +
+              '<button data-t="' + idx + '">Zobrazit odpovědi ▾</button>' +
+              (r.passed ? '<button class="issue" data-u="' + esc(r.user_id) + '" data-e="' + esc(r.email || '') + '" data-n="' + esc(r.full_name || '') + '" data-i="' + idx + '">🏅 Schválit pečeť + vystavit certifikát</button>' : '') +
+              (mail ? '<a href="mailto:' + esc(mail) + '?subject=' + encodeURIComponent('Barna Academy — tvůj závěrečný test') + '">✉️ Napsat studentovi</a>' : '') +
+              '<span class="issres" id="issres' + idx + '" style="font-size:.82rem;color:var(--muted-2);"></span>' +
+            '</div>' +
+            '<div class="detail">' + (detail || '<p style="color:var(--muted)">Bez detailu odpovědí.</p>') + '</div>' +
+          '</div>';
+        });
+        document.getElementById('list').innerHTML = html || '<div class="panel">Zatím žádný pokus o test. Až studenti spustí závěrečný test, uvidíš je tady.</div>';
+        [].forEach.call(document.querySelectorAll('.att .tools button[data-t]'), function (b) {
+          b.addEventListener('click', function () { document.getElementById('att' + b.getAttribute('data-t')).classList.toggle('open'); });
+        });
+        // Schválit pečeť + vystavit certifikát (admin)
+        [].forEach.call(document.querySelectorAll('.att .tools button.issue'), function (b) {
+          b.addEventListener('click', function () {
+            var name = (b.getAttribute('data-n') || '').trim() || prompt('Jméno, jak má být na certifikátu:');
+            if (!name) return;
+            var out = document.getElementById('issres' + b.getAttribute('data-i'));
+            b.disabled = true; b.textContent = 'Vystavuji…';
+            window.BA.adminIssueCertificate(b.getAttribute('data-u'), b.getAttribute('data-e'), name).then(function (r) {
+              if (r && r.ok) {
+                var datum = ''; try { datum = new Date(r.issued_at).toLocaleDateString('cs-CZ'); } catch (e) {}
+                var href = '/akademie/certifikat/?jmeno=' + encodeURIComponent(r.full_name || name) + '&id=' + encodeURIComponent(r.cert_id) + '&datum=' + encodeURIComponent(datum);
+                out.innerHTML = ' ✅ Vystaveno: <b style="color:#fff;">' + esc(r.cert_id) + '</b> · <a href="' + href + '" target="_blank" style="color:var(--gold-soft);">zobrazit</a>';
+                b.textContent = 'Certifikát vystaven ✓';
+              } else {
+                out.innerHTML = ' ⚠️ ' + esc((r && r.error) || 'nepodařilo se');
+                b.disabled = false; b.textContent = '🏅 Schválit pečeť + vystavit certifikát';
+              }
+            });
+          });
+        });
+        dash.style.display = '';
+      }
+
+      if (!window.BA) { gate.style.display = ''; gate.textContent = 'Jen pro přihlášeného kouče.'; return; }
+      window.BA.ready.then(function () {
+        if (window.BA.mode !== 'live') { gate.style.display = ''; gate.textContent = 'Ukázkový režim — přehled běží jen naostro.'; return; }
+        window.BA.getUser().then(function (u) {
+          if (!u) { location.href = '/akademie/prihlaseni/?next=' + encodeURIComponent('/akademie/moje/testy/'); return; }
+          if (ADMINS.indexOf((u.email || '').toLowerCase()) === -1) { gate.style.display = ''; gate.textContent = 'Tento přehled je jen pro kouče.'; return; }
+          window.BA.getTestAttempts().then(render);
+        });
+      });
+    })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>
