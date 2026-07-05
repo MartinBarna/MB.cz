@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
 <style>
+  /* Mobil: horizontální scroll tabulek nekýve celou stránkou */
+  html,body{overflow-x:clip;max-width:100%;overscroll-behavior-x:none;}
   .ref-code{display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;margin:1.2rem 0 .4rem}
   .ref-code b{font-size:clamp(1.6rem,6vw,2.4rem);letter-spacing:.08em;color:#ff9d3c;font-weight:800;background:rgba(255,122,0,.1);border:1px dashed rgba(255,122,0,.45);border-radius:14px;padding:10px 22px}
   .ref-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:1rem 0 0}
