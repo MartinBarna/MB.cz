@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
 <style>
+  /* Mobil: horizontální scroll tabulek nekýve celou stránkou */
+  html,body{overflow-x:clip;max-width:100%;overscroll-behavior-x:none;}
+  div[style*="overflow-x:auto"]{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
   .wrap{max-width:1200px;}
   .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:1.4rem 0}
   .stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 12px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
