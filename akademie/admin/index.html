@@ -13,7 +13,7 @@
   html,body{overflow-x:clip;max-width:100%;overscroll-behavior-x:none;}
   div[style*="overflow-x:auto"]{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
   .wrap{max-width:1200px;}
-  .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:1.4rem 0}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px;margin:1.4rem 0}
   .stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 12px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
   .stats .s:hover{border-color:rgba(255,157,60,.5);background:rgba(255,122,0,.08)}
   .stats .s.on{border-color:rgba(255,157,60,.65);background:rgba(255,122,0,.12)}
@@ -251,7 +251,10 @@
           show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return;
         }
         if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
-        renderStats(st.j); ALL=ov.j.rows||[]; renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress();
+        ALL=ov.j.rows||[];
+        // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
+        if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
+        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -328,7 +331,7 @@
 
     function renderStats(s){
       // třetí prvek = na co karta filtruje (prázdné = Všichni; '@maillog' = otevře e-mail log)
-      var items=[['Kontaktů',s.contacts,''],['Academy',s.academy,'academy'],['Videokurz',s.videokurz,'videokurz'],['Coaching',s.coaching,'coaching'],['Registrovaní',s.registered,'registered'],['Mailů odesláno',s.sent_total,'@maillog']];
+      var items=[['Kontaktů',s.contacts,''],['Leadů celkem',(s.leads_total!=null?s.leads_total:'—'),''],['Academy',s.academy,'academy'],['Videokurz',s.videokurz,'videokurz'],['Coaching',s.coaching,'coaching'],['Registrovaní',s.registered,'registered'],['Mailů odesláno',s.sent_total,'@maillog']];
       $('stats').innerHTML=items.map(function(i){return '<div class="s" data-filt="'+i[2]+'"><b>'+i[1]+'</b><span>'+i[0]+'</span></div>';}).join('');
       Array.prototype.forEach.call($('stats').querySelectorAll('.s'),function(c){
         c.addEventListener('click',function(){
