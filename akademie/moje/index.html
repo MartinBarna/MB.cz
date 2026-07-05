@@ -73,6 +73,14 @@
         <span class="go"><span class="lbl">Vyplnit check-in</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
+      <a class="card" id="tileMemberCheckin" href="/akademie/check-in/" style="display:none;">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg></div>
+        <h2>Týdenní check-in zdarma</h2>
+        <p class="desc">Naklikej za 30 vteřin, jak se ti vedlo — a hned dostaneš <strong>doporučení na míru</strong> na další týden. Ochutnávka toho, jaké je mít kouče. A načítá se ti sleva.</p>
+        <div class="chips"><span class="chip">30 vteřin</span><span class="chip">Doporučení na míru</span><span class="chip">Věrnostní sleva</span></div>
+        <span class="go"><span class="lbl">Vyplnit check-in</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
       <a class="card" id="tileCoach" href="/akademie/moje/kouc/" style="display:none;">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-6"/></svg></div>
         <h2>Kouč — přehled klientů</h2>
@@ -138,6 +146,7 @@
               .then(function(r){
                 showTiles(!!r[0], !!r[1]);
                 if(r[2]){ var tc=document.getElementById('tileCheckin'); if(tc) tc.style.display=''; }
+                else if(r[0]||r[1]){ var tm=document.getElementById('tileMemberCheckin'); if(tm) tm.style.display=''; }
                 if(['martin@martinbarna.cz','fitness.barna@gmail.com'].indexOf((u.email||'').toLowerCase())>-1){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; var tt=document.getElementById('tileTests'); if(tt) tt.style.display=''; }
               });
           });

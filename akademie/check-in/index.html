@@ -126,7 +126,8 @@
     <div class="thanks" id="thanks">
       <div class="card" style="background:rgba(47,174,87,.08);border-color:rgba(47,174,87,.3)">
         <h2 style="color:#fff;margin:0 0 .4rem;font-size:1.3rem">Hotovo! 🙌</h2>
-        <p style="margin:0">Díky, žes to vyplnil/a. <strong>Do pár dní ti přijde doporučení na míru</strong> na příští týden — podle toho, co jsi teď naklikal/a.</p>
+        <p style="margin:0 0 .6rem">Díky, žes to vyplnil/a! Tady je tvoje <strong>doporučení na míru</strong> na tento týden:</p>
+        <p id="recoText" style="margin:0;color:#e9e2d8;font-size:1.02rem;border-left:3px solid var(--gold);padding-left:.9rem"></p>
       </div>
       <div class="credit" id="creditBox">
         🎁 Za pravidelné check-iny se ti <b>po troškách načítá sleva</b> na videokurz i Academy. Čím víc výsledků, tím větší. Drž se a uvidíš se odměnit. 💪
@@ -195,6 +196,8 @@
         .then(function (res) {
           // i kdyby backend ještě nebyl, lokálně potvrdíme (data se odešlou, až bude funkce live)
           form.style.display = 'none'; thanks.style.display = 'block';
+          var FALLBACK = 'Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc. Maličkosti dělají výsledek. 💪';
+          var rt = document.getElementById('recoText'); if (rt) rt.textContent = (res && res.reco) ? res.reco : FALLBACK;
           if (res && res.credit) {
             document.getElementById('creditBox').innerHTML = '🎁 Připsal jsem ti <b>+' + res.credit + ' Kč</b> na slevu. Celkem nasbíráno: <b>' + (res.credit_total || res.credit) + ' Kč</b>. Pokračuj a roste to dál!';
           }
@@ -203,6 +206,7 @@
         .catch(function () {
           // síťová chyba — přesto poděkujeme (UX), data zkusí znovu příště
           form.style.display = 'none'; thanks.style.display = 'block';
+          var rt = document.getElementById('recoText'); if (rt) rt.textContent = 'Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc. Maličkosti dělají výsledek. 💪';
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
