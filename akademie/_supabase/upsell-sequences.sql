@@ -60,12 +60,10 @@ begin
 end;
 $$;
 
--- ---- GO-LIVE (spustit AŽ po Martinově „pošli ostro") -------------------------
--- Denní cron: zařadí max 25 eligibilních/den (drip-feed, respektuje Resend strop).
--- Hodinový drip-send pak maily rozešle (followups_enabled už je 'true').
---
--- select cron.schedule('upsell-enroll-daily', '20 7 * * *', $cmd$
---   select public.enroll_into_upsell_coaching(25);
--- $cmd$);
---
+-- ---- GO-LIVE: ŽIVÉ od 2026-07-05 (Martin schválil) --------------------------
+-- Denní cron zařazuje max 25 eligibilních/den; hodinový drip-send je rozešle (followups_enabled='true').
+-- NASAZENO:
+--   select cron.schedule('upsell-enroll-daily', '20 7 * * *', $cmd$
+--     select public.enroll_into_upsell_coaching(25);
+--   $cmd$);
 -- Vypnutí: select cron.unschedule('upsell-enroll-daily');
