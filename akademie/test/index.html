@@ -98,26 +98,10 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260704c"></script>
+  <script src="/assets/ba-academy.js?v=20260707a"></script>
   <script>
   (function(){
-    var QUESTIONS = [
-      { q:'Co primárně rozhoduje o tom, jestli klient hubne?', o:['Vyřazení všech sacharidů','Celkový kalorický deficit (přijmout míň, než vydá)','Nejíst nic po 18. hodině','Pravidelný detox'], c:1, w:'O změně hmotnosti rozhoduje energetická bilance. Bez deficitu se nehubne, i kdyby klient jedl „čistě".' },
-      { q:'Kolik bílkovin je rozumný cíl pro udržení/nárůst svalu při dietě?', o:['0,5 g na kg tělesné hmotnosti','1,6–2,2 g na kg','4 g na kg a víc','Na bílkovinách nezáleží'], c:1, w:'Konsenzus se pohybuje kolem 1,6–2,2 g/kg. Víc obvykle nepřináší další benefit.' },
-      { q:'Co je progresivní přetížení?', o:['Trénovat každý den do selhání','Postupné zvyšování nároku (váha, opakování, objem) v čase','Měnit cviky každý trénink','Cvičit co nejrychleji'], c:1, w:'Sval roste, když ho postupně vystavuješ vyššímu nároku. Bez progrese není důvod adaptovat.' },
-      { q:'Funguje „cílené spalování tuku" (spot reduction) — třeba kliky na břicho na břišní tuk?', o:['Ano, cviky na břicho pálí tuk z břicha','Ne, tuk se ubírá celkově podle deficitu','Jen u pokročilých','Jen s doplňky'], c:1, w:'Spot reduction je mýtus. Kde tuk ubývá dřív, řídí hlavně genetika, ne výběr cviku.' },
-      { q:'Kolik spánku potřebuje většina dospělých pro zdraví a regeneraci?', o:['4–5 hodin','7–9 hodin','Nezáleží na tom','12+ hodin'], c:1, w:'Většina dospělých funguje nejlíp na 7–9 h. Chronický nedostatek zhoršuje chutě, výkon i regeneraci.' },
-      { q:'Odstraní „detox" šťávy z těla toxiny?', o:['Ano, pročistí játra','Ne — detoxikaci řeší játra a ledviny samy','Jen třídenní kúra','Ano, ale jen nalačno'], c:1, w:'Zdravé tělo se „detoxikuje" samo. Detox produkty jsou marketing, ne fyziologie.' },
-      { q:'Kdy má trenér PŘESTAT radit a odkázat klienta na lékaře/odborníka?', o:['Nikdy, trenér zvládne vše','U podezření na poruchu příjmu potravy, v těhotenství s komplikacemi, u léků a diagnóz','Jen když si klient řekne','Jen u zranění'], c:1, w:'Diagnózy, léky, těhotenství s komplikacemi a poruchy příjmu potravy jsou mimo roli trenéra — patří k lékaři/specialistovi.' },
-      { q:'Proč na vláknině záleží?', o:['Zrychluje metabolismus o 20 %','Podporuje sytost, trávení a zdraví střev','Sama o sobě spaluje tuk','Nahrazuje bílkoviny'], c:1, w:'Vláknina zvyšuje sytost a podporuje střevo. Orientačně ~30 g/den. Není to zázrak, ale základ kvalitní stravy.' },
-      { q:'Proč váha na osobní váze kolísá ze dne na den?', o:['Mění se tuk o kilo denně','Kvůli vodě, glykogenu a obsahu střev','Váha je rozbitá','Kvůli fázi měsíce'], c:1, w:'Denní výkyvy jsou hlavně voda a obsah trávicího traktu, ne tuk. Sleduj trend za týdny, ne jedno číslo.' },
-      { q:'Jaká dieta je pro klienta „nejlepší"?', o:['Keto','Přerušovaný půst','Ta, kterou klient dlouhodobě udrží','Nejnižší možné kalorie'], c:2, w:'Adherence je král. Nejlepší přístup je ten, který klient zvládne dělat i za rok.' },
-      { q:'Je kreatin monohydrát bezpečný a účinný doplněk?', o:['Je nebezpečný pro ledviny','Ano — patří k nejlépe prozkoumaným a bezpečným doplňkům','Funguje jen na steroidech','Je to jen marketing'], c:1, w:'Kreatin monohydrát je jeden z mála doplňků s robustní evidencí pro sílu a výkon, u zdravých lidí bezpečný.' },
-      { q:'Co znamená zkratka TDEE?', o:['Denní příjem bílkovin','Celkový denní energetický výdej','Typ tréninku','Index tělesného tuku'], c:1, w:'TDEE = Total Daily Energy Expenditure, celkový denní výdej energie. Od něj se odvíjí deficit i přebytek.' },
-      { q:'Co silový trénink udělá s většinou žen?', o:['„Nafoukne" je do mužských svalů','Vybuduje sílu, tvar a hustotu kostí bez zmužštění','Zpomalí metabolismus','Poškodí klouby'], c:1, w:'Ženy nemají hormonální prostředí na „objemné" svaly. Silový trénink jim dává tvar, sílu a chrání kosti.' },
-      { q:'Jak vypadá etický marketing trenéra?', o:['Vymyšlené before/after pro víc prodejů','Poctivost — reálné výsledky, žádné zdravotní sliby ani strašení','Slibovat −10 kg za 2 týdny','Falešná časová tíseň'], c:1, w:'Dlouhodobě vyhrává důvěra. Vymyšlené výsledky a zdravotní sliby ničí značku i etiku.' },
-      { q:'Klient „nehubne" na spočítaných kaloriích. Co jako první?', o:['Prohlásit, že má pomalý metabolismus','Ověřit reálný příjem (logging), adherenci a výdej','Rovnou seknout kalorie na polovinu','Přidat spalovač tuků'], c:1, w:'Nejčastější příčina je podceněný příjem nebo nižší výdej, ne „rozbitý metabolismus". Nejdřív ověř data.' }
-    ];
+    var QUESTIONS = []; // otazky se nacitaji z DB (lesson_content/zaverecny-test, RLS: has_entitlement)
     var PASS = 12;
     var $ = function(id){ return document.getElementById(id); };
     var gate=$('gate'), test=$('test'), answered={};
@@ -182,7 +166,13 @@
     $('retryBtn').addEventListener('click', function(){ location.reload(); });
 
     function start(){
-      test.style.display=''; renderQuestions();
+      test.style.display='';
+      var load = (window.BA && window.BA.getLessonHtml) ? window.BA.getLessonHtml('zaverecny-test') : Promise.resolve(null);
+      load.then(function(raw){
+        try { QUESTIONS = JSON.parse(raw) || []; } catch(e) { QUESTIONS = []; }
+        if (!QUESTIONS.length){ $('questions').innerHTML = '<p style="color:#a89e94">🔒 Otázky se nepodařilo načíst — obnov stránku, nebo se znovu přihlas.</p>'; return; }
+        renderQuestions();
+      });
       try{ var n=localStorage.getItem('ba_cert_name'); if(n) $('fullName').value=n; }catch(e){}
     }
     if (!window.BA){ start(); return; }
