@@ -145,6 +145,15 @@
         .catch(function () { return null; });
     },
 
+    // Obsah placené lekce z DB. RLS: čte jen přihlášený s aktivním přístupem
+    // (has_entitlement) — text lekcí tak není ve statickém HTML ani pro curl.
+    getLessonHtml: function (lessonId) {
+      if (!LIVE) return Promise.resolve(null);
+      return client.from("lesson_content").select("html").eq("lesson_id", lessonId).maybeSingle()
+        .then(function (r) { return (r.data && r.data.html) || null; })
+        .catch(function () { return null; });
+    },
+
     // Postup: vrací objekt {lesson_id: true, ...}
     getProgress: function () {
       if (!LIVE) return Promise.resolve(lsGet());

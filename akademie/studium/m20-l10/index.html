@@ -71,94 +71,44 @@
     <div class="crumb">Modul 20 — Martinův systém v praxi</div>
     <h1>Logování bez výmluv: čtyři vrstvy a prázdný den jako jediná chyba</h1>
 
-<p class="lead">Klient nezůstane v appce kvůli funkcím, ale kvůli tomu, jestli pochopil, proč loguje. Tahle lekce ti dá pořadí: nejdřív filozofie, nástroje až potom.</p>
+  <div id="lbody"><div class="card" style="text-align:center;color:#a89e94;">Načítám lekci…</div></div>
 
-<div class="points"><strong>Co si z lekce odneseš:</strong><ul><li>Proč filozofii učíš dřív než tlačítka — jinak klient po týdnu skončí.</li><li>Čtyři vrstvy zápisu od nejpřesnější po nejhrubší a že každá je platná.</li><li>Tabulku situace → nástroj, kterou doporučíš na míru.</li><li>Jak klienta odnaučit „prázdný den“ pomocí rychlého přidání.</li></ul></div>
-
-<h2>Pořadí: filozofie, pak nástroje</h2>
-<p>Filozofii uč první, nástroje až potom. Když klient pochopí filozofii, loguje. Když nepochopí, po týdnu skončí. Tlačítka mu ukážeš, až bude vědět, proč je mačká.</p>
-
-<h2>Pět principů, co učíš nejdřív</h2>
-<div class="steps">
-<div class="row"><div class="num"></div><div class="b"><b>Nikdy klienta nezablokuješ</b><span>Čtyři vrstvy od nejpřesnější po nejhrubší — najít potravinu, vlastní potravina, rychlé přidání (jen kalorie), EAN/skener. Každá je platný zápis. „Oběd v restauraci, 800 kcal“ a hotovo.</span></div></div>
-<div class="row"><div class="num"></div><div class="b"><b>Poctivost před přesností</b><span>Engine počítá z reality. Olej na pánvi, doslazené kafe, dvě piva v pátek — patří tam.</span></div></div>
-<div class="row"><div class="num"></div><div class="b"><b>Prázdný den je jediná chyba</b><span>Radši hrubý odhad zapsaný než přesné číslo, které nezapíšeš.</span></div></div>
-<div class="row"><div class="num"></div><div class="b"><b>Zápis je beztrestný</b><span>Mazání jídla jde vrátit. Klient se nesmí bát „pokazit“ data.</span></div></div>
-<div class="row"><div class="num"></div><div class="b"><b>Šablony a recepty jsou návrh, ne vězení</b><span>Klient si je upravuje, neslouží jako pevný předpis.</span></div></div>
-</div>
-
-<div class="eq">PRÁZDNÝ DEN JE JEDINÁ CHYBA. VŠECHNO OSTATNÍ JE PLATNÝ ZÁPIS.</div>
-
-<h2>Který nástroj kdy doporučit</h2>
-<p>Když klient pochopí filozofii, vyber mu nástroj podle situace, ve které zrovna je.</p>
-<table>
-<tr><th>Situace</th><th>Nástroj</th></tr>
-<tr><td>Základní potravina, ví co jí</td><td>Hledání + tap</td></tr>
-<tr><td>Jí to samé pořád</td><td>Tlačítko „+“/Nedávné</td></tr>
-<tr><td>Balený produkt s obalem</td><td>Skener EAN</td></tr>
-<tr><td>Produkt není v DB, zná hodnoty</td><td>Vlastní potravina</td></tr>
-<tr><td>Restaurace/babička/nemá nic</td><td>Rychlé přidání (jen kalorie)</td></tr>
-<tr><td>Vaří doma stejná jídla</td><td>Recept</td></tr>
-<tr><td>Typický opakovaný den</td><td>Šablona</td></tr>
-<tr><td>Skoro stejný den</td><td>Zkopírovat den</td></tr>
-</table>
-
-<h2>Detaily, co se vyplatí znát</h2>
-<p>Hledání je dvoufázové a bez diakritiky: Martinova kurátorská DB hned nahoře, Open Food Facts async. „rohlik“ najde „Rohlík“. EAN skenuj jako reflex — vteřina práce, nejpřesnější cesta. Uklidni klienta: „Nic se nenahrává, kamera jen čte kód.“ Recepty a šablony jsou hlavní páka na setrvání. Klient uloží 2–3 typické dny a pak jen načítá a dolaďuje.</p>
-
-<p>V onboardingu nauč klienta nejhrubší vrstvu (rychlé přidání), ne nejjemnější. Když umí zapsat odhad, neexistuje den, kdy by nelogoval.</p>
-
-<div class="praxe"><b>V praxi (Martin):</b> Klient se omlouvá, že byl na svatbě a „nemohl nic zapsat“. Nauč ho rychlé přidání: „Příště to dáš jako ‚svatba, oběd, odhad 1200 kcal' a jedeš dál. Nepřesný odhad je pořád sto procent lepší než prázdný den.“</div>
-
-<blockquote>Nepřesný odhad je pořád sto procent lepší než prázdný den.</blockquote>
-
-    <div class="quiz" id="quiz">
-      <h3>Kvíz — ověř si pochopení</h3>
-      <p style="color:#8a8073;font-size:.9rem;margin-top:0;">Klikni na otázku a zobrazí se vzorová odpověď.</p>
-      <div class="q"><div class="qq"><span class="n">1.</span> Co učíš dřív — filozofii, nebo nástroje? A proč? <span class="tg">odpověď ▾</span></div><div class="aa">Filozofii. Když ji klient pochopí, loguje. Když nepochopí, po týdnu skončí. Tlačítka mu ukážeš až potom.</div></div>
-      <div class="q"><div class="qq"><span class="n">2.</span> Vyjmenuj čtyři vrstvy zápisu od nejpřesnější po nejhrubší. <span class="tg">odpověď ▾</span></div><div class="aa">Najít potravinu, vlastní potravina, rychlé přidání (jen kalorie), EAN/skener. Každá je platný zápis.</div></div>
-      <div class="q"><div class="qq"><span class="n">3.</span> Proč mají do zápisu patřit i olej na pánvi, doslazené kafe nebo dvě piva v pátek? <span class="tg">odpověď ▾</span></div><div class="aa">Protože poctivost je nad přesností. Engine počítá z reality, takže tyhle věci tam patří.</div></div>
-      <div class="q"><div class="qq"><span class="n">4.</span> Kterou vrstvu nauč klienta v onboardingu jako první a proč? <span class="tg">odpověď ▾</span></div><div class="aa">Nejhrubší — rychlé přidání. Když umí zapsat odhad, neexistuje den, kdy by nelogoval.</div></div>
-      <div class="q"><div class="qq"><span class="n">5.</span> Jak klienta uklidníš u skeneru EAN? <span class="tg">odpověď ▾</span></div><div class="aa">Řekneš mu: „Nic se nenahrává, kamera jen čte kód.“ Je to vteřina práce a nejpřesnější cesta.</div></div>
-    </div>
-
-    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> Vezmi jednoho klienta, který nedávno vynechal den, a nauč ho rychlé přidání jediným odhadem (např. „restaurace, oběd, 800 kcal“), ať příště místo prázdného dne zapíše aspoň hrubý odhad.</div>
-
-    <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
-      <a class="lnav-prev" href="/akademie/studium/m20-l9/">← Trénink a kalorie</a>
-      <a class="lnav-mod" href="/akademie/studium/#m20">⬑ Modul 20<span class="s">Martinův systém v praxi</span></a>
-      <a class="lnav-next" href="/akademie/studium/m20-l11/">Safety a hranice →</a>
-    </nav>
-
-    <div class="done-row">
+  <div class="done-row">
       <button class="btn" id="doneBtn">Označit jako dokončeno ✓</button>
       <a class="btn ghost" href="/akademie/studium/">Zpět na studium</a>
     </div>
-
-    <details class="src"><summary>Zdroj a zpracování</summary>
-      <p>Lekce vychází z koučovacího systému Martina Barny, který je zhmotněný v jeho appce („Tvůj Coach“) a ověřený praxí od roku 2013 na 600+ klientech. Čísla a pravidla odpovídají logice enginu appky. Autorské zpracování: Martin Barna.</p>
-    </details>
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260707a"></script>
   <script>
-    document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
-    var rbar = document.getElementById('rbar');
-    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
+    // Placená lekce: obsah se načítá z DB (lesson_content, RLS: has_entitlement)
+    // až po ověření přístupu — text lekce není ve statickém HTML.
     var LID='m20-l10', PRODUCT='academy', state={done:false};
     var btn=document.getElementById('doneBtn');
+    var rbar=document.getElementById('rbar');
+    window.addEventListener('scroll', function(){ var h=document.documentElement.scrollHeight-window.innerHeight; rbar.style.width=(h>0?Math.min(100,window.scrollY/h*100):0)+'%'; }, {passive:true});
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
-    function load(){
-      if (window.BA){ window.BA.ready.then(function(){ if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); } else { window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); } }); }
-      else { try{ state.done=!!JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')[LID]; }catch(e){} paint(); }
+    function bindLesson(){
+      document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
+      ['/assets/ba-diagrams.js?v=20260629a','/assets/lesson-audio.js?v=20260629c'].forEach(function(src){ var sc=document.createElement('script'); sc.src=src; document.body.appendChild(sc); });
+    }
+    function loadContent(){
+      window.BA.getLessonHtml(LID).then(function(html){
+        var el=document.getElementById('lbody'); if(!el) return;
+        if(html){ el.innerHTML=html; bindLesson(); }
+        else { el.innerHTML='<div class="card" style="text-align:center;">🔒 Obsah lekce se nepodařilo načíst. <a href="/akademie/prihlaseni/?next='+encodeURIComponent(location.pathname)+'">Přihlas se</a>, nebo stránku obnov.</div>'; }
+      });
     }
     btn.addEventListener('click', function(){ state.done=!state.done; paint(); if(window.BA){ window.BA.setDone(PRODUCT, LID, state.done); } if(state.done){ setTimeout(function(){ location.href='/akademie/studium/'; }, 500); } });
-    load();
+    if (window.BA){
+      window.BA.ready.then(function(){
+        if (window.BA.mode==='live'){ window.BA.requireAccess(PRODUCT).then(function(ok){ if(!ok) return; loadContent(); window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }); }
+        else { loadContent(); window.BA.getProgress().then(function(d){ state.done=!!d[LID]; paint(); }); }
+      });
+    } else { loadContent(); }
   </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
-  <script src="/assets/ba-diagrams.js?v=20260629a"></script>
-  <script src="/assets/lesson-audio.js?v=20260629c"></script>
   <script src="/assets/ai-martin.js?v=20260703b" defer></script>
 </body>
 </html>
