@@ -113,7 +113,7 @@
     <div class="hello">
       <span class="kick"><span class="dot"></span> Akademie pro trenéry</span>
       <h1>Vítej zpátky 👋</h1>
-      <p>Pokračuj tam, kde jsi přestal. Každá lekce tě posune blíž k certifikaci.</p>
+      <p>Pokračuj tam, kde jsi přestal(a). Každá lekce tě posune blíž k certifikaci.</p>
       <div class="prog"><span id="progBar" style="width:0%"></span></div>
       <div class="prog-lbl" id="progLbl">0 % dokončeno</div>
       <input id="lessonSearch" class="lsearch" type="search" placeholder="🔍 Hledat lekci… (např. spánek, bílkoviny, peak week)" aria-label="Hledat lekci" autocomplete="off">
@@ -256,7 +256,7 @@
 
     <a class="bonus" href="/materialy/" style="text-decoration:none;">
       <span class="bico">🎨</span>
-      <div class="btxt"><b>Materiály pro klienty — přebrandovatelné</b><span>19 hotových materiálů (výživa, trénink, spánek, suplementy…) — nově i <b style="color:#ffb066;">šablony pro praxi</b>: vstupní dotazník, týdenní check-in a skript první konzultace. Dej jim svoje jméno, barvu a logo a posílej klientům jako součást služby.</span></div>
+      <div class="btxt"><b>Materiály pro klienty — přebrandovatelné</b><span>20 hotových materiálů (výživa, trénink, spánek, suplementy…) — nově i <b style="color:#ffb066;">šablony pro praxi</b>: vstupní dotazník, týdenní check-in a skript první konzultace. Dej jim svoje jméno, barvu a logo a posílej klientům jako součást služby.</span></div>
       <span class="bbtn">Otevřít knihovnu →</span>
     </a>
 
@@ -624,11 +624,11 @@
         else if (c.a && c.d===c.a) cls += ' done-all';
         var foot;
         if (FREEMODE){
-          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'
+          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' '+plu(c.a,'lekce','lekce','lekcí') : 'Připravujeme')+'</span>'
             + (fc>0 ? '<span class="mfree">🔓 '+fc+' zdarma</span>' : (c.a? '<span class="mlock">🔒 Zamčeno</span>' : ''))
             + '</div>';
         } else {
-          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' lekcí' : 'Připravujeme')+'</span>'+(c.a? '<span class="pct">'+pct+' %</span>' : '')+'</div>';
+          foot = '<div class="mfoot"><span class="cnt">'+(c.a? c.a+' '+plu(c.a,'lekce','lekce','lekcí') : 'Připravujeme')+'</span>'+(c.a? '<span class="pct">'+pct+' %</span>' : '')+'</div>';
         }
         html += '<a class="'+cls+'" href="#m'+(mi+1)+'">'
           + '<div class="top"><span class="ix">'+(mi+1)+'</span><h3>'+m.t+'</h3></div>'
@@ -667,6 +667,7 @@
     }
     function startedAny(){ for (var k in DONE){ if (DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
     // #34 vyhledávání lekcí napříč moduly (bez diakritiky)
+    function plu(n,j,d,m){ return n===1?j:(n>=2&&n<=4?d:m); }
     function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
     function searchLessons(q){
       var nq = norm(q), res = [];
@@ -677,7 +678,7 @@
       });
       var html;
       if (!res.length) {
-        html = '<p class="searchempty">Pro „'+q+'" jsem nic nenašel. Zkus jiné slovo (např. spánek, protein, dieta).</p>';
+        html = '<p class="searchempty">Pro „'+q.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'" jsem nic nenašel. Zkus jiné slovo (např. spánek, protein, dieta).</p>';
       } else {
         html = '<div class="searchres">';
         res.forEach(function(r){
@@ -720,7 +721,7 @@
         var wl = streak===1?'týden':(streak>=2&&streak<=4?'týdny':'týdnů');
         html+='<div class="hpill streak"><span class="hic">🔥</span><span><span class="ht">'+streak+' '+wl+' v řadě</span><span class="hs">Učíš se pravidelně — jen tak dál</span></span></div>';
       }
-      html+='<div class="hpill goal'+(goalDone?' done':'')+'"><span class="hic">'+(goalDone?'✅':'🎯')+'</span><span><span class="ht">'+(goalDone?'Týdenní cíl splněn!':'Tento týden: '+thisWeek+' / '+WEEKLY_GOAL+' lekce')+'</span><span class="hs">'+(goalDone?'Super, '+thisWeek+' lekcí tento týden':'Cíl: '+WEEKLY_GOAL+' lekce týdně')+'</span><span class="hbar"><span style="width:'+goalPct+'%"></span></span></span></div>';
+      html+='<div class="hpill goal'+(goalDone?' done':'')+'"><span class="hic">'+(goalDone?'✅':'🎯')+'</span><span><span class="ht">'+(goalDone?'Týdenní cíl splněn!':'Tento týden: '+thisWeek+' / '+WEEKLY_GOAL+' lekce')+'</span><span class="hs">'+(goalDone?'Super, '+thisWeek+' '+plu(thisWeek,'lekce','lekce','lekcí')+' tento týden':'Cíl: '+WEEKLY_GOAL+' lekce týdně')+'</span><span class="hbar"><span style="width:'+goalPct+'%"></span></span></span></div>';
       el.innerHTML=html; el.style.display='flex';
     }
     function loadHabit(){
@@ -750,7 +751,7 @@
       var html='<div class="rt-top"><span class="rt-ic">'+cur.ic+'</span><span><span class="rt-name">Tvá úroveň: '+cur.n+'</span><span class="rt-sub">'+cur.d+'</span></span>';
       if(!master){
         var span=nextK-curFloor, into=co-curFloor, pct=(span>0?Math.max(4,Math.min(100,Math.round(into/span*100))):100);
-        html+='<span class="rt-next">Ještě <b>'+(nextK-co)+'</b> lekcí do: '+next.ic+' '+next.n+'</span></div>';
+        html+='<span class="rt-next">Ještě <b>'+(nextK-co)+'</b> '+plu(nextK-co,'lekce','lekce','lekcí')+' do: '+next.ic+' '+next.n+'</span></div>';
         html+='<div class="rt-bar"><span style="width:'+pct+'%"></span></div>';
       } else {
         html+='<span class="rt-next">🎓 Nejvyšší úroveň dosažena</span></div>';
@@ -766,11 +767,11 @@
       CURRICULUM.forEach(function(m){ var c=mc(m); if(c.a>0){ modsTotal++; if(c.d===c.a) modsMastered++; } });
       var mile=[{k:1,ic:'🌱',n:'První krok'},{k:10,ic:'🔥',n:'Rozjezd'},{k:25,ic:'⚡',n:'25 lekcí'},{k:50,ic:'💪',n:'50 lekcí'},{k:100,ic:'🏆',n:'100 lekcí'},{k:150,ic:'🎓',n:'150 lekcí'}];
       var pills='';
-      mile.forEach(function(b){ var on=co>=b.k; pills+='<span class="bdg'+(on?' on':'')+'" title="'+(on?'Získáno':'Zbývá '+(b.k-co)+' lekcí')+'"><span class="ic">'+b.ic+'</span>'+b.n+'</span>'; });
+      mile.forEach(function(b){ var on=co>=b.k; pills+='<span class="bdg'+(on?' on':'')+'" title="'+(on?'Získáno':'Zbývá '+(b.k-co)+' '+plu(b.k-co,'lekce','lekce','lekcí'))+'"><span class="ic">'+b.ic+'</span>'+b.n+'</span>'; });
       var allOn = ta>0 && co>=ta;
       pills+='<span class="bdg'+(allOn?' on':'')+'" title="Dokonči všechny lekce"><span class="ic">👑</span>Vše hotovo</span>';
       pills+='<span class="bdg mod" title="Moduly, kde máš hotové všechny lekce"><span class="ic">🥇</span>Moduly: '+modsMastered+' / '+modsTotal+'</span>';
-      el.innerHTML='<div class="bh"><b>🏅 Tvoje odznaky</b><span>'+co+' lekcí hotovo · '+modsMastered+' modulů zvládnuto</span></div><div class="row">'+pills+'</div>';
+      el.innerHTML='<div class="bh"><b>🏅 Tvoje odznaky</b><span>'+co+' '+plu(co,'lekce','lekce','lekcí')+' hotovo · '+modsMastered+' '+plu(modsMastered,'modul','moduly','modulů')+' zvládnuto</span></div><div class="row">'+pills+'</div>';
       el.style.display='block';
     }
     function paintProgress(){

@@ -45,6 +45,14 @@
   .doc-tools{display:flex;justify-content:flex-end;margin:-.4rem 0 .6rem;}
   .doc-tools button{cursor:pointer;border:none;font-family:inherit;font-weight:700;font-size:.82rem;padding:8px 16px;border-radius:50px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;}
   .scale5{display:flex;gap:14px;flex-wrap:wrap;color:#3c382f;font-size:.9rem;}
+  .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.6rem 0 1rem;}
+  .tblwrap table{margin:0;min-width:540px;}
+  @media(max-width:640px){
+    .doc{padding:24px 18px;border-radius:12px;}
+    .doc h2{font-size:1.25rem;}
+    .doc .docfoot{flex-direction:column;gap:.3rem;}
+    .doc .fill{min-width:120px;}
+  }
 
   /* tisk: jen vybrany dokument, cisty A4 */
   @media print{
@@ -52,6 +60,8 @@
     .top,.wrap>*:not(.doc),.doc-tools,.to-top,.fab-wa{display:none!important;}
     .doc{display:none;box-shadow:none;border-radius:0;margin:0;padding:0 6mm;}
     body[data-print="d1"] #d1,body[data-print="d2"] #d2,body[data-print="d3"] #d3,body[data-print="d4"] #d4,body[data-print="d5"] #d5{display:block!important;}
+    .tblwrap{overflow:visible;}
+    .tblwrap table{min-width:0;}
     .wrap{padding:0;max-width:none;}
   }
 </style>
@@ -79,7 +89,7 @@
       <a href="#d1">📋 Vstupní dotazník klienta<span>první schůzka — vše důležité na 1 místě</span></a>
       <a href="#d2">✅ Týdenní check-in<span>stejný systém, jakým vedu klienty já</span></a>
       <a href="#d3">📈 Tracker pokroku (8 týdnů)<span>trend místo panik z jednoho čísla</span></a>
-      <a href="#d4">💰 Ceníkový worksheet<span>nacen si služby, ať tě práce uživí</span></a>
+      <a href="#d4">💰 Ceníkový worksheet<span>naceň si služby, ať tě práce uživí</span></a>
       <a href="#d5">🚀 Checklist: prvních 5 klientů<span>od nuly k prvním platícím</span></a>
     </div>
 
@@ -148,10 +158,10 @@
 
       <h3>Čísla týdne</h3>
       <p class="hint">Važte se každé ráno nalačno po toaletě a zapište si hodnoty — sem patří PRŮMĚR celého týdne, ne jedno číslo. Váha kolísá i o kilo denně (voda, sůl, trávení) a nic to neznamená.</p>
-      <table>
+      <div class="tblwrap"><table>
         <tr><th>Po</th><th>Út</th><th>St</th><th>Čt</th><th>Pá</th><th>So</th><th>Ne</th><th style="background:#ffe9d4;">Ø průměr</th></tr>
         <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="background:#fff7ee;"></td></tr>
-      </table>
+      </table></div>
       <p>Pas: <span class="fill short"></span> cm &nbsp; Boky: <span class="fill short"></span> cm &nbsp; Kroky (denní průměr): <span class="fill short"></span> &nbsp; Tréninky: <span class="fill short"></span> / plán <span class="fill short"></span></p>
 
       <h3>Jak šel týden (zakroužkujte)</h3>
@@ -183,7 +193,7 @@
       <div class="doc-tools"><button data-doc="d3">🖨️ Vytisknout / uložit PDF</button></div>
       <h2>Tracker pokroku — 8 týdnů</h2>
       <p class="sub">Jedno místo, kde je vidět celá cesta. Hodnotíme TREND za týdny, nikdy jedno číslo.</p>
-      <table>
+      <div class="tblwrap"><table>
         <tr><th style="width:70px;">Týden</th><th>Ø váha (kg)</th><th>Pas (cm)</th><th>Boky (cm)</th><th>Adherence 1–5</th><th>Poznámka týdne</th></tr>
         <tr><td>Start</td><td></td><td></td><td></td><td>—</td><td></td></tr>
         <tr><td>1</td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -194,7 +204,7 @@
         <tr><td>6</td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td>7</td><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td>8</td><td></td><td></td><td></td><td></td><td></td></tr>
-      </table>
+      </table></div>
       <h3>Jak tracker číst</h3>
       <ul>
         <li><span class="cb">✓</span> Váha stagnuje, ale pas jde dolů = <strong>funguje to</strong> (rekompozice). Míry často mluví dřív než váha.</li>

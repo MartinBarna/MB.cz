@@ -105,8 +105,14 @@ Deno.serve(async (req) => {
   }
 
   // ---- SUBMIT MODE (z /akademie/check-in/) ----
-  const email = low(body.email);
-  if (!email || !email.includes("@")) return json({ error: "no_email" }, 400);
+  // E-mail bereme z OVERENEHO JWT prihlaseneho uzivatele — body.email nelze verit
+  // (jinak by kdokoliv umel farmit kredit na cizi/vlastni adresu bez prihlaseni).
+  let email = "";
+  const bearer = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
+  if (bearer) {
+    try { const { data: ures } = await admin.auth.getUser(bearer); email = low(ures?.user?.email || ""); } catch { /* neplatny token */ }
+  }
+  if (!email || !email.includes("@")) return json({ error: "unauthorized" }, 401);
 
   const ci = {
     email, weight: num(body.weight), waist: num(body.waist), hips: num(body.hips),
@@ -114,23 +120,28 @@ Deno.serve(async (req) => {
     adherence: num(body.adherence), sleep: num(body.sleep), feeling: num(body.feeling),
     note: String(body.note ?? "").slice(0, 200) || null,
   };
-  const { data: prev } = await admin.from("member_checkins").select("weight").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
+  const { data: prev } = await admin.from("member_checkins").select("weight,created_at").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
   await admin.from("member_checkins").insert(ci);
 
-  // věrnostní kredit
+  // věrnostní kredit — pripisuje se max 1x za ~tyden (6 dni), dalsi check-iny
+  // v tomtez tydnu se ulozi, ale kredit nefarmi
+  const tooSoon = !!(prev?.created_at && (Date.now() - new Date(prev.created_at as string).getTime()) < 6 * 24 * 3600 * 1000);
   const { data: dc } = await admin.from("discount_credits").select("*").eq("email", email).maybeSingle();
   let credit = dc ? Number(dc.credit_czk) : 0;
-  const n = (dc ? Number(dc.checkins_n) : 0) + 1;
+  const n = (dc ? Number(dc.checkins_n) : 0) + (tooSoon ? 0 : 1);
   let baseline = dc ? dc.baseline_waist : null;
   let milestone = dc ? dc.milestone_2cm : false;
-  credit += perCheckin;
-  if (baseline == null && ci.waist != null) baseline = ci.waist;
-  if (!milestone && baseline != null && ci.waist != null && (Number(baseline) - ci.waist) >= 2) { credit += milestoneBonus; milestone = true; }
-  credit = Math.min(credit, cap);
-  await admin.from("discount_credits").upsert(
-    { email, credit_czk: credit, checkins_n: n, baseline_waist: baseline, milestone_2cm: milestone, updated_at: new Date().toISOString() },
-    { onConflict: "email" },
-  );
+  let awarded = 0;
+  if (!tooSoon) {
+    credit += perCheckin; awarded = perCheckin;
+    if (baseline == null && ci.waist != null) baseline = ci.waist;
+    if (!milestone && baseline != null && ci.waist != null && (Number(baseline) - ci.waist) >= 2) { credit += milestoneBonus; awarded += milestoneBonus; milestone = true; }
+    credit = Math.min(credit, cap);
+    await admin.from("discount_credits").upsert(
+      { email, credit_czk: credit, checkins_n: n, baseline_waist: baseline, milestone_2cm: milestone, updated_at: new Date().toISOString() },
+      { onConflict: "email" },
+    );
+  }
 
   // doporučení na míru: decision tree → prio → message
   const wDir = (prev && prev.weight != null && ci.weight != null)
@@ -147,5 +158,5 @@ Deno.serve(async (req) => {
   const { data: rule } = await admin.from("coaching_rules").select("message").eq("prio", prio).maybeSingle();
   const reco = rule?.message ?? "Díky za check-in! Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc.";
 
-  return json({ ok: true, credit: perCheckin, credit_total: credit, checkins_n: n, reco });
+  return json({ ok: true, credit: awarded, credit_total: credit, checkins_n: n, reco });
 });
