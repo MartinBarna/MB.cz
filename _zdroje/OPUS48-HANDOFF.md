@@ -23,8 +23,15 @@ samo — viz Provoz bez Clauda níže.
   objednávce + 2 měsíční doklady po 3 000, celkem 9 000). Formulář
   https://form.simpleshop.cz/n0xgJ/buy/ je nalinkovaný z objednávky i /akademie/
   (cena + FAQ). Webhooky (paid+ordered, product=academy) zkopírované z hl. produktu
-  — přístup se odemyká hned po 1. splátce. POZOR: neuhrazené další splátky zatím
-  nikdo nehlídá — případný vymáhací mail je otevřený bod.
+  — přístup se odemyká hned po 1. splátce. **Neuhrazené splátky HLÍDÁ splatky-guard**
+  (7. 7. večer): webhook URL produktu nese `&plan=splatky`, simpleshop-webhook v9
+  počítá platby v tabulce `installment_status` (1. zakládá, 3. = completed), cron
+  **splatky-guard-daily** (6:10 UTC) posílá 33 dní po poslední platbě upozornění
+  a 7 dní poté dočasně pozastaví přístup (entitlements active=false, JEN
+  source=simpleshop — ruční granty nechává); nová platba přístup obnoví automaticky
+  (webhook upsert active=true + reset stavu). Test režim: POST {"test_email"}.
+  OVĚŘIT při 1. reálném splátkovém nákupu: (a) grant + řádek v installment_status,
+  (b) že SimpleShop volá paid webhook i u 2./3. opakovaného dokladu!
 - **Upgrade videokurz→Academy**: kupón **UPGRADE800** (−800 Kč jen na Academy),
   komunikuje se JEN mailem majitelům videokurzu (upsell-academy sekvence, trigger
   ≥40 % dokončení videokurzu, cron 7:10).
@@ -173,12 +180,19 @@ srovnat). m6-l3: Martinův příběh měl „před 15 lety / £/hod" (britský z
 přepsáno obecně; ideálně ať Martin doplní svou reálnou historku.
 
 ## Co zbývá z mise (stav 7. 7. večer)
-1. **Meta reklamy**: MCP server byl 7. 7. celý den nedostupný. Čeká: Reels
-   z Drive (task #27, Martin řekl „dořeším doma"), nové TOFU/MOFU kampaně,
-   škálování vítězné sady (blokuje EU/lokalita bug). Denní dohled kampaní.
+1. **Meta reklamy**: MCP server byl 7. 7. celý den nedostupný (přes Chrome to jde,
+   ale je to boj). Stav po večeru 7. 7.: TOFU běží skvěle (Ženy 39 leadů @ 9,55 Kč,
+   Muži 11 @ 33,86 Kč; CPL cíl byl 50), **5 z 8 konceptů zveřejněno** (Retargeting
+   180 d + 4 reklamy). **ZBÝVAJÍ 3 koncepty s chybou #1870194** (Cold – ČR –
+   Purchase, Muži 30–60, Ženy 28–55 vč. rozpočtu 75→150 pro vítěznou sadu Ženy):
+   Meta zrušila staré typy cílení na lokalitu a přestavění lokalit v UI chybu
+   NEvyčistilo (vyčistilo ji jen u Retargeting, kde se seznam lokalit stihl úplně
+   vyprázdnit). ⚡ NEJRYCHLEJŠÍ FIX: až naskočí Meta MCP, přepiš targeting přes
+   ads_update_entity (geo_locations: {countries:["CZ"]}) a koncepty zveřejni —
+   minuty práce. Pak: Reels z Drive (task #27), denní dohled kampaní.
 2. **První reálný nákup Academy/splátek hlídej v edge lozích** simpleshop-webhook
    (payload proti ostrému tvaru netestován; splátky = 1. reálný test opakované
-   platby). Neuhrazené 2./3. splátky zatím nikdo nehlídá — návrh: rescue mail.
+   platby — ověř, že paid webhook chodí i pro 2./3. doklad).
 3. GA4 stats v adminu — čeká na secrets GA_SA_JSON + GA_PROPERTY_ID (s Martinem).
    AI Martin chat (RAG nad lekcemi) čeká na ANTHROPIC_API_KEY.
 4. Legacy videokurz produkty v SimpleShopu („Celý videokurz + 16 příloh",
