@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "drip_daily_cap"]);
+  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "drip_daily_cap", "academy_founders_offset"]);
   const cmap = Object.fromEntries((cfg ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const provided = req.headers.get("x-drip-secret") || "";
   if (!cmap.drip_invoke_secret || provided !== cmap.drip_invoke_secret) return json({ error: "unauthorized" }, 401);
@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
   const yStart = new Date(dayStart.getTime() - 86400000);
   const d7 = new Date(now.getTime() - 7 * 86400000).toISOString();
 
-  const [leadsY, leads7, evY, due, entsY, wdr, refs] = await Promise.all([
+  const [leadsY, leads7, evY, due, entsY, wdr, refs, acadSold] = await Promise.all([
     admin.from("leads").select("source").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
     admin.from("leads").select("created_at").gte("created_at", d7),
     admin.from("email_events").select("type,detail").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
@@ -37,7 +37,14 @@ Deno.serve(async (req) => {
     admin.from("entitlements").select("product").eq("active", true).eq("source", "simpleshop").gte("granted_at", yStart.toISOString()),
     admin.from("withdrawals").select("status"),
     admin.from("referrals").select("status"),
+    admin.from("entitlements").select("id", { count: "exact", head: true }).eq("product", "academy").eq("active", true).eq("source", "simpleshop"),
   ]);
+
+  // zakladajici clenove: realne prodeje pres SimpleShop + rucni offset (app_config
+  // academy_founders_offset — prodeje grantnute rucne, testovaci ucty se nepocitaji);
+  // verejny slib: cena 8 900 plati pro prvnich 50, pak zdrazit
+  const founders = (acadSold.count ?? 0) + (Number(cmap.academy_founders_offset ?? "") || 0);
+  const foundersLeft = Math.max(0, 50 - founders);
 
   const bySrc: Record<string, number> = {};
   for (const l of leadsY.data ?? []) bySrc[String(l.source ?? "?")] = (bySrc[String(l.source ?? "?")] ?? 0) + 1;
@@ -69,6 +76,7 @@ Deno.serve(async (req) => {
   let alerts = "";
   if (wdrPending > 0) alerts += warn(wdrPending + "× odstoupení od smlouvy čeká na vyřízení (refundace do 14 dnů!)");
   if (errs > 0) alerts += warn(errs + "× chyba odesílání e-mailů včera" + (lastErr ? " — " + lastErr : ""));
+  if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50) — podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
 
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;color:#222;max-width:560px;margin:0 auto">` +
@@ -81,6 +89,7 @@ Deno.serve(async (req) => {
     row("Fronta e-mailů teď", String((due.data ?? []).length)) +
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
     row("Affiliate čeká na potvrzení", String(refPending)) +
+    row("Zakládající členové Academy", founders + " / 50 · zbývá " + foundersLeft) +
     `</table>` +
     `<p style="margin:14px 0 4px;color:#666;font-size:13px">Leadi 7 dní: ${trendStr || "—"}</p>` +
     `<p style="margin:14px 0 0;font-size:13px"><a href="https://martinbarna.cz/akademie/admin/" style="color:#c45e00">Otevřít admin →</a></p></div>`;
