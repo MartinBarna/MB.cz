@@ -20,8 +20,34 @@ const SUSPEND_AFTER_WARN_DAYS = 7; // tyden na napravu po upozorneni
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
 
-function greet(name: string | null): string {
-  const first = (name || "").trim().split(/\s+/)[0];
+// 5. pad (osloveni): stejna konzervativni pravidla jako v drip-send — nejista
+// jmena zustavaji v 1. padu, zenska jmena na souhlasku se nemeni.
+const VOK_EXC: Record<string, string> = {
+  "jan": "Jene", "pavel": "Pavle", "karel": "Karle", "zdenek": "Zdenku", "zdeněk": "Zdeňku", "josef": "Josefe",
+};
+const VOK_VOWELS = "aeiouyáéěíóúůý";
+function vokativ(fn: string, seg: string): string {
+  if (!fn) return fn;
+  const low = fn.toLowerCase();
+  if (low in VOK_EXC) return VOK_EXC[low];
+  const last = low.slice(-1);
+  if (last === "a") return fn.slice(0, -1) + "o";
+  if (VOK_VOWELS.includes(last)) return fn;
+  if (seg !== "muzi") return fn;
+  if (low.endsWith("ek")) return fn.slice(0, -2) + "ku";
+  if (low.endsWith("ch") || "kgh".includes(last)) return fn + "u";
+  if ("szxj".includes(last) || "šžč".includes(last)) return fn + "i";
+  if (low.endsWith("el")) return fn + "i";
+  if (last === "r") {
+    return VOK_VOWELS.includes(low.slice(-2, -1)) ? fn + "e" : fn.slice(0, -1) + "ře";
+  }
+  if ("bdflmnptvw".includes(last)) return fn + "e";
+  return fn;
+}
+
+function greet(name: string | null, seg = "other"): string {
+  const raw = (name || "").trim().split(/\s+/)[0];
+  const first = raw ? vokativ(raw.charAt(0).toUpperCase() + raw.slice(1), seg) : "";
   return first ? `Ahoj ${first},` : "Ahoj,";
 }
 
@@ -31,11 +57,11 @@ function wrap(body: string): string {
     `<p style="margin:14px 0 0;font-size:12px;color:#999">Martin Barna — Barna Academy · <a href="https://martinbarna.cz" style="color:#c45e00">martinbarna.cz</a> · odpovědět můžeš rovnou na tenhle e-mail</p></div>`;
 }
 
-function warnEmail(name: string | null) {
+function warnEmail(name: string | null, seg = "other") {
   return {
     subject: "Splátka za Barna Academy neproběhla",
     html: wrap(
-      `<p>${greet(name)}</p>` +
+      `<p>${greet(name, seg)}</p>` +
       `<p>dnes se nepodařilo strhnout další splátku <b>3 000 Kč</b> za Barna Academy. Většinou za to může expirovaná karta, denní limit nebo málo prostředků na účtu — zkontroluj to prosím.</p>` +
       `<p>Kdyby cokoliv nehrálo (změna karty, potřebuješ posunout termín), <b>odepiš mi rovnou na tenhle e-mail</b> a vyřešíme to spolu.</p>` +
       `<p style="padding:10px 14px;background:#fdf3ec;border-radius:10px">⚠️ Pokud se splátku nepodaří uhradit do <b>7 dnů</b>, budu muset přístup k Academy dočasně pozastavit. Po doplacení se obnoví automaticky.</p>`
@@ -43,11 +69,11 @@ function warnEmail(name: string | null) {
   };
 }
 
-function suspendEmail(name: string | null) {
+function suspendEmail(name: string | null, seg = "other") {
   return {
     subject: "Přístup k Barna Academy dočasně pozastaven",
     html: wrap(
-      `<p>${greet(name)}</p>` +
+      `<p>${greet(name, seg)}</p>` +
       `<p>splátku za Barna Academy se bohužel nepodařilo strhnout ani týden po upozornění, takže jsem musel tvůj přístup <b>dočasně pozastavit</b>.</p>` +
       `<p>Žádný stres — <b>jakmile splátka proběhne, přístup se ti obnoví automaticky</b> během pár minut a pokračuješ přesně tam, kde jsi skončil(a).</p>` +
       `<p>Kdyby ses zasekl(a) na čemkoliv (karta, termín, cokoliv), napiš mi na tenhle e-mail a domluvíme se.</p>`
@@ -78,7 +104,7 @@ Deno.serve(async (req) => {
   const body = await req.json().catch(() => ({}));
   if (body?.test_email) {
     const to = String(body.test_email);
-    const w = warnEmail("Martine"), s = suspendEmail("Martine");
+    const w = warnEmail("Martin", "muzi"), s = suspendEmail("Martin", "muzi");
     const ok1 = await sendMail(to, "[TEST] " + w.subject, w.html);
     const ok2 = await sendMail(to, "[TEST] " + s.subject, s.html);
     return json({ ok: true, mode: "test", to, warn_sent: ok1, suspend_sent: ok2 });
@@ -95,15 +121,17 @@ Deno.serve(async (req) => {
   const warned: string[] = [], suspended: string[] = [];
   for (const r of rows ?? []) {
     const email = String(r.email);
-    // jmeno pro osloveni (best-effort z leads)
+    // jmeno + segment pro osloveni (best-effort z leads)
     let name: string | null = null;
+    let seg = "other";
     try {
-      const { data: l } = await admin.from("leads").select("name").eq("email", email).maybeSingle();
+      const { data: l } = await admin.from("leads").select("name,segment").eq("email", email).maybeSingle();
       name = l?.name ?? null;
+      if (l?.segment === "muzi" || l?.segment === "zeny") seg = String(l.segment);
     } catch { /* bez jmena */ }
 
     if (r.status === "ok" && r.last_paid_at && String(r.last_paid_at) < warnCutoff) {
-      const m = warnEmail(name);
+      const m = warnEmail(name, seg);
       const sent = await sendMail(email, m.subject, m.html);
       if (sent) {
         await admin.from("installment_status").update({
@@ -116,7 +144,7 @@ Deno.serve(async (req) => {
       // pozastav JEN simpleshop grant (rucni/admin granty nechavame byt)
       await admin.from("entitlements").update({ active: false })
         .eq("email", email).eq("product", "academy").eq("source", "simpleshop");
-      const m = suspendEmail(name);
+      const m = suspendEmail(name, seg);
       await sendMail(email, m.subject, m.html);
       await admin.from("installment_status").update({
         status: "suspended", suspended_at: new Date().toISOString(), updated_at: new Date().toISOString(),

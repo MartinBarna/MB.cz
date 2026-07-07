@@ -26,6 +26,32 @@ const DISCOUNT2_PCT = 20;
 type Seg = 'zeny' | 'muzi' | 'other';
 const isFem = (seg: Seg) => seg === 'zeny';
 
+// 5. pad (osloveni): jen spolehliva pravidla ceske deklinace. Kdyz si nejsme jisti,
+// jmeno nechavame v 1. padu (= dosavadni chovani, nikdy nezhorsime). Zenska a
+// segmentove nejista jmena koncici souhlaskou se NEmeni (Dagmar, Ester, Miriam...).
+const VOK_EXC: Record<string, string> = {
+  'jan': 'Jene', 'pavel': 'Pavle', 'karel': 'Karle', 'zdenek': 'Zdenku', 'zdeněk': 'Zdeňku', 'josef': 'Josefe',
+};
+const VOK_VOWELS = 'aeiouyáéěíóúůý';
+function vokativ(fn: string, seg: Seg): string {
+  if (!fn) return fn;
+  const low = fn.toLowerCase();
+  if (low in VOK_EXC) return VOK_EXC[low];
+  const last = low.slice(-1);
+  if (last === 'a') return fn.slice(0, -1) + 'o';                        // Jana->Jano, Ota->Oto (oba rody)
+  if (VOK_VOWELS.includes(last)) return fn;                              // Lucie, Marie, Ivo, Jiri
+  if (seg !== 'muzi') return fn;                                         // souhlaska + nejiste pohlavi -> nechat
+  if (low.endsWith('ek')) return fn.slice(0, -2) + 'ku';                 // Marek->Marku, Radek->Radku
+  if (low.endsWith('ch') || 'kgh'.includes(last)) return fn + 'u';       // Vojtech->Vojtechu, Patrik->Patriku
+  if ('szxj'.includes(last) || 'šžč'.includes(last)) return fn + 'i';    // Tomas->Tomasi, Ondrej->Ondreji, Max->Maxi
+  if (low.endsWith('el')) return fn + 'i';                               // Daniel->Danieli, Marcel->Marceli
+  if (last === 'r') {
+    return VOK_VOWELS.includes(low.slice(-2, -1)) ? fn + 'e' : fn.slice(0, -1) + 'ře';  // Otakar->Otakare, Petr->Petře
+  }
+  if ('bdflmnptvw'.includes(last)) return fn + 'e';                      // Martin->Martine, David->Davide
+  return fn;                                                             // cokoliv jineho radsi nechat
+}
+
 const esc = (s: string) =>
   s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(DQ).join('&quot;');
 
@@ -119,7 +145,8 @@ function buildVars(name: string, seg: Seg, unsub: string, email: string): Record
   for (const ch of (name || '')) clean += BADCH.includes(ch) ? ' ' : ch;
   const parts = clean.trim().split(' ').filter((x) => x.length > 0);
   const t = parts[0] || '';
-  const fn = t ? t.charAt(0).toUpperCase() + t.slice(1) : '';
+  // osloveni v 5. padu (vokativ) — konzervativne, nejista jmena zustavaji v 1. padu
+  const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : '', seg);
   const dprice = Math.round(COURSE_PRICE * (1 - DISCOUNT_PCT / 100));
   const d2price = Math.round(COURSE_PRICE * (1 - DISCOUNT2_PCT / 100));
   return {
