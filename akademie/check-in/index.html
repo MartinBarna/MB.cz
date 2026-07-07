@@ -126,11 +126,11 @@
     <div class="thanks" id="thanks">
       <div class="card" style="background:rgba(47,174,87,.08);border-color:rgba(47,174,87,.3)">
         <h2 style="color:#fff;margin:0 0 .4rem;font-size:1.3rem">Hotovo! 🙌</h2>
-        <p style="margin:0 0 .6rem">Díky, žes to vyplnil/a! Tady je tvoje <strong>doporučení na míru</strong> na tento týden:</p>
+        <p style="margin:0 0 .6rem">Díky, žes to vyplnil/a! Tady je tvoje <strong>doporučení na míru</strong> na další týden:</p>
         <p id="recoText" style="margin:0;color:#e9e2d8;font-size:1.02rem;border-left:3px solid var(--gold);padding-left:.9rem"></p>
       </div>
       <div class="credit" id="creditBox">
-        🎁 Za pravidelné check-iny se ti <b>po troškách načítá sleva</b> na videokurz i Academy. Čím víc výsledků, tím větší. Drž se a uvidíš se odměnit. 💪
+        🎁 Za pravidelné check-iny se ti <b>po troškách načítá sleva</b> na videokurz i Academy. Čím víc výsledků, tím větší. Vydrž u toho — odměna poroste. 💪
       </div>
       <div class="card" style="background:rgba(255,122,0,.06);border-color:rgba(255,122,0,.3)">
         <p style="margin:0 0 .8rem"><strong>Chceš to samé, ale naostro se mnou?</strong> Tohle je automatická ochutnávka toho, jaké je mít kouče. V <strong>osobním koučinku</strong> ti plán řídím týden co týden na míru tvým datům — makra, trénink, a jsem ti na drátě (WhatsApp/mail), když to drhne. To je rozdíl mezi „mám check-in" a „mám kouče, který mě dovede k cíli".</p>
@@ -141,7 +141,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260707a"></script>
   <script>
     var SUPA = (window.BA_CONFIG && window.BA_CONFIG.url) || 'https://uhmrpfsdcujbhbtumqye.supabase.co';
     var ANON = (window.BA_CONFIG && window.BA_CONFIG.anonKey) || '';
@@ -188,10 +188,13 @@
       if (!data.weight && !data.waist) { err.textContent = 'Vyplň aspoň váhu nebo pás, ať máme co sledovat.'; err.style.display = 'block'; return; }
       var btn = form.querySelector('button[type=submit]'); var orig = btn.textContent;
       btn.disabled = true; btn.textContent = 'Odesílám…';
-      fetch(FN, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON, 'apikey': ANON },
-        body: JSON.stringify(data)
+      var tokP = (window.BA && window.BA.getToken) ? window.BA.getToken() : Promise.resolve(null);
+      tokP.then(function (tok) {
+        return fetch(FN, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (tok || ANON), 'apikey': ANON },
+          body: JSON.stringify(data)
+        });
       }).then(function (r) { return r.json().catch(function () { return { ok: r.ok }; }); })
         .then(function (res) {
           // i kdyby backend ještě nebyl, lokálně potvrdíme (data se odešlou, až bude funkce live)
