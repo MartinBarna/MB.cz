@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Začni tady — Martin Barna</title>
+    <meta name="description" content="Vyber si, čím začneš: jídelníček zdarma pro ženy, plán Forma zpět pro muže, nebo první lekce videokurzu zdarma.">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#ff7a00">
+    <link rel="canonical" href="https://martinbarna.cz/start/">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <style>
+        :root { --orange:#ff7a00; --orange-dark:#e36f00; --ink:#161616; --cream:#fff8f0; --cream2:#fff4e8; }
+        * { box-sizing:border-box; }
+        body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--ink); line-height:1.6; background:linear-gradient(160deg,var(--cream) 0%,var(--cream2) 100%); min-height:100vh; }
+        .wrap { max-width:520px; margin:0 auto; padding:0 20px 48px; }
+        a:focus-visible { outline:3px solid var(--orange); outline-offset:2px; border-radius:6px; }
+
+        .top { text-align:center; padding:34px 0 6px; }
+        .mark { display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:16px; background:var(--ink); color:var(--orange); font-weight:800; font-size:1.5rem; }
+        .brand { display:block; font-weight:800; font-size:1.05rem; margin-top:10px; letter-spacing:.3px; }
+        .brand span { color:var(--orange-dark); font-weight:600; font-size:.85rem; display:block; }
+
+        h1 { font-size:1.75rem; font-weight:800; line-height:1.2; text-align:center; margin:1.2rem 0 .4rem; }
+        .sub { text-align:center; color:#5d5d5d; margin:0 0 1.6rem; font-size:1.02rem; }
+
+        .choice { display:flex; align-items:center; gap:16px; background:#fff; border:1px solid #f1ece6; border-radius:18px; padding:18px 20px; margin-bottom:14px; text-decoration:none; color:var(--ink); box-shadow:0 8px 26px rgba(0,0,0,.06); transition:.15s; }
+        .choice:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(255,122,0,.18); border-color:var(--orange); }
+        .choice .em { font-size:1.9rem; flex:0 0 auto; }
+        .choice .tag { display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.6px; color:var(--orange-dark); text-transform:uppercase; }
+        .choice h2 { font-size:1.08rem; font-weight:800; margin:.15rem 0 .1rem; line-height:1.25; }
+        .choice p { margin:0; font-size:.88rem; color:#6a6a6a; }
+        .choice .arr { margin-left:auto; flex:0 0 auto; color:var(--orange); font-weight:800; font-size:1.3rem; }
+
+        .trust { text-align:center; margin-top:1.8rem; color:#6a6a6a; font-size:.9rem; }
+        .trust b { color:var(--ink); }
+        .beff { text-align:center; font-weight:800; color:var(--orange-dark); margin-top:.5rem; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header class="top">
+            <span class="mark" aria-hidden="true">MB</span>
+            <span class="brand">Martin Barna <span>online výživový kouč</span></span>
+        </header>
+
+        <main>
+            <h1>Super, že jsi tady! 👋</h1>
+            <p class="sub">Vyber si, čím začneš — všechno je <strong>zdarma</strong>.</p>
+
+            <a class="choice" data-utm href="/makro-plan/">
+                <span class="em" aria-hidden="true">🥗</span>
+                <span>
+                    <span class="tag">Pro ženy</span>
+                    <h2>7denní jídelníček zdarma</h2>
+                    <p>Konkrétní jídla a porce. Bez hladovění.</p>
+                </span>
+                <span class="arr" aria-hidden="true">→</span>
+            </a>
+
+            <a class="choice" data-utm href="/forma-zpet/">
+                <span class="em" aria-hidden="true">💪</span>
+                <span>
+                    <span class="tag">Pro muže</span>
+                    <h2>Plán Forma zpět zdarma</h2>
+                    <p>Zhubni břicho a vrať se do formy.</p>
+                </span>
+                <span class="arr" aria-hidden="true">→</span>
+            </a>
+
+            <a class="choice" data-utm href="/videokurz#zdarma">
+                <span class="em" aria-hidden="true">🎬</span>
+                <span>
+                    <span class="tag">Pro všechny</span>
+                    <h2>Videokurz — první lekce zdarma</h2>
+                    <p>Celý systém výživy. Pustíš si hned z mobilu.</p>
+                </span>
+                <span class="arr" aria-hidden="true">→</span>
+            </a>
+
+            <p class="trust"><b>600+ proměn</b> · <b>13 let praxe</b> · martinbarna.cz</p>
+            <p class="beff">Be Effective!</p>
+        </main>
+    </div>
+
+    <script>
+    // UTM passthrough: přenes ?utm_* z letáku na cílové stránky (atribuce leadů z QR)
+    (function(){
+        var q = location.search;
+        if (!q) return;
+        document.querySelectorAll('a[data-utm]').forEach(function(a){
+            var parts = a.getAttribute('href').split('#');
+            a.setAttribute('href', parts[0] + q + (parts[1] ? '#' + parts[1] : ''));
+        });
+    })();
+    </script>
+    <script defer src="/assets/analytics.js?v=20260702a"></script>
+</body>
+</html>
