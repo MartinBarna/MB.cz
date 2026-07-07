@@ -118,10 +118,23 @@
 
       <div class="stats" id="stats"></div>
 
+      <div class="traf-links" style="margin:.2rem 0 1rem;">
+        <a href="/akademie/moje/testy/">📝 Testy &amp; certifikáty →</a>
+        <a href="/akademie/moje/kouc/">🏋️ Check-iny klientů →</a>
+        <a href="/akademie/studium/">📚 Studium →</a>
+        <a href="https://resend.com/emails" target="_blank" rel="noopener">✉️ Resend →</a>
+      </div>
+
       <div class="traf" id="pulse" style="display:none;">
         <h3>🩺 Dnešní puls</h3>
         <div class="sub">Maily, fronta dripu, leadi a prodeje — živě z databáze</div>
         <div id="pulseBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+      <div class="traf" id="queue" style="display:none;">
+        <h3>📬 Fronta mailů</h3>
+        <div class="sub" id="queueSub">Komu, co a kdy odejde — a tady to můžeš pozastavit nebo přeřadit</div>
+        <div id="queueBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
       <div class="traf" id="prog" style="display:none;">
@@ -186,10 +199,6 @@
       <input type="search" id="mlogQ" placeholder="Hledat podle e-mailu…" autocomplete="off" style="flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
       <select id="mlogTrack" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
         <option value="">Všechny sekvence</option>
-        <option value="lead-magnet">Lead magnet (jídelníček)</option>
-        <option value="existing-leadmagnet">Starý lead → videokurz</option>
-        <option value="onboarding-videokurz">Onboarding videokurz</option>
-        <option value="onboarding-coaching">Onboarding coaching</option>
       </select>
       <select id="mlogType" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
         <option value="">Vše</option>
@@ -254,7 +263,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress();
+        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -291,6 +300,66 @@
             (e.last_error?' · Poslední chyba: <span style="color:#ffb061">'+esc(e.last_error)+'</span>':'')+'</p>';
           $('pulse').style.display='';
         }).catch(function(){ $('pulse').style.display='none'; });
+    }
+
+    // 📬 Fronta mailů — email_scheduled (kdo/co/kdy) + per-lead akce pauza/obnovit/přeřadit
+    var TRACKS=[]; // sekvence z email_templates (pro dropdown přeřazení)
+    function loadTracks(){
+      if(TRACKS.length) return Promise.resolve(TRACKS);
+      return api({action:'tracks'}).then(function(o){ TRACKS=(o.j&&o.j.rows)||[]; return TRACKS; });
+    }
+    function leadAction(email,op,track,after){
+      var p={action:'lead_update',email:email,op:op}; if(track) p.track=track;
+      api(p).then(function(o){
+        if(o.j&&o.j.ok){ toast(op==='pause'?'⏸ Sekvence pozastavena':op==='resume'?'▶ Sekvence obnovena':'🔁 Přeřazeno: '+trackName(track)); if(after) after(); }
+        else toast('Chyba: '+((o.j&&o.j.error)||o.status));
+      }).catch(function(){ toast('Chyba spojení'); });
+    }
+    function retrackPrompt(email,after){
+      loadTracks().then(function(ts){
+        var lines=ts.map(function(t,i){ return (i+1)+' = '+trackName(t.track)+' ('+t.steps+' mailů)'; }).join('\n');
+        var pick=prompt('Přeřadit '+email+' do sekvence (pojede od začátku):\n\n'+lines+'\n\nZadej číslo:');
+        if(!pick) return;
+        var t=ts[parseInt(pick,10)-1];
+        if(!t){ toast('Neplatná volba'); return; }
+        if(!confirm('Opravdu přeřadit '+email+' do „'+trackName(t.track)+'"? Sekvence pojede od prvního mailu.')) return;
+        leadAction(email,'retrack',t.track,after);
+      });
+    }
+    function loadQueue(){
+      api({action:'email_scheduled',limit:500}).then(function(o){
+        if(!o.j||!o.j.ok){ $('queue').style.display='none'; return; }
+        var rows=o.j.rows||[];
+        var overdue=rows.filter(function(r){return r.overdue;}).length;
+        $('queueSub').textContent='Naplánováno: '+rows.length+(overdue?' · ⚠️ po termínu (odejde nejbližším cronem): '+overdue:'')+' · komu, co a kdy odejde — a tady to zastavíš nebo přeřadíš';
+        if(!rows.length){ $('queueBody').innerHTML='<p class="muted" style="padding:.8rem 0;">Fronta je prázdná — nikdo nemá naplánovaný další mail.</p>'; $('queue').style.display=''; return; }
+        var trs=rows.slice(0,120).map(function(r){
+          var when=r.overdue?'<span style="color:#ffb061;">'+fmtDate(r.next_send_at)+' ⚠️</span>':fmtDate(r.next_send_at);
+          return '<tr><td style="white-space:nowrap;" class="muted">'+when+'</td>'
+            +'<td>'+esc(r.email)+'</td>'
+            +'<td>'+esc(trackName(r.track))+' <span class="muted">#'+esc(r.step)+'</span></td>'
+            +'<td>'+esc(r.subject||'—')+'</td>'
+            +'<td style="white-space:nowrap;">'
+              +'<button class="qa" data-op="pause" data-email="'+esc(r.email)+'" title="Pozastavit sekvenci">⏸</button> '
+              +'<button class="qa" data-op="retrack" data-email="'+esc(r.email)+'" title="Přeřadit do jiné sekvence">🔁</button> '
+              +'<button class="qa" data-op="prev" data-track="'+esc(r.track)+'" data-step="'+esc(r.step)+'" data-email="'+esc(r.email)+'" title="Náhled mailu">🔍</button>'
+            +'</td></tr>';
+        }).join('');
+        $('queueBody').innerHTML='<div style="overflow-x:auto;max-height:46vh;overflow-y:auto;"><table>'
+          +'<thead><tr><th>Kdy</th><th>E-mail</th><th>Sekvence</th><th>Předmět</th><th>Akce</th></tr></thead>'
+          +'<tbody>'+trs+'</tbody></table></div>'
+          +(rows.length>120?'<p class="muted" style="margin:.6rem 0 0;font-size:.8rem;">Zobrazeno prvních 120 z '+rows.length+'.</p>':'');
+        Array.prototype.forEach.call($('queueBody').querySelectorAll('.qa'),function(b){
+          b.style.cssText='cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#ece4d9;border-radius:8px;padding:4px 8px;font-size:.85rem;';
+          b.addEventListener('click',function(){
+            var em=b.getAttribute('data-email'), op=b.getAttribute('data-op');
+            if(op==='prev'){ openMailPreview(b.getAttribute('data-track'),b.getAttribute('data-step'),em); return; }
+            if(op==='pause'){ if(!confirm('Pozastavit maily pro '+em+'? (Jde kdykoliv obnovit — v detailu kontaktu.)')) return; leadAction(em,'pause',null,loadQueue); return; }
+            if(op==='retrack'){ retrackPrompt(em,loadQueue); }
+          });
+        });
+        $('queue').style.display='';
+      }).catch(function(){ $('queue').style.display='none'; });
     }
 
     // 📈 Progres klientů — kolik lekcí mají členové splněno (autoplay je dopisuje automaticky)
@@ -458,6 +527,23 @@
         var hasA=ents.some(function(e){return e.product==='academy'&&e.active;});
         var hasV=ents.some(function(e){return e.product==='videokurz'&&e.active;});
         var tags=(c.tags||[]);
+        // Mailing sekvence — stav leadu + akce (pauza / obnovit / přeřadit)
+        var lead=(d.leads&&d.leads[0])||null;
+        var seqHtml='';
+        if(lead){
+          var stBadge = lead.status==='active' ? '<span class="badge b-ok">běží</span>'
+            : lead.status==='paused' ? '<span class="badge" style="background:rgba(255,176,97,.16);color:#ffb061">pozastaveno</span>'
+            : lead.status==='purchased' ? '<span class="badge b-tag">koupil(a) — stop</span>'
+            : '<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">'+esc(lead.status)+'</span>';
+          var nextTxt = lead.next_send_at ? 'další mail '+fmtDate(lead.next_send_at) : 'sekvence dokončena';
+          seqHtml='<div class="tl"><b style="color:#cbbfae;font-size:.8rem;">Mailing sekvence</b>'
+            +'<p style="margin:.5rem 0 .3rem;font-size:.88rem;color:#ece4d9;">'+esc(trackName(lead.track))+' <span class="muted">· krok #'+esc(lead.step)+' · '+esc(nextTxt)+'</span> '+stBadge+'</p>'
+            +'<div class="det-act" style="margin:.5rem 0 0;">'
+            +(lead.status==='active'?'<button id="seqPause">⏸ Pozastavit</button>':'')
+            +(lead.status!=='active'?'<button id="seqResume">▶ Obnovit'+(lead.status==='unsubscribed'?' (jen na výslovnou žádost!)':'')+'</button>':'')
+            +'<button id="seqRetrack">🔁 Přeřadit do jiné sekvence</button>'
+            +'</div></div>';
+        }
         var tl=(d.timeline||[]).map(function(ev){
           var cls=ev.type==='sent'?'ev-sent':ev.type==='error'?'ev-error':ev.type==='open'?'ev-open':'ev-skip';
           var track=(ev.detail&&ev.detail.track)||'';
@@ -474,7 +560,12 @@
           '</div>'+
           '<div class="det-act" id="tagWrap">'+tags.map(function(t){return '<button data-tag="'+esc(t)+'" class="on">'+esc(t)+' ✕</button>';}).join('')+
             '<button id="addTag">+ tag</button></div>'+
+          seqHtml+
           '<div class="tl"><b style="color:#cbbfae;font-size:.8rem;">Historie e-mailů</b>'+tl+'</div>';
+        // akce mailing sekvence
+        var sp=$('seqPause'); if(sp) sp.addEventListener('click',function(){ if(!confirm('Pozastavit maily pro '+email+'?')) return; leadAction(email,'pause',null,function(){ openDetail(email); loadQueue(); }); });
+        var sr=$('seqResume'); if(sr) sr.addEventListener('click',function(){ if(!confirm('Obnovit mailing pro '+email+'? Pojede krokem, na kterém skončil.')) return; leadAction(email,'resume',null,function(){ openDetail(email); loadQueue(); }); });
+        var st2=$('seqRetrack'); if(st2) st2.addEventListener('click',function(){ retrackPrompt(email,function(){ openDetail(email); loadQueue(); }); });
         // klikací řádky historie e-mailů → náhled obsahu
         Array.prototype.forEach.call($('detBody').querySelectorAll('.ev.clk'),function(row){
           row.addEventListener('click',function(){ openMailPreview(row.getAttribute('data-track'),row.getAttribute('data-step'),email); });
@@ -501,17 +592,37 @@
     $('detClose').addEventListener('click',function(){ $('det').classList.remove('on'); });
 
     // ---- Odeslané e-maily: globální log + náhled obsahu (+ příloha) ----
-    var TRACK_NAMES={ 'lead-magnet':'Lead magnet (jídelníček)','existing-leadmagnet':'Starý lead → videokurz','onboarding-videokurz':'Onboarding videokurz','onboarding-coaching':'Onboarding coaching' };
+    var TRACK_NAMES={
+      'lead-magnet':'Lead magnet (jídelníček)',
+      'lead-magnet-tool':'Lead magnet (generátory)',
+      'existing-leadmagnet':'Starý lead → videokurz',
+      'nurture-videokurz':'Nurture videokurz (8 týdnů)',
+      'active-no-buy':'Aktivní bez koupě (sleva)',
+      'onboarding-videokurz':'Onboarding videokurz',
+      'onboarding-coaching':'Onboarding coaching',
+      'onboarding-nakup-videokurz':'Po nákupu: videokurz',
+      'onboarding-nakup-academy':'Po nákupu: Academy',
+      'onboarding-grant-videokurz':'Ruční přístup: videokurz',
+      'onboarding-grant-academy':'Ruční přístup: Academy',
+      'upsell-coaching':'Upsell → coaching',
+      'upsell-academy':'Upsell → Academy',
+      'milestone-videokurz':'Milníky videokurzu',
+      'reactivation-member':'Reaktivace člena',
+      'rescue-videokurz':'Záchrana objednávky: videokurz',
+      'rescue-academy':'Záchrana objednávky: Academy'
+    };
     function trackName(t){ return TRACK_NAMES[t]||t||'—'; }
     var mlogAll=[];
-    // sekvence, které chceme mít v souhrnu vždy vidět (i s nulou), ať Martin pozná, že nechodí
-    var MLOG_TRACKS=['lead-magnet','existing-leadmagnet','onboarding-videokurz','onboarding-coaching'];
+    // hlavní sekvence, které chceme mít v souhrnu vždy vidět (i s nulou), ať Martin pozná, že nechodí
+    var MLOG_TRACKS=['lead-magnet','existing-leadmagnet','nurture-videokurz','upsell-coaching','upsell-academy','onboarding-videokurz','onboarding-coaching','onboarding-nakup-videokurz','onboarding-nakup-academy'];
+    // dropdown filtru napln ze VŠECH známých sekvencí
+    (function(){ var sel=$('mlogTrack'); if(!sel) return; Object.keys(TRACK_NAMES).forEach(function(t){ var o=document.createElement('option'); o.value=t; o.textContent=TRACK_NAMES[t]; sel.appendChild(o); }); })();
     function openMailLog(){
       $('mlog').classList.add('on'); $('mlogRows').innerHTML=''; $('mlogSum').innerHTML=''; $('mlogFoot').textContent='Načítám…';
       // limit:2000 → stáhni CELÝ log, ať onboarding blast nepřebije lead-magnet/follow-up řádky
       api({action:'email_log',limit:2000}).then(function(o){
         if(o&&o.j&&o.j.ok&&o.j.rows){ mlogAll=o.j.rows; renderMailSummary(); renderMailLog(); }
-        else { $('mlogFoot').innerHTML='Globální log („email_log") ještě čeká na backend od Code vedle. Zatím historii uvidíš u konkrétního kontaktu — rozklikni řádek → Historie e-mailů → klikni na 🔍.'; }
+        else { $('mlogFoot').textContent='Log se nepodařilo načíst — zkus zavřít a otevřít znovu.'; }
       }).catch(function(){ $('mlogFoot').textContent='Chyba spojení.'; });
     }
     function renderMailSummary(){
@@ -558,7 +669,7 @@
       api({action:'email_preview',track:track,step:step,email:email||null}).then(function(o){
         var d=o&&o.j&&o.j.ok?o.j:null;
         if(!d||(!d.html&&!d.subject&&!d.text)){
-          $('mprevBody').innerHTML='<h2>Náhled e-mailu</h2><p class="muted">'+trackName(track)+' #'+esc(step)+(email?' · '+esc(email):'')+'</p><p class="muted" style="margin-top:.7rem;">Náhled obsahu („email_preview") ještě čeká na backend od Code vedle — prompt už má. Jakmile nasadí, otevře se tu přesný text mailu i s přílohou.</p>';
+          $('mprevBody').innerHTML='<h2>Náhled e-mailu</h2><p class="muted">'+trackName(track)+' #'+esc(step)+(email?' · '+esc(email):'')+'</p><p class="muted" style="margin-top:.7rem;">Náhled se nepodařilo vykreslit — šablona pro tenhle krok možná už neexistuje.</p>';
           return;
         }
         var att=(d.attachments||[]).map(function(a){ return '<a href="'+esc(a.url)+'" target="_blank" rel="noopener">📎 '+esc(a.name||'příloha')+'</a>'; }).join('');

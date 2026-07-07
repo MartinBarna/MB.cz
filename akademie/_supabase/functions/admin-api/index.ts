@@ -218,6 +218,18 @@ function extractAttachments(html: string): { name: string; url: string }[] {
   return out;
 }
 
+// auth.admin.listUsers je strankovane — jedna stranka (1000) by nad 1000 uctu tise orezavala data
+async function listAllUsers(admin: ReturnType<typeof createClient>) {
+  const users: { id: string; email?: string; last_sign_in_at?: string }[] = [];
+  for (let page = 1; page <= 10; page++) {
+    const { data } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+    const batch = data?.users ?? [];
+    users.push(...batch as typeof users);
+    if (batch.length < 1000) break;
+  }
+  return users;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -237,12 +249,12 @@ Deno.serve(async (req) => {
 
   try {
     if (action === "overview" || action === "stats") {
-      const [cc, lds, ents, evs, ulist] = await Promise.all([
+      const [cc, lds, ents, evs, allUsers] = await Promise.all([
         admin.from("customer_contacts").select("email,name,tags,status,audience,onboarding_sent_at"),
         admin.from("leads").select("id,email,name,segment,source,track,step,status,next_send_at"),
         admin.from("entitlements").select("email,product,active"),
         admin.from("email_events").select("lead_id,type,created_at").not("lead_id", "is", null),
-        admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+        listAllUsers(admin),
       ]);
       const leadById = new Map<string, string>();
       const map = new Map<string, Record<string, unknown>>();
@@ -265,9 +277,9 @@ Deno.serve(async (req) => {
         if (e.product === "academy" && e.active) r.has_academy = true;
         if (e.product === "videokurz" && e.active) r.has_videokurz = true;
       }
-      for (const u of ulist.data?.users ?? []) {
+      for (const u of allUsers) {
         const k = low(u.email); if (!k) continue;
-        const r = get(k); r.registered = true; r.last_sign_in = (u as { last_sign_in_at?: string }).last_sign_in_at ?? null;
+        const r = get(k); r.registered = true; r.last_sign_in = u.last_sign_in_at ?? null;
       }
       for (const ev of evs.data ?? []) {
         const email = leadById.get(String(ev.lead_id)); if (!email) continue;
@@ -334,6 +346,50 @@ Deno.serve(async (req) => {
       if (!email) return json({ error: "no_email" }, 400);
       await admin.from("leads").update({ status: "unsubscribed", next_send_at: null, updated_at: new Date().toISOString() }).eq("email", email);
       return json({ ok: true });
+    }
+
+    if (action === "lead_update") {
+      // Ovlivneni mailingu z adminu: pauza / pokracovat (i re-subscribe) / preradit do jine sekvence.
+      const email = low(body.email); const op = String(body.op || "");
+      if (!email) return json({ error: "no_email" }, 400);
+      const { data: lead } = await admin.from("leads").select("id,email,track,step,status,next_send_at").eq("email", email).maybeSingle();
+      if (!lead) return json({ error: "no_lead" }, 404);
+      const nowIso = new Date().toISOString();
+      if (op === "pause") {
+        if (lead.status !== "active") return json({ error: "not_active", status: lead.status }, 400);
+        // next_send_at zustava — resume pak vi, ze sekvence jeste nedobehla
+        const { error } = await admin.from("leads").update({ status: "paused", updated_at: nowIso }).eq("id", lead.id);
+        if (error) return json({ error: error.message }, 500);
+        return json({ ok: true, status: "paused" });
+      }
+      if (op === "resume") {
+        // pokracuje krokem, na kterem lead skoncil; posle nejblizsi hodinovy cron.
+        // Funguje i jako re-subscribe (unsubscribed/purchased) — POUZIVAT JEN na vyslovnou zadost cloveka!
+        if (lead.status === "active") return json({ error: "already_active" }, 400);
+        const next = lead.next_send_at ? nowIso : null; // null = sekvence uz dobehla, jen zapne stav
+        const { error } = await admin.from("leads").update({ status: "active", next_send_at: next, updated_at: nowIso }).eq("id", lead.id);
+        if (error) return json({ error: error.message }, 500);
+        return json({ ok: true, status: "active", next_send_at: next });
+      }
+      if (op === "retrack") {
+        // preradi do jine sekvence od kroku 0; dedupe drip-sendu je per-track, takze projde cela.
+        const track = String(body.track || "");
+        const { data: tpl } = await admin.from("email_templates").select("track").eq("track", track).eq("step", 0).maybeSingle();
+        if (!tpl) return json({ error: "unknown_track" }, 400);
+        const { error } = await admin.from("leads").update({ track, step: 0, status: "active", next_send_at: nowIso, updated_at: nowIso }).eq("id", lead.id);
+        if (error) return json({ error: error.message }, 500);
+        return json({ ok: true, track, step: 0 });
+      }
+      return json({ error: "bad_op" }, 400);
+    }
+
+    if (action === "tracks") {
+      // seznam sekvenci pro dropdowny v adminu (z email_templates = zdroj pravdy)
+      const { data } = await admin.from("email_templates").select("track,step");
+      const m = new Map<string, number>();
+      for (const t of data ?? []) m.set(String(t.track), Math.max(m.get(String(t.track)) ?? 0, Number(t.step) + 1));
+      const rows = [...m.entries()].map(([track, steps]) => ({ track, steps })).sort((a, b) => a.track.localeCompare(b.track));
+      return json({ ok: true, rows });
     }
 
     if (action === "ga_stats") {
@@ -510,12 +566,15 @@ Deno.serve(async (req) => {
     if (action === "progress_overview") {
       // Progres clenu: videokurz (lesson_id 'vk-*', 182 lekci) vs Academy (ostatni lesson_id).
       // Vraci jen cleny s pristupem nebo aspon 1 splnenou lekci.
-      const VK_TOTAL = 182, AC_TOTAL = 224;
-      const [ulist, prg, ents] = await Promise.all([
-        admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+      // Pocet Academy lekci se pocita zive: placene lekce v lesson_content ('m*') + 6 free ukazek.
+      const VK_TOTAL = 182;
+      const [ulist2, prg, ents, lcCount] = await Promise.all([
+        listAllUsers(admin),
         admin.from("progress").select("user_id,lesson_id,completed_at").eq("completed", true),
         admin.from("entitlements").select("email,product").eq("active", true),
+        admin.from("lesson_content").select("lesson_id", { count: "exact", head: true }).like("lesson_id", "m%"),
       ]);
+      const AC_TOTAL = (lcCount.count ?? 235) + 6;
       const entSet = new Set((ents.data ?? []).map((e) => low(e.email) + ":" + e.product));
       const byUser = new Map<string, { vk: number; ac: number; last: string | null }>();
       for (const p of prg.data ?? []) {
@@ -527,7 +586,7 @@ Deno.serve(async (req) => {
         if (t && (!r.last || t > r.last)) r.last = t;
       }
       const rows: Record<string, unknown>[] = [];
-      for (const u of ulist.data?.users ?? []) {
+      for (const u of ulist2) {
         const email = low(u.email); if (!email) continue;
         const pr = byUser.get(String(u.id)) || { vk: 0, ac: 0, last: null };
         const hasAc = entSet.has(email + ":academy");
