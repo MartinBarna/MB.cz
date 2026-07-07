@@ -25,3 +25,12 @@ alter table public.usage_events enable row level security;
 
 -- POZN.: otevření e-mailů ('open' eventy v email_events) doplní Resend webhook
 --        (fáze 2) — viz handoff. Tabulka email_events už 'open' typ unese.
+
+-- 3) PAUZA MAILINGU Z ADMINU (2026-07-07, nasazeno zivé): leads.status umi 'paused'.
+--    Admin-api akce lead_update (pause/resume/retrack) — pauza NEni unsubscribe,
+--    lead jde kdykoliv obnovit a pokracuje krokem, na kterem skoncil.
+--    Vsechny selecty dripu i enroll funkci filtruji status='active', takze
+--    'paused' bezpecne vypada z fronty i z auto-enrollu.
+alter table public.leads drop constraint if exists leads_status_check;
+alter table public.leads add constraint leads_status_check
+  check (status = any (array['active'::text,'unsubscribed'::text,'bounced'::text,'purchased'::text,'paused'::text]));
