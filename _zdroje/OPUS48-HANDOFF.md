@@ -106,6 +106,10 @@ Linktree (linktr.ee/martinbarna) odkazuje: /koucing/, /clenskasekce/, /videokurz
   has_entitlement) — úpravy lekcí dělej v DB, HTML v repu jsou jen shelly!
   Řádek 'zaverecny-test' = otázky testu (JSON). Nahrávání většího obsahu:
   temp SECURITY DEFINER RPC s náhodným hex guardem (vzor v `mb-fable5-mise`).
+  ⚠️ **PowerShell čti obsah přes `[IO.File]::ReadAllText($p,[Text.Encoding]::UTF8)`,
+  NE `Get-Content`** — ten vrací objekt s PSPath/PSDrive metadaty a `ConvertTo-Json`
+  uloží celý balík jako `{"value":"<html>",…}`, takže se lekce nezobrazí. Stalo se
+  u m15-l12 (7.7. opraveno). Po uploadu VŽDY ověř `left(html,3)` = `<p`, ne `{`.
 - **checkin-capture v3**: identita VÝHRADNĚ z JWT (ne z body), kredit max 1× за
   6 dní. **resend-webhook**: fail-closed Svix ověření (secret v app_config).
 - **Admin v2** (/akademie/admin/): fronta mailů s akcemi, mapa sekvencí + editor
@@ -202,6 +206,19 @@ přepsáno obecně; ideálně ať Martin doplní svou reálnou historku.
    až po stabilizaci; sběr recenzí na web.
 7. Web: nav odkazy vedou na /konzultace/ (teď 301 → /koucing/) — funguje, ale
    při nejbližší textové vlně můžeš hrefy přepsat rovnou na /koucing/.
+8. **Kontaktní formuláře (homepage, /koucing, /prednasky)** dostaly 8.7. anti-spam
+   hardening: honeypot mimo obrazovku (ne display:none — boti přeskakují) + časová
+   past 3 s. Chytí boty, co reálně projdou formulářem a vyplní jen viditelná pole
+   (přesně tvar spamu, co Martinovi chodil: nese české názvy polí). Pokud by spam
+   PŘESTO chodil, jsou to boti POSTující PŘÍMO na `formsubmit.co/martin@martinbarna.cz`
+   (e-mail je vidět ve zdroji) — KOMPLETNÍ fix = přesměrovat formulář přes vlastní
+   Supabase edge funkci (relay přes Resend), aby e-mail ze zdroje zmizel a validace
+   běžela server-side. Navrženo, čeká na Martinovo „jeď" (mění lead-cestu → ne naslepo).
+9. **Spánek — lekce m15-l12 + volný blog článek jsou ŽIVÉ a vědecky ověřené (8.7.)**.
+   Rekontrola všech čísel proti PubMedu (Yin 2017, Windred 2024, Spiegel 2004, Calvin
+   2013, Nedeltcheva 2010, Mah 2011). Per-hodinová čísla U-křivky přepsána z původního
+   (nepotvrzeného Shen 2016) na ověřené Yin 2017 (pod 7 h ~6 %/hod, nad 7 h ~13 %/hod).
+   Splátky Academy: na objednávce teď jako plnohodnotná 2. volba (tlačítko), ne jen odkaz.
 
 ## Práce s Martinem
 Píše krátce, s překlepy, z mobilu. Chce průběžná stručná hlášení („co je a co
