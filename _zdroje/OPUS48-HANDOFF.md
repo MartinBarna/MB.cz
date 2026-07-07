@@ -219,6 +219,20 @@ přepsáno obecně; ideálně ať Martin doplní svou reálnou historku.
    2013, Nedeltcheva 2010, Mah 2011). Per-hodinová čísla U-křivky přepsána z původního
    (nepotvrzeného Shen 2016) na ověřené Yin 2017 (pod 7 h ~6 %/hod, nad 7 h ~13 %/hod).
    Splátky Academy: na objednávce teď jako plnohodnotná 2. volba (tlačítko), ne jen odkaz.
+10. ⚠️ **SPLÁTKY — riziko opakovaných plateb (Martin nahlásil 8.7., NEDOŘEŠENO)**: splátkový
+    formulář n0xgJ nabízí i **jednorázové** metody vedle opakovaných. Klient, co u splátek
+    zvolí jednorázovku, zaplatí 1× 3000, rekurentní profil nevznikne, další splátky nepřijdou
+    a splatky-guard ho po ~40 dnech zablokuje. FIX: v SimpleShop adminu u produktu 151622
+    „na splátky" vypnout jednorázové metody, nechat jen „Opakované platby". Claude nebyl
+    přihlášený do SimpleShopu (heslo zadávat nesmí) → čeká na Martinův login (pak fix přes
+    Chrome) nebo Martin sám. Zvážit i zjemnění splatky-guardu (napřed mail s odkazem na doplatek,
+    ne tvrdý blok).
+11. **Infografiky z Drive → blog: HOTOVO (8.7.)**. Diagnostika 36 témat složky „Infografiky"
+    proti 139 blog článkům: 35 už pokryto, chyběl jediný → postaven `/clanky/hubnuti-a-vek-mozku.html`
+    (Maurer 2026, „omládne mozek?", anti-overclaim, vše ověřeno v PubMedu). Drive `search_files`
+    NEumí filtr parents → hledej `fullText contains 'X'`. V té složce je Martinův **LEARNINGS.md**
+    (anti-AI-slop manuál pro jeho hlas — načti při psaní jeho textů). POZOR: velké fan-out workflow
+    u Fable účtu padají na rate-limit → rešerše dělej inline nebo v dávkách ≤3-4.
 
 ## Práce s Martinem
 Píše krátce, s překlepy, z mobilu. Chce průběžná stručná hlášení („co je a co
