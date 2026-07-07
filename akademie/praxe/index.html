@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praxe kit — dokumenty pro tvou praxi — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23ff7a00' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<style>
+  .wrap{max-width:860px;margin:0 auto;padding:30px 20px 90px;}
+  .kick{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.2rem);color:#fff;margin:.4rem 0 .5rem;letter-spacing:-.02em;}
+  .lead{color:#cfc6b8;font-size:1.02rem;max-width:660px;line-height:1.6;}
+  .panel{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.3rem 1.5rem;margin:1.3rem 0;}
+  label{display:block;font-size:.82rem;color:var(--muted-2);font-weight:600;margin:0 0 5px;}
+  .ba input{width:100%;background-color:rgba(0,0,0,.45)!important;border:1px solid var(--line-2)!important;border-radius:11px;color:#fff!important;padding:11px 12px;font-family:inherit;font-size:.96rem;}
+  .ba input:focus{outline:none;border-color:rgba(255,122,0,.6)!important;}
+  .brandgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:560px){.brandgrid{grid-template-columns:1fr;}}
+  .toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:1.2rem 0;}
+  .toc a{display:block;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:.9rem 1rem;color:#fff;text-decoration:none;font-weight:600;font-size:.92rem;}
+  .toc a:hover{border-color:rgba(255,157,60,.5);}
+  .toc a span{display:block;color:var(--muted);font-weight:500;font-size:.78rem;margin-top:2px;}
+
+  /* ---- Dokumenty ---- */
+  .doc{background:#fff;color:#1c1a17;border-radius:16px;padding:34px 38px;margin:2rem 0;box-shadow:0 18px 50px rgba(0,0,0,.4);}
+  .doc h2{color:#161310;font-size:1.45rem;margin:0 0 .2rem;letter-spacing:-.01em;}
+  .doc .sub{color:#7a7368;font-size:.9rem;margin:0 0 1.1rem;}
+  .doc h3{color:#161310;font-size:1.02rem;margin:1.4rem 0 .5rem;border-bottom:2px solid #ff7a00;display:inline-block;padding-bottom:2px;}
+  .doc p{color:#3c382f;font-size:.92rem;line-height:1.55;margin:.5rem 0;}
+  .doc .hint{color:#8a8276;font-size:.8rem;font-style:italic;}
+  .doc ul{margin:.4rem 0 .6rem;padding-left:1.2rem;}
+  .doc li{color:#3c382f;font-size:.92rem;line-height:1.6;margin:.25rem 0;}
+  .doc .fill{display:inline-block;min-width:180px;border-bottom:1.5px dotted #b3aa9c;height:1.15em;vertical-align:bottom;}
+  .doc .fill.short{min-width:70px;} .doc .fill.long{min-width:100%;}
+  .doc table{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:.88rem;}
+  .doc th{background:#f4efe8;color:#161310;text-align:left;padding:8px 10px;border:1px solid #ddd4c6;font-size:.8rem;}
+  .doc td{padding:11px 10px;border:1px solid #ddd4c6;color:#3c382f;height:1.4em;}
+  .doc .cb{font-size:1.05rem;color:#ff7a00;margin-right:6px;}
+  .doc .warn{background:#fdf3e7;border:1px solid #f0c896;border-radius:10px;padding:.7rem 1rem;font-size:.85rem;color:#6b5335;margin:.8rem 0;}
+  .doc .docfoot{margin-top:1.6rem;padding-top:.8rem;border-top:1px solid #e6ddcf;display:flex;justify-content:space-between;gap:1rem;font-size:.82rem;color:#7a7368;}
+  .doc .docfoot b{color:#161310;}
+  .doc-tools{display:flex;justify-content:flex-end;margin:-.4rem 0 .6rem;}
+  .doc-tools button{cursor:pointer;border:none;font-family:inherit;font-weight:700;font-size:.82rem;padding:8px 16px;border-radius:50px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;}
+  .scale5{display:flex;gap:14px;flex-wrap:wrap;color:#3c382f;font-size:.9rem;}
+
+  /* tisk: jen vybrany dokument, cisty A4 */
+  @media print{
+    body{background:#fff!important;}
+    .top,.wrap>*:not(.doc),.doc-tools,.to-top,.fab-wa{display:none!important;}
+    .doc{display:none;box-shadow:none;border-radius:0;margin:0;padding:0 6mm;}
+    body[data-print="d1"] #d1,body[data-print="d2"] #d2,body[data-print="d3"] #d3,body[data-print="d4"] #d4,body[data-print="d5"] #d5{display:block!important;}
+    .wrap{padding:0;max-width:none;}
+  }
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Praxe kit</span></span></a>
+    <a class="back" href="/akademie/moje/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Zpět na Academy</a>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick">🧰 Praxe kit</span>
+    <h1>Dokumenty pro tvou praxi</h1>
+    <p class="lead">Pět hotových dokumentů, které můžeš <strong style="color:#fff;">zítra použít s reálným klientem</strong> — pod svým jménem. Vyplň si brand, klikni na „Vytisknout / uložit PDF" u dokumentu a máš profesionální materiál. Metodika odpovídá tomu, co se učíš v Academy: klient váží a zapisuje, řešíme týdenní průměr a míry, ne jedno číslo na váze.</p>
+
+    <div class="panel">
+      <div class="brandgrid">
+        <div><label for="bName">Tvoje jméno / brand (propíše se do dokumentů)</label><input id="bName" type="text" placeholder="např. Jana Nováková — výživové poradenství" autocomplete="off"></div>
+        <div><label for="bContact">Kontakt (e-mail / telefon / web)</label><input id="bContact" type="text" placeholder="např. jana@email.cz · 777 123 456" autocomplete="off"></div>
+      </div>
+      <p class="hint" style="color:var(--muted);font-size:.8rem;margin:.7rem 0 0;">Ukládá se jen ve tvém prohlížeči. Tip: „Vytisknout" v prohlížeči umí i „Uložit jako PDF" — pošleš klientovi hotový soubor.</p>
+    </div>
+
+    <div class="toc">
+      <a href="#d1">📋 Vstupní dotazník klienta<span>první schůzka — vše důležité na 1 místě</span></a>
+      <a href="#d2">✅ Týdenní check-in<span>stejný systém, jakým vedu klienty já</span></a>
+      <a href="#d3">📈 Tracker pokroku (8 týdnů)<span>trend místo panik z jednoho čísla</span></a>
+      <a href="#d4">💰 Ceníkový worksheet<span>nacen si služby, ať tě práce uživí</span></a>
+      <a href="#d5">🚀 Checklist: prvních 5 klientů<span>od nuly k prvním platícím</span></a>
+    </div>
+
+    <!-- D1: VSTUPNÍ DOTAZNÍK -->
+    <section class="doc" id="d1">
+      <div class="doc-tools"><button data-doc="d1">🖨️ Vytisknout / uložit PDF</button></div>
+      <h2>Vstupní dotazník klienta</h2>
+      <p class="sub">Vyplňte prosím před první konzultací — čím upřímněji, tím přesnější plán dostanete.</p>
+
+      <h3>Základní údaje</h3>
+      <p>Jméno: <span class="fill"></span> &nbsp; Věk: <span class="fill short"></span> &nbsp; Výška: <span class="fill short"></span> cm &nbsp; Váha: <span class="fill short"></span> kg</p>
+      <p>E-mail / telefon: <span class="fill long"></span></p>
+
+      <h3>Cíl</h3>
+      <ul>
+        <li><span class="cb">☐</span> Zhubnout &nbsp; <span class="cb">☐</span> Nabrat svaly &nbsp; <span class="cb">☐</span> Zpevnit / rekompozice &nbsp; <span class="cb">☐</span> Výkon / sport &nbsp; <span class="cb">☐</span> Zdraví a energie</li>
+        <li>Co konkrétně chcete změnit a do kdy? <span class="fill long"></span></li>
+        <li>Proč je to pro vás důležité právě teď? <span class="fill long"></span></li>
+      </ul>
+
+      <h3>Historie</h3>
+      <ul>
+        <li>Jaké diety/přístupy jste už zkoušel(a) a jak to dopadlo? <span class="fill long"></span><span class="fill long"></span></li>
+        <li>Co vám v minulosti fungovalo nejvíc? <span class="fill long"></span></li>
+        <li>Na čem to obvykle „spadne"? (víkendy, večery, stres, sladké…) <span class="fill long"></span></li>
+      </ul>
+
+      <h3>Zdravotní screening</h3>
+      <ul>
+        <li>Diagnózy / dlouhodobé potíže: <span class="fill long"></span></li>
+        <li>Léky, které pravidelně užíváte: <span class="fill long"></span></li>
+        <li>Těhotenství / kojení: <span class="cb">☐</span> ano &nbsp; <span class="cb">☐</span> ne &nbsp;&nbsp; Zranění / omezení pohybu: <span class="fill"></span></li>
+        <li>Vztah k jídlu, který vás trápí (záchvatovité přejídání, restrikce…): <span class="fill long"></span></li>
+      </ul>
+      <div class="warn">⚠️ Pokud uvedete diagnózu, léky, těhotenství nebo poruchu příjmu potravy, plán vždy ladíme společně s vaším lékařem / specialistou — to je hranice poctivého koučinku.</div>
+
+      <h3>Jídlo &amp; režim</h3>
+      <ul>
+        <li>Typický pracovní den (jídla, časy): <span class="fill long"></span><span class="fill long"></span></li>
+        <li>Jídla, bez kterých nechcete žít: <span class="fill long"></span></li>
+        <li>Co nejíte (alergie, averze): <span class="fill long"></span></li>
+        <li>Kdo doma vaří a jíte společně? <span class="fill long"></span></li>
+        <li>Alkohol / slazené nápoje týdně: <span class="fill long"></span></li>
+      </ul>
+
+      <h3>Pohyb, spánek, stres</h3>
+      <ul>
+        <li>Aktuální pohyb (co, kolikrát týdně): <span class="fill long"></span></li>
+        <li>Kolik hodin spíte a jak se ráno cítíte? <span class="fill long"></span></li>
+        <li>Stres 1–10 a hlavní zdroj: <span class="fill long"></span></li>
+        <li>Kolik času reálně máte na trénink týdně: <span class="fill"></span></li>
+      </ul>
+
+      <h3>Výchozí míry</h3>
+      <p>Pas: <span class="fill short"></span> cm &nbsp; Boky: <span class="fill short"></span> cm &nbsp; Stehno: <span class="fill short"></span> cm &nbsp; Datum: <span class="fill short"></span></p>
+      <p class="hint">Měříme ráno nalačno, vždy na stejném místě. Fotky (zepředu/z boku/zezadu) si uložte pro sebe — za 8 týdnů řeknou víc než váha.</p>
+
+      <div class="docfoot"><span><b class="brand-name">—</b><br><span class="brand-contact"></span></span><span>Vstupní dotazník · strana 1</span></div>
+    </section>
+
+    <!-- D2: TÝDENNÍ CHECK-IN -->
+    <section class="doc" id="d2">
+      <div class="doc-tools"><button data-doc="d2">🖨️ Vytisknout / uložit PDF</button></div>
+      <h2>Týdenní check-in</h2>
+      <p class="sub">Vyplňte 1× týdně, ideálně ve stejný den. Zabere 3 minuty — a právě díky němu plán vždy sedí na vaši realitu.</p>
+
+      <h3>Čísla týdne</h3>
+      <p class="hint">Važte se každé ráno nalačno po toaletě a zapište si hodnoty — sem patří PRŮMĚR celého týdne, ne jedno číslo. Váha kolísá i o kilo denně (voda, sůl, trávení) a nic to neznamená.</p>
+      <table>
+        <tr><th>Po</th><th>Út</th><th>St</th><th>Čt</th><th>Pá</th><th>So</th><th>Ne</th><th style="background:#ffe9d4;">Ø průměr</th></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="background:#fff7ee;"></td></tr>
+      </table>
+      <p>Pas: <span class="fill short"></span> cm &nbsp; Boky: <span class="fill short"></span> cm &nbsp; Kroky (denní průměr): <span class="fill short"></span> &nbsp; Tréninky: <span class="fill short"></span> / plán <span class="fill short"></span></p>
+
+      <h3>Jak šel týden (zakroužkujte)</h3>
+      <ul>
+        <li>Dodržení plánu (adherence): <span class="scale5">1 &nbsp; 2 &nbsp; 3 &nbsp; 4 &nbsp; 5</span> <span class="hint">(1 = mimo, 5 = podle plánu)</span></li>
+        <li>Spánek: <span class="scale5">1 &nbsp; 2 &nbsp; 3 &nbsp; 4 &nbsp; 5</span> &nbsp;&nbsp; Energie/pocit: <span class="scale5">1 &nbsp; 2 &nbsp; 3 &nbsp; 4 &nbsp; 5</span> &nbsp;&nbsp; Hlad/chutě: <span class="scale5">1 &nbsp; 2 &nbsp; 3 &nbsp; 4 &nbsp; 5</span></li>
+      </ul>
+
+      <h3>Slovní shrnutí</h3>
+      <ul>
+        <li>Co se povedlo: <span class="fill long"></span></li>
+        <li>Co bylo těžké / kde to ujelo: <span class="fill long"></span></li>
+        <li>Co potřebuji od kouče: <span class="fill long"></span></li>
+      </ul>
+
+      <h3>Vyhodnocení kouče</h3>
+      <ul>
+        <li>Trend vs. minulý týden: <span class="fill long"></span></li>
+        <li>Úprava na další týden (kalorie / kroky / trénink): <span class="fill long"></span></li>
+        <li>Jedna věc, na kterou se soustředit: <span class="fill long"></span></li>
+      </ul>
+      <p class="hint">Pozn. pro kouče: pořadí pák — nejdřív adherence a poctivost zápisu, pak kroky/NEAT, až pak kalorie. Když klient plán nedodržuje, nižší kalorie nic nevyřeší.</p>
+
+      <div class="docfoot"><span><b class="brand-name">—</b><br><span class="brand-contact"></span></span><span>Týdenní check-in · týden č. <span class="fill short"></span></span></div>
+    </section>
+
+    <!-- D3: TRACKER POKROKU -->
+    <section class="doc" id="d3">
+      <div class="doc-tools"><button data-doc="d3">🖨️ Vytisknout / uložit PDF</button></div>
+      <h2>Tracker pokroku — 8 týdnů</h2>
+      <p class="sub">Jedno místo, kde je vidět celá cesta. Hodnotíme TREND za týdny, nikdy jedno číslo.</p>
+      <table>
+        <tr><th style="width:70px;">Týden</th><th>Ø váha (kg)</th><th>Pas (cm)</th><th>Boky (cm)</th><th>Adherence 1–5</th><th>Poznámka týdne</th></tr>
+        <tr><td>Start</td><td></td><td></td><td></td><td>—</td><td></td></tr>
+        <tr><td>1</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>2</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>3</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>4</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>5</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>6</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>7</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>8</td><td></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <h3>Jak tracker číst</h3>
+      <ul>
+        <li><span class="cb">✓</span> Váha stagnuje, ale pas jde dolů = <strong>funguje to</strong> (rekompozice). Míry často mluví dřív než váha.</li>
+        <li><span class="cb">✓</span> Jeden „špatný" týden nic neznamená — rozhoduje trend 3–4 týdnů.</li>
+        <li><span class="cb">✓</span> 2–3 týdny bez posunu při adherenci 4–5? Teprve teď má smysl upravit kalorie nebo pohyb.</li>
+        <li><span class="cb">✓</span> Adherence pod 3? Neměňte čísla — zjednodušte plán, ať se dá dodržet.</li>
+      </ul>
+      <p>Fotky pokroku: <span class="cb">☐</span> start &nbsp; <span class="cb">☐</span> týden 4 &nbsp; <span class="cb">☐</span> týden 8 <span class="hint">(stejné světlo, stejné místo, stejný čas)</span></p>
+      <div class="docfoot"><span><b class="brand-name">—</b><br><span class="brand-contact"></span></span><span>Tracker pokroku · klient: <span class="fill"></span></span></div>
+    </section>
+
+    <!-- D4: CENÍKOVÝ WORKSHEET -->
+    <section class="doc" id="d4">
+      <div class="doc-tools"><button data-doc="d4">🖨️ Vytisknout / uložit PDF</button></div>
+      <h2>Ceníkový worksheet</h2>
+      <p class="sub">Pracovní list pro tebe (ne pro klienta). Cena se nepočítá od „co si dovolím říct", ale od toho, co tě uživí.</p>
+
+      <h3>Krok 1 — Kolik potřebuješ vydělat</h3>
+      <ul>
+        <li>Cílový hrubý měsíční příjem z koučinku: <span class="fill"></span> Kč</li>
+        <li>Měsíční náklady na podnikání (software, pojištění, vzdělávání, marketing): <span class="fill"></span> Kč</li>
+        <li>= Potřebuji od klientů celkem: <span class="fill"></span> Kč / měsíc</li>
+      </ul>
+
+      <h3>Krok 2 — Kolik klientů reálně utáhneš</h3>
+      <ul>
+        <li>Hodin na koučink týdně (vedle práce/života): <span class="fill short"></span> h</li>
+        <li>Čas na 1 klienta týdně (check-in + úpravy + komunikace): <span class="fill short"></span> h <span class="hint">(počítej poctivě 1–1,5 h)</span></li>
+        <li>= Maximální kapacita: <span class="fill short"></span> klientů <span class="hint">(hodiny ÷ čas na klienta; nech si 20 % rezervu)</span></li>
+      </ul>
+
+      <h3>Krok 3 — Minimální cena</h3>
+      <ul>
+        <li><strong>Potřebný příjem ÷ počet klientů = minimální cena za měsíc vedení:</strong> <span class="fill"></span> Kč</li>
+        <li>Pod tuhle cenu nejdeš — jinak dotuješ cizí hubnutí ze svého času.</li>
+      </ul>
+
+      <h3>Krok 4 — Pozicování (tohle rozhoduje víc než cifra)</h3>
+      <ul>
+        <li><span class="cb">☐</span> Neprodávám hodiny, prodávám <strong>výsledek a vedení</strong> — v ceně je plán, týdenní úpravy a podpora.</li>
+        <li><span class="cb">☐</span> Nekonkuruji cenou. Levnější kouč vždycky existuje — konkuruji systémem a péčí.</li>
+        <li><span class="cb">☐</span> Mám 2 balíčky (základ / prémium s užším vedením) — klient si vybírá úroveň podpory, ne slevu.</li>
+        <li><span class="cb">☐</span> Delší závazek (3 měsíce) = výhodnější měsíční cena. Výsledky stejně potřebují 8–12 týdnů.</li>
+        <li><span class="cb">☐</span> Cenu říkám nahlas a bez omluv. Ticho po ceně vydržím :)</li>
+      </ul>
+
+      <h3>Krok 5 — Sanity check</h3>
+      <ul>
+        <li>Moje cena × moje kapacita = <span class="fill"></span> Kč — pokrývá to Krok 1? <span class="cb">☐</span> ano <span class="cb">☐</span> ne → zvyš cenu, ne kapacitu</li>
+      </ul>
+      <div class="docfoot"><span><b class="brand-name">—</b><br><span class="brand-contact"></span></span><span>Ceníkový worksheet · jen pro interní použití</span></div>
+    </section>
+
+    <!-- D5: PRVNÍCH 5 KLIENTŮ -->
+    <section class="doc" id="d5">
+      <div class="doc-tools"><button data-doc="d5">🖨️ Vytisknout / uložit PDF</button></div>
+      <h2>Checklist: prvních 5 klientů</h2>
+      <p class="sub">Od nuly k prvním platícím — bez reklam a bez čekání na „až budu mít víc sledujících".</p>
+
+      <h3>Týden 1 — Základna</h3>
+      <ul>
+        <li><span class="cb">☐</span> Mám jasnou větu, koho vedu a k čemu („Pomáhám ____ dosáhnout ____ bez ____.")</li>
+        <li><span class="cb">☐</span> Vstupní dotazník a check-in mám připravené (z tohohle kitu) — vypadám profesionálně od 1. dne.</li>
+        <li><span class="cb">☐</span> Cenu mám spočítanou (worksheet výše), včetně „zakládací" nabídky pro první klienty.</li>
+      </ul>
+
+      <h3>Týden 1–2 — První 3 klienti z okolí</h3>
+      <ul>
+        <li><span class="cb">☐</span> Sepsal(a) jsem 20 lidí, kteří o mně vědí (kamarádi, kolegové, fitko, rodina jejich známých).</li>
+        <li><span class="cb">☐</span> Napsal(a) jsem 10 z nich osobní zprávu — ne prodej, nabídka: <em>„Rozjíždím vedení klientů. Beru 3 lidi do zakládající skupiny za zvýhodněnou cenu výměnou za zpětnou vazbu a recenzi. Nevíš o někom, komu by to pomohlo?"</em></li>
+        <li><span class="cb">☐</span> Zakládající cena je časově omezená a klient ví, že běžná cena je vyšší.</li>
+      </ul>
+
+      <h3>Týden 2–6 — Výsledky viditelně</h3>
+      <ul>
+        <li><span class="cb">☐</span> Vybral(a) jsem si JEDEN kanál (IG / FB skupiny / osobně ve fitku) a dělám ho pořádně.</li>
+        <li><span class="cb">☐</span> 3× týdně sdílím užitečnost ze své praxe (ne motivační citáty): co řeším s klienty, mini-tipy, zákulisí.</li>
+        <li><span class="cb">☐</span> Od každého klienta sbírám průběžná data (tracker) → v týdnu 4–6 mám první „před/po" příběh se souhlasem.</li>
+        <li><span class="cb">☐</span> Case study jsem sepsal(a) poctivě: výchozí stav → co jsme dělali → čísla → co říká klient.</li>
+      </ul>
+
+      <h3>Průběžně — Doporučení jako systém</h3>
+      <ul>
+        <li><span class="cb">☐</span> V týdnu 4 se každého spokojeného klienta ptám: <em>„Znáš někoho, komu by tohle taky pomohlo? Za doporučení dostaneš ____."</em></li>
+        <li><span class="cb">☐</span> Každou recenzi ukládám (screenshot) a mám je na jednom místě.</li>
+        <li><span class="cb">☐</span> Každému, kdo se ozval a nekoupil, se připomenu za 2–4 týdny — slušně, jednou.</li>
+      </ul>
+      <div class="warn">💡 Pravidlo: první klienti nekupují tvůj marketing, kupují TEBE. Rychlá odpověď, systém a poctivá péče prodávají víc než dokonalý web.</div>
+      <div class="docfoot"><span><b class="brand-name">—</b><br><span class="brand-contact"></span></span><span>Checklist prvních 5 klientů</span></div>
+    </section>
+
+    <p class="hint" style="color:var(--muted);margin-top:2rem;">Praxe kit patří k tvému členství v Barna Academy. Dokumenty používej volně se svými klienty pod svým jménem; kit jako celek prosím nešiř dál — díky. 🤝</p>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260707a"></script>
+  <script>
+    // Gate: Praxe kit je pro cleny Academy
+    if (window.BA) { window.BA.ready.then(function(){ if (window.BA.mode==='live') window.BA.requireAccess('academy'); }); }
+    // Personalizace brandu (localStorage) → propis do vsech dokumentu
+    (function(){
+      var KEY='ba_praxe_brand_v1';
+      var n=document.getElementById('bName'), c=document.getElementById('bContact');
+      function paint(){
+        var name=(n.value||'').trim()||'—', contact=(c.value||'').trim();
+        document.querySelectorAll('.brand-name').forEach(function(el){ el.textContent=name; });
+        document.querySelectorAll('.brand-contact').forEach(function(el){ el.textContent=contact; });
+      }
+      try { var s=JSON.parse(localStorage.getItem(KEY)||'{}'); if(s.n) n.value=s.n; if(s.c) c.value=s.c; } catch(e){}
+      [n,c].forEach(function(el){ el.addEventListener('input', function(){ try{ localStorage.setItem(KEY, JSON.stringify({n:n.value,c:c.value})); }catch(e){} paint(); }); });
+      paint();
+      // tisk konkretniho dokumentu
+      document.querySelectorAll('.doc-tools button').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.body.setAttribute('data-print', b.getAttribute('data-doc'));
+          window.print();
+        });
+      });
+      window.addEventListener('afterprint', function(){ document.body.removeAttribute('data-print'); });
+    })();
+  </script>
+  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+</body>
+</html>
