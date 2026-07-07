@@ -402,7 +402,7 @@
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_template" value="table">
                     <input type="hidden" name="_next" value="https://martinbarna.cz/koucing/?odeslano=1#kontakt">
-                    <input type="text" name="_honey" style="display:none">
+                    <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;">
                     <input name="Jméno" type="text" placeholder="Tvoje jméno" required>
                     <input name="E-mail" type="email" placeholder="Tvůj e-mail" required>
                     <select name="Balíček">
@@ -432,6 +432,20 @@
 </div>
 
 <script>
+    // Anti-spam: vyplněný honeypot nebo odeslání dřív než za 3 s = bot → zablokuj odeslání.
+    (function () {
+        var kf = document.getElementById('kontaktForm');
+        if (!kf) return;
+        var t0 = Date.now();
+        kf.addEventListener('submit', function (e) {
+            var hp = kf.querySelector('input[name="_honey"]');
+            if ((hp && hp.value) || (Date.now() - t0 < 3000)) {
+                e.preventDefault();
+                var d = document.getElementById('formDiky'); if (d) d.style.display = 'block';
+                kf.style.display = 'none';
+            }
+        });
+    })();
     // Po odeslání formuláře (FormSubmit redirect ?odeslano=1) zobraz poděkování
     if (location.search.indexOf('odeslano=1') !== -1) {
         var _diky = document.getElementById('formDiky');

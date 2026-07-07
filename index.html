@@ -1241,7 +1241,7 @@
                             <input type="hidden" name="_captcha" value="false">
                             <input type="hidden" name="_template" value="table">
                             <input type="hidden" name="_next" value="https://martinbarna.cz/?odeslano=1#kontakt">
-                            <input type="text" name="_honey" style="display:none">
+                            <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;">
                             <div class="mb-3"><input name="Jméno" type="text" class="form-control bg-light" placeholder="Tvoje jméno" required></div>
                             <div class="mb-3"><input name="E-mail" type="email" class="form-control bg-light" placeholder="Tvůj e-mail" required></div>
                             <div class="mb-3"><textarea name="Zpráva" class="form-control bg-light" rows="3" placeholder="Co tě trápí / s čím chceš pomoct?" required></textarea></div>
@@ -1393,8 +1393,16 @@
         // --- Kontaktní formulář: AJAX odeslání (návštěvník vidí jen české díky, nikdy stránku FormSubmitu) ---
         var _kf = document.getElementById('kontaktForm');
         if (_kf) {
+            var _kfLoad = Date.now();
             _kf.addEventListener('submit', function (e) {
                 e.preventDefault();
+                // Anti-spam: vyplněný honeypot nebo odeslání dřív než za 3 s = bot → tváříme se, že OK, ale nic neodešleme.
+                var _hp = _kf.querySelector('input[name="_honey"]');
+                if ((_hp && _hp.value) || (Date.now() - _kfLoad < 3000)) {
+                    var dd = document.getElementById('formDiky'); if (dd) dd.style.display = 'block';
+                    _kf.style.display = 'none';
+                    return;
+                }
                 var btn = _kf.querySelector('button[type="submit"]');
                 var orig = btn ? btn.textContent : '';
                 if (btn) { btn.textContent = 'Odesílám…'; btn.disabled = true; }
