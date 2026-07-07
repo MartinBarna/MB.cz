@@ -15,6 +15,31 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteCond %{HTTP_HOST} ^www\.martinbarna\.cz$ [NC]
 RewriteRule ^ https://martinbarna.cz%{REQUEST_URI} [L,R=301]
 
+# --- 2a) Case varianty oficiálních podstránek (mobilní auto-kapitalizace, např. /Koucing/) ---
+# [NC] chytí libovolnou velikost písmen; RewriteCond vylučuje už-kanonický tvar (žádná smyčka).
+RewriteCond %{REQUEST_URI} !^/koucing/$
+RewriteRule ^koucing/?$ /koucing/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/akademie/$
+RewriteRule ^akademie/?$ /akademie/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/start/$
+RewriteRule ^start/?$ /start/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/reference/$
+RewriteRule ^reference/?$ /reference/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/clanky/$
+RewriteRule ^clanky/?$ /clanky/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/makro-plan/$
+RewriteRule ^makro-plan/?$ /makro-plan/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/forma-zpet/$
+RewriteRule ^forma-zpet/?$ /forma-zpet/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/myty/$
+RewriteRule ^myty/?$ /myty/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/prednasky/$
+RewriteRule ^prednasky/?$ /prednasky/ [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/treninky$
+RewriteRule ^treninky/?$ /treninky [NC,R=301,L]
+RewriteCond %{REQUEST_URI} !^/videokurz$
+RewriteRule ^videokurz/?$ /videokurz [NC,R=301,L]
+
 # --- 2b) Čisté URL bez .html (sjednocení: /treninky a /videokurz jako ostatní podstránky) ---
 # Staré odkazy s .html → 301 na čistou verzi (jen skutečné požadavky z prohlížeče,
 # proto THE_REQUEST — vnitřní přepis níže se tím nespustí, žádná smyčka).
@@ -54,7 +79,29 @@ RedirectMatch 301 ^/kucharka/?$              https://martinbarna.cz/videokurz
 RedirectMatch 301 ^/recepty/?$               https://martinbarna.cz/videokurz
 RedirectMatch 301 ^/audiobook/?$             https://martinbarna.cz/videokurz
 RedirectMatch 301 ^/audiokniha/?$            https://martinbarna.cz/videokurz
-RedirectMatch 301 ^/clenskasekce/?$          https://martinbarna.cz/videokurz
+# členská sekce = přihlášení existujících členů (odkaz žije na Linktree!), ne prodejní stránka
+RedirectMatch 301 (?i)^/clenskasekce/?$      https://martinbarna.cz/akademie/prihlaseni/
+
+# --- 4b) Záchranná síť: jazykové varianty a hádané tvary oficiálních stránek ---
+# koučink: anglicky, spisovně, delší tvary → /koucing/ (kanonický slug už z WP éry, je na Linktree)
+RedirectMatch 301 (?i)^/coaching(\.html)?/?$    https://martinbarna.cz/koucing/
+RedirectMatch 301 (?i)^/koucink(\.html)?/?$     https://martinbarna.cz/koucing/
+RedirectMatch 301 (?i)^/online-coaching/?$      https://martinbarna.cz/koucing/
+RedirectMatch 301 (?i)^/online-koucink/?$       https://martinbarna.cz/koucing/
+# konzultace je součást koučinku — místo HTML stubu s meta-refresh pravé 301
+RedirectMatch 301 (?i)^/konzultace(\.html)?/?$  https://martinbarna.cz/koucing/
+# Academy anglicky, kalkulačka krátce, trénink v jednotném čísle
+RedirectMatch 301 (?i)^/academy/?$              https://martinbarna.cz/akademie/
+RedirectMatch 301 (?i)^/kalkulacka/?$           https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/
+RedirectMatch 301 (?i)^/trenink/?$              https://martinbarna.cz/treninky
+# /plan/ bez podstránky nemá index (vracel 403) → rozcestník nástrojů
+RedirectMatch 301 ^/plan/?$                     https://martinbarna.cz/nastroje-zdarma/
+# staré WP články, které se nemigrovaly (odkazované jen textem) → blog
+RedirectMatch 301 ^/5-mytu-o-cukru/?$                                https://martinbarna.cz/clanky/
+RedirectMatch 301 ^/6-duvodu-proc-glykemicky-index-nehraje-roli/?$   https://martinbarna.cz/clanky/
+RedirectMatch 301 ^/fakta-o-cukru-layne-norton-phd/?$                https://martinbarna.cz/clanky/
+RedirectMatch 301 ^/pravda-o-cukru-a-glykemickem-indexu/?$           https://martinbarna.cz/clanky/
+RedirectMatch 301 ^/sacharidy-na-noc-layne-norton-phd/?$             https://martinbarna.cz/clanky/
 
 # --- 5) Komprese + cache (rychlost) ---
 <IfModule mod_deflate.c>
