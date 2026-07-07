@@ -34,3 +34,33 @@ alter table public.usage_events enable row level security;
 alter table public.leads drop constraint if exists leads_status_check;
 alter table public.leads add constraint leads_status_check
   check (status = any (array['active'::text,'unsubscribed'::text,'bounced'::text,'purchased'::text,'paused'::text]));
+
+-- 4) ADMIN v2 (2026-07-07, nasazeno zive): referraly, check-iny, editor sablon.
+-- 4a) Evidence vyplat referral odmen (saldo = confirmed - paid, viz view nize)
+create table if not exists public.referral_payouts (
+  id bigint generated always as identity primary key,
+  owner_email text not null,
+  amount_czk integer not null check (amount_czk > 0),
+  note text,
+  created_by text,
+  created_at timestamptz not null default now()
+);
+alter table public.referral_payouts enable row level security; -- zadna policy = jen service_role
+
+-- 4b) Salda partneru z PLNYCH dat (admin-api akce referrals_overview)
+create or replace view public.referral_balances with (security_invoker = true) as
+select c.owner_email,
+  coalesce(sum(r.reward_amount) filter (where r.status='confirmed'), 0)::int as confirmed,
+  coalesce(sum(r.reward_amount) filter (where r.status='pending'), 0)::int as pending,
+  coalesce((select sum(p.amount_czk) from referral_payouts p where lower(p.owner_email)=lower(c.owner_email)), 0)::int as paid
+from referral_codes c
+left join referrals r on r.code = c.code
+group by c.owner_email;
+
+-- 4c) Souhrn check-inu per klient v SQL (zadny 1000-row strop PostgREST)
+--     (telo viz zive DB: admin_checkins_overview() — first/last vaha+pas, avg adherence)
+-- 4d) Pocty leadu per track: admin_leads_by_track()
+-- 4e) DEDUP INDEX PER-TRACK: email_events_lead_step_sent_uniq NAHRAZEN indexem
+--     email_events_lead_step_track_sent_uniq (lead_id, step, detail->>'track') where type='sent'
+--     -> po preradeni leadu do jine sekvence se odeslane maily normalne loguji
+--     (drive kolize s eventy stareho tracku = neviditelne maily + dira v idempotenci).

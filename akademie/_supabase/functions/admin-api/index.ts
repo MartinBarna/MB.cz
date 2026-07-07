@@ -90,6 +90,8 @@ const FREE_LESSONS_URL = "https://www.martinbarna.cz/videokurz#zdarma";
 const COURSE_PRICE = 800;
 const DISCOUNT_CODE = "ZACNI15";
 const DISCOUNT_PCT = 15;
+const DISCOUNT2_CODE = "JESTE20";
+const DISCOUNT2_PCT = 20;
 
 type Seg = "zeny" | "muzi" | "other";
 const isFem = (seg: Seg) => seg === "zeny";
@@ -103,7 +105,9 @@ function gender(s: string, seg: Seg): string {
     if (a < 0) { out += s.slice(i); break; }
     out += s.slice(i, a);
     const sep = s.indexOf("||", a + 2);
-    const end = s.indexOf("]]", sep + 2);
+    const end = sep < 0 ? -1 : s.indexOf("]]", sep + 2);
+    // neuzavreny token: nech ho v textu (hasToken ho nahlasi), zadna nekonecna smycka
+    if (sep < 0 || end < 0) { out += s.slice(a); break; }
     out += isFem(seg) ? s.slice(a + 2, sep) : s.slice(sep + 2, end);
     i = end + 2;
   }
@@ -116,6 +120,7 @@ function mergeVars(s: string, vars: Record<string, string>): string {
     if (a < 0) { out += s.slice(i); break; }
     out += s.slice(i, a);
     const end = s.indexOf("}}", a + 2);
+    if (end < 0) { out += s.slice(a); break; } // neuzavreny token -> hasToken
     const key = s.slice(a + 2, end);
     out += key in vars ? vars[key] : "{{" + key + "}}";
     i = end + 2;
@@ -173,18 +178,23 @@ function wrapHtml(preheader: string, bodyHtml: string, footerHtml: string): stri
     `<hr style='border:none;border-top:1px solid #eee;margin:22px 0 14px'>` +
     `<div style='font-size:12px;line-height:1.5;color:#999'>${footerHtml}</div></div></body></html>`;
 }
-function buildVars(name: string, seg: Seg, unsub: string): Record<string, string> {
+function buildVars(name: string, seg: Seg, unsub: string, email = "vzorek@example.cz"): Record<string, string> {
+  // STEJNA sada tokenu jako drip-send/index.ts buildVars — kdyz tam pribude token, doplnit i sem!
   const parts = (name || "").trim().split(" ").filter((x) => x.length > 0);
   const t = parts[0] || "";
   const fn = t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
   const dprice = Math.round(COURSE_PRICE * (1 - DISCOUNT_PCT / 100));
+  const d2price = Math.round(COURSE_PRICE * (1 - DISCOUNT2_PCT / 100));
   return {
     first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "",
     lead_magnet_url: seg === "muzi" ? SITE + "/download/forma-zpet-muzi.pdf" : SITE + "/download/makro-plan-zeny.pdf",
     plan_page_url: seg === "muzi" ? SITE + "/forma-zpet" : SITE + "/makro-plan",
     course_url: COURSE_URL, free_lessons_url: FREE_LESSONS_URL,
     course_price: String(COURSE_PRICE), discount_pct: String(DISCOUNT_PCT),
-    discount_price: String(dprice), discount_code: DISCOUNT_CODE, unsubscribe_url: unsub,
+    discount_price: String(dprice), discount_code: DISCOUNT_CODE,
+    discount2_pct: String(DISCOUNT2_PCT), discount2_price: String(d2price), discount2_code: DISCOUNT2_CODE,
+    email: email, email_url: encodeURIComponent(email),
+    unsubscribe_url: unsub,
   };
 }
 function renderEmailPreview(tpl: { subject: string; preheader: string; blocks: Block[] }, seg: Seg, v: Record<string, string>, footer: { html: string; text: string }) {
@@ -366,6 +376,8 @@ Deno.serve(async (req) => {
         // pokracuje krokem, na kterem lead skoncil; posle nejblizsi hodinovy cron.
         // Funguje i jako re-subscribe (unsubscribed/purchased) — POUZIVAT JEN na vyslovnou zadost cloveka!
         if (lead.status === "active") return json({ error: "already_active" }, 400);
+        // bounced adresa je nedorucitelna — obnoveni by skodilo reputaci domeny
+        if (lead.status === "bounced") return json({ error: "bounced_address" }, 400);
         const next = lead.next_send_at ? nowIso : null; // null = sekvence uz dobehla, jen zapne stav
         const { error } = await admin.from("leads").update({ status: "active", next_send_at: next, updated_at: nowIso }).eq("id", lead.id);
         if (error) return json({ error: error.message }, 500);
@@ -542,12 +554,18 @@ Deno.serve(async (req) => {
 
     if (action === "email_scheduled") {
       // nadchazejici odeslani z leads.next_send_at (aktivni, setrideno od nejblizsiho)
-      const limit = Math.min(1000, Math.max(1, Number(body.limit) || 200));
+      // + filtr dle e-mailu/sekvence a strankovani (offset/limit, vraci total)
+      const limit = Math.min(200, Math.max(1, Number(body.limit) || 100));
+      const offset = Math.max(0, Number(body.offset) || 0);
+      const q = low(body.q);
+      const fTrack = body.track ? String(body.track) : "";
       const nowI = new Date().toISOString();
-      const { data: lds } = await admin.from("leads")
-        .select("email,name,track,step,next_send_at")
-        .eq("status", "active").not("next_send_at", "is", null)
-        .order("next_send_at", { ascending: true }).limit(limit);
+      let lq = admin.from("leads")
+        .select("email,name,track,step,next_send_at", { count: "exact" })
+        .eq("status", "active").not("next_send_at", "is", null);
+      if (q) lq = lq.ilike("email", "%" + q.replace(/[%_*\\]/g, (m) => "\\" + m) + "%");
+      if (fTrack) lq = lq.eq("track", fTrack);
+      const { data: lds, count } = await lq.order("next_send_at", { ascending: true }).range(offset, offset + limit - 1);
       const { data: tpls } = await admin.from("email_templates").select("track,step,subject");
       const subjMap = new Map<string, string>();
       for (const t of tpls ?? []) subjMap.set(String(t.track) + ":" + t.step, String(t.subject ?? ""));
@@ -560,6 +578,143 @@ Deno.serve(async (req) => {
         subject: subjMap.get(String(l.track) + ":" + l.step) ?? "",
         overdue: String(l.next_send_at) < nowI,
       }));
+      return json({ ok: true, rows, total: count ?? rows.length, offset, limit });
+    }
+
+    if (action === "templates_list") {
+      // vsechny sablony pro mapu sekvenci (bez blocks — ty tahne template_get)
+      const { data } = await admin.from("email_templates").select("track,step,key,subject,preheader,wait_days,updated_at");
+      const rows = (data ?? []).map((t) => ({
+        track: String(t.track), step: Number(t.step), key: String(t.key ?? ""),
+        subject: String(t.subject ?? ""), preheader: String(t.preheader ?? ""),
+        wait_days: t.wait_days == null ? null : Number(t.wait_days),
+        updated_at: t.updated_at,
+      }));
+      rows.sort((a, b) => a.track === b.track ? a.step - b.step : a.track.localeCompare(b.track));
+      // pocty leadu na tracku pres SQL group-by (zadny 1000-row strop PostgREST)
+      const { data: lcounts } = await admin.rpc("admin_leads_by_track");
+      const onTrack: Record<string, { active: number; other: number }> = {};
+      for (const l of (lcounts ?? []) as { track: string; status: string; n: number }[]) {
+        const k = String(l.track ?? "");
+        if (!onTrack[k]) onTrack[k] = { active: 0, other: 0 };
+        if (l.status === "active") onTrack[k].active += Number(l.n); else onTrack[k].other += Number(l.n);
+      }
+      return json({ ok: true, rows, leads_on_track: onTrack });
+    }
+
+    if (action === "template_get") {
+      const track = String(body.track || ""); const step = Number(body.step ?? 0);
+      const { data } = await admin.from("email_templates").select("track,step,key,subject,preheader,blocks,wait_days,updated_at").eq("track", track).eq("step", step).maybeSingle();
+      if (!data) return json({ error: "not_found" }, 404);
+      return json({ ok: true, tpl: data });
+    }
+
+    if (action === "template_save") {
+      // Ulozeni sablony z editoru — MENI ZIVE MAILY. Pred zapisem validace bloku
+      // + zkusebni render pro oba rody (nevyreseny token by mail zablokoval a lead zaparkoval).
+      const track = String(body.track || ""); const step = Number(body.step ?? 0);
+      const subject = String(body.subject || "").trim();
+      const preheader = String(body.preheader || "").trim();
+      const wdRaw = body.wait_days;
+      const wait_days = (wdRaw === null || wdRaw === "" || wdRaw === undefined) ? null : Number(wdRaw);
+      const blocks = body.blocks;
+      if (!track || !subject || !Array.isArray(blocks) || !blocks.length) return json({ error: "bad_args" }, 400);
+      if (wait_days !== null && (!Number.isFinite(wait_days) || wait_days < 0 || wait_days > 365)) return json({ error: "bad_wait_days" }, 400);
+      for (const b of blocks as Record<string, unknown>[]) {
+        const t = String(b.t ?? "");
+        if (t === "p" || t === "ps") { if (typeof b.html !== "string" || !(b.html as string).trim()) return json({ error: "bad_block_html" }, 400); }
+        else if (t === "bullets") { if (!Array.isArray(b.items) || !(b.items as unknown[]).length || (b.items as unknown[]).some((x) => typeof x !== "string" || !(x as string).trim())) return json({ error: "bad_block_bullets" }, 400); }
+        else if (t === "btn") { if (typeof b.text !== "string" || !(b.text as string).trim() || typeof b.href !== "string" || !(b.href as string).trim()) return json({ error: "bad_block_btn" }, 400); }
+        else return json({ error: "bad_block_type:" + t }, 400);
+      }
+      const { data: exists } = await admin.from("email_templates").select("track").eq("track", track).eq("step", step).maybeSingle();
+      if (!exists) return json({ error: "not_found" }, 404);
+      const { data: fRows } = await admin.from("app_config").select("key,value").in("key", ["footer_html", "footer_text"]);
+      const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
+      const footer = { html: fMap.footer_html ?? "", text: fMap.footer_text ?? "" };
+      try {
+        for (const seg of ["zeny", "muzi"] as Seg[]) {
+          const v = buildVars(seg === "zeny" ? "Jana" : "Martin", seg, SUPABASE_URL + "/functions/v1/unsubscribe?token=sample");
+          renderEmailPreview({ subject, preheader, blocks: blocks as Block[] }, seg, v, footer);
+        }
+      } catch (e) { return json({ error: "render_failed", detail: String(e).slice(0, 200) }, 400); }
+      const up = await admin.from("email_templates").update({ subject, preheader, blocks, wait_days, updated_at: new Date().toISOString() }).eq("track", track).eq("step", step);
+      if (up.error) return json({ error: up.error.message }, 500);
+      return json({ ok: true });
+    }
+
+    if (action === "template_preview") {
+      // nahled NEULOZENE verze z editoru (nic nezapisuje)
+      const seg = normSeg(body.segment);
+      const blocks = Array.isArray(body.blocks) ? (body.blocks as Block[]) : [];
+      const { data: fRows } = await admin.from("app_config").select("key,value").in("key", ["footer_html", "footer_text"]);
+      const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
+      const footer = { html: fMap.footer_html ?? "", text: fMap.footer_text ?? "" };
+      try {
+        const v = buildVars(seg === "muzi" ? "Martin" : "Jana", seg, SUPABASE_URL + "/functions/v1/unsubscribe?token=sample");
+        const m = renderEmailPreview({ subject: String(body.subject || ""), preheader: String(body.preheader || ""), blocks }, seg, v, footer);
+        return json({ ok: true, subject: m.subject, html: m.html, text: m.text });
+      } catch (e) { return json({ ok: false, error: String(e).slice(0, 200) }); }
+    }
+
+    if (action === "referrals_overview") {
+      const [refs, codes, pays] = await Promise.all([
+        admin.from("referrals").select("id,code,buyer_email,product,amount,order_id,source,status,reward_type,reward_amount,created_at,confirmed_at").order("created_at", { ascending: false }).limit(300),
+        admin.from("referral_codes").select("code,owner_email,active"),
+        admin.from("referral_payouts").select("id,owner_email,amount_czk,note,created_at").order("created_at", { ascending: false }).limit(200),
+      ]);
+      const ownerByCode = new Map<string, string>((codes.data ?? []).map((c) => [String(c.code), low(c.owner_email)]));
+      const rows = (refs.data ?? []).map((r) => ({ ...r, owner_email: ownerByCode.get(String(r.code)) ?? "" }));
+      // salda z DB view referral_balances (plna agregace — zadne limity, zadna dvoji vyplata)
+      const { data: balRows } = await admin.from("referral_balances").select("owner_email,confirmed,pending,paid");
+      const balances = (balRows ?? [])
+        .map((b) => ({ owner_email: low(b.owner_email), confirmed: Number(b.confirmed) || 0, pending: Number(b.pending) || 0, paid: Number(b.paid) || 0, balance: (Number(b.confirmed) || 0) - (Number(b.paid) || 0) }))
+        .filter((b) => b.confirmed || b.pending || b.paid);
+      balances.sort((a, b) => b.balance - a.balance);
+      return json({ ok: true, referrals: rows, payouts: pays.data ?? [], balances });
+    }
+
+    if (action === "referral_set_status") {
+      // schvaleni (confirmed) / zamitnuti (void) referralu — hlavne pro source='self_report'
+      const id = Number(body.id); const status = String(body.status || "");
+      if (!id || !["confirmed", "void"].includes(status)) return json({ error: "bad_args" }, 400);
+      const patch: Record<string, unknown> = { status, confirmed_at: status === "confirmed" ? new Date().toISOString() : null };
+      const { data: upd, error } = await admin.from("referrals").update(patch).eq("id", id).select("id");
+      if (error) return json({ error: error.message }, 500);
+      if (!upd || !upd.length) return json({ error: "not_found" }, 404);
+      return json({ ok: true });
+    }
+
+    if (action === "referral_payout_add") {
+      // evidence vyplaty (kredit/cash) — snizi saldo partnera
+      const owner = low(body.owner_email); const amount = Math.round(Number(body.amount_czk)); const note = String(body.note || "").slice(0, 300);
+      if (!owner || !Number.isFinite(amount) || amount < 1) return json({ error: "bad_args" }, 400);
+      // vyplata jen realnemu partnerovi (preklep by vytvoril fantomove saldo)
+      const { data: ownerRow } = await admin.from("referral_codes").select("code").ilike("owner_email", owner).limit(1);
+      if (!ownerRow || !ownerRow.length) return json({ error: "unknown_owner" }, 400);
+      const { error } = await admin.from("referral_payouts").insert({ owner_email: owner, amount_czk: amount, note, created_by: me });
+      if (error) return json({ error: error.message }, 500);
+      return json({ ok: true });
+    }
+
+    if (action === "checkins_overview") {
+      // check-iny primo v adminu: souhrn per klient agreguje SQL funkce
+      // admin_checkins_overview() — zadny 1000-row strop PostgREST, trendy vzdy aktualni
+      const [chk, cred] = await Promise.all([
+        admin.rpc("admin_checkins_overview"),
+        admin.from("discount_credits").select("email,credit_czk,checkins_n,milestone_2cm"),
+      ]);
+      const credBy = new Map<string, Record<string, unknown>>((cred.data ?? []).map((c) => [low(c.email), c]));
+      const rows = ((chk.data ?? []) as Record<string, unknown>[]).map((r) => ({
+        email: low(r.email), n: Number(r.n) || 0, last: r.last, last_note: String(r.last_note ?? ""),
+        weight_from: r.weight_from == null ? null : Number(r.weight_from),
+        weight_to: r.weight_to == null ? null : Number(r.weight_to),
+        waist_from: r.waist_from == null ? null : Number(r.waist_from),
+        waist_to: r.waist_to == null ? null : Number(r.waist_to),
+        adherence_avg: r.adherence_avg == null ? null : Number(r.adherence_avg),
+        credit: credBy.get(low(r.email)) ?? null,
+      }));
+      rows.sort((a, b) => String(b.last || "").localeCompare(String(a.last || "")));
       return json({ ok: true, rows });
     }
 
