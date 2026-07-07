@@ -264,9 +264,30 @@ Deno.serve(async (req: Request) => {
   // Zaplaceno -> rozpracovane objednavky zakaznika na tento produkt uz nepripominat.
   try { await admin.from("pending_orders").update({ completed: true }).eq("email", email).eq("product", product); } catch { /* best-effort */ }
 
+  // Splatkovy prodej (produkt "na splatky", jeho webhook URL nese &plan=splatky):
+  // evidence plateb v installment_status. 1. platba zaklada zaznam, dalsi navysuji
+  // citac; 3. platba = completed. Zaplaceni zaroven RESETUJE stav hlidace
+  // (warned/suspended -> ok) a entitlement upsert vyse uz pristup reaktivoval.
+  // Best-effort: evidence nikdy nesmi shodit grant.
+  const plan = pick(body, ["plan"]).toLowerCase();
+  let installmentsPrior = 0;
+  if (plan === "splatky") {
+    try {
+      const { data: inst } = await admin.from("installment_status").select("payments_n").eq("email", email).maybeSingle();
+      installmentsPrior = Number(inst?.payments_n) || 0;
+      const n = installmentsPrior + 1;
+      await admin.from("installment_status").upsert({
+        email, payments_n: n, last_paid_at: new Date().toISOString(),
+        status: n >= 3 ? "completed" : "ok", warned_at: null, suspended_at: null,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "email" });
+    } catch { /* best-effort */ }
+  }
+
   // Uvitaci e-mail (jen pri prvnim udeleni) — best-effort, nikdy neshodi grant.
+  // U splatek jen pri 1. platbe (obnoveni po pozastaveni neni novy nakup).
   const name = (pick(body, ["firstname", "customer_firstname", "jmeno"]) + " " + pick(body, ["lastname", "customer_lastname", "prijmeni"])).trim();
-  if (isNew) {
+  if (isNew && !(plan === "splatky" && installmentsPrior > 0)) {
     try { await sendWelcome(admin, email, product, name); }
     catch (e) { await alertAdmin(admin, "SimpleShop: přístup udělen, ale uvítací e-mail selhal", { email, product, chyba: String(e).slice(0, 200) }); }
   }
