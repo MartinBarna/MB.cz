@@ -67,3 +67,13 @@ $$;
 --     select public.enroll_into_upsell_coaching(25);
 --   $cmd$);
 -- Vypnutí: select cron.unschedule('upsell-enroll-daily');
+
+-- ---- UPSELL-ACADEMY ENROLL (2026-07-07, ZIVE) --------------------------------
+-- Martinuv insight: skoro nikdo nedokonci videokurz na 100 % — upsell na Academy
+-- se spousti pri ~40 % dokonceni (73 z 182 vk-* lekci). Prah ladi app_config klic
+-- 'upsell_academy_min_lessons' (bez zasahu do kodu). Bezi denne v 7:10 — PRED
+-- coaching enrollem (7:20), takze zabrany student dostane prednostne Academy lane;
+-- kdo uz je na upsell-% tracku, druhy upsell nedostane (1 lead = 1 sekvence).
+-- Obe enroll funkce nove vylucuji i status 'paused' (admin pauza se respektuje).
+-- Zdroj pravdy tel funkci = ziva DB (create or replace nasazeno 7.7. vecer).
+-- Vypnuti: select cron.unschedule('upsell-academy-enroll-daily');
