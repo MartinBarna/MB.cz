@@ -219,6 +219,19 @@ přepsáno obecně; ideálně ať Martin doplní svou reálnou historku.
    2013, Nedeltcheva 2010, Mah 2011). Per-hodinová čísla U-křivky přepsána z původního
    (nepotvrzeného Shen 2016) na ověřené Yin 2017 (pod 7 h ~6 %/hod, nad 7 h ~13 %/hod).
    Splátky Academy: na objednávce teď jako plnohodnotná 2. volba (tlačítko), ne jen odkaz.
+10. ✅ **SPLÁTKY riziko VYŘEŠENO (8.7.)**: na splátkovém produktu 151622 byly na formuláři
+    i jednorázové metody → klient je mohl omylem zvolit a guard by ho pak zablokoval.
+    V SimpleShopu (Produkty → Upravit → **Formulář** → dole „Způsoby platby", per-produkt!)
+    odškrtnuty 3 jednorázové, ponechány 3 „Opakované platby". Živě ověřeno (formulář n0xgJ
+    nabízí jen 3 rekurentní metody). Checkboxy odškrtnout přes JS `.click()` (souřadnice míjí).
+11. **Infografiky z Drive → blog: HOTOVO (8.7.)**: z 36 témat chyběl 1 → `/clanky/hubnuti-a-vek-mozku.html`
+    (Maurer 2026). Drive `search_files` hledej `fullText contains 'X'`. Martinův LEARNINGS.md
+    ve složce = anti-AI-slop manuál. Fable účet: velké fan-out workflow padají na rate-limit.
+12. ⚠️ **TMAVÝ REŽIM u vlastních CSS tříd v článcích (8.7.)**: web má `marketing-dark.css`
+    (@media prefers-color-scheme: dark). Vlastní box/callout/rozcestník třídy NESMÍ spoléhat
+    na bílé pozadí + zděděný text (v dark módu neviditelné). Používej oranžový akcent #ff7a00
+    a translucentní bg. Martin má dark mód zapnutý → testuj články i v něm. Stalo se u
+    hubnuti-a-vek-mozku, opraveno. SVG graf popisky dávej mimo křivku (text-anchor middle).
 10. ⚠️ **SPLÁTKY — riziko opakovaných plateb (Martin nahlásil 8.7., NEDOŘEŠENO)**: splátkový
     formulář n0xgJ nabízí i **jednorázové** metody vedle opakovaných. Klient, co u splátek
     zvolí jednorázovku, zaplatí 1× 3000, rekurentní profil nevznikne, další splátky nepřijdou
