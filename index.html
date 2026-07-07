@@ -89,7 +89,7 @@
         {"@type":"Question","name":"Musím držet drastickou dietu?","acceptedAnswer":{"@type":"Answer","text":"Ne. Učím tě flexibilní stravování — jíš normální jídlo, které tě baví, jen ve správném množství. Žádné hladovění."}},
         {"@type":"Question","name":"Jak rychle uvidím výsledky?","acceptedAnswer":{"@type":"Answer","text":"Záleží na startu a cíli, ale první změny většinou vidíš během pár týdnů. Jdeme na to udržitelně, ne nárazově."}},
         {"@type":"Question","name":"Co když nevím, jak začít?","acceptedAnswer":{"@type":"Answer","text":"Od toho jsem tu já. Ozveš se mi a společně vymyslíme první krok."}},
-        {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Chceš-li vedení na míru s týdenními úpravami, vyber balíček Gold nebo Diamond. Chceš-li jít sám svým tempem, je ideální videokurz."}}
+        {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Chceš-li vedení na míru s týdenními úpravami, vyber balíček Gold nebo Diamond. Chceš-li jet vlastním tempem, je ideální videokurz."}}
       ]
     }
     </script>
@@ -878,7 +878,7 @@
                     <h3>2. Jak to chceš dělat?</h3>
                     <div class="quiz-opts">
                         <button type="button" data-k="how" data-v="koucink">Chci vedení na míru — ať mě někdo provede</button>
-                        <button type="button" data-k="how" data-v="kurz">Zvládnu sám svým tempem — jen mě nauč jak</button>
+                        <button type="button" data-k="how" data-v="kurz">Zvládnu to vlastním tempem — jen mě nauč jak</button>
                         <button type="button" data-k="how" data-v="zdarma">Zatím jen chci nezávazně začít zdarma</button>
                     </div>
                 </div>
@@ -1050,7 +1050,7 @@
                 <div class="row align-items-center g-4">
                     <div class="col-lg-8">
                         <span class="vk-tag"><span class="mb-ico"><svg><use href="#ic-play"/></svg></span> VIDEOKURZ</span>
-                        <h2 class="mt-3 mb-2">Nauč se výživu jednou provždy — sám a svým tempem</h2>
+                        <h2 class="mt-3 mb-2">Nauč se výživu jednou provždy — vlastním tempem</h2>
                         <p class="mb-0" style="opacity:.85;">Nechceš zatím koučink na míru? Začni tady. 182 videí, přes 20 hodin obsahu a kalkulačka makroživin — vše o hubnutí, nabírání i flexibilním stravování, vědecky podloženo. Doživotní přístup, kdykoliv se k tomu vrátíš.</p>
                     </div>
                     <div class="col-lg-4 text-lg-end">
@@ -1186,7 +1186,7 @@
         <div class="container">
             <div class="section-head">
                 <h2>Časté otázky</h2>
-                <p>Nenašel jsi odpověď? Napiš mi a rád ti poradím.</p>
+                <p>Chybí ti tu odpověď? Napiš mi a rád ti poradím.</p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -1205,7 +1205,7 @@
                         </div>
                         <div class="accordion-item border-0 rounded-4 shadow-sm">
                             <h3 class="accordion-header"><button class="accordion-button collapsed rounded-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#q4">Je lepší koučink, nebo videokurz?</button></h3>
-                            <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body text-muted">Chceš-li vedení na míru s týdenními úpravami, vyber <a href="#balicky">balíček Gold nebo Diamond</a>. Chceš-li jít sám svým tempem, je ideální <a href="/videokurz">videokurz</a>.</div></div>
+                            <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body text-muted">Chceš-li vedení na míru s týdenními úpravami, vyber <a href="#balicky">balíček Gold nebo Diamond</a>. Chceš-li jet vlastním tempem, je ideální <a href="/videokurz">videokurz</a>.</div></div>
                         </div>
                     </div>
                 </div>
@@ -1489,11 +1489,11 @@
                         'Objednat konzultaci za 1 990 Kč →', 'https://form.simpleshop.cz/qG2yO/buy/', 'Mrknout na balíčky', '#balicky');
                 } else if (ans.how === 'kurz' && ans.cil === 'svaly') {
                     html = card('🎥 Videokurz + tréninkové plány',
-                        'Chceš ' + cil + ' svým tempem? Výživa je 70 % výsledku, tak začni <strong>videokurzem</strong> — a přidej k němu <strong>tréninkové plány</strong>, ať víš, jak cvičit pro růst.' + exp,
+                        'Chceš ' + cil + ' svým tempem? Výživa je 80 % výsledku, tak začni <strong>videokurzem</strong> — a přidej k němu <strong>tréninkové plány</strong>, ať víš, jak cvičit pro růst.' + exp,
                         'Chci videokurz za 800 Kč →', '/videokurz', 'Tréninkové plány', '/treninky');
                 } else if (ans.how === 'kurz') {
                     html = card('🎥 Videokurz',
-                        'Chceš ' + cil + ' sám svým tempem? <strong>Videokurz</strong> tě naučí výživu jednou provždy — 182 videí, doživotní přístup.' + exp + ' Nejlevnější způsob, jak začít správně.',
+                        'Chceš ' + cil + ' vlastním tempem? <strong>Videokurz</strong> tě naučí výživu jednou provždy — 182 videí, doživotní přístup.' + exp + ' Nejlevnější způsob, jak začít správně.',
                         'Chci videokurz za 800 Kč →', '/videokurz', 'Nebo zkus koučink', '#balicky');
                 } else {
                     html = card('🎁 Začni zdarma',
