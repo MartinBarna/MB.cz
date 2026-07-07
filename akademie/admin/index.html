@@ -119,6 +119,7 @@
       <div class="stats" id="stats"></div>
 
       <div class="traf-links" style="margin:.2rem 0 1rem;">
+        <a href="#" id="seqLink">🗺️ Sekvence &amp; šablony (mapa + editor mailů) →</a>
         <a href="/akademie/moje/testy/">📝 Testy &amp; certifikáty →</a>
         <a href="/akademie/moje/kouc/">🏋️ Check-iny klientů →</a>
         <a href="/akademie/studium/">📚 Studium →</a>
@@ -977,6 +978,7 @@
       });
     }
     var _sq=$('seqBtn'); if(_sq) _sq.addEventListener('click',openSeqMap);
+    var _sql2=$('seqLink'); if(_sql2) _sql2.addEventListener('click',function(e){ e.preventDefault(); openSeqMap(); });
     var _sqx=$('seqmapX'); if(_sqx) _sqx.addEventListener('click',function(){ $('seqmap').classList.remove('on'); });
     var _tex=$('tpleditX'); if(_tex) _tex.addEventListener('click',function(){ if(confirm('Zavřít editor? Neuložené změny se ztratí.')) $('tpledit').classList.remove('on'); });
     $('seqmap').addEventListener('click',function(e){ if(e.target===$('seqmap')) $('seqmap').classList.remove('on'); });
