@@ -10,6 +10,18 @@
 
   function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
 
+  // UTM z URL (z QR letáku přes /start passthrough) -> atribuce leadu ke konkrétnímu letáku/zdroji
+  function utmParams() {
+    try {
+      var p = new URLSearchParams(location.search), out = {};
+      ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (k) {
+        var v = (p.get(k) || '').trim().slice(0, 60);
+        if (v) out[k] = v;
+      });
+      return out;
+    } catch (e) { return {}; }
+  }
+
   ready(function () {
     var forms = document.querySelectorAll('form[data-lead-form]');
     Array.prototype.forEach.call(forms, function (form) {
@@ -31,6 +43,10 @@
           website: (form.website && form.website.value || ''),
           segment: seg, source: src
         };
+        var utm = utmParams();
+        if (utm.utm_source) data.utm_source = utm.utm_source;
+        if (utm.utm_medium) data.utm_medium = utm.utm_medium;
+        if (utm.utm_campaign) data.utm_campaign = utm.utm_campaign;
         var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Odesílám…';
         if (msg) { msg.textContent = ''; }
 

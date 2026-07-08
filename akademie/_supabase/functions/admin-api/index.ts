@@ -774,6 +774,25 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === "qr_stats") {
+      // Leady z letáků/QR: seskupené podle meta->>'utm_source'. (Skeny/pageviews řeší GA4.)
+      const { data, error } = await admin.from("leads").select("meta,created_at");
+      if (error) return json({ error: error.message }, 500);
+      const bySrc = new Map<string, { source: string; medium: string | null; leads: number; last: string | null }>();
+      for (const l of (data ?? []) as { meta: unknown; created_at: string }[]) {
+        const meta = (l.meta && typeof l.meta === "object") ? l.meta as Record<string, unknown> : {};
+        const s = String(meta.utm_source ?? "").trim();
+        if (!s) continue;
+        if (!bySrc.has(s)) bySrc.set(s, { source: s, medium: meta.utm_medium ? String(meta.utm_medium) : null, leads: 0, last: null });
+        const r = bySrc.get(s)!;
+        r.leads++;
+        const t = String(l.created_at ?? "");
+        if (t && (!r.last || t > r.last)) r.last = t;
+      }
+      const rows = [...bySrc.values()].sort((a, b) => b.leads - a.leads);
+      return json({ ok: true, rows, total: rows.reduce((n, r) => n + r.leads, 0) });
+    }
+
     return json({ error: "unknown_action" }, 400);
   } catch (e) {
     return json({ error: "server", detail: String(e).slice(0, 300) }, 500);

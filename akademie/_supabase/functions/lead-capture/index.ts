@@ -29,6 +29,10 @@ Deno.serve(async (req) => {
     const goal = String(body.goal || "").slice(0, 200);
     const age = String(body.age || "").slice(0, 30);
     const phone = String(body.phone || "").trim().slice(0, 40);
+    // UTM z QR letáku (přes /start passthrough) -> atribuce leadu ke konkrétnímu letáku/zdroji
+    const utmSource = String(body.utm_source || "").trim().slice(0, 60);
+    const utmMedium = String(body.utm_medium || "").trim().slice(0, 60);
+    const utmCampaign = String(body.utm_campaign || "").trim().slice(0, 60);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ ok: false, error: "invalid_email" }, 400);
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -37,10 +41,15 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
       { auth: { persistSession: false } },
     );
+    const meta: Record<string, unknown> = { goal, age };
+    if (tool) meta.tool = tool;
+    if (utmSource) meta.utm_source = utmSource;
+    if (utmMedium) meta.utm_medium = utmMedium;
+    if (utmCampaign) meta.utm_campaign = utmCampaign;
     const { error } = await supa.from("leads").insert({
       email, name, segment, source, phone,   // phone -> vlastni sloupec (Cowork migrace add_phone_to_leads)
       track,
-      meta: tool ? { goal, age, tool } : { goal, age },
+      meta,
       next_send_at: new Date(Date.now() + (tool ? 24 * 3600000 : 0)).toISOString(),
     });
     // 23505 = unique violation (e-mail uz je v seznamu) -> bereme jako uspech (idempotentni)
