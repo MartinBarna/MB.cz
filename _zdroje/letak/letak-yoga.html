@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Leták A3 na šířku — jóga studio</title>
+<link rel="stylesheet" href="../../assets/vendor/fonts/poppins.css">
+<style>
+    @page { size: 420mm 297mm; margin: 0; }
+    * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html, body { margin: 0; padding: 0; overflow: hidden; }
+    body { width: 420mm; height: 297mm; font-family: 'Poppins', Arial, sans-serif; color: #161616; background: #fff; overflow: hidden; }
+    .page { width: 420mm; height: 297mm; display: flex; flex-direction: column; }
+
+    /* Horní tmavý blok */
+    .top { background: linear-gradient(160deg, #1b1d21 0%, #0f1113 100%); color: #fff; padding: 17mm 30mm 14mm; }
+    .brandrow { display: flex; align-items: center; gap: 5mm; margin-bottom: 10mm; }
+    .mark { width: 16mm; height: 16mm; border-radius: 4.5mm; background: #ff7a00; color: #161616; font-weight: 800; font-size: 7.6mm; display: flex; align-items: center; justify-content: center; }
+    .brand { font-weight: 800; font-size: 6.2mm; letter-spacing: .2mm; line-height: 1.08; }
+    .brand span { display: block; color: #ff9d3c; font-weight: 600; font-size: 3.9mm; letter-spacing: .5mm; text-transform: uppercase; margin-top: .8mm; }
+    h1 { font-size: 20mm; line-height: 1.08; font-weight: 800; margin: 0; letter-spacing: -.3mm; }
+    h1 .hl { color: #ff7a00; }
+    .sub { font-size: 6.1mm; color: #d9dde2; margin: 6mm 0 0; line-height: 1.4; max-width: 330mm; font-weight: 500; }
+
+    /* Střed: benefity + QR */
+    .mid { flex: 1; background: linear-gradient(160deg, #fff8f0 0%, #fff4e8 100%); padding: 13mm 30mm; display: flex; gap: 24mm; align-items: center; }
+    .ticks { flex: 1; list-style: none; padding: 0; margin: 0; }
+    .ticks li { position: relative; padding-left: 12mm; font-size: 7.2mm; font-weight: 600; line-height: 1.3; margin-bottom: 8mm; }
+    .ticks li:last-child { margin-bottom: 0; }
+    .ticks li::before { content: "✓"; position: absolute; left: 0; top: -0.4mm; color: #ff7a00; font-weight: 800; font-size: 8.4mm; }
+    .ticks li b { color: #e36f00; }
+    .qrbox { flex: 0 0 84mm; background: #fff; border-radius: 9mm; box-shadow: 0 4mm 12mm rgba(0,0,0,.15); padding: 7mm 7mm 5.5mm; text-align: center; }
+    .qrbox img { width: 68mm; height: 68mm; display: block; margin: 0 auto; }
+    .qrbox .scan { font-size: 4.7mm; font-weight: 700; margin-top: 4mm; line-height: 1.3; }
+    .qrbox .scan span { color: #e36f00; }
+
+    /* Spodní pruh */
+    .bottom { background: #161616; color: #fff; padding: 11mm 30mm 13mm; }
+    .stats { display: flex; gap: 20mm; margin-bottom: 5.5mm; }
+    .stats div { font-size: 4.6mm; color: #aeb4ba; line-height: 1.25; }
+    .stats b { display: block; color: #ff7a00; font-size: 10mm; font-weight: 800; line-height: 1.1; }
+    .footrow { display: flex; justify-content: space-between; align-items: baseline; border-top: .5mm solid rgba(255,255,255,.15); padding-top: 5.5mm; }
+    .web { font-weight: 700; font-size: 6.4mm; }
+    .beff { color: #ff7a00; font-weight: 800; font-size: 6.4mm; }
+</style>
+</head>
+<body><div class="page">
+    <div class="top">
+        <div class="brandrow">
+            <div class="mark">MB</div>
+            <div class="brand">Martin Barna<span>online výživový kouč</span></div>
+        </div>
+        <h1>Na podložce ti to jde.<br><span class="hl">Ať sedne i&nbsp;talíř.</span></h1>
+        <p class="sub">Naučím tě vážit, zapisovat a&nbsp;jíst s&nbsp;rozumem, bez diet a&nbsp;zákazů, aby ti to šlo i&nbsp;mimo podložku.</p>
+    </div>
+
+    <div class="mid">
+        <ul class="ticks">
+            <li><b>7denní jídelníček zdarma</b> — sedne k&nbsp;tomu, jak se hýbeš</li>
+            <li><b>První lekce videokurzu výživy zdarma</b> — pustíš si ji hned z&nbsp;mobilu</li>
+            <li><b>600+ klientů</b>, co to se mnou dokázali — v&nbsp;klidu a&nbsp;bez jojo efektu</li>
+        </ul>
+        <div class="qrbox">
+            <img src="qr-yoga.png" alt="QR kód — martinbarna.cz/start">
+            <div class="scan">Naskenuj foťákem<br><span>a&nbsp;začni ještě dnes</span></div>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <div class="stats">
+            <div><b>600+</b>proměn klientů</div>
+            <div><b>13&nbsp;let</b>praxe v&nbsp;oboru</div>
+            <div><b>ZDARMA</b>plán i&nbsp;první lekce</div>
+        </div>
+        <div class="footrow">
+            <span class="web">martinbarna.cz</span>
+            <span class="beff">Be Effective!</span>
+        </div>
+    </div>
+</div></body>
+</html>
