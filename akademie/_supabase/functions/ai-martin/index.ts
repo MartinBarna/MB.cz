@@ -15,6 +15,7 @@ const API_KEY = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
 const MODEL = Deno.env.get('AI_MARTIN_MODEL') ?? 'claude-sonnet-5';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 // AI Martin je PLACENA funkce (jen clenove Academy). Produkt pro kontrolu pristupu:
 const REQUIRED_PRODUCT = Deno.env.get('AI_MARTIN_PRODUCT') ?? 'academy';
 
@@ -77,11 +78,12 @@ async function isMember(token: string): Promise<boolean> {
 // k dotazu a složí kontextový blok pro model. Best-effort — při chybě vrátí prázdno.
 interface Hit { title?: string; url?: string; snippet?: string }
 async function retrieveContext(query: string): Promise<string> {
-  if (!query || !SUPABASE_URL || !ANON_KEY) return '';
+  // search_lessons je zamcena pred anon (uryvky placenych lekci) -> RAG vola pres service_role.
+  if (!query || !SUPABASE_URL || !SERVICE_ROLE) return '';
   try {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/search_lessons`, {
       method: 'POST',
-      headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}`, 'content-type': 'application/json' },
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json' },
       body: JSON.stringify({ p_query: query.slice(0, 400), p_limit: 4 }),
     });
     if (!r.ok) return '';
