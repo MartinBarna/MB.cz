@@ -64,7 +64,7 @@ function vokativ(fn: string, seg: string): string {
   if (last === "a") return fn.slice(0, -1) + "o";
   if (VOK_VOWELS.includes(last)) return fn;
   if (FEMALE_NAMES.has(low)) return fn;
-  if (seg !== "muzi" && !isMaleName(low)) return fn;
+  if (seg === "zeny" && !isMaleName(low)) return fn;
   if (low in VOK_EXC) return VOK_EXC[low];
   if (low.endsWith("ek")) return fn.slice(0, -2) + "ku";
   if (low.endsWith("ch") || "kgh".includes(last)) return fn + "u";

@@ -66,7 +66,7 @@ function vokativ(fn: string, seg: Seg): string {
   if (last === 'a') return fn.slice(0, -1) + 'o';                        // Jana->Jano, Honza->Honzo (oba rody)
   if (VOK_VOWELS.includes(last)) return fn;                              // Lucie, Marie, Ivo, Jiri
   if (FEMALE_NAMES.has(low)) return fn;                                  // pojistka: zenske jmeno na souhlasku
-  if (seg !== 'muzi' && !isMaleName(low)) return fn;                     // souhlaska + neznamo/zena -> nechat
+  if (seg === 'zeny' && !isMaleName(low)) return fn;                     // zensky seznam + nezname jmeno -> nechat; jinak sklonuj mužsky (kryje i nezname muzske jmeno)
   if (low in VOK_EXC) return VOK_EXC[low];
   if (low.endsWith('ek')) return fn.slice(0, -2) + 'ku';                 // Marek->Marku, Radek->Radku
   if (low.endsWith('ch') || 'kgh'.includes(last)) return fn + 'u';       // Vojtech->Vojtechu, Patrik->Patriku
