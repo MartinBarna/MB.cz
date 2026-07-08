@@ -30,20 +30,47 @@ const isFem = (seg: Seg) => seg === 'zeny';
 // jmeno nechavame v 1. padu (= dosavadni chovani, nikdy nezhorsime). Zenska a
 // segmentove nejista jmena koncici souhlaskou se NEmeni (Dagmar, Ester, Miriam...).
 const VOK_EXC: Record<string, string> = {
-  'jan': 'Jene', 'pavel': 'Pavle', 'karel': 'Karle', 'zdenek': 'Zdenku', 'zdeněk': 'Zdeňku', 'josef': 'Josefe',
+  'jan': 'Jene', 'pavel': 'Pavle', 'karel': 'Karle', 'havel': 'Havle', 'pavol': 'Pavle',
+  'zdenek': 'Zdenku', 'zdeněk': 'Zdeňku', 'zbynek': 'Zbynku', 'zbyněk': 'Zbyňku',
+  'josef': 'Josefe', 'luboš': 'Luboši', 'lubos': 'Luboši', 'bartoloměj': 'Bartoloměji',
+  'vavřinec': 'Vavřinče', 'vavrinec': 'Vavrinče', 'němec': 'Němče',
 };
+// bezna ceska/slovenska muzska jmena na SOUHLASKU -> sklonuj i bez segmentu 'muzi'
+const MALE_NAMES = new Set<string>([
+  'martin','david','tomáš','tomas','lukáš','lukas','petr','jakub','ondřej','ondrej','marek','michal','michael',
+  'filip','vojtěch','vojtech','patrik','patrick','radek','roman','adam','matěj','matej','štěpán','stepan','vít','vit',
+  'václav','vaclav','jaroslav','miroslav','stanislav','ladislav','bohuslav','bronislav','rostislav','přemysl','premysl',
+  'bohumil','kamil','emil','dalibor','otakar','richard','robert','norbert','albert','rudolf','adolf','oldřich','oldrich',
+  'bedřich','bedrich','jindřich','jindrich','vladimír','vladimir','dušan','dusan','milan','alois','ivan','igor','marcel',
+  'daniel','gabriel','samuel','dominik','erik','viktor','hynek','čeněk','cenek','kristián','kristian','sebastián','sebastian',
+  'maxmilián','maximilián','maximilian','kryštof','krystof','tobiáš','tobias','matyáš','matyas','mikuláš','mikulas','šimon','simon',
+  'damián','damian','fabián','fabian','julián','julian','benedikt','arnošt','arnost','evžen','evzen','augustin','antonín','antonin',
+  'valentýn','valentyn','radim','vilém','vilem','radovan','miloslav','svatopluk','vratislav','zbyšek','zbysek','aleš','ales',
+  'denis','dennis','nikolas','kevin','leon','vlastimil','radomír','radomir','lumír','lumir','ctibor','branislav','jáchym','jachym',
+  'kašpar','kaspar','melichar','řehoř','rehor','florián','florian','teodor','theodor','nikolaj','boris',
+  'radoslav','miloš','milos','bořek','borek','vladan','hubert','herbert','gustav','ferdinand','leopold','konrád','konrad',
+  'arnold','zikmund','matouš','matous','kilián','kilian','mojmír','mojmir',
+]);
+// zenska jmena na SOUHLASKU, ktera se nemeni -> NIKDY nesklonovat (i kdyby na 'muzi' seznamu)
+const FEMALE_NAMES = new Set<string>([
+  'ester','dagmar','miriam','karin','karyn','nikol','ingrid','rút','rut','judit','edit','ráchel','rachel',
+  'dolores','doris','agnes','mercedes','karmen','carmen','sarah','deborah','abigail','gwen','lilian','vivien',
+  'kristin','kristýn','katrin','madlen','jennifer','žaneta',
+]);
 const VOK_VOWELS = 'aeiouyáéěíóúůý';
+const isMaleName = (low: string) => (low in VOK_EXC) || MALE_NAMES.has(low);
 function vokativ(fn: string, seg: Seg): string {
   if (!fn) return fn;
   const low = fn.toLowerCase();
-  if (low in VOK_EXC) return VOK_EXC[low];
   const last = low.slice(-1);
-  if (last === 'a') return fn.slice(0, -1) + 'o';                        // Jana->Jano, Ota->Oto (oba rody)
+  if (last === 'a') return fn.slice(0, -1) + 'o';                        // Jana->Jano, Honza->Honzo (oba rody)
   if (VOK_VOWELS.includes(last)) return fn;                              // Lucie, Marie, Ivo, Jiri
-  if (seg !== 'muzi') return fn;                                         // souhlaska + nejiste pohlavi -> nechat
+  if (FEMALE_NAMES.has(low)) return fn;                                  // pojistka: zenske jmeno na souhlasku
+  if (seg === 'zeny' && !isMaleName(low)) return fn;                     // zensky seznam + nezname jmeno -> nechat; jinak sklonuj mužsky (kryje i nezname muzske jmeno)
+  if (low in VOK_EXC) return VOK_EXC[low];
   if (low.endsWith('ek')) return fn.slice(0, -2) + 'ku';                 // Marek->Marku, Radek->Radku
   if (low.endsWith('ch') || 'kgh'.includes(last)) return fn + 'u';       // Vojtech->Vojtechu, Patrik->Patriku
-  if ('szxj'.includes(last) || 'šžč'.includes(last)) return fn + 'i';    // Tomas->Tomasi, Ondrej->Ondreji, Max->Maxi
+  if ('szxj'.includes(last) || 'šžčř'.includes(last)) return fn + 'i';   // Tomas->Tomasi, Ondrej->Ondreji, Řehoř->Řehoři
   if (low.endsWith('el')) return fn + 'i';                               // Daniel->Danieli, Marcel->Marceli
   if (last === 'r') {
     return VOK_VOWELS.includes(low.slice(-2, -1)) ? fn + 'e' : fn.slice(0, -1) + 'ře';  // Otakar->Otakare, Petr->Petře
@@ -118,7 +145,7 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === 'bullets')
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(fill(b.text, seg, v))}</a></p>`;
+    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' class='mbbtn' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
 function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): string {
@@ -129,7 +156,10 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'></head>` +
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>` +
+    `<meta name='color-scheme' content='light'><meta name='supported-color-schemes' content='light'>` +
+    `<style>:root{color-scheme:light;supported-color-schemes:light}` +
+    `.mbbtn,.mbbtn[data-ogsb],.mbbtn[data-ogsc]{background:#ff7a00!important;color:#161616!important}</style></head>` +
     `<body style='margin:0;background:#f4f4f5;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${esc(preheader)}</span>` +
     `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px;margin:0 auto;background:#fff;border-radius:14px;padding:28px'>` +
