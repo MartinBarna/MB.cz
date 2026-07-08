@@ -36,7 +36,7 @@ function emailHtml(name: string, unsub: string): string {
   <div style="background:linear-gradient(180deg,#1a1613,#121010);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px 24px">
     <div style="font-size:15px;color:#a89e94;letter-spacing:2px;font-weight:700">🔥 NEZTRAŤ SÉRII</div>
     <h1 style="color:#fff;font-size:22px;margin:8px 0 12px">${hi}, tento týden ses ještě neučil</h1>
-    <p style="font-size:15px;line-height:1.6;color:#cfc7bc;margin:0 0 16px">Rozjel ses skvěle — a přesně teď se láme, jestli z toho bude zvyk. Stačí <b style="color:#fff">jedna lekce</b> a týdenní cíl máš rozjetý zpátky. Deset minut, a jsi zase o krok lepší trenér.</p>
+    <p style="font-size:15px;line-height:1.6;color:#cfc7bc;margin:0 0 16px">Rozjel ses skvěle — a přesně teď se láme, jestli z toho bude zvyk. Stačí <b style="color:#fff">jedna lekce</b> a týdenní cíl máš rozjetý zpátky. Deset minut, a jsi zase o krok blíž k tomu být lepší trenér.</p>
     <a href="${SITE}/akademie/studium/" style="display:inline-block;background:linear-gradient(145deg,#ffb64d,#ff7a00);color:#160d04;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:50px;font-size:15px">▶ Pokračovat ve studiu</a>
     <p style="font-size:13px;line-height:1.6;color:#8a8073;margin:20px 0 0">Drž se, i malý krok se počítá. Be Effective. 💪<br>— Martin</p>
   </div>

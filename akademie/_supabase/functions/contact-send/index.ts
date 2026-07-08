@@ -3,6 +3,11 @@
 // takže spamboti POSTovali napřímo mimo honeypot. Tady e-mail ve zdroji není
 // a validace běží server-side (honeypot + časová past + origin + pole).
 // verify_jwt: false (volá se z prohlížeče bez přihlášení).
+//
+// LOG: každou on-site submisi zapíšeme do contact_messages (relevant vs spam),
+// aby ji Martin viděl v adminu. Off-site boti (cizí/chybějící Origin) se NELOGUJÍ
+// (jinak by šel endpoint zaplavit řádky). Zápis je best-effort — nikdy neblokuje e-mail.
+import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const ALLOWED_ORIGINS = ["https://martinbarna.cz", "https://www.martinbarna.cz"];
 
@@ -26,6 +31,26 @@ function json(body: unknown, status: number, origin: string) {
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+// Zapíše submisi do contact_messages (best-effort). Pole ořízneme kvůli obraně proti balastu.
+async function logMessage(row: {
+  name: string; email: string; message: string; spam: boolean; spam_reason: string; origin: string;
+}) {
+  try {
+    const url = Deno.env.get("SUPABASE_URL");
+    const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!url || !key) return;
+    const admin = createClient(url, key, { auth: { persistSession: false } });
+    await admin.from("contact_messages").insert({
+      name: row.name.slice(0, 200),
+      email: row.email.slice(0, 200),
+      message: row.message.slice(0, 5000),
+      spam: row.spam,
+      spam_reason: row.spam_reason.slice(0, 300),
+      origin: row.origin.slice(0, 200),
+    });
+  } catch { /* log je doplněk, nesmí shodit odeslání */ }
+}
+
 Deno.serve(async (req) => {
   const origin = req.headers.get("origin") || "";
   if (req.method === "OPTIONS") return new Response(null, { headers: cors(origin) });
@@ -41,15 +66,25 @@ Deno.serve(async (req) => {
   const elapsed = Number(b.t ?? 0);             // ms od načtení formuláře
   const originOk = ALLOWED_ORIGINS.includes(origin);
 
-  // Spam signály → tváříme se OK, ale nic neodešleme (nekrmíme boty zpětnou vazbou).
-  const spam =
-    honey !== "" ||
-    !originOk ||
-    elapsed < 3000 ||
-    !name || !email || !message ||
-    !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) ||
-    message.length < 5 || message.length > 5000 ||
-    name.length > 120;
+  // Off-site POST (cizí/chybějící Origin) = bot mimo web → tiše zahoď, NELOGUJ (jinak zaplavení).
+  if (!originOk) return json({ ok: true }, 200, origin);
+
+  // Spam signály (submise ale přišla z webu) → tváříme se OK, ale nic neodešleme
+  // (nekrmíme boty zpětnou vazbou). I tak ji zalogujeme jako „potenciální spam".
+  const reasons: string[] = [];
+  if (honey !== "") reasons.push("honeypot");
+  if (elapsed < 3000) reasons.push("příliš rychle (<3s)");
+  if (!name) reasons.push("prázdné jméno");
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) reasons.push("neplatný e-mail");
+  if (!message || message.length < 5) reasons.push("krátká/prázdná zpráva");
+  if (message.length > 5000) reasons.push("příliš dlouhá zpráva");
+  if (name.length > 120) reasons.push("příliš dlouhé jméno");
+  const spam = reasons.length > 0;
+  const spam_reason = reasons.join(", ");
+
+  // Log VŽDY (relevant i spam) — ať to Martin vidí v adminu. Nezáleží na výsledku odeslání.
+  await logMessage({ name, email, message, spam, spam_reason, origin });
+
   if (spam) return json({ ok: true }, 200, origin);
 
   const key = Deno.env.get("RESEND_API_KEY");
