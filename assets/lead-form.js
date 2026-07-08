@@ -10,7 +10,11 @@
 
   function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
 
-  // UTM z URL (z QR letáku přes /start passthrough) -> atribuce leadu ke konkrétnímu letáku/zdroji
+  // UTM z URL (z QR letáku přes /start passthrough) -> atribuce leadu ke konkrétnímu zdroji.
+  // Navíc Google gclid/gbraid/wbraid (auto-tagging reklam): otagujeme lead jako google-ads,
+  // ať poznáme leady z Google Ads i bez cookie-souhlasu (Consent Mode gclid nespadne do
+  // konverzí Ads). gclid uložíme do utm_campaign (jen když vlastní utm_campaign chybí) —
+  // drží se v leads.meta pro pozdější offline import konverzí do Google Ads.
   function utmParams() {
     try {
       var p = new URLSearchParams(location.search), out = {};
@@ -18,6 +22,12 @@
         var v = (p.get(k) || '').trim().slice(0, 60);
         if (v) out[k] = v;
       });
+      var gcl = (p.get('gclid') || p.get('gbraid') || p.get('wbraid') || '').trim();
+      if (gcl) {
+        if (!out.utm_source) out.utm_source = 'google-ads';
+        if (!out.utm_medium) out.utm_medium = 'cpc';
+        if (!out.utm_campaign) out.utm_campaign = 'gclid:' + gcl.slice(0, 54);
+      }
       return out;
     } catch (e) { return {}; }
   }
