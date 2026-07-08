@@ -31,14 +31,15 @@
         body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
         a { color:var(--green-dark); }
         .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
-        .nav .wrap { max-width:1120px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
-        .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; display:flex; align-items:center; gap:8px; } .brand img { height:30px; width:auto; aspect-ratio:194/96; flex-shrink:0; display:block; }
+        .nav .wrap { max-width:1120px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:22px; }
+        .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; display:flex; align-items:center; gap:8px; flex-shrink:0; } .brand img { height:30px; width:auto; aspect-ratio:194/96; flex-shrink:0; display:block; } .brand span { white-space:nowrap; }
         .nav a.back { text-decoration:none; font-weight:600; color:var(--ink); }
         .navlinks { display:flex; align-items:center; gap:20px; }
         .navlinks a { text-decoration:none; font-weight:600; color:var(--ink); font-size:.96rem; }
         .navlinks a:hover { color:var(--green); }
         .navlinks a.cta { white-space:nowrap; background:var(--green); color:#161616; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(255,122,0,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
         .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
+        @media (max-width:1200px){ .navlinks { gap:12px; } .navlinks a { font-size:.9rem; } }
         @media (max-width:991px){ .navlinks .hide-sm { display:none; } .navlinks { gap:14px; } .navlinks a.cta { padding:7px 12px; font-size:.8rem; } .brand span { display:none; } }
         .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:80px 20px 64px; text-align:center; position:relative; }
         .hero::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
@@ -137,11 +138,11 @@
                 <text x="18" y="252" fill="#6a7269" font-size="12">nižší</text>
                 <text x="8" y="150" fill="#6a7269" font-size="12" transform="rotate(-90 14 150)">riziko</text>
                 <path d="M100 172 Q 170 214 250 236 Q 320 256 350 258 Q 400 256 450 206 Q 515 160 590 116" fill="none" stroke="#ff7a00" stroke-width="4" stroke-linecap="round"/>
-                <circle cx="150" cy="208" r="5" fill="#161616"/><text x="150" y="184" fill="#161616" font-size="12" font-weight="700" text-anchor="middle">5 h</text><text x="150" y="169" fill="#c0392b" font-size="11" text-anchor="middle">+12 %</text>
+                <circle cx="150" cy="208" r="5" fill="#161616"/><text x="150" y="180" fill="#161616" font-size="12" font-weight="700" text-anchor="middle">5 h</text><text x="118" y="200" fill="#c0392b" font-size="11" text-anchor="end">+12 %</text>
                 <circle cx="250" cy="236" r="5" fill="#161616"/><text x="250" y="222" fill="#161616" font-size="12" font-weight="700" text-anchor="middle">6 h</text><text x="250" y="252" fill="#c0392b" font-size="11" text-anchor="middle">+6 %</text>
                 <circle cx="350" cy="258" r="6.5" fill="#2fae57"/><text x="350" y="284" fill="#1f8f47" font-size="12" font-weight="700" text-anchor="middle">7 h — optimum</text>
                 <circle cx="450" cy="206" r="5" fill="#161616"/><text x="450" y="224" fill="#161616" font-size="12" font-weight="700" text-anchor="middle">8 h</text><text x="450" y="239" fill="#c0392b" font-size="11" text-anchor="middle">+13 %</text>
-                <circle cx="540" cy="120" r="5" fill="#161616"/><text x="540" y="138" fill="#161616" font-size="12" font-weight="700" text-anchor="middle">9 h</text><text x="540" y="153" fill="#c0392b" font-size="11" text-anchor="middle">+28 %</text>
+                <circle cx="540" cy="120" r="5" fill="#161616"/><text x="540" y="106" fill="#161616" font-size="12" font-weight="700" text-anchor="middle">9 h</text><text x="540" y="91" fill="#c0392b" font-size="11" text-anchor="middle">+28 %</text>
                 <text x="300" y="298" fill="#6a7269" font-size="11">délka spánku za noc →</text>
               </svg>
               <figcaption>Relativní riziko úmrtí podle délky spánku (7 h = optimum). Podle dávkově-odpovědní metaanalýzy Yin 2017: pod 7 h ~6 % a nad 7 h ~13 % vyššího rizika za každou hodinu.</figcaption>
