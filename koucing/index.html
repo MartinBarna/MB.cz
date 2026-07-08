@@ -397,12 +397,8 @@
             <div class="cbox">
                 <h3 style="font-size:1.1rem;">Napiš mi</h3>
                 <div id="formDiky" class="ok-msg">Díky! Tvoje zpráva dorazila — ozvu se ti na e-mail co nejdřív. 🙌</div>
-                <form id="kontaktForm" action="https://formsubmit.co/martin@martinbarna.cz" method="POST">
-                    <input type="hidden" name="_subject" value="Nová poptávka koučinku (/koucing)">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_template" value="table">
-                    <input type="hidden" name="_next" value="https://martinbarna.cz/koucing/?odeslano=1#kontakt">
-                    <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;">
+                <form id="kontaktForm" method="POST">
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;">
                     <input name="Jméno" type="text" placeholder="Tvoje jméno" required>
                     <input name="E-mail" type="email" placeholder="Tvůj e-mail" required>
                     <select name="Balíček">
@@ -432,18 +428,32 @@
 </div>
 
 <script>
-    // Anti-spam: vyplněný honeypot nebo odeslání dřív než za 3 s = bot → zablokuj odeslání.
+    // Kontaktní formulář → vlastní relay contact-send (Resend). Server-side validace + honeypot.
     (function () {
         var kf = document.getElementById('kontaktForm');
         if (!kf) return;
         var t0 = Date.now();
+        var AK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
         kf.addEventListener('submit', function (e) {
-            var hp = kf.querySelector('input[name="_honey"]');
+            e.preventDefault();
+            var hp = kf.querySelector('input[name="website"]');
             if ((hp && hp.value) || (Date.now() - t0 < 3000)) {
-                e.preventDefault();
-                var d = document.getElementById('formDiky'); if (d) d.style.display = 'block';
-                kf.style.display = 'none';
+                var d0 = document.getElementById('formDiky'); if (d0) d0.style.display = 'block';
+                kf.style.display = 'none'; return;
             }
+            var gv = function (n) { var el = kf.querySelector('[name="' + n + '"]'); return el ? el.value : ''; };
+            var pkg = gv('Balíček');
+            var msg = (pkg ? 'Balíček: ' + pkg + '\n\n' : '') + gv('Zpráva');
+            var btn = kf.querySelector('button[type="submit"]'); var orig = btn ? btn.textContent : '';
+            if (btn) { btn.textContent = 'Odesílám…'; btn.disabled = true; }
+            fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/contact-send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'apikey': AK, 'Authorization': 'Bearer ' + AK },
+                body: JSON.stringify({ name: gv('Jméno'), email: gv('E-mail'), message: msg, website: (hp ? hp.value : ''), t: Date.now() - t0 })
+            }).then(function () {
+                var d = document.getElementById('formDiky'); if (d) { d.style.display = 'block'; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+                kf.style.display = 'none';
+            }).catch(function () { if (btn) { btn.textContent = orig; btn.disabled = false; } });
         });
     })();
     // Po odeslání formuláře (FormSubmit redirect ?odeslano=1) zobraz poděkování

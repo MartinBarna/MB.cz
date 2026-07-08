@@ -1236,12 +1236,8 @@
                     <div class="bg-white p-4 p-md-5 rounded-4 shadow">
                         <h5 class="text-dark fw-bold mb-3">Napiš mi</h5>
                         <div id="formDiky" class="alert alert-success text-center mb-3" style="display:none;">Díky! Tvoje zpráva dorazila — ozvu se ti na e-mail co nejdřív. 🙌</div>
-                        <form id="kontaktForm" action="https://formsubmit.co/martin@martinbarna.cz" method="POST">
-                            <input type="hidden" name="_subject" value="Nová poptávka z webu (MB.cz)">
-                            <input type="hidden" name="_captcha" value="false">
-                            <input type="hidden" name="_template" value="table">
-                            <input type="hidden" name="_next" value="https://martinbarna.cz/?odeslano=1#kontakt">
-                            <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;">
+                        <form id="kontaktForm" method="POST">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;">
                             <div class="mb-3"><input name="Jméno" type="text" class="form-control bg-light" placeholder="Tvoje jméno" required></div>
                             <div class="mb-3"><input name="E-mail" type="email" class="form-control bg-light" placeholder="Tvůj e-mail" required></div>
                             <div class="mb-3"><textarea name="Zpráva" class="form-control bg-light" rows="3" placeholder="Co tě trápí / s čím chceš pomoct?" required></textarea></div>
@@ -1394,10 +1390,11 @@
         var _kf = document.getElementById('kontaktForm');
         if (_kf) {
             var _kfLoad = Date.now();
+            var _CS_AK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
             _kf.addEventListener('submit', function (e) {
                 e.preventDefault();
                 // Anti-spam: vyplněný honeypot nebo odeslání dřív než za 3 s = bot → tváříme se, že OK, ale nic neodešleme.
-                var _hp = _kf.querySelector('input[name="_honey"]');
+                var _hp = _kf.querySelector('input[name="website"]');
                 if ((_hp && _hp.value) || (Date.now() - _kfLoad < 3000)) {
                     var dd = document.getElementById('formDiky'); if (dd) dd.style.display = 'block';
                     _kf.style.display = 'none';
@@ -1406,8 +1403,11 @@
                 var btn = _kf.querySelector('button[type="submit"]');
                 var orig = btn ? btn.textContent : '';
                 if (btn) { btn.textContent = 'Odesílám…'; btn.disabled = true; }
-                fetch('https://formsubmit.co/ajax/martin@martinbarna.cz', {
-                    method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(_kf)
+                var _gv = function (n) { var el = _kf.querySelector('[name="' + n + '"]'); return el ? el.value : ''; };
+                fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/contact-send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': _CS_AK, 'Authorization': 'Bearer ' + _CS_AK },
+                    body: JSON.stringify({ name: _gv('Jméno'), email: _gv('E-mail'), message: _gv('Zpráva'), website: (_hp ? _hp.value : ''), t: Date.now() - _kfLoad })
                 }).then(function (r) { return r.json(); }).then(function () {
                     var d = document.getElementById('formDiky'); if (d) d.style.display = 'block';
                     _kf.style.display = 'none';
