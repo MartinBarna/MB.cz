@@ -64,9 +64,57 @@ function wrap(preheader: string, body: string): string {
     `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px;margin:0 auto;background:#fff;border-radius:14px;padding:28px'>` +
     body + `<hr style='border:none;border-top:1px solid #eee;margin:22px 0 14px'><div style='font-size:12px;line-height:1.5;color:#999'>${foot}</div></div></body></html>`;
 }
+// ===== 5. pad (vokativ) — kanonicka verze, drz v synci s drip-send =====
+const VOK_EXC: Record<string, string> = {
+  "jan": "Jene", "pavel": "Pavle", "karel": "Karle", "havel": "Havle", "pavol": "Pavle",
+  "zdenek": "Zdenku", "zdeněk": "Zdeňku", "zbynek": "Zbynku", "zbyněk": "Zbyňku",
+  "josef": "Josefe", "luboš": "Luboši", "lubos": "Luboši", "bartoloměj": "Bartoloměji",
+  "vavřinec": "Vavřinče", "vavrinec": "Vavrinče", "němec": "Němče",
+};
+const MALE_NAMES = new Set<string>([
+  "martin","david","tomáš","tomas","lukáš","lukas","petr","jakub","ondřej","ondrej","marek","michal","michael",
+  "filip","vojtěch","vojtech","patrik","patrick","radek","roman","adam","matěj","matej","štěpán","stepan","vít","vit",
+  "václav","vaclav","jaroslav","miroslav","stanislav","ladislav","bohuslav","bronislav","rostislav","přemysl","premysl",
+  "bohumil","kamil","emil","dalibor","otakar","richard","robert","norbert","albert","rudolf","adolf","oldřich","oldrich",
+  "bedřich","bedrich","jindřich","jindrich","vladimír","vladimir","dušan","dusan","milan","alois","ivan","igor","marcel",
+  "daniel","gabriel","samuel","dominik","erik","viktor","hynek","čeněk","cenek","kristián","kristian","sebastián","sebastian",
+  "maxmilián","maximilián","maximilian","kryštof","krystof","tobiáš","tobias","matyáš","matyas","mikuláš","mikulas","šimon","simon",
+  "damián","damian","fabián","fabian","julián","julian","benedikt","arnošt","arnost","evžen","evzen","augustin","antonín","antonin",
+  "valentýn","valentyn","radim","vilém","vilem","radovan","miloslav","svatopluk","vratislav","zbyšek","zbysek","aleš","ales",
+  "denis","dennis","nikolas","kevin","leon","vlastimil","radomír","radomir","lumír","lumir","ctibor","branislav","jáchym","jachym",
+  "kašpar","kaspar","melichar","řehoř","rehor","florián","florian","teodor","theodor","nikolaj","boris",
+  "radoslav","miloš","milos","bořek","borek","vladan","hubert","herbert","gustav","ferdinand","leopold","konrád","konrad",
+  "arnold","zikmund","matouš","matous","kilián","kilian","mojmír","mojmir",
+]);
+const FEMALE_NAMES = new Set<string>([
+  "ester","dagmar","miriam","karin","karyn","nikol","ingrid","rút","rut","judit","edit","ráchel","rachel",
+  "dolores","doris","agnes","mercedes","karmen","carmen","sarah","deborah","abigail","gwen","lilian","vivien",
+  "kristin","kristýn","katrin","madlen","jennifer","žaneta",
+]);
+const VOK_VOWELS = "aeiouyáéěíóúůý";
+const isMaleName = (low: string) => (low in VOK_EXC) || MALE_NAMES.has(low);
+function vokativ(fn: string, seg: string): string {
+  if (!fn) return fn;
+  const low = fn.toLowerCase();
+  const last = low.slice(-1);
+  if (last === "a") return fn.slice(0, -1) + "o";
+  if (VOK_VOWELS.includes(last)) return fn;
+  if (FEMALE_NAMES.has(low)) return fn;
+  if (seg !== "muzi" && !isMaleName(low)) return fn;
+  if (low in VOK_EXC) return VOK_EXC[low];
+  if (low.endsWith("ek")) return fn.slice(0, -2) + "ku";
+  if (low.endsWith("ch") || "kgh".includes(last)) return fn + "u";
+  if ("szxj".includes(last) || "šžčř".includes(last)) return fn + "i";
+  if (low.endsWith("el")) return fn + "i";
+  if (last === "r") {
+    return VOK_VOWELS.includes(low.slice(-2, -1)) ? fn + "e" : fn.slice(0, -1) + "ře";
+  }
+  if ("bdflmnptvw".includes(last)) return fn + "e";
+  return fn;
+}
 function vars(name: string): Record<string, string> {
   const t = (name || "").trim().split(" ")[0] || "";
-  const fn = t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+  const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : "", "");
   return { first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "" };
 }
 async function send(to: string, subject: string, html: string) {

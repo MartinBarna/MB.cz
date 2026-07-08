@@ -30,20 +30,47 @@ const isFem = (seg: Seg) => seg === 'zeny';
 // jmeno nechavame v 1. padu (= dosavadni chovani, nikdy nezhorsime). Zenska a
 // segmentove nejista jmena koncici souhlaskou se NEmeni (Dagmar, Ester, Miriam...).
 const VOK_EXC: Record<string, string> = {
-  'jan': 'Jene', 'pavel': 'Pavle', 'karel': 'Karle', 'zdenek': 'Zdenku', 'zdeněk': 'Zdeňku', 'josef': 'Josefe',
+  'jan': 'Jene', 'pavel': 'Pavle', 'karel': 'Karle', 'havel': 'Havle', 'pavol': 'Pavle',
+  'zdenek': 'Zdenku', 'zdeněk': 'Zdeňku', 'zbynek': 'Zbynku', 'zbyněk': 'Zbyňku',
+  'josef': 'Josefe', 'luboš': 'Luboši', 'lubos': 'Luboši', 'bartoloměj': 'Bartoloměji',
+  'vavřinec': 'Vavřinče', 'vavrinec': 'Vavrinče', 'němec': 'Němče',
 };
+// bezna ceska/slovenska muzska jmena na SOUHLASKU -> sklonuj i bez segmentu 'muzi'
+const MALE_NAMES = new Set<string>([
+  'martin','david','tomáš','tomas','lukáš','lukas','petr','jakub','ondřej','ondrej','marek','michal','michael',
+  'filip','vojtěch','vojtech','patrik','patrick','radek','roman','adam','matěj','matej','štěpán','stepan','vít','vit',
+  'václav','vaclav','jaroslav','miroslav','stanislav','ladislav','bohuslav','bronislav','rostislav','přemysl','premysl',
+  'bohumil','kamil','emil','dalibor','otakar','richard','robert','norbert','albert','rudolf','adolf','oldřich','oldrich',
+  'bedřich','bedrich','jindřich','jindrich','vladimír','vladimir','dušan','dusan','milan','alois','ivan','igor','marcel',
+  'daniel','gabriel','samuel','dominik','erik','viktor','hynek','čeněk','cenek','kristián','kristian','sebastián','sebastian',
+  'maxmilián','maximilián','maximilian','kryštof','krystof','tobiáš','tobias','matyáš','matyas','mikuláš','mikulas','šimon','simon',
+  'damián','damian','fabián','fabian','julián','julian','benedikt','arnošt','arnost','evžen','evzen','augustin','antonín','antonin',
+  'valentýn','valentyn','radim','vilém','vilem','radovan','miloslav','svatopluk','vratislav','zbyšek','zbysek','aleš','ales',
+  'denis','dennis','nikolas','kevin','leon','vlastimil','radomír','radomir','lumír','lumir','ctibor','branislav','jáchym','jachym',
+  'kašpar','kaspar','melichar','řehoř','rehor','florián','florian','teodor','theodor','nikolaj','boris',
+  'radoslav','miloš','milos','bořek','borek','vladan','hubert','herbert','gustav','ferdinand','leopold','konrád','konrad',
+  'arnold','zikmund','matouš','matous','kilián','kilian','mojmír','mojmir',
+]);
+// zenska jmena na SOUHLASKU, ktera se nemeni -> NIKDY nesklonovat (i kdyby na 'muzi' seznamu)
+const FEMALE_NAMES = new Set<string>([
+  'ester','dagmar','miriam','karin','karyn','nikol','ingrid','rút','rut','judit','edit','ráchel','rachel',
+  'dolores','doris','agnes','mercedes','karmen','carmen','sarah','deborah','abigail','gwen','lilian','vivien',
+  'kristin','kristýn','katrin','madlen','jennifer','žaneta',
+]);
 const VOK_VOWELS = 'aeiouyáéěíóúůý';
+const isMaleName = (low: string) => (low in VOK_EXC) || MALE_NAMES.has(low);
 function vokativ(fn: string, seg: Seg): string {
   if (!fn) return fn;
   const low = fn.toLowerCase();
-  if (low in VOK_EXC) return VOK_EXC[low];
   const last = low.slice(-1);
-  if (last === 'a') return fn.slice(0, -1) + 'o';                        // Jana->Jano, Ota->Oto (oba rody)
+  if (last === 'a') return fn.slice(0, -1) + 'o';                        // Jana->Jano, Honza->Honzo (oba rody)
   if (VOK_VOWELS.includes(last)) return fn;                              // Lucie, Marie, Ivo, Jiri
-  if (seg !== 'muzi') return fn;                                         // souhlaska + nejiste pohlavi -> nechat
+  if (FEMALE_NAMES.has(low)) return fn;                                  // pojistka: zenske jmeno na souhlasku
+  if (seg !== 'muzi' && !isMaleName(low)) return fn;                     // souhlaska + neznamo/zena -> nechat
+  if (low in VOK_EXC) return VOK_EXC[low];
   if (low.endsWith('ek')) return fn.slice(0, -2) + 'ku';                 // Marek->Marku, Radek->Radku
   if (low.endsWith('ch') || 'kgh'.includes(last)) return fn + 'u';       // Vojtech->Vojtechu, Patrik->Patriku
-  if ('szxj'.includes(last) || 'šžč'.includes(last)) return fn + 'i';    // Tomas->Tomasi, Ondrej->Ondreji, Max->Maxi
+  if ('szxj'.includes(last) || 'šžčř'.includes(last)) return fn + 'i';   // Tomas->Tomasi, Ondrej->Ondreji, Řehoř->Řehoři
   if (low.endsWith('el')) return fn + 'i';                               // Daniel->Danieli, Marcel->Marceli
   if (last === 'r') {
     return VOK_VOWELS.includes(low.slice(-2, -1)) ? fn + 'e' : fn.slice(0, -1) + 'ře';  // Otakar->Otakare, Petr->Petře
