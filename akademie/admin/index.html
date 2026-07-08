@@ -138,6 +138,12 @@
         <div id="queueBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+      <div class="traf" id="cmsg" style="display:none;">
+        <h3>📨 Formuláře z webu</h3>
+        <div class="sub" id="cmsgSub">Poptávky z kontaktního formuláře — relevantní vs. potenciální spam</div>
+        <div id="cmsgBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
       <div class="traf" id="chk" style="display:none;">
         <h3>🏋️ Check-iny klientů</h3>
         <div class="sub" id="chkSub">Týdenní check-iny, trend váhy a pasu, věrnostní kredit</div>
@@ -291,7 +297,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadCheckins(); loadReferrals();
+        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadCheckins(); loadReferrals();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -414,6 +420,50 @@
         var qn=$('qNext'); if(qn) qn.addEventListener('click',function(){ if(QS.offset+QS.limit<QS.total){ QS.offset+=QS.limit; loadQueue(); } });
         $('queue').style.display='';
       }).catch(function(){ var qt2=$('qTable'); if(qt2) qt2.innerHTML='<p class="muted">Chyba spojení — zkus obnovit.</p>'; });
+    }
+
+    // 📨 Formuláře z webu — kontaktní poptávky (relevantní vs potenciální spam)
+    function loadContactMsgs(){
+      api({action:'contact_messages'}).then(function(o){
+        if(!o.j||!o.j.ok){ $('cmsg').style.display='none'; return; }
+        var rel=o.j.relevant||[], spam=o.j.spam||[];
+        $('cmsgSub').textContent='Relevantní: '+rel.length+' · potenciální spam: '+spam.length;
+        if(!rel.length&&!spam.length){
+          $('cmsgBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné formuláře. Jakmile někdo napíše přes kontaktní formulář na webu, objeví se to tady — rozdělené na relevantní poptávky a potenciální spam.</p>';
+          $('cmsg').style.display=''; return;
+        }
+        var msgCell=function(m){ return '<div style="max-width:440px;white-space:pre-wrap;word-break:break-word;">'+esc(m||'')+'</div>'; };
+        var replyBtn=function(email){ return '<a href="mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent('Re: Tvoje zpráva z webu')+'" style="display:inline-block;cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#ece4d9;border-radius:8px;padding:4px 9px;font-size:.8rem;text-decoration:none;white-space:nowrap;">✉️ Odpovědět</a>'; };
+        var html='';
+        html+='<h4 style="margin:.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Relevantní poptávky ('+rel.length+')</h4>';
+        if(!rel.length){ html+='<p class="muted" style="padding:.2rem 0 .6rem;">Žádné relevantní poptávky.</p>'; }
+        else{
+          html+='<div style="overflow-x:auto;"><table><thead><tr><th>Datum</th><th>Jméno</th><th>E-mail</th><th>Zpráva</th><th></th></tr></thead><tbody>'
+            +rel.map(function(r){
+              return '<tr><td class="muted" style="white-space:nowrap;">'+fmtDate(r.created_at)+'</td>'
+                +'<td>'+esc(r.name)+'</td>'
+                +'<td><a href="mailto:'+encodeURIComponent(r.email)+'" style="color:#ff9d3c;">'+esc(r.email)+'</a></td>'
+                +'<td>'+msgCell(r.message)+'</td>'
+                +'<td style="white-space:nowrap;">'+replyBtn(r.email)+'</td></tr>';
+            }).join('')
+            +'</tbody></table></div>';
+        }
+        if(spam.length){
+          html+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Potenciální spam ('+spam.length+')</h4>'
+            +'<p class="muted" style="margin:0 0 .3rem;font-size:.78rem;">Tyhle formuláře systém zablokoval (nedošly ti mailem). Zkontroluj, jestli mezi nimi náhodou není skutečná poptávka — pokud ano, odpověz ručně.</p>'
+            +'<div style="overflow-x:auto;"><table><thead><tr><th>Datum</th><th>Jméno</th><th>E-mail</th><th>Zpráva</th><th>Důvod</th><th></th></tr></thead><tbody>'
+            +spam.map(function(r){
+              return '<tr style="opacity:.72;"><td class="muted" style="white-space:nowrap;">'+fmtDate(r.created_at)+'</td>'
+                +'<td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td>'
+                +'<td>'+msgCell(r.message)+'</td>'
+                +'<td class="muted" style="font-size:.78rem;white-space:nowrap;">'+esc(r.spam_reason)+'</td>'
+                +'<td style="white-space:nowrap;">'+(r.email?replyBtn(r.email):'')+'</td></tr>';
+            }).join('')
+            +'</tbody></table></div>';
+        }
+        $('cmsgBody').innerHTML=html;
+        $('cmsg').style.display='';
+      }).catch(function(){ $('cmsg').style.display='none'; });
     }
 
     // 🏋️ Check-iny klientů přímo v adminu (trend váhy/pasu + kredit)

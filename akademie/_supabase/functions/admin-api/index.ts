@@ -756,6 +756,24 @@ Deno.serve(async (req) => {
       return json({ ok: true, vk_total: VK_TOTAL, ac_total: AC_TOTAL, rows });
     }
 
+    if (action === "contact_messages") {
+      // Historické webové formuláře rozdělené na relevantní vs potenciální spam.
+      const limit = Math.min(Number(body.limit) || 300, 1000);
+      const { data, error } = await admin
+        .from("contact_messages")
+        .select("id,name,email,message,spam,spam_reason,origin,created_at")
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) return json({ error: error.message }, 500);
+      const rows = (data ?? []) as Record<string, unknown>[];
+      return json({
+        ok: true,
+        relevant: rows.filter((r) => !r.spam),
+        spam: rows.filter((r) => r.spam),
+        total: rows.length,
+      });
+    }
+
     return json({ error: "unknown_action" }, 400);
   } catch (e) {
     return json({ error: "server", detail: String(e).slice(0, 300) }, 500);
