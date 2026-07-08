@@ -145,7 +145,7 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === 'bullets')
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(fill(b.text, seg, v))}</a></p>`;
+    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' class='mbbtn' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
 function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): string {
@@ -156,7 +156,10 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'></head>` +
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>` +
+    `<meta name='color-scheme' content='light'><meta name='supported-color-schemes' content='light'>` +
+    `<style>:root{color-scheme:light;supported-color-schemes:light}` +
+    `.mbbtn,.mbbtn[data-ogsb],.mbbtn[data-ogsc]{background:#ff7a00!important;color:#161616!important}</style></head>` +
     `<body style='margin:0;background:#f4f4f5;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${esc(preheader)}</span>` +
     `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px;margin:0 auto;background:#fff;border-radius:14px;padding:28px'>` +
