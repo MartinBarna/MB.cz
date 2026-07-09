@@ -13,7 +13,7 @@
   .auth{max-width:440px;margin:0 auto;padding:44px 22px 80px;}
   .ahero{text-align:center;margin-bottom:26px;}
   .ahero .mark{width:62px;height:62px;border-radius:18px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;
-    font-weight:800;font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 14px 34px -6px rgba(255,122,0,.55);}
+    font-weight:800;font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 14px 34px -6px rgba(235,177,44,.55);}
   .ahero h1{font-size:1.7rem;color:#fff;letter-spacing:-.02em;}
   .ahero p{color:var(--muted);font-size:.95rem;margin-top:.4rem;}
   .acard{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);
@@ -21,21 +21,21 @@
   .tabs{display:flex;gap:5px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:14px;padding:5px;margin-bottom:20px;}
   .tabs button{flex:1;border:none;background:transparent;padding:11px;border-radius:10px;font-weight:700;cursor:pointer;color:var(--muted);
     font-family:inherit;font-size:.92rem;transition:.2s;}
-  .tabs button.on{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;box-shadow:0 8px 18px -6px rgba(255,122,0,.5);}
+  .tabs button.on{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;box-shadow:0 8px 18px -6px rgba(235,177,44,.5);}
   label{display:block;font-size:.82rem;font-weight:600;color:var(--muted-2);margin:14px 0 6px;}
   input{width:100%;padding:13px 15px;border:1px solid var(--line-2);border-radius:12px;font-family:inherit;font-size:.96rem;
     background:rgba(0,0,0,.25);color:var(--ink);transition:.2s;}
   input::placeholder{color:#6f665d;}
-  input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,122,0,.15);background:rgba(0,0,0,.35);}
+  input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(235,177,44,.15);background:rgba(0,0,0,.35);}
   .btn{width:100%;margin-top:20px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;
     padding:14px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;font-size:1rem;
-    box-shadow:0 14px 30px -8px rgba(255,122,0,.55);transition:transform .2s,box-shadow .2s;}
-  .btn:hover{transform:translateY(-2px);box-shadow:0 18px 38px -8px rgba(255,122,0,.7);}
+    box-shadow:0 14px 30px -8px rgba(235,177,44,.55);transition:transform .2s,box-shadow .2s;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 18px 38px -8px rgba(235,177,44,.7);}
   .btn[disabled]{opacity:.55;cursor:default;transform:none;}
   .msg{margin-top:15px;padding:12px 15px;border-radius:12px;font-size:.9rem;display:none;}
   .msg.err{display:block;background:rgba(179,38,30,.15);color:#ff9c93;border:1px solid rgba(179,38,30,.4);}
   .msg.ok{display:block;background:rgba(30,122,50,.15);color:#86e29a;border:1px solid rgba(30,122,50,.4);}
-  .note{display:block;background:rgba(255,122,0,.08);color:var(--gold-soft);border:1px solid rgba(255,122,0,.25);
+  .note{display:block;background:rgba(235,177,44,.08);color:var(--gold-soft);border:1px solid rgba(235,177,44,.25);
     margin-bottom:18px;padding:12px 15px;border-radius:12px;font-size:.88rem;}
   .note a{color:#fff;font-weight:700;}
   .afoot{text-align:center;color:var(--muted);font-size:.84rem;margin-top:22px;}
@@ -46,7 +46,7 @@
   .buy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   @media(max-width:440px){.buy-grid{grid-template-columns:1fr;}}
   .buy-card{display:block;padding:17px 14px;border-radius:15px;background:rgba(255,255,255,.03);border:1px solid var(--line);text-align:center;transition:transform .2s,border-color .2s,background .2s;}
-  .buy-card:hover{border-color:rgba(255,122,0,.4);transform:translateY(-3px);background:rgba(255,122,0,.05);}
+  .buy-card:hover{border-color:rgba(235,177,44,.4);transform:translateY(-3px);background:rgba(235,177,44,.05);}
   .buy-card .bi{font-size:1.6rem;}
   .buy-card b{display:block;color:#fff;margin-top:7px;font-size:.95rem;}
   .buy-card .d{color:var(--muted);font-size:.78rem;}
@@ -90,7 +90,7 @@
         <div class="msg" id="msg"></div>
         <p id="otpHint" style="font-size:.82rem;color:#9a948c;margin:.6rem 0 0;text-align:center;line-height:1.45;">Hlásíš se poprvé po koupi? Dej <strong>„Vytvořit účet"</strong> a použij stejný e-mail jako u platby.</p>
       </form>
-      <a href="/akademie/navod/" style="display:block;text-align:center;margin:14px 0 0;font-size:.86rem;color:#ffb061;text-decoration:none;font-weight:600;">📖 Nevíš si rady? Návod krok za krokem →</a>
+      <a href="/akademie/navod/" style="display:block;text-align:center;margin:14px 0 0;font-size:.86rem;color:#F6CD63;text-decoration:none;font-weight:600;">📖 Nevíš si rady? Návod krok za krokem →</a>
     </div>
 
     <div class="buy">
@@ -156,7 +156,7 @@
       if (qEmail && qEmail.indexOf('@') > 0) {
         emailEl.value = qEmail;
         var hint = document.createElement('p');
-        hint.style.cssText = 'font-size:.8rem;color:#ffb061;margin:6px 0 0;line-height:1.45;';
+        hint.style.cssText = 'font-size:.8rem;color:#F6CD63;margin:6px 0 0;line-height:1.45;';
         hint.innerHTML = '✓ Tohle je e-mail tvého přístupu k videokurzu — nech ho tak, jak je.';
         emailEl.parentNode.insertBefore(hint, emailEl.nextSibling);
       }
@@ -222,7 +222,7 @@
             window.BA.signInWithOtp(email, dest).then(function (r) {
               submit.disabled = false;
               if (r.ok) { if (window.mbTrackLead) window.mbTrackLead('registrace_magic_link', { value: 0, currency: 'CZK' }); show('ok', '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho (mrkni i do spamu) a jsi uvnitř.'); }
-              else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí — <a href="/akademie/videokurz/?preview=free" style="color:#ffb061;font-weight:700;text-decoration:underline;">pusť si 11 lekcí zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#ffb061;">martin@martinbarna.cz</a>.'; }
+              else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí — <a href="/akademie/videokurz/?preview=free" style="color:#F6CD63;font-weight:700;text-decoration:underline;">pusť si 11 lekcí zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#F6CD63;">martin@martinbarna.cz</a>.'; }
             });
           } else if (mode === 'up') {
             window.BA.signUp(email, pass, fname).then(function (r) {
