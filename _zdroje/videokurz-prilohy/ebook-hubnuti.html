@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Jak hubnout efektivně — E-book</title>
+<!-- Poppins z repa (absolutni file cesta, aby ji headless Chrome nacetl pri renderu) -->
+<link rel="stylesheet" href="file:///C:/Users/fitne/Desktop/MB.cz/assets/vendor/fonts/poppins.css">
+<style>
+/* ===== DARK + GOLD BRAND (paleta shodna s nasazenymi lead-magnety) ===== */
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; }
+.page { width: 210mm; min-height: 297mm; padding: 12mm 16mm; page-break-after: always;
+  background: radial-gradient(600px 400px at 90% -5%, rgba(235,177,44,.14), transparent 60%), linear-gradient(180deg,#15171a,#0f1113); }
+.page:last-child { page-break-after: auto; }
+
+/* Hlavicka se znackou */
+.brandrow { display:flex; align-items:center; gap:4mm; margin-bottom:5mm; }
+.mark { width:10mm; height:10mm; border-radius:2.6mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; }
+.brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.6mm; letter-spacing:.4mm; text-transform:uppercase; }
+
+/* Cover prvky */
+.cover-tag { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:.5mm; padding:2mm 5mm; border-radius:10mm; margin-bottom:4mm; }
+h1 { font-size:9mm; line-height:1.15; font-weight:800; margin:0 0 2.5mm; color:#fff; } h1 .hl { color:#EBB12C; }
+.sub { font-size:3.6mm; color:#cabfb1; line-height:1.5; margin:0 0 5mm; }
+.cover-meta { font-size:3mm; color:#8f8779; letter-spacing:.3mm; margin-top:3mm; }
+
+/* Obsahovy box */
+.box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.box h2 { font-size:4.8mm; font-weight:800; color:#fff; margin:0 0 3mm; }
+.box p, .box li { font-size:3.4mm; color:#d9dde2; line-height:1.5; } .box b { color:#F6CD63; }
+.box p { margin:0 0 2.5mm; } .box p:last-child { margin-bottom:0; }
+.box ul { list-style:none; margin:2mm 0 0; padding:0; } .box ul li { margin-bottom:2mm; padding-left:4.5mm; position:relative; }
+.box ul li:before { content:"•"; color:#EBB12C; position:absolute; left:0; font-weight:800; } .box ul li:last-child { margin-bottom:0; }
+h2.section { font-size:5.4mm; color:#fff; font-weight:800; margin:0 0 3.5mm; padding-left:3mm; border-left:1.4mm solid #EBB12C; }
+.kicker { font-size:2.8mm; color:#F6CD63; font-weight:700; letter-spacing:1.2mm; text-transform:uppercase; margin:0 0 1.5mm; padding-left:3mm; }
+.note { font-size:2.9mm; color:#8f8779; line-height:1.45; margin:0 0 3mm; }
+a { color:#EBB12C; text-decoration:none; }
+.study-title { font-size:3.7mm; color:#fff; font-weight:800; margin:0 0 2mm; }
+.study-title sup { color:#EBB12C; font-size:2.6mm; }
+
+/* Tabulka jidlo -> hodnota */
+.kvgroup { margin-bottom:3.5mm; } .kvgroup h3 { font-size:3.5mm; color:#F6CD63; font-weight:700; margin:0 0 1.5mm; }
+table.kv { width:100%; border-collapse:collapse; }
+table.kv td { font-size:3.3mm; color:#d9dde2; padding:1.6mm 0; border-top:1px solid rgba(255,255,255,.07); }
+table.kv tr:first-child td { border-top:none; }
+table.kv td.val { text-align:right; color:#EBB12C; font-weight:700; white-space:nowrap; }
+
+/* Mrizka polozek */
+.chips { display:flex; flex-wrap:wrap; gap:2mm; margin:2mm 0 0; }
+.chips span { background:rgba(235,177,44,.12); color:#f0eadf; border:1px solid rgba(235,177,44,.25); border-radius:8mm; padding:1.4mm 4mm; font-size:3mm; }
+
+/* Vzorec / vypocet */
+.formula { background:linear-gradient(135deg,rgba(235,177,44,.14),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.3); border-radius:4mm; padding:4mm 5mm; margin-bottom:4mm; }
+.formula .eq { font-size:4mm; color:#fff; font-weight:800; line-height:1.4; } .formula .ex { font-size:3.1mm; color:#cabfb1; margin-top:1.5mm; }
+
+/* Term + definice (EAT/TEF/NEAT/BMR) */
+.deflist { margin:0; }
+.def { border-top:1px solid rgba(255,255,255,.08); padding:2.6mm 0; }
+.def:first-child { border-top:none; padding-top:0; }
+.def .t { font-size:3.5mm; color:#EBB12C; font-weight:800; }
+.def .t small { color:#F6CD63; font-weight:600; font-size:2.9mm; }
+.def .d { font-size:3.3mm; color:#d9dde2; line-height:1.5; margin:1mm 0 0; }
+
+/* Mytus / realita */
+.myth { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4mm 5mm; margin-bottom:3.5mm; }
+.myth .m { font-size:3.5mm; color:#fff; font-weight:800; margin:0 0 2mm; }
+.myth .m span { color:#F6CD63; font-size:2.7mm; font-weight:700; letter-spacing:.6mm; display:block; text-transform:uppercase; margin-bottom:1mm; }
+.myth .r { font-size:3.3mm; color:#d9dde2; line-height:1.5; margin:0; }
+.myth .r span { color:#EBB12C; font-weight:700; font-size:2.7mm; letter-spacing:.6mm; display:block; text-transform:uppercase; margin-bottom:1mm; }
+
+/* Patka */
+.cta { margin-top:5mm; background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.06)); border:1px solid rgba(235,177,44,.35); border-radius:5mm; padding:6mm 8mm; }
+.cta h3 { margin:0 0 2.5mm; font-size:5mm; color:#fff; font-weight:800; } .cta p { margin:0 0 2mm; font-size:3.5mm; color:#d9dde2; line-height:1.5; } .cta p:last-child { margin-bottom:0; }
+.foot { margin-top:6mm; padding-top:3mm; border-top:1px solid rgba(255,255,255,.09); display:flex; justify-content:space-between; font-size:3mm; color:#8f8779; } .foot b { color:#EBB12C; }
+</style>
+</head>
+<body>
+
+<!-- ============ STRANA 1 · COVER ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <span class="cover-tag">PŘÍLOHA VIDEOKURZU</span>
+  <p class="kicker" style="padding-left:0">E-book · videokurz výživy</p>
+  <h1>Jak hubnout <span class="hl">efektivně</span></h1>
+  <p class="sub">Nauč se žít zdravěji — bez jojo efektu, bez hladu a jednou provždy.</p>
+  <p class="cover-meta">Bonusový materiál k videokurzu<br>martinbarna.cz · flexibilní stravování krok za krokem</p>
+</div>
+
+<!-- ============ STRANA 2 · ÚVOD + OBSAH ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">Úvod</h2>
+  <div class="box">
+    <p>Ahoj! Vítej — moc si vážím, že jsi do mě vložil(a) svou důvěru.</p>
+    <p>Dovol mi, abych se představil. Jmenuji se Martin Barna a starám se o jídlo, stravu, výživu, kalorie a všechna ta na první pohled děsivá slova. Na tréninku ve fitku se můžeme potkat taky, pokud jsi z Ostravy.</p>
+    <p>Zřejmě tohle čteš, protože toužíš po změně. Ať už chceš nabrat svaly, shodit přebytečná kila, nebo se prostě jen dozvědět o svém těle něco víc a přijít na chuť zdravému životnímu stylu. Ať už je tvá motivace jakákoliv, jsi na správném místě.</p>
+    <p>Jsi na místě, kde se nehraje na jídelníčky. Jdeme za trvalou změnou a jojo efekt necháme za dveřmi. Nebudeš mít hlad a budeš moct jíst, co ti chutná.</p>
+    <p>Ano, úspěchy nepřicházejí zadarmo. Čeká tě zkouška vůle a taky spousta dřiny. Ale pokud to vydržíš, dostaneš výsledek, který může vydržet po zbytek života. Tak neztrácejme čas. 🙂 — Martin</p>
+  </div>
+  <div class="box">
+    <h2>Co tě v e-booku čeká</h2>
+    <ul>
+      <li>1. První kroky</li>
+      <li>2. Flexibilní stravování</li>
+      <li>3. Váha × míry</li>
+      <li>4. Proč cvičit</li>
+      <li>5. Jojo efekt</li>
+      <li>6. Makroživiny</li>
+      <li>7. Bílkoviny &amp; 3 studie</li>
+      <li>8. Vláknina</li>
+      <li>9. Co ovlivňuje tvůj výdej</li>
+      <li>10. Proč jíme sacharidy</li>
+      <li>11. Inzulín a hubnutí</li>
+      <li>12. Aerobní vs. fitness trénink</li>
+      <li>13. 4 mýty o bolesti zad</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ STRANA 3 · KAP 01 + 02 ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 01</p>
+  <h2 class="section">První kroky</h2>
+  <div class="box">
+    <p>Ještě jednou vítej. Začíná první týden naší cesty. Bývá u mě zvykem, že klienti nejen něco dělají, ale hlavně vědí, proč to dělají.</p>
+    <p>Toto je tvá příručka, ke které se můžeš kdykoliv vrátit. Nemusíš si ji pamatovat zpaměti, nikdo tě nebude zkoušet. Jen pamatuj na priority, které společně nastavíme — a když tě přepadne pocit, že něčemu nerozumíš, ozvi se a zeptej se mě.</p>
+    <p>Můžeš se řídit pouze podle čísel, ale právě pochopení kontextu a souvislostí ti cestu s efektivním a flexibilním stravováním usnadní. Připraven(a)? Jdeme na to.</p>
+  </div>
+
+  <p class="kicker">Kapitola 02</p>
+  <h2 class="section">Všeobecné informace o flexibilním stravování</h2>
+  <div class="box">
+    <p>Z počátku použiju vzorec, abych vypočítal, jak se tvé tělo chová, a udělal si obrázek o tom, jakou stravu ti můžeme nastavit. Jednou týdně si z dat, která o sobě sbíráš, vytvoř report za minulý týden. Budou v něm:</p>
+    <ul>
+      <li>Míry · váha · jak proběhl trénink v uplynulém týdnu · jaký trénink plánuješ pro tento týden.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <p>Ideální je stanovit si standard aktivit, který budeš dodržovat pravidelně — to funguje vždy nejlépe. Budeš si poctivě zapisovat svůj příjem a podle toho, jak na něj tvé tělo zareaguje, s ním budeš pracovat. Pochopíš, co bys měl(a) v jídelníčku upravit tak, aby ti jídlo chutnalo a zároveň abys do sebe dostával(a) ty správné látky.</p>
+    <p>Vždy se budeme snažit nastavit jídelníček tak, abys mohl(a) jíst to, co máš rád(a) — neděláš to za trest. Samozřejmě musí být vše v rozumných mantinelech; principy se vztahují na všechny stejně. Začneme spíš na větším množství jídla, které budeme raději postupně ubírat (nebo i přidávat), než abychom začínali na málu.</p>
+    <p>Tvé tělo reguluje metabolické procesy i takzvanou svalovou proteinovou syntézu — proces, který ti regeneruje svaly po cvičení. Ten stojí dost energie a řídí se podle příjmu bílkovin i energie. Neexistuje černá a bílá, vše je o vyvážení. Proto je výhodné cvičit ve fitku: spálíš energii nejen cvičením, ale tělo svaly regeneruje i další dva dny — a to stojí další energii. A bílkoviny! Ty budeme povinně jíst v každém jídle. 🙂</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 4 · KAP 03 ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 03</p>
+  <h2 class="section">Váha × míry</h2>
+  <div class="box">
+    <p>Jedno upozornění předem: váha v kg bude kolísat — a bude to tak vždy. Ať se to tobě, mně nebo porotě u soudu líbí, nebo ne. Víš proč?</p>
+    <p>Způsobuje to přirozená fluktuace tekutin a spousta dalších faktorů. Když se najíš, tělo ukládá energii do tuků, do svalů a do jater jako takzvaný glykogen (sacharid) pro přímou spotřebu během dne a při cvičení. A 1 g glykogenu se ukládá se 3 g vody.</p>
+    <p>Základní příručka sportovní výživy praví, že „průměrný člověk" (každý jsme přitom unikátní) má cca 350 g glykogenu ve svalech a 100 g v játrech. Spočítej si, kolik ti to může dělat i s tou vodou. Váhu navíc ovlivňuje, jak moc jsi najezený(á) a kdy jsi naposled cvičil(a) — záleží na vyčerpanosti nebo načerpanosti zásob a na desítkách dalších procesů.</p>
+    <p><b>Lpění na váze je cesta do pekel, ne cesta k cíli.</b> Sleduj raději míry — pokud nepodvádíš, jsou podstatně spolehlivější.</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 5 · KAP 04 ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 04</p>
+  <h2 class="section">Proč cvičit ve fitku</h2>
+  <div class="box">
+    <p>Pokud chceš vizuálně změnit svou tělesnou kompozici — hubnout, zpevňovat nebo nabírat opravdu efektivně — silový trénink ve fitku vždy vítězí jako nejlepší varianta. Spálíš energii samotným cvičením a dalších 24–48 hodin spaluješ energii regenerací svalů.</p>
+    <p>Tělo je stroj na přežití. Dáš mu pořádný kartáč a ono si řekne: „Musíme svaly zesílit, protože až přijde nálož znova, musíme to zmáknout." A stavba svalů je jako stavění domu: <b>bílkoviny jsou cihly</b>, sacharidy, tuky a kalorie jsou dělníci, kteří stavbu posouvají dál.</p>
+    <p>Zajímalo tě někdy, proč můžou muži často sníst víc než ženy a nepřiberou tuk? Často mají více (či silnějších) svalů. Kluk s 90 kg svalů a holka s 50 kg můžou absolvovat stejný trénink, ale on spálí vždy víc. Čím větší svaly máš, tím více energie tělo spotřebuje i na jejich regeneraci — proto můžeš hubnout na větším množství jídla.</p>
+    <p>Pozor: jakmile přestaneš cvičit a tělo nedostává signál, že je třeba sílu udržovat, svalové adaptace se začnou ztrácet. Proto je výhodné cvičit pravidelně. Aktivity hrají při jakékoliv transformaci zásadní roli — právě ony nejvíc ovlivňují, kolik energie můžeš přijmout. Zákony termodynamiky neošálíme.</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 6 · KAP 05 + 06 ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 05</p>
+  <h2 class="section">Jojo efekt</h2>
+  <div class="box">
+    <p>Tušíš, o co jde. Klient přijde za trenérem: „Napište mi jídelníček." Trenér vypočítá kcal a makroživiny, naháže potraviny na papír a klient podle toho jede pár týdnů či měsíců. Po čase to přirozeně vzdá — vůle není nekonečná a nikdo nedokáže jíst stále to stejné jídlo dokola. Klient navíc nemá tušení, jak fungují makroživiny a kalorie, takže je odkázaný na konkrétní potraviny a předsudky o nich.</p>
+    <p>Jídelníček bývá energeticky podhodnocený, což je krátkodobé řešení. Klient zhubne třeba 10 kg, pak s dietou skončí a začne jíst cokoliv — vždyť „dieta skončila". Nemá ale tušení, co potraviny znamenají pro jeho metabolismus, a během diety navíc proběhly metabolické adaptace. A najednou má víc kg, než když začal.</p>
+    <p><b>Studie praví, že 90–95 % diet do 1–3 let selže.</b> Pokud chceš být dlouhodobě štíhlý(á), musíš na sobě dlouhodobě pracovat. Nedokážeš si představit, že tak budeš fungovat měsíc? Půl roku? Dva roky? Pak nemá cenu ani začínat.</p>
+  </div>
+
+  <p class="kicker">Kapitola 06</p>
+  <h2 class="section">Makroživiny</h2>
+  <div class="box">
+    <p>Vždy platí jasný vztah mezi kaloriemi a makroživinami (bílkoviny, sacharidy, tuky):</p>
+    <table class="kv">
+      <tr><td>1 g bílkovin</td><td class="val">4 kcal</td></tr>
+      <tr><td>1 g sacharidů</td><td class="val">4 kcal</td></tr>
+      <tr><td>1 g tuků</td><td class="val">9 kcal</td></tr>
+    </table>
+    <p class="note" style="margin-top:2.5mm">· vláknina je také sacharid (4 kcal/g), ale tak komplexní, že ji tělo úplně nestráví</p>
+    <p>Zpočátku si můžeme dovolit počítat přednostně kalorie, bílkoviny a vlákninu — každý gram sacharidů má vždy 4 kcal a každý gram tuků 9 kcal. Tuky jsou energeticky nejhustší, proto v nich tělo ukládá většinu energie: jsou váhově lehké a navíc se starají o termoregulaci.</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 7 · KAP 07 BÍLKOVINY (STUDIE) ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 07</p>
+  <h2 class="section">Bílkoviny</h2>
+  <div class="box">
+    <p>A teď se pojďme podívat na jednotlivé složky stravy — právě ty jsou základem naší práce. Přiblížím ti je na základě studií a znalostí, které jsem dával dohromady během celé kariéry.</p>
+  </div>
+  <div class="box">
+    <p class="study-title">Bílkoviny a udržení úbytku (12 měsíců) <sup>1</sup></p>
+    <p>Dvě skupiny obézních lidí, stejný kalorický příjem i příjem tuků. Jedna má více sacharidů a méně bílkovin, druhá naopak. Po čtyřech měsících zhubli všichni dle plánu — ale později skupina s vyšším příjmem bílkovin udržela větší procento úbytku. Zhruba dvakrát více lidí z bílkovinové skupiny dosahovalo plánovaného tempa úbytku i po 12 měsících.</p>
+  </div>
+  <div class="box">
+    <p class="study-title">Bílkoviny, cvičení a svalová hmota <sup>2</sup></p>
+    <p>Tři skupiny při dietě: necvičící, sportující (bez fitka) a cvičící ve fitku. U necvičících tvořil úbytek svalů 25 % celkového úbytku, u sportujících 12–13 %, a skupina cvičící ve fitku udržela veškeré svalstvo. To je pro tělo nejvýhodnější — vyšší výdej energie a víc jídla míří do svalů místo do tuků.</p>
+  </div>
+  <div class="box">
+    <p class="study-title">Vyšší vs. nižší příjem bílkovin v deficitu <sup>3</sup></p>
+    <p>Dvě skupiny, obě s deficitem 40 % a obě cvičící ve fitku. První jedla ~2 g bílkovin na 1 kg hmotnosti, druhá ~1 g/kg. První udržela veškerou svalovou hmotu a ještě dokázala vybudovat svaly nové — i s deficitem.</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 8 · BÍLKOVINY BONUS + KAP 08 VLÁKNINA ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 07 · pokračování</p>
+  <h2 class="section">Bílkoviny v praxi</h2>
+  <div class="box">
+    <p>Bonus: trávení bílkovin stojí tělo více energie a navíc stimuluje regeneraci svalů. Proto:</p>
+    <p>① Dbej na dostatek bílkovin za den — po kaloriích je to (spolu s vlákninou) nejdůležitější údaj.</p>
+    <p>② Miř na 30–40 g bílkovin v každém jídle, ideálně 3–4 jídla denně.</p>
+  </div>
+  <div class="formula">
+    <div class="eq">tělesná váha bez tuků × 2 ÷ počet jídel</div>
+    <div class="ex">= tvá ideální porce bílkovin na jídlo</div>
+  </div>
+  <div class="box">
+    <p>V příloze k e-booku máš i seznam doporučených potravin — podívej se, které obsahují hodně bílkovin a v jakém množství, a přemýšlej nad jídelníčkem už u nákupu.</p>
+  </div>
+
+  <p class="kicker">Kapitola 08</p>
+  <h2 class="section">Vláknina</h2>
+  <div class="box">
+    <p>Největší výhoda vlákniny? Zasytí tě. Ve střevech nasaje vodu, nabude a dává pocit plnosti. Je také prebiotikem — výživou pro tvé střevní prostředí, které tráví jídlo a podílí se na 80–85 % tvé imunity.</p>
+    <p>Vláknina čistí střeva, stimuluje mikroflóru a přináší vitamíny, minerály a stopové prvky. Pomáhá odstraňovat negativní důsledky stresu (antioxidanty tu hrají velkou roli). Pečivo, těstoviny a přílohy vybírej spíše celozrnné — při výrobě celozrnné mouky zůstává slupka zrna, která obsahuje vysoké množství vlákniny. Tělo z ní získá minimum energie, ale vyživuje bakterie ve střevech.</p>
+    <p><b>Doporučuji jíst hlavně spoustu zeleniny</b> — oproti ovoci má minimum energie, ale spoustu vlákniny. Když dostáváš veškerou vlákninu, kterou potřebuješ, zůstává minimum prostoru na cukry a prázdná jídla.</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 9 · KAP 09 VÝDEJ ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 09</p>
+  <h2 class="section">Co ovlivňuje můj denní výdej energie?</h2>
+  <div class="box">
+    <p>Cvičení je výhodné, protože ve fitku spálíš spoustu energie a pak ještě dny poté. Není to ale jen o něm — záleží i na stavu metabolismu, který řídí hormony, a ty ovlivňuje stres, nemoci i dlouhodobá historie tvého stravování. Tvůj denní výdej se skládá ze čtyř částí:</p>
+    <div class="deflist">
+      <div class="def">
+        <div class="t">EAT <small>— Exercise Activity Thermogenesis</small></div>
+        <p class="d">Výdej za tréninky ve fitku. Tvoří překvapivě malou část — ale pokud jíš dost bílkovin a makáš, tělo spaluje i mimo fitko a pozitivně ovlivníš BMR.</p>
+      </div>
+      <div class="def">
+        <div class="t">TEF <small>— Thermic Effect of Food</small></div>
+        <p class="d">Výdej na trávení jídla. Bílkoviny mají mnohem větší ztráty energie na trávení než sacharidy a tuky — i proto jsou „dietní".</p>
+      </div>
+      <div class="def">
+        <div class="t">NEAT <small>— Non-Exercise Activity Thermogenesis</small></div>
+        <p class="d">Výdej za aktivity mimo cvičení: schody, pěšky místo tramvaje, pes, doběhnutý autobus, práce servírky…</p>
+      </div>
+      <div class="def">
+        <div class="t">BMR <small>— Basic Metabolic Rate</small></div>
+        <p class="d">Základní metabolický výdej — energie pro samotnou funkci těla. Hodně svalů = spotřeba jako pětilitrový Mustang i na neutrál. Vyhladovělý dietář = trojválec ve Fabii.</p>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <p><b>Hubnutí je fér:</b> dáš tomu více na pohybu, získáš více na jídle i výsledcích. Nastavuj si plán na co nejvíc kcal týdně při udržení požadovaných výsledků.</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 10 · KAP 10 SACHARIDY ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 10</p>
+  <h2 class="section">Proč jíme sacharidy?</h2>
+  <div class="box">
+    <p>Zvlášť pokud holduješ fitness tréninku a chceš maximalizovat svalový objem, je výhodné tlačit do stravy co nejvíce sacharidů — nejen kvůli aktivitě samotné, ale i kvůli času kolem ní (klidně 24 hodin okolo tréninku). Sacharidy doplní cukry (glykogen) do svalů a tělo je umí skvěle využít.</p>
+    <p><b>Analogie s měnami.</b> Sacharidy jsou jako koruny — měna, na kterou jsme zvyklí a zaplatíš s ní kdekoliv (palivo při aktivitě, doplnění glykogenu). Tuky a bílkoviny jsou jako eura — musíš je nejdřív „směnit". Tou pomyslnou směnárnou je hormon glukagon. Proto má tělo pořád nějaké koruny po ruce, i když má eura na účtu.</p>
+    <p>Pokud jsi zdravý jedinec a máš hodně pohybu, je skutečně výhodné mít příjem sacharidů co nejvyšší — pomůže ti to k výkonnosti i stimulaci metabolismu. Pokud ti ale sedí spíš „low carb", nezoufej; i tak můžeš mít skvělé výsledky. Hlavní jsou kalorie, bílkoviny a vláknina.</p>
+    <p><b>Sacharidy nejsou zlo.</b> Zlo je jen neporozumění lidskému metabolismu — a pohádky některých výživových „guru". Pozor na to, odkud čerpáš informace.</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 11 · KAP 11 INZULÍN ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 11</p>
+  <h2 class="section">Inzulín, sacharidy a hubnutí</h2>
+  <div class="box">
+    <p>„On má rezistenci na inzulín, ten by neměl jíst moc sacharidů." Už jsi to slyšel(a)? Obvyklým tvrzením je, že jedinci rezistentní vůči inzulínu hubnou lépe z nízkosacharidových diet. Novější studie (financovaná organizací NuSI) ale ukázala, že ani rezistence na inzulín, ani genetické faktory z hlediska sacharidů roli nehrály — vyšší i nižší příjem sacharidů vedl k úbytku hmotnosti.</p>
+    <p>Zdá se, že poměr mezi sacharidy a tuky má pro dlouhodobé hubnutí malý význam, pokud je kalorický příjem a příjem bílkovin srovnatelný. Vysokosacharidová dieta u člověka cvičícího ve fitku tu nízkosacharidovou jasně poráží; u necvičící populace hrají sacharidy minimální roli.</p>
+    <p><b>Z praxe:</b> jedné klientce klesl krevní cukr ze 7,2 (horní hranice je 4,9) po měsíci fitka, aktivit a vysokosacharidové stravy s deficitem kcal přibližně na 6 — a po dvou měsících pod 4,9.</p>
+    <p>Dostatečně pij, doplňuj hořčík a přiměřeně sol. Ve fitku se potíš a vyplavuješ sůl i minerály, které musíš dodávat. Spousta fitness lidí žije v iluzi, že nesmí solit — není to pravda. Tělo sůl potřebuje.</p>
+    <p class="note" style="margin-bottom:0">Zdroj studie: <a href="https://ncbi.nlm.nih.gov/pubmed/28027950">ncbi.nlm.nih.gov/pubmed/28027950</a></p>
+  </div>
+</div>
+
+<!-- ============ STRANA 12 · KAP 12 AEROBNÍ VS FITNESS ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 12</p>
+  <h2 class="section">Aerobní cvičení vs. fitness trénink</h2>
+  <div class="box">
+    <p>Aerobní cvičení učí tvé tělo uběhnout dlouhé tratě za cenu co nejmenších energetických ztrát. Neučí ho ale pracovat s cukry ve svalech a zvětšovat jejich zásoby. Čím jsi trénovanější, tím tě stejná trať stojí méně energie. Hrocení tepové frekvence kvůli „spalování tuků" je zbytečné — tuky se neustále ukládají i spalují. Pokud běháš kvůli hubnutí, vyšší tempo spálí více kcal a rychleji zlepší kondici.</p>
+    <p>U fitness tréninku dostává tělo úplně jiný signál: „dostali jsme nálož, musíme zesílit." U aerobního cvičení spaluješ jen během cvičení; po fitku tělo regeneruje svaly dalších 36–48 hodin a tento proces stojí další energii — pokud máš kolem čtyř jídel denně a v každém dost bílkovin a energie.</p>
+    <p><b>Představ si zásoby jako lednici a mrazák.</b> Glykogen ve svalech je lednice — někdy nakoupíš, někdy čerpáš. Tuky jsou mrazák — zásoby na horší časy, které se ale musí teprve „rozmrazit". Proto tělo potřebuje lednici: nemůže čekat na rozmražování, aby podávalo výkon.</p>
+    <p>Vyšší spalování si tak držíš dlouhodobě díky růstu svalů a vyšší metabolické kapacitě — ne hladovou dietou a následným „zprasením" dokola. A proto můžeš při cvičení jíst spoustu jídla včetně sacharidů, aniž bys přibíral(a) tuky (samozřejmě do jistého limitu celkového spalování).</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 13 · KAP 13 4 MÝTY ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <p class="kicker">Kapitola 13</p>
+  <h2 class="section">4 mýty o bolesti zad a šíje</h2>
+  <div class="box">
+    <p>Nezaměřuji se jen na nabírání svalů, ale i na fyzioterapeutický aspekt tréninku a práci s klienty se zdravotním omezením. Bolesti zad řeší většina moderní populace — a přitom je tak snadné se jich zbavit pomocí více kroků za den a fitness tréninku.</p>
+  </div>
+  <div class="myth">
+    <p class="m"><span>Mýtus 1</span>Odpočinek je nejlepší způsob, jak léčit bolesti zad.</p>
+    <p class="r"><span>Realita</span>Krátký klid (max. 2 dny) může akutní bolest snížit. Déle riskuješ ztuhlost, atrofii a bludný kruh, kdy nečinnost zvyšuje bolest. Lékaři doporučují aktivní rehabilitaci a cvičení.</p>
+  </div>
+  <div class="myth">
+    <p class="m"><span>Mýtus 2</span>Vaše páteř je křehká a lehce zranitelná.</p>
+    <p class="r"><span>Realita</span>Okolní svaly, šlachy a vazy dávají páteři velkou pevnost a oporu. Zdravá páteř vyžaduje pohyb, posilování a aerobní cvičení — i když už bolestmi trpíš. Škodí špatná technika, kouření, nedostatek spánku a špatná výživa.</p>
+  </div>
+  <div class="myth">
+    <p class="m"><span>Mýtus 3</span>Lékař nic nenašel, takže bolest je „v mé hlavě".</p>
+    <p class="r"><span>Realita</span>Bolest je vždy reálná, i když lékař nenajde anatomickou příčinu. U chronické bolesti (déle než 2–3 měsíce) je klíčový aktivní přístup a komplexní program.</p>
+  </div>
+  <div class="myth">
+    <p class="m"><span>Mýtus 4</span>Rodič měl problémy se zády, budu to mít stejně.</p>
+    <p class="r"><span>Realita</span>Většinou nejsi obětí genetiky — lidé jen často volí podobný životní styl jako rodiče. Zaměř se na proaktivní přístup: pečuj o záda aktivním cvičením a nezapomeň chodit vzpřímeně. 🙂</p>
+  </div>
+</div>
+
+<!-- ============ STRANA 14 · FINÁLE + FOOT ============ -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">Finále</h2>
+  <div class="box">
+    <p>Dostal(a) ses až na konec — takže to se změnou myslíš vážně. Budu ti držet palce a nezapomeň, že se na mě můžeš obracet s dotazy, kdykoliv si nebudeš vědět rady.</p>
+    <p>Pokud se ti e-book zalíbil, budu jen rád, když si vyzkoušíš i plnohodnotný coaching. Klienti, co se mnou řeší stravu i trénink, mají vždy nejlepší výsledky.</p>
+    <p>Děkuji ti za pozornost a za důvěru. Přeji ti spoustu trpělivosti a pevné vůle na cestě k vysněné postavě — a doufám, že se naše cesty ještě protnou. Dveře u nás máš vždy otevřené.</p>
+  </div>
+  <div class="cta">
+    <h3>www.martinbarna.cz · MARTIN BARNA</h3>
+    <p>Máš dotaz nebo si nevíš rady? Ozvi se mi — dveře u nás máš vždy otevřené.</p>
+  </div>
+  <div class="foot">
+    <span>© Barna Academy — Martin Barna · martinbarna.cz</span>
+    <span><b>Bonusový materiál k videokurzu výživy</b></span>
+  </div>
+</div>
+
+</body>
+</html>

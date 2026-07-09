@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>NAZEV DOKUMENTU</title>
+<!-- Poppins z repa (absolutni file cesta, aby ji headless Chrome nacetl pri renderu) -->
+<link rel="stylesheet" href="file:///C:/Users/fitne/Desktop/MB.cz/assets/vendor/fonts/poppins.css">
+<style>
+/* ===== DARK + GOLD BRAND (paleta shodna s nasazenymi lead-magnety) ===== */
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; }
+.page { width: 210mm; min-height: 297mm; padding: 12mm 16mm; page-break-after: always;
+  background: radial-gradient(600px 400px at 90% -5%, rgba(235,177,44,.14), transparent 60%), linear-gradient(180deg,#15171a,#0f1113); }
+.page:last-child { page-break-after: auto; }
+
+/* Hlavicka se znackou */
+.brandrow { display:flex; align-items:center; gap:4mm; margin-bottom:5mm; }
+.mark { width:10mm; height:10mm; border-radius:2.6mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; }
+.brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.6mm; letter-spacing:.4mm; text-transform:uppercase; }
+
+/* Cover prvky */
+.cover-tag { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:.5mm; padding:2mm 5mm; border-radius:10mm; margin-bottom:4mm; }
+h1 { font-size:9mm; line-height:1.15; font-weight:800; margin:0 0 2.5mm; color:#fff; } h1 .hl { color:#EBB12C; }
+.sub { font-size:3.6mm; color:#cabfb1; line-height:1.5; margin:0 0 5mm; }
+
+/* Obsahovy box */
+.box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.box h2 { font-size:4.8mm; font-weight:800; color:#fff; margin:0 0 3mm; }
+.box p, .box li { font-size:3.4mm; color:#d9dde2; line-height:1.5; } .box b { color:#F6CD63; }
+.box p { margin:0 0 2.5mm; } .box p:last-child { margin-bottom:0; }
+.box ul { list-style:none; margin:2mm 0 0; padding:0; } .box ul li { margin-bottom:2mm; padding-left:4.5mm; position:relative; }
+.box ul li:before { content:"•"; color:#EBB12C; position:absolute; left:0; font-weight:800; } .box ul li:last-child { margin-bottom:0; }
+h2.section { font-size:5.4mm; color:#fff; font-weight:800; margin:0 0 3.5mm; padding-left:3mm; border-left:1.4mm solid #EBB12C; }
+.note { font-size:2.9mm; color:#8f8779; line-height:1.45; margin:0 0 3mm; }
+a { color:#EBB12C; text-decoration:none; }
+
+/* Tabulka jidlo -> hodnota (napr. bilkoviny na 100 g) */
+.kvgroup { margin-bottom:3.5mm; } .kvgroup h3 { font-size:3.5mm; color:#F6CD63; font-weight:700; margin:0 0 1.5mm; }
+table.kv { width:100%; border-collapse:collapse; }
+table.kv td { font-size:3.1mm; color:#d9dde2; padding:1.2mm 0; border-top:1px solid rgba(255,255,255,.07); }
+table.kv tr:first-child td { border-top:none; }
+table.kv td.val { text-align:right; color:#EBB12C; font-weight:700; white-space:nowrap; }
+
+/* Mrizka polozek (napr. seznamy potravin) */
+.chips { display:flex; flex-wrap:wrap; gap:2mm; margin:2mm 0 0; }
+.chips span { background:rgba(235,177,44,.12); color:#f0eadf; border:1px solid rgba(235,177,44,.25); border-radius:8mm; padding:1.4mm 4mm; font-size:3mm; }
+
+/* Vzorec / vypocet */
+.formula { background:linear-gradient(135deg,rgba(235,177,44,.14),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.3); border-radius:4mm; padding:4mm 5mm; margin-bottom:4mm; }
+.formula .eq { font-size:4.2mm; color:#fff; font-weight:800; } .formula .ex { font-size:3.1mm; color:#cabfb1; margin-top:1.5mm; }
+
+/* Porovnani (infografika 2 sloupce) */
+.compare { display:flex; gap:4mm; margin-bottom:4mm; }
+.compare .col { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:4mm; padding:4mm; text-align:center; }
+.compare .col.bad { border-color:rgba(235,177,44,.4); }
+.compare .big { font-size:7mm; font-weight:800; color:#EBB12C; margin:1mm 0; }
+.compare .lbl { font-size:3.2mm; color:#cabfb1; }
+
+/* CTA / kontaktni patka (u priloh kurzu = kontakt, ne prodej) */
+.cta { margin-top:5mm; background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.06)); border:1px solid rgba(235,177,44,.35); border-radius:5mm; padding:6mm 8mm; }
+.cta h3 { margin:0 0 2.5mm; font-size:5mm; color:#fff; font-weight:800; } .cta p { margin:0 0 4mm; font-size:3.5mm; color:#d9dde2; line-height:1.5; }
+.cta .btn { display:inline-block; background:#EBB12C; color:#1A1222; font-weight:800; font-size:3.8mm; padding:3.5mm 8mm; border-radius:10mm; text-decoration:none; }
+.foot { margin-top:6mm; padding-top:3mm; border-top:1px solid rgba(255,255,255,.09); display:flex; justify-content:space-between; font-size:3mm; color:#8f8779; } .foot b { color:#EBB12C; }
+</style>
+</head>
+<body>
+
+<!-- KAZDA STRANKA = <div class="page"> ... </div>. Prvni strana obvykle cover (mark+brand, cover-tag, h1, sub).
+     Dalsi strany: hlavicka .brandrow + obsah v .box / table.kv / .formula / .compare / .chips.
+     Patka na posledni strane: kontakt/foot (© Martin Barna · martinbarna.cz · Be Effective). -->
+
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <span class="cover-tag">PŘÍLOHA VIDEOKURZU</span>
+  <h1>Nadpis <span class="hl">dokumentu</span></h1>
+  <p class="sub">Podtitulek jednou větou.</p>
+</div>
+
+</body>
+</html>

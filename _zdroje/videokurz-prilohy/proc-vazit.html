@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Proč vážit jídlo?</title>
+<!-- Poppins z repa (absolutni file cesta, aby ji headless Chrome nacetl pri renderu) -->
+<link rel="stylesheet" href="file:///C:/Users/fitne/Desktop/MB.cz/assets/vendor/fonts/poppins.css">
+<style>
+/* ===== DARK + GOLD BRAND (paleta shodna s nasazenymi lead-magnety) ===== */
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; }
+.page { width: 210mm; min-height: 297mm; padding: 12mm 16mm; page-break-after: always;
+  background: radial-gradient(600px 400px at 90% -5%, rgba(235,177,44,.14), transparent 60%), linear-gradient(180deg,#15171a,#0f1113); }
+.page:last-child { page-break-after: auto; }
+
+/* Hlavicka se znackou */
+.brandrow { display:flex; align-items:center; gap:4mm; margin-bottom:5mm; }
+.mark { width:10mm; height:10mm; border-radius:2.6mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; }
+.brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.6mm; letter-spacing:.4mm; text-transform:uppercase; }
+
+/* Cover prvky */
+.cover-tag { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:.5mm; padding:2mm 5mm; border-radius:10mm; margin-bottom:4mm; }
+h1 { font-size:9mm; line-height:1.15; font-weight:800; margin:0 0 2.5mm; color:#fff; } h1 .hl { color:#EBB12C; }
+.sub { font-size:3.6mm; color:#cabfb1; line-height:1.5; margin:0 0 5mm; }
+
+/* Obsahovy box */
+.box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.box h2 { font-size:4.8mm; font-weight:800; color:#fff; margin:0 0 3mm; }
+.box p, .box li { font-size:3.4mm; color:#d9dde2; line-height:1.5; } .box b { color:#F6CD63; }
+.box p { margin:0 0 2.5mm; } .box p:last-child { margin-bottom:0; }
+.box ul { list-style:none; margin:2mm 0 0; padding:0; } .box ul li { margin-bottom:2mm; padding-left:4.5mm; position:relative; }
+.box ul li:before { content:"•"; color:#EBB12C; position:absolute; left:0; font-weight:800; } .box ul li:last-child { margin-bottom:0; }
+h2.section { font-size:5.4mm; color:#fff; font-weight:800; margin:0 0 3.5mm; padding-left:3mm; border-left:1.4mm solid #EBB12C; }
+.note { font-size:2.9mm; color:#8f8779; line-height:1.45; margin:0 0 3mm; }
+a { color:#EBB12C; text-decoration:none; }
+
+/* Mrizka 2x2 duvodu */
+.grid2 { display:flex; flex-wrap:wrap; gap:4mm; margin-bottom:4mm; }
+.grid2 .box { flex:1 1 calc(50% - 2mm); margin-bottom:0; }
+.box .ico { font-size:6mm; line-height:1; margin-bottom:2mm; }
+
+/* Porovnani (infografika 2 sloupce) */
+.compare { display:flex; gap:4mm; margin-bottom:3mm; align-items:stretch; }
+.compare .col { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:4mm; padding:4mm; text-align:center; }
+.compare .col.bad { border-color:rgba(235,177,44,.4); }
+.compare .plate { font-size:11mm; line-height:1.1; margin:0 0 2mm; }
+.compare .lbl { font-size:3.2mm; color:#cabfb1; }
+.compare .big { font-size:8mm; font-weight:800; color:#EBB12C; margin:1.5mm 0 1mm; }
+.compare .tag { font-size:3mm; color:#cabfb1; }
+.compare .col.bad .tag { color:#F6CD63; font-weight:700; }
+.vsbadge { display:flex; align-items:center; justify-content:center; width:11mm; margin:0 -1mm; }
+.vsbadge span { background:#EBB12C; color:#1A1222; font-weight:800; font-size:3.6mm; width:9mm; height:9mm; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
+/* Vzorec / vypocet */
+.formula { background:linear-gradient(135deg,rgba(235,177,44,.14),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.3); border-radius:4mm; padding:4mm 5mm; margin-bottom:4mm; }
+.formula .eq { font-size:4.2mm; color:#fff; font-weight:800; } .formula .ex { font-size:3.1mm; color:#cabfb1; margin-top:1.5mm; }
+
+.foot { margin-top:6mm; padding-top:3mm; border-top:1px solid rgba(255,255,255,.09); font-size:3mm; color:#8f8779; } .foot b { color:#EBB12C; }
+</style>
+</head>
+<body>
+
+<!-- ================= STRANA 1 — COVER + INFOGRAFIKA POROVNANI ================= -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <span class="cover-tag">PŘÍLOHA VIDEOKURZU</span>
+  <h1>Proč <span class="hl">vážit jídlo?</span></h1>
+  <p class="sub">„Já svoje jídlo vážit nepotřebuji.“ — Nespoléhej na svůj odhad.</p>
+
+  <div class="compare">
+    <div class="col">
+      <div class="plate">🍚🍗🥦</div>
+      <div class="lbl">Talíř A — odměřeno</div>
+      <div class="big">510 kcal</div>
+      <div class="tag">přesně podle plánu</div>
+    </div>
+    <div class="vsbadge"><span>vs</span></div>
+    <div class="col bad">
+      <div class="plate">🍚🍗🥦</div>
+      <div class="lbl">Talíř B — „od oka“</div>
+      <div class="big">660 kcal</div>
+      <div class="tag">+150 kcal navíc</div>
+    </div>
+  </div>
+  <p class="note" style="text-align:center;">Vypadají skoro stejně. Liší se o 150 kcal.</p>
+
+  <div class="box">
+    <p>Větší lžíce oleje, vrchovatá porce rýže, „jen kousek“ navíc — okem to nepoznáš.</p>
+  </div>
+</div>
+
+<!-- ================= STRANA 2 — PROC NA TOM ZALEZI + VYPOCET ================= -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+
+  <h2 class="section">Proč na tom záleží</h2>
+
+  <div class="grid2">
+    <div class="box">
+      <div class="ico">👁</div>
+      <h2>Oko klame</h2>
+      <p>Odhad porce se běžně mýlí o 20–50 %. Čím větší talíř, tím větší chyba.</p>
+    </div>
+    <div class="box">
+      <div class="ico">🥄</div>
+      <h2>Tuky se schovají</h2>
+      <p>1 lžíce oleje ≈ 120 kcal. Pár „neviditelných“ lžic udělá za den stovky kcal.</p>
+    </div>
+    <div class="box">
+      <div class="ico">📈</div>
+      <h2>Rozhoduje to o výsledku</h2>
+      <p>Drobné chyby v součtu rozhodují, jestli jsi v deficitu, nebo na nule.</p>
+    </div>
+    <div class="box">
+      <div class="ico">🎯</div>
+      <h2>Data se dají řídit</h2>
+      <p>Když víš přesně, kolik jíš, můžeš cíleně upravovat. Hádání řídit nejde.</p>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="eq">Spočítej si to: 150 kcal „od oka“ navíc u jednoho jídla denně = ~1 000 kcal týdně ≈ celý jeden den jídla.</div>
+    <div class="ex">To je často přesně ten rozdíl mezi „stojím na místě“ a „hubnu“.</div>
+  </div>
+
+  <div class="box">
+    <p><b>Dobrá zpráva:</b> vážit nemusíš navždy. Pár týdnů s kuchyňskou váhou ti vytrénuje oko — pak už porce odhadneš s mnohem menší chybou a váhu vytáhneš jen občas na kontrolu. Važ syrové potraviny a zapisuj do <a href="https://www.kaloricketabulky.cz">kaloricketabulky.cz</a>.</p>
+  </div>
+
+  <div class="foot">
+    © Martin Barna · <b>martinbarna.cz</b> · Be Effective — příloha videokurzu výživy. Hodnoty jsou ilustrační.
+  </div>
+</div>
+
+</body>
+</html>

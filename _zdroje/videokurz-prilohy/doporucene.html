@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Doporučené potraviny a zdroje vlákniny</title>
+<!-- Poppins z repa (absolutni file cesta, aby ji headless Chrome nacetl pri renderu) -->
+<link rel="stylesheet" href="file:///C:/Users/fitne/Desktop/MB.cz/assets/vendor/fonts/poppins.css">
+<style>
+/* ===== DARK + GOLD BRAND (paleta shodna s nasazenymi lead-magnety) ===== */
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; }
+.page { width: 210mm; min-height: 297mm; padding: 12mm 16mm; page-break-after: always;
+  background: radial-gradient(600px 400px at 90% -5%, rgba(235,177,44,.14), transparent 60%), linear-gradient(180deg,#15171a,#0f1113); }
+.page:last-child { page-break-after: auto; }
+
+/* Hlavicka se znackou */
+.brandrow { display:flex; align-items:center; gap:4mm; margin-bottom:5mm; }
+.mark { width:10mm; height:10mm; border-radius:2.6mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; }
+.brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.6mm; letter-spacing:.4mm; text-transform:uppercase; }
+
+/* Cover prvky */
+.cover-tag { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:.5mm; padding:2mm 5mm; border-radius:10mm; margin-bottom:4mm; }
+h1 { font-size:9mm; line-height:1.15; font-weight:800; margin:0 0 2.5mm; color:#fff; } h1 .hl { color:#EBB12C; }
+.sub { font-size:3.6mm; color:#cabfb1; line-height:1.5; margin:0 0 5mm; }
+
+/* Obsahovy box */
+.box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.box h2 { font-size:4.8mm; font-weight:800; color:#fff; margin:0 0 3mm; }
+.box p, .box li { font-size:3.4mm; color:#d9dde2; line-height:1.5; } .box b { color:#F6CD63; }
+.box p { margin:0 0 2.5mm; } .box p:last-child { margin-bottom:0; }
+.box ul { list-style:none; margin:2mm 0 0; padding:0; } .box ul li { margin-bottom:2mm; padding-left:4.5mm; position:relative; }
+.box ul li:before { content:"•"; color:#EBB12C; position:absolute; left:0; font-weight:800; } .box ul li:last-child { margin-bottom:0; }
+h2.section { font-size:5.4mm; color:#fff; font-weight:800; margin:0 0 3.5mm; padding-left:3mm; border-left:1.4mm solid #EBB12C; }
+.note { font-size:2.9mm; color:#8f8779; line-height:1.45; margin:0 0 3mm; }
+a { color:#EBB12C; text-decoration:none; }
+
+/* Tabulka jidlo -> hodnota (napr. bilkoviny na 100 g) */
+.kvgroup { margin-bottom:3.5mm; } .kvgroup h3 { font-size:3.5mm; color:#F6CD63; font-weight:700; margin:0 0 1.5mm; }
+table.kv { width:100%; border-collapse:collapse; }
+table.kv td { font-size:3.1mm; color:#d9dde2; padding:1.2mm 0; border-top:1px solid rgba(255,255,255,.07); }
+table.kv tr:first-child td { border-top:none; }
+table.kv td.val { text-align:right; color:#EBB12C; font-weight:700; white-space:nowrap; }
+
+/* Mrizka polozek (napr. seznamy potravin) */
+.chips { display:flex; flex-wrap:wrap; gap:2mm; margin:2mm 0 0; }
+.chips span { background:rgba(235,177,44,.12); color:#f0eadf; border:1px solid rgba(235,177,44,.25); border-radius:8mm; padding:1.4mm 4mm; font-size:3mm; }
+
+/* Vzorec / vypocet */
+.formula { background:linear-gradient(135deg,rgba(235,177,44,.14),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.3); border-radius:4mm; padding:4mm 5mm; margin-bottom:4mm; }
+.formula .eq { font-size:4.2mm; color:#fff; font-weight:800; } .formula .ex { font-size:3.1mm; color:#cabfb1; margin-top:1.5mm; }
+
+/* Porovnani (infografika 2 sloupce) */
+.compare { display:flex; gap:4mm; margin-bottom:4mm; }
+.compare .col { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:4mm; padding:4mm; text-align:center; }
+.compare .col.bad { border-color:rgba(235,177,44,.4); }
+.compare .big { font-size:7mm; font-weight:800; color:#EBB12C; margin:1mm 0; }
+.compare .lbl { font-size:3.2mm; color:#cabfb1; }
+
+/* CTA / kontaktni patka (u priloh kurzu = kontakt, ne prodej) */
+.cta { margin-top:5mm; background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.06)); border:1px solid rgba(235,177,44,.35); border-radius:5mm; padding:6mm 8mm; }
+.cta h3 { margin:0 0 2.5mm; font-size:5mm; color:#fff; font-weight:800; } .cta p { margin:0 0 4mm; font-size:3.5mm; color:#d9dde2; line-height:1.5; }
+.cta .btn { display:inline-block; background:#EBB12C; color:#1A1222; font-weight:800; font-size:3.8mm; padding:3.5mm 8mm; border-radius:10mm; text-decoration:none; }
+.foot { margin-top:6mm; padding-top:3mm; border-top:1px solid rgba(255,255,255,.09); display:flex; justify-content:space-between; font-size:3mm; color:#8f8779; } .foot b { color:#EBB12C; }
+
+/* Dvousloupcovy layout tahaku (bez vlastniho vizualu, jen rozvrzeni) */
+.cols2 { display:flex; gap:7mm; align-items:flex-start; }
+.cols2 > div { flex:1; }
+</style>
+</head>
+<body>
+
+<!-- ===================== STRANA 1 — COVER ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <span class="cover-tag">PŘÍLOHA VIDEOKURZU</span>
+  <h1>Doporučené <span class="hl">potraviny</span></h1>
+  <p class="sub">Bílkoviny, sacharidy, tuky a zdroje vlákniny — tahák pro skladbu jídelníčku.</p>
+
+  <div class="box">
+    <p>Přehled, ze kterého snadno složíš vyvážený talíř. U bílkovinových potravin je v závorce orientační obsah bílkovin na 100 g.</p>
+  </div>
+</div>
+
+<!-- ===================== STRANA 2 — BÍLKOVINY ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+
+  <h2 class="section">🍗 Bílkoviny</h2>
+  <p class="note">Hodnoty v pravém sloupci = orientační obsah bílkovin na 100 g.</p>
+
+  <div class="cols2">
+    <div>
+      <div class="box">
+        <div class="kvgroup">
+          <h3>Libové maso</h3>
+          <table class="kv">
+            <tr><td>Kuřecí prsa</td><td class="val">23 g</td></tr>
+            <tr><td>Krůtí prsa</td><td class="val">23 g</td></tr>
+            <tr><td>Hovězí libové</td><td class="val">20 g</td></tr>
+            <tr><td>Vepřové libové</td><td class="val">20 g</td></tr>
+          </table>
+        </div>
+        <div class="kvgroup">
+          <h3>Ryby &amp; mořské plody</h3>
+          <table class="kv">
+            <tr><td>Losos</td><td class="val">22 g</td></tr>
+            <tr><td>Tuňák</td><td class="val">22 g</td></tr>
+            <tr><td>Candát</td><td class="val">19 g</td></tr>
+            <tr><td>Kapr</td><td class="val">18 g</td></tr>
+            <tr><td>Ryby (průměr)</td><td class="val">20 g</td></tr>
+            <tr><td>Mořské plody</td><td class="val">14 g</td></tr>
+          </table>
+        </div>
+        <div class="kvgroup">
+          <h3>Uzeniny (libové)</h3>
+          <table class="kv">
+            <tr><td>Šunka krůtí prsní</td><td class="val">17 g</td></tr>
+            <tr><td>Šunka vepřová libová</td><td class="val">17 g</td></tr>
+            <tr><td>Šunka kuřecí prsní</td><td class="val">16 g</td></tr>
+          </table>
+        </div>
+        <div class="kvgroup">
+          <h3>Tvarohy &amp; jogurty</h3>
+          <table class="kv">
+            <tr><td>Tvaroh tvrdý</td><td class="val">25 g</td></tr>
+            <tr><td>Tvaroh bez tuku</td><td class="val">13 g</td></tr>
+            <tr><td>Tvaroh polotučný</td><td class="val">11 g</td></tr>
+            <tr><td>Jogurt bílý polot.</td><td class="val">5 g</td></tr>
+            <tr><td>Kefír neochucený</td><td class="val">3 g</td></tr>
+          </table>
+        </div>
+        <div class="kvgroup">
+          <h3>Vejce</h3>
+          <table class="kv">
+            <tr><td>Šmakoun</td><td class="val">14 g</td></tr>
+            <tr><td>Celé vejce</td><td class="val">13 g</td></tr>
+            <tr><td>Bílek</td><td class="val">11 g</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="box">
+        <div class="kvgroup">
+          <h3>Sýry (do 30 % t. v s.)</h3>
+          <table class="kv">
+            <tr><td>Eidam 20 % / Fitness</td><td class="val">31 g</td></tr>
+            <tr><td>Eidam 30 % / light</td><td class="val">30 g</td></tr>
+            <tr><td>Olomoucké tvarůžky</td><td class="val">30 g</td></tr>
+            <tr><td>Stříbrňák 30 %</td><td class="val">25 g</td></tr>
+            <tr><td>Mozzarella</td><td class="val">18 g</td></tr>
+            <tr><td>Balkánský 30 %</td><td class="val">15 g</td></tr>
+            <tr><td>Cottage 20 %</td><td class="val">12 g</td></tr>
+          </table>
+        </div>
+        <div class="kvgroup">
+          <h3>Rostlinné náhražky</h3>
+          <table class="kv">
+            <tr><td>Sója</td><td class="val">34 g</td></tr>
+            <tr><td>Seitan</td><td class="val">25 g</td></tr>
+            <tr><td>Robi</td><td class="val">21 g</td></tr>
+            <tr><td>Tempeh</td><td class="val">18 g</td></tr>
+            <tr><td>Tofu</td><td class="val">15 g</td></tr>
+          </table>
+        </div>
+        <div class="kvgroup">
+          <h3>Luštěniny</h3>
+          <table class="kv">
+            <tr><td>Sója</td><td class="val">34 g</td></tr>
+            <tr><td>Čočka</td><td class="val">24 g</td></tr>
+            <tr><td>Fazole</td><td class="val">22 g</td></tr>
+            <tr><td>Hrách</td><td class="val">20 g</td></tr>
+            <tr><td>Cizrna</td><td class="val">19 g</td></tr>
+          </table>
+        </div>
+        <div class="kvgroup">
+          <h3>Obiloviny</h3>
+          <table class="kv">
+            <tr><td>Amarant</td><td class="val">16 g</td></tr>
+            <tr><td>Quinoa</td><td class="val">14 g</td></tr>
+            <tr><td>Pohanka</td><td class="val">13 g</td></tr>
+            <tr><td>Ovesné vločky</td><td class="val">12 g</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>Živočišné vs. rostlinné bílkoviny</h2>
+    <p>Rostlinné zdroje neobsahují všechny potřebné aminokyseliny v dostatečném množství — proto je vhodné je kombinovat a střídat se zdroji živočišnými.</p>
+  </div>
+</div>
+
+<!-- ===================== STRANA 3 — SACHARIDY & VLÁKNINA ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+
+  <h2 class="section">🍚 Sacharidy (komplexní)</h2>
+  <div class="box">
+    <div class="chips">
+      <span>Ovesné vločky</span>
+      <span>Brambory</span>
+      <span>Rýže</span>
+      <span>Batáty</span>
+      <span>Celozrnné pečivo</span>
+      <span>Rýžové chlebíčky</span>
+      <span>Zelenina</span>
+      <span>Ovoce</span>
+      <span>Luštěniny</span>
+      <span>Obiloviny</span>
+      <span>Semínka</span>
+    </div>
+    <p style="margin-top:3mm;">Dej pozor, aby celozrnné pečivo bylo opravdu celozrnné, ne jen obarvené karamelem. A pozor na semínka — kromě sacharidů mají dost tuků a kcal.</p>
+  </div>
+
+  <h2 class="section">🌾 Zdroje vlákniny</h2>
+  <div class="box">
+    <p>Vláknina je také sacharid — sytí, podporuje trávení i imunitu. Hlavní skupiny:</p>
+    <div class="chips">
+      <span>Zelenina</span>
+      <span>Ovoce</span>
+      <span>Luštěniny</span>
+      <span>Celozrnné obiloviny</span>
+      <span>Ořechy &amp; semena</span>
+    </div>
+  </div>
+
+  <div class="cols2">
+    <div>
+      <div class="box">
+        <h2>Luštěniny &amp; obiloviny</h2>
+        <ul>
+          <li>Kukuřice, čočka, hrášek, fazole</li>
+          <li>Cizrna, hnědá rýže</li>
+          <li>Ovesné vločky, pohanka, jáhly</li>
+          <li>Pšeničné klíčky, otruby</li>
+          <li>Celozrnné pečivo a těstoviny</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="box">
+        <h2>Ovoce, zelenina &amp; další</h2>
+        <ul>
+          <li>Maliny, jahody, borůvky</li>
+          <li>Jablko, hruška, banán, švestky</li>
+          <li>Avokádo, rajčata</li>
+          <li>Brokolice, květák, růžičková kapusta</li>
+          <li>Mrkev, lilek</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== STRANA 4 — TUKY & KDE NAJDU HODNOTY ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+
+  <h2 class="section">🥑 Tuky</h2>
+  <div class="box">
+    <div class="chips">
+      <span>Mandle</span>
+      <span>Avokádo</span>
+      <span>Vejce</span>
+      <span>Maso</span>
+      <span>Chia semínka</span>
+      <span>Ořechy</span>
+      <span>Olivový olej</span>
+    </div>
+    <p style="margin-top:3mm;">Tuky opravdu není těžké najít — drž je spíš v rozumu, jsou energeticky nejhustší (9 kcal/g).</p>
+  </div>
+
+  <h2 class="section">Kde najdu přesné hodnoty?</h2>
+  <div class="box">
+    <p><b>①</b> Etiketa potraviny — na obalu je tabulka nutričních hodnot. Hlídej jednotky (na 100 g × na porci × na balení).</p>
+    <p><b>②</b> kaloricketabulky.cz — hodnoty potravin na pár kliků; tabulky budeš vyplňovat i v rámci týdenního reportu.</p>
+  </div>
+
+  <div class="foot">
+    <span>© Martin Barna · <b>martinbarna.cz</b> · Be Effective — příloha videokurzu výživy.</span>
+    <span>Hodnoty jsou orientační (na 100 g).</span>
+  </div>
+</div>
+
+</body>
+</html>

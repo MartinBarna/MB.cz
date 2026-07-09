@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Nejčastější dotazy klientů — E-book</title>
+<!-- Poppins z repa (absolutni file cesta, aby ji headless Chrome nacetl pri renderu) -->
+<link rel="stylesheet" href="file:///C:/Users/fitne/Desktop/MB.cz/assets/vendor/fonts/poppins.css">
+<style>
+/* ===== DARK + GOLD BRAND (paleta shodna s nasazenymi lead-magnety) ===== */
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; }
+.page { width: 210mm; min-height: 297mm; padding: 12mm 16mm; page-break-after: always;
+  background: radial-gradient(600px 400px at 90% -5%, rgba(235,177,44,.14), transparent 60%), linear-gradient(180deg,#15171a,#0f1113); }
+.page:last-child { page-break-after: auto; }
+
+/* Hlavicka se znackou */
+.brandrow { display:flex; align-items:center; gap:4mm; margin-bottom:5mm; }
+.mark { width:10mm; height:10mm; border-radius:2.6mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; }
+.brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.6mm; letter-spacing:.4mm; text-transform:uppercase; }
+
+/* Cover prvky */
+.cover-tag { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:.5mm; padding:2mm 5mm; border-radius:10mm; margin-bottom:4mm; }
+h1 { font-size:9mm; line-height:1.15; font-weight:800; margin:0 0 2.5mm; color:#fff; } h1 .hl { color:#EBB12C; }
+.sub { font-size:3.6mm; color:#cabfb1; line-height:1.5; margin:0 0 5mm; }
+
+/* Obsahovy box */
+.box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.box h2 { font-size:4.8mm; font-weight:800; color:#fff; margin:0 0 3mm; }
+.box p, .box li { font-size:3.4mm; color:#d9dde2; line-height:1.5; } .box b { color:#F6CD63; }
+.box p { margin:0 0 2.5mm; } .box p:last-child { margin-bottom:0; }
+.box ul { list-style:none; margin:2mm 0 0; padding:0; } .box ul li { margin-bottom:2mm; padding-left:4.5mm; position:relative; }
+.box ul li:before { content:"•"; color:#EBB12C; position:absolute; left:0; font-weight:800; } .box ul li:last-child { margin-bottom:0; }
+h2.section { font-size:5.4mm; color:#fff; font-weight:800; margin:0 0 3.5mm; padding-left:3mm; border-left:1.4mm solid #EBB12C; }
+.note { font-size:2.9mm; color:#8f8779; line-height:1.45; margin:0 0 3mm; }
+a { color:#EBB12C; text-decoration:none; word-break:break-word; }
+
+/* Tabulka jidlo -> hodnota (napr. bilkoviny na 100 g) */
+.kvgroup { margin-bottom:3.5mm; } .kvgroup h3 { font-size:3.5mm; color:#F6CD63; font-weight:700; margin:0 0 1.5mm; }
+table.kv { width:100%; border-collapse:collapse; }
+table.kv td { font-size:3.1mm; color:#d9dde2; padding:1.2mm 0; border-top:1px solid rgba(255,255,255,.07); }
+table.kv tr:first-child td { border-top:none; }
+table.kv td.val { text-align:right; color:#EBB12C; font-weight:700; white-space:nowrap; }
+
+/* Mrizka polozek (napr. seznamy potravin) */
+.chips { display:flex; flex-wrap:wrap; gap:2mm; margin:2mm 0 0; }
+.chips span { background:rgba(235,177,44,.12); color:#f0eadf; border:1px solid rgba(235,177,44,.25); border-radius:8mm; padding:1.4mm 4mm; font-size:3mm; }
+
+/* Vzorec / vypocet */
+.formula { background:linear-gradient(135deg,rgba(235,177,44,.14),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.3); border-radius:4mm; padding:4mm 5mm; margin-bottom:4mm; }
+.formula .eq { font-size:4.2mm; color:#fff; font-weight:800; } .formula .ex { font-size:3.1mm; color:#cabfb1; margin-top:1.5mm; }
+
+/* Porovnani (infografika 2 sloupce) */
+.compare { display:flex; gap:4mm; margin-bottom:4mm; }
+.compare .col { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:4mm; padding:4mm; text-align:center; }
+.compare .col.bad { border-color:rgba(235,177,44,.4); }
+.compare .big { font-size:7mm; font-weight:800; color:#EBB12C; margin:1mm 0; }
+.compare .lbl { font-size:3.2mm; color:#cabfb1; }
+
+/* CTA / kontaktni patka (u priloh kurzu = kontakt, ne prodej) */
+.cta { margin-top:5mm; background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.06)); border:1px solid rgba(235,177,44,.35); border-radius:5mm; padding:6mm 8mm; }
+.cta h3 { margin:0 0 2.5mm; font-size:5mm; color:#fff; font-weight:800; } .cta p { margin:0 0 4mm; font-size:3.5mm; color:#d9dde2; line-height:1.5; }
+.cta .btn { display:inline-block; background:#EBB12C; color:#1A1222; font-weight:800; font-size:3.8mm; padding:3.5mm 8mm; border-radius:10mm; text-decoration:none; }
+.foot { margin-top:6mm; padding-top:3mm; border-top:1px solid rgba(255,255,255,.09); display:flex; justify-content:space-between; font-size:3mm; color:#8f8779; } .foot b { color:#EBB12C; }
+
+/* Part divider */
+.partdiv { text-align:center; padding:60mm 0 0; }
+.partdiv .kick { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:1mm; padding:2mm 6mm; border-radius:10mm; margin-bottom:6mm; text-transform:uppercase; }
+.partdiv h1 { font-size:14mm; }
+.partdiv .sub { font-size:4.4mm; }
+</style>
+</head>
+<body>
+
+<!-- ========== COVER ========== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <div style="margin-top:38mm;">
+    <span class="cover-tag">PŘÍLOHA VIDEOKURZU</span>
+    <p class="note" style="letter-spacing:1mm;color:#F6CD63;margin-bottom:5mm;">E-BOOK · VIDEOKURZ VÝŽIVY</p>
+    <h1>Nejčastější <span class="hl">dotazy klientů</span></h1>
+    <p class="sub">V této elektronické knize probereme témata, která s&nbsp;klienty běžně řešíme a&nbsp;probíráme v&nbsp;rámci mého Online Coachingu.</p>
+    <div class="box" style="max-width:120mm;">
+      <p style="margin:0;">Bonusový materiál k&nbsp;videokurzu.<br><b>martinbarna.cz</b> · výživa &amp; trénink</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PART 1 DIVIDER ========== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <div class="partdiv">
+    <span class="kick">Část 1 z 2 · Příjem energie</span>
+    <h1>Výživa</h1>
+    <p class="sub">Kalorie, makroživiny, bílkoviny, jídelníček a&nbsp;vše kolem příjmu energie.</p>
+  </div>
+</div>
+<!-- ===== Kalorie ===== -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Kalorie a jejich role v našem životě</h2>
+  <div class="box">
+    <p>Kalorie jsou měrná jednotka energie. Tak jako množství benzínu do auta měříme v&nbsp;litrech, množství energie pro tělo měříme v&nbsp;kaloriích.</p>
+    <p>Pro změny tělesné hmotnosti platí, že pokud máme kalorií přebytek, budeme přibírat. Pokud jich je nedostatek, budeme hubnout.</p>
+    <p>Také se tomu říká <b>CICO</b> (calories in calories out – příjem kalorií výdej kalorií). Na obrázku je vysvětleno, jak to v&nbsp;podstatě funguje. Tento balanc příjmu a&nbsp;výdeje kalorií je základním pilířem všech změn tělesné hmotnosti.</p>
+    <p>Ať už je naším cílem hubnout, nabírat nebo udržovat. Případně pokud držíme nějaký způsob diet, např. keto, přerušované hladovění, vysokosacharidová dieta, nízkosacharidová dieta aj. Vše podléhá tomuto zákonu, ať jsme si toho vědomí nebo ne. Kalorie prostě platí a&nbsp;fungují, ať už je počítáme či nikoli. Stejně jako gravitace, ta funguje nehledě na to, zda v&nbsp;ní věříme.</p>
+    <p>V&nbsp;tomto vědění spočívá ta skvělá možnost nebýt otrokem předepsaných diet a&nbsp;jídelníčků a&nbsp;moct si „tvořit vlastní jídelníček". Tzn. jíst, co máme rádi a&nbsp;skloubit sociální život s&nbsp;hubnutím dohromady. Třeba když jdeme s&nbsp;kamarády do restaurace. Jisté diety by nás stavěly do nepříjemné situace.</p>
+    <p>Pokud však víme, jak pracovat s&nbsp;kaloriemi, stačí si vybrat jídlo vyhovující našim chutím a&nbsp;našemu kalorickému rozpočtu.</p>
+  </div>
+
+  <h2 class="section">Makroživiny a mikroživiny</h2>
+  <div class="box">
+    <p>Jak už víme, tělo pro své fungování potřebuje přijímat energii (kalorie) a&nbsp;tu lze získávat z&nbsp;makroživin a&nbsp;mikroživin. V&nbsp;podstatě z&nbsp;takových stavebních látek stravy.</p>
+    <p>„Makro" znamená velký, a&nbsp;proto zde patří živiny, které tělo potřebuje nejvíce pro své fungování (množství denních potřeb je v&nbsp;desítkách až stovkách gramů).</p>
+    <p>„Mikro" znamená malý, proto zde také patří živiny důležité pro fungování těla, ale ve značně menších dávkách.</p>
+    <div class="kvgroup" style="margin-top:1mm;">
+      <h3>Do skupiny makroživin patří</h3>
+      <table class="kv">
+        <tr><td>Bílkoviny</td><td class="val">4 kcal / 1 g</td></tr>
+        <tr><td>Sacharidy</td><td class="val">4 kcal / 1 g</td></tr>
+        <tr><td>Tuky</td><td class="val">9 kcal / 1 g</td></tr>
+        <tr><td>Vláknina</td><td class="val">—</td></tr>
+      </table>
+    </div>
+    <p>Jedná se o&nbsp;základní látky ve stravě. Každá makroživina má jiné množství kalorií na 1&nbsp;g. To znamená, že pokud sníme 100&nbsp;g sacharidů nebo bílkovin, přijmeme 400&nbsp;kcal. Pokud sníme 100&nbsp;g tuků, přijmeme 900&nbsp;kcal.</p>
+    <p>Neznamená to, že jsou tuky špatné. Každá živina hraje svou nezbytnou roli v&nbsp;těle. Znamená to, že tuk má více energie na stejné množství.</p>
+    <p>U&nbsp;vlákniny není uvedeno množství kcal, protože se jedná v&nbsp;podstatě o&nbsp;sacharid. Dále se dělí na vstřebatelné a&nbsp;nevstřebatelné. Proto se nevyjadřují v&nbsp;kaloriích. Dostatek vlákniny ve stravě často zpravidla přináší i&nbsp;dostatek potravin bohatých na mikroživiny. Je tak celkem jednoduchým ukazatelem kvalitní stravy.</p>
+  </div>
+  <div class="box">
+    <p><b>Do skupiny mikroživin řadíme:</b></p>
+    <ul>
+      <li>Vitamíny (A, B, C, D, apod.)</li>
+      <li>Minerály (vápník, sodík, hořčík, apod.)</li>
+      <li>Stopové prvky (měď, železo, zinek, apod.)</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Mikroživin je potřeba velmi malé množství, pokud jich je dlouhodobě nedostatek, může to vyvolat zdravotní potíže. Proto bereme tyto živiny jako takový zdravotní prvek stravy. Získáváme je z&nbsp;různých potravin a&nbsp;vody. Je dobré mít ve stravě určitou různorodost, abychom nasbírali dostatek těchto živin a&nbsp;byli obecně zdravější.</p>
+  </div>
+</div>
+<!-- ===== Bilkoviny ===== -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Bílkoviny a jejich důležitost</h2>
+  <div class="box">
+    <p>Nyní si rozebereme, velmi laicky, pár důvodů, proč se nám vyplatí jíst dostatek bílkovin.</p>
+    <p><b>Studie na příjem bílkovin číslo 1:</b></p>
+    <ul>
+      <li>Studie trvala 12 měsíců a&nbsp;srovnala dvě skupiny obézních lidí.</li>
+      <li>Obě skupiny mají totožný celkový kalorický příjem a&nbsp;příjem tuků.</li>
+      <li>Jedna skupina měla ve stravě více sacharidů a&nbsp;méně bílkovin.</li>
+      <li>Druhá skupina měla ve stravě naopak více bílkovin a&nbsp;méně sacharidů.</li>
+      <li>Po prvních čtyřech měsících zhubli všichni dle plánu.</li>
+      <li>Ovšem v&nbsp;dalších měsících skupina s&nbsp;větším příjmem bílkovin udržela větší procento úbytku hmotnosti, oproti skupině s&nbsp;větším příjmem sacharidů (konkrétně více lidí z&nbsp;bílkovinné skupiny mělo vyšší procento úbytku v&nbsp;tomto období studie).</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Cíl:</b> Studie mířila na 10% úbytek z&nbsp;původní váhy a&nbsp;zhruba dvakrát více lidí z&nbsp;těch, kteří měli vyšší příjem bílkovin, plánovaného tempa úbytku hmotnosti dosahovalo i&nbsp;po 12 měsících diety – oproti skupině s&nbsp;větším příjmem sacharidů na úkor příjmu bílkovin.</p>
+  </div>
+  <div class="box">
+    <p><b>Studie číslo 2:</b></p>
+    <p>Testovaly se rozdíly ve svalové hmotě při dietě při různém příjmu bílkovin a&nbsp;cvičení. Byly zde tři skupiny lidí:</p>
+    <ul>
+      <li>Necvičící během diety</li>
+      <li>Sportující během diety (různé aktivity kromě fitness tréninku)</li>
+      <li>Cvičící ve fitku během diety</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Výsledky:</b></p>
+    <ul>
+      <li>První skupině tvořil úbytek svalů 25&nbsp;% celkového úbytku hmotnosti.</li>
+      <li>Druhé skupině tento úbytek svalů tvořil 12&nbsp;–&nbsp;13&nbsp;% celkového úbytku hmotnosti.</li>
+      <li>Třetí skupina udržela během diety všechno svalstvo. Což je pro tělo nejvýhodnější, protože máme vyšší výdej energie. Velká část jídla jde pak do svalů místo do tuků.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <p><b>Studie číslo 3:</b></p>
+    <ul>
+      <li>Dvě skupiny lidí, obě měly energetický deficit 40&nbsp;% a&nbsp;obě cvičily ve fitku.</li>
+      <li>První skupina jedla bílkoviny v&nbsp;poměru cca 2&nbsp;g bílkovin na 1&nbsp;kg hmotnosti.</li>
+      <li>Druhá skupina jedla 1&nbsp;g bílkovin na 1&nbsp;kg hmotnosti.</li>
+      <li>První skupina opět udržela veškerou svalovou hmotu a&nbsp;ještě dokázala během diety vybudovat svaly nové i&nbsp;s&nbsp;deficitem.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Shrnutí:</b> Bílkoviny jsou opravdu důležitým hráčem v&nbsp;poli stravování, o&nbsp;čemž jsme se právě přesvědčili. A&nbsp;malý bonus – trávení bílkovin stojí tělo více energie a&nbsp;právě bílkoviny stimulují regeneraci svalů, která nám s&nbsp;růstem svalů pomáhá.</p>
+    <p><b>Proto je důležité, abychom měli:</b></p>
+    <ul>
+      <li>Dostatek bílkovin na den. S&nbsp;kaloriemi je to nejdůležitější údaj společně s&nbsp;vlákninou.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Je ideální směřovat na 3&nbsp;–&nbsp;4 porce bílkovin denně. Celkový příjem bílkovin pak vydělíte zvoleným počtem jídel a&nbsp;víme, jak má každé jídlo vypadat.</p>
+    <p>Podle tohoto principu si můžeme svůj jídelníček vylepšit a&nbsp;ideálně nad ním přemýšlet už u&nbsp;nákupu.</p>
+  </div>
+
+  <h2 class="section">Klíč k hubnutí</h2>
+  <div class="box">
+    <p>Znalost jednoduchého zákonu fyziky. Pokud chceme hubnout musíme jednoduše přijímat méně energie než vydáme v&nbsp;průběhu času.</p>
+    <p><b>Příjem vs. výdej energie</b></p>
+    <p>Pro dosažení svých cílů je třeba pochopit, že tělo má dva režimy.</p>
+    <p>Bavíme se o&nbsp;postavení těla do stavu rozkladu, kdy čerpá energii ze svých zásob (katabolize – kalorický deficit).</p>
+    <p>Anebo do stavu budování, kdy je nadbytečná energie z&nbsp;jídla investována do zvyšování hmotnosti (anabolize – kalorický přebytek).</p>
+    <p>Lidské tělo neustále touží po udržování hodnot na stejném bodě (homeostáza). Jak u&nbsp;spalování, tak u&nbsp;příjmu energie apod. To znamená, že se snaží držet příjem a&nbsp;výdej energie na stejné výši.</p>
+    <p>Abychom tělo donutili vystoupit z&nbsp;této rovnováhy a&nbsp;hubnout či nabírat, musíme zásobám těla umožnit, buď ubývat nebo přibývat. Základním principem pro tyto změny bude vždy balanc mezi příjmem energie a&nbsp;výdejem energie.</p>
+    <p>Jak vidíme na obrázku, hlavní a&nbsp;klíčovou roli ve změně tělesné hmotnosti hraje celkový příjem energie. A&nbsp;až potom ostatní věci jako živiny apod.</p>
+    <p>Proto se vyplatí, jakožto naprostý základ pro změnu, řešit prvně to, zda a&nbsp;jak jsme schopni dosáhnout optimálního příjmu a&nbsp;výdeje energie, vzhledem k&nbsp;našim cílům. Zbytečně se nezatěžovat časováním jídel, suplementy, složením apod., pokud nejsme schopni udržet příjem a&nbsp;výdej jako celek tak, abychom hubli.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Jak to tedy funguje?</b> Představme si tělo jako auto.</p>
+    <ul>
+      <li>Motor jsou svaly (větší motor spaluje více energie a&nbsp;větší svaly také).</li>
+      <li>Máme také do jisté míry naplněnou palivovou nádrž (zjednodušeně tuky na těle/v&nbsp;břiše).</li>
+      <li>Pokud chceme hubnout, potřebujeme více jezdit, abychom více spálili z&nbsp;nádrže.</li>
+      <li>Musíme také dolévat benzín (kalorie/jídlo), aby byl pořád dostatek energie na jízdu, ale abychom také postupně snižovali to, nakolik je nádrž obecně plná.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Tento princip je nadřazený všemu ostatnímu, co ve stravě řešíme, pokud se bavíme o&nbsp;nabírání a&nbsp;snižování váhy. Zaměřme se prvně na toto. Pokud máme tento naprostý základ zvládnutý, má cenu se začít zabývat dalšími věcmi.</p>
+  </div>
+
+  <h2 class="section">Složení jídelníčku</h2>
+  <div class="box">
+    <p>Čekáte raketovou vědu? Čekáte magické potraviny nebo složité postupy? Nic takového reálně není potřeba. Jak už víme, stačí se řídit jednoduchými pravidly, přizpůsobit si je podle svého životního stylu a&nbsp;je to.</p>
+    <p><b>Jak má tedy vypadat složení jídelníčku?</b></p>
+    <ul>
+      <li>Optimální množství kalorií</li>
+      <li>Dostatek bílkovin</li>
+      <li>Dostatek vlákniny</li>
+      <li>Dostatek zeleniny</li>
+      <li>Dostatek vody</li>
+    </ul>
+    <p style="margin-top:2.5mm;">To je co? Ano, tak jednoduché může být hubnutí a&nbsp;strava. Stačí si ji jednoduchou udělat.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Optimální množství kalorií:</b> Pokud máme optimální množství kalorií, tak hubneme, stagnujeme nebo lehce nabíráme. Vše záleží na tom, jaké si nastavíme cíle. Největší potíž bývá chronické přejídání a&nbsp;nedostatek pohybu.</p>
+    <p><b>Dostatek bílkovin:</b> Pokud máme dostatek bílkovin, jednoduše si díky tomu zvyšujeme spalování kvůli vysokému termickému efektu. Zároveň si zajistíme dostatek látek na regeneraci kůže, nehtů, vlasů a&nbsp;svalů. Vše zaznamená pozitiva. Jsme díky nim sytí a&nbsp;nemáme nutkání se tolik přejídat.</p>
+    <p><b>Dostatek vlákniny:</b> Pokud máme dostatek vlákniny, máme zpravidla zdravější stravu, protože jídla bohatá na vlákninu mají často plno vitamínů a&nbsp;minerálů. Vyživujeme střevní mikroflóru, cítíme se díky tomu po nějakém čase lépe energicky a&nbsp;zlepšíme svou imunitu. Také trávení funguje lépe. Jsme sytí a&nbsp;nemáme takové nutkání se potom přejídat.</p>
+    <p><b>Dostatek zeleniny:</b> Pokud máme dostatek zeleniny, budeme mít dostatek vlákniny, vitamínů, minerálů. Další výhodou je, že zelenina má ve většině případů velmi malé množství kalorií, proto si můžeme dost snížit denní příjem kcal a&nbsp;přesto hubnout s&nbsp;plným břichem. Zároveň nás zasytí a&nbsp;nemáme takovou potřebu se přejídat.</p>
+    <p><b>Dostatek vody:</b> Pokud máme dostatek vody, naše tělo nemusí vodou šetřit, a&nbsp;kdo má potíže se zavodněním už je s&nbsp;velkou pravděpodobností mít nebude. Tělo je z&nbsp;velké části voda a&nbsp;celé tělo ji využívá k&nbsp;nespočtu procesů. Pomáhá zlepšit kvalitu kůže a&nbsp;fungování celého těla. Voda občas pomáhá naplnit žaludek a&nbsp;díky hormonu hladu Ghrelin vyvolá skrze napnutí žaludeční stěny lehký pocit sytosti.</p>
+    <p>Nepijete, abyste nebyli zavodnění? To je špatně. Voda je pro tělo zásadní a&nbsp;pokud jí nepijete dost, hormon aldosteron se postará o&nbsp;její zadržování, protože nic jiného nezbývá.</p>
+    <p>K&nbsp;tomu všemu přidejte dostatek kroků na den, nějaký sport či cvičení a&nbsp;vše půjde mnohem snáz.</p>
+  </div>
+
+  <h2 class="section">Co je to TEF?</h2>
+  <p class="note">Thermic Effect of Food (termický efekt jídla)</p>
+  <div class="box">
+    <p>Je to výdej energie těla na trávení jídla. Vždy když něco sníme, tělo musí nějakou energii vydat na to, aby jídlo rozložilo a&nbsp;získalo z&nbsp;něj energii. Každá makroživina má tento efekt jiný.</p>
+    <p>Bílkoviny mají termický efekt o&nbsp;dost vyšší než tuky a&nbsp;sacharidy, proto se vyplatí pořád mít, co nejvyšší příjem bílkovin, nejen kvůli svalům, ale také kvůli spalování a&nbsp;sytosti.</p>
+    <p>To jednoduše znamená, že když budeme mít ve stravě více bílkovin než člověk, který nemá žádné bílkoviny a&nbsp;oba budeme mít stejné množství celkových kalorií, tak my, kteří máme více bílkovin, také spálíme více energie díky tomu, že bílkoviny se těžko tráví a&nbsp;tělo to stojí energii navíc. Což je pro hubnutí žádoucí věc.</p>
+    <div class="kvgroup" style="margin-top:1mm;">
+      <h3>Termický efekt živin</h3>
+      <table class="kv">
+        <tr><td>Bílkoviny (proteins, modrá čára)</td><td class="val">20 – 30 %</td></tr>
+        <tr><td>Sacharidy (carbohydrates, červená čára)</td><td class="val">5 – 10 %</td></tr>
+        <tr><td>Tuky (lipids, zelená čára)</td><td class="val">0 – 3 %</td></tr>
+      </table>
+    </div>
+    <p>V&nbsp;grafu vidíme, jak různé makroživiny ovlivnili bazální metabolismus v&nbsp;průběhu času.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Jojo efekt – proč hubnout pomalu a plynule?</h2>
+  <div class="box">
+    <p>Zkusme se zamyslet. Kolik lidí okolo nás každý rok hubne a&nbsp;každý rok jsou na tom hůře? I&nbsp;vy sami jste možná okusili JOJO efekt na vlastní kůži a&nbsp;víte, že to není zrovna příjemná věc. Proto je škoda investovat snahu, čas a&nbsp;píli do něčeho, co nám ve výsledku ještě uškodí. Zaměřme se proto na plynulé a&nbsp;hlavně dlouhodobě udržitelné hubnutí.</p>
+    <p>Klasický pohled lidí je dostat vše hned teď. Takto to bohužel nefunguje a&nbsp;pokud chceme opravdu dosáhnout svých cílů a&nbsp;hlavně si je udržet po zbytek života a&nbsp;radovat se z&nbsp;benefitů zdravého života. Je třeba být trpělivý, jít na to chytře, a&nbsp;zároveň co nejjednodušeji a&nbsp;příjemně, abychom to mohli vydržet a&nbsp;vybudovali tak udržitelné návyky kolem pohybu a&nbsp;stravování, které nám pomohou kýženou postavu udržet dlouhodobě.</p>
+    <p><b>Na grafu vidíme v&nbsp;časové ose:</b></p>
+    <ul>
+      <li>červenou čáru (váha)</li>
+      <li>modrou čáru (spalování – rychlost metabolismu)</li>
+      <li>tečkovaná čára (příjem kalorií)</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Na začátku si běžný člověk řekne: „Chci zhubnou a&nbsp;chci to hned!" Sníží si tedy rapidně příjem energie. Díky tomu také začne hubnout a&nbsp;i&nbsp;samotné spalování se začne rapidně snižovat.</p>
+    <p>Tělo je stroj na přežití a&nbsp;neví, že se chceme dostat do plavek. Vidí to jako hrozbu přežití a&nbsp;začne se hormonálně připravovat na to, aby získalo své zásoby zpět. Hlavně pomocí hormonů ghrelin a&nbsp;leptin.</p>
+    <p>Brzy dojde na to, že člověk už nevydrží jíst tak málo a&nbsp;podpořen hormony hladu, začne opět jíst více nebo se nárazově přejídá. Příjem se hodně zvýšil, tuk se začíná dost zvyšovat, ale spalování&nbsp;/ rychlost metabolismu zůstává stále pozadu.</p>
+  </div>
+  <div class="box">
+    <p><b>Tady vzniká problém.</b> Člověk nabral ještě více než měl na začátku. Jí stejné množství energie, ale spalování je stále ještě sníženo díky radikální dietě. Hlavně proto, že je stále unavený a&nbsp;má menší fyzický výkon.</p>
+    <p>Opět začne jíst málo, aby opět zhubl. Příjem energie jde dolů, tukové zásoby jdou dolů a&nbsp;spalování také. Ovšem spalování už je mnohem níže než na začátku diety a&nbsp;člověk musí opět ubírat jídlo/kalorie.</p>
+    <p>Takto se dostane do začarovaného kruhu známého jako JOJO efekt. Dokud nepřijde na to, jak rozumně tuto situaci zvrátit ve svůj prospěch a&nbsp;to rozumnou pozvolnou prací s&nbsp;příjmem kalorií.</p>
+    <p>Doporučuji vyhýbat se rapidním úbytkům váhy a&nbsp;jít na to pomalu a&nbsp;s&nbsp;rozumem, abychom si naši cestu za cíli nedělali zbytečně těžší. Snažíme se hubnout, na co největším možném příjmu kalorií za udržení požadovaného tempa hubnutí. A&nbsp;mimo jiné dlouhodobý udržitelný způsob hubnutí buduje dlouhodobě udržitelné návyky.</p>
+    <p>A&nbsp;stejně tak, jako že si každý den umyjete zuby a&nbsp;neřešíte, zda se vám zrovna dnes chce, můžete vytvořit návyk. Více chodit, 2x týdně cvičit, v&nbsp;každém jídle myslet na dostatek bílkovin/vlákniny a&nbsp;díky tomu budete více spalovat, budete sytější nehledě na to, zda máte období hubnutí či jste už po dietě.</p>
+    <p class="note">Téma jsem pro vás podrobně rozebral i&nbsp;ve videu: Jojo Efekt.</p>
+    <p>Po dietě takto doporučuji využít reverzní dietu, která vám pomůže stabilizovat návyky/příjem energie na normální hladinu po fázi diety a&nbsp;to postupně, individuálně vůči vašemu spalování. Více o&nbsp;něm pojednávám v&nbsp;další PDF příloze či v&nbsp;tomto videu: Reverzní dieta.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Období po dietě</h2>
+    <p>Začneme příkladem. Máme slečnu, co začíná hubnout na 1800&nbsp;kcal na den (budeme předpokládat, že má dlouhodobě spíše fixní životní styl). Na 2000&nbsp;–&nbsp;2200&nbsp;kcal udržuje míry. Ale po třech měsících diety, pokud na ni jde rozumně, si může dovolit jen 1400&nbsp;kcal, aby hubnula dále. Ona však přijímá 1700&nbsp;kcal.</p>
+    <p>V&nbsp;této fázi se z&nbsp;1700&nbsp;kcal stane její udržovací hladina, ne těch 2000&nbsp;–&nbsp;2200. Metabolismus je flexibilní, přizpůsobuje se. A&nbsp;teď si představ, že ta slečna začne po dietě nekontrolovaně jíst a&nbsp;neví o&nbsp;stravování nic. Po dietě je totiž mnohem unavenější, letargičtější (hormony diktují tělu, aby méně plýtvalo energií – proto jsou lidé během diety častými uživateli kofeinu) a&nbsp;taky má mnohem větší hlad, i&nbsp;když jí zase normální porce jídla. Díky tomuto koktejlu je téměř jisté, že sní mnohem více kcal než před dietou, ale tělo spaluje mnohem méně. Tak vzniká jojo efekt a&nbsp;nabere hodně kilo. Ano, ten metabolismus se po nějaké době „dostatku" zotaví a&nbsp;začne opět spalovat více, ale v&nbsp;té době už často mají „amatéři" mnohem více kilo a&nbsp;tuků než před dietou.</p>
+    <p>Proto si povíme něco o&nbsp;metodě od Layne Nortona, PhD.</p>
+  </div>
+  <div class="box">
+    <h2>Reverse Dieting</h2>
+    <p>Málokdo ho řeší a&nbsp;to je špatně. Je dobře, že se o&nbsp;něj už teď zajímáte. My totiž během vaší případné cesty snižujeme tělu přísun energie nebo zvyšujeme výdej. Dostáváme tělo do energetického mínusu, aby muselo spalovat své zásoby ve formě tuků.</p>
+    <p>Pokud cvičíte ve fitku, jdete na to správně, protože najednou zvětšujete i&nbsp;zásoby cukrů (a&nbsp;energie) ve svalech právě na výkony ve fitku. Díky toho máte méně tuků, ale taky větší sklady pro cukry. Proto pojmete více energie z&nbsp;jídla do svalů než se naplní a&nbsp;zbytek jde do tuků. Ano, je to na měsíce i&nbsp;roky kvalitního tréninku a&nbsp;stravy, ale dlouhodobě se to vyplácí. A&nbsp;jak už jsme říkali nesčetněkrát, tělo je stroj na přežití, takže celou dobu diety se to hubnutí snaží zastavit. Takže zvětšuje pocit hladu, abyste více energie snědli a&nbsp;taky vás dělá lenivější, unavenější, letargičtější. Tím ušetří energii na pohybu a&nbsp;aktivitách. Na šetření energie používá spoustu dalších mechanismů.</p>
+    <p>Představte si, že byste najednou začali vydělávat jen jednu třetinu toho, co vyděláváte teď. Taky byste museli začít na něčem šetřit, abyste přežili. Tělo funguje úplně stejně, přizpůsobuje se situaci.</p>
+    <p>Proto musíme postupně přidávat pohyb a&nbsp;ubírat jídlo, abychom shodili další tuky. Po dietě budete mít v&nbsp;těle nižší hladinu tuku, ale tělo bude mnohem méně spalovat. Není tedy ideální říct si: „tak konečně jsme zhubli" a&nbsp;nacpeme se dortíky, řízky a&nbsp;mekáčem. A&nbsp;k&nbsp;tomu ještě přestaneme cvičit. Opravdu jste před dietou mohli spalovat 2000&nbsp;kcal a&nbsp;na konci diety 1300&nbsp;kcal. A&nbsp;to je obrovský rozdíl. Pokud v&nbsp;tu chvíli sníte 2000&nbsp;kcal, přiberete více než před dietou, protože tělo energii nevyužije. Proto je reverse dieting po dietě tak důležitý. Během něj stále cvičíte a&nbsp;jídlo (pracuje se zejména se sacharidy) se postupně přidává. Všechno se dělá strategicky podle toho, jak se čísla hýbou nebo nehýbou a&nbsp;cílem je formu udržet. Někdo něco málo nabere, někdo ještě něco málo zhubne. Ale hlavně se zotaví metabolismus a&nbsp;zase se „zrychlí". A&nbsp;to pouze s&nbsp;minimálním nárůstem tuků.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Postup je pak individuální. Někdo chce, co nejdříve více jíst a&nbsp;nevadí mu více tuků. Někdo chce radši méně přibrat, ale zvládne se více omezit. Obecně platí, že čím déle a&nbsp;více jste zhubli, tím delší by měl být reverse dieting. Díky tomuto přístupu má metabolismus tendenci dostat ze sebe, co nejvíce a&nbsp;držet, co nejlépe formu. A&nbsp;výhody? Ty jsou jasné.</p>
+    <ul>
+      <li>Zejména vypadáte dobře celý rok, jen nečekejte, že budete vysekaní na kost.</li>
+      <li>Také jíte dlouhodobě více jídla.</li>
+      <li>Jste v&nbsp;mnohem lepší formě než jste byli dříve.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Vše je ale velmi individuální a&nbsp;záleží na spoustě faktorů – aktivity, genetika, dlouhodobé stravování zpětně, co tělo zažilo, a&nbsp;na co se adaptovalo, množství svalů, spánek, stres, hormony, je toho opravdu moc.</p>
+    <p>Ale představte si, že držíte reverse dieting přes zimu. V&nbsp;létě si všechny výhody můžete užít. A&nbsp;pak až zase přijde zima, tak stačí trochu upravit stravu směrem k&nbsp;nižšímu kalorickému příjmu, ubrat tuky a&nbsp;vysekat se na další léto, je úplně snadné. Pak zase jen nasadíte reverse dieting. Takto se dá s&nbsp;vaším tělem pracovat dlouhodobě a&nbsp;individuálně. Vše je pod kontrolou a&nbsp;kouč má vaše data dlouhodobě. Proto používám tuto metodu Dr. Layne Nortona a&nbsp;je to také jeden z&nbsp;důvodů, proč mám spoustu klientů už třeba rok a&nbsp;déle v&nbsp;kuse a&nbsp;pořád pokračují. I&nbsp;když v&nbsp;původní dietě už dávno zhubli.</p>
+    <p>Velký vliv na to, kolik kcal v&nbsp;reverse dieting přidáte, má to, jak moc budete mít pohybu/kroků během dne/sportů. Více aktivní lidí z&nbsp;toho „vytřískají" více.</p>
+    <p>Mimo to takto budujete návyk, který je udržitelnější dlouhodobě, bližší vaší udržovačce. Po dietě není cílem jíst „pořád stejně málo", protože už není cíl hubnout. Pro udržení formy, minimalizaci Jojo Efektu, je však klíčové nezačít jíst až příliš moc.</p>
+    <p>Po reverse dietingu je možné trénovat takzvané „osvobození od aplikace", které učím své dlouhodobé klienty s&nbsp;dostatečnou praxí. O&nbsp;tom však více zase někdy příště.</p>
+  </div>
+
+  <div class="box">
+    <h2>Načasování jídel</h2>
+    <p>Jak jsme si říkali, pokud jdete do fitka a&nbsp;odjedete trénink, poškozený sval má potom cca 36&nbsp;–&nbsp;48h potenciál regenerovat se a&nbsp;zesílit. A&nbsp;tento proces stojí dost energie. Tomu procesu se říká svalová proteinová syntéza nebo lidově růst svalů.</p>
+    <p>Tělo je jako dům a&nbsp;zedník. Ve fitku rozmlátíte stěny, tělo dostane zabrat, a&nbsp;jelikož je to stroj na přežití, příště už chce být silnější a&nbsp;zesílit, aby nedostalo tak zabrat a&nbsp;mělo větší šanci na přežití. Tělo neví, že chodíme do fitka, abychom nějak vypadali, je to pro něj prostě nějaký stres, se kterým se musí vypořádat. No a&nbsp;pokud tu zeď poškodíme, tělo má těch dalších 36&nbsp;–&nbsp;48h šanci zeď opravit a&nbsp;vystavět něco navíc, aby bylo příště silnější.</p>
+    <p><b>Priorita č. 1</b> je mít v&nbsp;těch dalších dnech najezeno dostatek bílkovin. Tzn. alespoň 1,8&nbsp;–&nbsp;2,2&nbsp;g x tvá tělesná váha bez tuků (tzn. pokud máte 100&nbsp;kg a&nbsp;30&nbsp;% tuků, tak je to 70&nbsp;x&nbsp;1,8&nbsp;–&nbsp;2,2&nbsp;g). Více bílkovin může například pomoci s&nbsp;rychlejším zotavením a&nbsp;regenerací do dalšího tréninku.</p>
+    <p>Pokud máme toto zajištěno, přichází na řadu další metody, které mohou přidat dalších pár&nbsp;% navíc. To je například časování jídel. V&nbsp;podstatě, pokud v&nbsp;jídle přijmete dostatek bílkovin na to, aby si tělo řeklo: „Super dostali jsme dostatek cihel na to, abychom mohli stavět.". Začne stavět a&nbsp;spustí syntézu. Je to náročný proces a&nbsp;může se dít jen po určitou dobu. A&nbsp;opět zvýšit, podle výzkumů, jde za cca 4&nbsp;–&nbsp;6 hodin. Byla i&nbsp;studie, kdy krysám pouštěli do krve neustále další bílkoviny, ale syntéza vždy po nějakém čase klesla. A&nbsp;až po těch 4&nbsp;–&nbsp;6h šla zase navýšit. Tzn. ideálně jíst 3&nbsp;–&nbsp;4 poměrné porce bílkovin denně (toto potvrzují i&nbsp;další studie zatím až po rok 2022).</p>
+    <p>To znamená, najedli jsme se, měli jsme dost bílkovin. Tělo začalo stavět. A&nbsp;zase tu stavbu po nějaké době zpomalilo. A&nbsp;teď po těch 4&nbsp;–&nbsp;6h máme zase šanci tu syntézu navýšit tím, že sníme dostatek bílkovin.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Takto to celý den opakuješ a&nbsp;řekněme, že jíš takto:</p>
+    <div class="formula"><div class="eq">snídaně &rArr; po 4&nbsp;–&nbsp;6h další jídlo &rArr; po 4&nbsp;–&nbsp;6h další jídlo</div></div>
+    <p>A&nbsp;na konci dne jste 3x maximalizovali syntézu a&nbsp;tím pádem spálili navíc velké množství energie, protože jak jsem říkal, je to náročný proces a&nbsp;stojí energii.</p>
+    <p>Nebo jíte takto:</p>
+    <div class="formula"><div class="eq">snídaně &rArr; za 1h jídlo &rArr; za 8h jídlo</div></div>
+    <p>A&nbsp;na konci dne jste syntézu maximalizovali jen 2x. Není to špatně, ale mohli jste spálit více i&nbsp;vybudovat, tím že byste poslali do těla pořádnou dávku bílkovin a&nbsp;maximalizoval syntézu 3x nebo 4x.</p>
+    <p><b>A&nbsp;co je to dostatek bílkovin?</b> Každý to má jinak, dá se to zjistit jednoduše. Pokud je vaším denním cílem najíst 200&nbsp;g bílkovin a&nbsp;víte, že dokážete sníst 4 jídla denně, tak spočítáte 200/4=50 &rArr; to znamená, že chceme mít v&nbsp;každém jídle alespoň 50&nbsp;g bílkovin, abychom ze syntézy vytřískali maximum.</p>
+    <p>Hlavní je mít na den dostatek bílkovin, tento přístup však, zdá se, může přinést navíc pár&nbsp;% efektu na svaly. Někomu to může stát za to.</p>
+  </div>
+  <div class="box">
+    <h2>Co můžete dělat pro pravidelné výsledky bez záseků?</h2>
+    <ul>
+      <li>skutečně striktně vážit potraviny a&nbsp;dávat si záležet na přesnosti zápisu ingrediencí jídel a&nbsp;nápojů</li>
+      <li>ano, i&nbsp;mléko a&nbsp;cukr do kafe se počítá, i&nbsp;když ukusujete kámošce z&nbsp;dortu apod. (to je čistě z&nbsp;praxe s&nbsp;klienty, co sami říkají, že dělali a&nbsp;dávají si na to už pozor, protože se naučili, jak hodně kcal to dělá :-D)</li>
+      <li>dodržení kroků spíše na více než je cíl, ale rozhodně nikdy ne méně, protože to přímo značně ovlivní spalování kcal a&nbsp;nemusí to pak sedět z&nbsp;hlediska jídlo vs. to, co očekáváme, že spálíte pohybem a&nbsp;třeba nevyjde kalorický deficit a&nbsp;tím pádem tělo má dostatek na to, co potřebuje a&nbsp;nevezme si z&nbsp;tuků za ten týden to, co chceme :)</li>
+      <li>pozor na „nedokonalosti" reality našich metod, samozřejmě když mají třeba holky hodinky a&nbsp;myjou okna, uklízí nebo pletou, počítá to kroky, ale asi se shodneme na tom, že hýbání rukou kolem okna či pletení není tak namáhavé a&nbsp;tedy nespálí tolik, jako když tělo chodí z&nbsp;místa na místo a&nbsp;tak samozřejmě chceme kroky hlavně z&nbsp;procházek a&nbsp;to nám dá to spalování „větší", to čistě prakticky. Tohle téma jsme řešili i&nbsp;v&nbsp;rozhovoru s&nbsp;klientkou Andy – Rozhovory s&nbsp;klienty – Andrea.</li>
+      <li>mějte pořád na paměti, že priority jsou průměr kcal, dost bílkovin denně, dost vlákniny denně + kroky/cvičení</li>
+      <li>každý den chceme přes 70&nbsp;% potravin čerstvých a&nbsp;nezpracovaných (dlouhodobý cíl, nebude to vždy dokonalé)</li>
+    </ul>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <ul>
+      <li>co týden se snažíme tzv. „rotovat některé potraviny", tzn. prostě hledáte pořád nové typy zeleniny, ovoce, ryb a&nbsp;ideálně dalších čerstvých potravin, ne nové příchutě chipsů (haha), to se nepočítá</li>
+      <li>pokud vám to sedne, může se vyplácet sníst polovinu bílkovin/vlákniny dopoledne či „do oběda včetně oběda"; dost lidem to pomohlo udržet celý den lepší chutě, náladu, krevní cukr + je pro svaly rozložení do 3&nbsp;–&nbsp;4 porcí taky lepší než sníst všechny bílkoviny třeba večer</li>
+      <li>pokud vám však jíst dopoledne nevyhovuje, OK – doporučuji dávat si pozor na to, aby to nedopadlo „jím první jídlo, co nejpozději, aby mi tam vyšlo, co nejvíce dobrot na kcal, jednak to někdy psychicky takto vede k&nbsp;ne moc dobrým návykům dlouhodobě a&nbsp;méně kvalitní strava méně bílkovin/vlákniny a&nbsp;rozhozený režim a&nbsp;nakročeno k&nbsp;PPP (poruchy příjmu potravy) nebo verze „takže je 18:00 a&nbsp;musím ještě najíst 150&nbsp;g bílkovin, takže buď to nacpu a&nbsp;bude se mi fakt blbě spát a&nbsp;nebo nejím dost bílkoviny". Nacpat se příliš moc na noc většinou nechceme, protože špatný spánek = větší hlad/chutě/únava, anebo „nebude dost bílkovin a&nbsp;vyspíte se dobře" a&nbsp;omezíte tak sytost, regeneraci, imunitu apod. Asi chápete, proč doporučuji si jídlo alespoň částečně rozložit. Jsou však případy lidí, co to zvládnou split, i&nbsp;když jí až odpoledne, jen je fajn chápat potenciální rizika a&nbsp;moci se rozhodnout, co mi sedí „pomocí edukované volby".</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Nikdy nebudeme dokonalí. Ale ani nemusíme. Jen chci, ať máte fakt větší představu, co ještě kolem hraje roli na výsledky a&nbsp;máte, co největší kontrolu nad tím, co se děje z&nbsp;týdne na týden, a&nbsp;jak formujete své návyky dlouhodobě.</p>
+  </div>
+
+  <div class="box">
+    <h2>Analogie hubnutí na auto / nákup v obchodě</h2>
+    <p>Pokud máte hodně sedavou práci, navrhoval bych vměstnat do daného dne více chůze – myšleno třeba do práce, z&nbsp;práce, na oběd apod. Ono se to nezdá, ale spálí nám to energii. Tělo je jako auto, jeho motor jsou naše svaly. Třeba kulturista má obrovské svaly/motor a&nbsp;ty mu žerou hodně energie:</p>
+    <ul>
+      <li>když spí (volnoběh na křižovatce)</li>
+      <li>když cvičí (projížďka autem na závodním okruhu)</li>
+      <li>když chodí (ježdění po městě do obchodu)</li>
+      <li>a&nbsp;hlavně dokáže podat lepší výkon/větší síla, takže spálí za trénink více energie než netrénovaný začátečník.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Máme něco jako palivovou nádrž, což jsou tuky. A&nbsp;to kolik v&nbsp;palivové nádrži zůstane paliva (tuků z&nbsp;jídla uložených), tak závisí na tom:</p>
+    <ul>
+      <li>kolik najezdíte,</li>
+      <li>jakou máte spotřebu,</li>
+      <li>jestli jezdíte závody, po městě nebo stojíte na červené na volnoběh…</li>
+      <li>ALE také na tom, kolik litrů paliva doléváte.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">To znamená, kolik jíte jídla a&nbsp;tam energii vyjadřujeme v&nbsp;kaloriích, což je to samé jako litry benzinu. Ať už lijeme různé typy a&nbsp;oktany = jíme různé jídla, zajímá nás, kolik to má energie. Já se potom tyto údaje s&nbsp;klienty snažím regulovat tak, abychom vůči tomu, jak jezdíme, mohli co nejvíce dolévat (jíst) a&nbsp;přesto dosahovali týdenních výsledků, tak jak potřebujeme.</p>
+    <p>Cílem není začít jíst ze startu moc málo, protože tělo se na to adaptuje a&nbsp;sice zhubnete krátkodobé více, ale dlouhodobě si tělo zvykne na méně a&nbsp;zefektivní procesy. To pak znamená, pro další hubnutí musíte zase ubrat více jídla. S&nbsp;klienty raději běžíme maraton než sprint. Chceme proměnit tělesnou kompozici a&nbsp;ne zhubnout na fotku „PŘED/PO". Cílem je, abychom váhu i&nbsp;míry udrželi a&nbsp;na to máme po-dietní servis, takzvaný Reverse Dieting.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Je to jako když chodíte do obchodu na nákupy, určitě už víte z&nbsp;hlavy, jaký máte +- rozpočet na jídlo (to je analogie na plán/kalorický strop), a&nbsp;také +- víte, že kuřecí maso stojí x&nbsp;Kč, šunka x&nbsp;Kč, mléko x, sýr x&nbsp;a&nbsp;ovoce x.</p>
+    <p>A&nbsp;stejně jako potraviny mají cenovku v&nbsp;korunách, stejně tak mají i&nbsp;nějaký obsah energie a&nbsp;zároveň je to taky na váhu dané potraviny (stejně jako většinou ceny). Takže jako jste se naučili, kolik co stojí v&nbsp;Kč, tak stejně se postupně začnete více z&nbsp;hlavy rozlišovat „kolik ta a&nbsp;ta potravina stojí energie".</p>
+    <p>Klienti takto ode mě vědí, jaký mají „rozpočet" a&nbsp;od začátku začneme od základů stravu regulovat tak, abychom nejprve udělali to nejvíce vlivné na hubnutí a&nbsp;nechali aspoň relativní svobodu (pamatujte, udržitelnost dlouhodobě je naprosto zásadní, jinak ta dieta nemá smysl a&nbsp;naberete váhu zpět). Podle toho, jak klienti zvládají základy, přidávame a&nbsp;vysvětlujeme další věci, aby klient rozuměl tomu, co děláme a&nbsp;dlouhodobě se „něco naučil" do života o&nbsp;stravování :).</p>
+  </div>
+
+  <h2 class="section">Alkohol, hubnutí a společenské události</h2>
+  <div class="box">
+    <p>Alkohol „intoxikuje tělo" a&nbsp;nám se to do určité míry líbí. Tělo však automaticky alkohol odbourává přes játra. Naprosto cokoliv, co do sebe dostanete játra filtrují, vychytají jako vojáci v&nbsp;první linii ty „rány" a&nbsp;velmi rychle se regenerují a&nbsp;pošlou to, co je třeba hned ven.</p>
+    <p>Tělo je v&nbsp;podstatě úžasný výtvor, který se na vše adaptuje. Proto jsem třeba já v&nbsp;16 letech dal 1 pivo a&nbsp;byl jsem fakt opilý, ale stačí pár akcí s&nbsp;kamarády a&nbsp;člověk zjistí, že potřebuje více alkoholu, aby měl ten pocit opilosti. Proč? Protože tělo se na vše adaptuje a&nbsp;stává se v&nbsp;tom efektivnější – běh, cvičení, drogy, alkohol.</p>
+    <p>Takže tělo se stává i&nbsp;efektivnější v&nbsp;odbourávání alkoholu a&nbsp;je odolnější. Musíte tak zvýšit dávku pro stejný efekt. Játra, která se na tom odbourávání hodně podílí, se ovšem podílí i&nbsp;na procesu regenerace/budování svalů (mimo jiné zásadní věci pro lidské tělo). Takže například, když jdete cvičit a&nbsp;pak se opijete, tak tělo samozřejmě upřednostní odbourávat alkohol z&nbsp;krve a&nbsp;svaly jsou pro něj až na druhém místě.</p>
+    <p>Ovšem Dr. Layne Norton tvrdí, že ve své přípravě na mistrovství světa v&nbsp;naturálním powerliftingu pil občas i&nbsp;„desítku" pivo. Ovšem dal si třeba 2 během celého dne, ne 8. Proč? Vysvětlil to tak, že když si dáte trošku, tak to vaše játra v&nbsp;podstatě tolik nezatíží, jako když začínáte být opilí. To už je totiž v&nbsp;té rovině, kdy játra více zatížíte a&nbsp;musí toho odbourávat více.</p>
+    <p>Tedy i&nbsp;zde není černá nebo bílá, ale jde o&nbsp;kontext. Pokud se budeme bavit o&nbsp;všeobecném „pivku na zahrádce", doporučím pít desítky, jednoduše nízké voltáže a&nbsp;mít svou míru a&nbsp;nepřehnat to.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Co se týče alkoholu jako takového. Má 7&nbsp;kcal na 1&nbsp;g (bílkoviny a&nbsp;sacharidy mají 4&nbsp;kcal na 1&nbsp;g a&nbsp;tuky 9&nbsp;kcal na 1&nbsp;g). Má ty „prázdné kalorie", jak jste už určitě někde slyšeli. Proto se po něm může i&nbsp;přibírat, protože to je také jistá forma energie pro tělo. Stejně jako sacharidy, bílkoviny nebo tuky, akorát ho tělo nepotřebuje a&nbsp;nemá zrovna moc benefitů, spíše naopak – pokud se nebavíme o&nbsp;občasné umírněné konzumaci. Od toho se odvíjí i&nbsp;to, co na oslavě pít či nepít a&nbsp;kolik, ať vám to vychází, co nejlépe.</p>
+    <p><b>Jak na akcích, kde se „musí pít"?</b></p>
+    <p>Máme tam hledisko jater, pocit opilosti vám postačí jako nejlepší pomůcka a&nbsp;tam je to o&nbsp;vašich prioritách. Co se kalorií týče, tak z&nbsp;odstavce výše vyplývá, že čím vyšší voltáž alkoholu, tím více alkoholu a&nbsp;tím více kalorií v&nbsp;dané flašce/panáku.</p>
+    <p>Dobré je, že v&nbsp;kalorických tabulkách najdete spousty druhů alkoholu. Doporučuji si udělat „malý průzkum" předem a&nbsp;najít si něco, co máte rádi a&nbsp;zároveň to „nesežere" moc kcal.</p>
+    <div class="kvgroup" style="margin-top:1mm;">
+      <h3>Příklady (kalorie v alkoholu)</h3>
+      <table class="kv">
+        <tr><td>Pivo desítka</td><td class="val">185 kcal / půl litru</td></tr>
+        <tr><td>Pivo dvanáctka</td><td class="val">237 kcal / půl litru</td></tr>
+        <tr><td>Panák vodky 5 cl</td><td class="val">110 kcal</td></tr>
+        <tr><td>53% slivovice 4 cl</td><td class="val">88 kcal</td></tr>
+        <tr><td>Bílé suché víno 2 dcl</td><td class="val">cca 110 kcal</td></tr>
+      </table>
+    </div>
+    <p>Je to tím, že je tam více alkoholu a&nbsp;to přidává kalorie, mimo to slad je sacharid v&nbsp;pivu a&nbsp;ty taky mají kcal, to samé ty sladké alkoholové typy mají ještě cukry mimo alkohol.</p>
+    <p>Jak vidíte, jsou tam rozdíly, a&nbsp;když si do tabulek napíšete, co máte rádi, tak si jen sepíšete, kolik to má na určité množství kcal a&nbsp;uvidíte, co vás vyjde nejvýhodněji a&nbsp;získáte lepší přehled, kolik má co kcal a&nbsp;to se „v&nbsp;terénu" hodí.</p>
+  </div>
+  <div class="box">
+    <p>Snažíme se alkohol samozřejmě omezit. Když alkohol konzumujeme tak to vždy alespoň zapíšeme. Co se týče míchání alkoholu, tak raději opatrně, ideálně se držte svého druhu a&nbsp;když pijete, tak najezení. Ještě mám pro vás tip na „opici" po akci. Část toho špatného pocitu po pití alkoholu další den, dělá dehydratace. Takže doporučím pít hodně vody během akce, potom se napít i&nbsp;doma a&nbsp;třeba si naplnit láhev vodou a&nbsp;dát si ji k&nbsp;posteli, ať se můžete kdykoli během noci napít a&nbsp;hned ráno doplnit tekutiny a&nbsp;pak pospávat dále. Omezuje to dehydrataci, protože alkohol odvodňuje.</p>
+    <p>Když si chcete na párty zaznamenat, kolik jste čeho vypili a&nbsp;snědli, nezapomeňte, že ve světě neustálého focení všeho je méně divné si třeba každé jídlo/panáka vyfotit a&nbsp;další den si to podle fotek v&nbsp;klidu přepsat. Je to lepší než strašit s&nbsp;tabulkami před kamarády. A&nbsp;s&nbsp;přípravou předem vyjdete ještě lépe. Neříkám ať pijete alkohol v&nbsp;dietě, ale říkám, že i&nbsp;když si občas něco dáte, pokud to zohledníme správně, můžete i&nbsp;tak udržet hubnutí.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Ovoce vs. Bebe sušenka (z hlediska cukrů/sacharidů)</h2>
+    <p>Je zde samozřejmě více faktorů. Vezmeme to tak, abyste z&nbsp;toho opět něco měli a&nbsp;ne jen, že „ovoce je zdravé a&nbsp;bebe sušenky jsou zlé".</p>
+    <p>Faktor krevní cukr/sacharidy/cukry. Zjednoduším to jako vše, aby to bylo pro vás srozumitelnější. Řekněme, že když sníte komplexní sacharid z&nbsp;rýže versus vypijete sklenici coca coly a&nbsp;vezmeme v&nbsp;potaz, že OBOJÍ KONZUMUJETE SAMOSTATNĚ BEZ DALŠÍCH POTRAVIN.</p>
+    <p><b>Rýže obsahuje komplexní sacharidy, co to znamená:</b></p>
+    <ul>
+      <li>je to řetězec velkého množství glukózy (což je základní jednotka cukru, řetězec pak tvoří komplexní sacharid, například rýže/brambory apod.)</li>
+      <li>v&nbsp;trávicím traktu se to pak „naseká" na jednotky glukózy a&nbsp;ta jde teprve do krve</li>
+      <li>vzhledem k&nbsp;tomu, že se jedná o&nbsp;větší řetězec, tak se do krve dostává více pozvolna.</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Sklenice coly nemá řetězce, ale například 2 spojené jednotky cukrů:</b></p>
+    <ul>
+      <li>cukr se mnohem rychleji dostane do krve a&nbsp;zvedne se krevní cukr.</li>
+      <li>na to reaguje inzulín, což je hormon, který funguje jako „dveře z&nbsp;krevního řečiště do buňky" a&nbsp;„odemkne" nějakou buňku (tukovou/svalovou) a&nbsp;vpustí tam glukózu z&nbsp;krevního řečiště</li>
+      <li>když se rychle zvedne krevní cukr, inzulínu se vyplaví více, jak se to vyklidí tak je nízký krevní cukr a&nbsp;tělo si ho udržuje v&nbsp;určitém rozmezí (kdyby cukr klesl teoreticky na nulu, tak jste mrtví, například cukrovkář mají i&nbsp;ráno nalačno vyšší cukr než má být – a&nbsp;dlouhodobě zvýšený dělá také problémy)</li>
+      <li>tělo chce další cukry, proto když se cpete sladkým nebo pijete moc cukerných vod jako například coca cola/sprite/mirinda apod, tak máte chuť na další a&nbsp;další a&nbsp;stále to pijete</li>
+    </ul>
+  </div>
+  <div class="box">
+    <p><b>Co z&nbsp;toho tedy vyplývá:</b></p>
+    <ul>
+      <li>když jíte více rýži, tak tam nemusí být takový akutní nárůst krevního cukru a&nbsp;více pozvolna se dostává cukr do krve</li>
+      <li>dlouhodobé extrémní přežírání se, obezita, neaktivita a&nbsp;také genetika mohou způsobit právě to, že slinivka už inzulín moc nevylučuje a&nbsp;máte náběh na cukrovku</li>
+      <li>proto je krevní cukr vyšší – protože slinivka vyplavuje inzulín, co ten krevní cukr přenáší do buněk, jinak tam zůstává a&nbsp;dělá problémy…</li>
+      <li>zároveň i&nbsp;buňky mohou být méně citlivé na cukry a&nbsp;nepřijímat je, anebo slinivka už téměř nefunguje, a&nbsp;proto si cukrovkář musí píchat inzulín a&nbsp;měl by jíst přesné množství sacharidů podle toho, kolik inzulínu si píchá, jednotka inzulínu přenáší asi 10&nbsp;–&nbsp;15 jednotek glukózy.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">OVŠEM rychlost trávení (i&nbsp;sacharidů/cukrů) ovlivňuje i&nbsp;příjem vlákniny, bílkovin a&nbsp;tuků v&nbsp;daném jídle, tzn pokud sníte třeba kus dortu a&nbsp;dáte si k&nbsp;tomu tvaroh a&nbsp;třeba nějaký celozrnný chléb s&nbsp;kupou vlákniny, tak i&nbsp;když jste snědli nějaké množství cukru, do krve se stejně bude dostávat ÚPLNĚ JINAK A&nbsp;POZVOLNĚJI NEŽ KDYBYSTE JEDLI JEN CUKR SAMOTNÝ. Jak říká Dr. Layne Norton (PhD. z&nbsp;výživových věd a&nbsp;Bc. z&nbsp;biochemie): „Problém není hodně cukru, ale málo vlákniny."</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Bebe sušenky vs. ovoce</h2>
+    <ul>
+      <li>Bebe má pravděpodobně méně vlákniny a&nbsp;více cukrů než většina typů ovoce – to je jeden pohled, proč „může být ovoce všeobecně vhodnější" pro většinu lidí</li>
+      <li>to neznamená, že když si dáte občas Bebe a&nbsp;bílkoviny, vlákninu i&nbsp;kcal máte naprosto v&nbsp;pořádku, že to je problém</li>
+      <li>další věc je, že jednoduché sacharidy (cukry) v&nbsp;ústech mohou živit bakterie, které poškozují zubní sklovinu a&nbsp;zvyšuje se riziko vzniku zubního kazu (opět záleží na více faktorech, avšak je dobré to zmínit)</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Další faktor je obsah dalších živin:</b> Jaké vitamíny a&nbsp;minerály obsahuje daná potravina. Je fakt, že ve všeobecně dobře vyvážené stravě s&nbsp;dostatkem vlákniny je pravděpodobně, že obsahuje dostatek vitamínů a&nbsp;minerálů.</p>
+    <p>Nedostatek vitamínů a&nbsp;minerálů se dá zjistit pouze krevními testy, ne tím že vám výživový poradce řekne: „Hmm máte kruhy pod očima, kupte si multivitamin." apod.</p>
+    <p>Má kamarádka byla v&nbsp;jedné výživové poradně a&nbsp;tam jí řekli, že „nemá svaly vhodné na posilování", což je naprostý nesmysl. Protože toto lze zjistit jen analýzou svalových vláken pomocí svalové biopsie – tedy že vám velkou jehlou vyjmou kus svalu a&nbsp;ten v&nbsp;laborce analyzují z&nbsp;hlediska složení typů svalových vláken. Ale paní výživářka to zřejmě poznala jen díky pohledu do očí, haha.</p>
+    <p>Tak či tak třeba jablko, banán bude mít více různých vitamínů a&nbsp;minerálů než zmiňované bebe oplatky.</p>
+    <p><b>Další faktor jsou takzvané enzymy:</b> To je laicky řečeno to, kvůli čeho vám třeba jablko hnije nebo se zkazí maso. Enzymy pomáhají trávit tu „čerstvou" potravinu. Když se jedná o&nbsp;hodně zpracovanou potravinu, tělo ty enzymy musí dodávat, tvořit je více samo. Je tudíž dobré jíst i&nbsp;nějaké čerstvé čerstvě uvařené potraviny a&nbsp;ne jen třeba ty bebe oplatky.</p>
+    <p>Vysvětluji to zde opět zjednodušeně pro laika, chci ať rozumíte tomu, že faktorů je více a&nbsp;třeba ovoce má opravdu svůj význam v&nbsp;kvalitní stravě, nehledě na obsah makroživin.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Maso versus „proteinový prášek"</h2>
+    <p>Je rozdíl mezi tím, když si dáte proteinový prášek s&nbsp;vodou nebo čerstvé maso? Proteinů je více typů, například hovězí, veganský z&nbsp;hrášku, syrovátkový apod. Jednoznačně doporučuji syrovátkový, který používají i&nbsp;na vědecké výzkumy. Je to totiž nejlevnější a&nbsp;nejkvalitnější forma suplementu na příjem bílkovin.</p>
+    <p><b>Příklad: Syrovátkový protein vs. hovězí maso</b></p>
+    <p>Každá potravina se skládá z&nbsp;makroživin a&nbsp;mikroživin. Makroživiny jsou bílkoviny/sacharidy/tuky/vláknina (vláknina je v&nbsp;podstatě sacharid, ale je méně stravitelná). Mikroživiny jsou minerály/stopové prvky a&nbsp;vitamíny. Makro znamená větší složky, mikro znamená menší.</p>
+    <p>Nějaké máme přidané například v&nbsp;proteinovém prášku (vidíte to vypsané na obalu v&nbsp;té tabulce, jaké tam jsou a&nbsp;kolik), jsou i&nbsp;v&nbsp;jablku, ale i&nbsp;například v&nbsp;hovězím mase. Obsah různých živin v&nbsp;potravinách tedy můžeme přesně vyjádřit pomocí makroživin a&nbsp;mikroživin. V&nbsp;každém je trošku něco jiného, nebo jiné množství různých složek.</p>
+    <p>Ovšem tyto mikroživiny jsou pro nás důležité a&nbsp;čerstvé potraviny jich mají více, mají také více enzymů a&nbsp;fytonutrientů, které mají pozitivní vliv na naše trávení, zdraví a&nbsp;mikroflóru. Čerstvý kus masa či jablko tedy bude mít těchto látek více než trvanlivá více zpracovaná potravina typu proteinový prášek.</p>
+    <p>Pořád můžeš bílkoviny čerpat i&nbsp;z&nbsp;proteinového prášku. Chcete však v&nbsp;jídelníčku převahu potravin z&nbsp;„čerstvých nezpracovaných/méně trvanlivých" potravin.</p>
+  </div>
+  <div class="box">
+    <p><b>Makroživiny jsou větší složky a&nbsp;jsou to druhy částic daného jídla</b> (vysvětluju „nevědecky" pro vás):</p>
+    <ul>
+      <li>Když sníte tuky, tak se rozloží na takzvané „mastné kyseliny" a&nbsp;v&nbsp;této formě putují v&nbsp;krvi a&nbsp;tělo s&nbsp;nimi dále nakládá.</li>
+      <li>Sacharidy se rozloží na glukózu a&nbsp;ta se zase využije nebo uloží do svalů/jater/tukových buněk apod.</li>
+      <li>Bílkoviny se rozloží na takzvané aminokyseliny.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">To si představte třeba jakože bílkovina je molekula a&nbsp;aminokyseliny atomy v&nbsp;molekule. Je to na ně rozložitelné a&nbsp;do krve bílkovina nesmí, takže se „naseká" a&nbsp;dostává se do krevního řečiště v&nbsp;podobě aminokyselin.</p>
+    <p><b>Existuje 9 esenciálních aminokyselin</b> které tělo nedokáže vytvořit a&nbsp;potřebuje je dodávat – to může být problém u&nbsp;veganů, pokud nerozumí výživě a&nbsp;neví jak to nahradit, když nejí živočišné, protože živočišné má tohohle nejvíce. 3 z&nbsp;nich jsou v&nbsp;BCAA (branched chain amino acids) = leucine/valine/isoleucine a&nbsp;ty právě mají největší vliv na svaly a&nbsp;jejich regeneraci.</p>
+    <p>I&nbsp;hovězí maso a&nbsp;syrovátkový protein má esenciálních aminokyselin poměrně hodně na gramáž dané potraviny, takže obojí je prvotřídní zdroj bílkovin. Ovšem třeba když byste najedli 30&nbsp;–&nbsp;40&nbsp;g z&nbsp;masa/syrovátky, tak i&nbsp;když budete svalově jako například já, tak +- maximalizujete regeneraci.</p>
+    <p>Množství bílkovin se určuje podle obsahu těch esenciálních aminokyselin, a&nbsp;proto se vždy píše „tolik a&nbsp;tolik denně z&nbsp;KVALITNÍCH zdrojů" (většinou tedy živočišných nebo aspoň mix živoč/rostlin). Ale kdybyste snědli 30&nbsp;–&nbsp;40&nbsp;g bílkovin třeba z&nbsp;chleba, tak sice najíte tolik bílkovin, ale těch „esenciálních aminokyselin" tam stejně bude méně. Jednoduše mají menší zastoupení v&nbsp;rostlinných produktech.</p>
+    <p>Ovšem v&nbsp;roce 2021 se ukazuje, že i&nbsp;rostlinné i&nbsp;živočišné bílkoviny dokážou stimulovat růst svalů srovnatelně. Až bude více informací, nasdílím na toto téma článek/video. Může to do jisté míry změnit vědecké paradigma kolem bílkovin.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Chutě a hlad</h2>
+  <div class="box">
+    <p>Proč máte chutě na sladké? Může tam být více vlivů, pojďme si to rozebrat.</p>
+    <p><b>Období periody ženy.</b> NĚKTERÉ mívají nižší krevní cukr a&nbsp;projevuje se to většími chutěmi, často jim stačí povolit trošku sladkého a&nbsp;udržet +- priority a&nbsp;je to v&nbsp;pohodě (pokud jste žena, kolem periody očekávejte více kg i&nbsp;větší míry – je to jen dočasné zavodnění, poté to vždy opadne, a&nbsp;na kolik je to zavodnění, je opět individuální u&nbsp;každé ženy)</p>
+    <p><b>Velmi přísná dieta.</b> Kdyby daný klient hubl příliš rychle, nastane velká únava a&nbsp;hlad. Tělo chce dostat „víc peněz na spořící účet", protože má obrovské výdaje (= jak jej donutí sníst více kč = kcal?, chutě/hlad) + co ještě udělá jako zdatný „finanční manažer"? Udělá jej ultra unaveného = sníží výdaje z&nbsp;toho účtu.</p>
+    <p>Když je klient unavený, méně chodí, méně mává rukama, když mluví a&nbsp;celkově šetří energii – lidské tělo nechce zkrachovat, tak jako my. Tělo netuší, že řešíme esteticky, ať „jsme v&nbsp;této době historie lidstva sexy" – před 100 lety bylo sexy mít nadváhu.</p>
+    <p>Tělo vidí „účetnictví" a&nbsp;jedná pro přežití, proto když mi klienti hlásí velkou únavu a&nbsp;hlad, dává se tzv. diet break (Pauza od diety – zde podrobně vysvětluji, co to je diet break/pauza od diety a&nbsp;proč to může být fajn nástroj)</p>
+    <p><b>Nedostatek bílkovin a&nbsp;vlákniny</b> celkově v&nbsp;celém dni nebo v&nbsp;jídlech, před výskytem chutí</p>
+  </div>
+  <div class="box">
+    <p><b>Další vlivy</b></p>
+    <p>Když hubnete máte častěji nižší krevní cukr, kdyby se dostal na 0, máte cukrovkářské kóma a&nbsp;pak smrt, je tedy kritické, aby si tělo drželo jisté rozmezí množství glukózy/cukru v&nbsp;krvi.</p>
+    <p>Když méně jíte a&nbsp;více makáte, tak je toho méně častěji během dne. Jak tělu nejrychleji zvednete krevní cukr? Ano, sladkým. Má to jednoduché sacharidy/cukry a&nbsp;tak to tělo dokáže vstřebávat do krve již v&nbsp;ústech přes sliznice i&nbsp;přes žaludek.</p>
+    <p>Když sníte sacharidy ve fazolích, je tam hromada bílkovin a&nbsp;vlákniny, takže se cítíte sytější, trávíte pomaleji a&nbsp;pomaleji se i&nbsp;ty „cukry" uvolňují do krve, takže máte stabilnější krevní cukr.</p>
+    <p>ALE! Myslete jako tělo, když máte nízký krevní cukr, tak nechcete čekat několik hodin na pořádnou dávku cukrů, která vám jde postupně po troškách, takže dáte signál „máme chuť na sladké" a&nbsp;takhle doručíte to zvýšení krevního cukru ihned.</p>
+    <p>Jak říkám, tělo má v&nbsp;paži naše cíle, jede si svoje na přežití a&nbsp;věřte mi, přežití je mnohem silnější PROČ než „mít více sexy břicho/zadek" + lidské tělo je doslova MISTR přežití, je to fascinující organismus.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Ketogenní dieta a sacharidy</h2>
+  <div class="box">
+    <p>Nejvtipnější jsou lidé, kteří tvrdí něco jako: „Naši předci taky nejedli sacharidy!" a&nbsp;nejí skoro žádné sacharidy. Pak se nárazově, ale pravidelně, totálně přejí, samozřejmě hlavně pomocí sacharidů. Hned první otázka, kterou bych těmto lidem položil: „Pokud tedy naši předci nejedli sacharidy, proč se tedy často nárazově přejídáš právě cukrem?".</p>
+    <p>Další věc, Dr. Brad Schoenfeld (jeden z&nbsp;TOP 30 vědců planety ohledně svalové hypertrofie) na FB sdílel studii, kde nalezli dle zubní analýzy pravěkých pozůstatků důkazy o&nbsp;tom, že pravěcí lidé konzumovali vlákninu. Vláknina je sacharid sám o&nbsp;sobě, akorát tak komplexní, že ho tělo úplně nestráví a&nbsp;fermentuje v&nbsp;tlustém střevě, proto z&nbsp;ní tělo dostane jen cca &#8531; energie, jenž obsahuje. Vlákninu najdeme například v&nbsp;zelenině, ovoci, luštěninách, celozrnných potravinách, batátech, bramborách apod. Je součástí zdravého jídelníčku a&nbsp;její příznivý vliv na lidské tělo je vědecky potvrzen.</p>
+    <p>Sacharidové vlny mají své opodstatnění hlavně u&nbsp;lidí s&nbsp;nízkým tělesným tukem, a&nbsp;kteří hodně trénují. Ale lidé jsou dnes zmatení a&nbsp;myslí si, že ketogenní dieta znamená to, že jedí méně sacharidů a&nbsp;pak se jimi nárazově přecpou, protože to pro ně není udržitelná forma stravování.</p>
+    <p>Jenže pro to, aby tělo přešlo do ketózy musíte jíst několik dní v&nbsp;kuse nejen velmi málo sacharidů na den (tedy přílohy maximálně troška zeleniny) a&nbsp;stejně tak bílkovin. Moderní věda jasně ukazuje, že adekvátní přísun bílkovin má mnoho benefitů pro zdraví těla, mozku i&nbsp;regeneraci a&nbsp;atletický výkon. Pokud jich však v&nbsp;jídelníčku budete mít tolik, kolik je efektivní, nemůžete být zároveň v&nbsp;ketóze. Tělo si totiž z&nbsp;aminokyselin a&nbsp;z&nbsp;bílkovin vytváří, pomocí glukoneogeneze v&nbsp;játrech, glukosu. Tedy nezůstanete v&nbsp;ketóze, protože k&nbsp;tomu není důvod. Tělo má totiž opět dostatek glukózy a&nbsp;ketozu tedy nepotřebuje. Obecně, jakmile se najíte sacharidů, tělo jde z&nbsp;ketózy hned ven. Dále to, že má tělo mechanismus, kdy i&nbsp;při nedostatku sacharidů dokáže jet na ketolátky neznamená, že ho do toho stavu musíme dostávat či že je výhodnější. Stejně jako když jste vy bez práce, máte méně peněz, ale i&nbsp;tak vyžijete. Ale to neznamená, že chcete být na pracovním úřadě celý život, že ano?</p>
+  </div>
+  <div class="box">
+    <p>Ketóza je tedy velmi zjednodušeně stav, kdy tělo nemá dost sacharidů a&nbsp;musí na to reagovat. Mozek k&nbsp;optimálnímu výkonu využívá hlavně glukosu, tedy sacharid. Proto musí játra produkovat takzvané ketolátky z&nbsp;tuků/mastných kyselin, na kterých je mozek schopen fungovat také.</p>
+    <p>Ale ty průvodní pocity jsou často hodně nepříjemné a&nbsp;v&nbsp;praxi je obtížné dostat se do ketózy a&nbsp;ještě obtížnější v&nbsp;ní zůstat. Musíte tedy takto jíst dlouhodobě. Umíte si to představit jako udržitelný způsob stravování pro vás? Mimo to, pokud ketogenní dieta funguje, funguje pouze díky vytvoření kalorického deficitu. A&nbsp;vytvořit kalorický deficit je možné i&nbsp;bez ketodiety. Často však tito lidé v&nbsp;praxi, těch obdobích, kdy se přejídají, sní tolik, že nakonec ani nehubnou jak si přejí. A&nbsp;často to ani nepoznají.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Proč to ne vždy poznají?</b></p>
+    <p>Řekli jsme si, že sacharidy se ukládají i&nbsp;do svalů na 1&nbsp;g toho sacharidu jsou 3&nbsp;g vody. Když odstraníme sacharidy, z&nbsp;těla odejde i&nbsp;dost vody a&nbsp;lidé často hodnotí své pokroky dle tělesné váhy v&nbsp;kg a&nbsp;ne podle toho, jak se jim mění tělesné míry, což je zde nevýhodou. Proto pak mohou pocit, že hubnou svižně, většina úbytku je však odvodnění.</p>
+    <p>To samé platí i&nbsp;u&nbsp;„detoxikačních diet", kdy lidé přestanou na pár dní téměř jíst. Samozřejmě jakmile se zase více nají, tělo si hned uloží glykogen do svalů a&nbsp;jater i&nbsp;s&nbsp;vodou a&nbsp;váha jde nahoru. Proto mají následně lidé pocit, že sacharidy jsou zlé a&nbsp;mohou za jejich „přibírání". Mimochodem určitě pamatujete časy, kdy naopak tuky byly „to zlo". Mýty se ve výživě pořád cyklicky mění, stejně jako ve světě módy.</p>
+    <p>Nemluvě o&nbsp;tom, že když někdo jí extrémním a&nbsp;neudržitelným způsobem a&nbsp;pak se totálně „přejí", může vést k&nbsp;budování velmi nezdravého návyku a&nbsp;vytvoření poruchy příjmu potravy. A&nbsp;tohle fakt není to, co chci své svěřence učit.</p>
+    <p>Mimo to, pokud cvičíte, sacharidy jsou pro svaly a&nbsp;jejich výkon velmi výhodné. Mají antikatabolické účinky a&nbsp;právě sacharidy se ukládají do svalů a&nbsp;svaly si tréninkem zásoby cukrů zvyšují. Proto u&nbsp;sportovců kolísá i&nbsp;tělesná váha ze dne na den více, než u&nbsp;netrénovaného jedince. Proto si měřte i&nbsp;tělesné míry a&nbsp;může se vám to vyplatit.</p>
+    <p>Kdyby to bylo málo, tak přihazuju podrobné vyjádření Dr. Layne Nortona: BioLayne Video Log 18 – Carbohydrate Metabolism: What Intake is Right for You? tady krásně rozebírá sacharidy, v&nbsp;popisu videa má samozřejmě i&nbsp;konkrétní studie, které tam zmiňuje, například tuto:</p>
+    <p class="note">Ketogenic diets do not have a metabolic advantage over non-ketogenic high protein diets — <a href="http://ajcn.nutrition.org/content/83/5/1055.long">http://ajcn.nutrition.org/content/83/5/1055.long</a><br>Conclusions: KLC and NLC diets were equally effective in reducing body weight and insulin resistance, but the KLC diet was associated with several adverse metabolic and emotional effects. The use of ketogenic diets for weight loss is not warranted.</p>
+    <p>Nejsem zastáncem čtení abstraktů a&nbsp;vyvozování pevných závěrů, ale toto je studie, kterou analyzoval Layne a&nbsp;ten má Bc. z&nbsp;biochemie, PhD. z&nbsp;výživových věd a&nbsp;jeho životní zaměření je svalová proteinová syntéza a&nbsp;už asi 20 let vede vědecké výzkumy a&nbsp;je coachem. Mimo to dnes již máme řadu studií ukazujících, že ketogenní dieta nemá žádné výhody oproti klasické „zdravé stravě". Je to tedy otázka čistě volby a&nbsp;toho, co komu vyhovuje.</p>
+    <p><b>Pro vás z&nbsp;toho vyplývá:</b></p>
+    <ul>
+      <li>sacharidy jsou náš spojenec</li>
+      <li>doporučuji vám je i&nbsp;před tréninkem či mezi tréninky.</li>
+      <li>poměr toho kolik jíte tuků a&nbsp;sacharidů je na nás, protože při stejných kcal/bílkovinách je to z&nbsp;hlediska hubnutí, dle studií, jedno</li>
+    </ul>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Svaly / sacharidy / voda a jejich vliv na váhu v kilogramech</h2>
+    <p>Tělo v&nbsp;reakci na cvičení zvyšuje zásoby sacharidů ve svalech. Dle materiálů z&nbsp;Advanced Coaching Academy to je kolem 12&nbsp;g glykogenu na 100&nbsp;g svaloviny u&nbsp;netrénovaného jedince a&nbsp;u&nbsp;hodně trénovaného atleta to bylo kolem 32&nbsp;g na 100&nbsp;g. To je skoro 3x tolik. Proč? Zvyšuje objem tréninku, což je hlavní hnací motor svalového rozvoje podle metaanalýz (metaanalýza je analýza kupy studií na dané téma, tedy nadřazené klasickým studiím jednorázovým).</p>
+    <p>Svaly takto jednak sílí a&nbsp;jednak zvětšují i&nbsp;zásoby „glykogenu", což se projevuje tak, že se svaly zvětšují. A&nbsp;díky tomu zvládají ty intenzivnější a&nbsp;delší tréninky. Dokážou také pojmout více sacharidů a&nbsp;s&nbsp;tím i&nbsp;na každý 1&nbsp;g toho sacharidu 3&nbsp;g vody, proto váha u&nbsp;cvičícího „nic neznamená", protože tam mohou být velké výkyvy jen dle akutního nasycení svalů glykogenem a&nbsp;vodou.</p>
+    <p>Svalnatý kamarád Kuba Kiovsky (95&nbsp;kg – vysekaný) jednou zkoušel vysadit sacharidy asi na 3 dny a&nbsp;váha mu akutně spadla o&nbsp;5&nbsp;kg, přitom to byla v&nbsp;drtivé většině voda. Podle nasycení či vyčerpání zásob člověk i&nbsp;jinak váží. Celkově fluktuace tekutin v&nbsp;těle, například vlivem hormonů a&nbsp;dalších procesů, má také vliv na váhu.</p>
+  </div>
+
+  <h2 class="section">Nabírání tuků na buněčné úrovni</h2>
+  <div class="box">
+    <p>Připravil jsem si pro vás velmi zajímavý úryvek z&nbsp;mého článku „Dělá vás vaše dieta tlustšími?". Celý článek najdete na Můj článek „Dělá Vás Vaše dieta tlustšími?".</p>
+    <p>Pokud nabíráte či hubnete tuky, máte určité množství tukových buněk a&nbsp;tyto buňky se zmenšují, když hubnete a&nbsp;zvětšují, když nabíráte. Počet těchto buněk určuje vaši takzvanou „výchozí hodnotu tělesného tuku" (z&nbsp;AJ body fat set point). Vaše tělo a&nbsp;buňky tak synchronizují svou velikost.</p>
+    <p>Když zmenšíte tukovou buňku, začne pomocí vylučování hormonu leptin snižovat „rychlost metabolismu" a&nbsp;toto vede k&nbsp;dalším metabolickým adaptacím. Takto se tělo snaží uzavřít onu energetickou mezeru. Když se vaše buňka naopak zvětší, zvýší se leptin a&nbsp;zrychlí se metabolismus. To proto, aby se zabránilo překročení „výchozí hodnoty tělesného tuku", tělo se snaží zachovat homeostázu, tedy rovnovážný stav.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>MacLean ve svých studiích ukázal, že když hubnete na velmi nízkém kalorickém příjmu a&nbsp;poté váhu velmi rapidně naberete zpět (jak to dělá většina lidí – soutěže, JoJo diety), tak vaše tělo může začít produkovat nové tukové buňky. Zvýší se tedy celkový počet tukových buněk ve vašem těle.</p>
+    <p><b>Proč je to problém?</b> Řekněme, že máte 1&nbsp;000&nbsp;000 tukových buněk (což ani zdaleka neodpovídá realitě) a&nbsp;hubnete. Buňky se tedy zmenší a&nbsp;je jich zhruba 1&nbsp;000&nbsp;000. A&nbsp;když po drastické dietě rapidně naberete, vaše tělo vyprodukuje nové tukové buňky. Řekněme, že teď máte 1&nbsp;500&nbsp;000 tukových buněk v&nbsp;těle.</p>
+    <p>Když se dostanete na vaše původní procento tělesného tuku, máte stejné množství tuků, ale každá jednotlivá buňka je teď menší, protože jich máte více. Menší tukové buňky snižují leptin a&nbsp;jsou citlivější na inzulín a&nbsp;jsou skvěle připravené pro nabírání tuků.</p>
+    <p><b>Co se tedy stane?</b> Jste hladovější než předtím, a&nbsp;to na stejném procentu tělesného tuku jako předtím. A&nbsp;tím se dostáváme k&nbsp;odpovědi na otázku: Proč mají lidé, kteří prošli za život větším množstvím diet, tendenci nabírat více tuků?</p>
+    <p>Není to proto, že by vás diety dělaly tlustými. Je to kvůli podmínkám, které typické diety vytvářejí:</p>
+    <ul>
+      <li>zpomalení metabolismu</li>
+      <li>energetická mezera</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Takže nejen, že velmi rychle naberete zpátky všechen shozený tělesný tuk, ale naberete ho ještě více, než jste měli předtím. Dokonce takto můžete vytvořit novou „výchozí hodnotu tělesného tuku"= tzv. bodyfat set point.</p>
+    <p>Celou problematiku diet, které používá většina lidí včetně odpovědí na otázky PROČ a&nbsp;JAK, pro vás podrobně rozebírám v&nbsp;celém článku na Můj článek „Dělá Vás Vaše dieta tlustšími?".</p>
+  </div>
+
+  <h2 class="section">Suplementy, se kterými se můžete setkat</h2>
+  <div class="box">
+    <h2>BCAA</h2>
+    <p>Používat ideálně na doplnění aminokyselin. Leucine valine isoleucine – důležitý pro svaly, hlavně leucine spouští regeneraci svalů na vyšší level dle toho, kolik ho je v&nbsp;koncentraci v&nbsp;krvi, jak vstupuje do buňky apod.</p>
+    <p><b>Příklad:</b> Když vím, že jsem měl jídlo, kde „nebylo moc bílkovin", tak si přisypu BCAA.</p>
+    <p>Dr. Donald Layman (učitel od Dr. Layne Nortona, expert na svalovou proteinovou syntézu) dává po fitku 10&nbsp;g BCAA, důvod: Během cvičení (v&nbsp;této studii konkrétně vytrvalostního) spálíme ekvivalent zhruba 10&nbsp;g bílkovin za hodinu. Čistě jen provozováním cvičení = jen je pálíme. A&nbsp;většina těchto bílkovin pochází z&nbsp;BCAA. Proto bere Dr. Layman po cvičení BCAA = přesně to, co jsme během cvičení spálili.</p>
+    <p>Pokud byste toho leucine z&nbsp;jídla (nejen toho, jde i&nbsp;o&nbsp;dostupnost ostatních aminokyselin, ale dost se to kolem něj točí) měli řekněme více než 3,5&nbsp;–&nbsp;4&nbsp;g, tak dle výzkumů to neudělá „nic navíc" pro regeneraci. Kdybyste měli třeba jen kolem 1,7&nbsp;g nebo méně, tak by se růst v&nbsp;podstatě nestimuloval. Proto se doporučuje přisypávat BCAA do těch „slabších jídel", ať je maximalizujete.</p>
+    <p>Zároveň doporučuji kombinovat rostlinné a&nbsp;živočišné zdroje bílkovin – ty živočišné mají toho leucine a&nbsp;dalších esenciálních aminokyselin více na gramáž. Ovšem pokud máte dost bílkovin na den i&nbsp;dost kvalitních bílkovin na jídlo dle mých instrukcí, BCAA navíc nepřináší žádné benefity pro svaly navíc. Aminokyselin máte už dost z&nbsp;jídla. Já tedy nedoporučuji BCAA kupovat, raději bych si koupil syrovátkový protein, který obsahuje i&nbsp;BCAA a&nbsp;další aminokyseliny a&nbsp;vyjde vás to levněji.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Creatine</h2>
+    <p>Některé to možná překvapí, ale kreatin (creatine) není steroid. Vyskytuje se ve svalstvu všech obratlovců a&nbsp;má přímou spojitost s&nbsp;regenerací té nejrychleji využitelné svalové energie ATP/ADP. Pro vaše tělo je přirozenou součástí.</p>
+    <ul>
+      <li>Kreatin monohydrát podléhá více než 20 letům odborných vědeckých studií.</li>
+      <li>Je to bezpečný, funkční suplement vaší stravy.</li>
+      <li>Dá se však čerpat z&nbsp;přirozené stravy – maso (hlavně hovězí, vepřové, zvěřina), ryby (např. losos) a&nbsp;další.</li>
+      <li>Pravděpodobně neexistuje suplement, který by byl natolik vědecky ověřený a&nbsp;prozkoumaný jako kreatin monohydrát.</li>
+      <li>Prokazatelně zvyšuje sílu a&nbsp;svalovou hmotu.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Nejdůležitější je, abyste ho suplementovali každý den a&nbsp;to kvůli nasycení svalových buněk kreatinem. Kreatin monohydrát se prokázal jako 100% efektivní v&nbsp;nasycení buněk. Proto volíme monohydrát, má prokázanou 100% efektivitu a&nbsp;je nejlevnější. Jelikož žijeme v&nbsp;reálném světě, tak zde platí, že 100&nbsp;% = maximální efektivita. Nedoporučuji připlácet za jiné formy kreatinu, jež logicky nemohou být ověřenější a&nbsp;efektivnější už ve své podstatě. Mohou však být „sexy/novinka" a&nbsp;tedy dražší.</p>
+    <p>Doporučuji suplementovat 3&nbsp;–&nbsp;5&nbsp;g denně v&nbsp;závislosti na vaší tělesné váze. Studie ukazují, že i&nbsp;dávky vyšší (kolem 10&nbsp;g) měla navíc další benefity pro mozkové funkce a&nbsp;učení. Vliv kreatinu poznáte hlavně na svalové síle a&nbsp;energii při cvičení. Tudíž odvedete lepší tréninkový výkon a&nbsp;tím lépe stimulujete svalovou proteinovou syntézu a&nbsp;přirozeně tréninkem spálíte více energie. Hydratovaná buňka = anabolická buňka. I&nbsp;ze spousty dalších důvodů je zavodnění svalů žádoucím účinkem kreatinu.</p>
+    <p><b>Závěrem:</b> Kreatin funguje na lidi různě. Každý člověk má zasycení buněk kreatinem přirozeně různé (genetika a&nbsp;samozřejmě přirozená strava). A&nbsp;tak u&nbsp;někoho udělá kreatin větší skok ve výkonu a&nbsp;energii a&nbsp;u&nbsp;někoho menší. Kreatin má také pozitivní vliv na mozkové funkce.</p>
+    <p>Pokud byste jej kupovali, tak zase to, na kolik máte buňky nasycené kreatinem je individuální. Podle genetiky, toho, jak jíte a&nbsp;dalšího. Někteří lidé již mají ze stravy buňky nasycené kreatinem dostatečně a&nbsp;tak ze suplementace nic moc navíc nezískají. Oproti tomu například vegan pravděpodobně bude mít nasycení nižší (protože nejí potraviny s&nbsp;vyšším obsahem kreatinu, ty jsou většinou živočišného původu) a&nbsp;tak tento člověk ze suplementace získá více benefitů.</p>
+    <p>Je to tedy individuální, ale 3&nbsp;–&nbsp;5&nbsp;g denně dlouhodobě z&nbsp;hlediska kosterního svalstva stačí. Pro další podporu mozkových funkcí i&nbsp;vyšší dávky. Doba než se dostatečně nasytí buňky suplementací kreatinem, je individuální. Někdo dává třeba první 2 nebo 3 týdny nasycovací fázi a&nbsp;přijímá 10&nbsp;–&nbsp;20&nbsp;g kreatinu denně, rozděleno do více dávek po 5&nbsp;g a&nbsp;s&nbsp;dostatkem vody. Takto své zásoby nasytí dříve a&nbsp;pak udržuje dávky 3&nbsp;–&nbsp;5&nbsp;g dlouhodobě. Stejně tak je možné od začátku brát 3&nbsp;–&nbsp;5&nbsp;g kreatinu dlouhodobě bez vyšších dávek na začátku a&nbsp;po měsíci budou tak či tak zásoby nasyceny také. Jen to bude trvat o&nbsp;něco déle. Suplementace kreatinu je tedy dlouhodobá záležitost a&nbsp;nefunguje jen na akutní bázi. Pokud vám dráždí žaludek, zkuste jej suplementovat ne na lačno, ale po jídle a&nbsp;pít více vody.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Spalovače</h2>
+    <p>Například L-carnitine je pro spalování tuků nefunkční, ač může stimulovat například bdělost. Carnitine je přenašeč mastných kyselin (řekněme částice tuků, jež putují v&nbsp;krvi). Pro účely rychlejšího hubnutí jej tedy nedoporučuji.</p>
+    <p><b>Proč nepotřebujeme carnitine suplementovat pro hubnutí tuků:</b></p>
+    <ul>
+      <li>Tělo si jej samo vytváří dostatek.</li>
+      <li>Je to přenašeč mastných kyselin, jinými slovy je to něco jako mít batoh na přenášení věcí. Jaký je rozdíl v&nbsp;tom, když máte nějaké množství věcí a&nbsp;máte na to třeba 2 nebo 40 batohů? Stejně přenesete to, co jste chtěli přenést a&nbsp;batohy navíc na tom nic nezmění.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Touto analogií se jen snažím vysvětlit racionálně, že i&nbsp;když je carnitine přenašeč mastných kyselin, jeho suplementace navíc nemusí zvýšit spalování tuků.</p>
+    <p>Celkově většina spalovačů má hlavní funkční složku kofein. Kofein prokazatelně stimuluje atletický výkon, a&nbsp;když ho přijmete dostatek, tak vás i&nbsp;sám o&nbsp;sobě znatelně nabudí. Dr Eric Helms v&nbsp;minulosti přímo analyzoval studie na většinu spalovačů a&nbsp;ukázalo se, že neprokázaly žádný statisticky důležitý vliv na spalování. Kofein však ukazuje opakovaně vliv na atletický výkon i&nbsp;nabuzení a&nbsp;tím i&nbsp;spalování tuků či kalorií. Ovšem pouze za předpokladu, že konzumujete méně energie než spálíte. Tedy vždy pouze pokud vytvoříte kalorický deficit, jinak tělesný tuk hubnout nikdy nebudete.</p>
+    <p><b>Co udělá tělo, aby zastavilo hubnutí?</b></p>
+    <ul>
+      <li>Jednak díky leptinu a&nbsp;ghrelinu zvýší nutkání jíst s&nbsp;pocity hladu, nutí vás jíst více energie.</li>
+      <li>Budete se cítit unavení a&nbsp;nachodíte denně méně kroků, podáte horší atletický výkon, jste více líní či letargičtí a&nbsp;ušetříte na výdeji energie.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">A&nbsp;právě kofein snižuje apetit a&nbsp;pomocí adenosinových receptorů v&nbsp;mozku máte pocit, že máte energie dost a&nbsp;zvyšuje se tak atletický výkon, pocity energie a&nbsp;s&nbsp;tím i&nbsp;výdej energie. Snížení pocitu energie během hubnutí nepoznáte vždy intenzivně, často přichází postupně a&nbsp;například podle krokoměru byste poznali, že postupně přirozeně nachodíte o&nbsp;něco méně.</p>
+  </div>
+  <div class="box">
+    <p><b>Co dělá kofein?</b> Udržuje vás bdělejší a&nbsp;dává vám větší pocit energie a&nbsp;tak i&nbsp;přesto, že byste jinak trénovali méně intenzivně, tak podáte výkon vyšší. K&nbsp;tomuto efektu stačí spoustě lidí dát si silnou kávu, nepotřebují přímo spalovač a&nbsp;ušetří peníze.</p>
+    <p>Každá varianta je maličko jiná obsahem kofeinu. Ve spalovačích a&nbsp;pre-workoutech je například 200&nbsp;–&nbsp;400&nbsp;mg kofeinu na odměrku a&nbsp;to je skutečně hodně. Zhruba 3&nbsp;–&nbsp;6&nbsp;mg kofeinu na každé 1&nbsp;kg tělesné hmotnosti člověka, prokazatelně zvyšuje atletický výkon. Když se podíváte na obsah kofeinu v&nbsp;šálku 1 kávy, zjistíte, že se značně liší, ale že to je vždy násobně méně, než v&nbsp;jedné odměrce pre-workoutu.</p>
+    <p>Pre-workouty samozřejmě obsahují i&nbsp;další látky, které prokázaly nějaký efekt navíc. Jenže v&nbsp;praxi často výrobci stačí napsat název dané látky na obal a&nbsp;spotřebitel už neřeší, že je to třeba zanedbatelná dávka oproti dávce, která se vědeckým výzkumem ukázala jako efektivní. Například citrulline malate má účinnou dávku 6&nbsp;–&nbsp;8&nbsp;g, ve spoustě pre-workoutů je ho však násobně méně. Laik toto často nemá šanci chápat či vzít v&nbsp;potaz, a&nbsp;když na obalu vidí citrulline, koupí si to bez dalších úvah. Jednoduše vidí tu složku a&nbsp;nechápe, že míra vždy dělá výsledný efekt. V&nbsp;praxi se může vyplatit nakoupit ty složky předtréninkovky zvlášť a&nbsp;dávkovat si je sami dle studií.</p>
+    <p>Obecně stimulanty jako je kofein či konkrétně káva, používejte účelově. Pijte kávu méně a&nbsp;užívejte jen na tréninky, kdy jste skutečně unavení. Tělo se na příjem kofeinu adaptuje a&nbsp;postupně musíte dávat větší dávky pro podobný efekt. Periodicky doporučuji kofein na nějakou dobu úplně vysazovat.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Omega 3</h2>
+    <p>Na trhu existuje spousta produktů s&nbsp;označením „Rybí Olej". Doporučuji zvolit ten produkt, který má nejvyšší obsah EPA a&nbsp;DHA. EPA a&nbsp;DHA v&nbsp;dostatečném množství mohou zvyšovat anabolické účinky aminokyselin. EPA je aktivní komponent, z&nbsp;něhož získáváme nejvíce benefitů, proto podle něj vypočítáváme dávkování.</p>
+    <p>Doporučuji 1&nbsp;g EPA po tréninku a&nbsp;1&nbsp;g EPA jindy během dne. Tzn. nejde jen o&nbsp;to, že to je rybí tuk, ale vzadu máte v&nbsp;tabulce EPA/DHA obsah a&nbsp;podle toho se určuje dávka, různé kapsle mají různý obsah těchto látek.</p>
+    <p>Dle různých studií je příjem rybího oleje dobrý pro více zdravotních aspektů. Toto je jeden z&nbsp;důvodu, proč je také přímořská strava brána jako zdravá, tedy mnoho ryb a&nbsp;s&nbsp;tím i&nbsp;rybí tuk/olej. Místo suplementace můžete jíst více ryb, hlavně těch tučných a&nbsp;k&nbsp;tomu doporučuji dostatek zdrojů rostlinné potravy, dostatek bílkovin a&nbsp;vlákniny obecně.</p>
+    <p>V&nbsp;roce 2021 se ukazuje, že rybí olej nemá většinu benefitů, o&nbsp;kterých se polemizovalo poslední roky. Nedoporučuji je již tedy kupovat, dostatek ryb ve vaší stravě má však mnoho benefitů i&nbsp;tak.</p>
+  </div>
+  <div class="box">
+    <h2>Multivitamin</h2>
+    <p>Není nutné jej mít. Ve světle moderních výzkumů se ukazuje jako neefektivní. Jednak většinu vitamínů a&nbsp;minerálů stejně přijmete ze stravy a&nbsp;zároveň multivitamíny často nemají vhodné poměry látek, které by se vyplatilo suplementovat versus látek, kterých i&nbsp;tak sníte dostatek z&nbsp;jídla.</p>
+    <p>Podle studií dokonce suplementace vitamínů dlouhodobě nemá efekt, jež jsme si mysleli. Pestré stravě, dostatku rostlinných potravin v&nbsp;jídelníčku a&nbsp;dostatku vlákniny se tedy opět nevyhneme. Mimochodem pokud máte nedostatek vitamínů, tak to zjistíte pouze z&nbsp;krevních testů.</p>
+    <p>V&nbsp;případě pochybností doporučuji navštívit lékaře, například v&nbsp;rámci bezplatné preventivní prohlídky a&nbsp;udělat si krevní testy. Poté, pokud máte dle výsledků krevních testů nějakých látek nedostatek, obohaťte jídelníček o&nbsp;potraviny s&nbsp;vysokým obsahem daných látek či o&nbsp;konkrétní suplement.</p>
+    <p>Spousta lidí však po krevních testech zjistí, že jim nic moc nechybí a&nbsp;není tedy většinou nutné na ně chodit, pokud nemáte zdravotní komplikace či nejste skutečně aktivní atlet či nemocný člověk, kterému hrozí nedostatek některých minerálů a&nbsp;vitamínů.</p>
+    <p>Suplementů je samozřejmě obrovské množství, ale jak vidíte i&nbsp;bez suplementů můžete mít skvělé výsledky a&nbsp;většinu z&nbsp;nich ve skutečnosti nepotřebujete. Samozřejmě bychom mohli detailně probrat i&nbsp;citrulline, beta alanine. Tyto suplementy totiž mají prokázaný efekt v&nbsp;jisté dávce a&nbsp;jsou velmi levné, když si je koupíte zvlášť ve větším balení. Předmětem této knihy však není probrat, co nejvíce suplementů, ale probrat většinu hlavních témat, na která se mě klienti pravidelně ptají.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Proč hubnu v různých fázích života na různém množství kcal?</h2>
+  <div class="box">
+    <p>Nedávno měl jeden můj dlouholetý klient zajímavý dotaz a&nbsp;inspiroval mě k&nbsp;tomuto článku.</p>
+    <p><b>Dotaz klienta:</b> „Ahoj, spíše jako laik se divím, že jsme cukry stáhli na nějakých 130&nbsp;g, po Vánocích navýšili na 160&nbsp;g a&nbsp;držíme je. Přesto hubnu. Už se blíží vánočka."</p>
+    <p><b>Moje odpověď:</b> Občas totiž stačí nepřemýšlet jako laik. Jen si představte místo kalorií třeba vaši výplatu. A&nbsp;budeme předpokládat, že nemůžete mluvit se šéfem, jen se mění vaše výkonnost a&nbsp;vy se snažíte jednoduše přežít.</p>
+    <p>A&nbsp;najednou se nějaká vyšší síla rozhodla, že částka na vašem účtu klesne na 10&nbsp;000&nbsp;Kč. Vy máte však naspořeno 100 nebo 200 tisíc. Z&nbsp;ničeho nic vám začne šéf ubírat plat, zdraží se potraviny, oblečení i&nbsp;toaletní papír. Ale vy nevíte, že se jen někdo rozhodl, že vaše úspory budou utraceny.</p>
+    <p>Musíte si tedy zvyknout. Utrácíte jiným způsobem a&nbsp;snažíte se řídit vaše finance jinak, mezi tím, co propadáte panice. A&nbsp;snažíte se šetřit i&nbsp;z&nbsp;té menší výplaty, kterou dostáváte. A&nbsp;když vám takhle šéf z&nbsp;ničeho nic sníží plat třeba o&nbsp;50&nbsp;%, tak jste najednou motivovaní. Opravdu, máte motivaci přežít. Stejně funguje i&nbsp;tělo. Není hloupé, vlastně je chytřejší, než si myslíme.</p>
+    <p>A&nbsp;co když na to jde šéf trochu jinak? Prostě vám začne výplatu snižovat postupně a&nbsp;ještě se vás zeptá, jestli se náhodou nechystáte o&nbsp;víkendu koupit mámě pěkně drahý kožich (= coach tě učí, jak zařídit i&nbsp;rande o&nbsp;víkendu s&nbsp;více kcal a&nbsp;stále hubnout), protože by vám mohl dát nějakou tu prémii. A&nbsp;vy tak utrácíte pořád stejně, ale vaše výplata pomalu klesá. A&nbsp;s&nbsp;ní i&nbsp;hodnota na vašem účtu. Přesně podle plánu „vyšší síly".</p>
+    <p>A&nbsp;nakonec jste vlastně vděční, že i&nbsp;po pár měsících vám zbývá 60&nbsp;–&nbsp;70&nbsp;% z&nbsp;původní hodnoty. Celou dobu je vám lépe a&nbsp;máte lepší vyhlídky. A&nbsp;nakonec vám zbyde třeba jen pár tisíc na účtě, tedy jsou vidět břišáky – máte málo tělesného tuku. A&nbsp;tímto způsobem se cítíte lépe a&nbsp;je to udržitelnější cesta.</p>
+    <p>Celou myšlenkou je, že je důležité naučit se fungovat s&nbsp;výplatou i&nbsp;svým tělem dlouhodobě, nestačí jednorázově strhnout částku. A&nbsp;právě proto jsem vám neprodal rybu, ale učíme se společně rybařit, a&nbsp;co mezitím nachytáme, vám zůstane.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Proč více kcal nemusí vždy znamenat, že přiberu tuk</h2>
+  <div class="box">
+    <p>Zde je cílem si rozebrat, proč i&nbsp;když sníte více, tak nemusíte hned přibírat tukové zásoby. Čistě pro konkrétní příklad pojďme přijmout teoretický předpoklad, že na 1400&nbsp;kcal byste hubli 2&nbsp;cm týdně v&nbsp;pase. To neznamená, že na třeba 1500 nebo 1600&nbsp;kcal byste začali přibírat tuk. Pravděpodobně byste na těchto hodnotách jen hubli pomaleji, anebo by se hubnutí zastavilo. Záviselo by to samozřejmě na více faktorech, například na množství kroků denně nebo odcvičených minut.</p>
+    <p>Když některým klientům přidám sacharidy, tak prostě sedí stejně doma u&nbsp;TV. Tito lidé pak mohou přibrat tuk či zastavit své hubnutí. Ovšem jsou zde i&nbsp;klienti, kterým přidám sacharidy a&nbsp;využijí je k&nbsp;tréninku navíc či obecně hodně sportují a&nbsp;jejich výkon na trénincích se znatelně zvětší a&nbsp;tím se zvýší i&nbsp;spalování. Popřípadě začnou přirozeně více chodit, být více aktivní. Tito přibrat nemusí a&nbsp;dokonce v&nbsp;některých případech hubnou i&nbsp;na více kcal. Samozřejmě to vše ovlivňují konkrétní příjmy kalorií, o&nbsp;kolik klientovi přidám kalorií navíc, jak sportoval a&nbsp;chodil versus, jak bude sportovat a&nbsp;chodit od přidání kalorií apod. Například reverzní diety fungují hlavně proto, že je člověk postupně více aktivní a&nbsp;méně unavený a&nbsp;tak se zvyšuje i&nbsp;jeho spalování po dietě, pokud tedy jídlo přidáváme pomaličku a&nbsp;po troškách, v&nbsp;některých případech klienti přibírat nemusí nebo alespoň nepřibírají prvních několika týdnech.</p>
+    <p class="note">Více o&nbsp;reverzní dietě učím v&nbsp;mém videokurzu na <a href="http://www.martinbarna.cz/videokurz">www.martinbarna.cz/videokurz</a> a&nbsp;také zde na youtube: Reverzní dieta.</p>
+    <p>Jak víme, tělo nechce hubnout tuk. Tak jako vy nechcete mít méně financí na bankovním kontu. Tělo nedostatek energie z&nbsp;potravy a&nbsp;drastické hubnutí vidí jako hrozbu pro přežití. Nemá dost energie a&nbsp;musí brát z&nbsp;vlastních zásob. To je jako byste najednou nedostávali dost vysokou výplatu a&nbsp;museli vyžít ze svých nižších úspor a&nbsp;nižších příjmů.</p>
+    <p>Čím méně úspor budete mít na spořícím účtě, tím více budete shánět brigádu na přivýdělek (= větší chutě a&nbsp;nutkání sníst něco kalorického či sladkého). Stejně tak budete o&nbsp;to méně utrácet za nezbytné věci a&nbsp;budete šetřit třeba i&nbsp;na jídle, oblečení apod. Což je analogie na tělo v&nbsp;dietě, které vás udělá unavenějším, aby ušetřilo energii na výdajích a&nbsp;méně jste chodili a&nbsp;cvičili.</p>
+    <p>Čím méně tělesného tuku máme a&nbsp;čím rychleji hubneme, čím větší vytváříme kalorický deficit, tím více se tělo brání a&nbsp;šetří. Čím více je výplata snížená oproti standardu, tím více šetříte a&nbsp;ještě o&nbsp;to více si plánujete naspořit více peněz na účtě na později, aby jste měli větší šanci další potenciální finanční krizi ustát lépe.</p>
+    <p>Tělo stejně tak tvoří nové tukové buňky. Tímto a&nbsp;dalšími vlivy se může měnit i&nbsp;váš „bodyfat set point", který souvisí s&nbsp;tím, na jakém množství tělesného tuku se cítíte komfortně a&nbsp;je pro vás poměrně snadno udržitelný.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Jak tedy tělo může zjednodušeně ten proces hubnutí zvrátit?</b></p>
+    <ul>
+      <li>Sníží výdej energie (únava/lenost/letargie, nižší NEAT, tedy pohyb během dne).</li>
+      <li>Zvýší příjem energie (hlad/chutě), pokud se mu podaří jedno nebo nejlépe obojí, tak nabere tuk zpět. Pokud jen do jisté míry, nabere třeba jen glykogenové zásoby do svalů spolu s&nbsp;vodou. A&nbsp;tím se zvýší i&nbsp;tělesná váha, nemusí to být však všechno tuk navíc.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Mimo to tělo reguluje výdej/plýtvání energii skrze thyroidní hormony. Produkuje je štítná žláza. Hormony T3 a&nbsp;T4 regulují například to, že podle toho, kolik energie přijímáte akutně či krátkodobě, tak regulují procesy v&nbsp;těle z&nbsp;hlediska investice energie a&nbsp;efektivity nakládání s&nbsp;energií. Toto také značně ovlivní, kolik se nakonec ze snědeného jídla navíc uloží.</p>
+    <p>V&nbsp;minulosti se dělaly pokusy na vězních, kdy jim z&nbsp;jídla dodávali velké množství kalorií a&nbsp;stejně nenabrali množství tuků, které měli podle výpočtů přibrat. Tělo má „bodyfat set point" to je jeho komfortní zóna, homeostáza či rovnovážný stav a&nbsp;také jsou zde značné rozdíly v&nbsp;pohybu a&nbsp;cvičení mezi lidmi.</p>
+  </div>
+  <div class="box">
+    <p><b>MPS (muscle protein synthesis) tedy svalová proteinová syntéza:</b></p>
+    <ul>
+      <li>Je proces regenerace svalové tkáně kosterního svalstva.</li>
+      <li>Jakmile se zvýší v&nbsp;krvi hladina aminokyseliny leucine, zvýší se například úroveň MPS v&nbsp;procvičených svalech v&nbsp;rámci adaptace na fitness trénink.</li>
+      <li>Zvyšuje se dočasně kvůli bílkovin či aminokyselin z&nbsp;jídla a&nbsp;po několika hodinách většinou zase klesá.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">K&nbsp;poklesu MPS po pár hodinách, dle teorie vědců jako je Brad Schoenfeld, klesá, protože má tělo omezené regenerační kapacity ATP na buněčné úrovni a&nbsp;to souvisí s&nbsp;potenciálním rizikem úplné nehybnosti a&nbsp;tím ohrožení přežití. Ve studiích, MPS po pár hodinách vždy klesala, i&nbsp;když po tom jídle, jež stimulovalo MPS dostatečně, vědci dostávali do krve další aminokyseliny.</p>
+    <p>Tento proces a&nbsp;jeho trvání ovlivňuje příjem bílkovin a&nbsp;také energie v&nbsp;daném jídle. Smíšená kalorická jídla s&nbsp;dostatkem bílkovin, sacharidů i&nbsp;tuků ukazují prodloužení doby trvání a&nbsp;mohou tento proces vygradovat na maximum. Jelikož je tento proces energeticky hodně náročný, zvyšuje se tím i&nbsp;výdej energie a&nbsp;takto můžete podpořit i&nbsp;vaše tempo hubnutí. Proto je výhodné pravidelně intenzivně cvičit.</p>
+    <p>Více fitness tréninků týdně znamená více spálené energie a&nbsp;podpoření hubnutí. Intenzivní aktivity spalují více, než pohyb nižší intenzity. Snažte se najít si intenzivní sport, který vás bude bavit a&nbsp;budete se na tréninky těšit.</p>
+    <p>V&nbsp;roce 2021 se na nových studiích ukazuje, že rostlinná i&nbsp;živočišná forma bílkovin může růst svalů stimulovat stejně. Je tedy možné, že ten leucine není tak důležitý, jak se myslelo. Postupně o&nbsp;tom vydám nová videa a&nbsp;články, až si to více nastuduji a&nbsp;až to okomentují TOP vědci z&nbsp;oboru, kteří mají kontext celého vědeckého těla na toto téma.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Proč tělesná váha kolísá, i když hubnete</h2>
+  <div class="box">
+    <p><b>Jak tělo ukládá energii</b></p>
+    <ul>
+      <li>existuje více energetických „skladů"</li>
+      <li>zaměříme se na rozdíl, když tělo uloží energii do tukových zásob jako mastné kyseliny, a&nbsp;když do svalů a&nbsp;jater jako glykogen</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Netrénovaný člověk má na 100&nbsp;g svalů v&nbsp;zásobě asi 12&nbsp;g glykogenu. Glykogen je forma sacharidů, které si tělo ukládá hlavně pro regulaci hladiny krevního cukru (glukózy), na pohyb a&nbsp;fungování ve vyšší intenzitě, kdy na pokrytí akutních potřeb mastné kyseliny nestačí. Trénovaný atlet může mít v&nbsp;zásobě až 33&nbsp;g glykogenu na 100&nbsp;g svaloviny, což je téměř 3x více než netrénovaný člověk.</p>
+    <p>Na silový trénink jednak tělo reaguje tím, že zesiluje, zvětšuje své glykogenové zásoby a&nbsp;adaptuje se příslušně nervovým systémem. Zásoby glykogenu si zvětšuje hlavně proto, že těžší trénink a&nbsp;delší tréninky vyžadují větší energetické investice a&nbsp;trénink vysoké intenzity tělo nedokáže energeticky pokrýt pouze z&nbsp;tukových zásob, tedy z&nbsp;mastných kyselin. Právě tím, jak ve fitku makáte a&nbsp;zatěžujete svaly, tak se glykogen postupně vyčerpává a&nbsp;potom zase doplňuje z&nbsp;jídla či interními metabolickými procesy jako je glukoneogeneze.</p>
+    <p>Když člověk cvičí dlouho, tak se jeho zásoby glykogenu postupně zvětšují. Silnější svaly a&nbsp;delší a&nbsp;těžší tréninky přináší i&nbsp;větší spotřebu energie, primárně sacharidů, a&nbsp;díky tomu můžete a&nbsp;pravděpodobně byste také měli jíst více kalorií, preferenčně sacharidů. Velmi dobře trénovaný atlet dokáže podat intenzivnější a&nbsp;delší výkon a&nbsp;tedy spálit za svůj trénink více energie než méně trénovaný jedinec. Proto také může a&nbsp;měl by jíst více kalorií a&nbsp;nepřibírá tolik tukové zásoby, protože větší množství energie z&nbsp;jídla využije pro dané atletické výkony.</p>
+  </div>
+  <div class="box">
+    <p><b>Pro lepší pochopení těchto procesů pro laika si to vysvětlíme na analogii.</b></p>
+    <p>Představte si, že popsané zásoby glykogenu ve svalech jsou vaše lednice na jídlo a&nbsp;tukové zásoby jsou mrazák. Když jdete nakoupit do obchodu jídlo a&nbsp;nakoupíte ho moc (tedy sníte hodně jídla), tak naskládáte jídlo do lednice, dokud není plná (tedy tělo si z&nbsp;toho jídla naplní zásoby glykogenu v&nbsp;játrech a&nbsp;svalech). Zbytek jídla dáte do mrazáku, aby se nezkazilo. Stejně tak i&nbsp;tělo zbytek té energie z&nbsp;jídla uloží do mrazáku (tedy ukládání do tukových zásob).</p>
+    <p>Jak jistě víte, plná lednice je těžší než lednice prázdná. Stejně tak nasycené glykogenové zásoby ve svalech udělají vaše tělo těžší a&nbsp;to znatelně. Také proto, že na každý 1 gram glykogenu tělo ukládá vždy 3 gramy vody spolu s&nbsp;tím.</p>
+    <p>Když si teď vybavíme fakt, že netrénovaný člověk má na 100&nbsp;g svaloviny zhruba 12&nbsp;g glykogenu a&nbsp;atlet klidně i&nbsp;33&nbsp;g a&nbsp;také fakt, že dle většiny zdrojů má průměrný netrénovaný člověk kolem 500&nbsp;g glykogenu v&nbsp;těle, a&nbsp;že se na každý gram glykogenu ukládají vždy 3 gramy vody, vidíme, že u&nbsp;atletů může tělesná váha kolísat běžně o&nbsp;několik kilogramů, a&nbsp;to čistě kvůli nasycování a&nbsp;vyčerpávání glykogenových zásob, nehledě na množství tuků v&nbsp;těle či potenciální hubnutí tukových zásob.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Proto kolísání tělesné váhy nemusí znamenat ani přibírání ani hubnutí tukových zásob. Navíc existují tisíce metabolických procesů, které pracují s&nbsp;tekutinami a&nbsp;ovlivňují váhu taktéž.</p>
+    <p>Už chápete proč s&nbsp;klienty měříme pravidelně tělesné míry a&nbsp;nespoléháme na jednorázové vážení? Pokud se přesto pouze vážíte, važte se alespoň každý den ráno za stejných podmínek a&nbsp;srovnávejte pouze týdenní průměry váhy s&nbsp;dalšími týdenními průměry váhy z&nbsp;jiného období.</p>
+    <p>Jak si v&nbsp;této analogii lednice a&nbsp;mrazáku ještě jednoduše vysvětlíme, proč si tělo ukládá i&nbsp;glykogen a&nbsp;ne pouze tukové zásoby. Když doma v&nbsp;noci pracujete a&nbsp;máte hlad (tedy když tělo během dne potřebuje okamžitě využitelnou energii), musíte jít do lednice pro jídlo, pak to jídlo jíte narychlo u&nbsp;PC, protože musíte pracovat a&nbsp;máte časový skluz (tedy tělo využívá primárně sacharidy pro pokrytí akutního intenzivního výkonu jako například box, fitness apod, tukové zásoby na to nestačí).</p>
+    <p>Lednice v&nbsp;analogii reprezentuje glykogenové zásoby ve svalech a&nbsp;ty může tělo přímo využít na intenzivní aktivity. Kdybychom neměli jídlo v&nbsp;lednici (tedy zásoby glykogenu v&nbsp;játrech a&nbsp;svalech), museli bychom vytáhnout jídlo z&nbsp;mrazáku. Čekat než se rozmrazí a&nbsp;nemohli dále pracovat. Stejně tak jako mražené jídlo z&nbsp;mrazáku ani tukové zásoby tělu na pokrytí akutního a&nbsp;intenzivního výkonu nestačí.</p>
+    <p>Snad je to pro vás takto srozumitelnější a&nbsp;nebudete se již stresovat pravidelnými výkyvy tělesné váhy během hubnutí či nabírání.</p>
+  </div>
+
+  <h2 class="section">Studie na téma diet breaks (pauzy od diety a hubnutí)</h2>
+  <div class="box">
+    <p>Probereme si zde výsledky studie, která se pustila do hledání nejefektivnějšího způsobu, jak shodit přebytečná kila a&nbsp;centimetry. Připravil jsem vám z&nbsp;ní malý výběr toho nejdůležitějšího. Studie pracovala (jak už to tak bývá) se dvěmi skupinami lidí:</p>
+    <ul>
+      <li>skupina: 16 týdnů diety, z&nbsp;jejich standardního příjmu jedli 67&nbsp;% kcal</li>
+      <li>skupina: 16 týdnů diety, po každém dvoutýdenním bloku diety vložili 2 týdny udržovacích kcal (toto číslo se během diety samozřejmě mění), takže celková délka diety byla 30 týdnů</li>
+    </ul>
+    <p style="margin-top:2.5mm;">2. skupina zhubla téměř dvojnásobné množství tuků za dané období, udrželi více svalové hmoty a&nbsp;nabrali mnohem méně tuků zpět po dietě.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Pár dodatků k&nbsp;výsledkům této studie v&nbsp;bodech:</b></p>
+    <ul>
+      <li>Obě skupiny po dietě nějaké tuky nabraly zpět, ale druhá skupina dopadla podstatně lépe. Nabírání tuku po dietě je běžné.</li>
+      <li>2. skupina měla mnohem lepší tempo hubnutí v&nbsp;daných dietních blocích. Ovšem kvůli vloženým kalorickým „udržovacím obdobím" byl průměrný úbytek tuků na týden nižší než v&nbsp;1. skupině.</li>
+      <li>Pokud víte, kolik je vaše aktuální hodnota kcal pro udržení stávajícího stavu a&nbsp;vrátíte se na ni během diety, tak nenaberete zpátky žádné tuky, pouze hubnutí zastavíte. Na metabolismus a&nbsp;spalování energie měl však tento krok pozitivní vliv.</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Pozor!</b> Vaše „udržovačka" se během diety snižuje spolu s&nbsp;vaší tělesnou hmotností. Pokud jste tedy na začátku udržovali svůj současný stav například na 2000&nbsp;kcal, po pár týdnech to bude méně.</p>
+    <p>Preferujete-li rychlejší úbytek bez ohledu na zmíněné faktory, není třeba nic měnit. Tento způsob hubnutí nemusí být nejlepší, ale může mít své benefity. Tato slova můžeme brát jako další indikátor, že na dlouhodobou proměnu tělesné kompozice je lepší nespěchat. Dokonce nemusíte zhubnout ani každý týden. Nechceme přece pouze zhubnout 5&nbsp;kg na léto, ale dostat vaše tělo do nejlepší formy a&nbsp;dlouhodobě ji udržet.</p>
+    <p>V&nbsp;roce 2021 však vyšly další studie, jež ukazují, že diet breaks/pauzy v&nbsp;dietě nemají výhody oproti kontinuálnímu hubnutí, jak se zdálo například dle studie uvedené výše. Přesto však diet breaks využití mají, například když má klient těžší týden, oslavu či potřebuje trošku více zvolnit, ale zároveň nechce nic přibrat. Když hubnete celkově například 50&nbsp;kg, není to proces na pár týdnů a&nbsp;v&nbsp;jistém bodě dietu klient poruší a&nbsp;pauza od diety se tím zrealizuje automaticky.</p>
+    <p>Často je udržitelnější jednou za čas nemířit na hubnutí, hlavně z&nbsp;psychologických důvodů a&nbsp;jako nástroj pro dlouhodobou udržitelnost zvoleného způsobu hubnutí a&nbsp;životního stylu. Během hubnutí, mimo jiné, budujeme hlavně návyky, které nám pomohou životní styl a&nbsp;tedy i&nbsp;výslednou postavu dlouhodobě snáz udržet a&nbsp;nemít po zhubnutí takový jojo efekt.</p>
+    <p class="note">Toto téma jsem pro vás zpracoval i&nbsp;ve video podobě: Pauza od diety.</p>
+  </div>
+
+  <h2 class="section">Záněty a stravování – studie</h2>
+  <div class="box">
+    <p>Také jíte „protizánětlivě" podle svého výživového guru? Zajímavým paradoxem je, že často právě lidé, kteří mají za cíl vybudovat, co největší svaly, považují záněty za katastrofu.</p>
+    <p>Co myslíte? K&nbsp;čemu dochází ve svalu vlivem efektivního fitness tréninku? Ano, máte pravdu, dochází k&nbsp;zanícení. Také se zvýší tvoje tepová frekvence, krevní tlak a&nbsp;produkce volných radikálů. A&nbsp;všechny tyto faktory jsou nezdravé, pokud jsou trvalé. To můžeme pozorovat například u&nbsp;nemocných ve formě vyššího tlaku, volných radikálů a&nbsp;vyšší tepovky i&nbsp;během klidového režimu.</p>
+    <p>Ovšem krátkodobé přechodné zvýšení těchto faktorů není škodlivé. Ve skutečnosti je pro daný proces prospěšné a&nbsp;nutné. Efektivní trénink je vlastně pomyslnou vakcínou, která vám podá kontrolovanou dávku daného stresoru a&nbsp;umožní vašemu tělu naučit se na něj lépe přizpůsobit. A&nbsp;to je právě ten kýžený pokrok.</p>
+    <p><b>Existuje tedy zánět, který:</b></p>
+    <ul>
+      <li>bojuje s&nbsp;infekcí</li>
+      <li>zotavuje ze zranění</li>
+      <li>zotavuje po tréninku (reakce na mikro poškození tkáně)</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Body 2. a&nbsp;3. spadají pod takzvaný lokální zánět. Menší zvýšení systémového zánětu nesouvisí s&nbsp;rizikovými faktory pro nemoci či rakovinu. Když se odřete, nedostanete do toho místa rakovinu, i&nbsp;když se tam zvýší zánětlivost. Dlouhodobě zvýšené zánětlivé markery v&nbsp;krvi (CRP) však zvyšují riziko různých nemocí. Je tedy rozdíl v&nbsp;lokálním a&nbsp;systémovém zánětu.</p>
+    <p>Někteří lidé si spojují třeba i&nbsp;zranění zad s&nbsp;konzumací cukru, která podle nich zvyšuje zánětlivost, což je samozřejmě nesmysl. Zánět není prekurzorem zranění, je to reakce na zranění. Lokální zánět tedy nesouvisí se systémovým. Mnozí tvrdí, že veganská strava (nepravdivý a&nbsp;zmanipulovaný dokument game changers) či keto dieta snižuje zánětlivost.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Co na to věda?</b> Makroživiny a&nbsp;jejich poměry nemají velký vliv na zánětlivost, když jsou kontrolovány kcal a&nbsp;tělesný tuk. Potvrzují to i&nbsp;studie, které si níže rozebereme.</p>
+    <p><b>1. studie</b> — Srovnává:</p>
+    <ul>
+      <li>proteinovou dietu (+ 10&nbsp;% bílkoviny, - 10&nbsp;% sacharidy)</li>
+      <li>sacharidovou dietu (58&nbsp;% sacharidy)</li>
+      <li>dietu s&nbsp;nenasycenými tuky (středomořská strava)</li>
+      <li>všechny měly málo zpracovaných potravin a&nbsp;hodně whole grain, tedy celozrnných potravin</li>
+      <li>všechny zlepšily zánětlivé markery</li>
+      <li>LDL cholesterol byl lepší u&nbsp;proteinové diety</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>2. studie</b> — Srovnává keto dietu vs. vysokosacharidovou, stejné kcal u&nbsp;obou skupin.</p>
+    <ul>
+      <li>stejné zánětlivé, CRP markery</li>
+      <li>CRP vždy klesá, když zhubnete tuk</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>3. studie</b> — Živočišné vs. rostlinné zdroje bílkovin, stejné kcal u&nbsp;obou skupin.</p>
+    <ul>
+      <li>stejné zlepšení CRP, zánětů</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>4. studie</b> — Nasycené tuky vs. polynenasycené tuky vs. mononenasycené tuky.</p>
+    <ul>
+      <li>některé studie ukazují, že nasycené tuky zhoršují zánětlivost, jsou to však observační studie a&nbsp;nekontrolovaly kcal</li>
+      <li>některé studie ukazují zlepšení zánětlivosti u&nbsp;nahrazení nasycených polynenasycenými</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>5. studie</b> — Omega 3 (polynenasycené tuky) mají nejvíce důkazů o&nbsp;zlepšení zánětlivých markerů – buď ukazují neutrální vliv, nebo zlepšení.</p>
+    <p><b>6. studie</b> — Tvrzení, že je cukr zánětlivý?</p>
+    <ul>
+      <li>Když jíte hodně cukrů, jíte většinou hodně kcal celkově a&nbsp;stáváte se tím pádem obéznější, právě tímto se zvyšuje zánětlivost.</li>
+      <li>tuková tkáň zvyšuje zánětlivost, protože produkuje adipokiny a&nbsp;ty zvyšují zánětlivost</li>
+      <li>u&nbsp;studií s&nbsp;kontrolovanými kcal skupiny s&nbsp;více cukry i&nbsp;méně cukry ukazují stejný vliv na zánětlivost</li>
+      <li>je však těžké jíst méně kcal (dieta) a&nbsp;zároveň mít moc cukrů ve stravě, protože jsou hyper palatabilní a&nbsp;často tyto potraviny obsahují zároveň hodne kcal z&nbsp;tuků</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Závěr:</b> Kontrolujte, kolik máte tělesného tuku. Toto umožňuje dlouhodobě nejlépe forma stravování, která vám osobně sedí a&nbsp;je pro vás tedy dlouhodobě udržitelná.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Tělo jako stroj</h2>
+  <div class="box">
+    <p>Často slýchám lidi přirovnávat lidské tělo ke stroji. Nemám až tak problém se samotným přirovnáním. Problém však vzniká s&nbsp;konkrétním úhlem pohledu cílové skupiny, tedy mých klientů a&nbsp;sledujících.</p>
+    <p>Většina lidí si pod obecným pojmem stroj představí mašinu, do které něco vložíte a&nbsp;vyjede to, co chcete. Popřípadě rozkážete a&nbsp;stane se, co si přejete. Něco ve stylu kávovaru, že? Podle toho, jakou kapsli vložíte, dostanete vždy to, co chcete. Ať už je to čokoláda či káva. Takto ovšem tělo nefunguje.</p>
+    <p>Když už byste po mě chtěli stroj, ke kterému bych tělo přirovnal, budou to hodiny. Tikají vždy ve svém vlastním rytmu, nehledě na okolní svět. Nevhodná změna jejich rytmu povede vždy k&nbsp;nepřesnosti či škodám na stroji. Pokud mají dobře fungovat, musejí být přesně seřízeny. A&nbsp;to ani méně ani více, ale optimálně pro daný druh, typ, velikost hodin. Všechny jejich díly mají svůj význam ve fungování celku a&nbsp;každé kolečko má význam pro celý stroj i&nbsp;jako jednotlivá individuální část celku.</p>
+    <p><b>Určitě by se našlo mnoho dalších přirovnání těla k&nbsp;hodinám. Ovšem i&nbsp;u&nbsp;tohoto vhodnějšího přirovnání najdeme také několik rozdílů:</b></p>
+    <ul>
+      <li>Hodiny se sami nedokážou regenerovat.</li>
+      <li>Některé procesy lidského těla, narozdíl od procesů hodin, stále neznáme a&nbsp;úplně nechápeme. Věda nás tedy může nasměrovat ke konkrétnímu cíli, optimální stezku už ale musíme nalézt sami.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Dávejte si pozor na nepřesné škatulkování při uvažování a&nbsp;diskuzích o&nbsp;vašem těle a&nbsp;jeho reakcích. Škatulkuje se lehce, ale pozorování bez předsudků je mnohem těžší. Avšak bez předsudků uvidíte vždy jen maximálně polovinu pravdy.</p>
+  </div>
+
+  <h2 class="section">Praktické tipy z praxe</h2>
+  <div class="box">
+    <h2>Trénink</h2>
+    <p>Silový trénink je definován přetížením a&nbsp;manipulací s&nbsp;břemeny. Většina lidí NENÍ SCHOPNA zvládnout zatížení, které by po nich vyžadovalo udělat 5 a&nbsp;méně opakování. Jejich mechanika to prostě nezvládne. Ale to je v&nbsp;pořádku, pořádné poplácání klienta po zádech poté, co zvedne své 1RM (1 rep max – váha, kterou má člověk technicky dokázat zvednout pouze 1* využitím maximální intenzity), ale je toto v&nbsp;souladu s&nbsp;cíli klienta?</p>
+    <p>Mnoho trenérů toto používá jako způsob, jak odvést pozornost od faktu, že jejich klient nevidí výsledky v&nbsp;oblasti, jež byla jeho primárním cílem. Nechápejte mě špatně, mám rád zvedání těžkých vah, ale parametry a&nbsp;všeobecné pokyny pro zvedání těžkých vah jsou navrženy za použití dat elitních atletů.</p>
+    <p>Zdvihání větších a&nbsp;větších vah 4*12 opakování týden za týdnem je stále silový trénink, jsou-li brány v&nbsp;potaz koncentrické a&nbsp;excentrické úseky zdvihu. Přesto spousta lidí stále zvedá činky z&nbsp;bodu A&nbsp;do bodu B&nbsp;v&nbsp;očekávání, že nastane něco velkolepého.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>Výživa</h2>
+    <p>Ujistěte se, že pokud budete ze své stravy vylučovat sacharidy, nahradíte je něčím jiným. Jinak pouze snížíte příjem kalorií ve své stravě.</p>
+    <p>Se sacharidy to má málo, co dělat. Před 20 lety lidé se sacharidy zacházeli lépe a&nbsp;tak pro snížení kalorického příjmu ubrali tuky (chytře proto, že má 1&nbsp;g tuku více kalorií). Nyní lidé se sacharidy zacházejí neefektivně (převážně v&nbsp;důsledku dopadů způsobených vynecháním tuků ze stravy) a&nbsp;je nyní trendem sacharidy ze stravy odstraňovat.</p>
+    <p>Cyklické snižování a&nbsp;zvyšování příjmu většiny makronutrientů je periodicky prospěšné, ale chronicky hloupé!</p>
+    <p>Jak na jedné výživové konferenci v&nbsp;Brně řekl RNDr. Petr Fořt, Csc (parafráze): „Výživa je individuální věc. Každý si musí najít to nejoptimálnější pro něho samotného. Není to tak, že přijdete za poradcem a&nbsp;on okamžitě ví, co na vás platí. Spousta věcí je individuálních."</p>
+    <p>Proto se svými svěřenci určujeme rozložení makroživin nejen dle toho, co je dle aktuálního trendu „optimální", ale také dle jejich individuálního životního stylu a&nbsp;osobních preferencí. Tyto věci se ukáží až poté, co se něco aplikuje dle dostupných dat a&nbsp;podle následných reakcí konkrétního člověka. Ty nevyčtete pouze z&nbsp;nějakého všeobecného vzorce. Vzorec nám sice může pomoci s&nbsp;výchozím bodem směrem k&nbsp;našemu cíli, ale nemusí zároveň odpovídat vašim osobním potřebám a&nbsp;požadavkům.</p>
+    <p>Coachoval jsem například 52&nbsp;kg vážící dámu, která jedla přes 2300&nbsp;kcal na den se 3&nbsp;–&nbsp;4 tréninky v&nbsp;týdnu a&nbsp;přesto hubla tělesný tuk. Pak mám také svěřenkyni, která byla mnohem těžší a&nbsp;při 3&nbsp;–&nbsp;5 fyzických aktivitách týdně nehubla ani na 1150&nbsp;kcal.</p>
+    <p>Samozřejmě dle studií i&nbsp;praxe víme, že je to hlavně tím, že jsou lidé velmi nepřesní v&nbsp;ohledu určování velikosti porce a&nbsp;případném vyhodnocení skutečné kalorické hodnoty jídel. Dle jedné studie to bylo o&nbsp;cca 20&nbsp;–&nbsp;60&nbsp;%. V&nbsp;praxi přesažení kcal plánu týdne i&nbsp;pouze o&nbsp;těch 20&nbsp;% znamená, že se klientovi může hubnutí zastavit. Je tedy možné, že druhá svěřenkyně vědomě či nevědomě jedla o&nbsp;dost více kalorií kvůli nedostatku praxe s&nbsp;vážením a&nbsp;zapisováním či vyhodnocováním konkrétní kalorické hodnoty pokrmů.</p>
+    <p>Ne vždy tedy lidem stačí „personalizované stravovací plány", které jsou personalizované maximálně proměnnou v&nbsp;kolonce věk, pohlaví, váha a&nbsp;počtem tréninkových jednotek týdně. A&nbsp;teď si představte, že by tyto 2 dámy jedly čistě podle výpočtu dle vzorce. Jedna takto nezhubne a&nbsp;druhá si zbytečně omezí svou výkonnost, kvality života a&nbsp;pocitů energie i&nbsp;chutí během hubnutí.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Stres – sympatikus a parasympatikus</h2>
+  <div class="box">
+    <p>Stres a&nbsp;odpočinek jsou důležitá témata. Určitě je dobré si jde sjednotit časy, v&nbsp;kolik hodin chodíte spát, a&nbsp;kdy vstáváte. Dost to pomůže kvalitnímu spánku a&nbsp;to je dobré pro lepší fyzickou i&nbsp;psychickou výkonnost. Stresu se dá v&nbsp;dnešní době jen těžko úplně vyhnout. Ale určitě je dobré snažit se ho minimalizovat a&nbsp;mít správný stresový management. Učte se odpočívat aktivně, choďte například na procházky či výlety. Občas je však třeba odpočívat i&nbsp;pasivně, prostě si jen tak zdřímnout, relaxovat nebo si zajít na masáž a&nbsp;wellness.</p>
+    <p>Vaše tělo má 2 typy autonomního nervového systému – sympatikus (boj nebo útěk) a&nbsp;parasympatikus (odpočinek a&nbsp;trávení). Pokud míváte nechuť k&nbsp;jídlu, může to naznačovat převahu sympatiku spojenou s&nbsp;chronickým stresem.</p>
+    <div class="compare">
+      <div class="col">
+        <div class="lbl"><b style="color:#F6CD63;">Sympatikus</b></div>
+        <ul style="text-align:left;margin-top:2mm;list-style:none;padding:0;">
+          <li>potlačuje slinění,</li>
+          <li>rozšiřuje zorničky,</li>
+          <li>zrychluje tepovou frekvenci,</li>
+          <li>zrychluje dech,</li>
+          <li>potlačuje ejakulaci u&nbsp;mužů,</li>
+          <li>potlačuje trávení,</li>
+          <li>potlačuje potřebu vylučování,</li>
+          <li>vyplavuje adrenalin apod.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="lbl"><b style="color:#F6CD63;">Parasympatikus</b></div>
+        <ul style="text-align:left;margin-top:2mm;list-style:none;padding:0;">
+          <li>uvolňuje svaly,</li>
+          <li>zpomaluje tepovou frekvenci,</li>
+          <li>zklidňuje dech,</li>
+          <li>zužuje zorničky apod.</li>
+        </ul>
+      </div>
+    </div>
+    <p>Sympatikus se stará tedy o&nbsp;to, abychom byli připraveni na výkon například v&nbsp;krizové situaci, připravuje nás v&nbsp;podstatě na boj nebo útěk. Tímto způsobem tělo reaguje na stresory a&nbsp;okolní podmínky.</p>
+    <p>Když vás třeba pronásleduje medvěd, potřebujete rychlejší tepovou frekvenci a&nbsp;rychlejší dech pro lepší zásobení svalů živinami a&nbsp;kyslíkem, potřebujete být nabuzení (adrenalin) a&nbsp;mít k&nbsp;dispozici dostatek živin a&nbsp;glukózy v&nbsp;krevním řečišti (kortizol). Naopak když ležíte doma třeba u&nbsp;seriálu v&nbsp;klidu, je v&nbsp;převaze parasympatikus.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Samozřejmě je vždy sympatikus či parasympatikus pouze v&nbsp;převaze, nikdy není jeden „vypnutý" a&nbsp;druhý „zapnutý". Vaše tělo nemusí fyziologicky vnímat rozdíl v&nbsp;tom, jestli jde o&nbsp;život a&nbsp;pronásleduje vás třeba medvěd a&nbsp;mezi tím, když se stresujete proto, že po vás řve v&nbsp;práci šéf.</p>
+    <p>Akutní stres je v&nbsp;pořádku. Může to být například sportovní aktivita na níž tělo reaguje adaptacemi a&nbsp;přizpůsobením. Je to něco jako očkování, přiměřená dávka, která vám umožní se rozvíjet, adaptovat, odolat tomuto stresoru příště lépe.</p>
+    <p>Ovšem chronický stres může být problém. Protože jste velmi často v&nbsp;„bojovém režimu sympatiku" a&nbsp;to může například omezovat vaši imunitu, vaši chuť jíst a&nbsp;zpomalí vám trávení. Zde se dostáváme ke spojitosti mezi stresem a&nbsp;apetitem.</p>
+    <p>Sympatický nervový systém v&nbsp;podstatě nutí tělo rozkládat tkáně a&nbsp;uvolňovat energetické substráty do krevního řečiště pro další využití pro boj či útěk. Pokud parasympatikus nevyvažuje dost často tento stav, je pro tělo těžší „ukládat a&nbsp;růst". Takto vidíme, že problém spousty ektomorfů může být právě ve vyvážení sympatiku a&nbsp;parasympatiku, o&nbsp;stresovém managementu a&nbsp;citlivosti na stres.</p>
+    <p>V&nbsp;neustálém stresu a&nbsp;se sníženým apetitem nemají problém spálit hodně energie a&nbsp;méně jí konzumovat z&nbsp;potravy. Proto pro ně může být snazší udržet štíhlou postavu, ale také těžší budovat další svalovou hmotu.</p>
+    <p>Svalový růst není pouze o&nbsp;anabolických procesech, tedy kolik svalů budujeme. Je také o&nbsp;tom, kolik jich katabolickými procesy rozložíme. Například snížená hladina krevního cukru může vyvolat takzvanou glukoneogenezi. Je to proces, při kterém játra přeměňují aminokyseliny na krevní cukr, tedy glukosu. Tyto aminokyseliny v&nbsp;přísné dietě mohou pocházet více z&nbsp;katabolismu svalových tkání či z&nbsp;trávicího traktu z&nbsp;jídla. Pokud se jako ektomorf snažíte nabírat svalovou hmotu a&nbsp;jde vám to těžko, zaměřte se na tyto aspekty vašeho života a&nbsp;návyků kolem stresu a&nbsp;pravděpodobně se vám to vyplatí.</p>
+  </div>
+
+  <h2 class="section">Spánek</h2>
+  <div class="box">
+    <p>Kvalitní spánek zlepšuje efektivitu a&nbsp;kvalitu práce, sportovního výkonu i&nbsp;regeneraci. Když workoholik zhodnotí, že potřebuje více času ke své práci, často automaticky sníží čas určený pro spánek. Někteří lidé dokonce zajdou tak daleko, že užívají modafinil, aby zůstali vzhůru. Modafinil je droga, kterou berou vojáci při dlouhých a&nbsp;náročných misích, kdy potřebují zůstat vzhůru po dobu několika dní v&nbsp;kuse. Tento přístup určitě nedoporučuji a&nbsp;dlouhodobě pro vás stejně nebude efektivní.</p>
+    <p>Každý však potřebuje zdravý spánkový režim, aby mohl optimálně fungovat. Místo toho, abychom se na spánek dívali jako na překážku u&nbsp;práce, tak bychom na něj měli nahlížet jako na investici, která nám umožňuje udržovat stabilní úroveň pracovního nasazení a&nbsp;produktivity v&nbsp;rámci delšího časového horizontu.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Mám pro vás několik tipů na návyky, které vám doporučuji ovládnout pro zajištění dostatku kvalitního spánku:</b></p>
+    <ul>
+      <li><b>Jaká délka spánku je ideální?</b> Doporučuji spát alespoň 7&nbsp;–&nbsp;8 hodin denně. Určitě je nutné brát ohled na individuální potřeby a&nbsp;nervové vypětí. Ektomorf může být často více unavený a&nbsp;měl by tedy i&nbsp;déle odpočívat. Například šlofík do 20 minut v&nbsp;průběhu dne může příjemně osvěžit a&nbsp;povzbudit bez použití stimulantů. Většina vědeckých studií se shoduje na tom, že spát méně než 7 hodin denně v&nbsp;průměru, může škodit zdraví v&nbsp;dlouhodobém horizontu. Mimo to nevyspaní budete mít větší pocit únavy a&nbsp;hladu, což není výhodné pro udržení štíhlé postavy.</li>
+      <li><b>Určete si čas, kdy budete každý den chodit spát.</b> Lidské tělo má rádo návyky a&nbsp;neustále si nějaké tvoří. V&nbsp;rámci cirkadiálních cyklů vám pravděpodobně nejvíc sedne spánek v&nbsp;rozmezí cca od 22. do 6. hodiny. Pokud však nemůžete spát v&nbsp;této době, nastavte si jiné, ale pevné, časové rozmezí a&nbsp;snažte se ho, co nejméně porušovat. Toto platí i&nbsp;pro víkendy.</li>
+      <li><b>Alespoň 20 minut před spaním nepoužívejte elektronické přístroje.</b> Vypněte tedy televizi, odložte mobilní telefon. Vaše tělo potřebuje v&nbsp;rámci usínání produkovat melatonin. Umělé záření z&nbsp;těchto přístrojů může omezovat produkci tohoto hormonu. Tvorba melatoninu souvisí i&nbsp;s&nbsp;předchozím bodem, okolo šesté ranní totiž vychází slunce.</li>
+      <li><b>Stáhněte si aplikaci F.lux.</b> Tato aplikace upravuje barvy zobrazované vašim displejem dle denní doby. Přesto však večer nestačí blokátor modrého světla, je zapotřebí skutečně nevystavovat oči žádnému jasnějšímu světlu. Takto je to však pravděpodobně alespoň „menší zlo".</li>
+      <li><b>Ujistěte se, že místnost, ve které spíte, je co možná nejtemnější</b> a&nbsp;máte tam dostatečný chlad pro rychlé usínání i&nbsp;snazší udržení hlubšího spánku. Nezapomeňte tedy ideálně zatáhnout žaluzie či závěsy.</li>
+      <li><b>Pokud máte i&nbsp;tak problém usnout,</b> můžete si koupit melatoninový suplement. Tyto suplementy bývají přírodní a&nbsp;poměrně levné. Nechcete však budovat závislost svého spánku na tomto suplementu jako návyk. Je to pouze přechodný nástroj pro zlepšení spánkových návyků.</li>
+    </ul>
+  </div>
+
+  <h2 class="section">Právo volby</h2>
+  <div class="box">
+    <p>Jak si ZVOLÍ dospělý člověk vypadat, je čistě jeho věc. Na co my coachové často zapomínáme je slovo „volba".</p>
+    <p>Pracuji v&nbsp;průmyslu, který by měl lidi motivovat. Ve většině případů tomu tak však není. Jsme průmysl, který má lidí posilovat, ale často tomu tak není. Nutíme lidi, aby na nás byli závislí. Jednak ze strachu, že přijdeme o&nbsp;klientelu. A&nbsp;také proto, že mnozí z&nbsp;nás postrádají vzdělání, umožňující vědění předávat.</p>
+    <p>Měli bychom být schopni lidem nabídnout možnost volby v&nbsp;souvislosti s&nbsp;jejich tělesnou kompozicí a&nbsp;atletickým výkonem. Neděláme to a&nbsp;spíše lidem ordinujeme naše vlastní volby, stigmata, očekávání a&nbsp;všeobecné standardy. Předpokládáme, že každý chce to, co společnost a&nbsp;my diktujeme. A&nbsp;to je špatně.</p>
+    <p>V&nbsp;tomto světě, kde lidé nadávají „tlusťochům" i&nbsp;„příliš vypracovaným lidem" se zdá, že ztrácíme smysl pro realitu. Abychom mohli cítit stud, musíme se nejprve cítit zostuzeni. Ano, společnost a&nbsp;lidé nám ukládají, za co bychom se měli stydět, ač pocit studu spočívá neoddělitelně v&nbsp;našem nitru.</p>
+    <p>Ale jak většina z&nbsp;nás Coachů motivuje? My jsme ti, kteří způsobují u&nbsp;lidí pocit studu našimi perfektními dietami a&nbsp;tréninkovými plány a&nbsp;tím stanovujeme tento neudržitelný ideál. Ve většině případů je to však lež. Kolik z&nbsp;nás Coachů takto skutečně žije? Je to pouze vyobrazení našeho života v&nbsp;závislosti na tom, jak chceme, aby ho lidé viděli.</p>
+    <p>A&nbsp;hádejte, proč to děláme. Protože se stydíme. Stydíme se, že samotné „ne-kritické" odvětví, kterým jsme se rozhodli být součástí, nás skutečně bude soudit.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Ani ve snu by nikoho nenapadlo, že se prostě rozhodneme nejít cvičit. Nebo že bychom snědli jídlo nebo si dali drink čistě pro radost z&nbsp;chuti. Přestaňme klást nerealistické a&nbsp;neudržitelné ideály lidem, kteří je nevyhledávají.</p>
+    <p>To jak budete vypadat je VOLBA každého z&nbsp;vás. Není to tak, že se jednoho dne probudíte tlustí nebo vysekaní. Jedno je vedlejším produktem přejídání se a&nbsp;druhé je produktem tréninku a&nbsp;vhodného stravování. Ovšem, co si jedinec zvolí, ať už je to jeden extrém nebo kombinace obojího, je čistě na něm. A&nbsp;většina populace chce střední kombinaci – tedy kompenzaci přejídání výdejem energie prostřednictvím cvičení, což je pro tyto lidi dlouhodobě udržitelná varianta.</p>
+    <p>V&nbsp;určitém bodě tohoto celého procesu jsme měli na výběr nebo ne? Vybral si tedy někdo být tlustý? Pokud ano, je to životní volba jako každá jiná. Věřím, že pokud je někdo dobře informovaný a&nbsp;rozhodne se kouřit, brát drogy, skákat z&nbsp;letadla, je to čistě na něm. Pokud je to ale něco, co si nemohli zvolit nebo se musí pod tlakem přizpůsobit, pak to v&nbsp;pořádku není.</p>
+    <p>Jsou to stejné životní volby jako všechny ostatní, založené na naději, vědění, vzdělání a&nbsp;do určité míry na životních zkušenostech. A&nbsp;jak to bývá u&nbsp;všech životních voleb, přicházejí spolu s&nbsp;kompromisy, riskem a&nbsp;odměnou. A&nbsp;pokud se rozhodnu žít 24/7 se svalovou bolestí a&nbsp;perfektním jídelníčkem tak, že se touhy a&nbsp;potřeby v&nbsp;mém životě jasně oddělí, je to má VOLBA. Nesuďte mě či kohokoli jiného jen proto, že se naše životní styly neshodují.</p>
+    <p>Lidé soudí obézní dítě stejně jako špičkového atleta. Co je na tom nejhorší, že to v&nbsp;dnešní době dělají lidé, kteří danou osobu vůbec neznají a&nbsp;nikdy se s&nbsp;ní nesetkali (sociální média). A&nbsp;zdá se, že to společnost hodnotí jako normální věc. Jsou to jednoduše lidé, kteří mají pocit, že je v&nbsp;pořádku soudit rozhodnutí někoho jiného. A&nbsp;pokud nejste v&nbsp;souladu s&nbsp;jejich vlastními životními volbami, vadíte jim, žárlí na vás a&nbsp;kdoví, co ještě.</p>
+    <p>Jde o&nbsp;to, že já i&nbsp;vy, bychom měli mít možnost volby stát se tím, čím chceme. A&nbsp;to bez ohledu na to, co nám diktuje společnost nebo vrstevníci.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Myslíte si, že obézní dítě je obézní na základě své volby? Myslíte si, že když je to dítě každý den mučeno a&nbsp;škádleno kvůli svému vzhledu, tak chce mít možnost volby? To dítě si to nevolí. Může vyrůst a&nbsp;v&nbsp;dospělosti, stále obézní, si stěžovat, že ho lidé zostuzují za to, jak vypadá. Nebo se může sebrat a&nbsp;něco s&nbsp;tím udělat. Právě ta negativní zkušenost ho může zocelit a&nbsp;vyhecovat jít po cestě změny a&nbsp;stát se fitness modelem.</p>
+    <p>No a&nbsp;bude pak jeho život procházka růžovým sadem? Jistěže ne, to že zhubnete nějaký tuk určitě není zárukou k&nbsp;věčnému štěstí. Být více akceptovaný znamená být průměrný. Pokud se však vychýlíte na jednu stranu spektra (obezita, totální vyrýsovanost a&nbsp;hodně svalů), budete okolím souzeni.</p>
+    <p>Lidé jsou krutí. Rádi haní lidi, kteří nejsou jako oni. Je to jako osoba v&nbsp;baru, která nepije alkohol. Volby. Motivuji lidi k&nbsp;tomu, aby byli schopni volit a&nbsp;mít KONTROLU nad svou tělesnou kompozicí, stravováním a&nbsp;tréninkem. Raději je naučím kontrole a&nbsp;know how pro jejich vlastní cíle, než abych jim diktoval, jak si já nebo společnost myslíme, že by měli vypadat.</p>
+    <p>Viděl jsem až příliš mnoho lidí, kteří nabrali trochu svalů, vyrýsovali břicho a&nbsp;změnili se v&nbsp;arogantní idioty, jejichž životním smyslem je soudit druhé. Mou prací není dát lidem svaly nebo jim ubírat tuky. Mým cílem je dát jim kontrolu, povědomí a&nbsp;sebevědomí. Během tohoto procesu spousta z&nbsp;nich vyrýsuje, ale spousta taky ne. Dávám jim nástroje zhodnotit, kde se v&nbsp;daném spektru nacházejí a&nbsp;jak se dostat tam, kam sami chtějí.</p>
+    <p>Toto je všeobecně vrchol křivky štěstí. Ne to, co za něj pokládá tento průmysl. Ale to, co za něj pokládáte vy. Silový trénink provází kompromisy, zdravý životní styl provázejí také kompromisy (často se týkají hlavně vašeho mozku).</p>
+    <p>Nadváha je, až na případ metabolické benigní obezity (což je extrémně malé procento populace a&nbsp;je to pouze přechodný stav), kde obezita neobnáší žádné metabolické problémy s&nbsp;ní jinak spojené, spojena s&nbsp;vyšším rizikem cukrovky, srdečními onemocněními, vysokým cholesterolem, vysokým tlakem atd.</p>
+    <p>Jsem znepokojen tím, že nadváha často není volbou (jak předpokládá společenský konsensus) a&nbsp;chci lidem tuto volbu dát. A&nbsp;pokud vidíte někoho obézního vstoupit do fitka, pak to znamená, že s&nbsp;tím už něco dělá. Dokonce i&nbsp;vy, kdo jste obézní a&nbsp;čtete si tento příspěvek očividně se svým aktuální stavem chcete něco dělat. A&nbsp;to je dobře, protože z&nbsp;vlastní volby začínáte měnit realitu svého života.</p>
+    <p>Ať už však sledujete kohokoli jako svůj fitness vzor. Nezapomeňte, že se tak nenarodili ani jednoho dne neprobudili. Prošli si spoustou let dřiny. A&nbsp;ani ve vašem případě těch 5, 10, 20 let nicnedělání a&nbsp;špatných stravovacích návyků nezmění pár týdnů v&nbsp;posilovně. Pokud však máte dost silné PROČ a&nbsp;pochází z&nbsp;vašeho nitra, nic vás nedokáže zastavit. A&nbsp;to, kdy dorazíte do vašeho cíle závisí na dlouhodobé udržitelnosti vašeho progressu, stejně jako na tom, kolik tomu sami dáte.</p>
+  </div>
+</div>
+
+<!-- ========== PART 2 DIVIDER ========== -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="partdiv">
+    <span class="kick">Část 2 z 2 · Výdej energie</span>
+    <h1>Pohyb &amp; fitness</h1>
+    <p class="sub">Pohybové aktivity, trénink, periodizace, svalový růst a&nbsp;vše kolem výdeje energie.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Pohybové aktivity</h2>
+  <div class="box">
+    <p>Abychom zvýšili své spalování, posílili své tělo a&nbsp;svalstvo, aby nás nebolely záda a&nbsp;klouby, je dobré zařadit do svého života pravidelné aktivity nebo sport. Tělo je jednoduše stavěno na pohyb, ať se nám to líbí nebo ne. Kdo je aktivní a&nbsp;hýbe se, je zpravidla zdravější a&nbsp;ve stáří za to bude moc rád.</p>
+    <p>Je dobré najít si to, co nás baví a&nbsp;toho se držet. Zkuste si například vybrat z&nbsp;tohoto základního seznamu níže.</p>
+    <p><b>Základní nápady na aktivity:</b></p>
+    <ul>
+      <li>Pravidelná chůze</li>
+      <li>Kardio cvičení</li>
+      <li>Silové cvičení (posilování)</li>
+      <li>Jakýkoliv sport či pohybová aktivita</li>
+    </ul>
+  </div>
+  <div class="box">
+    <p><b>Pravidelná chůze:</b></p>
+    <ul>
+      <li>Chůze je často podceňovaná zbraň proti bolesti zad a&nbsp;kloubů.</li>
+      <li>Chůzí spalujeme mnohem více než sezením.</li>
+      <li>Podporuje naši imunitu, zlepšuje náladu, pomáhá nám lépe usínat.</li>
+      <li>Podporuje správnou funkci kardiovaskulárního systému.</li>
+    </ul>
+    <p style="margin-top:2.5mm;">Zkrátka pokud jste opravdu zarytý nesportovec nebo jen hledáte pohyb navíc ke svému sportu, pravidelná chůze je naprosto skvělá. I&nbsp;20 minut denně dělá obrovský rozdíl proti člověku, který nemá žádný pohyb.</p>
+    <p>Pokud často chodíme a&nbsp;chceme sledovat svůj pohybový standard, do mobilu se dá stáhnout krokoměr a&nbsp;díky němu vidíme, kolik kroků denně, týdně a&nbsp;měsíčně ujdete. Hodí se to pro udržení standardu pro týdenní aktivity, kdy si například řeknete, že za týden chcete ujít 49&nbsp;000 kroků. To je 7&nbsp;000 kroků denně. Jeden den můžete ujít více a&nbsp;druhý méně. Ale máte jasný přehled a&nbsp;motivaci dodržení aktivity, což se kladně podepíše na vašem energetickém výdeji.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Kardio cvičení:</b></p>
+    <p>Do této skupiny spadá klasický běh, jízda na kole, brusle, běžky, koloběžka a&nbsp;i&nbsp;výše zmíněná chůze. Tyto aktivity mají v&nbsp;podstatě stejné výhody jako chůze. Pravděpodobně, ale spálíme více energie a&nbsp;získáme větší výdrž, protože tyto aktivity bývají náročnější na výkon.</p>
+    <p><b>Silové cvičení (posilování):</b></p>
+    <p>Do této skupiny patří klasické posilování, cvičení v&nbsp;posilovně, domácí cvičení, dřepy, lehsedy, kliky apod. Nejlepší volbou je fitness centrum pod odborným dohledem, kdy se naučíte, jak správně cvičit, protože jak vždy říkám svým klientům: „Cvičení může být prospěšné, stejně tak jako na škodu." Vyplatí se najít si odborníka a&nbsp;naučit se, jak na to jít správně a&nbsp;efektivně. Váš čas je tím pádem dobře využitý a&nbsp;výsledky jsou lepší. Zároveň se s&nbsp;postupem času stáváte zdravějšími a&nbsp;silnějšími a&nbsp;ne opak.</p>
+    <p>Ovšem ne každý má finance na trenéra a&nbsp;to naprosto chápu, v&nbsp;tom případě stačí cvičit doma podle videí z&nbsp;YouTube. Můžete cvičit i&nbsp;na workout hřišti, případně požádat kamarády, kteří mají se cvičením zkušenosti. Rozhodně rádi pomohou.</p>
+    <p>Výhoda silového cvičení oproti kardiu, a&nbsp;proč je výrazně doporučeno, je, že když cvičíte a&nbsp;poškozujete si tím v&nbsp;podstatě svaly, tak dalších 36&nbsp;–&nbsp;48 hodin po tréninku má tělo potenciál regenerovat a&nbsp;pokud mu dodáte dostatek bílkovin, tak ta samotná regenerace pálí značné množství energie. U&nbsp;kardio cvičení sice spálíte energie více, ale ty následující dny potenciální regenerace u&nbsp;něj nejsou.</p>
+    <p><b>Jakýkoli sport:</b></p>
+    <p>Jednoduše jakýkoliv sport a&nbsp;pohyb bude pro vás skvělý, pokud se jedná o&nbsp;člověka s&nbsp;nadváhou. Výrazně doporučuji cvičení fitness nebo chůzi. Rozhodně nedoporučuji běh. Při nárazech u&nbsp;běhu působí na naše klouby naše váha 3x tolik. A&nbsp;pokud tělo není na tuto zátěž připraveno, může to být na škodu. U&nbsp;posilování takové nárazy nejsou, a&nbsp;proto se vyplatí jít spíše touto cestou.</p>
+  </div>
+  <div class="box">
+    <p>Doporučuji si zvolit svou pravidelnou aktivitu a&nbsp;té se držet zuby nehty. Zároveň doporučuji, stanovit si standardní počet aktivit týdně. Například 3x týdně fitko 60 min nebo 3x týdně chůze 7&nbsp;000 kroků. Pomůže vám to při regulaci výdeje energie. Pod standardní počet aktivit nejdete, abyste měli jistotu, že váš týdenní příjem kalorií, díky tomu, nepřevýší výdej energie.</p>
+    <p>Volba je na každém z&nbsp;nás a&nbsp;věřím, že si každý najde to, co ho baví a&nbsp;pozná, jak je výsledný pocit po aktivitách naprosto skvělý!</p>
+    <p style="color:#F6CD63;font-weight:700;">„Hýbejme se, jezme, bavme se, buďme zdraví"</p>
+    <p>Samozřejmě aktivitu zvolit nemusíte, ale její pozitivní následky na výdej energie, náladu, zdraví a&nbsp;celkové zdraví, jsou extrémní.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Co je víc? Cvičení nebo strava?</h2>
+  <div class="box">
+    <p>Na internetu, od klientů a&nbsp;v&nbsp;médiích stále slýchám, že „strava je 80&nbsp;% úspěchu, trénink je 20&nbsp;%!", popřípadě „trénink je 70&nbsp;% a&nbsp;strava 30&nbsp;%!". Pojďme se podívat trošku více do hloubky, co vlastně ten trénink a&nbsp;ta strava s&nbsp;vaším tělem ve skutečnosti dělá. Možná se pak dožiju dne, kdy už tyto mýty, ukazující neporozumění lidskému tělu, neuslyším.</p>
+    <p><b>Trénink:</b> Pokud je správně sestaven a&nbsp;prováděn, dává tělu signál, že je potřeba se přizpůsobit novým podmínkám a&nbsp;připravit se na příští zatížení tak, ať to zvládneme lépe/bez problémů. Toto je tedy velmi zjednodušeně signál pro tělo investovat spoustu energie (kterou by jinak – bez stimulu z&nbsp;tréninku – nemělo důvod plýtvat) do svalové proteinové syntézy (růst svalů + výdej energie na tento proces).</p>
+    <p>Další výhodou silového tréninku (mimo to že dává stimul, aby vůbec tělo mělo důvod svaly zvětšovat a&nbsp;zesilovat) je spalování energie na fungování svalů v&nbsp;rámci tréninku a&nbsp;také v&nbsp;rámci dané svalové proteinové syntézy, která je energeticky velmi náročná (a&nbsp;je k&nbsp;ní tedy potřeba mít dostatek makro a&nbsp;mikro živin ve stravě).</p>
+    <p><b>Strava:</b> Vaše strava má vliv na hormony (manažeři lidského těla), které řídí svalovou proteinovou syntézu, hubnutí, zdraví, pocity, hlad apod. Také dodává energii, makro a&nbsp;mikroživiny tělu pro to, aby měly svaly z&nbsp;čeho přestavět či se zvětšit (stále ovšem v&nbsp;návaznosti na stimul z&nbsp;tréninku).</p>
+    <p>Strava vždy vyvažuje trénink a&nbsp;stresové vypětí. Trénink naopak může kompenzovat například vyšší příjem stravy, která je pak využita, místo toho, aby byla uložena do tukových zásob (což jsem samozřejmě velmi zjednodušil). Pokud tedy budete cvičit, svaly vám neporostou, pokud nebudete správně jíst, jelikož svaly nebudou mít z&nbsp;čeho růst.</p>
+    <p>Ani jeden aspekt tedy není více či méně důležitý. Oba jsou stejně důležité a&nbsp;v&nbsp;souhře nám umožňují se fyzicky vyvíjet (či degradovat). Jeden bez druhého nefunguje – Jin Jang.</p>
+    <p>Pokud bychom však chtěli fakt „na přísno" říct, co je pro růst svalů „důležitější", řekl bych trénink. Protože pokud dostatečně tvrdě trénujete, svaly vám porostou (i&nbsp;když ne optimálně) i&nbsp;bez perfektní stravy. Pokud však budete perfektně jíst, ale nebudete cvičit, tak svaly neporostou. Ovšem stejně tak, pokud byste nejedli fakt nic (což je fér srovnání pro „necvičíte vůbec"), tak se stejně daleko nedostanete.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Celý rozsah pohybu při cvičení a růst svalů</h2>
+  <div class="box">
+    <p><b>Assistant Professor Brad Schoenfeld:</b></p>
+    <p>„Nová studie ukazuje, že plný rozsah pohybu při cvičení má větší vliv na markery svalového poškození než částečná opakování. A&nbsp;to i&nbsp;přes použití vyšších vah v&nbsp;kratším rozsahu pohybu. To nám poskytuje důkaz, že je rozsah pohybu, zvláště pokud je sval natahován pod zatížením, z&nbsp;hlediska poškození svalu důležitější než množství použitého zatížení. Podle těchto důkazů je svalová hypertrofie větší, když jsou svaly trénovány v&nbsp;„delší svalové délce" (tj. natažené pozici). Poskytuje tak další podporu důvěryhodnosti hypotézy, že se poškození svalové tkáně podílí na růstu svalů."</p>
+  </div>
+
+  <h2 class="section">Kortizol a svalový růst</h2>
+  <div class="box">
+    <p>Kortizol je nejdůležitější hormon pro svalový růst. A&nbsp;už nás všechny unavují ty řeči, že bychom kvůli němu neměli cvičit déle než 45&nbsp;–&nbsp;60 minut.</p>
+    <p>Ano, hladina kortizolu skutečně stoupá, když trénujeme. Pojďme si to však rozebrat podrobněji. Lidé říkají „Netrénujte déle než 45&nbsp;–&nbsp;60 minut, protože vám stoupne hladina kortizolu." Stejní lidé často doporučují například 1&nbsp;–&nbsp;2 hodiny kardia. Je to logické? Vždyť kardio na lačno úplně stejným způsobem vystřelí hladinu kortizolu k&nbsp;nebesům.</p>
+    <p>Doporučuji sledovat výzkumy doktora Phillipse (měl jsem tu čest s&nbsp;ním natočit rozhovor: <a href="https://youtu.be/jjejpF9gtMc">https://youtu.be/jjejpF9gtMc</a>), který se zabýval i&nbsp;touto tématikou. Porovnával různé hormonální výkyvy během cvičení: růstový hormon, testosteron, IGF-1 a&nbsp;kortizol. Který myslíte, že měl největší korelaci s&nbsp;nárůstem svalové hmoty během tréninku? Ano, správně, kortizol.</p>
+    <p>„Ale Martine, kortizol je katabolický.", slyším tradiční argument. Ano. To je pravda, kortizol je katabolický. Ale přechodné zvýšení hladiny hormonů neznamenají vůbec nic pro svalovou hmotu. Přechodná navýšení během tréninku (pro testosteron platí totéž) nemají žádný efekt na růst svalů. Je to jen nástroj pro mobilizaci substrátů pro trénink.</p>
+    <p><b>Vysvětlení:</b> Katabolize (palivo pro trénink) v&nbsp;biochemii znamená, že se ze složitějších látek dělají jednodušší. Například glykogen ve svalech je složitý navázaný sacharid, ten se rozloží na glukózu a&nbsp;teprve ta může jít do krve a&nbsp;být využita mozkem, anebo dalšími svaly jako energie, když je potřeba u&nbsp;cvičení. To je katabolický proces. Ovšem bez něj byste nemohli fungovat a&nbsp;byli byste nehybní. V&nbsp;těle nepřetržitě probíhají anabolické i&nbsp;katabolické procesy, pořád se něco ukládá i&nbsp;rozkládá. Výsledek je vždy závislý na poměru těch daných procesů. Jak moc na konci dne, týdne nebo měsíce porostete proti množství látky, která se rozloží.</p>
+    <p>Při cvičení jdou hormony nahoru, aby tělo získalo více paliva. To je vše.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Lidé tvrdí, že je nesmysl, aby byl kortizol asociován právě s&nbsp;růstem svalové hmoty. Ve skutečnosti to dává perfektní smysl. Protože bych mohl citovat klasickou poučku ze ZŠ „korelace neimplikuje kauzalitu". To znamená, že pokud se dvě události dějí najednou, neznamená to, že spolu automaticky souvisí.</p>
+    <p>Například v&nbsp;létě roste spotřeba zmrzliny. A&nbsp;v&nbsp;létě roste i&nbsp;počet vražd. Korelace by znamenala, že pokud jíš zmrzlinu, pravděpodobně jsi vrah. A&nbsp;to je nesmysl. Kauzalita jsou naopak dva děje, které spolu mají prokazatelný vztah. Například mi dá Kuba Kiovský ránu a&nbsp;mě praskne lebka. To je nevyhnutelné. Bohužel, spousta lidí se nechá těmito tvrzeními ovlivnit a&nbsp;dogmaticky jim věří.</p>
+    <p><b>Pojďme si to ještě jednou shrnout:</b></p>
+    <p>Kortizol je rozhodně katabolický. „Ale Martine, jak je možné, že pak přechodné nárůsty kortizolu během tréninku korespondují s&nbsp;růstem svalů nejvíce ze všech hormonů?" Protože trénink, který způsobí největší nárůst svalů, je typicky velmi stresující (mluvíme o&nbsp;metabolickém stresu) a&nbsp;způsobuje hodně svalového poškození. A&nbsp;právě kvůli těmto stresorům se objeví i&nbsp;více kortizolu.</p>
+    <p>Je značný rozdíl mezi přechodným navýšením a&nbsp;mezi dlouhodobým a&nbsp;stálým zvýšením hodnoty tohoto hormonu. I&nbsp;proto je sice krásné, když vám tělo v&nbsp;nějaké denní době vyplaví více testosteronu, ale nedá se to srovnat s&nbsp;efektem, když si někdo denně aplikuje několikanásobné dávky testosteronu „suprafyziologický" – tak jak tělo nikdy nedokáže, nechce a&nbsp;nemůže. Tyto věci jsou obrovský rozdíl. A&nbsp;lidé jim často nerozumí. Vy už ano.</p>
+  </div>
+
+  <h2 class="section">Periodizace tréninku</h2>
+  <div class="box">
+    <p>Nejprve si vyjasněme, že k&nbsp;roku 2022 víme, že pro optimální růst svalů jsou hlavní:</p>
+    <ul>
+      <li>objem tréninku,</li>
+      <li>intenzita tréninku,</li>
+      <li>cvičení svalů v&nbsp;celém rozsahu jejich pohybu a&nbsp;správná technika,</li>
+      <li>progresivní přetížení,</li>
+      <li>podobného růstu svalů a&nbsp;síly lze dosáhnout i&nbsp;zvedáním těžší činky na méně opakování, i&nbsp;lehčí na více opakování. Je zde důležité, aby byla v&nbsp;obou případech dostatečná intenzita a&nbsp;správná technika, tedy u&nbsp;těžké váhy jen tak těžká, abyste to zvedali správně, u&nbsp;lehčích vah je třeba jít blízko selhání, ne skončit „z&nbsp;nudy" u&nbsp;10 opakování, nebo protože jste někde četli, že máte jet jen „10 opakování"</li>
+    </ul>
+    <p style="margin-top:2.5mm;">…a&nbsp;to nehledě na periodizaci tréninku. Je to však zajímavý koncept a&nbsp;má přesah také pro tréninkovou specializaci. Tedy MMA zápasník cvičí jinak než třeba powerlifter a&nbsp;například kulturista má ještě úplně jiné priority.</p>
+    <p class="note">!! Následující téma vám podám velmi jednoduše, takže mě, prosím, nechytejte za každé slovíčko a&nbsp;soustřeďte se na princip. Čísla, která budu používat, jsou příklad, na kterém budu principy ukazovat, v&nbsp;realitě se mohou různit !!</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <h2>DUP – Daily Undulating Periodization</h2>
+    <p class="note">Periodizace tréninkového plánu na denní bázi</p>
+    <p>Autorem těchto myšlenek jsou Dr. Mike Zourdos a&nbsp;hlásí se k&nbsp;němu i&nbsp;velikáni jako Layne Norton a&nbsp;Ben Esgro. Jeho slavnou větou je „Není otázkou, zda to funguje, ale zda je to optimální."</p>
+    <p>Také je autorem slavné otázky: „Kdyby ti někdo unesl rodinu, mířil jim pistolí na hlavu a&nbsp;řekl, že pokud do šesti týdnů nezvedneš maximálku na dřep, třeba 25&nbsp;kg, tak je zastřelí. Pak se zeptá „Kdo z&nbsp;vás by dále cvičil nohy jednou týdně, aby se nepřetrénoval?" Sám jednou dřepoval měsíc. Každý den. A&nbsp;tímto způsobem přidal přes 10&nbsp;kg. I&nbsp;když to byl jen pokus a&nbsp;to opravdu drsný.</p>
+    <p><b>Objem tréninku:</b></p>
+    <ul>
+      <li>se doporučuje vždy zvyšovat postupně,</li>
+      <li>je hlavní hnací motor svalového rozvoje,</li>
+      <li>je třeba ho však postupně zvyšovat,</li>
+      <li>je potřeba, abyste věděli, kolik zvedáte,</li>
+      <li>pište si kolik sérií jste u&nbsp;jakého cviku odcvičili, a&nbsp;s&nbsp;jakým počtem opakování a&nbsp;váhou.</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Příklad:</b></p>
+    <div class="formula"><div class="eq">Bench Press: 40/15 + 60/12 + 80/8 + 90/6</div><div class="ex">(v&nbsp;první sérii 40&nbsp;kg a&nbsp;15 opakování, ve druhé sérii 60&nbsp;kg a&nbsp;12 opakování a&nbsp;tak dále)</div></div>
+    <ul>
+      <li>abyste se nedostali do extrémů, neznamená to, že si dáte na bench press 30 kilo, budete dělat 100 opakování, a&nbsp;že je to super,</li>
+      <li>zhruba nad 65&nbsp;% 1&nbsp;RM (RM = rep max, maximální váha, kterou zvednete jen jednou), to už by mohlo být ideální,</li>
+      <li>třeba takových 90&nbsp;% 1&nbsp;RM už je opravdu těžká váha, protože je velmi blízko vaší maximální kapacitě.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <p><b>Existují 3 základní zaměření tréninku:</b></p>
+    <ul>
+      <li>Síla</li>
+      <li>Svalový objem/hypertrofie</li>
+      <li>Výbušnost</li>
+    </ul>
+    <p style="margin-top:2.5mm;"><b>Výbušnost</b> je výhodná pro sportovce typu sprinter nebo zápasník MMA. Trénuje se například tak, že si na bench naložíte střední váhu a&nbsp;snažíte se ji, co nejrychleji vytlačit nahoru. Jde o&nbsp;vyvinutí co největší akcelerace v&nbsp;dané časové jednotce pod daným odporem. Pro zjednodušení se tímto principem moc zabývat nebudeme.</p>
+    <p><b>Hypertrofie</b> je trénink pro zvyšování objemu svalů. A&nbsp;objem je v&nbsp;tomto případě důležitější než síla. Jak už víte, když se nějakému tréninku přestanete věnovat, tělo svou adaptaci pro něj ztrácí. V&nbsp;minulosti se často trénovalo třeba 3 měsíce silově (například 2&nbsp;–&nbsp;6 opakování maximální váhy), pak 3 měsíce hypertrofně (8&nbsp;–&nbsp;12 opakování, tedy váha, se kterou toto množství zvládnete). Ale tyto adaptace se po čase ztrácejí, takže jste 3 měsíce naháněli sílu, abyste o&nbsp;ni pak během 3 měsíců hypertrofního tréninku z&nbsp;části přišli. Tak vznikla lineární periodizace, kdy se střídá silový a&nbsp;hypertrofní trénink například co týden.</p>
+    <p>A&nbsp;DUP je tady proto, že se principy střídají z&nbsp;tréninku na trénink. Díky ní nejsou takové mezery na sval nebo cvik, takže křivka pokroku, hypertrofie i&nbsp;síly jde udržitelněji nahoru a&nbsp;neztrácí se tak adaptace mezi tréninky.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p><b>Příklad:</b> Samozřejmě záleží na tom, kolikrát týdně cvičíte. A&nbsp;vždy myslete na to, že se jedná o&nbsp;princip, ne o&nbsp;tréninkový plán. Využít ho může každý, ať cvičí jakkoliv.</p>
+    <p>Kulturista cvičí 6x týdně. Jeho zaměření je očividně hlavně hypertrofie, síla jde trochu do pozadí. Na soutěžích jde přece o&nbsp;velikost. Bude mít tedy 2/3 objem tréninku hypertrofní a&nbsp;jen 1/3 silovou. Ale i&nbsp;přesto tam silové cvičení zařadí. Proč?</p>
+    <p>Kdyby měl zvedat objem tréninku (dle metaanalýz je základním hnacím ústrojím právě objem tréninku) bez zvyšování síly, tak by teoreticky mohl přidávat jen počty opakování a&nbsp;počty sérií se stejnou vahou. A&nbsp;to nemůže dělat do nekonečna, protože by nakonec byl 15 hodin denně ve fitku. Ovšem pokud zvyšuje i&nbsp;sílu, tak může dlouhodobě přidávat kila na činku. A&nbsp;to je také navýšení objemu tréninku.</p>
+    <p>Pokud cvičíte partii jednou týdně a&nbsp;makáte jen měsíc nebo dva, tak navyšujete objem tréninku pozvolna tak, abyste měli výsledky. Někdo potřebuje více, někdo méně. Ale čím větší je objem vašeho tréninku nad to, co vaše tělo potřebuje, tím větší je riziko úrazu a&nbsp;ten k&nbsp;dlouhodobě udržitelné křivce pokroku nepomůže.</p>
+    <p>Takže když cvičíte dřepy jednou týdně, neznamená to, že máte začít třikrát a&nbsp;s&nbsp;trojnásobnou zátěží ze dne na den. Asi by to nedopadlo dobře. Místo toho raději začněte postupně navyšovat objem tréninku na nohy. Časem začněte nohy trénovat dvakrát týdně. Protože můžete cvičit jednou týdně 3/3 objemu tréninku nebo dvakrát týdně 2/3 objemu. A&nbsp;spočítejte si, co je víc.</p>
+    <p>Principům byste teď měli rozumět. Je na vás rozhodnout se, jaké bude zaměření vašeho tréninku a&nbsp;nastavit si poměr mezi jednotlivými principy. Doporučuji vám tedy otevřít nepopsaný sešit a&nbsp;začít si psát, kolik toho nazvedáte. Doma si to pak spočítáte a&nbsp;dostanete představu o&nbsp;objemu vašeho tréninku, který teď zvládáte, i&nbsp;o&nbsp;tom, jak se cítíte, a&nbsp;jak rychle regenerujete.</p>
+    <p>Čísla postupně navyšujete přes větší množství sérií, více opakování, větší váhy. Zaměření na nižší počet opakování s&nbsp;větší vahou bude stimulovat nárůst síly. Více opakování s&nbsp;nižší vahou a&nbsp;pořádným pumpováním bude stimulovat hypertrofii.</p>
+    <p>Tyto principy jsou taky důvodem, proč nejsem fanoušek tréninkových plánů. Profík přece nemůže napsat někomu, koho nezná a&nbsp;nemá tušení, jak dotyčný cvičí, ani jak moc je trénovaný, a&nbsp;jakou má techniku provedení různých cviků, „mrtvý tah 4x5 opakování s&nbsp;100&nbsp;kg".</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <div class="box">
+    <p>Pár tipů k&nbsp;periodizaci tréninku, které vám pomůžou udělat vaše cvičení, co nejefektivnějším. Pokud se takto cíleně „přetrénováváte", tak přibližně jednou za dva měsíce si na týden až dva můžete dát tzv. „Deload."</p>
+    <p><b>O&nbsp;co jde?</b> Zvolníte váš trénink na 65&nbsp;% intenzity a&nbsp;objemu tréninku, aby se vaše tělo zotavilo než zase naskočíte na plný režim. Svalové adaptace jsou údajně kumulativní, takže byste po tomto deloadu měli mít větší výkonnost. Powerlifteři například používají tuto techniku i&nbsp;před závody, aby během závodu byli na svém silovém vrcholu.</p>
+    <p>Cvičení je individuální věc, takže i&nbsp;plán budete upravovat podle vašich potřeb. Pokud budete cítit vyčerpání nebo nechuť ke cvičení, dejte mi vědět a&nbsp;naplánujeme vám právě deload.</p>
+    <p>Existuje jednotka „1&nbsp;RM" a&nbsp;znamená 1 rep max (1 maximální opakování). 1&nbsp;RM je váha, kterou pro daný cvik dokážete zvednout technicky správně jen jednou a&nbsp;podruhé už ne. Pokud to budete zjišťovat, tak myslete na to, že je vhodné mít jištění a&nbsp;nepodcenit odpočinek a&nbsp;jídlo před výkonem.</p>
+    <p>Když víte, že třeba na bench press je vaše 1&nbsp;RM 100&nbsp;kg, tak podle toho můžete rozhodovat, jaký je optimální trénink. 75&nbsp;% – 85&nbsp;% vašeho 1&nbsp;RM je trénink kulturistický. V&nbsp;praxi uděláte 8&nbsp;–&nbsp;12 opakování se 75&nbsp;–&nbsp;80&nbsp;kg. Pokud byste chtěli na sílu tlačit ještě více, můžete udělat 2&nbsp;–&nbsp;6 opakování s&nbsp;85&nbsp;–&nbsp;90&nbsp;% 1&nbsp;RM. Tím ale změníte intenzitu tréninku.</p>
+    <p>Pokud zvedáte velmi těžkou váhu, tak je intenzita velmi vysoká a&nbsp;učíte tělo zapojovat neuromuskulárně více svalových vláken během zdvihu. Díky toho zvednete více a&nbsp;ovlivňujete i&nbsp;růst svalů. Důležitý je v&nbsp;tu chvíli objem tréninku. Protože když odcvičíte s&nbsp;80&nbsp;kg 10 opakování jako kulturisté nebo s&nbsp;90&nbsp;kg 4 opakování, tak objem tréninku bude za jednu sérii, co zabere podobné množství času podstatně větší ve verzi s&nbsp;10 opakováními.</p>
+    <p>Abyste nazvedali stejný objem tréninku a&nbsp;ten měl tedy i&nbsp;stejný vliv na velikost svalů, museli byste se silovým tréninkem trávit ve fitku mnohem více času než při tréninku kulturistickém. Proto je z&nbsp;praktického hlediska pro většinu pracujících lidí, kteří jen chtějí větší svaly, nejvhodnější trénink kulturistický doplněný z&nbsp;1/3 tréninkem silovým. Například jeden cvik po zahřátí zpočátku tréninku.</p>
+  </div>
+  <div class="box">
+    <p>Vysvětlím vám pojem, kterému dáme český pracovní název „Stupnice vyčerpání". Od jedné do deseti. Stupnice 1&nbsp;–&nbsp;10 je objektivní, ale samozřejmě si každý musí subjektivně určit, kdy se na jakou hodnotu cítí. Stupnice bude označovat, kolik opakování byste ještě dokázali provést s&nbsp;tou činkou, kterou držíte v&nbsp;ruce po konci série.</p>
+    <p>V&nbsp;praxi: pokud mi řeknete 11, tak to znamená, že jste selhali u&nbsp;posledního opakování. Pokud mi řeknete 10, tak už byste další sérii opakování nezvládli technicky správně. Když řeknete 9, tak jste měli v&nbsp;rezervě ještě 1 opakování.</p>
+    <p>Podle velkého množství metaanalýz není cvičení o&nbsp;selhání během každého tréninku. Cvičení není vždy o&nbsp;„roste to vždy více, když selžete". Fakt je, že svaly rostou s&nbsp;větším objemem tréninku. Jak tedy nazvedat během tréninku, co nejvíc hmotnosti? Když v&nbsp;prvních dvou cvicích pravidelně každou sérii selžete a&nbsp;v&nbsp;půlce tréninku jste KO, tak máte menší šanci, než když budete cvičit na hodnotu 7&nbsp;–&nbsp;8 ve stupnici opakování. Denně a&nbsp;týdně máte tímto způsobem větší šanci udržet objem tréninku vyšší, než když se hned unavíte. Pokud se zničíte, ovlivňujete tím svou výkonnost v&nbsp;dalších dnech.</p>
+    <p>Selhání si proto naplánujte třeba na konec tréninku nebo týdne, pokud se po něm cítíte. Prioritou je celkový objem tréninku a&nbsp;jeho postupné navyšování. Ne přidat tunu navíc.</p>
+  </div>
+</div>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Kolik svalů mohu nabrat za rok?</h2>
+  <div class="box">
+    <p>Lidé se často ptají, kolik svalů je možné nabrat za jeden rok. Spousta lidí má obavy, že když budou příliš moc cvičit a&nbsp;jíst moc bílkovin, tak naberou moc svalů. Dovolte mi, abych toto prohlášení uvedl do kontextu.</p>
+    <p>Vezměte si 1&nbsp;kg steak a&nbsp;kladivo. Rozklepejte steak kladivem tak, aby byl celý plochý a&nbsp;podívejte se na jeho povrch. Vynásobte si to 4&nbsp;–&nbsp;8 krát a&nbsp;zhodnoťte, jestli by to mělo dost velký povrch, abyste se tím mohli celí obalit.</p>
+    <p>Většina lidí bude ráda, když by jim to vůbec pokrylo polovinu povrchu jejich těla (což je důvod, proč se zdá, že lidem s&nbsp;menšími těly rostou svaly rychleji). Pokud porostete v&nbsp;průměru na celé tělo o&nbsp;0,5&nbsp;cm za rok, děláte to správně. Dokonce i&nbsp;geneticky nadaní jedinci a&nbsp;jedinci na chemické suplementaci za rok neporostou o&nbsp;moc více.</p>
+    <p>Nezapomeňte, že pokud shodíte tuk, budete vypadat svalově o&nbsp;dost větší. Je to proto, že bez tuků vyniknou svalové proporce a&nbsp;detaily. A&nbsp;to ovlivňuje vnímání velikosti.</p>
+    <p><b>Některé z&nbsp;největších limitujících faktorů pro svalový růst:</b></p>
+    <ul>
+      <li>nedostatek kalorií,</li>
+      <li>nedostačující intenzita, technika a&nbsp;objem tréninku,</li>
+      <li>nedostatek vytrvalosti,</li>
+      <li>nedostatek trpělivosti.</li>
+    </ul>
+  </div>
+
+  <h2 class="section">Hormonální specifika ektomorfa</h2>
+  <div class="box">
+    <p>„Mnoho jedinců se propůjčuje směrem k&nbsp;sympatickému nervovému systému (SNS), jež je citlivý na vliv katecholaminů (stresových hormonů). Je-li SNS nadměrně stimulován, jak akutně tak chronicky, může to vést ke ztrátě chuti k&nbsp;jídlu a&nbsp;v&nbsp;některých případech k&nbsp;poruchám příjmu potravy (čili chronicky negativním stravovacím návykům) podobným těm, které se týkají lidí s&nbsp;nadváhou či chronických dietářů.</p>
+    <p>Systém somatotypologie navržený Sheldonem, navzdory některým problémům této metodologie, ukazuje ektomorfy (tzv. hard gainery) jako ty, kteří by mohli být silně senzitivní na stimulaci SNS. Tito lidé také mívají, dle mých zkušeností, tendenci být více introvertní povahy. Obvykle (avšak ne vždy) bývají všeobecně více tolerantní vůči vysokému příjmu sacharidů a&nbsp;celkově vyšší produkci thyroidů. Vzájemné působení se SNS je zde zřejmé, ne vždy však průkazné. Komplexní pochopení souvislostí mezi kaskádami hormonů, které regulují naše tělo a&nbsp;naše stravovací návyky je ještě v&nbsp;plenkách, ale rozhodně stojí za pozornost."</p>
+    <p class="note">Přeložený úryvek z&nbsp;knihy N1 Nutritional Programming – Phil Learney</p>
+    <p>Pochopení fungování a&nbsp;vzájemného působení hormonů je klíčové k&nbsp;tomu, aby byl Coach schopen skutečně individuálně porozumět stavu klienta a&nbsp;navrhnout řešení skutečně na míru a&nbsp;to s&nbsp;dlouhodobými benefity pro klienta.</p>
+    <p>Thyroidní hormony jsou důležitým regulátorem vydané energie a&nbsp;právě příjem energie ze stravy jejich seřízení ovlivňuje (proto ektomorfové často „musejí jíst více").</p>
+    <p>SNS (sympatický nervový systém = „boj nebo útěk") je nutné vyvažovat i&nbsp;stimulací PNS (parasympatický nervový systém = „trávení a&nbsp;odpočinek"). To znamená, že pokud máte hodně stresorů psychických (práce, partner, děti, výplata…), či fyzických (trénink, zranění, hladovění, přejídání se…), je potřeba je jednak regulovat, tj. ubrat stresory, které ubrat lze. A&nbsp;jednak je důležité úměrně stresorům zařadit i&nbsp;PASIVNÍ odpočinek a&nbsp;stravování pro přiměřenou regeneraci a&nbsp;celkové fungování těla + dlouhodobé dosažení a&nbsp;UDRŽENÍ vašich cílů.</p>
+  </div>
+</div>
+
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa a fitness</span></div></div>
+  <h2 class="section">Tréninkové masky</h2>
+  <div class="box">
+    <p>Nedávná studie zkoumala reálnou funkčnost tréninkových masek (údajně simulujících vysokou nadmořskou výšku při tréninku) a&nbsp;to jednak po stránce tréninku respiračních svalů i&nbsp;z&nbsp;hlediska toho, na kolik skutečně simulují vystavení sportovce podmínkám tréninku ve vysoké nadmořské výšce.</p>
+    <p>„Tréninková maska zkoumaná v&nbsp;této studii zajišťovala trénink dýchacích svalů (RMT) a&nbsp;způsobila hypoxii, když byla nasazena během vytrvalostního tréninku. Důležité je, že hypoxemie způsobená maskou byla mnohem menší, než jakou způsobuje skutečná nadmořská výška a&nbsp;nebyl prakticky žádný rozdíl mezi dvěma různými konfiguracemi daných testovaných masek. Snížení dlouhodobé tolerance zátěže a&nbsp;maximální tréninkové kapacity by zredukovalo kvalitu tréninku a&nbsp;negativně ovlivnilo vytrvalostní sportovní výkon. Tréninková maska způsobila nepřiměřenou hyperventilaci, která vedla k&nbsp;arteriální hypoxémií a&nbsp;psychické nepohodě, ale míra těchto reakcí byla malá a&nbsp;neměnila se spolu s&nbsp;různou konfigurací masek."</p>
+    <p>*Tyto malé změny v&nbsp;arteriální hypoxémii nebudou vyvolávat zvýšení výkonu. Je to tedy další produkt fitness průmyslu, který patří spíše do sekce hračkářství či módních doplňků než do tréninkových prostor. Aneb ač v&nbsp;tom můžete vypadat drsně jako Bane, lepšími sportovci vás to neudělá.</p>
+    <p>Já osobně bych si to za tu cenu nekupoval. Neprokázalo to ty benefity, na kterých staví reklamu. Samozřejmě to nikomu nezakazuji, jen se snažím šetřit vám klientům finance a&nbsp;čerstvé informace z&nbsp;vědeckého světa.</p>
+  </div>
+
+  <h2 class="section">Poznámky a zdroje</h2>
+  <div class="box">
+    <p class="note">1. Odkazy na studie: <a href="https://pubmed.ncbi.nlm.nih.gov/28765272/">pubmed.ncbi.nlm.nih.gov/28765272</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/28193517/">28193517</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/28871849/">28871849</a></p>
+    <p class="note">2. Odkazy na studie: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5618052/">PMC5618052</a> · <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4005268/">PMC4005268</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/28871849/">pubmed 28871849</a></p>
+    <p class="note">3. Odkazy na studie: <a href="https://pubmed.ncbi.nlm.nih.gov/28765272/">pubmed 28765272</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/28193517/">28193517</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/28871849/">28871849</a></p>
+    <p class="note">4. mají různé názvy, podstata je v&nbsp;rychlosti, za jak dlouho se glukóza dostane do krve a&nbsp;v&nbsp;jakém množství</p>
+    <p class="note">5. Na toto téma zde vkládám pár článků, které už mám na webu a&nbsp;kde toto téma řeším: <a href="http://www.martinbarna.cz/fakta-o-cukru-layne-norton-phd/">fakta-o-cukru-layne-norton-phd</a> · <a href="http://www.martinbarna.cz/5-mytu-o-cukru/">5-mytu-o-cukru</a> · <a href="http://www.martinbarna.cz/6-duvodu-proc-glykemicky-index-nehraje-roli/">6-duvodu-proc-glykemicky-index-nehraje-roli</a> · <a href="http://www.martinbarna.cz/pravda-o-cukru-a-glykemickem-indexu/">pravda-o-cukru-a-glykemickem-indexu</a> · <a href="https://www.martinbarna.cz/sacharidy-na-noc-layne-norton-phd/">sacharidy-na-noc-layne-norton-phd</a></p>
+    <p class="note">6. pro ženy: právě svaly dělají ženskou figuru a&nbsp;taky vám neustále aktivně i&nbsp;pasivně pálí spoustu energie, ovšem po dlouhých měsících dřiny</p>
+    <p class="note">7. Zdroj/studie, na kterou Brad odkazuje: <a href="https://www.ncbi.nlm.nih.gov/pubmed/27398917">pubmed 27398917</a>. Nová metaanalýza z&nbsp;roku 2021 potvrdila, co si tady povídáme: <a href="https://pubmed.ncbi.nlm.nih.gov/34170576/">34170576</a>. V&nbsp;tomto videu podrobně rozebírám dalších 8 studií a&nbsp;metaanalýz, jež potvrzují, že celý rozsah pohybu je pro svalový růst lepší, než částečná opakování: <a href="https://www.youtube.com/watch?v=dDKYSefgn7U">youtube.com/watch?v=dDKYSefgn7U</a>. Pod tímto odkazem najdete analýzu dalších tří výzkumů, které potvrzují, že je celý rozsah pohybu pro růst velikosti svalů i&nbsp;síly důležitější než jen částečné opakování. A&nbsp;to i&nbsp;v&nbsp;případě, že si při částečném opakování naložíte větší váhu: <a href="https://www.youtube.com/watch?v=YNBE3xSJHxw">youtube.com/watch?v=YNBE3xSJHxw</a></p>
+    <p class="note">8. Toto téma rozebírám i&nbsp;ve formě videa, můžeš na něj kouknout zde: <a href="https://youtu.be/ed4iH0McWE0">youtu.be/ed4iH0McWE0</a></p>
+    <p class="note">9. <a href="https://www.youtube.com/watch?v=dDKYSefgn7U">youtube.com/watch?v=dDKYSefgn7U</a></p>
+    <p class="note">10. <a href="https://www.youtube.com/watch?v=MsPq9nUVTv4&t=51s">youtube.com/watch?v=MsPq9nUVTv4&amp;t=51s</a></p>
+    <p class="note">11. Toto téma mám pro vás zpracované také ve video podobě: <a href="https://www.youtube.com/watch?v=wbQUUycGarY&t=226s">youtube.com/watch?v=wbQUUycGarY&amp;t=226s</a></p>
+    <p class="note">12. Odkaz na 2 studie, jedna z&nbsp;roku 2015 a&nbsp;jedna z&nbsp;2016. Oba výzkumy podporují výše popsané: <a href="https://www.ncbi.nlm.nih.gov/pubmed/26340471">pubmed 26340471</a> · <a href="https://www.ncbi.nlm.nih.gov/m/pubmed/26356482/#fft">26356482</a></p>
+    <p class="note">13. Zdroje: Inflammation not different between healthy diets that vary in macronutrients: <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7172033/pdf/nihms-1538755.pdf">PMC7172033</a>. Inflammation not different between plant vs. animal proteins when macronutrients are equated: <a href="https://pubmed.ncbi.nlm.nih.gov/27765690/">pubmed 27765690</a>. Inflammation not different between ketogenic diet and low fat diet when calories are equated: <a href="https://pubmed.ncbi.nlm.nih.gov/12949361/">12949361</a>. Omega 3 PUFAs may decrease inflammation: <a href="https://journals.lww.com/md-journal/Fulltext/2017/02170/Impact_of_the_dietary_fatty_acid_intake_on.6.aspx">journals.lww.com</a>. Sugar intake does not increase inflammation in absence of weight gain: <a href="https://academic.oup.com/ajcn/article/82/2/421/4862989?login=true">academic.oup.com/ajcn</a></p>
+    <p class="note">14. Zdroj: Článek „Donald Layman – svalová proteinová syntéza"</p>
+  </div>
+
+  <div class="foot">
+    <span>© Barna Academy — Martin Barna · martinbarna.cz</span>
+    <span><b>bonusový materiál k videokurzu výživy</b></span>
+  </div>
+</div>
+</body>
+</html>
