@@ -22,11 +22,12 @@
         var v = (p.get(k) || '').trim().slice(0, 60);
         if (v) out[k] = v;
       });
-      var gcl = (p.get('gclid') || p.get('gbraid') || p.get('wbraid') || '').trim();
+      // CELY gclid do vlastniho pole (max 200 zn., realny gclid ma ~70-100). NEdorezavat na 54!
+      var gcl = (p.get('gclid') || p.get('gbraid') || p.get('wbraid') || '').trim().slice(0, 200);
       if (gcl) {
+        out.gclid = gcl;
         if (!out.utm_source) out.utm_source = 'google-ads';
         if (!out.utm_medium) out.utm_medium = 'cpc';
-        if (!out.utm_campaign) out.utm_campaign = 'gclid:' + gcl.slice(0, 54);
       }
       return out;
     } catch (e) { return {}; }
@@ -57,6 +58,7 @@
         if (utm.utm_source) data.utm_source = utm.utm_source;
         if (utm.utm_medium) data.utm_medium = utm.utm_medium;
         if (utm.utm_campaign) data.utm_campaign = utm.utm_campaign;
+        if (utm.gclid) data.gclid = utm.gclid;
         var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Odesílám…';
         if (msg) { msg.textContent = ''; }
 
