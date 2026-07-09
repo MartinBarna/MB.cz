@@ -49,12 +49,19 @@
 
     var wa = document.querySelector('.fab-wa, a[class*="fab-wa"], a[aria-label="WhatsApp"]');
 
-    // spodní lišta "koupit" (jen na některých stránkách) — měříme její výšku, když je vidět
+    // spodní lišta "koupit/konzultace" (jen na některých stránkách) — měříme její výšku, když je vidět.
+    // Pozor: .mbar (koucing/materiály) se zobrazuje media query (display:flex), ne .show třídou,
+    // tak měříme podle SKUTEČNÉ viditelnosti (computed style), ne podle přítomnosti třídy.
     function buyBarBottom() {
-      var bar = document.querySelector('.vk-buybar.show, .cta-bar.show');
-      if (!bar) return 0;
-      var h = bar.offsetHeight;
-      return (h > 0 && h < window.innerHeight) ? h : 0;
+      var bars = document.querySelectorAll('.vk-buybar, .cta-bar, .mbar, .buybar');
+      var max = 0;
+      for (var i = 0; i < bars.length; i++) {
+        var bar = bars[i], cs = window.getComputedStyle(bar);
+        if (cs.position !== 'fixed' || cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity || '1') === 0) continue;
+        var h = bar.offsetHeight;
+        if (h > 0 && h < window.innerHeight && h > max) max = h;
+      }
+      return max;
     }
 
     function place() {
