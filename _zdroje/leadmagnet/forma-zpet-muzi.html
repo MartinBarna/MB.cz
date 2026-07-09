@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Muž 35+: dostat formu zpátky · 7denní makro plán</title>
+<link rel="stylesheet" href="../../assets/vendor/fonts/poppins.css">
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; }
+.page { width: 210mm; min-height: 297mm; padding: 10mm 16mm; page-break-after: always; background: radial-gradient(600px 400px at 90% -5%, rgba(235,177,44,.14), transparent 60%), linear-gradient(180deg,#15171a,#0f1113); }
+.page:last-child { page-break-after: auto; }
+.brandrow { display:flex; align-items:center; gap:4mm; margin-bottom:4mm; }
+.mark { width:10mm; height:10mm; border-radius:2.6mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; } .brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.6mm; letter-spacing:.4mm; text-transform:uppercase; }
+.cover-tag { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:.5mm; padding:2mm 5mm; border-radius:10mm; margin-bottom:4mm; }
+h1 { font-size:9mm; line-height:1.15; font-weight:800; margin:0 0 2.5mm; color:#fff; } h1 .hl { color:#EBB12C; }
+.sub { font-size:3.6mm; color:#cabfb1; line-height:1.5; margin:0 0 5mm; }
+.box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.box h2 { font-size:4.8mm; font-weight:800; color:#fff; margin:0 0 3mm; }
+.box p, .box li { font-size:3.4mm; color:#d9dde2; line-height:1.5; } .box b { color:#F6CD63; }
+.day { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.09); border-radius:4mm; padding:3.5mm 4.5mm; margin-bottom:3mm; }
+.day .dh { display:flex; align-items:center; gap:3mm; margin-bottom:2.5mm; }
+.day .dnum { width:7mm; height:7mm; border-radius:50%; background:#EBB12C; color:#161616; font-weight:800; font-size:3.4mm; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.day .dt { font-size:4mm; font-weight:800; color:#fff; } .day .dt small { color:#F6CD63; font-weight:600; font-size:2.8mm; }
+.day table { width:100%; border-collapse:collapse; }
+.day td { font-size:3.1mm; color:#d9dde2; line-height:1.4; padding:1.4mm 0; vertical-align:top; border-top:1px solid rgba(255,255,255,.06); }
+.day tr:first-child td { border-top:none; } .day td.lbl { width:24mm; color:#F6CD63; font-weight:700; }
+.cta { margin-top:5mm; background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.06)); border:1px solid rgba(235,177,44,.35); border-radius:5mm; padding:6.5mm 8mm; }
+.cta h3 { margin:0 0 2.5mm; font-size:5mm; color:#fff; font-weight:800; } .cta p { margin:0 0 4mm; font-size:3.5mm; color:#d9dde2; line-height:1.5; }
+.cta .btn { display:inline-block; background:#EBB12C; color:#161616; font-weight:800; font-size:3.8mm; padding:3.5mm 8mm; border-radius:10mm; text-decoration:none; }
+.foot { margin-top:5mm; display:flex; justify-content:space-between; font-size:3mm; color:#8f8779; } .foot b { color:#EBB12C; }
+/* additions */
+a { color:#EBB12C; text-decoration:none; }
+.box p { margin:0 0 2.5mm; } .box p:last-child { margin-bottom:0; }
+.box ul { list-style:none; margin:2mm 0 0; padding:0; } .box ul li { margin-bottom:2mm; padding-left:4.5mm; position:relative; }
+.box ul li:before { content:"•"; color:#EBB12C; position:absolute; left:0; font-weight:800; }
+.box ul li:last-child { margin-bottom:0; }
+.note { font-size:2.9mm; color:#8f8779; line-height:1.45; margin:0 0 3mm; }
+.legend { font-size:3mm; color:#cabfb1; line-height:1.5; margin:0 0 3mm; }
+.legend b { color:#F6CD63; }
+.day .dt small { display:block; margin-top:.4mm; }
+.mac { display:block; color:#EBB12C; font-weight:700; font-size:2.85mm; margin-top:.5mm; letter-spacing:.1mm; }
+.cat { color:#F6CD63; font-weight:700; font-size:3.1mm; letter-spacing:.3mm; text-transform:uppercase; margin:3mm 0 1.4mm; }
+.cat:first-child { margin-top:1mm; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1.2mm 6mm; }
+.grid2 div { font-size:3.2mm; color:#d9dde2; line-height:1.4; }
+.grid2 div b { color:#F6CD63; font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="page">
+    <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>online výživový kouč · 600+ proměn</span></div>
+    </div>
+    <span class="cover-tag">TVŮJ PLÁN ZDARMA</span>
+    <h1>Muž 35+: ještě není pozdě <span class="hl">dostat formu zpátky</span></h1>
+    <p class="sub">7denní makro plán pro vytížené muže, s přesnými porcemi a makry, nákupním seznamem a variantami. Víc energie, síly a sebevědomí, bez extrémů a hodin v posilce.</p>
+
+    <div class="box">
+        <h2>Jak tenhle plán používat (přečti jako první)</h2>
+        <p>Plán je postavený na ~2 000 kcal/den, což je rozumný start pro hubnutí u většiny mužů 35+ se sedavou prací. Není to dogma. Svá přesná čísla si spočítáš za minutu v kalkulačce a podle nich plán doškáluješ (návod na konci). Makra jsou zaokrouhlená a orientační, jde o směr, ne o desetiny gramu.</p>
+    </div>
+
+    <div class="box">
+        <h2>Proč chlapi po 35 ztrácí formu</h2>
+        <p>Není to věkem. Je to životem: sedavá práce, stres, málo spánku, pivo a víkendové nájezdy, žádný systém. Testosteron sice po 30. roce pomalu klesá, ale 90 % ztráty formy jde za stravou, pohybem a spánkem, a to všechno se dá vrátit. Rychleji, než si myslíš.</p>
+        <p>Řešení není hladovka ani dřina 5× týdně v posilce (na to stejně nemáš čas). Řešení je systém, který zvládneš i s prací, rodinou a nabitým kalendářem. Hlídáš tři živiny:</p>
+        <ul>
+            <li><b>Bílkoviny:</b> drží svaly i sytost, klíč po čtyřicítce.</li>
+            <li><b>Sacharidy:</b> energie do práce i tréninku (ne, nejsou nepřítel).</li>
+            <li><b>Tuky:</b> hormony (vč. testosteronu), vstřebávání vitamínů, sytost.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="page">
+    <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>7denní makro plán pro muže 35+</span></div>
+    </div>
+
+    <div class="box">
+        <h2>Proč makra fungují u vytížených mužů</h2>
+        <p>Místo počítání každého sousta sleduješ poměr tří živin. Můžeš jíst normálně (maso, rýže, pečivo, i občas burger nebo pivo) a přesto hubnout a mít energii. Žádné odříkání, žádné „zakázané" jídlo. To je důvod, proč to vydržíš i po šesti měsících, ne jen dva týdny.</p>
+    </div>
+
+    <div class="box">
+        <h2>Tvoje makra: vodítka pro muže 35+</h2>
+        <ul>
+            <li><b>Bílkoviny 1,6–2,2 g / kg váhy:</b> udržení svalů a sytost (vyšší při hubnutí a tréninku).</li>
+            <li><b>Tuky 0,8–1 g / kg:</b> hormony vč. testosteronu, po 35 nepodceňuj.</li>
+            <li><b>Sacharidy, zbytek do kalorií:</b> energie do práce, tréninku i hlavy.</li>
+            <li><b>Pravidlo 80/20:</b> 80 % kvalitně, 20 % volně. Udržitelnost, do které se vejde pivo i steak.</li>
+        </ul>
+        <p style="margin-top:2.5mm">Spočítej si přesná čísla zde: <b><a href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin/">martinbarna.cz/kalkulacka-kalorii-a-makrozivin</a></b></p>
+    </div>
+</div>
+
+<div class="page">
+    <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>7denní makro plán pro muže 35+</span></div>
+    </div>
+    <h1 style="font-size:6mm; margin-bottom:2mm">7denní jídelníček <span class="hl">s porcemi a makry</span></h1>
+    <p class="legend"><b>B</b> = bílkoviny (g) · <b>S</b> = sacharidy (g) · <b>T</b> = tuky (g). Porce v syrovém stavu, není-li uvedeno jinak. Plán myslí na realitu: rychlovky, meal prep i krabička z práce.</p>
+
+    <div class="day">
+        <div class="dh"><div class="dnum">1</div><div class="dt">Pondělí <small>tréninkový den · Σ ~2000 kcal · B 158 · S 185 · T 73</small></div></div>
+        <table>
+            <tr><td class="lbl">Snídaně</td><td>Míchaná vejce (3) + 2 krajíce celozrnného chleba + ½ avokáda.<span class="mac">B 30 · S 35 · T 25 · ~490 kcal</span></td></tr>
+            <tr><td class="lbl">Svačina</td><td>200 g skyr + banán + 30 g ořechů.<span class="mac">B 28 · S 38 · T 16 · ~410 kcal</span></td></tr>
+            <tr><td class="lbl">Oběd</td><td>150 g kuřecí prsa + 80 g rýže + zelenina + 10 g oleje.<span class="mac">B 46 · S 62 · T 14 · ~580 kcal</span></td></tr>
+            <tr><td class="lbl">Večeře</td><td>150 g losos + 250 g brambory + velký salát.<span class="mac">B 38 · S 50 · T 18 · ~520 kcal</span></td></tr>
+        </table>
+    </div>
+
+    <div class="day">
+        <div class="dh"><div class="dnum">2</div><div class="dt">Úterý <small>Σ ~1980 kcal · B 152 · S 196 · T 64</small></div></div>
+        <table>
+            <tr><td class="lbl">Snídaně</td><td>Ovesná kaše: 70 g vloček + 30 g protein + 250 ml polotučné mléko + banán.<span class="mac">B 42 · S 78 · T 12 · ~560 kcal</span></td></tr>
+            <tr><td class="lbl">Svačina</td><td>200 g tvaroh + 100 g ovoce.<span class="mac">B 28 · S 18 · T 5 · ~230 kcal</span></td></tr>
+            <tr><td class="lbl">Oběd</td><td>150 g libové hovězí + 300 g brambory + zelenina.<span class="mac">B 40 · S 55 · T 16 · ~560 kcal</span></td></tr>
+            <tr><td class="lbl">Večeře</td><td>150 g kuřecí + 70 g celozrnné těstoviny + zelenina.<span class="mac">B 45 · S 55 · T 12 · ~560 kcal</span></td></tr>
+        </table>
+    </div>
+
+    <div class="day">
+        <div class="dh"><div class="dnum">3</div><div class="dt">Středa <small>den s krabičkou · Σ ~2010 kcal · B 160 · S 188 · T 70</small></div></div>
+        <table>
+            <tr><td class="lbl">Snídaně</td><td>250 g řecký jogurt + 50 g granola + ovoce + 20 g ořechů.<span class="mac">B 32 · S 55 · T 18 · ~520 kcal</span></td></tr>
+            <tr><td class="lbl">Svačina</td><td>Proteinový shake (30 g) + 50 g pečivo.<span class="mac">B 30 · S 30 · T 4 · ~280 kcal</span></td></tr>
+            <tr><td class="lbl">Oběd</td><td>Krabička z práce: maso + příloha, vyber rozumně (cca 150 g masa + 200 g přílohy).<span class="mac">B 45 · S 60 · T 20 · ~630 kcal</span></td></tr>
+            <tr><td class="lbl">Večeře</td><td>150 g krůtí + 250 g batáty + brokolice.<span class="mac">B 42 · S 43 · T 12 · ~480 kcal</span></td></tr>
+        </table>
+    </div>
+</div>
+
+<div class="page">
+    <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>7denní makro plán pro muže 35+</span></div>
+    </div>
+
+    <div class="day">
+        <div class="dh"><div class="dnum">4</div><div class="dt">Čtvrtek <small>tréninkový den · Σ ~2020 kcal · B 165 · S 195 · T 66</small></div></div>
+        <table>
+            <tr><td class="lbl">Snídaně</td><td>Omeleta ze 4 vajec + 50 g sýr + 2 krajíce chleba.<span class="mac">B 38 · S 35 · T 26 · ~540 kcal</span></td></tr>
+            <tr><td class="lbl">Svačina</td><td>200 g skyr + 60 g ovesných vloček + ovoce.<span class="mac">B 30 · S 50 · T 6 · ~370 kcal</span></td></tr>
+            <tr><td class="lbl">Oběd</td><td>180 g hovězí steak + 250 g brambory + zelenina.<span class="mac">B 48 · S 50 · T 20 · ~600 kcal</span></td></tr>
+            <tr><td class="lbl">Večeře</td><td>150 g ryba (treska/losos) + 80 g rýže + salát.<span class="mac">B 40 · S 60 · T 12 · ~510 kcal</span></td></tr>
+        </table>
+    </div>
+
+    <div class="day">
+        <div class="dh"><div class="dnum">5</div><div class="dt">Pátek <small>Σ ~1990 kcal · B 150 · S 190 · T 70</small></div></div>
+        <table>
+            <tr><td class="lbl">Snídaně</td><td>Toast (2) s vejci + ½ avokáda + rajče.<span class="mac">B 28 · S 38 · T 24 · ~480 kcal</span></td></tr>
+            <tr><td class="lbl">Svačina</td><td>200 g cottage + 100 g ovoce + 20 g ořechů.<span class="mac">B 28 · S 22 · T 14 · ~330 kcal</span></td></tr>
+            <tr><td class="lbl">Oběd</td><td>„Fit burger": 150 g mleté hovězí (10 %) + celozrnná houska + zelenina + 100 g hranolky z trouby.<span class="mac">B 42 · S 65 · T 20 · ~620 kcal</span></td></tr>
+            <tr><td class="lbl">Večeře</td><td>150 g kuřecí + 200 g brambory + brokolice.<span class="mac">B 45 · S 40 · T 10 · ~440 kcal</span></td></tr>
+        </table>
+    </div>
+
+    <div class="day">
+        <div class="dh"><div class="dnum">6</div><div class="dt">Sobota <small>flex den · Σ ~2050 kcal · drž bílkoviny, zbytek volněji</small></div></div>
+        <table>
+            <tr><td class="lbl">Snídaně</td><td>200 g tvaroh + 50 g ovesné vločky + ovoce + med.<span class="mac">B 32 · S 55 · T 6 · ~390 kcal</span></td></tr>
+            <tr><td class="lbl">Oběd</td><td>Velký kuřecí/hovězí salát + pečivo.<span class="mac">B 45 · S 35 · T 15 · ~450 kcal</span></td></tr>
+            <tr><td class="lbl">Večeře</td><td>Volnější: steak/pizza + 2 piva, užij si to bez výčitek, drž bílkoviny.<span class="mac">B 45 · S 75 · T 35 · ~820 kcal</span></td></tr>
+            <tr><td class="lbl">Svačina</td><td>Proteinový shake (25 g).<span class="mac">B 25 · S 5 · T 2 · ~150 kcal</span></td></tr>
+        </table>
+    </div>
+    <p class="note">Flex den = ventil, ne výmluva na celý zničený víkend. Jedno volnější jídlo, bílkoviny nahoře, druhý den jedeš dál.</p>
+</div>
+
+<div class="page">
+    <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>7denní makro plán pro muže 35+</span></div>
+    </div>
+
+    <div class="day">
+        <div class="dh"><div class="dnum">7</div><div class="dt">Neděle <small>Σ ~1970 kcal · B 162 · S 175 · T 66</small></div></div>
+        <table>
+            <tr><td class="lbl">Snídaně</td><td>Omeleta ze 4 vajec + zelenina + 2 krajíce chleba.<span class="mac">B 34 · S 32 · T 24 · ~480 kcal</span></td></tr>
+            <tr><td class="lbl">Svačina</td><td>Proteinový shake (30 g) + banán.<span class="mac">B 30 · S 30 · T 3 · ~270 kcal</span></td></tr>
+            <tr><td class="lbl">Oběd</td><td>Pečené kuře 180 g + 250 g brambory + zelenina.<span class="mac">B 50 · S 45 · T 18 · ~570 kcal</span></td></tr>
+            <tr><td class="lbl">Večeře</td><td>150 g krůtí + 70 g rýže + velký salát.<span class="mac">B 45 · S 55 · T 10 · ~520 kcal</span></td></tr>
+        </table>
+    </div>
+
+    <div class="box">
+        <h2>Nákupní seznam na celý týden</h2>
+        <p class="note" style="margin-bottom:1mm">Orientační množství pro 1 muže na 7 dní. Uprav podle svých porcí.</p>
+        <div class="cat">Bílkoviny</div>
+        <div class="grid2">
+            <div>Kuřecí prsa <b>900 g</b></div>
+            <div>Krůtí maso <b>300 g</b></div>
+            <div>Hovězí (steak + libové + mleté 10 %) <b>600 g</b></div>
+            <div>Ryba (losos, treska) <b>450 g</b></div>
+            <div>Vejce <b>20 ks</b></div>
+            <div>Syrovátkový protein <b>balení</b></div>
+        </div>
+        <div class="cat">Mléčné</div>
+        <div class="grid2">
+            <div>Skyr <b>800 g</b></div>
+            <div>Tvaroh <b>400 g</b></div>
+            <div>Řecký jogurt <b>250 g</b></div>
+            <div>Cottage <b>200 g</b></div>
+            <div>Polotučné mléko <b>1 l</b></div>
+            <div>Sýr <b>100 g</b></div>
+        </div>
+        <div class="cat">Sacharidy</div>
+        <div class="grid2">
+            <div>Ovesné vločky <b>250 g</b></div>
+            <div>Granola <b>50 g</b></div>
+            <div>Rýže <b>230 g</b></div>
+            <div>Brambory <b>1,8 kg</b></div>
+            <div>Batáty <b>250 g</b></div>
+            <div>Celozrnné těstoviny <b>70 g</b></div>
+            <div>Celozrnný chléb / pečivo <b>1 bochník + housky</b></div>
+        </div>
+        <div class="cat">Tuky · zelenina · ovoce</div>
+        <div class="grid2">
+            <div>Ořechy <b>100 g</b></div>
+            <div>Avokádo <b>2 ks</b></div>
+            <div>Olivový / řepkový olej</div>
+            <div>Med</div>
+            <div>Zelenina na celý týden (brokolice, salát, rajčata, mix)</div>
+            <div>Ovoce: banány, jablka, bobule dle chuti</div>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>7denní makro plán pro muže 35+</span></div>
+    </div>
+
+    <div class="box">
+        <h2>Varianty: zaměň, co ti nesedí (makra zůstanou ±stejná)</h2>
+        <ul>
+            <li><b>Bílkovina (~150 g masa):</b> kuřecí ↔ krůtí ↔ hovězí ↔ vepřová panenka ↔ ryba ↔ 4 vejce + sýr ↔ 200 g tvarohu/skyru.</li>
+            <li><b>Sacharid (~80 g syrového / ~250 g vařeného):</b> rýže ↔ brambory ↔ batáty ↔ těstoviny ↔ kuskus ↔ 3 krajíce chleba ↔ velká tortilla.</li>
+            <li><b>Tuk:</b> 30 g ořechů ↔ ½ avokáda ↔ 1,5 lžíce oleje ↔ arašídové máslo.</li>
+            <li><b>Jídlo venku:</b> restaurace: maso + příloha (rýže/brambory) + zelenina, vynech smažené a omáčky navíc. Fast food: grilované, ne smažené.</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h2>Jak si plán zvětšit nebo zmenšit</h2>
+        <ul>
+            <li><b>Potřebuješ víc (+300 kcal):</b> přidej porci sacharidu (rýže/brambory/pečivo) + kus ovoce.</li>
+            <li><b>Potřebuješ míň (−300 kcal):</b> uber polovinu sacharidu u oběda i večeře a vynech přidané tuky.</li>
+            <li><b>Trénuješ?</b> Dej víc sacharidů kolem tréninku.</li>
+            <li><b>Bílkoviny drž vždy nahoře:</b> to je tvoje pojistka na svaly i sytost.</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h2>Nejčastější chyby mužů 35+</h2>
+        <ul>
+            <li>Málo bílkovin → ztráta svalů, hlad, jojo.</li>
+            <li>Tekuté kalorie navíc (pivo, slazené, džusy) se sčítají rychleji, než čekáš.</li>
+            <li>Žádný systém = jedeš na motivaci. Motivace dojde, systém zůstane.</li>
+            <li>Víkendové nájezdy, co smažou celý týden.</li>
+            <li>Ignorování spánku a stresu, bez nich makra nefungují tak dobře.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="page">
+    <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>7denní makro plán pro muže 35+</span></div>
+    </div>
+
+    <div class="box">
+        <h2>5 pravidel, bez kterých to nepojede</h2>
+        <ul>
+            <li>Pij 3 l vody denně (a hlídej alkohol).</li>
+            <li>Spi 7–8 hodin: spánek řídí hlad i testosteron.</li>
+            <li>Hýbej se: 2–3× síla týdně + denně kroky. Stačí začít.</li>
+            <li>Bílkovinu do každého jídla: nejjednodušší pravidlo s největším dopadem.</li>
+            <li>Nebuď perfektní, buď konzistentní 80 % času.</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h2>Další krok: spočítej si svá přesná makra</h2>
+        <p>Tenhle plán je start. Pro čísla přímo na tebe použij kalkulačku (minuta): <b><a href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin/">martinbarna.cz/kalkulacka-kalorii-a-makrozivin</a></b></p>
+        <p>Chceš to nastavit přesně na sebe a mít to pod dohledem? Napiš mi „CALL" na WhatsApp <b>603 229 831</b> a domluvíme krátký hovor zdarma.</p>
+    </div>
+
+    <div class="cta">
+        <h3>Chceš to mít nastavené napořád?</h3>
+        <p>Tenhle plán ti ukáže JAK. Ve videokurzu výživy ti vysvětlím PROČ to funguje a jak si makra doladíš sám na jakýkoli cíl, aby ti forma zůstala natrvalo.</p>
+        <a class="btn" href="https://martinbarna.cz/videokurz?utm_source=pdf&utm_medium=leadmagnet">Spustit videokurz →</a>
+    </div>
+
+    <p class="note" style="margin-top:5mm">Tento materiál je obecné vzdělávací vodítko, ne individuální lékařská či dietní rada.</p>
+    <div class="foot">
+        <span>martinbarna.cz · Martin Barna, online výživový kouč</span>
+        <span><b>Be Effective!</b></span>
+    </div>
+</div>
+
+</body>
+</html>
