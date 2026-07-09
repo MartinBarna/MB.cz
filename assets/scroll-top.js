@@ -34,12 +34,12 @@
   function ready(fn) { document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn); }
   ready(function () {
     var css = '#baToTop{position:fixed;right:20px;bottom:20px;width:48px;height:48px;border-radius:50%;'
-      + 'background:linear-gradient(145deg,#ff9d3c,#ff7a00);color:#160d04;border:none;cursor:pointer;'
+      + 'background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;border:none;cursor:pointer;'
       + 'display:flex;align-items:center;justify-content:center;font-size:1.45rem;font-weight:800;line-height:1;z-index:1090;'
-      + 'box-shadow:0 10px 26px -6px rgba(255,122,0,.6);opacity:0;visibility:hidden;transform:translateY(10px);'
+      + 'box-shadow:0 10px 26px -6px rgba(235,177,44,.6);opacity:0;visibility:hidden;transform:translateY(10px);'
       + 'transition:opacity .25s,transform .25s,visibility .25s,bottom .25s;-webkit-tap-highlight-color:transparent;}'
       + '#baToTop.show{opacity:1;visibility:visible;transform:translateY(0);}'
-      + '#baToTop:hover{transform:translateY(-3px);box-shadow:0 16px 32px -6px rgba(255,122,0,.7);}'
+      + '#baToTop:hover{transform:translateY(-3px);box-shadow:0 16px 32px -6px rgba(235,177,44,.7);}'
       + '@media(max-width:600px){#baToTop{right:14px;bottom:16px;width:44px;height:44px;font-size:1.3rem;}}';
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 

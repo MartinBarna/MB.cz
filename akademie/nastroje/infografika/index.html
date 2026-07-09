@@ -22,20 +22,20 @@
   .ba input,.ba textarea,.ba select{width:100%;background-color:rgba(0,0,0,.45)!important;border:1px solid var(--line-2)!important;border-radius:11px;color:#fff!important;padding:11px 12px;font-family:inherit;font-size:.95rem;color-scheme:dark;}
   .ba textarea{min-height:70px;resize:vertical;line-height:1.4;}
   .ba input[type=color]{height:44px;padding:4px;cursor:pointer;}
-  .ba input:focus,.ba textarea:focus,.ba select:focus{outline:none;border-color:rgba(255,122,0,.6)!important;}
+  .ba input:focus,.ba textarea:focus,.ba select:focus{outline:none;border-color:rgba(235,177,44,.6)!important;}
   .field{margin:0 0 12px;}
   .listrow{display:flex;gap:8px;align-items:center;margin:0 0 8px;}
   .listrow .n{color:var(--gold-soft);font-weight:800;font-size:.9rem;min-width:18px;}
   .tpls{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;}
   .tpl{text-align:left;background:rgba(255,255,255,.04);border:1px solid var(--line-2);border-radius:12px;padding:10px 12px;cursor:pointer;color:#cfc6b8;transition:border-color .15s,background .15s;}
-  .tpl:hover{border-color:rgba(255,122,0,.5);}
-  .tpl.active{border-color:var(--gold);background:rgba(255,122,0,.12);color:#fff;}
+  .tpl:hover{border-color:rgba(235,177,44,.5);}
+  .tpl.active{border-color:var(--gold);background:rgba(235,177,44,.12);color:#fff;}
   .tpl b{display:block;color:#fff;font-size:.9rem;margin-bottom:2px;}
   .tpl span{font-size:.76rem;line-height:1.35;display:block;}
   .segs{display:flex;gap:8px;flex-wrap:wrap;}
   .seg{background:rgba(255,255,255,.04);border:1px solid var(--line-2);border-radius:50px;padding:8px 15px;font-size:.86rem;color:#cfc6b8;cursor:pointer;}
   .seg.active{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:800;border-color:transparent;}
-  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:800;padding:14px 26px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;font-size:1rem;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;width:100%;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:800;padding:14px 26px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;font-size:1rem;box-shadow:0 12px 26px -8px rgba(235,177,44,.55);transition:transform .2s;width:100%;}
   .btn:hover{transform:translateY(-2px);}
   .previewbox{background-color:#0e0e0e;background-image:linear-gradient(45deg,#161616 25%,transparent 25%,transparent 75%,#161616 75%),linear-gradient(45deg,#161616 25%,transparent 25%,transparent 75%,#161616 75%);background-size:26px 26px;background-position:0 0,13px 13px;border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;align-items:center;justify-content:center;min-height:320px;}
   .previewbox svg{width:auto;height:auto;max-width:100%;max-height:70vh;border-radius:10px;box-shadow:0 20px 50px -12px rgba(0,0,0,.7);display:block;}
@@ -43,7 +43,7 @@
   .brandbox summary::-webkit-details-marker{display:none;}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .note{color:var(--muted);font-size:.82rem;margin-top:.7rem;line-height:1.5;}
-  .lock{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:14px;padding:1.2rem 1.4rem;color:#e9e2d8;margin-top:1rem;}
+  .lock{background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.25);border-radius:14px;padding:1.2rem 1.4rem;color:#e9e2d8;margin-top:1rem;}
   .hidden{display:none;}
 </style>
 </head>
@@ -91,7 +91,7 @@
           <div style="margin-top:12px;">
             <div class="grid2">
               <div class="field"><label>Jméno / značka</label><input id="brName" type="text" placeholder="např. Jana Nováková"></div>
-              <div class="field"><label>Akcentová barva</label><input id="brAccent" type="color" value="#ff7a00"></div>
+              <div class="field"><label>Akcentová barva</label><input id="brAccent" type="color" value="#EBB12C"></div>
             </div>
             <div class="field"><label>Logo (URL, volitelné)</label><input id="brLogo" type="url" placeholder="https://…/logo.png"></div>
             <div class="field"><label>Kontakt / handle (volitelné)</label><input id="brContact" type="text" placeholder="@jananovakova · jana@example.cz"></div>
@@ -111,7 +111,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260704"></script>
-  <script src="/assets/infographic-gen.js?v=20260704"></script>
+  <script src="/assets/infographic-gen.js?v=g1"></script>
   <script>
   (function(){
     var IG = window.Infographic;
@@ -215,6 +215,6 @@
     }); }
   })();
   </script>
-  <script src="/assets/scroll-top.js?v=20260710" defer></script>
+  <script src="/assets/scroll-top.js?v=g1" defer></script>
 </body>
 </html>

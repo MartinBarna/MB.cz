@@ -41,9 +41,9 @@
   }
   // předdané pole řádků (list) s číslem/odrážkou
   function palette(style, accent) {
-    accent = /^#[0-9a-fA-F]{6}$/.test(accent || '') ? accent : '#ff7a00';
-    if (style === 'light') return { bg:'#faf7f2', bg2:'#efe9df', ink:'#161310', sub:'#5f574c', accent:accent, onAccent:'#160d04', line:'rgba(0,0,0,.10)' };
-    return { bg:'#0f0e0c', bg2:'#1a1712', ink:'#f6f2ec', sub:'#b7ac9e', accent:accent, onAccent:'#160d04', line:'rgba(255,255,255,.12)' };
+    accent = /^#[0-9a-fA-F]{6}$/.test(accent || '') ? accent : '#EBB12C';
+    if (style === 'light') return { bg:'#faf7f2', bg2:'#efe9df', ink:'#161310', sub:'#5f574c', accent:accent, onAccent:'#1A1222', line:'rgba(0,0,0,.10)' };
+    return { bg:'#0f0e0c', bg2:'#1a1712', ink:'#f6f2ec', sub:'#b7ac9e', accent:accent, onAccent:'#1A1222', line:'rgba(255,255,255,.12)' };
   }
 
   function bgLayer(fmt, p) {
