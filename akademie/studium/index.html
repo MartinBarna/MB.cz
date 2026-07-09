@@ -33,14 +33,14 @@
   .modules { margin-top:26px; display:grid; gap:16px; }
   .mod { background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:20px; overflow:hidden; box-shadow:0 24px 50px -34px rgba(0,0,0,.9); }
   .mod-h { display:flex; align-items:center; gap:14px; padding:18px 22px; }
-  .mod-h .ix { width:42px; height:42px; border-radius:13px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 8px 18px -6px rgba(235,177,44,.5); }
+  .mod-h .ix { width:42px; height:42px; border-radius:13px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 8px 18px -6px rgba(235,177,44,.5); }
   .mod-h h3 { font-size:1.1rem; color:#fff; } .mod-h p { color:var(--muted); font-size:.85rem; }
   .mod-h .pct { margin-left:auto; font-weight:700; color:var(--gold-soft); font-size:.78rem; white-space:nowrap; background:rgba(235,177,44,.1); border:1px solid rgba(235,177,44,.22); padding:4px 11px; border-radius:50px; }
   .lessons { border-top:1px solid var(--line); }
   .les { display:flex; align-items:center; gap:13px; padding:13px 22px; text-decoration:none; border-top:1px solid rgba(255,255,255,.05); transition:background .15s, padding .15s; color:var(--ink); }
   .les:first-child { border-top:none; }
   .les:hover { background:rgba(235,177,44,.07); padding-left:26px; }
-  .les .ck { width:24px; height:24px; border-radius:50%; border:2px solid rgba(255,255,255,.22); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.76rem; color:#160d04; font-weight:800; }
+  .les .ck { width:24px; height:24px; border-radius:50%; border:2px solid rgba(255,255,255,.22); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.76rem; color:#1A1222; font-weight:800; }
   .les.done .ck { background:linear-gradient(145deg,var(--gold-2),var(--gold)); border-color:var(--gold); }
   .les.locked { opacity:.4; cursor:default; pointer-events:none; }
   .les .t { font-weight:600; font-size:.96rem; }
@@ -50,14 +50,14 @@
   .cert-card { margin-top:24px; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1.5px dashed rgba(235,177,44,.4); border-radius:20px; padding:26px; text-align:center; }
   .cert-card.ready { border:1.5px solid var(--gold); background:rgba(235,177,44,.06); }
   .cert-card h3 { font-size:1.2rem; color:#fff; } .cert-card p { color:var(--muted); font-size:.92rem; margin:.4rem auto 0; max-width:480px; }
-  .btn { display:inline-block; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:13px 28px; border-radius:50px; text-decoration:none; margin-top:1rem; border:none; cursor:pointer; box-shadow:0 12px 26px -8px rgba(235,177,44,.55); transition:transform .2s; }
+  .btn { display:inline-block; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:13px 28px; border-radius:50px; text-decoration:none; margin-top:1rem; border:none; cursor:pointer; box-shadow:0 12px 26px -8px rgba(235,177,44,.22); transition:transform .2s; }
   .btn:hover { transform:translateY(-2px); }
   .btn.dis { background:rgba(255,255,255,.06); color:var(--muted); cursor:not-allowed; box-shadow:none; border:1px solid var(--line); }
   .demo-note { text-align:center; color:var(--muted); font-size:.8rem; margin-top:22px; }
   .bonus { background:rgba(235,177,44,.06); border:1px solid rgba(235,177,44,.25); border-radius:20px; padding:18px 22px; margin-top:24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
   .bonus .bico { font-size:1.9rem; }
   .bonus .btxt { flex:1; min-width:200px; } .bonus .btxt b { display:block; font-size:1.02rem; color:#fff; } .bonus .btxt span { color:var(--muted); font-size:.88rem; }
-  .bonus .bbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:11px 22px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.92rem; white-space:nowrap; box-shadow:0 10px 22px -8px rgba(235,177,44,.55); transition:transform .2s; }
+  .bonus .bbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:11px 22px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.92rem; white-space:nowrap; box-shadow:0 10px 22px -8px rgba(235,177,44,.22); transition:transform .2s; }
   .bonus .bbtn:hover { transform:translateY(-1px); }
 
   /* ---- sekční navigace (#33): přehled modulů → fokus na modul ---- */
@@ -65,7 +65,7 @@
   .modcard { text-align:left; cursor:pointer; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:11px; transition:transform .2s,border-color .2s,box-shadow .2s; color:inherit; text-decoration:none; }
   .modcard:hover { transform:translateY(-4px); border-color:rgba(235,177,44,.35); box-shadow:0 24px 46px -28px rgba(235,177,44,.28); }
   .modcard .top { display:flex; align-items:center; gap:12px; }
-  .modcard .ix { width:38px; height:38px; border-radius:12px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modcard .ix { width:38px; height:38px; border-radius:12px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .modcard h3 { font-size:1.02rem; color:#fff; line-height:1.25; }
   .modcard p { color:var(--muted); font-size:.85rem; line-height:1.45; flex:1; margin:0; }
   .modcard .mbar { height:6px; background:rgba(255,255,255,.08); border-radius:50px; overflow:hidden; }
@@ -80,7 +80,7 @@
   .modcard.has-free .ix { box-shadow:0 0 18px -2px rgba(235,177,44,.75); }
   .modcard.mod-locked { opacity:.52; filter:grayscale(.4); }
   .modcard.mod-locked:hover { opacity:.82; transform:translateY(-3px); box-shadow:none; border-color:rgba(235,177,44,.25); }
-  .modcard .mfree { font-size:.74rem; color:#160d04; font-weight:800; background:linear-gradient(145deg,var(--gold-2),var(--gold)); padding:3px 11px; border-radius:50px; white-space:nowrap; }
+  .modcard .mfree { font-size:.74rem; color:#1A1222; font-weight:800; background:linear-gradient(145deg,var(--gold-2),var(--gold)); padding:3px 11px; border-radius:50px; white-space:nowrap; }
   .modcard .mlock { font-size:.74rem; color:var(--muted); font-weight:700; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:3px 10px; border-radius:50px; white-space:nowrap; }
   .modlegend { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 15px; font-size:.82rem; font-weight:600; }
   .modlegend span { display:inline-flex; align-items:center; gap:6px; padding:6px 13px; border-radius:50px; border:1px solid var(--line); }
@@ -96,7 +96,7 @@
   .secnav .next { background:linear-gradient(145deg,rgba(235,177,44,.16),rgba(235,177,44,.05)); border-color:rgba(235,177,44,.35); text-align:right; align-items:flex-end; }
   .secnav .next .nm { color:var(--gold-soft); }
   .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(235,177,44,.35); border-color:rgba(235,177,44,.5); }
-  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.55); transition:transform .2s; text-decoration:none; position:relative; }
+  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.22); transition:transform .2s; text-decoration:none; position:relative; }
   .contbtn:hover { transform:translateY(-2px); }
 </style>
 </head>
@@ -164,7 +164,7 @@
       .freebanner{display:none;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.04));border:1px solid rgba(235,177,44,.4);border-radius:16px;padding:14px 20px;margin:0 0 18px;text-decoration:none;color:var(--muted-2)}
       .freebanner .fb-txt b{color:#fff;display:block;margin-bottom:2px}
       .freebanner .fb-txt > span > span{font-size:.9rem;line-height:1.5;display:block}
-      .freebanner .fb-cta{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:800;padding:11px 20px;border-radius:50px;white-space:nowrap;font-size:.92rem}
+      .freebanner .fb-cta{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:800;padding:11px 20px;border-radius:50px;white-space:nowrap;font-size:.92rem}
       @media(max-width:430px){.freebanner{padding:14px 16px}.freebanner .fb-cta{width:100%;text-align:center;white-space:normal}}
       .les.lockbuy .t{color:var(--muted)}
       .les.lockbuy .s.buy{color:var(--gold-soft);font-weight:700}

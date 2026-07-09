@@ -29,7 +29,7 @@
   .lesson a:hover { background:rgba(235,177,44,.07); padding-left:14px; }
   .lesson .chk { width:21px; height:21px; border-radius:50%; border:2px solid rgba(255,255,255,.22); flex-shrink:0; transition:.2s; }
   .lesson.done .chk { background:linear-gradient(145deg,var(--gold-2),var(--gold)); border-color:var(--gold); position:relative; }
-  .lesson.done .chk::after { content:"✓"; color:#160d04; font-weight:800; font-size:.72rem; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .lesson.done .chk::after { content:"✓"; color:#1A1222; font-weight:800; font-size:.72rem; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
   .lesson .lt { flex:1; font-size:.96rem; }
   .lesson.done .lt { color:var(--muted); }
   .ba .lesson .go { color:var(--gold-soft); background:none; border:none; box-shadow:none; padding:0; transform:none; font-weight:700; font-size:.82rem; white-space:nowrap; }
@@ -44,7 +44,7 @@
   .minfo { flex:1; display:flex; flex-direction:column; min-width:0; }
   .minfo b { color:#fff; font-size:.92rem; line-height:1.25; overflow-wrap:break-word; }
   .minfo small { color:var(--muted); font-size:.78rem; }
-  .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(235,177,44,.6); transition:transform .2s; }
+  .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(235,177,44,.6); transition:transform .2s; }
   .mbtn:hover { transform:translateY(-1px); }
   .mbtn[disabled] { opacity:.5; cursor:default; transform:none; }
 
@@ -53,7 +53,7 @@
   .modcard { text-align:left; cursor:pointer; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:11px; transition:transform .2s,border-color .2s,box-shadow .2s; color:inherit; text-decoration:none; }
   .modcard:hover { transform:translateY(-4px); border-color:rgba(235,177,44,.35); box-shadow:0 24px 46px -28px rgba(235,177,44,.28); }
   .modcard .top { display:flex; align-items:center; gap:12px; }
-  .modcard .ix { width:36px; height:36px; border-radius:11px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; font-size:.92rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modcard .ix { width:36px; height:36px; border-radius:11px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:800; font-size:.92rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .modcard h3 { font-size:1rem; color:#fff; line-height:1.25; }
   .modcard .mbar { height:6px; background:rgba(255,255,255,.08); border-radius:50px; overflow:hidden; }
   .modcard .mbar span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); border-radius:50px; }
@@ -72,7 +72,7 @@
   .secnav .next { background:linear-gradient(145deg,rgba(235,177,44,.16),rgba(235,177,44,.05)); border-color:rgba(235,177,44,.35); text-align:right; align-items:flex-end; }
   .secnav .next .nm { color:var(--gold-soft); }
   .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(235,177,44,.35); border-color:rgba(235,177,44,.5); }
-  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.55); transition:transform .2s; text-decoration:none; }
+  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.22); transition:transform .2s; text-decoration:none; }
   .contbtn:hover { transform:translateY(-2px); }
   /* free tier (ochutnávka) */
   .freebanner { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; text-decoration:none; background:linear-gradient(135deg,rgba(235,177,44,.2),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.45); border-radius:18px; padding:18px 22px; margin:8px 0 4px; transition:transform .2s,border-color .2s; }
@@ -80,14 +80,14 @@
   .freebanner .fb-txt { display:flex; flex-direction:column; gap:3px; min-width:240px; flex:1; }
   .freebanner .fb-txt b { color:#fff; font-size:1.06rem; }
   .freebanner .fb-txt span { color:var(--muted-2); font-size:.9rem; }
-  .freebanner .fb-cta { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 22px; border-radius:50px; white-space:nowrap; }
+  .freebanner .fb-cta { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:12px 22px; border-radius:50px; white-space:nowrap; }
   .lesson .lockrow { display:flex; align-items:center; gap:13px; padding:13px 8px; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.05); border-radius:11px; transition:background .2s; }
   .lesson:last-child .lockrow { border-bottom:none; }
   .lesson .lockrow:hover { background:rgba(235,177,44,.07); }
   .lesson.locked .chk.lock { width:21px; height:21px; border:none; background:none; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; opacity:.7; }
   .lesson.locked .lt { flex:1; font-size:.96rem; color:var(--muted); }
   .lesson.locked .go.buy { color:var(--gold-soft); font-weight:700; font-size:.82rem; white-space:nowrap; }
-  .freetag { display:inline-block; font-size:.64rem; font-weight:800; letter-spacing:.04em; color:#160d04; background:var(--gold-soft); padding:1px 8px; border-radius:50px; margin-left:7px; vertical-align:middle; text-transform:uppercase; }
+  .freetag { display:inline-block; font-size:.64rem; font-weight:800; letter-spacing:.04em; color:#1A1222; background:var(--gold-soft); padding:1px 8px; border-radius:50px; margin-left:7px; vertical-align:middle; text-transform:uppercase; }
   body.freemode .matcard { display:none; }
 </style>
 </head>
@@ -116,7 +116,7 @@
 
     <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05));border:1px solid rgba(235,177,44,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
       <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(235,177,44,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (23 modulů, 241 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
-      <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
+      <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
     </a>
 
     <style>
