@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Výpočty pro hubnutí a nabírání — Martin Barna</title>
+<!-- Poppins z repa (absolutni file cesta, aby ji headless Chrome nacetl pri renderu) -->
+<link rel="stylesheet" href="file:///C:/Users/fitne/Desktop/MB.cz/assets/vendor/fonts/poppins.css">
+<style>
+/* ===== DARK + GOLD BRAND (paleta shodna s nasazenymi lead-magnety) ===== */
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; }
+.page { width: 210mm; min-height: 297mm; padding: 12mm 16mm; page-break-after: always;
+  background: radial-gradient(600px 400px at 90% -5%, rgba(235,177,44,.14), transparent 60%), linear-gradient(180deg,#15171a,#0f1113); }
+.page:last-child { page-break-after: auto; }
+
+/* Hlavicka se znackou */
+.brandrow { display:flex; align-items:center; gap:4mm; margin-bottom:5mm; }
+.mark { width:10mm; height:10mm; border-radius:2.6mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; }
+.brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.6mm; letter-spacing:.4mm; text-transform:uppercase; }
+
+/* Cover prvky */
+.cover-tag { display:inline-block; background:rgba(235,177,44,.15); color:#F6CD63; font-weight:700; font-size:3mm; letter-spacing:.5mm; padding:2mm 5mm; border-radius:10mm; margin-bottom:4mm; }
+h1 { font-size:9mm; line-height:1.15; font-weight:800; margin:0 0 2.5mm; color:#fff; } h1 .hl { color:#EBB12C; }
+.sub { font-size:3.6mm; color:#cabfb1; line-height:1.5; margin:0 0 5mm; }
+
+/* Obsahovy box */
+.box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-left:1.2mm solid #EBB12C; border-radius:4mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.box h2 { font-size:4.8mm; font-weight:800; color:#fff; margin:0 0 3mm; }
+.box p, .box li { font-size:3.4mm; color:#d9dde2; line-height:1.5; } .box b { color:#F6CD63; }
+.box p { margin:0 0 2.5mm; } .box p:last-child { margin-bottom:0; }
+.box ul { list-style:none; margin:2mm 0 0; padding:0; } .box ul li { margin-bottom:2mm; padding-left:4.5mm; position:relative; }
+.box ul li:before { content:"•"; color:#EBB12C; position:absolute; left:0; font-weight:800; } .box ul li:last-child { margin-bottom:0; }
+h2.section { font-size:5.4mm; color:#fff; font-weight:800; margin:0 0 3.5mm; padding-left:3mm; border-left:1.4mm solid #EBB12C; }
+.note { font-size:2.9mm; color:#8f8779; line-height:1.45; margin:0 0 3mm; }
+a { color:#EBB12C; text-decoration:none; }
+
+/* Tabulka jidlo -> hodnota (napr. bilkoviny na 100 g) */
+.kvgroup { margin-bottom:3.5mm; } .kvgroup h3 { font-size:3.5mm; color:#F6CD63; font-weight:700; margin:0 0 1.5mm; }
+table.kv { width:100%; border-collapse:collapse; }
+table.kv td { font-size:3.1mm; color:#d9dde2; padding:1.2mm 0; border-top:1px solid rgba(255,255,255,.07); }
+table.kv tr:first-child td { border-top:none; }
+table.kv td.val { text-align:right; color:#EBB12C; font-weight:700; white-space:nowrap; }
+
+/* Mrizka polozek (napr. seznamy potravin) */
+.chips { display:flex; flex-wrap:wrap; gap:2mm; margin:2mm 0 0; }
+.chips span { background:rgba(235,177,44,.12); color:#f0eadf; border:1px solid rgba(235,177,44,.25); border-radius:8mm; padding:1.4mm 4mm; font-size:3mm; }
+
+/* Vzorec / vypocet */
+.formula { background:linear-gradient(135deg,rgba(235,177,44,.14),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.3); border-radius:4mm; padding:4mm 5mm; margin-bottom:4mm; }
+.formula .eq { font-size:4.2mm; color:#fff; font-weight:800; } .formula .ex { font-size:3.1mm; color:#cabfb1; margin-top:1.5mm; }
+
+/* Porovnani (infografika 2 sloupce) */
+.compare { display:flex; gap:4mm; margin-bottom:4mm; }
+.compare .col { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:4mm; padding:4mm; text-align:center; }
+.compare .col.bad { border-color:rgba(235,177,44,.4); }
+.compare .big { font-size:7mm; font-weight:800; color:#EBB12C; margin:1mm 0; }
+.compare .lbl { font-size:3.2mm; color:#cabfb1; }
+
+/* CTA / kontaktni patka (u priloh kurzu = kontakt, ne prodej) */
+.cta { margin-top:5mm; background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.06)); border:1px solid rgba(235,177,44,.35); border-radius:5mm; padding:6mm 8mm; }
+.cta h3 { margin:0 0 2.5mm; font-size:5mm; color:#fff; font-weight:800; } .cta p { margin:0 0 4mm; font-size:3.5mm; color:#d9dde2; line-height:1.5; }
+.cta .btn { display:inline-block; background:#EBB12C; color:#1A1222; font-weight:800; font-size:3.8mm; padding:3.5mm 8mm; border-radius:10mm; text-decoration:none; }
+.foot { margin-top:6mm; padding-top:3mm; border-top:1px solid rgba(255,255,255,.09); display:flex; justify-content:space-between; font-size:3mm; color:#8f8779; } .foot b { color:#EBB12C; }
+
+/* Kroky (cislovany postup) */
+.steps { counter-reset: step; }
+.step { display:flex; gap:4mm; margin-bottom:3.5mm; align-items:flex-start; }
+.step:last-child { margin-bottom:0; }
+.step .num { flex:0 0 auto; width:8mm; height:8mm; border-radius:50%; background:#EBB12C; color:#161616; font-weight:800; font-size:3.8mm; display:flex; align-items:center; justify-content:center; }
+.step .txt { flex:1; }
+.step .txt h3 { font-size:3.9mm; color:#fff; font-weight:800; margin:.6mm 0 1mm; }
+.step .txt p { font-size:3.3mm; color:#d9dde2; line-height:1.5; margin:0; }
+
+/* Koeficienty - radek */
+.coef { display:flex; gap:3.5mm; align-items:flex-start; padding:2.6mm 0; border-top:1px solid rgba(255,255,255,.07); }
+.coef:first-child { border-top:none; }
+.coef .k { flex:0 0 auto; min-width:14mm; text-align:center; font-size:4.4mm; font-weight:800; color:#EBB12C; }
+.coef .d { flex:1; font-size:3.3mm; color:#d9dde2; line-height:1.45; }
+</style>
+</head>
+<body>
+
+<!-- ===================== STRANA 1 — COVER ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <span class="cover-tag">PŘÍLOHA VIDEOKURZU</span>
+  <h1>Výpočty pro <span class="hl">hubnutí</span><br>a <span class="hl">nabírání</span></h1>
+  <p class="sub">Kalorie · Bílkoviny · Tuky · Sacharidy · Vláknina</p>
+
+  <div class="formula">
+    <div class="eq">Nejrychlejší cesta: online kalkulačka</div>
+    <div class="ex"><a href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin">www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin</a></div>
+  </div>
+
+  <p class="sub" style="margin-top:6mm;">Příloha videokurzu flexibilního stravování</p>
+  <p class="sub" style="color:#F6CD63; font-weight:700;">Be Effective, Martin</p>
+
+  <div class="foot">
+    <span>© Martin Barna · <b>martinbarna.cz</b></span>
+    <span>Be Effective · příloha videokurzu</span>
+  </div>
+</div>
+
+<!-- ===================== STRANA 2 — JAK S VÝPOČTY PRACOVAT ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">Jak s výpočty pracovat</h2>
+  <p class="note">Příloha videokurzu flexibilního stravování · martinbarna.cz</p>
+
+  <div class="box">
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="txt">
+          <h3>Spočítej si svůj denní příjem</h3>
+          <p>Buď online kalkulačkou (2 minuty), nebo ručně podle návodu na dalších stranách. Obojí vychází ze stejných principů.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="txt">
+          <h3>Drž plán a sbírej data</h3>
+          <p>Zapisuj jídlo (ideálně kaloricketabulky.cz), jednou týdně se zvaž a změř míry. Bez dat se nedá řídit.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="txt">
+          <h3>Upravuj podle vývoje</h3>
+          <p>Jak na to přesně, víš z lekcí o týdenních reportech a úpravě cílů. Tělo se adaptuje — plán musí taky.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="eq">Online kalkulačka — bonus pro klienty kurzu</div>
+    <div class="ex">Kalorie, bílkoviny, sacharidy, tuky i vláknina na pár kliků:<br>
+      <a href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin">www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin</a></div>
+  </div>
+
+  <div class="foot">
+    <span>Martin Barna — Online výživa a fitness · Be Effective</span>
+    <span><b>martinbarna.cz</b> · 2</span>
+  </div>
+</div>
+
+<!-- ===================== STRANA 3 — KALORIE HUBNUTÍ ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">Kalorie — HUBNUTÍ</h2>
+  <p class="note">Příloha videokurzu flexibilního stravování · martinbarna.cz</p>
+
+  <div class="box">
+    <p>Vezmi svou tělesnou váhu v librách a vynásob ji koeficientem <b>11–14</b> podle své aktivity. Výsledek je tvůj denní příjem kalorií pro hubnutí.</p>
+  </div>
+
+  <div class="formula">
+    <div class="eq">Převod: váha v librách = váha v kg × 2,2</div>
+    <div class="ex">Příklad: 70 kg × 2,2 = 154 liber</div>
+  </div>
+
+  <div class="box">
+    <h2>Koeficient podle aktivity:</h2>
+    <div class="coef"><div class="k">× 11</div><div class="d">Sedavá práce, cvičíš málo nebo vůbec.</div></div>
+    <div class="coef"><div class="k">× 12</div><div class="d">Aktivní práce (pošťák, řemeslník…), NEBO sedavá práce + trénink 2–3× týdně.</div></div>
+    <div class="coef"><div class="k">× 13</div><div class="d">Aktivní práce + trénink 2–3× týdně, NEBO sedavá práce + intenzivní trénink 4–6× týdně.</div></div>
+    <div class="coef"><div class="k">× 14</div><div class="d">Aktivní práce + intenzivní trénink 4–6× týdně, nebo atlet trénující denně.</div></div>
+  </div>
+
+  <div class="formula">
+    <div class="eq">PŘÍKLAD — žena 70 kg, sedavá práce, 2–3 tréninky týdně</div>
+    <div class="ex">70 × 2,2 = 154 lb → 154 × 12 = 1 850 kcal/den</div>
+  </div>
+
+  <div class="foot">
+    <span>Martin Barna — Online výživa a fitness · Be Effective</span>
+    <span><b>martinbarna.cz</b> · 3</span>
+  </div>
+</div>
+
+<!-- ===================== STRANA 4 — KALORIE NABÍRÁNÍ SVALŮ ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">Kalorie — NABÍRÁNÍ SVALŮ</h2>
+  <p class="note">Příloha videokurzu flexibilního stravování · martinbarna.cz</p>
+
+  <div class="box">
+    <p>Stejný princip: váha v librách × koeficient <b>16–18</b>. Jíst se musí — svaly z deficitu nevyrostou.</p>
+  </div>
+
+  <div class="box">
+    <div class="coef"><div class="k">× 16</div><div class="d">Sedavá práce + intenzivní trénink ve fitku 2–3× týdně.</div></div>
+    <div class="coef"><div class="k">× 17</div><div class="d">Aktivní práce + fitko 2–3× týdně, NEBO sedavá práce + fitko 4–6× týdně, NEBO fitko 2–3× + HIIT navíc.</div></div>
+    <div class="coef"><div class="k">× 18</div><div class="d">Aktivní práce + intenzivní fitko 4–6× týdně, nebo atlet trénující silově i aerobně několikrát týdně.</div></div>
+  </div>
+
+  <div class="formula">
+    <div class="eq">PŘÍKLAD — muž 80 kg, sedavá práce, fitko 3× týdně</div>
+    <div class="ex">80 × 2,2 = 176 lb → 176 × 16 = 2 820 kcal/den</div>
+  </div>
+
+  <div class="box">
+    <h2>TIP</h2>
+    <p>Váha týden stojí nebo klesá? Přidej ~100–150 kcal. Roste moc rychle (víc než ~0,5 % váhy/týden)? Uber. Detaily v lekcích o úpravě plánu.</p>
+  </div>
+
+  <div class="foot">
+    <span>Martin Barna — Online výživa a fitness · Be Effective</span>
+    <span><b>martinbarna.cz</b> · 4</span>
+  </div>
+</div>
+
+<!-- ===================== STRANA 5 — BÍLKOVINY ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">🍗 Bílkoviny</h2>
+  <p class="note">Příloha videokurzu flexibilního stravování · martinbarna.cz</p>
+
+  <div class="formula">
+    <div class="eq">1,2 – 2,2 g na 1 kg tělesné váhy denně</div>
+    <div class="ex">Sladká tečka: při hubnutí miř k horní polovině rozpětí (cca 1,6–2,2 g/kg).</div>
+  </div>
+
+  <div class="box">
+    <h2>Proč se vyšší příjem bílkovin vyplatí (skoro) všem:</h2>
+    <ul>
+      <li><b>✔ Skvěle zasytí</b> — Nejsytivější makroživina — pomáhá udržet deficit bez hladovění.</li>
+      <li><b>✔ Pálí kalorie trávením</b> — Tělo spálí na zpracování bílkovin nejvíc energie (termický efekt).</li>
+      <li><b>✔ Staví a chrání svaly</b> — Stimulují regeneraci a růst — v dietě chrání svalovou hmotu.</li>
+      <li><b>✔ Brání jojo efektu</b> — Víc svalů = vyšší výdej = dlouhodobě udržitelný výsledek.</li>
+    </ul>
+  </div>
+
+  <div class="formula">
+    <div class="eq">PŘÍKLAD</div>
+    <div class="ex">Žena 70 kg v dietě: 70 × 1,8 = 126 g bílkovin denně</div>
+  </div>
+
+  <div class="foot">
+    <span>Martin Barna — Online výživa a fitness · Be Effective</span>
+    <span><b>martinbarna.cz</b> · 5</span>
+  </div>
+</div>
+
+<!-- ===================== STRANA 6 — TUKY A SACHARIDY ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">🥑 Tuky a sacharidy 🍚</h2>
+  <p class="note">Příloha videokurzu flexibilního stravování · martinbarna.cz</p>
+
+  <div class="compare">
+    <div class="col">
+      <div class="lbl">Tuky</div>
+      <div class="big">cca 25 %</div>
+      <div class="lbl">denních kalorií</div>
+      <div class="lbl" style="margin-top:2.5mm; color:#d9dde2;">Minimálně ~0,8 g/kg — tuky potřebuješ pro hormony. Gramy: (kcal × 0,25) ÷ 9.</div>
+    </div>
+    <div class="col">
+      <div class="lbl">Sacharidy</div>
+      <div class="big">Zbytek</div>
+      <div class="lbl">kalorií</div>
+      <div class="lbl" style="margin-top:2.5mm; color:#d9dde2;">Co zbyde po bílkovinách a tucích: (kcal − bílk.×4 − tuky×9) ÷ 4. Palivo pro tréninky.</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    <div class="eq">PŘÍKLAD — žena 70 kg, 1 850 kcal, 126 g bílkovin</div>
+    <div class="ex">Tuky: 1 850 × 0,25 = 463 kcal → 463 ÷ 9 = 51 g tuků<br>
+      Sacharidy: (1 850 − 126×4 − 51×9) ÷ 4 = 222 g sacharidů</div>
+  </div>
+
+  <div class="box">
+    <h2>🌾 Vláknina</h2>
+    <p><b>12–14 g na každých 1 000 kcal</b></p>
+    <p>Příklad: 1 850 kcal → cca 22–26 g vlákniny denně. Sytí, pomáhá trávení i zdraví.</p>
+  </div>
+
+  <div class="box">
+    <h2>Nad ~50–60 g vlákniny denně pij víc vody</h2>
+    <p>Vláknina nabývá vodu v trávicím traktu — proto tak krásně sytí. Hydratace se vyplatí každému.</p>
+  </div>
+
+  <div class="foot">
+    <span>Martin Barna — Online výživa a fitness · Be Effective</span>
+    <span><b>martinbarna.cz</b> · 6</span>
+  </div>
+</div>
+
+<!-- ===================== STRANA 7 — A TEĎ DO AKCE ===================== -->
+<div class="page">
+  <div class="brandrow">
+    <div class="mark">MB</div>
+    <div class="brand">Martin Barna<span>Online výživa a fitness</span></div>
+  </div>
+  <h2 class="section">A teď do akce</h2>
+  <p class="note">Příloha videokurzu flexibilního stravování · martinbarna.cz</p>
+
+  <div class="box">
+    <p>Čísla máš. Teď je nastav v kaloricketabulky.cz, drž plán týden a pak upravuj podle měr — přesně jak to učím v lekcích o týdenních reportech. Žádná teorie navíc. Bez výmluv.</p>
+  </div>
+
+  <div class="formula">
+    <div class="eq">Kalkulačka (bonus pro klienty)</div>
+    <div class="ex"><a href="https://www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin">www.martinbarna.cz/kalkulacka-kalorii-a-makrozivin</a></div>
+  </div>
+
+  <div class="cta">
+    <h3>Chceš osobní vedení a dohled?</h3>
+    <p>Online koučing s týdenními kontrolami:</p>
+    <a class="btn" href="https://www.martinbarna.cz/koucing">www.martinbarna.cz/koucing</a>
+  </div>
+
+  <p class="sub" style="margin-top:6mm; color:#F6CD63; font-weight:700;">Be Effective,<br>Martin</p>
+  <p class="note">martin@martinbarna.cz · 603 229 831 · martinbarna.cz</p>
+
+  <p class="note" style="margin-top:4mm;">Hodnoty jsou orientační startovní bod pro zdravé dospělé. Nejsou lékařským doporučením — při zdravotních potížích konzultuj s lékařem.</p>
+
+  <div class="foot">
+    <span>© Martin Barna · <b>martinbarna.cz</b> · Be Effective</span>
+    <span>příloha videokurzu · 7</span>
+  </div>
+</div>
+
+</body>
+</html>
