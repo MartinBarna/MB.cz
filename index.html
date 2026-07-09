@@ -26,7 +26,7 @@
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
-    <link rel="stylesheet" href="/assets/highend.css?v=20260629b">
+    <link rel="stylesheet" href="/assets/highend.css?v=r1">
     <link rel="preconnect" href="https://img.youtube.com" crossorigin>
     <link rel="preload" as="image" href="assets/foto/martin/hero.webp" fetchpriority="high">
     <link href="/assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -504,7 +504,7 @@
         .macro-leg { display:flex; gap:16px; justify-content:center; font-size:.74rem; opacity:.95; }
         .macro-leg i { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; vertical-align:middle; }
         .macro-leg .d-p { background:#ffd166; } .macro-leg .d-c { background:#fff; } .macro-leg .d-f { background:#ff8a3d; }
-        /* Generická high-end vrstva (typografie, frosted nav, tilt/magnet) je sdílená: /assets/highend.css + /assets/ui.js */
+        /* Generická high-end vrstva (typografie, frosted nav, tilt/magnet) je sdílená: /assets/highend.css?v=r1 + /assets/ui.js */
     </style>
     <script>
     (function(){
@@ -552,9 +552,9 @@
         }
     })();
     </script>
-    <script defer src="/assets/analytics.js?v=20260702a"></script><script defer src="/assets/referral.js?v=20260701"></script>
-<script defer src="/assets/lead-popup.js?v=20260702d"></script>
-    <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260702b">
+    <script defer src="/assets/analytics.js?v=r1"></script><script defer src="/assets/referral.js?v=20260701"></script>
+<script defer src="/assets/lead-popup.js?v=r1"></script>
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=r1">
     <style id="hp-dark">
       /* Homepage — doladění dark-luxe (přebíjí stránkové světlé prvky) */
       .proof-marquee { background:rgba(255,122,0,.06)!important; border-color:rgba(255,122,0,.18)!important; }
@@ -579,6 +579,7 @@
       [style*="color:#333"] { color:#cabfb4!important; }
       div[style*="color:#161616"] { color:#fff!important; }
     </style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r1">
 </head>
 <body>
     <!-- SVG ikony (sprite) — schované, referují se přes <use> -->
@@ -605,7 +606,7 @@
     <!-- NAV -->
     <nav class="navbar navbar-expand-xl navbar-light bg-white sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="/"><img src="/assets/brand/mb-mark.png" alt="Martin Barna — logo" height="32" width="65" style="display:block;height:32px;width:auto;aspect-ratio:194/96;flex-shrink:0" decoding="async"><span>Martin Barna</span></a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna — logo" height="32" width="65" style="display:block;height:32px;width:auto;aspect-ratio:194/96;flex-shrink:0" decoding="async"><span>Martin Barna</span></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Otevřít menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -1252,7 +1253,7 @@
     </section>
 
     <footer>
-        <img src="/assets/brand/logo-full-orange.png" alt="Martin Barna — Online výživa a fitness" width="230" height="114" style="height:auto;max-width:230px;margin-bottom:1.1rem" decoding="async">
+        <img src="/assets/brand/logo-full-gold.png" alt="Martin Barna — Online výživa a fitness" width="230" height="114" style="height:auto;max-width:230px;margin-bottom:1.1rem" decoding="async">
         <p class="mb-1">&copy; 2026 Martin Barna — Online výživa a fitness. Všechna práva vyhrazena.</p>
         <p class="mb-0"><a href="https://martinbarna.cz">martinbarna.cz</a> · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> · +420 603 229 831</p>
         <p class="mb-0" style="margin-top:.35rem">Martin Barna · IČO 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice</p>
@@ -1546,6 +1547,6 @@
         }
         // Pozn.: frosted navbar + 3D tilt karet + magnetická CTA řeší sdílený /assets/ui.js (high-end vrstva).
     </script>
-    <script src="/assets/ai-martin.js?v=20260703b" defer></script>
+    <script src="/assets/ai-martin.js?v=r1" defer></script>
 </body>
 </html>
