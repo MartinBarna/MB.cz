@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <style>
-  :root { --gold:#ff7a00; --ink:#161616; }
+  :root { --gold:#EBB12C; --ink:#161616; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'Poppins',Arial,sans-serif; color:#23211d; background:#f7f3ec; line-height:1.65; }
   .top { background:#161616; color:#fff; }
@@ -25,11 +25,11 @@
   label { display:block; font-size:.85rem; font-weight:600; color:#cabfb1; margin:16px 0 6px; }
   label:first-child { margin-top:0; }
   input, select, textarea { width:100%; padding:12px 14px; border:1px solid #d9cdba; border-radius:11px; font-family:inherit; font-size:.96rem; background:#fdfbf7; color:var(--ink); }
-  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(255,122,0,.14); }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(235,177,44,.14); }
   textarea { min-height:88px; resize:vertical; }
   .hint { font-size:.78rem; color:#9a8f7d; margin-top:4px; }
-  .btn { width:100%; margin-top:22px; background:linear-gradient(145deg,#ff9d3c,#ff7a00); color:#161616; font-weight:700; padding:15px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:1rem; transition:.2s; box-shadow:0 14px 30px -10px rgba(255,122,0,.5); }
-  .btn:hover { transform:translateY(-1px); box-shadow:0 18px 38px -10px rgba(255,122,0,.65); }
+  .btn { width:100%; margin-top:22px; background:linear-gradient(145deg,#F6CD63,#EBB12C); color:#161616; font-weight:700; padding:15px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:1rem; transition:.2s; box-shadow:0 14px 30px -10px rgba(235,177,44,.5); }
+  .btn:hover { transform:translateY(-1px); box-shadow:0 18px 38px -10px rgba(235,177,44,.65); }
   .btn[disabled] { opacity:.55; cursor:default; transform:none; }
   .msg { margin-top:15px; padding:12px 15px; border-radius:12px; font-size:.9rem; display:none; }
   .msg.err { display:block; background:#fdecea; color:#a3352b; border:1px solid #f2c4bf; }
@@ -37,13 +37,14 @@
   .ok-card .tick { width:64px; height:64px; border-radius:50%; background:rgba(47,174,87,.16); color:#7bd88f; font-size:1.9rem; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; }
   .ok-card h2 { font-size:1.3rem; margin-bottom:8px; }
   .ok-card p { color:#cabfb1; font-size:.94rem; margin:.4rem 0; }
-  .note { background:rgba(255,122,0,.08); border:1px solid rgba(255,122,0,.28); border-radius:12px; padding:12px 15px; font-size:.86rem; margin-top:20px; }
-  .note a { color:#ffb066; }
+  .note { background:rgba(235,177,44,.08); border:1px solid rgba(235,177,44,.28); border-radius:12px; padding:12px 15px; font-size:.86rem; margin-top:20px; }
+  .note a { color:#F6CD63; }
   .hp { position:absolute; left:-9999px; top:-9999px; }
   footer { background:#0d0d0d; color:#bbb; text-align:center; padding:26px 18px; font-size:.85rem; margin-top:48px; }
-  footer a { color:#ffb066; }
+  footer a { color:#F6CD63; }
 </style>
-  <link rel="stylesheet" href="/assets/marketing-dark.css?v=20260702b">
+  <link rel="stylesheet" href="/assets/marketing-dark.css?v=r1">
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r1">
 </head>
 <body>
   <div class="top"><div class="in">
@@ -138,6 +139,6 @@
     })();
   </script>
   <script src="/assets/scroll-top.js?v=20260710" defer></script>
-    <script defer src="/assets/analytics.js?v=20260702a"></script>
+    <script defer src="/assets/analytics.js?v=r1"></script>
 </body>
 </html>

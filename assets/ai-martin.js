@@ -35,17 +35,17 @@
   }
 
   // ---- bublina (plovoucí tlačítko) ----
-  var btn = E('button', 'position:fixed;right:22px;bottom:22px;z-index:99998;width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(145deg,#ffb066,#ff7a00);box-shadow:0 12px 30px -8px rgba(255,122,0,.6);display:flex;align-items:center;justify-content:center;transition:transform .2s');
+  var btn = E('button', 'position:fixed;right:22px;bottom:22px;z-index:99998;width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(145deg,#F6CD63,#EBB12C);box-shadow:0 12px 30px -8px rgba(235,177,44,.6);display:flex;align-items:center;justify-content:center;transition:transform .2s');
   btn.setAttribute('aria-label', 'Zeptej se AI Martina');
   btn.innerHTML = '<span style="font-family:Poppins,Arial,sans-serif;font-weight:800;color:#160d04;font-size:1.05rem;letter-spacing:-.02em;">MB</span>';
   btn.onmouseenter = function () { btn.style.transform = 'scale(1.06)'; };
   btn.onmouseleave = function () { btn.style.transform = 'scale(1)'; };
 
   // ---- panel ----
-  var panel = E('div', 'position:fixed;right:22px;bottom:92px;z-index:99999;width:360px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 130px);background:#141210;border:1px solid rgba(255,122,0,.32);border-radius:18px;box-shadow:0 28px 70px -20px rgba(0,0,0,.7);display:none;flex-direction:column;overflow:hidden;font-family:Poppins,Arial,sans-serif');
+  var panel = E('div', 'position:fixed;right:22px;bottom:92px;z-index:99999;width:360px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 130px);background:#141210;border:1px solid rgba(235,177,44,.32);border-radius:18px;box-shadow:0 28px 70px -20px rgba(0,0,0,.7);display:none;flex-direction:column;overflow:hidden;font-family:Poppins,Arial,sans-serif');
   panel.innerHTML =
     '<div style="padding:14px 16px;background:linear-gradient(145deg,#23211e,#0c0c0c);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:11px;">' +
-      '<span style="width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#ffb066,#ff7a00);display:flex;align-items:center;justify-content:center;font-weight:800;color:#160d04;flex-shrink:0;">MB</span>' +
+      '<span style="width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#F6CD63,#EBB12C);display:flex;align-items:center;justify-content:center;font-weight:800;color:#160d04;flex-shrink:0;">MB</span>' +
       '<div style="flex:1;"><div style="color:#fff;font-weight:700;font-size:.98rem;">AI Martin</div><div id="amStatus" style="color:#7bd88f;font-size:.74rem;font-weight:600;">● online</div></div>' +
       '<button id="amX" aria-label="Zavřít" style="background:rgba(255,255,255,.08);border:none;color:#cabfb4;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.05rem;line-height:1;">×</button>' +
     '</div>' +
@@ -55,19 +55,19 @@
   var FORM_HTML =
     '<form id="amForm" style="padding:12px;display:flex;gap:8px;">' +
       '<input id="amIn" autocomplete="off" placeholder="' + esc(CFG.PLACEHOLDER) + '" style="flex:1;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.14);border-radius:50px;color:#fff;padding:11px 16px;font-family:inherit;font-size:.92rem;outline:none;">' +
-      '<button type="submit" aria-label="Odeslat" style="background:linear-gradient(145deg,#ffb066,#ff7a00);border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;color:#160d04;font-size:1.1rem;flex-shrink:0;">↑</button>' +
+      '<button type="submit" aria-label="Odeslat" style="background:linear-gradient(145deg,#F6CD63,#EBB12C);border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;color:#160d04;font-size:1.1rem;flex-shrink:0;">↑</button>' +
     '</form>';
 
   var LOCKED_HTML =
     '<div style="padding:14px 16px;text-align:center;">' +
-      '<a href="' + CFG.CHECKOUT + '" style="display:block;background:linear-gradient(145deg,#ffb066,#ff7a00);color:#160d04;font-weight:800;text-decoration:none;padding:12px 16px;border-radius:50px;font-size:.95rem;">🔓 Získat plný přístup</a>' +
+      '<a href="' + CFG.CHECKOUT + '" style="display:block;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#160d04;font-weight:800;text-decoration:none;padding:12px 16px;border-radius:50px;font-size:.95rem;">🔓 Získat plný přístup</a>' +
       '<div style="color:#9a8f84;font-size:.72rem;margin-top:8px;">AI Martin je součást členství v Barna Academy</div>' +
     '</div>';
 
   function bubble(role, text) {
     var me = role === 'user';
     var b = E('div', 'max-width:84%;padding:10px 14px;border-radius:14px;font-size:.92rem;line-height:1.5;white-space:pre-wrap;' +
-      (me ? 'align-self:flex-end;background:linear-gradient(145deg,#ff7a00,#e36f00);color:#160d04;font-weight:600;border-bottom-right-radius:4px;'
+      (me ? 'align-self:flex-end;background:linear-gradient(145deg,#EBB12C,#e36f00);color:#160d04;font-weight:600;border-bottom-right-radius:4px;'
           : 'align-self:flex-start;background:rgba(255,255,255,.06);color:#ece3d8;border:1px solid rgba(255,255,255,.08);border-bottom-left-radius:4px;'));
     b.textContent = text;
     return b;
@@ -85,7 +85,7 @@
   function lockUI() {
     access = false;
     panel.querySelector('#amFoot').innerHTML = LOCKED_HTML;
-    setStatus('● jen pro členy', '#ffb066');
+    setStatus('● jen pro členy', '#F6CD63');
   }
   function unlockUI() {
     panel.querySelector('#amFoot').innerHTML = FORM_HTML;

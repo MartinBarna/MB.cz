@@ -28,8 +28,8 @@ a, button, .btn, .btn-gold, .btn-grn, .btn-out, .btn-white, [role="button"], inp
 }
 
 /* Výběr textu ve značkové barvě */
-::selection { background:#ff7a00; color:#fff; }
-::-moz-selection { background:#ff7a00; color:#fff; }
+::selection { background:#EBB12C; color:#fff; }
+::-moz-selection { background:#EBB12C; color:#fff; }
 
 /* Typografická finesa */
 h1, h2, h3, h4, .plan-name, .section-head h2 { text-wrap:balance; }
@@ -38,11 +38,11 @@ section p, .hero p, .lead, .card-text { text-wrap:pretty; }
 
 /* Slim značkový scrollbar (desktop) */
 @media (min-width:992px) {
-  html { scrollbar-width:thin; scrollbar-color:#ff7a00 #f1e9df; }
+  html { scrollbar-width:thin; scrollbar-color:#EBB12C #f1e9df; }
   ::-webkit-scrollbar { width:11px; }
   ::-webkit-scrollbar-track { background:#f4ede3; }
-  ::-webkit-scrollbar-thumb { background:linear-gradient(#ff8a1f,#ff7a00); border-radius:50px; border:2px solid #f4ede3; }
-  ::-webkit-scrollbar-thumb:hover { background:linear-gradient(#ff7a00,#e86f00); }
+  ::-webkit-scrollbar-thumb { background:linear-gradient(#F6CD63,#EBB12C); border-radius:50px; border:2px solid #f4ede3; }
+  ::-webkit-scrollbar-thumb:hover { background:linear-gradient(#EBB12C,#e86f00); }
 }
 
 /* Frosted, scroll-aware navbar */
@@ -60,7 +60,7 @@ section p, .hero p, .lead, .card-text { text-wrap:pretty; }
   .navbar .nav-link { position:relative; }
   .navbar .nav-link::after {
     content:""; position:absolute; left:.6rem; right:.6rem; bottom:.2rem; height:2px;
-    border-radius:2px; background:#ff7a00; transform:scaleX(0); transform-origin:left;
+    border-radius:2px; background:#EBB12C; transform:scaleX(0); transform-origin:left;
     transition:transform .28s cubic-bezier(.2,.7,.2,1);
   }
   .navbar .nav-link:hover::after { transform:scaleX(1); }
@@ -73,7 +73,7 @@ section p, .hero p, .lead, .card-text { text-wrap:pretty; }
 
 /* ===== Lightbox pro galerie (proměny, recenze) ===== */
 .promeny-grid img, .story-duo img, img.js-zoom { cursor:zoom-in; }
-.promeny-grid img:focus-visible, .story-duo img:focus-visible, img.js-zoom:focus-visible { outline:3px solid #ff7a00; outline-offset:3px; }
+.promeny-grid img:focus-visible, .story-duo img:focus-visible, img.js-zoom:focus-visible { outline:3px solid #EBB12C; outline-offset:3px; }
 .mb-lb {
   position:fixed; inset:0; z-index:5000; display:flex; align-items:center; justify-content:center;
   background:rgba(15,12,10,.92); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
@@ -90,7 +90,7 @@ section p, .hero p, .lead, .card-text { text-wrap:pretty; }
   display:flex; align-items:center; justify-content:center; transition:background .2s ease;
 }
 .mb-lb-btn:hover { background:rgba(255,255,255,.30); }
-.mb-lb-btn:focus-visible { outline:3px solid #ff7a00; outline-offset:2px; }
+.mb-lb-btn:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; }
 .mb-lb-prev { left:18px; } .mb-lb-next { right:18px; }
 .mb-lb-close { top:18px; right:18px; left:auto; width:46px; height:46px; transform:none; font-size:1.5rem; }
 @media (max-width:600px) { .mb-lb-prev { left:6px; } .mb-lb-next { right:6px; } .mb-lb-btn { width:44px; height:44px; } }
