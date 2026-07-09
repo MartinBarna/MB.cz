@@ -104,3 +104,45 @@
     onScroll();
   });
 })();
+
+/* Mobilni hamburger menu pro sdileny .nav/.navlinks (marketing stranky).
+   Postavi vlastni dropdown z existujicich odkazu -> jednotne na vsech strankach,
+   nezavisle na inline CSS. Na akademii / bootstrap navbaru se NEaktivuje (.navlinks chybi). */
+(function () {
+  function ready(fn){ document.readyState!=='loading'?fn():document.addEventListener('DOMContentLoaded',fn); }
+  ready(function () {
+    var nav = document.querySelector('.nav .navlinks');
+    if (!nav) return;
+    var bar = nav.closest('.nav'); if (!bar) return;
+    if (bar.querySelector('.mb-burger')) return;
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a')).map(function (a) {
+      return { t:(a.textContent||'').trim(), h:a.getAttribute('href')||'#', cta:a.classList.contains('cta') };
+    }).filter(function (l) { return l.t; });
+    if (!links.length) return;
+    var css = ''
+      + '.nav .mb-burger{display:inline-flex;flex-direction:column;background:none;border:none;cursor:pointer;padding:9px;margin-left:auto;line-height:0;-webkit-tap-highlight-color:transparent;}'
+      + '.nav .mb-burger span{display:block;width:25px;height:2px;background:#EBB12C;margin:5px 0;border-radius:2px;transition:transform .25s,opacity .2s;}'
+      + '.nav.mbopen .mb-burger span:nth-child(1){transform:translateY(7px) rotate(45deg);}'
+      + '.nav.mbopen .mb-burger span:nth-child(2){opacity:0;}'
+      + '.nav.mbopen .mb-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}'
+      + '.nav .mb-drawer{display:none;position:absolute;top:100%;left:0;right:0;background:#181520;border-top:1px solid #262232;box-shadow:0 26px 54px -14px rgba(0,0,0,.65);z-index:1200;padding:6px 0 10px;}'
+      + '.nav.mbopen .mb-drawer{display:block;}'
+      + '.nav .mb-drawer a{display:block;padding:13px 22px;color:#F0EADF;text-decoration:none;font-weight:600;font-size:1.03rem;border-bottom:1px solid rgba(255,255,255,.05);}'
+      + '.nav .mb-drawer a:hover{background:rgba(235,177,44,.08);color:#EBB12C;}'
+      + '.nav .mb-drawer a.cta{color:#1A1222;background:#EBB12C;margin:10px 16px 4px;border-radius:50px;text-align:center;border-bottom:none;font-weight:700;}'
+      + '@media (max-width:991px){ .nav .navlinks{display:none!important;} }'
+      + '@media (min-width:992px){ .nav .mb-drawer,.nav .mb-burger{display:none!important;} }';
+    var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+    if (getComputedStyle(bar).position === 'static') bar.style.position = 'relative';
+    var b = document.createElement('button');
+    b.className='mb-burger'; b.type='button'; b.setAttribute('aria-label','Menu'); b.setAttribute('aria-expanded','false');
+    b.innerHTML='<span></span><span></span><span></span>';
+    var d = document.createElement('div'); d.className='mb-drawer';
+    links.forEach(function (l) { var a=document.createElement('a'); a.href=l.h; a.textContent=l.t; if(l.cta)a.className='cta'; d.appendChild(a); });
+    var wrap = bar.querySelector('.wrap') || bar;
+    wrap.appendChild(b); bar.appendChild(d);
+    b.addEventListener('click', function (e) { e.stopPropagation(); var open=bar.classList.toggle('mbopen'); b.setAttribute('aria-expanded', open?'true':'false'); });
+    d.addEventListener('click', function (e) { if (e.target.tagName==='A') bar.classList.remove('mbopen'); });
+    document.addEventListener('click', function (e) { if (!bar.contains(e.target)) bar.classList.remove('mbopen'); });
+  });
+})();
