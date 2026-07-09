@@ -82,7 +82,7 @@
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Dokončeno ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako dokončeno ✓'; } }
     function bindLesson(){
       document.querySelectorAll('#quiz .q .qq').forEach(function(q){ q.addEventListener('click', function(){ q.parentElement.classList.toggle('open'); }); });
-      ['/assets/ba-diagrams.js?v=20260629a','/assets/lesson-audio.js?v=20260629c'].forEach(function(src){ var sc=document.createElement('script'); sc.src=src; document.body.appendChild(sc); });
+      ['/assets/ba-diagrams.js?v=g1','/assets/lesson-audio.js?v=g1'].forEach(function(src){ var sc=document.createElement('script'); sc.src=src; document.body.appendChild(sc); });
     }
     function loadContent(){
       window.BA.getLessonHtml(LID).then(function(html){
@@ -99,7 +99,7 @@
       });
     } else { loadContent(); }
   </script>
-  <script src="/assets/scroll-top.js?v=20260710" defer></script>
-  <script src="/assets/ai-martin.js?v=20260703b" defer></script>
+  <script src="/assets/scroll-top.js?v=g1" defer></script>
+  <script src="/assets/ai-martin.js?v=g1" defer></script>
 </body>
 </html>

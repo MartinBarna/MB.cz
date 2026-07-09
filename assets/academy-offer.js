@@ -52,15 +52,15 @@
 
   function el(tag, css, html) { var e = document.createElement(tag); if (css) e.style.cssText = css; if (html != null) e.innerHTML = html; return e; }
 
-  var bar = el('div', 'position:fixed;left:0;right:0;bottom:0;z-index:9999;background:linear-gradient(145deg,#1c1a17,#0c0c0c);border-top:1px solid rgba(255,122,0,.5);box-shadow:0 -12px 34px rgba(0,0,0,.55);font-family:Poppins,Arial,sans-serif;transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.7,.2,1)');
+  var bar = el('div', 'position:fixed;left:0;right:0;bottom:0;z-index:9999;background:linear-gradient(145deg,#1c1a17,#0c0c0c);border-top:1px solid rgba(235,177,44,.5);box-shadow:0 -12px 34px rgba(0,0,0,.55);font-family:Poppins,Arial,sans-serif;transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.7,.2,1)');
   bar.setAttribute('role', 'dialog'); bar.setAttribute('aria-label', 'Časově omezená nabídka Academy');
   bar.innerHTML =
     '<div style="max-width:1000px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">' +
       '<div style="flex:1;min-width:230px;color:#f1ece6;font-size:.95rem;line-height:1.45;">' +
         '<b style="color:#fff;display:block;font-size:1.02rem;margin-bottom:2px;">🎁 Vidím, že se vracíš — a Academy ti dává smysl.</b>' +
-        'Tady máš <b style="color:#ff9d3c;">−' + CFG.PCT + ' %</b> jen pro tebe. Kód <b style="color:#ff9d3c;letter-spacing:.04em;">' + CFG.CODE + '</b> vlož v objednávce. Platí ještě <b id="baOfferCd" style="color:#fff;">…</b>.' +
+        'Tady máš <b style="color:#F6CD63;">−' + CFG.PCT + ' %</b> jen pro tebe. Kód <b style="color:#F6CD63;letter-spacing:.04em;">' + CFG.CODE + '</b> vlož v objednávce. Platí ještě <b id="baOfferCd" style="color:#fff;">…</b>.' +
       '</div>' +
-      '<a href="' + CFG.BUY_URL + '" style="background:linear-gradient(145deg,#ffb066,#ff7a00);color:#160d04;font-weight:800;padding:12px 22px;border-radius:50px;text-decoration:none;white-space:nowrap;font-size:.95rem;">Využít slevu →</a>' +
+      '<a href="' + CFG.BUY_URL + '" style="background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;font-weight:800;padding:12px 22px;border-radius:50px;text-decoration:none;white-space:nowrap;font-size:.95rem;">Využít slevu →</a>' +
       '<button type="button" id="baOfferX" aria-label="Zavřít" style="background:rgba(255,255,255,.08);border:none;color:#cabfb4;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.1rem;line-height:1;flex-shrink:0;">×</button>' +
     '</div>';
 

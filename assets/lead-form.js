@@ -82,13 +82,13 @@
               '<h3 style="color:#fff;margin:.5rem 0 .3rem;">' + (dup ? 'Vítej zpátky' : 'Díky') + (data.name ? ', ' + data.name : '') + '!</h3>' +
               '<p style="color:#cabfb4;margin:.2rem 0;">' + info + '</p>' +
               dl +
-              '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">Chceš se v tom naučit chodit sám/sama? Mrkni na <a href="/videokurz" style="color:#ff9d3c;text-decoration:underline;">videokurz výživy</a>.</p>' +
+              '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">Chceš se v tom naučit chodit sám/sama? Mrkni na <a href="/videokurz" style="color:#F6CD63;text-decoration:underline;">videokurz výživy</a>.</p>' +
             '</div>';
         }
         function showError(text) {
           if (done) return; done = true; if (timer) clearTimeout(timer);
           btn.disabled = false; btn.textContent = orig;
-          if (msg) { msg.style.color = '#ff9d3c'; msg.textContent = text; }
+          if (msg) { msg.style.color = '#F6CD63'; msg.textContent = text; }
         }
 
         // Bezpečnostní síť: lead se ukládá hned a uvítací mail řeší pozadí, takže pokud

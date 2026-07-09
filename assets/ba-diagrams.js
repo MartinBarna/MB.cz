@@ -2,9 +2,9 @@
    Použití v lekci:  <figure class="ba-fig" data-fig="KLIC"><figcaption>Popisek</figcaption></figure>
    + na konci stránky:  <script src="/assets/ba-diagrams.js?v=20260628a"></script>
    Vylepšení diagramu = úprava TADY → projeví se ve všech lekcích.
-   Paleta: gold #ff7a00 / #ffa450, bílá #fff, muted #a89e94, zelená #2fae57, modrá #5aa9e6. */
+   Paleta: gold #EBB12C / #F6CD63, bílá #fff, muted #a89e94, zelená #2fae57, modrá #5aa9e6. */
 (function () {
-  var G = '#ff7a00', GS = '#ffa450', W = '#ffffff', M = '#a89e94', GR = '#2fae57', BL = '#5aa9e6', LN = 'rgba(255,255,255,.14)';
+  var G = '#EBB12C', GS = '#F6CD63', W = '#ffffff', M = '#a89e94', GR = '#2fae57', BL = '#5aa9e6', LN = 'rgba(255,255,255,.14)';
   var F = 'font-family:Poppins,system-ui,sans-serif';
 
   var FIGS = {
@@ -19,7 +19,7 @@
       '<rect x="294" y="118" width="12" height="40" fill="'+G+'"/>' +
       // left pan IN — popisek je UNDER miskou, ať se nepřekrývá
       '<line x1="120" y1="80" x2="120" y2="120" stroke="'+M+'" stroke-width="2"/>' +
-      '<path d="M70 120 h100 a50 28 0 0 1 -100 0 z" fill="rgba(255,122,0,.18)" stroke="'+G+'" stroke-width="2"/>' +
+      '<path d="M70 120 h100 a50 28 0 0 1 -100 0 z" fill="rgba(235,177,44,.18)" stroke="'+G+'" stroke-width="2"/>' +
       '<text x="120" y="172" text-anchor="middle" fill="'+GS+'" style="'+F+';font-weight:800;font-size:14px">PŘÍJEM</text>' +
       '<text x="120" y="189" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">jídlo &amp; pití</text>' +
       // right pan OUT
@@ -81,7 +81,7 @@
       // half veg
       '<path d="M0 0 L0 -92 A92 92 0 0 0 0 92 Z" fill="rgba(47,174,87,.30)" stroke="'+GR+'" stroke-width="2"/>' +
       // quarter protein
-      '<path d="M0 0 L0 -92 A92 92 0 0 1 92 0 Z" fill="rgba(255,122,0,.30)" stroke="'+G+'" stroke-width="2"/>' +
+      '<path d="M0 0 L0 -92 A92 92 0 0 1 92 0 Z" fill="rgba(235,177,44,.30)" stroke="'+G+'" stroke-width="2"/>' +
       // quarter carbs
       '<path d="M0 0 L92 0 A92 92 0 0 1 0 92 Z" fill="rgba(255,164,80,.28)" stroke="'+GS+'" stroke-width="2"/>' +
       '<text x="-46" y="-4" text-anchor="middle" fill="'+W+'" style="'+F+';font-weight:800;font-size:12px">½</text>' +
@@ -165,7 +165,7 @@
       '<text x="120" y="122" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">dlouhé série</text>' +
       '</g>' +
       '<g transform="translate(320,50)">' +
-      '<rect width="240" height="140" rx="14" fill="rgba(255,122,0,.10)" stroke="'+G+'" stroke-width="1.5"/>' +
+      '<rect width="240" height="140" rx="14" fill="rgba(235,177,44,.10)" stroke="'+G+'" stroke-width="1.5"/>' +
       '<text x="120" y="30" text-anchor="middle" fill="'+GS+'" style="'+F+';font-weight:800;font-size:14px">TYP II — rychlá</text>' +
       '<text x="120" y="58" text-anchor="middle" fill="'+W+'" style="'+F+';font-size:12px">síla a výkon</text>' +
       '<text x="120" y="80" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">rychlá únava · hodně síly</text>' +
@@ -258,9 +258,9 @@
       '<rect width="144" height="34" rx="8" fill="'+GR+'" opacity="0.85"/>' +
       '<rect x="144" width="216" height="34" fill="'+GS+'" opacity="0.85"/>' +
       '<rect x="360" width="120" height="34" rx="8" fill="'+G+'" opacity="0.85"/>' +
-      '<text x="72" y="22" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">30 %</text>' +
-      '<text x="252" y="22" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">45 %</text>' +
-      '<text x="420" y="22" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">25 %</text>' +
+      '<text x="72" y="22" text-anchor="middle" fill="#1A1222" style="'+F+';font-weight:800;font-size:12px">30 %</text>' +
+      '<text x="252" y="22" text-anchor="middle" fill="#1A1222" style="'+F+';font-weight:800;font-size:12px">45 %</text>' +
+      '<text x="420" y="22" text-anchor="middle" fill="#1A1222" style="'+F+';font-weight:800;font-size:12px">25 %</text>' +
       '</g>' +
       '<g transform="translate(60,104)" style="'+F+'">' +
       '<rect x="0" y="0" width="14" height="14" rx="3" fill="'+GR+'"/><text x="22" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Bílkoviny</text><text x="22" y="28" fill="'+M+'" font-size="10.5">~1,6–2,2 g/kg — drž napevno</text>' +
@@ -409,7 +409,7 @@
   function sysBar(y,name,time,desc,col,w){
     return '<g transform="translate(0,'+y+')">' +
       '<rect x="60" y="0" width="'+w+'" height="30" rx="8" fill="'+col+'" opacity="0.8"/>' +
-      '<text x="72" y="20" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">'+name+'</text>' +
+      '<text x="72" y="20" fill="#1A1222" style="'+F+';font-weight:800;font-size:12px">'+name+'</text>' +
       '<text x="'+(70+w)+'" y="13" fill="'+W+'" style="'+F+';font-weight:700;font-size:11px">'+time+'</text>' +
       '<text x="'+(70+w)+'" y="27" fill="'+M+'" style="'+F+';font-size:10px">'+desc+'</text></g>';
   }
@@ -436,13 +436,13 @@
     var y = 150 - h;
     return '<g transform="translate('+x+',0)">' +
       '<rect x="0" y="'+y+'" width="120" height="'+h+'" rx="8" fill="'+col+'" opacity="0.8"/>' +
-      '<text x="60" y="'+(y+h/2)+'" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:11.5px">'+title+'</text>' +
+      '<text x="60" y="'+(y+h/2)+'" text-anchor="middle" fill="#1A1222" style="'+F+';font-weight:800;font-size:11.5px">'+title+'</text>' +
       '<text x="60" y="166" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10.5px">'+sub+'</text></g>';
   }
   function rpeRow(y,rpe,rir,desc,col){
     return '<g transform="translate(0,'+y+')">' +
       '<rect x="60" y="-14" width="58" height="26" rx="6" fill="'+col+'" opacity="0.85"/>' +
-      '<text x="89" y="4" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">'+rpe+'</text>' +
+      '<text x="89" y="4" text-anchor="middle" fill="#1A1222" style="'+F+';font-weight:800;font-size:12px">'+rpe+'</text>' +
       '<text x="134" y="-2" fill="'+M+'" style="'+F+';font-size:10px">RIR '+rir+'</text>' +
       '<text x="134" y="11" fill="'+W+'" style="'+F+';font-size:11.5px">'+desc+'</text></g>';
   }
@@ -457,7 +457,7 @@
   function hrZone(y,name,pct,desc,col,w){
     return '<g transform="translate(0,'+y+')">' +
       '<rect x="60" y="0" width="'+w+'" height="28" rx="7" fill="'+col+'" opacity="0.8"/>' +
-      '<text x="72" y="19" fill="#160d04" style="'+F+';font-weight:800;font-size:11.5px">'+name+' · '+pct+'</text>' +
+      '<text x="72" y="19" fill="#1A1222" style="'+F+';font-weight:800;font-size:11.5px">'+name+' · '+pct+'</text>' +
       '<text x="'+(70+w)+'" y="19" fill="'+M+'" style="'+F+';font-size:10.5px">'+desc+'</text></g>';
   }
   function benefit(x,ico,title,desc){
@@ -471,8 +471,8 @@
     var x = 300 - w/2;
     return '<g transform="translate(0,'+y+')">' +
       '<rect x="'+x+'" y="0" width="'+w+'" height="34" rx="6" fill="'+col+'" opacity="0.82"/>' +
-      '<text x="300" y="16" text-anchor="middle" fill="#160d04" style="'+F+';font-weight:800;font-size:12px">'+title+'</text>' +
-      '<text x="300" y="29" text-anchor="middle" fill="#160d04" style="'+F+';font-size:9.5px">'+desc+'</text></g>';
+      '<text x="300" y="16" text-anchor="middle" fill="#1A1222" style="'+F+';font-weight:800;font-size:12px">'+title+'</text>' +
+      '<text x="300" y="29" text-anchor="middle" fill="#1A1222" style="'+F+';font-size:9.5px">'+desc+'</text></g>';
   }
 
   function ensureStyle(){
