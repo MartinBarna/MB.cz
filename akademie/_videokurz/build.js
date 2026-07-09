@@ -158,15 +158,15 @@ function videoPage(v) {
   .done-row { margin-top:1.7rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
   .autop { display:flex; align-items:center; gap:8px; color:var(--muted-2); font-size:.88rem; cursor:pointer; user-select:none; }
   .autop input { accent-color:var(--gold); width:17px; height:17px; cursor:pointer; }
-  .btn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:13px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; }
+  .btn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:13px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.55); transition:transform .2s; }
   .btn:hover { transform:translateY(-2px); }
   .btn.ghost { background:rgba(255,255,255,.05); border:1px solid var(--line-2); color:var(--muted-2); box-shadow:none; }
-  .btn.ghost:hover { border-color:rgba(255,122,0,.4); color:#fff; transform:none; }
+  .btn.ghost:hover { border-color:rgba(235,177,44,.4); color:#fff; transform:none; }
   .btn.is-done { background:linear-gradient(145deg,#2fae57,#1f9647); color:#fff; box-shadow:0 12px 26px -8px rgba(47,174,87,.5); }
   .nav { margin-top:1.5rem; display:flex; justify-content:space-between; gap:10px; }
   .foot { margin-top:2rem; font-size:.8rem; color:var(--muted); }
-  .upsell { display:block; margin-top:1.6rem; text-decoration:none; background:linear-gradient(135deg,rgba(255,122,0,.18),rgba(255,122,0,.05)); border:1px solid rgba(255,122,0,.4); border-radius:16px; padding:16px 20px; color:var(--muted-2); font-size:.95rem; line-height:1.55; transition:transform .2s,border-color .2s; }
-  .upsell:hover { transform:translateY(-2px); border-color:rgba(255,122,0,.7); }
+  .upsell { display:block; margin-top:1.6rem; text-decoration:none; background:linear-gradient(135deg,rgba(235,177,44,.18),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.4); border-radius:16px; padding:16px 20px; color:var(--muted-2); font-size:.95rem; line-height:1.55; transition:transform .2s,border-color .2s; }
+  .upsell:hover { transform:translateY(-2px); border-color:rgba(235,177,44,.7); }
   .upsell b { color:#fff; }
   .upsell .go2 { display:block; margin-top:8px; color:var(--gold-soft); font-weight:700; }
 </style>
@@ -281,8 +281,8 @@ function videoPage(v) {
       var d=document.createElement('div'); d.className='vlock'; d.style.background='rgba(0,0,0,.85)'; d.style.zIndex='3';
       d.innerHTML=html; box.appendChild(d);
     }
-    function upsellOverlay(){ overlayBox('<span class="vlock-ico">🔓</span><p><strong>Další lekce jsou v plném kurzu.</strong></p><p><a href="'+BUY+'" style="color:#ffb066;font-weight:700;">Odemknout všech '+TOTAL+' lekcí →</a></p>'); }
-    function endNote(t){ overlayBox('<span class="vlock-ico">🏆</span><p><strong>'+t+'</strong></p><p><a href="/akademie/videokurz/" style="color:#ffb066;font-weight:700;">Zpět na přehled →</a></p>'); }
+    function upsellOverlay(){ overlayBox('<span class="vlock-ico">🔓</span><p><strong>Další lekce jsou v plném kurzu.</strong></p><p><a href="'+BUY+'" style="color:#F6CD63;font-weight:700;">Odemknout všech '+TOTAL+' lekcí →</a></p>'); }
+    function endNote(t){ overlayBox('<span class="vlock-ico">🏆</span><p><strong>'+t+'</strong></p><p><a href="/akademie/videokurz/" style="color:#F6CD63;font-weight:700;">Zpět na přehled →</a></p>'); }
 
     var btn=document.getElementById('doneBtn');
     function paint(){ if(state.done){ btn.classList.add('is-done'); btn.textContent='Zhlédnuto ✓ (klikni pro zrušení)'; } else { btn.classList.remove('is-done'); btn.textContent='Označit jako zhlédnuté ✓'; } }
@@ -365,14 +365,14 @@ function dashboard() {
   .mhead { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 0 12px; border-bottom:1px solid var(--line); }
   .mhead h2, .matcard h2 { color:#fff; font-size:1.12rem; letter-spacing:-.01em; }
   .matcard h2 { padding:16px 0 12px; border-bottom:1px solid var(--line); margin-bottom:6px; }
-  .mhead .cnt { color:var(--gold-soft); font-size:.76rem; font-weight:700; white-space:nowrap; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:4px 11px; border-radius:50px; }
+  .mhead .cnt { color:var(--gold-soft); font-size:.76rem; font-weight:700; white-space:nowrap; background:rgba(235,177,44,.1); border:1px solid rgba(235,177,44,.22); padding:4px 11px; border-radius:50px; }
   .lessons { list-style:none; }
   .lesson a { display:flex; align-items:center; gap:13px; padding:13px 8px; text-decoration:none; color:var(--ink); border-bottom:1px solid rgba(255,255,255,.05); border-radius:11px; transition:background .2s, padding .2s; }
   .lesson:last-child a { border-bottom:none; }
-  .lesson a:hover { background:rgba(255,122,0,.07); padding-left:14px; }
+  .lesson a:hover { background:rgba(235,177,44,.07); padding-left:14px; }
   .lesson .chk { width:21px; height:21px; border-radius:50%; border:2px solid rgba(255,255,255,.22); flex-shrink:0; transition:.2s; }
   .lesson.done .chk { background:linear-gradient(145deg,var(--gold-2),var(--gold)); border-color:var(--gold); position:relative; }
-  .lesson.done .chk::after { content:"✓"; color:#160d04; font-weight:800; font-size:.72rem; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .lesson.done .chk::after { content:"✓"; color:#1A1222; font-weight:800; font-size:.72rem; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
   .lesson .lt { flex:1; font-size:.96rem; }
   .lesson.done .lt { color:var(--muted); }
   .ba .lesson .go { color:var(--gold-soft); background:none; border:none; box-shadow:none; padding:0; transform:none; font-weight:700; font-size:.82rem; white-space:nowrap; }
@@ -382,55 +382,55 @@ function dashboard() {
   .mats { list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px; }
   @media(max-width:680px){ .mats { grid-template-columns:1fr; } }
   .mat { display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:14px; background:rgba(255,255,255,.03); border:1px solid var(--line); transition:border-color .2s, transform .2s; min-width:0; }
-  .mat:hover { border-color:rgba(255,122,0,.3); transform:translateY(-2px); }
+  .mat:hover { border-color:rgba(235,177,44,.3); transform:translateY(-2px); }
   .mico { font-size:1.35rem; width:30px; text-align:center; flex-shrink:0; }
   .minfo { flex:1; display:flex; flex-direction:column; min-width:0; }
   .minfo b { color:#fff; font-size:.92rem; line-height:1.25; overflow-wrap:break-word; }
   .minfo small { color:var(--muted); font-size:.78rem; }
-  .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(255,122,0,.6); transition:transform .2s; }
+  .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(235,177,44,.6); transition:transform .2s; }
   .mbtn:hover { transform:translateY(-1px); }
   .mbtn[disabled] { opacity:.5; cursor:default; transform:none; }
 
   /* ---- sekční navigace (#33): přehled sekcí → fokus na sekci ---- */
   .modgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-top:8px; }
   .modcard { text-align:left; cursor:pointer; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:11px; transition:transform .2s,border-color .2s,box-shadow .2s; color:inherit; text-decoration:none; }
-  .modcard:hover { transform:translateY(-4px); border-color:rgba(255,122,0,.35); box-shadow:0 24px 46px -28px rgba(255,122,0,.28); }
+  .modcard:hover { transform:translateY(-4px); border-color:rgba(235,177,44,.35); box-shadow:0 24px 46px -28px rgba(235,177,44,.28); }
   .modcard .top { display:flex; align-items:center; gap:12px; }
-  .modcard .ix { width:36px; height:36px; border-radius:11px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:800; font-size:.92rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .modcard .ix { width:36px; height:36px; border-radius:11px; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:800; font-size:.92rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .modcard h3 { font-size:1rem; color:#fff; line-height:1.25; }
   .modcard .mbar { height:6px; background:rgba(255,255,255,.08); border-radius:50px; overflow:hidden; }
   .modcard .mbar span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); border-radius:50px; }
   .modcard .mfoot { display:flex; align-items:center; justify-content:space-between; gap:10px; }
   .modcard .cnt { font-size:.8rem; color:var(--muted-2); font-weight:600; }
-  .modcard .pct { font-size:.74rem; color:var(--gold-soft); font-weight:700; background:rgba(255,122,0,.1); border:1px solid rgba(255,122,0,.22); padding:3px 10px; border-radius:50px; }
+  .modcard .pct { font-size:.74rem; color:var(--gold-soft); font-weight:700; background:rgba(235,177,44,.1); border:1px solid rgba(235,177,44,.22); padding:3px 10px; border-radius:50px; }
   .modcard.done-all { border-color:rgba(47,174,87,.45); }
   .modcard.done-all .pct { color:#86e29a; background:rgba(47,174,87,.12); border-color:rgba(47,174,87,.3); }
   .backlink { display:inline-flex; align-items:center; gap:7px; color:var(--muted-2); text-decoration:none; font-weight:600; font-size:.9rem; margin-bottom:16px; background:rgba(255,255,255,.05); border:1px solid var(--line); padding:9px 16px; border-radius:50px; transition:.2s; }
-  .backlink:hover { border-color:rgba(255,122,0,.4); color:#fff; }
+  .backlink:hover { border-color:rgba(235,177,44,.4); color:#fff; }
   .secnav { display:flex; align-items:stretch; gap:12px; margin-top:24px; flex-wrap:wrap; }
   .secnav a { flex:1; min-width:210px; text-decoration:none; border-radius:16px; padding:16px 20px; display:flex; flex-direction:column; gap:3px; border:1px solid var(--line); transition:transform .2s,border-color .2s,box-shadow .2s; }
   .secnav .lbl { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; }
   .secnav .nm { font-weight:700; color:#fff; font-size:.96rem; }
   .secnav .prev { background:rgba(255,255,255,.03); }
-  .secnav .next { background:linear-gradient(145deg,rgba(255,122,0,.16),rgba(255,122,0,.05)); border-color:rgba(255,122,0,.35); text-align:right; align-items:flex-end; }
+  .secnav .next { background:linear-gradient(145deg,rgba(235,177,44,.16),rgba(235,177,44,.05)); border-color:rgba(235,177,44,.35); text-align:right; align-items:flex-end; }
   .secnav .next .nm { color:var(--gold-soft); }
-  .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(255,122,0,.35); border-color:rgba(255,122,0,.5); }
-  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(255,122,0,.55); transition:transform .2s; text-decoration:none; }
+  .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(235,177,44,.35); border-color:rgba(235,177,44,.5); }
+  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.55); transition:transform .2s; text-decoration:none; }
   .contbtn:hover { transform:translateY(-2px); }
   /* free tier (ochutnávka) */
-  .freebanner { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; text-decoration:none; background:linear-gradient(135deg,rgba(255,122,0,.2),rgba(255,122,0,.05)); border:1px solid rgba(255,122,0,.45); border-radius:18px; padding:18px 22px; margin:8px 0 4px; transition:transform .2s,border-color .2s; }
-  .freebanner:hover { transform:translateY(-2px); border-color:rgba(255,122,0,.75); }
+  .freebanner { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; text-decoration:none; background:linear-gradient(135deg,rgba(235,177,44,.2),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.45); border-radius:18px; padding:18px 22px; margin:8px 0 4px; transition:transform .2s,border-color .2s; }
+  .freebanner:hover { transform:translateY(-2px); border-color:rgba(235,177,44,.75); }
   .freebanner .fb-txt { display:flex; flex-direction:column; gap:3px; min-width:240px; flex:1; }
   .freebanner .fb-txt b { color:#fff; font-size:1.06rem; }
   .freebanner .fb-txt span { color:var(--muted-2); font-size:.9rem; }
-  .freebanner .fb-cta { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#160d04; font-weight:700; padding:12px 22px; border-radius:50px; white-space:nowrap; }
+  .freebanner .fb-cta { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:12px 22px; border-radius:50px; white-space:nowrap; }
   .lesson .lockrow { display:flex; align-items:center; gap:13px; padding:13px 8px; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.05); border-radius:11px; transition:background .2s; }
   .lesson:last-child .lockrow { border-bottom:none; }
-  .lesson .lockrow:hover { background:rgba(255,122,0,.07); }
+  .lesson .lockrow:hover { background:rgba(235,177,44,.07); }
   .lesson.locked .chk.lock { width:21px; height:21px; border:none; background:none; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; opacity:.7; }
   .lesson.locked .lt { flex:1; font-size:.96rem; color:var(--muted); }
   .lesson.locked .go.buy { color:var(--gold-soft); font-weight:700; font-size:.82rem; white-space:nowrap; }
-  .freetag { display:inline-block; font-size:.64rem; font-weight:800; letter-spacing:.04em; color:#160d04; background:var(--gold-soft); padding:1px 8px; border-radius:50px; margin-left:7px; vertical-align:middle; text-transform:uppercase; }
+  .freetag { display:inline-block; font-size:.64rem; font-weight:800; letter-spacing:.04em; color:#1A1222; background:var(--gold-soft); padding:1px 8px; border-radius:50px; margin-left:7px; vertical-align:middle; text-transform:uppercase; }
   body.freemode .matcard { display:none; }
 </style>
 </head>
@@ -457,9 +457,9 @@ function dashboard() {
       <span class="fb-cta">Odemknout — 680 Kč s ZACNI15 →</span>
     </a>
 
-    <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(255,122,0,.16),rgba(255,122,0,.05));border:1px solid rgba(255,122,0,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
-      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(255,122,0,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (20 modulů, 224 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
-      <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
+    <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05));border:1px solid rgba(235,177,44,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(235,177,44,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (20 modulů, 224 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
+      <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
     </a>
 
     <div id="modules"></div>
