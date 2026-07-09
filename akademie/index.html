@@ -59,7 +59,9 @@
         .ac-hero .lead { font-size:clamp(1.05rem,2.4vw,1.3rem); opacity:.92; max-width:680px; animation:fadeUp .7s ease .15s both; }
         .ac-trust { display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:1.4rem; font-size:.92rem; opacity:.95; }
         .ac-trust span { display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap; }
-        @media (max-width:576px) { .ac-trust span { white-space:normal; } }
+        @media (max-width:576px) { .ac-trust span { white-space:normal; display:inline; } }
+        /* trimmed bootstrap build nema display utility -> mobilni "Koupit" tlacitko skryj na desktopu rucne */
+        @media (min-width:1200px) { .navbar .d-xl-none { display:none !important; } }
         .ac-meta { display:flex; flex-wrap:wrap; gap:1.6rem; margin-top:2rem; }
         .ac-meta div span { display:block; font-size:1.7rem; font-weight:800; color:var(--gold); }
 
@@ -152,7 +154,7 @@
       }
     }
     </script>
-    <script defer src="/assets/analytics.js?v=20260702a"></script><script defer src="/assets/referral.js?v=g1"></script>
+    <script defer src="/assets/analytics.js?v=g4"></script><script defer src="/assets/referral.js?v=g1"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r2">
 </head>
 <body>
