@@ -170,3 +170,11 @@ section.cta, #kontakt.cta{ background:linear-gradient(160deg,#241026 0%, #0C0B10
 .proof figcaption .src, .proof .src{ background:var(--mb-surface) !important; color:var(--mb-muted) !important; border-color:var(--mb-border) !important; }
 /* sekundární „Pro ženy 30+" tlačítka (bílá → švestková, sesterská ke zlaté „Pro muže") */
 a.btn[style*="#fff"], .btn.alt{ background:var(--mb-plum) !important; color:#fff !important; border:1px solid var(--mb-plum-light) !important; }
+
+/* ---- Lead-magnet formulare (byly svetle: .form-sec cream, .form-card #fff, bile inputy) ---- */
+.form-sec{ background:var(--mb-bg) !important; }
+.form-card{ background:var(--mb-surface) !important; border:1px solid var(--mb-border) !important; box-shadow:0 20px 50px -28px rgba(0,0,0,.8) !important; }
+.form-card h1,.form-card h2,.form-card h3,.form-card h4,.form-card b,.form-card strong{ color:#fff !important; }
+.form-card p,.form-fallback,.lead-form label{ color:var(--mb-muted) !important; }
+.lead-form input,.lead-form select,.lead-form textarea{ background:var(--mb-bg) !important; color:#fff !important; border:1px solid var(--mb-border) !important; }
+.lead-form input::placeholder{ color:var(--mb-muted) !important; }
