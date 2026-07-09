@@ -24,18 +24,18 @@ const STYLE = `  .bar{height:5px;background:rgba(255,255,255,.06);}
   em{color:var(--muted-2);}
   .wrap a{color:var(--gold-soft);}
   .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
-  .praxe{background:rgba(255,122,0,.07);border:1px solid rgba(255,122,0,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
+  .praxe{background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.25);border-radius:16px;padding:1.1rem 1.4rem;margin:1.3rem 0;}
   .praxe b{color:var(--gold-soft);}
   .points{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.4rem;}
   .points li{margin:.4rem 0 .4rem 1.1rem;}
-  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(255,122,0,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
+  .eq{text-align:center;font-weight:800;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(235,177,44,.3);color:#fff;border-radius:14px;padding:15px;margin:1.2rem 0;letter-spacing:.3px;}
   blockquote{border-left:3px solid var(--gold);padding:.4rem 0 .4rem 1.2rem;color:var(--muted-2);font-style:italic;margin:1.2rem 0;}
   table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.92rem;}
   th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;color:var(--ink);}
-  th{background:rgba(255,122,0,.08);color:#fff;font-weight:700;}
+  th{background:rgba(235,177,44,.08);color:#fff;font-weight:700;}
   .steps{counter-reset:s;margin:1.2rem 0;}
   .steps .row{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 10px;}
-  .steps .row .num{counter-increment:s;flex:none;width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .steps .row .num{counter-increment:s;flex:none;width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:800;display:flex;align-items:center;justify-content:center;}
   .steps .row .num::before{content:counter(s);}
   .steps .row .b{flex:1;}.steps .row b{color:#fff;}.steps .row span{display:block;color:var(--muted-2);font-size:.94rem;margin-top:2px;}
   .quiz{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.5rem;margin-top:2.2rem;}
@@ -47,10 +47,10 @@ const STYLE = `  .bar{height:5px;background:rgba(255,255,255,.06);}
   .q.open .aa{display:block;}
   .q .qq .tg{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap;}
   .done-row{margin-top:2.2rem;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#160d04;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(255,122,0,.55);transition:transform .2s;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:700;padding:13px 28px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit;box-shadow:0 12px 26px -8px rgba(235,177,44,.55);transition:transform .2s;}
   .btn:hover{transform:translateY(-2px);}
   .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;}
-  .btn.ghost:hover{border-color:rgba(255,122,0,.4);color:#fff;transform:none;}
+  .btn.ghost:hover{border-color:rgba(235,177,44,.4);color:#fff;transform:none;}
   .btn.is-done{background:linear-gradient(145deg,#2fae57,#1f9647);color:#fff;box-shadow:0 12px 26px -8px rgba(47,174,87,.5);}
   .lesson-nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:2.4rem;}
   .lesson-nav a{flex:1;min-width:200px;text-decoration:none;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:14px 18px;color:#cfc6b8;}
@@ -100,7 +100,7 @@ ${L.body}
 ${quizHtml(L.quiz)}
     </div>
 
-    <div class="card" style="background:rgba(255,122,0,.06);"><strong>📌 Úkol do praxe:</strong> ${L.task}</div>
+    <div class="card" style="background:rgba(235,177,44,.06);"><strong>📌 Úkol do praxe:</strong> ${L.task}</div>
 
     <nav class="lesson-nav" aria-label="Navigace mezi lekcemi">
       <a class="lnav-mod" href="${L.prevHref}">← ${L.prevLabel}</a>
