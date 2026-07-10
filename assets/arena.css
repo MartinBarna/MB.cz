@@ -73,14 +73,8 @@ h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em
 }
 .ba .praxe{border-left:3px solid var(--ar-gold)!important;background:#171410!important;}
 .card-ac:hover,.mod:hover{transform:none!important;border-color:rgba(235,177,44,.55)!important;box-shadow:none!important;}
-/* ikonove ctverce v nastrojich: zlaty gradient -> ocelovy ram se zlatou znackou */
-.card .ico,.ico{
-  border-radius:2px!important;
-  background:transparent!important;
-  border:1px solid var(--ar-line2)!important;
-  position:relative;
-  filter:grayscale(1) contrast(1.05);
-}
+/* ikony nastroju: puvodni barevne emoji na zlatem ctverci (Martin chce barevne), jen ostry roh */
+.card .ico,.ico{border-radius:4px!important;}
 
 /* ---------- 5) GLOW ORBY & GRADIENTY pryc (zname vzory) ---------- */
 .hero::before,.ac-hero::before{display:none!important;}
@@ -148,3 +142,10 @@ article .hero .tag::before{background:#fff;}
 .ba .contbtn:hover,.ba .bbtn:hover,.ba .fb-cta:hover{transform:none!important;filter:brightness(1.07);}
 .ba .lsearch,.ba .lsearch input{border-radius:2px!important;}
 .ba .bdg,.ba .litebadge,.ba .badge-soon{border-radius:2px!important;}
+/* D4b: ba kick badge -> kicker, go buttony cut */
+.ba .kick{border-radius:0!important;background:transparent!important;border:none!important;
+  padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);letter-spacing:.22em!important;}
+.ba .kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
+.ba .kick .dot{display:none!important;}
+.card .go{border-radius:0!important;clip-path:var(--ar-cut);font-family:var(--ar-display)!important;
+  font-weight:700!important;text-transform:uppercase;letter-spacing:.06em;}
