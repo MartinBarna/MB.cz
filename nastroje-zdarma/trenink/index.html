@@ -85,7 +85,7 @@
     <h1>Generátor tréninku: plán na míru, ať cvičíš kdekoli</h1>
     <p class="lead">Zadáš, kde cvičíš (fitko / doma / hřiště), s čím a na jaké jsi úrovni, a systém ti hned poskládá tréninkový plán s cviky, sériemi i opakováními. Stejný engine, který v Barna Academy používají trenéři pro klienty.</p>
     <ul class="ticks"><li>Fitko, doma i venku</li><li>Podle úrovně a cíle</li><li>Série, opakování i tipy k technice</li></ul>
-    <p style="margin:1rem 0 0;padding:11px 15px;background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.28);border-radius:12px;color:#e9e2d8;font-size:.92rem;line-height:1.5;max-width:660px;"><b style="color:var(--gold-soft);">⚡ Tohle je lite verze zdarma</b>, bez registrace. Plná verze v <a href="/akademie/" style="color:var(--gold-soft);">Barna Academy</a> přidá generátor jídelníčků, rebrand pod tvým jménem i export do PDF.</p>
+    <p style="margin:1rem 0 0;padding:11px 15px;background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.28);border-radius:12px;color:#e9e2d8;font-size:.92rem;line-height:1.5;max-width:660px;"><b style="color:var(--gold-soft);">⚡ Tohle je lite verze zdarma</b>, bez registrace. Plná verze v <a href="/akademie/" style="color:var(--gold-soft);">Barna Academy</a> přidá generátor jídelníčků, objemovou analýzu (série na sval), rebrand pod tvým jménem i export do PDF.</p>
 
     <div class="panel" id="form">
       <div class="grid">
@@ -178,7 +178,7 @@
     </div>
   </div>
 
-  <script src="/assets/workout-gen.js?v=20260629"></script>
+  <script src="/assets/workout-gen.js?v=20260711"></script>
   <script>
   (function(){
     var DB=null, seed=0;
@@ -201,7 +201,7 @@
         html+='</table></div>';
       });
       $('days').innerHTML=html;
-      $('restnote').textContent='Pauza mezi sériemi ~'+plan.rest+'. Cíl: '+plan.goal.label+'. Plán je výchozí bod — uprav podle sebe, techniky a regenerace. Postupně přidávej zátěž nebo opakování (progresivní přetížení).';
+      $('restnote').textContent='Pauza mezi sériemi ~'+plan.rest+'. Cíl: '+plan.goal.label+'. Cvič s 1–3 opakováními v záloze (nechoď do selhání v každé sérii). Když ve všech sériích čistě zvládneš horní hranici opakování, přidej váhu nebo opakování (progresivní přetížení). Po 4–6 týdnech zařaď lehčí „deload" týden. Plán je výchozí bod — uprav podle sebe, techniky a regenerace.';
       $('byline').textContent=plan.goal.label;
       $('result').classList.remove('hidden');
       $('result').scrollIntoView({behavior:'smooth',block:'start'});
