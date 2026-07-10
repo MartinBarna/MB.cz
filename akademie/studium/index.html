@@ -794,7 +794,9 @@
       var ta=0, co=0; CURRICULUM.forEach(function(m){ var c=mc(m); ta+=c.a; co+=c.d; });
       var overall = ta? Math.round(co/ta*100) : 0;
       document.getElementById('progBar').style.width = overall+'%';
-      document.getElementById('progLbl').textContent = co+' z '+ta+' dostupných lekcí · '+overall+' % dokončeno';
+      var lblTa = ta, lblTxt = ' dostupných lekcí · ';
+      if (FREEMODE){ lblTa = 0; CURRICULUM.forEach(function(m){ lblTa += freeCount(m); }); lblTxt = ' lekcí zdarma (celá Academy má '+ta+') · '; }
+      document.getElementById('progLbl').textContent = co+' z '+lblTa+lblTxt+overall+' % dokončeno';
       paintRank(co, ta);
       paintBadges(co, ta);
       var hero = document.querySelector('.hello'), cb = document.getElementById('contBtn'), nx = nextLesson();
@@ -893,5 +895,5 @@
   <script src="/assets/ba-share-card.js?v=g1"></script>
   <script src="/assets/scroll-top.js?v=g3" defer></script>
   <script src="/assets/ai-martin.js?v=g2" defer></script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a4"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
 </html>

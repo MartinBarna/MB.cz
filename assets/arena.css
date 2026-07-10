@@ -153,3 +153,9 @@ article .hero .tag::before{background:#fff;}
 @media (max-width:991.98px){
   .hero .d-flex.flex-wrap{justify-content:center;}
 }
+
+/* ZV Martin 10.7.: velka clenska CTA (Pokracovat, bonusy, free banner, nastroje) byla
+   v plnem gradientu prilis syta a spatne citelna -> kremova zlata (svetly vrch prevazuje) */
+.ba .contbtn,.ba .bbtn,.ba .fb-cta,.ba .btn,.card .go{
+  background:linear-gradient(160deg,#FAE7A9,#F6CD63 60%,#F2C24E)!important;color:#161616!important;}
+.ba .contbtn:hover,.ba .bbtn:hover,.ba .fb-cta:hover,.ba .btn:hover,.card .go:hover{filter:brightness(1.04)!important;}
