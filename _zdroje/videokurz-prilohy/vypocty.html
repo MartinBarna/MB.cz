@@ -4,7 +4,20 @@
 <meta charset="UTF-8">
 <title>Výpočty pro hubnutí a nabírání — Martin Barna</title>
 <!-- Poppins z repa (absolutni file cesta, aby ji headless Chrome nacetl pri renderu) -->
-<link rel="stylesheet" href="file:///C:/Users/fitne/Desktop/MB.cz/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css">
+<style>
+/* ARENA pass: display typografie + ostre tvary (paleta beze zmeny) */
+h1, h2 { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; letter-spacing:.01em; }
+h1 { font-weight:800; text-transform:uppercase; }
+.cover-tag { background:transparent !important; border:none !important; border-radius:0 !important;
+  padding:0 0 0 8mm !important; position:relative; letter-spacing:.9mm !important; text-transform:uppercase; }
+.cover-tag::before { content:""; position:absolute; left:0; top:50%; width:5.5mm; height:.6mm; background:#EBB12C; }
+.box, .formula, .callout, .step { border-radius:.7mm !important; }
+.chips span { border-radius:.7mm !important; }
+.mark { border-radius:1mm !important; }
+table, th, td { border-radius:0 !important; }
+</style>
 <style>
 /* ===== DARK + GOLD BRAND (paleta shodna s nasazenymi lead-magnety) ===== */
 @page { size: A4; margin: 0; }
