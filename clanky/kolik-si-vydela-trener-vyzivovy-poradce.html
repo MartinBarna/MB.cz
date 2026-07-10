@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kolik si vydělá trenér nebo výživový poradce? Spočítej si to — Martin Barna</title>
+    <meta name="description" content="Žádné vymyšlené statistiky. Výdělek trenéra a výživového poradce je matematika tří čísel: klienti, cena, retence. Návod, jak si spočítat vlastní strop a co ho zvedá.">
+    <meta name="theme-color" content="#EBB12C">
+    <link rel="canonical" href="https://martinbarna.cz/clanky/kolik-si-vydela-trener-vyzivovy-poradce.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://martinbarna.cz/clanky/kolik-si-vydela-trener-vyzivovy-poradce.html">
+    <meta property="og:title" content="Kolik si vydělá trenér nebo výživový poradce? Spočítej si to">
+    <meta property="og:description" content="Žádné vymyšlené statistiky. Výdělek trenéra a výživového poradce je matematika tří čísel: klienti, cena, retence. Návod, jak si spočítat vlastní strop a co ho zvedá.">
+    <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g5">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Martin Barna — online výživa a fitness koučink">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g5">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <link rel="stylesheet" href="/assets/highend.css?v=r2">
+    <style>
+        .skip-link{position:absolute;left:-999px;top:0;background:#EBB12C;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+        :root { --green:#EBB12C; --green-dark:#161616; --green-light:#fff4e8; --gold:#EBB12C; --ink:#161616; }
+        * { box-sizing:border-box; scroll-behavior:smooth; }
+        a:focus-visible, button:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; border-radius:4px; }
+        body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
+        a { color:var(--green-dark); }
+        .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
+        .nav .wrap { max-width:1120px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:22px; }
+        .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+        .brand img { height:30px; width:auto; aspect-ratio:194/96; flex-shrink:0; display:block; } .brand span { white-space:nowrap; }
+        .navlinks { display:flex; align-items:center; gap:20px; }
+        .navlinks a { text-decoration:none; font-weight:600; color:var(--ink); font-size:.96rem; }
+        .navlinks a:hover { color:var(--green); }
+        .navlinks a.cta { white-space:nowrap; background:var(--green); color:#161616; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+        .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
+        @media (max-width:1200px){ .navlinks { gap:12px; } .navlinks a { font-size:.9rem; } } @media (max-width:991px){ .navlinks .hide-sm { display:none; } .navlinks { gap:14px; } .navlinks a.cta { padding:7px 12px; font-size:.8rem; } .brand span { display:none; } }
+        .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:80px 20px 64px; text-align:center; position:relative; overflow:hidden; }
+        .hero::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
+        .hero > * { position:relative; z-index:1; }
+        .hero .tag { background:rgba(255,255,255,.2); padding:5px 14px; border-radius:50px; font-size:.8rem; font-weight:600; }
+        .hero h1 { max-width:840px; margin:1rem auto 0; font-size:clamp(2.1rem, 5vw, 3.2rem); font-weight:800; line-height:1.12; letter-spacing:-.025em; }
+        .wrapc { max-width:760px; margin:0 auto; padding:0 20px; }
+        article { padding:60px 0; font-size:1.08rem; }
+        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; font-size:clamp(1.55rem, 3.6vw, 2.1rem); letter-spacing:-.018em; line-height:1.2; }
+        article ul { padding-left:1.2rem; }
+        article li { margin:.4rem 0; }
+        .lead { font-size:1.2rem; color:#3a463f; }
+        .cta-box { background:var(--green-light); border-radius:20px; padding:2.2rem; margin:3rem 0 0; text-align:center; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .cta-box h3 { color:var(--green-dark); font-weight:800; margin-top:0; }
+        .btn { display:inline-block; background:var(--green); color:#161616; font-weight:700; padding:13px 32px; border-radius:50px; text-decoration:none; margin:6px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(235,177,44,.38); background:var(--green-dark); color:#fff; }
+        .btn.gold { background:var(--gold); } .btn.gold:hover { background:#C8901F; }
+        .disclaimer { font-size:.9rem; color:#5c655f; border-top:1px solid #e6ece6; margin-top:2.5rem; padding-top:1.2rem; }
+        footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
+        footer a { color:#F6CD63; text-decoration:underline; }
+        .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
+        body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
+        ::selection { background:#EBB12C; color:#fff; }
+        h1, h2, h3 { letter-spacing:-.015em; }
+        @media (prefers-reduced-motion: reduce){ *, *::before, *::after { transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#666; }
+        .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs span { color:var(--ink); }
+        .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
+        .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .author-box img { width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
+        .author-box h4 { margin:0 0 .3rem; color:var(--green-dark); font-weight:800; font-size:1.1rem; }
+        .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
+        .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
+        @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
+    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Kolik si vydělá trenér nebo výživový poradce? Spočítej si to",
+  "description": "Žádné vymyšlené statistiky. Výdělek trenéra a výživového poradce je matematika tří čísel: klienti, cena, retence. Návod, jak si spočítat vlastní strop a co ho zvedá.",
+  "image": "https://martinbarna.cz/assets/og-default.jpg",
+  "datePublished": "2026-07-10",
+  "dateModified": "2026-07-10",
+  "author": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" },
+  "publisher": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://martinbarna.cz/clanky/kolik-si-vydela-trener-vyzivovy-poradce.html" },
+  "articleSection": "Pro trenéry",
+  "inLanguage": "cs-CZ"
+}
+    </script>
+    <script defer src="/assets/analytics.js?v=g6"></script><script defer src="/assets/referral.js?v=g1"></script>
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=r2">
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r2">
+</head>
+<body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+    <div class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna — logo" decoding="async"><span>Martin Barna</span></a><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="/koucing/">Koučink</a><a class="hide-sm" href="/konzultace/">Konzultace</a><a class="hide-sm" href="/videokurz">Videokurz</a><a class="hide-sm" href="/akademie/">Academy</a><a class="hide-sm" href="/treninky">Tréninky</a><a class="hide-sm" href="/prednasky/">Přednášky</a><a class="hide-sm" href="/clanky/">Blog</a><a class="hide-sm" href="/reference/">Reference</a><a class="hide-sm" href="/akademie/prihlaseni/">Přihlásit</a><a class="cta" href="https://form.simpleshop.cz/qG2yO/buy/">Objednat konzultaci</a></nav></div></div>
+
+    <nav class="crumbs" aria-label="Drobečková navigace"><a href="../index.html">Domů</a> › <a href="index.html">Blog</a> › <span>Kolik si vydělá trenér nebo výživový poradce? Spočítej si to</span></nav>
+    <header class="hero" id="obsah">
+        <span class="tag">PRO TRENÉRY A PORADCE</span>
+        <h1>Kolik si vydělá trenér nebo výživový poradce? Spočítej si to</h1>
+    <p class="hero-meta">📅 červenec 2026 · ⏱️ 5 min čtení</p></header>
+
+    <div class="wrapc">
+        <article>
+            <p class="lead">„Kolik si vydělá výživový poradce?“ a „uživí mě trenéřina?“ jsou asi nejčastější otázky lidí po certifikaci. Nebudu ti sypat vymyšlené statistiky. Ukážu ti, jak si to spočítat sám. Protože výdělek v téhle branži není loterie, je to matematika tří čísel.</p>
+
+            <h2>Tři čísla, která rozhodují</h2>
+            <p>Tvůj příjem = <strong>počet klientů × cena × jak dlouho u tebe klient vydrží</strong>. Nic víc v tom není. Každé z těch tří čísel můžeš ovlivnit, ale každé jinak.</p>
+            <p>Vezmi si papír a počítej se mnou. Řekněme, že vedeš klienty online a bereš si za měsíc spolupráce 2 000 Kč. Deset klientů znamená 20 000 Kč měsíčně. Dvacet klientů 40 000 Kč. U osobních tréninků počítej lekci a kapacitu: kolik lekcí týdně reálně odtrénuješ vedle práce nebo školy?</p>
+            <p>Čísla si dosaď vlastní podle svého města a nabídky. Pointa je jinde: hned vidíš, které číslo tě brzdí.</p>
+
+            <h2>Začátečník řeší počet. Profík řeší cenu a retenci</h2>
+            <p>Na startu je úzké hrdlo počet klientů. Proto má smysl prvních pár měsíců dělat hlavně konzultace a nábor (postup jsem rozepsal v článku o <a href="jak-ziskat-prvni-klienty-trener-vyzivovy-poradce.html" class="ilink">získávání prvních klientů</a>).</p>
+            <p>Jakmile máš klientů deset a víc, přestává být problém počet a začíná být problém čas. A tady se láme chleba: buď zvedneš cenu, nebo se udřeš. Cenu ti ale nikdo nezaplatí za certifikát. Zaplatí ji za výsledky, které umíš doložit, a za servis, který cítí: plán na míru, týdenní check-iny, úpravy podle dat.</p>
+            <p>A retence? Klient, který u tebe vydrží šest měsíců místo jednoho, má šestinásobnou hodnotu, aniž bys hnul prstem navíc v náboru. Retenci nedělá motivační hláška, ale systém: klient ví, co má dělat, vidí svůj pokrok v číslech a každý týden dostane zpětnou vazbu.</p>
+
+            <h2>Online zvedá strop</h2>
+            <p>Osobní trénink má strop daný hodinami dne a cenou lekce v tvém městě. Online koučink ten strop zvedá: neprodáváš hodiny, ale vedení. Dvacet online klientů zvládneš vedle osobních tréninků, pokud máš procesy. Bez procesů se utopíš v psaní jídelníčků u pěti.</p>
+            <p>Proto je největší páka na výdělek paradoxně nudná věc: šablony, dotazníky, check-iny a nástroje, které ti šetří hodiny. Čas, který nestrávíš administrativou, strávíš náborem nebo klienty navíc.</p>
+
+            <h2>Spočítej si svůj cíl odzadu</h2>
+            <ul>
+                <li>Kolik chceš vydělávat měsíčně? Napiš si konkrétní číslo.</li>
+                <li>Vyděl ho realistickou cenou za měsíc spolupráce ve tvé nabídce. Vyjde ti počet klientů.</li>
+                <li>Zeptej se: zvládnu ten počet se svými procesy? Když ne, víš, co budovat dřív než reklamu.</li>
+            </ul>
+            <p>Tahle třířádková kalkulačka ti řekne o tvém podnikání víc než jakákoliv statistika „průměrného platu trenéra“. Průměr totiž neexistuje: jsou trenéři, co dělají trenéřinu za hubičku jako koníček, a poradci, kteří na systému postavili hlavní příjem. Rozdíl mezi nimi není talent. Je to systém.</p>
+
+            <div class="cta-box" style="background:#161616;color:#fff;">
+                <h3 style="color:#fff;">🧰 Postav si systém od prvního klienta</h3>
+                <p style="color:#e8e8e8;">Stáhni si zdarma startovací kit: vstupní dotazník, osnovu první konzultace, týdenní check-in a lead systém.</p>
+                <a class="btn gold" href="/pro-trenery/">Stáhnout startovací kit →</a>
+            </div>
+
+            <h2>Mohlo by tě zajímat</h2>
+            <ul>
+                <li><a href="jak-ziskat-prvni-klienty-trener-vyzivovy-poradce.html">Jak získat první klienty jako trenér nebo výživový poradce</a></li>
+                <li><a href="certifikace-trener-vyzivovy-poradce.html">Certifikace trenéra a výživového poradce: co potřebuješ a co rozhoduje</a></li>
+                <li><a href="kardio-nici-svaly-mytus.html">Kardio ti sežere svaly? Mýtus o kardiu a síle</a></li>
+            </ul>
+
+            <div class="author-box"><img src="../assets/foto/martin/portret.webp" alt="Martin Barna — online výživový a fitness kouč" loading="lazy" width="84" height="84" decoding="async"><div><h4>Martin Barna</h4><p>Online výživový a fitness kouč. Od roku 2013 pomohl přes 600 lidem zhubnout a získat formu natrvalo. V Barna Academy učí trenéry a výživové poradce systém, který na to používá.</p><a class="btn gold" href="/akademie/">Barna Academy pro trenéry</a></div></div>
+                <p class="disclaimer">Článek má informativní charakter a není lékařským ani právním doporučením.</p>
+        </article>
+    </div>
+
+    <footer>
+        <img src="/assets/brand/logo-full-gold.png" alt="Martin Barna — Online výživa a fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async">
+        <p>&copy; 2026 Martin Barna — Online výživa a fitness · <a href="../index.html">Hlavní web</a></p>
+    </footer>
+    <a class="fab-wa" href="https://wa.me/420603229831" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.748-.747zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+    </a>
+  <script src="/assets/scroll-top.js?v=g3" defer></script>
+  <script src="/assets/ai-martin.js?v=g1" defer></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a3"></body>
+</html>
