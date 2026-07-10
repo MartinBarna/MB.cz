@@ -25,28 +25,70 @@ const FONTCSS = [400, 600, 700, 800].map((w) => ['', '-ext'].map((v) => {
   return `@font-face{font-family:'Poppins';font-weight:${w};src:url(data:font/woff2;base64,${b64}) format('woff2');}`;
 }).join('')).join('\n');
 
+// Barlow Condensed pro ARENA display titulky (stejny podklad jako web)
+const BFDIR = path.join(ROOT, 'assets/vendor/fonts');
+let BARLOWCSS = '';
+try {
+  BARLOWCSS = [600, 700, 800].map((w) => {
+    const file = path.join(BFDIR, `barlow-condensed-latin-ext-${w}.woff2`);
+    if (!fs.existsSync(file)) return '';
+    const b64 = fs.readFileSync(file).toString('base64');
+    return `@font-face{font-family:'Barlow Condensed';font-weight:${w};src:url(data:font/woff2;base64,${b64}) format('woff2');}`;
+  }).join('');
+  // latin zaklad (bez -ext) pro jistotu
+  BARLOWCSS += [600, 700, 800].map((w) => {
+    const file = path.join(BFDIR, `barlow-condensed-latin-${w}.woff2`);
+    if (!fs.existsSync(file)) return '';
+    const b64 = fs.readFileSync(file).toString('base64');
+    return `@font-face{font-family:'Barlow Condensed';font-weight:${w};src:url(data:font/woff2;base64,${b64}) format('woff2');unicode-range:U+0000-00FF;}`;
+  }).join('');
+} catch (e) { /* bez Barlow spadneme na Arial Narrow */ }
+
+// Martinova fotka (puvodni barvy) — na malych nahledech FB/WhatsApp nese identitu lip nez text
+const HERO_URI = 'file:///' + path.join(ROOT, 'assets/foto/martin/hero.jpg').replace(/\\/g, '/');
+
 function page(body) {
   return `<!DOCTYPE html><html lang="cs"><head><meta charset="UTF-8">
-<style>${FONTCSS}</style>
+<style>${FONTCSS}${BARLOWCSS}</style>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:1200px;height:630px;overflow:hidden;font-family:'Poppins',Arial,sans-serif;color:#f0eadf;
- background:radial-gradient(760px 560px at 88% 88%, rgba(235,177,44,.20), transparent 62%), linear-gradient(160deg,#17181c,#0f1113);}
-.stripe{position:absolute;left:0;top:0;width:14px;height:630px;background:linear-gradient(180deg,${GOLD_SOFT},${GOLD});}
-.mark{width:150px;height:150px;border-radius:34px;background:linear-gradient(145deg,${GOLD_SOFT},${GOLD});color:#161616;
- font-weight:800;font-size:82px;display:flex;align-items:center;justify-content:center;}
+ background:#0C0B10;position:relative;}
+.stripe{position:absolute;left:0;top:0;width:14px;height:630px;background:linear-gradient(180deg,${GOLD_SOFT},${GOLD});z-index:5;}
+.mark{width:66px;height:66px;border-radius:12px;background:linear-gradient(145deg,${GOLD_SOFT},${GOLD});color:#161616;
+ font-weight:800;font-size:34px;display:flex;align-items:center;justify-content:center;font-family:'Poppins',Arial,sans-serif;}
+.kick{font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;color:${GOLD_SOFT};letter-spacing:.22em;
+ font-weight:600;font-size:27px;text-transform:uppercase;padding-left:52px;position:relative;white-space:nowrap;}
+.kick::before{content:"";position:absolute;left:0;top:52%;width:36px;height:4px;background:${GOLD};}
+.disp{font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:800;text-transform:uppercase;line-height:.9;color:#fff;}
 .tag{display:inline-block;background:rgba(235,177,44,.16);border:2px solid rgba(235,177,44,.45);color:${GOLD_SOFT};
- font-weight:700;font-size:30px;letter-spacing:2px;padding:8px 28px;border-radius:50px;text-transform:uppercase;}
+ font-weight:700;font-size:28px;letter-spacing:2px;padding:8px 26px;border-radius:4px;text-transform:uppercase;}
 </style></head><body>${body}</body></html>`;
+}
+
+// Martinova fotka vpravo (PUVODNI barvy, jeho pravidlo) — na malych FB/WhatsApp/LinkedIn
+// nahledech nese identitu znacky i kdyz text zmizi (obliceje se poznaji). Meke prolnuti
+// do tmave vlevo, aby text vlevo zustal citelny, + tenka zlata hrana vpravo.
+function photoRight(w) {
+  return `<div style="position:absolute;top:0;right:0;width:${w}px;height:630px;overflow:hidden;z-index:1">
+    <img src="${HERO_URI}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:57% 15%">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,#0C0B10 0%,rgba(12,11,16,.62) 20%,rgba(12,11,16,0) 66%)"></div>
+    <div style="position:absolute;top:0;right:0;width:8px;height:630px;background:${GOLD}"></div>
+  </div>`;
 }
 
 function brandDefault() {
   return page(`<div class="stripe"></div>
-  <div style="padding:80px">
-    <div class="mark">MB</div>
-    <div style="font-weight:800;font-size:96px;color:#fff;margin-top:56px;line-height:1.05">Martin Barna</div>
-    <div style="font-size:44px;color:${GOLD};font-weight:600;margin-top:14px">Online výživa &amp; fitness koučink</div>
-    <div style="font-size:32px;color:#b9ada0;margin-top:56px">od 2013&nbsp;&nbsp;·&nbsp;&nbsp;600+ klientů&nbsp;&nbsp;·&nbsp;&nbsp;vědecky podloženo</div>
+  ${photoRight(478)}
+  <div style="position:relative;z-index:3;height:100%;padding:74px 0 62px 82px;display:flex;flex-direction:column">
+    <div class="kick">Online výživa &amp; fitness koučink</div>
+    <div class="disp" style="font-size:132px;margin-top:30px">Martin<br>Barna</div>
+    <div style="font-size:45px;font-weight:600;color:#f0eadf;margin-top:34px;line-height:1.1">Forma podle vědy.<br><span style="color:${GOLD_SOFT}">Ne podle pocitů.</span></div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:24px">
+      <span style="font-weight:800;font-size:33px;color:#fff">martinbarna.cz</span>
+      <span style="width:7px;height:7px;border-radius:50%;background:${GOLD};display:inline-block"></span>
+      <span style="font-size:26px;color:#b9ada0">od 2013 · 600+ klientů</span>
+    </div>
   </div>`);
 }
 
@@ -81,16 +123,21 @@ function cleanTitle(t) {
 
 function articleCard(tag, title) {
   title = cleanTitle(title);
-  const fs1 = title.length > 70 ? 56 : title.length > 45 ? 64 : 74;
+  const L = title.length;
+  const fs1 = L > 78 ? 50 : L > 54 ? 58 : L > 34 ? 68 : 78;
   return page(`<div class="stripe"></div>
-  <div style="padding:64px 80px;display:flex;flex-direction:column;height:100%">
-    <div>
-      <div style="font-weight:800;font-size:38px;color:#fff;letter-spacing:1px">MARTIN BARNA</div>
-      <div style="font-weight:600;font-size:24px;color:${GOLD};letter-spacing:3px">ONLINE VÝŽIVA &amp; FITNESS</div>
+  ${photoRight(392)}
+  <div style="position:relative;z-index:3;height:100%;padding:58px 0 54px 82px;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:20px">
+      <div class="mark">MB</div>
+      <div>
+        <div style="font-weight:800;font-size:30px;color:#fff;letter-spacing:.5px;line-height:1.05">MARTIN BARNA</div>
+        <div style="font-weight:600;font-size:20px;color:${GOLD};letter-spacing:2.5px">ONLINE VÝŽIVA &amp; FITNESS</div>
+      </div>
     </div>
-    <div style="margin-top:44px"><span class="tag">${tag}</span></div>
-    <div style="font-weight:800;font-size:${fs1}px;line-height:1.16;color:#fff;margin-top:30px;max-width:1020px">${title}</div>
-    <div style="margin-top:auto;font-weight:700;font-size:30px;color:#b9ada0">web.martinbarna.cz</div>
+    <div style="margin-top:38px"><span class="tag">${tag}</span></div>
+    <div style="font-weight:800;font-size:${fs1}px;line-height:1.15;color:#fff;margin-top:26px;max-width:720px">${title}</div>
+    <div style="margin-top:auto;font-weight:700;font-size:28px;color:#b9ada0">martinbarna.cz</div>
   </div>`);
 }
 
