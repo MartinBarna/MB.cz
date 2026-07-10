@@ -149,3 +149,7 @@ article .hero .tag::before{background:#fff;}
 .ba .kick .dot{display:none!important;}
 .card .go{border-radius:0!important;clip-path:var(--ar-cut);font-family:var(--ar-display)!important;
   font-weight:700!important;text-transform:uppercase;letter-spacing:.06em;}
+/* ZV Hana 10.7.: na mobilu hero CTA tlacitka na stred (text je centrovany, flex radek byl vlevo) */
+@media (max-width:991.98px){
+  .hero .d-flex.flex-wrap{justify-content:center;}
+}
