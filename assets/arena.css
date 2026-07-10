@@ -138,3 +138,14 @@ article .hero .tag::before{background:#fff;}
   padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);
   font-weight:600;letter-spacing:.22em!important;text-transform:uppercase;color:var(--ar-gold2)!important;}
 .eyebrow::before,.fp-kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
+/* D3: blog author box do systemu */
+.author-box{border-radius:2px!important;background:var(--ar-panel)!important;border:1px solid var(--ar-line)!important;box-shadow:none!important;}
+/* D4: clenska sekce Academy (studium/moje) */
+.ba .hello,.ba .freebanner,.ba .bonus,.ba .cert-card,.ba .mfree,.ba .path,.ba .tool,.ba .binfo{
+  border-radius:2px!important;background:var(--ar-panel)!important;border:1px solid var(--ar-line)!important;box-shadow:none!important;}
+.ba .hello::after{display:none!important;}
+.ba .contbtn,.ba .bbtn,.ba .fb-cta{border-radius:0!important;clip-path:var(--ar-cut);
+  font-family:var(--ar-display)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.06em;box-shadow:none!important;}
+.ba .contbtn:hover,.ba .bbtn:hover,.ba .fb-cta:hover{transform:none!important;filter:brightness(1.07);}
+.ba .lsearch,.ba .lsearch input{border-radius:2px!important;}
+.ba .bdg,.ba .litebadge,.ba .badge-soon{border-radius:2px!important;}
