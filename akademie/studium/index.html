@@ -171,7 +171,7 @@
       .les.isfree .s{color:var(--gold-soft);font-weight:700}
     </style>
     <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
-      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (241 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
+      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly — vidíš, co tě uvnitř čeká. Celou Academy (255 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí, místo 12 900). Doživotně.</span></span></span>
       <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
     </a>
 
@@ -562,6 +562,21 @@
         { id:"m23-l2", t:"Sarkopenie: jak u klienta 50+ chránit svaly", available:true, href:"/akademie/studium/m23-l2/" },
         { id:"m23-l3", t:"Inzulinová rezistence a prediabetes: role životního stylu", available:true, href:"/akademie/studium/m23-l3/" },
         { id:"m23-l4", t:"Cholesterol a lipidy: co zvládne strava a pohyb", available:true, href:"/akademie/studium/m23-l4/" }
+      ]},
+      { t:"AI pro trenéry a výživáře", d:"Nejdůležitější dovednost letoška: jak s AI (na příkladu Clauda) zvládnout celý byznys rychleji a líp. Od pozicování přes onboarding, check-iny, jídelníčky a tréninky po obsah, reklamy a etické hranice. Vše směřuje na tvoje nástroje a tvou odbornost, ne od nich.", lessons:[
+        { id:"m24-l1", t:"Proč AI a proč právě teď", available:true, href:"/akademie/studium/m24-l1/" },
+        { id:"m24-l2", t:"Jak AI správně zadávat úkoly", available:true, href:"/akademie/studium/m24-l2/" },
+        { id:"m24-l3", t:"AI jako druhý mozek tvého byznysu", available:true, href:"/akademie/studium/m24-l3/" },
+        { id:"m24-l4", t:"Onboarding klienta s pomocí AI", available:true, href:"/akademie/studium/m24-l4/" },
+        { id:"m24-l5", t:"Check-iny: vyhodnocení a zpětná vazba s AI", available:true, href:"/akademie/studium/m24-l5/" },
+        { id:"m24-l6", t:"Jídelníčky a makra: AI jako pomocník, ne kalkulačka", available:true, href:"/akademie/studium/m24-l6/" },
+        { id:"m24-l7", t:"Tréninkové plány s pomocí AI", available:true, href:"/akademie/studium/m24-l7/" },
+        { id:"m24-l8", t:"Materiály pro klienty za zlomek času", available:true, href:"/akademie/studium/m24-l8/" },
+        { id:"m24-l9", t:"AI a věda: PubMed, studie a past halucinací", available:true, href:"/akademie/studium/m24-l9/" },
+        { id:"m24-l10", t:"Obsah na sociální sítě s AI", available:true, href:"/akademie/studium/m24-l10/" },
+        { id:"m24-l11", t:"Reklamy: texty, cílení a čtení metrik s AI", available:true, href:"/akademie/studium/m24-l11/" },
+        { id:"m24-l12", t:"AI systém den za dnem a etické hranice", available:true, href:"/akademie/studium/m24-l12/" },
+        { id:"m24-l13", t:"AI agenti a automatizace (pokročilé)", available:true, href:"/akademie/studium/m24-l13/" }
       ]}
     ];
     // ----- Free-preview (#35): ochutnávka pro nepřihlášené/nekupující + upsell -----
@@ -828,7 +843,7 @@
               if(!u){
                 FREEMODE = true; applyFreeMode();
                 var n0 = document.getElementById('modeNote');
-                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 241 lekcím odemkni celou Academy.';
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 255 lekcím odemkni celou Academy.';
                 try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
                 return;
               }
@@ -838,7 +853,7 @@
                 var note = document.getElementById('modeNote');
                 if (note) note.textContent = has
                   ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 241 lekcím odemkni celou Academy.';
+                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 255 lekcím odemkni celou Academy.';
                 window.BA.getProgress().then(render);
               });
             });

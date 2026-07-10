@@ -1,4 +1,10 @@
-# Copy mise — faktické nálezy k Martinově kontrole (flagged, NEměněno)
+# Copy mise — faktické nálezy k Martinově kontrole
+
+## ✅ VŠE NÍŽE OPRAVENO 10.7. (Martin potvrdil: „všechny flags byly překlepy či chyby, oprav vše")
+Blog: posloužím (už nebyl), cukrovkáři mají, kvůli čemu, cirkadiánních, „se dočteš v článku", SCFA (mastné kyseliny s krátkým řetězcem), předčasně narozené děti, Už ti to napoví, spletl, Bernays → 20. léta, koučing→koučink (14 souborů), ženský rod v zeny-a-posilovani (Musela by ses / sama), og:image jist-po-seste → og-default, „insulin resistance" v EN citaci, kolagen meta gramatika (3 místa), wobenzym osiřelá „2", zanety 6×`<ol>` → číslované nadpisy 1.–6. studie, meta em-dash pohybove-aktivity + pravo-volby.
+Academy DB lekce: odmyslíš→vymyslíš, zeskelnatí→zesklovatí, ve dni→v den (m5-l13 i m1-l13!), pošlu dál, není (čárka, i kvíz), a neotrávilo, hloubš→hlouběji, UK čísla 191→200 (interně konzistentní s 6312−6112), nezajímáš→nezajímáte, pilníš→piluješ, nehecuj, Tříúrovňový, Vydá obrovské množství energie, dolaďuješ, Academy 224→255, + **strukturální oprava praxe boxů v 6 lekcích** (m4-l14, m7-l8, m8-l8, m9-l4: osiřelé `</p>`; m8-l5, m8-l9: NEZAVŘENÝ div = obsah tekl do zlatého boxu — viditelný bug, opraven). Vše ověřeno: p/div páry = balance. RAG lesson_docs refresh + m24 přidán (249 docs).
+
+# (Historie nálezů níže — vše vyřešeno)
 
 Agenti při čištění textů (blog + Academy lekce) narazili na věci, které vypadají fakticky
 podezřele. Podle pravidla „vědu sám neopravuj" jsem je NEMĚNIL — jen sepsal sem. Projdi je,
@@ -50,6 +56,15 @@ obecně („data ukazují…“), nebo větu smazat. Řekni, kterou cestou, a pr
 - `clanky/cukr-je-jed-mytus.html` (~ř. 179): „light verze posloužím" → má být „poslouží".
 - `clanky/e-book…ovoce-vs-bebe…`: „cukrovkář mají" → „cukrovkáři mají"; „kvůli čeho" → „kvůli čemu".
 - Academy lekce `m21-l2`: „témat máš v Academy 224" — jinde se uvádí 235/237; možná zastaralé číslo.
+
+## 🟠 Z ACADEMY LEKCÍ (dokončeno 10.7., 237/237) — k posouzení
+- `m5-l8`: „klient se začne spoléhat, že to za něj **odmyslíš**" — nejspíš mělo být „vymyslíš". Neměněno.
+- `m6-l3`: čísla o UK fitness trhu nesedí: 6 312 vs 6 112 zařízení = +200, ale text říká „přibylo 191". Ověř zdroj.
+- `m7-l4`: „**nehec** klienta naprázdno" — asi „nehecuj", ale může být tvůj hovorový tvar. Neměněno.
+- `m6-l7`: „**pilníš**" (2×, spisovně „piluješ") a `m6-l2` „jde **hloubš**" — vypadá jako záměrná hovorovost, necháno; potvrď.
+- `m9-l8`: „**doceluješ** autoregulaci" — možná „dolaďuješ", možná záměr. Neměněno.
+- Struktura: ~7 lekcí (m4-l14, m7-l8, m8-l5/l8/l9, m9-l4) má v „V praxi" boxech přebytečný `</p>` před `</div>` — prohlížeč to tiše ignoruje (nic není rozbité), jen kdybys chtěl někdy čistit.
+- `zaverecny-test`: obsah je JSON kvízu, em-dashe v otázkách ponechány (chráněný kvíz).
 
 ## 🟡 DROBNÉ (meta/struktura — mimo viditelnou prózu, jen info)
 - `kolagen-na-slachy-a-klouby.html`: překlep + rozbitá gramatika v meta description/JSON-LD
