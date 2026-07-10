@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startovací kit pro trenéry a výživové poradce zdarma — Martin Barna</title>
+    <meta name="description" content="Vstupní dotazník, osnova první konzultace, týdenní check-in a systém, jak získat první klienty. Startovací kit pro trenéry a výživové poradce zdarma na e-mail.">
+    <meta name="theme-color" content="#0C0B10">
+    <link rel="canonical" href="https://martinbarna.cz/pro-trenery/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://martinbarna.cz/pro-trenery/">
+    <meta property="og:title" content="Startovací kit pro trenéry a výživové poradce — zdarma">
+    <meta property="og:description" content="Dotazník, osnova první konzultace, check-in a lead systém z 13 let praxe. Pošlu ti ho na e-mail.">
+    <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g5">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <style>
+        .skip-link{position:absolute;left:-999px;top:0;background:#EBB12C;color:#161616;font-weight:700;padding:10px 18px;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+        :root { --gold:#EBB12C; --gold2:#F6CD63; --ink:#F0EADF; --muted:#b9b2a6; --panel:#15141a; --line:#2a2731; --bg:#0C0B10; }
+        * { box-sizing:border-box; scroll-behavior:smooth; }
+        body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--ink); line-height:1.65; background:var(--bg); }
+        h1,h2,h3 { font-weight:800; line-height:1.15; color:#fff; }
+        a { color:var(--gold2); }
+        .wrap { max-width:1060px; margin:0 auto; padding:0 20px; }
+        a:focus-visible, button:focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+
+        .nav { background:#100e14; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; }
+        .nav .row { display:flex; align-items:center; justify-content:space-between; padding:13px 0; }
+        .brand { font-weight:800; color:#fff; text-decoration:none; font-size:1.15rem; display:flex; align-items:center; gap:10px; }
+        .brand img { height:30px; width:auto; display:block; }
+        .nav .back { text-decoration:none; color:#cfd2d6; font-weight:600; font-size:.92rem; }
+
+        .btn { display:inline-block; background:var(--gold); color:#161616; font-weight:700; padding:14px 30px; text-decoration:none; border:none; cursor:pointer; text-align:center; }
+        .btn:hover { filter:brightness(1.07); color:#161616; }
+        .btn.ghost { background:transparent; color:#fff; border:1px solid #3a3542; }
+
+        .hero { padding:74px 0 66px; background:var(--bg); }
+        .hero .grid { display:flex; gap:48px; align-items:center; }
+        .hero .col { flex:1; min-width:0; }
+        .hero h1 { font-size:2.7rem; margin:1rem 0; }
+        .hero .sub { font-size:1.12rem; color:var(--muted); max-width:560px; }
+        .ticks { list-style:none; padding:0; margin:1.4rem 0 0; display:flex; flex-wrap:wrap; gap:8px 22px; font-weight:600; font-size:.93rem; color:#e6e8ea; }
+        .ticks li::before { content:"✓ "; color:var(--gold); font-weight:800; }
+        .hero-cta { margin:1.7rem 0 .6rem; }
+        .micro { font-size:.9rem; color:#8d8677; }
+
+        .kitbox { background:var(--panel); border:1px solid var(--line); padding:26px; }
+        .kitbox .khead { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--gold2); font-weight:700; margin-bottom:14px; }
+        .kitem { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #221f28; }
+        .kitem:last-child { border-bottom:none; }
+        .kitem .kn { flex:0 0 30px; height:30px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:.95rem; }
+        .kitem b { color:#fff; display:block; }
+        .kitem span { color:var(--muted); font-size:.92rem; }
+
+        section { padding:64px 0; }
+        .sh { text-align:center; max-width:720px; margin:0 auto 2.4rem; }
+        .sh h2, .acad h2, .form-card h2 { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:.02em; }
+        .sh h2 { font-size:2.1rem; }
+        .sh p { color:var(--muted); }
+
+        /* srovnani kurz vs system */
+        .vs { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px; max-width:920px; margin:0 auto; }
+        .vs .colv { background:var(--panel); border:1px solid var(--line); padding:26px; }
+        .vs .colv.win { border-color:rgba(235,177,44,.55); }
+        .vs h3 { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:1.25rem; margin:0 0 14px; }
+        .vs .colv:not(.win) h3 { color:#8d8677; }
+        .vs ul { list-style:none; margin:0; padding:0; }
+        .vs li { padding:9px 0 9px 26px; position:relative; color:var(--muted); font-size:.96rem; border-bottom:1px solid #221f28; }
+        .vs li:last-child { border-bottom:none; }
+        .vs .colv:not(.win) li::before { content:"—"; position:absolute; left:0; color:#5c5648; }
+        .vs .win li { color:#e6dfd2; }
+        .vs .win li::before { content:"✓"; position:absolute; left:0; color:var(--gold); font-weight:800; }
+
+        .form-sec { background:#100e14; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+        .form-card { max-width:680px; margin:0 auto; background:var(--panel); border:1px solid var(--line); padding:30px; }
+        .form-card h2 { text-align:center; font-size:1.7rem; margin-top:0; }
+        .lead-form label { display:block; font-weight:600; margin:14px 0 6px; color:#fff; }
+        .lead-form input, .lead-form select { width:100%; padding:13px 14px; border:1px solid #3a3542; background:#0f0e12; color:var(--ink); font-family:inherit; font-size:1rem; }
+        .lead-form input:focus, .lead-form select:focus { border-color:var(--gold); outline:none; }
+
+        .acad { text-align:center; }
+        .acad .nums { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin:1.6rem 0; }
+        .acad .num { background:var(--panel); border:1px solid var(--line); padding:16px 22px; min-width:130px; }
+        .acad .num b { display:block; font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; font-size:1.9rem; color:var(--gold); line-height:1.1; }
+        .acad .num span { font-size:.84rem; color:var(--muted); }
+        .acad .price { margin:1.2rem 0 .2rem; font-size:1.05rem; color:#e6dfd2; }
+        .acad .price b { color:#fff; font-size:1.35rem; }
+
+        .faq { max-width:720px; margin:0 auto; }
+        .faq details { background:var(--panel); border:1px solid var(--line); padding:4px 20px; margin-bottom:12px; }
+        .faq summary { cursor:pointer; font-weight:700; padding:14px 0; list-style:none; color:#fff; }
+        .faq summary::-webkit-details-marker { display:none; }
+        .faq summary::after { content:"+"; float:right; color:var(--gold); font-weight:800; }
+        .faq details[open] summary::after { content:"–"; }
+        .faq p { color:var(--muted); margin:0 0 16px; }
+
+        footer { text-align:center; padding:44px 20px 54px; color:#8d8677; font-size:.9rem; border-top:1px solid var(--line); }
+        footer a { color:var(--gold2); }
+
+        @media (max-width: 860px) {
+            .hero .grid { flex-direction:column; }
+            .hero h1 { font-size:2.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+    <nav class="nav"><div class="wrap"><div class="row">
+        <a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna — logo" decoding="async"><span>Martin Barna</span></a>
+        <div><a class="back" href="/akademie/">Barna Academy →</a></div>
+    </div></div></nav>
+
+    <header class="hero" id="obsah"><div class="wrap"><div class="grid">
+        <div class="col">
+            <span class="ar-kick">Pro trenéry a výživové poradce</span>
+            <h1>Klienty ti nepřinese certifikát.<br><span class="ar-ghost">Přinese je systém.</span></h1>
+            <p class="sub">Stáhni si zdarma <strong style="color:#fff;">startovací kit</strong>: vstupní dotazník, osnovu první konzultace, týdenní check-in a jednoduchý postup, jak získat první platící klienty. Přesně to, co používám ve vlastní praxi.</p>
+            <div class="hero-cta"><a class="btn" href="#kit">Chci kit zdarma →</a></div>
+            <ul class="ticks"><li>13 let praxe</li><li>600+ klientů</li><li>Věda, ne bro-science</li></ul>
+        </div>
+        <div class="col">
+            <div class="kitbox">
+                <div class="khead">Co je v kitu</div>
+                <div class="kitem"><div class="kn">1</div><div><b>Vstupní dotazník klienta</b><span>15 otázek, ze kterých postavíš plán. Nic ti neuteče.</span></div></div>
+                <div class="kitem"><div class="kn">2</div><div><b>Osnova první konzultace</b><span>Struktura na 45–60 minut, po které klient chce spolupráci.</span></div></div>
+                <div class="kitem"><div class="kn">3</div><div><b>Týdenní check-in</b><span>Co měřit a na co se ptát, aby klient vydržel a měl výsledky.</span></div></div>
+                <div class="kitem"><div class="kn">4</div><div><b>Lead systém pro start</b><span>Jak získat prvních 5 klientů bez placené reklamy.</span></div></div>
+            </div>
+        </div>
+    </div></div></header>
+
+    <!-- FORMULÁŘ -->
+    <section class="form-sec" id="kit"><div class="wrap">
+        <div class="form-card">
+            <h2>Pošlu ti kit na e-mail</h2>
+            <form data-lead-form data-segment="trener" data-source="pro-trenery" data-pdf="/download/startovaci-kit-trener.pdf" data-noun="Kit" data-upsell='Až budeš chtít celý systém, mrkni na <a href="/akademie/" style="color:#F6CD63;text-decoration:underline;">Barna Academy</a>.' class="lead-form">
+                <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
+                <label>Jméno <input name="name" type="text" required autocomplete="given-name" placeholder="Jak ti mám říkat?"></label>
+                <label>E-mail <input name="email" type="email" required autocomplete="email" placeholder="Kam ti mám kit poslat?"></label>
+                <label>Kde teď jsi? <span style="font-weight:500;color:#8d8677;">(nepovinné)</span> <select name="goal"><option value="">— vyber —</option><option>Začínám, klienty ještě nemám</option><option>Mám prvních pár klientů</option><option>Mám praxi a chci růst</option></select></label>
+                <button type="submit" class="btn" style="width:100%;margin-top:14px;">Poslat startovací kit zdarma →</button>
+                <p data-msg style="font-size:.86rem;margin:8px 0 0;text-align:center;"></p>
+                <p style="font-size:.76rem;color:#8d8677;margin:8px 0 0;text-align:center;">Odesláním souhlasíš se zasláním kitu a občasných tipů pro trenérskou praxi. Odhlásit se můžeš kdykoli.</p>
+            </form>
+        </div>
+        <p style="text-align:center;margin:1.6rem auto 0;color:var(--muted);max-width:560px;">A jestli chceš nejdřív vidět, jak učím: <a href="/akademie/#zdarma">část lekcí Barna Academy je otevřená zdarma</a>, bez karty.</p>
+    </div></section>
+
+    <!-- KURZ VS SYSTÉM -->
+    <section><div class="wrap">
+        <div class="sh"><h2>Kurz ti dá papír. Praxe chce systém.</h2><p>Rekvalifikační kurz je dobrý start, ale klienti neplatí za to, co víš. Platí za to, kam je dovedeš.</p></div>
+        <div class="vs">
+            <div class="colv"><h3>Teoretický kurz</h3><ul>
+                <li>Skripta, testy a certifikát na zeď</li>
+                <li>Teorie, kterou si do praxe musíš přeložit sama/sám</li>
+                <li>Končí závěrečnou zkouškou</li>
+                <li>O získávání klientů ani slovo</li>
+                <li>Materiály pro klienty si tvoříš od nuly</li>
+            </ul></div>
+            <div class="colv win"><h3>Systém z praxe</h3><ul>
+                <li>Postupy ověřené na stovkách reálných klientů</li>
+                <li>Vstup, plán, check-iny a úpravy podle dat: celý proces vedení klienta</li>
+                <li>Začíná tam, kde kurz končí: u praxe</li>
+                <li>Byznys, obsah na sítě i AI nástroje pro tvou práci</li>
+                <li>Hotové generátory a materiály, které dáš klientům pod svým jménem</li>
+            </ul></div>
+        </div>
+    </div></section>
+
+    <!-- ACADEMY -->
+    <section class="acad" style="background:#100e14;border-top:1px solid var(--line);"><div class="wrap">
+        <span class="ar-kick">Až budeš chtít celý systém</span>
+        <h2 style="margin:.8rem 0 .4rem;">Barna Academy</h2>
+        <p style="color:var(--muted);max-width:620px;margin:0 auto;">Kompletní vzdělání pro trenéry a výživové poradce: věda, vedení klientů, byznys i AI. Postavené na 13 letech online koučinku.</p>
+        <div class="nums">
+            <div class="num"><b>24</b><span>modulů</span></div>
+            <div class="num"><b>255</b><span>lekcí</span></div>
+            <div class="num"><b>182</b><span>videí v ceně</span></div>
+            <div class="num"><b>∞</b><span>doživotní přístup</span></div>
+        </div>
+        <p class="price">Zaváděcí cena <b>8 900 Kč</b> jednorázově · nebo 3 splátky po 3 000 Kč</p>
+        <p style="color:#8d8677;font-size:.9rem;margin:.2rem 0 1.4rem;">Certifikace, generátory jídelníčků a tréninků, prompt knihovna i rebrandovatelné materiály v ceně.</p>
+        <a class="btn" href="/akademie/">Prohlédnout Academy →</a>
+    </div></section>
+
+    <!-- FAQ -->
+    <section><div class="wrap">
+        <div class="sh"><h2>Časté otázky</h2></div>
+        <div class="faq">
+            <details><summary>Je kit pro trenéry, nebo pro výživové poradce?</summary><p>Pro oba. Dotazník, konzultace i check-in fungují stejně, ať vedeš klienty v posilovně, nebo řešíš jídelníčky. V Academy pak najdeš výživu i trénink do hloubky.</p></details>
+            <details><summary>Začínám a nemám žádné klienty. Má to pro mě smysl?</summary><p>Právě pro tebe. Kit je postavený tak, abys mohl(a) první konzultaci odvést už tento týden. A lead systém uvnitř řeší přesně to, jak získat první platící klienty.</p></details>
+            <details><summary>Co mě to bude stát?</summary><p>Nic. Kit ti pošlu na e-mail zdarma a k tomu občas praktické tipy pro trenérskou praxi. Odhlásit se můžeš jedním klikem kdykoli.</p></details>
+        </div>
+    </div></section>
+
+    <footer><img src="/assets/brand/logo-full-gold.png" alt="Martin Barna — Online výživa a fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async">
+        &copy; 2026 Martin Barna — Online výživa a fitness · <a href="/">Hlavní web</a> · <a href="/akademie/">Barna Academy</a>
+    </footer>
+
+    <script src="/assets/analytics.js?v=g6" defer></script>
+    <script src="/assets/lead-form.js?v=g2" defer></script>
+    <script src="/assets/scroll-top.js?v=g3" defer></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a3"></body>
+</html>
