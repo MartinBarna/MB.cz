@@ -10,6 +10,31 @@
 
   function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
 
+  // Oslovení v 5. pádu (vokativ) pro potvrzovací hlášku — stejná pravidla jako mailový drip.
+  // Ženská jména na souhlásku (Dagmar, Ester…) mají vokativ = nominativ, ostatní skloňujeme mužsky.
+  var VOK_EXC = { 'jan': 'Jane', 'pavel': 'Pavle', 'karel': 'Karle', 'zdenek': 'Zdenku', 'zdeněk': 'Zdeňku', 'josef': 'Josefe' };
+  var VOK_FEM = ['dagmar', 'ester', 'miriam', 'mirjam', 'ingrid', 'karin', 'katrin', 'kristin', 'nikol', 'nicol', 'doris', 'iris', 'ines', 'agnes', 'ruth', 'elen', 'ellen', 'helen', 'karen', 'sharon', 'megan', 'vivien', 'evelin', 'marlen', 'carmen', 'dolores', 'mercedes', 'rachel'];
+  var VOK_VW = 'aeiouyáéěíóúůý';
+  function vokativ(name) {
+    var t = String(name || '').trim().split(/\s+/)[0] || '';
+    if (!t) return '';
+    t = t.charAt(0).toUpperCase() + t.slice(1);
+    var low = t.toLowerCase();
+    if (VOK_EXC[low]) return VOK_EXC[low];
+    var last = low.slice(-1);
+    if (last === 'a') return t.slice(0, -1) + 'o';
+    if (VOK_VW.indexOf(last) >= 0) return t;
+    if (VOK_FEM.indexOf(low) >= 0) return t;
+    if (low.slice(-2) === 'ek') return t.slice(0, -2) + 'ku';
+    if (low.slice(-2) === 'ch' || 'kgh'.indexOf(last) >= 0) return t + 'u';
+    if ('szxjšžč'.indexOf(last) >= 0) return t + 'i';
+    if (low.slice(-2) === 'el') return t + 'i';
+    if (last === 'r') return VOK_VW.indexOf(low.slice(-2, -1)) >= 0 ? t + 'e' : t.slice(0, -1) + 'ře';
+    if ('bdflmnptvw'.indexOf(last) >= 0) return t + 'e';
+    return t;
+  }
+  function escName(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
   // UTM z URL (z QR letáku přes /start passthrough) -> atribuce leadu ke konkrétnímu zdroji.
   // Navíc Google gclid/gbraid/wbraid (auto-tagging reklam): otagujeme lead jako google-ads,
   // ať poznáme leady z Google Ads i bez cookie-souhlasu (Consent Mode gclid nespadne do
@@ -81,7 +106,7 @@
           form.innerHTML =
             '<div style="text-align:center;padding:14px 6px;">' +
               '<div style="font-size:2.4rem;line-height:1">✅</div>' +
-              '<h3 style="color:#fff;margin:.5rem 0 .3rem;">' + (dup ? 'Vítej zpátky' : 'Díky') + (data.name ? ', ' + data.name : '') + '!</h3>' +
+              '<h3 style="color:#fff;margin:.5rem 0 .3rem;">' + (dup ? 'Vítej zpátky' : 'Díky') + (data.name ? ', ' + escName(vokativ(data.name)) : '') + '!</h3>' +
               '<p style="color:#cabfb4;margin:.2rem 0;">' + info + '</p>' +
               dl +
               '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">' + upsell + '</p>' +
