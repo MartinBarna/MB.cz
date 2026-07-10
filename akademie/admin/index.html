@@ -126,6 +126,17 @@
         <a href="https://resend.com/emails" target="_blank" rel="noopener">✉️ Resend →</a>
       </div>
 
+      <div class="traf" id="news">
+        <h3>🆕 Novinky &amp; co sledovat <span class="muted" style="font-size:.75rem;font-weight:400;">(aktualizace 10. 7. 2026)</span></h3>
+        <div class="sub">Co je nově živé a na co koukat — kartu ti Claude průběžně aktualizuje</div>
+        <ul style="margin:.5rem 0 .2rem;padding-left:1.2rem;line-height:1.75;font-size:.92rem;color:#e7e0d5;">
+          <li><b style="color:#F6CD63;">Trychtýř pro trenéry je živý:</b> reklamy → <a href="/pro-trenery/" target="_blank" rel="noopener" style="color:#F6CD63;">/pro-trenery/</a> (kit zdarma) → 5mailová sekvence „Kit pro trenéry" → nabídka Academy. Leady a prodeje sleduj níž v kartě <b>🎯 Trenéři — trychtýř</b>, maily v mapě sekvencí.</li>
+          <li><b style="color:#F6CD63;">FB kampaň „Academy – TOFU – Startovací kit pro trenéry" běží</b> (110 Kč/den): 4 reklamy soupeří (systém / nástroje / AI / certifikace), Meta přelévá rozpočet vítězi sama. Cena za lead je vodítko — <b>severka je cena za prodej Academy</b> (konverze uvidíš v kartě trychtýře).</li>
+          <li><b style="color:#F6CD63;">Nový obsah:</b> 3 blog články pro trenéry (kategorie „Pro trenéry"), srovnání kurz vs. systém + splátky 3× 3 000 Kč na /akademie/, modul 24 „AI pro trenéry" (13 lekcí + prompt knihovna) — Academy má 255 lekcí.</li>
+          <li>⏰ <b>Hlídat:</b> po 50. prodeji Academy zdražit 8 900 → 12 900. Testovací lead (fitness.barna+kittest@…) ti jede sekvencí do inboxu — klidně nech doběhnout, ať vidíš všech 5 mailů.</li>
+        </ul>
+      </div>
+
       <div class="traf" id="pulse" style="display:none;">
         <h3>🩺 Dnešní puls</h3>
         <div class="sub">Maily, fronta dripu, leadi a prodeje — živě z databáze</div>
@@ -148,6 +159,12 @@
         <h3>📮 Letáky (QR)</h3>
         <div class="sub" id="qrSub">Kolik leadů přišlo z QR na letácích (podle zdroje)</div>
         <div id="qrBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+      <div class="traf" id="trf" style="display:none;">
+        <h3>🎯 Trenéři — trychtýř</h3>
+        <div class="sub" id="trfSub">Startovací kit → mailová sekvence → prodej Academy</div>
+        <div id="trfBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
       <div class="traf" id="chk" style="display:none;">
@@ -303,7 +320,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadCheckins(); loadReferrals();
+        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -450,6 +467,43 @@
           +'<p class="muted" style="margin:.6rem 0 0;font-size:.8rem;">Skeny bez registrace (kolik lidí QR jen naskenovalo) najdeš v GA4 podle stejného utm_source. Už vytištěné letáky s holým odkazem na /start se do zdrojů nepočítají.</p>';
         $('qr').style.display='';
       }).catch(function(){ $('qr').style.display='none'; });
+    }
+
+    // 🎯 Trenéři — trychtýř: kit leady, kroky sekvence, konverze na Academy (e-mail match)
+    function loadTrenerFunnel(){
+      api({action:'trener_funnel'}).then(function(o){
+        if(!o.j||!o.j.ok){ $('trf').style.display='none'; return; }
+        var j=o.j, conv=j.conversions||[];
+        $('trfSub').textContent='Leadů: '+j.total+' · aktivních v sekvenci: '+j.active+' · koupilo Academy: '+conv.length+(j.total?' ('+Math.round(100*conv.length/j.total)+' %)':'');
+        if(!j.total){
+          $('trfBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné leady. Jakmile si někdo stáhne startovací kit na /pro-trenery/ (z reklam i organicky), objeví se tady — krok sekvence, zdroj i případný nákup Academy.</p>';
+          $('trf').style.display=''; return;
+        }
+        var html='';
+        if((j.byDay||[]).length){
+          html+='<p class="muted" style="font-size:.82rem;margin:.2rem 0 .5rem;">Nové leady (14 dní): '+j.byDay.map(function(d){return fmtDay(d.day)+' <b style="color:#F6CD63;">'+d.n+'</b>';}).join(' · ')+'</p>';
+        }
+        var stepNames={0:'čeká na uvítačku',1:'dostal kit',2:'dostal „první klienti"',3:'dostal „systém"',4:'dostal nabídku Academy',5:'dostal last call'};
+        html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin:.3rem 0 .7rem;">'+Object.keys(j.byStep||{}).sort().map(function(s){
+          return '<span style="background:rgba(235,177,44,.13);border:1px solid rgba(235,177,44,.35);color:#F6CD63;font-size:.82rem;padding:5px 12px;border-radius:9px;">'+esc(stepNames[s]||('krok '+s))+': <b>'+j.byStep[s]+'</b></span>';
+        }).join('')+'</div>';
+        if((j.bySource||[]).length){
+          html+='<p class="muted" style="font-size:.82rem;margin:.2rem 0 .6rem;">Zdroje: '+j.bySource.map(function(s){return esc(s.source)+' <b style="color:#F6CD63;">'+s.n+'</b>';}).join(' · ')+'</p>';
+        }
+        if(conv.length){
+          html+='<h4 style="margin:.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Koupili Academy ('+conv.length+')</h4>'
+            +'<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Lead</th><th>Nákup</th></tr></thead><tbody>'
+            +conv.map(function(c){return '<tr><td>'+esc(c.email)+'</td><td class="muted">'+fmtDay(c.lead_at)+'</td><td class="muted">'+fmtDay(c.bought_at)+'</td></tr>';}).join('')
+            +'</tbody></table></div>';
+        }
+        var rec=j.recent||[];
+        html+='<h4 style="margin:.8rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Poslední leady</h4>'
+          +'<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Jméno</th><th>Krok</th><th>Stav</th><th>Zdroj</th><th>Kdy</th></tr></thead><tbody>'
+          +rec.map(function(r){return '<tr><td>'+esc(r.email)+'</td><td>'+esc(r.name||'—')+'</td><td class="tcount">'+esc(r.step)+'</td><td class="muted">'+esc(r.status)+'</td><td class="muted">'+esc(r.source||'—')+'</td><td class="muted" style="white-space:nowrap;">'+fmtDay(r.created_at)+'</td></tr>';}).join('')
+          +'</tbody></table></div>';
+        $('trfBody').innerHTML=html;
+        $('trf').style.display='';
+      }).catch(function(){ $('trf').style.display='none'; });
     }
 
     // 📨 Formuláře z webu — kontaktní poptávky (relevantní vs potenciální spam)

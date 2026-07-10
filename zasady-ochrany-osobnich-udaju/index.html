@@ -63,6 +63,7 @@
       <tr><td>Přihlašovací údaje do členské sekce (e-mail, zabezpečené heslo), údaje o pokroku ve studiu</td><td>Vedení účtu, zpřístupnění zakoupeného obsahu, ukládání pokroku</td><td>Plnění smlouvy</td></tr>
       <tr><td>Údaje z kontaktního formuláře / formuláře zájemce</td><td>Odpověď na poptávku, kontaktování zájemce</td><td>Souhlas / oprávněný zájem</td></tr>
       <tr><td>Cookies a údaje o používání webu (statistika, měření reklam)</td><td>Analýza návštěvnosti, zlepšování webu a reklam</td><td>Souhlas (cookie lišta)</td></tr>
+      <tr><td>Obsah konverzace s AI chatbotem „AI Martin" (dotazy a odpovědi v chatu, funkce pro členy Academy)</td><td>Vygenerování odpovědi AI kouče, poskytnutí zakoupené služby</td><td>Plnění smlouvy (členství)</td></tr>
     </table>
 
     <h2>3. Příjemci a zpracovatelé</h2>
@@ -76,11 +77,25 @@
       <li><b>Google</b> (Google Analytics, vložená videa YouTube) — statistika návštěvnosti a přehrávání videí.</li>
       <li><b>Meta Platforms</b> (Facebook/Instagram pixel a Conversions API) — měření a optimalizace reklam.</li>
       <li><b>FormSubmit</b> — doručení odeslaných formulářů na e-mail správce.</li>
+      <li><b>Anthropic</b> (model Claude) — provoz AI chatbota „AI Martin": text konverzace se předává ke zpracování za účelem vygenerování odpovědi. Chatbot je určen členům Academy; do chatu nevkládej citlivé údaje (zejména zdravotní).</li>
     </ul>
-    <p>Někteří poskytovatelé (Google, Meta, FormSubmit) mohou údaje zpracovávat i mimo EU (zejména USA). Předání se opírá o odpovídající záruky dle GDPR (standardní smluvní doložky, příp. rámec EU–USA pro ochranu dat).</p>
+    <p>Někteří poskytovatelé (Google, Meta, FormSubmit, Anthropic) mohou údaje zpracovávat i mimo EU (zejména USA). Předání se opírá o odpovídající záruky dle GDPR (standardní smluvní doložky, příp. rámec EU–USA pro ochranu dat).</p>
+
+    <h2>3a. AI chatbot „AI Martin"</h2>
+    <p>Na webu je k dispozici chatbot „AI Martin". Jde o <b>umělou inteligenci (automatizovaný systém)</b>, nikoli o komunikaci se skutečnou osobou — chatbot na to sám upozorňuje přímo v okně chatu. Obsah konverzace se zpracovává pro vygenerování odpovědi (zpracovatel Anthropic, viz výše) a chatbot neposkytuje lékařské ani zdravotní poradenství.</p>
 
     <h2>4. Cookies</h2>
-    <p>Web používá nezbytné cookies pro svůj provoz a — <b>až po vašem souhlasu</b> přes cookie lištu — analytické (Google Analytics) a marketingové cookies (Meta Pixel). Souhlas můžete kdykoli změnit nebo odvolat (smazáním cookies v prohlížeči / opětovným načtením lišty). Měření je do udělení souhlasu ve výchozím stavu vypnuté (Google Consent Mode).</p>
+    <p>Web používá nezbytné cookies pro svůj provoz a — <b>až po vašem souhlasu</b> přes cookie lištu — analytické (Google Analytics) a marketingové cookies (Meta Pixel). V liště lze zvolit i variantu <b>„jen statistika"</b> (analytika bez reklamních cookies). Měření je do udělení souhlasu ve výchozím stavu vypnuté (Google Consent Mode; do souhlasu se neukládají žádné cookies ani identifikátory). Souhlas můžete kdykoli změnit nebo odvolat kliknutím na <a href="#" data-cookie-settings>Nastavení cookies</a> v patičce webu.</p>
+    <table>
+      <tr><th>Cookie / nástroj</th><th>Kategorie</th><th>Účel a platnost</th></tr>
+      <tr><td>mb_consent_v1 (localStorage)</td><td>Nezbytné</td><td>Pamatuje si vaši volbu z cookie lišty; do odvolání.</td></tr>
+      <tr><td>Supabase auth (sb-*)</td><td>Nezbytné</td><td>Přihlášení do členské sekce; po dobu přihlášení.</td></tr>
+      <tr><td>Google Analytics (_ga, _ga_*)</td><td>Analytické</td><td>Statistika návštěvnosti; až 2 roky. Jen po souhlasu.</td></tr>
+      <tr><td>Meta Pixel (_fbp, _fbc)</td><td>Marketingové</td><td>Měření a optimalizace reklam; až 90 dní. Jen po souhlasu.</td></tr>
+    </table>
+
+    <h2>4a. Obchodní sdělení (newsletter a e-mailové tipy)</h2>
+    <p>E-mailové tipy a nabídky (obchodní sdělení dle zákona č. 480/2004 Sb.) zasílám na základě vašeho souhlasu — ten udělujete odesláním formuláře, u kterého je zasílání výslovně uvedeno — nebo v rámci tzv. zákaznické výjimky u stávajících zákazníků. Každý e-mail obsahuje <b>odkaz pro okamžité odhlášení</b>; odhlásit se můžete také e-mailem na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>. Po odhlášení vám obchodní sdělení přestanou chodit.</p>
 
     <h2>5. Doba uchování</h2>
     <p>Údaje uchovávám po dobu trvání smluvního vztahu a dále po dobu nutnou pro splnění právních povinností (zejména účetní a daňové doklady po zákonem stanovenou dobu). Údaje zpracovávané na základě souhlasu uchovávám do odvolání souhlasu.</p>
@@ -93,9 +108,9 @@
   </div>
 
   <footer>
-    &copy; 2026 Martin Barna — Online výživa a fitness · <a href="/">martinbarna.cz</a> · <a href="/obchodni-podminky/">Obchodní podmínky</a>
+    &copy; 2026 Martin Barna — Online výživa a fitness · <a href="/">martinbarna.cz</a> · <a href="/obchodni-podminky/">Obchodní podmínky</a> · <a href="#" data-cookie-settings>Nastavení cookies</a>
   </footer>
   <script src="/assets/scroll-top.js?v=g3" defer></script>
-    <script defer src="/assets/analytics.js?v=g6"></script>
+    <script defer src="/assets/analytics.js?v=g7"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a4"></body>
 </html>

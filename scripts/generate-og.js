@@ -133,6 +133,7 @@ async function render(html, outJpg) {
     ['konzultace.jpg', 'koucing/index.html', 'KOUČINK'],
     ['koucing.jpg', 'koucing/index.html', 'KOUČINK'],
     ['prednasky.jpg', 'prednasky/index.html', 'PŘEDNÁŠKY'],
+    ['pro-trenery.jpg', 'pro-trenery/index.html', 'PRO TRENÉRY A PORADCE'],
     ['reference.jpg', 'reference/index.html', 'REFERENCE'],
     ['treninky.jpg', 'treninky.html', 'TRÉNINKY'],
     ['videokurz.jpg', 'videokurz.html', 'VIDEOKURZ'],

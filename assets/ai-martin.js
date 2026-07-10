@@ -10,8 +10,8 @@
     ENABLED: true,
     ENDPOINT: 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/ai-martin',
     CHECKOUT: '/akademie/objednavka/',
-    GREETING: 'Ahoj! Jsem AI Martin — natrénovaný na tom, jak reálně koučuju. Zeptej se na výživu, trénink nebo jak začít. (Nejsem lékař, u zdravotních věcí běž za odborníkem.)',
-    LOCKED_INTRO: 'Ahoj! Jsem AI Martin — tvůj osobní kouč natrénovaný na mém stylu a celém obsahu Academy. Radím ti s výživou, tréninkem i konkrétními otázkami, kdykoliv potřebuješ. 💪\n\nJsem součást Barna Academy pro členy. Odemkni si plný přístup a začneme spolu makat.',
+    GREETING: 'Ahoj! Jsem AI Martin — umělá inteligence (chatbot) natrénovaná na tom, jak Martin reálně koučuje. Nemluvíš se skutečným Martinem. Zeptej se na výživu, trénink nebo jak začít. (Nejsem lékař, u zdravotních věcí běž za odborníkem.)',
+    LOCKED_INTRO: 'Ahoj! Jsem AI Martin — umělá inteligence (chatbot) natrénovaná na Martinově stylu a celém obsahu Academy. Nemluvíš se skutečným Martinem, ale poradím ti s výživou, tréninkem i konkrétními otázkami, kdykoliv potřebuješ. 💪\n\nJsem součást Barna Academy pro členy. Odemkni si plný přístup a začneme spolu makat.',
     PLACEHOLDER: 'Napiš dotaz… např. „kolik bílkovin denně?"'
   };
   var PREVIEW = /[?&]aimartin=test/.test(location.search);
@@ -46,7 +46,7 @@
   panel.innerHTML =
     '<div style="padding:14px 16px;background:linear-gradient(145deg,#23211e,#0c0c0c);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:11px;">' +
       '<span style="width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#F6CD63,#EBB12C);display:flex;align-items:center;justify-content:center;font-weight:800;color:#1A1222;flex-shrink:0;">MB</span>' +
-      '<div style="flex:1;"><div style="color:#fff;font-weight:700;font-size:.98rem;">AI Martin</div><div id="amStatus" style="color:#7bd88f;font-size:.74rem;font-weight:600;">● online</div></div>' +
+      '<div style="flex:1;"><div style="color:#fff;font-weight:700;font-size:.98rem;">AI Martin</div><div id="amStatus" style="color:#cabfae;font-size:.74rem;font-weight:600;">AI chatbot · automatické odpovědi</div></div>' +
       '<button id="amX" aria-label="Zavřít" style="background:rgba(255,255,255,.08);border:none;color:#cabfb4;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.05rem;line-height:1;">×</button>' +
     '</div>' +
     '<div id="amBody" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#0e0d0b;"></div>' +
@@ -89,7 +89,7 @@
   }
   function unlockUI() {
     panel.querySelector('#amFoot').innerHTML = FORM_HTML;
-    setStatus(PREVIEW ? '● ukázka' : '● online', '#7bd88f');
+    setStatus(PREVIEW ? 'AI chatbot · ukázka' : 'AI chatbot · automatické odpovědi', '#cabfae');
     bindForm();
   }
 
