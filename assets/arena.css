@@ -122,3 +122,13 @@ article .hero .tag::before{background:#fff;}
 /* ---------- 10) OBECNE DOLADENI ---------- */
 .fab-wa{box-shadow:0 4px 14px rgba(0,0,0,.35)!important;}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+/* ---------- 11) D2: foto v hero wrapperu + meta cisla ---------- */
+.hero-photo img{border-radius:0!important;box-shadow:none!important;}
+.hero .meta div{font-family:var(--ar-display);letter-spacing:.04em;text-transform:uppercase;font-size:.95rem;}
+/* D2: dalsi tridy badge/CTA napric podstrankami */
+.badge,.tb-cta,.btn-acc,.pill{border-radius:0!important;}
+.tb-cta,.btn-acc{clip-path:var(--ar-cut);font-family:var(--ar-display)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.07em;box-shadow:none!important;}
+.tb-cta:hover,.btn-acc:hover{transform:none!important;filter:brightness(1.07);}
+.badge{background:transparent!important;border:none!important;padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);letter-spacing:.22em!important;}
+.badge::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
