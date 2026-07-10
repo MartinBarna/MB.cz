@@ -87,9 +87,8 @@ h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em
 
 /* ---------- 6) FOTKY: editorial treatment ---------- */
 .arena-photo{position:relative;overflow:hidden;}
-.arena-photo img{filter:grayscale(1) contrast(1.12) brightness(.92);display:block;width:100%;}
-.arena-photo::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(200deg,rgba(235,177,44,.26),transparent 55%);}
+.arena-photo img{display:block;width:100%;}
+.arena-photo::after{content:none;}
 .arena-cap{position:absolute;bottom:12px;right:14px;z-index:2;font-family:var(--ar-display);
   font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:#cabfae;
   background:rgba(10,10,12,.72);padding:5px 10px;}
