@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Startovací kit pro trenéry a výživové poradce</title>
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css">
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; color: #f0eadf; background: #0f1113; font-size: 3.4mm; line-height: 1.55; }
+.page { width: 210mm; min-height: 297mm; padding: 13mm 16mm; page-break-after: always; background: #101014; position: relative; }
+.page:last-child { page-break-after: auto; }
+
+.brandrow { display:flex; align-items:center; justify-content:space-between; margin-bottom:7mm; border-bottom:1px solid #2a2731; padding-bottom:4mm; }
+.brand-l { display:flex; align-items:center; gap:4mm; }
+.mark { width:10mm; height:10mm; border-radius:1mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.4mm; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',Arial,sans-serif; }
+.brand { font-weight:800; font-size:3.8mm; color:#fff; }
+.brand span { display:block; color:#F6CD63; font-weight:600; font-size:2.5mm; letter-spacing:.5mm; text-transform:uppercase; }
+.pgnum { font-size:2.6mm; color:#6e6759; letter-spacing:.5mm; text-transform:uppercase; }
+
+.kick { display:inline-block; position:relative; padding-left:8mm; font-family:'Barlow Condensed',Arial,sans-serif; font-weight:600; letter-spacing:1mm; text-transform:uppercase; color:#F6CD63; font-size:3.2mm; margin-bottom:3mm; }
+.kick::before { content:""; position:absolute; left:0; top:50%; width:5.5mm; height:.6mm; background:#EBB12C; }
+h1 { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; font-size:12mm; line-height:1.05; font-weight:800; margin:0 0 3mm; color:#fff; text-transform:uppercase; }
+h1 .hl { color:#EBB12C; }
+h2 { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; font-size:7mm; font-weight:700; margin:0 0 3.5mm; color:#fff; text-transform:uppercase; letter-spacing:.2mm; }
+h3 { font-size:3.7mm; font-weight:700; margin:4mm 0 2mm; color:#F6CD63; }
+p { margin:0 0 2.8mm; }
+.sub { font-size:3.7mm; color:#cabfb1; margin:0 0 6mm; }
+.muted { color:#8d8677; }
+
+.box { background:#15141a; border:1px solid #2a2731; border-left:1.2mm solid #EBB12C; border-radius:.7mm; padding:4.5mm 5.5mm; margin-bottom:4mm; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:4mm; }
+
+.q { display:flex; gap:3mm; padding:1.5mm 0; border-bottom:1px solid #221f28; line-height:1.4; }
+.q:last-child { border-bottom:none; }
+.q .n { flex:0 0 6.4mm; height:6.4mm; background:#EBB12C; color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:3mm; font-family:'Barlow Condensed',Arial,sans-serif; }
+.q b { color:#fff; display:block; font-size:3.2mm; }
+.q span { color:#a89f90; font-size:2.8mm; }
+
+.step { display:flex; gap:4mm; margin-bottom:3.6mm; }
+.step .sn { flex:0 0 9mm; height:9mm; background:#EBB12C; color:#161616; font-weight:800; font-size:4.2mm; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',Arial,sans-serif; }
+.step b { color:#fff; display:block; }
+.step p { margin:0; color:#b9b2a6; font-size:3.1mm; }
+
+table { width:100%; border-collapse:collapse; margin:3mm 0 4mm; font-size:3mm; }
+th { text-align:left; font-family:'Barlow Condensed',Arial,sans-serif; text-transform:uppercase; letter-spacing:.4mm; font-size:2.9mm; color:#F6CD63; border-bottom:1px solid #EBB12C; padding:2mm 2.5mm; }
+td { border-bottom:1px solid #221f28; padding:2.4mm 2.5mm; color:#d8d0c2; vertical-align:top; }
+td.fill { color:#5c5648; }
+
+.cta { background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.4); border-radius:.7mm; padding:4.5mm 5.5mm; margin-top:5mm; }
+.cta b { color:#fff; }
+.footline { position:absolute; bottom:8mm; left:16mm; right:16mm; display:flex; justify-content:space-between; font-size:2.5mm; color:#6e6759; border-top:1px solid #221f28; padding-top:2.5mm; }
+ul.tick { list-style:none; margin:0 0 3mm; padding:0; }
+ul.tick li { padding:1.6mm 0 1.6mm 7mm; position:relative; color:#d8d0c2; }
+ul.tick li::before { content:"✓"; position:absolute; left:0; color:#EBB12C; font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- STRANA 1: COVER -->
+<div class="page">
+  <div class="brandrow"><div class="brand-l"><div class="mark">MB</div><div class="brand">Martin Barna<span>Online výživa &amp; fitness · od 2013</span></div></div><div class="pgnum">Zdarma</div></div>
+  <div style="margin-top:28mm;">
+    <span class="kick">Startovací kit</span>
+    <h1>Pro trenéry<br>a výživové <span class="hl">poradce</span></h1>
+    <p class="sub">Čtyři nástroje, které používám ve vlastní praxi. Ne teorie z učebnice: věci, se kterými zítra odvedeš profesionální první konzultaci a povedeš klienta k výsledku.</p>
+  </div>
+  <div class="box" style="margin-top:12mm;">
+    <h3 style="margin-top:0;">Co v kitu najdeš</h3>
+    <ul class="tick">
+      <li><b>Systém v kostce:</b> jak vypadá cesta klienta od poptávky k výsledku (strana 2)</li>
+      <li><b>Vstupní dotazník:</b> 15 otázek, ze kterých postavíš plán (strana 3)</li>
+      <li><b>Osnova první konzultace:</b> struktura na 45–60 minut (strana 4)</li>
+      <li><b>Týdenní check-in:</b> co měřit a na co se ptát (strana 5)</li>
+      <li><b>Lead systém pro start:</b> jak získat prvních 5 klientů (strana 6)</li>
+    </ul>
+  </div>
+  <p class="muted" style="margin-top:8mm;">Jedno pravidlo, než začneš: všechno v tomhle kitu stojí na datech. Klient váží a zapisuje jídlo, měří míry a hlásí se ti každý týden. Žádné odhady, žádné dojmy. Přesně tak vedu klienty 13 let a přesně tak to budeš dělat i ty.</p>
+  <div class="footline"><span>Startovací kit · Martin Barna</span><span>martinbarna.cz/pro-trenery</span></div>
+</div>
+
+<!-- STRANA 2: SYSTEM V KOSTCE -->
+<div class="page">
+  <div class="brandrow"><div class="brand-l"><div class="mark">MB</div><div class="brand">Martin Barna<span>Startovací kit</span></div></div><div class="pgnum">2 / 6</div></div>
+  <span class="kick">Základ</span>
+  <h2>Systém v kostce</h2>
+  <p class="sub">Klient neplatí za to, co víš. Platí za to, že ho provedeš odsud tam. Celá cesta má pět kroků a každý z nich má v tomhle kitu svůj nástroj.</p>
+  <div class="step"><div class="sn">1</div><div><b>Poptávka</b><p>Někdo projeví zájem. Tvůj úkol: do 24 hodin poslat vstupní dotazník a nabídnout termín konzultace. Rychlost tady prodává víc než cokoliv jiného.</p></div></div>
+  <div class="step"><div class="sn">2</div><div><b>Vstupní dotazník</b><p>Vyplní ho před konzultací. Ty přijdeš připravený: znáš cíl, historii diet, zdravotní omezení i to, co klient reálně jí. Konzultace pak není výslech, ale rozhovor experta.</p></div></div>
+  <div class="step"><div class="sn">3</div><div><b>První konzultace</b><p>45–60 minut podle osnovy ze strany 4. Cíl: klient odchází se dvěma třemi konkrétními kroky a jasnou představou, jak vypadá spolupráce s tebou.</p></div></div>
+  <div class="step"><div class="sn">4</div><div><b>Plán</b><p>Kalorie a bílkoviny podle cíle, trénink podle možností. Jednoduchý natolik, aby ho klient zvládl i v nabitém týdnu. Dokonalý plán, který se nedodržuje, prohrává s dobrým plánem, který běží.</p></div></div>
+  <div class="step"><div class="sn">5</div><div><b>Týdenní check-in</b><p>Každý týden data: váha, míry, fotky, kroky, jak se dařilo. Podle nich plán upravuješ. Tady se dělají výsledky a tady se pozná profík: nevaří z vody, řídí podle čísel.</p></div></div>
+  <div class="box">
+    <h3 style="margin-top:0;">Tři zásady, které tě odliší</h3>
+    <ul class="tick">
+      <li><b>Data místo dojmů.</b> Vážení jídla, míry a týdenní průměry váhy. Klient vidí, že to řídíš, ne hádáš.</li>
+      <li><b>Adherence první.</b> Nejlepší plán je ten, který klient udrží. Uprav plán klientovi, ne klienta plánu.</li>
+      <li><b>Komunikuj dřív, než klient zmizí.</b> Kdo nepošle check-in, dostane zprávu do 24 hodin. Mlčení je začátek konce spolupráce.</li>
+    </ul>
+  </div>
+  <div class="footline"><span>Startovací kit · Martin Barna</span><span>martinbarna.cz/pro-trenery</span></div>
+</div>
+
+<!-- STRANA 3: VSTUPNI DOTAZNIK -->
+<div class="page">
+  <div class="brandrow"><div class="brand-l"><div class="mark">MB</div><div class="brand">Martin Barna<span>Startovací kit</span></div></div><div class="pgnum">3 / 6</div></div>
+  <span class="kick">Nástroj č. 1</span>
+  <h2>Vstupní dotazník klienta</h2>
+  <p class="sub">Pošli před první konzultací. Otázky si zkopíruj do vlastního formuláře (stačí Google Forms) a nic nevynechávej: každá z nich má důvod.</p>
+  <div class="q"><div class="n">1</div><div><b>Jaký je tvůj hlavní cíl a proč právě teď?</b><span>Motivace „proč teď" rozhoduje o vytrvalosti víc než cíl sám.</span></div></div>
+  <div class="q"><div class="n">2</div><div><b>Věk, výška, aktuální váha</b><span>Základ pro výpočet příjmu.</span></div></div>
+  <div class="q"><div class="n">3</div><div><b>Jak vypadá tvůj běžný pracovní den?</b><span>Sedavá práce vs. práce na nohou zásadně mění výdej.</span></div></div>
+  <div class="q"><div class="n">4</div><div><b>Co jsi za poslední rok zkoušel/a? Jak to dopadlo?</b><span>Historie diet ti řekne, na co si dát pozor.</span></div></div>
+  <div class="q"><div class="n">5</div><div><b>Popiš, co jsi včera snědl/a od rána do večera.</b><span>Konkrétní den řekne víc než „jím celkem zdravě".</span></div></div>
+  <div class="q"><div class="n">6</div><div><b>Vaříš si sám/sama? Kolikrát týdně jíš mimo domov?</b><span>Určuje, jak stavět jídelníček.</span></div></div>
+  <div class="q"><div class="n">7</div><div><b>Jaké potraviny nesnášíš nebo nechceš jíst?</b><span>Plán z nenáviděných jídel klient nedodrží.</span></div></div>
+  <div class="q"><div class="n">8</div><div><b>Zdravotní omezení, léky, alergie?</b><span>Cokoliv lékařského patří k lékaři. Ty potřebuješ vědět, kde jsou hranice.</span></div></div>
+  <div class="q"><div class="n">9</div><div><b>Sportuješ teď? Co, jak často, jak dlouho?</b><span>Výchozí bod pro trénink.</span></div></div>
+  <div class="q"><div class="n">10</div><div><b>Kolik času reálně máš na trénink týdně?</b><span>Reálně, ne ideálně. Plán na 5 tréninků při 2 volných večerech je k ničemu.</span></div></div>
+  <div class="q"><div class="n">11</div><div><b>Kolik hodin spíš a jak se cítíš přes den?</b><span>Spánek a energie ovlivňují hlad, výkon i regeneraci.</span></div></div>
+  <div class="q"><div class="n">12</div><div><b>Alkohol: co a jak často?</b><span>Bez soudů. Jen to potřebuješ vidět v kaloriích.</span></div></div>
+  <div class="q"><div class="n">13</div><div><b>Co bylo na minulých pokusech nejtěžší?</b><span>Tady najdeš budoucí krizová místa spolupráce.</span></div></div>
+  <div class="q"><div class="n">14</div><div><b>Jak bude vypadat úspěch za 3 měsíce?</b><span>Konkrétní představa = měřitelný cíl a spokojený klient.</span></div></div>
+  <div class="q"><div class="n">15</div><div><b>Je něco, co bych měl/a vědět a neptal/a jsem se?</b><span>Poslední otevřené dveře. Často tu vypadne to nejdůležitější.</span></div></div>
+  <div class="footline"><span>Startovací kit · Martin Barna</span><span>martinbarna.cz/pro-trenery</span></div>
+</div>
+
+<!-- STRANA 4: OSNOVA PRVNI KONZULTACE -->
+<div class="page">
+  <div class="brandrow"><div class="brand-l"><div class="mark">MB</div><div class="brand">Martin Barna<span>Startovací kit</span></div></div><div class="pgnum">4 / 6</div></div>
+  <span class="kick">Nástroj č. 2</span>
+  <h2>Osnova první konzultace</h2>
+  <p class="sub">45–60 minut. Dotazník máš přečtený předem, takže nezjišťuješ, ale potvrzuješ a jdeš do hloubky. Klient má odejít s pocitem: „Tenhle člověk ví přesně, co dělá."</p>
+  <table>
+    <tr><th style="width:22mm;">Čas</th><th>Blok</th><th>Co se děje</th></tr>
+    <tr><td>0–5 min</td><td><b style="color:#fff;">Úvod</b></td><td>Přivítání, lidsky. Řekni, jak konzultace proběhne a co z ní klient odnese. Přebíráš vedení.</td></tr>
+    <tr><td>5–15 min</td><td><b style="color:#fff;">Cíl a příběh</b></td><td>Projdi dotazník nahlas: „Píšeš, že… řekni mi k tomu víc." Doptávej se na minulé pokusy a co je zlomilo.</td></tr>
+    <tr><td>15–25 min</td><td><b style="color:#fff;">Výchozí stav</b></td><td>Váha, míry (pas, boky, případně stehno a paže), klidně fotka pro vlastní porovnávání. Vysvětli, proč měříš: pokrok není jen číslo na váze.</td></tr>
+    <tr><td>25–40 min</td><td><b style="color:#fff;">Mini vzdělání + první kroky</b></td><td>Vysvětli princip: kalorická bilance, dost bílkovin, silový trénink, spánek. Krátce a bez balastu. Pak dej 2–3 konkrétní kroky na první týden.</td></tr>
+    <tr><td>40–50 min</td><td><b style="color:#fff;">Jak vypadá spolupráce</b></td><td>Popiš svůj systém: plán na míru, týdenní check-iny, úpravy podle dat. Řekni cenu klidně a bez omluv. Pak buď zticha a nech klienta reagovat.</td></tr>
+    <tr><td>50–60 min</td><td><b style="color:#fff;">Dohoda a další krok</b></td><td>Chce spolupráci? Domluvte start a co ti pošle. Nechce? V pohodě: popros o doporučení a nech dveře otevřené.</td></tr>
+  </table>
+  <div class="box">
+    <h3 style="margin-top:0;">Chyby, které tě připraví o klienta</h3>
+    <ul class="tick">
+      <li>Mluvíš 80 % času. Otoč to: klient má mluvit, ty vedeš otázkami.</li>
+      <li>Zahltíš ho vším, co víš. Expert se pozná podle toho, co vynechá.</li>
+      <li>Omlouváš cenu („no, stojí to teda…"). Cena je informace, ne přiznání viny.</li>
+      <li>Konzultace skončí bez konkrétního dalšího kroku. Vždy odchází s úkolem a termínem.</li>
+    </ul>
+  </div>
+  <div class="footline"><span>Startovací kit · Martin Barna</span><span>martinbarna.cz/pro-trenery</span></div>
+</div>
+
+<!-- STRANA 5: TYDENNI CHECK-IN -->
+<div class="page">
+  <div class="brandrow"><div class="brand-l"><div class="mark">MB</div><div class="brand">Martin Barna<span>Startovací kit</span></div></div><div class="pgnum">5 / 6</div></div>
+  <span class="kick">Nástroj č. 3</span>
+  <h2>Týdenní check-in</h2>
+  <p class="sub">Jeden pevný den v týdnu (u mě neděle). Klient pošle data, ty do 24 hodin odpovíš s vyhodnocením a případnou úpravou plánu. Tohle je páteř celé spolupráce.</p>
+  <h3>Co klient posílá</h3>
+  <table>
+    <tr><th>Údaj</th><th>Jak</th><th>Proč</th></tr>
+    <tr><td><b style="color:#fff;">Váha</b></td><td>Denně ráno po probuzení, po toaletě, nalačno. Hodnotí se týdenní průměr.</td><td>Denní výkyvy jsou voda a náhoda. Trend dělá průměr.</td></tr>
+    <tr><td><b style="color:#fff;">Míry</b></td><td>1× týdně: pas přes pupík, boky, případně stehno a paže. Stejné místo, stejný čas.</td><td>Váha stojí a pas mizí = pokrok, který by ti bez měr utekl.</td></tr>
+    <tr><td><b style="color:#fff;">Fotky</b></td><td>1× za 2 týdny, stejné světlo a pozice (zepředu, z boku).</td><td>Nejsilnější motivace klienta, jakou kdy uvidíš.</td></tr>
+    <tr><td><b style="color:#fff;">Kroky</b></td><td>Denní průměr z telefonu nebo hodinek.</td><td>Největší tichý hráč výdeje energie.</td></tr>
+    <tr><td><b style="color:#fff;">Adherence</b></td><td>Kolik dní z týdne plán zhruba seděl (např. 5/7).</td><td>Bez tohohle čísla nevíš, jestli upravovat plán, nebo podporu.</td></tr>
+  </table>
+  <h3>Na co se zeptat (stačí těchto 5 otázek)</h3>
+  <ul class="tick">
+    <li>Jak hodnotíš uplynulý týden od 1 do 10? Co by ho posunulo o bod výš?</li>
+    <li>Kde to skřípalo? Konkrétní situace (víkend, práce, chutě večer…).</li>
+    <li>Jak ti chutná a sedí jídelníček? Co vyměnit?</li>
+    <li>Jak se cítíš v tréninku? Síla roste, stagnuje, padá?</li>
+    <li>Spánek a energie přes den od 1 do 5?</li>
+  </ul>
+  <div class="box">
+    <h3 style="margin-top:0;">Jak vyhodnotit</h3>
+    <p style="font-size:3.1mm;">Porovnej týdenní průměr váhy a míry s minulým týdnem <b style="color:#fff;">ve světle adherence</b>. Plán seděl a váha stojí 2–3 týdny? Uprav příjem. Plán neseděl? Neměň čísla, řeš s klientem překážky: menší změna, kterou udrží, porazí větší, kterou vzdá.</p>
+  </div>
+  <div class="footline"><span>Startovací kit · Martin Barna</span><span>martinbarna.cz/pro-trenery</span></div>
+</div>
+
+<!-- STRANA 6: LEAD SYSTEM -->
+<div class="page">
+  <div class="brandrow"><div class="brand-l"><div class="mark">MB</div><div class="brand">Martin Barna<span>Startovací kit</span></div></div><div class="pgnum">6 / 6</div></div>
+  <span class="kick">Nástroj č. 4</span>
+  <h2>Lead systém pro start</h2>
+  <p class="sub">Prvních 5 klientů nezískáš reklamou, ale prací s okolím. Tenhle postup je nula korun a funguje, když ho opravdu uděláš.</p>
+  <div class="step"><div class="sn">1</div><div><b>Sepiš 20 jmen</b><p>Lidé z fitka, práce, rodiny a sítí, o kterých víš, že chtějí zhubnout, nabrat nebo se hýbat. Nikoho nesoudíš, jen mapuješ.</p></div></div>
+  <div class="step"><div class="sn">2</div><div><b>Napiš 5 z nich osobní zprávu</b><p>Ne kopii. Jedna věta o nich, jedna o tom, že rozjíždíš praxi, a nabídka: vstupní konzultace zdarma, kde dostanou konkrétní plán prvních kroků. Žádný závazek.</p></div></div>
+  <div class="step"><div class="sn">3</div><div><b>Odveď konzultaci podle osnovy</b><p>Dotazník předem, struktura ze strany 4. Na konci řekni cenu a co za ni. Ze zájemců, kteří zažijí profesionální konzultaci, se klienti dělají sami.</p></div></div>
+  <div class="step"><div class="sn">4</div><div><b>Popros o doporučení</b><p>Každého, i toho, kdo řekl ne: „Znáš někoho, komu by tohle pomohlo?" Jedno jméno od každého = nikdy prázdný kalendář.</p></div></div>
+  <div class="step"><div class="sn">5</div><div><b>Ukazuj práci</b><p>Každý check-in je obsah: „Klientka po 4 týdnech: −3 cm v pase, síla nahoru" (se souhlasem). Lidé nekupují sliby, kupují důkazy.</p></div></div>
+  <div class="cta">
+    <h3 style="margin-top:0;">Tohle byl start. Celý systém je v Barna Academy.</h3>
+    <p style="font-size:3.1mm;">24 modulů a 255 lekcí: výživa a trénink do hloubky, psychologie klientů, byznys, obsah na sítě i AI ve tvé praxi. K tomu certifikace, generátory jídelníčků a tréninků a plné rebrandovatelné verze těchhle nástrojů pod tvým jménem.</p>
+    <p style="font-size:3.1mm;"><b>martinbarna.cz/akademie</b> · část lekcí si projdeš zdarma, bez karty.</p>
+  </div>
+  <p class="muted" style="margin-top:5mm;">Be Effective!<br><b style="color:#fff;">Martin Barna</b> · martinbarna.cz · martin@martinbarna.cz</p>
+  <div class="footline"><span>Startovací kit · Martin Barna</span><span>martinbarna.cz/pro-trenery</span></div>
+</div>
+
+</body>
+</html>

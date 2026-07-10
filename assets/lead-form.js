@@ -39,6 +39,8 @@
       var seg = form.getAttribute('data-segment') || 'other';
       var src = form.getAttribute('data-source') || 'lead_magnet';
       var pdf = form.getAttribute('data-pdf') || '';
+      var noun = form.getAttribute('data-noun') || 'Plán';
+      var upsell = form.getAttribute('data-upsell') || 'Chceš se v tom naučit chodit sám/sama? Mrkni na <a href="/videokurz" style="color:#F6CD63;text-decoration:underline;">videokurz výživy</a>.';
       var msg = form.querySelector('[data-msg]');
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -71,18 +73,18 @@
         }
         function showSuccess(dup) {
           if (done) return; done = true; if (timer) clearTimeout(timer); track();
-          var dl = pdf ? '<a class="btn" href="' + pdf + '" target="_blank" rel="noopener" style="margin-top:12px;display:inline-block">Stáhnout plán (PDF) →</a>' : '';
+          var dl = pdf ? '<a class="btn" href="' + pdf + '" target="_blank" rel="noopener" style="margin-top:12px;display:inline-block">Stáhnout (PDF) →</a>' : '';
           // dup = e-mail už v seznamu je → uvítací mail se znovu neposílá, tak to řekneme na rovinu
           var info = dup
-            ? 'Tenhle e-mail už v seznamu mám — mail ti znovu posílat nebudu. ' + (pdf ? 'Plán si stáhni rovnou tady:' : '')
-            : 'Plán ti posíláme na e-mail. ' + (pdf ? 'Nebo si ho stáhni rovnou:' : '');
+            ? 'Tenhle e-mail už v seznamu mám, mail ti znovu posílat nebudu. ' + (pdf ? noun + ' si stáhni rovnou tady:' : '')
+            : noun + ' ti posíláme na e-mail. ' + (pdf ? 'Nebo si ho stáhni rovnou:' : '');
           form.innerHTML =
             '<div style="text-align:center;padding:14px 6px;">' +
               '<div style="font-size:2.4rem;line-height:1">✅</div>' +
               '<h3 style="color:#fff;margin:.5rem 0 .3rem;">' + (dup ? 'Vítej zpátky' : 'Díky') + (data.name ? ', ' + data.name : '') + '!</h3>' +
               '<p style="color:#cabfb4;margin:.2rem 0;">' + info + '</p>' +
               dl +
-              '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">Chceš se v tom naučit chodit sám/sama? Mrkni na <a href="/videokurz" style="color:#F6CD63;text-decoration:underline;">videokurz výživy</a>.</p>' +
+              '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">' + upsell + '</p>' +
             '</div>';
         }
         function showError(text) {
