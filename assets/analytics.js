@@ -26,15 +26,16 @@
   g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
   document.head.appendChild(g);
 
-  function applyConsent(granted) {
-    // Lišta žádá souhlas se statistikou I měřením reklam najednou — po „Přijmout"
-    // povolujeme i ad_* signály (Google Ads konverze + remarketing), jinak zůstává vše denied.
-    var v = granted ? 'granted' : 'denied';
+  function applyConsent(mode) {
+    // Granularita souhlasu: 'granted' = statistika i reklamy, 'analytics' = jen statistika
+    // (GA4 bez ad_* signálů, Meta Pixel se nenačte), 'denied' = vše zamítnuté.
+    var an = (mode === 'granted' || mode === 'analytics') ? 'granted' : 'denied';
+    var ad = (mode === 'granted') ? 'granted' : 'denied';
     gtag('consent', 'update', {
-      analytics_storage: v,
-      ad_storage: v,
-      ad_user_data: v,
-      ad_personalization: v
+      analytics_storage: an,
+      ad_storage: ad,
+      ad_user_data: ad,
+      ad_personalization: ad
     });
   }
 
@@ -111,14 +112,16 @@
   }
   onReady(function () { wireConversions(); fireConvGA(); });
 
-  var saved;
-  try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (saved === 'granted') { applyConsent(true); loadMetaPixelAndConvert(); return; }
-  if (saved === 'denied') { applyConsent(false); return; }
-
   // --- cookie lišta (karta vlevo dole, ať nekoliduje s CTA lištou) ---
+  function setChoice(mode, box) {
+    try { localStorage.setItem(KEY, mode); } catch (e) {}
+    applyConsent(mode);
+    if (mode === 'granted') loadMetaPixelAndConvert();
+    if (box) box.remove();
+  }
   function showBanner() {
-    if (document.getElementById('mb-cookie')) return;
+    var old = document.getElementById('mb-cookie');
+    if (old) old.remove();
     var st = document.createElement('style');
     st.textContent = '@media(max-width:991px){#mb-cookie{left:12px!important;right:12px!important;bottom:92px!important;max-width:none!important}}';
     document.head.appendChild(st);
@@ -133,21 +136,31 @@
       'font-size:.92rem;line-height:1.5;';
     box.innerHTML =
       '<div style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
-      '<div style="color:#f3ece2">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem.</div>' +
+      '<div style="color:#f3ece2">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.</div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
         '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#160d04;font-weight:700;padding:10px 12px;border-radius:2px">Přijmout</button>' +
         '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:2px">Odmítnout</button>' +
-      '</div>';
+      '</div>' +
+      '<button id="mb-c-an" style="width:100%;margin-top:8px;border:none;background:transparent;color:#cabfae;cursor:pointer;font-family:inherit;font-size:.82rem;text-decoration:underline;padding:2px">Povolit jen statistiku (bez reklamních cookies)</button>';
     document.body.appendChild(box);
-    document.getElementById('mb-c-ok').onclick = function () {
-      try { localStorage.setItem(KEY, 'granted'); } catch (e) {}
-      applyConsent(true); loadMetaPixelAndConvert(); box.remove();
-    };
-    document.getElementById('mb-c-no').onclick = function () {
-      try { localStorage.setItem(KEY, 'denied'); } catch (e) {}
-      applyConsent(false); box.remove();
-    };
+    document.getElementById('mb-c-ok').onclick = function () { setChoice('granted', box); };
+    document.getElementById('mb-c-no').onclick = function () { setChoice('denied', box); };
+    document.getElementById('mb-c-an').onclick = function () { setChoice('analytics', box); };
   }
+  // Trvalá možnost změnit volbu: odkaz s atributem data-cookie-settings kdekoli na webu
+  // (patičky právních stránek a článků) lištu znovu otevře.
+  window.mbCookieSettings = showBanner;
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-cookie-settings]') : null;
+    if (el) { e.preventDefault(); showBanner(); }
+  });
+
+  var saved;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved === 'granted') { applyConsent('granted'); loadMetaPixelAndConvert(); return; }
+  if (saved === 'analytics') { applyConsent('analytics'); return; }
+  if (saved === 'denied') { applyConsent('denied'); return; }
+
   if (document.body) showBanner();
   else document.addEventListener('DOMContentLoaded', showBanner);
 })();
