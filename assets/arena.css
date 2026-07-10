@@ -132,3 +132,9 @@ article .hero .tag::before{background:#fff;}
 .tb-cta:hover,.btn-acc:hover{transform:none!important;filter:brightness(1.07);}
 .badge{background:transparent!important;border:none!important;padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);letter-spacing:.22em!important;}
 .badge::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
+/* D2b: chips + eyebrow kickery napric vlajkovymi */
+.chip,.pill{border-radius:2px!important;}
+.eyebrow,.fp-kick{border-radius:0!important;background:transparent!important;border:none!important;
+  padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);
+  font-weight:600;letter-spacing:.22em!important;text-transform:uppercase;color:var(--ar-gold2)!important;}
+.eyebrow::before,.fp-kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
