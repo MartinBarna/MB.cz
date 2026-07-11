@@ -169,6 +169,24 @@ Deno.serve(async (req) => {
       // pozastav JEN simpleshop grant (rucni/admin granty nechavame byt)
       await admin.from("entitlements").update({ active: false })
         .eq("email", email).eq("product", "academy").eq("source", "simpleshop");
+      // Pozastaveni Academy zamkne i appku Tvuj Coach. Symetricke: dalsi splatka pres
+      // simpleshop-webhook appku zase odemkne (grant blok tam bezi pri kazde uhrazene splatce).
+      // Best-effort: nikdy neshodi guard. Loguje do tvujcoach_grants.
+      try {
+        const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+        const gsec = gs?.value ? String(gs.value) : "";
+        let gres = "no-secret";
+        if (gsec) {
+          const gr = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+            method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+            body: JSON.stringify({ email, action: "revoke", source: "splatky-default" }),
+          }).catch(() => null);
+          // deno-lint-ignore no-explicit-any
+          if (gr && gr.ok) { const jj: any = await gr.json().catch(() => ({})); gres = String(jj.result || "ok"); }
+          else gres = gr ? "http-" + gr.status : "fetch-fail";
+        }
+        await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: gres, source: "splatky-default" });
+      } catch { /* best-effort */ }
       const m = suspendEmail(name, seg);
       await sendMail(email, m.subject, m.html);
       await admin.from("installment_status").update({
