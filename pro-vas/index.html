@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jídelníček i trénink si zvládneš sám — Barna Academy</title>
+    <meta name="description" content="Nemusíš platit výživáře každý měsíc. Barna Academy ti dá nástroje i srozumitelné know-how: spočítá kalorie a makra, poskládá jídelníček, sestaví trénink a ukáže cviky. Naučíš se, proč to funguje.">
+    <meta name="theme-color" content="#0C0B10">
+    <link rel="canonical" href="https://martinbarna.cz/pro-vas/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://martinbarna.cz/pro-vas/">
+    <meta property="og:title" content="Jídelníček i trénink si zvládneš sám — Barna Academy">
+    <meta property="og:description" content="Nástroje spočítají kalorie a makra, poskládají jídelníček i trénink. Ty se naučíš, proč to funguje. Zaplatíš jednou, používáš navždy.">
+    <meta property="og:image" content="https://martinbarna.cz/assets/og/akademie.png?v=g6">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <style>
+        .skip-link{position:absolute;left:-999px;top:0;background:#EBB12C;color:#161616;font-weight:700;padding:10px 18px;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+        :root { --gold:#EBB12C; --gold2:#F6CD63; --ink:#F0EADF; --muted:#b9b2a6; --panel:#15141a; --line:#2a2731; --bg:#0C0B10; }
+        * { box-sizing:border-box; scroll-behavior:smooth; }
+        body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--ink); line-height:1.65; background:var(--bg); }
+        h1,h2,h3 { font-weight:800; line-height:1.15; color:#fff; }
+        a { color:var(--gold2); }
+        .wrap { max-width:1060px; margin:0 auto; padding:0 20px; }
+        a:focus-visible, button:focus-visible { outline:3px solid var(--gold); outline-offset:2px; }
+
+        .nav { background:#100e14; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; }
+        .nav .row { display:flex; align-items:center; justify-content:space-between; padding:13px 0; }
+        .brand { font-weight:800; color:#fff; text-decoration:none; font-size:1.15rem; display:flex; align-items:center; gap:10px; }
+        .brand img { height:30px; width:auto; display:block; }
+        .nav .back { text-decoration:none; color:#cfd2d6; font-weight:600; font-size:.92rem; }
+
+        .btn { display:inline-block; background:var(--gold); color:#161616; font-weight:700; padding:14px 30px; text-decoration:none; border:none; cursor:pointer; text-align:center; }
+        .btn:hover { filter:brightness(1.07); color:#161616; }
+        .btn.ghost { background:transparent; color:#fff; border:1px solid #3a3542; }
+
+        .hero { padding:74px 0 66px; background:var(--bg); }
+        .hero .grid { display:flex; gap:48px; align-items:center; }
+        .hero .col { flex:1; min-width:0; }
+        .hero h1 { font-size:2.7rem; margin:1rem 0; }
+        .hero .sub { font-size:1.12rem; color:var(--muted); max-width:560px; }
+        .ticks { list-style:none; padding:0; margin:1.4rem 0 0; display:flex; flex-wrap:wrap; gap:8px 22px; font-weight:600; font-size:.93rem; color:#e6e8ea; }
+        .ticks li::before { content:"✓ "; color:var(--gold); font-weight:800; }
+        .hero-cta { margin:1.7rem 0 .6rem; display:flex; gap:12px; flex-wrap:wrap; }
+        .micro { font-size:.9rem; color:#8d8677; }
+
+        .kitbox { background:var(--panel); border:1px solid var(--line); padding:26px; }
+        .kitbox .khead { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--gold2); font-weight:700; margin-bottom:14px; }
+        .kitem { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #221f28; }
+        .kitem:last-child { border-bottom:none; }
+        .kitem .kn { flex:0 0 30px; height:30px; background:var(--gold); color:#161616; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+        .kitem b { color:#fff; display:block; }
+        .kitem span { color:var(--muted); font-size:.92rem; }
+
+        section { padding:64px 0; }
+        .sh { text-align:center; max-width:720px; margin:0 auto 2.4rem; }
+        .sh h2, .acad h2 { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:.02em; }
+        .sh h2 { font-size:2.1rem; }
+        .sh p { color:var(--muted); }
+
+        /* nástroje grid */
+        .tools { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
+        .tool { background:var(--panel); border:1px solid var(--line); padding:22px 22px 20px; display:flex; flex-direction:column; }
+        .tool .ic { font-size:1.7rem; margin-bottom:.5rem; }
+        .tool h3 { font-size:1.15rem; margin:0 0 .4rem; }
+        .tool p { color:var(--muted); font-size:.95rem; margin:0 0 1rem; flex:1; }
+        .tool .tcta { color:var(--gold2); font-weight:700; text-decoration:none; font-size:.92rem; }
+        .tool .free { display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#7bbf6a; border:1px solid rgba(123,191,106,.4); border-radius:50px; padding:2px 10px; margin-bottom:.7rem; align-self:flex-start; }
+        .tool .inacad { display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--gold2); border:1px solid rgba(235,177,44,.4); border-radius:50px; padding:2px 10px; margin-bottom:.7rem; align-self:flex-start; }
+
+        /* srovnani */
+        .vs { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px; max-width:920px; margin:0 auto; }
+        .vs .colv { background:var(--panel); border:1px solid var(--line); padding:26px; }
+        .vs .colv.win { border-color:rgba(235,177,44,.55); }
+        .vs h3 { font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:.1em; font-size:1.25rem; margin:0 0 14px; }
+        .vs .colv:not(.win) h3 { color:#8d8677; }
+        .vs ul { list-style:none; margin:0; padding:0; }
+        .vs li { padding:9px 0 9px 26px; position:relative; color:var(--muted); font-size:.96rem; border-bottom:1px solid #221f28; }
+        .vs li:last-child { border-bottom:none; }
+        .vs .colv:not(.win) li::before { content:"—"; position:absolute; left:0; color:#5c5648; }
+        .vs .win li { color:#e6dfd2; }
+        .vs .win li::before { content:"✓"; position:absolute; left:0; color:var(--gold); font-weight:800; }
+
+        .acad { text-align:center; }
+        .acad .nums { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin:1.6rem 0; }
+        .acad .num { background:var(--panel); border:1px solid var(--line); padding:16px 22px; min-width:130px; }
+        .acad .num b { display:block; font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; font-size:1.9rem; color:var(--gold); line-height:1.1; }
+        .acad .num span { font-size:.84rem; color:var(--muted); }
+        .acad .price { margin:1.2rem 0 .2rem; font-size:1.05rem; color:#e6dfd2; }
+        .acad .price b { color:#fff; font-size:1.35rem; }
+
+        .faq { max-width:720px; margin:0 auto; }
+        .faq details { background:var(--panel); border:1px solid var(--line); padding:4px 20px; margin-bottom:12px; }
+        .faq summary { cursor:pointer; font-weight:700; padding:14px 0; list-style:none; color:#fff; }
+        .faq summary::-webkit-details-marker { display:none; }
+        .faq summary::after { content:"+"; float:right; color:var(--gold); font-weight:800; }
+        .faq details[open] summary::after { content:"–"; }
+        .faq p { color:var(--muted); margin:0 0 16px; }
+
+        footer { text-align:center; padding:44px 20px 54px; color:#8d8677; font-size:.9rem; border-top:1px solid var(--line); }
+        footer a { color:var(--gold2); }
+
+        @media (max-width: 860px) {
+            .hero .grid { flex-direction:column; }
+            .hero h1 { font-size:2.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+    <nav class="nav"><div class="wrap"><div class="row">
+        <a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna — logo" decoding="async"><span>Martin Barna</span></a>
+        <div><a class="back" href="/akademie/">Barna Academy →</a></div>
+    </div></div></nav>
+
+    <header class="hero" id="obsah"><div class="wrap"><div class="grid">
+        <div class="col">
+            <span class="ar-kick">Nemusíš na to být trenér</span>
+            <h1>Jídelníček i trénink<br><span class="ar-ghost">si zvládneš sám.</span></h1>
+            <p class="sub">Nemusíš platit výživáře každý měsíc. <strong style="color:#fff;">Barna Academy</strong> ti dá nástroje i srozumitelné know-how — zadáš pár údajů a systém spočítá kalorie a makra, poskládá jídelníček, sestaví tréninkový plán a ukáže cviky. A ty se přitom naučíš, <em>proč</em> to funguje.</p>
+            <div class="hero-cta"><a class="btn" href="#nastroje">Vyzkoušej zdarma →</a><a class="btn ghost" href="#cena">Co je v Academy</a></div>
+            <ul class="ticks"><li>Bez měsíčních plateb</li><li>Nástroje počítají za tebe</li><li>Věda, ne zaručené diety</li></ul>
+        </div>
+        <div class="col">
+            <div class="kitbox">
+                <div class="khead">Co si uděláš sám</div>
+                <div class="kitem"><div class="kn">🥗</div><div><b>Jídelníček na míru</b><span>Zadáš údaje a cíl, systém spočítá kalorie i makra a poskládá hotový den z běžných potravin.</span></div></div>
+                <div class="kitem"><div class="kn">🏋️</div><div><b>Tréninkový plán</b><span>Doma, venku i do posilovny — s cviky, sériemi i opakováními podle tvé úrovně.</span></div></div>
+                <div class="kitem"><div class="kn">📚</div><div><b>Databáze cviků a potravin</b><span>120 cviků s fotkami a technikou + makra potravin. Vždy víš, jak cvik provést i co jíš.</span></div></div>
+                <div class="kitem"><div class="kn">🎓</div><div><b>Videokurz srozumitelně</b><span>Výživa a trénink lidsky vysvětlené — ať se rozhoduješ sám, ne podle zaručených rad.</span></div></div>
+            </div>
+        </div>
+    </div></div></header>
+
+    <!-- NÁSTROJE (ochutnávka zdarma) -->
+    <section id="nastroje"><div class="wrap">
+        <div class="sh"><h2>Vyzkoušej si to hned. Zdarma.</h2><p>Část nástrojů je otevřená bez karty — mrkni, jak to funguje. Plnou verzi (recepty, víc filtrů, uložení a vlastní úpravy) pak najdeš v Academy.</p></div>
+        <div class="tools">
+            <div class="tool"><div class="ic">🥗</div><span class="free">Zdarma</span><h3>Generátor jídelníčku</h3><p>Spočítá tvoje kalorie a makra podle cíle a poskládá hotový denní jídelníček z běžných potravin.</p><a class="tcta" href="/nastroje-zdarma/jidelnicek/">Vyzkoušet zdarma →</a></div>
+            <div class="tool"><div class="ic">🏋️</div><span class="free">Zdarma</span><h3>Generátor tréninků</h3><p>Poskládá týdenní plán podle místa, vybavení a úrovně — se sériemi i opakováními.</p><a class="tcta" href="/nastroje-zdarma/trenink/">Vyzkoušet zdarma →</a></div>
+            <div class="tool"><div class="ic">📚</div><span class="free">Zdarma</span><h3>Databáze cviků</h3><p>120 cviků s fotkami, provedením krok za krokem a nejčastějšími chybami.</p><a class="tcta" href="/nastroje-zdarma/cviky/">Prohlédnout zdarma →</a></div>
+            <div class="tool"><div class="ic">🧮</div><span class="inacad">V Academy</span><h3>Kalkulačka kalorií a maker</h3><p>Přesná denní čísla (kcal, bílkoviny, sacharidy, tuky, vláknina) podle tvého cíle za pár vteřin.</p><a class="tcta" href="/akademie/">Součást Academy →</a></div>
+            <div class="tool"><div class="ic">🍳</div><span class="inacad">V Academy</span><h3>Generátor receptů</h3><p>Praktické recepty podle typu jídla a zaměření — se surovinami, postupem i makry na porci.</p><a class="tcta" href="/akademie/">Součást Academy →</a></div>
+            <div class="tool"><div class="ic">🎓</div><span class="inacad">V Academy</span><h3>Videokurz + databáze potravin</h3><p>Ať nástrojům rozumíš — výživa a trénink vysvětlené lidsky, plus makra stovek potravin.</p><a class="tcta" href="/akademie/">Součást Academy →</a></div>
+        </div>
+    </div></div></section>
+
+    <!-- VÝŽIVÁŘ NA MĚSÍCE VS. NAUČIT SE TO -->
+    <section style="background:#100e14;border-top:1px solid var(--line);border-bottom:1px solid var(--line);"><div class="wrap">
+        <div class="sh"><h2>Platit za jídelníček každý měsíc? Nebo se to naučit jednou.</h2><p>Hotový plán od někoho jiného ti řekne <em>co</em>. Nikdy ne <em>proč</em>. A za měsíc jsi zase tam, kde jsi začal.</p></div>
+        <div class="vs">
+            <div class="colv"><h3>Jídelníček na míru za peníze</h3><ul>
+                <li>Dostaneš PDF — a je to</li>
+                <li>Za měsíc platíš znovu za nový</li>
+                <li>Nevíš, proč co jíš — jen posloucháš</li>
+                <li>Když sejdeš z cesty (dovolená, oslava), nevíš, co dál</li>
+                <li>Jedna dieta, dokud za ni platíš</li>
+            </ul></div>
+            <div class="colv win"><h3>Naučit se to s Academy</h3><ul>
+                <li>Rozumíš, proč to funguje — rozhoduješ se sám</li>
+                <li>Zaplatíš jednou, přístup máš doživotně</li>
+                <li>Nástroje ti výpočty udělají za pár vteřin</li>
+                <li>Umíš si to upravit kdykoli — i po roce, i při jiném cíli</li>
+                <li>Funguje na hubnutí, nabírání svalů i udržení</li>
+            </ul></div>
+        </div>
+    </div></div></section>
+
+    <!-- ACADEMY NABÍDKA -->
+    <section class="acad" id="cena"><div class="wrap">
+        <span class="ar-kick">Celý balík na jednom místě</span>
+        <h2 style="margin:.8rem 0 .4rem;">Barna Academy</h2>
+        <p style="color:var(--muted);max-width:640px;margin:0 auto;">Všechny nástroje + videokurz, který ti výživu a trénink vysvětlí lidsky a srozumitelně — bez marketingových keců a zázračných diet. Postavené na 13 letech praxe a 600+ klientech.</p>
+        <div class="nums">
+            <div class="num"><b>6</b><span>chytrých nástrojů</span></div>
+            <div class="num"><b>120</b><span>cviků s fotkami</span></div>
+            <div class="num"><b>Video</b><span>kurz v ceně</span></div>
+            <div class="num"><b>∞</b><span>doživotní přístup</span></div>
+        </div>
+        <p class="price">Zaváděcí cena <b>8 900 Kč</b> jednorázově · nebo 3 splátky po 3 000 Kč</p>
+        <p style="color:#8d8677;font-size:.9rem;margin:.2rem 0 1.4rem;">Zaplatíš jednou, používáš navždy. Generátory jídelníčků, tréninků a receptů, kalkulačka, databáze cviků i potravin a videokurz v ceně.</p>
+        <a class="btn" href="/akademie/">Chci Academy →</a>
+        <p style="margin:1.3rem 0 0;color:var(--muted);font-size:.95rem;">Nejsi si jistý? <a href="/akademie/#zdarma">Část lekcí i nástrojů je otevřená zdarma</a>, bez karty.</p>
+    </div></div></section>
+
+    <!-- FAQ -->
+    <section><div class="wrap">
+        <div class="sh"><h2>Časté otázky</h2></div>
+        <div class="faq">
+            <details><summary>Nejsem trenér a o výživě nic nevím. Zvládnu to?</summary><p>Ano, přesně pro tebe je to postavené. Nástroje udělají všechny výpočty za tebe a videokurz tě provede krok za krokem — nemusíš nic počítat ručně ani se učit vzorce. Stačí zadat pár údajů.</p></details>
+            <details><summary>Musím platit každý měsíc jako u výživáře?</summary><p>Ne. Academy zaplatíš jednou a přístup máš doživotně — nástroje, videokurz i všechny aktualizace. Žádné měsíční poplatky.</p></details>
+            <details><summary>Je to jen na hubnutí?</summary><p>Funguje na hubnutí, nabírání svalů i udržení. Cíl si nastavíš a nástroje se mu přizpůsobí — kalorie, makra i tréninkový objem.</p></details>
+            <details><summary>Můžu si to vyzkoušet, než zaplatím?</summary><p>Jasně. Generátor jídelníčku, tréninku i databázi cviků si vyzkoušíš zdarma hned nahoře — bez karty. A část lekcí Academy je taky otevřená zdarma.</p></details>
+            <details><summary>Nahradí mi to úplně trenéra nebo výživáře?</summary><p>Pro většinu lidí, kteří chtějí zhubnout nebo se zpevnit, ano — dá ti stejný základ, jen se to naučíš dělat sám. Pokud řešíš zdravotní komplikace nebo chceš vedení na míru, klidně napiš na osobní koučink.</p></details>
+        </div>
+    </div></div></section>
+
+    <footer><img src="/assets/brand/logo-full-gold.png" alt="Martin Barna — Online výživa a fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async">
+        &copy; 2026 Martin Barna — Online výživa a fitness · <a href="/">Hlavní web</a> · <a href="/akademie/">Barna Academy</a>
+    </footer>
+
+    <script src="/assets/analytics.js?v=g7" defer></script>
+    <script src="/assets/scroll-top.js?v=g3" defer></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
+</html>
