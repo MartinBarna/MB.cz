@@ -233,7 +233,7 @@ select option, select optgroup { color:#161616; background:#fff; }
 .freeplan p { color:var(--bd-muted2)!important; }
 .freeplan .fp-kick { color:var(--bd-gold-soft)!important; }
 /* zvýrazněný text s inline tmavou barvou na tmavé sekci → čitelná zlatá */
-strong[style*="--ink"], b[style*="--ink"], strong[style*="#161616"], em[style*="--ink"] { color:var(--bd-gold-soft)!important; }
+strong[style*="--ink"], b[style*="--ink"], strong[style*="#161616"], b[style*="#161616"], em[style*="--ink"] { color:var(--bd-gold-soft)!important; }
 
 /* === Články: .pull citace a .keytab tabulka měly text přes třídu color:var(--green-dark)
    na faint-orange pozadí (--green-light přebité na tmavé) → tmavý na tmavém, nečitelné.

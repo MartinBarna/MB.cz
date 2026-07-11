@@ -61,7 +61,7 @@
   .bonus .bbtn:hover { transform:translateY(-1px); }
 
   /* ---- sekční navigace (#33): přehled modulů → fokus na modul ---- */
-  .modgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px; margin-top:8px; }
+  .modgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(290px,100%),1fr)); gap:14px; margin-top:8px; }
   .modcard { text-align:left; cursor:pointer; background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:11px; transition:transform .2s,border-color .2s,box-shadow .2s; color:inherit; text-decoration:none; }
   .modcard:hover { transform:translateY(-4px); border-color:rgba(235,177,44,.35); box-shadow:0 24px 46px -28px rgba(235,177,44,.28); }
   .modcard .top { display:flex; align-items:center; gap:12px; }
@@ -852,11 +852,11 @@
             // free ochutnávku (FREEMODE) a upsell na koupi celé Academy.
             window.BA.getUser().then(function(u){
               if(u && u.user_metadata){ SHARE_NAME = u.user_metadata.full_name || u.user_metadata.name || ''; }
-              // Tvůj Coach karta: pro přihlášeného člena předhoď e-mail do sign-in (appka páruje přístup
-              // JEN přes e-mail — jiný e-mail = přístup se nespojí). Bez e-mailu zůstává fallback odkaz.
-              if(u && u.email){ var _tc=document.getElementById('tvujCoachCard'); if(_tc) _tc.setAttribute('href','https://coach.martinbarna.cz/sign-in?email='+encodeURIComponent(u.email)+'&from=academy'); }
+              // Tvůj Coach karta se nastaví níž podle Academy entitlementu:
+              // člen → magic-link přihlášení s předvyplněným e-mailem; nečlen/ochutnávka → upsell /pro-vas/.
               if(!u){
                 FREEMODE = true; applyFreeMode();
+                var _tcAnon=document.getElementById('tvujCoachCard'); if(_tcAnon){ _tcAnon.setAttribute('href','/pro-vas/'); _tcAnon.removeAttribute('target'); }
                 var n0 = document.getElementById('modeNote');
                 if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 255 lekcím odemkni celou Academy.';
                 try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
@@ -864,6 +864,11 @@
               }
               window.BA.hasEntitlement('academy').then(function(has){
                 if(!has){ FREEMODE = true; }
+                var _tc=document.getElementById('tvujCoachCard');
+                if(_tc){
+                  if(has && u.email){ _tc.setAttribute('href','https://coach.martinbarna.cz/sign-in?email='+encodeURIComponent(u.email)+'&from=academy'); }
+                  else { _tc.setAttribute('href','/pro-vas/'); _tc.removeAttribute('target'); }
+                }
                 applyFreeMode();
                 var note = document.getElementById('modeNote');
                 if (note) note.textContent = has

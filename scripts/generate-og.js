@@ -177,6 +177,7 @@ async function render(html, outJpg) {
   const PAGES = [
     ['akademie.png', 'akademie/index.html', 'BARNA ACADEMY'],
     ['kalkulacka.jpg', 'kalkulacka-kalorii-a-makrozivin/index.html', 'NÁSTROJ ZDARMA'],
+    ['nastroje-zdarma.jpg', 'nastroje-zdarma/index.html', 'NÁSTROJE ZDARMA'],
     ['konzultace.jpg', 'koucing/index.html', 'KOUČINK'],
     ['koucing.jpg', 'koucing/index.html', 'KOUČINK'],
     ['prednasky.jpg', 'prednasky/index.html', 'PŘEDNÁŠKY'],
