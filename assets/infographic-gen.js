@@ -56,7 +56,7 @@
       '<rect x="0" y="0" width="14" height="' + fmt.h + '" fill="url(#acc)"/>';
   }
   function brandHeader(fmt, p, brand, pad) {
-    var y = pad, svg = '', hasLogo = brand.logo && /^https?:\/\//.test(brand.logo);
+    var y = pad, svg = '', hasLogo = brand.logo && /^(https?:|data:)/.test(brand.logo);
     if (hasLogo) {
       svg += '<image href="' + esc(brand.logo) + '" x="' + pad + '" y="' + y + '" height="70" width="220" preserveAspectRatio="xMinYMid meet"/>';
     } else if (brand.name) {

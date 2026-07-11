@@ -91,9 +91,13 @@
           <div style="margin-top:12px;">
             <div class="grid2">
               <div class="field"><label>Jméno / značka</label><input id="brName" type="text" placeholder="např. Jana Nováková"></div>
-              <div class="field"><label>Akcentová barva</label><input id="brAccent" type="color" value="#EBB12C"></div>
+              <div class="field"><label>Akcentová barva</label>
+                <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="brAccent" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;"><span id="swatches" style="display:flex;gap:7px;flex-wrap:wrap"></span></div>
+              </div>
             </div>
-            <div class="field"><label>Logo (URL, volitelné)</label><input id="brLogo" type="url" placeholder="https://…/logo.png"></div>
+            <div class="field"><label>Logo (nahraj soubor nebo URL)</label>
+              <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="brLogofile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:120px;font-size:.85rem"><button type="button" id="brLogoclear" style="display:none;font-size:.82rem;background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);border-radius:8px;padding:5px 9px;cursor:pointer">✕ odebrat logo</button></div>
+              <input id="brLogo" type="url" placeholder="…nebo URL: https://…/logo.png" style="margin-top:7px"></div>
             <div class="field"><label>Kontakt / handle (volitelné)</label><input id="brContact" type="text" placeholder="@jananovakova · jana@example.cz"></div>
           </div>
         </details>
@@ -111,18 +115,19 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260704"></script>
-  <script src="/assets/infographic-gen.js?v=g1"></script>
+  <script src="/assets/infographic-gen.js?v=g2"></script>
   <script>
   (function(){
     var IG = window.Infographic;
     var $ = function(id){ return document.getElementById(id); };
     var state = { tpl: IG.TEMPLATES[0].id, fmt:'post', bg:'dark', data: IG.defaultsFor(IG.TEMPLATES[0].id) };
+    var logoData='';
 
     function brand(){
-      return { name:$('brName').value.trim(), accent:$('brAccent').value, logo:$('brLogo').value.trim(), contact:$('brContact').value.trim() };
+      return { name:$('brName').value.trim(), accent:$('brAccent').value, logo:(logoData||$('brLogo').value.trim()), contact:$('brContact').value.trim() };
     }
-    function saveBrand(){ try{ localStorage.setItem('ba_trainer_brand', JSON.stringify({t:$('brName').value,a:$('brAccent').value,l:$('brLogo').value,c:$('brContact').value})); }catch(e){} }
-    function loadBrand(){ try{ var b=JSON.parse(localStorage.getItem('ba_trainer_brand')||'{}'); if(b.t)$('brName').value=b.t; if(b.a)$('brAccent').value=b.a; if(b.l)$('brLogo').value=b.l; if(b.c)$('brContact').value=b.c; if(b.l||b.t)$('brandbox').open=true; }catch(e){} }
+    function saveBrand(){ try{ localStorage.setItem('ba_trainer_brand', JSON.stringify({t:$('brName').value,a:$('brAccent').value,l:$('brLogo').value,c:$('brContact').value,lf:logoData})); }catch(e){} }
+    function loadBrand(){ try{ var b=JSON.parse(localStorage.getItem('ba_trainer_brand')||'{}'); if(b.t)$('brName').value=b.t; if(b.a)$('brAccent').value=b.a; if(b.l)$('brLogo').value=b.l; if(b.c)$('brContact').value=b.c; if(b.lf){ logoData=b.lf; $('brLogoclear').style.display=''; } if(b.l||b.t||b.lf)$('brandbox').open=true; syncSwatch(); }catch(e){} }
 
     function tplById(id){ return IG.TEMPLATES.filter(function(t){return t.id===id;})[0]; }
 
@@ -192,6 +197,13 @@
       });
     });
     ['brName','brAccent','brLogo','brContact'].forEach(function(id){ $(id).addEventListener('input', draw); });
+    var PRESETS=['#EBB12C','#E0762C','#C0453B','#2C7BE0','#1FA97B','#7A5CE0','#111827','#8A6D3B'];
+    var sc=$('swatches');
+    PRESETS.forEach(function(hex){ var b=document.createElement('button'); b.type='button'; b.dataset.hex=hex.toLowerCase(); b.title=hex; b.style.cssText='width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;background:'+hex; b.addEventListener('click',function(){ $('brAccent').value=hex; syncSwatch(); draw(); }); sc.appendChild(b); });
+    function syncSwatch(){ var v=($('brAccent').value||'').toLowerCase(); Array.prototype.forEach.call(sc.children,function(b){ var on=b.dataset.hex===v; b.style.borderColor=on?'#fff':'rgba(255,255,255,.25)'; b.style.boxShadow=on?'0 0 0 2px #EBB12C':'none'; }); }
+    $('brAccent').addEventListener('input', syncSwatch);
+    $('brLogofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) — zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('brLogoclear').style.display=''; draw(); }; r.readAsDataURL(f); });
+    $('brLogoclear').addEventListener('click',function(){ logoData=''; $('brLogofile').value=''; $('brLogoclear').style.display='none'; draw(); });
 
     $('download').addEventListener('click', function(){
       var f = IG.FORMATS[state.fmt];
