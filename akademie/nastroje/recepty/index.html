@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generátor receptů — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r2">
+<style>
+  .wrap{max-width:900px;margin:0 auto;padding:30px 20px 90px;}
+  .kick{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.2rem);color:#fff;margin:.4rem 0 .5rem;letter-spacing:-.02em;}
+  .lead{color:#cfc6b8;font-size:1.05rem;max-width:640px;}
+  .panel{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.4rem 1.5rem;margin:1.4rem 0;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;}
+  label{display:block;font-size:.82rem;color:var(--muted-2);font-weight:600;margin:0 0 5px;}
+  body{color-scheme:dark;}
+  .ba input,.ba select{width:100%;background-color:rgba(0,0,0,.45)!important;border:1px solid var(--line-2)!important;border-radius:11px;color:#fff!important;padding:11px 12px;font-family:inherit;font-size:.96rem;color-scheme:dark;}
+  .ba input:not([type=color]),.ba select{-webkit-appearance:none;appearance:none;}
+  .ba select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23F6CD63' stroke-width='3' stroke-linecap='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;}
+  .ba input[type=color]{height:44px;padding:4px;cursor:pointer;background-color:rgba(0,0,0,.45)!important;}
+  .ba select option{background:#161310;color:#fff;}
+  .ba input:focus,.ba select:focus{outline:none;border-color:rgba(235,177,44,.2)!important;}
+  .ba input::placeholder{color:var(--muted);}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.04);border:1px solid var(--line-2);border-radius:50px;padding:8px 14px;font-size:.88rem;color:#cfc6b8;cursor:pointer;}
+  .chip input{width:auto;}
+  .btn{background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:800;padding:14px 30px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;font-size:1rem;box-shadow:0 12px 26px -8px rgba(235,177,44,.22);transition:transform .2s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;font-weight:700;}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:1.1rem;}
+  .targets{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 1rem;}
+  .tcard{flex:1;min-width:110px;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid rgba(235,177,44,.28);border-radius:14px;padding:12px 14px;text-align:center;}
+  .tcard b{display:block;color:#fff;font-size:1.4rem;}
+  .tcard span{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;}
+  .meal{border:1px solid var(--line);border-radius:14px;margin:0 0 12px;overflow:hidden;}
+  .meal h3{margin:0;background:var(--acc-soft,rgba(235,177,44,.08));color:#fff;font-size:1.05rem;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;}
+  .meal h3 small{color:var(--gold-soft);font-weight:600;font-size:.8rem;}
+  .meal table{width:100%;border-collapse:collapse;}
+  .meal td{padding:9px 16px;border-top:1px solid var(--line);color:var(--ink);font-size:.95rem;}
+  .meal td.g{color:var(--muted-2);white-space:nowrap;text-align:right;}
+  .swatch{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;}
+  .swatch.on{border-color:#fff;box-shadow:0 0 0 2px var(--gold,#EBB12C);}
+  .steps{color:var(--ink);padding-left:1.3rem;line-height:1.65;margin:.3rem 0 0;}
+  .steps li{margin:0 0 7px;}
+  .brandline{color:var(--muted);font-size:.85rem;}
+  .note{color:var(--muted);font-size:.82rem;margin-top:.7rem;line-height:1.5;}
+  .hidden{display:none;}
+  .lock{background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.25);border-radius:14px;padding:1rem 1.3rem;color:#e9e2d8;}
+  .brandbox{margin:14px 0 2px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:rgba(255,255,255,.02);}
+  .brandbox summary{cursor:pointer;color:#cfc6b8;font-weight:600;font-size:.92rem;}
+  #result{--acc:#EBB12C;}
+  #result .tcard{border-color:var(--acc);}
+  #result .meal h3{border-left:4px solid var(--acc);}
+  .brandhead{display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--acc);padding:0 0 12px;margin:0 0 16px;}
+  .brandhead img{max-height:44px;max-width:150px;object-fit:contain;}
+  .brandhead .bn{color:#fff;font-weight:800;font-size:1.1rem;letter-spacing:-.01em;}
+  .brandhead .bc{color:var(--muted);font-size:.82rem;margin-left:auto;text-align:right;line-height:1.3;}
+  .brandhead.empty{display:none;}
+  @media print{
+    body{background:#fff!important;color:#161616!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    #result,.meal,.meal h3,.tcard{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .top,.no-print{display:none!important;}
+    .panel,.meal,.tcard{border-color:#ddd!important;background:#fff!important;color:#161616!important;}
+    .meal h3{background:var(--acc-soft,#f3ede4)!important;color:#161616!important;} .meal td,.steps,.steps li{color:#222!important;}
+    h1,h2,.tcard b{color:#161616!important;}
+  }
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Generátor receptů</span></span></a>
+    <span style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:flex-end;"><a class="back" href="/akademie/studium/#nastroje" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Seznam nástrojů</a><a class="back" href="/akademie/moje/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">Moje sekce</a></span>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Nástroj pro trenéry</span>
+    <h1>Generátor receptů</h1>
+    <p class="lead">Vyber typ jídla a zaměření — systém vybere praktický recept se surovinami, postupem i makry na porci (počítaná z reálných hodnot). Pak ho dáš klientovi pod svým jménem.</p>
+
+    <div id="lock" class="lock hidden">🔒 Plná verze je součástí <b>Barna Academy</b>. <a href="/akademie/" style="color:var(--gold-soft)">Získat přístup →</a></div>
+
+    <div class="panel" id="form">
+      <div class="grid">
+        <div><label>Typ jídla</label><select id="meal">
+          <option value="vse">Všechny</option>
+          <option value="snidane">Snídaně</option>
+          <option value="obed">Oběd</option>
+          <option value="vecere">Večeře</option>
+          <option value="svacina">Svačina</option>
+          <option value="dezert">Zdravý dezert</option>
+        </select></div>
+        <div><label>Zaměření</label><select id="tag">
+          <option value="vse">Nezáleží</option>
+          <option value="highprotein">Vysoký protein</option>
+          <option value="lowcal">Nízké kalorie</option>
+          <option value="balanced">Vyvážené</option>
+        </select></div>
+        <div><label>Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Jana"></div>
+      </div>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="veg"> Vegetariánské</label>
+        <label class="chip"><input type="checkbox" id="nodairy"> Bez mléčných výrobků</label>
+      </div>
+      <details class="brandbox" id="brandbox">
+        <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">— projeví se ve výstupu i v PDF (uloží se ti, sdílí se s generátory)</span></summary>
+        <div class="grid" style="margin-top:12px;">
+          <div><label>Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková — výživa"></div>
+          <div><label>Akcentová barva</label>
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="accent" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;">
+            <span id="swatches" style="display:flex;gap:7px;flex-wrap:wrap"></span></div>
+          </div>
+          <div><label>Logo (nahraj soubor nebo URL)</label>
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="logofile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:120px;font-size:.85rem"><button type="button" id="logoclear" class="ghost no-print" style="display:none;font-size:.82rem">✕ odebrat logo</button></div>
+            <input id="logo" type="url" placeholder="…nebo URL: https://…/logo.png" style="margin-top:7px"></div>
+          <div><label>Kontakt (web / e-mail, volitelné)</label><input id="contact" type="text" placeholder="jana@example.cz"></div>
+        </div>
+      </details>
+      <div class="actions">
+        <button class="btn" id="gen">Vybrat recept</button>
+        <span class="brandline" id="dbstate">Načítám recepty…</span>
+      </div>
+    </div>
+
+    <div id="result" class="hidden">
+      <div class="panel">
+        <div class="brandhead empty" id="brandhead"></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+          <h2 style="margin:0;color:#fff;font-size:1.35rem;" id="rname">Recept</h2>
+          <span class="brandline" id="byline"></span>
+        </div>
+        <div class="targets" id="targets" style="margin-top:1rem;"></div>
+        <div class="meal"><h3>Suroviny <small id="servlbl"></small></h3><table id="ingr"></table></div>
+        <p class="note" id="extra"></p>
+        <h3 style="color:#fff;margin:1.1rem 0 .3rem;font-size:1.05rem">Postup</h3>
+        <ol class="steps" id="steps"></ol>
+        <p class="note" id="tip"></p>
+        <p class="note">Makra jsou na porci, počítaná z běžných potravinových tabulek. Uprav gramáž podle klienta a jeho cílů — recept je výchozí bod.</p>
+        <div class="actions no-print">
+          <button class="btn" id="regen">↻ Jiný recept</button>
+          <button class="btn ghost" id="print">🖨️ Uložit / tisk (PDF)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script src="/assets/recipe-gen.js?v=1"></script>
+  <script>
+  (function(){
+    var $=function(id){return document.getElementById(id);};
+    var FOODS=null, RECIPES=null, seed=0;
+    var MEAL_LABEL={ snidane:'Snídaně', obed:'Oběd', vecere:'Večeře', svacina:'Svačina', dezert:'Zdravý dezert' };
+    function fmt(n){return Math.round(n);}
+    function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+    var logoData='';
+    function hexToRgba(h,a){ if(!/^#[0-9a-fA-F]{6}$/.test(h))h='#EBB12C'; var n=parseInt(h.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+    function saveBrand(){ try{ localStorage.setItem('ba_trainer_brand', JSON.stringify({t:$('trainer').value,a:$('accent').value,l:$('logo').value,c:$('contact').value,lf:logoData})); }catch(e){} }
+    function loadBrand(){ try{ var b=JSON.parse(localStorage.getItem('ba_trainer_brand')||'{}'); if(b.t)$('trainer').value=b.t; if(b.a)$('accent').value=b.a; if(b.l)$('logo').value=b.l; if(b.c)$('contact').value=b.c; if(b.lf){ logoData=b.lf; $('logoclear').style.display=''; } if(b.t||b.l||b.lf)$('brandbox').open=true; syncSwatch(); }catch(e){} }
+    var PRESETS=['#EBB12C','#E0762C','#C0453B','#2C7BE0','#1FA97B','#7A5CE0','#111827','#8A6D3B'];
+    var sc=$('swatches');
+    PRESETS.forEach(function(hex){ var b=document.createElement('button'); b.type='button'; b.className='swatch'; b.style.background=hex; b.dataset.hex=hex.toLowerCase(); b.title=hex; b.addEventListener('click',function(){ $('accent').value=hex; syncSwatch(); saveBrand(); }); sc.appendChild(b); });
+    function syncSwatch(){ var v=($('accent').value||'').toLowerCase(); Array.prototype.forEach.call(sc.children,function(b){ b.classList.toggle('on', b.dataset.hex===v); }); }
+    $('accent').addEventListener('input',function(){ syncSwatch(); saveBrand(); });
+    $('logofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) — zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('logoclear').style.display=''; saveBrand(); }; r.readAsDataURL(f); });
+    $('logoclear').addEventListener('click',function(){ logoData=''; $('logofile').value=''; $('logoclear').style.display='none'; saveBrand(); });
+
+    Promise.all([
+      fetch('/assets/food-db.json?v=20260704').then(function(r){return r.json();}),
+      fetch('/assets/recipe-db.json?v=1').then(function(r){return r.json();})
+    ]).then(function(a){ FOODS=a[0]; RECIPES=a[1]; $('dbstate').textContent=RECIPES.length+' receptů připraveno'; })
+      .catch(function(){ $('dbstate').textContent='⚠️ Recepty se nepodařilo načíst.'; });
+    loadBrand();
+
+    function opts(){ return { meal:$('meal').value, tag:$('tag').value, veg:$('veg').checked, nodairy:$('nodairy').checked, seed:seed }; }
+
+    function render(res){
+      var m=res.macros, r=res.recipe;
+      $('rname').textContent=r.name;
+      $('targets').innerHTML=
+        '<div class="tcard"><b>'+m.kcal+'</b><span>kcal / porce</span></div>'+
+        '<div class="tcard"><b>'+m.p+' g</b><span>Bílkoviny</span></div>'+
+        '<div class="tcard"><b>'+m.c+' g</b><span>Sacharidy</span></div>'+
+        '<div class="tcard"><b>'+m.f+' g</b><span>Tuky</span></div>'+
+        '<div class="tcard"><b>'+m.fib+' g</b><span>Vláknina</span></div>';
+      $('servlbl').textContent=(r.servings>1?(r.servings+' porce'):'1 porce');
+      $('ingr').innerHTML=res.ing.map(function(i){ return '<tr><td>'+esc(i.name)+'</td><td class="g">'+fmt(i.g)+' g</td></tr>'; }).join('');
+      $('extra').innerHTML=(r.extra&&r.extra.length)?('<b style="color:#cfc6b8">Dochucení:</b> '+esc(r.extra.join(', '))):'';
+      $('extra').style.display=(r.extra&&r.extra.length)?'':'none';
+      $('steps').innerHTML=(r.steps||[]).map(function(s){ return '<li>'+esc(s)+'</li>'; }).join('');
+      $('tip').innerHTML=r.tip?('💡 <b style="color:#cfc6b8">Tip:</b> '+esc(r.tip)):'';
+      $('tip').style.display=r.tip?'':'none';
+      // branding (trenér) — sdílený ba_trainer_brand
+      var c=$('client').value.trim(), tn=$('trainer').value.trim(), ac=$('accent').value, lg=(logoData||$('logo').value.trim()), ct=$('contact').value.trim();
+      saveBrand();
+      var bh=$('brandhead');
+      if(tn||lg){
+        bh.classList.remove('empty');
+        bh.innerHTML=(lg?('<img src="'+esc(lg)+'" alt="logo" onerror="this.style.display=\'none\'">'):'')+
+          (tn?('<span class="bn">'+esc(tn)+'</span>'):'')+
+          (ct?('<span class="bc">'+esc(ct)+'</span>'):'');
+      } else { bh.classList.add('empty'); bh.innerHTML=''; }
+      var acc=/^#[0-9a-fA-F]{6}$/.test(ac)?ac:'#EBB12C';
+      $('result').style.setProperty('--acc', acc);
+      $('result').style.setProperty('--acc-soft', hexToRgba(acc,0.10));
+      $('byline').textContent=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'')+' · '+(MEAL_LABEL[r.meal]||'recept');
+      $('result').classList.remove('hidden');
+      $('result').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    function generate(newSeed){
+      if(!RECIPES){ $('dbstate').textContent='Recepty ještě nenačtené, zkus to za chvíli.'; return; }
+      if(newSeed) seed++;
+      var res=window.RecipeGen.pick(RECIPES, FOODS, opts());
+      if(!res){ $('dbstate').textContent='Pro tuhle kombinaci filtrů nemám recept — zkus uvolnit filtry (např. zaměření na „Nezáleží").'; return; }
+      render(res);
+    }
+    $('gen').addEventListener('click',function(){ seed=0; generate(false); });
+    $('regen').addEventListener('click',function(){ generate(true); });
+    $('print').addEventListener('click',function(){ window.print(); });
+
+    // Gating: plná verze jen pro Academy. Bez přístupu → zámek (nástroj skrytý). Demo/bez BA běží.
+    if(window.BA){ window.BA.ready.then(function(){
+      if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){
+        if(!ok){ $('lock').classList.remove('hidden'); $('form').classList.add('hidden'); $('result').classList.add('hidden'); }
+      }); }
+    }); }
+  })();
+  </script>
+  <script src="/assets/scroll-top.js?v=g3" defer></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
+</html>
