@@ -53,6 +53,12 @@
         .hero h1 .hl { color:var(--orange); }
         .hero .sub { font-size:1.15rem; color:#4a4a4a; max-width:560px; }
         .hero-cta { margin:1.6rem 0 .8rem; }
+        .hero-form { display:flex; flex-wrap:wrap; gap:10px; margin:1.5rem 0 .5rem; max-width:520px; }
+        .hero-form input { flex:1 1 150px; min-width:0; padding:13px 15px; border:1.5px solid rgba(0,0,0,.14); border-radius:12px; font-family:inherit; font-size:1rem; background:#fff; color:var(--ink); }
+        .hero-form input::placeholder { color:#9a9186; }
+        .hero-form input:focus { outline:none; border-color:var(--orange); box-shadow:0 0 0 3px rgba(235,177,44,.18); }
+        .hero-form button { flex:1 1 100%; margin:0; }
+        .hero-form [data-msg] { flex:1 1 100%; margin:2px 0 0; font-size:.86rem; text-align:left; }
         .micro { font-size:.92rem; color:#6a6a6a; max-width:520px; }
         .ticks { list-style:none; padding:0; margin:1.4rem 0 0; display:flex; flex-wrap:wrap; gap:8px 22px; font-weight:600; font-size:.95rem; }
         .ticks li::before { content:"✓ "; color:var(--orange); font-weight:800; }
@@ -235,8 +241,14 @@
             <span class="eyebrow">ZDARMA · PDF ROVNOU NA E-MAIL</span>
             <h1>Jez chutně, do sytosti.<br>A přesto <span class="hl">začni hubnout.</span></h1>
             <p class="sub">Stáhni si zdarma 7denní makro plán pro ženy 30+. Konkrétní jídla, přesné porce, běžné potraviny. Bez hladovění, bez počítání, bez jojo efektu.</p>
-            <div class="hero-cta"><a class="btn" href="#formular">Ano, chci 7denní plán zdarma →</a></div>
-            <p style="margin:.2rem 0 .6rem;font-weight:600;font-size:.95rem;color:#33302c;"><span style="color:#EBB12C;letter-spacing:1px;">★★★★★</span> 5,0 · 100+ recenzí na Googlu a Facebooku</p>
+            <form data-lead-form data-segment="zeny" data-source="makro-plan" data-pdf="/download/makro-plan-zeny.pdf" class="hero-form">
+                <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
+                <input name="name" type="text" required autocomplete="given-name" placeholder="Jméno">
+                <input name="email" type="email" required autocomplete="email" placeholder="Tvůj e-mail">
+                <button type="submit" class="btn">Ano, chci 7denní plán zdarma →</button>
+                <p data-msg></p>
+            </form>
+            <p style="margin:.2rem 0 .6rem;font-weight:600;font-size:.95rem;color:#33302c;"><span style="color:#EBB12C;letter-spacing:1px;">★★★★★</span> 5,0 · 100+ recenzí na Googlu a Facebooku · plán ti přijde na e-mail hned</p>
             <p class="micro">Pošlu ti ho na e-mail a pár dní nato i bonusy (7 chyb + rychlá kuchařka), celé zdarma.</p>
             <ul class="ticks"><li>13+ let praxe</li><li>stovky klientů</li><li>flexibilní stravování</li></ul>
         </div>
