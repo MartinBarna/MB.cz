@@ -48,6 +48,15 @@
         <span class="go"><span class="lbl">Otevřít videokurz</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
+      <a class="card" id="tileApp" href="https://coach.martinbarna.cz/?from=academy" target="_blank" rel="noopener" style="border-color:rgba(235,177,44,.5);background:linear-gradient(150deg,rgba(235,177,44,.10),rgba(235,177,44,.02));">
+        <span class="lockbadge" id="appBadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">🎁 v ceně Academy</span>
+        <div class="ico" style="color:#EBB12C;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/><path d="m9.5 10.5 1.5 1.5 3.5-3.5"/></svg></div>
+        <h2>Tvůj Coach — appka</h2>
+        <p class="desc">Mobil i web: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. Máš ji v ceně Academy.</p>
+        <div class="chips"><span class="chip">Foto → makra</span><span class="chip">Adaptivní cíle</span><span class="chip">AI kouč</span></div>
+        <span class="go"><span class="lbl">Otevřít appku</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
       <a class="card" id="tileTools" href="/akademie/nastroje/">
         <span class="lockbadge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> Uzamčeno</span>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h7M15 18h5"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="13" cy="18" r="2"/></svg></div>
@@ -120,8 +129,15 @@
         var ta=document.getElementById('tileAcademy'), tv=document.getElementById('tileVideo'), tt=document.getElementById('tileTools');
         if(!hasA){ lock(ta, '/akademie/studium/?preview=free', 'Prohlédnout zdarma'); var _lb=ta.querySelector('.lockbadge'); if(_lb) _lb.textContent='🎁 Ochutnávka zdarma'; }
         if(!hasV) lock(tv, '/videokurz', 'Získat přístup');
-        // nástroje: plný má Academy verzi, free dostane lite veřejnou verzi (ne hard lock)
-        if(tt && !hasA){ tt.setAttribute('href', '/nastroje-zdarma/'); var ttl=tt.querySelector('.go .lbl'); if(ttl) ttl.textContent='Vyzkoušet lite verzi'; }
+        // nástroje: plný (Academy) = trenérské rámování; bez Academy = spotřebitelské lákadlo (lite → upsell)
+        if(tt && !hasA){
+          tt.setAttribute('href', '/nastroje-zdarma/');
+          var ttl=tt.querySelector('.go .lbl'); if(ttl) ttl.textContent='Vyzkoušet zdarma';
+          var tth=tt.querySelector('h2'); if(tth) tth.textContent='Nástroje na míru';
+          var ttd=tt.querySelector('.desc'); if(ttd) ttd.textContent='Spočítej si vlastní jídelníček i makra, najdi potraviny podle kalorií a bílkovin, vygeneruj recepty i tréninkový plán. Lite verzi máš zdarma, plnou v Academy.';
+          var ttc=tt.querySelector('.chips'); if(ttc) ttc.innerHTML='<span class="chip">Jídelníček</span><span class="chip">Makra</span><span class="chip">Potraviny</span>';
+          var ttlb=tt.querySelector('.lockbadge'); if(ttlb){ ttlb.style.display='inline-flex'; ttlb.style.background='linear-gradient(145deg,#EBB12C,#E0762C)'; ttlb.style.color='#1A1222'; ttlb.style.border='none'; ttlb.textContent='🎁 Lite zdarma'; }
+        }
         var n=(hasA?1:0)+(hasV?1:0);
         if(n>0){ document.getElementById('cnt').textContent=n; document.getElementById('cntPill').style.display=''; }
         if(!hasA && !hasV && !window.__hasCoaching){ grid.style.display='none'; empty.style.display=''; }
@@ -146,6 +162,19 @@
               .then(function(r){
                 window.__hasCoaching = !!r[2];
                 showTiles(!!r[0], !!r[1]);
+                // Tvůj Coach appka: Academy člen → otevře appku s předvyplněným e-mailem (párování jede JEN
+                // přes e-mail). Bez Academy → lákadlo „v ceně Academy" míří na upsell /pro-vas/.
+                var ap=document.getElementById('tileApp');
+                if(ap){
+                  if(r[0]){
+                    ap.setAttribute('href','https://coach.martinbarna.cz/sign-up?email='+encodeURIComponent(u.email||'')+'&from=academy');
+                    var apl=ap.querySelector('.go .lbl'); if(apl) apl.textContent='Otevřít appku';
+                    var apb=document.getElementById('appBadge'); if(apb) apb.textContent='🎁 v ceně · NOVÉ';
+                  } else {
+                    ap.setAttribute('href','/pro-vas/'); ap.removeAttribute('target');
+                    var apl2=ap.querySelector('.go .lbl'); if(apl2) apl2.textContent='Chci ji → v ceně Academy';
+                  }
+                }
                 if(r[2]){ var tc=document.getElementById('tileCheckin'); if(tc) tc.style.display=''; }
                 else if(r[0]||r[1]){ var tm=document.getElementById('tileMemberCheckin'); if(tm) tm.style.display=''; }
                 if(['martin@martinbarna.cz','fitness.barna@gmail.com'].indexOf((u.email||'').toLowerCase())>-1){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; var tt=document.getElementById('tileTests'); if(tt) tt.style.display=''; }

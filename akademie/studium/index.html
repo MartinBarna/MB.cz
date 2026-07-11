@@ -218,8 +218,9 @@
     <h3 class="tools-head" id="nastroje">🛠️ Nástroje pro trenéry</h3>
     <p class="tools-sub" id="toolsSub">Generátory, které ti spočítají a poskládají plán na míru klienta. Dáš mu ho pod svým jménem.</p>
 
-    <!-- Tvůj Coach appka. Odkaz zatím na tvujcoach.cz (funguje); po napojení subdomény přepnout na https://coach.martinbarna.cz/?from=academy -->
-    <a class="bonus" id="tvujCoachCard" href="https://tvujcoach.cz/?from=academy" target="_blank" rel="noopener" style="text-decoration:none;border-color:rgba(235,177,44,.55);background:linear-gradient(145deg,rgba(235,177,44,.12),rgba(235,177,44,.03));">
+    <!-- Tvůj Coach appka. Fallback odkaz na subdoménu; boot() ho pro Academy člena přepíše na
+         /sign-up?email=<jeho e-mail>&from=academy (párování appky jede JEN přes e-mail). -->
+    <a class="bonus" id="tvujCoachCard" href="https://coach.martinbarna.cz/?from=academy" target="_blank" rel="noopener" style="text-decoration:none;border-color:rgba(235,177,44,.55);background:linear-gradient(145deg,rgba(235,177,44,.12),rgba(235,177,44,.03));">
       <span class="bico">📱</span>
       <div class="btxt"><b>Tvůj Coach — appka (mobil i web)<span class="litebadge" style="display:inline-block;background:#EBB12C;color:#161616;border:none;">🎁 NOVÉ · v ceně</span></b><span>Kompletní koučovací appka: trackuješ jídlo i trénink, appka ti <b>sama upravuje cíle</b> podle týdenních check-inů, <b>vyfotíš jídlo a spočítá makra</b>, a máš v ní <b>AI kouče</b>. <b style="color:var(--gold-soft)">Přihlas se do appky stejným e-mailem jako do Academy</b> — přístup máš v ceně členství.</span></div>
       <span class="bbtn">Otevřít appku →</span>
@@ -851,6 +852,9 @@
             // free ochutnávku (FREEMODE) a upsell na koupi celé Academy.
             window.BA.getUser().then(function(u){
               if(u && u.user_metadata){ SHARE_NAME = u.user_metadata.full_name || u.user_metadata.name || ''; }
+              // Tvůj Coach karta: pro přihlášeného člena předhoď e-mail do sign-up (appka páruje přístup
+              // JEN přes e-mail — jiný e-mail = přístup se nespojí). Bez e-mailu zůstává fallback odkaz.
+              if(u && u.email){ var _tc=document.getElementById('tvujCoachCard'); if(_tc) _tc.setAttribute('href','https://coach.martinbarna.cz/sign-up?email='+encodeURIComponent(u.email)+'&from=academy'); }
               if(!u){
                 FREEMODE = true; applyFreeMode();
                 var n0 = document.getElementById('modeNote');

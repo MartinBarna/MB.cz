@@ -27,8 +27,11 @@ body.ba{
 .ba ::selection{background:rgba(235,177,44,.3);color:#fff;}
 
 /* ---------- top bar ---------- */
-.ba .top{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  background:rgba(12,11,10,.55);border-bottom:1px solid var(--line);}
+/* POZOR: pouzij PRIMY potomek (.ba > .top). Studium/videokurz reusuji generickou tridu ".top"
+   i pro hlavicky karet (.modcard .top) — bez ">" by dedily sticky+z-index+blur a lepily se
+   pres horni listu (viditelny prekryv "Odhlasit"). Direct-child to omezi jen na skutecnou listu. */
+.ba > .top{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(12,11,10,.82);border-bottom:1px solid var(--line);}
 .ba .top .in{max-width:1080px;margin:0 auto;padding:13px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .ba .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.01em;color:#fff;}
 .ba .brand .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,var(--gold-2),var(--gold));
