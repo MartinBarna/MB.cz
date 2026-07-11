@@ -34,6 +34,25 @@
   .meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted-2);font-size:.9rem;margin:.4rem 0 0;}
   .meta b{color:#fff;}
   .note{color:var(--muted);font-size:.82rem;margin-top:.9rem;line-height:1.5;}
+  .swatch{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;}
+  .swatch.on{border-color:#fff;box-shadow:0 0 0 2px var(--gold,#EBB12C);}
+  .brandbox{margin:14px 0 2px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:rgba(255,255,255,.02);}
+  .brandbox summary{cursor:pointer;color:#cfc6b8;font-weight:600;font-size:.92rem;}
+  .brandbox .grid{margin-top:12px;}
+  .brandhead{display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--acc,var(--gold));padding:0 0 12px;margin:0 0 16px;}
+  .brandhead img{max-height:44px;max-width:150px;object-fit:contain;}
+  .brandhead .bn{color:#fff;font-weight:800;font-size:1.1rem;letter-spacing:-.01em;}
+  .brandhead .bc{color:var(--muted);font-size:.82rem;margin-left:auto;text-align:right;line-height:1.3;}
+  .brandhead.empty{display:none;}
+  .tcard.kcal{border-color:var(--acc,var(--gold));}
+  @media print{
+    body{background:#fff!important;color:#161616!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .top,.no-print{display:none!important;}
+    #result,.panel,.tcard,.brandhead{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .panel{border-color:#ddd!important;background:#fff!important;box-shadow:none!important;}
+    h1,h2,.tcard b,.brandhead .bn{color:#161616!important;} .meta b{color:#161616!important;}
+    .tcard{background:#f7f3ea!important;border-color:var(--acc,#EBB12C)!important;}
+  }
   .hidden{display:none;}
 </style>
 </head>
@@ -48,7 +67,7 @@
     <h1>Kalkulačka kalorií a maker</h1>
     <p class="lead">Zadej údaje klienta a spočítám jeho denní kalorie a makra (bílkoviny, sacharidy, tuky, vláknina) podle cíle. Stejný engine jako generátor jídelníčku — čísla sedí.</p>
 
-    <div class="panel">
+    <div class="panel no-print">
       <div class="grid">
         <div><label>Pohlaví</label><select id="sex"><option value="muz">Muž</option><option value="zena">Žena</option></select></div>
         <div><label>Věk</label><input id="age" type="number" value="32" min="14" max="100"></div>
@@ -68,7 +87,22 @@
           <option value="mirny_narust">Mírný nárůst svalů</option>
           <option value="narust">Nabírání svalů</option>
         </select></div>
+        <div><label>Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Jana"></div>
       </div>
+      <details class="brandbox" id="brandbox">
+        <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">— projeví se ve výstupu i v PDF (uloží se ti, sdílí se s generátory)</span></summary>
+        <div class="grid">
+          <div><label>Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková — výživa"></div>
+          <div><label>Akcentová barva</label>
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="accent" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;">
+            <span id="swatches" style="display:flex;gap:7px;flex-wrap:wrap"></span></div>
+          </div>
+          <div><label>Logo (nahraj soubor nebo URL)</label>
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="logofile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:120px;font-size:.85rem"><button type="button" id="logoclear" class="ghost no-print" style="display:none;font-size:.82rem">✕ odebrat logo</button></div>
+            <input id="logo" type="url" placeholder="…nebo URL: https://…/logo.png" style="margin-top:7px"></div>
+          <div><label>Kontakt (web / e-mail, volitelné)</label><input id="contact" type="text" placeholder="jana@example.cz"></div>
+        </div>
+      </details>
       <div class="actions">
         <button class="btn" id="calc">Spočítat</button>
       </div>
@@ -76,6 +110,7 @@
 
     <div id="result" class="hidden">
       <div class="panel">
+        <div class="brandhead empty" id="brandhead"></div>
         <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
           <h2 style="margin:0;color:#fff;font-size:1.3rem;">Denní cíl</h2>
           <span class="brandline" id="goalLbl" style="color:var(--muted);font-size:.9rem;"></span>
@@ -83,7 +118,8 @@
         <div class="targets" id="targets" style="margin-top:1rem;"></div>
         <div class="meta" id="meta"></div>
         <p class="note">Hodnoty jsou výchozí odhad (Mifflin–St Jeor + koeficient aktivity a cíle). Vždy je dolaď podle reálného vývoje klienta — pokud po 2–3 týdnech váha nejde podle plánu, uprav příjem.</p>
-        <div class="actions">
+        <div class="actions no-print">
+          <button class="btn ghost" id="print">🖨️ Uložit / tisk (PDF)</button>
           <a class="btn ghost" href="/akademie/nastroje/jidelnicek/">🥗 Chceš z toho hotový jídelníček? →</a>
         </div>
       </div>
@@ -95,6 +131,19 @@
   (function(){
     var $=function(id){return document.getElementById(id);};
     function fmt(n){return Math.round(n);}
+    function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+    var logoData='';
+    function hexToRgba(h,a){ if(!/^#[0-9a-fA-F]{6}$/.test(h))h='#EBB12C'; var n=parseInt(h.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+    function saveBrand(){ try{ localStorage.setItem('ba_trainer_brand', JSON.stringify({t:$('trainer').value,a:$('accent').value,l:$('logo').value,c:$('contact').value,lf:logoData})); }catch(e){} }
+    function loadBrand(){ try{ var b=JSON.parse(localStorage.getItem('ba_trainer_brand')||'{}'); if(b.t)$('trainer').value=b.t; if(b.a)$('accent').value=b.a; if(b.l)$('logo').value=b.l; if(b.c)$('contact').value=b.c; if(b.lf){ logoData=b.lf; $('logoclear').style.display=''; } if(b.t||b.l||b.lf)$('brandbox').open=true; syncSwatch(); }catch(e){} }
+    var PRESETS=['#EBB12C','#E0762C','#C0453B','#2C7BE0','#1FA97B','#7A5CE0','#111827','#8A6D3B'];
+    var sc=$('swatches');
+    PRESETS.forEach(function(hex){ var b=document.createElement('button'); b.type='button'; b.className='swatch'; b.style.background=hex; b.dataset.hex=hex.toLowerCase(); b.title=hex; b.addEventListener('click',function(){ $('accent').value=hex; syncSwatch(); saveBrand(); }); sc.appendChild(b); });
+    function syncSwatch(){ var v=($('accent').value||'').toLowerCase(); Array.prototype.forEach.call(sc.children,function(b){ b.classList.toggle('on', b.dataset.hex===v); }); }
+    $('accent').addEventListener('input',function(){ syncSwatch(); saveBrand(); });
+    $('logofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) — zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('logoclear').style.display=''; saveBrand(); }; r.readAsDataURL(f); });
+    $('logoclear').addEventListener('click',function(){ logoData=''; $('logofile').value=''; $('logoclear').style.display='none'; saveBrand(); });
+    loadBrand();
     function calc(){
       var t=window.MealGen.computeTargets({ sex:$('sex').value, age:$('age').value, weight:$('weight').value, height:$('height').value, activity:$('activity').value, goal:$('goal').value });
       $('targets').innerHTML=
@@ -103,12 +152,25 @@
         '<div class="tcard"><b>'+t.carbs+' g</b><span>Sacharidy</span></div>'+
         '<div class="tcard"><b>'+t.fat+' g</b><span>Tuky</span></div>'+
         '<div class="tcard"><b>'+t.fiber+' g</b><span>Vláknina</span></div>';
-      $('goalLbl').textContent='cíl: '+t.goalLabel;
       $('meta').innerHTML='<span>Bazální metabolismus (BMR): <b>'+t.bmr+' kcal</b></span><span>Celkový výdej (TDEE): <b>'+t.tdee+' kcal</b></span>';
+      // branding (trenér) — sdílený ba_trainer_brand
+      var c=$('client').value.trim(), tn=$('trainer').value.trim(), ac=$('accent').value, lg=(logoData||$('logo').value.trim()), ct=$('contact').value.trim();
+      saveBrand();
+      var bh=$('brandhead');
+      if(tn||lg){
+        bh.classList.remove('empty');
+        bh.innerHTML=(lg?('<img src="'+esc(lg)+'" alt="logo" onerror="this.style.display=\'none\'">'):'')+
+          (tn?('<span class="bn">'+esc(tn)+'</span>'):'')+
+          (ct?('<span class="bc">'+esc(ct)+'</span>'):'');
+      } else { bh.classList.add('empty'); bh.innerHTML=''; }
+      var acc=/^#[0-9a-fA-F]{6}$/.test(ac)?ac:'#EBB12C';
+      $('result').style.setProperty('--acc', acc);
+      $('goalLbl').textContent=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'')+' · cíl: '+t.goalLabel;
       $('result').classList.remove('hidden');
       $('result').scrollIntoView({behavior:'smooth',block:'start'});
     }
     $('calc').addEventListener('click', calc);
+    $('print').addEventListener('click',function(){ window.print(); });
   })();
   </script>
   <script src="/assets/scroll-top.js?v=g3" defer></script>

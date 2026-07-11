@@ -60,6 +60,124 @@
     });
   }
 
+  // ===== Objem per sval: 14 detailních svalů + fractional counting + zóny MEV/MAV/MRV =====
+  // Port z appky Tvůj Coach (src/engine/muscle.ts). Deterministické; landmarky = publikované
+  // defaulty z tréninkové literatury (editovatelné), NE Martinova metoda vydávaná za fakt.
+  var MUS_LABEL = { chest:'Prsa', front_delts:'Přední delty', side_delts:'Boční delty', rear_delts:'Zadní delty', back:'Záda', traps:'Trapézy', biceps:'Biceps', triceps:'Triceps', forearms:'Předloktí', quads:'Kvadricepsy', hamstrings:'Hamstringy', glutes:'Hýždě', calves:'Lýtka', abs:'Břicho' };
+  var MUS_ORDER = ['chest','back','side_delts','front_delts','rear_delts','traps','biceps','triceps','forearms','quads','hamstrings','glutes','calves','abs'];
+  var LANDMARKS = { chest:{mev:8,mav:16,mrv:22}, front_delts:{mev:0,mav:8,mrv:12}, side_delts:{mev:8,mav:16,mrv:26}, rear_delts:{mev:6,mav:12,mrv:20}, back:{mev:10,mav:18,mrv:25}, traps:{mev:0,mav:12,mrv:20}, biceps:{mev:8,mav:14,mrv:20}, triceps:{mev:6,mav:12,mrv:18}, forearms:{mev:2,mav:8,mrv:15}, quads:{mev:8,mav:14,mrv:20}, hamstrings:{mev:6,mav:12,mrv:16}, glutes:{mev:0,mav:8,mrv:16}, calves:{mev:8,mav:14,mrv:20}, abs:{mev:0,mav:16,mrv:25} };
+  function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim(); }
+  // Pořadí ROZHODUJE — specifičtější vzory dřív (rumunský před mrtvým tahem, reverse fly před fly). První shoda vyhrává.
+  var RULES = [
+    { re:/rumunsk|rdl|romanian/, primary:['hamstrings','glutes'], secondary:[] },
+    { re:/mrtv[yý] tah|deadlift|mrtvol/, primary:['back','hamstrings','glutes'], secondary:[] },
+    { re:/predkop|leg extension|extenze kolen/, primary:['quads'], secondary:[] },
+    { re:/zakop|leg curl|flexe kolen|hamstring curl/, primary:['hamstrings'], secondary:[] },
+    { re:/hip thrust|hyzd|glute bridge|mostik/, primary:['glutes'], secondary:['hamstrings'] },
+    { re:/vypad|lunge|bulhar|split squat/, primary:['quads','glutes'], secondary:[] },
+    { re:/leg press|leg-press/, primary:['quads'], secondary:['glutes'] },
+    { re:/drep|squat|hack/, primary:['quads','glutes'], secondary:['hamstrings'] },
+    { re:/lytk|calf|vypony/, primary:['calves'], secondary:[] },
+    { re:/reverse fly|rozpaz.*predklon|zadni delt|rear delt/, primary:['rear_delts'], secondary:[] },
+    { re:/rozpaz|fly|pec.?deck|peck|rozpazov/, primary:['chest'], secondary:[] },
+    { re:/sikm|incline|horni prsa/, primary:['chest'], secondary:['front_delts','triceps'] },
+    { re:/bench|tlak na (rovn|lavici)|bench press|klik|push.?up|prsa/, primary:['chest'], secondary:['front_delts','triceps'] },
+    { re:/upaz|lateral raise|bocni zdvih|side raise/, primary:['side_delts'], secondary:[] },
+    { re:/face.?pull|face pull/, primary:['rear_delts'], secondary:['traps'] },
+    { re:/tlak nad hlavu|nad hlavu|overhead|ohp|military|arnold|tlak.*rameno|rameno.*tlak/, primary:['front_delts'], secondary:['side_delts','triceps'] },
+    { re:/krceni ramen|shrug|trapez/, primary:['traps'], secondary:[] },
+    { re:/shyb|pull.?up|chin.?up|pritahovan/, primary:['back'], secondary:['biceps'] },
+    { re:/stahovani (kladky|hor)|lat pulldown|pulldown|prit.*kladk/, primary:['back'], secondary:['biceps'] },
+    { re:/vesl|row|pritah|prit[aá]h/, primary:['back'], secondary:['biceps','rear_delts'] },
+    { re:/kladka na triceps|triceps|stahovani.*triceps|francouz|dip|klik na trojhlav/, primary:['triceps'], secondary:[] },
+    { re:/kladka na biceps|biceps|zdvih.*(cink|jednoruc|obouruc)|curl|dvojhlav/, primary:['biceps'], secondary:[] },
+    { re:/predlokt|forearm|wrist|zapesti/, primary:['forearms'], secondary:[] },
+    { re:/tlak s jednoruc|db press|jednoruc.*tlak/, primary:['chest'], secondary:['front_delts','triceps'] },
+    { re:/brich|abs|plank|prkno|zkracov|crunch|leg raise|nudle|core/, primary:['abs'], secondary:[] }
+  ];
+  function matchMuscles(exercise) {
+    var n = norm(exercise); if (!n) return null;
+    for (var i = 0; i < RULES.length; i++) { if (RULES[i].re.test(n)) return { primary: RULES[i].primary, secondary: RULES[i].secondary }; }
+    return null;
+  }
+  // autoritativní mapa z DB (skupina + pohyb + název) na 14 detailních svalů
+  function musclesFromDb(m, pattern, name) {
+    var n = norm(name);
+    var isRear = /zadni|reverse|face|predklon/.test(n);
+    var isFront = /predni|predpaz|front/.test(n);
+    var isShrug = /shrug|krceni ramen|trapez/.test(n);
+    switch (m) {
+      case 'biceps': return { primary:['biceps'], secondary:[] };
+      case 'triceps': return { primary:['triceps'], secondary:[] };
+      case 'lytka': return { primary:['calves'], secondary:[] };
+      case 'bricho': return { primary:['abs'], secondary:[] };
+      case 'prsa': return { primary:['chest'], secondary: pattern.indexOf('tlak') === 0 ? ['front_delts','triceps'] : [] };
+      case 'zada':
+        if (pattern === 'hinge') {
+          return /rumunsk|rdl|romanian/.test(n)
+            ? { primary:['hamstrings','glutes'], secondary:['back'] }
+            : { primary:['back','hamstrings','glutes'], secondary:[] };
+        }
+        return { primary:['back'], secondary: pattern === 'tah-horizontalni' ? ['biceps','rear_delts'] : ['biceps'] };
+      case 'ramena':
+        if (isShrug) return { primary:['traps'], secondary:[] };
+        if (isRear) return { primary:['rear_delts'], secondary:[] };
+        if (isFront) return { primary:['front_delts'], secondary:[] };
+        if (pattern === 'tlak-vertikalni') return { primary:['front_delts'], secondary:['side_delts','triceps'] };
+        return { primary:['side_delts'], secondary:[] };
+      case 'nohy':
+        if (pattern === 'hinge') return { primary:['hamstrings','glutes'], secondary:[] };
+        if (/zakop|leg curl|flexe kolen|hamstring/.test(n)) return { primary:['hamstrings'], secondary:[] };
+        return { primary:['quads'], secondary:['glutes'] };
+      case 'hyzde': return { primary:['glutes'], secondary: pattern === 'hinge' ? ['hamstrings'] : [] };
+      case 'full':
+        if (pattern === 'kardio') return { primary:[], secondary:[] };
+        if (pattern === 'hinge') return { primary:['back','hamstrings','glutes'], secondary:[] };
+        if (pattern === 'drep' || pattern === 'vypad') return { primary:['quads','glutes'], secondary:[] };
+        return { primary:[], secondary:[] };
+      default: return { primary:[], secondary:[] };
+    }
+  }
+  var DB_BY_NAME = null;
+  function setMuscleDb(db) { DB_BY_NAME = {}; db.forEach(function (e) { DB_BY_NAME[norm(e.name)] = { muscle: e.muscle, pattern: e.pattern, name: e.name }; }); }
+  function resolveMuscles(exercise) {
+    if (DB_BY_NAME) { var hit = DB_BY_NAME[norm(exercise)]; if (hit) return musclesFromDb(hit.muscle, hit.pattern, hit.name); }
+    return matchMuscles(exercise);
+  }
+  function zoneFor(sets, lm) { if (sets < lm.mev) return 'low'; if (sets <= lm.mav) return 'building'; if (sets <= lm.mrv) return 'high'; return 'over'; }
+  // parita s appkou (pro testy): týdenní série na sval z logu tréninků (fractional counting)
+  function weeklySetsByMuscle(rows, sinceDateIncl) {
+    var acc = {}, unmatched = 0;
+    rows.forEach(function (r) {
+      if (r.logged_date < sinceDateIncl) return;
+      var sets = r.sets || 0; if (sets <= 0) return;
+      var mm = resolveMuscles(r.exercise);
+      if (!mm || (!mm.primary.length && !mm.secondary.length)) { unmatched += sets; return; }
+      mm.primary.forEach(function (p) { acc[p] = (acc[p] || 0) + sets; });
+      mm.secondary.forEach(function (s) { acc[s] = (acc[s] || 0) + sets * 0.5; });
+    });
+    var byMuscle = MUS_ORDER.filter(function (mu) { return acc[mu] != null; }).map(function (mu) { return { muscle: mu, sets: Math.round(acc[mu] * 2) / 2 }; });
+    return { byMuscle: byMuscle, unmatchedSets: unmatched };
+  }
+  // objem z VYGENEROVANÉHO plánu: každý cvik autoritativně přes musclesFromDb (má muscle+pattern+name z DB)
+  function planVolume(plan) {
+    var acc = {};
+    plan.days.forEach(function (d) {
+      d.exercises.forEach(function (pe) {
+        if (pe.ex.pattern === 'kardio') return;
+        var sets = pe.sets || 0; if (sets <= 0) return;
+        var mm = musclesFromDb(pe.ex.muscle, pe.ex.pattern, pe.ex.name);
+        if (!mm || (!mm.primary.length && !mm.secondary.length)) return;
+        mm.primary.forEach(function (p) { acc[p] = (acc[p] || 0) + sets; });
+        mm.secondary.forEach(function (s) { acc[s] = (acc[s] || 0) + sets * 0.5; });
+      });
+    });
+    return MUS_ORDER.filter(function (mu) { return acc[mu] != null; }).map(function (mu) {
+      var sets = Math.round(acc[mu] * 2) / 2, lm = LANDMARKS[mu];
+      return { muscle: mu, label: MUS_LABEL[mu], sets: sets, lm: lm, zone: zoneFor(sets, lm) };
+    });
+  }
+
   // objemové pokrytí týdne: kolik pracovních sérií padne na každou svalovou skupinu (kardio se nepočítá)
   function planCoverage(plan) {
     var byGroup = {};
@@ -76,6 +194,7 @@
     opts = opts || {};
     var seed = opts.seed || 0;
     var pool = filterDb(db, opts);
+    setMuscleDb(db);
     var g = GOALS[opts.goal] || GOALS.svaly;
     var split = splitFor(opts.days);
     var days = [];
@@ -148,8 +267,9 @@
       days.push({ name: dayName, day: di + 1, exercises: exercises });
     });
 
-    return { days: days, goal: g, rest: g.rest, poolSize: pool.length, coverage: planCoverage({ days: days }) };
+    return { days: days, goal: g, rest: g.rest, poolSize: pool.length, coverage: planCoverage({ days: days }), volume: planVolume({ days: days }) };
   }
 
-  global.WorkoutGen = { buildPlan: buildPlan, planCoverage: planCoverage, GOALS: GOALS };
+  global.WorkoutGen = { buildPlan: buildPlan, planCoverage: planCoverage, planVolume: planVolume, GOALS: GOALS,
+    muscles: { musclesFromDb: musclesFromDb, matchMuscles: matchMuscles, resolveMuscles: resolveMuscles, weeklySetsByMuscle: weeklySetsByMuscle, setDb: setMuscleDb, LANDMARKS: LANDMARKS, zoneFor: zoneFor, LABELS: MUS_LABEL, ORDER: MUS_ORDER } };
 })(window);
