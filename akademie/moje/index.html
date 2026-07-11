@@ -173,6 +173,8 @@
                   } else {
                     ap.setAttribute('href','/pro-vas/'); ap.removeAttribute('target');
                     var apl2=ap.querySelector('.go .lbl'); if(apl2) apl2.textContent='Chci ji → v ceně Academy';
+                    var apd=ap.querySelector('.desc'); if(apd) apd.textContent='Kompletní koučovací appka (mobil i web): vyfotíš jídlo a spočítá makra, sama upravuje cíle podle výsledků, AI kouč. Dostaneš ji v ceně Academy.';
+                    var apb2=document.getElementById('appBadge'); if(apb2) apb2.textContent='🎁 v ceně Academy';
                   }
                 }
                 if(r[2]){ var tc=document.getElementById('tileCheckin'); if(tc) tc.style.display=''; }
