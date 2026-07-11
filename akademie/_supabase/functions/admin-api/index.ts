@@ -384,7 +384,32 @@ Deno.serve(async (req) => {
       if (!email || !["academy", "videokurz"].includes(product)) return json({ error: "bad_args" }, 400);
       const { error } = await admin.from("entitlements").upsert({ email, product, active, source: "admin-panel", granted_at: new Date().toISOString() }, { onConflict: "email,product" });
       if (error) return json({ error: error.message }, 500);
+      // Academy pristup zrcadli i appku Tvuj Coach: grant kdyz active, revoke kdyz odebiras. Best-effort + log.
+      if (product === "academy") {
+        try {
+          const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+          const gsec = gs?.value ? String(gs.value) : "";
+          const act = active ? "grant" : "revoke";
+          let gres = "no-secret";
+          if (gsec) {
+            const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+              method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+              body: JSON.stringify({ email, action: act, source: "admin-panel" }),
+            }).catch(() => null);
+            if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
+            else gres = r ? "http-" + r.status : "fetch-fail";
+          }
+          await admin.from("tvujcoach_grants").insert({ email, action: act, result: gres, source: "admin-panel" });
+        } catch { /* best-effort */ }
+      }
       return json({ ok: true });
+    }
+
+    // Prehled udeleni pristupu do appky Tvuj Coach (kdo/kdy/vysledek) — pro admin sekci.
+    if (action === "tvujcoach_grants") {
+      const { data, error } = await admin.from("tvujcoach_grants").select("email,action,result,source,created_at").order("created_at", { ascending: false }).limit(200);
+      if (error) return json({ error: error.message }, 500);
+      return json({ ok: true, grants: data ?? [] });
     }
 
     if (action === "set_tag") {
