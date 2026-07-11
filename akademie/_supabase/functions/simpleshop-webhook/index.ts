@@ -261,6 +261,26 @@ Deno.serve(async (req: Request) => {
   );
   if (error) return json({ error: "db", detail: error.message }, 500);
 
+  // Kdo koupi Academy -> odemkni i appku Tvuj Coach (externi endpoint appky, paruje podle e-mailu).
+  // Best-effort: nikdy neshodi nakup. Vysledek (granted|pending) loguje do tvujcoach_grants (prehled + mereni aktivace).
+  if (product === "academy") {
+    try {
+      const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+      const gsec = gs?.value ? String(gs.value) : "";
+      let gres = "no-secret";
+      if (gsec) {
+        const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+          method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+          body: JSON.stringify({ email, action: "grant", tier: "diamond", source: "academy-nakup", academy_order_id: pick(body, ["order_id", "order_number", "number", "id"]) || null }),
+        }).catch(() => null);
+        // deno-lint-ignore no-explicit-any
+        if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
+        else gres = r ? "http-" + r.status : "fetch-fail";
+      }
+      await admin.from("tvujcoach_grants").insert({ email, action: "grant", result: gres, source: "academy-nakup" });
+    } catch { /* best-effort, nikdy neshodi nakup */ }
+  }
+
   // Zaplaceno -> rozpracovane objednavky zakaznika na tento produkt uz nepripominat.
   try { await admin.from("pending_orders").update({ completed: true }).eq("email", email).eq("product", product); } catch { /* best-effort */ }
 
