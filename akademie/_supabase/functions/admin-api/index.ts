@@ -394,7 +394,7 @@ Deno.serve(async (req) => {
           if (gsec) {
             const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
               method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-              body: JSON.stringify({ email, action: act, source: "admin-panel" }),
+              body: JSON.stringify({ email, action: act, tier: "diamond", source: "admin-panel" }),
             }).catch(() => null);
             if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
             else gres = r ? "http-" + r.status : "fetch-fail";

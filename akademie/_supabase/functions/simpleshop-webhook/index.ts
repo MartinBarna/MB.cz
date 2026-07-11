@@ -271,7 +271,7 @@ Deno.serve(async (req: Request) => {
       if (gsec) {
         const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
           method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-          body: JSON.stringify({ email, action: "grant", source: "academy-nakup" }),
+          body: JSON.stringify({ email, action: "grant", tier: "diamond", source: "academy-nakup", academy_order_id: pick(body, ["order_id", "order_number", "number", "id"]) || null }),
         }).catch(() => null);
         // deno-lint-ignore no-explicit-any
         if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
