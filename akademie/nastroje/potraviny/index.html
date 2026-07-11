@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databáze potravin — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r2">
+<style>
+  .wrap{max-width:820px;margin:0 auto;padding:30px 20px 90px;}
+  .kick{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+  h1{font-size:clamp(1.7rem,4vw,2.2rem);color:#fff;margin:.4rem 0 .5rem;letter-spacing:-.02em;}
+  .lead{color:#cfc6b8;font-size:1.05rem;max-width:620px;}
+  body{color-scheme:dark;}
+  .searchbox{position:relative;margin:1.4rem 0 .6rem;}
+  .searchbox input{width:100%;background-color:rgba(0,0,0,.5)!important;border:1px solid var(--line-2)!important;border-radius:14px;color:#fff!important;padding:15px 16px 15px 46px;font-family:inherit;font-size:1.05rem;}
+  .searchbox input:focus{outline:none;border-color:rgba(235,177,44,.4)!important;}
+  .searchbox .si{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gold-soft);font-size:1.1rem;}
+  .hint{color:var(--muted);font-size:.85rem;margin:.2rem 0 0;}
+  .count{color:var(--muted-2);font-size:.85rem;margin:1rem 0 .4rem;font-weight:600;}
+  .fcard{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 10px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));}
+  .fhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+  .fhead b{color:#fff;font-size:1.05rem;}
+  .fcat{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;border:1px solid var(--line-2);border-radius:50px;padding:3px 10px;white-space:nowrap;}
+  .fportion{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:11px 0 9px;color:var(--muted-2);font-size:.9rem;}
+  .fportion input{width:80px;background-color:rgba(0,0,0,.45)!important;border:1px solid var(--line-2)!important;border-radius:9px;color:#fff!important;padding:7px 9px;font-family:inherit;font-size:.95rem;-webkit-appearance:none;appearance:none;}
+  .fportion .per100{color:var(--muted);font-size:.8rem;margin-left:auto;}
+  .fmac{display:flex;gap:8px;flex-wrap:wrap;}
+  .fmac .m{flex:1;min-width:78px;background:linear-gradient(145deg,#23211e,#0c0c0c);border:1px solid var(--line);border-radius:11px;padding:9px 6px;text-align:center;}
+  .fmac .m b{display:block;color:#fff;font-size:1.05rem;}
+  .fmac .m span{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;}
+  .fmac .m.kcal{border-color:rgba(235,177,44,.4);}
+  .empty{color:var(--muted);text-align:center;padding:2rem 0;}
+  .lock{background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.25);border-radius:14px;padding:1rem 1.3rem;color:#e9e2d8;}
+  .hidden{display:none;}
+  .src{color:var(--muted);font-size:.78rem;margin-top:1.4rem;line-height:1.5;}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/studium/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Databáze potravin</span></span></a>
+    <span style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:flex-end;"><a class="back" href="/akademie/studium/#nastroje" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Seznam nástrojů</a><a class="back" href="/akademie/moje/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">Moje sekce</a></span>
+  </div></div>
+
+  <div class="wrap">
+    <span class="kick"><span class="dot"></span> Nástroj</span>
+    <h1>Databáze potravin</h1>
+    <p class="lead">Najdi jakoukoli potravinu a hned uvidíš její kalorie a makra — na 100 g i na porci. Zadej gramáž a přepočítá se ti to na míru. Přes 2 300 českých potravin.</p>
+
+    <div id="lock" class="lock hidden">🔒 Plná verze je součástí <b>Barna Academy</b>. <a href="/akademie/" style="color:var(--gold-soft)">Získat přístup →</a></div>
+
+    <div id="tool">
+      <div class="searchbox"><span class="si">🔍</span><input id="q" type="search" placeholder="Hledej potravinu… (např. rýže, tvaroh, banán)" autocomplete="off" autofocus></div>
+      <p class="hint" id="hint">Nezáleží na diakritice — „rohlik" najde „rohlík".</p>
+      <div class="count" id="count"></div>
+      <div id="results"></div>
+      <p class="src">Makra jsou orientační (běžné potravinové tabulky) — u konkrétních produktů se mohou lišit, řiď se obalem. Databáze: Martinova kurátorská sbírka potravin.</p>
+    </div>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script src="/assets/food-search.js?v=1"></script>
+  <script>
+  (function(){
+    var $=function(id){return document.getElementById(id);};
+    var FOODS=null;
+    function r(n){return Math.round(n);}
+    function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+    function macHtml(m){
+      return '<span class="m kcal"><b>'+r(m.kcal)+'</b><span>kcal</span></span>'+
+        '<span class="m"><b>'+r(m.protein)+' g</b><span>Bílkoviny</span></span>'+
+        '<span class="m"><b>'+r(m.carb)+' g</b><span>Sacharidy</span></span>'+
+        '<span class="m"><b>'+r(m.fat)+' g</b><span>Tuky</span></span>'+
+        '<span class="m"><b>'+r(m.fiber)+' g</b><span>Vláknina</span></span>';
+    }
+    function render(items){
+      if(!items.length){ $('results').innerHTML='<div class="empty">Nic jsem nenašel — zkus jiný název nebo obecnější slovo.</div>'; $('count').textContent=''; return; }
+      $('count').textContent=items.length+(items.length===1?' výsledek':(items.length<5?' výsledky':' výsledků'));
+      $('results').innerHTML=items.map(function(it,i){
+        var sv=it.serving_g||100;
+        return '<div class="fcard" data-i="'+i+'">'+
+          '<div class="fhead"><b>'+esc(it.name)+'</b><span class="fcat">'+esc(it.category)+'</span></div>'+
+          '<div class="fportion"><label style="color:#cfc6b8">Porce:</label> <input type="number" class="fg" value="'+sv+'" min="1" max="3000" step="1"> g'+
+          '<span class="per100">na 100 g: '+r(it.kcal_100g)+' kcal · B '+r(it.protein_100g)+' · S '+r(it.carb_100g)+' · T '+r(it.fat_100g)+'</span></div>'+
+          '<div class="fmac"></div></div>';
+      }).join('');
+      Array.prototype.forEach.call($('results').querySelectorAll('.fcard'),function(card){
+        var i=+card.getAttribute('data-i'), input=card.querySelector('.fg'), mac=card.querySelector('.fmac');
+        function upd(){ var g=Math.max(0,+input.value||0); mac.innerHTML=macHtml(window.FoodSearch.macrosFor(items[i],g)); }
+        input.addEventListener('input',upd); upd();
+      });
+    }
+    var t=null;
+    function doSearch(){
+      if(!FOODS) return;
+      var q=$('q').value;
+      if(!q.trim()){ $('results').innerHTML=''; $('count').textContent=''; return; }
+      render(window.FoodSearch.search(FOODS, q, 30));
+    }
+    $('q').addEventListener('input',function(){ clearTimeout(t); t=setTimeout(doSearch,90); });
+
+    fetch('/assets/curated-foods.json?v=1').then(function(r){return r.json();}).then(function(d){
+      FOODS=d; $('hint').textContent='Nezáleží na diakritice — „rohlik" najde „rohlík". '+d.length+' potravin.';
+      if($('q').value.trim()) doSearch();
+    }).catch(function(){ $('hint').textContent='⚠️ Databázi se nepodařilo načíst.'; });
+
+    // Gating: plná verze jen pro Academy. Bez přístupu → zámek. Demo/bez BA běží.
+    if(window.BA){ window.BA.ready.then(function(){
+      if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){
+        if(!ok){ $('lock').classList.remove('hidden'); $('tool').classList.add('hidden'); }
+      }); }
+    }); }
+  })();
+  </script>
+  <script src="/assets/scroll-top.js?v=g3" defer></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
+</html>
