@@ -118,6 +118,7 @@
           <span class="brandline" id="byline"></span>
         </div>
         <div id="days"></div>
+        <div id="coverage"></div>
         <p class="note" id="restnote"></p>
         <div class="actions no-print">
           <button class="btn" id="regen">↻ Přegenerovat</button>
@@ -129,7 +130,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260628b"></script>
-  <script src="/assets/workout-gen.js?v=20260629"></script>
+  <script src="/assets/workout-gen.js?v=20260711"></script>
   <script>
   (function(){
     var DB=null, seed=0;
@@ -155,7 +156,19 @@
         html+='</table></div>';
       });
       $('days').innerHTML=html;
-      $('restnote').textContent='Pauza mezi sériemi ~'+plan.rest+'. Cíl: '+plan.goal.label+'. Plán je výchozí bod — uprav podle klienta, techniky a regenerace. Postupně přidávej zátěž nebo opakování (progresivní přetížení).';
+      // Objemové pokrytí týdne (profi feature) — pracovní série na svalovou skupinu + orientační zóny.
+      var MUS={prsa:'Prsa',zada:'Záda',nohy:'Nohy',hyzde:'Hýždě',ramena:'Ramena',biceps:'Biceps',triceps:'Triceps',lytka:'Lýtka',bricho:'Břicho / core',full:'Celé tělo'};
+      function zone(s){ return s<10?['málo','#e0a52c']:s<=20?['optimum','#7bbf6a']:['vysoký','#e0762c']; }
+      var cov=plan.coverage||{}, muscles=Object.keys(cov).sort(function(a,b){return cov[b]-cov[a];});
+      if(muscles.length){
+        var ch='<h3 style="margin:1.6rem 0 .5rem">Objem za týden <small style="color:#9a8f80;font-weight:600">pracovní série na svalovou skupinu</small></h3><div style="display:flex;flex-direction:column;gap:7px">';
+        muscles.forEach(function(m){ var s=cov[m], z=zone(s), w=Math.min(100,Math.round(s/22*100));
+          ch+='<div style="display:grid;grid-template-columns:96px 1fr 96px;align-items:center;gap:10px"><span style="color:#e7e0d5;font-size:.9rem">'+esc(MUS[m]||m)+'</span><span style="height:10px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden"><i style="display:block;height:100%;width:'+w+'%;background:'+z[1]+'"></i></span><span style="font-size:.85rem;color:#cbbfae;white-space:nowrap"><b style="color:'+z[1]+'">'+s+'</b> sérií · '+z[0]+'</span></div>';
+        });
+        ch+='</div><p class="note" style="margin-top:.7rem">Orientační zóny pro růst svalů: pod ~10 sérií týdně = spíš udržovací, ~10–20 = růstové optimum, nad ~20 = vysoký objem (hlídej regeneraci). Přizpůsob dle klienta, jeho historie a případných dalších tréninků.</p>';
+        $('coverage').innerHTML=ch;
+      } else { $('coverage').innerHTML=''; }
+      $('restnote').textContent='Pauza mezi sériemi ~'+plan.rest+'. Cíl: '+plan.goal.label+'. Cvič s 1–3 opakováními v záloze (nejdi do selhání v každé sérii). Když ve všech sériích čistě zvládneš horní hranici opakování, přidej váhu nebo opakování (progresivní přetížení). Po 4–6 týdnech zařaď lehčí „deload" týden. Plán je výchozí bod — uprav podle klienta, techniky a regenerace.';
       // branding
       var c=$('client').value.trim(), tn=$('trainer').value.trim(), ac=$('accent').value, lg=$('logo').value.trim(), ct=$('contact').value.trim();
       saveBrand();

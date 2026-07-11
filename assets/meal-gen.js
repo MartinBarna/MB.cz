@@ -166,14 +166,26 @@
       factor = Math.max(lo, Math.min(hi, factor));
       all.forEach(function (it) { if (it.food.cat === cat) it.grams = it.grams * factor; });
     }
-    // pořadí: bílkoviny → sacharidy → tuky (každý dorovná svůj makro-cíl)
-    scaleCat('protein', 'p', targets.protein, 0.45, 2.2);
-    scaleCat('carb', 'c', targets.carbs, 0.4, 2.6);
-    scaleCat('fat', 'f', targets.fat, 0.3, 3.0);
-    // hezké zaokrouhlení gramů (5 g, drobné zdroje tuku na 1 g)
+    // Normalizace maker je provázaná — potraviny každé kategorie nesou i ostatní makra
+    // (sacharidové zdroje mají protein, proteinové zdroje mají tuk atd.). Škálování jedné
+    // kategorie proto rozhodí ostatní. Iterujeme sacharidy → tuky → protein několikrát,
+    // ať se to ustálí; protein necháváme jako poslední (nejčistší makro), aby trefil cíl
+    // co nejpřesněji. Dřív běžel jediný průchod v pořadí protein-první → systematický přestřel
+    // bílkovin (u nabírání/vysokého příjmu i o 30–45 %).
+    for (var np = 0; np < 3; np++) {
+      scaleCat('carb', 'c', targets.carbs, 0.4, 2.6);
+      scaleCat('fat', 'f', targets.fat, 0.3, 3.0);
+      scaleCat('protein', 'p', targets.protein, 0.35, 2.4);
+    }
+    // hezké zaokrouhlení gramů (5 g, drobné zdroje tuku na 1 g) + realistický strop porce.
+    // Bez stropu škálování na vysoké cíle vyrobí nesmysly (675 g bulguru na jeden zátah).
+    // Stropy jsou generózní (velký objemový den je prostě velký), jen ořežou extrémy — u
+    // hodně vysokých cílů se pak den může mírně podstřelit; totály to poctivě ukážou.
+    var CAP = { protein:300, carb:500, legume:350, dairy:350, veg:250, fruit:250, fat:50, snack:120 };
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
       it.grams = Math.max(step, Math.round(it.grams / step) * step);
+      var cap = CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
     });
 
     // přepočítej totály po normalizaci
