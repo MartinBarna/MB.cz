@@ -214,6 +214,7 @@
         <span class="muted" id="count"></span>
         <button class="mlogbtn" id="seqBtn">🗺️ Sekvence &amp; šablony</button>
         <button class="mlogbtn" id="mlogBtn">📧 Odeslané e-maily</button>
+        <button class="mlogbtn" id="tcBtn">🎁 Tvůj Coach (app)</button>
       </div>
 
       <div style="overflow-x:auto;">
@@ -233,6 +234,19 @@
     <button class="close" id="detClose">×</button>
     <div id="detBody"></div>
   </div>
+
+  <div class="ovl" id="tclog"><div class="box">
+    <button class="x" id="tclogX">×</button>
+    <h2>🎁 Tvůj Coach — přístup do appky</h2>
+    <p class="muted" style="margin:.1rem 0 .9rem;font-size:.9rem;line-height:1.5">Kdo koupí (nebo dostane od tebe v adminu) <b>Academy</b>, dostane automaticky i přístup do appky <b>Tvůj Coach</b> (<a href="https://coach.martinbarna.cz" target="_blank" rel="noopener" style="color:#F6CD63">coach.martinbarna.cz</a>) — páruje se podle e-mailu. <b>„čeká na registraci"</b> = uživatel si appku ještě nezaložil; přístup se aktivuje sám, jakmile se zaregistruje stejným e-mailem. Odebrání Academy appku zase zamkne.</p>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Kdy</th><th>E-mail</th><th>Akce</th><th>Výsledek</th><th>Zdroj</th></tr></thead>
+        <tbody id="tclogRows"></tbody>
+      </table>
+    </div>
+    <p class="foot" id="tclogFoot" style="margin-top:1rem"></p>
+  </div></div>
 
   <div class="ovl" id="mlog"><div class="box">
     <button class="x" id="mlogX">×</button>
@@ -889,6 +903,26 @@
     var MLOG_TRACKS=['lead-magnet','existing-leadmagnet','nurture-videokurz','upsell-coaching','upsell-academy','onboarding-videokurz','onboarding-coaching','onboarding-nakup-videokurz','onboarding-nakup-academy'];
     // dropdown filtru napln ze VŠECH známých sekvencí
     (function(){ var sel=$('mlogTrack'); if(!sel) return; Object.keys(TRACK_NAMES).forEach(function(t){ var o=document.createElement('option'); o.value=t; o.textContent=TRACK_NAMES[t]; sel.appendChild(o); }); })();
+    // Tvuj Coach — prehled udeleni pristupu do appky (akce admin-api: tvujcoach_grants -> {ok, grants:[]})
+    function openTcLog(){
+      $('tclog').classList.add('on'); $('tclogRows').innerHTML=''; $('tclogFoot').textContent='Načítám…';
+      api({action:'tvujcoach_grants'}).then(function(o){
+        if(o&&o.j&&o.j.ok&&o.j.grants){
+          var rows=o.j.grants;
+          $('tclogRows').innerHTML=rows.map(function(r){
+            var res = r.result==='granted' ? '<span class="badge b-ok">udělen</span>'
+              : (r.result==='pending' ? '<span class="badge" style="background:rgba(246,205,99,.16);color:#F6CD63">čeká na registraci</span>'
+              : (r.result==='revoked' ? '<span class="badge b-no">odebrán</span>'
+              : '<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">'+esc(r.result||'—')+'</span>'));
+            var act = r.action==='revoke' ? 'odebrání' : 'udělení';
+            return '<tr><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'—')+'</td><td>'+act+'</td><td>'+res+'</td><td class="muted">'+esc(r.source||'—')+'</td></tr>';
+          }).join('')||'<tr><td colspan="5" class="muted" style="padding:1rem;">Zatím žádné přidělení — objeví se po prvním nákupu Academy nebo ručním udělení.</td></tr>';
+          $('tclogFoot').textContent=rows.length+' záznamů';
+        } else {
+          $('tclogFoot').textContent='Přehled se nepodařilo načíst — zkus zavřít a otevřít znovu.';
+        }
+      }).catch(function(){ $('tclogFoot').textContent='Chyba spojení.'; });
+    }
     function openMailLog(){
       $('mlog').classList.add('on'); $('mlogRows').innerHTML=''; $('mlogSum').innerHTML=''; $('mlogFoot').textContent='Načítám…';
       // limit:2000 → stáhni CELÝ log, ať onboarding blast nepřebije lead-magnet/follow-up řádky
@@ -1119,6 +1153,8 @@
 
     var _ml=$('mlogBtn'); if(_ml) _ml.addEventListener('click',openMailLog);
     var _mlx=$('mlogX'); if(_mlx) _mlx.addEventListener('click',function(){ $('mlog').classList.remove('on'); });
+    var _tc=$('tcBtn'); if(_tc) _tc.addEventListener('click',openTcLog);
+    var _tcx=$('tclogX'); if(_tcx) _tcx.addEventListener('click',function(){ $('tclog').classList.remove('on'); });
     var _mpx=$('mprevX'); if(_mpx) _mpx.addEventListener('click',function(){ $('mprev').classList.remove('on'); });
     var _mlq=$('mlogQ'); if(_mlq) _mlq.addEventListener('input',renderMailLog);
     var _mlt=$('mlogTrack'); if(_mlt) _mlt.addEventListener('change',function(){ renderMailSummary(); renderMailLog(); });
