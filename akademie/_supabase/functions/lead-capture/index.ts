@@ -24,7 +24,9 @@ Deno.serve(async (req) => {
     // Uvitacka se odklada o 24 h: sablona lead-magnet-tool:0 vznika zvlast; kdyby jeste
     // nebyla, drip-send lead bezpecne zaparkuje (zadny spatny PDF mail jako driv).
     const tool = segRaw === "academy-jidelnicek" ? "jidelnicek" : segRaw === "academy-trenink" ? "trenink" : "";
-    const track = tool ? "lead-magnet-tool" : "lead-magnet";
+    // /pro-vas capture (B2C ochutnávka Academy) -> vlastní nurture s Academy uvítačkou,
+    // ať nedostane food-plan welcome ("Tady máš svůj plán") jako makro-plan leady.
+    const track = tool ? "lead-magnet-tool" : segRaw === "academy-pro-vas" ? "nurture-pro-vas" : "lead-magnet";
     const source = String(body.source || "lead_magnet").slice(0, 60);
     const goal = String(body.goal || "").slice(0, 200);
     const age = String(body.age || "").slice(0, 30);
