@@ -81,26 +81,22 @@ const VISION_SYSTEM = [
 ].join(NL);
 
 /** Vyfotí jídlo → odhad. Volá Grok (multimodální) přes image_url; vrátí lidsky formátovanou hlášku. */
-async function visionReply(image: string, userText: string): Promise<string> {
+async function visionReply(image: string, userText: string, userId?: string | null): Promise<string> {
   if (PROVIDER !== 'grok') {
     return 'Rozpoznání jídla z fotky tu zatím jede jen na Groku. Zkus to prosím za chvíli. 💪';
   }
-  const res = await fetch('https://api.x.ai/v1/chat/completions', {
-    method: 'POST',
-    headers: { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json' },
-    body: JSON.stringify({
-      model: MODEL, max_tokens: 1024,
-      messages: [
-        { role: 'system', content: VISION_SYSTEM },
-        { role: 'user', content: [
-          { type: 'text', text: userText || 'Odhadni prosím kalorie a makra tohohle jídla z fotky.' },
-          { type: 'image_url', image_url: { url: image } },
-        ] },
-      ],
-    }),
-  });
+  const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
+    { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json' },
+    { model: MODEL, max_tokens: 1024, messages: [
+      { role: 'system', content: VISION_SYSTEM },
+      { role: 'user', content: [
+        { type: 'text', text: userText || 'Odhadni prosím kalorie a makra tohohle jídla z fotky.' },
+        { type: 'image_url', image_url: { url: image } },
+      ] },
+    ] });
   if (!res.ok) { console.error('xai_vision_error', res.status, (await res.text()).slice(0, 300)); throw new Error('vision'); }
   const data = await res.json();
+  logUsage(userId ?? null, 'ai_vision_web', (data as { usage?: unknown }).usage);
   let txt = String((data as { choices?: { message?: { content?: string } }[] }).choices?.[0]?.message?.content ?? '').trim();
   txt = txt.replace(/^```(?:json)?/i, '').replace(/```$/,'').trim();
   let v: { is_food?: boolean; items?: { label?: string; qty_g?: number }[]; estimate?: { kcal?: number; protein_g?: number; fat_g?: number; carb_g?: number; fiber_g?: number } | null; message?: string | null };
@@ -160,6 +156,62 @@ async function retrieveContext(query: string): Promise<string> {
   }
 }
 
+// --- P1 (handoff §2): retry/backoff na přetížení modelu (429/5xx/529) i síťovou chybu ---
+async function postWithRetry(url: string, headers: Record<string, string>, bodyObj: unknown, attempt = 0): Promise<Response> {
+  const MAX = 3;
+  try {
+    const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyObj) });
+    if ((res.status === 429 || res.status >= 500) && attempt < MAX) {
+      const ra = Number(res.headers.get('retry-after'));
+      const wait = Number.isFinite(ra) && ra > 0 ? Math.min(ra * 1000, 10000) : Math.min(2 ** attempt * 500, 8000);
+      await new Promise((r) => setTimeout(r, wait));
+      return postWithRetry(url, headers, bodyObj, attempt + 1);
+    }
+    return res;
+  } catch (e) {
+    if (attempt < MAX) { await new Promise((r) => setTimeout(r, Math.min(2 ** attempt * 500, 8000))); return postWithRetry(url, headers, bodyObj, attempt + 1); }
+    throw e;
+  }
+}
+
+// --- P1 (§9 daty řízený ceník): měření nákladu na člena ---
+const PRICE_PER_M: Record<string, { in: number; out: number }> = {
+  'claude-opus-4-8': { in: 15, out: 75 }, 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5': { in: 1, out: 5 },
+  'grok-4.3': { in: 3, out: 15 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6 },
+};
+function parseUsage(u: unknown): { tin: number; tout: number } {
+  const o = (u ?? {}) as Record<string, number>;
+  return { tin: Number(o.input_tokens ?? o.prompt_tokens ?? 0) || 0, tout: Number(o.output_tokens ?? o.completion_tokens ?? 0) || 0 };
+}
+function userIdFromToken(token: string): string | null {
+  try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof p.sub === 'string' ? p.sub : null; } catch { return null; }
+}
+// best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď (fire-and-forget).
+function logUsage(userId: string | null, feature: string, usage: unknown): void {
+  if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
+  const { tin, tout } = parseUsage(usage);
+  const p = PRICE_PER_M[MODEL] ?? { in: 3, out: 15 };
+  const cost = Number(((tin / 1e6) * p.in + (tout / 1e6) * p.out).toFixed(6));
+  fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+    method: 'POST',
+    headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
+    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: tout, est_cost_usd: cost }),
+  }).catch(() => {});
+}
+// --- P2: denní strop na člena (anti-abuse). Best-effort; při chybě pustí dál. ---
+const DAILY_CAP = Number(Deno.env.get('AI_MARTIN_DAILY_CAP') ?? '60') || 60;
+async function overDailyCap(userId: string | null): Promise<boolean> {
+  if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return false;
+  try {
+    const since = new Date(Date.now() - 24 * 3600000).toISOString();
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage?select=id&user_id=eq.${userId}&created_at=gte.${since}`, {
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, Prefer: 'count=exact', Range: '0-0' },
+    });
+    const total = Number((r.headers.get('content-range') || '').split('/')[1] || '0') || 0;
+    return total >= DAILY_CAP;
+  } catch { return false; }
+}
+
 Deno.serve(async (req: Request) => {
   const CORS = corsFor(req);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
@@ -172,6 +224,7 @@ Deno.serve(async (req: Request) => {
 
   // 2) Klíč se přidá nakonec — do té doby graceful hláška (jen pro členy).
   if (!API_KEY) return json({ reply: 'Za chvíli! AI Martin se právě dokončuje. Mrkni sem brzy. 💪' }, CORS, 200);
+  const userId = userIdFromToken(token);   // pro měření nákladu (§9) + denní strop
 
   let body: { messages?: Msg[] };
   try { body = await req.json(); } catch { return json({ error: 'bad_json' }, CORS, 400); }
@@ -199,10 +252,15 @@ Deno.serve(async (req: Request) => {
     ? NL + NL + 'SAFE MODE: dotaz se dotýká zdraví / léků / těhotenství / nezletilého. NEDÁVEJ konkrétní medicínské ani dietní rady, nevymýšlej čísla, buď opatrný a odkaž na lékaře nebo osobně na Martina.'
     : '';
 
+  // P2 denní strop (safety hard-stop výše proběhl vždy; limit se týká jen placených LLM/vision volání).
+  if (await overDailyCap(userId)) {
+    return json({ reply: 'Na dnešek už jsme toho probrali slušně 💪 Denní limit chatu je vyčerpaný — pokračujeme zase zítra. Kdyby něco hořelo, napiš Martinovi.' }, CORS, 200);
+  }
+
   // VISION: když přišla fotka jídla, jdeme rovnou na odhad (Grok multimodální), bez RAG.
   if (image) {
     try {
-      const reply = await visionReply(image, lastUser);
+      const reply = await visionReply(image, lastUser, userId);
       return json({ reply }, CORS);
     } catch (_e) {
       return json({ reply: 'Fotku se mi teď nepodařilo zpracovat, zkus to prosím znovu za chvíli.' }, CORS, 200);
@@ -215,30 +273,28 @@ Deno.serve(async (req: Request) => {
   try {
     let reply = '';
     if (PROVIDER === 'grok') {
-      // xAI Grok — OpenAI-kompatibilní chat completions (system jako první zpráva)
-      const res = await fetch('https://api.x.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ model: MODEL, max_tokens: 600, messages: [{ role: 'system', content: system }, ...msgs] }),
-      });
+      // xAI Grok — OpenAI-kompatibilní chat completions (system jako první zpráva) + retry
+      const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
+        { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json' },
+        { model: MODEL, max_tokens: 600, messages: [{ role: 'system', content: system }, ...msgs] });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('xai_error', res.status, JSON.stringify(data).slice(0, 300));
         return json({ reply: 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli, nebo mi napiš na WhatsApp.' }, CORS, 200);
       }
+      logUsage(userId, 'ai_chat_web', (data as { usage?: unknown }).usage);
       reply = ((data as { choices?: { message?: { content?: string } }[] }).choices?.[0]?.message?.content ?? '').trim();
     } else {
-      // Anthropic Messages API
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-        body: JSON.stringify({ model: MODEL, max_tokens: 600, system, messages: msgs }),
-      });
+      // Anthropic Messages API + retry
+      const res = await postWithRetry('https://api.anthropic.com/v1/messages',
+        { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+        { model: MODEL, max_tokens: 600, system, messages: msgs });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('anthropic_error', res.status, JSON.stringify(data).slice(0, 300));
         return json({ reply: 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli, nebo mi napiš na WhatsApp.' }, CORS, 200);
       }
+      logUsage(userId, 'ai_chat_web', (data as { usage?: unknown }).usage);
       const parts = (data as { content?: { type: string; text?: string }[] }).content ?? [];
       reply = parts.filter((p) => p.type === 'text').map((p) => p.text ?? '').join(NL).trim();
     }
