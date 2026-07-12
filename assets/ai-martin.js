@@ -10,7 +10,7 @@
     ENABLED: true,
     ENDPOINT: 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/ai-martin',
     CHECKOUT: '/akademie/objednavka/',
-    GREETING: 'Ahoj! Jsem AI Martin — umělá inteligence (chatbot) natrénovaná na tom, jak Martin reálně koučuje. Nemluvíš se skutečným Martinem. Zeptej se na výživu, trénink nebo jak začít. (Nejsem lékař, u zdravotních věcí běž za odborníkem.)',
+    GREETING: 'Ahoj! Jsem AI Martin — umělá inteligence (chatbot) natrénovaná na tom, jak Martin reálně koučuje. Nemluvíš se skutečným Martinem. Zeptej se na výživu, trénink nebo jak začít — nebo 📷 vyfoť jídlo a odhadnu ti kalorie a makra. (Nejsem lékař, u zdravotních věcí běž za odborníkem.)',
     LOCKED_INTRO: 'Ahoj! Jsem AI Martin — umělá inteligence (chatbot) natrénovaná na Martinově stylu a celém obsahu Academy. Nemluvíš se skutečným Martinem, ale poradím ti s výživou, tréninkem i konkrétními otázkami, kdykoliv potřebuješ. 💪\n\nJsem součást Barna Academy pro členy. Odemkni si plný přístup a začneme spolu makat.',
     PLACEHOLDER: 'Napiš dotaz… např. „kolik bílkovin denně?"'
   };
@@ -53,8 +53,10 @@
     '<div id="amFoot" style="border-top:1px solid rgba(255,255,255,.08);background:#141210;"></div>';
 
   var FORM_HTML =
-    '<form id="amForm" style="padding:12px;display:flex;gap:8px;">' +
-      '<input id="amIn" autocomplete="off" placeholder="' + esc(CFG.PLACEHOLDER) + '" style="flex:1;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.14);border-radius:50px;color:#fff;padding:11px 16px;font-family:inherit;font-size:.92rem;outline:none;">' +
+    '<form id="amForm" style="padding:12px;display:flex;gap:8px;align-items:center;">' +
+      '<input id="amFile" type="file" accept="image/*" style="display:none;">' +
+      '<button type="button" id="amCam" aria-label="Vyfotit jídlo" title="Vyfoť jídlo a odhadnu kalorie" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:50%;width:42px;height:42px;cursor:pointer;color:#EBB12C;font-size:1.15rem;flex-shrink:0;line-height:1;">📷</button>' +
+      '<input id="amIn" autocomplete="off" placeholder="' + esc(CFG.PLACEHOLDER) + '" style="flex:1;min-width:0;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.14);border-radius:50px;color:#fff;padding:11px 16px;font-family:inherit;font-size:.92rem;outline:none;">' +
       '<button type="submit" aria-label="Odeslat" style="background:linear-gradient(145deg,#F6CD63,#EBB12C);border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;color:#1A1222;font-size:1.1rem;flex-shrink:0;">↑</button>' +
     '</form>';
 
@@ -119,6 +121,50 @@
       .finally(function () { busy = false; });
   }
 
+  // ---- VISION: vyfoť jídlo → odhad kalorií/maker ----
+  function imgBubble(src) {
+    var b = E('div', 'align-self:flex-end;max-width:72%;');
+    var im = E('img'); im.src = src; im.alt = 'fotka jídla';
+    im.style.cssText = 'max-width:180px;width:100%;border-radius:14px;border-bottom-right-radius:4px;display:block;';
+    b.appendChild(im); return b;
+  }
+  function addImage(src) {
+    msgs.push({ role: 'user', text: '[fotka jídla]' });   // historie bez base64 (šetří payload)
+    panel.querySelector('#amBody').appendChild(imgBubble(src)); scrollDown();
+  }
+  function compressImage(f, cb) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var max = 1024, w = img.width, h = img.height;
+        if (w > max || h > max) { if (w > h) { h = Math.round(h * max / w); w = max; } else { w = Math.round(w * max / h); h = max; } }
+        try { var c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h); cb(c.toDataURL('image/jpeg', 0.82)); }
+        catch (e) { cb(null); }
+      };
+      img.onerror = function () { cb(null); };
+      img.src = reader.result;
+    };
+    reader.onerror = function () { cb(null); };
+    reader.readAsDataURL(f);
+  }
+  function sendImage(dataUri) {
+    if (PREVIEW) { busy = true; typing(true); setTimeout(function () { typing(false); add('assistant', 'V ukázce fotku nezpracuju 🙂 U členů z ní odhadnu kalorie a makra. Be Effective! 💪'); busy = false; }, 650); return; }
+    busy = true; typing(true);
+    getToken().then(function (token) {
+      var headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      return fetch(CFG.ENDPOINT, { method: 'POST', headers: headers, body: JSON.stringify({ messages: [{ role: 'user', text: '', image: dataUri }] }) });
+    }).then(function (r) { return r.json(); })
+      .then(function (d) {
+        typing(false);
+        if (d && d.locked) { add('assistant', d.reply || CFG.LOCKED_INTRO); lockUI(); }
+        else add('assistant', (d && d.reply) || 'Fotku se mi teď nepodařilo zpracovat, zkus to prosím znovu.');
+      })
+      .catch(function () { typing(false); add('assistant', 'Spojení selhalo. Zkus to prosím znovu.'); })
+      .finally(function () { busy = false; });
+  }
+
   function replyPreview() {
     busy = true; typing(true);
     setTimeout(function () {
@@ -141,6 +187,18 @@
       var inp = panel.querySelector('#amIn'); var t = (inp.value || '').trim(); if (!t) return;
       inp.value = ''; add('user', t); reply(t);
     });
+    var cam = panel.querySelector('#amCam'), file = panel.querySelector('#amFile');
+    if (cam && file) {
+      cam.addEventListener('click', function () { if (!busy) file.click(); });
+      file.addEventListener('change', function () {
+        var f = file.files && file.files[0]; file.value = '';
+        if (!f || busy) return;
+        compressImage(f, function (dataUri) {
+          if (!dataUri) { add('assistant', 'Tuhle fotku se mi nepodařilo načíst, zkus jinou (JPEG/PNG).'); return; }
+          addImage(dataUri); sendImage(dataUri);
+        });
+      });
+    }
   }
 
   function openPanel() {
