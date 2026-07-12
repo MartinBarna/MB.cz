@@ -77,17 +77,25 @@ function photoRight(w) {
   </div>`;
 }
 
+// Fotka přes CELÉ pozadí (obličej vodorovně na střed) + tmavý gradient dolů pro text.
+// Square-safe: FB čtvercový ořez (střední svislý pruh) tak ukáže obličej + centrovaný text, ne půlku.
+function photoBg(pos) {
+  return `<div style="position:absolute;inset:0;z-index:0">
+    <img src="${HERO_URI}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:${pos || '50% 12%'}">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,11,16,.28) 0%,rgba(12,11,16,.20) 30%,rgba(12,11,16,.88) 76%,rgba(12,11,16,.97) 100%)"></div>
+  </div>`;
+}
+
 function brandDefault() {
   return page(`<div class="stripe"></div>
-  ${photoRight(478)}
-  <div style="position:relative;z-index:3;height:100%;padding:74px 0 62px 82px;display:flex;flex-direction:column">
-    <div class="kick">Online výživa &amp; fitness koučink</div>
-    <div class="disp" style="font-size:132px;margin-top:30px">Martin<br>Barna</div>
-    <div style="font-size:45px;font-weight:600;color:#f0eadf;margin-top:34px;line-height:1.1">Forma podle vědy.<br><span style="color:${GOLD_SOFT}">Ne podle pocitů.</span></div>
-    <div style="margin-top:auto;display:flex;align-items:center;gap:24px">
-      <span style="font-weight:800;font-size:33px;color:#fff">martinbarna.cz</span>
+  ${photoBg('50% 10%')}
+  <div style="position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 60px 56px">
+    <div class="disp" style="font-size:118px;line-height:.86">Martin<br>Barna</div>
+    <div style="font-size:40px;font-weight:600;color:#f0eadf;margin-top:22px;line-height:1.12">Forma podle vědy. <span style="color:${GOLD_SOFT}">Ne podle pocitů.</span></div>
+    <div style="margin-top:24px;display:flex;align-items:center;gap:20px">
+      <span style="font-weight:800;font-size:30px;color:#fff">martinbarna.cz</span>
       <span style="width:7px;height:7px;border-radius:50%;background:${GOLD};display:inline-block"></span>
-      <span style="font-size:26px;color:#b9ada0">od 2013 · 600+ klientů</span>
+      <span style="font-size:24px;color:#cdbfa8">od 2013 · 600+ klientů</span>
     </div>
   </div>`);
 }
@@ -124,20 +132,19 @@ function cleanTitle(t) {
 function articleCard(tag, title) {
   title = cleanTitle(title);
   const L = title.length;
-  const fs1 = L > 78 ? 50 : L > 54 ? 58 : L > 34 ? 68 : 78;
+  const fs1 = L > 78 ? 46 : L > 54 ? 54 : L > 34 ? 62 : 72;
   return page(`<div class="stripe"></div>
-  ${photoRight(392)}
-  <div style="position:relative;z-index:3;height:100%;padding:58px 0 54px 82px;display:flex;flex-direction:column">
-    <div style="display:flex;align-items:center;gap:20px">
-      <div class="mark">MB</div>
-      <div>
-        <div style="font-weight:800;font-size:30px;color:#fff;letter-spacing:.5px;line-height:1.05">MARTIN BARNA</div>
-        <div style="font-weight:600;font-size:20px;color:${GOLD};letter-spacing:2.5px">ONLINE VÝŽIVA &amp; FITNESS</div>
+  ${photoBg('50% 12%')}
+  <div style="position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 68px 52px">
+    <div style="margin-bottom:20px"><span class="tag">${tag}</span></div>
+    <div style="font-weight:800;font-size:${fs1}px;line-height:1.13;color:#fff;max-width:920px;text-shadow:0 2px 18px rgba(0,0,0,.55)">${title}</div>
+    <div style="margin-top:26px;display:flex;align-items:center;gap:13px">
+      <div class="mark" style="width:46px;height:46px;font-size:23px">MB</div>
+      <div style="text-align:left">
+        <div style="font-weight:800;font-size:23px;color:#fff;letter-spacing:.5px;line-height:1.05">MARTIN BARNA</div>
+        <div style="font-weight:600;font-size:15px;color:${GOLD};letter-spacing:2.5px">ONLINE VÝŽIVA &amp; FITNESS</div>
       </div>
     </div>
-    <div style="margin-top:38px"><span class="tag">${tag}</span></div>
-    <div style="font-weight:800;font-size:${fs1}px;line-height:1.15;color:#fff;margin-top:26px;max-width:720px">${title}</div>
-    <div style="margin-top:auto;font-weight:700;font-size:28px;color:#b9ada0">martinbarna.cz</div>
   </div>`);
 }
 
