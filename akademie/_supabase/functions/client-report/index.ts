@@ -114,6 +114,20 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
       .map(([k, l]) => `<td align='center' style='background:#211d2b;border:1px solid #2e2940;border-radius:8px;padding:10px 4px'><div style='font-size:18px;font-weight:800;color:#fff'>${czk(num(n[k]))}</div><div style='font-size:11px;color:#8F8A99'>${l}</div></td>`).join("") +
     `</tr></table>`;
 
+  // volitelný denní rozpis (jako záložky týdnů v Excelu)
+  // deno-lint-ignore no-explicit-any
+  const dny = (Array.isArray(n.dny) ? n.dny : []).filter((x: any) => x);
+  if (dny.length) {
+    b += `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:collapse;font-size:13px;margin-top:10px'>` +
+      `<tr style='color:#8F8A99;font-size:11px;text-transform:uppercase'><td style='padding:5px 8px;border-bottom:1px solid #262232'>Den</td>` +
+      ["kcal", "B", "S", "T", "Vl"].map((h) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #262232'>${h}</td>`).join("") + `</tr>` +
+      // deno-lint-ignore no-explicit-any
+      dny.map((d: any) =>
+        `<tr><td style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${esc(d.den ?? "")}</td>` +
+        [d.kcal, d.p, d.c, d.f, d.fib].map((v) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${czk(num(v))}</td>`).join("") + `</tr>`).join("");
+    b += `</table>`;
+  }
+
   // aktivity
   const a = r.activity || {};
   b += sect("Aktivity") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='font-size:14px;color:#F0EADF'>` +

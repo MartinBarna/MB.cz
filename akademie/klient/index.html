@@ -74,8 +74,10 @@
   .slegend{display:flex;justify-content:space-between;font-size:.75rem;color:#8F8A99;margin-top:6px;}
   .m2{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;}
   .mtgl{margin:4px 0 14px;}
-  .days7{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px 10px;align-items:center;}
-  .days7 .dn{color:#8F8A99;font-size:.85rem;font-weight:700;width:28px;}
+  .days7{display:grid;grid-template-columns:auto repeat(5,1fr);gap:8px 6px;align-items:center;}
+  .days7 .dn{color:#8F8A99;font-size:.85rem;font-weight:700;width:24px;}
+  .days7 .hd{font-size:.72rem;color:#8F8A99;text-align:center;}
+  .days7 input{padding:8px 6px !important;font-size:.88rem !important;text-align:center;}
   .sumg{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:14px 16px;margin:0 0 12px;}
   .sumg h4{margin:0 0 8px;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#F6CD63;display:flex;justify-content:space-between;align-items:center;}
   .sumg h4 button{background:none;border:none;color:#8F8A99;cursor:pointer;font-family:inherit;font-size:.78rem;text-decoration:underline;text-transform:none;letter-spacing:0;}
@@ -352,11 +354,24 @@
       { name: "únava", color: "#e05c5c", pts: reports.map(function(r){ return { x: r.report_date, y: toNum((r.scales || {}).unava) }; }) }
     ], { minPad: .4 });
 
-    var rows = reports.slice().reverse().map(function(r){
+    var rows = reports.slice().reverse().map(function(r, ri){
       var m = r.measurements || {}, nu = r.nutrition || {}, ac = r.activity || {}, sc = r.scales || {};
-      return "<tr><td>" + dateCz(r.report_date) + "</td><td class='r'>" + czk(toNum(r.weight)) + "</td><td class='r'>" + czk(toNum(m.pas)) + "</td><td class='r'>" + czk(toNum(nu.kcal)) + "</td><td class='r'>" + czk(toNum(nu.protein)) + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "—") + "</td><td class='r'>" + czk(toNum(ac.fitko)) + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
+      var dnyArr = (nu.dny || []).filter(Boolean);
+      var datum = dnyArr.length
+        ? '<a href="#" data-hdny="' + ri + '" style="color:#F6CD63;text-decoration:none;" title="denní rozpis stravy">▸ ' + dateCz(r.report_date) + "</a>"
+        : dateCz(r.report_date);
+      var out = "<tr><td style='white-space:nowrap;'>" + datum + "</td><td class='r'>" + czk(toNum(r.weight)) + "</td><td class='r'>" + czk(toNum(m.pas)) + "</td><td class='r'>" + czk(toNum(nu.kcal)) + "</td><td class='r'>" + czk(toNum(nu.protein)) + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "—") + "</td><td class='r'>" + czk(toNum(ac.fitko)) + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
+      if(dnyArr.length){
+        var dt = "<table class='hist' style='font-size:.82rem;'><tr><th>Den</th><th class='r'>kcal</th><th class='r'>B</th><th class='r'>S</th><th class='r'>T</th><th class='r'>Vl</th></tr>"
+          + (nu.dny || []).map(function(d){ if(!d) return ""; return "<tr><td>" + escH(d.den || "") + "</td><td class='r'>" + czk(toNum(d.kcal)) + "</td><td class='r'>" + czk(toNum(d.p)) + "</td><td class='r'>" + czk(toNum(d.c)) + "</td><td class='r'>" + czk(toNum(d.f)) + "</td><td class='r'>" + czk(toNum(d.fib)) + "</td></tr>"; }).join("") + "</table>";
+        out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="8" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis — tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
+      }
+      return out;
     }).join("");
     el("histBody").innerHTML = rows;
+    el("histBody").querySelectorAll("[data-hdny]").forEach(function(a2){
+      a2.addEventListener("click", function(e){ e.preventDefault(); var row = document.getElementById("hdnyrow" + a2.getAttribute("data-hdny")); if(row) row.style.display = (row.style.display === "none" ? "" : "none"); });
+    });
   }
 
   function renderDocs(){
@@ -453,22 +468,26 @@
     var b = opts.map(function(o){ return '<button type="button" data-v="' + escH(o) + '"' + (String(val) === String(o) ? ' class="on"' : "") + ">" + escH(o) + "</button>"; }).join("");
     return '<div class="frow"><label>' + label + '</label><div class="chips2" id="' + id + '">' + b + "</div></div>";
   }
-  // ---- fotky (sdílené pro report i dotazník) ----
+  // ---- fotky a přílohy (sdílené pro report i dotazník) ----
+  function fotoOk(f){
+    var t = f.type || "", n = (f.name || "").toLowerCase();
+    return /^image\//.test(t) || t === "application/pdf" || /\.(pdf|xls|xlsx)$/.test(n);
+  }
   function fotoRender(){
-    var list = WFILES.map(function(f, i){ return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;font-size:.9rem;color:#E8E3EF;"><span>📷 ' + escH(f.name) + ' <span style="color:#8F8A99;">(' + Math.max(1, Math.round(f.size / 1024)) + ' kB)</span></span><button type="button" data-frm="' + i + '" style="background:none;border:none;color:#e05c5c;cursor:pointer;font-size:1rem;">✕</button></div>'; }).join("");
-    return '<div class="frow"><label>Fotky <span class="opt">(nepovinné · max 6, každá do 8 MB)</span></label>'
-      + '<input type="file" id="f_foto" accept="image/*" multiple class="fin" style="padding:10px;">'
+    var list = WFILES.map(function(f, i){ return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;font-size:.9rem;color:#E8E3EF;"><span>' + (/^image\//.test(f.type || "") ? "📷" : "📎") + ' ' + escH(f.name) + ' <span style="color:#8F8A99;">(' + Math.max(1, Math.round(f.size / 1024)) + ' kB)</span></span><button type="button" data-frm="' + i + '" style="background:none;border:none;color:#e05c5c;cursor:pointer;font-size:1rem;">✕</button></div>'; }).join("");
+    return '<div class="frow"><label>Fotky a přílohy <span class="opt">(nepovinné · max 6, každá do 8 MB)</span></label>'
+      + '<input type="file" id="f_foto" accept="image/*,application/pdf,.xls,.xlsx" multiple class="fin" style="padding:10px;">'
       + '<div id="f_fotoList" style="margin-top:8px;">' + list + '</div></div>'
-      + '<p class="help" style="font-size:.85rem;">Fotky vidíte jen ty a Martin (uloží se do tvého soukromého úložiště). Přiloží se při odeslání.</p>';
+      + '<p class="help" style="font-size:.85rem;">Vidíte je jen ty a Martin (tvoje soukromé úložiště). Kromě fotek jde přiložit i <b>PDF/XLS export jídelníčku z Kalorických tabulek</b> (na webu KT: ikona šipky dolů v hlavičce jídelníčku → vyber poslední týden) nebo screenshot statistik z mobilu.</p>';
   }
   function fotoMount(){
     var inp = document.getElementById("f_foto");
     if(inp) inp.addEventListener("change", function(){
       for(var i = 0; i < inp.files.length; i++){
         var f = inp.files[i];
-        if(WFILES.length >= 6){ toast("Maximálně 6 fotek na jeden report."); break; }
+        if(WFILES.length >= 6){ toast("Maximálně 6 příloh na jeden report."); break; }
         if(f.size > 8 * 1024 * 1024){ toast(escH(f.name) + " má přes 8 MB — pošli běžnou kvalitu z mobilu."); continue; }
-        if(!/^image\//.test(f.type || "")){ toast(escH(f.name) + " není obrázek."); continue; }
+        if(!fotoOk(f)){ toast(escH(f.name) + " — přikládej fotky, PDF nebo XLS."); continue; }
         WFILES.push(f);
       }
       inp.value = ""; wShow();
@@ -487,13 +506,90 @@
           var path = myEmail + "/fotky/" + Date.now() + "-" + i + "-" + safe;
           return fetch(CFG.url + "/storage/v1/object/client-docs/" + path.split("/").map(encodeURIComponent).join("/"), {
             method: "POST",
-            headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t, "Content-Type": f.type || "image/jpeg" },
+            headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t, "Content-Type": f.type || "application/octet-stream" },
             body: f
           }).then(function(r){ if(!r.ok) throw new Error("upload " + r.status); paths.push(path); });
         });
       });
       return chain.then(function(){ return paths; });
     });
+  }
+
+  // ---- import z Kalorických tabulek (XLS export jídelníčku z webu KT) ----
+  // Engine počítá deterministicky: detekce hlavičky (Energie/Bílkoviny…), kJ→kcal,
+  // agregace po dnech (řádek „Celkem" dne má přednost před součtem položek).
+  function loadXlsx(){
+    return new Promise(function(res, rej){
+      if(window.XLSX) return res();
+      var s = document.createElement("script");
+      s.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"; s.async = true;
+      s.onload = function(){ res(); };
+      s.onerror = function(){ rej(new Error("Čtečku XLS se nepodařilo načíst — zkontroluj připojení.")); };
+      document.head.appendChild(s);
+    });
+  }
+  function ktNum(v){ if(v == null) return null; var n = Number(String(v).replace(/\s| /g, "").replace(",", ".")); return isFinite(n) ? n : null; }
+  function ktParseDate(v){
+    if(v instanceof Date && !isNaN(v)) return v;
+    var m = String(v == null ? "" : v).match(/(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})/);
+    if(m) return new Date(+m[3], +m[2] - 1, +m[1], 12);
+    return null;
+  }
+  function parseKT(wb){
+    var DOW = ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"];
+    for(var si = 0; si < wb.SheetNames.length; si++){
+      var rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[si]], { header: 1, raw: true, defval: null });
+      var hi = -1, col = null;
+      for(var i = 0; i < Math.min(rows.length, 60); i++){
+        var low = (rows[i] || []).map(function(c){ return String(c == null ? "" : c).toLowerCase(); });
+        var pi = -1, ei = -1;
+        for(var j = 0; j < low.length; j++){
+          if(pi < 0 && (low[j].indexOf("bílkovin") > -1 || low[j].indexOf("bilkovin") > -1)) pi = j;
+          if(ei < 0 && (low[j].indexOf("energie") > -1 || low[j].indexOf("kcal") > -1 || (low[j].indexOf("kj") > -1 && low[j].length < 20))) ei = j;
+        }
+        if(pi > -1 && ei > -1){
+          hi = i;
+          function findCol(sub){ for(var j2 = 0; j2 < low.length; j2++){ if(low[j2].indexOf(sub) > -1) return j2; } return -1; }
+          col = { p: pi, e: ei, kj: low[ei].indexOf("kcal") === -1 && low[ei].indexOf("kj") > -1,
+            c: findCol("sacharid"), f: findCol("tuk"), fib: (findCol("vláknin") > -1 ? findCol("vláknin") : findCol("vlaknin")) };
+          break;
+        }
+      }
+      if(hi < 0) continue;
+      var days = {}, order = [], cur = null;
+      for(var r = 0; r < rows.length; r++){
+        var row = rows[r] || [];
+        var d = null;
+        for(var cx = 0; cx < Math.min(row.length, 4); cx++){ d = ktParseDate(row[cx]); if(d) break; }
+        if(d){
+          var k = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+          if(!days[k]){ days[k] = { date: d, kcal: 0, p: 0, c: 0, f: 0, fib: 0, celkem: null }; order.push(k); }
+          cur = days[k]; continue;
+        }
+        if(!cur) continue;
+        var e = ktNum(row[col.e]);
+        if(e == null) continue;
+        var vals = { kcal: col.kj ? e / 4.184 : e, p: ktNum(row[col.p]) || 0,
+          c: col.c > -1 ? (ktNum(row[col.c]) || 0) : 0, f: col.f > -1 ? (ktNum(row[col.f]) || 0) : 0,
+          fib: col.fib > -1 ? (ktNum(row[col.fib]) || 0) : 0 };
+        var joined = row.map(function(c){ return String(c == null ? "" : c).toLowerCase(); }).join(" ");
+        if(/celkem|součet|soucet|total/.test(joined)) cur.celkem = vals;
+        else { cur.kcal += vals.kcal; cur.p += vals.p; cur.c += vals.c; cur.f += vals.f; cur.fib += vals.fib; }
+      }
+      var list = order.map(function(k2){
+        var dd = days[k2], v = dd.celkem || dd;
+        return { date: dd.date, kcal: Math.round(v.kcal), p: Math.round(v.p), c: Math.round(v.c), f: Math.round(v.f), fib: Math.round(v.fib) };
+      }).filter(function(x){ return x.kcal > 200; });
+      if(!list.length) continue;
+      list.sort(function(a, b){ return a.date - b.date; });
+      if(list.length > 7) list = list.slice(-7);
+      var dny = [null, null, null, null, null, null, null]; // Po..Ne
+      list.forEach(function(x){ dny[(x.date.getDay() + 6) % 7] = { den: DOW[x.date.getDay()], kcal: x.kcal, p: x.p, c: x.c, f: x.f, fib: x.fib }; });
+      var n = list.length;
+      var avg = function(key){ return Math.round(list.reduce(function(s, x){ return s + x[key]; }, 0) / n); };
+      return { dny: dny, dnyCount: n, kcal: avg("kcal"), protein: avg("p"), carbs: avg("c"), fat: avg("f"), fiber: avg("fib") };
+    }
+    return null;
   }
 
   function mountPick(id){
@@ -557,20 +653,50 @@
           if(m.prsa == null && m.pas == null && m.boky == null && m.zadek == null && m.p_stehno == null && m.l_stehno == null) return "Vyplň aspoň jednu z hlavních měr, nebo se vrať a zvol „přeskočím“.";
           a.measurements = m;
         } },
-      { id: "strava", title: "Strava — týdenní průměr", help: "Průměr za dny, kdy jsi zapisoval/a — nemusíš na gram přesně. <b>Kalorické tabulky?</b> Otevři <b>Statistiky → Analýza jídelníčku → poslední týden</b> a opiš průměr kcal a bílkovin (nic nepřepisuj po dnech; screenshot můžeš přiložit v kroku Fotky). Appka Tvůj Coach ti průměr ukáže taky.",
+      { id: "strava", title: "Strava — týdenní průměr", help: "Stačí <b>průměr kcal a bílkovin</b> za dny, kdy jsi zapisoval/a — nemusíš na gram přesně (Kalorické tabulky: Statistiky → Analýza jídelníčku). A jestli jedeš KT na webu, nech to celé na mně: nahraj export a čísla doplním sám(a).",
         render: function(a){
           var n = a.nutrition || {};
-          return fNum("f_kcal", "Kalorie Ø/den", "kcal", "např. 1750", n.kcal)
+          return '<div style="background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.35);border-radius:12px;padding:12px 14px;margin:0 0 16px;">'
+            + '<button type="button" class="kbtn2" id="f_ktBtn" style="width:100%;">📥 Načíst z Kalorických tabulek (XLS export)</button>'
+            + '<input type="file" id="f_ktFile" accept=".xls,.xlsx" style="display:none;">'
+            + '<p class="help" style="font-size:.8rem;margin:8px 0 0;">Na webu KT: ikona šipky dolů v hlavičce jídelníčku → vyber poslední týden → XLS. Průměry i denní rozpis se doplní samy a export se přiloží pro Martina.</p></div>'
+            + fNum("f_kcal", "Kalorie Ø/den", "kcal", "např. 1750", n.kcal)
             + '<div class="m2">' + fNum("f_prot", "Bílkoviny Ø", "g", "", n.protein) + fNum("f_carb", "Sacharidy Ø", "g", "", n.carbs, true) + fNum("f_fat", "Tuky Ø", "g", "", n.fat, true) + fNum("f_fib", "Vláknina Ø", "g", "", n.fiber, true) + "</div>"
             + fChips("f_dny", "Kolik dní jsi zapisoval/a?", ["0", "1", "2", "3", "4", "5", "6", "7"], n.dny_zapsano != null ? String(n.dny_zapsano) : null)
             + '<div class="mtgl"><button type="button" class="kbtn2" id="f_dnyBtn">' + (a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)") + '</button></div>'
-            + '<div id="f_dnyBox" style="display:' + (a._dnyOpen ? "block" : "none") + ';"><div class="days7"><span></span><label style="font-size:.78rem;color:#8F8A99;">kcal</label><label style="font-size:.78rem;color:#8F8A99;">bílkoviny (g)</label>'
-            + DAYS.map(function(d, i){ var dd = (n.dny || [])[i] || {}; return '<span class="dn">' + d + '</span><input class="fin" style="padding:9px 10px;font-size:.95rem;" inputmode="numeric" id="f_d_k' + i + '" value="' + escH(dd.kcal == null ? "" : dd.kcal) + '"><input class="fin" style="padding:9px 10px;font-size:.95rem;" inputmode="numeric" id="f_d_p' + i + '" value="' + escH(dd.p == null ? "" : dd.p) + '">'; }).join("")
-            + "</div></div>";
+            + '<div id="f_dnyBox" style="display:' + (a._dnyOpen ? "block" : "none") + ';"><div class="days7"><span></span><span class="hd">kcal</span><span class="hd">B (g)</span><span class="hd">S (g)</span><span class="hd">T (g)</span><span class="hd">Vl (g)</span>'
+            + DAYS.map(function(d, i){
+                var dd = (n.dny || [])[i] || {};
+                return '<span class="dn">' + d + '</span>'
+                  + ["k", "p", "c", "t", "v"].map(function(col){
+                      var val = col === "k" ? dd.kcal : col === "p" ? dd.p : col === "c" ? dd.c : col === "t" ? dd.f : dd.fib;
+                      return '<input class="fin" inputmode="numeric" id="f_d_' + col + i + '" value="' + escH(val == null ? "" : val) + '">';
+                    }).join("");
+              }).join("")
+            + '</div><p class="help" style="font-size:.8rem;margin-top:8px;">Vyplň, co znáš — klidně jen kcal. Nebo detail vůbec nepřepisuj a přilož export/screenshot z Kalorických tabulek v kroku Fotky a přílohy.</p></div>';
         },
         mount: function(a){
           mountPick("f_dny");
           document.getElementById("f_dnyBtn").addEventListener("click", function(){ a._dnyOpen = !a._dnyOpen; document.getElementById("f_dnyBox").style.display = a._dnyOpen ? "block" : "none"; this.textContent = a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)"; });
+          document.getElementById("f_ktBtn").addEventListener("click", function(){ document.getElementById("f_ktFile").click(); });
+          document.getElementById("f_ktFile").addEventListener("change", function(){
+            var f = this.files && this.files[0]; if(!f) return;
+            var btn = document.getElementById("f_ktBtn"); btn.disabled = true; btn.textContent = "Čtu export…";
+            loadXlsx().then(function(){
+              return f.arrayBuffer().then(function(buf){
+                var out = parseKT(window.XLSX.read(buf, { type: "array", cellDates: true }));
+                if(!out) throw new Error("V souboru jsem nenašel jídelníček — přilož ho prosím v kroku Fotky a přílohy a průměry vyplň ručně.");
+                a.nutrition = { kcal: out.kcal, protein: out.protein, carbs: out.carbs, fat: out.fat, fiber: out.fiber, dny_zapsano: Math.min(out.dnyCount, 7), dny: out.dny };
+                a._dnyOpen = true;
+                if(WFILES.length < 6 && fotoOk(f)) WFILES.push(f); // export rovnou jako příloha pro Martina
+                wShow();
+                toast("✅ Načteno " + out.dnyCount + " dní z Kalorických tabulek — zkontroluj čísla a pokračuj.");
+              });
+            }).catch(function(err){
+              btn.disabled = false; btn.textContent = "📥 Načíst z Kalorických tabulek (XLS export)";
+              toast(String(err && err.message || "Soubor se nepodařilo přečíst."));
+            });
+          });
         },
         collect: function(a){
           var kcal = reqNum("f_kcal", "průměrné kalorie", 400, 8000); if(kcal.err) return kcal.err;
@@ -584,7 +710,10 @@
           for(var i = 0; i < 7; i++){
             var k = optNum("f_d_k" + i, 0, 10000); if(k.err) return DAYS[i] + " kcal: " + k.err;
             var p = optNum("f_d_p" + i, 0, 600); if(p.err) return DAYS[i] + " bílkoviny: " + p.err;
-            if(k.v != null || p.v != null) rozpis.push({ den: DAYS[i], kcal: k.v, p: p.v }); else rozpis.push(null);
+            var c = optNum("f_d_c" + i, 0, 1500); if(c.err) return DAYS[i] + " sacharidy: " + c.err;
+            var tt = optNum("f_d_t" + i, 0, 500); if(tt.err) return DAYS[i] + " tuky: " + tt.err;
+            var v = optNum("f_d_v" + i, 0, 200); if(v.err) return DAYS[i] + " vláknina: " + v.err;
+            if(k.v != null || p.v != null || c.v != null || tt.v != null || v.v != null) rozpis.push({ den: DAYS[i], kcal: k.v, p: p.v, c: c.v, f: tt.v, fib: v.v }); else rozpis.push(null);
           }
           if(rozpis.some(function(x){ return x; })) n.dny = rozpis;
           a.nutrition = n;
@@ -629,7 +758,7 @@
             + fText("f_dalsi", "💬 Cokoliv dalšího", "prostor jen pro tebe — klidně napiš román", t.dalsi, true, true);
         },
         collect: function(a){ a.notes = { povedlo: gv("f_povedlo"), drhlo: gv("f_drhlo"), otazky: gv("f_otazky"), dalsi: gv("f_dalsi") }; } },
-      { id: "fotky", title: "Fotky pokroku (nepovinné)", help: "Jednou za čas řekne fotka víc než váha — pomůže tobě i Martinovi vidět proměnu. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně. Hodí se i screenshot statistik z Kalorických tabulek.",
+      { id: "fotky", title: "Fotky a přílohy (nepovinné)", help: "Jednou za čas řekne fotka víc než váha — pomůže tobě i Martinovi vidět proměnu. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně. Sem patří i <b>export nebo screenshot jídelníčku z Kalorických tabulek</b> — Martin pak vidí detail toho, co jsi reálně jedl/a.",
         render: fotoRender, mount: fotoMount,
         collect: function(a){ a._fotoCount = WFILES.length; } },
       { id: "souhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání přijde hezky zpracovaný report mailem tobě i Martinovi.",
