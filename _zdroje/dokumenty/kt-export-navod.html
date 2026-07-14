@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Kalorické tabulky → report</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { width: 210mm; height: 296mm; background: linear-gradient(160deg, #15171a 0%, #0f1113 100%); color: #F0EADF;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { padding: 14mm 16mm 10mm; height: 100%; display: flex; flex-direction: column; }
+  .kick { display: inline-block; border-left: 4px solid #EBB12C; padding-left: 10px; font-weight: 800; font-size: 11px;
+    letter-spacing: .22em; text-transform: uppercase; color: #EBB12C; margin: 0 0 5mm; }
+  h1 { margin: 0 0 2mm; font-size: 24px; color: #fff; line-height: 1.2; }
+  .lead { margin: 0 0 6mm; font-size: 12.5px; color: #B9B3C4; line-height: 1.5; max-width: 158mm; }
+  .var { background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: 12px;
+    padding: 5mm 6mm; margin: 0 0 5mm; }
+  .var.gold { border-color: rgba(235,177,44,.45); background: rgba(235,177,44,.06); }
+  .var h2 { margin: 0 0 2.5mm; font-size: 14.5px; color: #fff; }
+  .var h2 .tag { display: inline-block; background: linear-gradient(145deg,#EBB12C,#E0762C); color: #1A1222; border-radius: 5px;
+    padding: .5mm 2.5mm; font-weight: 800; font-size: 10px; vertical-align: 2px; margin-left: 2mm; }
+  .var ol { margin: 0; padding-left: 5.5mm; }
+  .var li, .var p { margin: 0 0 1.6mm; font-size: 11.5px; color: #C9C3D4; line-height: 1.6; }
+  .var b, .var strong { color: #F6CD63; }
+  .var .w { color: #fff; font-weight: 700; }
+  .btnlike { display: inline-block; background: linear-gradient(145deg,#EBB12C,#E0762C); color: #1A1222; border-radius: 5px;
+    padding: .5mm 2.5mm; font-weight: 800; font-size: 10.5px; white-space: nowrap; }
+  .url { display: inline-block; background: rgba(235,177,44,.12); border: 1px solid rgba(235,177,44,.45);
+    border-radius: 6px; padding: .5mm 2.5mm; color: #F6CD63; font-weight: 700; font-size: 11px; white-space: nowrap; }
+  .tip { background: rgba(235,177,44,.07); border-left: 3px solid #EBB12C; padding: 2.5mm 4mm; margin: 0 0 4mm;
+    font-size: 11px; color: #C9C3D4; line-height: 1.55; }
+  .tip b { color: #F6CD63; }
+  .foot { margin-top: auto; border-top: 1px solid rgba(255,255,255,.12); padding-top: 3mm; font-size: 10px;
+    color: #8F8A99; display: flex; justify-content: space-between; align-items: center; }
+  .foot b { color: #F6CD63; }
+</style>
+</head>
+<body>
+<div class="page">
+  <span class="kick">Martin Barna · osobní koučink · návod</span>
+  <h1>Kalorické tabulky → tvůj report za 2 minuty</h1>
+  <p class="lead">Zapisuješ jídlo v Kalorických tabulkách? Skvěle — nemusíš do reportu nic přepisovat. Vyber si cestu podle toho, kde KT používáš. A kdo KT nejede, prostě napíše průměr kcal a bílkovin — to stačí vždycky.</p>
+
+  <div class="var gold">
+    <h2>🥇 Varianta A — web Kalorických tabulek <span class="tag">čísla se doplní sama</span></h2>
+    <ol>
+      <li>Přihlas se na <span class="url">kaloricketabulky.cz</span> v prohlížeči (jde to i na mobilu přes prohlížeč — účet máš stejný jako v appce).</li>
+      <li>Otevři svůj <span class="w">Jídelníček</span>.</li>
+      <li>V hlavičce jídelníčku klikni na <span class="w">ikonu šipky dolů</span> (export) — je v řádku mezi datem a snídaní.</li>
+      <li>Vyber rozsah <span class="w">posledních 7 dní (pondělí–neděle)</span> a formát <span class="w">XLS</span>. Soubor se uloží do mobilu/počítače.</li>
+      <li>V reportu, v kroku <span class="w">Strava</span>, klikni na <span class="btnlike">📥 Načíst z Kalorických tabulek</span> a vyber stažený soubor.</li>
+    </ol>
+    <p style="margin-top:2mm;">✨ <b>Hotovo:</b> průměry i rozpis po dnech se vyplní samy, export se automaticky přiloží pro Martina — a ty jen zkontroluješ čísla. V historii pak uvidíš po dnech, co se kdy dělo.</p>
+  </div>
+
+  <div class="var">
+    <h2>🥈 Varianta B — mobilní appka KT (export neumí)</h2>
+    <ol>
+      <li>Otevři v appce <span class="w">Statistiky → Analýza jídelníčku → poslední týden</span>.</li>
+      <li>Opiš do reportu <b>průměr kcal a bílkovin</b> (2 čísla, 30 vteřin).</li>
+      <li>Volitelně: udělej <span class="w">screenshot</span> statistik a přilož ho v kroku <span class="w">Fotky a přílohy</span> — Martin uvidí detail.</li>
+    </ol>
+  </div>
+
+  <div class="var">
+    <h2>🥉 Varianta C — bez Kalorických tabulek</h2>
+    <p>Prostě do reportu napiš <b>průměr kcal a bílkovin za týden</b> podle toho, jak zapisuješ (appka Tvůj Coach ti průměr ukáže sama). Nic víc netřeba — rychlost je důležitější než dokonalost.</p>
+  </div>
+
+  <div class="tip">💡 <b>PDF export z KT</b> jde taky přiložit (v kroku Fotky a přílohy) — ale čísla z něj samy nedoplním, to umí jen XLS. A nezapomeň: <b>rozhoduje týdenní průměr</b>, ne jeden dokonalý den.</div>
+
+  <div class="foot">
+    <span>Něco drhne? Napiš mi: <b>martin@martinbarna.cz</b> — vyřešíme spolu.</span>
+    <span><b>Be Effective!</b> · martinbarna.cz</span>
+  </div>
+</div>
+</body>
+</html>
