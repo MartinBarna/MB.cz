@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klientská sekce — Martin Barna</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon-g3.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-g3.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r3">
+<style>
+  html,body{overflow-x:clip;max-width:100%;overscroll-behavior-x:none;}
+  .kcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0 8px;}
+  .kcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px;}
+  .kcard h3{margin:0 0 6px;font-size:1.02rem;color:#fff;}
+  .kcard p{margin:0;font-size:.88rem;color:#B9B3C4;line-height:1.5;}
+  .kstat{font-size:1.7rem;font-weight:800;color:#fff;line-height:1.15;}
+  .kstat .u{font-size:.85rem;font-weight:600;color:#8F8A99;}
+  .kstat .pos{color:#4fc07a;font-size:.95rem;font-weight:700;}
+  .kstat .neg{color:#e0a04f;font-size:.95rem;font-weight:700;}
+  .kcta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(150deg,rgba(235,177,44,.13),rgba(235,177,44,.03));border:1px solid rgba(235,177,44,.45);border-radius:14px;padding:20px;margin:18px 0;}
+  .kcta h2{margin:0 0 4px;font-size:1.15rem;color:#fff;}
+  .kcta p{margin:0;font-size:.9rem;color:#B9B3C4;}
+  .kbtn{display:inline-block;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;text-decoration:none;border:none;cursor:pointer;padding:13px 26px;border-radius:10px;font-weight:800;font-size:1rem;font-family:inherit;letter-spacing:.02em;}
+  .kbtn:disabled{opacity:.6;cursor:default;}
+  .kbtn2{display:inline-block;background:transparent;color:#F6CD63;border:1px solid rgba(235,177,44,.55);cursor:pointer;padding:11px 20px;border-radius:10px;font-weight:700;font-size:.92rem;font-family:inherit;text-decoration:none;}
+  .ksec{margin:30px 0 10px;font-size:.82rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#F6CD63;}
+  .gwrap{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px 14px 8px;overflow-x:auto;}
+  .gwrap h3{margin:0 0 4px;font-size:.98rem;color:#fff;padding-left:4px;}
+  .gwrap .sub{margin:0 0 8px;font-size:.8rem;color:#8F8A99;padding-left:4px;}
+  .ggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
+  table.hist{width:100%;border-collapse:collapse;font-size:.88rem;}
+  table.hist th{color:#8F8A99;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;text-align:left;padding:8px;border-bottom:1px solid rgba(255,255,255,.12);}
+  table.hist td{padding:9px 8px;border-bottom:1px solid rgba(255,255,255,.06);color:#E8E3EF;white-space:nowrap;}
+  table.hist td.r,table.hist th.r{text-align:right;}
+  .doc{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:12px 16px;margin:8px 0;color:#E8E3EF;text-decoration:none;font-size:.92rem;}
+  .doc:hover{border-color:rgba(235,177,44,.5);}
+  .doc .ic{flex:0 0 auto;color:#EBB12C;}
+  .doc .sz{margin-left:auto;color:#8F8A99;font-size:.78rem;flex:0 0 auto;}
+  /* ===== wizard overlay ===== */
+  #wiz{position:fixed;inset:0;background:#100e16;z-index:60;display:none;flex-direction:column;}
+  #wiz.open{display:flex;}
+  .wtop{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+  .wback{background:none;border:none;color:#B9B3C4;cursor:pointer;padding:8px;font-size:1.25rem;line-height:1;}
+  .wbar{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;}
+  .wbar i{display:block;height:100%;background:linear-gradient(90deg,#EBB12C,#E0762C);border-radius:3px;transition:width .25s;}
+  .wclose{background:none;border:none;color:#B9B3C4;cursor:pointer;padding:8px;font-size:1.15rem;line-height:1;}
+  .wbody{flex:1;overflow-y:auto;padding:10px 20px 20px;}
+  .win{max-width:560px;margin:0 auto;animation:wfade .22s ease;}
+  @keyframes wfade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .win h2{margin:12px 0 6px;font-size:1.45rem;color:#fff;line-height:1.25;}
+  .win .help{margin:0 0 18px;font-size:.92rem;color:#B9B3C4;line-height:1.55;}
+  .wfoot{padding:14px 20px calc(18px + env(safe-area-inset-bottom));}
+  .wfoot .win{display:flex;gap:10px;animation:none;}
+  .wfoot .kbtn{flex:1;padding:16px;font-size:1.05rem;}
+  .wskip{background:none;border:none;color:#8F8A99;cursor:pointer;font-family:inherit;font-size:.9rem;padding:12px;text-decoration:underline;}
+  .frow{margin:0 0 14px;}
+  .frow label{display:block;font-size:.85rem;color:#B9B3C4;margin:0 0 6px;font-weight:600;}
+  .frow label .opt{color:#6d6879;font-weight:400;}
+  .fin{width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#fff;font-family:inherit;font-size:1.05rem;padding:13px 14px;outline:none;}
+  .fin:focus{border-color:#EBB12C;}
+  .fin.err{border-color:#e05c5c;}
+  textarea.fin{min-height:96px;resize:vertical;font-size:.98rem;}
+  .funit{position:relative;}
+  .funit .u{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#8F8A99;font-size:.9rem;pointer-events:none;}
+  .ferr{color:#e88;font-size:.82rem;margin:6px 0 0;display:none;}
+  .chips2{display:flex;flex-wrap:wrap;gap:8px;}
+  .chips2 button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#E8E3EF;border-radius:999px;padding:10px 16px;font-family:inherit;font-size:.95rem;cursor:pointer;}
+  .chips2 button.on{background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border-color:transparent;font-weight:700;}
+  .scale5{display:flex;gap:8px;}
+  .scale5 button{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#E8E3EF;border-radius:12px;padding:16px 0;font-family:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;}
+  .scale5 button.on{background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border-color:transparent;}
+  .slegend{display:flex;justify-content:space-between;font-size:.75rem;color:#8F8A99;margin-top:6px;}
+  .m2{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;}
+  .mtgl{margin:4px 0 14px;}
+  .days7{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px 10px;align-items:center;}
+  .days7 .dn{color:#8F8A99;font-size:.85rem;font-weight:700;width:28px;}
+  .sumg{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:14px 16px;margin:0 0 12px;}
+  .sumg h4{margin:0 0 8px;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:#F6CD63;display:flex;justify-content:space-between;align-items:center;}
+  .sumg h4 button{background:none;border:none;color:#8F8A99;cursor:pointer;font-family:inherit;font-size:.78rem;text-decoration:underline;text-transform:none;letter-spacing:0;}
+  .sumg .kv{display:flex;justify-content:space-between;gap:12px;font-size:.9rem;padding:3px 0;}
+  .sumg .kv span:first-child{color:#8F8A99;}
+  .sumg .kv span:last-child{color:#fff;font-weight:600;text-align:right;overflow-wrap:anywhere;}
+  .wdone{text-align:center;padding:40px 10px;}
+  .wdone .big{font-size:3.2rem;}
+  .wdone h2{font-size:1.5rem;}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#211d2b;border:1px solid rgba(235,177,44,.5);color:#fff;border-radius:12px;padding:12px 20px;font-size:.92rem;z-index:80;box-shadow:0 8px 30px rgba(0,0,0,.5);}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/klient/"><span class="mark">MB</span><span><b>Klientská sekce</b><span class="tag">Koučink</span></span></a>
+    <div class="topr"><a href="/akademie/moje/">Moje studium</a><a href="mailto:martin@martinbarna.cz">Napsat Martinovi</a><a id="logout" href="#" role="button">Odhlásit</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <div id="load" class="panel">Načítám tvoji sekci…</div>
+
+    <div id="noauth" style="display:none;" class="panel">
+      Tahle sekce je jen pro klienty koučinku.<br><br>
+      <a class="kbtn" href="/akademie/prihlaseni/?next=%2Fakademie%2Fklient%2F">Přihlásit se</a>
+    </div>
+
+    <div id="noent" style="display:none;" class="panel">
+      Tvůj e-mail (<b id="noentMail"></b>) zatím nemá přístup do klientské sekce — ta je součástí
+      <a href="/koucing/" style="color:#F6CD63;">osobního koučinku</a>.<br><br>
+      Jsi Martinův klient a nevidíš sekci? Napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>
+      — přístup ti zapne (musí sedět e-mail, kterým se registruješ).
+    </div>
+
+    <div id="app" style="display:none;">
+      <span class="kick"><span class="dot"></span> Tvůj koučink s Martinem</span>
+      <h1 id="hello">Ahoj!</h1>
+      <p class="lead">Tady je celá tvoje cesta: reporty, grafy pokroku, dokumenty od Martina i výhody navíc.</p>
+
+      <!-- intake CTA (jen dokud neni vyplneny) -->
+      <div class="kcta" id="intakeCta" style="display:none;">
+        <div><h2>📝 Začínáme: vstupní dotazník</h2>
+        <p>~10 minut o tobě, ať je plán od prvního dne přesně na míru. Nic se nedá zkazit.</p></div>
+        <button class="kbtn" id="btnIntake">Vyplnit dotazník</button>
+      </div>
+
+      <!-- report CTA -->
+      <div class="kcta" id="reportCta">
+        <div><h2>📊 Týdenní report</h2>
+        <p id="reportCtaSub">Naklikáš ho za ~3 minuty. Kopie přijde tobě i Martinovi.</p></div>
+        <button class="kbtn" id="btnReport">Vyplnit report</button>
+      </div>
+
+      <!-- stat karty -->
+      <div class="kcards" id="stats" style="display:none;">
+        <div class="kcard"><h3>Aktuální váha</h3><div class="kstat" id="stW">—</div><p id="stWsub"></p></div>
+        <div class="kcard"><h3>Celková změna</h3><div class="kstat" id="stD">—</div><p id="stDsub"></p></div>
+        <div class="kcard"><h3>Odeslané reporty</h3><div class="kstat" id="stN">—</div><p id="stNsub"></p></div>
+        <div class="kcard"><h3>Dodržení plánu Ø</h3><div class="kstat" id="stA">—</div><p>průměr ze všech reportů (1–5)</p></div>
+      </div>
+
+      <!-- grafy -->
+      <div id="graphs" style="display:none;">
+        <div class="ksec">Grafy pokroku</div>
+        <div class="ggrid">
+          <div class="gwrap"><h3>Váha</h3><p class="sub">týdenní průměry (kg)</p><div id="gW"></div></div>
+          <div class="gwrap"><h3>Míry</h3><p class="sub">pupík · pas · boky (cm)</p><div id="gM"></div></div>
+          <div class="gwrap"><h3>Kroky</h3><p class="sub">denní průměr v týdnu</p><div id="gK"></div></div>
+          <div class="gwrap"><h3>Energie a dodržení</h3><p class="sub">škály 1–5: dodržení plánu · síla · únava (nižší = líp)</p><div id="gS"></div></div>
+        </div>
+      </div>
+
+      <!-- historie -->
+      <div id="histWrap" style="display:none;">
+        <div class="ksec">Historie reportů</div>
+        <div class="gwrap"><table class="hist"><thead><tr>
+          <th>Datum</th><th class="r">Váha</th><th class="r">Pas</th><th class="r">kcal Ø</th><th class="r">Bílk. Ø</th><th class="r">Kroky Ø</th><th class="r">Fitko</th><th class="r">Dodržení</th>
+        </tr></thead><tbody id="histBody"></tbody></table></div>
+      </div>
+
+      <!-- dokumenty -->
+      <div class="ksec">Dokumenty od Martina</div>
+      <div id="docs"><p class="lead" style="font-size:.9rem;" id="docsEmpty">Zatím tu žádné dokumenty nejsou — jakmile ti Martin něco nahraje (plán, jídelníček, podklady), objeví se tady.</p></div>
+
+      <!-- vyhody -->
+      <div class="ksec">Tvoje výhody v ceně koučinku</div>
+      <div class="kcards">
+        <a class="kcard" href="/akademie/videokurz/" style="text-decoration:none;display:block;">
+          <h3>🎬 Videokurz výživy</h3>
+          <p>182 videí o hubnutí, jídle a tréninku — máš kompletně odemčený. Skvělý doplněk ke koučinku.</p>
+        </a>
+        <a class="kcard" href="https://coach.martinbarna.cz" target="_blank" rel="noopener" style="text-decoration:none;display:block;">
+          <h3>📱 Appka Tvůj Coach</h3>
+          <p>Vyfotíš jídlo a appka spočítá makra, hlídá kalorie a bílkoviny. Ideální na zapisování stravy pro report.</p>
+        </a>
+        <a class="kcard" href="/akademie/" style="text-decoration:none;display:block;border-color:rgba(235,177,44,.5);">
+          <h3>🎓 Barna Academy −20 %</h3>
+          <p>Chceš jít do hloubky (nebo se stát trenérem)? Jako můj klient máš slevu 20 % s kódem <b style="color:#F6CD63;">KLIENT20</b>.</p>
+        </a>
+      </div>
+
+      <p class="foot">Klientská sekce — Martin Barna · osobní koučink · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
+    </div>
+  </div>
+
+  <!-- ===== WIZARD ===== -->
+  <div id="wiz" role="dialog" aria-modal="true">
+    <div class="wtop">
+      <button class="wback" id="wBack" aria-label="Zpět">←</button>
+      <div class="wbar"><i id="wProg" style="width:0%"></i></div>
+      <button class="wclose" id="wClose" aria-label="Zavřít">✕</button>
+    </div>
+    <div class="wbody"><div class="win" id="wIn"></div></div>
+    <div class="wfoot"><div class="win">
+      <button class="kbtn" id="wNext">Pokračovat</button>
+    </div></div>
+  </div>
+
+<script src="/assets/ba-config.js?v=20260628b"></script>
+<script src="/assets/ba-academy.js?v=20260704"></script>
+<script>
+(function(){
+  "use strict";
+  var CFG = window.BA_CONFIG || {};
+  var FN = (CFG.url || "") + "/functions/v1/client-report";
+  var myEmail = "", myName = "", reports = [], hasIntake = false;
+
+  function el(id){ return document.getElementById(id); }
+  function czk(n){ return (n==null||n==="") ? "—" : String(n).replace(".", ","); }
+  function toNum(v){ var n = Number(String(v==null?"":v).replace(",", ".").trim()); return isFinite(n) && String(v).trim()!=="" ? n : null; }
+  function dateCz(iso){ var d = new Date(iso + "T12:00:00"); return d.getDate()+". "+(d.getMonth()+1)+". "+d.getFullYear(); }
+  function escH(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function toast(msg){ var t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 4200); }
+
+  // ---------- data (REST + RLS: vidím jen svoje řádky) ----------
+  function api(path){
+    return window.BA.getToken().then(function(t){
+      return fetch(CFG.url + "/rest/v1/" + path, { headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t } })
+        .then(function(r){ return r.ok ? r.json() : []; });
+    });
+  }
+  function storageList(prefix){
+    return window.BA.getToken().then(function(t){
+      return fetch(CFG.url + "/storage/v1/object/list/client-docs", {
+        method: "POST",
+        headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t, "Content-Type": "application/json" },
+        body: JSON.stringify({ prefix: prefix, limit: 100, sortBy: { column: "created_at", order: "desc" } })
+      }).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; });
+    });
+  }
+  function openDoc(path, nameTxt){
+    window.BA.getToken().then(function(t){
+      fetch(CFG.url + "/storage/v1/object/authenticated/client-docs/" + path.split("/").map(encodeURIComponent).join("/"),
+        { headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t } })
+      .then(function(r){ if(!r.ok) throw 0; return r.blob(); })
+      .then(function(b){
+        var u = URL.createObjectURL(b);
+        var a = document.createElement("a"); a.href = u; a.download = nameTxt; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(u); }, 30000);
+      }).catch(function(){ toast("Soubor se nepodařilo stáhnout, zkus to znovu."); });
+    });
+  }
+
+  // ---------- grafy (čisté SVG, žádné knihovny) ----------
+  var GOLD = "#EBB12C", GOLD2 = "#F6CD63", MUT = "#8F8A99", GRID = "rgba(255,255,255,.08)";
+  function svgOpen(w, h){ return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" style="display:block;min-width:280px;">'; }
+  function lineChart(elId, seriesList, opts){
+    // seriesList: [{name, color, pts:[{x:date,y:num}]}] — sdílená časová osa dle reportů
+    var w = 460, h = 190, pl = 44, pr = 10, pt = 14, pb = 26;
+    var all = [];
+    seriesList.forEach(function(s){ s.pts.forEach(function(p){ if(p.y!=null) all.push(p.y); }); });
+    if(!all.length){ el(elId).innerHTML = '<p style="color:'+MUT+';font-size:.85rem;padding:8px 4px;">Zatím málo dat — doplní se z reportů.</p>'; return; }
+    var yMin = Math.min.apply(null, all), yMax = Math.max.apply(null, all);
+    var pad = Math.max((yMax - yMin) * 0.15, (opts && opts.minPad) || 0.5);
+    yMin -= pad; yMax += pad;
+    if(opts && opts.zeroMin) yMin = Math.max(0, yMin);
+    var dates = reports.map(function(r){ return r.report_date; });
+    var n = dates.length;
+    function X(i){ return n < 2 ? (pl + (w - pl - pr) / 2) : pl + (w - pl - pr) * (i / (n - 1)); }
+    function Y(v){ return pt + (h - pt - pb) * (1 - (v - yMin) / (yMax - yMin || 1)); }
+    var out = svgOpen(w, h);
+    // y grid: 3 linky
+    for(var g = 0; g <= 2; g++){
+      var gv = yMin + (yMax - yMin) * g / 2, gy = Y(gv);
+      out += '<line x1="' + pl + '" y1="' + gy + '" x2="' + (w - pr) + '" y2="' + gy + '" stroke="' + GRID + '"/>';
+      out += '<text x="' + (pl - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="10" fill="' + MUT + '">' + (Math.round(gv * 10) / 10).toLocaleString("cs-CZ") + '</text>';
+    }
+    // x popisky: max 5
+    var step = Math.max(1, Math.ceil(n / 5));
+    for(var i = 0; i < n; i += step){
+      var d = new Date(dates[i] + "T12:00:00");
+      out += '<text x="' + X(i) + '" y="' + (h - 8) + '" text-anchor="middle" font-size="10" fill="' + MUT + '">' + d.getDate() + '.' + (d.getMonth() + 1) + '.</text>';
+    }
+    seriesList.forEach(function(s){
+      var path = "", started = false;
+      s.pts.forEach(function(p, i){
+        if(p.y == null){ return; }
+        path += (started ? " L " : "M ") + X(i) + " " + Y(p.y); started = true;
+      });
+      if(path) out += '<path d="' + path + '" fill="none" stroke="' + s.color + '" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+      s.pts.forEach(function(p, i){
+        if(p.y == null) return;
+        out += '<circle cx="' + X(i) + '" cy="' + Y(p.y) + '" r="3.4" fill="' + s.color + '"><title>' + dateCz(dates[i]) + ': ' + czk(p.y) + '</title></circle>';
+      });
+    });
+    // legenda (jen u vice serii)
+    if(seriesList.length > 1){
+      var lx = pl;
+      seriesList.forEach(function(s){
+        out += '<circle cx="' + (lx + 4) + '" cy="10" r="4" fill="' + s.color + '"/><text x="' + (lx + 12) + '" y="14" font-size="10" fill="' + MUT + '">' + s.name + '</text>';
+        lx += 14 + s.name.length * 6.2;
+      });
+    }
+    el(elId).innerHTML = out + "</svg>";
+  }
+  function barChart(elId, pts){
+    var w = 460, h = 190, pl = 48, pr = 10, pt = 14, pb = 26;
+    var vals = pts.map(function(p){ return p.y; }).filter(function(v){ return v != null; });
+    if(!vals.length){ el(elId).innerHTML = '<p style="color:'+MUT+';font-size:.85rem;padding:8px 4px;">Zatím málo dat — doplní se z reportů.</p>'; return; }
+    var yMax = Math.max.apply(null, vals) * 1.15;
+    var n = pts.length, bw = Math.min(28, (w - pl - pr) / n * 0.6);
+    var out = svgOpen(w, h);
+    for(var g = 0; g <= 2; g++){
+      var gv = yMax * g / 2, gy = pt + (h - pt - pb) * (1 - gv / yMax);
+      out += '<line x1="' + pl + '" y1="' + gy + '" x2="' + (w - pr) + '" y2="' + gy + '" stroke="' + GRID + '"/>';
+      out += '<text x="' + (pl - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="10" fill="' + MUT + '">' + Math.round(gv).toLocaleString("cs-CZ") + '</text>';
+    }
+    var step = Math.max(1, Math.ceil(n / 5));
+    pts.forEach(function(p, i){
+      var cx = n < 2 ? (pl + (w - pl - pr) / 2) : pl + (w - pl - pr) * (i / (n - 1));
+      if(i % step === 0){
+        var d = new Date(p.x + "T12:00:00");
+        out += '<text x="' + cx + '" y="' + (h - 8) + '" text-anchor="middle" font-size="10" fill="' + MUT + '">' + d.getDate() + '.' + (d.getMonth() + 1) + '.</text>';
+      }
+      if(p.y == null) return;
+      var bh = (h - pt - pb) * (p.y / yMax);
+      out += '<rect x="' + (cx - bw / 2) + '" y="' + (h - pb - bh) + '" width="' + bw + '" height="' + bh + '" rx="3" fill="' + GOLD + '" opacity=".85"><title>' + dateCz(p.x) + ': ' + Math.round(p.y).toLocaleString("cs-CZ") + '</title></rect>';
+    });
+    el(elId).innerHTML = out + "</svg>";
+  }
+
+  // ---------- dashboard render ----------
+  function renderDash(){
+    if(!reports.length){
+      el("stats").style.display = "none"; el("graphs").style.display = "none"; el("histWrap").style.display = "none";
+      el("reportCtaSub").textContent = "První report odemkne grafy pokroku. Naklikáš ho za ~3 minuty.";
+      return;
+    }
+    el("stats").style.display = ""; el("graphs").style.display = ""; el("histWrap").style.display = "";
+    var last = reports[reports.length - 1], first = reports[0];
+    el("reportCtaSub").textContent = "Poslední report: " + dateCz(last.report_date) + ". Kopie přijde tobě i Martinovi.";
+    var lw = toNum(last.weight), fw = toNum(first.weight);
+    el("stW").innerHTML = lw != null ? czk(lw) + ' <span class="u">kg</span>' : "—";
+    el("stWsub").textContent = "z reportu " + dateCz(last.report_date);
+    if(lw != null && fw != null && reports.length > 1){
+      var d = Math.round((lw - fw) * 10) / 10;
+      el("stD").innerHTML = '<span class="' + (d <= 0 ? "pos" : "neg") + '" style="font-size:1.7rem;">' + (d > 0 ? "+" : "−") + czk(Math.abs(d)) + ' kg</span>';
+      el("stDsub").textContent = "od začátku (" + dateCz(first.report_date) + ": " + czk(fw) + " kg)";
+    } else { el("stD").textContent = "—"; el("stDsub").textContent = "doplní se od 2. reportu"; }
+    el("stN").textContent = reports.length;
+    el("stNsub").textContent = "první " + dateCz(first.report_date);
+    var adh = reports.map(function(r){ return toNum((r.scales || {}).dodrzeni); }).filter(function(v){ return v != null; });
+    el("stA").innerHTML = adh.length ? czk(Math.round(adh.reduce(function(a, b){ return a + b; }, 0) / adh.length * 10) / 10) + ' <span class="u">/ 5</span>' : "—";
+
+    lineChart("gW", [{ name: "váha", color: GOLD, pts: reports.map(function(r){ return { x: r.report_date, y: toNum(r.weight) }; }) }], { minPad: .6 });
+    lineChart("gM", [
+      { name: "pupík", color: GOLD, pts: reports.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).pupik) }; }) },
+      { name: "pas", color: "#e0a04f", pts: reports.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).pas) }; }) },
+      { name: "boky", color: "#b9b3c4", pts: reports.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).boky) }; }) }
+    ], { minPad: 1 });
+    barChart("gK", reports.map(function(r){ return { x: r.report_date, y: toNum((r.activity || {}).kroky) }; }));
+    lineChart("gS", [
+      { name: "dodržení", color: GOLD, pts: reports.map(function(r){ return { x: r.report_date, y: toNum((r.scales || {}).dodrzeni) }; }) },
+      { name: "síla", color: "#4fc07a", pts: reports.map(function(r){ return { x: r.report_date, y: toNum((r.scales || {}).sila) }; }) },
+      { name: "únava", color: "#e05c5c", pts: reports.map(function(r){ return { x: r.report_date, y: toNum((r.scales || {}).unava) }; }) }
+    ], { minPad: .4 });
+
+    var rows = reports.slice().reverse().map(function(r){
+      var m = r.measurements || {}, nu = r.nutrition || {}, ac = r.activity || {}, sc = r.scales || {};
+      return "<tr><td>" + dateCz(r.report_date) + "</td><td class='r'>" + czk(toNum(r.weight)) + "</td><td class='r'>" + czk(toNum(m.pas)) + "</td><td class='r'>" + czk(toNum(nu.kcal)) + "</td><td class='r'>" + czk(toNum(nu.protein)) + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "—") + "</td><td class='r'>" + czk(toNum(ac.fitko)) + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
+    }).join("");
+    el("histBody").innerHTML = rows;
+  }
+
+  function renderDocs(){
+    Promise.all([storageList("shared"), storageList(myEmail)]).then(function(res){
+      var items = [];
+      (res[0] || []).forEach(function(o){ if(o && o.name && o.id) items.push({ path: "shared/" + o.name, name: o.name, size: o.metadata && o.metadata.size, shared: true, at: o.created_at }); });
+      (res[1] || []).forEach(function(o){ if(o && o.name && o.id) items.push({ path: myEmail + "/" + o.name, name: o.name, size: o.metadata && o.metadata.size, shared: false, at: o.created_at }); });
+      if(!items.length) return;
+      el("docsEmpty").style.display = "none";
+      items.sort(function(a, b){ return String(b.at || "").localeCompare(String(a.at || "")); });
+      var host = el("docs");
+      items.forEach(function(it){
+        var a = document.createElement("a");
+        a.className = "doc"; a.href = "#";
+        a.innerHTML = '<span class="ic">📄</span><span>' + escH(it.name) + (it.shared ? ' <span style="color:#8F8A99;font-size:.78rem;">· pro všechny klienty</span>' : "") + '</span><span class="sz">' + (it.size ? Math.max(1, Math.round(it.size / 1024)) + " kB" : "") + "</span>";
+        a.addEventListener("click", function(e){ e.preventDefault(); openDoc(it.path, it.name); });
+        host.appendChild(a);
+      });
+    });
+  }
+
+  // ---------- wizard engine ----------
+  var W = { steps: [], i: 0, ans: {}, id: "", onDone: null };
+  function draftKey(){ return "mb_wiz_" + W.id + "_" + myEmail; }
+  function wOpen(id, steps, onDone){
+    W.id = id; W.steps = steps; W.i = 0; W.ans = {}; W.onDone = onDone;
+    try { var d = JSON.parse(localStorage.getItem(draftKey()) || "null"); if(d && d.ans){ W.ans = d.ans; } } catch(e){}
+    el("wiz").classList.add("open"); document.body.style.overflow = "hidden";
+    wShow();
+  }
+  function wCloseFn(force){
+    if(!force && Object.keys(W.ans).length && !confirm("Zavřít? Rozpracované odpovědi zůstanou uložené v tomhle prohlížeči.")) return;
+    el("wiz").classList.remove("open"); document.body.style.overflow = "";
+  }
+  function wSaveDraft(){ try { localStorage.setItem(draftKey(), JSON.stringify({ ans: W.ans, t: Date.now() })); } catch(e){} }
+  function visSteps(){ return W.steps.filter(function(s){ return !s.when || s.when(W.ans); }); }
+  function wShow(){
+    var steps = visSteps();
+    if(W.i >= steps.length) W.i = steps.length - 1;
+    var s = steps[W.i];
+    el("wProg").style.width = Math.round(((W.i) / (steps.length - 1 || 1)) * 100) + "%";
+    el("wBack").style.visibility = W.i === 0 ? "hidden" : "visible";
+    var h = "<h2>" + s.title + "</h2>";
+    if(s.help) h += '<p class="help">' + s.help + "</p>";
+    h += s.render(W.ans);
+    el("wIn").innerHTML = h;
+    el("wNext").textContent = s.nextLabel || (W.i === steps.length - 1 ? "Odeslat" : "Pokračovat");
+    var skipBtn = document.getElementById("wSkipHost");
+    if(skipBtn) skipBtn.style.display = "";
+    if(s.mount) s.mount(W.ans);
+    el("wIn").querySelectorAll("input,textarea").forEach(function(inp){
+      inp.addEventListener("keydown", function(e){ if(e.key === "Enter" && inp.tagName !== "TEXTAREA"){ e.preventDefault(); el("wNext").click(); } });
+    });
+    var f = el("wIn").querySelector("input,textarea"); if(f && window.innerWidth > 720) f.focus();
+    document.querySelector(".wbody").scrollTop = 0;
+  }
+  function wGoto(id){
+    var idx = visSteps().findIndex ? visSteps().findIndex(function(s){ return s.id === id; }) : -1;
+    if(idx < 0){ var vs = visSteps(); for(var i = 0; i < vs.length; i++){ if(vs[i].id === id){ idx = i; break; } } }
+    if(idx >= 0){ W.i = idx; wShow(); }
+  }
+  function mountGoto(){
+    el("wIn").querySelectorAll("[data-goto]").forEach(function(b){
+      b.addEventListener("click", function(){ wGoto(b.getAttribute("data-goto")); });
+    });
+  }
+  function wNext(){
+    var steps = visSteps(), s = steps[W.i];
+    if(s.collect){ var err = s.collect(W.ans); if(err){ toast(err); return; } }
+    wSaveDraft();
+    if(W.i === steps.length - 1){ if(W.onDone) W.onDone(W.ans); return; }
+    W.i++; wShow();
+  }
+  el("wNext").addEventListener("click", wNext);
+  el("wBack").addEventListener("click", function(){ if(W.i > 0){ W.i--; wShow(); } });
+  el("wClose").addEventListener("click", function(){ wCloseFn(false); });
+
+  // ---- field helpers ----
+  function fNum(id, label, unit, ph, val, opt){
+    if(typeof val === "number") val = String(val).replace(".", ",");   // česká čárka v inputu (draft ukládá čísla)
+    return '<div class="frow"><label>' + label + (opt ? ' <span class="opt">(nepovinné)</span>' : "") + '</label><div class="funit"><input class="fin" id="' + id + '" type="text" inputmode="decimal" placeholder="' + (ph || "") + '" value="' + escH(val == null ? "" : val) + '">' + (unit ? '<span class="u">' + unit + "</span>" : "") + "</div></div>";
+  }
+  function fText(id, label, ph, val, opt, area){
+    return '<div class="frow"><label>' + label + (opt ? ' <span class="opt">(nepovinné)</span>' : "") + "</label>" + (area ? '<textarea class="fin" id="' + id + '" placeholder="' + (ph || "") + '">' + escH(val == null ? "" : val) + "</textarea>" : '<input class="fin" id="' + id + '" type="text" placeholder="' + (ph || "") + '" value="' + escH(val == null ? "" : val) + '">') + "</div>";
+  }
+  function fScale(id, label, val, lo, hi){
+    var b = "";
+    for(var i = 1; i <= 5; i++) b += '<button type="button" data-v="' + i + '"' + (val === i ? ' class="on"' : "") + ">" + i + "</button>";
+    return '<div class="frow" style="margin-bottom:20px;"><label>' + label + '</label><div class="scale5" id="' + id + '">' + b + '</div><div class="slegend"><span>' + lo + "</span><span>" + hi + "</span></div></div>";
+  }
+  function fChips(id, label, opts, val){
+    var b = opts.map(function(o){ return '<button type="button" data-v="' + escH(o) + '"' + (String(val) === String(o) ? ' class="on"' : "") + ">" + escH(o) + "</button>"; }).join("");
+    return '<div class="frow"><label>' + label + '</label><div class="chips2" id="' + id + '">' + b + "</div></div>";
+  }
+  function mountPick(id){
+    var host = document.getElementById(id);
+    if(!host) return;
+    host.querySelectorAll("button").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        host.querySelectorAll("button").forEach(function(x){ x.classList.remove("on"); });
+        btn.classList.add("on");
+      });
+    });
+  }
+  function pickVal(id){ var on = document.querySelector("#" + id + " button.on"); return on ? on.getAttribute("data-v") : null; }
+  function gv(id){ var n = document.getElementById(id); return n ? n.value.trim() : ""; }
+  function reqNum(id, label, min, max){
+    var v = toNum(gv(id));
+    if(v == null) return { err: "Vyplň prosím " + label + "." };
+    if(v < min || v > max) return { err: label + " vypadá mimo rozsah (" + min + "–" + max + ") — zkontroluj překlep." };
+    return { v: v };
+  }
+  function optNum(id, min, max){
+    var raw = gv(id); if(raw === "") return { v: null };
+    var v = toNum(raw); if(v == null || v < min || v > max) return { err: "Hodnota „" + raw + "“ vypadá jako překlep — zkontroluj ji." };
+    return { v: v };
+  }
+
+  var MIRY = [["pupik", "Pupík"], ["pas", "Pas"], ["boky", "Boky"], ["krk", "Krk"], ["prsa", "Prsa"], ["zadek", "Zadek"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["p_stehno", "P stehno"], ["l_stehno", "L stehno"], ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"]];
+  var DAYS = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+
+  // ---------- REPORT WIZARD ----------
+  function reportSteps(){
+    return [
+      { id: "vaha", title: "Jaká je tvoje váha?", help: "Ideálně <b>průměr ranních vážení</b> za celý týden (nalačno, po záchodě). Jedno číslo lže, průměr ne.",
+        render: function(a){ return fNum("f_w", "Váha", "kg", "např. 71,3", a.weight); },
+        collect: function(a){ var r = reqNum("f_w", "váhu", 30, 300); if(r.err) return r.err; a.weight = r.v; } },
+      { id: "miryq", title: "Měřil/a ses tento týden?", help: "Míry řeknou to, co váha neumí — hlavně pupík, pas a boky.",
+        render: function(a){ return fChips("f_mq", "Míry tento týden", ["Ano, mám míry", "Tento týden přeskočím"], a._miry === false ? "Tento týden přeskočím" : (a._miry === true ? "Ano, mám míry" : null)); },
+        mount: function(){ mountPick("f_mq"); },
+        collect: function(a){ var v = pickVal("f_mq"); if(!v) return "Vyber prosím jednu možnost."; a._miry = (v.indexOf("Ano") === 0); if(!a._miry) a.measurements = {}; } },
+      { id: "miry", title: "Tvoje míry (cm)", help: "Stačí <b>pupík, pas a boky</b>. Ostatní klidně nech prázdné — doplňuj je třeba 1× za měsíc.", when: function(a){ return a._miry === true; },
+        render: function(a){
+          var m = a.measurements || {};
+          var main = MIRY.slice(0, 3).map(function(x){ return fNum("f_m_" + x[0], x[1], "cm", "", m[x[0]]); }).join("");
+          var rest = MIRY.slice(3).map(function(x){ return fNum("f_m_" + x[0], x[1], "cm", "", m[x[0]], true); }).join("");
+          return main + '<div class="mtgl"><button type="button" class="kbtn2" id="f_mAll">' + (a._miryAll ? "Skrýt ostatní míry" : "+ Všechny míry (dalších 9)") + '</button></div><div class="m2" id="f_mRest" style="display:' + (a._miryAll ? "grid" : "none") + ';">' + rest + "</div>";
+        },
+        mount: function(a){
+          var b = document.getElementById("f_mAll");
+          b.addEventListener("click", function(){ a._miryAll = !a._miryAll; document.getElementById("f_mRest").style.display = a._miryAll ? "grid" : "none"; b.textContent = a._miryAll ? "Skrýt ostatní míry" : "+ Všechny míry (dalších 9)"; });
+        },
+        collect: function(a){
+          var m = {};
+          for(var i = 0; i < MIRY.length; i++){
+            var r = optNum("f_m_" + MIRY[i][0], 15, 250); if(r.err) return MIRY[i][1] + ": " + r.err;
+            if(r.v != null) m[MIRY[i][0]] = r.v;
+          }
+          if(m.pupik == null && m.pas == null && m.boky == null) return "Vyplň aspoň jednu míru, nebo se vrať a zvol „přeskočím“.";
+          a.measurements = m;
+        } },
+      { id: "strava", title: "Strava — týdenní průměr", help: "Průměr za dny, kdy jsi zapisoval/a (appka Tvůj Coach ti ho ukáže sama). Nemusíš na gram přesně.",
+        render: function(a){
+          var n = a.nutrition || {};
+          return fNum("f_kcal", "Kalorie Ø/den", "kcal", "např. 1750", n.kcal)
+            + '<div class="m2">' + fNum("f_prot", "Bílkoviny Ø", "g", "", n.protein) + fNum("f_carb", "Sacharidy Ø", "g", "", n.carbs, true) + fNum("f_fat", "Tuky Ø", "g", "", n.fat, true) + fNum("f_fib", "Vláknina Ø", "g", "", n.fiber, true) + "</div>"
+            + fChips("f_dny", "Kolik dní jsi zapisoval/a?", ["0", "1", "2", "3", "4", "5", "6", "7"], n.dny_zapsano != null ? String(n.dny_zapsano) : null)
+            + '<div class="mtgl"><button type="button" class="kbtn2" id="f_dnyBtn">' + (a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)") + '</button></div>'
+            + '<div id="f_dnyBox" style="display:' + (a._dnyOpen ? "block" : "none") + ';"><div class="days7"><span></span><label style="font-size:.78rem;color:#8F8A99;">kcal</label><label style="font-size:.78rem;color:#8F8A99;">bílkoviny (g)</label>'
+            + DAYS.map(function(d, i){ var dd = (n.dny || [])[i] || {}; return '<span class="dn">' + d + '</span><input class="fin" style="padding:9px 10px;font-size:.95rem;" inputmode="numeric" id="f_d_k' + i + '" value="' + escH(dd.kcal == null ? "" : dd.kcal) + '"><input class="fin" style="padding:9px 10px;font-size:.95rem;" inputmode="numeric" id="f_d_p' + i + '" value="' + escH(dd.p == null ? "" : dd.p) + '">'; }).join("")
+            + "</div></div>";
+        },
+        mount: function(a){
+          mountPick("f_dny");
+          document.getElementById("f_dnyBtn").addEventListener("click", function(){ a._dnyOpen = !a._dnyOpen; document.getElementById("f_dnyBox").style.display = a._dnyOpen ? "block" : "none"; this.textContent = a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)"; });
+        },
+        collect: function(a){
+          var kcal = reqNum("f_kcal", "průměrné kalorie", 400, 8000); if(kcal.err) return kcal.err;
+          var prot = reqNum("f_prot", "průměrné bílkoviny", 10, 500); if(prot.err) return prot.err;
+          var carb = optNum("f_carb", 0, 1200); if(carb.err) return "Sacharidy: " + carb.err;
+          var fat = optNum("f_fat", 0, 400); if(fat.err) return "Tuky: " + fat.err;
+          var fib = optNum("f_fib", 0, 150); if(fib.err) return "Vláknina: " + fib.err;
+          var dny = pickVal("f_dny"); if(dny == null) return "Vyber, kolik dní jsi zapisoval/a (klidně 0).";
+          var n = { kcal: kcal.v, protein: prot.v, carbs: carb.v, fat: fat.v, fiber: fib.v, dny_zapsano: Number(dny) };
+          var rozpis = [];
+          for(var i = 0; i < 7; i++){
+            var k = optNum("f_d_k" + i, 0, 10000); if(k.err) return DAYS[i] + " kcal: " + k.err;
+            var p = optNum("f_d_p" + i, 0, 600); if(p.err) return DAYS[i] + " bílkoviny: " + p.err;
+            if(k.v != null || p.v != null) rozpis.push({ den: DAYS[i], kcal: k.v, p: p.v }); else rozpis.push(null);
+          }
+          if(rozpis.some(function(x){ return x; })) n.dny = rozpis;
+          a.nutrition = n;
+        } },
+      { id: "aktivity", title: "Aktivity za týden", help: "Kroky ti řekne mobil/hodinky. U fitka počet odcvičených tréninků.",
+        render: function(a){
+          var ac = a.activity || {};
+          return fNum("f_kroky", "Kroky Ø/den", "kroků", "např. 8500", ac.kroky)
+            + fChips("f_fitko", "Fitko — počet tréninků", ["0", "1", "2", "3", "4", "5", "6", "7"], ac.fitko != null ? String(ac.fitko) : null)
+            + fText("f_kardio", "Kardio", "např. 2× 30 min chůze do kopce", ac.kardio, true)
+            + fText("f_dalsi", "Jiný sport / pohyb", "např. volejbal 1×, kolo o víkendu", ac.dalsi, true);
+        },
+        mount: function(){ mountPick("f_fitko"); },
+        collect: function(a){
+          var k = reqNum("f_kroky", "průměrné kroky", 0, 60000); if(k.err) return k.err;
+          var f = pickVal("f_fitko"); if(f == null) return "Vyber počet tréninků ve fitku (klidně 0).";
+          a.activity = { kroky: k.v, fitko: Number(f), kardio: gv("f_kardio"), dalsi: gv("f_dalsi") };
+        } },
+      { id: "skaly", title: "Jak ses cítil/a?", help: "Škály 1–5. Není správná odpověď — podle tohohle Martin ladí plán.",
+        render: function(a){
+          var s = a.scales || {};
+          return fScale("f_unava", "Únava", s.unava, "1 = čerstvý/á", "5 = vyřízený/á")
+            + fScale("f_hlad", "Hlad", s.hlad, "1 = žádný", "5 = pořád")
+            + fScale("f_sila", "Síla v tréninku", s.sila, "1 = slabota", "5 = nabušeno")
+            + fScale("f_spanekk", "Kvalita spánku", s.spanek_kvalita, "1 = mizerná", "5 = výborná")
+            + fNum("f_spanekh", "Spánek — hodin průměrně", "h", "např. 7", s.spanek_h)
+            + fScale("f_dodrz", "Dodržení plánu", s.dodrzeni, "1 = vůbec", "5 = na 100 %");
+        },
+        mount: function(){ ["f_unava", "f_hlad", "f_sila", "f_spanekk", "f_dodrz"].forEach(mountPick); },
+        collect: function(a){
+          var out = {}, need = [["f_unava", "unava", "únavu"], ["f_hlad", "hlad", "hlad"], ["f_sila", "sila", "sílu"], ["f_spanekk", "spanek_kvalita", "kvalitu spánku"], ["f_dodrz", "dodrzeni", "dodržení plánu"]];
+          for(var i = 0; i < need.length; i++){ var v = pickVal(need[i][0]); if(v == null) return "Naklikej prosím " + need[i][2] + " (1–5)."; out[need[i][1]] = Number(v); }
+          var h = optNum("f_spanekh", 2, 14); if(h.err) return "Spánek: " + h.err;
+          out.spanek_h = h.v; a.scales = out;
+        } },
+      { id: "texty", title: "Slovní zhodnocení", help: "Pár vět stačí — tohle je pro Martina často to nejcennější z celého reportu.",
+        render: function(a){
+          var t = a.notes || {};
+          return fText("f_povedlo", "✓ Co se tenhle týden povedlo?", "", t.povedlo, true, true)
+            + fText("f_drhlo", "✗ Co drhlo?", "", t.drhlo, true, true)
+            + fText("f_otazky", "? Otázky na Martina", "", t.otazky, true, true);
+        },
+        collect: function(a){ a.notes = { povedlo: gv("f_povedlo"), drhlo: gv("f_drhlo"), otazky: gv("f_otazky") }; } },
+      { id: "souhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání přijde hezky zpracovaný report mailem tobě i Martinovi.",
+        render: function(a){
+          function g(title, gotoId, rows){
+            var filled = rows.filter(function(r){ return r[1] !== "" && r[1] != null && r[1] !== "—"; });
+            return '<div class="sumg"><h4>' + title + ' <button type="button" data-goto="' + gotoId + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>—</span><span></span></div>') + "</div>";
+          }
+          var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {};
+          return g("Váha", "vaha", [["Týdenní průměr", czk(a.weight) + " kg"]])
+            + g("Míry", a._miry ? "miry" : "miryq", a._miry ? MIRY.map(function(x){ return [x[1], m[x[0]] != null ? czk(m[x[0]]) + " cm" : ""]; }) : [["Tento týden", "přeskočeno"]])
+            + g("Strava Ø", "strava", [["Kalorie", czk(n.kcal) + " kcal"], ["Bílkoviny", czk(n.protein) + " g"], ["Sacharidy", n.carbs != null ? czk(n.carbs) + " g" : ""], ["Tuky", n.fat != null ? czk(n.fat) + " g" : ""], ["Vláknina", n.fiber != null ? czk(n.fiber) + " g" : ""], ["Zapsáno dní", n.dny_zapsano + "/7"]])
+            + g("Aktivity", "aktivity", [["Kroky Ø", czk(ac.kroky)], ["Fitko", ac.fitko + "×"], ["Kardio", ac.kardio], ["Další", ac.dalsi]])
+            + g("Pocity", "skaly", [["Únava", s.unava + "/5"], ["Hlad", s.hlad + "/5"], ["Síla", s.sila + "/5"], ["Spánek", (s.spanek_h != null ? czk(s.spanek_h) + " h · " : "") + s.spanek_kvalita + "/5"], ["Dodržení plánu", s.dodrzeni + "/5"]])
+            + g("Slovně", "texty", [["Povedlo se", t.povedlo], ["Drhlo", t.drhlo], ["Otázky", t.otazky]]);
+        },
+        mount: mountGoto,
+        nextLabel: "Odeslat report 📨" }
+    ];
+  }
+
+  // ---------- INTAKE WIZARD ----------
+  function intakeSteps(){
+    return [
+      { id: "osobni", title: "Něco o tobě", help: "Základ, ať Martin počítá s reálnými čísly.",
+        render: function(a){ return fNum("i_vek", "Věk", "let", "", a.vek) + '<div class="m2">' + fNum("i_vyska", "Výška", "cm", "", a.vyska) + fNum("i_vaha", "Aktuální váha", "kg", "", a.vaha) + "</div>" + fText("i_telefon", "Telefon", "+420 …", a.telefon, true); },
+        collect: function(a){
+          var v = reqNum("i_vek", "věk", 15, 90); if(v.err) return v.err;
+          var h = reqNum("i_vyska", "výšku", 120, 230); if(h.err) return h.err;
+          var w = reqNum("i_vaha", "váhu", 35, 300); if(w.err) return w.err;
+          a.vek = v.v; a.vyska = h.v; a.vaha = w.v; a.telefon = gv("i_telefon");
+        } },
+      { id: "cil", title: "Tvůj cíl", help: "Čím konkrétněji, tím líp. „Zhubnout 8 kg do Vánoc“ je lepší než „zhubnout“.",
+        render: function(a){ return fText("i_cil", "Čeho chceš dosáhnout?", "váha, postava, síla, zdraví…", a.cil, false, true) + fText("i_proc", "Proč to chceš? Co se změní, až to dokážeš?", "tvoje motivace — k té se budeme vracet", a.proc, false, true) + fText("i_termin", "Do kdy / kvůli jaké události?", "např. svatba v září, dovolená…", a.termin, true); },
+        collect: function(a){ if(!gv("i_cil")) return "Napiš prosím svůj cíl."; if(!gv("i_proc")) return "Napiš prosím i svoje proč — je důležitější, než se zdá."; a.cil = gv("i_cil"); a.proc = gv("i_proc"); a.termin = gv("i_termin"); } },
+      { id: "historie", title: "Co už máš za sebou", help: "Diety, výkyvy váhy, sporty — ať Martin neopakuje, co u tebe nefungovalo.",
+        render: function(a){ return fText("i_diety", "Diety a hubnutí v minulosti", "co jsi zkoušel/a a jak to dopadlo", a.diety, true, true) + fText("i_sport", "Sport dřív a teď", "co jsi dělal/a a co děláš teď", a.sport, true, true); },
+        collect: function(a){ a.diety = gv("i_diety"); a.sport = gv("i_sport"); } },
+      { id: "zdravi", title: "Zdraví", help: "⚠️ Jen pro Martina, ať plán ničemu neublíží. <b>Nenahrazuje lékaře</b> — zdravotní potíže vždy řeš primárně s ním.",
+        render: function(a){ return fText("i_zdravi", "Zdravotní omezení / diagnózy", "klouby, záda, štítná žláza, tlak…", a.zdravi, true, true) + fText("i_leky", "Léky a doplňky, které bereš", "", a.leky, true, true) + fText("i_alergie", "Alergie a intolerance", "laktóza, lepek, ořechy…", a.alergie, true, true); },
+        collect: function(a){ a.zdravi = gv("i_zdravi"); a.leky = gv("i_leky"); a.alergie = gv("i_alergie"); } },
+      { id: "jidlo", title: "Jídlo", help: "Plán musí sedět tobě — ne ty plánu.",
+        render: function(a){ return fText("i_neji", "Co nejíš / nesnášíš?", "", a.neji, true, true) + fChips("i_jidel", "Kolik jídel denně ti vyhovuje?", ["2", "3", "4", "5", "6"], a.jidel_denne) + fText("i_vareni", "Kdo ti vaří / jak se přes den stravuješ?", "vařím si / partner/ka / kantýna / restaurace…", a.vareni, true, true); },
+        mount: function(){ mountPick("i_jidel"); },
+        collect: function(a){ var j = pickVal("i_jidel"); if(!j) return "Vyber počet jídel denně."; a.neji = gv("i_neji"); a.jidel_denne = j; a.vareni = gv("i_vareni"); } },
+      { id: "trenink", title: "Trénink", help: "Reálné možnosti > ideální plán, který nedáš.",
+        render: function(a){ return fChips("i_kde", "Kde můžeš cvičit?", ["Fitko", "Doma", "Fitko i doma", "Zatím nikde"], a.kde_cvici) + fChips("i_dnyt", "Kolik dní v týdnu reálně stíháš?", ["1", "2", "3", "4", "5", "6"], a.dny_treninku) + fText("i_vybaveni", "Vybavení doma (pokud cvičíš doma)", "činky, gumy, hrazda…", a.vybaveni, true); },
+        mount: function(){ mountPick("i_kde"); mountPick("i_dnyt"); },
+        collect: function(a){ var k = pickVal("i_kde"); if(!k) return "Vyber, kde můžeš cvičit."; var d = pickVal("i_dnyt"); if(!d) return "Vyber počet dní v týdnu."; a.kde_cvici = k; a.dny_treninku = d; a.vybaveni = gv("i_vybaveni"); } },
+      { id: "rezim", title: "Tvůj den", help: "Směny a režim rozhodují o tom, jak plán poskládat.",
+        render: function(a){ return fText("i_prace", "Práce a režim dne", "sedavá / na nohou / směny — jaké?", a.prace, false, true) + fNum("i_kroky", "Kroky denně — odhad", "kroků", "mrkni do mobilu", a.kroky, true) + fNum("i_spanek", "Spánek — hodin průměrně", "h", "", a.spanek, true); },
+        collect: function(a){ if(!gv("i_prace")) return "Popiš prosím práci a režim dne."; var k = optNum("i_kroky", 0, 60000); if(k.err) return "Kroky: " + k.err; var s = optNum("i_spanek", 2, 14); if(s.err) return "Spánek: " + s.err; a.prace = gv("i_prace"); a.kroky = k.v; a.spanek = s.v; } },
+      { id: "imiry", title: "Výchozí míry (cm)", help: "Startovní čára pro grafy. Stačí <b>pupík, pas, boky</b> — zbytek je bonus. Měř ráno, volně, bez zatahování břicha.",
+        render: function(a){ return '<div class="m2">' + MIRY.map(function(x){ return fNum("i_m_" + x[0], x[1], "cm", "", a["mira_" + x[0]], x[0] !== "pupik" && x[0] !== "pas" && x[0] !== "boky"); }).join("") + "</div>"; },
+        collect: function(a){
+          for(var i = 0; i < MIRY.length; i++){
+            var r = optNum("i_m_" + MIRY[i][0], 15, 250); if(r.err) return MIRY[i][1] + ": " + r.err;
+            a["mira_" + MIRY[i][0]] = r.v == null ? "" : r.v;
+          }
+          if(a.mira_pupik === "" && a.mira_pas === "") return "Změř prosím aspoň pupík nebo pas — bez startovní čáry nejde měřit pokrok.";
+        } },
+      { id: "pozn", title: "Ještě něco?", help: "Cokoliv, co by měl Martin vědět a nikam se to nevešlo.",
+        render: function(a){ return fText("i_poznamka", "Vzkaz pro Martina", "", a.poznamka, true, true); },
+        collect: function(a){ a.poznamka = gv("i_poznamka"); } },
+      { id: "isouhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání dostaneš kopii mailem a Martin ti do <b>48 hodin</b> nastaví plán.",
+        render: function(a){
+          var groups = [["O tobě", "osobni", [["Věk", a.vek], ["Výška", a.vyska + " cm"], ["Váha", czk(a.vaha) + " kg"], ["Telefon", a.telefon]]],
+            ["Cíl", "cil", [["Cíl", a.cil], ["Proč", a.proc], ["Termín", a.termin]]],
+            ["Historie", "historie", [["Diety", a.diety], ["Sport", a.sport]]],
+            ["Zdraví", "zdravi", [["Omezení", a.zdravi], ["Léky", a.leky], ["Alergie", a.alergie]]],
+            ["Jídlo", "jidlo", [["Nejí", a.neji], ["Jídel denně", a.jidel_denne], ["Vaření", a.vareni]]],
+            ["Trénink", "trenink", [["Kde", a.kde_cvici], ["Dní/týden", a.dny_treninku], ["Vybavení", a.vybaveni]]],
+            ["Režim", "rezim", [["Práce", a.prace], ["Kroky", a.kroky], ["Spánek", a.spanek != null && a.spanek !== "" ? czk(a.spanek) + " h" : ""]]],
+            ["Míry", "imiry", MIRY.map(function(x){ return [x[1], a["mira_" + x[0]] !== "" && a["mira_" + x[0]] != null ? czk(a["mira_" + x[0]]) + " cm" : ""]; })],
+            ["Poznámka", "pozn", [["Vzkaz", a.poznamka]]]];
+          return groups.map(function(grp){
+            var filled = grp[2].filter(function(r){ return r[1] !== "" && r[1] != null; });
+            return '<div class="sumg"><h4>' + grp[0] + ' <button type="button" data-goto="' + grp[1] + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>—</span><span></span></div>') + "</div>";
+          }).join("");
+        },
+        mount: mountGoto,
+        nextLabel: "Odeslat dotazník 📨" }
+    ];
+  }
+
+  // ---------- submit ----------
+  function submit(action, payload, doneMsg){
+    var btn = el("wNext");
+    btn.disabled = true; btn.textContent = "Odesílám…";
+    window.BA.getToken().then(function(t){
+      return fetch(FN, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
+        body: JSON.stringify({ action: action, name: myName, data: payload })
+      }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok && j && j.ok, j: j }; }); });
+    }).then(function(res){
+      btn.disabled = false;
+      if(!res.ok){ btn.textContent = "Zkusit odeslat znovu"; toast("Odeslání se nepovedlo — tvoje odpovědi jsou uložené, zkus to za chvíli znovu."); return; }
+      try { localStorage.removeItem(draftKey()); } catch(e){}
+      el("wIn").innerHTML = '<div class="wdone"><div class="big">✅</div><h2>' + doneMsg + '</h2><p class="help">Kopie ti právě letí na e-mail (mrkni i do hromadných). Martin se ozve.</p></div>';
+      el("wProg").style.width = "100%"; el("wBack").style.visibility = "hidden";
+      btn.textContent = "Zpět do sekce";
+      el("wNext").replaceWith(btn.cloneNode(true));
+      el("wNext").addEventListener("click", function(){ wCloseFn(true); location.reload(); });
+    }).catch(function(){
+      btn.disabled = false; btn.textContent = "Zkusit odeslat znovu";
+      toast("Odeslání se nepovedlo — tvoje odpovědi jsou uložené, zkus to za chvíli znovu.");
+    });
+  }
+
+  // ---------- boot ----------
+  function boot(u){
+    myEmail = String(u.email || "").toLowerCase();
+    myName = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || "";
+    el("hello").textContent = myName ? "Ahoj, " + myName.split(" ")[0] + "!" : "Ahoj!";
+    el("load").style.display = "none"; el("app").style.display = "";
+    Promise.all([
+      api("client_reports?select=report_date,weight,measurements,nutrition,activity,scales&order=report_date.asc&limit=200"),
+      api("client_intake?select=id&limit=1")
+    ]).then(function(res){
+      reports = Array.isArray(res[0]) ? res[0] : [];
+      hasIntake = Array.isArray(res[1]) && res[1].length > 0;
+      if(!hasIntake) el("intakeCta").style.display = "";
+      renderDash();
+    });
+    renderDocs();
+    el("btnReport").addEventListener("click", function(){
+      wOpen("report", reportSteps(), function(a){
+        submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition || {}, activity: a.activity || {}, scales: a.scales || {}, notes: a.notes || {} }, "Report odeslán!");
+      });
+    });
+    el("btnIntake").addEventListener("click", function(){
+      wOpen("intake", intakeSteps(), function(a){
+        var d = {}; Object.keys(a).forEach(function(k){ if(k.charAt(0) !== "_") d[k] = a[k]; });
+        submit("intake", d, "Dotazník odeslán!");
+      });
+    });
+  }
+
+  if(!window.BA){ el("load").textContent = "Sekce se nepodařilo načíst — obnov prosím stránku."; return; }
+  window.BA.ready.then(function(){
+    if(window.BA.mode !== "live"){ el("load").textContent = "Sekce vyžaduje připojení — zkus to prosím později."; return; }
+    var lg = el("logout");
+    if(lg) lg.addEventListener("click", function(e){ e.preventDefault(); window.BA.signOut().then(function(){ location.href = "/akademie/prihlaseni/"; }); });
+    window.BA.getUser().then(function(u){
+      if(!u){
+        el("load").style.display = "none"; el("noauth").style.display = "";
+        var settled = false;
+        window.BA.onAuth(function(uu){ if(uu && !settled){ settled = true; location.reload(); } });
+        return;
+      }
+      window.BA.hasEntitlement("coaching").then(function(has){
+        if(!has){ el("load").style.display = "none"; el("noentMail").textContent = u.email || ""; el("noent").style.display = ""; return; }
+        boot(u);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

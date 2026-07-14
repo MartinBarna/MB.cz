@@ -867,6 +867,160 @@ Deno.serve(async (req) => {
       return json({ ok: true, rows, total: rows.reduce((n, r) => n + r.leads, 0) });
     }
 
+    // ================= KLIENTSKÁ SEKCE (osobní koučink) =================
+    if (action === "clients_list") {
+      const [ents, reps, intakes, users, cc] = await Promise.all([
+        admin.from("entitlements").select("email,active,created_at").eq("product", "coaching"),
+        admin.from("client_reports").select("email,report_date"),
+        admin.from("client_intake").select("email"),
+        listAllUsers(admin),
+        admin.from("customer_contacts").select("email,name"),
+      ]);
+      const nameBy = new Map<string, string>();
+      for (const c of cc.data ?? []) if (c.name) nameBy.set(low(c.email), String(c.name));
+      const regSet = new Set(users.map((u: { email?: string }) => low(u.email)));
+      const repBy = new Map<string, { last: string; count: number }>();
+      for (const r of reps.data ?? []) {
+        const k = low(r.email); const cur = repBy.get(k);
+        if (!cur) repBy.set(k, { last: r.report_date, count: 1 });
+        else { cur.count++; if (r.report_date > cur.last) cur.last = r.report_date; }
+      }
+      const intakeSet = new Set((intakes.data ?? []).map((i) => low(i.email)));
+      const rows = (ents.data ?? []).filter((e) => e.active).map((e) => {
+        const k = low(e.email); const rep = repBy.get(k);
+        return { email: k, name: nameBy.get(k) ?? "", registered: regSet.has(k), since: e.created_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k) };
+      }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
+      return json({ ok: true, rows });
+    }
+
+    if (action === "client_detail") {
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      const [reps, intake, notes, docsOwn] = await Promise.all([
+        admin.from("client_reports").select("*").eq("email", email).order("report_date", { ascending: true }),
+        admin.from("client_intake").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+        admin.from("client_notes").select("id,note,created_at").eq("email", email).order("created_at", { ascending: false }),
+        admin.storage.from("client-docs").list(email, { limit: 100 }),
+      ]);
+      const docs = (docsOwn.data ?? []).filter((o) => o.id)
+        .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
+      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs });
+    }
+
+    if (action === "client_note_save") {
+      const email = low(body.email); const note = String(body.note ?? "").trim().slice(0, 4000);
+      if (!email || !note) return json({ error: "missing" }, 400);
+      const { error } = await admin.from("client_notes").insert({ email, note });
+      if (error) return json({ error: error.message }, 500);
+      return json({ ok: true });
+    }
+    if (action === "client_note_delete") {
+      const id = String(body.id ?? ""); if (!id) return json({ error: "missing" }, 400);
+      await admin.from("client_notes").delete().eq("id", id);
+      return json({ ok: true });
+    }
+
+    if (action === "client_docs_shared") {
+      const { data } = await admin.storage.from("client-docs").list("shared", { limit: 100 });
+      return json({ ok: true, docs: (data ?? []).filter((o) => o.id).map((o) => ({ path: "shared/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at })) });
+    }
+    if (action === "client_doc_upload") {
+      const folder = String(body.folder ?? ""); const filename = String(body.filename ?? "").replace(/[/\\]/g, "_").slice(0, 140);
+      const b64 = String(body.content_base64 ?? "");
+      if (!folder || !filename || !b64) return json({ error: "missing" }, 400);
+      if (b64.length > 14_000_000) return json({ error: "too_big" }, 400); // ~10 MB binárně
+      const key = folder === "shared" ? "shared" : low(folder);
+      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      const { error } = await admin.storage.from("client-docs").upload(key + "/" + filename, bytes, { contentType: String(body.content_type ?? "application/octet-stream"), upsert: true });
+      if (error) return json({ error: error.message }, 500);
+      return json({ ok: true, path: key + "/" + filename });
+    }
+    if (action === "client_doc_delete") {
+      const path = String(body.path ?? ""); if (!path) return json({ error: "missing" }, 400);
+      const { error } = await admin.storage.from("client-docs").remove([path]);
+      if (error) return json({ error: error.message }, 500);
+      return json({ ok: true });
+    }
+    if (action === "client_doc_url") {
+      const path = String(body.path ?? ""); if (!path) return json({ error: "missing" }, 400);
+      const { data, error } = await admin.storage.from("client-docs").createSignedUrl(path, 3600);
+      if (error || !data) return json({ error: error?.message ?? "signed_url" }, 500);
+      return json({ ok: true, url: data.signedUrl });
+    }
+
+    if (action === "client_invite") {
+      // Pozvánka do klientské sekce: zapne coaching entitlement + pošle mail (schválené šablony).
+      // kind: "novy" (vstupní dotazník) | "stavajici" ("Konec Excelu"). Odesílá VŽDY Martin klikem v adminu.
+      const email = low(body.email); const name = String(body.name ?? "").trim().slice(0, 120);
+      const osloveni = String(body.osloveni ?? "").trim().slice(0, 60); // vokativ — Martin vidí a může opravit v UI
+      const kind = body.kind === "stavajici" ? "stavajici" : "novy";
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+      const { data: ent } = await admin.from("entitlements").select("id,active").eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      if (!ent) await admin.from("entitlements").insert({ email, product: "coaching", active: true, source: "admin-klient-invite" });
+      else if (!ent.active) await admin.from("entitlements").update({ active: true }).eq("id", ent.id);
+      if (name) {
+        const { data: cc2 } = await admin.from("customer_contacts").select("email,name").eq("email", email).maybeSingle();
+        if (cc2 && !cc2.name) await admin.from("customer_contacts").update({ name }).eq("email", email);
+      }
+      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+      if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
+      const ahoj = osloveni ? "Ahoj " + escd(osloveni) + "," : "Ahoj,";
+      const CTA_URL = "https://martinbarna.cz/akademie/prihlaseni/?next=%2Fakademie%2Fklient%2F";
+      const btn = (label: string) => `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
+      const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
+      let subject: string, inner: string;
+      if (kind === "stavajici") {
+        subject = "Konec Excelu 🎉 Tvoje klientská sekce je tady";
+        inner = p(ahoj) +
+          p("mám pro tebe upgrade naší spolupráce: od teď máš na mém webu <strong>vlastní klientskou sekci</strong>. Žádné vyplňování Excelu a posílání mailem — všechno na pár kliknutí, i z mobilu.") +
+          `<p style='margin:0 0 8px'><strong>Co v ní najdeš:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
+          `<li style='margin:0 0 7px'>📊 <strong>Grafy tvého pokroku</strong> — váha, míry, kroky… celá tvoje cesta na jednom místě</li>` +
+          `<li style='margin:0 0 7px'>📝 <strong>Pondělní report naklikáš za 3 minuty</strong> — provede tě to krok za krokem, kopie přijde nám oběma</li>` +
+          `<li style='margin:0 0 7px'>📁 <strong>Dokumenty ode mě</strong> — všechny podklady pohromadě, žádné hledání v mailech</li>` +
+          `<li style='margin:0 0 7px'>🎬 <strong>Videokurz (182 videí)</strong> — máš v ceně koučinku</li>` +
+          `<li style='margin:0 0 7px'>🎓 <strong>Sleva 20 % na Barna Academy</strong> s kódem <strong>KLIENT20</strong> — jen pro mé klienty</li></ul>` +
+          p("<strong>Jak dovnitř:</strong> přihlas se tímhle e-mailem (na který ti píšu) a přístup naskočí automaticky:") +
+          btn("Otevřít moji sekci") +
+          p("<strong>Be Effective!</strong><br>Martin") +
+          `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>P.S. V příloze máš jednostránkový návod (najdeš ho i ve své sekci mezi Dokumenty). Kdyby cokoliv drhlo, odepiš — vyřešíme spolu.</p>`;
+      } else {
+        subject = "Vítej v týmu 💪 První krok: 10 minut o tobě";
+        inner = p(ahoj) +
+          p("vítej v koučinku! Od teď na tvé formě pracujeme spolu — a aby byl plán od prvního dne přesně na tebe, potřebuju tě nejdřív poznat.") +
+          p("Připravil jsem <strong>vstupní dotazník</strong> — proklikáš ho krok za krokem za ~10 minut (cíle, zdraví, co rád jíš, kdy stíháš trénovat…). Nic se nedá zkazit, všechno jde později upravit:") +
+          btn("Vyplnit vstupní dotazník") +
+          `<p style='margin:0 0 8px'><strong>Co bude dál:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
+          `<li style='margin:0 0 7px'>1️⃣ Do <strong>48 hodin</strong> ti nastavím jídelníček, makra a trénink na míru</li>` +
+          `<li style='margin:0 0 7px'>2️⃣ Každé <strong>pondělí ráno</strong> ti přijde připomínka na týdenní report (3 minuty klikání)</li>` +
+          `<li style='margin:0 0 7px'>3️⃣ Já každý report projdu, upravím plán a ozvu se ti</li></ul>` +
+          p("Ve tvé sekci najdeš i <strong>videokurz zdarma</strong> (182 videí), dokumenty ode mě a grafy pokroku, které spolu budeme plnit.") +
+          p("<strong>Be Effective!</strong><br>Martin");
+      }
+      const html = `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='color-scheme' content='dark'></head><body style='margin:0;padding:0;background:#0C0B10'>` +
+        `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10'><tr><td align='center' style='padding:16px'>` +
+        `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
+        `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
+        inner +
+        `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · osobní mail pro klienty koučinku</div>` +
+        `</td></tr></table></td></tr></table></body></html>`;
+      // návod PDF ze sdílených dokumentů jako příloha (best effort — bez něj mail stejně odejde)
+      let attachments: { filename: string; content: string }[] | undefined;
+      try {
+        const { data: pdf } = await admin.storage.from("client-docs").download("shared/klientska-sekce-navod.pdf");
+        if (pdf) {
+          const buf = new Uint8Array(await pdf.arrayBuffer());
+          let bin = "";
+          for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+          attachments = [{ filename: "klientska-sekce-navod.pdf", content: btoa(bin) }];
+        }
+      } catch (_e) { /* příloha je bonus */ }
+      const rs = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html, reply_to: "martin@martinbarna.cz", ...(attachments ? { attachments } : {}) }),
+      });
+      return json({ ok: rs.status === 200, mail_status: rs.status, priloha: !!attachments });
+    }
+
     return json({ error: "unknown_action" }, 400);
   } catch (e) {
     return json({ error: "server", detail: String(e).slice(0, 300) }, 500);
