@@ -74,6 +74,15 @@
         <span class="go"><span class="lbl">Otevřít doporučení</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
+      <a class="card" id="tileKlient" href="/akademie/klient/" style="display:none;border-color:rgba(235,177,44,.5);background:linear-gradient(150deg,rgba(235,177,44,.10),rgba(235,177,44,.02));">
+        <span class="lockbadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">⭐ Tvůj koučink</span>
+        <div class="ico" style="color:#EBB12C;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-6"/></svg></div>
+        <h2>Klientská sekce</h2>
+        <p class="desc">Tvůj koučink s Martinem na jednom místě: týdenní report na pár kliknutí, grafy pokroku, dokumenty od Martina i výhody navíc.</p>
+        <div class="chips"><span class="chip">Týdenní report</span><span class="chip">Grafy pokroku</span><span class="chip">Dokumenty</span></div>
+        <span class="go"><span class="lbl">Otevřít moji sekci</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+
       <a class="card" id="tileCheckin" href="/akademie/moje/check-in/" style="display:none;">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg></div>
         <h2>Týdenní check-in</h2>
@@ -177,7 +186,8 @@
                     var apb2=document.getElementById('appBadge'); if(apb2) apb2.textContent='🎁 v ceně Academy';
                   }
                 }
-                if(r[2]){ var tc=document.getElementById('tileCheckin'); if(tc) tc.style.display=''; }
+                // koučink klient → nová klientská sekce (nahrazuje starý lehký check-in, ať nejsou dva formuláře)
+                if(r[2]){ var tk2=document.getElementById('tileKlient'); if(tk2) tk2.style.display=''; }
                 else if(r[0]||r[1]){ var tm=document.getElementById('tileMemberCheckin'); if(tm) tm.style.display=''; }
                 if(['martin@martinbarna.cz','fitness.barna@gmail.com'].indexOf((u.email||'').toLowerCase())>-1){ var tk=document.getElementById('tileCoach'); if(tk) tk.style.display=''; var tt=document.getElementById('tileTests'); if(tt) tt.style.display=''; }
               });

@@ -167,6 +167,30 @@
         <div id="trfBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+      <div class="traf" id="kli" style="display:none;border-color:rgba(235,177,44,.45);">
+        <h3>🤝 Klienti koučinku — klientská sekce</h3>
+        <div class="sub">Týdenní reporty, dotazníky, dokumenty a poznámky · ⚠️ = report chybí déle než 8 dní</div>
+        <div id="kliBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.9rem 0 .2rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.08);">
+          <span class="muted" style="font-size:.85rem;font-weight:700;">➕ Pozvat klienta:</span>
+          <input type="email" id="kiEmail" placeholder="e-mail" autocomplete="off" style="min-width:190px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;">
+          <input type="text" id="kiName" placeholder="jméno (Jana Nováková)" autocomplete="off" style="min-width:150px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;">
+          <input type="text" id="kiVok" placeholder="oslovení (Jano)" autocomplete="off" style="width:110px;background:rgba(255,255,255,.05);border:1px solid rgba(235,177,44,.35);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;">
+          <select id="kiKind" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+            <option value="novy">Nový klient (dotazník)</option>
+            <option value="stavajici">Stávající klient (Konec Excelu)</option>
+          </select>
+          <button class="mlogbtn" id="kiSend">📨 Zapnout přístup + poslat mail</button>
+        </div>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména — zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.7rem 0 .2rem;">
+          <span class="muted" style="font-size:.85rem;font-weight:700;">📁 Dokument pro VŠECHNY klienty:</span>
+          <input type="file" id="kiSharedFile" style="font-size:.82rem;color:#b7ab9b;max-width:250px;">
+          <button class="mlogbtn" id="kiSharedUp">Nahrát do sdílených</button>
+          <span class="muted" id="kiSharedList" style="font-size:.78rem;"></span>
+        </div>
+      </div>
+
       <div class="traf" id="chk" style="display:none;">
         <h3>🏋️ Check-iny klientů</h3>
         <div class="sub" id="chkSub">Týdenní check-iny, trend váhy a pasu, věrnostní kredit</div>
@@ -277,6 +301,11 @@
     <div id="mprevBody"><p class="muted">Načítám…</p></div>
   </div></div>
 
+  <div class="ovl" id="kdet"><div class="box" style="max-width:1000px;">
+    <button class="x" id="kdetX">×</button>
+    <div id="kdetBody"><p class="muted">Načítám…</p></div>
+  </div></div>
+
   <div class="ovl" id="seqmap"><div class="box" style="max-width:1040px;">
     <button class="x" id="seqmapX">×</button>
     <h2>🗺️ Sekvence &amp; šablony</h2>
@@ -334,11 +363,198 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals();
+        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
     boot();
+
+    // ================= 🤝 KLIENTI KOUČINKU (klientská sekce) =================
+    var KLI_MIRY=[['pupik','Pupík'],['pas','Pas'],['boky','Boky'],['prsa','Hrudník'],['zadek','Zadek'],['p_stehno','P stehno'],['l_stehno','L stehno'],['krk','Krk'],['p_paze','P paže'],['l_paze','L paže'],['p_lytko','P lýtko'],['l_lytko','L lýtko']];
+    function kliNum(v){ var n=Number(String(v==null?'':v).replace(',','.')); return isFinite(n)&&String(v).trim()!==''?n:null; }
+    function kliCz(v){ var n=kliNum(v); return n==null?'—':String(n).replace('.',','); }
+    // jednoduchý odhad 5. pádu — Martin ho v poli vidí a může opravit
+    function kliVok(name){
+      var fn=(name||'').trim().split(/\s+/)[0]; if(!fn) return '';
+      var l=fn.toLowerCase(), last=l.slice(-1);
+      if(last==='a') return fn.slice(0,-1)+'o';
+      if('eiouyáéěíóúůý'.indexOf(last)>-1) return fn;
+      if(l.slice(-2)==='ek') return fn.slice(0,-2)+'ku';
+      if(l.slice(-2)==='ch'||'kgh'.indexOf(last)>-1) return fn+'u';
+      if('szxj'.indexOf(last)>-1||'šžčř'.indexOf(last)>-1) return fn+'i';
+      if(l.slice(-2)==='el') return fn+'i';
+      if(last==='r') return 'aeiouyáéěíóúůý'.indexOf(l.slice(-2,-1))>-1?fn+'e':fn.slice(0,-1)+'ře';
+      if('bdflmnptvw'.indexOf(last)>-1) return fn+'e';
+      return fn;
+    }
+    function loadKlienti(){
+      api({action:'clients_list'}).then(function(o){
+        if(!o.j||!o.j.ok){ $('kli').style.display='none'; return; }
+        var rows=o.j.rows||[], now=Date.now();
+        var trs=rows.map(function(r){
+          var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
+          var days=lastMs?Math.floor((now-lastMs)/86400000):null;
+          var warn=(days==null||days>8)?' <b style="color:#F6CD63">⚠️</b>':'';
+          return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
+            +'<td>'+esc(r.name||'—')+'</td>'
+            +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
+            +'<td>'+(r.has_intake?'✅':'<span class="muted">—</span>')+'</td>'
+            +'<td class="tcount">'+r.reports+'</td>'
+            +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
+        }).join('');
+        $('kliBody').innerHTML = rows.length
+          ? '<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Reportů</th><th>Poslední report</th></tr></thead><tbody>'+trs+'</tbody></table></div>'
+          : '<p class="muted" style="padding:.6rem 0;">Zatím žádní klienti — pozvi prvního formulářem níže.</p>';
+        $('kliBody').querySelectorAll('[data-kli]').forEach(function(a){
+          a.addEventListener('click',function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli')); });
+        });
+        $('kli').style.display='';
+        loadSharedDocs();
+      }).catch(function(){ $('kli').style.display='none'; });
+    }
+    function loadSharedDocs(){
+      api({action:'client_docs_shared'}).then(function(o){
+        var docs=(o.j&&o.j.docs)||[];
+        $('kiSharedList').innerHTML = docs.length
+          ? 'Sdílené: '+docs.map(function(d){ return esc(d.name)+' <a href="#" data-kdel="'+esc(d.path)+'" style="color:#ff6b6b;text-decoration:none;">✕</a>'; }).join(' · ')
+          : 'Sdílené: zatím nic';
+        $('kiSharedList').querySelectorAll('[data-kdel]').forEach(function(a){
+          a.addEventListener('click',function(e){
+            e.preventDefault();
+            var p=a.getAttribute('data-kdel');
+            if(!confirm('Smazat sdílený dokument „'+p.split('/').pop()+'"? Zmizí všem klientům.')) return;
+            api({action:'client_doc_delete',path:p}).then(function(){ toast('🗑️ Smazáno'); loadSharedDocs(); });
+          });
+        });
+      });
+    }
+    function fileToB64(file){
+      return new Promise(function(res,rej){
+        if(file.size>10*1024*1024) return rej(new Error('Soubor je větší než 10 MB.'));
+        var fr=new FileReader();
+        fr.onload=function(){ res(String(fr.result).split(',')[1]||''); };
+        fr.onerror=function(){ rej(new Error('Soubor se nepodařilo přečíst.')); };
+        fr.readAsDataURL(file);
+      });
+    }
+    function uploadDoc(folder,inputEl,after){
+      var f=inputEl.files&&inputEl.files[0];
+      if(!f){ toast('Nejdřív vyber soubor'); return; }
+      fileToB64(f).then(function(b64){
+        toast('⏳ Nahrávám…');
+        return api({action:'client_doc_upload',folder:folder,filename:f.name,content_type:f.type||'application/octet-stream',content_base64:b64});
+      }).then(function(o){
+        if(o&&o.j&&o.j.ok){ toast('✅ Nahráno: '+f.name); inputEl.value=''; if(after) after(); }
+        else toast('Chyba: '+((o&&o.j&&o.j.error)||'?'));
+      }).catch(function(err){ toast(String(err.message||err)); });
+    }
+    $('kiSharedUp').addEventListener('click',function(){ uploadDoc('shared',$('kiSharedFile'),loadSharedDocs); });
+    $('kiName').addEventListener('input',function(){ $('kiVok').value=kliVok($('kiName').value); });
+    $('kiSend').addEventListener('click',function(){
+      var email=($('kiEmail').value||'').trim().toLowerCase(), name=($('kiName').value||'').trim(), vok=($('kiVok').value||'').trim(), kind=$('kiKind').value;
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast('Zadej platný e-mail'); return; }
+      var what=kind==='stavajici'?'„Konec Excelu" (stávající klient)':'pozvánka s dotazníkem (nový klient)';
+      if(!confirm('Zapnout klientskou sekci pro '+email+' a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"')) return;
+      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind}).then(function(o){
+        if(o.j&&o.j.ok){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value=''; loadKlienti(); }
+        else toast('Chyba: '+((o.j&&(o.j.error||o.j.mail_status))||o.status));
+      }).catch(function(){ toast('Chyba spojení'); });
+    });
+    // ---- detail klienta ----
+    var KDET={email:'',data:null};
+    function openKlient(email){
+      KDET.email=email; KDET.data=null;
+      $('kdet').classList.add('on'); $('kdetBody').innerHTML='<p class="muted">Načítám…</p>';
+      api({action:'client_detail',email:email}).then(function(o){
+        if(!o.j||!o.j.ok){ $('kdetBody').innerHTML='<p class="muted">Nepovedlo se načíst detail.</p>'; return; }
+        KDET.data=o.j; renderKlient();
+      });
+    }
+    $('kdetX').addEventListener('click',function(){ $('kdet').classList.remove('on'); });
+    function renderKlient(){
+      var d=KDET.data, email=KDET.email;
+      var reps=(d.reports||[]).slice().reverse(); // nejnovější nahoře
+      var h='<h2 style="margin:0 0 2px;">🤝 '+esc(email)+'</h2>'
+        +'<p class="muted" style="margin:0 0 .8rem;font-size:.85rem;">'+(d.reports||[]).length+' reportů · dotazník '+(d.intake?'✅':'—')
+        +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a></p>';
+      // reporty
+      if(reps.length){
+        h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Pupík</th><th>Pas</th><th>Boky</th><th>Hruď</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>Slovně</th></tr></thead><tbody>';
+        reps.forEach(function(r){
+          var m=r.measurements||{},n=r.nutrition||{},a=r.activity||{},s=r.scales||{},t=r.notes||{};
+          var txt=[t.povedlo?'✓ '+t.povedlo:'',t.drhlo?'✗ '+t.drhlo:'',t.otazky?'? '+t.otazky:'',t.dalsi?'💬 '+t.dalsi:''].filter(Boolean).join(' · ');
+          h+='<tr><td>'+fmtDay(r.report_date)+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.pupik)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="max-width:260px;white-space:normal;">'+esc(txt)+'</td></tr>';
+        });
+        h+='</tbody></table></div>';
+      } else h+='<p class="muted" style="padding:.4rem 0;">Zatím žádné reporty.</p>';
+      // dotazník
+      if(d.intake&&d.intake.data){
+        var idata=d.intake.data;
+        var groups=[['O klientovi',[['Věk',idata.vek],['Výška',idata.vyska],['Váha',idata.vaha],['Telefon',idata.telefon]]],
+          ['Cíl',[['Cíl',idata.cil],['Proč',idata.proc],['Termín',idata.termin]]],
+          ['Historie',[['Diety',idata.diety],['Sport',idata.sport]]],
+          ['Zdraví ⚠️',[['Omezení',idata.zdravi],['Léky',idata.leky],['Alergie',idata.alergie]]],
+          ['Jídlo',[['Nejí',idata.neji],['Jídel denně',idata.jidel_denne],['Vaření',idata.vareni]]],
+          ['Trénink',[['Kde',idata.kde_cvici],['Dní/týden',idata.dny_treninku],['Vybavení',idata.vybaveni]]],
+          ['Režim',[['Práce',idata.prace],['Aktivita',idata.aktivita],['Kroky/den',idata.kroky],['Spánek',idata.spanek]]],
+          ['Výchozí míry',KLI_MIRY.map(function(x){ return [x[1],idata['mira_'+x[0]]]; })],
+          ['Poznámka',[['Vzkaz',idata.poznamka]]]];
+        h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📝 Vstupní dotazník ('+fmtDay(d.intake.created_at)+')</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;">';
+        groups.forEach(function(g){
+          var kv=g[1].filter(function(r){ return r[1]!=null&&String(r[1]).trim()!==''; });
+          if(!kv.length) return;
+          h+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;font-size:.82rem;"><b style="color:#F6CD63;">'+g[0]+'</b><br>'+kv.map(function(r){ return '<span class="muted">'+r[0]+':</span> '+esc(r[1]); }).join('<br>')+'</div>';
+        });
+        h+='</div>';
+      }
+      // poznámky kouče
+      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🗒️ Tvoje poznámky (klient je nevidí)</h4>'
+        +'<div style="display:flex;gap:8px;margin:.3rem 0 .5rem;"><input type="text" id="kdNote" placeholder="nová poznámka…" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;"><button class="mlogbtn" id="kdNoteSave">Uložit</button></div>';
+      (d.notes||[]).forEach(function(nt){
+        h+='<p style="margin:.2rem 0;font-size:.85rem;"><span class="muted">'+fmtDate(nt.created_at)+'</span> · '+esc(nt.note)+' <a href="#" data-kn="'+esc(nt.id)+'" style="color:#ff6b6b;text-decoration:none;">✕</a></p>';
+      });
+      // dokumenty klienta
+      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📁 Dokumenty pro tohoto klienta</h4>'
+        +((d.docs||[]).length?(d.docs||[]).map(function(dc){ return '<p style="margin:.2rem 0;font-size:.85rem;"><a href="#" data-kdoc="'+esc(dc.path)+'" style="color:#F6CD63;">'+esc(dc.name)+'</a> <span class="muted">'+(dc.size?Math.max(1,Math.round(dc.size/1024))+' kB':'')+'</span> <a href="#" data-kdocdel="'+esc(dc.path)+'" style="color:#ff6b6b;text-decoration:none;">✕</a></p>'; }).join(''):'<p class="muted" style="font-size:.85rem;">Zatím nic.</p>')
+        +'<div style="display:flex;gap:8px;align-items:center;margin:.5rem 0;"><input type="file" id="kdFile" style="font-size:.82rem;color:#b7ab9b;"><button class="mlogbtn" id="kdUp">Nahrát klientovi</button></div>';
+      $('kdetBody').innerHTML=h;
+      // handlery
+      $('kdCsv').addEventListener('click',function(e){ e.preventDefault(); exportKlientCsv(); });
+      $('kdNoteSave').addEventListener('click',function(){
+        var v=($('kdNote').value||'').trim(); if(!v) return;
+        api({action:'client_note_save',email:email,note:v}).then(function(o){ if(o.j&&o.j.ok){ toast('🗒️ Uloženo'); openKlient(email); } else toast('Chyba'); });
+      });
+      $('kdetBody').querySelectorAll('[data-kn]').forEach(function(a){
+        a.addEventListener('click',function(e){ e.preventDefault(); if(!confirm('Smazat poznámku?')) return; api({action:'client_note_delete',id:a.getAttribute('data-kn')}).then(function(){ openKlient(email); }); });
+      });
+      $('kdetBody').querySelectorAll('[data-kdoc]').forEach(function(a){
+        a.addEventListener('click',function(e){ e.preventDefault(); api({action:'client_doc_url',path:a.getAttribute('data-kdoc')}).then(function(o){ if(o.j&&o.j.url) window.open(o.j.url,'_blank'); else toast('Chyba'); }); });
+      });
+      $('kdetBody').querySelectorAll('[data-kdocdel]').forEach(function(a){
+        a.addEventListener('click',function(e){ e.preventDefault(); if(!confirm('Smazat dokument?')) return; api({action:'client_doc_delete',path:a.getAttribute('data-kdocdel')}).then(function(){ toast('🗑️ Smazáno'); openKlient(email); }); });
+      });
+      $('kdUp').addEventListener('click',function(){ uploadDoc(email,$('kdFile'),function(){ openKlient(email); }); });
+    }
+    function exportKlientCsv(){
+      var d=KDET.data; if(!d) return;
+      var SEP=';', cols=['Datum','Váha (kg)'];
+      KLI_MIRY.forEach(function(x){ cols.push(x[1]+' (cm)'); });
+      cols=cols.concat(['kcal Ø','Bílkoviny Ø (g)','Sacharidy Ø (g)','Tuky Ø (g)','Vláknina Ø (g)','Dny zapsáno','Kroky Ø','Fitko','Kardio','Další sport','Únava 1-5','Hlad 1-5','Síla 1-5','Spánek (h)','Spánek kvalita 1-5','Dodržení 1-5','Co se povedlo','Co drhlo','Otázky','Cokoliv dalšího']);
+      function cell(v){ v=v==null?'':String(v).replace(/\./g,','); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
+      function cellTxt(v){ v=v==null?'':String(v); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
+      var lines=[cols.join(SEP)];
+      (d.reports||[]).forEach(function(r){
+        var m=r.measurements||{},n=r.nutrition||{},a=r.activity||{},s=r.scales||{},t=r.notes||{};
+        var row=[r.report_date,cell(r.weight)];
+        KLI_MIRY.forEach(function(x){ row.push(cell(m[x[0]])); });
+        row=row.concat([cell(n.kcal),cell(n.protein),cell(n.carbs),cell(n.fat),cell(n.fiber),cell(n.dny_zapsano),cell(a.kroky),cell(a.fitko),cellTxt(a.kardio),cellTxt(a.dalsi),cell(s.unava),cell(s.hlad),cell(s.sila),cell(s.spanek_h),cell(s.spanek_kvalita),cell(s.dodrzeni),cellTxt(t.povedlo),cellTxt(t.drhlo),cellTxt(t.otazky),cellTxt(t.dalsi)]);
+        lines.push(row.join(SEP));
+      });
+      var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});  // BOM: česká diakritika v Excelu
+      var u=URL.createObjectURL(blob), aEl=document.createElement('a');
+      aEl.href=u; aEl.download='reporty-'+KDET.email.replace(/[@.]/g,'_')+'.csv'; document.body.appendChild(aEl); aEl.click(); aEl.remove();
+      setTimeout(function(){ URL.revokeObjectURL(u); },30000);
+    }
 
     // 🩺 Dnešní puls — admin-pulse edge funkce (maily/fronta/leadi/prodeje/affiliate)
     function loadPulse(){
