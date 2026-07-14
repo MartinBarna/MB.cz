@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Jak zvládnout víkendové přejídání — Martin Barna</title>
+<link rel="stylesheet" href="../../assets/vendor/fonts/poppins.css">
+<style>
+  @page { size: 210mm 297mm; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Poppins', Arial, sans-serif; color: #F0EADF; background: #0C0B10; }
+  .page { width: 210mm; height: 297mm; background: linear-gradient(165deg, #15171a 0%, #0f1113 100%); padding: 18mm 20mm 14mm; position: relative; overflow: hidden; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+
+  .brandrow { display: flex; align-items: center; gap: 4mm; margin-bottom: 10mm; }
+  .mark { width: 11mm; height: 11mm; border-radius: 3mm; background: #EBB12C; color: #1A1222; font-weight: 800; font-size: 5mm; display: flex; align-items: center; justify-content: center; }
+  .brand { font-weight: 800; font-size: 4mm; letter-spacing: .2mm; line-height: 1.2; }
+  .brand span { display: block; color: #F6CD63; font-weight: 600; font-size: 2.7mm; letter-spacing: .5mm; text-transform: uppercase; }
+
+  .eyebrow { color: #EBB12C; font-weight: 800; font-size: 3mm; letter-spacing: .3mm; text-transform: uppercase; margin: 0 0 3mm; }
+  h1 { font-size: 13mm; line-height: 1.1; font-weight: 800; margin: 0 0 5mm; }
+  h1 .hl { color: #EBB12C; }
+  h2 { font-size: 6.6mm; line-height: 1.15; font-weight: 800; margin: 0 0 5mm; }
+  h2 .hl { color: #EBB12C; }
+  h3 { font-size: 4.4mm; font-weight: 700; margin: 7mm 0 2.5mm; color: #F6CD63; }
+  p { font-size: 3.75mm; line-height: 1.6; color: #d9d5df; margin: 0 0 3.5mm; }
+  b, strong { color: #F0EADF; }
+
+  .lead { font-size: 4.3mm; line-height: 1.55; color: #ece8f0; }
+  .callout { background: rgba(235,177,44,.09); border-left: 1mm solid #EBB12C; border-radius: 0 2mm 2mm 0; padding: 5mm 6mm; margin: 5mm 0; }
+  .callout p { margin: 0; color: #F0EADF; }
+  .callout .k { color: #EBB12C; font-weight: 800; }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 4mm 0; }
+  .steps > li { position: relative; padding-left: 11mm; margin-bottom: 5mm; }
+  .steps > li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: -.5mm; width: 7.5mm; height: 7.5mm; background: #EBB12C; color: #1A1222; border-radius: 50%; font-weight: 800; font-size: 4mm; display: flex; align-items: center; justify-content: center; }
+  .steps > li b { color: #F6CD63; }
+
+  .split { display: flex; gap: 6mm; margin: 5mm 0; }
+  .col { flex: 1; background: rgba(255,255,255,.03); border: .3mm solid rgba(255,255,255,.08); border-radius: 3mm; padding: 5mm 6mm; }
+  .col.no { border-color: rgba(224,90,90,.35); }
+  .col.yes { border-color: rgba(235,177,44,.4); }
+  .col .h { font-weight: 800; font-size: 3.7mm; margin-bottom: 2.5mm; }
+  .col.no .h { color: #e07a7a; }
+  .col.yes .h { color: #EBB12C; }
+  .col ul { margin: 0; padding-left: 4.5mm; }
+  .col li { font-size: 3.4mm; line-height: 1.45; margin-bottom: 1.8mm; color: #cfc9d6; }
+
+  .checklist { list-style: none; padding: 0; margin: 3mm 0; }
+  .checklist li { position: relative; padding-left: 7mm; font-size: 3.6mm; line-height: 1.4; margin-bottom: 2.6mm; color: #ded9e4; }
+  .checklist li::before { content: "✓"; position: absolute; left: 0; top: -.2mm; color: #EBB12C; font-weight: 800; font-size: 4.2mm; }
+  .phase { color: #F6CD63; font-weight: 800; font-size: 3.4mm; letter-spacing: .3mm; text-transform: uppercase; margin: 5mm 0 2mm; }
+
+  .keys { counter-reset: k; list-style: none; padding: 0; margin: 4mm 0; }
+  .keys li { counter-increment: k; position: relative; padding: 4mm 5mm 4mm 13mm; background: rgba(255,255,255,.03); border-radius: 2.5mm; margin-bottom: 3mm; font-size: 3.9mm; line-height: 1.4; }
+  .keys li::before { content: counter(k); position: absolute; left: 4.5mm; top: 3.4mm; color: #EBB12C; font-weight: 800; font-size: 6mm; }
+
+  .cta { background: linear-gradient(160deg, #211b26 0%, #17131c 100%); border: .3mm solid rgba(235,177,44,.3); border-radius: 4mm; padding: 7mm 8mm; margin-top: 6mm; }
+  .cta h2 { margin-bottom: 3mm; }
+  .cta .line { font-size: 3.7mm; color: #ded9e4; margin-bottom: 2mm; padding-left: 6mm; position: relative; }
+  .cta .line::before { content: "→"; position: absolute; left: 0; color: #EBB12C; font-weight: 800; }
+
+  .foot { position: absolute; left: 20mm; right: 20mm; bottom: 9mm; display: flex; justify-content: space-between; align-items: baseline; border-top: .3mm solid rgba(255,255,255,.1); padding-top: 3mm; font-size: 2.7mm; color: #8F8A99; }
+  .foot .beff { color: #EBB12C; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online výživový kouč</span></div></div>
+  <div style="margin-top: 34mm">
+    <p class="eyebrow">Makro coaching · praktický průvodce</p>
+    <h1>Jak zvládnout<br><span class="hl">víkendové přejídání</span></h1>
+    <p class="lead">Bez striktních zákazů a bez víkendového chaosu. Systém, který ti dá kontrolu i prostor na reálný život — a výsledky, které vydrží.</p>
+  </div>
+  <div class="callout" style="margin-top: 12mm">
+    <p><span class="k">Nejdůležitější změna hned na začátek:</span> místo „striktní 5–6 dní + víkendový chaos" přejdeš na <b>týdenní průměr kalorií</b>. Víkend může být vyšší, když ho máš naplánovaný a zbytek týdne to vyrovná. To je flexibilita, která funguje dlouhodobě.</p>
+  </div>
+  <div class="foot"><span>martinbarna.cz</span><span class="beff">Be Effective!</span></div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online výživový kouč</span></div></div>
+  <p class="eyebrow">Proč se to děje</p>
+  <h2>Proč rigidní plány <span class="hl">selhávají</span></h2>
+  <p>Když máš přesný jídelníček na každý den, který sestavil někdo jiný, cítíš se buď „úspěšný" (když ho dodržíš), nebo „selhal" (když ne). To vytváří obrovský tlak. O víkendu pak přijde „teď už si to konečně zasloužím" — a přejídání je skoro nevyhnutelné.</p>
+  <p>V makro coachingu to děláme jinak. Naučíš se pracovat s makry (bílkoviny, sacharidy, tuky) a vážit si jídlo — ne proto, abys byl navždy závislý na tabulkách, ale abys za pár měsíců uměl jíst intuitivně a s rozumem. Protože jsi prošel fází vážení, zápisu a pochopení „cen potravin".</p>
+
+  <h3>1. Týdenní průměr místo denní dokonalosti</h3>
+  <p>Nejúspěšnější klienti přestávají honit dokonalý den a přejdou na pohled přes celý týden:</p>
+  <ul class="steps">
+    <li><b>Pondělí–čtvrtek:</b> mírný deficit (tady si „naspoříš" prostor).</li>
+    <li><b>Pátek–sobota:</b> vyšší příjem, ale <b>plánovaný</b> — ne chaos.</li>
+    <li><b>Neděle:</b> návrat k udržitelnému příjmu.</li>
+  </ul>
+  <div class="callout">
+    <p><span class="k">Konkrétně:</span> když přes týden držíš deficit ~300–500 kcal/den, „naspoříš" za 4 dny klidně <b>1 500–2 000 kcal</b>. To je reálný prostor na jednu pořádnou večeři nebo dvě vyšší jídla o víkendu — a týdenní průměr pořád zůstane v deficitu. Hubneš dál, ale bez extrému a bez rebound efektu.</p>
+  </div>
+  <div class="foot"><span>Makro coaching · víkendové přejídání</span><span>strana 2 · martinbarna.cz</span></div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online výživový kouč</span></div></div>
+  <p class="eyebrow">Praktické strategie</p>
+  <h2>Co reálně <span class="hl">dělat</span></h2>
+
+  <h3>2. Plánuj „vyšší dny" dopředu</h3>
+  <p>Nejlepší obrana proti impulzivnímu přejídání je předem daný plán:</p>
+  <ul class="steps">
+    <li>V pátek dopoledne si sedni na <b>5–10 minut</b> a rozhodni, která <b>1–2 jídla</b> za víkend si opravdu chceš užít.</li>
+    <li>Zapiš si je do appky — vidíš, kolik „rozpočtu" ti to vezme.</li>
+    <li>Zbytek víkendu drž vyšší bílkoviny a volume (zelenina).</li>
+  </ul>
+  <p>Když máš plán, snižuješ rozhodovací únavu i riziko „jedno jídlo a pak už to řeším až v pondělí".</p>
+
+  <h3>3. Protein + volume jako základ (i o víkendu)</h3>
+  <p>I když jíš něco, co není „ideální", můžeš výrazně omezit dopad. Pořadí na talíři:</p>
+  <ul class="steps">
+    <li>Začni <b>velkou porcí bílkovin</b> (100–150 g masa/ryby/tvarohu nebo shake).</li>
+    <li>Přidej <b>hodně nízkokalorické zeleniny</b> (objem = sytost).</li>
+    <li>Teprve potom sacharidy a tuky.</li>
+  </ul>
+  <div class="callout">
+    <p><span class="k">Bílkoviny — kolik stačí?</span> Pro hubnutí a udržení svalů většinou <b>1,6–2,2 g na kg</b> tělesné hmotnosti. Víc neuškodí, ale když tě to stresuje a cítíš se neúspěšný, když to netrefíš, není to nutné. Cíl je udržitelnost, ne perfekcionismus.</p>
+  </div>
+  <div class="split">
+    <div class="col yes"><div class="h">Naplánovaný vyšší den</div><ul><li>Vím dopředu, co si dám</li><li>Bílkoviny + zelenina jako první</li><li>Ráno další den zpět do rytmu</li><li>Zapadá do týdenního průměru</li></ul></div>
+    <div class="col no"><div class="h">Nekontrolovaný „binge"</div><ul><li>Impulz, žádný plán</li><li>Přejedení do nevolnosti</li><li>Vina → „až v pondělí"</li><li>Rozbije celý týden</li></ul></div>
+  </div>
+  <div class="foot"><span>Makro coaching · víkendové přejídání</span><span>strana 3 · martinbarna.cz</span></div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online výživový kouč</span></div></div>
+  <p class="eyebrow">Mindset a reset</p>
+  <h2>Hlava, pondělí <span class="hl">a tvůj systém</span></h2>
+
+  <h3>4. Vědomé jezení a absence viny</h3>
+  <p>Když už se rozhodneš pro něco speciálního, dělej to vědomě: jez pomalu, nepočítej v hlavě každou kalorii — užij si to. Po jídle si řekni: <b>„Bylo to dobré. Teď se vracím k plánu."</b> Bez sebemrskačství. Vina je jeden z nejsilnějších spouštěčů dalšího přejídání — odstraň ji.</p>
+
+  <h3>5. Pondělní reset (napojený na tvoje reporty)</h3>
+  <div class="split">
+    <div class="col no"><div class="h">Co NEdělat v pondělí</div><ul><li>Hladovět nebo „detoxovat"</li><li>Trestat se tréninkem navíc</li><li>Propadat pocitu selhání</li></ul></div>
+    <div class="col yes"><div class="h">Co dělat</div><ul><li>Zpět k běžnému plánu (klidně −100–200 kcal na 2–3 dny)</li><li>Vyšší bílkoviny, kvalitní trénink</li><li>Vyplnit pondělní report</li></ul></div>
+  </div>
+  <p>Tím se vrátíš do rytmu rychle a bez jojo efektu — a tvůj kouč má data k případné úpravě plánu.</p>
+
+  <h3>Tvůj akční plán pro tento víkend</h3>
+  <p class="phase">Pátek dopoledne (5–10 minut)</p>
+  <ul class="checklist"><li>Rozhodni max. 1–2 „vyšší" jídla, která si chceš užít</li><li>Zapiš je do appky (vidíš, kolik rozpočtu to vezme)</li><li>Lehce uprav středu/čtvrtek, ať týdenní průměr vyjde</li></ul>
+  <p class="phase">Během víkendu</p>
+  <ul class="checklist"><li>Každé větší jídlo začni proteinem + zeleninou</li><li>Pij hodně vody</li><li>Pokud alkohol — s mírou a k jídlu</li></ul>
+  <p class="phase">Pondělí — report + reset</p>
+  <ul class="checklist"><li>Zpět k běžnému plánu, vyšší bílkoviny</li><li>Vyplň report (váha, energie, hlad, makra, kroky…)</li><li>Žádná vina — jen data a zpět do rytmu</li></ul>
+  <div class="foot"><span>Makro coaching · víkendové přejídání</span><span>strana 4 · martinbarna.cz</span></div>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online výživový kouč</span></div></div>
+  <p class="eyebrow">Dlouhodobé řešení</p>
+  <h2>Tvoje cesta <span class="hl">dál</span></h2>
+  <p>Nejlepší výsledky mají klienti, kteří:</p>
+  <ul class="checklist">
+    <li>Přestávají vidět víkendy jako „nepřítele" svých cílů</li>
+    <li>Učí se plánovat dopředu (proaktivní přístup)</li>
+    <li>Přecházejí od „někdo mi řekne, co jíst" k „umím si to naplánovat sám"</li>
+    <li>Chápou, že vážení a zápis je dočasný nástroj na cestě k intuici</li>
+    <li>Mají silný důvod „proč" a jsou ochotní to dělat dost dlouho</li>
+  </ul>
+
+  <h3>Shrnutí — 5 klíčů</h3>
+  <ul class="keys">
+    <li>Přejdi z denní dokonalosti na <b>týdenní průměr</b>.</li>
+    <li>Plánuj 1–2 vyšší jídla dopředu (pátek, 5–10 minut).</li>
+    <li>Vždy <b>protein + volume</b> jako základ, i o víkendu.</li>
+    <li>Jez vědomě a <b>bez viny</b> — vina zabíjí výsledky.</li>
+    <li>Pondělí = <b>report + reset</b>, ne trest.</li>
+  </ul>
+
+  <div class="cta">
+    <h2 style="font-size:6mm">Chceš jít <span class="hl">dál?</span></h2>
+    <p style="margin-bottom:4mm">Můj přístup není o tom, že ti budu navždy posílat přesné jídelníčky. Je o tom, že se naučíš makra, vážit, plánovat a nakonec jíst intuitivně — s vědomím, které ti dá svobodu i kontrolu zároveň.</p>
+    <div class="line">Vyplň dotazník a pošli na <b>martin@martinbarna.cz</b></div>
+    <div class="line">Týdenní reporty v pondělí + neomezená podpora na WhatsApp</div>
+    <div class="line">3 nebo 6 měsíců = nejlepší výsledky (reálná změna potřebuje čas)</div>
+  </div>
+  <div class="foot"><span>Martin Barna · online výživa a fitness</span><span class="beff">Be Effective!</span></div>
+</div>
+
+</body>
+</html>

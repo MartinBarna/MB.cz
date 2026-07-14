@@ -1,0 +1,15 @@
+{
+  "slug": "alkohol-a-hubnuti",
+  "slides": [
+    { "kind": "cover", "kicker": "Věda & výživa", "title": "Zhubneš i<br>s <span class=\"hl\">alkoholem?</span>", "sub": "Pivo, víno, panák — a přesto kila dolů. Co na to věda a kde je rozumná hranice." },
+    { "kind": "point", "kicker": "Kontext", "title": "Dva tábory,<br>oba vedle", "body": "Jedni tvrdí, že tě <b>jedna sklenka potopí</b>. Druzí, že „když makra sedí, je to jedno“.<br><br>Pravda je míň dramatická — a užitečnější.", "callout": "Na hubnutí rozhoduje <b>kalorický deficit</b>, ne pivo samo o sobě." },
+    { "kind": "point", "kicker": "Co říkají studie", "title": "Lehká konzumace ≠ přibírání", "body": "Velké přehledy studií se shodují: <b>lehká až střední konzumace</b> se s přibíráním nepojí.<br><br>Sklenka k večeři párkrát za týden je něco jiného než šest piv v pátek." },
+    { "kind": "stat", "kicker": "Háček č. 1", "big": "+82", "unit": "kcal navíc v jídle po alkoholu (průměr, meta-analýza 22 studií)", "body": "Alkohol <b>zvedne chuť a sníží zábrany</b>. Sníš víc — a tělo si to z piva nijak neodečte. Kebab cestou domů nadělá víc škody než drink samotný." },
+    { "kind": "stat", "kicker": "Háček č. 2", "big": "−24 %", "unit": "stavba svalů po opití (i s proteinem)", "body": "Pozor: v té studii šlo o ~12 drinků, tedy <b>opíjení</b>, ne sklenku vína. Ale pravidelné pařby brzdí růst svalů znatelně." },
+    { "kind": "point", "kicker": "Háček č. 3", "title": "Spánek to<br>schytá vždycky", "body": "Alkohol <b>potlačuje REM fázi</b> a láme spánek, hlavně druhou půlku noci.<br><br>Horší spánek = větší hlad, horší regenerace, slabší trénink. Kruh se zavírá." },
+    { "kind": "point", "kicker": "A jedna věc navíc", "title": "Zdraví ≠ váha", "body": "WHO řekla v roce 2023 natvrdo: <b>žádná dávka alkoholu není pro zdraví bezpečná</b>. Je to karcinogen nejvyšší kategorie.<br><br>To se deficitem přebít nedá — i když hubneš.", "callout": "Tohle není strašení. Je to informace k rozhodnutí <b>s rozmyslem</b>." },
+    { "kind": "vs", "kicker": "Prakticky", "title": "Jak s tím naložit", "yes": { "h": "Vejde se do plánu", "items": ["Pár sklenek za týden, <b>započítaných do dne</b>", "K jídlu, ne na lačno", "Týdenní průměr kalorií drží"] }, "no": { "h": "Brzdí tě", "items": ["Pravidelné páteční pařby", "Alkohol + kebab „mimo evidenci\"", "Pití místo spánku"] } },
+    { "kind": "quote", "text": "Pivo se do plánu vejde. Drama kolem něj ne.", "note": "Ulož si to a příště se rozhodni s rozmyslem." },
+    { "kind": "cta", "title": "Chceš jít <span class=\"hl\">dál?</span>", "lines": ["Celý článek se zdroji: <b>martinbarna.cz/clanky</b>", "Jídelníček, kam se sklenka vejde: <b>videokurz za 800 Kč</b>", "Systém na míru: <b>koučink 1:1</b>"] }
+  ]
+}

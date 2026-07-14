@@ -50,19 +50,20 @@ const fill = (s: string, v: Record<string, string>) => merge(gender(s), v);
 function renderBlocks(blocks: Block[], v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === "p") return `<p style='margin:0 0 14px'>${fill(b.html, v)}</p>`;
-    if (b.t === "ps") return `<p style='margin:16px 0 0;color:#666;font-style:italic'>${fill(b.html, v)}</p>`;
+    if (b.t === "ps") return `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, v)}</p>`;
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` + b.items.map((li) => `<li style='margin:0 0 9px'>${fill(li, v)}</li>`).join("") + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, v)}' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
   }).join("\n");
 }
 function wrap(preheader: string, body: string): string {
   const foot = "Martin Barna — online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku — není to newsletter).";
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'></head>` +
-    `<body style='margin:0;background:#f4f4f5;padding:16px'>` +
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
+    `<body style='margin:0;background:#0C0B10;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${preheader}</span>` +
-    `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px;margin:0 auto;background:#fff;border-radius:14px;padding:28px'>` +
-    body + `<hr style='border:none;border-top:1px solid #eee;margin:22px 0 14px'><div style='font-size:12px;line-height:1.5;color:#999'>${foot}</div></div></body></html>`;
+    `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF;max-width:560px;margin:0 auto;background:#181520;border:1px solid #262232;border-radius:14px;padding:28px'>` +
+    `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
+    body + `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;line-height:1.5;color:#8F8A99'>${foot}</div></div></body></html>`;
 }
 // ===== 5. pad (vokativ) — kanonicka verze, drz v synci s drip-send =====
 const VOK_EXC: Record<string, string> = {

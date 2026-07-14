@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Pondělní check-in — Martin Barna</title>
+<link rel="stylesheet" href="../../assets/vendor/fonts/poppins.css">
+<style>
+  @page { size: 210mm 297mm; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Poppins', Arial, sans-serif; color: #F0EADF; background: #0C0B10; }
+  .page { width: 210mm; height: 297mm; background: linear-gradient(165deg, #15171a 0%, #0f1113 100%); padding: 16mm 18mm 14mm; position: relative; overflow: hidden; }
+  .brandrow { display: flex; align-items: center; gap: 4mm; margin-bottom: 8mm; }
+  .mark { width: 11mm; height: 11mm; border-radius: 3mm; background: #EBB12C; color: #1A1222; font-weight: 800; font-size: 5mm; display: flex; align-items: center; justify-content: center; }
+  .brand { font-weight: 800; font-size: 4mm; letter-spacing: .2mm; line-height: 1.2; }
+  .brand span { display: block; color: #F6CD63; font-weight: 600; font-size: 2.7mm; letter-spacing: .5mm; text-transform: uppercase; }
+  .eyebrow { color: #EBB12C; font-weight: 800; font-size: 3mm; letter-spacing: .3mm; text-transform: uppercase; margin: 0 0 2mm; }
+  h1 { font-size: 11mm; line-height: 1.1; font-weight: 800; margin: 0 0 2.5mm; }
+  h1 .hl { color: #EBB12C; }
+  .lead { font-size: 3.6mm; line-height: 1.5; color: #d9d5df; margin: 0 0 6mm; }
+  .sec { color: #F6CD63; font-weight: 800; font-size: 3.6mm; letter-spacing: .3mm; text-transform: uppercase; margin: 5mm 0 2.5mm; }
+  .row { display: flex; align-items: center; gap: 4mm; background: rgba(255,255,255,.03); border: .3mm solid rgba(255,255,255,.08); border-radius: 2.5mm; padding: 3.2mm 4.5mm; margin-bottom: 2.2mm; }
+  .box { flex: none; width: 5mm; height: 5mm; border: .6mm solid #EBB12C; border-radius: 1.2mm; }
+  .row .t { font-size: 3.4mm; line-height: 1.35; color: #ded9e4; }
+  .row .t b { color: #F0EADF; }
+  .row .fill { margin-left: auto; flex: none; color: #8F8A99; font-size: 3mm; white-space: nowrap; }
+  .fill i { display: inline-block; width: 22mm; border-bottom: .4mm solid rgba(255,255,255,.25); height: 4mm; margin-left: 2mm; }
+  .decide { background: rgba(235,177,44,.08); border: .3mm solid rgba(235,177,44,.3); border-radius: 3mm; padding: 4.5mm 5.5mm; margin-top: 5mm; }
+  .decide .h { color: #EBB12C; font-weight: 800; font-size: 3.6mm; text-transform: uppercase; letter-spacing: .3mm; margin-bottom: 2.5mm; }
+  .decide p { font-size: 3.3mm; line-height: 1.5; color: #ded9e4; margin: 0 0 2mm; padding-left: 6mm; position: relative; }
+  .decide p::before { content: "→"; position: absolute; left: 0; color: #EBB12C; font-weight: 800; }
+  .decide p b { color: #F0EADF; }
+  .foot { position: absolute; left: 18mm; right: 18mm; bottom: 9mm; display: flex; justify-content: space-between; align-items: baseline; border-top: .3mm solid rgba(255,255,255,.1); padding-top: 3mm; font-size: 2.7mm; color: #8F8A99; }
+  .foot .beff { color: #EBB12C; font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online výživový kouč</span></div></div>
+
+  <p class="eyebrow">Každé pondělí · 5 minut</p>
+  <h1>Pondělní <span class="hl">check-in</span></h1>
+  <p class="lead">Kdo měří, ten řídí. Projeď těchhle pár bodů každé pondělí ráno — a rozhoduj podle dat, ne podle nálady. Jeden týden nic neznamená, trend znamená všechno.</p>
+
+  <div class="sec">1 · Čísla</div>
+  <div class="row"><div class="box"></div><div class="t"><b>Váha — týdenní průměr</b> (vážit ráno nalačno, sečti a vyděl počtem vážení)</div><div class="fill">Ø<i></i>kg</div></div>
+  <div class="row"><div class="box"></div><div class="t"><b>Míry:</b> pas přes pupík / boky (stačí 1× za 2 týdny)</div><div class="fill">pas<i></i>cm</div></div>
+  <div class="row"><div class="box"></div><div class="t"><b>Kroky — denní průměr</b> za minulý týden</div><div class="fill">Ø<i></i></div></div>
+
+  <div class="sec">2 · Pocity (1–5)</div>
+  <div class="row"><div class="box"></div><div class="t"><b>Energie</b> přes den (5 = nabito, 1 = vláčím se)</div><div class="fill">1 2 3 4 5</div></div>
+  <div class="row"><div class="box"></div><div class="t"><b>Hlad</b> (5 = v pohodě sytost, 1 = pořád bych jedl)</div><div class="fill">1 2 3 4 5</div></div>
+  <div class="row"><div class="box"></div><div class="t"><b>Spánek</b> — kolik hodin průměrně?</div><div class="fill"><i></i>h</div></div>
+
+  <div class="sec">3 · Poctivost</div>
+  <div class="row"><div class="box"></div><div class="t"><b>Kolik dní jsem zapisoval/a jídlo?</b> (jediná opravdová chyba je prázdný den)</div><div class="fill"><i></i>/ 7</div></div>
+  <div class="row"><div class="box"></div><div class="t"><b>Bílkoviny:</b> trefil/a jsem je většinu dní?</div><div class="fill">ano · ne</div></div>
+  <div class="row"><div class="box"></div><div class="t"><b>Víkend podle plánu?</b> (vyšší den plánovaný ≠ chaos)</div><div class="fill">ano · ne</div></div>
+
+  <div class="decide">
+    <div class="h">4 · Rozhodnutí (v tomhle pořadí!)</div>
+    <p><b>Váha v trendu klesá / míry dolů</b> → nic neměň. Funguje to. Jeď dál.</p>
+    <p><b>Váha stojí 2–3 týdny</b> → nejdřív týden zpřesni zápis a kroky. Kalorie jsou poslední páka, ne první.</p>
+    <p><b>Velký hlad + únava + špatný spánek</b> → neřež kalorie. Sprav spánek a objem jídla (zelenina, bílkoviny).</p>
+    <p><b>Po vyšším víkendu +1–2 kg</b> → to je voda a trávení, ne tuk. Klid, do čtvrtka to spadne.</p>
+  </div>
+
+  <div class="foot"><span>martinbarna.cz · celý systém: videokurz &amp; koučink</span><span class="beff">Be Effective!</span></div>
+</div>
+</body>
+</html>

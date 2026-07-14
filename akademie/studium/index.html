@@ -171,7 +171,7 @@
       .les.isfree .s{color:var(--gold-soft);font-weight:700}
     </style>
     <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
-      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly. Vidíš, co tě uvnitř čeká. Celou Academy (255 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí cena; po naplnění kapacity bude 12 900 Kč). Doživotně.</span></span></span>
+      <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly. Vidíš, co tě uvnitř čeká. Celou Academy (256 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí cena; po naplnění kapacity bude 12 900 Kč). Doživotně.</span></span></span>
       <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
     </a>
 
@@ -527,7 +527,7 @@
         { id:"m18-l7", t:"Bílkoviny a výživa žen napříč životem", available:true, href:"/akademie/studium/m18-l7/" },
         { id:"m18-l8", t:"Kreatin pro ženy: napříč cyklem, těhotenstvím i menopauzou", available:true, href:"/akademie/studium/m18-l8/" }
       ]},
-      { t:"Praxe a pokročilá aplikace", d:"Jak to celé použít v reálu: flexi dieta, kvalita jídla, udržení po dietě, energy flux, peak week, chaos, porce bez vážení, meal prep", lessons:[
+      { t:"Praxe a pokročilá aplikace", d:"Jak to celé použít v reálu: flexi dieta, kvalita jídla, udržení po dietě, energy flux, peak week, chaos, porce bez vážení, meal prep, víkendové přejídání", lessons:[
         { id:"m19-l1", t:"Flexibilní dieta v praxi (IIFYM bez chaosu)", available:true, href:"/akademie/studium/m19-l1/" },
         { id:"m19-l2", t:"Kvalita jídla: co to vlastně znamená", available:true, href:"/akademie/studium/m19-l2/" },
         { id:"m19-l3", t:"Po dietě: jak udržet formu a nevrátit kila", available:true, href:"/akademie/studium/m19-l3/" },
@@ -535,7 +535,8 @@
         { id:"m19-l5", t:"Peak week: vyladění formy na focení/soutěž", available:true, href:"/akademie/studium/m19-l5/" },
         { id:"m19-l6", t:"Chaotický režim: jíst dobře při směnách a cestování", available:true, href:"/akademie/studium/m19-l6/" },
         { id:"m19-l7", t:"Porce bez vážení: hand portioning", available:true, href:"/akademie/studium/m19-l7/" },
-        { id:"m19-l8", t:"Meal prep: systém, který drží formu za tebe", available:true, href:"/akademie/studium/m19-l8/" }
+        { id:"m19-l8", t:"Meal prep: systém, který drží formu za tebe", available:true, href:"/akademie/studium/m19-l8/" },
+        { id:"m19-l9", t:"Víkendové přejídání: systém místo chaosu", available:true, href:"/akademie/studium/m19-l9/" }
       ]},
       { t:"Martinův systém v praxi", d:"Jak reálně pracuju s klienty: celý můj systém z praxe od roku 2013 a 600+ klientů, zhmotněný v appce. Pořadí pák, check-iny, makra, samostatnost. Modul postupně roste.", lessons:[
         { id:"m20-l2", t:"5 priorit v praxi: jak je u klienta nastavit a hlídat", available:true, href:"/akademie/studium/m20-l2/" },
@@ -858,7 +859,7 @@
                 FREEMODE = true; applyFreeMode();
                 var _tcAnon=document.getElementById('tvujCoachCard'); if(_tcAnon){ _tcAnon.setAttribute('href','/pro-vas/'); _tcAnon.removeAttribute('target'); }
                 var n0 = document.getElementById('modeNote');
-                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 255 lekcím odemkni celou Academy.';
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 256 lekcím odemkni celou Academy.';
                 try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
                 return;
               }
@@ -873,7 +874,7 @@
                 var note = document.getElementById('modeNote');
                 if (note) note.textContent = has
                   ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 255 lekcím odemkni celou Academy.';
+                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 256 lekcím odemkni celou Academy.';
                 window.BA.getProgress().then(render);
               });
             });
