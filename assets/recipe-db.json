@@ -1,1 +1,1266 @@
-[{"id":"michana-vejce-se-sunkou-a-zitnym-chlebem","name":"Míchaná vejce se šunkou, špenátem a žitným chlebem","meal":"snidane","tags":["highprotein","balanced"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"vejce","g":150},{"id":"bilek","g":66},{"id":"sunka-od-kosti","g":60},{"id":"spenat","g":40},{"id":"rajce","g":60},{"id":"chleb-zitny","g":60}],"extra":["sůl","pepř","pažitka"],"steps":["Vejce a bílky rozšlehej vidličkou, osol a opepři.","Na rozpálené pánvi krátce orestuj nakrájenou šunku a špenát.","Přilij vejce a za stálého míchání táhni po pánvi do jemné, ještě vláčné hmoty.","Podávej s plátkem žitného chleba a nakrájeným rajčetem."],"tip":"Stáhni z plotny o chvilku dřív, než ti přijdou hotová – dojedou zbytkovým teplem a zůstanou krémová."},{"id":"tvarohova-pomazanka-s-knackebrotem","name":"Tvarohová pomazánka s křupavou zeleninou a knäckebrotem","meal":"snidane","tags":["highprotein","lowcal","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"tvaroh-mekky","g":200},{"id":"paprika","g":60},{"id":"redkev","g":40},{"id":"knackebrot","g":40}],"extra":["sůl","pepř","pažitka","česnek"],"steps":["Měkký tvaroh promíchej se solí, pepřem a nasekanou pažitkou dohladka.","Papriku a ředkvičky nakrájej na drobno a část vmíchej do tvarohu.","Namaž na knäckebrot a ozdob zbytkem nakrájené zeleniny.","Dochuť špetkou soli a případně prolisovaným stroužkem česneku."],"tip":"Když je tvaroh moc tuhý, zjemni ho lžící vody – získáš roztíratelnou pomazánku bez přidání tuku."},{"id":"proteinova-ovesna-kase-s-bananem","name":"Proteinová ovesná kaše s banánem a borůvkami","meal":"snidane","tags":["highprotein","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"ovesne-vlocky","g":60},{"id":"mleko-polotucne","g":200},{"id":"syrovatkovy-protein","g":30},{"id":"banan","g":100},{"id":"boruvky","g":50}],"extra":["skořice"],"steps":["Vločky zalij mlékem a za občasného míchání vař 3–4 minuty do zhoustnutí.","Kaši nech chvíli zchladnout, aby nebyla vroucí.","Vmíchej syrovátkový protein až do vlažné kaše, ať se nesrazí.","Navrch poskládej plátky banánu a borůvky, posyp skořicí."],"tip":"Protein přidávej vždy až do vychladlejší kaše – v horké se srazí a zhrudkovatí."},{"id":"skyr-bowl-s-boruvkami-a-musli","name":"Skyr bowl s borůvkami, müsli a mandlemi","meal":"snidane","tags":["highprotein","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"skyr","g":250},{"id":"boruvky","g":80},{"id":"musli-bez-cukru","g":30},{"id":"mandle","g":15}],"extra":["skořice"],"steps":["Skyr rozmíchej do hladka a přendej do misky.","Navrch nasyp müsli bez přidaného cukru.","Přidej borůvky a nasekané mandle.","Podle chuti dochuť špetkou skořice."],"tip":"Müsli přidej až těsně před jídlem, ať zůstane křupavé a nerozmočí se."},{"id":"proteinove-ovesne-palacinky","name":"Proteinové ovesné palačinky s jogurtem a malinami","meal":"snidane","tags":["highprotein","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"vejce","g":100},{"id":"ovesne-vlocky","g":45},{"id":"syrovatkovy-protein","g":30},{"id":"banan","g":90},{"id":"recky-jogurt-0","g":120},{"id":"maliny","g":60}],"extra":["skořice","prášek do pečiva","olej na pánev"],"steps":["Banán rozmačkej vidličkou, přidej vejce, vločky a protein a rozmíchej na těsto.","Nech 5 minut odpočinout, ať vločky nabobtnají a těsto zhoustne.","Na pánvi s kapkou oleje smaž menší palačinky z obou stran dozlatova.","Naskládej na sebe, přelij řeckým jogurtem a posyp malinami."],"tip":"Smaž na mírném plameni a otoč až se na povrchu udělají bublinky – uvnitř pak nezůstanou syrové."},{"id":"peceny-losos-brokolice-bataty","name":"Pečený losos s brokolicí a batáty","meal":"vecere","tags":["highprotein","balanced"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"losos","g":150},{"id":"brokolice","g":200},{"id":"bataty-pecene","g":100},{"id":"olivovy-olej","g":7}],"extra":["citron","sůl","pepř"],"steps":["Troubu rozpal na 200 °C. Batáty nakrájej na kostky, pokapej půlkou oleje a dej péct na 20 minut.","Losos osol, opepři a pokapej citronem. Po 20 minutách přidej k batátům a peč dalších 12-15 minut.","Brokolici rozeber na růžičky a spař v páře nebo krátce povař 5 minut, ať zůstane křupavá.","Vše dej na talíř, zbytkem oleje pokapej brokolici a dochuť solí."],"tip":"Losos poznáš hotový, když se maso láme na plátky a uvnitř je jen lehce růžové - přepečený vysychá."},{"id":"kureci-prsa-spenat-cizrna","name":"Kuřecí prsa se špenátem a cizrnou","meal":"vecere","tags":["highprotein","balanced"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"kureci-prsa","g":150},{"id":"spenat","g":150},{"id":"cizrna-varena","g":120},{"id":"olivovy-olej","g":8}],"extra":["česnek","sůl","pepř","citron"],"steps":["Kuřecí prsa naklepej na stejnou tloušťku, osol, opepři a orestuj na půlce oleje z obou stran dozlatova (asi 4 minuty na stranu).","Na zbytku oleje krátce orestuj prolisovaný česnek, přidej cizrnu a nech projít 2-3 minuty.","Vhoď špenát a míchej jen do zavadnutí, ať neztratí barvu.","Kuře nakrájej na plátky a naservíruj na cizrnu se špenátem, dochuť solí a citronem."],"tip":"Vážením prsa poznáš porci přesně - 150 g syrového kuřete dá kolem 35 g bílkovin, ideál na večeři."},{"id":"tvarohova-misa-zelenina","name":"Tvarohová mísa se zeleninovým salátem","meal":"vecere","tags":["highprotein","lowcal"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"tvaroh-mekky","g":200},{"id":"paprika","g":100},{"id":"okurka","g":100},{"id":"redkev","g":60},{"id":"knackebrot","g":20}],"extra":["pažitka","sůl","pepř"],"steps":["Tvaroh dej do misky, osol, opepři a promíchej s nasekanou pažitkou.","Papriku, okurku a ředkvičky nakrájej na kostičky a plátky.","Zeleninu buď vmíchej do tvarohu, nebo naskládej vedle jako salát.","Podávej s knäckebrotem, který namáčej do tvarohu."],"tip":"Rychlá studená večeře bez vaření - měkký tvaroh dodá přes 25 g bílkovin a skoro žádný tuk."},{"id":"krevety-restovana-zelenina","name":"Krevety s restovanou zeleninou","meal":"vecere","tags":["highprotein","lowcal","balanced"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"krevety","g":180},{"id":"cuketa","g":200},{"id":"paprika","g":100},{"id":"cibule","g":40},{"id":"olivovy-olej","g":8}],"extra":["česnek","chilli","sůl","citron"],"steps":["Na oleji zpěň nakrájenou cibuli a prolisovaný česnek.","Přidej cuketu a papriku nakrájené na kostky a restuj 5-6 minut, ať zůstanou křupavé.","Vhoď krevety a smaž jen 2-3 minuty, dokud nezrůžoví - déle je nevař, ať nezgumovatí.","Dochuť solí, chilli a zakápni citronem."],"tip":"Nízkosacharidová večeře nabitá bílkovinami - krevety stačí na pánvi pár minut, hotové jsou ve chvíli, kdy se stočí do C."},{"id":"pecene-tofu-brokolice-quinoa","name":"Pečené tofu s brokolicí a quinoou","meal":"vecere","tags":["highprotein","balanced"],"veg":true,"nodairy":true,"servings":1,"ing":[{"id":"tofu","g":200},{"id":"brokolice","g":200},{"id":"quinoa-varena","g":100},{"id":"olivovy-olej","g":8}],"extra":["sójová omáčka","sezam","sůl"],"steps":["Tofu osuš do ubrousku a nakrájej na kostky. Pokapej sójovou omáčkou a nech chvíli marinovat.","Na oleji tofu opeč ze všech stran dozlatova a dokřupava.","Brokolici rozeber na růžičky a spař v páře 5 minut.","Na talíř dej quinou, přidej tofu a brokolici, posyp sezamem a dochuť."],"tip":"Rostlinná varianta s 25+ g bílkovin - tofu před pečením pořádně osuš, jinak se jen dusí a nezezlátne."},{"id":"skyr-s-boruvkami-a-mandlemi","name":"Skyr s borůvkami, vločkami a mandlemi","meal":"svacina","tags":["highprotein","lowcal","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"skyr","g":200},{"id":"ovesne-vlocky","g":25},{"id":"boruvky","g":60},{"id":"mandle","g":15}],"extra":["skořice"],"steps":["Do misky nasyp skyr a přidej ovesné vločky.","Promíchej a nech 5 minut nabobtnat (nebo přes noc v lednici).","Navrch dej borůvky a nahrubo nasekané mandle.","Zamíchej špetku skořice a sněz hned, nebo si vezmi s sebou v uzavíratelné misce."],"tip":"Vločky nech přes noc nabobtnat ve skyru — ráno máš krémovou svačinu bez vaření."},{"id":"tortilla-wrap-sunka-cottage","name":"Tortilla wrap se šunkou, cottage a paprikou","meal":"svacina","tags":["highprotein","balanced"],"veg":false,"nodairy":false,"servings":1,"ing":[{"id":"tortilla","g":60},{"id":"sunka-od-kosti","g":70},{"id":"cottage","g":100},{"id":"paprika","g":40},{"id":"spenat","g":15}],"extra":["pepř"],"steps":["Tortillu rozlož a rovnoměrně rozetři cottage až skoro k okrajům.","Poklaď plátky šunky, proužky papriky a hrst čerstvého špenátu.","Zabal pevně do ruličky.","Přeřízni napůl a zabal do alobalu na cestu."],"tip":"Cottage funguje jako lepidlo i bílkovina navíc — wrap se nerozbalí a nepromastí tašku."},{"id":"proteinovy-tvarohovy-krem-banan","name":"Proteinový tvarohový krém s banánem","meal":"svacina","tags":["highprotein","lowcal","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"tvaroh-mekky","g":180},{"id":"syrovatkovy-protein","g":10},{"id":"banan","g":80},{"id":"araside-maslo","g":10}],"extra":["skořice"],"steps":["Do misky dej měkký tvaroh a syrovátkový protein.","Zamíchej do hladkého krému, podle potřeby přilej pár lžic vody.","Přidej rozmačkaný nebo nakrájený banán.","Navrch kápni arašídové máslo a lehce promíchej."],"tip":"Když je krém moc hustý, přilévej vodu po lžících — protein ho hodně zahušťuje."},{"id":"knackebrot-s-tunakem","name":"Knäckebrot s tuňákem a zeleninou","meal":"svacina","tags":["highprotein","lowcal"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"tunak-vlastni-stava","g":100},{"id":"knackebrot","g":30},{"id":"rajce","g":60},{"id":"okurka","g":40}],"extra":["pepř","citron"],"steps":["Tuňáka nech okapat a rozmačkej vidličkou.","Ochuť pepřem a kapkou citronu.","Navrš tuňáka na knäckebroty.","Doplň plátky rajčete a okurky."],"tip":"Ber tuňáka ve vlastní šťávě, ne v oleji — ušetříš spoustu kalorií při stejné bílkovině."},{"id":"cottage-s-ryzovymi-chlebicky","name":"Cottage s rýžovými chlebíčky a ředkvičkami","meal":"svacina","tags":["highprotein","lowcal"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"cottage","g":200},{"id":"ryzove-chlebicky","g":20},{"id":"redkev","g":40},{"id":"paprika","g":40}],"extra":["sůl","pepř","pažitka"],"steps":["Cottage dej do misky nebo krabičky.","Ředkvičky a papriku nakrájej na kolečka a proužky.","Cottage lehce osol a opepři.","Namáčej rýžové chlebíčky a zeleninu do cottage jako dip."],"tip":"Nakrájenou zeleninu si nachystej dopředu — svačinu pak složíš za minutu."},{"id":"tvarohovy-krem-boruvky","name":"Tvarohový krém s borůvkami a vlašskými ořechy","meal":"dezert","tags":["highprotein","lowcal","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"tvaroh-mekky","g":200},{"id":"boruvky","g":80},{"id":"med","g":10},{"id":"vlasske-orechy","g":10}],"extra":["skořice"],"steps":["Tvaroh měkký vyšlehej vidličkou nebo tyčovým mixérem do hladka.","Vmíchej med a špetku skořice.","Přendej do sklenice, navrch dej borůvky a nasekané vlašské ořechy.","Nech 10 minut v lednici uležet a podávej."],"tip":"Místo medu můžeš krém osladit rozmačkaným banánem — ušetříš přidaný cukr a přidáš krémovost."},{"id":"proteinova-ovesna-kase-banan-arasidy","name":"Proteinová ovesná kaše s banánem a arašídovým máslem","meal":"dezert","tags":["highprotein","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"ovesne-vlocky","g":50},{"id":"mleko-polotucne","g":150},{"id":"syrovatkovy-protein","g":25},{"id":"banan","g":60},{"id":"araside-maslo","g":12}],"extra":["skořice"],"steps":["Vločky zalij mlékem a za občasného míchání vař 3–4 minuty do zhoustnutí.","Odstav a nech krátce vychladnout, teprve pak vmíchej syrovátkový protein.","Přendej do misky, navrch dej plátky banánu a arašídové máslo.","Poprašek skořice a hotovo."],"tip":"Protein přidávej až do vlažné kaše — ve vroucí by se srazil do hrudek."},{"id":"pecene-jablko-recky-jogurt","name":"Pečené jablko s řeckým jogurtem a ořechy","meal":"dezert","tags":["highprotein","lowcal","balanced"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"jablko","g":180},{"id":"recky-jogurt-0","g":200},{"id":"syrovatkovy-protein","g":12},{"id":"vlasske-orechy","g":10},{"id":"med","g":8}],"extra":["skořice"],"steps":["Jablko překroj, vydlabej jádřinec a polož do zapékací misky.","Posyp skořicí a peč na 180 °C asi 20 minut, dokud nezměkne.","Řecký jogurt prošlehej se syrovátkovým proteinem do hladka.","Upečené jablko přelij jogurtem, pokapej medem a posyp nasekanými ořechy."],"tip":"Jablko je hotové, když jím vidlička lehce projede, ale ještě se nerozpadá."},{"id":"skyr-krem-jahody-cokolada","name":"Skyr krém s jahodami a hořkou čokoládou","meal":"dezert","tags":["highprotein","lowcal"],"veg":true,"nodairy":false,"servings":1,"ing":[{"id":"skyr","g":250},{"id":"jahody","g":80},{"id":"horka-cokolada-70","g":10},{"id":"med","g":5}],"extra":[],"steps":["Skyr vyšlehej do hladka a lehce dosladí medem.","Jahody nakrájej na čtvrtky.","Ve sklenici vrstvi skyr a jahody.","Navrch najemno nastrouhej hořkou čokoládu."],"tip":"Čokoládu strouhej najemno — 10 g stačí na chuť i vzhled bez velké kalorické zátěže."},{"id":"cokoladovy-krem-tofu","name":"Čokoládový krém z tofu (vegan)","meal":"dezert","tags":["highprotein","balanced"],"veg":true,"nodairy":true,"servings":1,"ing":[{"id":"tofu","g":200},{"id":"horka-cokolada-70","g":20},{"id":"banan","g":80},{"id":"araside-maslo","g":10}],"extra":[],"steps":["Hořkou čokoládu rozpusť ve vodní lázni.","Tofu, banán, rozpuštěnou čokoládu a arašídové máslo rozmixuj dohladka.","Přendej do misky a dej aspoň hodinu ztuhnout do lednice.","Podávej vychlazené, klidně s pár kousky ovoce."],"tip":"Rozmixuj tofu co nejjemněji — čím hladší, tím krémovější výsledek bez tofu příchuti."},{"id":"kureci-prsa-ryze-brokolice","name":"Kuřecí prsa s rýží a restovanou brokolicí","meal":"obed","tags":["highprotein","balanced"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"kureci-prsa","g":180},{"id":"ryze-bila-varena","g":200},{"id":"brokolice","g":150},{"id":"paprika","g":60},{"id":"cibule","g":40},{"id":"olivovy-olej","g":8}],"extra":["sůl","pepř","česnek","citron"],"steps":["Rýži uvař podle návodu a nech odstát pod pokličkou.","Kuřecí prsa naplátkuj, osol, opepři a na lžíci oleje opeč z obou stran dozlatova (cca 4 min každá strana).","Přidej cibuli a papriku, krátce orestuj.","Brokolici rozeber na růžičky a spař v páře nebo vroucí vodě 4-5 minut, ať zůstane křupavá.","Naservíruj rýži, kuře a brokolici na talíř."],"tip":"Prsa neopékej moc dlouho — jakmile jsou uvnitř bílá, sundej je, jinak vyschnou."},{"id":"peceny-losos-brambory-fazolky","name":"Pečený losos s bramborem a zelenými fazolkami","meal":"obed","tags":["highprotein"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"losos","g":170},{"id":"brambory-varene","g":250},{"id":"fazolky","g":150},{"id":"olivovy-olej","g":8},{"id":"cibule","g":30}],"extra":["sůl","pepř","citron","kopr"],"steps":["Troubu předehřej na 200 °C.","Filet lososa polož na pečicí papír, pokapej polovinou oleje, osol, opepři a pokapej citronem.","Peč 12-15 minut, dokud se maso nezačne krásně odlupovat.","Brambory uvař ve slupce nebo oloupané v osolené vodě.","Fazolky spař 5 minut a krátce prohoď na zbytku oleje s cibulí."],"tip":"Losos je hotový, když ho vidličkou lehce rozdělíš na plátky — přepečený je suchý."},{"id":"bolonske-hovezi-testoviny","name":"Boloňské s libovým hovězím a těstovinami","meal":"obed","tags":["highprotein"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"hovezi-mlete-5","g":150},{"id":"testoviny-varene","g":200},{"id":"rajce","g":150},{"id":"cibule","g":50},{"id":"paprika","g":60},{"id":"olivovy-olej","g":8}],"extra":["sůl","pepř","česnek","oregano","bazalka"],"steps":["Těstoviny uvař v osolené vodě al dente.","Na oleji zpěň cibuli, přidej mleté hovězí a rozmělňuj vidličkou, dokud nezhnědne.","Přidej nakrájené rajče a papriku, osol, opepři a duste 10 minut do omáčky.","Omáčku promíchej s těstovinami nebo ji navrš navrch."],"tip":"Hovězí 5 % je libové — kapka oleje na začátku stačí, aby se maso nepřipálilo."},{"id":"tofu-stir-fry-natural-ryze","name":"Tofu stir-fry s natural rýží a zeleninou","meal":"obed","tags":["highprotein","balanced"],"veg":true,"nodairy":true,"servings":1,"ing":[{"id":"tofu","g":200},{"id":"ryze-natural-varena","g":200},{"id":"paprika","g":80},{"id":"cuketa","g":100},{"id":"cibule","g":40},{"id":"repkovy-olej","g":8}],"extra":["sójová omáčka","česnek","zázvor","pepř"],"steps":["Natural rýži uvař podle návodu.","Tofu osuš do ubrousku, nakrájej na kostky a na oleji opeč ze všech stran dokřupava.","Přidej cibuli, papriku a cuketu a restuj na prudkém ohni 4-5 minut, ať zelenina zůstane křupavá.","Zakápni sójovou omáčkou, promíchej a podávej s rýží."],"tip":"Tofu před opékáním pořádně osuš — suché se krásně opeče, mokré se jen dusí."},{"id":"veprova-panenka-bataty-kapusta","name":"Vepřová panenka s batáty a kapustou","meal":"obed","tags":["highprotein","balanced"],"veg":false,"nodairy":true,"servings":1,"ing":[{"id":"veprova-panenka","g":180},{"id":"bataty-pecene","g":220},{"id":"kapusta","g":120},{"id":"mrkev","g":60},{"id":"olivovy-olej","g":8}],"extra":["sůl","pepř","česnek","tymián"],"steps":["Batáty nakrájej na kostky, pokapej polovinou oleje, osol a peč v troubě na 200 °C cca 25 minut.","Panenku osol, opepři a na zbytku oleje opeč zprudka ze všech stran, pak dopeč 8-10 minut.","Maso nech pár minut odpočinout, než ho nakrájíš na medailonky.","Kapustu a mrkev nakrájej a orestuj nebo spař do měkka."],"tip":"Panenku po opečení nech odpočinout pod alobalem — šťáva se rozloží a maso zůstane křehké."}]
+[
+{
+"id": "michana-vejce-se-sunkou-a-zitnym-chlebem",
+"name": "Míchaná vejce se šunkou, špenátem a žitným chlebem",
+"meal": "snidane",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "vejce",
+"g": 150
+},
+{
+"id": "bilek",
+"g": 66
+},
+{
+"id": "sunka-od-kosti",
+"g": 60
+},
+{
+"id": "spenat",
+"g": 40
+},
+{
+"id": "rajce",
+"g": 60
+},
+{
+"id": "chleb-zitny",
+"g": 60
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"pažitka"
+],
+"steps": [
+"Vejce a bílky rozšlehej vidličkou, osol a opepři.",
+"Na rozpálené pánvi krátce orestuj nakrájenou šunku a špenát.",
+"Přilij vejce a za stálého míchání táhni po pánvi do jemné, ještě vláčné hmoty.",
+"Podávej s plátkem žitného chleba a nakrájeným rajčetem."
+],
+"tip": "Stáhni z plotny o chvilku dřív, než ti přijdou hotová – dojedou zbytkovým teplem a zůstanou krémová."
+},
+{
+"id": "tvarohova-pomazanka-s-knackebrotem",
+"name": "Tvarohová pomazánka s křupavou zeleninou a knäckebrotem",
+"meal": "snidane",
+"tags": [
+"highprotein",
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "tvaroh-mekky",
+"g": 200
+},
+{
+"id": "paprika",
+"g": 60
+},
+{
+"id": "redkev",
+"g": 40
+},
+{
+"id": "knackebrot",
+"g": 40
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"pažitka",
+"česnek"
+],
+"steps": [
+"Měkký tvaroh promíchej se solí, pepřem a nasekanou pažitkou dohladka.",
+"Papriku a ředkvičky nakrájej na drobno a část vmíchej do tvarohu.",
+"Namaž na knäckebrot a ozdob zbytkem nakrájené zeleniny.",
+"Dochuť špetkou soli a případně prolisovaným stroužkem česneku."
+],
+"tip": "Když je tvaroh moc tuhý, zjemni ho lžící vody – získáš roztíratelnou pomazánku bez přidání tuku."
+},
+{
+"id": "proteinova-ovesna-kase-s-bananem",
+"name": "Proteinová ovesná kaše s banánem a borůvkami",
+"meal": "snidane",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "ovesne-vlocky",
+"g": 60
+},
+{
+"id": "mleko-polotucne",
+"g": 200
+},
+{
+"id": "syrovatkovy-protein",
+"g": 30
+},
+{
+"id": "banan",
+"g": 100
+},
+{
+"id": "boruvky",
+"g": 50
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Vločky zalij mlékem a za občasného míchání vař 3–4 minuty do zhoustnutí.",
+"Kaši nech chvíli zchladnout, aby nebyla vroucí.",
+"Vmíchej syrovátkový protein až do vlažné kaše, ať se nesrazí.",
+"Navrch poskládej plátky banánu a borůvky, posyp skořicí."
+],
+"tip": "Protein přidávej vždy až do vychladlejší kaše – v horké se srazí a zhrudkovatí."
+},
+{
+"id": "skyr-bowl-s-boruvkami-a-musli",
+"name": "Skyr bowl s borůvkami, müsli a mandlemi",
+"meal": "snidane",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "skyr",
+"g": 250
+},
+{
+"id": "boruvky",
+"g": 80
+},
+{
+"id": "musli-bez-cukru",
+"g": 30
+},
+{
+"id": "mandle",
+"g": 15
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Skyr rozmíchej do hladka a přendej do misky.",
+"Navrch nasyp müsli bez přidaného cukru.",
+"Přidej borůvky a nasekané mandle.",
+"Podle chuti dochuť špetkou skořice."
+],
+"tip": "Müsli přidej až těsně před jídlem, ať zůstane křupavé a nerozmočí se."
+},
+{
+"id": "proteinove-ovesne-palacinky",
+"name": "Proteinové ovesné palačinky s jogurtem a malinami",
+"meal": "snidane",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "vejce",
+"g": 100
+},
+{
+"id": "ovesne-vlocky",
+"g": 45
+},
+{
+"id": "syrovatkovy-protein",
+"g": 30
+},
+{
+"id": "banan",
+"g": 90
+},
+{
+"id": "recky-jogurt-0",
+"g": 120
+},
+{
+"id": "maliny",
+"g": 60
+}
+],
+"extra": [
+"skořice",
+"prášek do pečiva",
+"olej na pánev"
+],
+"steps": [
+"Banán rozmačkej vidličkou, přidej vejce, vločky a protein a rozmíchej na těsto.",
+"Nech 5 minut odpočinout, ať vločky nabobtnají a těsto zhoustne.",
+"Na pánvi s kapkou oleje smaž menší palačinky z obou stran dozlatova.",
+"Naskládej na sebe, přelij řeckým jogurtem a posyp malinami."
+],
+"tip": "Smaž na mírném plameni a otoč až se na povrchu udělají bublinky – uvnitř pak nezůstanou syrové."
+},
+{
+"id": "peceny-losos-brokolice-bataty",
+"name": "Pečený losos s brokolicí a batáty",
+"meal": "vecere",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "losos",
+"g": 150
+},
+{
+"id": "brokolice",
+"g": 200
+},
+{
+"id": "bataty-pecene",
+"g": 100
+},
+{
+"id": "olivovy-olej",
+"g": 7
+}
+],
+"extra": [
+"citron",
+"sůl",
+"pepř"
+],
+"steps": [
+"Troubu rozpal na 200 °C. Batáty nakrájej na kostky, pokapej půlkou oleje a dej péct na 20 minut.",
+"Losos osol, opepři a pokapej citronem. Po 20 minutách přidej k batátům a peč dalších 12-15 minut.",
+"Brokolici rozeber na růžičky a spař v páře nebo krátce povař 5 minut, ať zůstane křupavá.",
+"Vše dej na talíř, zbytkem oleje pokapej brokolici a dochuť solí."
+],
+"tip": "Losos poznáš hotový, když se maso láme na plátky a uvnitř je jen lehce růžové - přepečený vysychá."
+},
+{
+"id": "kureci-prsa-spenat-cizrna",
+"name": "Kuřecí prsa se špenátem a cizrnou",
+"meal": "vecere",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "kureci-prsa",
+"g": 150
+},
+{
+"id": "spenat",
+"g": 150
+},
+{
+"id": "cizrna-varena",
+"g": 120
+},
+{
+"id": "olivovy-olej",
+"g": 8
+}
+],
+"extra": [
+"česnek",
+"sůl",
+"pepř",
+"citron"
+],
+"steps": [
+"Kuřecí prsa naklepej na stejnou tloušťku, osol, opepři a orestuj na půlce oleje z obou stran dozlatova (asi 4 minuty na stranu).",
+"Na zbytku oleje krátce orestuj prolisovaný česnek, přidej cizrnu a nech projít 2-3 minuty.",
+"Vhoď špenát a míchej jen do zavadnutí, ať neztratí barvu.",
+"Kuře nakrájej na plátky a naservíruj na cizrnu se špenátem, dochuť solí a citronem."
+],
+"tip": "Vážením prsa poznáš porci přesně - 150 g syrového kuřete dá kolem 35 g bílkovin, ideál na večeři."
+},
+{
+"id": "tvarohova-misa-zelenina",
+"name": "Tvarohová mísa se zeleninovým salátem",
+"meal": "vecere",
+"tags": [
+"highprotein",
+"lowcal"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "tvaroh-mekky",
+"g": 200
+},
+{
+"id": "paprika",
+"g": 100
+},
+{
+"id": "okurka",
+"g": 100
+},
+{
+"id": "redkev",
+"g": 60
+},
+{
+"id": "knackebrot",
+"g": 20
+}
+],
+"extra": [
+"pažitka",
+"sůl",
+"pepř"
+],
+"steps": [
+"Tvaroh dej do misky, osol, opepři a promíchej s nasekanou pažitkou.",
+"Papriku, okurku a ředkvičky nakrájej na kostičky a plátky.",
+"Zeleninu buď vmíchej do tvarohu, nebo naskládej vedle jako salát.",
+"Podávej s knäckebrotem, který namáčej do tvarohu."
+],
+"tip": "Rychlá studená večeře bez vaření - měkký tvaroh dodá přes 25 g bílkovin a skoro žádný tuk."
+},
+{
+"id": "krevety-restovana-zelenina",
+"name": "Krevety s restovanou zeleninou",
+"meal": "vecere",
+"tags": [
+"highprotein",
+"lowcal",
+"balanced"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "krevety",
+"g": 180
+},
+{
+"id": "cuketa",
+"g": 200
+},
+{
+"id": "paprika",
+"g": 100
+},
+{
+"id": "cibule",
+"g": 40
+},
+{
+"id": "olivovy-olej",
+"g": 8
+}
+],
+"extra": [
+"česnek",
+"chilli",
+"sůl",
+"citron"
+],
+"steps": [
+"Na oleji zpěň nakrájenou cibuli a prolisovaný česnek.",
+"Přidej cuketu a papriku nakrájené na kostky a restuj 5-6 minut, ať zůstanou křupavé.",
+"Vhoď krevety a smaž jen 2-3 minuty, dokud nezrůžoví - déle je nevař, ať nezgumovatí.",
+"Dochuť solí, chilli a zakápni citronem."
+],
+"tip": "Nízkosacharidová večeře nabitá bílkovinami - krevety stačí na pánvi pár minut, hotové jsou ve chvíli, kdy se stočí do C."
+},
+{
+"id": "pecene-tofu-brokolice-quinoa",
+"name": "Pečené tofu s brokolicí a quinoou",
+"meal": "vecere",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "tofu",
+"g": 200
+},
+{
+"id": "brokolice",
+"g": 200
+},
+{
+"id": "quinoa-varena",
+"g": 100
+},
+{
+"id": "olivovy-olej",
+"g": 8
+}
+],
+"extra": [
+"sójová omáčka",
+"sezam",
+"sůl"
+],
+"steps": [
+"Tofu osuš do ubrousku a nakrájej na kostky. Pokapej sójovou omáčkou a nech chvíli marinovat.",
+"Na oleji tofu opeč ze všech stran dozlatova a dokřupava.",
+"Brokolici rozeber na růžičky a spař v páře 5 minut.",
+"Na talíř dej quinou, přidej tofu a brokolici, posyp sezamem a dochuť."
+],
+"tip": "Rostlinná varianta s 25+ g bílkovin - tofu před pečením pořádně osuš, jinak se jen dusí a nezezlátne."
+},
+{
+"id": "skyr-s-boruvkami-a-mandlemi",
+"name": "Skyr s borůvkami, vločkami a mandlemi",
+"meal": "svacina",
+"tags": [
+"highprotein",
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "skyr",
+"g": 200
+},
+{
+"id": "ovesne-vlocky",
+"g": 25
+},
+{
+"id": "boruvky",
+"g": 60
+},
+{
+"id": "mandle",
+"g": 15
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Do misky nasyp skyr a přidej ovesné vločky.",
+"Promíchej a nech 5 minut nabobtnat (nebo přes noc v lednici).",
+"Navrch dej borůvky a nahrubo nasekané mandle.",
+"Zamíchej špetku skořice a sněz hned, nebo si vezmi s sebou v uzavíratelné misce."
+],
+"tip": "Vločky nech přes noc nabobtnat ve skyru — ráno máš krémovou svačinu bez vaření."
+},
+{
+"id": "tortilla-wrap-sunka-cottage",
+"name": "Tortilla wrap se šunkou, cottage a paprikou",
+"meal": "svacina",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": false,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "tortilla",
+"g": 60
+},
+{
+"id": "sunka-od-kosti",
+"g": 70
+},
+{
+"id": "cottage",
+"g": 100
+},
+{
+"id": "paprika",
+"g": 40
+},
+{
+"id": "spenat",
+"g": 15
+}
+],
+"extra": [
+"pepř"
+],
+"steps": [
+"Tortillu rozlož a rovnoměrně rozetři cottage až skoro k okrajům.",
+"Poklaď plátky šunky, proužky papriky a hrst čerstvého špenátu.",
+"Zabal pevně do ruličky.",
+"Přeřízni napůl a zabal do alobalu na cestu."
+],
+"tip": "Cottage funguje jako lepidlo i bílkovina navíc — wrap se nerozbalí a nepromastí tašku."
+},
+{
+"id": "proteinovy-tvarohovy-krem-banan",
+"name": "Proteinový tvarohový krém s banánem",
+"meal": "svacina",
+"tags": [
+"highprotein",
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "tvaroh-mekky",
+"g": 180
+},
+{
+"id": "syrovatkovy-protein",
+"g": 10
+},
+{
+"id": "banan",
+"g": 80
+},
+{
+"id": "araside-maslo",
+"g": 10
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Do misky dej měkký tvaroh a syrovátkový protein.",
+"Zamíchej do hladkého krému, podle potřeby přilej pár lžic vody.",
+"Přidej rozmačkaný nebo nakrájený banán.",
+"Navrch kápni arašídové máslo a lehce promíchej."
+],
+"tip": "Když je krém moc hustý, přilévej vodu po lžících — protein ho hodně zahušťuje."
+},
+{
+"id": "knackebrot-s-tunakem",
+"name": "Knäckebrot s tuňákem a zeleninou",
+"meal": "svacina",
+"tags": [
+"highprotein",
+"lowcal"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "tunak-vlastni-stava",
+"g": 100
+},
+{
+"id": "knackebrot",
+"g": 30
+},
+{
+"id": "rajce",
+"g": 60
+},
+{
+"id": "okurka",
+"g": 40
+}
+],
+"extra": [
+"pepř",
+"citron"
+],
+"steps": [
+"Tuňáka nech okapat a rozmačkej vidličkou.",
+"Ochuť pepřem a kapkou citronu.",
+"Navrš tuňáka na knäckebroty.",
+"Doplň plátky rajčete a okurky."
+],
+"tip": "Ber tuňáka ve vlastní šťávě, ne v oleji — ušetříš spoustu kalorií při stejné bílkovině."
+},
+{
+"id": "cottage-s-ryzovymi-chlebicky",
+"name": "Cottage s rýžovými chlebíčky a ředkvičkami",
+"meal": "svacina",
+"tags": [
+"highprotein",
+"lowcal"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "cottage",
+"g": 200
+},
+{
+"id": "ryzove-chlebicky",
+"g": 20
+},
+{
+"id": "redkev",
+"g": 40
+},
+{
+"id": "paprika",
+"g": 40
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"pažitka"
+],
+"steps": [
+"Cottage dej do misky nebo krabičky.",
+"Ředkvičky a papriku nakrájej na kolečka a proužky.",
+"Cottage lehce osol a opepři.",
+"Namáčej rýžové chlebíčky a zeleninu do cottage jako dip."
+],
+"tip": "Nakrájenou zeleninu si nachystej dopředu — svačinu pak složíš za minutu."
+},
+{
+"id": "tvarohovy-krem-boruvky",
+"name": "Tvarohový krém s borůvkami a vlašskými ořechy",
+"meal": "dezert",
+"tags": [
+"highprotein",
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "tvaroh-mekky",
+"g": 200
+},
+{
+"id": "boruvky",
+"g": 80
+},
+{
+"id": "med",
+"g": 10
+},
+{
+"id": "vlasske-orechy",
+"g": 10
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Tvaroh měkký vyšlehej vidličkou nebo tyčovým mixérem do hladka.",
+"Vmíchej med a špetku skořice.",
+"Přendej do sklenice, navrch dej borůvky a nasekané vlašské ořechy.",
+"Nech 10 minut v lednici uležet a podávej."
+],
+"tip": "Místo medu můžeš krém osladit rozmačkaným banánem — ušetříš přidaný cukr a přidáš krémovost."
+},
+{
+"id": "proteinova-ovesna-kase-banan-arasidy",
+"name": "Proteinová ovesná kaše s banánem a arašídovým máslem",
+"meal": "dezert",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "ovesne-vlocky",
+"g": 50
+},
+{
+"id": "mleko-polotucne",
+"g": 150
+},
+{
+"id": "syrovatkovy-protein",
+"g": 25
+},
+{
+"id": "banan",
+"g": 60
+},
+{
+"id": "araside-maslo",
+"g": 12
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Vločky zalij mlékem a za občasného míchání vař 3–4 minuty do zhoustnutí.",
+"Odstav a nech krátce vychladnout, teprve pak vmíchej syrovátkový protein.",
+"Přendej do misky, navrch dej plátky banánu a arašídové máslo.",
+"Poprašek skořice a hotovo."
+],
+"tip": "Protein přidávej až do vlažné kaše — ve vroucí by se srazil do hrudek."
+},
+{
+"id": "pecene-jablko-recky-jogurt",
+"name": "Pečené jablko s řeckým jogurtem a ořechy",
+"meal": "dezert",
+"tags": [
+"highprotein",
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "jablko",
+"g": 180
+},
+{
+"id": "recky-jogurt-0",
+"g": 200
+},
+{
+"id": "syrovatkovy-protein",
+"g": 12
+},
+{
+"id": "vlasske-orechy",
+"g": 10
+},
+{
+"id": "med",
+"g": 8
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Jablko překroj, vydlabej jádřinec a polož do zapékací misky.",
+"Posyp skořicí a peč na 180 °C asi 20 minut, dokud nezměkne.",
+"Řecký jogurt prošlehej se syrovátkovým proteinem do hladka.",
+"Upečené jablko přelij jogurtem, pokapej medem a posyp nasekanými ořechy."
+],
+"tip": "Jablko je hotové, když jím vidlička lehce projede, ale ještě se nerozpadá."
+},
+{
+"id": "skyr-krem-jahody-cokolada",
+"name": "Skyr krém s jahodami a hořkou čokoládou",
+"meal": "dezert",
+"tags": [
+"highprotein",
+"lowcal"
+],
+"veg": true,
+"nodairy": false,
+"servings": 1,
+"ing": [
+{
+"id": "skyr",
+"g": 250
+},
+{
+"id": "jahody",
+"g": 80
+},
+{
+"id": "horka-cokolada-70",
+"g": 10
+},
+{
+"id": "med",
+"g": 5
+}
+],
+"extra": [],
+"steps": [
+"Skyr vyšlehej do hladka a lehce dosladí medem.",
+"Jahody nakrájej na čtvrtky.",
+"Ve sklenici vrstvi skyr a jahody.",
+"Navrch najemno nastrouhej hořkou čokoládu."
+],
+"tip": "Čokoládu strouhej najemno — 10 g stačí na chuť i vzhled bez velké kalorické zátěže."
+},
+{
+"id": "cokoladovy-krem-tofu",
+"name": "Čokoládový krém z tofu (vegan)",
+"meal": "dezert",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "tofu",
+"g": 200
+},
+{
+"id": "horka-cokolada-70",
+"g": 20
+},
+{
+"id": "banan",
+"g": 80
+},
+{
+"id": "araside-maslo",
+"g": 10
+}
+],
+"extra": [],
+"steps": [
+"Hořkou čokoládu rozpusť ve vodní lázni.",
+"Tofu, banán, rozpuštěnou čokoládu a arašídové máslo rozmixuj dohladka.",
+"Přendej do misky a dej aspoň hodinu ztuhnout do lednice.",
+"Podávej vychlazené, klidně s pár kousky ovoce."
+],
+"tip": "Rozmixuj tofu co nejjemněji — čím hladší, tím krémovější výsledek bez tofu příchuti."
+},
+{
+"id": "kureci-prsa-ryze-brokolice",
+"name": "Kuřecí prsa s rýží a restovanou brokolicí",
+"meal": "obed",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "kureci-prsa",
+"g": 180
+},
+{
+"id": "ryze-bila-varena",
+"g": 200
+},
+{
+"id": "brokolice",
+"g": 150
+},
+{
+"id": "paprika",
+"g": 60
+},
+{
+"id": "cibule",
+"g": 40
+},
+{
+"id": "olivovy-olej",
+"g": 8
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"česnek",
+"citron"
+],
+"steps": [
+"Rýži uvař podle návodu a nech odstát pod pokličkou.",
+"Kuřecí prsa naplátkuj, osol, opepři a na lžíci oleje opeč z obou stran dozlatova (cca 4 min každá strana).",
+"Přidej cibuli a papriku, krátce orestuj.",
+"Brokolici rozeber na růžičky a spař v páře nebo vroucí vodě 4-5 minut, ať zůstane křupavá.",
+"Naservíruj rýži, kuře a brokolici na talíř."
+],
+"tip": "Prsa neopékej moc dlouho — jakmile jsou uvnitř bílá, sundej je, jinak vyschnou."
+},
+{
+"id": "peceny-losos-brambory-fazolky",
+"name": "Pečený losos s bramborem a zelenými fazolkami",
+"meal": "obed",
+"tags": [
+"highprotein"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "losos",
+"g": 170
+},
+{
+"id": "brambory-varene",
+"g": 250
+},
+{
+"id": "fazolky",
+"g": 150
+},
+{
+"id": "olivovy-olej",
+"g": 8
+},
+{
+"id": "cibule",
+"g": 30
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"citron",
+"kopr"
+],
+"steps": [
+"Troubu předehřej na 200 °C.",
+"Filet lososa polož na pečicí papír, pokapej polovinou oleje, osol, opepři a pokapej citronem.",
+"Peč 12-15 minut, dokud se maso nezačne krásně odlupovat.",
+"Brambory uvař ve slupce nebo oloupané v osolené vodě.",
+"Fazolky spař 5 minut a krátce prohoď na zbytku oleje s cibulí."
+],
+"tip": "Losos je hotový, když ho vidličkou lehce rozdělíš na plátky — přepečený je suchý."
+},
+{
+"id": "bolonske-hovezi-testoviny",
+"name": "Boloňské s libovým hovězím a těstovinami",
+"meal": "obed",
+"tags": [
+"highprotein"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "hovezi-mlete-5",
+"g": 150
+},
+{
+"id": "testoviny-varene",
+"g": 200
+},
+{
+"id": "rajce",
+"g": 150
+},
+{
+"id": "cibule",
+"g": 50
+},
+{
+"id": "paprika",
+"g": 60
+},
+{
+"id": "olivovy-olej",
+"g": 8
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"česnek",
+"oregano",
+"bazalka"
+],
+"steps": [
+"Těstoviny uvař v osolené vodě al dente.",
+"Na oleji zpěň cibuli, přidej mleté hovězí a rozmělňuj vidličkou, dokud nezhnědne.",
+"Přidej nakrájené rajče a papriku, osol, opepři a duste 10 minut do omáčky.",
+"Omáčku promíchej s těstovinami nebo ji navrš navrch."
+],
+"tip": "Hovězí 5 % je libové — kapka oleje na začátku stačí, aby se maso nepřipálilo."
+},
+{
+"id": "tofu-stir-fry-natural-ryze",
+"name": "Tofu stir-fry s natural rýží a zeleninou",
+"meal": "obed",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "tofu",
+"g": 200
+},
+{
+"id": "ryze-natural-varena",
+"g": 200
+},
+{
+"id": "paprika",
+"g": 80
+},
+{
+"id": "cuketa",
+"g": 100
+},
+{
+"id": "cibule",
+"g": 40
+},
+{
+"id": "repkovy-olej",
+"g": 8
+}
+],
+"extra": [
+"sójová omáčka",
+"česnek",
+"zázvor",
+"pepř"
+],
+"steps": [
+"Natural rýži uvař podle návodu.",
+"Tofu osuš do ubrousku, nakrájej na kostky a na oleji opeč ze všech stran dokřupava.",
+"Přidej cibuli, papriku a cuketu a restuj na prudkém ohni 4-5 minut, ať zelenina zůstane křupavá.",
+"Zakápni sójovou omáčkou, promíchej a podávej s rýží."
+],
+"tip": "Tofu před opékáním pořádně osuš — suché se krásně opeče, mokré se jen dusí."
+},
+{
+"id": "veprova-panenka-bataty-kapusta",
+"name": "Vepřová panenka s batáty a kapustou",
+"meal": "obed",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "veprova-panenka",
+"g": 180
+},
+{
+"id": "bataty-pecene",
+"g": 220
+},
+{
+"id": "kapusta",
+"g": 120
+},
+{
+"id": "mrkev",
+"g": 60
+},
+{
+"id": "olivovy-olej",
+"g": 8
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"česnek",
+"tymián"
+],
+"steps": [
+"Batáty nakrájej na kostky, pokapej polovinou oleje, osol a peč v troubě na 200 °C cca 25 minut.",
+"Panenku osol, opepři a na zbytku oleje opeč zprudka ze všech stran, pak dopeč 8-10 minut.",
+"Maso nech pár minut odpočinout, než ho nakrájíš na medailonky.",
+"Kapustu a mrkev nakrájej a orestuj nebo spař do měkka."
+],
+"tip": "Panenku po opečení nech odpočinout pod alobalem — šťáva se rozloží a maso zůstane křehké."
+},
+{
+"id": "tunakovy-salat-s-fazolemi",
+"name": "Tuňákový salát s fazolemi a červenou cibulí",
+"meal": "obed",
+"tags": [
+"lowcal",
+"highprotein"
+],
+"veg": false,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "tunak-vlastni-stava",
+"g": 130
+},
+{
+"id": "fazole-varene",
+"g": 150
+},
+{
+"id": "rajce",
+"g": 100
+},
+{
+"id": "okurka",
+"g": 100
+},
+{
+"id": "cibule",
+"g": 30
+},
+{
+"id": "olivovy-olej",
+"g": 7
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"citronová šťáva",
+"petrželka"
+],
+"steps": [
+"Tuňáka slij a rozdrob vidličkou do mísy.",
+"Přidej propláchnuté fazole, nakrájené rajče, okurku a jemně krájenou cibuli.",
+"Zakápni olivovým olejem a citronem, osol, opepři a promíchej.",
+"Nech pět minut odležet, ať se chutě spojí, a podávej."
+],
+"tip": "Sytý oběd pod 500 kcal — fazole dodají vlákninu, tuňák bílkoviny. Klidně den dopředu do krabičky."
+},
+{
+"id": "zeleninova-omeleta-se-zampiony",
+"name": "Zeleninová omeleta se žampiony a špenátem",
+"meal": "snidane",
+"tags": [
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "vejce",
+"g": 150
+},
+{
+"id": "bilek",
+"g": 66
+},
+{
+"id": "zampiony",
+"g": 100
+},
+{
+"id": "spenat",
+"g": 50
+},
+{
+"id": "rajce",
+"g": 80
+},
+{
+"id": "olivovy-olej",
+"g": 5
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"pažitka"
+],
+"steps": [
+"Žampiony nakrájej na plátky a orestuj na oleji dozlatova.",
+"Přidej špenát a nech ho jen spadnout.",
+"Zalij rozšlehanými vejci s bílkem, osol, opepři a nech na mírném ohni zatáhnout.",
+"Podávej s nakrájeným rajčetem a pažitkou."
+],
+"tip": "Bez mléčných výrobků, kolem 330 kcal a 30 g bílkovin — ideální lehká snídaně."
+},
+{
+"id": "tofu-bowl-s-cizrnou",
+"name": "Tofu bowl s cizrnou a pečenou paprikou",
+"meal": "obed",
+"tags": [
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "tofu",
+"g": 150
+},
+{
+"id": "cizrna-varena",
+"g": 120
+},
+{
+"id": "paprika",
+"g": 100
+},
+{
+"id": "okurka",
+"g": 80
+},
+{
+"id": "spenat",
+"g": 40
+},
+{
+"id": "olivovy-olej",
+"g": 7
+}
+],
+"extra": [
+"sůl",
+"uzená paprika",
+"citronová šťáva",
+"česnek"
+],
+"steps": [
+"Tofu nakrájej na kostky, ochuť uzenou paprikou a orestuj na oleji dokřupava.",
+"Papriku orestuj (nebo krátce opeč) vedle tofu.",
+"Do misky dej špenát, cizrnu, okurku, papriku a tofu.",
+"Zakápni citronem, dosol podle chuti a promíchej."
+],
+"tip": "Rostlinný oběd s poctivou porcí bílkovin z tofu a cizrny. Funguje teplý i studený."
+}
+]

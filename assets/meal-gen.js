@@ -25,7 +25,11 @@
     var tdee = bmr * (ACT[inp.activity] || 1.375);
     var g = GOAL[inp.goal] || GOAL.udrzeni;
     var kcal = Math.round(tdee * g.kcal);
-    var protein = Math.round(w * g.protein);          // g
+    // [fix 2026-07-14] u výrazné nadváhy počítej bílkoviny z upravené hmotnosti (výška−100,
+    // min. 75 % váhy) — 2 g × 115 kg = 230 g bílkovin v deficitu je nesmysl, který se nedá
+    // ani poskládat z jídla; pro běžné váhy se nic nemění.
+    var refW = Math.min(w, Math.max(h - 100, w * 0.75));
+    var protein = Math.round(refW * g.protein);       // g
     var fat = Math.round((kcal * g.fatPct) / 9);      // g
     var carbsKcal = kcal - (protein * 4 + fat * 9);
     var carbs = Math.max(40, Math.round(carbsKcal / 4)); // g, pojistka
@@ -55,7 +59,11 @@
     return db.filter(function (f) {
       if (exclCat.indexOf(f.cat) !== -1) return false;
       if (exclId.indexOf(f.id) !== -1) return false;
-      if (prefs.vegetarian && /kure|krut|hovez|veprov|losos|tunak|treska|sunka|sardin|stehno|mlete/.test(f.id)) return false;
+      // [fix 2026-07-14] krevety nejsou vegetariánské; tvaroh/skyr/cottage/whey/máslo jsou mléčné,
+      // i když mají kategorii protein/fat (kategorie řídí skládání jídel, ne alergie).
+      if (prefs.vegetarian && /kure|krut|hovez|veprov|losos|tunak|treska|sunka|sardin|stehno|mlete|krevet/.test(f.id)) return false;
+      if (exclCat.indexOf('dairy') !== -1 &&
+          ['tvaroh-mekky', 'tvaroh-tvrdy', 'skyr', 'cottage', 'syrovatkovy-protein', 'maslo'].indexOf(f.id) !== -1) return false;
       return true;
     });
   }
@@ -172,20 +180,83 @@
     // ať se to ustálí; protein necháváme jako poslední (nejčistší makro), aby trefil cíl
     // co nejpřesněji. Dřív běžel jediný průchod v pořadí protein-první → systematický přestřel
     // bílkovin (u nabírání/vysokého příjmu i o 30–45 %).
-    for (var np = 0; np < 3; np++) {
-      scaleCat('carb', 'c', targets.carbs, 0.4, 2.6);
-      scaleCat('fat', 'f', targets.fat, 0.3, 3.0);
-      scaleCat('protein', 'p', targets.protein, 0.35, 2.4);
-    }
-    // hezké zaokrouhlení gramů (5 g, drobné zdroje tuku na 1 g) + realistický strop porce.
-    // Bez stropu škálování na vysoké cíle vyrobí nesmysly (675 g bulguru na jeden zátah).
-    // Stropy jsou generózní (velký objemový den je prostě velký), jen ořežou extrémy — u
-    // hodně vysokých cílů se pak den může mírně podstřelit; totály to poctivě ukážou.
+    // realistické stropy porcí — bez nich škálování vyrobí nesmysly (675 g bulguru na zátah)
     var CAP = { protein:300, carb:500, legume:350, dairy:350, veg:250, fruit:250, fat:50, snack:120 };
+    function capPass() {
+      all.forEach(function (it) {
+        var cap = CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
+      });
+    }
+    function runScale() {
+      for (var np = 0; np < 3; np++) {
+        scaleCat('carb', 'c', targets.carbs, 0.4, 2.6);
+        scaleCat('fat', 'f', targets.fat, 0.3, 3.0);
+        scaleCat('protein', 'p', targets.protein, 0.35, 2.4);
+      }
+      capPass(); // [fix 2026-07-14] stropy hned po škálování — jinak kontrola sytosti dne
+                 // viděla nadstropové porce a den po ořezu tiše podstřelil i o 20 %
+      // bílkovinný základ jídla nesmí zdegenerovat na ozdobu (křížové škálování ho umí
+      // stlačit) — drž aspoň 30 g; je to páteř každého jídla v Martinově metodě
+      all.forEach(function (it) {
+        if (it.food.cat === 'protein' && it.grams < 30) it.grams = 30;
+      });
+    }
+    runScale();
+
+    // [fix 2026-07-14] Velké cíle (např. 230 g bílkovin / 3 000+ kcal ve 3 jídlech) se přes
+    // stropy porcí nevejdou → den podstřeloval i o 20 %. Doplníme reálné doplňky (shake
+    // k hlavnímu jídlu, vločky a banán k snídani, hrst mandlí) a znormalizujeme znovu —
+    // přesně tohle by velkému klientovi poradil kouč.
+    function byId(id) { return db.filter(function (f) { return f.id === id; })[0] || null; }
+    function addExtra(food, grams, mealIdx) {
+      if (!food) return false;
+      if (all.some(function (it) { return it.food.id === food.id; })) return false;
+      var it = { food: food, grams: grams };
+      out[Math.min(mealIdx, out.length - 1)].items.push(it);
+      all.push(it);
+      return true;
+    }
+    if (totalKey('kcal') < targets.kcal * 0.94) {
+      var mainIdx = out.length >= 3 ? Math.floor(out.length / 2) : 0; // oběd / prostřední jídlo
+      addExtra(byId('syrovatkovy-protein'), 30, mainIdx);
+      addExtra(byId('ovesne-vlocky'), 50, 0);
+      runScale();
+      if (totalKey('kcal') < targets.kcal * 0.94 || totalKey('p') < targets.protein * 0.88) {
+        // druhý zdroj bílkovin k večeři (bez shaku: tvaroh; bez mléčných: tuňák; vege: tofu/tempeh)
+        var protPool = ['tvaroh-mekky', 'tunak-vlastni-stava', 'tofu', 'tempeh', 'vejce'];
+        for (var pi = 0; pi < protPool.length; pi++) {
+          if (addExtra(byId(protPool[pi]), 150, out.length - 1)) break;
+        }
+        addExtra(byId('mandle'), 25, out.length - 1);
+        addExtra(byId('banan'), 100, 0);
+        runScale();
+        if (totalKey('kcal') < targets.kcal * 0.94) {
+          var carbPool = ['ryze-natural-varena', 'brambory-varene', 'testoviny-celozrnne-varene', 'bulgur-vareny'];
+          for (var ci = 0; ci < carbPool.length; ci++) {
+            if (addExtra(byId(carbPool[ci]), 150, out.length - 1)) break;
+          }
+          var fatPool = ['olivovy-olej', 'repkovy-olej', 'avokado', 'araside-maslo'];
+          if (totalKey('f') < targets.fat * 0.85) {
+            for (var fi = 0; fi < fatPool.length; fi++) {
+              if (addExtra(byId(fatPool[fi]), 12, mainIdx)) break;
+            }
+          }
+          runScale();
+        }
+      }
+    }
+
+    // hezké zaokrouhlení gramů (5 g, drobné zdroje tuku na 1 g); stropy už drží capPass()
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
       it.grams = Math.max(step, Math.round(it.grams / step) * step);
       var cap = CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
+    });
+    // [fix 2026-07-14] minigramáže („přidej 1 g oleje") v klientském plánu nemají co dělat —
+    // nebílkovinné položky pod 8 g vyhodíme (pár kalorií totály poctivě ukážou);
+    // bílkovinné zdroje drží podlahu 30 g z runScale, ty nemažeme.
+    out.forEach(function (m) {
+      m.items = m.items.filter(function (it) { return it.food.cat === 'protein' || it.grams >= 8; });
     });
 
     // přepočítej totály po normalizaci
