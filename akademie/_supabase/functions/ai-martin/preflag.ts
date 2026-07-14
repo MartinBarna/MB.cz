@@ -54,9 +54,12 @@ const SUBSTR: Record<FlagCategory, string[]> = {
 };
 
 // Minimalizace příjmu VÁZANÁ na jídlo (ať „nejmíň 2 l vody" neflagujeme jako ED).
+// `\bjak malo` = hranice slova → chytne „JAK MÁLO můžu jíst" (restrikce), ale NE „neJAK MÁLO
+// kcal" (= trochu málo, běžná poznámka ke kaloriím jídla). Bez \b to bylo falešně pozitivní.
+// [safety-sync 2026-07-14: zrcadleno z app supabase/functions/ai-martin/preflag.ts, app = zdroj pravdy]
 const RESTRICTION_RE: RegExp[] = [
-  /(nejmin|co nejmene|jak malo|nejmensi)[^.!?]{0,40}(jist|jidl|kalori|kcal|snist|prijem|jest)/,
-  /(jist|jidl|kalori|kcal|prijem|snist|jest)[^.!?]{0,40}(nejmin|co nejmene|jak malo|nejmensi)/,
+  /(nejmin|co nejmene|\bjak malo|nejmensi)[^.!?]{0,40}(jist|jidl|kalori|kcal|snist|prijem|jest)/,
+  /(jist|jidl|kalori|kcal|prijem|snist|jest)[^.!?]{0,40}(nejmin|co nejmene|\bjak malo|nejmensi)/,
 ];
 const PURGE_MATH_RE: RegExp[] = [
   /vstreba[^.!?]{0,40}(zvrac|vyzvrac|vyzvrat)/,
