@@ -1134,6 +1134,14 @@
                         <div class="macro-bar" aria-hidden="true"><span class="mb-p" id="bar-bil"></span><span class="mb-c" id="bar-sach"></span><span class="mb-f" id="bar-tuk"></span></div>
                         <div class="macro-leg"><span><i class="d-p"></i>Bílkoviny</span><span><i class="d-c"></i>Sacharidy</span><span><i class="d-f"></i>Tuky</span></div>
                         <a href="#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
+                        <div class="mt-3" style="background:rgba(0,0,0,.22);border-radius:14px;padding:14px;text-align:left;">
+                            <p class="small mb-2" style="opacity:.95;"><strong>💌 Chceš k číslům i hotový 7denní jídelníček zdarma?</strong></p>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                <input type="email" id="calcEmail" placeholder="tvuj@email.cz" autocomplete="email" style="flex:1;min-width:170px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.25);color:#fff;">
+                                <button type="button" id="calcMailBtn" class="btn btn-gold" style="white-space:nowrap;">Poslat →</button>
+                            </div>
+                            <p class="small mt-2 mb-0" id="calcMailMsg" style="opacity:.8;">Jídelníček s makry podle tvého cíle. Odhlásíš se kdykoliv jedním klikem.</p>
+                        </div>
                         <p class="small mt-3 mb-0" style="opacity:.8;">Hodnoty jsou orientační startovní bod (Mifflin–St Jeor). Nejsou lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
                     </div>
                 </div>
@@ -1551,5 +1559,28 @@
         // Pozn.: frosted navbar + 3D tilt karet + magnetická CTA řeší sdílený /assets/ui.js (high-end vrstva).
     </script>
     <script src="/assets/ai-martin.js?v=g3" defer></script>
+    <script>
+    // Kalkulačka → e-mail capture: výsledek zůstává viditelný hned (nic negatujeme),
+    // mail je bonus navíc (7denní jídelníček) → lead do drip sekvence dle pohlaví.
+    (function(){
+      var btn=document.getElementById('calcMailBtn'); if(!btn) return;
+      var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
+      btn.addEventListener('click',function(){
+        var em=(document.getElementById('calcEmail').value||'').trim();
+        var msg=document.getElementById('calcMailMsg');
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){msg.textContent='⚠️ Zadej prosím platný e-mail.';return;}
+        btn.disabled=true;btn.textContent='Posílám…';
+        var sexEl=document.getElementById('pohlavi');
+        var seg=(sexEl&&sexEl.value==='zena')?'zeny':'muzi';
+        var kcal=(document.getElementById('r-kcal')||{}).textContent||'';
+        fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},
+          body:JSON.stringify({email:em,segment:seg,source:'kalkulacka',goal:'kalkulacka vysledek: '+kcal+' kcal'})
+        }).then(function(){ msg.textContent='✅ Hotovo! Jídelníček ti letí do schránky (mrkni i do promoakcí).'; btn.textContent='Odesláno ✓'; if(window.gtag)gtag('event','generate_lead',{zdroj:'kalkulacka'}); if(window.fbq)fbq('track','Lead'); })
+          .catch(function(){ msg.textContent='Nepovedlo se odeslat, zkus to prosím znovu.'; btn.disabled=false; btn.textContent='Poslat →'; });
+      });
+    })();
+    </script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
 </html>

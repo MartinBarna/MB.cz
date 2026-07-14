@@ -267,6 +267,7 @@
 }
     </script>
     <script defer src="/assets/analytics.js?v=g7"></script><script defer src="/assets/referral.js?v=g1"></script>
+    <script defer src="/assets/lead-popup.js?v=r1"></script>
     <link rel="stylesheet" href="/assets/app-brand-override.css?v=r2">
 </head>
 <body>
@@ -431,6 +432,12 @@
                 <div class="col-md-6"><div class="card p-4 h-100 text-start"><p class="mb-2" style="font-size:.95rem;">„Jedno z nejlepších rozhodnutí, které jsem pro sebe v oblasti zdraví a formy udělal. Pomohl mi vše nastavit tak, aby to bylo dlouhodobě udržitelné a fungovalo v běžném životě."</p><p class="text-muted small mb-0"><strong>Vlastimil Vícha</strong> · ★★★★★</p></div></div>
                 <div class="col-md-6"><div class="card p-4 h-100 text-start"><p class="mb-2" style="font-size:.95rem;">„Vše vysvětlí srozumitelně a vždy hledá řešení na míru. Určitě doporučuji každému, kdo to myslí se změnou vážně."</p><p class="text-muted small mb-0"><strong>Petr Musil</strong> · ★★★★★</p></div></div>
             </div>
+            <div class="row g-3 justify-content-center mt-3" style="max-width:900px;margin:0 auto;">
+                <div class="col-md-4"><img src="/assets/foto/promeny/zena-62kg.webp" alt="Klientka — proměna před a po" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;box-shadow:0 10px 30px rgba(22,22,22,.12);"></div>
+                <div class="col-md-4"><img src="/assets/foto/promeny/kuba-v3.webp" alt="Kuba — proměna před a po" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;box-shadow:0 10px 30px rgba(22,22,22,.12);"></div>
+                <div class="col-md-4"><img src="/assets/foto/promeny/brezen-srpen.webp" alt="Proměna klienta od března do srpna" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;box-shadow:0 10px 30px rgba(22,22,22,.12);"></div>
+            </div>
+            <p class="text-muted small mt-2 mb-0">Reálné proměny mých klientů — se svolením. Stejný systém tě učí tenhle kurz.</p>
             <p class="mt-3 mb-2"><a href="/reference/" style="color:var(--green);font-weight:700;">Přečíst všechny recenze →</a></p>
             <a class="btn btn-gold mt-2" href="https://form.simpleshop.cz/3Vbl/buy/">Přidej se k nim</a>
         </div>
@@ -553,5 +560,43 @@
         })();
     </script>
   <script src="/assets/scroll-top.js?v=g3" defer></script>
+
+    <!-- Brána na free lekce: e-mail → OKAMŽITÝ vstup (fire-and-forget capture, žádné čekání) -->
+    <div id="vkGate" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.74);" role="dialog" aria-modal="true" aria-label="11 lekcí zdarma">
+      <div style="max-width:430px;margin:13vh auto 0;background:#181520;border:1px solid rgba(235,177,44,.4);border-radius:18px;padding:26px 24px;color:#F0EADF;position:relative;box-shadow:0 30px 70px rgba(0,0,0,.6);">
+        <button type="button" id="vkGateX" aria-label="Zavřít" style="position:absolute;top:8px;right:14px;background:none;border:none;color:#8F8A99;font-size:24px;cursor:pointer;line-height:1;">×</button>
+        <h3 style="margin:0 0 6px;color:#fff;font-weight:800;">🎁 11 lekcí zdarma</h3>
+        <p style="margin:0 0 14px;color:#cfc9d6;font-size:.95rem;">Napiš mi e-mail a hned tě pustím dovnitř — žádné čekání, žádná karta.</p>
+        <input type="email" id="vkGateEmail" placeholder="tvuj@email.cz" autocomplete="email" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(0,0,0,.4);color:#fff;margin-bottom:10px;font-size:1rem;">
+        <button type="button" id="vkGateGo" style="width:100%;background:#EBB12C;color:#1A1222;font-weight:700;border:none;border-radius:50px;padding:13px;cursor:pointer;font-size:1rem;">Pustit lekce zdarma →</button>
+        <p id="vkGateMsg" style="margin:10px 0 0;font-size:.83rem;color:#8F8A99;">Sem tam pošlu i praktické tipy k hubnutí — odhlásíš se jedním klikem.</p>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var DEST='/akademie/videokurz/?preview=free';
+      var gate=document.getElementById('vkGate');
+      var links=document.querySelectorAll('a[href*="preview=free"]');
+      for(var i=0;i<links.length;i++){
+        links[i].addEventListener('click',function(e){e.preventDefault();gate.style.display='block';setTimeout(function(){document.getElementById('vkGateEmail').focus();},60);});
+      }
+      document.getElementById('vkGateX').addEventListener('click',function(){gate.style.display='none';});
+      gate.addEventListener('click',function(e){if(e.target===gate)gate.style.display='none';});
+      function go(){
+        var em=(document.getElementById('vkGateEmail').value||'').trim();
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){document.getElementById('vkGateMsg').textContent='⚠️ Zadej prosím platný e-mail.';return;}
+        var btn=document.getElementById('vkGateGo');btn.disabled=true;btn.textContent='Otevírám lekce…';
+        try{
+          var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
+          fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},body:JSON.stringify({email:em,segment:'other',source:'videokurz-free'})}).catch(function(){});
+          if(window.gtag)gtag('event','generate_lead',{zdroj:'videokurz-free'});
+          if(window.fbq)fbq('track','Lead');
+        }catch(e){}
+        setTimeout(function(){location.href=DEST;},350);
+      }
+      document.getElementById('vkGateGo').addEventListener('click',go);
+      document.getElementById('vkGateEmail').addEventListener('keydown',function(e){if(e.key==='Enter')go();});
+    })();
+    </script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
 </html>
