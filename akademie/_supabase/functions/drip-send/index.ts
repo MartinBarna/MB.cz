@@ -141,11 +141,11 @@ type Block =
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === 'p') return `<p style='margin:0 0 14px'>${fill(b.html, seg, v)}</p>`;
-    if (b.t === 'ps') return `<p style='margin:16px 0 0;color:#666;font-style:italic'>${fill(b.html, seg, v)}</p>`;
+    if (b.t === 'ps') return `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, seg, v)}</p>`;
     if (b.t === 'bullets')
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' class='mbbtn' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(fill(b.text, seg, v))}</a></p>`;
+    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
 function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): string {
@@ -156,16 +156,17 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>` +
-    `<meta name='color-scheme' content='light'><meta name='supported-color-schemes' content='light'>` +
-    `<style>:root{color-scheme:light;supported-color-schemes:light}` +
-    `.mbbtn,.mbbtn[data-ogsb],.mbbtn[data-ogsc]{background:#ff7a00!important;color:#161616!important}</style></head>` +
-    `<body style='margin:0;background:#f4f4f5;padding:16px'>` +
+  // Tabulkovy layout + bgcolor = tmava karta drzi i v Outlooku (div-background Outlook ignoruje).
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
+    `<body style='margin:0;padding:0;background:#0C0B10'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${esc(preheader)}</span>` +
-    `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px;margin:0 auto;background:#fff;border-radius:14px;padding:28px'>` +
+    `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
+    `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
+    `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
     body +
-    `<hr style='border:none;border-top:1px solid #eee;margin:22px 0 14px'>` +
-    `<div style='font-size:12px;line-height:1.5;color:#999'>${footerHtml}</div></div></body></html>`;
+    `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'>` +
+    `<div style='font-size:12px;line-height:1.5;color:#8F8A99'>${footerHtml}</div>` +
+    `</td></tr></table></td></tr></table></body></html>`;
 }
 
 function buildVars(name: string, seg: Seg, unsub: string, email: string): Record<string, string> {
