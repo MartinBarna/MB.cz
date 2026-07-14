@@ -63,11 +63,11 @@ function dots(v: number | null): string {
   return `<span style='letter-spacing:3px'>${s}</span>`;
 }
 
-// pořadí = týdenní priorita (pupík→stehna sledujeme každý týden), zbytek volitelný
+// pořadí = týdenní priorita (Martin: hruď, pas, boky, zadek, stehna zaberou celé tělo), zbytek volitelný
 const MIRY: [string, string][] = [
-  ["pupik", "Pupík"], ["pas", "Pas"], ["boky", "Boky"], ["prsa", "Hrudník"], ["zadek", "Zadek"],
+  ["prsa", "Hruď"], ["pas", "Pas"], ["boky", "Boky"], ["zadek", "Zadek"],
   ["p_stehno", "P stehno"], ["l_stehno", "L stehno"],
-  ["krk", "Krk"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"],
+  ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["krk", "Krk"], ["pupik", "Pupík"],
 ];
 
 // ---------- report mail ----------
@@ -81,7 +81,7 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
   // váha
   const w = num(r.weight), pw = prev ? num(prev.weight) : null, fw = first ? num(first.weight) : null;
   b += `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background:#211d2b;border:1px solid #2e2940;border-radius:10px;margin:0 0 6px'><tr><td style='padding:16px 20px'>` +
-    `<div style='font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#EBB12C;font-weight:700'>Váha (týdenní průměr)</div>` +
+    `<div style='font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#EBB12C;font-weight:700'>Váha</div>` +
     `<div style='font-size:34px;font-weight:800;color:#fff;line-height:1.2'>${czk(w)} kg${delta(w, pw)}</div>` +
     (pw != null || fw != null
       ? `<div style='font-size:13px;color:#8F8A99'>${pw != null ? `minule ${czk(pw)} kg` : ""}${pw != null && fw != null ? " · " : ""}${fw != null && w != null ? `start ${czk(fw)} kg · celkem <span style='color:${w - fw <= 0 ? "#4fc07a" : "#e0a04f"};font-weight:700'>${w - fw > 0 ? "+" : "−"}${czk(Math.round(Math.abs(w - fw) * 10) / 10)} kg</span>` : ""}</div>`
@@ -141,6 +141,10 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
     if (t.dalsi) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#B9B3C4;font-weight:700'>💬 Navíc:</span> ${esc(t.dalsi)}</p>`;
   }
 
+  // fotky
+  const nPhotos = Array.isArray(r.photos) ? r.photos.length : 0;
+  if (nPhotos) b += sect("Fotky") + `<p style='margin:0;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${nPhotos}×</strong> — najdeš je u klienta v adminu (a klient ve své sekci).</p>`;
+
   b += `<p style='margin:20px 0 4px'><a href='https://martinbarna.cz/akademie/klient/' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Otevřít grafy v klientské sekci</a></p>`;
   return b;
 }
@@ -162,6 +166,7 @@ function intakeMail(name: string, d: any): string {
   b += S("Trénink", { "Kde může cvičit": d.kde_cvici, "Kolik dní v týdnu": d.dny_treninku, "Vybavení": d.vybaveni });
   b += S("Režim", { "Práce / směny": d.prace, "Úroveň aktivity": d.aktivita, "Kroky/den (odhad)": d.kroky, "Spánek (h)": d.spanek });
   b += S("Výchozí míry (cm)", Object.fromEntries(MIRY.map(([k, l]) => [l, d["mira_" + k] || ""])));
+  if (Array.isArray(d.fotky) && d.fotky.length) b += sect("Výchozí fotky") + `<p style='margin:0 0 7px;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${d.fotky.length}×</strong> — najdeš je u klienta v adminu.</p>`;
   if (d.poznamka) b += S("Poznámka", { "Vzkaz": d.poznamka });
   return b;
 }
@@ -209,6 +214,7 @@ Deno.serve(async (req: Request) => {
       activity: data.activity ?? {},
       scales: data.scales ?? {},
       notes: data.notes ?? {},
+      photos: Array.isArray(data.photos) ? data.photos.slice(0, 12).map((p: unknown) => String(p).slice(0, 300)) : [],
       source: "web",
     };
     // předchozí + první report pro šipky (bez dnešního — re-submit v tentýž den je update)

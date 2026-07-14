@@ -370,7 +370,7 @@
     boot();
 
     // ================= 🤝 KLIENTI KOUČINKU (klientská sekce) =================
-    var KLI_MIRY=[['pupik','Pupík'],['pas','Pas'],['boky','Boky'],['prsa','Hrudník'],['zadek','Zadek'],['p_stehno','P stehno'],['l_stehno','L stehno'],['krk','Krk'],['p_paze','P paže'],['l_paze','L paže'],['p_lytko','P lýtko'],['l_lytko','L lýtko']];
+    var KLI_MIRY=[['prsa','Hruď'],['pas','Pas'],['boky','Boky'],['zadek','Zadek'],['p_stehno','P stehno'],['l_stehno','L stehno'],['p_lytko','P lýtko'],['l_lytko','L lýtko'],['p_paze','P paže'],['l_paze','L paže'],['krk','Krk'],['pupik','Pupík']];
     function kliNum(v){ var n=Number(String(v==null?'':v).replace(',','.')); return isFinite(n)&&String(v).trim()!==''?n:null; }
     function kliCz(v){ var n=kliNum(v); return n==null?'—':String(n).replace('.',','); }
     // jednoduchý odhad 5. pádu — Martin ho v poli vidí a může opravit
@@ -479,11 +479,12 @@
         +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a></p>';
       // reporty
       if(reps.length){
-        h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Pupík</th><th>Pas</th><th>Boky</th><th>Hruď</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>Slovně</th></tr></thead><tbody>';
+        h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
         reps.forEach(function(r){
           var m=r.measurements||{},n=r.nutrition||{},a=r.activity||{},s=r.scales||{},t=r.notes||{};
           var txt=[t.povedlo?'✓ '+t.povedlo:'',t.drhlo?'✗ '+t.drhlo:'',t.otazky?'? '+t.otazky:'',t.dalsi?'💬 '+t.dalsi:''].filter(Boolean).join(' · ');
-          h+='<tr><td>'+fmtDay(r.report_date)+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.pupik)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="max-width:260px;white-space:normal;">'+esc(txt)+'</td></tr>';
+          var fot=(Array.isArray(r.photos)?r.photos:[]).map(function(p,pi){ return '<a href="#" data-kdoc="'+esc(p)+'" style="color:#F6CD63;text-decoration:none;">📷'+(pi+1)+'</a>'; }).join(' ');
+          h+='<tr><td>'+fmtDay(r.report_date)+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'—')+'</td><td style="max-width:260px;white-space:normal;">'+esc(txt)+'</td></tr>';
         });
         h+='</tbody></table></div>';
       } else h+='<p class="muted" style="padding:.4rem 0;">Zatím žádné reporty.</p>';
@@ -506,6 +507,9 @@
           h+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;font-size:.82rem;"><b style="color:#F6CD63;">'+g[0]+'</b><br>'+kv.map(function(r){ return '<span class="muted">'+r[0]+':</span> '+esc(r[1]); }).join('<br>')+'</div>';
         });
         h+='</div>';
+        if(Array.isArray(idata.fotky)&&idata.fotky.length){
+          h+='<p style="margin:.5rem 0 0;font-size:.85rem;">📷 Výchozí fotky: '+idata.fotky.map(function(p,pi){ return '<a href="#" data-kdoc="'+esc(p)+'" style="color:#F6CD63;">foto '+(pi+1)+'</a>'; }).join(' · ')+'</p>';
+        }
       }
       // poznámky kouče
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🗒️ Tvoje poznámky (klient je nevidí)</h4>'
@@ -539,7 +543,7 @@
       var d=KDET.data; if(!d) return;
       var SEP=';', cols=['Datum','Váha (kg)'];
       KLI_MIRY.forEach(function(x){ cols.push(x[1]+' (cm)'); });
-      cols=cols.concat(['kcal Ø','Bílkoviny Ø (g)','Sacharidy Ø (g)','Tuky Ø (g)','Vláknina Ø (g)','Dny zapsáno','Kroky Ø','Fitko','Kardio','Další sport','Únava 1-5','Hlad 1-5','Síla 1-5','Spánek (h)','Spánek kvalita 1-5','Dodržení 1-5','Co se povedlo','Co drhlo','Otázky','Cokoliv dalšího']);
+      cols=cols.concat(['kcal Ø','Bílkoviny Ø (g)','Sacharidy Ø (g)','Tuky Ø (g)','Vláknina Ø (g)','Dny zapsáno','Kroky Ø','Fitko','Kardio','Další sport','Únava 1-5','Hlad 1-5','Síla 1-5','Spánek (h)','Spánek kvalita 1-5','Dodržení 1-5','Co se povedlo','Co drhlo','Otázky','Cokoliv dalšího','Fotek']);
       function cell(v){ v=v==null?'':String(v).replace(/\./g,','); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
       function cellTxt(v){ v=v==null?'':String(v); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
       var lines=[cols.join(SEP)];
@@ -547,7 +551,7 @@
         var m=r.measurements||{},n=r.nutrition||{},a=r.activity||{},s=r.scales||{},t=r.notes||{};
         var row=[r.report_date,cell(r.weight)];
         KLI_MIRY.forEach(function(x){ row.push(cell(m[x[0]])); });
-        row=row.concat([cell(n.kcal),cell(n.protein),cell(n.carbs),cell(n.fat),cell(n.fiber),cell(n.dny_zapsano),cell(a.kroky),cell(a.fitko),cellTxt(a.kardio),cellTxt(a.dalsi),cell(s.unava),cell(s.hlad),cell(s.sila),cell(s.spanek_h),cell(s.spanek_kvalita),cell(s.dodrzeni),cellTxt(t.povedlo),cellTxt(t.drhlo),cellTxt(t.otazky),cellTxt(t.dalsi)]);
+        row=row.concat([cell(n.kcal),cell(n.protein),cell(n.carbs),cell(n.fat),cell(n.fiber),cell(n.dny_zapsano),cell(a.kroky),cell(a.fitko),cellTxt(a.kardio),cellTxt(a.dalsi),cell(s.unava),cell(s.hlad),cell(s.sila),cell(s.spanek_h),cell(s.spanek_kvalita),cell(s.dodrzeni),cellTxt(t.povedlo),cellTxt(t.drhlo),cellTxt(t.otazky),cellTxt(t.dalsi),cell((Array.isArray(r.photos)?r.photos:[]).length||'')]);
         lines.push(row.join(SEP));
       });
       var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});  // BOM: česká diakritika v Excelu
