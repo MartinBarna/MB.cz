@@ -59,9 +59,11 @@ const SUBSTR: Record<FlagCategory, string[]> = {
     // kardio signály (stimulanty/spalovače u rizikových lidí):
     'arytmi', 'buseni srdce', 'busi mi srdce', 'vysoky tlak', 'hypertenz',
     // doping / PED (SYSTEM to odmítá; safe-mode navíc hlídá čísla). 'testosteron'/'sarm'/'inzulin'/
-    // 'rakovin' jsou v MED_CONTEXT_RE (holé slovo = běžný vzdělávací dotaz, nemá degradovat odpověď):
-    'steroid', 'anabolik', 'prohormon', 'klenbuterol', 'clenbuterol',
-    'efedrin', 'trenbolon', 'dianabol', 'oxandrolon',
+    // 'rakovin' jsou v MED_CONTEXT_RE (holé slovo = běžný vzdělávací dotaz, nemá degradovat odpověď).
+    // [sync 2026-07-14 s appkou Tvůj Coach — app preflag.ts = zdroj pravdy, byte-parity]:
+    'steroid', 'anabol', 'prohormon', 'klenbuterol', 'clenbuterol',
+    'efedrin', 'ephedrin', 'trenbolon', 'dianabol', 'oxandrolon',
+    'ostarine', 'yohimbin', 'spalovac tuku', 'stanozolol', 'nandrolon', 'eca stack',
     'prasky na', 'prasek na', 'lek na', 'leky na', 'beru lek', 'vysadit lek', 'vysadit prasky',
     'vysazeni lek', 'na predpis',
   ],
@@ -120,8 +122,14 @@ const MED_CONTEXT_RE: RegExp[] = [
   /testosteron[^.!?]{0,30}(kur[au]|picha|injek|davk|cyklus|nasadit)/,
   /(picham|beru|aplikuj|davkuj)[^.!?]{0,25}inzulin/,
   /na inzulinu/,
-  /\bsarm(?![a-z]{4,})/,
+  // [sync 2026-07-14 app] \bsarm[sy]?\b — dřívější (?![a-z]{4,}) flagoval jídlo „sarma" (holubky)
+  /\bsarm[sy]?\b/,
   /rakovin(?!otvor)/,
+];
+// [sync 2026-07-14 app] látky, které musí být word-boundary (DNP = smrtelné i v malé dávce,
+// ale „dnp" se jinak vyskytuje ve zkratkách) → medical.
+const SUBSTANCE_RE: RegExp[] = [
+  /\bdnp\b/,
 ];
 
 /** Zmínka o věku < 18.
@@ -176,6 +184,9 @@ export function preflagMessage(text: string): PreflagResult {
   }
   for (const re of MED_CONTEXT_RE) {
     if (re.test(t)) { categories.add('medical'); matched.push('medical:context'); }
+  }
+  for (const re of SUBSTANCE_RE) {
+    if (re.test(t)) { categories.add('medical'); matched.push('medical:substance'); }
   }
   if (detectMinorAge(t)) { categories.add('minor'); matched.push('minor:age'); }
 

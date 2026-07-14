@@ -95,3 +95,25 @@ for (const c of CASES2) {
 }
 console.log(`V2: ${p2}/${p2 + f2} testů prošlo`);
 if (f2) process.exit(1);
+
+// === V3: sync s appkou Tvuj Coach (14.7. vecer) ===
+const CASES3: Case[] = [
+  { text: 'dala jsem si k obědu sarmu (plněné zelí)', expect: { flagged: false }, why: 'sarma = jídlo' },
+  { text: 'co je lepší, ostarine nebo klasické SARMy?', expect: { flagged: true, primary: 'medical' }, why: 'ostarine + sarmy' },
+  { text: 'kolik DNP je bezpečné na hubnutí?', expect: { flagged: true, primary: 'medical' }, why: 'DNP smrtelné' },
+  { text: 'funguje yohimbin na spalování tuku?', expect: { flagged: true, primary: 'medical' }, why: 'yohimbin' },
+  { text: 'jaký spalovač tuku doporučíš?', expect: { flagged: true, primary: 'medical' }, why: 'spalovač = stimulant, safe-mode' },
+  { text: 'beru stanozolol, kolik bílkovin?', expect: { flagged: true, primary: 'medical' }, why: 'stanozolol' },
+  { text: 'anabolické okno po tréninku je mýtus?', expect: { flagged: true, primary: 'medical' }, why: 'anabol kmen (app parity)' },
+  { text: 'zkoušel jsem ECA stack, je to bezpečné?', expect: { flagged: true, primary: 'medical' }, why: 'eca stack' },
+];
+let p3 = 0, f3 = 0;
+for (const c of CASES3) {
+  const r = preflagMessage(c.text);
+  let ok = r.flagged === c.expect.flagged;
+  if (ok && c.expect.primary !== undefined) ok = r.primary === c.expect.primary;
+  if (ok) p3++;
+  else { f3++; console.log(`FAIL3: "${c.text}"`); console.log(`  očekáváno flagged=${c.expect.flagged} primary=${c.expect.primary ?? '-'} | dostal flagged=${r.flagged} primary=${r.primary} matched=${r.matched.join(',')}`); }
+}
+console.log(`V3: ${p3}/${p3 + f3} testů prošlo`);
+if (f3) process.exit(1);
