@@ -26,8 +26,14 @@ Deno.serve(async (req) => {
     const tool = segRaw === "academy-jidelnicek" ? "jidelnicek" : segRaw === "academy-trenink" ? "trenink" : "";
     // /pro-vas capture (B2C ochutnávka Academy) -> vlastní nurture s Academy uvítačkou,
     // ať nedostane food-plan welcome ("Tady máš svůj plán") jako makro-plan leady.
-    const track = tool ? "lead-magnet-tool" : segRaw === "academy-pro-vas" ? "nurture-pro-vas" : "lead-magnet";
     const source = String(body.source || "lead_magnet").slice(0, 60);
+    // [2026-07-14] brána na free lekce videokurzu → nurture-videokurz (uvítačka nv-0 má CTA
+    // „Pustit první lekce zdarma", žádný slib PDF plánu). Kalkulačka jde do lead-magnet
+    // (slibujeme 7denní jídelníček dle segmentu = přesně to, co lead-magnet doručuje).
+    const track = source === "videokurz-free" ? "nurture-videokurz"
+      : tool ? "lead-magnet-tool"
+      : segRaw === "academy-pro-vas" ? "nurture-pro-vas"
+      : "lead-magnet";
     const goal = String(body.goal || "").slice(0, 200);
     const age = String(body.age || "").slice(0, 30);
     const phone = String(body.phone || "").trim().slice(0, 40);
