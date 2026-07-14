@@ -475,7 +475,8 @@
     return { v: v };
   }
 
-  var MIRY = [["pupik", "Pupík"], ["pas", "Pas"], ["boky", "Boky"], ["krk", "Krk"], ["prsa", "Prsa"], ["zadek", "Zadek"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["p_stehno", "P stehno"], ["l_stehno", "L stehno"], ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"]];
+  // pořadí = priorita: prvních 7 sledujeme každý týden (Martin: + hrudník, zadek, stehna), zbytek volitelně
+  var MIRY = [["pupik", "Pupík"], ["pas", "Pas"], ["boky", "Boky"], ["prsa", "Hrudník (prsa)"], ["zadek", "Zadek"], ["p_stehno", "P stehno"], ["l_stehno", "L stehno"], ["krk", "Krk"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"]];
   var DAYS = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
 
   // ---------- REPORT WIZARD ----------
@@ -488,16 +489,16 @@
         render: function(a){ return fChips("f_mq", "Míry tento týden", ["Ano, mám míry", "Tento týden přeskočím"], a._miry === false ? "Tento týden přeskočím" : (a._miry === true ? "Ano, mám míry" : null)); },
         mount: function(){ mountPick("f_mq"); },
         collect: function(a){ var v = pickVal("f_mq"); if(!v) return "Vyber prosím jednu možnost."; a._miry = (v.indexOf("Ano") === 0); if(!a._miry) a.measurements = {}; } },
-      { id: "miry", title: "Tvoje míry (cm)", help: "Stačí <b>pupík, pas a boky</b>. Ostatní klidně nech prázdné — doplňuj je třeba 1× za měsíc.", when: function(a){ return a._miry === true; },
+      { id: "miry", title: "Tvoje míry (cm)", help: "Každý týden sledujeme <b>pupík, pas, boky, hrudník, zadek a stehna</b>. Co nestihneš, nech prázdné.", when: function(a){ return a._miry === true; },
         render: function(a){
           var m = a.measurements || {};
-          var main = MIRY.slice(0, 3).map(function(x){ return fNum("f_m_" + x[0], x[1], "cm", "", m[x[0]]); }).join("");
-          var rest = MIRY.slice(3).map(function(x){ return fNum("f_m_" + x[0], x[1], "cm", "", m[x[0]], true); }).join("");
-          return main + '<div class="mtgl"><button type="button" class="kbtn2" id="f_mAll">' + (a._miryAll ? "Skrýt ostatní míry" : "+ Všechny míry (dalších 9)") + '</button></div><div class="m2" id="f_mRest" style="display:' + (a._miryAll ? "grid" : "none") + ';">' + rest + "</div>";
+          var main = MIRY.slice(0, 7).map(function(x){ return fNum("f_m_" + x[0], x[1], "cm", "", m[x[0]]); }).join("");
+          var rest = MIRY.slice(7).map(function(x){ return fNum("f_m_" + x[0], x[1], "cm", "", m[x[0]], true); }).join("");
+          return '<div class="m2">' + main + '</div><div class="mtgl"><button type="button" class="kbtn2" id="f_mAll">' + (a._miryAll ? "Skrýt zbývající míry" : "+ Zbývající míry (dalších 5)") + '</button></div><div class="m2" id="f_mRest" style="display:' + (a._miryAll ? "grid" : "none") + ';">' + rest + "</div>";
         },
         mount: function(a){
           var b = document.getElementById("f_mAll");
-          b.addEventListener("click", function(){ a._miryAll = !a._miryAll; document.getElementById("f_mRest").style.display = a._miryAll ? "grid" : "none"; b.textContent = a._miryAll ? "Skrýt ostatní míry" : "+ Všechny míry (dalších 9)"; });
+          b.addEventListener("click", function(){ a._miryAll = !a._miryAll; document.getElementById("f_mRest").style.display = a._miryAll ? "grid" : "none"; b.textContent = a._miryAll ? "Skrýt zbývající míry" : "+ Zbývající míry (dalších 5)"; });
         },
         collect: function(a){
           var m = {};
@@ -571,14 +572,15 @@
           var h = optNum("f_spanekh", 2, 14); if(h.err) return "Spánek: " + h.err;
           out.spanek_h = h.v; a.scales = out;
         } },
-      { id: "texty", title: "Slovní zhodnocení", help: "Pár vět stačí — tohle je pro Martina často to nejcennější z celého reportu.",
+      { id: "texty", title: "Slovní zhodnocení", help: "Pár vět stačí — tohle je pro Martina často to nejcennější z celého reportu. Žádné pole nemá limit délky.",
         render: function(a){
           var t = a.notes || {};
           return fText("f_povedlo", "✓ Co se tenhle týden povedlo?", "", t.povedlo, true, true)
             + fText("f_drhlo", "✗ Co drhlo?", "", t.drhlo, true, true)
-            + fText("f_otazky", "? Otázky na Martina", "", t.otazky, true, true);
+            + fText("f_otazky", "? Otázky na Martina", "", t.otazky, true, true)
+            + fText("f_dalsi", "💬 Cokoliv dalšího", "prostor jen pro tebe — klidně napiš román", t.dalsi, true, true);
         },
-        collect: function(a){ a.notes = { povedlo: gv("f_povedlo"), drhlo: gv("f_drhlo"), otazky: gv("f_otazky") }; } },
+        collect: function(a){ a.notes = { povedlo: gv("f_povedlo"), drhlo: gv("f_drhlo"), otazky: gv("f_otazky"), dalsi: gv("f_dalsi") }; } },
       { id: "souhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání přijde hezky zpracovaný report mailem tobě i Martinovi.",
         render: function(a){
           function g(title, gotoId, rows){
@@ -591,7 +593,7 @@
             + g("Strava Ø", "strava", [["Kalorie", czk(n.kcal) + " kcal"], ["Bílkoviny", czk(n.protein) + " g"], ["Sacharidy", n.carbs != null ? czk(n.carbs) + " g" : ""], ["Tuky", n.fat != null ? czk(n.fat) + " g" : ""], ["Vláknina", n.fiber != null ? czk(n.fiber) + " g" : ""], ["Zapsáno dní", n.dny_zapsano + "/7"]])
             + g("Aktivity", "aktivity", [["Kroky Ø", czk(ac.kroky)], ["Fitko", ac.fitko + "×"], ["Kardio", ac.kardio], ["Další", ac.dalsi]])
             + g("Pocity", "skaly", [["Únava", s.unava + "/5"], ["Hlad", s.hlad + "/5"], ["Síla", s.sila + "/5"], ["Spánek", (s.spanek_h != null ? czk(s.spanek_h) + " h · " : "") + s.spanek_kvalita + "/5"], ["Dodržení plánu", s.dodrzeni + "/5"]])
-            + g("Slovně", "texty", [["Povedlo se", t.povedlo], ["Drhlo", t.drhlo], ["Otázky", t.otazky]]);
+            + g("Slovně", "texty", [["Povedlo se", t.povedlo], ["Drhlo", t.drhlo], ["Otázky", t.otazky], ["Navíc", t.dalsi]]);
         },
         mount: mountGoto,
         nextLabel: "Odeslat report 📨" }
@@ -626,9 +628,13 @@
         render: function(a){ return fChips("i_kde", "Kde můžeš cvičit?", ["Fitko", "Doma", "Fitko i doma", "Zatím nikde"], a.kde_cvici) + fChips("i_dnyt", "Kolik dní v týdnu reálně stíháš?", ["1", "2", "3", "4", "5", "6"], a.dny_treninku) + fText("i_vybaveni", "Vybavení doma (pokud cvičíš doma)", "činky, gumy, hrazda…", a.vybaveni, true); },
         mount: function(){ mountPick("i_kde"); mountPick("i_dnyt"); },
         collect: function(a){ var k = pickVal("i_kde"); if(!k) return "Vyber, kde můžeš cvičit."; var d = pickVal("i_dnyt"); if(!d) return "Vyber počet dní v týdnu."; a.kde_cvici = k; a.dny_treninku = d; a.vybaveni = gv("i_vybaveni"); } },
-      { id: "rezim", title: "Tvůj den", help: "Směny a režim rozhodují o tom, jak plán poskládat.",
-        render: function(a){ return fText("i_prace", "Práce a režim dne", "sedavá / na nohou / směny — jaké?", a.prace, false, true) + fNum("i_kroky", "Kroky denně — odhad", "kroků", "mrkni do mobilu", a.kroky, true) + fNum("i_spanek", "Spánek — hodin průměrně", "h", "", a.spanek, true); },
-        collect: function(a){ if(!gv("i_prace")) return "Popiš prosím práci a režim dne."; var k = optNum("i_kroky", 0, 60000); if(k.err) return "Kroky: " + k.err; var s = optNum("i_spanek", 2, 14); if(s.err) return "Spánek: " + s.err; a.prace = gv("i_prace"); a.kroky = k.v; a.spanek = s.v; } },
+      { id: "rezim", title: "Tvůj den", help: "Směny, pohyb a režim rozhodují o tom, jak plán poskládat.",
+        render: function(a){ return fText("i_prace", "Práce a režim dne", "sedavá / na nohou / směny — jaké?", a.prace, false, true)
+          + fChips("i_aktivita", "Úroveň aktivity přes den", ["Sedavá", "Lehce aktivní", "Aktivní", "Velmi aktivní"], a.aktivita)
+          + fNum("i_kroky", "Kroky denně — kolik cca reálně dáš?", "kroků", "mrkni do mobilu / hodinek", a.kroky)
+          + fNum("i_spanek", "Spánek — hodin průměrně", "h", "", a.spanek, true); },
+        mount: function(){ mountPick("i_aktivita"); },
+        collect: function(a){ if(!gv("i_prace")) return "Popiš prosím práci a režim dne."; var av = pickVal("i_aktivita"); if(!av) return "Vyber úroveň aktivity přes den."; var k = reqNum("i_kroky", "odhad kroků za den", 0, 60000); if(k.err) return k.err; var s = optNum("i_spanek", 2, 14); if(s.err) return "Spánek: " + s.err; a.prace = gv("i_prace"); a.aktivita = av; a.kroky = k.v; a.spanek = s.v; } },
       { id: "imiry", title: "Výchozí míry (cm)", help: "Startovní čára pro grafy. Stačí <b>pupík, pas, boky</b> — zbytek je bonus. Měř ráno, volně, bez zatahování břicha.",
         render: function(a){ return '<div class="m2">' + MIRY.map(function(x){ return fNum("i_m_" + x[0], x[1], "cm", "", a["mira_" + x[0]], x[0] !== "pupik" && x[0] !== "pas" && x[0] !== "boky"); }).join("") + "</div>"; },
         collect: function(a){
@@ -638,8 +644,8 @@
           }
           if(a.mira_pupik === "" && a.mira_pas === "") return "Změř prosím aspoň pupík nebo pas — bez startovní čáry nejde měřit pokrok.";
         } },
-      { id: "pozn", title: "Ještě něco?", help: "Cokoliv, co by měl Martin vědět a nikam se to nevešlo.",
-        render: function(a){ return fText("i_poznamka", "Vzkaz pro Martina", "", a.poznamka, true, true); },
+      { id: "pozn", title: "Ještě něco?", help: "Cokoliv, co by měl Martin vědět a nikam se to nevešlo. Bez omezení délky — klidně román.",
+        render: function(a){ return fText("i_poznamka", "Vzkaz pro Martina", "piš, kolik potřebuješ", a.poznamka, true, true); },
         collect: function(a){ a.poznamka = gv("i_poznamka"); } },
       { id: "isouhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání dostaneš kopii mailem a Martin ti do <b>48 hodin</b> nastaví plán.",
         render: function(a){
@@ -649,7 +655,7 @@
             ["Zdraví", "zdravi", [["Omezení", a.zdravi], ["Léky", a.leky], ["Alergie", a.alergie]]],
             ["Jídlo", "jidlo", [["Nejí", a.neji], ["Jídel denně", a.jidel_denne], ["Vaření", a.vareni]]],
             ["Trénink", "trenink", [["Kde", a.kde_cvici], ["Dní/týden", a.dny_treninku], ["Vybavení", a.vybaveni]]],
-            ["Režim", "rezim", [["Práce", a.prace], ["Kroky", a.kroky], ["Spánek", a.spanek != null && a.spanek !== "" ? czk(a.spanek) + " h" : ""]]],
+            ["Režim", "rezim", [["Práce", a.prace], ["Aktivita", a.aktivita], ["Kroky/den", a.kroky], ["Spánek", a.spanek != null && a.spanek !== "" ? czk(a.spanek) + " h" : ""]]],
             ["Míry", "imiry", MIRY.map(function(x){ return [x[1], a["mira_" + x[0]] !== "" && a["mira_" + x[0]] != null ? czk(a["mira_" + x[0]]) + " cm" : ""]; })],
             ["Poznámka", "pozn", [["Vzkaz", a.poznamka]]]];
           return groups.map(function(grp){

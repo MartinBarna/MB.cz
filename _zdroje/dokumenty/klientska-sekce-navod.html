@@ -7,60 +7,110 @@
   @page { size: A4; margin: 0; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
-  body { width: 210mm; height: 296mm; background: linear-gradient(160deg, #15171a 0%, #0f1113 100%); color: #F0EADF;
+  body { background: #101216; color: #F0EADF;
     font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .page { padding: 14mm 16mm 10mm; height: 100%; display: flex; flex-direction: column; }
+  .page { width: 210mm; height: 296mm; background: linear-gradient(160deg, #15171a 0%, #0f1113 100%);
+    padding: 13mm 16mm 10mm; display: flex; flex-direction: column; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
   .kick { display: inline-block; border-left: 4px solid #EBB12C; padding-left: 10px; font-weight: 800; font-size: 11px;
-    letter-spacing: .22em; text-transform: uppercase; color: #EBB12C; margin: 0 0 6mm; }
-  h1 { margin: 0 0 2mm; font-size: 26px; color: #fff; line-height: 1.2; }
-  .lead { margin: 0 0 7mm; font-size: 13px; color: #B9B3C4; line-height: 1.5; max-width: 150mm; }
-  .step { display: flex; gap: 5mm; margin: 0 0 5.5mm; }
-  .n { flex: 0 0 11mm; height: 11mm; border-radius: 50%; background: linear-gradient(145deg, #EBB12C, #E0762C);
-    color: #1A1222; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-  .step h2 { margin: 0 0 1.2mm; font-size: 14.5px; color: #fff; }
-  .step p { margin: 0; font-size: 11.5px; color: #C9C3D4; line-height: 1.55; }
+    letter-spacing: .22em; text-transform: uppercase; color: #EBB12C; margin: 0 0 5mm; }
+  h1 { margin: 0 0 2mm; font-size: 25px; color: #fff; line-height: 1.2; }
+  .lead { margin: 0 0 6mm; font-size: 12.5px; color: #B9B3C4; line-height: 1.5; max-width: 155mm; }
+  .step { display: flex; gap: 5mm; margin: 0 0 5mm; }
+  .n { flex: 0 0 10.5mm; height: 10.5mm; border-radius: 50%; background: linear-gradient(145deg, #EBB12C, #E0762C);
+    color: #1A1222; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+  .step h2 { margin: 0 0 1.2mm; font-size: 14px; color: #fff; }
+  .step p, .step li { margin: 0; font-size: 11.3px; color: #C9C3D4; line-height: 1.55; }
+  .step ol { margin: 1mm 0 0; padding-left: 5mm; }
+  .step li { margin: 0 0 1.4mm; }
   .step b, .step strong { color: #F6CD63; }
+  .step .w { color: #fff; font-weight: 700; }
   .url { display: inline-block; background: rgba(235,177,44,.12); border: 1px solid rgba(235,177,44,.45);
-    border-radius: 6px; padding: 1mm 3mm; color: #F6CD63; font-weight: 700; font-size: 11.5px; }
+    border-radius: 6px; padding: .6mm 2.5mm; color: #F6CD63; font-weight: 700; font-size: 11px; white-space: nowrap; }
+  .btnlike { display: inline-block; background: linear-gradient(145deg,#EBB12C,#E0762C); color: #1A1222; border-radius: 5px;
+    padding: .5mm 2.5mm; font-weight: 800; font-size: 10.5px; white-space: nowrap; }
+  .tip { background: rgba(235,177,44,.07); border-left: 3px solid #EBB12C; padding: 2.5mm 4mm; margin: 1mm 0 4.5mm;
+    font-size: 11px; color: #C9C3D4; line-height: 1.55; }
+  .tip b { color: #F6CD63; }
   .box { background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: 10px;
-    padding: 4mm 5mm; margin: 1mm 0 5mm; }
-  .box h3 { margin: 0 0 2mm; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: #F6CD63; }
-  .box p { margin: 0 0 1.5mm; font-size: 11.5px; color: #C9C3D4; line-height: 1.55; }
+    padding: 4mm 5mm; margin: 1mm 0 4mm; }
+  .box h3 { margin: 0 0 2mm; font-size: 11.5px; text-transform: uppercase; letter-spacing: .12em; color: #F6CD63; }
+  .box p { margin: 0 0 1.5mm; font-size: 11.3px; color: #C9C3D4; line-height: 1.55; }
   .box p b { color: #fff; }
-  .foot { margin-top: auto; border-top: 1px solid rgba(255,255,255,.12); padding-top: 3.5mm; font-size: 10.5px;
+  .foot { margin-top: auto; border-top: 1px solid rgba(255,255,255,.12); padding-top: 3mm; font-size: 10px;
     color: #8F8A99; display: flex; justify-content: space-between; align-items: center; }
   .foot b { color: #F6CD63; }
 </style>
 </head>
 <body>
+
+<!-- ===== STRANA 1: registrace + dotazník ===== -->
 <div class="page">
-  <span class="kick">Martin Barna · osobní koučink</span>
-  <h1>Tvoje klientská sekce — jak na to</h1>
-  <p class="lead">Všechno k naší spolupráci na jednom místě: týdenní report na pár kliknutí, grafy tvého pokroku a dokumenty ode mě. Funguje na mobilu i počítači, nic se neinstaluje.</p>
+  <span class="kick">Martin Barna · osobní koučink · strana 1/2</span>
+  <h1>Tvoje klientská sekce — krok za krokem</h1>
+  <p class="lead">Všechno k naší spolupráci na jednom místě: týdenní report na pár kliknutí, grafy tvého pokroku a dokumenty ode mě. Funguje na mobilu i počítači, nic se neinstaluje. Tenhle návod tě provede úplně vším.</p>
 
   <div class="step"><div class="n">1</div><div>
-    <h2>Přihlas se</h2>
-    <p>Otevři <span class="url">martinbarna.cz/akademie/klient/</span> a přihlas se <b>e-mailem, na který ti píšu</b> (na jiný e-mail sekce nenaskočí). Můžeš si nechat poslat přihlašovací odkaz — žádné heslo si pamatovat nemusíš.</p>
+    <h2>Vytvoř si účet (poprvé, zabere minutu)</h2>
+    <ol>
+      <li>Otevři <span class="url">martinbarna.cz/akademie/klient/</span> (nebo klikni na tlačítko v mailu ode mě) a zvol <span class="btnlike">Přihlásit se</span>.</li>
+      <li>Na přihlašovací stránce klikni nahoře na záložku <span class="w">„Vytvořit účet"</span>.</li>
+      <li>Zadej <b>přesně ten e-mail, na který ti píšu já</b> — podle něj tě sekce pozná. Jiný e-mail nebude fungovat.</li>
+      <li>Zvol si heslo (aspoň 6 znaků) a klikni <span class="btnlike">Vytvořit účet</span>.</li>
+      <li>Pak už jen <span class="w">„Přihlásit se"</span> — e-mail a heslo zůstanou předvyplněné.</li>
+    </ol>
   </div></div>
+  <div class="tip">💡 <b>Příště:</b> stačí otevřít stejnou adresu a přihlásit se. Když heslo zapomeneš, na přihlašovací stránce si necháš poslat nové — nebo mi prostě napiš.</div>
 
   <div class="step"><div class="n">2</div><div>
-    <h2>Vyplň vstupní dotazník <span style="font-weight:400;color:#8F8A99;font-size:11px;">(jen jednou, noví klienti)</span></h2>
-    <p>~10 minut o tobě: cíl, zdraví, jídlo, možnosti tréninku. Podle něj ti do <b>48 hodin</b> nastavím plán na míru. Nic se nedá zkazit — všechno jde později upravit.</p>
+    <h2>Vyplň vstupní dotazník (jen jednou, ~10 minut)</h2>
+    <ol>
+      <li>Po přihlášení uvidíš žlutý rámeček <span class="w">„📝 Začínáme: vstupní dotazník"</span> — klikni na <span class="btnlike">Vyplnit dotazník</span>.</li>
+      <li>Sekce se tě ptá <b>po jedné otázce</b>: cíl a proč, zdraví, co (ne)jíš, kde a kolik dní můžeš trénovat, tvůj režim, úroveň aktivity a kroky, výchozí míry.</li>
+      <li>Vždy vyplníš obrazovku a dáš <span class="btnlike">Pokračovat</span>. Šipkou ← vlevo nahoře se kdykoliv vrátíš.</li>
+      <li>U měr stačí metr: měř ráno, volně, bez zatahování břicha. Co nestihneš, nech prázdné.</li>
+      <li>Na konci vše zkontroluješ v souhrnu (cokoliv jde „Upravit") a dáš <span class="btnlike">Odeslat dotazník</span>.</li>
+    </ol>
   </div></div>
+  <div class="tip">✍️ Poslední krok „Ještě něco?" je volný text <b>bez omezení délky</b> — klidně mi napiš román. Čím víc toho o tobě vím, tím přesnější plán dostaneš. Kopie dotazníku ti přijde mailem a já ti do <b>48 hodin</b> nastavím plán na míru.</div>
+
+  <div class="foot">
+    <span>Něco drhne? Napiš mi: <b>martin@martinbarna.cz</b> — vyřešíme spolu.</span>
+    <span><b>Be Effective!</b> · martinbarna.cz</span>
+  </div>
+</div>
+
+<!-- ===== STRANA 2: tydenni report + grafy + vyhody ===== -->
+<div class="page">
+  <span class="kick">Martin Barna · osobní koučink · strana 2/2</span>
+  <h1>Každé pondělí: týdenní report</h1>
+  <p class="lead">Report je moje palivo — podle něj ti každý týden ladím kalorie, jídelníček i trénink. Zabere ~3 minuty a v pondělí brzy ráno ti přijde mailem připomínka s tlačítkem, ať na nic nemusíš myslet.</p>
 
   <div class="step"><div class="n">3</div><div>
-    <h2>Každé pondělí: týdenní report (3 minuty)</h2>
-    <p>Klikneš na <b>„Vyplnit report"</b> a sekce tě provede krok za krokem: váha (průměr ranních vážení), míry, strava, aktivity a jak ses cítil/a. V pondělí ráno ti přijde připomínka mailem — stačí kliknout. Kopii reportu dostaneme <b>oba</b> a já ti podle ní doladím plán.</p>
+    <h2>Jak report vyplnit</h2>
+    <ol>
+      <li>Klikni na tlačítko <span class="w">„Vyplnit report"</span> v pondělním mailu, nebo rovnou ve své sekci.</li>
+      <li><b>Váha</b> — zadej <b>průměr ranních vážení</b> za celý týden (jedno číslo lže, průměr ne). Važ se ráno nalačno, po záchodě.</li>
+      <li><b>Míry</b> — každý týden měříme pupík, pas, boky, hrudník, zadek a stehna. Když ses neměřil/a, dáš „přeskočit".</li>
+      <li><b>Strava</b> — týdenní průměr kalorií a bílkovin (appka Tvůj Coach ti ho ukáže sama). Kdo chce, rozklikne i denní rozpis.</li>
+      <li><b>Aktivity</b> — průměr kroků za den, počet tréninků, kardio.</li>
+      <li><b>Pocity</b> — únava, hlad, síla, spánek a dodržení plánu na škále 1–5. Není správná odpověď, piš to na rovinu.</li>
+      <li><b>Slovní zhodnocení</b> — co se povedlo, co drhlo, otázky na mě + <b>„Cokoliv dalšího" bez omezení délky</b>.</li>
+      <li>Souhrn → <span class="btnlike">Odeslat report</span>. Hotovo — kopie přijde tobě i mně a ozvu se s úpravou plánu.</li>
+    </ol>
   </div></div>
+  <div class="tip">💾 <b>Nemusíš to stihnout naráz:</b> rozdělaný report se ukládá — když sekci zavřeš, po otevření pokračuješ tam, kde jsi skončil/a.</div>
 
   <div class="step"><div class="n">4</div><div>
-    <h2>Sleduj grafy a dokumenty</h2>
-    <p>Z reportů se ti automaticky kreslí <b>grafy pokroku</b> (váha, míry, kroky…) — celá tvoje cesta od začátku. V <b>Dokumentech</b> najdeš všechny podklady ode mě, žádné hledání v mailech.</p>
+    <h2>Grafy, dokumenty a co v sekci ještě najdeš</h2>
+    <p>Z reportů se automaticky kreslí <b>grafy pokroku</b> (váha, míry, kroky, pocity) — vidíš celou svoji cestu od začátku. V <b>Dokumentech</b> máš všechny podklady ode mě (plány, jídelníčky) — žádné hledání v mailech.</p>
   </div></div>
 
   <div class="box">
     <h3>🎁 Tvoje výhody v ceně koučinku</h3>
-    <p><b>Videokurz výživy</b> (182 videí) — kompletně odemčený · <b>Appka Tvůj Coach</b> — vyfotíš jídlo, spočítá makra (ideální na zapisování pro report) · <b>Barna Academy se slevou 20 %</b> — kód <b>KLIENT20</b></p>
+    <p><b>Videokurz výživy</b> (182 videí) — kompletně odemčený, skvělý doplněk k naší spolupráci.</p>
+    <p><b>Appka Tvůj Coach</b> (coach.martinbarna.cz) — vyfotíš jídlo a spočítá makra. Ideální na zapisování stravy pro report.</p>
+    <p><b>Barna Academy se slevou 20 %</b> — chceš jít do hloubky? Při objednávce zadej kód <b>KLIENT20</b>.</p>
   </div>
 
   <div class="foot">
@@ -68,5 +118,6 @@
     <span><b>Be Effective!</b> · martinbarna.cz</span>
   </div>
 </div>
+
 </body>
 </html>

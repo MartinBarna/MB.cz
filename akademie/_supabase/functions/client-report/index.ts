@@ -63,9 +63,11 @@ function dots(v: number | null): string {
   return `<span style='letter-spacing:3px'>${s}</span>`;
 }
 
+// pořadí = týdenní priorita (pupík→stehna sledujeme každý týden), zbytek volitelný
 const MIRY: [string, string][] = [
-  ["krk", "Krk"], ["prsa", "Prsa"], ["pupik", "Pupík"], ["pas", "Pas"], ["boky", "Boky"], ["zadek", "Zadek"],
-  ["p_paze", "P paže"], ["l_paze", "L paže"], ["p_stehno", "P stehno"], ["l_stehno", "L stehno"], ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"],
+  ["pupik", "Pupík"], ["pas", "Pas"], ["boky", "Boky"], ["prsa", "Hrudník"], ["zadek", "Zadek"],
+  ["p_stehno", "P stehno"], ["l_stehno", "L stehno"],
+  ["krk", "Krk"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"],
 ];
 
 // ---------- report mail ----------
@@ -131,11 +133,12 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
 
   // slovně
   const t = r.notes || {};
-  if (t.povedlo || t.drhlo || t.otazky) {
+  if (t.povedlo || t.drhlo || t.otazky || t.dalsi) {
     b += sect("Slovní zhodnocení");
     if (t.povedlo) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#4fc07a;font-weight:700'>✓ Povedlo se:</span> ${esc(t.povedlo)}</p>`;
     if (t.drhlo) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#e0a04f;font-weight:700'>✗ Drhlo:</span> ${esc(t.drhlo)}</p>`;
     if (t.otazky) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#EBB12C;font-weight:700'>? Otázka:</span> ${esc(t.otazky)}</p>`;
+    if (t.dalsi) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#B9B3C4;font-weight:700'>💬 Navíc:</span> ${esc(t.dalsi)}</p>`;
   }
 
   b += `<p style='margin:20px 0 4px'><a href='https://martinbarna.cz/akademie/klient/' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Otevřít grafy v klientské sekci</a></p>`;
@@ -157,7 +160,7 @@ function intakeMail(name: string, d: any): string {
   b += S("Zdraví (jen pro Martina — neradíme, sběr)", { "Omezení / diagnózy": d.zdravi, "Léky / doplňky": d.leky, "Alergie": d.alergie });
   b += S("Jídlo", { "Co nejí / nesnáší": d.neji, "Kolik jídel denně": d.jidel_denne, "Kdo vaří / jak se stravuje": d.vareni });
   b += S("Trénink", { "Kde může cvičit": d.kde_cvici, "Kolik dní v týdnu": d.dny_treninku, "Vybavení": d.vybaveni });
-  b += S("Režim", { "Práce / směny": d.prace, "Kroky teď (odhad)": d.kroky, "Spánek (h)": d.spanek });
+  b += S("Režim", { "Práce / směny": d.prace, "Úroveň aktivity": d.aktivita, "Kroky/den (odhad)": d.kroky, "Spánek (h)": d.spanek });
   b += S("Výchozí míry (cm)", Object.fromEntries(MIRY.map(([k, l]) => [l, d["mira_" + k] || ""])));
   if (d.poznamka) b += S("Poznámka", { "Vzkaz": d.poznamka });
   return b;
