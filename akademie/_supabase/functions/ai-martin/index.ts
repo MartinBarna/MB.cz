@@ -167,7 +167,7 @@ async function isMember(token: string): Promise<boolean> {
 
 // RAG: natáhne z korpusu lekcí (lesson_docs přes RPC search_lessons) relevantní úryvky
 // k dotazu a složí kontextový blok pro model. Best-effort — při chybě vrátí prázdno.
-interface Hit { title?: string; url?: string; snippet?: string }
+interface Hit { title?: string; module?: string; url?: string; snippet?: string }
 async function retrieveContext(query: string): Promise<string> {
   // search_lessons je zamcena pred anon (uryvky placenych lekci) -> RAG vola pres service_role.
   if (!query || !SUPABASE_URL || !SERVICE_ROLE) return '';
@@ -180,9 +180,15 @@ async function retrieveContext(query: string): Promise<string> {
     if (!r.ok) return '';
     const hits = (await r.json()) as Hit[];
     if (!Array.isArray(hits) || !hits.length) return '';
-    const blocks = hits.map((h) =>
-      `--- Lekce: ${h.title ?? ''} (martinbarna.cz${h.url ?? ''})${NL}${(h.snippet ?? '').trim()}`).join(NL + NL);
-    return NL + NL + 'KONTEXT Z LEKCÍ BARNA ACADEMY (tvůj vlastní obsah; použij, jen pokud je k dotazu relevantní):'
+    // [harden 2026-07-14] modul dáváme do kontextu explicitně, ať ho model neodvozuje z mapy
+    // (a nesplete číslo) — jméno lekce + její modul = přesný odkaz „Modul X, lekce …".
+    const blocks = hits.map((h) => {
+      const modul = (h.module ?? '').trim();
+      return `--- Lekce: ${h.title ?? ''}${modul ? ` (modul: ${modul})` : ''} (martinbarna.cz${h.url ?? ''})`
+        + `${NL}${(h.snippet ?? '').trim()}`;
+    }).join(NL + NL);
+    return NL + NL + 'KONTEXT Z LEKCÍ BARNA ACADEMY (tvůj vlastní obsah; použij, jen pokud je k dotazu relevantní; '
+      + 'když odkazuješ na lekci, použij přesně její název a modul odsud, nedomýšlej):'
       + NL + blocks;
   } catch (_e) {
     return '';
