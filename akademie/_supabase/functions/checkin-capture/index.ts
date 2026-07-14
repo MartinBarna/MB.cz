@@ -80,10 +80,15 @@ Deno.serve(async (req) => {
     const now = Date.now();
     // kdo je v loopu: má aspoň 1 check-in, reminders zapnuté; připomeň, když poslední check-in 6–45 dní zpět
     const { data: creds } = await admin.from("discount_credits").select("email,reminder_token").eq("reminders_off", false);
+    // [2026-07-14] koučink klienti mají vlastní klientskou sekci + pondělní report (client-remind)
+    // — starý členský check-in by jim chodil duplicitně, tak je z připomínek vynecháváme
+    const { data: coachEnts } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
+    const coachSet = new Set((coachEnts ?? []).map((e) => low(e.email)));
     let sent = 0; const MAX = 40;
     for (const c of (creds ?? [])) {
       if (sent >= MAX) break;
       const email = low(c.email);
+      if (coachSet.has(email)) continue;
       const { data: last } = await admin.from("member_checkins").select("created_at").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
       if (!last) continue;
       const days = (now - Date.parse(String(last.created_at))) / 86400000;

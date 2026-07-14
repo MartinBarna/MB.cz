@@ -54,7 +54,7 @@ function mailHtml(osloveni: string): string {
     p(osloveni ? "Ahoj " + osloveni + "," : "Ahoj,") +
     p("nový týden, nová data 💪 Mrkni na váhu a hoď mi <strong>týdenní report</strong> — zabere ~3 minuty a já ti podle něj doladím plán.") +
     `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Vyplnit report (3 min)</a></p>` +
-    p("<span style='color:#A09AAD;font-size:14px'>Tip: váhu ber jako průměr ranních vážení za celý týden. Jedno číslo lže, průměr ne.</span>") +
+    p("<span style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna — míry řeknou víc než váha. Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>") +
     p("<strong>Be Effective!</strong><br>Martin") +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · připomínka pro klienty koučinku — nechceš je? Odepiš „stop připomínky“ a vypnu ti je.</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
