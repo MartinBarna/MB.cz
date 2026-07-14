@@ -1,6 +1,8 @@
 // ingest-lessons — jednorázový/aktualizační plnič korpusu lesson_docs pro RAG AI Martina.
-// Načte CURRICULUM z živé stránky /akademie/studium/, pro každou dostupnou lekci stáhne
-// její stránku, vytáhne čistý text (bez nav/upsell/quiz) a upsertne do lesson_docs.
+// Načte CURRICULUM z živé stránky /akademie/studium/ a pro každou dostupnou lekci vytáhne text:
+// [harden 2026-07-14] PŘEDNOSTNĚ z DB lesson_content (placené lekce mají obsah v DB — statický
+// shell obsahuje jen „Načítám lekci…", takže crawl vyráběl stub dokumenty bez obsahu!);
+// teprve když lekce v lesson_content není (statické free lekce), stáhne její stránku.
 // Auth: x-ingest-secret (== app_config.drip_invoke_secret). Zpracuje dávku od ?from o ?count.
 // Deploy: supabase functions deploy ingest-lessons --no-verify-jwt
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -63,13 +65,31 @@ Deno.serve(async (req: Request) => {
   }
   const slice = flat.slice(from, from + count);
 
+  // [harden 2026-07-14] obsah z DB má přednost (placené lekce): lesson_id -> čistý text z lesson_content
+  const ids = slice.map((L) => L.id);
+  const dbText = new Map<string, string>();
+  if (ids.length) {
+    const { data: lc } = await admin.from("lesson_content").select("lesson_id,html").in("lesson_id", ids);
+    for (const row of (lc ?? []) as { lesson_id: string; html: string }[]) {
+      let body = row.html ?? "";
+      let cut = body.length;
+      for (const mk of MARKERS) { const i = body.indexOf(mk); if (i > -1 && i < cut) cut = i; }
+      const txt = clean(body.slice(0, cut));
+      if (txt.length >= 40) dbText.set(row.lesson_id, txt);
+    }
+  }
+
   let ok = 0, fail = 0;
   const rows: { lesson_id: string; module: string; title: string; url: string; content: string }[] = [];
-  // stahuj po menších skupinách, ať to nezahltí
+  // stahuj po menších skupinách, ať to nezahltí (jen lekce, které nemají obsah v DB)
   const GROUP = 12;
   for (let i = 0; i < slice.length; i += GROUP) {
     const grp = slice.slice(i, i + GROUP);
     const fetched = await Promise.all(grp.map(async (L) => {
+      const fromDb = dbText.get(L.id);
+      if (fromDb) {
+        return { lesson_id: L.id, module: L.module, title: L.title, url: L.url, content: (L.title + ". " + fromDb).slice(0, 1500).trim() };
+      }
       try {
         const html = await (await fetch(BASE + L.url, { headers: { "Cache-Control": "no-cache" } })).text();
         const content = extractContent(html, L.title);

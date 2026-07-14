@@ -5,3 +5,6 @@ akademie/_ai/AI-MARTIN-ZNALOSTNI-MAPA.md
 akademie/_ai/AI-MARTIN-TRENINK-BRIEF.md
 # dotrénování odvozené z Martinových SOUKROMÝCH dat (Gmail/Drive) — jen lokálně
 akademie/_ai/AI-MARTIN-GMAIL-DRIVE-DOTRENOVANI.md
+
+# staging kopie pro supabase CLI deploy (zdroj = akademie/_supabase/functions/)
+supabase/
