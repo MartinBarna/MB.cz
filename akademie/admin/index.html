@@ -562,7 +562,10 @@
           var d=j.data||{};
           if(d.found===false){ host.innerHTML='<p class="muted" style="font-size:.85rem;">Klient s tímhle e-mailem v appce zatím není (nebo nic nezapsal).</p>'; return; }
           var hh='';
-          if(d.avg) hh+='<p style="margin:.2rem 0;font-size:.88rem;">Ø za '+(d.dny_zapsano!=null?d.dny_zapsano+' zapsaných dní':'období')+': <b>'+kliCz(d.avg.kcal)+' kcal</b> · B '+kliCz(d.avg.protein)+' g · S '+kliCz(d.avg.carbs)+' g · T '+kliCz(d.avg.fat)+' g'+(d.avg.fiber!=null?' · Vl '+kliCz(d.avg.fiber)+' g':'')+(d.posledni_vaha!=null?' · poslední váha <b>'+kliCz(d.posledni_vaha)+' kg</b>':'')+'</p>';
+          // avg je null, když klient nemá zapsané jídlo — poslední váha ale může existovat (jen se váží)
+          if(d.avg||d.posledni_vaha!=null) hh+='<p style="margin:.2rem 0;font-size:.88rem;">'
+            +(d.avg?'Ø za '+(d.dny_zapsano!=null?d.dny_zapsano+' zapsaných dní':'období')+': <b>'+kliCz(d.avg.kcal)+' kcal</b> · B '+kliCz(d.avg.protein)+' g · S '+kliCz(d.avg.carbs)+' g · T '+kliCz(d.avg.fat)+' g'+(d.avg.fiber!=null?' · Vl '+kliCz(d.avg.fiber)+' g':''):'Jídlo zatím nezapisuje')
+            +(d.posledni_vaha!=null?' · poslední váha <b>'+kliCz(d.posledni_vaha)+' kg</b>':'')+'</p>';
           if(Array.isArray(d.dny)&&d.dny.length){
             hh+='<div style="overflow-x:auto;"><table style="font-size:.78rem;"><thead><tr><th>Datum</th><th>kcal</th><th>B</th><th>S</th><th>T</th><th>Vl</th><th>Váha</th></tr></thead><tbody>'
               +d.dny.map(function(x){ return '<tr><td>'+esc(x.datum||'')+'</td><td>'+kliCz(x.kcal)+'</td><td>'+kliCz(x.protein!=null?x.protein:x.p)+'</td><td>'+kliCz(x.carbs!=null?x.carbs:x.c)+'</td><td>'+kliCz(x.fat!=null?x.fat:x.f)+'</td><td>'+kliCz(x.fiber!=null?x.fiber:x.fib)+'</td><td>'+kliCz(x.vaha)+'</td></tr>'; }).join('')
