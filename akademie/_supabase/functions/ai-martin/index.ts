@@ -145,9 +145,9 @@ async function visionReply(image: string, userText: string, userId?: string | nu
     + '⚠️ Je to jen ODHAD z fotky, ne přesné číslo. Na přesno si jídlo zaloguj v appce Tvůj Coach, nebo hoď do generátoru jídelníčku (martinbarna.cz/nastroje-zdarma). Be Effective! 💪';
 }
 
-// Ověří, že volající je přihlášený člen s aktivním přístupem k produktu (server-side brána).
-async function isMember(token: string): Promise<boolean> {
-  if (!token || !SUPABASE_URL || !ANON_KEY) return false;
+// Ověří, že volající je přihlášený člen s aktivním přístupem (server-side brána).
+// Pouští Academy členy i klienty osobního koučinku (mají AI v ceně koučinku — Martin 14.7.).
+async function hasEnt(token: string, product: string): Promise<boolean> {
   try {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/has_entitlement`, {
       method: 'POST',
@@ -156,13 +156,18 @@ async function isMember(token: string): Promise<boolean> {
         Authorization: `Bearer ${token}`,   // uživatelův JWT → RPC běží v jeho kontextu (auth.uid())
         'content-type': 'application/json',
       },
-      body: JSON.stringify({ p_product: REQUIRED_PRODUCT }),
+      body: JSON.stringify({ p_product: product }),
     });
     if (!r.ok) return false;               // 401 (neplatný token) i cokoliv jiného = není člen
     return (await r.json()) === true;
   } catch (_e) {
     return false;
   }
+}
+async function isMember(token: string): Promise<boolean> {
+  if (!token || !SUPABASE_URL || !ANON_KEY) return false;
+  if (await hasEnt(token, REQUIRED_PRODUCT)) return true;
+  return await hasEnt(token, 'coaching');
 }
 
 // RAG: natáhne z korpusu lekcí (lesson_docs přes RPC search_lessons) relevantní úryvky

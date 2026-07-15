@@ -962,6 +962,8 @@ Deno.serve(async (req) => {
       if (!r.ok) return json({ ok: false, reason: "http-" + r.status });
       const jj = await r.json().catch(() => null);
       if (!jj || jj.ok === false) return json({ ok: false, reason: (jj && jj.reason) || "app-neumi" });
+      // stará verze app endpointu neznámou akci tiše bere jako grant → poznáme podle action v odpovědi
+      if (jj.action && jj.action !== "weekly-summary" && !("dny" in jj) && !("found" in jj)) return json({ ok: false, reason: "app-neumi" });
       return json({ ok: true, data: jj });
     }
 

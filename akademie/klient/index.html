@@ -138,11 +138,25 @@
         <div class="kcard"><h3>Dodržení plánu Ø</h3><div class="kstat" id="stA">—</div><p>průměr ze všech reportů (1–5)</p></div>
       </div>
 
+      <!-- reference (ukáže se po 8+ reportech) -->
+      <div class="kcta" id="refCta" style="display:none;">
+        <div style="flex:1;min-width:260px;">
+          <h2>🌟 Tvoje proměna může inspirovat</h2>
+          <p id="refSub">Máš za sebou pěkný kus cesty. Když budeš souhlasit, Martin může tvůj pokrok (křestní jméno + čísla) použít jako referenci — pomůžeš dalším se rozhoupat.</p>
+          <div id="refForm" style="display:none;margin-top:12px;">
+            <textarea class="fin" id="refText" placeholder="Napiš pár vět: jak se ti spolupracuje, co se změnilo…"></textarea>
+            <label style="display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:#B9B3C4;margin:10px 0;cursor:pointer;"><input type="checkbox" id="refOk" style="width:auto;margin-top:3px;"> Souhlasím, aby Martin použil moje křestní jméno, moje slova a čísla pokroku jako referenci na webu a sociálních sítích.</label>
+            <button class="kbtn" id="refSend">Odeslat Martinovi</button>
+          </div>
+        </div>
+        <button class="kbtn" id="refOpen">Chci pomoct referencí</button>
+      </div>
+
       <!-- grafy -->
       <div id="graphs" style="display:none;">
         <div class="ksec">Grafy pokroku</div>
         <div class="ggrid">
-          <div class="gwrap"><h3>Váha</h3><p class="sub">týdenní průměry (kg)</p><div id="gW"></div></div>
+          <div class="gwrap"><h3>Váha</h3><p class="sub">týdenní průměry (kg) · <a href="#" id="gWdl" style="color:#F6CD63;">⬇︎ uložit jako obrázek</a></p><div id="gW"></div></div>
           <div class="gwrap"><h3>Míry</h3><p class="sub">pas · boky · hruď (cm)</p><div id="gM"></div></div>
           <div class="gwrap"><h3>Kroky</h3><p class="sub">denní průměr v týdnu</p><div id="gK"></div></div>
           <div class="gwrap"><h3>Energie a dodržení</h3><p class="sub">škály 1–5: dodržení plánu · síla · únava (nižší = líp)</p><div id="gS"></div></div>
@@ -180,6 +194,10 @@
           <h3>👀 Academy — ochutnávka zdarma</h3>
           <p>Prohlédni si obsah všech 24 modulů a pusť si volné ukázkové lekce — ať víš, do čeho bys šel/šla.</p>
         </a>
+        <div class="kcard">
+          <h3>🤖 AI Martin — máš v ceně</h3>
+          <p>Zlaté tlačítko vpravo dole 👉 rychlé dotazy mezi check-iny (jídlo, trénink, motivace) zodpoví AI vytrénovaná na Martinově metodice. Velké věci řeš dál v reportu — čte ho Martin osobně.</p>
+        </div>
       </div>
 
       <p class="foot">Klientská sekce — Martin Barna · osobní koučink · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
@@ -200,6 +218,7 @@
   </div>
 
 <script src="/assets/ba-config.js?v=20260628b"></script>
+<script src="/assets/ai-martin.js?v=g4" defer></script>
 <script src="/assets/ba-academy.js?v=20260704"></script>
 <script>
 (function(){
@@ -329,6 +348,7 @@
       el("reportCtaSub").textContent = "První report odemkne grafy pokroku. Naklikáš ho za ~3 minuty.";
       return;
     }
+    if(reports.length >= 8) el("refCta").style.display = "";
     el("stats").style.display = ""; el("graphs").style.display = ""; el("histWrap").style.display = "";
     var last = reports[reports.length - 1], first = reports[0];
     el("reportCtaSub").textContent = "Poslední report: " + dateCz(last.report_date) + ". Kopie přijde tobě i Martinovi.";
@@ -920,6 +940,40 @@
       renderDash();
     });
     renderDocs();
+    // reference: souhlas + jejich slova → mail Martinovi
+    el("refOpen").addEventListener("click", function(){ el("refForm").style.display = ""; el("refOpen").style.display = "none"; });
+    el("refSend").addEventListener("click", function(){
+      var txt = (el("refText").value || "").trim();
+      if(!txt){ toast("Napiš prosím pár vět — tvoje slova jsou to nejcennější."); return; }
+      if(!el("refOk").checked){ toast("Zaškrtni prosím souhlas — bez něj to Martin nepoužije."); return; }
+      var b = el("refSend"); b.disabled = true; b.textContent = "Odesílám…";
+      window.BA.getToken().then(function(t){
+        return fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
+          body: JSON.stringify({ action: "reference", name: myName, data: { text: txt } }) })
+          .then(function(r){ return r.json(); });
+      }).then(function(j){
+        if(j && j.ok){ el("refForm").innerHTML = '<p style="color:#4fc07a;font-weight:700;">✅ Díky! Martin se ti ozve — a tvoje cesta může inspirovat další.</p>'; }
+        else { b.disabled = false; b.textContent = "Odeslat Martinovi"; toast("Odeslání se nepovedlo, zkus to znovu."); }
+      }).catch(function(){ b.disabled = false; b.textContent = "Odeslat Martinovi"; toast("Odeslání se nepovedlo, zkus to znovu."); });
+    });
+    // graf váhy jako PNG (sdílení / archiv)
+    el("gWdl").addEventListener("click", function(e){
+      e.preventDefault();
+      var svg = el("gW").querySelector("svg"); if(!svg){ toast("Graf se doplní z reportů."); return; }
+      var xml = new XMLSerializer().serializeToString(svg);
+      if(xml.indexOf("xmlns=") < 0) xml = xml.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ');
+      var img = new Image();
+      img.onload = function(){
+        var c = document.createElement("canvas"); c.width = 920; c.height = 380;
+        var ctx = c.getContext("2d");
+        ctx.fillStyle = "#15171a"; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        ctx.fillStyle = "#8F8A99"; ctx.font = "14px Arial"; ctx.fillText("martinbarna.cz · osobní koučink", 12, c.height - 10);
+        var a = document.createElement("a"); a.download = "moje-vaha.png"; a.href = c.toDataURL("image/png"); a.click();
+      };
+      img.onerror = function(){ toast("Obrázek se nepodařilo vytvořit."); };
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+    });
     el("btnReport").addEventListener("click", function(){
       wOpen("report", reportSteps(), function(a){
         submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition || {}, activity: a.activity || {}, scales: a.scales || {}, notes: a.notes || {} }, "Report odeslán!");
