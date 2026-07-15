@@ -1053,7 +1053,7 @@ Deno.serve(async (req) => {
       const rs = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html, reply_to: "martin@martinbarna.cz", ...(attachments ? { attachments } : {}) }),
+        body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html, reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"], ...(attachments ? { attachments } : {}) }),
       });
       return json({ ok: rs.status === 200, mail_status: rs.status, priloha: !!attachments });
     }

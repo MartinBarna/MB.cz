@@ -185,12 +185,14 @@ function intakeMail(name: string, d: any): string {
   return b;
 }
 
-async function send(to: string, subject: string, html: string) {
+// Martin chce kopii všech mailů, co chodí klientům (jako u mailingu) → BCC na jeho gmail.
+const BCC_COACH = "fitness.barna@gmail.com";
+async function send(to: string, subject: string, html: string, bccCoach = false) {
   if (!RESEND_KEY) return { status: 0 };
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: COACH }),
+    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: COACH, ...(bccCoach ? { bcc: [BCC_COACH] } : {}) }),
   });
   return { status: r.status };
 }
@@ -246,7 +248,7 @@ Deno.serve(async (req: Request) => {
     const coachMail = wrap("Martin Barna · týdenní report klienta", html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled — stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
     const s1 = await send(COACH, subj, coachMail);
-    const s2 = await send(email, "Tvůj týdenní report ✓ (kopie)", clientMail);
+    const s2 = await send(email, "Tvůj týdenní report ✓ (kopie)", clientMail, true);
     return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
   }
 
@@ -259,7 +261,7 @@ Deno.serve(async (req: Request) => {
       `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! — Martin</p>`,
       "Kopie dotazníku pro tvůj přehled. Martin Barna · martinbarna.cz");
     const s1 = await send(COACH, `📝 Vstupní dotazník — ${name}`, coachMail);
-    const s2 = await send(email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail);
+    const s2 = await send(email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail, true);
     return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
   }
 

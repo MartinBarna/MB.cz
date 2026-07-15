@@ -107,7 +107,7 @@ Deno.serve(async (req: Request) => {
       const r = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from: FROM, to: [email], subject: "Pondělní report ✍️ (3 minuty)", html: mailHtml(nameBy.get(email) ?? ""), reply_to: "martin@martinbarna.cz" }),
+        body: JSON.stringify({ from: FROM, to: [email], subject: "Pondělní report ✍️ (3 minuty)", html: mailHtml(nameBy.get(email) ?? ""), reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"] }),
       });
       if (r.status === 200) sent++; else errors.push(email + ":" + r.status);
       await new Promise((res) => setTimeout(res, 550)); // Resend rate limit 2/s
