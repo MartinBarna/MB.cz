@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co ti reálně brání zhubnout? — kvíz zdarma | Martin Barna</title>
+<meta name="description" content="5 otázek, 60 vteřin — a víš, kde se ti hubnutí reálně sype. Žádné typy metabolismu, jen praxe z 13 let koučování. Zdarma.">
+<link rel="icon" href="/favicon-g3.ico" sizes="any">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  :root{color-scheme:dark;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Poppins',Arial,sans-serif;background:linear-gradient(160deg,#15171a 0%,#0f1113 100%);color:#F0EADF;min-height:100vh;}
+  .wrap{max-width:640px;margin:0 auto;padding:36px 20px 80px;}
+  .kick{color:#EBB12C;font-weight:800;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;}
+  h1{font-size:clamp(1.6rem,5vw,2.2rem);color:#fff;margin:.4rem 0 .6rem;line-height:1.2;}
+  .lead{color:#B9B3C4;line-height:1.6;margin:0 0 22px;}
+  .card{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;}
+  .q{font-size:1.15rem;font-weight:700;color:#fff;margin:0 0 14px;}
+  .opts button{display:block;width:100%;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);color:#E8E3EF;border-radius:12px;padding:13px 16px;margin:0 0 9px;font-family:inherit;font-size:.98rem;cursor:pointer;line-height:1.45;}
+  .opts button:hover{border-color:rgba(235,177,44,.55);}
+  .bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;margin:0 0 18px;overflow:hidden;}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#EBB12C,#E0762C);transition:width .25s;}
+  .res h2{color:#EBB12C;font-size:1.35rem;margin:0 0 10px;}
+  .res p, .res li{color:#D9D2C6;line-height:1.65;}
+  .res ol{padding-left:22px;margin:10px 0 18px;}
+  .res li{margin:0 0 10px;}
+  .res b{color:#fff;}
+  .cta{display:inline-block;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;text-decoration:none;font-weight:800;padding:14px 26px;border-radius:12px;margin:6px 10px 6px 0;border:none;cursor:pointer;font-family:inherit;font-size:1rem;}
+  .cta2{display:inline-block;background:transparent;color:#F6CD63;border:1px solid rgba(235,177,44,.55);text-decoration:none;font-weight:700;padding:13px 22px;border-radius:12px;margin:6px 0;}
+  .mailbox{background:rgba(0,0,0,.25);border:1px solid rgba(235,177,44,.35);border-radius:14px;padding:16px;margin-top:22px;}
+  .mailbox input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:inherit;font-size:1rem;padding:12px 14px;margin:8px 0 10px;}
+  .small{font-size:.8rem;color:#8F8A99;line-height:1.5;}
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="kick">Kvíz zdarma · 60 vteřin</span>
+  <h1>Co ti <span style="color:#EBB12C;">reálně</span> brání zhubnout?</h1>
+  <p class="lead">Žádné „“ a horoskopy. 5 otázek z praxe 13 let koučování — a řeknu ti na rovinu, kde se ti to nejspíš sype a co s tím.</p>
+
+  <div class="bar"><i id="qbar" style="width:0%"></i></div>
+  <div class="card" id="qbox"></div>
+
+  <div class="res hidden" id="rbox"></div>
+</div>
+
+<script src="/assets/analytics.js?v=g7" defer></script>
+<script>
+(function(){
+  var Q=[
+    {q:"Kdo odpovídá?",o:[["Žena","zeny"],["Muž","muzi"],["Nechci uvádět","other"]],seg:true},
+    {q:"Jak vypadá tvůj typický týden v jídle?",o:[["Po–Čt jedu dobře, o víkendu se to sesype","vikend"],["Celý týden je to spíš nahodilé","data"],["Jím „“, ale váha stojí","data"],["Držím se, ale večer to neubrzdím","vecer"]]},
+    {q:"Zapisuješ si, co za den sníš?",o:[["Ne, jedu od oka","data"],["Občas, když si vzpomenu","data"],["Ano, ale gramáže střílím od boku","data"],["Ano, vážím a zapisuju poctivě","vikend"]]},
+    {q:"Co se děje večer?",o:[["Nic, večery mám v klidu","vikend"],["Uzobávám u televize","vecer"],["Přes den „“ a večer se přejím","vecer"],["Večer jím normální jídlo podle plánu","pohyb"]]},
+    {q:"Kolik toho přes den nachodíš?",o:[["Sedavý režim, do 5 000 kroků","pohyb"],["Tak 5–8 tisíc","pohyb"],["8 tisíc a víc","vikend"],["Netuším, nikdy jsem to neměřil/a","data"]]},
+    {q:"Co už jsi zkoušel/a?",o:[["Diety, detoxy, zázraky z internetu","data"],["Počítání kalorií — chvíli, pak konec","vikend"],["Cvičím, ale jídlo neřeším","data"],["Zatím nic systematického","data"]]}
+  ];
+  var PROFILY={
+    vikend:{t:"🍕 Víkendový typ",d:"Přes týden systém, o víkendu chaos — a víkend ti pravidelně smaže deficit z celého týdne. Není to slabá vůle, je to špatně postavený plán.",kroky:["Počítej <b>týdenní průměr kalorií</b>, ne dokonalé dny — víkend do něj zabuduj dopředu.","Plánuj <b>jedno volnější jídlo</b>, ne volný den. Jedno jídlo tě nepotopí, celý den ano.","V pondělí <b>žádné trestání</b> — normální den podle plánu, žádný detox."],pdf:"/materialy/pdf/vikendove-prejidani.pdf",pdfT:"Stáhnout průvodce Víkendové přejídání (PDF zdarma)"},
+    data:{t:"📊 Letíš naslepo",d:"Nehubneš nejspíš proto, že netušíš, kolik toho reálně sníš. Studie i praxe říkají totéž: lidé podceňují svůj příjem klidně o 30–50 %. Bez dat se nedá řídit nic.",kroky:["Spočítej si <b>svůj denní příjem</b> — kalkulačka níže, zabere minutu.","<b>2 týdny važ a zapisuj</b> všechno. Ne navždy — jen ať víš, kde jsi.","Sleduj <b>týdenní průměr váhy</b>, ne denní výkyvy (kolísá o 1–3 kg vodou)."],pdf:"",pdfT:""},
+    vecer:{t:"🌙 Večerní chutě",d:"Přes den „“ — málo jídla, málo bílkovin — a večer to tělo srovná za tebe. Večerní přejídání není o vůli, je to normální reakce na celodenní podstřel.",kroky:["<b>Dost bílkovin přes den</b> (velká porce ke každému jídlu) — sytost je základ.","Nezakazuj si večeři: klidně si nech <b>největší jídlo dne na večer</b>, když ti to sedí.","Chutě = často jen málo jídla přes den. <b>Nejez míň, jez chytřeji.</b>"],pdf:"",pdfT:""},
+    pohyb:{t:"🚶 Tichá brzda: málo pohybu",d:"Jídlo možná zvládáš, ale výdej je nízko. Kroky přes den spálí u většiny lidí víc než samotný trénink — a sedavý režim je nejčastější tichá brzda.",kroky:["Dej si laťku <b>+2 000 kroků denně</b> proti současnému stavu (auto dál, schody, telefonát za chůze).","<b>2–3 silové tréninky týdně</b> — svaly = vyšší výdej i lepší postava.","Kroky měř — co se měří, to se řídí."],pdf:"",pdfT:""}
+  };
+  var i=0, seg="other", score={vikend:0,data:0,vecer:0,pohyb:0};
+  var qbox=document.getElementById('qbox'), rbox=document.getElementById('rbox'), qbar=document.getElementById('qbar');
+  function show(){
+    if(i>=Q.length){ result(); return; }
+    qbar.style.width=Math.round(i/Q.length*100)+'%';
+    var q=Q[i];
+    qbox.innerHTML='<p class="q">'+q.q+'</p><div class="opts">'+q.o.map(function(o,oi){ return '<button type="button" data-i="'+oi+'">'+o[0]+'</button>'; }).join('')+'</div>';
+    qbox.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){
+        var val=q.o[Number(b.getAttribute('data-i'))][1];
+        if(q.seg) seg=val; else score[val]++;
+        i++; show();
+      });
+    });
+  }
+  function result(){
+    qbar.style.width='100%';
+    var best='data', max=-1;
+    ['vikend','data','vecer','pohyb'].forEach(function(k){ if(score[k]>max){ max=score[k]; best=k; } });
+    var P=PROFILY[best];
+    qbox.classList.add('hidden'); rbox.classList.remove('hidden');
+    rbox.innerHTML='<div class="card"><h2>'+P.t+'</h2><p>'+P.d+'</p>'
+      +'<p style="margin-top:14px;"><b style="color:#F6CD63;">Co s tím — 3 kroky:</b></p><ol>'+P.kroky.map(function(k){ return '<li>'+k+'</li>'; }).join('')+'</ol>'
+      +(P.pdf?'<a class="cta" href="'+P.pdf+'">'+P.pdfT+'</a>':'')
+      +'<a class="cta'+(P.pdf?'2':'')+'" href="/kalkulacka-kalorii-a-makrozivin/">Spočítat si kalorie zdarma</a>'
+      +'<p style="margin-top:16px;">A jestli chceš celý systém od výpočtu po udržení — přesně tohle učím ve <a href="/videokurz" style="color:#F6CD63;font-weight:700;">videokurzu za 800 Kč</a> (182 videí, doživotně).</p>'
+      +'<div class="mailbox"><b>💌 Chceš plán šitý na tvůj výsledek?</b><p class="small" style="margin:4px 0 0;">Pošlu ti na mail 7denní jídelníček zdarma + praktické tipy přesně k tvému profilu.</p>'
+      +'<input type="email" id="kvEmail" placeholder="tvuj@email.cz" autocomplete="email"><button class="cta" id="kvSend" style="margin:0;">Poslat zdarma</button>'
+      +'<p class="small" id="kvMsg" style="margin:8px 0 0;">Odhlásíš se kdykoliv jedním klikem.</p></div></div>';
+    if(window.gtag) gtag('event','kviz_dokoncen',{profil:best});
+    var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
+    document.getElementById('kvSend').addEventListener('click',function(){
+      var em=(document.getElementById('kvEmail').value||'').trim(), msg=document.getElementById('kvMsg');
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ msg.textContent='⚠️ Zadej prosím platný e-mail.'; return; }
+      var btn=document.getElementById('kvSend'); btn.disabled=true; btn.textContent='Posílám…';
+      fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture',{
+        method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},
+        body:JSON.stringify({email:em,segment:seg,source:'kviz',goal:'kviz profil: '+best})
+      }).then(function(){ msg.textContent='✅ Hotovo! Mrkni do schránky (i do promoakcí).'; btn.textContent='Odesláno ✓'; if(window.gtag)gtag('event','generate_lead',{zdroj:'kviz'}); if(window.fbq)fbq('track','Lead'); })
+        .catch(function(){ msg.textContent='Nepovedlo se, zkus to znovu.'; btn.disabled=false; btn.textContent='Poslat zdarma'; });
+    });
+  }
+  show();
+})();
+</script>
+</body>
+</html>

@@ -29,7 +29,11 @@
     window.BA.ready.then(function () {
       window.BA.getUser().then(function (u) {
         if (!u) { cb(false); return; }
-        window.BA.hasEntitlement('academy').then(function (has) { cb(!!has); }).catch(function () { cb(false); });
+        // Academy člen NEBO klient koučinku (AI má v ceně koučinku)
+        window.BA.hasEntitlement('academy').then(function (has) {
+          if (has) { cb(true); return; }
+          window.BA.hasEntitlement('coaching').then(function (h2) { cb(!!h2); }).catch(function () { cb(false); });
+        }).catch(function () { cb(false); });
       }).catch(function () { cb(false); });
     }).catch(function () { cb(false); });
   }

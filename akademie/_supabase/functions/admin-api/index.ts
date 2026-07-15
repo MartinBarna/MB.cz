@@ -947,6 +947,26 @@ Deno.serve(async (req) => {
       return json({ ok: true, url: data.signedUrl });
     }
 
+    if (action === "client_app_data") {
+      // Data klienta z appky Tvůj Coach (bonus vedle reportů): stejný endpoint + secret jako granty.
+      // App strana musí umět action:"weekly-summary" — kontrakt viz vzkaz app-Claudovi (14.7.).
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+      const gsec = gs?.value ? String(gs.value) : "";
+      if (!gsec) return json({ ok: false, reason: "no-secret" });
+      const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+        method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+        body: JSON.stringify({ email, action: "weekly-summary", days: Number(body.days) || 14 }),
+      }).catch(() => null);
+      if (!r) return json({ ok: false, reason: "fetch-fail" });
+      if (!r.ok) return json({ ok: false, reason: "http-" + r.status });
+      const jj = await r.json().catch(() => null);
+      if (!jj || jj.ok === false) return json({ ok: false, reason: (jj && jj.reason) || "app-neumi" });
+      // stará verze app endpointu neznámou akci tiše bere jako grant → poznáme podle action v odpovědi
+      if (jj.action && jj.action !== "weekly-summary" && !("dny" in jj) && !("found" in jj)) return json({ ok: false, reason: "app-neumi" });
+      return json({ ok: true, data: jj });
+    }
+
     if (action === "client_invite") {
       // Pozvánka do klientské sekce: zapne coaching entitlement + pošle mail (schválené šablony).
       // kind: "novy" (vstupní dotazník) | "stavajici" ("Konec Excelu"). Odesílá VŽDY Martin klikem v adminu.
@@ -957,6 +977,22 @@ Deno.serve(async (req) => {
       const { data: ent } = await admin.from("entitlements").select("id,active").eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
       if (!ent) await admin.from("entitlements").insert({ email, product: "coaching", active: true, source: "admin-klient-invite" });
       else if (!ent.active) await admin.from("entitlements").update({ active: true }).eq("id", ent.id);
+      // Koučink klient dostává i appku Tvůj Coach — stejný kanál jako Academy nákup (best-effort).
+      try {
+        const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+        const gsec = gs?.value ? String(gs.value) : "";
+        let gres = "no-secret";
+        if (gsec) {
+          const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+            method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+            body: JSON.stringify({ email, action: "grant", tier: "diamond", source: "koucink-klient" }),
+          }).catch(() => null);
+          // deno-lint-ignore no-explicit-any
+          if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
+          else gres = r ? "http-" + r.status : "fetch-fail";
+        }
+        await admin.from("tvujcoach_grants").insert({ email, action: "grant", result: gres, source: "koucink-klient" });
+      } catch { /* best-effort, pozvánku neshodí */ }
       if (name) {
         const { data: cc2 } = await admin.from("customer_contacts").select("email,name").eq("email", email).maybeSingle();
         if (cc2 && !cc2.name) await admin.from("customer_contacts").update({ name }).eq("email", email);
@@ -976,6 +1012,7 @@ Deno.serve(async (req) => {
           `<li style='margin:0 0 7px'>📊 <strong>Grafy tvého pokroku</strong> — váha, míry, kroky… celá tvoje cesta na jednom místě</li>` +
           `<li style='margin:0 0 7px'>📝 <strong>Pondělní report naklikáš za 3 minuty</strong> — provede tě to krok za krokem, kopie přijde nám oběma</li>` +
           `<li style='margin:0 0 7px'>📁 <strong>Dokumenty ode mě</strong> — všechny podklady pohromadě, žádné hledání v mailech</li>` +
+          `<li style='margin:0 0 7px'>📸 <strong>Appka Tvůj Coach v ceně</strong> — vyfotíš jídlo a máš spočítaná makra (coach.martinbarna.cz, stejný e-mail)</li>` +
           `<li style='margin:0 0 7px'>🎬 <strong>Videokurz (182 videí)</strong> — máš v ceně koučinku</li>` +
           `<li style='margin:0 0 7px'>🎓 <strong>Sleva 20 % na Barna Academy</strong> s kódem <strong>KLIENT20</strong> — jen pro mé klienty</li></ul>` +
           p("<strong>Jak dovnitř:</strong> přihlas se tímhle e-mailem (na který ti píšu) a přístup naskočí automaticky:") +
@@ -992,7 +1029,7 @@ Deno.serve(async (req) => {
           `<li style='margin:0 0 7px'>1️⃣ Do <strong>48 hodin</strong> ti nastavím jídelníček, makra a trénink na míru</li>` +
           `<li style='margin:0 0 7px'>2️⃣ Každé <strong>pondělí ráno</strong> ti přijde připomínka na týdenní report (3 minuty klikání)</li>` +
           `<li style='margin:0 0 7px'>3️⃣ Já každý report projdu, upravím plán a ozvu se ti</li></ul>` +
-          p("Ve tvé sekci najdeš i <strong>videokurz zdarma</strong> (182 videí), dokumenty ode mě a grafy pokroku, které spolu budeme plnit.") +
+          p("Ve tvé sekci najdeš i <strong>videokurz zdarma</strong> (182 videí), <strong>appku Tvůj Coach</strong> na zapisování jídla (vyfotíš a máš makra), dokumenty ode mě a grafy pokroku, které spolu budeme plnit.") +
           p("<strong>Be Effective!</strong><br>Martin");
       }
       const html = `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='color-scheme' content='dark'></head><body style='margin:0;padding:0;background:#0C0B10'>` +

@@ -263,5 +263,26 @@ Deno.serve(async (req: Request) => {
     return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
   }
 
+  if (action === "reference") {
+    // Klient souhlasí s použitím svého pokroku jako reference → mail Martinovi + záznam do poznámek.
+    const text = String(data.text ?? "").trim();
+    if (!text) return json({ error: "no_text" }, C, 400);
+    const { data: reps } = await admin.from("client_reports").select("report_date,weight")
+      .eq("email", email).order("report_date", { ascending: true });
+    const first = reps && reps.length ? reps[0] : null, last = reps && reps.length ? reps[reps.length - 1] : null;
+    const fw = first ? num(first.weight) : null, lw = last ? num(last.weight) : null;
+    const pokrok = (fw != null && lw != null)
+      ? `${czk(fw)} kg → ${czk(lw)} kg (${lw - fw > 0 ? "+" : "−"}${czk(Math.round(Math.abs(lw - fw) * 10) / 10)} kg za ${reps!.length} reportů, ${first!.report_date} – ${last!.report_date})`
+      : `${reps?.length ?? 0} reportů`;
+    const html = `<p style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
+      `<p style='margin:0 0 14px;color:#8F8A99;font-size:14px'>souhlasí s použitím jako reference (jméno + slova + čísla)</p>` +
+      sect("Jeho/její slova") + `<p style='margin:0 0 12px;font-size:15px;color:#F0EADF'>„${esc(text)}“</p>` +
+      sect("Pokrok z reportů") + `<p style='margin:0 0 12px;font-size:14px;color:#F0EADF'>${pokrok}</p>` +
+      `<p style='margin:16px 0 0;color:#A09AAD;font-size:13px'>Kontakt: ${esc(email)} — ozvi se, poděkuj a klidně popros o fotku před/po.</p>`;
+    const s1 = await send(COACH, `🌟 Souhlas s referencí — ${name}`, wrap("Martin Barna · reference", html, "Souhlas přišel z klientské sekce martinbarna.cz"));
+    try { await admin.from("client_notes").insert({ email, note: "🌟 SOUHLAS S REFERENCÍ: „" + text.slice(0, 500) + "“ (" + pokrok + ")" }); } catch { /* best-effort */ }
+    return json({ ok: true, mail_coach: s1.status }, C);
+  }
+
   return json({ error: "unknown_action" }, C, 400);
 });
