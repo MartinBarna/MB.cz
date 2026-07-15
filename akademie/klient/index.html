@@ -168,13 +168,17 @@
           <h3>🎬 Videokurz výživy</h3>
           <p>182 videí o hubnutí, jídle a tréninku — máš kompletně odemčený. Skvělý doplněk ke koučinku.</p>
         </a>
-        <a class="kcard" href="https://coach.martinbarna.cz" target="_blank" rel="noopener" style="text-decoration:none;display:block;">
-          <h3>📱 Appka Tvůj Coach</h3>
-          <p>Vyfotíš jídlo a appka spočítá makra, hlídá kalorie a bílkoviny. Ideální na zapisování stravy pro report.</p>
+        <a class="kcard" id="tileAppka" href="https://coach.martinbarna.cz" target="_blank" rel="noopener" style="text-decoration:none;display:block;">
+          <h3>📱 Appka Tvůj Coach — máš v ceně</h3>
+          <p>Vyfotíš jídlo a appka spočítá makra, hlídá kalorie a bílkoviny. Ideální na zapisování stravy pro report. Registruj se stejným e-mailem jako tady.</p>
         </a>
         <a class="kcard" href="/akademie/" style="text-decoration:none;display:block;border-color:rgba(235,177,44,.5);">
           <h3>🎓 Barna Academy −20 %</h3>
-          <p>Chceš jít do hloubky (nebo se stát trenérem)? Jako můj klient máš slevu 20 % s kódem <b style="color:#F6CD63;">KLIENT20</b>.</p>
+          <p>Chceš jít do hloubky (nebo se stát trenérem)? Jako můj klient máš slevu 20 % s kódem <b style="color:#F6CD63;">KLIENT20</b>. <span style="color:#F6CD63;">Nahlédnout zdarma můžeš hned</span> — mrkni na ukázkové lekce.</p>
+        </a>
+        <a class="kcard" href="/akademie/studium/?preview=free" style="text-decoration:none;display:block;">
+          <h3>👀 Academy — ochutnávka zdarma</h3>
+          <p>Prohlédni si obsah všech 24 modulů a pusť si volné ukázkové lekce — ať víš, do čeho bys šel/šla.</p>
         </a>
       </div>
 
@@ -903,6 +907,8 @@
     myEmail = String(u.email || "").toLowerCase();
     myName = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || "";
     el("hello").textContent = myName ? "Ahoj, " + myName.split(" ")[0] + "!" : "Ahoj!";
+    var ap = el("tileAppka");
+    if(ap) ap.setAttribute("href", "https://coach.martinbarna.cz/sign-in?email=" + encodeURIComponent(myEmail) + "&from=koucink");
     el("load").style.display = "none"; el("app").style.display = "";
     Promise.all([
       api("client_reports?select=report_date,weight,measurements,nutrition,activity,scales&order=report_date.asc&limit=200"),

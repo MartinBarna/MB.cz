@@ -518,6 +518,9 @@
           h+='<p style="margin:.5rem 0 0;font-size:.85rem;">📷 Výchozí fotky: '+idata.fotky.map(function(p,pi){ return '<a href="#" data-kdoc="'+esc(p)+'" style="color:#F6CD63;">foto '+(pi+1)+'</a>'; }).join(' · ')+'</p>';
         }
       }
+      // data z appky Tvůj Coach (bonus vedle reportů)
+      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach — reálný zápis jídla</h4>'
+        +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky (14 dní)</button> <span class="muted" style="font-size:.8rem;">Pokud klient zapisuje v naší appce, uvidíš tady jeho reálná data automaticky.</span></div>';
       // poznámky kouče
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🗒️ Tvoje poznámky (klient je nevidí)</h4>'
         +'<div style="display:flex;gap:8px;margin:.3rem 0 .5rem;"><input type="text" id="kdNote" placeholder="nová poznámka…" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;"><button class="mlogbtn" id="kdNoteSave">Uložit</button></div>';
@@ -547,6 +550,26 @@
       $('kdUp').addEventListener('click',function(){ uploadDoc(email,$('kdFile'),function(){ openKlient(email); }); });
       $('kdetBody').querySelectorAll('[data-kdny]').forEach(function(a){
         a.addEventListener('click',function(e){ e.preventDefault(); var row=document.getElementById('kdnyrow'+a.getAttribute('data-kdny')); if(row) row.style.display=(row.style.display==='none'?'':'none'); });
+      });
+      $('kdAppBtn').addEventListener('click',function(){
+        var host=$('kdApp'); host.innerHTML='<p class="muted" style="font-size:.85rem;">Načítám z appky…</p>';
+        api({action:'client_app_data',email:email,days:14}).then(function(o){
+          var j=o.j||{};
+          if(!j.ok){
+            var why=j.reason==='http-404'||j.reason==='app-neumi'?'appka tenhle export zatím neumí (čeká na app-Clauda)':j.reason==='no-secret'?'chybí propojovací klíč':'klient v appce nejspíš není ('+esc(j.reason||'?')+')';
+            host.innerHTML='<p class="muted" style="font-size:.85rem;">📱 Data nedostupná — '+why+'.</p>'; return;
+          }
+          var d=j.data||{};
+          if(d.found===false){ host.innerHTML='<p class="muted" style="font-size:.85rem;">Klient s tímhle e-mailem v appce zatím není (nebo nic nezapsal).</p>'; return; }
+          var hh='';
+          if(d.avg) hh+='<p style="margin:.2rem 0;font-size:.88rem;">Ø za '+(d.dny_zapsano!=null?d.dny_zapsano+' zapsaných dní':'období')+': <b>'+kliCz(d.avg.kcal)+' kcal</b> · B '+kliCz(d.avg.protein)+' g · S '+kliCz(d.avg.carbs)+' g · T '+kliCz(d.avg.fat)+' g'+(d.avg.fiber!=null?' · Vl '+kliCz(d.avg.fiber)+' g':'')+(d.posledni_vaha!=null?' · poslední váha <b>'+kliCz(d.posledni_vaha)+' kg</b>':'')+'</p>';
+          if(Array.isArray(d.dny)&&d.dny.length){
+            hh+='<div style="overflow-x:auto;"><table style="font-size:.78rem;"><thead><tr><th>Datum</th><th>kcal</th><th>B</th><th>S</th><th>T</th><th>Vl</th><th>Váha</th></tr></thead><tbody>'
+              +d.dny.map(function(x){ return '<tr><td>'+esc(x.datum||'')+'</td><td>'+kliCz(x.kcal)+'</td><td>'+kliCz(x.protein!=null?x.protein:x.p)+'</td><td>'+kliCz(x.carbs!=null?x.carbs:x.c)+'</td><td>'+kliCz(x.fat!=null?x.fat:x.f)+'</td><td>'+kliCz(x.fiber!=null?x.fiber:x.fib)+'</td><td>'+kliCz(x.vaha)+'</td></tr>'; }).join('')
+              +'</tbody></table></div>';
+          }
+          $('kdApp').innerHTML=hh||'<p class="muted" style="font-size:.85rem;">Appka vrátila prázdná data.</p>';
+        }).catch(function(){ $('kdApp').innerHTML='<p class="muted" style="font-size:.85rem;">Chyba spojení.</p>'; });
       });
     }
     function exportKlientCsv(){
