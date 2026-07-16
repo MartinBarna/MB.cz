@@ -1,6 +1,8 @@
 -- ============================================================
 -- Barna Academy - DRIP: copy mailu (email_templates)
--- CERSTVY DUMP ZIVE DB z 2026-07-07 (generovano automaticky).
+-- POZOR: ZASTARALY dump z 2026-07-07. Zdroj pravdy = zive email_templates v DB.
+-- 16. 7. 2026 probehla mailing revize + pomlckova cistka vsech 90 sablon primo v DB;
+-- tenhle soubor NEODRAZI aktualni stav. Pri priste praci se sablonami vygenerovat cerstvy dump.
 -- DB je ZDROJ PRAVDY - zive texty edituj primo v email_templates;
 -- tenhle soubor je verzovany zaznam/backup pro obnovu.
 -- Pred pouzitim k obnove si over, ze dump neni starsi nez DB!
