@@ -60,6 +60,18 @@
         .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(235,177,44,.4); background:var(--green-dark); color:#fff; }
         .btn.ghost { background:#fff; color:var(--green-dark); border:2px solid var(--green); box-shadow:none; }
         .btn.ghost:hover { background:var(--green); color:#161616; }
+        .promeny { max-width:1180px; margin:0 auto; padding:56px 20px 0; text-align:center; }
+        .promeny h2 { color:var(--green-dark); font-weight:800; letter-spacing:-.02em; font-size:clamp(1.5rem,4vw,2.1rem); margin:0 0 .5rem; }
+        .promeny .sub { color:#5b6064; max-width:640px; margin:0 auto 1.8rem; }
+        .promeny-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; text-align:left; }
+        @media (max-width:900px){ .promeny-grid { grid-template-columns:repeat(2,1fr); } }
+        @media (max-width:600px){ .promeny-grid { grid-template-columns:1fr; } }
+        .promeny-grid figure { margin:0; background:#fff; border:1px solid #f0ece6; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px rgba(22,22,22,.06); }
+        .promeny-grid img { width:100%; height:auto; display:block; }
+        .promeny-grid figcaption { padding:.85rem 1.2rem 1rem; font-weight:700; color:var(--green-dark); font-size:.98rem; }
+        .promeny-grid figcaption span { display:block; font-weight:400; font-size:.85rem; color:#5b6064; margin-top:.15rem; }
+        .promeny-note { color:#8a8f93; font-size:.85rem; margin:1rem 0 0; }
+        .promeny-cta { margin-top:1.2rem; }
         footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:30px 20px; }
         footer a { color:#F6CD63; text-decoration:underline; }
         .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
@@ -944,8 +956,44 @@
     <header class="hero" id="obsah">
         <div class="big-stars">★★★★★</div>
         <h1>Co říkají moji klienti</h1>
-        <p><strong>Výběr 66 z více než 100 recenzí na Googlu a Facebooku</strong>, všechny 5★, od skutečných lidí. Tady jsou jejich příběhy.</p>
+        <p><strong>Výběr z více než 100 recenzí na Googlu a Facebooku</strong>, všechny 5★, od skutečných lidí. Tady jsou jejich příběhy.</p>
     </header>
+
+    <section class="promeny" aria-labelledby="promeny-h">
+        <h2 id="promeny-h">Proměny klientů</h2>
+        <p class="sub">Recenze jsou slova. Tohle jsou výsledky, které uvidíš na vlastní oči.</p>
+        <div class="promeny-grid">
+            <figure>
+                <img src="/assets/foto/promeny/katka.webp" alt="Katka, proměna před a po" width="848" height="560" loading="lazy" decoding="async">
+                <figcaption>Katka<span>Proměna před a po. Formu si drží i 2 roky po spolupráci.</span></figcaption>
+            </figure>
+            <figure>
+                <img src="/assets/foto/promeny/tomas.webp" alt="Tomáš, proměna před a po" width="848" height="560" loading="lazy" decoding="async">
+                <figcaption>Tomáš<span>Vyladěný trénink i návyky, bez jojo efektu.</span></figcaption>
+            </figure>
+            <figure>
+                <img src="/assets/foto/promeny/kuba-v3.webp" alt="Kuba, proměna před a po" width="900" height="594" loading="lazy" decoding="async">
+                <figcaption>Kuba<span>Zhubl a krevní testy potvrdily zlepšení zdraví.</span></figcaption>
+            </figure>
+            <figure>
+                <img src="/assets/foto/promeny/muz-97-85.webp" alt="Klient, proměna z 97 na 85 kg" width="1100" height="982" loading="lazy" decoding="async">
+                <figcaption>−12 kg · 97 → 85 kg<span>Postupná a udržitelná proměna bez drastických diet a hladovění.</span></figcaption>
+            </figure>
+            <figure>
+                <img src="/assets/foto/promeny/zena-62kg.webp" alt="Klientka, proměna z 68,5 na 62,3 kg" width="1100" height="1100" loading="lazy" decoding="async">
+                <figcaption>−6 kg a vyrýsování<span>Z 68,5 na 62,3 kg. Pevnější, silnější a viditelně vyrýsovaná postava.</span></figcaption>
+            </figure>
+            <figure>
+                <img src="/assets/foto/promeny/brezen-srpen.webp" alt="Proměna klienta od března do srpna" width="1100" height="1088" loading="lazy" decoding="async">
+                <figcaption>Od března do srpna<span>Pár měsíců disciplíny u jídla a pohybu. A výsledek je vidět.</span></figcaption>
+            </figure>
+        </div>
+        <p class="promeny-note">Reálné proměny mých klientů, zveřejněné s jejich svolením.</p>
+        <div class="promeny-cta">
+            <a class="btn" href="/koucing/">Chci stejnou změnu</a>
+            <a class="btn ghost" href="/videokurz">Začít hned za 800 Kč</a>
+        </div>
+    </section>
 
     <main class="wrap-main">
         <div class="revgrid">
@@ -1035,5 +1083,5 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.748-.747zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
     </a>
   <script src="/assets/scroll-top.js?v=g3" defer></script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
 </html>

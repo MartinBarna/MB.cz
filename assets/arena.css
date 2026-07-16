@@ -24,7 +24,8 @@ h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em
 .ac-meta div span,.stat b,.stats b,.num{font-family:var(--ar-display)!important;font-variant-numeric:tabular-nums;}
 
 /* ---------- 2) TLACITKA: kapsle -> seriznuty roh ---------- */
-.btn-gold,.btn-grn,.btn-white,.btn,.navlinks a.cta,.done-row .btn,.copy{
+.btn-gold,.btn-grn,.btn-white,.btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light),.navlinks a.cta,.done-row .btn,.copy{
+/* outline tlacitka (ghost/out) mimo clip-path: pri DPR 1.25/1.5 clip orezaval spodni linku ramecku */
   border-radius:0!important;
   clip-path:var(--ar-cut);
   font-family:var(--ar-display)!important;

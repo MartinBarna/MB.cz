@@ -65,7 +65,7 @@ function wrap(preheader: string, body: string, unsubUrl = ""): string {
   const unsubLine = unsubUrl
     ? `<br>Nechceš už ode mě e-maily? <a href='${unsubUrl}' style='color:#8F8A99'>Odhlásit se</a>.`
     : "";
-  const foot = "Martin Barna — online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku — není to newsletter)." + unsubLine;
+  const foot = "Martin Barna, online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku, není to newsletter)." + unsubLine;
   return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
     `<body style='margin:0;background:#0C0B10;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${preheader}</span>` +

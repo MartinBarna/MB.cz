@@ -54,7 +54,7 @@ function renderBlocks(blocks: Block[], v: Record<string, string>): string {
   }).join("\n");
 }
 function wrap(preheader: string, body: string): string {
-  const foot = "Martin Barna — online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako jednorázová připomínka objednávky, kterou jsi rozpracoval na martinbarna.cz. Žádné další maily k ní nedostaneš.";
+  const foot = "Martin Barna, online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako jednorázová připomínka objednávky, kterou jsi rozpracoval na martinbarna.cz. Žádné další maily k ní nedostaneš.";
   return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
     `<body style='margin:0;background:#0C0B10;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${preheader}</span>` +

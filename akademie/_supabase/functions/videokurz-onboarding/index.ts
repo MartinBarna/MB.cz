@@ -55,12 +55,12 @@ function buildEmail(variant: string, email: string, name: string, token: string)
   const fn = firstName(name);
   const hi = 'Ahoj' + (fn ? ', ' + esc(fn) : '') + ',';
   const intro = variant === 'manual'
-    ? 'máš u mě <strong>videokurz výživy</strong> — vítej! Celý kurz teď najdeš v nové <strong>členské sekci</strong> a tvůj přístup je už aktivní.'
-    : 'máš u mě <strong>videokurz výživy</strong> — a patříš mezi <strong>původní klienty</strong>, co si ho koupili ještě na starém webu. O to víc mi záleží, aby ses k němu dostal v plné kráse. 🙏';
+    ? 'máš u mě <strong>videokurz výživy</strong>, vítej! Celý kurz teď najdeš v nové <strong>členské sekci</strong> a tvůj přístup je už aktivní.'
+    : 'máš u mě <strong>videokurz výživy</strong> a patříš mezi <strong>původní klienty</strong>, co si ho koupili ještě na starém webu. O to víc mi záleží, aby ses k němu dostal v plné kráse. 🙏';
   const subject = variant === 'manual'
     ? 'Vítej ve videokurzu výživy 🎬 (přístup máš aktivní)'
     : 'Tvůj videokurz má nový domov 🎬 (přístup už máš aktivní)';
-  const preheader = 'Stačí se jednou přihlásit — návod uvnitř. Přístup je už aktivní, nic neplatíš znovu.';
+  const preheader = 'Stačí se jednou přihlásit, návod je uvnitř. Přístup je už aktivní, nic neplatíš znovu.';
   const btn = loginUrl(email);
   const unsub = unsubUrl(token);
 
@@ -71,22 +71,22 @@ function buildEmail(variant: string, email: string, name: string, token: string)
     `<ul style='margin:0 0 14px;padding-left:20px'>` +
       `<li style='margin:0 0 7px'>všech <strong>182 lekcí</strong> pohromadě, podle modulů</li>` +
       `<li style='margin:0 0 7px'>přílohy, jídelníčky a e-booky ke stažení</li>` +
-      `<li style='margin:0 0 7px'>postup, vyhledávání, funguje i na mobilu — celé v novém designu</li>` +
+      `<li style='margin:0 0 7px'>postup, vyhledávání, funguje i na mobilu, celé v novém designu</li>` +
     `</ul>` +
-    `<p style='margin:0 0 10px'><strong>Tvůj přístup je už aktivní — nic neplatíš znovu.</strong> Přihlášení zabere dvě minuty:</p>` +
+    `<p style='margin:0 0 10px'><strong>Tvůj přístup je už aktivní, nic neplatíš znovu.</strong> Přihlášení zabere dvě minuty:</p>` +
     `<ol style='margin:0 0 18px;padding-left:20px'>` +
       `<li style='margin:0 0 7px'>Klikni na tlačítko níže.</li>` +
       `<li style='margin:0 0 7px'>Dej <strong>„Vytvořit účet“</strong> a vymysli si heslo (tvůj e-mail je v odkazu už správně předvyplněný).</li>` +
-      `<li style='margin:0 0 7px'>Pak se přihlas stejným e-mailem a heslem — a jsi uvnitř. 🎉</li>` +
+      `<li style='margin:0 0 7px'>Pak se přihlas stejným e-mailem a heslem. A jsi uvnitř. 🎉</li>` +
     `</ol>` +
     `<p style='margin:4px 0 18px'><a href='${esc(btn)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:14px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em'>Vstoupit do videokurzu →</a></p>` +
-    `<p style='margin:0 0 14px;font-size:14px;color:#A09AAD'>Nevíš si rady? Připravil jsem <a href='${esc(NAVOD_URL)}' style='color:#F6CD63'>návod krok za krokem</a>. A kdyby cokoliv zlobilo, stačí odepsat na tenhle e-mail — spravím to.</p>` +
-    `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>P.S. Pokud tě výživa fakt chytla a chceš jít do hloubky — celou vědu, certifikaci a 19 modulů máš v <a href='${esc(ACADEMY_URL)}' style='color:#F6CD63'>Barna Academy</a>. Ale to počká, teď si hlavně užij videokurz. 😉</p>`;
+    `<p style='margin:0 0 14px;font-size:14px;color:#A09AAD'>Nevíš si rady? Připravil jsem <a href='${esc(NAVOD_URL)}' style='color:#F6CD63'>návod krok za krokem</a>. A kdyby cokoliv zlobilo, stačí odepsat na tenhle e-mail a spravím to.</p>` +
+    `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>P.S. Pokud tě výživa fakt chytla a chceš jít do hloubky: celou vědu, certifikaci a 24 modulů máš v <a href='${esc(ACADEMY_URL)}' style='color:#F6CD63'>Barna Academy</a>. Ale to počká, teď si hlavně užij videokurz. 😉</p>`;
 
   const footerHtml =
     `Tento e-mail ti přišel, protože máš u Martina Barny zakoupený videokurz výživy.<br>` +
     `Nechceš už e-maily? <a href='${esc(unsub)}' style='color:#8F8A99'>Odhlásit se</a>.<br>` +
-    `Martin Barna — online výživový Coach · <a href='https://martinbarna.cz' style='color:#8F8A99'>martinbarna.cz</a>`;
+    `Martin Barna, online výživový Coach · <a href='https://martinbarna.cz' style='color:#8F8A99'>martinbarna.cz</a>`;
 
   const html =
     `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'></head>` +

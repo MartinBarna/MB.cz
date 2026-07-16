@@ -109,10 +109,10 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
 
   // strava (nutrition === null → klient tenhle týden nezapisoval, čísla si nevymýšlel)
   if (r.nutrition == null) {
-    b += sect("Strava") + `<p style='margin:0;font-size:13px;color:#8F8A99'>Tenhle týden strava nezapsána — klient nezapisoval.</p>`;
+    b += sect("Strava") + `<p style='margin:0;font-size:13px;color:#8F8A99'>Tenhle týden strava nezapsána, klient nezapisoval.</p>`;
   } else {
     const n = r.nutrition || {};
-    b += sect(`Strava — týdenní průměr${n.dny_zapsano != null ? ` (zapsáno ${esc(n.dny_zapsano)}/7 dní)` : ""}`) +
+    b += sect(`Strava: týdenní průměr${n.dny_zapsano != null ? ` (zapsáno ${esc(n.dny_zapsano)}/7 dní)` : ""}`) +
       `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:separate;border-spacing:6px 0;table-layout:fixed'><tr>` +
       [["kcal", "kcal"], ["protein", "bílkoviny (g)"], ["carbs", "sacharidy (g)"], ["fat", "tuky (g)"], ["fiber", "vláknina (g)"]]
         .map(([k, l]) => `<td align='center' style='background:#211d2b;border:1px solid #2e2940;border-radius:8px;padding:10px 4px'><div style='font-size:18px;font-weight:800;color:#fff'>${czk(num(n[k]))}</div><div style='font-size:11px;color:#8F8A99'>${l}</div></td>`).join("") +
@@ -162,7 +162,7 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
 
   // fotky
   const nPhotos = Array.isArray(r.photos) ? r.photos.length : 0;
-  if (nPhotos) b += sect("Fotky") + `<p style='margin:0;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${nPhotos}×</strong> — najdeš je u klienta v adminu (a klient ve své sekci).</p>`;
+  if (nPhotos) b += sect("Fotky") + `<p style='margin:0;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${nPhotos}×</strong>, najdeš je u klienta v adminu (a klient ve své sekci).</p>`;
 
   b += `<p style='margin:20px 0 4px'><a href='https://martinbarna.cz/akademie/klient/' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Otevřít grafy v klientské sekci</a></p>`;
   return b;
@@ -180,12 +180,12 @@ function intakeMail(name: string, d: any): string {
   b += S("Osobní", { "Věk": d.vek, "Výška": d.vyska ? d.vyska + " cm" : "", "Váha": d.vaha ? d.vaha + " kg" : "", "Telefon": d.telefon });
   b += S("Cíl a proč", { "Cíl": d.cil, "Proč (motivace)": d.proc, "Do kdy / událost": d.termin });
   b += S("Historie", { "Diety v minulosti": d.diety, "Sport dřív a teď": d.sport });
-  b += S("Zdraví (jen pro Martina — neradíme, sběr)", { "Omezení / diagnózy": d.zdravi, "Léky / doplňky": d.leky, "Alergie": d.alergie });
+  b += S("Zdraví (jen pro Martina: neradíme, jen sběr)", { "Omezení / diagnózy": d.zdravi, "Léky / doplňky": d.leky, "Alergie": d.alergie });
   b += S("Jídlo", { "Co nejí / nesnáší": d.neji, "Kolik jídel denně": d.jidel_denne, "Kdo vaří / jak se stravuje": d.vareni });
   b += S("Trénink", { "Kde může cvičit": d.kde_cvici, "Kolik dní v týdnu": d.dny_treninku, "Vybavení": d.vybaveni });
   b += S("Režim", { "Práce / směny": d.prace, "Úroveň aktivity": d.aktivita, "Kroky/den (odhad)": d.kroky, "Spánek (h)": d.spanek });
   b += S("Výchozí míry (cm)", Object.fromEntries(MIRY.map(([k, l]) => [l, d["mira_" + k] || ""])));
-  if (Array.isArray(d.fotky) && d.fotky.length) b += sect("Výchozí fotky") + `<p style='margin:0 0 7px;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${d.fotky.length}×</strong> — najdeš je u klienta v adminu.</p>`;
+  if (Array.isArray(d.fotky) && d.fotky.length) b += sect("Výchozí fotky") + `<p style='margin:0 0 7px;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${d.fotky.length}×</strong>, najdeš je u klienta v adminu.</p>`;
   if (d.poznamka) b += S("Poznámka", { "Vzkaz": d.poznamka });
   return b;
 }
@@ -250,9 +250,9 @@ Deno.serve(async (req: Request) => {
 
     const weekNo = hist.length + 1;
     const html = reportMail(name, row, prev, first, weekNo);
-    const subj = `📊 Týdenní report — ${name}`;
+    const subj = `📊 Týdenní report: ${name}`;
     const coachMail = wrap("Martin Barna · týdenní report klienta", html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`);
-    const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled — stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
+    const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled. Stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
     const s1 = await send(COACH, subj, coachMail);
     const s2 = await send(email, "Tvůj týdenní report ✓ (kopie)", clientMail, true);
     return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
@@ -264,9 +264,9 @@ Deno.serve(async (req: Request) => {
     const html = intakeMail(name, data as Record<string, string>);
     const coachMail = wrap("Martin Barna · vstupní dotazník", html, `Dotazník od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · vstupní dotazník", html +
-      `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! — Martin</p>`,
+      `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! Martin</p>`,
       "Kopie dotazníku pro tvůj přehled. Martin Barna · martinbarna.cz");
-    const s1 = await send(COACH, `📝 Vstupní dotazník — ${name}`, coachMail);
+    const s1 = await send(COACH, `📝 Vstupní dotazník: ${name}`, coachMail);
     const s2 = await send(email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail, true);
     return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
   }
@@ -286,8 +286,8 @@ Deno.serve(async (req: Request) => {
       `<p style='margin:0 0 14px;color:#8F8A99;font-size:14px'>souhlasí s použitím jako reference (jméno + slova + čísla)</p>` +
       sect("Jeho/její slova") + `<p style='margin:0 0 12px;font-size:15px;color:#F0EADF'>„${esc(text)}“</p>` +
       sect("Pokrok z reportů") + `<p style='margin:0 0 12px;font-size:14px;color:#F0EADF'>${pokrok}</p>` +
-      `<p style='margin:16px 0 0;color:#A09AAD;font-size:13px'>Kontakt: ${esc(email)} — ozvi se, poděkuj a klidně popros o fotku před/po.</p>`;
-    const s1 = await send(COACH, `🌟 Souhlas s referencí — ${name}`, wrap("Martin Barna · reference", html, "Souhlas přišel z klientské sekce martinbarna.cz"));
+      `<p style='margin:16px 0 0;color:#A09AAD;font-size:13px'>Kontakt: ${esc(email)}. Ozvi se, poděkuj a klidně popros o fotku před/po.</p>`;
+    const s1 = await send(COACH, `🌟 Souhlas s referencí: ${name}`, wrap("Martin Barna · reference", html, "Souhlas přišel z klientské sekce martinbarna.cz"));
     try { await admin.from("client_notes").insert({ email, note: "🌟 SOUHLAS S REFERENCÍ: „" + text.slice(0, 500) + "“ (" + pokrok + ")" }); } catch { /* best-effort */ }
     return json({ ok: true, mail_coach: s1.status }, C);
   }

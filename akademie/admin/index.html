@@ -479,7 +479,7 @@
       api({action:'client_detail',email:email}).then(function(o){
         if(!o.j||!o.j.ok){ $('kdetBody').innerHTML='<p class="muted">Nepovedlo se načíst detail.</p>'; return; }
         KDET.data=o.j; renderKlient();
-      }).catch(function(){ $('kdetBody').innerHTML='<p class="muted">Chyba spojení — zavři a zkus znovu.</p>'; });
+      }).catch(function(){ $('kdetBody').innerHTML='<p class="muted">Chyba spojení. Zavři a zkus znovu.</p>'; });
     }
     $('kdetX').addEventListener('click',function(){ $('kdet').classList.remove('on'); });
     function renderKlient(){
@@ -489,7 +489,7 @@
         +'<p class="muted" style="margin:0 0 .4rem;font-size:.85rem;">'+(d.reports||[]).length+' reportů · dotazník '+(d.intake?'✅':'—')
         +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a></p>'
         // per-klient vypnutí pondělní připomínky ("stop připomínky") — čte ji client-remind fn
-        +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">— odškrtni, když klient odepíše „stop připomínky"</span></p>';
+        +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>';
       // reporty
       if(reps.length){
         h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
@@ -1002,7 +1002,7 @@
       }).catch(function(){ trafFail(); });
     }
     function trafFail(){
-      $('trafBody').innerHTML='<p class="traf-note">⚠️ Statistiky se teď nepodařilo stáhnout (dočasný výpadek GA4 nebo spojení) — zkus za chvíli obnovit stránku. Kdyby to přetrvávalo, mrkni přímo do <a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener" style="color:#F6CD63;">GA4 →</a></p>';
+      $('trafBody').innerHTML='<p class="traf-note">⚠️ Statistiky se teď nepodařilo stáhnout (dočasný výpadek GA4 nebo spojení). Zkus za chvíli obnovit stránku. Kdyby to přetrvávalo, mrkni přímo do <a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener" style="color:#F6CD63;">GA4 →</a></p>';
     }
     function num(n){ return (n==null?'—':Number(n).toLocaleString('cs-CZ')); }
     function dur(sec){ if(sec==null) return '—'; sec=Math.round(sec); var m=Math.floor(sec/60), s=sec%60; return m+'m '+s+'s'; }
@@ -1072,7 +1072,7 @@
         '</tr>';
       }).join('')
       +(list.length>shown.length
-        ? '<tr><td colspan="8" style="text-align:center;padding:.8rem;"><span class="muted">Zobrazeno prvních '+shown.length+' z '+list.length+' — upřesni hledáním, nebo</span> <button id="rowsMore" class="mlogbtn" style="margin-left:6px;">Načíst dalších 500</button></td></tr>'
+        ? '<tr><td colspan="8" style="text-align:center;padding:.8rem;"><span class="muted">Zobrazeno prvních '+shown.length+' z '+list.length+'. Upřesni hledáním, nebo</span> <button id="rowsMore" class="mlogbtn" style="margin-left:6px;">Načíst dalších 500</button></td></tr>'
         : '');
       Array.prototype.forEach.call($('rows').querySelectorAll('tr[data-email]'),function(tr){ tr.addEventListener('click',function(){ openDetail(tr.getAttribute('data-email')); }); });
       var rm=$('rowsMore'); if(rm) rm.addEventListener('click',function(){ ROWS_CAP+=500; renderRows(); });
@@ -1195,9 +1195,9 @@
       'rescue-videokurz':'Záchrana objednávky: videokurz',
       'rescue-academy':'Záchrana objednávky: Academy',
       'trener-kit':'Trenéři: startovací kit',
-      'longtail-consumer':'Dlouhodobá péče — veřejnost',
-      'longtail-trener':'Dlouhodobá péče — trenéři',
-      'longtail-kupci':'Dlouhodobá péče — kupci videokurzu',
+      'longtail-consumer':'Dlouhodobá péče: veřejnost',
+      'longtail-trener':'Dlouhodobá péče: trenéři',
+      'longtail-kupci':'Dlouhodobá péče: kupci videokurzu',
       'nurture-pro-vas':'Nurture Academy (/pro-vas)',
       'reaktivace-kviz':'Reaktivace kvízem (start ~září)'
     };
@@ -1326,7 +1326,7 @@
       'longtail-trener':'Vstup: dojetý trener-kit bez koupě · 6 mailů à 30 dní · ⛔ stop při koupi Academy',
       'longtail-kupci':'Vstup: dojetý onboarding-videokurz (kupci) · 6 mailů à 21 dní · ⛔ stop při koupi Academy',
       'nurture-pro-vas':'Vstup: formulář na /pro-vas/ (B2C ochutnávka Academy) · ⛔ stop při koupi',
-      'reaktivace-kviz':'Ruční reaktivace spících leadů kvízem — 1 mail (připraveno, launch ~září)'
+      'reaktivace-kviz':'Ruční reaktivace spících leadů kvízem, 1 mail (připraveno, launch ~září)'
     };
     var TPLS=[], TPL_ONTRACK={};
     function openSeqMap(){
@@ -1379,7 +1379,7 @@
         var t=o.j.tpl;
         TE={track:t.track,step:t.step,key:t.key,subject:t.subject||'',preheader:t.preheader||'',wait_days:t.wait_days,blocks:(t.blocks||[]).map(function(b){return JSON.parse(JSON.stringify(b));})};
         renderTplEdit();
-      }).catch(function(){ $('tpleditBody').innerHTML='<p class="muted">Chyba spojení — zavři a zkus znovu.</p>'; });
+      }).catch(function(){ $('tpleditBody').innerHTML='<p class="muted">Chyba spojení. Zavři a zkus znovu.</p>'; });
     }
     function teInput(v,ph){ return '<input type="text" value="'+esc(v)+'" placeholder="'+esc(ph||'')+'" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:8px 11px;color:#fff;font-family:inherit;font-size:.9rem;">'; }
     function teArea(v,rows){ return '<textarea rows="'+(rows||3)+'" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:8px 11px;color:#fff;font-family:inherit;font-size:.88rem;line-height:1.45;resize:vertical;">'+esc(v)+'</textarea>'; }
@@ -1493,5 +1493,5 @@
   })();
   </script>
   <script src="/assets/scroll-top.js?v=g3" defer></script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
 </html>

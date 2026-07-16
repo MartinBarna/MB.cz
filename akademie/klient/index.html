@@ -179,7 +179,7 @@
       <!-- fotky z reportů -->
       <div id="fotoWrap" style="display:none;">
         <div class="ksec">📷 Tvoje fotky</div>
-        <p class="lead" style="font-size:.9rem;margin:0 0 12px;">Fotky z reportů pohromadě — tvoje proměna černé na bílém. Vidíte je jen ty a Martin. Klepnutím otevřeš plnou velikost.</p>
+        <p class="lead" style="font-size:.9rem;margin:0 0 12px;">Fotky z reportů pohromadě: tvoje proměna černé na bílém. Vidíte je jen ty a Martin. Klepnutím otevřeš plnou velikost.</p>
         <div class="fgrid" id="fotos"></div>
       </div>
 
@@ -210,6 +210,10 @@
           <h3>🤖 AI Martin — máš v ceně</h3>
           <p>Zlaté tlačítko vpravo dole 👉 rychlé dotazy mezi check-iny (jídlo, trénink, motivace) zodpoví AI vytrénovaná na Martinově metodice. Velké věci řeš dál v reportu — čte ho Martin osobně.</p>
         </div>
+        <a class="kcard" href="/akademie/moje/doporuc/" style="text-decoration:none;display:block;">
+          <h3>🎁 Doporuč kamarádovi</h3>
+          <p>Kamarád přes tvůj odkaz ušetří 10 % na videokurzu nebo Academy a ty dostaneš 150 až 300 Kč kredit na další nákup. Svůj osobní kód najdeš na stránce doporučení, pošleš ho jedním klikem.</p>
+        </a>
       </div>
 
       <p class="foot">Klientská sekce — Martin Barna · osobní koučink · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
@@ -359,7 +363,7 @@
     if(!reports.length){
       el("stats").style.display = "none"; el("graphs").style.display = "none"; el("histWrap").style.display = "none";
       el("reportCtaSub").textContent = loadFailed
-        ? "Nepodařilo se načíst data — zkus obnovit stránku."
+        ? "Nepodařilo se načíst data. Zkus obnovit stránku."
         : "První report odemkne grafy pokroku. Naklikáš ho za ~3 minuty.";
       return;
     }
@@ -455,7 +459,7 @@
         }).then(function(r){ if(!r.ok) throw 0; return r.blob(); }).then(function(b){
           var u = URL.createObjectURL(b);
           card.querySelector("img").src = u; card.href = u;
-        }).catch(function(){ card.querySelector(".fd").textContent = "nenačteno — obnov stránku"; });
+        }).catch(function(){ card.querySelector(".fd").textContent = "nenačteno, obnov stránku"; });
       }
       var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
         entries.forEach(function(en){ if(en.isIntersecting){ io.unobserve(en.target); loadImg(en.target); } });
@@ -748,7 +752,7 @@
             + '<button type="button" class="kbtn2" id="f_ktBtn" style="width:100%;">📥 Načíst z Kalorických tabulek (XLS export)</button>'
             + '<input type="file" id="f_ktFile" accept=".xls,.xlsx" style="display:none;">'
             + '<p class="help" style="font-size:.8rem;margin:8px 0 0;">Na webu KT: ikona šipky dolů v hlavičce jídelníčku → vyber poslední týden → XLS. Průměry i denní rozpis se doplní samy a export se přiloží pro Martina.</p></div>'
-            + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:.9rem;color:#B9B3C4;margin:0 0 14px;cursor:pointer;"><input type="checkbox" id="f_noTrack"' + (a._noTrack ? " checked" : "") + ' style="width:auto;margin-top:3px;"> Tenhle týden jsem stravu nezapisoval/a — čísla přeskočit (nic si nevymýšlej, Martin to tak uvidí férově)</label>'
+            + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:.9rem;color:#B9B3C4;margin:0 0 14px;cursor:pointer;"><input type="checkbox" id="f_noTrack"' + (a._noTrack ? " checked" : "") + ' style="width:auto;margin-top:3px;"> Tenhle týden jsem stravu nezapisoval/a, čísla přeskočit (nic si nevymýšlej, Martin to tak uvidí férově)</label>'
             + fNum("f_kcal", "Kalorie Ø/den", "kcal", "např. 1750", n.kcal)
             + '<div class="m2">' + fNum("f_prot", "Bílkoviny Ø", "g", "", n.protein) + fNum("f_carb", "Sacharidy Ø", "g", "", n.carbs, true) + fNum("f_fat", "Tuky Ø", "g", "", n.fat, true) + fNum("f_fib", "Vláknina Ø", "g", "", n.fiber, true) + "</div>"
             + fChips("f_dny", "Kolik dní jsi zapisoval/a?", ["0", "1", "2", "3", "4", "5", "6", "7"], n.dny_zapsano != null ? String(n.dny_zapsano) : null)

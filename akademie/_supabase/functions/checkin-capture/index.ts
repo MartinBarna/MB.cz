@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
   const milestoneBonus = Number(cfg.coach_milestone_2cm_bonus ?? 100) || 100;
   const cap = Number(cfg.coach_credit_cap_czk ?? 400) || 400;
   const replyTo = cfg.reply_to_email ?? "";
-  const footerHtml = cfg.footer_html ?? "Barna Academy — Martin Barna · martinbarna.cz";
+  const footerHtml = cfg.footer_html ?? "Barna Academy · Martin Barna · martinbarna.cz";
 
   // ---- OPT-OUT (GET ?stop=<reminder_token>) ----
   if (req.method === "GET") {
@@ -98,12 +98,12 @@ Deno.serve(async (req) => {
       const html = wrapHtml(
         "30 vteřin a máš doporučení na míru.",
         `<p style='margin:0 0 14px'>Ahoj,</p>` +
-        `<p style='margin:0 0 14px'>jak se ti vedl týden? Naklikej si <strong>30vteřinový check-in</strong> — hned dostaneš <strong>doporučení na míru</strong> na další týden a načítá se ti sleva. 💪</p>` +
+        `<p style='margin:0 0 14px'>jak se ti vedl týden? Naklikej si <strong>30vteřinový check-in</strong>. Hned dostaneš <strong>doporučení na míru</strong> na další týden a načítá se ti sleva. 💪</p>` +
         btn("Vyplnit check-in", SITE + "/akademie/check-in/") +
         `<p style='margin:14px 0 0'>Drž se!<br><strong>Be Effective!</strong><br>Martin</p>`,
         foot,
       );
-      const text = "Ahoj, čas na týdenní check-in: " + SITE + "/akademie/check-in/  — Be Effective! Martin";
+      const text = "Ahoj, čas na týdenní check-in: " + SITE + "/akademie/check-in/\n\nBe Effective! Martin";
       try { await sendResend(email, "Čas na týdenní check-in 💪", html, text, replyTo); sent++; } catch { /* skip */ }
     }
     return json({ ok: true, mode: "remind", sent });

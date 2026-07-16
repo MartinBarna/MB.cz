@@ -79,7 +79,7 @@ function greet(name: string | null, seg = "other"): string {
 function wrap(body: string): string {
   return `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.6;color:#222;max-width:560px;margin:0 auto">${body}` +
     `<p style="margin:18px 0 0">Martin</p>` +
-    `<p style="margin:14px 0 0;font-size:12px;color:#999">Martin Barna — Barna Academy · <a href="https://martinbarna.cz" style="color:#c45e00">martinbarna.cz</a> · odpovědět můžeš rovnou na tenhle e-mail</p></div>`;
+    `<p style="margin:14px 0 0;font-size:12px;color:#999">Martin Barna · Barna Academy · <a href="https://martinbarna.cz" style="color:#c45e00">martinbarna.cz</a> · odpovědět můžeš rovnou na tenhle e-mail</p></div>`;
 }
 
 function warnEmail(name: string | null, seg = "other") {
@@ -87,7 +87,7 @@ function warnEmail(name: string | null, seg = "other") {
     subject: "Splátka za Barna Academy neproběhla",
     html: wrap(
       `<p>${greet(name, seg)}</p>` +
-      `<p>dnes se nepodařilo strhnout další splátku <b>3 000 Kč</b> za Barna Academy. Většinou za to může expirovaná karta, denní limit nebo málo prostředků na účtu — zkontroluj to prosím.</p>` +
+      `<p>dnes se nepodařilo strhnout další splátku <b>3 000 Kč</b> za Barna Academy. Většinou za to může expirovaná karta, denní limit nebo málo prostředků na účtu. Zkontroluj to prosím.</p>` +
       `<p>Kdyby cokoliv nehrálo (změna karty, potřebuješ posunout termín), <b>odepiš mi rovnou na tenhle e-mail</b> a vyřešíme to spolu.</p>` +
       `<p style="padding:10px 14px;background:#fdf3ec;border-radius:10px">⚠️ Pokud se splátku nepodaří uhradit do <b>7 dnů</b>, budu muset přístup k Academy dočasně pozastavit. Po doplacení se obnoví automaticky.</p>`
     ),
@@ -100,7 +100,7 @@ function suspendEmail(name: string | null, seg = "other") {
     html: wrap(
       `<p>${greet(name, seg)}</p>` +
       `<p>splátku za Barna Academy se bohužel nepodařilo strhnout ani týden po upozornění, takže jsem musel tvůj přístup <b>dočasně pozastavit</b>.</p>` +
-      `<p>Žádný stres — <b>jakmile splátka proběhne, přístup se ti obnoví automaticky</b> během pár minut a pokračuješ přesně tam, kde jsi skončil(a).</p>` +
+      `<p>Žádný stres: <b>jakmile splátka proběhne, přístup se ti obnoví automaticky</b> během pár minut a pokračuješ přesně tam, kde jsi skončil(a).</p>` +
       `<p>Kdyby ses zasekl(a) na čemkoliv (karta, termín, cokoliv), napiš mi na tenhle e-mail a domluvíme se.</p>`
     ),
   };
