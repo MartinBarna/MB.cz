@@ -155,11 +155,11 @@ type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t:
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === "p") return `<p style='margin:0 0 14px'>${fill(b.html, seg, v)}</p>`;
-    if (b.t === "ps") return `<p style='margin:16px 0 0;color:#666;font-style:italic'>${fill(b.html, seg, v)}</p>`;
+    if (b.t === "ps") return `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, seg, v)}</p>`;
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join("") + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${escd(fill(b.text, seg, v))}</a></p>`;
+    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${escd(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
 function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): string {
@@ -170,13 +170,17 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, bodyHtml: string, footerHtml: string): string {
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'></head>` +
-    `<body style='margin:0;background:#f4f4f5;padding:16px'>` +
+  // Tabulkovy layout + bgcolor = tmava karta drzi i v Outlooku — 1:1 s drip-send (nahled = realita).
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
+    `<body style='margin:0;padding:0;background:#0C0B10'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${escd(preheader)}</span>` +
-    `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px;margin:0 auto;background:#fff;border-radius:14px;padding:28px'>` +
+    `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
+    `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
+    `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
     bodyHtml +
-    `<hr style='border:none;border-top:1px solid #eee;margin:22px 0 14px'>` +
-    `<div style='font-size:12px;line-height:1.5;color:#999'>${footerHtml}</div></div></body></html>`;
+    `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'>` +
+    `<div style='font-size:12px;line-height:1.5;color:#8F8A99'>${footerHtml}</div>` +
+    `</td></tr></table></td></tr></table></body></html>`;
 }
 // ===== 5. pad (vokativ) — kanonicka verze, drz v synci s drip-send =====
 const VOK_EXC: Record<string, string> = {
@@ -276,6 +280,23 @@ function extractAttachments(html: string): { name: string; url: string }[] {
   return out;
 }
 
+// PostgREST vraci max 1000 radku na dotaz — smycka pres .range() posbira vsechno.
+// Dotaz MUSI mit deterministicke razeni (.order), jinak by strankovani preskakovalo/duplikovalo.
+// deno-lint-ignore no-explicit-any
+async function fetchAllRows(pageQuery: (from: number, to: number) => any): Promise<any[]> {
+  // deno-lint-ignore no-explicit-any
+  const out: any[] = [];
+  const STEP = 1000;
+  for (let from = 0; ; from += STEP) {
+    const { data, error } = await pageQuery(from, from + STEP - 1);
+    if (error) throw new Error(String(error.message ?? error));
+    const batch = data ?? [];
+    out.push(...batch);
+    if (batch.length < STEP) break;
+  }
+  return out;
+}
+
 // auth.admin.listUsers je strankovane — jedna stranka (1000) by nad 1000 uctu tise orezavala data
 async function listAllUsers(admin: ReturnType<typeof createClient>) {
   const users: { id: string; email?: string; last_sign_in_at?: string }[] = [];
@@ -307,11 +328,12 @@ Deno.serve(async (req) => {
 
   try {
     if (action === "overview" || action === "stats") {
-      const [cc, lds, ents, evs, allUsers] = await Promise.all([
-        admin.from("customer_contacts").select("email,name,tags,status,audience,onboarding_sent_at"),
-        admin.from("leads").select("id,email,name,segment,source,track,step,status,next_send_at"),
-        admin.from("entitlements").select("email,product,active"),
-        admin.from("email_events").select("lead_id,type,created_at").not("lead_id", "is", null),
+      // email_events uz preleze 1000 radku → vsechny selecty strankovane (fetchAllRows), zadny tichy orez
+      const [ccRows, ldsRows, entsRows, evsRows, allUsers] = await Promise.all([
+        fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name,tags,status,audience,onboarding_sent_at").order("email").range(f, t)),
+        fetchAllRows((f, t) => admin.from("leads").select("id,email,name,segment,source,track,step,status,next_send_at").order("id").range(f, t)),
+        fetchAllRows((f, t) => admin.from("entitlements").select("email,product,active").order("email").order("product").range(f, t)),
+        fetchAllRows((f, t) => admin.from("email_events").select("lead_id,type,created_at").not("lead_id", "is", null).order("id").range(f, t)),
         listAllUsers(admin),
       ]);
       const leadById = new Map<string, string>();
@@ -321,16 +343,16 @@ Deno.serve(async (req) => {
         if (!map.has(k)) map.set(k, { email: k, name: "", tags: [], segment: "", sources: [], has_academy: false, has_videokurz: false, registered: false, last_sign_in: null, sent_count: 0, last_sent_at: null, opened_count: 0, lead_track: null, lead_step: null, lead_status: null, contact_status: null, onboarding_sent_at: null });
         return map.get(k)!;
       };
-      for (const c of cc.data ?? []) {
+      for (const c of ccRows) {
         const r = get(c.email); r.name = r.name || c.name || ""; r.tags = c.tags || []; r.contact_status = c.status; r.onboarding_sent_at = c.onboarding_sent_at;
         (r.sources as string[]).push("contact");
       }
-      for (const l of lds.data ?? []) {
+      for (const l of ldsRows) {
         leadById.set(String(l.id), low(l.email));
         const r = get(l.email); r.name = r.name || l.name || ""; r.segment = l.segment || r.segment; r.lead_track = l.track; r.lead_step = l.step; r.lead_status = l.status;
         (r.sources as string[]).push("lead:" + (l.source || "?"));
       }
-      for (const e of ents.data ?? []) {
+      for (const e of entsRows) {
         const r = get(e.email);
         if (e.product === "academy" && e.active) r.has_academy = true;
         if (e.product === "videokurz" && e.active) r.has_videokurz = true;
@@ -339,7 +361,7 @@ Deno.serve(async (req) => {
         const k = low(u.email); if (!k) continue;
         const r = get(k); r.registered = true; r.last_sign_in = u.last_sign_in_at ?? null;
       }
-      for (const ev of evs.data ?? []) {
+      for (const ev of evsRows) {
         const email = leadById.get(String(ev.lead_id)); if (!email) continue;
         const r = get(email);
         if (ev.type === "sent") { r.sent_count = (r.sent_count as number) + 1; if (!r.last_sent_at || ev.created_at > (r.last_sent_at as string)) r.last_sent_at = ev.created_at; }
@@ -479,19 +501,20 @@ Deno.serve(async (req) => {
     }
 
     if (action === "ga_stats") {
-      // GA4 Data API pres service account. Kdyz chybi secret -> {ok:false} (frontend ukaze stav nastaveni).
+      // GA4 Data API pres service account. reason: 'no-config' = chybi/rozbite secrets (frontend
+      // ukaze navod k nastaveni), 'error' = nakonfigurovano, ale stazeni selhalo (docasny vypadek).
       try {
         const saRaw = Deno.env.get("GA_SA_JSON") || "";
         const property = (Deno.env.get("GA_PROPERTY_ID") || "").replace(/[^0-9]/g, "");
-        if (!saRaw || !property) return json({ ok: false });
+        if (!saRaw || !property) return json({ ok: false, reason: "no-config" });
         let sa: any;
-        try { sa = JSON.parse(saRaw); } catch { return json({ ok: false }); }
+        try { sa = JSON.parse(saRaw); } catch { return json({ ok: false, reason: "no-config" }); }
 
         const days = Math.min(365, Math.max(1, parseInt(String(body.range ?? "28d"), 10) || 28));
         const dateRanges = [{ startDate: `${days}daysAgo`, endDate: "today" }];
 
         const token = await gaAccessToken(sa);
-        if (!token) return json({ ok: false });
+        if (!token) return json({ ok: false, reason: "error" });
 
         const reqAgg = { dateRanges, metrics: ["totalUsers", "sessions", "screenPageViews", "newUsers", "bounceRate", "averageSessionDuration"].map((name) => ({ name })) };
         const reqPages = { dateRanges, dimensions: [{ name: "pagePath" }], metrics: [{ name: "screenPageViews" }], orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }], limit: 10 };
@@ -523,7 +546,7 @@ Deno.serve(async (req) => {
         };
         return json({ ok: true, data });
       } catch {
-        return json({ ok: false });
+        return json({ ok: false, reason: "error" });
       }
     }
 
@@ -535,13 +558,22 @@ Deno.serve(async (req) => {
       const fType = body.type ? String(body.type) : "";
       const fetchN = q ? 2000 : limit;
       const startAt = q ? 0 : offset;
-      let evq = admin.from("email_events")
-        .select("lead_id,step,type,provider_id,detail,created_at")
-        .order("created_at", { ascending: false });
-      if (fType) evq = evq.eq("type", fType);
-      if (fTrack) evq = evq.eq("detail->>track", fTrack);
-      const { data: evs } = await evq.range(startAt, startAt + fetchN - 1);
-      const events = evs ?? [];
+      // PostgREST vraci max 1000 radku na dotaz → vnitrni smycka, at limit 2000 realne funguje
+      // deno-lint-ignore no-explicit-any
+      const events: any[] = [];
+      for (let got = 0; got < fetchN;) {
+        const step = Math.min(1000, fetchN - got);
+        let evq = admin.from("email_events")
+          .select("lead_id,step,type,provider_id,detail,created_at")
+          .order("created_at", { ascending: false }).order("id", { ascending: false });
+        if (fType) evq = evq.eq("type", fType);
+        if (fTrack) evq = evq.eq("detail->>track", fTrack);
+        const { data: evs } = await evq.range(startAt + got, startAt + got + step - 1);
+        const batch = evs ?? [];
+        events.push(...batch);
+        got += batch.length;
+        if (batch.length < step) break;
+      }
       const leadIds = [...new Set(events.map((e) => e.lead_id).filter(Boolean))] as string[];
       const leadMap = new Map<string, { email: string; name: string }>();
       if (leadIds.length) {
@@ -607,22 +639,23 @@ Deno.serve(async (req) => {
     if (action === "email_summary") {
       // per-track: sent / error / test (z email_events) + pending (aktivni leady s next_send_at v minulosti)
       const nowI = new Date().toISOString();
-      const { data: evs } = await admin.from("email_events").select("type,detail");
+      // strankovane — email_events uz ma pres 1000 radku (PostgREST strop by tise orezal souhrn)
+      const evs = await fetchAllRows((f, t) => admin.from("email_events").select("type,detail").order("id").range(f, t));
       const agg = new Map<string, { track: string; sent: number; error: number; test: number; pending: number }>();
       const bump = (track: string, k: "sent" | "error" | "test" | "pending") => {
         if (!agg.has(track)) agg.set(track, { track, sent: 0, error: 0, test: 0, pending: 0 });
         agg.get(track)![k]++;
       };
-      for (const e of evs ?? []) {
+      for (const e of evs) {
         const det = (e.detail && typeof e.detail === "object") ? (e.detail as Record<string, unknown>) : {};
         const track = String(det.track ?? "");
         if (e.type === "sent") bump(track, "sent");
         else if (e.type === "error") bump(track, "error");
         else if (e.type === "test") bump(track, "test");
       }
-      const { data: pend } = await admin.from("leads").select("track")
-        .eq("status", "active").not("next_send_at", "is", null).lt("next_send_at", nowI);
-      for (const l of pend ?? []) bump(String(l.track ?? ""), "pending");
+      const pend = await fetchAllRows((f, t) => admin.from("leads").select("track")
+        .eq("status", "active").not("next_send_at", "is", null).lt("next_send_at", nowI).order("id").range(f, t));
+      for (const l of pend) bump(String(l.track ?? ""), "pending");
       return json({ ok: true, rows: [...agg.values()].sort((a, b) => a.track.localeCompare(b.track)) });
     }
 
@@ -850,10 +883,10 @@ Deno.serve(async (req) => {
 
     if (action === "qr_stats") {
       // Leady z letáků/QR: seskupené podle meta->>'utm_source'. (Skeny/pageviews řeší GA4.)
-      const { data, error } = await admin.from("leads").select("meta,created_at");
-      if (error) return json({ error: error.message }, 500);
+      // strankovane — leads porostou pres PostgREST strop 1000 (dnes 600+, s reklamami vic)
+      const data = await fetchAllRows((f, t) => admin.from("leads").select("meta,created_at").order("id").range(f, t));
       const bySrc = new Map<string, { source: string; medium: string | null; leads: number; last: string | null }>();
-      for (const l of (data ?? []) as { meta: unknown; created_at: string }[]) {
+      for (const l of data as { meta: unknown; created_at: string }[]) {
         const meta = (l.meta && typeof l.meta === "object") ? l.meta as Record<string, unknown> : {};
         const s = String(meta.utm_source ?? "").trim();
         if (!s) continue;
@@ -865,6 +898,52 @@ Deno.serve(async (req) => {
       }
       const rows = [...bySrc.values()].sort((a, b) => b.leads - a.leads);
       return json({ ok: true, rows, total: rows.reduce((n, r) => n + r.leads, 0) });
+    }
+
+    if (action === "trener_funnel") {
+      // 🎯 Trenéři — trychtýř: kit leady (track='trener-kit') → kroky sekvence → nákup Academy.
+      // Konverze = match e-mailu leadu na aktivni entitlement product='academy'.
+      const leads = await fetchAllRows((f, t) =>
+        admin.from("leads").select("id,email,name,source,step,status,created_at")
+          .eq("track", "trener-kit").order("created_at", { ascending: false }).order("id", { ascending: false }).range(f, t));
+      const total = leads.length;
+      const active = leads.filter((l) => l.status === "active").length;
+      const byStep: Record<string, number> = {};
+      const srcMap = new Map<string, number>();
+      const dayMap = new Map<string, number>();
+      const sinceDay = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
+      const leadAt = new Map<string, string>(); // email -> nejstarsi created_at (kdy prisel jako lead)
+      for (const l of leads) {
+        const k = String(l.step ?? 0);
+        byStep[k] = (byStep[k] ?? 0) + 1;
+        const s = String(l.source || "?");
+        srcMap.set(s, (srcMap.get(s) ?? 0) + 1);
+        const at = String(l.created_at ?? "");
+        const day = at.slice(0, 10);
+        if (day >= sinceDay) dayMap.set(day, (dayMap.get(day) ?? 0) + 1);
+        const em = low(l.email);
+        const prev = leadAt.get(em);
+        if (!prev || at < prev) leadAt.set(em, at);
+      }
+      const bySource = [...srcMap.entries()].map(([source, n]) => ({ source, n })).sort((a, b) => b.n - a.n);
+      const byDay = [...dayMap.entries()].map(([day, n]) => ({ day, n })).sort((a, b) => a.day.localeCompare(b.day));
+      // nakupy Academy mezi kit leady — po davkach 200 e-mailu (.in() s tisici by prerostl URL)
+      const emails = [...leadAt.keys()];
+      const conversions: { email: string; lead_at: string; bought_at: string | null }[] = [];
+      for (let i = 0; i < emails.length; i += 200) {
+        const { data: ents } = await admin.from("entitlements").select("email,granted_at")
+          .eq("product", "academy").eq("active", true).in("email", emails.slice(i, i + 200));
+        for (const e of ents ?? []) {
+          const em = low(e.email);
+          conversions.push({ email: em, lead_at: leadAt.get(em) ?? "", bought_at: e.granted_at ?? null });
+        }
+      }
+      conversions.sort((a, b) => String(b.bought_at ?? "").localeCompare(String(a.bought_at ?? "")));
+      const recent = leads.slice(0, 20).map((l) => ({
+        email: low(l.email), name: String(l.name || ""), step: l.step, status: l.status,
+        source: l.source || "", created_at: l.created_at,
+      }));
+      return json({ ok: true, total, active, byStep, bySource, byDay, conversions, recent });
     }
 
     // ================= KLIENTSKÁ SEKCE (osobní koučink) =================
@@ -895,15 +974,17 @@ Deno.serve(async (req) => {
 
     if (action === "client_detail") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      const [reps, intake, notes, docsOwn] = await Promise.all([
+      const [reps, intake, notes, docsOwn, remindCfg] = await Promise.all([
         admin.from("client_reports").select("*").eq("email", email).order("report_date", { ascending: true }),
         admin.from("client_intake").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_notes").select("id,note,created_at").eq("email", email).order("created_at", { ascending: false }),
         admin.storage.from("client-docs").list(email, { limit: 100 }),
+        admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle(),
       ]);
       const docs = (docsOwn.data ?? []).filter((o) => o.id)
         .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
-      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs });
+      const remindOn = !String(remindCfg.data?.value ?? "").split(",").map((s) => low(s)).includes(email);
+      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs, remind_on: remindOn });
     }
 
     if (action === "client_note_save") {
@@ -915,8 +996,24 @@ Deno.serve(async (req) => {
     }
     if (action === "client_note_delete") {
       const id = String(body.id ?? ""); if (!id) return json({ error: "missing" }, 400);
-      await admin.from("client_notes").delete().eq("id", id);
+      const { error } = await admin.from("client_notes").delete().eq("id", id);
+      if (error) return json({ error: error.message }, 500);
       return json({ ok: true });
+    }
+
+    if (action === "client_remind_toggle") {
+      // Per-klient vypnuti pondelni pripominky reportu ("stop pripominky"). Zapis CSV e-mailu
+      // do app_config.client_remind_optout — client-remind fn seznam cte a tyhle klienty preskoci.
+      const email = low(body.email);
+      const on = !!body.on; // true = pripominky ZAPNOUT (vyndat z optout seznamu)
+      if (!email) return json({ error: "no_email" }, 400);
+      const { data: cur } = await admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle();
+      const optout = new Set(String(cur?.value ?? "").split(",").map((s) => low(s)).filter(Boolean));
+      if (on) optout.delete(email); else optout.add(email);
+      const { error } = await admin.from("app_config")
+        .upsert({ key: "client_remind_optout", value: [...optout].join(","), updated_at: new Date().toISOString() }, { onConflict: "key" });
+      if (error) return json({ error: error.message }, 500);
+      return json({ ok: true, on });
     }
 
     if (action === "client_docs_shared") {
@@ -957,6 +1054,7 @@ Deno.serve(async (req) => {
       const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
         method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
         body: JSON.stringify({ email, action: "weekly-summary", days: Number(body.days) || 14 }),
+        signal: AbortSignal.timeout(10_000), // kdyz appka visi, nesmi viset i admin request
       }).catch(() => null);
       if (!r) return json({ ok: false, reason: "fetch-fail" });
       if (!r.ok) return json({ ok: false, reason: "http-" + r.status });

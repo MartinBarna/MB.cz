@@ -28,8 +28,9 @@ const json = (b: unknown, c: Record<string, string>, status = 200) =>
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const num = (v: unknown): number | null => {
-  const n = Number(String(v ?? "").replace(",", "."));
-  return Number.isFinite(n) && n > 0 ? Math.round(n * 10) / 10 : null;
+  if (v == null || String(v).trim() === "") return null; // Number("") === 0 — prázdno není nula
+  const n = Number(String(v).replace(",", "."));
+  return Number.isFinite(n) && n >= 0 ? Math.round(n * 10) / 10 : null; // 0 je validní hodnota (kroky, fitko)
 };
 const czk = (n: number | null) => n == null ? "—" : String(n).replace(".", ",");
 
@@ -84,7 +85,7 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
     `<div style='font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#EBB12C;font-weight:700'>Váha</div>` +
     `<div style='font-size:34px;font-weight:800;color:#fff;line-height:1.2'>${czk(w)} kg${delta(w, pw)}</div>` +
     (pw != null || fw != null
-      ? `<div style='font-size:13px;color:#8F8A99'>${pw != null ? `minule ${czk(pw)} kg` : ""}${pw != null && fw != null ? " · " : ""}${fw != null && w != null ? `start ${czk(fw)} kg · celkem <span style='color:${w - fw <= 0 ? "#4fc07a" : "#e0a04f"};font-weight:700'>${w - fw > 0 ? "+" : "−"}${czk(Math.round(Math.abs(w - fw) * 10) / 10)} kg</span>` : ""}</div>`
+      ? `<div style='font-size:13px;color:#8F8A99'>${pw != null ? `minule ${czk(pw)} kg` : ""}${pw != null && fw != null ? " · " : ""}${fw != null && w != null ? `start ${czk(fw)} kg · celkem <span style='color:${w - fw <= 0 ? "#4fc07a" : "#e0a04f"};font-weight:700'>${w - fw > 0 ? "+" : w - fw < 0 ? "−" : ""}${czk(Math.round(Math.abs(w - fw) * 10) / 10)} kg</span>` : ""}</div>`
       : "") +
     `</td></tr></table>`;
 
@@ -106,33 +107,37 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
     b += sect("Míry (cm)") + `<p style='margin:0;font-size:13px;color:#8F8A99'>Tento týden neměřeno.</p>`;
   }
 
-  // strava
-  const n = r.nutrition || {};
-  b += sect(`Strava — týdenní průměr${n.dny_zapsano != null ? ` (zapsáno ${esc(n.dny_zapsano)}/7 dní)` : ""}`) +
-    `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:separate;border-spacing:6px 0;table-layout:fixed'><tr>` +
-    [["kcal", "kcal"], ["protein", "bílkoviny (g)"], ["carbs", "sacharidy (g)"], ["fat", "tuky (g)"], ["fiber", "vláknina (g)"]]
-      .map(([k, l]) => `<td align='center' style='background:#211d2b;border:1px solid #2e2940;border-radius:8px;padding:10px 4px'><div style='font-size:18px;font-weight:800;color:#fff'>${czk(num(n[k]))}</div><div style='font-size:11px;color:#8F8A99'>${l}</div></td>`).join("") +
-    `</tr></table>`;
+  // strava (nutrition === null → klient tenhle týden nezapisoval, čísla si nevymýšlel)
+  if (r.nutrition == null) {
+    b += sect("Strava") + `<p style='margin:0;font-size:13px;color:#8F8A99'>Tenhle týden strava nezapsána — klient nezapisoval.</p>`;
+  } else {
+    const n = r.nutrition || {};
+    b += sect(`Strava — týdenní průměr${n.dny_zapsano != null ? ` (zapsáno ${esc(n.dny_zapsano)}/7 dní)` : ""}`) +
+      `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:separate;border-spacing:6px 0;table-layout:fixed'><tr>` +
+      [["kcal", "kcal"], ["protein", "bílkoviny (g)"], ["carbs", "sacharidy (g)"], ["fat", "tuky (g)"], ["fiber", "vláknina (g)"]]
+        .map(([k, l]) => `<td align='center' style='background:#211d2b;border:1px solid #2e2940;border-radius:8px;padding:10px 4px'><div style='font-size:18px;font-weight:800;color:#fff'>${czk(num(n[k]))}</div><div style='font-size:11px;color:#8F8A99'>${l}</div></td>`).join("") +
+      `</tr></table>`;
 
-  // volitelný denní rozpis (jako záložky týdnů v Excelu)
-  // deno-lint-ignore no-explicit-any
-  const dny = (Array.isArray(n.dny) ? n.dny : []).filter((x: any) => x);
-  if (dny.length) {
-    b += `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:collapse;font-size:13px;margin-top:10px'>` +
-      `<tr style='color:#8F8A99;font-size:11px;text-transform:uppercase'><td style='padding:5px 8px;border-bottom:1px solid #262232'>Den</td>` +
-      ["kcal", "B", "S", "T", "Vl"].map((h) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #262232'>${h}</td>`).join("") + `</tr>` +
-      // deno-lint-ignore no-explicit-any
-      dny.map((d: any) =>
-        `<tr><td style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${esc(d.den ?? "")}</td>` +
-        [d.kcal, d.p, d.c, d.f, d.fib].map((v) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${czk(num(v))}</td>`).join("") + `</tr>`).join("");
-    b += `</table>`;
+    // volitelný denní rozpis (jako záložky týdnů v Excelu)
+    // deno-lint-ignore no-explicit-any
+    const dny = (Array.isArray(n.dny) ? n.dny : []).filter((x: any) => x);
+    if (dny.length) {
+      b += `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:collapse;font-size:13px;margin-top:10px'>` +
+        `<tr style='color:#8F8A99;font-size:11px;text-transform:uppercase'><td style='padding:5px 8px;border-bottom:1px solid #262232'>Den</td>` +
+        ["kcal", "B", "S", "T", "Vl"].map((h) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #262232'>${h}</td>`).join("") + `</tr>` +
+        // deno-lint-ignore no-explicit-any
+        dny.map((d: any) =>
+          `<tr><td style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${esc(d.den ?? "")}</td>` +
+          [d.kcal, d.p, d.c, d.f, d.fib].map((v) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${czk(num(v))}</td>`).join("") + `</tr>`).join("");
+      b += `</table>`;
+    }
   }
 
   // aktivity
   const a = r.activity || {};
   b += sect("Aktivity") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='font-size:14px;color:#F0EADF'>` +
     `<tr><td style='padding:4px 0'>🚶 Kroky (Ø/den)</td><td align='right' style='font-weight:700;color:#fff'>${czk(num(a.kroky))}${delta(num(a.kroky), prev ? num((prev.activity || {}).kroky) : null, false)}</td></tr>` +
-    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td align='right' style='font-weight:700;color:#fff'>${a.fitko ? esc(a.fitko) + "×" : "—"}</td></tr>` +
+    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" : "—"}</td></tr>` +
     `<tr><td style='padding:4px 0'>🏃 Kardio</td><td align='right' style='font-weight:700;color:#fff'>${esc(a.kardio || "—")}</td></tr>` +
     `<tr><td style='padding:4px 0'>⚽ Další</td><td align='right' style='font-weight:700;color:#fff'>${esc(a.dalsi || "—")}</td></tr></table>`;
 
@@ -223,10 +228,11 @@ Deno.serve(async (req: Request) => {
   if (action === "report") {
     const row = {
       email,
-      report_date: new Date().toISOString().slice(0, 10),
+      // datum v Europe/Prague — report odeslaný po půlnoci CZ nesmí dostat včerejší (UTC) datum
+      report_date: new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Prague" }).format(new Date()),
       weight: num(data.weight),
       measurements: data.measurements ?? {},
-      nutrition: data.nutrition ?? {},
+      nutrition: data.nutrition === null ? null : (data.nutrition ?? {}), // null = klient stravu nezapisoval
       activity: data.activity ?? {},
       scales: data.scales ?? {},
       notes: data.notes ?? {},
@@ -274,7 +280,7 @@ Deno.serve(async (req: Request) => {
     const first = reps && reps.length ? reps[0] : null, last = reps && reps.length ? reps[reps.length - 1] : null;
     const fw = first ? num(first.weight) : null, lw = last ? num(last.weight) : null;
     const pokrok = (fw != null && lw != null)
-      ? `${czk(fw)} kg → ${czk(lw)} kg (${lw - fw > 0 ? "+" : "−"}${czk(Math.round(Math.abs(lw - fw) * 10) / 10)} kg za ${reps!.length} reportů, ${first!.report_date} – ${last!.report_date})`
+      ? `${czk(fw)} kg → ${czk(lw)} kg (${lw - fw > 0 ? "+" : lw - fw < 0 ? "−" : ""}${czk(Math.round(Math.abs(lw - fw) * 10) / 10)} kg za ${reps!.length} reportů, ${first!.report_date} – ${last!.report_date})`
       : `${reps?.length ?? 0} reportů`;
     const html = `<p style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
       `<p style='margin:0 0 14px;color:#8F8A99;font-size:14px'>souhlasí s použitím jako reference (jméno + slova + čísla)</p>` +

@@ -3,6 +3,7 @@
 // Komu: aktivní entitlement 'coaching' + registrovaný účet + report nemá z posledních 3 dnů
 // (kdo vyplnil o víkendu / v pondělí před cronem, mail nedostane).
 // Globální vypnutí: app_config.client_remind_enabled = 'false'.
+// Per-klient vypnutí: app_config.client_remind_optout = CSV e-mailů (zapisuje se v adminu).
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -56,7 +57,7 @@ function mailHtml(osloveni: string): string {
     `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Vyplnit report (3 min)</a></p>` +
     p("<span style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna — míry řeknou víc než váha. Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>") +
     p("<strong>Be Effective!</strong><br>Martin") +
-    `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · připomínka pro klienty koučinku — nechceš je? Odepiš „stop připomínky“ a vypnu ti je.</div>` +
+    `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · připomínka pro klienty koučinku — nechceš je? Odepiš mi na tenhle mail a vypnu ti je.</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
 }
 
@@ -91,6 +92,10 @@ Deno.serve(async (req: Request) => {
   const { data: recent } = await admin.from("client_reports").select("email").gte("report_date", cutoff);
   const recentSet = new Set((recent ?? []).map((r) => low(r.email)));
 
+  // per-klient opt-out (klient odepsal, že připomínky nechce → admin ho zapíše do CSV)
+  const { data: opt } = await admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle();
+  const optout = new Set(String(opt?.value ?? "").split(/[\s,;]+/).map((s) => low(s)).filter(Boolean));
+
   // oslovení z customer_contacts (křestní jméno v 5. pádu; bez jména padne na "Ahoj,")
   const { data: cc } = await admin.from("customer_contacts").select("email,name").in("email", clients);
   const nameBy = new Map<string, string>();
@@ -99,7 +104,7 @@ Deno.serve(async (req: Request) => {
     if (raw) nameBy.set(low(c.email), vokativ(raw.charAt(0).toUpperCase() + raw.slice(1)));
   }
 
-  const targets = clients.filter((e) => registered.has(e) && !recentSet.has(e));
+  const targets = clients.filter((e) => registered.has(e) && !recentSet.has(e) && !optout.has(e));
   let sent = 0;
   const errors: string[] = [];
   for (const email of targets) {

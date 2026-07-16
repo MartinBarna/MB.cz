@@ -38,6 +38,11 @@
   .doc:hover{border-color:rgba(235,177,44,.5);}
   .doc .ic{flex:0 0 auto;color:#EBB12C;}
   .doc .sz{margin-left:auto;color:#8F8A99;font-size:.78rem;flex:0 0 auto;}
+  .fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+  .fitem{display:block;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;overflow:hidden;text-decoration:none;}
+  .fitem:hover{border-color:rgba(235,177,44,.5);}
+  .fitem img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;background:#211d2b;}
+  .fitem .fd{display:block;padding:6px 8px;font-size:.75rem;color:#8F8A99;}
   /* ===== wizard overlay ===== */
   #wiz{position:fixed;inset:0;background:#100e16;z-index:60;display:none;flex-direction:column;}
   #wiz.open{display:flex;}
@@ -171,6 +176,13 @@
         </tr></thead><tbody id="histBody"></tbody></table></div>
       </div>
 
+      <!-- fotky z reportů -->
+      <div id="fotoWrap" style="display:none;">
+        <div class="ksec">📷 Tvoje fotky</div>
+        <p class="lead" style="font-size:.9rem;margin:0 0 12px;">Fotky z reportů pohromadě — tvoje proměna černá na bílém. Vidíte je jen ty a Martin. Klepnutím otevřeš plnou velikost.</p>
+        <div class="fgrid" id="fotos"></div>
+      </div>
+
       <!-- dokumenty -->
       <div class="ksec">Dokumenty od Martina</div>
       <div id="docs"><p class="lead" style="font-size:.9rem;" id="docsEmpty">Zatím tu žádné dokumenty nejsou — jakmile ti Martin něco nahraje (plán, jídelníček, podklady), objeví se tady.</p></div>
@@ -236,10 +248,11 @@
 
   // ---------- data (REST + RLS: vidím jen svoje řádky) ----------
   function api(path){
+    // null = chyba načtení (odlišit od prázdného výsledku, ať klient nevidí falešné "žádné reporty")
     return window.BA.getToken().then(function(t){
       return fetch(CFG.url + "/rest/v1/" + path, { headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t } })
-        .then(function(r){ return r.ok ? r.json() : []; });
-    });
+        .then(function(r){ return r.ok ? r.json() : null; });
+    }).catch(function(){ return null; });
   }
   function storageList(prefix){
     return window.BA.getToken().then(function(t){
@@ -342,10 +355,12 @@
   }
 
   // ---------- dashboard render ----------
-  function renderDash(){
+  function renderDash(loadFailed){
     if(!reports.length){
       el("stats").style.display = "none"; el("graphs").style.display = "none"; el("histWrap").style.display = "none";
-      el("reportCtaSub").textContent = "První report odemkne grafy pokroku. Naklikáš ho za ~3 minuty.";
+      el("reportCtaSub").textContent = loadFailed
+        ? "Nepodařilo se načíst data — zkus obnovit stránku."
+        : "První report odemkne grafy pokroku. Naklikáš ho za ~3 minuty.";
       return;
     }
     if(reports.length >= 8) el("refCta").style.display = "";
@@ -357,7 +372,7 @@
     el("stWsub").textContent = "z reportu " + dateCz(last.report_date);
     if(lw != null && fw != null && reports.length > 1){
       var d = Math.round((lw - fw) * 10) / 10;
-      el("stD").innerHTML = '<span class="' + (d <= 0 ? "pos" : "neg") + '" style="font-size:1.7rem;">' + (d > 0 ? "+" : "−") + czk(Math.abs(d)) + ' kg</span>';
+      el("stD").innerHTML = '<span class="' + (d <= 0 ? "pos" : "neg") + '" style="font-size:1.7rem;">' + (d > 0 ? "+" : d < 0 ? "−" : "") + czk(Math.abs(d)) + ' kg</span>';
       el("stDsub").textContent = "od začátku (" + dateCz(first.report_date) + ": " + czk(fw) + " kg)";
     } else { el("stD").textContent = "—"; el("stDsub").textContent = "doplní se od 2. reportu"; }
     el("stN").textContent = reports.length;
@@ -413,6 +428,49 @@
         a.innerHTML = '<span class="ic">📄</span><span>' + escH(it.name) + (it.shared ? ' <span style="color:#8F8A99;font-size:.78rem;">· pro všechny klienty</span>' : "") + '</span><span class="sz">' + (it.size ? Math.max(1, Math.round(it.size / 1024)) + " kB" : "") + "</span>";
         a.addEventListener("click", function(e){ e.preventDefault(); openDoc(it.path, it.name); });
         host.appendChild(a);
+      });
+    });
+  }
+
+  function renderFotky(){
+    // fotky z reportů (podsložka email/fotky/) — SELECT policy vlastní složky je pokrývá
+    storageList(myEmail + "/fotky").then(function(list){
+      var imgs = (list || []).filter(function(o){
+        if(!(o && o.name && o.id)) return false;
+        var mt = (o.metadata && o.metadata.mimetype) || "";
+        return /^image\//.test(mt) || /\.(jpe?g|png|gif|webp|heic|heif)$/i.test(o.name);
+      });
+      if(!imgs.length) return;
+      imgs.sort(function(a, b){ return String(b.name).localeCompare(String(a.name)); }); // název začíná timestampem → nejnovější první
+      imgs = imgs.slice(0, 24);
+      el("fotoWrap").style.display = "";
+      var host = el("fotos");
+      function loadImg(card){
+        if(card.getAttribute("data-loaded")) return;
+        card.setAttribute("data-loaded", "1");
+        var path = card.getAttribute("data-path");
+        window.BA.getToken().then(function(t){
+          return fetch(CFG.url + "/storage/v1/object/authenticated/client-docs/" + path.split("/").map(encodeURIComponent).join("/"),
+            { headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t } });
+        }).then(function(r){ if(!r.ok) throw 0; return r.blob(); }).then(function(b){
+          var u = URL.createObjectURL(b);
+          card.querySelector("img").src = u; card.href = u;
+        }).catch(function(){ card.querySelector(".fd").textContent = "nenačteno — obnov stránku"; });
+      }
+      var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if(en.isIntersecting){ io.unobserve(en.target); loadImg(en.target); } });
+      }, { rootMargin: "300px" }) : null;
+      imgs.forEach(function(o){
+        var ts = (String(o.name).match(/^(\d{13})/) || [])[1];
+        var dd = ts ? new Date(Number(ts)) : (o.created_at ? new Date(o.created_at) : null);
+        var when = (dd && !isNaN(dd)) ? dd.getDate() + ". " + (dd.getMonth() + 1) + ". " + dd.getFullYear() : "";
+        var card = document.createElement("a");
+        card.className = "fitem"; card.href = "#"; card.target = "_blank"; card.rel = "noopener";
+        card.setAttribute("data-path", myEmail + "/fotky/" + o.name);
+        card.innerHTML = '<img alt="' + escH(when ? "Fotka z " + when : o.name) + '"><span class="fd">' + escH(when || o.name) + '</span>';
+        card.addEventListener("click", function(e){ if(card.getAttribute("href") === "#") e.preventDefault(); });
+        host.appendChild(card);
+        if(io) io.observe(card); else loadImg(card);
       });
     });
   }
@@ -547,6 +605,7 @@
       if(window.XLSX) return res();
       var s = document.createElement("script");
       s.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"; s.async = true;
+      s.integrity = "sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw"; s.crossOrigin = "anonymous";
       s.onload = function(){ res(); };
       s.onerror = function(){ rej(new Error("Čtečku XLS se nepodařilo načíst — zkontroluj připojení.")); };
       document.head.appendChild(s);
@@ -591,13 +650,18 @@
           cur = days[k]; continue;
         }
         if(!cur) continue;
+        var joined = row.map(function(c){ return String(c == null ? "" : c).toLowerCase(); }).join(" ");
+        if(/\b(pr[ůu]měr|prumer)\b/.test(joined)){ cur = null; continue; } // týdenní souhrn za posledním dnem — nepatří žádnému dni
         var e = ktNum(row[col.e]);
         if(e == null) continue;
         var vals = { kcal: col.kj ? e / 4.184 : e, p: ktNum(row[col.p]) || 0,
           c: col.c > -1 ? (ktNum(row[col.c]) || 0) : 0, f: col.f > -1 ? (ktNum(row[col.f]) || 0) : 0,
           fib: col.fib > -1 ? (ktNum(row[col.fib]) || 0) : 0 };
-        var joined = row.map(function(c){ return String(c == null ? "" : c).toLowerCase(); }).join(" ");
-        if(/celkem|součet|soucet|total/.test(joined)) cur.celkem = vals;
+        if(/celkem|součet|soucet|total/.test(joined)){
+          // Celkem UVNITŘ dne ≈ součet položek; výrazně vyšší číslo = souhrn za celé období → nepatří dni
+          if(cur.kcal > 0 && vals.kcal > cur.kcal * 1.25 + 150){ cur = null; continue; }
+          cur.celkem = vals; cur = null; // Celkem uzavírá den — souhrnné řádky za ním se ignorují
+        }
         else { cur.kcal += vals.kcal; cur.p += vals.p; cur.c += vals.c; cur.f += vals.f; cur.fib += vals.fib; }
       }
       var list = order.map(function(k2){
@@ -684,6 +748,7 @@
             + '<button type="button" class="kbtn2" id="f_ktBtn" style="width:100%;">📥 Načíst z Kalorických tabulek (XLS export)</button>'
             + '<input type="file" id="f_ktFile" accept=".xls,.xlsx" style="display:none;">'
             + '<p class="help" style="font-size:.8rem;margin:8px 0 0;">Na webu KT: ikona šipky dolů v hlavičce jídelníčku → vyber poslední týden → XLS. Průměry i denní rozpis se doplní samy a export se přiloží pro Martina.</p></div>'
+            + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:.9rem;color:#B9B3C4;margin:0 0 14px;cursor:pointer;"><input type="checkbox" id="f_noTrack"' + (a._noTrack ? " checked" : "") + ' style="width:auto;margin-top:3px;"> Tenhle týden jsem stravu nezapisoval/a — čísla přeskočit (nic si nevymýšlej, Martin to tak uvidí férově)</label>'
             + fNum("f_kcal", "Kalorie Ø/den", "kcal", "např. 1750", n.kcal)
             + '<div class="m2">' + fNum("f_prot", "Bílkoviny Ø", "g", "", n.protein) + fNum("f_carb", "Sacharidy Ø", "g", "", n.carbs, true) + fNum("f_fat", "Tuky Ø", "g", "", n.fat, true) + fNum("f_fib", "Vláknina Ø", "g", "", n.fiber, true) + "</div>"
             + fChips("f_dny", "Kolik dní jsi zapisoval/a?", ["0", "1", "2", "3", "4", "5", "6", "7"], n.dny_zapsano != null ? String(n.dny_zapsano) : null)
@@ -701,6 +766,12 @@
         },
         mount: function(a){
           mountPick("f_dny");
+          var nt = document.getElementById("f_noTrack");
+          function applyNoTrack(){
+            var dis = !!(nt && nt.checked);
+            ["f_kcal", "f_prot", "f_carb", "f_fat", "f_fib"].forEach(function(id){ var x = document.getElementById(id); if(x) x.disabled = dis; });
+          }
+          if(nt){ nt.addEventListener("change", function(){ a._noTrack = nt.checked; applyNoTrack(); }); applyNoTrack(); }
           document.getElementById("f_dnyBtn").addEventListener("click", function(){ a._dnyOpen = !a._dnyOpen; document.getElementById("f_dnyBox").style.display = a._dnyOpen ? "block" : "none"; this.textContent = a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)"; });
           document.getElementById("f_ktBtn").addEventListener("click", function(){ document.getElementById("f_ktFile").click(); });
           document.getElementById("f_ktFile").addEventListener("change", function(){
@@ -711,6 +782,7 @@
                 var out = parseKT(window.XLSX.read(buf, { type: "array", cellDates: true }));
                 if(!out) throw new Error("V souboru jsem nenašel jídelníček — přilož ho prosím v kroku Fotky a přílohy a průměry vyplň ručně.");
                 a.nutrition = { kcal: out.kcal, protein: out.protein, carbs: out.carbs, fat: out.fat, fiber: out.fiber, dny_zapsano: Math.min(out.dnyCount, 7), dny: out.dny };
+                a._noTrack = false; // import z KT = strava zapsaná
                 a._dnyOpen = true;
                 if(WFILES.length < 6 && fotoOk(f)) WFILES.push(f); // export rovnou jako příloha pro Martina
                 wShow();
@@ -723,6 +795,9 @@
           });
         },
         collect: function(a){
+          var nt = document.getElementById("f_noTrack");
+          if(nt && nt.checked){ a._noTrack = true; a.nutrition = null; return; } // strava nezapsána — do reportu jde férové "nezapisoval/a"
+          a._noTrack = false;
           var kcal = reqNum("f_kcal", "průměrné kalorie", 400, 8000); if(kcal.err) return kcal.err;
           var prot = reqNum("f_prot", "průměrné bílkoviny", 10, 500); if(prot.err) return prot.err;
           var carb = optNum("f_carb", 0, 1200); if(carb.err) return "Sacharidy: " + carb.err;
@@ -794,7 +869,9 @@
           var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {};
           return g("Váha", "vaha", [["Týdenní průměr", czk(a.weight) + " kg"]])
             + g("Míry", a._miry ? "miry" : "miryq", a._miry ? MIRY.map(function(x){ return [x[1], m[x[0]] != null ? czk(m[x[0]]) + " cm" : ""]; }) : [["Tento týden", "přeskočeno"]])
-            + g("Strava Ø", "strava", [["Kalorie", czk(n.kcal) + " kcal"], ["Bílkoviny", czk(n.protein) + " g"], ["Sacharidy", n.carbs != null ? czk(n.carbs) + " g" : ""], ["Tuky", n.fat != null ? czk(n.fat) + " g" : ""], ["Vláknina", n.fiber != null ? czk(n.fiber) + " g" : ""], ["Zapsáno dní", n.dny_zapsano + "/7"]])
+            + (a.nutrition === null
+              ? g("Strava", "strava", [["Tenhle týden", "strava nezapsána"]])
+              : g("Strava Ø", "strava", [["Kalorie", czk(n.kcal) + " kcal"], ["Bílkoviny", czk(n.protein) + " g"], ["Sacharidy", n.carbs != null ? czk(n.carbs) + " g" : ""], ["Tuky", n.fat != null ? czk(n.fat) + " g" : ""], ["Vláknina", n.fiber != null ? czk(n.fiber) + " g" : ""], ["Zapsáno dní", n.dny_zapsano + "/7"]]))
             + g("Aktivity", "aktivity", [["Kroky Ø", czk(ac.kroky)], ["Fitko", ac.fitko + "×"], ["Kardio", ac.kardio], ["Další", ac.dalsi]])
             + g("Pocity", "skaly", [["Únava", s.unava + "/5"], ["Hlad", s.hlad + "/5"], ["Síla", s.sila + "/5"], ["Spánek", (s.spanek_h != null ? czk(s.spanek_h) + " h · " : "") + s.spanek_kvalita + "/5"], ["Dodržení plánu", s.dodrzeni + "/5"]])
             + g("Slovně", "texty", [["Povedlo se", t.povedlo], ["Drhlo", t.drhlo], ["Otázky", t.otazky], ["Navíc", t.dalsi]])
@@ -934,12 +1011,14 @@
       api("client_reports?select=report_date,weight,measurements,nutrition,activity,scales&order=report_date.asc&limit=200"),
       api("client_intake?select=id&limit=1")
     ]).then(function(res){
+      var failed = res[0] === null;
       reports = Array.isArray(res[0]) ? res[0] : [];
       hasIntake = Array.isArray(res[1]) && res[1].length > 0;
-      if(!hasIntake) el("intakeCta").style.display = "";
-      renderDash();
-    });
+      if(!hasIntake && res[1] !== null) el("intakeCta").style.display = ""; // při chybě nenutit dotazník stávajícímu klientovi
+      renderDash(failed);
+    }).catch(function(){ renderDash(true); });
     renderDocs();
+    renderFotky();
     // reference: souhlas + jejich slova → mail Martinovi
     el("refOpen").addEventListener("click", function(){ el("refForm").style.display = ""; el("refOpen").style.display = "none"; });
     el("refSend").addEventListener("click", function(){
@@ -976,7 +1055,7 @@
     });
     el("btnReport").addEventListener("click", function(){
       wOpen("report", reportSteps(), function(a){
-        submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition || {}, activity: a.activity || {}, scales: a.scales || {}, notes: a.notes || {} }, "Report odeslán!");
+        submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition === null ? null : (a.nutrition || {}), activity: a.activity || {}, scales: a.scales || {}, notes: a.notes || {} }, "Report odeslán!");
       });
     });
     el("btnIntake").addEventListener("click", function(){

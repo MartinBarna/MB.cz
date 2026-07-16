@@ -83,14 +83,6 @@
         <span class="go"><span class="lbl">Otevřít moji sekci</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
-      <a class="card" id="tileCheckin" href="/akademie/moje/check-in/" style="display:none;">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg></div>
-        <h2>Týdenní check-in</h2>
-        <p class="desc">Tvoje váha, energie, spánek a tréninky za týden. Čím pravidelněji vyplňuješ, tím větší věrnostní sleva — a tím líp tě vedu.</p>
-        <div class="chips"><span class="chip">2 minuty týdně</span><span class="chip">Věrnostní sleva</span><span class="chip">Vidí to Martin</span></div>
-        <span class="go"><span class="lbl">Vyplnit check-in</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-      </a>
-
       <a class="card" id="tileMemberCheckin" href="/akademie/check-in/" style="display:none;">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg></div>
         <h2>Týdenní check-in zdarma</h2>
@@ -143,8 +135,8 @@
           tt.setAttribute('href', '/nastroje-zdarma/');
           var ttl=tt.querySelector('.go .lbl'); if(ttl) ttl.textContent='Vyzkoušet zdarma';
           var tth=tt.querySelector('h2'); if(tth) tth.textContent='Nástroje na míru';
-          var ttd=tt.querySelector('.desc'); if(ttd) ttd.textContent='Spočítej si vlastní jídelníček i makra, najdi potraviny podle kalorií a bílkovin, vygeneruj recepty i tréninkový plán. Lite verzi máš zdarma, plnou v Academy.';
-          var ttc=tt.querySelector('.chips'); if(ttc) ttc.innerHTML='<span class="chip">Jídelníček</span><span class="chip">Makra</span><span class="chip">Potraviny</span>';
+          var ttd=tt.querySelector('.desc'); if(ttd) ttd.textContent='Spočítej si vlastní jídelníček i makra, vygeneruj tréninkový plán a projdi databázi cviků. Lite verzi máš zdarma, plnou v Academy.';
+          var ttc=tt.querySelector('.chips'); if(ttc) ttc.innerHTML='<span class="chip">Jídelníček</span><span class="chip">Trénink</span><span class="chip">Cviky</span>';
           var ttlb=tt.querySelector('.lockbadge'); if(ttlb){ ttlb.style.display='inline-flex'; ttlb.style.background='linear-gradient(145deg,#EBB12C,#E0762C)'; ttlb.style.color='#1A1222'; ttlb.style.border='none'; ttlb.textContent='🎁 Lite zdarma'; }
         }
         var n=(hasA?1:0)+(hasV?1:0);

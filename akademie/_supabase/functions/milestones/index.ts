@@ -56,8 +56,13 @@ function renderBlocks(blocks: Block[], v: Record<string, string>): string {
     return `<p style='margin:4px 0 18px'><a href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
   }).join("\n");
 }
-function wrap(preheader: string, body: string): string {
-  const foot = "Martin Barna — online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku — není to newsletter).";
+function wrap(preheader: string, body: string, unsubUrl = ""): string {
+  // unsubscribe paticka: vk-complete obsahuje i prodejni blok (Academy/referral/appka),
+  // takze odhlaseni musi byt primo v mailu, ne jen "neni to newsletter"
+  const unsubLine = unsubUrl
+    ? `<br>Nechceš už ode mě e-maily? <a href='${unsubUrl}' style='color:#8F8A99'>Odhlásit se</a> — jedním klikem.`
+    : "";
+  const foot = "Martin Barna — online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku — není to newsletter)." + unsubLine;
   return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
     `<body style='margin:0;background:#0C0B10;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${preheader}</span>` +
@@ -118,12 +123,16 @@ function vars(name: string): Record<string, string> {
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : "", "");
   return { first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "" };
 }
-async function send(to: string, subject: string, html: string) {
+async function send(to: string, subject: string, html: string, unsubUrl = "") {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
+  // RFC 8058 List-Unsubscribe hlavicky (kdyz mame token) — stejne jako drip-send
+  const headers = unsubUrl
+    ? { "List-Unsubscribe": "<" + unsubUrl + ">", "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" }
+    : undefined;
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz" }),
+    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz", headers }),
   });
   if (!r.ok) throw new Error("resend_" + r.status);
 }

@@ -1,6 +1,6 @@
 // Barna Academy - drip-send (email nurture / DRIP engine). Deno, deploy --no-verify-jwt.
 // Copy zije v DB (email_templates + app_config footer_*), aby sla menit bez redeploye.
-// Gender tokeny v copy: [[zena||muz]] a [a]. Merge: dvojite-slozene-zavorky key. Viz README.md.
+// Gender tokeny v copy: [[zena||muz]], [a] a [á]. Merge: dvojite-slozene-zavorky key. Viz README.md.
 // Rezimy POST JSON: dry:true | test_email+track+step+segment+name | prazdne (ostry beh).
 // Auth: hlavicka x-drip-secret == app_config drip_invoke_secret. Klice jen z env.
 // Pozn.: zdrojak je zamerne bez znaku uvozovek a zpetnych lomitek (kvuli snadnemu deployi).
@@ -94,7 +94,8 @@ function gender(s: string, seg: Seg): string {
     out += isFem(seg) ? s.slice(a + 2, sep) : s.slice(sep + 2, end);
     i = end + 2;
   }
-  return out.split('[a]').join(isFem(seg) ? 'a' : '');
+  // [á] = rad[á]/rád ap. (dlouhe pripony) — order-rescue ho uz podporuje, drz v synci
+  return out.split('[a]').join(isFem(seg) ? 'a' : '').split('[á]').join(isFem(seg) ? 'á' : 'ý');
 }
 function merge(s: string, vars: Record<string, string>): string {
   let out = '', i = 0;
@@ -110,7 +111,8 @@ function merge(s: string, vars: Record<string, string>): string {
   return out;
 }
 const fill = (s: string, seg: Seg, v: Record<string, string>) => merge(gender(s, seg), v);
-const hasToken = (s: string) => s.includes('{{') || s.includes('[[') || s.includes(']]') || s.includes('[a]');
+// pojistka: zadny nerozreseny token (vc. [á]) nesmi nikdy odejit v tele mailu
+const hasToken = (s: string) => s.includes('{{') || s.includes('[[') || s.includes(']]') || s.includes('[a]') || s.includes('[á]');
 
 function inlineToText(s: string): string {
   s = s.split('<br>').join(NL).split('<br/>').join(NL).split('<br />').join(NL);
@@ -248,10 +250,12 @@ Deno.serve(async (req: Request) => {
   // BRANA: follow-up/transakcni tracky (non-onboarding) se posilaji jen kdyz je followups_enabled='true'.
   // Absence/jina hodnota = drzet (test-first). Prepnuti ostro = 1 SQL update, bez redeploye.
   const followupsEnabled = (fMap.followups_enabled ?? '') === 'true';
-  // DENNI STROP: rezerva pod Resend limitem (100/den) pro instantni uvitacky (mimo strop),
-  // transakcni maily (rescue/milniky/digest) a Auth SMTP. Cti z app_config drip_daily_cap
-  // (zmena = 1 SQL update bez redeploye); fallback 60.
-  const DAILY_CAP = Math.max(1, Number(fMap.drip_daily_cap ?? '') || 60);
+  // DENNI STROP: pojistka proti runaway odesilani (bug/flood), ne Resend Free limit —
+  // provoz jede na Resend Pro (50k/mes). 500/den necha rezervu pro transakcni maily
+  // (rescue/milniky/digest) a Auth SMTP. Cti z app_config drip_daily_cap (zmena = 1 SQL
+  // update bez redeploye); fallback 500. POZN: app_config drzi 2000 = fakticky vypnuto,
+  // snizeni na 500 je v security-fixes-2026-07.sql (ceka na schvaleni Martinem).
+  const DAILY_CAP = Math.max(1, Number(fMap.drip_daily_cap ?? '') || 500);
 
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
@@ -318,19 +322,35 @@ Deno.serve(async (req: Request) => {
     leads = [...nonOnb, ...freshOnb, ...staleOnb];
   }
 
-  const { data: buyersRows } = await admin.from('entitlements').select('email').eq('product', 'videokurz').eq('active', true);
-  const buyers = new Set((buyersRows ?? []).map((b: { email: string }) => b.email.toLowerCase()));
+  // STOP-PO-NAKUPU (per track): prodejni track se stopne, kdyz prijemce UZ vlastni produkt,
+  // ktery mu track prodava (entitlements, active):
+  //  - akvizicni (lead-magnet*, existing-leadmagnet, nurture-*) a longtail-consumer prodavaji
+  //    vstup ne-majitelum -> stop pri JAKEMKOLI nakupu (videokurz/academy/coaching);
+  //    u akvizicnich je krok 0 slibeny freebie (PDF plan) -> posli vzdy, stop az od kroku 1
+  //  - longtail-trener a upsell-academy prodavaji Academy -> stop pri academy
+  //  - upsell-coaching prodava koucink -> stop pri coaching
+  //  - longtail-kupci = pece o kupce videokurzu + upgrade na Academy -> stop pri academy
+  // Clenske tracky (onboarding, milestone, reactivation, rescue) cili na zakazniky -> nikdy nestopovat.
+  const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true).in('product', ['videokurz', 'academy', 'coaching']);
+  const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set() };
+  for (const b of (buyersRows ?? []) as { email: string; product: string }[]) owns[b.product]?.add(b.email.toLowerCase());
+  const ownsAny = (em: string) => owns.videokurz.has(em) || owns.academy.has(em) || owns.coaching.has(em);
+  const shouldStop = (track: string, step: number, em: string): boolean => {
+    const t = String(track || '');
+    if (['lead-magnet', 'existing-leadmagnet', 'nurture-'].some((p) => t.indexOf(p) === 0)) return step > 0 && ownsAny(em);
+    if (t === 'longtail-consumer') return ownsAny(em);
+    if (t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci') return owns.academy.has(em);
+    if (t === 'upsell-coaching') return owns.coaching.has(em);
+    return false;
+  };
 
   // DRY
   if (body.dry === true) {
     const byStep: Record<string, number> = {};
     let would = 0, bought = 0, invalid = 0;
     for (const l of leads) {
-      // STOP po nakupu plati JEN pro akvizicni tracky (prodavaji videokurz ne-majitelum).
-      // Clenske tracky (onboarding, upsell, milestone, reactivation, rescue, coaching)
-      // cili PRAVE na zakazniky -> nikdy nepreskakovat. Krok 0 = uvitaci/freebie -> posli vzdy.
-      const acqDry = ['lead-magnet', 'existing-leadmagnet', 'nurture-'].some((p) => String(l.track || '').indexOf(p) === 0);
-      if (acqDry && l.step > 0 && buyers.has(String(l.email).toLowerCase())) { bought++; continue; }
+      // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
+      if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; }
       const tpl = await getTpl(l.track, l.step);
       if (!tpl) { invalid++; continue; }
       const key = l.track + '/step' + l.step + ':' + tpl.key;
@@ -353,11 +373,8 @@ Deno.serve(async (req: Request) => {
     const seg = normSeg(l.segment);
     const tpl = await getTpl(l.track, l.step);
     if (!tpl) { await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue; }
-    // STOP po nakupu plati JEN pro akvizicni tracky (prodavaji videokurz ne-majitelum).
-    // Clenske tracky (onboarding, upsell, milestone, reactivation, rescue, coaching)
-    // cili PRAVE na zakazniky -> nikdy nepreskakovat. Krok 0 = uvitaci/freebie -> posli vzdy.
-    const acq = ['lead-magnet', 'existing-leadmagnet', 'nurture-'].some((p) => String(l.track || '').indexOf(p) === 0);
-    if (acq && l.step > 0 && buyers.has(String(l.email).toLowerCase())) {
+    // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
+    if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) {
       await admin.from('leads').update({ status: 'purchased', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
       await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_purchased', detail: { track: l.track } });
       stopped++; continue;

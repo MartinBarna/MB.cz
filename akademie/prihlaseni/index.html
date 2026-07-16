@@ -32,6 +32,10 @@
     box-shadow:0 14px 30px -8px rgba(235,177,44,.22);transition:transform .2s,box-shadow .2s;}
   .btn:hover{transform:translateY(-2px);box-shadow:0 18px 38px -8px rgba(235,177,44,.7);}
   .btn[disabled]{opacity:.55;cursor:default;transform:none;}
+  .btn.otpb{background:rgba(255,255,255,.05);border:1px solid var(--line-2);color:var(--muted-2);box-shadow:none;margin-top:10px;font-size:.92rem;}
+  .btn.otpb:hover{border-color:rgba(235,177,44,.45);color:#fff;transform:none;box-shadow:none;}
+  .forgot{display:block;text-align:right;font-size:.8rem;color:var(--muted);margin-top:7px;text-decoration:none;font-weight:600;}
+  .forgot:hover{color:var(--gold-soft);}
   .msg{margin-top:15px;padding:12px 15px;border-radius:12px;font-size:.9rem;display:none;}
   .msg.err{display:block;background:rgba(179,38,30,.15);color:#ff9c93;border:1px solid rgba(179,38,30,.4);}
   .msg.ok{display:block;background:rgba(30,122,50,.15);color:#86e29a;border:1px solid rgba(30,122,50,.4);}
@@ -85,10 +89,13 @@
         <div id="passRow">
           <label for="pass">Heslo</label>
           <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••" minlength="6">
+          <a class="forgot" href="#" id="forgotLink">Zapomněl(a) jsi heslo?</a>
         </div>
         <button class="btn" id="submit" type="submit">Přihlásit se</button>
+        <button class="btn otpb" id="otpBtn" type="button">📧 Přihlásit se e-mailem (bez hesla)</button>
         <div class="msg" id="msg"></div>
         <p id="otpHint" style="font-size:.82rem;color:#9a948c;margin:.6rem 0 0;text-align:center;line-height:1.45;">Hlásíš se poprvé po koupi? Dej <strong>„Vytvořit účet"</strong> a použij stejný e-mail jako u platby.</p>
+        <p id="resetHint" style="display:none;font-size:.82rem;color:#9a948c;margin:.6rem 0 0;text-align:center;line-height:1.45;">Pošleme ti e-mail s odkazem — na něm si nastavíš nové heslo. <a href="#" id="backToLogin" style="color:#F6CD63;font-weight:600;">← Zpět na přihlášení</a></p>
       </form>
       <a href="/akademie/navod/" style="display:block;text-align:center;margin:14px 0 0;font-size:.86rem;color:#F6CD63;text-decoration:none;font-weight:600;">📖 Nevíš si rady? Návod krok za krokem →</a>
     </div>
@@ -110,12 +117,13 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260716"></script>
   <script>
     (function () {
       var mode = 'in';
       var tabIn = document.getElementById('tabIn'), tabUp = document.getElementById('tabUp');
       var nameRow = document.getElementById('nameRow'), passRow = document.getElementById('passRow'), otpHint = document.getElementById('otpHint'), submit = document.getElementById('submit');
+      var resetHint = document.getElementById('resetHint'), otpBtn = document.getElementById('otpBtn');
       var msg = document.getElementById('msg'), form = document.getElementById('form');
       var emailEl = document.getElementById('email'), passEl = document.getElementById('pass'), fnameEl = document.getElementById('fname');
 
@@ -139,14 +147,19 @@
         tabIn.classList.toggle('on', m === 'in');
         tabUp.classList.toggle('on', m === 'up');
         nameRow.style.display = m === 'up' ? 'block' : 'none';
-        passRow.style.display = 'block';
-        otpHint.style.display = m === 'up' ? 'none' : 'block';
-        submit.textContent = m === 'up' ? 'Vytvořit účet' : 'Přihlásit se';
+        passRow.style.display = m === 'reset' ? 'none' : 'block';
+        otpHint.style.display = m === 'in' ? 'block' : 'none';
+        resetHint.style.display = m === 'reset' ? 'block' : 'none';
+        otpBtn.style.display = m === 'in' ? 'block' : 'none';
+        submit.textContent = m === 'up' ? 'Vytvořit účet' : (m === 'reset' ? 'Poslat odkaz pro nové heslo' : 'Přihlásit se');
         passEl.setAttribute('autocomplete', m === 'up' ? 'new-password' : 'current-password');
         msg.className = 'msg'; msg.textContent = '';
       }
       tabIn.addEventListener('click', function () { setMode('in'); });
       tabUp.addEventListener('click', function () { setMode('up'); });
+      // Zapomenuté heslo: přepne formulář na odeslání obnovovacího odkazu (bez pole hesla).
+      document.getElementById('forgotLink').addEventListener('click', function (e) { e.preventDefault(); setMode('reset'); if (!emailEl.value.trim()) emailEl.focus(); });
+      document.getElementById('backToLogin').addEventListener('click', function (e) { e.preventDefault(); setMode('in'); });
 
       // Deep-link z onboarding e-mailu: ?tab=up otevře rovnou registraci,
       // ?email= předvyplní e-mail přístupu (zabrání nejčastější chybě — registraci jiným e-mailem).
@@ -208,7 +221,7 @@
         e.preventDefault();
         var email = emailEl.value.trim(), pass = passEl.value, fname = fnameEl.value.trim();
         if (!email || email.indexOf('@') < 1) { show('err', 'Zadej prosím platný e-mail.'); return; }
-        if (pass.length < 6) { show('err', 'Vyplň heslo (min. 6 znaků).'); return; }
+        if (mode !== 'reset' && pass.length < 6) { show('err', 'Vyplň heslo (min. 6 znaků).'); return; }
         submit.disabled = true; show('', '');
 
         window.BA.ready.then(function () {
@@ -217,12 +230,11 @@
             submit.disabled = false;
             return;
           }
-          if (mode === 'otp') {
-            var dest = location.origin + (need === 'videokurz' ? '/akademie/videokurz/' : nextUrl);
-            window.BA.signInWithOtp(email, dest).then(function (r) {
+          if (mode === 'reset') {
+            window.BA.resetPassword(email).then(function (r) {
               submit.disabled = false;
-              if (r.ok) { if (window.mbTrackLead) window.mbTrackLead('registrace_magic_link', { value: 0, currency: 'CZK' }); show('ok', '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho (mrkni i do spamu) a jsi uvnitř.'); }
-              else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí — <a href="/akademie/videokurz/?preview=free" style="color:#F6CD63;font-weight:700;text-decoration:underline;">pusť si 11 lekcí zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#F6CD63;">martin@martinbarna.cz</a>.'; }
+              if (r.ok) show('ok', '📧 Hotovo! Poslali jsme ti na ' + email + ' odkaz pro nastavení nového hesla. Otevři ho (mrkni i do spamu) a za minutku jsi zpátky uvnitř.');
+              else show('err', friendlyErr(r.error));
             });
           } else if (mode === 'up') {
             window.BA.signUp(email, pass, fname).then(function (r) {
@@ -241,6 +253,23 @@
               else { submit.disabled = false; show('err', friendlyErr(r.error)); }
             });
           }
+        });
+      });
+
+      // Magic-link: přihlášení e-mailem bez hesla (sekundární cesta, míň tření).
+      otpBtn.addEventListener('click', function () {
+        var email = emailEl.value.trim();
+        if (!email || email.indexOf('@') < 1) { show('err', 'Zadej nahoře svůj e-mail — pošleme ti na něj přihlašovací odkaz.'); emailEl.focus(); return; }
+        otpBtn.disabled = true; show('', '');
+        window.BA.ready.then(function () {
+          if (window.BA.mode === 'demo') { otpBtn.disabled = false; show('ok', 'Barna Academy zatím běží v ukázkovém režimu — přihlášení bude aktivní po spuštění.'); return; }
+          var dest = location.origin + (need === 'videokurz' ? '/akademie/videokurz/' : nextUrl);
+          window.BA.signInWithOtp(email, dest).then(function (r) {
+            otpBtn.disabled = false;
+            if (r.ok) { if (window.mbTrackLead) window.mbTrackLead('registrace_magic_link', { value: 0, currency: 'CZK' }); show('ok', '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho (mrkni i do spamu) a jsi uvnitř.'); }
+            else if (need === 'videokurz') { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí — <a href="/akademie/videokurz/?preview=free" style="color:#F6CD63;font-weight:700;text-decoration:underline;">pusť si 11 lekcí zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#F6CD63;">martin@martinbarna.cz</a>.'; }
+            else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Zkus to za chvíli znovu, přihlas se heslem, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#F6CD63;">martin@martinbarna.cz</a>.'; }
+          });
         });
       });
     })();
