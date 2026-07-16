@@ -24,7 +24,8 @@
 -- opomenutý kus. Cron 'longtail-enroll-daily' běží jako superuser,
 -- takže se nic nerozbije.
 -- ============================================================
-REVOKE EXECUTE ON FUNCTION public.enroll_into_longtail(integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.enroll_into_longtail(integer) FROM PUBLIC, anon, authenticated;
+-- (FROM PUBLIC je nutne: funkce mela vychozi =X grant pro PUBLIC, ktery by REVOKE jen pro anon obesel)
 
 
 -- ============================================================

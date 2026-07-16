@@ -73,7 +73,7 @@
       </div>
 
       <div id="expiredBox" style="display:none;">
-        <div class="msg err" style="display:block;">Tenhle odkaz už není platný — nejspíš vypršel, nebo už byl použitý. Nevadí, pošleme ti nový.</div>
+        <div class="msg err" style="display:block;">Tenhle odkaz už není platný, nejspíš vypršel nebo už byl použitý. Nevadí, pošleme ti nový.</div>
         <form id="resendForm" novalidate>
           <label for="remail">Tvůj e-mail</label>
           <input id="remail" type="email" autocomplete="email" placeholder="tvuj@email.cz">
@@ -110,7 +110,7 @@
       function friendlyErr(e) {
         var s = (e || '').toLowerCase();
         if (s.indexOf('different from the old') >= 0 || s.indexOf('same password') >= 0)
-          return 'Nové heslo je stejné jako to staré — zvol jiné.';
+          return 'Nové heslo je stejné jako to staré. Zvol jiné.';
         if (s.indexOf('at least') >= 0 || (s.indexOf('password') >= 0 && s.indexOf('6') >= 0))
           return 'Heslo musí mít aspoň 6 znaků.';
         if (s.indexOf('rate limit') >= 0 || s.indexOf('too many') >= 0)
@@ -138,7 +138,7 @@
         e.preventDefault();
         var a = p1.value, b = p2.value;
         if (a.length < 6) { show('err', 'Heslo musí mít aspoň 6 znaků.'); return; }
-        if (a !== b) { show('err', 'Hesla se neshodují — zkontroluj je a zkus to znovu.'); return; }
+        if (a !== b) { show('err', 'Hesla se neshodují. Zkontroluj je a zkus to znovu.'); return; }
         submit.disabled = true; show('', '');
         window.BA.updatePassword(a).then(function (r) {
           if (r.ok) {
@@ -164,7 +164,7 @@
         window.BA.resetPassword(em).then(function (r) {
           btn.disabled = false;
           if (r.ok) show2('ok', '📧 Hotovo! Poslali jsme ti na ' + em + ' nový odkaz. Otevři ho (mrkni i do spamu).');
-          else show2('err', r.error || 'Odeslání se nepovedlo — zkus to za chvíli znovu, nebo napiš na martin@martinbarna.cz.');
+          else show2('err', r.error || 'Odeslání se nepovedlo. Zkus to za chvíli znovu, nebo napiš na martin@martinbarna.cz.');
         });
       });
     })();
