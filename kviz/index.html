@@ -102,7 +102,7 @@
       +'<div class="mailbox"><b>💌 Chceš plán šitý na tvůj výsledek?</b><p class="small" style="margin:4px 0 0;">Pošlu ti na mail 7denní jídelníček zdarma + praktické tipy přesně k tvému profilu.</p>'
       +'<input type="email" id="kvEmail" placeholder="tvuj@email.cz" autocomplete="email" aria-label="Tvůj e-mail"><button class="cta" id="kvSend" style="margin:0;">Poslat zdarma</button>'
       +'<p class="small" id="kvMsg" style="margin:8px 0 0;">Odhlásíš se kdykoliv jedním klikem.</p></div></div>';
-    if(window.gtag) gtag('event','kviz_dokoncen',{profil:best});
+    if(window.gtag) gtag('event','kviz_dokoncen',{profil:best}); if(window.fbq) fbq('trackCustom','KvizDokoncen',{profil:best});
     var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
     document.getElementById('kvSend').addEventListener('click',function(){
       var em=(document.getElementById('kvEmail').value||'').trim(), msg=document.getElementById('kvMsg');
@@ -111,7 +111,7 @@
       fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture',{
         method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},
         body:JSON.stringify({email:em,segment:seg,source:'kviz',goal:'kviz profil: '+best})
-      }).then(function(){ msg.textContent='✅ Hotovo! Mrkni do schránky (i do promoakcí).'; btn.textContent='Odesláno ✓'; if(window.gtag)gtag('event','generate_lead',{zdroj:'kviz'}); if(window.fbq)fbq('track','Lead'); })
+      }).then(function(){ msg.textContent='✅ Hotovo! Mrkni do schránky (i do promoakcí).'; btn.textContent='Odesláno ✓'; if(window.mbTrackLead)mbTrackLead('kviz',{zdroj:'kviz'}); else { if(window.gtag)gtag('event','generate_lead',{zdroj:'kviz'}); if(window.fbq)fbq('track','Lead'); } })
         .catch(function(){ msg.textContent='Nepovedlo se, zkus to znovu.'; btn.disabled=false; btn.textContent='Poslat zdarma'; });
     });
   }
