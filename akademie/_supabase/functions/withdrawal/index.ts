@@ -86,14 +86,14 @@ Deno.serve(async (req: Request) => {
   // i Resend kvotu. Pri prekroceni tichy OK (utocnikovi nedavame zpetnou vazbu).
   const { count: emailCnt } = await admin.from("withdrawals")
     .select("id", { count: "exact", head: true }).eq("email", email).gt("created_at", since);
-  if ((emailCnt ?? 0) >= EMAIL_DAY_MAX) return json({ ok: true, when: "" }, 200, origin);
+  if ((emailCnt ?? 0) >= EMAIL_DAY_MAX) return json({ error: "rate-limit" }, 429, origin);
 
   // Rate-limit per IP/24h (vzor referral-click). Kdyz sloupec ip jeste neexistuje
   // (security-fixes SQL ceka na schvaleni), dotaz selze a check se tise preskoci.
   if (ip) {
     const { count: ipCnt, error: ipErr } = await admin.from("withdrawals")
       .select("id", { count: "exact", head: true }).eq("ip", ip).gt("created_at", since);
-    if (!ipErr && (ipCnt ?? 0) >= IP_DAY_MAX) return json({ ok: true, when: "" }, 200, origin);
+    if (!ipErr && (ipCnt ?? 0) >= IP_DAY_MAX) return json({ error: "rate-limit" }, 429, origin);
   }
 
   // Zapis (zdroj pravdy). Nejdriv s IP; kdyz sloupec jeste neexistuje, fallback bez ni.

@@ -85,7 +85,7 @@ function buildEmail(variant: string, email: string, name: string, token: string)
 
   const footerHtml =
     `Tento e-mail ti přišel, protože máš u Martina Barny zakoupený videokurz výživy.<br>` +
-    `Nechceš už e-maily? <a href='${esc(unsub)}' style='color:#8F8A99'>Odhlásit se</a> — jedním klikem.<br>` +
+    `Nechceš už e-maily? <a href='${esc(unsub)}' style='color:#8F8A99'>Odhlásit se</a>.<br>` +
     `Martin Barna — online výživový Coach · <a href='https://martinbarna.cz' style='color:#8F8A99'>martinbarna.cz</a>`;
 
   const html =

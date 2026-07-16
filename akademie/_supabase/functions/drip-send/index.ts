@@ -327,7 +327,8 @@ Deno.serve(async (req: Request) => {
   //  - akvizicni (lead-magnet*, existing-leadmagnet, nurture-*) a longtail-consumer prodavaji
   //    vstup ne-majitelum -> stop pri JAKEMKOLI nakupu (videokurz/academy/coaching);
   //    u akvizicnich je krok 0 slibeny freebie (PDF plan) -> posli vzdy, stop az od kroku 1
-  //  - longtail-trener a upsell-academy prodavaji Academy -> stop pri academy
+  //  - longtail-trener, trener-kit a upsell-academy prodavaji Academy -> stop pri academy
+  //    (trener-kit krok 0 = slibeny kit zdarma -> posli vzdy, stop az od kroku 1)
   //  - upsell-coaching prodava koucink -> stop pri coaching
   //  - longtail-kupci = pece o kupce videokurzu + upgrade na Academy -> stop pri academy
   // Clenske tracky (onboarding, milestone, reactivation, rescue) cili na zakazniky -> nikdy nestopovat.
@@ -340,6 +341,7 @@ Deno.serve(async (req: Request) => {
     if (['lead-magnet', 'existing-leadmagnet', 'nurture-'].some((p) => t.indexOf(p) === 0)) return step > 0 && ownsAny(em);
     if (t === 'longtail-consumer') return ownsAny(em);
     if (t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci') return owns.academy.has(em);
+    if (t === 'trener-kit') return step > 0 && owns.academy.has(em);
     if (t === 'upsell-coaching') return owns.coaching.has(em);
     return false;
   };
