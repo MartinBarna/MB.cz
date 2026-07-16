@@ -1105,23 +1105,23 @@ Deno.serve(async (req) => {
       if (kind === "stavajici") {
         subject = "Konec Excelu 🎉 Tvoje klientská sekce je tady";
         inner = p(ahoj) +
-          p("mám pro tebe upgrade naší spolupráce: od teď máš na mém webu <strong>vlastní klientskou sekci</strong>. Žádné vyplňování Excelu a posílání mailem — všechno na pár kliknutí, i z mobilu.") +
+          p("mám pro tebe upgrade naší spolupráce: od teď máš na mém webu <strong>vlastní klientskou sekci</strong>. Žádné vyplňování Excelu a posílání mailem, všechno na pár kliknutí, i z mobilu.") +
           `<p style='margin:0 0 8px'><strong>Co v ní najdeš:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
-          `<li style='margin:0 0 7px'>📊 <strong>Grafy tvého pokroku</strong> — váha, míry, kroky… celá tvoje cesta na jednom místě</li>` +
-          `<li style='margin:0 0 7px'>📝 <strong>Pondělní report naklikáš za 3 minuty</strong> — provede tě to krok za krokem, kopie přijde nám oběma</li>` +
-          `<li style='margin:0 0 7px'>📁 <strong>Dokumenty ode mě</strong> — všechny podklady pohromadě, žádné hledání v mailech</li>` +
-          `<li style='margin:0 0 7px'>📸 <strong>Appka Tvůj Coach v ceně</strong> — vyfotíš jídlo a máš spočítaná makra (coach.martinbarna.cz, stejný e-mail)</li>` +
-          `<li style='margin:0 0 7px'>🎬 <strong>Videokurz (182 videí)</strong> — máš v ceně koučinku</li>` +
-          `<li style='margin:0 0 7px'>🎓 <strong>Sleva 20 % na Barna Academy</strong> s kódem <strong>KLIENT20</strong> — jen pro mé klienty</li></ul>` +
+          `<li style='margin:0 0 7px'>📊 <strong>Grafy tvého pokroku</strong>: váha, míry, kroky… celá tvoje cesta na jednom místě</li>` +
+          `<li style='margin:0 0 7px'>📝 <strong>Pondělní report naklikáš za 3 minuty</strong>, provede tě to krok za krokem a kopie přijde nám oběma</li>` +
+          `<li style='margin:0 0 7px'>📁 <strong>Dokumenty ode mě</strong>: všechny podklady pohromadě, žádné hledání v mailech</li>` +
+          `<li style='margin:0 0 7px'>📸 <strong>Appka Tvůj Coach v ceně</strong>: vyfotíš jídlo a máš spočítaná makra (coach.martinbarna.cz, stejný e-mail)</li>` +
+          `<li style='margin:0 0 7px'>🎬 <strong>Videokurz (182 videí)</strong> máš v ceně koučinku</li>` +
+          `<li style='margin:0 0 7px'>🎓 <strong>Sleva 20 % na Barna Academy</strong> s kódem <strong>KLIENT20</strong>, jen pro mé klienty</li></ul>` +
           p("<strong>Jak dovnitř:</strong> přihlas se tímhle e-mailem (na který ti píšu) a přístup naskočí automaticky:") +
           btn("Otevřít moji sekci") +
           p("<strong>Be Effective!</strong><br>Martin") +
-          `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>P.S. V příloze máš jednostránkový návod (najdeš ho i ve své sekci mezi Dokumenty). Kdyby cokoliv drhlo, odepiš — vyřešíme spolu.</p>`;
+          `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>P.S. V příloze máš jednostránkový návod (najdeš ho i ve své sekci mezi Dokumenty). Kdyby cokoliv drhlo, odepiš a vyřešíme to spolu.</p>`;
       } else {
         subject = "Vítej v týmu 💪 První krok: 10 minut o tobě";
         inner = p(ahoj) +
-          p("vítej v koučinku! Od teď na tvé formě pracujeme spolu — a aby byl plán od prvního dne přesně na tebe, potřebuju tě nejdřív poznat.") +
-          p("Připravil jsem <strong>vstupní dotazník</strong> — proklikáš ho krok za krokem za ~10 minut (cíle, zdraví, co rád jíš, kdy stíháš trénovat…). Nic se nedá zkazit, všechno jde později upravit:") +
+          p("vítej v koučinku! Od teď na tvé formě pracujeme spolu. A aby byl plán od prvního dne přesně na tebe, potřebuju tě nejdřív poznat.") +
+          p("Připravil jsem <strong>vstupní dotazník</strong>. Proklikáš ho krok za krokem za ~10 minut (cíle, zdraví, co rád jíš, kdy stíháš trénovat…). Nic se nedá zkazit, všechno jde později upravit:") +
           btn("Vyplnit vstupní dotazník") +
           `<p style='margin:0 0 8px'><strong>Co bude dál:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
           `<li style='margin:0 0 7px'>1️⃣ Do <strong>48 hodin</strong> ti nastavím jídelníček, makra a trénink na míru</li>` +

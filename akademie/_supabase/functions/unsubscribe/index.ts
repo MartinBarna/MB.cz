@@ -63,14 +63,14 @@ Deno.serve(async (req: Request) => {
     if (!accept.includes('text/html')) return new Response('ok', { status: 200 });
     if (!ok) return htmlResp(brokenPage());
     const eraseLink = `<p style='margin:0 0 18px'><a href='?token=${encodeURIComponent(token)}&action=erase' style='color:#8F8A99;font-size:13px'>Chci úplně smazat svoje data z databáze (GDPR)</a></p>`;
-    return htmlResp(page('Odhlášeno ✅', 'Hotovo — už Ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, stačí si plán znovu stáhnout na webu.', eraseLink));
+    return htmlResp(page('Odhlášeno ✅', 'Hotovo, už Ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, stačí si plán znovu stáhnout na webu.', eraseLink));
   }
 
   if (req.method === 'GET') {
     if (action === 'erase') {
       const gone = await erase(token);
       return htmlResp(gone
-        ? page('Data smazána ✅', 'Tvoje data jsme nadobro vymazali z databáze — e-mail, jméno, telefon i historii e-mailů. U nás je to kompletně pryč.')
+        ? page('Data smazána ✅', 'Tvoje data jsme nadobro vymazali z databáze: e-mail, jméno, telefon i historii e-mailů. U nás je to kompletně pryč.')
         : page('Odkaz nefunguje', 'Tenhle odkaz na výmaz už neplatí, nebo byla data smazána dříve. Kdyžtak nám napiš přímo a vyřešíme to.'));
     }
     // GET bez akce = jen potvrzovaci stranka (zadny side-effect — ochrana pred mail skenery)

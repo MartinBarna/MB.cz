@@ -127,7 +127,7 @@ Deno.serve(async (req: Request) => {
       `<p>Dobrý den,</p>` +
       `<p>potvrzuji <b>přijetí odstoupení od smlouvy</b> s tímto obsahem:</p>` + summary +
       `<p>Peníze vrátím <b>bez zbytečného odkladu, nejpozději do 14 dnů</b>, stejným způsobem, jakým platba proběhla (nedomluvíme-li se jinak).</p>` +
-      `<p>Kdyby cokoliv — stačí odpovědět na tento e-mail.</p>` +
+      `<p>Kdyby cokoliv, stačí odpovědět na tento e-mail.</p>` +
       `<p>Martin Barna<br>martinbarna.cz · IČO 76383032</p></div>`,
       "martin@martinbarna.cz");
   } catch { /* zapis v DB je zdrojem pravdy; admin dostane alert nize */ }
@@ -137,7 +137,7 @@ Deno.serve(async (req: Request) => {
     let to = ALERT_FALLBACK;
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
-    await resend(to, "⚠️ Odstoupení od smlouvy — " + email,
+    await resend(to, "⚠️ Odstoupení od smlouvy: " + email,
       `<p>Zákazník podal online odstoupení od smlouvy:</p>` + summary +
       `<p><b>Co udělat:</b> vrátit peníze do 14 dnů (SimpleShop → Prodeje → dohledat objednávku → refundace) a případně deaktivovat přístup v adminu.</p>`);
   } catch { /* best-effort */ }

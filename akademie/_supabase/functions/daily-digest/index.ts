@@ -75,8 +75,8 @@ Deno.serve(async (req) => {
 
   let alerts = "";
   if (wdrPending > 0) alerts += warn(wdrPending + "× odstoupení od smlouvy čeká na vyřízení (refundace do 14 dnů!)");
-  if (errs > 0) alerts += warn(errs + "× chyba odesílání e-mailů včera" + (lastErr ? " — " + lastErr : ""));
-  if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50) — podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
+  if (errs > 0) alerts += warn(errs + "× chyba odesílání e-mailů včera" + (lastErr ? ": " + lastErr : ""));
+  if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50). Podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
 
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;color:#222;max-width:560px;margin:0 auto">` +

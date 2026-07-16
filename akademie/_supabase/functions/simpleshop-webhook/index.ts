@@ -240,7 +240,7 @@ Deno.serve(async (req: Request) => {
   const rawProduct = pick(body, ["product", "produkt", "product_name", "nazev_produktu", "item", "sku", "product_id", "nazev", "name"]);
   const product = resolveProduct(rawProduct);
   if (!product) {
-    await alertAdmin(admin, "SimpleShop: neznámý produkt — přístup NEUDĚLEN", {
+    await alertAdmin(admin, "SimpleShop: neznámý produkt, přístup NEUDĚLEN", {
       produkt: rawProduct || "(prázdné)", email,
       objednavka: pick(body, ["order_id", "order_number", "number", "id"]) || "?",
       castka: pick(body, ["amount", "total"]) || "?",
