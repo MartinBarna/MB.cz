@@ -1,7 +1,10 @@
 // referral-webhook (#39) — SimpleShop platba → zapise referral (pending) podle pouziteho kuponu.
 // verify_jwt=false (externi webhook). Idempotence pres order_id, anti-self-referral.
 // Surovy payload loguje do referral_webhook_log (Martin tam najde presny nazev pole s kuponem).
-// Secret: pokud app_config.referral_webhook_secret existuje, vyzaduje header x-ref-secret.
+// Secret: POVINNY (fail-closed) — app_config.referral_webhook_secret musi existovat a header
+// x-ref-secret sedet, jinak 401. Bez nastaveneho klice funkce odmita VSE (zadne anonymni
+// "nakupy" -> zadny farming pending referral kreditu). Atribuci realnych nakupu kryje
+// Cesta A v simpleshop-webhook; tenhle endpoint se odemkne az nastavenim secretu.
 //
 // Deploy: supabase functions deploy referral-webhook --no-verify-jwt
 // SimpleShop nastav tak, aby po platbe poslal webhook na URL teto funkce.
@@ -51,13 +54,15 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok');
   if (req.method !== 'POST') return json({ error: 'method' }, 405);
 
-  // secret (pokud nastaveny)
+  // secret POVINNY (fail-closed): chybi v app_config, nesedi, nebo kontrola selze -> 401 a konec.
+  // (Driv: secret volitelny a chyba kontroly se spolkla -> anonymni POSTy mohly vyrabet kredity.)
+  let secret = '';
   try {
     const cr = await rest('app_config?select=value&key=eq.referral_webhook_secret&limit=1');
     const cd = await cr.json().catch(() => []);
-    const secret = Array.isArray(cd) && cd.length ? String(cd[0].value ?? '') : '';
-    if (secret && req.headers.get('x-ref-secret') !== secret) return json({ error: 'forbidden' }, 401);
-  } catch { /* pokud check selze, pokracuj (MVP) */ }
+    secret = Array.isArray(cd) && cd.length ? String(cd[0].value ?? '') : '';
+  } catch { /* secret zustava prazdny -> 401 nize */ }
+  if (!secret || req.headers.get('x-ref-secret') !== secret) return json({ error: 'unauthorized' }, 401);
 
   let body: Record<string, unknown>;
   try { body = await req.json(); } catch { await logRaw({ _raw: 'unparseable' }, false, 'bad_json'); return json({ ok: true }); }

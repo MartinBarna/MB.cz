@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nové heslo — Barna Academy</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon-g3.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-g3.png">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r3">
+<style>
+  .auth{max-width:440px;margin:0 auto;padding:44px 22px 80px;}
+  .ahero{text-align:center;margin-bottom:26px;}
+  .ahero .mark{width:62px;height:62px;border-radius:18px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;
+    font-weight:800;font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 14px 34px -6px rgba(235,177,44,.22);}
+  .ahero h1{font-size:1.7rem;color:#fff;letter-spacing:-.02em;}
+  .ahero p{color:var(--muted);font-size:.95rem;margin-top:.4rem;}
+  .acard{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);
+    border-radius:22px;padding:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.8);}
+  label{display:block;font-size:.82rem;font-weight:600;color:var(--muted-2);margin:14px 0 6px;}
+  input{width:100%;padding:13px 15px;border:1px solid var(--line-2);border-radius:12px;font-family:inherit;font-size:.96rem;
+    background:rgba(0,0,0,.25);color:var(--ink);transition:.2s;}
+  input::placeholder{color:#6f665d;}
+  input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(235,177,44,.15);background:rgba(0,0,0,.35);}
+  .btn{width:100%;margin-top:20px;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:700;
+    padding:14px;border-radius:50px;border:none;cursor:pointer;font-family:inherit;font-size:1rem;text-decoration:none;
+    display:inline-block;text-align:center;box-sizing:border-box;
+    box-shadow:0 14px 30px -8px rgba(235,177,44,.22);transition:transform .2s,box-shadow .2s;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 18px 38px -8px rgba(235,177,44,.7);}
+  .btn[disabled]{opacity:.55;cursor:default;transform:none;}
+  .msg{margin-top:15px;padding:12px 15px;border-radius:12px;font-size:.9rem;display:none;}
+  .msg.err{display:block;background:rgba(179,38,30,.15);color:#ff9c93;border:1px solid rgba(179,38,30,.4);}
+  .msg.ok{display:block;background:rgba(30,122,50,.15);color:#86e29a;border:1px solid rgba(30,122,50,.4);}
+  .whobox{background:rgba(235,177,44,.08);color:var(--gold-soft);border:1px solid rgba(235,177,44,.25);
+    margin-bottom:6px;padding:12px 15px;border-radius:12px;font-size:.88rem;}
+  .whobox b{color:#fff;}
+  .waiting{text-align:center;color:var(--muted);font-size:.94rem;padding:14px 0;}
+  .afoot{text-align:center;color:var(--muted);font-size:.84rem;margin-top:22px;}
+  .afoot a{color:var(--gold-soft);font-weight:600;}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Nové heslo</span></span></a>
+    <div class="topr"><a href="/akademie/prihlaseni/">← Přihlášení</a></div>
+  </div></div>
+
+  <div class="auth">
+    <div class="ahero">
+      <div class="mark">MB</div>
+      <h1>Nastav si nové heslo</h1>
+      <p>Zadej ho dvakrát a jsi zpátky ve studiu.</p>
+    </div>
+
+    <div class="acard">
+      <div id="waitBox" class="waiting">⏳ Ověřuju odkaz z e-mailu…</div>
+
+      <div id="formBox" style="display:none;">
+        <div class="whobox" id="whoBox" style="display:none;">Nastavuješ nové heslo pro účet <b id="accEmail"></b>.</div>
+        <form id="form" novalidate>
+          <label for="pass1">Nové heslo</label>
+          <input id="pass1" type="password" autocomplete="new-password" placeholder="min. 6 znaků" minlength="6">
+          <label for="pass2">Nové heslo ještě jednou</label>
+          <input id="pass2" type="password" autocomplete="new-password" placeholder="••••••••" minlength="6">
+          <button class="btn" id="submit" type="submit">Uložit nové heslo</button>
+          <div class="msg" id="msg"></div>
+        </form>
+        <div id="doneBox" style="display:none;">
+          <div class="msg ok">✅ Hotovo! Nové heslo je uložené a jsi přihlášen(a).</div>
+          <a class="btn" href="/akademie/moje/">Pokračovat do studia →</a>
+        </div>
+      </div>
+
+      <div id="expiredBox" style="display:none;">
+        <div class="msg err" style="display:block;">Tenhle odkaz už není platný — nejspíš vypršel, nebo už byl použitý. Nevadí, pošleme ti nový.</div>
+        <form id="resendForm" novalidate>
+          <label for="remail">Tvůj e-mail</label>
+          <input id="remail" type="email" autocomplete="email" placeholder="tvuj@email.cz">
+          <button class="btn" id="resendBtn" type="submit">Poslat nový odkaz</button>
+          <div class="msg" id="msg2"></div>
+        </form>
+      </div>
+    </div>
+
+    <p class="afoot">Problém s heslem? Napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> · <a href="/akademie/prihlaseni/">Zpět na přihlášení</a></p>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="/assets/ba-academy.js?v=20260716"></script>
+  <script>
+    (function () {
+      // Recovery odkaz ze Supabase nese token v URL hashi — supabase-js (detectSessionInUrl)
+      // z něj sám ustaví session. Hash si zapamatuj hned, SDK ho po zpracování smaže.
+      var HASH = location.hash || '';
+      var HASH_ERR = /error=|error_code=/.test(HASH);
+
+      var waitBox = document.getElementById('waitBox'), formBox = document.getElementById('formBox'), expiredBox = document.getElementById('expiredBox');
+      var form = document.getElementById('form'), p1 = document.getElementById('pass1'), p2 = document.getElementById('pass2');
+      var submit = document.getElementById('submit'), msg = document.getElementById('msg');
+
+      function show(kind, text) { msg.className = 'msg ' + kind; msg.textContent = text; }
+      function showState(which) {
+        waitBox.style.display = which === 'wait' ? 'block' : 'none';
+        formBox.style.display = which === 'form' ? 'block' : 'none';
+        expiredBox.style.display = which === 'expired' ? 'block' : 'none';
+      }
+
+      // Přelož časté (anglické) chyby Supabase do srozumitelné češtiny pro laiky.
+      function friendlyErr(e) {
+        var s = (e || '').toLowerCase();
+        if (s.indexOf('different from the old') >= 0 || s.indexOf('same password') >= 0)
+          return 'Nové heslo je stejné jako to staré — zvol jiné.';
+        if (s.indexOf('at least') >= 0 || (s.indexOf('password') >= 0 && s.indexOf('6') >= 0))
+          return 'Heslo musí mít aspoň 6 znaků.';
+        if (s.indexOf('rate limit') >= 0 || s.indexOf('too many') >= 0)
+          return 'Moc pokusů po sobě. Dej tomu chvilku a zkus to znovu.';
+        return e || 'Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.';
+      }
+
+      window.BA.ready.then(function () {
+        if (window.BA.mode !== 'live') { showState('form'); return; }
+        if (HASH_ERR) { showState('expired'); return; }
+        var settled = false;
+        function arm(u) {
+          if (!u || settled) return;
+          settled = true;
+          var ae = document.getElementById('accEmail');
+          if (ae && u.email) { ae.textContent = u.email; document.getElementById('whoBox').style.display = 'block'; }
+          showState('form');
+        }
+        window.BA.onAuth(arm);          // session z recovery odkazu se teprve ustavuje
+        window.BA.getUser().then(arm);  // …nebo už je hotová (i běžně přihlášený člen)
+        setTimeout(function () { if (!settled) showState('expired'); }, 8000);
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var a = p1.value, b = p2.value;
+        if (a.length < 6) { show('err', 'Heslo musí mít aspoň 6 znaků.'); return; }
+        if (a !== b) { show('err', 'Hesla se neshodují — zkontroluj je a zkus to znovu.'); return; }
+        submit.disabled = true; show('', '');
+        window.BA.updatePassword(a).then(function (r) {
+          if (r.ok) {
+            form.style.display = 'none';
+            document.getElementById('doneBox').style.display = 'block';
+            return;
+          }
+          submit.disabled = false;
+          var s = (r.error || '').toLowerCase();
+          if (s.indexOf('session') >= 0 || s.indexOf('not authenticated') >= 0 || s.indexOf('jwt') >= 0) showState('expired');
+          else show('err', friendlyErr(r.error));
+        });
+      });
+
+      // Expirovaný/použitý odkaz → pošli nový obnovovací e-mail.
+      document.getElementById('resendForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var em = document.getElementById('remail').value.trim();
+        var m2 = document.getElementById('msg2'), btn = document.getElementById('resendBtn');
+        function show2(kind, text) { m2.className = 'msg ' + kind; m2.textContent = text; }
+        if (!em || em.indexOf('@') < 1) { show2('err', 'Zadej prosím platný e-mail.'); return; }
+        btn.disabled = true; show2('', '');
+        window.BA.resetPassword(em).then(function (r) {
+          btn.disabled = false;
+          if (r.ok) show2('ok', '📧 Hotovo! Poslali jsme ti na ' + em + ' nový odkaz. Otevři ho (mrkni i do spamu).');
+          else show2('err', r.error || 'Odeslání se nepovedlo — zkus to za chvíli znovu, nebo napiš na martin@martinbarna.cz.');
+        });
+      });
+    })();
+  </script>
+  <script src="/assets/scroll-top.js?v=g3" defer></script>
+  <script defer src="/assets/analytics.js?v=g7"></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a5"></body>
+</html>

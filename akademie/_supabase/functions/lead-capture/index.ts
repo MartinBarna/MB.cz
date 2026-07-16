@@ -30,7 +30,11 @@ Deno.serve(async (req) => {
     // [2026-07-14] brána na free lekce videokurzu → nurture-videokurz (uvítačka nv-0 má CTA
     // „Pustit první lekce zdarma", žádný slib PDF plánu). Kalkulačka jde do lead-magnet
     // (slibujeme 7denní jídelníček dle segmentu = přesně to, co lead-magnet doručuje).
+    // [2026-07-16] FIX kritické regrese: trenérské leady z /pro-trenery (source 'pro-trenery',
+    // segment 'trener') patří do tracku 'trener-kit' (startovací kit mailem + Academy sekvence),
+    // ne do konzumního 'lead-magnet' (ten posílá makro-plán a prodává videokurz).
     const track = source === "videokurz-free" ? "nurture-videokurz"
+      : (source === "pro-trenery" || segRaw === "trener") ? "trener-kit"
       : tool ? "lead-magnet-tool"
       : segRaw === "academy-pro-vas" ? "nurture-pro-vas"
       : "lead-magnet";

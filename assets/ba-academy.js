@@ -118,6 +118,26 @@
       });
     },
 
+    // Zapomenuté heslo: pošle e-mail s odkazem na nastavení nového hesla.
+    // Odkaz vede na /akademie/nove-heslo/, kde stránka zavolá updatePassword.
+    resetPassword: function (email) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      // Kanonický non-www cíl — stejný důvod jako u signInWithOtp (session je per-origin).
+      var dest = (location.origin + "/akademie/nove-heslo/").replace("://www.", "://");
+      return client.auth.resetPasswordForEmail(email, { redirectTo: dest })
+        .then(function (r) { return { ok: !r.error, error: r.error && r.error.message }; })
+        .catch(function (e) { return { ok: false, error: String(e && e.message || e) }; });
+    },
+
+    // Nastavení nového hesla přihlášeného uživatele (typicky po recovery odkazu,
+    // kdy detectSessionInUrl ustaví session z URL hashe).
+    updatePassword: function (newPassword) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      return client.auth.updateUser({ password: newPassword })
+        .then(function (r) { return { ok: !r.error, error: r.error && r.error.message }; })
+        .catch(function (e) { return { ok: false, error: String(e && e.message || e) }; });
+    },
+
     // Má uživatel zaplacený přístup k produktu? ('academy' | 'videokurz')
     // Demo režim vrací true (kvůli vývoji).
     hasEntitlement: function (product) {
@@ -257,7 +277,9 @@
     requireAccess: function (product, redirectTo) {
       if (!LIVE) return Promise.resolve(true);
       return BA.getUser().then(function (u) {
-        if (!u) { location.href = (redirectTo || "/akademie/prihlaseni/") + "?next=" + encodeURIComponent(location.pathname); return false; }
+        // I host (nepřihlášený) dostane need=<product> — login stránka pak ukáže
+        // nákupní hlášku místo holého formuláře (host z free lekce = nejteplejší moment).
+        if (!u) { location.href = (redirectTo || "/akademie/prihlaseni/") + "?next=" + encodeURIComponent(location.pathname) + "&need=" + encodeURIComponent(product); return false; }
         return BA.hasEntitlement(product).then(function (has) {
           if (!has) { location.href = "/akademie/prihlaseni/?need=" + encodeURIComponent(product); return false; }
           return true;

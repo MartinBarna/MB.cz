@@ -43,6 +43,7 @@ const FILES = [
   'akademie/_videokurz/build.js',
   'assets/academy-upsell.js',
   'videokurz.html',
+  'pro-trenery/index.html',
 ];
 
 // metrika -> jednotkový "suffix", na který kotvíme (přepisujeme '<num> <suffix>')
@@ -69,7 +70,8 @@ for (const key of Object.keys(canonical)) {
     const fp = path.join(ROOT, rel);
     let txt;
     try { txt = fs.readFileSync(fp, 'utf8'); } catch (e) { continue; }
-    const re = new RegExp('\\b' + oldN + '(?=\\s*' + unit + ')', 'g');
+    // allow whitespace and/or HTML tags between number and unit (e.g. <b>256</b><span>lekcí)
+    const re = new RegExp('\\b' + oldN + '(?=(?:\\s|<[^>]+>)*' + unit + ')', 'g');
     const updated = txt.replace(re, String(newN));
     if (updated !== txt) { fs.writeFileSync(fp, updated); const c = (txt.match(re) || []).length; fileHits += c; totalEdits += c; }
   }

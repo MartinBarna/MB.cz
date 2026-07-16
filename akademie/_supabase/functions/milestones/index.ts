@@ -1,6 +1,8 @@
 // Barna Academy — milestones: milnikove maily za progres ve videokurzu.
 // 50 = prekrocena polovina (>=91 z 182 lekci), 100 = dokonceno (182/182).
 // Idempotence pres tabulku milestone_sent (email, product, milestone).
+// [2026-07-16] respektuje leads.status unsubscribed/bounced, prida unsubscribe odkaz+hlavicky
+// (vk-complete ma prodejni blok -> odhlaseni musi jit primo z mailu) a listUsers strankuje.
 // Auth: x-drip-secret == app_config drip_invoke_secret. Cron se zapoji az po schvaleni.
 // TEST rezim: POST {test_email, milestone: 50|100, name} -> [TEST] mail, nic se nezapisuje.
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -9,6 +11,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const FROM = "Martin Barna <news@martinbarna.cz>";
+const unsubLink = (token: string) => SUPABASE_URL + "/functions/v1/unsubscribe?token=" + encodeURIComponent(token);
 const VK_TOTAL = 182;
 const HALF = Math.ceil(VK_TOTAL / 2);
 const MAX_PER_RUN = 20; // pojistka pod denni limit Resendu
@@ -56,8 +59,13 @@ function renderBlocks(blocks: Block[], v: Record<string, string>): string {
     return `<p style='margin:4px 0 18px'><a href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
   }).join("\n");
 }
-function wrap(preheader: string, body: string): string {
-  const foot = "Martin Barna — online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku — není to newsletter).";
+function wrap(preheader: string, body: string, unsubUrl = ""): string {
+  // unsubscribe paticka: vk-complete obsahuje i prodejni blok (Academy/referral/appka),
+  // takze odhlaseni musi byt primo v mailu, ne jen "neni to newsletter"
+  const unsubLine = unsubUrl
+    ? `<br>Nechceš už ode mě e-maily? <a href='${unsubUrl}' style='color:#8F8A99'>Odhlásit se</a>.`
+    : "";
+  const foot = "Martin Barna — online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku — není to newsletter)." + unsubLine;
   return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
     `<body style='margin:0;background:#0C0B10;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${preheader}</span>` +
@@ -118,12 +126,16 @@ function vars(name: string): Record<string, string> {
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : "", "");
   return { first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "" };
 }
-async function send(to: string, subject: string, html: string) {
+async function send(to: string, subject: string, html: string, unsubUrl = "") {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
+  // RFC 8058 List-Unsubscribe hlavicky (kdyz mame token) — stejne jako drip-send
+  const headers = unsubUrl
+    ? { "List-Unsubscribe": "<" + unsubUrl + ">", "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" }
+    : undefined;
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz" }),
+    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz", headers }),
   });
   if (!r.ok) throw new Error("resend_" + r.status);
 }
@@ -154,12 +166,28 @@ Deno.serve(async (req) => {
   }
 
   // LIVE: spocitej progres vsech clenu videokurzu a posli nove dosazene milniky
-  const [ulist, prg, ents, sent] = await Promise.all([
-    admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+  const [prg, ents, sent] = await Promise.all([
     admin.from("progress").select("user_id,lesson_id").eq("completed", true).like("lesson_id", "vk-%"),
     admin.from("entitlements").select("email,product").eq("active", true).in("product", ["videokurz", "academy"]),
     admin.from("milestone_sent").select("email,milestone").eq("product", "videokurz"),
   ]);
+  // auth uzivatele pres VSECHNY stranky (jen page 1 = tichy vypadek clenu nad 1000)
+  type AuthUser = { id: string; email?: string; user_metadata?: Record<string, unknown> };
+  const users: AuthUser[] = [];
+  for (let page = 1; page <= 50; page++) {
+    const { data: ud, error: uerr } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+    const batch = (ud?.users ?? []) as AuthUser[];
+    users.push(...batch);
+    if (uerr || batch.length < 1000) break;
+  }
+  // leads = zdroj odhlaseni/bounce + unsubscribe tokenu (strankovane po 1000)
+  const leadInfo = new Map<string, { status: string; token: string }>();
+  for (let from = 0; ; from += 1000) {
+    const { data: lrows, error: lerr } = await admin.from("leads")
+      .select("email,status,unsubscribe_token").order("id").range(from, from + 999);
+    for (const l of lrows ?? []) leadInfo.set(low(l.email), { status: String(l.status ?? ""), token: String(l.unsubscribe_token ?? "") });
+    if (lerr || (lrows ?? []).length < 1000) break;
+  }
   const members = new Set((ents.data ?? []).map((e) => low(e.email)));
   const already = new Set((sent.data ?? []).map((s) => low(s.email) + ":" + s.milestone));
   const cnt = new Map<string, number>();
@@ -170,22 +198,26 @@ Deno.serve(async (req) => {
 
   let sends = 0, marked = 0;
   const results: Record<string, unknown>[] = [];
-  for (const u of ulist.data?.users ?? []) {
+  for (const u of users) {
     if (sends >= MAX_PER_RUN) break;
     const email = low(u.email);
     if (!email || !members.has(email)) continue;
+    // respektuj odhlaseni/bounce z drip enginu (vk-complete obsahuje prodejni blok)
+    const li = leadInfo.get(email);
+    if (li && (li.status === "unsubscribed" || li.status === "bounced")) continue;
+    const unsub = li?.token ? unsubLink(li.token) : "";
     const done = cnt.get(String(u.id)) ?? 0;
     const name = String((u.user_metadata as Record<string, unknown>)?.full_name ?? "");
     const v = vars(name);
     try {
       if (done >= VK_TOTAL && !already.has(email + ":100")) {
-        await send(email, fill(tpl100.subject, v), wrap(fill(tpl100.preheader, v), renderBlocks(tpl100.blocks, v)));
+        await send(email, fill(tpl100.subject, v), wrap(fill(tpl100.preheader, v), renderBlocks(tpl100.blocks, v), unsub), unsub);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 100 });
         // 50 uz neposilat nikdy (prekonano) — zapis bez mailu
         if (!already.has(email + ":50")) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 }); marked++; }
         sends++; results.push({ email, milestone: 100, done });
       } else if (done >= HALF && !already.has(email + ":50")) {
-        await send(email, fill(tpl50.subject, v), wrap(fill(tpl50.preheader, v), renderBlocks(tpl50.blocks, v)));
+        await send(email, fill(tpl50.subject, v), wrap(fill(tpl50.preheader, v), renderBlocks(tpl50.blocks, v), unsub), unsub);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 });
         sends++; results.push({ email, milestone: 50, done });
       }
