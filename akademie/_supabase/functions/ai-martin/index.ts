@@ -332,7 +332,11 @@ Deno.serve(async (req: Request) => {
   }
 
   const ragContext = await retrieveContext(lastUser);
-  const system = SYSTEM + ragContext + safeSuffix;
+  // POŘADÍ KVŮLI CACHE: stabilní prefix (SYSTEM) → historie → volatilní blok (RAG + safety) → user.
+  // Cache se trefuje po první změněný bajt, takže volatilní části patří AŽ NA KONEC,
+  // jinak si odřízneme historii. RAG blíž k dotazu navíc bývá i kvalitnější.
+  const system = SYSTEM;
+  const volatile = ragContext + safeSuffix;
 
   try {
     let reply = '';
@@ -341,9 +345,17 @@ Deno.serve(async (req: Request) => {
       // x-grok-conv-id: drzi cache pres zpravy jednoho clena (xAI cachuje automaticky,
       // ale s conv-id vyrazne lip trefi stabilni prefix = SYSTEM + persona).
       const convId = `ai-martin-${userId ?? 'anon'}`;
+      const hist = msgs.slice(0, -1);
+      const last = msgs[msgs.length - 1];
+      const grokMsgs = [
+        { role: 'system', content: system },
+        ...hist,
+        ...(volatile ? [{ role: 'system' as const, content: volatile }] : []),
+        ...(last ? [last] : []),
+      ];
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
         { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-        { model: MODEL, max_tokens: 600, prompt_cache_key: convId, messages: [{ role: 'system', content: system }, ...msgs] });
+        { model: MODEL, max_tokens: 600, prompt_cache_key: convId, messages: grokMsgs });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('xai_error', res.status, JSON.stringify(data).slice(0, 300));
@@ -355,7 +367,10 @@ Deno.serve(async (req: Request) => {
       // Anthropic Messages API + retry
       const res = await postWithRetry('https://api.anthropic.com/v1/messages',
         { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-        { model: MODEL, max_tokens: 600, system, messages: msgs });
+        { model: MODEL, max_tokens: 600, system, messages: (() => {
+          const h = msgs.slice(0, -1); const l = msgs[msgs.length - 1];
+          return [...h, ...(volatile ? [{ role: 'user' as const, content: volatile }] : []), ...(l ? [l] : [])];
+        })() });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('anthropic_error', res.status, JSON.stringify(data).slice(0, 300));
