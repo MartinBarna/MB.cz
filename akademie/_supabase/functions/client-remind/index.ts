@@ -55,6 +55,7 @@ function mailHtml(osloveni: string): string {
     p(osloveni ? "Ahoj " + osloveni + "," : "Ahoj,") +
     p("nový týden, nová data 💪 Mrkni na váhu a hoď mi <strong>týdenní report</strong>. Zabere ~3 minuty a já ti podle něj doladím plán.") +
     `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Vyplnit report (3 min)</a></p>` +
+    p("<span style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Nemusíš nic opisovat.</span>") +
     p("<span style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>") +
     p("<strong>Be Effective!</strong><br>Martin") +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · připomínka pro klienty koučinku. Nechceš je? Odepiš mi na tenhle mail a vypnu ti je.</div>` +
@@ -71,6 +72,11 @@ Deno.serve(async (req: Request) => {
   const { data: flag } = await admin.from("app_config").select("value").eq("key", "client_remind_enabled").maybeSingle();
   if (flag && String(flag.value).toLowerCase() === "false") return json({ ok: true, skipped: "disabled" });
   if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
+
+  // TEST rezim: {"test_email":"..."} posle ukazku JEN na tuhle adresu a nikomu jinemu.
+  // Driv se test_email tise ignoroval a spustil ostry rozesil (stalo se 17. 7.).
+  const body = await req.json().catch(() => ({} as Record<string, unknown>));
+  const testEmail = typeof body?.test_email === "string" && body.test_email.includes("@") ? body.test_email.trim() : null;
 
   // klienti s aktivním coaching entitlementem
   const { data: ents } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
@@ -104,7 +110,22 @@ Deno.serve(async (req: Request) => {
     if (raw) nameBy.set(low(c.email), vokativ(raw.charAt(0).toUpperCase() + raw.slice(1)));
   }
 
-  const targets = clients.filter((e) => registered.has(e) && !recentSet.has(e) && !optout.has(e));
+  const targets = testEmail
+    ? [testEmail]
+    : clients.filter((e) => registered.has(e) && !recentSet.has(e) && !optout.has(e));
+
+  // KT návod jako příloha (stáhne se jednou pro všechny; best effort — bez něj mail stejně odejde)
+  let attachments: { filename: string; content: string }[] | undefined;
+  try {
+    const { data: pdf } = await admin.storage.from("client-docs").download("shared/kaloricke-tabulky-navod.pdf");
+    if (pdf) {
+      const buf = new Uint8Array(await pdf.arrayBuffer());
+      let bin = "";
+      for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+      attachments = [{ filename: "kaloricke-tabulky-navod.pdf", content: btoa(bin) }];
+    }
+  } catch (_e) { /* příloha je bonus, ne blokace */ }
+
   let sent = 0;
   const errors: string[] = [];
   for (const email of targets) {
@@ -112,11 +133,11 @@ Deno.serve(async (req: Request) => {
       const r = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from: FROM, to: [email], subject: "Pondělní report ✍️ (3 minuty)", html: mailHtml(nameBy.get(email) ?? ""), reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"] }),
+        body: JSON.stringify({ from: FROM, to: [email], subject: "Pondělní report ✍️ (3 minuty)", html: mailHtml(nameBy.get(email) ?? ""), reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"], ...(attachments ? { attachments } : {}) }),
       });
       if (r.status === 200) sent++; else errors.push(email + ":" + r.status);
       await new Promise((res) => setTimeout(res, 550)); // Resend rate limit 2/s
     } catch (e) { errors.push(email + ":" + String(e).slice(0, 40)); }
   }
-  return json({ ok: true, clients: clients.length, targets: targets.length, sent, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, sent, priloha: !!attachments, errors });
 });
