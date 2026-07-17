@@ -45,8 +45,12 @@ Deno.serve(async (req) => {
     const utmSource = String(body.utm_source || "").trim().slice(0, 60);
     const utmMedium = String(body.utm_medium || "").trim().slice(0, 60);
     const utmCampaign = String(body.utm_campaign || "").trim().slice(0, 60);
+    // utm_content = varianta kreativy (A/B test reklam) -> bez nej nejde z DB merit, ktera reklama lead privedla
+    const utmContent = String(body.utm_content || "").trim().slice(0, 60);
     // Google gclid/gbraid/wbraid — CELY (max 200 zn., NEdorezavat na 60!), jinak se v offline importu konverzi do Google Ads nespáruje
     const gclid = String(body.gclid || "").trim().slice(0, 200);
+    // Meta click id (fbclid) — stejny duvod jako gclid u Google Ads
+    const fbclid = String(body.fbclid || "").trim().slice(0, 200);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ ok: false, error: "invalid_email" }, 400);
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -60,7 +64,9 @@ Deno.serve(async (req) => {
     if (utmSource) meta.utm_source = utmSource;
     if (utmMedium) meta.utm_medium = utmMedium;
     if (utmCampaign) meta.utm_campaign = utmCampaign;
+    if (utmContent) meta.utm_content = utmContent;
     if (gclid) meta.gclid = gclid;
+    if (fbclid) meta.fbclid = fbclid;
     const { error } = await supa.from("leads").insert({
       email, name, segment, source, phone,   // phone -> vlastni sloupec (Cowork migrace add_phone_to_leads)
       track,
