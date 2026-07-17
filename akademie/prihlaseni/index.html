@@ -67,7 +67,7 @@
     <div class="ahero">
       <div class="mark">MB</div>
       <h1>Barna Academy</h1>
-      <p>Přihlas se ke svému studiu — lekce, videa i certifikace na jednom místě.</p>
+      <p>Přihlas se ke svému studiu. Lekce, videa i certifikace na jednom místě.</p>
     </div>
 
     <div class="note" id="demoNote" style="display:none;">Barna Academy se právě spouští. Zatím si můžeš projít <a href="/akademie/studium/">ukázkové lekce</a>; přihlášení bude aktivní po startu.</div>
@@ -133,6 +133,17 @@
       var nextUrl = '/akademie/moje/';
       var nextQ = qs('next');
       if (nextQ && /^\/akademie\//.test(nextQ)) nextUrl = nextQ;
+      // Klient koučinku míří do /akademie/klient/. Prodejní blok "Nemáš ještě přístup? od 800 Kč"
+      // by platícímu klientovi nabízel, ať si přístup koupí, a hlavička mu slibovala studium
+      // a certifikace, což je Academy, ne koučink. Pro tenhle cíl obojí přepnout.
+      if (nextQ && /^\/akademie\/klient\//.test(nextQ)) {
+        var buyBox = document.querySelector('.buy');
+        if (buyBox) buyBox.style.display = 'none';
+        var heroH = document.querySelector('.ahero h1');
+        if (heroH) heroH.textContent = 'Klientská sekce';
+        var heroP = document.querySelector('.ahero p');
+        if (heroP) heroP.textContent = 'Tvoje reporty, grafy i historie na jednom místě.';
+      }
       var need = qs('need');
       if (need) {
         var n = document.getElementById('needNote');
