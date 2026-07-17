@@ -1,7 +1,8 @@
 // client-remind — pondělní ranní připomínka týdenního reportu klientům koučinku.
 // Volá pg_cron (client-remind-weekly, pondělí ráno) s hlavičkou x-drip-secret.
-// Komu: aktivní entitlement 'coaching' + registrovaný účet + report nemá z posledních 3 dnů
-// (kdo vyplnil o víkendu / v pondělí před cronem, mail nedostane).
+// Komu: aktivní entitlement 'coaching' mimo optout. Registrovaný dostane připomínku reportu
+// (pokud report nemá z posledních 3 dnů; kdo vyplnil o víkendu, mail nedostane).
+// Neregistrovaný dostane výzvu k založení přístupu (bez účtu nemá report kam vyplnit).
 // Globální vypnutí: app_config.client_remind_enabled = 'false'.
 // Per-klient vypnutí: app_config.client_remind_optout = CSV e-mailů (zapisuje se v adminu).
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -11,6 +12,9 @@ const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const CTA_URL = "https://martinbarna.cz/akademie/klient/";
+// ?tab=up otevre rovnou zalozku "Vytvorit ucet" (prihlaseni/index.html startuje jinak na "Prihlasit se",
+// coz je u cloveka bez uctu slepa ulicka). &amp; kvuli platnosti HTML v href.
+const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2Fakademie%2Fklient%2F";
 
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
@@ -46,17 +50,28 @@ function vokativ(fn: string): string {
   return fn;
 }
 
-function mailHtml(osloveni: string): string {
+function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean): string {
   const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
+  const cta = (href: string, label: string) =>
+    `<p style='margin:4px 0 18px'><a href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
+  // POZOR na znění register varianty: 3 ze 4 prijemcu reporty POSILAJI, jen mimo web (vsech 31 zaznamu
+  // v client_reports ma source='import-sheet'). Text proto NESMI tvrdit "bez pristupu mi neposles report",
+  // to by klientovi lhalo tyden pote, co report poslal. Cil je presun kanalu, ne vycitka.
+  const telo = kind === "register"
+    ? p("od teď mi svoje reporty posílej přes <strong>klientskou sekci</strong> na webu. Budeš v ní mít svoje grafy, historii i appku Tvůj Coach v ceně koučinku. Žádný Excel, nic neopisuješ.") +
+      cta(REG_URL, "Vytvořit přístup") +
+      p("<span style='color:#A09AAD;font-size:14px'>Zabere to minutu. Registruj se e-mailem, na který ti přišel tenhle vzkaz, jiný ti sekci neotevře. Heslo si zvolíš při registraci.</span>") +
+      p("<span style='color:#A09AAD;font-size:14px'>Kdyby něco nefungovalo, odepiš mi na tenhle mail a vyřešíme to.</span>")
+    : p("nový týden, nová data 💪 Mrkni na váhu a hoď mi <strong>týdenní report</strong>. Zabere ~3 minuty a já ti podle něj doladím plán.") +
+      cta(CTA_URL, "Vyplnit report (3 min)") +
+      (maPrilohu ? p("<span style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Nemusíš nic opisovat.</span>") : "") +
+      p("<span style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>");
   return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='color-scheme' content='dark'></head><body style='margin:0;padding:0;background:#0C0B10'>` +
     `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10'><tr><td align='center' style='padding:16px'>` +
     `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
     `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
     p(osloveni ? "Ahoj " + osloveni + "," : "Ahoj,") +
-    p("nový týden, nová data 💪 Mrkni na váhu a hoď mi <strong>týdenní report</strong>. Zabere ~3 minuty a já ti podle něj doladím plán.") +
-    `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Vyplnit report (3 min)</a></p>` +
-    p("<span style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Nemusíš nic opisovat.</span>") +
-    p("<span style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>") +
+    telo +
     p("<strong>Be Effective!</strong><br>Martin") +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · připomínka pro klienty koučinku. Nechceš je? Odepiš mi na tenhle mail a vypnu ti je.</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
@@ -77,6 +92,16 @@ Deno.serve(async (req: Request) => {
   // Driv se test_email tise ignoroval a spustil ostry rozesil (stalo se 17. 7.).
   const body = await req.json().catch(() => ({} as Record<string, unknown>));
   const testEmail = typeof body?.test_email === "string" && body.test_email.includes("@") ? body.test_email.trim() : null;
+  const testKind: "report" | "register" = body?.test_kind === "register" ? "register" : "report";
+  // OSTRY rezim spousti VYHRADNE cron s prazdnym telem {}. Cokoliv jineho nez prazdne telo
+  // nebo platny {"test_email":"...@..."} = chyba, ne tichy ostry rozesil. Whitelist (ne "obsahuje
+  // test") schvalne: chyti i {"email":...}, {"to":...}, {"testEmail":...} atd. Presne takhle odesel
+  // 17. 7. mail 5 klientum v patek (parametr se tise ignoroval). Radeji 400 nez rozeslat.
+  // Jediny legitimni neprazdny vstup je platny test_email. Cokoliv jineho v tele (preklep v klici,
+  // spatny typ, chybejici zavinac, test_kind bez test_email) => 400, nikdy tichy ostry rozesil.
+  const klice = Object.keys(body ?? {});
+  if (klice.length > 0 && !testEmail)
+    return json({ error: "test_email_invalid", hint: 'cekam prazdne telo (ostry beh) nebo {"test_email":"nekdo@domena.cz"}', got: klice }, 400);
 
   // klienti s aktivním coaching entitlementem
   const { data: ents } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
@@ -84,14 +109,20 @@ Deno.serve(async (req: Request) => {
   if (!clients.length) return json({ ok: true, sent: 0 });
 
   // jen registrovaní (bez účtu nemá report kdo vyplnit — ty řeší pozvánka, ne pondělní mail)
+  // listUsers() chybu NEHAZI, vraci ji v error a data zustanou prazdna. Bez tehle kontroly by
+  // vypadek auth API znamenal "nikdo nema ucet" -> vsech 9 klientu (i 5 aktivnich) by dostalo
+  // vyzvu k registraci. Radeji neposlat nic nez rozeslat plosne spatny mail.
   const registered = new Set<string>();
   let page = 1;
   while (page < 20) {
-    const { data: u } = await admin.auth.admin.listUsers({ page, perPage: 200 });
+    const { data: u, error: uerr } = await admin.auth.admin.listUsers({ page, perPage: 200 });
+    if (uerr) return json({ error: "auth_list_failed", detail: String(uerr.message ?? uerr).slice(0, 120), sent: 0 }, 500);
     for (const usr of u?.users ?? []) registered.add(low(usr.email));
     if (!u || u.users.length < 200) break;
     page++;
   }
+  // Prazdny seznam uctu nemuze nastat legitimne (v auth.users jsou desitky uctu) = spolehlivy detektor chyby.
+  if (!registered.size) return json({ error: "auth_list_empty", sent: 0 }, 500);
 
   // kdo už report v posledních 3 dnech poslal, připomínku nedostane
   const cutoff = new Date(Date.now() - 3 * 86400000).toISOString().slice(0, 10);
@@ -110,9 +141,13 @@ Deno.serve(async (req: Request) => {
     if (raw) nameBy.set(low(c.email), vokativ(raw.charAt(0).toUpperCase() + raw.slice(1)));
   }
 
-  const targets = testEmail
-    ? [testEmail]
-    : clients.filter((e) => registered.has(e) && !recentSet.has(e) && !optout.has(e));
+  const pool = clients.filter((e) => !optout.has(e));
+  const targets: { email: string; kind: "report" | "register" }[] = testEmail
+    ? [{ email: testEmail, kind: testKind }]
+    : [
+        ...pool.filter((e) => registered.has(e) && !recentSet.has(e)).map((email) => ({ email, kind: "report" as const })),
+        ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
+      ];
 
   // KT návod jako příloha (stáhne se jednou pro všechny; best effort — bez něj mail stejně odejde)
   let attachments: { filename: string; content: string }[] | undefined;
@@ -128,16 +163,27 @@ Deno.serve(async (req: Request) => {
 
   let sent = 0;
   const errors: string[] = [];
-  for (const email of targets) {
+  for (const tgt of targets) {
+    const isReg = tgt.kind === "register";
     try {
       const r = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from: FROM, to: [email], subject: "Pondělní report ✍️ (3 minuty)", html: mailHtml(nameBy.get(email) ?? ""), reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"], ...(attachments ? { attachments } : {}) }),
+        body: JSON.stringify({
+          from: FROM,
+          to: [tgt.email],
+          subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)" : "Pondělní report ✍️ (3 minuty)",
+          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!attachments && !isReg),
+          reply_to: "martin@martinbarna.cz",
+          // Pri testu je bcc zbytecne (mail uz jde na Martina) a mate: prisel by dvakrat.
+          ...(testEmail ? {} : { bcc: ["fitness.barna@gmail.com"] }),
+          ...(attachments && !isReg ? { attachments } : {}),
+        }),
       });
-      if (r.status === 200) sent++; else errors.push(email + ":" + r.status);
+      if (r.status === 200) sent++; else errors.push(tgt.email + ":" + r.status);
       await new Promise((res) => setTimeout(res, 550)); // Resend rate limit 2/s
-    } catch (e) { errors.push(email + ":" + String(e).slice(0, 40)); }
+    } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, sent, priloha: !!attachments, errors });
+  const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, priloha: !!attachments, errors });
 });
