@@ -221,7 +221,8 @@ async function postWithRetry(url: string, headers: Record<string, string>, bodyO
 // --- P1 (§9 daty řízený ceník): měření nákladu na člena ---
 const PRICE_PER_M: Record<string, { in: number; out: number }> = {
   'claude-opus-4-8': { in: 15, out: 75 }, 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5': { in: 1, out: 5 },
-  'grok-4.3': { in: 3, out: 15 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6 },
+  // Ceny x.ai overene v konzoli 17. 7. 2026 (USD za 1M tokenu). Cached vstup: 4.3 = 0,20 / 4.5 = 0,50 (zatim nemerime).
+  'grok-4.3': { in: 1.25, out: 2.5 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6 },
 };
 function parseUsage(u: unknown): { tin: number; tout: number } {
   const o = (u ?? {}) as Record<string, number>;
