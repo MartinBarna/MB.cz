@@ -219,14 +219,22 @@ async function postWithRetry(url: string, headers: Record<string, string>, bodyO
 }
 
 // --- P1 (§9 daty řízený ceník): měření nákladu na člena ---
-const PRICE_PER_M: Record<string, { in: number; out: number }> = {
+// Ceny overene v konzoli x.ai 17. 7. 2026 (USD za 1M tokenu). 'cached' = zlevneny vstup,
+// ktery poskytovatel trefi z cache (na xAI automaticky, nic se nezapina).
+const PRICE_PER_M: Record<string, { in: number; out: number; cached?: number }> = {
   'claude-opus-4-8': { in: 15, out: 75 }, 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5': { in: 1, out: 5 },
-  // Ceny x.ai overene v konzoli 17. 7. 2026 (USD za 1M tokenu). Cached vstup: 4.3 = 0,20 / 4.5 = 0,50 (zatim nemerime).
-  'grok-4.3': { in: 1.25, out: 2.5 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6 },
+  'grok-4.3': { in: 1.25, out: 2.5, cached: 0.2 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6, cached: 0.5 },
 };
-function parseUsage(u: unknown): { tin: number; tout: number } {
-  const o = (u ?? {}) as Record<string, number>;
-  return { tin: Number(o.input_tokens ?? o.prompt_tokens ?? 0) || 0, tout: Number(o.output_tokens ?? o.completion_tokens ?? 0) || 0 };
+// tcached = cast vstupu trefena z cache (xAI: usage.prompt_tokens_details.cached_tokens,
+// Anthropic: cache_read_input_tokens). Bez toho bychom ucetli plnou sazbu i za levny vstup.
+function parseUsage(u: unknown): { tin: number; tout: number; tcached: number } {
+  const o = (u ?? {}) as Record<string, unknown>;
+  const num = (v: unknown) => Number(v ?? 0) || 0;
+  const details = (o.prompt_tokens_details ?? {}) as Record<string, unknown>;
+  const tin = num(o.input_tokens ?? o.prompt_tokens);
+  const tout = num(o.output_tokens ?? o.completion_tokens);
+  const tcached = Math.min(num(details.cached_tokens ?? o.cache_read_input_tokens), tin);
+  return { tin, tout, tcached };
 }
 function userIdFromToken(token: string): string | null {
   try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof p.sub === 'string' ? p.sub : null; } catch { return null; }
@@ -234,13 +242,15 @@ function userIdFromToken(token: string): string | null {
 // best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď (fire-and-forget).
 function logUsage(userId: string | null, feature: string, usage: unknown): void {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
-  const { tin, tout } = parseUsage(usage);
+  const { tin, tout, tcached } = parseUsage(usage);
   const p = PRICE_PER_M[MODEL] ?? { in: 3, out: 15 };
-  const cost = Number(((tin / 1e6) * p.in + (tout / 1e6) * p.out).toFixed(6));
+  // cached vstup se uctuje levnejsi sazbou; zbytek vstupu plnou
+  const cachedRate = p.cached ?? p.in;
+  const cost = Number((((tin - tcached) / 1e6) * p.in + (tcached / 1e6) * cachedRate + (tout / 1e6) * p.out).toFixed(6));
   fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: tout, est_cost_usd: cost }),
+    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: tout, tokens_cached: tcached, est_cost_usd: cost }),
   }).catch(() => {});
 }
 // --- P2: denní strop na člena (anti-abuse). Best-effort; při chybě pustí dál. ---
@@ -327,9 +337,12 @@ Deno.serve(async (req: Request) => {
     let reply = '';
     if (PROVIDER === 'grok') {
       // xAI Grok — OpenAI-kompatibilní chat completions (system jako první zpráva) + retry
+      // x-grok-conv-id: drzi cache pres zpravy jednoho clena (xAI cachuje automaticky,
+      // ale s conv-id vyrazne lip trefi stabilni prefix = SYSTEM + persona).
+      const convId = `ai-martin-${userId ?? 'anon'}`;
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
-        { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json' },
-        { model: MODEL, max_tokens: 600, messages: [{ role: 'system', content: system }, ...msgs] });
+        { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
+        { model: MODEL, max_tokens: 600, prompt_cache_key: convId, messages: [{ role: 'system', content: system }, ...msgs] });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('xai_error', res.status, JSON.stringify(data).slice(0, 300));
