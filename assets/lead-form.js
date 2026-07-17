@@ -43,7 +43,7 @@
   function utmParams() {
     try {
       var p = new URLSearchParams(location.search), out = {};
-      ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function (k) {
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) {
         var v = (p.get(k) || '').trim().slice(0, 60);
         if (v) out[k] = v;
       });
@@ -54,9 +54,20 @@
         if (!out.utm_source) out.utm_source = 'google-ads';
         if (!out.utm_medium) out.utm_medium = 'cpc';
       }
+      // Meta click id (fbclid) — at jde lead z FB reklam sparovat i bez cookie souhlasu
+      var fbc = (p.get('fbclid') || '').trim().slice(0, 200);
+      if (fbc) {
+        out.fbclid = fbc;
+        if (!out.utm_source) out.utm_source = 'facebook';
+        if (!out.utm_medium) out.utm_medium = 'cpc';
+      }
       return out;
     } catch (e) { return {}; }
   }
+
+  // API pro stranky s vlastnim odesilanim (napr. /kviz/): window.MBLead.utm()
+  window.MBLead = window.MBLead || {};
+  window.MBLead.utm = utmParams;
 
   ready(function () {
     var forms = document.querySelectorAll('form[data-lead-form]');

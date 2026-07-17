@@ -57,6 +57,7 @@
 </div>
 
 <script src="/assets/analytics.js?v=g7" defer></script>
+<script src="/assets/lead-form.js?v=g4" defer></script>
 <script>
 (function(){
   var Q=[
@@ -110,8 +111,15 @@
       var btn=document.getElementById('kvSend'); btn.disabled=true; btn.textContent='Posílám…';
       fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture',{
         method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},
-        body:JSON.stringify({email:em,segment:seg,source:'kviz',goal:'kviz profil: '+best})
-      }).then(function(){ msg.textContent='✅ Hotovo! Mrkni do schránky (i do promoakcí).'; btn.textContent='Odesláno ✓'; if(window.mbTrackLead)mbTrackLead('kviz',{zdroj:'kviz'}); else { if(window.gtag)gtag('event','generate_lead',{zdroj:'kviz'}); if(window.fbq)fbq('track','Lead'); } })
+        body:JSON.stringify(Object.assign({email:em,segment:seg,source:'kviz',goal:'kviz profil: '+best}, (window.MBLead&&window.MBLead.utm)?window.MBLead.utm():{}))
+      }).then(function(r){ return r.json().catch(function(){ return {ok:r.ok}; }); })
+        .then(function(res){
+          if(!res || !res.ok){ msg.textContent = (res && res.error==='invalid_email') ? '⚠️ Zkontroluj prosím e-mail.' : 'Nepovedlo se, zkus to znovu.'; btn.disabled=false; btn.textContent='Poslat zdarma'; return; }
+          msg.textContent='✅ Hotovo! Mrkni do schránky (i do promoakcí).'; btn.textContent='Odesláno ✓';
+          // Lead do Mety/GA jen kdyz se radek REALNE zalozil (duplicita nebo chyba = zadny novy lead)
+          if(res.duplicate) return;
+          if(window.mbTrackLead)mbTrackLead('kviz',{zdroj:'kviz'}); else { if(window.gtag)gtag('event','generate_lead',{zdroj:'kviz'}); if(window.fbq)fbq('track','Lead'); }
+        })
         .catch(function(){ msg.textContent='Nepovedlo se, zkus to znovu.'; btn.disabled=false; btn.textContent='Poslat zdarma'; });
     });
   }
