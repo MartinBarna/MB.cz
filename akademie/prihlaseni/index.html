@@ -136,13 +136,16 @@
       // Klient koučinku míří do /akademie/klient/. Prodejní blok "Nemáš ještě přístup? od 800 Kč"
       // by platícímu klientovi nabízel, ať si přístup koupí, a hlavička mu slibovala studium
       // a certifikace, což je Academy, ne koučink. Pro tenhle cíl obojí přepnout.
-      if (nextQ && /^\/akademie\/klient\//.test(nextQ)) {
+      var jeKlient = !!(nextQ && /^\/akademie\/klient\//.test(nextQ));
+      if (jeKlient) {
         var buyBox = document.querySelector('.buy');
         if (buyBox) buyBox.style.display = 'none';
         var heroH = document.querySelector('.ahero h1');
         if (heroH) heroH.textContent = 'Klientská sekce';
         var heroP = document.querySelector('.ahero p');
         if (heroP) heroP.textContent = 'Tvoje reporty, grafy i historie na jednom místě.';
+        var backEl = document.querySelector('.topr a');
+        if (backEl) backEl.setAttribute('href', 'https://martinbarna.cz/');
       }
       var need = qs('need');
       if (need) {
@@ -254,7 +257,7 @@
               // Autoconfirm: po registraci je uživatel rovnou přihlášený → pusť ho dovnitř bez druhého kroku.
               // (Kdyby bylo ověření e-mailu zapnuté, getUser vrátí null → ukáž instrukci k přihlášení.)
               window.BA.getUser().then(function (u) {
-                if (u) { show('ok', '✅ Hotovo! Otevírám tvoje studium…'); location.href = nextUrl; }
+                if (u) { show('ok', jeKlient ? '✅ Hotovo! Otevírám tvoji sekci…' : '✅ Hotovo! Otevírám tvoje studium…'); location.href = nextUrl; }
                 else { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď klikni na „Přihlásit se" — e-mail a heslo už máš vyplněné.'); }
               }).catch(function () { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď se přihlas stejným e-mailem a heslem.'); });
             });

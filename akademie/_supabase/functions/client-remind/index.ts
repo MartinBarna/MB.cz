@@ -58,7 +58,7 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
   // v client_reports ma source='import-sheet'). Text proto NESMI tvrdit "bez pristupu mi neposles report",
   // to by klientovi lhalo tyden pote, co report poslal. Cil je presun kanalu, ne vycitka.
   const telo = kind === "register"
-    ? p("od teď mi svoje reporty posílej přes <strong>klientskou sekci</strong> na webu. Najdeš v ní svoje grafy, historii i appku Tvůj Coach v ceně koučinku. Žádný Excel, nic neopisuješ.") +
+    ? p("od teď mi svoje reporty posílej přes <strong>klientskou sekci</strong> na webu. Budeš v ní mít svoje grafy, historii i appku Tvůj Coach v ceně koučinku. Žádný Excel, nic neopisuješ.") +
       cta(REG_URL, "Vytvořit přístup") +
       p("<span style='color:#A09AAD;font-size:14px'>Zabere to minutu. Registruj se e-mailem, na který ti přišel tenhle vzkaz, jiný ti sekci neotevře. Heslo si zvolíš při registraci.</span>") +
       p("<span style='color:#A09AAD;font-size:14px'>Kdyby něco nefungovalo, odepiš mi na tenhle mail a vyřešíme to.</span>")
@@ -93,12 +93,15 @@ Deno.serve(async (req: Request) => {
   const body = await req.json().catch(() => ({} as Record<string, unknown>));
   const testEmail = typeof body?.test_email === "string" && body.test_email.includes("@") ? body.test_email.trim() : null;
   const testKind: "report" | "register" = body?.test_kind === "register" ? "register" : "report";
-  // Kdyz telo vypada jako pokus o test, ale test_email neprosel validaci (preklep v klici, spatny typ,
-  // chybejici zavinac), NESMI to tise spadnout do ostreho rezimu. Presne takhle odesel 17. 7.
-  // mail 5 klientum v patek. Radeji vratit chybu nez rozeslat.
+  // OSTRY rezim spousti VYHRADNE cron s prazdnym telem {}. Cokoliv jineho nez prazdne telo
+  // nebo platny {"test_email":"...@..."} = chyba, ne tichy ostry rozesil. Whitelist (ne "obsahuje
+  // test") schvalne: chyti i {"email":...}, {"to":...}, {"testEmail":...} atd. Presne takhle odesel
+  // 17. 7. mail 5 klientum v patek (parametr se tise ignoroval). Radeji 400 nez rozeslat.
+  // Jediny legitimni neprazdny vstup je platny test_email. Cokoliv jineho v tele (preklep v klici,
+  // spatny typ, chybejici zavinac, test_kind bez test_email) => 400, nikdy tichy ostry rozesil.
   const klice = Object.keys(body ?? {});
-  if (!testEmail && klice.some((k) => /test/i.test(k)))
-    return json({ error: "test_email_invalid", hint: 'cekam {"test_email":"nekdo@domena.cz"}', got: klice }, 400);
+  if (klice.length > 0 && !testEmail)
+    return json({ error: "test_email_invalid", hint: 'cekam prazdne telo (ostry beh) nebo {"test_email":"nekdo@domena.cz"}', got: klice }, 400);
 
   // klienti s aktivním coaching entitlementem
   const { data: ents } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
