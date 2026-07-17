@@ -12,7 +12,9 @@ const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const CTA_URL = "https://martinbarna.cz/akademie/klient/";
-const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?next=%2Fakademie%2Fklient%2F";
+// ?tab=up otevre rovnou zalozku "Vytvorit ucet" (prihlaseni/index.html startuje jinak na "Prihlasit se",
+// coz je u cloveka bez uctu slepa ulicka). &amp; kvuli platnosti HTML v href.
+const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2Fakademie%2Fklient%2F";
 
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
@@ -48,18 +50,21 @@ function vokativ(fn: string): string {
   return fn;
 }
 
-function mailHtml(osloveni: string, kind: "report" | "register"): string {
+function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean): string {
   const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
   const cta = (href: string, label: string) =>
     `<p style='margin:4px 0 18px'><a href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
+  // POZOR na znění register varianty: 3 ze 4 prijemcu reporty POSILAJI, jen mimo web (vsech 31 zaznamu
+  // v client_reports ma source='import-sheet'). Text proto NESMI tvrdit "bez pristupu mi neposles report",
+  // to by klientovi lhalo tyden pote, co report poslal. Cil je presun kanalu, ne vycitka.
   const telo = kind === "register"
-    ? p("zatím nemáš přístup do své klientské sekce. Bez něj mi nepošleš týdenní report a já ti nedoladím plán.") +
-      cta(REG_URL, "Založit přístup") +
-      p("<span style='color:#A09AAD;font-size:14px'>Zabere to minutu. Přihlásíš se tímhle e-mailem a heslo si nastavíš sám. Uvnitř máš týdenní report, svoje grafy a historii i appku Tvůj Coach v ceně koučinku.</span>") +
+    ? p("od teď mi svoje reporty posílej přes <strong>klientskou sekci</strong> na webu. Najdeš v ní svoje grafy, historii i appku Tvůj Coach v ceně koučinku. Žádný Excel, nic neopisuješ.") +
+      cta(REG_URL, "Vytvořit přístup") +
+      p("<span style='color:#A09AAD;font-size:14px'>Zabere to minutu. Registruj se e-mailem, na který ti přišel tenhle vzkaz, jiný ti sekci neotevře. Heslo si zvolíš při registraci.</span>") +
       p("<span style='color:#A09AAD;font-size:14px'>Kdyby něco nefungovalo, odepiš mi na tenhle mail a vyřešíme to.</span>")
     : p("nový týden, nová data 💪 Mrkni na váhu a hoď mi <strong>týdenní report</strong>. Zabere ~3 minuty a já ti podle něj doladím plán.") +
       cta(CTA_URL, "Vyplnit report (3 min)") +
-      p("<span style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Nemusíš nic opisovat.</span>") +
+      (maPrilohu ? p("<span style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Nemusíš nic opisovat.</span>") : "") +
       p("<span style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>");
   return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='color-scheme' content='dark'></head><body style='margin:0;padding:0;background:#0C0B10'>` +
     `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10'><tr><td align='center' style='padding:16px'>` +
@@ -88,6 +93,12 @@ Deno.serve(async (req: Request) => {
   const body = await req.json().catch(() => ({} as Record<string, unknown>));
   const testEmail = typeof body?.test_email === "string" && body.test_email.includes("@") ? body.test_email.trim() : null;
   const testKind: "report" | "register" = body?.test_kind === "register" ? "register" : "report";
+  // Kdyz telo vypada jako pokus o test, ale test_email neprosel validaci (preklep v klici, spatny typ,
+  // chybejici zavinac), NESMI to tise spadnout do ostreho rezimu. Presne takhle odesel 17. 7.
+  // mail 5 klientum v patek. Radeji vratit chybu nez rozeslat.
+  const klice = Object.keys(body ?? {});
+  if (!testEmail && klice.some((k) => /test/i.test(k)))
+    return json({ error: "test_email_invalid", hint: 'cekam {"test_email":"nekdo@domena.cz"}', got: klice }, 400);
 
   // klienti s aktivním coaching entitlementem
   const { data: ents } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
@@ -95,14 +106,20 @@ Deno.serve(async (req: Request) => {
   if (!clients.length) return json({ ok: true, sent: 0 });
 
   // jen registrovaní (bez účtu nemá report kdo vyplnit — ty řeší pozvánka, ne pondělní mail)
+  // listUsers() chybu NEHAZI, vraci ji v error a data zustanou prazdna. Bez tehle kontroly by
+  // vypadek auth API znamenal "nikdo nema ucet" -> vsech 9 klientu (i 5 aktivnich) by dostalo
+  // vyzvu k registraci. Radeji neposlat nic nez rozeslat plosne spatny mail.
   const registered = new Set<string>();
   let page = 1;
   while (page < 20) {
-    const { data: u } = await admin.auth.admin.listUsers({ page, perPage: 200 });
+    const { data: u, error: uerr } = await admin.auth.admin.listUsers({ page, perPage: 200 });
+    if (uerr) return json({ error: "auth_list_failed", detail: String(uerr.message ?? uerr).slice(0, 120), sent: 0 }, 500);
     for (const usr of u?.users ?? []) registered.add(low(usr.email));
     if (!u || u.users.length < 200) break;
     page++;
   }
+  // Prazdny seznam uctu nemuze nastat legitimne (v auth.users jsou desitky uctu) = spolehlivy detektor chyby.
+  if (!registered.size) return json({ error: "auth_list_empty", sent: 0 }, 500);
 
   // kdo už report v posledních 3 dnech poslal, připomínku nedostane
   const cutoff = new Date(Date.now() - 3 * 86400000).toISOString().slice(0, 10);
@@ -152,10 +169,11 @@ Deno.serve(async (req: Request) => {
         body: JSON.stringify({
           from: FROM,
           to: [tgt.email],
-          subject: isReg ? "Chybí ti přístup do klientské sekce (1 minuta)" : "Pondělní report ✍️ (3 minuty)",
-          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind),
+          subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)" : "Pondělní report ✍️ (3 minuty)",
+          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!attachments && !isReg),
           reply_to: "martin@martinbarna.cz",
-          bcc: ["fitness.barna@gmail.com"],
+          // Pri testu je bcc zbytecne (mail uz jde na Martina) a mate: prisel by dvakrat.
+          ...(testEmail ? {} : { bcc: ["fitness.barna@gmail.com"] }),
           ...(attachments && !isReg ? { attachments } : {}),
         }),
       });
