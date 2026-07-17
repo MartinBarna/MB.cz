@@ -92,11 +92,9 @@
           website: (form.website && form.website.value || ''),
           segment: seg, source: src
         };
-        var utm = utmParams();
-        if (utm.utm_source) data.utm_source = utm.utm_source;
-        if (utm.utm_medium) data.utm_medium = utm.utm_medium;
-        if (utm.utm_campaign) data.utm_campaign = utm.utm_campaign;
-        if (utm.gclid) data.gclid = utm.gclid;
+        // Vse, co utmParams() nasbira (utm_source/medium/campaign/content, gclid, fbclid),
+        // posli rovnou dal — vypis po polich se driv rozesel a zahazoval utm_content i fbclid.
+        Object.assign(data, utmParams());
         var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Odesílám…';
         if (msg) { msg.textContent = ''; }
 
