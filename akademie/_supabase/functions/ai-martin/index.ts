@@ -52,6 +52,10 @@ const UPSELL =
 // Znění 1:1 s appkou Tvůj Coach (sdílená safety vrstva — viz handoff §5).
 // [harden 2026-07-14] doplněno „u sebe nebo u klienta" — web čtou i trenéři řešící svého klienta.
 const HARD_STOP = 'Tohle s tebou radši řešit nebudu, není to na tenhle chat — ať to řešíš u sebe, nebo u klienta. Napiš přímo Martinovi, je tu pro tebe. Když je to akutní, zavolej Linku první psychické pomoci 116 123 (nonstop, zdarma, anonymně).';
+// Porucha prijmu potravy dostava vlastni hlasku se specializovanou pomoci (vzor prevzat z appky),
+// navic s trenerskou vetvi: na Academy se pta student-trener na klienta, v appce sedi sam klient.
+// Krizova HARD_STOP zustava 1:1 sdilena s appkou, na tu nesahat.
+const ED_HARD_STOP = 'Tohle je nad rámec tohohle chatu a záleží mi na tom, ať se to řeší dobře. Proto k tomu nedám žádná čísla, kalorie ani „triky", takhle se to neřeší, ať už jde o tebe, nebo o tvého klienta. Jako trenér nebo poradce tady nevedeš dietu ani deficit: tvoje role je podpora a předání odborníkovi. Napiš prosím přímo Martinovi, projde to s tebou v klidu. A obrať se na odborníky na poruchy příjmu potravy (v ČR se tomu věnuje Asociace Anabell) nebo na lékaře či psychiatra. Když je akutně zle, je tu Linka první psychické pomoci 116 123 (nonstop, zdarma, anonymně).';
 
 // Martinova plná persona (zdroj: akademie/_ai/AI-MARTIN-TRENINK-BRIEF.md — „hotový systémový prompt").
 const SYSTEM = [
@@ -303,7 +307,8 @@ Deno.serve(async (req: Request) => {
   // SAFETY pre-flag (deterministický, sdílený s appkou Tvůj Coach): krize / poruchy příjmu potravy
   // = tvrdý stop bez volání LLM; ostatní rizika (léky, těhotenství, nezletilí) → opatrný safe-mode.
   const flag = preflagMessage(lastUser);
-  if (flag.primary === 'crisis' || flag.primary === 'eating_disorder') return json({ reply: HARD_STOP }, CORS, 200);
+  if (flag.primary === 'crisis') return json({ reply: HARD_STOP }, CORS, 200);
+  if (flag.primary === 'eating_disorder') return json({ reply: ED_HARD_STOP }, CORS, 200);
   // [harden 2026-07-14] opatrnost napříč konverzací: riziko zmíněné o pár zpráv dřív („mám cukrovku"
   // → za 3 zprávy „kolik sacharidů?") drží safe-mode dál — pre-flag jede i přes posledních 6 user zpráv.
   const histFlag = preflagMessage(msgs.filter((m) => m.role === 'user').slice(-6).map((m) => m.content).join(' | '));
