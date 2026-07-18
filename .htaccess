@@ -88,8 +88,9 @@ RedirectMatch 301 (?i)^/coaching(\.html)?/?$    https://martinbarna.cz/koucing/
 RedirectMatch 301 (?i)^/koucink(\.html)?/?$     https://martinbarna.cz/koucing/
 RedirectMatch 301 (?i)^/online-coaching/?$      https://martinbarna.cz/koucing/
 RedirectMatch 301 (?i)^/online-koucink/?$       https://martinbarna.cz/koucing/
-# konzultace je součást koučinku — místo HTML stubu s meta-refresh pravé 301
-RedirectMatch 301 (?i)^/konzultace(\.html)?/?$  https://martinbarna.cz/koucing/
+# /konzultace/ ma od 18. 7. VLASTNI prodejni stranku (1 990 Kc + VIP balicek), takze uz se
+# nepresmerovava na koucink. Presmerovani drzime jen pro starou variantu s priponou .html.
+RedirectMatch 301 (?i)^/konzultace\.html$  https://martinbarna.cz/konzultace/
 # Academy anglicky, kalkulačka krátce, trénink v jednotném čísle
 RedirectMatch 301 (?i)^/academy/?$              https://martinbarna.cz/akademie/
 RedirectMatch 301 (?i)^/kalkulacka/?$           https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/
