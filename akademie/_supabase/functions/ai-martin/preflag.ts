@@ -39,7 +39,9 @@ const SUBSTR: Record<FlagCategory, string[]> = {
     // „kardio o hladě?", „zhubnout bez hladovění"). Nevolnost ('zvrac') je medical; purging drží
     // PURGE_*_RE. 'bojim se jist' = ED red flag (strach z jídla).
     'vyzvrac', 'vyzvrat', 'vybli', 'poblit', 'poblil', 'poblij', 'purg', 'projimadl',
-    'laxativ', 'bulimi', 'anorex', 'obsesivn', 'hladovk', 'hladovim', 'hladovis', 'vyhladovet',
+    'laxativ', 'bulimi', 'anorex', 'ortorex',
+    // Samotne sousloví se dosud neflagovalo, chytaly se jen konkretni diagnozy.
+    'porucha prijmu potravy', 'poruchu prijmu potravy', 'poruchou prijmu potravy', 'poruch prijmu potravy', 'obsesivn', 'hladovk', 'hladovim', 'hladovis', 'vyhladovet',
     'drzet hlad', 'bojim se jist', 'strach z jidla', 'strach se najist',
   ],
   medical: [
@@ -81,8 +83,8 @@ const SUBSTR: Record<FlagCategory, string[]> = {
 // kcal" (= trochu málo, běžná poznámka ke kaloriím jídla). Bez \b to bylo falešně pozitivní.
 // [safety-sync 2026-07-14: zrcadleno z app supabase/functions/ai-martin/preflag.ts, app = zdroj pravdy]
 const RESTRICTION_RE: RegExp[] = [
-  /(nejmin|co nejmene|\bjak malo|nejmensi)[^.!?]{0,40}(jist|jidl|kalori|kcal|snist|prijem|jest)/,
-  /(jist|jidl|kalori|kcal|prijem|snist|jest)[^.!?]{0,40}(nejmin|co nejmene|\bjak malo|nejmensi)/,
+  /(nejmin|co nejmene|\bjak malo|nejmensi|nejnizsi)[^.!?]{0,40}(jist|jidl|kalori|kcal|snist|prijem|jest)/,
+  /(jist|jidl|kalori|kcal|prijem|snist|jest)[^.!?]{0,40}(nejmin|co nejmene|\bjak malo|nejmensi|nejnizsi)/,
 ];
 const PURGE_MATH_RE: RegExp[] = [
   /vstreba[^.!?]{0,40}(zvrac|vyzvrac|vyzvrat)/,

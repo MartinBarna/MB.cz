@@ -1,8 +1,12 @@
 // referral-code (#39) — get-or-create referral kod pro prihlaseneho zakaznika + stav kreditu.
-// verify_jwt=true → Supabase gateway overi user JWT. Z JWT vezmeme email, overime entitlement,
+// verify_jwt=FALSE → token overujeme SAMI pres auth/v1/user (gateway s verify_jwt=true odmitala
+// legacy JWT chybou UNAUTHORIZED_LEGACY_JWT a funkce se vubec nespustila). Z overeneho tokenu
+// vezmeme email, overime entitlement,
 // vratime kod (BARNA-XXXX), share_url a stav (referral_credit view). Zapis pres service role.
 //
-// Deploy: supabase functions deploy referral-code  (verify_jwt=true)
+// Deploy: supabase functions deploy referral-code --no-verify-jwt
+// (POZOR: pri --no-verify-jwt MUSI zustat overeni tokenu nize; jinak by stacilo poslat
+//  vymysleny token s cizim e-mailem a precist cizi kod i vydelky.)
 // Volitelne env: REF_ORIGIN (CORS), REF_SITE (zaklad share linku).
 
 const URL = Deno.env.get('SUPABASE_URL') ?? '';
@@ -12,20 +16,26 @@ const SITE = Deno.env.get('REF_SITE') ?? 'https://martinbarna.cz';
 
 const CORS = {
   'Access-Control-Allow-Origin': ORIGIN,
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+  // 'apikey' MUSI byt povolena: supabase-js ji u functions.invoke posila vzdy a prohlizec
+  // jinak zablokuje uz preflight (projevi se jako 'Failed to send a request to the Edge Function').
+  'Access-Control-Allow-Headers': 'authorization, content-type, apikey, x-client-info',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 };
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...CORS, 'Content-Type': 'application/json' } });
 
-function emailFromJwt(auth: string): string {
+// Overi user token proti Supabase auth API a vrati e-mail. Na rozdil od pouheho dekodovani
+// payloadu tohle NELZE podvrhnout: neplatny podpis = auth API vrati chybu.
+async function emailFromToken(auth: string): Promise<string> {
   try {
-    const t = auth.replace(/^Bearer\s+/i, '');
-    const p = t.split('.')[1];
-    if (!p) return '';
-    const dec = atob(p.replace(/-/g, '+').replace(/_/g, '/'));
-    const o = JSON.parse(dec);
-    return String(o.email ?? '').toLowerCase();
+    const t = auth.replace(/^Bearer\s+/i, '').trim();
+    if (!t) return '';
+    const r = await fetch(URL + '/auth/v1/user', {
+      headers: { Authorization: 'Bearer ' + t, apikey: SERVICE },
+    });
+    if (!r.ok) return '';
+    const u = await r.json();
+    return String(u?.email ?? '').toLowerCase();
   } catch { return ''; }
 }
 
@@ -52,7 +62,7 @@ function genCode(): string {
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
-  const email = emailFromJwt(req.headers.get('Authorization') ?? '');
+  const email = await emailFromToken(req.headers.get('Authorization') ?? '');
   if (!email) return json({ error: 'unauthorized' }, 401);
 
   // entitlement check (aktivni academy nebo videokurz)

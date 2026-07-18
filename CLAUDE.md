@@ -21,7 +21,7 @@ node scripts/sync-academy-counts.js
   `akademie/prihlaseni/`, `akademie/moje/`, `akademie/studium/`, `akademie/_videokurz/build.js`,
   `assets/academy-upsell.js`, `videokurz.html`.
 - Bezpečné: nahrazuje přesně předchozí zaznamenané číslo (`scripts/.academy-counts.json`),
-  takže nemíchá 212 lekcí Academy s 182 videi videokurzu.
+  takže nemíchá 256 lekcí Academy s 182 videi videokurzu.
 - Po přidání lekce do studia ji **také zařaď do `CURRICULUM`** v `akademie/studium/index.html`
   (a nový modul tamtéž), pak spusť skript a deployni.
 - Materiály (počet PDF) skript zatím neřeší — při změně počtu materiálů zkontroluj ručně
@@ -114,12 +114,12 @@ STYL, kterému se vyhýbáš: vata („je důležité si uvědomit", „v dnešn
 signpostování, robotická vyváženost. Piš jako Martin — přímo, hravě, k věci.
 
 ZNALOSTNÍ BÁZE (v tomto repu, cesty relativní ke kořeni):
-- Mapa všech 20 modulů a 224 lekcí je v akademie/studium/index.html (pole CURRICULUM — názvy
+- Mapa všech 24 modulů a 256 lekcí je v akademie/studium/index.html (pole CURRICULUM — názvy
   modulů, lekcí i cesty).
 - Plný text každé lekce je v akademie/studium/<id>/index.html (např. m11-l1). Text je v HTML,
   klíčové bloky: perex, „Co si z lekce odneseš", výklad, „V praxi (Martin)", kvíz, Zdroje.
 - Při odpovědi: podle CURRICULUM najdi relevantní modul/lekci → přečti její HTML → odpověz z ní.
-  NENAČÍTEJ všech 224 lekcí naráz; ber jen ty relevantní (grep podle tématu).
+  NENAČÍTEJ všech 256 lekcí naráz; ber jen ty relevantní (grep podle tématu).
 
 ## AI Martin — jak rychle dohledávat (navigace k bázi)
 
@@ -128,9 +128,9 @@ Nad nimi máš lokální pomůcky ve složce `akademie/_ai/` (jen lokální, mim
 ji hledej přímo na disku, ne v gitu):
 
 - **Rychlý index podle tématu** → grepni `akademie/_ai/AI-MARTIN-ZNALOSTNI-MAPA.md` (perex +
-  učební cíle u všech 224 lekcí). Najdeš `mX-lY` → otevři lekci ve `studium/` (nejpřesnější),
+  učební cíle u všech 256 lekcí). Najdeš `mX-lY` → otevři lekci ve `studium/` (nejpřesnější),
   nebo čistý text celého modulu v `akademie/_ai/AI-MARTIN-KORPUS/mXX.txt`.
-- **Celý „mozek" balíku** (persona + přehled 20 modulů + funkce Academy + safety + cesty
+- **Celý „mozek" balíku** (persona + přehled 24 modulů + funkce Academy + safety + cesty
   nasazení) je v `akademie/_ai/AI-MARTIN-TRENINK-BRIEF.md`.
 - Postup: téma → grep MAPU → 1–3 relevantní lekce → přečti → odpověz Martinovým hlasem + přidej PROČ.
 
