@@ -71,6 +71,9 @@ Redirect 301 /muj-pribeh/                    https://martinbarna.cz/#omne
 Redirect 301 /team-martin-barna/             https://martinbarna.cz/#omne
 Redirect 301 /videokurz-dekovaci-stranka/    https://martinbarna.cz/videokurz
 # kategorie blogu + starý /blog → nový blog
+# Clanky zijí jako /clanky/nazev.html. Kdyz nekdo sdili nebo napise variantu s lomitkem
+# (/clanky/nazev/), vracel web 404 a socialni site pak neukazaly ani nahled. Presmerujeme na .html.
+RedirectMatch 301 (?i)^/clanky/([a-z0-9-]+)/$  https://martinbarna.cz/clanky/$1.html
 RedirectMatch 301 ^/rubrika/.*$              https://martinbarna.cz/clanky/
 RedirectMatch 301 ^/blog/?$                  https://martinbarna.cz/clanky/
 # staré produktové stránky → videokurz (hlavní low-cost produkt, vše je v něm)
