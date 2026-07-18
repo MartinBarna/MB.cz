@@ -1,0 +1,15 @@
+{
+  "slug": "sacharidy-pred-treninkem",
+  "slides": [
+    { "kind": "cover", "kicker": "Výživa & výkon", "title": "Banán před<br>tréninkem: nutnost,<br>nebo <span class=\"hl\">rituál?</span>", "sub": "Klasika z každé posilovny. Studie z roku 2025 ukázala, kolik z toho dělá hlava." },
+    { "kind": "point", "kicker": "Co se traduje", "title": "Bez sacharidů<br>to prý nejede", "body": "Banán, rýžové chlebíčky, sladký nápoj. Bez rychlé energie před tréninkem to podle posiloven nedáš.<br><br>Někdo to zkusil pořádně změřit." },
+    { "kind": "point", "kicker": "Design studie", "title": "Tři skupiny,<br>nula sacharidů", "body": "<b>45 aktivních mužů</b> rozdělili na tři party. Jedna byla kontrolní. Druhá dostala sladký nápoj bez sacharidů a k tomu řeč, že sacharidy jsou uvnitř. Třetí to samé plus zpětnou vazbu při testech, která je utvrzovala, že to zabírá.<br><br>Sacharidy ve hře nebyly žádné." },
+    { "kind": "stat", "kicker": "Výsledek", "big": "0", "unit": "gramů sacharidů, a síla přesto nahoru (Lee et al. 2025)", "body": "V testu síly kolena přidali <b>5 až 7 %</b>. A nejvíc ta skupina, co dostala nejvíc podnětů k víře. Zvedlo je <b>přesvědčení</b>." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Jedna studie<br>není věda", "body": "Přehled <b>49 studií</b> z roku 2022 uzavřel, že v najezeném stavu a u tréninku <b>do 10 sérií</b> na partii sacharidy před cvičením výkon nezlepší. Nad tenhle objem pomoct můžou.<br><br>Dávkový efekt se nenašel.", "callout": "Lee et al. 2025 (Physiology & Behavior); Henselmans et al. 2022 (Nutrients); King et al. 2022 (Sports Medicine); Hamidvand et al. 2025 (Physiological Reports)." },
+    { "kind": "point", "kicker": "Jak to funguje", "title": "Chybí dávkový<br>efekt", "body": "U věci, co reálně pohání výkon, obvykle platí: víc dávky, víc efektu. Tady se to nepotvrdilo.<br><br>Přesně tak vypadá otisk <b>placeba</b>." },
+    { "kind": "point", "kicker": "Háček", "title": "Z rituálu<br>křehkost", "body": "Když uvěříš, že bez sacharidů trénovat nejde, vypěstuješ si na nich závislost v hlavě.<br><br>Den, kdy je nedáš, je horší. Ale kvůli hlavě, ne kvůli energii." },
+    { "kind": "vs", "kicker": "Prakticky", "title": "Kdy je vzít,<br>kdy je pustit", "yes": { "h": "Reálně pomůžou", "items": ["Trénink po <b>8 a víc hodinách</b> nalačno", "Objemová dřina, <b>10 a víc sérií</b> na partii", "Trénink <b>přes 45 minut</b>"] }, "no": { "h": "Jedeš ze zvyku", "items": ["Trénuješ najezený, pár hodin po jídle", "Krátký trénink o pár sériích", "Banán dáváš ze strachu, že bez něj to nezvládneš"] } },
+    { "kind": "quote", "text": "Banán před tréninkem ti sílu nepřidá. Strach, že bez něj nemůžeš, ti ji sebere.", "note": "Rituál je v pohodě. Závislost na něm už ne." },
+    { "kind": "cta", "title": "Chceš v tom mít <span class=\"hl\">jasno?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

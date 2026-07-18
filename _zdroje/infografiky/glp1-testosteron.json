@@ -1,0 +1,15 @@
+{
+  "slug": "glp1-testosteron",
+  "slides": [
+    { "kind": "cover", "kicker": "Léky na hubnutí", "title": "Zvedá Ozempic<br><span class=\"hl\">testosteron?</span>", "sub": "Titulky jásají, že GLP-1 léky nakopnou testosteron i plodnost. Věda říká: pozor, čím to je." },
+    { "kind": "point", "kicker": "Co se teď píše", "title": "Lék, co<br>umí všechno", "body": "Ozempic a spol. prý shodí kila a k tomu zvednou testosteron a zlepší spermie.<br><br>Efekt je reálný. Háček je v tom, čím ho tělo způsobí." },
+    { "kind": "point", "kicker": "Klíčová otázka", "title": "Z léku,<br>nebo z hubnutí?", "body": "V tom je celý rozdíl. Když za to může lék, dává smysl ho brát. Když úbytek tuku, stačí zhubnout jakkoli.<br><br>Data mají jasno." },
+    { "kind": "stat", "kicker": "Co ukázala data", "big": "0", "unit": "změna testosteronu u zdravých mužů (přehled 10 studií, 639 mužů, Deameh 2026)", "body": "Testosteron se zvedl <b>jen u mužů s obezitou</b> nebo cukrovkou. U zdravých se nestalo nic. To je ta stopa." },
+    { "kind": "point", "kicker": "Proč to tak je", "title": "Tuk vyrábí<br>estrogen", "body": "Tuková tkáň dělá aromatázu, enzym, co mění testosteron na estrogen. Víc tuku, míň testosteronu.<br><br>Zhubneš, aromatázy ubude a testosteron se vrací. Lék je jen cesta, jak zhubnout." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Proti TRT<br>má výhodu", "body": "Na rozdíl od nasazení testosteronu zvenčí, GLP-1 nevypne vlastní tvorbu. Řídící hormony zůstávají, plodnost se drží.<br><br>Pořád ale rozhoduje ten úbytek tuku.", "callout": "Deameh et al. 2026, The Journal of Sexual Medicine." },
+    { "kind": "point", "kicker": "Důležité", "title": "Není to<br>hračka na gains", "body": "GLP-1 jsou léky s vedlejšími účinky a patří do rukou lékaře. Pro zdravého trénujícího nejsou zkratka na svaly ani na testosteron.<br><br>Nasazení i vysazení řeš s lékařem, ne podle Instagramu." },
+    { "kind": "vs", "kicker": "Prakticky", "title": "Než sáhneš<br>po TRT", "yes": { "h": "Zvedá testosteron zdravě", "items": ["Shodit břišní tuk", "Spánek 7 až 9 hodin", "Silový trénink a míň alkoholu"] }, "no": { "h": "Slepá ulička", "items": ["GLP-1 kvůli „gains“", "TRT jako první krok bez vyšetření", "Boostery a zázračné pilulky"] } },
+    { "kind": "quote", "text": "Testosteron nezvedl lék. Zvedlo ho hubnutí.", "note": "Ať zhubneš jakkoli, tělo ti poděkuje. Lék je jen jedna z cest, a ne pro každého." },
+    { "kind": "cta", "title": "Chceš to <span class=\"hl\">bez léků?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

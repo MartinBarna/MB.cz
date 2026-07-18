@@ -35,6 +35,17 @@
   // pořadí cviků v tréninku: velké spoje → izolace → core → kardio (finisher)
   function orderRank(p) { return p === 'izolace' ? 1 : p === 'core' ? 2 : p === 'kardio' ? 3 : 0; }
 
+  // Plně vybavené místo → plán má vypadat jako plán do posilovny, ne jako mix všeho.
+  // Činky, stroje, kladky a hrazda mají přednost; guma a vlastní tělo se použijí jen tehdy,
+  // když pro daný slot nic zatíženého není (typicky břicho / core), ne jako běžný prvek plánu.
+  var LOADED = ['velka-cinka', 'cinky', 'kettlebell', 'stroj', 'kladka', 'hrazda'];
+  function isLoaded(e) { return e.equip.some(function (x) { return LOADED.indexOf(x) !== -1; }); }
+  function preferLoaded(cand, equipMode) {
+    if (equipMode !== 'vse') return cand;   // u „jen činky" / „jen tělo" je guma i tělo legitimní volba
+    var top = cand.filter(isLoaded);
+    return top.length ? top : cand;
+  }
+
   function splitFor(days) {
     days = Math.min(5, Math.max(2, days));
     if (days === 2) return [['Trénink A — celé tělo', T.FBA], ['Trénink B — celé tělo', T.FBB]];
@@ -190,6 +201,149 @@
     return byGroup; // { prsa: 12, zada: 14, nohy: 16, biceps: 6, ... }
   }
 
+  // ===== Auto-balance objemu =====
+  // Tabulka objemu hlásila „nad MRV" u plánu, který vyrobil sám generátor — opravit to má tedy
+  // generátor, ne uživatel. Dokud je partie nad MRV, ubíráme série u nejméně prioritních cviků
+  // té partie, a to přednostně tak, aby to jiný sval neshodilo pod MEV.
+  var MIN_SETS = 2;
+
+  function entryMuscles(pe) { return musclesFromDb(pe.ex.muscle, pe.ex.pattern, pe.ex.name); }
+
+  // všechny cviky plánu, které daný sval trénují; seřazené „nejméně prioritní první"
+  function contributorsFor(days, muscle) {
+    var out = [];
+    days.forEach(function (d, di) {
+      d.exercises.forEach(function (pe, ei) {
+        if (pe.ex.pattern === 'kardio') return;
+        var mm = entryMuscles(pe); if (!mm) return;
+        var isP = mm.primary.indexOf(muscle) !== -1;
+        if (!isP && mm.secondary.indexOf(muscle) === -1) return;
+        out.push({ pe: pe, primary: isP, di: di, ei: ei, breadth: mm.primary.length + mm.secondary.length });
+      });
+    });
+    out.sort(function (a, b) {
+      if (a.primary !== b.primary) return a.primary ? -1 : 1;              // primární = ubraná série se projeví celá
+      if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;    // doplňkový cvik dřív než hlavní
+      if (a.breadth !== b.breadth) return a.breadth - b.breadth;           // úzký cvik = míň vedlejších škod
+      return (b.di - a.di) || (b.ei - a.ei);                               // pozdější v týdnu dřív
+    });
+    return out;
+  }
+
+  function countBelowMev(days) {
+    var n = 0;
+    planVolume({ days: days }).forEach(function (v) { if (v.sets < v.lm.mev) n++; });
+    return n;
+  }
+
+  // krajní pojistka: když už nejde ubrat série (všechno na minimu), vyhoď nejméně prioritní cvik
+  function dropWeakest(days, muscle) {
+    var cands = contributorsFor(days, muscle).sort(function (a, b) {
+      if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;
+      return (b.di - a.di) || (b.ei - a.ei);
+    });
+    for (var i = 0; i < cands.length; i++) {
+      var d = days[cands[i].di], ix = d.exercises.indexOf(cands[i].pe);
+      if (ix === -1 || d.exercises.length <= 3) continue;
+      d.exercises.splice(ix, 1);
+      return true;
+    }
+    return false;
+  }
+
+  function autoBalance(days) {
+    for (var guard = 0; guard < 400; guard++) {
+      var over = planVolume({ days: days }).filter(function (v) { return v.sets > v.lm.mrv; });
+      if (!over.length) return;
+      over.sort(function (a, b) { return (b.sets - b.lm.mrv) - (a.sets - a.lm.mrv); });
+      var cands = contributorsFor(days, over[0].muscle).filter(function (c) { return c.pe.sets > MIN_SETS; });
+      if (!cands.length) { if (!dropWeakest(days, over[0].muscle)) return; continue; }
+      var base = countBelowMev(days), done = false;
+      for (var i = 0; i < cands.length; i++) {
+        cands[i].pe.sets--;
+        if (countBelowMev(days) <= base) { done = true; break; }
+        cands[i].pe.sets++;
+      }
+      // radši sval pod MEV (to jde doplnit jedním klikem) než přepal nad MRV
+      if (!done) cands[0].pe.sets--;
+    }
+  }
+
+  // kam nový cvik zařadit: do dne, kde se ten sval už trénuje, a při shodě tam, kde je míň cviků
+  function bestDayFor(days, muscle) {
+    var best = null, bestScore = -Infinity;
+    days.forEach(function (d) {
+      var s = 0;
+      d.exercises.forEach(function (pe) {
+        var mm = entryMuscles(pe); if (!mm) return;
+        if (mm.primary.indexOf(muscle) !== -1) s += pe.sets;
+        else if (mm.secondary.indexOf(muscle) !== -1) s += pe.sets * 0.5;
+      });
+      var score = s * 10 - d.exercises.length;
+      if (score > bestScore) { bestScore = score; best = d; }
+    });
+    return best || days[0];
+  }
+
+  // „Doplnit objem" u partie pod MEV (typicky boční delty, lýtka): nejdřív zkusí přidat cvik,
+  // který sval trénuje primárně, teprve pak přidává série. Nikdy nepřetáhne jiný sval nad MRV.
+  function addVolume(plan, muscle) {
+    var lm = LANDMARKS[muscle]; if (!lm || !plan || !plan.days) return false;
+    var g = plan.goal || GOALS.svaly, pool = plan.pool || [], changed = false;
+    function cur() {
+      var hit = planVolume(plan).filter(function (v) { return v.muscle === muscle; });
+      return hit.length ? hit[0].sets : 0;
+    }
+    function anyOver() { return planVolume(plan).some(function (v) { return v.sets > v.lm.mrv; }); }
+
+    var used = {};
+    plan.days.forEach(function (d) { d.exercises.forEach(function (pe) { used[pe.ex.id] = 1; }); });
+
+    // nový cvik na daný sval; loadedOnly = drž prioritu vybavení stejně jako při stavbě plánu
+    function tryAddExercise(loadedOnly) {
+      var cand = pool.filter(function (e) {
+        if (used[e.id] || e.pattern === 'kardio') return false;
+        var mm = musclesFromDb(e.muscle, e.pattern, e.name);
+        return !!mm && mm.primary.indexOf(muscle) !== -1;
+      });
+      if (loadedOnly) cand = cand.filter(isLoaded);
+      if (!cand.length) return false;
+      cand.sort(function (a, b) { return orderRank(b.pattern) - orderRank(a.pattern); });   // izolace/core dřív
+      var pick = cand[0], need = Math.ceil(lm.mev - cur());
+      var day = bestDayFor(plan.days, muscle);
+      day.exercises.push({ ex: pick, sets: Math.max(MIN_SETS, Math.min(g.sets, need)), reps: g.accessReps, access: true });
+      if (anyOver()) { day.exercises.pop(); return false; }
+      day.exercises.sort(function (a, b) { return orderRank(a.ex.pattern) - orderRank(b.ex.pattern); });
+      used[pick.id] = 1; changed = true;
+      return true;
+    }
+
+    // série navíc u cviku, který sval trénuje primárně
+    function tryAddSet() {
+      var c = contributorsFor(plan.days, muscle).filter(function (x) { return x.primary && x.pe.sets < g.sets; });
+      for (var i = 0; i < c.length; i++) {
+        c[i].pe.sets++;
+        if (anyOver()) { c[i].pe.sets--; continue; }
+        changed = true; return true;
+      }
+      return false;
+    }
+
+    // Pořadí záměrně: nejdřív plnohodnotný cvik, pak série u stávajících, a teprve nakonec
+    // cvik na gumu/tělo. Jinak by ve vybaveném fitku přibyla guma i tam, kde stačí přidat sérii.
+    var loadedOnly = plan.equip === 'vse';
+    for (var guard = 0; guard < 40 && cur() < lm.mev; guard++) {
+      if (tryAddExercise(loadedOnly)) continue;
+      if (tryAddSet()) continue;
+      if (loadedOnly && tryAddExercise(false)) continue;
+      break;
+    }
+
+    plan.volume = planVolume(plan);
+    plan.coverage = planCoverage(plan);
+    return changed;
+  }
+
   function buildPlan(db, opts) {
     opts = opts || {};
     var seed = opts.seed || 0;
@@ -225,6 +379,7 @@
           if (iso.length) cand = iso;
         }
         if (!cand.length) return;
+        cand = preferLoaded(cand, opts.equip);
         var pick = pickVaried(cand, seed + di * 3 + si);
         used[pick.id] = 1; usedWeek[pick.id] = 1;
         exercises.push({
@@ -252,11 +407,12 @@
       }
 
       // backfill proti „hubeným" dnům (min ~4 cviky z cílových svalů dne)
+      var bpool = preferLoaded(pool.filter(function (e) { return dayMuscles[e.muscle] && !used[e.id]; }), opts.equip);
       var bi = 0;
-      while (exercises.length < 4 && bi < pool.length) {
-        var be = pool[(seed + di + bi) % pool.length];
+      while (exercises.length < 4 && bi < bpool.length) {
+        var be = bpool[(seed + di + bi) % bpool.length];
         bi++;
-        if (used[be.id] || !dayMuscles[be.muscle]) continue;
+        if (used[be.id]) continue;
         used[be.id] = 1; usedWeek[be.id] = 1;
         exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps });
       }
@@ -267,9 +423,12 @@
       days.push({ name: dayName, day: di + 1, exercises: exercises });
     });
 
-    return { days: days, goal: g, rest: g.rest, poolSize: pool.length, coverage: planCoverage({ days: days }), volume: planVolume({ days: days }) };
+    // objem srovnej PŘED vrácením plánu — uživatel nemá dostat plán, o kterém mu tabulka rovnou řekne „uber"
+    autoBalance(days);
+
+    return { days: days, goal: g, rest: g.rest, pool: pool, equip: opts.equip, poolSize: pool.length, coverage: planCoverage({ days: days }), volume: planVolume({ days: days }) };
   }
 
-  global.WorkoutGen = { buildPlan: buildPlan, planCoverage: planCoverage, planVolume: planVolume, GOALS: GOALS,
+  global.WorkoutGen = { buildPlan: buildPlan, planCoverage: planCoverage, planVolume: planVolume, addVolume: addVolume, GOALS: GOALS,
     muscles: { musclesFromDb: musclesFromDb, matchMuscles: matchMuscles, resolveMuscles: resolveMuscles, weeklySetsByMuscle: weeklySetsByMuscle, setDb: setMuscleDb, LANDMARKS: LANDMARKS, zoneFor: zoneFor, LABELS: MUS_LABEL, ORDER: MUS_ORDER } };
 })(window);

@@ -1,0 +1,15 @@
+{
+  "slug": "krevni-testy",
+  "slides": [
+    { "kind": "cover", "kicker": "Testy & personalizace", "title": "DNA test<br>na <span class=\"hl\">hubnutí?</span>", "sub": "Genetické diety, intolerance z kapky krve, senzor na cukr. Zní to vědecky. Stanford to změřil." },
+    { "kind": "point", "kicker": "Co se slibuje", "title": "Jídelníček<br>na tvoje geny", "body": "Prodává se to jako konec hádání. Vzorek slin, kapka krve, senzor na paži a máš plán ušitý přesně na tělo.<br><br>Na samotné hubnutí to ale věda neutáhne." },
+    { "kind": "point", "kicker": "Co na to věda?", "title": "Stanford<br>to změřil", "body": "Studie DIETFITS rozdělila lidi podle genů na „typ pro nízký tuk“ a „typ pro nízké sacharidy“.<br><br>Pak sledovala, jestli genotyp trefí, komu která dieta sedne." },
+    { "kind": "stat", "kicker": "Výsledek", "big": "609", "unit": "lidí. Geny ani inzulin nepředpověděly, komu která dieta sedne (Gardner a kol. 2018)", "body": "Genotyp netrefil nic, inzulin taky ne. Test za tisíce ti šanci na úspěch nezvedne." },
+    { "kind": "point", "kicker": "Kapka krve", "title": "Co IgG testy<br>vlastně měří", "body": "Testy potravinové intolerance měří protilátky IgG. Ty v krvi ukazují, <b>co normálně jíš</b>, ne co nesnášíš.<br><br>Vyjde ti spíš seznam toho, co jíš často.", "callout": "Odmítá je evropská, kanadská i americká alergologická společnost. Stapel a kol. 2008 (EAACI), Carr a kol. 2012 (CSACI), AAAAI Choosing Wisely." },
+    { "kind": "stat", "kicker": "Senzor na cukr", "big": "0", "unit": "významný rozdíl na váze proti obyčejné nízkotučné dietě (Popp a kol. 2022)", "body": "204 lidí, šest měsíců. Dieta personalizovaná podle glukózové odezvy obyčejnou nízkotučnou nepřekonala.<br><br>A to u lidí s poruchou cukru, kde by měla zabrat nejvíc." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Každý reaguje<br>trochu jinak", "body": "Že se reakce na stejné jídlo mezi lidmi liší, je pravda a věda to potvrdila.<br><br>U zdravého člověka je ale senzor na paži spíš drahá hračka. Deficit ti stejně nepřebije.", "callout": "Glykemická variabilita: Zeevi a kol. 2015, Cell." },
+    { "kind": "point", "kicker": "Kdy testy dávají smysl", "title": "Zdraví ano,<br>hubnutí ne", "body": "Štítná žláza, vitamin D, krevní obraz. Tyhle testy svoje místo mají, jenom řeší zdraví.<br><br>Cítíš se dlouhodobě unaveně, nebo dlouho nehubneš, i když děláš věci správně? Zajdi na vyšetření.", "callout": "Patří to k lékaři, ne do laboratoře z reklamy. Tohle není diagnóza z Instagramu." },
+    { "kind": "bullets", "kicker": "Do praxe", "title": "Pět věcí<br>místo testů", "items": ["<b>Kalorický deficit</b> jako základ", "<b>Dost bílkovin</b> každý den", "<b>Dost vlákniny</b> z jídla, ne z prášku", "<b>Silový trénink</b> pravidelně", "Žádné utrácení za zázrak na míru"] },
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

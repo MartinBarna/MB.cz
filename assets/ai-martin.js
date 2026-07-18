@@ -79,7 +79,45 @@
     return b;
   }
   function scrollDown() { var bd = panel.querySelector('#amBody'); bd.scrollTop = bd.scrollHeight; }
-  function add(role, text) { msgs.push({ role: role, text: text }); panel.querySelector('#amBody').appendChild(bubble(role, text)); scrollDown(); }
+
+  // ---- klikací zdroje pod odpovědí ("Kde to najdeš") ----
+  // URL chodí ze serveru, kde ji skládá edge funkce z lesson_id v DB. Nikdy nepochází z textu
+  // modelu, takže halucinovaný odkaz sem nemá jak proniknout. Prefix kontrolujeme i tady.
+  var SRC_PREFIX = 'https://martinbarna.cz/akademie/studium/';
+  function sourcesBlock(sources) {
+    var wrap = E('div', 'align-self:flex-start;max-width:84%;margin:-2px 0 2px 4px;font-size:.74rem;line-height:1.5;color:#9a8f84;');
+    var head = E('div', 'margin-bottom:2px;');
+    head.textContent = 'Kde to najdeš';
+    wrap.appendChild(head);
+    var n = 0;
+    for (var i = 0; i < sources.length && n < 3; i++) {
+      var s = sources[i];
+      if (!s || typeof s.url !== 'string' || s.url.indexOf(SRC_PREFIX) !== 0) continue;
+      var row = E('div', 'margin-top:1px;');
+      var a = document.createElement('a');
+      a.href = s.url;
+      a.textContent = String(s.title || 'Lekce');
+      a.style.cssText = 'color:#EBB12C;text-decoration:none;border-bottom:1px solid rgba(235,177,44,.3);';
+      row.appendChild(a);
+      if (s.module) {
+        var m = E('span', 'color:#7d7369;');
+        m.textContent = ' · ' + String(s.module);
+        row.appendChild(m);
+      }
+      wrap.appendChild(row);
+      n++;
+    }
+    return n ? wrap : null;
+  }
+
+  function add(role, text, sources) {
+    msgs.push({ role: role, text: text });
+    var bd = panel.querySelector('#amBody');
+    bd.appendChild(bubble(role, text));
+    // bez zdrojů (starý backend, foto, chybová hláška) se prostě nic nevykreslí
+    if (sources && sources.length) { var sb = sourcesBlock(sources); if (sb) bd.appendChild(sb); }
+    scrollDown();
+  }
   function typing(on) {
     var bd = panel.querySelector('#amBody'); var ex = bd.querySelector('#amTyping');
     if (on && !ex) { var t = bubble('assistant', '…'); t.id = 'amTyping'; t.style.opacity = '.6'; bd.appendChild(t); scrollDown(); }
@@ -119,7 +157,8 @@
       .then(function (d) {
         typing(false);
         if (d && d.locked) { add('assistant', d.reply || CFG.LOCKED_INTRO); lockUI(); }
-        else add('assistant', (d && d.reply) || 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.');
+        else add('assistant', (d && d.reply) || 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.',
+          (d && Array.isArray(d.sources)) ? d.sources : null);
       })
       .catch(function () { typing(false); add('assistant', 'Spojení selhalo. Zkus to prosím znovu.'); })
       .finally(function () { busy = false; });

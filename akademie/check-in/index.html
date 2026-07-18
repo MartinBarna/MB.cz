@@ -127,7 +127,7 @@
       <div class="card" style="background:rgba(47,174,87,.08);border-color:rgba(47,174,87,.3)">
         <h2 style="color:#fff;margin:0 0 .4rem;font-size:1.3rem">Hotovo! 🙌</h2>
         <p style="margin:0 0 .6rem">Díky, žes to vyplnil/a! Tady je tvoje <strong>doporučení na míru</strong> na další týden:</p>
-        <p id="recoText" style="margin:0;color:#e9e2d8;font-size:1.02rem;border-left:3px solid var(--gold);padding-left:.9rem"></p>
+        <div id="recoText" style="margin:0;color:#e9e2d8;font-size:1.02rem;border-left:3px solid var(--gold);padding-left:.9rem"></div>
       </div>
       <div class="credit" id="creditBox">
         🎁 Za pravidelné check-iny se ti <b>po troškách načítá sleva</b> na videokurz i Academy. Čím víc výsledků, tím větší. Vydrž u toho — odměna poroste. 💪
@@ -200,7 +200,19 @@
           // i kdyby backend ještě nebyl, lokálně potvrdíme (data se odešlou, až bude funkce live)
           form.style.display = 'none'; thanks.style.display = 'block';
           var FALLBACK = 'Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc. Maličkosti dělají výsledek. 💪';
-          var rt = document.getElementById('recoText'); if (rt) rt.textContent = (res && res.reco) ? res.reco : FALLBACK;
+          // engine vrací 2 až 4 body; každý jako vlastní odstavec, ať se to dá číst
+          var rt = document.getElementById('recoText');
+          if (rt) {
+            var pts = (res && res.reco_points && res.reco_points.length)
+              ? res.reco_points : [(res && res.reco) ? res.reco : FALLBACK];
+            rt.innerHTML = '';
+            pts.forEach(function (p, i) {
+              var el = document.createElement('p');
+              el.style.margin = (i === pts.length - 1) ? '0' : '0 0 .7rem';
+              el.textContent = p; // textContent, ne innerHTML: data jdou z DB
+              rt.appendChild(el);
+            });
+          }
           if (res && res.credit) {
             document.getElementById('creditBox').innerHTML = '🎁 Připsal jsem ti <b>+' + res.credit + ' Kč</b> na slevu. Celkem nasbíráno: <b>' + (res.credit_total || res.credit) + ' Kč</b>. Pokračuj a roste to dál!';
           }

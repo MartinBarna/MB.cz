@@ -1,0 +1,15 @@
+{
+  "slug": "dieta-vs-nabirani-svalu",
+  "slides": [
+    { "kind": "cover", "kicker": "Trénink v dietě", "title": "V dietě ubrat<br><span class=\"hl\">série?</span>", "sub": "Klasická rada zní logicky. Nová studie z European Journal of Clinical Nutrition ji ale nabourává." },
+    { "kind": "point", "kicker": "Co se traduje", "title": "Deficit prý<br>ničí objem", "body": "Logika sedí. V deficitu hůř regeneruješ, tak se doporučuje seškrtat série.<br><br>Někdo to konečně změřil." },
+    { "kind": "point", "kicker": "Design studie", "title": "12 sérií<br>proti 30", "body": "Šestnáct trénovaných cvičenců, 40% deficit, hodně bílkovin, čtyři týdny. Půlka trénovala 12 sérií týdně na partii, půlka 30.<br><br>Složení těla měřili přes DXA sken." },
+    { "kind": "stat", "kicker": "Výsledek", "big": "0", "unit": "žádný statisticky významný rozdíl ve složení těla mezi skupinami (Nait-Yahia 2026, n = 16)", "body": "Obě skupiny shodily slušně tuku a <b>udržely beztukovou hmotu</b>. Vysoký objem o svaly nepřipravil." },
+    { "kind": "point", "kicker": "Kde rozdíl byl", "title": "Síla<br>rostla víc", "body": "Skupina s 30 sériemi přidala v silových testech <b>15 až 27 %</b>. Skupina s 12 sériemi <b>7 až 14 %</b>.<br><br>Víc práce v dietě tedy neuškodilo." },
+    { "kind": "point", "kicker": "Háček", "title": "Sval, nebo<br>naučený pohyb?", "body": "Vyšší číslo v silovém testu nemusí znamenat víc svalu. Může jít o neurální adaptaci, tělo se pohyb naučí líp.<br><br>Autoři to přiznávají sami: mechanismus toho nárůstu síly zůstává neobjasněný." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Jen 16 lidí,<br>čtyři týdny", "body": "Studie prošla recenzí a vyšla, ale je malá a krátká. Beru to jako silný signál, ne hotovou věc.<br><br>Jedna studie na šestnácti lidech nepřepíše trénink celé scény.", "callout": "Nait-Yahia S. a kol., European Journal of Clinical Nutrition (2026). DOI: 10.1038/s41430-026-01757-8" },
+    { "kind": "vs", "kicker": "Prakticky", "title": "Co s objemem<br>v dietě", "yes": { "h": "Dává smysl", "items": ["Objem drž, dokud stíháš regenerovat", "Bílkoviny nahoru, těžké série nech v plánu", "Ubírej podle spánku a výkonu"] }, "no": { "h": "Spíš ne", "items": ["Seškrtat série hned první týden diety", "Řídit se strachem ze ztráty svalů", "Kopírovat 30 sérií, i když jsi začátečník"] } },
+    { "kind": "quote", "text": "V dietě svaly snesou víc, než si myslíš. Škrtat objem preventivně je zbytečná opatrnost.", "note": "Rozhoduje rozumný plán a regenerace, ne strach ze ztráty svalů." },
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

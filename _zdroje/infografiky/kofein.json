@@ -1,0 +1,15 @@
+{
+  "slug": "kofein",
+  "slides": [
+    { "kind": "cover", "kicker": "Suplementy & výkon", "title": "Kofein: pomoc,<br>nebo <span class=\"hl\">rituál?</span>", "sub": "Skoro každý si dá kafe před tréninkem. Jedna studie chytře změřila, jestli to není spíš zvyk." },
+    { "kind": "point", "kicker": "Co se traduje", "title": "Energie<br>a výkon", "body": "Panuje shoda, že kofein nakopne každý trénink. Víc síly, vyšší skok, tvrdší dřina.<br><br>Jedna studie to zkusila ověřit jinak než ostatní." },
+    { "kind": "point", "kicker": "Chytrý trik", "title": "34 žen<br>a slepá karta", "body": "Dostaly 6 mg/kg kofeinu, zhruba pět Red Bullů. Jenže jim řekli: možná je to kofein, možná placebo, možná kyselina mléčná, co výkon zhorší.<br><br>Nemohly čekat vůbec nic. Pak měřily skok do výšky." },
+    { "kind": "stat", "kicker": "Výsledek", "big": "0", "unit": "žádný významný rozdíl ve výšce skoku oproti kontrolnímu dni (Sousa et al. 2024, preprint)", "body": "A když měly hádat, co vlastně dostaly, trefilo se jen <b>33 %</b>. Na výběr byly tři možnosti, takže čistá náhoda. Bez očekávání efekt zmizel." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Jedna studie<br>není věda", "body": "Než z toho uděláš, že kofein je jen placebo, mrkni dál. Je to zatím jen preprint bez recenze a čtyři další zdroje ukazují opak.<br><br>Pravda leží uprostřed.", "callout": "Del Coso 2025, Grgic 2018, Saunders 2017, ISSN Position Stand (Guest 2021)." },
+    { "kind": "point", "kicker": "Jak to funguje", "title": "Proč přece<br>jen zabírá", "body": "Kofein blokuje adenosin, zvyšuje nábor svalových vláken a bdělost. To je měřitelná farmakologie.<br><br>Účinek je ale <b>menší</b>, než fitness scéna tvrdí." },
+    { "kind": "point", "kicker": "A ještě jeden mýtus", "title": "Zvyk prý<br>efekt zabije", "body": "Traduje se, že kdo pije kafe denně, z předtréninkové dávky nevytěží nic.<br><br>Metaanalýza 60 studií (Carvalho 2022) to <b>nepotvrdila</b>. Běžný denní příjem akutní efekt neruší." },
+    { "kind": "vs", "kicker": "Prakticky", "title": "Nástroj,<br>nebo zvyk?", "yes": { "h": "Funguje jako nástroj", "items": ["<b>3 až 6 mg/kg</b> zhruba hodinu před výkonem", "Nasadíš ho, když na výkonu fakt záleží", "Počítáš i kofein z kávy a energiťáků"] }, "no": { "h": "Jede jen ze zvyku", "items": ["Kafe ráno co ráno bez ohledu na trénink", "Dáš si hrnek a čekáš zázrak", "Pozdě odpoledne, pak nespíš"] } },
+    { "kind": "quote", "text": "Kofein zabere. Míň, než čekáš, a ne proto, že v něj věříš.", "note": "Efekt je reálný, ale malý. Rozhoduje trénink, jídlo a spánek, ne hrnek před dřepem." },
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

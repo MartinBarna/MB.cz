@@ -177,19 +177,27 @@ async function isMember(token: string): Promise<boolean> {
 
 // RAG: natáhne z korpusu lekcí (lesson_docs přes RPC search_lessons) relevantní úryvky
 // k dotazu a složí kontextový blok pro model. Best-effort — při chybě vrátí prázdno.
-interface Hit { title?: string; module?: string; url?: string; snippet?: string }
-async function retrieveContext(query: string): Promise<string> {
+interface Hit { lesson_id?: string; title?: string; module?: string; url?: string; snippet?: string }
+// Zdroj pro proklik ve frontendu. URL skládáme sami z lesson_id, NIKDY ji nebereme z odpovědi
+// modelu — halucinovaný ani podvržený odkaz se tak k uživateli nedostane.
+interface LessonSource { title: string; module: string; url: string }
+const LESSON_ID_RE = /^m[0-9]{1,3}-l[0-9]{1,3}$/;
+const LESSON_BASE = 'https://martinbarna.cz/akademie/studium/';
+const MAX_SOURCES = 3;
+const EMPTY_RAG: { block: string; hits: Hit[] } = { block: '', hits: [] };
+
+async function retrieveContext(query: string): Promise<{ block: string; hits: Hit[] }> {
   // search_lessons je zamcena pred anon (uryvky placenych lekci) -> RAG vola pres service_role.
-  if (!query || !SUPABASE_URL || !SERVICE_ROLE) return '';
+  if (!query || !SUPABASE_URL || !SERVICE_ROLE) return EMPTY_RAG;
   try {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/search_lessons`, {
       method: 'POST',
       headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json' },
       body: JSON.stringify({ p_query: query.slice(0, 400), p_limit: 4 }),
     });
-    if (!r.ok) return '';
+    if (!r.ok) return EMPTY_RAG;
     const hits = (await r.json()) as Hit[];
-    if (!Array.isArray(hits) || !hits.length) return '';
+    if (!Array.isArray(hits) || !hits.length) return EMPTY_RAG;
     // [harden 2026-07-14] modul dáváme do kontextu explicitně, ať ho model neodvozuje z mapy
     // (a nesplete číslo) — jméno lekce + její modul = přesný odkaz „Modul X, lekce …".
     const blocks = hits.map((h) => {
@@ -197,12 +205,48 @@ async function retrieveContext(query: string): Promise<string> {
       return `--- Lekce: ${h.title ?? ''}${modul ? ` (modul: ${modul})` : ''} (martinbarna.cz${h.url ?? ''})`
         + `${NL}${(h.snippet ?? '').trim()}`;
     }).join(NL + NL);
-    return NL + NL + 'KONTEXT Z LEKCÍ BARNA ACADEMY (tvůj vlastní obsah; použij, jen pokud je k dotazu relevantní; '
+    const block = NL + NL + 'KONTEXT Z LEKCÍ BARNA ACADEMY (tvůj vlastní obsah; použij, jen pokud je k dotazu relevantní; '
       + 'když odkazuješ na lekci, použij přesně její název a modul odsud, nedomýšlej):'
       + NL + blocks;
+    return { block, hits };
   } catch (_e) {
-    return '';
+    return EMPTY_RAG;
   }
+}
+
+// Porovnávací tvar: bez diakritiky, malá písmena, interpunkce -> mezera. Model název lekce
+// přepisuje volně (uvozovky, velká písmena, chybějící háčky), tohle to všechno srovná.
+function normForMatch(s: string): string {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+// Zdroje ukazujeme jen u lekcí, které model v odpovědi opravdu zmínil — jinak by pod odpovědí
+// visely náhodné RAG trefy. Model názvy často zkracuje ("Frekvence a rozložení objemu" místo
+// "... přes týden"), proto bereme i dost dlouhé prefixy názvu, ne jen shodu celého.
+const MIN_NEEDLE = 14;
+function citedSources(reply: string, hits: Hit[]): LessonSource[] {
+  const hay = normForMatch(reply);
+  if (!hay) return [];
+  const out: LessonSource[] = [];
+  const seen = new Set<string>();
+  for (const h of hits) {
+    const id = (h.lesson_id ?? '').trim();
+    const title = (h.title ?? '').trim();
+    if (!LESSON_ID_RE.test(id) || !title || seen.has(id)) continue;
+    const words = normForMatch(title).split(' ').filter(Boolean);
+    let cited = false;
+    for (let n = words.length; n > 0 && !cited; n--) {
+      const needle = words.slice(0, n).join(' ');
+      if (needle.length < MIN_NEEDLE) break;
+      if (hay.includes(needle)) cited = true;
+    }
+    if (!cited) continue;
+    seen.add(id);
+    out.push({ title, module: (h.module ?? '').trim(), url: `${LESSON_BASE}${id}/` });
+    if (out.length >= MAX_SOURCES) break;
+  }
+  return out;
 }
 
 // --- P1 (handoff §2): retry/backoff na přetížení modelu (429/5xx/529) i síťovou chybu ---
@@ -336,7 +380,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  const ragContext = await retrieveContext(lastUser);
+  const { block: ragContext, hits: ragHits } = await retrieveContext(lastUser);
   // POŘADÍ KVŮLI CACHE: stabilní prefix (SYSTEM) → historie → volatilní blok (RAG + safety) → user.
   // Cache se trefuje po první změněný bajt, takže volatilní části patří AŽ NA KONEC,
   // jinak si odřízneme historii. RAG blíž k dotazu navíc bývá i kvalitnější.
@@ -386,7 +430,7 @@ Deno.serve(async (req: Request) => {
       reply = parts.filter((p) => p.type === 'text').map((p) => p.text ?? '').join(NL).trim();
     }
     reply = reply || 'Promiň, nemám na to dobrou odpověď. Zkus se zeptat jinak.';
-    return json({ reply }, CORS);
+    return json({ reply, sources: citedSources(reply, ragHits) }, CORS);
   } catch (e) {
     console.error('ai-martin exception', String(e).slice(0, 300));
     return json({ reply: 'Spojení selhalo, zkus to prosím znovu.' }, CORS, 200);
