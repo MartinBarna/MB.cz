@@ -340,6 +340,52 @@
   };
 
   window.BA = BA;
+  // ---- upsell podle vlastnictvi ---------------------------------
+  // Free ukazkove lekce maji v HTML vyzvu k nakupu (spravne pro navstevnika bez pristupu).
+  // Kdo produkt UZ MA, nesmi videt "Odemknout za 8 900 / 800 Kc" u obsahu, ktery vlastni.
+  // Prvky jsou znacene atributem data-upsell="academy" | "videokurz".
+  function hideOwnedUpsells() {
+    var els = document.querySelectorAll("[data-upsell]");
+    if (!els.length) { showUpsells(); return; }
+    var produkty = {};
+    for (var i = 0; i < els.length; i++) produkty[els[i].getAttribute("data-upsell")] = 1;
+    var jmena = Object.keys(produkty);
+    Promise.all(jmena.map(function (p) {
+      return BA.hasEntitlement(p).then(function (ma) { return { p: p, ma: ma }; })
+        .catch(function () { return { p: p, ma: false }; });
+    })).then(function (vysledky) {
+      vysledky.forEach(function (v) {
+        if (!v.ma) return;
+        var vlastnene = document.querySelectorAll('[data-upsell="' + v.p + '"]');
+        for (var j = 0; j < vlastnene.length; j++) vlastnene[j].style.display = "none";
+      });
+    }).catch(function () { /* pri chybe radeji upsell ukazat nez skryt obsah */ })
+      .then(showUpsells);
+  }
+
+  // Proti probliknuti: prihlasenemu uzivateli upsell docasne skryjeme, nez overime pristup.
+  // Nepřihlaseny (tedy vetsina navstevniku free ukazek) vidi upsell hned, bez zpozdeni.
+  function hideUpsellsWhileChecking() {
+    try {
+      var maSession = false;
+      for (var i = 0; i < localStorage.length; i++) {
+        if (/^sb-.*-auth-token$/.test(localStorage.key(i))) { maSession = true; break; }
+      }
+      if (!maSession) return;
+      var st = document.createElement("style");
+      st.id = "ba-upsell-check";
+      st.textContent = "[data-upsell]{visibility:hidden}";
+      (document.head || document.documentElement).appendChild(st);
+      setTimeout(showUpsells, 3000); // pojistka, kdyby overeni nedobehlo
+    } catch (e) { /* bez localStorage proste neskryvame */ }
+  }
+  function showUpsells() {
+    var st = document.getElementById("ba-upsell-check");
+    if (st && st.parentNode) st.parentNode.removeChild(st);
+  }
+
+  hideUpsellsWhileChecking();
+  ready.then(hideOwnedUpsells);
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();

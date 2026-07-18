@@ -4,7 +4,7 @@
  * Spočítá kanonické počty z filesystému (Academy lekce/moduly, videokurz videa) a
  * přepíše zastaralé počty v landing/prodejních stránkách tak, aby vždy seděly.
  * Bezpečné: nahrazuje PŘESNĚ předchozí zaznamenané číslo (ze scripts/.academy-counts.json),
- * takže nehrozí kolize mezi 212 lekcemi Academy a 182 videi videokurzu.
+ * takže nehrozí kolize mezi 256 lekcemi Academy a 182 videi videokurzu.
  *
  * Pusť po každém přidání/odebrání lekce, modulu nebo videa:  node scripts/sync-academy-counts.js
  * (Viz CLAUDE.md — dělá se to automaticky, bez připomenutí.)
@@ -48,8 +48,8 @@ const FILES = [
 
 // metrika -> jednotkový "suffix", na který kotvíme (přepisujeme '<num> <suffix>')
 const UNITS = {
-  academyLessons: 'lekc',   // 212 lekcí / lekcím / lekcích
-  academyModules: 'modul',  // 20 modulů / moduly / modul
+  academyLessons: 'lekc',   // 256 lekcí / lekcím / lekcích
+  academyModules: 'modul',  // 24 modulů / moduly / modul
   videokurzLessons: 'vide', // 182 videí / 182 video lekcí
 };
 
