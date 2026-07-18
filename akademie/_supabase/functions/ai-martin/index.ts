@@ -316,6 +316,93 @@ async function overDailyCap(userId: string | null): Promise<boolean> {
   } catch { return false; }
 }
 
+// --- STREAMING (jen Grok chat) ---
+// Proč: bez streamu člen po odeslání dotazu čeká 9 až 14 sekund na tři tečky a chat působí
+// zamrzle. Se streamem text přitéká průběžně. Streamuje se VÝHRADNĚ běžný chat; členská brána,
+// safety hard-stopy, denní strop i vision se vrací klasickým JSONem i tehdy, když si klient
+// stream vyžádal. Frontend proto rozlišuje odpověď podle Content-Type, ne podle toho, co poslal.
+function sseHeaders(cors: Record<string, string>): Record<string, string> {
+  return {
+    ...cors,
+    'Content-Type': 'text/event-stream; charset=utf-8',
+    'Cache-Control': 'no-cache, no-transform',
+    'X-Accel-Buffering': 'no',   // ať to po cestě nikdo nebufferuje, jinak streamování nemá smysl
+  };
+}
+// Když poskytovatel usage v posledním chunku nepošle, odhadneme ji z délky textu (~4 znaky/token).
+// Řádek v ai_usage musí vzniknout vždy: drží se o něj denní strop, ne jen měření nákladu (§9).
+const CHARS_PER_TOKEN = 4;
+function estimateUsage(promptChars: number, replyChars: number) {
+  return {
+    prompt_tokens: Math.round(promptChars / CHARS_PER_TOKEN),
+    completion_tokens: Math.round(replyChars / CHARS_PER_TOKEN),
+  };
+}
+async function streamGrokReply(
+  grokMsgs: { role: string; content: string }[],
+  convId: string,
+  cors: Record<string, string>,
+  userId: string | null,
+  ragHits: Hit[],
+): Promise<Response> {
+  const upstream = await postWithRetry('https://api.x.ai/v1/chat/completions',
+    { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
+    { model: MODEL, max_tokens: 600, prompt_cache_key: convId, stream: true,
+      stream_options: { include_usage: true }, messages: grokMsgs });
+  // Selhání PŘED prvním bajtem řešíme ještě klasickým JSONem: klient tak dostane stejnou
+  // chybovou hlášku jako doteď a nemusí řešit poloprázdný stream.
+  if (!upstream.ok || !upstream.body) {
+    console.error('xai_stream_error', upstream.status, (await upstream.text().catch(() => '')).slice(0, 300));
+    return json({ reply: 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli, nebo mi napiš na WhatsApp.' }, cors, 200);
+  }
+  const promptChars = grokMsgs.reduce((n, m) => n + m.content.length, 0);
+  const body = upstream.body;
+  const enc = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      const send = (o: unknown) => controller.enqueue(enc.encode(`data: ${JSON.stringify(o)}${NL}${NL}`));
+      let reply = '';
+      let usage: unknown = null;
+      try {
+        const reader = body.getReader();
+        const dec = new TextDecoder();
+        let buf = '';
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, { stream: true }).replace(/\r\n/g, NL);
+          // SSE rámce odděluje prázdný řádek; poslední kus může být utnutý uprostřed,
+          // ten si necháme v bufferu do dalšího chunku.
+          const frames = buf.split(NL + NL);
+          buf = frames.pop() ?? '';
+          for (const frame of frames) {
+            for (const line of frame.split(NL)) {
+              if (!line.startsWith('data:')) continue;
+              const payload = line.slice(5).trim();
+              if (!payload || payload === '[DONE]') continue;
+              try {
+                const j = JSON.parse(payload) as { choices?: { delta?: { content?: string } }[]; usage?: unknown };
+                const piece = j.choices?.[0]?.delta?.content;
+                if (typeof piece === 'string' && piece) { reply += piece; send({ type: 'delta', text: piece }); }
+                if (j.usage) usage = j.usage;   // xAI ji posílá v posledním chunku (stream_options)
+              } catch { /* neznámý nebo utnutý rámec: přeskoč, jeden chunk nesmí shodit celý stream */ }
+            }
+          }
+        }
+      } catch (e) {
+        console.error('ai-martin stream exception', String(e).slice(0, 300));
+        if (!reply) send({ type: 'error', reply: 'Spojení selhalo, zkus to prosím znovu.' });
+      }
+      logUsage(userId, 'ai_chat_web', usage ?? estimateUsage(promptChars, reply.length));
+      // Zdroje až na konci: citedSources porovnává CELOU odpověď proti RAG trefám.
+      if (reply) send({ type: 'sources', sources: citedSources(reply, ragHits) });
+      controller.enqueue(enc.encode(`data: [DONE]${NL}${NL}`));
+      controller.close();
+    },
+  });
+  return new Response(stream, { headers: sseHeaders(cors) });
+}
+
 Deno.serve(async (req: Request) => {
   const CORS = corsFor(req);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
@@ -330,8 +417,11 @@ Deno.serve(async (req: Request) => {
   if (!API_KEY) return json({ reply: 'Za chvíli! AI Martin se právě dokončuje. Mrkni sem brzy. 💪' }, CORS, 200);
   const userId = userIdFromToken(token);   // pro měření nákladu (§9) + denní strop
 
-  let body: { messages?: Msg[] };
+  let body: { messages?: Msg[]; stream?: boolean };
   try { body = await req.json(); } catch { return json({ error: 'bad_json' }, CORS, 400); }
+  // Stream si klient vyžádá explicitně. Starý frontend (i prohlížeč bez ReadableStream) ho
+  // nepošle a dostane celou odpověď najednou jako doteď, takže nasazení nic nerozbije.
+  const wantStream = body.stream === true;
   const raw = Array.isArray(body.messages) ? body.messages : [];
   // Fotka jídla z poslední zprávy (vision path). Bereme jen data: URI běžných formátů, strop ~12 MB.
   const lastRaw: Msg = raw[raw.length - 1] || {};
@@ -402,6 +492,8 @@ Deno.serve(async (req: Request) => {
         ...(volatile ? [{ role: 'system' as const, content: volatile }] : []),
         ...(last ? [last] : []),
       ];
+      // Streamovaná větev: safety pre-flag, členská brána i denní strop už proběhly výše.
+      if (wantStream) return await streamGrokReply(grokMsgs, convId, CORS, userId, ragHits);
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
         { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
         { model: MODEL, max_tokens: 600, prompt_cache_key: convId, messages: grokMsgs });

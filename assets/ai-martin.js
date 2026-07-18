@@ -147,19 +147,87 @@
     return Promise.resolve(null);
   }
 
+  // Umí prohlížeč číst tělo odpovědi po částech? Když ne, o stream si vůbec neřekneme
+  // a server pošle celou odpověď najednou jako doteď. Radši funkční chat bez streamu.
+  var CAN_STREAM = (function () {
+    try { return typeof ReadableStream === 'function' && !!(new Response('')).body; }
+    catch (e) { return false; }
+  })();
+
+  // Klasická (nestreamovaná) odpověď: členská brána, safety hard-stop, denní strop i foto.
+  function handleJson(d) {
+    typing(false);
+    if (d && d.locked) { add('assistant', d.reply || CFG.LOCKED_INTRO); lockUI(); }
+    else add('assistant', (d && d.reply) || 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.',
+      (d && Array.isArray(d.sources)) ? d.sources : null);
+  }
+
+  // Čte SSE ze serveru a dopisuje text do jedné bubliny, jak přitéká.
+  // Události: {type:'delta',text}, {type:'sources',sources}, {type:'error',reply}, pak "[DONE]".
+  function readStream(res) {
+    var reader = res.body.getReader(), dec = new TextDecoder();
+    var buf = '', text = '', sources = null, bub = null, ended = false;
+    function paint() {
+      if (!bub) { typing(false); bub = bubble('assistant', text); panel.querySelector('#amBody').appendChild(bub); }
+      else bub.textContent = text;
+      scrollDown();
+    }
+    function frame(payload) {
+      if (!payload || payload === '[DONE]') return;
+      var j; try { j = JSON.parse(payload); } catch (e) { return; }
+      if (j.type === 'delta' && j.text) { text += j.text; paint(); }
+      else if (j.type === 'sources') sources = j.sources;
+      else if (j.type === 'error' && !text) { text = j.reply || 'Spojení selhalo. Zkus to prosím znovu.'; paint(); }
+    }
+    function finish() {
+      if (ended) return; ended = true;
+      typing(false);
+      if (!text) { text = 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.'; paint(); }
+      // Do historie zapisujeme až tady: bublinu kreslíme průběžně sami, add() by ji zdvojil.
+      msgs.push({ role: 'assistant', text: text });
+      if (sources && sources.length) {
+        var sb = sourcesBlock(sources);
+        if (sb) { panel.querySelector('#amBody').appendChild(sb); scrollDown(); }
+      }
+      scrollDown();
+    }
+    function pump() {
+      return reader.read().then(function (r) {
+        if (r.done) { finish(); return; }
+        buf += dec.decode(r.value, { stream: true });
+        var parts = buf.split('\n\n'); buf = parts.pop();   // poslední kus může být utnutý
+        for (var i = 0; i < parts.length; i++) {
+          var lines = parts[i].split('\n');
+          for (var k = 0; k < lines.length; k++) {
+            if (lines[k].indexOf('data:') === 0) frame(lines[k].slice(5).trim());
+          }
+        }
+        return pump();
+      });
+    }
+    // Spadlé spojení uprostřed streamu: co doteklo, si necháme, ale musí být poznat, že
+    // odpověď je useknutá (jinak by člen četl půlku věty jako hotovou radu).
+    return pump().catch(function () {
+      text = text ? text + '\n\n(Spojení se přerušilo, odpověď je neúplná. Zkus to prosím znovu.)'
+                  : 'Spojení selhalo. Zkus to prosím znovu.';
+      paint(); finish();
+    });
+  }
+
   function sendToServer(userText) {
     busy = true; typing(true);
     getToken().then(function (token) {
       var headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = 'Bearer ' + token;
-      return fetch(CFG.ENDPOINT, { method: 'POST', headers: headers, body: JSON.stringify({ messages: msgs.slice(-12) }) });
-    }).then(function (r) { return r.json(); })
-      .then(function (d) {
-        typing(false);
-        if (d && d.locked) { add('assistant', d.reply || CFG.LOCKED_INTRO); lockUI(); }
-        else add('assistant', (d && d.reply) || 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.',
-          (d && Array.isArray(d.sources)) ? d.sources : null);
-      })
+      return fetch(CFG.ENDPOINT, { method: 'POST', headers: headers,
+        body: JSON.stringify({ messages: msgs.slice(-12), stream: CAN_STREAM }) });
+    }).then(function (r) {
+      // Server streamuje jen běžný chat. Brána, safety stop i strop chodí dál jako JSON,
+      // proto se řídíme hlavičkou, ne tím, co jsme si vyžádali.
+      var ct = r.headers.get('content-type') || '';
+      if (CAN_STREAM && r.body && ct.indexOf('text/event-stream') >= 0) return readStream(r);
+      return r.json().then(handleJson);
+    })
       .catch(function () { typing(false); add('assistant', 'Spojení selhalo. Zkus to prosím znovu.'); })
       .finally(function () { busy = false; });
   }
