@@ -347,7 +347,7 @@ async function streamGrokReply(
 ): Promise<Response> {
   const upstream = await postWithRetry('https://api.x.ai/v1/chat/completions',
     { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-    { model: MODEL, max_tokens: 600, prompt_cache_key: convId, stream: true,
+    { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, stream: true,
       stream_options: { include_usage: true }, messages: grokMsgs });
   // Selhání PŘED prvním bajtem řešíme ještě klasickým JSONem: klient tak dostane stejnou
   // chybovou hlášku jako doteď a nemusí řešit poloprázdný stream.
@@ -496,7 +496,7 @@ Deno.serve(async (req: Request) => {
       if (wantStream) return await streamGrokReply(grokMsgs, convId, CORS, userId, ragHits);
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
         { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-        { model: MODEL, max_tokens: 600, prompt_cache_key: convId, messages: grokMsgs });
+        { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, messages: grokMsgs });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('xai_error', res.status, JSON.stringify(data).slice(0, 300));
@@ -508,7 +508,7 @@ Deno.serve(async (req: Request) => {
       // Anthropic Messages API + retry
       const res = await postWithRetry('https://api.anthropic.com/v1/messages',
         { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-        { model: MODEL, max_tokens: 600, system, messages: (() => {
+        { model: MODEL, max_tokens: 2000, system, messages: (() => {
           const h = msgs.slice(0, -1); const l = msgs[msgs.length - 1];
           return [...h, ...(volatile ? [{ role: 'user' as const, content: volatile }] : []), ...(l ? [l] : [])];
         })() });

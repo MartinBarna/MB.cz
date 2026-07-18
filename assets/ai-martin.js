@@ -118,10 +118,48 @@
     if (sources && sources.length) { var sb = sourcesBlock(sources); if (sb) bd.appendChild(sb); }
     scrollDown();
   }
+  // Faze cekani: po case rekneme DUVOD, at je jasne, ze se nic nezaseklo, ale premysli se.
+  // Kratke a lidske, zadne omluvy. Posledni faze zustava do prichodu odpovedi.
+  var TYPING_FAZE = [
+    { po: 0, text: 'Přemýšlím' },
+    { po: 4000, text: 'Hledám to v lekcích' },
+    { po: 9000, text: 'Ještě chvilku, ať je odpověď pořádná' },
+  ];
+  var typingTimery = [];
   function typing(on) {
     var bd = panel.querySelector('#amBody'); var ex = bd.querySelector('#amTyping');
-    if (on && !ex) { var t = bubble('assistant', '…'); t.id = 'amTyping'; t.style.opacity = '.6'; bd.appendChild(t); scrollDown(); }
-    else if (!on && ex) ex.remove();
+    if (on && !ex) {
+      var t = bubble('assistant', TYPING_FAZE[0].text);
+      t.id = 'amTyping'; t.style.opacity = '.75';
+      // tecky animujeme zvlast, at se text da menit nezavisle na nich
+      var tecky = document.createElement('span');
+      tecky.id = 'amDots'; tecky.textContent = '…';
+      t.appendChild(tecky);
+      bd.appendChild(t); scrollDown();
+      var krok = 0;
+      typingTimery.push(setInterval(function () {
+        krok = (krok + 1) % 4;
+        tecky.textContent = ['', '.', '..', '...'][krok];
+      }, 450));
+      // texty faze po case; posledni uz nemenime
+      for (var i = 1; i < TYPING_FAZE.length; i++) {
+        (function (faze) {
+          typingTimery.push(setTimeout(function () {
+            var b = panel.querySelector('#amTyping');
+            if (!b) return;
+            b.firstChild.nodeValue = faze.text;
+            scrollDown();
+          }, faze.po));
+        })(TYPING_FAZE[i]);
+      }
+    } else if (!on && ex) {
+      ex.remove();
+    }
+    if (!on) {
+      // uklidit vsechny bezici casovace, at nezustavaji viset po odpovedi
+      for (var j = 0; j < typingTimery.length; j++) { clearTimeout(typingTimery[j]); clearInterval(typingTimery[j]); }
+      typingTimery = [];
+    }
   }
   function setStatus(txt, color) { var s = panel.querySelector('#amStatus'); if (s) { s.textContent = txt; s.style.color = color; } }
 
