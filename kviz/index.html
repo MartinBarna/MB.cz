@@ -75,9 +75,19 @@
     pohyb:{t:"🚶 Tichá brzda: málo pohybu",d:"Jídlo možná zvládáš, ale výdej je nízko. Kroky přes den spálí u většiny lidí víc než samotný trénink — a sedavý režim je nejčastější tichá brzda.",kroky:["Dej si laťku <b>+2 000 kroků denně</b> proti současnému stavu (auto dál, schody, telefonát za chůze).","<b>2–3 silové tréninky týdně</b> — svaly = vyšší výdej i lepší postava.","Kroky měř — co se měří, to se řídí."],pdf:"",pdfT:""}
   };
   var i=0, seg="other", score={vikend:0,data:0,vecer:0,pohyb:0};
+  // Mereni pruchodu kvizem: kde presne lide odpadaji (bez toho nerozlisime drop-off
+  // od falesnych Leadu v Mete). maxQ hlida, aby se stejna otazka nepocitala dvakrat.
+  var maxQ=-1;
+  function kvTrack(ev,params){ try{ if(window.gtag) gtag("event",ev,params||{}); }catch(e){} }
+  function kvKrok(n){
+    if(n<=maxQ) return; maxQ=n;
+    if(n===0){ kvTrack("kviz_start",{celkem_otazek:Q.length}); try{ if(window.fbq) fbq("trackCustom","KvizStart"); }catch(e){} }
+    kvTrack("kviz_otazka",{cislo:n+1, celkem:Q.length, otazka:(Q[n]&&Q[n].q||"").slice(0,80)});
+  }
   var qbox=document.getElementById('qbox'), rbox=document.getElementById('rbox'), qbar=document.getElementById('qbar');
   function show(){
     if(i>=Q.length){ result(); return; }
+    kvKrok(i);
     qbar.style.width=Math.round(i/Q.length*100)+'%';
     var q=Q[i];
     qbox.innerHTML='<p class="q">'+q.q+'</p><div class="opts">'+q.o.map(function(o,oi){ return '<button type="button" data-i="'+oi+'">'+o[0]+'</button>'; }).join('')+'</div>';
@@ -103,8 +113,9 @@
       +'<div class="mailbox"><b>💌 Chceš plán šitý na tvůj výsledek?</b><p class="small" style="margin:4px 0 0;">Pošlu ti na mail 7denní jídelníček zdarma + praktické tipy přesně k tvému profilu.</p>'
       +'<input type="email" id="kvEmail" placeholder="tvuj@email.cz" autocomplete="email" aria-label="Tvůj e-mail"><button class="cta" id="kvSend" style="margin:0;">Poslat zdarma</button>'
       +'<p class="small" id="kvMsg" style="margin:8px 0 0;">Odhlásíš se kdykoliv jedním klikem.</p></div></div>';
-    if(window.gtag) gtag('event','kviz_dokoncen',{profil:best}); if(window.fbq) fbq('trackCustom','KvizDokoncen',{profil:best});
+    if(window.gtag) gtag('event','kviz_dokoncen',{profil:best, otazek:Q.length}); if(window.fbq) fbq('trackCustom','KvizDokoncen',{profil:best});
     var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
+    kvTrack('kviz_email_zobrazen',{profil:best});
     document.getElementById('kvSend').addEventListener('click',function(){
       var em=(document.getElementById('kvEmail').value||'').trim(), msg=document.getElementById('kvMsg');
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ msg.textContent='⚠️ Zadej prosím platný e-mail.'; return; }
