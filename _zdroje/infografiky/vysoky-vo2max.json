@@ -1,0 +1,15 @@
+{
+  "slug": "vysoky-vo2max",
+  "slides": [
+    { "kind": "cover", "kicker": "Kondice & dlouhověkost", "title": "Vysoký VO2max<br>= <span class=\"hl\">delší život?</span>", "sub": "Studie z roku 2025 propojila kondici změřenou u zhruba 70 000 lidí s dožitím přes milion rodičů. Odpověď rozdělí internet." },
+    { "kind": "point", "kicker": "Co se traduje", "title": "Kondice<br>jako pojistka", "body": "Z pozorování to vypadá jasně. Kdo má nejvyšší kondici, umírá míň.<br><br>Fitness scéna z toho udělala jednoduchou rovnici: honit VO2max znamená honit dlouhý život." },
+    { "kind": "point", "kicker": "Design studie", "title": "Genetika<br>místo dotazníku", "body": "Autoři použili Mendelovskou randomizaci, tedy „randomizovanou studii od přírody“.<br><br>Geny se rozdají náhodně při početí. Nejdou zaměnit s tím, jak kdo žije." },
+    { "kind": "stat", "kicker": "Pozorování", "big": "40", "unit": "% nižší riziko úmrtí u lidí s vysokou kondicí oproti nízké (meta-analýza 33 studií, 102 980 lidí; Kodama 2009, JAMA)", "body": "Tahle čísla drží titulky. Vypadají jako důkaz, že <b>VO2max prodlužuje život</b>.<br><br>Genetika ale řekla něco jiného." },
+    { "kind": "point", "kicker": "Výsledek", "title": "Sám VO2max<br>život nepřidá", "body": "Když se do dat pustila genetika, přímý efekt VO2max na délku života zmizel.<br><br>Číslo z testu samo o sobě nic nezaručuje.", "callout": "Kjaergaard et al. (2025), J Clin Endocrinol Metab. DOI: 10.1210/clinem/dgae393" },
+    { "kind": "point", "kicker": "Co tedy táhne", "title": "Tuk, cukrovka,<br>pohyb", "body": "Geneticky život prodlužuje <b>nízký podíl tuku</b>, <b>nízké riziko cukrovky 2. typu</b> a <b>pohyb</b>. U pohybu byl signál slabší.<br><br>Svalová hmota vyšla taky, ale po zohlednění tuku efekt zmizel. VO2max je jen odraz toho ostatního." },
+    { "kind": "point", "kicker": "Než to špatně pochopíš", "title": "Kardio<br>nezahazuj", "body": "Ze studie nevyplývá, že kardio je k ničemu. Pohyb je jedna z věcí, které tam vyšly.<br><br>Jen samotné číslo VO2max není cíl, na kterém stavíš celý trénink." },
+    { "kind": "vs", "kicker": "Do praxe", "title": "Kde brát<br>výsledek", "yes": { "h": "Základ, který platí", "items": ["Silový trénink <b>2 až 3×</b> týdně", "<b>7 000 až 9 000</b> kroků denně", "Podíl tuku ve zdravém pásmu", "Kardio jako součást týdne"] }, "no": { "h": "Slepá ulička", "items": ["Honit VO2max a sílu nechat ležet", "Kardio jako celý plán", "Číslo z hodinek jako jediná metrika"] } },
+    { "kind": "quote", "text": "Vysoký VO2max je zpráva o tom, jak žiješ. Život ti prodlužuje to, co za tím číslem stojí.", "note": "Silový trénink, kroky a rozumný podíl tuku. Kardio s nimi jede ruku v ruce." },
+    { "kind": "cta", "title": "Honíš kondici, nebo <span class=\"hl\">sílu?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

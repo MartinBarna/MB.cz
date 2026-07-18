@@ -79,11 +79,87 @@
     return b;
   }
   function scrollDown() { var bd = panel.querySelector('#amBody'); bd.scrollTop = bd.scrollHeight; }
-  function add(role, text) { msgs.push({ role: role, text: text }); panel.querySelector('#amBody').appendChild(bubble(role, text)); scrollDown(); }
+
+  // ---- klikací zdroje pod odpovědí ("Kde to najdeš") ----
+  // URL chodí ze serveru, kde ji skládá edge funkce z lesson_id v DB. Nikdy nepochází z textu
+  // modelu, takže halucinovaný odkaz sem nemá jak proniknout. Prefix kontrolujeme i tady.
+  var SRC_PREFIX = 'https://martinbarna.cz/akademie/studium/';
+  function sourcesBlock(sources) {
+    var wrap = E('div', 'align-self:flex-start;max-width:84%;margin:-2px 0 2px 4px;font-size:.74rem;line-height:1.5;color:#9a8f84;');
+    var head = E('div', 'margin-bottom:2px;');
+    head.textContent = 'Kde to najdeš';
+    wrap.appendChild(head);
+    var n = 0;
+    for (var i = 0; i < sources.length && n < 3; i++) {
+      var s = sources[i];
+      if (!s || typeof s.url !== 'string' || s.url.indexOf(SRC_PREFIX) !== 0) continue;
+      var row = E('div', 'margin-top:1px;');
+      var a = document.createElement('a');
+      a.href = s.url;
+      a.textContent = String(s.title || 'Lekce');
+      a.style.cssText = 'color:#EBB12C;text-decoration:none;border-bottom:1px solid rgba(235,177,44,.3);';
+      row.appendChild(a);
+      if (s.module) {
+        var m = E('span', 'color:#7d7369;');
+        m.textContent = ' · ' + String(s.module);
+        row.appendChild(m);
+      }
+      wrap.appendChild(row);
+      n++;
+    }
+    return n ? wrap : null;
+  }
+
+  function add(role, text, sources) {
+    msgs.push({ role: role, text: text });
+    var bd = panel.querySelector('#amBody');
+    bd.appendChild(bubble(role, text));
+    // bez zdrojů (starý backend, foto, chybová hláška) se prostě nic nevykreslí
+    if (sources && sources.length) { var sb = sourcesBlock(sources); if (sb) bd.appendChild(sb); }
+    scrollDown();
+  }
+  // Faze cekani: po case rekneme DUVOD, at je jasne, ze se nic nezaseklo, ale premysli se.
+  // Kratke a lidske, zadne omluvy. Posledni faze zustava do prichodu odpovedi.
+  var TYPING_FAZE = [
+    { po: 0, text: 'Přemýšlím' },
+    { po: 4000, text: 'Hledám to v lekcích' },
+    { po: 9000, text: 'Ještě chvilku, ať je odpověď pořádná' },
+  ];
+  var typingTimery = [];
   function typing(on) {
     var bd = panel.querySelector('#amBody'); var ex = bd.querySelector('#amTyping');
-    if (on && !ex) { var t = bubble('assistant', '…'); t.id = 'amTyping'; t.style.opacity = '.6'; bd.appendChild(t); scrollDown(); }
-    else if (!on && ex) ex.remove();
+    if (on && !ex) {
+      var t = bubble('assistant', TYPING_FAZE[0].text);
+      t.id = 'amTyping'; t.style.opacity = '.75';
+      // tecky animujeme zvlast, at se text da menit nezavisle na nich
+      var tecky = document.createElement('span');
+      tecky.id = 'amDots'; tecky.textContent = '…';
+      t.appendChild(tecky);
+      bd.appendChild(t); scrollDown();
+      var krok = 0;
+      typingTimery.push(setInterval(function () {
+        krok = (krok + 1) % 4;
+        tecky.textContent = ['', '.', '..', '...'][krok];
+      }, 450));
+      // texty faze po case; posledni uz nemenime
+      for (var i = 1; i < TYPING_FAZE.length; i++) {
+        (function (faze) {
+          typingTimery.push(setTimeout(function () {
+            var b = panel.querySelector('#amTyping');
+            if (!b) return;
+            b.firstChild.nodeValue = faze.text;
+            scrollDown();
+          }, faze.po));
+        })(TYPING_FAZE[i]);
+      }
+    } else if (!on && ex) {
+      ex.remove();
+    }
+    if (!on) {
+      // uklidit vsechny bezici casovace, at nezustavaji viset po odpovedi
+      for (var j = 0; j < typingTimery.length; j++) { clearTimeout(typingTimery[j]); clearInterval(typingTimery[j]); }
+      typingTimery = [];
+    }
   }
   function setStatus(txt, color) { var s = panel.querySelector('#amStatus'); if (s) { s.textContent = txt; s.style.color = color; } }
 
@@ -109,18 +185,87 @@
     return Promise.resolve(null);
   }
 
+  // Umí prohlížeč číst tělo odpovědi po částech? Když ne, o stream si vůbec neřekneme
+  // a server pošle celou odpověď najednou jako doteď. Radši funkční chat bez streamu.
+  var CAN_STREAM = (function () {
+    try { return typeof ReadableStream === 'function' && !!(new Response('')).body; }
+    catch (e) { return false; }
+  })();
+
+  // Klasická (nestreamovaná) odpověď: členská brána, safety hard-stop, denní strop i foto.
+  function handleJson(d) {
+    typing(false);
+    if (d && d.locked) { add('assistant', d.reply || CFG.LOCKED_INTRO); lockUI(); }
+    else add('assistant', (d && d.reply) || 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.',
+      (d && Array.isArray(d.sources)) ? d.sources : null);
+  }
+
+  // Čte SSE ze serveru a dopisuje text do jedné bubliny, jak přitéká.
+  // Události: {type:'delta',text}, {type:'sources',sources}, {type:'error',reply}, pak "[DONE]".
+  function readStream(res) {
+    var reader = res.body.getReader(), dec = new TextDecoder();
+    var buf = '', text = '', sources = null, bub = null, ended = false;
+    function paint() {
+      if (!bub) { typing(false); bub = bubble('assistant', text); panel.querySelector('#amBody').appendChild(bub); }
+      else bub.textContent = text;
+      scrollDown();
+    }
+    function frame(payload) {
+      if (!payload || payload === '[DONE]') return;
+      var j; try { j = JSON.parse(payload); } catch (e) { return; }
+      if (j.type === 'delta' && j.text) { text += j.text; paint(); }
+      else if (j.type === 'sources') sources = j.sources;
+      else if (j.type === 'error' && !text) { text = j.reply || 'Spojení selhalo. Zkus to prosím znovu.'; paint(); }
+    }
+    function finish() {
+      if (ended) return; ended = true;
+      typing(false);
+      if (!text) { text = 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.'; paint(); }
+      // Do historie zapisujeme až tady: bublinu kreslíme průběžně sami, add() by ji zdvojil.
+      msgs.push({ role: 'assistant', text: text });
+      if (sources && sources.length) {
+        var sb = sourcesBlock(sources);
+        if (sb) { panel.querySelector('#amBody').appendChild(sb); scrollDown(); }
+      }
+      scrollDown();
+    }
+    function pump() {
+      return reader.read().then(function (r) {
+        if (r.done) { finish(); return; }
+        buf += dec.decode(r.value, { stream: true });
+        var parts = buf.split('\n\n'); buf = parts.pop();   // poslední kus může být utnutý
+        for (var i = 0; i < parts.length; i++) {
+          var lines = parts[i].split('\n');
+          for (var k = 0; k < lines.length; k++) {
+            if (lines[k].indexOf('data:') === 0) frame(lines[k].slice(5).trim());
+          }
+        }
+        return pump();
+      });
+    }
+    // Spadlé spojení uprostřed streamu: co doteklo, si necháme, ale musí být poznat, že
+    // odpověď je useknutá (jinak by člen četl půlku věty jako hotovou radu).
+    return pump().catch(function () {
+      text = text ? text + '\n\n(Spojení se přerušilo, odpověď je neúplná. Zkus to prosím znovu.)'
+                  : 'Spojení selhalo. Zkus to prosím znovu.';
+      paint(); finish();
+    });
+  }
+
   function sendToServer(userText) {
     busy = true; typing(true);
     getToken().then(function (token) {
       var headers = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = 'Bearer ' + token;
-      return fetch(CFG.ENDPOINT, { method: 'POST', headers: headers, body: JSON.stringify({ messages: msgs.slice(-12) }) });
-    }).then(function (r) { return r.json(); })
-      .then(function (d) {
-        typing(false);
-        if (d && d.locked) { add('assistant', d.reply || CFG.LOCKED_INTRO); lockUI(); }
-        else add('assistant', (d && d.reply) || 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli.');
-      })
+      return fetch(CFG.ENDPOINT, { method: 'POST', headers: headers,
+        body: JSON.stringify({ messages: msgs.slice(-12), stream: CAN_STREAM }) });
+    }).then(function (r) {
+      // Server streamuje jen běžný chat. Brána, safety stop i strop chodí dál jako JSON,
+      // proto se řídíme hlavičkou, ne tím, co jsme si vyžádali.
+      var ct = r.headers.get('content-type') || '';
+      if (CAN_STREAM && r.body && ct.indexOf('text/event-stream') >= 0) return readStream(r);
+      return r.json().then(handleJson);
+    })
       .catch(function () { typing(false); add('assistant', 'Spojení selhalo. Zkus to prosím znovu.'); })
       .finally(function () { busy = false; });
   }

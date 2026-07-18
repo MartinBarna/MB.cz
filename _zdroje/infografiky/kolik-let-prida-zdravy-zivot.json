@@ -1,0 +1,15 @@
+{
+  "slug": "kolik-let-prida-zdravy-zivot",
+  "slides": [
+    { "kind": "cover", "kicker": "Dlouhověkost", "title": "Kolik let přidá<br><span class=\"hl\">zdravý život?</span>", "sub": "Studie na skoro 60 000 lidech to spočítala. A ti nejzdravější nebyli žádní asketi." },
+    { "kind": "point", "kicker": "Co se traduje", "title": "Čekání na<br>dokonalý start", "body": "Většina lidí čeká, až půjde všechno naráz a dokonale. Od pondělka, od prvního, od nového roku.<br><br>Data ukazují něco mnohem nudnějšího." },
+    { "kind": "point", "kicker": "Jak to měřili", "title": "60 000 lidí<br>a náramek", "body": "Skoro <b>60 000</b> lidí z UK Biobank. Sledovali u nich nemoci i úmrtí. Spánek a pohyb měřil náramek, ne dotazník.<br><br>A hlavně: spánek, pohyb a stravu dohromady, ne každou věc zvlášť.", "callout": "Koemel et al. 2026, eClinicalMedicine (UK Biobank, 59 078 lidí)." },
+    { "kind": "stat", "kicker": "Výsledek", "big": "9,4", "unit": "roku života navíc: kdo byl v nejlepší třetině ve všech třech věcech naráz, měl podle modelu skoro o dekádu delší život než lidé v té nejhorší (Koemel et al. 2026)", "body": "A nebyl to jen čas navíc. O <b>9,5 roku</b> se protáhl i život <b>bez infarktu, cukrovky, rakoviny a demence</b>." },
+    { "kind": "bullets", "kicker": "Dosažitelné", "title": "Žádní<br>asketi", "items": ["Spánek zhruba <b>7 až 8 hodin</b>", "Přes <b>40 minut</b> svižného pohybu denně (kolo do práce, schody)", "Dobrá strava, <b>ne stoprocentně perfektní</b>"] },
+    { "kind": "stat", "kicker": "Nejlepší zpráva", "big": "1", "unit": "rok života navíc za nejmenší změnu, která se v datech ještě projevila (počítáno od nejhorších 5 % účastníků)", "body": "Denně přidat <b>5 minut spánku</b>, <b>2 minuty svižného pohybu</b> a <b>půl porce zeleniny</b>. Zhruba rok navíc. Tři drobnosti naráz, ne jedna velká." },
+    { "kind": "point", "kicker": "Háček", "title": "Strava sama<br>nestačila", "body": "Samotná kvalita stravy jasný efekt na délku života neukázala. Pohyb byl naopak hlavní tahoun.<br><br>Kouzlo kombinace je jinde: když hneš se všemi třemi věcmi naráz, stačí u každé mnohem menší změna.", "callout": "Koemel et al. 2026 a doprovodná studie stejného týmu: Stamatakis et al. 2025, BMC Medicine." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Sedí to<br>i jinde", "body": "Americká práce na <b>123 000</b> lidech: pět zdravých návyků, o <b>14 let</b> delší život u žen a o <b>12</b> u mužů.<br><br>Pořád je to ale pozorování, ne důkaz příčiny. Roky navíc jsou modelové odhady, ne garance.", "callout": "Li et al. 2018, Circulation. Zdravější lidé se liší i jinak (kouření, příjem, vzdělání) a kvalitu stravy zjišťoval jen dotazník." },
+    { "kind": "quote", "text": "Roky života navíc se schovávají ve všedních dnech, které vydržíš opakovat.", "note": "Spánek, pohyb a lepší jídlo. Čas, co do nich dáš, se ti vrátí i s úroky." },
+    { "kind": "cta", "title": "Chceš, aby ti to <span class=\"hl\">drželo roky?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

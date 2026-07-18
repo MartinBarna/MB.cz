@@ -1,8 +1,9 @@
 // Barna Academy — checkin-capture: přijme týdenní check-in, spočítá věrnostní kredit,
-// vybere "doporučení na míru" (coaching_rules) a vrátí ho rovnou frontendu.
+// spočítá "doporučení na míru" z reálných dat (analysis.ts) a vrátí ho rovnou frontendu.
 // Režimy: POST check-in (z /akademie/check-in/) | POST {mode:'remind'}+x-drip-secret (týdenní cron)
 //         | GET ?stop=<reminder_token> (opt-out z připomínek).
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { analyzeCheckin, type Checkin } from "./analysis.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -125,7 +126,13 @@ Deno.serve(async (req) => {
     adherence: num(body.adherence), sleep: num(body.sleep), feeling: num(body.feeling),
     note: String(body.note ?? "").slice(0, 200) || null,
   };
-  const { data: prev } = await admin.from("member_checkins").select("weight,created_at").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
+  // historii ctem PRED insertem, at v ni neni prave odeslany check-in;
+  // 4 zaznamy staci na trend i na "kolikaty check-in v rade to je"
+  const { data: hist } = await admin.from("member_checkins")
+    .select("weight,waist,hips,steps,workouts,adherence,sleep,feeling,created_at")
+    .eq("email", email).order("created_at", { ascending: false }).limit(4);
+  const history = (hist ?? []) as Checkin[];
+  const prev = history[0] ?? null;
   await admin.from("member_checkins").insert(ci);
 
   // věrnostní kredit — pripisuje se max 1x za ~tyden (6 dni), dalsi check-iny
@@ -148,20 +155,8 @@ Deno.serve(async (req) => {
     );
   }
 
-  // doporučení na míru: decision tree → prio → message
-  const wDir = (prev && prev.weight != null && ci.weight != null)
-    ? (ci.weight < Number(prev.weight) ? "down" : ci.weight > Number(prev.weight) ? "up" : "same") : "unknown";
-  const stepsLow = ci.steps === "do5k" || ci.steps === "5-8k";
-  let prio = 99;
-  if (ci.sleep != null && ci.sleep <= 2) prio = 10;
-  else if (ci.feeling != null && ci.feeling <= 2) prio = 20;
-  else if (wDir === "down" && ci.adherence != null && ci.adherence >= 4) prio = 30;
-  else if (wDir === "same" && stepsLow) prio = 40;
-  else if (wDir === "same" && ci.adherence != null && ci.adherence <= 3) prio = 50;
-  else if (wDir === "up" && ci.adherence != null && ci.adherence >= 4) prio = 60;
-  else if (ci.workouts === 0) prio = 70;
-  const { data: rule } = await admin.from("coaching_rules").select("message").eq("prio", prio).maybeSingle();
-  const reco = rule?.message ?? "Díky za check-in! Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc.";
+  // doporučení na míru: engine počítá, čísla v textu jsou reálná data toho člověka
+  const recoPoints = analyzeCheckin(ci, history, Date.now());
 
-  return json({ ok: true, credit: awarded, credit_total: credit, checkins_n: n, reco });
+  return json({ ok: true, credit: awarded, credit_total: credit, checkins_n: n, reco: recoPoints.join(" "), reco_points: recoPoints });
 });

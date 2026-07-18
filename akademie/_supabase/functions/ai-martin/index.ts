@@ -177,19 +177,27 @@ async function isMember(token: string): Promise<boolean> {
 
 // RAG: natáhne z korpusu lekcí (lesson_docs přes RPC search_lessons) relevantní úryvky
 // k dotazu a složí kontextový blok pro model. Best-effort — při chybě vrátí prázdno.
-interface Hit { title?: string; module?: string; url?: string; snippet?: string }
-async function retrieveContext(query: string): Promise<string> {
+interface Hit { lesson_id?: string; title?: string; module?: string; url?: string; snippet?: string }
+// Zdroj pro proklik ve frontendu. URL skládáme sami z lesson_id, NIKDY ji nebereme z odpovědi
+// modelu — halucinovaný ani podvržený odkaz se tak k uživateli nedostane.
+interface LessonSource { title: string; module: string; url: string }
+const LESSON_ID_RE = /^m[0-9]{1,3}-l[0-9]{1,3}$/;
+const LESSON_BASE = 'https://martinbarna.cz/akademie/studium/';
+const MAX_SOURCES = 3;
+const EMPTY_RAG: { block: string; hits: Hit[] } = { block: '', hits: [] };
+
+async function retrieveContext(query: string): Promise<{ block: string; hits: Hit[] }> {
   // search_lessons je zamcena pred anon (uryvky placenych lekci) -> RAG vola pres service_role.
-  if (!query || !SUPABASE_URL || !SERVICE_ROLE) return '';
+  if (!query || !SUPABASE_URL || !SERVICE_ROLE) return EMPTY_RAG;
   try {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/search_lessons`, {
       method: 'POST',
       headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json' },
       body: JSON.stringify({ p_query: query.slice(0, 400), p_limit: 4 }),
     });
-    if (!r.ok) return '';
+    if (!r.ok) return EMPTY_RAG;
     const hits = (await r.json()) as Hit[];
-    if (!Array.isArray(hits) || !hits.length) return '';
+    if (!Array.isArray(hits) || !hits.length) return EMPTY_RAG;
     // [harden 2026-07-14] modul dáváme do kontextu explicitně, ať ho model neodvozuje z mapy
     // (a nesplete číslo) — jméno lekce + její modul = přesný odkaz „Modul X, lekce …".
     const blocks = hits.map((h) => {
@@ -197,12 +205,48 @@ async function retrieveContext(query: string): Promise<string> {
       return `--- Lekce: ${h.title ?? ''}${modul ? ` (modul: ${modul})` : ''} (martinbarna.cz${h.url ?? ''})`
         + `${NL}${(h.snippet ?? '').trim()}`;
     }).join(NL + NL);
-    return NL + NL + 'KONTEXT Z LEKCÍ BARNA ACADEMY (tvůj vlastní obsah; použij, jen pokud je k dotazu relevantní; '
+    const block = NL + NL + 'KONTEXT Z LEKCÍ BARNA ACADEMY (tvůj vlastní obsah; použij, jen pokud je k dotazu relevantní; '
       + 'když odkazuješ na lekci, použij přesně její název a modul odsud, nedomýšlej):'
       + NL + blocks;
+    return { block, hits };
   } catch (_e) {
-    return '';
+    return EMPTY_RAG;
   }
+}
+
+// Porovnávací tvar: bez diakritiky, malá písmena, interpunkce -> mezera. Model název lekce
+// přepisuje volně (uvozovky, velká písmena, chybějící háčky), tohle to všechno srovná.
+function normForMatch(s: string): string {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+// Zdroje ukazujeme jen u lekcí, které model v odpovědi opravdu zmínil — jinak by pod odpovědí
+// visely náhodné RAG trefy. Model názvy často zkracuje ("Frekvence a rozložení objemu" místo
+// "... přes týden"), proto bereme i dost dlouhé prefixy názvu, ne jen shodu celého.
+const MIN_NEEDLE = 14;
+function citedSources(reply: string, hits: Hit[]): LessonSource[] {
+  const hay = normForMatch(reply);
+  if (!hay) return [];
+  const out: LessonSource[] = [];
+  const seen = new Set<string>();
+  for (const h of hits) {
+    const id = (h.lesson_id ?? '').trim();
+    const title = (h.title ?? '').trim();
+    if (!LESSON_ID_RE.test(id) || !title || seen.has(id)) continue;
+    const words = normForMatch(title).split(' ').filter(Boolean);
+    let cited = false;
+    for (let n = words.length; n > 0 && !cited; n--) {
+      const needle = words.slice(0, n).join(' ');
+      if (needle.length < MIN_NEEDLE) break;
+      if (hay.includes(needle)) cited = true;
+    }
+    if (!cited) continue;
+    seen.add(id);
+    out.push({ title, module: (h.module ?? '').trim(), url: `${LESSON_BASE}${id}/` });
+    if (out.length >= MAX_SOURCES) break;
+  }
+  return out;
 }
 
 // --- P1 (handoff §2): retry/backoff na přetížení modelu (429/5xx/529) i síťovou chybu ---
@@ -272,6 +316,93 @@ async function overDailyCap(userId: string | null): Promise<boolean> {
   } catch { return false; }
 }
 
+// --- STREAMING (jen Grok chat) ---
+// Proč: bez streamu člen po odeslání dotazu čeká 9 až 14 sekund na tři tečky a chat působí
+// zamrzle. Se streamem text přitéká průběžně. Streamuje se VÝHRADNĚ běžný chat; členská brána,
+// safety hard-stopy, denní strop i vision se vrací klasickým JSONem i tehdy, když si klient
+// stream vyžádal. Frontend proto rozlišuje odpověď podle Content-Type, ne podle toho, co poslal.
+function sseHeaders(cors: Record<string, string>): Record<string, string> {
+  return {
+    ...cors,
+    'Content-Type': 'text/event-stream; charset=utf-8',
+    'Cache-Control': 'no-cache, no-transform',
+    'X-Accel-Buffering': 'no',   // ať to po cestě nikdo nebufferuje, jinak streamování nemá smysl
+  };
+}
+// Když poskytovatel usage v posledním chunku nepošle, odhadneme ji z délky textu (~4 znaky/token).
+// Řádek v ai_usage musí vzniknout vždy: drží se o něj denní strop, ne jen měření nákladu (§9).
+const CHARS_PER_TOKEN = 4;
+function estimateUsage(promptChars: number, replyChars: number) {
+  return {
+    prompt_tokens: Math.round(promptChars / CHARS_PER_TOKEN),
+    completion_tokens: Math.round(replyChars / CHARS_PER_TOKEN),
+  };
+}
+async function streamGrokReply(
+  grokMsgs: { role: string; content: string }[],
+  convId: string,
+  cors: Record<string, string>,
+  userId: string | null,
+  ragHits: Hit[],
+): Promise<Response> {
+  const upstream = await postWithRetry('https://api.x.ai/v1/chat/completions',
+    { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
+    { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, stream: true,
+      stream_options: { include_usage: true }, messages: grokMsgs });
+  // Selhání PŘED prvním bajtem řešíme ještě klasickým JSONem: klient tak dostane stejnou
+  // chybovou hlášku jako doteď a nemusí řešit poloprázdný stream.
+  if (!upstream.ok || !upstream.body) {
+    console.error('xai_stream_error', upstream.status, (await upstream.text().catch(() => '')).slice(0, 300));
+    return json({ reply: 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli, nebo mi napiš na WhatsApp.' }, cors, 200);
+  }
+  const promptChars = grokMsgs.reduce((n, m) => n + m.content.length, 0);
+  const body = upstream.body;
+  const enc = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      const send = (o: unknown) => controller.enqueue(enc.encode(`data: ${JSON.stringify(o)}${NL}${NL}`));
+      let reply = '';
+      let usage: unknown = null;
+      try {
+        const reader = body.getReader();
+        const dec = new TextDecoder();
+        let buf = '';
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, { stream: true }).replace(/\r\n/g, NL);
+          // SSE rámce odděluje prázdný řádek; poslední kus může být utnutý uprostřed,
+          // ten si necháme v bufferu do dalšího chunku.
+          const frames = buf.split(NL + NL);
+          buf = frames.pop() ?? '';
+          for (const frame of frames) {
+            for (const line of frame.split(NL)) {
+              if (!line.startsWith('data:')) continue;
+              const payload = line.slice(5).trim();
+              if (!payload || payload === '[DONE]') continue;
+              try {
+                const j = JSON.parse(payload) as { choices?: { delta?: { content?: string } }[]; usage?: unknown };
+                const piece = j.choices?.[0]?.delta?.content;
+                if (typeof piece === 'string' && piece) { reply += piece; send({ type: 'delta', text: piece }); }
+                if (j.usage) usage = j.usage;   // xAI ji posílá v posledním chunku (stream_options)
+              } catch { /* neznámý nebo utnutý rámec: přeskoč, jeden chunk nesmí shodit celý stream */ }
+            }
+          }
+        }
+      } catch (e) {
+        console.error('ai-martin stream exception', String(e).slice(0, 300));
+        if (!reply) send({ type: 'error', reply: 'Spojení selhalo, zkus to prosím znovu.' });
+      }
+      logUsage(userId, 'ai_chat_web', usage ?? estimateUsage(promptChars, reply.length));
+      // Zdroje až na konci: citedSources porovnává CELOU odpověď proti RAG trefám.
+      if (reply) send({ type: 'sources', sources: citedSources(reply, ragHits) });
+      controller.enqueue(enc.encode(`data: [DONE]${NL}${NL}`));
+      controller.close();
+    },
+  });
+  return new Response(stream, { headers: sseHeaders(cors) });
+}
+
 Deno.serve(async (req: Request) => {
   const CORS = corsFor(req);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
@@ -286,8 +417,11 @@ Deno.serve(async (req: Request) => {
   if (!API_KEY) return json({ reply: 'Za chvíli! AI Martin se právě dokončuje. Mrkni sem brzy. 💪' }, CORS, 200);
   const userId = userIdFromToken(token);   // pro měření nákladu (§9) + denní strop
 
-  let body: { messages?: Msg[] };
+  let body: { messages?: Msg[]; stream?: boolean };
   try { body = await req.json(); } catch { return json({ error: 'bad_json' }, CORS, 400); }
+  // Stream si klient vyžádá explicitně. Starý frontend (i prohlížeč bez ReadableStream) ho
+  // nepošle a dostane celou odpověď najednou jako doteď, takže nasazení nic nerozbije.
+  const wantStream = body.stream === true;
   const raw = Array.isArray(body.messages) ? body.messages : [];
   // Fotka jídla z poslední zprávy (vision path). Bereme jen data: URI běžných formátů, strop ~12 MB.
   const lastRaw: Msg = raw[raw.length - 1] || {};
@@ -336,7 +470,7 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  const ragContext = await retrieveContext(lastUser);
+  const { block: ragContext, hits: ragHits } = await retrieveContext(lastUser);
   // POŘADÍ KVŮLI CACHE: stabilní prefix (SYSTEM) → historie → volatilní blok (RAG + safety) → user.
   // Cache se trefuje po první změněný bajt, takže volatilní části patří AŽ NA KONEC,
   // jinak si odřízneme historii. RAG blíž k dotazu navíc bývá i kvalitnější.
@@ -358,9 +492,11 @@ Deno.serve(async (req: Request) => {
         ...(volatile ? [{ role: 'system' as const, content: volatile }] : []),
         ...(last ? [last] : []),
       ];
+      // Streamovaná větev: safety pre-flag, členská brána i denní strop už proběhly výše.
+      if (wantStream) return await streamGrokReply(grokMsgs, convId, CORS, userId, ragHits);
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
         { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-        { model: MODEL, max_tokens: 600, prompt_cache_key: convId, messages: grokMsgs });
+        { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, messages: grokMsgs });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('xai_error', res.status, JSON.stringify(data).slice(0, 300));
@@ -372,7 +508,7 @@ Deno.serve(async (req: Request) => {
       // Anthropic Messages API + retry
       const res = await postWithRetry('https://api.anthropic.com/v1/messages',
         { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-        { model: MODEL, max_tokens: 600, system, messages: (() => {
+        { model: MODEL, max_tokens: 2000, system, messages: (() => {
           const h = msgs.slice(0, -1); const l = msgs[msgs.length - 1];
           return [...h, ...(volatile ? [{ role: 'user' as const, content: volatile }] : []), ...(l ? [l] : [])];
         })() });
@@ -386,7 +522,7 @@ Deno.serve(async (req: Request) => {
       reply = parts.filter((p) => p.type === 'text').map((p) => p.text ?? '').join(NL).trim();
     }
     reply = reply || 'Promiň, nemám na to dobrou odpověď. Zkus se zeptat jinak.';
-    return json({ reply }, CORS);
+    return json({ reply, sources: citedSources(reply, ragHits) }, CORS);
   } catch (e) {
     console.error('ai-martin exception', String(e).slice(0, 300));
     return json({ reply: 'Spojení selhalo, zkus to prosím znovu.' }, CORS, 200);

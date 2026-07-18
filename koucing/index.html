@@ -89,6 +89,22 @@
         .tb-nav a { color:rgba(255,255,255,.85); text-decoration:none; font-weight:600; font-size:.92rem; }
         .tb-nav a:hover { color:var(--acc-l); }
         @media (max-width: 1080px) { .tb-nav { display:none; } }
+        /* Mobilni navigace: .tb-nav se pod 1080px skryva a driv nemela nahradu,
+           takze na mobilu nebyla na techto strankach navigace vubec. */
+        .tb-menu { display:none; margin-left:auto; margin-right:.6rem; position:relative; }
+        .tb-menu > summary { list-style:none; cursor:pointer; color:#fff; padding:.45rem .6rem;
+          border:1px solid rgba(255,255,255,.22); border-radius:10px; font-size:1.15rem; line-height:1; }
+        .tb-menu > summary::-webkit-details-marker { display:none; }
+        .tb-menu[open] > summary { border-color:var(--acc); color:var(--acc-l); }
+        /* fixed (ne absolute): tlacitko ☰ neni u praveho kraje, takze panel kotveny k nemu
+           pretekal mimo obrazovku. Takhle je vzdy u kraje okna a vejde se i na uzkem telefonu. */
+        .tb-menu-panel { position:fixed; right:10px; left:auto; top:58px; max-width:calc(100vw - 20px); background:#15121c;
+          border:1px solid rgba(255,255,255,.14); border-radius:14px; padding:.5rem; min-width:220px;
+          box-shadow:0 24px 48px -18px rgba(0,0,0,.9); z-index:60; display:flex; flex-direction:column; }
+        .tb-menu-panel a { color:rgba(255,255,255,.9); text-decoration:none; font-weight:600;
+          font-size:.95rem; padding:.6rem .7rem; border-radius:9px; }
+        .tb-menu-panel a:hover { background:rgba(235,177,44,.12); color:var(--acc-l); }
+        @media (max-width: 1080px) { .tb-menu { display:block; } }
 
         /* hero */
         .hero { position:relative; overflow:hidden; padding:4.6rem 0 4rem; background:#121014; }
@@ -211,16 +227,32 @@
 <div class="topbar">
     <a class="tb-brand" href="/"><span class="tb-mark">MB</span> Martin Barna</a>
     <nav class="tb-nav" aria-label="Hlavní navigace">
-        <a href="/koucing/">Koučink</a>
+        <a href="/koucing/" aria-current="page">Koučink</a>
         <a href="/konzultace/">Konzultace</a>
         <a href="/videokurz">Videokurz</a>
         <a href="/akademie/">Academy</a>
+        <a href="/tvuj-coach/">Appka</a>
         <a href="/treninky">Tréninky</a>
         <a href="/prednasky/">Přednášky</a>
         <a href="/clanky/">Blog</a>
         <a href="/reference/">Reference</a>
         <a href="/akademie/prihlaseni/">Přihlásit</a>
     </nav>
+    <details class="tb-menu">
+      <summary aria-label="Menu">☰</summary>
+      <nav class="tb-menu-panel" aria-label="Hlavní navigace (mobil)">
+          <a href="/koucing/" aria-current="page">Koučink</a>
+          <a href="/konzultace/">Konzultace</a>
+          <a href="/videokurz">Videokurz</a>
+          <a href="/akademie/">Academy</a>
+          <a href="/tvuj-coach/">Appka</a>
+          <a href="/treninky">Tréninky</a>
+          <a href="/prednasky/">Přednášky</a>
+          <a href="/clanky/">Blog</a>
+          <a href="/reference/">Reference</a>
+          <a href="/akademie/prihlaseni/">Přihlásit</a>
+      </nav>
+    </details>
     <a class="tb-cta" href="https://form.simpleshop.cz/qG2yO/buy/">Objednat konzultaci →</a>
 </div>
 

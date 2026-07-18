@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Dárkový poukaz — Tereza</title>
+<link rel="stylesheet" href="../../assets/vendor/fonts/poppins.css">
+<style>
+  @page { size: 210mm 148mm; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Poppins', Arial, sans-serif; background: #08070a; }
+  .card { position: relative; width: 210mm; height: 148mm; overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 82% 8%, rgba(235,177,44,.16), transparent 45%),
+      radial-gradient(90% 80% at 12% 100%, rgba(120,70,150,.14), transparent 50%),
+      linear-gradient(158deg, #1a1c20 0%, #121317 55%, #0d0e11 100%);
+    color: #F0EADF; padding: 12mm 14mm; }
+
+  /* zlatý dvojrámeček */
+  .frame { position: absolute; inset: 6mm; border: .5mm solid rgba(235,177,44,.55); border-radius: 2mm; pointer-events: none; }
+  .frame::before { content: ""; position: absolute; inset: 1.4mm; border: .2mm solid rgba(235,177,44,.28); border-radius: 1.2mm; }
+
+  .inner { position: relative; height: 100%; display: flex; flex-direction: column; padding: 4mm 6mm; }
+
+  .top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .brandrow { display: flex; align-items: center; gap: 3.5mm; }
+  .mark { width: 10mm; height: 10mm; border-radius: 2.5mm; background: #EBB12C; color: #1A1222; font-weight: 800; font-size: 4.6mm; display: flex; align-items: center; justify-content: center; }
+  .brand { font-weight: 800; font-size: 3.5mm; line-height: 1.2; }
+  .brand span { display: block; color: #C9A24B; font-weight: 600; font-size: 2.4mm; letter-spacing: .5mm; text-transform: uppercase; }
+  .vlabel { text-align: right; }
+  .vlabel .k { color: #EBB12C; font-weight: 800; font-size: 3.6mm; letter-spacing: 1.2mm; text-transform: uppercase; }
+  .vlabel .sub { color: #8F8A99; font-size: 2.5mm; letter-spacing: .4mm; margin-top: 1mm; }
+
+  .hero { margin-top: 7mm; }
+  .occasion { color: #C9A24B; font-weight: 700; font-size: 3mm; letter-spacing: .6mm; text-transform: uppercase; margin: 0 0 2mm; }
+  .name { font-size: 15mm; line-height: 1; font-weight: 800; margin: 0; }
+  .name .g { color: #EBB12C; }
+  .wish { font-size: 3.5mm; line-height: 1.5; color: #d9d5df; margin: 3.5mm 0 0; max-width: 150mm; }
+
+  .gifts { margin-top: auto; display: flex; flex-direction: column; gap: 3mm; }
+  .gift { display: flex; align-items: center; gap: 4mm; background: rgba(255,255,255,.035); border: .3mm solid rgba(235,177,44,.22); border-radius: 2.5mm; padding: 4mm 5mm; }
+  .gift .ic { flex: 0 0 9mm; width: 9mm; height: 9mm; border-radius: 50%; background: rgba(235,177,44,.14); color: #EBB12C; display: flex; align-items: center; justify-content: center; font-size: 4.6mm; }
+  .gift .t { flex: 1; }
+  .gift .t .h { font-weight: 800; font-size: 3.7mm; color: #F0EADF; }
+  .gift .t .d { font-size: 2.9mm; color: #a9a3b3; margin-top: .6mm; }
+  .gift .from { text-align: right; font-size: 2.7mm; color: #C9A24B; font-weight: 700; white-space: nowrap; }
+
+  .foot { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5mm; }
+  .sign { }
+  .sign .nm { font-weight: 800; font-size: 3.4mm; color: #EBB12C; }
+  .sign .ln { font-size: 2.5mm; color: #8F8A99; margin-top: .6mm; }
+  .beff { text-align: right; }
+  .beff .b { color: #EBB12C; font-weight: 800; font-size: 3.4mm; }
+  .beff .w { font-size: 2.5mm; color: #8F8A99; margin-top: .6mm; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="frame"></div>
+  <div class="inner">
+
+    <div class="top">
+      <div class="brandrow">
+        <div class="mark">MB</div>
+        <div class="brand">Martin Barna<span>online výživa &amp; fitness</span></div>
+      </div>
+      <div class="vlabel">
+        <div class="k">Dárkový poukaz</div>
+        <div class="sub">Online Coaching Diamond</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <p class="occasion">🎉 K narozeninám &amp; do nové etapy</p>
+      <h1 class="name">Pro <span class="g">Terezu</span></h1>
+      <p class="wish">Čerstvá maminka, která je připravená vzít svoji formu do vlastních rukou. Tenhle poukaz je start — po porodu zesílit, zpevnit postavu a nastartovat život, který ti sedne. Jde se na to spolu. 💪</p>
+    </div>
+
+    <div class="gifts">
+      <div class="gift">
+        <div class="ic">💎</div>
+        <div class="t"><div class="h">Online Coaching Diamond — 6 měsíců</div><div class="d">Kompletní vedení, jídelníček i trénink na míru, týdenní check-iny a podpora.</div></div>
+        <div class="from">dárek od maminky</div>
+      </div>
+      <div class="gift">
+        <div class="ic">🏋</div>
+        <div class="t"><div class="h">1× osobní trénink s Martinem — zdarma</div><div class="d">Naživo v GYM BIP Fitness — technika, forma a pořádný nášup energie.</div></div>
+        <div class="from">dárek od Martina</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="sign">
+        <div class="nm">Martin Barna</div>
+        <div class="ln">Poukaz uplatníš přímo u Martina · termíny doladíme společně</div>
+      </div>
+      <div class="beff">
+        <div class="b">Be Effective!</div>
+        <div class="w">martinbarna.cz</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

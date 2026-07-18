@@ -67,6 +67,22 @@
         .tb-nav a { color:rgba(255,255,255,.85); text-decoration:none; font-weight:600; font-size:.92rem; }
         .tb-nav a:hover { color:var(--acc-l); }
         @media (max-width: 1080px) { .tb-nav { display:none; } }
+        /* Mobilni navigace: .tb-nav se pod 1080px skryva a driv nemela nahradu,
+           takze na mobilu nebyla na techto strankach navigace vubec. */
+        .tb-menu { display:none; margin-left:auto; margin-right:.6rem; position:relative; }
+        .tb-menu > summary { list-style:none; cursor:pointer; color:#fff; padding:.45rem .6rem;
+          border:1px solid rgba(255,255,255,.22); border-radius:10px; font-size:1.15rem; line-height:1; }
+        .tb-menu > summary::-webkit-details-marker { display:none; }
+        .tb-menu[open] > summary { border-color:var(--acc); color:var(--acc-l); }
+        /* fixed (ne absolute): tlacitko ☰ neni u praveho kraje, takze panel kotveny k nemu
+           pretekal mimo obrazovku. Takhle je vzdy u kraje okna a vejde se i na uzkem telefonu. */
+        .tb-menu-panel { position:fixed; right:10px; left:auto; top:58px; max-width:calc(100vw - 20px); background:#15121c;
+          border:1px solid rgba(255,255,255,.14); border-radius:14px; padding:.5rem; min-width:220px;
+          box-shadow:0 24px 48px -18px rgba(0,0,0,.9); z-index:60; display:flex; flex-direction:column; }
+        .tb-menu-panel a { color:rgba(255,255,255,.9); text-decoration:none; font-weight:600;
+          font-size:.95rem; padding:.6rem .7rem; border-radius:9px; }
+        .tb-menu-panel a:hover { background:rgba(235,177,44,.12); color:var(--acc-l); }
+        @media (max-width: 1080px) { .tb-menu { display:block; } }
         .hero { position:relative; overflow:hidden; padding:4.6rem 0 4rem; background:#121014; }
         .badge { display:inline-block; background:rgba(235,177,44,.14); color:var(--acc-l); font-weight:700; font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; padding:.45rem 1rem; border-radius:50px; margin-bottom:1.1rem; }
         .hero h1 { font-size:clamp(2rem,5vw,3rem); font-weight:800; max-width:820px; margin-left:auto; margin-right:auto; }
@@ -118,9 +134,28 @@
         <a href="/konzultace/">Konzultace</a>
         <a href="/videokurz">Videokurz</a>
         <a href="/akademie/">Academy</a>
+        <a href="/tvuj-coach/" aria-current="page">Appka</a>
+        <a href="/treninky">Tréninky</a>
+        <a href="/prednasky/">Přednášky</a>
         <a href="/clanky/">Blog</a>
         <a href="/reference/">Reference</a>
+        <a href="/akademie/prihlaseni/">Přihlásit</a>
     </nav>
+    <details class="tb-menu">
+      <summary aria-label="Menu">☰</summary>
+      <nav class="tb-menu-panel" aria-label="Hlavní navigace (mobil)">
+          <a href="/koucing/">Koučink</a>
+          <a href="/konzultace/">Konzultace</a>
+          <a href="/videokurz">Videokurz</a>
+          <a href="/akademie/">Academy</a>
+          <a href="/tvuj-coach/" aria-current="page">Appka</a>
+          <a href="/treninky">Tréninky</a>
+          <a href="/prednasky/">Přednášky</a>
+          <a href="/clanky/">Blog</a>
+          <a href="/reference/">Reference</a>
+          <a href="/akademie/prihlaseni/">Přihlásit</a>
+      </nav>
+    </details>
     <a class="tb-cta" href="https://tvujcoach.cz">Vyzkoušet zdarma →</a>
 </div>
 
@@ -206,7 +241,8 @@
 
         <div class="legal-note" style="grid-column:1/-1;margin:1.4rem 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);font-size:.88rem;line-height:1.6;color:#A09AAD;">
         <p style="margin:0 0 .5rem;"><b style="color:#F0EADF;">Předplatné je opakovaná platba.</b> Obnovuje se automaticky na konci každého období (měsíc, nebo rok) za stejnou cenu, dokud ho nezrušíš. Zrušit ho můžeš kdykoliv v appce v sekci Profil → Předplatné. Zaplacené období vždy doběhne do konce a další platba se už nestrhne.</p>
-        <p style="margin:0;"><b style="color:#F0EADF;">Odstoupení do 14 dnů.</b> Jde o digitální službu poskytovanou online. Jako spotřebitel máš právo odstoupit od smlouvy do 14 dnů od jejího uzavření. Placené funkce se odemykají ihned po zaplacení, takže při objednávce uděluješ výslovný souhlas se zahájením plnění před uplynutím této lhůty a bereš na vědomí, že tím právo na odstoupení zaniká (§ 1837 občanského zákoníku). Podrobnosti v <a href="/obchodni-podminky/" style="color:#EBB12C;">obchodních podmínkách</a>.</p>
+        <p style="margin:0;"><b style="color:#F0EADF;">Odstoupení do 14 dnů.</b> Jde o digitální službu poskytovanou online. Jako spotřebitel máš právo odstoupit od smlouvy do 14 dnů od jejího uzavření. Placené funkce se odemykají ihned po zaplacení, takže při objednávce uděluješ výslovný souhlas se zahájením plnění před uplynutím této lhůty a bereš na vědomí, že tím právo na odstoupení zaniká (§ 1837 občanského zákoníku). Odstoupení i případné vrácení peněz vyřídíš formulářem na <a href="https://tvujcoach.cz/odstoupeni" style="color:#EBB12C;">tvujcoach.cz/odstoupeni</a>. Podrobnosti v <a href="/obchodni-podminky/" style="color:#EBB12C;">obchodních podmínkách</a>.</p>
+        <p style="margin:.5rem 0 0;"><b style="color:#F0EADF;">Garance vrácení peněz 14 dnů.</b> Přesto ti dávám svoje slovo navíc: když ti to do 14 dnů od začátku předplatného nesedne, napiš na <a href="mailto:martin@martinbarna.cz" style="color:#EBB12C;">martin@martinbarna.cz</a> a vrátím ti celou částku. Bez udání důvodu. Je to můj dobrovolný závazek nad rámec zákona, ne zákonná povinnost.</p>
       </div>
 
       <div class="incl">🎁 <b>Máš to v ceně?</b> Klienti <a href="/koucing/">koučinku</a> a členové <a href="/akademie/">Barna Academy</a> mají plnou appku součástí svého balíčku. Stačí se přihlásit stejným e-mailem.</div>

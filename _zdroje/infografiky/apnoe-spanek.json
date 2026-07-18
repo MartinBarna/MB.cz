@@ -1,0 +1,86 @@
+{
+  "slug": "apnoe-spanek",
+  "slides": [
+    {
+      "kind": "cover",
+      "kicker": "Hubnutí & spánek",
+      "title": "Za plató<br>může <span class=\"hl\">spánek?</span>",
+      "sub": "Trackuješ, trénuješ, držíš deficit. A váha se nehne. Než to hodíš na slabou vůli, zvaž ještě tohle."
+    },
+    {
+      "kind": "point",
+      "kicker": "Podezřelý",
+      "title": "Obstrukční<br>spánková apnoe",
+      "body": "V noci se opakovaně zavírají dýchací cesty. Tělo tě přitom nakrátko probouzí a ty o tom ani nevíš.<br><br>U středně těžké až těžké apnoe nemá diagnózu <b>82 % mužů a 93 % žen</b> (Young 1997, populační studie)."
+    },
+    {
+      "kind": "stat",
+      "kicker": "Není to jen o obezitě",
+      "big": "44 %",
+      "unit": "lidí s apnoí má jen nadváhu, dalších 23 % normální nebo nižší váhu (Esmaeili 2025)",
+      "body": "Metaanalýza na <b>12 860</b> dospělých. Štíhlejší postava tě z podezření nevyřazuje."
+    },
+    {
+      "kind": "point",
+      "kicker": "Jak to jede",
+      "title": "Začarovaný<br>kruh",
+      "body": "Apnoe dělá únavu. Z únavy se míň hýbeš a víc jíš. Přibereš a apnoe se zhorší.<br><br>A točí se to dál. Není to lenost."
+    },
+    {
+      "kind": "stat",
+      "kicker": "Dobrá zpráva",
+      "big": "57 %",
+      "unit": "míň apnoí (AHI) při o 20 % nižším BMI (Malhotra 2024)",
+      "body": "Metaanalýza <b>27 studií</b>. Vztah není lineární a rozptyl je široký, směr je ale jasný.<br><br>Studii platila Eli Lilly, výrobce léků na hubnutí. Říkám to rovnou."
+    },
+    {
+      "kind": "point",
+      "kicker": "Ale férově",
+      "title": "Váha není<br>jediná páka",
+      "body": "Aerobní pohyb apnoi zmírňuje i bez velkého úbytku váhy, ideálně 70 až 100 minut týdně. S nižším BMI se navíc lepší tlak, cholesterol i triglyceridy.<br><br>Vyplatí se to, i když čísla na váze jdou dolů pomalu.",
+      "callout": "Iftikhar et al. 2014, Lung. Iftikhar et al. 2024, Sleep & Breathing. Stelmach-Mardas et al. 2021, J Clin Med."
+    },
+    {
+      "kind": "vs",
+      "kicker": "Prakticky",
+      "title": "Co s tím<br>udělat",
+      "yes": {
+        "h": "Dává smysl",
+        "items": [
+          "Chrápání a denní únavu řekneš praktikovi",
+          "Držíš deficit dál, i pomalý pokrok kruh otáčí",
+          "Přidáš aerobní pohyb, pomáhá i bez velkého úbytku"
+        ]
+      },
+      "no": {
+        "h": "Nikam nevede",
+        "items": [
+          "Řežeš kalorie ještě víc, protože „to musí jít“",
+          "Hodíš to na slabou vůli a vzdáš to",
+          "Diagnostikuješ se podle příspěvku na síti"
+        ]
+      }
+    },
+    {
+      "kind": "point",
+      "kicker": "Důležité",
+      "title": "Diagnózu<br>dělá lékař",
+      "body": "Chrápeš, budíš se nevyspalý, přes den tě válcuje únava a hubnutí drhne? Řekni o tom praktikovi.<br><br>Vyšetření je dostupné. A když se apnoe potvrdí, dá se s ní pracovat.",
+      "callout": "Tohle není diagnóza z Instagramu. Apnoi potvrdí jedině vyšetření, spánková poradna nebo praktik. Poznáváš se v příznacích? Nepodceň to."
+    },
+    {
+      "kind": "quote",
+      "text": "Apnoe ti nemění termodynamiku, jen zhoršuje udržitelnost.",
+      "note": "Tracking ti dá přesnost, spánek dá udržitelnost. Deficit platí dál."
+    },
+    {
+      "kind": "cta",
+      "title": "Chceš to mít <span class=\"hl\">poskládané?</span>",
+      "lines": [
+        "Celý rozbor se zdroji: <b>martinbarna.cz</b>",
+        "Systém na míru: <b>online koučink</b>",
+        "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"
+      ]
+    }
+  ]
+}

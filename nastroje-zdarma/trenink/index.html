@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generátor tréninku zdarma — plán na míru (fitko, doma, hřiště) | Martin Barna</title>
+<title>Generátor tréninku zdarma, plán na míru (fitko, doma, hřiště) | Martin Barna</title>
 <meta name="description" content="Zadáš, kde cvičíš, s čím a na jaké jsi úrovni, a generátor ti zdarma poskládá tréninkový plán s cviky, sériemi i opakováními. Bez registrace, výsledek hned.">
 <meta name="theme-color" content="#161616">
 <link rel="canonical" href="https://martinbarna.cz/nastroje-zdarma/trenink/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://martinbarna.cz/nastroje-zdarma/trenink/">
-<meta property="og:title" content="Generátor tréninku zdarma — plán na míru (fitko, doma, hřiště)">
+<meta property="og:title" content="Generátor tréninku zdarma, plán na míru (fitko, doma, hřiště)">
 <meta property="og:description" content="Zadáš místo, vybavení a úroveň a systém ti hned poskládá tréninkový plán s cviky, sériemi a opakováními. Zdarma, bez registrace.">
 <meta property="og:image" content="https://martinbarna.cz/assets/og-makro-plan.jpg?v=g7">
 <meta name="twitter:card" content="summary_large_image">
@@ -179,7 +179,7 @@
     </div>
   </div>
 
-  <script src="/assets/workout-gen.js?v=20260711b"></script>
+  <script src="/assets/workout-gen.js?v=20260718c"></script>
   <script>
   (function(){
     var DB=null, seed=0;
@@ -202,7 +202,7 @@
         html+='</table></div>';
       });
       $('days').innerHTML=html;
-      $('restnote').textContent='Pauza mezi sériemi ~'+plan.rest+'. Cíl: '+plan.goal.label+'. Cvič s 1–3 opakováními v záloze (nechoď do selhání v každé sérii). Když ve všech sériích čistě zvládneš horní hranici opakování, přidej váhu nebo opakování (progresivní přetížení). Po 4–6 týdnech zařaď lehčí „deload" týden. Plán je výchozí bod — uprav podle sebe, techniky a regenerace.';
+      $('restnote').textContent='Pauza mezi sériemi ~'+plan.rest+'. Cíl: '+plan.goal.label+'. Cvič s 1–3 opakováními v záloze (nechoď do selhání v každé sérii). Když ve všech sériích čistě zvládneš horní hranici opakování, přidej váhu nebo opakování (progresivní přetížení). Po 4–6 týdnech zařaď lehčí „deload" týden. Plán je výchozí bod, uprav podle sebe, techniky a regenerace.';
       $('byline').textContent=plan.goal.label;
       $('result').classList.remove('hidden');
       $('result').scrollIntoView({behavior:'smooth',block:'start'});
@@ -211,7 +211,7 @@
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
       var plan=window.WorkoutGen.buildPlan(DB, opts());
-      if(!plan.poolSize){ $('dbstate').textContent='Pro tuhle kombinaci místa a vybavení nemám dost cviků — zkus jiné vybavení.'; return; }
+      if(!plan.poolSize){ $('dbstate').textContent='Pro tuhle kombinaci místa a vybavení nemám dost cviků, zkus jiné vybavení.'; return; }
       render(plan);
     }
     $('gen').addEventListener('click',function(){ generate(false); });

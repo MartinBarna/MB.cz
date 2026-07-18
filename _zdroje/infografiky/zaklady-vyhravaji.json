@@ -1,0 +1,15 @@
+{
+  "slug": "zaklady-vyhravaji",
+  "slides": [
+    { "kind": "cover", "kicker": "Základy & pokrok", "title": "Základy pořád<br><span class=\"hl\">vyhrávají</span>", "sub": "Doplňky, biohacky, nový split. A pak zjistíš, že to celé stojí na pár nudných věcech, které dělá málokdo." },
+    { "kind": "point", "kicker": "Co lidi hledají", "title": "Zkratka,<br>co neexistuje", "body": "Nejčastější dotaz, co mi chodí: co si mám koupit, aby to šlo rychleji. Spalovač, kolagen, jiný plán.<br><br>Skoro nikdo se neptá, kolik toho za týden reálně snědl a jestli v posilovně vůbec přidal." },
+    { "kind": "bullets", "kicker": "Co rozhoduje", "title": "Nudná<br>čtyřka", "items": ["<b>Strava:</b> kalorický deficit při hubnutí a dost bílkovin", "<b>Trénink:</b> silový 3 až 5× týdně, slušná technika", "<b>Spánek:</b> 7 až 9 hodin, jinak jedeš na dluh", "<b>Konzistence:</b> plán, který dodržíš i ve špatném týdnu"] },
+    { "kind": "point", "kicker": "Motor růstu", "title": "Progresivní<br>přetížení", "body": "Sval roste, když dostane víc než minule. Víc kila na ose, víc opakování, čistější provedení.<br><br>Nemusí to být každý trénink. Ale za pár měsíců musí ta křivka jít nahoru.", "callout": "Posouvat jde zátěž, opakování i počet sérií. Stačí jedna věc naráz." },
+    { "kind": "stat", "kicker": "Bez přetížení", "big": "0", "unit": "pokroku, když se v tréninku roky nic nemění", "body": "Stejná váha, stejná opakování, stejné tempo. Tělo nemá důvod se měnit, protože ho k tomu nic netlačí.<br><br>Chodit do posilovny bez posunu formu <b>udrží</b>, ale novou nepostaví." },
+    { "kind": "point", "kicker": "Proč to tak je", "title": "Tělo se<br>adaptuje rychle", "body": "Podnět, který byl na začátku těžký, je za pár týdnů rutina. Svaly i nervový systém si zvyknou.<br><br>Vidím to u klientů pořád. Program jede skvěle a najednou přestane. Nezkazil se. Jen ho dohnali." },
+    { "kind": "vs", "kicker": "Prakticky", "title": "Posun,<br>nebo kolotoč?", "yes": { "h": "Takhle to jde nahoru", "items": ["Zapisuješ si váhy a opakování", "Každých pár týdnů přidáš kilo nebo opakování", "Bílkoviny a spánek řešíš dřív než doplňky"] }, "no": { "h": "Takhle stojíš na místě", "items": ["Trénuješ podle pocitu, nic si nepíšeš", "Váhy se rok nehnuly, ale plán měníš každý měsíc", "Řešíš spalovač a nevíš, kolik jíš"] } },
+    { "kind": "point", "kicker": "Háček", "title": "Kdy základy<br>nestačí", "body": "Přidávat donekonečna nejde. Přijde plató a tam zabere spíš deload, změna cviku nebo pár týdnů v udržovacím příjmu. Přitlačit ještě víc obvykle nepomůže.<br><br>A když jedeš základy poctivě, tělo nereaguje a něco tě trápí, nech se vyšetřit.", "callout": "Diagnózu z Instagramu ti nedá nikdo. Ani já." },
+    { "kind": "quote", "text": "Základy nejsou sexy. Fungují i ve chvíli, kdy se na ně vykašle celý internet.", "note": "Průměrný plán, který dodržíš půl roku, porazí dokonalý plán, co vydrží dva týdny." },
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}

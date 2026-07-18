@@ -1,0 +1,15 @@
+{
+  "slug": "spanek-a-hubnuti",
+  "slides": [
+    { "kind": "cover", "kicker": "Spánek & směny", "title": "Noční směny a váha:<br>o <span class=\"hl\">23 % vyšší riziko</span>", "sub": "Kdo jede noční nebo rotující směny, má vyšší riziko obezity než kolegové na denní. Meta-analýzy ukazují, o kolik." },
+    { "kind": "point", "kicker": "Co se traduje", "title": "Chce to<br>jen víc vůle", "body": "Když někdo na nočních nehubne, obvykle slyší, že se málo snaží. Není to lenost.<br><br>Data říkají něco jiného než jeho okolí." },
+    { "kind": "point", "kicker": "Co na to věda?", "title": "28 studií<br>v jedné analýze", "body": "Sun 2018 sesbíral 28 studií o směnném provozu a hmotnosti. Wang 2021 udělal totéž pro metabolický syndrom, sečetl 36 studií.<br><br>Meta-analýza sečte, co ukazuje víc týmů dohromady." },
+    { "kind": "stat", "kicker": "Výsledek", "big": "23", "unit": "% vyšší riziko nadváhy nebo obezity u nočních směn (Sun 2018, 28 studií)", "body": "Napříč studiemi vychází lidem na noční a rotující směně vyšší riziko než kolegům na denní. Většina těch studií je ale průřezová: ukazují souvislost, ne příčinu." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Roste to s roky,<br>ale pomalu", "body": "Wang 2021 přidává o <b>35 %</b> vyšší riziko metabolického syndromu. S odpracovanými roky riziko roste, ale mírně: po 10 letech asi o <b>11 %</b>, dál už křivka neroste.<br><br>Riziko v populaci není diagnóza jednotlivce.", "callout": "Sun 2018 (meta-analýza, 28 studií), Wang 2021 (meta-analýza, 36 studií). Jiná meta-analýza (Khosravipour 2021) vychází níž, kolem 11 až 14 %." },
+    { "kind": "point", "kicker": "Jak to funguje", "title": "Stejné jídlo,<br>jiná odpověď", "body": "Noční sestry měly při <b>stejném režimu jídel</b> vyšší inzulin a leptin než denní (Molzof 2022, jen 18 sester).<br><br>Rozdíl táhly hlavně ty, které jedly převážně v noci.", "callout": "Malá studie a vyšší hodnoty v ní nejsou tvoje diagnóza. Když máš obavy o zdraví, patří to k lékaři." },
+    { "kind": "point", "kicker": "Háček", "title": "Fyzika<br>platí dál", "body": "Směny ti rozhodí chuť k jídlu, spánek i energii na pohyb. Kalorický deficit tím ale nezmizí, termodynamika neselhává.<br><br>Zhoršují ti <b>udržitelnost</b>, ne fyziku." },
+    { "kind": "bullets", "kicker": "Prakticky", "title": "Co s tím<br>na směně", "items": ["Hlavní jídlo dej <b>před směnou nebo po ní</b>, ne doprostřed", "Jídlo si připrav z domu, nabídka v práci bývá bída", "Spánek je priorita, ne důvod k většímu deficitu", "Strategický šlofík <b>20 až 30 minut</b> uprostřed směny"] },
+    { "kind": "quote", "text": "Počítání kalorií ti dá přesnost. Načasování jídla a spánek ti dají to, že to vydržíš.", "note": "U zdravotníků na nočních to vidím pořád. Plán, který sedne na směnu, udělá víc než tvrdší deficit." },
+    { "kind": "cta", "title": "Chceš plán, co sedne na <span class=\"hl\">tvoje směny?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+  ]
+}
