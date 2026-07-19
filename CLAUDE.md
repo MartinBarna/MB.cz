@@ -3,6 +3,18 @@
 Statický web (deploy na Wedos přes GitHub Actions `deploy-wedos.yml`) + Supabase backend
 (přístupy, leady, zákazníci, e-maily). Vyvíjí se na větvi `claude/learn-claude-code-tay5rb`.
 
+## ⚠️ SPOLEČNÁ PAMĚŤ JE JINDE (přečti dřív, než začneš)
+
+Když jsi spuštěný z téhle složky (`Desktop\MB.cz`), máš VLASTNÍ prázdný zápisník a nevidíš
+nic z dosavadní práce. Všechna společná paměť (80+ poznámek: stav projektu, rozhodnutí, pasti,
+co hlídat Martinovi) žije v projektu **`Desktop\AI Martin`**, konkrétně tady:
+
+`C:\Users\fitne\.claude\projects\C--Users-fitne-Desktop-AI-Martin\memory\`
+
+**Než začneš pracovat, přečti si `MEMORY.md` v té složce** (je to rejstřík) a pak konkrétní
+poznámky k úkolu. **Zapisuj tamtéž**, ne do svého prázdného zápisníku, jinak to ostatní
+Claudové neuvidí. Na projektu pracuje víc Claudů zároveň: web MB.cz, appka Tvůj Coach, reklamy.
+
 ## ⚠️ STANDING RULE: počty na prodejních stránkách musí VŽDY sedět
 
 Kdykoliv přidáš nebo odebereš **lekci/modul Academy**, **video videokurzu** nebo **přílohu**,
