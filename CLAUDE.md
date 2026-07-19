@@ -15,6 +15,22 @@ co hlídat Martinovi) žije v projektu **`Desktop\AI Martin`**, konkrétně tady
 poznámky k úkolu. **Zapisuj tamtéž**, ne do svého prázdného zápisníku, jinak to ostatní
 Claudové neuvidí. Na projektu pracuje víc Claudů zároveň: web MB.cz, appka Tvůj Coach, reklamy.
 
+## ⚠️ AI Martin — bezpečnost (NEPŘEKROČITELNÉ)
+
+Platí pro webového chatbota `akademie/_supabase/functions/ai-martin/`:
+
+- **`preflag.ts` musí zůstat 1:1 s appkou.** Zdroj pravdy je
+  `C:\Users\fitne\Desktop\AI Martin\supabase\functions\ai-martin\preflag.ts`.
+  Změna na jedné straně → okamžitě zrcadli na druhou a přenasaď. Web nikdy nesmí být pozadu.
+- **Krize / porucha příjmu potravy → TVRDÝ STOP:** bezpečná odpověď + **Linka první psychické
+  pomoci 116 123** + odkaz na Martina. **LLM se vůbec nevolá.**
+- **Léky / těhotenství / nezletilí → SAFE MODE:** žádné konkrétní medicínské ani dietní rady,
+  odkaz na lékaře nebo osobně na Martina.
+- **Chatbot je chat-only** — nikdy nepřidávej tool-calling ani ovládání appky (na webu není čí JWT).
+- **AI nevymýšlí čísla** — kalorie, makra a TDEE počítá engine nebo kalkulačka.
+
+Detail a proč: `ai-martin-safety-a-hranice.md` v hlavní paměti (cesta výše).
+
 ## ⚠️ STANDING RULE: počty na prodejních stránkách musí VŽDY sedět
 
 Kdykoliv přidáš nebo odebereš **lekci/modul Academy**, **video videokurzu** nebo **přílohu**,
