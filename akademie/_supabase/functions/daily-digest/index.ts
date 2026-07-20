@@ -16,12 +16,14 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "drip_daily_cap", "academy_founders_offset"]);
+  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset"]);
   const cmap = Object.fromEntries((cfg ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const provided = req.headers.get("x-drip-secret") || "";
   if (!cmap.drip_invoke_secret || provided !== cmap.drip_invoke_secret) return json({ error: "unauthorized" }, 401);
   const to = String(cmap.admin_emails || "fitness.barna@gmail.com").split(",")[0].trim();
-  // strop fronty z app_config (autotune cron ho zvedne po dojeti backlogu); Resend limit 100/den je pevny
+  // strop fronty z app_config (autotune cron ho zvedne po dojeti backlogu).
+  // POZOR: driv tu stalo "Resend limit 100/den je pevny" — to platilo pro free tarif.
+  // Od prechodu na placeny Resend denni limit NENI (potvrdil Martin 20. 7. 2026).
   const cap = Math.max(1, Number(cmap.drip_daily_cap ?? "") || 60);
 
   const now = new Date();
@@ -76,6 +78,14 @@ Deno.serve(async (req) => {
   let alerts = "";
   if (wdrPending > 0) alerts += warn(wdrPending + "× odstoupení od smlouvy čeká na vyřízení (refundace do 14 dnů!)");
   if (errs > 0) alerts += warn(errs + "× chyba odesílání e-mailů včera" + (lastErr ? ": " + lastErr : ""));
+  // Sepnuty jistic byl driv jen radek v tabulce nize, ktery vypada kazdy den stejne a lisi se
+  // jedinym slovem. Pri zavrene brane mlci vsechny follow-up sekvence (cca 355 lidi) a nic
+  // to nehlasi. Proto to od 20. 7. 2026 patri mezi alerty, ne do tabulky.
+  if (cmap.followups_enabled !== "true") {
+    alerts += warn("FOLLOW-UPY JSOU VYPNUTÉ. Jistič sepnul a všechny navazující sekvence mlčí. " +
+      "Důvod: " + (cmap.followups_breaker_reason || "neuveden") + ". " +
+      "Brána se otevře sama po 3 hodinách bez další chyby. Když spěcháš, jde přepnout ručně v app_config.");
+  }
   if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50). Podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
 
   const html =
@@ -85,7 +95,9 @@ Deno.serve(async (req) => {
     `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
     row("Nové leady", String(leadsYc) + (leadsYc ? " (" + Object.entries(bySrc).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
     row("Prodeje (SimpleShop)", String(salesYc) + (salesYc ? " (" + Object.entries(salesY).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
-    row("Odeslané e-maily", String(sent) + " · strop fronty " + cap + " · Resend max 100/den") +
+    // "Resend max 100/den" bylo z free tarifu a od prechodu na placeny uz to neplatilo.
+    // Zavadejici udaj: 30. 6. 2026 prave tenhle denni limit vyrobil 307 chyb.
+    row("Odeslané e-maily", String(sent) + " · strop fronty " + cap + " · Resend bez denního limitu") +
     row("Fronta e-mailů teď", String((due.data ?? []).length)) +
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
     row("Affiliate čeká na potvrzení", String(refPending)) +
