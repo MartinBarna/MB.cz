@@ -245,7 +245,48 @@
 
   function el(id){ return document.getElementById(id); }
   function czk(n){ return (n==null||n==="") ? "—" : String(n).replace(".", ","); }
-  function toNum(v){ var n = Number(String(v==null?"":v).replace(",", ".").trim()); return isFinite(n) && String(v).trim()!=="" ? n : null; }
+  // Prazdna hodnota MUSI vratit null, ne 0. Driv se testovalo String(v) misto normalizovaneho
+  // retezce, takze String(null) bylo "null" (neprazdne) a toNum(null) vracelo 0. Dusledek:
+  // chybejici vaha se pocitala jako nula kilo ("Celkova zmena +73,8 kg") a v grafu se kreslila
+  // jako bod na nule. Stejne tak kazila prumer dodrzeni, kam padaly nuly za nevyplnene reporty.
+  // Navic prijimame oddelovac tisicu (1,448 nebo 1 448, typicky pri kopirovani z Google Sheets):
+  // skupiny presne po 3 cislicich = tisice, jinak je carka desetinna (1,5). Tri desetinna mista
+  // u kalorii, gramu ani centimetru stejne nedavaji smysl.
+  function toNum(v){
+    var s = String(v==null?"":v).replace(/[\s ]/g, "");
+    if(s === "") return null;
+    if(/^-?\d{1,3}([.,]\d{3})+$/.test(s)) s = s.replace(/[.,]/g, "");
+    else s = s.replace(",", ".");
+    var n = Number(s);
+    return isFinite(n) ? n : null;
+  }
+  // Cesky 5. pad, prenesene 1:1 z edge funkce client-remind (tam uz overene v ostrych mailech).
+  // Bez toho stranka zdravila "Ahoj, Hana!" misto "Ahoj, Hano!".
+  var VOK_EXC = {
+    "jan":"Jene","pavel":"Pavle","karel":"Karle","havel":"Havle","pavol":"Pavle",
+    "zdenek":"Zdenku","zdeněk":"Zdeňku","zbynek":"Zbynku","zbyněk":"Zbyňku",
+    "josef":"Josefe","luboš":"Luboši","lubos":"Luboši","bartoloměj":"Bartoloměji",
+    "vavřinec":"Vavřinče","vavrinec":"Vavrinče","němec":"Němče"
+  };
+  var FEMALE_NAMES = ["ester","dagmar","miriam","karin","karyn","nikol","ingrid","rút","rut","judit","edit","ráchel","rachel",
+    "dolores","doris","agnes","mercedes","karmen","carmen","sarah","deborah","abigail","gwen","lilian","vivien",
+    "kristin","kristýn","katrin","madlen","jennifer","žaneta"];
+  var VOK_VOWELS = "aeiouyáéěíóúůý";
+  function vokativ(fn){
+    if(!fn) return fn;
+    var l = fn.toLowerCase(), last = l.slice(-1);
+    if(last === "a") return fn.slice(0, -1) + "o";
+    if(VOK_VOWELS.indexOf(last) !== -1) return fn;
+    if(FEMALE_NAMES.indexOf(l) !== -1) return fn;
+    if(Object.prototype.hasOwnProperty.call(VOK_EXC, l)) return VOK_EXC[l];
+    if(l.slice(-2) === "ek") return fn.slice(0, -2) + "ku";
+    if(l.slice(-2) === "ch" || "kgh".indexOf(last) !== -1) return fn + "u";
+    if("szxj".indexOf(last) !== -1 || "šžčř".indexOf(last) !== -1) return fn + "i";
+    if(l.slice(-2) === "el") return fn + "i";
+    if(last === "r") return VOK_VOWELS.indexOf(l.slice(-2, -1)) !== -1 ? fn + "e" : fn.slice(0, -1) + "ře";
+    if("bdflmnptvw".indexOf(last) !== -1) return fn + "e";
+    return fn;
+  }
   function dateCz(iso){ var d = new Date(iso + "T12:00:00"); return d.getDate()+". "+(d.getMonth()+1)+". "+d.getFullYear(); }
   function escH(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   function toast(msg){ var t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 4200); }
@@ -370,15 +411,19 @@
     if(reports.length >= 8) el("refCta").style.display = "";
     el("stats").style.display = ""; el("graphs").style.display = ""; el("histWrap").style.display = "";
     var last = reports[reports.length - 1], first = reports[0];
+    // Vychozi bod pro VAHU je prvni report, ktery vahu skutecne ma, ne prvni report v poradi.
+    // Klient muze prvni tyden vahu vynechat a pak by se zmena pocitala proti prazdne hodnote.
+    var firstW = null;
+    for(var fi = 0; fi < reports.length; fi++){ if(toNum(reports[fi].weight) != null){ firstW = reports[fi]; break; } }
     el("reportCtaSub").textContent = "Poslední report: " + dateCz(last.report_date) + ". Kopie přijde tobě i Martinovi.";
-    var lw = toNum(last.weight), fw = toNum(first.weight);
+    var lw = toNum(last.weight), fw = firstW ? toNum(firstW.weight) : null;
     el("stW").innerHTML = lw != null ? czk(lw) + ' <span class="u">kg</span>' : "—";
     el("stWsub").textContent = "z reportu " + dateCz(last.report_date);
-    if(lw != null && fw != null && reports.length > 1){
+    if(lw != null && fw != null && firstW !== last){
       var d = Math.round((lw - fw) * 10) / 10;
       el("stD").innerHTML = '<span class="' + (d <= 0 ? "pos" : "neg") + '" style="font-size:1.7rem;">' + (d > 0 ? "+" : d < 0 ? "−" : "") + czk(Math.abs(d)) + ' kg</span>';
-      el("stDsub").textContent = "od začátku (" + dateCz(first.report_date) + ": " + czk(fw) + " kg)";
-    } else { el("stD").textContent = "—"; el("stDsub").textContent = "doplní se od 2. reportu"; }
+      el("stDsub").textContent = "od začátku (" + dateCz(firstW.report_date) + ": " + czk(fw) + " kg)";
+    } else { el("stD").textContent = "—"; el("stDsub").textContent = "doplní se, až pošleš váhu podruhé"; }
     el("stN").textContent = reports.length;
     el("stNsub").textContent = "první " + dateCz(first.report_date);
     var adh = reports.map(function(r){ return toNum((r.scales || {}).dodrzeni); }).filter(function(v){ return v != null; });
@@ -1007,7 +1052,7 @@
   function boot(u){
     myEmail = String(u.email || "").toLowerCase();
     myName = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || "";
-    el("hello").textContent = myName ? "Ahoj, " + myName.split(" ")[0] + "!" : "Ahoj!";
+    el("hello").textContent = myName ? "Ahoj, " + vokativ(myName.split(" ")[0]) + "!" : "Ahoj!";
     var ap = el("tileAppka");
     if(ap) ap.setAttribute("href", "https://coach.martinbarna.cz/sign-in?email=" + encodeURIComponent(myEmail) + "&from=koucink");
     el("load").style.display = "none"; el("app").style.display = "";
