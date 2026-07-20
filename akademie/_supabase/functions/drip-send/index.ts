@@ -242,7 +242,7 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
@@ -275,8 +275,15 @@ Deno.serve(async (req: Request) => {
   // na zakazniky -> nikdy nestopovat"). Plati pro ne stejna ochrana i u stropu pokusu:
   // nikoho z nich neodstavujeme, protoze to jsou lide, kteri zaplatili nebo prave plati.
   // rescue-* je zachrana nedokoncene objednavky, tam je tiche vzdani se nejhorsi ze vsech.
-  // ⚠️ Kdyz sem pribude dalsi clensky track, PATRI I SEM, ne jen do komentare u shouldStop.
-  const CLENSKE_PREFIXY = ['onboarding', 'milestone', 'reactivation', 'rescue'];
+  // ⚠️ ZDROJ PRAVDY JE app_config.clenske_track_prefixy, NE tenhle soubor.
+  // Driv byl seznam natvrdo tady A JESTE jednou v daily-digest, spojeny jen komentarem
+  // "drz to shodne". To je prani, ne mechanismus: staci pridat track na jednom miste
+  // a seznamy se tise rozejdou. Ted ho obe funkce ctou z jednoho radku v DB, takze
+  // novy clensky track = jeden SQL update, bez redeploye a bez rizika rozjeti.
+  // Natvrdo psany seznam nize je uz jen zachrana pro pripad, ze klic z DB zmizi.
+  const CLENSKE_PREFIXY = String(fMap.clenske_track_prefixy ?? '')
+    .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+  if (CLENSKE_PREFIXY.length === 0) CLENSKE_PREFIXY.push('onboarding', 'milestone', 'reactivation', 'rescue');
   let lastSendAt = 0;
   const pace = async () => {
     const wait = lastSendAt + SEND_GAP_MS - Date.now();

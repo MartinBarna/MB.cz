@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset"]);
+  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy"]);
   const cmap = Object.fromEntries((cfg ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const provided = req.headers.get("x-drip-secret") || "";
   if (!cmap.drip_invoke_secret || provided !== cmap.drip_invoke_secret) return json({ error: "unauthorized" }, 401);
@@ -59,6 +59,9 @@ Deno.serve(async (req) => {
   // proto se to tady pocita zvlast a vyskakuje jako alert.
   let gaveUp = 0, gaveUpOnboarding = 0;
   const gaveUpTracks = new Set<string>();
+  const CLENSKE_PREFIXY = String(cmap.clenske_track_prefixy ?? "")
+    .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+  if (CLENSKE_PREFIXY.length === 0) CLENSKE_PREFIXY.push("onboarding", "milestone", "reactivation", "rescue");
   for (const e of evY.data ?? []) {
     if (e.type === "sent") sent++;
     else if (e.type === "error") { errs++; lastErr = String((e.detail as Record<string, unknown>)?.error ?? "").slice(0, 120); }
@@ -66,8 +69,9 @@ Deno.serve(async (req) => {
       const tr = String((e.detail as Record<string, unknown>)?.track ?? "?");
       // 'gave_up' = follow-up, uz se neposila. 'gave_up_warn' = clensky track, zkousi se DAL,
       // ale opakovane to selhava a nekdo za to zaplatil. Druhe je vaznejsi.
-      // Seznam prefixu drz 1:1 s CLENSKE_PREFIXY v drip-send.
-      if (["onboarding", "milestone", "reactivation", "rescue"].some((p) => tr.startsWith(p))) gaveUpOnboarding++;
+      // Zdroj pravdy je app_config.clenske_track_prefixy, stejny radek cte i drip-send.
+      // Driv tu byl seznam natvrdo podruhe a drzel ho jen komentar "drz to shodne".
+      if (CLENSKE_PREFIXY.some((p) => tr.startsWith(p))) gaveUpOnboarding++;
       else { gaveUp++; gaveUpTracks.add(tr); }
     }
   }
