@@ -255,6 +255,14 @@ Deno.serve(async (req: Request) => {
   // (rescue/milniky/digest) a Auth SMTP. Cti z app_config drip_daily_cap (zmena = 1 SQL
   // update bez redeploye); fallback 500. POZN: app_config drzi 2000 = fakticky vypnuto,
   // snizeni na 500 je v security-fixes-2026-07.sql (ceka na schvaleni Martinem).
+  // DAILY_CAP je BACKSTOP PROTI SPLASENE SMYCCE, NE SKRTIC PROPUSTNOSTI.
+  // Porovnava se proti sentToday (soucet od pulnoci PRES VSECHNY BEHY, viz r. ~407),
+  // takze je to DENNI strop. Nemá nic spolecneho s RUN_DEADLINE_MS, ktery reze jednu davku
+  // (~166 mailu pri gap 600 ms). Jsou to DVE NEZAVISLE pojistky a nesmi se slevat dohromady:
+  // 20. 7. 2026 z jejich zameny vznikl zaver "cap se stejne nikdy neprojevi", coz by vedlo
+  // k jeho zruseni. Pri 24 bezich za den se denni strop projevi uz zhruba po sesti plnych davkach.
+  // Hodnota: 1000 (zvednuto z 500 dne 20. 7. kvuli fronte 291 lidi a longtail enrollu 150/den).
+  // Resend Pro nema denni limit, mesicni je 50 000 pri spotrebe ~4 100, spicka provozu 230/den.
   const DAILY_CAP = Math.max(1, Number(fMap.drip_daily_cap ?? '') || 500);
   // PACING: Resend dokumentuje rate limit ~2 req/s. Smycka nize posilala bez rozestupu.
   // 600 ms = ~1.7 req/s (rezerva pod limitem). Zmena = 1 SQL update app_config, bez redeploye.

@@ -15,12 +15,12 @@
 --
 -- PROC SE NIKDO NEUPREDNOSTNUJE (rozhodnuti Martina 20. 7. 2026):
 -- Resend Pro nema denni limit, mesicni je 50 000 pri spotrebe ~4 100. Kapacita fronty
--- tedy neni vzacny zdroj a neni co delit. Puvodni otazka "maji mit trenери prednost?"
+-- tedy neni vzacny zdroj a neni co delit. Puvodni otazka "maji mit treneri prednost?"
 -- vznikla jen z limitu 50/den, ktery byl dedictvim free tarifu Resendu.
 -- Limit zvednut 50 -> 100 -> 150. Pri 150 nikdo neceka ani den:
 --   21. 7. dobehne 142 lidi (73 z 20. 7. + 69 z 21. 7.), vejdou se vsichni
 --   22. 7. dobehne 7 treneru, 23. 7. 73 lidi, 24. 7. 70 lidi — vzdy pod kapacitou
--- Trenери tedy nikdy necekaji, i bez jakekoli priority. FIFO je tu pro predvidatelnost,
+-- Treneri tedy nikdy necekaji, i bez jakekoli priority. FIFO je tu pro predvidatelnost,
 -- ne pro reseni nedostatku.
 -- ============================================================================
 
