@@ -47,6 +47,7 @@ set search_path to 'public'
 as $function$
 declare
   v_gate         text;
+  v_reason       text;
   v_thr_rl       int := 3;    -- rate-limit chyb dnes -> zavri
   v_thr_err      int := 10;   -- ostatnich non-onboarding chyb dnes -> zavri
   v_cooldown_h   int := 3;    -- hodin bez chyby -> otevri zpet
@@ -63,6 +64,17 @@ begin
   -- BRANA ZAVRENA: zkusit ji sama otevrit (tohle v1 neumela vubec)
   -- ---------------------------------------------------------------------
   if coalesce(v_gate,'') <> 'true' then
+    select value into v_reason from public.app_config where key = 'followups_breaker_reason';
+
+    -- ⚠️ KVOTOVA ZAVORA SE SAMA NEOTEVIRA.
+    -- Resend Pro nema DENNI limit, ale ma MESICNI (50 000; k 20. 7. 2026 spotreba ~4 100).
+    -- Vycerpana kvota se za 3 h nezahoji, obnovi se az zacatkem dalsiho mesice. Bez tehle
+    -- vyjimky by se brana kazde 3 h otevrela, poslala par mailu do chyby a zase zavrela.
+    -- Vypadek site a rate limit se zahoji samy, kvota ne. Proto se rozlisuji.
+    if coalesce(v_reason,'') ~ 'kvota=[1-9]' then
+      return;
+    end if;
+
     -- Kdy se zaviralo? Bez toho by se brana mohla otevrit driv, nez cooldown ubehne.
     select updated_at into v_closed_at
       from public.app_config where key = 'followups_enabled';
@@ -100,8 +112,9 @@ begin
   select
     count(*) filter (where type='error'),
     count(*) filter (where type='error' and coalesce(detail->>'error','') like '%resend_429:%'
-                       and coalesce(detail->>'error','') not like '%daily_quota_exceeded%'),
-    count(*) filter (where type='error' and coalesce(detail->>'error','') like '%daily_quota_exceeded%')
+                       and coalesce(detail->>'error','') not like '%quota_exceeded%'),
+    -- 'quota_exceeded' bez predpony 'daily_', at to chyti i mesicni vycerpani
+    count(*) filter (where type='error' and coalesce(detail->>'error','') like '%quota_exceeded%')
   into v_errors, v_rl, v_quota
   from public.email_events
   where created_at >= v_daystart
@@ -114,8 +127,9 @@ begin
       values ('followups_breaker_reason',
         'AUTO-CLOSED ' || to_char(now(),'YYYY-MM-DD HH24:MI') || 'Z: chyby=' || v_errors
           || ', rate_limit=' || v_rl || ', kvota=' || v_quota
-          || ' (prahy: rl>=' || v_thr_rl || ', kvota>=1, chyby>=' || v_thr_err
-          || '; otevre se sama po ' || v_cooldown_h || ' h bez chyby)',
+          || case when v_quota >= 1
+               then ' — KVOTA RESEND VYCERPANA, brana se sama NEOTEVRE, pusti ji az clovek'
+               else ' (otevre se sama po ' || v_cooldown_h || ' h bez chyby)' end,
         now())
       on conflict (key) do update set value=excluded.value, updated_at=now();
   end if;
