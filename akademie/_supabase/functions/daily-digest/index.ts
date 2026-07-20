@@ -53,9 +53,22 @@ Deno.serve(async (req) => {
   const leadsYc = (leadsY.data ?? []).length;
 
   let sent = 0, errs = 0, lastErr = "";
+  // Od 20. 7. 2026 umi drip-send po MAX_TRIES neuspesich leada odstavit (udalost 'gave_up',
+  // status='paused'). U follow-upu je to spravne, mrtva adresa prestane vyrabet chyby.
+  // U ONBOARDINGU je to ale vazne: clovek zaplatil a nedostal pristup. Tise se to stat nesmi,
+  // proto se to tady pocita zvlast a vyskakuje jako alert.
+  let gaveUp = 0, gaveUpOnboarding = 0;
+  const gaveUpTracks = new Set<string>();
   for (const e of evY.data ?? []) {
     if (e.type === "sent") sent++;
     else if (e.type === "error") { errs++; lastErr = String((e.detail as Record<string, unknown>)?.error ?? "").slice(0, 120); }
+    else if (e.type === "gave_up" || e.type === "gave_up_warn") {
+      const tr = String((e.detail as Record<string, unknown>)?.track ?? "?");
+      // 'gave_up' = follow-up, uz se neposila. 'gave_up_warn' = onboarding, zkousi se DAL,
+      // ale opakovane to selhava a nekdo za to zaplatil. Druhe je vaznejsi.
+      if (tr.startsWith("onboarding")) gaveUpOnboarding++;
+      else { gaveUp++; gaveUpTracks.add(tr); }
+    }
   }
 
   const salesY: Record<string, number> = {};
@@ -85,6 +98,15 @@ Deno.serve(async (req) => {
     alerts += warn("FOLLOW-UPY JSOU VYPNUTÉ. Jistič sepnul a všechny navazující sekvence mlčí. " +
       "Důvod: " + (cmap.followups_breaker_reason || "neuveden") + ". " +
       "Brána se otevře sama po 3 hodinách bez další chyby. Když spěcháš, jde přepnout ručně v app_config.");
+  }
+  if (gaveUpOnboarding > 0) {
+    alerts += warn("🔴 " + gaveUpOnboarding + "× KOUPIL, ALE UVÍTACÍ E-MAIL MU OPAKOVANĚ NEDORAZIL. " +
+      "Systém to zkouší dál každých 6 hodin a nevzdá to, ale ozvi se jim radši sám. " +
+      "Nejspíš mají překlep v adrese. Najdeš je v e-mailových událostech pod typem 'gave_up_warn'.");
+  }
+  if (gaveUp > 0) {
+    alerts += warn(gaveUp + "× odstavený kontakt po opakovaném selhání (" +
+      Array.from(gaveUpTracks).join(", ") + "). U follow-upů je to v pořádku, jen ať o tom víš.");
   }
   if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50). Podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
 

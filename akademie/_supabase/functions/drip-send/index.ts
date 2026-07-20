@@ -441,7 +441,21 @@ Deno.serve(async (req: Request) => {
       const { count: failCount } = await admin.from('email_events')
         .select('id', { count: 'exact', head: true })
         .eq('lead_id', l.id).eq('step', l.step).eq('type', 'error').eq('detail->>track', l.track);
-      if ((failCount ?? 0) >= MAX_TRIES) {
+      // ⚠️ ONBOARDING SE NEVZDAVA NIKDY. U follow-upu je odstaveni spravne, ale onboarding
+      // dostava clovek, ktery PRAVE ZAPLATIL. Tise ho odstavit znamena, ze nikdy nedostane
+      // pristup, za ktery zaplatil, a nikdo se to nedozvi. Radeji zkousime dal po 6 h
+      // donekonecna: jistic onboarding tracky ignoruje (filtr not ilike 'onboarding%'),
+      // takze tyhle opakovane chyby nikomu jinemu branu neshodi.
+      // Aby to nebylo tiche, po MAX_TRIES se jednou zaloguje 'gave_up_warn' a denni digest
+      // z toho udela alert. Retry ale bezi dal.
+      const jeOnboarding = String(l.track || '').startsWith('onboarding');
+      if (jeOnboarding && (failCount ?? 0) >= MAX_TRIES) {
+        if ((failCount ?? 0) === MAX_TRIES) {
+          await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up_warn', detail: { track: l.track, tries: failCount ?? 0 } });
+        }
+        const retry = new Date(Date.now() + 6 * 3600000).toISOString();
+        await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
+      } else if ((failCount ?? 0) >= MAX_TRIES) {
         await admin.from('leads').update({ status: 'paused', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
         await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up', detail: { track: l.track, tries: failCount ?? 0 } });
         gaveUp++;
