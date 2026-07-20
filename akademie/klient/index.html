@@ -555,8 +555,16 @@
     var skipBtn = document.getElementById("wSkipHost");
     if(skipBtn) skipBtn.style.display = "";
     if(s.mount) s.mount(W.ans);
+    // Tlacitko dole je na vsech krocich JEDEN a tentyz prvek, meni se mu jen popisek. Kdyz na nej
+    // klient klikne mysi nebo prstem, zustane mu focus i po prechodu na dalsi krok. Na poslednim
+    // kroku uz se ale jmenuje "Odeslat report", takze jedine nahodne Enter nebo mezernik report
+    // odeslal, aniz klient na cokoli kliknul. Presne tohle nahlasila klientka 20. 7. 2026
+    // ("ani jsem na nic neklikla a uz se to odeslalo") a mela pravdu.
+    el("wNext").blur();
+    var jePosledniKrok = (W.i === steps.length - 1);
     el("wIn").querySelectorAll("input,textarea").forEach(function(inp){
-      inp.addEventListener("keydown", function(e){ if(e.key === "Enter" && inp.tagName !== "TEXTAREA"){ e.preventDefault(); el("wNext").click(); } });
+      // Enter posouva pruvodce dal, ale NIKDY neodesila. Odeslani chce vzdycky vedomy klik.
+      inp.addEventListener("keydown", function(e){ if(e.key === "Enter" && inp.tagName !== "TEXTAREA" && !jePosledniKrok){ e.preventDefault(); el("wNext").click(); } });
     });
     var f = el("wIn").querySelector("input,textarea"); if(f && window.innerWidth > 720) f.focus();
     document.querySelector(".wbody").scrollTop = 0;
