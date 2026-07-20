@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elonga a HRV náramek: co je věda a co marketing — Martin Barna</title>
+    <meta name="description" content="Elonga slibuje lab-grade HRV, funkční věk a oddělené měření stresu a regenerace. Co z toho drží vědecky, co je proprietary skóre a kdy dává smysl náramek ignorovat.">
+    <meta name="theme-color" content="#EBB12C">
+    <link rel="canonical" href="https://martinbarna.cz/clanky/elonga-hrv-veda-nebo-marketing.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://martinbarna.cz/clanky/elonga-hrv-veda-nebo-marketing.html">
+    <meta property="og:title" content="Elonga a HRV náramek: co je věda a co marketing">
+    <meta property="og:description" content="Elonga slibuje lab-grade HRV, funkční věk a oddělené měření stresu a regenerace. Co z toho drží vědecky a co je marketing.">
+    <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Martin Barna — online výživa a fitness koučink">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <link rel="stylesheet" href="/assets/highend.css?v=r2">
+    <style>
+        .skip-link{position:absolute;left:-999px;top:0;background:#EBB12C;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+        :root { --green:#EBB12C; --green-dark:#161616; --green-light:#fff4e8; --gold:#EBB12C; --ink:#161616; }
+        * { box-sizing:border-box; scroll-behavior:smooth; }
+        a:focus-visible, button:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; border-radius:4px; }
+        body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
+        a { color:var(--green-dark); }
+        .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
+        .nav .wrap { max-width:1120px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:22px; }
+        .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+        .brand img { height:30px; width:auto; aspect-ratio:194/96; flex-shrink:0; display:block; } .brand span { white-space:nowrap; }
+        .navlinks { display:flex; align-items:center; gap:20px; }
+        .navlinks a { text-decoration:none; font-weight:600; color:var(--ink); font-size:.96rem; }
+        .navlinks a:hover { color:var(--green); }
+        .navlinks a.cta { white-space:nowrap; background:var(--green); color:#161616; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+        .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
+        @media (max-width:1200px){ .navlinks { gap:12px; } .navlinks a { font-size:.9rem; } }
+        @media (max-width:991px){ .navlinks .hide-sm { display:none; } .navlinks { gap:14px; } .navlinks a.cta { padding:7px 12px; font-size:.8rem; } .brand span { display:none; } }
+        .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:80px 20px 64px; text-align:center; position:relative; overflow:hidden; }
+        .hero::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
+        .hero > * { position:relative; z-index:1; }
+        .hero .tag { background:rgba(255,255,255,.2); padding:5px 14px; border-radius:50px; font-size:.8rem; font-weight:600; }
+        .hero h1 { max-width:840px; margin:1rem auto 0; font-size:clamp(2.1rem, 5vw, 3.2rem); font-weight:800; line-height:1.12; letter-spacing:-.025em; }
+        .wrapc { max-width:760px; margin:0 auto; padding:0 20px; }
+        article { padding:60px 0; font-size:1.08rem; }
+        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; font-size:clamp(1.55rem, 3.6vw, 2.1rem); letter-spacing:-.018em; line-height:1.2; }
+        article h3 { color:var(--green-dark); font-weight:700; margin-top:1.6rem; font-size:1.2rem; }
+        article ul { padding-left:1.2rem; }
+        article li { margin:.4rem 0; }
+        .lead { font-size:1.2rem; color:#3a463f; }
+        .keytab { width:100%; border-collapse:collapse; margin:1.6rem 0; font-size:.98rem; }
+        .keytab th, .keytab td { border:1px solid #e6ece6; padding:10px 13px; text-align:left; vertical-align:top; }
+        .keytab th { background:var(--green-light); color:var(--green-dark); font-weight:700; }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .cta-box { background:var(--green-light); border-radius:20px; padding:2.2rem; margin:3rem 0 0; text-align:center; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .cta-box h3 { color:var(--green-dark); font-weight:800; margin-top:0; }
+        .btn { display:inline-block; background:var(--green); color:#161616; font-weight:700; padding:13px 32px; border-radius:50px; text-decoration:none; margin:6px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(235,177,44,.38); background:var(--green-dark); color:#fff; }
+        .btn.gold { background:var(--gold); } .btn.gold:hover { background:#C8901F; }
+        .disclaimer { font-size:.9rem; color:#5c655f; border-top:1px solid #e6ece6; margin-top:2.5rem; padding-top:1.2rem; }
+        footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
+        footer a { color:#F6CD63; text-decoration:underline; }
+        .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
+        body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
+        ::selection { background:#EBB12C; color:#fff; }
+        h1, h2, h3 { letter-spacing:-.015em; }
+        .nav { background:rgba(255,255,255,.78)!important; -webkit-backdrop-filter:saturate(180%) blur(12px); backdrop-filter:saturate(180%) blur(12px); }
+        @media (prefers-reduced-motion: reduce){ *, *::before, *::after { transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#666; }
+        .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs span { color:var(--ink); }
+        .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
+        .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .author-box img { width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
+        .author-box h4 { margin:0 0 .3rem; color:var(--green-dark); font-weight:800; font-size:1.1rem; }
+        .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
+        .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
+        @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
+        .src-list { font-size:.95rem; color:#3a463f; }
+        .src-list li { margin:.55rem 0; }
+    </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Elonga a HRV náramek: co je věda a co marketing",
+  "description": "Elonga slibuje lab-grade HRV, funkční věk a oddělené měření stresu a regenerace. Co z toho drží vědecky, co je proprietary skóre a kdy dává smysl náramek ignorovat.",
+  "image": "https://martinbarna.cz/assets/og-default.jpg?v=g7",
+  "datePublished": "2026-07-20",
+  "dateModified": "2026-07-20",
+  "author": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" },
+  "publisher": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://martinbarna.cz/clanky/elonga-hrv-veda-nebo-marketing.html" },
+  "articleSection": "Věda a mýty",
+  "inLanguage": "cs-CZ"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Domů", "item": "https://martinbarna.cz/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://martinbarna.cz/clanky/" },
+    { "@type": "ListItem", "position": 3, "name": "Elonga a HRV náramek: co je věda a co marketing", "item": "https://martinbarna.cz/clanky/elonga-hrv-veda-nebo-marketing.html" }
+  ]
+}
+    </script>
+    <script defer src="/assets/analytics.js?v=g7"></script>
+    <script defer src="/assets/referral.js?v=g1"></script>
+    <script defer src="/assets/lead-popup.js?v=r1"></script>
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=r3">
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r2">
+</head>
+<body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+    <div class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna — logo" decoding="async"><span>Martin Barna</span></a><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="/koucing/">Koučink</a><a class="hide-sm" href="/konzultace/">Konzultace</a><a class="hide-sm" href="/videokurz">Videokurz</a><a class="hide-sm" href="/akademie/">Academy</a><a class="hide-sm" href="/treninky">Tréninky</a><a class="hide-sm" href="/prednasky/">Přednášky</a><a class="hide-sm" href="/clanky/">Blog</a><a class="hide-sm" href="/reference/">Reference</a><a class="hide-sm" href="/akademie/prihlaseni/">Přihlásit</a><a class="cta" href="https://form.simpleshop.cz/qG2yO/buy/">Objednat konzultaci</a></nav></div></div>
+
+    <nav class="crumbs" aria-label="Drobečková navigace"><a href="../index.html">Domů</a> › <a href="index.html">Blog</a> › <span>Elonga a HRV náramek: co je věda a co marketing</span></nav>
+    <header class="hero" id="obsah">
+        <span class="tag">VĚDA &amp; MÝTY</span>
+        <h1>Elonga a HRV náramek: co je věda a co marketing</h1>
+        <p class="hero-meta">📅 červenec 2026 · ⏱️ 9 min čtení</p>
+    </header>
+
+    <div class="wrapc">
+        <article>
+            <p class="lead">Klient mi poslal reklamu na Elongu. „Měří regeneraci, stres, funkční věk, připravenost na trénink. Stojí za tím PhD a 30 let výzkumu. Mám si to koupit?" Odpověď je složitější než ano/ne. HRV je reálná věc. Velká část toho, co se z ní v appkách prodává jako jistota o tvém nervovém systému, už tak jistá není.</p>
+
+            <div class="cta-box" style="background:#161616;color:#fff;">
+                <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
+                <p style="color:#e8e8e8;">Než utratíš za další gadget, pošlu ti na e-mail hotový 7denní plán s makry a tipy na jídla. Vyber si svou verzi:</p>
+                <a class="btn gold" href="/forma-zpet/">Pro muže 35+</a>
+                <a class="btn" href="/makro-plan/" style="background:#fff;color:#161616;">Pro ženy 30+</a>
+            </div>
+
+            <h2>Co Elonga vlastně je</h2>
+            <p>Elonga je náramek (přesněji senzor na předloktí), který ráno vleže měří asi 3 minuty. Opticky snímá tep (PPG, tedy světlo skrz cévy, ne EKG elektrody). Z intervalů mezi tepy počítá HRV, tedy variabilitu srdeční frekvence, a appka ti z toho vyhodí skóre: připravenost, stres, regenerace, funkční věk, fitness a doporučení aktivit.</p>
+            <p>Firma navazuje na mySASY, českou sportovní diagnostiku okolo fyziologa Radima Šlachty, Ph.D. To je důležité říct hned na začátku: nejde o anonymní e-shop s náramekem z Asie. Jde o produkt s reálným výzkumným zázemím a s historií ve sportovní praxi. Otázka zní, jestli z toho automaticky plyne, že každé skóre v appce je „lab-grade věda".</p>
+
+            <h2>HRV jako takové: tohle drží</h2>
+            <p>Variabilita srdeční frekvence znamená, že intervaly mezi tepy se mírně liší. U zdravého člověka v klidu to tak má být. HRV souvisí s autonomním nervovým systémem (tím, co řídí tep, dýchání, trávení a spoustu věcí „na pozadí"). Ve sportovní vědě se HRV používá desítky let jako jeden z ukazatelů regenerace a zátěže.</p>
+            <p>Když máš špatný spánek, chytáš nemoc, přeháníš trénink, vypiješ víc alkoholu nebo jsi v delším stresu, HRV často klesne. Ranní trend za týdny umí být užitečný signál: „něco je jinak." To platí u Elongy, Oury, Whoopu, Garmínu i u levného hrudního pásu. Tady se s Elongou nehádám.</p>
+            <div class="pull">HRV umí říct „dnes jsi na tom spíš hůř než obvykle". Už hůř umí říct přesně proč a co s tím musíš udělat.</div>
+
+            <h2>Spektrální analýza: reálná metoda, ne magie Elongy</h2>
+            <p>Marketing Elongy stojí na frekvenční (spektrální) analýze HRV. Signál se rozloží do frekvenčních pásem a z nich se vyvozuje, co dělá nervový systém. To je standardní výzkumná metoda. Task Force Evropské kardiologické společnosti a severoamerické společnosti pro pacing a elektrofyziologii ji v roce 1996 popsala jako jednu z hlavních cest, jak HRV hodnotit (vedle time-domain metrik, které používá spousta hodinek).</p>
+            <p>Důležité nuance:</p>
+            <ul>
+                <li>Spektrální analýza není tajný patent, který by měli jen v Brně. Používá se v laboratořích po celém světě.</li>
+                <li>Time-domain metriky (třeba RMSSD) nejsou „laciná náhražka". U krátkých denních měření jsou často praktičtější a lépe prozkoumané pro každodenní použití.</li>
+                <li>„Lab-grade spektrální analýza v 3 minutách z optického náramku" je silné tvrzení. Standardní short-term spektrální záznam se ve výzkumu typicky dělá kolem 5 minut, ideálně z kvalitního EKG, ne z optiky na předloktí. Zkrácení přes machine learning na 3 minuty může být chytré. Veřejně dostupné peer-reviewed srovnání senzoru Elonga versus laboratorní EKG ale zatím nevidím jako hotovou věc.</li>
+            </ul>
+
+            <h2>Hlavní trhlina: „stres" a „regenerace" jako dvě čisté větve</h2>
+            <p>Tady je jádro mého skepticismus. Elonga (a spousta HRV marketingu obecně) ti prodává příběh: sympatikus = stres, parasympatikus = regenerace, a spektrální analýza ti je umí oddělit. V appce pak uvidíš, že „stres vyskočil o X %" a „regenerace klesla o Y %".</p>
+            <p>Realita z fyziologie je méně pohádková:</p>
+            <ul>
+                <li><strong>HF (high frequency)</strong> spíš odpovídá parasympatiku a je silně vázaná na dýchání.</li>
+                <li><strong>LF (low frequency)</strong> není čistý sympatikus. Je to směs: parasympatikus, baroreflex (regulace tlaku) a v některých situacích i sympatikus. V klidu vleže často spíš baroreflex než „stres z práce".</li>
+                <li><strong>LF/HF jako „balance stres vs. regenerace"</strong> je v literatuře silně zpochybněná. George Billman v roce 2013 v Frontiers in Physiology shrnul, že LF/HF jako přesné měřítko kardiální „sympatho-vagal balance" neobstojí. Na tomhle bodě se shoduje i řada pozdějších přehledů HRV metrik.</li>
+            </ul>
+            <p>Když ti appka řekne „dnes máš vysoký stres a nízkou regeneraci", často jen jinak zabalila, že se tvé HRV změnilo. To může být užitečný signál. Jen to nemusí znamenat, že ti přístroj přesně rozpitval dvě větve nervového systému jako na operačním sále.</p>
+            <div class="pull">PhD a 30 let výzkumu dokážou postavit solidní metodu. Nedokážou z LF pásma udělat čistý „stres metr", když to fyziologie tak čistě nedává.</div>
+
+            <h2>Funkční věk, readiness a další skóre</h2>
+            <p>Appka ti dává i funkční věk, připravenost, fitness skóre a doporučení tréninku. Tady je férová mapa:</p>
+            <table class="keytab">
+                <tr><th>Tvrzení / skóre</th><th>Co z toho drží</th><th>Kde je přestřel</th></tr>
+                <tr><td><strong>HRV se mění se zátěží a regenerací</strong></td><td>Ano, to je solidně podložené.</td><td>Jedno ranní číslo ti nenahradí celkový kontext (spánek, jídlo, nemoc, alkohol, stres).</td></tr>
+                <tr><td><strong>Spektrální analýza</strong></td><td>Reálná laboratorní metoda.</td><td>U spotřebitelského PPG a 3 minut bez silné validace senzoru nejde o automatický lab standard.</td></tr>
+                <tr><td><strong>Oddělený „stres" a „regenerace"</strong></td><td>HF má blíž k parasympatiku.</td><td>LF ≠ čistý stres. Interpretace „dvou větví" je zjednodušení až mýtus.</td></tr>
+                <tr><td><strong>Funkční věk</strong></td><td>Porovnání s věkovými normami HRV existuje ve výzkumu.</td><td>Jedno skóre „je ti 34" je marketingový kompozit, ne diagnóza stárnutí.</td></tr>
+                <tr><td><strong>Readiness / doporučení tréninku</strong></td><td>Může ti dát deník trendů.</td><td>Algoritmus je black box. Není to náhrada za plán, spánek a to, jak se reálně cítíš.</td></tr>
+                <tr><td><strong>„Zpomal a nemoc se zkrátí o polovinu"</strong></td><td>Odpočinek při nemoci dává smysl.</td><td>Silné zdravotní claimy potřebují tvrdá data. U spotřebitelského náramku buď opatrný.</td></tr>
+            </table>
+
+            <h2>PhD, WHO a „30 let výzkumu": argument z autority</h2>
+            <p>Šlachta je reálný fyziolog s PhD a s dlouhou prací okolo spektrální HRV na FTK UP Olomouc. mySASY má historii ve sportovní diagnostice. Na webu Elongy najdeš literaturu: vlastní práce z Olomouce, Task Force 1996, obecné studie o HRV v tréninku. To všechno je legitimní kontext.</p>
+            <p>Co z toho neplyne:</p>
+            <ul>
+                <li>Že každé skóre v appce Elonga prošlo peer-reviewed validací jako diagnostický nástroj.</li>
+                <li>Že „spolupráce s WHO" (v příběhu firmy spíš okolo podpory pohybové aktivity) znamená, že WHO Elongu certifikovala jako zdravotnický prostředek pro měření stresu.</li>
+                <li>Že studie, kde se mySASY/Elonga použily jako měřicí pomůcka, automaticky dokazují, že doporučení appky zlepší tvé zdraví, výkon nebo zkrátí nemoc.</li>
+            </ul>
+            <p>Věda funguje tak, že se měří konkrétní tvrzení, ne tituly. „Mám PhD" je začátek debaty, ne její konec. Stejně jako u <a href="dna-testy-na-hubnuti.html">DNA testů na hubnutí</a> nebo u <a href="spalovace-tuku-co-funguje-a-co-je-mytus.html">spalovačů tuku</a>: marketing umí obléct slabší důkaz do bílého pláště.</p>
+
+            <h2>PPG, 3 minuty a co z toho plyne pro tebe</h2>
+            <p>Laboratorní gold standard pro HRV je EKG (přesné RR intervaly). Elonga měří opticky. Optika umí být u klidového měření slušná, ale frekvenční složky (hlavně ty citlivější) jsou náchylnější na šum, prokrvení, pohyb a polohu senzoru. Když firma říká „world’s most accurate" a „lab-grade", chci vidět nezávislé srovnání s EKG na lidech, ne jen odkaz na 30 let práce v laboratoři s jiným hardwarovým setupem.</p>
+            <p>Ranní 3 minuty vleže mají jednu výhodu: standardizace. Měříš ve stejném stavu, bez kávy a bez tréninku. To je chytřejší než náhodné HRV uprostřed dne z hodinek, které zrovna běžíš s nákupem. Stejný princip používají i jiné produkty (třeba noční HRV u Oury). Samotná standardizace ale neznamená, že interpretace skóre je přesná.</p>
+
+            <h2>Kdy z toho můžeš něco vytěžit (a kdy ne)</h2>
+            <p>Férově: náramek na HRV není automaticky odpad. Můžeš ho brát jako deník trendů.</p>
+            <p><strong>Dává smysl, když:</strong></p>
+            <ul>
+                <li>Chceš vidět, jestli ti po špatném spánku, alkoholu nebo těžkém bloku tréninků klesá ranní HRV.</li>
+                <li>Umíš číslo brát jako jeden signál vedle toho, jak se cítíš, jak spíš a jak trénuješ.</li>
+                <li>Tě baví data a necháš se jimi spíš usměrnit (lehčí den), než paralyzovat.</li>
+            </ul>
+            <p><strong>Nedává smysl, když:</strong></p>
+            <ul>
+                <li>Čekáš, že ti appka řekne „pravdu o nervovém systému" s přesností lékařské diagnostiky.</li>
+                <li>Podle readiness skóre rušíš tréninky, i když se cítíš dobře a plán dává smysl.</li>
+                <li>Místo spánku, deficitu, bílkovin a silového tréninku hledáš gadget, který „opraví regeneraci".</li>
+                <li>Platíš předplatné hlavně kvůli funkčnímu věku a marketingovým skórům.</li>
+            </ul>
+            <p>U mých klientů vidím pořád to samé: největší páky na formu a na to, jak se cítíš, jsou <a href="kaloricky-deficit.html">kalorický deficit</a> (když hubneš), dost <a href="bilkoviny.html">bílkovin</a>, silový trénink, kroky a <a href="spanek-a-hubnuti.html">spánek</a>. HRV ti může napovědět, že spánek a regenerace stojí za řešení. Náramek ti ale nespočítá kalorie, nepostaví plán a neuhlídá, jestli jsi včera nepodcenil příjem o 20–30 %.</p>
+
+            <h2>Praktické rozhodnutí</h2>
+            <p>Když už Elongu (nebo jakýkoliv HRV náramek) máš, používej ji takhle:</p>
+            <ol>
+                <li>Sleduj <strong>trend za 7–14 dní</strong>, ne jedno ranní skóre.</li>
+                <li>Když skóre spadne, nejdřív hledej banální příčiny: spánek, alkohol, nemoc, těžký trénink, cestování, hormonální cyklus, stres v práci.</li>
+                <li>Rozhodnutí o tréninku nech na plánu + subjektivním pocitu + dlouhodobém trendu. Appka je rádce, ne trenér.</li>
+                <li>Ignoruj absolutní „funkční věk" jako pravdu o tom, jak stárneš. Ber ho maximálně jako hrubý kompas v čase u tebe samotného.</li>
+                <li>Když máš zdravotní potíže (bušení srdce, mdloby, dlouhodobá únava, duševní potíže), jdi k lékaři. Náramek není ordinace.</li>
+            </ol>
+            <p>A když Elongu ještě nemáš a řešíš formu: nejdřív nastav základy. Pak teprve řeš, jestli ti nějaké číslo na zápěstí pomůže udržet disciplínu. U spousty lidí stačí spánek, kroky a váha 1× týdně. Be Effective.</p>
+
+            <div class="cta-box" style="background:#161616;color:#fff;">
+                <h3 style="color:#fff;">Chceš systém, ne další gadget?</h3>
+                <p style="color:#e8e8e8;">Celý systém (kalorie, jídelníček, trénink i návyky) učím ve videokurzu. A jestli jsi trenér nebo výživový poradce, stejné know-how do hloubky (i jak ho předat klientům) najdeš v <strong>Barna Academy</strong>.</p>
+                <a class="btn" style="background:#fff;color:#161616;" href="../videokurz">Chci to pro sebe → Videokurz za 800 Kč</a>
+                <a class="btn gold" href="/akademie/">Jsem trenér → Barna Academy</a>
+                <p style="color:#b9b9b9;font-size:.9rem;margin:.8rem 0 0;">Chceš, ať ti to nastavím já? <a href="../index.html#balicky" style="color:#F6CD63;">Koučink na míru</a> · <a href="../index.html#plan-zdarma" style="color:#F6CD63;">7denní plán zdarma</a></p>
+            </div>
+
+            <h2>Zdroje (ať si to každý ověří)</h2>
+            <ul class="src-list">
+                <li>Task Force of the ESC and NASPE (1996). Heart rate variability: standards of measurement, physiological interpretation and clinical use. Circulation. DOI: 10.1161/01.CIR.93.5.1043</li>
+                <li>Billman G.E. (2013). The LF/HF ratio does not accurately measure cardiac sympatho-vagal balance. Frontiers in Physiology. DOI: 10.3389/fphys.2013.00026</li>
+                <li>Shaffer F., Ginsberg J.P. (2017). An overview of heart rate variability metrics and norms. Frontiers in Public Health. DOI: 10.3389/fpubh.2017.00258</li>
+                <li>Reyes del Paso G.A. et al. (2013). The utility of low frequency heart rate variability as an index of sympathetic cardiac tone. Psychophysiology. DOI: 10.1111/psyp.12027</li>
+                <li>Elonga (oficiální science a literature stránky): elonga.com – pro srovnání s tím, co firma sama deklaruje</li>
+            </ul>
+            <p>Pozn.: Vycházím z veřejných firemních materiálů, standardních HRV guideline a peer-reviewed kritiky frekvenčních metrik. Nemám interní validační data Elongy, která nejsou publikovaná. Když je firma zveřejní proti EKG na lidech, rád tenhle článek doplním.</p>
+
+            <h2>Mohlo by tě zajímat</h2>
+            <ul>
+                <li><a href="dna-testy-na-hubnuti.html">DNA testy a appky na hubnutí: vyplatí se?</a></li>
+                <li><a href="spalovace-tuku-co-funguje-a-co-je-mytus.html">Spalovače tuků: co funguje a co jsou vyhozené peníze</a></li>
+                <li><a href="spanek-a-hubnuti.html">Spánek a hubnutí: proč ti 5 hodin kazí deficit</a></li>
+                <li><a href="malo-spanku-a-hubnuti.html">Málo spánku a hubnutí</a></li>
+                <li><a href="kaloricky-deficit.html">Kalorický deficit: jak ho nastavit bez extrémů</a></li>
+                <li><a href="e-book-nejcastejsi-dotazy-klientu-stres-sympatikus-a-parasympatikus.html">Stres, sympatikus a parasympatikus (z e-booku)</a></li>
+            </ul>
+
+            <div class="author-box">
+                <img src="../assets/foto/martin/portret.webp" alt="Martin Barna — online výživový a fitness kouč" loading="lazy" width="84" height="84" decoding="async">
+                <div>
+                    <h4>Martin Barna</h4>
+                    <p>Online výživový a fitness kouč. Od roku 2013 pomohl přes 600 lidem zhubnout a získat formu natrvalo. Vědecky, bez drastických diet a jojo efektu.</p>
+                    <a class="btn gold" href="../index.html#balicky">Chci koučink na míru</a>
+                </div>
+            </div>
+            <p class="disclaimer">Článek má informativní charakter a není lékařským doporučením ani diagnostikou. Wearables nenahrazují vyšetření u lékaře. Při zdravotních potížích se poraď s lékařem. U duševní krize volej Linku první psychické pomoci 116 123.</p>
+        </article>
+    </div>
+
+    <footer>
+        <img src="/assets/brand/logo-full-gold.png" alt="Martin Barna — Online výživa a fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async">
+        <p>&copy; 2026 Martin Barna — Online výživa a fitness · <a href="../index.html">Hlavní web</a> · <a href="/obchodni-podminky/">Obchodní podmínky</a> · <a href="/zasady-ochrany-osobnich-udaju/">Soukromí</a> · <a href="#" data-cookie-settings>Nastavení cookies</a><br><span style="opacity:.7;font-size:.92em">Martin Barna · IČO 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice · neplátce DPH</span></p>
+    </footer>
+    <a class="fab-wa" href="https://wa.me/420603229831" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.748-.747zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+    </a>
+    <script src="/assets/scroll-top.js?v=g3" defer></script>
+    <script src="/assets/ai-martin.js?v=g5" defer></script>
+    <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css">
+    <link rel="stylesheet" href="/assets/arena.css?v=a6">
+</body>
+</html>
