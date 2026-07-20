@@ -270,6 +270,13 @@ Deno.serve(async (req: Request) => {
   // chyby se otevira sam, takze uz jedna mrtva adresa branu neshodi. Strop pokusu ale
   // dava smysl dal: bez nej ten lead vyrabi chyby donekonecna.
   const MAX_TRIES = Math.max(1, Number(fMap.drip_max_tries ?? '') || 5);
+  // CLENSKE TRACKY = cili na ZAKAZNIKY, ne na leady. Seznam drzi 1:1 s komentarem nad
+  // shouldStop nize ("Clenske tracky (onboarding, milestone, reactivation, rescue) cili
+  // na zakazniky -> nikdy nestopovat"). Plati pro ne stejna ochrana i u stropu pokusu:
+  // nikoho z nich neodstavujeme, protoze to jsou lide, kteri zaplatili nebo prave plati.
+  // rescue-* je zachrana nedokoncene objednavky, tam je tiche vzdani se nejhorsi ze vsech.
+  // ⚠️ Kdyz sem pribude dalsi clensky track, PATRI I SEM, ne jen do komentare u shouldStop.
+  const CLENSKE_PREFIXY = ['onboarding', 'milestone', 'reactivation', 'rescue'];
   let lastSendAt = 0;
   const pace = async () => {
     const wait = lastSendAt + SEND_GAP_MS - Date.now();
@@ -441,15 +448,16 @@ Deno.serve(async (req: Request) => {
       const { count: failCount } = await admin.from('email_events')
         .select('id', { count: 'exact', head: true })
         .eq('lead_id', l.id).eq('step', l.step).eq('type', 'error').eq('detail->>track', l.track);
-      // ⚠️ ONBOARDING SE NEVZDAVA NIKDY. U follow-upu je odstaveni spravne, ale onboarding
-      // dostava clovek, ktery PRAVE ZAPLATIL. Tise ho odstavit znamena, ze nikdy nedostane
-      // pristup, za ktery zaplatil, a nikdo se to nedozvi. Radeji zkousime dal po 6 h
-      // donekonecna: jistic onboarding tracky ignoruje (filtr not ilike 'onboarding%'),
+      // ⚠️ CLENSKE TRACKY SE NEVZDAVAJI NIKDY (viz CLENSKE_PREFIXY vyse). U follow-upu je
+      // odstaveni spravne, ale tyhle maily dostava clovek, ktery PRAVE ZAPLATIL nebo se
+      // o to prave pokousi. Tise ho odstavit znamena, ze nikdy nedostane pristup, za ktery
+      // zaplatil, a nikdo se to nedozvi. Radeji zkousime dal po 6 h donekonecna.
+      // Bezpecne to je proto, ze jistic onboarding ignoruje (filtr not ilike 'onboarding%'),
       // takze tyhle opakovane chyby nikomu jinemu branu neshodi.
-      // Aby to nebylo tiche, po MAX_TRIES se jednou zaloguje 'gave_up_warn' a denni digest
+      // Aby to nebylo tiche, po MAX_TRIES se JEDNOU zaloguje 'gave_up_warn' a denni digest
       // z toho udela alert. Retry ale bezi dal.
-      const jeOnboarding = String(l.track || '').startsWith('onboarding');
-      if (jeOnboarding && (failCount ?? 0) >= MAX_TRIES) {
+      const jeClensky = CLENSKE_PREFIXY.some((p) => String(l.track || '').startsWith(p));
+      if (jeClensky && (failCount ?? 0) >= MAX_TRIES) {
         if ((failCount ?? 0) === MAX_TRIES) {
           await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up_warn', detail: { track: l.track, tries: failCount ?? 0 } });
         }

@@ -64,9 +64,10 @@ Deno.serve(async (req) => {
     else if (e.type === "error") { errs++; lastErr = String((e.detail as Record<string, unknown>)?.error ?? "").slice(0, 120); }
     else if (e.type === "gave_up" || e.type === "gave_up_warn") {
       const tr = String((e.detail as Record<string, unknown>)?.track ?? "?");
-      // 'gave_up' = follow-up, uz se neposila. 'gave_up_warn' = onboarding, zkousi se DAL,
+      // 'gave_up' = follow-up, uz se neposila. 'gave_up_warn' = clensky track, zkousi se DAL,
       // ale opakovane to selhava a nekdo za to zaplatil. Druhe je vaznejsi.
-      if (tr.startsWith("onboarding")) gaveUpOnboarding++;
+      // Seznam prefixu drz 1:1 s CLENSKE_PREFIXY v drip-send.
+      if (["onboarding", "milestone", "reactivation", "rescue"].some((p) => tr.startsWith(p))) gaveUpOnboarding++;
       else { gaveUp++; gaveUpTracks.add(tr); }
     }
   }
