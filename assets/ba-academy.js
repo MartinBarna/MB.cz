@@ -332,10 +332,51 @@
       }).catch(function () { return { streak: 0, loyalty_pct: 0, weeks_total: 0 }; });
     },
     // Admin (Martin): všechny check-iny přes RLS admin-policy. Ostatním vrátí prázdno.
+    // ISO tyden pro LIBOVOLNE datum, stejny format jako _isoWeek() vyse ("2026-W30").
+    _isoWeekOf: function (iso) {
+      var dt = new Date(iso + "T12:00:00Z");
+      if (isNaN(dt.getTime())) return "";
+      var d = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate()));
+      var dayNum = (d.getUTCDay() + 6) % 7;
+      d.setUTCDate(d.getUTCDate() - dayNum + 3);
+      var firstThu = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+      var w = 1 + Math.round(((d - firstThu) / 864e5 - 3 + ((firstThu.getUTCDay() + 6) % 7)) / 7);
+      return d.getUTCFullYear() + "-W" + (w < 10 ? "0" + w : "" + w);
+    },
+    // POZOR: reporty klientu leti do "client_reports", NE do "checkins". Tabulka "checkins"
+    // je pozustatek formulare, ktery se nakonec nepouziva, a je trvale prazdna. Prehled pro
+    // kouce proto do 20. 7. 2026 ukazoval nuly, i kdyz klienti reporty poctive posilali.
+    // Tvary obou tabulek se lisi, takze tady prevadime na to, co prehled ocekava.
     getAllCheckins: function () {
       if (!LIVE) return Promise.resolve([]);
-      return client.from("checkins").select("*").order("created_at", { ascending: false })
-        .then(function (r) { return r.data || []; }).catch(function () { return []; });
+      var self = this;
+      return client.from("client_reports").select("*").order("report_date", { ascending: false })
+        .then(function (r) {
+          function num(v) {
+            if (v === null || v === undefined || v === "") return null;
+            var n = Number(String(v).replace(",", "."));
+            return isFinite(n) ? n : null;
+          }
+          return (r.data || []).map(function (row) {
+            var s = row.scales || {}, ac = row.activity || {}, nt = row.notes || {};
+            var adh = num(s.dodrzeni); // skala 1 az 5 -> procenta, at sedi prah "adherence < 60 %"
+            return {
+              email: row.email,
+              user_id: row.email,            // client_reports nema user_id, seskupuje se podle e-mailu
+              created_at: row.created_at,
+              iso_week: self._isoWeekOf(row.report_date),
+              weight_kg: num(row.weight),
+              plan_adherence_pct: adh == null ? null : Math.round(adh * 20),
+              energy: num(s.sila),           // "sila" je nejblizsi tomu, co prehled zove energii
+              sleep: num(s.spanek_kvalita),
+              cravings: num(s.hlad),
+              workouts_done: num(ac.fitko),
+              workouts_planned: null,        // formular planovany pocet treninku nesbira
+              win_text: nt.povedlo || "",
+              struggle_text: nt.drhlo || ""
+            };
+          });
+        }).catch(function () { return []; });
     }
   };
 
