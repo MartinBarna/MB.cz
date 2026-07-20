@@ -242,7 +242,7 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
@@ -256,6 +256,31 @@ Deno.serve(async (req: Request) => {
   // update bez redeploye); fallback 500. POZN: app_config drzi 2000 = fakticky vypnuto,
   // snizeni na 500 je v security-fixes-2026-07.sql (ceka na schvaleni Martinem).
   const DAILY_CAP = Math.max(1, Number(fMap.drip_daily_cap ?? '') || 500);
+  // PACING: Resend dokumentuje rate limit ~2 req/s. Smycka nize posilala bez rozestupu.
+  // 600 ms = ~1.7 req/s (rezerva pod limitem). Zmena = 1 SQL update app_config, bez redeploye.
+  // ⚠️ POZOR NA PRICINU, at se nesiri dal: incident 30. 6. 2026 (307 chyb) NEBYL rate limit,
+  // ale 'daily_quota_exceeded' na tehdejsim free tarifu. Prvnich 99 mailu proslo tempem
+  // 4-5/s BEZ chyby. Rate-limit chyba se za celou historii email_events nevyskytla ani
+  // jednou a engine jede 4-5/s od 1. 7. Tohle je tedy levna POJISTKA, ne oprava vady.
+  // Resend je dnes Pro: denni limit zadny, mesicni 50 000 (spotreba ~4 100 k 20. 7.).
+  const SEND_GAP_MS = Math.max(0, Number(fMap.drip_send_gap_ms ?? '') || 600);
+  // POKUSY: kolikrat smi jeden krok jednoho leada selhat, nez ho odstavime. Bez stropu
+  // se lead s trvale nedorucitelnou adresou toci po 6 h donekonecna a kazdy beh z nej
+  // vyrabi error. Jistic ma od 20. 7. 2026 prah 10 chyb za den (driv 3) a po 3 h bez
+  // chyby se otevira sam, takze uz jedna mrtva adresa branu neshodi. Strop pokusu ale
+  // dava smysl dal: bez nej ten lead vyrabi chyby donekonecna.
+  const MAX_TRIES = Math.max(1, Number(fMap.drip_max_tries ?? '') || 5);
+  let lastSendAt = 0;
+  const pace = async () => {
+    const wait = lastSendAt + SEND_GAP_MS - Date.now();
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    lastSendAt = Date.now();
+  };
+  // CASOVY STROP BEHU: s pacingem trva 200 mailu pres 2 minuty a beh by mohl spadnout
+  // na timeout edge funkce UPROSTRED odesilani. Radeji skoncime drive a zbytek dobere
+  // dalsi hodinovy beh (leady zustavaji splatne, nic se neztrati).
+  const RUN_DEADLINE_MS = Math.max(10000, Number(fMap.drip_run_deadline_ms ?? '') || 100000);
+  const runStart = Date.now();
 
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
@@ -368,10 +393,11 @@ Deno.serve(async (req: Request) => {
   const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
 
   // LIVE
-  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, capped = false;
+  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, capped = false, timeUp = false;
   const byStep: Record<string, number> = {};
   for (const l of leads) {
     if (sent >= remaining) { capped = true; break; }
+    if (Date.now() - runStart > RUN_DEADLINE_MS) { timeUp = true; break; }
     const seg = normSeg(l.segment);
     const tpl = await getTpl(l.track, l.step);
     if (!tpl) { await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue; }
@@ -397,6 +423,7 @@ Deno.serve(async (req: Request) => {
     try {
       const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email));
       const m = renderEmail(tpl, seg, v, footer);
+      await pace();   // rozestup mezi volanimi Resendu, viz SEND_GAP_MS vyse
       const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);
       const { error: logErr } = await admin.from('email_events')
         .insert({ lead_id: l.id, step: l.step, type: 'sent', provider_id: id, detail: { track: l.track, key: tpl.key } });
@@ -406,9 +433,23 @@ Deno.serve(async (req: Request) => {
     } catch (e) {
       errors++;
       await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'error', detail: { track: l.track, error: String(e).slice(0, 400) } });
-      const retry = new Date(Date.now() + 6 * 3600000).toISOString();
-      await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
+      // STROP POKUSU: kolikrat uz tenhle lead na tomhle kroku a tracku selhal (vc. teto chyby).
+      // Po MAX_TRIES ho odstavime na status='paused' + next_send_at=null. 'paused' je v CHECK
+      // constraintu leads_status_check povoleny a enroll_* funkce ho spravne neseberou
+      // (hledaji status='active'). Bez tohohle se lead s mrtvou adresou toci navzdy
+      // a trvale vyrabi errory, ktere shodi jistic vsem ostatnim.
+      const { count: failCount } = await admin.from('email_events')
+        .select('id', { count: 'exact', head: true })
+        .eq('lead_id', l.id).eq('step', l.step).eq('type', 'error').eq('detail->>track', l.track);
+      if ((failCount ?? 0) >= MAX_TRIES) {
+        await admin.from('leads').update({ status: 'paused', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
+        await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up', detail: { track: l.track, tries: failCount ?? 0 } });
+        gaveUp++;
+      } else {
+        const retry = new Date(Date.now() + 6 * 3600000).toISOString();
+        await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
+      }
     }
   }
-  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, by_step: byStep });
+  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, gave_up: gaveUp, by_step: byStep });
 });
