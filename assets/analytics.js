@@ -221,3 +221,24 @@
     openQR(a.getAttribute('href') || ('https://wa.me/' + PHONE));
   }, false);
 })();
+
+/* ===== Kotvy zvenku (celý web) ==============================================
+   CSS scroll-behavior:smooth (inline na stránkách i v ba-ui.css) v Chromiu
+   přeruší skok na #kotvu při načítání stránky (posuny layoutu z lazy obrázků),
+   takže příchod z článku nebo mailu skončí nahoře místo u cílové sekce.
+   Po load proto doskočíme najisto s dočasně vypnutým smooth. Homepage má
+   vlastní řešení; případný druhý skok na tentýž cíl je neškodný. */
+(function () {
+  if (!location.hash) return;
+  addEventListener('load', function () {
+    var id = location.hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (e) {}
+    var el = document.getElementById(id);
+    if (!el && document.getElementsByName) el = document.getElementsByName(id)[0];
+    if (!el) return;
+    var de = document.documentElement, prev = de.style.scrollBehavior;
+    de.style.scrollBehavior = 'auto';
+    el.scrollIntoView();
+    de.style.scrollBehavior = prev;
+  });
+})();
