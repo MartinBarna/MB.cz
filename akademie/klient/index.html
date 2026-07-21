@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Klientská sekce — Martin Barna</title>
+<title>Klientská sekce · Martin Barna</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="/favicon-g3.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-g3.png">
@@ -113,7 +113,7 @@
       Tvůj e-mail (<b id="noentMail"></b>) zatím nemá přístup do klientské sekce, ta je součástí
       <a href="/koucing/" style="color:#F6CD63;">osobního koučinku</a>.<br><br>
       Jsi Martinův klient a nevidíš sekci? Napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>
-      — přístup ti zapne (musí sedět e-mail, kterým se registruješ).
+     : přístup ti zapne (musí sedět e-mail, kterým se registruješ).
     </div>
 
     <div id="app" style="display:none;">
@@ -195,19 +195,19 @@
           <p>182 videí o hubnutí, jídle a tréninku, máš kompletně odemčený. Skvělý doplněk ke koučinku.</p>
         </a>
         <a class="kcard" id="tileAppka" href="https://coach.martinbarna.cz" target="_blank" rel="noopener" style="text-decoration:none;display:block;">
-          <h3>📱 Appka Tvůj Coach — máš v ceně</h3>
+          <h3>📱 Appka Tvůj Coach: máš v ceně</h3>
           <p>Vyfotíš jídlo a appka spočítá makra, hlídá kalorie a bílkoviny. Ideální na zapisování stravy pro report. Registruj se stejným e-mailem jako tady.</p>
         </a>
         <a class="kcard" href="/akademie/" style="text-decoration:none;display:block;border-color:rgba(235,177,44,.5);">
           <h3>🎓 Barna Academy −20 %</h3>
-          <p>Chceš jít do hloubky (nebo se stát trenérem)? Jako můj klient máš slevu 20 % s kódem <b style="color:#F6CD63;">KLIENT20</b>. <span style="color:#F6CD63;">Nahlédnout zdarma můžeš hned</span> — mrkni na ukázkové lekce.</p>
+          <p>Chceš jít do hloubky (nebo se stát trenérem)? Jako můj klient máš slevu 20 % s kódem <b style="color:#F6CD63;">KLIENT20</b>. <span style="color:#F6CD63;">Nahlédnout zdarma můžeš hned</span>: mrkni na ukázkové lekce.</p>
         </a>
         <a class="kcard" href="/akademie/studium/?preview=free" style="text-decoration:none;display:block;">
-          <h3>👀 Academy — ochutnávka zdarma</h3>
+          <h3>👀 Academy: ochutnávka zdarma</h3>
           <p>Prohlédni si obsah všech 24 modulů a pusť si volné ukázkové lekce, ať víš, do čeho bys šel/šla.</p>
         </a>
         <div class="kcard">
-          <h3>🤖 AI Martin — máš v ceně</h3>
+          <h3>🤖 AI Martin: máš v ceně</h3>
           <p>Zlaté tlačítko vpravo dole 👉 rychlé dotazy mezi check-iny (jídlo, trénink, motivace) zodpoví AI vytrénovaná na Martinově metodice. Velké věci řeš dál v reportu, čte ho Martin osobně.</p>
         </div>
         <a class="kcard" href="/akademie/moje/doporuc/" style="text-decoration:none;display:block;">
@@ -216,7 +216,7 @@
         </a>
       </div>
 
-      <p class="foot">Klientská sekce — Martin Barna · osobní koučink · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
+      <p class="foot">Klientská sekce · Martin Barna · osobní koučink · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
     </div>
   </div>
 
@@ -778,14 +778,14 @@
   // ---------- REPORT WIZARD ----------
   function reportSteps(){
     return [
-      { id: "vaha", title: "Jaká je tvoje váha?", help: "Zvaž se <b>ráno nalačno, po záchodě</b> — jedno vážení stačí. A počítej s tím, že váha běžně kolísá o <b>1–3 kg</b> (voda, glykogen, plné břicho, u žen cyklus) bez ohledu na to, jestli hubneš — proto sledujeme i míry, ty řeknou pravdu.<br><br><span style='color:#8F8A99;font-size:.86rem;'>Pro fitness nadšence: kdo se váží denně, může zadat <b>průměr 7 ranních vážení</b> — je přesnější. Není to ale povinnost, denní vážení není pro každého.</span>",
+      { id: "vaha", title: "Jaká je tvoje váha?", help: "Zvaž se <b>ráno nalačno, po záchodě</b>: jedno vážení stačí. A počítej s tím, že váha běžně kolísá o <b>1–3 kg</b> (voda, glykogen, plné břicho, u žen cyklus) bez ohledu na to, jestli hubneš — proto sledujeme i míry, ty řeknou pravdu.<br><br><span style='color:#8F8A99;font-size:.86rem;'>Pro fitness nadšence: kdo se váží denně, může zadat <b>průměr 7 ranních vážení</b>: je přesnější. Není to ale povinnost, denní vážení není pro každého.</span>",
         render: function(a){ return fNum("f_w", "Váha", "kg", "např. 71,3", a.weight); },
         collect: function(a){ var r = reqNum("f_w", "váhu", 30, 300); if(r.err) return r.err; a.weight = r.v; } },
       { id: "miryq", title: "Měřil/a ses tento týden?", help: "Míry řeknou to, co váha neumí — hlavně pupík, pas a boky.",
         render: function(a){ return fChips("f_mq", "Míry tento týden", ["Ano, mám míry", "Tento týden přeskočím"], a._miry === false ? "Tento týden přeskočím" : (a._miry === true ? "Ano, mám míry" : null)); },
         mount: function(){ mountPick("f_mq"); },
         collect: function(a){ var v = pickVal("f_mq"); if(!v) return "Vyber prosím jednu možnost."; a._miry = (v.indexOf("Ano") === 0); if(!a._miry) a.measurements = {}; } },
-      { id: "miry", title: "Tvoje míry (cm)", help: "Každý týden sledujeme <b>hruď, pas, boky, zadek a stehna</b> — zaberou celé tělo a dají Martinovi kontext, který samotná váha neumí. Co nestihneš, nech prázdné.", when: function(a){ return a._miry === true; },
+      { id: "miry", title: "Tvoje míry (cm)", help: "Každý týden sledujeme <b>hruď, pas, boky, zadek a stehna</b>: zaberou celé tělo a dají Martinovi kontext, který samotná váha neumí. Co nestihneš, nech prázdné.", when: function(a){ return a._miry === true; },
         render: function(a){
           var m = a.measurements || {};
           var main = MIRY.slice(0, MIRY_MAIN).map(function(x){ return fNum("f_m_" + x[0], x[1], "cm", "", m[x[0]]); }).join("");
@@ -954,7 +954,7 @@
             + fText("f_dalsi", "💬 Cokoliv dalšího", "prostor jen pro tebe — klidně napiš román", t.dalsi, true, true);
         },
         collect: function(a){ a.notes = { povedlo: gv("f_povedlo"), drhlo: gv("f_drhlo"), otazky: gv("f_otazky"), dalsi: gv("f_dalsi") }; } },
-      { id: "fotky", title: "Fotky a přílohy (nepovinné)", help: "Jednou za čas řekne fotka víc než váha — pomůže tobě i Martinovi vidět proměnu. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně. Sem patří i <b>export nebo screenshot jídelníčku z Kalorických tabulek</b> — Martin pak vidí detail toho, co jsi reálně jedl/a.",
+      { id: "fotky", title: "Fotky a přílohy (nepovinné)", help: "Jednou za čas řekne fotka víc než váha — pomůže tobě i Martinovi vidět proměnu. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně. Sem patří i <b>export nebo screenshot jídelníčku z Kalorických tabulek</b>: Martin pak vidí detail toho, co jsi reálně jedl/a.",
         render: fotoRender, mount: fotoMount,
         collect: function(a){ a._fotoCount = WFILES.length; } },
       { id: "souhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání přijde hezky zpracovaný report mailem tobě i Martinovi.",
@@ -999,7 +999,7 @@
       { id: "historie", title: "Co už máš za sebou", help: "Diety, výkyvy váhy, sporty — ať Martin neopakuje, co u tebe nefungovalo.",
         render: function(a){ return fText("i_diety", "Diety a hubnutí v minulosti", "co jsi zkoušel/a a jak to dopadlo", a.diety, true, true) + fText("i_sport", "Sport dřív a teď", "co jsi dělal/a a co děláš teď", a.sport, true, true); },
         collect: function(a){ a.diety = gv("i_diety"); a.sport = gv("i_sport"); } },
-      { id: "zdravi", title: "Zdraví", help: "⚠️ Jen pro Martina, ať plán ničemu neublíží. <b>Nenahrazuje lékaře</b> — zdravotní potíže vždy řeš primárně s ním.",
+      { id: "zdravi", title: "Zdraví", help: "⚠️ Jen pro Martina, ať plán ničemu neublíží. <b>Nenahrazuje lékaře</b>: zdravotní potíže vždy řeš primárně s ním.",
         render: function(a){ return fText("i_zdravi", "Zdravotní omezení / diagnózy", "klouby, záda, štítná žláza, tlak…", a.zdravi, true, true) + fText("i_leky", "Léky a doplňky, které bereš", "", a.leky, true, true) + fText("i_alergie", "Alergie a intolerance", "laktóza, lepek, ořechy…", a.alergie, true, true); },
         collect: function(a){ a.zdravi = gv("i_zdravi"); a.leky = gv("i_leky"); a.alergie = gv("i_alergie"); } },
       { id: "jidlo", title: "Jídlo", help: "Plán musí sedět tobě — ne ty plánu.",
