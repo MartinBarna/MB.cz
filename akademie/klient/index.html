@@ -329,7 +329,7 @@
     var w = 460, h = 190, pl = 44, pr = 10, pt = 14, pb = 26;
     var all = [];
     seriesList.forEach(function(s){ s.pts.forEach(function(p){ if(p.y!=null) all.push(p.y); }); });
-    if(!all.length){ el(elId).innerHTML = '<p style="color:'+MUT+';font-size:.85rem;padding:8px 4px;">Zatím málo dat — doplní se z reportů.</p>'; return; }
+    if(!all.length){ el(elId).innerHTML = '<p style="color:'+MUT+';font-size:.85rem;padding:8px 4px;">Zatím málo dat, doplní se z reportů.</p>'; return; }
     var yMin = Math.min.apply(null, all), yMax = Math.max.apply(null, all);
     var pad = Math.max((yMax - yMin) * 0.15, (opts && opts.minPad) || 0.5);
     yMin -= pad; yMax += pad;
@@ -376,7 +376,7 @@
   function barChart(elId, pts){
     var w = 460, h = 190, pl = 48, pr = 10, pt = 14, pb = 26;
     var vals = pts.map(function(p){ return p.y; }).filter(function(v){ return v != null; });
-    if(!vals.length){ el(elId).innerHTML = '<p style="color:'+MUT+';font-size:.85rem;padding:8px 4px;">Zatím málo dat — doplní se z reportů.</p>'; return; }
+    if(!vals.length){ el(elId).innerHTML = '<p style="color:'+MUT+';font-size:.85rem;padding:8px 4px;">Zatím málo dat, doplní se z reportů.</p>'; return; }
     var yMax = Math.max.apply(null, vals) * 1.15;
     var n = pts.length, bw = Math.min(28, (w - pl - pr) / n * 0.6);
     var out = svgOpen(w, h);
@@ -459,7 +459,7 @@
       if(dnyArr.length){
         var dt = "<table class='hist' style='font-size:.82rem;'><tr><th>Den</th><th class='r'>kcal</th><th class='r'>B</th><th class='r'>S</th><th class='r'>T</th><th class='r'>Vl</th></tr>"
           + (nu.dny || []).map(function(d){ if(!d) return ""; return "<tr><td>" + escH(d.den || "") + "</td><td class='r'>" + czk(toNum(d.kcal)) + "</td><td class='r'>" + czk(toNum(d.p)) + "</td><td class='r'>" + czk(toNum(d.c)) + "</td><td class='r'>" + czk(toNum(d.f)) + "</td><td class='r'>" + czk(toNum(d.fib)) + "</td></tr>"; }).join("") + "</table>";
-        out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="9" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis — tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
+        out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="9" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis, tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
       }
       return out;
     }).join("");
@@ -632,8 +632,8 @@
       for(var i = 0; i < inp.files.length; i++){
         var f = inp.files[i];
         if(WFILES.length >= 6){ toast("Maximálně 6 příloh na jeden report."); break; }
-        if(f.size > 8 * 1024 * 1024){ toast(escH(f.name) + " má přes 8 MB — pošli běžnou kvalitu z mobilu."); continue; }
-        if(!fotoOk(f)){ toast(escH(f.name) + " — přikládej fotky, PDF nebo XLS."); continue; }
+        if(f.size > 8 * 1024 * 1024){ toast(escH(f.name) + " má přes 8 MB, pošli běžnou kvalitu z mobilu."); continue; }
+        if(!fotoOk(f)){ toast(escH(f.name) + ", přikládej fotky, PDF nebo XLS."); continue; }
         WFILES.push(f);
       }
       inp.value = ""; wShow();
@@ -671,7 +671,7 @@
       s.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"; s.async = true;
       s.integrity = "sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw"; s.crossOrigin = "anonymous";
       s.onload = function(){ res(); };
-      s.onerror = function(){ rej(new Error("Čtečku XLS se nepodařilo načíst — zkontroluj připojení.")); };
+      s.onerror = function(){ rej(new Error("Čtečku XLS se nepodařilo načíst, zkontroluj připojení.")); };
       document.head.appendChild(s);
     });
   }
@@ -759,12 +759,12 @@
   function reqNum(id, label, min, max){
     var v = toNum(gv(id));
     if(v == null) return { err: "Vyplň prosím " + label + "." };
-    if(v < min || v > max) return { err: label + " vypadá mimo rozsah (" + min + "–" + max + ") — zkontroluj překlep." };
+    if(v < min || v > max) return { err: label + " vypadá mimo rozsah (" + min + "–" + max + "), zkontroluj překlep." };
     return { v: v };
   }
   function optNum(id, min, max){
     var raw = gv(id); if(raw === "") return { v: null };
-    var v = toNum(raw); if(v == null || v < min || v > max) return { err: "Hodnota „" + raw + "“ vypadá jako překlep — zkontroluj ji." };
+    var v = toNum(raw); if(v == null || v < min || v > max) return { err: "Hodnota „" + raw + "“ vypadá jako překlep, zkontroluj ji." };
     return { v: v };
   }
 
@@ -778,10 +778,10 @@
   // ---------- REPORT WIZARD ----------
   function reportSteps(){
     return [
-      { id: "vaha", title: "Jaká je tvoje váha?", help: "Zvaž se <b>ráno nalačno, po záchodě</b>: jedno vážení stačí. A počítej s tím, že váha běžně kolísá o <b>1–3 kg</b> (voda, glykogen, plné břicho, u žen cyklus) bez ohledu na to, jestli hubneš — proto sledujeme i míry, ty řeknou pravdu.<br><br><span style='color:#8F8A99;font-size:.86rem;'>Pro fitness nadšence: kdo se váží denně, může zadat <b>průměr 7 ranních vážení</b>: je přesnější. Není to ale povinnost, denní vážení není pro každého.</span>",
+      { id: "vaha", title: "Jaká je tvoje váha?", help: "Zvaž se <b>ráno nalačno, po záchodě</b>: jedno vážení stačí. A počítej s tím, že váha běžně kolísá o <b>1–3 kg</b> (voda, glykogen, plné břicho, u žen cyklus) bez ohledu na to, jestli hubneš, proto sledujeme i míry, ty řeknou pravdu.<br><br><span style='color:#8F8A99;font-size:.86rem;'>Pro fitness nadšence: kdo se váží denně, může zadat <b>průměr 7 ranních vážení</b>: je přesnější. Není to ale povinnost, denní vážení není pro každého.</span>",
         render: function(a){ return fNum("f_w", "Váha", "kg", "např. 71,3", a.weight); },
         collect: function(a){ var r = reqNum("f_w", "váhu", 30, 300); if(r.err) return r.err; a.weight = r.v; } },
-      { id: "miryq", title: "Měřil/a ses tento týden?", help: "Míry řeknou to, co váha neumí — hlavně pupík, pas a boky.",
+      { id: "miryq", title: "Měřil/a ses tento týden?", help: "Míry řeknou to, co váha neumí: hlavně pupík, pas a boky.",
         render: function(a){ return fChips("f_mq", "Míry tento týden", ["Ano, mám míry", "Tento týden přeskočím"], a._miry === false ? "Tento týden přeskočím" : (a._miry === true ? "Ano, mám míry" : null)); },
         mount: function(){ mountPick("f_mq"); },
         collect: function(a){ var v = pickVal("f_mq"); if(!v) return "Vyber prosím jednu možnost."; a._miry = (v.indexOf("Ano") === 0); if(!a._miry) a.measurements = {}; } },
@@ -805,7 +805,7 @@
           if(m.prsa == null && m.pas == null && m.boky == null && m.zadek == null && m.p_stehno == null && m.l_stehno == null) return "Vyplň aspoň jednu z hlavních měr, nebo se vrať a zvol „přeskočím“.";
           a.measurements = m;
         } },
-      { id: "strava", title: "Strava — týdenní průměr", help: "Stačí <b>průměr kcal a bílkovin</b> za dny, kdy jsi zapisoval/a — nemusíš na gram přesně (Kalorické tabulky: Statistiky → Analýza jídelníčku). A jestli jedeš KT na webu, nech to celé na mně: nahraj export a čísla doplním sám(a).",
+      { id: "strava", title: "Strava: týdenní průměr", help: "Stačí <b>průměr kcal a bílkovin</b> za dny, kdy jsi zapisoval/a, nemusíš na gram přesně (Kalorické tabulky: Statistiky → Analýza jídelníčku). A jestli jedeš KT na webu, nech to celé na mně: nahraj export a čísla doplním sám(a).",
         render: function(a){
           var n = a.nutrition || {};
           return '<div style="background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.35);border-radius:12px;padding:12px 14px;margin:0 0 16px;">'
@@ -826,7 +826,7 @@
                       return '<input class="fin" inputmode="numeric" id="f_d_' + col + i + '" value="' + escH(val == null ? "" : val) + '">';
                     }).join("");
               }).join("")
-            + '</div><p class="help" style="font-size:.8rem;margin-top:8px;">Vyplň, co znáš — klidně jen kcal. Nebo detail vůbec nepřepisuj a přilož export/screenshot z Kalorických tabulek v kroku Fotky a přílohy.</p></div>';
+            + '</div><p class="help" style="font-size:.8rem;margin-top:8px;">Vyplň, co znáš, klidně jen kcal. Nebo detail vůbec nepřepisuj a přilož export/screenshot z Kalorických tabulek v kroku Fotky a přílohy.</p></div>';
         },
         mount: function(a){
           mountPick("f_dny");
@@ -844,13 +844,13 @@
             loadXlsx().then(function(){
               return f.arrayBuffer().then(function(buf){
                 var out = parseKT(window.XLSX.read(buf, { type: "array", cellDates: true }));
-                if(!out) throw new Error("V souboru jsem nenašel jídelníček — přilož ho prosím v kroku Fotky a přílohy a průměry vyplň ručně.");
+                if(!out) throw new Error("V souboru jsem nenašel jídelníček, přilož ho prosím v kroku Fotky a přílohy a průměry vyplň ručně.");
                 a.nutrition = { kcal: out.kcal, protein: out.protein, carbs: out.carbs, fat: out.fat, fiber: out.fiber, dny_zapsano: Math.min(out.dnyCount, 7), dny: out.dny };
                 a._noTrack = false; // import z KT = strava zapsaná
                 a._dnyOpen = true;
                 if(WFILES.length < 6 && fotoOk(f)) WFILES.push(f); // export rovnou jako příloha pro Martina
                 wShow();
-                toast("✅ Načteno " + out.dnyCount + " dní z Kalorických tabulek — zkontroluj čísla a pokračuj.");
+                toast("✅ Načteno " + out.dnyCount + " dní z Kalorických tabulek, zkontroluj čísla a pokračuj.");
               });
             }).catch(function(err){
               btn.disabled = false; btn.textContent = "📥 Načíst z Kalorických tabulek (XLS export)";
@@ -885,7 +885,7 @@
         render: function(a){
           var ac = a.activity || {};
           return fNum("f_kroky", "Kroky Ø/den", "kroků", "např. 8500", ac.kroky)
-            + fChips("f_fitko", "Fitko — počet tréninků", ["0", "1", "2", "3", "4", "5", "6", "7"], ac.fitko != null ? String(ac.fitko) : null)
+            + fChips("f_fitko", "Fitko: počet tréninků", ["0", "1", "2", "3", "4", "5", "6", "7"], ac.fitko != null ? String(ac.fitko) : null)
             + fNum("f_sport", "Sport celkem za týden", "min", "fitko + kardio + vše, např. 240", ac.sport_min)
             + fText("f_kardio", "Kardio", "např. 2× 30 min chůze do kopce", ac.kardio, true)
             + fText("f_dalsi", "Jiný sport / pohyb", "např. volejbal 1×, kolo o víkendu", ac.dalsi, true);
@@ -928,14 +928,14 @@
             a.plan = { stejne: true, kroky: ac.kroky, sport_min: ac.sport_min };
           }
         } },
-      { id: "skaly", title: "Jak ses cítil/a?", help: "Škály 1–5. Není správná odpověď — podle tohohle Martin ladí plán.",
+      { id: "skaly", title: "Jak ses cítil/a?", help: "Škály 1–5. Není správná odpověď, podle tohohle Martin ladí plán.",
         render: function(a){
           var s = a.scales || {};
           return fScale("f_unava", "Únava", s.unava, "1 = čerstvý/á", "5 = vyřízený/á")
             + fScale("f_hlad", "Hlad", s.hlad, "1 = žádný", "5 = pořád")
             + fScale("f_sila", "Síla v tréninku", s.sila, "1 = slabota", "5 = nabušeno")
             + fScale("f_spanekk", "Kvalita spánku", s.spanek_kvalita, "1 = mizerná", "5 = výborná")
-            + fNum("f_spanekh", "Spánek — hodin průměrně", "h", "např. 7", s.spanek_h)
+            + fNum("f_spanekh", "Spánek: hodin průměrně", "h", "např. 7", s.spanek_h)
             + fScale("f_dodrz", "Dodržení plánu", s.dodrzeni, "1 = vůbec", "5 = na 100 %");
         },
         mount: function(){ ["f_unava", "f_hlad", "f_sila", "f_spanekk", "f_dodrz"].forEach(mountPick); },
@@ -945,19 +945,19 @@
           var h = optNum("f_spanekh", 2, 14); if(h.err) return "Spánek: " + h.err;
           out.spanek_h = h.v; a.scales = out;
         } },
-      { id: "texty", title: "Slovní zhodnocení", help: "Pár vět stačí — tohle je pro Martina často to nejcennější z celého reportu. Žádné pole nemá limit délky.",
+      { id: "texty", title: "Slovní zhodnocení", help: "Pár vět stačí, tohle je pro Martina často to nejcennější z celého reportu. Žádné pole nemá limit délky.",
         render: function(a){
           var t = a.notes || {};
           return fText("f_povedlo", "✓ Co se tenhle týden povedlo?", "", t.povedlo, true, true)
             + fText("f_drhlo", "✗ Co drhlo?", "", t.drhlo, true, true)
             + fText("f_otazky", "? Otázky na Martina", "", t.otazky, true, true)
-            + fText("f_dalsi", "💬 Cokoliv dalšího", "prostor jen pro tebe — klidně napiš román", t.dalsi, true, true);
+            + fText("f_dalsi", "💬 Cokoliv dalšího", "prostor jen pro tebe, klidně napiš román", t.dalsi, true, true);
         },
         collect: function(a){ a.notes = { povedlo: gv("f_povedlo"), drhlo: gv("f_drhlo"), otazky: gv("f_otazky"), dalsi: gv("f_dalsi") }; } },
-      { id: "fotky", title: "Fotky a přílohy (nepovinné)", help: "Jednou za čas řekne fotka víc než váha — pomůže tobě i Martinovi vidět proměnu. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně. Sem patří i <b>export nebo screenshot jídelníčku z Kalorických tabulek</b>: Martin pak vidí detail toho, co jsi reálně jedl/a.",
+      { id: "fotky", title: "Fotky a přílohy (nepovinné)", help: "Jednou za čas řekne fotka víc než váha, pomůže tobě i Martinovi vidět proměnu. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně. Sem patří i <b>export nebo screenshot jídelníčku z Kalorických tabulek</b>: Martin pak vidí detail toho, co jsi reálně jedl/a.",
         render: fotoRender, mount: fotoMount,
         collect: function(a){ a._fotoCount = WFILES.length; } },
-      { id: "souhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání přijde hezky zpracovaný report mailem tobě i Martinovi.",
+      { id: "souhrn", title: "Souhrn: zkontroluj a odešli", help: "Po odeslání přijde hezky zpracovaný report mailem tobě i Martinovi.",
         render: function(a){
           function g(title, gotoId, rows){
             var filled = rows.filter(function(r){ return r[1] !== "" && r[1] != null && r[1] !== "—"; });
@@ -985,7 +985,7 @@
     return [
       { id: "osobni", title: "Něco o tobě", help: "Základ, ať Martin počítá s reálnými čísly.",
         render: function(a){ return fNum("i_vek", "Věk", "let", "", a.vek) + '<div class="m2">' + fNum("i_vyska", "Výška", "cm", "", a.vyska) + fNum("i_vaha", "Aktuální váha", "kg", "", a.vaha) + "</div>"
-          + '<p class="help" style="font-size:.85rem;margin:-4px 0 14px;">ℹ️ Váha je tady jednorázová, jen pro výpočet plánu — zvaž se ráno nalačno. A nelekej se jí: běžně kolísá o <b>1–3 kg</b> (voda, glykogen, plné břicho, u žen cyklus), i když hubneš. Trend pak hlídáme v týdenních reportech spolu s mírami.</p>'
+          + '<p class="help" style="font-size:.85rem;margin:-4px 0 14px;">ℹ️ Váha je tady jednorázová, jen pro výpočet plánu, zvaž se ráno nalačno. A nelekej se jí: běžně kolísá o <b>1–3 kg</b> (voda, glykogen, plné břicho, u žen cyklus), i když hubneš. Trend pak hlídáme v týdenních reportech spolu s mírami.</p>'
           + fText("i_telefon", "Telefon", "+420 …", a.telefon, true); },
         collect: function(a){
           var v = reqNum("i_vek", "věk", 15, 90); if(v.err) return v.err;
@@ -994,15 +994,15 @@
           a.vek = v.v; a.vyska = h.v; a.vaha = w.v; a.telefon = gv("i_telefon");
         } },
       { id: "cil", title: "Tvůj cíl", help: "Čím konkrétněji, tím líp. „Zhubnout 8 kg do Vánoc“ je lepší než „zhubnout“.",
-        render: function(a){ return fText("i_cil", "Čeho chceš dosáhnout?", "váha, postava, síla, zdraví…", a.cil, false, true) + fText("i_proc", "Proč to chceš? Co se změní, až to dokážeš?", "tvoje motivace — k té se budeme vracet", a.proc, false, true) + fText("i_termin", "Do kdy / kvůli jaké události?", "např. svatba v září, dovolená…", a.termin, true); },
-        collect: function(a){ if(!gv("i_cil")) return "Napiš prosím svůj cíl."; if(!gv("i_proc")) return "Napiš prosím i svoje proč — je důležitější, než se zdá."; a.cil = gv("i_cil"); a.proc = gv("i_proc"); a.termin = gv("i_termin"); } },
-      { id: "historie", title: "Co už máš za sebou", help: "Diety, výkyvy váhy, sporty — ať Martin neopakuje, co u tebe nefungovalo.",
+        render: function(a){ return fText("i_cil", "Čeho chceš dosáhnout?", "váha, postava, síla, zdraví…", a.cil, false, true) + fText("i_proc", "Proč to chceš? Co se změní, až to dokážeš?", "tvoje motivace, k té se budeme vracet", a.proc, false, true) + fText("i_termin", "Do kdy / kvůli jaké události?", "např. svatba v září, dovolená…", a.termin, true); },
+        collect: function(a){ if(!gv("i_cil")) return "Napiš prosím svůj cíl."; if(!gv("i_proc")) return "Napiš prosím i svoje proč, je důležitější, než se zdá."; a.cil = gv("i_cil"); a.proc = gv("i_proc"); a.termin = gv("i_termin"); } },
+      { id: "historie", title: "Co už máš za sebou", help: "Diety, výkyvy váhy, sporty, ať Martin neopakuje, co u tebe nefungovalo.",
         render: function(a){ return fText("i_diety", "Diety a hubnutí v minulosti", "co jsi zkoušel/a a jak to dopadlo", a.diety, true, true) + fText("i_sport", "Sport dřív a teď", "co jsi dělal/a a co děláš teď", a.sport, true, true); },
         collect: function(a){ a.diety = gv("i_diety"); a.sport = gv("i_sport"); } },
       { id: "zdravi", title: "Zdraví", help: "⚠️ Jen pro Martina, ať plán ničemu neublíží. <b>Nenahrazuje lékaře</b>: zdravotní potíže vždy řeš primárně s ním.",
         render: function(a){ return fText("i_zdravi", "Zdravotní omezení / diagnózy", "klouby, záda, štítná žláza, tlak…", a.zdravi, true, true) + fText("i_leky", "Léky a doplňky, které bereš", "", a.leky, true, true) + fText("i_alergie", "Alergie a intolerance", "laktóza, lepek, ořechy…", a.alergie, true, true); },
         collect: function(a){ a.zdravi = gv("i_zdravi"); a.leky = gv("i_leky"); a.alergie = gv("i_alergie"); } },
-      { id: "jidlo", title: "Jídlo", help: "Plán musí sedět tobě — ne ty plánu.",
+      { id: "jidlo", title: "Jídlo", help: "Plán musí sedět tobě, ne ty plánu.",
         render: function(a){ return fText("i_neji", "Co nejíš / nesnášíš?", "", a.neji, true, true) + fChips("i_jidel", "Kolik jídel denně ti vyhovuje?", ["2", "3", "4", "5", "6"], a.jidel_denne) + fText("i_vareni", "Kdo ti vaří / jak se přes den stravuješ?", "vařím si / partner/ka / kantýna / restaurace…", a.vareni, true, true); },
         mount: function(){ mountPick("i_jidel"); },
         collect: function(a){ var j = pickVal("i_jidel"); if(!j) return "Vyber počet jídel denně."; a.neji = gv("i_neji"); a.jidel_denne = j; a.vareni = gv("i_vareni"); } },
@@ -1011,13 +1011,13 @@
         mount: function(){ mountPick("i_kde"); mountPick("i_dnyt"); },
         collect: function(a){ var k = pickVal("i_kde"); if(!k) return "Vyber, kde můžeš cvičit."; var d = pickVal("i_dnyt"); if(!d) return "Vyber počet dní v týdnu."; a.kde_cvici = k; a.dny_treninku = d; a.vybaveni = gv("i_vybaveni"); } },
       { id: "rezim", title: "Tvůj den", help: "Směny, pohyb a režim rozhodují o tom, jak plán poskládat.",
-        render: function(a){ return fText("i_prace", "Práce a režim dne", "sedavá / na nohou / směny — jaké?", a.prace, false, true)
+        render: function(a){ return fText("i_prace", "Práce a režim dne", "sedavá / na nohou / směny, jaké?", a.prace, false, true)
           + fChips("i_aktivita", "Úroveň aktivity přes den", ["Sedavá", "Lehce aktivní", "Aktivní", "Velmi aktivní"], a.aktivita)
-          + fNum("i_kroky", "Kroky denně — kolik cca reálně dáš?", "kroků", "mrkni do mobilu / hodinek", a.kroky)
-          + fNum("i_spanek", "Spánek — hodin průměrně", "h", "", a.spanek, true); },
+          + fNum("i_kroky", "Kroky denně: kolik cca reálně dáš?", "kroků", "mrkni do mobilu / hodinek", a.kroky)
+          + fNum("i_spanek", "Spánek: hodin průměrně", "h", "", a.spanek, true); },
         mount: function(){ mountPick("i_aktivita"); },
         collect: function(a){ if(!gv("i_prace")) return "Popiš prosím práci a režim dne."; var av = pickVal("i_aktivita"); if(!av) return "Vyber úroveň aktivity přes den."; var k = reqNum("i_kroky", "odhad kroků za den", 0, 60000); if(k.err) return k.err; var s = optNum("i_spanek", 2, 14); if(s.err) return "Spánek: " + s.err; a.prace = gv("i_prace"); a.aktivita = av; a.kroky = k.v; a.spanek = s.v; } },
-      { id: "imiry", title: "Výchozí míry (cm)", help: "Startovní čára pro grafy: <b>hruď, pas, boky, zadek a stehna</b> zaberou celé tělo — s váhou dohromady je to pro Martina dost dat na přesné úpravy. Měř ráno, volně, bez zatahování břicha.",
+      { id: "imiry", title: "Výchozí míry (cm)", help: "Startovní čára pro grafy: <b>hruď, pas, boky, zadek a stehna</b> zaberou celé tělo, s váhou dohromady je to pro Martina dost dat na přesné úpravy. Měř ráno, volně, bez zatahování břicha.",
         render: function(a){ return '<div class="m2">' + MIRY.slice(0, MIRY_MAIN).map(function(x){ return fNum("i_m_" + x[0], x[1], "cm", "", a["mira_" + x[0]]); }).join("") + "</div>"
           + '<div class="mtgl"><button type="button" class="kbtn2" id="i_mAll">' + (a._imiryAll ? "Skrýt bonusové míry" : "+ Pro fitnessáky: lýtka, paže, krk, pupík") + '</button></div>'
           + '<div class="m2" id="i_mRest" style="display:' + (a._imiryAll ? "grid" : "none") + ';">' + MIRY.slice(MIRY_MAIN).map(function(x){ return fNum("i_m_" + x[0], x[1], "cm", "", a["mira_" + x[0]], true); }).join("") + "</div>"; },
@@ -1030,15 +1030,15 @@
             var r = optNum("i_m_" + MIRY[i][0], 15, 250); if(r.err) return MIRY[i][1] + ": " + r.err;
             a["mira_" + MIRY[i][0]] = r.v == null ? "" : r.v;
           }
-          if(a.mira_pas === "" && a.mira_boky === "") return "Změř prosím aspoň pas nebo boky — bez startovní čáry nejde měřit pokrok.";
+          if(a.mira_pas === "" && a.mira_boky === "") return "Změř prosím aspoň pas nebo boky, bez startovní čáry nejde měřit pokrok.";
         } },
-      { id: "ifotky", title: "Výchozí fotky (nepovinné)", help: "Startovní čára pro pozdější porovnání proměny — za pár měsíců za ně budeš rád/a. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně.",
+      { id: "ifotky", title: "Výchozí fotky (nepovinné)", help: "Startovní čára pro pozdější porovnání proměny, za pár měsíců za ně budeš rád/a. Ale <b>nikdy to není povinnost</b>: foť se, jen když se cítíš pohodlně.",
         render: fotoRender, mount: fotoMount,
         collect: function(a){ a._fotoCount = WFILES.length; } },
-      { id: "pozn", title: "Ještě něco?", help: "Cokoliv, co by měl Martin vědět a nikam se to nevešlo. Bez omezení délky — klidně román.",
+      { id: "pozn", title: "Ještě něco?", help: "Cokoliv, co by měl Martin vědět a nikam se to nevešlo. Bez omezení délky, klidně román.",
         render: function(a){ return fText("i_poznamka", "Vzkaz pro Martina", "piš, kolik potřebuješ", a.poznamka, true, true); },
         collect: function(a){ a.poznamka = gv("i_poznamka"); } },
-      { id: "isouhrn", title: "Souhrn — zkontroluj a odešli", help: "Po odeslání dostaneš kopii mailem a Martin ti do <b>48 hodin</b> nastaví plán.",
+      { id: "isouhrn", title: "Souhrn: zkontroluj a odešli", help: "Po odeslání dostaneš kopii mailem a Martin ti do <b>48 hodin</b> nastaví plán.",
         render: function(a){
           var groups = [["O tobě", "osobni", [["Věk", a.vek], ["Výška", a.vyska + " cm"], ["Váha", czk(a.vaha) + " kg"], ["Telefon", a.telefon]]],
             ["Cíl", "cil", [["Cíl", a.cil], ["Proč", a.proc], ["Termín", a.termin]]],
@@ -1066,7 +1066,7 @@
     btn.disabled = true; btn.textContent = WFILES.length ? "Nahrávám fotky…" : "Odesílám…";
     uploadFotky().catch(function(){
       btn.disabled = false; btn.textContent = "Zkusit odeslat znovu";
-      toast("Fotky se nepodařilo nahrát — zkus to znovu, nebo je v kroku Fotky odeber.");
+      toast("Fotky se nepodařilo nahrát, zkus to znovu, nebo je v kroku Fotky odeber.");
       return null;
     }).then(function(paths){
       if(paths === null) return { aborted: true };
@@ -1084,7 +1084,7 @@
     }).then(function(res){
       if(res && res.aborted) return;
       btn.disabled = false;
-      if(!res.ok){ btn.textContent = "Zkusit odeslat znovu"; toast("Odeslání se nepovedlo — tvoje odpovědi jsou uložené, zkus to za chvíli znovu."); return; }
+      if(!res.ok){ btn.textContent = "Zkusit odeslat znovu"; toast("Odeslání se nepovedlo, tvoje odpovědi jsou uložené, zkus to za chvíli znovu."); return; }
       try { localStorage.removeItem(draftKey()); } catch(e){}
       el("wIn").innerHTML = '<div class="wdone"><div class="big">✅</div><h2>' + doneMsg + '</h2><p class="help">Kopie ti právě letí na e-mail (mrkni i do hromadných). Martin se ozve.</p></div>';
       el("wProg").style.width = "100%"; el("wBack").style.visibility = "hidden";
@@ -1093,7 +1093,7 @@
       el("wNext").addEventListener("click", function(){ wCloseFn(true); location.reload(); });
     }).catch(function(){
       btn.disabled = false; btn.textContent = "Zkusit odeslat znovu";
-      toast("Odeslání se nepovedlo — tvoje odpovědi jsou uložené, zkus to za chvíli znovu.");
+      toast("Odeslání se nepovedlo, tvoje odpovědi jsou uložené, zkus to za chvíli znovu.");
     });
   }
 
@@ -1121,15 +1121,15 @@
     el("refOpen").addEventListener("click", function(){ el("refForm").style.display = ""; el("refOpen").style.display = "none"; });
     el("refSend").addEventListener("click", function(){
       var txt = (el("refText").value || "").trim();
-      if(!txt){ toast("Napiš prosím pár vět — tvoje slova jsou to nejcennější."); return; }
-      if(!el("refOk").checked){ toast("Zaškrtni prosím souhlas — bez něj to Martin nepoužije."); return; }
+      if(!txt){ toast("Napiš prosím pár vět, tvoje slova jsou to nejcennější."); return; }
+      if(!el("refOk").checked){ toast("Zaškrtni prosím souhlas, bez něj to Martin nepoužije."); return; }
       var b = el("refSend"); b.disabled = true; b.textContent = "Odesílám…";
       window.BA.getToken().then(function(t){
         return fetch(FN, { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
           body: JSON.stringify({ action: "reference", name: myName, data: { text: txt } }) })
           .then(function(r){ return r.json(); });
       }).then(function(j){
-        if(j && j.ok){ el("refForm").innerHTML = '<p style="color:#4fc07a;font-weight:700;">✅ Díky! Martin se ti ozve — a tvoje cesta může inspirovat další.</p>'; }
+        if(j && j.ok){ el("refForm").innerHTML = '<p style="color:#4fc07a;font-weight:700;">✅ Díky! Martin se ti ozve, a tvoje cesta může inspirovat další.</p>'; }
         else { b.disabled = false; b.textContent = "Odeslat Martinovi"; toast("Odeslání se nepovedlo, zkus to znovu."); }
       }).catch(function(){ b.disabled = false; b.textContent = "Odeslat Martinovi"; toast("Odeslání se nepovedlo, zkus to znovu."); });
     });
@@ -1167,9 +1167,9 @@
     });
   }
 
-  if(!window.BA){ el("load").textContent = "Sekce se nepodařilo načíst — obnov prosím stránku."; return; }
+  if(!window.BA){ el("load").textContent = "Sekce se nepodařilo načíst, obnov prosím stránku."; return; }
   window.BA.ready.then(function(){
-    if(window.BA.mode !== "live"){ el("load").textContent = "Sekce vyžaduje připojení — zkus to prosím později."; return; }
+    if(window.BA.mode !== "live"){ el("load").textContent = "Sekce vyžaduje připojení, zkus to prosím později."; return; }
     var lg = el("logout");
     if(lg) lg.addEventListener("click", function(e){ e.preventDefault(); window.BA.signOut().then(function(){ location.href = "/akademie/prihlaseni/"; }); });
     window.BA.getUser().then(function(u){
