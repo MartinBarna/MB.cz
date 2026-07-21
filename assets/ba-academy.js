@@ -167,11 +167,32 @@
 
     // Obsah placené lekce z DB. RLS: čte jen přihlášený s aktivním přístupem
     // (has_entitlement) — text lekcí tak není ve statickém HTML ani pro curl.
+    // Fallback ?ak=: klient koučinku bez Academy dostane lekci, na kterou ho odkázal
+    // přímo AI Martin — odkaz nese podepsaný klíč a pravost ověřuje server (lesson-peek).
     getLessonHtml: function (lessonId) {
       if (!LIVE) return Promise.resolve(null);
       return client.from("lesson_content").select("html").eq("lesson_id", lessonId).maybeSingle()
         .then(function (r) { return (r.data && r.data.html) || null; })
-        .catch(function () { return null; });
+        .catch(function () { return null; })
+        .then(function (html) {
+          if (html) return html;
+          var ak = null;
+          try { ak = new URLSearchParams(location.search).get("ak"); } catch (e) {}
+          if (!ak) return null;
+          return BA.getToken().then(function (t) {
+            if (!t) return null;
+            return fetch(cfg.url + "/functions/v1/lesson-peek", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
+              body: JSON.stringify({ lesson_id: lessonId, ak: ak })
+            }).then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (j) {
+                if (!(j && j.html)) return null;
+                // jemný upsell u nakouknuté lekce: klient vidí, odkud obsah je a že má slevu
+                return '<div style="background:rgba(235,177,44,.1);border:1px solid rgba(235,177,44,.3);border-radius:14px;padding:13px 18px;margin:0 0 1.2rem;font-size:.93rem;color:#e9e2d8;">🔓 <b style="color:#fff">Otevřeno přes AI Martina</b> v rámci tvého koučinku. Je to jedna z lekcí Barna Academy. Jako klient máš na celou Academy slevu 20 % s kódem <b style="color:#F6CD63">KLIENT20</b>. <a href="/akademie/" style="color:#F6CD63;font-weight:700;">Mrknout na Academy →</a></div>' + j.html;
+              }).catch(function () { return null; });
+          });
+        });
     },
 
     // Postup: vrací objekt {lesson_id: true, ...}
@@ -279,10 +300,15 @@
       return BA.getUser().then(function (u) {
         // I host (nepřihlášený) dostane need=<product> — login stránka pak ukáže
         // nákupní hlášku místo holého formuláře (host z free lekce = nejteplejší moment).
-        if (!u) { location.href = (redirectTo || "/akademie/prihlaseni/") + "?next=" + encodeURIComponent(location.pathname) + "&need=" + encodeURIComponent(product); return false; }
+        // next nese i query string — v ?ak= je klíč z AI Martina a po přihlášení nesmí zmizet
+        if (!u) { location.href = (redirectTo || "/akademie/prihlaseni/") + "?next=" + encodeURIComponent(location.pathname + location.search) + "&need=" + encodeURIComponent(product); return false; }
         return BA.hasEntitlement(product).then(function (has) {
-          if (!has) { location.href = "/akademie/prihlaseni/?need=" + encodeURIComponent(product); return false; }
-          return true;
+          if (has) return true;
+          // Klíč z AI chatu (?ak=): stránku pustíme dál a o pravosti rozhodne server
+          // (lesson-peek). Neplatný klíč nic nevrátí, takže tohle samo o sobě nic neodemyká.
+          try { if (product === "academy" && new URLSearchParams(location.search).get("ak")) return true; } catch (e) {}
+          location.href = "/akademie/prihlaseni/?need=" + encodeURIComponent(product);
+          return false;
         });
       });
     },

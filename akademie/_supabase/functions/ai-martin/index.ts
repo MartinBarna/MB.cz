@@ -170,10 +170,13 @@ async function hasEnt(token: string, product: string): Promise<boolean> {
     return false;
   }
 }
-async function isMember(token: string): Promise<boolean> {
-  if (!token || !SUPABASE_URL || !ANON_KEY) return false;
-  if (await hasEnt(token, REQUIRED_PRODUCT)) return true;
-  return await hasEnt(token, 'coaching');
+// Vrací, ČÍM uživatel prošel: 'academy' čte lekce normálně, 'coaching' dostane k odkazům
+// na lekce podepsaný peek klíč (viz addPeekLinks). null = není člen.
+type MemberVia = 'academy' | 'coaching' | null;
+async function memberVia(token: string): Promise<MemberVia> {
+  if (!token || !SUPABASE_URL || !ANON_KEY) return null;
+  if (await hasEnt(token, REQUIRED_PRODUCT)) return 'academy';
+  return (await hasEnt(token, 'coaching')) ? 'coaching' : null;
 }
 
 // RAG: natáhne z korpusu lekcí (lesson_docs přes RPC search_lessons) relevantní úryvky
@@ -250,6 +253,43 @@ function citedSources(reply: string, hits: Hit[]): LessonSource[] {
   return out;
 }
 
+// --- Peek odkazy pro klienty koučinku bez Academy (Martin 21. 7. 2026) ---
+// Lekce, kterou AI Martin sám odkáže, se klientovi otevře i bez koupené Academy: URL nese
+// podepsaný klíč (HMAC přes lekci|e-mail|expiraci), který ověří edge funkce lesson-peek.
+// Klíč je vázaný na konkrétního člověka — přeposlaný odkaz cizímu nefunguje. Academy členům
+// se odkazy nemění. Bez secretu v app_config se odkazy tiše vrací beze změny (žádný pád).
+const PEEK_TTL_S = 30 * 86400; // 30 dní: klient se k odpovědi v chatu klidně vrátí později
+let peekSecretCache: string | null = null;
+async function peekSecret(): Promise<string | null> {
+  if (peekSecretCache) return peekSecretCache;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/app_config?key=eq.lesson_peek_secret&select=value`, {
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` },
+    });
+    if (!r.ok) return null;
+    const rows = await r.json() as { value?: string }[];
+    peekSecretCache = rows?.[0]?.value ? String(rows[0].value) : null;
+  } catch { return null; }
+  return peekSecretCache;
+}
+async function hmacHex(secret: string, msg: string): Promise<string> {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(msg));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+async function addPeekLinks(sources: LessonSource[], via: MemberVia, email: string | null): Promise<LessonSource[]> {
+  if (via !== 'coaching' || !email || !sources.length) return sources;
+  const secret = await peekSecret();
+  if (!secret) return sources;
+  const exp = Math.floor(Date.now() / 1000) + PEEK_TTL_S;
+  return await Promise.all(sources.map(async (s) => {
+    const id = s.url.slice(LESSON_BASE.length).replace(/\/$/, '');
+    if (!LESSON_ID_RE.test(id)) return s;
+    const sig = await hmacHex(secret, `${id}|${email}|${exp}`);
+    return { ...s, url: `${s.url}?ak=${exp}.${sig}` };
+  }));
+}
+
 // --- P1 (handoff §2): retry/backoff na přetížení modelu (429/5xx/529) i síťovou chybu ---
 async function postWithRetry(url: string, headers: Record<string, string>, bodyObj: unknown, attempt = 0): Promise<Response> {
   const MAX = 3;
@@ -288,6 +328,11 @@ function parseUsage(u: unknown): { tin: number; tout: number; tcached: number } 
 }
 function userIdFromToken(token: string): string | null {
   try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof p.sub === 'string' ? p.sub : null; } catch { return null; }
+}
+// E-mail z JWT pro podpis peek odkazů. Payload je věrohodný: token už prošel členskou bránou
+// (has_entitlement RPC by s podvrženým tokenem selhala), tady ho jen znovu čteme.
+function emailFromToken(token: string): string | null {
+  try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof p.email === 'string' ? p.email.toLowerCase() : null; } catch { return null; }
 }
 // best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď (fire-and-forget).
 function logUsage(userId: string | null, feature: string, usage: unknown): void {
@@ -345,6 +390,8 @@ async function streamGrokReply(
   cors: Record<string, string>,
   userId: string | null,
   ragHits: Hit[],
+  via: MemberVia,
+  email: string | null,
 ): Promise<Response> {
   const upstream = await postWithRetry('https://api.x.ai/v1/chat/completions',
     { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
@@ -396,7 +443,7 @@ async function streamGrokReply(
       }
       logUsage(userId, 'ai_chat_web', usage ?? estimateUsage(promptChars, reply.length));
       // Zdroje až na konci: citedSources porovnává CELOU odpověď proti RAG trefám.
-      if (reply) send({ type: 'sources', sources: citedSources(reply, ragHits) });
+      if (reply) send({ type: 'sources', sources: await addPeekLinks(citedSources(reply, ragHits), via, email) });
       controller.enqueue(enc.encode(`data: [DONE]${NL}${NL}`));
       controller.close();
     },
@@ -409,14 +456,16 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   if (req.method !== 'POST') return json({ error: 'method' }, CORS, 405);
 
-  // 1) ČLENSKÁ BRÁNA — jen platící člen Academy. Ne-člen dostane výzvu ke koupi.
+  // 1) ČLENSKÁ BRÁNA — jen platící člen Academy nebo klient koučinku. Jiný dostane výzvu ke koupi.
   const authz = req.headers.get('Authorization') ?? '';
   const token = authz.startsWith('Bearer ') ? authz.slice(7) : '';
-  if (!(await isMember(token))) return json({ locked: true, reply: UPSELL }, CORS, 200);
+  const via = await memberVia(token);
+  if (!via) return json({ locked: true, reply: UPSELL }, CORS, 200);
 
   // 2) Klíč se přidá nakonec — do té doby graceful hláška (jen pro členy).
   if (!API_KEY) return json({ reply: 'Za chvíli! AI Martin se právě dokončuje. Mrkni sem brzy. 💪' }, CORS, 200);
   const userId = userIdFromToken(token);   // pro měření nákladu (§9) + denní strop
+  const email = emailFromToken(token);     // pro podpis peek odkazů (jen koučink bez Academy)
 
   let body: { messages?: Msg[]; stream?: boolean };
   try { body = await req.json(); } catch { return json({ error: 'bad_json' }, CORS, 400); }
@@ -494,7 +543,7 @@ Deno.serve(async (req: Request) => {
         ...(last ? [last] : []),
       ];
       // Streamovaná větev: safety pre-flag, členská brána i denní strop už proběhly výše.
-      if (wantStream) return await streamGrokReply(grokMsgs, convId, CORS, userId, ragHits);
+      if (wantStream) return await streamGrokReply(grokMsgs, convId, CORS, userId, ragHits, via, email);
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
         { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
         { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, messages: grokMsgs });
@@ -523,7 +572,7 @@ Deno.serve(async (req: Request) => {
       reply = parts.filter((p) => p.type === 'text').map((p) => p.text ?? '').join(NL).trim();
     }
     reply = reply || 'Promiň, nemám na to dobrou odpověď. Zkus se zeptat jinak.';
-    return json({ reply, sources: citedSources(reply, ragHits) }, CORS);
+    return json({ reply, sources: await addPeekLinks(citedSources(reply, ragHits), via, email) }, CORS);
   } catch (e) {
     console.error('ai-martin exception', String(e).slice(0, 300));
     return json({ reply: 'Spojení selhalo, zkus to prosím znovu.' }, CORS, 200);
