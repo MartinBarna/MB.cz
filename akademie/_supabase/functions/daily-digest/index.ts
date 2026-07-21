@@ -94,21 +94,29 @@ Deno.serve(async (req) => {
   // povoloval v CORS jen content-type, stranky posilaji i apikey+authorization, prohlizec
   // kazde odeslani zablokoval jeste u navstevnika a na serveru nezustala zadna stopa.
   // Server-side test tohle NIKDY neodhali, proto se denne ptame PRESNE jako prohlizec.
-  const BROWSER_FNS = ["contact-send", "lead-capture", "checkin-capture", "ai-martin"];
-  const NEEDED = ["authorization", "apikey", "content-type"];
+  // Klic = funkce, hodnota = hlavicky, ktere JEJI stranky realne posilaji (overeno v kodu
+  // 21. 7.: index.html + landing pages posilaji apikey+authorization, check-in taky,
+  // ai-martin.js posila jen authorization). Kdyz se zmeni fetch na strance, zmen i tohle.
+  const BROWSER_FNS: Record<string, string[]> = {
+    "contact-send": ["authorization", "apikey", "content-type"],
+    "lead-capture": ["authorization", "apikey", "content-type"],
+    "checkin-capture": ["authorization", "apikey", "content-type"],
+    "ai-martin": ["authorization", "content-type"],
+  };
   const corsBad: string[] = [];
-  await Promise.all(BROWSER_FNS.map(async (slug) => {
+  await Promise.all(Object.keys(BROWSER_FNS).map(async (slug) => {
+    const needed = BROWSER_FNS[slug];
     try {
       const r = await fetch(`${SUPABASE_URL}/functions/v1/${slug}`, {
         method: "OPTIONS",
         headers: {
           "Origin": "https://martinbarna.cz",
           "Access-Control-Request-Method": "POST",
-          "Access-Control-Request-Headers": NEEDED.join(", "),
+          "Access-Control-Request-Headers": needed.join(", "),
         },
       });
       const allow = (r.headers.get("access-control-allow-headers") || "").toLowerCase();
-      const ok = allow.includes("*") || NEEDED.every((h) => allow.includes(h));
+      const ok = allow.includes("*") || needed.every((h) => allow.includes(h));
       if (!r.ok || !ok) corsBad.push(`${slug} (povoluje: ${allow || "nic"})`);
     } catch (_e) { corsBad.push(slug + " (nedostupná)"); }
   }));
