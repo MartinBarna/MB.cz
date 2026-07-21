@@ -172,7 +172,7 @@
       <div id="histWrap" style="display:none;">
         <div class="ksec">Historie reportů</div>
         <div class="gwrap"><table class="hist"><thead><tr>
-          <th>Datum</th><th class="r">Váha</th><th class="r">Pas</th><th class="r">kcal Ø</th><th class="r">Bílk. Ø</th><th class="r">Kroky Ø</th><th class="r">Fitko</th><th class="r">Dodržení</th>
+          <th>Datum</th><th class="r">Váha</th><th class="r">Pas</th><th class="r">kcal Ø</th><th class="r">Bílk. Ø</th><th class="r">Kroky Ø</th><th class="r">Fitko</th><th class="r">Sport (min)</th><th class="r">Dodržení</th>
         </tr></thead><tbody id="histBody"></tbody></table></div>
       </div>
 
@@ -235,7 +235,7 @@
 
 <script src="/assets/ba-config.js?v=20260628b"></script>
 <script src="/assets/ai-martin.js?v=g5" defer></script>
-<script src="/assets/ba-academy.js?v=20260718"></script>
+<script src="/assets/ba-academy.js?v=20260721"></script>
 <script>
 (function(){
   "use strict";
@@ -448,11 +448,18 @@
       var datum = dnyArr.length
         ? '<a href="#" data-hdny="' + ri + '" style="color:#F6CD63;text-decoration:none;" title="denní rozpis stravy">▸ ' + dateCz(r.report_date) + "</a>"
         : dateCz(r.report_date);
-      var out = "<tr><td style='white-space:nowrap;'>" + datum + "</td><td class='r'>" + czk(toNum(r.weight)) + "</td><td class='r'>" + czk(toNum(m.pas)) + "</td><td class='r'>" + czk(toNum(nu.kcal)) + "</td><td class='r'>" + czk(toNum(nu.protein)) + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "—") + "</td><td class='r'>" + czk(toNum(ac.fitko)) + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
+      // Sport v minutach; stare importovane reporty maji minuty zvlast (fitko_min + kardio_min),
+      // obe jsou stejna jednotka, takze soucet je poctivy. Nikdy neprepocitavat pocty na minuty.
+      var sportMin = toNum(ac.sport_min);
+      if(sportMin == null){
+        var fm = toNum(ac.fitko_min), km = toNum(ac.kardio_min);
+        if(fm != null || km != null) sportMin = (fm || 0) + (km || 0);
+      }
+      var out = "<tr><td style='white-space:nowrap;'>" + datum + "</td><td class='r'>" + czk(toNum(r.weight)) + "</td><td class='r'>" + czk(toNum(m.pas)) + "</td><td class='r'>" + czk(toNum(nu.kcal)) + "</td><td class='r'>" + czk(toNum(nu.protein)) + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "—") + "</td><td class='r'>" + czk(toNum(ac.fitko)) + "</td><td class='r'>" + czk(sportMin) + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
       if(dnyArr.length){
         var dt = "<table class='hist' style='font-size:.82rem;'><tr><th>Den</th><th class='r'>kcal</th><th class='r'>B</th><th class='r'>S</th><th class='r'>T</th><th class='r'>Vl</th></tr>"
           + (nu.dny || []).map(function(d){ if(!d) return ""; return "<tr><td>" + escH(d.den || "") + "</td><td class='r'>" + czk(toNum(d.kcal)) + "</td><td class='r'>" + czk(toNum(d.p)) + "</td><td class='r'>" + czk(toNum(d.c)) + "</td><td class='r'>" + czk(toNum(d.f)) + "</td><td class='r'>" + czk(toNum(d.fib)) + "</td></tr>"; }).join("") + "</table>";
-        out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="8" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis — tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
+        out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="9" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis — tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
       }
       return out;
     }).join("");
@@ -874,11 +881,12 @@
           if(rozpis.some(function(x){ return x; })) n.dny = rozpis;
           a.nutrition = n;
         } },
-      { id: "aktivity", title: "Aktivity za týden", help: "Kroky ti řekne mobil/hodinky. U fitka počet odcvičených tréninků.",
+      { id: "aktivity", title: "Aktivity za týden", help: "Kroky ti řekne mobil/hodinky. U sportu Martina zajímají hlavně <b>celkové minuty za týden</b>: „4× fitko\" může znamenat 4× 30 minut i 4× 120 minut, a pro plán je to obrovský rozdíl. Sečti fitko, kardio i jiný pohyb dohromady.",
         render: function(a){
           var ac = a.activity || {};
           return fNum("f_kroky", "Kroky Ø/den", "kroků", "např. 8500", ac.kroky)
             + fChips("f_fitko", "Fitko — počet tréninků", ["0", "1", "2", "3", "4", "5", "6", "7"], ac.fitko != null ? String(ac.fitko) : null)
+            + fNum("f_sport", "Sport celkem za týden", "min", "fitko + kardio + vše, např. 240", ac.sport_min)
             + fText("f_kardio", "Kardio", "např. 2× 30 min chůze do kopce", ac.kardio, true)
             + fText("f_dalsi", "Jiný sport / pohyb", "např. volejbal 1×, kolo o víkendu", ac.dalsi, true);
         },
@@ -886,7 +894,39 @@
         collect: function(a){
           var k = reqNum("f_kroky", "průměrné kroky", 0, 60000); if(k.err) return k.err;
           var f = pickVal("f_fitko"); if(f == null) return "Vyber počet tréninků ve fitku (klidně 0).";
-          a.activity = { kroky: k.v, fitko: Number(f), kardio: gv("f_kardio"), dalsi: gv("f_dalsi") };
+          var sp = reqNum("f_sport", "celkové minuty sportu za týden (klidně 0)", 0, 3000); if(sp.err) return sp.err;
+          a.activity = { kroky: k.v, fitko: Number(f), sport_min: sp.v, kardio: gv("f_kardio"), dalsi: gv("f_dalsi") };
+        } },
+      { id: "plan", title: "Plán na příští týden", help: "Domluva dopředu: kolik kroků denně a kolik minut sportu příští týden dáš? Martin pak v dalším reportu vidí plán vedle reality. Nechceš-li nic měnit, stačí kliknout „bude stejně\".",
+        render: function(a){
+          var p = a.plan || {};
+          var sel = p.stejne === true ? "Bude stejně jako tento týden" : (p.stejne === false ? "Nastavím si čísla" : null);
+          return fChips("f_pmode", "Jak to bude příští týden?", ["Bude stejně jako tento týden", "Nastavím si čísla"], sel)
+            + '<div id="f_pbox" style="display:' + (p.stejne === false ? "block" : "none") + ';">'
+            + fNum("f_pkroky", "Plán: kroky Ø/den", "kroků", "např. 9000", p.stejne === false ? p.kroky : null)
+            + fNum("f_psport", "Plán: sport celkem za týden", "min", "např. 270", p.stejne === false ? p.sport_min : null)
+            + "</div>";
+        },
+        mount: function(){
+          mountPick("f_pmode");
+          document.querySelectorAll("#f_pmode button").forEach(function(b){
+            b.addEventListener("click", function(){
+              var box = document.getElementById("f_pbox");
+              if(box) box.style.display = b.getAttribute("data-v") === "Nastavím si čísla" ? "block" : "none";
+            });
+          });
+        },
+        collect: function(a){
+          var v = pickVal("f_pmode"); if(!v) return "Vyber, jak to bude příští týden.";
+          if(v === "Nastavím si čísla"){
+            var k = reqNum("f_pkroky", "plánované kroky", 0, 60000); if(k.err) return "Plán: " + k.err;
+            var s = reqNum("f_psport", "plánované minuty sportu (klidně 0)", 0, 3000); if(s.err) return "Plán: " + s.err;
+            a.plan = { stejne: false, kroky: k.v, sport_min: s.v };
+          } else {
+            // "bude stejně" = převezmi čísla z právě vyplněného týdne, ať má Martin plán vždy v číslech
+            var ac = a.activity || {};
+            a.plan = { stejne: true, kroky: ac.kroky, sport_min: ac.sport_min };
+          }
         } },
       { id: "skaly", title: "Jak ses cítil/a?", help: "Škály 1–5. Není správná odpověď — podle tohohle Martin ladí plán.",
         render: function(a){
@@ -923,13 +963,14 @@
             var filled = rows.filter(function(r){ return r[1] !== "" && r[1] != null && r[1] !== "—"; });
             return '<div class="sumg"><h4>' + title + ' <button type="button" data-goto="' + gotoId + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>—</span><span></span></div>') + "</div>";
           }
-          var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {};
+          var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {}, p = a.plan || {};
           return g("Váha", "vaha", [["Týdenní průměr", czk(a.weight) + " kg"]])
             + g("Míry", a._miry ? "miry" : "miryq", a._miry ? MIRY.map(function(x){ return [x[1], m[x[0]] != null ? czk(m[x[0]]) + " cm" : ""]; }) : [["Tento týden", "přeskočeno"]])
             + (a.nutrition === null
               ? g("Strava", "strava", [["Tenhle týden", "strava nezapsána"]])
               : g("Strava Ø", "strava", [["Kalorie", czk(n.kcal) + " kcal"], ["Bílkoviny", czk(n.protein) + " g"], ["Sacharidy", n.carbs != null ? czk(n.carbs) + " g" : ""], ["Tuky", n.fat != null ? czk(n.fat) + " g" : ""], ["Vláknina", n.fiber != null ? czk(n.fiber) + " g" : ""], ["Zapsáno dní", n.dny_zapsano + "/7"]]))
-            + g("Aktivity", "aktivity", [["Kroky Ø", czk(ac.kroky)], ["Fitko", ac.fitko + "×"], ["Kardio", ac.kardio], ["Další", ac.dalsi]])
+            + g("Aktivity", "aktivity", [["Kroky Ø", czk(ac.kroky)], ["Fitko", ac.fitko + "×"], ["Sport celkem", ac.sport_min != null ? czk(ac.sport_min) + " min" : ""], ["Kardio", ac.kardio], ["Další", ac.dalsi]])
+            + g("Plán na příští týden", "plan", [["Kroky Ø/den", p.kroky != null ? czk(p.kroky) : ""], ["Sport celkem", p.sport_min != null ? czk(p.sport_min) + " min" : ""], ["Režim", p.stejne ? "stejně jako tento týden" : ""]])
             + g("Pocity", "skaly", [["Únava", s.unava + "/5"], ["Hlad", s.hlad + "/5"], ["Síla", s.sila + "/5"], ["Spánek", (s.spanek_h != null ? czk(s.spanek_h) + " h · " : "") + s.spanek_kvalita + "/5"], ["Dodržení plánu", s.dodrzeni + "/5"]])
             + g("Slovně", "texty", [["Povedlo se", t.povedlo], ["Drhlo", t.drhlo], ["Otázky", t.otazky], ["Navíc", t.dalsi]])
             + g("Fotky", "fotky", [["Přiloženo", WFILES.length ? WFILES.length + "×" : ""]]);
@@ -1112,7 +1153,10 @@
     });
     el("btnReport").addEventListener("click", function(){
       wOpen("report", reportSteps(), function(a){
-        submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition === null ? null : (a.nutrition || {}), activity: a.activity || {}, scales: a.scales || {}, notes: a.notes || {} }, "Report odeslán!");
+        // plan_next jede uvnitr activity (jsonb), at neni potreba nova kolona v client_reports
+        var ac = a.activity || {};
+        if(a.plan) ac.plan_next = a.plan;
+        submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition === null ? null : (a.nutrition || {}), activity: ac, scales: a.scales || {}, notes: a.notes || {} }, "Report odeslán!");
       });
     });
     el("btnIntake").addEventListener("click", function(){

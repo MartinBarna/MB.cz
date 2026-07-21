@@ -372,6 +372,12 @@
               cravings: num(s.hlad),
               workouts_done: num(ac.fitko),
               workouts_planned: null,        // formular planovany pocet treninku nesbira
+              // minuty sportu za tyden; stare import-sheet reporty je maji zvlast (fitko_min +
+              // kardio_min, stejna jednotka -> soucet je poctivy). Pocty na minuty neprepocitavat.
+              sport_min: num(ac.sport_min) != null ? num(ac.sport_min)
+                : (num(ac.fitko_min) != null || num(ac.kardio_min) != null
+                  ? (num(ac.fitko_min) || 0) + (num(ac.kardio_min) || 0) : null),
+              plan_next: ac.plan_next || null,   // klientuv plan na dalsi tyden (kroky, sport_min)
               win_text: nt.povedlo || "",
               struggle_text: nt.drhlo || ""
             };
