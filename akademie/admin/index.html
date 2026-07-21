@@ -137,6 +137,12 @@
         </ul>
       </div>
 
+      <div class="traf" id="aiflags" style="display:none;border-color:rgba(220,80,60,.45);">
+        <h3>🚨 AI chat — rizikové zprávy</h3>
+        <div class="sub">Zprávy, u kterých AI zachytila riziko (krize, poruchy příjmu potravy, zdraví, těhotenství, nezletilí). Hard-stopy jsou nahoře červeně. Úryvek zprávy je vidět jen tady, mailem chodí pouze typ a čas. Flagy z appky Tvůj Coach chodí zvlášť mailem.</div>
+        <div id="aiflagsBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
       <div class="traf" id="pulse" style="display:none;">
         <h3>🩺 Dnešní puls</h3>
         <div class="sub">Maily, fronta dripu, leadi a prodeje — živě z databáze</div>
@@ -366,7 +372,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti();
+        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -627,6 +633,42 @@
       var u=URL.createObjectURL(blob), aEl=document.createElement('a');
       aEl.href=u; aEl.download='reporty-'+KDET.email.replace(/[@.]/g,'_')+'.csv'; document.body.appendChild(aEl); aEl.click(); aEl.remove();
       setTimeout(function(){ URL.revokeObjectURL(u); },30000);
+    }
+
+    // 🚨 AI rizikové zprávy — čte tabulku ai_flags napřímo přes RLS (admin SELECT/UPDATE
+    // politika na e-mail admina). Hard-stopy (krize, PPP) nahoře červeně. „Vyřešeno" jen
+    // přepne status, nic nemaže — historie flagů se drží celá.
+    var AIF_KAT={crisis:'🔴 KRIZE',eating_disorder:'🔴 Porucha příjmu potravy',medical:'🟠 Zdravotní',pregnancy:'🟠 Těhotenství',minor:'🟠 Nezletilý'};
+    function loadAiFlags(){
+      sb.from('ai_flags').select('id,created_at,category,hard_stop,user_email,note,status,resolved_at').order('created_at',{ascending:false}).limit(200)
+        .then(function(r){
+          var card=$('aiflags'), el=$('aiflagsBody'); if(!card||!el) return;
+          card.style.display='';
+          if(r.error){ el.innerHTML='<p class="muted" style="padding:.6rem 0;">⚠️ Nepodařilo se načíst: '+esc(r.error.message)+'</p>'; return; }
+          var rows=r.data||[];
+          if(!rows.length){ el.innerHTML='<p class="muted" style="padding:.6rem 0;">✅ Zatím žádný flag. Systém běží: jakmile AI zachytí rizikovou zprávu, objeví se tady a přijde ti mail.</p>'; return; }
+          var open=rows.filter(function(f){return f.status!=='resolved';});
+          var done=rows.filter(function(f){return f.status==='resolved';}).slice(0,15);
+          open.sort(function(a,b){ return ((b.hard_stop?1:0)-(a.hard_stop?1:0)) || String(b.created_at).localeCompare(String(a.created_at)); });
+          function radek(f){
+            var kat=AIF_KAT[f.category]||esc(f.category);
+            var styl=(f.hard_stop&&f.status!=='resolved')?'background:rgba(220,80,60,.13);':'';
+            var akce=f.status==='resolved'
+              ? '<span class="muted">vyřešeno '+fmtDay(f.resolved_at)+'</span>'
+              : '<button data-aif="'+esc(f.id)+'" class="mlogbtn">Vyřešeno ✓</button>';
+            return '<tr style="'+styl+'"><td style="white-space:nowrap;">'+fmtDate(f.created_at)+'</td><td style="white-space:nowrap;font-weight:700;">'+kat+'</td><td>'+esc(f.user_email||'—')+'</td><td style="max-width:360px;white-space:normal;">'+esc(f.note||'')+'</td><td>'+akce+'</td></tr>';
+          }
+          el.innerHTML=(open.length?'<p style="margin:.2rem 0 .6rem;font-weight:700;color:#e07f6f;">Nevyřízené: '+open.length+'</p>':'<p class="muted" style="margin:.2rem 0 .6rem;">Vše vyřízené ✅</p>')
+            +'<div style="overflow-x:auto;"><table><thead><tr><th>Kdy</th><th>Typ</th><th>Kdo</th><th>Úryvek zprávy</th><th></th></tr></thead><tbody>'
+            +open.map(radek).join('')+done.map(radek).join('')+'</tbody></table></div>';
+          el.querySelectorAll('[data-aif]').forEach(function(b){
+            b.addEventListener('click',function(){
+              b.disabled=true;
+              sb.from('ai_flags').update({status:'resolved',resolved_at:new Date().toISOString()}).eq('id',b.getAttribute('data-aif'))
+                .then(function(rr){ if(rr.error){ b.disabled=false; toast('Nepovedlo se: '+rr.error.message); } else { toast('Označeno jako vyřešené'); loadAiFlags(); } });
+            });
+          });
+        });
     }
 
     // 🩺 Dnešní puls — admin-pulse edge funkce (maily/fronta/leadi/prodeje/affiliate)
