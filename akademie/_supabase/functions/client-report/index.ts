@@ -135,11 +135,32 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
 
   // aktivity
   const a = r.activity || {};
+  const prevAct = (prev && prev.activity) || {};
   b += sect("Aktivity") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='font-size:14px;color:#F0EADF'>` +
-    `<tr><td style='padding:4px 0'>🚶 Kroky (Ø/den)</td><td align='right' style='font-weight:700;color:#fff'>${czk(num(a.kroky))}${delta(num(a.kroky), prev ? num((prev.activity || {}).kroky) : null, false)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>🚶 Kroky (Ø/den)</td><td align='right' style='font-weight:700;color:#fff'>${czk(num(a.kroky))}${delta(num(a.kroky), num(prevAct.kroky), false)}</td></tr>` +
     `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" : "—"}</td></tr>` +
+    `<tr><td style='padding:4px 0'>⏱️ Sport celkem (min/týden)</td><td align='right' style='font-weight:700;color:#fff'>${num(a.sport_min) != null ? czk(num(a.sport_min)) : "—"}${delta(num(a.sport_min), num(prevAct.sport_min), false)}</td></tr>` +
     `<tr><td style='padding:4px 0'>🏃 Kardio</td><td align='right' style='font-weight:700;color:#fff'>${esc(a.kardio || "—")}</td></tr>` +
     `<tr><td style='padding:4px 0'>⚽ Další</td><td align='right' style='font-weight:700;color:#fff'>${esc(a.dalsi || "—")}</td></tr></table>`;
+
+  // plán z minulého reportu vs. realita — jen když si ho klient minule nastavil
+  const prevPlan = prevAct.plan_next;
+  if (prevPlan && (num(prevPlan.kroky) != null || num(prevPlan.sport_min) != null)) {
+    const planOk = (planV: number | null, realV: number | null) =>
+      planV == null || realV == null ? "" : (realV >= planV ? " ✓" : ` (plán ${czk(planV)})`);
+    b += `<p style='margin:8px 0 0;font-size:13px;color:#8F8A99'>Plán z minulého reportu: ` +
+      `${czk(num(prevPlan.kroky))} kroků · ${czk(num(prevPlan.sport_min))} min sportu. ` +
+      `Realita: ${czk(num(a.kroky))} kroků${planOk(num(prevPlan.kroky), num(a.kroky))} · ` +
+      `${czk(num(a.sport_min))} min${planOk(num(prevPlan.sport_min), num(a.sport_min))}.</p>`;
+  }
+
+  // plán na příští týden
+  const pn = a.plan_next || {};
+  if (num(pn.kroky) != null || num(pn.sport_min) != null) {
+    b += sect("Plán na příští týden") +
+      `<p style='margin:0;font-size:14px;color:#F0EADF'>🚶 <strong>${czk(num(pn.kroky))}</strong> kroků denně · ⏱️ <strong>${czk(num(pn.sport_min))}</strong> min sportu za týden` +
+      `${pn.stejne ? ` <span style='color:#8F8A99'>(stejně jako tento týden)</span>` : ""}</p>`;
+  }
 
   // škály
   const s = r.scales || {};

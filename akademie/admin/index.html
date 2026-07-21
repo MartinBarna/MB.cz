@@ -492,18 +492,24 @@
         +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>';
       // reporty
       if(reps.length){
-        h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
+        h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Sport min</th><th>Plán příští t.</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
         reps.forEach(function(r,ri){
           var m=r.measurements||{},n=r.nutrition||{},a=r.activity||{},s=r.scales||{},t=r.notes||{};
           var txt=[t.povedlo?'✓ '+t.povedlo:'',t.drhlo?'✗ '+t.drhlo:'',t.otazky?'? '+t.otazky:'',t.dalsi?'💬 '+t.dalsi:''].filter(Boolean).join(' · ');
           var fot=(Array.isArray(r.photos)?r.photos:[]).map(function(p,pi){ return '<a href="#" data-kdoc="'+esc(p)+'" style="color:#F6CD63;text-decoration:none;">📷'+(pi+1)+'</a>'; }).join(' ');
           var dnyArr=(n.dny||[]).filter(Boolean);
           var datum=dnyArr.length?'<a href="#" data-kdny="'+ri+'" style="color:#F6CD63;text-decoration:none;" title="denní rozpis stravy">▸ '+fmtDay(r.report_date)+'</a>':fmtDay(r.report_date);
-          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'—')+'</td><td style="max-width:260px;white-space:normal;">'+esc(txt)+'</td></tr>';
+          // sport v minutach: novy formular = sport_min; stare import-sheet reporty = fitko_min +
+          // kardio_min (stejna jednotka, soucet je poctivy; pocty na minuty se neprepocitavaji)
+          var sportMin=kliNum(a.sport_min);
+          if(sportMin==null&&(kliNum(a.fitko_min)!=null||kliNum(a.kardio_min)!=null)) sportMin=(kliNum(a.fitko_min)||0)+(kliNum(a.kardio_min)||0);
+          var pn=a.plan_next||{};
+          var plan=(kliNum(pn.kroky)!=null||kliNum(pn.sport_min)!=null)?(kliCz(pn.kroky)+' kr / '+kliCz(pn.sport_min)+' min'+(pn.stejne?' (=)':'')):'—';
+          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'—')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'—')+'</td><td style="max-width:260px;white-space:normal;">'+esc(txt)+'</td></tr>';
           if(dnyArr.length){
             var dt='<table style="font-size:.76rem;border-collapse:collapse;"><tr><th style="padding:2px 8px;color:#8F8A99;">Den</th><th style="padding:2px 8px;color:#8F8A99;">kcal</th><th style="padding:2px 8px;color:#8F8A99;">B</th><th style="padding:2px 8px;color:#8F8A99;">S</th><th style="padding:2px 8px;color:#8F8A99;">T</th><th style="padding:2px 8px;color:#8F8A99;">Vl</th></tr>'
               +(n.dny||[]).map(function(d){ if(!d) return ''; return '<tr><td style="padding:2px 8px;color:#8F8A99;">'+esc(d.den||'')+'</td><td style="padding:2px 8px;">'+kliCz(d.kcal)+'</td><td style="padding:2px 8px;">'+kliCz(d.p)+'</td><td style="padding:2px 8px;">'+kliCz(d.c)+'</td><td style="padding:2px 8px;">'+kliCz(d.f)+'</td><td style="padding:2px 8px;">'+kliCz(d.fib)+'</td></tr>'; }).join('')+'</table>';
-            h+='<tr id="kdnyrow'+ri+'" style="display:none;"><td colspan="19" style="background:rgba(235,177,44,.05);padding:6px 12px;">🍽️ Denní rozpis (z Kalorických tabulek / ručně):<br>'+dt+'</td></tr>';
+            h+='<tr id="kdnyrow'+ri+'" style="display:none;"><td colspan="21" style="background:rgba(235,177,44,.05);padding:6px 12px;">🍽️ Denní rozpis (z Kalorických tabulek / ručně):<br>'+dt+'</td></tr>';
           }
         });
         h+='</tbody></table></div>';
@@ -605,7 +611,7 @@
       var d=KDET.data; if(!d) return;
       var SEP=';', cols=['Datum','Váha (kg)'];
       KLI_MIRY.forEach(function(x){ cols.push(x[1]+' (cm)'); });
-      cols=cols.concat(['kcal Ø','Bílkoviny Ø (g)','Sacharidy Ø (g)','Tuky Ø (g)','Vláknina Ø (g)','Dny zapsáno','Kroky Ø','Fitko','Kardio','Další sport','Únava 1-5','Hlad 1-5','Síla 1-5','Spánek (h)','Spánek kvalita 1-5','Dodržení 1-5','Co se povedlo','Co drhlo','Otázky','Cokoliv dalšího','Fotek']);
+      cols=cols.concat(['kcal Ø','Bílkoviny Ø (g)','Sacharidy Ø (g)','Tuky Ø (g)','Vláknina Ø (g)','Dny zapsáno','Kroky Ø','Fitko','Sport celkem (min)','Plán kroky','Plán sport (min)','Kardio','Další sport','Únava 1-5','Hlad 1-5','Síla 1-5','Spánek (h)','Spánek kvalita 1-5','Dodržení 1-5','Co se povedlo','Co drhlo','Otázky','Cokoliv dalšího','Fotek']);
       function cell(v){ v=v==null?'':String(v).replace(/\./g,','); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
       function cellTxt(v){ v=v==null?'':String(v); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
       var lines=[cols.join(SEP)];
@@ -613,7 +619,8 @@
         var m=r.measurements||{},n=r.nutrition||{},a=r.activity||{},s=r.scales||{},t=r.notes||{};
         var row=[r.report_date,cell(r.weight)];
         KLI_MIRY.forEach(function(x){ row.push(cell(m[x[0]])); });
-        row=row.concat([cell(n.kcal),cell(n.protein),cell(n.carbs),cell(n.fat),cell(n.fiber),cell(n.dny_zapsano),cell(a.kroky),cell(a.fitko),cellTxt(a.kardio),cellTxt(a.dalsi),cell(s.unava),cell(s.hlad),cell(s.sila),cell(s.spanek_h),cell(s.spanek_kvalita),cell(s.dodrzeni),cellTxt(t.povedlo),cellTxt(t.drhlo),cellTxt(t.otazky),cellTxt(t.dalsi),cell((Array.isArray(r.photos)?r.photos:[]).length||'')]);
+        var pn=a.plan_next||{};
+        row=row.concat([cell(n.kcal),cell(n.protein),cell(n.carbs),cell(n.fat),cell(n.fiber),cell(n.dny_zapsano),cell(a.kroky),cell(a.fitko),cell(a.sport_min),cell(pn.kroky),cell(pn.sport_min),cellTxt(a.kardio),cellTxt(a.dalsi),cell(s.unava),cell(s.hlad),cell(s.sila),cell(s.spanek_h),cell(s.spanek_kvalita),cell(s.dodrzeni),cellTxt(t.povedlo),cellTxt(t.drhlo),cellTxt(t.otazky),cellTxt(t.dalsi),cell((Array.isArray(r.photos)?r.photos:[]).length||'')]);
         lines.push(row.join(SEP));
       });
       var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});  // BOM: česká diakritika v Excelu

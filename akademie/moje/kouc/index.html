@@ -61,7 +61,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260718"></script>
+  <script src="/assets/ba-academy.js?v=20260721"></script>
   <script>
     (function () {
       var ADMINS = ['martin@martinbarna.cz', 'fitness.barna@gmail.com'];
@@ -117,7 +117,14 @@
               '<div class="m">spánek<b>' + (cur.sleep || '–') + '/5</b></div>' +
               '<div class="m">chutě<b>' + (cur.cravings || '–') + '/5</b></div>' +
               '<div class="m">tréninky<b>' + (cur.workouts_done || 0) + '/' + (cur.workouts_planned || 0) + '</b></div>' +
+              '<div class="m">sport<b>' + (cur.sport_min != null ? cur.sport_min + ' min' : '–') + '</b></div>' +
             '</div>' +
+            (cur.plan_next && (cur.plan_next.kroky != null || cur.plan_next.sport_min != null)
+              ? '<div style="color:var(--muted);font-size:.8rem;margin-top:.4rem;">Plán na příští týden: ' +
+                (cur.plan_next.kroky != null ? Number(cur.plan_next.kroky).toLocaleString('cs-CZ') + ' kroků' : '') +
+                (cur.plan_next.kroky != null && cur.plan_next.sport_min != null ? ' · ' : '') +
+                (cur.plan_next.sport_min != null ? cur.plan_next.sport_min + ' min sportu' : '') +
+                (cur.plan_next.stejne ? ' (beze změny)' : '') + '</div>' : '') +
             '<div class="flags">' + (flags.length ? flags.map(function (f) { return '<span class="flag">' + f + '</span>'; }).join('') : '<span class="flag ok">bez flagů</span>') + '</div>' +
             ((cur.win_text || cur.struggle_text) ? '<div class="txt">' +
               (cur.win_text ? '<div><span class="lbl">Povedlo se:</span> <span class="win">' + esc(cur.win_text) + '</span></div>' : '') +
