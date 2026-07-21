@@ -334,6 +334,28 @@ function userIdFromToken(token: string): string | null {
 function emailFromToken(token: string): string | null {
   try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof p.email === 'string' ? p.email.toLowerCase() : null; } catch { return null; }
 }
+// §8 FRONTA RIZIKOVÝCH ZPRÁV: každá zachycená riziková zpráva se zapíše do ai_flags
+// (tabulka jen pro admina, insert přes service-role). Zápis je awaited, ať se neztratí
+// při ukončení izolátu po odpovědi, ale NIKDY nesmí shodit bezpečnou odpověď → try/catch.
+// Mailem pak chodí jen typ+čas (fn ai-flags-notify); úryvek zprávy vidí jen admin v adminu.
+async function logFlag(userId: string | null, email: string | null, primary: string | null, categories: string[], text: string): Promise<void> {
+  if (!SUPABASE_URL || !SERVICE_ROLE) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/ai_flags`, {
+      method: 'POST',
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        user_id: userId,
+        user_email: email,
+        category: primary ?? categories[0] ?? 'unknown',
+        categories,
+        hard_stop: primary === 'crisis' || primary === 'eating_disorder',
+        note: text.slice(0, 300),
+        source: 'web-chat',
+      }),
+    });
+  } catch (e) { console.error('ai_flags insert selhal (flag muze chybet!):', String(e).slice(0, 200)); }
+}
 // best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď (fire-and-forget).
 function logUsage(userId: string | null, feature: string, usage: unknown): void {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
@@ -491,6 +513,9 @@ Deno.serve(async (req: Request) => {
   // SAFETY pre-flag (deterministický, sdílený s appkou Tvůj Coach): krize / poruchy příjmu potravy
   // = tvrdý stop bez volání LLM; ostatní rizika (léky, těhotenství, nezletilí) → opatrný safe-mode.
   const flag = preflagMessage(lastUser);
+  // Flag se zapisuje PŘED hard-stop returny, jinak by právě ty nejvážnější zprávy
+  // (krize, poruchy příjmu potravy) nikdy nedoputovaly do admin fronty.
+  if (flag.flagged) await logFlag(userId, email, flag.primary ?? null, flag.categories, lastUser);
   if (flag.primary === 'crisis') return json({ reply: HARD_STOP }, CORS, 200);
   if (flag.primary === 'eating_disorder') return json({ reply: ED_HARD_STOP }, CORS, 200);
   // [harden 2026-07-14] opatrnost napříč konverzací: riziko zmíněné o pár zpráv dřív („mám cukrovku"
