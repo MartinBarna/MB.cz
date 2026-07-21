@@ -90,7 +90,7 @@
       </div>
 
       <div class="dist">
-        <b>🏅 Poslední krok: Mistrovská pečeť:</b> Certifikát není jen za test. Po jeho složení zpracuj <b>případovou studii reálného klienta</b> (profil, analýza, plán, komunikace, etika a hranice) a pošli mi ji na <a href="mailto:martin@martinbarna.cz?subject=Barna%20Academy%20—%20case%20study%20k%20certifik%C3%A1tu" style="color:var(--gold-soft)">martin@martinbarna.cz</a>. Osobně ji projdu a po schválení ti certifikát vystavím, právě to mu dává váhu.
+        <b>🏅 Poslední krok: Mistrovská pečeť:</b> Certifikát není jen za test. Po jeho složení zpracuj <b>případovou studii reálného klienta</b> (profil, analýza, plán, komunikace, etika a hranice) a pošli mi ji na <a href="mailto:martin@martinbarna.cz?subject=Barna%20Academy%3A%20case%20study%20k%20certifik%C3%A1tu" style="color:var(--gold-soft)">martin@martinbarna.cz</a>. Osobně ji projdu a po schválení ti certifikát vystavím, právě to mu dává váhu.
       </div>
     </div>
 
@@ -154,7 +154,7 @@
         try{ localStorage.setItem('ba_cert_name', name); }catch(e){}
         res.innerHTML='<div class="big">'+score+' / '+QUESTIONS.length+' ✅</div>'
           + '<p><b style="color:#fff;">Písemný test máš složený!</b> Poslední krok k certifikátu je <b style="color:#fff;">Mistrovská pečeť</b>: zpracuj případovou studii reálného klienta a pošli mi ji na '
-          + '<a href="mailto:martin@martinbarna.cz?subject=Barna%20Academy%20—%20case%20study%20k%20certifik%C3%A1tu&amp;body='+encodeURIComponent('Jméno: '+name)+'" style="color:var(--gold-soft);">martin@martinbarna.cz</a>. '
+          + '<a href="mailto:martin@martinbarna.cz?subject=Barna%20Academy%3A%20case%20study%20k%20certifik%C3%A1tu&amp;body='+encodeURIComponent('Jméno: '+name)+'" style="color:var(--gold-soft);">martin@martinbarna.cz</a>. '
           + 'Osobně ji projdu a po schválení ti certifikát vystavím a pošlu. Právě to mu dává váhu. 💪</p>';
       } else {
         res.innerHTML='<div class="big">'+score+' / '+QUESTIONS.length+'</div><p>Ještě to nestačilo (potřebuješ '+PASS+'). Projdi si vysvětlení u otázek, mrkni zpět do lekcí a zkus to znovu.</p>';
@@ -170,7 +170,7 @@
       var load = (window.BA && window.BA.getLessonHtml) ? window.BA.getLessonHtml('zaverecny-test') : Promise.resolve(null);
       load.then(function(raw){
         try { QUESTIONS = JSON.parse(raw) || []; } catch(e) { QUESTIONS = []; }
-        if (!QUESTIONS.length){ $('questions').innerHTML = '<p style="color:#a89e94">🔒 Otázky se nepodařilo načíst — obnov stránku, nebo se znovu přihlas.</p>'; return; }
+        if (!QUESTIONS.length){ $('questions').innerHTML = '<p style="color:#a89e94">🔒 Otázky se nepodařilo načíst, obnov stránku, nebo se znovu přihlas.</p>'; return; }
         renderQuestions();
       });
       try{ var n=localStorage.getItem('ba_cert_name'); if(n) $('fullName').value=n; }catch(e){}
