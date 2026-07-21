@@ -53,10 +53,10 @@
 
     <div id="tool">
       <div class="searchbox"><span class="si">🔍</span><input id="q" type="search" placeholder="Hledej potravinu… (např. rýže, tvaroh, banán)" autocomplete="off" autofocus></div>
-      <p class="hint" id="hint">Nezáleží na diakritice — „rohlik" najde „rohlík".</p>
+      <p class="hint" id="hint">Nezáleží na diakritice, „rohlik" najde „rohlík".</p>
       <div class="count" id="count"></div>
       <div id="results"></div>
-      <p class="src">Makra jsou orientační (běžné potravinové tabulky) — u konkrétních produktů se mohou lišit, řiď se obalem. Databáze: Martinova kurátorská sbírka potravin.</p>
+      <p class="src">Makra jsou orientační (běžné potravinové tabulky), u konkrétních produktů se mohou lišit, řiď se obalem. Databáze: Martinova kurátorská sbírka potravin.</p>
     </div>
   </div>
 
@@ -103,7 +103,7 @@
     $('q').addEventListener('input',function(){ clearTimeout(t); t=setTimeout(doSearch,90); });
 
     fetch('/assets/curated-foods.json?v=1').then(function(r){return r.json();}).then(function(d){
-      FOODS=d; $('hint').textContent='Nezáleží na diakritice — „rohlik" najde „rohlík". '+d.length+' potravin.';
+      FOODS=d; $('hint').textContent='Nezáleží na diakritice, „rohlik" najde „rohlík". '+d.length+' potravin.';
       if($('q').value.trim()) doSearch();
     }).catch(function(){ $('hint').textContent='⚠️ Databázi se nepodařilo načíst.'; });
 
