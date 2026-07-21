@@ -1,7 +1,7 @@
-// Resend webhook → email_events (open / bounce / complaint) + stav leadu.
+// Resend webhook → email_events (open / click / bounce / complaint) + stav leadu.
 // Zapoji se v Resend dashboardu: Webhooks → Add endpoint →
 //   https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/resend-webhook
-//   eventy: email.opened, email.bounced, email.complained
+//   eventy: email.opened, email.clicked, email.bounced, email.complained
 // Podpisovy secret (whsec_...) MUSI byt v app_config klici 'resend_webhook_secret' —
 // dokud tam neni, funkce vraci 503 a NIC nezapisuje (fail closed: podvrzeny bounce
 // by jinak umel vypnout mailing celym leadum).
@@ -10,6 +10,10 @@
 // Pozn. k open rate: drip-send posila archivni BCC kopii se STEJNYM Resend id —
 // kdyz Martin otevre archiv, zapocita se open leadovi. Metriku ber orientacne,
 // dokud se archivace nepreveda na samostatny send.
+// Pozn. ke click: Resend click tracking prepisuje odkazy pres cizi domenu (mirne horsi
+// dorucitelnost) — dokud stiznosti neklesnou pod 0,10 %, mereni prokliku jede pres UTM
+// v Analytics a event 'email.clicked' se v Resendu NEsubscribuje. Tenhle handler je jen
+// pripraveny, aby az se click tracking zapne, se prokliky rovnou zapisovaly.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -58,7 +62,7 @@ Deno.serve(async (req) => {
   let ev: { type?: string; data?: { email_id?: string; to?: string | string[] } };
   try { ev = JSON.parse(payload); } catch { return json({ error: "bad_json" }, 400); }
 
-  const map: Record<string, string> = { "email.opened": "open", "email.bounced": "bounce", "email.complained": "complaint" };
+  const map: Record<string, string> = { "email.opened": "open", "email.clicked": "click", "email.bounced": "bounce", "email.complained": "complaint" };
   const t = map[String(ev?.type || "")];
   if (!t) return json({ ok: true, ignored: String(ev?.type || "") });
 
@@ -76,9 +80,9 @@ Deno.serve(async (req) => {
   const track = String(baseDetail.track ?? "");
   const detail = { ...baseDetail, via: "resend-webhook", of: isTest ? "test" : "sent" };
 
-  // dedup: open staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak
-  if (t === "open") {
-    let dq = admin.from("email_events").select("id").eq("type", "open").limit(1);
+  // dedup: open/click staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak
+  if (t === "open" || t === "click") {
+    let dq = admin.from("email_events").select("id").eq("type", t).limit(1);
     if (lead_id && step != null) dq = dq.eq("lead_id", lead_id).eq("step", step).eq("detail->>track", track);
     else dq = dq.eq("provider_id", emailId);
     const { data: dup } = await dq;
