@@ -128,7 +128,8 @@
   --radius:20px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:84px}
+/* smooth scroll zapíná až JS po load — jinak Chromium přeruší skok na kotvu při načítání stránky */
+html{scroll-padding-top:84px}
 body{background:var(--bg);color:var(--text);font-family:'Poppins',Arial,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
 img{max-width:100%;height:auto;display:block}
 a{color:var(--gold);text-decoration:none}
@@ -944,6 +945,17 @@ footer a{color:var(--gold-light)}
 <script>
 (function(){
   'use strict';
+  /* ===== Kotvy zvenku + plynulý scroll ===== */
+  // Smooth se zapíná až po načtení stránky (jinak Chromium při loadu přeruší skok na kotvu
+  // kvůli posunům layoutu z lazy obrázků) a s kotvou v URL po loadu ještě najisto doskočíme.
+  addEventListener('load',function(){
+    if(location.hash){
+      var target=document.getElementById(location.hash.slice(1));
+      if(target)target.scrollIntoView();
+    }
+    document.documentElement.style.scrollBehavior='smooth';
+  });
+
   /* ===== Mobilní menu ===== */
   var burger=document.getElementById('burger'),links=document.getElementById('navLinks');
   if(burger)burger.addEventListener('click',function(){
@@ -952,8 +964,8 @@ footer a{color:var(--gold-light)}
   });
   if(links)links.addEventListener('click',function(e){ if(e.target.closest('a'))links.classList.remove('open'); });
 
-  /* ===== Reveal on scroll ===== */
-  if('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches){
+  /* ===== Reveal on scroll (při příchodu s kotvou přeskočit, ať obsah nečeká na animaci) ===== */
+  if(!location.hash && 'IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches){
     document.documentElement.classList.add('reveal-on');
     var obs=new IntersectionObserver(function(es){es.forEach(function(en){
       if(en.isIntersecting){en.target.classList.add('in');obs.unobserve(en.target);}});},
