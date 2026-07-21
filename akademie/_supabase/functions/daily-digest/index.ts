@@ -89,11 +89,57 @@ Deno.serve(async (req) => {
   for (const l of leads7.data ?? []) { const d = String(l.created_at).slice(5, 10); trend[d] = (trend[d] ?? 0) + 1; }
   const trendStr = Object.keys(trend).sort().map((k) => k.split("-").reverse().join(".") + ". <b>" + trend[k] + "</b>").join(" &nbsp;·&nbsp; ");
 
+  // ===== Hlidac konverznich kanalu (21. 7. 2026) =====
+  // Vznikl po 13dennim TICHEM vypadku kontaktniho formulare: contact-send po nasazeni 8. 7.
+  // povoloval v CORS jen content-type, stranky posilaji i apikey+authorization, prohlizec
+  // kazde odeslani zablokoval jeste u navstevnika a na serveru nezustala zadna stopa.
+  // Server-side test tohle NIKDY neodhali, proto se denne ptame PRESNE jako prohlizec.
+  const BROWSER_FNS = ["contact-send", "lead-capture", "checkin-capture", "ai-martin"];
+  const NEEDED = ["authorization", "apikey", "content-type"];
+  const corsBad: string[] = [];
+  await Promise.all(BROWSER_FNS.map(async (slug) => {
+    try {
+      const r = await fetch(`${SUPABASE_URL}/functions/v1/${slug}`, {
+        method: "OPTIONS",
+        headers: {
+          "Origin": "https://martinbarna.cz",
+          "Access-Control-Request-Method": "POST",
+          "Access-Control-Request-Headers": NEEDED.join(", "),
+        },
+      });
+      const allow = (r.headers.get("access-control-allow-headers") || "").toLowerCase();
+      const ok = allow.includes("*") || NEEDED.every((h) => allow.includes(h));
+      if (!r.ok || !ok) corsBad.push(`${slug} (povoluje: ${allow || "nic"})`);
+    } catch (_e) { corsBad.push(slug + " (nedostupná)"); }
+  }));
+  // Detektor ticha: kdyz kanal dlouho nema ANI spamovy zaznam, je podezrely cely retez
+  // (formular pise do contact_messages i spam, leady chodi z reklam denne).
+  const [lastContact, lastLead] = await Promise.all([
+    admin.from("contact_messages").select("created_at").order("created_at", { ascending: false }).limit(1),
+    admin.from("leads").select("created_at").order("created_at", { ascending: false }).limit(1),
+  ]);
+  const daysSince = (v: unknown) => v ? Math.floor((now.getTime() - new Date(String(v)).getTime()) / 86400000) : 9999;
+  const dContact = daysSince(lastContact.data?.[0]?.created_at);
+  const dLead = daysSince(lastLead.data?.[0]?.created_at);
+
   const dY = yStart.toLocaleDateString("cs-CZ", { timeZone: "Europe/Prague", day: "numeric", month: "long" });
   const row = (label: string, val: string) => `<tr><td style="padding:7px 12px;color:#666">${label}</td><td style="padding:7px 12px;font-weight:700;text-align:right">${val}</td></tr>`;
   const warn = (t: string) => `<p style="margin:10px 0;padding:10px 14px;background:#fdecea;border-radius:10px;color:#a3352b"><b>⚠️ ${t}</b></p>`;
 
   let alerts = "";
+  if (corsBad.length > 0) {
+    alerts += warn("🔴 FORMULÁŘOVÁ CESTA MŮŽE BÝT ROZBITÁ (CORS): " + corsBad.join(", ") +
+      ". Prohlížeč návštěvníka pak odeslání zablokuje bez stopy na serveru. Stejná chyba v červenci " +
+      "13 dní tiše blokovala kontaktní formulář. Řekni Claudovi, ať to hned opraví a otestuje z prohlížeče.");
+  }
+  if (dContact >= 10 && dContact < 9999) {
+    alerts += warn("Kontaktní formulář nemá už " + dContact + " dní ani jeden záznam (ani spam). " +
+      "Buď je opravdu mrtvý provoz, nebo je rozbitá cesta zápisu. Stojí za kontrolu z prohlížeče.");
+  }
+  if (dLead >= 3 && dLead < 9999) {
+    alerts += warn("Sběr leadů nemá už " + dLead + " dní žádný nový kontakt. Při běžících reklamách " +
+      "to znamená rozbitý sběr (lead-capture) nebo vypnuté kampaně. Zkontrolovat.");
+  }
   if (wdrPending > 0) alerts += warn(wdrPending + "× odstoupení od smlouvy čeká na vyřízení (refundace do 14 dnů!)");
   if (errs > 0) alerts += warn(errs + "× chyba odesílání e-mailů včera" + (lastErr ? ": " + lastErr : ""));
   // Sepnuty jistic byl driv jen radek v tabulce nize, ktery vypada kazdy den stejne a lisi se
@@ -144,5 +190,5 @@ Deno.serve(async (req) => {
     }),
   });
   if (!res.ok) return json({ error: "resend_" + res.status }, 500);
-  return json({ ok: true, to, leads: leadsYc, sales: salesYc, sent, errors: errs, withdrawals_pending: wdrPending });
+  return json({ ok: true, to, leads: leadsYc, sales: salesYc, sent, errors: errs, withdrawals_pending: wdrPending, watchdog: { corsBad, dContact, dLead } });
 });
