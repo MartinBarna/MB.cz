@@ -221,7 +221,7 @@ TEMPLATE = r'''<!DOCTYPE html>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <style>
-:root{{--brand:#ff7a00;--brand2:#ff9d3c;--ink:#1a1714;--muted:#5d564d;--soft:#fff6ec;--line:#efe5d8;--paper:#fff;--b:#ff7a00;--s:#2e8be6;--t:#e0a020;}}
+:root{{--brand:#EBB12C;--brand2:#F6CD63;--ink:#1a1714;--muted:#5d564d;--soft:#fff6ec;--line:#efe5d8;--paper:#fff;--b:#EBB12C;--s:#2e8be6;--t:#e0a020;}}
 *{{box-sizing:border-box;}}html,body{{margin:0;}}
 body{{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#e9e7e4;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
 .sheet{{max-width:840px;margin:24px auto;background:var(--paper);box-shadow:0 18px 50px rgba(0,0,0,.13);}}

@@ -94,7 +94,7 @@ function emailHtml(name: string, unsub: string): string {
     + `.sr-white{color:#fff!important}`
     + `.sr-body{color:#cfc7bc!important}`
     + `.sr-eye{color:#a89e94!important}`
-    + `.sr-btn{background:linear-gradient(145deg,#ffb64d,#ff7a00)!important;color:#160d04!important}`
+    + `.sr-btn{background:#EBB12C!important;color:#1A1222!important}`
     + `.sr-sig{color:#8a8073!important}`
     + `.sr-foot{color:#6a6058!important}.sr-foot a{color:#8a8073!important}`
     + `}`
@@ -103,7 +103,7 @@ function emailHtml(name: string, unsub: string): string {
     + `[data-ogsc] .sr-white,[data-ogsb] .sr-white{color:#fff!important}`
     + `[data-ogsc] .sr-body,[data-ogsb] .sr-body{color:#cfc7bc!important}`
     + `[data-ogsc] .sr-eye,[data-ogsb] .sr-eye{color:#a89e94!important}`
-    + `[data-ogsc] .sr-btn,[data-ogsb] .sr-btn{background:linear-gradient(145deg,#ffb64d,#ff7a00)!important;color:#160d04!important}`
+    + `[data-ogsc] .sr-btn,[data-ogsb] .sr-btn{background:#EBB12C!important;color:#1A1222!important}`
     + `[data-ogsc] .sr-sig,[data-ogsb] .sr-sig{color:#8a8073!important}`
     + `[data-ogsc] .sr-foot,[data-ogsb] .sr-foot{color:#6a6058!important}[data-ogsc] .sr-foot a,[data-ogsb] .sr-foot a{color:#8a8073!important}`
     + `</style></head>`
@@ -114,7 +114,7 @@ function emailHtml(name: string, unsub: string): string {
     <div class="sr-eye" style="font-size:15px;color:#a89e94;letter-spacing:2px;font-weight:700">🔥 NEZTRAŤ SÉRII</div>
     <h1 class="sr-white" style="color:#fff;font-size:22px;margin:8px 0 12px">${hi}, tento týden ses ještě neučil</h1>
     <p class="sr-body" style="font-size:15px;line-height:1.6;color:#cfc7bc;margin:0 0 16px">Rozjel ses skvěle. A přesně teď se láme, jestli z toho bude zvyk. Stačí <b class="sr-white" style="color:#fff">jedna lekce</b> a týdenní cíl máš rozjetý zpátky. Deset minut, a jsi zase o krok blíž k tomu být lepší trenér.</p>
-    <a class="sr-btn" href="${SITE}/akademie/studium/" style="display:inline-block;background:linear-gradient(145deg,#ffb64d,#ff7a00);color:#160d04;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:50px;font-size:15px">▶ Pokračovat ve studiu</a>
+    <a class="sr-btn" href="${SITE}/akademie/studium/" style="display:inline-block;background:#EBB12C;color:#1A1222;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:50px;font-size:15px">▶ Pokračovat ve studiu</a>
     <p class="sr-sig" style="font-size:13px;line-height:1.6;color:#8a8073;margin:20px 0 0">Drž se, i malý krok se počítá. Be Effective. 💪<br>Martin</p>
   </div>
   <p class="sr-foot" style="font-size:11px;color:#6a6058;text-align:center;margin:16px 0 0">Barna Academy · martinbarna.cz &nbsp;·&nbsp; <a href="${unsub}" style="color:#8a8073">Odhlásit připomínky</a></p>

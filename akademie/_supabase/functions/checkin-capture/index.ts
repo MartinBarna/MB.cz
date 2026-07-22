@@ -32,7 +32,7 @@ function wrapHtml(preheader: string, body: string, footerHtml: string): string {
     `<div style='font-size:12px;line-height:1.5;color:#999'>${footerHtml}</div></div></body></html>`;
 }
 const btn = (text: string, href: string) =>
-  `<p style='margin:6px 0 16px'><a href='${href}' style='display:inline-block;background:#ff7a00;color:#161616;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(text)}</a></p>`;
+  `<p style='margin:6px 0 16px'><a href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(text)}</a></p>`;
 
 async function sendResend(to: string, subject: string, html: string, text: string, replyTo: string): Promise<void> {
   if (!RESEND_API_KEY) throw new Error("no_resend_key");

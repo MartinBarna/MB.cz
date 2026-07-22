@@ -19,12 +19,12 @@ WA_SVG = ('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBo
           '2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>')
 
 STYLE = """    <style>
-        .skip-link{position:absolute;left:-999px;top:0;background:#ff7a00;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
+        .skip-link{position:absolute;left:-999px;top:0;background:#EBB12C;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
         .skip-link:focus{left:0}
 
-        :root { --green:#ff7a00; --green-dark:#161616; --green-light:#fff4e8; --gold:#ff7a00; --ink:#161616; }
+        :root { --green:#EBB12C; --green-dark:#161616; --green-light:#fff4e8; --gold:#EBB12C; --ink:#161616; }
         * { box-sizing:border-box; scroll-behavior:smooth; }
-        a:focus-visible, button:focus-visible { outline:3px solid #ff7a00; outline-offset:2px; border-radius:4px; }
+        a:focus-visible, button:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; border-radius:4px; }
         body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
         a { color:var(--green-dark); }
         .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
@@ -89,7 +89,7 @@ def render(a):
     favicon = ("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>"
                "<rect width='100' height='100' rx='22' fill='%23161616'/>"
                "<text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' "
-               "fill='%23ff7a00' text-anchor='middle'>MB</text></svg>")
+               "fill='%23EBB12C' text-anchor='middle'>MB</text></svg>")
     font = ("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800"
             "&display=swap")
     return f"""<!DOCTYPE html>
@@ -99,7 +99,7 @@ def render(a):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{a['title']} — Martin Barna</title>
     <meta name="description" content="{a['desc']}">
-    <meta name="theme-color" content="#ff7a00">
+    <meta name="theme-color" content="#EBB12C">
     <link rel="canonical" href="{canonical}">
     <meta property="og:type" content="article">
     <meta property="og:url" content="{canonical}">
