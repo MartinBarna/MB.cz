@@ -80,17 +80,44 @@ function emailHtml(name: string, unsub: string): string {
   const _t = (name || "").trim().split(" ")[0] || "";
   const _fn = vokativ(_t ? _t.charAt(0).toUpperCase() + _t.slice(1) : "", "");
   const hi = _fn ? "Ahoj " + esc(_fn) : "Ahoj";
-  return `<!doctype html><html><body style="margin:0;background:#0f0d0b;font-family:Poppins,Segoe UI,Arial,sans-serif;color:#e9e2d8">
+  // DARK-MODE FIX (22.7.2026): color-scheme 'light dark' + zamky barev pres tridy .sr-* !important.
+  // Bez toho Gmail/klienti v dark rezimu invertovali tmavou kartu na svetlou a svetly text zcernal
+  // (necitelny text na tmave gradientove karte). [data-ogsc]/[data-ogsb] = Outlook, @media = Apple Mail.
+  // Paleta je jina nez u drip mailu (#0f0d0b, kremovy text, oranzovy gradient), proto vlastni tridy.
+  // Inline styly zustavaji jako fallback. Puvodni vzhled zachovan 1:1, jen zamceny proti prebarveni.
+  return `<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark">`
+    + `<style>`
+    + `:root{color-scheme:light dark;supported-color-schemes:light dark}`
+    + `@media (prefers-color-scheme: dark){`
+    + `.sr-bg{background:#0f0d0b!important}`
+    + `.sr-card{background:linear-gradient(180deg,#1a1613,#121010)!important}`
+    + `.sr-white{color:#fff!important}`
+    + `.sr-body{color:#cfc7bc!important}`
+    + `.sr-eye{color:#a89e94!important}`
+    + `.sr-btn{background:linear-gradient(145deg,#ffb64d,#ff7a00)!important;color:#160d04!important}`
+    + `.sr-sig{color:#8a8073!important}`
+    + `.sr-foot{color:#6a6058!important}.sr-foot a{color:#8a8073!important}`
+    + `}`
+    + `[data-ogsc] .sr-bg,[data-ogsb] .sr-bg{background:#0f0d0b!important}`
+    + `[data-ogsc] .sr-card,[data-ogsb] .sr-card{background:linear-gradient(180deg,#1a1613,#121010)!important}`
+    + `[data-ogsc] .sr-white,[data-ogsb] .sr-white{color:#fff!important}`
+    + `[data-ogsc] .sr-body,[data-ogsb] .sr-body{color:#cfc7bc!important}`
+    + `[data-ogsc] .sr-eye,[data-ogsb] .sr-eye{color:#a89e94!important}`
+    + `[data-ogsc] .sr-btn,[data-ogsb] .sr-btn{background:linear-gradient(145deg,#ffb64d,#ff7a00)!important;color:#160d04!important}`
+    + `[data-ogsc] .sr-sig,[data-ogsb] .sr-sig{color:#8a8073!important}`
+    + `[data-ogsc] .sr-foot,[data-ogsb] .sr-foot{color:#6a6058!important}[data-ogsc] .sr-foot a,[data-ogsb] .sr-foot a{color:#8a8073!important}`
+    + `</style></head>`
+    + `<body class="sr-bg" style="margin:0;background:#0f0d0b;font-family:Poppins,Segoe UI,Arial,sans-serif;color:#e9e2d8">
 <div style="max-width:560px;margin:0 auto;padding:28px 22px">
-  <div style="font-weight:800;color:#fff;font-size:20px;margin-bottom:18px">Barna Academy</div>
-  <div style="background:linear-gradient(180deg,#1a1613,#121010);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px 24px">
-    <div style="font-size:15px;color:#a89e94;letter-spacing:2px;font-weight:700">🔥 NEZTRAŤ SÉRII</div>
-    <h1 style="color:#fff;font-size:22px;margin:8px 0 12px">${hi}, tento týden ses ještě neučil</h1>
-    <p style="font-size:15px;line-height:1.6;color:#cfc7bc;margin:0 0 16px">Rozjel ses skvěle. A přesně teď se láme, jestli z toho bude zvyk. Stačí <b style="color:#fff">jedna lekce</b> a týdenní cíl máš rozjetý zpátky. Deset minut, a jsi zase o krok blíž k tomu být lepší trenér.</p>
-    <a href="${SITE}/akademie/studium/" style="display:inline-block;background:linear-gradient(145deg,#ffb64d,#ff7a00);color:#160d04;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:50px;font-size:15px">▶ Pokračovat ve studiu</a>
-    <p style="font-size:13px;line-height:1.6;color:#8a8073;margin:20px 0 0">Drž se, i malý krok se počítá. Be Effective. 💪<br>Martin</p>
+  <div class="sr-white" style="font-weight:800;color:#fff;font-size:20px;margin-bottom:18px">Barna Academy</div>
+  <div class="sr-card" style="background:linear-gradient(180deg,#1a1613,#121010);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px 24px">
+    <div class="sr-eye" style="font-size:15px;color:#a89e94;letter-spacing:2px;font-weight:700">🔥 NEZTRAŤ SÉRII</div>
+    <h1 class="sr-white" style="color:#fff;font-size:22px;margin:8px 0 12px">${hi}, tento týden ses ještě neučil</h1>
+    <p class="sr-body" style="font-size:15px;line-height:1.6;color:#cfc7bc;margin:0 0 16px">Rozjel ses skvěle. A přesně teď se láme, jestli z toho bude zvyk. Stačí <b class="sr-white" style="color:#fff">jedna lekce</b> a týdenní cíl máš rozjetý zpátky. Deset minut, a jsi zase o krok blíž k tomu být lepší trenér.</p>
+    <a class="sr-btn" href="${SITE}/akademie/studium/" style="display:inline-block;background:linear-gradient(145deg,#ffb64d,#ff7a00);color:#160d04;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:50px;font-size:15px">▶ Pokračovat ve studiu</a>
+    <p class="sr-sig" style="font-size:13px;line-height:1.6;color:#8a8073;margin:20px 0 0">Drž se, i malý krok se počítá. Be Effective. 💪<br>Martin</p>
   </div>
-  <p style="font-size:11px;color:#6a6058;text-align:center;margin:16px 0 0">Barna Academy · martinbarna.cz &nbsp;·&nbsp; <a href="${unsub}" style="color:#8a8073">Odhlásit připomínky</a></p>
+  <p class="sr-foot" style="font-size:11px;color:#6a6058;text-align:center;margin:16px 0 0">Barna Academy · martinbarna.cz &nbsp;·&nbsp; <a href="${unsub}" style="color:#8a8073">Odhlásit připomínky</a></p>
 </div></body></html>`;
 }
 
