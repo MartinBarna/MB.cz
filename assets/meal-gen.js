@@ -170,8 +170,13 @@
         }
       }
       // 3) zelenina pro objem (u hlavních jídel)
+      // [fix 2026-07-22] aromatická zelenina (cibule, česnek, chilli, bylinky…) není samostatná
+      // příloha — 150 g cibule k večeři je nesmysl. Do dochucení patří, na talíř jako zelenina ne.
       if (dist[i] >= 0.2) {
-        var veg = pick(db, 'veg', seed + i + 5, (i === 0) ? /rajce|okurka|paprika|spenat/ : null);
+        var sideVegDb = db.filter(function (f) {
+          return f.cat !== 'veg' || !/cibul|cesnek|chilli|zazvor|kren|bylink|petrzel|koriandr|kopr|pazitk|medvedi/.test(f.id);
+        });
+        var veg = pick(sideVegDb, 'veg', seed + i + 5, (i === 0) ? /rajce|okurka|paprika|spenat/ : null);
         if (veg) items.push({ food: veg, grams: 150 });
       }
       // 4) ovoce u snídaně/svačin
@@ -220,9 +225,12 @@
     // bílkovin (u nabírání/vysokého příjmu i o 30–45 %).
     // realistické stropy porcí — bez nich škálování vyrobí nesmysly (675 g bulguru na zátah)
     var CAP = { protein:300, carb:500, legume:350, dairy:350, veg:250, fruit:250, fat:50, snack:120 };
+    // stropy pro konkrétní potraviny (přebijí kategorii): 240 g syrových bílků na talíři
+    // je „tabulkové" jídlo, ne snídaně — víc než ~5 bílků na jedno jídlo nedává smysl
+    var FOOD_CAP = { bilek: 150 };
     function capPass() {
       all.forEach(function (it) {
-        var cap = CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
+        var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
       });
     }
     function runScale() {
@@ -345,7 +353,7 @@
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
       it.grams = Math.max(step, Math.round(it.grams / step) * step);
-      var cap = CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
+      var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
     });
     // [fix 2026-07-14] minigramáže („přidej 1 g oleje") v klientském plánu nemají co dělat —
     // nebílkovinné položky pod 8 g vyhodíme (pár kalorií totály poctivě ukážou);
@@ -385,7 +393,7 @@
   // Jen položky, kde kus dává v obchodě smysl; ostatní zůstávají v gramech.
   var PIECES = {
     vejce: [60, 'ks'], bilek: [33, 'ks'],
-    rohlik: [43, 'ks'], 'grahamovy-rohlik': [60, 'ks'], houska: [43, 'ks'], 'houska-celozrnna': [60, 'ks'],
+    rohlik: [43, 'ks'], 'grahamovy-rohlik': [60, 'ks'], houska: [50, 'ks'], 'houska-celozrnna': [60, 'ks'],
     tortilla: [60, 'ks'], 'tortilla-kukuricna': [30, 'ks'], 'bezlepkova-tortilla': [30, 'ks'], 'low-carb-tortilla-wrap': [45, 'ks'],
     knackebrot: [10, 'ks'], 'bezlepkovy-knackebrot': [15, 'ks'],
     'tousty-celozrnne': [28, 'ks'], 'chleb-toustovy-celozrnny-tmavy': [25, 'ks'], 'bezlepkovy-chleb-toustovy': [30, 'ks'],

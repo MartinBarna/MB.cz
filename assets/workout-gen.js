@@ -40,9 +40,16 @@
   // když pro daný slot nic zatíženého není (typicky břicho / core), ne jako běžný prvek plánu.
   var LOADED = ['velka-cinka', 'cinky', 'kettlebell', 'stroj', 'kladka', 'hrazda'];
   function isLoaded(e) { return e.equip.some(function (x) { return LOADED.indexOf(x) !== -1; }); }
+  // [fix 2026-07-22] Režim „jednoručky": preferuj cviky, které činky/kettlebell REÁLNĚ používají
+  // (uživatel si je vybral, tak je chce v plánu vidět), tělo doplňuje. Dřív plán z jednoruček
+  // skoro nečerpal a dominovaly gumy a TRX, které uživatel vůbec nemusí mít.
   function preferLoaded(cand, equipMode) {
-    if (equipMode !== 'vse') return cand;   // u „jen činky" / „jen tělo" je guma i tělo legitimní volba
-    var top = cand.filter(isLoaded);
+    var top;
+    if (equipMode === 'vse') top = cand.filter(isLoaded);
+    else if (equipMode === 'cinky') top = cand.filter(function (e) {
+      return e.equip.some(function (x) { return x === 'cinky' || x === 'kettlebell'; });
+    });
+    else return cand;
     return top.length ? top : cand;
   }
 
@@ -61,11 +68,15 @@
     return db.filter(function (e) {
       if (e.location.indexOf(loc) === -1) return false;
       if ((LEVELS[e.level] || 1) > maxLvl) return false;
+      // [fix 2026-07-22] Cviky, které v NÁZVU předepisují gumu nebo TRX, do režimů „tělo"
+      // a „jednoručky" nepatří vůbec — uživatel to náčiní neuvedl a „dřep s gumou" bez gumy
+      // je prostě jiný cvik. (Nezávislé na equip datech, kde má guma/TRX často i 'telo'.)
+      if ((equipMode === 'telo' || equipMode === 'cinky') && /guma|trx/.test(e.id)) return false;
       if (equipMode === 'telo') return e.equip.indexOf('telo') !== -1;
       if (equipMode === 'cinky') {
-        // Režim „jednoručky/doma" — jen náčiní, které reálně máš. 'lavka'/'hrazda' jsou jen
-        // doplňky (bench, hrazda), ne signál „jde to lehce" → NEsmí propustit cvik na velkou činku/stroj.
-        return e.equip.some(function (x) { return ['telo', 'cinky', 'kettlebell', 'guma', 'trx'].indexOf(x) !== -1; });
+        // Režim „jednoručky/doma" — jen náčiní, které reálně máš (tělo + činky + kettlebell).
+        // 'lavka'/'hrazda' jsou jen doplňky, ne signál „jde to lehce".
+        return e.equip.some(function (x) { return ['telo', 'cinky', 'kettlebell'].indexOf(x) !== -1; });
       }
       return true; // vse
     });
