@@ -33,7 +33,7 @@
         '.ba-lp .q{color:#fff;font-weight:700;font-size:.92rem;margin:0 0 12px;}',
         '.ba-lp-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;}',
         '.ba-lp-btns a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;padding:16px 10px;border-radius:15px;font-weight:800;font-size:1rem;border:1px solid #3a2c1c;background:rgba(255,255,255,.04);color:#fff;transition:transform .18s,border-color .18s,background .18s;}',
-        '.ba-lp-btns a .ic{font-size:1.7rem;}',
+        '.ba-lp-btns a .ic{font-size:1.7rem;line-height:1.1;}',
         '.ba-lp-btns a small{font-weight:600;font-size:.74rem;color:#F6CD63;}',
         '.ba-lp-btns a:hover{transform:translateY(-3px);border-color:rgba(235,177,44,.6);background:rgba(235,177,44,.1);}',
         '.ba-lp .later{margin-top:14px;background:none;border:none;color:#8a7e6d;font-size:.82rem;cursor:pointer;text-decoration:underline;font-family:inherit;}',
