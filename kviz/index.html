@@ -105,36 +105,69 @@
     ['vikend','data','vecer','pohyb'].forEach(function(k){ if(score[k]>max){ max=score[k]; best=k; } });
     var P=PROFILY[best];
     qbox.classList.add('hidden'); rbox.classList.remove('hidden');
-    rbox.innerHTML='<div class="card"><h2>'+P.t+'</h2><p>'+P.d+'</p>'
-      +'<p style="margin-top:14px;"><b style="color:#F6CD63;">Co s tím, 3 kroky:</b></p><ol>'+P.kroky.map(function(k){ return '<li>'+k+'</li>'; }).join('')+'</ol>'
-      +(P.pdf?'<a class="cta" href="'+P.pdf+'">'+P.pdfT+'</a>':'')
-      +'<a class="cta'+(P.pdf?'2':'')+'" href="/kalkulacka-kalorii-a-makrozivin/">Spočítat si kalorie zdarma</a>'
-      +'<p style="margin-top:16px;">A jestli chceš celý systém od výpočtu po udržení, přesně tohle učím ve <a href="/videokurz" style="color:#F6CD63;font-weight:700;">videokurzu za 800 Kč</a> (182 videí, doživotně).</p>'
-      +'<div class="mailbox"><b>💌 Chceš plán šitý na tvůj výsledek?</b><p class="small" style="margin:4px 0 0;">Pošlu ti na mail 7denní jídelníček zdarma + praktické tipy přesně k tvému profilu.</p>'
-      +'<input type="email" id="kvEmail" placeholder="tvuj@email.cz" autocomplete="email" aria-label="Tvůj e-mail"><button class="cta" id="kvSend" style="margin:0;">Poslat zdarma</button>'
-      +'<p class="small" id="kvMsg" style="margin:8px 0 0;">Odhlásíš se kdykoliv jedním klikem.</p></div></div>';
     if(window.gtag) gtag('event','kviz_dokoncen',{profil:best, otazek:Q.length}); if(window.fbq) fbq('trackCustom','KvizDokoncen',{profil:best});
+    // E-mailova brana pred vysledkem: kampan plati za leady a s dobrovolnym polem pod
+    // vysledkem padal ~1 lead z 15 dokonceni (GA4 vs leads, cervenec). Teaser (nazev
+    // profilu) je videt hned, detail a 3 kroky se odemknou e-mailem. Pri vypadku
+    // serveru se objevi nouzovy odkaz "bez e-mailu", at chyba nezablokuje cely kviz.
+    rbox.innerHTML='<div class="card"><h2>Hotovo! Tvůj profil: '+P.t+'</h2>'
+      +'<p>Vyhodnocení mám. Zadej e-mail a hned ti ukážu celý výsledek: co tě reálně brzdí a 3 konkrétní kroky, co s tím.</p>'
+      +'<div class="mailbox" style="margin-top:14px;"><b>💌 K výsledku ti pošlu i 7denní jídelníček zdarma</b><p class="small" style="margin:4px 0 0;">Sestavený přesně k tvému profilu. Žádný spam.</p>'
+      +'<input type="email" id="kvEmail" placeholder="tvuj@email.cz" autocomplete="email" aria-label="Tvůj e-mail"><button class="cta" id="kvSend" style="margin:0;">Zobrazit můj výsledek</button>'
+      +'<p class="small" id="kvMsg" style="margin:8px 0 0;">Odhlásíš se kdykoliv jedním klikem.</p></div></div>';
     var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
     kvTrack('kviz_email_zobrazen',{profil:best});
+    var skipShown=false;
+    function reveal(sEmailem){
+      kvTrack('kviz_vysledek_zobrazen',{profil:best, s_emailem:!!sEmailem});
+      rbox.innerHTML='<div class="card"><h2>'+P.t+'</h2>'
+        +(sEmailem?'<p class="small" style="color:#7fc98b;margin:0 0 10px;">✅ Jídelníček ti letí do schránky (mrkni i do promoakcí).</p>':'')
+        +'<p>'+P.d+'</p>'
+        +'<p style="margin-top:14px;"><b style="color:#F6CD63;">Co s tím, 3 kroky:</b></p><ol>'+P.kroky.map(function(k){ return '<li>'+k+'</li>'; }).join('')+'</ol>'
+        +(P.pdf?'<a class="cta" href="'+P.pdf+'">'+P.pdfT+'</a>':'')
+        +'<a class="cta'+(P.pdf?'2':'')+'" href="/kalkulacka-kalorii-a-makrozivin/">Spočítat si kalorie zdarma</a>'
+        +'<p style="margin-top:16px;">A jestli chceš celý systém od výpočtu po udržení, přesně tohle učím ve <a href="/videokurz" style="color:#F6CD63;font-weight:700;">videokurzu za 800 Kč</a> (182 videí, doživotně).</p></div>';
+    }
+    var kvIn=document.getElementById('kvEmail');
+    kvIn.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('kvSend').click(); } });
     document.getElementById('kvSend').addEventListener('click',function(){
-      var em=(document.getElementById('kvEmail').value||'').trim(), msg=document.getElementById('kvMsg');
+      var em=(kvIn.value||'').trim(), msg=document.getElementById('kvMsg');
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ msg.textContent='⚠️ Zadej prosím platný e-mail.'; return; }
-      var btn=document.getElementById('kvSend'); btn.disabled=true; btn.textContent='Posílám…';
+      var btn=document.getElementById('kvSend'); btn.disabled=true; btn.textContent='Moment…';
+      function fail(txt){
+        msg.textContent=txt; btn.disabled=false; btn.textContent='Zobrazit můj výsledek';
+        // Nouzovy ventil jen pro technickou chybu: bez nej by vypadek endpointu
+        // zamknul vysledek uplne vsem a reklama by palila penize do zdi.
+        if(!skipShown){ skipShown=true;
+          var a=document.createElement('a'); a.href='#';
+          a.style.cssText='display:block;margin-top:8px;color:#8F8A99;font-size:.8rem;text-decoration:underline;';
+          a.textContent='Zobrazit výsledek bez e-mailu →';
+          a.addEventListener('click',function(e){ e.preventDefault(); kvTrack('kviz_email_preskocen',{duvod:'chyba'}); reveal(false); });
+          msg.parentNode.appendChild(a);
+        }
+      }
       fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture',{
         method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},
         body:JSON.stringify(Object.assign({email:em,segment:seg,source:'kviz',goal:'kviz profil: '+best}, (window.MBLead&&window.MBLead.utm)?window.MBLead.utm():{}))
       }).then(function(r){ return r.json().catch(function(){ return {ok:r.ok}; }); })
         .then(function(res){
-          if(!res || !res.ok){ msg.textContent = (res && res.error==='invalid_email') ? '⚠️ Zkontroluj prosím e-mail.' : 'Nepovedlo se, zkus to znovu.'; btn.disabled=false; btn.textContent='Poslat zdarma'; return; }
-          msg.textContent='✅ Hotovo! Mrkni do schránky (i do promoakcí).'; btn.textContent='Odesláno ✓';
-          // Lead do Mety/GA jen kdyz se radek REALNE zalozil (duplicita nebo chyba = zadny novy lead)
-          if(res.duplicate) return;
-          if(window.mbTrackLead)mbTrackLead('kviz',{zdroj:'kviz'}); else { if(window.gtag)gtag('event','generate_lead',{zdroj:'kviz'}); if(window.fbq)fbq('track','Lead'); }
+          if(!res || !res.ok){
+            if(res && res.error==='invalid_email'){ msg.textContent='⚠️ Zkontroluj prosím e-mail.'; btn.disabled=false; btn.textContent='Zobrazit můj výsledek'; }
+            else fail('Nepovedlo se, zkus to znovu.');
+            return;
+          }
+          // Lead do Mety/GA jen kdyz se radek REALNE zalozil (duplicita = zadny novy lead)
+          if(!res.duplicate){ if(window.mbTrackLead)mbTrackLead('kviz',{zdroj:'kviz'}); else { if(window.gtag)gtag('event','generate_lead',{zdroj:'kviz'}); if(window.fbq)fbq('track','Lead'); } }
+          reveal(true);
         })
-        .catch(function(){ msg.textContent='Nepovedlo se, zkus to znovu.'; btn.disabled=false; btn.textContent='Poslat zdarma'; });
+        .catch(function(){ fail('Nepovedlo se, zkus to znovu.'); });
     });
   }
-  show();
+  // Start az po DOMContentLoaded: analytics.js (defer) definuje window.gtag az PO
+  // rozparsovani stranky, tenhle inline skript ale bezi uz BEHEM nej. Primy start
+  // proto ztracel kviz_start i prvni kviz_otazka (gtag jeste neexistoval). Presne
+  // proto GA4 videl kviz_dokoncen, ale kviz_start nikdy.
+  if(document.readyState!=='loading') show(); else document.addEventListener('DOMContentLoaded', show);
 })();
 </script>
 </body>
