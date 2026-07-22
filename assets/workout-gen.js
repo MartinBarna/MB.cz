@@ -149,10 +149,24 @@
       default: return { primary:[], secondary:[] };
     }
   }
-  var DB_BY_NAME = null;
-  function setMuscleDb(db) { DB_BY_NAME = {}; db.forEach(function (e) { DB_BY_NAME[norm(e.name)] = { muscle: e.muscle, pattern: e.pattern, name: e.name }; }); }
+  // „Bulharský výpad (split dřep)" i „Bulharský výpad" je týž cvik — druhá šance přes základ
+  // bez závorek (parita s appkou, src/engine/muscle.ts). Plná shoda má vždy přednost.
+  function stripParen(s) { return norm(s).replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var DB_BY_NAME = null, DB_BY_BASE = null;
+  function setMuscleDb(db) {
+    DB_BY_NAME = {}; DB_BY_BASE = {};
+    db.forEach(function (e) {
+      var rec = { muscle: e.muscle, pattern: e.pattern, name: e.name };
+      DB_BY_NAME[norm(e.name)] = rec;
+      var b = stripParen(e.name);
+      if (!DB_BY_BASE[b]) DB_BY_BASE[b] = rec;
+    });
+  }
   function resolveMuscles(exercise) {
-    if (DB_BY_NAME) { var hit = DB_BY_NAME[norm(exercise)]; if (hit) return musclesFromDb(hit.muscle, hit.pattern, hit.name); }
+    if (DB_BY_NAME) {
+      var hit = DB_BY_NAME[norm(exercise)] || DB_BY_BASE[stripParen(exercise)];
+      if (hit) return musclesFromDb(hit.muscle, hit.pattern, hit.name);
+    }
     return matchMuscles(exercise);
   }
   function zoneFor(sets, lm) { if (sets < lm.mev) return 'low'; if (sets <= lm.mav) return 'building'; if (sets <= lm.mrv) return 'high'; return 'over'; }
@@ -407,14 +421,18 @@
       }
 
       // backfill proti „hubeným" dnům (min ~4 cviky z cílových svalů dne)
+      // dva průchody jako v appce: nejdřív cviky tento týden nepoužité (pestrost), pak klidně opakuj
       var bpool = preferLoaded(pool.filter(function (e) { return dayMuscles[e.muscle] && !used[e.id]; }), opts.equip);
-      var bi = 0;
-      while (exercises.length < 4 && bi < bpool.length) {
-        var be = bpool[(seed + di + bi) % bpool.length];
-        bi++;
-        if (used[be.id]) continue;
-        used[be.id] = 1; usedWeek[be.id] = 1;
-        exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps });
+      for (var bpass = 0; bpass < 2 && exercises.length < 4; bpass++) {
+        var bi = 0;
+        while (exercises.length < 4 && bi < bpool.length) {
+          var be = bpool[(seed + di + bi) % bpool.length];
+          bi++;
+          if (used[be.id]) continue;
+          if (bpass === 0 && usedWeek[be.id]) continue;
+          used[be.id] = 1; usedWeek[be.id] = 1;
+          exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps });
+        }
       }
 
       // pořadí cviků: velké spoje → izolace → core → kardio (stabilní řazení)
