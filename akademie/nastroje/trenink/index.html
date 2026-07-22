@@ -148,10 +148,10 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260721b"></script>
-  <script src="/assets/workout-gen.js?v=20260722"></script>
+  <script src="/assets/workout-gen.js?v=20260718c"></script>
   <script>
   (function(){
-    var DB=null, seed=0, logoData='', lastPlan=null, restoring=false;
+    var DB=null, seed=0, logoData='', lastPlan=null;
     var $=function(id){return document.getElementById(id);};
     function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
     function hexToRgba(h,a){ if(!/^#[0-9a-fA-F]{6}$/.test(h))h='#EBB12C'; var n=parseInt(h.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
@@ -166,22 +166,8 @@
     $('logofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB), zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('logoclear').style.display=''; saveBrand(); }; r.readAsDataURL(f); });
     $('logoclear').addEventListener('click',function(){ logoData=''; $('logofile').value=''; $('logoclear').style.display='none'; saveBrand(); });
 
-    // Uložení posledního plánu: plán je deterministický (stejné zadání + seed = stejný plán),
-    // takže stačí uložit vstupy a seed — po návratu se vykreslí přesně to, co trenér viděl.
-    function saveState(){ try{ localStorage.setItem('ba_workout_last', JSON.stringify({ location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:$('daysCount').value, client:$('client').value, seed:seed })); }catch(e){} }
-    function loadState(){ try{ return JSON.parse(localStorage.getItem('ba_workout_last')||'null'); }catch(e){ return null; } }
-
     fetch('/assets/exercise-db.json').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' cviků připraveno';
-      var st=loadState();
-      if(st){
-        if(st.location)$('location').value=st.location; if(st.equip)$('equip').value=st.equip;
-        if(st.level)$('level').value=st.level; if(st.goal)$('goal').value=st.goal;
-        if(st.days)$('daysCount').value=st.days; if(st.client)$('client').value=st.client;
-        seed=st.seed||0;
-        restoring=true; generate(false); restoring=false;
-        $('dbstate').textContent='Obnovil jsem tvůj poslední plán (' + d.length + ' cviků připraveno).';
-      }
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
     loadBrand();
 
@@ -228,7 +214,7 @@
       $('result').style.setProperty('--acc-soft', hexToRgba(acc,0.10));
       $('byline').textContent=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'')+' · '+plan.goal.label;
       $('result').classList.remove('hidden');
-      if(!restoring) $('result').scrollIntoView({behavior:'smooth',block:'start'});
+      $('result').scrollIntoView({behavior:'smooth',block:'start'});
     }
     function generate(newSeed){
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
@@ -237,7 +223,6 @@
       if(!plan.poolSize){ $('dbstate').textContent='Pro tuhle kombinaci místa a vybavení nemám dost cviků, zkus jiné vybavení.'; return; }
       lastPlan=plan;
       render(plan);
-      saveState();
     }
     $('coverage').addEventListener('click',function(e){
       var b=e.target&&e.target.closest?e.target.closest('[data-boost]'):null;

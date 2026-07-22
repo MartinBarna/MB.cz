@@ -1945,7 +1945,7 @@
 },
 {
 "id": "mountain-climbers",
-"name": "Mountain climbers",
+"name": "Mountain climbers (horolezec)",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1993,7 +1993,7 @@
 },
 {
 "id": "dead-bug",
-"name": "Dead bug",
+"name": "Dead bug (mrtvý brouk)",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2016,7 +2016,7 @@
 },
 {
 "id": "hollow-hold",
-"name": "Hollow hold",
+"name": "Hollow hold (lodička)",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2339,7 +2339,7 @@
 },
 {
 "id": "kettlebell-swing",
-"name": "Kettlebell swing",
+"name": "Kettlebell swing (švih s kettlebellem)",
 "muscle": "hyzde",
 "pattern": "hinge",
 "equip": [
@@ -2495,7 +2495,7 @@
 },
 {
 "id": "burpees",
-"name": "Burpees",
+"name": "Burpees (angličáky)",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2608,7 +2608,7 @@
 },
 {
 "id": "kettlebell-clean-press",
-"name": "Kettlebell clean & press",
+"name": "Kettlebell clean & press (přemístění a tlak)",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [

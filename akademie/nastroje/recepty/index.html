@@ -170,7 +170,7 @@
 
     Promise.all([
       fetch('/assets/food-db.json?v=20260704').then(function(r){return r.json();}),
-      fetch('/assets/recipe-db.json?v=3').then(function(r){return r.json();})
+      fetch('/assets/recipe-db.json?v=2').then(function(r){return r.json();})
     ]).then(function(a){ FOODS=a[0]; RECIPES=a[1]; $('dbstate').textContent=RECIPES.length+' receptů připraveno'; })
       .catch(function(){ $('dbstate').textContent='⚠️ Recepty se nepodařilo načíst.'; });
     loadBrand();
@@ -215,9 +215,7 @@
       if(!RECIPES){ $('dbstate').textContent='Recepty ještě nenačtené, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
       var res=window.RecipeGen.pick(RECIPES, FOODS, opts());
-      if(!res){ $('dbstate').textContent='Pro tuhle kombinaci filtrů nemám recept. Zkus uvolnit filtry (např. zaměření na „Nezáleží").'; return; }
-      var n=res.matchCount, idx=((seed%n)+n)%n+1;
-      $('dbstate').textContent='Recept '+idx+' z '+n+' pro tenhle výběr.';
+      if(!res){ $('dbstate').textContent='Pro tuhle kombinaci filtrů nemám recept — zkus uvolnit filtry (např. zaměření na „Nezáleží").'; return; }
       render(res);
     }
     $('gen').addEventListener('click',function(){ seed=0; generate(false); });
