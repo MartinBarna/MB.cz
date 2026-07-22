@@ -143,11 +143,11 @@ type Block =
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === 'p') return `<p style='margin:0 0 14px'>${fill(b.html, seg, v)}</p>`;
-    if (b.t === 'ps') return `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, seg, v)}</p>`;
+    if (b.t === 'ps') return `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, seg, v)}</p>`;
     if (b.t === 'bullets')
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
+    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
 function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): string {
@@ -159,15 +159,41 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
   // Tabulkovy layout + bgcolor = tmava karta drzi i v Outlooku (div-background Outlook ignoruje).
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
-    `<body style='margin:0;padding:0;background:#0C0B10'>` +
+  // DARK-MODE FIX: color-scheme 'light dark' + <style> override. Gmail app (iOS/Android) v dark rezimu
+  // prebarvoval mail (zlata #EBB12C sla do hneda, tmava karta se invertovala na svetlou) — prebarveny
+  // strom oznacuje atributy [data-ogsc]/[data-ogsb], pres ktere zlate/kartu/pozadi zamykame zpet.
+  // Apple Mail resi @media (prefers-color-scheme: dark). Barvy zamykame pres tridy .mb-* !important.
+  // Inline styly zustavaji jako fallback pro klienty bez podpory <style> (Outlook Windows).
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light dark'><meta name='supported-color-schemes' content='light dark'>` +
+    `<style>` +
+    `:root{color-scheme:light dark;supported-color-schemes:light dark}` +
+    `@media (prefers-color-scheme: dark){` +
+    `.mb-bg{background:#0C0B10!important}` +
+    `.mb-card{background:#181520!important}` +
+    `.mb-body{color:#F0EADF!important}` +
+    `.mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `.mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `.mb-mut{color:#8F8A99!important}` +
+    `.mb-ps{color:#A09AAD!important}` +
+    `.mb-link{color:#F6CD63!important}` +
+    `}` +
+    `[data-ogsc] .mb-bg,[data-ogsb] .mb-bg{background:#0C0B10!important}` +
+    `[data-ogsc] .mb-card,[data-ogsb] .mb-card{background:#181520!important}` +
+    `[data-ogsc] .mb-body,[data-ogsb] .mb-body{color:#F0EADF!important}` +
+    `[data-ogsc] .mb-brand,[data-ogsb] .mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `[data-ogsc] .mb-btn,[data-ogsb] .mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `[data-ogsc] .mb-mut,[data-ogsb] .mb-mut{color:#8F8A99!important}` +
+    `[data-ogsc] .mb-ps,[data-ogsb] .mb-ps{color:#A09AAD!important}` +
+    `[data-ogsc] .mb-link,[data-ogsb] .mb-link{color:#F6CD63!important}` +
+    `</style></head>` +
+    `<body class='mb-bg' style='margin:0;padding:0;background:#0C0B10'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${esc(preheader)}</span>` +
-    `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
-    `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
-    `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
+    `<table role='presentation' class='mb-bg' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
+    `<table role='presentation' class='mb-card' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td class='mb-body' style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
+    `<div class='mb-brand' style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
     body +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'>` +
-    `<div style='font-size:12px;line-height:1.5;color:#8F8A99'>${footerHtml}</div>` +
+    `<div class='mb-mut' style='font-size:12px;line-height:1.5;color:#8F8A99'>${footerHtml}</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
 }
 

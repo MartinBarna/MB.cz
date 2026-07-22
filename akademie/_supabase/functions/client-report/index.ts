@@ -35,32 +35,73 @@ const num = (v: unknown): number | null => {
 const czk = (n: number | null) => n == null ? "—" : String(n).replace(".", ",");
 
 // ---------- mail obal (1:1 s drip stylem) ----------
+// DARK-MODE FIX (drz 1:1 s drip-send): color-scheme 'light dark' + zamky barev pres tridy .mb-*.
+// Gmail app v dark rezimu invertoval kartu na svetlou a zlatou #EBB12C barvil dohneda;
+// [data-ogsc]/[data-ogsb] = Outlook aplikace, @media prefers-color-scheme = Apple Mail.
+// client-report ma navic vnitrni boxy a barevne delty -> vlastni tridy (mb-w, mb-sect, mb-box...).
 function wrap(kicker: string, body: string, footer: string): string {
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'></head>` +
-    `<body style='margin:0;padding:0;background:#0C0B10'>` +
-    `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
-    `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
-    `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>${kicker}</div>` +
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light dark'><meta name='supported-color-schemes' content='light dark'>` +
+    `<style>` +
+    `:root{color-scheme:light dark;supported-color-schemes:light dark}` +
+    `@media (prefers-color-scheme: dark){` +
+    `.mb-bg{background:#0C0B10!important}` +
+    `.mb-card{background:#181520!important}` +
+    `.mb-body{color:#F0EADF!important}` +
+    `.mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `.mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `.mb-mut{color:#8F8A99!important}` +
+    `.mb-ps{color:#A09AAD!important}` +
+    `.mb-link{color:#F6CD63!important}` +
+    `.mb-w{color:#ffffff!important}` +
+    `.mb-sect{color:#F6CD63!important}` +
+    `.mb-good{color:#4fc07a!important}` +
+    `.mb-warn{color:#e0a04f!important}` +
+    `.mb-gold{color:#EBB12C!important}` +
+    `.mb-box{background:#211d2b!important}` +
+    `.mb-doff{color:#3a3450!important}` +
+    `.mb-b9{color:#B9B3C4!important}` +
+    `}` +
+    `[data-ogsc] .mb-bg,[data-ogsb] .mb-bg{background:#0C0B10!important}` +
+    `[data-ogsc] .mb-card,[data-ogsb] .mb-card{background:#181520!important}` +
+    `[data-ogsc] .mb-body,[data-ogsb] .mb-body{color:#F0EADF!important}` +
+    `[data-ogsc] .mb-brand,[data-ogsb] .mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `[data-ogsc] .mb-btn,[data-ogsb] .mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `[data-ogsc] .mb-mut,[data-ogsb] .mb-mut{color:#8F8A99!important}` +
+    `[data-ogsc] .mb-ps,[data-ogsb] .mb-ps{color:#A09AAD!important}` +
+    `[data-ogsc] .mb-link,[data-ogsb] .mb-link{color:#F6CD63!important}` +
+    `[data-ogsc] .mb-w,[data-ogsb] .mb-w{color:#ffffff!important}` +
+    `[data-ogsc] .mb-sect,[data-ogsb] .mb-sect{color:#F6CD63!important}` +
+    `[data-ogsc] .mb-good,[data-ogsb] .mb-good{color:#4fc07a!important}` +
+    `[data-ogsc] .mb-warn,[data-ogsb] .mb-warn{color:#e0a04f!important}` +
+    `[data-ogsc] .mb-gold,[data-ogsb] .mb-gold{color:#EBB12C!important}` +
+    `[data-ogsc] .mb-box,[data-ogsb] .mb-box{background:#211d2b!important}` +
+    `[data-ogsc] .mb-doff,[data-ogsb] .mb-doff{color:#3a3450!important}` +
+    `[data-ogsc] .mb-b9,[data-ogsb] .mb-b9{color:#B9B3C4!important}` +
+    `</style></head>` +
+    `<body class='mb-bg' style='margin:0;padding:0;background:#0C0B10'>` +
+    `<table role='presentation' class='mb-bg' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
+    `<table role='presentation' class='mb-card' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td class='mb-body' style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
+    `<div class='mb-brand' style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>${kicker}</div>` +
     body +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'>` +
-    `<div style='font-size:12px;line-height:1.5;color:#8F8A99'>${footer}</div>` +
+    `<div class='mb-mut' style='font-size:12px;line-height:1.5;color:#8F8A99'>${footer}</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
 }
 const sect = (t: string) =>
-  `<div style='font-weight:800;color:#F6CD63;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:18px 0 8px'>${t}</div>`;
+  `<div class='mb-sect' style='font-weight:800;color:#F6CD63;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:18px 0 8px'>${t}</div>`;
 function delta(cur: number | null, prev: number | null, downGood = true): string {
   if (cur == null || prev == null) return "";
   const d = Math.round((cur - prev) * 10) / 10;
-  if (d === 0) return ` <span style='color:#8F8A99;font-size:13px'>→ 0,0</span>`;
+  if (d === 0) return ` <span class='mb-mut' style='color:#8F8A99;font-size:13px'>→ 0,0</span>`;
   const good = downGood ? d < 0 : d > 0;
   const col = good ? "#4fc07a" : "#e0a04f";
   const arrow = d < 0 ? "▼" : "▲";
-  return ` <span style='color:${col};font-size:13px;font-weight:700'>${arrow} ${d > 0 ? "+" : "−"}${czk(Math.abs(d))}</span>`;
+  return ` <span class='${good ? "mb-good" : "mb-warn"}' style='color:${col};font-size:13px;font-weight:700'>${arrow} ${d > 0 ? "+" : "−"}${czk(Math.abs(d))}</span>`;
 }
 function dots(v: number | null): string {
-  if (!v) return "<span style='color:#8F8A99'>—</span>";
+  if (!v) return "<span class='mb-mut' style='color:#8F8A99'>—</span>";
   let s = "";
-  for (let i = 1; i <= 5; i++) s += `<span style='color:${i <= v ? "#EBB12C" : "#3a3450"};font-weight:800'>●</span>`;
+  for (let i = 1; i <= 5; i++) s += `<span class='${i <= v ? "mb-gold" : "mb-doff"}' style='color:${i <= v ? "#EBB12C" : "#3a3450"};font-weight:800'>●</span>`;
   return `<span style='letter-spacing:3px'>${s}</span>`;
 }
 
@@ -76,16 +117,16 @@ const MIRY: [string, string][] = [
 function reportMail(name: string, r: any, prev: any | null, first: any | null, weekNo: number): string {
   const d = new Date(r.report_date + "T12:00:00");
   const dateTxt = `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
-  let b = `<p style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
-    `<p style='margin:0 0 18px;color:#8F8A99;font-size:14px'>Report k ${dateTxt}${weekNo > 0 ? ` · ${weekNo}. report spolupráce` : ""}</p>`;
+  let b = `<p class='mb-w' style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
+    `<p class='mb-mut' style='margin:0 0 18px;color:#8F8A99;font-size:14px'>Report k ${dateTxt}${weekNo > 0 ? ` · ${weekNo}. report spolupráce` : ""}</p>`;
 
   // váha
   const w = num(r.weight), pw = prev ? num(prev.weight) : null, fw = first ? num(first.weight) : null;
-  b += `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background:#211d2b;border:1px solid #2e2940;border-radius:10px;margin:0 0 6px'><tr><td style='padding:16px 20px'>` +
-    `<div style='font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#EBB12C;font-weight:700'>Váha</div>` +
-    `<div style='font-size:34px;font-weight:800;color:#fff;line-height:1.2'>${czk(w)} kg${delta(w, pw)}</div>` +
+  b += `<table role='presentation' class='mb-box' width='100%' cellpadding='0' cellspacing='0' style='background:#211d2b;border:1px solid #2e2940;border-radius:10px;margin:0 0 6px'><tr><td style='padding:16px 20px'>` +
+    `<div class='mb-gold' style='font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#EBB12C;font-weight:700'>Váha</div>` +
+    `<div class='mb-w' style='font-size:34px;font-weight:800;color:#fff;line-height:1.2'>${czk(w)} kg${delta(w, pw)}</div>` +
     (pw != null || fw != null
-      ? `<div style='font-size:13px;color:#8F8A99'>${pw != null ? `minule ${czk(pw)} kg` : ""}${pw != null && fw != null ? " · " : ""}${fw != null && w != null ? `start ${czk(fw)} kg · celkem <span style='color:${w - fw <= 0 ? "#4fc07a" : "#e0a04f"};font-weight:700'>${w - fw > 0 ? "+" : w - fw < 0 ? "−" : ""}${czk(Math.round(Math.abs(w - fw) * 10) / 10)} kg</span>` : ""}</div>`
+      ? `<div class='mb-mut' style='font-size:13px;color:#8F8A99'>${pw != null ? `minule ${czk(pw)} kg` : ""}${pw != null && fw != null ? " · " : ""}${fw != null && w != null ? `start ${czk(fw)} kg · celkem <span class='${w - fw <= 0 ? "mb-good" : "mb-warn"}' style='color:${w - fw <= 0 ? "#4fc07a" : "#e0a04f"};font-weight:700'>${w - fw > 0 ? "+" : w - fw < 0 ? "−" : ""}${czk(Math.round(Math.abs(w - fw) * 10) / 10)} kg</span>` : ""}</div>`
       : "") +
     `</td></tr></table>`;
 
@@ -94,28 +135,28 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
   const rows = MIRY.filter(([k]) => num(m[k]) != null);
   if (rows.length) {
     b += sect("Míry (cm)") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:collapse;font-size:14px'>` +
-      `<tr style='color:#8F8A99;font-size:12px;text-transform:uppercase'><td style='padding:6px 8px;border-bottom:1px solid #262232'>Místo</td><td align='right' style='padding:6px 8px;border-bottom:1px solid #262232'>Teď</td><td align='right' style='padding:6px 8px;border-bottom:1px solid #262232'>Minule</td><td align='right' style='padding:6px 8px;border-bottom:1px solid #262232'>Změna</td></tr>`;
+      `<tr class='mb-mut' style='color:#8F8A99;font-size:12px;text-transform:uppercase'><td style='padding:6px 8px;border-bottom:1px solid #262232'>Místo</td><td align='right' style='padding:6px 8px;border-bottom:1px solid #262232'>Teď</td><td align='right' style='padding:6px 8px;border-bottom:1px solid #262232'>Minule</td><td align='right' style='padding:6px 8px;border-bottom:1px solid #262232'>Změna</td></tr>`;
     for (const [k, label] of rows) {
       const cur = num(m[k]), pr = num(pm[k]);
-      b += `<tr><td style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${label}</td>` +
-        `<td align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#fff;font-weight:700'>${czk(cur)}</td>` +
-        `<td align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${czk(pr)}</td>` +
-        `<td align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b'>${delta(cur, pr) || "<span style='color:#8F8A99'>—</span>"}</td></tr>`;
+      b += `<tr><td class='mb-body' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${label}</td>` +
+        `<td class='mb-w' align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#fff;font-weight:700'>${czk(cur)}</td>` +
+        `<td class='mb-mut' align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${czk(pr)}</td>` +
+        `<td align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b'>${delta(cur, pr) || "<span class='mb-mut' style='color:#8F8A99'>—</span>"}</td></tr>`;
     }
     b += `</table>`;
   } else {
-    b += sect("Míry (cm)") + `<p style='margin:0;font-size:13px;color:#8F8A99'>Tento týden neměřeno.</p>`;
+    b += sect("Míry (cm)") + `<p class='mb-mut' style='margin:0;font-size:13px;color:#8F8A99'>Tento týden neměřeno.</p>`;
   }
 
   // strava (nutrition === null → klient tenhle týden nezapisoval, čísla si nevymýšlel)
   if (r.nutrition == null) {
-    b += sect("Strava") + `<p style='margin:0;font-size:13px;color:#8F8A99'>Tenhle týden strava nezapsána, klient nezapisoval.</p>`;
+    b += sect("Strava") + `<p class='mb-mut' style='margin:0;font-size:13px;color:#8F8A99'>Tenhle týden strava nezapsána, klient nezapisoval.</p>`;
   } else {
     const n = r.nutrition || {};
     b += sect(`Strava: týdenní průměr${n.dny_zapsano != null ? ` (zapsáno ${esc(n.dny_zapsano)}/7 dní)` : ""}`) +
       `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:separate;border-spacing:6px 0;table-layout:fixed'><tr>` +
       [["kcal", "kcal"], ["protein", "bílkoviny (g)"], ["carbs", "sacharidy (g)"], ["fat", "tuky (g)"], ["fiber", "vláknina (g)"]]
-        .map(([k, l]) => `<td align='center' style='background:#211d2b;border:1px solid #2e2940;border-radius:8px;padding:10px 4px'><div style='font-size:18px;font-weight:800;color:#fff'>${czk(num(n[k]))}</div><div style='font-size:11px;color:#8F8A99'>${l}</div></td>`).join("") +
+        .map(([k, l]) => `<td class='mb-box' align='center' style='background:#211d2b;border:1px solid #2e2940;border-radius:8px;padding:10px 4px'><div class='mb-w' style='font-size:18px;font-weight:800;color:#fff'>${czk(num(n[k]))}</div><div class='mb-mut' style='font-size:11px;color:#8F8A99'>${l}</div></td>`).join("") +
       `</tr></table>`;
 
     // volitelný denní rozpis (jako záložky týdnů v Excelu)
@@ -123,12 +164,12 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
     const dny = (Array.isArray(n.dny) ? n.dny : []).filter((x: any) => x);
     if (dny.length) {
       b += `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:collapse;font-size:13px;margin-top:10px'>` +
-        `<tr style='color:#8F8A99;font-size:11px;text-transform:uppercase'><td style='padding:5px 8px;border-bottom:1px solid #262232'>Den</td>` +
+        `<tr class='mb-mut' style='color:#8F8A99;font-size:11px;text-transform:uppercase'><td style='padding:5px 8px;border-bottom:1px solid #262232'>Den</td>` +
         ["kcal", "B", "S", "T", "Vl"].map((h) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #262232'>${h}</td>`).join("") + `</tr>` +
         // deno-lint-ignore no-explicit-any
         dny.map((d: any) =>
-          `<tr><td style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${esc(d.den ?? "")}</td>` +
-          [d.kcal, d.p, d.c, d.f, d.fib].map((v) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${czk(num(v))}</td>`).join("") + `</tr>`).join("");
+          `<tr><td class='mb-mut' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${esc(d.den ?? "")}</td>` +
+          [d.kcal, d.p, d.c, d.f, d.fib].map((v) => `<td class='mb-body' align='right' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${czk(num(v))}</td>`).join("") + `</tr>`).join("");
       b += `</table>`;
     }
   }
@@ -136,19 +177,19 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
   // aktivity
   const a = r.activity || {};
   const prevAct = (prev && prev.activity) || {};
-  b += sect("Aktivity") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='font-size:14px;color:#F0EADF'>` +
-    `<tr><td style='padding:4px 0'>🚶 Kroky (Ø/den)</td><td align='right' style='font-weight:700;color:#fff'>${czk(num(a.kroky))}${delta(num(a.kroky), num(prevAct.kroky), false)}</td></tr>` +
-    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" : "—"}</td></tr>` +
-    `<tr><td style='padding:4px 0'>⏱️ Sport celkem (min/týden)</td><td align='right' style='font-weight:700;color:#fff'>${num(a.sport_min) != null ? czk(num(a.sport_min)) : "—"}${delta(num(a.sport_min), num(prevAct.sport_min), false)}</td></tr>` +
-    `<tr><td style='padding:4px 0'>🏃 Kardio</td><td align='right' style='font-weight:700;color:#fff'>${esc(a.kardio || "—")}</td></tr>` +
-    `<tr><td style='padding:4px 0'>⚽ Další</td><td align='right' style='font-weight:700;color:#fff'>${esc(a.dalsi || "—")}</td></tr></table>`;
+  b += sect("Aktivity") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' class='mb-body' style='font-size:14px;color:#F0EADF'>` +
+    `<tr><td style='padding:4px 0'>🚶 Kroky (Ø/den)</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${czk(num(a.kroky))}${delta(num(a.kroky), num(prevAct.kroky), false)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" : "—"}</td></tr>` +
+    `<tr><td style='padding:4px 0'>⏱️ Sport celkem (min/týden)</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${num(a.sport_min) != null ? czk(num(a.sport_min)) : "—"}${delta(num(a.sport_min), num(prevAct.sport_min), false)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>🏃 Kardio</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.kardio || "—")}</td></tr>` +
+    `<tr><td style='padding:4px 0'>⚽ Další</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.dalsi || "—")}</td></tr></table>`;
 
   // plán z minulého reportu vs. realita — jen když si ho klient minule nastavil
   const prevPlan = prevAct.plan_next;
   if (prevPlan && (num(prevPlan.kroky) != null || num(prevPlan.sport_min) != null)) {
     const planOk = (planV: number | null, realV: number | null) =>
       planV == null || realV == null ? "" : (realV >= planV ? " ✓" : ` (plán ${czk(planV)})`);
-    b += `<p style='margin:8px 0 0;font-size:13px;color:#8F8A99'>Plán z minulého reportu: ` +
+    b += `<p class='mb-mut' style='margin:8px 0 0;font-size:13px;color:#8F8A99'>Plán z minulého reportu: ` +
       `${czk(num(prevPlan.kroky))} kroků · ${czk(num(prevPlan.sport_min))} min sportu. ` +
       `Realita: ${czk(num(a.kroky))} kroků${planOk(num(prevPlan.kroky), num(a.kroky))} · ` +
       `${czk(num(a.sport_min))} min${planOk(num(prevPlan.sport_min), num(a.sport_min))}.</p>`;
@@ -158,34 +199,34 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
   const pn = a.plan_next || {};
   if (num(pn.kroky) != null || num(pn.sport_min) != null) {
     b += sect("Plán na příští týden") +
-      `<p style='margin:0;font-size:14px;color:#F0EADF'>🚶 <strong>${czk(num(pn.kroky))}</strong> kroků denně · ⏱️ <strong>${czk(num(pn.sport_min))}</strong> min sportu za týden` +
-      `${pn.stejne ? ` <span style='color:#8F8A99'>(stejně jako tento týden)</span>` : ""}</p>`;
+      `<p class='mb-body' style='margin:0;font-size:14px;color:#F0EADF'>🚶 <strong>${czk(num(pn.kroky))}</strong> kroků denně · ⏱️ <strong>${czk(num(pn.sport_min))}</strong> min sportu za týden` +
+      `${pn.stejne ? ` <span class='mb-mut' style='color:#8F8A99'>(stejně jako tento týden)</span>` : ""}</p>`;
   }
 
   // škály
   const s = r.scales || {};
-  b += sect("Pocity (1–5)") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='font-size:14px;color:#F0EADF'>` +
-    `<tr><td style='padding:4px 0;width:44%'>Únava</td><td>${dots(s.unava)}</td><td align='right' style='color:#8F8A99'>${s.unava || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Hlad</td><td>${dots(s.hlad)}</td><td align='right' style='color:#8F8A99'>${s.hlad || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Síla</td><td>${dots(s.sila)}</td><td align='right' style='color:#8F8A99'>${s.sila || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Spánek</td><td>${dots(s.spanek_kvalita)}</td><td align='right' style='color:#8F8A99'>${s.spanek_h ? czk(num(s.spanek_h)) + " h · " : ""}${s.spanek_kvalita || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Dodržení plánu</td><td>${dots(s.dodrzeni)}</td><td align='right' style='color:#8F8A99'>${s.dodrzeni || "—"}/5</td></tr></table>`;
+  b += sect("Pocity (1–5)") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' class='mb-body' style='font-size:14px;color:#F0EADF'>` +
+    `<tr><td style='padding:4px 0;width:44%'>Únava</td><td>${dots(s.unava)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.unava || "—"}/5</td></tr>` +
+    `<tr><td style='padding:4px 0'>Hlad</td><td>${dots(s.hlad)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.hlad || "—"}/5</td></tr>` +
+    `<tr><td style='padding:4px 0'>Síla</td><td>${dots(s.sila)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.sila || "—"}/5</td></tr>` +
+    `<tr><td style='padding:4px 0'>Spánek</td><td>${dots(s.spanek_kvalita)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.spanek_h ? czk(num(s.spanek_h)) + " h · " : ""}${s.spanek_kvalita || "—"}/5</td></tr>` +
+    `<tr><td style='padding:4px 0'>Dodržení plánu</td><td>${dots(s.dodrzeni)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.dodrzeni || "—"}/5</td></tr></table>`;
 
   // slovně
   const t = r.notes || {};
   if (t.povedlo || t.drhlo || t.otazky || t.dalsi) {
     b += sect("Slovní zhodnocení");
-    if (t.povedlo) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#4fc07a;font-weight:700'>✓ Povedlo se:</span> ${esc(t.povedlo)}</p>`;
-    if (t.drhlo) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#e0a04f;font-weight:700'>✗ Drhlo:</span> ${esc(t.drhlo)}</p>`;
-    if (t.otazky) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#EBB12C;font-weight:700'>? Otázka:</span> ${esc(t.otazky)}</p>`;
-    if (t.dalsi) b += `<p style='margin:0 0 8px;font-size:14px'><span style='color:#B9B3C4;font-weight:700'>💬 Navíc:</span> ${esc(t.dalsi)}</p>`;
+    if (t.povedlo) b += `<p style='margin:0 0 8px;font-size:14px'><span class='mb-good' style='color:#4fc07a;font-weight:700'>✓ Povedlo se:</span> ${esc(t.povedlo)}</p>`;
+    if (t.drhlo) b += `<p style='margin:0 0 8px;font-size:14px'><span class='mb-warn' style='color:#e0a04f;font-weight:700'>✗ Drhlo:</span> ${esc(t.drhlo)}</p>`;
+    if (t.otazky) b += `<p style='margin:0 0 8px;font-size:14px'><span class='mb-gold' style='color:#EBB12C;font-weight:700'>? Otázka:</span> ${esc(t.otazky)}</p>`;
+    if (t.dalsi) b += `<p style='margin:0 0 8px;font-size:14px'><span class='mb-b9' style='color:#B9B3C4;font-weight:700'>💬 Navíc:</span> ${esc(t.dalsi)}</p>`;
   }
 
   // fotky
   const nPhotos = Array.isArray(r.photos) ? r.photos.length : 0;
-  if (nPhotos) b += sect("Fotky") + `<p style='margin:0;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${nPhotos}×</strong>, najdeš je u klienta v adminu (a klient ve své sekci).</p>`;
+  if (nPhotos) b += sect("Fotky") + `<p class='mb-body' style='margin:0;font-size:14px;color:#F0EADF'>📷 Přiloženo <strong>${nPhotos}×</strong>, najdeš je u klienta v adminu (a klient ve své sekci).</p>`;
 
-  b += `<p style='margin:20px 0 4px'><a href='https://martinbarna.cz/akademie/klient/' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Otevřít grafy v klientské sekci</a></p>`;
+  b += `<p style='margin:20px 0 4px'><a class='mb-btn' href='https://martinbarna.cz/akademie/klient/' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>Otevřít grafy v klientské sekci</a></p>`;
   return b;
 }
 
@@ -194,10 +235,10 @@ function intakeMail(name: string, d: any): string {
   const S = (t: string, obj: Record<string, string>) => {
     const rows = Object.entries(obj).filter(([, v]) => v);
     if (!rows.length) return "";
-    return sect(t) + rows.map(([k, v]) => `<p style='margin:0 0 7px;font-size:14px'><span style='color:#8F8A99'>${k}:</span> <span style='color:#F0EADF'>${esc(v)}</span></p>`).join("");
+    return sect(t) + rows.map(([k, v]) => `<p style='margin:0 0 7px;font-size:14px'><span class='mb-mut' style='color:#8F8A99'>${k}:</span> <span class='mb-body' style='color:#F0EADF'>${esc(v)}</span></p>`).join("");
   };
-  let b = `<p style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
-    `<p style='margin:0 0 12px;color:#8F8A99;font-size:14px'>Vstupní dotazník nového klienta</p>`;
+  let b = `<p class='mb-w' style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
+    `<p class='mb-mut' style='margin:0 0 12px;color:#8F8A99;font-size:14px'>Vstupní dotazník nového klienta</p>`;
   b += S("Osobní", { "Věk": d.vek, "Výška": d.vyska ? d.vyska + " cm" : "", "Váha": d.vaha ? d.vaha + " kg" : "", "Telefon": d.telefon });
   b += S("Cíl a proč", { "Cíl": d.cil, "Proč (motivace)": d.proc, "Do kdy / událost": d.termin });
   b += S("Historie", { "Diety v minulosti": d.diety, "Sport dřív a teď": d.sport });
@@ -285,7 +326,7 @@ Deno.serve(async (req: Request) => {
     const html = intakeMail(name, data as Record<string, string>);
     const coachMail = wrap("Martin Barna · vstupní dotazník", html, `Dotazník od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · vstupní dotazník", html +
-      `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! Martin</p>`,
+      `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! Martin</p>`,
       "Kopie dotazníku pro tvůj přehled. Martin Barna · martinbarna.cz");
     const s1 = await send(COACH, `📝 Vstupní dotazník: ${name}`, coachMail);
     const s2 = await send(email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail, true);
@@ -303,11 +344,11 @@ Deno.serve(async (req: Request) => {
     const pokrok = (fw != null && lw != null)
       ? `${czk(fw)} kg → ${czk(lw)} kg (${lw - fw > 0 ? "+" : lw - fw < 0 ? "−" : ""}${czk(Math.round(Math.abs(lw - fw) * 10) / 10)} kg za ${reps!.length} reportů, ${first!.report_date} – ${last!.report_date})`
       : `${reps?.length ?? 0} reportů`;
-    const html = `<p style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
-      `<p style='margin:0 0 14px;color:#8F8A99;font-size:14px'>souhlasí s použitím jako reference (jméno + slova + čísla)</p>` +
-      sect("Jeho/její slova") + `<p style='margin:0 0 12px;font-size:15px;color:#F0EADF'>„${esc(text)}“</p>` +
-      sect("Pokrok z reportů") + `<p style='margin:0 0 12px;font-size:14px;color:#F0EADF'>${pokrok}</p>` +
-      `<p style='margin:16px 0 0;color:#A09AAD;font-size:13px'>Kontakt: ${esc(email)}. Ozvi se, poděkuj a klidně popros o fotku před/po.</p>`;
+    const html = `<p class='mb-w' style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
+      `<p class='mb-mut' style='margin:0 0 14px;color:#8F8A99;font-size:14px'>souhlasí s použitím jako reference (jméno + slova + čísla)</p>` +
+      sect("Jeho/její slova") + `<p class='mb-body' style='margin:0 0 12px;font-size:15px;color:#F0EADF'>„${esc(text)}“</p>` +
+      sect("Pokrok z reportů") + `<p class='mb-body' style='margin:0 0 12px;font-size:14px;color:#F0EADF'>${pokrok}</p>` +
+      `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-size:13px'>Kontakt: ${esc(email)}. Ozvi se, poděkuj a klidně popros o fotku před/po.</p>`;
     const s1 = await send(COACH, `🌟 Souhlas s referencí: ${name}`, wrap("Martin Barna · reference", html, "Souhlas přišel z klientské sekce martinbarna.cz"));
     try { await admin.from("client_notes").insert({ email, note: "🌟 SOUHLAS S REFERENCÍ: „" + text.slice(0, 500) + "“ (" + pokrok + ")" }); } catch { /* best-effort */ }
     return json({ ok: true, mail_coach: s1.status }, C);

@@ -79,24 +79,48 @@ function buildEmail(variant: string, email: string, name: string, token: string)
       `<li style='margin:0 0 7px'>Dej <strong>„Vytvořit účet“</strong> a vymysli si heslo (tvůj e-mail je v odkazu už správně předvyplněný).</li>` +
       `<li style='margin:0 0 7px'>Pak se přihlas stejným e-mailem a heslem. A jsi uvnitř. 🎉</li>` +
     `</ol>` +
-    `<p style='margin:4px 0 18px'><a href='${esc(btn)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:14px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em'>Vstoupit do videokurzu →</a></p>` +
-    `<p style='margin:0 0 14px;font-size:14px;color:#A09AAD'>Nevíš si rady? Připravil jsem <a href='${esc(NAVOD_URL)}' style='color:#F6CD63'>návod krok za krokem</a>. A kdyby cokoliv zlobilo, stačí odepsat na tenhle e-mail a spravím to.</p>` +
-    `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>P.S. Pokud tě výživa fakt chytla a chceš jít do hloubky: celou vědu, certifikaci a 24 modulů máš v <a href='${esc(ACADEMY_URL)}' style='color:#F6CD63'>Barna Academy</a>. Ale to počká, teď si hlavně užij videokurz. 😉</p>`;
+    `<p style='margin:4px 0 18px'><a class='mb-btn' href='${esc(btn)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:14px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em'>Vstoupit do videokurzu →</a></p>` +
+    `<p class='mb-ps' style='margin:0 0 14px;font-size:14px;color:#A09AAD'>Nevíš si rady? Připravil jsem <a class='mb-link' href='${esc(NAVOD_URL)}' style='color:#F6CD63'>návod krok za krokem</a>. A kdyby cokoliv zlobilo, stačí odepsat na tenhle e-mail a spravím to.</p>` +
+    `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>P.S. Pokud tě výživa fakt chytla a chceš jít do hloubky: celou vědu, certifikaci a 24 modulů máš v <a class='mb-link' href='${esc(ACADEMY_URL)}' style='color:#F6CD63'>Barna Academy</a>. Ale to počká, teď si hlavně užij videokurz. 😉</p>`;
 
   const footerHtml =
     `Tento e-mail ti přišel, protože máš u Martina Barny zakoupený videokurz výživy.<br>` +
-    `Nechceš už e-maily? <a href='${esc(unsub)}' style='color:#8F8A99'>Odhlásit se</a>.<br>` +
-    `Martin Barna, online výživový Coach · <a href='https://martinbarna.cz' style='color:#8F8A99'>martinbarna.cz</a>`;
+    `Nechceš už e-maily? <a class='mb-mut' href='${esc(unsub)}' style='color:#8F8A99'>Odhlásit se</a>.<br>` +
+    `Martin Barna, online výživový Coach · <a class='mb-mut' href='https://martinbarna.cz' style='color:#8F8A99'>martinbarna.cz</a>`;
 
+  // DARK-MODE FIX (drz 1:1 s drip-send): color-scheme 'light dark' + zamky barev pres tridy .mb-*.
+  // Gmail app v dark rezimu invertoval kartu na svetlou a zlatou #EBB12C barvil dohneda;
+  // [data-ogsc]/[data-ogsb] = Outlook aplikace, @media prefers-color-scheme = Apple Mail.
   const html =
-    `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'></head>` +
-    `<body style='margin:0;padding:0;background:#0C0B10'>` +
+    `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light dark'><meta name='supported-color-schemes' content='light dark'>` +
+    `<style>` +
+    `:root{color-scheme:light dark;supported-color-schemes:light dark}` +
+    `@media (prefers-color-scheme: dark){` +
+    `.mb-bg{background:#0C0B10!important}` +
+    `.mb-card{background:#181520!important}` +
+    `.mb-body{color:#F0EADF!important}` +
+    `.mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `.mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `.mb-mut{color:#8F8A99!important}` +
+    `.mb-ps{color:#A09AAD!important}` +
+    `.mb-link{color:#F6CD63!important}` +
+    `}` +
+    `[data-ogsc] .mb-bg,[data-ogsb] .mb-bg{background:#0C0B10!important}` +
+    `[data-ogsc] .mb-card,[data-ogsb] .mb-card{background:#181520!important}` +
+    `[data-ogsc] .mb-body,[data-ogsb] .mb-body{color:#F0EADF!important}` +
+    `[data-ogsc] .mb-brand,[data-ogsb] .mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `[data-ogsc] .mb-btn,[data-ogsb] .mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `[data-ogsc] .mb-mut,[data-ogsb] .mb-mut{color:#8F8A99!important}` +
+    `[data-ogsc] .mb-ps,[data-ogsb] .mb-ps{color:#A09AAD!important}` +
+    `[data-ogsc] .mb-link,[data-ogsb] .mb-link{color:#F6CD63!important}` +
+    `</style></head>` +
+    `<body class='mb-bg' style='margin:0;padding:0;background:#0C0B10'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${esc(preheader)}</span>` +
-    `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
-    `<table role='presentation' width='560' cellpadding='0' cellspacing='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF;padding:28px'>` +
+    `<table role='presentation' class='mb-bg' width='100%' cellpadding='0' cellspacing='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
+    `<table role='presentation' class='mb-card' width='560' cellpadding='0' cellspacing='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td class='mb-body' style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF;padding:28px'>` +
     body +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'>` +
-    `<div style='font-size:12px;line-height:1.5;color:#8F8A99'>${footerHtml}</div>` +
+    `<div class='mb-mut' style='font-size:12px;line-height:1.5;color:#8F8A99'>${footerHtml}</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
 
   const text =

@@ -53,25 +53,49 @@ const fill = (s: string, v: Record<string, string>) => merge(gender(s), v);
 function renderBlocks(blocks: Block[], v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === "p") return `<p style='margin:0 0 14px'>${fill(b.html, v)}</p>`;
-    if (b.t === "ps") return `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, v)}</p>`;
+    if (b.t === "ps") return `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, v)}</p>`;
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` + b.items.map((li) => `<li style='margin:0 0 9px'>${fill(li, v)}</li>`).join("") + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
   }).join("\n");
 }
 function wrap(preheader: string, body: string, unsubUrl = ""): string {
   // unsubscribe paticka: vk-complete obsahuje i prodejni blok (Academy/referral/appka),
   // takze odhlaseni musi byt primo v mailu, ne jen "neni to newsletter"
   const unsubLine = unsubUrl
-    ? `<br>Nechceš už ode mě e-maily? <a href='${unsubUrl}' style='color:#8F8A99'>Odhlásit se</a>.`
+    ? `<br>Nechceš už ode mě e-maily? <a class='mb-mut' href='${unsubUrl}' style='color:#8F8A99'>Odhlásit se</a>.`
     : "";
-  const foot = "Martin Barna, online výživový kouč · IČO 76383032 · <a href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku, není to newsletter)." + unsubLine;
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>` +
-    `<body style='margin:0;background:#0C0B10;padding:16px'>` +
+  const foot = "Martin Barna, online výživový kouč · IČO 76383032 · <a class='mb-mut' href='https://martinbarna.cz' style='color:#999'>martinbarna.cz</a><br>Tento e-mail ti přišel jako členovi videokurzu (gratulace k tvému pokroku, není to newsletter)." + unsubLine;
+  // DARK-MODE FIX (drz 1:1 s drip-send): color-scheme 'light dark' + zamky barev pres tridy .mb-*.
+  // Gmail app v dark rezimu invertoval kartu na svetlou a zlatou #EBB12C barvil dohneda;
+  // [data-ogsc]/[data-ogsb] = Outlook aplikace, @media prefers-color-scheme = Apple Mail.
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light dark'><meta name='supported-color-schemes' content='light dark'>` +
+    `<style>` +
+    `:root{color-scheme:light dark;supported-color-schemes:light dark}` +
+    `@media (prefers-color-scheme: dark){` +
+    `.mb-bg{background:#0C0B10!important}` +
+    `.mb-card{background:#181520!important}` +
+    `.mb-body{color:#F0EADF!important}` +
+    `.mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `.mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `.mb-mut{color:#8F8A99!important}` +
+    `.mb-ps{color:#A09AAD!important}` +
+    `.mb-link{color:#F6CD63!important}` +
+    `}` +
+    `[data-ogsc] .mb-bg,[data-ogsb] .mb-bg{background:#0C0B10!important}` +
+    `[data-ogsc] .mb-card,[data-ogsb] .mb-card{background:#181520!important}` +
+    `[data-ogsc] .mb-body,[data-ogsb] .mb-body{color:#F0EADF!important}` +
+    `[data-ogsc] .mb-brand,[data-ogsb] .mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
+    `[data-ogsc] .mb-btn,[data-ogsb] .mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
+    `[data-ogsc] .mb-mut,[data-ogsb] .mb-mut{color:#8F8A99!important}` +
+    `[data-ogsc] .mb-ps,[data-ogsb] .mb-ps{color:#A09AAD!important}` +
+    `[data-ogsc] .mb-link,[data-ogsb] .mb-link{color:#F6CD63!important}` +
+    `</style></head>` +
+    `<body class='mb-bg' style='margin:0;background:#0C0B10;padding:16px'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${preheader}</span>` +
-    `<div style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF;max-width:560px;margin:0 auto;background:#181520;border:1px solid #262232;border-radius:14px;padding:28px'>` +
-    `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
-    body + `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;line-height:1.5;color:#8F8A99'>${foot}</div></div></body></html>`;
+    `<div class='mb-card mb-body' style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF;max-width:560px;margin:0 auto;background:#181520;border:1px solid #262232;border-radius:14px;padding:28px'>` +
+    `<div class='mb-brand' style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
+    body + `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div class='mb-mut' style='font-size:12px;line-height:1.5;color:#8F8A99'>${foot}</div></div></body></html>`;
 }
 // ===== 5. pad (vokativ) — kanonicka verze, drz v synci s drip-send =====
 const VOK_EXC: Record<string, string> = {
