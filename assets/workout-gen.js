@@ -407,14 +407,18 @@
       }
 
       // backfill proti „hubeným" dnům (min ~4 cviky z cílových svalů dne)
+      // dva průchody jako v appce: nejdřív cviky tento týden nepoužité (pestrost), pak klidně opakuj
       var bpool = preferLoaded(pool.filter(function (e) { return dayMuscles[e.muscle] && !used[e.id]; }), opts.equip);
-      var bi = 0;
-      while (exercises.length < 4 && bi < bpool.length) {
-        var be = bpool[(seed + di + bi) % bpool.length];
-        bi++;
-        if (used[be.id]) continue;
-        used[be.id] = 1; usedWeek[be.id] = 1;
-        exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps });
+      for (var bpass = 0; bpass < 2 && exercises.length < 4; bpass++) {
+        var bi = 0;
+        while (exercises.length < 4 && bi < bpool.length) {
+          var be = bpool[(seed + di + bi) % bpool.length];
+          bi++;
+          if (used[be.id]) continue;
+          if (bpass === 0 && usedWeek[be.id]) continue;
+          used[be.id] = 1; usedWeek[be.id] = 1;
+          exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps });
+        }
       }
 
       // pořadí cviků: velké spoje → izolace → core → kardio (stabilní řazení)
