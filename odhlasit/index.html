@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
+<meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex,nofollow">
 <title>Odhlásit odběr e-mailů | Martin Barna</title>
 <style>
@@ -74,20 +75,26 @@
     show("Odhlášeno",
       "Hotovo, už Ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, stačí si plán znovu stáhnout na webu.",
       '<a class="gdpr" href="#" id="eraseLink">Chci úplně smazat svoje data z databáze (GDPR)</a>');
-    var el = document.getElementById("eraseLink");
-    el.addEventListener("click", function (e) {
+    document.getElementById("eraseLink").addEventListener("click", function (e) {
       e.preventDefault();
-      el.textContent = "Mažu…";
-      post("erase").then(function (res) {
-        if (res && res.erased) {
-          show("Data smazána",
-            "Tvoje data jsme nadobro vymazali z databáze: e-mail, jméno, telefon i historii e-mailů. U nás je to kompletně pryč.");
-        } else {
-          show("Nepovedlo se to",
-            "Výmaz se teď nepodařil, nebo byla data smazána dříve. Kdyžtak nám napiš přímo a vyřešíme to.");
-        }
-      }).catch(function () {
-        show("Nepovedlo se to", "Něco se nepovedlo. Zkus to prosím za chvíli znovu, nebo nám napiš.");
+      // druhy krok proti nevratnemu omylu: erase je nevratny, chce vedomy druhy klik
+      act.innerHTML =
+        '<p style="color:#A09AAD;font-size:13px;margin:0 0 12px">Tohle je nevratné. Smažeme Tvůj e-mail, jméno, telefon i historii e-mailů. Opravdu?</p>' +
+        '<button class="btn" id="eraseYes">Ano, smazat nadobro</button>';
+      document.getElementById("eraseYes").addEventListener("click", function () {
+        var b = document.getElementById("eraseYes");
+        b.disabled = true; b.textContent = "Mažu…";
+        post("erase").then(function (res) {
+          if (res && res.erased) {
+            show("Data smazána",
+              "Tvoje data jsme nadobro vymazali z databáze: e-mail, jméno, telefon i historii e-mailů. U nás je to kompletně pryč.");
+          } else {
+            show("Nepovedlo se to",
+              "Výmaz se teď nepodařil, nebo byla data smazána dříve. Kdyžtak nám napiš přímo a vyřešíme to.");
+          }
+        }).catch(function () {
+          show("Nepovedlo se to", "Něco se nepovedlo. Zkus to prosím za chvíli znovu, nebo nám napiš.");
+        });
       });
     });
   }
