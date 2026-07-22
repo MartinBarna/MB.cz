@@ -47,7 +47,7 @@
 "Přilij vejce a za stálého míchání táhni po pánvi do jemné, ještě vláčné hmoty.",
 "Podávej s plátkem žitného chleba a nakrájeným rajčetem."
 ],
-"tip": "Stáhni z plotny o chvilku dřív, než ti přijdou hotová – dojedou zbytkovým teplem a zůstanou krémová."
+"tip": "Stáhni z plotny o chvilku dřív, než ti přijdou hotová. Dojedou zbytkovým teplem a zůstanou krémová."
 },
 {
 "id": "tvarohova-pomazanka-s-knackebrotem",
@@ -91,7 +91,7 @@
 "Namaž na knäckebrot a ozdob zbytkem nakrájené zeleniny.",
 "Dochuť špetkou soli a případně prolisovaným stroužkem česneku."
 ],
-"tip": "Když je tvaroh moc tuhý, zjemni ho lžící vody – získáš roztíratelnou pomazánku bez přidání tuku."
+"tip": "Když je tvaroh moc tuhý, zjemni ho lžící vody. Získáš roztíratelnou pomazánku bez přidání tuku."
 },
 {
 "id": "proteinova-ovesna-kase-s-bananem",
@@ -135,7 +135,7 @@
 "Vmíchej syrovátkový protein až do vlažné kaše, ať se nesrazí.",
 "Navrch poskládej plátky banánu a borůvky, posyp skořicí."
 ],
-"tip": "Protein přidávej vždy až do vychladlejší kaše – v horké se srazí a zhrudkovatí."
+"tip": "Protein přidávej vždy až do vychladlejší kaše, v horké se srazí a zhrudkovatí."
 },
 {
 "id": "skyr-bowl-s-boruvkami-a-musli",
@@ -225,7 +225,7 @@
 "Na pánvi s kapkou oleje smaž menší palačinky z obou stran dozlatova.",
 "Naskládej na sebe, přelij řeckým jogurtem a posyp malinami."
 ],
-"tip": "Smaž na mírném plameni a otoč až se na povrchu udělají bublinky – uvnitř pak nezůstanou syrové."
+"tip": "Smaž na mírném plameni a otoč, až se na povrchu udělají bublinky. Uvnitř pak nezůstanou syrové."
 },
 {
 "id": "peceny-losos-brokolice-bataty",
@@ -487,7 +487,7 @@
 "Navrch dej borůvky a nahrubo nasekané mandle.",
 "Zamíchej špetku skořice a sněz hned, nebo si vezmi s sebou v uzavíratelné misce."
 ],
-"tip": "Vločky nech přes noc nabobtnat ve skyru — ráno máš krémovou svačinu bez vaření."
+"tip": "Vločky nech přes noc nabobtnat ve skyru a ráno máš krémovou svačinu bez vaření."
 },
 {
 "id": "tortilla-wrap-sunka-cottage",
@@ -531,7 +531,7 @@
 "Zabal pevně do ruličky.",
 "Přeřízni napůl a zabal do alobalu na cestu."
 ],
-"tip": "Cottage funguje jako lepidlo i bílkovina navíc — wrap se nerozbalí a nepromastí tašku."
+"tip": "Cottage funguje jako lepidlo i bílkovina navíc: wrap se nerozbalí a nepromastí tašku."
 },
 {
 "id": "proteinovy-tvarohovy-krem-banan",
@@ -572,7 +572,7 @@
 "Přidej rozmačkaný nebo nakrájený banán.",
 "Navrch kápni arašídové máslo a lehce promíchej."
 ],
-"tip": "Když je krém moc hustý, přilévej vodu po lžících — protein ho hodně zahušťuje."
+"tip": "Když je krém moc hustý, přilévej vodu po lžících, protein ho hodně zahušťuje."
 },
 {
 "id": "knackebrot-s-tunakem",
@@ -613,7 +613,7 @@
 "Navrš tuňáka na knäckebroty.",
 "Doplň plátky rajčete a okurky."
 ],
-"tip": "Ber tuňáka ve vlastní šťávě, ne v oleji — ušetříš spoustu kalorií při stejné bílkovině."
+"tip": "Ber tuňáka ve vlastní šťávě, ne v oleji. Ušetříš spoustu kalorií při stejné bílkovině."
 },
 {
 "id": "cottage-s-ryzovymi-chlebicky",
@@ -655,7 +655,7 @@
 "Cottage lehce osol a opepři.",
 "Namáčej rýžové chlebíčky a zeleninu do cottage jako dip."
 ],
-"tip": "Nakrájenou zeleninu si nachystej dopředu — svačinu pak složíš za minutu."
+"tip": "Nakrájenou zeleninu si nachystej dopředu, svačinu pak složíš za minutu."
 },
 {
 "id": "tvarohovy-krem-boruvky",
@@ -696,7 +696,7 @@
 "Přendej do sklenice, navrch dej borůvky a nasekané vlašské ořechy.",
 "Nech 10 minut v lednici uležet a podávej."
 ],
-"tip": "Místo medu můžeš krém osladit rozmačkaným banánem — ušetříš přidaný cukr a přidáš krémovost."
+"tip": "Místo medu můžeš krém osladit rozmačkaným banánem. Ušetříš přidaný cukr a přidáš krémovost."
 },
 {
 "id": "proteinova-ovesna-kase-banan-arasidy",
@@ -740,7 +740,7 @@
 "Přendej do misky, navrch dej plátky banánu a arašídové máslo.",
 "Poprašek skořice a hotovo."
 ],
-"tip": "Protein přidávej až do vlažné kaše — ve vroucí by se srazil do hrudek."
+"tip": "Protein přidávej až do vlažné kaše, ve vroucí by se srazil do hrudek."
 },
 {
 "id": "pecene-jablko-recky-jogurt",
@@ -823,7 +823,7 @@
 "Ve sklenici vrstvi skyr a jahody.",
 "Navrch najemno nastrouhej hořkou čokoládu."
 ],
-"tip": "Čokoládu strouhej najemno — 10 g stačí na chuť i vzhled bez velké kalorické zátěže."
+"tip": "Čokoládu strouhej najemno: 10 g stačí na chuť i vzhled bez velké kalorické zátěže."
 },
 {
 "id": "cokoladovy-krem-tofu",
@@ -861,7 +861,7 @@
 "Přendej do misky a dej aspoň hodinu ztuhnout do lednice.",
 "Podávej vychlazené, klidně s pár kousky ovoce."
 ],
-"tip": "Rozmixuj tofu co nejjemněji — čím hladší, tím krémovější výsledek bez tofu příchuti."
+"tip": "Rozmixuj tofu co nejjemněji. Čím hladší, tím krémovější výsledek bez tofu příchuti."
 },
 {
 "id": "kureci-prsa-ryze-brokolice",
@@ -913,7 +913,7 @@
 "Brokolici rozeber na růžičky a spař v páře nebo vroucí vodě 4-5 minut, ať zůstane křupavá.",
 "Naservíruj rýži, kuře a brokolici na talíř."
 ],
-"tip": "Prsa neopékej moc dlouho — jakmile jsou uvnitř bílá, sundej je, jinak vyschnou."
+"tip": "Prsa neopékej moc dlouho. Jakmile jsou uvnitř bílá, sundej je, jinak vyschnou."
 },
 {
 "id": "peceny-losos-brambory-fazolky",
@@ -960,7 +960,7 @@
 "Brambory uvař ve slupce nebo oloupané v osolené vodě.",
 "Fazolky spař 5 minut a krátce prohoď na zbytku oleje s cibulí."
 ],
-"tip": "Losos je hotový, když ho vidličkou lehce rozdělíš na plátky — přepečený je suchý."
+"tip": "Losos je hotový, když ho vidličkou lehce rozdělíš na plátky. Přepečený je suchý."
 },
 {
 "id": "bolonske-hovezi-testoviny",
@@ -1011,7 +1011,7 @@
 "Přidej nakrájené rajče a papriku, osol, opepři a duste 10 minut do omáčky.",
 "Omáčku promíchej s těstovinami nebo ji navrš navrch."
 ],
-"tip": "Hovězí 5 % je libové — kapka oleje na začátku stačí, aby se maso nepřipálilo."
+"tip": "Hovězí 5 % je libové. Kapka oleje na začátku stačí, aby se maso nepřipálilo."
 },
 {
 "id": "tofu-stir-fry-natural-ryze",
@@ -1062,7 +1062,7 @@
 "Přidej cibuli, papriku a cuketu a restuj na prudkém ohni 4-5 minut, ať zelenina zůstane křupavá.",
 "Zakápni sójovou omáčkou, promíchej a podávej s rýží."
 ],
-"tip": "Tofu před opékáním pořádně osuš — suché se krásně opeče, mokré se jen dusí."
+"tip": "Tofu před opékáním pořádně osuš. Suché se krásně opeče, mokré se jen dusí."
 },
 {
 "id": "veprova-panenka-bataty-kapusta",
@@ -1109,7 +1109,7 @@
 "Maso nech pár minut odpočinout, než ho nakrájíš na medailonky.",
 "Kapustu a mrkev nakrájej a orestuj nebo spař do měkka."
 ],
-"tip": "Panenku po opečení nech odpočinout pod alobalem — šťáva se rozloží a maso zůstane křehké."
+"tip": "Panenku po opečení nech odpočinout pod alobalem. Šťáva se rozloží a maso zůstane křehké."
 },
 {
 "id": "tunakovy-salat-s-fazolemi",
@@ -1160,7 +1160,7 @@
 "Zakápni olivovým olejem a citronem, osol, opepři a promíchej.",
 "Nech pět minut odležet, ať se chutě spojí, a podávej."
 ],
-"tip": "Sytý oběd pod 500 kcal — fazole dodají vlákninu, tuňák bílkoviny. Klidně den dopředu do krabičky."
+"tip": "Sytý oběd pod 500 kcal: fazole dodají vlákninu, tuňák bílkoviny. Klidně den dopředu do krabičky."
 },
 {
 "id": "zeleninova-omeleta-se-zampiony",
@@ -1210,7 +1210,7 @@
 "Zalij rozšlehanými vejci s bílkem, osol, opepři a nech na mírném ohni zatáhnout.",
 "Podávej s nakrájeným rajčetem a pažitkou."
 ],
-"tip": "Bez mléčných výrobků, kolem 330 kcal a 30 g bílkovin — ideální lehká snídaně."
+"tip": "Bez mléčných výrobků, kolem 330 kcal a 30 g bílkovin. Ideální lehká snídaně."
 },
 {
 "id": "tofu-bowl-s-cizrnou",
@@ -1226,11 +1226,11 @@
 "ing": [
 {
 "id": "tofu",
-"g": 150
+"g": 130
 },
 {
 "id": "cizrna-varena",
-"g": 120
+"g": 100
 },
 {
 "id": "paprika",
@@ -1246,7 +1246,7 @@
 },
 {
 "id": "olivovy-olej",
-"g": 7
+"g": 5
 }
 ],
 "extra": [
@@ -1262,5 +1262,220 @@
 "Zakápni citronem, dosol podle chuti a promíchej."
 ],
 "tip": "Rostlinný oběd s poctivou porcí bílkovin z tofu a cizrny. Funguje teplý i studený."
+},
+{
+"id": "omeleta-spenat-rajcata-zitny-chleb",
+"name": "Omeleta se špenátem, rajčaty a žitným chlebem",
+"meal": "snidane",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "vejce",
+"g": 165
+},
+{
+"id": "bilek",
+"g": 100
+},
+{
+"id": "spenat",
+"g": 50
+},
+{
+"id": "rajce",
+"g": 100
+},
+{
+"id": "chleb-zitny",
+"g": 60
+}
+],
+"extra": [
+"sůl",
+"pepř",
+"pažitka"
+],
+"steps": [
+"Vejce s bílky rozšlehej vidličkou, osol a opepři.",
+"Na nepřilnavé pánvi nech krátce zavadnout špenát.",
+"Přilij vejce a na mírném plameni nech omeletu ztuhnout, klidně pod pokličkou.",
+"Podávej s plátkem žitného chleba a nakrájenými rajčaty."
+],
+"tip": "Bílky navíc zvednou bílkoviny bez tuku a omeleta zůstane nadýchaná."
+},
+{
+"id": "vejce-natvrdo-knackebrot-hummus",
+"name": "Vejce natvrdo s knäckebrotem, hummusem a zeleninou",
+"meal": "svacina",
+"tags": [
+"highprotein",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "vejce",
+"g": 110
+},
+{
+"id": "knackebrot",
+"g": 30
+},
+{
+"id": "hummus",
+"g": 50
+},
+{
+"id": "okurka",
+"g": 100
+},
+{
+"id": "paprika",
+"g": 80
+}
+],
+"extra": [
+"sůl",
+"pepř"
+],
+"steps": [
+"Vejce uvař natvrdo (8 až 9 minut), zchlaď ve studené vodě a oloupej.",
+"Knäckebroty potři hummusem.",
+"Doplň nakrájenou okurkou, paprikou a vejci."
+],
+"tip": "Vejce si uvař do zásoby. V lednici vydrží několik dní a svačina je hned."
+},
+{
+"id": "prazena-cizrna-s-paprikou",
+"name": "Pražená cizrna s čerstvou paprikou",
+"meal": "svacina",
+"tags": [
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "cizrna-varena",
+"g": 150
+},
+{
+"id": "paprika",
+"g": 150
+},
+{
+"id": "olivovy-olej",
+"g": 4
+}
+],
+"extra": [
+"sůl",
+"uzená paprika",
+"kmín"
+],
+"steps": [
+"Cizrnu osuš, promíchej s olejem, solí a kořením.",
+"Rozprostři na plech a peč 25 až 30 minut na 200 °C dokřupava, v polovině promíchej.",
+"Podávej s nakrájenou čerstvou paprikou."
+],
+"tip": "Upeč rovnou dvojitou dávku, křupe i druhý den."
+},
+{
+"id": "cockovy-salat-s-pecenou-zeleninou",
+"name": "Čočkový salát s pečenou zeleninou",
+"meal": "vecere",
+"tags": [
+"lowcal",
+"balanced"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "cocka-varena",
+"g": 200
+},
+{
+"id": "paprika",
+"g": 100
+},
+{
+"id": "cuketa",
+"g": 150
+},
+{
+"id": "cibule",
+"g": 40
+},
+{
+"id": "rajce",
+"g": 100
+},
+{
+"id": "olivovy-olej",
+"g": 8
+}
+],
+"extra": [
+"balsamikový ocet",
+"sůl",
+"pepř",
+"čerstvé bylinky"
+],
+"steps": [
+"Papriku, cuketu a cibuli zapeč v troubě do změknutí, nebo krátce orestuj na pánvi.",
+"Smíchej s uvařenou čočkou, zakápni olejem a octem.",
+"Dochuť solí, pepřem a bylinkami. Chutná vlažný i studený."
+],
+"tip": "Z čočky uvařené do zásoby je večeře hotová za deset minut."
+},
+{
+"id": "pecene-jablko-skorice-orechy",
+"name": "Pečené jablko se skořicí a vlašskými ořechy",
+"meal": "dezert",
+"tags": [
+"lowcal"
+],
+"veg": true,
+"nodairy": true,
+"servings": 1,
+"ing": [
+{
+"id": "jablko",
+"g": 200
+},
+{
+"id": "vlasske-orechy",
+"g": 15
+},
+{
+"id": "med",
+"g": 10
+},
+{
+"id": "rozinky",
+"g": 10
+}
+],
+"extra": [
+"skořice"
+],
+"steps": [
+"Jablko rozpul, vydlabej jádřinec a polož do zapékací misky.",
+"Posyp skořicí, rozinkami a nasekanými ořechy, zakápni medem.",
+"Peč zhruba 20 minut na 180 °C, dokud jablko nezměkne."
+],
+"tip": "Funguje i v mikrovlnce, 3 až 4 minuty na plný výkon."
 }
 ]

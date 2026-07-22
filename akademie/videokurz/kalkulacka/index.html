@@ -79,19 +79,21 @@
           <div class="field full">
             <label for="aktivita">Aktivita</label>
             <select id="aktivita">
-              <option value="1.2">Sedavý (kancelář, minimum pohybu)</option>
-              <option value="1.375">Lehká aktivita (1–3× týdně)</option>
-              <option value="1.55" selected>Střední aktivita (3–5× týdně)</option>
-              <option value="1.725">Vysoká aktivita (6–7× týdně)</option>
-              <option value="1.9">Velmi vysoká (fyzická práce / 2× denně)</option>
+              <option value="sedavy">Sedavý (kancelář, minimum pohybu)</option>
+              <option value="lehka">Lehká aktivita (1–3× týdně)</option>
+              <option value="stredni" selected>Střední aktivita (3–5× týdně)</option>
+              <option value="vysoka">Vysoká aktivita (6–7× týdně)</option>
+              <option value="extremni">Velmi vysoká (fyzická práce / 2× denně)</option>
             </select>
           </div>
           <div class="field full">
             <label for="cil">Tvůj cíl</label>
             <select id="cil">
-              <option value="hubnuti">Zhubnout (kalorický deficit)</option>
+              <option value="hubnuti">Zhubnout rychleji (větší deficit)</option>
+              <option value="mirne_hubnuti">Zhubnout v klidu (mírný deficit)</option>
               <option value="udrzeni" selected>Udržet váhu</option>
-              <option value="nabirani">Nabrat svaly (mírný přebytek)</option>
+              <option value="mirny_narust">Nabrat svaly (mírný přebytek)</option>
+              <option value="narust">Nabrat rychleji (větší přebytek)</option>
             </select>
           </div>
           <div class="field full">
@@ -109,6 +111,7 @@
           <div class="macro"><div class="num" id="r-sach">—</div><div class="lbl">Sacharidy (g)</div></div>
           <div class="macro"><div class="num" id="r-vlak">—</div><div class="lbl">Vláknina (g)</div></div>
         </div>
+        <p class="disc" id="r-meta"></p>
         <p class="disc">Orientační startovní bod (Mifflin–St Jeor). Není lékařským doporučením, při zdravotních potížích se poraď s lékařem.</p>
       </div>
     </div>
@@ -116,32 +119,29 @@
     <p class="tip">Jak s čísly pracovat naplno (sacharidové vlny, úpravy, kalorické tabulky) najdeš v <a href="/akademie/videokurz/">modulech videokurzu</a>.</p>
   </div>
 
+  <script src="/assets/meal-gen.js?v=20260722"></script>
   <script>
+    // Výpočet jede na sdíleném enginu MealGen (assets/meal-gen.js) — stejný jako veřejná
+    // kalkulačka i nástroje v Academy, čísla všude sedí.
     function spocitej() {
       var pohlavi = document.getElementById('pohlavi').value;
       var vek = parseFloat(document.getElementById('vek').value);
       var vyska = parseFloat(document.getElementById('vyska').value);
       var vaha = parseFloat(document.getElementById('vaha').value);
-      var aktivita = parseFloat(document.getElementById('aktivita').value);
-      var cil = document.getElementById('cil').value;
       if (!vek || !vyska || !vaha) { alert('Vyplň prosím věk, výšku a váhu.'); return; }
-      var bmr = (pohlavi === 'muz')
-        ? 10 * vaha + 6.25 * vyska - 5 * vek + 5
-        : 10 * vaha + 6.25 * vyska - 5 * vek - 161;
-      var tdee = bmr * aktivita;
-      if (cil === 'hubnuti') tdee *= 0.80;
-      else if (cil === 'nabirani') tdee *= 1.10;
-      var kcal = Math.round(tdee);
-      var bilkoviny = Math.round(vaha * 2);
-      var tuky = Math.round(vaha * 1);
-      var zbytekKcal = kcal - (bilkoviny * 4) - (tuky * 9);
-      var sacharidy = Math.max(0, Math.round(zbytekKcal / 4));
-      var vlaknina = Math.round(kcal / 1000 * 14);
-      document.getElementById('r-kcal').textContent = kcal.toLocaleString('cs-CZ');
-      document.getElementById('r-bil').textContent = bilkoviny;
-      document.getElementById('r-tuk').textContent = tuky;
-      document.getElementById('r-sach').textContent = sacharidy;
-      document.getElementById('r-vlak').textContent = vlaknina;
+      if (!window.MealGen) { alert('Kalkulačka se nenačetla celá, zkus obnovit stránku.'); return; }
+      var t = window.MealGen.computeTargets({
+        sex: pohlavi, age: vek, height: vyska, weight: vaha,
+        activity: document.getElementById('aktivita').value,
+        goal: document.getElementById('cil').value
+      });
+      document.getElementById('r-kcal').textContent = t.kcal.toLocaleString('cs-CZ');
+      document.getElementById('r-bil').textContent = t.protein;
+      document.getElementById('r-tuk').textContent = t.fat;
+      document.getElementById('r-sach').textContent = t.carbs;
+      document.getElementById('r-vlak').textContent = t.fiber;
+      var meta = document.getElementById('r-meta');
+      if (meta) meta.textContent = 'Bazální metabolismus ' + t.bmr.toLocaleString('cs-CZ') + ' kcal · celkový denní výdej ' + t.tdee.toLocaleString('cs-CZ') + ' kcal';
     }
     document.getElementById('calcBtn').addEventListener('click', spocitej);
   </script>
