@@ -2,6 +2,7 @@
 {
 "id": "drep-velka-cinka",
 "name": "Dřep s velkou činkou",
+"plain": "Dřep s činkou položenou na horní části zad.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -24,6 +25,7 @@
 {
 "id": "drep-vlastni-vaha",
 "name": "Dřep s vlastní vahou",
+"plain": "Podřep a zvednutí jen s vahou vlastního těla.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -47,6 +49,7 @@
 {
 "id": "goblet-drep",
 "name": "Goblet dřep s kettlebellem",
+"plain": "Dřep se závažím drženým oběma rukama u hrudníku.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -70,6 +73,7 @@
 {
 "id": "drep-cinky-pred-telem",
 "name": "Front dřep s velkou činkou",
+"plain": "Dřep s činkou položenou vpředu na ramenou.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -91,6 +95,7 @@
 {
 "id": "leg-press",
 "name": "Leg press na stroji",
+"plain": "Vsedě ve stroji odtlačuješ plošinu nohama od sebe.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -112,6 +117,7 @@
 {
 "id": "hack-drep",
 "name": "Hack dřep na stroji",
+"plain": "Dřep ve stroji se zády opřenými o šikmou opěrku.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -133,6 +139,7 @@
 {
 "id": "bulharsky-drep",
 "name": "Bulharský výpad (split dřep)",
+"plain": "Dřep na přední noze, zadní noha za tebou na lavičce.",
 "muscle": "nohy",
 "pattern": "vypad",
 "equip": [
@@ -157,6 +164,7 @@
 {
 "id": "vypad-vpred",
 "name": "Výpad vpřed",
+"plain": "Krok vpřed a pokles do kleku, pak zpět do stoje.",
 "muscle": "nohy",
 "pattern": "vypad",
 "equip": [
@@ -181,6 +189,7 @@
 {
 "id": "vypad-vzad",
 "name": "Výpad vzad",
+"plain": "Krok vzad a pokles do kleku, pak zpět do stoje.",
 "muscle": "nohy",
 "pattern": "vypad",
 "equip": [
@@ -205,6 +214,7 @@
 {
 "id": "chodici-vypady",
 "name": "Chodící výpady",
+"plain": "Výpady, kterými plynule kráčíš vpřed.",
 "muscle": "nohy",
 "pattern": "vypad",
 "equip": [
@@ -229,6 +239,7 @@
 {
 "id": "bocni-vypad",
 "name": "Boční výpad",
+"plain": "Úkrok do strany s pokrčením jednoho kolene.",
 "muscle": "nohy",
 "pattern": "vypad",
 "equip": [
@@ -253,6 +264,7 @@
 {
 "id": "leg-extension",
 "name": "Předkopávání na stroji",
+"plain": "Vsedě ve stroji propínáš kolena proti odporu.",
 "muscle": "nohy",
 "pattern": "izolace",
 "equip": [
@@ -274,6 +286,7 @@
 {
 "id": "leg-curl-lezici",
 "name": "Zakopávání vleže na stroji",
+"plain": "Vleže na břiše přitahuješ paty k hýždím proti odporu.",
 "muscle": "nohy",
 "pattern": "izolace",
 "equip": [
@@ -295,6 +308,7 @@
 {
 "id": "step-up",
 "name": "Výstupy na lavičku",
+"plain": "Vystupuješ celým chodidlem na lavičku a zpět dolů.",
 "muscle": "nohy",
 "pattern": "vypad",
 "equip": [
@@ -320,6 +334,7 @@
 {
 "id": "wall-sit",
 "name": "Sed u stěny",
+"plain": "Výdrž v sedu zády o stěnu, stehna vodorovně.",
 "muscle": "nohy",
 "pattern": "izolace",
 "equip": [
@@ -343,6 +358,7 @@
 {
 "id": "vyskok-z-drepu",
 "name": "Výskok z dřepu",
+"plain": "Z podřepu se výbušně odrazíš do výskoku.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -366,6 +382,7 @@
 {
 "id": "pistol-drep",
 "name": "Dřep na jedné noze (pistol)",
+"plain": "Dřep na jedné noze, druhá natažená před tebou.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -389,6 +406,7 @@
 {
 "id": "sumo-drep",
 "name": "Sumo dřep s kettlebellem",
+"plain": "Dřep v širokém stoji se závažím mezi nohama.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -413,6 +431,7 @@
 {
 "id": "vyskoky-na-bednu",
 "name": "Výskoky na bednu",
+"plain": "Odrazem snožmo vyskočíš na bednu a sestoupíš zpět.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -436,6 +455,7 @@
 {
 "id": "drep-s-gumou",
 "name": "Dřep s gumou",
+"plain": "Dřep s odporovou gumou pod chodidly a přes ramena.",
 "muscle": "nohy",
 "pattern": "drep",
 "equip": [
@@ -460,6 +480,7 @@
 {
 "id": "bench-press",
 "name": "Bench press s velkou činkou",
+"plain": "Vleže na lavici tlačíš velkou činku od hrudníku vzhůru.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -482,6 +503,7 @@
 {
 "id": "bench-press-jednorucky",
 "name": "Tlaky s jednoručkami na lavici",
+"plain": "Vleže na lavici tlačíš dvě jednoručky od hrudníku vzhůru.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -505,6 +527,7 @@
 {
 "id": "bench-sikma-cinky",
 "name": "Tlaky na šikmé lavici s jednoručkami",
+"plain": "Tlaky s jednoručkami vleže na mírně zvednuté lavici.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -528,6 +551,7 @@
 {
 "id": "bench-sikma-cinka",
 "name": "Bench press na šikmé lavici",
+"plain": "Tlak velké činky vleže na mírně zvednuté lavici.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -550,6 +574,7 @@
 {
 "id": "kliky",
 "name": "Kliky",
+"plain": "Ve vzporu spouštíš a zvedáš tělo silou paží a hrudníku.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -573,6 +598,7 @@
 {
 "id": "kliky-na-kolenou",
 "name": "Kliky na kolenou",
+"plain": "Lehčí kliky s oporou o kolena místo špiček.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -596,6 +622,7 @@
 {
 "id": "diamantove-kliky",
 "name": "Diamantové kliky",
+"plain": "Kliky s dlaněmi u sebe pod hrudníkem, víc zaberou paže.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -619,6 +646,7 @@
 {
 "id": "kliky-sikme-nohy-nahore",
 "name": "Kliky s nohama na vyvýšení",
+"plain": "Kliky s chodidly na vyvýšení, těžší varianta.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -643,6 +671,7 @@
 {
 "id": "kliky-o-lavku",
 "name": "Kliky o lavičku (incline)",
+"plain": "Kliky s rukama opřenýma o lavičku, lehčí varianta.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -667,6 +696,7 @@
 {
 "id": "rozpazovani-cinky",
 "name": "Rozpažování s jednoručkami",
+"plain": "Vleže rozpažuješ a spojuješ jednoručky nad hrudníkem.",
 "muscle": "prsa",
 "pattern": "izolace",
 "equip": [
@@ -690,6 +720,7 @@
 {
 "id": "peck-deck",
 "name": "Stahování na peck-deck stroji",
+"plain": "Vsedě ve stroji spojuješ opěrky před hrudníkem.",
 "muscle": "prsa",
 "pattern": "izolace",
 "equip": [
@@ -711,6 +742,7 @@
 {
 "id": "kladka-stahovani-prsa",
 "name": "Stahování kladek na prsa",
+"plain": "Ve stoje stahuješ úchopy dvou kladek k sobě před tělo.",
 "muscle": "prsa",
 "pattern": "izolace",
 "equip": [
@@ -732,6 +764,7 @@
 {
 "id": "tlak-na-stroji-prsa",
 "name": "Tlak na prsa na stroji",
+"plain": "Vsedě ve stroji tlačíš úchopy od hrudníku vpřed.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -753,6 +786,7 @@
 {
 "id": "kliky-s-gumou",
 "name": "Kliky s gumou přes záda",
+"plain": "Kliky ztížené odporovou gumou přetaženou přes záda.",
 "muscle": "prsa",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -776,6 +810,7 @@
 {
 "id": "mrtvy-tah",
 "name": "Mrtvý tah s velkou činkou",
+"plain": "Zvedáš činku ze země napřímením celého těla.",
 "muscle": "zada",
 "pattern": "hinge",
 "equip": [
@@ -797,6 +832,7 @@
 {
 "id": "rumunsky-mrtvy-tah",
 "name": "Rumunský mrtvý tah",
+"plain": "S činkou v rukou se předkláníš s rovnými zády a zpět.",
 "muscle": "zada",
 "pattern": "hinge",
 "equip": [
@@ -819,6 +855,7 @@
 {
 "id": "rumunsky-tah-jednorucky",
 "name": "Rumunský mrtvý tah s jednoručkami",
+"plain": "Předklon s rovnými zády s jednoručkami v rukou.",
 "muscle": "zada",
 "pattern": "hinge",
 "equip": [
@@ -842,6 +879,7 @@
 {
 "id": "veslovani-cinka",
 "name": "Veslování ve předklonu s velkou činkou",
+"plain": "V předklonu přitahuješ velkou činku k břichu.",
 "muscle": "zada",
 "pattern": "tah-horizontalni",
 "equip": [
@@ -863,6 +901,7 @@
 {
 "id": "veslovani-jednorucka",
 "name": "Veslování s jednoručkou v předklonu",
+"plain": "S oporou o lavičku přitahuješ jednoručku k boku.",
 "muscle": "zada",
 "pattern": "tah-horizontalni",
 "equip": [
@@ -886,6 +925,7 @@
 {
 "id": "veslovani-kladka",
 "name": "Veslování na spodní kladce vsedě",
+"plain": "Vsedě přitahuješ úchop spodní kladky k břichu.",
 "muscle": "zada",
 "pattern": "tah-horizontalni",
 "equip": [
@@ -908,6 +948,7 @@
 {
 "id": "lat-pulldown",
 "name": "Stahování horní kladky (lat pulldown)",
+"plain": "Vsedě stahuješ tyč horní kladky k hrudníku.",
 "muscle": "zada",
 "pattern": "tah-vertikalni",
 "equip": [
@@ -930,6 +971,7 @@
 {
 "id": "shyby-nadhmat",
 "name": "Shyby nadhmatem",
+"plain": "Ve visu na hrazdě se přitahuješ bradou k tyči.",
 "muscle": "zada",
 "pattern": "tah-vertikalni",
 "equip": [
@@ -954,6 +996,7 @@
 {
 "id": "shyby-podhmat",
 "name": "Shyby podhmatem",
+"plain": "Shyby s dlaněmi otočenými k tobě, víc zapojí biceps.",
 "muscle": "zada",
 "pattern": "tah-vertikalni",
 "equip": [
@@ -978,6 +1021,7 @@
 {
 "id": "shyby-s-gumou",
 "name": "Shyby s dopomocí gumy",
+"plain": "Shyby odlehčené gumou, která tě nadnáší.",
 "muscle": "zada",
 "pattern": "tah-vertikalni",
 "equip": [
@@ -1002,6 +1046,7 @@
 {
 "id": "australske-shyby",
 "name": "Australské shyby (veslování na hrazdě)",
+"plain": "Přitahuješ se k nízké hrazdě, tělo šikmo, paty na zemi.",
 "muscle": "zada",
 "pattern": "tah-horizontalni",
 "equip": [
@@ -1026,6 +1071,7 @@
 {
 "id": "veslo-trx",
 "name": "Veslování na TRX",
+"plain": "V záklonu se přitahuješ na popruzích TRX, paty na zemi.",
 "muscle": "zada",
 "pattern": "tah-horizontalni",
 "equip": [
@@ -1050,6 +1096,7 @@
 {
 "id": "pritahy-gumy",
 "name": "Přítahy s gumou vsedě",
+"plain": "Vsedě přitahuješ gumu přehozenou přes chodidla k břichu.",
 "muscle": "zada",
 "pattern": "tah-horizontalni",
 "equip": [
@@ -1074,6 +1121,7 @@
 {
 "id": "stahovani-gumy-shora",
 "name": "Stahování gumy shora (lat pulldown s gumou)",
+"plain": "Stahuješ gumu upevněnou nad hlavou dolů k hrudníku.",
 "muscle": "zada",
 "pattern": "tah-vertikalni",
 "equip": [
@@ -1097,6 +1145,7 @@
 {
 "id": "tah-na-stroji-zada",
 "name": "Přítahy na zádovém stroji",
+"plain": "Vsedě s hrudníkem o opěrku přitahuješ úchopy stroje k tělu.",
 "muscle": "zada",
 "pattern": "tah-horizontalni",
 "equip": [
@@ -1118,6 +1167,7 @@
 {
 "id": "superman",
 "name": "Superman (zvedání trupu vleže)",
+"plain": "Vleže na břiše zvedáš současně paže a nohy nad zem.",
 "muscle": "zada",
 "pattern": "core",
 "equip": [
@@ -1141,6 +1191,7 @@
 {
 "id": "tlak-nad-hlavu-cinka",
 "name": "Tlak nad hlavu s velkou činkou (OHP)",
+"plain": "Ve stoje vytlačuješ velkou činku od ramen nad hlavu.",
 "muscle": "ramena",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1162,6 +1213,7 @@
 {
 "id": "tlak-nad-hlavu-jednorucky",
 "name": "Tlak nad hlavu s jednoručkami",
+"plain": "Vytlačuješ jednoručky od ramen nad hlavu.",
 "muscle": "ramena",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1184,6 +1236,7 @@
 {
 "id": "arnold-tlak",
 "name": "Arnoldův tlak",
+"plain": "Tlak jednoruček nad hlavu s otočením dlaní během pohybu.",
 "muscle": "ramena",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1206,6 +1259,7 @@
 {
 "id": "tlak-na-stroji-ramena",
 "name": "Tlak na ramena na stroji",
+"plain": "Vsedě ve stroji tlačíš úchopy od ramen vzhůru.",
 "muscle": "ramena",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1227,6 +1281,7 @@
 {
 "id": "upazovani-cinky",
 "name": "Upažování s jednoručkami",
+"plain": "Zvedáš jednoručky upažením do výšky ramen.",
 "muscle": "ramena",
 "pattern": "izolace",
 "equip": [
@@ -1249,6 +1304,7 @@
 {
 "id": "predpazovani-cinky",
 "name": "Předpažování s jednoručkami",
+"plain": "Zvedáš jednoručky před tělem do výšky ramen.",
 "muscle": "ramena",
 "pattern": "izolace",
 "equip": [
@@ -1271,6 +1327,7 @@
 {
 "id": "upazovani-v-predklonu",
 "name": "Rozpažování v předklonu (zadní delty)",
+"plain": "V hlubokém předklonu rozpažuješ jednoručky do stran.",
 "muscle": "ramena",
 "pattern": "izolace",
 "equip": [
@@ -1293,6 +1350,7 @@
 {
 "id": "upazovani-guma",
 "name": "Upažování s gumou",
+"plain": "Upažování proti odporu gumy, na které stojíš.",
 "muscle": "ramena",
 "pattern": "izolace",
 "equip": [
@@ -1316,6 +1374,7 @@
 {
 "id": "tlak-nad-hlavu-guma",
 "name": "Tlak nad hlavu s gumou",
+"plain": "Vytlačuješ konce gumy, na které stojíš, nad hlavu.",
 "muscle": "ramena",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1339,6 +1398,7 @@
 {
 "id": "pike-push-up",
 "name": "Pike kliky (na ramena)",
+"plain": "Kliky v pozici obráceného V, hlava míří k zemi.",
 "muscle": "ramena",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1362,6 +1422,7 @@
 {
 "id": "handstand-push-up",
 "name": "Stoj na rukou u zdi – kliky",
+"plain": "Kliky ve stoji na rukou s oporou nohou o zeď.",
 "muscle": "ramena",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1384,6 +1445,7 @@
 {
 "id": "shrugy-cinky",
 "name": "Krčení ramen s jednoručkami (shrugy)",
+"plain": "Krčíš ramena k uším s jednoručkami v natažených pažích.",
 "muscle": "ramena",
 "pattern": "izolace",
 "equip": [
@@ -1407,6 +1469,7 @@
 {
 "id": "biceps-zdvih-cinky",
 "name": "Bicepsový zdvih s jednoručkami",
+"plain": "Ohýbáš paže s jednoručkami, lokty u těla.",
 "muscle": "biceps",
 "pattern": "izolace",
 "equip": [
@@ -1429,6 +1492,7 @@
 {
 "id": "biceps-zdvih-velka-cinka",
 "name": "Bicepsový zdvih s velkou činkou",
+"plain": "Ohýbáš paže s velkou činkou v podhmatu.",
 "muscle": "biceps",
 "pattern": "izolace",
 "equip": [
@@ -1450,6 +1514,7 @@
 {
 "id": "kladivove-zdvihy",
 "name": "Kladivové zdvihy (hammer curl)",
+"plain": "Zdvihy jednoruček s dlaněmi otočenými k sobě.",
 "muscle": "biceps",
 "pattern": "izolace",
 "equip": [
@@ -1472,6 +1537,7 @@
 {
 "id": "koncentrovany-zdvih",
 "name": "Koncentrovaný bicepsový zdvih",
+"plain": "Vsedě zvedáš jednoručku s loktem opřeným o stehno.",
 "muscle": "biceps",
 "pattern": "izolace",
 "equip": [
@@ -1495,6 +1561,7 @@
 {
 "id": "biceps-kladka",
 "name": "Bicepsový zdvih na kladce",
+"plain": "Ohýbáš paže s tyčí spodní kladky, lokty u těla.",
 "muscle": "biceps",
 "pattern": "izolace",
 "equip": [
@@ -1516,6 +1583,7 @@
 {
 "id": "biceps-guma",
 "name": "Bicepsový zdvih s gumou",
+"plain": "Ohýbáš paže proti odporu gumy, na které stojíš.",
 "muscle": "biceps",
 "pattern": "izolace",
 "equip": [
@@ -1539,6 +1607,7 @@
 {
 "id": "biceps-kettlebell",
 "name": "Bicepsový zdvih s kettlebellem",
+"plain": "Bicepsové zdvihy s kettlebellem místo jednoručky.",
 "muscle": "biceps",
 "pattern": "izolace",
 "equip": [
@@ -1561,6 +1630,7 @@
 {
 "id": "shyby-uzky-podhmat",
 "name": "Shyby úzkým podhmatem (na biceps)",
+"plain": "Shyby úzkým podhmatem, silně zapojí biceps.",
 "muscle": "biceps",
 "pattern": "tah-vertikalni",
 "equip": [
@@ -1585,6 +1655,7 @@
 {
 "id": "triceps-stahovani-kladka",
 "name": "Stahování kladky na triceps",
+"plain": "Stahuješ tyč horní kladky dolů propínáním paží.",
 "muscle": "triceps",
 "pattern": "izolace",
 "equip": [
@@ -1606,6 +1677,7 @@
 {
 "id": "triceps-francouzsky-tlak",
 "name": "Francouzský tlak s jednoručkou",
+"plain": "Spouštíš jednoručku za hlavu a propínáš paže vzhůru.",
 "muscle": "triceps",
 "pattern": "izolace",
 "equip": [
@@ -1628,6 +1700,7 @@
 {
 "id": "triceps-kickback",
 "name": "Zapažování s jednoručkou (kickback)",
+"plain": "V předklonu propínáš paži s jednoručkou vzad.",
 "muscle": "triceps",
 "pattern": "izolace",
 "equip": [
@@ -1650,6 +1723,7 @@
 {
 "id": "dipy-na-lavicce",
 "name": "Dipy o lavičku (triceps)",
+"plain": "Rukama za tebou na lavičce spouštíš a zvedáš tělo.",
 "muscle": "triceps",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1674,6 +1748,7 @@
 {
 "id": "dipy-na-bradlech",
 "name": "Dipy na bradlech",
+"plain": "Na bradlech spouštíš a zvedáš tělo silou paží.",
 "muscle": "triceps",
 "pattern": "tlak-vertikalni",
 "equip": [
@@ -1697,6 +1772,7 @@
 {
 "id": "triceps-kliky-uzke",
 "name": "Úzké kliky (na triceps)",
+"plain": "Kliky s dlaněmi u sebe a lokty podél těla.",
 "muscle": "triceps",
 "pattern": "tlak-horizontalni",
 "equip": [
@@ -1720,6 +1796,7 @@
 {
 "id": "triceps-cinka-za-hlavu",
 "name": "Tlak za hlavu s jednoručkou vsedě",
+"plain": "Vsedě propínáš paže s jednoručkou drženou za hlavou.",
 "muscle": "triceps",
 "pattern": "izolace",
 "equip": [
@@ -1742,6 +1819,7 @@
 {
 "id": "triceps-guma",
 "name": "Stahování gumy na triceps",
+"plain": "Stahuješ gumu upevněnou nahoře propínáním paží.",
 "muscle": "triceps",
 "pattern": "izolace",
 "equip": [
@@ -1765,6 +1843,7 @@
 {
 "id": "triceps-kladka-nad-hlavu",
 "name": "Francouzský tlak na kladce nad hlavu",
+"plain": "Zády ke kladce propínáš paže s lanem nad hlavou.",
 "muscle": "triceps",
 "pattern": "izolace",
 "equip": [
@@ -1786,6 +1865,7 @@
 {
 "id": "triceps-velka-cinka-vleze",
 "name": "Francouzský tlak vleže s velkou činkou",
+"plain": "Vleže spouštíš velkou činku k čelu a propínáš paže.",
 "muscle": "triceps",
 "pattern": "izolace",
 "equip": [
@@ -1808,6 +1888,7 @@
 {
 "id": "plank",
 "name": "Plank (prkno)",
+"plain": "Výdrž ve vzporu na předloktích, tělo v jedné přímce.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1831,6 +1912,7 @@
 {
 "id": "plank-bocni",
 "name": "Boční plank",
+"plain": "Výdrž na boku s oporou o jedno předloktí.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1854,6 +1936,7 @@
 {
 "id": "sklapovacky",
 "name": "Sklapovačky",
+"plain": "Vleže zvedáš trup i nohy současně proti sobě.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1877,6 +1960,7 @@
 {
 "id": "zkracovacky",
 "name": "Zkracovačky (crunche)",
+"plain": "Vleže s pokrčenými koleny zvedáš horní část trupu.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1900,6 +1984,7 @@
 {
 "id": "leg-raises",
 "name": "Zvedání nohou vleže",
+"plain": "Vleže na zádech zvedáš natažené nohy nahoru.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1923,6 +2008,7 @@
 {
 "id": "hanging-leg-raises",
 "name": "Zvedání nohou ve visu na hrazdě",
+"plain": "Ve visu na hrazdě zvedáš nohy před tělo.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1946,6 +2032,7 @@
 {
 "id": "mountain-climbers",
 "name": "Mountain climbers (horolezec)",
+"plain": "Ve vzporu svižně střídáš přitahování kolen k hrudníku.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1969,6 +2056,7 @@
 {
 "id": "rusky-twist",
 "name": "Ruský twist",
+"plain": "V sedu se zakloněným trupem otáčíš rameny ze strany na stranu.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -1994,6 +2082,7 @@
 {
 "id": "dead-bug",
 "name": "Dead bug (mrtvý brouk)",
+"plain": "Vleže na zádech střídavě natahuješ protilehlou ruku a nohu.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2017,6 +2106,7 @@
 {
 "id": "hollow-hold",
 "name": "Hollow hold (lodička)",
+"plain": "Výdrž vleže s rameny a nohama zvednutými nad zem.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2040,6 +2130,7 @@
 {
 "id": "kolo-na-bricho",
 "name": "Kolo (bicycle crunch)",
+"plain": "Vleže střídavě přitahuješ loket k protilehlému kolenu.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2063,6 +2154,7 @@
 {
 "id": "kolibka",
 "name": "Plank s přitažením kolen (knee tuck)",
+"plain": "Z planku přitahuješ kolena k hrudníku a zpět.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2086,6 +2178,7 @@
 {
 "id": "ab-rollout",
 "name": "Ab rollout s kolečkem",
+"plain": "V kleku odjíždíš s kolečkem vpřed a vracíš se zpět.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2109,6 +2202,7 @@
 {
 "id": "v-sklapovacky",
 "name": "V-sklapovačky",
+"plain": "Vleže zvedáš současně trup i natažené nohy do tvaru V.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2132,6 +2226,7 @@
 {
 "id": "plank-na-dlanich",
 "name": "Plank na dlaních s dotyky ramen",
+"plain": "V planku na dlaních se střídavě dotýkáš rukou ramen.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2155,6 +2250,7 @@
 {
 "id": "leg-raises-lavka",
 "name": "Zvedání nohou v sedu na lavičce",
+"plain": "V sedu na kraji lavičky přitahuješ kolena k hrudníku.",
 "muscle": "bricho",
 "pattern": "core",
 "equip": [
@@ -2179,6 +2275,7 @@
 {
 "id": "hip-thrust",
 "name": "Hip thrust s velkou činkou",
+"plain": "Zdvihy boků s horními zády o lavičku, činka na klíně.",
 "muscle": "hyzde",
 "pattern": "hinge",
 "equip": [
@@ -2201,6 +2298,7 @@
 {
 "id": "hip-thrust-jednonoz",
 "name": "Hip thrust na jedné noze",
+"plain": "Zdvihy boků o lavičku na jedné noze.",
 "muscle": "hyzde",
 "pattern": "hinge",
 "equip": [
@@ -2225,6 +2323,7 @@
 {
 "id": "glute-bridge",
 "name": "Most (glute bridge)",
+"plain": "Vleže na zádech zvedáš boky vzhůru zpevněnými hýžděmi.",
 "muscle": "hyzde",
 "pattern": "hinge",
 "equip": [
@@ -2248,6 +2347,7 @@
 {
 "id": "glute-bridge-jednonoz",
 "name": "Most na jedné noze",
+"plain": "Most s jednou nohou zvednutou nad zem.",
 "muscle": "hyzde",
 "pattern": "hinge",
 "equip": [
@@ -2271,6 +2371,7 @@
 {
 "id": "kickback-guma",
 "name": "Zakopávání vzad s gumou (donkey kick)",
+"plain": "Ve vzporu na čtyřech zanožuješ proti odporu gumy.",
 "muscle": "hyzde",
 "pattern": "izolace",
 "equip": [
@@ -2295,6 +2396,7 @@
 {
 "id": "unozovani-guma",
 "name": "Únožování vstoje s gumou",
+"plain": "Ve stoje unožuješ do strany proti odporu gumy.",
 "muscle": "hyzde",
 "pattern": "izolace",
 "equip": [
@@ -2319,6 +2421,7 @@
 {
 "id": "kickback-kladka",
 "name": "Zanožování na kladce",
+"plain": "Zanožuješ s manžetou kladky připnutou ke kotníku.",
 "muscle": "hyzde",
 "pattern": "izolace",
 "equip": [
@@ -2340,6 +2443,7 @@
 {
 "id": "kettlebell-swing",
 "name": "Kettlebell swing (švih s kettlebellem)",
+"plain": "Švihy kettlebellem od boků do výšky hrudníku prací boků.",
 "muscle": "hyzde",
 "pattern": "hinge",
 "equip": [
@@ -2362,6 +2466,7 @@
 {
 "id": "abdukce-stroj",
 "name": "Abdukce kyčlí na stroji",
+"plain": "Vsedě ve stroji roztahuješ kolena od sebe proti odporu.",
 "muscle": "hyzde",
 "pattern": "izolace",
 "equip": [
@@ -2383,6 +2488,7 @@
 {
 "id": "frog-pumps",
 "name": "Žabí mosty (frog pumps)",
+"plain": "Mosty s chodidly u sebe a koleny do stran.",
 "muscle": "hyzde",
 "pattern": "hinge",
 "equip": [
@@ -2406,6 +2512,7 @@
 {
 "id": "vypony-stoje",
 "name": "Výpony ve stoje",
+"plain": "Zvedáš se na špičky na hraně schodu a zpět dolů.",
 "muscle": "lytka",
 "pattern": "izolace",
 "equip": [
@@ -2430,6 +2537,7 @@
 {
 "id": "vypony-stroj",
 "name": "Výpony na stroji vstoje",
+"plain": "Výpony na špičky ve stroji se zátěží na ramenou.",
 "muscle": "lytka",
 "pattern": "izolace",
 "equip": [
@@ -2451,6 +2559,7 @@
 {
 "id": "vypony-vsede",
 "name": "Výpony vsedě (sed s činkou)",
+"plain": "Výpony vsedě se zátěží položenou na kolenou.",
 "muscle": "lytka",
 "pattern": "izolace",
 "equip": [
@@ -2473,6 +2582,7 @@
 {
 "id": "vypony-jednonoz",
 "name": "Výpony na jedné noze",
+"plain": "Výpony na špičku jedné nohy na hraně schodu.",
 "muscle": "lytka",
 "pattern": "izolace",
 "equip": [
@@ -2496,6 +2606,7 @@
 {
 "id": "burpees",
 "name": "Burpees (angličáky)",
+"plain": "Z dřepu do vzporu, případně klik, a zpět s výskokem.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2519,6 +2630,7 @@
 {
 "id": "svihadlo",
 "name": "Skákání přes švihadlo",
+"plain": "Přeskoky přes švihadlo nízko na špičkách.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2542,6 +2654,7 @@
 {
 "id": "jumping-jacks",
 "name": "Jumping jacks (panák)",
+"plain": "Poskoky do roznožení s tlesknutím rukama nad hlavou.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2565,6 +2678,7 @@
 {
 "id": "high-knees",
 "name": "Běh na místě s vysokými koleny",
+"plain": "Běh na místě s koleny zvedanými k pasu.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2588,6 +2702,7 @@
 {
 "id": "veslo-trenazer",
 "name": "Veslařský trenažér (ergometr)",
+"plain": "Tahy na veslařském trenažéru: nohy, trup a nakonec paže.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2609,6 +2724,7 @@
 {
 "id": "kettlebell-clean-press",
 "name": "Kettlebell clean & press (přemístění a tlak)",
+"plain": "Přemístíš kettlebell k rameni a vytlačíš ho nad hlavu.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2631,6 +2747,7 @@
 {
 "id": "thruster",
 "name": "Thruster (dřep s výtlakem)",
+"plain": "Dřep se zátěží na ramenou a výtlak nad hlavu v jednom pohybu.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2655,6 +2772,7 @@
 {
 "id": "bear-crawl",
 "name": "Medvědí chůze (bear crawl)",
+"plain": "Chůze po čtyřech s koleny těsně nad zemí.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2678,6 +2796,7 @@
 {
 "id": "sprint",
 "name": "Sprinty",
+"plain": "Krátké běhy naplno s pauzami na vydýchání.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [
@@ -2699,6 +2818,7 @@
 {
 "id": "beh",
 "name": "Vytrvalostní běh",
+"plain": "Souvislý běh volnějším tempem na delší vzdálenost.",
 "muscle": "full",
 "pattern": "kardio",
 "equip": [

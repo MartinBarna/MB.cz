@@ -45,6 +45,8 @@
   .meal td.g{color:var(--muted-2);white-space:nowrap;text-align:right;}
   .meal td.m{color:var(--muted);font-size:.82rem;white-space:nowrap;text-align:right;}
   .mt{display:flex;justify-content:space-between;padding:9px 16px;background:rgba(255,255,255,.03);color:var(--muted-2);font-size:.85rem;}
+  .swapbtn{background:rgba(235,177,44,.1);border:1px solid rgba(235,177,44,.42);color:#F6CD63;border-radius:8px;padding:2px 7px;font-family:inherit;font-size:.78rem;cursor:pointer;margin-left:7px;line-height:1.2;vertical-align:middle;}
+  .swapbtn:hover{background:rgba(235,177,44,.2);}
   .brandline{color:var(--muted);font-size:.85rem;}
   .note{color:var(--muted);font-size:.82rem;margin-top:.7rem;line-height:1.5;}
   .hidden{display:none;}
@@ -79,7 +81,7 @@
   <div class="wrap">
     <span class="kick"><span class="dot"></span> Nástroj pro trenéry</span>
     <h1>Generátor jídelníčků</h1>
-    <p class="lead">Zadej údaje klienta, systém spočítá kalorie i makra a poskládá hotový denní jídelníček z běžných potravin. Pak ho můžeš dát klientovi pod svým jménem.</p>
+    <p class="lead">Zadej údaje klienta, systém spočítá kalorie i makra a poskládá hotový jídelníček z běžných potravin: jeden den, nebo rovnou celý týden s nákupním seznamem. Pak ho dáš klientovi pod svým jménem.</p>
 
     <div id="lock" class="lock hidden">🔒 Plná verze generátoru je součástí <b>Barna Academy</b>. <a href="/akademie/" style="color:var(--gold-soft)">Získat přístup →</a></div>
 
@@ -104,6 +106,7 @@
           <option value="narust">Nabírání svalů</option>
         </select></div>
         <div><label>Počet jídel</label><select id="mealsCount"><option>3</option><option selected>4</option><option>5</option></select></div>
+        <div><label>Rozsah</label><select id="range"><option value="den" selected>1 den</option><option value="tyden">Celý týden + nákupní seznam</option></select></div>
         <div><label>Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Jana"></div>
       </div>
       <div class="chips">
@@ -134,13 +137,13 @@
       <div class="panel">
         <div class="brandhead empty" id="brandhead"></div>
         <div id="resHead" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
-          <h2 style="margin:0;color:#fff;font-size:1.3rem;">Denní jídelníček</h2>
+          <h2 style="margin:0;color:#fff;font-size:1.3rem;" id="resTitle">Denní jídelníček</h2>
           <span class="brandline" id="byline"></span>
         </div>
         <div class="targets" id="targets"></div>
         <div id="meals"></div>
-        <div class="mt" style="border-radius:12px;border:1px solid var(--line);margin-top:6px;"><b style="color:#fff;">Den celkem</b><span id="daytot"></span></div>
-        <p class="note">Hodnoty jsou orientační (běžné potravinové tabulky). Generátor je výchozí bod, uprav porce podle klienta, chutí a reality. Cílové makro = ze vstupních údajů, sestava ±10 %.</p>
+        <div class="mt" id="daytotwrap" style="border-radius:12px;border:1px solid var(--line);margin-top:6px;"><b style="color:#fff;">Den celkem</b><span id="daytot"></span></div>
+        <p class="note">Hodnoty jsou orientační (běžné potravinové tabulky). Generátor je výchozí bod, uprav porce podle klienta, chutí a reality. Cílové makro = ze vstupních údajů, sestava ±10 %. Tlačítkem ⇄ u položky ji vyměníš za jinou ze stejné kategorie (gramáž se dopočítá na stejné kalorie).</p>
         <div class="actions no-print">
           <button class="btn" id="regen">↻ Přegenerovat</button>
           <button class="btn ghost" id="print">🖨️ Uložit / tisk (PDF)</button>
@@ -151,10 +154,10 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260721b"></script>
-  <script src="/assets/meal-gen.js?v=20260714"></script>
+  <script src="/assets/meal-gen.js?v=20260722b"></script>
   <script>
   (function(){
-    var DB=null, seed=0, lastTargets=null;
+    var DB=null, seed=0, lastTargets=null, lastPlan=null, lastWeek=null, swapSeed=0;
     var $=function(id){return document.getElementById(id);};
     function fmt(n){return Math.round(n);}
     function macros(m){return 'B '+fmt(m.p)+' · S '+fmt(m.c)+' · T '+fmt(m.f)+' · Vl '+fmt(m.fib)+' · '+fmt(m.kcal)+' kcal';}
@@ -186,25 +189,24 @@
       if($('vegetarian').checked) p.vegetarian=true;
       return p;
     }
-    function render(plan){
-      var t=plan.targets;
+    function mealHtml(m, mi, withSwap){
+      var html='<div class="meal"><h3>'+m.name+' <small>'+fmt(m.totals.kcal)+' kcal</small></h3><table>';
+      m.items.forEach(function(it, ii){
+        var mm=window.MealGen.macrosFor(it.food,it.grams);
+        html+='<tr><td>'+esc(it.food.name)+'</td><td class="g">'+fmt(it.grams)+' g</td><td class="m">'+fmt(mm.kcal)+' kcal'+
+          (withSwap?(' <button type="button" class="swapbtn no-print" data-swap="'+mi+','+ii+'" title="Vyměnit za jinou potravinu ze stejné kategorie">⇄</button>'):'')+
+          '</td></tr>';
+      });
+      html+='</table><div class="mt"><span>'+macros(m.totals)+'</span></div></div>';
+      return html;
+    }
+    function renderCommon(t){
       $('targets').innerHTML=
-        '<div class="tcard"><b>'+t.kcal+'</b><span>kcal</span></div>'+
+        '<div class="tcard"><b>'+t.kcal+'</b><span>kcal / den</span></div>'+
         '<div class="tcard"><b>'+t.protein+' g</b><span>Bílkoviny</span></div>'+
         '<div class="tcard"><b>'+t.carbs+' g</b><span>Sacharidy</span></div>'+
         '<div class="tcard"><b>'+t.fat+' g</b><span>Tuky</span></div>'+
         '<div class="tcard"><b>'+t.fiber+' g</b><span>Vláknina</span></div>';
-      var html='';
-      plan.meals.forEach(function(m){
-        html+='<div class="meal"><h3>'+m.name+' <small>'+fmt(m.totals.kcal)+' kcal</small></h3><table>';
-        m.items.forEach(function(it){
-          var mm=window.MealGen.macrosFor(it.food,it.grams);
-          html+='<tr><td>'+it.food.name+'</td><td class="g">'+fmt(it.grams)+' g</td><td class="m">'+fmt(mm.kcal)+' kcal</td></tr>';
-        });
-        html+='</table><div class="mt"><span>'+macros(m.totals)+'</span></div></div>';
-      });
-      $('meals').innerHTML=html;
-      $('daytot').textContent=macros(plan.totals);
       var c=$('client').value.trim();
       // branding (trenér)
       var tn=$('trainer').value.trim(), ac=$('accent').value, lg=(logoData||$('logo').value.trim()), ct=$('contact').value.trim();
@@ -221,15 +223,57 @@
       $('result').style.setProperty('--acc-soft', hexToRgba(acc,0.10));
       $('byline').textContent=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'')+' · cíl: '+t.goalLabel;
       $('result').classList.remove('hidden');
-      $('result').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    function renderDay(plan){
+      $('resTitle').textContent='Denní jídelníček';
+      var html='';
+      plan.meals.forEach(function(m, mi){ html+=mealHtml(m, mi, true); });
+      $('meals').innerHTML=html;
+      $('daytotwrap').style.display='';
+      $('daytot').textContent=macros(plan.totals);
+      renderCommon(plan.targets);
+    }
+    function renderWeek(days){
+      $('resTitle').textContent='Týdenní jídelníček (7 dní)';
+      var html='';
+      days.forEach(function(d, di){
+        html+='<h3 style="color:#fff;margin:'+(di?'1.5rem':'0.4rem')+' 0 .6rem;font-size:1.12rem;">Den '+(di+1)+' <small style="color:var(--muted);font-weight:600;">'+macros(d.totals)+'</small></h3>';
+        d.meals.forEach(function(m){ html+=mealHtml(m, -1, false); });
+      });
+      // nákupní seznam za celý týden (sloučené položky, po odděleních)
+      var list=window.MealGen.shoppingListFromDays(days);
+      html+='<h3 style="color:#fff;margin:1.6rem 0 .6rem;font-size:1.12rem;">🛒 Nákupní seznam na týden</h3><div class="meal"><table>';
+      list.forEach(function(s){
+        var disp=(s.grams>=1000)?((Math.round(s.grams/50)*50/1000).toLocaleString('cs-CZ')+' kg'):(s.grams+' g');
+        html+='<tr><td>'+esc(s.name)+'</td><td class="g">'+disp+'</td></tr>';
+      });
+      html+='</table></div><p class="note">Gramáže v syrovém stavu podle jídelníčku, zaokrouhli podle balení v obchodě.</p>';
+      $('meals').innerHTML=html;
+      $('daytotwrap').style.display='none';
+      renderCommon(days[0].targets);
     }
     function generate(newSeed){
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
       lastTargets=window.MealGen.computeTargets(inputs());
-      var plan=window.MealGen.assembleDay(lastTargets,{ meals:+$('mealsCount').value, prefs:prefs(), db:DB, seed:seed });
-      render(plan);
+      if($('range').value==='tyden'){
+        lastWeek=window.MealGen.assembleWeek(lastTargets,{ meals:+$('mealsCount').value, prefs:prefs(), db:DB, seed:seed });
+        lastPlan=null;
+        renderWeek(lastWeek);
+      } else {
+        lastPlan=window.MealGen.assembleDay(lastTargets,{ meals:+$('mealsCount').value, prefs:prefs(), db:DB, seed:seed });
+        lastWeek=null;
+        renderDay(lastPlan);
+      }
+      $('result').scrollIntoView({behavior:'smooth',block:'start'});
     }
+    $('meals').addEventListener('click',function(e){
+      var b=e.target&&e.target.closest?e.target.closest('[data-swap]'):null;
+      if(!b||!lastPlan)return;
+      var p=b.getAttribute('data-swap').split(',');
+      window.MealGen.swapItem(lastPlan, +p[0], +p[1], { db:DB, prefs:prefs(), seed:swapSeed++ });
+      renderDay(lastPlan);
+    });
     $('gen').addEventListener('click',function(){ generate(false); });
     $('regen').addEventListener('click',function(){ generate(true); });
     $('print').addEventListener('click',function(){ window.print(); });

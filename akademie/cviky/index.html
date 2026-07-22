@@ -42,6 +42,8 @@
   .bdg{font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:50px;background:rgba(235,177,44,.14);color:#F6CD63;}
   .bdg.g{background:rgba(255,255,255,.06);color:#a89e94;}
   .card .tp{color:var(--muted);font-size:.78rem;line-height:1.4;margin-top:2px;}
+  .card .pl{color:#cfc6b8;font-size:.8rem;line-height:1.4;}
+  .mbody .mplain{color:#cfc6b8;font-size:.95rem;margin:0 0 .7rem;}
   .empty{color:var(--muted);text-align:center;padding:3rem 0;}
   /* detail modal */
   #ov{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none;align-items:center;justify-content:center;padding:20px;}
@@ -75,7 +77,7 @@
 
     <div class="tools">
       <div class="searchrow">
-        <input type="search" id="q" placeholder="Hledat cvik podle názvu…" autocomplete="off">
+        <input type="search" id="q" placeholder="Hledat cvik podle názvu nebo popisu…" autocomplete="off">
         <select id="fEquip"><option value="">Vybavení: vše</option></select>
         <select id="fLevel"><option value="">Úroveň: vše</option></select>
         <select id="fLoc"><option value="">Místo: vše</option></select>
@@ -103,7 +105,7 @@
     function label(map,v){return map[v]||v;}
     function img(e){return '/assets/cviky/'+e.id+'.jpg';}
 
-    fetch('/assets/exercise-db.json').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/exercise-db.json?v=20260722b').then(function(r){return r.json();}).then(function(d){
       DB=d; buildFilters(); render();
     }).catch(function(){ $('count').textContent='⚠️ Databázi cviků se nepodařilo načíst.'; });
 
@@ -133,7 +135,7 @@
         if(eq && (e.equip||[]).indexOf(eq)<0) return false;
         if(lv && e.level!==lv) return false;
         if(lo && (e.location||[]).indexOf(lo)<0) return false;
-        if(q && (e.name||'').toLowerCase().indexOf(q)<0) return false;
+        if(q && ((e.name||'')+' '+(e.plain||'')).toLowerCase().indexOf(q)<0) return false;
         return true;
       });
       $('count').textContent=list.length+' cviků';
@@ -143,8 +145,8 @@
           '<div class="thumb"><img src="'+img(e)+'" alt="'+esc(e.name)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'\';"><span class="ph" style="display:none">🏋️</span>'+
             (e.level?'<span class="plvl">'+esc(label(LVL,e.level))+'</span>':'')+'</div>'+
           '<div class="cb"><div class="nm">'+esc(e.name)+'</div>'+
+            (e.plain?'<div class="pl">'+esc(e.plain)+'</div>':'')+
             '<div class="mt"><span class="bdg">'+esc(label(MUS,e.muscle))+'</span>'+((e.equip&&e.equip[0])?'<span class="bdg g">'+esc(label(EQ,e.equip[0]))+'</span>':'')+'</div>'+
-            (e.tip?'<div class="tp">💡 '+esc(e.tip)+'</div>':'')+
           '</div></div>';
       }).join('');
       Array.prototype.forEach.call($('cards').querySelectorAll('.card'),function(c){c.addEventListener('click',function(){openDetail(c.getAttribute('data-id'));});});
@@ -157,7 +159,9 @@
         (e.level?'<span class="bdg g">'+esc(label(LVL,e.level))+'</span>':'')+
         (e.location||[]).map(function(x){return '<span class="bdg g">'+esc(label(LOC,x))+'</span>';}).join('');
       var body='<div class="mimg"><img src="'+img(e)+'" alt="'+esc(e.name)+'" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'\';"><span class="ph" style="display:none">🏋️</span></div>'+
-        '<div class="mbody"><h2>'+esc(e.name)+'</h2><div class="mmeta">'+meta+'</div>';
+        '<div class="mbody"><h2>'+esc(e.name)+'</h2>'+
+        (e.plain?'<p class="mplain">'+esc(e.plain)+'</p>':'')+
+        '<div class="mmeta">'+meta+'</div>';
       if(e.desc){ body+='<h4>Provedení</h4><p>'+esc(e.desc)+'</p>'; }
       if(e.cues&&e.cues.length){ body+='<h4>Na co dávat pozor</h4><ul class="cues">'+e.cues.map(function(c){return '<li>❌ '+esc(c)+'</li>';}).join('')+'</ul>'; }
       if(e.tip){ body+='<h4>Tip</h4><p>💡 '+esc(e.tip)+'</p>'; }
