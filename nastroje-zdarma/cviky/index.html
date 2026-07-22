@@ -115,7 +115,7 @@
     function label(map,v){return map[v]||v;}
     function img(e){return '/assets/cviky/'+e.id+'.jpg';}
 
-    fetch('/assets/exercise-db.json?v=20260722b').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/exercise-db.json?v=20260722c').then(function(r){return r.json();}).then(function(d){
       DB=d; buildFilters(); render();
     }).catch(function(){ $('count').textContent='⚠️ Databázi cviků se nepodařilo načíst.'; });
 

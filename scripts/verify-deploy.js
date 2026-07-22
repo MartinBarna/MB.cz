@@ -1,11 +1,15 @@
-/* Plošné ověření deploye: každý FTP-nasazovaný soubor z origin/main porovná s živým webem.
-   Kritérium: git blob SHA1 == sha1("blob <len>\0" + stažené bajty). Detekuje WEDOS challenge. */
+/* Plošné ověření deploye: každý FTP-nasazovaný soubor daného commitu porovná s živým webem.
+   Kritérium: git blob SHA1 == sha1("blob <len>\0" + stažené bajty). Detekuje WEDOS challenge.
+   Spuštění: node scripts/verify-deploy.js [ref]   (default origin/main; v CI: HEAD)
+   Exit code 1 při jakémkoli rozdílu → v deploy workflow shodí run, žádné tiché přeskočení. */
 'use strict';
 const { execSync } = require('child_process');
 const crypto = require('crypto');
 const https = require('https');
+const path = require('path');
 
-const REPO = 'C:/Users/fitne/Desktop/MB.cz';
+const REPO = path.join(__dirname, '..');
+const REF = process.argv[2] || 'origin/main';
 const BASE = 'https://martinbarna.cz/';
 const NC = Date.now();
 
@@ -13,9 +17,10 @@ const EXCL = [
   /^\.git/, /\/\.git/, /^\.github\//, /^_import\//, /^_zaloha\//, /^_zdroje\//,
   /^Logo-rebrand\//, /^scripts\//, /^akademie\/_ai\//, /^akademie\/_pdf\//,
   /^akademie\/_supabase\//, /^akademie\/_videokurz\//, /\.md$/, /^CNAME$/, /^\.nojekyll$/,
+  /^\.htaccess$/, // Apache ho přes HTTP záměrně nevydává (401) — zvenku neověřitelný
 ];
 
-const lsRaw = execSync('git -c core.quotepath=false ls-tree -r origin/main', { cwd: REPO, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+const lsRaw = execSync('git -c core.quotepath=false ls-tree -r ' + REF, { cwd: REPO, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
 const files = lsRaw.split('\n').filter(Boolean).map((l) => {
   const m = l.match(/^\d+ blob ([0-9a-f]{40})\t(.+)$/);
   return m ? { sha: m[1], path: m[2] } : null;
@@ -84,10 +89,15 @@ async function check(f, attempt = 0) {
   }
   const t0 = Date.now();
   await Promise.all(Array.from({ length: CONC }, worker));
-  console.log('hotovo za ' + Math.round((Date.now() - t0) / 1000) + ' s');
+  console.log('hotovo za ' + Math.round((Date.now() - t0) / 1000) + ' s (ref ' + REF + ')');
   console.log('OK: ' + results.ok + ' / ' + files.length);
   console.log('MISMATCH (' + results.mismatch.length + '):'); results.mismatch.slice(0, 40).forEach((p) => console.log('  ' + p));
   console.log('MISSING/404 (' + results.missing.length + '):'); results.missing.slice(0, 20).forEach((p) => console.log('  ' + p));
   console.log('CHALLENGE (' + results.challenge.length + '):'); results.challenge.slice(0, 10).forEach((p) => console.log('  ' + p));
   console.log('ERROR (' + results.error.length + '):'); results.error.slice(0, 10).forEach((p) => console.log('  ' + p));
+  const bad = results.mismatch.length + results.missing.length + results.challenge.length + results.error.length;
+  if (bad > 0) {
+    console.error('DEPLOY NENÍ KONZISTENTNÍ: ' + bad + ' souborů neodpovídá ' + REF + '.');
+    process.exitCode = 1;
+  }
 })();

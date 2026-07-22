@@ -195,7 +195,7 @@
                         <p class="small mt-2 mb-0" id="r-meta" style="opacity:.85;"></p>
                         <a href="/#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
                         <a href="/videokurz" class="btn btn-grn mt-2 w-100">Chci se naučit s kaloriemi pracovat: videokurz za 800 Kč →</a>
-                        <p class="small mt-3 mb-0" style="opacity:.95;">Nebo si <a href="/nastroje-zdarma/jidelnicek/" style="color:#fff;text-decoration:underline;text-underline-offset:2px;font-weight:600;">hned teď zdarma poskládej ukázkový den →</a> v generátoru jídelníčku.</p>
+                        <p class="small mt-3 mb-0" style="opacity:.95;">Nebo si <a id="gen-link" href="/nastroje-zdarma/jidelnicek/" style="color:#fff;text-decoration:underline;text-underline-offset:2px;font-weight:600;">hned teď zdarma poskládej ukázkový den →</a> v generátoru jídelníčku.</p>
                         <p class="small mt-2 mb-0" style="opacity:.8;">Hodnoty jsou orientační startovní bod (Mifflin–St Jeor). Nejsou lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
     <script defer src="/assets/ui.js?v=20260628b"></script>
     <script defer src="/assets/analytics.js?v=g8"></script><script defer src="/assets/referral.js?v=g1"></script>
     <script defer src="/assets/lead-popup.js?v=r1"></script>
-    <script src="/assets/meal-gen.js?v=20260722b"></script>
+    <script src="/assets/meal-gen.js?v=20260722c"></script>
     <script>
         // Výpočet jede na sdíleném enginu MealGen (assets/meal-gen.js) — stejný jako
         // kalkulačka a generátor jídelníčku v Academy i ve videokurzu, čísla všude sedí.
@@ -247,6 +247,15 @@
             document.getElementById('r-vlak').textContent = t.fiber;
             var meta = document.getElementById('r-meta');
             if (meta) meta.textContent = 'Bazální metabolismus ' + t.bmr.toLocaleString('cs-CZ') + ' kcal · celkový denní výdej ' + t.tdee.toLocaleString('cs-CZ') + ' kcal';
+            // Předej spočítané údaje do generátoru jídelníčku (předvyplní se a rovnou vygeneruje)
+            var genLink = document.getElementById('gen-link');
+            if (genLink) {
+                genLink.href = '/nastroje-zdarma/jidelnicek/?sex=' + encodeURIComponent(pohlavi) +
+                    '&age=' + encodeURIComponent(vek) + '&h=' + encodeURIComponent(vyska) +
+                    '&w=' + encodeURIComponent(vaha) +
+                    '&act=' + encodeURIComponent(document.getElementById('aktivita').value) +
+                    '&goal=' + encodeURIComponent(document.getElementById('cil').value);
+            }
             // Odemkni kontextovou free nabídku + naroutuj podle pohlaví (žena → makro plán, muž → forma zpět)
             var fp = document.getElementById('freeplan-cta');
             if (fp) {

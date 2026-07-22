@@ -154,7 +154,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260721b"></script>
-  <script src="/assets/meal-gen.js?v=20260722b"></script>
+  <script src="/assets/meal-gen.js?v=20260722c"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null, lastPlan=null, lastWeek=null, swapSeed=0;
@@ -174,8 +174,21 @@
     $('logofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) — zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('logoclear').style.display=''; saveBrand(); }; r.readAsDataURL(f); });
     $('logoclear').addEventListener('click',function(){ logoData=''; $('logofile').value=''; $('logoclear').style.display='none'; saveBrand(); });
 
-    fetch('/assets/food-db.json?v=20260704').then(function(r){return r.json();}).then(function(d){
+    // Předvyplnění z kalkulačky (?sex=&age=&w=&h=&act=&goal=) — po načtení DB se rovnou vygeneruje
+    var fromCalc=false;
+    try{
+      var qp=new URLSearchParams(location.search);
+      if(qp.get('w')){
+        var setV=function(id,v){ if(v && $(id)) $(id).value=v; };
+        setV('sex',qp.get('sex')); setV('age',qp.get('age')); setV('weight',qp.get('w'));
+        setV('height',qp.get('h')); setV('activity',qp.get('act')); setV('goal',qp.get('goal'));
+        fromCalc=true;
+      }
+    }catch(e){}
+
+    fetch('/assets/food-db.json?v=20260722c').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
+      if(fromCalc) generate(false);
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
     loadBrand();
 
@@ -245,9 +258,10 @@
       html+='<h3 style="color:#fff;margin:1.6rem 0 .6rem;font-size:1.12rem;">🛒 Nákupní seznam na týden</h3><div class="meal"><table>';
       list.forEach(function(s){
         var disp=(s.grams>=1000)?((Math.round(s.grams/50)*50/1000).toLocaleString('cs-CZ')+' kg'):(s.grams+' g');
+        if(s.pieces) disp='~'+s.pieces+' '+s.pieceLabel+' ('+disp+')';
         html+='<tr><td>'+esc(s.name)+'</td><td class="g">'+disp+'</td></tr>';
       });
-      html+='</table></div><p class="note">Gramáže v syrovém stavu podle jídelníčku, zaokrouhli podle balení v obchodě.</p>';
+      html+='</table></div><p class="note">Gramáže v syrovém stavu podle jídelníčku; u kusového zboží je přepočet na kusy orientační, zaokrouhli podle balení v obchodě.</p>';
       $('meals').innerHTML=html;
       $('daytotwrap').style.display='none';
       renderCommon(days[0].targets);
@@ -282,7 +296,7 @@
     // (tam je jasně označená jako lite + co navíc dává plná). Demo/bez BA běží (MVP).
     if(window.BA){ window.BA.ready.then(function(){
       if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){
-        if(!ok){ location.replace('/nastroje-zdarma/jidelnicek/?from=academy'); }
+        if(!ok){ location.replace('/nastroje-zdarma/jidelnicek/'+(location.search?location.search+'&':'?')+'from=academy'); }
       }); }
     }); }
   })();

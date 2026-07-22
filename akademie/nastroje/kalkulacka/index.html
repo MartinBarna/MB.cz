@@ -120,13 +120,13 @@
         <p class="note">Hodnoty jsou výchozí odhad (Mifflin–St Jeor + koeficient aktivity a cíle). Vždy je dolaď podle reálného vývoje klienta, pokud po 2–3 týdnech váha nejde podle plánu, uprav příjem.</p>
         <div class="actions no-print">
           <button class="btn ghost" id="print">🖨️ Uložit / tisk (PDF)</button>
-          <a class="btn ghost" href="/akademie/nastroje/jidelnicek/">🥗 Chceš z toho hotový jídelníček? →</a>
+          <a class="btn ghost" id="genLink" href="/akademie/nastroje/jidelnicek/">🥗 Chceš z toho hotový jídelníček? →</a>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260722b"></script>
+  <script src="/assets/meal-gen.js?v=20260722c"></script>
   <script>
   (function(){
     var $=function(id){return document.getElementById(id);};
@@ -166,6 +166,11 @@
       var acc=/^#[0-9a-fA-F]{6}$/.test(ac)?ac:'#EBB12C';
       $('result').style.setProperty('--acc', acc);
       $('goalLbl').textContent=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'')+' · cíl: '+t.goalLabel;
+      // předej zadání do generátoru jídelníčku (předvyplní se a rovnou vygeneruje)
+      $('genLink').href='/akademie/nastroje/jidelnicek/?sex='+encodeURIComponent($('sex').value)+
+        '&age='+encodeURIComponent($('age').value)+'&h='+encodeURIComponent($('height').value)+
+        '&w='+encodeURIComponent($('weight').value)+'&act='+encodeURIComponent($('activity').value)+
+        '&goal='+encodeURIComponent($('goal').value);
       $('result').classList.remove('hidden');
       $('result').scrollIntoView({behavior:'smooth',block:'start'});
     }

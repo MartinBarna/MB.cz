@@ -51,6 +51,15 @@
     };
   }
 
+  // [fix 2026-07-22] nodairy: kategorii 'dairy' řeší excludeCat; tohle chytá mléčné položky
+  // schované v jiných kategoriích (tvaroh/skyr/whey v protein, máslo a ghí ve fat). Ořechová
+  // „másla" (arašídové, mandlové…) ani máslová ryba mléčné nejsou.
+  function isDairyExtra(id) {
+    if (/tvaroh|skyr|cottage|syrovatk|prepusten/.test(id)) return true;
+    if (/maslo/.test(id)) return !/(mandl|kesu|arasid|liskooris|kokos|burak|slunecnic|sezam|rostlinn|maslov)/.test(id);
+    return false;
+  }
+
   // filtr DB podle preferencí (vyloučení kategorií/ id)
   function filterDb(db, prefs) {
     prefs = prefs || {};
@@ -59,11 +68,12 @@
     return db.filter(function (f) {
       if (exclCat.indexOf(f.cat) !== -1) return false;
       if (exclId.indexOf(f.id) !== -1) return false;
-      // [fix 2026-07-14] krevety nejsou vegetariánské; tvaroh/skyr/cottage/whey/máslo jsou mléčné,
-      // i když mají kategorii protein/fat (kategorie řídí skládání jídel, ne alergie).
-      if (prefs.vegetarian && /kure|krut|hovez|veprov|losos|tunak|treska|sunka|sardin|stehno|mlete|krevet/.test(f.id)) return false;
-      if (exclCat.indexOf('dairy') !== -1 &&
-          ['tvaroh-mekky', 'tvaroh-tvrdy', 'skyr', 'cottage', 'syrovatkovy-protein', 'maslo'].indexOf(f.id) !== -1) return false;
+      // [fix 2026-07-22] vegetariána řídí flag nonveg PŘÍMO v DB (klasifikace všech 1182
+      // položek vč. světové kuchyně; rostlinné náhražky s masovým názvem flag nemají).
+      // Starý id regex zůstává jako záchranná síť pro případné neoflagované budoucí přírůstky.
+      if (prefs.vegetarian && (f.nonveg ||
+          /kure|krut|hovez|veprov|losos|tunak|treska|sunka|sardin|stehno|mlete|krevet/.test(f.id))) return false;
+      if (exclCat.indexOf('dairy') !== -1 && isDairyExtra(f.id)) return false;
       return true;
     });
   }
@@ -110,6 +120,17 @@
       }
       return pick(db, 'protein', s, prefer) || pick(db, 'dairy', s, prefer);
     }
+    // [fix 2026-07-22] totéž pro přílohy: velká DB má i tučné sacharidové zdroje (opékané
+    // brambory, plněné těstoviny, saláty s majonézou). Při napjatém tukovém rozpočtu ber
+    // přílohy do 4 g tuku/100 g (rýže, brambory, těstoviny…); jinak by skrytý tuk přetekl.
+    function pickCarb(s, prefer) {
+      if (leanOnly) {
+        var leanDb = db.filter(function (f) { return f.cat !== 'carb' || f.per100.f <= 4; });
+        var c = pick(leanDb, 'carb', s, prefer);
+        if (c) return c;
+      }
+      return pick(db, 'carb', s, prefer);
+    }
 
     // rozložení kalorií do jídel
     var dist;
@@ -139,7 +160,7 @@
       }
       // 2) sacharidová příloha (ne u poslední menší svačiny)
       if (!isSnack || i === 0) {
-        var carb = (i === 0) ? (pick(db, 'carb', seed + i + 7, BREAKFAST_CARB)) : pick(db, 'carb', seed + i + 3, MAIN_CARB);
+        var carb = (i === 0) ? (pickCarb(seed + i + 7, BREAKFAST_CARB)) : pickCarb(seed + i + 3, MAIN_CARB);
         if (carb) {
           // dopočítej gramy sacharidů zbývající po proteinu
           var usedC = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).c; }, 0);
@@ -299,6 +320,27 @@
       }
     }
 
+    // [fix 2026-07-22] Finální dorovnání KALORIÍ při velké DB (stejný mechanismus, jaký má
+    // appka Tvůj Coach): skrytý tuk a cukr v přílohách se nedá doškálovat po makrech. Když
+    // kcal po všem přesahují cíl o >6 %, uber sacharidovou kategorii, pak tukovou; bílkoviny
+    // jsou floor a nesahá se na ně.
+    var overKcal = totalKey('kcal') - targets.kcal;
+    if (overKcal > targets.kcal * 0.06) {
+      var carbK = sumP('carb', 'kcal');
+      if (carbK > 0) {
+        var cf2 = Math.max(0.35, (carbK - overKcal) / carbK);
+        all.forEach(function (it) { if (it.food.cat === 'carb') it.grams *= cf2; });
+      }
+      overKcal = totalKey('kcal') - targets.kcal;
+      if (overKcal > targets.kcal * 0.06) {
+        var fatK = sumP('fat', 'kcal');
+        if (fatK > 0) {
+          var ff2 = Math.max(0.25, (fatK - overKcal) / fatK);
+          all.forEach(function (it) { if (it.food.cat === 'fat') it.grams *= ff2; });
+        }
+      }
+    }
+
     // hezké zaokrouhlení gramů (5 g, drobné zdroje tuku na 1 g); stropy už drží capPass()
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
@@ -338,8 +380,26 @@
   }
 
   var CAT_ORDER = { protein: 0, dairy: 1, carb: 2, legume: 3, veg: 4, fruit: 5, fat: 6, snack: 7 };
+
+  // Kusové jednotky pro nákupní seznam: hmotnost jednoho kusu/balení (vychází z porcí v DB).
+  // Jen položky, kde kus dává v obchodě smysl; ostatní zůstávají v gramech.
+  var PIECES = {
+    vejce: [60, 'ks'], bilek: [33, 'ks'],
+    rohlik: [43, 'ks'], 'grahamovy-rohlik': [60, 'ks'], houska: [43, 'ks'], 'houska-celozrnna': [60, 'ks'],
+    tortilla: [60, 'ks'], 'tortilla-kukuricna': [30, 'ks'], 'bezlepkova-tortilla': [30, 'ks'], 'low-carb-tortilla-wrap': [45, 'ks'],
+    knackebrot: [10, 'ks'], 'bezlepkovy-knackebrot': [15, 'ks'],
+    'tousty-celozrnne': [28, 'ks'], 'chleb-toustovy-celozrnny-tmavy': [25, 'ks'], 'bezlepkovy-chleb-toustovy': [30, 'ks'],
+    'ryzove-chlebicky': [9, 'ks'],
+    banan: [120, 'ks'], jablko: [150, 'ks'], hruska: [150, 'ks'], 'nashi-hruska': [120, 'ks'],
+    pomeranc: [150, 'ks'], kiwi: [75, 'ks'], broskev: [120, 'ks'], nektarinka: [130, 'ks'], avokado: [140, 'ks'],
+    mozzarella: [125, 'bal.'],
+    'tunak-vlastni-stava': [120, 'konz.'], 'tunak-v-oleji-konzerva': [80, 'konz.'], 'tunak-v-oleji-odkapany': [80, 'konz.'],
+    sardinky: [90, 'konz.'], 'sardinky-v-oleji': [90, 'konz.'], 'sardinky-v-tomate': [120, 'konz.']
+  };
+
   // Sloučí položky z více dní na nákupní seznam (stejná potravina = součet gramáže),
   // seřazeno po odděleních (maso/mléčné/přílohy/zelenina/…), v oddělení od největší porce.
+  // U kusových položek doplní přepočet na kusy/balení (pieces + pieceLabel).
   function shoppingListFromDays(days) {
     var map = {}, list = [];
     days.forEach(function (d) { d.meals.forEach(function (m) { m.items.forEach(function (it) {
@@ -347,7 +407,14 @@
       if (cur) { cur.grams += it.grams; }
       else { cur = { id: it.food.id, name: it.food.name, cat: it.food.cat, grams: it.grams }; map[it.food.id] = cur; list.push(cur); }
     }); }); });
-    list.forEach(function (s) { s.grams = Math.round(s.grams); });
+    list.forEach(function (s) {
+      s.grams = Math.round(s.grams);
+      var pc = PIECES[s.id];
+      if (pc && s.grams >= pc[0] * 0.75) {
+        s.pieces = Math.max(1, Math.round(s.grams / pc[0]));
+        s.pieceLabel = pc[1];
+      }
+    });
     list.sort(function (a, b) {
       var ca = (CAT_ORDER[a.cat] != null ? CAT_ORDER[a.cat] : 9), cb = (CAT_ORDER[b.cat] != null ? CAT_ORDER[b.cat] : 9);
       return (ca - cb) || (b.grams - a.grams);
