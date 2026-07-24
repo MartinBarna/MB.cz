@@ -40,10 +40,15 @@
   // ať poznáme leady z Google Ads i bez cookie-souhlasu (Consent Mode gclid nespadne do
   // konverzí Ads). gclid uložíme do utm_campaign (jen když vlastní utm_campaign chybí) —
   // drží se v leads.meta pro pozdější offline import konverzí do Google Ads.
-  function utmParams() {
+  // POZOR: tenhle parser je zdvojený s analytics.js (window.MBAttr) schválně —
+  // každý ze skriptů musí fungovat i sám o sobě. Když se mění pole tady, měň je
+  // i tam a v edge funkci lead-capture, jinak se nové pole tiše zahodí.
+  function utmFromUrl() {
     try {
       var p = new URLSearchParams(location.search), out = {};
-      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(function (k) {
+      // utm_term = klíčové slovo z Google search ({keyword}), utm_id = id kampaně
+      // z platformy — bez nich nejde spárovat lead s konkrétním dotazem ani s náklady.
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id'].forEach(function (k) {
         var v = (p.get(k) || '').trim().slice(0, 60);
         if (v) out[k] = v;
       });
@@ -63,6 +68,21 @@
       }
       return out;
     } catch (e) { return {}; }
+  }
+
+  // Atribuce k odeslani = parametry z TETO url + to, co si navstevnik prinesl
+  // z predchozi stranky (analytics.js si reklamni parametry uklada do sessionStorage).
+  // Bez toho prisel o atribuci kazdy, kdo z reklamy dorazil na clanek nebo na
+  // homepage a formular vyplnil az o stranku dal — v DB pak vypadal jako organicky.
+  // Aktualni URL ma prednost: novy proklik z reklamy prebije starsi zaznam.
+  function utmParams() {
+    var live = utmFromUrl();
+    var stored = {};
+    try { if (window.MBAttr) stored = window.MBAttr.get() || {}; } catch (e) {}
+    for (var k in stored) {
+      if (stored.hasOwnProperty(k) && !live.hasOwnProperty(k)) live[k] = stored[k];
+    }
+    return live;
   }
 
   // API pro stranky s vlastnim odesilanim (napr. /kviz/): window.MBLead.utm()

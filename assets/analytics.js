@@ -165,6 +165,92 @@
   else document.addEventListener('DOMContentLoaded', showBanner);
 })();
 
+/* ===== Atribuce reklam napříč stránkami i doménou ===========================
+   PROBLÉM, který to řeší (dvě tiché díry v měření):
+   1) UTM se dosud četla až při odeslání formuláře z location.search. Kdo přišel
+      z reklamy na článek a formulář vyplnil o dvě stránky dál (nebo přes
+      lead-popup), přišel o atribuci úplně. V DB pak vypadal jako organický.
+   2) Odkazy na tvujcoach.cz vedly holé, takže na hranici domény stopa končila
+      a registraci v appce nešlo spárovat s kampaní.
+   ŘEŠENÍ: první stránka s reklamními parametry si je uloží do sessionStorage
+   (žije jen do zavření panelu, je to první strana, žádné sledování napříč weby)
+   a formuláře i odkazy do appky si je odtud vezmou.
+   Nový klik z reklamy vlastní parametry přepíše = last touch v rámci návštěvy. */
+(function () {
+  var KEY = 'mb_attr_v1';
+  // Pořadí polí drž shodné s lead-form.js a s edge funkcí lead-capture.
+  var UTM = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id'];
+
+  // Reklamní parametry z aktuální URL. Stejná pravidla jako v lead-form.js:
+  // utm_* max 60 znaků, klik ID celé (max 200) — zkrácený gclid je pro offline
+  // import konverzí do Google Ads nepoužitelný.
+  function fromUrl() {
+    try {
+      var p = new URLSearchParams(location.search), out = {};
+      UTM.forEach(function (k) {
+        var v = (p.get(k) || '').trim().slice(0, 60);
+        if (v) out[k] = v;
+      });
+      var gcl = (p.get('gclid') || p.get('gbraid') || p.get('wbraid') || '').trim().slice(0, 200);
+      if (gcl) {
+        out.gclid = gcl;
+        if (!out.utm_source) out.utm_source = 'google-ads';
+        if (!out.utm_medium) out.utm_medium = 'cpc';
+      }
+      var fbc = (p.get('fbclid') || '').trim().slice(0, 200);
+      if (fbc) {
+        out.fbclid = fbc;
+        if (!out.utm_source) out.utm_source = 'facebook';
+        if (!out.utm_medium) out.utm_medium = 'cpc';
+      }
+      return out;
+    } catch (e) { return {}; }
+  }
+
+  function read() {
+    try { return JSON.parse(sessionStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function save(o) {
+    try { sessionStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* privátní režim */ }
+  }
+
+  // Uloží jen tehdy, když URL reklamní parametry opravdu nese. Prosté prokliknutí
+  // na další stránku (bez parametrů) tím pádem uložený záznam nesmaže.
+  var live = fromUrl();
+  var hasLive = false;
+  for (var k in live) { if (live.hasOwnProperty(k)) { hasLive = true; break; } }
+  if (hasLive) save(live);
+
+  function get() {
+    var stored = read(), cur = fromUrl(), out = {};
+    for (var a in stored) if (stored.hasOwnProperty(a)) out[a] = stored[a];
+    for (var b in cur) if (cur.hasOwnProperty(b)) out[b] = cur[b];   // aktuální URL má přednost
+    return out;
+  }
+  window.MBAttr = { get: get, key: KEY };
+
+  // Odkazy na appku dostanou atribuci do URL. Cross-domain jinak nejde: appka
+  // běží na jiné doméně (Vercel), takže se k sessionStorage martinbarna.cz nedostane.
+  // Vlastní parametry odkazu (např. ?plan=vip z ceníku) zůstávají, atribuce jen doplňuje.
+  function decorate() {
+    var attr = get(), keys = [];
+    for (var k in attr) if (attr.hasOwnProperty(k)) keys.push(k);
+    if (!keys.length) return;
+    var links = document.querySelectorAll('a[href*="tvujcoach.cz"]');
+    Array.prototype.forEach.call(links, function (a) {
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('tvujcoach.cz') === -1) return;
+      try {
+        var u = new URL(href, location.href);
+        keys.forEach(function (k) { if (!u.searchParams.has(k)) u.searchParams.set(k, attr[k]); });
+        a.setAttribute('href', u.toString());
+      } catch (e) { /* nevalidní href necháme být */ }
+    });
+  }
+  if (document.readyState !== 'loading') decorate();
+  else document.addEventListener('DOMContentLoaded', decorate);
+})();
+
 /* ===== WhatsApp na počítači → QR popup =====================================
    Problém: klik na wa.me na PC je k ničemu (otevře přihlášení do WhatsApp Webu).
    Řešení: na desktopu klik na jakýkoli WhatsApp odkaz NEnaviguje, ale ukáže QR

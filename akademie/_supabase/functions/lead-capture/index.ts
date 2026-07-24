@@ -47,6 +47,11 @@ Deno.serve(async (req) => {
     const utmCampaign = String(body.utm_campaign || "").trim().slice(0, 60);
     // utm_content = varianta kreativy (A/B test reklam) -> bez nej nejde z DB merit, ktera reklama lead privedla
     const utmContent = String(body.utm_content || "").trim().slice(0, 60);
+    // utm_term = klicove slovo z Google search ({keyword}) -> bez nej nejde rict, ktery dotaz lead privedl
+    const utmTerm = String(body.utm_term || "").trim().slice(0, 60);
+    // utm_id = id kampane z platformy ({{campaign.id}} / {campaignid}) -> tvrdy join na naklady,
+    // nezavisly na tom, jestli nekdo mezitim kampan v UI prejmenoval
+    const utmId = String(body.utm_id || "").trim().slice(0, 60);
     // Google gclid/gbraid/wbraid — CELY (max 200 zn., NEdorezavat na 60!), jinak se v offline importu konverzi do Google Ads nespáruje
     const gclid = String(body.gclid || "").trim().slice(0, 200);
     // Meta click id (fbclid) — stejny duvod jako gclid u Google Ads
@@ -65,6 +70,8 @@ Deno.serve(async (req) => {
     if (utmMedium) meta.utm_medium = utmMedium;
     if (utmCampaign) meta.utm_campaign = utmCampaign;
     if (utmContent) meta.utm_content = utmContent;
+    if (utmTerm) meta.utm_term = utmTerm;
+    if (utmId) meta.utm_id = utmId;
     if (gclid) meta.gclid = gclid;
     if (fbclid) meta.fbclid = fbclid;
     const { error } = await supa.from("leads").insert({
