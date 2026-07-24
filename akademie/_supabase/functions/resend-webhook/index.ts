@@ -11,9 +11,17 @@
 // kdyz Martin otevre archiv, zapocita se open leadovi. Metriku ber orientacne,
 // dokud se archivace nepreveda na samostatny send.
 // Pozn. ke click: Resend click tracking prepisuje odkazy pres cizi domenu (mirne horsi
-// dorucitelnost) — dokud stiznosti neklesnou pod 0,10 %, mereni prokliku jede pres UTM
-// v Analytics a event 'email.clicked' se v Resendu NEsubscribuje. Tenhle handler je jen
-// pripraveny, aby az se click tracking zapne, se prokliky rovnou zapisovaly.
+// dorucitelnost). AKTUALIZACE 22. 7. 2026: Click i Open tracking je v Resendu ZAPNUTY
+// (domena links.martinbarna.cz Verified), prokliky se sem tedy realne zapisuji.
+//
+// ⚠️ JAK TAHLE DATA CIST (24. 7. 2026, jinak z nich vyjde opacny zaver):
+//  1) `open` je nafouknuty na 95-100 % — postovni servery (Gmail, seznam) si sledovaci
+//     obrazek stahnou samy. Open NEMERI cteni, jen zhruba dorucitelnost.
+//  2) Dedup nize je select-then-insert, tedy NEATOMICKY: kdyz prijde nekolik webhooku
+//     naraz, projdou vsechny. Realny priklad 23. 7.: 4 radky click na tentyz mail
+//     behem 378 ms. Pri cteni proto VZDY `count(distinct lead_id)`, ne `count(*)`.
+//     Dedup schvalne NEopravujeme — ta multiplicita je uzitecny signal, protoze
+//     nekolik kliku ve zlomku sekundy = bezpecnostni skener, ne clovek.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -59,7 +67,7 @@ Deno.serve(async (req) => {
   );
   if (!ok) return json({ error: "bad_signature" }, 401);
 
-  let ev: { type?: string; data?: { email_id?: string; to?: string | string[] } };
+  let ev: { type?: string; data?: { email_id?: string; to?: string | string[]; click?: { link?: string } } };
   try { ev = JSON.parse(payload); } catch { return json({ error: "bad_json" }, 400); }
 
   const map: Record<string, string> = { "email.opened": "open", "email.clicked": "click", "email.bounced": "bounce", "email.complained": "complaint" };
@@ -78,7 +86,16 @@ Deno.serve(async (req) => {
   const step = orig?.step == null ? null : Number(orig.step);
   const baseDetail = (orig?.detail && typeof orig.detail === "object") ? (orig.detail as Record<string, unknown>) : {};
   const track = String(baseDetail.track ?? "");
-  const detail = { ...baseDetail, via: "resend-webhook", of: isTest ? "test" : "sent" };
+  // URL prokliku (jen u click) — bez ni nerozlisime klik na nabidku od kliku na "odhlasit se"
+  // ani cloveka od bezpecnostniho skeneru, ktery proklika vsechny odkazy v mailu naraz.
+  // IP ani user agent ZAMERNE neukladame (osobni udaj, k rozliseni odkazu netreba).
+  const clickUrl = t === "click" ? String(ev?.data?.click?.link || "") : "";
+  const detail = {
+    ...baseDetail,
+    via: "resend-webhook",
+    of: isTest ? "test" : "sent",
+    ...(clickUrl ? { url: clickUrl } : {}),
+  };
 
   // dedup: open/click staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak
   if (t === "open" || t === "click") {
