@@ -94,6 +94,29 @@ tracking = dostupné majitelům videokurzu i Academy.
 
 Před deployem ověř render lokálně (chromium + lokální server na :8099), 0 JS chyb.
 
+## ⛔ STANDING RULE: navigace (burger patří jen na mobil a tablet)
+
+Martin 24. 7. 2026 doslova: „na web PC verzi žádný burger být nemá, mají být nahoře ty položky
+jak mají být." Hranice je **1260 px** a drž ji na obou místech, jinak se rozjedou:
+
+- **Vestavěné CSS v HTML** (161 stránek s kanonickou hlavičkou): `@media (max-width:1259px)`
+  ukazuje `.nav-burger` a mění `.navlinks` na rozbalovací panel s **bílým pozadím**.
+- **`assets/scroll-top.js`** injektuje tmavý `.mb-burger` + `.mb-drawer` (`#181520`) a stejnou
+  hranicí (`max-width:1259px` / `min-width:1260px`) vestavěný bílý panel i burger vypíná.
+  Pod 1260 px tedy jede **jen tmavý drawer**, nad 1260 px plné menu a **nula burgerů**.
+
+Na co si dát pozor:
+- **Když měníš `scroll-top.js`, musíš bumpnout `?v=` ve VŠECH HTML** (načítá ho 636 stránek,
+  jinak lidem zůstane stará verze v cache). Poslední: `g5`.
+- Obě hranice měň **naráz**. Kdyby se rozešly, dostaneš buď dva burgery vedle sebe, nebo
+  nečitelný bílý panel (hlavička má na všech 161 stránkách tmavou vrstvu s textem `#cabfb4`).
+- **„Menu se nevejde" NIKDY neřeš zvýšením hranice burgeru.** Přesně tak vznikl incident
+  22. 7. (burger na 1519 px = i na běžném monitoru). Pořadí: 1) rozšířit `.nav .wrap`
+  `max-width`, 2) zmenšit font/gap/padding CTA, 3) teprve pak burger, a jen pro mobil.
+- `.nav .mb-drawer a{color:#F0EADF}` ve skriptu je v praxi mrtvé: stránky mají
+  `.nav a{color:#cabfb4!important}`, takže vyhraje `#cabfb4`. Na `#181520` je kontrast 9,96:1,
+  takže je to v pořádku, jen se nediv, že úprava barvy ve skriptu nic neudělá.
+
 ## Bezpečnost / GDPR
 
 - E-maily/jména klientů jen do Supabase, **nikdy seznam adres do chatu**, jen počty.
