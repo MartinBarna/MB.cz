@@ -15,6 +15,18 @@ co hlídat Martinovi) žije v projektu **`Desktop\AI Martin`**, konkrétně tady
 poznámky k úkolu. **Zapisuj tamtéž**, ne do svého prázdného zápisníku, jinak to ostatní
 Claudové neuvidí. Na projektu pracuje víc Claudů zároveň: web MB.cz, appka Tvůj Coach, reklamy.
 
+⛔ **Rejstřík NENÍ obsah.** `MEMORY.md` jsou jednořádkové popisky nad ~90 soubory, takže
+„přečetl jsem rejstřík" neznamená „znám kontext". Historicky se do paměti psalo víc a
+podrobněji než sem, leží tam rozdělaná práce, zamítnutá řešení a pasti, co z kódu ani z gitu
+nezjistíš (např. že tenhle pracovní strom bývá o commity pozadu, nebo že kořenový
+`supabase/functions/` je jen gitignorovaná staging kopie, která už 3× tiše zahodila práci).
+- **Než sáhneš na téma, dohledej k němu konkrétní soubory a přečti je CELÉ.** Hledej `Grep`
+  přes celou složku `memory\`, ne očima přes rejstřík; soubor se často jmenuje jinak, než čekáš.
+- **Vždy projdi `mb-co-hlidam-martinovi.md`** (nástěnka napříč chaty) a co je aktuální, nadhoď sám.
+- Než něco navrhneš jako novinku, ověř, jestli to **nebylo už jednou zamítnuto a proč**.
+- ⚠️ Paměť je zápis k datu, ne živý stav. Závěr o kódu, cestě nebo nasazené verzi **ověř proti
+  realitě** (git `origin/main`, živý web, `get_edge_function`), a když se liší, oprav i ten soubor.
+
 ## ⚠️ AI Martin: bezpečnost (NEPŘEKROČITELNÉ)
 
 Platí pro webového chatbota `akademie/_supabase/functions/ai-martin/`:
