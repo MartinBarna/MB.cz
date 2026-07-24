@@ -242,3 +242,22 @@ klienta přes tool-calling pod JWT/RLS) řeší samostatné repo `C:\Users\fitne
 (Edge Function `ai-coach-agent`; kontrakt `AI-COACH-AGENT-TOOLS.md`, hlas+safety
 `AI-MARTIN-AGENT-KNOWLEDGE.md`). AI Martin appku přímo neovládá, zná ji a umí o ní radit;
 ovládání za klienta dělá ten in-app agent.
+
+## ⛔ DVA GENERÁTORY JÍDELNÍČKU (zapsáno 24. 7. 2026 na Martinovo zadání)
+Generátor jídelníčku i databáze potravin existují **dvakrát a odděleně**:
+- **web (tady):** `assets/meal-gen.js` + `assets/food-db.json` (**1182 položek**) + `assets/recipe-db.json`
+- **appka Tvůj Coach:** `AI Martin/src/engine/meal-gen.ts` + `src/engine/food-db.json` (**1145**)
+
+Překryv je 1136 id, ale **některá id se pro týž koncept jmenují jinak** (web `tunak-vlastni-stava`
+vs appka `tunak-ve-vlastni-stave`, web `tortilla` vs appka `tortilla-psenicna`).
+**Každá úprava generátoru, potravin nebo kusových jednotek se dělá na OBOU stranách v rámci
+jednoho úkolu**, nebo se výslovně napíše, proč se druhá strana netýká. Klíče nekopíruj naslepo,
+vždy ověř proti té druhé databázi. (24. 7.: appce chyběla vejce a bílky úplně, přestože web je
+měl; 8 klíčů kusového přepočtu v appce viselo naprázdno.) Sjednocení = samostatný projekt.
+
+## ⛔ PUSH OVĚŘ PŘED DEPLOYEM (24. 7. 2026 se to pokazilo dvakrát za den)
+Nikdy neřetěz `git push … && gh workflow run deploy…` do jednoho příkazu. Když push selže
+(`remote rejected`, `Internal Server Error`, non-fast-forward kvůli souběžné session), **deploy
+se stejně spustí, nasadí STAROU verzi a skončí zeleně**. Workflow bere stav z GitHubu, ne
+z tvého disku. Správně: push → `git fetch origin` → ověř SHA nebo přímo obsah
+(`git show origin/main:cesta | grep …`) → teprve pak deploy → nakonec ověř živou produkci.
