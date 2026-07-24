@@ -261,3 +261,14 @@ Nikdy neřetěz `git push … && gh workflow run deploy…` do jednoho příkazu
 se stejně spustí, nasadí STAROU verzi a skončí zeleně**. Workflow bere stav z GitHubu, ne
 z tvého disku. Správně: push → `git fetch origin` → ověř SHA nebo přímo obsah
 (`git show origin/main:cesta | grep …`) → teprve pak deploy → nakonec ověř živou produkci.
+
+## ⏰ ČEKÁ NA MARTINOVO PŘEČTENÍ: mailové série A a B (24. 7. 2026)
+V `_zdroje/tc-serie-A-B-navrh.md` leží **12 mailů** ve dvou sériích pro A/B test v reklamách
+na appku Tvůj Coach (`tc-free` a `tc-magnet`). Martin je chtěl zatím jen uložit a přečíst si
+je později, proto jsou v repu, ale **nikde neběží**: nejsou v tabulce `email_templates`
+a `_zdroje/**` je z deploye excludnuté, takže se nic nerozesílá ani nepublikuje.
+**Kdykoli s Martinem řešíš marketing nebo maily, připomeň mu, že je má přečíst.** Sám si to
+nepamatuje a výslovně o tu připomínku požádal.
+Nasazení až na jeho pokyn: záloha `email_templates` → INSERT → [TEST] náhledy na
+fitness.barna@gmail.com → teprve pak zdroj leadů a reklamy. Texty jdou ven pod jeho jménem,
+takže případné úpravy nedeleguj.
