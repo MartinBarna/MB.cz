@@ -402,7 +402,16 @@
     pomeranc: [150, 'ks'], kiwi: [75, 'ks'], broskev: [120, 'ks'], nektarinka: [130, 'ks'], avokado: [140, 'ks'],
     mozzarella: [125, 'bal.'],
     'tunak-vlastni-stava': [120, 'konz.'], 'tunak-v-oleji-konzerva': [80, 'konz.'], 'tunak-v-oleji-odkapany': [80, 'konz.'],
-    sardinky: [90, 'konz.'], 'sardinky-v-oleji': [90, 'konz.'], 'sardinky-v-tomate': [120, 'konz.']
+    sardinky: [90, 'konz.'], 'sardinky-v-oleji': [90, 'konz.'], 'sardinky-v-tomate': [120, 'konz.'],
+
+    // [rozšíření 2026-07-22 · větev pieces-rozsireni-web] Další kusové jednotky z tabulky CZ retail
+    // (mb-kusove-hmotnosti-grok). Párováno na web food-db id; existující hodnoty výše nedotčené.
+    // Aromatická zelenina (cibule) vynechána: generátor ji nepouští na talíř, přepočet by byl mrtvý.
+    kaiserka: [60, 'ks'], 'pita-chleb': [60, 'ks'], bageta: [250, 'ks'], croissant: [55, 'ks'],
+    'chleb-zitny-tmavy': [40, 'ks'], 'chleb-celozrnny': [40, 'ks'], 'chleb-kvaskovy': [45, 'ks'], 'toustovy-chleb': [25, 'ks'],
+    cottage: [150, 'bal.'], skyr: [150, 'bal.'], 'bily-jogurt-3': [150, 'bal.'], 'recky-jogurt-bily': [140, 'bal.'], 'ochuceny-jogurt-jahodovy': [150, 'bal.'],
+    'eidam-30': [20, 'ks'], 'kureci-prsa': [180, 'ks'], 'sunka-veprova-nejvyssi-jakost': [15, 'ks'], 'anglicka-slanina': [15, 'ks'],
+    mandarinka: [80, 'ks'], rajce: [100, 'ks'], paprika: [150, 'ks'], okurka: [300, 'ks'], mrkev: [80, 'ks'], brambory: [150, 'ks']
   };
 
   // Sloučí položky z více dní na nákupní seznam (stejná potravina = součet gramáže),
