@@ -20,8 +20,12 @@
 //  2) Dedup nize je select-then-insert, tedy NEATOMICKY: kdyz prijde nekolik webhooku
 //     naraz, projdou vsechny. Realny priklad 23. 7.: 4 radky click na tentyz mail
 //     behem 378 ms. Pri cteni proto VZDY `count(distinct lead_id)`, ne `count(*)`.
-//     Dedup schvalne NEopravujeme — ta multiplicita je uzitecny signal, protoze
-//     nekolik kliku ve zlomku sekundy = bezpecnostni skener, ne clovek.
+//     Neatomicnost schvalne NEopravujeme (chtelo by to unikatni index): ta multiplicita
+//     je uzitecny signal, nekolik kliku ve zlomku sekundy = skener, ne clovek.
+//  3) Click se dedupuje az na (lead, step, track, URL), ne jen na mail — jinak by se
+//     ulozil jen prvni klik a nesel by odlisit klik na nabidku od kliku na odhlaseni.
+//     ⚠️ Data pred 24. 7. 13:31 UTC URL nemaji vubec a maji jen prvni klik na mail,
+//     takze se s novejsimi NEDAJI scitat do jedne rady.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -97,10 +101,15 @@ Deno.serve(async (req) => {
     ...(clickUrl ? { url: clickUrl } : {}),
   };
 
-  // dedup: open/click staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak
+  // dedup: open staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak.
+  // ⚠️ U CLICK je soucasti klice i URL: v jednom mailu je vic odkazu a klik na nabidku je jina
+  // informace nez klik na odhlaseni. Bez URL v klici by se ulozil jen PRVNI klik na dany mail
+  // a ten rozdil by se nedal precist (nalez z revize 24. 7.). Kdyz Resend URL nepošle,
+  // chovame se jako driv (konzervativne jeden click na mail).
   if (t === "open" || t === "click") {
     let dq = admin.from("email_events").select("id").eq("type", t).limit(1);
     if (lead_id && step != null) dq = dq.eq("lead_id", lead_id).eq("step", step).eq("detail->>track", track);
+    if (t === "click" && clickUrl) dq = dq.eq("detail->>url", clickUrl);
     else dq = dq.eq("provider_id", emailId);
     const { data: dup } = await dq;
     if (dup && dup.length) return json({ ok: true, dedup: true });
