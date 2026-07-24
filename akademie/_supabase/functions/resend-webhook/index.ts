@@ -109,8 +109,9 @@ Deno.serve(async (req) => {
   if (t === "open" || t === "click") {
     let dq = admin.from("email_events").select("id").eq("type", t).limit(1);
     if (lead_id && step != null) dq = dq.eq("lead_id", lead_id).eq("step", step).eq("detail->>track", track);
-    if (t === "click" && clickUrl) dq = dq.eq("detail->>url", clickUrl);
     else dq = dq.eq("provider_id", emailId);
+    // URL az jako DALSI podminka nad obema vetvemi (nikdy mezi if a else — else by se navazal sem)
+    if (t === "click" && clickUrl) dq = dq.eq("detail->>url", clickUrl);
     const { data: dup } = await dq;
     if (dup && dup.length) return json({ ok: true, dedup: true });
   }
