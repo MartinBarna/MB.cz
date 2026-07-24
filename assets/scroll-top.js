@@ -130,8 +130,8 @@
       + '.nav .mb-drawer a{display:block;padding:13px 22px;color:#F0EADF;text-decoration:none;font-weight:600;font-size:1.03rem;border-bottom:1px solid rgba(255,255,255,.05);}'
       + '.nav .mb-drawer a:hover{background:rgba(235,177,44,.08);color:#EBB12C;}'
       + '.nav .mb-drawer a.cta{color:#1A1222;background:#EBB12C;margin:10px 16px 4px;border-radius:50px;text-align:center;border-bottom:none;font-weight:700;}'
-      + '@media (max-width:991px){ .nav .navlinks{display:none!important;} .nav .nav-burger{display:none!important;} }'
-      + '@media (min-width:992px){ .nav .mb-drawer,.nav .mb-burger{display:none!important;} }';
+      + '@media (max-width:1519px){ .nav .navlinks{display:none!important;} .nav .nav-burger{display:none!important;} }'
+      + '@media (min-width:1520px){ .nav .mb-drawer,.nav .mb-burger{display:none!important;} }';
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     if (getComputedStyle(bar).position === 'static') bar.style.position = 'relative';
     var b = document.createElement('button');
