@@ -110,9 +110,43 @@ jako **reálné UTF-8**, ne `\u` kódy, překlep `ď`(ď)→`ğ`(ğ) udělal „
   `referral-code`, `referral-click`, `referral-webhook`, `admin-api`, `ai-martin`.
   ⚠️ Nasazená verze může být NOVĚJŠÍ než repo (editovalo se přes MCP), před úpravou funkce vždy
   `get_edge_function` a porovnej s repem; po deployi commitni nasazený stav zpět do repa.
+  ⚠️ **Po deployi si přečti NASAZENÝ zdroj** (`get_edge_function` → `files[].content`), ne jen
+  hlášku „Deployed Functions". 24. 7. 2026 tak byla odhalena vlastní chyba, kterou `deno check`
+  pustil: nová podmínka vložená mezi `if` a `else` přesměrovala ten `else` na sebe a tiše
+  změnila větvení. Zelený typecheck není důkaz, že kód dělá totéž.
 - Registrace je autoconfirm (bez potvrzování e-mailu). Auth SMTP jede přes Resend
   (smtp.resend.com:465, sender news@martinbarna.cz), od 2026-06-29 funkční, šablony česky.
   POZOR: auth maily sdílí Resend kvótu (free 100/den) s drip enginem.
+
+## ⛔ STANDING RULE: jak číst `email_events` (jinak z nich vyjde OPAČNÝ závěr)
+
+Měření otevření a kliků běží od 22. 7. 2026. **Tři pasti, na které se naletělo hned první den**
+a kvůli kterým se málem opravovala úplně jiná věc, než bylo potřeba:
+
+1. **`open` je mrtvá metrika. Nepoužívej ji jako důkaz, že lidi maily čtou.** Vychází 95 až 100 %
+   (87 otevření z 87 odeslaných), protože poštovní servery si sledovací obrázek stáhnou samy.
+   Použitelná je nanejvýš na hrubou doručitelnost. Navíc `drip-send` posílá archivní BCC kopii
+   se **stejným Resend id**, takže Martinovo otevření archivu se započítá leadovi.
+2. **Počítej `count(distinct lead_id)`, nikdy `count(*)`.** Dedup ve `resend-webhook` je
+   select-then-insert, tedy neatomický. „4 kliky" na prodejní mail byly ve skutečnosti
+   4 události od **jednoho** člověka a otočily závěr o celém funnelu.
+3. **I klik může být stroj.** Těch 5 událostí přišlo během 378 ms = bezpečnostní skener, který
+   proklikal odkazy v mailu. Z jednoho kliku nedělej příběh o zájmu.
+
+```sql
+select l.track, e.step,
+       count(*) filter (where e.type='sent') as sent,
+       count(distinct e.lead_id) filter (where e.type='click') as kliklo
+from email_events e join leads l on l.id = e.lead_id
+where e.created_at >= '<od>' group by 1,2 order by 1,2;
+```
+⚠️ `email_events` **nemá sloupec `track`**, ten je až v `leads` (join přes `lead_id`).
+⚠️ **Data před 24. 7. 2026 13:31 UTC nemají `detail.url` a obsahují jen první klik na mail**,
+takže se s novějšími **nedají sčítat do jedné řady**.
+
+Plné znění, baseline čísel a co z nich zatím plyne: `mb-email-open-click-pasti.md`
+v hlavní paměti (cesta nahoře), obecná pravidla `feedback-pocitej-lidi-ne-udalosti.md`
+a `feedback-metrika-na-100-procent-je-rozbita.md`.
 
 ---
 
