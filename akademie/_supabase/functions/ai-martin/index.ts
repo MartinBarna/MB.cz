@@ -277,17 +277,83 @@ async function hmacHex(secret: string, msg: string): Promise<string> {
   const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(msg));
   return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
-async function addPeekLinks(sources: LessonSource[], via: MemberVia, email: string | null): Promise<LessonSource[]> {
+// --- STROP NAKOUKNUTÍ (Martin 25. 7. 2026) ---
+// Bez stropu platilo „nepustíme do celé Academy" jen společensky: 3 lekce na odpověď,
+// odkaz platí 30 dní, denní strop chatu 60 zpráv → 180 odkazů denně proti 256 lekcím.
+// U devíti klientů, co znají Martina osobně, to nevadilo; s reklamami by to byla díra.
+// Teď se počítají RŮZNÉ lekce na klienta. Už jednou odemčená lekce se do stropu nepřičítá
+// znovu (klient se k ní smí vracet), takže strop omezuje ŠÍŘKU, ne opakované čtení.
+const PEEK_BUDGET = 25;
+interface PeekStav { pouzito: number; lekce: Set<string> }
+async function peekStav(email: string | null): Promise<PeekStav> {
+  const prazdno: PeekStav = { pouzito: 0, lekce: new Set() };
+  if (!email) return prazdno;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_lesson_peeks?email=eq.${encodeURIComponent(email)}&select=lesson_id`, {
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` },
+    });
+    if (!r.ok) return prazdno;
+    const rows = await r.json() as { lesson_id?: string }[];
+    const lekce = new Set((rows ?? []).map((x) => String(x.lesson_id ?? '')).filter(Boolean));
+    return { pouzito: lekce.size, lekce };
+  } catch { return prazdno; }
+}
+// Zápis je best-effort: když se nepovede, klient odkaz stejně dostane (radši puštěná lekce
+// navíc než rozbitá odpověď). Konflikt na primárním klíči je očekávaný stav, ne chyba.
+async function zapisPeek(email: string, lessonId: string): Promise<void> {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/ai_lesson_peeks`, {
+      method: 'POST',
+      headers: {
+        apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`,
+        'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates',
+      },
+      body: JSON.stringify({ email, lesson_id: lessonId }),
+    });
+  } catch { /* best-effort */ }
+}
+async function addPeekLinks(sources: LessonSource[], via: MemberVia, email: string | null, stav?: PeekStav): Promise<LessonSource[]> {
   if (via !== 'coaching' || !email || !sources.length) return sources;
   const secret = await peekSecret();
   if (!secret) return sources;
+  const s0 = stav ?? await peekStav(email);
+  const jizOdemcene = s0.lekce;
+  let zbyva = Math.max(0, PEEK_BUDGET - jizOdemcene.size);
   const exp = Math.floor(Date.now() / 1000) + PEEK_TTL_S;
-  return await Promise.all(sources.map(async (s) => {
+  const out: LessonSource[] = [];
+  for (const s of sources) {
     const id = s.url.slice(LESSON_BASE.length).replace(/\/$/, '');
-    if (!LESSON_ID_RE.test(id)) return s;
+    if (!LESSON_ID_RE.test(id)) { out.push(s); continue; }
+    const zname = jizOdemcene.has(id);
+    if (!zname) {
+      // Strop vyčerpán a je to NOVÁ lekce → zdroj vůbec nenabízíme. Model o vyčerpaném
+      // stropu ví z kontextu (viz peekPoznamka), takže místo odkazu nabídne Academy.
+      if (zbyva <= 0) continue;
+      zbyva--;
+      jizOdemcene.add(id);
+      await zapisPeek(email, id);
+    }
     const sig = await hmacHex(secret, `${id}|${email}|${exp}`);
-    return { ...s, url: `${s.url}?ak=${exp}.${sig}` };
-  }));
+    out.push({ ...s, url: `${s.url}?ak=${exp}.${sig}` });
+  }
+  return out;
+}
+// Kdo se ptá + kolik nakouknutí zbývá. Jde do VOLATILNÍ části promptu, ne do SYSTEM:
+// SYSTEM musí zůstat bajt po bajtu stejný, jinak si rozbijeme prompt cache.
+// Bez tohohle model netušil, jestli mluví se členem Academy nebo s klientem koučinku,
+// a klientovi koučinku odpovídal „najdeš v modulu 12", který on nemá a neotevře.
+function peekPoznamka(via: MemberVia, stav: PeekStav): string {
+  if (via !== 'coaching') return '';
+  const zbyva = Math.max(0, PEEK_BUDGET - stav.pouzito);
+  const zaklad = '\n\n# S KÝM MLUVÍŠ\nTenhle člověk je Martinův klient OSOBNÍHO KOUČINKU a Barnu Academy si NEKOUPIL. ' +
+    'Nemá tedy přístup do studia ani k seznamu modulů. Nikdy mu neříkej „najdeš to v modulu X" jako by tam mohl vejít.';
+  if (zbyva > 0) {
+    return zaklad + ` Lekci, kterou v odpovědi ZMÍNÍŠ JMÉNEM, mu systém otevře jako dárek k jeho koučinku (zbývá mu ${zbyva} takových lekcí). ` +
+      'Odpověz normálně do hloubky z pasáží a lekci zmiň jménem, ať se mu odkaz vygeneruje. Academy nevnucuj, on už Martinovi platí nejvíc ze všech.';
+  }
+  return zaklad + ' Vyčerpal už všechna nakouknutí lekcí, která k koučinku dostává, takže mu teď žádnou další lekci otevřít nejde. ' +
+    'Odpověz naplno z pasáží, které máš v kontextu (to je to hlavní, co od tebe chce), a konkrétní lekce jménem NEslibuj otevřít. ' +
+    'Když je vidět, že by mu celá Academy pomohla, zmiň ji jednou větou a bez nátlaku: má na ni jako klient slevu 20 % s kódem KLIENT20.';
 }
 
 // --- P1 (handoff §2): retry/backoff na přetížení modelu (429/5xx/529) i síťovou chybu ---
@@ -550,7 +616,10 @@ Deno.serve(async (req: Request) => {
   // Cache se trefuje po první změněný bajt, takže volatilní části patří AŽ NA KONEC,
   // jinak si odřízneme historii. RAG blíž k dotazu navíc bývá i kvalitnější.
   const system = SYSTEM;
-  const volatile = ragContext + safeSuffix;
+  // Stav nakouknutí čteme JEN pro klienty koučinku (člen Academy žádný strop nemá),
+  // ať se členům nepřidává dotaz do DB na každou zprávu.
+  const stavPeek = via === 'coaching' ? await peekStav(email) : { pouzito: 0, lekce: new Set<string>() };
+  const volatile = ragContext + safeSuffix + peekPoznamka(via, stavPeek);
 
   try {
     let reply = '';
