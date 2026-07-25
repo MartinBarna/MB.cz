@@ -3,6 +3,16 @@
 Statický web (deploy na Wedos přes GitHub Actions `deploy-wedos.yml`) + Supabase backend
 (přístupy, leady, zákazníci, e-maily). Vyvíjí se na větvi `claude/learn-claude-code-tay5rb`.
 
+## 📂 KAM UKLÁDAT PRACOVNÍ SOUBORY (⛔ NE na plochu, Martin 25. 7. 2026)
+Zadání pro Groka, jeho reporty, návrhy textů a pomocné skripty patří do
+**`Desktop\_Claude-dokumenty\<datum>_<téma>\`**, ne volně na plochu.
+Martin ji měl 25. 7. přeplněnou třiceti soubory a nevěděl, co je co.
+- Vytvoříš složku → dej do ní **`CTI-ME.md`**: co je co, čemu se dá věřit a co už
+  neplatí. Bez toho je archiv k ničemu, protože se v něm nikdo nevyzná.
+- **Do promptů pro Groka piš rovnou cílovou cestu**, ať tam ukládá sám.
+- Aktuální složka k Tvůj Coach: `_Claude-dokumenty\2026-07-25_TC-spusteni\`.
+Mapa celé plochy včetně toho, co se NESMÍ přesouvat: `mb-kde-co-je-na-plose` v paměti.
+
 ## ⚠️ SPOLEČNÁ PAMĚŤ JE JINDE (přečti dřív, než začneš)
 
 Když jsi spuštěný z téhle složky (`Desktop\MB.cz`), máš VLASTNÍ prázdný zápisník a nevidíš
