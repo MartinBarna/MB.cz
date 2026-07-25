@@ -168,6 +168,23 @@ a kvůli kterým se málem opravovala úplně jiná věc, než bylo potřeba:
 3. **I klik může být stroj.** Těch 5 událostí přišlo během 378 ms = bezpečnostní skener, který
    proklikal odkazy v mailu. Z jednoho kliku nedělej příběh o zájmu.
 
+🔴 **AKTUALIZACE 25. 7. 2026: bod 2 NESTAČÍ, filtruj i ČAS.** První den s uloženými URL ukázal,
+že skenery projdou i přes `count(distinct lead_id)`. Jeden lead klikl na **objednávku Academy**
+v 17:24:16,8 a 17:24:17,2 a pak na **odhlašovací odkaz** v 17:24:26,2 a 17:24:26,3, tedy nabídku
+i odhlášení během deseti vteřin. Jiný klikl 2× na tutéž URL 13 ms po sobě.
+**Povinný filtr před každým čtením kliků:** (a) zahoď události od téhož `lead_id` a `step`
+do 2 vteřin po sobě, (b) zahoď leady, které v jednom mailu trefí nabídku i odhlášení během
+vteřin. Teprve na zbytku dělej `count(distinct lead_id)`.
+**Dopad:** z 26 odeslaných nabídek Academy trenérům (`trener-kit` step 3) po filtru nezůstal
+**ani jeden ověřený lidský klik**. Dřívější „trenéři klikají 33 %“ NEPLATÍ, neopírej o to nic.
+
+⛔ **A hlavně, pravidlo od Martina 25. 7. 2026: NEVYHODNOCUJ REKLAMY ANI MAILY NA PROKLIKU.**
+„Jestli to prodává, se pozná jen na skutečných předplatných.“ Proklik je zástupná metrika
+a je kontaminovaná strojem. Měř na události, kvůli které to děláš: **prodej, zaplacené
+předplatné, registrace** (`entitlements`, resp. předplatná v appce). Severka reklam je
+**cena za PRODEJ**, ne za klik ani za leada.
+Obecné pravidlo pro všechny chaty: `feedback-merit-na-penezich-ne-na-prokliku` ve společné paměti.
+
 ```sql
 select l.track, e.step,
        count(*) filter (where e.type='sent') as sent,
