@@ -251,7 +251,12 @@
 
     // Bez přístupu → přesměruj na lite veřejnou verzi (označená jako lite + co navíc dává plná).
     if(window.BA){ window.BA.ready.then(function(){
-      if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){ if(!ok){ location.replace('/nastroje-zdarma/trenink/?from=academy'); } }); }
+      // Academy NEBO koučink (Martin 25. 7. 2026: koučinkový klient má mít i generátor tréninku).
+      if(window.BA.mode==='live'){
+        Promise.all([window.BA.hasEntitlement('academy'), window.BA.hasEntitlement('coaching')]).then(function(r){
+          if(!r[0] && !r[1]){ location.replace('/nastroje-zdarma/trenink/?from=academy'); }
+        });
+      }
     }); }
   })();
   </script>

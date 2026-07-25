@@ -292,12 +292,15 @@
     $('regen').addEventListener('click',function(){ generate(true); });
     $('print').addEventListener('click',function(){ window.print(); });
 
-    // Gating: plná verze jen pro Academy. Bez přístupu → přesměruj na lite veřejnou verzi
-    // (tam je jasně označená jako lite + co navíc dává plná). Demo/bez BA běží (MVP).
+    // Gating: plná verze pro Academy A PRO KOUČINKOVÉ KLIENTY (Martin 25. 7. 2026: koučinkový
+    // klient má mít plný generátor jídelníčku i tréninku, je to součást jeho balíčku).
+    // Bez přístupu → lite veřejná verze (je tam jasně označená jako lite + co navíc dává plná).
     if(window.BA){ window.BA.ready.then(function(){
-      if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){
-        if(!ok){ location.replace('/nastroje-zdarma/jidelnicek/'+(location.search?location.search+'&':'?')+'from=academy'); }
-      }); }
+      if(window.BA.mode==='live'){
+        Promise.all([window.BA.hasEntitlement('academy'), window.BA.hasEntitlement('coaching')]).then(function(r){
+          if(!r[0] && !r[1]){ location.replace('/nastroje-zdarma/jidelnicek/'+(location.search?location.search+'&':'?')+'from=academy'); }
+        });
+      }
     }); }
   })();
   </script>

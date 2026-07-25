@@ -424,6 +424,13 @@
         });
         $('kli').style.display='';
         loadSharedDocs();
+        // Deep link z mailu po odeslani reportu: /akademie/admin/#klient=<email> otevre rovnou
+        // detail toho klienta. Hash pak zahodime, at refresh detail neotevira porad dokola.
+        var hMatch=(location.hash||'').match(/klient=([^&]+)/);
+        if(hMatch){
+          try{ openKlient(decodeURIComponent(hMatch[1]).trim().toLowerCase()); }catch(e){}
+          history.replaceState(null,'',location.pathname+location.search);
+        }
       }).catch(function(){ cardFail('kli','kliBody'); });
     }
     function loadSharedDocs(){
@@ -496,6 +503,29 @@
         +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a></p>'
         // per-klient vypnutí pondělní připomínky ("stop připomínky") — čte ji client-remind fn
         +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>';
+      // 🎯 ZADÁNÍ pro klienta — JEDINÉ místo, kde cíl vzniká. Klient ho vidí ve své sekci a
+      // počítá se z něj odchylka („bílkoviny +18 g proti cíli"). Prázdné pole = cíl nenastaven,
+      // klientovi se pak nezobrazí nic (nikdy ne dopočítaná nula). Nedopočítávat z TDEE.
+      var tg=d.targets||{};
+      function kdTgIn(id,label,unit,ph){
+        var v=tg[id]==null?'':String(tg[id]);
+        return '<label style="display:block;font-size:.78rem;color:#8F8A99;">'+label+(unit?' <span style="color:#6d6879;">('+unit+')</span>':'')
+          +'<input type="text" inputmode="decimal" id="kdTg_'+id+'" value="'+esc(v)+'" placeholder="'+(ph||'')+'" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>';
+      }
+      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🎯 Zadání pro klienta <span class="muted" style="text-transform:none;font-weight:400;">(tohle klient VIDÍ ve své sekci)</span></h4>'
+        +'<div style="background:rgba(235,177,44,.06);border:1px solid rgba(235,177,44,.3);border-radius:10px;padding:12px;">'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;">'
+        + kdTgIn('kcal','Kalorie','kcal/den','1800')
+        + kdTgIn('protein','Bílkoviny','g/den','140')
+        + kdTgIn('kroky','Kroky','Ø/den','9000')
+        + kdTgIn('sport_min','Sport celkem','min/týden','240')
+        + kdTgIn('treninky','Tréninky','×/týden','3')
+        +'</div>'
+        +'<label style="display:block;margin-top:8px;font-size:.78rem;color:#8F8A99;">Vzkaz ke změně <span style="color:#6d6879;">(proč to měníš, klient to čte)</span>'
+        +'<input type="text" id="kdTg_note" value="'+esc(tg.note||'')+'" placeholder="např. Přidáváme 100 kcal, energie v tréninku byla nízká." style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
+        +'<div style="display:flex;gap:10px;align-items:center;margin-top:10px;"><button class="mlogbtn" id="kdTgSave">Uložit zadání</button>'
+        +'<span class="muted" style="font-size:.78rem;">'+(tg.updated_at?'naposled '+fmtDate(tg.updated_at):'zatím nenastaveno, klient nevidí žádné zadání')+'</span></div>'
+        +'</div>';
       // reporty
       if(reps.length){
         h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Sport min</th><th>Plán příští t.</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
@@ -566,6 +596,17 @@
           if(o.j&&o.j.ok){ if(KDET.data) KDET.data.remind_on=on; toast(on?'🔔 Připomínky zapnuty':'🔕 Připomínky vypnuty'); }
           else { kr.checked=!on; toast('Chyba: '+((o.j&&o.j.error)||o.status)); }
         }).catch(function(){ kr.disabled=false; kr.checked=!on; toast('Chyba spojení'); });
+      });
+      $('kdTgSave').addEventListener('click',function(){
+        var b=$('kdTgSave'); if(b.disabled) return;
+        var p={action:'client_targets_save',email:email,note:($('kdTg_note').value||'').trim()};
+        ['kcal','protein','kroky','sport_min','treninky'].forEach(function(k){ p[k]=($('kdTg_'+k).value||'').trim(); });
+        var t0=b.textContent; b.disabled=true; b.textContent='Ukládám…';
+        api(p).then(function(o){
+          b.disabled=false; b.textContent=t0;
+          if(o.j&&o.j.ok){ toast('🎯 Zadání uloženo, klient ho vidí ve své sekci'); openKlient(email); }
+          else toast('Chyba: '+((o.j&&o.j.error)||o.status));
+        }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
       });
       $('kdNoteSave').addEventListener('click',function(){
         var v=($('kdNote').value||'').trim(); if(!v) return;

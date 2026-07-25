@@ -307,3 +307,30 @@ where blocks::text ~ '[0-9][0-9 ]*Kč' order by track, step;
 Postup a zbytek checklistu: `tvujcoach-cenik-zmena-checklist` ve společné paměti.
 Trvalá oprava (až bude čas): přidat `{{tc_basic_price}}` a `{{tc_vip_price}}` do `buildVars`
 v `drip-send`, čtené z `app_config`.
+
+## 🎯 KLIENTSKÁ SEKCE: cíle od Martina (zadáno 25. 7. 2026, větev `klient-sekce-cile`)
+
+Zpětná vazba reálného koučinkového klienta: sekce mu bere data, ale nic nevrací.
+**Kořen: v systému neexistoval CÍL**, takže „o kolik jsem přestřelil bílkoviny" nešlo spočítat.
+`client_reports` má jen naměřené hodnoty, tabulka cílů nebyla žádná.
+
+**Datový tvar (NEMĚNIT bez rozmyslu):** tabulka `client_targets`, jeden řádek na e-mail klienta,
+sloupce `kcal, protein, kroky, sport_min, treninky, note`. Vyplňuje je **Martin ručně**
+v adminu (detail klienta), klient je jen čte.
+
+Pravidla, která musí platit všude, kde se cíl zobrazuje:
+- **Prázdný cíl znamená nezobrazit nic.** Nikdy nepočítej odchylku proti chybějící hodnotě,
+  vznikly by nesmysly typu „−100 %". Stejná past jako `toNum(null)` → 0 v `akademie/klient/`,
+  kvůli které se kdysi zobrazovalo „Celková změna +73,8 kg".
+- **Cíl je Martinovo zadání, ne výpočet.** Nedopočítávej ho z TDEE ani z reportů, je to
+  jeho odborné rozhodnutí a appka ani web ho nesmí přepsat.
+- **Klientův `plan_next` (jeho vlastní plán kroků a minut) NENÍ cíl od Martina.** Jsou to dvě
+  různé věci a v UI se nesmí smíchat.
+
+**Nástroje:** koučinkový klient (entitlement `coaching`) má mít plný generátor jídelníčku
+i tréninku. Brány v `akademie/nastroje/*/index.html` historicky pouštěly jen `academy`
+a koučinkového klienta překlápěly na lite verzi v `/nastroje-zdarma/`.
+⛔ **Nikdy kvůli tomu nestav nový generátor**, viz sekce o dvou generátorech výš.
+
+**Mail po odeslání reportu** musí Martina navést k akci: odkaz `/akademie/admin/#klient=<email>`
+otevře rovnou detail toho klienta a text řekne, co v zadání upravit.

@@ -974,17 +974,18 @@ Deno.serve(async (req) => {
 
     if (action === "client_detail") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      const [reps, intake, notes, docsOwn, remindCfg] = await Promise.all([
+      const [reps, intake, notes, docsOwn, remindCfg, targets] = await Promise.all([
         admin.from("client_reports").select("*").eq("email", email).order("report_date", { ascending: true }),
         admin.from("client_intake").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_notes").select("id,note,created_at").eq("email", email).order("created_at", { ascending: false }),
         admin.storage.from("client-docs").list(email, { limit: 100 }),
         admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle(),
+        admin.from("client_targets").select("*").eq("email", email).maybeSingle(),
       ]);
       const docs = (docsOwn.data ?? []).filter((o) => o.id)
         .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
       const remindOn = !String(remindCfg.data?.value ?? "").split(",").map((s) => low(s)).includes(email);
-      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs, remind_on: remindOn });
+      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs, remind_on: remindOn, targets: targets.data ?? null });
     }
 
     if (action === "client_note_save") {
@@ -997,6 +998,31 @@ Deno.serve(async (req) => {
     if (action === "client_note_delete") {
       const id = String(body.id ?? ""); if (!id) return json({ error: "missing" }, 400);
       const { error } = await admin.from("client_notes").delete().eq("id", id);
+      if (error) return json({ error: error.message }, 500);
+      return json({ ok: true });
+    }
+
+    if (action === "client_targets_save") {
+      // Tydenni ZADANI od Martina pro klienta (kcal, bilkoviny, kroky, minuty sportu, treninky
+      // + veta pro klienta). Klient to jen cte (RLS na vlastni radek), zapis jde vyhradne tudy
+      // pod service_role. Cil se NIKDY nedopocitava z TDEE ani z reportu, je to Martinovo
+      // rozhodnuti; prazdna hodnota = cil nenastaven a vsechna zobrazovaci mista nesmi nic ukazat.
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      // Meze drzi 1:1 s CHECK constraintami v client-targets.sql — jinak by uzivatel dostal
+      // syrovou chybu z Postgresu misto srozumitelne hlasky.
+      const MEZE: Record<string, [number, number]> = {
+        kcal: [500, 8000], protein: [20, 500], kroky: [0, 60000], sport_min: [0, 3000], treninky: [0, 14],
+      };
+      const row: Record<string, unknown> = { email, updated_at: new Date().toISOString() };
+      for (const [pole, [min, max]] of Object.entries(MEZE)) {
+        const raw = body[pole];
+        if (raw === null || raw === undefined || String(raw).trim() === "") { row[pole] = null; continue; }
+        const n = Number(String(raw).replace(",", ".").replace(/\s/g, ""));
+        if (!isFinite(n) || n < min || n > max) return json({ error: `${pole}: hodnota mimo rozsah ${min} az ${max}` }, 400);
+        row[pole] = Math.round(n);
+      }
+      row.note = String(body.note ?? "").trim().slice(0, 1000) || null;
+      const { error } = await admin.from("client_targets").upsert(row, { onConflict: "email" });
       if (error) return json({ error: error.message }, 500);
       return json({ ok: true });
     }

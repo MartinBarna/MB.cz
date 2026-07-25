@@ -224,11 +224,15 @@
     $('regen').addEventListener('click',function(){ generate(true); });
     $('print').addEventListener('click',function(){ window.print(); });
 
-    // Gating: plná verze jen pro Academy. Bez přístupu → zámek (nástroj skrytý). Demo/bez BA běží.
+    // Gating: Academy NEBO koučink. Recepty jsou puštěné spolu s generátorem jídelníčku schválně:
+    // jídelníček na recepty odkazuje, takže zamčené recepty by koučinkovému klientovi udělaly
+    // slepou uličku uvnitř nástroje, který zrovna dostal. Bez přístupu → zámek (nástroj skrytý).
     if(window.BA){ window.BA.ready.then(function(){
-      if(window.BA.mode==='live'){ window.BA.hasEntitlement('academy').then(function(ok){
-        if(!ok){ $('lock').classList.remove('hidden'); $('form').classList.add('hidden'); $('result').classList.add('hidden'); }
-      }); }
+      if(window.BA.mode==='live'){
+        Promise.all([window.BA.hasEntitlement('academy'), window.BA.hasEntitlement('coaching')]).then(function(r){
+          if(!r[0] && !r[1]){ $('lock').classList.remove('hidden'); $('form').classList.add('hidden'); $('result').classList.add('hidden'); }
+        });
+      }
     }); }
   })();
   </script>

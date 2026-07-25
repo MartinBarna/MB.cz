@@ -287,6 +287,42 @@ Deno.serve(async (req: Request) => {
 
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
+  // Blok „co teď udělat" JEN do Martinovy kopie mailu (klient dostává totéž `html` bez něj).
+  // Smysl: Martin po reportu nemá lovit, kde se co nastavuje. Odkaz otevře rovnou detail
+  // toho klienta v adminu (#klient=<email>) a text řekne, co konkrétně přenastavit.
+  type Cile = { kcal: number | null; protein: number | null; kroky: number | null; sport_min: number | null; treninky: number | null } | null;
+  function coachTodo(mail: string, r: Record<string, unknown>, tg: Cile): string {
+    const odkaz = `https://martinbarna.cz/akademie/admin/#klient=${encodeURIComponent(mail)}`;
+    const n = (r.nutrition ?? {}) as Record<string, unknown>;
+    const a = (r.activity ?? {}) as Record<string, unknown>;
+    const radky: string[] = [];
+    if (!tg) {
+      radky.push(`<span class='mb-warn' style='color:#e0a04f'>Tenhle klient zatím nemá zadání.</span> Bez něj nevidí ve své sekci, co má dodržet, a nepočítají se mu odchylky. Nastav mu kalorie, bílkoviny, kroky, minuty sportu a počet tréninků.`);
+    } else {
+      // Porovnání TOHOTO reportu proti zadání. Chybějící hodnota nebo chybějící cíl = řádek se
+      // nevypíše, nikdy nedopočítávat (viz stejné pravidlo v klientské sekci).
+      const porovnej = (label: string, cil: number | null, real: number | null, jednotka: string) => {
+        if (cil == null || real == null) return;
+        const d = Math.round(real - cil);
+        if (d === 0) return;
+        const barva = d > 0 ? "mb-good" : "mb-warn";
+        radky.push(`${label}: <b>${czk(real)} ${jednotka}</b>, cíl ${cil} <span class='${barva}' style='color:${d > 0 ? "#4fc07a" : "#e0a04f"}'>(${d > 0 ? "+" : "−"}${Math.abs(d)})</span>`);
+      };
+      porovnej("Kalorie", tg.kcal, num(n.kcal), "kcal");
+      porovnej("Bílkoviny", tg.protein, num(n.protein), "g");
+      porovnej("Kroky", tg.kroky, num(a.kroky), "");
+      porovnej("Sport", tg.sport_min, num(a.sport_min), "min");
+      porovnej("Tréninky", tg.treninky, num(a.fitko), "×");
+      if (!radky.length) radky.push(`<span class='mb-good' style='color:#4fc07a'>Sedí na zadání ve všech sledovaných číslech.</span> Když necháváš plán beze změny, stačí klientovi napsat vzkaz do zadání, ať ví, že to tak má být.`);
+    }
+    return `<div class='mb-sect' style='font-weight:800;color:#F6CD63;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px'>➡️ Co teď udělat</div>` +
+      `<table role='presentation' class='mb-box' width='100%' cellpadding='0' cellspacing='0' style='background:#211d2b;border:1px solid #2e2940;border-radius:10px;margin:0 0 18px'><tr><td style='padding:16px 20px'>` +
+      radky.map((t) => `<p class='mb-body' style='margin:0 0 8px;font-size:14px;line-height:1.5'>${t}</p>`).join("") +
+      `<p style='margin:12px 0 4px'><a class='mb-btn' href='${odkaz}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:12px 22px;font-weight:700;font-size:14px;border-radius:6px'>Upravit zadání klienta</a></p>` +
+      `<p class='mb-mut' style='margin:6px 0 0;font-size:12px;color:#8F8A99'>Odkaz otevře admin rovnou na detailu tohoto klienta, zadání je hned nahoře pod jeho e-mailem. Co tam uložíš, uvidí klient ve své sekci.</p>` +
+      `</td></tr></table>`;
+  }
+
   if (action === "report") {
     const row = {
       email,
@@ -313,7 +349,11 @@ Deno.serve(async (req: Request) => {
     const weekNo = hist.length + 1;
     const html = reportMail(name, row, prev, first, weekNo);
     const subj = `📊 Týdenní report: ${name}`;
-    const coachMail = wrap("Martin Barna · týdenní report klienta", html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`);
+    // Zadání klienta kvůli bloku „co teď udělat". Když se čtení nepovede, blok se zobrazí
+    // ve variantě „zadání není" — mail kvůli tomu nikdy nepadá.
+    const { data: tgRow } = await admin.from("client_targets")
+      .select("kcal,protein,kroky,sport_min,treninky").eq("email", email).maybeSingle();
+    const coachMail = wrap("Martin Barna · týdenní report klienta", coachTodo(email, row, tgRow ?? null) + html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled. Stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
     const s1 = await send(COACH, subj, coachMail);
     const s2 = await send(email, "Tvůj týdenní report ✓ (kopie)", clientMail, true);
