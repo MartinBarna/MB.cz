@@ -279,6 +279,22 @@ se stejně spustí, nasadí STAROU verzi a skončí zeleně**. Workflow bere sta
 z tvého disku. Správně: push → `git fetch origin` → ověř SHA nebo přímo obsah
 (`git show origin/main:cesta | grep …`) → teprve pak deploy → nakonec ověř živou produkci.
 
+## 🚀 SPUŠTĚNÍ: nabídka zkušebky UŽ ODEŠLA, reklamy a mailing čekají (25. 7. 2026)
+Martin nejdřív chtěl pustit všechno naráz, pak to **rozdělil**: „těm našim už
+existujícím to můžeš poslat hned, ty ads a mailing počkáme až později."
+- ✅ **Odesláno 25. 7.:** trať `tc-trial-nabidka`, 1 mail, TŘI lidé (uživatelé appky,
+  kteří 14denní zkušebku nedostali). Ověřeno `sent=1, errors=0`, série u nich ukončená.
+- ⛔ **NEPOUŠTÍ SE:** reklamy, série `tc-free` a `tc-magnet`, a vrácení zmínek o appce
+  do stávajících mailů. Uložené znění zmínek je v Academy DB v tabulce
+  `email_templates_s_appkou_2026_07_25`. Čeká se na Martinův výslovný povel.
+- 🔴 **Tři lidé vynecháni**, čeká na Martinovo rozhodnutí: jsou v tratích
+  `upsell-coaching` a `onboarding-coaching`, kam se appka podle pravidel mise NEDÁVÁ
+  (kanibalizuje koučink). U jedné z nich navíc běžela prodejní série splatná druhý den,
+  přepnutí tratě by ji zabilo.
+⚠️ **Před každou takovou rozesílkou zkontroluj, jestli adresát nemá rozdělanou jinou
+sérii** (`select track, step, next_send_at from leads where email = …`). Trať se dá
+přepsat jedním UPDATE a tiše tím zahodíš prodejní sekvenci, která je řádově dražší.
+
 ## 🚀 AŽ PADNE POVEL KE SPUŠTĚNÍ: pouští se to VŠECHNO NARÁZ (Martin 25. 7. 2026)
 Martin výslovně: nabídka zkušebky se má vypustit **ve chvíli, kdy se nahodí reklamy
 a mailing na Tvůj Coach na ostro, spolu s tím**. Není to samostatné rozhodnutí.
