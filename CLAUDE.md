@@ -279,6 +279,23 @@ se stejně spustí, nasadí STAROU verzi a skončí zeleně**. Workflow bere sta
 z tvého disku. Správně: push → `git fetch origin` → ověř SHA nebo přímo obsah
 (`git show origin/main:cesta | grep …`) → teprve pak deploy → nakonec ověř živou produkci.
 
+## 🚀 AŽ PADNE POVEL KE SPUŠTĚNÍ: pouští se to VŠECHNO NARÁZ (Martin 25. 7. 2026)
+Martin výslovně: nabídka zkušebky se má vypustit **ve chvíli, kdy se nahodí reklamy
+a mailing na Tvůj Coach na ostro, spolu s tím**. Není to samostatné rozhodnutí.
+Do jednoho spuštění patří:
+1. **Vrátit zmínky o appce do stávajících mailů.** Uložené znění je v Academy DB
+   v tabulce `email_templates_s_appkou_2026_07_25`. Vyříznuté byly 25. 7. ráno,
+   protože Martin řekl „zatím nepouštěj". ⚠️ 17 mailů tehdy odešlo dřív, než to řekl:
+   **UPDATE mailové šablony NENÍ příprava, je to rozeslání** (drip běží každou hodinu).
+2. **Napojit zdroj leadů na `tc-free` a `tc-magnet`** (12 mailů v DB, dnes 0 lidí).
+3. **Rozeslat `tc-trial-nabidka`** (1 mail v DB, Martin viděl [TEST] náhled): nabídka
+   14denní zkušebky lidem, kteří appku mají, ale zkušebku nedostali (k 25. 7. jich je 10).
+   ⚠️ **Jsou to uživatelé APPKY, ne leady v Academy DB.** Rozeslání proto nejde přes
+   běžný enroll, musí se jejich e-maily doplnit do `leads`, nebo poslat jednorázově.
+   Tohle je jediná nedořešená technická část.
+4. **Spustit reklamy** (Blok 3 mise).
+⛔ **Do té doby se NEROZESÍLÁ NIC.** Detail a stav: `mb-co-hlidam-martinovi` v paměti.
+
 ## ⏰ ČEKÁ NA MARTINOVO PŘEČTENÍ: mailové série A a B (25. 7. 2026)
 Dvě série po 6 mailech pro A/B test v reklamách na appku Tvůj Coach, tratě **`tc-free`**
 (kdo se z reklamy zaregistroval do Free) a **`tc-magnet`** (kdo nechal e-mail za jídelníčkem).
