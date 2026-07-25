@@ -262,13 +262,31 @@ se stejně spustí, nasadí STAROU verzi a skončí zeleně**. Workflow bere sta
 z tvého disku. Správně: push → `git fetch origin` → ověř SHA nebo přímo obsah
 (`git show origin/main:cesta | grep …`) → teprve pak deploy → nakonec ověř živou produkci.
 
-## ⏰ ČEKÁ NA MARTINOVO PŘEČTENÍ: mailové série A a B (24. 7. 2026)
-V `_zdroje/tc-serie-A-B-navrh.md` leží **12 mailů** ve dvou sériích pro A/B test v reklamách
-na appku Tvůj Coach (`tc-free` a `tc-magnet`). Martin je chtěl zatím jen uložit a přečíst si
-je později, proto jsou v repu, ale **nikde neběží**: nejsou v tabulce `email_templates`
-a `_zdroje/**` je z deploye excludnuté, takže se nic nerozesílá ani nepublikuje.
-**Kdykoli s Martinem řešíš marketing nebo maily, připomeň mu, že je má přečíst.** Sám si to
-nepamatuje a výslovně o tu připomínku požádal.
-Nasazení až na jeho pokyn: záloha `email_templates` → INSERT → [TEST] náhledy na
-fitness.barna@gmail.com → teprve pak zdroj leadů a reklamy. Texty jdou ven pod jeho jménem,
+## ⏰ ČEKÁ NA MARTINOVO PŘEČTENÍ: mailové série A a B (25. 7. 2026)
+Dvě série po 6 mailech pro A/B test v reklamách na appku Tvůj Coach, tratě **`tc-free`**
+(kdo se z reklamy zaregistroval do Free) a **`tc-magnet`** (kdo nechal e-mail za jídelníčkem).
+Znění je v repu v `_zdroje/tc-serie-A-B-navrh.md` (mimo deploy).
+**Od 25. 7. jsou vložené i v tabulce `email_templates`** a Martin má všech 12 jako [TEST]
+náhled ve schránce.
+⛔ **Nic se nerozesílá: na obou tratích je 0 leadů** a žádná enroll funkce je necílí.
+Vložení je inertní, slouží k náhledu a k připravenosti na spuštění reklam.
+**Kdykoli s Martinem řešíš marketing nebo maily, připomeň mu, že si je má přečíst.** Sám si to
+nepamatuje a výslovně o tu připomínku požádal. Texty jdou ven pod jeho jménem,
 takže případné úpravy nedeleguj.
+
+## ⛔ CENY APPKY JSOU NATVRDO V MAILECH (zapsáno 25. 7. 2026 na Martinovo zadání)
+Engine `drip-send` má merge proměnné jen pro **videokurz** (`{{course_price}}`,
+`{{discount_price}}`, `{{discount2_price}}`). Pro **appku Tvůj Coach žádné nejsou**, takže
+Basic 249 Kč a VIP 499 Kč jsou v šablonách napsané číslem (`tc-free` kroky 3 a 4,
+`tc-magnet` krok 4; Academy 8 900 Kč v `trener-kit` krocích 3 a 4).
+🔴 **Ceník appky žije jinde:** tabulka `pricing_plans` v projektu appky
+(`kfkmghvhqwqtsalqjmrp`), ne tady. **Změna ceny tam maily NEOPRAVÍ a nikde to nekřikne.**
+Lidem by chodila stará cena a přišlo by se na to od naštvaného zákazníka.
+**Kdo mění ceník, musí projít i maily.** Najdi je takhle:
+```sql
+select track, step, key from email_templates
+where blocks::text ~ '[0-9][0-9 ]*Kč' order by track, step;
+```
+Postup a zbytek checklistu: `tvujcoach-cenik-zmena-checklist` ve společné paměti.
+Trvalá oprava (až bude čas): přidat `{{tc_basic_price}}` a `{{tc_vip_price}}` do `buildVars`
+v `drip-send`, čtené z `app_config`.
