@@ -351,3 +351,34 @@ a koučinkového klienta překlápěly na lite verzi v `/nastroje-zdarma/`.
 
 **Mail po odeslání reportu** musí Martina navést k akci: odkaz `/akademie/admin/#klient=<email>`
 otevře rovnou detail toho klienta a text řekne, co v zadání upravit.
+
+⛔ **Odchylka se počítá proti SNÍMKU cíle uloženému v reportu** (`client_reports.targets`),
+nikdy proti aktuálnímu cíli. Jinak by zvýšení kalorií zpětně přebarvilo celé měsíce historie
+na „−400", i když klient tehdy plnil přesně. Report bez snímku (starší než featura) odchylku
+nemá a to je správně. Snímek se bere PŘED uložením reportu, proto `client-report` čte
+`client_targets` na začátku větve `report`, ne až u mailu.
+
+## 🔓 AI MARTIN A KLIENTI KOUČINKU (25. 7. 2026)
+
+Klient koučinku (entitlement `coaching`) **nemá Academy**, ale chat AI Martina má v ceně.
+Lekci, kterou mu AI v odpovědi zmíní jménem, mu systém otevře podepsaným odkazem (`?ak=`).
+
+- **Model musí vědět, s kým mluví.** `peekPoznamka()` v `ai-martin/index.ts` to vkládá do
+  promptu. ⛔ **Vždy do VOLATILNÍ části, nikdy do `SYSTEM`**: systémový prompt musí zůstat
+  bajt po bajtu stejný, jinak se rozbije prompt cache (cena i latence).
+  Bez téhle poznámky model klientovi odpovídal „najdeš v modulu 12", kam on nevejde.
+- **Strop `PEEK_BUDGET = 25`** různých lekcí na klienta (tabulka `ai_lesson_peeks`).
+  Už odemčená lekce se nepočítá znovu, strop omezuje ŠÍŘKU, ne opakované čtení.
+  Po vyčerpání se nová lekce jako zdroj vůbec nenabídne (žádný odkaz do paywallu)
+  a model místo toho nabídne Academy s kódem KLIENT20.
+- ⛔ **Délka úryvku 1200 znaků a plná lekce přes peek jsou ZÁMĚR, neopravovat.**
+  Appkový `ai-coach-agent` má od 25. 7. jen 600 znaků, ale tady Martin rozhodl jinak:
+  „coaching klienti platí vysoký měsíční paušál, je to dárek ode mě pro ně."
+  Kdo to bude chtít sjednotit, musí to nejdřív probrat s ním.
+- **Šest lekcí je ochutnávka zdarma** (`m1-l1, m1-l2, m1-l3, m2-l1, m3-l1, m6-l1`, seznam
+  `FREE` v `akademie/studium/index.html`). Mají obsah přímo v HTML, ne v `lesson_content`,
+  takže je otevře kdokoli i bez peeku. **Není to díra, je to lákadlo na koupi.**
+  Upsell mají všechny, ale ve dvou variantách (nahoře „🔓 Ochutnávka zdarma" → `/akademie/`,
+  dole „🎁 Tahle lekce je ochutnávka Academy zdarma" → `/akademie/objednavka/`).
+  ⚠️ Když hledáš, jestli prvek na stránce je, hledej podle **struktury** (`data-upsell="academy"`),
+  ne podle copy. 25. 7. jsem kvůli jinému slovosledu ohlásil falešný nález.
