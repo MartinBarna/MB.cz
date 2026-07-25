@@ -301,18 +301,22 @@ Deno.serve(async (req: Request) => {
     } else {
       // Porovnání TOHOTO reportu proti zadání. Chybějící hodnota nebo chybějící cíl = řádek se
       // nevypíše, nikdy nedopočítávat (viz stejné pravidlo v klientské sekci).
-      const porovnej = (label: string, cil: number | null, real: number | null, jednotka: string) => {
+      // ⚠️ Barva MUSÍ sedět 1:1 s klientskou sekcí (funkce delta()), jinak totéž číslo svítí
+      // na webu oranžově a v mailu zeleně. U bílkovin, kroků a tréninků je „nad cíl" dobře.
+      // U KALORIÍ ne: hubnoucí klient, co snědl 2200 místo 1800, není splněno, proto pásmo ±5 %.
+      const porovnej = (label: string, cil: number | null, real: number | null, jednotka: string, vyssiJeLepsi: boolean) => {
         if (cil == null || real == null) return;
         const d = Math.round(real - cil);
         if (d === 0) return;
-        const barva = d > 0 ? "mb-good" : "mb-warn";
-        radky.push(`${label}: <b>${czk(real)} ${jednotka}</b>, cíl ${cil} <span class='${barva}' style='color:${d > 0 ? "#4fc07a" : "#e0a04f"}'>(${d > 0 ? "+" : "−"}${Math.abs(d)})</span>`);
+        const dobre = vyssiJeLepsi ? d > 0 : Math.abs(d) <= Math.max(1, Math.round(cil * 0.05));
+        const barva = dobre ? "mb-good" : "mb-warn";
+        radky.push(`${label}: <b>${czk(real)} ${jednotka}</b>, cíl ${cil} <span class='${barva}' style='color:${dobre ? "#4fc07a" : "#e0a04f"}'>(${d > 0 ? "+" : "−"}${Math.abs(d)})</span>`);
       };
-      porovnej("Kalorie", tg.kcal, num(n.kcal), "kcal");
-      porovnej("Bílkoviny", tg.protein, num(n.protein), "g");
-      porovnej("Kroky", tg.kroky, num(a.kroky), "");
-      porovnej("Sport", tg.sport_min, num(a.sport_min), "min");
-      porovnej("Tréninky", tg.treninky, num(a.fitko), "×");
+      porovnej("Kalorie", tg.kcal, num(n.kcal), "kcal", false);
+      porovnej("Bílkoviny", tg.protein, num(n.protein), "g", true);
+      porovnej("Kroky", tg.kroky, num(a.kroky), "", true);
+      porovnej("Sport", tg.sport_min, num(a.sport_min), "min", true);
+      porovnej("Tréninky", tg.treninky, num(a.fitko), "×", true);
       if (!radky.length) radky.push(`<span class='mb-good' style='color:#4fc07a'>Sedí na zadání ve všech sledovaných číslech.</span> Když necháváš plán beze změny, stačí klientovi napsat vzkaz do zadání, ať ví, že to tak má být.`);
     }
     return `<div class='mb-sect' style='font-weight:800;color:#F6CD63;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px'>➡️ Co teď udělat</div>` +
@@ -324,6 +328,11 @@ Deno.serve(async (req: Request) => {
   }
 
   if (action === "report") {
+    // Cíl NEJDŘÍV, protože se ukládá jako SNÍMEK do reportu. Kdyby se odchylka počítala proti
+    // aktuálnímu cíli, zvýšení kalorií z 1800 na 2200 by zpětně obarvilo celou historii na
+    // „−400", i když klient tehdy plnil přesně. Snímek to zavírá: minulost se už nikdy nemění.
+    const { data: tgRow } = await admin.from("client_targets")
+      .select("kcal,protein,kroky,sport_min,treninky").eq("email", email).maybeSingle();
     const row = {
       email,
       // datum v Europe/Prague — report odeslaný po půlnoci CZ nesmí dostat včerejší (UTC) datum
@@ -335,6 +344,9 @@ Deno.serve(async (req: Request) => {
       scales: data.scales ?? {},
       notes: data.notes ?? {},
       photos: Array.isArray(data.photos) ? data.photos.slice(0, 12).map((p: unknown) => String(p).slice(0, 300)) : [],
+      // null = v tu chvíli klient žádné zadání neměl; klientská sekce pak u toho reportu
+      // odchylku vůbec nezobrazí (viz client-targets.sql).
+      targets: tgRow ?? null,
       source: "web",
     };
     // předchozí + první report pro šipky (bez dnešního — re-submit v tentýž den je update)
@@ -349,10 +361,6 @@ Deno.serve(async (req: Request) => {
     const weekNo = hist.length + 1;
     const html = reportMail(name, row, prev, first, weekNo);
     const subj = `📊 Týdenní report: ${name}`;
-    // Zadání klienta kvůli bloku „co teď udělat". Když se čtení nepovede, blok se zobrazí
-    // ve variantě „zadání není" — mail kvůli tomu nikdy nepadá.
-    const { data: tgRow } = await admin.from("client_targets")
-      .select("kcal,protein,kroky,sport_min,treninky").eq("email", email).maybeSingle();
     const coachMail = wrap("Martin Barna · týdenní report klienta", coachTodo(email, row, tgRow ?? null) + html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled. Stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
     const s1 = await send(COACH, subj, coachMail);
