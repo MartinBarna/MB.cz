@@ -48,6 +48,24 @@
              bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label };
   }
 
+  /**
+   * Sacharidy v EVROPSKÉ konvenci, tedy BEZ vlákniny, jak je čte člověk na etiketě
+   * v českém obchodě. Vláknina se sleduje zvlášť.
+   * ⚠️ Databáze míchá dvě konvence: část přišla z USDA, kde jsou sacharidy VČETNĚ vlákniny
+   * („carbohydrate by difference"), část z evropských etiket, kde jsou bez ní. Uživatel to
+   * nepoznal: u ovesných otrub viděl 66 g, u mraženého hrášku 10 g, a nevěděl, že každé
+   * číslo znamená něco jiného. Konvenci nese pole `per100.carbBasis`, doložil ji Grok
+   * proti USDA FoodData Central a nutridatabaze.cz, položku po položce, s odkazem.
+   * ⛔ **Co pole nemá, se nechává být.** Nedopočítáváme nic, co nevíme.
+   * ⛔ Táž logika je v appce (`src/engine/meal-gen.ts`).
+   */
+  function sacharidyAvailable(food) {
+    var c = isFinite(food.per100.c) ? food.per100.c : 0;
+    if (food.per100.carbBasis !== 'total') return c;
+    var fib = isFinite(food.per100.fib) ? food.per100.fib : 0;
+    return Math.max(0, c - fib);
+  }
+
   // ---- pomocné: makra porce dané potraviny při X gramech ----
   function macrosFor(food, grams) {
     var k = grams / 100;
@@ -62,7 +80,7 @@
     var cislo = function (x) { return isFinite(x) ? x : 0; };
     return {
       kcal: cislo(food.per100.kcal) * k, p: cislo(food.per100.p) * k,
-      c: cislo(food.per100.c) * k, f: cislo(food.per100.f) * k,
+      c: sacharidyAvailable(food) * k, f: cislo(food.per100.f) * k,
       fib: cislo(food.per100.fib) * k
     };
   }
