@@ -31,7 +31,10 @@
       "description": "Appka pro výživu a trénink: zápis jídla, adaptivní kalorické cíle a AI kouč na metodice Martina Barny.",
       "offers": [
         { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "CZK" },
-        { "@type": "Offer", "name": "VIP s AI koučem (měsíčně)", "price": "499", "priceCurrency": "CZK" }
+        { "@type": "Offer", "name": "Basic (měsíčně)", "price": "249", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "Basic (ročně, dva měsíce zdarma)", "price": "2490", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "VIP s AI koučem (měsíčně)", "price": "499", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "VIP s AI koučem (ročně, dva měsíce zdarma)", "price": "4990", "priceCurrency": "CZK" }
       ],
       "author": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" }
     }
@@ -201,7 +204,7 @@
             <div class="plan">
                 <div class="plan-name">Basic</div>
                 <div class="plan-price" data-price="basic:month">249 Kč <small>/ měsíc</small></div>
-                <p class="plan-year" data-year="basic">nebo 2 490 Kč / rok</p>
+                <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
                 <ul class="feat">
                     <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
                     <li>Generátory jídelníčků a tréninků</li>
@@ -214,7 +217,7 @@
                 <span class="ribbon">★ S AI KOUČEM</span>
                 <div class="plan-name">VIP</div>
                 <div class="plan-price" data-price="ai_basic:month">499 Kč <small>/ měsíc</small></div>
-                <p class="plan-year" data-year="ai_basic">nebo 4 990 Kč / rok</p>
+                <p class="plan-year" data-year="ai_basic">nebo 4 990 Kč na rok, ušetříš 998 Kč (dva měsíce zdarma)</p>
                 <ul class="feat">
                     <li>Vše z Basicu</li>
                     <li>AI kouč 24/7 mým hlasem, ovládá appku za tebe</li>
@@ -287,8 +290,13 @@
         if (elP && m) elP.innerHTML = kc(m) + ' <small>/ měsíc</small>';
         var elY = document.querySelector('[data-year="' + tier + '"]');
         if (elY && y) {
+          // Ročni varianta se PRODAVA, ne jen zminuje: vedle ceny i uspora a kolik
+          // mesicu zdarma to je. Cislo se pocita z ceniku, nikdy se nepise natvrdo (§9).
           var uspora = (m && y) ? Math.round(m * 12 - y) : 0;
-          elY.textContent = 'nebo ' + kc(y) + ' / rok' + (uspora > 0 ? ' (ušetříš ' + kc(uspora) + ')' : '');
+          var mesicu = (m && uspora > 0) ? Math.round(uspora / m) : 0;
+          var mesicuText = mesicu === 1 ? 'měsíc zdarma' : (mesicu >= 2 && mesicu <= 4 ? 'měsíce zdarma' : 'měsíců zdarma');
+          elY.textContent = 'nebo ' + kc(y) + ' na rok, ušetříš ' + kc(uspora)
+            + (mesicu > 0 ? ' (' + mesicu + ' ' + mesicuText + ')' : '');
         }
       });
     })
