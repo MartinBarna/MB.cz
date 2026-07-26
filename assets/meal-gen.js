@@ -356,21 +356,28 @@
     // appka Tvůj Coach): skrytý tuk a cukr v přílohách se nedá doškálovat po makrech. Když
     // kcal po všem přesahují cíl o >6 %, uber sacharidovou kategorii, pak tukovou; bílkoviny
     // jsou floor a nesahá se na ně.
+    // [fix 2026-07-26] Dorovnání je nově OBOUSMĚRNÉ a s prahem 5 %, stejně jako v appce.
+    // Dřív uměl web jen ubírat, takže podstřelený den zůstal podstřelený a musel se zachraňovat
+    // doplňkovým blokem výš. Naměřeno na 324 dnech: web měl odchylku kalorií 4,0 %, appka
+    // s obousměrným dorovnáním 2,2 %, a u malých cílů (1400 kcal) byl rozdíl 6,0 vs 1,4 %.
+    // Bílkovinou se neškáluje ani teď, je to floor (filozofie enginu).
     var overKcal = totalKey('kcal') - targets.kcal;
-    if (overKcal > targets.kcal * 0.06) {
+    if (Math.abs(overKcal) > targets.kcal * 0.05) {
       var carbK = sumP('carb', 'kcal');
       if (carbK > 0) {
-        var cf2 = Math.max(0.35, (carbK - overKcal) / carbK);
+        var cf2 = Math.max(0.3, Math.min(2.4, (carbK - overKcal) / carbK));
         all.forEach(function (it) { if (it.food.cat === 'carb') it.grams *= cf2; });
       }
+      // Zbývající PŘESTŘEL dorovnej ubráním tuku. Nahoru se tuk nepřidává, má floor.
       overKcal = totalKey('kcal') - targets.kcal;
-      if (overKcal > targets.kcal * 0.06) {
+      if (overKcal > targets.kcal * 0.05) {
         var fatK = sumP('fat', 'kcal');
         if (fatK > 0) {
-          var ff2 = Math.max(0.25, (fatK - overKcal) / fatK);
+          var ff2 = Math.max(0.2, Math.min(1, (fatK - overKcal) / fatK));
           all.forEach(function (it) { if (it.food.cat === 'fat') it.grams *= ff2; });
         }
       }
+      capPass();
     }
 
     // hezké zaokrouhlení gramů (5 g, drobné zdroje tuku na 1 g); stropy už drží capPass()
