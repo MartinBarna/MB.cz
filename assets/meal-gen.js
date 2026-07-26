@@ -1,3 +1,10 @@
+// ⛔⛔ TENHLE GENERÁTOR EXISTUJE DVAKRÁT. KAŽDÁ ZMĚNA SE DĚLÁ DO OBOU.
+// Protějšek: appka Tvůj Coach → src/engine/meal-gen.ts
+// Web navíc obsluhuje Academy, obě kalkulačky I lite verzi zdarma, takže jeden soubor
+// pokrývá čtyři místa. Když se sáhne jen na jednu stranu, uživatelé dostanou různé
+// výsledky podle toho, kudy přišli, a nikde to nekřikne.
+// Hlídá to pre-commit hook přes `node scripts/hlidac-dvou-verzi.mjs` v repu appky.
+// Commit, který obě strany rozejde, NEPROJDE. Detail: paměť `tvujcoach-jeden-generator-cil`.
 /* Barna Academy — engine generátoru jídelníčků. (v 2026-07-22b)
    Čistě klientský, deterministický. Žádný backend.
    1) computeTargets() — kalorie + makra z údajů klienta (Mifflin–St Jeor).
