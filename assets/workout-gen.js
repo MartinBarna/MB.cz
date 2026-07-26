@@ -410,7 +410,14 @@
         exercises.push({
           ex: pick,
           sets: slot.access ? Math.max(2, g.sets - 1) : g.sets,
-          reps: slot.access ? g.accessReps : g.reps
+          reps: slot.access ? g.accessReps : g.reps,
+          // [fix 2026-07-26] Flag se sem MUSÍ zapsat. Bez něj je `pe.access` vždycky
+          // undefined a dvě pravidla řazení v `contributorsFor` a `dropWeakest`
+          // („doplňkový cvik ubrat dřív než hlavní") byla mrtvá páka: web ubíral série
+          // HLAVNÍM cvikům. Naměřeno u fitko/tělo/pokročilý/síla/4 dny: web srazil
+          // `dipy-na-lavicce` z 5 na 3, appka správně `dipy-na-bradlech` ze 4 na 2.
+          // Součet sérií i objem po partiích vycházel stejně, takže to nic nehlásilo.
+          access: !!slot.access
         });
       });
 
@@ -442,7 +449,9 @@
           if (used[be.id]) continue;
           if (bpass === 0 && usedWeek[be.id]) continue;
           used[be.id] = 1; usedWeek[be.id] = 1;
-          exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps });
+          // access i tady: je to doplňkový cvik (bere accessReps), takže se má ubírat dřív
+          // než hlavní. Appka to má taky (`src/engine/workout-gen.ts`).
+          exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps, access: true });
         }
       }
 
