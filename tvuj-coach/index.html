@@ -102,13 +102,17 @@
         /* Nahled appky. Clovek kupuje neco, co jinak nikdy nevidel, takze u kazdeho bloku
            funkci stoji jeden skutecny snimek obrazovky. Obrazky se nacitaji az kdyz na ne
            uzivatel doscrolluje (loading=lazy), at to nezdrzuje prvni vykresleni na mobilu. */
-        .shot { margin:1.6rem auto 0; max-width:940px; }
-        .shot img { display:block; width:100%; height:auto; border-radius:16px; border:1px solid rgba(255,255,255,.12); box-shadow:0 18px 48px rgba(0,0,0,.45); background:#12101a; }
+        /* ⚠️ Snimky jsou z MOBILNI verze appky (390 px). Desktopovy snimek se na telefonu
+           zmensi skoro sestkrat a text v appce vyjde na 3 pixely, tedy necitelne smouha.
+           Telefonni snimek se na mobilu vykresli skoro 1:1 a na pocitaci vypada jako
+           nahled z obchodu s aplikacemi. Proto uzky sloupec, ne roztazeni pres celou sirku. */
+        .shot { margin:1.6rem auto 0; max-width:330px; }
+        .shot img { display:block; width:100%; height:auto; border-radius:22px; border:1px solid rgba(255,255,255,.14); box-shadow:0 18px 48px rgba(0,0,0,.5); background:#12101a; }
         .shot figcaption { color:var(--mut); font-size:.86rem; text-align:center; margin-top:.7rem; }
         /* Snimek v hlavicce se nacita hned (fetchpriority=high), je to prvni vec,
            kterou clovek z reklamy uvidi, a rozhoduje o tom, jestli scrolluje dal. */
-        .shot-hero { margin-top:2.4rem; max-width:880px; }
-        @media (max-width:640px) { .shot { margin-top:1.2rem; } .shot img { border-radius:12px; } .shot-hero { margin-top:1.8rem; } }
+        .shot-hero { margin-top:2.4rem; }
+        @media (max-width:640px) { .shot { margin-top:1.2rem; max-width:300px; } .shot-hero { margin-top:1.8rem; } }
         .plans { display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; max-width:820px; margin:0 auto; }
         .plans-3 { grid-template-columns:repeat(3,1fr); max-width:1000px; }
         .plan { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:1.8rem 1.6rem; display:flex; flex-direction:column; }
@@ -149,7 +153,7 @@
         </div>
         <div class="trust"><span>✓ Začneš zdarma</span><span>✓ Česky a bez balastu</span><span>✓ Zrušíš kdykoliv</span></div>
         <figure class="shot shot-hero">
-            <img src="/assets/app/dnes.png?v=1" alt="Úvodní obrazovka appky Tvůj Coach: denní přehled kalorií a maker, zapsaná jídla a zbývající příjem." width="1919" height="824" fetchpriority="high" decoding="async">
+            <img src="/assets/app/dnes.png?v=2" alt="Úvodní obrazovka appky Tvůj Coach: denní přehled kalorií a maker, zapsaná jídla a zbývající příjem." width="390" height="844" fetchpriority="high" decoding="async">
         </figure>
     </div>
 </header>
@@ -168,7 +172,7 @@
         </div>
 
         <figure class="shot">
-            <img src="/assets/app/generator-jidelnicku.png?v=1" alt="Generátor jídelníčku v appce Tvůj Coach: celý den poskládaný z běžných potravin s gramážemi, kaloriemi a makry." width="1280" height="900" loading="lazy" decoding="async">
+            <img src="/assets/app/generator-jidelnicku.png?v=2" alt="Generátor jídelníčku v appce Tvůj Coach: celý den poskládaný z běžných potravin s gramážemi, kaloriemi a makry." width="390" height="844" loading="lazy" decoding="async">
             <figcaption>Generátor ti poskládá celý den z běžných potravin, i s gramážemi.</figcaption>
         </figure>
 
@@ -181,7 +185,7 @@
         </div>
 
         <figure class="shot">
-            <img src="/assets/app/generator-treninku.png?v=1" alt="Vygenerovaný tréninkový plán v appce Tvůj Coach: cviky, série a opakování rozdělené do tréninkových dnů." width="1280" height="900" loading="lazy" decoding="async">
+            <img src="/assets/app/generator-treninku.png?v=2" alt="Vygenerovaný tréninkový plán v appce Tvůj Coach: cviky, série a opakování rozdělené do tréninkových dnů." width="390" height="844" loading="lazy" decoding="async">
             <figcaption>Plán ti appka napíše podle toho, kde cvičíš a kolik dní v týdnu máš.</figcaption>
         </figure>
 
@@ -194,7 +198,7 @@
         </div>
 
         <figure class="shot">
-            <img src="/assets/app/ai-kouc.png?v=1" alt="Chat s AI koučem v appce Tvůj Coach: otázka klienta a odpověď, která vychází z jeho vlastních zapsaných dat." width="1919" height="824" loading="lazy" decoding="async">
+            <img src="/assets/app/ai-kouc.png?v=2" alt="Chat s AI koučem v appce Tvůj Coach: otázka klienta a odpověď, která vychází z jeho vlastních zapsaných dat." width="390" height="844" loading="lazy" decoding="async">
             <figcaption>AI kouč odpovídá podle tvých čísel, ne obecně z internetu.</figcaption>
         </figure>
     </div>
@@ -286,7 +290,7 @@
             <div class="faq-i"><b>Jak VIP zruším?</b><p>Kdykoliv na dvě klepnutí přímo v appce (Profil → Předplatné). Doběhne zaplacené období a dál nic neplatíš.</p></div>
             <div class="faq-i"><b>Funguje na mobilu i počítači?</b><p>Ano. Zatím běží jako webová aplikace, otevřeš ji v prohlížeči na mobilu i počítači a data máš všude stejná. Appku pro iPhone a Android chystáme.</p></div>
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč bych měl zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Deník ti řekne, co jsi snědl. Tvůj Coach ti řekne, co s tím dál. Už ve Free ti každý týden přepočítá kalorie a makra podle toho, jak ti to reálně jde, ne podle tabulky z registrace. V Basicu ti k tomu poskládá jídelníček na tvoje čísla i s nákupním seznamem a napíše tréninkový plán. Ve VIP se na to můžeš zeptat AI kouče, který vidí tvoje data. Nemusíš nic rušit. Vyzkoušej Free vedle toho, co máš, a nech si to, co ti dává větší smysl.</p></div>
-            <div class="faq-i"><b>Máte míň potravin než velké appky. Nevadí to?</b><p>Vadilo by, kdybych to schovával. Mám jich něco přes tisíc a jsou to ty, které lidi v Česku opravdu jedí. Skládám tu databázi sám, nepřidávají do ní cizí lidi, a u sporných položek si čísla ověřuju proti americké databázi USDA a proti etiketám. V databázích, které plní sami uživatelé, se chyby množí rychleji, než je někdo stihne opravit. Když ti něco chybí, naskenuješ čárový kód a appka to dohledá v Open Food Facts, nebo mi napíšeš a doplním to.</p></div>
+            <div class="faq-i"><b>Máte míň potravin než velké appky. Nevadí to?</b><p>Vadilo by, kdybych to schovával. Mám jich něco přes tisíc a jsou to ty, které lidi v Česku opravdu jedí. Skládám tu databázi sám, nepřidávají do ní cizí lidi, průběžně ji reviduju proti odborným zdrojům a dál doplňuju. V databázích, které plní sami uživatelé, se chyby množí rychleji, než je někdo stihne opravit, a člověk ani nemá jak špatnou hodnotu opravit. Když ti něco chybí, naskenuješ čárový kód a appka to dohledá v Open Food Facts, nebo mi napíšeš a doplním to.</p></div>
         </div>
         <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušet Tvůj Coach zdarma →</a></p>
     </div>
