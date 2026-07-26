@@ -169,7 +169,7 @@
     $('logoclear').addEventListener('click',function(){ logoData=''; $('logofile').value=''; $('logoclear').style.display='none'; saveBrand(); });
 
     Promise.all([
-      fetch('/assets/food-db.json?v=20260726d').then(function(r){return r.json();}),
+      fetch('/assets/food-db.json?v=20260726e').then(function(r){return r.json();}),
       fetch('/assets/recipe-db.json?v=3b').then(function(r){return r.json();})
     ]).then(function(a){ FOODS=a[0]; RECIPES=a[1]; $('dbstate').textContent=RECIPES.length+' receptů připraveno'; })
       .catch(function(){ $('dbstate').textContent='⚠️ Recepty se nepodařilo načíst.'; });

@@ -210,7 +210,7 @@
       }
     }catch(e){}
 
-    fetch('/assets/food-db.json?v=20260726d').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/food-db.json?v=20260726e').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
       if(fromCalc) generate(false);
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
