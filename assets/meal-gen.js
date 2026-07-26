@@ -51,10 +51,19 @@
   // ---- pomocné: makra porce dané potraviny při X gramech ----
   function macrosFor(food, grams) {
     var k = grams / 100;
+    // [fix 2026-07-26] Chybějící makro se bere jako nula, ne jako NaN.
+    // ⚠️ PROČ: `kureci-prsa` neměla v databázi pole `c` ani `fib`. Jedna položka z 1191.
+    // `undefined * k` je NaN, ten propadl do součtu kategorie, z něj do škálovacího
+    // faktoru a odtud do gramáže VŠECH bílkovinných položek dne. V appce klient viděl
+    // „NaN g · NaN kcal" u masa a v nákupním seznamu „Kuřecí prsa · NaN g".
+    // Zelenina vycházela správně, protože se neškáluje, což tu vadu maskovalo.
+    // Konzole přitom mlčela, NaN se nikde nevyhodí jako chyba.
+    // ⛔ Táž pojistka je v appce (`src/engine/meal-gen.ts`).
+    var cislo = function (x) { return isFinite(x) ? x : 0; };
     return {
-      kcal: food.per100.kcal * k, p: food.per100.p * k,
-      c: food.per100.c * k, f: food.per100.f * k,
-      fib: (food.per100.fib || 0) * k
+      kcal: cislo(food.per100.kcal) * k, p: cislo(food.per100.p) * k,
+      c: cislo(food.per100.c) * k, f: cislo(food.per100.f) * k,
+      fib: cislo(food.per100.fib) * k
     };
   }
 
