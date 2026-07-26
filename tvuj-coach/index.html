@@ -91,6 +91,8 @@
         .g3 { grid-template-columns:repeat(3,1fr); }
         .card { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.09); border-radius:18px; padding:1.5rem 1.4rem; }
         .card .em { font-size:1.9rem; display:block; margin-bottom:.6rem; }
+        h3.blok { text-align:center; color:var(--acc-l); font-size:.82rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin:2.6rem 0 1.2rem; }
+        h3.blok:first-of-type { margin-top:.6rem; }
         .card h3 { font-size:1.05rem; margin:0 0 .45rem; }
         .card p { color:var(--warm); font-size:.93rem; margin:0; }
         .vip-tag { display:inline-block; background:rgba(235,177,44,.16); color:var(--acc-l); font-weight:700; font-size:.68rem; letter-spacing:.08em; padding:.15rem .55rem; border-radius:50px; vertical-align:middle; margin-left:.35rem; }
@@ -139,23 +141,42 @@
 <section class="sec">
     <div class="wrap">
         <h2 class="center">Co appka umí</h2>
-        <p class="sec-sub">Žádná další tabulka na kalorie. Systém, který jsem 13 let ladil s klienty koučinku, přetavený do appky.</p>
+        <p class="sec-sub">Systém, který jsem 13 let ladil s klienty koučinku, přetavený do appky. Jídlo i trénink na jednom místě, protože spolu souvisí.</p>
+
+        <h3 class="blok">Zapsat jídlo trvá vteřiny</h3>
         <div class="grid g4">
-            <div class="card"><span class="em">🍽️</span><h3>Rychlý zápis jídla</h3><p>Databáze tisíců potravin s makry, hledání i bez diakritiky, oblíbená jídla na jeden klepnutí.</p></div>
-            <div class="card"><span class="em">🎯</span><h3>Cíle, které žijí s tebou</h3><p>Týdenní check-in přepočítá kalorie a makra podle reálného vývoje váhy a zápisů. Žádné mrtvé tabulkové cíle.</p></div>
-            <div class="card"><span class="em">🤖</span><h3>AI kouč 24/7<span class="vip-tag">VIP</span></h3><p>Vyfotíš jídlo a odhadne makra. Zeptáš se a odpoví mým hlasem. A umí appku ovládat za tebe: zapsat, upravit, vysvětlit.</p></div>
-            <div class="card"><span class="em">📊</span><h3>Grafy a přehledy</h3><p>Váha, míry, kroky, voda i trénink na jednom místě. Vidíš trend, ne jen dnešní číslo.</p></div>
+            <div class="card"><span class="em">📷</span><h3>Namíříš na čárový kód</h3><p>Kamera přečte obal a jídlo je v deníku. U všeho baleného otázka dvou vteřin.</p></div>
+            <div class="card"><span class="em">🎙️</span><h3>Nebo to řekneš nahlas</h3><p>„Rohlík, tvaroh dvě stě gramů a tři deci vody." Appka větu rozebere a zapíše ji za tebe.</p></div>
+            <div class="card"><span class="em">🍽️</span><h3>Vyfotíš talíř<span class="vip-tag">VIP</span></h3><p>Na domácí kuchyni, kde žádný obal není. Odhadne, co na talíři leží, a spočítá makra.</p></div>
+            <div class="card"><span class="em">⚡</span><h3>Šablony a historie</h3><p>Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím. A dohledáš cokoli, cos kdy jedl.</p></div>
+        </div>
+
+        <h3 class="blok">Trénink ti appka napíše</h3>
+        <div class="grid g4">
+            <div class="card"><span class="em">🏋️</span><h3>Plán podle toho, kde cvičíš</h3><p>Fitko, doma, hřiště. Vlastní tělo, činky, všechno. Zadáš cíl a kolik dní v týdnu máš, a plán je hotový.</p></div>
+            <div class="card"><span class="em">📖</span><h3>120 cviků s fotkou</h3><p>U každého provedení, časté chyby a popis česky. Tatáž databáze, kterou používám s klienty.</p></div>
+            <div class="card"><span class="em">📈</span><h3>Pamatuje si, kolik jsi zvedl</h3><p>Zapíšeš série a příště ti řekne: „Zkus 60 kg × 10, minule ti zbývala rezerva."</p></div>
+            <div class="card"><span class="em">🧩</span><h3>Objem po svalových partiích</h3><p>Kolik sérií týdně padlo na záda a kolik na nohy. Barevně uvidíš, jestli je to málo, akorát, nebo už moc. Tohle si trenéři počítají ručně.</p></div>
+        </div>
+
+        <h3 class="blok">A tady začíná koučink</h3>
+        <div class="grid g4">
+            <div class="card"><span class="em">🎯</span><h3>Cíle se hýbou s tebou</h3><p>Týdenní check-in přepočítá kalorie a makra podle reálné váhy a podle toho, co jsi doopravdy snědl.</p></div>
+            <div class="card"><span class="em">🧠</span><h3>„Co si můžu ještě dnes dát?"</h3><p>Zbývá ti 400 kcal a 30 g bílkovin. Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
+            <div class="card"><span class="em">🤖</span><h3>AI kouč mým hlasem<span class="vip-tag">VIP</span></h3><p>Zeptáš se ve dvě ráno a dostaneš odpověď. A umí appku ovládat za tebe: zapsat, upravit, vysvětlit, proč ti zvedla sacharidy.</p></div>
+            <div class="card"><span class="em">🛑</span><h3>Umí říct, že svým číslům nevěří</h3><p>Když je den poskládaný hlavně z fotoodhadů, cíle nepřepočítá. Fotka podceňuje olej a omáčku a podle toho ti jídelníček přenastavovat nechci.</p></div>
         </div>
     </div>
 </section>
 
 <section class="sec" style="background:#121014;">
     <div class="wrap">
-        <h2 class="center">Proč Tvůj Coach, a ne obyčejný tracker</h2>
-        <div class="grid g3" style="margin-top:2rem;">
-            <div class="card"><span class="em">🧠</span><h3>Za appkou je kouč</h3><p>Není to anonymní kalkulačka. Je to metodika, kterou prošlo přes 600 mých klientů, od nastavení cílů po práci s plateau.</p></div>
-            <div class="card"><span class="em">🔢</span><h3>Čísla počítá engine, ne AI</h3><p>Kalorie a makra počítá deterministický systém, žádné vymyšlené hodnoty. AI ti je vysvětlí a pomůže je naplnit.</p></div>
-            <div class="card"><span class="em">🤝</span><h3>Napojená na moje služby</h3><p>Klienti koučinku v ní zapisují a já vidím reálná data místo odhadů. A appka roste s každou zpětnou vazbou.</p></div>
+        <h2 class="center">Čím se liší od běžného trackeru</h2>
+        <div class="grid g4" style="margin-top:2rem;">
+            <div class="card"><span class="em">🧑‍🏫</span><h3>Za appkou stojí kouč</h3><p>Metodika, kterou prošlo přes 600 mých klientů, od nastavení cílů po práci s plateau. Appka ti řekne to, co bych ti řekl já.</p></div>
+            <div class="card"><span class="em">🔢</span><h3>Čísla počítá engine</h3><p>Kalorie a makra vypočítá deterministický systém, aby seděly na gram. AI ti je vysvětlí a pomůže je naplnit, ale nikdy si je nevymýšlí.</p></div>
+            <div class="card"><span class="em">🤝</span><h3>Napojená na moje služby</h3><p>Klienti koučinku v ní zapisují a já vidím reálná data místo odhadů z paměti.</p></div>
+            <div class="card"><span class="em">🔄</span><h3>Mění se každý týden</h3><p>Napíšeš mi, co ti v ní chybí, a já to zadám dál. Většina funkcí, které v appce dneska jsou, vznikla přesně takhle, z připomínek lidí, co ji používají.</p></div>
         </div>
     </div>
 </section>
