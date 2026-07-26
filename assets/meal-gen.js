@@ -258,18 +258,31 @@
       });
     }
     function runScale() {
-      for (var np = 0; np < 3; np++) {
+      // [fix 2026-07-26] 5 průchodů místo 3, sjednoceno s appkou. Se stropy porcí konverguje
+      // škálování pomaleji: co se u položky na stropu ořízne, musí se rozpustit do ostatních,
+      // a na to tři průchody nestačily. Naměřeno na 180 zadáních: se třemi průchody web
+      // podstřeloval a spouštěl o úroveň víc doplňků než appka.
+      for (var np = 0; np < 5; np++) {
         scaleCat('carb', 'c', targets.carbs, 0.4, 2.6);
         scaleCat('fat', 'f', targets.fat, 0.3, 3.0);
-        scaleCat('protein', 'p', targets.protein, 0.35, 2.4);
+        // [fix 2026-07-26] Rozsah 0,45 až 2,2 místo 0,35 až 2,4, sjednoceno s appkou.
+        // Naměřeno na 324 dnech: appka s užším rozsahem trefuje bílkoviny na 1,2 %,
+        // web se širším na 2,6 %. Širší rozsah svádí škálování k velkým skokům, které
+        // pak musí dorovnávat ostatní kategorie.
+        scaleCat('protein', 'p', targets.protein, 0.45, 2.2);
+        // [fix 2026-07-26] Ořez i podlaha jsou nově UVNITŘ cyklu, sjednoceno s appkou.
+        // Dřív běžely až za ním a den o ten ořez tiše podstřelil. Uvnitř se chybějící makro
+        // rozpustí do položek, které na stropu nejsou. Naměřeno v appce: odchylka sacharidů
+        // z 6,7 zpět na 4,5 %, právě tímhle přesunem.
+        // [fix 2026-07-14] stropy hned po škálování, jinak kontrola sytosti dne viděla
+        // nadstropové porce a den po ořezu tiše podstřelil i o 20 %
+        capPass();
+        // bílkovinný základ jídla nesmí zdegenerovat na ozdobu (křížové škálování ho umí
+        // stlačit), drž aspoň 30 g; je to páteř každého jídla v Martinově metodě
+        all.forEach(function (it) {
+          if (it.food.cat === 'protein' && it.grams < 30) it.grams = 30;
+        });
       }
-      capPass(); // [fix 2026-07-14] stropy hned po škálování — jinak kontrola sytosti dne
-                 // viděla nadstropové porce a den po ořezu tiše podstřelil i o 20 %
-      // bílkovinný základ jídla nesmí zdegenerovat na ozdobu (křížové škálování ho umí
-      // stlačit) — drž aspoň 30 g; je to páteř každého jídla v Martinově metodě
-      all.forEach(function (it) {
-        if (it.food.cat === 'protein' && it.grams < 30) it.grams = 30;
-      });
     }
     runScale();
 
