@@ -54,8 +54,10 @@ Deno.serve(async (req: Request) => {
   }
 
   const esc = (s: string) => /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  // Conversion Time BEZ offsetu (jen "YYYY-MM-DD HH:MM:SS"); TZ urcuje hlavicka
+  // Parameters:TimeZone=+0000. Dvoji urceni zony (offset +00:00 + hlavicka) Google odmita.
   const fmt = (iso: string) =>
-    new Date(iso).toISOString().slice(0, 19).replace("T", " ") + "+00:00";
+    new Date(iso).toISOString().slice(0, 19).replace("T", " ");
 
   const lines: string[] = [
     "Parameters:TimeZone=+0000",
