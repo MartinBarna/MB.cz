@@ -71,7 +71,11 @@
       // [fix 2026-07-22] Cviky, které v NÁZVU předepisují gumu nebo TRX, do režimů „tělo"
       // a „jednoručky" nepatří vůbec — uživatel to náčiní neuvedl a „dřep s gumou" bez gumy
       // je prostě jiný cvik. (Nezávislé na equip datech, kde má guma/TRX často i 'telo'.)
-      if ((equipMode === 'telo' || equipMode === 'cinky') && /guma|trx/.test(e.id)) return false;
+      // [fix 2026-07-26] Filtruje se podle POLE `equip`, ne podle názvu. Regex `/guma|trx/`
+      // nad id propouštěl `drep-s-gumou`, `kliky-s-gumou` a `pritahy-gumy`, protože v id je
+      // „gumou" a „gumy", ne „guma". Do plánu „jen vlastní tělo" se tak dostaly přítahy
+      // s gumou. ⛔ Táž oprava je v appce (`src/engine/workout-gen.ts`).
+      if ((equipMode === 'telo' || equipMode === 'cinky') && e.equip.some(function (x) { return x === 'guma' || x === 'trx'; })) return false;
       if (equipMode === 'telo') return e.equip.indexOf('telo') !== -1;
       if (equipMode === 'cinky') {
         // Režim „jednoručky/doma" — jen náčiní, které reálně máš (tělo + činky + kettlebell).
@@ -247,8 +251,13 @@
       });
     });
     out.sort(function (a, b) {
-      if (a.primary !== b.primary) return a.primary ? -1 : 1;              // primární = ubraná série se projeví celá
-      if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;    // doplňkový cvik dřív než hlavní
+      // [fix 2026-07-26] Doplňkový cvik se ubírá PRVNÍ, i před primárním. Martin:
+      // „hlavní komplexní cviky jsou priorita, izolované doplněk."
+      // Dřív bylo pořadí obrácené kvůli rychlosti (u primárního se ubraná série projeví
+      // celá), takže se ubíralo rumunskému mrtvému tahu a hip thrustu, zatímco výpony
+      // na konci dne si držely plný počet. ⛔ Táž oprava je v appce.
+      if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;
+      if (a.primary !== b.primary) return a.primary ? -1 : 1;              // pak primární
       if (a.breadth !== b.breadth) return a.breadth - b.breadth;           // úzký cvik = míň vedlejších škod
       return (b.di - a.di) || (b.ei - a.ei);                               // pozdější v týdnu dřív
     });
