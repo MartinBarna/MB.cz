@@ -93,7 +93,13 @@
       var sub = list.filter(function (f) { return prefer.test(f.id); });
       if (sub.length) list = sub;
     }
-    return list[(seed % list.length + list.length) % list.length];
+    // [fix 2026-07-26] Seed se před výběrem rozptýlí. Databáze je řazená abecedně a seedy
+    // chodí malé (1, 2, 3…), takže prosté `seed % délka` sahalo pořád na začátek abecedy.
+    // Grok při testu vypsal: „silný sklon k potravinám na začátku abecedy: Angrešt,
+    // Ančovička, Aronie, Arašídy, Anglická slanina, Bambusové výhonky."
+    // Knuthův multiplikativní hash rozprostře i sousední seedy po celé nabídce. Výběr
+    // zůstává deterministický. ⛔ Stejná oprava je v appce, hlídá `parita:jidelnicek`.
+    return list[((seed * 2654435761) >>> 0) % list.length];
   }
 
   // ---- 2) Sestav den ----
