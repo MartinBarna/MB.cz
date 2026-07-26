@@ -112,14 +112,30 @@
     // volnější cíle. Když libový kandidát není (úzké filtry), spadne to zpět na celou nabídku.
     var leanOnly = targets.fat / Math.max(1, targets.protein) < 0.5;
     function isLean(f) { return f.per100.f <= Math.max(3, (f.per100.p || 0) * 0.4); }
+    // [fix 2026-07-26] ROTACE bilkovinnych zdroju pres den + denni strop na jednu potravinu.
+    // Nalez z testu appky: vegetarian v deficitu dostal 780 g vajecneho bilku za den (asi
+    // 24 kusu) a v tydennim nakupu 200 ks. Cisla pritom sedela na gram.
+    // Priciny: `leanOnly` (deficit) zuzi nabidku na libove zdroje a bez masa a ryb v ni
+    // zbyde prakticky jen bilek. Strop 260 g platil na JIDLO, ne na den, takze pet jidel
+    // znamenalo az 1300 g teze potraviny.
+    // ⛔ Stejna oprava je v appce (src/engine/meal-gen.ts), oba generatory se musi chovat
+    // stejne. Hlida to `npm run parita:generatory` v repu appky.
+    var pouziteProt = {};
+    function jesteNebyl(list) {
+      var cerstve = list.filter(function (f) { return !pouziteProt[f.id]; });
+      return cerstve.length ? cerstve : list;
+    }
     function pickProt(s, prefer) {
       if (leanOnly) {
-        var leanDb = db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); });
+        var leanDb = jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); }));
         var p = pick(leanDb, 'protein', s, prefer) || pick(leanDb, 'dairy', s, prefer);
         if (p) return p;
       }
-      return pick(db, 'protein', s, prefer) || pick(db, 'dairy', s, prefer);
+      var cely = jesteNebyl(db);
+      return pick(cely, 'protein', s, prefer) || pick(cely, 'dairy', s, prefer);
     }
+    var gramyDnes = {};
+    var DENNI_STROP_G = 400;
     // [fix 2026-07-22] totéž pro přílohy: velká DB má i tučné sacharidové zdroje (opékané
     // brambory, plněné těstoviny, saláty s majonézou). Při napjatém tukovém rozpočtu ber
     // přílohy do 4 g tuku/100 g (rýže, brambory, těstoviny…); jinak by skrytý tuk přetekl.
@@ -156,7 +172,15 @@
       if (prot) {
         var pg = round((mProt / (prot.per100.p || 1)) * 100, 10);
         pg = Math.min(pg, prot.cat === 'protein' ? 260 : 300);
-        items.push({ food: prot, grams: Math.max(30, pg) });
+        // Denni strop: co uz dnes z teto potraviny padlo, se odecte. Bez toho jde strop
+        // na jidlo obejit tim, ze se taz potravina da do vsech peti jidel.
+        var zbyva = Math.max(0, DENNI_STROP_G - (gramyDnes[prot.id] || 0));
+        pg = Math.min(pg, zbyva);
+        if (pg >= 30) {
+          gramyDnes[prot.id] = (gramyDnes[prot.id] || 0) + pg;
+          pouziteProt[prot.id] = true;
+          items.push({ food: prot, grams: pg });
+        }
       }
       // 2) sacharidová příloha (ne u poslední menší svačiny)
       if (!isSnack || i === 0) {
