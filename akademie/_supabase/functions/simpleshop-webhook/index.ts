@@ -263,6 +263,11 @@ Deno.serve(async (req: Request) => {
 
   // Kdo koupi Academy -> odemkni i appku Tvuj Coach (externi endpoint appky, paruje podle e-mailu).
   // Best-effort: nikdy neshodi nakup. Vysledek (granted|pending) loguje do tvujcoach_grants (prehled + mereni aktivace).
+  // ⚠️ tier "ai_basic" = VIP verze APPKY na JEDEN ROK od udeleni (delku resi SQL grant_app_access,
+  // migrace 0077 v repu appky, vetveni podle source). Do 26. 7. 2026 se posilalo "diamond", coz je
+  // uroven Martinova ONLINE KOUCINKU (navic one_on_one a voice) a Academy ho neprodava.
+  // Kdyz se tady meni tier nebo delka, meni se i texty na webu a v mailech (ceny 249/499 jsou
+  // v email_templates natvrdo) — checklist `tvujcoach-cenik-zmena-checklist` v pameti.
   if (product === "academy") {
     try {
       const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
@@ -271,7 +276,7 @@ Deno.serve(async (req: Request) => {
       if (gsec) {
         const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
           method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-          body: JSON.stringify({ email, action: "grant", tier: "diamond", source: "academy-nakup", academy_order_id: pick(body, ["order_id", "order_number", "number", "id"]) || null }),
+          body: JSON.stringify({ email, action: "grant", tier: "ai_basic", source: "academy-nakup", academy_order_id: pick(body, ["order_id", "order_number", "number", "id"]) || null }),
         }).catch(() => null);
         // deno-lint-ignore no-explicit-any
         if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }

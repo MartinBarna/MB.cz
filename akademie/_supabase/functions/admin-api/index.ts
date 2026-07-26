@@ -416,7 +416,11 @@ Deno.serve(async (req) => {
           if (gsec) {
             const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
               method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-              body: JSON.stringify({ email, action: act, tier: "diamond", source: "admin-panel" }),
+              // ai_basic = VIP verze APPKY, kterou Academy opravdu prodava (na rok, viz migrace
+              // 0077 v repu appky). Do 26. 7. 2026 se tu posilalo "diamond", coz je uroven
+              // Martinova ONLINE KOUCINKU (navic one_on_one a voice) a Academy ho neobsahuje.
+              // ⛔ Koucinkovi klienti maji vlastni volani niz (client_invite) a diamond si drzi.
+              body: JSON.stringify({ email, action: act, tier: "ai_basic", source: "admin-panel" }),
             }).catch(() => null);
             // deno-lint-ignore no-explicit-any
             if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
