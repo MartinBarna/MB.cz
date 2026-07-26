@@ -99,6 +99,15 @@
           <option value="pokrocily" selected>Pokročilý</option>
           <option value="zkuseny">Zkušený</option>
         </select></div>
+        <div style="grid-column:1/-1">
+          <label>Když se plán nevejde do objemu, co ubrat první?</label>
+          <select id="orezStyl">
+            <option value="velke" selected>Držet velké cviky (doporučeno)</option>
+            <option value="pestrost">Držet pestrost</option>
+            <option value="auto">Nech to na generátoru</option>
+          </select>
+          <p class="orez-vysvetleni" id="orezVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
+        </div>
         <div><label>Cíl</label><select id="goal">
           <option value="svaly" selected>Svaly (hypertrofie)</option>
           <option value="sila">Síla</option>
@@ -148,7 +157,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260721b"></script>
-  <script src="/assets/workout-gen.js?v=20260726b"></script>
+  <script src="/assets/workout-gen.js?v=20260726c"></script>
   <script>
   (function(){
     var DB=null, seed=0, logoData='', lastPlan=null, restoring=false;
@@ -185,7 +194,21 @@
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
     loadBrand();
 
-    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed }; }
+    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed, orezStyl:($('orezStyl')?$('orezStyl').value:'velke') }; }
+    // Vysvětlení přepínače stylu ořezu. Text je psaný pro laika: první věta říká, co se
+    // stane, druhá komu to sedí. Schválně bez zkratek MEV, MAV a MRV a bez toho, aby byla
+    // některá volba označená za správnou.
+    var OREZ_TEXT = {
+      velke: 'Dřepy, mrtvé tahy, benče a shyby zůstanou celé. Ubírá se u doplňkových cviků, a když nestačí, jeden se z plánu vypustí. Sedí většině, velké cviky nesou nejvíc výsledku za nejmíň času.',
+      pestrost: 'Zůstane co nejvíc různých cviků v plánu, i za cenu toho, že velký cvik bude mít o sérii dvě míň. Sedí tomu, koho baví střídat a nechce mít tréninky pořád stejné.',
+      auto: 'Generátor se rozhodne podle toho, co plán nejmíň rozhodí. Někdy ubere velkému cviku, jindy doplňku. Sedí tomu, komu je to jedno a chce mít pokoj.'
+    };
+    function obnovOrezText(){
+      var el = $('orezVysvetleni'), sel = $('orezStyl');
+      if (el && sel) el.textContent = OREZ_TEXT[sel.value] || '';
+    }
+    if ($('orezStyl')) { $('orezStyl').addEventListener('change', obnovOrezText); obnovOrezText(); }
+
 
     function render(plan){
       var html='';
