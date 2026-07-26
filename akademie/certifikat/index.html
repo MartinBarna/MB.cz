@@ -15,7 +15,7 @@
   .toolbar button, .toolbar a { background:var(--gold); color:#161616; border:none; font-weight:700; padding:11px 24px; border-radius:50px; cursor:pointer; text-decoration:none; font-size:.95rem; }
   .toolbar a.ghost { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.4); }
 
-  /* Certifikát — A4 na šířku */
+  /* Certifikát - A4 na šířku */
   .cert { width:297mm; max-width:100%; aspect-ratio:297/210; background:linear-gradient(160deg,#171109,#0f0b07); position:relative; overflow:hidden;
     box-shadow:0 30px 80px rgba(0,0,0,.5); padding:14mm; display:flex; flex-direction:column; }
   .cert::before { content:""; position:absolute; inset:6mm; border:2px solid var(--gold); border-radius:6px; pointer-events:none; }
@@ -93,7 +93,7 @@
       set('cName', q.get('jmeno'));
       set('cId', q.get('id'));
       set('cDate', q.get('datum'));
-      if (q.get('jmeno')) document.title = 'Certifikát — ' + q.get('jmeno') + ' — Barna Academy';
+      if (q.get('jmeno')) document.title = 'Certifikát - ' + q.get('jmeno') + ' - Barna Academy';
 
       // LinkedIn: oficiální Add-to-Profile (sekce Certifikace) + sdílení příspěvku.
       // Sdílená URL = veřejné ověření pravosti (?id= spustí kontrolu automaticky).
@@ -105,7 +105,7 @@
       var issueYear = dm ? dm[3] : ((certId.match(/\d{4}/) || [''])[0]);
       document.getElementById('liAdd').addEventListener('click', function () {
         var u = 'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME'
-          + '&name=' + encodeURIComponent('Barna Academy — kompletní vzdělávací program (výživa, trénink, vedení klienta)')
+          + '&name=' + encodeURIComponent('Barna Academy - kompletní vzdělávací program (výživa, trénink, vedení klienta)')
           + '&organizationName=' + encodeURIComponent('Barna Academy')
           + (issueYear ? '&issueYear=' + issueYear : '')
           + (issueMonth ? '&issueMonth=' + issueMonth : '')
@@ -114,8 +114,8 @@
         window.open(u, '_blank', 'noopener');
       });
       document.getElementById('liShare').addEventListener('click', function () {
-        var text = '🎓 Mám za sebou Barna Academy — kompletní vzdělávací program pro trenéry a výživové poradce od Martina Barny.\n\n'
-          + 'Výživa, trénink, anatomie i psychologie chování — zakončeno praktickými úkoly a závěrečnou zkouškou.\n\n'
+        var text = '🎓 Mám za sebou Barna Academy - kompletní vzdělávací program pro trenéry a výživové poradce od Martina Barny.\n\n'
+          + 'Výživa, trénink, anatomie i psychologie chování - zakončeno praktickými úkoly a závěrečnou zkouškou.\n\n'
           + 'Pravost certifikátu si můžeš ověřit tady: ' + verifyUrl;
         function openShare() {
           window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(verifyUrl), '_blank', 'noopener');

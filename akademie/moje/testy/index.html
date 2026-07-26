@@ -103,7 +103,7 @@
             '<div class="tools">' +
               '<button data-t="' + idx + '">Zobrazit odpovědi ▾</button>' +
               (r.passed ? '<button class="issue" data-u="' + esc(r.user_id) + '" data-e="' + esc(r.email || '') + '" data-n="' + esc(r.full_name || '') + '" data-i="' + idx + '">🏅 Schválit pečeť + vystavit certifikát</button>' : '') +
-              (mail ? '<a href="mailto:' + esc(mail) + '?subject=' + encodeURIComponent('Barna Academy — tvůj závěrečný test') + '">✉️ Napsat studentovi</a>' : '') +
+              (mail ? '<a href="mailto:' + esc(mail) + '?subject=' + encodeURIComponent('Barna Academy - tvůj závěrečný test') + '">✉️ Napsat studentovi</a>' : '') +
               '<span class="issres" id="issres' + idx + '" style="font-size:.82rem;color:var(--muted-2);"></span>' +
             '</div>' +
             '<div class="detail">' + (detail || '<p style="color:var(--muted)">Bez detailu odpovědí.</p>') + '</div>' +
@@ -138,7 +138,7 @@
 
       if (!window.BA) { gate.style.display = ''; gate.textContent = 'Jen pro přihlášeného kouče.'; return; }
       window.BA.ready.then(function () {
-        if (window.BA.mode !== 'live') { gate.style.display = ''; gate.textContent = 'Ukázkový režim — přehled běží jen naostro.'; return; }
+        if (window.BA.mode !== 'live') { gate.style.display = ''; gate.textContent = 'Ukázkový režim - přehled běží jen naostro.'; return; }
         window.BA.getUser().then(function (u) {
           if (!u) { location.href = '/akademie/prihlaseni/?next=' + encodeURIComponent('/akademie/moje/testy/'); return; }
           if (ADMINS.indexOf((u.email || '').toLowerCase()) === -1) { gate.style.display = ''; gate.textContent = 'Tento přehled je jen pro kouče.'; return; }

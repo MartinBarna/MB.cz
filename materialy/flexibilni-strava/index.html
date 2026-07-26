@@ -164,7 +164,7 @@
     if (tag){ document.getElementById('brandTag').textContent = tag; }
     if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
     if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
-    document.title = (name||'Martin Barna') + ' — Flexibilní stravování';
+    document.title = (name||'Martin Barna') + ' - Flexibilní stravování';
   })();
   document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
 </script>

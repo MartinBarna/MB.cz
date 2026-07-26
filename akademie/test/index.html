@@ -149,7 +149,7 @@
       $('submitBtn').style.display='none'; $('retryBtn').style.display='inline-block';
       // ulož pokus (skóre + konkrétní odpovědi) pro učitelský detail v adminu
       if (window.BA){ try { window.BA.saveTestAttempt({ score:score, total:QUESTIONS.length, passed:passed, full_name:name,
-        answers: QUESTIONS.map(function(q,i){ return { q:q.q, a:(answered[i]!=null?q.o[answered[i]]:'—'), correct:q.o[q.c], ok:answered[i]===q.c }; }) }); } catch(e){} }
+        answers: QUESTIONS.map(function(q,i){ return { q:q.q, a:(answered[i]!=null?q.o[answered[i]]:'-'), correct:q.o[q.c], ok:answered[i]===q.c }; }) }); } catch(e){} }
       if (passed){
         try{ localStorage.setItem('ba_cert_name', name); }catch(e){}
         res.innerHTML='<div class="big">'+score+' / '+QUESTIONS.length+' ✅</div>'

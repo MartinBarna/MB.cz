@@ -180,7 +180,7 @@
     }
     function renderOverview(){
       var h='<div class="modgrid">';
-      // Přílohy jako PRVNÍ dlaždice — před Modulem 1.
+      // Přílohy jako PRVNÍ dlaždice - před Modulem 1.
       h+='<a class="modcard matcard-tile" href="#materialy"><div class="top"><span class="ix">📎</span><h3>Přílohy ke stažení</h3></div><div class="mfoot"><span class="cnt">'+MATS.length+' materiálů</span><span class="pct">'+(FREEMODE?'🔒 v ceně kurzu':'Otevřít →')+'</span></div></a>';
       SECS.forEach(function(s,i){ var d=secDone(s), t=s.videos.length, p=t?Math.round(d/t*100):0;
         h+='<a class="modcard'+(t&&d===t?' done-all':'')+'" href="#s'+(i+1)+'"><div class="top"><span class="ix">'+(i+1)+'</span><h3>'+s.name+'</h3></div><div class="mbar"><span style="width:'+p+'%"></span></div><div class="mfoot"><span class="cnt">'+t+' videí</span><span class="pct">'+p+' %</span></div></a>';
@@ -215,7 +215,7 @@
       try{ window.scrollTo(0,0); }catch(e){}
     }
     function firstUnfinished(){ for(var i=0;i<SECS.length;i++){ if(secDone(SECS[i])<SECS[i].videos.length) return i; } return -1; }
-    // #34 „Pokračovat, kde jsi skončil" — první nedokončené a přístupné video (deep-link do lekce).
+    // #34 „Pokračovat, kde jsi skončil" - první nedokončené a přístupné video (deep-link do lekce).
     function nextVideo(){
       for(var i=0;i<SECS.length;i++){ var vs=SECS[i].videos;
         for(var j=0;j<vs.length;j++){ var v=vs[j]; if(!DONE[v.lid] && (!FREEMODE || v.free)) return v; } }

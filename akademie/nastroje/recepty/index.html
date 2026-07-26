@@ -107,7 +107,7 @@
       <details class="brandbox" id="brandbox">
         <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">projeví se ve výstupu i v PDF (uloží se ti, sdílí se s generátory)</span></summary>
         <div class="grid" style="margin-top:12px;">
-          <div><label>Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková — výživa"></div>
+          <div><label>Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková - výživa"></div>
           <div><label>Akcentová barva</label>
             <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="accent" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;">
             <span id="swatches" style="display:flex;gap:7px;flex-wrap:wrap"></span></div>
@@ -165,7 +165,7 @@
     PRESETS.forEach(function(hex){ var b=document.createElement('button'); b.type='button'; b.className='swatch'; b.style.background=hex; b.dataset.hex=hex.toLowerCase(); b.title=hex; b.addEventListener('click',function(){ $('accent').value=hex; syncSwatch(); saveBrand(); }); sc.appendChild(b); });
     function syncSwatch(){ var v=($('accent').value||'').toLowerCase(); Array.prototype.forEach.call(sc.children,function(b){ b.classList.toggle('on', b.dataset.hex===v); }); }
     $('accent').addEventListener('input',function(){ syncSwatch(); saveBrand(); });
-    $('logofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) — zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('logoclear').style.display=''; saveBrand(); }; r.readAsDataURL(f); });
+    $('logofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) - zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('logoclear').style.display=''; saveBrand(); }; r.readAsDataURL(f); });
     $('logoclear').addEventListener('click',function(){ logoData=''; $('logofile').value=''; $('logoclear').style.display='none'; saveBrand(); });
 
     Promise.all([
@@ -193,7 +193,7 @@
       $('steps').innerHTML=(r.steps||[]).map(function(s){ return '<li>'+esc(s)+'</li>'; }).join('');
       $('tip').innerHTML=r.tip?('💡 <b style="color:#cfc6b8">Tip:</b> '+esc(r.tip)):'';
       $('tip').style.display=r.tip?'':'none';
-      // branding (trenér) — sdílený ba_trainer_brand
+      // branding (trenér) - sdílený ba_trainer_brand
       var c=$('client').value.trim(), tn=$('trainer').value.trim(), ac=$('accent').value, lg=(logoData||$('logo').value.trim()), ct=$('contact').value.trim();
       saveBrand();
       var bh=$('brandhead');

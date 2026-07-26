@@ -55,7 +55,7 @@
     <div id="app" style="display:none;">
       <div class="ci-loyal">
         <div class="big" id="loyPct">0 %</div>
-        <div class="lt">Tvoje věrnostní sleva<br><b id="loyStreak">—</b></div>
+        <div class="lt">Tvoje věrnostní sleva<br><b id="loyStreak">-</b></div>
       </div>
 
       <form id="ciForm" autocomplete="off">
@@ -171,7 +171,7 @@
           if (c.plan_adherence_pct != null) { adh.value = c.plan_adherence_pct; adhVal.textContent = c.plan_adherence_pct; }
           setPill('energy', c.energy); setPill('sleep', c.sleep); setPill('cravings', c.cravings);
           if (c.workouts_planned != null) document.getElementById('wPlan').value = c.workouts_planned;
-          flash('Hodnoty z minula natažené — uprav váhu a odešli.', true);
+          flash('Hodnoty z minula natažené - uprav váhu a odešli.', true);
         });
       });
       function flash(text, ok) {
@@ -211,7 +211,7 @@
           window.BA.getLoyalty().then(paintLoyalty);
           window.BA.getCheckins(1).then(function (arr) {
             var c = arr[0];
-            if (c && c.iso_week === window.BA._isoWeek()) { prefill(c); flash('Tento týden už máš check-in vyplněný — klidně ho uprav a ulož znovu.', true); }
+            if (c && c.iso_week === window.BA._isoWeek()) { prefill(c); flash('Tento týden už máš check-in vyplněný - klidně ho uprav a ulož znovu.', true); }
           });
         });
       });

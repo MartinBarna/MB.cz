@@ -172,7 +172,7 @@
     </style>
     <a class="freebanner" id="freeBanner" href="/akademie/objednavka/">
       <span class="fb-txt"><b>🎁 Tohle je ochutnávka Academy zdarma</b><span><span>Odemčené máš ukázkové lekce napříč moduly. Vidíš, co tě uvnitř čeká. Celou Academy (256 lekcí, certifikát, videokurz v ceně) odemkneš jednorázově za <b>8 900 Kč</b> (zaváděcí cena; po naplnění kapacity bude 12 900 Kč). Doživotně.</span></span></span>
-      <span class="fb-cta">Odemknout celou Academy — 8 900 Kč →</span>
+      <span class="fb-cta">Odemknout celou Academy - 8 900 Kč →</span>
     </a>
 
     <style>
@@ -222,7 +222,7 @@
          /sign-in?email=<jeho e-mail>&from=academy (párování appky jede JEN přes e-mail). -->
     <a class="bonus" id="tvujCoachCard" href="https://coach.martinbarna.cz/?from=academy" target="_blank" rel="noopener" style="text-decoration:none;border-color:rgba(235,177,44,.55);background:linear-gradient(145deg,rgba(235,177,44,.12),rgba(235,177,44,.03));">
       <span class="bico">📱</span>
-      <div class="btxt"><b>Tvůj Coach — appka (web, běží i na mobilu)<span class="litebadge" style="display:inline-block;background:#EBB12C;color:#161616;border:none;">🎁 NOVÉ · VIP na rok</span></b><span>Kompletní koučovací appka: trackuješ jídlo i trénink, appka ti <b>sama upravuje cíle</b> podle týdenních check-inů, <b>vyfotíš jídlo a spočítá makra</b>, a máš v ní <b>AI kouče</b>. <b style="color:var(--gold-soft)">Přihlas se do appky stejným e-mailem jako do Academy</b> — rok VIP verze máš v ceně členství, hodnota 4 990 Kč.</span></div>
+      <div class="btxt"><b>Tvůj Coach - appka (web, běží i na mobilu)<span class="litebadge" style="display:inline-block;background:#EBB12C;color:#161616;border:none;">🎁 NOVÉ · VIP na rok</span></b><span>Kompletní koučovací appka: trackuješ jídlo i trénink, appka ti <b>sama upravuje cíle</b> podle týdenních check-inů, <b>vyfotíš jídlo a spočítá makra</b>, a máš v ní <b>AI kouče</b>. <b style="color:var(--gold-soft)">Přihlas se do appky stejným e-mailem jako do Academy</b> - rok VIP verze máš v ceně členství, hodnota 4 990 Kč.</span></div>
       <span class="bbtn">Otevřít appku →</span>
     </a>
 
@@ -469,7 +469,7 @@
         { id:"m13-l9", t:"Management únavy a kdy zařadit deload", available:true, href:"/akademie/studium/m13-l9/" },
         { id:"m13-l10", t:"Realistická očekávání: kolik svalu lze nabrat za rok bez látek", available:true, href:"/akademie/studium/m13-l10/" }
       ]},
-      { t:"Suplementace podle důkazů", d:"Co funguje, co je hype a v jakých dávkách — podle ISSN", lessons:[
+      { t:"Suplementace podle důkazů", d:"Co funguje, co je hype a v jakých dávkách - podle ISSN", lessons:[
         { id:"m14-l1", t:"Jak vůbec hodnotit doplněk: hierarchie důkazů ISSN", available:true, href:"/akademie/studium/m14-l1/" },
         { id:"m14-l2", t:"Kreatin: nejlépe prozkoumaný doplněk a jak ho dávkovat", available:true, href:"/akademie/studium/m14-l2/" },
         { id:"m14-l3", t:"Kofein: výkon, dávkování a timing", available:true, href:"/akademie/studium/m14-l3/" },
@@ -618,11 +618,11 @@
           if(btn) btn.textContent='Otevřít generátor →';
         }
       });
-      // Databáze cviků je zdarma i pro nečleny — badge „Zdarma" ukaž jen v ochutnávce (člen ho nepotřebuje).
+      // Databáze cviků je zdarma i pro nečleny - badge „Zdarma" ukaž jen v ochutnávce (člen ho nepotřebuje).
       var cb=document.getElementById('cvikyBadge'); if(cb) cb.style.display = free ? 'inline-block' : 'none';
       var sub=document.getElementById('toolsSub');
       if(sub) sub.textContent = free
-        ? 'Lite verze máš zdarma — vyzkoušej, jak fungují. Plná verze (celý týden, rebrand pod tvým jménem, export do PDF) se odemkne s Academy.'
+        ? 'Lite verze máš zdarma - vyzkoušej, jak fungují. Plná verze (celý týden, rebrand pod tvým jménem, export do PDF) se odemkne s Academy.'
         : 'Generátory, které ti spočítají a poskládají plán na míru klienta. Dáš mu ho pod svým jménem.';
     }
     // ----- Sekční nástěnka (#33): přehled modulů → fokus na jeden modul -----
@@ -684,7 +684,7 @@
       try { window.scrollTo(0,0); } catch(e){}
     }
     function firstUnfinished(){ for (var i=0;i<CURRICULUM.length;i++){ var c=mc(CURRICULUM[i]); if (c.a && c.d<c.a) return i; } return -1; }
-    // #34 „Pokračovat, kde jsi skončil" — najdi přesně první dostupnou nedokončenou lekci (ne jen modul).
+    // #34 „Pokračovat, kde jsi skončil" - najdi přesně první dostupnou nedokončenou lekci (ne jen modul).
     function nextLesson(){
       for (var i=0;i<CURRICULUM.length;i++){
         var ls=CURRICULUM[i].lessons;
@@ -746,7 +746,7 @@
       var html='';
       if(streak>=1){
         var wl = streak===1?'týden':(streak>=2&&streak<=4?'týdny':'týdnů');
-        html+='<div class="hpill streak"><span class="hic">🔥</span><span><span class="ht">'+streak+' '+wl+' v řadě</span><span class="hs">Učíš se pravidelně — jen tak dál</span></span></div>';
+        html+='<div class="hpill streak"><span class="hic">🔥</span><span><span class="ht">'+streak+' '+wl+' v řadě</span><span class="hs">Učíš se pravidelně - jen tak dál</span></span></div>';
       }
       html+='<div class="hpill goal'+(goalDone?' done':'')+'"><span class="hic">'+(goalDone?'✅':'🎯')+'</span><span><span class="ht">'+(goalDone?'Týdenní cíl splněn!':'Tento týden: '+thisWeek+' / '+WEEKLY_GOAL+' lekce')+'</span><span class="hs">'+(goalDone?'Super, '+thisWeek+' '+plu(thisWeek,'lekce','lekce','lekcí')+' tento týden':'Cíl: '+WEEKLY_GOAL+' lekce týdně')+'</span><span class="hbar"><span style="width:'+goalPct+'%"></span></span></span></div>';
       el.innerHTML=html; el.style.display='flex';
@@ -849,7 +849,7 @@
       if (window.BA){
         window.BA.ready.then(function(){
           if (window.BA.mode === 'live'){
-            // NEPŘESMĚROVÁVÁME nepřihlášené/nekoupivší — místo toho ukážeme
+            // NEPŘESMĚROVÁVÁME nepřihlášené/nekoupivší - místo toho ukážeme
             // free ochutnávku (FREEMODE) a upsell na koupi celé Academy.
             window.BA.getUser().then(function(u){
               if(u && u.user_metadata){ SHARE_NAME = u.user_metadata.full_name || u.user_metadata.name || ''; }
@@ -859,7 +859,7 @@
                 FREEMODE = true; applyFreeMode();
                 var _tcAnon=document.getElementById('tvujCoachCard'); if(_tcAnon){ _tcAnon.setAttribute('href','/pro-vas/'); _tcAnon.removeAttribute('target'); }
                 var n0 = document.getElementById('modeNote');
-                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 256 lekcím odemkni celou Academy.';
+                if (n0) n0.textContent = 'Tohle je ochutnávka Academy zdarma - pár lekcí máš otevřených. Pro přístup ke všem 256 lekcím odemkni celou Academy.';
                 try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
                 return;
               }
@@ -874,7 +874,7 @@
                 var note = document.getElementById('modeNote');
                 if (note) note.textContent = has
                   ? 'Tvůj pokrok se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Tohle je ochutnávka Academy zdarma — pár lekcí máš otevřených. Pro přístup ke všem 256 lekcím odemkni celou Academy.';
+                  : 'Tohle je ochutnávka Academy zdarma - pár lekcí máš otevřených. Pro přístup ke všem 256 lekcím odemkni celou Academy.';
                 window.BA.getProgress().then(render);
               });
             });
@@ -888,13 +888,13 @@
         try { render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); } catch(e){ render({}); }
       }
     }
-    // #34 vyhledávání — při psaní přepni na výsledky, po smazání zpět na přehled/modul
+    // #34 vyhledávání - při psaní přepni na výsledky, po smazání zpět na přehled/modul
     (function(){
       var sb=document.getElementById('lessonSearch'); if(!sb) return;
       sb.addEventListener('input', function(){ route(); });
     })();
     boot();
-    // re-scroll na statickou kotvu (např. #nastroje) — moduly se renderují asynchronně a kotvu odsunou;
+    // re-scroll na statickou kotvu (např. #nastroje) - moduly se renderují asynchronně a kotvu odsunou;
     // hashe routeru (#mN, #prehled) nechává být
     var _hashScrolled = false;
     function hashScrollOnce(){
@@ -904,7 +904,7 @@
       _hashScrolled = true;
       var go = function(){ t.scrollIntoView(); };
       if(document.visibilityState === 'hidden'){
-        // tab na pozadí (ctrl+klik) — Chrome scroll potlačí, doscrolluj po zviditelnění
+        // tab na pozadí (ctrl+klik) - Chrome scroll potlačí, doscrolluj po zviditelnění
         document.addEventListener('visibilitychange', function h(){
           if(document.visibilityState === 'visible'){ document.removeEventListener('visibilitychange', h); setTimeout(go, 50); }
         });

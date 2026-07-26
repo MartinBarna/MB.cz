@@ -77,7 +77,7 @@
         '<span class="m"><b>'+r(m.fiber)+' g</b><span>Vláknina</span></span>';
     }
     function render(items){
-      if(!items.length){ $('results').innerHTML='<div class="empty">Nic jsem nenašel — zkus jiný název nebo obecnější slovo.</div>'; $('count').textContent=''; return; }
+      if(!items.length){ $('results').innerHTML='<div class="empty">Nic jsem nenašel - zkus jiný název nebo obecnější slovo.</div>'; $('count').textContent=''; return; }
       $('count').textContent=items.length+(items.length===1?' výsledek':(items.length<5?' výsledky':' výsledků'));
       $('results').innerHTML=items.map(function(it,i){
         var sv=it.serving_g||100;

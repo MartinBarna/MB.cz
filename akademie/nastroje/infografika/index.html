@@ -202,7 +202,7 @@
     PRESETS.forEach(function(hex){ var b=document.createElement('button'); b.type='button'; b.dataset.hex=hex.toLowerCase(); b.title=hex; b.style.cssText='width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;background:'+hex; b.addEventListener('click',function(){ $('brAccent').value=hex; syncSwatch(); draw(); }); sc.appendChild(b); });
     function syncSwatch(){ var v=($('brAccent').value||'').toLowerCase(); Array.prototype.forEach.call(sc.children,function(b){ var on=b.dataset.hex===v; b.style.borderColor=on?'#fff':'rgba(255,255,255,.25)'; b.style.boxShadow=on?'0 0 0 2px #EBB12C':'none'; }); }
     $('brAccent').addEventListener('input', syncSwatch);
-    $('brLogofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) — zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('brLogoclear').style.display=''; draw(); }; r.readAsDataURL(f); });
+    $('brLogofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) - zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('brLogoclear').style.display=''; draw(); }; r.readAsDataURL(f); });
     $('brLogoclear').addEventListener('click',function(){ logoData=''; $('brLogofile').value=''; $('brLogoclear').style.display='none'; draw(); });
 
     $('download').addEventListener('click', function(){

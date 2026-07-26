@@ -153,10 +153,10 @@
 
       <!-- stat karty -->
       <div class="kcards" id="stats" style="display:none;">
-        <div class="kcard"><h3>Aktuální váha</h3><div class="kstat" id="stW">—</div><p id="stWsub"></p></div>
-        <div class="kcard"><h3>Celková změna</h3><div class="kstat" id="stD">—</div><p id="stDsub"></p></div>
-        <div class="kcard"><h3>Odeslané reporty</h3><div class="kstat" id="stN">—</div><p id="stNsub"></p></div>
-        <div class="kcard"><h3>Dodržení plánu Ø</h3><div class="kstat" id="stA">—</div><p>průměr ze všech reportů (1–5)</p></div>
+        <div class="kcard"><h3>Aktuální váha</h3><div class="kstat" id="stW">-</div><p id="stWsub"></p></div>
+        <div class="kcard"><h3>Celková změna</h3><div class="kstat" id="stD">-</div><p id="stDsub"></p></div>
+        <div class="kcard"><h3>Odeslané reporty</h3><div class="kstat" id="stN">-</div><p id="stNsub"></p></div>
+        <div class="kcard"><h3>Dodržení plánu Ø</h3><div class="kstat" id="stA">-</div><p>průměr ze všech reportů (1–5)</p></div>
       </div>
 
       <!-- reference (ukáže se po 8+ reportech) -->
@@ -280,7 +280,7 @@
   var VIEW = [], periodWeeks = 0; // 0 = vše
 
   function el(id){ return document.getElementById(id); }
-  function czk(n){ return (n==null||n==="") ? "—" : String(n).replace(".", ","); }
+  function czk(n){ return (n==null||n==="") ? "-" : String(n).replace(".", ","); }
   // Prazdna hodnota MUSI vratit null, ne 0. Driv se testovalo String(v) misto normalizovaneho
   // retezce, takze String(null) bylo "null" (neprazdne) a toNum(null) vracelo 0. Dusledek:
   // chybejici vaha se pocitala jako nula kilo ("Celkova zmena +73,8 kg") a v grafu se kreslila
@@ -361,7 +361,7 @@
   var GOLD = "#EBB12C", GOLD2 = "#F6CD63", MUT = "#8F8A99", GRID = "rgba(255,255,255,.08)";
   function svgOpen(w, h){ return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" height="' + h + '" style="display:block;min-width:280px;">'; }
   function lineChart(elId, seriesList, opts){
-    // seriesList: [{name, color, pts:[{x:date,y:num}]}] — sdílená časová osa dle reportů
+    // seriesList: [{name, color, pts:[{x:date,y:num}]}] - sdílená časová osa dle reportů
     var w = 460, h = 190, pl = 44, pr = 10, pt = 14, pb = 26;
     var all = [];
     seriesList.forEach(function(s){ s.pts.forEach(function(p){ if(p.y!=null) all.push(p.y); }); });
@@ -575,17 +575,17 @@
     for(var fi = 0; fi < reports.length; fi++){ if(toNum(reports[fi].weight) != null){ firstW = reports[fi]; break; } }
     el("reportCtaSub").textContent = "Poslední report: " + dateCz(last.report_date) + ". Kopie přijde tobě i Martinovi.";
     var lw = toNum(last.weight), fw = firstW ? toNum(firstW.weight) : null;
-    el("stW").innerHTML = lw != null ? czk(lw) + ' <span class="u">kg</span>' : "—";
+    el("stW").innerHTML = lw != null ? czk(lw) + ' <span class="u">kg</span>' : "-";
     el("stWsub").textContent = "z reportu " + dateCz(last.report_date);
     if(lw != null && fw != null && firstW !== last){
       var d = Math.round((lw - fw) * 10) / 10;
       el("stD").innerHTML = '<span class="' + (d <= 0 ? "pos" : "neg") + '" style="font-size:1.7rem;">' + (d > 0 ? "+" : d < 0 ? "−" : "") + czk(Math.abs(d)) + ' kg</span>';
       el("stDsub").textContent = "od začátku (" + dateCz(firstW.report_date) + ": " + czk(fw) + " kg)";
-    } else { el("stD").textContent = "—"; el("stDsub").textContent = "doplní se, až pošleš váhu podruhé"; }
+    } else { el("stD").textContent = "-"; el("stDsub").textContent = "doplní se, až pošleš váhu podruhé"; }
     el("stN").textContent = reports.length;
     el("stNsub").textContent = "první " + dateCz(first.report_date);
     var adh = reports.map(function(r){ return toNum((r.scales || {}).dodrzeni); }).filter(function(v){ return v != null; });
-    el("stA").innerHTML = adh.length ? czk(Math.round(adh.reduce(function(a, b){ return a + b; }, 0) / adh.length * 10) / 10) + ' <span class="u">/ 5</span>' : "—";
+    el("stA").innerHTML = adh.length ? czk(Math.round(adh.reduce(function(a, b){ return a + b; }, 0) / adh.length * 10) / 10) + ' <span class="u">/ 5</span>' : "-";
 
     // VIEW = okno, které klient zrovna sleduje. Grafy, historie i shrnutí bloku jedou nad ním.
     VIEW = filtrObdobi(reports);
@@ -629,7 +629,7 @@
       var out = "<tr><td style='white-space:nowrap;'>" + datum + "</td><td class='r'>" + czk(toNum(r.weight)) + "</td><td class='r'>" + czk(toNum(m.pas))
         + "</td><td class='r'>" + czk(toNum(nu.kcal)) + delta("kcal", nu.kcal, false, tgR)
         + "</td><td class='r'>" + czk(toNum(nu.protein)) + delta("protein", nu.protein, true, tgR)
-        + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "—") + delta("kroky", ac.kroky, true, tgR)
+        + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "-") + delta("kroky", ac.kroky, true, tgR)
         + "</td><td class='r'>" + czk(toNum(ac.fitko)) + delta("treninky", ac.fitko, true, tgR)
         + "</td><td class='r'>" + czk(sportMin) + delta("sport_min", sportMin, true, tgR)
         + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
@@ -666,7 +666,7 @@
   }
 
   function renderFotky(){
-    // fotky z reportů (podsložka email/fotky/) — SELECT policy vlastní složky je pokrývá
+    // fotky z reportů (podsložka email/fotky/) - SELECT policy vlastní složky je pokrývá
     storageList(myEmail + "/fotky").then(function(list){
       var imgs = (list || []).filter(function(o){
         if(!(o && o.name && o.id)) return false;
@@ -710,7 +710,7 @@
 
   // ---------- wizard engine ----------
   var W = { steps: [], i: 0, ans: {}, id: "", onDone: null };
-  var WFILES = []; // vybrané fotky (File objekty — do draftu se ukládat nedají, přiloží se při odeslání)
+  var WFILES = []; // vybrané fotky (File objekty - do draftu se ukládat nedají, přiloží se při odeslání)
   var SUBPATHS = []; // už nahrané cesty fotek (přežijí retry odeslání po chybě)
   function draftKey(){ return "mb_wiz_" + W.id + "_" + myEmail; }
   function wOpen(id, steps, onDone){
@@ -892,7 +892,7 @@
         }
         if(!cur) continue;
         var joined = row.map(function(c){ return String(c == null ? "" : c).toLowerCase(); }).join(" ");
-        if(/\b(pr[ůu]měr|prumer)\b/.test(joined)){ cur = null; continue; } // týdenní souhrn za posledním dnem — nepatří žádnému dni
+        if(/\b(pr[ůu]měr|prumer)\b/.test(joined)){ cur = null; continue; } // týdenní souhrn za posledním dnem - nepatří žádnému dni
         var e = ktNum(row[col.e]);
         if(e == null) continue;
         var vals = { kcal: col.kj ? e / 4.184 : e, p: ktNum(row[col.p]) || 0,
@@ -901,7 +901,7 @@
         if(/celkem|součet|soucet|total/.test(joined)){
           // Celkem UVNITŘ dne ≈ součet položek; výrazně vyšší číslo = souhrn za celé období → nepatří dni
           if(cur.kcal > 0 && vals.kcal > cur.kcal * 1.25 + 150){ cur = null; continue; }
-          cur.celkem = vals; cur = null; // Celkem uzavírá den — souhrnné řádky za ním se ignorují
+          cur.celkem = vals; cur = null; // Celkem uzavírá den - souhrnné řádky za ním se ignorují
         }
         else { cur.kcal += vals.kcal; cur.p += vals.p; cur.c += vals.c; cur.f += vals.f; cur.fib += vals.fib; }
       }
@@ -946,7 +946,7 @@
   }
 
   // pořadí = priorita: prvních 7 sledujeme každý týden (Martin: + hrudník, zadek, stehna), zbytek volitelně
-  // pořadí = priorita (Martin): hlavních 6 sledujeme každý týden — zaberou celé tělo
+  // pořadí = priorita (Martin): hlavních 6 sledujeme každý týden - zaberou celé tělo
   // (gynoidní i androidní typ); zbytek volitelný bonus pro fitnessáky.
   var MIRY = [["prsa", "Hruď"], ["pas", "Pas"], ["boky", "Boky"], ["zadek", "Zadek"], ["p_stehno", "P stehno"], ["l_stehno", "L stehno"], ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["krk", "Krk"], ["pupik", "Pupík"]];
   var MIRY_MAIN = 6;
@@ -1037,7 +1037,7 @@
         },
         collect: function(a){
           var nt = document.getElementById("f_noTrack");
-          if(nt && nt.checked){ a._noTrack = true; a.nutrition = null; return; } // strava nezapsána — do reportu jde férové "nezapisoval/a"
+          if(nt && nt.checked){ a._noTrack = true; a.nutrition = null; return; } // strava nezapsána - do reportu jde férové "nezapisoval/a"
           a._noTrack = false;
           var kcal = reqNum("f_kcal", "průměrné kalorie", 400, 8000); if(kcal.err) return kcal.err;
           var prot = reqNum("f_prot", "průměrné bílkoviny", 10, 500); if(prot.err) return prot.err;
@@ -1137,8 +1137,8 @@
       { id: "souhrn", title: "Souhrn: zkontroluj a odešli", help: "Po odeslání přijde hezky zpracovaný report mailem tobě i Martinovi.",
         render: function(a){
           function g(title, gotoId, rows){
-            var filled = rows.filter(function(r){ return r[1] !== "" && r[1] != null && r[1] !== "—"; });
-            return '<div class="sumg"><h4>' + title + ' <button type="button" data-goto="' + gotoId + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>—</span><span></span></div>') + "</div>";
+            var filled = rows.filter(function(r){ return r[1] !== "" && r[1] != null && r[1] !== "-"; });
+            return '<div class="sumg"><h4>' + title + ' <button type="button" data-goto="' + gotoId + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>-</span><span></span></div>') + "</div>";
           }
           var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {}, p = a.plan || {};
           return g("Váha", "vaha", [["Týdenní průměr", czk(a.weight) + " kg"]])
@@ -1229,7 +1229,7 @@
             ["Poznámka", "pozn", [["Vzkaz", a.poznamka]]]];
           return groups.map(function(grp){
             var filled = grp[2].filter(function(r){ return r[1] !== "" && r[1] != null; });
-            return '<div class="sumg"><h4>' + grp[0] + ' <button type="button" data-goto="' + grp[1] + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>—</span><span></span></div>') + "</div>";
+            return '<div class="sumg"><h4>' + grp[0] + ' <button type="button" data-goto="' + grp[1] + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>-</span><span></span></div>') + "</div>";
           }).join("");
         },
         mount: mountGoto,

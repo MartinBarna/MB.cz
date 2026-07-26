@@ -198,7 +198,7 @@
     function fmt(n){return Math.round(n);}
     function macros(m){return 'B '+fmt(m.p)+' · S '+fmt(m.c)+' · T '+fmt(m.f)+' · Vl '+fmt(m.fib)+' · '+fmt(m.kcal)+' kcal';}
 
-    // Předvyplnění z kalkulačky (?sex=&age=&w=&h=&act=&goal=) — po načtení DB se rovnou vygeneruje
+    // Předvyplnění z kalkulačky (?sex=&age=&w=&h=&act=&goal=) - po načtení DB se rovnou vygeneruje
     var fromCalc=false;
     try{
       var qp=new URLSearchParams(location.search);

@@ -219,7 +219,7 @@
           window.scrollTo({ top: 0, behavior: 'smooth' });
         })
         .catch(function () {
-          // síťová chyba — přesto poděkujeme (UX), data zkusí znovu příště
+          // síťová chyba - přesto poděkujeme (UX), data zkusí znovu příště
           form.style.display = 'none'; thanks.style.display = 'block';
           var rt = document.getElementById('recoText'); if (rt) rt.textContent = 'Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc. Maličkosti dělají výsledek. 💪';
           window.scrollTo({ top: 0, behavior: 'smooth' });

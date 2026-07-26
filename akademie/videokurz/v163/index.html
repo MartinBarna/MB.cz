@@ -49,7 +49,7 @@
     <div class="done-row">
       <button class="btn" id="doneBtn">Označit jako zhlédnuté ✓</button>
       <a class="btn ghost" href="/akademie/videokurz/">Zpět na přehled</a>
-      <label class="autop" title="Po dohrání videa se automaticky pustí další lekce — ideální na poslech se sluchátky."><input type="checkbox" id="autoNext" checked> Po dohrání pustit další lekci ▶</label>
+      <label class="autop" title="Po dohrání videa se automaticky pustí další lekce - ideální na poslech se sluchátky."><input type="checkbox" id="autoNext" checked> Po dohrání pustit další lekci ▶</label>
     </div>
 
     <div class="nav"><a class="btn ghost" href="/akademie/videokurz/v162/">← Předchozí</a><a class="btn ghost" href="/akademie/videokurz/v164/">Další →</a></div>
@@ -79,7 +79,7 @@
       }
     }
     function attachFree(){ ytApi(function(){ if(!player && document.getElementById('ytframe')) player=new YT.Player('ytframe',{events:{onStateChange:onState}}); }); }
-    // Placené video: YouTube ID není v HTML — načte se z DB manifestu až po ověření přístupu (RLS).
+    // Placené video: YouTube ID není v HTML - načte se z DB manifestu až po ověření přístupu (RLS).
     function mountVideo(){
       if (FREE || !window.BA || typeof window.BA.getVideoId !== 'function') return;
       window.BA.getVideoId(SLUG).then(function(id){
@@ -97,7 +97,7 @@
     }
 
     // --- autoplay řetěz: konec videa -> označ zhlédnuté -> pusť další lekci v témže přehrávači
-    // (bez načtení stránky, takže mobil nezablokuje zvuk — funguje i se sluchátky v kapse) ---
+    // (bez načtení stránky, takže mobil nezablokuje zvuk - funguje i se sluchátky v kapse) ---
     function onState(e){
       if (e.data !== 0) return;   // 0 = ENDED
       markDone(true);
@@ -113,7 +113,7 @@
       loadChain(function(ch){
         var i=-1; for(var k=0;k<ch.length;k++){ if(ch[k].s===SLUG){ i=k; break; } }
         var nx = i>=0 ? ch[i+1] : null;
-        if (!nx){ endNote('🎉 Gratuluji — dojel[a] jsi na konec kurzu!'); return; }
+        if (!nx){ endNote('🎉 Gratuluji - dojel[a] jsi na konec kurzu!'); return; }
         if (GUEST && !nx.f){ upsellOverlay(); return; }
         window.BA.getVideoId(nx.s).then(function(id){
           if (!id){ if(!nx.f) upsellOverlay(); return; }
@@ -125,7 +125,7 @@
       SLUG = nx.s; LID = 'vk-' + nx.s;
       state.done = !!prog[LID]; paint();
       var h=document.querySelector('h1'); if(h) h.textContent=nx.t;
-      document.title = nx.t + ' — Videokurz · Martin Barna';
+      document.title = nx.t + ' - Videokurz · Martin Barna';
       var cr=document.querySelector('.crumb'); if(cr) cr.textContent='Video ' + (idx+1) + ' / ' + TOTAL;
       try{ history.replaceState(null, '', '/akademie/videokurz/' + nx.s + '/'); }catch(e){}
       var nav=document.querySelector('.nav');

@@ -176,7 +176,7 @@
       document.getElementById('backToLogin').addEventListener('click', function (e) { e.preventDefault(); setMode('in'); });
 
       // Deep-link z onboarding e-mailu: ?tab=up otevře rovnou registraci,
-      // ?email= předvyplní e-mail přístupu (zabrání nejčastější chybě — registraci jiným e-mailem).
+      // ?email= předvyplní e-mail přístupu (zabrání nejčastější chybě - registraci jiným e-mailem).
       var qTab = qs('tab');
       if (qTab === 'up' || qTab === 'register') setMode('up');
       var qEmail = qs('email');
@@ -184,7 +184,7 @@
         emailEl.value = qEmail;
         var hint = document.createElement('p');
         hint.style.cssText = 'font-size:.8rem;color:#F6CD63;margin:6px 0 0;line-height:1.45;';
-        hint.innerHTML = '✓ Tohle je e-mail tvého přístupu k videokurzu — nech ho tak, jak je.';
+        hint.innerHTML = '✓ Tohle je e-mail tvého přístupu k videokurzu - nech ho tak, jak je.';
         emailEl.parentNode.insertBefore(hint, emailEl.nextSibling);
       }
 
@@ -196,7 +196,7 @@
         if (s.indexOf('invalid login') >= 0 || s.indexOf('invalid credentials') >= 0)
           return 'E-mail nebo heslo nesedí. Zkontroluj překlepy. Hlásíš se poprvé po koupi? Dej „Vytvořit účet".';
         if (s.indexOf('already registered') >= 0 || s.indexOf('already been registered') >= 0 || s.indexOf('user already') >= 0)
-          return 'Na tenhle e-mail už účet existuje — přepni nahoře na „Přihlásit se" a zadej heslo.';
+          return 'Na tenhle e-mail už účet existuje - přepni nahoře na „Přihlásit se" a zadej heslo.';
         if (s.indexOf('password') >= 0 && s.indexOf('6') >= 0)
           return 'Heslo musí mít aspoň 6 znaků.';
         if (s.indexOf('not confirmed') >= 0 || s.indexOf('email not confirmed') >= 0)
@@ -258,7 +258,7 @@
               // (Kdyby bylo ověření e-mailu zapnuté, getUser vrátí null → ukáž instrukci k přihlášení.)
               window.BA.getUser().then(function (u) {
                 if (u) { show('ok', jeKlient ? '✅ Hotovo! Otevírám tvoji sekci…' : '✅ Hotovo! Otevírám tvoje studium…'); location.href = nextUrl; }
-                else { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď klikni na „Přihlásit se" — e-mail a heslo už máš vyplněné.'); }
+                else { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď klikni na „Přihlásit se" - e-mail a heslo už máš vyplněné.'); }
               }).catch(function () { submit.disabled = false; setMode('in'); show('ok', 'Účet vytvořen. Teď se přihlas stejným e-mailem a heslem.'); });
             });
           } else {
