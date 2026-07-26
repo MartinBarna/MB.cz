@@ -239,7 +239,8 @@
   function entryMuscles(pe) { return musclesFromDb(pe.ex.muscle, pe.ex.pattern, pe.ex.name); }
 
   // všechny cviky plánu, které daný sval trénují; seřazené „nejméně prioritní první"
-  function contributorsFor(days, muscle) {
+  function contributorsFor(days, muscle, styl) {
+    styl = styl || 'velke';
     var out = [];
     days.forEach(function (d, di) {
       d.exercises.forEach(function (pe, ei) {
@@ -251,13 +252,18 @@
       });
     });
     out.sort(function (a, b) {
-      // [fix 2026-07-26] Doplňkový cvik se ubírá PRVNÍ, i před primárním. Martin:
-      // „hlavní komplexní cviky jsou priorita, izolované doplněk."
-      // Dřív bylo pořadí obrácené kvůli rychlosti (u primárního se ubraná série projeví
-      // celá), takže se ubíralo rumunskému mrtvému tahu a hip thrustu, zatímco výpony
-      // na konci dne si držely plný počet. ⛔ Táž oprava je v appce.
-      if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;
-      if (a.primary !== b.primary) return a.primary ? -1 : 1;              // pak primární
+      // [fix 2026-07-26] Pořadí kandidátů na ubrání série řídí uživatelský přepínač.
+      // `velke` (výchozí): doplňkový cvik se ubírá PRVNÍ, i před primárním, aby páteřní
+      //   cvik dne zůstal celý. Martin: „hlavní komplexní cviky jsou priorita."
+      // `auto` a `pestrost`: primární první, u něj se ubraná série projeví celá.
+      // ⛔ Táž logika je v appce (`src/engine/workout-gen.ts`).
+      if (styl === 'velke') {
+        if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;
+        if (a.primary !== b.primary) return a.primary ? -1 : 1;
+      } else {
+        if (a.primary !== b.primary) return a.primary ? -1 : 1;
+        if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;
+      }
       if (a.breadth !== b.breadth) return a.breadth - b.breadth;           // úzký cvik = míň vedlejších škod
       return (b.di - a.di) || (b.ei - a.ei);                               // pozdější v týdnu dřív
     });
@@ -271,8 +277,10 @@
   }
 
   // krajní pojistka: když už nejde ubrat série (všechno na minimu), vyhoď nejméně prioritní cvik
-  function dropWeakest(days, muscle) {
-    var cands = contributorsFor(days, muscle).sort(function (a, b) {
+  function dropWeakest(days, muscle, styl) {
+    // `pestrost` drží počet různých cviků za každou cenu, takže se nevyhazuje.
+    if (styl === 'pestrost') return false;
+    var cands = contributorsFor(days, muscle, styl).sort(function (a, b) {
       if (!!a.pe.access !== !!b.pe.access) return a.pe.access ? -1 : 1;
       return (b.di - a.di) || (b.ei - a.ei);
     });
@@ -285,13 +293,22 @@
     return false;
   }
 
-  function autoBalance(days) {
+  function autoBalance(days, styl) {
+    styl = styl || 'velke';
     for (var guard = 0; guard < 400; guard++) {
       var over = planVolume({ days: days }).filter(function (v) { return v.sets > v.lm.mrv; });
       if (!over.length) return;
       over.sort(function (a, b) { return (b.sets - b.lm.mrv) - (a.sets - a.lm.mrv); });
-      var cands = contributorsFor(days, over[0].muscle).filter(function (c) { return c.pe.sets > MIN_SETS; });
-      if (!cands.length) { if (!dropWeakest(days, over[0].muscle)) return; continue; }
+      var vsichni = contributorsFor(days, over[0].muscle, styl).filter(function (c) { return c.pe.sets > MIN_SETS; });
+      // [fix 2026-07-26] `velke` hlavní cviky CHRÁNÍ, nejen upřednostňuje doplňky.
+      // Samotné přeřazení pořadí měnilo výsledek jen ve 4 z 54 zadání, takže by z přepínače
+      // byla ozdoba. Teď se u `velke` sahá na hlavní cvik až nakonec: nejdřív doplňky,
+      // pak vyhození celého doplňkového cviku, a teprve pak hlavní.
+      // ⛔ Táž logika je v appce (`src/engine/workout-gen.ts`).
+      var cands = styl === 'velke' ? vsichni.filter(function (c) { return c.pe.access; }) : vsichni;
+      if (!cands.length && styl === 'velke' && dropWeakest(days, over[0].muscle, styl)) continue;
+      if (!cands.length) cands = vsichni;
+      if (!cands.length) { if (!dropWeakest(days, over[0].muscle, styl)) return; continue; }
       var base = countBelowMev(days), done = false;
       for (var i = 0; i < cands.length; i++) {
         cands[i].pe.sets--;
@@ -471,7 +488,7 @@
     });
 
     // objem srovnej PŘED vrácením plánu — uživatel nemá dostat plán, o kterém mu tabulka rovnou řekne „uber"
-    autoBalance(days);
+    autoBalance(days, opts.orezStyl || 'velke');
 
     return { days: days, goal: g, rest: g.rest, pool: pool, equip: opts.equip, poolSize: pool.length, coverage: planCoverage({ days: days }), volume: planVolume({ days: days }) };
   }
