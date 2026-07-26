@@ -61,6 +61,9 @@
     return [['Push (tlaky)', T.PUSH], ['Pull (tahy)', T.PULL], ['Nohy', T.LEGS], ['Horní partie', T.UPPER], ['Dolní partie', T.LOWER]];
   }
 
+  /** Název, který přímo předepisuje náčiní. Bez něj je to jiný cvik, ne lehčí varianta. */
+  var NAZEV_NACINI = / s (kettlebell|kettleb|[čc]inkou|[čc]inkami|gumou|gumami|trx|kladkou|osou|jednoru[čc]k)/i;
+
   function filterDb(db, opts) {
     var maxLvl = LEVELS[opts.level] || 1;
     var loc = opts.location;             // 'fitko'|'doma'|'hriste'
@@ -76,6 +79,10 @@
       // „gumou" a „gumy", ne „guma". Do plánu „jen vlastní tělo" se tak dostaly přítahy
       // s gumou. ⛔ Táž oprava je v appce (`src/engine/workout-gen.ts`).
       if ((equipMode === 'telo' || equipMode === 'cinky') && e.equip.some(function (x) { return x === 'guma' || x === 'trx'; })) return false;
+      // [fix 2026-07-26, druhá vrstva] Filtr podle pole `equip` nestačí. „Sumo dřep
+      // s kettlebellem" má v datech i `telo`, takže projde do režimu „jen vlastní tělo",
+      // a bez kettlebellu je to jiný cvik. ⛔ Táž oprava je v appce.
+      if (equipMode === 'telo' && NAZEV_NACINI.test(e.name)) return false;
       if (equipMode === 'telo') return e.equip.indexOf('telo') !== -1;
       if (equipMode === 'cinky') {
         // Režim „jednoručky/doma" — jen náčiní, které reálně máš (tělo + činky + kettlebell).
