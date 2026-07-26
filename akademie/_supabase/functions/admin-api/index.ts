@@ -417,9 +417,10 @@ Deno.serve(async (req) => {
             const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
               method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
               // ai_basic = VIP verze APPKY, kterou Academy opravdu prodava (na rok, viz migrace
-              // 0077 v repu appky). Do 26. 7. 2026 se tu posilalo "diamond", coz je uroven
-              // Martinova ONLINE KOUCINKU (navic one_on_one a voice) a Academy ho neobsahuje.
-              // ⛔ Koucinkovi klienti maji vlastni volani niz (client_invite) a diamond si drzi.
+              // 0077 v repu appky, ktera vetvi delku pristupu podle `source`).
+              // Do 26. 7. 2026 se tu posilalo "diamond". `gold` a `diamond` jsou v appce
+              // prazdne nalepky: jejich jedine vlastni priznaky `one_on_one` a `voice` nejsou
+              // v kodu appky nikde pouzity. Realne davaly totez co ai_basic, jen bez limitu.
               body: JSON.stringify({ email, action: act, tier: "ai_basic", source: "admin-panel" }),
             }).catch(() => null);
             // deno-lint-ignore no-explicit-any
@@ -1105,7 +1106,14 @@ Deno.serve(async (req) => {
       const { data: ent } = await admin.from("entitlements").select("id,active").eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
       if (!ent) await admin.from("entitlements").insert({ email, product: "coaching", active: true, source: "admin-klient-invite" });
       else if (!ent.active) await admin.from("entitlements").update({ active: true }).eq("id", ent.id);
-      // Koučink klient dostává i appku Tvůj Coach — stejný kanál jako Academy nákup (best-effort).
+      // Koučink klient dostává i appku Tvůj Coach (best-effort, pozvánku to nikdy neshodí).
+      // ⚠️ Online koučink a appka jsou DVĚ ODDĚLENÉ SLUŽBY. Jediná spojitost je tahle:
+      // klientská sekce webu dává přístup i do appky. Nemíchat je dohromady.
+      // tier "ai_basic" = VIP verze appky. Do 26. 7. 2026 se posílalo "diamond", ale
+      // `gold` a `diamond` jsou v appce prázdné nálepky: jejich jediné vlastní příznaky
+      // `one_on_one` a `voice` nejsou v kódu appky nikde použity, takže reálně dávají totéž.
+      // ⛔ Roční limit se koučinkových klientů NETÝKÁ, ten je jen pro Academy (migrace 0077
+      // v repu appky větví podle `source`). Proto tady musí zůstat `source: "koucink-klient"`.
       try {
         const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
         const gsec = gs?.value ? String(gs.value) : "";
@@ -1113,7 +1121,7 @@ Deno.serve(async (req) => {
         if (gsec) {
           const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
             method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-            body: JSON.stringify({ email, action: "grant", tier: "diamond", source: "koucink-klient" }),
+            body: JSON.stringify({ email, action: "grant", tier: "ai_basic", source: "koucink-klient" }),
           }).catch(() => null);
           // deno-lint-ignore no-explicit-any
           if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
@@ -1184,6 +1192,95 @@ Deno.serve(async (req) => {
         body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html, reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"], ...(attachments ? { attachments } : {}) }),
       });
       return json({ ok: rs.status === 200, mail_status: rs.status, priloha: !!attachments });
+    }
+
+    // Ukonceni koucinku: odebere klientskou sekci, s ni i appku Tvuj Coach, a posle mail
+    // s nabidkou, jak muze pokracovat bez koucinku (Martin 26. 7. 2026).
+    // Protejsek k `client_invite`. Do te doby sla pozvanka udelit, ale odebrat nesla nijak.
+    if (action === "client_offboard") {
+      const email = low(body.email);
+      const osloveni = String(body.osloveni ?? "").trim().slice(0, 60);
+      const tiche = body.tiche === true; // odchod bez mailu (Martin nekdy jen uklizi seznam)
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+
+      // 1) Vypnout koucinkovy narok. Tim zmizi z klientske sekce i ze `clients_list`.
+      const { data: ent } = await admin.from("entitlements").select("id,active")
+        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      if (!ent) return json({ error: "neni_klient" }, 404);
+      if (ent.active) await admin.from("entitlements").update({ active: false }).eq("id", ent.id);
+
+      // 2) ⛔ POJISTKA: kdo ma zaplacenou Academy, o appku PRIJIT NESMI.
+      // `revoke_app_access` v appce rusi vsechny granty se zdrojem 'academy' bez Stripe,
+      // a ten zdroj se do `subscriptions` zapisuje natvrdo i u koucinku. Bez tehle kontroly
+      // by odchod z koucinku sebral appku i cloveku, ktery si Academy koupil za 8 900 Kc.
+      // (Kdo si TC plati sam pres Stripe, je v poradku, toho `revoke_app_access` nesaha.)
+      const { data: academyEnt } = await admin.from("entitlements").select("active")
+        .eq("email", email).eq("product", "academy").limit(1).maybeSingle();
+      const maAcademy = !!academyEnt?.active;
+
+      let gres = maAcademy ? "preskoceno-ma-academy" : "no-secret";
+      if (!maAcademy) {
+        try {
+          const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+          const gsec = gs?.value ? String(gs.value) : "";
+          if (gsec) {
+            const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+              method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+              body: JSON.stringify({ email, action: "revoke", source: "koucink-konec" }),
+            }).catch(() => null);
+            // deno-lint-ignore no-explicit-any
+            if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
+            else gres = r ? "http-" + r.status : "fetch-fail";
+          }
+        } catch { /* best-effort, odchod z koucinku to neshodi */ }
+      }
+      try {
+        await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: gres, source: "koucink-konec" });
+      } catch { /* log je bonus */ }
+
+      if (tiche) return json({ ok: true, mail: "preskocen", tvujcoach: gres, mel_academy: maAcademy });
+
+      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+      if (!RESEND_KEY) return json({ ok: true, mail: "no_resend", tvujcoach: gres, mel_academy: maAcademy });
+
+      const ahoj = osloveni ? "Ahoj " + escd(osloveni) + "," : "Ahoj,";
+      const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
+      const btn = (href: string, label: string) =>
+        `<p style='margin:4px 0 18px'><a href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
+      const btn2 = (href: string, label: string) =>
+        `<p style='margin:4px 0 18px'><a href='${href}' style='display:inline-block;border:1px solid #EBB12C;color:#EBB12C;text-decoration:none;padding:12px 25px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
+
+      const subject = "Díky za spolupráci. Co dál s appkou a s tvými daty";
+      // ⚠️ Zamerne tu NENI zadna cena. Ceny appky (249 a 499) uz jsou natvrdo v sablonach
+      // v `email_templates` a pri zmene cenika se na ne zapomina. Tenhle mail proto odkazuje
+      // na cenik, at nevznika dalsi misto, ktere se musi hlidat.
+      const inner = p(ahoj) +
+        p("naše spolupráce v koučinku právě končí. Děkuju ti za ni a za práci, kterou jsi do toho dal. Chci, abys věděl, co se teď děje s tvým přístupem, ať tě nic nepřekvapí.") +
+        `<p style='margin:0 0 8px'><strong>Co se změnilo:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
+        `<li style='margin:0 0 7px'>Klientská sekce na webu se zavřela.</li>` +
+        `<li style='margin:0 0 7px'>S ní skončil i tvůj přístup do appky <strong>Tvůj Coach</strong>, protože jsi ji měl v ceně koučinku.</li>` +
+        `<li style='margin:0 0 7px'>Účet ani zapsaná data ti nemažu. Zůstávají tam, kdyby ses vrátil.</li></ul>` +
+        p("Jestli sis na appku zvykl, můžeš v ní pokračovat i bez koučinku. Je to stejná appka, jen si ji platíš sám:") +
+        btn("https://martinbarna.cz/tvuj-coach/?utm_source=mail&utm_medium=offboard&utm_campaign=koucink-konec", "Pokračovat v Tvůj Coach") +
+        p("A jestli chceš rozumět tomu, co jsme spolu dělali, a umět si to řídit sám, je tu <strong>Barna Academy</strong>. Je to celý systém výživy a tréninku vysvětlený od základů. Jako můj klient na ni máš <strong>slevu 20 % s kódem KLIENT20</strong> a ten ti platí dál.") +
+        btn2("https://martinbarna.cz/akademie/?utm_source=mail&utm_medium=offboard&utm_campaign=koucink-konec", "Mrknout na Academy") +
+        p("Kdybys chtěl někdy koučink znovu, ozvi se. Vím, kde jsme skončili.") +
+        p("<strong>Be Effective!</strong><br>Martin");
+
+      const html = `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='color-scheme' content='dark'></head><body style='margin:0;padding:0;background:#0C0B10'>` +
+        `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10'><tr><td align='center' style='padding:16px'>` +
+        `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
+        `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
+        inner +
+        `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · osobní mail pro klienty koučinku</div>` +
+        `</td></tr></table></td></tr></table></body></html>`;
+
+      const rs = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html, reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"] }),
+      });
+      return json({ ok: true, mail_status: rs.status, tvujcoach: gres, mel_academy: maAcademy });
     }
 
     return json({ error: "unknown_action" }, 400);

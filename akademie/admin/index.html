@@ -409,7 +409,7 @@
           var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
           var days=lastMs?Math.floor((now-lastMs)/86400000):null;
           var warn=(days==null||days>8)?' <b style="color:#F6CD63">⚠️</b>':'';
-          return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
+          return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
             +'<td>'+esc(r.name||'—')+'</td>'
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
             +'<td>'+(r.has_intake?'✅':'<span class="muted">—</span>')+'</td>'
@@ -420,7 +420,7 @@
           ? '<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Reportů</th><th>Poslední report</th></tr></thead><tbody>'+trs+'</tbody></table></div>'
           : '<p class="muted" style="padding:.6rem 0;">Zatím žádní klienti — pozvi prvního formulářem níže.</p>';
         $('kliBody').querySelectorAll('[data-kli]').forEach(function(a){
-          a.addEventListener('click',function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli')); });
+          a.addEventListener('click',function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli'),a.getAttribute('data-kliname')); });
         });
         $('kli').style.display='';
         loadSharedDocs();
@@ -485,9 +485,9 @@
       }).catch(function(){ b.disabled=false; b.textContent=origTxt; toast('Chyba spojení'); });
     });
     // ---- detail klienta ----
-    var KDET={email:'',data:null};
-    function openKlient(email){
-      KDET.email=email; KDET.data=null;
+    var KDET={email:'',name:'',data:null};
+    function openKlient(email,name){
+      KDET.email=email; KDET.name=name||''; KDET.data=null;
       $('kdet').classList.add('on'); $('kdetBody').innerHTML='<p class="muted">Načítám…</p>';
       api({action:'client_detail',email:email}).then(function(o){
         if(!o.j||!o.j.ok){ $('kdetBody').innerHTML='<p class="muted">Nepovedlo se načíst detail.</p>'; return; }
@@ -586,9 +586,34 @@
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📁 Dokumenty pro tohoto klienta</h4>'
         +((d.docs||[]).length?(d.docs||[]).map(function(dc){ return '<p style="margin:.2rem 0;font-size:.85rem;"><a href="#" data-kdoc="'+esc(dc.path)+'" style="color:#F6CD63;">'+esc(dc.name)+'</a> <span class="muted">'+(dc.size?Math.max(1,Math.round(dc.size/1024))+' kB':'')+'</span> <a href="#" data-kdocdel="'+esc(dc.path)+'" style="color:#ff6b6b;text-decoration:none;">✕</a></p>'; }).join(''):'<p class="muted" style="font-size:.85rem;">Zatím nic.</p>')
         +'<div style="display:flex;gap:8px;align-items:center;margin:.5rem 0;"><input type="file" id="kdFile" style="font-size:.82rem;color:#b7ab9b;"><button class="mlogbtn" id="kdUp">Nahrát klientovi</button></div>';
+      // Ukončení koučinku. Zavře klientskou sekci, odebere appku Tvůj Coach a pošle mail
+      // s nabídkou, jak může pokračovat bez koučinku (TC předplatné, Academy s KLIENT20).
+      // Kdo má zaplacenou Academy, o appku nepřijde, to hlídá server.
+      h+='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🚪 Ukončení koučinku</h4>'
+        +'<div style="background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.28);border-radius:10px;padding:12px;">'
+        +'<p class="muted" style="margin:0 0 8px;font-size:.85rem;">Zavře klientskou sekci a odebere přístup do appky Tvůj Coach. Data a účet zůstávají, jde to kdykoli vrátit pozvánkou. Kdo má zaplacenou Academy, o appku nepřijde.</p>'
+        +'<label style="display:block;font-size:.78rem;color:#8F8A99;margin-bottom:8px;">Oslovení do mailu <span style="color:#6d6879;">(5. pád, např. Petře)</span>'
+        +'<input type="text" id="kdOffVok" value="'+esc(kliVok(KDET.name))+'" placeholder="nech prázdné pro obecné „Ahoj,“" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
+        +'<label style="display:block;font-size:.85rem;color:#cbbfae;cursor:pointer;margin-bottom:10px;"><input type="checkbox" id="kdOffTiche" style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">Tiše, bez mailu <span class="muted" style="font-size:.78rem;">(jen uklidit seznam)</span></label>'
+        +'<button class="mlogbtn" id="kdOffBtn" style="border-color:rgba(255,107,107,.5);color:#ff9b9b;">Ukončit koučink</button>'
+        +'</div>';
       $('kdetBody').innerHTML=h;
       // handlery
       $('kdCsv').addEventListener('click',function(e){ e.preventDefault(); exportKlientCsv(); });
+      $('kdOffBtn').addEventListener('click',function(){
+        var b=$('kdOffBtn'); if(b.disabled) return;
+        var vok=($('kdOffVok').value||'').trim(), tiche=$('kdOffTiche').checked;
+        var co=tiche?'BEZ mailu' : 'a HNED poslat mail s nabídkou Tvůj Coach a Academy (oslovení: „Ahoj '+(vok||'(bez jména)')+'")';
+        if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, odebere se přístup do appky Tvůj Coach, '+co+'.\n\nData ani účet se nemažou.')) return;
+        b.disabled=true; b.textContent='Ukončuji…';
+        api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche}).then(function(o){
+          if(o.j&&o.j.ok){
+            var pozn = o.j.mel_academy ? ' Appku si nechává, má zaplacenou Academy.' : '';
+            toast('🚪 Koučink ukončen.'+(tiche?'':' Mail odešel.')+pozn);
+            $('kdet').classList.remove('on'); loadKlienti();
+          } else { toast('Chyba: '+((o.j&&o.j.error)||o.status)); b.disabled=false; b.textContent='Ukončit koučink'; }
+        }).catch(function(){ toast('Chyba spojení'); b.disabled=false; b.textContent='Ukončit koučink'; });
+      });
       var kr=$('kdRemind'); if(kr) kr.addEventListener('change',function(){
         var on=kr.checked; kr.disabled=true;
         api({action:'client_remind_toggle',email:email,on:on}).then(function(o){
