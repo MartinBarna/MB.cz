@@ -414,11 +414,16 @@
     function loadKlienti(){
       api({action:'clients_list'}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('kli','kliBody'); return; }
-        var rows=o.j.rows||[], now=Date.now();
-        var trs=rows.map(function(r){
+        var vsechny=o.j.rows||[], now=Date.now();
+        // `clients_list` vraci i UKONCENE klienty (pole `active`). Delime je tady, ne v datech:
+        // Martin je chce mit dohledatelne, ne smazane, ale v hlavni tabulce prekazeji.
+        var rows=vsechny.filter(function(r){ return r.active!==false; });
+        var byvali=vsechny.filter(function(r){ return r.active===false; });
+        function radek(r, jeByvaly){
           var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
           var days=lastMs?Math.floor((now-lastMs)/86400000):null;
-          var warn=(days==null||days>8)?' <b style="color:#F6CD63">⚠️</b>':'';
+          // U byvaleho klienta varovani „dlouho neposlal report" nedava smysl, uz ho posilat nema.
+          var warn=(!jeByvaly&&(days==null||days>8))?' <b style="color:#F6CD63">⚠️</b>':'';
           return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
             +'<td>'+esc(r.name||'—')+'</td>'
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
@@ -426,10 +431,19 @@
             +'<td>'+kliApp(r.app)+'</td>'
             +'<td class="tcount">'+r.reports+'</td>'
             +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
-        }).join('');
-        $('kliBody').innerHTML = rows.length
-          ? '<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Reportů</th><th>Poslední report</th></tr></thead><tbody>'+trs+'</tbody></table></div>'
-          : '<p class="muted" style="padding:.6rem 0;">Zatím žádní klienti — pozvi prvního formulářem níže.</p>';
+        }
+        var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
+        var html = rows.length
+          ? '<div style="overflow-x:auto;"><table>'+HLAVICKA+'<tbody>'+rows.map(function(r){return radek(r,false);}).join('')+'</tbody></table></div>'
+          : '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti — pozvi prvního formulářem níže.</p>';
+        if(byvali.length){
+          html += '<details style="margin-top:1.1rem;">'
+            + '<summary style="cursor:pointer;color:#8F8A99;font-size:.92rem;">Bývalí klienti ('+byvali.length+') — koučink ukončen, data zůstávají</summary>'
+            + '<p class="muted" style="margin:.5rem 0 .6rem;font-size:.86rem;">Nechodí jim pondělní reporty ani upomínky. Reporty a poznámky se neztratily, klikni na e-mail. Když se vrátí, stačí ho znovu pozvat formulářem níž.</p>'
+            + '<div style="overflow-x:auto;opacity:.72;"><table>'+HLAVICKA+'<tbody>'+byvali.map(function(r){return radek(r,true);}).join('')+'</tbody></table></div>'
+            + '</details>';
+        }
+        $('kliBody').innerHTML = html;
         $('kliBody').querySelectorAll('[data-kli]').forEach(function(a){
           a.addEventListener('click',function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli'),a.getAttribute('data-kliname')); });
         });
@@ -619,6 +633,13 @@
         b.disabled=true; b.textContent='Ukončuji…';
         api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche}).then(function(o){
           if(o.j&&o.j.ok){
+            if(o.j.uz_ukoncen){
+              // Byvali klienti jsou od 27. 7. v seznamu videt a jdou otevrit, takze na uz
+              // ukoncenem klientovi jde tohle tlacitko zmacknout znovu. Server to zastavi
+              // a nic neposle; tady se to jen srozumitelne rekne.
+              toast('Tenhle klient už ukončený je, nic se neposlalo.');
+              $('kdet').classList.remove('on'); loadKlienti(); return;
+            }
             var pozn = o.j.mel_academy ? ' Appku si nechává, má zaplacenou Academy.' : '';
             toast('🚪 Koučink ukončen.'+(tiche?'':' Mail odešel.')+pozn);
             $('kdet').classList.remove('on'); loadKlienti();

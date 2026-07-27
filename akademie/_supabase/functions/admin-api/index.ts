@@ -974,9 +974,13 @@ Deno.serve(async (req) => {
         else { cur.count++; if (r.report_date > cur.last) cur.last = r.report_date; }
       }
       const intakeSet = new Set((intakes.data ?? []).map((i) => low(i.email)));
-      const rows = (ents.data ?? []).filter((e) => e.active).map((e) => {
+      // ⚠️ Dřív tu bylo `.filter((e) => e.active)`, takže ukončený klient ze seznamu
+      // ZMIZEL a nedal se dohledat. Martin 27. 7.: „zůstanou jejich data v databázi
+      // a půjde je dohledat." Vracíme proto i bývalé a rozlišuje je pole `active`;
+      // roztřídit je do dvou tabulek je věc UI, ne dat.
+      const rows = (ents.data ?? []).map((e) => {
         const k = low(e.email); const rep = repBy.get(k);
-        return { email: k, name: nameBy.get(k) ?? "", registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), app: "?" as string };
+        return { email: k, name: nameBy.get(k) ?? "", active: e.active === true, registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), app: "?" as string };
       }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
 
       // Stav appky Tvůj Coach. ⛔ NEBRAT z tabulky `tvujcoach_grants` — ta se zapisuje
@@ -1263,10 +1267,13 @@ Deno.serve(async (req) => {
       const { data: ent } = await admin.from("entitlements").select("active")
         .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
       if (!ent) return json({ error: "neni_klient" }, 404);
-      if (ent.active) {
-        await admin.from("entitlements").update({ active: false })
-          .eq("email", email).eq("product", "coaching");
-      }
+      // ⛔ Uz ukonceny klient: skoncit HNED. Od 27. 7. jsou byvali klienti v seznamu
+      // videt a jsou proklikatelni, takze na nich jde tohle tlacitko zmacknout znovu.
+      // Bez teto pojistky by se jim rozlouckovy mail poslal PODRUHE a znovu by se
+      // volalo odebrani appky. Zadna cast teto akce neni idempotentni sama o sobe.
+      if (!ent.active) return json({ ok: true, uz_ukoncen: true, mail: "preskocen" });
+      await admin.from("entitlements").update({ active: false })
+        .eq("email", email).eq("product", "coaching");
 
       // 2) ⛔ POJISTKA: kdo ma zaplacenou Academy, o appku PRIJIT NESMI.
       // `revoke_app_access` v appce rusi vsechny granty se zdrojem 'academy' bez Stripe,
@@ -1296,6 +1303,22 @@ Deno.serve(async (req) => {
       try {
         await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: gres, source: "koucink-konec" });
       } catch { /* log je bonus */ }
+
+      // 3) Prehodit znacku v marketingovych kontaktech: coaching-active -> coaching-ex.
+      // ⚠️ Doplneno 27. 7. 2026. Konvence tech dvou tagu je popsana v CLAUDE.md uz dlouho,
+      // ale kod `coaching-ex` NIKDY nenastavoval, takze ukonceny klient zustal veden
+      // jako aktivni. Dnes na tom nezavisi zadne odesilani (overeno grepem), ale prvni
+      // rozesilka cilena na `coaching-active` by trefila i lidi, kteri uz klienti nejsou.
+      // Kontakt se NEMAZE a nic jineho se nemeni, jen se zmeni jeden tag za druhy.
+      try {
+        const { data: cc } = await admin.from("customer_contacts").select("tags").eq("email", email).maybeSingle();
+        if (cc) {
+          const tags = Array.isArray(cc.tags) ? (cc.tags as string[]) : [];
+          const nove = tags.filter((t) => t !== "coaching-active");
+          if (!nove.includes("coaching-ex")) nove.push("coaching-ex");
+          await admin.from("customer_contacts").update({ tags: nove }).eq("email", email);
+        }
+      } catch { /* znacka je bonus, odchod z koucinku to neshodi */ }
 
       if (tiche) return json({ ok: true, mail: "preskocen", tvujcoach: gres, mel_academy: maAcademy });
 
