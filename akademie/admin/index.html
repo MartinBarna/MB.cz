@@ -401,6 +401,16 @@
       if('bdflmnptvw'.indexOf(last)>-1) return fn+'e';
       return fn;
     }
+    // Stav appky Tvuj Coach u klienta. Prichazi ze ZIVEHO stavu appky (academy-grant,
+    // action access-status), ne z logu pozvanek — ten se po registraci uz neaktualizuje.
+    // "?" = appka se nepodarilo zeptat; schvalne se NEtvari jako "nema", to by lhalo.
+    function kliApp(stav){
+      if(stav==='aktivni') return '✅';
+      if(stav==='ceka_na_registraci') return '<span class="muted" title="Přístup je přichystaný, ale klient se do appky ještě nezaregistroval">čeká na registraci</span>';
+      if(stav==='vyprselo') return '<span style="color:#F6CD63" title="Přístup vypršel">vypršelo</span>';
+      if(stav==='zadny') return '<span class="muted">—</span>';
+      return '<span class="muted" title="Appka neodpověděla, stav neznámý">?</span>';
+    }
     function loadKlienti(){
       api({action:'clients_list'}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('kli','kliBody'); return; }
@@ -413,11 +423,12 @@
             +'<td>'+esc(r.name||'—')+'</td>'
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
             +'<td>'+(r.has_intake?'✅':'<span class="muted">—</span>')+'</td>'
+            +'<td>'+kliApp(r.app)+'</td>'
             +'<td class="tcount">'+r.reports+'</td>'
             +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
         }).join('');
         $('kliBody').innerHTML = rows.length
-          ? '<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Reportů</th><th>Poslední report</th></tr></thead><tbody>'+trs+'</tbody></table></div>'
+          ? '<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Reportů</th><th>Poslední report</th></tr></thead><tbody>'+trs+'</tbody></table></div>'
           : '<p class="muted" style="padding:.6rem 0;">Zatím žádní klienti — pozvi prvního formulářem níže.</p>';
         $('kliBody').querySelectorAll('[data-kli]').forEach(function(a){
           a.addEventListener('click',function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli'),a.getAttribute('data-kliname')); });

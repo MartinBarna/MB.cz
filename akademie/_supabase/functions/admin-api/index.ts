@@ -976,8 +976,38 @@ Deno.serve(async (req) => {
       const intakeSet = new Set((intakes.data ?? []).map((i) => low(i.email)));
       const rows = (ents.data ?? []).filter((e) => e.active).map((e) => {
         const k = low(e.email); const rep = repBy.get(k);
-        return { email: k, name: nameBy.get(k) ?? "", registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k) };
+        return { email: k, name: nameBy.get(k) ?? "", registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), app: "?" as string };
       }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
+
+      // Stav appky Tvůj Coach. ⛔ NEBRAT z tabulky `tvujcoach_grants` — ta se zapisuje
+      // ve chvíli pozvání a UŽ SE NEAKTUALIZUJE, takže u lidí, kteří se zaregistrovali
+      // později, tvrdí „pending" napořád. Je to záznam o pokusu, ne stav.
+      // Živý stav umí appka přes `academy-grant` (action access-status, migrace 0082),
+      // jedním voláním pro celý seznam.
+      // ⚠️ Best-effort: když appka nebo secret nejsou k dispozici, zůstane "?" a seznam
+      // klientů se kvůli tomu nesmí rozbít. Prázdno by se tvářilo jako „nikdo nemá appku".
+      if (rows.length) {
+        try {
+          const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+          const gsec = gs?.value ? String(gs.value) : "";
+          if (gsec) {
+            const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+              body: JSON.stringify({ action: "access-status", emails: rows.map((x) => x.email) }),
+              signal: AbortSignal.timeout(10_000),
+            });
+            if (r.ok) {
+              const jj = await r.json().catch(() => null);
+              const stavBy = new Map<string, string>();
+              for (const s of (jj?.rows ?? []) as Array<{ email?: string; stav?: string }>) {
+                if (s?.email) stavBy.set(low(s.email), String(s.stav ?? "?"));
+              }
+              for (const x of rows) x.app = stavBy.get(x.email) ?? "?";
+            }
+          }
+        } catch { /* seznam klientů musí dojít i bez appky */ }
+      }
       return json({ ok: true, rows });
     }
 
