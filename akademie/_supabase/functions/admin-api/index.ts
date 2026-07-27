@@ -954,7 +954,11 @@ Deno.serve(async (req) => {
     // ================= KLIENTSKÁ SEKCE (osobní koučink) =================
     if (action === "clients_list") {
       const [ents, reps, intakes, users, cc] = await Promise.all([
-        admin.from("entitlements").select("email,active,created_at").eq("product", "coaching"),
+        // ⛔ OPRAVA 27. 7. 2026: sloupec se jmenuje `granted_at`, ne `created_at`.
+        // Kvůli tomu tenhle select vracel chybu, `ents.data` bylo null, seznam vyšel prázdný
+        // a admin hlásil „zatím žádní klienti", i když jich bylo dvanáct. Kdo přidal klienta,
+        // neměl jak si ověřit, že tam opravdu je. Přesně na tohle 27. 7. narazil Martin.
+        admin.from("entitlements").select("email,active,granted_at").eq("product", "coaching"),
         admin.from("client_reports").select("email,report_date"),
         admin.from("client_intake").select("email"),
         listAllUsers(admin),
@@ -972,7 +976,7 @@ Deno.serve(async (req) => {
       const intakeSet = new Set((intakes.data ?? []).map((i) => low(i.email)));
       const rows = (ents.data ?? []).filter((e) => e.active).map((e) => {
         const k = low(e.email); const rep = repBy.get(k);
-        return { email: k, name: nameBy.get(k) ?? "", registered: regSet.has(k), since: e.created_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k) };
+        return { email: k, name: nameBy.get(k) ?? "", registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k) };
       }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
       return json({ ok: true, rows });
     }
@@ -1103,9 +1107,16 @@ Deno.serve(async (req) => {
       const osloveni = String(body.osloveni ?? "").trim().slice(0, 60); // vokativ — Martin vidí a může opravit v UI
       const kind = body.kind === "stavajici" ? "stavajici" : "novy";
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
-      const { data: ent } = await admin.from("entitlements").select("id,active").eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
-      if (!ent) await admin.from("entitlements").insert({ email, product: "coaching", active: true, source: "admin-klient-invite" });
-      else if (!ent.active) await admin.from("entitlements").update({ active: true }).eq("id", ent.id);
+      // ⛔ OPRAVA 27. 7. 2026: `entitlements` NEMÁ sloupec `id`. Klíč je (email, product).
+      // Dřív se tu vybíralo "id,active", což skončilo chybou, `ent` bylo vždycky null,
+      // a tak se pokaždé zkusil INSERT. U NOVÉHO klienta to prošlo, ale u VRACEJÍCÍHO SE
+      // (dřív odebraného, active=false) insert narazil na primární klíč, tiše selhal,
+      // a přístup se NEOBNOVIL. Admin přesto ohlásil úspěch a uvítací mail odešel.
+      // `upsert` s onConflict řeší oba případy naráz a nemá jak selhat na klíči.
+      await admin.from("entitlements").upsert(
+        { email, product: "coaching", active: true, source: "admin-klient-invite" },
+        { onConflict: "email,product" },
+      );
       // Koučink klient dostává i appku Tvůj Coach (best-effort, pozvánku to nikdy neshodí).
       // ⚠️ Online koučink a appka jsou DVĚ ODDĚLENÉ SLUŽBY. Jediná spojitost je tahle:
       // klientská sekce webu dává přístup i do appky. Nemíchat je dohromady.
@@ -1216,10 +1227,16 @@ Deno.serve(async (req) => {
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
 
       // 1) Vypnout koucinkovy narok. Tim zmizi z klientske sekce i ze `clients_list`.
-      const { data: ent } = await admin.from("entitlements").select("id,active")
+      // ⛔ OPRAVA 27. 7. 2026: tady se taky vybíralo neexistující `id`, takže select
+      // skončil chybou, `ent` bylo null a tahle akce vracela „neni_klient" (404)
+      // pro ÚPLNĚ KAŽDÉHO. Odebrání klienta tedy nešlo vůbec. Klíč je (email, product).
+      const { data: ent } = await admin.from("entitlements").select("active")
         .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
       if (!ent) return json({ error: "neni_klient" }, 404);
-      if (ent.active) await admin.from("entitlements").update({ active: false }).eq("id", ent.id);
+      if (ent.active) {
+        await admin.from("entitlements").update({ active: false })
+          .eq("email", email).eq("product", "coaching");
+      }
 
       // 2) ⛔ POJISTKA: kdo ma zaplacenou Academy, o appku PRIJIT NESMI.
       // `revoke_app_access` v appce rusi vsechny granty se zdrojem 'academy' bez Stripe,
