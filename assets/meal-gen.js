@@ -480,7 +480,7 @@
     rohlik: [43, 'ks'], 'grahamovy-rohlik': [60, 'ks'], houska: [50, 'ks'], 'houska-celozrnna': [60, 'ks'],
     tortilla: [60, 'ks'], 'tortilla-kukuricna': [30, 'ks'], 'bezlepkova-tortilla': [30, 'ks'], 'low-carb-tortilla-wrap': [45, 'ks'],
     knackebrot: [10, 'ks'], 'bezlepkovy-knackebrot': [15, 'ks'],
-    'tousty-celozrnne': [28, 'ks'], 'chleb-toustovy-celozrnny-tmavy': [25, 'ks'], 'bezlepkovy-chleb-toustovy': [30, 'ks'],
+    'toustovy-chleb-celozrnny': [28, 'ks'], 'chleb-toustovy-celozrnny-tmavy': [25, 'ks'], 'bezlepkovy-chleb-toustovy': [30, 'ks'],
     'ryzove-chlebicky': [9, 'ks'],
     banan: [120, 'ks'], jablko: [150, 'ks'], hruska: [150, 'ks'], 'nashi-hruska': [120, 'ks'],
     pomeranc: [150, 'ks'], kiwi: [75, 'ks'], broskev: [120, 'ks'], nektarinka: [130, 'ks'], avokado: [140, 'ks'],

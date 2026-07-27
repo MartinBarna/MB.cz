@@ -501,7 +501,7 @@
 "servings": 1,
 "ing": [
 {
-"id": "tortilla",
+"id": "tortilla-psenicna",
 "g": 60
 },
 {
@@ -509,7 +509,7 @@
 "g": 70
 },
 {
-"id": "cottage",
+"id": "cottage-syr",
 "g": 100
 },
 {
@@ -627,7 +627,7 @@
 "servings": 1,
 "ing": [
 {
-"id": "cottage",
+"id": "cottage-syr",
 "g": 200
 },
 {
