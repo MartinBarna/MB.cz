@@ -151,6 +151,12 @@ jako **reálné UTF-8**, ne `\u` kódy, překlep `ď`(ď)→`ğ`(ğ) udělal „
 - Marketingové kontakty = `public.customer_contacts` (oddělené od `leads`). Segmenty přes `tags`:
   `early-customer` (WordPress kupci), `manual-add`, `coaching-active`, `coaching-ex`.
   Pojistka proti duplicitám mailů: `onboarding_sent_at`.
+  ⛔ **Sem se zapisuje jméno klienta a odsud ho berou pozdější maily** (`client-remind` staví
+  oslovení z `name`; bez řádku pošle „Ahoj,"). Do 28. 7. 2026 tu byla tichá díra: `client_invite`
+  dělal `update` jen na EXISTUJÍCÍ řádek, takže **u nově pozvaného klienta se jméno zahodilo**,
+  přestože admin i uvítací mail ukazovaly správné „Ahoj Milane" (bralo se z formuláře, ne z DB).
+  Opraveno v `admin-api` v28. **Kdo sem píše, používá `upsert` nebo doplní `insert` větev**,
+  a po zásahu si hodnotu přečte zpátky z DB. Detail: paměť `feedback-podmineny-update-bez-insertu`.
 - Edge funkce: `lead-capture`, `drip-send`, `unsubscribe`, `videokurz-onboarding`, `simpleshop-webhook`,
   `referral-code`, `referral-click`, `referral-webhook`, `admin-api`, `ai-martin`.
   ⚠️ Nasazená verze může být NOVĚJŠÍ než repo (editovalo se přes MCP), před úpravou funkce vždy
