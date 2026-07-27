@@ -1129,9 +1129,21 @@ Deno.serve(async (req) => {
         }
         await admin.from("tvujcoach_grants").insert({ email, action: "grant", result: gres, source: "koucink-klient" });
       } catch { /* best-effort, pozvánku neshodí */ }
+      // ⛔ OPRAVA 28. 7. 2026: tady dřív stálo `if (cc2 && !cc2.name) update(...)`, tedy
+      // jméno se zapsalo JEN když kontakt už existoval. U nově pozvaného klienta žádný
+      // neexistuje, takže se jméno TIŠE ZAHODILO a nikde to nekřiklo. Martin ho vyplnil
+      // u Milana i u Lenky, UI mu ukázalo správné „Ahoj Milane", a v databázi nebylo nic.
+      // Teď se kontakt v tom případě založí. Existující jméno se nepřepisuje.
       if (name) {
         const { data: cc2 } = await admin.from("customer_contacts").select("email,name").eq("email", email).maybeSingle();
-        if (cc2 && !cc2.name) await admin.from("customer_contacts").update({ name }).eq("email", email);
+        if (!cc2) {
+          await admin.from("customer_contacts").insert({
+            email, name, audience: "customer", source: "admin-klient-invite",
+            products: ["coaching"], tags: ["coaching-active"],
+          });
+        } else if (!cc2.name) {
+          await admin.from("customer_contacts").update({ name }).eq("email", email);
+        }
       }
       const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
       if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
