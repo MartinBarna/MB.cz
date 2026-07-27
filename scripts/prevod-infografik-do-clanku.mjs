@@ -10,9 +10,10 @@
 // Kdo sem přidává řádek, ať to udělá stejně: otevře JSON scénáře a HTML článku
 // a přesvědčí se, že mluví o TÉMŽE. Špatný pár = obrázky odporují textu.
 //
-// ⛔ ZÁMĚRNĚ CHYBÍ `protein-po-treninku`. Vypadá to na dvojici s infografikou
-// `protein-post`, ale ta je o tom, KOLIK bílkovin (1,6 g/kg, Phillips/Refalo),
-// kdežto článek je o tom, KDY je jíst (anabolické okno). Jiné téma, nespojovat.
+// ⚠️ POROVNÁVEJ STAROU INFOGRAFIKU S NOVOU, ne nadpis článku s titulkem infografiky.
+// 27. 7. jsem takhle omylem vyřadil `protein-po-treninku`: nadpis článku je o načasování
+// („musí to být hned po tréninku?"), ale jeho galerie byla odjakživa o DÁVCE. Nadpis
+// článku tedy nemusí popisovat, co je v jeho galerii. Rozhodlo až otevření obou sad.
 //
 // Spuštění z kořene repa: node scripts/prevod-infografik-do-clanku.mjs [--zapsat]
 import { existsSync, readdirSync, statSync } from 'node:fs';
@@ -71,6 +72,16 @@ const MAPA = {
   'ultra-zpracovana-jidla': 'ultra-zpracovana-jidla',
   'umela-sladidla': 'umela-sladidla-mytus',
   'vysoky-vo2max': 'vo2max-a-delsi-zivot',
+  // ⚠️ DOPLNĚNO 27. 7. po opravě vlastního omylu. Nejdřív jsem tenhle pár ZAMÍTL,
+  // protože nadpis článku zní „Protein hned po tréninku: musí to být?" (načasování),
+  // kdežto infografika `protein-post` je o dávce (1,6 g/kg). Jenže **ta galerie nikdy
+  // neseděla s nadpisem článku**: staré oranžové slidy mluví o 1,3 a 1,5 g/kg,
+  // Tagawovi 2021 a 2022, o +0,39 vs +0,12 kg a o tom, že lean mass nejsou svaly.
+  // To je přesně obsah `protein-post`, jen v novém kabátu a s upřesněným číslem
+  // u DXA (35 až 65 % → 45 až 50 %).
+  // ⇒ Poučení: u výměny obrázků porovnávej STAROU infografiku s NOVOU, ne nadpis
+  //   článku s titulkem infografiky. Nadpis článku nemusí popisovat jeho galerii.
+  'protein-post': 'protein-po-treninku',
 };
 
 // Kvalita webp: stará galerie měla kolem 37 kB na obrázek. Držíme se podobně,
@@ -115,4 +126,3 @@ if (ZAPSAT) {
 } else {
   console.log('\nNÁHLED. Nic se nezapsalo. Spusť s --zapsat.');
 }
-console.log('\n⛔ protein-po-treninku ZÁMĚRNĚ vynechán (viz komentář v hlavičce).');

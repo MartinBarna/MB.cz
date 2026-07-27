@@ -16,6 +16,7 @@ const SLUGY = [
   'sacharidy-pred-treninkem', 'sladidla-a-mikrobiom', 'spankova-apnoe-a-hubnuti',
   'svaly-v-kalorickem-deficitu', 'testosteron-4-paky', 'trenujes-tak-tvrde',
   'ultra-zpracovana-jidla', 'umela-sladidla-mytus', 'vo2max-a-delsi-zivot',
+  'protein-po-treninku', // doplněno 27. 7., viz oprava omylu v prevod-infografik-do-clanku.mjs
 ];
 
 let souboru = 0, nahrad = 0;
