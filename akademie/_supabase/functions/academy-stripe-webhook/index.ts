@@ -373,13 +373,27 @@ Deno.serve(async (req) => {
       }
 
       const prvni = await udelPristup(email, expirace);
+
+      // ⛔ ODSUD SE UVÍTAČKA NEPOSÍLÁ NIKDY (oprava 28. 7. 2026).
+      // Při prvním nákupu dorazí `checkout.session.completed` i `invoice.paid`
+      // pár vteřin po sobě a OBA volaly `posliUvitani`. Ten resetuje leada na step 0
+      // a hned kopne do `drip-send`, jenže jeho dedupe je check-then-act, takže druhý
+      // invoke stihl projít kontrolou a mail ODEŠEL PODRUHÉ. Teprve jeho zápis spadl
+      // na unique a spolkl se. ⚠️ Proto to v `email_events` NENÍ VIDĚT: DB ukazuje
+      // jeden 'sent', ale ve schránce byly dva maily (18:02:22 a 18:02:25, ověřeno
+      // v Gmailu). Nepřítomnost záznamu není důkaz, že se akce nestala.
+      // Věcně to sedí i bez toho závodu: `invoice.paid` je ZAPLACENÁ FAKTURA, tedy
+      // i obnova. Uvítačka patří k nákupu, ne k obnově.
+      // (Hlubší oprava dedupe v drip-send, tedy insert PŘED odesláním, je samostatný úkol.)
       if (prvni) {
-        try { await posliUvitani(email); }
-        catch (e) {
-          await alertAdmin("Stripe: přístup udělen, ale uvítací e-mail selhal", {
-            email, chyba: String(e).slice(0, 200),
-          });
-        }
+        // Sem se to dostane jen tehdy, když `checkout.session.completed` NEDORAZILA
+        // (jinak už řádek existuje a `prvni` je false). Přístup dostal, uvítačku ne,
+        // a to se nesmí stát tiše.
+        await alertAdmin("Stripe: přístup udělen z faktury BEZ uvítacího e-mailu", {
+          email,
+          poznamka: "Nedorazila checkout.session.completed. Přístup JE udělen. "
+            + "Uvítačku pošli ručně (drip-send only_email) nebo prověř doručování webhooku.",
+        });
       }
       return json({ ok: true, email, expirace, prvni });
     }
