@@ -197,7 +197,22 @@ function wrapHtml(preheader: string, body: string, footerHtml: string): string {
     `</td></tr></table></td></tr></table></body></html>`;
 }
 
-function buildVars(name: string, seg: Seg, unsub: string, email: string): Record<string, string> {
+// `extra` = volitelné proměnné z těla invoku (`vars`). Slouží mailům, které nesou
+// hodnoty známé až za běhu (částka refundu, název produktu…). Před tím uměl engine
+// jen pevný seznam a jakákoli neznámá {{proměnná}} shodila render výjimkou
+// `unresolved_token`, takže šablona vypadala hotově a mail nikdy neodešel.
+//
+// ⛔ BEZPEČNOSTNÍ PRAVIDLO: `extra` smí jen PŘIDÁVAT nové klíče. Vestavěné NIKDY
+// nepřepíše, při kolizi vyhrává vestavěná hodnota a zaloguje se varování.
+// Bez toho by chybný nebo kompromitovaný volající mohl podvrhnout `unsubscribe_url`
+// a odhlašovací odkaz je právní povinnost, ne kosmetika.
+function buildVars(
+  name: string,
+  seg: Seg,
+  unsub: string,
+  email: string,
+  extra?: Record<string, unknown> | null,
+): Record<string, string> {
   // jmeno leada je user input: pryc s HTML a tokenovymi znaky, at nerozbije render ani markup
   const BADCH = '{}[]<>&' + DQ + String.fromCharCode(39);
   let clean = '';
@@ -208,7 +223,7 @@ function buildVars(name: string, seg: Seg, unsub: string, email: string): Record
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : '', seg);
   const dprice = Math.round(COURSE_PRICE * (1 - DISCOUNT_PCT / 100));
   const d2price = Math.round(COURSE_PRICE * (1 - DISCOUNT2_PCT / 100));
-  return {
+  const vestavene: Record<string, string> = {
     first_name: fn, fn_space: fn ? ' ' + fn : '', fn_suffix: fn ? ', ' + fn : '', fn_prefix: fn ? fn + ', ' : '',
     lead_magnet_url: seg === 'muzi' ? SITE + '/download/forma-zpet-muzi.pdf' : SITE + '/download/makro-plan-zeny.pdf',
     plan_page_url: seg === 'muzi' ? SITE + '/forma-zpet' : SITE + '/makro-plan',
@@ -219,6 +234,22 @@ function buildVars(name: string, seg: Seg, unsub: string, email: string): Record
     email: email, email_url: encodeURIComponent(email),
     unsubscribe_url: unsub,
   };
+
+  if (!extra || typeof extra !== 'object') return vestavene;
+
+  // Pridavame POUZE klice, ktere vestavena mapa nema. Kolize se zahazuje a loguje.
+  const pridane: Record<string, string> = {};
+  for (const [k, val] of Object.entries(extra)) {
+    if (Object.prototype.hasOwnProperty.call(vestavene, k)) {
+      console.warn('[drip-send] vars: klic "' + k + '" je vestaveny, hodnota z invoku ZAHOZENA');
+      continue;
+    }
+    if (val === null || val === undefined) continue;
+    pridane[k] = String(val);
+  }
+  // Poradi je zamerne: vestavene se rozbaluji POSLEDNI, takze pri jakemkoli prehlednuti
+  // nahore stejne vyhraji ony. Dve pojistky na tutez vec, protoze jde o unsubscribe_url.
+  return { ...pridane, ...vestavene };
 }
 
 interface Tpl { subject: string; preheader: string; blocks: Block[]; wait_days: number | null; key: string }
@@ -341,6 +372,21 @@ Deno.serve(async (req: Request) => {
     return tplCache.get(k)!;
   };
 
+  // Volitelne promenne z tela invoku (`vars`). Pouzivaji je maily, ktere nesou hodnoty
+  // zname az za behu (castka refundu, nazev produktu). Detail a bezpecnostni pravidlo
+  // viz `buildVars`: vestavene klice se NIKDY neprepisuji.
+  //
+  // ⛔ POVOLENO JEN U JEDNOHO PRIJEMCE (`test_email` nebo `only_email`).
+  // Pri davkovem behu by se tataz castka dosadila VSEM lidem ve fronte, coz je presne
+  // ten druh tiche skody, kterou nikdo nezpozoruje, dokud nekomu neprijde cizi cislo.
+  const jeJedenPrijemce = (typeof body.test_email === 'string' && body.test_email.includes('@'))
+    || (typeof body.only_email === 'string' && body.only_email.includes('@'));
+  let extraVars: Record<string, unknown> | null = null;
+  if (body.vars && typeof body.vars === 'object') {
+    if (jeJedenPrijemce) extraVars = body.vars as Record<string, unknown>;
+    else console.warn('[drip-send] vars: ZAHOZENY, davkovy beh nesmi dosazovat stejne hodnoty vsem');
+  }
+
   // TEST
   if (typeof body.test_email === 'string' && body.test_email.includes('@')) {
     const track = String(body.track ?? 'existing-leadmagnet');
@@ -349,7 +395,7 @@ Deno.serve(async (req: Request) => {
     const tpl = await getTpl(track, step);
     if (!tpl) return json({ ok: false, mode: 'test', error: 'no_template:' + track + ':' + step }, 400);
     try {
-      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email));
+      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email), extraVars);
       const m = renderEmail(tpl, seg, v, footer);
       const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
       await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } });
@@ -475,7 +521,7 @@ Deno.serve(async (req: Request) => {
     };
     if (already) { await advance(); skippedAlready++; continue; }
     try {
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email));
+      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars);
       const m = renderEmail(tpl, seg, v, footer);
       await pace();   // rozestup mezi volanimi Resendu, viz SEND_GAP_MS vyse
       const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);
