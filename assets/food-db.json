@@ -4038,6 +4038,20 @@
     "portionLabel": "1 ks ~60 g"
   },
   {
+    "id": "hovezi-jatra",
+    "name": "Hovězí játra (syrová)",
+    "cat": "protein",
+    "nonveg": true,
+    "per100": {
+      "kcal": 135,
+      "p": 20.4,
+      "c": 3.9,
+      "f": 3.6,
+      "fib": 0
+    },
+    "portion": 100
+  },
+  {
     "id": "hovezi-jazyk",
     "name": "Hovězí jazyk (syrový)",
     "cat": "protein",
@@ -4575,6 +4589,20 @@
     "portion": 15
   },
   {
+    "id": "chilli-papricka",
+    "name": "Chilli paprička (čerstvá)",
+    "cat": "veg",
+    "per100": {
+      "kcal": 40,
+      "p": 1.9,
+      "c": 8.8,
+      "f": 0.4,
+      "fib": 1.5
+    },
+    "portion": 10,
+    "portionLabel": "1 ks ~10 g"
+  },
+  {
     "id": "chimichurri",
     "name": "Chimichurri (bylinková omáčka s olejem)",
     "cat": "fat",
@@ -4814,6 +4842,19 @@
     },
     "portion": 100,
     "portionLabel": "1 kapsička ~100 g"
+  },
+  {
+    "id": "jablka-susena",
+    "name": "Jablka sušená",
+    "cat": "fruit",
+    "per100": {
+      "kcal": 243,
+      "p": 0.9,
+      "c": 65.9,
+      "f": 0.3,
+      "fib": 8.7
+    },
+    "portion": 30
   },
   {
     "id": "jablko",
@@ -5056,6 +5097,20 @@
       "fib": 0
     },
     "portion": 30
+  },
+  {
+    "id": "jarni-cibulka",
+    "name": "Jarní cibulka",
+    "cat": "veg",
+    "per100": {
+      "kcal": 32,
+      "p": 1.8,
+      "c": 7.3,
+      "f": 0.2,
+      "fib": 2.6
+    },
+    "portion": 30,
+    "portionLabel": "hrst ~30 g"
   },
   {
     "id": "jerk-chicken",
@@ -6289,6 +6344,20 @@
     "portion": 25
   },
   {
+    "id": "kren-strouhany",
+    "name": "Křen strouhaný (ve skleničce)",
+    "cat": "veg",
+    "per100": {
+      "kcal": 48,
+      "p": 1.2,
+      "c": 11.3,
+      "f": 0.7,
+      "fib": 3.3
+    },
+    "portion": 10,
+    "portionLabel": "1 lžička ~10 g"
+  },
+  {
     "id": "krenova-slehacka",
     "name": "Křenová šlehačka (křen se šlehačkou)",
     "cat": "fat",
@@ -6441,6 +6510,20 @@
     },
     "portion": 100,
     "portionLabel": "100 g"
+  },
+  {
+    "id": "kukurice-cerstva",
+    "name": "Kukuřice čerstvá (syrová)",
+    "cat": "veg",
+    "per100": {
+      "kcal": 86,
+      "p": 3.3,
+      "c": 18.7,
+      "f": 1.4,
+      "fib": 2
+    },
+    "portion": 100,
+    "portionLabel": "1 klas ~100 g"
   },
   {
     "id": "kukurice-sladka-konzerva",
@@ -9920,6 +10003,19 @@
     "portion": 100
   },
   {
+    "id": "paprika-zelena",
+    "name": "Paprika zelená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 20,
+      "p": 0.9,
+      "c": 4.6,
+      "f": 0.2,
+      "fib": 1.7
+    },
+    "portion": 100
+  },
+  {
     "id": "para-orechy",
     "name": "Para ořechy",
     "cat": "fat",
@@ -13085,6 +13181,19 @@
     "portion": 50
   },
   {
+    "id": "smetana-na-vareni-19",
+    "name": "Smetana na vaření 19%",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 195,
+      "p": 3,
+      "c": 3.7,
+      "f": 19.3,
+      "fib": 0
+    },
+    "portion": 50
+  },
+  {
     "id": "smetana-zakysana",
     "name": "Smetana zakysaná (smetana, ruská kuchyně)",
     "cat": "dairy",
@@ -15229,6 +15338,20 @@
     "portionLabel": "1 ks ~60 g"
   },
   {
+    "id": "veprova-jatra",
+    "name": "Vepřová játra (syrová)",
+    "cat": "protein",
+    "nonveg": true,
+    "per100": {
+      "kcal": 134,
+      "p": 21.4,
+      "c": 2.5,
+      "f": 3.7,
+      "fib": 0
+    },
+    "portion": 100
+  },
+  {
     "id": "veprova-krkovice",
     "name": "Vepřová krkovice",
     "cat": "protein",
@@ -15341,6 +15464,20 @@
     },
     "portion": 130,
     "nonveg": true
+  },
+  {
+    "id": "veprovy-bucek",
+    "name": "Vepřový bůček (syrový)",
+    "cat": "protein",
+    "nonveg": true,
+    "per100": {
+      "kcal": 518,
+      "p": 9.3,
+      "c": 0,
+      "f": 53,
+      "fib": 0
+    },
+    "portion": 150
   },
   {
     "id": "vicezrnna-kase",
@@ -15724,6 +15861,19 @@
     },
     "portion": 150,
     "portionLabel": "150 g"
+  },
+  {
+    "id": "zeli-cervene",
+    "name": "Zelí červené (syrové)",
+    "cat": "veg",
+    "per100": {
+      "kcal": 31,
+      "p": 1.4,
+      "c": 7.4,
+      "f": 0.2,
+      "fib": 2.1
+    },
+    "portion": 150
   },
   {
     "id": "zerve",
