@@ -466,19 +466,58 @@
       });
       return targets.kcal - mel;
     };
+    // ⚠️ POŘADÍ JE ZÁMĚRNÉ. První verze (27. 7.) nafukovala rovnou ovoce do stropu a kalorie
+    // tím trefila, jenže vyrobila snídani s 250 g moruší a 190 g banánu a sacharidy přestřelila
+    // o 27 %. Metrika se zlepšila a talíř zhoršil. Proto se nejdřív sahá na přílohu.
+    var PRILOHY = ['ryze-natural-varena', 'brambory-varene', 'testoviny-celozrnne-varene', 'bulgur-vareny'];
     if (chybiKcal() > targets.kcal * 0.05) {
-      ['carb', 'fruit'].forEach(function (cat) {
-        out.forEach(function (m) {
-          m.items.forEach(function (it) {
-            if (it.food.cat !== cat) return;
-            var chybi = chybiKcal();
-            if (chybi <= targets.kcal * 0.05) return;
-            var cap = FOOD_CAP[it.food.id] != null ? FOOD_CAP[it.food.id] : CAP[it.food.cat];
-            var rezerva = Math.max(0, (cap != null ? cap : Infinity) - it.grams);
-            var naGram = it.food.per100.kcal / 100;
-            if (rezerva < 5 || naGram <= 0) return;
-            it.grams += Math.min(rezerva, Math.ceil(chybi / naGram / 5) * 5);
-          });
+      // 1) Zvětši přílohy, které mají do stropu rezervu. Víc rýže je normální rada.
+      out.forEach(function (m) {
+        m.items.forEach(function (it) {
+          if (it.food.cat !== 'carb') return;
+          var chybi = chybiKcal();
+          if (chybi <= targets.kcal * 0.05) return;
+          var cap = FOOD_CAP[it.food.id] != null ? FOOD_CAP[it.food.id] : CAP[it.food.cat];
+          var rezerva = Math.max(0, (cap != null ? cap : Infinity) - it.grams);
+          var naGram = it.food.per100.kcal / 100;
+          if (rezerva < 5 || naGram <= 0) return;
+          it.grams += Math.min(rezerva, Math.ceil(chybi / naGram / 5) * 5);
+        });
+      });
+      // 2) Den nemá ŽÁDNOU přílohu? Přidej ji. Tohle je ta vada „kategorie carb zmizela":
+      //    sacharidový cíl pokryly ovoce a zelenina, takže nebylo co škálovat.
+      var maPrilohu = out.some(function (m) {
+        return m.items.some(function (it) { return it.food.cat === 'carb'; });
+      });
+      if (chybiKcal() > targets.kcal * 0.05 && !maPrilohu) {
+        for (var pi = 0; pi < PRILOHY.length; pi++) {
+          var f = byId(PRILOHY[pi]);
+          if (!f) continue;
+          if (all.some(function (it) { return it.food.id === f.id; })) continue;
+          var naGramP = f.per100.kcal / 100;
+          if (naGramP <= 0) continue;
+          var capP = FOOD_CAP[f.id] != null ? FOOD_CAP[f.id] : CAP[f.cat];
+          var g = Math.min(capP != null ? capP : Infinity, Math.ceil(chybiKcal() / naGramP / 5) * 5);
+          if (g >= 8) {
+            var novaPolozka = { food: f, grams: g };
+            out[out.length - 1].items.push(novaPolozka);
+            all.push(novaPolozka);
+          }
+          break;
+        }
+      }
+      // 3) Teprve zbytek dolaď na ovoci, a jen MÍRNĚ (nejvýš o polovinu původní porce),
+      //    ať nevznikne miska ovoce místo jídla.
+      out.forEach(function (m) {
+        m.items.forEach(function (it) {
+          if (it.food.cat !== 'fruit') return;
+          var chybi = chybiKcal();
+          if (chybi <= targets.kcal * 0.05) return;
+          var cap = FOOD_CAP[it.food.id] != null ? FOOD_CAP[it.food.id] : CAP[it.food.cat];
+          var rezerva = Math.min(Math.max(0, (cap != null ? cap : Infinity) - it.grams), it.grams * 0.5);
+          var naGram = it.food.per100.kcal / 100;
+          if (rezerva < 5 || naGram <= 0) return;
+          it.grams += Math.min(rezerva, Math.ceil(chybi / naGram / 5) * 5);
         });
       });
     }
