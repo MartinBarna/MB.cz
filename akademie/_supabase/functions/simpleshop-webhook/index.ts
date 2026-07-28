@@ -126,6 +126,54 @@ async function sendWelcome(admin: any, email: string, product: "academy" | "vide
   }).catch(() => null);
 }
 
+// Rozluckovy mail po stornu. Pristup u SimpleShopu konci IHNED (neni zadne obdobi,
+// ktere by dobehlo), proto vzdy vetev "hned".
+// ⚠️ Sablona vyzaduje {{castka}}. Kdyby chybela, render spadne na `unresolved_token`
+// a mail NIKDY neodejde. Proto ma vzdy nahradu, nikdy se neposila prazdna.
+// deno-lint-ignore no-explicit-any
+async function sendRozlouceni(admin: any, email: string, product: "academy" | "videokurz", orderId: string) {
+  const TRACK = "rozlouceni-refund-hned";
+  const nowIso = new Date().toISOString();
+
+  const { data: tpl } = await admin.from("email_templates")
+    .select("track").eq("track", TRACK).eq("step", 0).maybeSingle();
+  if (!tpl) {
+    await alertAdmin(admin, "SimpleShop: storno zpracováno, ale chybí rozlučková šablona", {
+      email, produkt: product, track: TRACK, poznamka: "Přístup ODEBRÁN, jen mail neodešel.",
+    });
+    return;
+  }
+
+  const { data: lead } = await admin.from("leads").select("id").eq("email", email).limit(1);
+  if (lead && lead.length) {
+    await admin.from("leads").update({ track: TRACK, step: 0, status: "active", next_send_at: nowIso, updated_at: nowIso }).eq("id", lead[0].id);
+  } else {
+    await admin.from("leads").insert({ email, track: TRACK, step: 0, status: "active", next_send_at: nowIso, source: "simpleshop-storno" });
+  }
+
+  const { data: cfg } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
+  const dripSecret = cfg?.value ? String(cfg.value) : "";
+  if (!dripSecret) return;
+
+  const nazev = product === "academy" ? "Barna Academy" : "Videokurz výživy";
+  await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-drip-secret": dripSecret },
+    body: JSON.stringify({
+      only_email: email,
+      vars: {
+        castka: "celé částky",     // SimpleShop v storno payloadu castku spolehlive nenese
+        produkt: nazev,
+        varianta: product === "academy" ? "doživotní přístup" : "videokurz",
+        znovu_odkaz: product === "academy"
+          ? "https://martinbarna.cz/akademie/#cena"
+          : "https://martinbarna.cz/videokurz/",
+        objednavka: orderId || "",
+      },
+    }),
+  }).catch(() => null);
+}
+
 // --- Cesta A: referral atribuce pres e-mail (SimpleShop neprotahne ref do webhooku). ---
 // Best-effort: kdykoli hodi vyjimku, volajici ji spolkne a entitlement grant zustane netknuty.
 // deno-lint-ignore no-explicit-any
@@ -216,15 +264,66 @@ Deno.serve(async (req: Request) => {
   const status = pick(body, ["status", "stav", "payment_status", "state"]).toLowerCase();
   const flags = Number(pick(body, ["flags"])) || 0;
 
-  // Refund/storno -> zneplatni pripadny referral (best-effort). Take flags bit 8 = doklad stornovan.
-  // Entitlement nechavame beze zmeny (jako dosud).
+  // Refund/storno. Take flags bit 8 = doklad stornovan.
+  // ⛔ ZMENA 28. 7. 2026: driv se tady JEN zneplatnil referral a entitlement se nechal
+  // ZIT. Kdo dostal vracene penize za Academy 8 900, mel dal doživotni pristup
+  // i rocni VIP v appce. Nikdo se to nedozvedel. Ted se pristup odebira.
   const stornoWord = ["refund", "storno", "vracen", "zrus", "cancel"].some((s) => status.includes(s));
   if (stornoWord || (flags & 8) !== 0) {
-    try {
-      const oid = pick(body, ["order_id", "order", "order_number", "cislo_objednavky", "variable_symbol", "vs", "id"]);
-      if (oid) await admin.from("referrals").update({ status: "void" }).eq("order_id", oid);
-    } catch { /* best-effort */ }
-    return json({ ok: true, refund: true }, 200);
+    const oid = pick(body, ["order_id", "order", "order_number", "cislo_objednavky", "variable_symbol", "vs", "id"]);
+    try { if (oid) await admin.from("referrals").update({ status: "void" }).eq("order_id", oid); }
+    catch { /* best-effort */ }
+
+    // ⚠️ E-mail nese JEN produktovy webhook. Globalni posila pouze cislo dokladu,
+    // takze podle nej cloveka neurcime. Nesmi to skoncit ticho: radsi at Martin
+    // dostane alert a odebere rucne, nez aby refundovany clovek mel dal pristup.
+    const stornoEmail = pick(body, ["email", "customer_email", "buyer_email", "e-mail", "mail"]).toLowerCase();
+    const stornoProdukt = resolveProduct(pick(body, ["product", "produkt", "product_name", "nazev_produktu", "item", "sku", "product_id", "nazev", "name"]));
+    if (!stornoEmail || !stornoEmail.includes("@") || !stornoProdukt) {
+      await alertAdmin(admin, "SimpleShop: STORNO bez e-mailu nebo produktu, přístup NEODEBRÁN", {
+        objednavka: oid || "(neznámá)",
+        email: stornoEmail || "(neposlán)",
+        produkt: stornoProdukt || "(neurčen)",
+        poznamka: "Globální webhook e-mail neposílá. Odeber přístup RUČNĚ v adminu.",
+      });
+      return json({ ok: true, refund: true, pristup_odebran: false, duvod: "bez-emailu-nebo-produktu" }, 200);
+    }
+
+    // 1) odebrat pristup k tomu produktu
+    const { error: chybaRevoke } = await admin.from("entitlements")
+      .update({ active: false }).eq("email", stornoEmail).eq("product", stornoProdukt);
+
+    // 2) u Academy odebrat i rocni VIP v appce, jinak by appka zustala zdarma
+    let tcRevoke = "netyka-se";
+    if (stornoProdukt === "academy") {
+      try {
+        const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+        const gsec = gs?.value ? String(gs.value) : "";
+        if (!gsec) tcRevoke = "no-secret";
+        else {
+          const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+            method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+            body: JSON.stringify({ email: stornoEmail, action: "revoke", source: "academy-storno", academy_order_id: oid || null }),
+          }).catch(() => null);
+          tcRevoke = r && r.ok ? "ok" : (r ? "http-" + r.status : "fetch-fail");
+        }
+        await admin.from("tvujcoach_grants").insert({ email: stornoEmail, action: "revoke", result: tcRevoke, source: "academy-storno" });
+      } catch { /* best-effort, nikdy neshodi odebrani pristupu */ }
+    }
+
+    // 3) rozluckovy mail (pristup konci ihned -> vetev "hned")
+    try { await sendRozlouceni(admin, stornoEmail, stornoProdukt, oid); } catch { /* best-effort */ }
+
+    if (chybaRevoke || (stornoProdukt === "academy" && tcRevoke !== "ok" && tcRevoke !== "netyka-se")) {
+      await alertAdmin(admin, "SimpleShop: storno zpracováno, ale něco se nepovedlo", {
+        email: stornoEmail, produkt: stornoProdukt,
+        odebrani_pristupu: chybaRevoke ? "SELHALO: " + chybaRevoke.message : "ok",
+        odebrani_TC_VIP: tcRevoke,
+        poznamka: "Zkontroluj ručně v adminu.",
+      });
+    }
+
+    return json({ ok: true, refund: true, pristup_odebran: !chybaRevoke, tc_revoke: tcRevoke }, 200);
   }
 
   // Prijmeme jen zaplacene. Globalni POST posila flags: bez bitu 2 (Uhrazeno) neni co delat.
