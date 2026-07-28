@@ -49,6 +49,32 @@ function rozlouceniTrack(expiraceIso: string | null): string {
     : ROZLOUCENI_HNED;
 }
 
+// ⛔⛔ ROZLUČKOVÁ ŠABLONA MÁ VLASTNÍ PROMĚNNÉ A VOLAJÍCÍ JE MUSÍ POSLAT.
+// Používá {{castka}}, {{produkt}}, {{varianta}}, {{znovu_odkaz}}, větev s dojezdem
+// navíc {{pristup_do}}. NEJSOU to vestavěné proměnné `drip-send`, posílají se v `vars`.
+// Když chybí jediná, render spadne na `unresolved_token` a mail NIKDY NEODEJDE.
+// ⚠️ Stalo se 28. 7. 2026 při ostrém refundu: trať se vybrala správně, přístup se
+// odebral správně, ale mail skončil jako 'error' v `email_events` a Martinovi nic
+// nepřišlo. Příčina: tahle cesta recykluje `posliUvitani`, napsaný pro uvítačku,
+// která žádné vlastní proměnné nemá. Sesterský `simpleshop-webhook` je posílá
+// od začátku ⇒ zase vzorec „nová cesta, staré pravidlo".
+function castkaText(halere: number, mena: string): string {
+  const c = Math.round(halere) / 100;
+  const cislo = Number.isInteger(c) ? String(c) : c.toFixed(2).replace(".", ",");
+  return (mena || "czk").toLowerCase() === "czk"
+    ? cislo + " Kč"
+    : cislo + " " + (mena || "").toUpperCase();
+}
+
+/** Datum pro člověka, v pražském čase (edge běží v UTC, u večerních akcí by to jinak ujelo o den). */
+function datumCesky(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString("cs-CZ", { timeZone: "Europe/Prague" });
+  } catch {
+    return iso.slice(0, 10);
+  }
+}
+
 // Stripe (live, účet Tvůj Coach acct_1TqQ56Bq3rKubW9k), založeno 28. 7. 2026:
 //   produkt      prod_Uy7nu91R8yjVwI  „Barna Academy členství"
 //   price        price_1TyBXTBq3rKubW9kGizHd41g  = 990 CZK/měs, DPH v ceně
@@ -265,7 +291,11 @@ async function udelPristup(
 // Vzor převzatý ze `simpleshop-webhook`, ale s vlastní tratí pro měsíční členy.
 // `track` má výchozí hodnotu, takže původní volání `posliUvitani(email)` funguje
 // beze změny. Používá se i pro rozlučkový mail po refundu.
-async function posliUvitani(email: string, track: string = WELCOME_TRACK) {
+async function posliUvitani(
+  email: string,
+  track: string = WELCOME_TRACK,
+  vars?: Record<string, string>,
+) {
   const nowIso = new Date().toISOString();
 
   // Když trať nemá šablonu, drip-send by neposlal nic a nikdo by se to nedozvěděl.
@@ -307,7 +337,9 @@ async function posliUvitani(email: string, track: string = WELCOME_TRACK) {
   await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-drip-secret": dripSecret },
-    body: JSON.stringify({ only_email: email }),
+    // `vars` posíláme jen když nějaké jsou. Uvítačka žádné vlastní proměnné nemá,
+    // rozlučka ano a bez nich by se neodeslala (viz komentář u `castkaText`).
+    body: JSON.stringify(vars ? { only_email: email, vars } : { only_email: email }),
   }).catch(() => null);
 }
 
@@ -526,16 +558,27 @@ Deno.serve(async (req) => {
       }
 
       // 2) odebrat přístup (expirace na teď, řádek necháváme kvůli historii)
+      // Jeden časový otisk pro zápis do DB i pro text mailu, ať se nemůžou rozejít.
+      const konecIso = new Date().toISOString();
       const { error: chybaRevoke } = await admin
         .from("entitlements")
-        .update({ expires_at: new Date().toISOString() })
+        .update({ expires_at: konecIso })
         .eq("email", ent.email).eq("product", "academy");
 
       // 3) rozlučkový mail (best-effort, nikdy nesmí shodit odebrání)
       // Po refundu odebíráme přístup ihned, takže vyjde větev „hned". Volba je tu
       // přesto dynamická, ať to sedí i kdyby se sem někdy dostalo zrušení s dojezdem.
-      try { await posliUvitani(ent.email, rozlouceniTrack(new Date().toISOString())); }
-      catch { /* best-effort, nikdy nesmí shodit odebrání přístupu */ }
+      // ⛔ `vars` NENÍ volitelná ozdoba, bez nich mail neodejde. Viz `castkaText`.
+      // U sporu je v `obj` Dispute (má `amount`, nemá `amount_refunded`), proto ten fallback.
+      try {
+        await posliUvitani(ent.email, rozlouceniTrack(konecIso), {
+          castka: castkaText(vraceno > 0 ? vraceno : castka, String(obj.currency ?? "czk")),
+          produkt: "Barna Academy",
+          varianta: "měsíční členství",
+          znovu_odkaz: "https://martinbarna.cz/akademie/#cena",
+          pristup_do: datumCesky(konecIso),
+        });
+      } catch { /* best-effort, nikdy nesmí shodit odebrání přístupu */ }
 
       // 4) hlásit. U sporu a u nezrušeného předplatného VŽDY, jinak by to zůstalo tiché.
       if (jeSpor || zruseno !== "ok" || chybaRevoke) {
