@@ -1,0 +1,338 @@
+// ============================================================
+// Barna Academy — Stripe webhook pro MĚSÍČNÍ členství 990 Kč/měs.
+//
+// Doživotní varianta (8 900) jde dál přes SimpleShop a `simpleshop-webhook`.
+// Tahle funkce řeší VÝHRADNĚ předplatné ze Stripu.
+//
+// ⛔ NEVOLÁ `academy-grant` appky Tvůj Coach. Měsíční členství appku V CENĚ NEMÁ
+//    (rozhodnutí 2 mise `mb-academy-pricing-mise`). Roční VIP appky zůstává
+//    exkluzivní výhodou doživotní varianty, je to hlavní důvod k upgradu.
+//    Kdo sem TC grant přidá, zabije ten důvod a rozdá appku zadarmo.
+//
+// ⛔ NEENROLLUJE do `onboarding-nakup-academy`. Ta trať je psaná pro doživotní
+//    nákup a její step 0 slibuje appku Tvůj Coach jako dárek včetně přihlašovacího
+//    tlačítka. Měsíčnímu členovi by tedy hned po zaplacení přišel slib, který
+//    neplatí, a tlačítko, které ho nikam nepustí. Proto vlastní trať.
+//
+// Deploy: --no-verify-jwt (autentizace je Stripe podpisem, ne JWT).
+// Env: STRIPE_WEBHOOK_SECRET (whsec_...), SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+// ============================================================
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const STRIPE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
+const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const ALERT_FALLBACK = "fitness.barna@gmail.com";
+
+// Stripe (live, účet Tvůj Coach acct_1TqQ56Bq3rKubW9k), založeno 28. 7. 2026:
+//   produkt      prod_Uy7nu91R8yjVwI  „Barna Academy členství"
+//   price        price_1TyBXTBq3rKubW9kGizHd41g  = 990 CZK/měs, DPH v ceně
+//   Payment Link https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00
+//   redirect po platbě -> https://martinbarna.cz/akademie/vitejte/
+
+// Trať pro MĚSÍČNÍ členy. Musí existovat v `email_templates`, jinak se pošle alert
+// a člen zůstane bez uvítačky (přístup dostane tak jako tak, grant je první).
+const WELCOME_TRACK = "onboarding-nakup-academy-mesicni";
+
+// Kolik dní po konci zaplaceného období ještě pustit dovnitř. Kryje Stripe Smart
+// Retries u selhané karty, ať nikoho nezamkneme kvůli jednomu neúspěšnému stržení.
+const GRACE_DNI = 5;
+
+// Když dorazí `checkout.session.completed`, ale ještě neznáme konec období z faktury,
+// dáme prozatímní přístup. `invoice.paid` ho vzápětí přepíše přesným datem.
+const PROVIZORNI_DNI = 35;
+
+const admin = createClient(SUPABASE_URL, SERVICE_ROLE, {
+  auth: { persistSession: false },
+});
+
+// --- Ověření podpisu Stripu -------------------------------------------------
+// ⛔ BEZ TOHOHLE by kdokoli mohl POSTem udělit sám sobě členství zdarma.
+// Stripe posílá hlavičku `stripe-signature: t=<ts>,v1=<hex hmac>`, podepisuje se
+// řetězec "<ts>.<raw body>" klíčem whsec_. Porovnává se na RAW těle, ne na
+// přeparsovaném JSONu (jakákoli reserializace podpis rozbije).
+async function overPodpis(raw: string, hlavicka: string): Promise<boolean> {
+  if (!STRIPE_WEBHOOK_SECRET || !hlavicka) return false;
+
+  const casti = Object.fromEntries(
+    hlavicka.split(",").map((p) => {
+      const i = p.indexOf("=");
+      return [p.slice(0, i).trim(), p.slice(i + 1).trim()];
+    }),
+  );
+  const ts = casti["t"];
+  const v1 = casti["v1"];
+  if (!ts || !v1) return false;
+
+  // Ochrana proti přehrání starého požadavku (Stripe doporučuje 5 minut).
+  const stariS = Math.abs(Date.now() / 1000 - Number(ts));
+  if (!Number.isFinite(stariS) || stariS > 300) return false;
+
+  const klic = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(STRIPE_WEBHOOK_SECRET),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const podpis = await crypto.subtle.sign(
+    "HMAC",
+    klic,
+    new TextEncoder().encode(`${ts}.${raw}`),
+  );
+  const ocekavano = [...new Uint8Array(podpis)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  // Porovnání v konstantním čase.
+  if (ocekavano.length !== v1.length) return false;
+  let rozdil = 0;
+  for (let i = 0; i < ocekavano.length; i++) {
+    rozdil |= ocekavano.charCodeAt(i) ^ v1.charCodeAt(i);
+  }
+  return rozdil === 0;
+}
+
+// Alert adminovi. Vzor 1:1 podle `simpleshop-webhook`, ať se to hlásí na jedno místo.
+// ⚠️ Zapisuje do `email_events` (type='error'), NE do vlastní tabulky. Tabulka
+// `admin_alerts` v tomhle projektu NEEXISTUJE (ověřeno v information_schema);
+// kdyby se do ní psalo, alerty by tiše mizely a nikdo by se o selhaném grantu nedozvěděl.
+async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
+  try {
+    await admin.from("email_events").insert({
+      lead_id: null, step: 0, type: "error",
+      detail: {
+        track: "academy-stripe-webhook",
+        error: predmet + " " + JSON.stringify(detail).slice(0, 300),
+      },
+    });
+  } catch { /* best-effort */ }
+
+  if (!RESEND_KEY) return;
+  try {
+    let to = ALERT_FALLBACK;
+    const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
+    if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
+    const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: "Barna Academy <news@martinbarna.cz>", to: [to],
+        subject: "⚠️ " + predmet,
+        html: `<p>Stripe webhook měsíčního členství narazil.</p><ul>${rows}</ul>`
+          + `<p>Zkontroluj platbu ve Stripu a případně uděl přístup ručně v adminu.</p>`,
+      }),
+    });
+  } catch { /* best-effort */ }
+}
+
+// --- Udělení / prodloužení přístupu ----------------------------------------
+// Vrací true, když šlo o PRVNÍ udělení (rozhoduje o uvítacím e-mailu).
+async function udelPristup(email: string, expiraceIso: string): Promise<boolean> {
+  const { data: stavajici } = await admin
+    .from("entitlements")
+    .select("source, active, expires_at")
+    .eq("email", email)
+    .eq("product", "academy")
+    .maybeSingle();
+
+  // ⛔ POJISTKA PROTI DEGRADACI DOŽIVOTNÍHO ČLENSTVÍ.
+  // Kdo má doživotní přístup (expires_at IS NULL a jiný zdroj než stripe-monthly),
+  // toho měsíční platba NESMÍ přepsat na expirující. Stalo by se to, kdyby si
+  // doživotní člen omylem založil ještě předplatné, nebo kdyby dorazily události
+  // v jiném pořadí. Přístup necháme být; peníze řeší Martin refundem ve Stripu.
+  if (stavajici && stavajici.expires_at === null && stavajici.source !== "stripe-monthly") {
+    await alertAdmin("Stripe: platba od člena, který má DOŽIVOTNÍ přístup", {
+      email,
+      stavajici_zdroj: stavajici.source,
+      poznamka: "Přístup nezměněn (nedegradovat na expirující). Zvážit refund předplatného.",
+    });
+    return false;
+  }
+
+  const jePrvni = !stavajici || !stavajici.active;
+
+  const { error } = await admin.from("entitlements").upsert(
+    {
+      email,
+      product: "academy",
+      active: true,
+      source: "stripe-monthly",
+      granted_at: new Date().toISOString(),
+      expires_at: expiraceIso,
+    },
+    { onConflict: "email,product" },
+  );
+  if (error) throw new Error("db: " + error.message);
+
+  return jePrvni;
+}
+
+// --- Uvítací e-mail (jen při prvním udělení) --------------------------------
+// Vzor převzatý ze `simpleshop-webhook`, ale s vlastní tratí pro měsíční členy.
+async function posliUvitani(email: string) {
+  const nowIso = new Date().toISOString();
+
+  // Když trať nemá šablonu, drip-send by neposlal nic a nikdo by se to nedozvěděl.
+  // Radši to zakřičí, než aby platící člen tiše zůstal bez uvítačky.
+  const { data: sablona } = await admin
+    .from("email_templates")
+    .select("track")
+    .eq("track", WELCOME_TRACK)
+    .eq("step", 0)
+    .maybeSingle();
+  if (!sablona) {
+    await alertAdmin("Stripe: měsíční člen nedostal uvítací e-mail (chybí šablona)", {
+      email,
+      track: WELCOME_TRACK,
+      poznamka: "Přístup UDĚLEN. Chybí step 0 v email_templates, dopsat text.",
+    });
+    return;
+  }
+
+  const { data: lead } = await admin
+    .from("leads").select("id,name").eq("email", email).limit(1);
+  if (lead && lead.length) {
+    await admin.from("leads").update({
+      track: WELCOME_TRACK, step: 0, status: "active",
+      next_send_at: nowIso, purchased: true, updated_at: nowIso,
+    }).eq("id", lead[0].id);
+  } else {
+    await admin.from("leads").insert({
+      email, track: WELCOME_TRACK, step: 0, status: "active",
+      next_send_at: nowIso, purchased: true, source: "stripe-monthly",
+    });
+  }
+
+  const { data: cfg } = await admin
+    .from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
+  const dripSecret = cfg?.value ? String(cfg.value) : "";
+  if (!dripSecret) return;
+
+  await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-drip-secret": dripSecret },
+    body: JSON.stringify({ only_email: email }),
+  }).catch(() => null);
+}
+
+function json(obj: unknown, status = 200): Response {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
+
+function zaDni(n: number): string {
+  return new Date(Date.now() + n * 86400000).toISOString();
+}
+
+Deno.serve(async (req) => {
+  if (req.method !== "POST") return json({ error: "method" }, 405);
+
+  const raw = await req.text();
+  const sig = req.headers.get("stripe-signature") ?? "";
+  if (!(await overPodpis(raw, sig))) {
+    return json({ error: "bad-signature" }, 400);
+  }
+
+  // deno-lint-ignore no-explicit-any
+  let ev: any;
+  try {
+    ev = JSON.parse(raw);
+  } catch {
+    return json({ error: "bad-json" }, 400);
+  }
+
+  const typ = String(ev?.type ?? "");
+  const obj = ev?.data?.object ?? {};
+
+  try {
+    // --- 1) První zaplacení z Payment Linku -------------------------------
+    if (typ === "checkout.session.completed") {
+      if (obj.mode !== "subscription") {
+        return json({ ok: true, ignorovano: "ne-predplatne" });
+      }
+      const email = String(
+        obj.customer_details?.email ?? obj.customer_email ?? "",
+      ).trim().toLowerCase();
+      if (!email) {
+        await alertAdmin("Stripe: zaplaceno, ale chybí e-mail", {
+          session: obj.id,
+          poznamka: "Přístup NEUDĚLEN. V Payment Linku musí být e-mail povinný.",
+        });
+        return json({ error: "no-email" }, 422);
+      }
+
+      // Prozatímní přístup. `invoice.paid` dorazí vzápětí a nahradí ho přesným
+      // koncem období. Kdyby nedorazila, člen i tak měsíc dovnitř může.
+      const prvni = await udelPristup(email, zaDni(PROVIZORNI_DNI));
+      if (prvni) {
+        try { await posliUvitani(email); }
+        catch (e) {
+          await alertAdmin("Stripe: přístup udělen, ale uvítací e-mail selhal", {
+            email, chyba: String(e).slice(0, 200),
+          });
+        }
+      }
+      return json({ ok: true, email, prvni });
+    }
+
+    // --- 2) Zaplacená faktura: první i každá další obnova ------------------
+    if (typ === "invoice.paid" || typ === "invoice.payment_succeeded") {
+      const email = String(
+        obj.customer_email ?? obj.customer_details?.email ?? "",
+      ).trim().toLowerCase();
+      if (!email) {
+        await alertAdmin("Stripe: faktura zaplacena, ale chybí e-mail", {
+          invoice: obj.id, poznamka: "Přístup NEPRODLOUŽEN, spárovat ručně.",
+        });
+        return json({ error: "no-email" }, 422);
+      }
+
+      // Konec zaplaceného období z řádku faktury (unixové sekundy) + grace.
+      const konecS = Number(obj.lines?.data?.[0]?.period?.end ?? 0);
+      const expirace = konecS > 0
+        ? new Date(konecS * 1000 + GRACE_DNI * 86400000).toISOString()
+        : zaDni(PROVIZORNI_DNI);
+
+      const prvni = await udelPristup(email, expirace);
+      if (prvni) {
+        try { await posliUvitani(email); }
+        catch (e) {
+          await alertAdmin("Stripe: přístup udělen, ale uvítací e-mail selhal", {
+            email, chyba: String(e).slice(0, 200),
+          });
+        }
+      }
+      return json({ ok: true, email, expirace, prvni });
+    }
+
+    // --- 3) Selhaná platba: NIC nezamykáme --------------------------------
+    // Grace v `expires_at` pokryje Stripe Smart Retries. Když se karta nakonec
+    // nestrhne, přístup vyprší sám. Aktivní revoke by byl křehčí.
+    if (typ === "invoice.payment_failed") {
+      const email = String(obj.customer_email ?? "").trim().toLowerCase();
+      await alertAdmin("Stripe: selhala platba měsíčního členství", {
+        email, invoice: obj.id, poznamka: `Nezamykáme, grace ${GRACE_DNI} dní, pak vyprší samo.`,
+      });
+      return json({ ok: true, poznamka: "logovano" });
+    }
+
+    // --- 4) Zrušení předplatného: taky NIC --------------------------------
+    // Zákazník má zaplaceno do konce období, tak ho tam necháme dojet.
+    if (typ === "customer.subscription.deleted") {
+      return json({ ok: true, poznamka: "expirace dojede sama" });
+    }
+
+    return json({ ok: true, ignorovano: typ });
+  } catch (e) {
+    // Stripe při nenulovém statusu zkusí událost poslat znovu, což je žádoucí.
+    await alertAdmin("Stripe webhook: neošetřená chyba", {
+      typ, chyba: String(e).slice(0, 300),
+    });
+    return json({ error: "internal" }, 500);
+  }
+});

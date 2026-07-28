@@ -39,7 +39,14 @@ Deno.serve(async (req) => {
     admin.from("entitlements").select("product").eq("active", true).eq("source", "simpleshop").gte("granted_at", yStart.toISOString()),
     admin.from("withdrawals").select("status"),
     admin.from("referrals").select("status"),
-    admin.from("entitlements").select("id", { count: "exact", head: true }).eq("product", "academy").eq("active", true).eq("source", "simpleshop"),
+    // ⛔ OPRAVA 28. 7. 2026: bylo tu `select("id")`, jenze `entitlements` sloupec `id`
+    // NEMA (PK je email+product). Dotaz tise selhal, `count` vyslo null a radek nize
+    // ho prebil nulou -> pocitadlo zakladajicich hlasilo jen rucni offset. Nebylo to
+    // videt, protoze skutecny pocet byl taky 0. Tataz chyba byla 27. 7. opravena
+    // v admin-api, tady se prehledla. Detail: pamet `feedback-select-neexistujiciho-sloupce`.
+    // ⚠️ Filtr source='simpleshop' je ZAMERNY a musi zustat: do padesatky zakladajicich
+    // se pocitaji jen DOZIVOTNI prodeje, ne mesicni clenstvi (source='stripe-monthly').
+    admin.from("entitlements").select("email", { count: "exact", head: true }).eq("product", "academy").eq("active", true).eq("source", "simpleshop"),
   ]);
 
   // zakladajici clenove: realne prodeje pres SimpleShop + rucni offset (app_config
