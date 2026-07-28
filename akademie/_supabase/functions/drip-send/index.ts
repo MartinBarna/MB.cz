@@ -408,7 +408,7 @@ Deno.serve(async (req: Request) => {
   // due leady (only_email = zpracuj jen jeden konkretni lead -> bezpecny instant-send bez zavodu)
   const limit = Number(body.limit ?? 200);
   const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : '';
-  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token,next_send_at';
+  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token,next_send_at,vars';
   const dueBase = () => admin.from('leads').select(FIELDS)
     .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso)
     .order('next_send_at', { ascending: true }).limit(limit);
@@ -521,7 +521,15 @@ Deno.serve(async (req: Request) => {
     };
     if (already) { await advance(); skippedAlready++; continue; }
     try {
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars);
+      // ZALOHA PRO OPAKOVANY POKUS: `vars` z tela invoku existuji jen jednou. Kdyz odeslani
+      // selze, dalsi pokus jede z hodinove davky, ktera zadne telo nema — a mail by spadl
+      // na `unresolved_token` uz navzdy (viz leads-vars.sql). Proto se ctou i z leada.
+      // ⛔ Vyhradne `l.vars[l.track]`, nikdy plosne: zaznam patrici jine trati nesmi
+      // prosaknout do mailu, ktery si nahodou pojmenoval promennou stejne.
+      const varsZLeada = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars))
+        ? (l.vars as Record<string, unknown>)[String(l.track)] as Record<string, unknown> | undefined
+        : undefined;
+      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars ?? varsZLeada ?? null);
       const m = renderEmail(tpl, seg, v, footer);
       await pace();   // rozestup mezi volanimi Resendu, viz SEND_GAP_MS vyse
       const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);

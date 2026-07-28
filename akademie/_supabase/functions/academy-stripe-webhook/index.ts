@@ -315,17 +315,24 @@ async function posliUvitani(
     return;
   }
 
+  // ⛔ `vars` se ukládají i K LEADOVI, ne jen do těla invoku níž. Tělo existuje jednou;
+  // když odeslání selže, opakovaný pokus jede z hodinové dávky a bez tohohle by spadl
+  // na `unresolved_token` už navždy. Klíčuje se tratí, viz `leads-vars.sql`.
+  const varsProLeada = vars ? { [track]: vars } : null;
+
   const { data: lead } = await admin
     .from("leads").select("id,name").eq("email", email).limit(1);
   if (lead && lead.length) {
     await admin.from("leads").update({
       track: track, step: 0, status: "active",
       next_send_at: nowIso, purchased: true, updated_at: nowIso,
+      ...(varsProLeada ? { vars: varsProLeada } : {}),
     }).eq("id", lead[0].id);
   } else {
     await admin.from("leads").insert({
       email, track: track, step: 0, status: "active",
       next_send_at: nowIso, purchased: true, source: "stripe-monthly",
+      ...(varsProLeada ? { vars: varsProLeada } : {}),
     });
   }
 

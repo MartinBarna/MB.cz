@@ -144,33 +144,35 @@ async function sendRozlouceni(admin: any, email: string, product: "academy" | "v
     return;
   }
 
+  const nazev = product === "academy" ? "Barna Academy" : "Videokurz výživy";
+  const vars = {
+    castka: "celé částky",     // SimpleShop v storno payloadu castku spolehlive nenese
+    produkt: nazev,
+    varianta: product === "academy" ? "doživotní přístup" : "videokurz",
+    znovu_odkaz: product === "academy"
+      ? "https://martinbarna.cz/akademie/#cena"
+      : "https://martinbarna.cz/videokurz/",
+    objednavka: orderId || "",
+  };
+
+  // ⛔ `vars` se ukladaji i K LEADOVI, ne jen do tela invoku niz. Telo existuje jednou;
+  // kdyz odeslani selze, opakovany pokus jede z hodinove davky a bez tohohle by spadl
+  // na `unresolved_token` uz navzdy. Klicuje se trati, viz `leads-vars.sql`.
   const { data: lead } = await admin.from("leads").select("id").eq("email", email).limit(1);
   if (lead && lead.length) {
-    await admin.from("leads").update({ track: TRACK, step: 0, status: "active", next_send_at: nowIso, updated_at: nowIso }).eq("id", lead[0].id);
+    await admin.from("leads").update({ track: TRACK, step: 0, status: "active", next_send_at: nowIso, updated_at: nowIso, vars: { [TRACK]: vars } }).eq("id", lead[0].id);
   } else {
-    await admin.from("leads").insert({ email, track: TRACK, step: 0, status: "active", next_send_at: nowIso, source: "simpleshop-storno" });
+    await admin.from("leads").insert({ email, track: TRACK, step: 0, status: "active", next_send_at: nowIso, source: "simpleshop-storno", vars: { [TRACK]: vars } });
   }
 
   const { data: cfg } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
   const dripSecret = cfg?.value ? String(cfg.value) : "";
   if (!dripSecret) return;
 
-  const nazev = product === "academy" ? "Barna Academy" : "Videokurz výživy";
   await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-drip-secret": dripSecret },
-    body: JSON.stringify({
-      only_email: email,
-      vars: {
-        castka: "celé částky",     // SimpleShop v storno payloadu castku spolehlive nenese
-        produkt: nazev,
-        varianta: product === "academy" ? "doživotní přístup" : "videokurz",
-        znovu_odkaz: product === "academy"
-          ? "https://martinbarna.cz/akademie/#cena"
-          : "https://martinbarna.cz/videokurz/",
-        objednavka: orderId || "",
-      },
-    }),
+    body: JSON.stringify({ only_email: email, vars }),
   }).catch(() => null);
 }
 
