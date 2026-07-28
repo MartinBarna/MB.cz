@@ -4561,21 +4561,6 @@
     "portion": 30
   },
   {
-    "id": "chia",
-    "name": "Chia semínka",
-    "cat": "fat",
-    "per100": {
-      "kcal": 486,
-      "p": 17,
-      "c": 42,
-      "f": 31,
-      "fib": 34,
-      "carbBasis": "total"
-    },
-    "portion": 15,
-    "portionLabel": "1 lžíce ~15 g"
-  },
-  {
     "id": "chia-seminka",
     "name": "Chia semínka",
     "cat": "fat",
@@ -9920,20 +9905,6 @@
       "fib": 1.7
     },
     "portion": 150
-  },
-  {
-    "id": "paprika",
-    "name": "Paprika červená",
-    "cat": "veg",
-    "per100": {
-      "kcal": 31,
-      "p": 1,
-      "c": 6,
-      "f": 0.3,
-      "fib": 2.1
-    },
-    "portion": 120,
-    "portionLabel": "1 ks ~120 g"
   },
   {
     "id": "paprika-cervena",
