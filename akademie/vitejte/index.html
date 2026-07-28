@@ -9,7 +9,12 @@
 <link rel="stylesheet" href="/assets/ba-ui.css?v=r3">
 <style>
   .wrap{max-width:640px;margin:0 auto;padding:30px 20px 80px;}
-  .crumb{color:var(--gold-soft);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;text-align:center;}
+  /* ⚠️ Velikost `.crumb` tady ZÁMĚRNĚ nenastavuju. arena.css nese celowebové
+     `.ba .crumb{font-size:.7rem !important}` (11,2 px), které přebije i vyšší
+     specificitu. Přebít by šlo jen dalším !important, ale to by z téhle jediné
+     stránky udělalo výjimku proti zbytku webu. Je to designový token, ne chyba
+     téhle stránky, takže změna patří do arena.css a je na řídicím okně. */
+  .crumb{color:var(--gold-soft);font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;}
   h1{font-size:clamp(1.8rem,5vw,2.4rem);color:#fff;margin:.5rem 0 .8rem;letter-spacing:-.02em;text-align:center;}
   .card{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:20px;padding:30px 26px 28px;text-align:center;}
   .tick{width:66px;height:66px;border-radius:50%;background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-size:2rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 10px 30px rgba(235,177,44,.25);}
@@ -20,7 +25,7 @@
   .ps b{color:#fff;}
   .ps a{color:var(--gold-soft);text-decoration:underline;text-underline-offset:2px;}
   .ps a:hover{color:#fff;}
-  .note{color:#9b9080;font-size:.78rem;text-align:center;margin:18px 0 0;line-height:1.6;}
+  .note{color:#a49a8c;font-size:.83rem;text-align:center;margin:18px 0 0;line-height:1.6;}
   .note a{color:var(--gold-soft);text-decoration:underline;text-underline-offset:2px;}
   .backrow{margin:22px 0 0;text-align:center;}
   .backrow a{color:var(--muted-2);text-decoration:none;font-size:.88rem;}
