@@ -446,6 +446,43 @@
       m.items = m.items.filter(function (it) { return it.food.cat === 'protein' || it.grams >= 8; });
     });
 
+    // [fix 2026-07-27] POSLEDNÍ ZÁCHRANA proti podstřelení. Den, který i po zaokrouhlení
+    // a stropech zůstal víc než 5 % POD cílem, dorovnej na položkách, které mají do stropu
+    // porce ještě rezervu.
+    // ⛔ PROČ TO TU MUSÍ BÝT: finální dorovnání kalorií výš selhává ve DVOU případech:
+    //  1. den nemá ANI JEDNU položku kategorie `carb` (sacharidový cíl pokryje ovoce
+    //     a zelenina) → podmínka `carbKcal > 0` neplatí a dorovnání je prázdná operace
+    //  2. dorovnání sacharidy zvětší, jenže strop hned za ním je ořeže zpátky
+    //     a kalorie se už nikdy nepřepočítají
+    // Naměřeno 27. 7. 2026 po přidání chudé zeleniny (paprika zelená 20 kcal): 6 dnů
+    // z 324 skončilo 10 až 13 % POD cílem. Obě vady jsou v enginu dávno.
+    // Roste se jen na NOSIČÍCH SACHARIDŮ (carb, pak fruit) — zelenina se schválně
+    // nezvětšuje, 250 g špenátu navíc přidá pár kalorií a klientovi to nedává smysl.
+    // ⛔ Stejná oprava je v appce (`src/engine/meal-gen.ts`), hlídá parita.
+    var chybiKcal = function () {
+      var mel = 0;
+      out.forEach(function (m) {
+        m.items.forEach(function (it) { mel += macrosFor(it.food, it.grams).kcal; });
+      });
+      return targets.kcal - mel;
+    };
+    if (chybiKcal() > targets.kcal * 0.05) {
+      ['carb', 'fruit'].forEach(function (cat) {
+        out.forEach(function (m) {
+          m.items.forEach(function (it) {
+            if (it.food.cat !== cat) return;
+            var chybi = chybiKcal();
+            if (chybi <= targets.kcal * 0.05) return;
+            var cap = FOOD_CAP[it.food.id] != null ? FOOD_CAP[it.food.id] : CAP[it.food.cat];
+            var rezerva = Math.max(0, (cap != null ? cap : Infinity) - it.grams);
+            var naGram = it.food.per100.kcal / 100;
+            if (rezerva < 5 || naGram <= 0) return;
+            it.grams += Math.min(rezerva, Math.ceil(chybi / naGram / 5) * 5);
+          });
+        });
+      });
+    }
+
     // přepočítej totály po normalizaci
     out.forEach(function (m) {
       m.totals = m.items.reduce(function (s, it) {
