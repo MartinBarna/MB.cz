@@ -25,6 +25,16 @@ const STRIPE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
 
+// ⚠️ RESTRICTED klíč, NE plný secret. Práva jen Subscriptions:Write (+Read, co si
+// k tomu Stripe vyžádá). Schválně se nejmenuje STRIPE_SECRET_KEY jako v appce, aby
+// si nikdo nemyslel, že tu leží plný klíč a že si přes něj může sáhnout na platby.
+// Slouží k JEDINÉ věci: zrušit předplatné při refundu. Bez něj by se za měsíc
+// strhlo znovu, i když jsme přístup odebrali.
+const STRIPE_SUBS_KEY = Deno.env.get("STRIPE_RESTRICTED_SUBS_KEY") ?? "";
+
+// Trať rozlučkového mailu po refundu. Text píše řídicí okno.
+const ROZLOUCENI_TRACK = "rozlouceni-refund";
+
 // Stripe (live, účet Tvůj Coach acct_1TqQ56Bq3rKubW9k), založeno 28. 7. 2026:
 //   produkt      prod_Uy7nu91R8yjVwI  „Barna Academy členství"
 //   price        price_1TyBXTBq3rKubW9kGizHd41g  = 990 CZK/měs, DPH v ceně
@@ -170,7 +180,15 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
 
 // --- Udělení / prodloužení přístupu ----------------------------------------
 // Vrací true, když šlo o PRVNÍ udělení (rozhoduje o uvítacím e-mailu).
-async function udelPristup(email: string, expiraceIso: string): Promise<boolean> {
+// `stripe` = vazba na konkrétní platbu. Ukládá se kvůli REFUNDU: bez ní by se
+// refund musel párovat podle e-mailu, což je nejednoznačné (Academy i appka jedou
+// na jednom Stripe účtu, takže by refund appky mohl sebrat Academy), a bez
+// `subscription` by nebylo co zrušit a za měsíc by se strhlo znovu.
+async function udelPristup(
+  email: string,
+  expiraceIso: string,
+  stripe?: { customer?: string | null; subscription?: string | null },
+): Promise<boolean> {
   const { data: stavajici } = await admin
     .from("entitlements")
     .select("source, active, expires_at")
@@ -202,6 +220,10 @@ async function udelPristup(email: string, expiraceIso: string): Promise<boolean>
       source: "stripe-monthly",
       granted_at: new Date().toISOString(),
       expires_at: expiraceIso,
+      // ⚠️ Nepřepisovat na null, když událost ID nenese (např. obnova bez customeru).
+      // `??` by null zapsalo, proto se pole doplní jen když hodnota opravdu je.
+      ...(stripe?.customer ? { stripe_customer_id: stripe.customer } : {}),
+      ...(stripe?.subscription ? { stripe_subscription_id: stripe.subscription } : {}),
     },
     { onConflict: "email,product" },
   );
@@ -212,7 +234,9 @@ async function udelPristup(email: string, expiraceIso: string): Promise<boolean>
 
 // --- Uvítací e-mail (jen při prvním udělení) --------------------------------
 // Vzor převzatý ze `simpleshop-webhook`, ale s vlastní tratí pro měsíční členy.
-async function posliUvitani(email: string) {
+// `track` má výchozí hodnotu, takže původní volání `posliUvitani(email)` funguje
+// beze změny. Používá se i pro rozlučkový mail po refundu.
+async function posliUvitani(email: string, track: string = WELCOME_TRACK) {
   const nowIso = new Date().toISOString();
 
   // Když trať nemá šablonu, drip-send by neposlal nic a nikdo by se to nedozvěděl.
@@ -220,13 +244,13 @@ async function posliUvitani(email: string) {
   const { data: sablona } = await admin
     .from("email_templates")
     .select("track")
-    .eq("track", WELCOME_TRACK)
+    .eq("track", track)
     .eq("step", 0)
     .maybeSingle();
   if (!sablona) {
     await alertAdmin("Stripe: měsíční člen nedostal uvítací e-mail (chybí šablona)", {
       email,
-      track: WELCOME_TRACK,
+      track: track,
       poznamka: "Přístup UDĚLEN. Chybí step 0 v email_templates, dopsat text.",
     });
     return;
@@ -236,12 +260,12 @@ async function posliUvitani(email: string) {
     .from("leads").select("id,name").eq("email", email).limit(1);
   if (lead && lead.length) {
     await admin.from("leads").update({
-      track: WELCOME_TRACK, step: 0, status: "active",
+      track: track, step: 0, status: "active",
       next_send_at: nowIso, purchased: true, updated_at: nowIso,
     }).eq("id", lead[0].id);
   } else {
     await admin.from("leads").insert({
-      email, track: WELCOME_TRACK, step: 0, status: "active",
+      email, track: track, step: 0, status: "active",
       next_send_at: nowIso, purchased: true, source: "stripe-monthly",
     });
   }
@@ -315,7 +339,10 @@ Deno.serve(async (req) => {
 
       // Prozatímní přístup. `invoice.paid` dorazí vzápětí a nahradí ho přesným
       // koncem období. Kdyby nedorazila, člen i tak měsíc dovnitř může.
-      const prvni = await udelPristup(email, zaDni(PROVIZORNI_DNI));
+      const prvni = await udelPristup(email, zaDni(PROVIZORNI_DNI), {
+        customer: typeof obj.customer === "string" ? obj.customer : null,
+        subscription: typeof obj.subscription === "string" ? obj.subscription : null,
+      });
       if (prvni) {
         try { await posliUvitani(email); }
         catch (e) {
@@ -372,7 +399,14 @@ Deno.serve(async (req) => {
         });
       }
 
-      const prvni = await udelPristup(email, expirace);
+      // ⚠️ `invoice.subscription` v novějších verzích API NEEXISTUJE, přesunulo se pod
+      // `parent.subscription_details.subscription` (ověřeno proti 2026-06-24.dahlia).
+      // Čteme obě cesty, ať to nespadne při změně verze ani jedním směrem.
+      const subId = obj.parent?.subscription_details?.subscription ?? obj.subscription ?? null;
+      const prvni = await udelPristup(email, expirace, {
+        customer: typeof obj.customer === "string" ? obj.customer : null,
+        subscription: typeof subId === "string" ? subId : null,
+      });
 
       // ⛔ ODSUD SE UVÍTAČKA NEPOSÍLÁ NIKDY (oprava 28. 7. 2026).
       // Při prvním nákupu dorazí `checkout.session.completed` i `invoice.paid`
@@ -401,6 +435,87 @@ Deno.serve(async (req) => {
     // --- 3) Selhaná platba: NIC nezamykáme --------------------------------
     // Grace v `expires_at` pokryje Stripe Smart Retries. Když se karta nakonec
     // nestrhne, přístup vyprší sám. Aktivní revoke by byl křehčí.
+    // --- 2b) REFUND a SPOR: odebrat přístup a zastavit další strhávání --------
+    // Martin klikne refund tam, kde jsou peníze, a zbytek dodělá tohle.
+    // ⛔ Párujeme podle `stripe_customer_id`, NE podle e-mailu. Academy i appka jedou
+    //    na jednom Stripe účtu, takže podle e-mailu by refund za appku mohl sebrat
+    //    Academy témuž člověku. Cizí platba se sem dostane taky a musí projít bez efektu.
+    if (typ === "charge.refunded" || typ === "charge.dispute.created") {
+      const jeSpor = typ === "charge.dispute.created";
+      // U sporu je v `data.object` Dispute, u refundu Charge. Zákazník je na obou.
+      const zakaznik = typeof obj.customer === "string" ? obj.customer : "";
+      if (!zakaznik) return json({ ok: true, ignored: "bez-zakaznika" });
+
+      const { data: ent } = await admin
+        .from("entitlements")
+        .select("email, product, source, expires_at, stripe_subscription_id")
+        .eq("stripe_customer_id", zakaznik)
+        .eq("product", "academy")
+        .maybeSingle();
+
+      // Není náš zákazník (typicky refund předplatného appky). Ticho, žádný alert.
+      if (!ent) return json({ ok: true, ignored: "not-ours", zakaznik });
+
+      // ⚠️ ČÁSTEČNÝ REFUND PŘÍSTUP NEODEBÍRÁ. Vrácení 200 Kč z 990 není konec
+      // členství a automatika by tu rozhodovala o něčem, co neví. Jen upozorníme.
+      const castka = Number(obj.amount ?? 0);
+      const vraceno = Number(obj.amount_refunded ?? 0);
+      if (!jeSpor && castka > 0 && vraceno > 0 && vraceno < castka) {
+        await alertAdmin("Stripe: ČÁSTEČNÝ refund, přístup NECHÁN beze změny", {
+          email: ent.email, vraceno_haleru: vraceno, celkem_haleru: castka,
+          poznamka: "Rozhodni ručně. Automatika u částečného refundu přístup neodebírá.",
+        });
+        return json({ ok: true, castecny_refund: true, odebrano: false });
+      }
+
+      // 1) zastavit další strhávání
+      let zruseno = "nebylo-co";
+      if (ent.stripe_subscription_id) {
+        if (!STRIPE_SUBS_KEY) {
+          zruseno = "CHYBI-KLIC";
+        } else {
+          try {
+            const r = await fetch(
+              "https://api.stripe.com/v1/subscriptions/" + encodeURIComponent(ent.stripe_subscription_id),
+              { method: "DELETE", headers: { Authorization: "Bearer " + STRIPE_SUBS_KEY } },
+            );
+            zruseno = r.ok ? "ok" : "http-" + r.status;
+          } catch (e) { zruseno = "chyba-" + String(e).slice(0, 60); }
+        }
+      }
+
+      // 2) odebrat přístup (expirace na teď, řádek necháváme kvůli historii)
+      const { error: chybaRevoke } = await admin
+        .from("entitlements")
+        .update({ expires_at: new Date().toISOString() })
+        .eq("email", ent.email).eq("product", "academy");
+
+      // 3) rozlučkový mail (best-effort, nikdy nesmí shodit odebrání)
+      try { await posliUvitani(ent.email, ROZLOUCENI_TRACK); } catch { /* best-effort */ }
+
+      // 4) hlásit. U sporu a u nezrušeného předplatného VŽDY, jinak by to zůstalo tiché.
+      if (jeSpor || zruseno !== "ok" || chybaRevoke) {
+        await alertAdmin(
+          jeSpor ? "🔴 Stripe: SPOR (chargeback) u Academy, přístup odebrán"
+                 : "Stripe: refund Academy, ale předplatné se nezrušilo",
+          {
+            email: ent.email,
+            zruseni_predplatneho: zruseno,
+            odebrani_pristupu: chybaRevoke ? "SELHALO: " + chybaRevoke.message : "ok",
+            co_delat: zruseno === "CHYBI-KLIC"
+              ? "⛔ ZRUŠ PŘEDPLATNÉ RUČNĚ VE STRIPU. Chybí STRIPE_RESTRICTED_SUBS_KEY."
+              : (jeSpor ? "Spor lze u banky vyhrát. Když vyhraješ, vrať přístup ručně." : "Zkontroluj ve Stripu."),
+          },
+        );
+      }
+
+      return json({
+        ok: true, typ, email: ent.email,
+        zruseno_predplatne: zruseno,
+        pristup_odebran: !chybaRevoke,
+      });
+    }
+
     if (typ === "invoice.payment_failed") {
       const email = String(obj.customer_email ?? "").trim().toLowerCase();
       await alertAdmin("Stripe: selhala platba měsíčního členství", {
