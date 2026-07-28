@@ -32,8 +32,22 @@ const ALERT_FALLBACK = "fitness.barna@gmail.com";
 // strhlo znovu, i když jsme přístup odebrali.
 const STRIPE_SUBS_KEY = Deno.env.get("STRIPE_RESTRICTED_SUBS_KEY") ?? "";
 
-// Trať rozlučkového mailu po refundu. Text píše řídicí okno.
-const ROZLOUCENI_TRACK = "rozlouceni-refund";
+// Tratě rozlučkového mailu. ⛔ JSOU DVĚ a musí se vybrat podle situace.
+// Engine neumí podmínky, takže větev „přístup končí ihned" a „přístup ještě doběhne"
+// nejdou udělat v jedné šabloně. Tady se jen vybírá, která se použije.
+// ⚠️ 28. 7. 2026 tu byl název `rozlouceni-refund`, který NEEXISTUJE. Rozdělil jsem
+// tratě na dvě a konstantu zapomněl přepsat ⇒ při prvním ostrém refundu mail
+// NEODEŠEL a chytila to až pojistka „chybí šablona". Proto tu ta poznámka je.
+const ROZLOUCENI_HNED = "rozlouceni-refund-hned";
+const ROZLOUCENI_DOJEZD = "rozlouceni-refund-dojezd";
+
+/** Vybere trať podle toho, jestli přístup končí teď, nebo ještě doběhne. */
+function rozlouceniTrack(expiraceIso: string | null): string {
+  if (!expiraceIso) return ROZLOUCENI_HNED;
+  return new Date(expiraceIso).getTime() > Date.now() + 60_000
+    ? ROZLOUCENI_DOJEZD
+    : ROZLOUCENI_HNED;
+}
 
 // Stripe (live, účet Tvůj Coach acct_1TqQ56Bq3rKubW9k), založeno 28. 7. 2026:
 //   produkt      prod_Uy7nu91R8yjVwI  „Barna Academy členství"
@@ -188,6 +202,7 @@ async function udelPristup(
   email: string,
   expiraceIso: string,
   stripe?: { customer?: string | null; subscription?: string | null },
+  provizorni = false,
 ): Promise<boolean> {
   const { data: stavajici } = await admin
     .from("entitlements")
@@ -212,6 +227,20 @@ async function udelPristup(
 
   const jePrvni = !stavajici || !stavajici.active;
 
+  // ⛔ PROVIZORNÍ GRANT NESMÍ NIKDY ZKRÁTIT UŽ ZAPSANOU EXPIRACI.
+  // `checkout.session.completed` dává jen odhad (35 dní), `invoice.paid` zná přesný
+  // konec období. Stripe NEZARUČUJE pořadí doručení, takže když dorazí invoice první,
+  // checkout jí přepsal přesnou hodnotu zpátky na odhad. U měsíčního je to den,
+  // ⚠️ ALE U ROČNÍHO TARIFU by odhad 35 dní přepsal 370 a člověk by zaplatil rok
+  // a přístup by mu vypršel za měsíc. Změřeno 28. 7. 2026 na reálné platbě.
+  let expiraceFinal = expiraceIso;
+  if (provizorni && stavajici?.expires_at) {
+    const stara = new Date(stavajici.expires_at).getTime();
+    if (Number.isFinite(stara) && stara > new Date(expiraceIso).getTime()) {
+      expiraceFinal = stavajici.expires_at;   // stávající je delší ⇒ nesaháme na ni
+    }
+  }
+
   const { error } = await admin.from("entitlements").upsert(
     {
       email,
@@ -219,7 +248,7 @@ async function udelPristup(
       active: true,
       source: "stripe-monthly",
       granted_at: new Date().toISOString(),
-      expires_at: expiraceIso,
+      expires_at: expiraceFinal,
       // ⚠️ Nepřepisovat na null, když událost ID nenese (např. obnova bez customeru).
       // `??` by null zapsalo, proto se pole doplní jen když hodnota opravdu je.
       ...(stripe?.customer ? { stripe_customer_id: stripe.customer } : {}),
@@ -339,10 +368,12 @@ Deno.serve(async (req) => {
 
       // Prozatímní přístup. `invoice.paid` dorazí vzápětí a nahradí ho přesným
       // koncem období. Kdyby nedorazila, člen i tak měsíc dovnitř může.
+      // Poslední argument `true` = PROVIZORNÍ. Nesmí zkrátit expiraci, kterou už
+      // případně zapsala `invoice.paid` (Stripe pořadí událostí negarantuje).
       const prvni = await udelPristup(email, zaDni(PROVIZORNI_DNI), {
         customer: typeof obj.customer === "string" ? obj.customer : null,
         subscription: typeof obj.subscription === "string" ? obj.subscription : null,
-      });
+      }, true);
       if (prvni) {
         try { await posliUvitani(email); }
         catch (e) {
@@ -479,7 +510,17 @@ Deno.serve(async (req) => {
               "https://api.stripe.com/v1/subscriptions/" + encodeURIComponent(ent.stripe_subscription_id),
               { method: "DELETE", headers: { Authorization: "Bearer " + STRIPE_SUBS_KEY } },
             );
-            zruseno = r.ok ? "ok" : "http-" + r.status;
+            if (r.ok) zruseno = "ok";
+            else {
+              // ⚠️ UKLÁDÁME I TĚLO ODPOVĚDI, ne jen číslo. 28. 7. 2026 přišlo 404
+              // a musel jsem příčinu dedukovat z dokumentace, protože jsme měli
+              // jen stavový kód. Stripe v těle posílá `error.code` (např.
+              // `resource_missing` = objekt v tomhle režimu klíče neexistuje, typicky
+              // test klíč na live objekt) a u málo práv i jmenovitě chybějící scope.
+              // Nestačí vědět, ŽE to selhalo. Musí být poznat PROČ.
+              const telo = await r.text().catch(() => "");
+              zruseno = "http-" + r.status + " " + telo.slice(0, 200);
+            }
           } catch (e) { zruseno = "chyba-" + String(e).slice(0, 60); }
         }
       }
@@ -491,7 +532,10 @@ Deno.serve(async (req) => {
         .eq("email", ent.email).eq("product", "academy");
 
       // 3) rozlučkový mail (best-effort, nikdy nesmí shodit odebrání)
-      try { await posliUvitani(ent.email, ROZLOUCENI_TRACK); } catch { /* best-effort */ }
+      // Po refundu odebíráme přístup ihned, takže vyjde větev „hned". Volba je tu
+      // přesto dynamická, ať to sedí i kdyby se sem někdy dostalo zrušení s dojezdem.
+      try { await posliUvitani(ent.email, rozlouceniTrack(new Date().toISOString())); }
+      catch { /* best-effort, nikdy nesmí shodit odebrání přístupu */ }
 
       // 4) hlásit. U sporu a u nezrušeného předplatného VŽDY, jinak by to zůstalo tiché.
       if (jeSpor || zruseno !== "ok" || chybaRevoke) {
