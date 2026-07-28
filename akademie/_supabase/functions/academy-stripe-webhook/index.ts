@@ -31,6 +31,46 @@ const ALERT_FALLBACK = "fitness.barna@gmail.com";
 //   Payment Link https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00
 //   redirect po platbě -> https://martinbarna.cz/akademie/vitejte/
 
+// ⛔⛔ WHITELIST: KTERÉ PLATBY VŮBEC ZAKLÁDAJÍ ACADEMY (přidáno 28. 7. 2026)
+// Stripe účet je SPOLEČNÝ pro Academy i pro appku Tvůj Coach (acct_1TqQ56Bq3rKubW9k)
+// a webhook endpoint dostává události CELÉHO účtu, ne jen našeho produktu.
+// Bez téhle kontroly by každý, kdo si v appce koupí VIP za 499 Kč, dostal zdarma
+// i Academy za 8 900 Kč, a nikdo by se to nedozvěděl (nic by nespadlo, alert nesepne).
+// Ceny appky pro představu, TY SEM NEPATŘÍ: price_1TtvIk… 499, price_1TtvN6… 249.
+// Vzorec „nová cesta, staré pravidlo": appkový stripe-webhook se proti cizím platbám
+// brání tím, že vyžaduje user_id v metadatech. Tenhle guard je jeho protějšek.
+const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
+  "plink_1TyBZUBq3rKubW9k81dwwUsq,plink_1TyFAyBq3rKubW9kXRelRllH")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+
+const ALLOWED_PRICES = (Deno.env.get("ACADEMY_ALLOWED_PRICES") ??
+  "price_1TyBXTBq3rKubW9kGizHd41g,price_1TyF94Bq3rKubW9kuUZwqGWv")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+
+// Záchranná síť: kdyby na témž produktu vznikla nová cena a zapomnělo se ji sem dopsat,
+// grant by tiše přestal chodit platícím lidem. Produkt je stabilnější klíč než cena.
+const ALLOWED_PRODUCTS = (Deno.env.get("ACADEMY_ALLOWED_PRODUCTS") ?? "prod_Uy7nu91R8yjVwI")
+  .split(",").map((s) => s.trim()).filter(Boolean);
+
+// Vytáhne z řádků faktury ceny a produkty.
+// ⚠️ Tvar ověřen proti Stripe API 2026-06-24.dahlia: cena je na
+// `lines.data[].pricing.price_details.price`, NE na `price.id` jako ve starších
+// verzích. Čteme obojí, ať to nespadne při změně verze ani jedním směrem.
+// Kdyby se četla jen stará cesta, whitelist by neodpovídal NIČEMU a Academy by
+// nedostal ani ten, kdo řádně zaplatil. To je horší vada než ta, kterou tohle řeší.
+// deno-lint-ignore no-explicit-any
+function cenyAProdukty(lines: any): { ceny: string[]; produkty: string[] } {
+  const ceny: string[] = [], produkty: string[] = [];
+  for (const l of (Array.isArray(lines?.data) ? lines.data : [])) {
+    const p = l?.pricing?.price_details;
+    const cena = p?.price ?? l?.price?.id ?? null;          // nová i legacy cesta
+    const produkt = p?.product ?? l?.price?.product ?? null;
+    if (typeof cena === "string") ceny.push(cena);
+    if (typeof produkt === "string") produkty.push(produkt);
+  }
+  return { ceny, produkty };
+}
+
 // Trať pro MĚSÍČNÍ členy. Musí existovat v `email_templates`, jinak se pošle alert
 // a člen zůstane bez uvítačky (přístup dostane tak jako tak, grant je první).
 const WELCOME_TRACK = "onboarding-nakup-academy-mesicni";
@@ -255,6 +295,13 @@ Deno.serve(async (req) => {
       if (obj.mode !== "subscription") {
         return json({ ok: true, ignorovano: "ne-predplatne" });
       }
+      // ⛔ Jen platby z NAŠICH Payment Linků. Session z appky (VIP/Basic) sem taky
+      // dorazí, protože účet je společný, a bez tohohle by zakládala Academy zdarma.
+      // Tiché ignorování, ne alert: platby za appku jsou v pořádku, jen nejsou naše.
+      const plink = typeof obj.payment_link === "string" ? obj.payment_link : "";
+      if (!ALLOWED_PLINKS.includes(plink)) {
+        return json({ ok: true, ignored: "foreign-price", payment_link: plink || null });
+      }
       const email = String(
         obj.customer_details?.email ?? obj.customer_email ?? "",
       ).trim().toLowerCase();
@@ -282,6 +329,15 @@ Deno.serve(async (req) => {
 
     // --- 2) Zaplacená faktura: první i každá další obnova ------------------
     if (typ === "invoice.paid" || typ === "invoice.payment_succeeded") {
+      // ⛔ Jen faktury za NAŠI cenu nebo náš produkt. Faktura za appkové VIP/Basic
+      // sem dorazí taky (společný účet) a bez tohohle by zakládala Academy zdarma.
+      const { ceny, produkty } = cenyAProdukty(obj.lines);
+      const nase = ceny.some((c) => ALLOWED_PRICES.includes(c)) ||
+                   produkty.some((p) => ALLOWED_PRODUCTS.includes(p));
+      if (!nase) {
+        return json({ ok: true, ignored: "foreign-price", ceny, produkty });
+      }
+
       const email = String(
         obj.customer_email ?? obj.customer_details?.email ?? "",
       ).trim().toLowerCase();
