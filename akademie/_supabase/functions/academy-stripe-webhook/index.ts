@@ -292,11 +292,29 @@ Deno.serve(async (req) => {
         return json({ error: "no-email" }, 422);
       }
 
-      // Konec zaplaceného období z řádku faktury (unixové sekundy) + grace.
-      const konecS = Number(obj.lines?.data?.[0]?.period?.end ?? 0);
+      // Konec zaplaceného období + grace.
+      // ⚠️ Bereme NEJPOZDĚJŠÍ `period.end` ze VŠECH řádků faktury, ne `data[0]`.
+      // Faktura předplatného může nést víc řádků (proporcionální dopočet při změně
+      // plánu, sleva, jednorázová položka) a pořadí není zaručené. Kdyby se vzal
+      // první řádek a byl to proration za pár dní, členovi by přístup vypršel
+      // uprostřed zaplaceného měsíce.
+      // Tvar pole ověřen proti Stripe API 2026-06-24.dahlia (lines.data[].period.end
+      // v ní pořád existuje). Pozn.: `invoice.subscription` se v novějších verzích
+      // přesunul pod `parent.subscription_details.subscription`, my ho nečteme.
+      const konceS: number[] = Array.isArray(obj.lines?.data)
+        ? obj.lines.data.map((l: { period?: { end?: number } }) => Number(l?.period?.end ?? 0))
+            .filter((n: number) => Number.isFinite(n) && n > 0)
+        : [];
+      const konecS = konceS.length ? Math.max(...konceS) : 0;
       const expirace = konecS > 0
         ? new Date(konecS * 1000 + GRACE_DNI * 86400000).toISOString()
         : zaDni(PROVIZORNI_DNI);
+      if (konecS === 0) {
+        await alertAdmin("Stripe: faktura bez období, dáno provizorních 35 dní", {
+          email: String(obj.customer_email ?? ""), invoice: obj.id,
+          poznamka: "Zkontroluj tvar lines.data[].period.end proti verzi API.",
+        });
+      }
 
       const prvni = await udelPristup(email, expirace);
       if (prvni) {
