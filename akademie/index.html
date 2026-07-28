@@ -140,7 +140,9 @@
       {"@type":"Question","name":"Potřebuju předchozí vzdělání?","acceptedAnswer":{"@type":"Answer","text":"Ne. Academy tě provede od základů, takže to zvládneš i jako úplný začátečník. A pokud už praxi máš, dostaneš hloubku a systém, který ti chyběl."}},
       {"@type":"Question","name":"V jaké formě je obsah?","acceptedAnswer":{"@type":"Answer","text":"Prémiové psané lekce s kvízy a úkoly + poslech lekcí jedním klikem (každá lekce se ti umí přečíst nahlas), ať se učíš i v autě nebo na procházce. Doživotní přístup. Videonástavbu plánujeme přidat jako další bonus."}},
       {"@type":"Question","name":"Je to vědecky podložené?","acceptedAnswer":{"@type":"Answer","text":"Ano. Každá lekce stojí na vědeckých zdrojích, které jsou v textu odcitované - a převedené do srozumitelné, použitelné podoby."}},
-      {"@type":"Question","name":"Kolik Academy stojí?","acceptedAnswer":{"@type":"Answer","text":"Zaváděcí cena pro prvních 50 zakládajících členů je 8 900 Kč jednorázově - doživotní přístup, certifikát i celý videokurz v ceně. Poté se zvyšuje na 12 900 Kč. Pro srovnání: jeden měsíc Diamond koučinku stojí 8 950 Kč - tady máš za stejné peníze celou Academy navždy."}},
+      {"@type":"Question","name":"Kolik Academy stojí?","acceptedAnswer":{"@type":"Answer","text":"Buď 990 Kč měsíčně (zrušíš kdykoli), nebo jednorázově 8 900 Kč s doživotním přístupem. Jednorázová cena je zaváděcí pro prvních 50 zakládajících členů, poté bude 12 900 Kč. Obsah je v obou variantách stejný."}},
+      {"@type":"Question","name":"Jak zruším měsíční členství?","acceptedAnswer":{"@type":"Answer","text":"Dvěma kliknutími v zákaznickém portálu, odkaz máš v každém potvrzení platby. Přístup ti doběhne do konce zaplaceného měsíce. Vrátit se můžeš kdykoli."}},
+      {"@type":"Question","name":"Je appka Tvůj Coach v ceně?","acceptedAnswer":{"@type":"Answer","text":"U doživotního přístupu ano: dostaneš rok VIP verze (hodnota 4 990 Kč). U měsíčního členství ne, ve studiu si ji můžeš přidat za 499 Kč měsíčně."}},
       {"@type":"Question","name":"Co když mi to nesedne?","acceptedAnswer":{"@type":"Answer","text":"Máš 14denní záruku vrácení peněz. Když v prvních 14 dnech zjistíš, že to pro tebe není, napiš mi a vrátím ti celou částku. Nulové riziko."}}
     ]}
     </script>
@@ -152,14 +154,33 @@
       "description": "Vzdělávací program pro trenéry, výživové poradce i závodníky fitness: vědecky podložená výživa, psychologie chování, anatomie a byznys. V češtině, autorsky zpracováno Martinem Barnou.",
       "provider": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz" },
       "inLanguage": "cs",
-      "offers": {
-        "@type": "Offer",
-        "price": "8900",
-        "priceCurrency": "CZK",
-        "availability": "https://schema.org/InStock",
-        "url": "https://martinbarna.cz/akademie/objednavka/",
-        "category": "Paid"
-      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Měsíční členství",
+          "price": "990",
+          "priceCurrency": "CZK",
+          "availability": "https://schema.org/InStock",
+          "url": "https://martinbarna.cz/akademie/#cena",
+          "category": "Paid",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "990",
+            "priceCurrency": "CZK",
+            "billingIncrement": 1,
+            "unitCode": "MON"
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Doživotní přístup",
+          "price": "8900",
+          "priceCurrency": "CZK",
+          "availability": "https://schema.org/InStock",
+          "url": "https://martinbarna.cz/akademie/#cena",
+          "category": "Paid"
+        }
+      ],
       "hasCourseInstance": {
         "@type": "CourseInstance",
         "courseMode": "Online",
@@ -181,7 +202,7 @@
             <h1>Staň se trenérem a&nbsp;výživovým poradcem, kterému klienti věří</h1>
             <p class="lead">Barna Academy je škola, kde tě naučím to, co fakt funguje: vědecky podloženou výživu, psychologii chování, anatomii, byznys a nově i maximální využití AI v tvé praxi. Žádné mýty a zázračné diety. Jen know-how, se kterým získáš výsledky u klientů a vybuduješ si jméno. A když sám/sama závodíš (bikini, physique, kulturistika), naučíš se připravit se, včetně peak weeku a soutěžní diety bez mýtů a bez gearu.</p>
             <div class="mt-4 d-flex flex-wrap gap-2">
-                <a href="/akademie/objednavka/" class="btn-gold">Chci Academy: 8 900 Kč →</a>
+                <a href="#cena" class="btn-gold">Chci Academy: 8 900 Kč →</a>
                 <a href="#moduly" class="btn-ghost">Co se naučím?</a>
             </div>
             <div class="ac-trust">
@@ -198,7 +219,7 @@
     <div id="vkUpsell" style="display:none;background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05));border-bottom:1px solid rgba(235,177,44,.3);">
         <div class="container" style="padding:16px 12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;text-align:center;">
             <span style="font-size:1rem;line-height:1.5;"><b style="color:#EBB12C;">Máš videokurz? Skvělé.</b> Videokurz výživy máš v Academy <b>v ceně</b> a přístup dostaneš <b>hned po zaplacení</b>.</span>
-            <a href="/akademie/objednavka/" class="btn-gold" style="padding:9px 22px;white-space:nowrap;">Chci Academy →</a>
+            <a href="#cena" class="btn-gold" style="padding:9px 22px;white-space:nowrap;">Chci Academy →</a>
         </div>
     </div>
 
@@ -337,8 +358,8 @@
                 <div class="col-lg-9">
                     <div class="card-ac text-center" style="border-color:rgba(246,205,99,.35);">
                         <div style="font-size:2.2rem;line-height:1;">🚀</div>
-                        <h2 style="font-size:1.6rem;margin-top:.5rem;">Kupuješ jednou. Rosteme spolu.</h2>
-                        <p class="text-muted mb-0" style="max-width:700px;margin:.7rem auto 0;">Barna Academy budeme dál <strong>hodně rozšiřovat</strong>: nové moduly, lekce, bonusy i <strong>nové funkce</strong> (na dalších právě pracujeme). Jako člen máš <strong>veškerý budoucí obsah doživotně v ceně</strong>, bez doplácení. A navíc získáš přístup do <strong>affiliate programu</strong>. Doporuč Academy dál a vydělávej.</p>
+                        <h2 style="font-size:1.6rem;margin-top:.5rem;">Jednou, nebo po měsících. Rosteme spolu.</h2>
+                        <p class="text-muted mb-0" style="max-width:700px;margin:.7rem auto 0;">Vyber si: měsíční členství za 990 Kč, nebo jedna platba a doživotní přístup. Barna Academy budeme dál <strong>hodně rozšiřovat</strong>: nové moduly, lekce, bonusy i <strong>nové funkce</strong> (na dalších právě pracujeme). Jako člen máš <strong>veškerý budoucí obsah v ceně</strong>, bez doplácení. A navíc získáš přístup do <strong>affiliate programu</strong>. Doporuč Academy dál a vydělávej.</p>
                     </div>
                 </div>
             </div>
@@ -390,7 +411,7 @@
             <div class="row g-4">
                 <div class="col-md-3"><div class="feature-ac"><div class="ic">📖</div><h5 class="fw-bold">Psané lekce</h5><p class="text-muted small">Srozumitelně, do hloubky, s vědeckými zdroji. Studuj svým tempem.</p></div></div>
                 <div class="col-md-3"><div class="feature-ac"><div class="ic">✅</div><h5 class="fw-bold">Kvízy a úkoly</h5><p class="text-muted small">Po každé lekci si ověříš pochopení a převedeš to do praxe.</p></div></div>
-                <div class="col-md-3"><div class="feature-ac"><div class="ic">∞</div><h5 class="fw-bold">Doživotní přístup, i ke všemu budoucímu</h5><p class="text-muted small">Zaplatíš jednou a máš to napořád. Academy poroste: nové moduly, lekce i bonusy dostaneš v ceně, zdarma.</p></div></div>
+                <div class="col-md-3"><div class="feature-ac"><div class="ic">∞</div><h5 class="fw-bold">Doživotní přístup, i ke všemu budoucímu</h5><p class="text-muted small">U doživotního přístupu zaplatíš jednou a máš to napořád. Academy poroste: nové moduly, lekce i bonusy dostaneš v ceně, zdarma.</p></div></div>
                 <div class="col-md-3"><div class="feature-ac"><div class="ic">🏅</div><h5 class="fw-bold">Certifikát</h5><p class="text-muted small">Po složení závěrečného testu získáš certifikát Barna Academy.</p></div></div>
             </div>
         </div>
@@ -537,46 +558,87 @@
     </section>
 
     <!-- CENA -->
+    <!-- PRO KOHO ACADEMY JE -->
+    <section id="pro-koho">
+        <div class="container" style="max-width:900px;">
+            <div class="sec-head">
+                <h2>Pro koho Academy je</h2>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:stretch;">
+                <div style="flex:1 1 300px;min-width:0;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 22px 24px;">
+                    <h3 style="color:#fff;margin:0 0 .6rem;font-size:1.12rem;">Chceš to umět pro sebe</h3>
+                    <p style="color:#cfcabf;margin:0;font-size:.95rem;line-height:1.65;">Roky posloucháš protichůdné rady a chceš konečně rozumět vlastnímu jídlu a tréninku. V Academy se naučíš, jak to funguje, a nástroje ti práci udělají za tebe: spočítáš si kalorie a makra a vygeneruješ jídelníček i trénink, kolikrát chceš.</p>
+                </div>
+                <div style="flex:1 1 300px;min-width:0;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 22px 24px;">
+                    <h3 style="color:#fff;margin:0 0 .6rem;font-size:1.12rem;">Děláš to profesně</h3>
+                    <p style="color:#cfcabf;margin:0;font-size:.95rem;line-height:1.65;">Trenér, výživový poradce, instruktor. Dostaneš systém ověřený na stovkách klientů, generátory plánů pod tvým jménem, brandovatelné materiály a certifikaci s veřejným ověřením online.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="cena">
         <div class="container" style="max-width:780px;">
             <div class="sec-head">
                 <span class="ac-tag">💎 INVESTICE DO SEBE</span>
                 <h2>Kolik to stojí</h2>
-                <p>Jeden klient navíc. A Academy je zaplacená. Zbytek života ti vydělává.</p>
+                <p>Vyber si, jak chceš začít. Obsah je v obou variantách stejný.</p>
             </div>
-            <div class="pricebox">
-                <span class="soon" style="background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;">🔥 ZAVÁDĚCÍ CENA · ZAKLÁDAJÍCÍ ČLENOVÉ</span>
-                <h3 class="mt-3 mb-1" style="color:#fff;">Barna Academy: kompletní přístup</h3>
-                <p style="opacity:.8;margin-bottom:1rem;">Doživotně. Včetně všeho budoucího obsahu.</p>
-                <div style="margin:1.2rem 0 .4rem;">
-                    <div style="font-size:2.8rem;font-weight:800;color:#fff;line-height:1;margin:.2rem 0;">8 900 Kč</div>
-                    <p style="opacity:.85;margin:.2rem 0 0;">jednorázová platba &middot; žádné další poplatky &middot; po skončení zaváděcí nabídky 12 900 Kč</p>
-                    <p style="opacity:.9;margin:.5rem 0 0;color:#F6CD63;font-weight:600;">nebo 3 splátky po 3 000 Kč (vybereš ve formuláři)</p>
+
+            <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:stretch;">
+
+                <!-- KARTA A: MĚSÍČNÍ ČLENSTVÍ (primární) -->
+                <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:24px 22px 26px;">
+                    <span style="align-self:flex-start;background:rgba(235,177,44,.16);border:1px solid rgba(235,177,44,.45);color:#F6CD63;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:50px;">Novinka</span>
+                    <h3 style="color:#fff;margin:.9rem 0 .2rem;font-size:1.2rem;">Měsíční členství</h3>
+                    <div style="font-size:2.4rem;font-weight:800;color:#fff;line-height:1;margin:.6rem 0 .2rem;">990 Kč <span style="font-size:1rem;font-weight:600;opacity:.75;">/ měsíc</span></div>
+                    <p style="opacity:.85;margin:.2rem 0 1rem;font-size:.92rem;">zrušíš kdykoli, přístup ihned</p>
+                    <ul style="margin:0 0 1.2rem;">
+                        <li>Všech 24 modulů a 256 lekcí</li>
+                        <li>Generátory jídelníčků a tréninků: počítej a generuj, kolikrát chceš</li>
+                        <li>Recepty a databáze přes 2 300 potravin</li>
+                        <li>AI Martin: odpovídá z lekcí, kdykoli se zeptáš</li>
+                        <li>Videokurz výživy (182 videí) v ceně</li>
+                        <li>Certifikace Barna Academy po dokončení studia</li>
+                    </ul>
+                    <div style="margin-top:auto;">
+                        <a href="https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00" class="btn-gold w-100" style="display:block;text-align:center;text-decoration:none;">Začít za 990 Kč měsíčně →</a>
+                        <p style="opacity:.62;font-size:.78rem;margin:.8rem 0 0;line-height:1.55;">Cena včetně DPH. Členství zrušíš kdykoli v zákaznickém portálu, přístup ti doběhne do konce zaplaceného měsíce.</p>
+                    </div>
                 </div>
-                <ul>
-                    <li><strong>24 modulů a 256 lekcí</strong>: výživa, chování, anatomie, trénink, byznys + pokročilá věda s citacemi</li>
-                    <li><strong>Certifikát Barna Academy</strong> po složení závěrečného testu, pečeť tvé kvality</li>
-                    <li><strong>Celý Videokurz výživy v ceně</strong> (jinak 800 Kč) + 26 bonusových materiálů</li>
-                    <li><strong>Rebrandovatelné klientské materiály</strong>: dáš je svým klientům ve svém brandu</li>
-                    <li><strong>Praxe kit</strong>: vstupní dotazník, check-in, tracker pokroku, ceník i checklist prvních klientů. Vytiskneš pod svým jménem a zítra použiješ</li>
-                    <li>Doživotní přístup i k budoucímu obsahu &middot; přístup do affiliate programu</li>
-                </ul>
-                <div class="callout-anchor" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:1rem 1.2rem;margin:1.2rem 0;text-align:left;">
-                    <p style="margin:0 0 .5rem;color:#e8d8c8;"><strong style="color:#fff;">Proč je 8 900 Kč ve skutečnosti levné:</strong></p>
-                    <p style="margin:.3rem 0;color:#cfcabf;font-size:.95rem;">💎 <strong style="color:#fff;">1 měsíc</strong> mého Diamond koučinku stojí <strong style="color:#fff;">8 950 Kč</strong>. Za stejné peníze tu máš <strong style="color:#fff;">celou Academy, navždy</strong>.</p>
-                    <p style="margin:.3rem 0 0;color:#cfcabf;font-size:.95rem;">🎨 Např. britská ACA má brandovatelné materiály v programu za <strong style="color:#fff;">£549 (cca 15 500 Kč)</strong>. U mě je máš <strong style="color:#fff;">v ceně</strong>.</p>
+
+                <!-- KARTA B: DOŽIVOTNÍ PŘÍSTUP (zvýrazněná) -->
+                <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(235,177,44,.09),rgba(235,177,44,.03));border:2px solid rgba(235,177,44,.55);border-radius:20px;padding:24px 22px 26px;box-shadow:0 10px 34px rgba(235,177,44,.14);">
+                    <span style="align-self:flex-start;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:50px;">Nejlepší hodnota &middot; Zakládající členové</span>
+                    <h3 style="color:#fff;margin:.9rem 0 .2rem;font-size:1.2rem;">Doživotní přístup</h3>
+                    <div style="font-size:2.4rem;font-weight:800;color:#fff;line-height:1;margin:.6rem 0 .2rem;">8 900 Kč <span style="font-size:1rem;font-weight:600;opacity:.75;">jednorázově</span></div>
+                    <p style="opacity:.85;margin:.2rem 0 1rem;font-size:.92rem;">zaváděcí cena pro prvních 50 zakládajících členů, poté 12 900 Kč</p>
+                    <ul style="margin:0 0 1.2rem;">
+                        <li>Všechno z měsíčního členství, <strong style="color:#fff;">napořád</strong></li>
+                        <li>Veškerý budoucí obsah v ceně, bez doplácení</li>
+                        <li>🎁 <strong style="color:#fff;">Rok appky Tvůj Coach ve VIP verzi</strong> (hodnota 4 990 Kč)</li>
+                        <li>Vyjde levněji než rok měsíčního členství</li>
+                    </ul>
+                    <div class="callout-anchor" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:.9rem 1.1rem;margin:0 0 1.2rem;text-align:left;">
+                        <p style="margin:0 0 .5rem;color:#e8d8c8;"><strong style="color:#fff;">Proč je 8 900 Kč ve skutečnosti levné:</strong></p>
+                        <p style="margin:.3rem 0;color:#cfcabf;font-size:.9rem;">💎 <strong style="color:#fff;">1 měsíc</strong> mého Diamond koučinku stojí <strong style="color:#fff;">8 950 Kč</strong>. Za stejné peníze tu máš <strong style="color:#fff;">celou Academy, navždy</strong>.</p>
+                        <p style="margin:.3rem 0 0;color:#cfcabf;font-size:.9rem;">🎨 Např. britská ACA má brandovatelné materiály v programu za <strong style="color:#fff;">£549 (cca 15 500 Kč)</strong>. U mě je máš <strong style="color:#fff;">v ceně</strong>.</p>
+                    </div>
+                    <div style="margin-top:auto;">
+                        <a href="https://form.simpleshop.cz/Xgl8g/buy/" class="btn-gold w-100" style="display:block;text-align:center;text-decoration:none;">Chci doživotní přístup za 8 900 Kč →</a>
+                        <p style="opacity:.62;font-size:.78rem;margin:.8rem 0 0;line-height:1.55;">Máš už videokurz? V objednávce zadej kód <strong style="color:#e8d8c8;">UPGRADE800</strong> a Academy tě vyjde na 8 100 Kč.</p>
+                    </div>
                 </div>
-                <a href="/akademie/objednavka/" class="btn-gold w-100" style="display:block;text-align:center;text-decoration:none;">Chci zaváděcí cenu 8 900 Kč →</a>
-                <div class="vk-guarantee" style="margin-top:1rem;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#34a853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;flex-shrink:0;" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                    <span><strong style="color:#fff;">14denní záruka vrácení peněz</strong>: když ti Academy nesedne, do 14 dnů ti vrátím celou částku. Žádné riziko.</span>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:.45rem;margin-top:.9rem;text-align:left;font-size:.9rem;color:#cfcabf;">
-                    <span>💳 <strong style="color:#fff;">Potřebuješ rozložit platbu?</strong> <a href="https://form.simpleshop.cz/n0xgJ/buy/" style="color:#F6CD63;">Objednej na 3&nbsp;×&nbsp;3&nbsp;000&nbsp;Kč</a>. Přístup máš hned po první splátce.</span>
-                    <span>🎬 <strong style="color:#fff;">Máš už videokurz?</strong> Odečtu ti ho z ceny: v <a href="/akademie/objednavka/" style="color:#F6CD63;">objednávce</a> zadej kód <strong style="color:#fff;">UPGRADE800</strong> a Academy tě vyjde na <strong style="color:#fff;">8&nbsp;100&nbsp;Kč</strong>. Kdyby cokoliv, <a href="mailto:martin@martinbarna.cz?subject=Academy%20upgrade%20z%20videokurzu" style="color:#F6CD63;">napiš mi</a>.</span>
-                </div>
-                <p style="opacity:.65;font-size:.8rem;margin:.9rem 0 0;">Zaváděcí cena platí pro <strong style="color:#e8d8c8;">prvních 50 zakládajících členů</strong>. Poté se zvyšuje na 12 900 Kč.</p>
             </div>
+
+            <p style="text-align:center;color:#cfcabf;font-size:.92rem;line-height:1.6;margin:1.4rem auto 0;max-width:56ch;">Appka Tvůj Coach je v ceně jen u doživotního přístupu (rok VIP verze). V měsíčním členství ji nemáš, ve studiu si ji můžeš kdykoli přidat za 499 Kč měsíčně.</p>
+
+            <div class="vk-guarantee" style="margin-top:1.2rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#34a853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;flex-shrink:0;" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                <span><strong style="color:#fff;">14denní záruka vrácení peněz</strong>: když ti Academy nesedne, do 14 dnů ti vrátím celou částku. Žádné riziko.</span>
+            </div>
+
+            <p style="opacity:.65;font-size:.8rem;margin:.9rem 0 0;text-align:center;">Zaváděcí cena platí pro <strong style="color:#e8d8c8;">prvních 50 zakládajících členů</strong>. Poté se zvyšuje na 12 900 Kč.</p>
         </div>
     </section>
 
@@ -587,8 +649,10 @@
             <div class="faq-item"><button type="button">Potřebuju předchozí vzdělání? <span class="chev">⌄</span></button><div class="a"><p>Ne. Academy tě provede od základů, takže to zvládneš i jako úplný začátečník. A pokud už praxi máš, dostaneš hloubku a systém, který ti chyběl.</p></div></div>
             <div class="faq-item"><button type="button">V jaké formě je obsah? <span class="chev">⌄</span></button><div class="a"><p>Prémiové psané lekce s kvízy a úkoly + <strong>poslech lekcí jedním klikem</strong> (každá lekce se ti umí přečíst nahlas), ať se učíš i v autě nebo na procházce. Doživotní přístup. Videonástavbu plánujeme přidat jako další bonus.</p></div></div>
             <div class="faq-item"><button type="button">Je to vědecky podložené? <span class="chev">⌄</span></button><div class="a"><p>Ano. Každá lekce stojí na vědeckých zdrojích, které jsou v textu odcitované a převedené do srozumitelné, použitelné podoby.</p></div></div>
-            <div class="faq-item"><button type="button">Kolik Academy stojí? <span class="chev">⌄</span></button><div class="a"><p>Zaváděcí cena pro <strong>prvních 50 zakládajících členů</strong> je <strong>8 900 Kč</strong> jednorázově: doživotní přístup, certifikát i celý videokurz v ceně. Poté se zvyšuje na 12 900 Kč. Pro srovnání: jeden měsíc mého Diamond koučinku stojí 8 950 Kč. Tady máš za stejné peníze celou Academy navždy.</p></div></div>
-            <div class="faq-item"><button type="button">Jde platba rozložit na splátky? <span class="chev">⌄</span></button><div class="a"><p>Ano. Platbu jde rozložit na <strong>3 × 3 000 Kč</strong> (celkem 9 000 Kč). <a href="https://form.simpleshop.cz/n0xgJ/buy/">Objednej rovnou přes splátkový formulář</a>. Přístup máš hned po první platbě, zbylé dvě splátky se strhnou automaticky kartou.</p></div></div>
+            <div class="faq-item"><button type="button">Kolik Academy stojí? <span class="chev">⌄</span></button><div class="a"><p>Buď <strong>990 Kč měsíčně</strong> (zrušíš kdykoli), nebo jednorázově <strong>8 900 Kč</strong> s doživotním přístupem. Jednorázová cena je zaváděcí pro prvních 50 zakládajících členů, poté bude 12 900 Kč. Obsah je v obou variantách stejný.</p></div></div>
+            <div class="faq-item"><button type="button">Jak zruším měsíční členství? <span class="chev">⌄</span></button><div class="a"><p>Dvěma kliknutími v zákaznickém portálu, odkaz máš v každém potvrzení platby. Přístup ti doběhne do konce zaplaceného měsíce. Vrátit se můžeš kdykoli.</p></div></div>
+            <div class="faq-item"><button type="button">Co když si měsíční členství později rozmyslím a budu chtít doživotní přístup? <span class="chev">⌄</span></button><div class="a"><p>Prostě koupíš doživotní přístup a měsíční členství zrušíš. Nic ti nepropadne, studium i postup zůstávají.</p></div></div>
+            <div class="faq-item"><button type="button">Je appka Tvůj Coach v ceně? <span class="chev">⌄</span></button><div class="a"><p>U doživotního přístupu ano: dostaneš rok VIP verze (hodnota 4 990 Kč). U měsíčního členství ne, ve studiu si ji můžeš přidat za 499 Kč měsíčně.</p></div></div>
             <div class="faq-item"><button type="button">Mám už videokurz, platím znovu? <span class="chev">⌄</span></button><div class="a"><p>Ne. Co jsi zaplatil<span aria-hidden="true">(a)</span> za videokurz, ti <strong>odečtu z ceny Academy</strong>: v <a href="/akademie/objednavka/">objednávce</a> zadej kód <strong>UPGRADE800</strong> a vyjde tě na <strong>8 100 Kč</strong>. Kdyby cokoliv nešlo, <a href="mailto:martin@martinbarna.cz?subject=Academy%20upgrade%20z%20videokurzu">napiš mi</a>.</p></div></div>
             <div class="faq-item"><button type="button">Co když mi to nesedne? <span class="chev">⌄</span></button><div class="a"><p>Máš <strong>14denní záruku vrácení peněz</strong>. Když v prvních 14 dnech zjistíš, že to pro tebe není, napiš mi a vrátím ti celou částku. Nulové riziko.</p></div></div>
         </div>
@@ -610,7 +674,7 @@
                     <li>Certifikát Barna Academy po složení závěrečného testu</li>
                 </ul>
                 <div class="mt-3 d-flex flex-column gap-2">
-                    <a href="/akademie/objednavka/" class="btn-gold w-100">Koupit Academy: 8 900 Kč →</a>
+                    <a href="#cena" class="btn-gold w-100">Koupit Academy: 8 900 Kč →</a>
                     <a href="/akademie/studium/" class="btn-ghost w-100" style="text-align:center;">Nejdřív vyzkoušet zdarma →</a>
                 </div>
                 <p class="ac-alt mb-0">Radši napřímo? <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20z%C3%A1jem%20o%20Barna%20Academy" target="_blank" rel="noopener">WhatsApp</a> · <a href="mailto:martin@martinbarna.cz?subject=Z%C3%A1jem%20o%20Barna%20Academy">martin@martinbarna.cz</a></p>

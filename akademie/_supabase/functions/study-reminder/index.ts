@@ -161,7 +161,10 @@ Deno.serve(async (req) => {
   // --- data: členové Academy, jejich progres (completed_at), už odeslané tento týden ---
   const [ulist, ents, prg, sent, leads] = await Promise.all([
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
-    admin.from("entitlements").select("email,product").eq("active", true).eq("product", "academy"),
+    // Expirace: pripominky ke studiu jen platnym clenum (NULL = dozivotni). Viz `mb-academy-pricing-mise`.
+    admin.from("entitlements").select("email,product").eq("active", true)
+      .or("expires_at.is.null,expires_at.gt." + new Date().toISOString())
+      .eq("product", "academy"),
     admin.from("progress").select("user_id,completed_at").eq("completed", true).not("lesson_id", "like", "vk-%"),
     admin.from("study_reminder_sent").select("email").eq("week_key", thisWeek),
     admin.from("leads").select("email,unsubscribe_token"),

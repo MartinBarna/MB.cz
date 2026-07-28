@@ -147,6 +147,21 @@
         .catch(function () { return false; });
     },
 
+    // Druh členství Academy: 'lifetime' | 'monthly' | null.
+    // Rozlišuje doživotní přístup (8 900 Kč) od měsíčního členství (990 Kč),
+    // protože appka Tvůj Coach je v ceně JEN u doživotního. hasEntitlement to neumí,
+    // vrací jen ano/ne. Vyžaduje DB funkci academy_membership_kind
+    // (migrace akademie/_supabase/academy-cenik-expirace.sql).
+    // ⚠️ Když RPC selže (typicky: HTML nasazené dřív než migrace), vracíme 'lifetime',
+    //    což je dosavadní chování a sedí na všechny členy, kteří existovali před
+    //    zavedením měsíční varianty. Nasazuj proto migraci PŘED tímhle souborem.
+    membershipKind: function () {
+      if (!LIVE) return Promise.resolve("lifetime");
+      return client.rpc("academy_membership_kind")
+        .then(function (r) { return r.error ? "lifetime" : (r.data || null); })
+        .catch(function () { return "lifetime"; });
+    },
+
     // Přihlašovací token (JWT) pro autorizované volání edge funkcí (např. AI Martin).
     getToken: function () {
       if (!LIVE) return Promise.resolve(null);

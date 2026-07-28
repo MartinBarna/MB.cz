@@ -192,7 +192,10 @@ Deno.serve(async (req) => {
   // LIVE: spocitej progres vsech clenu videokurzu a posli nove dosazene milniky
   const [prg, ents, sent] = await Promise.all([
     admin.from("progress").select("user_id,lesson_id").eq("completed", true).like("lesson_id", "vk-%"),
-    admin.from("entitlements").select("email,product").eq("active", true).in("product", ["videokurz", "academy"]),
+    // Expirace: milniky chodi jen platnym clenum (NULL = dozivotni). Viz `mb-academy-pricing-mise`.
+    admin.from("entitlements").select("email,product").eq("active", true)
+      .or("expires_at.is.null,expires_at.gt." + new Date().toISOString())
+      .in("product", ["videokurz", "academy"]),
     admin.from("milestone_sent").select("email,milestone").eq("product", "videokurz"),
   ]);
   // auth uzivatele pres VSECHNY stranky (jen page 1 = tichy vypadek clenu nad 1000)

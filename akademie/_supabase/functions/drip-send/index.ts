@@ -405,7 +405,13 @@ Deno.serve(async (req: Request) => {
   //  - upsell-coaching prodava koucink -> stop pri coaching
   //  - longtail-kupci = pece o kupce videokurzu + upgrade na Academy -> stop pri academy
   // Clenske tracky (onboarding, milestone, reactivation, rescue) cili na zakazniky -> nikdy nestopovat.
-  const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true).in('product', ['videokurz', 'academy', 'coaching']);
+  // ⚠️ Expirace (28. 7. 2026, mesicni clenstvi Academy): za kupce se pocita jen ten,
+  // komu clenstvi PLATI. Bez teto podminky by expirovany mesicni clen zustal navzdy
+  // mezi kupci, prisel by o pristup a ZAROVEN by mu nikdy neprisla nabidka obnovy.
+  // NULL = dozivotni, tedy plati porad. Detail: pamet `mb-academy-pricing-mise`.
+  const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true)
+    .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString())
+    .in('product', ['videokurz', 'academy', 'coaching']);
   const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set() };
   for (const b of (buyersRows ?? []) as { email: string; product: string }[]) owns[b.product]?.add(b.email.toLowerCase());
   const ownsAny = (em: string) => owns.videokurz.has(em) || owns.academy.has(em) || owns.coaching.has(em);

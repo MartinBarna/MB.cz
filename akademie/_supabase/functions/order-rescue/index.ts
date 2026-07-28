@@ -188,8 +188,12 @@ Deno.serve(async (req) => {
   for (const p of pend ?? []) {
     const email = low(p.email);
     // pojistka: uz ma pristup (koupil pod jinou objednavkou)? -> oznac a preskoc
+    // Expirace: expirovane clenstvi se NEpocita jako "uz ma pristup", jinak by clovek,
+    // kteremu mesicni Academy dobehla a znovu si objednava, nedostal zachranny mail.
+    // NULL = dozivotni. Viz `mb-academy-pricing-mise`.
     const { data: ent } = await admin.from("entitlements").select("email")
-      .eq("email", email).eq("product", p.product).eq("active", true).limit(1);
+      .eq("email", email).eq("product", p.product).eq("active", true)
+      .or("expires_at.is.null,expires_at.gt." + new Date().toISOString()).limit(1);
     if (ent && ent.length) {
       await admin.from("pending_orders").update({ completed: true }).eq("order_id", p.order_id);
       skipped++; continue;

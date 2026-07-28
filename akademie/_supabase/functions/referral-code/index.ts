@@ -67,7 +67,10 @@ Deno.serve(async (req: Request) => {
 
   // entitlement check (aktivni academy nebo videokurz)
   try {
-    const er = await rest('entitlements?select=product&active=eq.true&email=ilike.' + encodeURIComponent(email) + '&limit=1');
+    // Expirace: referral kod smi generovat jen clen s PLATNYM pristupem (NULL = dozivotni).
+    // Bez toho by expirovany mesicni clen dal vydelaval na provizich. Viz `mb-academy-pricing-mise`.
+    const er = await rest('entitlements?select=product&active=eq.true&email=ilike.' + encodeURIComponent(email)
+      + '&or=(expires_at.is.null,expires_at.gt.' + encodeURIComponent(new Date().toISOString()) + ')&limit=1');
     const ents = await er.json().catch(() => []);
     if (!Array.isArray(ents) || ents.length === 0) return json({ error: 'no_entitlement' }, 403);
   } catch { return json({ error: 'check_failed' }, 500); }
