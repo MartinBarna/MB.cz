@@ -34,7 +34,21 @@ const KLICOVE_STRANKY = [
   "https://martinbarna.cz/obchodni-podminky/",
   "https://martinbarna.cz/zasady-ochrany-osobnich-udaju/",
   "https://tvujcoach.cz/",
+  // ⚠️ Platební odkazy patří sem RUČNĚ. V `email_templates` zatím NEJSOU (šablony
+  // jsou starší než nový ceník), takže by je automatický výtah z šablon minul.
+  // Přitom mrtvá pokladna je ta nejdražší porucha ze všech. Když se ceník změní,
+  // aktualizuj i tenhle seznam. Checklist: `tvujcoach-cenik-zmena-checklist`.
+  "https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00",     // Academy 990 Kč/měs
+  "https://form.simpleshop.cz/Xgl8g/buy/",              // Academy 8 900 doživotně
 ];
+// ✅ DETEKTOR OVĚŘEN 28. 7. 2026 KANÁRKEM, ne jen přečtením kódu.
+// Do seznamu se dočasně přidala schválně neexistující adresa
+// `martinbarna.cz/tahle-stranka-neexistuje-kanarek/`. Výsledek: HTTP 404, ok=false,
+// a odešel alert „1 z 78 odkazů NEFUNGUJE". Celý řetěz detekce → zápis → poplach
+// tedy prokazatelně funguje. Kanárek byl hned potom odstraněn, jinak by alert
+// chodil každý den a člověk by si na něj zvykl.
+// ⚠️ Kdo sem bude sahat, ať si ten test zopakuje. Nula chyb může znamenat
+// „vše v pořádku" i „detektor je slepý", a rozdíl pozná jen kanárek.
 
 const TIMEOUT_MS = 15000;
 const SOUBEZNE = 6;          // ať nezahltíme Wedos ani sebe

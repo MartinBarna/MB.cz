@@ -176,6 +176,30 @@ Deno.serve(async (req) => {
   }
   if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50). Podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
 
+  // --- Denní kontrola odkazů (pojistka po incidentu s mrtvými odkazy 22. až 27. 7.) ---
+  // ⚠️ „Žádný běh" NENÍ „všechno v pořádku". Když kontrola neproběhla, je to samo o sobě
+  // poplach: přesně takhle se tehdy pět dní nevědělo, že odkazy nefungují.
+  let odkazyRadek = "kontrola zatím neproběhla";
+  try {
+    const { data: lc } = await admin.rpc("link_check_souhrn");
+    const s = Array.isArray(lc) ? lc[0] : lc;
+    if (!s || !s.posledni_beh) {
+      alerts += warn("Kontrola odkazů NIKDY neproběhla. Buď se nespustil cron link-check-daily, nebo padá. Zkontroluj to, tohle je pojistka proti mrtvým odkazům v mailech.");
+    } else {
+      const stari = (Date.now() - new Date(s.posledni_beh).getTime()) / 3600000;
+      odkazyRadek = `${s.celkem} zkontrolováno · ${s.chyb} nefunguje`;
+      if (s.chyb > 0) {
+        alerts += warn(`ROZBITÉ ODKAZY: ${s.chyb} z ${s.celkem} nefunguje. ${String(s.prvni_chyby ?? "").split("\n").slice(0, 5).join(" · ")}`);
+      }
+      if (stari > 30) {
+        alerts += warn(`Kontrola odkazů je stará ${Math.round(stari)} h, měla by běžet denně. Nejede cron link-check-daily?`);
+        odkazyRadek += ` · ⚠️ stará ${Math.round(stari)} h`;
+      }
+    }
+  } catch (e) {
+    alerts += warn("Kontrola odkazů se nedá přečíst: " + String(e).slice(0, 120));
+  }
+
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;color:#222;max-width:560px;margin:0 auto">` +
     `<h2 style="margin:0 0 4px">🌅 Ranní přehled</h2>` +
@@ -190,6 +214,7 @@ Deno.serve(async (req) => {
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
     row("Affiliate čeká na potvrzení", String(refPending)) +
     row("Zakládající členové Academy", founders + " / 50 · zbývá " + foundersLeft) +
+    row("Odkazy v mailech a na webu", odkazyRadek) +
     `</table>` +
     `<p style="margin:14px 0 4px;color:#666;font-size:13px">Leadi 7 dní: ${trendStr || "—"}</p>` +
     `<p style="margin:14px 0 0;font-size:13px"><a href="https://martinbarna.cz/akademie/admin/" style="color:#c45e00">Otevřít admin →</a></p></div>`;
