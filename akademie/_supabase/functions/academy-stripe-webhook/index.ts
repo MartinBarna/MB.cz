@@ -126,9 +126,13 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
 };
 
 // Který odkaz vede na který klíč katalogu. Formát: `plink_A=academy-lifetime,plink_B=videokurz`.
-// Drží se v proměnné prostředí, aby šlo přidat nebo vyměnit odkaz BEZ nasazování funkce.
-// ⬜ Hodnotu doplní řídicí okno. Do té doby je mapa prázdná a jednorázová větev je slepá:
-//    radši ať nedělá nic, než aby dělala něco špatně.
+// Proměnná prostředí `STRIPE_ONETIME_LINKS` fallback CELÝ PŘEBIJE, takže když se přes ni
+// přidává další odkaz, musí obsahovat i ten stávající. Vzor je stejný jako u měsíčních
+// `ACADEMY_ALLOWED_PLINKS` o pár řádků níž.
+// ⚠️ ID platebního odkazu není tajemství (nese ho každá adresa checkoutu), proto smí být
+//    v kódu. Klíče a tajné tokeny do zdrojáku NEPATŘÍ a taky tu žádné nejsou.
+// ⬜ Testovací odkaz zatím neexistuje; až vznikne, přidá se sem nebo do proměnné.
+//    Do té doby doživotní větev přijme JEN ostrý odkaz, což nevadí, ten zatím nikdo nezná.
 function parsujOdkazy(s: string): Record<string, string> {
   const m: Record<string, string> = {};
   for (const kus of s.split(",")) {
@@ -143,7 +147,10 @@ function parsujOdkazy(s: string): Record<string, string> {
   }
   return m;
 }
-const ODKAZ_NA_PRODUKT = parsujOdkazy(Deno.env.get("STRIPE_ONETIME_LINKS") ?? "");
+const ODKAZ_NA_PRODUKT = parsujOdkazy(
+  Deno.env.get("STRIPE_ONETIME_LINKS") ??
+    "plink_1TyPM3Bq3rKubW9ku0ROM7Dq=academy-lifetime",
+);
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
   "plink_1TyBZUBq3rKubW9k81dwwUsq,plink_1TyFAyBq3rKubW9kXRelRllH")
