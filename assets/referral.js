@@ -39,6 +39,10 @@
     if (href.indexOf('simpleshop.cz/3Vbl') >= 0) return { url: href, prod: 'videokurz' };
     if (href.indexOf('simpleshop.cz/Xgl8g') >= 0) return { url: href, prod: 'academy' };
     if (href.indexOf('4gM00ibnpgjMerK7dB3ks04') >= 0) return { url: href, prod: 'academy', stripe: true };
+    // Odkaz s odečtem videokurzu (8 100 Kč) dodává TÝŽ produkt, jen levněji, proto stejný `prod`.
+    if (href.indexOf('9B6aEW6356Jc4Ra55t3ks05') >= 0) return { url: href, prod: 'academy', stripe: true };
+    // ⬜ Měsíční členství (`bJe9AS3UXgjMcjC8hF3ks00`) tu VĚDOMĚ NENÍ: jestli se za předplatné
+    //    má vyplácet odměna za doporučení, je obchodní rozhodnutí, ne technické. Až padne, přidat sem.
     return null;
   }
   // ⚠️ Každá pokladna si jméno parametru pojmenovala po svém. SimpleShop čte `email`,

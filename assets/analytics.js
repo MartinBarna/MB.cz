@@ -107,8 +107,16 @@
       if (!a) return;
       var href = a.getAttribute('href') || '';
       // Stripe odkazy nemají v adrese jméno produktu, poznají se podle ID odkazu.
+      // ⛔ KAŽDÝ NOVÝ STRIPE ODKAZ NA WEBU MUSÍ PŘIBÝT I SEM. Když tu chybí, spadne do
+      // větve `stripe-other` s hodnotou 0: událost se odešle, takže nic nevypadá rozbitě,
+      // ale Meta i Google se učí, že ten nákup nemá cenu. Nejhorší druh tiché chyby,
+      // protože reklamy pak optimalizují proti nejdražším produktům.
       // `4gM00ibnpgjMerK7dB3ks04` = Academy doživotně 8 900 Kč (plink_1TyQXw…).
+      // `9B6aEW6356Jc4Ra55t3ks05` = Academy doživotně po odečtu videokurzu, 8 100 Kč.
+      // `bJe9AS3UXgjMcjC8hF3ks00` = Academy měsíčně 990 Kč (hodnota = první platba).
       var c = href.indexOf('4gM00ibnpgjMerK7dB3ks04') !== -1 ? { id: 'academy', name: 'Barna Academy', val: 8900 }
+            : href.indexOf('9B6aEW6356Jc4Ra55t3ks05') !== -1 ? { id: 'academy-upgrade', name: 'Barna Academy (odečet videokurzu)', val: 8100 }
+            : href.indexOf('bJe9AS3UXgjMcjC8hF3ks00') !== -1 ? { id: 'academy-mesicne', name: 'Barna Academy měsíčně', val: 990 }
             : href.indexOf('3Vbl') !== -1  ? { id: 'videokurz',  name: 'Videokurz výživy', val: 800 }
             : href.indexOf('Xgl8g') !== -1 ? { id: 'academy',    name: 'Barna Academy',    val: 8900 }
             : href.indexOf('qG2yO') !== -1 ? { id: 'konzultace', name: 'Konzultace',       val: 1990 }
