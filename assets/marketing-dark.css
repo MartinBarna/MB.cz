@@ -253,3 +253,39 @@ strong[style*="--ink"], b[style*="--ink"], strong[style*="#161616"], b[style*="#
 /* === Academy nav brand (.ac-brand) měl color:#161616 (světlý motiv) → na ztmaveném
    navbaru byl text „Barna Academy" tmavý na tmavém. (audit kontrastu 2026-07-04) === */
 .ac-brand, .ac-brand span, .ac-brand b { color:#fff!important; }
+
+/* ============================================================
+   AUDIT KONTRASTU 2026-07-29 (strojové měření renderu všech 169 veřejných
+   stránek, mobil 390 px i desktop 1280 px, oba dopadly stejně).
+   Čísla v komentářích = naměřený WCAG poměr PŘED opravou, práh je 4,5.
+
+   Společný jmenovatel všech nálezů: světlý motiv nastavil barvu POTOMKOVI,
+   tmavá vrstva přebila jen RODIČE. Dědičnost se k potomkovi nedostane,
+   protože vlastní deklarace potomka vyhraje bez ohledu na !important rodiče.
+   ⇒ Když sem přidáváš ztmavení kontejneru, projdi i jeho děti.
+   ============================================================ */
+
+/* Drobečková navigace. Řádek 191 výše řeší jen kontejner .crumbs, jenže <a>
+   i <span> mají v šabloně článku vlastní barvu. Název právě otevřené stránky
+   byl proto tmavý na tmavém na 147 článcích a nikdo si toho nevšiml. */
+.crumbs a { color:var(--bd-muted)!important; }        /* bylo #666    → 3,46 */
+.crumbs span { color:var(--bd-muted2)!important; }    /* bylo #161616 → 1,10 */
+
+/* CTA box lead magnetu v článcích. Krémový gradient je napsaný natvrdo
+   (ne přes --green-light), takže ho plošné ztmavení proměnných minulo a box
+   zůstal světlý, zatímco popisek zdědil světlou barvu z body. Box necháváme
+   krémový záměrně, text v něm proto musí být tmavý. */
+.inline-magnet { color:#161616!important; }           /* bílá na krémové → 1,19 */
+.inline-magnet strong { color:#161616!important; }
+.inline-magnet a { color:#161616!important; }         /* bílá na zlaté   → 1,93 */
+
+/* .btn.ghost: arena.css mu nastavil background:transparent!important, ale barvu
+   textu nechal tmavou. Řádek 85 výše míří na .btn-ghost se spojovníkem, tuhle
+   variantu se dvěma třídami nechytá. */
+.btn.ghost, .btn-outline-light { color:#fff!important; }   /* #161616 na tmavé → 1,03 */
+
+/* Bílé zvýrazňovací boxy s inline background:#fff. Pravidlo výše mění tmavý
+   <strong> na zlatý, protože počítá s tmavým podkladem. Uvnitř bílého boxu
+   ho musíme nechat tmavý. */
+[style*="background:#fff"] strong[style*="#161616"],
+[style*="background:#fff"] b[style*="#161616"] { color:#161616!important; }  /* zlatá na bílé → 1,52 */

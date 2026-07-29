@@ -54,6 +54,9 @@
         .rev blockquote { margin:.6rem 0 1rem; font-size:.98rem; color:#33383a; font-style:normal; }
         .rev figcaption { font-weight:700; color:var(--green-dark); display:flex; align-items:center; justify-content:space-between; gap:10px; }
         .rev .src { font-size:.72rem; font-weight:700; color:#fff; background:#1a73e8; padding:3px 9px; border-radius:50px; }
+        /* facebooková varianta má pozadí zapsané inline u každého odznaku (#1877F2),
+           na kterém bílý text vycházel 4,23 při požadovaných 4,5; tohle ho ztmaví na 5,4 */
+        .rev .src[style*="1877F2"] { background:#1266d8!important; }
         .cta-strip { text-align:center; margin-top:48px; background:var(--green-light); border-radius:22px; padding:2.6rem 1.5rem; }
         .cta-strip h2 { color:var(--green-dark); font-weight:800; margin:0 0 .6rem; font-size:clamp(1.5rem,4vw,2.1rem); }
         .btn { display:inline-block; background:var(--green); color:#161616; font-weight:700; padding:14px 34px; border-radius:50px; text-decoration:none; margin:6px; box-shadow:0 6px 18px rgba(235,177,44,.25); transition:transform .25s ease, box-shadow .25s ease, background .25s ease; }

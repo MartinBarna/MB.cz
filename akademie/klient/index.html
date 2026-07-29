@@ -23,6 +23,9 @@
   .kcta h2{margin:0 0 4px;font-size:1.15rem;color:#fff;}
   .kcta p{margin:0;font-size:.9rem;color:#B9B3C4;}
   .kbtn{display:inline-block;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;text-decoration:none;border:none;cursor:pointer;padding:13px 26px;border-radius:10px;font-weight:800;font-size:1rem;font-family:inherit;letter-spacing:.02em;}
+  /* ba-ui.css má .ba .panel a { color:var(--gold-soft) }, což je specifičtější než .kbtn,
+     takže text přihlašovacího tlačítka vycházel zlatě na zlatooranžové (poměr 2,03). */
+  .ba .panel a.kbtn, .ba .panel button.kbtn{color:#1A1222;}
   .kbtn:disabled{opacity:.6;cursor:default;}
   .kbtn2{display:inline-block;background:transparent;color:#F6CD63;border:1px solid rgba(235,177,44,.55);cursor:pointer;padding:11px 20px;border-radius:10px;font-weight:700;font-size:.92rem;font-family:inherit;text-decoration:none;}
   .ksec{margin:30px 0 10px;font-size:.82rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#F6CD63;}

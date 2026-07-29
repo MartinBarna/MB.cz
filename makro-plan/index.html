@@ -42,7 +42,8 @@
         .btn { display:inline-block; background:var(--orange); color:#161616; font-weight:700; padding:14px 30px; border-radius:50px; text-decoration:none; border:none; cursor:pointer; transition:.2s; text-align:center; }
         .btn:hover { background:var(--orange-dark); transform:translateY(-2px); color:#fff; box-shadow:0 10px 24px rgba(235,177,44,.3); }
         .btn.sm { padding:10px 22px; font-size:.95rem; }
-        .btn.dark { background:var(--ink); } .btn.dark:hover { background:#000; }
+        /* color patří k tmavému pozadí: bez něj se dědí #161616 ze základního .btn a text splyne s pozadím (poměr 1,00) */
+        .btn.dark { background:var(--ink); color:#fff; } .btn.dark:hover { background:#000; }
 
         /* Hero */
         .hero { background:linear-gradient(160deg,var(--cream) 0%,var(--cream2) 100%); padding:70px 0 80px; }
