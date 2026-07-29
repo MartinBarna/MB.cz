@@ -164,9 +164,17 @@ function parsujOdkazy(s: string): Record<string, string> {
 //    grant v appce, lead), jinak zůstane v počítadle zakládajících navíc jeden člověk.
 const ODKAZ_NA_PRODUKT = parsujOdkazy(
   Deno.env.get("STRIPE_ONETIME_LINKS") ??
-    // ostrý odkaz na produkt „Barna Academy doživotní přístup"
+    // ostrý odkaz, plná cena 8 900 („Barna Academy doživotní přístup")
     "plink_1TyQXwBq3rKubW9k1ywUSITs=academy-lifetime," +
-    // testovací 15 Kč, ⬜ po dokončení kupónu se zamkne ve Stripu a smaže se odsud
+    // ⭐ UPGRADE Z VIDEOKURZU za 8 100 (`price_1TyUNl…`). Dodává se ÚPLNĚ TOTÉŽ,
+    // proto vede na týž klíč katalogu: doživotní přístup, appka na rok, uvítačka,
+    // a započítá se do padesátky zakládajících. Kupující je zakládající člen jako
+    // každý jiný, jen zaplatil o 800 míň za videokurz, který už má.
+    // ⚠️ Vznikl NÁHRADOU za slevový kód UPGRADE800, který u ceny s daní v ceně
+    // počítal jinak, než ukazoval (sleva 533,33 místo 800). Samostatná cena tuhle
+    // třídu chyby vylučuje: není co přepočítávat.
+    "plink_1TyUPQBq3rKubW9kj5P2YjCB=academy-lifetime," +
+    // testovací 15 Kč, ⬜ zamknout ve Stripu a smazat odsud, až doběhne testování
     "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime",
 );
 
