@@ -117,8 +117,13 @@ type JednorazovyProdukt = {
 };
 
 const KATALOG: Record<string, JednorazovyProdukt> = {
-  // Academy doživotně 8 900 Kč. Cena `price_1TyPGaBq3rKubW9kFGDTLaes` na produktu
-  // `prod_Uy7nu91R8yjVwI`. Od 29. 7. 2026 nahrazuje SimpleShop.
+  // Academy doživotně 8 900 Kč. Od 29. 7. 2026 nahrazuje SimpleShop.
+  // Produkt `prod_UyNGi6oRQPZLOe` „Barna Academy doživotní přístup",
+  // cena `price_1TyQVoBq3rKubW9kMVS3SfzC` (jednorázová, DPH v ceně).
+  // ⚠️ Vlastní produkt vznikl schválně: první pokus visel na produktu měsíčního členství
+  // (`prod_Uy7nu91R8yjVwI`) a checkout kupujícímu ukazoval popis „Měsíční členství…
+  // zrušitelné kdykoli". Martin sám při testu myslel, že platí měsíční. U prodeje
+  // za 8 900 Kč by to zákazníka zmátlo nebo odradilo, a nikde by to nekřiklo.
   "academy-lifetime": {
     produkt: "academy",
     source: "stripe-lifetime",
@@ -159,7 +164,9 @@ function parsujOdkazy(s: string): Record<string, string> {
 //    grant v appce, lead), jinak zůstane v počítadle zakládajících navíc jeden člověk.
 const ODKAZ_NA_PRODUKT = parsujOdkazy(
   Deno.env.get("STRIPE_ONETIME_LINKS") ??
-    "plink_1TyPM3Bq3rKubW9ku0ROM7Dq=academy-lifetime," +
+    // ostrý odkaz na produkt „Barna Academy doživotní přístup"
+    "plink_1TyQXwBq3rKubW9k1ywUSITs=academy-lifetime," +
+    // testovací 15 Kč, ⬜ po dokončení kupónu se zamkne ve Stripu a smaže se odsud
     "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime",
 );
 
