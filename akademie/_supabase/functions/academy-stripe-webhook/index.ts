@@ -1,8 +1,12 @@
 // ============================================================
-// Barna Academy — Stripe webhook pro MĚSÍČNÍ členství 990 Kč/měs.
+// Barna Academy — Stripe webhook pro OBĚ varianty členství.
 //
-// Doživotní varianta (8 900) jde dál přes SimpleShop a `simpleshop-webhook`.
-// Tahle funkce řeší VÝHRADNĚ předplatné ze Stripu.
+// ⚠️ 29. 7. 2026 se sem přidala DOŽIVOTNÍ varianta 8 900 Kč. Do té doby tady stálo
+// „doživotní jde dál přes SimpleShop", a to už NEPLATÍ. SimpleShop dál obsluhuje
+// jen videokurz a doběh starých objednávek; produkt `Xgl8g` se schválně nemaže.
+//   • měsíční 990 Kč  = `mode=subscription`, expirace období + 5 dní, BEZ appky
+//   • doživotní 8 900 = `mode=payment`, expirace NULL, S appkou Tvůj Coach na rok
+// Ta dvě čísla se nesmí splést, viz whitelisty odkazů níž.
 //
 // ⛔ NEVOLÁ `academy-grant` appky Tvůj Coach. Měsíční členství appku V CENĚ NEMÁ
 //    (rozhodnutí 2 mise `mb-academy-pricing-mise`). Roční VIP appky zůstává
@@ -519,9 +523,16 @@ async function posliUvitani(
       ...(varsProLeada ? { vars: varsProLeada } : {}),
     }).eq("id", lead[0].id);
   } else {
+    // ⚠️ `source` u NOVÉHO leada se řídí tratí, ne konstantou. Doživotní kupec zapsaný
+    // jako „stripe-monthly" by pak v přehledu podle zdrojů seděl ve špatné škatuli
+    // a nikde by to nekřiklo. Týká se jen nově zakládaných leadů; kdo už v tabulce je,
+    // si svůj původní zdroj (kampaň, magnet) ponechá, a to je správně.
+    const zdrojLeada = track.startsWith("rozlouceni-")
+      ? "stripe-refund"
+      : (track === WELCOME_TRACK ? "stripe-monthly" : "stripe-lifetime");
     await admin.from("leads").insert({
       email, track: track, step: 0, status: "active",
-      next_send_at: nowIso, purchased: true, source: "stripe-monthly",
+      next_send_at: nowIso, purchased: true, source: zdrojLeada,
       ...(varsProLeada ? { vars: varsProLeada } : {}),
     });
   }
