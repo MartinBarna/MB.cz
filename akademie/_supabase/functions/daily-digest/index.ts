@@ -36,7 +36,9 @@ Deno.serve(async (req) => {
     admin.from("leads").select("created_at").gte("created_at", d7),
     admin.from("email_events").select("type,detail").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
     admin.from("leads").select("id").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", now.toISOString()),
-    admin.from("entitlements").select("product").eq("active", true).eq("source", "simpleshop").gte("granted_at", yStart.toISOString()),
+    // Vcerejsi realne prodeje. `stripe-lifetime` = dozivotni Academy pres Stripe
+    // (od 29. 7. 2026 nahrazuje SimpleShop), musi se pocitat stejne jako `simpleshop`.
+    admin.from("entitlements").select("product").eq("active", true).in("source", ["simpleshop", "stripe-lifetime"]).gte("granted_at", yStart.toISOString()),
     admin.from("withdrawals").select("status"),
     admin.from("referrals").select("status"),
     // ⛔ OPRAVA 28. 7. 2026: bylo tu `select("id")`, jenze `entitlements` sloupec `id`
@@ -44,9 +46,15 @@ Deno.serve(async (req) => {
     // ho prebil nulou -> pocitadlo zakladajicich hlasilo jen rucni offset. Nebylo to
     // videt, protoze skutecny pocet byl taky 0. Tataz chyba byla 27. 7. opravena
     // v admin-api, tady se prehledla. Detail: pamet `feedback-select-neexistujiciho-sloupce`.
-    // ⚠️ Filtr source='simpleshop' je ZAMERNY a musi zustat: do padesatky zakladajicich
-    // se pocitaji jen DOZIVOTNI prodeje, ne mesicni clenstvi (source='stripe-monthly').
-    admin.from("entitlements").select("email", { count: "exact", head: true }).eq("product", "academy").eq("active", true).eq("source", "simpleshop"),
+    // ⚠️ Filtr na zdroj je ZAMERNY a musi zustat: do padesatky zakladajicich se pocitaji
+    // jen DOZIVOTNI prodeje, ne mesicni clenstvi (source='stripe-monthly').
+    // ⛔ ROZSIRENO 29. 7. 2026 o 'stripe-lifetime'. Dozivotni varianta se toho dne
+    // presunula ze SimpleShopu na Stripe; kdyby tu zustal jen 'simpleshop', pocitadlo
+    // by od te chvile TISE STALO na miste a Martin by podle nej nikdy nezdrazil,
+    // prestoze verejne slibil cenu 8 900 jen pro prvnich 50 lidi. Nic by nespadlo.
+    // ⚠️ Kdo sem prida dalsi zdroj dozivotniho prodeje, musi ho pridat i v `admin-pulse`
+    // (30denni prodeje) — jsou to DVE ruzna mista a nic je nedrzi v synci.
+    admin.from("entitlements").select("email", { count: "exact", head: true }).eq("product", "academy").eq("active", true).in("source", ["simpleshop", "stripe-lifetime"]),
   ]);
 
   // zakladajici clenove: realne prodeje pres SimpleShop + rucni offset (app_config
@@ -175,6 +183,29 @@ Deno.serve(async (req) => {
       Array.from(gaveUpTracks).join(", ") + "). U follow-upů je to v pořádku, jen ať o tom víš.");
   }
   if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50). Podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
+
+  // --- Zaplatil Academy a nedostal uvítačku? -------------------------------
+  // ⛔ Přibylo 29. 7. 2026 NÁHRADOU za alert, který posílal `academy-stripe-webhook`
+  // přímo z faktury a LHAL. Stál na úvaze „když je to první udělení, checkout nedorazil",
+  // jenže Stripe pořadí událostí NEGARANTUJE a faktura občas dorazí o pár vteřin dřív.
+  // Alert pak vyskočil, přestože uvítačka hned nato odešla.
+  // ⇒ Závod nejde rozhodnout v okamžiku události. S odstupem ale ano: když uvítačka
+  // odešla, `drip-send` posunul leada z kroku 0 dál. Kdo po dvou hodinách pořád visí
+  // na nule, ten ji nedostal — a je jedno, jestli selhalo odeslání, nebo se `drip-send`
+  // vůbec nezavolal. Tahle kontrola chytí OBA případy, na rozdíl od té původní.
+  try {
+    const { data: bezUvitacky } = await admin.from("leads")
+      .select("email")
+      .like("track", "onboarding-nakup-academy%")
+      .eq("step", 0).eq("status", "active")
+      .lt("updated_at", new Date(Date.now() - 2 * 3600000).toISOString())
+      .limit(20);
+    if (bezUvitacky && bezUvitacky.length) {
+      alerts += warn(`${bezUvitacky.length}× zaplacená Academy BEZ uvítacího e-mailu (`
+        + bezUvitacky.slice(0, 5).map((l: { email: string }) => l.email).join(", ")
+        + `). Přístup mají, mail ne. Pošli ho ručně přes drip-send only_email a zjisti proč.`);
+    }
+  } catch { /* best-effort: doplňková kontrola nesmí shodit celý digest */ }
 
   // --- Denní kontrola odkazů (pojistka po incidentu s mrtvými odkazy 22. až 27. 7.) ---
   // ⚠️ „Žádný běh" NENÍ „všechno v pořádku". Když kontrola neproběhla, je to samo o sobě

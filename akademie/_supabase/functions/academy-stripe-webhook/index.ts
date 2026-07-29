@@ -89,6 +89,62 @@ function datumCesky(iso: string): string {
 // Ceny appky pro představu, TY SEM NEPATŘÍ: price_1TtvIk… 499, price_1TtvN6… 249.
 // Vzorec „nová cesta, staré pravidlo": appkový stripe-webhook se proti cizím platbám
 // brání tím, že vyžaduje user_id v metadatech. Tenhle guard je jeho protějšek.
+// ═══ JEDNORÁZOVÉ PRODUKTY (mode=payment) ══════════════════════════════════════
+// Katalog: co se za daný klíč dodá. Přidání dalšího produktu (videokurz, konzultace)
+// = JEDEN řádek sem a JEDEN do mapy odkazů níž. Do vlastní logiky se nesahá.
+//
+// ⛔⛔ KLÍČUJE SE PLATEBNÍM ODKAZEM, NE CENOU, a má to dva důvody:
+// 1. Událost `checkout.session.completed` u `mode=payment` **cenu vůbec nenese**;
+//    položky faktury by se musely dotahovat dalším voláním Stripu.
+// 2. Slevový kód mění `amount_total`, takže kontrola na částku by u UPGRADE800 selhala
+//    a člověk, který řádně zaplatil 8 100, by přístup nedostal.
+//
+// ⛔ A NESMÍ SE SLÉVAT S MĚSÍČNÍM SEZNAMEM. Podle toho, kudy člověk zaplatil, se liší
+// úplně všechno: expirace (NULL versus 36 dní), zdroj, uvítací trať, appka Tvůj Coach
+// i to, jestli se počítá do padesátky zakládajících. Jeden společný seznam by ty dvě
+// věci tiše prohodil a poznalo by se to až u zákazníka, kterému po 8 900 vyprší přístup.
+type JednorazovyProdukt = {
+  produkt: string;    // entitlements.product
+  source: string;     // entitlements.source  (⚠️ počítá se do padesátky, viz daily-digest)
+  welcome: string;    // trať uvítacího e-mailu
+  tcGrant: boolean;   // dostane appku Tvůj Coach na rok?
+  nazev: string;      // jak se produkt jmenuje v rozlučkovém mailu
+  varianta: string;   // upřesnění varianty v rozlučkovém mailu
+};
+
+const KATALOG: Record<string, JednorazovyProdukt> = {
+  // Academy doživotně 8 900 Kč. Cena `price_1TyPGaBq3rKubW9kFGDTLaes` na produktu
+  // `prod_Uy7nu91R8yjVwI`. Od 29. 7. 2026 nahrazuje SimpleShop.
+  "academy-lifetime": {
+    produkt: "academy",
+    source: "stripe-lifetime",
+    welcome: "onboarding-nakup-academy",
+    tcGrant: true,
+    nazev: "Barna Academy",
+    varianta: "doživotní přístup",
+  },
+};
+
+// Který odkaz vede na který klíč katalogu. Formát: `plink_A=academy-lifetime,plink_B=videokurz`.
+// Drží se v proměnné prostředí, aby šlo přidat nebo vyměnit odkaz BEZ nasazování funkce.
+// ⬜ Hodnotu doplní řídicí okno. Do té doby je mapa prázdná a jednorázová větev je slepá:
+//    radši ať nedělá nic, než aby dělala něco špatně.
+function parsujOdkazy(s: string): Record<string, string> {
+  const m: Record<string, string> = {};
+  for (const kus of s.split(",")) {
+    const [odkaz, klic] = kus.split("=").map((x) => (x ?? "").trim());
+    if (!odkaz || !klic) continue;
+    if (!KATALOG[klic]) {
+      // Překlep v konfiguraci by jinak znamenal, že platba tiše propadne.
+      console.error(`[academy-stripe-webhook] STRIPE_ONETIME_LINKS: klic "${klic}" neni v katalogu, odkaz ${odkaz} IGNOROVAN`);
+      continue;
+    }
+    m[odkaz] = klic;
+  }
+  return m;
+}
+const ODKAZ_NA_PRODUKT = parsujOdkazy(Deno.env.get("STRIPE_ONETIME_LINKS") ?? "");
+
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
   "plink_1TyBZUBq3rKubW9k81dwwUsq,plink_1TyFAyBq3rKubW9kXRelRllH")
   .split(",").map((s) => s.trim()).filter(Boolean);
@@ -124,6 +180,13 @@ function cenyAProdukty(lines: any): { ceny: string[]; produkty: string[] } {
 // Trať pro MĚSÍČNÍ členy. Musí existovat v `email_templates`, jinak se pošle alert
 // a člen zůstane bez uvítačky (přístup dostane tak jako tak, grant je první).
 const WELCOME_TRACK = "onboarding-nakup-academy-mesicni";
+
+// ⛔ DOŽIVOTNÍ MÁ JINOU UVÍTACÍ TRAŤ, a ten rozdíl není kosmetický.
+// `onboarding-nakup-academy` (bez přípony) slibuje appku Tvůj Coach jako dárek včetně
+// přihlašovacího tlačítka. Doživotnímu členovi to platí, měsíčnímu ne, a proto vznikla
+// varianta `-mesicni`. Poslat doživotnímu tu měsíční by ho o slíbený dárek připravilo
+// a poslat měsíčnímu tu doživotní by slíbilo něco, co nedostane. Prohodit se nesmí.
+// ⇒ Doživotní trať je v `KATALOG` výš (pole `welcome`), tahle konstanta je jen pro měsíční.
 
 // Kolik dní po konci zaplaceného období ještě pustit dovnitř. Kryje Stripe Smart
 // Retries u selhané karty, ať nikoho nezamkneme kvůli jednomu neúspěšnému stržení.
@@ -287,6 +350,119 @@ async function udelPristup(
   return jePrvni;
 }
 
+// --- Doživotní přístup (jednorázová platba 8 900) ---------------------------
+// Vrací `novyDozivotni` = true, když člověk doživotní přístup PRÁVĚ získal (nový
+// zákazník i ten, kdo přechází z měsíčního). Rozhoduje o uvítacím e-mailu a o TC grantu.
+//
+// ⛔⛔ EXPIRACE SE MUSÍ PŘEPSAT NA NULL VÝSLOVNĚ. Kdo si dosud platil měsíčně, má
+// v řádku datum konce. Upsert, který pole `expires_at` neuvede, tam **starou hodnotu
+// NECHÁ**, takže by doživotnímu členovi přístup za pár týdnů vypršel a nikdo by se to
+// nedozvěděl. Tahle třída chyby (změna, která se tváří jako provedená) nás 28. 7.
+// stála dva testy, viz `feedback-create-or-replace-neni-nahrada`.
+async function udelDozivotni(
+  email: string,
+  def: JednorazovyProdukt,
+  stripe?: { customer?: string | null },
+): Promise<{ novyDozivotni: boolean; zruseneMesicni: string }> {
+  const { data: stavajici } = await admin
+    .from("entitlements")
+    .select("source, active, expires_at, stripe_subscription_id")
+    .eq("email", email)
+    .eq("product", def.produkt)
+    .maybeSingle();
+
+  const bylDozivotni = !!stavajici && stavajici.active && stavajici.expires_at === null;
+  if (bylDozivotni) {
+    await alertAdmin("Stripe: DRUHÝ doživotní nákup od téhož člověka", {
+      email,
+      produkt: def.nazev,
+      stavajici_zdroj: stavajici.source,
+      poznamka: "Přístup už měl. Zvaž vrácení té druhé platby.",
+    });
+  }
+
+  const { error } = await admin.from("entitlements").upsert(
+    {
+      email,
+      product: def.produkt,
+      active: true,
+      source: def.source,
+      granted_at: new Date().toISOString(),
+      expires_at: null,                 // ⛔ výslovně, viz komentář výš
+      ...(stripe?.customer ? { stripe_customer_id: stripe.customer } : {}),
+    },
+    { onConflict: "email,product" },
+  );
+  if (error) throw new Error("db: " + error.message);
+
+  // ⛔⛔ UPGRADE Z MĚSÍČNÍHO: ZASTAVIT DALŠÍ STRHÁVÁNÍ.
+  // Slevový kód na upgrade existuje právě proto, aby měsíční členové přešli na doživotní.
+  // Kdybychom jim předplatné nechali běžet, platili by 990 Kč měsíčně NAVÍC k doživotnímu
+  // přístupu, který už mají. Nikde by to nespadlo a přišlo by se na to reklamací.
+  // Grant je první a zrušení až po něm: kdyby zrušení selhalo, člověk má přístup a přijde
+  // hlasitý alert. Opačné pořadí by při chybě nechalo člověka bez přístupu.
+  let zruseneMesicni = "nebylo-co";
+  const subId = stavajici?.stripe_subscription_id;
+  if (subId && stavajici?.source === "stripe-monthly") {
+    if (!STRIPE_SUBS_KEY) {
+      zruseneMesicni = "CHYBI-KLIC";
+    } else {
+      try {
+        const r = await fetch(
+          "https://api.stripe.com/v1/subscriptions/" + encodeURIComponent(subId),
+          { method: "DELETE", headers: { Authorization: "Bearer " + STRIPE_SUBS_KEY } },
+        );
+        if (r.ok) zruseneMesicni = "ok";
+        else {
+          const telo = await r.text().catch(() => "");
+          zruseneMesicni = "http-" + r.status + " " + telo.slice(0, 200);
+        }
+      } catch (e) { zruseneMesicni = "chyba-" + String(e).slice(0, 60); }
+    }
+    if (zruseneMesicni !== "ok") {
+      await alertAdmin("🔴 Stripe: upgrade na doživotní, ale MĚSÍČNÍ PŘEDPLATNÉ BĚŽÍ DÁL", {
+        email,
+        subscription: subId,
+        vysledek: zruseneMesicni,
+        co_delat: "⛔ ZRUŠ PŘEDPLATNÉ RUČNĚ VE STRIPU, jinak mu strhneme 990 Kč navíc.",
+      });
+    }
+  }
+
+  return { novyDozivotni: !bylDozivotni, zruseneMesicni };
+}
+
+// --- Appka Tvůj Coach na rok (jen doživotní varianta) -----------------------
+// Vzor 1:1 podle `simpleshop-webhook`, ať se doživotní nákup chová stejně bez ohledu
+// na to, kudy peníze přišly. ⚠️ tier `ai_basic` = VIP appky na JEDEN ROK (délku řeší
+// SQL `grant_app_access` v repu appky, větví se podle `source`). Neregistrovanému
+// se grant uloží jako pending a sedne si, až se zaregistruje.
+async function grantTvujCoach(email: string, sessionId: string | null): Promise<string> {
+  let vysledek = "no-secret";
+  try {
+    const { data: gs } = await admin
+      .from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+    const gsec = gs?.value ? String(gs.value) : "";
+    if (gsec) {
+      const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+        body: JSON.stringify({
+          email, action: "grant", tier: "ai_basic",
+          source: "academy-nakup", academy_order_id: sessionId,
+        }),
+      }).catch(() => null);
+      if (r && r.ok) {
+        const jj = await r.json().catch(() => ({}));
+        vysledek = String((jj as { result?: string }).result || "ok");
+      } else vysledek = r ? "http-" + r.status : "fetch-fail";
+    }
+    await admin.from("tvujcoach_grants")
+      .insert({ email, action: "grant", result: vysledek, source: "academy-nakup" });
+  } catch { /* best-effort, nikdy nesmí shodit nákup */ }
+  return vysledek;
+}
+
 // --- Uvítací e-mail (jen při prvním udělení) --------------------------------
 // Vzor převzatý ze `simpleshop-webhook`, ale s vlastní tratí pro měsíční členy.
 // `track` má výchozí hodnotu, takže původní volání `posliUvitani(email)` funguje
@@ -384,6 +560,54 @@ Deno.serve(async (req) => {
   try {
     // --- 1) První zaplacení z Payment Linku -------------------------------
     if (typ === "checkout.session.completed") {
+      // --- 1a) DOŽIVOTNÍ 8 900 Kč: jednorázová platba ---------------------
+      // Od 29. 7. 2026 jde doživotní varianta přes Stripe, ne přes SimpleShop.
+      // ⚠️ `mode` rozhoduje o VŠEM ostatním, proto se větví hned na začátku.
+      if (obj.mode === "payment") {
+        const plinkL = typeof obj.payment_link === "string" ? obj.payment_link : "";
+        // ⛔ Jen odkazy z naší mapy. Cizí jednorázové platby z téhož Stripe účtu
+        // (a je jich tam víc, účet je společný s appkou) sem chodí taky.
+        const klic = ODKAZ_NA_PRODUKT[plinkL];
+        const def = klic ? KATALOG[klic] : undefined;
+        if (!def) {
+          return json({ ok: true, ignored: "foreign-price", mode: "payment", payment_link: plinkL || null });
+        }
+        const emailL = String(
+          obj.customer_details?.email ?? obj.customer_email ?? "",
+        ).trim().toLowerCase();
+        if (!emailL) {
+          await alertAdmin("Stripe: doživotní zaplaceno, ale chybí e-mail", {
+            session: obj.id,
+            poznamka: "Přístup NEUDĚLEN. V Payment Linku musí být e-mail povinný.",
+          });
+          return json({ error: "no-email" }, 422);
+        }
+
+        const { novyDozivotni, zruseneMesicni } = await udelDozivotni(emailL, def, {
+          customer: typeof obj.customer === "string" ? obj.customer : null,
+        });
+
+        // Appka a uvítačka jen tomu, kdo přístup PRÁVĚ získal. Opakovaný nákup
+        // (nebo přehrání téže události Stripem) nesmí poslat druhý mail ani druhý grant.
+        let tcGrant = def.tcGrant ? "preskoceno" : "netyka-se";
+        if (novyDozivotni) {
+          if (def.tcGrant) {
+            tcGrant = await grantTvujCoach(emailL, typeof obj.id === "string" ? obj.id : null);
+          }
+          try { await posliUvitani(emailL, def.welcome); }
+          catch (e) {
+            await alertAdmin("Stripe: přístup udělen, ale uvítací e-mail selhal", {
+              email: emailL, produkt: def.nazev, chyba: String(e).slice(0, 200),
+            });
+          }
+        }
+
+        return json({
+          ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
+          novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
+        });
+      }
+
       if (obj.mode !== "subscription") {
         return json({ ok: true, ignorovano: "ne-predplatne" });
       }
@@ -445,6 +669,20 @@ Deno.serve(async (req) => {
         return json({ error: "no-email" }, 422);
       }
 
+      // ⛔ DOŽIVOTNÍHO ČLENA TAHLE VĚTEV NESMÍ POTKAT. Kdyby Stripe k jednorázové
+      // platbě 8 900 vystavil fakturu, doputovala by sem a `udelPristup` by
+      // doživotnímu členovi zapsal expiraci. Pojistka v `udelPristup` sice degradaci
+      // zachytí, ale zakřičí alertem u KAŽDÉHO doživotního nákupu, takže by z ní
+      // rychle byl šum, který nikdo nečte. Radši tiše a přesně tady.
+      {
+        const { data: dozivotni } = await admin
+          .from("entitlements").select("source, expires_at, active")
+          .eq("email", email).eq("product", "academy").maybeSingle();
+        if (dozivotni?.active && dozivotni.expires_at === null) {
+          return json({ ok: true, ignored: "lifetime", email });
+        }
+      }
+
       // Konec zaplaceného období + grace.
       // ⚠️ Bereme NEJPOZDĚJŠÍ `period.end` ze VŠECH řádků faktury, ne `data[0]`.
       // Faktura předplatného může nést víc řádků (proporcionální dopočet při změně
@@ -489,16 +727,17 @@ Deno.serve(async (req) => {
       // Věcně to sedí i bez toho závodu: `invoice.paid` je ZAPLACENÁ FAKTURA, tedy
       // i obnova. Uvítačka patří k nákupu, ne k obnově.
       // (Hlubší oprava dedupe v drip-send, tedy insert PŘED odesláním, je samostatný úkol.)
-      if (prvni) {
-        // Sem se to dostane jen tehdy, když `checkout.session.completed` NEDORAZILA
-        // (jinak už řádek existuje a `prvni` je false). Přístup dostal, uvítačku ne,
-        // a to se nesmí stát tiše.
-        await alertAdmin("Stripe: přístup udělen z faktury BEZ uvítacího e-mailu", {
-          email,
-          poznamka: "Nedorazila checkout.session.completed. Přístup JE udělen. "
-            + "Uvítačku pošli ručně (drip-send only_email) nebo prověř doručování webhooku.",
-        });
-      }
+      // ⛔ TADY DŘÍV BYL ALERT „přístup udělen z faktury BEZ uvítacího e-mailu" A LHAL.
+      // Vycházel z úvahy „když je `prvni`, checkout nedorazil". Jenže Stripe pořadí
+      // událostí NEGARANTUJE: 29. 7. 2026 dorazila `invoice.paid` o pět vteřin DŘÍV
+      // než `checkout.session.completed`, alert vyskočil a poslal Martina posílat
+      // uvítačku ručně, přestože odešla sama hned nato.
+      // Závod tady rozhodnout NEJDE, obě události chodí v řádu vteřin a v okamžiku
+      // faktury o té druhé nevíme nic. Proto se to neřeší tady, ale odloženě
+      // v `daily-digest`: ten se jednou denně zeptá „kdo má aktivní členství a nedostal
+      // uvítačku", nezávodí s ničím a mlčí, když je vše v pořádku.
+      // ⚠️ Poučení nad rámec tohohle místa: alert, který jednou zalže, se přestane číst,
+      // a pak nezafunguje ani ve chvíli, kdy má pravdu.
       return json({ ok: true, email, expirace, prvni });
     }
 
@@ -539,8 +778,13 @@ Deno.serve(async (req) => {
       }
 
       // 1) zastavit další strhávání
-      let zruseno = "nebylo-co";
-      if (ent.stripe_subscription_id) {
+      // ⛔ U DOŽIVOTNÍ VARIANTY SE TENHLE KROK PŘESKAKUJE. Jednorázová platba žádné
+      // předplatné nemá, takže není co rušit. A kdo přešel z měsíčního na doživotní,
+      // má v řádku ID předplatného, které jsme mu zrušili UŽ PŘI TOM UPGRADU; druhý
+      // pokus by Stripe odmítl a my bychom z toho vyrobili falešný poplach.
+      const jeDozivotni = ent.source === "stripe-lifetime";
+      let zruseno = jeDozivotni ? "nema-predplatne" : "nebylo-co";
+      if (!jeDozivotni && ent.stripe_subscription_id) {
         if (!STRIPE_SUBS_KEY) {
           zruseno = "CHYBI-KLIC";
         } else {
@@ -581,32 +825,74 @@ Deno.serve(async (req) => {
         await posliUvitani(ent.email, rozlouceniTrack(konecIso), {
           castka: castkaText(vraceno > 0 ? vraceno : castka, String(obj.currency ?? "czk")),
           produkt: "Barna Academy",
-          varianta: "měsíční členství",
+          // ⚠️ Popis varianty se řídí ZDROJEM, ne odhadem. Doživotnímu členovi napsat
+          // „měsíční členství" by v mailu o vrácení peněz vypadalo, že nevíme, co mu rušíme.
+          varianta: jeDozivotni ? "doživotní přístup" : "měsíční členství",
           znovu_odkaz: "https://martinbarna.cz/akademie/#cena",
           pristup_do: datumCesky(konecIso),
         });
       } catch { /* best-effort, nikdy nesmí shodit odebrání přístupu */ }
 
+      // 3b) DOŽIVOTNÍ MĚL V CENĚ APPKU NA ROK ⇒ při vrácení peněz se odebírá taky.
+      // Měsíční ji nikdy nedostal, takže se u něj nesahá na nic. Vzor 1:1 podle storno
+      // větve `simpleshop-webhook`. Best-effort, odebrání Academy nesmí shodit.
+      let tcRevoke = "netyka-se";
+      if (jeDozivotni) {
+        tcRevoke = "no-secret";
+        try {
+          const { data: gs } = await admin
+            .from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+          const gsec = gs?.value ? String(gs.value) : "";
+          if (gsec) {
+            const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+              body: JSON.stringify({
+                email: ent.email, action: "revoke",
+                source: "academy-storno", academy_order_id: null,
+              }),
+            }).catch(() => null);
+            if (r && r.ok) {
+              const jj = await r.json().catch(() => ({}));
+              tcRevoke = String((jj as { result?: string }).result || "ok");
+            } else tcRevoke = r ? "http-" + r.status : "fetch-fail";
+          }
+          await admin.from("tvujcoach_grants")
+            .insert({ email: ent.email, action: "revoke", result: tcRevoke, source: "academy-storno" });
+        } catch { /* best-effort */ }
+      }
+
       // 4) hlásit. U sporu a u nezrušeného předplatného VŽDY, jinak by to zůstalo tiché.
-      if (jeSpor || zruseno !== "ok" || chybaRevoke) {
+      // ⚠️ „nema-predplatne" u doživotní varianty NENÍ chyba, je to očekávaný stav.
+      // Bez téhle výjimky by alert chodil po KAŽDÉM vrácení doživotní platby a rychle
+      // by z něj byl šum, který nikdo nečte. Alert má křičet jen tam, kde je co dělat.
+      const zruseniSelhalo = zruseno !== "ok" && zruseno !== "nema-predplatne";
+      const tcRevokeSelhal = jeDozivotni && tcRevoke !== "ok" && tcRevoke !== "granted"
+                             && tcRevoke !== "revoked" && tcRevoke !== "pending";
+      if (jeSpor || zruseniSelhalo || chybaRevoke || tcRevokeSelhal) {
         await alertAdmin(
           jeSpor ? "🔴 Stripe: SPOR (chargeback) u Academy, přístup odebrán"
-                 : "Stripe: refund Academy, ale předplatné se nezrušilo",
+                 : "Stripe: refund Academy, ale něco se nedotáhlo",
           {
             email: ent.email,
+            varianta: jeDozivotni ? "doživotní" : "měsíční",
             zruseni_predplatneho: zruseno,
             odebrani_pristupu: chybaRevoke ? "SELHALO: " + chybaRevoke.message : "ok",
+            odebrani_appky: tcRevoke,
             co_delat: zruseno === "CHYBI-KLIC"
               ? "⛔ ZRUŠ PŘEDPLATNÉ RUČNĚ VE STRIPU. Chybí STRIPE_RESTRICTED_SUBS_KEY."
-              : (jeSpor ? "Spor lze u banky vyhrát. Když vyhraješ, vrať přístup ručně." : "Zkontroluj ve Stripu."),
+              : (tcRevokeSelhal ? "⛔ ODEBER PŘÍSTUP DO APPKY RUČNĚ v adminu appky."
+              : (jeSpor ? "Spor lze u banky vyhrát. Když vyhraješ, vrať přístup ručně." : "Zkontroluj ve Stripu.")),
           },
         );
       }
 
       return json({
         ok: true, typ, email: ent.email,
+        varianta: jeDozivotni ? "dozivotni" : "mesicni",
         zruseno_predplatne: zruseno,
         pristup_odebran: !chybaRevoke,
+        odebrani_appky: tcRevoke,
       });
     }
 

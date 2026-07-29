@@ -80,12 +80,19 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 7d/30d pocitame JEN source='simpleshop' (realne prodeje) — wordpress-import ma
-    // granted_at = datum importu (29. 6.) a cisla by nesmyslne nafoukl.
+    // 7d/30d pocitame JEN realne prodeje — wordpress-import ma granted_at = datum
+    // importu (29. 6.) a cisla by nesmyslne nafoukl.
+    // ⛔ ROZSIRENO 29. 7. 2026 o 'stripe-lifetime': dozivotni Academy se toho dne
+    // presunula ze SimpleShopu na Stripe. Bez toho by Martinovi tenhle prehled po
+    // migraci hlasil NULA prodanych Academy, i kdyby se prodavaly kazdy den.
+    // ⚠️ Tataz zmena patri i do `daily-digest` (pocitadlo zakladajicich X/50).
+    // ⛔ NEPRIDAVAT sem 'stripe-monthly': to je mesicni clenstvi, ne prodej dozivotni
+    // varianty, a smichalo by dve ruzne veci do jednoho cisla.
     const sales = { videokurz_7d: 0, videokurz_30d: 0, academy_30d: 0, academy_total: 0, videokurz_total: 0 };
+    const REALNE_ZDROJE = ["simpleshop", "stripe-lifetime"];
     for (const e of ents.data ?? []) {
       const g = String(e.granted_at ?? "");
-      const real = e.source === "simpleshop";
+      const real = REALNE_ZDROJE.includes(String(e.source ?? ""));
       if (e.product === "videokurz") {
         sales.videokurz_total++;
         if (real && g >= d7) sales.videokurz_7d++;
