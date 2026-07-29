@@ -108,7 +108,10 @@
         .btn-ghost:hover { background:#fff; color:var(--ink); }
 
         .hero { background:linear-gradient(135deg,#262626 0%,#000 100%); color:#fff; padding:130px 0 110px; }
-        /* zlatá je světlá barva, bílý text na ní vycházel 1,93 při požadovaných 4,5 */
+        /* Zlatá je světlá barva, patří na ni tmavý text. Tenhle konkrétní prvek dnes přebíjí
+           arena.css (.hero .tag → průhledné pozadí a zlatý text), takže se pravidlo neuplatní,
+           ale zůstává jako záložní hodnota, kdyby to přebití zmizelo. Skutečně nečitelné byly
+           dva odznaky .tag MIMO hlavičku, ty měly barvu v inline stylu (poměr 1,93). */
         .hero .tag { background:var(--gold); color:#161616; font-weight:700; font-size:.82rem; padding:6px 16px; border-radius:50px; display:inline-block; letter-spacing:.5px; }
         .hero h1 { font-size:clamp(2.2rem, 6vw, 3.1rem); margin:1.2rem 0; line-height:1.12; animation:fadeUp .7s ease both; }
         .hero p.lead { font-size:1.25rem; opacity:.9; max-width:620px; animation:fadeUp .7s ease .15s both; }
@@ -464,7 +467,7 @@
     <section class="bg-soft" id="zdarma">
         <div class="container">
             <div class="section-head">
-                <span class="tag" style="background:var(--gold);color:#fff;padding:5px 14px;border-radius:50px;font-weight:700;font-size:.8rem;">🎁 ZDARMA NA VYZKOUŠENÍ</span>
+                <span class="tag" style="background:var(--gold);color:#161616;padding:5px 14px;border-radius:50px;font-weight:700;font-size:.8rem;">🎁 ZDARMA NA VYZKOUŠENÍ</span>
                 <h2 class="mt-3">Nejdřív ochutnej, pak se rozhodni</h2>
                 <p>Pusť si <strong>11 lekcí zdarma</strong>: první 4 základy (kalorie, bílkoviny, tuky, sacharidy) plus ukázkové lekce z dalších modulů i ukázku bonusů, hned teď a bez registrace, bez karty, bez závazku. Pokud ti to sedne, odemkneš si celý kurz jedním klikem.</p>
             </div>
@@ -496,7 +499,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-7">
                     <div class="pricebox">
-                        <span class="tag" style="background:var(--gold); color:#fff; padding:5px 14px; border-radius:50px; font-weight:700; font-size:.8rem;">VIDEOKURZ FLEXIBILNÍHO STRAVOVÁNÍ</span>
+                        <span class="tag" style="background:var(--gold); color:#161616; padding:5px 14px; border-radius:50px; font-weight:700; font-size:.8rem;">VIDEOKURZ FLEXIBILNÍHO STRAVOVÁNÍ</span>
                         <h3 class="mt-3 mb-3">Vše, co potřebuješ o výživě vědět</h3>
                         <ul class="check text-start d-inline-block mb-4">
                             <li>182 videí · přes 20 hodin obsahu</li>

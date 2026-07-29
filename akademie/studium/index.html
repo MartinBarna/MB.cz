@@ -214,6 +214,9 @@
       .tools-head{margin:30px 0 4px;color:#fff;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;scroll-margin-top:90px;}
       .tools-sub{color:var(--muted);font-size:.9rem;margin:0 0 14px;}
       .bonus .litebadge{display:inline-block;background:rgba(235,177,44,.16);border:1px solid rgba(235,177,44,.4);color:var(--gold-soft);font-size:.68rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:50px;margin-left:8px;vertical-align:middle;}
+      /* .bonus .btxt span (řádek 59) je specifičtější než .bonus .litebadge, takže odznakům
+         vnucoval --muted a ty vycházely 4,47 při požadovaných 4,5. Tohle vrací zamýšlenou zlatou. */
+      .bonus .btxt span.litebadge{color:var(--gold-soft);}
       .bonus.islite{opacity:.96;}
       .bonus.islite .bbtn{background:rgba(255,255,255,.06);color:var(--gold-soft);border:1px solid rgba(235,177,44,.4);box-shadow:none;}
     </style>
