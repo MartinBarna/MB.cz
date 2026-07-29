@@ -30,15 +30,24 @@
   }
 
   // ---- 2) je to buy odkaz produktu v referralu? ----
+  // ⛔ Od 29. 7. 2026 jde Academy přes STRIPE, ne SimpleShop. Bez řádku pro Stripe
+  // by referral u doživotní Academy TIŠE PŘESTAL FUNGOVAT: `buyInfo` by vrátilo null,
+  // modal by se neukázal a doporučitel by o odměnu přišel, aniž by kdokoli poznal proč.
+  // `4gM00ibnpgjMerK7dB3ks04` = odkaz Academy doživotně (plink_1TyQXw…).
   function buyInfo(href) {
     if (!href) return null;
     if (href.indexOf('simpleshop.cz/3Vbl') >= 0) return { url: href, prod: 'videokurz' };
     if (href.indexOf('simpleshop.cz/Xgl8g') >= 0) return { url: href, prod: 'academy' };
+    if (href.indexOf('4gM00ibnpgjMerK7dB3ks04') >= 0) return { url: href, prod: 'academy', stripe: true };
     return null;
   }
-  function withEmail(url, email) {
+  // ⚠️ Každá pokladna si jméno parametru pojmenovala po svém. SimpleShop čte `email`,
+  // Stripe `prefilled_email`; poslat Stripu `email` znamená, že se pole prostě
+  // nepředvyplní. Nic nespadne, jen člověk píše adresu znovu a část jich odpadne.
+  function withEmail(url, email, jeStripe) {
     var sep = url.indexOf('?') >= 0 ? '&' : '?';
-    return url + sep + 'email=' + encodeURIComponent(email);
+    var klic = jeStripe ? 'prefilled_email' : 'email';
+    return url + sep + klic + '=' + encodeURIComponent(email);
   }
   function validEmail(e) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e); }
 
@@ -95,7 +104,7 @@
           body: JSON.stringify({ ref: ref, email: email, website: (hp.value || '') })
         }).catch(function () {});
       } catch (e) {}
-      proceed(withEmail(info.url, email));
+      proceed(withEmail(info.url, email, info.stripe));
     };
     em.onkeydown = function (e) { if (e.key === 'Enter') go.onclick(); };
     skip.onclick = function () { proceed(info.url); };

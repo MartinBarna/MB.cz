@@ -39,7 +39,10 @@ const KLICOVE_STRANKY = [
   // Přitom mrtvá pokladna je ta nejdražší porucha ze všech. Když se ceník změní,
   // aktualizuj i tenhle seznam. Checklist: `tvujcoach-cenik-zmena-checklist`.
   "https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00",     // Academy 990 Kč/měs
-  "https://form.simpleshop.cz/Xgl8g/buy/",              // Academy 8 900 doživotně
+  "https://form.simpleshop.cz/Xgl8g/buy/",              // Academy 8 900 doživotně (STARÁ cesta, doběh)
+  // ⛔ Od 29. 7. 2026 vede doživotní Academy sem. Kdyby tenhle odkaz umřel, přestane
+  // se prodávat nejdražší produkt a nikde jinde to nekřikne. Hlídač na to je právě.
+  "https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04",     // Academy 8 900 doživotně (Stripe)
 ];
 // ✅ DETEKTOR OVĚŘEN 28. 7. 2026 KANÁRKEM, ne jen přečtením kódu.
 // Do seznamu se dočasně přidala schválně neexistující adresa

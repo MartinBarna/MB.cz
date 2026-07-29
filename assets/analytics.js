@@ -94,14 +94,25 @@
   }
   window.mbTrackLead = trackLead;
   function wireConversions() {
-    // Klik na nákup (SimpleShop) → InitiateCheckout / begin_checkout
+    // Klik na nákup → InitiateCheckout / begin_checkout.
+    // ⛔ POZOR NA VÝBĚR ODKAZŮ: od 29. 7. 2026 jde Academy přes STRIPE, ne SimpleShop.
+    // Kdyby tu zůstal jen výběr `a[href*="simpleshop.cz"]`, klik na doživotní Academy
+    // by se přestal měřit ÚPLNĚ: Meta ani Google by o zahájení nákupu za 8 900 Kč
+    // nevěděly a optimalizovaly by reklamy na nekompletních datech. Nic by nespadlo,
+    // jen by tiše zmizela nejdražší konverze, kterou máme.
     document.addEventListener('click', function (e) {
-      var a = e.target.closest ? e.target.closest('a[href*="simpleshop.cz"]') : null;
+      var a = e.target.closest
+        ? e.target.closest('a[href*="simpleshop.cz"], a[href*="buy.stripe.com"]')
+        : null;
       if (!a) return;
       var href = a.getAttribute('href') || '';
-      var c = href.indexOf('3Vbl') !== -1  ? { id: 'videokurz',  name: 'Videokurz výživy', val: 800 }
+      // Stripe odkazy nemají v adrese jméno produktu, poznají se podle ID odkazu.
+      // `4gM00ibnpgjMerK7dB3ks04` = Academy doživotně 8 900 Kč (plink_1TyQXw…).
+      var c = href.indexOf('4gM00ibnpgjMerK7dB3ks04') !== -1 ? { id: 'academy', name: 'Barna Academy', val: 8900 }
+            : href.indexOf('3Vbl') !== -1  ? { id: 'videokurz',  name: 'Videokurz výživy', val: 800 }
             : href.indexOf('Xgl8g') !== -1 ? { id: 'academy',    name: 'Barna Academy',    val: 8900 }
             : href.indexOf('qG2yO') !== -1 ? { id: 'konzultace', name: 'Konzultace',       val: 1990 }
+            : href.indexOf('buy.stripe.com') !== -1 ? { id: 'stripe-other', name: 'Stripe', val: 0 }
             :                                { id: 'simpleshop-other', name: 'SimpleShop', val: 0 };
       if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: c.name, content_type: 'product', content_ids: [c.id], value: c.val, currency: 'CZK' }, { eventID: evId('checkout') });
       if (window.gtag) gtag('event', 'begin_checkout', { value: c.val, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.val }] });
