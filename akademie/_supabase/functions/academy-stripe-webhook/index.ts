@@ -380,7 +380,7 @@ async function udelPristup(
 async function udelDozivotni(
   email: string,
   def: JednorazovyProdukt,
-  stripe?: { customer?: string | null },
+  stripe?: { customer?: string | null; paymentIntent?: string | null },
 ): Promise<{ novyDozivotni: boolean; zruseneMesicni: string }> {
   const { data: stavajici } = await admin
     .from("entitlements")
@@ -408,6 +408,11 @@ async function udelDozivotni(
       granted_at: new Date().toISOString(),
       expires_at: null,                 // ⛔ výslovně, viz komentář výš
       ...(stripe?.customer ? { stripe_customer_id: stripe.customer } : {}),
+      // ⛔⛔ BEZ TOHOHLE NEJDE SPÁROVAT REFUND. U `mode=payment` Stripe zákazníka
+      // NEZAKLÁDÁ, takže `stripe_customer_id` zůstane NULL a refundová větev nemá
+      // podle čeho hledat. Změřeno naostro 29. 7. 2026: vrácení peněz tiše neudělalo
+      // vůbec nic, přístup i appka zůstaly udělené. Viz `entitlements-payment-intent.sql`.
+      ...(stripe?.paymentIntent ? { stripe_payment_intent: stripe.paymentIntent } : {}),
     },
     { onConflict: "email,product" },
   );
@@ -610,6 +615,7 @@ Deno.serve(async (req) => {
 
         const { novyDozivotni, zruseneMesicni } = await udelDozivotni(emailL, def, {
           customer: typeof obj.customer === "string" ? obj.customer : null,
+          paymentIntent: typeof obj.payment_intent === "string" ? obj.payment_intent : null,
         });
 
         // Appka a uvítačka jen tomu, kdo přístup PRÁVĚ získal. Opakovaný nákup
@@ -777,18 +783,57 @@ Deno.serve(async (req) => {
     if (typ === "charge.refunded" || typ === "charge.dispute.created") {
       const jeSpor = typ === "charge.dispute.created";
       // U sporu je v `data.object` Dispute, u refundu Charge. Zákazník je na obou.
+      // ⛔⛔ PÁRUJEME PODLE DVOU IDENTIFIKÁTORŮ, PROTOŽE KAŽDÁ VARIANTA MÁ JINÝ.
+      // Předplatné: Stripe vždycky založí zákazníka ⇒ `customer`.
+      // Jednorázová platba (`mode=payment`): zákazníka NEZAKLÁDÁ ⇒ jediné, co spojuje
+      // nákup s refundem, je `payment_intent`.
+      // ⚠️ 29. 7. 2026 tady stálo jen to první a doživotní refund proto TIŠE NEUDĚLAL NIC:
+      // vrácených 8 900 Kč a zákazník si nechal Academy navždy i appku na rok.
+      const SLOUPCE_ENT = "email, product, source, expires_at, stripe_subscription_id";
       const zakaznik = typeof obj.customer === "string" ? obj.customer : "";
-      if (!zakaznik) return json({ ok: true, ignored: "bez-zakaznika" });
+      const platba = typeof obj.payment_intent === "string" ? obj.payment_intent : "";
+      if (!zakaznik && !platba) return json({ ok: true, ignored: "bez-identifikatoru" });
 
-      const { data: ent } = await admin
-        .from("entitlements")
-        .select("email, product, source, expires_at, stripe_subscription_id")
-        .eq("stripe_customer_id", zakaznik)
-        .eq("product", "academy")
-        .maybeSingle();
+      // deno-lint-ignore no-explicit-any
+      let ent: any = null;
+      if (zakaznik) {
+        const { data } = await admin.from("entitlements").select(SLOUPCE_ENT)
+          .eq("stripe_customer_id", zakaznik).eq("product", "academy").maybeSingle();
+        ent = data ?? null;
+      }
+      if (!ent && platba) {
+        const { data } = await admin.from("entitlements").select(SLOUPCE_ENT)
+          .eq("stripe_payment_intent", platba).eq("product", "academy").maybeSingle();
+        ent = data ?? null;
+      }
 
-      // Není náš zákazník (typicky refund předplatného appky). Ticho, žádný alert.
-      if (!ent) return json({ ok: true, ignored: "not-ours", zakaznik });
+      if (!ent) {
+        // Není náš zákazník (typicky refund předplatného appky). Ticho je tu SPRÁVNÉ,
+        // takových refundů chodí spousta a alert by se z nich stal šum.
+        // ⭐ ALE: než mlčky odejdeme, zkusíme e-mail z platby jako POSLEDNÍ pojistku.
+        // ⛔ Podle e-mailu se nikdy NEJEDNÁ (Academy a appka sdílí Stripe účet, takže
+        // refund appky by sebral Academy), jen se KŘIČÍ. Tím se tahle třída chyby příště
+        // pozná do minuty místo až z reklamace, a přitom nehrozí špatné odebrání.
+        const emailZPlatby = String(
+          obj.billing_details?.email ?? obj.receipt_email ?? "",
+        ).trim().toLowerCase();
+        if (emailZPlatby) {
+          const { data: podleMailu } = await admin.from("entitlements")
+            .select("email, source, expires_at")
+            .eq("email", emailZPlatby).eq("product", "academy").eq("active", true).maybeSingle();
+          if (podleMailu) {
+            await alertAdmin("🔴 Stripe: refund se NESPÁROVAL, ale e-mail sedí na aktivní Academy", {
+              email: emailZPlatby,
+              zdroj: podleMailu.source,
+              zakaznik: zakaznik || "(žádný)",
+              platba: platba || "(žádná)",
+              co_delat: "⛔ PŘÍSTUP NEBYL ODEBRÁN. Odeber ho ručně v adminu a nahlas to, "
+                + "protože párování mělo zafungovat samo.",
+            });
+          }
+        }
+        return json({ ok: true, ignored: "not-ours", zakaznik: zakaznik || null, platba: platba || null });
+      }
 
       // ⚠️ ČÁSTEČNÝ REFUND PŘÍSTUP NEODEBÍRÁ. Vrácení 200 Kč z 990 není konec
       // členství a automatika by tu rozhodovala o něčem, co neví. Jen upozorníme.
