@@ -147,9 +147,16 @@ function parsujOdkazy(s: string): Record<string, string> {
   }
   return m;
 }
+// ⚠️ Testovací odkaz vede na TÝŽ klíč katalogu jako ostrý, a je to schválně.
+// Kdyby měl vlastní `source`, test by neprošel tou cestou, která běží v provozu,
+// a neověřil by nic (mimo jiné ani to, jestli se prodej započítá do padesátky).
+// ⛔ CENA TOHO: 15Kč odkaz uděluje doživotní Academy za 8 900 Kč plus appku na rok.
+//    Po testu se MUSÍ zamknout ve Stripu a testovací nákup uklidit (entitlement,
+//    grant v appce, lead), jinak zůstane v počítadle zakládajících navíc jeden člověk.
 const ODKAZ_NA_PRODUKT = parsujOdkazy(
   Deno.env.get("STRIPE_ONETIME_LINKS") ??
-    "plink_1TyPM3Bq3rKubW9ku0ROM7Dq=academy-lifetime",
+    "plink_1TyPM3Bq3rKubW9ku0ROM7Dq=academy-lifetime," +
+    "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
