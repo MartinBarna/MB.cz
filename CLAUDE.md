@@ -104,6 +104,26 @@ tracking = dostupné majitelům videokurzu i Academy.
 
 Před deployem ověř render lokálně (chromium + lokální server na :8099), 0 JS chyb.
 
+## ⛔ STANDING RULE: měníš barvu? ZMĚŘ ji na renderu, čtení CSS nestačí
+Martin 29. 7. 2026: *„nečitelnost a barvy řešíme DOKOLA, ošetřit na 100 %."*
+Barva jednoho prvku tady vzniká až ze **šesti** stylopisů (`highend`, inline blok stránky,
+`marketing-dark`, `app-brand-override`, `ba-ui`, `arena`). **Oprava, která v CSS vypadá
+správně, bývá mrtvá.** 29. 7. se to stalo třikrát za jedno odpoledne.
+- ⛔ **`assets/marketing-dark.css` NENÍ motiv, je to záplata** nad starým světlým motivem.
+  Ztmavuje jmenovitě vypsané třídy, takže **každá nová světlá komponenta je rozbitá od
+  narození**, dokud si jí někdo nevšimne. Soubor v sobě nese pět kol oprav (29. 6., 1. 7.,
+  3. 7., 4. 7., 29. 7.). Přidáváš-li ztmavení kontejneru, **projdi i jeho děti**: vlastní
+  deklarace potomka vyhraje bez ohledu na `!important` u rodiče.
+- ⛔ **`assets/arena.css` mění pozadí přes `!important`, ale barvu textu nechává být.**
+  (`background:transparent`, `var(--ar-panel)`.) Tenhle jediný vzorec vyrobil 3 z 13 nálezů.
+  Kdo tam sáhne na pozadí, ať sáhne i na `color`.
+- **Jak měřit:** načíst stránku, protáhnout stylopisy přes `fetch(url,{cache:'reload'})`
+  (mají pevné `?v=`, jinak měříš starou verzi), pak `getComputedStyle`. Práh WCAG AA je
+  4,5 pro běžný text a 3,0 pro velký (24 px, nebo 18,66 px tučně).
+- **Pasti měření** (průhlednost zastávek gradientu, SVG se vybarvuje `fill` a ne `color`,
+  emoji `color` ignorují, vlastní skenování si vyrobí 503 od hostingu): paměť
+  `feedback-kontrast-mer-renderem-ne-css`. Nálezy a stav: `mb-kontrast-audit-29-7`.
+
 ## ⛔ STANDING RULE: navigace (burger patří jen na mobil a tablet)
 
 Martin 24. 7. 2026 doslova: „na web PC verzi žádný burger být nemá, mají být nahoře ty položky
