@@ -54,7 +54,14 @@ Deno.serve(async (req) => {
     // prestoze verejne slibil cenu 8 900 jen pro prvnich 50 lidi. Nic by nespadlo.
     // ⚠️ Kdo sem prida dalsi zdroj dozivotniho prodeje, musi ho pridat i v `admin-pulse`
     // (30denni prodeje) — jsou to DVE ruzna mista a nic je nedrzi v synci.
-    admin.from("entitlements").select("email", { count: "exact", head: true }).eq("product", "academy").eq("active", true).in("source", ["simpleshop", "stripe-lifetime"]),
+    // ⛔ A MUSÍ SE POČÍTAT JEN TEN, KOMU PŘÍSTUP OPRAVDU PLATÍ.
+    // Refund nastavuje `expires_at` do minulosti, ale `active` nechává na true (řádek se
+    // schválně drží kvůli historii). Bez podmínky na expiraci by se tedy vrácené nákupy
+    // počítaly dál a Martin by zdražil na 12 900 dřív, než má 50 skutečných zakládajících.
+    // Změřeno 29. 7. 2026 na testovacím nákupu: počítadlo hlásilo 1, správně mělo 0.
+    // ⚠️ Táž slepota vůči expiraci byla 28. 7. opravena v `drip-send` (seznam kupců).
+    // Tady se přehlédla, protože to je JINÝ dotaz v JINÉ funkci. NULL = doživotní, platí vždy.
+    admin.from("entitlements").select("email", { count: "exact", head: true }).eq("product", "academy").eq("active", true).in("source", ["simpleshop", "stripe-lifetime"]).or("expires_at.is.null,expires_at.gt." + new Date().toISOString()),
   ]);
 
   // zakladajici clenove: realne prodeje pres SimpleShop + rucni offset (app_config
