@@ -114,9 +114,14 @@
       // `4gM00ibnpgjMerK7dB3ks04` = Academy doživotně 8 900 Kč (plink_1TyQXw…).
       // `9B6aEW6356Jc4Ra55t3ks05` = Academy doživotně po odečtu videokurzu, 8 100 Kč.
       // `bJe9AS3UXgjMcjC8hF3ks00` = Academy měsíčně 990 Kč (hodnota = první platba).
+      // `dRmeVcbnpaZs5VedBZ3ks06` = Videokurz výživy 800 Kč (plink_1TymiH…), od 30. 7. 2026.
       var c = href.indexOf('4gM00ibnpgjMerK7dB3ks04') !== -1 ? { id: 'academy', name: 'Barna Academy', val: 8900 }
             : href.indexOf('9B6aEW6356Jc4Ra55t3ks05') !== -1 ? { id: 'academy-upgrade', name: 'Barna Academy (odečet videokurzu)', val: 8100 }
             : href.indexOf('bJe9AS3UXgjMcjC8hF3ks00') !== -1 ? { id: 'academy-mesicne', name: 'Barna Academy měsíčně', val: 990 }
+            : href.indexOf('dRmeVcbnpaZs5VedBZ3ks06') !== -1 ? { id: 'videokurz', name: 'Videokurz výživy', val: 800 }
+            // ⚠️ SimpleShop varianta ZŮSTÁVÁ schválně: web je od 30. 7. přepnutý na Stripe,
+            // ale staré odkazy pořád žijí v už rozeslaných mailech. Kdyby tenhle řádek zmizel,
+            // klik ze starého mailu by se měřil s hodnotou 0.
             : href.indexOf('3Vbl') !== -1  ? { id: 'videokurz',  name: 'Videokurz výživy', val: 800 }
             : href.indexOf('Xgl8g') !== -1 ? { id: 'academy',    name: 'Barna Academy',    val: 8900 }
             : href.indexOf('qG2yO') !== -1 ? { id: 'konzultace', name: 'Konzultace',       val: 1990 }
