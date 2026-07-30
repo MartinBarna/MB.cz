@@ -20,7 +20,22 @@ const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
 const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 const esc = (s: string) => String(s).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
-const num = (x: unknown) => (x === "" || x == null || isNaN(Number(x)) ? null : Number(x));
+// ⛔ ČÍSLO S DESETINNOU ČÁRKOU. Formulář check-inu posílá váhu a míry jako TEXT
+// (`type="number"` česky psanou „82,5" podle locale prohlížeče zahodí a odešle prázdno,
+// takže se hodnota TIŠE ztratila; opraveno 30. 7. 2026). Tady se proto čárka převádí
+// na tečku, jinak by `Number("82,5")` dalo NaN a `num()` by uložilo null, tedy tatáž
+// tichá ztráta, jen o vrstvu dál.
+// ⚠️ Rozsah se hlídá TADY, ne v atributech `min`/`max` inputu: ty u `type="text"`
+// neplatí. Bez toho by šlo uložit 4000 kg a report by podle toho počítal.
+const num = (x: unknown, min?: number, max?: number) => {
+  const s = String(x ?? "").replace(",", ".").trim();
+  if (s === "") return null;
+  const n = Number(s);
+  if (!Number.isFinite(n)) return null;
+  if (min != null && n < min) return null;
+  if (max != null && n > max) return null;
+  return Math.round(n * 10) / 10;
+};
 
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
   return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'></head>` +
@@ -120,10 +135,18 @@ Deno.serve(async (req) => {
   }
   if (!email || !email.includes("@")) return json({ error: "unauthorized" }, 401);
 
+  // Rozsahy odpovídají tomu, co dřív hlídaly atributy `min`/`max` v inputech.
+  // Škály (adherence, spánek, pocit) jsou 1 až 5, tréninky 0 až 21 za týden.
   const ci = {
-    email, weight: num(body.weight), waist: num(body.waist), hips: num(body.hips),
-    steps: (body.steps as string) || null, workouts: num(body.workouts),
-    adherence: num(body.adherence), sleep: num(body.sleep), feeling: num(body.feeling),
+    email,
+    weight: num(body.weight, 30, 350),
+    waist: num(body.waist, 40, 200),
+    hips: num(body.hips, 40, 200),
+    steps: (body.steps as string) || null,
+    workouts: num(body.workouts, 0, 21),
+    adherence: num(body.adherence, 1, 5),
+    sleep: num(body.sleep, 1, 5),
+    feeling: num(body.feeling, 1, 5),
     note: String(body.note ?? "").slice(0, 200) || null,
   };
   // historii ctem PRED insertem, at v ni neni prave odeslany check-in;
