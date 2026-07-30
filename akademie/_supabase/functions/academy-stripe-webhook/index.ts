@@ -232,6 +232,13 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // a BEZ appky. Kdyby tenhle řádek chyběl, zaplacený videokurz by spadl do větve
     // „neznámý odkaz" a člověk by přístup nedostal, aniž by to kdekoli křiklo.
     "plink_1TymiHBq3rKubW9kz1vYnyP1=videokurz," +
+    // ⭐ KONZULTACE, DVA ODKAZY NA TÝŽ PRODUKT, ALE JINÝ KLÍČ KATALOGU (30. 7. 2026).
+    // Rozdíl je JEN v tom, jestli je v ceně videokurz, a právě proto to musí být dva
+    // klíče a ne jeden: podle klíče se rozhoduje, jestli se udělí bonusový kurz.
+    // `plink_1Tyrn5…` = 2 990 Kč (`price_1TypXx…`), videokurz V CENĚ.
+    "plink_1Tyrn5Bq3rKubW9k8n2VoeWL=konzultace," +
+    // `plink_1Typhu…` = 2 190 Kč (`price_1TypdQ…`) pro majitele videokurzu, BEZ bonusu.
+    "plink_1TyphuBq3rKubW9k1CHEIgDS=konzultace-vk," +
     // testovací 15 Kč, ⬜ zamknout ve Stripu a smazat odsud, až doběhne testování
     "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime",
 );
