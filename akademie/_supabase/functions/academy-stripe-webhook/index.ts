@@ -240,6 +240,13 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // `plink_1Typhu…` = 2 190 Kč (`price_1TypdQ…`) pro majitele videokurzu, BEZ bonusu.
     "plink_1TyphuBq3rKubW9k1CHEIgDS=konzultace-vk," +
     // testovací 15 Kč, ⬜ zamknout ve Stripu a smazat odsud, až doběhne testování
+    // ⭐ POSTUP, KTERÝ SE 30. 7. VYPLATIL: konzultační větev se ověřila tím, že se tenhle
+    // odkaz DOČASNĚ přemapoval na `konzultace` a přehrála se už zaplacená (a refundovaná)
+    // událost z 29. 7. Testuje se tak ostrá cesta, bez jediné koruny navíc a bez podvrženého
+    // podpisu. Odhalilo to CHECK v `entitlements`, který neznal product='konzultace',
+    // takže by zaplacená konzultace vracela 500 a NEPŘIŠEL BY ANI ALERT.
+    // ⛔ Kdo to udělá znovu, MUSÍ ten řádek vrátit na `academy-lifetime`, jinak testovací
+    //    odkaz za 15 Kč prodává produkt za 2 990.
     "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime",
 );
 
