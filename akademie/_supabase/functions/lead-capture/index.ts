@@ -33,11 +33,6 @@ Deno.serve(async (req) => {
     // [2026-07-16] FIX kritické regrese: trenérské leady z /pro-trenery (source 'pro-trenery',
     // segment 'trener') patří do tracku 'trener-kit' (startovací kit mailem + Academy sekvence),
     // ne do konzumního 'lead-magnet' (ten posílá makro-plán a prodává videokurz).
-    const track = source === "videokurz-free" ? "nurture-videokurz"
-      : (source === "pro-trenery" || segRaw === "trener") ? "trener-kit"
-      : tool ? "lead-magnet-tool"
-      : segRaw === "academy-pro-vas" ? "nurture-pro-vas"
-      : "lead-magnet";
     const goal = String(body.goal || "").slice(0, 200);
     const age = String(body.age || "").slice(0, 30);
     const phone = String(body.phone || "").trim().slice(0, 40);
@@ -45,6 +40,24 @@ Deno.serve(async (req) => {
     const utmSource = String(body.utm_source || "").trim().slice(0, 60);
     const utmMedium = String(body.utm_medium || "").trim().slice(0, 60);
     const utmCampaign = String(body.utm_campaign || "").trim().slice(0, 60);
+    // [2026-07-30] ⭐ REKLAMNÍ PROVOZ NA MAGNETY JDE DO SÉRIE B (`tc-magnet`), ne do `lead-magnet`.
+    // Pozná se podle kampaně v adrese landing page, kterou `lead-form.js` posílá dál.
+    // ⛔ Rozhoduje se podle utm_CAMPAIGN, ne podle utm_source: až přibude jiný kanál než Meta,
+    //    nesmí to přestat fungovat.
+    // ⚠️ POŘADÍ TÉHLE PODMÍNKY JE PODSTATNÉ: musí být ZA speciálními zdroji a PŘED defaultem.
+    //    Kdyby byla první, reklama by přebila trenérský kit i generátorové leady a poslala by
+    //    lidem trať, která slibuje něco jiného, než na co klikli.
+    // ⚠️ `segment` a `source` se NEMĚNÍ. Na segmentu visí, které PDF drip pošle
+    //    (`{{lead_magnet_url}}` plní `drip-send` podle `leads.segment`), a `tc-magnet` step 0
+    //    tu proměnnou používá stejně jako `lead-magnet` step 0. Kdo to začne přepisovat,
+    //    pošle muži ženský jídelníček.
+    const jeReklamaMagnet = utmCampaign.toLowerCase() === "tc-leadgen";
+    const track = source === "videokurz-free" ? "nurture-videokurz"
+      : (source === "pro-trenery" || segRaw === "trener") ? "trener-kit"
+      : tool ? "lead-magnet-tool"
+      : segRaw === "academy-pro-vas" ? "nurture-pro-vas"
+      : jeReklamaMagnet ? "tc-magnet"
+      : "lead-magnet";
     // utm_content = varianta kreativy (A/B test reklam) -> bez nej nejde z DB merit, ktera reklama lead privedla
     const utmContent = String(body.utm_content || "").trim().slice(0, 60);
     // utm_term = klicove slovo z Google search ({keyword}) -> bez nej nejde rict, ktery dotaz lead privedl

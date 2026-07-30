@@ -30,7 +30,21 @@ const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 // se clovek zapise (nechceme, aby appka mohla poslat libovolny track).
 const TRACKY: Record<string, string> = {
   tvujcoach: "onboarding-nakup-tvujcoach",
+  // [2026-07-30] ⭐ REGISTRACE (ne nákup) z reklamní kampaně `tc-direct` → série A.
+  // Volá to trigger v appkové DB, který se pálí JEN když `profiles.signup_attribution`
+  // nese `utm_campaign=tc-direct`. Organické registrace se sem vůbec nedostanou,
+  // filtr je v podmínce triggeru, ne tady.
+  "tvujcoach-registrace": "tc-free",
 };
+
+// ⛔ AKVIZIČNÍ TRATĚ SE NEPŘEPISUJÍ. Kdo běží v magnetové nebo nurture sekvenci a mezitím
+// se zaregistruje v appce z reklamy, dojede svou sekvenci do konce. Přepnutí by ho vytrhlo
+// uprostřed příběhu, který mu slibujeme, a `tc-free` navíc nezačíná na `onboarding-`,
+// takže by ho stará podmínka níž nechytila. Registraci jen zapíšeme do `meta`, ať to
+// atribuce vidí. (Nákup je pořád silnější signál a přepnout smí, ten sem chodí jako
+// `product: tvujcoach`.)
+const AKVIZICNI = ["lead-magnet", "tc-magnet", "nurture-", "trener-kit", "longtail-"];
+const jeAkvizicni = (t: string) => AKVIZICNI.some((p) => t.startsWith(p));
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
@@ -57,12 +71,21 @@ Deno.serve(async (req: Request) => {
   // Kdyz uz nejakou onboarding sekvenci ma (treba koupil driv Academy), nezakladame druhou,
   // jinak by mu chodily dve rady mailu naraz.
   const { data: lead } = await admin
-    .from("leads").select("id, track, status, purchased").eq("email", email).maybeSingle();
+    .from("leads").select("id, track, status, purchased, meta").eq("email", email).maybeSingle();
 
   if (lead) {
     if (lead.track === track) return json({ ok: true, status: "uz_v_teto_sekvenci" });
     if (String(lead.track ?? "").startsWith("onboarding-")) {
       return json({ ok: true, status: "uz_v_jinem_onboardingu", track: lead.track });
+    }
+    // ⭐ REGISTRACE Z REKLAMY nepřebíjí rozjetou akviziční trať (viz komentář u AKVIZICNI).
+    // Jen si k leadovi poznamenáme, že se registroval, ať atribuce nepřijde o informaci.
+    if (product === "tvujcoach-registrace" && jeAkvizicni(String(lead.track ?? ""))) {
+      const meta = { ...(lead.meta as Record<string, unknown> ?? {}), "tc-direct-registrace": new Date().toISOString() };
+      const { error } = await admin.from("leads")
+        .update({ meta, updated_at: new Date().toISOString() }).eq("id", lead.id);
+      if (error) return json({ error: "meta_update_failed", detail: error.message }, 500);
+      return json({ ok: true, status: "ponechan_v_akvizicni_trati", track: lead.track });
     }
     // Byl jen v nurture nebo lead-magnetu: nakup je silnejsi signal, prepneme ho.
     const { error } = await admin.from("leads").update({
