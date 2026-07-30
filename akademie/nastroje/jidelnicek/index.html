@@ -89,7 +89,7 @@
       <div class="grid">
         <div><label>Pohlaví</label><select id="sex"><option value="muz">Muž</option><option value="zena">Žena</option></select></div>
         <div><label>Věk</label><input id="age" type="number" value="32" min="14" max="100"></div>
-        <div><label>Váha (kg)</label><input id="weight" type="number" value="80" min="35" max="250"></div>
+        <div><label>Váha (kg)</label><input id="weight" type="text" inputmode="decimal" value="80" min="35" max="250"></div>
         <div><label>Výška (cm)</label><input id="height" type="number" value="180" min="130" max="220"></div>
         <div><label>Aktivita</label><select id="activity">
           <option value="sedavy">Sedavá (málo pohybu)</option>
@@ -305,5 +305,21 @@
   })();
   </script>
   <script src="/assets/scroll-top.js?v=g5" defer></script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><script>
+/* ⛔ ČESKÁ DESETINNÁ ČÁRKA (30. 7. 2026). Pole váhy bylo `type="number"`, takže „80,5"
+   prohlížeč podle locale zahodil a výpočet dostal prázdno. Teď je pole text a čárka se
+   normalizuje NA MÍSTĚ, přímo v hodnotě pole. Děláme to tady a ne u každého čtení schválně:
+   ta hodnota se v těchhle nástrojích čte na víc místech a stačilo by zapomenout na jedno.
+   ⚠️ `parseFloat("80,5")` vrátí 80, tedy TIŠE špatné číslo. Proto se nesmí jen přepnout typ
+   inputu bez tohohle: bylo by to horší než původní stav, kdy se aspoň nic nespočítalo. */
+(function () {
+  var el = document.getElementById('weight');
+  if (!el) return;
+  function norm() { var v = el.value; if (v.indexOf(',') >= 0) el.value = v.replace(/,/g, '.'); }
+  el.addEventListener('input', norm);
+  el.addEventListener('blur', norm);
+  el.form && el.form.addEventListener('submit', norm);
+})();
+</script>
+</body>
 </html>
