@@ -784,23 +784,48 @@ Deno.serve(async (req) => {
           // `maybeSingle()` by hodil chybu, webhook by vrátil 500 a Stripe by refund
           // opakoval donekonečna. Bonus se proto dohledává přes e-mail + `source`.
           //
-          // ⚠️ `onConflict: email,product` = kdo videokurz UŽ MÁ, tomu se řádek přepíše
-          // na bonusový zdroj. To je u ceny 2 990 v pořádku (koupil si obojí a bonus je
-          // novější titul), ale je to důvod, proč varianta za 2 190 bonus NEMÁ: tam by
-          // to přepsalo zaplacený kurz na bonusový a refund konzultace by ho pak sebral.
+          // ⛔⛔ A NEPŘEPISUJEME ZAPLACENÝ VIDEOKURZ NA BONUSOVÝ. `entitlements` má
+          // UNIQUE(email, product), takže slepý `upsert` by u člověka, který si kurz
+          // koupil zvlášť za 800 Kč, jen přepsal `source` na `konzultace-bonus`.
+          // Refund konzultace pak videokurz odebírá právě podle toho zdroje, takže
+          // by mu SEBRAL kurz, který si zaplatil, a nikde by to nekřiklo.
+          // ⚠️ A není to okrajový případ: odkaz za 2 190 zná jen ten, kdo přijde
+          // z děkovací stránky nebo z uvítacího mailu. Kdo dojde na `/konzultace/`,
+          // vidí 2 990 i s videokurzem v ceně, i když kurz dávno má.
+          // Proto se sahá jen na řádek, který ještě neexistuje nebo už bonusový JE.
           if (def.videokurzBonus) {
             try {
-              const { error: chybaBonus } = await admin.from("entitlements").upsert({
-                email: emailL,
-                product: "videokurz",
-                active: true,
-                source: ZDROJ_BONUS_VIDEOKURZ,
-                granted_at: new Date().toISOString(),
-                expires_at: null,
-              }, { onConflict: "email,product" });
-              bonusVideokurz = chybaBonus ? "CHYBA: " + chybaBonus.message : "ok";
+              const { data: stavajici } = await admin.from("entitlements")
+                .select("source").eq("email", emailL).eq("product", "videokurz").maybeSingle();
+              if (stavajici && stavajici.source !== ZDROJ_BONUS_VIDEOKURZ) {
+                // Kurz už má z jiného titulu (koupený zvlášť, SimpleShop, ruční grant).
+                // Nechat být: dostal míň, než slibuje mail, ale nepřišel o zaplacené.
+                bonusVideokurz = "jiz-mel-z-" + stavajici.source;
+              } else {
+                const { error: chybaBonus } = await admin.from("entitlements").upsert({
+                  email: emailL,
+                  product: "videokurz",
+                  active: true,
+                  source: ZDROJ_BONUS_VIDEOKURZ,
+                  granted_at: new Date().toISOString(),
+                  expires_at: null,
+                }, { onConflict: "email,product" });
+                bonusVideokurz = chybaBonus ? "CHYBA: " + chybaBonus.message : "ok";
+              }
             } catch (e) { bonusVideokurz = "chyba-" + String(e).slice(0, 60); }
-            if (bonusVideokurz !== "ok") {
+            // ⚠️ Ty dvě větve MUSÍ zůstat výlučné (`else if`). „Už ho měl" není chyba,
+            // ale taky to není „ok", takže by jinak spadlo i do červeného alertu níž
+            // a Martinovi by přišlo, že má ručně dodat kurz, který ten člověk má.
+            // Táž třída falešného poplachu jako u refundu videokurzu dnes ráno.
+            if (bonusVideokurz.startsWith("jiz-mel-z-")) {
+              // Není to chyba, ale Martin to má vědět: člověk zaplatil 2 990 za balík,
+              // ve kterém je kurz, co už měl. Nabídka za 2 190 mu unikla.
+              await alertAdmin("ℹ️ Stripe: konzultace za 2 990 kupci, který videokurz UŽ MĚL", {
+                email: emailL, mel_kurz_z: bonusVideokurz.replace("jiz-mel-z-", ""),
+                co_delat: "Nic nutného. Zvaž, jestli mu nevrátit rozdíl 800 Kč: existuje "
+                  + "varianta za 2 190 Kč pro majitele kurzu a on ji minul.",
+              });
+            } else if (bonusVideokurz !== "ok") {
               await alertAdmin("🔴 Stripe: konzultace zaplacena, ale BONUSOVÝ VIDEOKURZ se neudělil", {
                 email: emailL, chyba: bonusVideokurz,
                 co_delat: "⛔ Přidej mu videokurz ručně v adminu. Konzultaci má, kurz ne, "
