@@ -999,6 +999,11 @@ Deno.serve(async (req) => {
       // ⚠️ Měsíční Academy (`stripe-monthly`) v katalogu NENÍ (ten je jen pro jednorázové
       // platby), takže tady vyjde `undefined` a použije se fallback. To je správně.
       const katalogZdroje = Object.values(KATALOG).find((p) => p.source === ent.source);
+      // ⚠️ `KATALOG` obsahuje VÝHRADNĚ jednorázové produkty, takže „našel jsem ho tam"
+      // je zároveň odpověď na otázku „může tenhle produkt vůbec mít předplatné?".
+      const jeJednorazovy = !!katalogZdroje;
+      const nazevProduktu = katalogZdroje?.nazev ?? "Barna Academy";
+      const variantaProduktu = katalogZdroje?.varianta ?? (jeDozivotni ? "doživotní přístup" : "měsíční členství");
       let zruseno = jeDozivotni ? "nema-predplatne" : "nebylo-co";
       if (!jeDozivotni && ent.stripe_subscription_id) {
         if (!STRIPE_SUBS_KEY) {
@@ -1048,10 +1053,10 @@ Deno.serve(async (req) => {
           // tedy o produktu, který si nikdy nekoupil.
           // ⚠️ Fallback drží PŮVODNÍ chování u měsíční Academy (`stripe-monthly`), která
           // v katalogu jednorázových produktů schválně není.
-          produkt: katalogZdroje?.nazev ?? "Barna Academy",
+          produkt: nazevProduktu,
           // ⚠️ Popis varianty se řídí ZDROJEM, ne odhadem. Doživotnímu členovi napsat
           // „měsíční členství" by v mailu o vrácení peněz vypadalo, že nevíme, co mu rušíme.
-          varianta: katalogZdroje?.varianta ?? (jeDozivotni ? "doživotní přístup" : "měsíční členství"),
+          varianta: variantaProduktu,
           znovu_odkaz: "https://martinbarna.cz/akademie/#cena",
           pristup_do: datumCesky(konecIso),
         });
@@ -1090,16 +1095,25 @@ Deno.serve(async (req) => {
       // ⚠️ „nema-predplatne" u doživotní varianty NENÍ chyba, je to očekávaný stav.
       // Bez téhle výjimky by alert chodil po KAŽDÉM vrácení doživotní platby a rychle
       // by z něj byl šum, který nikdo nečte. Alert má křičet jen tam, kde je co dělat.
-      const zruseniSelhalo = zruseno !== "ok" && zruseno !== "nema-predplatne";
+      // ⛔ A „nebylo-co" NENÍ chyba u JEDNORÁZOVÉHO produktu, protože ten předplatné mít
+      // nemůže. Do 30. 7. 2026 tady ta výjimka chyběla jen pro doživotní Academy, takže
+      // refund VIDEOKURZU vyhodil falešný poplach po každém vrácení peněz, a k tomu
+      // s cizím názvem produktu („refund Academy"). Falešný alert je vlastní druh škody:
+      // pár jich stačí, aby se alerty přestaly číst, a pak zapadne i ten skutečný.
+      // ⚠️ Plošně „nebylo-co" povolit NELZE: u měsíčního členství, kterému chybí ID
+      // předplatného, je to naopak správný poplach. Proto ta podmínka na jednorázovost.
+      const zruseniSelhalo = zruseno !== "ok" && zruseno !== "nema-predplatne"
+                             && !(jeJednorazovy && zruseno === "nebylo-co");
       const tcRevokeSelhal = jeDozivotni && tcRevoke !== "ok" && tcRevoke !== "granted"
                              && tcRevoke !== "revoked" && tcRevoke !== "pending";
       if (jeSpor || zruseniSelhalo || chybaRevoke || tcRevokeSelhal) {
         await alertAdmin(
-          jeSpor ? "🔴 Stripe: SPOR (chargeback) u Academy, přístup odebrán"
-                 : "Stripe: refund Academy, ale něco se nedotáhlo",
+          jeSpor ? "🔴 Stripe: SPOR (chargeback) u " + nazevProduktu + ", přístup odebrán"
+                 : "Stripe: refund " + nazevProduktu + ", ale něco se nedotáhlo",
           {
             email: ent.email,
-            varianta: jeDozivotni ? "doživotní" : "měsíční",
+            produkt: nazevProduktu,
+            varianta: variantaProduktu,
             zruseni_predplatneho: zruseno,
             odebrani_pristupu: chybaRevoke ? "SELHALO: " + chybaRevoke.message : "ok",
             odebrani_appky: tcRevoke,
