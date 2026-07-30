@@ -48,10 +48,20 @@
   // ⚠️ Každá pokladna si jméno parametru pojmenovala po svém. SimpleShop čte `email`,
   // Stripe `prefilled_email`; poslat Stripu `email` znamená, že se pole prostě
   // nepředvyplní. Nic nespadne, jen člověk píše adresu znovu a část jich odpadne.
-  function withEmail(url, email, jeStripe) {
-    var sep = url.indexOf('?') >= 0 ? '&' : '?';
-    var klic = jeStripe ? 'prefilled_email' : 'email';
-    return url + sep + klic + '=' + encodeURIComponent(email);
+  //
+  // ⛔ A hlavně: SimpleShop dostával kód doporučitele v těle webhooku, Stripe ho takhle
+  // NEPŘENESE. Payment link umí nést vlastní identifikátor jedině v `client_reference_id`
+  // (písmena, číslice, `-` a `_`, do 200 znaků; náš formát BARNA-XXXX se vejde).
+  // Bez něj by doporučitel o odměnu přišel a nikde by se to nerozsvítilo.
+  // ⚠️ Kód se připojuje i tehdy, když člověk e-mail NEZADÁ: odměna stojí na kódu, ne na mailu.
+  function sParametry(url, email, jeStripe, ref) {
+    var u = url;
+    function pridej(klic, hodnota) {
+      u += (u.indexOf('?') >= 0 ? '&' : '?') + klic + '=' + encodeURIComponent(hodnota);
+    }
+    if (jeStripe && ref) pridej('client_reference_id', ref);
+    if (email) pridej(jeStripe ? 'prefilled_email' : 'email', email);
+    return u;
   }
   function validEmail(e) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e); }
 
@@ -108,10 +118,11 @@
           body: JSON.stringify({ ref: ref, email: email, website: (hp.value || '') })
         }).catch(function () {});
       } catch (e) {}
-      proceed(withEmail(info.url, email, info.stripe));
+      proceed(sParametry(info.url, email, info.stripe, ref));
     };
     em.onkeydown = function (e) { if (e.key === 'Enter') go.onclick(); };
-    skip.onclick = function () { proceed(info.url); };
+    // I při přeskočení e-mailu musí kód doporučitele odejít, jinak přijde o odměnu.
+    skip.onclick = function () { proceed(sParametry(info.url, '', info.stripe, ref)); };
     ov.onclick = function (e) { if (e.target === ov) close(); };
   }
 

@@ -132,6 +132,21 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
     nazev: "Barna Academy",
     varianta: "doživotní přístup",
   },
+  // Videokurz výživy 800 Kč, doživotní přístup. Od 30. 7. 2026 vedle SimpleShopu.
+  // Produkt `prod_UyXOi2f4LCMtOJ`, cena `price_1TyaJvBq3rKubW9ka31byHsB` (jednorázová, DPH v ceně).
+  // ⛔ `tcGrant: false` SCHVÁLNĚ: videokurz appku Tvůj Coach nemá a mít nemá. Kupci
+  //    videokurzu se appka jen nabízí ke koupi, nedostávají ji v ceně. Kdo to přepne
+  //    na true, rozdá roční VIP za 4 990 lidem, kteří zaplatili 800.
+  // ⚠️ `source: "stripe-videokurz"` musí zůstat odlišný od Academy zdrojů, jinak by se
+  //    kupci videokurzu začali počítat do padesátky zakládajících členů (viz daily-digest).
+  "videokurz": {
+    produkt: "videokurz",
+    source: "stripe-videokurz",
+    welcome: "onboarding-nakup-videokurz",
+    tcGrant: false,
+    nazev: "Videokurz výživy",
+    varianta: "videokurz",
+  },
 };
 
 // Který odkaz vede na který klíč katalogu. Formát: `plink_A=academy-lifetime,plink_B=videokurz`.
@@ -174,6 +189,11 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // počítal jinak, než ukazoval (sleva 533,33 místo 800). Samostatná cena tuhle
     // třídu chyby vylučuje: není co přepočítávat.
     "plink_1TyUPQBq3rKubW9kj5P2YjCB=academy-lifetime," +
+    // ⭐ VIDEOKURZ 800 Kč (`plink_1TymiH…`, cena `price_1TyaJv…`), vytvořeno 30. 7. 2026.
+    // Vede na klíč `videokurz`, tedy JINÝ produkt, jiný zdroj, jinou uvítací trať
+    // a BEZ appky. Kdyby tenhle řádek chyběl, zaplacený videokurz by spadl do větve
+    // „neznámý odkaz" a člověk by přístup nedostal, aniž by to kdekoli křiklo.
+    "plink_1TymiHBq3rKubW9kz1vYnyP1=videokurz," +
     // testovací 15 Kč, ⬜ zamknout ve Stripu a smazat odsud, až doběhne testování
     "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime",
 );
@@ -501,6 +521,72 @@ async function grantTvujCoach(email: string, sessionId: string | null): Promise<
   return vysledek;
 }
 
+// --- Referral atribuce ------------------------------------------------------
+// ⛔ NÁLEZ 29. 7. 2026: tahle logika žila JEN v `simpleshop-webhook`. Ve chvíli, kdy
+// Academy přešla na Stripe, se odměna za doporučení přestala připisovat a nikde to
+// nekřiklo. Nikdo o peníze nepřišel (tabulka `referrals` byla prázdná), ale mechanismus
+// byl rozpojený a u videokurzu na Stripu by se to zopakovalo.
+//
+// Kód doporučitele se hledá ve DVOU krocích:
+//  1) `client_reference_id` z payment linku (připojuje ho `assets/referral.js`). Tohle je
+//     odolnější cesta: funguje, i když člověk v modalu přeskočí e-mail nebo zaplatí jinou
+//     adresou, než kterou napsal.
+//  2) fallback na `referral_click` podle e-mailu kupujícího, přesně jako SimpleShop.
+//     Díky němu funguje atribuce i u odkazů bez `client_reference_id`.
+//
+// ⚠️ Pravidla (platný aktivní kód, zákaz self-referralu, idempotence, výše odměn) jsou
+// schválně TOTOŽNÁ se SimpleShopem. Kdyby se rozešla, dostal by doporučitel jinou odměnu
+// podle toho, kudy kupující náhodou prošel.
+const ODMENA: Record<string, number> = { academy: 300, videokurz: 150 };
+
+async function atribuujReferral(
+  buyerEmail: string,
+  produkt: string,
+  clientRef: string | null,
+  orderId: string | null,
+): Promise<string> {
+  try {
+    const email = buyerEmail.toLowerCase().trim();
+    let ref = (clientRef ?? "").toUpperCase().trim();
+
+    if (!ref) {
+      const cutoff = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
+      const { data: clicks } = await admin
+        .from("referral_click").select("ref").eq("email", email).gt("created_at", cutoff)
+        .order("created_at", { ascending: false }).limit(1);
+      ref = clicks?.[0]?.ref ? String(clicks[0].ref).toUpperCase().trim() : "";
+    }
+    if (!ref) return "bez-kodu";
+
+    const { data: codes } = await admin
+      .from("referral_codes").select("owner_email").eq("code", ref).eq("active", true).limit(1);
+    const owner = codes?.[0]?.owner_email ? String(codes[0].owner_email).toLowerCase() : "";
+    if (!owner) return "neznamy-kod";
+    if (owner === email) return "self-referral";
+
+    if (orderId) {
+      const { data: existing } = await admin.from("referrals").select("id").eq("order_id", orderId).limit(1);
+      if (existing && existing.length) return "duplicita-order";
+    }
+    const { data: dup } = await admin
+      .from("referrals").select("id").eq("buyer_email", email).eq("product", produkt).limit(1);
+    if (dup && dup.length) return "duplicita-produkt";
+
+    await admin.from("referrals").insert({
+      code: ref, buyer_email: email, product: produkt, amount: null,
+      order_id: orderId || null, source: "coupon", status: "pending",
+      reward_type: "credit", reward_amount: ODMENA[produkt] ?? 0,
+    });
+    return "zapsano";
+  } catch (e) {
+    // Best-effort: atribuce NIKDY nesmí shodit nákup. Selhání jde do alertu, ne do 500.
+    await alertAdmin("Stripe: referral atribuce selhala", {
+      email: buyerEmail, produkt, chyba: String(e).slice(0, 200),
+    });
+    return "chyba";
+  }
+}
+
 // --- Uvítací e-mail (jen při prvním udělení) --------------------------------
 // Vzor převzatý ze `simpleshop-webhook`, ale s vlastní tratí pro měsíční členy.
 // `track` má výchozí hodnotu, takže původní volání `posliUvitani(email)` funguje
@@ -636,6 +722,7 @@ Deno.serve(async (req) => {
         // Appka a uvítačka jen tomu, kdo přístup PRÁVĚ získal. Opakovaný nákup
         // (nebo přehrání téže události Stripem) nesmí poslat druhý mail ani druhý grant.
         let tcGrant = def.tcGrant ? "preskoceno" : "netyka-se";
+        let referral = "preskoceno";
         if (novyDozivotni) {
           if (def.tcGrant) {
             tcGrant = await grantTvujCoach(emailL, typeof obj.id === "string" ? obj.id : null);
@@ -646,11 +733,19 @@ Deno.serve(async (req) => {
               email: emailL, produkt: def.nazev, chyba: String(e).slice(0, 200),
             });
           }
+          // Až po udělení přístupu a jen u NOVÉHO nákupu, ať přehrání události Stripem
+          // nezaloží druhý referral. Vlastní idempotenci má funkce i uvnitř.
+          referral = await atribuujReferral(
+            emailL, def.produkt,
+            typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
+            typeof obj.payment_intent === "string" ? obj.payment_intent : null,
+          );
         }
 
         return json({
           ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
           novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
+          referral,
         });
       }
 
