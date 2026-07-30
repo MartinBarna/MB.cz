@@ -82,7 +82,12 @@
       <textarea id="activity" placeholder="I „žádný" je odpověď, se kterou umím pracovat."></textarea>
 
       <label for="weight">Ranní váha (kg)</label>
-      <input id="weight" type="number" step="0.1" min="25" max="350" inputmode="decimal" placeholder="např. 82,5">
+      <!-- ⛔ `type="text"`, NE `type="number"`. Čech napíše „82,5" s čárkou, a číselný input
+           ji podle locale prohlížeče buď nepřijme, nebo hodnotu zahodí: pole zůstane prázdné
+           a váha se TIŠE neuloží. Odhaleno reálným průchodem, ne čtením kódu.
+           Na desetinnou čárku i tečku je připravená funkce `vahaNaCislo` v `intake-capture`,
+           která zároveň zahodí nesmysly mimo 25 až 350 kg. Validace patří na server. -->
+      <input id="weight" type="text" inputmode="decimal" placeholder="např. 82,5">
 
       <label for="measures">Míry, jestli je znáš: pas a boky (cm)</label>
       <input id="measures" type="text" placeholder="nepovinné, např. pas 94, boky 106">
