@@ -91,9 +91,17 @@ RedirectMatch 301 (?i)^/coaching(\.html)?/?$    https://martinbarna.cz/koucing/
 RedirectMatch 301 (?i)^/koucink(\.html)?/?$     https://martinbarna.cz/koucing/
 RedirectMatch 301 (?i)^/online-coaching/?$      https://martinbarna.cz/koucing/
 RedirectMatch 301 (?i)^/online-koucink/?$       https://martinbarna.cz/koucing/
-# /konzultace/ ma od 18. 7. VLASTNI prodejni stranku (1 990 Kc + VIP balicek), takze uz se
-# nepresmerovava na koucink. Presmerovani drzime jen pro starou variantu s priponou .html.
+# /konzultace/ ma od 18. 7. VLASTNI prodejni stranku (od 30. 7. 2026 za 2 990 Kc, videokurz
+# a e-booky v cene; balicek VIP zanikl), takze uz se nepresmerovava na koucink.
+# Presmerovani drzime jen pro starou variantu s priponou .html.
 RedirectMatch 301 (?i)^/konzultace\.html$  https://martinbarna.cz/konzultace/
+
+# Dekovacka Academy ze doby SimpleShopu. Vsechny tri Stripe odkazy Academy dnes vedou na
+# /akademie/vitejte/, a ta ma od 30. 7. 2026 i navod na vytvoreni uctu a pouceni o odstoupeni,
+# takze je plnohodnotna nahrada. Interni odkazy na /dekuji-academy/ na webu zadne nejsou (grep).
+# ⚠️ Mereni to neohrozi: `pageConv()` v analytics.js vraci na kazde /dekuji ceste null a
+#    Purchase se posila server-side pres CAPI. Overeno, ne odhadnuto.
+RedirectMatch 301 (?i)^/dekuji-academy/?$       https://martinbarna.cz/akademie/vitejte/
 # Academy anglicky, kalkulačka krátce, trénink v jednotném čísle
 RedirectMatch 301 (?i)^/academy/?$              https://martinbarna.cz/akademie/
 RedirectMatch 301 (?i)^/kalkulacka/?$           https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/

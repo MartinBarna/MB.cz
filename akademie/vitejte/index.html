@@ -29,6 +29,10 @@
   .cta:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(235,177,44,.38);}
   .ps{color:var(--muted-2);font-size:.9rem;line-height:1.6;margin:22px auto 0;max-width:48ch;text-align:left;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:15px 18px;}
   .ps b{color:#fff;}
+  /* Návod na vytvoření účtu (30. 7. 2026). Čísla nechávám na `ol`, ať je to i pro
+     odečítač obrazovky seznam kroků, ne tři samostatné odstavce. */
+  .kroky{text-align:left;color:var(--ink);margin:.9rem 0 0;padding:0 0 0 1.3rem;line-height:1.6;}
+  .kroky li{margin:.55rem 0;}
   .ps a{color:var(--gold-soft);text-decoration:underline;text-underline-offset:2px;}
   .ps a:hover{color:#fff;}
   .note{color:#a49a8c;font-size:.83rem;text-align:center;margin:18px 0 0;line-height:1.6;}
@@ -51,13 +55,27 @@
     <div class="card">
       <div class="tick">✓</div>
 
-      <p class="lead">Platba proběhla. Během pár minut ti přijde e-mail s přístupem do studia.
-        Přihlašuješ se e-mailem, který jsi zadal při platbě.</p>
+      <!-- ⚠️ Původní věta „Během pár minut ti přijde e-mail s přístupem do studia" tady být
+           NEMŮŽE zároveň s návodem níž: ten správně říká, že heslo si člověk tvoří sám a
+           žádné mu nechodí. Ta věta tvrdila opak a kupující by čekal na mail s přístupem,
+           který nikdy nepřijde. Vyškrtnuta, potvrzení platby zůstalo. -->
+      <p class="lead">Platba proběhla.</p>
 
-      <a class="cta" href="/akademie/studium/">Otevřít studio →</a>
+      <p class="lead" style="font-weight:700;color:#fff;margin-top:1.1rem;">Teď si vytvoříš přístup, zabere to minutu.</p>
+      <ol class="kroky">
+        <li>👉 Klikni na tlačítko níž. Otevře se ti stránka přihlášení.</li>
+        <li>🔑 Tam dej „Vytvořit účet“ a zadej jméno, stejný e-mail jako u platby a vymysli si heslo. (Heslo si tvoříš teď poprvé, žádné ti nikam nechodí. Pokud už u mě účet máš, jen se přihlas.)</li>
+        <li>✅ A jsi uvnitř. Všechno se odemkne samo: 256 lekcí, generátory, AI Martin i videokurz výživy.</li>
+      </ol>
 
-      <p class="ps"><b>P.S.</b> Kdyby ti mail do 10 minut nedošel, mrkni do spamu, nebo mi napiš na
-        <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>. Jsem tu.</p>
+      <a class="cta" href="/akademie/moje/">Vytvořit přístup do Academy →</a>
+      <p class="note" style="margin-top:.9rem;">⚠️ Důležité: registruj se stejným e-mailem jako u platby. Podle něj se přístup páruje.</p>
+
+      <!-- ⚠️ „ten mail" tady mělo antecedent ve věti o e-mailu s přístupem, která šla ven.
+           Teď je pojmenovaný: uvítací mail z tratě `onboarding-nakup-academy`, ten opravdu chodí. -->
+      <p class="ps"><b>P.S.</b> Kdyby ti do 10 minut nedošel uvítací e-mail, mrkni do spamu, nebo mi napiš na
+        <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>. Jsem tu.
+        Přístup do Academy na ten mail nečekej, ten si vytvoříš tlačítkem výš.</p>
 
       <!-- ⚖️ Poučení o odstoupení. Doplněno 30. 7. 2026: tuhle stránku vidí po platbě KAŽDÝ
            kupující Academy (měsíčně 990, doživotně 8 900 i upgrade 8 100), protože je to
