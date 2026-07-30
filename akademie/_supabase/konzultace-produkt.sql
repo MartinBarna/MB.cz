@@ -4,10 +4,13 @@
 -- Webhook `academy-stripe-webhook` po zaplacení konzultace zapisuje product='konzultace',
 -- takže mu insert padal na porušení CHECKu, funkce vracela 500 a Stripe událost opakoval.
 --
--- ⛔ CO BY TO ZNAMENALO NAOSTRO: zákazník zaplatí 2 990 Kč, přístup nedostane, uvítací mail
--- nepřijde a NEPŘIJDE ANI ALERT (výjimka nastane dřív, než se k odeslání alertu dojde).
--- Martin by o tom nevěděl, dokud by si ten člověk sám nestěžoval. Odhaleno přehráním
--- už zaplacené (a refundované) testovací události, ne až na živém nákupu.
+-- ⛔ CO BY TO ZNAMENALO NAOSTRO: zákazník zaplatí 2 990 Kč, přístup nedostane a uvítací mail
+-- mu nepřijde. Stripe by událost opakoval, takže by se to samo nespravilo.
+-- ✅ Alert BY přišel: zastřešující `catch` posílá „Stripe webhook: neošetřená chyba" a v textu
+--    je i jméno porušeného constraintu. Ověřeno, při testu 30. 7. přišel dvakrát (11:22).
+--    (V první verzi tohohle komentáře jsem napsal, že alert nepřijde. Byla to chyba.)
+--    Ta záchranná síť ale řeší jen to, že se o tom Martin dozví, ne že zákazník dostane, co koupil.
+-- Odhaleno přehráním už zaplacené (a refundované) testovací události, ne až na živém nákupu.
 --
 -- ⚠️ 'coaching' v tom výčtu už je a ZŮSTÁVÁ: konzultace není koučink. Koučink je dlouhodobá
 --    spolupráce (Gold/Diamond), konzultace je jedna hodina. Kdyby se slily do jednoho
