@@ -904,17 +904,44 @@ Deno.serve(async (req) => {
       const platba = typeof obj.payment_intent === "string" ? obj.payment_intent : "";
       if (!zakaznik && !platba) return json({ ok: true, ignored: "bez-identifikatoru" });
 
+      // ⛔⛔ PÁROVACÍ KLÍČ JE PLATBA, NE PRODUKT. Do 30. 7. 2026 bylo v obou dotazech
+      // `.eq("product","academy")` a refund VIDEOKURZU proto TIŠE NEUDĚLAL NIC: nic nenašel,
+      // vyhodnotil to jako „cizí platba", vrátil 200 a zákazník si po vrácení peněz nechal
+      // doživotní přístup. Nevyskočil ani alert, protože i záchranná síť níž byla
+      // filtrovaná na `academy`. Viz paměť `feedback-novy-produkt-projdi-i-cesty-odchodu`.
+      //
+      // ⚠️ POŘADÍ JE ZÁMĚRNÉ: nejdřív `payment_intent`, protože ten je pro každou platbu
+      // JEDINEČNÝ, takže nemůže být dvojznačný. `stripe_customer_id` naopak Stripe u téhož
+      // e-mailu recykluje, takže po zrušení filtru na produkt může padnout na VÍC řádků
+      // (kdo koupí Academy i videokurz). Proto se u něj nehádá: jeden aktivní řádek se
+      // odebere, u víc řádků se KŘIČÍ a nechá se to na člověku. Špatně odebraný přístup
+      // je horší než neodebraný, protože o něj přijde platící zákazník.
       // deno-lint-ignore no-explicit-any
       let ent: any = null;
-      if (zakaznik) {
+      let dvojznacne: string[] = [];
+      if (platba) {
         const { data } = await admin.from("entitlements").select(SLOUPCE_ENT)
-          .eq("stripe_customer_id", zakaznik).eq("product", "academy").maybeSingle();
+          .eq("stripe_payment_intent", platba).maybeSingle();
         ent = data ?? null;
       }
-      if (!ent && platba) {
+      if (!ent && zakaznik) {
         const { data } = await admin.from("entitlements").select(SLOUPCE_ENT)
-          .eq("stripe_payment_intent", platba).eq("product", "academy").maybeSingle();
-        ent = data ?? null;
+          .eq("stripe_customer_id", zakaznik).eq("active", true);
+        const radky = data ?? [];
+        if (radky.length === 1) ent = radky[0];
+        else if (radky.length > 1) dvojznacne = radky.map((r: { product: string }) => r.product);
+      }
+
+      if (dvojznacne.length > 1) {
+        await alertAdmin("🔴 Stripe: refund se spároval na VÍC produktů, přístup NEODEBRÁN", {
+          zakaznik,
+          platba: platba || "(žádná)",
+          nalezene_produkty: dvojznacne.join(", "),
+          co_delat: "⛔ Automatika schválně nehádala, který přístup odebrat. Odeber ten správný "
+            + "ručně v adminu. Nastalo to proto, že týž zákazník má víc aktivních produktů "
+            + "a refund nenesl `payment_intent`, podle kterého se páruje jednoznačně.",
+        });
+        return json({ ok: true, odebrano: false, duvod: "dvojznacne-parovani", produkty: dvojznacne });
       }
 
       if (!ent) {
@@ -928,12 +955,16 @@ Deno.serve(async (req) => {
           obj.billing_details?.email ?? obj.receipt_email ?? "",
         ).trim().toLowerCase();
         if (emailZPlatby) {
+          // ⛔ BEZ FILTRU NA PRODUKT. Dokud tu stálo `product = "academy"`, byla tahle
+          // pojistka u každého jiného produktu MRTVÁ, a to je horší než žádná: vypadá,
+          // že je hlídáno. `limit(1)` stačí, protože se tady jen křičí, nesahá se na nic.
           const { data: podleMailu } = await admin.from("entitlements")
-            .select("email, source, expires_at")
-            .eq("email", emailZPlatby).eq("product", "academy").eq("active", true).maybeSingle();
+            .select("email, product, source, expires_at")
+            .eq("email", emailZPlatby).eq("active", true).limit(1).maybeSingle();
           if (podleMailu) {
-            await alertAdmin("🔴 Stripe: refund se NESPÁROVAL, ale e-mail sedí na aktivní Academy", {
+            await alertAdmin("🔴 Stripe: refund se NESPÁROVAL, ale e-mail sedí na aktivní přístup", {
               email: emailZPlatby,
+              produkt: podleMailu.product,
               zdroj: podleMailu.source,
               zakaznik: zakaznik || "(žádný)",
               platba: platba || "(žádná)",
@@ -963,6 +994,11 @@ Deno.serve(async (req) => {
       // má v řádku ID předplatného, které jsme mu zrušili UŽ PŘI TOM UPGRADU; druhý
       // pokus by Stripe odmítl a my bychom z toho vyrobili falešný poplach.
       const jeDozivotni = ent.source === "stripe-lifetime";
+      // Který katalogový produkt to byl, poznáme podle `source`. Slouží jen k pojmenování
+      // produktu v rozlučkovém mailu, na logiku odebírání to nemá vliv.
+      // ⚠️ Měsíční Academy (`stripe-monthly`) v katalogu NENÍ (ten je jen pro jednorázové
+      // platby), takže tady vyjde `undefined` a použije se fallback. To je správně.
+      const katalogZdroje = Object.values(KATALOG).find((p) => p.source === ent.source);
       let zruseno = jeDozivotni ? "nema-predplatne" : "nebylo-co";
       if (!jeDozivotni && ent.stripe_subscription_id) {
         if (!STRIPE_SUBS_KEY) {
@@ -991,10 +1027,13 @@ Deno.serve(async (req) => {
       // 2) odebrat přístup (expirace na teď, řádek necháváme kvůli historii)
       // Jeden časový otisk pro zápis do DB i pro text mailu, ať se nemůžou rozejít.
       const konecIso = new Date().toISOString();
+      // ⛔ `ent.product`, NE natvrdo "academy". Odebírá se ten produkt, který je na
+      // nalezeném řádku, tedy ten, za který se opravdu vracely peníze. Natvrdo napsaný
+      // produkt tady 30. 7. 2026 způsobil, že refund videokurzu neodebral vůbec nic.
       const { error: chybaRevoke } = await admin
         .from("entitlements")
         .update({ expires_at: konecIso })
-        .eq("email", ent.email).eq("product", "academy");
+        .eq("email", ent.email).eq("product", ent.product);
 
       // 3) rozlučkový mail (best-effort, nikdy nesmí shodit odebrání)
       // Po refundu odebíráme přístup ihned, takže vyjde větev „hned". Volba je tu
@@ -1004,10 +1043,15 @@ Deno.serve(async (req) => {
       try {
         await posliUvitani(ent.email, rozlouceniTrack(konecIso), {
           castka: castkaText(vraceno > 0 ? vraceno : castka, String(obj.currency ?? "czk")),
-          produkt: "Barna Academy",
+          // ⛔ Název i varianta jdou Z KATALOGU podle `source`, ne natvrdo. Jinak by
+          // kupující videokurzu dostal mail o vrácení „Barna Academy, doživotní přístup",
+          // tedy o produktu, který si nikdy nekoupil.
+          // ⚠️ Fallback drží PŮVODNÍ chování u měsíční Academy (`stripe-monthly`), která
+          // v katalogu jednorázových produktů schválně není.
+          produkt: katalogZdroje?.nazev ?? "Barna Academy",
           // ⚠️ Popis varianty se řídí ZDROJEM, ne odhadem. Doživotnímu členovi napsat
           // „měsíční členství" by v mailu o vrácení peněz vypadalo, že nevíme, co mu rušíme.
-          varianta: jeDozivotni ? "doživotní přístup" : "měsíční členství",
+          varianta: katalogZdroje?.varianta ?? (jeDozivotni ? "doživotní přístup" : "měsíční členství"),
           znovu_odkaz: "https://martinbarna.cz/akademie/#cena",
           pristup_do: datumCesky(konecIso),
         });
