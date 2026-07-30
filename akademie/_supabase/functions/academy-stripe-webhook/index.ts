@@ -114,7 +114,19 @@ type JednorazovyProdukt = {
   tcGrant: boolean;   // dostane appku Tvůj Coach na rok?
   nazev: string;      // jak se produkt jmenuje v rozlučkovém mailu
   varianta: string;   // upřesnění varianty v rozlučkovém mailu
+  // ⭐ Dostane kupující NAVÍC videokurz jako bonus? (konzultace za 2 990 ho má v ceně,
+  // varianta za 2 190 ne, protože ten člověk už videokurz má a proto je levnější.)
+  videokurzBonus?: boolean;
+  // Má po nákupu přijít Martinovi upozornění, že se má něco udělat ručně?
+  // U konzultace ano: musí se ozvat a domluvit termín, jinak zákazník čeká.
+  alertPoNakupu?: string;
 };
+
+// ⛔⛔ ZDROJ BONUSOVÉHO VIDEOKURZU. Nesmí se slévat s `stripe-videokurz` (samostatný nákup
+// za 800) ani s `simpleshop`. Podle tohohle jediného řetězce refund konzultace pozná,
+// který videokurz smí odebrat: bonusový ano, zaplacený zvlášť NIKDY. Kdyby zdroje byly
+// stejné, nešlo by to rozhodnout a refund konzultace by lidem bral kurz, který si koupili.
+const ZDROJ_BONUS_VIDEOKURZ = "konzultace-bonus";
 
 const KATALOG: Record<string, JednorazovyProdukt> = {
   // Academy doživotně 8 900 Kč. Od 29. 7. 2026 nahrazuje SimpleShop.
@@ -146,6 +158,32 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
     tcGrant: false,
     nazev: "Videokurz výživy",
     varianta: "videokurz",
+  },
+  // Konzultace 2 990 Kč. Produkt `prod_Uyn8JGHPgrQNAc`, cena `price_1TypXx…`.
+  // ⭐ VIDEOKURZ MÁ V CENĚ, proto `videokurzBonus: true`.
+  // ⚠️ `tcGrant: false`: appka Tvůj Coach v konzultaci není.
+  "konzultace": {
+    produkt: "konzultace",
+    source: "stripe-konzultace",
+    welcome: "onboarding-nakup-konzultace",
+    tcGrant: false,
+    nazev: "Konzultace s Martinem Barnou",
+    varianta: "konzultace",
+    videokurzBonus: true,
+    alertPoNakupu: "🗓️ Stripe: ZAPLACENÁ KONZULTACE, ozvi se a domluv termín",
+  },
+  // Konzultace 2 190 Kč pro majitele videokurzu, cena `price_1TypdQ…`.
+  // ⛔ `videokurzBonus` SCHVÁLNĚ CHYBÍ (tedy false): tenhle člověk videokurz už má
+  // a právě proto zaplatil o 800 Kč míň. Kdyby ho dostal znovu jako bonus, refund
+  // konzultace by mu pak vzal i ten, který si koupil sám.
+  "konzultace-vk": {
+    produkt: "konzultace",
+    source: "stripe-konzultace",
+    welcome: "onboarding-nakup-konzultace",
+    tcGrant: false,
+    nazev: "Konzultace s Martinem Barnou",
+    varianta: "konzultace",
+    alertPoNakupu: "🗓️ Stripe: ZAPLACENÁ KONZULTACE (majitel videokurzu), ozvi se a domluv termín",
   },
 };
 
@@ -723,16 +761,65 @@ Deno.serve(async (req) => {
         // (nebo přehrání téže události Stripem) nesmí poslat druhý mail ani druhý grant.
         let tcGrant = def.tcGrant ? "preskoceno" : "netyka-se";
         let referral = "preskoceno";
+        let bonusVideokurz = def.videokurzBonus ? "preskoceno" : "netyka-se";
         if (novyDozivotni) {
           if (def.tcGrant) {
             tcGrant = await grantTvujCoach(emailL, typeof obj.id === "string" ? obj.id : null);
           }
+
+          // ⭐ BONUSOVÝ VIDEOKURZ (konzultace za 2 990 ho má v ceně).
+          // Udílí se PŘED uvítacím mailem schválně: ten mail bonusy slibuje, takže kdyby
+          // se přidávaly po něm a selhalo to, člověk by dostal mail o něčem, co nemá.
+          //
+          // ⛔⛔ NEZAPISUJEME `stripe_payment_intent` ANI `stripe_customer_id`.
+          // Refundová větev páruje dotazem `.eq("stripe_payment_intent", platba).maybeSingle()`,
+          // takže kdyby tuhle platbu nesly DVA řádky (konzultace i bonusový kurz),
+          // `maybeSingle()` by hodil chybu, webhook by vrátil 500 a Stripe by refund
+          // opakoval donekonečna. Bonus se proto dohledává přes e-mail + `source`.
+          //
+          // ⚠️ `onConflict: email,product` = kdo videokurz UŽ MÁ, tomu se řádek přepíše
+          // na bonusový zdroj. To je u ceny 2 990 v pořádku (koupil si obojí a bonus je
+          // novější titul), ale je to důvod, proč varianta za 2 190 bonus NEMÁ: tam by
+          // to přepsalo zaplacený kurz na bonusový a refund konzultace by ho pak sebral.
+          if (def.videokurzBonus) {
+            try {
+              const { error: chybaBonus } = await admin.from("entitlements").upsert({
+                email: emailL,
+                product: "videokurz",
+                active: true,
+                source: ZDROJ_BONUS_VIDEOKURZ,
+                granted_at: new Date().toISOString(),
+                expires_at: null,
+              }, { onConflict: "email,product" });
+              bonusVideokurz = chybaBonus ? "CHYBA: " + chybaBonus.message : "ok";
+            } catch (e) { bonusVideokurz = "chyba-" + String(e).slice(0, 60); }
+            if (bonusVideokurz !== "ok") {
+              await alertAdmin("🔴 Stripe: konzultace zaplacena, ale BONUSOVÝ VIDEOKURZ se neudělil", {
+                email: emailL, chyba: bonusVideokurz,
+                co_delat: "⛔ Přidej mu videokurz ručně v adminu. Konzultaci má, kurz ne, "
+                  + "a uvítací mail mu ho slibuje.",
+              });
+            }
+          }
+
           try { await posliUvitani(emailL, def.welcome); }
           catch (e) {
             await alertAdmin("Stripe: přístup udělen, ale uvítací e-mail selhal", {
               email: emailL, produkt: def.nazev, chyba: String(e).slice(0, 200),
             });
           }
+          // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
+          // a domluvit termín. Bez tohohle upozornění by zákazník zaplatil 2 990 Kč
+          // a čekal, dokud si toho někdo náhodou nevšimne v přehledu platieb.
+          if (def.alertPoNakupu) {
+            await alertAdmin(def.alertPoNakupu, {
+              email: emailL,
+              produkt: def.nazev,
+              varianta: klic === "konzultace-vk" ? "2 190 Kč (videokurz už měl)" : "2 990 Kč (videokurz v ceně)",
+              co_delat: "Ozvi se mu, domluv termín a pošli dotazník před hovorem.",
+            });
+          }
+
           // Až po udělení přístupu a jen u NOVÉHO nákupu, ať přehrání události Stripem
           // nezaloží druhý referral. Vlastní idempotenci má funkce i uvnitř.
           referral = await atribuujReferral(
@@ -745,7 +832,7 @@ Deno.serve(async (req) => {
         return json({
           ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
           novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
-          referral,
+          referral, bonus_videokurz: bonusVideokurz,
         });
       }
 
@@ -1040,6 +1127,34 @@ Deno.serve(async (req) => {
         .update({ expires_at: konecIso })
         .eq("email", ent.email).eq("product", ent.product);
 
+      // 2b) ⭐ REFUND KONZULTACE ODEBÍRÁ I BONUSOVÝ VIDEOKURZ, ALE JEN TEN BONUSOVÝ.
+      // ⛔⛔ Podmínka na `source` je tu to jediné, co chrání zaplacený kurz. Kdo si
+      // videokurz koupil zvlášť za 800 Kč (`stripe-videokurz` / `simpleshop`) a pak si
+      // koupil konzultaci za 2 190, MUSÍ si kurz po refundu konzultace nechat. Bez téhle
+      // podmínky by mu ho vrácení peněz za jinou věc sebralo, a byla by to tichá krádež
+      // zaplaceného obsahu.
+      let bonusOdebran = "netyka-se";
+      if (ent.product === "konzultace") {
+        const { data: bonus, error: chybaBonus } = await admin
+          .from("entitlements")
+          .update({ expires_at: konecIso })
+          .eq("email", ent.email)
+          .eq("product", "videokurz")
+          .eq("source", ZDROJ_BONUS_VIDEOKURZ)
+          .select("email");
+        bonusOdebran = chybaBonus
+          ? "CHYBA: " + chybaBonus.message
+          : ((bonus?.length ?? 0) > 0 ? "ok" : "nebyl-bonusovy");
+        if (chybaBonus) {
+          await alertAdmin("🔴 Stripe: refund konzultace, ale bonusový videokurz se NEODEBRAL", {
+            email: ent.email, chyba: chybaBonus.message,
+            co_delat: "⛔ Odeber mu videokurz ručně v adminu. ⚠️ ALE NEJDŘÍV ZKONTROLUJ "
+              + "`source`: pokud je `stripe-videokurz` nebo `simpleshop`, kurz si koupil "
+              + "sám a MUSÍ mu zůstat.",
+          });
+        }
+      }
+
       // 3) rozlučkový mail (best-effort, nikdy nesmí shodit odebrání)
       // Po refundu odebíráme přístup ihned, takže vyjde větev „hned". Volba je tu
       // přesto dynamická, ať to sedí i kdyby se sem někdy dostalo zrušení s dojezdem.
@@ -1127,10 +1242,12 @@ Deno.serve(async (req) => {
 
       return json({
         ok: true, typ, email: ent.email,
+        produkt: ent.product,
         varianta: jeDozivotni ? "dozivotni" : "mesicni",
         zruseno_predplatne: zruseno,
         pristup_odebran: !chybaRevoke,
         odebrani_appky: tcRevoke,
+        bonus_videokurz_odebran: bonusOdebran,
       });
     }
 
