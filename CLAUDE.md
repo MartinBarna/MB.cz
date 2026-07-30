@@ -166,8 +166,28 @@ jako **reálné UTF-8**, ne `\u` kódy, překlep `ď`(ď)→`ğ`(ğ) udělal „
 
 ## Supabase (projekt „Barna Academy", ref uhmrpfsdcujbhbtumqye)
 
-- Přístup = `public.entitlements` (email, product `academy`|`videokurz`, active). RPC `has_entitlement`
-  páruje přes e-mail z JWT (case-insensitive); academy ⇒ i videokurz.
+- Přístup = `public.entitlements` (email, product `academy`|`videokurz`|`coaching`|`konzultace`,
+  active). RPC `has_entitlement` páruje přes e-mail z JWT (case-insensitive); academy ⇒ i videokurz.
+- ⛔⛔ **`entitlements.product` MÁ CHECK CONSTRAINT. Nový produkt tam bez migrace nesmí.**
+  30. 7. 2026 to zastavilo zaplacenou konzultaci: webhook chtěl zapsat `product='konzultace'`,
+  CHECK znal jen `academy`/`videokurz`/`coaching`, funkce vracela **500**. Naostro by to znamenalo,
+  že člověk zaplatí, přístup nedostane, uvítačka nepřijde a Stripe to opakuje.
+  **Constraint není v kódu vidět, takže ho revize kódu nenajde.** Než přidáš produkt, vypiš si
+  všechny výčty produktů v DB (jsou TŘI: `entitlements_product_check`, `referrals_product_check`,
+  `progress_product_check`) a u každého si odpověz, jestli tam nový produkt kdy poteče:
+  `select conrelid::regclass, conname, pg_get_constraintdef(oid) from pg_constraint
+   where contype='c' and pg_get_constraintdef(oid) ilike '%videokurz%';`
+  ⚠️ `referrals_product_check` schválně zůstal bez konzultace: sazebník odměn ve webhooku ji nezná.
+  Kdo bude chtít odměnu i za doporučenou konzultaci, **musí rozšířit constraint i sazebník ZÁROVEŇ**,
+  jinak zápis odměny spadne a webhook vrátí 500 na zaplacené konzultaci.
+- ⛔ **Slepý `upsert` na `entitlements` může PŘEPSAT něco zaplaceného.** Klíč je UNIQUE(email,
+  product), takže „přidání" bonusu člověku, který ten produkt už koupil, mu jen přepíše `source`.
+  A podle `source` se pak při refundu rozhoduje, co se odebere. Detail a správný postup:
+  paměť `feedback-upsert-nesmi-prepsat-zaplacene`.
+- ⭐ **Novou větev platebního webhooku testuj PŘEHRÁNÍM už zaplacené a refundované události**
+  (dočasně přemapuj 15Kč testovací payment link na nový klíč katalogu, Stripe Workbench →
+  Event deliveries → Resend). Ostrá cesta, ostrý podpis, nula korun. Přesně tohle odhalilo ten
+  CHECK výš. Postup a pasti: paměť `feedback-test-vetve-prehranim-zaplacene-udalosti`.
 - Marketingové kontakty = `public.customer_contacts` (oddělené od `leads`). Segmenty přes `tags`:
   `early-customer` (WordPress kupci), `manual-add`, `coaching-active`, `coaching-ex`.
   Pojistka proti duplicitám mailů: `onboarding_sent_at`.
