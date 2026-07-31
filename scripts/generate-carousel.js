@@ -153,7 +153,9 @@ function patka(s, auto = true, kompakt = false) {
   const casti = typeof z === 'string' ? [z] : z ? [z.kdo, z.kde, z.doi && 'DOI: ' + z.doi].filter(Boolean) : [];
   const zdroj = !z ? ''
     : kompakt ? `<div class="zdrojmini"><b>Zdroj:</b> ${casti.map(esc).join(', ')}</div>`
-    : `<div class="zdroj"><em>Zdroj</em>${typeof z === 'string' ? z
+    // Řetězcový zdroj se musí zabalit do <span>, jinak zdědí výchozí velikost písma
+    // prohlížeče a vysází se drobně. Strukturovaný zdroj má styl na <b>/<span>/<i>.
+    : `<div class="zdroj"><em>Zdroj</em>${typeof z === 'string' ? `<span>${z}</span>`
       : `${z.kdo ? `<b>${z.kdo}</b>` : ''}${z.kde ? `<span>${z.kde}</span>` : ''}${z.doi ? `<i>DOI: ${esc(z.doi)}</i>` : ''}`}</div>`;
   const callout = s.callout ? `<div class="callout">${s.callout}</div>` : '';
   const pozn = s.pozn ? `<div class="pozn">${s.pozn}</div>` : '';
