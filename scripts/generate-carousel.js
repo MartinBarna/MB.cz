@@ -47,6 +47,20 @@ try {
 
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
+/** Velikost hlavní hodnoty na slidu `stat`.
+ *  ⛔ Dřív tu bylo natvrdo 210px. To sedí na čísla („609", „0"), ale slide se dá naplnit
+ *  i SLOVEM, a to se do šířky nevejde. Odhalila to kontrola přetečení 27. 7. 2026:
+ *  `hubnuti-a-zdravi-mozku` slide 4 má big „Klidnější" a vytékal o 71 px doprava.
+ *  Byla to starší vada, se změnou písma titulků nesouvisí (tenhle prvek není h1).
+ *  Použitelná šířka je 1080 minus 2× 84 px odsazení, tedy 912 px. */
+function bigPx(hodnota) {
+  const n = String(hodnota == null ? '' : hodnota).length;
+  if (n <= 4) return 210;
+  if (n <= 6) return 150;
+  if (n <= 8) return 120;
+  return 96;
+}
+
 function page(body, pageNo, total) {
   const foot = pageNo === 1 ? '' :
     `<div class="foot"><span>martinbarna.cz</span><span>${pageNo} / ${total}</span></div>`;
@@ -66,7 +80,16 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Poppins',Arial,sans
 .kick{font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;color:${GOLD_SOFT};letter-spacing:.2em;
  font-weight:600;font-size:30px;text-transform:uppercase;padding-left:52px;position:relative;margin-bottom:26px;white-space:nowrap;}
 .kick::before{content:"";position:absolute;left:0;top:50%;width:36px;height:4px;background:${GOLD};}
-h1{font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:800;text-transform:uppercase;line-height:.95;color:#fff;}
+/* [zmena 27. 7. 2026] Titulky zpatky na Poppins normalnim pismem, jako maji PUVODNI
+   oranzove infografiky. Barlow Condensed s vynucenymi verzalkami dava jiny charakter:
+   sevrenejsi a lacinejsi. Martin: „chci to uplne stejne, jen v novem kabate barev",
+   takze se meni jen paleta, ne rez pisma.
+   ⚠️ Poppins je vyrazne SIRSI nez Barlow Condensed, proto se u vsech typu slidu
+   zmensily velikosti titulku (zhruba na 0,73). Bez toho by delsi titulek pretekl
+   a pravidlo overflow:hidden na body by ho TISE OREZALO.
+   ⛔ Pozor: tenhle komentar je UVNITR sablonoveho retezce, takze v nem NESMI byt
+   zpetny apostrof. Poprve to tu spadlo prave na nem. */
+h1{font-family:'Poppins',Arial,sans-serif;font-weight:800;line-height:1.05;color:#fff;letter-spacing:-.01em;}
 h1 .hl{color:${GOLD};}
 .body{font-size:37px;line-height:1.5;color:#d9d5df;}
 .body b{color:#F0EADF;}
@@ -91,7 +114,7 @@ const KINDS = {
     return `<div class="wrap">${BRAND}
       <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:120px">
         ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
-        <h1 style="font-size:126px">${s.title}</h1>
+        <h1 style="font-size:92px">${s.title}</h1>
         ${s.sub ? `<div class="body" style="margin-top:44px;font-size:40px;color:#ece8f0">${s.sub}</div>` : ''}
       </div>
       <div style="display:flex;align-items:center;gap:16px;font-weight:700;font-size:30px;color:${GOLD_SOFT}">Posuň dál <span style="font-size:40px">→</span></div>
@@ -100,7 +123,7 @@ const KINDS = {
   point(s, i, n) {
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
-      <h1 style="font-size:78px;margin-bottom:44px">${s.title}</h1>
+      <h1 style="font-size:58px;margin-bottom:44px">${s.title}</h1>
       <div class="body">${s.body || ''}</div>
       ${s.callout ? `<div class="callout" style="margin-top:auto">${s.callout}</div>` : ''}
     </div>`;
@@ -113,14 +136,14 @@ const KINDS = {
       </div>`).join('');
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
-      <h1 style="font-size:72px;margin-bottom:48px">${s.title}</h1>${items}
+      <h1 style="font-size:54px;margin-bottom:48px">${s.title}</h1>${items}
     </div>`;
   },
   stat(s, i, n) {
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
       <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:80px">
-        <div style="font-weight:800;font-size:210px;line-height:1;color:${GOLD}">${esc(s.big)}</div>
+        <div style="font-weight:800;font-size:${bigPx(s.big)}px;line-height:1;color:${GOLD}">${esc(s.big)}</div>
         ${s.unit ? `<div style="font-weight:700;font-size:40px;color:${GOLD_SOFT};margin:6px 0 40px">${esc(s.unit)}</div>` : ''}
         <div class="body" style="font-size:40px">${s.body || ''}</div>
       </div>
@@ -133,7 +156,7 @@ const KINDS = {
     </div>`;
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
-      <h1 style="font-size:70px;margin-bottom:44px">${s.title}</h1>
+      <h1 style="font-size:52px;margin-bottom:44px">${s.title}</h1>
       <div style="display:flex;flex-direction:column;gap:26px">${col(s.yes, GOLD)}${col(s.no, '#e07a7a')}</div>
     </div>`;
   },
@@ -155,7 +178,7 @@ const KINDS = {
       `<div style="font-size:34px;line-height:1.45;color:#ded9e4;margin-bottom:20px;padding-left:44px;position:relative"><span style="position:absolute;left:0;color:${GOLD};font-weight:800">→</span>${l}</div>`).join('');
     return `<div class="wrap">${BRAND}${dots(i, n)}
       <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px">
-        <h1 style="font-size:88px;margin-bottom:48px">${s.title}</h1>
+        <h1 style="font-size:64px;margin-bottom:48px">${s.title}</h1>
         <div style="background:linear-gradient(160deg,#211b26 0%,#17131c 100%);border:2px solid rgba(235,177,44,.35);border-radius:28px;padding:48px 46px">${lines}</div>
         <div style="margin-top:48px;display:flex;justify-content:space-between;align-items:baseline">
           <span style="font-weight:800;font-size:38px;color:#fff">martinbarna.cz</span>
@@ -175,6 +198,13 @@ async function render(html, outPng) {
     `--screenshot=${tmpPng}`, `file:///${tmpHtml.replace(/\\/g, '/')}`], { stdio: 'ignore' });
   await sharp(tmpPng).png().toFile(outPng);
 }
+
+// Vystaveno pro `scripts/kontrola-preteceni-infografik.mjs`, aby kontrola stavela
+// HTML TOUTEZ funkci jako generator. Druha kopie sablony by se casem rozesla a
+// kontrola by hlidala neco jineho, nez se doopravdy vyrenderuje.
+module.exports = { page, KINDS, W, H, CHROME, TMP };
+
+if (require.main !== module) return;
 
 (async () => {
   const slug = process.argv[2];
