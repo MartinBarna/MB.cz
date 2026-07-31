@@ -11,6 +11,7 @@
 //  point   {kicker, title, body}                 — obecný obsahový slide (odstavec)
 //  bullets {kicker, title, items:[..]}           — odrážky (max 5)
 //  stat    {kicker, big, unit, body}             — velké číslo (data ze studie)
+//  graf    {kicker, title, bars:[{label,value,jednotka,tlumit}], body} — sloupcové srovnání
 //  vs      {kicker, title, yes:{h,items}, no:{h,items}} — srovnání dvou sloupců
 //  quote   {text, note}                          — výrok Martinovým hlasem
 //  cta     {title, lines:[..]}                   — 10: závěr + kam dál (martinbarna.cz)
@@ -202,6 +203,42 @@ const KINDS = {
         ${s.unit ? `<div style="font-weight:700;font-size:${String(s.unit).length > 60 ? 34 : 40}px;color:${GOLD_SOFT};margin:6px 0 ${String(s.unit).length > 60 ? 30 : 40}px">${esc(s.unit)}</div>` : ''}
         <div class="body" style="font-size:${String(s.body || '').length > 200 ? 36 : 40}px">${s.body || ''}</div>
       </div>${p}
+    </div>`;
+  },
+  /** Sloupcové srovnání dvou nebo tří hodnot.
+   *  Vzniklo 31. 7. 2026 podle infografiky „Ploténky", kterou Martin označil za vzor:
+   *  má tam skutečnou datovou vizualizaci, ne jen velké číslo. Velké číslo (`stat`)
+   *  je dobré na JEDEN údaj. Jakmile jsou hodnoty dvě a mají se porovnat, čtenář
+   *  potřebuje vidět rozdíl, ne ho počítat z textu.
+   *  bars: [{ label, value, jednotka, tlumit }] */
+  graf(s, i, n) {
+    const b = (s.bars || []).slice(0, 4);
+    const max = Math.max(...b.map((x) => Number(String(x.value).replace(',', '.')) || 0), 0.0001);
+    // Označení statistické významnosti si vezme kus výšky, tak sloupce o kus zkrátíme.
+    const VYSKA = s.rozdil ? 268 : 300;
+    const sloupec = (x) => {
+      const v = Number(String(x.value).replace(',', '.')) || 0;
+      const h = Math.max(10, Math.round((v / max) * VYSKA));
+      const zlaty = !x.tlumit;
+      const vypln = zlaty
+        ? `linear-gradient(180deg,${GOLD} 0%,rgba(235,177,44,.14) 100%)`
+        : 'linear-gradient(180deg,#57525f 0%,rgba(87,82,95,.12) 100%)';
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+        <div style="font-weight:800;font-size:62px;line-height:1;color:${zlaty ? GOLD : '#9a94a4'};margin-bottom:16px;white-space:nowrap">${esc(x.value)}${x.jednotka ? `<span style="font-size:34px;font-weight:700"> ${esc(x.jednotka)}</span>` : ''}</div>
+        <div style="width:70%;height:${h}px;border-radius:20px 20px 0 0;background:${vypln}"></div>
+      </div>`;
+    };
+    // Popisek se NEescapuje, aby v něm šlo zalomit řádek přes <br>. Ostatní pole
+    // v grafu escapovaná jsou; sem se píšou jen naše texty, ne vstup od uživatele.
+    const popisky = b.map((x) => `<div style="flex:1;text-align:center;font-weight:700;font-size:27px;line-height:1.3;color:#a9a3b3;padding:0 8px">${x.label}</div>`).join('');
+    return `<div class="wrap">${BRAND}${dots(i, n)}
+      ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
+      <h1 style="font-size:54px;margin-bottom:40px">${s.title}</h1>
+      <div style="display:flex;align-items:flex-end;gap:32px;height:${VYSKA + 90}px">${b.map(sloupec).join('')}</div>
+      <div style="display:flex;gap:32px;border-top:2px solid rgba(255,255,255,.14);padding-top:16px">${popisky}</div>
+      ${s.rozdil ? `<div style="text-align:center;margin-top:18px"><span style="display:inline-block;border:2px dashed rgba(235,177,44,.45);border-radius:999px;padding:10px 26px;font-weight:700;font-size:25px;color:${GOLD_SOFT}">${esc(s.rozdil)}</span></div>` : ''}
+      ${s.body ? `<div class="body" style="margin-top:${s.rozdil ? 26 : 34}px;font-size:33px">${s.body}</div>` : ''}
+      ${patka(s, true, true)}
     </div>`;
   },
   vs(s, i, n) {
