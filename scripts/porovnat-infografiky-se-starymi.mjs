@@ -121,7 +121,7 @@ for (const slug of nase) {
 
   // DOI se hledá zvlášť. Je to nejtvrdší důkaz zdroje a nejsnáz se ztratí.
   const doi = [...readFileSync(path.join(STARE, soubor + '.md'), 'utf8')
-    .matchAll(/10\.\d{4,}\/[^\s)\]]+/g)].map((m) => m[0]);
+    .matchAll(/10\.\d{4,}\/\S*?[^\s.,;)\]]\)?[^\s.,;)\]]*/g)].map((m) => m[0]);
   const doiChybi = doi.filter((d) => !nasNorm.includes(sjednotit(d)));
 
   ztracenychRadku += chybi.length;

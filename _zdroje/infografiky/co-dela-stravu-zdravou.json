@@ -1,76 +1,15 @@
 {
   "slug": "co-dela-stravu-zdravou",
   "slides": [
-    {
-      "kind": "cover",
-      "kicker": "Výživa & dlouhověkost",
-      "title": "Co dělá stravu<br><span class=\"hl\">zdravou?</span>",
-      "sub": "Většina lidí sáhne po chia semínkách. Přehled z roku 2025 přitom ukazuje na látky, které máš i v obyčejné české kuchyni."
-    },
-    {
-      "kind": "point",
-      "kicker": "Co se traduje",
-      "title": "Superpotravina<br>z e-shopu",
-      "body": "Kombucha, matcha, chia semínka z Amazonu. Tak si většina lidí představí „zdravou stravu“.<br><br>Vidím to u klientů pořád. Nakoupí exotiku a běžný talíř neřeší."
-    },
-    {
-      "kind": "point",
-      "kicker": "Co na to věda?",
-      "title": "Pět míst<br>na mapě",
-      "body": "Přehledová práce z roku 2025 se podívala na Blue Zones. Pět oblastí světa, kde žije nezvykle hodně devadesátníků a stoletých.<br><br>Hledala, co mají jejich jídelníčky společné."
-    },
-    {
-      "kind": "stat",
-      "kicker": "Společný jmenovatel",
-      "big": "5",
-      "unit": "oblastí, jedna společná věc v jídle (Davinelli et al. 2025)",
-      "body": "<b>Polyfenoly.</b> Rostlinné látky z ovoce, zeleniny, bylinek a olivového oleje. Mají jich v jídelníčku hodně."
-    },
-    {
-      "kind": "point",
-      "kicker": "Ale férově",
-      "title": "Blue Zones<br>nejsou důkaz",
-      "body": "Je to pozorování, ne experiment. Liší se tam i pohyb, spánek a to, jak spolu lidé žijí.<br><br>Sporná jsou i samotná data o věku. Části rekordů chybí rodné listy.",
-      "callout": "Data zpochybnil demograf S. Newman (UCL, 2024), tvůrci Blue Zones to odmítají. Polyfenoly samy dlouhověkost nevysvětlí."
-    },
-    {
-      "kind": "point",
-      "kicker": "Jak to funguje",
-      "title": "Proč zrovna<br>polyfenoly",
-      "body": "Autoři je popisují jako možné geroprotektivní látky. Podle nich mohou zasahovat do procesů, které stojí za stárnutím buněk.<br><br>Vodítko je barva a slupka. Tam jich bývá nejvíc."
-    },
-    {
-      "kind": "point",
-      "kicker": "Háček",
-      "title": "Kapsle<br>nenahradí talíř",
-      "body": "Studie mluví o stravě, ne o extraktu v prášku. Doplněk to jídlo nepřebije.<br><br>A pozor na druhý extrém: polyfenoly nepřebijí kalorický příjem. Energetická bilance platí dál.",
-      "callout": "V seznamu je i moravské červené. Žádná studie ale není důvod začít pít."
-    },
-    {
-      "kind": "bullets",
-      "kicker": "Do praxe",
-      "title": "Česká kuchyně,<br>ale vědomě",
-      "items": [
-        "<b>Cibule</b> do guláše (kvercetin)",
-        "<b>Borůvky a jablka se slupkou</b> (flavonoidy, antokyany)",
-        "<b>Pohanka</b> místo rýže (rutin)",
-        "<b>Kvašené zelí</b> ke knedlíku (polyfenoly a probiotika dohromady)",
-        "<b>Olivový olej a bylinky</b> úplně do všeho"
-      ]
-    },
-    {
-      "kind": "quote",
-      "text": "Nejlevnější polyfenoly v Česku má cibule do guláše a jablko se slupkou.",
-      "note": "Nemusíš kupovat nic exotického. Stačí jíst to, co znáš, jen vědomě."
-    },
-    {
-      "kind": "cta",
-      "title": "Chceš jíst <span class=\"hl\">vědomě?</span>",
-      "lines": [
-        "Celý rozbor se zdroji: <b>martinbarna.cz</b>",
-        "Systém na míru: <b>online koučink</b>",
-        "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"
-      ]
-    }
+    { "kind": "cover", "kicker": "Výživa & dlouhověkost", "title": "Co dělá stravu<br><span class=\"hl\">zdravou?</span>", "sub": "Většina lidí sáhne po chia semínkách. Přehled z roku 2025 přitom ukazuje na látky, které máš i v obyčejné české kuchyni." },
+    { "kind": "point", "kicker": "Co se traduje", "title": "Superpotravina<br>z e-shopu", "body": "Kombucha, matcha, chia semínka z Amazonu. Tak si většina lidí představí „zdravou stravu“.<br><br>Vidím to u klientů pořád. Nakoupí exotiku a běžný talíř neřeší." },
+    { "kind": "point", "kicker": "Co na to věda?", "title": "Pět míst<br>na mapě", "body": "Přehledová práce z roku 2025 se podívala na Blue Zones. Pět oblastí světa, kde žije nezvykle hodně devadesátníků a stoletých.<br><br>Hledala, co mají jejich jídelníčky společné." },
+    { "kind": "stat", "kicker": "Společný jmenovatel", "big": "5", "unit": "oblastí, jedna společná věc v jídle (Davinelli et al. 2025)", "body": "<b>Polyfenoly.</b> Rostlinné látky z ovoce, zeleniny, bylinek a olivového oleje. Mají jich v jídelníčku hodně." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Blue Zones<br>nejsou důkaz", "body": "Je to pozorování, ne experiment. Liší se tam i pohyb, spánek a to, jak spolu lidé žijí.<br><br>Sporná jsou i samotná data o věku. Části rekordů chybí rodné listy.", "callout": "Data zpochybnil demograf S. Newman (UCL, 2024), tvůrci Blue Zones to odmítají. Polyfenoly samy dlouhověkost nevysvětlí." },
+    { "kind": "point", "kicker": "Jak to funguje", "title": "Proč zrovna<br>polyfenoly", "body": "Autoři je popisují jako možné geroprotektivní látky. Podle nich mohou zasahovat do procesů, které stojí za stárnutím buněk.<br><br>Vodítko je barva a slupka. Tam jich bývá nejvíc.", "zdroj": { "kdo": "Davinelli et al. (2025)", "kde": "Ageing Research Reviews", "doi": "10.1016/j.arr.2025.102733" } },
+    { "kind": "point", "kicker": "Háček", "title": "Kapsle<br>nenahradí talíř", "body": "Studie mluví o stravě, ne o extraktu v prášku. Doplněk to jídlo nepřebije.<br><br>A pozor na druhý extrém: polyfenoly nepřebijí kalorický příjem. Energetická bilance platí dál.", "callout": "V seznamu je i moravské červené. Žádná studie ale není důvod začít pít." },
+    { "kind": "bullets", "kicker": "Do praxe", "title": "Česká kuchyně,<br>ale vědomě", "items": ["<b>Cibule</b> do guláše (kvercetin)", "<b>Borůvky a jablka se slupkou</b> (flavonoidy, antokyany)", "<b>Pohanka</b> místo rýže (rutin)", "<b>Kvašené zelí</b> ke knedlíku (polyfenoly a probiotika dohromady)", "<b>Olivový olej a bylinky</b> úplně do všeho"] },
+    { "kind": "quote", "text": "Nejlevnější polyfenoly v Česku má cibule do guláše a jablko se slupkou.", "note": "Nemusíš kupovat nic exotického. Stačí jíst to, co znáš, jen vědomě." },
+    { "kind": "cta", "title": "Chceš jíst <span class=\"hl\">vědomě?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
   ]
 }
