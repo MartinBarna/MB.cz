@@ -54,6 +54,16 @@ RewriteRule ^videokurz/$  /videokurz  [R=301,L]
 RewriteRule ^treninky$   treninky.html   [L]
 RewriteRule ^videokurz$  videokurz.html  [L]
 
+# --- 2c) Zkratka pro TikTok bio: /tt → kvíz s tiktokovými UTM ---
+# TikTok bio má limit 80 znaků a plná adresa kvízu s parametry jich má 82, takže se tam
+# nevejde ani bez Martinova textu. Krátké martinbarna.cz/tt má 17 znaků a měření se
+# dolepí až tady, takže neztrácíme atribuci.
+# ⚠️ Schválně RewriteRule, a ne RedirectMatch jako sousední pravidla: cíl má VLASTNÍ query
+#    string. mod_alias (Redirect/RedirectMatch) k cíli připojí i případný příchozí dotaz
+#    a vyrobil by adresu se dvěma otazníky. mod_rewrite bez příznaku QSA příchozí dotaz
+#    zahodí, takže cíl je vždycky čistý.
+RewriteRule ^tt/?$ https://martinbarna.cz/kviz/?utm_source=tiktok&utm_medium=organic&utm_campaign=bio [NC,R=301,L]
+
 # --- 3) Vlastní 404 stránka ---
 ErrorDocument 404 /404.html
 
