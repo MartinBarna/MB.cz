@@ -81,6 +81,10 @@ function vokativ(fn: string, seg: Seg): string {
 
 const esc = (s: string) =>
   s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(DQ).join('&quot;');
+// HTML atributy jsou v tomhle souboru v JEDNODUCHYCH uvozovkach (soubor zamerne neobsahuje znak ").
+// esc() apostrof neresi, takze do atributu se musi escapovat navic, jinak by text z nej vyskocil.
+const SQ = String.fromCharCode(39);   // single-quote char
+const attr = (s: string) => esc(s).split(SQ).join('&#39;');
 
 // gender expanze: [[zena||muz]] a [a] (bez regexu)
 function gender(s: string, seg: Seg): string {
@@ -138,7 +142,8 @@ type Block =
   | { t: 'p'; html: string }
   | { t: 'bullets'; items: string[] }
   | { t: 'btn'; text: string; href: string }
-  | { t: 'ps'; html: string };
+  | { t: 'ps'; html: string }
+  | { t: 'img'; src: string; alt: string };
 
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
@@ -147,6 +152,10 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === 'bullets')
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
+    // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
+    // Vsechny styly inline, mailove klienty externi CSS ignoruji.
+    if (b.t === 'img')
+      return `<img src='${attr(fill(b.src, seg, v))}' alt='${attr(fill(b.alt, seg, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
     return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
@@ -154,6 +163,7 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   return blocks.map((b) => {
     if (b.t === 'bullets') return b.items.map((li) => '- ' + inlineToText(fill(li, seg, v))).join(NL);
     if (b.t === 'btn') return fill(b.text, seg, v) + ': ' + fill(b.href, seg, v);
+    if (b.t === 'img') return '[obrázek: ' + inlineToText(fill(b.alt, seg, v)) + ']';
     return inlineToText(fill(b.html, seg, v));
   }).join(NL + NL);
 }

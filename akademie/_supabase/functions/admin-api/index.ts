@@ -150,7 +150,11 @@ function inlineToText(s: string): string {
   return out.split("&amp;").join("&").split("&lt;").join("<").split("&gt;").join(">").split("&quot;").join(DQ);
 }
 
-type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string };
+type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string } | { t: "img"; src: string; alt: string };
+
+// Atributy jsou i tady v jednoduchych uvozovkach, escd() apostrof neresi -> pro atribut navic.
+const SQ = String.fromCharCode(39);
+const attr = (s: string) => escd(s).split(SQ).join("&#39;");
 
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
@@ -159,6 +163,9 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join("") + `</ul>`;
+    // 1:1 s drip-send (nahled = realita). Kdyz se meni tam, musi se zmenit i tady.
+    if (b.t === "img")
+      return `<img src='${attr(fill(b.src, seg, v))}' alt='${attr(fill(b.alt, seg, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
     return `<p style='margin:4px 0 18px'><a href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${escd(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
@@ -166,6 +173,7 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   return blocks.map((b) => {
     if (b.t === "bullets") return b.items.map((li) => "- " + inlineToText(fill(li, seg, v))).join(NL);
     if (b.t === "btn") return fill(b.text, seg, v) + ": " + fill(b.href, seg, v);
+    if (b.t === "img") return "[obrázek: " + inlineToText(fill(b.alt, seg, v)) + "]";
     return inlineToText(fill(b.html, seg, v));
   }).join(NL + NL);
 }
@@ -737,6 +745,13 @@ Deno.serve(async (req) => {
         if (t === "p" || t === "ps") { if (typeof b.html !== "string" || !(b.html as string).trim()) return json({ error: "bad_block_html" }, 400); }
         else if (t === "bullets") { if (!Array.isArray(b.items) || !(b.items as unknown[]).length || (b.items as unknown[]).some((x) => typeof x !== "string" || !(x as string).trim())) return json({ error: "bad_block_bullets" }, 400); }
         else if (t === "btn") { if (typeof b.text !== "string" || !(b.text as string).trim() || typeof b.href !== "string" || !(b.href as string).trim()) return json({ error: "bad_block_btn" }, 400); }
+        // Obrazek: src musi byt https (mailove klienty http bloknou nebo varuji), alt povinny
+        // kvuli klientum s vypnutymi obrazky a kvuli textove verzi mailu.
+        else if (t === "img") {
+          const src = typeof b.src === "string" ? (b.src as string).trim() : "";
+          const alt = typeof b.alt === "string" ? (b.alt as string).trim() : "";
+          if (!src || !alt || !src.startsWith("https://")) return json({ error: "bad_block_img" }, 400);
+        }
         else return json({ error: "bad_block_type:" + t }, 400);
       }
       const { data: exists } = await admin.from("email_templates").select("track").eq("track", track).eq("step", step).maybeSingle();
