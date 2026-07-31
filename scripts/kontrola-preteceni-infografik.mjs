@@ -54,10 +54,30 @@ const TMP = mkdtempSync(path.join(tmpdir(), 'preteceni-'));
 // Správně: pustit obsah z pevné výšky (`height:auto`, `overflow:visible`), nechat ho
 // narůst do přirozené velikosti a teprve tu porovnat s plátnem. Co se nevejde tam,
 // to se v ostrém renderu ořízne.
+// ⛔ DRUHÁ VĚC, KTEROU MUSÍ MĚŘIT: kolizi s patičkou.
+// Patička je absolutně pozicovaná, takže do výšky obsahu nepatří a kontrola si ji
+// odstraňuje. Jenže tím se stane slepou vůči tomu, že na ní obsah LEŽÍ. Přesně to
+// se stalo 31. 7. 2026: vysvětlivka pod čarou se vykreslila přes „martinbarna.cz",
+// bylo to nečitelné a tahle kontrola to pustila jako „v pořádku".
+// Proto se kolize měří PRVNÍ, v původním rozvržení, a teprve pak se patička odstraní.
+// ⛔ MĚŘIT AŽ PO NAČTENÍ PÍSEM. Událost `load` může přijít dřív, než se použije
+// Poppins, a pak se měří náhradní Arial, který má jinou šířku. Projevilo se to
+// 31. 7. 2026 tím, že týž slide vyšel samostatně na 3 px a v dávce 380 slidů na
+// 59 px. Hlídač, který dává pokaždé jiné číslo, se přestane brát vážně.
 const MERIC = `<script>
   window.addEventListener('load', function () {
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
     var w = document.querySelector('.wrap');
     var f = document.querySelector('.foot');
+    var kolize = 0;
+    if (f && w) {
+      var hraniceP = f.getBoundingClientRect().top;
+      w.querySelectorAll(':scope > *').forEach(function (el) {
+        if (getComputedStyle(el).position === 'absolute') return;   // tečky nahoře
+        var d = el.getBoundingClientRect().bottom - hraniceP;
+        if (d > kolize) kolize = d;
+      });
+    }
     if (f) f.remove();                     // zápatí je absolutní, do výšky obsahu nepatří
     document.body.style.height = 'auto';
     document.body.style.overflow = 'visible';
@@ -70,8 +90,11 @@ const MERIC = `<script>
       var s = el.scrollWidth - el.clientWidth;
       if (s > siroko) siroko = s;
     });
-    document.title = 'MERENI:' + Math.round(Math.max(prirozena - ${gen.H}, siroko))
-      + ';KDE:vyska ' + Math.round(prirozena) + ' z ' + ${gen.H};
+    var vysledek = Math.max(prirozena - ${gen.H}, siroko, kolize);
+    var kde = kolize >= Math.max(prirozena - ${gen.H}, siroko)
+      ? 'obsah lezi na paticce' : 'vyska ' + Math.round(prirozena) + ' z ' + ${gen.H};
+    document.title = 'MERENI:' + Math.round(vysledek) + ';KDE:' + kde;
+    });
   });
 </script>`;
 

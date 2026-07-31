@@ -1,76 +1,15 @@
 {
   "slug": "deprese-a-fitness",
   "slides": [
-    {
-      "kind": "cover",
-      "kicker": "Duševní zdraví & pohyb",
-      "title": "Zvedne pohyb<br><span class=\"hl\">náladu?</span>",
-      "sub": "Cochrane prošla 73 randomizovaných studií. Výsledek je slibný, ale opatrnější, než čekáš."
-    },
-    {
-      "kind": "point",
-      "kicker": "Jak to máme v hlavě",
-      "title": "Na všechno<br>si zvykneš",
-      "body": "Nové auto, vyšší plat, lepší telefon. Za pár týdnů to bereš jako normál. Mozek tomu říká hédonická adaptace.<br><br>Pohyb je jedna z mála výjimek."
-    },
-    {
-      "kind": "point",
-      "kicker": "Co na to věda?",
-      "title": "Zlatý<br>standard",
-      "body": "Cochrane metaanalýza sesbírala <b>73 randomizovaných studií</b>. Lepší typ důkazu se u téhle otázky nedělá.<br><br>Pravidelné cvičení snižovalo příznaky deprese víc než kontrolní skupina. Efekt je střední, jistota důkazu je ale podle autorů <b>nízká</b>.",
-      "callout": "Clegg AJ et al. Exercise for depression. Cochrane Database Syst Rev. 2026;1:CD004366."
-    },
-    {
-      "kind": "stat",
-      "kicker": "Srovnání s léky",
-      "big": "5",
-      "unit": "studií porovnalo cvičení přímo s antidepresivy (Clegg et al. 2026)",
-      "body": "V účinnosti mezi nimi nevyšel významný rozdíl. Jde ale jen o pár malých studií a jistota důkazu je nízká. <b>Není to návod vysadit léky.</b> Pokud je bereš, řeš to vždycky s lékařem."
-    },
-    {
-      "kind": "point",
-      "kicker": "Ale férově",
-      "title": "Jedna analýza<br>nestačí",
-      "body": "Druhá metaanalýza, 19 studií, 1 795 dětí a dospívajících s nadváhou. Míň úzkosti, lepší nálada, vyšší sebevědomí.<br><br>Autoři jsou ale opatrní. Efekty vyšly <b>malé</b> a u úzkosti je jistota důkazu nízká.",
-      "callout": "Men J a kol., BMC Psychiatry 2026;26:139. I oni berou pohyb jako doplněk, ne náhradu léčby."
-    },
-    {
-      "kind": "point",
-      "kicker": "Háček",
-      "title": "Co pohyb<br>neumí",
-      "body": "Nespraví vztahy ani nedá životu smysl. Když máš jasný důvod ke smutku, řeš ho přímo. Terapeut, profík, změna situace.<br><br>Není to lenost, když to samo od tréninku nezmizí."
-    },
-    {
-      "kind": "bullets",
-      "kicker": "Do praxe",
-      "title": "Když tělo<br>šlape",
-      "items": [
-        "<b>Pravidelný pohyb</b>: radši 3× týdně kousek než jednou za měsíc naplno",
-        "<b>Spánek</b>: stejná doba usínání i vstávání",
-        "<b>Slušná strava</b>: dost jídla, dost bílkovin, žádné extrémy",
-        "Trénink, který tě baví. Ten se opakuje sám."
-      ]
-    },
-    {
-      "kind": "point",
-      "kicker": "Důležité",
-      "title": "Když je toho<br>víc než smutek",
-      "body": "Déletrvající skleslost, ztráta zájmu o věci, které tě dřív bavily, rozbitý spánek. Když to táhne týdny, patří to k lékaři nebo terapeutovi. Tohle není diagnóza z Instagramu.<br><br>Cvičení odbornou péči doplňuje. Nikdy ji nenahrazuje.",
-      "callout": "Myšlenky na sebepoškození? Nečekej. Linka první psychické pomoci <b>116 123</b> (zdarma, nonstop, anonymně)."
-    },
-    {
-      "kind": "quote",
-      "text": "Když tělo šlape, jde všechno ostatní o kousek líp.",
-      "note": "Pohyb, spánek, strava. Nevyřeší za tebe život, ale zbytek se pak nese snáz."
-    },
-    {
-      "kind": "cta",
-      "title": "Chceš to mít <span class=\"hl\">poskládané?</span>",
-      "lines": [
-        "Celý rozbor se zdroji: <b>martinbarna.cz</b>",
-        "Systém na míru: <b>online koučink</b>",
-        "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"
-      ]
-    }
+    { "kind": "cover", "kicker": "Duševní zdraví & pohyb", "title": "Zvedne pohyb<br><span class=\"hl\">náladu?</span>", "sub": "Cochrane prošla 73 randomizovaných studií. Výsledek je slibný, ale opatrnější, než čekáš." },
+    { "kind": "point", "kicker": "Jak to máme v hlavě", "title": "Na všechno<br>si zvykneš", "body": "Nové auto, vyšší plat, lepší telefon. Za pár týdnů to bereš jako normál. Mozek tomu říká hédonická adaptace.<br><br>Pohyb je jedna z mála výjimek." },
+    { "kind": "point", "kicker": "Co na to věda?", "title": "Zlatý<br>standard", "body": "Cochrane metaanalýza sesbírala <b>73 randomizovaných studií</b>. Lepší typ důkazu se u téhle otázky nedělá.<br><br>Pravidelné cvičení snižovalo příznaky deprese víc než kontrolní skupina. Efekt je střední, jistota důkazu je ale podle autorů <b>nízká</b>.", "callout": "Clegg AJ et al. Exercise for depression. Cochrane Database Syst Rev. 2026;1:CD004366.", "zdroj": { "kdo": "Clegg et al. (2026)", "kde": "Cochrane Database of Systematic Reviews", "doi": "10.1002/14651858.CD004366.pub7" }, "pozn": "Cochrane = zlatý standard pro meta-analýzy" },
+    { "kind": "stat", "kicker": "Srovnání s léky", "big": "5", "unit": "studií porovnalo cvičení přímo s antidepresivy (Clegg et al. 2026)", "body": "V účinnosti mezi nimi nevyšel významný rozdíl. Jde ale jen o pár malých studií a jistota důkazu je nízká. <b>Není to návod vysadit léky.</b> Pokud je bereš, řeš to vždycky s lékařem." },
+    { "kind": "point", "kicker": "Ale férově", "title": "Jedna analýza<br>nestačí", "body": "Druhá metaanalýza, 19 studií, 1 795 dětí a dospívajících s nadváhou. Míň úzkosti, lepší nálada, vyšší sebevědomí.<br><br>Autoři jsou ale opatrní. Efekty vyšly <b>malé</b> a u úzkosti je jistota důkazu nízká.", "callout": "Men J a kol., BMC Psychiatry 2026;26:139. I oni berou pohyb jako doplněk, ne náhradu léčby." },
+    { "kind": "point", "kicker": "Háček", "title": "Co pohyb<br>neumí", "body": "Nespraví vztahy ani nedá životu smysl. Když máš jasný důvod ke smutku, řeš ho přímo. Terapeut, profík, změna situace.<br><br>Není to lenost, když to samo od tréninku nezmizí." },
+    { "kind": "bullets", "kicker": "Do praxe", "title": "Když tělo<br>šlape", "items": ["<b>Pravidelný pohyb</b>: radši 3× týdně kousek než jednou za měsíc naplno", "<b>Spánek</b>: stejná doba usínání i vstávání", "<b>Slušná strava</b>: dost jídla, dost bílkovin, žádné extrémy", "Trénink, který tě baví. Ten se opakuje sám."] },
+    { "kind": "point", "kicker": "Důležité", "title": "Když je toho<br>víc než smutek", "body": "Déletrvající skleslost, ztráta zájmu o věci, které tě dřív bavily, rozbitý spánek. Když to táhne týdny, patří to k lékaři nebo terapeutovi. Tohle není diagnóza z Instagramu.<br><br>Cvičení odbornou péči doplňuje. Nikdy ji nenahrazuje.", "callout": "Myšlenky na sebepoškození? Nečekej. Linka první psychické pomoci <b>116 123</b> (zdarma, nonstop, anonymně)." },
+    { "kind": "quote", "text": "Když tělo šlape, jde všechno ostatní o kousek líp.", "note": "Pohyb, spánek, strava. Nevyřeší za tebe život, ale zbytek se pak nese snáz." },
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
   ]
 }

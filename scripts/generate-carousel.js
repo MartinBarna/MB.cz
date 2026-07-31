@@ -14,6 +14,11 @@
 //  vs      {kicker, title, yes:{h,items}, no:{h,items}} — srovnání dvou sloupců
 //  quote   {text, note}                          — výrok Martinovým hlasem
 //  cta     {title, lines:[..]}                   — 10: závěr + kam dál (martinbarna.cz)
+//
+// Společná pole pro point / bullets / stat / vs (viz funkce `patka`):
+//  callout {string}                              — zvýrazněný rámeček s poznámkou
+//  zdroj   {kdo, kde, doi} nebo {string}         — citace studie (autor, časopis, DOI)
+//  pozn    {string}                              — vysvětlivka pod čarou („IgG = protilátka…")
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -71,7 +76,12 @@ function page(body, pageNo, total) {
 body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Poppins',Arial,sans-serif;color:#F0EADF;
  background:linear-gradient(165deg,#15171a 0%,#0f1113 100%);position:relative;}
 .stripe{position:absolute;left:0;top:0;width:12px;height:${H}px;background:linear-gradient(180deg,${GOLD_SOFT},${GOLD});z-index:5;}
-.wrap{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:84px 84px 96px;}
+/* Spodní odsazení MUSÍ uhlídat patičku. Ta je absolutní: sedí 44 px ode dna a je
+   57 px vysoká, takže zabírá spodních 101 px plátna. Dokud tu bylo 96 px, sahal
+   obsah 5 px POD její horní hranu a text se překrýval. U rámečku s pozadím to jen
+   ošklivě splývalo, u vysvětlivky pod čarou byl výsledek nečitelný.
+   Změřeno 31. 7. 2026: pozn 1220..1254, foot 1249..1306. 124 = 101 + odstup. */
+.wrap{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:84px 84px 124px;}
 .brandrow{display:flex;align-items:center;gap:18px;margin-bottom:56px;}
 .mark{width:64px;height:64px;border-radius:16px;background:linear-gradient(145deg,${GOLD_SOFT},${GOLD});color:${INK};
  font-weight:800;font-size:30px;display:flex;align-items:center;justify-content:center;}
@@ -96,6 +106,19 @@ h1 .hl{color:${GOLD};}
 .foot{position:absolute;left:84px;right:84px;bottom:44px;display:flex;justify-content:space-between;
  border-top:2px solid rgba(255,255,255,.12);padding-top:20px;font-size:24px;color:#8F8A99;z-index:3;}
 .callout{background:rgba(235,177,44,.09);border-left:8px solid ${GOLD};border-radius:0 18px 18px 0;padding:34px 38px;font-size:34px;line-height:1.45;color:#F0EADF;}
+.zdroj{background:rgba(255,255,255,.045);border-left:6px solid ${GOLD};border-radius:0 14px 14px 0;
+ padding:18px 26px;margin-top:18px;}
+.zdroj em{display:block;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;color:${GOLD_SOFT};
+ letter-spacing:.18em;font-weight:700;font-size:21px;text-transform:uppercase;font-style:normal;margin-bottom:6px;}
+.zdroj b{display:block;font-weight:700;font-size:28px;color:#F0EADF;line-height:1.3;}
+.zdroj span{display:block;font-size:25px;color:#a9a3b3;line-height:1.35;}
+.zdroj i{display:block;font-size:22px;color:#8F8A99;line-height:1.35;margin-top:4px;}
+.pozn{font-size:24px;line-height:1.4;color:#8F8A99;font-style:italic;margin-top:16px;}
+/* Kompaktni zdroj pro slidy, kde na box neni misto (typicky srovnavaci slide se
+   dvema sloupci). Nese totez co box, jen bez ramecku a popisku, usetri asi 50 px.
+   Zadny zpetny apostrof, jsme uvnitr sablonoveho retezce. */
+.zdrojmini{font-size:23px;line-height:1.35;color:#8F8A99;margin-top:18px;}
+.zdrojmini b{color:#a9a3b3;font-weight:700;}
 .dots{position:absolute;right:84px;top:96px;display:flex;gap:10px;z-index:3;}
 .dots i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.16);}
 .dots i.on{background:${GOLD};}
@@ -108,6 +131,34 @@ function dots(i, total) {
   return s + '</div>';
 }
 const BRAND = `<div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online výživa &amp; fitness</span></div></div>`;
+
+/** Spodní blok slidu: rámeček s poznámkou, box se zdrojem a vysvětlivka pod čarou.
+ *
+ *  ⛔ PROČ TU JSOU VŠECHNY TŘI: původní oranžové infografiky měly tři oddělené bloky,
+ *  ale tahle šablona měla dlouho jen `callout`. Text se proto při rebrandu neměl kam
+ *  vrátit a tiše se zahodil. Změřeno 31. 7. 2026 přes všech 35 přepsaných témat
+ *  (`scripts/porovnat-infografiky-se-starymi.mjs`): ztratilo se 397 kusů obsahu,
+ *  z toho 53 DOI, 36 vysvětlivek a 273 čísel. Nebyla to nedbalost pisatele, byla to
+ *  chybějící kolonka. Kdo tuhle šablonu zjednodušuje, ať ví, co tím rozbije.
+ *
+ *  `zdroj` bere buď hotový řetězec, nebo {kdo, kde, doi}. Rozdělené je lepší, protože
+ *  DOI se pak sází jinak než jméno autora a nedá se přehlédnout. */
+function patka(s, auto = true, kompakt = false) {
+  // Dva rámečky pod sebou se na plátno nevejdou a jsou i opticky těžké. Když už
+  // slide nese zvýrazněný callout, sází se zdroj jen jako nenápadný řádek. Ušetří
+  // to zhruba 50 px a je to jediný důvod, proč se 5 slidů vešlo (změřeno 31. 7.).
+  if (s.callout && s.zdroj) kompakt = true;
+  const z = s.zdroj;
+  const casti = typeof z === 'string' ? [z] : z ? [z.kdo, z.kde, z.doi && 'DOI: ' + z.doi].filter(Boolean) : [];
+  const zdroj = !z ? ''
+    : kompakt ? `<div class="zdrojmini"><b>Zdroj:</b> ${casti.map(esc).join(', ')}</div>`
+    : `<div class="zdroj"><em>Zdroj</em>${typeof z === 'string' ? z
+      : `${z.kdo ? `<b>${z.kdo}</b>` : ''}${z.kde ? `<span>${z.kde}</span>` : ''}${z.doi ? `<i>DOI: ${esc(z.doi)}</i>` : ''}`}</div>`;
+  const callout = s.callout ? `<div class="callout">${s.callout}</div>` : '';
+  const pozn = s.pozn ? `<div class="pozn">${s.pozn}</div>` : '';
+  if (!callout && !zdroj && !pozn) return '';
+  return `<div${auto ? ' style="margin-top:auto"' : ''}>${callout}${zdroj}${pozn}</div>`;
+}
 
 const KINDS = {
   cover(s) {
@@ -125,7 +176,7 @@ const KINDS = {
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
       <h1 style="font-size:58px;margin-bottom:44px">${s.title}</h1>
       <div class="body">${s.body || ''}</div>
-      ${s.callout ? `<div class="callout" style="margin-top:auto">${s.callout}</div>` : ''}
+      ${patka(s)}
     </div>`;
   },
   bullets(s, i, n) {
@@ -137,27 +188,36 @@ const KINDS = {
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
       <h1 style="font-size:54px;margin-bottom:48px">${s.title}</h1>${items}
+      ${patka(s, true, (s.items || []).length >= 5)}
     </div>`;
   },
   stat(s, i, n) {
+    // Na `stat` už prostor rozdělil `flex:1`, takže se patka NEodsazuje `margin-top:auto`.
+    // Když je pod číslem ještě zdroj, sníží se spodní odsazení, jinak by to přeteklo.
+    const p = patka(s, false);
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
-      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:80px">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:${p ? 24 : 80}px">
         <div style="font-weight:800;font-size:${bigPx(s.big)}px;line-height:1;color:${GOLD}">${esc(s.big)}</div>
-        ${s.unit ? `<div style="font-weight:700;font-size:40px;color:${GOLD_SOFT};margin:6px 0 40px">${esc(s.unit)}</div>` : ''}
-        <div class="body" style="font-size:40px">${s.body || ''}</div>
-      </div>
+        ${s.unit ? `<div style="font-weight:700;font-size:${String(s.unit).length > 60 ? 34 : 40}px;color:${GOLD_SOFT};margin:6px 0 ${String(s.unit).length > 60 ? 30 : 40}px">${esc(s.unit)}</div>` : ''}
+        <div class="body" style="font-size:${String(s.body || '').length > 200 ? 36 : 40}px">${s.body || ''}</div>
+      </div>${p}
     </div>`;
   },
   vs(s, i, n) {
-    const col = (c, color) => `<div style="flex:1;background:rgba(255,255,255,.03);border:2px solid ${color};border-radius:24px;padding:36px 34px">
-      <div style="font-weight:800;font-size:34px;color:${color};margin-bottom:22px">${esc(c.h)}</div>
-      ${(c.items || []).map((it) => `<div style="font-size:30px;line-height:1.4;color:#d9d5df;margin-bottom:18px;padding-left:30px;position:relative"><span style="position:absolute;left:0;color:${color};font-weight:800">•</span>${it}</div>`).join('')}
+    // Dva sloupce plné odrážek zaberou skoro celé plátno, takže zdroj se sem vejde
+    // jen jako kompaktní řádek a sloupce se zároveň o kus stáhnou. Bez toho slide
+    // přeteče o zhruba 100 px (změřeno na `kloubni-vyziva` a `sacharidy-pred-treninkem`).
+    const husto = !!(s.zdroj || s.pozn);
+    const col = (c, color) => `<div style="flex:1;background:rgba(255,255,255,.03);border:2px solid ${color};border-radius:24px;padding:${husto ? '26px 30px' : '36px 34px'}">
+      <div style="font-weight:800;font-size:34px;color:${color};margin-bottom:${husto ? 16 : 22}px">${esc(c.h)}</div>
+      ${(c.items || []).map((it) => `<div style="font-size:30px;line-height:1.4;color:#d9d5df;margin-bottom:${husto ? 13 : 18}px;padding-left:30px;position:relative"><span style="position:absolute;left:0;color:${color};font-weight:800">•</span>${it}</div>`).join('')}
     </div>`;
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
-      <h1 style="font-size:52px;margin-bottom:44px">${s.title}</h1>
-      <div style="display:flex;flex-direction:column;gap:26px">${col(s.yes, GOLD)}${col(s.no, '#e07a7a')}</div>
+      <h1 style="font-size:52px;margin-bottom:${husto ? 32 : 44}px">${s.title}</h1>
+      <div style="display:flex;flex-direction:column;gap:${husto ? 20 : 26}px">${col(s.yes, GOLD)}${col(s.no, '#e07a7a')}</div>
+      ${patka(s, true, true)}
     </div>`;
   },
   quote(s, i, n) {
