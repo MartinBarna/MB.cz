@@ -1006,7 +1006,8 @@
                       return '<input class="fin" inputmode="numeric" id="f_d_' + col + i + '" value="' + escH(val == null ? "" : val) + '">';
                     }).join("");
               }).join("")
-            + '</div><p class="help" style="font-size:.8rem;margin-top:8px;">Vyplň, co znáš, klidně jen kcal. Nebo detail vůbec nepřepisuj a přilož export/screenshot z Kalorických tabulek v kroku Fotky a přílohy.</p></div>';
+            + '</div><p class="help" id="f_dnyCalc" style="font-size:.8rem;margin-top:8px;color:#F6CD63;display:none;"></p>'
+            + '<p class="help" style="font-size:.8rem;margin-top:8px;">Vyplň, co znáš, klidně jen kcal. <b>Průměry nahoře ti spočítám sám</b>, přepisovat je nemusíš. Nebo detail vůbec nepřepisuj a přilož export/screenshot z Kalorických tabulek v kroku Fotky a přílohy.</p></div>';
         },
         mount: function(a){
           mountPick("f_dny");
@@ -1017,6 +1018,33 @@
           }
           if(nt){ nt.addEventListener("change", function(){ a._noTrack = nt.checked; applyNoTrack(); }); applyNoTrack(); }
           document.getElementById("f_dnyBtn").addEventListener("click", function(){ a._dnyOpen = !a._dnyOpen; document.getElementById("f_dnyBox").style.display = a._dnyOpen ? "block" : "none"; this.textContent = a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)"; });
+
+          // Vyplní-li klient denní rozpis, průměry nahoře se dopočítají samy (jeho vlastní žádost).
+          // Každé makro se průměruje jen přes dny, kde je vyplněné: kdo zapsal kcal 7× a bílkoviny 3×,
+          // dostane průměr bílkovin ze tří dnů, ne sedmi. Počet zapsaných dnů se bere podle kcal.
+          var SLOUPCE = [["k", "f_kcal"], ["p", "f_prot"], ["c", "f_carb"], ["t", "f_fat"], ["v", "f_fib"]];
+          function prumeryZRozpisu(){
+            if(nt && nt.checked) return;   // „stravu jsem nezapisoval" = do průměrů nesahat, pole jsou disabled
+            var dnu = 0, i;
+            for(i = 0; i < 7; i++) if(toNum(gv("f_d_k" + i)) != null) dnu++;
+            SLOUPCE.forEach(function(par){
+              var suma = 0, poc = 0, j, v;
+              for(j = 0; j < 7; j++){ v = toNum(gv("f_d_" + par[0] + j)); if(v != null){ suma += v; poc++; } }
+              var cil = document.getElementById(par[1]);
+              if(cil && poc) cil.value = String(Math.round(suma / poc));
+            });
+            var chips = document.getElementById("f_dny");
+            if(chips && dnu) chips.querySelectorAll("button").forEach(function(b){
+              b.classList.toggle("on", b.getAttribute("data-v") === String(dnu));
+            });
+            var info = document.getElementById("f_dnyCalc");
+            if(info){
+              info.style.display = dnu ? "block" : "none";
+              info.textContent = dnu ? "✅ Průměry nahoře jsem dopočítal z rozpisu. Zapsaných dní: " + dnu + "." : "";
+            }
+          }
+          var dnyBox = document.getElementById("f_dnyBox");
+          if(dnyBox) dnyBox.addEventListener("input", prumeryZRozpisu);
           document.getElementById("f_ktBtn").addEventListener("click", function(){ document.getElementById("f_ktFile").click(); });
           document.getElementById("f_ktFile").addEventListener("change", function(){
             var f = this.files && this.files[0]; if(!f) return;
