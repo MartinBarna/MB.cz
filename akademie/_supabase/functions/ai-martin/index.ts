@@ -450,6 +450,61 @@ async function overDailyCap(userId: string | null): Promise<boolean> {
   } catch { return false; }
 }
 
+// --- Měsíční NÁKLADOVÝ strop na člena (Martin 3. 8. 2026). ---
+// ⛔ NENAHRAZUJE denní strop výše, chrání něco jiného. Denní strop počítá ZPRÁVY a utne
+// splašenou smyčku nebo zneužití během jednoho dne. Tenhle počítá PENÍZE za klouzavých
+// 30 dní a chrání marži: Academy stojí 990 Kč měsíčně (~40 USD), tak nesmí jít utratit víc.
+// Kdyby existoval jen měsíční strop, jediný zacyklený klient by za jeden den spálil celý
+// měsíční rozpočet a strop by sepnul až po vyčerpání. Proto oba.
+//
+// ⚠️ Appka Tvůj Coach má SVŮJ vlastní strop ve své databázi a tyhle dva se nesčítají.
+// Doživotní člen Academy dostává i rok appky, takže může vyčerpat oba (dnes 6 + 12 USD).
+// Sdílet je napříč projekty by znamenalo cizí HTTP volání při každé zprávě, tedy latenci
+// a další bod selhání, a měřením 3. 8. se ukázalo, že to nikdo nepotřebuje: jediný člověk,
+// který používá obě strany, je Martin sám a dohromady je na 1,80 USD za měsíc.
+//
+// Práh z env `AI_MARTIN_MONTHLY_CAP_USD`. Prázdná nebo nesmyslná hodnota → default,
+// NE tiché vypnutí (překlep v secretu by jinak marži odblokoval a nikdo by se to nedozvěděl).
+// Explicitní 0 = strop vypnutý, to je vědomé rozhodnutí.
+const MONTHLY_CAP_USD = (() => {
+  const raw = Deno.env.get('AI_MARTIN_MONTHLY_CAP_USD');
+  if (raw == null || String(raw).trim() === '') return 6;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : 6;
+})();
+async function overMonthlyCap(userId: string | null): Promise<boolean> {
+  if (!userId || !MONTHLY_CAP_USD || !SUPABASE_URL || !SERVICE_ROLE) return false;
+  try {
+    const since = new Date(Date.now() - 30 * 86400000).toISOString();
+    // ⚠️ Čte se PO STRÁNKÁCH: PostgREST tiše usekne nad ~1000 řádků, a to by součet
+    // podhodnotilo přesně u těžkého uživatele, tedy tam, kde na stropu záleží nejvíc.
+    let total = 0, from = 0;
+    for (let i = 0; i < 20; i++) {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage?select=est_cost_usd&user_id=eq.${userId}&created_at=gte.${since}`, {
+        headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, Range: `${from}-${from + 999}` },
+      });
+      const rows = await r.json().catch(() => []);
+      if (!Array.isArray(rows) || !rows.length) break;
+      // `numeric` chodí z PostgREST jako STRING, takže vždy přes Number()
+      for (const x of rows) { const n = Number((x as { est_cost_usd?: unknown })?.est_cost_usd); if (Number.isFinite(n)) total += n; }
+      if (rows.length < 1000) break;
+      from += 1000;
+    }
+    return total >= MONTHLY_CAP_USD;
+  } catch { return false; }   // při chybě pustit dál: strop nesmí shodit chat
+}
+// Sepnutý strop se zapíše do `ai_usage` s nulovým nákladem, ať jde spočítat, KOLIK LIDÍ
+// na něj naráží (`feature like '%_capped'`). Bez toho by se ticho dalo číst jako „nikdo
+// ho nepotřebuje" i ve chvíli, kdy o něj klienti denně zakopávají.
+function logCapped(userId: string | null, feature: string): void {
+  if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
+  fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+    method: 'POST',
+    headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
+    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: 0, tokens_out: 0, tokens_cached: 0, est_cost_usd: 0 }),
+  }).catch(() => {});
+}
+
 // --- STREAMING (jen Grok chat) ---
 // Proč: bez streamu člen po odeslání dotazu čeká 9 až 14 sekund na tři tečky a chat působí
 // zamrzle. Se streamem text přitéká průběžně. Streamuje se VÝHRADNĚ běžný chat; členská brána,
@@ -594,7 +649,16 @@ Deno.serve(async (req: Request) => {
 
   // P2 denní strop (safety hard-stop výše proběhl vždy; limit se týká jen placených LLM/vision volání).
   if (await overDailyCap(userId)) {
+    logCapped(userId, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily');
     return json({ reply: 'Na dnešek už jsme toho probrali slušně 💪 Denní limit chatu je vyčerpaný, pokračujeme zase zítra. Kdyby něco hořelo, napiš Martinovi.' }, CORS, 200);
+  }
+  // Měsíční nákladový strop. Stejné pořadí jako u denního: až ZA safety vrstvou, aby
+  // krizová hláška (116 123) prošla i vyčerpanému členovi. Vrací se HTTP 200 v běžném
+  // poli `reply`, ne chybový kód: klient non-2xx tělo nezobrazí a člen by viděl jen
+  // obecnou chybu místo téhle věty.
+  if (await overMonthlyCap(userId)) {
+    logCapped(userId, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped');
+    return json({ reply: 'Tenhle měsíc už toho máme v chatu hodně za sebou 💪 Limit se počítá za posledních 30 dní a uvolňuje se postupně, takže za pár dní se zase ozvi. Kdyby něco hořelo, napiš rovnou Martinovi.' }, CORS, 200);
   }
 
   // VISION: když přišla fotka jídla, jdeme rovnou na odhad (Grok multimodální), bez RAG.
