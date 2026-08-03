@@ -1046,6 +1046,95 @@ Deno.serve(async (req) => {
       return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs, remind_on: remindOn, targets: targets.data ?? null });
     }
 
+    // Přehled VŠECH klientů koučinku na jedné obrazovce (Martin 3. 8. 2026: „nevidím
+    // kontext všech dat, musím otevírat každého zvlášť"). Vrací hotová čísla, ne reporty:
+    // po drátě jde ~15 hodnot na klienta místo celé historie.
+    //
+    // Odpovídá na tři otázky, které Martin řeší každý týden:
+    //   1. kdo se hýbe a kdo stojí          → `vaha.zmena` a `pas.zmena`
+    //   2. kdo přestal reportovat           → `dni_od_reportu`
+    //   3. kdo je nejdál od svého zadání    → `*.odchylka_pct` proti `client_targets`
+    //
+    // ⛔ Chybějící hodnota NENÍ nula. Report bez vyplněných kroků se z průměru vynechá,
+    // nezapočítá se jako „0 kroků" (táž past opravena 3. 8. i v adminím `kliNum`).
+    if (action === "clients_overview") {
+      const OKNO = 30;                                        // klouzavé okno pro průměry a změny
+      const hranice = new Date(Date.now() - OKNO * 86400000).toISOString().slice(0, 10);
+      const [ents, reps, targets, cc] = await Promise.all([
+        admin.from("entitlements").select("email,active").eq("product", "coaching"),
+        admin.from("client_reports").select("email,report_date,weight,measurements,nutrition,activity,scales").order("report_date", { ascending: true }),
+        admin.from("client_targets").select("*"),
+        admin.from("customer_contacts").select("email,name"),
+      ]);
+      // `numeric` chodí z PostgREST jako string; null/undefined/prázdno = chybí, ne nula
+      const num = (v: unknown): number | null => {
+        if (v == null) return null;
+        const s = String(v).trim(); if (s === "") return null;
+        const n = Number(s.replace(",", ".")); return Number.isFinite(n) ? n : null;
+      };
+      const nameBy = new Map<string, string>();
+      for (const c of cc.data ?? []) if (c.name) nameBy.set(low(c.email), String(c.name));
+      const tgBy = new Map<string, Record<string, unknown>>();
+      for (const t of targets.data ?? []) tgBy.set(low(t.email), t as Record<string, unknown>);
+
+      type Rep = { report_date: string; weight?: unknown; measurements?: Record<string, unknown> | null;
+                   nutrition?: Record<string, unknown> | null; activity?: Record<string, unknown> | null;
+                   scales?: Record<string, unknown> | null };
+      const repBy = new Map<string, Rep[]>();
+      for (const r of (reps.data ?? []) as Rep[]) {
+        const k = low((r as unknown as { email: string }).email);
+        const a = repBy.get(k); if (a) a.push(r); else repBy.set(k, [r]);
+      }
+
+      const rows = (ents.data ?? []).map((e) => {
+        const k = low(e.email);
+        const vse = repBy.get(k) ?? [];
+        const okno = vse.filter((r) => r.report_date >= hranice);
+        const tg = tgBy.get(k) ?? {};
+
+        // hodnoty jedné metriky v okně, chybějící se přeskakují
+        const hodnoty = (zdroj: (r: Rep) => unknown, jenOkno = true): number[] => {
+          const out: number[] = [];
+          for (const r of (jenOkno ? okno : vse)) { const v = num(zdroj(r)); if (v != null) out.push(v); }
+          return out;
+        };
+        const prum = (a: number[]) => a.length ? Math.round((a.reduce((s, x) => s + x, 0) / a.length) * 10) / 10 : null;
+        const zmena = (a: number[]) => a.length > 1 ? Math.round((a[a.length - 1] - a[0]) * 10) / 10 : null;
+        // odchylka od zadání v procentech. Cíl nenastavený = null, NIKDY dopočítaná nula:
+        // klient bez zadání nesmí vypadat jako „přesně na cíli" ani jako „úplně mimo".
+        const odch = (skutecnost: number | null, cil: unknown): number | null => {
+          const c = num(cil);
+          if (skutecnost == null || c == null || c === 0) return null;
+          return Math.round(((skutecnost - c) / c) * 100);
+        };
+
+        const vahy = hodnoty((r) => r.weight);
+        const vahyVse = hodnoty((r) => r.weight, false);
+        const pasy = hodnoty((r) => (r.measurements ?? {}).pas);
+        const kcal = hodnoty((r) => (r.nutrition ?? {}).kcal);
+        const prot = hodnoty((r) => (r.nutrition ?? {}).protein);
+        const krok = hodnoty((r) => (r.activity ?? {}).kroky);
+        const dodr = hodnoty((r) => (r.scales ?? {}).dodrzeni);
+        const posledni = vse.length ? vse[vse.length - 1].report_date : null;
+        const dni = posledni ? Math.floor((Date.now() - Date.parse(posledni)) / 86400000) : null;
+
+        const kcalP = prum(kcal), protP = prum(prot), krokP = prum(krok);
+        return {
+          email: k, name: nameBy.get(k) ?? "", active: e.active === true,
+          reportu: vse.length, reportu_v_okne: okno.length,
+          posledni_report: posledni, dni_od_reportu: dni,
+          vaha: { ted: vahyVse.length ? vahyVse[vahyVse.length - 1] : null, zmena: zmena(vahy), zmena_celkem: zmena(vahyVse) },
+          pas: { ted: pasy.length ? pasy[pasy.length - 1] : null, zmena: zmena(pasy) },
+          kcal: { prumer: kcalP, cil: num(tg.kcal), odchylka_pct: odch(kcalP, tg.kcal) },
+          protein: { prumer: protP, cil: num(tg.protein), odchylka_pct: odch(protP, tg.protein) },
+          kroky: { prumer: krokP, cil: num(tg.kroky), odchylka_pct: odch(krokP, tg.kroky) },
+          dodrzeni: { prumer: prum(dodr) },
+          ma_zadani: Object.keys(tg).some((x) => ["kcal", "protein", "kroky", "sport_min", "treninky"].includes(x) && num(tg[x]) != null),
+        };
+      });
+      return json({ ok: true, okno_dnu: OKNO, rows });
+    }
+
     if (action === "client_note_save") {
       const email = low(body.email); const note = String(body.note ?? "").trim().slice(0, 4000);
       if (!email || !note) return json({ error: "missing" }, 400);

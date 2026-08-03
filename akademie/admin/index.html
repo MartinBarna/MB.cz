@@ -182,6 +182,16 @@
         <div id="trfBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+      <!-- Přehled napříč klienty. Zadal Martin 3. 8. 2026: „nevidím kontext všech dat,
+           musím otevírat každého zvlášť". Odpovídá na tři otázky naráz: kdo se hýbe,
+           kdo přestal reportovat, kdo je nejdál od zadání. Detail jednoho klienta
+           zůstává tam, kde byl (proklik ze seznamu níž). -->
+      <div class="traf" id="prehled" style="display:none;border-color:rgba(235,177,44,.45);">
+        <h3>📊 Přehled klientů: s kým začít týden</h3>
+        <div class="sub" id="prehledSub">Změny a průměry za posledních 30 dní, odchylka proti zadání, které klientovi nastavuješ</div>
+        <div id="prehledBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
       <div class="traf" id="kli" style="display:none;border-color:rgba(235,177,44,.45);">
         <h3>🤝 Klienti koučinku — klientská sekce</h3>
         <div class="sub">Týdenní reporty, dotazníky, dokumenty a poznámky · ⚠️ = report chybí déle než 8 dní</div>
@@ -381,7 +391,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti();
+        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti(); loadPrehled();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -438,6 +448,141 @@
       if(stav==='zadny') return '<span class="muted">—</span>';
       return '<span class="muted" title="Appka neodpověděla, stav neznámý">?</span>';
     }
+    // ---------- 📊 PŘEHLED KLIENTŮ ----------
+    // Prahy pro barvy. Vědomě mírné: cílem je upozornit, ne strašit. Kdo je 8 dní bez
+    // reportu, může být na dovolené; kdo 15, ten vypadl a Martin o tom má vědět sám.
+    var PR_DNI_VARUJ = 8, PR_DNI_KRIT = 15;
+    var PR_ODCH_VARUJ = 10, PR_ODCH_KRIT = 20;   // % od zadání
+    var PREH = { razeni: 'dni', sestupne: true, data: null };
+
+    function prZmena(v, jed, dolu){
+      if(v == null) return '<span class="muted">—</span>';
+      if(Math.abs(v) < 0.05) return '<span class="muted">0</span>';
+      var dobre = dolu ? (v < 0) : (v > 0);
+      return '<b style="color:' + (dobre ? '#7BD88F' : '#ff9b9b') + '">' + (v > 0 ? '+' : '') + kliCz(v) + (jed ? ' ' + jed : '') + '</b>';
+    }
+    // Odchylka od zadání. ⛔ Když cíl NENÍ nastavený, píše se to natvrdo („bez cíle"),
+    // nikdy se nedopočítává: klient bez zadání nesmí vypadat jako „přesně na cíli".
+    function prOdch(m){
+      if(m == null || m.prumer == null) return '<span class="muted">—</span>';
+      if(m.cil == null) return kliCz(m.prumer) + ' <span class="muted" style="font-size:.78rem;">bez cíle</span>';
+      var p = m.odchylka_pct, barva = '#7BD88F';
+      if(p != null && Math.abs(p) >= PR_ODCH_KRIT) barva = '#ff9b9b';
+      else if(p != null && Math.abs(p) >= PR_ODCH_VARUJ) barva = '#F6CD63';
+      return kliCz(m.prumer) + ' <span style="color:' + barva + ';font-size:.82rem;font-weight:700;">' + (p == null ? '' : (p > 0 ? '+' : '') + p + ' %') + '</span>';
+    }
+    // Největší odchylka klienta napříč metrikami: podle ní se řadí „kdo je od zadání nejdál".
+    function prNejvetsiOdch(r){
+      var v = [r.kcal, r.protein, r.kroky].map(function(m){ return m && m.odchylka_pct != null ? Math.abs(m.odchylka_pct) : null; })
+        .filter(function(x){ return x != null; });
+      return v.length ? Math.max.apply(null, v) : null;
+    }
+
+    function renderPrehled(){
+      var d = PREH.data; if(!d) return;
+      // ukončení klienti do přehledu nepatří, ti už reportovat nemají
+      var rows = (d.rows || []).filter(function(r){ return r.active !== false; });
+      if(!rows.length){ $('prehledBody').innerHTML = '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti.</p>'; $('prehled').style.display=''; return; }
+
+      // Řadicí klíče. ⚠️ Každý musí mít SVOU hlavičku ve `sl` níž, jinak je nedosažitelný:
+      // klíč `odch` tu chvíli byl bez sloupce a řazení „kdo je od zadání nejdál" tím
+      // fakticky neexistovalo, i když v kódu vypadalo hotově.
+      // U metrik s cílem se řadí podle VELIKOSTI odchylky (bez ohledu na směr): otázka zní
+      // „kdo je nejdál", ne „kdo má nejvíc".
+      var odchAbs = function(m){ return (m && m.odchylka_pct != null) ? Math.abs(m.odchylka_pct) : -1; };
+      var klic = {
+        dni:     function(r){ return r.dni_od_reportu == null ? 99999 : r.dni_od_reportu; },
+        odch:    function(r){ var x = prNejvetsiOdch(r); return x == null ? -1 : x; },
+        vaha:    function(r){ return r.vaha.zmena == null ? 0 : r.vaha.zmena; },
+        pas:     function(r){ return r.pas.zmena == null ? 0 : r.pas.zmena; },
+        kcal:    function(r){ return odchAbs(r.kcal); },
+        protein: function(r){ return odchAbs(r.protein); },
+        kroky:   function(r){ return odchAbs(r.kroky); },
+        dodrz:   function(r){ return r.dodrzeni.prumer == null ? -1 : r.dodrzeni.prumer; },
+        jmeno:   function(r){ return (r.name || r.email).toLowerCase(); }
+      }[PREH.razeni] || function(r){ return r.dni_od_reportu || 0; };
+      rows = rows.slice().sort(function(a, b){
+        var x = klic(a), y = klic(b);
+        if(typeof x === 'string') return PREH.sestupne ? y.localeCompare(x) : x.localeCompare(y);
+        return PREH.sestupne ? y - x : x - y;
+      });
+
+      // shrnutí: kolik LIDÍ spadá do které kategorie (ne kolik událostí)
+      var mlci = rows.filter(function(r){ return r.dni_od_reportu == null || r.dni_od_reportu >= PR_DNI_KRIT; });
+      var daleko = rows.filter(function(r){ var x = prNejvetsiOdch(r); return x != null && x >= PR_ODCH_KRIT; });
+      var bezZadani = rows.filter(function(r){ return !r.ma_zadani; });
+      var shrn = [];
+      if(mlci.length) shrn.push('<b style="color:#ff9b9b">' + mlci.length + '×</b> bez reportu ' + PR_DNI_KRIT + '+ dní');
+      if(daleko.length) shrn.push('<b style="color:#F6CD63">' + daleko.length + '×</b> od zadání o víc než ' + PR_ODCH_KRIT + ' %');
+      if(bezZadani.length) shrn.push('<b style="color:#8F8A99">' + bezZadani.length + '×</b> bez nastaveného zadání');
+      var shrnHtml = shrn.length
+        ? '<p style="margin:0 0 .7rem;font-size:.9rem;">' + shrn.join(' &nbsp;·&nbsp; ') + '</p>'
+        : '<p style="margin:0 0 .7rem;font-size:.9rem;color:#7BD88F;">✅ Všichni reportují a drží se zadání.</p>';
+
+      var sl = [['jmeno','Klient'],['dni','Poslední report'],['vaha','Váha'],['pas','Pas'],
+                ['kcal','Kalorie Ø'],['protein','Bílkoviny Ø'],['kroky','Kroky Ø'],['dodrz','Dodržení'],
+                ['odch','Od zadání']];
+      var hlav = '<thead><tr>' + sl.map(function(s){
+        var razeno = PREH.razeni === s[0];
+        return '<th style="cursor:pointer;white-space:nowrap;' + (razeno ? 'color:#F6CD63;' : '') + '" data-prsort="' + s[0] + '">'
+          + esc(s[1]) + (razeno ? (PREH.sestupne ? ' ▾' : ' ▴') : '') + '</th>';
+      }).join('') + '</tr></thead>';
+
+      var telo = rows.map(function(r){
+        var dni = r.dni_od_reportu, dniTxt, dniBarva = '';
+        if(dni == null) dniTxt = '<span class="muted">nikdy</span>', dniBarva = 'color:#ff9b9b;';
+        else {
+          dniTxt = fmtDay(r.posledni_report) + ' <span style="font-size:.82rem;">(' + dni + ' d)</span>';
+          if(dni >= PR_DNI_KRIT) dniBarva = 'color:#ff9b9b;font-weight:700;';
+          else if(dni >= PR_DNI_VARUJ) dniBarva = 'color:#F6CD63;';
+        }
+        return '<tr>'
+          + '<td><a href="#" data-kli="' + esc(r.email) + '" data-kliname="' + esc(r.name || '') + '" style="color:#F6CD63;">' + esc(r.name || r.email) + '</a>'
+            + (r.reportu ? ' <span class="muted" style="font-size:.78rem;">' + r.reportu + '×</span>' : '') + '</td>'
+          + '<td style="white-space:nowrap;' + dniBarva + '">' + dniTxt + '</td>'
+          + '<td style="white-space:nowrap;">' + prZmena(r.vaha.zmena, 'kg', true) + (r.vaha.ted != null ? ' <span class="muted" style="font-size:.78rem;">' + kliCz(r.vaha.ted) + '</span>' : '') + '</td>'
+          + '<td style="white-space:nowrap;">' + prZmena(r.pas.zmena, 'cm', true) + (r.pas.ted != null ? ' <span class="muted" style="font-size:.78rem;">' + kliCz(r.pas.ted) + '</span>' : '') + '</td>'
+          + '<td style="white-space:nowrap;">' + prOdch(r.kcal) + '</td>'
+          + '<td style="white-space:nowrap;">' + prOdch(r.protein) + '</td>'
+          + '<td style="white-space:nowrap;">' + prOdch(r.kroky) + '</td>'
+          + '<td>' + (r.dodrzeni.prumer != null ? kliCz(r.dodrzeni.prumer) + '<span class="muted" style="font-size:.78rem;">/5</span>' : '<span class="muted">—</span>') + '</td>'
+          + '<td style="white-space:nowrap;">' + (function(){
+              // souhrnný sloupec: největší odchylka napříč metrikami, tedy „jak daleko od zadání"
+              if(!r.ma_zadani) return '<span class="muted" style="font-size:.8rem;">nezadáno</span>';
+              var x = prNejvetsiOdch(r);
+              if(x == null) return '<span class="muted">—</span>';
+              var b = x >= PR_ODCH_KRIT ? '#ff9b9b' : (x >= PR_ODCH_VARUJ ? '#F6CD63' : '#7BD88F');
+              return '<b style="color:' + b + '">' + x + ' %</b>';
+            })() + '</td>'
+          + '</tr>';
+      }).join('');
+
+      $('prehledBody').innerHTML = shrnHtml
+        + '<div style="overflow-x:auto;"><table style="font-size:.86rem;">' + hlav + '<tbody>' + telo + '</tbody></table></div>'
+        + '<p class="muted" style="margin:.6rem 0 0;font-size:.78rem;">Klikni na hlavičku pro seřazení, na jméno pro detail. Procento je odchylka průměru od zadání; zeleně do ' + PR_ODCH_VARUJ + ' %, žlutě do ' + PR_ODCH_KRIT + ' %, červeně nad.</p>';
+      $('prehled').style.display = '';
+
+      $('prehledBody').querySelectorAll('[data-prsort]').forEach(function(th){
+        th.addEventListener('click', function(){
+          var k = th.getAttribute('data-prsort');
+          if(PREH.razeni === k) PREH.sestupne = !PREH.sestupne; else { PREH.razeni = k; PREH.sestupne = true; }
+          renderPrehled();
+        });
+      });
+      $('prehledBody').querySelectorAll('[data-kli]').forEach(function(a){
+        a.addEventListener('click', function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli'), a.getAttribute('data-kliname')); });
+      });
+    }
+    function loadPrehled(){
+      api({action:'clients_overview'}).then(function(o){
+        if(!o.j || !o.j.ok){ cardFail('prehled','prehledBody'); return; }
+        PREH.data = o.j;
+        var s = $('prehledSub');
+        if(s) s.textContent = 'Změny a průměry za posledních ' + (o.j.okno_dnu || 30) + ' dní, odchylka proti zadání, které klientovi nastavuješ';
+        renderPrehled();
+      }).catch(function(){ cardFail('prehled','prehledBody'); });
+    }
+
     function loadKlienti(){
       api({action:'clients_list'}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('kli','kliBody'); return; }
