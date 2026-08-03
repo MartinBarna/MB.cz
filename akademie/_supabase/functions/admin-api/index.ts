@@ -1441,7 +1441,15 @@ Deno.serve(async (req) => {
       // ⚠️ 3. 8. 2026 dostala Jana Kaločayová tenhle mail celý v mužském rodě.
       // Tvary se proto píšou přes `rd()`, ne natvrdo. Kdo sem přidá další větu
       // s příčestím minulým, MUSÍ ji tím taky prohnat.
-      const zena = String(body.rod ?? "").trim().toLowerCase().startsWith("z");
+      // ⚠️ Chybějící rod se LOGUJE. Tichý pád na mužský rod je přesně ta vada, kterou
+      // tenhle přepínač řeší, takže se o něm musí dát dozvědět i bez stížnosti klientky.
+      const rodRaw = String(body.rod ?? "").trim().toLowerCase();
+      if (rodRaw !== "z" && rodRaw !== "m") {
+        console.warn("client_offboard: rod neprisel, padam na muzsky rod; prislo:", JSON.stringify(body.rod));
+      }
+      // „ž" je tu pro případ, že by někdo poslal celé slovo „žena": bez toho by diakritika
+      // spadla do mužské větve úplně tiše.
+      const zena = rodRaw.startsWith("z") || rodRaw.startsWith("ž");
       const rd = (muzsky: string, zensky: string) => (zena ? zensky : muzsky);
 
       const subject = "Díky za spolupráci. Co dál s appkou a s tvými daty";

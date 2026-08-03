@@ -445,9 +445,12 @@ async function overDailyCap(userId: string | null): Promise<boolean> {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage?select=id&user_id=eq.${userId}&created_at=gte.${since}`, {
       headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, Prefer: 'count=exact', Range: '0-0' },
     });
+    // Nedostupná DB = strop se neuplatní. Je to záměr (strop nesmí shodit chat), ale musí
+    // po tom zůstat stopa v logu funkce, jinak by výpadek znamenal tiše vypnuté stropy.
+    if (!r.ok) { console.error('daily_cap_check_failed', r.status); return false; }
     const total = Number((r.headers.get('content-range') || '').split('/')[1] || '0') || 0;
     return total >= DAILY_CAP;
-  } catch { return false; }
+  } catch (e) { console.error('daily_cap_check_failed', String(e).slice(0, 200)); return false; }
 }
 
 // --- Měsíční NÁKLADOVÝ strop na člena (Martin 3. 8. 2026). ---
@@ -478,11 +481,18 @@ async function overMonthlyCap(userId: string | null): Promise<boolean> {
     const since = new Date(Date.now() - 30 * 86400000).toISOString();
     // ⚠️ Čte se PO STRÁNKÁCH: PostgREST tiše usekne nad ~1000 řádků, a to by součet
     // podhodnotilo přesně u těžkého uživatele, tedy tam, kde na stropu záleží nejvíc.
+    // ⛔ `order=id.asc` je POVINNÉ: bez explicitního řazení PostgREST nezaručuje stejné
+    // pořadí mezi stránkami, takže by se řádky mohly zopakovat nebo přeskočit a součet
+    // by vyšel jinak. Denní strop pouští 60 zpráv/den, tedy až ~1800 řádků za 30 dní,
+    // takže druhá stránka je reálně dosažitelná. `id` je bigint NOT NULL.
     let total = 0, from = 0;
     for (let i = 0; i < 20; i++) {
-      const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage?select=est_cost_usd&user_id=eq.${userId}&created_at=gte.${since}`, {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage?select=est_cost_usd&user_id=eq.${userId}&created_at=gte.${since}&order=id.asc`, {
         headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, Range: `${from}-${from + 999}` },
       });
+      // Selhání stránky nezahazuje, co už je sečtené: kdo je nad stropem už z první
+      // stránky, tomu strop sepne i tak. Pod stropem se pouští dál, ale se stopou v logu.
+      if (!r.ok) { console.error('monthly_cap_page_failed', r.status, 'od radku', from); break; }
       const rows = await r.json().catch(() => []);
       if (!Array.isArray(rows) || !rows.length) break;
       // `numeric` chodí z PostgREST jako STRING, takže vždy přes Number()
@@ -491,7 +501,12 @@ async function overMonthlyCap(userId: string | null): Promise<boolean> {
       from += 1000;
     }
     return total >= MONTHLY_CAP_USD;
-  } catch { return false; }   // při chybě pustit dál: strop nesmí shodit chat
+  } catch (e) {
+    // Pustit dál je záměr (strop nesmí shodit chat), ale ne potichu: bez téhle řádky
+    // by výpadek DB znamenal vypnutý strop, o kterém se nikdo nikdy nedozví.
+    console.error('monthly_cap_check_failed', String(e).slice(0, 200));
+    return false;
+  }
 }
 // Sepnutý strop se zapíše do `ai_usage` s nulovým nákladem, ať jde spočítat, KOLIK LIDÍ
 // na něj naráží (`feature like '%_capped'`). Bez toho by se ticho dalo číst jako „nikdo

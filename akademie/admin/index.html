@@ -950,17 +950,24 @@
           b.classList.add('on'); kdVyvojPrekresli();
         });
       });
-      // přepínač rodu: jedno z tlačítek je vždy aktivní, hodnota se čte při odeslání
-      Array.prototype.forEach.call(document.querySelectorAll('.kdrod'),function(rb){
+      // Přepínač rodu: jedno z tlačítek je vždy aktivní, hodnota se čte při odeslání.
+      // ⛔ Selektor MUSÍ být [data-rod], NE .kdrod. Třídu .kdrod nosí i přepínače období
+      // a metriky u grafu, které se vykreslují VÝŠ, takže .kdrod bralo cizí tlačítko:
+      // rod se posílal jako null (server to čte jako mužský rod) a kliknutí na rod navíc
+      // zhaslo přepínače grafu. Opraveno 3. 8. 2026, .kdrod zůstává jen na vzhled.
+      Array.prototype.forEach.call(document.querySelectorAll('[data-rod]'),function(rb){
         rb.addEventListener('click',function(){
-          Array.prototype.forEach.call(document.querySelectorAll('.kdrod'),function(x){ x.classList.remove('on'); });
+          Array.prototype.forEach.call(document.querySelectorAll('[data-rod]'),function(x){ x.classList.remove('on'); });
           rb.classList.add('on');
         });
       });
       $('kdOffBtn').addEventListener('click',function(){
         var b=$('kdOffBtn'); if(b.disabled) return;
         var vok=($('kdOffVok').value||'').trim(), tiche=$('kdOffTiche').checked;
-        var rodEl=document.querySelector('.kdrod.on'), rod=rodEl?rodEl.getAttribute('data-rod'):'m';
+        var rodEl=document.querySelector('[data-rod].on'), rod=rodEl?rodEl.getAttribute('data-rod'):'';
+        // Radši nepošleme nic než mail ve špatném rodě. Tichý fallback na mužský rod byl
+        // přesně ta vada, kvůli které tenhle přepínač vznikl (u tichého odchodu mail není).
+        if(!tiche && rod!=='z' && rod!=='m'){ toast('Vyber prosím rod (žena/muž), bez něj mail neodesílám.'); return; }
         var co=tiche?'BEZ mailu' : 'a HNED poslat mail s nabídkou Tvůj Coach a Academy (oslovení: „Ahoj '+(vok||'(bez jména)')+'", psaný pro '+(rod==='z'?'ŽENU':'MUŽE')+')';
         if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, odebere se přístup do appky Tvůj Coach, '+co+'.\n\nData ani účet se nemažou.')) return;
         b.disabled=true; b.textContent='Ukončuji…';
