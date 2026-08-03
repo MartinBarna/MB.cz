@@ -78,6 +78,13 @@
   .mlogbtn:hover{background:rgba(235,177,44,.16)}
   .kdrod{cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#b7ab9b;font-family:inherit;font-weight:700;font-size:.82rem;padding:6px 14px;border-radius:8px;margin-right:6px}
   .kdrod.on{border-color:#EBB12C;background:rgba(235,177,44,.16);color:#F6CD63}
+  .kdtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:8px}
+  .kdtile{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px 10px;display:flex;flex-direction:column;gap:1px;min-width:0}
+  .kdt-n{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:#8F8A99}
+  .kdt-v{font-size:1.18rem;font-weight:800;color:#fff;line-height:1.2}
+  .kdt-v i{font-size:.72rem;font-weight:600;color:#8F8A99;font-style:normal}
+  .kdt-z{font-size:.76rem;font-weight:700}
+  .kdt-c{font-size:.72rem;color:#EBB12C}
   .ovl{position:fixed;inset:0;z-index:70;background:rgba(8,6,4,.74);display:none;align-items:flex-start;justify-content:center;padding:22px 12px;overflow-y:auto}
   .ovl.on{display:flex}
   .ovl .box{background:#140d06;border:1px solid rgba(255,255,255,.12);border-radius:16px;width:100%;max-width:920px;padding:20px 22px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.6)}
@@ -382,7 +389,13 @@
 
     // ================= 🤝 KLIENTI KOUČINKU (klientská sekce) =================
     var KLI_MIRY=[['prsa','Hruď'],['pas','Pas'],['boky','Boky'],['zadek','Zadek'],['p_stehno','P stehno'],['l_stehno','L stehno'],['p_lytko','P lýtko'],['l_lytko','L lýtko'],['p_paze','P paže'],['l_paze','L paže'],['krk','Krk'],['pupik','Pupík']];
-    function kliNum(v){ var n=Number(String(v==null?'':v).replace(',','.')); return isFinite(n)&&String(v).trim()!==''?n:null; }
+    // ⛔ OPRAVA 3. 8. 2026: pro `null` a `undefined` to vracelo NULU, ne null. Vzniklo tím,
+    // že se prázdnost testovala přes `String(v).trim()`, jenže `String(null)` je "null",
+    // tedy neprázdný řetězec, zatímco číslo se počítalo z prázdného. Chybějící hodnota
+    // se pak v tabulce reportů tvářila jako 0 (Jana měla 4 týdny bez kroků = „0 kroků")
+    // a v grafech by to kreslilo propady, které se nestaly. Prázdný řetězec i nesmysl
+    // vracely null správně už dřív, mění se jen ty dva případy.
+    function kliNum(v){ if(v==null) return null; var s=String(v).trim(); if(s==='') return null; var n=Number(s.replace(',','.')); return isFinite(n)?n:null; }
     function kliCz(v){ var n=kliNum(v); return n==null?'—':String(n).replace('.',','); }
     // jednoduchý odhad 5. pádu — Martin ho v poli vidí a může opravit
     // výjimky + ženská jména na souhlásku: 1:1 s drip-send/client-remind (Pavel→Pavle, ne „Paveli")
@@ -534,6 +547,134 @@
       }).catch(function(){ $('kdetBody').innerHTML='<p class="muted">Chyba spojení. Zavři a zkus znovu.</p>'; });
     }
     $('kdetX').addEventListener('click',function(){ $('kdet').classList.remove('on'); });
+    // ---------- 📈 VÝVOJ KLIENTA (souhrn + graf) ----------
+    // Metriky, které jde sledovat v čase. `get` vytáhne hodnotu z jednoho reportu,
+    // `dolu` = klesající hodnota je dobrá zpráva (barví se zeleně).
+    var KD_METRIKY=[
+      {id:'weight', nazev:'Váha',      jed:'kg',  dolu:true,  cil:null,        get:function(r){ return kliNum(r.weight); }},
+      {id:'pas',    nazev:'Pas',       jed:'cm',  dolu:true,  cil:null,        get:function(r){ return kliNum((r.measurements||{}).pas); }},
+      {id:'boky',   nazev:'Boky',      jed:'cm',  dolu:true,  cil:null,        get:function(r){ return kliNum((r.measurements||{}).boky); }},
+      {id:'kcal',   nazev:'Kalorie',   jed:'kcal',dolu:false, cil:'kcal',      get:function(r){ return kliNum((r.nutrition||{}).kcal); }},
+      {id:'protein',nazev:'Bílkoviny', jed:'g',   dolu:false, cil:'protein',   get:function(r){ return kliNum((r.nutrition||{}).protein); }},
+      {id:'kroky',  nazev:'Kroky',     jed:'',    dolu:false, cil:'kroky',     get:function(r){ return kliNum((r.activity||{}).kroky); }},
+      {id:'dodrz',  nazev:'Dodržení',  jed:'/5',  dolu:false, cil:null,        get:function(r){ return kliNum((r.scales||{}).dodrzeni); }}
+    ];
+    var KDV={ okno:90, metrika:'weight' };   // výchozí pohled: váha za 90 dní
+
+    // Body jedné metriky v okně. Report bez té hodnoty se přeskočí (ne nula, to by lhalo).
+    function kdBody(reps, m, dnu){
+      var hranice = dnu ? (Date.now() - dnu*86400000) : 0;
+      var out=[];
+      reps.forEach(function(r){
+        var t=Date.parse(r.report_date); if(isNaN(t)||t<hranice) return;
+        var v=m.get(r); if(v==null) return;
+        out.push({t:t, v:v, datum:r.report_date});
+      });
+      out.sort(function(a,b){ return a.t-b.t; });
+      return out;
+    }
+
+    // SVG graf. Bez knihovny schválně: web je statický a nemá build krok.
+    function kdGraf(body, cil, jed){
+      if(body.length<2) return '<p class="muted" style="font-size:.85rem;padding:.6rem 0;">Na graf potřebuju aspoň dva reporty s touhle hodnotou. Zatím jich je '+body.length+'.</p>';
+      var W=620,H=190,L=44,R=12,T=14,B=26;
+      var vals=body.map(function(p){ return p.v; });
+      var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals);
+      if(cil!=null){ mn=Math.min(mn,cil); mx=Math.max(mx,cil); }
+      if(mx===mn){ mx=mn+1; mn=mn-1; }                 // rovná čára by jinak dělila nulou
+      var pad=(mx-mn)*0.12; mn-=pad; mx+=pad;
+      var t0=body[0].t, t1=body[body.length-1].t; if(t1===t0) t1=t0+1;
+      var X=function(t){ return L+(W-L-R)*(t-t0)/(t1-t0); };
+      var Y=function(v){ return T+(H-T-B)*(1-(v-mn)/(mx-mn)); };
+      var body2=body.map(function(p){ return X(p.t).toFixed(1)+','+Y(p.v).toFixed(1); }).join(' ');
+      var s='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;" role="img" aria-label="Graf vývoje">';
+      // vodorovná mřížka po třetinách + popisky osy
+      [0,0.5,1].forEach(function(f){
+        var v=mn+(mx-mn)*f, y=Y(v);
+        s+='<line x1="'+L+'" y1="'+y.toFixed(1)+'" x2="'+(W-R)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.08)" stroke-width="1"/>'
+          +'<text x="'+(L-6)+'" y="'+(y+3.5).toFixed(1)+'" text-anchor="end" fill="#6d6879" font-size="10">'+kliCz(Math.round(v*10)/10)+'</text>';
+      });
+      if(cil!=null){   // zadání pro klienta jako přerušovaná čára, ať je vidět odchylka
+        s+='<line x1="'+L+'" y1="'+Y(cil).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(cil).toFixed(1)+'" stroke="#EBB12C" stroke-width="1.4" stroke-dasharray="5 4" opacity=".75"/>'
+          +'<text x="'+(W-R)+'" y="'+(Y(cil)-5).toFixed(1)+'" text-anchor="end" fill="#EBB12C" font-size="10">cíl '+kliCz(cil)+'</text>';
+      }
+      s+='<polyline points="'+body2+'" fill="none" stroke="#F6CD63" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+      body.forEach(function(p){
+        s+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="3.2" fill="#0C0B10" stroke="#F6CD63" stroke-width="1.8"><title>'+esc(fmtDay(p.datum))+': '+kliCz(p.v)+' '+esc(jed)+'</title></circle>';
+      });
+      s+='<text x="'+L+'" y="'+(H-6)+'" fill="#6d6879" font-size="10">'+esc(fmtDay(body[0].datum))+'</text>'
+        +'<text x="'+(W-R)+'" y="'+(H-6)+'" text-anchor="end" fill="#6d6879" font-size="10">'+esc(fmtDay(body[body.length-1].datum))+'</text>'
+        +'</svg>';
+      return s;
+    }
+
+    // Dlaždice: poslední hodnota + změna od začátku okna. U kalorií, bílkovin a kroků
+    // je smysluplnější PRŮMĚR (jeden týden nic neřekne), u váhy a měr poslední hodnota.
+    function kdDlazdice(reps, m, dnu, tg){
+      var b=kdBody(reps, m, dnu);
+      if(!b.length) return '<div class="kdtile"><span class="kdt-n">'+esc(m.nazev)+'</span><span class="kdt-v">—</span><span class="kdt-z muted">bez dat</span></div>';
+      // Kalorie, bílkoviny, kroky a dodržení kolísají týden od týdne, takže dlaždice
+      // ukazuje PRŮMĚR. Váha a míry jsou stavové, tam dává smysl poslední hodnota.
+      var prumerovat=(m.id==='kcal'||m.id==='protein'||m.id==='kroky'||m.id==='dodrz');
+      var prum=function(a){ var s=0; a.forEach(function(p){ s+=p.v; }); return s/a.length; };
+      var hodnota, popis;
+      if(prumerovat){ hodnota=Math.round(prum(b)); popis='Ø z '+b.length+(b.length===1?' reportu':' reportů'); }
+      else { hodnota=b[b.length-1].v; popis=fmtDay(b[b.length-1].datum); }
+      // ⚠️ U průměrovaných metrik se NESMÍ brát rozdíl krajních reportů: jeden slabý
+      // týden na začátku nebo na konci by udělal „−12 000 kroků", i když se nic nezměnilo.
+      // Porovnává se proto průměr druhé poloviny období proti první, a jen když je
+      // z čeho (aspoň 4 body). Váha a míry se dál měří od prvního k poslednímu.
+      var zmena=null, zmenaPopis='';
+      if(prumerovat){
+        if(b.length>=4){ var pul=Math.floor(b.length/2); zmena=prum(b.slice(b.length-pul))-prum(b.slice(0,pul)); zmenaPopis=' vs dřív'; }
+      } else if(b.length>1){ zmena=b[b.length-1].v-b[0].v; }
+      var zt='';
+      if(zmena!=null && Math.abs(zmena)>(prumerovat?0.5:0.001)){
+        var dobre = m.dolu ? (zmena<0) : (zmena>0);
+        // desetinné místo jen u malých čísel; „+206,1 kcal" předstírá přesnost, kterou průměr nemá
+        var zz = Math.abs(zmena)>=10 ? Math.round(zmena) : Math.round(zmena*10)/10;
+        zt='<span class="kdt-z" style="color:'+(dobre?'#7BD88F':'#ff9b9b')+'">'+(zz>0?'+':'')+kliCz(zz)+(m.jed?' '+esc(m.jed):'')+esc(zmenaPopis)+'</span>';
+      } else if(zmena!=null){ zt='<span class="kdt-z muted">beze změny</span>'; }
+      else { zt='<span class="kdt-z muted">'+esc(popis)+'</span>'; }
+      var cilTxt='';
+      if(m.cil && tg && tg[m.cil]!=null && tg[m.cil]!==''){
+        var c=kliNum(tg[m.cil]);
+        if(c!=null){ var od=hodnota-c; cilTxt='<span class="kdt-c">cíl '+kliCz(c)+(Math.abs(od)>0.5?' ('+(od>0?'+':'')+kliCz(Math.round(od))+')':' ✓')+'</span>'; }
+      }
+      return '<div class="kdtile"><span class="kdt-n">'+esc(m.nazev)+'</span>'
+        +'<span class="kdt-v">'+kliCz(prumerovat?hodnota:Math.round(hodnota*10)/10)+(m.jed?'<i> '+esc(m.jed)+'</i>':'')+'</span>'
+        +zt+cilTxt+'</div>';
+    }
+
+    function kdVyvoj(reps, tg){
+      if(!reps || reps.length<2) return '';   // z jednoho reportu se trend udělat nedá
+      var oknaTxt={30:'30 dní',90:'90 dní',0:'celá historie'};
+      var h='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📈 Vývoj <span class="muted" style="text-transform:none;font-weight:400;">('+reps.length+' reportů, '+esc(fmtDay(reps[0].report_date))+' až '+esc(fmtDay(reps[reps.length-1].report_date))+')</span></h4>'
+        +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;">'
+        +'<div style="margin-bottom:10px;">'+[30,90,0].map(function(o){
+            return '<button type="button" class="kdrod kdvokno'+(KDV.okno===o?' on':'')+'" data-okno="'+o+'">'+oknaTxt[o]+'</button>';
+          }).join('')+'</div>'
+        +'<div class="kdtiles" id="kdTiles">'+KD_METRIKY.map(function(m){ return kdDlazdice(reps,m,KDV.okno,tg); }).join('')+'</div>'
+        +'<div style="margin:14px 0 8px;">'+KD_METRIKY.map(function(m){
+            return '<button type="button" class="kdrod kdvmet'+(KDV.metrika===m.id?' on':'')+'" data-met="'+m.id+'">'+esc(m.nazev)+'</button>';
+          }).join('')+'</div>'
+        +'<div id="kdGrafBox">'+kdVyvojGraf(reps,tg)+'</div>'
+        +'</div>';
+      return h;
+    }
+    function kdVyvojGraf(reps, tg){
+      var m=KD_METRIKY.filter(function(x){ return x.id===KDV.metrika; })[0]||KD_METRIKY[0];
+      var cil=null;
+      if(m.cil && tg && tg[m.cil]!=null && tg[m.cil]!=='') cil=kliNum(tg[m.cil]);
+      return kdGraf(kdBody(reps,m,KDV.okno), cil, m.jed);
+    }
+    // Překreslení bez nového dotazu na server: data už jsou v KDET.data.
+    function kdVyvojPrekresli(){
+      var reps=(KDET.data&&KDET.data.reports)||[], tg=(KDET.data&&KDET.data.targets)||{};
+      var t=document.getElementById('kdTiles'); if(t) t.innerHTML=KD_METRIKY.map(function(m){ return kdDlazdice(reps,m,KDV.okno,tg); }).join('');
+      var g=document.getElementById('kdGrafBox'); if(g) g.innerHTML=kdVyvojGraf(reps,tg);
+    }
+
     function renderKlient(){
       var d=KDET.data, email=KDET.email;
       var reps=(d.reports||[]).slice().reverse(); // nejnovější nahoře
@@ -565,6 +706,10 @@
         +'<div style="display:flex;gap:10px;align-items:center;margin-top:10px;"><button class="mlogbtn" id="kdTgSave">Uložit zadání</button>'
         +'<span class="muted" style="font-size:.78rem;">'+(tg.updated_at?'naposled '+fmtDate(tg.updated_at):'zatím nenastaveno, klient nevidí žádné zadání')+'</span></div>'
         +'</div>';
+      // 📈 VÝVOJ: souhrn a graf z CELÉ historie. `client_detail` vrací všechny reporty
+      // bez limitu, takže se nikam nedotazuje, jen se počítá z toho, co už v paměti je.
+      // Tabulka pod tím zůstává, ta je na čtení jednoho týdne; tohle je na trend.
+      h+=kdVyvoj(d.reports||[], tg);
       // reporty
       if(reps.length){
         h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Sport min</th><th>Plán příští t.</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
@@ -645,6 +790,21 @@
       $('kdetBody').innerHTML=h;
       // handlery
       $('kdCsv').addEventListener('click',function(e){ e.preventDefault(); exportKlientCsv(); });
+      // 📈 přepínače vývoje: mění jen pohled na už načtená data, nic se nedotahuje
+      Array.prototype.forEach.call(document.querySelectorAll('.kdvokno'),function(b){
+        b.addEventListener('click',function(){
+          KDV.okno=Number(b.getAttribute('data-okno'));
+          Array.prototype.forEach.call(document.querySelectorAll('.kdvokno'),function(x){ x.classList.remove('on'); });
+          b.classList.add('on'); kdVyvojPrekresli();
+        });
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('.kdvmet'),function(b){
+        b.addEventListener('click',function(){
+          KDV.metrika=b.getAttribute('data-met');
+          Array.prototype.forEach.call(document.querySelectorAll('.kdvmet'),function(x){ x.classList.remove('on'); });
+          b.classList.add('on'); kdVyvojPrekresli();
+        });
+      });
       // přepínač rodu: jedno z tlačítek je vždy aktivní, hodnota se čte při odeslání
       Array.prototype.forEach.call(document.querySelectorAll('.kdrod'),function(rb){
         rb.addEventListener('click',function(){
