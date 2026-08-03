@@ -76,6 +76,8 @@
   .tbar .v{color:#b7ab9b;font-variant-numeric:tabular-nums}
   .mlogbtn{cursor:pointer;border:1px solid rgba(235,177,44,.3);background:rgba(235,177,44,.08);color:#F6CD63;font-family:inherit;font-weight:700;font-size:.85rem;padding:9px 14px;border-radius:10px;white-space:nowrap}
   .mlogbtn:hover{background:rgba(235,177,44,.16)}
+  .kdrod{cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#b7ab9b;font-family:inherit;font-weight:700;font-size:.82rem;padding:6px 14px;border-radius:8px;margin-right:6px}
+  .kdrod.on{border-color:#EBB12C;background:rgba(235,177,44,.16);color:#F6CD63}
   .ovl{position:fixed;inset:0;z-index:70;background:rgba(8,6,4,.74);display:none;align-items:flex-start;justify-content:center;padding:22px 12px;overflow-y:auto}
   .ovl.on{display:flex}
   .ovl .box{background:#140d06;border:1px solid rgba(255,255,255,.12);border-radius:16px;width:100%;max-width:920px;padding:20px 22px;position:relative;box-shadow:0 24px 70px rgba(0,0,0,.6)}
@@ -401,6 +403,18 @@
       if('bdflmnptvw'.indexOf(last)>-1) return fn+'e';
       return fn;
     }
+    // Odhad rodu klienta z českého jména, jen pro PŘEDVYBRÁNÍ tlačítka u ukončení
+    // koučinku. Martin ho vidí a může přepnout, takže špatný odhad nic nezpůsobí;
+    // smyslem je, aby nemusel klikat u každého klienta. ⛔ Nikde jinde to nepoužívej
+    // jako fakt o klientovi, je to odhad z tvaru slova.
+    function kliRod(name){
+      var s=String(name||'').trim().split(/\s+/);
+      var fn=(s[0]||'').toLowerCase(), ln=(s.length>1?s[s.length-1]:'').toLowerCase();
+      if(/(ová|á)$/.test(ln)) return 'z';        // Nováková, Bílá
+      if(KLI_FEM.indexOf(fn)>-1) return 'z';     // Ester, Dagmar a spol. (nekončí na -a)
+      if(fn.slice(-1)==='a') return 'z';         // Jana, Petra i bez příjmení
+      return 'm';
+    }
     // Stav appky Tvuj Coach u klienta. Prichazi ze ZIVEHO stavu appky (academy-grant,
     // action access-status), ne z logu pozvanek — ten se po registraci uz neaktualizuje.
     // "?" = appka se nepodarilo zeptat; schvalne se NEtvari jako "nema", to by lhalo.
@@ -619,19 +633,33 @@
         +'<p class="muted" style="margin:0 0 8px;font-size:.85rem;">Zavře klientskou sekci a odebere přístup do appky Tvůj Coach. Data a účet zůstávají, jde to kdykoli vrátit pozvánkou. Kdo má zaplacenou Academy, o appku nepřijde.</p>'
         +'<label style="display:block;font-size:.78rem;color:#8F8A99;margin-bottom:8px;">Oslovení do mailu <span style="color:#6d6879;">(5. pád, např. Petře)</span>'
         +'<input type="text" id="kdOffVok" value="'+esc(kliVok(KDET.name))+'" placeholder="nech prázdné pro obecné „Ahoj,“" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
+        // Rod v mailu. Mail je psaný v 1. osobě minulého času („jsi do toho dal"),
+        // takže bez tohohle chodí ženám mužský text (3. 8. 2026 Jana Kaločayová).
+        // Předvybráno podle jména, ale Martin to vidí a může přepnout.
+        +'<div style="margin-bottom:10px;"><span style="display:block;font-size:.78rem;color:#8F8A99;margin-bottom:4px;">Rod v mailu <span style="color:#6d6879;">(„jsi to dal" vs „dala")</span></span>'
+        +'<button type="button" class="kdrod'+(kliRod(KDET.name)==='z'?' on':'')+'" data-rod="z">žena</button>'
+        +'<button type="button" class="kdrod'+(kliRod(KDET.name)==='m'?' on':'')+'" data-rod="m">muž</button></div>'
         +'<label style="display:block;font-size:.85rem;color:#cbbfae;cursor:pointer;margin-bottom:10px;"><input type="checkbox" id="kdOffTiche" style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">Tiše, bez mailu <span class="muted" style="font-size:.78rem;">(jen uklidit seznam)</span></label>'
         +'<button class="mlogbtn" id="kdOffBtn" style="border-color:rgba(255,107,107,.5);color:#ff9b9b;">Ukončit koučink</button>'
         +'</div>';
       $('kdetBody').innerHTML=h;
       // handlery
       $('kdCsv').addEventListener('click',function(e){ e.preventDefault(); exportKlientCsv(); });
+      // přepínač rodu: jedno z tlačítek je vždy aktivní, hodnota se čte při odeslání
+      Array.prototype.forEach.call(document.querySelectorAll('.kdrod'),function(rb){
+        rb.addEventListener('click',function(){
+          Array.prototype.forEach.call(document.querySelectorAll('.kdrod'),function(x){ x.classList.remove('on'); });
+          rb.classList.add('on');
+        });
+      });
       $('kdOffBtn').addEventListener('click',function(){
         var b=$('kdOffBtn'); if(b.disabled) return;
         var vok=($('kdOffVok').value||'').trim(), tiche=$('kdOffTiche').checked;
-        var co=tiche?'BEZ mailu' : 'a HNED poslat mail s nabídkou Tvůj Coach a Academy (oslovení: „Ahoj '+(vok||'(bez jména)')+'")';
+        var rodEl=document.querySelector('.kdrod.on'), rod=rodEl?rodEl.getAttribute('data-rod'):'m';
+        var co=tiche?'BEZ mailu' : 'a HNED poslat mail s nabídkou Tvůj Coach a Academy (oslovení: „Ahoj '+(vok||'(bez jména)')+'", psaný pro '+(rod==='z'?'ŽENU':'MUŽE')+')';
         if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, odebere se přístup do appky Tvůj Coach, '+co+'.\n\nData ani účet se nemažou.')) return;
         b.disabled=true; b.textContent='Ukončuji…';
-        api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche}).then(function(o){
+        api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche,rod:rod}).then(function(o){
           if(o.j&&o.j.ok){
             if(o.j.uz_ukoncen){
               // Byvali klienti jsou od 27. 7. v seznamu videt a jdou otevrit, takze na uz

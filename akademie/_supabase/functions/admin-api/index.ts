@@ -1347,21 +1347,29 @@ Deno.serve(async (req) => {
       const btn2 = (href: string, label: string) =>
         `<p style='margin:4px 0 18px'><a href='${href}' style='display:inline-block;border:1px solid #EBB12C;color:#EBB12C;text-decoration:none;padding:12px 25px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
 
+      // Rod klienta. Admin posílá 'z' (žena) nebo 'm' (muž); bez hodnoty zůstává
+      // mužský rod, tedy dosavadní chování.
+      // ⚠️ 3. 8. 2026 dostala Jana Kaločayová tenhle mail celý v mužském rodě.
+      // Tvary se proto píšou přes `rd()`, ne natvrdo. Kdo sem přidá další větu
+      // s příčestím minulým, MUSÍ ji tím taky prohnat.
+      const zena = String(body.rod ?? "").trim().toLowerCase().startsWith("z");
+      const rd = (muzsky: string, zensky: string) => (zena ? zensky : muzsky);
+
       const subject = "Díky za spolupráci. Co dál s appkou a s tvými daty";
       // ⚠️ Zamerne tu NENI zadna cena. Ceny appky (249 a 499) uz jsou natvrdo v sablonach
       // v `email_templates` a pri zmene cenika se na ne zapomina. Tenhle mail proto odkazuje
       // na cenik, at nevznika dalsi misto, ktere se musi hlidat.
       const inner = p(ahoj) +
-        p("naše spolupráce v koučinku právě končí. Děkuju ti za ni a za práci, kterou jsi do toho dal. Chci, abys věděl, co se teď děje s tvým přístupem, ať tě nic nepřekvapí.") +
+        p("naše spolupráce v koučinku právě končí. Děkuju ti za ni a za práci, kterou jsi do toho " + rd("dal", "dala") + ". Chci, abys " + rd("věděl", "věděla") + ", co se teď děje s tvým přístupem, ať tě nic nepřekvapí.") +
         `<p style='margin:0 0 8px'><strong>Co se změnilo:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
         `<li style='margin:0 0 7px'>Klientská sekce na webu se zavřela.</li>` +
-        `<li style='margin:0 0 7px'>S ní skončil i tvůj přístup do appky <strong>Tvůj Coach</strong>, protože jsi ji měl v ceně koučinku.</li>` +
-        `<li style='margin:0 0 7px'>Účet ani zapsaná data ti nemažu. Zůstávají tam, kdyby ses vrátil.</li></ul>` +
-        p("Jestli sis na appku zvykl, můžeš v ní pokračovat i bez koučinku. Je to stejná appka, jen si ji platíš sám:") +
+        `<li style='margin:0 0 7px'>S ní skončil i tvůj přístup do appky <strong>Tvůj Coach</strong>, protože jsi ji ${rd("měl", "měla")} v ceně koučinku.</li>` +
+        `<li style='margin:0 0 7px'>Účet ani zapsaná data ti nemažu. Zůstávají tam, kdyby ses ${rd("vrátil", "vrátila")}.</li></ul>` +
+        p("Jestli sis na appku " + rd("zvykl", "zvykla") + ", můžeš v ní pokračovat i bez koučinku. Je to stejná appka, jen si ji platíš " + rd("sám", "sama") + ":") +
         btn("https://martinbarna.cz/tvuj-coach/?utm_source=mail&utm_medium=offboard&utm_campaign=koucink-konec", "Pokračovat v Tvůj Coach") +
-        p("A jestli chceš rozumět tomu, co jsme spolu dělali, a umět si to řídit sám, je tu <strong>Barna Academy</strong>. Je to celý systém výživy a tréninku vysvětlený od základů. Jako můj klient na ni máš <strong>slevu 20 % s kódem KLIENT20</strong> a ten ti platí dál.") +
+        p("A jestli chceš rozumět tomu, co jsme spolu dělali, a umět si to řídit " + rd("sám", "sama") + ", je tu <strong>Barna Academy</strong>. Je to celý systém výživy a tréninku vysvětlený od základů. Jako " + rd("můj klient", "moje klientka") + " na ni máš <strong>slevu 20 % s kódem KLIENT20</strong> a ten ti platí dál.") +
         btn2("https://martinbarna.cz/akademie/?utm_source=mail&utm_medium=offboard&utm_campaign=koucink-konec", "Mrknout na Academy") +
-        p("Kdybys chtěl někdy koučink znovu, ozvi se. Vím, kde jsme skončili.") +
+        p("Kdybys " + rd("chtěl", "chtěla") + " někdy koučink znovu, ozvi se. Vím, kde jsme skončili.") +
         p("<strong>Be Effective!</strong><br>Martin");
 
       const html = `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='color-scheme' content='dark'></head><body style='margin:0;padding:0;background:#0C0B10'>` +
