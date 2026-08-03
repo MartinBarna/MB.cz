@@ -49,10 +49,13 @@
       </a>
 
       <a class="card" id="tileApp" href="https://coach.martinbarna.cz/?from=academy" target="_blank" rel="noopener" style="border-color:rgba(235,177,44,.5);background:linear-gradient(150deg,rgba(235,177,44,.10),rgba(235,177,44,.02));">
-        <span class="lockbadge" id="appBadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">🎁 v ceně Academy</span>
+        <!-- ⛔ Výchozí znění je pro DOŽIVOTNÍ přístup (rok VIP v ceně). Měsíčnímu členovi
+             (990 Kč) se to v boot() přepíše podle academy_membership_kind(), protože ten
+             appku v ceně NEMÁ. Rozhodnutí 2 mise `mb-academy-pricing-mise`. -->
+        <span class="lockbadge" id="appBadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">🎁 rok VIP v ceně</span>
         <div class="ico" style="color:#EBB12C;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/><path d="m9.5 10.5 1.5 1.5 3.5-3.5"/></svg></div>
         <h2>Tvůj Coach: appka</h2>
-        <p class="desc">Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. Máš ji v ceně Academy.</p>
+        <p class="desc" id="appDesc">Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. K doživotnímu přístupu ji máš rok ve VIP verzi.</p>
         <div class="chips"><span class="chip">Foto → makra</span><span class="chip">Adaptivní cíle</span><span class="chip">AI kouč</span></div>
         <span class="go"><span class="lbl">Otevřít appku</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
@@ -171,12 +174,23 @@
                   if(r[0]){
                     ap.setAttribute('href','https://coach.martinbarna.cz/sign-in?email='+encodeURIComponent(u.email||'')+'&from=academy');
                     var apl=ap.querySelector('.go .lbl'); if(apl) apl.textContent='Otevřít appku';
-                    var apb=document.getElementById('appBadge'); if(apb) apb.textContent='🎁 v ceně · NOVÉ';
+                    var apb=document.getElementById('appBadge'); if(apb) apb.textContent='🎁 rok VIP v ceně';
+                    // ⛔ Měsíční člen (990 Kč) appku v ceně NEMÁ, tlačítko „Otevřít appku" by ho
+                    // poslalo tam, kam ho nepustí. hasEntitlement('academy') je na oba stejné,
+                    // rozliší je až academy_membership_kind(). Stejný vzor jako /akademie/studium/.
+                    window.BA.membershipKind().then(function(kind){
+                      if(kind !== 'monthly') return;   // doživotní necháváme, jak bylo
+                      ap.setAttribute('href','https://tvujcoach.cz/?utm_source=academy&utm_medium=moje&utm_campaign=tc-kachlice');
+                      ap.setAttribute('target','_blank');
+                      var mb=document.getElementById('appBadge'); if(mb) mb.textContent='📱 PŘIDAT ZA 499 Kč / MĚS';
+                      var ml=ap.querySelector('.go .lbl'); if(ml) ml.textContent='Vyzkoušet Tvůj Coach';
+                      var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. V měsíčním členství ji v ceně nemáš, přidáš si ji za 499 Kč měsíčně.';
+                    });
                   } else {
                     ap.setAttribute('href','/pro-vas/'); ap.removeAttribute('target');
-                    var apl2=ap.querySelector('.go .lbl'); if(apl2) apl2.textContent='Chci ji → v ceně Academy';
-                    var apd=ap.querySelector('.desc'); if(apd) apd.textContent='Kompletní koučovací appka (web, běží i na mobilu): vyfotíš jídlo a spočítá makra, sama upravuje cíle podle výsledků, AI kouč. Dostaneš ji v ceně Academy.';
-                    var apb2=document.getElementById('appBadge'); if(apb2) apb2.textContent='🎁 v ceně Academy';
+                    var apl2=ap.querySelector('.go .lbl'); if(apl2) apl2.textContent='Chci ji → rok VIP v Academy';
+                    var apd=document.getElementById('appDesc'); if(apd) apd.textContent='Kompletní koučovací appka (web, běží i na mobilu): vyfotíš jídlo a spočítá makra, sama upravuje cíle podle výsledků, AI kouč. K doživotnímu přístupu do Academy ji máš rok ve VIP verzi.';
+                    var apb2=document.getElementById('appBadge'); if(apb2) apb2.textContent='🎁 rok VIP v Academy';
                   }
                 }
                 // koučink klient → nová klientská sekce (nahrazuje starý lehký check-in, ať nejsou dva formuláře)
