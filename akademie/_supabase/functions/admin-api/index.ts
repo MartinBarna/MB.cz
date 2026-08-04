@@ -1135,6 +1135,36 @@ Deno.serve(async (req) => {
       return json({ ok: true, okno_dnu: OKNO, rows });
     }
 
+    // Přehled appky Tvůj Coach (registrace + předplatná). Martin 4. 8. 2026:
+    // „kromě Academy prodáváme hodně i TC a je třeba ať mám přehled."
+    //
+    // ⛔ Servisní klíč APPKY se sem NIKDY nedostane. Web se ptá své vlastní appky
+    // přes `academy-grant` a sdílený secret, TÝMŽ kanálem jako `access-status` výš.
+    // Druhý kanál se schválně nezakládal.
+    //
+    // ⚠️ Chyba se tu NEPOLYKÁ do prázdna. Kdyby appka neodpověděla a vrátilo se
+    // `{rows:[]}`, admin by poctivě ukázal „nula registrací", což je nerozeznatelné
+    // od pravdy. Vrací se proto `chyba`, ať UI umí říct „nepodařilo se zeptat".
+    if (action === "tc_overview") {
+      const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+      const gsec = gs?.value ? String(gs.value) : "";
+      if (!gsec) return json({ ok: false, chyba: "chybi_secret" });
+      try {
+        const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+          body: JSON.stringify({ action: "tc-overview" }),
+          signal: AbortSignal.timeout(15_000),
+        });
+        if (!r.ok) return json({ ok: false, chyba: "appka_http_" + r.status });
+        const jj = await r.json().catch(() => null);
+        if (!jj || jj.ok !== true) return json({ ok: false, chyba: "appka_odpoved" });
+        return json({ ok: true, registrace: jj.registrace, predplatna: jj.predplatna, posledni: jj.posledni, generovano: jj.generovano });
+      } catch (e) {
+        return json({ ok: false, chyba: "spojeni: " + String(e).slice(0, 120) });
+      }
+    }
+
     if (action === "client_note_save") {
       const email = low(body.email); const note = String(body.note ?? "").trim().slice(0, 4000);
       if (!email || !note) return json({ error: "missing" }, 400);

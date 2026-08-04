@@ -182,6 +182,16 @@
         <div id="trfBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+      <!-- Přehled appky Tvůj Coach. Zadal Martin 4. 8. 2026: „kromě Academy prodáváme
+           hodně i TC a je třeba ať mám přehled." Data si web tahá ze své appky přes
+           `academy-grant` (akce tc-overview), servisní klíč appky se na klienta nedostane.
+           ⚠️ Souhrnná čísla jsou BEZ Martinových testovacích účtů, ty se počítají zvlášť. -->
+      <div class="traf" id="tcp" style="display:none;border-color:rgba(101,168,58,.45);">
+        <h3>📱 Tvůj Coach: registrace a předplatná</h3>
+        <div class="sub" id="tcpSub">Souhrny jsou bez testovacích účtů, ty jsou vyčíslené zvlášť</div>
+        <div id="tcpBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
       <!-- Přehled napříč klienty. Zadal Martin 3. 8. 2026: „nevidím kontext všech dat,
            musím otevírat každého zvlášť". Odpovídá na tři otázky naráz: kdo se hýbe,
            kdo přestal reportovat, kdo je nejdál od zadání. Detail jednoho klienta
@@ -391,7 +401,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti(); loadPrehled();
+        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti(); loadPrehled(); loadTcPrehled();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -448,6 +458,84 @@
       if(stav==='zadny') return '<span class="muted">—</span>';
       return '<span class="muted" title="Appka neodpověděla, stav neznámý">?</span>';
     }
+    // ---------- 📱 PŘEHLED TVŮJ COACH ----------
+    // Data počítá SQL `tc_overview` v DB appky, sem chodí hotová přes admin-api.
+    // ⚠️ `registrace.celkem` je UŽ BEZ testovacích účtů (dělá to backend), `testovacich`
+    // je jejich počet zvlášť. Nikdy ty dvě hodnoty nesčítej do „prodejů".
+    function tcTile(popis, hodnota, doplnek, barva){
+      return '<div class="kdtile"><span class="kdt-n">' + esc(popis) + '</span>'
+        + '<span class="kdt-v"' + (barva ? ' style="color:' + barva + '"' : '') + '>' + hodnota + '</span>'
+        + (doplnek ? '<span class="kdt-z muted">' + doplnek + '</span>' : '') + '</div>';
+    }
+    function loadTcPrehled(){
+      api({action:'tc_overview'}).then(function(o){
+        var d = o.j;
+        if(!d || d.ok !== true){
+          // ⛔ Vědomě NEukazujeme nuly: „appka neodpověděla" a „nikdo se nezaregistroval"
+          // vypadají v číslech stejně, a to druhé by bylo lživé uklidnění.
+          $('tcpBody').innerHTML = '<p class="muted" style="padding:.6rem 0;">⚠️ Nepodařilo se zeptat appky'
+            + (d && d.chyba ? ' <span style="font-size:.85rem;">(' + esc(String(d.chyba)) + ')</span>' : '')
+            + '. Čísla schválně nezobrazuju, aby to nevypadalo jako nula registrací.</p>';
+          $('tcp').style.display = ''; return;
+        }
+        var r = d.registrace || {}, pp = d.predplatna || [], po = d.posledni || [];
+        // ⚠️ Rozpad po tierech se drží ZVLÁŠŤ pro každý stav. Kdyby se sčítal dohromady,
+        // stálo by u „Aktivní 7" napsáno „ai_basic 14×" (aktivní + trial) a vypadalo by to,
+        // že aktivních je dvakrát tolik.
+        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {};
+        pp.forEach(function(x){
+          var n = Number(x.pocet) || 0;
+          if(x.status === 'active'){ aktivni += n; tieryA[x.tier] = (tieryA[x.tier] || 0) + n; }
+          if(x.status === 'trialing'){ trial += n; tieryT[x.tier] = (tieryT[x.tier] || 0) + n; }
+        });
+        var popisTieru = function(m){
+          var k = Object.keys(m);
+          return k.length ? k.map(function(t){ return esc(t) + (k.length > 1 ? ' ' + m[t] + '×' : ''); }).join(' · ') : '';
+        };
+
+        var h = '<div class="kdtiles" style="margin-bottom:12px;">'
+          + tcTile('Registrací', r.celkem != null ? r.celkem : '—', 'bez testovacích')
+          + tcTile('Za 7 dní', r.za_7_dni != null ? r.za_7_dni : '—', '')
+          + tcTile('Za 30 dní', r.za_30_dni != null ? r.za_30_dni : '—', '')
+          + tcTile('Aktivní předplatné', aktivni, popisTieru(tieryA), aktivni ? '#7BD88F' : '')
+          + tcTile('Ve zkušebce', trial, popisTieru(tieryT) || '14 dní zdarma', trial ? '#F6CD63' : '')
+          + tcTile('Testovací účty', r.testovacich != null ? r.testovacich : '—', 'do součtů výš NEPATŘÍ', '#8F8A99')
+          + '</div>';
+
+        if(po.length){
+          h += '<div style="overflow-x:auto;"><table style="font-size:.86rem;"><thead><tr>'
+            + '<th>E-mail</th><th>Registrace</th><th>Tier</th><th>Stav</th><th>Zdroj</th><th>Atribuce</th></tr></thead><tbody>'
+            + po.map(function(x){
+                var test = x.je_test === true;
+                var stav = x.status || '—', barva = stav === 'active' ? '#7BD88F' : (stav === 'trialing' ? '#F6CD63' : '#8F8A99');
+                // Atribuce bude zatím skoro všude prázdná: sbírat se začala až po opravě
+                // z 4. 8. Prázdno tu proto NEZNAMENÁ „přišel odnikud".
+                var atr = x.atribuce, atrTxt = '<span class="muted">—</span>';
+                if(atr && typeof atr === 'object'){
+                  var kus = atr.utm_campaign || atr.utm_source || atr.referrer_host;
+                  if(kus) atrTxt = esc(String(kus));
+                }
+                return '<tr' + (test ? ' style="opacity:.55"' : '') + '>'
+                  + '<td>' + esc(x.email || '') + (test ? ' <span class="muted" style="font-size:.75rem;">TEST</span>' : '') + '</td>'
+                  + '<td style="white-space:nowrap;">' + esc(x.registrace || '—') + '</td>'
+                  + '<td>' + (x.tier ? esc(x.tier) : '<span class="muted">bez předplatného</span>') + '</td>'
+                  + '<td style="color:' + barva + ';font-weight:700;">' + esc(stav) + '</td>'
+                  + '<td>' + (x.zdroj ? esc(x.zdroj) : '<span class="muted">—</span>') + '</td>'
+                  + '<td>' + atrTxt + '</td></tr>';
+              }).join('')
+            + '</tbody></table></div>'
+            + '<p class="muted" style="margin:.6rem 0 0;font-size:.78rem;">Posledních ' + po.length
+            + ' registrací. Zašedlé řádky s TEST jsou tvoje testovací účty, do souhrnů výš se nepočítají. '
+            + 'Sloupec Atribuce bude zatím skoro prázdný, sbírá se až od opravy z 4. 8. 2026, '
+            + 'takže prázdno neznamená „přišel odnikud".</p>';
+        } else {
+          h += '<p class="muted" style="padding:.6rem 0;">Zatím žádné registrace.</p>';
+        }
+        $('tcpBody').innerHTML = h;
+        $('tcp').style.display = '';
+      }).catch(function(){ cardFail('tcp','tcpBody'); });
+    }
+
     // ---------- 📊 PŘEHLED KLIENTŮ ----------
     // Prahy pro barvy. Vědomě mírné: cílem je upozornit, ne strašit. Kdo je 8 dní bez
     // reportu, může být na dovolené; kdo 15, ten vypadl a Martin o tom má vědět sám.
