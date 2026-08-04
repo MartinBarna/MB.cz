@@ -1313,10 +1313,21 @@
     var ap = el("tileAppka");
     if(ap) ap.setAttribute("href", "https://coach.martinbarna.cz/sign-in?email=" + encodeURIComponent(myEmail) + "&from=koucink");
     el("load").style.display = "none"; el("app").style.display = "";
+    // ⛔ FILTR NA VLASTNÍ E-MAIL PATŘÍ DO DOTAZU, ne jen do RLS.
+    // Do 4. 8. 2026 tu filtr nebyl a stránka spoléhala na politiky. Jenže
+    // `client_reports` i `client_targets` mají VEDLE „vidím jen svoje" ještě
+    // admin politiku, a Postgres politiky spojuje přes NEBO. Martinovi se proto
+    // načetlo všech 56 reportů od 9 klientů a váhový graf je nakreslil do jedné
+    // čáry (hlásil to jako „chaotický mix"). Klienti viděli správně, admin ne.
+    // Filtr v dotazu drží význam UI („moje data") bez ohledu na to, jaké politiky
+    // v DB zrovna jsou. `ilike` kvůli velikosti písmen, e-mail nemá zástupné znaky.
+    var jaFiltr = "email=ilike." + encodeURIComponent(myEmail);
     Promise.all([
-      api("client_reports?select=report_date,weight,measurements,nutrition,activity,scales,targets&order=report_date.asc&limit=200"),
-      api("client_intake?select=id&limit=1"),
-      api("client_targets?select=*&limit=1")
+      api("client_reports?select=report_date,weight,measurements,nutrition,activity,scales,targets&" + jaFiltr + "&order=report_date.asc&limit=200"),
+      api("client_intake?select=id&" + jaFiltr + "&limit=1"),
+      // `limit=1` bez řazení vrací libovolný řádek. S filtrem je řádek stejně jen
+      // jeden, ale řazení tu drží jako pojistka, ať to nikdy nezávisí na náhodě.
+      api("client_targets?select=*&" + jaFiltr + "&order=updated_at.desc&limit=1")
     ]).then(function(res){
       var failed = res[0] === null;
       reports = Array.isArray(res[0]) ? res[0] : [];
