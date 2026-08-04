@@ -160,7 +160,10 @@
         </div>
         <div class="trust"><span>✓ Začneš zdarma</span><span>✓ Česky a bez balastu</span><span>✓ Zrušíš kdykoliv</span></div>
         <figure class="shot shot-hero">
-            <img src="/assets/app/dnes.png?v=2" alt="Úvodní obrazovka appky Tvůj Coach: denní přehled kalorií a maker, zapsaná jídla a zbývající příjem." width="390" height="844" fetchpriority="high" decoding="async">
+            <!-- 780x1688 = TÁŽ mobilní obrazovka nafocená ve dvojnásobném rozlišení (retina),
+                 ne jiné rozvržení. Text má na displeji stejnou velikost, jen dvakrát tolik
+                 pixelů. WebP je navíc o 57 kB lehčí než původní PNG, což se u hero snímku počítá. -->
+            <img src="/assets/app/dnes.webp?v=1" alt="Úvodní obrazovka appky Tvůj Coach: denní přehled kalorií, zbývající příjem a tlačítka pro zápis jídla textem, hlasem nebo fotkou." width="780" height="1688" fetchpriority="high" decoding="async">
         </figure>
     </div>
 </header>
@@ -182,7 +185,7 @@
              Tenhle ukazuje samotne hledani potraviny vcetne znacky „Overeno Martinem". -->
         <figure class="shot">
             <img src="/assets/app/zapis-jidla.webp?v=1" alt="Vyhledávání potraviny v appce Tvůj Coach: zadaný název, výsledky s kaloriemi na 100 g a označením Ověřeno Martinem u potravin, které prošly kontrolou." width="780" height="1688" loading="lazy" decoding="async">
-            <figcaption>Najdeš potravinu, ťukneš a je zapsaná. Co jsem prověřil osobně, má u sebe značku Ověřeno Martinem.</figcaption>
+            <figcaption>Najdeš potravinu, ťukneš a je zapsaná. Potraviny, které jsem prověřil osobně, poznáš podle značky Ověřeno Martinem.</figcaption>
         </figure>
 
         <figure class="shot">
