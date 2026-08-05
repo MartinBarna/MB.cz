@@ -113,8 +113,14 @@
   }
 
   // vhodnost potravin do snídaně / svačiny (ať nevyjde kuřecí prsa k snídani)
-  var BREAKFAST_PROT = /vejce|bilek|tvaroh|skyr|cottage|syrovatkovy-protein|sunka/;
+  // [fix 2026-08-05 večer] Ze snídaňových bílkovin pryč `bilek` a prášek: 150 g čistého
+  // bílku není snídaně, normální člověk jí VEJCE. Bílek i prášek zůstávají v záměnách
+  // a v doplňkovém bloku. Táž změna v appce, hlídá parita.
+  var BREAKFAST_PROT = /vejce|tvaroh|skyr|cottage|sunka/;
   var SNACK_PROT     = /tvaroh|skyr|cottage|syrovatkovy-protein|recky-jogurt|bily-jogurt|sunka/;
+  // [fix 2026-08-05 večer] Proteinový prášek a čistý bílek NEJSOU základ hlavního jídla
+  // („syrovátkový protein 55 g + těstoviny + rajče" jako oběd nikdo jíst nebude).
+  var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$/;
   var BREAKFAST_CARB = /ovesne-vlocky|chleb|musli|knackebrot|tousty|rohlik|houska/;
   var MAIN_CARB      = /ryze|brambory|bataty|testoviny|kuskus|bulgur|quinoa|pohanka|jahly|kukurice|tortilla|ryzove-nudle/;
 
@@ -162,6 +168,13 @@
     // volnější cíle. Když libový kandidát není (úzké filtry), spadne to zpět na celou nabídku.
     var leanOnly = targets.fat / Math.max(1, targets.protein) < 0.5;
     function isLean(f) { return f.per100.f <= Math.max(3, (f.per100.p || 0) * 0.4); }
+    // [fix 2026-08-05 večer] PŘÍLOHA JE STRUKTURÁLNÍ SOUČÁST HLAVNÍHO JÍDLA, ne položka,
+    // která smí vypadnout kvůli makrům. Martin z reálného výstupu (1200 kcal / 48 g sach.):
+    // „kuřecí + brokolice + máslo" bez přílohy nikdo jíst nebude. Pokud cíle nejsou
+    // fakticky keto (pod 12 % kalorií ze sacharidů), má každé hlavní jídlo přílohu
+    // s podlahou 40 g; zmenšuje se, neruší. ⛔ Táž logika v appce, hlídá parita.
+    var lowCarb = (targets.carbs * 4) / Math.max(1, targets.kcal) < 0.12;
+    var MIN_PRILOHA_G = 40;
     // [fix 2026-07-26] ROTACE bilkovinnych zdroju pres den + denni strop na jednu potravinu.
     // Nalez z testu appky: vegetarian v deficitu dostal 780 g vajecneho bilku za den (asi
     // 24 kusu) a v tydennim nakupu 200 ks. Cisla pritom sedela na gram.
@@ -176,12 +189,19 @@
       return cerstve.length ? cerstve : list;
     }
     function pickProt(s, prefer) {
+      // U hlavních jídel (bez snídaňové/svačinové preference) vyřaď prášky a bílek
+      // ze základu jídla; fallback na plnou nabídku drží průchodnost úzkých filtrů.
+      function bezPrasku(list) {
+        if (prefer) return list;
+        var poctive = list.filter(function (f) { return !NENI_ZAKLAD_JIDLA.test(f.id); });
+        return poctive.length ? poctive : list;
+      }
       if (leanOnly) {
-        var leanDb = jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); }));
+        var leanDb = bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); })));
         var p = pick(leanDb, 'protein', s, prefer) || pick(leanDb, 'dairy', s, prefer);
         if (p) return p;
       }
-      var cely = jesteNebyl(db);
+      var cely = bezPrasku(jesteNebyl(db));
       return pick(cely, 'protein', s, prefer) || pick(cely, 'dairy', s, prefer);
     }
     var gramyDnes = {};
@@ -240,6 +260,8 @@
           var usedC = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).c; }, 0);
           var needC = (targets.carbs * dist[i]) - usedC;
           var cg = round((needC / (carb.per100.c || 1)) * 100, 10);
+          // Hlavní jídlo bez keto cílů: příloha se zmenšuje, ale neruší (podlaha 40 g).
+          if (!lowCarb && (i === 0 || dist[i] >= 0.2)) cg = Math.max(cg, MIN_PRILOHA_G);
           if (cg > 10) items.push({ food: carb, grams: Math.min(cg, 320) });
         }
       }
@@ -250,7 +272,9 @@
         var sideVegDb = db.filter(function (f) {
           return f.cat !== 'veg' || !/cibul|cesnek|chilli|zazvor|kren|bylink|petrzel|koriandr|kopr|pazitk|medvedi/.test(f.id);
         });
-        var veg = pick(sideVegDb, 'veg', seed + i + 5, (i === 0) ? /rajce|okurka|paprika|spenat/ : null);
+        // [fix 2026-08-05 večer] Snídaňová zelenina bez špenátu: 150 g syrových listů
+        // k toustu nikdo nejí. K vaječné snídani patří rajče, okurka, paprika.
+        var veg = pick(sideVegDb, 'veg', seed + i + 5, (i === 0) ? /rajce|okurka|paprika/ : null);
         if (veg) items.push({ food: veg, grams: 150 });
       }
       // 4) ovoce u snídaně/svačin
@@ -331,6 +355,8 @@
         // stlačit), drž aspoň 30 g; je to páteř každého jídla v Martinově metodě
         all.forEach(function (it) {
           if (it.food.cat === 'protein' && it.grams < 30) it.grams = 30;
+          // podlaha přílohy drží i proti křížovému škálování (viz [fix 2026-08-05 večer])
+          if (!lowCarb && it.food.cat === 'carb' && it.grams < MIN_PRILOHA_G) it.grams = MIN_PRILOHA_G;
         });
       }
     }
@@ -451,6 +477,7 @@
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
       it.grams = Math.max(step, Math.round(it.grams / step) * step);
+      if (!lowCarb && it.food.cat === 'carb' && it.grams < MIN_PRILOHA_G) it.grams = MIN_PRILOHA_G;
       var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
     });
     // [fix 2026-07-14] minigramáže („přidej 1 g oleje") v klientském plánu nemají co dělat —
