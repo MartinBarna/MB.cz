@@ -118,7 +118,11 @@ Deno.serve(async (req) => {
 
     return json({
       ok: true,
-      emails_today: { ...em, daily_cap: dailyCap, resend_limit: 100 },
+      // ⛔ Bylo tu `resend_limit: 100` natvrdo a admin to zobrazoval jako „Resend max 100".
+      // Sto mailů denně byl limit FREE tarifu; na placeném Resend denní limit NEMÁ
+      // (Martin 20. 7. 2026). Číslo tedy nikde nežilo a jen mátlo, proto ho neposíláme.
+      // `daily_cap` naopak žije v app_config.drip_daily_cap a mění se výhradně tam.
+      emails_today: { ...em, daily_cap: dailyCap },
       queue: { due_now: (due.data ?? []).length, by_track: queueByTrack, followups_enabled: (gmap.followups_enabled ?? "") === "true" },
       leads: { days, today_by_source: todayBySource },
       sales,
