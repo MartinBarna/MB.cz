@@ -142,10 +142,68 @@ Deno.serve(async (req) => {
       if (!r.ok || !ok) corsBad.push(`${slug} (povoluje: ${allow || "nic"})`);
     } catch (_e) { corsBad.push(slug + " (nedostupná)"); }
   }));
+  // ===== KANÁREK zápisové cesty kontaktního formuláře (5. 8. 2026) =====
+  // PROČ: detektor ticha níž hlásil „formulář nemá 14 dní ani jeden záznam, možná je
+  // rozbitá cesta zápisu". Prověřeno naostro: cesta FUNGOVALA, jen nikdo nepsal.
+  // Off-site boti se totiž ZÁMĚRNĚ nelogují (contact-send je zahazuje podle Origin),
+  // takže úplné ticho je u malého webu normální stav, ne porucha.
+  // Ten alert tedy strašil kvůli něčemu, co nešlo z ticha poznat. Místo hádání se
+  // teď každý den zkusí NAPSAT a ověří se, že řádek vznikl.
+  //
+  // ⛔ DVĚ NEZÁVISLÉ POJISTKY, aby kanárek NIKDY neposlal Martinovi mail:
+  //   1) honeypot `website` je vyplněný
+  //   2) `t` = 0, tedy odesláno pod 3 vteřiny
+  // Stačí jedna z nich, aby contact-send vyhodnotil submisi jako spam a mail neodeslal.
+  // Kdyby někdo v budoucnu jednu kontrolu zrušil, druhá pořád drží.
+  const KANAREK_JMENO = "KANAREK-DIGEST";
+  const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? SERVICE_ROLE;
+  let kanarekOk = false;
+  let kanarekChyba = "";
+  try {
+    const r = await fetch(`${SUPABASE_URL}/functions/v1/contact-send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Origin musí být v ALLOWED_ORIGINS, jinak contact-send submisi tiše zahodí
+        // a NEZALOGUJE. Kanárek by pak "selhal", i kdyby cesta fungovala.
+        "Origin": "https://martinbarna.cz",
+        // Stránky posílají obojí, posíláme to samé, ať testujeme tutéž cestu.
+        "apikey": ANON_KEY,
+        "Authorization": "Bearer " + ANON_KEY,
+      },
+      body: JSON.stringify({
+        name: KANAREK_JMENO,
+        email: "kanarek@martinbarna.cz",
+        message: "Automatická denní kontrola zápisové cesty. Záznam se hned maže.",
+        website: "kanarek",
+        t: 0,
+      }),
+    });
+    if (!r.ok) throw new Error("contact-send vrátil HTTP " + r.status);
+    // Odpověď nestačí: contact-send vrací ok:true i na spam a log je best-effort.
+    // Důkazem je až řádek v tabulce, proto se ptáme databáze.
+    const { data: stopa, error: chybaCteni } = await admin.from("contact_messages")
+      .select("id")
+      .eq("name", KANAREK_JMENO)
+      .gte("created_at", new Date(Date.now() - 5 * 60000).toISOString())
+      .limit(1);
+    if (chybaCteni) throw new Error("čtení stopy selhalo: " + chybaCteni.message);
+    kanarekOk = !!(stopa && stopa.length);
+    if (!kanarekOk) kanarekChyba = "POST prošel, ale řádek v contact_messages nevznikl";
+  } catch (e) {
+    kanarekChyba = String(e).slice(0, 160);
+  }
+  // Úklid VŽDY, i když ověření selhalo. Bere všechny kanárkové řádky, takže po sobě
+  // uklidí i případné pozůstatky z dřívějších neúspěšných běhů a tabulka nezarůstá.
+  try { await admin.from("contact_messages").delete().eq("name", KANAREK_JMENO); } catch { /* úklid nesmí shodit digest */ }
+
   // Detektor ticha: kdyz kanal dlouho nema ANI spamovy zaznam, je podezrely cely retez
   // (formular pise do contact_messages i spam, leady chodi z reklam denne).
+  // ⚠️ Kanárkové řádky se z tohohle dotazu VYLUČUJÍ. Kdyby se sem započítaly, ukazoval by
+  // detektor napořád „0 dní" a skutečné ticho by zamaskoval. Vyloučení je druhá pojistka
+  // vedle mazání: kdyby úklid někdy selhal, statistika zůstane pravdivá.
   const [lastContact, lastLead] = await Promise.all([
-    admin.from("contact_messages").select("created_at").order("created_at", { ascending: false }).limit(1),
+    admin.from("contact_messages").select("created_at").neq("name", KANAREK_JMENO).order("created_at", { ascending: false }).limit(1),
     admin.from("leads").select("created_at").order("created_at", { ascending: false }).limit(1),
   ]);
   const daysSince = (v: unknown) => v ? Math.floor((now.getTime() - new Date(String(v)).getTime()) / 86400000) : 9999;
@@ -155,6 +213,9 @@ Deno.serve(async (req) => {
   const dY = yStart.toLocaleDateString("cs-CZ", { timeZone: "Europe/Prague", day: "numeric", month: "long" });
   const row = (label: string, val: string) => `<tr><td style="padding:7px 12px;color:#666">${label}</td><td style="padding:7px 12px;font-weight:700;text-align:right">${val}</td></tr>`;
   const warn = (t: string) => `<p style="margin:10px 0;padding:10px 14px;background:#fdecea;border-radius:10px;color:#a3352b"><b>⚠️ ${t}</b></p>`;
+  // Neutrální sdělení. Schválně NENÍ červené a NENÍ v něm vykřičník: je to informace,
+  // na kterou se nic nedělá. Kdyby vypadala jako alert, Martin by časem přestal číst obojí.
+  const info = (t: string) => `<p style="margin:10px 0;padding:10px 14px;background:#f2f4f7;border-radius:10px;color:#555">${t}</p>`;
 
   let alerts = "";
   if (corsBad.length > 0) {
@@ -162,9 +223,19 @@ Deno.serve(async (req) => {
       ". Prohlížeč návštěvníka pak odeslání zablokuje bez stopy na serveru. Stejná chyba v červenci " +
       "13 dní tiše blokovala kontaktní formulář. Řekni Claudovi, ať to hned opraví a otestuje z prohlížeče.");
   }
-  if (dContact >= 10 && dContact < 9999) {
-    alerts += warn("Kontaktní formulář nemá už " + dContact + " dní ani jeden záznam (ani spam). " +
-      "Buď je opravdu mrtvý provoz, nebo je rozbitá cesta zápisu. Stojí za kontrolu z prohlížeče.");
+  // ⛔ ZMĚNA 5. 8. 2026: „dlouho ani jeden záznam" UŽ NENÍ VAROVÁNÍ.
+  // Původní alert tvrdil, že je možná rozbitá cesta zápisu, ale z ticha se to poznat NEDÁ:
+  // off-site boti se záměrně nelogují, takže u malého webu je úplné ticho normální stav.
+  // Prověřeno naostro (Fable, 5. 8.): cesta fungovala, jen nikdo nepsal. Alert tedy jen strašil.
+  // O rozbité cestě nově rozhoduje JEDINĚ kanárek výš, který se o zápis reálně pokusí.
+  if (!kanarekOk) {
+    alerts += warn("🔴 ZÁPISOVÁ CESTA KONTAKTNÍHO FORMULÁŘE NEFUNGUJE. Denní kanárek zkusil poslat " +
+      "testovací zprávu z martinbarna.cz a záznam v databázi nevznikl. Co selhalo: " +
+      (kanarekChyba || "neuvedeno") + ". Prakticky to znamená, že když ti teď někdo napíše přes " +
+      "formulář, zpráva se ztratí a nikde po ní nezůstane stopa. Řekni Claudovi, ať to hned prověří.");
+  } else if (dContact >= 10 && dContact < 9999) {
+    alerts += info("Kontaktním formulářem ti " + dContact + " dní nikdo nenapsal. Zápisová cesta je " +
+      "dnes ověřená kanárkem, takže je to opravdu tichý provoz, ne porucha.");
   }
   if (dLead >= 3 && dLead < 9999) {
     alerts += warn("Sběr leadů nemá už " + dLead + " dní žádný nový kontakt. Při běžících reklamách " +
@@ -268,5 +339,5 @@ Deno.serve(async (req) => {
     }),
   });
   if (!res.ok) return json({ error: "resend_" + res.status }, 500);
-  return json({ ok: true, to, leads: leadsYc, sales: salesYc, sent, errors: errs, withdrawals_pending: wdrPending, watchdog: { corsBad, dContact, dLead } });
+  return json({ ok: true, to, leads: leadsYc, sales: salesYc, sent, errors: errs, withdrawals_pending: wdrPending, watchdog: { corsBad, dContact, dLead, kanarek: { ok: kanarekOk, chyba: kanarekChyba } } });
 });
