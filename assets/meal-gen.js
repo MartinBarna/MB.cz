@@ -127,6 +127,16 @@
       var sub = list.filter(function (f) { return prefer.test(f.id); });
       if (sub.length) list = sub;
     }
+    // [fix 2026-08-05] Výchozí den se skládá JEN z běžných potravin (flag `bezny` v DB,
+    // 283 z 1192; přiděluje `scripts/oznac-bezne-potraviny.mjs` v repu appky). Bez toho
+    // vybíral generátor rovnoměrně z celé DB plné světové kuchyně a dětských příkrmů:
+    // změřeno na 240 dnech, 100 % dní mělo exotickou položku a exotická byla každá druhá
+    // (51 %). Grok na Academy potřeboval 15+ generování, než padlo běžné české menu.
+    // Exotika NEmizí: v záměnách (⇄) se řadí až za běžné. Fallback na celou nabídku
+    // drží průchodnost úzkých filtrů (vegetarián + bez mléčných + libové).
+    // ⛔ Stejná logika je v appce (`src/engine/meal-gen.ts`), hlídá parita-jidelnicku.mjs.
+    var bezne = list.filter(function (f) { return f.bezny; });
+    if (bezne.length) list = bezne;
     // [fix 2026-07-26] Seed se před výběrem rozptýlí. Databáze je řazená abecedně a seedy
     // chodí malé (1, 2, 3…), takže prosté `seed % délka` sahalo pořád na začátek abecedy.
     // Grok při testu vypsal: „silný sklon k potravinám na začátku abecedy: Angrešt,
@@ -348,6 +358,10 @@
         return (f.cat === 'protein' || f.cat === 'dairy') && !usedIds[f.id] &&
           (!swapPref || swapPref.test(f.id)) && fatRatio(f) < fatRatio(worst.food) - 0.1;
       });
+      // [fix 2026-08-05] I záchranná výměna preferuje běžné potraviny (flag `bezny`) —
+      // jinak deficit vyměnil vejce za „bacalhau" a exotika se vracela zadními vrátky.
+      var bezneCand = swapCand.filter(function (f) { return f.bezny; });
+      if (bezneCand.length) swapCand = bezneCand;
       // k hlavnímu jídlu patří maso/ryba/tofu, ne miska čistých bílků — bílek jen když nezbývá nic jiného
       if (!swapPref && swapCand.length > 1) {
         var noBilek = swapCand.filter(function (f) { return f.id !== 'bilek'; });
@@ -625,6 +639,11 @@
       if (sub.filter(function (f) { return f.id !== item.food.id; }).length) list = sub;
     }
     var seed = opts.seed || 0;
+    // [fix 2026-08-05] Běžné potraviny (flag `bezny`) jdou v nabídce záměn PRVNÍ, exotika
+    // až za nimi. Klikání ⇄ tak nejdřív projde tvaroh/kuřecí/rýži a teprve pak durian —
+    // dřív záměny exotiku naopak přilévaly (změřil Grok na Academy 5. 8. 2026).
+    // Pořadí je deterministické, každá potravina zůstává dosažitelná.
+    list = list.filter(function (f) { return f.bezny; }).concat(list.filter(function (f) { return !f.bezny; }));
     var idx = ((seed % list.length) + list.length) % list.length;
     var next = list[idx];
     if (next.id === item.food.id) next = list[(idx + 1) % list.length];

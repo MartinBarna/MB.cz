@@ -10,7 +10,8 @@
       "f": 2,
       "fib": 0
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "adzuki-fazole-varene",
@@ -118,7 +119,8 @@
       "fib": 1.4
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "ancovicka",
@@ -280,7 +282,8 @@
       "fib": 6
     },
     "portion": 20,
-    "portionLabel": "1 lžíce ~20 g"
+    "portionLabel": "1 lžíce ~20 g",
+    "bezny": true
   },
   {
     "id": "arasidovy-olej",
@@ -308,7 +311,8 @@
       "carbBasis": "available"
     },
     "portion": 30,
-    "portionLabel": "hrst ~30 g"
+    "portionLabel": "hrst ~30 g",
+    "bezny": true
   },
   {
     "id": "arasidy-prazene",
@@ -403,7 +407,8 @@
       "carbBasis": "available"
     },
     "portion": 100,
-    "portionLabel": "1/2 ks ~100 g"
+    "portionLabel": "1/2 ks ~100 g",
+    "bezny": true
   },
   {
     "id": "avokadova-pomazanka",
@@ -535,7 +540,8 @@
       "f": 1.5,
       "fib": 3
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "bageta-psenicna",
@@ -587,7 +593,8 @@
       "f": 22,
       "fib": 0
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "balsamico-vinaigrette",
@@ -627,7 +634,8 @@
       "fib": 2.6
     },
     "portion": 120,
-    "portionLabel": "1 ks ~120 g"
+    "portionLabel": "1 ks ~120 g",
+    "bezny": true
   },
   {
     "id": "bara-brith",
@@ -732,7 +740,8 @@
       "fib": 3.3
     },
     "portion": 200,
-    "portionLabel": "200 g"
+    "portionLabel": "200 g",
+    "bezny": true
   },
   {
     "id": "batoleci-mleko",
@@ -997,7 +1006,8 @@
       "carbBasis": "total"
     },
     "portion": 150,
-    "portionLabel": "150 g vařené"
+    "portionLabel": "150 g vařené",
+    "bezny": true
   },
   {
     "id": "bilek",
@@ -1011,7 +1021,8 @@
       "fib": 0
     },
     "portion": 33,
-    "portionLabel": "1 bílek ~33 g"
+    "portionLabel": "1 bílek ~33 g",
+    "bezny": true
   },
   {
     "id": "biltong",
@@ -1039,7 +1050,8 @@
       "fib": 0
     },
     "portion": 150,
-    "portionLabel": "1 kelímek ~150 g"
+    "portionLabel": "1 kelímek ~150 g",
+    "bezny": true
   },
   {
     "id": "bily-jogurt-3",
@@ -1065,7 +1077,8 @@
       "f": 0.1,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "bily-jogurt-reckeho-typu-0",
@@ -1078,7 +1091,8 @@
       "f": 0.2,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "blini",
@@ -1159,7 +1173,8 @@
       "fib": 2.4
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "bramborova-kase",
@@ -1172,7 +1187,8 @@
       "f": 3,
       "fib": 1.4
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "bramborova-placka",
@@ -1211,7 +1227,8 @@
       "f": 1,
       "fib": 2
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "bramborovy-skrob",
@@ -1237,7 +1254,8 @@
       "f": 0.1,
       "fib": 2.2
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "brambory-americke-pecene",
@@ -1250,7 +1268,8 @@
       "f": 5,
       "fib": 2.4
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "brambory-gratinovane",
@@ -1276,7 +1295,8 @@
       "f": 0.1,
       "fib": 2.2
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "brambory-varene",
@@ -1290,7 +1310,8 @@
       "fib": 1.8
     },
     "portion": 200,
-    "portionLabel": "200 g"
+    "portionLabel": "200 g",
+    "bezny": true
   },
   {
     "id": "brezel",
@@ -1316,7 +1337,8 @@
       "f": 28,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "brie-de-meaux",
@@ -1343,7 +1365,8 @@
       "fib": 2.6
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "brokolicove-klicky",
@@ -1370,7 +1393,8 @@
       "fib": 1.5
     },
     "portion": 120,
-    "portionLabel": "1 ks ~120 g"
+    "portionLabel": "1 ks ~120 g",
+    "bezny": true
   },
   {
     "id": "brunost",
@@ -1423,7 +1447,8 @@
       "f": 21,
       "fib": 0
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "bubble-and-squeak",
@@ -1477,7 +1502,8 @@
       "fib": 18,
       "carbBasis": "total"
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "bulgur-vareny",
@@ -1491,7 +1517,8 @@
       "fib": 4.5
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "bulharsky-jogurt-bily",
@@ -1571,7 +1598,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "candat-filet",
@@ -1598,7 +1626,8 @@
       "f": 34,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "cedar-zrajici",
@@ -1678,7 +1707,8 @@
       "fib": 1.6
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "celer-bulvovy",
@@ -1691,7 +1721,8 @@
       "f": 0.3,
       "fib": 1.8
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "celozrnne-krekry",
@@ -1704,7 +1735,8 @@
       "f": 15,
       "fib": 7
     },
-    "portion": 25
+    "portion": 25,
+    "bezny": true
   },
   {
     "id": "cerealie-medove-krouzky",
@@ -1811,7 +1843,8 @@
       "f": 0.2,
       "fib": 2.8
     },
-    "portion": 80
+    "portion": 80,
+    "bezny": true
   },
   {
     "id": "cesnek",
@@ -1903,7 +1936,8 @@
       "f": 0.2,
       "fib": 1.2
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "cinske-zeli-dusene",
@@ -1970,7 +2004,8 @@
       "f": 2.6,
       "fib": 4.8
     },
-    "portion": 120
+    "portion": 120,
+    "bezny": true
   },
   {
     "id": "cizrna-varena",
@@ -1984,7 +2019,8 @@
       "fib": 6
     },
     "portion": 150,
-    "portionLabel": "150 g vařené"
+    "portionLabel": "150 g vařené",
+    "bezny": true
   },
   {
     "id": "cizrnove-klicky",
@@ -2064,7 +2100,8 @@
       "fib": 7.9,
       "carbBasis": "total"
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "cocka-sucha",
@@ -2093,7 +2130,8 @@
       "carbBasis": "total"
     },
     "portion": 150,
-    "portionLabel": "150 g vařené"
+    "portionLabel": "150 g vařené",
+    "bezny": true
   },
   {
     "id": "cocka-zelena-varena",
@@ -2107,7 +2145,8 @@
       "fib": 7.9,
       "carbBasis": "total"
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "cockova-pomazanka",
@@ -2224,7 +2263,8 @@
       "f": 4.3,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "cottage-syr-light",
@@ -2237,7 +2277,8 @@
       "f": 0.8,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "croissant",
@@ -2316,7 +2357,8 @@
       "fib": 1
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "cuketa-zluta",
@@ -2381,7 +2423,8 @@
       "f": 2.8,
       "fib": 3.5
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "datle",
@@ -2409,7 +2452,8 @@
       "fib": 8,
       "carbBasis": "total"
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "debrecinska-pecene",
@@ -2423,7 +2467,8 @@
       "fib": 0
     },
     "portion": 50,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "detska-mlecna-kase-krupicova",
@@ -2685,7 +2730,8 @@
       "fib": 0
     },
     "portion": 50,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "dusene-veprove-zebirko-s-fazolovou-omackou",
@@ -2712,7 +2758,8 @@
       "f": 0.5,
       "fib": 2.6
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "dyne-hokkaido",
@@ -2751,7 +2798,8 @@
       "f": 0.1,
       "fib": 2
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "dyne-spagetova",
@@ -2778,7 +2826,8 @@
       "fib": 6,
       "carbBasis": "total"
     },
-    "portion": 15
+    "portion": 15,
+    "bezny": true
   },
   {
     "id": "dynovy-olej",
@@ -2859,7 +2908,8 @@
       "fib": 0
     },
     "portion": 50,
-    "portionLabel": "2 plátky ~50 g"
+    "portionLabel": "2 plátky ~50 g",
+    "bezny": true
   },
   {
     "id": "eidam-zrajici",
@@ -2898,7 +2948,8 @@
       "f": 29,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "emental-svycarsky",
@@ -3097,7 +3148,8 @@
       "fib": 6.2,
       "carbBasis": "available"
     },
-    "portion": 120
+    "portion": 120,
+    "bezny": true
   },
   {
     "id": "fazole-bile-varene",
@@ -3125,7 +3177,8 @@
       "fib": 8.7,
       "carbBasis": "total"
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "fazole-cervene-v-konzerve",
@@ -3153,7 +3206,8 @@
       "fib": 6.4,
       "carbBasis": "total"
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "fazole-lima-varene",
@@ -3196,7 +3250,8 @@
       "carbBasis": "total"
     },
     "portion": 150,
-    "portionLabel": "150 g vařené"
+    "portionLabel": "150 g vařené",
+    "bezny": true
   },
   {
     "id": "fazolky",
@@ -3210,7 +3265,8 @@
       "fib": 3.4
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "fazolova-pomazanka",
@@ -3341,7 +3397,8 @@
       "f": 21,
       "fib": 0
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "feta-syr",
@@ -3381,7 +3438,8 @@
       "fib": 9.8,
       "carbBasis": "total"
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "focaccia",
@@ -3568,7 +3626,8 @@
       "f": 100,
       "fib": 0
     },
-    "portion": 10
+    "portion": 10,
+    "bezny": true
   },
   {
     "id": "gnocchi-bramborove",
@@ -3648,7 +3707,8 @@
       "f": 28,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "gouda-zrala",
@@ -3674,7 +3734,8 @@
       "f": 2,
       "fib": 5
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "grana-padano",
@@ -3713,7 +3774,8 @@
       "f": 18,
       "fib": 9
     },
-    "portion": 45
+    "portion": 45,
+    "bezny": true
   },
   {
     "id": "gravadlaxsas",
@@ -3753,7 +3815,8 @@
       "f": 0.1,
       "fib": 1.6
     },
-    "portion": 130
+    "portion": 130,
+    "bezny": true
   },
   {
     "id": "grep-ruzovy",
@@ -3861,7 +3924,8 @@
       "f": 25,
       "fib": 0
     },
-    "portion": 80
+    "portion": 80,
+    "bezny": true
   },
   {
     "id": "harissa",
@@ -3927,7 +3991,8 @@
       "f": 24,
       "fib": 0
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "hliva-kralovska",
@@ -3953,7 +4018,8 @@
       "f": 0.4,
       "fib": 2.3
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "hliva-ustricna-2",
@@ -3981,7 +4047,8 @@
       "carbBasis": "total"
     },
     "portion": 20,
-    "portionLabel": "2 kostičky ~20 g"
+    "portionLabel": "2 kostičky ~20 g",
+    "bezny": true
   },
   {
     "id": "horka-tykev",
@@ -4021,7 +4088,8 @@
       "f": 3,
       "fib": 2.5
     },
-    "portion": 43
+    "portion": 43,
+    "bezny": true
   },
   {
     "id": "houska-celozrnna",
@@ -4035,7 +4103,8 @@
       "fib": 6
     },
     "portion": 60,
-    "portionLabel": "1 ks ~60 g"
+    "portionLabel": "1 ks ~60 g",
+    "bezny": true
   },
   {
     "id": "hovezi-jatra",
@@ -4049,7 +4118,8 @@
       "f": 3.6,
       "fib": 0
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "hovezi-jazyk",
@@ -4077,7 +4147,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "hovezi-licka",
@@ -4105,7 +4176,8 @@
       "fib": 0
     },
     "portion": 130,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "hovezi-mlete-20",
@@ -4120,7 +4192,8 @@
     },
     "portion": 150,
     "portionLabel": "150 g",
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "hovezi-mlete-20-tuku",
@@ -4149,7 +4222,8 @@
     },
     "portion": 150,
     "portionLabel": "150 g",
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "hovezi-rostena",
@@ -4163,7 +4237,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "hovezi-steak-libovy",
@@ -4177,7 +4252,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "hovezi-svickova",
@@ -4192,7 +4268,8 @@
     },
     "portion": 150,
     "portionLabel": "150 g",
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "hovezi-zebro",
@@ -4221,7 +4298,8 @@
       "carbBasis": "total"
     },
     "portion": 150,
-    "portionLabel": "150 g vařené"
+    "portionLabel": "150 g vařené",
+    "bezny": true
   },
   {
     "id": "hrach-zluty-suchy",
@@ -4327,7 +4405,8 @@
       "f": 0.4,
       "fib": 4.5
     },
-    "portion": 80
+    "portion": 80,
+    "bezny": true
   },
   {
     "id": "hrebenatky",
@@ -4381,7 +4460,8 @@
       "fib": 0.9
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "hruska",
@@ -4395,7 +4475,8 @@
       "fib": 3.1
     },
     "portion": 150,
-    "portionLabel": "1 ks ~150 g"
+    "portionLabel": "1 ks ~150 g",
+    "bezny": true
   },
   {
     "id": "hummus",
@@ -4410,7 +4491,8 @@
       "carbBasis": "total"
     },
     "portion": 50,
-    "portionLabel": "50 g"
+    "portionLabel": "50 g",
+    "bezny": true
   },
   {
     "id": "hummus-2",
@@ -4559,7 +4641,8 @@
       "f": 0.2,
       "fib": 1.2
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "chevre",
@@ -4586,7 +4669,8 @@
       "fib": 34,
       "carbBasis": "total"
     },
-    "portion": 15
+    "portion": 15,
+    "bezny": true
   },
   {
     "id": "chilli-papricka",
@@ -4627,7 +4711,8 @@
       "fib": 7
     },
     "portion": 50,
-    "portionLabel": "1 krajíc ~50 g"
+    "portionLabel": "1 krajíc ~50 g",
+    "bezny": true
   },
   {
     "id": "chleb-cerealni",
@@ -4640,7 +4725,8 @@
       "f": 4.5,
       "fib": 6
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "chleb-kvaskovy",
@@ -4653,7 +4739,8 @@
       "f": 1.5,
       "fib": 4
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "chleb-psenicno-zitny",
@@ -4666,7 +4753,8 @@
       "f": 1.3,
       "fib": 3.5
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "chleb-spaldovy",
@@ -4692,7 +4780,8 @@
       "f": 4.5,
       "fib": 7
     },
-    "portion": 25
+    "portion": 25,
+    "bezny": true
   },
   {
     "id": "chleb-zitny",
@@ -4707,7 +4796,8 @@
       "carbBasis": "total"
     },
     "portion": 50,
-    "portionLabel": "1 krajíc ~50 g"
+    "portionLabel": "1 krajíc ~50 g",
+    "bezny": true
   },
   {
     "id": "chleb-zitny-tmavy",
@@ -4720,7 +4810,8 @@
       "f": 1.2,
       "fib": 6.5
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "chobotnice",
@@ -4775,7 +4866,8 @@
       "f": 0.1,
       "fib": 2.1
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "chrest-bily",
@@ -4841,7 +4933,8 @@
       "fib": 1.1
     },
     "portion": 100,
-    "portionLabel": "1 kapsička ~100 g"
+    "portionLabel": "1 kapsička ~100 g",
+    "bezny": true
   },
   {
     "id": "jablka-susena",
@@ -4868,7 +4961,8 @@
       "fib": 2.4
     },
     "portion": 150,
-    "portionLabel": "1 ks ~150 g"
+    "portionLabel": "1 ks ~150 g",
+    "bezny": true
   },
   {
     "id": "jackfruit",
@@ -4946,7 +5040,8 @@
       "f": 1,
       "fib": 1.3
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "jahlove-vlocky",
@@ -4987,7 +5082,8 @@
       "fib": 8.5,
       "carbBasis": "total"
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "jahly-varene",
@@ -5001,7 +5097,8 @@
       "fib": 1.3
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "jahody",
@@ -5015,7 +5112,8 @@
       "fib": 2
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "jakitori",
@@ -5178,7 +5276,8 @@
       "f": 5,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "jogurtovy-bylinkovy-dresink",
@@ -5231,7 +5330,8 @@
       "f": 0.9,
       "fib": 3.6
     },
-    "portion": 80
+    "portion": 80,
+    "bezny": true
   },
   {
     "id": "kaderavek-2",
@@ -5284,7 +5384,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kachni-stehno",
@@ -5311,7 +5412,8 @@
       "f": 2.5,
       "fib": 2.5
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "kaki",
@@ -5407,7 +5509,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kapr-smazeny-v-trojobalu",
@@ -5435,7 +5538,8 @@
       "fib": 3.1
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "kapusta-hlavkova",
@@ -5593,7 +5697,8 @@
       "f": 0.1,
       "fib": 3.6
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "kefir",
@@ -5607,7 +5712,8 @@
       "fib": 0
     },
     "portion": 250,
-    "portionLabel": "250 ml"
+    "portionLabel": "250 ml",
+    "bezny": true
   },
   {
     "id": "kelewele",
@@ -5633,7 +5739,8 @@
       "f": 44,
       "fib": 3.3
     },
-    "portion": 25
+    "portion": 25,
+    "bezny": true
   },
   {
     "id": "kesu-maslo",
@@ -5739,7 +5846,8 @@
       "fib": 3
     },
     "portion": 75,
-    "portionLabel": "1 ks ~75 g"
+    "portionLabel": "1 ks ~75 g",
+    "bezny": true
   },
   {
     "id": "klicky-alfalfa",
@@ -5848,7 +5956,8 @@
       "carbBasis": "available"
     },
     "portion": 10,
-    "portionLabel": "1 plátek ~10 g"
+    "portionLabel": "1 plátek ~10 g",
+    "bezny": true
   },
   {
     "id": "knedlik-bramborovy",
@@ -5861,7 +5970,8 @@
       "f": 1,
       "fib": 2
     },
-    "portion": 120
+    "portion": 120,
+    "bezny": true
   },
   {
     "id": "knedlik-houskovy",
@@ -5874,7 +5984,8 @@
       "f": 2,
       "fib": 1.8
     },
-    "portion": 120
+    "portion": 120,
+    "bezny": true
   },
   {
     "id": "knedlik-ovocny",
@@ -6231,7 +6342,8 @@
       "f": 21,
       "fib": 0
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "krab",
@@ -6301,7 +6413,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kranas",
@@ -6383,7 +6496,8 @@
     },
     "portion": 120,
     "nonveg": true,
-    "portionLabel": "120 g"
+    "portionLabel": "120 g",
+    "bezny": true
   },
   {
     "id": "kroupy-jecne",
@@ -6397,7 +6511,8 @@
       "fib": 15.6,
       "carbBasis": "total"
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "krupave-musli-s-orechy",
@@ -6438,7 +6553,8 @@
     },
     "portion": 150,
     "nonveg": true,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "kruti-mlete-maso",
@@ -6467,7 +6583,8 @@
     },
     "portion": 150,
     "nonveg": true,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "kruti-stehno",
@@ -6481,7 +6598,8 @@
       "fib": 0
     },
     "portion": 200,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kruti-sunka",
@@ -6495,7 +6613,8 @@
       "fib": 0
     },
     "portion": 50,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kukurice",
@@ -6509,7 +6628,8 @@
       "fib": 2.4
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "kukurice-cerstva",
@@ -6549,7 +6669,8 @@
       "f": 2,
       "fib": 4
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "kukuricna-mouka",
@@ -6602,7 +6723,8 @@
       "f": 0.9,
       "fib": 3
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "kukuricne-testoviny-bezlepkove",
@@ -6684,7 +6806,8 @@
       "fib": 0
     },
     "portion": 100,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kureci-kridla",
@@ -6698,7 +6821,8 @@
       "fib": 0
     },
     "portion": 100,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kureci-kridla-pecena-ostra",
@@ -6741,7 +6865,8 @@
     },
     "portion": 150,
     "nonveg": true,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "kureci-prsa-grilovana",
@@ -6769,7 +6894,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kureci-stehno-s-kuzi",
@@ -6783,7 +6909,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "kureci-teriyaki",
@@ -6811,7 +6938,8 @@
       "fib": 5,
       "carbBasis": "total"
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "kuskus-perlovy-ptaci",
@@ -6838,7 +6966,8 @@
       "fib": 1.4
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "kvasene-zeli",
@@ -6878,7 +7007,8 @@
       "fib": 2
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "kvetakova-ryze",
@@ -6917,7 +7047,8 @@
       "f": 2.5,
       "fib": 0
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "kysane-zeli",
@@ -6931,7 +7062,8 @@
       "fib": 2.9
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "kysane-zeli-konzerva",
@@ -6957,7 +7089,8 @@
       "f": 0.2,
       "fib": 1.2
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "labneh",
@@ -7079,7 +7212,8 @@
       "fib": 1.2
     },
     "portion": 80,
-    "portionLabel": "80 g"
+    "portionLabel": "80 g",
+    "bezny": true
   },
   {
     "id": "leerdammer",
@@ -7160,7 +7294,8 @@
       "fib": 3
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "limeta",
@@ -7253,7 +7388,8 @@
       "fib": 9.7,
       "carbBasis": "total"
     },
-    "portion": 25
+    "portion": 25,
+    "bezny": true
   },
   {
     "id": "listove-testo",
@@ -7307,7 +7443,8 @@
       "carbBasis": "total"
     },
     "portion": 15,
-    "portionLabel": "1 lžíce ~15 g"
+    "portionLabel": "1 lžíce ~15 g",
+    "bezny": true
   },
   {
     "id": "lneny-olej",
@@ -7361,7 +7498,8 @@
     },
     "portion": 150,
     "nonveg": true,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "losos-uzeny",
@@ -7375,7 +7513,8 @@
       "fib": 0
     },
     "portion": 50,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "losos-uzeny-2",
@@ -7520,7 +7659,8 @@
       "f": 23,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "lupinova-mouka",
@@ -7641,7 +7781,8 @@
       "fib": 20,
       "carbBasis": "total"
     },
-    "portion": 20
+    "portion": 20,
+    "bezny": true
   },
   {
     "id": "makadamove-orechy",
@@ -7669,7 +7810,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "makrela-grilovana",
@@ -7697,7 +7839,8 @@
       "fib": 0
     },
     "portion": 80,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "makrela-v-oleji",
@@ -7711,7 +7854,8 @@
       "fib": 0
     },
     "portion": 100,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "makrela-v-tomate-konzerva",
@@ -7740,7 +7884,8 @@
       "carbBasis": "total"
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "manakish-se-syrem",
@@ -7779,7 +7924,8 @@
       "f": 0.3,
       "fib": 1.8
     },
-    "portion": 70
+    "portion": 70,
+    "bezny": true
   },
   {
     "id": "mandle",
@@ -7794,7 +7940,8 @@
       "carbBasis": "total"
     },
     "portion": 30,
-    "portionLabel": "hrst ~30 g"
+    "portionLabel": "hrst ~30 g",
+    "bezny": true
   },
   {
     "id": "mandlova-mouka",
@@ -7822,7 +7969,8 @@
       "fib": 12,
       "carbBasis": "total"
     },
-    "portion": 20
+    "portion": 20,
+    "bezny": true
   },
   {
     "id": "mandlove-mleko-slazene",
@@ -7875,7 +8023,8 @@
       "fib": 1.6
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "mango-pyre",
@@ -8047,7 +8196,8 @@
       "fib": 0
     },
     "portion": 10,
-    "portionLabel": "1 lžička ~10 g"
+    "portionLabel": "1 lžička ~10 g",
+    "bezny": true
   },
   {
     "id": "maslova-dyne",
@@ -8170,7 +8320,8 @@
       "fib": 0.2
     },
     "portion": 20,
-    "portionLabel": "1 lžíce ~20 g"
+    "portionLabel": "1 lžíce ~20 g",
+    "bezny": true
   },
   {
     "id": "medovo-horcicny-dresink",
@@ -8210,7 +8361,8 @@
       "fib": 0.4
     },
     "portion": 200,
-    "portionLabel": "200 g"
+    "portionLabel": "200 g",
+    "bezny": true
   },
   {
     "id": "merunka",
@@ -8223,7 +8375,8 @@
       "f": 0.4,
       "fib": 2
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "mexicka-ryze",
@@ -8353,7 +8506,8 @@
       "f": 0.5,
       "fib": 0
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "mleko-plnotucne-3-5",
@@ -8366,7 +8520,8 @@
       "f": 3.5,
       "fib": 0
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "mleko-polotucne",
@@ -8380,7 +8535,8 @@
       "fib": 0
     },
     "portion": 250,
-    "portionLabel": "1 sklenice ~250 ml"
+    "portionLabel": "1 sklenice ~250 ml",
+    "bezny": true
   },
   {
     "id": "mleko-polotucne-1-5",
@@ -8596,7 +8752,8 @@
       "fib": 0
     },
     "portion": 60,
-    "portionLabel": "60 g"
+    "portionLabel": "60 g",
+    "bezny": true
   },
   {
     "id": "mozzarella-light",
@@ -8609,7 +8766,8 @@
       "f": 9,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "mrazena-zeleninova-smes",
@@ -8713,7 +8871,8 @@
       "f": 0.4,
       "fib": 3.5
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "mrazene-syrove-krokety",
@@ -8782,7 +8941,8 @@
       "fib": 2.8
     },
     "portion": 100,
-    "portionLabel": "1 ks ~100 g"
+    "portionLabel": "1 ks ~100 g",
+    "bezny": true
   },
   {
     "id": "msemen",
@@ -8902,7 +9062,8 @@
       "f": 6,
       "fib": 7
     },
-    "portion": 45
+    "portion": 45,
+    "bezny": true
   },
   {
     "id": "musli-bez-cukru",
@@ -8916,7 +9077,8 @@
       "fib": 8
     },
     "portion": 60,
-    "portionLabel": "60 g"
+    "portionLabel": "60 g",
+    "bezny": true
   },
   {
     "id": "musli-klasicke",
@@ -9125,7 +9287,8 @@
       "f": 0.3,
       "fib": 1.7
     },
-    "portion": 130
+    "portion": 130,
+    "bezny": true
   },
   {
     "id": "nemlecna-pohankova-kase-hruska",
@@ -9177,7 +9340,8 @@
       "f": 30,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "nivova-pomazanka",
@@ -9216,7 +9380,8 @@
       "f": 2.5,
       "fib": 0.2
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "ochuceny-jogurt-jahodovy",
@@ -9229,7 +9394,8 @@
       "f": 2.5,
       "fib": 0.1
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "ochuceny-jogurt-vanilkovy",
@@ -9242,7 +9408,8 @@
       "f": 2.5,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "okoun-ricni",
@@ -9283,7 +9450,8 @@
       "fib": 0.5
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "olej-z-hroznovych-jader",
@@ -9351,7 +9519,8 @@
       "fib": 0
     },
     "portion": 10,
-    "portionLabel": "1 lžíce ~10 g"
+    "portionLabel": "1 lžíce ~10 g",
+    "bezny": true
   },
   {
     "id": "olivy-cerne",
@@ -9390,7 +9559,8 @@
       "f": 0.6,
       "fib": 0
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "omega-3-rybi-olej-citronovy",
@@ -9444,7 +9614,8 @@
       "fib": 5.3,
       "carbBasis": "total"
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "otrubove-cerealie",
@@ -9511,7 +9682,8 @@
       "f": 1.4,
       "fib": 1.7
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "ovesna-mouka",
@@ -9552,7 +9724,8 @@
       "fib": 15,
       "carbBasis": "total"
     },
-    "portion": 15
+    "portion": 15,
+    "bezny": true
   },
   {
     "id": "ovesne-vlocky",
@@ -9567,7 +9740,8 @@
       "carbBasis": "available"
     },
     "portion": 60,
-    "portionLabel": "60 g (suché)"
+    "portionLabel": "60 g (suché)",
+    "bezny": true
   },
   {
     "id": "ovesne-vlocky-jemne",
@@ -9948,7 +10122,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "pao-de-queijo",
@@ -10000,7 +10175,8 @@
       "f": 0.3,
       "fib": 2.1
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "paprika-zelena",
@@ -10013,7 +10189,8 @@
       "f": 0.2,
       "fib": 1.7
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "para-orechy",
@@ -10054,7 +10231,8 @@
       "fib": 0
     },
     "portion": 20,
-    "portionLabel": "20 g"
+    "portionLabel": "20 g",
+    "bezny": true
   },
   {
     "id": "parmezan",
@@ -10106,7 +10284,8 @@
       "f": 0.3,
       "fib": 4.9
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "pastinak-2",
@@ -10184,7 +10363,8 @@
       "f": 12,
       "fib": 0.5
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "pecena-husa",
@@ -10293,7 +10473,8 @@
       "f": 0.9,
       "fib": 1.8
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "pernil",
@@ -10425,7 +10606,8 @@
       "fib": 10,
       "carbBasis": "total"
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "pita-chleb",
@@ -10438,7 +10620,8 @@
       "f": 1.2,
       "fib": 2.2
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "pizza-testo",
@@ -10478,7 +10661,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "platys-2",
@@ -10519,7 +10703,8 @@
       "fib": 0
     },
     "portion": 250,
-    "portionLabel": "250 ml"
+    "portionLabel": "250 ml",
+    "bezny": true
   },
   {
     "id": "pohanka",
@@ -10533,7 +10718,8 @@
       "fib": 10,
       "carbBasis": "total"
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "pohanka-varena",
@@ -10547,7 +10733,8 @@
       "fib": 2.7
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "pohankova-kase-instantni",
@@ -10573,7 +10760,8 @@
       "f": 1,
       "fib": 2.7
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "pohankova-mouka",
@@ -10640,7 +10828,8 @@
       "f": 0.4,
       "fib": 1.5
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "pomazankove-maslo",
@@ -10653,7 +10842,8 @@
       "f": 25,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "pomelo",
@@ -10680,7 +10870,8 @@
       "fib": 2.4
     },
     "portion": 150,
-    "portionLabel": "1 ks ~150 g"
+    "portionLabel": "1 ks ~150 g",
+    "bezny": true
   },
   {
     "id": "popcorn",
@@ -10695,7 +10886,8 @@
       "carbBasis": "total"
     },
     "portion": 25,
-    "portionLabel": "25 g"
+    "portionLabel": "25 g",
+    "bezny": true
   },
   {
     "id": "porek",
@@ -10708,7 +10900,8 @@
       "f": 0.3,
       "fib": 1.8
     },
-    "portion": 80
+    "portion": 80,
+    "bezny": true
   },
   {
     "id": "porridge",
@@ -10854,7 +11047,8 @@
       "f": 0.5,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "proteinovy-pudink",
@@ -10867,7 +11061,8 @@
       "f": 1.5,
       "fib": 0.5
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "provolone",
@@ -10974,7 +11169,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "pstruh-duhovy",
@@ -11002,7 +11198,8 @@
       "fib": 0
     },
     "portion": 80,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "puffed-psenice",
@@ -11070,7 +11267,8 @@
       "fib": 7,
       "carbBasis": "total"
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "quinoa-varena",
@@ -11084,7 +11282,8 @@
       "fib": 2.8
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "quinoa-vlocky",
@@ -11189,7 +11388,8 @@
       "fib": 1.2
     },
     "portion": 100,
-    "portionLabel": "1 ks ~100 g"
+    "portionLabel": "1 ks ~100 g",
+    "bezny": true
   },
   {
     "id": "rak-ricni",
@@ -11361,7 +11561,8 @@
       "fib": 0
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "recky-jogurt-10",
@@ -11375,7 +11576,8 @@
       "fib": 0
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "recky-jogurt-bily",
@@ -11388,7 +11590,8 @@
       "f": 5,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "recky-salat",
@@ -11428,7 +11631,8 @@
       "f": 0.1,
       "fib": 1.6
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "redkvickove-klicky",
@@ -11481,7 +11685,8 @@
       "fib": 0
     },
     "portion": 10,
-    "portionLabel": "1 lžíce ~10 g"
+    "portionLabel": "1 lžíce ~10 g",
+    "bezny": true
   },
   {
     "id": "rericha-seta",
@@ -11520,7 +11725,8 @@
       "f": 13,
       "fib": 0
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "rohlik",
@@ -11534,7 +11740,8 @@
       "fib": 2.3
     },
     "portion": 43,
-    "portionLabel": "1 ks ~43 g"
+    "portionLabel": "1 ks ~43 g",
+    "bezny": true
   },
   {
     "id": "romadur",
@@ -12003,7 +12210,8 @@
       "fib": 3.7
     },
     "portion": 30,
-    "portionLabel": "hrst ~30 g"
+    "portionLabel": "hrst ~30 g",
+    "bezny": true
   },
   {
     "id": "rozmaryn-cerstvy",
@@ -12043,7 +12251,8 @@
       "f": 0.7,
       "fib": 1.6
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "rukola-2",
@@ -12096,7 +12305,8 @@
       "f": 0.3,
       "fib": 3.8
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "ryba-maslova",
@@ -12177,7 +12387,8 @@
       "f": 0.5,
       "fib": 1.3
     },
-    "portion": 75
+    "portion": 75,
+    "bezny": true
   },
   {
     "id": "ryze-bila",
@@ -12190,7 +12401,8 @@
       "f": 0.6,
       "fib": 1.3
     },
-    "portion": 75
+    "portion": 75,
+    "bezny": true
   },
   {
     "id": "ryze-bila-varena",
@@ -12204,7 +12416,8 @@
       "fib": 0.4
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "ryze-divoka",
@@ -12230,7 +12443,8 @@
       "f": 0.6,
       "fib": 1.3
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "ryze-natural",
@@ -12243,7 +12457,8 @@
       "f": 2.7,
       "fib": 3.5
     },
-    "portion": 75
+    "portion": 75,
+    "bezny": true
   },
   {
     "id": "ryze-natural-varena",
@@ -12257,7 +12472,8 @@
       "fib": 1.6
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "ryze-parboiled",
@@ -12322,7 +12538,8 @@
       "f": 0.2,
       "fib": 0.4
     },
-    "portion": 250
+    "portion": 250,
+    "bezny": true
   },
   {
     "id": "ryzova-mouka",
@@ -12349,7 +12566,8 @@
       "fib": 4.2
     },
     "portion": 18,
-    "portionLabel": "2 ks ~18 g"
+    "portionLabel": "2 ks ~18 g",
+    "bezny": true
   },
   {
     "id": "ryzove-kase-detske-vlocky-ryzove",
@@ -12388,7 +12606,8 @@
       "f": 0.6,
       "fib": 1.6
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "ryzove-nudle-varene",
@@ -12648,7 +12867,8 @@
     },
     "portion": 90,
     "portionLabel": "1 konzerva ~90 g",
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "sardinky-v-oleji",
@@ -12676,7 +12896,8 @@
       "fib": 0
     },
     "portion": 120,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "satay-ayam",
@@ -12785,7 +13006,8 @@
       "fib": 0.6
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "sepie",
@@ -12949,7 +13171,8 @@
       "fib": 0
     },
     "portion": 150,
-    "portionLabel": "1 kelímek ~150 g"
+    "portionLabel": "1 kelímek ~150 g",
+    "bezny": true
   },
   {
     "id": "skyr-boruvkovy",
@@ -12962,7 +13185,8 @@
       "f": 0.2,
       "fib": 0.2
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "skyr-jahodovy",
@@ -12975,7 +13199,8 @@
       "f": 0.2,
       "fib": 0.1
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "skyr-vanilkovy",
@@ -12988,7 +13213,8 @@
       "f": 0.2,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "slane-krekry",
@@ -13055,7 +13281,8 @@
       "fib": 0
     },
     "portion": 80,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "sled-cerstvy",
@@ -13112,7 +13339,8 @@
       "carbBasis": "available"
     },
     "portion": 20,
-    "portionLabel": "20 g"
+    "portionLabel": "20 g",
+    "bezny": true
   },
   {
     "id": "slunecnicove-klicky",
@@ -13138,7 +13366,8 @@
       "f": 100,
       "fib": 0
     },
-    "portion": 10
+    "portion": 10,
+    "bezny": true
   },
   {
     "id": "smetana-ke-slehani",
@@ -13178,7 +13407,8 @@
       "f": 12,
       "fib": 0
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "smetana-na-vareni-19",
@@ -13326,7 +13556,8 @@
       "f": 2,
       "fib": 0.5
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "sojovy-jogurt-natural",
@@ -13419,7 +13650,8 @@
       "f": 0.9,
       "fib": 1.8
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "spagety-celozrnne",
@@ -13432,7 +13664,8 @@
       "f": 1.3,
       "fib": 4.5
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "spalda",
@@ -13553,7 +13786,8 @@
       "fib": 2.2
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "spenat-baby",
@@ -13770,7 +14004,8 @@
       "fib": 0
     },
     "portion": 50,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "sunka-od-kosti",
@@ -13785,7 +14020,8 @@
     },
     "portion": 50,
     "nonveg": true,
-    "portionLabel": "2 plátky ~50 g"
+    "portionLabel": "2 plátky ~50 g",
+    "bezny": true
   },
   {
     "id": "sunka-veprova-nejvyssi-jakost",
@@ -13799,7 +14035,8 @@
       "fib": 0
     },
     "portion": 50,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "sunkovy-narez",
@@ -13924,7 +14161,8 @@
       "fib": 7.3,
       "carbBasis": "total"
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "susene-moruse-bile",
@@ -13978,7 +14216,8 @@
       "fib": 7.1,
       "carbBasis": "total"
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "suseny-ananas",
@@ -14031,7 +14270,8 @@
       "f": 0.3,
       "fib": 1.4
     },
-    "portion": 60
+    "portion": 60,
+    "bezny": true
   },
   {
     "id": "syrova-pomazanka",
@@ -14058,7 +14298,8 @@
       "fib": 0
     },
     "portion": 30,
-    "portionLabel": "1 odměrka ~30 g"
+    "portionLabel": "1 odměrka ~30 g",
+    "bezny": true
   },
   {
     "id": "syrove-tycinky",
@@ -14243,7 +14484,8 @@
       "f": 23,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "taveny-syr-smetanovy",
@@ -14296,7 +14538,8 @@
       "fib": 0
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "tempeh-2",
@@ -14348,7 +14591,8 @@
       "f": 1.5,
       "fib": 3
     },
-    "portion": 75
+    "portion": 75,
+    "bezny": true
   },
   {
     "id": "testoviny-celozrnne",
@@ -14362,7 +14606,8 @@
       "fib": 9,
       "carbBasis": "available"
     },
-    "portion": 75
+    "portion": 75,
+    "bezny": true
   },
   {
     "id": "testoviny-celozrnne-varene",
@@ -14376,7 +14621,8 @@
       "fib": 4.5
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "testoviny-varene",
@@ -14390,7 +14636,8 @@
       "fib": 1.8
     },
     "portion": 200,
-    "portionLabel": "200 g vařené"
+    "portionLabel": "200 g vařené",
+    "bezny": true
   },
   {
     "id": "thit-kho",
@@ -14515,7 +14762,8 @@
       "fib": 0.9
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "tofu-bile",
@@ -14528,7 +14776,8 @@
       "f": 7,
       "fib": 1
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "tofu-marinovane",
@@ -14541,7 +14790,8 @@
       "f": 8,
       "fib": 0.5
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "tofu-marinovane-2",
@@ -14567,7 +14817,8 @@
       "f": 8.5,
       "fib": 0.5
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "tolstolobik",
@@ -14661,7 +14912,8 @@
       "fib": 6.3,
       "carbBasis": "total"
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "tortilla-psenicna",
@@ -14675,7 +14927,8 @@
       "fib": 3
     },
     "portion": 60,
-    "portionLabel": "1 ks ~60 g"
+    "portionLabel": "1 ks ~60 g",
+    "bezny": true
   },
   {
     "id": "tostones",
@@ -14701,7 +14954,8 @@
       "f": 3.5,
       "fib": 3
     },
-    "portion": 25
+    "portion": 25,
+    "bezny": true
   },
   {
     "id": "toustovy-chleb-celozrnny",
@@ -14715,7 +14969,8 @@
       "fib": 6,
       "carbBasis": "total"
     },
-    "portion": 28
+    "portion": 28,
+    "bezny": true
   },
   {
     "id": "treska",
@@ -14730,7 +14985,8 @@
     },
     "portion": 150,
     "nonveg": true,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "treska-tmava",
@@ -14757,7 +15013,8 @@
       "f": 0.2,
       "fib": 2.1
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "tteok",
@@ -14784,7 +15041,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "tunak-kridlaty",
@@ -14840,7 +15098,8 @@
       "fib": 0
     },
     "portion": 80,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "tunak-v-oleji-odkapany",
@@ -14869,7 +15128,8 @@
     },
     "portion": 120,
     "portionLabel": "1 konzerva ~120 g",
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "tunak-zlutoploutvy",
@@ -14950,7 +15210,8 @@
       "fib": 0
     },
     "portion": 125,
-    "portionLabel": "125 g"
+    "portionLabel": "125 g",
+    "bezny": true
   },
   {
     "id": "tvaroh-mekky-nizkotucny",
@@ -14963,7 +15224,8 @@
       "f": 0.3,
       "fib": 0
     },
-    "portion": 125
+    "portion": 125,
+    "bezny": true
   },
   {
     "id": "tvaroh-mekky-odtucneny",
@@ -14976,7 +15238,8 @@
       "f": 0.3,
       "fib": 0
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "tvaroh-plnotucny",
@@ -14989,7 +15252,8 @@
       "f": 10,
       "fib": 0
     },
-    "portion": 100
+    "portion": 100,
+    "bezny": true
   },
   {
     "id": "tvaroh-tucny",
@@ -15016,7 +15280,8 @@
       "fib": 0
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "tykev-lahvova",
@@ -15056,7 +15321,8 @@
       "f": 7.5,
       "fib": 0.4
     },
-    "portion": 50
+    "portion": 50,
+    "bezny": true
   },
   {
     "id": "uhersky-salam",
@@ -15139,7 +15405,8 @@
       "f": 23,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "vaclavka-obecna",
@@ -15335,7 +15602,8 @@
       "fib": 0
     },
     "portion": 60,
-    "portionLabel": "1 ks ~60 g"
+    "portionLabel": "1 ks ~60 g",
+    "bezny": true
   },
   {
     "id": "veprova-jatra",
@@ -15363,7 +15631,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "veprova-kyta-libova",
@@ -15377,7 +15646,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "veprova-kytka",
@@ -15407,7 +15677,8 @@
     },
     "portion": 150,
     "nonveg": true,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "veprova-plec",
@@ -15421,7 +15692,8 @@
       "fib": 0
     },
     "portion": 150,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "veprova-zebra",
@@ -15463,7 +15735,8 @@
       "fib": 0
     },
     "portion": 130,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "veprovy-bucek",
@@ -15531,7 +15804,8 @@
       "carbBasis": "available"
     },
     "portion": 30,
-    "portionLabel": "hrst ~30 g"
+    "portionLabel": "hrst ~30 g",
+    "bezny": true
   },
   {
     "id": "vlasskoorechovy-olej",
@@ -15661,7 +15935,8 @@
       "f": 15,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "zampion-bily",
@@ -15701,7 +15976,8 @@
       "fib": 1
     },
     "portion": 100,
-    "portionLabel": "100 g"
+    "portionLabel": "100 g",
+    "bezny": true
   },
   {
     "id": "zampiony-bile",
@@ -15741,7 +16017,8 @@
       "fib": 0
     },
     "portion": 50,
-    "nonveg": true
+    "nonveg": true,
+    "bezny": true
   },
   {
     "id": "zeleninovy-prikrm-brambor-mrkev",
@@ -15846,7 +16123,8 @@
       "fib": 5,
       "carbBasis": "total"
     },
-    "portion": 80
+    "portion": 80,
+    "bezny": true
   },
   {
     "id": "zeli-bile",
@@ -15860,7 +16138,8 @@
       "fib": 2.5
     },
     "portion": 150,
-    "portionLabel": "150 g"
+    "portionLabel": "150 g",
+    "bezny": true
   },
   {
     "id": "zeli-cervene",
@@ -15873,7 +16152,8 @@
       "f": 0.2,
       "fib": 2.1
     },
-    "portion": 150
+    "portion": 150,
+    "bezny": true
   },
   {
     "id": "zerve",
@@ -15886,7 +16166,8 @@
       "f": 21,
       "fib": 0
     },
-    "portion": 30
+    "portion": 30,
+    "bezny": true
   },
   {
     "id": "zitna-mouka-celozrnna",
@@ -15940,7 +16221,8 @@
       "fib": 6,
       "carbBasis": "total"
     },
-    "portion": 40
+    "portion": 40,
+    "bezny": true
   },
   {
     "id": "zluty-meloun",
@@ -15953,7 +16235,8 @@
       "f": 0.2,
       "fib": 0.9
     },
-    "portion": 200
+    "portion": 200,
+    "bezny": true
   },
   {
     "id": "zverinova-pecene",
