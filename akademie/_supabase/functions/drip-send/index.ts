@@ -636,6 +636,30 @@ Deno.serve(async (req: Request) => {
       .eq('detail->>track', l.track).maybeSingle();   // dedupe per track (pri prerazeni leadu jinam se kroky nepreskakuji)
     const advance = async () => {
       const ns = l.step + 1;
+      // ⛔⛔ KDO SE ODHLASIL A PAK KOUPIL, DOSTANE JEN DORUCENI. Nic vic. (7. 8. 2026)
+      // `posliUvitani` v academy-stripe-webhook nastavuje `status: 'active'` bez podminky,
+      // takze nakup ODHLASENEHO cloveka ho vratil do rozesilky natrvalo: dostal nejen
+      // doruceni (spravne, to je plneni smlouvy), ale i upsell a vsechen budouci marketing.
+      // Ten webhook proto nove pri odhlasenem leadovi zapise do `vars` znacku
+      // `_byl_odhlaseny: true` a tady se podle ni po PRVNIM mailu trate lead vrati zpatky
+      // mezi odhlasene. ⇒ Zaplacene dostane, marketing uz ne.
+      // ⚠️ Znacka je na NEJVYSSI urovni `vars`, tedy vedle klicu trati. Kolize nehrozi,
+      //    protoze trate se jmenuji bez podtrzitka na zacatku a cte se vyhradne `vars[track]`.
+      // ⚠️ Kontroluje se `l.step === 0`, ne posledni krok. Zamerne: krok 0 je doruceni,
+      //    kroky 1 a 2 uz jsou „jak na to" a upsell, a ty odhlaseny clovek dostat nema.
+      const bylOdhlaseny = !!(l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars)
+        && (l.vars as Record<string, unknown>)._byl_odhlaseny);
+      if (bylOdhlaseny && l.step === 0 && String(l.track || '').startsWith('onboarding-nakup-')) {
+        await admin.from('leads').update({
+          status: 'unsubscribed', next_send_at: null, step: ns, updated_at: nowIso,
+        }).eq('id', l.id);
+        await admin.from('email_events').insert({
+          lead_id: l.id, step: l.step, type: 'stop_odhlaseny_kupec',
+          detail: { track: l.track, duvod: 'koupil po odhlaseni, doruceni odeslano, marketing ne' },
+        });
+        finished++;
+        return;
+      }
       if (tpl.wait_days == null) {
         // wait_days = null znamena POSLEDNI mail trate. Tady se rozhoduje, jestli
         // clovek pokracuje jinam, nebo definitivne ztichne. Viz MOSTY vyse.

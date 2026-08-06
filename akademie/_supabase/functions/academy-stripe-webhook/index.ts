@@ -699,7 +699,7 @@ async function posliUvitani(
   // když odeslání selže, opakovaný pokus jede z hodinové dávky a bez tohohle by spadl
   // na `unresolved_token` už navždy. Klíčuje se tratí, viz `leads-vars.sql`.
   const { data: lead } = await admin
-    .from("leads").select("id,name,vars").eq("email", email).limit(1);
+    .from("leads").select("id,name,vars,status").eq("email", email).limit(1);
 
   // ⛔ SLOUČIT, NE PŘEPSAT (opraveno 6. 8. 2026). Do té doby se sem psalo natvrdo
   // `{ [track]: vars }`, což PŘEPSALO CELÝ sloupec a tiše zahodilo proměnné všech
@@ -712,7 +712,20 @@ async function posliUvitani(
     && typeof lead[0].vars === "object" && !Array.isArray(lead[0].vars))
     ? lead[0].vars as Record<string, unknown>
     : {};
-  const varsProLeada = vars ? { ...stavajiciVars, [track]: vars } : null;
+  // ⛔⛔ ODHLASENY CLOVEK, KTERY KOUPIL, NESMI SKONCIT ZPATKY V MARKETINGU (7. 8. 2026).
+  // `status: "active"` nize je nutne, jinak `drip-send` nevybere leada a NEODEJDE ANI
+  // DORUCENI (vybira `status='active' AND next_send_at IS NOT NULL`). Zaplacene tedy
+  // dostat musi. Ale do te doby tim clovek, ktery se drive odhlasil, TICHE OZIL
+  // pro vsechny budouci rozesilky. Proto se sem zapisuje znacka a `drip-send` podle ni
+  // po prvnim mailu trate vrati `status` zpatky na `unsubscribed` (viz tam `bylOdhlaseny`).
+  // ⚠️ Znacka se nesmi ztratit ani smazat: bez ni oprava mlci a chyba se vrati.
+  // ⚠️ Zatim se to nikomu nestalo (zmereno 6. 8.: 37 odhlasenych, 0 z nich s nakupem),
+  //    takze tohle je prevence, ne oprava skody.
+  const bylOdhlaseny = !!(lead && lead.length && lead[0].status === "unsubscribed");
+  const znacka = bylOdhlaseny ? { _byl_odhlaseny: true } : {};
+  const varsProLeada = (vars || bylOdhlaseny)
+    ? { ...stavajiciVars, ...znacka, ...(vars ? { [track]: vars } : {}) }
+    : null;
 
   if (lead && lead.length) {
     await admin.from("leads").update({
