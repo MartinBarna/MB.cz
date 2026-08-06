@@ -478,6 +478,16 @@ Deno.serve(async (req: Request) => {
     if (t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci') return owns.academy.has(em);
     if (t === 'trener-kit') return step > 0 && owns.academy.has(em);
     if (t === 'upsell-coaching') return owns.coaching.has(em);
+    // [2026-08-06] TRATE APPKY (tc-free = registrace v appce, tc-magnet = jidelnickovy magnet).
+    // Prodavaji predplatne Tvuj Coach. Kdo si koupi predplatne PRIMO v appce, prepne se pryc
+    // sam (app-onboarding-hook ho hodi do onboarding-nakup-tvujcoach), takze na nej tohle
+    // pravidlo neni. Diru maji ale dva pripady, ktere hook nikdy neuvidi:
+    //   - kdo koupil ACADEMY, ma appku VIP na rok (pamet tvujcoach-academy-vip-na-rok),
+    //   - kdo ma KOUCINK, plati Martinovi nejvyssi ticket, jaky prodavame.
+    // Obema by od kroku 5 chodilo "zkusebka ti skonci / doběhla, odemkni si appku za 249",
+    // coz je u prvniho lez a u druheho trapne. Kroky 0 az 4 jsou obsahove (vazeni, prumery,
+    // generatory, AI kouc) a davaji smysl i jim, proto se stopuje az od kroku 5.
+    if (t === 'tc-free' || t === 'tc-magnet') return step >= 5 && (owns.academy.has(em) || owns.coaching.has(em));
     return false;
   };
 
