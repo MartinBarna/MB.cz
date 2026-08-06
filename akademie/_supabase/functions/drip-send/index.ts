@@ -14,7 +14,15 @@ const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
 const FROM = 'Martin Barna <news@martinbarna.cz>';
 const SITE = 'https://martinbarna.cz';
-const COURSE_URL = 'https://form.simpleshop.cz/3Vbl/buy/';
+// ⛔ 6. 8. 2026: bylo tu 'https://form.simpleshop.cz/3Vbl/buy/'. Martin SimpleShop
+// i Comgate pred par dny ZRUSIL, vsechno jde pres Stripe. Web uz na Stripe jel
+// (overeno na vsech sesti prodejnich strankach, nula vyskytu simpleshop/comgate),
+// ale maily posilaly lidi porad na SimpleShop, protoze tuhle konstantu nikdo
+// neprepsal. Formular tam navic vracel HTTP 200, takze to nevypadalo rozbite.
+// Tenhle odkaz pouziva 13 sablon pres {{course_url}}, takze zmena jednoho radku
+// spravi vsechny najednou. Je to tentyz odkaz, ktery je na /videokurz pod
+// tlacitkem „Koupit za 800 Kc".
+const COURSE_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06';
 const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
 const COURSE_PRICE = 800;
 const DISCOUNT_CODE = 'ZACNI15';
