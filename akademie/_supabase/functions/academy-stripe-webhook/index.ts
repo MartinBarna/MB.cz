@@ -722,9 +722,18 @@ async function posliUvitani(
   // ⚠️ Zatim se to nikomu nestalo (zmereno 6. 8.: 37 odhlasenych, 0 z nich s nakupem),
   //    takze tohle je prevence, ne oprava skody.
   const bylOdhlaseny = !!(lead && lead.length && lead[0].status === "unsubscribed");
-  const znacka = bylOdhlaseny ? { _byl_odhlaseny: true } : {};
-  const varsProLeada = (vars || bylOdhlaseny)
-    ? { ...stavajiciVars, ...znacka, ...(vars ? { [track]: vars } : {}) }
+  // ⛔ ZNACKA SE MUSI I MAZAT, ne jen zapisovat (nalez z revize 7. 8. 2026).
+  // Kdo se odhlasil, koupil (drip ho vratil mezi odhlasene), pak se ZNOVU PRIHLASIL
+  // a koupil podruhe, dostal by doruceni a znacka ze `vars` by ho TISE odhlasila znovu,
+  // protoze prezila. Proto se pri aktivnim leadovi vzdycky vyhodi.
+  const varsBezZnacky = { ...stavajiciVars };
+  delete (varsBezZnacky as Record<string, unknown>)._byl_odhlaseny;
+  const varsProLeada = (vars || bylOdhlaseny || "_byl_odhlaseny" in stavajiciVars)
+    ? {
+      ...varsBezZnacky,
+      ...(bylOdhlaseny ? { _byl_odhlaseny: true } : {}),
+      ...(vars ? { [track]: vars } : {}),
+    }
     : null;
 
   if (lead && lead.length) {
