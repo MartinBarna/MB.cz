@@ -36,10 +36,17 @@ const json = (b: unknown, status: number, origin: string) =>
 
 const clip = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
 
+// ⛔ TENHLE SEZNAM SE ROZCHAZI S FORMULAREM, A NIC TO NEHLIDA.
+// Hodnota, ktera tady chybi, se na r. 78 TISE prepise na "jine", takze zakonne
+// potvrzeni odejde s predmetem "Jiny produkt" a Martin nevi, co ten clovek koupil.
+// Stalo se to 6. 8. 2026 u balicku: volba uz byla v odstoupeni/index.html i v odkazu
+// na dekovaci strance, sem ji nikdo nedopsal. ⇒ KAZDY NOVY PRODUKT MA DVA SEZNAMY,
+// jeden na ceste dovnitr (KATALOG v academy-stripe-webhook) a jeden na ceste ven (tenhle).
 const PRODUCT_LABEL: Record<string, string> = {
   videokurz: "Videokurz výživy",
   academy: "Barna Academy",
   konzultace: "Konzultace / koučink",
+  balicek: "40 receptů a 48 odpovědí",
   jine: "Jiný produkt",
 };
 
@@ -108,6 +115,32 @@ Deno.serve(async (req: Request) => {
   if (ins.error || !ins.data) return json({ error: "db" }, 500, origin);
   const row = ins.data;
 
+  // ⛔ ODSTOUPENI MUSI UMLCET PONAKUPNI MAILY (doplneno 6. 8. 2026).
+  // Do te doby tahle funkce nesahala na `leads` vubec, takze clovek, ktery pozadal
+  // o vraceni penez, dostal 3. den mail „kde v tom zacit" a 8. den upsell na videokurz.
+  // Trat zastavi jedine PLNY refund ve Stripu, a na ten ma Martin ze zakona 14 dnu.
+  // Parkujeme proto uz pri PODANI odstoupeni. Uplne tiche selhani, nic by neskrilo.
+  // ⚠️ Vyhradne trate `onboarding-nakup-%`, tedy ponakupni serie k JEDNOMU produktu.
+  //    Kdo odstoupi od videokurzu, nesmi tim prijit o bezny mailing ani o onboarding
+  //    jineho produktu, ktery si nechava.
+  // ⚠️ Zastavuje se pres `next_send_at = null` a status zustava `active`. Duvod:
+  //    drip-send vybira `status='active' AND next_send_at IS NOT NULL` (drip-send:450),
+  //    takze tohle spolehlive mlci. A az refund ve Stripu leada prehodi na rozluckovou
+  //    trat (nastavi mu next_send_at), rozjede se sam. Kdybych sem dal status='paused',
+  //    rozluckovy mail by uz nikdy neodesel.
+  try {
+    const { data: zaparkovani } = await admin.from("leads")
+      .update({ next_send_at: null, updated_at: new Date().toISOString() })
+      .eq("email", email).eq("status", "active").like("track", "onboarding-nakup-%")
+      .select("id, track, step");
+    for (const p of zaparkovani ?? []) {
+      await admin.from("email_events").insert({
+        lead_id: p.id, step: p.step, type: "paused_withdrawal",
+        detail: { track: p.track, duvod: "odstoupeni od smlouvy", produkt: product },
+      });
+    }
+  } catch { /* best-effort: podani odstoupeni plati i kdyz se parkovani nepovede */ }
+
   const when = new Date(row.created_at).toLocaleString("cs-CZ", { timeZone: "Europe/Prague", dateStyle: "long", timeStyle: "short" });
   const label = PRODUCT_LABEL[product];
   const summary =
@@ -139,7 +172,12 @@ Deno.serve(async (req: Request) => {
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     await resend(to, "⚠️ Odstoupení od smlouvy: " + email,
       `<p>Zákazník podal online odstoupení od smlouvy:</p>` + summary +
-      `<p><b>Co udělat:</b> vrátit peníze do 14 dnů (SimpleShop → Prodeje → dohledat objednávku → refundace) a případně deaktivovat přístup v adminu.</p>`);
+      // ⛔ Tenhle navod byl do 6. 8. 2026 DVAKRAT spatne: posilal do SimpleShopu, ktery
+      //    Martin uz zrusil (vsechno jde pres Stripe), a radil „deaktivovat pristup v adminu",
+      //    coz maily NEZASTAVI (drip-send na entitlements nesaha). Prodejni maily zastavi
+      //    jedine PLNY refund ve Stripu; castecny refund je taky nezastavi.
+      `<p><b>Co udělat:</b> vrátit peníze do 14 dnů ve <b>Stripu</b> (Payments → najít platbu podle e-mailu → Refund, <b>celou částku</b>).</p>` +
+      `<p style="font-size:14px;color:#555">Ponákupní maily k tomuhle produktu jsou už zaparkované od chvíle, kdy zákazník formulář odeslal. <b>Plný</b> refund ve Stripu pak doošetří zbytek (odebere přístup a pošle rozlučkový mail). Částečný refund nestačí, ten se chová jako by se nic nestalo.</p>`);
   } catch { /* best-effort */ }
 
   return json({ ok: true, id: row.id, submitted_at: row.created_at, when }, 200, origin);

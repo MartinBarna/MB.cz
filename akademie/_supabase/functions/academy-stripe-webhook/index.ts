@@ -933,10 +933,94 @@ Deno.serve(async (req) => {
           );
         }
 
+        // ⭐⭐ OPAKOVANÝ NÁKUP BALÍČKU: PENÍZE PŘIŠLY, TAK SE MUSÍ NĚCO POSLAT.
+        // ⛔ Do 6. 8. 2026 viselo celé doručení uvnitř `if (novyDozivotni)`. Kdo si balíček
+        //    koupil podruhé, zaplatil 349 Kč, dostal HTTP 200 a NIC JINÉHO. U tohohle
+        //    produktu to není okrajový případ: odkazy platí 14 dní a nejrychlejší reakce
+        //    člověka, kterému vypršely, je koupit to znovu za tři stovky, ne psát Martinovi.
+        // ⛔⛔ A NESTAČILO BY jen vytáhnout `posliUvitani` z té podmínky ven. `posliUvitani`
+        //    postaví leada na krok 0 trati a spustí `drip-send`, jenže ten má deduplikaci
+        //    `lead_id + step + type='sent' + detail->>track` (drip-send:634). U druhého
+        //    nákupu ji NAJDE, mail PŘESKOČÍ a jen posune krok. Doručení proto musí jít
+        //    mimo trať, přímo přes Resend. (Ověřeno čtením drip-send, ne odhadem.)
+        // ⚠️ Idempotence: Stripe tutéž událost běžně doručuje víckrát. Rozhoduje
+        //    `payment_intent`, ne „má už přístup". Táž platba = mlčet, nová platba = poslat.
+        let balicekZnovu = klic === "balicek" && !novyDozivotni ? "neznamo" : "netyka-se";
+        if (klic === "balicek" && !novyDozivotni) {
+          const pi = typeof obj.payment_intent === "string"
+            ? obj.payment_intent
+            : (typeof obj.id === "string" ? obj.id : "");
+          // Přehrání PRVNÍHO nákupu: `entitlements` u sebe nese jeho payment_intent.
+          const { data: puvodni } = await admin.from("entitlements")
+            .select("stripe_payment_intent").eq("email", emailL).eq("product", def.produkt).maybeSingle();
+          // Přehrání NĚKTERÉHO z opakovaných nákupů: stopa níž.
+          const { data: jizPoslano } = await admin.from("email_events")
+            .select("id").eq("type", "balicek_znovu_doruceno").eq("detail->>payment_intent", pi).limit(1);
+
+          if (!pi) {
+            balicekZnovu = "preskoceno-chybi-payment-intent";
+          } else if (puvodni?.stripe_payment_intent === pi || (jizPoslano ?? []).length > 0) {
+            balicekZnovu = "preskoceno-prehrana-udalost";
+          } else {
+            try {
+              const podepis = async (soubor: string, jmenoProStazeni: string) => {
+                const { data, error } = await admin.storage.from("videokurz-materialy")
+                  .createSignedUrl(soubor, 14 * 24 * 3600, { download: jmenoProStazeni });
+                if (error || !data?.signedUrl) throw new Error("signed_url:" + soubor);
+                return data.signedUrl;
+              };
+              const kucharka = await podepis("Kucharka 40 + receptu.pdf", "Martin-Barna-Kucharka-40-receptu.pdf");
+              const otazky = await podepis("Otazky klientu EBook.pdf", "Martin-Barna-48-odpovedi.pdf");
+              if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
+              const btn = (href: string, text: string) =>
+                `<a href="${href}" style="display:inline-block;background:#EBB12C;color:#161616;`
+                + `font-weight:700;text-decoration:none;padding:13px 26px;border-radius:50px;margin:6px 8px 6px 0">${text}</a>`;
+              const res = await fetch("https://api.resend.com/emails", {
+                method: "POST",
+                headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  from: "Martin Barna <news@martinbarna.cz>",
+                  to: [emailL],
+                  reply_to: "martin@martinbarna.cz",
+                  subject: "Posílám odkazy ke stažení znovu",
+                  html:
+                    `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px">`
+                    + `<p>Dobrý den,</p>`
+                    + `<p>objednávka na <b>40 receptů a 48 odpovědí</b> dorazila znovu. Nejspíš proto, `
+                    + `že původní odkazy ke stažení mezitím vypršely. Tady jsou čerstvé, platí 14 dní:</p>`
+                    + `<p>${btn(kucharka, "Stáhnout kuchařku")}${btn(otazky, "Stáhnout e-book")}</p>`
+                    + `<p><b>Ulož si oba soubory rovnou do mobilu nebo do počítače.</b> Pak už je nebudeš `
+                    + `potřebovat stahovat znovu, zůstanou ti navždy.</p>`
+                    + `<p>A hlavně: kdyby ti odkaz zase vypršel, <b>nekupuj to podruhé</b>. Stačí odpovědět `
+                    + `na tenhle e-mail a pošlu ti nové zdarma. Ohledně toho druhého nákupu se ti ozvu.</p>`
+                    + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
+                }),
+              });
+              if (!res.ok) throw new Error("resend_" + res.status);
+              await admin.from("email_events").insert({
+                lead_id: null, step: 0, type: "balicek_znovu_doruceno",
+                detail: { track: "onboarding-nakup-balicek", payment_intent: pi, email: emailL },
+              });
+              balicekZnovu = "ok";
+              await alertAdmin("💸 Stripe: BALÍČEK koupen PODRUHÉ, odkazy odeslány znovu", {
+                email: emailL, payment_intent: pi,
+                co_delat: "⛔ Vrať mu 349 Kč (Stripe → Payments → tahle platba → Refund, celou částku). "
+                  + "Zaplatil dvakrát za totéž, soubory už dostal. Mail mu slíbil, že se ozveš.",
+              });
+            } catch (e) {
+              balicekZnovu = "CHYBA: " + String(e).slice(0, 120);
+              await alertAdmin("🔴 Stripe: BALÍČEK koupen PODRUHÉ a odkazy se NEODESLALY", {
+                email: emailL, chyba: String(e).slice(0, 200),
+                co_delat: "⛔ Pošli mu kuchařku a e-book ručně A vrať mu 349 Kč. Zaplatil a nedostal nic.",
+              });
+            }
+          }
+        }
+
         return json({
           ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
           novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
-          referral, bonus_videokurz: bonusVideokurz,
+          referral, bonus_videokurz: bonusVideokurz, balicek_znovu: balicekZnovu,
         });
       }
 

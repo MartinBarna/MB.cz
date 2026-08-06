@@ -38,7 +38,13 @@ Deno.serve(async (req) => {
     admin.from("leads").select("id").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", now.toISOString()),
     // Vcerejsi realne prodeje. `stripe-lifetime` = dozivotni Academy pres Stripe
     // (od 29. 7. 2026 nahrazuje SimpleShop), musi se pocitat stejne jako `simpleshop`.
-    admin.from("entitlements").select("product").eq("active", true).in("source", ["simpleshop", "stripe-lifetime"]).gte("granted_at", yStart.toISOString()),
+    // ⛔ ROZŠÍŘENO 6. 8. 2026: seznam znal jen Academy, takže prodej videokurzu,
+    //    konzultace a balíčku se do řádku „Prodeje" NEZAPOČÍTAL. Den, kdy balíček
+    //    koupilo deset lidí, vypadal v přehledu stejně jako den bez prodeje, takže
+    //    Martin neměl z čeho poznat ani úspěch, ani výpadek doručení.
+    //    ⚠️ Nezaměňovat s počítadlem zakládajících členů níž (ř. ~64): tam je užší
+    //    filtr ZÁMĚRNÝ, do padesátky se kupci ostatních produktů počítat nesmí.
+    admin.from("entitlements").select("product").eq("active", true).in("source", ["simpleshop", "stripe-lifetime", "stripe-videokurz", "stripe-konzultace", "stripe-balicek"]).gte("granted_at", yStart.toISOString()),
     admin.from("withdrawals").select("status"),
     admin.from("referrals").select("status"),
     // ⛔ OPRAVA 28. 7. 2026: bylo tu `select("id")`, jenze `entitlements` sloupec `id`
@@ -272,15 +278,21 @@ Deno.serve(async (req) => {
   // na nule, ten ji nedostal — a je jedno, jestli selhalo odeslání, nebo se `drip-send`
   // vůbec nezavolal. Tahle kontrola chytí OBA případy, na rozdíl od té původní.
   try {
+    // ⛔ ROZŠÍŘENO 6. 8. 2026 z `onboarding-nakup-academy%` na `onboarding-nakup-%`.
+    //    Pojistka vypadala, že hlídá, ale byla mrtvá pro TŘI ze čtyř produktů:
+    //    videokurz, konzultaci i balíček. Zaplacený nákup, který uvízne na kroku 0
+    //    bez chybové události, se nikde neobjevil a Martin se to dozvěděl z reklamace.
+    //    Je to týž vzorec „nová cesta, staré pravidlo": při každém dalším produktu
+    //    zkontroluj, jestli ho existující pojistky vidí, ne jestli existují.
     const { data: bezUvitacky } = await admin.from("leads")
-      .select("email")
-      .like("track", "onboarding-nakup-academy%")
+      .select("email,track")
+      .like("track", "onboarding-nakup-%")
       .eq("step", 0).eq("status", "active")
       .lt("updated_at", new Date(Date.now() - 2 * 3600000).toISOString())
       .limit(20);
     if (bezUvitacky && bezUvitacky.length) {
-      alerts += warn(`${bezUvitacky.length}× zaplacená Academy BEZ uvítacího e-mailu (`
-        + bezUvitacky.slice(0, 5).map((l: { email: string }) => l.email).join(", ")
+      alerts += warn(`${bezUvitacky.length}× zaplacený nákup BEZ uvítacího e-mailu (`
+        + bezUvitacky.slice(0, 5).map((l: { email: string; track: string }) => l.email + " / " + l.track).join(", ")
         + `). Přístup mají, mail ne. Pošli ho ručně přes drip-send only_email a zjisti proč.`);
     }
   } catch { /* best-effort: doplňková kontrola nesmí shodit celý digest */ }
