@@ -121,6 +121,11 @@
   // [fix 2026-08-05 večer] Proteinový prášek a čistý bílek NEJSOU základ hlavního jídla
   // („syrovátkový protein 55 g + těstoviny + rajče" jako oběd nikdo jíst nebude).
   var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$/;
+  // [fix 2026-08-06] Šunka a spol. NEJSOU hlavní bílkovina oběda/večeře: uzenina je na
+  // chleba a do svačiny, na hlavní jídlo lidi vaří maso/rybu. U hlavních jídel se masné
+  // výrobky řadí AŽ ZA vařené zdroje (měkce, s fallbackem). Uzené RYBY zůstávají.
+  // Snídaně/svačiny mají šunku dál v preferencích. ⛔ Táž logika v appce, hlídá parita.
+  var UZENINA_RE = /sunka|salam|klobas|parky|slanina|debrecin|kabanos|mortadela/;
   var BREAKFAST_CARB = /ovesne-vlocky|chleb|musli|knackebrot|tousty|rohlik|houska/;
   var MAIN_CARB      = /ryze|brambory|bataty|testoviny|kuskus|bulgur|quinoa|pohanka|jahly|kukurice|tortilla|ryzove-nudle/;
 
@@ -196,12 +201,18 @@
         var poctive = list.filter(function (f) { return !NENI_ZAKLAD_JIDLA.test(f.id); });
         return poctive.length ? poctive : list;
       }
+      // Uzeniny až za vařené zdroje (viz UZENINA_RE výš); měkké pravidlo s fallbackem.
+      function uzeninaAzNakonec(list) {
+        if (prefer) return list;
+        var varene = list.filter(function (f) { return !UZENINA_RE.test(f.id); });
+        return varene.length ? varene : list;
+      }
       if (leanOnly) {
-        var leanDb = bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); })));
+        var leanDb = uzeninaAzNakonec(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); }))));
         var p = pick(leanDb, 'protein', s, prefer) || pick(leanDb, 'dairy', s, prefer);
         if (p) return p;
       }
-      var cely = bezPrasku(jesteNebyl(db));
+      var cely = uzeninaAzNakonec(bezPrasku(jesteNebyl(db)));
       return pick(cely, 'protein', s, prefer) || pick(cely, 'dairy', s, prefer);
     }
     var gramyDnes = {};
@@ -417,27 +428,33 @@
     }
     if (totalKey('kcal') < targets.kcal * 0.94) {
       var mainIdx = out.length >= 3 ? Math.floor(out.length / 2) : 0; // oběd / prostřední jídlo
-      addExtra(byId('syrovatkovy-protein'), 30, mainIdx);
-      addExtra(byId('ovesne-vlocky'), 50, 0);
+      // [fix 2026-08-06] Gramáže doplňků úměrně velikosti dne. Pevné porce byly na velké
+      // dny (2200+) a malý den (1300/3) přestřelily o 13 % kcal, protože finální ořez
+      // umí ubírat jen carb a fat. Malý den = menší shake a půl kelímku tvarohu.
+      // ⛔ Táž logika v appce (meal-gen-core.ts), hlídá parita.
+      var velikostDne = Math.max(0.6, Math.min(1, targets.kcal / 2200));
+      function vg(g) { return Math.round(g * velikostDne); }
+      addExtra(byId('syrovatkovy-protein'), vg(30), mainIdx);
+      addExtra(byId('ovesne-vlocky'), vg(50), 0);
       runScale();
       if (totalKey('kcal') < targets.kcal * 0.94 || totalKey('p') < targets.protein * 0.88) {
         // druhý zdroj bílkovin k večeři (bez shaku: tvaroh; bez mléčných: tuňák; vege: tofu/tempeh)
         var protPool = ['tvaroh-mekky', 'tunak-vlastni-stava', 'tofu', 'tempeh', 'vejce'];
         for (var pi = 0; pi < protPool.length; pi++) {
-          if (addExtra(byId(protPool[pi]), 150, out.length - 1)) break;
+          if (addExtra(byId(protPool[pi]), vg(150), out.length - 1)) break;
         }
-        addExtra(byId('mandle'), 25, out.length - 1);
-        addExtra(byId('banan'), 100, 0);
+        addExtra(byId('mandle'), vg(25), out.length - 1);
+        addExtra(byId('banan'), vg(100), 0);
         runScale();
         if (totalKey('kcal') < targets.kcal * 0.94) {
           var carbPool = ['ryze-natural-varena', 'brambory-varene', 'testoviny-celozrnne-varene', 'bulgur-vareny'];
           for (var ci = 0; ci < carbPool.length; ci++) {
-            if (addExtra(byId(carbPool[ci]), 150, out.length - 1)) break;
+            if (addExtra(byId(carbPool[ci]), vg(150), out.length - 1)) break;
           }
           var fatPool = ['olivovy-olej', 'repkovy-olej', 'avokado', 'araside-maslo'];
           if (totalKey('f') < targets.fat * 0.85) {
             for (var fi = 0; fi < fatPool.length; fi++) {
-              if (addExtra(byId(fatPool[fi]), 12, mainIdx)) break;
+              if (addExtra(byId(fatPool[fi]), vg(12), mainIdx)) break;
             }
           }
           runScale();
