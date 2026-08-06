@@ -138,7 +138,12 @@
   function ketoTargets(t) {
     var carbs = Math.round((t.kcal * 0.08) / 4);
     var fat = Math.max(20, Math.round((t.kcal - t.protein * 4 - carbs * 4) / 9));
-    return { kcal: t.kcal, protein: t.protein, carbs: carbs, fat: fat };
+    // Kopie vstupu drží doprovodná pole (fiber, popisek cíle z computeTargets), jen
+    // přepíše carbs+fat. Bez toho UI v keto ukazovalo „cíl: undefined" a vlákninu undefined.
+    var out = {};
+    for (var k in t) out[k] = t[k];
+    out.carbs = carbs; out.fat = fat;
+    return out;
   }
   var BREAKFAST_CARB = /ovesne-vlocky|chleb|musli|knackebrot|tousty|rohlik|houska/;
   var MAIN_CARB      = /ryze|brambory|bataty|testoviny|kuskus|bulgur|quinoa|pohanka|jahly|kukurice|tortilla|ryzove-nudle/;
