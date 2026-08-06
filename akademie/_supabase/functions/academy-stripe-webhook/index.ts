@@ -185,6 +185,26 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
     varianta: "konzultace",
     alertPoNakupu: "🗓️ Stripe: ZAPLACENÁ KONZULTACE (majitel videokurzu), ozvi se a domluv termín",
   },
+  // ⭐ BALÍČEK „40 receptů a 48 odpovědí" za 349 Kč (6. 8. 2026). Nejlevnější vstup
+  // do systému: kuchařka s makry + e-book na nejčastější dotazy klientů, obojí PDF.
+  // Produkt `40 receptů a 48 odpovědí`, odkaz `plink_1U1VnFBq3rKubW9kXK79LF0i`.
+  // ⛔ `tcGrant: false` SCHVÁLNĚ. Kdo to přepne na true, rozdá roční VIP appky
+  //    za 4 990 Kč lidem, kteří zaplatili 349.
+  // ⚠️ `source: "stripe-balicek"` musí zůstat odlišný od Academy zdrojů, jinak by se
+  //    kupci balíčku začali počítat do padesátky zakládajících členů (viz daily-digest).
+  // ⚠️ `produkt: "balicek"` funguje jen díky tomu, že se 6. 8. rozšířil CHECK
+  //    `entitlements_product_check`. Bez toho by zaplacený nákup spadl na 500 a NEPŘIŠEL
+  //    BY ANI ALERT, přesně jako 30. 7. u konzultace.
+  // ⛔ Doručení řeší uvítací trať: soubory NEJSOU veřejně na webu, jinak by z placeného
+  //    produktu byl magnet zdarma.
+  "balicek": {
+    produkt: "balicek",
+    source: "stripe-balicek",
+    welcome: "onboarding-nakup-balicek",
+    tcGrant: false,
+    nazev: "40 receptů a 48 odpovědí",
+    varianta: "kuchařka a e-book",
+  },
 };
 
 // Který odkaz vede na který klíč katalogu. Formát: `plink_A=academy-lifetime,plink_B=videokurz`.
@@ -247,7 +267,15 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // takže by zaplacená konzultace vracela 500 a NEPŘIŠEL BY ANI ALERT.
     // ⛔ Kdo to udělá znovu, MUSÍ ten řádek vrátit na `academy-lifetime`, jinak testovací
     //    odkaz za 15 Kč prodává produkt za 2 990.
-    "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime",
+    "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime," +
+    // ⭐ BALÍČEK 349 Kč („40 receptů a 48 odpovědí"), vytvořeno 6. 8. 2026.
+    // Po zaplacení Stripe přesměruje na https://martinbarna.cz/dekuji-balicek/.
+    "plink_1U1VnFBq3rKubW9kXK79LF0i=balicek," +
+    // ⬜ TESTOVACÍ ODKAZ 15 Kč na produkt „TEST balicek (NEPRODAVAT)", 6. 8. 2026.
+    // ⭐ LEPŠÍ POJISTKA NEŽ V ČERVENCI: odkaz má ve Stripu nastaveno „Limit the number
+    // of payments = 1", takže se po JEDNOM nákupu SÁM vypne. Nespoléhá se na to, že si
+    // někdo vzpomene ho zamknout. Tenhle řádek se pak už jen uklidí odsud.
+    "plink_1U1WCJBq3rKubW9koVfHcZ5i=balicek",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
@@ -841,11 +869,48 @@ Deno.serve(async (req) => {
             }
           }
 
-          try { await posliUvitani(emailL, def.welcome); }
-          catch (e) {
-            await alertAdmin("Stripe: přístup udělen, ale uvítací e-mail selhal", {
-              email: emailL, produkt: def.nazev, chyba: String(e).slice(0, 200),
-            });
+          // ⭐ BALÍČEK 349 Kč: doručení JE ten uvítací mail. Soubory nejsou nikde veřejně,
+          // takže se sem musí dostat jako podepsané odkazy s expirací. Generuje je server
+          // (service role), platnost 14 dní, ať má člověk čas si je uložit i z dovolené.
+          // ⛔ Kdyby generování selhalo, mail se NEPOSÍLÁ s prázdnými odkazy: bez souborů
+          //    by byl k ničemu a člověk by si myslel, že dostal, co si koupil. Radši alert
+          //    Martinovi, ať to pošle ručně.
+          let varsProUvitani: Record<string, string> | undefined;
+          if (klic === "balicek") {
+            // ⚠️ `download` je nosné, ne kosmetika: bez něj prohlížeč PDF jen OTEVŘE
+            // v nové záložce a člověk si myslí, že se nic nestáhlo. S ním se soubor
+            // uloží, a rovnou pod čitelným jménem místo `Kucharka 40 + receptu.pdf`.
+            const podepis = async (soubor: string, jmenoProStazeni: string) => {
+              const { data, error } = await admin.storage.from("videokurz-materialy")
+                .createSignedUrl(soubor, 14 * 24 * 3600, { download: jmenoProStazeni });
+              if (error || !data?.signedUrl) throw new Error("signed_url:" + soubor + ":" + String(error?.message ?? "prazdne"));
+              return data.signedUrl;
+            };
+            try {
+              varsProUvitani = {
+                // ⚠️ NE `Otazky klientu EBook.docx.pdf`, to je starší export z Wordu bez
+                //    brandových barev. Ostrá verze je ta bez `.docx` (ověřeno 6. 8. 2026).
+                kucharka_url: await podepis("Kucharka 40 + receptu.pdf", "Martin-Barna-Kucharka-40-receptu.pdf"),
+                otazky_url: await podepis("Otazky klientu EBook.pdf", "Martin-Barna-48-odpovedi.pdf"),
+              };
+            } catch (e) {
+              await alertAdmin("🔴 Stripe: BALÍČEK zaplacen, ale odkazy ke stažení se nevygenerovaly", {
+                email: emailL, chyba: String(e).slice(0, 200),
+                co_delat: "⛔ Pošli mu kuchařku a e-book ručně. Zaplatil a nedostal nic.",
+              });
+              varsProUvitani = undefined;
+            }
+          }
+
+          if (klic === "balicek" && !varsProUvitani) {
+            // Uvítačka balíčku bez odkazů nemá smysl posílat, alert už odešel výš.
+          } else {
+            try { await posliUvitani(emailL, def.welcome, varsProUvitani); }
+            catch (e) {
+              await alertAdmin("Stripe: přístup udělen, ale uvítací e-mail selhal", {
+                email: emailL, produkt: def.nazev, chyba: String(e).slice(0, 200),
+              });
+            }
           }
           // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
           // a domluvit termín. Bez tohohle upozornění by zákazník zaplatil 2 990 Kč
