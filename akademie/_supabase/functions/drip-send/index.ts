@@ -529,7 +529,14 @@ Deno.serve(async (req: Request) => {
     const cil = MOSTY[String(l.track || '')];
     if (!cil || typeof cil.track !== 'string' || !cil.track || cil.track === l.track) return null;
     const em = String(l.email).toLowerCase();
-    if (shouldStop(cil.track, 0, em)) return null;
+    // ⛔ ZAMERNE KROK 1, NE 0. shouldStop ma pro akvizicni trate (lead-magnet*,
+    // existing-leadmagnet, nurture-*) tvar `step > 0 && ownsAny`, protoze KROK 0 je
+    // slibeny freebie a ten se posila i tomu, kdo uz koupil. Pri volani s nulou by
+    // ochrana kupujiciho pro tyhle trate NIKDY nesepnula (mrtva paka) a most by
+    // platiciho zakaznika prehodil do akvizicni trate s nabidkou na to, co uz ma.
+    // Toho, koho prehazujeme mostem, se freebie netyka: on si o nej neposlal.
+    // Nasel to druhy chat pri revizi 6. 8. 2026, viz pamet feedback-nova-cesta-stare-pravidlo.
+    if (shouldStop(cil.track, 1, em)) return null;
     if (!(await getTpl(cil.track, 0))) return null;
     const { data: uzTamByl } = await admin.from('email_events')
       .select('id').eq('lead_id', l.id).eq('type', 'sent').eq('detail->>track', cil.track).limit(1);
@@ -541,7 +548,12 @@ Deno.serve(async (req: Request) => {
     const cilTrack = await kamDal(l);
     if (!cilTrack) return null;
     // Odstup po poslednim mailu puvodni trate, at cloveku neprijdou dva maily po sobe.
-    const poDnech = Math.max(0, Number(MOSTY[String(l.track || '')]?.po_dnech ?? 7) || 0);
+    // ⛔ FAIL-SAFE SMEREM K CEKANI, NE K ODESLANI. `?? 7` kryje jen CHYBEJICI klic;
+    // preklep (`"sedm"` misto 7) dava NaN a driv z nej `|| 0` udelalo nulu, tedy mail
+    // z nove trate HNED a dva po sobe — presne to, cemu ma tenhle parametr branit.
+    // Proto se nevalidni hodnota chova stejne jako chybejici: 7 dni.
+    const poDnechRaw = Number(MOSTY[String(l.track || '')]?.po_dnech ?? 7);
+    const poDnech = Number.isFinite(poDnechRaw) && poDnechRaw >= 0 ? poDnechRaw : 7;
     await admin.from('leads').update({
       track: cilTrack, step: 0,
       next_send_at: new Date(Date.now() + poDnech * 86400000).toISOString(),
@@ -549,9 +561,11 @@ Deno.serve(async (req: Request) => {
     }).eq('id', l.id);
     // Stopa v logu: bez ni by prechod byl neviditelny a nikdo by nedohledal, proc
     // clovek dostava maily z jine trate, nez do ktere se prihlasil.
+    // ⚠️ `track` v detailu je POVINNE, i kdyz je duplicitni k `z`: adminsky log sklada
+    // sloupec trate i predmet z `detail->>track` a bez nej se radek zobrazi prazdny.
     await admin.from('email_events').insert({
       lead_id: l.id, step: l.step, type: 'bridged',
-      detail: { z: l.track, na: cilTrack, po_dnech: poDnech },
+      detail: { track: l.track, z: l.track, na: cilTrack, po_dnech: poDnech },
     });
     return cilTrack;
   };
@@ -617,6 +631,10 @@ Deno.serve(async (req: Request) => {
       if (tpl.wait_days == null) {
         // wait_days = null znamena POSLEDNI mail trate. Tady se rozhoduje, jestli
         // clovek pokracuje jinam, nebo definitivne ztichne. Viz MOSTY vyse.
+        // ⛔ TEN `return` JE NOSNY, NESMAZAT. Most uz leada prepsal na cilovou trat
+        // a krok 0. Kdyby se pokracovalo dal, update nize by mu nastavil step = 8
+        // (dalsi krok PUVODNI trate) nad uz prepsanym leadem a clovek by v nove trati
+        // preskocil osm mailu z dvanacti. Track by se neprepsal, ale krok ano.
         const na = await mostNaDalsiTrat(l);
         if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; return; }
         await admin.from('leads').update({ step: ns, next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++;
