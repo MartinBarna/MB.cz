@@ -309,7 +309,7 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy', 'navazujici_trate']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
@@ -359,6 +359,26 @@ Deno.serve(async (req: Request) => {
   const CLENSKE_PREFIXY = String(fMap.clenske_track_prefixy ?? '')
     .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
   if (CLENSKE_PREFIXY.length === 0) CLENSKE_PREFIXY.push('onboarding', 'milestone', 'reactivation', 'rescue');
+  // MOSTY MEZI TRATEMI (Martin schvalil 6. 8. 2026: "pocitejme s tim obecne u mailingu").
+  // PROC: kdyz trat dojede posledni mail, engine jen zhasnul next_send_at a lead tam
+  // zustal lezet. Nikde to nekriklo. 6. 8. tak sedelo 53 lidi na poslednim kroku
+  // lead-magnetu, zatimco longtail-consumer mel 12 hotovych mailu a DVA lidi uvnitr.
+  // Zapis do longtailu se do te doby delal rucne SQL, tedy jen kdyz si nekdo vzpomnel.
+  // ⛔ TOHLE JE ODCHOZI MAIL. Fail-safe je NEPRESUNOUT: kdyz klic v app_config chybi
+  // nebo je rozbity, most se nepostavi a chova se to jako driv. Nikdy naopak.
+  // Format: {"zdrojova-trat":{"track":"cilova-trat","po_dnech":7}}
+  // Zmena = jeden SQL update app_config, bez redeploye (stejne jako clenske_track_prefixy).
+  let MOSTY: Record<string, { track: string; po_dnech?: number }> = {};
+  try {
+    const raw = String(fMap.navazujici_trate ?? '').trim();
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) MOSTY = parsed;
+    }
+  } catch (e) {
+    console.warn('[drip-send] navazujici_trate: nevalidni JSON, mosty VYPNUTE: ' + String(e));
+    MOSTY = {};
+  }
   let lastSendAt = 0;
   const pace = async () => {
     const wait = lastSendAt + SEND_GAP_MS - Date.now();
@@ -491,19 +511,75 @@ Deno.serve(async (req: Request) => {
     return false;
   };
 
+  // MOST NA DALSI TRAT: vola se v jedinou chvili, kdy trat pro leada skoncila.
+  // Vraci nazev cilove trati (= lead byl prepsan), nebo null (= necha se dobehnout).
+  // ⛔ Ctyri pojistky, kazda umi most sama zrusit. Poradi je zamerne od nejlevnejsi:
+  //   1. neni definovany most -> nic (vychozi stav pro vsechny trate)
+  //   2. clovek uz vlastni to, co cilova trat prodava -> nic (tataz pravidla jako shouldStop)
+  //   3. cilova trat nema krok 0 -> nic (jinak bychom ho poslali do prazdna a on by ztichl
+  //      uplne stejne, jen o trat vedle a hur dohledatelne)
+  //   4. tuhle trat uz jednou dostal -> nic (bez toho by se dva mosty daly zacyklit
+  //      a clovek by dostaval tytez maily dokola)
+  // Odhlaseni a bounce resit nemusime: due fronta bere jen status='active'.
+  // Rozhodovaci cast je ODDELENA od zapisu schvalne: `dry` beh ji smi zavolat taky
+  // a ukazat, kam by kdo sel, aniz by cokoli prepsal. Bez toho by se most dal
+  // vyzkouset jedine naostro na zivych lidech.
+  // deno-lint-ignore no-explicit-any
+  const kamDal = async (l: any): Promise<string | null> => {
+    const cil = MOSTY[String(l.track || '')];
+    if (!cil || typeof cil.track !== 'string' || !cil.track || cil.track === l.track) return null;
+    const em = String(l.email).toLowerCase();
+    if (shouldStop(cil.track, 0, em)) return null;
+    if (!(await getTpl(cil.track, 0))) return null;
+    const { data: uzTamByl } = await admin.from('email_events')
+      .select('id').eq('lead_id', l.id).eq('type', 'sent').eq('detail->>track', cil.track).limit(1);
+    if ((uzTamByl ?? []).length > 0) return null;
+    return cil.track;
+  };
+  // deno-lint-ignore no-explicit-any
+  const mostNaDalsiTrat = async (l: any): Promise<string | null> => {
+    const cilTrack = await kamDal(l);
+    if (!cilTrack) return null;
+    // Odstup po poslednim mailu puvodni trate, at cloveku neprijdou dva maily po sobe.
+    const poDnech = Math.max(0, Number(MOSTY[String(l.track || '')]?.po_dnech ?? 7) || 0);
+    await admin.from('leads').update({
+      track: cilTrack, step: 0,
+      next_send_at: new Date(Date.now() + poDnech * 86400000).toISOString(),
+      updated_at: nowIso,
+    }).eq('id', l.id);
+    // Stopa v logu: bez ni by prechod byl neviditelny a nikdo by nedohledal, proc
+    // clovek dostava maily z jine trate, nez do ktere se prihlasil.
+    await admin.from('email_events').insert({
+      lead_id: l.id, step: l.step, type: 'bridged',
+      detail: { z: l.track, na: cilTrack, po_dnech: poDnech },
+    });
+    return cilTrack;
+  };
+
   // DRY
   if (body.dry === true) {
     const byStep: Record<string, number> = {};
-    let would = 0, bought = 0, invalid = 0;
+    const byBridge: Record<string, number> = {};
+    let would = 0, bought = 0, invalid = 0, wouldBridge = 0;
     for (const l of leads) {
       // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
       if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; }
       const tpl = await getTpl(l.track, l.step);
-      if (!tpl) { invalid++; continue; }
+      if (!tpl) {
+        const na = await kamDal(l);
+        if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; }
+        else invalid++;
+        continue;
+      }
+      // Posledni mail trate (wait_days = null): po jeho odeslani se rozhoduje o mostu.
+      if (tpl.wait_days == null) {
+        const na = await kamDal(l);
+        if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; }
+      }
       const key = l.track + '/step' + l.step + ':' + tpl.key;
       byStep[key] = (byStep[key] ?? 0) + 1; would++;
     }
-    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, by_step: byStep });
+    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
   }
 
   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
@@ -513,14 +589,20 @@ Deno.serve(async (req: Request) => {
   const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
 
   // LIVE
-  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, capped = false, timeUp = false;
+  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, capped = false, timeUp = false;
   const byStep: Record<string, number> = {};
+  const byBridge: Record<string, number> = {};
   for (const l of leads) {
     if (sent >= remaining) { capped = true; break; }
     if (Date.now() - runStart > RUN_DEADLINE_MS) { timeUp = true; break; }
     const seg = normSeg(l.segment);
     const tpl = await getTpl(l.track, l.step);
-    if (!tpl) { await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue; }
+    // Krok bez sablony = trat skoncila (nebo ji nekdo zkratil). Driv se tu jen zhasl termin.
+    if (!tpl) {
+      const na = await mostNaDalsiTrat(l);
+      if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; continue; }
+      await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue;
+    }
     // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
     if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) {
       await admin.from('leads').update({ status: 'purchased', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
@@ -533,6 +615,10 @@ Deno.serve(async (req: Request) => {
     const advance = async () => {
       const ns = l.step + 1;
       if (tpl.wait_days == null) {
+        // wait_days = null znamena POSLEDNI mail trate. Tady se rozhoduje, jestli
+        // clovek pokracuje jinam, nebo definitivne ztichne. Viz MOSTY vyse.
+        const na = await mostNaDalsiTrat(l);
+        if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; return; }
         await admin.from('leads').update({ step: ns, next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++;
       } else {
         const next = new Date(Date.now() + tpl.wait_days * 86400000).toISOString();
@@ -594,5 +680,5 @@ Deno.serve(async (req: Request) => {
       }
     }
   }
-  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, gave_up: gaveUp, by_step: byStep });
+  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
 });
