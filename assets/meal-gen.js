@@ -131,6 +131,10 @@
   // doplní DRUHÝ zdroj (vejce/tvaroh/skyr/cottage). ⛔ Táž logika v appce, hlídá parita.
   var UZENINA_MAX_G = 80;
   var SNIDANE_DOPLNEK_PROT = /vejce|tvaroh|skyr|cottage/;
+  // [fix 2026-08-06 kolo 4] Párování tuku k charakteru jídla (detail u použití níž).
+  // ⚠️ KOTVENÉ `^(...)$`: nekotvené `maslo` chytá i `mandlove-maslo`. ⛔ Táž logika v appce.
+  var SLADKY_TUK = /^(mandle|vlasske-orechy|liskove-orechy|kesu|araside|arasidy|mandlove-maslo|araside-maslo|chia-seminka|lnene-seminko|pistacie)$/;
+  var SLANY_TUK = /^(olivovy-olej|repkovy-olej|slunecnicovy-olej|maslo|ghi|avokado|dynova-seminka|slunecnicova-seminka)$/;
 
   // [2026-08-06 kolo 3] Keto varianta cílů: sacharidy na ~8 % kalorií, bílkoviny drží,
   // zbytek kalorií dorovná tuk. Jediná keto matematika pro web, appku i AI kouče.
@@ -217,7 +221,16 @@
       var cerstve = list.filter(function (f) { return !pouziteProt[f.id]; });
       return cerstve.length ? cerstve : list;
     }
-    function pickProt(s, prefer) {
+    function pickProt(s, prefer, protCilJidla) {
+      // [fix 2026-08-06 kolo 4] Zdroj, který se do porce nevejde, do SVAČINY nevybírej:
+      // koncentrovaný zdroj vyjde pod podlahu 30 g a položka se zahodí, takže ze svačiny
+      // zbude samotné ovoce („Švestky 35 g" = 16 kcal). Schválně JEN u svačin, na hlavních
+      // jídlech to zhoršovalo trefu bílkovin. ⛔ Táž logika v appce, hlídá parita.
+      function sedneNaPorci(list) {
+        if (!protCilJidla) return list;
+        var sedne = list.filter(function (f) { return (protCilJidla / (f.per100.p || 1)) * 100 >= 30; });
+        return sedne.length ? sedne : list;
+      }
       // U hlavních jídel (bez snídaňové/svačinové preference) vyřaď prášky a bílek
       // ze základu jídla; fallback na plnou nabídku drží průchodnost úzkých filtrů.
       function bezPrasku(list) {
@@ -232,11 +245,11 @@
         return varene.length ? varene : list;
       }
       if (leanOnly) {
-        var leanDb = uzeninaAzNakonec(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); }))));
+        var leanDb = sedneNaPorci(uzeninaAzNakonec(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); })))));
         var p = pick(leanDb, 'protein', s, prefer) || pick(leanDb, 'dairy', s, prefer);
         if (p) return p;
       }
-      var cely = uzeninaAzNakonec(bezPrasku(jesteNebyl(db)));
+      var cely = sedneNaPorci(uzeninaAzNakonec(bezPrasku(jesteNebyl(db))));
       return pick(cely, 'protein', s, prefer) || pick(cely, 'dairy', s, prefer);
     }
     var gramyDnes = {};
@@ -273,7 +286,7 @@
       // 1) bílkovinný základ — dávkuj na bílkovinný cíl jídla
       // snídaně/svačina dostanou vhodnější zdroj (vejce, tvaroh, skyr…), ne kuřecí prsa
       var protPrefer = (i === 0) ? BREAKFAST_PROT : (isSnack ? SNACK_PROT : null);
-      var prot = pickProt(seed + i, protPrefer);
+      var prot = pickProt(seed + i, protPrefer, isSnack ? mProt : undefined);
       if (prot) {
         var pg = round((mProt / (prot.per100.p || 1)) * 100, 10);
         pg = Math.min(pg, prot.cat === 'protein' ? 260 : 300);
@@ -333,13 +346,27 @@
       if (i === 0 || isSnack) {
         // V keto režimu z ovoce jen bobule a menší porce; jiné ovoce nese moc sacharidů.
         var fruit = pick(db, 'fruit', seed + i + 2, lowCarb ? /malin|boruvk|jahod|ostruzin|rybiz/ : null);
-        if (fruit) items.push({ food: fruit, grams: vg(lowCarb ? 80 : (fruit.portion || 120)) });
+        if (fruit) {
+          var fg0 = vg(lowCarb ? 80 : (fruit.portion || 120));
+          // [fix 2026-08-06 kolo 4] Ve svačině se porce ovoce dopočítá na kalorie svačiny
+          // (pevná porce nechávala svačinu na mediánu 72 % jejího cíle). Jen ZVĚTŠUJEME.
+          if (isSnack && !lowCarb && fruit.per100.kcal > 0) {
+            var uzKcal = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).kcal; }, 0);
+            var zbyva = (targets.kcal * dist[i]) - uzKcal - (mFat * 9 * 0.3);
+            if (zbyva > 0) fg0 = Math.min(Math.max(fg0, (zbyva / fruit.per100.kcal) * 100), fg0 * 2, 250);
+          }
+          items.push({ food: fruit, grams: round(fg0, 5) });
+        }
       }
       // 5) dorovnání tuků zdrojem tuku
       var usedF = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).f; }, 0);
       var needF = mFat - usedF;
       if (needF > 4) {
-        var fat = pick(db, 'fat', seed + i + 1);
+        // [fix 2026-08-06 kolo 4] Tuk se páruje k CHARAKTERU jídla: sladké (ovoce bez
+        // zeleniny) dostane ořechy, slané oleje/máslo/avokádo. ⛔ Táž logika v appce.
+        var maOvoce = items.some(function (it) { return it.food.cat === 'fruit'; });
+        var maZeleninu = items.some(function (it) { return it.food.cat === 'veg'; });
+        var fat = pick(db, 'fat', seed + i + 1, maOvoce && !maZeleninu ? SLADKY_TUK : (maZeleninu ? SLANY_TUK : null));
         if (fat && fat.per100.f) {
           var fg = round((needF / fat.per100.f) * 100, 1);
           fg = Math.min(Math.max(fg, 5), 30);
