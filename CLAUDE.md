@@ -209,6 +209,31 @@ jako **reálné UTF-8**, ne `\u` kódy, překlep `ď`(ď)→`ğ`(ğ) udělal „
   (smtp.resend.com:465, sender news@martinbarna.cz), od 2026-06-29 funkční, šablony česky.
   POZOR: auth maily sdílí Resend kvótu (free 100/den) s drip enginem.
 
+## ⛔ STANDING RULE: každá mailová trať musí mít VÝSTUP, ne jen konec (6. 8. 2026)
+
+Martin: „počítejme s tím obecně u mailingů, co bychom stavěli či všech co máme."
+
+Do 6. 8. platilo, že když trať dojela poslední mail (`wait_days = null`), `drip-send`
+jen zhasnul `next_send_at` a člověk tam **zůstal ležet**. Nikde to nekřiklo, v žádném
+přehledu to nesvítilo. Výsledek: 53 lidí sedělo na posledním kroku `lead-magnet`,
+zatímco `longtail-consumer` měl 12 hotových mailů a **dva lidi uvnitř**.
+
+- ⭐ **Mechanismus je hotový: `app_config.navazujici_trate`** (JSON
+  `{"zdroj":{"track":"cil","po_dnech":7}}`). Další most = **jeden SQL update, bez
+  redeploye**. Prázdný nebo rozbitý klíč = mosty vypnuté, tedy chování jako dřív.
+- ⛔ **Kdo staví novou trať, odpoví na otázku „a co potom?" DŘÍV, než ji spustí.**
+  Platné odpovědi jsou dvě: buď most do navazující trati, nebo **výslovná poznámka
+  v šabloně posledního kroku, proč je ticho správně** (rozloučení po refundu,
+  jednorázová nabídka). Nezodpovězená otázka není třetí možnost.
+- **Pojistky mostu** (v kódu, každá ho umí sama zrušit): není definovaný · člověk už
+  vlastní to, co cílová trať prodává · cílová trať nemá krok 0 · **už tam jednou byl**
+  (brání zacyklení dvou mostů). Přechod se loguje jako `email_events` type `bridged`.
+- **Jak najdeš, kdo právě mlčí:** `leads` se `status='active'` a `next_send_at is null`.
+  Změřeno 6. 8.: `onboarding-coaching` 29 lidí, `upsell-coaching` 28. Obojí jsou
+  rozhodnutí o obsahu, ne o kódu, a čekají na Martina.
+- Detail, čísla a proč to nejde řešit checklistem: paměť
+  `feedback-mailing-serie-musi-mit-vystup` a `mb-drip-engine`.
+
 ## ⛔ STANDING RULE: jak číst `email_events` (jinak z nich vyjde OPAČNÝ závěr)
 
 Měření otevření a kliků běží od 22. 7. 2026. **Tři pasti, na které se naletělo hned první den**
