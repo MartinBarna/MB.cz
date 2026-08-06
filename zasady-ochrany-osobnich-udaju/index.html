@@ -70,8 +70,8 @@
     <h2>3. Příjemci a zpracovatelé</h2>
     <p>K naplnění uvedených účelů využívám prověřené poskytovatele, kteří mohou zpracovávat osobní údaje jako zpracovatelé:</p>
     <ul>
-      <li><b>SimpleShop</b> (Redbit s.r.o.): objednávkový a fakturační systém, doručení digitálního obsahu.</li>
-      <li>Platební brána provozovaná v rámci SimpleShopu: zpracování plateb.</li>
+      <li><b>Stripe</b> (Stripe Payments Europe, Ltd., Irsko): platební brána, objednávkové a pokladní rozhraní, zpracování plateb a vystavení dokladu. Údaje o platební kartě zadává kupující přímo do rozhraní Stripe a správce k nim nemá přístup.</li>
+      <li><b>Resend</b> (Plus Five Five, Inc.): odesílání transakčních a informačních e-mailů (potvrzení objednávky, doručení digitálního obsahu, upozornění).</li>
       <li><b>Supabase</b>: databáze členské sekce a přihlašování (účet, přístup, pokrok); hosting v EU.</li>
       <li><b>WEDOS</b>: hosting webu (ČR).</li>
       <li><b>Cloudflare</b>: technické zpracování po platbě (předání přístupu).</li>
@@ -80,7 +80,7 @@
       <li><b>FormSubmit</b>: doručení odeslaných formulářů na e-mail správce.</li>
       <li><b>Anthropic</b> (model Claude): provoz AI chatbota „AI Martin": text konverzace se předává ke zpracování za účelem vygenerování odpovědi. Chatbot je určen členům Academy; do chatu nevkládej citlivé údaje (zejména zdravotní).</li>
     </ul>
-    <p>Někteří poskytovatelé (Google, Meta, FormSubmit, Anthropic) mohou údaje zpracovávat i mimo EU (zejména USA). Předání se opírá o odpovídající záruky dle GDPR (standardní smluvní doložky, příp. rámec EU–USA pro ochranu dat).</p>
+    <p>Někteří poskytovatelé (Google, Meta, FormSubmit, Anthropic, Resend) mohou údaje zpracovávat i mimo EU (zejména USA). Předání se opírá o odpovídající záruky dle GDPR (standardní smluvní doložky, příp. rámec EU–USA pro ochranu dat).</p>
 
     <h2>3a. AI chatbot „AI Martin"</h2>
     <p>Na webu je k dispozici chatbot „AI Martin". Jde o <b>umělou inteligenci (automatizovaný systém)</b>, nikoli o komunikaci se skutečnou osobou, chatbot na to sám upozorňuje přímo v okně chatu. Obsah konverzace se zpracovává pro vygenerování odpovědi (zpracovatel Anthropic, viz výše) a chatbot neposkytuje lékařské ani zdravotní poradenství.</p>
