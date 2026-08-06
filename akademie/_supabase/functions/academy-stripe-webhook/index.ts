@@ -698,10 +698,22 @@ async function posliUvitani(
   // ⛔ `vars` se ukládají i K LEADOVI, ne jen do těla invoku níž. Tělo existuje jednou;
   // když odeslání selže, opakovaný pokus jede z hodinové dávky a bez tohohle by spadl
   // na `unresolved_token` už navždy. Klíčuje se tratí, viz `leads-vars.sql`.
-  const varsProLeada = vars ? { [track]: vars } : null;
-
   const { data: lead } = await admin
-    .from("leads").select("id,name").eq("email", email).limit(1);
+    .from("leads").select("id,name,vars").eq("email", email).limit(1);
+
+  // ⛔ SLOUČIT, NE PŘEPSAT (opraveno 6. 8. 2026). Do té doby se sem psalo natvrdo
+  // `{ [track]: vars }`, což PŘEPSALO CELÝ sloupec a tiše zahodilo proměnné všech
+  // ostatních tratí. Kdo si koupil balíček (odkazy ke stažení uložené pod
+  // `onboarding-nakup-balicek`) a pak videokurz, přišel zápisem druhého nákupu
+  // o proměnné toho prvního. Nespadlo by to, jen by mail vyšel s `unresolved_token`.
+  // ⚠️ Slučuje se jen o úroveň výš, klíčem trati. Uvnitř jedné trati je přepis správný:
+  //    nové odkazy mají nahradit ty staré, ne se s nimi míchat.
+  const stavajiciVars = (lead && lead.length && lead[0].vars
+    && typeof lead[0].vars === "object" && !Array.isArray(lead[0].vars))
+    ? lead[0].vars as Record<string, unknown>
+    : {};
+  const varsProLeada = vars ? { ...stavajiciVars, [track]: vars } : null;
+
   if (lead && lead.length) {
     await admin.from("leads").update({
       track: track, step: 0, status: "active",
