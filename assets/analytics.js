@@ -125,6 +125,10 @@
             : href.indexOf('dRmeVcbnpaZs5VedBZ3ks06') !== -1 ? { id: 'videokurz', name: 'Videokurz výživy', val: 800 }
             : href.indexOf('bJe6oG8bdc3wcjCdBZ3ks08') !== -1 ? { id: 'konzultace', name: 'Konzultace', val: 2990 }
             : href.indexOf('6oU8wO3UX3x00AU55t3ks07') !== -1 ? { id: 'konzultace-vk', name: 'Konzultace (majitel videokurzu)', val: 2190 }
+            // `4gMbJ0ezBc3wcjC0Pd3ks09` = balíček „40 receptů a 48 odpovědí" 349 Kč
+            //    (plink_1U1VnF…), od 6. 8. 2026. Bez tohohle řádku spadne do `stripe-other`
+            //    s hodnotou 0, přesně ta tichá chyba, kterou popisuje komentář výš.
+            : href.indexOf('4gMbJ0ezBc3wcjC0Pd3ks09') !== -1 ? { id: 'balicek', name: '40 receptů a 48 odpovědí', val: 349 }
             // ⚠️ SimpleShop varianta ZŮSTÁVÁ schválně: web je od 30. 7. přepnutý na Stripe,
             // ale staré odkazy pořád žijí v už rozeslaných mailech. Kdyby tenhle řádek zmizel,
             // klik ze starého mailu by se měřil s hodnotou 0.
