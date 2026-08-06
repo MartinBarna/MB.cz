@@ -120,6 +120,7 @@
       <div class="chips">
         <label class="chip"><input type="checkbox" id="vegetarian"> Vegetariánský</label>
         <label class="chip"><input type="checkbox" id="nodairy"> Bez mléčných výrobků</label>
+        <label class="chip" title="Kalorie a bílkoviny drží tvůj cíl, sacharidy ~8 % kalorií, zbytek dorovná tuk. Bez příloh, nízkosacharidová zelenina a bobule."><input type="checkbox" id="keto"> Keto / low-carb</label>
       </div>
       <div class="actions">
         <button class="btn" id="gen">Spočítat a vygenerovat den →</button>
@@ -190,7 +191,7 @@
     </div>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260806"></script>
+  <script src="/assets/meal-gen.js?v=20260806b"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null;
@@ -252,6 +253,7 @@
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
       lastTargets=window.MealGen.computeTargets(inputs());
+      if($("keto").checked) lastTargets=window.MealGen.ketoTargets(lastTargets); // kolo 3: keto předvolba, matematika v enginu
       var plan=window.MealGen.assembleDay(lastTargets,{ meals:+$('mealsCount').value, prefs:prefs(), db:DB, seed:seed });
       render(plan);
     }

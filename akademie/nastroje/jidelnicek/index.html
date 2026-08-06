@@ -112,6 +112,7 @@
       <div class="chips">
         <label class="chip"><input type="checkbox" id="vegetarian"> Vegetariánský</label>
         <label class="chip"><input type="checkbox" id="nodairy"> Bez mléčných výrobků</label>
+        <label class="chip" title="Kalorie a bílkoviny drží tvůj cíl, sacharidy ~8 % kalorií, zbytek dorovná tuk. Bez příloh, nízkosacharidová zelenina a bobule."><input type="checkbox" id="keto"> Keto / low-carb</label>
       </div>
       <details class="brandbox" id="brandbox">
         <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">projeví se ve výstupu i v PDF (uloží se ti)</span></summary>
@@ -154,7 +155,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/meal-gen.js?v=20260806"></script>
+  <script src="/assets/meal-gen.js?v=20260806b"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null, lastPlan=null, lastWeek=null, swapSeed=0;
@@ -270,6 +271,7 @@
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
       lastTargets=window.MealGen.computeTargets(inputs());
+      if($("keto").checked) lastTargets=window.MealGen.ketoTargets(lastTargets); // kolo 3: keto předvolba, matematika v enginu
       if($('range').value==='tyden'){
         lastWeek=window.MealGen.assembleWeek(lastTargets,{ meals:+$('mealsCount').value, prefs:prefs(), db:DB, seed:seed });
         lastPlan=null;

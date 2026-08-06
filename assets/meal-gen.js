@@ -126,6 +126,20 @@
   // výrobky řadí AŽ ZA vařené zdroje (měkce, s fallbackem). Uzené RYBY zůstávají.
   // Snídaně/svačiny mají šunku dál v preferencích. ⛔ Táž logika v appce, hlídá parita.
   var UZENINA_RE = /sunka|salam|klobas|parky|slanina|debrecin|kabanos|mortadela/;
+  // [fix 2026-08-06 kolo 3] Uzenina má strop 80 g NA TALÍŘI. 160 g šunky jako jediný
+  // základ snídaně nikdo nejí; snídaňová uzenina se ořeže na 80 g a zbytek bílkovin
+  // doplní DRUHÝ zdroj (vejce/tvaroh/skyr/cottage). ⛔ Táž logika v appce, hlídá parita.
+  var UZENINA_MAX_G = 80;
+  var SNIDANE_DOPLNEK_PROT = /vejce|tvaroh|skyr|cottage/;
+
+  // [2026-08-06 kolo 3] Keto varianta cílů: sacharidy na ~8 % kalorií, bílkoviny drží,
+  // zbytek kalorií dorovná tuk. Jediná keto matematika pro web, appku i AI kouče.
+  // ⛔ Táž funkce v appce (meal-gen-core.ts), hlídá parita.
+  function ketoTargets(t) {
+    var carbs = Math.round((t.kcal * 0.08) / 4);
+    var fat = Math.max(20, Math.round((t.kcal - t.protein * 4 - carbs * 4) / 9));
+    return { kcal: t.kcal, protein: t.protein, carbs: carbs, fat: fat };
+  }
   var BREAKFAST_CARB = /ovesne-vlocky|chleb|musli|knackebrot|tousty|rohlik|houska/;
   var MAIN_CARB      = /ryze|brambory|bataty|testoviny|kuskus|bulgur|quinoa|pohanka|jahly|kukurice|tortilla|ryzove-nudle/;
 
@@ -180,6 +194,11 @@
     // s podlahou 40 g; zmenšuje se, neruší. ⛔ Táž logika v appce, hlídá parita.
     var lowCarb = (targets.carbs * 4) / Math.max(1, targets.kcal) < 0.12;
     var MIN_PRILOHA_G = 40;
+    // [fix 2026-08-06 kolo 3] Velikost dne škáluje PEVNÉ porce (zelenina 150 g, porce
+    // ovoce, doplňky). Malému dni se podlahy sečtou přes cíl a finální ořez (jen carb+fat)
+    // to nevrátí. ⛔ Táž logika v appce, hlídá parita.
+    var velikostDne = Math.max(0.6, Math.min(1, targets.kcal / 2200));
+    function vg(g) { return Math.round(g * velikostDne); }
     // [fix 2026-07-26] ROTACE bilkovinnych zdroju pres den + denni strop na jednu potravinu.
     // Nalez z testu appky: vegetarian v deficitu dostal 780 g vajecneho bilku za den (asi
     // 24 kusu) a v tydennim nakupu 200 ks. Cisla pritom sedela na gram.
@@ -253,6 +272,7 @@
       if (prot) {
         var pg = round((mProt / (prot.per100.p || 1)) * 100, 10);
         pg = Math.min(pg, prot.cat === 'protein' ? 260 : 300);
+        if (UZENINA_RE.test(prot.id)) pg = Math.min(pg, UZENINA_MAX_G);
         // Denni strop: co uz dnes z teto potraviny padlo, se odecte. Bez toho jde strop
         // na jidlo obejit tim, ze se taz potravina da do vsech peti jidel.
         var zbyva = Math.max(0, DENNI_STROP_G - (gramyDnes[prot.id] || 0));
@@ -261,6 +281,21 @@
           gramyDnes[prot.id] = (gramyDnes[prot.id] || 0) + pg;
           pouziteProt[prot.id] = true;
           items.push({ food: prot, grams: pg });
+        }
+        // Kombinovaná snídaně: uzenina ořezaná na 80 g nese málo bílkovin, zbytek doplní
+        // vejce/tvaroh/skyr (viz [fix 2026-08-06 kolo 3] výš).
+        if (i === 0 && UZENINA_RE.test(prot.id)) {
+          var chybiP = mProt - macrosFor(prot, Math.min(pg, UZENINA_MAX_G)).p;
+          if (chybiP >= 8) {
+            var druhy = pickProt(seed + i + 11, SNIDANE_DOPLNEK_PROT);
+            if (druhy && !UZENINA_RE.test(druhy.id)) {
+              var dg = round((chybiP / (druhy.per100.p || 1)) * 100, 10);
+              dg = Math.min(Math.max(dg, 30), druhy.cat === 'protein' ? 260 : 300);
+              gramyDnes[druhy.id] = (gramyDnes[druhy.id] || 0) + dg;
+              pouziteProt[druhy.id] = true;
+              items.push({ food: druhy, grams: dg });
+            }
+          }
         }
       }
       // 2) sacharidová příloha (ne u poslední menší svačiny)
@@ -280,18 +315,20 @@
       // [fix 2026-07-22] aromatická zelenina (cibule, česnek, chilli, bylinky…) není samostatná
       // příloha — 150 g cibule k večeři je nesmysl. Do dochucení patří, na talíř jako zelenina ne.
       if (dist[i] >= 0.2) {
+        // [fix 2026-08-06 kolo 3] V keto režimu jen nízkosacharidová zelenina. Táž logika v appce.
         var sideVegDb = db.filter(function (f) {
-          return f.cat !== 'veg' || !/cibul|cesnek|chilli|zazvor|kren|bylink|petrzel|koriandr|kopr|pazitk|medvedi/.test(f.id);
+          return f.cat !== 'veg' || (!/cibul|cesnek|chilli|zazvor|kren|bylink|petrzel|koriandr|kopr|pazitk|medvedi/.test(f.id) && (!lowCarb || f.per100.c <= 5));
         });
         // [fix 2026-08-05 večer] Snídaňová zelenina bez špenátu: 150 g syrových listů
         // k toustu nikdo nejí. K vaječné snídani patří rajče, okurka, paprika.
         var veg = pick(sideVegDb, 'veg', seed + i + 5, (i === 0) ? /rajce|okurka|paprika/ : null);
-        if (veg) items.push({ food: veg, grams: 150 });
+        if (veg) items.push({ food: veg, grams: vg(150) });
       }
       // 4) ovoce u snídaně/svačin
       if (i === 0 || isSnack) {
-        var fruit = pick(db, 'fruit', seed + i + 2);
-        if (fruit) items.push({ food: fruit, grams: fruit.portion || 120 });
+        // V keto režimu z ovoce jen bobule a menší porce; jiné ovoce nese moc sacharidů.
+        var fruit = pick(db, 'fruit', seed + i + 2, lowCarb ? /malin|boruvk|jahod|ostruzin|rybiz/ : null);
+        if (fruit) items.push({ food: fruit, grams: vg(lowCarb ? 80 : (fruit.portion || 120)) });
       }
       // 5) dorovnání tuků zdrojem tuku
       var usedF = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).f; }, 0);
@@ -340,6 +377,8 @@
     function capPass() {
       all.forEach(function (it) {
         var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
+        // Uzenina nikdy přes 80 g na talíři (drží i proti zpětnému škálování).
+        if (UZENINA_RE.test(it.food.id) && it.grams > UZENINA_MAX_G) it.grams = UZENINA_MAX_G;
       });
     }
     function runScale() {
@@ -428,12 +467,7 @@
     }
     if (totalKey('kcal') < targets.kcal * 0.94) {
       var mainIdx = out.length >= 3 ? Math.floor(out.length / 2) : 0; // oběd / prostřední jídlo
-      // [fix 2026-08-06] Gramáže doplňků úměrně velikosti dne. Pevné porce byly na velké
-      // dny (2200+) a malý den (1300/3) přestřelily o 13 % kcal, protože finální ořez
-      // umí ubírat jen carb a fat. Malý den = menší shake a půl kelímku tvarohu.
-      // ⛔ Táž logika v appce (meal-gen-core.ts), hlídá parita.
-      var velikostDne = Math.max(0.6, Math.min(1, targets.kcal / 2200));
-      function vg(g) { return Math.round(g * velikostDne); }
+      // Gramáže doplňků úměrně velikosti dne (velikostDne/vg deklarované u MIN_PRILOHA_G).
       addExtra(byId('syrovatkovy-protein'), vg(30), mainIdx);
       addExtra(byId('ovesne-vlocky'), vg(50), 0);
       runScale();
@@ -709,6 +743,7 @@
     return day;
   }
 
-  global.MealGen = { computeTargets: computeTargets, assembleDay: assembleDay, assembleWeek: assembleWeek,
-    shoppingListFromDays: shoppingListFromDays, swapItem: swapItem, macrosFor: macrosFor, GOAL: GOAL, ACT: ACT };
+  global.MealGen = { computeTargets: computeTargets, ketoTargets: ketoTargets, assembleDay: assembleDay,
+    assembleWeek: assembleWeek, shoppingListFromDays: shoppingListFromDays, swapItem: swapItem,
+    macrosFor: macrosFor, GOAL: GOAL, ACT: ACT };
 })(window);
