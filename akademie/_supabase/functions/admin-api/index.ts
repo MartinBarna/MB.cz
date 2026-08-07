@@ -786,7 +786,9 @@ Deno.serve(async (req) => {
 
     if (action === "referrals_overview") {
       const [refs, codes, pays] = await Promise.all([
-        admin.from("referrals").select("id,code,buyer_email,product,amount,order_id,source,status,reward_type,reward_amount,created_at,confirmed_at").order("created_at", { ascending: false }).limit(300),
+        // `partner_type` doplněn 7. 8. 2026 s affiliate programem: bez něj by v přehledu
+        // nešlo odlišit kredit člena od provize partnerky a výplaty by se počítaly ručně.
+        admin.from("referrals").select("id,code,buyer_email,product,amount,order_id,source,status,reward_type,reward_amount,partner_type,created_at,confirmed_at").order("created_at", { ascending: false }).limit(300),
         admin.from("referral_codes").select("code,owner_email,active"),
         admin.from("referral_payouts").select("id,owner_email,amount_czk,note,created_at").order("created_at", { ascending: false }).limit(200),
       ]);
@@ -799,6 +801,22 @@ Deno.serve(async (req) => {
         .filter((b) => b.confirmed || b.pending || b.paid);
       balances.sort((a, b) => b.balance - a.balance);
       return json({ ok: true, referrals: rows, payouts: pays.data ?? [], balances });
+    }
+
+    if (action === "affiliate_prehled") {
+      // Podklad pro výplaty affiliate partnerkám (7. 8. 2026). Čte view
+      // `affiliate_prehled`, které sčítá `referrals.reward_amount`, tedy provizi
+      // ZMRAZENOU v okamžiku zápisu. Změna sazby proto nepřepočítá historii.
+      // ⚠️ Vlastní akce, ne rozšíření `referrals_overview`: ten vrací JEDNOTLIVÉ
+      //    referraly včetně členských kreditů a je limitovaný na 300 řádků, takže
+      //    by se z něj součty pro výplaty nedaly spolehlivě spočítat.
+      const { data, error } = await admin
+        .from("affiliate_prehled")
+        .select("code,owner_email,rate_monthly,rate_oneoff,referralu_celkem,referralu_pending,referralu_confirmed,obrat_pending,obrat_confirmed,provize_pending,provize_confirmed,vyplaceno,k_vyplate")
+        .order("k_vyplate", { ascending: false });
+      if (error) return json({ error: error.message }, 500);
+      const rows = (data ?? []).map((r) => ({ ...r, owner_email: low(r.owner_email) }));
+      return json({ ok: true, partneri: rows });
     }
 
     if (action === "referral_set_status") {
