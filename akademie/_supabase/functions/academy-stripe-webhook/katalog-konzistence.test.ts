@@ -142,9 +142,15 @@ check('A2 priorita promo > client_reference_id > referral_click',
 
 // Lookup kodu v referral_codes musi byt JEDEN pro vsechny zdroje, jinak by se
 // „co je platny kod" mohlo mezi zdroji rozejit.
-check('A3 kod se hleda v referral_codes jen na JEDNOM miste',
-  (blokRef.match(/from\("referral_codes"\)/g) ?? []).length === 1,
-  JSON.stringify((blokRef.match(/from\("referral_codes"\)/g) ?? []).length));
+// Uvnitr JEDNORAZOVE atribuce smi byt lookup jen jednou, at se tri zdroje kodu
+// nerozejdou v tom, co je platny kod. (Recurring vetev ma vlastni, to je v poradku.)
+const blokJednoraz = zdrojWebhook.slice(
+  zdrojWebhook.indexOf('async function atribuujReferral'),
+  zdrojWebhook.indexOf('async function posliUvitani'),
+);
+check('A3 v jednorazove atribuci se kod hleda jen na JEDNOM miste',
+  (blokJednoraz.match(/from\("referral_codes"\)/g) ?? []).length === 1,
+  JSON.stringify((blokJednoraz.match(/from\("referral_codes"\)/g) ?? []).length));
 
 check('A4 lookup kodu NENI podmineny produktem',
   !/if\s*\([^)]*produkt[^)]*\)[^;]*from\("referral_codes"\)/.test(blokRef), '');
@@ -155,8 +161,11 @@ check('A5 castka jde z amount_total session, ne z ceniku',
 check('A6 affiliate dostava reward_type "cash", member "credit"',
   /partnerType === "affiliate" \? "cash" : "credit"/.test(blokRef), '');
 
-check('A7 do referrals se zapisuje amount_czk i partner_type',
-  /amount_czk:/.test(blokRef) && /partner_type:/.test(blokRef), '');
+check('A7 do referrals se zapisuje amount (STAVAJICI sloupec) i partner_type',
+  /amount: castkaKc/.test(blokRef) && /partner_type:/.test(blokRef), '');
+// Dva sloupce na totez je budouci past: `amount` uz existuje a admin-api ho cte.
+check('A7b nezavadi se novy sloupec amount_czk',
+  !/amount_czks*:/.test(zdrojWebhook), '');
 
 // Kdyz sazba chybi, partner NESMI dostat nulu (tise by prodal zadarmo).
 check('A8 chybejici sazba spadne na ODMENU, ne na nulu',
@@ -174,12 +183,54 @@ const MIGRACE = KOREN + 'akademie/_supabase/referral-affiliate-partner-type.sql'
 let sqlMigrace = '';
 try { sqlMigrace = await Deno.readTextFile(MIGRACE); } catch { /* soubor chybi */ }
 check('M1 migracni soubor existuje', sqlMigrace.length > 0, MIGRACE);
-for (const sloupec of ['partner_type', 'rate_monthly', 'rate_oneoff', 'amount_czk']) {
+for (const sloupec of ['partner_type', 'rate_monthly', 'rate_oneoff']) {
   check(`M2 migrace pridava ${sloupec}`, new RegExp(`add column if not exists ${sloupec}`).test(sqlMigrace), '');
 }
 // Bez rozsireni CHECKu by atribuce u balicku a konzultace spadla.
 check('M3 migrace rozsiruje CHECK na product o balicek a konzultace',
   /check \(product in \([^)]*'balicek'[^)]*'konzultace'[^)]*\)\)/.test(sqlMigrace), '');
+// Bez zahozeni tohohle unique indexu by druha mesicni provize spadla.
+check('M4 migrace zahazuje unique index (buyer_email, product), ktery blokuje recurring',
+  /drop index if exists public\.referrals_buyer_product_uidx/.test(sqlMigrace), '');
+check('M5 migrace NEPRIDAVA sloupec amount_czk',
+  !/add column[^;]*amount_czk/.test(sqlMigrace), '');
+
+// --- 9) RECURRING PROVIZE Z FAKTUR ---
+const blokRec = zdrojWebhook.slice(
+  zdrojWebhook.indexOf('async function zapisRecurringProvizi'),
+  zdrojWebhook.indexOf('async function atribuujReferral'),
+);
+check('R1 funkce pro recurring provizi existuje', blokRec.length > 0, '');
+// Nejdulezitejsi pravidlo cele vetve: kredit clena se za obnovy NEDAVA.
+check('R2 recurring je JEN pro affiliate, member kredit se neopakuje',
+  /partner_type !== "affiliate"/.test(blokRec) && /member-bez-recurring/.test(blokRec), '');
+check('R3 idempotence stoji na ID faktury (order_id)',
+  /eq\("order_id", fakturaId\)/.test(blokRec) && /duplicita-faktura/.test(blokRec), '');
+check('R4 castka jde z amount_paid faktury, ne z total',
+  /amount_paid/.test(blokRec), '');
+check('R5 sazba se cte ZIVE z referral_codes (rate_monthly), ne z puvodniho radku',
+  /rate_monthly/.test(blokRec) && /from\("referral_codes"\)/.test(blokRec), '');
+check('R6 chybejici sazba provizi NEZAPISE (nula by byla horsi nez nic)',
+  /bez-sazby/.test(blokRec), '');
+check('R7 recurring zapisuje reward_type cash a partner_type affiliate',
+  /reward_type: "cash"/.test(blokRec) && /partner_type: "affiliate"/.test(blokRec), '');
+check('R8 self-referral se u obnov taky odchyti',
+  /self-referral/.test(blokRec), '');
+check('R9 recurring je zavolany z vetve invoice.paid',
+  /zapisRecurringProvizi\(email, obj\)/.test(zdrojWebhook), '');
+// Zapis provize nesmi shodit obnovu predplatneho.
+check('R10 selhani zapisu provize je best-effort (alert, ne 500)',
+  /catch \(e\)/.test(blokRec) && /alertAdmin\("Stripe: recurring provize/.test(blokRec), '');
+
+// --- 10) ADMIN VIDI, CO SE ZAPSALO ---
+const ADMIN = KOREN + 'akademie/_supabase/functions/admin-api/index.ts';
+let zdrojAdmin = '';
+try { zdrojAdmin = await Deno.readTextFile(ADMIN); } catch { /* nevadi */ }
+const vycetAdmin = (zdrojAdmin.match(/from\("referrals"\)\.select\("([^"]+)"\)/) ?? ['', ''])[1];
+check('AD1 admin-api vybira partner_type (jinak Martin neodlisi kredit od provize)',
+  vycetAdmin.includes('partner_type'), vycetAdmin);
+check('AD2 admin-api vybira amount (zaklad provize)',
+  vycetAdmin.includes('amount'), vycetAdmin);
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);

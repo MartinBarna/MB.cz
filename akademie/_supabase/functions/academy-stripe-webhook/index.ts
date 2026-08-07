@@ -754,6 +754,81 @@ async function zalogujNerozpoznanouSlevu(obj: any, jak: string): Promise<void> {
   } catch { /* log je pomůcka, nikdy nesmí shodit nákup */ }
 }
 
+/**
+ * ⭐ OPAKOVANÁ PROVIZE za zaplacenou fakturu předplatného (7. 8. 2026).
+ *
+ * Affiliate partnerka bere podíl z KAŽDÉ měsíční platby, ne jen z první. První
+ * platbu zapsal `atribuujReferral` z `checkout.session.completed`; tady se podle
+ * ní jen dohledá, komu ten zákazník patří, a přidá se řádek za tuhle fakturu.
+ *
+ * ⛔ MEMBER KREDIT SE SEM NETÝKÁ. Kredit je jednorázová odměna za doporučení,
+ *    ne podíl z předplatného. Proto se pokračuje jen u `partner_type='affiliate'`.
+ *
+ * ⚠️ Párujeme podle e-mailu kupujícího, ne podle ID předplatného: `referrals`
+ *    si ID předplatného neukládá (schéma je z doby, kdy byly jen jednorázovky).
+ *
+ * Idempotence stojí na `order_id` = ID faktury. Stripe tutéž fakturu doručí
+ * klidně vícekrát a `referrals_order_uidx` je na to unique, ale kontrolujeme
+ * i předem, ať se do logu nesype porušení constraintu.
+ */
+// deno-lint-ignore no-explicit-any
+async function zapisRecurringProvizi(buyerEmail: string, invoice: any): Promise<string> {
+  try {
+    const email = buyerEmail.toLowerCase().trim();
+    const fakturaId = typeof invoice?.id === "string" ? invoice.id : "";
+    if (!fakturaId) return "bez-id-faktury";
+
+    // Už je tahle faktura zapsaná? (přehrání události Stripem)
+    const { data: existing } = await admin
+      .from("referrals").select("id").eq("order_id", fakturaId).limit(1);
+    if (existing && existing.length) return "duplicita-faktura";
+
+    // Původní doporučení tohohle kupujícího. `maybeSingle` schválně NE: kupující
+    // může mít víc řádků (jednorázovka + předchozí měsíce), bereme ten nejstarší.
+    const { data: puvodni } = await admin
+      .from("referrals").select("code,partner_type")
+      .eq("buyer_email", email).order("created_at", { ascending: true }).limit(1);
+    const kod = puvodni?.[0]?.code ? String(puvodni[0].code) : "";
+    if (!kod) return "bez-doporuceni";
+    if (puvodni?.[0]?.partner_type !== "affiliate") return "member-bez-recurring";
+
+    // Sazba se čte ŽIVĚ z kódu, ne z původního řádku: když Martin partnerce sazbu
+    // změní, má platit od příští faktury, ne zpětně.
+    const { data: codes } = await admin
+      .from("referral_codes").select("owner_email,partner_type,rate_monthly")
+      .eq("code", kod).eq("active", true).limit(1);
+    const owner = codes?.[0]?.owner_email ? String(codes[0].owner_email).toLowerCase() : "";
+    if (!owner) return "kod-neaktivni";
+    if (owner === email) return "self-referral";
+    if (codes?.[0]?.partner_type !== "affiliate") return "kod-uz-neni-affiliate";
+    const sazba = Number(codes?.[0]?.rate_monthly ?? 0);
+    if (!(sazba > 0)) return "bez-sazby";
+
+    // ⚠️ `amount_paid` je to, co Stripe reálně strhl (po slevě i po kreditu).
+    // `total` by u faktury se slevovým kupónem nadhodnotil provizi.
+    const halere = Number(invoice?.amount_paid ?? invoice?.total ?? 0);
+    if (!Number.isFinite(halere) || halere <= 0) return "nulova-faktura";
+    const castkaKc = Math.round(halere) / 100;
+
+    await admin.from("referrals").insert({
+      code: kod, buyer_email: email, product: "academy",
+      amount: castkaKc,
+      order_id: fakturaId, source: "coupon", status: "pending",
+      reward_type: "cash",
+      reward_amount: Math.round(castkaKc * sazba * 100) / 100,
+      partner_type: "affiliate",
+    });
+    return "zapsano";
+  } catch (e) {
+    // Best-effort jako u jednorázové atribuce: provize NIKDY nesmí shodit obnovu
+    // předplatného. Kdyby zápis selhal, přijde alert a dohledá se ručně.
+    await alertAdmin("Stripe: recurring provize se nezapsala", {
+      email: buyerEmail, faktura: String(invoice?.id ?? ""), chyba: String(e).slice(0, 200),
+    });
+    return "chyba";
+  }
+}
+
 async function atribuujReferral(
   buyerEmail: string,
   produkt: string,
@@ -822,12 +897,15 @@ async function atribuujReferral(
       : (ODMENA[produkt] ?? 0);
 
     await admin.from("referrals").insert({
-      code: ref, buyer_email: email, product: produkt, amount: null,
+      code: ref, buyer_email: email, product: produkt,
       order_id: orderId || null, source: "coupon", status: "pending",
       // 'cash' je v CHECK constraintu povolený (ověřeno proti živé DB 7. 8. 2026).
       reward_type: partnerType === "affiliate" ? "cash" : "credit",
       reward_amount: odmena,
-      amount_czk: castkaKc,
+      // ⚠️ Píše se do STÁVAJÍCÍHO sloupce `amount`, ne do nového `amount_czk`.
+      // `admin-api` ten sloupec už čte, takže Martin provizi uvidí hned a nevznikají
+      // dva sloupce na totéž. Do 7. 8. 2026 tu bylo natvrdo `amount: null`.
+      amount: castkaKc,
       partner_type: partnerType,
     });
     return "zapsano-" + (zdrojKodu || "?");
@@ -1452,6 +1530,11 @@ Deno.serve(async (req) => {
         subscription: typeof subId === "string" ? subId : null,
       });
 
+      // ⭐ OPAKOVANÁ PROVIZE AFFILIATE PARTNERKY (7. 8. 2026).
+      // Za KAŽDOU zaplacenou fakturu, ne jen za první. Kredit členů se sem schválně
+      // netýká: ten je JEDNORÁZOVÁ odměna za doporučení, ne podíl z předplatného.
+      const provize = await zapisRecurringProvizi(email, obj);
+
       // ⛔ ODSUD SE UVÍTAČKA NEPOSÍLÁ NIKDY (oprava 28. 7. 2026).
       // Při prvním nákupu dorazí `checkout.session.completed` i `invoice.paid`
       // pár vteřin po sobě a OBA volaly `posliUvitani`. Ten resetuje leada na step 0
@@ -1474,7 +1557,7 @@ Deno.serve(async (req) => {
       // uvítačku", nezávodí s ničím a mlčí, když je vše v pořádku.
       // ⚠️ Poučení nad rámec tohohle místa: alert, který jednou zalže, se přestane číst,
       // a pak nezafunguje ani ve chvíli, kdy má pravdu.
-      return json({ ok: true, email, expirace, prvni });
+      return json({ ok: true, email, expirace, prvni, provize });
     }
 
     // --- 3) Selhaná platba: NIC nezamykáme --------------------------------

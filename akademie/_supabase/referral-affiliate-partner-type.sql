@@ -24,14 +24,28 @@ comment on column public.referral_codes.rate_oneoff is
   'Podíl z JEDNORÁZOVÝCH plateb jako desetinné číslo (0.20 = 20 %). NULL u member kódů.';
 
 -- 2) Co si o nákupu pamatujeme -------------------------------------
+-- ⚠️ ŽÁDNÝ `amount_czk`. Sloupec `amount` už v tabulce JE (numeric, dnes všude null)
+-- a `admin-api` ho v přehledu referralů čte. Nový sloupec by znamenal dva sloupce
+-- na totéž a Martin by v adminu dál viděl prázdno. Webhook proto píše do `amount`.
 alter table public.referrals
-  add column if not exists amount_czk   numeric,   -- kolik člověk reálně zaplatil (po slevě)
   add column if not exists partner_type text;      -- kopie typu v době nákupu
 
-comment on column public.referrals.amount_czk is
-  'Zaplaceno v Kč ze Stripe session.amount_total/100. Základ pro výpočet provize.';
+comment on column public.referrals.amount is
+  'Zaplaceno v Kč (Stripe amount_total/100 u jednorázovky, amount_paid/100 u faktury). Základ provize.';
 comment on column public.referrals.partner_type is
   'Typ partnera v době nákupu. Kopie schválně: sazby se můžou v čase měnit, historie ne.';
+
+-- 2b) 🔴 UNIQUE INDEX, KTERÝ BLOKUJE OPAKOVANÉ PROVIZE (nález 7. 8. 2026) ----
+-- `referrals_buyer_product_uidx` je UNIQUE na (lower(buyer_email), product), tedy
+-- „jeden referral na kupujícího a produkt". To dávalo smysl, dokud byly jen
+-- jednorázovky. U affiliate provizí z MĚSÍČNÍHO předplatného ale potřebujeme
+-- jeden řádek ZA KAŽDOU FAKTURU, takže druhý měsíc by insert spadl na tenhle index
+-- a partnerka by dostala zaplaceno jen jednou.
+-- ⚠️ Idempotenci to neoslabí: `referrals_order_uidx` (unique na order_id) drží dál
+--    a je přesnější, protože order_id je payment intent u jednorázovky a ID faktury
+--    u předplatného. Původní pravidlo „1x na kupujícího a produkt" navíc hlídá i KÓD
+--    (`duplicita-produkt` v atribuujReferral), takže jednorázová cesta se nemění.
+drop index if exists public.referrals_buyer_product_uidx;
 
 -- 3) 🔴 ROZŠÍŘENÍ CHECKU NA `product` (nález při psaní téhle migrace) ----
 -- Původní `referral-affiliate.sql` povoluje POUZE 'academy' a 'videokurz'.

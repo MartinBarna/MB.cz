@@ -786,7 +786,9 @@ Deno.serve(async (req) => {
 
     if (action === "referrals_overview") {
       const [refs, codes, pays] = await Promise.all([
-        admin.from("referrals").select("id,code,buyer_email,product,amount,order_id,source,status,reward_type,reward_amount,created_at,confirmed_at").order("created_at", { ascending: false }).limit(300),
+        // `partner_type` doplněn 7. 8. 2026 s affiliate programem: bez něj by v přehledu
+        // nešlo odlišit kredit člena od provize partnerky a výplaty by se počítaly ručně.
+        admin.from("referrals").select("id,code,buyer_email,product,amount,order_id,source,status,reward_type,reward_amount,partner_type,created_at,confirmed_at").order("created_at", { ascending: false }).limit(300),
         admin.from("referral_codes").select("code,owner_email,active"),
         admin.from("referral_payouts").select("id,owner_email,amount_czk,note,created_at").order("created_at", { ascending: false }).limit(200),
       ]);
