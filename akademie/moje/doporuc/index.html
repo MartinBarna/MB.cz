@@ -28,7 +28,7 @@
   .ref-deal .d .sub{font-size:.82rem;color:#9b8e7d;margin-top:4px}
   @media(max-width:520px){.ref-deal{grid-template-columns:1fr}}
   .b-ghost{background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.16)!important}
-  .ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1.6rem 0}
+  .ref-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:1.6rem 0}
   .ref-stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px 10px;text-align:center}
   .ref-stats .s b{display:block;font-size:1.7rem;color:#F6CD63;font-weight:800;line-height:1}
   .ref-stats .s span{font-size:.78rem;color:#b7ab9b}
@@ -86,7 +86,8 @@
         <div class="ref-stats">
           <div class="s"><b id="stRefC">0</b><span>potvrzených doporučení</span></div>
           <div class="s"><b id="stRefP">0</b><span>čeká na potvrzení</span></div>
-          <div class="s"><b id="stCredit">0 Kč</b><span>tvůj kredit</span></div>
+          <div class="s"><b id="stCredit">0 Kč</b><span>kredit k vyplacení</span></div>
+          <div class="s"><b id="stPaid">0 Kč</b><span>už vyplaceno</span></div>
         </div>
       </div>
 
@@ -114,8 +115,8 @@
         <b>Kolik dostaneš (a kamarád ušetří):</b><br>
         • <b>Videokurz výživy:</b> kamarád −10 %, ty 150 Kč kredit.<br>
         • <b>Academy:</b> kamarád −10 % z první platby, ty 300 Kč kredit.<br><br>
-        Kredit se připíše po zaplacení a uplynutí 14denní vratné lhůty. Platí 1× na kupujícího,
-        nelze použít na vlastní nákup, kredit má platnost 12 měsíců. Program lze kdykoliv upravit.
+        Kredit se připíše po zaplacení a uplynutí 14denní vratné lhůty. Platí 1× na kupujícího
+        a nelze ho použít na vlastní nákup. Program lze kdykoliv upravit.
         <b>Jak kredit uplatníš:</b> až budeš chtít nakoupit, napiš Martinovi a pošle ti slevový kód
         ve výši tvého kreditu. Otázka nebo nesedí ti stav? Napiš na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a>.
       </div>
@@ -167,7 +168,20 @@
       var st = d.status || {};
       $('stRefC').textContent = st.referrals_confirmed || 0;
       $('stRefP').textContent = st.referrals_pending || 0;
-      $('stCredit').textContent = (st.credit_confirmed || 0) + ' Kč';
+      // ⛔ Číslo je K VYPLACENÍ, ne „celkem vydělané". Do 7. 8. 2026 tu svítilo
+      //    `credit_confirmed` z view `referral_credit`, které o tabulce `referral_payouts`
+      //    vůbec neví. Po výplatě tedy členovi svítila původní částka dál a mohl ji chtít
+      //    podruhé, aniž by proti tomu Martin měl v ruce cokoli kromě vlastní paměti.
+      // ⚠️ Odečet MUSÍ počítat edge funkce `referral-code` pod service rolí. `referral_payouts`
+      //    má zapnuté RLS a NULA politik, a view `referral_balances` je `security_invoker`,
+      //    takže dotaz z prohlížeče by u `paid` vždycky vrátil 0 a oprava by vypadala hotová.
+      // ⬇️ Fallback drží starou hodnotu, dokud není nasazená nová verze `referral-code`:
+      //    do té doby stránka ukáže přesně to co dřív, jen pod poctivějším popiskem.
+      var kVyplaceni = (typeof st.credit_available === 'number')
+        ? st.credit_available
+        : Math.max(0, (st.credit_confirmed || 0) - (st.credit_paid || 0));
+      $('stCredit').textContent = kVyplaceni + ' Kč';
+      $('stPaid').textContent = (st.credit_paid || 0) + ' Kč';
       var msg = 'Ahoj! Mrkni na videokurz výživy nebo Barna Academy od Martina Barny. S mým kódem ' + d.code + ' máš slevu 10 %, stačí otevřít tenhle odkaz: ' + link;
       var wa = $('btnWa'); if(wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(msg);
       var bc = $('btnCopyCode'); if(bc) bc.addEventListener('click', function(){ copy(d.code); toast('Kód zkopírován ✓'); });
