@@ -877,7 +877,15 @@ function zaDni(n: number): string {
 // ⚠️ `amount_total` se bere ze SESSION, ne z ceníku. Slevový kód ji mění a doklad
 //    musí říkat, kolik člověk reálně zaplatil.
 // deno-lint-ignore no-explicit-any
-async function posliDoklad(email: string, obj: any): Promise<string> {
+// ⚠️ `def` je řádek KATALOGU, ne natvrdo napsaný produkt. Do 7. 8. 2026 tu byl
+// natvrdo balíček (název, odkaz na odstoupení i věta o souborech), takže doklad
+// chodil VÝHRADNĚ u něj a kupec videokurzu, upgradu ani konzultace nedostal nic.
+// Tři místa se musela měnit společně, jinak by doklad tvrdil špatný produkt:
+//   1. název produktu       → `def.nazev`
+//   2. odkaz na odstoupení  → `def.produkt` (hodnoty na /odstoupeni/ jsou
+//      videokurz | academy | konzultace | balicek, tedy přesně `produkt` z katalogu)
+//   3. věta o tom, co člověk dostal (viz níž, byla balíčková)
+async function posliDoklad(email: string, obj: any, def: JednorazovyProdukt): Promise<string> {
   if (!RESEND_KEY) return "chybi-resend-klic";
   try {
     const castka = castkaText(Number(obj.amount_total ?? 0), String(obj.currency ?? "czk"));
@@ -894,9 +902,12 @@ async function posliDoklad(email: string, obj: any): Promise<string> {
         html:
           `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px">`
           + `<p>Dobrý den,</p>`
-          + `<p>tady je doklad o zaplacení. Soubory ke stažení máš v předchozím e-mailu.</p>`
+          // ⚠️ Věta byla „Soubory ke stažení máš v předchozím e-mailu." To platí JEN
+          // u balíčku. Videokurz a Academy jsou přístup, ne soubory, a u konzultace
+          // se teprve domlouvá termín, takže by doklad třem ze čtyř produktů lhal.
+          + `<p>tady je doklad o zaplacení. Podrobnosti k produktu máš v předchozím e-mailu.</p>`
           + `<table cellpadding="6" style="border-collapse:collapse;font-size:15px">`
-          + `<tr><td style="color:#666">Produkt</td><td><b>40 receptů a 48 odpovědí</b></td></tr>`
+          + `<tr><td style="color:#666">Produkt</td><td><b>${def.nazev}</b></td></tr>`
           + `<tr><td style="color:#666">Částka</td><td><b>${castka}</b></td></tr>`
           + `<tr><td style="color:#666">Zaplaceno</td><td>${datum}</td></tr>`
           + `<tr><td style="color:#666">Číslo objednávky</td><td>${cislo}</td></tr>`
@@ -904,7 +915,7 @@ async function posliDoklad(email: string, obj: any): Promise<string> {
           + `</table>`
           + `<p style="font-size:14px;color:#555">Platba proběhla přes platební bránu Stripe. `
           + `Do 14 dnů můžeš od smlouvy odstoupit na `
-          + `<a href="https://martinbarna.cz/odstoupeni/?product=balicek">martinbarna.cz/odstoupeni</a>.</p>`
+          + `<a href="https://martinbarna.cz/odstoupeni/?product=${encodeURIComponent(def.produkt)}">martinbarna.cz/odstoupeni</a>.</p>`
           + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
       }),
     });
@@ -972,7 +983,9 @@ Deno.serve(async (req) => {
         let referral = "preskoceno";
         let bonusVideokurz = def.videokurzBonus ? "preskoceno" : "netyka-se";
         // Stav dokladu jde do odpovědi funkce, ať je v logu Stripu vidět, jestli odešel.
-        let doklad = klic === "balicek" ? "neodeslano" : "netyka-se";
+        // ⚠️ Od 7. 8. 2026 se doklad týká VŠECH jednorázových produktů, ne jen balíčku,
+        // takže tu už není `klic === "balicek" ? … : "netyka-se"`.
+        let doklad = "neodeslano";
         if (novyDozivotni) {
           if (def.tcGrant) {
             tcGrant = await grantTvujCoach(emailL, typeof obj.id === "string" ? obj.id : null);
@@ -1099,7 +1112,12 @@ Deno.serve(async (req) => {
           // ⚠️ Schválně BEZ podmínky na `varsProUvitani`: doklad je o PLATBĚ, ne o odkazech.
           //    Když se odkazy nevygenerují, člověk stejně zaplatil a doklad mu patří
           //    (a Martinovi o tom už odešel alert).
-          if (klic === "balicek") doklad = await posliDoklad(emailL, obj);
+          // ⛔ ŽÁDNÁ PODMÍNKA NA PRODUKT. `KATALOG` obsahuje výhradně JEDNORÁZOVÉ produkty
+          //    (měsíční předplatné Academy sem nevede, to jede větví `invoice.paid`),
+          //    takže „zaplaceno jednorázově" = „patří mu doklad", bez výjimky.
+          //    Do 7. 8. 2026 tu stálo `if (klic === "balicek")` a kupec videokurzu,
+          //    upgradu ani konzultace doklad nikdy nedostal.
+          doklad = await posliDoklad(emailL, obj, def);
 
           // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
           // a domluvit termín. Bez tohohle upozornění by zákazník zaplatil 2 990 Kč
@@ -1214,7 +1232,7 @@ Deno.serve(async (req) => {
             }
             // ⛔ DOKLAD I ZA DRUHOU PLATBU. Peníze přišly znovu, takže doklad patří znovu.
             //    Schválně až tady, mimo `try`: i když odkazy selhaly, platba proběhla.
-            doklad = await posliDoklad(emailL, obj);
+            doklad = await posliDoklad(emailL, obj, def);
           }
         }
 

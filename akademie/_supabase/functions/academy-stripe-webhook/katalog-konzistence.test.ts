@@ -75,6 +75,50 @@ const chybiVDigestu = [...new Set(zdroje)].filter((s) => !zdrojeDigest.includes(
 check('K11 daily-digest zna VSECHNY zdroje z katalogu (jinak se prodej nezapocita)',
   chybiVDigestu.length === 0, `chybi=${JSON.stringify(chybiVDigestu)} digest=${JSON.stringify(zdrojeDigest)}`);
 
+// --- 6) DOKLAD O ZAPLACENI PATRI KAZDEMU JEDNORAZOVEMU PRODUKTU (7. 8. 2026) ---
+// Do teto opravy byl `posliDoklad` natvrdo balickovy: nazev produktu, odkaz na
+// odstoupeni i veta o souborech. Kupec videokurzu (800), upgradu i konzultace
+// (2 990) zaplatil a doklad nedostal. Tyhle kontroly hlidaji, aby se to nevratilo.
+const blokDoklad = zdrojWebhook.slice(
+  zdrojWebhook.indexOf('async function posliDoklad'),
+  zdrojWebhook.indexOf('Deno.serve('),
+);
+
+check('D1 posliDoklad dostava radek katalogu (`def`), ne jen e-mail a session',
+  /async function posliDoklad\([^)]*def:\s*JednorazovyProdukt/.test(zdrojWebhook), '');
+
+// Nejdulezitejsi kontrola cele sady: kdyby se pred volani vratila podminka na produkt,
+// doklad by zase chodil jen nekomu a nikde by to nekriklo.
+check('D2 volani posliDoklad NENI podmineno konkretnim produktem',
+  !/if\s*\(\s*klic\s*===\s*"[a-z0-9-]+"\s*\)\s*doklad\s*=\s*await\s+posliDoklad/.test(zdrojWebhook),
+  'nekdo vratil podminku typu `if (klic === "balicek") doklad = await posliDoklad(...)`');
+
+check('D3 vsechna volani posliDoklad predavaji `def`',
+  [...zdrojWebhook.matchAll(/posliDoklad\(([^)]*)\)/g)]
+    .filter((m) => !m[1].includes('email: string'))   // vynech definici funkce
+    .every((m) => /,\s*def\s*$/.test(m[1])),
+  JSON.stringify([...zdrojWebhook.matchAll(/posliDoklad\(([^)]*)\)/g)].map((m) => m[1])));
+
+check('D4 nazev produktu v dokladu jde z katalogu, ne natvrdo',
+  blokDoklad.includes('${def.nazev}'), '');
+
+check('D5 odkaz na odstoupeni v dokladu jde z katalogu, ne natvrdo `balicek`',
+  blokDoklad.includes('${encodeURIComponent(def.produkt)}') && !/product=balicek/.test(blokDoklad), '');
+
+// Zadny nazev produktu z katalogu nesmi zustat natvrdo v tele dokladu.
+const nazvy = [...blokKatalog.matchAll(/nazev:\s*"([^"]+)"/g)].map((m) => m[1]);
+const natvrdoVDokladu = nazvy.filter((n) => blokDoklad.includes(n));
+check('D6 v dokladu nezustal natvrdo napsany zadny nazev produktu',
+  natvrdoVDokladu.length === 0, JSON.stringify(natvrdoVDokladu));
+
+// Slevove kody meni castku, takze se NIKDY nesmi brat z ceniku.
+check('D7 castka se dal bere z amount_total session (kvuli slevovym kodum)',
+  /amount_total/.test(blokDoklad), '');
+
+// Stav dokladu uz se nesmi inicializovat jako "netyka-se" podle produktu.
+check('D8 stav dokladu se neinicializuje podminkou na produkt',
+  !/let\s+doklad\s*=\s*klic\s*===/.test(zdrojWebhook), '');
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo`);
