@@ -214,6 +214,31 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
     nazev: "40 receptů a 48 odpovědí",
     varianta: "kuchařka a e-book",
   },
+  // ⭐ UPGRADE Z BALÍČKU NA VIDEOKURZ za 450 Kč (7. 8. 2026). Kdo má balíček za 349,
+  // doplatí rozdíl místo plných 800. Postaveno vzorem `konzultace-vk`: týž produkt
+  // jako plná varianta, ale VLASTNÍ KLÍČ KATALOGU, protože se liší cesta i započtení.
+  // ⛔ `produkt: "videokurz"` je schválně TOTOŽNÝ s plnou variantou. Kupující dostane
+  //    přesně týž přístup, jen za jinou cenu; `entitlements` má PK (email, product),
+  //    takže se to správně potká s jedním řádkem videokurzu.
+  // ⛔ `source: "stripe-videokurz-upgrade"` musí zůstat ODLIŠNÝ od `stripe-videokurz`.
+  //    Jen tak jde v datech poznat, kolik lidí přišlo přes schod z balíčku, a hlavně
+  //    se tím nerozbije rozlišení zdrojů u refundu (viz ZDROJ_BONUS_VIDEOKURZ výš:
+  //    refund konzultace smí sebrat POUZE bonusový videokurz, nikdy zaplacený).
+  // ⛔ `tcGrant: false` SCHVÁLNĚ, stejně jako u plného videokurzu. Kdo to přepne na
+  //    true, rozdá roční VIP appky za 4 990 Kč lidem, kteří zaplatili 450.
+  // ⚠️ `welcome` je TÁŽ uvítací trať jako u plné varianty: dodává se totéž zboží,
+  //    takže i onboarding má být tentýž. Vlastní trať by znamenala druhou sadu šablon,
+  //    která se při každé úpravě textů tiše rozejde s originálem.
+  // ⚠️ NOVÝ ZDROJ SE MUSÍ DOPLNIT I DO `daily-digest` (seznam zdrojů u denních prodejů),
+  //    jinak se prodej nezapočítá a nikde to nekřikne. Doplněno v témže commitu.
+  "videokurz-upgrade": {
+    produkt: "videokurz",
+    source: "stripe-videokurz-upgrade",
+    welcome: "onboarding-nakup-videokurz",
+    tcGrant: false,
+    nazev: "Videokurz výživy",
+    varianta: "upgrade z balíčku",
+  },
 };
 
 // Který odkaz vede na který klíč katalogu. Formát: `plink_A=academy-lifetime,plink_B=videokurz`.
@@ -297,7 +322,15 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     //    projet znovu a znovu bez Martinovych penez. Ostre odkazy limit mit MUSI, tenhle ne.
     // ⚠️ Sandboxova platba zaklada SKUTECNY radek v `entitlements` a posila SKUTECNE maily.
     //    Testuje se proto vyhradne na `fitness.barna@gmail.com`.
-    "plink_1U1imlBq3rKubW9kcGLCUJPh=balicek",
+    "plink_1U1imlBq3rKubW9kcGLCUJPh=balicek," +
+    // ⬜⬜ UPGRADE Z BALÍČKU NA VIDEOKURZ za 450 Kč (7. 8. 2026).
+    // ⛔ ID JE ZATÍM PLACEHOLDER. Odkaz ve Stripu teprve vznikne; až bude, nahradí se
+    //    `plink_DOPLNIT_UPGRADE_450` skutečným ID a TEPRVE POTOM to smí jít na produkci.
+    //    Do té doby je řádek neškodný: na neexistující odkaz nemůže přijít platba.
+    // ⚠️ Placeholder schválně NENÍ zakomentovaný. Mapování se tím dá otestovat hned
+    //    (test kontroluje, že klíč vede na `videokurz-upgrade`), a zapomenutý řádek
+    //    je vidět v kódu, kdežto zapomenutý komentář nikdo nehledá.
+    "plink_DOPLNIT_UPGRADE_450=videokurz-upgrade",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??

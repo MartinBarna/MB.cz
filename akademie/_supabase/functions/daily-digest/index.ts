@@ -44,7 +44,11 @@ Deno.serve(async (req) => {
     //    Martin neměl z čeho poznat ani úspěch, ani výpadek doručení.
     //    ⚠️ Nezaměňovat s počítadlem zakládajících členů níž (ř. ~64): tam je užší
     //    filtr ZÁMĚRNÝ, do padesátky se kupci ostatních produktů počítat nesmí.
-    admin.from("entitlements").select("product").eq("active", true).in("source", ["simpleshop", "stripe-lifetime", "stripe-videokurz", "stripe-konzultace", "stripe-balicek"]).gte("granted_at", yStart.toISOString()),
+    //    ⛔ ROZŠÍŘENO ZNOVU 7. 8. 2026 o `stripe-videokurz-upgrade` (upgrade z balíčku
+    //    na videokurz za 450 Kč). Tenhle seznam je natvrdo, takže KAŽDÝ nový `source`
+    //    v `academy-stripe-webhook` se sem musí doplnit ručně. Kdo na to zapomene,
+    //    vyrobí přesně tutéž tichou vadu jako 6. 8.: peníze přijdou, přehled mlčí.
+    admin.from("entitlements").select("product").eq("active", true).in("source", ["simpleshop", "stripe-lifetime", "stripe-videokurz", "stripe-videokurz-upgrade", "stripe-konzultace", "stripe-balicek"]).gte("granted_at", yStart.toISOString()),
     admin.from("withdrawals").select("status"),
     admin.from("referrals").select("status"),
     // ⛔ OPRAVA 28. 7. 2026: bylo tu `select("id")`, jenze `entitlements` sloupec `id`
