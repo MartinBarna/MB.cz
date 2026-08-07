@@ -5,6 +5,7 @@
 // Auth: hlavicka x-drip-secret == app_config drip_invoke_secret. Klice jen z env.
 // Pozn.: zdrojak je zamerne bez znaku uvozovek a zpetnych lomitek (kvuli snadnemu deployi).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { maPreskocitKrok, PRESKOC_KROK_KDYZ_VLASTNI } from './preskoc.ts';
 
 const NL = String.fromCharCode(10);   // newline
 const DQ = String.fromCharCode(34);   // double-quote char
@@ -582,10 +583,13 @@ Deno.serve(async (req: Request) => {
   if (body.dry === true) {
     const byStep: Record<string, number> = {};
     const byBridge: Record<string, number> = {};
-    let would = 0, bought = 0, invalid = 0, wouldBridge = 0;
+    let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0;
     for (const l of leads) {
       // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
       if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; }
+      // Preskoceni kroku, ktery prodava uz vlastneny produkt (viz preskoc.ts).
+      // V dry behu se jen zapocita, at je videt, kolik mailu oprava zadrzi, nez se nasadi.
+      if (maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns)) { wouldSkipOwns++; continue; }
       const tpl = await getTpl(l.track, l.step);
       if (!tpl) {
         const na = await kamDal(l);
@@ -601,7 +605,7 @@ Deno.serve(async (req: Request) => {
       const key = l.track + '/step' + l.step + ':' + tpl.key;
       byStep[key] = (byStep[key] ?? 0) + 1; would++;
     }
-    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
+    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), by_step: byStep });
   }
 
   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
@@ -611,7 +615,7 @@ Deno.serve(async (req: Request) => {
   const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
 
   // LIVE
-  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, capped = false, timeUp = false;
+  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, skippedOwns = 0, capped = false, timeUp = false;
   const byStep: Record<string, number> = {};
   const byBridge: Record<string, number> = {};
   for (const l of leads) {
@@ -675,6 +679,20 @@ Deno.serve(async (req: Request) => {
         await admin.from('leads').update({ step: ns, next_send_at: next, updated_at: nowIso }).eq('id', l.id);
       }
     };
+    // ⛔ NENABIZEJ, CO UZ CLOVEK MA. Bez teto branky dostal kupec balicku, ktery uz
+    // videokurz vlastni, mail "Kurz ti rekne proc" s nabidkou na koupi kurzu, ktery ma.
+    // ⚠️ MUSI se volat `advance()`, ne jen `continue`: krok 2 balicku je POSLEDNI mail
+    // trate (wait_days = null) a prave za nim se rozhoduje o mostu do dalsi trate.
+    // Holy `continue` by leada nechal navzdy viset na tomhle kroku a hodinova davka
+    // by ho brala donekonecna dokola.
+    const preskocProdukt = maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns);
+    if (preskocProdukt) {
+      await admin.from('email_events').insert({
+        lead_id: l.id, step: l.step, type: 'skip_owns_product',
+        detail: { track: l.track, key: tpl.key, produkt: preskocProdukt },
+      });
+      await advance(); skippedOwns++; continue;
+    }
     if (already) { await advance(); skippedAlready++; continue; }
     try {
       // ZALOHA PRO OPAKOVANY POKUS: `vars` z tela invoku existuji jen jednou. Kdyz odeslani
@@ -730,5 +748,5 @@ Deno.serve(async (req: Request) => {
       }
     }
   }
-  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
+  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
 });

@@ -126,6 +126,10 @@
         .feat li { padding:.42rem 0 .42rem 26px; position:relative; color:var(--txt); font-size:.94rem; }
         .feat li::before { content:"✓"; position:absolute; left:0; color:var(--acc); font-weight:800; }
         .plan .btn { text-align:center; margin-top:auto; }
+        /* Druhé tlačítko v kartě (roční koupě). Jediná odchylka od `.btn` je odsazení:
+           bez něj by mu `margin-top:auto` výš slepilo horní okraj s tlačítkem nad ním.
+           Velikost ani barvy se schválně NEMĚNÍ, ať je vzhled 1:1 se stávajícími CTA. */
+        .plan .btn.btn-year { margin-top:.6rem; }
         .incl { background:rgba(235,177,44,.07); border:1px solid rgba(235,177,44,.25); border-radius:16px; padding:1.2rem 1.4rem; max-width:820px; margin:2rem auto 0; color:#e9e2d8; font-size:.95rem; }
         /* Dvojice zlatých boxů pod ceníkem. Bez tohohle je každý box samostatná buňka
            třísloupcové mřížky `.plans-3`, takže obsadí sloupce 1 a 2, třetí zůstane prázdný
@@ -285,6 +289,11 @@
                     <li>Bez AI kouče</li>
                 </ul>
                 <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=basic">Vybrat Basic →</a>
+                <!-- Roční koupě rovnou. Vede na /sign-up, ne na úvod: kdo chce platit rok
+                     dopředu, je rozhodnutý a nemá se vracet přes landing. Klíč `basic-rok`
+                     překládá appka na tier basic + interval year (src/lib/plan-param.ts).
+                     Skript níž tlačítko SCHOVÁ, když roční plán v ceníku není. -->
+                <a class="btn btn-ghost btn-year" data-year-cta="basic" href="https://tvujcoach.cz/sign-up?plan=basic-rok">Koupit roční →</a>
             </div>
             <div class="plan featured">
                 <span class="ribbon">★ S AI KOUČEM</span>
@@ -298,6 +307,7 @@
                     <li>AI komentář k týdennímu check-inu</li>
                 </ul>
                 <a class="btn btn-acc" href="https://tvujcoach.cz/?plan=vip">Vyzkoušet VIP →</a>
+                <a class="btn btn-ghost btn-year" data-year-cta="ai_basic" href="https://tvujcoach.cz/sign-up?plan=vip-rok">Koupit roční →</a>
             </div>
 
         <div class="legal-note" style="grid-column:1/-1;margin:1.4rem 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);font-size:.88rem;line-height:1.6;color:#A09AAD;">
@@ -344,7 +354,7 @@
     <p style="margin:0 0 .4rem;">&copy; 2026 Martin Barna · Online výživa a fitness. Všechna práva vyhrazena.</p>
     <p style="margin:0 0 .4rem;font-size:.85rem;opacity:.85;">Provozovatel: Martin Barna, IČO 76383032, Lumírova 489/11, 700 30 Ostrava-Výškovice. Fyzická osoba podnikající dle živnostenského zákona. Neplátce DPH, uvedené ceny jsou konečné.</p>
     <p style="margin:0 0 .4rem;"><a href="https://martinbarna.cz">martinbarna.cz</a> · <a href="https://tvujcoach.cz">tvujcoach.cz</a> · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
-    <p style="margin:0;"><a href="/obchodni-podminky/">Obchodní podmínky</a> · <a href="/zasady-ochrany-osobnich-udaju/">Zásady ochrany osobních údajů</a> · <a href="#" data-cookie-settings>Nastavení cookies</a></p>
+    <p style="margin:0;"><a href="/obchodni-podminky/">Obchodní podmínky</a> · <a href="/zasady-ochrany-osobnich-udaju/">Zásady ochrany osobních údajů</a> · <a href="#" data-cookie-settings>Nastavení cookies</a> · <a href="https://herohero.co/martinbarna">Členská komunita</a></p>
 </footer>
 
 <script>
@@ -376,6 +386,12 @@
           elY.textContent = 'nebo ' + kc(y) + ' na rok, ušetříš ' + kc(uspora)
             + (mesicu > 0 ? ' (' + mesicu + ' ' + mesicuText + ')' : '');
         }
+        // Tlačítko „Koupit roční" smí svítit JEN když roční plán v ceníku opravdu je.
+        // Kdyby ho Martin vypnul, odkaz by vedl na plán, který nejde koupit, a člověk
+        // by skončil u prázdného výběru. Statický fallback v HTML tlačítko nechává
+        // viditelné (ceník je dnes aktivní); schovává ho až tenhle doběhlý dotaz.
+        var elCta = document.querySelector('[data-year-cta="' + tier + '"]');
+        if (elCta && !y) elCta.style.display = 'none';
       });
     })
     .catch(function () { /* fallback: zustanou hodnoty z HTML */ });
