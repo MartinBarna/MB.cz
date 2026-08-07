@@ -926,6 +926,18 @@ Deno.serve(async (req) => {
                 //    brandových barev. Ostrá verze je ta bez `.docx` (ověřeno 6. 8. 2026).
                 kucharka_url: await podepis("Kucharka 40 + receptu.pdf", "Martin-Barna-Kucharka-40-receptu.pdf"),
                 otazky_url: await podepis("Otazky klientu EBook.pdf", "Martin-Barna-48-odpovedi.pdf"),
+                // ⭐ DOKLAD O ZAPLACENÍ VE VLASTNÍM MAILU (7. 8. 2026).
+                // ⛔ Stripe zákaznické účtenky NEPOSÍLÁ. Ověřeno 7. 8. průchodem Martinova
+                //    Gmailu: za dva týdny testovacích nákupů nedorazila ani jedna účtenka
+                //    od Martina Barny, jen účtenky cizích firem a Stripe faktura ZA poplatky
+                //    (ta je adresovaná jemu, ne zákazníkovi). Zapíná se to v dashboardu,
+                //    kam se nikdo kromě Martina nedostane, takže doklad posíláme sami.
+                // ⚠️ `amount_total` je v haléřích a MĚNÍ HO SLEVOVÝ KÓD, takže se bere
+                //    ze session, ne z ceníku. Jinak by doklad tvrdil jinou částku, než
+                //    kolik člověk reálně zaplatil.
+                doklad_castka: castkaText(Number(obj.amount_total ?? 0), String(obj.currency ?? "czk")),
+                doklad_datum: datumCesky(new Date().toISOString()),
+                doklad_cislo: String(obj.id ?? "").slice(-12).toUpperCase(),
               };
             } catch (e) {
               await alertAdmin("🔴 Stripe: BALÍČEK zaplacen, ale odkazy ke stažení se nevygenerovaly", {
