@@ -56,11 +56,15 @@
      obe tridy pravidla s !important (tmavy fialovy gradient), takze by prebil zlate
      tlacitko i pozadi a na uvodnim bloku by udelal orizly pruh siroky jen jako obsah.
      Zjisteno na zivem webu 7. 8. 2026. Viz pamet feedback-sdilena-css-trida-je-mrtva-paka. */
-  .uvod { padding:64px 0 8px; }
+  /* ⛔ JEN padding-top/bottom, NIKDY zkraceny `padding`. Zkraceny zapis vynuluje
+     i levy a pravy okraj, ktery nastavuje `.wrap` (0 20px), a na mobilu pak text
+     dosedne na kraj obrazovky. Na desktopu to videt neni, obsah je stejne
+     vycentrovany na 860 px. Nahlasil Martin 7. 8. 2026 ze ziveho mobilu. */
+  .uvod { padding-top:64px; padding-bottom:8px; }
   .kicker { color:var(--gold); font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:.78rem; margin-bottom:.7rem; }
   h1 { font-size:clamp(2rem,5vw,3rem); line-height:1.1; letter-spacing:-.02em; margin:0 0 1rem; color:#fff; }
   .lead { font-size:1.12rem; color:#d7cfc3; }
-  .sec { padding:3rem 0; border-top:1px solid var(--line); }
+  .sec { padding-top:3rem; padding-bottom:3rem; border-top:1px solid var(--line); }
   h2 { font-size:clamp(1.4rem,3.2vw,2rem); color:#fff; letter-spacing:-.01em; margin:0 0 1rem; }
   h3 { color:#fff; margin:1.6rem 0 .4rem; font-size:1.05rem; }
   .card { background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:18px; padding:24px; }
