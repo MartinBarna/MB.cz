@@ -238,6 +238,12 @@
         <div id="refsBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+      <div class="traf" id="afil" style="display:none;">
+        <h3>💰 Výplaty partnerek</h3>
+        <div class="sub" id="afilSub">Affiliate program: kolik komu poslat</div>
+        <div id="afilBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
       <div class="traf" id="prog" style="display:none;">
         <h3>📈 Progres klientů</h3>
         <div class="sub" id="progSub">Kolik lekcí mají členové za sebou (videokurz / Academy)</div>
@@ -401,7 +407,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadKlienti(); loadPrehled(); loadTcPrehled();
+        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadTcPrehled();
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
     }
@@ -1507,6 +1513,39 @@
         });
         $('refs').style.display='';
       }).catch(function(){ cardFail('refs','refsBody'); });
+    }
+
+    // 💰 Výplaty partnerek (affiliate). Vlastní akce `affiliate_prehled`, ne rozšíření
+    // referralů: ten vrací jednotlivé řádky včetně členských kreditů a je stropovaný
+    // na 300, takže by z něj součty k výplatě nešly spolehlivě spočítat.
+    // Provize je v `referrals.reward_amount` ZMRAZENÁ k okamžiku zápisu, takže změna
+    // sazby historii nepřepočítá; sloupec „Sazby" ukazuje sazbu PLATNOU DNES.
+    function loadAfil(){
+      api({action:'affiliate_prehled'}).then(function(o){
+        if(!o.j||!o.j.ok){ cardFail('afil','afilBody'); return; }
+        var ps=o.j.partneri||[];
+        var kVyplate=ps.reduce(function(s,p){ return s+(Number(p.k_vyplate)||0); },0);
+        var ceka=ps.reduce(function(s,p){ return s+(Number(p.provize_pending)||0); },0);
+        $('afilSub').textContent='Partnerek: '+ps.length+' · k výplatě celkem: '+kVyplate+' Kč · čeká na potvrzení: '+ceka+' Kč';
+        if(!ps.length){
+          $('afilBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádná partnerka s affiliate kódem. Jakmile nějaká přivede zákazníka, objeví se tady i s částkou k výplatě.</p>';
+          $('afil').style.display=''; return;
+        }
+        var trs=ps.map(function(p){
+          var kv=Number(p.k_vyplate)||0;
+          var sazby=(Number(p.rate_monthly)||0)+' % měs. / '+(Number(p.rate_oneoff)||0)+' % jedn.';
+          return '<tr><td style="white-space:nowrap;">'+esc(p.code)+'</td><td>'+esc(p.owner_email||'–')+'</td>'
+            +'<td class="muted" style="white-space:nowrap;">'+esc(sazby)+'</td>'
+            +'<td class="tcount">'+(Number(p.provize_confirmed)||0)+' Kč</td>'
+            +'<td class="tcount">'+(Number(p.vyplaceno)||0)+' Kč</td>'
+            +'<td class="tcount" style="color:'+(kv>0?'#F6CD63':'#7bd88f')+';font-weight:700;">'+kv+' Kč</td></tr>';
+        }).join('');
+        $('afilBody').innerHTML='<div style="overflow-x:auto;"><table>'
+          +'<thead><tr><th>Kód</th><th>Partnerka</th><th>Sazby</th><th>Potvrzená provize</th><th>Vyplaceno</th><th>K výplatě</th></tr></thead>'
+          +'<tbody>'+trs+'</tbody></table></div>'
+          +'<p class="muted" style="margin:.6rem 0 0;font-size:.8rem;">Provize se počítá ze zmrazené sazby v okamžiku prodeje. Výplatu zapíšeš v kartě Referraly &amp; odměny.</p>';
+        $('afil').style.display='';
+      }).catch(function(){ cardFail('afil','afilBody'); });
     }
 
     // 📈 Progres klientů — kolik lekcí mají členové splněno (autoplay je dopisuje automaticky)
