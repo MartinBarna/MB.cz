@@ -26,6 +26,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const STRIPE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
+// ⭐ TESTOVACI REZIM (7. 8. 2026). Stripe sandbox podepisuje JINYM tajemstvim nez ostry
+// ucet. Bez tohohle by kazda testovaci platba skoncila na `bad-signature`, a cely nakupni
+// retez by se dal vyzkouset jedine naostro, Martinovymi penezi. Presne to se 6. a 7. 8.
+// stalo trikrat za den a vady nasel az on. Test mod NENI komfort, je to podminka toho,
+// aby se sem vubec smelo sahat.
+// ⛔ NENI TO PREPINAC. Obe tajemstvi plati SOUCASNE. Kdyby se prepinalo, znamenalo by to,
+//    ze po dobu testovani neposloucham ostre platby platicich zakazniku.
+// ⚠️ Prazdna promenna = test mod nenastaven a funkce se chova presne jako driv.
+const STRIPE_WEBHOOK_SECRET_TEST = Deno.env.get("STRIPE_WEBHOOK_SECRET_TEST") ?? "";
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
 
@@ -281,7 +290,14 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     //    Tenhle je taky na 1 platbu. Testuje se jim doklad o zaplaceni.
     // ⚠️ OSTRY odkaz na balicek ma `Limited use: No`, overeno 7. 8. v dashboardu.
     //    Limit patri VYHRADNE na testovaci odkazy, nikdy na prodejni.
-    "plink_1U1iUXBq3rKubW9kXemTtn1h=balicek",
+    "plink_1U1iUXBq3rKubW9kXemTtn1h=balicek," +
+    // ⭐ SANDBOXOVY (TESTOVACI) ODKAZ, 7. 8. 2026: buy.stripe.com/test_bJe9AS3UXgjMcjC8hF3ks00
+    //    Zdroj `we_1U1ijpBq3rKubW9kurDo42vd` (event destination `academy-stripe-webhook-test`).
+    // ⛔ NEMA limit poctu plateb, a je to zamerne: cely smysl je moct cely nakupni retez
+    //    projet znovu a znovu bez Martinovych penez. Ostre odkazy limit mit MUSI, tenhle ne.
+    // ⚠️ Sandboxova platba zaklada SKUTECNY radek v `entitlements` a posila SKUTECNE maily.
+    //    Testuje se proto vyhradne na `fitness.barna@gmail.com`.
+    "plink_1U1imlBq3rKubW9kcGLCUJPh=balicek",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
@@ -344,26 +360,11 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE, {
 // Stripe posílá hlavičku `stripe-signature: t=<ts>,v1=<hex hmac>`, podepisuje se
 // řetězec "<ts>.<raw body>" klíčem whsec_. Porovnává se na RAW těle, ne na
 // přeparsovaném JSONu (jakákoli reserializace podpis rozbije).
-async function overPodpis(raw: string, hlavicka: string): Promise<boolean> {
-  if (!STRIPE_WEBHOOK_SECRET || !hlavicka) return false;
-
-  const casti = Object.fromEntries(
-    hlavicka.split(",").map((p) => {
-      const i = p.indexOf("=");
-      return [p.slice(0, i).trim(), p.slice(i + 1).trim()];
-    }),
-  );
-  const ts = casti["t"];
-  const v1 = casti["v1"];
-  if (!ts || !v1) return false;
-
-  // Ochrana proti přehrání starého požadavku (Stripe doporučuje 5 minut).
-  const stariS = Math.abs(Date.now() / 1000 - Number(ts));
-  if (!Number.isFinite(stariS) || stariS > 300) return false;
-
+// Spocita HMAC jednim tajemstvim a porovna v konstantnim case.
+async function podpisSedi(tajemstvi: string, ts: string, raw: string, v1: string): Promise<boolean> {
   const klic = await crypto.subtle.importKey(
     "raw",
-    new TextEncoder().encode(STRIPE_WEBHOOK_SECRET),
+    new TextEncoder().encode(tajemstvi),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"],
@@ -384,6 +385,33 @@ async function overPodpis(raw: string, hlavicka: string): Promise<boolean> {
     rozdil |= ocekavano.charCodeAt(i) ^ v1.charCodeAt(i);
   }
   return rozdil === 0;
+}
+
+async function overPodpis(raw: string, hlavicka: string): Promise<boolean> {
+  // ⛔ Ostre I testovaci tajemstvi soucasne, viz komentar u STRIPE_WEBHOOK_SECRET_TEST.
+  // Nenastavene se odfiltruje, takze prazdny test secret nikdy nic nepropusti.
+  const tajemstvi = [STRIPE_WEBHOOK_SECRET, STRIPE_WEBHOOK_SECRET_TEST].filter(Boolean);
+  if (!tajemstvi.length || !hlavicka) return false;
+
+  const casti = Object.fromEntries(
+    hlavicka.split(",").map((p) => {
+      const i = p.indexOf("=");
+      return [p.slice(0, i).trim(), p.slice(i + 1).trim()];
+    }),
+  );
+  const ts = casti["t"];
+  const v1 = casti["v1"];
+  if (!ts || !v1) return false;
+
+  // Ochrana proti přehrání starého požadavku (Stripe doporučuje 5 minut).
+  const stariS = Math.abs(Date.now() / 1000 - Number(ts));
+  if (!Number.isFinite(stariS) || stariS > 300) return false;
+
+  // Staci, kdyz sedi JEDNO z tajemstvi: ostre pro platby zakazniku, testovaci pro sandbox.
+  for (const t of tajemstvi) {
+    if (await podpisSedi(t, ts, raw, v1)) return true;
+  }
+  return false;
 }
 
 // Alert adminovi. Vzor 1:1 podle `simpleshop-webhook`, ať se to hlásí na jedno místo.
@@ -502,13 +530,22 @@ async function udelDozivotni(
   email: string,
   def: JednorazovyProdukt,
   stripe?: { customer?: string | null; paymentIntent?: string | null },
-): Promise<{ novyDozivotni: boolean; zruseneMesicni: string }> {
+): Promise<{ novyDozivotni: boolean; zruseneMesicni: string; predchoziPi: string | null }> {
   const { data: stavajici } = await admin
     .from("entitlements")
-    .select("source, active, expires_at, stripe_subscription_id")
+    .select("source, active, expires_at, stripe_subscription_id, stripe_payment_intent")
     .eq("email", email)
     .eq("product", def.produkt)
     .maybeSingle();
+
+  // ⛔⛔ PLATBA Z MINULA SE MUSI PRECIST TED, PRED UPSERTEM NIZ.
+  // Upsert o par radku niz `stripe_payment_intent` PREPISE tou soucasnou platbou.
+  // Kdo si tuhle hodnotu precte az potom (a presne to delala vetev opakovaneho nakupu
+  // balicku), dostane platbu, kterou prave ted sam zapsal, porovna ji sama se sebou,
+  // vyjde mu shoda a vyhodnoti novy nakup jako "prehrana udalost". 7. 8. 2026 kvuli tomu
+  // Martin zaplatil podruhe a NEDOSTAL nic: zadny mail, zadny zaznam v `email_events`.
+  // ⇒ Pojistka se nikdy nesmi porovnavat proti udaji, ktery si tentyz beh prepisuje.
+  const predchoziPi: string | null = stavajici?.stripe_payment_intent ?? null;
 
   const bylDozivotni = !!stavajici && stavajici.active && stavajici.expires_at === null;
   if (bylDozivotni) {
@@ -573,7 +610,7 @@ async function udelDozivotni(
     }
   }
 
-  return { novyDozivotni: !bylDozivotni, zruseneMesicni };
+  return { novyDozivotni: !bylDozivotni, zruseneMesicni, predchoziPi };
 }
 
 // --- Appka Tvůj Coach na rok (jen doživotní varianta) -----------------------
@@ -788,6 +825,63 @@ function zaDni(n: number): string {
   return new Date(Date.now() + n * 86400000).toISOString();
 }
 
+// ⭐ DOKLAD O ZAPLACENÍ, SAMOSTATNÝM MAILEM (7. 8. 2026).
+// ⛔ Stripe zákaznické účtenky neposílá (v dashboardu vypnuté) a ZAPNOUT je nejde
+//    smysluplně: v „Default language" ČEŠTINA VŮBEC NENÍ (ověřeno v účtu, 16 jazyků
+//    včetně polštiny a řečtiny, čeština chybí). Anglická účtenka je pro Martinovu
+//    cílovku horší než žádná, proto si doklad posíláme sami, česky.
+// ⛔⛔ A PROČ SAMOSTATNÝM MAILEM, NE ŘÁDKEM V DORUČOVACÍM: `renderEmail` v drip-send
+//    dělá `if (hasToken(...)) throw new Error('unresolved_token')`, takže JAKÁKOLI
+//    nenaplněná {{proměnná}} shodí render a mail NEODEJDE. Doklad je doplněk,
+//    doručení jsou peníze. ⇒ Doručení nesmí na dokladu viset.
+// ⛔⛔⛔ MUSÍ ODEJÍT PŘI KAŽDÉ PLATBĚ (opraveno 7. 8. 2026). Do té doby byl vevnitř
+//    `if (novyDozivotni)`, takže kdo koupil podruhé, zaplatil a doklad nedostal.
+//    Peníze přišly pokaždé ⇒ doklad musí odejít pokaždé. Idempotenci nedělá tenhle
+//    kód, ale místa, odkud se volá: první nákup jen při novém grantu, opakovaný jen
+//    při NOVÉM `payment_intent`.
+// ⚠️ Vrací stav (ne void), ať je v odpovědi funkce vidět, co se stalo. Tichý doplněk,
+//    o kterém nikde není stopa, se hledá stejně blbě jako tichá chyba.
+// ⚠️ `amount_total` se bere ze SESSION, ne z ceníku. Slevový kód ji mění a doklad
+//    musí říkat, kolik člověk reálně zaplatil.
+// deno-lint-ignore no-explicit-any
+async function posliDoklad(email: string, obj: any): Promise<string> {
+  if (!RESEND_KEY) return "chybi-resend-klic";
+  try {
+    const castka = castkaText(Number(obj.amount_total ?? 0), String(obj.currency ?? "czk"));
+    const cislo = String(obj.id ?? "").slice(-12).toUpperCase();
+    const datum = datumCesky(new Date().toISOString());
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: "Martin Barna <news@martinbarna.cz>",
+        to: [email],
+        reply_to: "martin@martinbarna.cz",
+        subject: "Doklad o zaplacení, " + castka,
+        html:
+          `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px">`
+          + `<p>Dobrý den,</p>`
+          + `<p>tady je doklad o zaplacení. Soubory ke stažení máš v předchozím e-mailu.</p>`
+          + `<table cellpadding="6" style="border-collapse:collapse;font-size:15px">`
+          + `<tr><td style="color:#666">Produkt</td><td><b>40 receptů a 48 odpovědí</b></td></tr>`
+          + `<tr><td style="color:#666">Částka</td><td><b>${castka}</b></td></tr>`
+          + `<tr><td style="color:#666">Zaplaceno</td><td>${datum}</td></tr>`
+          + `<tr><td style="color:#666">Číslo objednávky</td><td>${cislo}</td></tr>`
+          + `<tr><td style="color:#666">Prodávající</td><td>Martin Barna, IČO 76383032<br>neplátce DPH</td></tr>`
+          + `</table>`
+          + `<p style="font-size:14px;color:#555">Platba proběhla přes platební bránu Stripe. `
+          + `Do 14 dnů můžeš od smlouvy odstoupit na `
+          + `<a href="https://martinbarna.cz/odstoupeni/?product=balicek">martinbarna.cz/odstoupeni</a>.</p>`
+          + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
+      }),
+    });
+    return res.ok ? "ok" : "http-" + res.status;
+  } catch (e) {
+    // Doklad je doplněk, nikdy nesmí shodit doručení zaplaceného produktu.
+    return "chyba-" + String(e).slice(0, 60);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
 
@@ -834,7 +928,7 @@ Deno.serve(async (req) => {
           return json({ error: "no-email" }, 422);
         }
 
-        const { novyDozivotni, zruseneMesicni } = await udelDozivotni(emailL, def, {
+        const { novyDozivotni, zruseneMesicni, predchoziPi } = await udelDozivotni(emailL, def, {
           customer: typeof obj.customer === "string" ? obj.customer : null,
           paymentIntent: typeof obj.payment_intent === "string" ? obj.payment_intent : null,
         });
@@ -844,6 +938,8 @@ Deno.serve(async (req) => {
         let tcGrant = def.tcGrant ? "preskoceno" : "netyka-se";
         let referral = "preskoceno";
         let bonusVideokurz = def.videokurzBonus ? "preskoceno" : "netyka-se";
+        // Stav dokladu jde do odpovědi funkce, ať je v logu Stripu vidět, jestli odešel.
+        let doklad = klic === "balicek" ? "neodeslano" : "netyka-se";
         if (novyDozivotni) {
           if (def.tcGrant) {
             tcGrant = await grantTvujCoach(emailL, typeof obj.id === "string" ? obj.id : null);
@@ -964,52 +1060,13 @@ Deno.serve(async (req) => {
               });
             }
           }
-          // ⭐ DOKLAD O ZAPLACENÍ, SAMOSTATNÝM MAILEM (7. 8. 2026).
-          // ⛔ Stripe zákaznické účtenky neposílá (v dashboardu vypnuté) a ZAPNOUT je nejde
-          //    smysluplně: v „Default language" ČEŠTINA VŮBEC NENÍ (ověřeno v účtu, 16 jazyků
-          //    včetně polštiny a řečtiny, čeština chybí). Anglická účtenka je pro Martinovu
-          //    cílovku horší než žádná, proto si doklad posíláme sami, česky.
-          // ⛔⛔ A PROČ SAMOSTATNÝM MAILEM, NE ŘÁDKEM V DORUČOVACÍM: `renderEmail` v drip-send
-          //    dělá `if (hasToken(...)) throw new Error('unresolved_token')`, takže JAKÁKOLI
-          //    nenaplněná {{proměnná}} shodí render a mail NEODEJDE. Když jsem doklad zkusil
-          //    dát do šablony `balicek-0-doruceni`, svázal jsem tím doručení zaplaceného
-          //    produktu (odkazy ke stažení!) s tím, aby vždy dorazila i data o platbě.
-          //    Doklad je doplněk, doručení jsou peníze. ⇒ Doručení nesmí na dokladu viset.
-          // ⚠️ Best-effort: selhání dokladu nesmí nic shodit, člověk už soubory dostal.
-          // ⚠️ `amount_total` se bere ze SESSION, ne z ceníku. Slevový kód ji mění a doklad
-          //    musí říkat, kolik člověk reálně zaplatil.
-          if (klic === "balicek" && varsProUvitani && RESEND_KEY) {
-            try {
-              const castka = castkaText(Number(obj.amount_total ?? 0), String(obj.currency ?? "czk"));
-              const cislo = String(obj.id ?? "").slice(-12).toUpperCase();
-              const datum = datumCesky(new Date().toISOString());
-              await fetch("https://api.resend.com/emails", {
-                method: "POST",
-                headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  from: "Martin Barna <news@martinbarna.cz>",
-                  to: [emailL],
-                  reply_to: "martin@martinbarna.cz",
-                  subject: "Doklad o zaplacení, " + castka,
-                  html:
-                    `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px">`
-                    + `<p>Dobrý den,</p>`
-                    + `<p>tady je doklad o zaplacení. Soubory ke stažení máš v předchozím e-mailu.</p>`
-                    + `<table cellpadding="6" style="border-collapse:collapse;font-size:15px">`
-                    + `<tr><td style="color:#666">Produkt</td><td><b>40 receptů a 48 odpovědí</b></td></tr>`
-                    + `<tr><td style="color:#666">Částka</td><td><b>${castka}</b></td></tr>`
-                    + `<tr><td style="color:#666">Zaplaceno</td><td>${datum}</td></tr>`
-                    + `<tr><td style="color:#666">Číslo objednávky</td><td>${cislo}</td></tr>`
-                    + `<tr><td style="color:#666">Prodávající</td><td>Martin Barna, IČO 76383032<br>neplátce DPH</td></tr>`
-                    + `</table>`
-                    + `<p style="font-size:14px;color:#555">Platba proběhla přes platební bránu Stripe. `
-                    + `Do 14 dnů můžeš od smlouvy odstoupit na `
-                    + `<a href="https://martinbarna.cz/odstoupeni/?product=balicek">martinbarna.cz/odstoupeni</a>.</p>`
-                    + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
-                }),
-              });
-            } catch { /* doklad je doplněk, nikdy nesmí shodit doručení */ }
-          }
+          // DOKLAD O ZAPLACENÍ: text i důvody jsou u funkce `posliDoklad` výš.
+          // ⛔ Tady je jen PRVNÍ nákup. Opakovaný si doklad volá ve své větvi níž, protože
+          //    peníze přišly i tam. Idempotenci dělají ta dvě volací místa, ne funkce sama.
+          // ⚠️ Schválně BEZ podmínky na `varsProUvitani`: doklad je o PLATBĚ, ne o odkazech.
+          //    Když se odkazy nevygenerují, člověk stejně zaplatil a doklad mu patří
+          //    (a Martinovi o tom už odešel alert).
+          if (klic === "balicek") doklad = await posliDoklad(emailL, obj);
 
           // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
           // a domluvit termín. Bez tohohle upozornění by zákazník zaplatil 2 990 Kč
@@ -1049,16 +1106,25 @@ Deno.serve(async (req) => {
           const pi = typeof obj.payment_intent === "string"
             ? obj.payment_intent
             : (typeof obj.id === "string" ? obj.id : "");
-          // Přehrání PRVNÍHO nákupu: `entitlements` u sebe nese jeho payment_intent.
-          const { data: puvodni } = await admin.from("entitlements")
-            .select("stripe_payment_intent").eq("email", emailL).eq("product", def.produkt).maybeSingle();
-          // Přehrání NĚKTERÉHO z opakovaných nákupů: stopa níž.
+          // ⛔⛔ PŘEHRÁNÍ PRVNÍHO NÁKUPU SE POZNÁ JEN PODLE `predchoziPi`, TEDY PODLE HODNOTY
+          //    PŘEČTENÉ PŘED GRANTEM. Do 7. 8. 2026 se sem četlo `entitlements` ZNOVU, jenže
+          //    `udelDozivotni` o pár řádků výš do toho sloupce právě zapsal SOUČASNOU platbu.
+          //    Porovnání pak vyšlo na shodu vždycky, každý druhý nákup se vyhodnotil jako
+          //    přehraná událost a NEODESLALO SE NIC. Martin to zaplatil naostro a nedostal
+          //    ani mail, ani řádek v `email_events`. Pojistka porovnávala údaj sama se sebou.
+          // Přehrání NĚKTERÉHO z opakovaných nákupů: stopa níž (ta se nepřepisuje).
           const { data: jizPoslano } = await admin.from("email_events")
             .select("id").eq("type", "balicek_znovu_doruceno").eq("detail->>payment_intent", pi).limit(1);
 
           if (!pi) {
+            // Nemělo by nastat (`obj.id` je vždy), ale kdyby ano, člověk zaplatil a nedostal
+            // nic. Tichý průchod je tady to nejhorší možné chování.
             balicekZnovu = "preskoceno-chybi-payment-intent";
-          } else if (puvodni?.stripe_payment_intent === pi || (jizPoslano ?? []).length > 0) {
+            await alertAdmin("🔴 Stripe: BALÍČEK koupen znovu, ale CHYBÍ payment_intent", {
+              email: emailL, session: String(obj.id ?? ""),
+              co_delat: "⛔ Pošli mu soubory ručně. Zaplatil a automatika mu nic neposlala.",
+            });
+          } else if (predchoziPi === pi || (jizPoslano ?? []).length > 0) {
             balicekZnovu = "preskoceno-prehrana-udalost";
           } else {
             try {
@@ -1113,6 +1179,9 @@ Deno.serve(async (req) => {
                 co_delat: "⛔ Pošli mu kuchařku a e-book ručně A vrať mu 349 Kč. Zaplatil a nedostal nic.",
               });
             }
+            // ⛔ DOKLAD I ZA DRUHOU PLATBU. Peníze přišly znovu, takže doklad patří znovu.
+            //    Schválně až tady, mimo `try`: i když odkazy selhaly, platba proběhla.
+            doklad = await posliDoklad(emailL, obj);
           }
         }
 
@@ -1120,6 +1189,7 @@ Deno.serve(async (req) => {
           ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
           novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
           referral, bonus_videokurz: bonusVideokurz, balicek_znovu: balicekZnovu,
+          doklad,
         });
       }
 
