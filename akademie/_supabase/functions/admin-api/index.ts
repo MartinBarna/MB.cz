@@ -803,6 +803,22 @@ Deno.serve(async (req) => {
       return json({ ok: true, referrals: rows, payouts: pays.data ?? [], balances });
     }
 
+    if (action === "affiliate_prehled") {
+      // Podklad pro výplaty affiliate partnerkám (7. 8. 2026). Čte view
+      // `affiliate_prehled`, které sčítá `referrals.reward_amount`, tedy provizi
+      // ZMRAZENOU v okamžiku zápisu. Změna sazby proto nepřepočítá historii.
+      // ⚠️ Vlastní akce, ne rozšíření `referrals_overview`: ten vrací JEDNOTLIVÉ
+      //    referraly včetně členských kreditů a je limitovaný na 300 řádků, takže
+      //    by se z něj součty pro výplaty nedaly spolehlivě spočítat.
+      const { data, error } = await admin
+        .from("affiliate_prehled")
+        .select("code,owner_email,rate_monthly,rate_oneoff,referralu_celkem,referralu_pending,referralu_confirmed,obrat_pending,obrat_confirmed,provize_pending,provize_confirmed,vyplaceno,k_vyplate")
+        .order("k_vyplate", { ascending: false });
+      if (error) return json({ error: error.message }, 500);
+      const rows = (data ?? []).map((r) => ({ ...r, owner_email: low(r.owner_email) }));
+      return json({ ok: true, partneri: rows });
+    }
+
     if (action === "referral_set_status") {
       // schvaleni (confirmed) / zamitnuti (void) referralu — hlavne pro source='self_report'
       const id = Number(body.id); const status = String(body.status || "");

@@ -64,6 +64,55 @@ alter table public.referrals
 create index if not exists referral_codes_partner_type_idx
   on public.referral_codes (partner_type) where partner_type = 'affiliate';
 
+-- 5) PŘEHLED PRO VÝPLATY PARTNEREK ----------------------------------
+-- ⛔⛔ ŽÁDNÝ NOVÝ SLOUPEC `commission`. Zadání ho chtělo, ale `referrals.reward_amount`
+--     (numeric, not null) UŽ JE přesně to: vypočtená provize ZMRAZENÁ v okamžiku zápisu.
+--     Webhook do něj počítanou provizi zapisuje v obou větvích (jednorázová i recurring),
+--     takže problém „přehled by sčítal historické platby dnešní sazbou" NEEXISTUJE:
+--     každý řádek si nese sazbu, která platila při jeho vzniku.
+--     Nový sloupec by byl druhý sloupec na totéž, stejně jako by jím byl `amount_czk`.
+--     `referral_credit` view i `admin-api` navíc `reward_amount` už čtou.
+--
+-- ⚠️ `referral_payouts` je vedená podle `owner_email`, ne podle kódu. Spojuje se to
+--    díky tomu, že `referral_codes_owner_uidx` drží JEDEN kód na osobu.
+-- ⚠️ Filtr `reward_type = 'cash'` je nosný: kdyby kód byl dřív `member` a přepnul se
+--    na `affiliate`, staré řádky s kreditem se do výplat počítat NESMÍ.
+create or replace view public.affiliate_prehled
+with (security_invoker = on) as
+select
+  rc.code,
+  rc.owner_email,
+  rc.rate_monthly,
+  rc.rate_oneoff,
+  count(r.id)                                                        as referralu_celkem,
+  count(r.id) filter (where r.status = 'pending')                    as referralu_pending,
+  count(r.id) filter (where r.status = 'confirmed')                  as referralu_confirmed,
+  -- Obrat = co zaplatili kupující. Provize = co patří partnerce.
+  coalesce(sum(r.amount)        filter (where r.status = 'pending'),   0) as obrat_pending,
+  coalesce(sum(r.amount)        filter (where r.status = 'confirmed'), 0) as obrat_confirmed,
+  coalesce(sum(r.reward_amount) filter (where r.status = 'pending'),   0) as provize_pending,
+  coalesce(sum(r.reward_amount) filter (where r.status = 'confirmed'), 0) as provize_confirmed,
+  coalesce(v.vyplaceno, 0)                                               as vyplaceno,
+  -- ⚠️ K výplatě je jen POTVRZENÁ provize minus už vyplacené. Pending se schválně
+  --    nepočítá: je to 14denní lhůta na odstoupení, peníze ještě nejsou jisté.
+  coalesce(sum(r.reward_amount) filter (where r.status = 'confirmed'), 0)
+    - coalesce(v.vyplaceno, 0)                                           as k_vyplate
+from public.referral_codes rc
+left join public.referrals r
+       on r.code = rc.code
+      and r.reward_type = 'cash'
+left join (
+  select lower(owner_email) as owner_email, sum(amount_czk) as vyplaceno
+    from public.referral_payouts
+   group by lower(owner_email)
+) v on v.owner_email = lower(rc.owner_email)
+where rc.partner_type = 'affiliate'
+group by rc.code, rc.owner_email, rc.rate_monthly, rc.rate_oneoff, v.vyplaceno;
+
+comment on view public.affiliate_prehled is
+  'Podklad pro výplaty affiliate partnerkám. Provize se sčítá z referrals.reward_amount, '
+  'které je zmrazené v okamžiku zápisu, takže změna sazby nepřepočítá historii.';
+
 -- =========================================================
 -- ⬜ POZNÁMKY K NASAZENÍ (přečíst před spuštěním)
 --

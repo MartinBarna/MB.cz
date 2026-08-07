@@ -232,6 +232,55 @@ check('AD1 admin-api vybira partner_type (jinak Martin neodlisi kredit od proviz
 check('AD2 admin-api vybira amount (zaklad provize)',
   vycetAdmin.includes('amount'), vycetAdmin);
 
+// --- 11) PREHLED PRO VYPLATY PARTNEREK ---
+check('V1 migrace vytvari view affiliate_prehled',
+  /create or replace view public\.affiliate_prehled/.test(sqlMigrace), '');
+
+// JADRO CELE VECI: provize se SCITA z ulozeneho reward_amount, NEPOCITA se
+// z amount * dnesni sazba. Jinak by zmena sazby prepsala historii vyplat.
+const blokView = sqlMigrace.slice(
+  sqlMigrace.indexOf('create or replace view public.affiliate_prehled'),
+  sqlMigrace.indexOf('comment on view public.affiliate_prehled'),
+);
+check('V2 provize se scita z reward_amount (zmrazena v case zapisu)',
+  /sum\(r\.reward_amount\)/.test(blokView), '');
+check('V3 view NEPOCITA provizi z amount * sazba',
+  !/amount\s*\*\s*(rate|r\.rate|rc\.rate)/.test(blokView), '');
+
+// Zadny novy sloupec `commission`: reward_amount uz presne tohle je.
+check('V4 nezavadi se sloupec commission (reward_amount uz existuje)',
+  !/add column[^;]*commission/.test(sqlMigrace) && !/commission:/.test(zdrojWebhook), '');
+
+// Kdyby kod byl driv member a prepnul se na affiliate, stare kreditni radky
+// se do vyplat pocitat NESMI.
+check('V5 view bere jen reward_type cash, ne clenske kredity',
+  /r\.reward_type = 'cash'/.test(blokView), '');
+
+// Pending je 14denni lhuta na odstoupeni, penize jeste nejsou jiste.
+// Vyraz pro k_vyplate: od posledni carky pred nim az po jeho nazev.
+const iKV = blokView.indexOf('as k_vyplate');
+const vyrazKV = iKV > 0 ? blokView.slice(Math.max(0, iKV - 220), iKV) : '';
+check('V6 k_vyplate = CONFIRMED provize minus vyplacene, pending se nepocita',
+  vyrazKV.includes("'confirmed'") && vyrazKV.includes('- coalesce(v.vyplaceno') && !vyrazKV.includes("'pending'"),
+  vyrazKV.replace(/\s+/g, ' ').slice(0, 160));
+
+// referral_payouts je vedena podle owner_email, ne podle kodu.
+check('V7 vyplacene se paruje pres owner_email',
+  /referral_payouts/.test(blokView) && /lower\(rc\.owner_email\)/.test(blokView), '');
+
+check('V8 view bere jen affiliate kody',
+  /where rc\.partner_type = 'affiliate'/.test(blokView), '');
+
+// --- 12) ADMIN AKCE PRO PREHLED ---
+const iGate = zdrojAdmin.indexOf('"forbidden"');
+const iAkce = zdrojAdmin.indexOf('action === "affiliate_prehled"');
+check('AD3 admin-api ma akci affiliate_prehled', iAkce > 0, '');
+// Autorizace je jedna globalni brana; akce za ni je admin-only.
+check('AD4 akce je AZ ZA admin branou (403 forbidden)',
+  iGate > 0 && iAkce > iGate, `gate=${iGate} akce=${iAkce}`);
+check('AD5 akce cte view, ne tabulku referrals naprimo',
+  /from\("affiliate_prehled"\)/.test(zdrojAdmin), '');
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo`);
