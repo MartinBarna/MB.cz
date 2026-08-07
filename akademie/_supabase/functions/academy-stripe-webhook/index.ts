@@ -275,7 +275,13 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // ⭐ LEPŠÍ POJISTKA NEŽ V ČERVENCI: odkaz má ve Stripu nastaveno „Limit the number
     // of payments = 1", takže se po JEDNOM nákupu SÁM vypne. Nespoléhá se na to, že si
     // někdo vzpomene ho zamknout. Tenhle řádek se pak už jen uklidí odsud.
-    "plink_1U1WCJBq3rKubW9koVfHcZ5i=balicek",
+    "plink_1U1WCJBq3rKubW9koVfHcZ5i=balicek," +
+    // ⬜ DRUHY TESTOVACI ODKAZ 15 Kc, 7. 8. 2026. Ten prvni se po Martinove platbe
+    //    SAM deaktivoval (limit 1 platba funguje, overeno v seznamu odkazu).
+    //    Tenhle je taky na 1 platbu. Testuje se jim doklad o zaplaceni.
+    // ⚠️ OSTRY odkaz na balicek ma `Limited use: No`, overeno 7. 8. v dashboardu.
+    //    Limit patri VYHRADNE na testovaci odkazy, nikdy na prodejni.
+    "plink_1U1iUXBq3rKubW9kXemTtn1h=balicek",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
