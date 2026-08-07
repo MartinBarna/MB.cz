@@ -64,6 +64,9 @@
       u += (u.indexOf('?') >= 0 ? '&' : '?') + klic + '=' + encodeURIComponent(hodnota);
     }
     if (jeStripe && ref) pridej('client_reference_id', ref);
+    // Kupón DOPORUC10 se předvyplní sám (ověřeno živým checkoutem 8. 8. 2026);
+    // bez tohohle musel kamarád kód ručně opsat a část jich to vzdala.
+    if (jeStripe) pridej('prefilled_promo_code', 'DOPORUC10');
     if (email) pridej(jeStripe ? 'prefilled_email' : 'email', email);
     return u;
   }
@@ -86,7 +89,7 @@
     var ov = document.createElement('div'); ov.id = 'ba-ref-ov'; ov.style.display = 'none';
     ov.innerHTML = '<div class="bx" role="dialog" aria-modal="true">'
       + '<h3>Máš slevu −10 % 🎉</h3>'
-      + '<p>Kamarád ti poslal doporučení. Zadej svůj e-mail, ať ti slevu spárujeme — pak tě pošleme k platbě, kde stačí zadat kód <b>DOPORUC10</b>.</p>'
+      + '<p>Kamarád ti poslal doporučení. Zadej svůj e-mail, ať ti slevu spárujeme. Pak tě pošleme k platbě, kde se ti sleva načte sama (kdyby ne, vlož kód <b>DOPORUC10</b> do pole „Přidat kód promoakce").</p>'
       + '<input type="email" id="ba-ref-em" placeholder="tvuj@email.cz" autocomplete="email">'
       + '<input type="text" id="ba-ref-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">'
       + '<div class="err" id="ba-ref-err"></div>'
