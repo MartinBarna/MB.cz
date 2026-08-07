@@ -323,14 +323,14 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // ⚠️ Sandboxova platba zaklada SKUTECNY radek v `entitlements` a posila SKUTECNE maily.
     //    Testuje se proto vyhradne na `fitness.barna@gmail.com`.
     "plink_1U1imlBq3rKubW9kcGLCUJPh=balicek," +
-    // ⬜⬜ UPGRADE Z BALÍČKU NA VIDEOKURZ za 450 Kč (7. 8. 2026).
-    // ⛔ ID JE ZATÍM PLACEHOLDER. Odkaz ve Stripu teprve vznikne; až bude, nahradí se
-    //    `plink_DOPLNIT_UPGRADE_450` skutečným ID a TEPRVE POTOM to smí jít na produkci.
-    //    Do té doby je řádek neškodný: na neexistující odkaz nemůže přijít platba.
-    // ⚠️ Placeholder schválně NENÍ zakomentovaný. Mapování se tím dá otestovat hned
-    //    (test kontroluje, že klíč vede na `videokurz-upgrade`), a zapomenutý řádek
-    //    je vidět v kódu, kdežto zapomenutý komentář nikdo nehledá.
-    "plink_DOPLNIT_UPGRADE_450=videokurz-upgrade",
+    // ⭐⭐ UPGRADE Z BALÍČKU NA VIDEOKURZ za 450 Kč (7. 8. 2026).
+    // Odkaz `buy.stripe.com/aFa6oGajl9VodnG2Xl3ks0c`, cena `price_1U1obiBq3rKubW9khzc13N67`
+    // („Pro majitele balicku 40 receptu, odecet 349 Kc z 800"), potvrzení /dekuji-videokurz/.
+    // Založeno v dashboardu, ověřeno renderem checkout stránky (produkt i částka sedí).
+    // ⛔ Odkaz se nabízí VÝHRADNĚ v kroku 2 trati `onboarding-nakup-balicek` (majitele
+    //    videokurzu ten krok přeskakuje drip-send/preskoc.ts). Na web NEPATŘÍ: veřejná
+    //    cena kurzu je 800 Kč a odečet 349 má vidět jen ten, komu skutečně náleží.
+    "plink_1U1oe9Bq3rKubW9k7212caGt=videokurz-upgrade",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
