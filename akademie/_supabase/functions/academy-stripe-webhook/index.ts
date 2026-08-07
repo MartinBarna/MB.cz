@@ -958,6 +958,53 @@ Deno.serve(async (req) => {
               });
             }
           }
+          // ⭐ DOKLAD O ZAPLACENÍ, SAMOSTATNÝM MAILEM (7. 8. 2026).
+          // ⛔ Stripe zákaznické účtenky neposílá (v dashboardu vypnuté) a ZAPNOUT je nejde
+          //    smysluplně: v „Default language" ČEŠTINA VŮBEC NENÍ (ověřeno v účtu, 16 jazyků
+          //    včetně polštiny a řečtiny, čeština chybí). Anglická účtenka je pro Martinovu
+          //    cílovku horší než žádná, proto si doklad posíláme sami, česky.
+          // ⛔⛔ A PROČ SAMOSTATNÝM MAILEM, NE ŘÁDKEM V DORUČOVACÍM: `renderEmail` v drip-send
+          //    dělá `if (hasToken(...)) throw new Error('unresolved_token')`, takže JAKÁKOLI
+          //    nenaplněná {{proměnná}} shodí render a mail NEODEJDE. Když jsem doklad zkusil
+          //    dát do šablony `balicek-0-doruceni`, svázal jsem tím doručení zaplaceného
+          //    produktu (odkazy ke stažení!) s tím, aby vždy dorazila i data o platbě.
+          //    Doklad je doplněk, doručení jsou peníze. ⇒ Doručení nesmí na dokladu viset.
+          // ⚠️ Best-effort: selhání dokladu nesmí nic shodit, člověk už soubory dostal.
+          // ⚠️ `amount_total` se bere ze SESSION, ne z ceníku. Slevový kód ji mění a doklad
+          //    musí říkat, kolik člověk reálně zaplatil.
+          if (klic === "balicek" && varsProUvitani && RESEND_KEY) {
+            try {
+              const castka = castkaText(Number(obj.amount_total ?? 0), String(obj.currency ?? "czk"));
+              const cislo = String(obj.id ?? "").slice(-12).toUpperCase();
+              const datum = datumCesky(new Date().toISOString());
+              await fetch("https://api.resend.com/emails", {
+                method: "POST",
+                headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  from: "Martin Barna <news@martinbarna.cz>",
+                  to: [emailL],
+                  reply_to: "martin@martinbarna.cz",
+                  subject: "Doklad o zaplacení, " + castka,
+                  html:
+                    `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px">`
+                    + `<p>Dobrý den,</p>`
+                    + `<p>tady je doklad o zaplacení. Soubory ke stažení máš v předchozím e-mailu.</p>`
+                    + `<table cellpadding="6" style="border-collapse:collapse;font-size:15px">`
+                    + `<tr><td style="color:#666">Produkt</td><td><b>40 receptů a 48 odpovědí</b></td></tr>`
+                    + `<tr><td style="color:#666">Částka</td><td><b>${castka}</b></td></tr>`
+                    + `<tr><td style="color:#666">Zaplaceno</td><td>${datum}</td></tr>`
+                    + `<tr><td style="color:#666">Číslo objednávky</td><td>${cislo}</td></tr>`
+                    + `<tr><td style="color:#666">Prodávající</td><td>Martin Barna, IČO 76383032<br>neplátce DPH</td></tr>`
+                    + `</table>`
+                    + `<p style="font-size:14px;color:#555">Platba proběhla přes platební bránu Stripe. `
+                    + `Do 14 dnů můžeš od smlouvy odstoupit na `
+                    + `<a href="https://martinbarna.cz/odstoupeni/?product=balicek">martinbarna.cz/odstoupeni</a>.</p>`
+                    + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
+                }),
+              });
+            } catch { /* doklad je doplněk, nikdy nesmí shodit doručení */ }
+          }
+
           // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
           // a domluvit termín. Bez tohohle upozornění by zákazník zaplatil 2 990 Kč
           // a čekal, dokud si toho někdo náhodou nevšimne v přehledu platieb.
