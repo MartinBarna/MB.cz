@@ -119,6 +119,68 @@ check('D7 castka se dal bere z amount_total session (kvuli slevovym kodum)',
 check('D8 stav dokladu se neinicializuje podminkou na produkt',
   !/let\s+doklad\s*=\s*klic\s*===/.test(zdrojWebhook), '');
 
+// --- 7) AFFILIATE ATRIBUCE: promo kod jako treti zdroj (7. 8. 2026) ---
+// Affiliate partnerky dostavaji provizi z realne zaplacene castky, takze spatne
+// prirazeny kod nebo spatna castka = spatne vyplacene penize.
+const blokRef = zdrojWebhook.slice(
+  zdrojWebhook.indexOf('async function zjistiPromoKod'),
+  zdrojWebhook.indexOf('// --- Uvitaci e-mail') >= 0
+    ? zdrojWebhook.indexOf('// --- Uvitaci e-mail')
+    : zdrojWebhook.indexOf('async function posliUvitani'),
+);
+
+check('A1 promo kod se cte ze session.discounts',
+  /discounts/.test(blokRef) && /promotion_code/.test(blokRef), '');
+
+// PRIORITA je jadro veci: promo kod musi prebit oba stare zdroje.
+const iPromo = blokRef.indexOf('zdrojKodu = "promo"');
+const iClient = blokRef.indexOf('zdrojKodu = "client_reference_id"');
+const iClick = blokRef.indexOf('zdrojKodu = "referral_click"');
+check('A2 priorita promo > client_reference_id > referral_click',
+  iPromo >= 0 && iClient > iPromo && iClick > iClient,
+  `promo=${iPromo} client=${iClient} click=${iClick}`);
+
+// Lookup kodu v referral_codes musi byt JEDEN pro vsechny zdroje, jinak by se
+// „co je platny kod" mohlo mezi zdroji rozejit.
+check('A3 kod se hleda v referral_codes jen na JEDNOM miste',
+  (blokRef.match(/from\("referral_codes"\)/g) ?? []).length === 1,
+  JSON.stringify((blokRef.match(/from\("referral_codes"\)/g) ?? []).length));
+
+check('A4 lookup kodu NENI podmineny produktem',
+  !/if\s*\([^)]*produkt[^)]*\)[^;]*from\("referral_codes"\)/.test(blokRef), '');
+
+check('A5 castka jde z amount_total session, ne z ceniku',
+  /session\.amount_total/.test(blokRef) && /\/\s*100/.test(blokRef), '');
+
+check('A6 affiliate dostava reward_type "cash", member "credit"',
+  /partnerType === "affiliate" \? "cash" : "credit"/.test(blokRef), '');
+
+check('A7 do referrals se zapisuje amount_czk i partner_type',
+  /amount_czk:/.test(blokRef) && /partner_type:/.test(blokRef), '');
+
+// Kdyz sazba chybi, partner NESMI dostat nulu (tise by prodal zadarmo).
+check('A8 chybejici sazba spadne na ODMENU, ne na nulu',
+  /sazbaJednoraz > 0/.test(blokRef) && /ODMENA\[produkt\]/.test(blokRef), '');
+
+// Restricted klic na predplatna NESMI byt pouzity na promo kody (nema prava).
+check('A9 promo lookup nepouziva klic urceny na predplatna',
+  !/STRIPE_SUBS_KEY/.test(blokRef), '');
+
+check('A10 nerozpoznana sleva se loguje, at se tvar zjisti z prvniho realneho pripadu',
+  /referral_webhook_log/.test(blokRef), '');
+
+// --- 8) MIGRACE MUSI SEDET NA TO, CO KOD ZAPISUJE ---
+const MIGRACE = KOREN + 'akademie/_supabase/referral-affiliate-partner-type.sql';
+let sqlMigrace = '';
+try { sqlMigrace = await Deno.readTextFile(MIGRACE); } catch { /* soubor chybi */ }
+check('M1 migracni soubor existuje', sqlMigrace.length > 0, MIGRACE);
+for (const sloupec of ['partner_type', 'rate_monthly', 'rate_oneoff', 'amount_czk']) {
+  check(`M2 migrace pridava ${sloupec}`, new RegExp(`add column if not exists ${sloupec}`).test(sqlMigrace), '');
+}
+// Bez rozsireni CHECKu by atribuce u balicku a konzultace spadla.
+check('M3 migrace rozsiruje CHECK na product o balicek a konzultace',
+  /check \(product in \([^)]*'balicek'[^)]*'konzultace'[^)]*\)\)/.test(sqlMigrace), '');
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo`);
