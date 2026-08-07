@@ -1377,6 +1377,28 @@ Deno.serve(async (req) => {
         }
       }
 
+      // 2c) ⭐ UZAVŘÍT PODANÉ ODSTOUPENÍ OD SMLOUVY (doplněno 7. 8. 2026).
+      // `withdrawals.status` má default `'pending'` a do dneška ho NIKDO nikdy nepřepsal
+      // na hotovo, protože k tomu neexistovala žádná cesta. Denní přehled přitom počítá
+      // `status='pending'` jako „čeká na vyřízení", takže by po prvním odstoupení křičel
+      // napořád a Martin by si na ten alert zvykl a přestal ho číst. Nejhorší druh alertu.
+      // ⭐ Refund je přesně ten okamžik, kdy je odstoupení vyřízené: peníze jsou zpátky.
+      // ⚠️ Zavírají se jen `pending` řádky téhož e-mailu. Když jich je víc (člověk může
+      //    odstoupit od víc produktů), zavřou se všechny čekající, a to je správně.
+      // ⚠️ Sloupec `resolved_at` NEEXISTUJE, ověřeno proti schématu před zápisem.
+      //    Zápis do neexistujícího sloupce by tenhle blok tiše proměnil v no-op.
+      // ⚠️ Best-effort: nesmí shodit odebrání přístupu ani rozlučkový mail.
+      let odstoupeniUzavreno = "nic-necekalo";
+      try {
+        const { data: uzavrena, error: chybaW } = await admin.from("withdrawals")
+          .update({ status: "resolved" })
+          .eq("email", ent.email).eq("status", "pending")
+          .select("id");
+        odstoupeniUzavreno = chybaW
+          ? "CHYBA: " + chybaW.message
+          : ((uzavrena?.length ?? 0) > 0 ? "uzavreno-" + uzavrena!.length : "nic-necekalo");
+      } catch (e) { odstoupeniUzavreno = "chyba-" + String(e).slice(0, 60); }
+
       // 3) rozlučkový mail (best-effort, nikdy nesmí shodit odebrání)
       // Po refundu odebíráme přístup ihned, takže vyjde větev „hned". Volba je tu
       // přesto dynamická, ať to sedí i kdyby se sem někdy dostalo zrušení s dojezdem.
@@ -1470,6 +1492,7 @@ Deno.serve(async (req) => {
         pristup_odebran: !chybaRevoke,
         odebrani_appky: tcRevoke,
         bonus_videokurz_odebran: bonusOdebran,
+        odstoupeni_uzavreno: odstoupeniUzavreno,
       });
     }
 
