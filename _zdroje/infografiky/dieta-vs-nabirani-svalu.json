@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Ale férově", "title": "Jen 16 lidí,<br><span class=\"hl\">čtyři týdny</span>", "body": "Studie prošla recenzí a vyšla, ale je malá a krátká. Beru to jako silný signál, ne hotovou věc.<br><br>Jedna studie na šestnácti lidech nepřepíše trénink celé scény.", "zdroj": { "kdo": "Nait-Yahia et al. (2026)", "kde": "European Journal of Clinical Nutrition, vyšlo online 8. 5. 2026", "doi": "10.1038/s41430-026-01757-8" } },
     { "kind": "vs", "kicker": "Prakticky", "title": "Co s objemem<br>v dietě", "yes": { "h": "Dává smysl", "items": ["Objem drž, dokud stíháš regenerovat", "Bílkoviny nahoru, těžké série nech v plánu", "Ubírej podle spánku a výkonu"] }, "no": { "h": "Spíš ne", "items": ["Seškrtat série hned první týden diety", "Řídit se strachem ze ztráty svalů", "Kopírovat 30 sérií, i když jsi začátečník"] } },
     { "kind": "quote", "text": "V dietě svaly snesou víc, než si myslíš. Škrtat objem preventivně většinou není potřeba.", "note": "Rozhoduje rozumný plán a regenerace, ne strach ze ztráty svalů." },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }

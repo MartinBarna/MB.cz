@@ -10,6 +10,6 @@
     { "kind": "vs", "kicker": "Do praxe", "title": "Co s tím<br>po čtyřicítce", "yes": { "h": "Drží svaly i hlavu", "items": ["Silovku bereš stejně vážně jako kardio", "Skládáš obojí, ne „jedno, nebo druhé“", "Počítáš v měsících, ne v týdnech"] }, "no": { "h": "Odkládáš to", "items": ["Kardio jako jediná pojistka na hlavu", "Silovka „až někdy, kvůli postavě“", "Čekáš změnu po pár trénincích"] } },
     { "kind": "bullets", "kicker": "Háček", "title": "Tři věci, které<br>studie neříká", "items": ["Neříká, že kardio je k ničemu. V paměti vedlo ono.", "Neříká nic o mladších. Ve vzorku byli jen senioři.", "Nejde o „buď, anebo“. Meta-analýza z roku 2018 doporučuje dělat aerobní i silový trénink."], "zdroj": { "kdo": "Northey et al. (2018)", "kde": "British Journal of Sports Medicine", "doi": "10.1136/bjsports-2016-096587" } },
     { "kind": "quote", "text": "Po čtyřicítce silovka přestává být věc kvůli vzhledu. Stává se z ní obrana proti úbytku svalů i proti úpadku mysli.", "note": "Kde to u tebe drhne? Silovka, kardio, spánek, nebo bílkoviny?" },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }

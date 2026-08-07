@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Námitka 5", "title": "„Tělo je otevřený<br>systém“", "body": "Zachování energie platí i pro otevřené systémy. Jen počítáš víc toků: jídlo dovnitř, teplo, pohyb, dech, co odejde ven.<br><br>A právě protože je tělo otevřené, vůbec můžeš zhubnout. <b>Tuk z něj odchází ven.</b>", "callout": "Ten argument popisuje, jak deficit funguje. Ne proč neplatí." },
     { "kind": "vs", "kicker": "Prakticky", "title": "Co s tím<br>uděláš", "yes": { "h": "Posune tě dopředu", "items": ["Týden vážit a zapisovat všechno, i olej a doušky", "Hodnotit trend váhy po 2 až 3 týdnech", "Při podezření na zdravotní příčinu k lékaři"] }, "no": { "h": "Nechá tě stát na místě", "items": ["Hledat viníka v „rozbitém metabolismu“", "Střídat dietu každých 14 dní", "Odhadovat příjem od oka"] } },
     { "kind": "quote", "text": "Žádná z těch námitek bilanci neruší. Jen mění čísla v ní.", "note": "Mezi „těžké přesně změřit“ a „neplatí“ je celý ten rozdíl." },
-    { "kind": "cta", "title": "Kterou slýcháš <span class=\"hl\">nejčastěji?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Kterou slýcháš <span class=\"hl\">nejčastěji?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }

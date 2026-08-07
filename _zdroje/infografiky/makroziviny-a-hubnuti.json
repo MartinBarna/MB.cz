@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Háček", "title": "Kde to má<br><span class=\"hl\">hranice</span>", "body": "Tuky drž aspoň na <b>20 až 25 % kalorií</b>, kvůli hormonům a vstřebávání vitaminů. Sacharidy táhnou tvrdý trénink a sytost má každý jinou.<br><br>Vypustit z počítání neznamená ignorovat." },
     { "kind": "vs", "kicker": "Prakticky", "title": "Co hlídat,<br>co pustit", "yes": { "h": "Sleduj", "items": ["<b>Kalorie</b>, ať deficit sedí", "<b>Bílkoviny</b>, ať zůstane sval", "<b>Vlákninu</b>, kvůli sytosti a zdraví"] }, "no": { "h": "Neřeš do gramu", "items": ["Přesný poměr sacharidů a tuků", "Hledání „nejlepší“ diety podle poměru", "Vyhýbání se sacharidům večer"] } },
     { "kind": "quote", "text": "Kalorie rozhodnou, jestli zhubneš. Bílkoviny o tom, kolik svalů ti zbude.", "note": "Sacharidy a tuky si rozděl podle chuti a tréninku. Vydržíš to pak dýl." },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }

@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Háček", "title": "Kapsle<br><span class=\"hl\">nenahradí talíř</span>", "body": "Studie mluví o stravě, ne o extraktu v prášku. Doplněk to jídlo nepřebije.<br><br>A pozor na druhý extrém: polyfenoly nepřebijí kalorický příjem. Energetická bilance platí dál.", "callout": "V seznamu je i červené víno. Žádná studie ale není důvod začít pít." },
     { "kind": "bullets", "kicker": "Do praxe", "title": "Česká kuchyně,<br>ale vědomě", "items": ["<b>Cibule</b> do guláše (kvercetin)", "<b>Borůvky a jablka se slupkou</b> (flavonoidy, antokyany)", "<b>Pohanka</b> místo rýže (rutin)", "<b>Kvašené zelí</b> ke knedlíku (polyfenoly a probiotika dohromady)", "<b>Olivový olej a bylinky</b> úplně do všeho"] },
     { "kind": "quote", "text": "Nejlevnější polyfenoly v Česku má cibule do guláše a jablko se slupkou.", "note": "Nemusíš kupovat nic exotického. Stačí jíst to, co znáš, jen vědomě." },
-    { "kind": "cta", "title": "Chceš jíst <span class=\"hl\">vědomě?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš jíst <span class=\"hl\">vědomě?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }

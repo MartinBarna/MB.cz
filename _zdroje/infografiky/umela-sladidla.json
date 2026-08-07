@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "A co WHO?", "title": "„Možný<br>karcinogen“?", "body": "IARC hodnotí sílu důkazu, ne riziko z reálné dávky. Aspartam sedí ve stejné kategorii jako tvůj mobil nebo výtažek z aloe vera.<br><br>Ranní čaj nad 65 °C je dokonce v přísnější.", "callout": "IARC měří sílu důkazu, ne velikost rizika. Panikařit nemusíš." },
     { "kind": "vs", "kicker": "Do praxe", "title": "Nástroj,<br>nebo zázrak?", "yes": { "h": "Funguje jako nástroj", "items": ["Light místo coly s cukrem: zhruba <b>140 kcal</b> pryč", "Chuť na sladké uspokojíš bez kalorií", "Ušetřené kalorie dej do jídla s bílkovinami a vlákninou"] }, "no": { "h": "Takhle ne", "items": ["Čekáš, že sladidlo zhubne za tebe", "Dva litry light coly místo vody", "Fenylketonurie: aspartamu se vyhni"] } },
     { "kind": "quote", "text": "Sladidlo samo o sobě nehubne. Usnadní ti ale deficit, který hubne.", "note": "Chuť na sladké uspokojíš bez kalorií a v jídelníčku ti zbude místo na jídlo s bílkovinami." },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }

@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Co s tím", "title": "Změř si<br>pas", "body": "Nejjednodušší lepší ukazatel: obvod pasu ať je <b>míň než půlka výšky</b>. Při 180 cm tedy pod 90 cm.<br><br>Pár vteřin a řekne víc než váha." },
     { "kind": "bullets", "kicker": "Do praxe", "title": "Neřeš<br>jen váhu", "items": ["Změř si <b>pas</b>, ne jen hmotnost", "Silový trénink, ať máš svaly", "Dost <b>bílkovin</b> každý den", "Obvody a fotky víc než číslo na váze"] },
     { "kind": "quote", "text": "Váha ti řekne, kolik vážíš. Ne, jak na tom jsi.", "note": "Pas, síla a energie prozradí víc než číslo pod nohama." },
-    { "kind": "cta", "title": "Chceš to <span class=\"hl\">měřit chytře?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to <span class=\"hl\">měřit chytře?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }

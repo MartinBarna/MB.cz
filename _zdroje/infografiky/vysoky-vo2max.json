@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Než to špatně pochopíš", "title": "Kardio<br><span class=\"hl\">nezahazuj</span>", "body": "Ze studie nevyplývá, že kardio je k ničemu. Zdravé srdce, cévy a rozumný podíl tuku spolu jdou ruku v ruce.<br><br>Jen samotné číslo VO2max není cíl, na kterém stavíš celý trénink." },
     { "kind": "vs", "kicker": "Do praxe", "title": "Kde brát<br>výsledek", "yes": { "h": "Základ, který platí", "items": ["Silový trénink <b>2 až 3×</b> týdně", "<b>7 000 až 9 000</b> kroků denně", "Podíl tuku ve zdravém pásmu", "Kardio jako součást týdne"] }, "no": { "h": "Slepá ulička", "items": ["Honit VO2max a sílu nechat ležet", "Kardio jako celý plán", "Číslo z hodinek jako jediná metrika"] } },
     { "kind": "quote", "text": "Vysoký VO2max je zpráva o tom, jak žiješ. Život ti prodlužuje to, co za tím číslem stojí.", "note": "Silový trénink, kroky a rozumný podíl tuku. Kardio s nimi jede ruku v ruce." },
-    { "kind": "cta", "title": "Honíš kondici, nebo <span class=\"hl\">sílu?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Honíš kondici, nebo <span class=\"hl\">sílu?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
   ]
 }
