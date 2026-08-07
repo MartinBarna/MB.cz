@@ -117,7 +117,7 @@ SECTIONS.forEach(s => {
 ordered.forEach((v, i) => { v.n = i + 1; v.slug = 'v' + String(i + 1).padStart(3, '0'); v.lid = 'vk-' + v.slug; });
 // Free tier (#35/#37): ochutnávka napříč kurzem — Modul 1 první 4 lekce + první lekce
 // z každého dalšího modulu (m2–m8), ať návštěvník vidí šíři kurzu → silnější upsell na koupi.
-const BUY_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06';
+const BUY_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06?locale=cs';
 const _secSeen = {};
 ordered.forEach((v) => {
   const k = v.sec; _secSeen[k] = (_secSeen[k] || 0) + 1; const idx = _secSeen[k];

@@ -82,7 +82,7 @@ function datumCesky(iso: string): string {
 // Stripe (live, účet Tvůj Coach acct_1TqQ56Bq3rKubW9k), založeno 28. 7. 2026:
 //   produkt      prod_Uy7nu91R8yjVwI  „Barna Academy členství"
 //   price        price_1TyBXTBq3rKubW9kGizHd41g  = 990 CZK/měs, DPH v ceně
-//   Payment Link https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00
+//   Payment Link https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00?locale=cs
 //   redirect po platbě -> https://martinbarna.cz/akademie/vitejte/
 
 // ⛔⛔ WHITELIST: KTERÉ PLATBY VŮBEC ZAKLÁDAJÍ ACADEMY (přidáno 28. 7. 2026)

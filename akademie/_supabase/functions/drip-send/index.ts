@@ -22,7 +22,7 @@ const SITE = 'https://martinbarna.cz';
 // Tenhle odkaz pouziva 13 sablon pres {{course_url}}, takze zmena jednoho radku
 // spravi vsechny najednou. Je to tentyz odkaz, ktery je na /videokurz pod
 // tlacitkem „Koupit za 800 Kc".
-const COURSE_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06';
+const COURSE_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06?locale=cs';
 const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
 const COURSE_PRICE = 800;
 const DISCOUNT_CODE = 'ZACNI15';
