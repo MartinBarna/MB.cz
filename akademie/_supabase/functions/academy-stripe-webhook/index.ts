@@ -284,13 +284,13 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // ⭐ LEPŠÍ POJISTKA NEŽ V ČERVENCI: odkaz má ve Stripu nastaveno „Limit the number
     // of payments = 1", takže se po JEDNOM nákupu SÁM vypne. Nespoléhá se na to, že si
     // někdo vzpomene ho zamknout. Tenhle řádek se pak už jen uklidí odsud.
-    "plink_1U1WCJBq3rKubW9koVfHcZ5i=balicek," +
+    // (uklizeno 7. 8. 2026: vycerpany testovaci odkaz na 1 platbu)
     // ⬜ DRUHY TESTOVACI ODKAZ 15 Kc, 7. 8. 2026. Ten prvni se po Martinove platbe
     //    SAM deaktivoval (limit 1 platba funguje, overeno v seznamu odkazu).
     //    Tenhle je taky na 1 platbu. Testuje se jim doklad o zaplaceni.
     // ⚠️ OSTRY odkaz na balicek ma `Limited use: No`, overeno 7. 8. v dashboardu.
     //    Limit patri VYHRADNE na testovaci odkazy, nikdy na prodejni.
-    "plink_1U1iUXBq3rKubW9kXemTtn1h=balicek," +
+    // (uklizeno 7. 8. 2026: vycerpany testovaci odkaz na 1 platbu)
     // ⭐ SANDBOXOVY (TESTOVACI) ODKAZ, 7. 8. 2026: buy.stripe.com/test_bJe9AS3UXgjMcjC8hF3ks00
     //    Zdroj `we_1U1ijpBq3rKubW9kurDo42vd` (event destination `academy-stripe-webhook-test`).
     // ⛔ NEMA limit poctu plateb, a je to zamerne: cely smysl je moct cely nakupni retez
@@ -441,7 +441,7 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
       body: JSON.stringify({
         from: "Barna Academy <news@martinbarna.cz>", to: [to],
         subject: "⚠️ " + predmet,
-        html: `<p>Stripe webhook měsíčního členství narazil.</p><ul>${rows}</ul>`
+        html: `<p>Upozornění ze Stripe webhooku (Academy/produkty).</p><ul>${rows}</ul>`
           + `<p>Zkontroluj platbu ve Stripu a případně uděl přístup ručně v adminu.</p>`,
       }),
     });
