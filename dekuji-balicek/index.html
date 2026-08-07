@@ -14,8 +14,18 @@
   * { box-sizing:border-box; }
   body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--ink); background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
     min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
-  .card { background:#fff; border-radius:24px; box-shadow:0 24px 70px rgba(0,0,0,.12); max-width:580px; width:100%;
+  /* ⛔ 580 px bylo na velkem monitoru uzke jako mobil (Martin 7. 8. 2026: „vypada to
+     na mobilni akorat"). Karta se ted rozsiruje az na 860 px a od 900 px vys ma
+     vetsi typografii i odsazeni, at to sedi na obou. */
+  .card { background:#fff; border-radius:24px; box-shadow:0 24px 70px rgba(0,0,0,.12); max-width:860px; width:100%;
     padding:48px 40px; text-align:center; }
+  @media (min-width:900px) {
+    .card { padding:64px 72px; }
+    h1 { font-size:2.4rem; }
+    .card > p { font-size:1.08rem; }
+    .steps { padding:26px 34px; }
+    .steps li { font-size:1.02rem; margin:.7rem 0; }
+  }
   .mark { width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg,#F6CD63,#EBB12C);
     display:flex; align-items:center; justify-content:center; margin:0 auto 1.4rem; box-shadow:0 12px 30px rgba(235,177,44,.35); }
   .mark svg { width:42px; height:42px; }

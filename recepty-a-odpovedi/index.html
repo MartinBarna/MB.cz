@@ -50,9 +50,13 @@
   .navlinks { display:flex; align-items:center; gap:16px; font-size:.9rem; }
   .navlinks a { color:#cfc6b9; text-decoration:none; }
   .navlinks a:hover { color:#fff; }
-  .navlinks .cta { background:linear-gradient(145deg,var(--gold-soft),var(--gold)); color:var(--ink); font-weight:700; padding:9px 18px; border-radius:50px; }
+  .navlinks .nav-koupit { background:linear-gradient(145deg,var(--gold-soft),var(--gold)); color:var(--ink); font-weight:700; padding:9px 18px; border-radius:50px; }
   @media (max-width:960px) { .hide-sm { display:none; } }
-  .hero { padding:64px 0 8px; }
+  /* ⛔ NEPOJMENOVAVAT TOHLE `.hero` ANI `.cta`. Sdileny app-brand-override.css ma na
+     obe tridy pravidla s !important (tmavy fialovy gradient), takze by prebil zlate
+     tlacitko i pozadi a na uvodnim bloku by udelal orizly pruh siroky jen jako obsah.
+     Zjisteno na zivem webu 7. 8. 2026. Viz pamet feedback-sdilena-css-trida-je-mrtva-paka. */
+  .uvod { padding:64px 0 8px; }
   .kicker { color:var(--gold); font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:.78rem; margin-bottom:.7rem; }
   h1 { font-size:clamp(2rem,5vw,3rem); line-height:1.1; letter-spacing:-.02em; margin:0 0 1rem; color:#fff; }
   .lead { font-size:1.12rem; color:#d7cfc3; }
@@ -90,11 +94,11 @@
     <a class="hide-sm" href="/akademie/">Academy</a>
     <a class="hide-sm" href="/tvuj-coach/">Appka</a>
     <a class="hide-sm" href="/clanky/">Blog</a>
-    <a class="cta" href="https://buy.stripe.com/4gMbJ0ezBc3wcjC0Pd3ks09?utm_source=web&amp;utm_medium=nav&amp;utm_campaign=balicek">Koupit za 349 Kč</a>
+    <a class="nav-koupit" href="https://buy.stripe.com/4gMbJ0ezBc3wcjC0Pd3ks09?utm_source=web&amp;utm_medium=nav&amp;utm_campaign=balicek">Koupit za 349 Kč</a>
   </nav>
 </div></div>
 
-<div class="wrap hero">
+<div class="wrap uvod">
   <p class="kicker">Dvě PDF ke stažení</p>
   <h1>40 receptů a 48 odpovědí</h1>
   <p class="lead">Kuchařka s hotovými jídly <b>i s makry</b>, ať nemusíš nic dopočítávat. A k tomu e-book s odpověďmi na otázky, které dostávám od klientů úplně nejčastěji. Za cenu jednoho oběda v restauraci a navždy.</p>
