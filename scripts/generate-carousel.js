@@ -259,10 +259,14 @@ const KINDS = {
       ${patka(s, true, true)}
     </div>`;
   },
+  /** ⛔ Ozdobná uvozovka (Georgia, 190 px, zlatá) nad citátem se 8. 8. 2026 ODSTRANILA
+   *  na Martinův pokyn při revizi tématu `lepek-nocebo`. Znovu ji sem nevracej.
+   *  ⚠️ Týká se to VŠECH témat s citátovým slidem, ne jen toho jednoho: je jich 33
+   *  z 38 a jejich PNG v repu je proto potřeba přegenerovat, jinak se obrázek
+   *  rozejde se šablonou. */
   quote(s, i, n) {
     return `<div class="wrap">${BRAND}${dots(i, n)}
       <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:100px">
-        <div style="font-family:Georgia,serif;font-size:190px;line-height:.5;color:${GOLD};opacity:.5;margin-bottom:30px">“</div>
         <div style="font-weight:800;font-size:64px;line-height:1.25;color:#fff">${s.text}</div>
         ${s.note ? `<div class="body" style="margin-top:40px;font-size:34px">${s.note}</div>` : ''}
         <div style="margin-top:52px;display:flex;align-items:center;gap:22px">
