@@ -2276,13 +2276,31 @@
     }
     function teInput(v,ph){ return '<input type="text" value="'+esc(v)+'" placeholder="'+esc(ph||'')+'" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:8px 11px;color:#fff;font-family:inherit;font-size:.9rem;">'; }
     function teArea(v,rows){ return '<textarea rows="'+(rows||3)+'" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:8px 11px;color:#fff;font-family:inherit;font-size:.88rem;line-height:1.45;resize:vertical;">'+esc(v)+'</textarea>'; }
-    var BLOCK_LBL={p:'Odstavec',bullets:'Odrážky',btn:'Tlačítko',ps:'P.S.'};
+    // ⛔ DOPLNĚNO 8. 8. 2026: `img` tu chybělo, i když ho server umí uložit i vykreslit.
+    // Následek: 14 obrázkových bloků v 11 ŽIVÝCH šablonách (mimo jiné academy-nabidka,
+    // tc-free, tc-magnet) se v editoru ukazovalo jako PRÁZDNÝ blok se štítkem „img".
+    // Uložení je nezahodilo, ale Martin neviděl, co v nich je, nemohl je změnit,
+    // a křížkem je mohl smazat, aniž by tušil, o co přišel.
+    var BLOCK_LBL={p:'Odstavec',bullets:'Odrážky',btn:'Tlačítko',ps:'P.S.',img:'Obrázek'};
+    // Chyby validace bloků ze serveru přeložené do češtiny (dřív se ukazoval holý kód).
+    var TPL_CHYBY={
+      bad_block_html:'Odstavec nebo P.S. je prázdný.',
+      bad_block_bullets:'Odrážky jsou prázdné, nebo je některá bez textu.',
+      bad_block_btn:'Tlačítko nemá text nebo odkaz.',
+      bad_block_img:'Obrázek musí mít adresu začínající https:// a vyplněný popis.',
+      bad_wait_days:'Pauza musí být číslo od 0 do 365 dní.',
+      bad_args:'Chybí předmět nebo je mail bez bloků.',
+      not_found:'Tahle šablona v databázi není.'
+    };
     function renderTplEdit(){
       var blocksHtml=TE.blocks.map(function(b,i){
         var body='';
         if(b.t==='p'||b.t==='ps') body='<div data-f="html">'+teArea(b.html,3)+'</div>';
         else if(b.t==='bullets') body='<div data-f="items">'+teArea((b.items||[]).join('\n'),3)+'<div class="muted" style="font-size:.72rem;margin-top:2px;">Jedna odrážka = jeden řádek</div></div>';
         else if(b.t==='btn') body='<div data-f="text" style="margin-bottom:6px;"><span class="muted" style="font-size:.72rem;">Text tlačítka</span>'+teInput(b.text)+'</div><div data-f="href"><span class="muted" style="font-size:.72rem;">Odkaz</span>'+teInput(b.href)+'</div>';
+        else if(b.t==='img') body='<div data-f="src" style="margin-bottom:6px;"><span class="muted" style="font-size:.72rem;">Adresa obrázku (musí začínat https://)</span>'+teInput(b.src)+'</div>'
+          +'<div data-f="alt" style="margin-bottom:6px;"><span class="muted" style="font-size:.72rem;">Popis obrázku (povinný, čte ho ten, komu se obrázek nenačte)</span>'+teInput(b.alt)+'</div>'
+          +(b.src?'<img src="'+esc(b.src)+'" alt="" style="max-width:230px;max-height:130px;border-radius:8px;display:block;border:1px solid rgba(255,255,255,.12);">':'');
         return '<div class="teb" data-i="'+i+'" style="border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;margin:0 0 8px;background:rgba(255,255,255,.03);">'
           +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">'
           +'<span class="badge b-tag">'+esc(BLOCK_LBL[b.t]||b.t)+'</span><span style="flex:1;"></span>'
@@ -2297,7 +2315,7 @@
         +'<div style="margin-bottom:12px;"><span class="muted" style="font-size:.74rem;">Pauza PO tomhle mailu (dny; prázdné = konec sekvence)</span><div id="teWait" style="max-width:130px;">'+teInput(TE.wait_days==null?'':String(TE.wait_days))+'</div></div>'
         +'<div id="teBlocks">'+blocksHtml+'</div>'
         +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin:.4rem 0 1rem;">'
-        +'<button class="teb-add" data-t="p">+ odstavec</button><button class="teb-add" data-t="bullets">+ odrážky</button><button class="teb-add" data-t="btn">+ tlačítko</button><button class="teb-add" data-t="ps">+ P.S.</button></div>'
+        +'<button class="teb-add" data-t="p">+ odstavec</button><button class="teb-add" data-t="bullets">+ odrážky</button><button class="teb-add" data-t="btn">+ tlačítko</button><button class="teb-add" data-t="img">+ obrázek</button><button class="teb-add" data-t="ps">+ P.S.</button></div>'
         +'<div style="display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:12px;">'
         +'<button id="tePrevF" class="mlogbtn">👀 Náhled (žena)</button><button id="tePrevM" class="mlogbtn">👀 Náhled (muž)</button>'
         +'<span style="flex:1;"></span><button id="teSave" style="cursor:pointer;border:none;font-family:inherit;font-weight:700;padding:10px 22px;border-radius:50px;background:#EBB12C;color:#1a1208;">💾 Uložit (platí okamžitě)</button></div>'
@@ -2312,6 +2330,7 @@
           if(b.t==='p'||b.t==='ps') b.html=el.querySelector('[data-f="html"] textarea').value;
           else if(b.t==='bullets') b.items=el.querySelector('[data-f="items"] textarea').value.split('\n').map(function(x){return x.trim();}).filter(Boolean);
           else if(b.t==='btn'){ b.text=el.querySelector('[data-f="text"] input').value; b.href=el.querySelector('[data-f="href"] input').value; }
+          else if(b.t==='img'){ b.src=el.querySelector('[data-f="src"] input').value.trim(); b.alt=el.querySelector('[data-f="alt"] input').value.trim(); }
         });
       }
       Array.prototype.forEach.call($('tpleditBody').querySelectorAll('.teb-mv,.teb-rm,.teb-add'),function(b){
@@ -2335,7 +2354,10 @@
       Array.prototype.forEach.call($('tpleditBody').querySelectorAll('.teb-add'),function(b){
         b.addEventListener('click',function(){
           collect(); var t=b.getAttribute('data-t');
-          TE.blocks.push(t==='bullets'?{t:'bullets',items:['']}:t==='btn'?{t:'btn',text:'',href:'https://martinbarna.cz/'}:{t:t,html:''});
+          TE.blocks.push(t==='bullets'?{t:'bullets',items:['']}
+            :t==='btn'?{t:'btn',text:'',href:'https://martinbarna.cz/'}
+            :t==='img'?{t:'img',src:'https://www.martinbarna.cz/',alt:''}
+            :{t:t,html:''});
           renderTplEdit();
         });
       });
@@ -2355,6 +2377,8 @@
         api({action:'template_save',track:TE.track,step:TE.step,subject:TE.subject,preheader:TE.preheader,wait_days:TE.wait_days,blocks:TE.blocks}).then(function(o){
           if(o.j&&o.j.ok){ toast('💾 Uloženo'); $('tpledit').classList.remove('on'); openSeqMap(); }
           else if(o.j&&o.j.error==='render_failed') toast('❌ Neuloženo — rozbitý token: '+(o.j.detail||''));
+          // srozumitelná hláška místo holého kódu ze serveru (bad_block_img a spol.)
+          else if(o.j&&TPL_CHYBY[o.j.error]) toast('❌ Neuloženo: '+TPL_CHYBY[o.j.error]);
           else toast('Chyba: '+((o.j&&o.j.error)||o.status));
         }).catch(function(){ toast('⚠️ Chyba spojení — NEuloženo, zkus Uložit znovu'); });
       });
