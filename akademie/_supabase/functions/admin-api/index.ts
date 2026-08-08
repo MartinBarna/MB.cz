@@ -348,7 +348,7 @@ Deno.serve(async (req) => {
       const map = new Map<string, Record<string, unknown>>();
       const get = (email: string) => {
         const k = low(email);
-        if (!map.has(k)) map.set(k, { email: k, name: "", tags: [], segment: "", sources: [], has_academy: false, has_videokurz: false, registered: false, last_sign_in: null, sent_count: 0, last_sent_at: null, opened_count: 0, lead_track: null, lead_step: null, lead_status: null, contact_status: null, onboarding_sent_at: null });
+        if (!map.has(k)) map.set(k, { email: k, name: "", tags: [], segment: "", sources: [], has_academy: false, has_videokurz: false, has_coaching: false, registered: false, last_sign_in: null, sent_count: 0, last_sent_at: null, opened_count: 0, lead_track: null, lead_step: null, lead_status: null, contact_status: null, onboarding_sent_at: null });
         return map.get(k)!;
       };
       for (const c of ccRows) {
@@ -364,6 +364,15 @@ Deno.serve(async (req) => {
         const r = get(e.email);
         if (e.product === "academy" && e.active) r.has_academy = true;
         if (e.product === "videokurz" && e.active) r.has_videokurz = true;
+        // ⛔ DOPLNENO 8. 8. 2026. Dlazdice „Coaching" i filtr v tabulce se pocitaly
+        // ze ZNACEK (`tags` zacinajici na "coaching"), ne z narok. To davalo 39, protoze
+        // se scitaly `coaching-client`, `coaching-active` I `coaching-ex`, tedy i lide,
+        // kterym koucink uz skoncil, a navic 11 kontaktu ma `coaching-active` bez
+        // jakehokoli koucinkoveho naroku (znacky se rozesly s realitou). Skutecnych
+        // aktivnich klientu je 13 a presne tolik jich ukazuje karta „Klienti koucinku".
+        // Dva ukazatele tehoz v jednom adminu si nesmi odporovat, takze se ted oba
+        // pocitaji z `entitlements`, coz je jediny zdroj, ktery rozhoduje o pristupu.
+        if (e.product === "coaching" && e.active) r.has_coaching = true;
       }
       for (const u of allUsers) {
         const k = low(u.email); if (!k) continue;
@@ -383,7 +392,9 @@ Deno.serve(async (req) => {
           academy: rows.filter((r) => r.has_academy).length,
           videokurz: rows.filter((r) => r.has_videokurz).length,
           registered: rows.filter((r) => r.registered).length,
-          coaching: rows.filter((r) => (r.tags as string[]).some((t) => String(t).indexOf("coaching") === 0)).length,
+          coaching: rows.filter((r) => r.has_coaching).length,
+          // byvali klienti se drzi zvlast, at se nemichaji do aktivnich (viz komentar u has_coaching)
+          coaching_ex: rows.filter((r) => !r.has_coaching && (r.tags as string[]).some((t) => String(t) === "coaching-ex")).length,
           sent_total: rows.reduce((n, r) => n + (r.sent_count as number), 0),
         });
       }

@@ -105,6 +105,23 @@
   .att a,.mprev-meta a{display:inline-block;margin:.3rem .4rem 0 0;font-size:.82rem;color:#F6CD63;background:rgba(235,177,44,.1);border:1px solid rgba(235,177,44,.28);border-radius:50px;padding:6px 12px;text-decoration:none}
   .tl .ev.clk{cursor:pointer;border-radius:6px;margin:0 -6px;padding-left:6px;padding-right:6px}
   .tl .ev.clk:hover{background:rgba(255,255,255,.05)}
+  /* SEKCE: karty seskupené pod nadpis, sbalitelné. Stav se pamatuje v localStorage.
+     Karty uvnitř zůstávají beze změny, sekce je jen obal, takže všechna id a všechny
+     handlery drží dál. */
+  .sek{border:1px solid rgba(255,255,255,.09);border-radius:16px;margin:1.1rem 0;background:rgba(255,255,255,.015)}
+  .sek>summary{cursor:pointer;list-style:none;padding:13px 18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-weight:800;color:#F6CD63;font-size:1.02rem}
+  .sek>summary::-webkit-details-marker{display:none}
+  .sek>summary::before{content:'▸';color:#8a7e6d;font-size:.85rem;display:inline-block;transition:transform .15s}
+  .sek[open]>summary::before{transform:rotate(90deg)}
+  .sek>summary:hover{background:rgba(235,177,44,.06);border-radius:15px}
+  .sek>summary .sekpop{font-weight:400;color:#8a7e6d;font-size:.8rem}
+  .sek>summary .sekinfo{font-weight:700;color:#cbbfae;font-size:.8rem;margin-left:auto;text-align:right}
+  .sek-in{padding:0 14px 8px}
+  .sek-in>.traf:first-child{margin-top:.2rem}
+  .sek-in>.traf{margin:.9rem 0}
+  .seknav{display:flex;gap:7px;flex-wrap:wrap;margin:1.1rem 0 .2rem}
+  .seknav a{font-size:.8rem;font-weight:700;color:#cbbfae;text-decoration:none;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:6px 13px}
+  .seknav a:hover{border-color:rgba(246,205,99,.5);color:#F6CD63}
 </style>
 </head>
 <body class="ba">
@@ -128,22 +145,23 @@
       <div class="stats" id="stats"></div>
 
       <div class="traf-links" style="margin:.2rem 0 1rem;">
-        <a href="#" id="seqLink">🗺️ Sekvence &amp; šablony (mapa + editor mailů) →</a>
         <a href="/akademie/moje/testy/">📝 Testy &amp; certifikáty →</a>
         <a href="/akademie/moje/kouc/">🏋️ Check-iny klientů →</a>
         <a href="/akademie/studium/">📚 Studium →</a>
         <a href="https://resend.com/emails" target="_blank" rel="noopener">✉️ Resend →</a>
       </div>
 
-      <div class="traf" id="news">
-        <h3>🆕 Novinky &amp; co sledovat <span class="muted" style="font-size:.75rem;font-weight:400;">(aktualizace 10. 7. 2026)</span></h3>
-        <div class="sub">Co je nově živé a na co koukat — kartu ti Claude průběžně aktualizuje</div>
-        <ul style="margin:.5rem 0 .2rem;padding-left:1.2rem;line-height:1.75;font-size:.92rem;color:#e7e0d5;">
-          <li><b style="color:#F6CD63;">Trychtýř pro trenéry je živý:</b> reklamy → <a href="/pro-trenery/" target="_blank" rel="noopener" style="color:#F6CD63;">/pro-trenery/</a> (kit zdarma) → 5mailová sekvence „Kit pro trenéry" → nabídka Academy. Leady a prodeje sleduj níž v kartě <b>🎯 Trenéři — trychtýř</b>, maily v mapě sekvencí.</li>
-          <li><b style="color:#F6CD63;">FB kampaň „Academy – TOFU – Startovací kit pro trenéry" běží</b> (110 Kč/den): 4 reklamy soupeří (systém / nástroje / AI / certifikace), Meta přelévá rozpočet vítězi sama. Cena za lead je vodítko — <b>severka je cena za prodej Academy</b> (konverze uvidíš v kartě trychtýře).</li>
-          <li><b style="color:#F6CD63;">Nový obsah:</b> 3 blog články pro trenéry (kategorie „Pro trenéry"), srovnání kurz vs. systém + splátky 3× 3 000 Kč na /akademie/, modul 24 „AI pro trenéry" (13 lekcí + prompt knihovna) — Academy má 256 lekcí.</li>
-          <li>⏰ <b>Hlídat:</b> po 50. prodeji Academy zdražit 8 900 → 12 900. Testovací lead (fitness.barna+kittest@…) ti jede sekvencí do inboxu — klidně nech doběhnout, ať vidíš všech 5 mailů.</li>
-        </ul>
+      <!-- Rozcestník sekcí. Klik otevře sbalenou sekci a odroluje na ni. -->
+      <div class="seknav" id="seknav"></div>
+
+      <details class="sek" id="sek-dnesek" open>
+        <summary>🩺 Dnešek <span class="sekpop">puls, rizikové zprávy, formuláře z webu</span><span class="sekinfo" id="info-dnesek"></span></summary>
+        <div class="sek-in">
+
+      <div class="traf" id="pulse" style="display:none;">
+        <h3>🩺 Dnešní puls</h3>
+        <div class="sub">Maily, fronta dripu, leadi a prodeje — živě z databáze</div>
+        <div id="pulseBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
       <div class="traf" id="aiflags" style="display:none;border-color:rgba(220,80,60,.45);">
@@ -152,45 +170,18 @@
         <div id="aiflagsBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
-      <div class="traf" id="pulse" style="display:none;">
-        <h3>🩺 Dnešní puls</h3>
-        <div class="sub">Maily, fronta dripu, leadi a prodeje — živě z databáze</div>
-        <div id="pulseBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
-      </div>
-
-      <div class="traf" id="queue" style="display:none;">
-        <h3>📬 Fronta mailů</h3>
-        <div class="sub" id="queueSub">Komu, co a kdy odejde — a tady to můžeš pozastavit nebo přeřadit</div>
-        <div id="queueBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
-      </div>
-
       <div class="traf" id="cmsg" style="display:none;">
         <h3>📨 Formuláře z webu</h3>
         <div class="sub" id="cmsgSub">Poptávky z kontaktního formuláře — relevantní vs. potenciální spam</div>
         <div id="cmsgBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
-      <div class="traf" id="qr" style="display:none;">
-        <h3>📮 Letáky (QR)</h3>
-        <div class="sub" id="qrSub">Kolik leadů přišlo z QR na letácích (podle zdroje)</div>
-        <div id="qrBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
-      </div>
+        </div>
+      </details>
 
-      <div class="traf" id="trf" style="display:none;">
-        <h3>🎯 Trenéři — trychtýř</h3>
-        <div class="sub" id="trfSub">Startovací kit → mailová sekvence → prodej Academy</div>
-        <div id="trfBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
-      </div>
-
-      <!-- Přehled appky Tvůj Coach. Zadal Martin 4. 8. 2026: „kromě Academy prodáváme
-           hodně i TC a je třeba ať mám přehled." Data si web tahá ze své appky přes
-           `academy-grant` (akce tc-overview), servisní klíč appky se na klienta nedostane.
-           ⚠️ Souhrnná čísla jsou BEZ Martinových testovacích účtů, ty se počítají zvlášť. -->
-      <div class="traf" id="tcp" style="display:none;border-color:rgba(101,168,58,.45);">
-        <h3>📱 Tvůj Coach: registrace a předplatná</h3>
-        <div class="sub" id="tcpSub">Souhrny jsou bez testovacích účtů, ty jsou vyčíslené zvlášť</div>
-        <div id="tcpBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
-      </div>
+      <details class="sek" id="sek-klienti" open>
+        <summary>🤝 Klienti koučinku <span class="sekpop">přehled, seznam, check-iny</span><span class="sekinfo" id="info-klienti"></span></summary>
+        <div class="sek-in">
 
       <!-- Přehled napříč klienty. Zadal Martin 3. 8. 2026: „nevidím kontext všech dat,
            musím otevírat každého zvlášť". Odpovídá na tři otázky naráz: kdo se hýbe,
@@ -232,6 +223,36 @@
         <div id="chkBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+        </div>
+      </details>
+
+      <details class="sek" id="sek-prodej" open>
+        <summary>💰 Prodej a produkty <span class="sekpop">appka, trenéři, letáky, odměny</span><span class="sekinfo" id="info-prodej"></span></summary>
+        <div class="sek-in">
+
+      <!-- Přehled appky Tvůj Coach. Zadal Martin 4. 8. 2026: „kromě Academy prodáváme
+           hodně i TC a je třeba ať mám přehled." Data si web tahá ze své appky přes
+           `academy-grant` (akce tc-overview), servisní klíč appky se na klienta nedostane.
+           ⚠️ Souhrnná čísla jsou BEZ Martinových testovacích účtů, ty se počítají zvlášť. -->
+      <div class="traf" id="tcp" style="display:none;border-color:rgba(101,168,58,.45);">
+        <h3>📱 Tvůj Coach: registrace a předplatná</h3>
+        <div class="sub" id="tcpSub">Souhrny jsou bez testovacích účtů, ty jsou vyčíslené zvlášť</div>
+        <div id="tcpBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+        <div style="margin:.8rem 0 .2rem;"><button class="mlogbtn" id="tcBtn">🎁 Log udělení přístupů do appky</button></div>
+      </div>
+
+      <div class="traf" id="trf" style="display:none;">
+        <h3>🎯 Trenéři — trychtýř</h3>
+        <div class="sub" id="trfSub">Startovací kit → mailová sekvence → prodej Academy</div>
+        <div id="trfBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+      <div class="traf" id="qr" style="display:none;">
+        <h3>📮 Letáky (QR)</h3>
+        <div class="sub" id="qrSub">Kolik leadů přišlo z QR na letácích (podle zdroje)</div>
+        <div id="qrBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
       <div class="traf" id="refs" style="display:none;">
         <h3>🤝 Referraly &amp; odměny</h3>
         <div class="sub" id="refsSub">Doporučení, schvalování odměn a evidence výplat</div>
@@ -244,17 +265,30 @@
         <div id="afilBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
-      <div class="traf" id="prog" style="display:none;">
-        <h3>📈 Progres klientů</h3>
-        <div class="sub" id="progSub">Kolik lekcí mají členové za sebou (videokurz / Academy)</div>
-        <div id="progBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+        </div>
+      </details>
+
+      <details class="sek" id="sek-mailing" open>
+        <summary>📬 Mailing <span class="sekpop">fronta, sekvence, odeslané</span><span class="sekinfo" id="info-mailing"></span></summary>
+        <div class="sek-in">
+
+      <div class="traf-links" style="margin:.6rem 0 .2rem;">
+        <a href="#" id="seqLink">🗺️ Sekvence &amp; šablony (mapa + editor mailů) →</a>
+        <a href="#" id="mlogLink">📧 Odeslané e-maily →</a>
       </div>
 
-      <div class="traf" id="traf" style="display:none;">
-        <h3>📊 Statistiky návštěvnosti</h3>
-        <div class="sub" id="trafSub">Google Analytics 4 · G-C3JC8G3FS0 · posledních 28 dní</div>
-        <div id="trafBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      <div class="traf" id="queue" style="display:none;">
+        <h3>📬 Fronta mailů</h3>
+        <div class="sub" id="queueSub">Komu, co a kdy odejde — a tady to můžeš pozastavit nebo přeřadit</div>
+        <div id="queueBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
+
+        </div>
+      </details>
+
+      <details class="sek" id="sek-kontakty" open>
+        <summary>👥 Kontakty a přístupy <span class="sekpop">udělení přístupu, hledání, tabulka</span><span class="sekinfo" id="info-kontakty"></span></summary>
+        <div class="sek-in">
 
       <div class="qg">
         <span class="lbl">Rychlé udělení přístupu:</span>
@@ -269,7 +303,8 @@
         <input type="search" id="q" placeholder="Hledat e-mail nebo jméno…" autocomplete="off">
         <select id="filt">
           <option value="">Všichni</option>
-          <option value="coaching">Coaching klienti</option>
+          <option value="coaching">Koučink: aktivní klienti</option>
+          <option value="coaching-ex">Koučink: bývalí klienti</option>
           <option value="videokurz">Má videokurz</option>
           <option value="academy">Má Academy</option>
           <option value="lead">Lead-magnet (bez koupě)</option>
@@ -279,7 +314,6 @@
         <span class="muted" id="count"></span>
         <button class="mlogbtn" id="seqBtn">🗺️ Sekvence &amp; šablony</button>
         <button class="mlogbtn" id="mlogBtn">📧 Odeslané e-maily</button>
-        <button class="mlogbtn" id="tcBtn">🎁 Tvůj Coach (app)</button>
       </div>
 
       <div style="overflow-x:auto;">
@@ -291,6 +325,51 @@
           <tbody id="rows"></tbody>
         </table>
       </div>
+
+        </div>
+      </details>
+
+      <details class="sek" id="sek-obsah">
+        <summary>📈 Progres a návštěvnost <span class="sekpop">lekce členů, GA4</span><span class="sekinfo" id="info-obsah"></span></summary>
+        <div class="sek-in">
+
+      <div class="traf" id="prog" style="display:none;">
+        <h3>📈 Progres klientů</h3>
+        <div class="sub" id="progSub">Kolik lekcí mají členové za sebou (videokurz / Academy)</div>
+        <div id="progBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+      <div class="traf" id="traf" style="display:none;">
+        <h3>📊 Statistiky návštěvnosti</h3>
+        <div class="sub" id="trafSub">Google Analytics 4 · G-C3JC8G3FS0 · posledních 28 dní</div>
+        <div id="trafBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
+
+        </div>
+      </details>
+
+      <details class="sek" id="sek-novinky">
+        <summary>🆕 Novinky &amp; co sledovat <span class="sekpop">ruční poznámky</span><span class="sekinfo" id="info-novinky"></span></summary>
+        <div class="sek-in">
+
+      <!-- ⚠️ Tuhle kartu píše ručně Claude, žádná data se do ní netahají. Datum poslední
+           úpravy je proto NATVRDO v `data-stari`; kdo kartu aktualizuje, MUSÍ ho přepsat,
+           jinak si admin dál myslí, že je karta čerstvá. Stáří se pod nadpisem dopočítá
+           samo, ať se nestane, že tu měsíce visí neplatné poznámky a nikde to nekřikne. -->
+      <div class="traf" id="news" data-stari="2026-07-10">
+        <h3>🆕 Novinky &amp; co sledovat <span class="muted" style="font-size:.75rem;font-weight:400;">(aktualizace 10. 7. 2026)</span></h3>
+        <div class="sub">Co je nově živé a na co koukat — kartu ti Claude průběžně aktualizuje</div>
+        <p id="newsStari" style="margin:.5rem 0 0;font-size:.84rem;"></p>
+        <ul style="margin:.5rem 0 .2rem;padding-left:1.2rem;line-height:1.75;font-size:.92rem;color:#e7e0d5;">
+          <li><b style="color:#F6CD63;">Trychtýř pro trenéry je živý:</b> reklamy → <a href="/pro-trenery/" target="_blank" rel="noopener" style="color:#F6CD63;">/pro-trenery/</a> (kit zdarma) → 5mailová sekvence „Kit pro trenéry" → nabídka Academy. Leady a prodeje sleduj níž v kartě <b>🎯 Trenéři — trychtýř</b>, maily v mapě sekvencí.</li>
+          <li><b style="color:#F6CD63;">FB kampaň „Academy – TOFU – Startovací kit pro trenéry" běží</b> (110 Kč/den): 4 reklamy soupeří (systém / nástroje / AI / certifikace), Meta přelévá rozpočet vítězi sama. Cena za lead je vodítko — <b>severka je cena za prodej Academy</b> (konverze uvidíš v kartě trychtýře).</li>
+          <li><b style="color:#F6CD63;">Nový obsah:</b> 3 blog články pro trenéry (kategorie „Pro trenéry"), srovnání kurz vs. systém + splátky 3× 3 000 Kč na /akademie/, modul 24 „AI pro trenéry" (13 lekcí + prompt knihovna) — Academy má 256 lekcí.</li>
+          <li>⏰ <b>Hlídat:</b> po 50. prodeji Academy zdražit 8 900 → 12 900. Testovací lead (fitness.barna+kittest@…) ti jede sekvencí do inboxu — klidně nech doběhnout, ať vidíš všech 5 mailů.</li>
+        </ul>
+      </div>
+
+        </div>
+      </details>
       <p class="foot" style="margin-top:1.6rem">Barna Academy — admin · data jen pro tebe · <span id="meta"></span></p>
     </div>
   </div>
@@ -368,7 +447,7 @@
   (function(){
     var FN='https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/admin-api';
     var $=function(id){return document.getElementById(id);};
-    var sb=null, token=null, ALL=[];
+    var sb=null, token=null, ALL=[], mojeEmail='';
     function show(id){ ['load','gate','app'].forEach(function(x){ $(x).style.display=(x===id?'':'none'); }); }
     function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on');},1600); }
     function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -376,7 +455,40 @@
     function czDatum(s){ var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(s||'')); return m ? (+m[3])+'. '+(+m[2])+'. '+m[1] : String(s||''); }
     function fmtDate(s){ if(!s) return '—'; var d=new Date(s); return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); }
     function fmtDay(s){ if(!s) return '—'; return new Date(s).toLocaleDateString('cs-CZ'); }
-    function api(payload){ return fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)}).then(function(r){ return r.json().then(function(j){return {status:r.status,j:j};}); }); }
+    // ⛔ OPRAVA 8. 8. 2026: `token` se nabíral JEDNOU při startu (`getSessionRetry`) a už se
+    // nikdy neaktualizoval. supabase-js si session na pozadí obnovuje (`autoRefreshToken`),
+    // ale admin dál posílal starý JWT. Access token platí hodinu, takže admin nechaný
+    // otevřený déle než hodinu vracel 403 na VŠECHNO: pozvání klienta, uložení šablony,
+    // ukončení koučinku i obyčejné překreslení karty. Navenek to vypadalo jako „ono to nešlo".
+    // Token se proto bere ze session před každým voláním a při 401/403 se jednou zkusí
+    // obnovit a požadavek se zopakuje. Teprve pak je 403 opravdu 403.
+    function cerstvyToken(){
+      if(!sb) return Promise.resolve(token);
+      return sb.auth.getSession().then(function(res){
+        var s=res&&res.data&&res.data.session;
+        if(s&&s.access_token) token=s.access_token;
+        return token;
+      }).catch(function(){ return token; });
+    }
+    // Odpověď bez platného JSON (proxy, výpadek) NESMÍ shodit celý řetěz na reject:
+    // karty by pak spadly do .catch a nerozliší se to od výpadku sítě. Vrací se {}.
+    function apiRaw(payload,tok,url){
+      return fetch(url||FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify(payload)})
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return {status:r.status,j:j}; }); });
+    }
+    function api(payload,url){
+      return cerstvyToken().then(function(tok){
+        return apiRaw(payload,tok,url).then(function(o){
+          if(o.status!==401&&o.status!==403) return o;
+          return sb.auth.refreshSession().then(function(r){
+            var s=r&&r.data&&r.data.session;
+            if(!s||!s.access_token||s.access_token===tok) return o;   // opravdu nemá přístup
+            token=s.access_token;
+            return apiRaw(payload,token,url);
+          }).catch(function(){ return o; });
+        });
+      });
+    }
     // Chyba načtení karty NESMÍ kartu tiše schovat (vypadala by jako neexistující) — ukaž hlášku.
     function cardFail(cardId,bodyId){ var c=$(cardId); if(c) c.style.display=''; var b=$(bodyId); if(b) b.innerHTML='<p class="muted" style="padding:.6rem 0;">⚠️ Nepodařilo se načíst (zkus obnovit stránku).</p>'; }
 
@@ -395,23 +507,81 @@
       sb.auth.getSession().then(function(res){
         var s=res&&res.data&&res.data.session;
         if(!s){ if(tries<6){ return setTimeout(function(){getSessionRetry(tries+1);},350); } location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'); return; }
-        token=s.access_token; load(true);
+        token=s.access_token; mojeEmail=(s.user&&s.user.email)||''; load();
       });
     }
-    function load(allowRefresh){
+    // ⛔ OPRAVA 8. 8. 2026: hláška „Tenhle účet nemá admin přístup" neřekla, KTERÝ účet
+    // je přihlášený, a nenabídla odhlášení. Martinovi 8. 8. zůstal v Chromu přihlášený
+    // testovací účet (fitness.barna+grokfin1@…) a admin vypadal jako rozbitý, protože
+    // z hlášky nešlo poznat, že stačí přepnout účet. Teď se e-mail vypíše a odhlášení
+    // je na jeden klik.
+    function gateNeniAdmin(){
+      show('gate');
+      $('gate').innerHTML='Tenhle účet nemá do adminu přístup.<br><br>'
+        +'Přihlášený jsi jako <b style="color:#F6CD63;">'+esc(mojeEmail||'neznámý účet')+'</b>.<br>'
+        +'<span class="muted" style="font-size:.88rem;">Admin funguje jen pod hlavním účtem. Odhlas se a přihlas tím správným.</span><br><br>'
+        +'<a href="#" id="gateOut">Odhlásit a přihlásit se jiným účtem</a><br><br>'
+        +'<a href="/akademie/moje/">Zpět na Academy</a>';
+      var g=$('gateOut');
+      if(g) g.addEventListener('click',function(e){
+        e.preventDefault();
+        sb.auth.signOut().then(function(){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'); });
+      });
+    }
+    function load(){
+      // api() si sám obnoví token a jednou zopakuje požadavek, takže 403, které dorazí sem,
+      // už je opravdové „tenhle účet není admin", ne vypršelý token.
       Promise.all([api({action:'stats'}),api({action:'overview'})]).then(function(out){
         var st=out[0], ov=out[1];
-        if(st.status===403||ov.status===403){
-          if(allowRefresh){ return sb.auth.refreshSession().then(function(r){ var s=r&&r.data&&r.data.session; if(s&&s.access_token){ token=s.access_token; } load(false); }).catch(function(){ load(false); }); }
-          show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return;
-        }
+        if(st.status===401||st.status===403||ov.status===401||ov.status===403){ gateNeniAdmin(); return; }
         if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadTcPrehled();
+        renderStats(st.j); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadTcPrehled();
+        sekInfo('kontakty',ALL.length+' kontaktů');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
+    }
+
+    // ---------- SEKCE: rozcestník, zapamatovaný stav, souhrn v nadpisu ----------
+    // Karty jsou beze změny, sekce je jen obal. Sbalený stav se pamatuje v localStorage,
+    // ať Martin nemusí po každém obnovení zavírat totéž.
+    var SEKCE=[['dnesek','🩺 Dnešek'],['klienti','🤝 Klienti'],['prodej','💰 Prodej'],
+               ['mailing','📬 Mailing'],['kontakty','👥 Kontakty'],['obsah','📈 Progres'],['novinky','🆕 Novinky']];
+    // Souhrn do hlavičky sekce, ať je stav vidět i když je sekce sbalená.
+    function sekInfo(id,text){ var el=$('info-'+id); if(el) el.textContent=text||''; }
+    // Stáří ručně psané karty Novinky. Bez tohohle na ní můžou měsíce viset neplatné
+    // poznámky (8. 8. 2026 tam byly 4 týdny staré) a nic to neřekne.
+    function newsStari(){
+      var c=$('news'), p=$('newsStari'); if(!c||!p) return;
+      var d=Date.parse((c.getAttribute('data-stari')||'')+'T12:00:00');
+      if(isNaN(d)){ sekInfo('novinky','bez data'); return; }
+      var dni=Math.floor((Date.now()-d)/86400000);
+      var stara=dni>21;
+      p.innerHTML=stara
+        ? '<span style="color:#F6CD63;">⚠️ Tahle karta je ruční a nikdo ji '+dni+' dní neaktualizoval. Ber ji jako poznámku k datu, ne jako aktuální stav.</span>'
+        : '<span class="muted">Naposledy aktualizováno před '+dni+' dny.</span>';
+      sekInfo('novinky',(stara?'⚠️ ':'')+'ruční poznámky, '+dni+' dní staré');
+    }
+    function initSekce(){
+      newsStari();
+      var nav=$('seknav'); if(!nav) return;
+      nav.innerHTML=SEKCE.map(function(s){ return '<a href="#" data-sek="'+s[0]+'">'+esc(s[1])+'</a>'; }).join('');
+      Array.prototype.forEach.call(nav.querySelectorAll('[data-sek]'),function(a){
+        a.addEventListener('click',function(e){
+          e.preventDefault();
+          var d=$('sek-'+a.getAttribute('data-sek')); if(!d) return;
+          d.open=true; d.scrollIntoView({behavior:'smooth',block:'start'});
+        });
+      });
+      SEKCE.forEach(function(s){
+        var d=$('sek-'+s[0]); if(!d) return;
+        var ulozeno=null;
+        try{ ulozeno=localStorage.getItem('ba_admin_sek_'+s[0]); }catch(e){}
+        if(ulozeno==='1') d.open=true; else if(ulozeno==='0') d.open=false;
+        d.addEventListener('toggle',function(){ try{ localStorage.setItem('ba_admin_sek_'+s[0], d.open?'1':'0'); }catch(e){} });
+      });
     }
     boot();
 
@@ -484,7 +654,7 @@
           $('tcpBody').innerHTML = '<p class="muted" style="padding:.6rem 0;">⚠️ Nepodařilo se zeptat appky'
             + (d && d.chyba ? ' <span style="font-size:.85rem;">(' + esc(String(d.chyba)) + ')</span>' : '')
             + '. Čísla schválně nezobrazuju, aby to nevypadalo jako nula registrací.</p>';
-          $('tcp').style.display = ''; return;
+          $('tcp').style.display = ''; sekInfo('prodej','appka neodpověděla'); return;
         }
         var r = d.registrace || {}, pp = d.predplatna || [], po = d.posledni || [];
         // ⚠️ Rozpad po tierech se drží ZVLÁŠŤ pro každý stav. Kdyby se sčítal dohromady,
@@ -548,7 +718,8 @@
         }
         $('tcpBody').innerHTML = h;
         $('tcp').style.display = '';
-      }).catch(function(){ cardFail('tcp','tcpBody'); });
+        sekInfo('prodej', (r.celkem != null ? r.celkem + ' registrací v appce' : 'appka: bez čísel') + ' · ' + aktivni + ' aktivních předplatných');
+      }).catch(function(){ cardFail('tcp','tcpBody'); sekInfo('prodej','appka neodpověděla'); });
     }
 
     // ---------- 📊 PŘEHLED KLIENTŮ ----------
@@ -585,7 +756,7 @@
       var d = PREH.data; if(!d) return;
       // ukončení klienti do přehledu nepatří, ti už reportovat nemají
       var rows = (d.rows || []).filter(function(r){ return r.active !== false; });
-      if(!rows.length){ $('prehledBody').innerHTML = '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti.</p>'; $('prehled').style.display=''; return; }
+      if(!rows.length){ $('prehledBody').innerHTML = '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti.</p>'; $('prehled').style.display=''; sekInfo('klienti','žádní aktivní klienti'); return; }
 
       // Řadicí klíče. ⚠️ Každý musí mít SVOU hlavičku ve `sl` níž, jinak je nedosažitelný:
       // klíč `odch` tu chvíli byl bez sloupce a řazení „kdo je od zadání nejdál" tím
@@ -614,6 +785,7 @@
       var mlci = rows.filter(function(r){ return r.dni_od_reportu == null || r.dni_od_reportu >= PR_DNI_KRIT; });
       var daleko = rows.filter(function(r){ var x = prNejvetsiOdch(r); return x != null && x >= PR_ODCH_KRIT; });
       var bezZadani = rows.filter(function(r){ return !r.ma_zadani; });
+      sekInfo('klienti', rows.length+' aktivních'+(mlci.length?' · ⚠️ '+mlci.length+' bez reportu '+PR_DNI_KRIT+'+ dní':''));
       var shrn = [];
       if(mlci.length) shrn.push('<b style="color:#ff9b9b">' + mlci.length + '×</b> bez reportu ' + PR_DNI_KRIT + '+ dní');
       if(daleko.length) shrn.push('<b style="color:#F6CD63">' + daleko.length + '×</b> od zadání o víc než ' + PR_ODCH_KRIT + ' %');
@@ -734,7 +906,11 @@
       }).catch(function(){ cardFail('kli','kliBody'); });
     }
     function loadSharedDocs(){
+      // ⛔ OPRAVA 8. 8. 2026: řetěz neměl .catch() ani větev pro neúspěšnou odpověď, takže
+      // při chybě zůstal řádek prázdný a vypadalo to jako „žádné sdílené dokumenty".
+      // Prázdno a porucha se nesmí tvářit stejně.
       api({action:'client_docs_shared'}).then(function(o){
+        if(!o.j||!o.j.ok){ $('kiSharedList').textContent='Sdílené: nepodařilo se načíst'; return; }
         var docs=(o.j&&o.j.docs)||[];
         $('kiSharedList').innerHTML = docs.length
           ? 'Sdílené: '+docs.map(function(d){ return esc(d.name)+' <a href="#" data-kdel="'+esc(d.path)+'" style="color:#ff6b6b;text-decoration:none;">✕</a>'; }).join(' · ')
@@ -1185,10 +1361,11 @@
         .then(function(r){
           var card=$('aiflags'), el=$('aiflagsBody'); if(!card||!el) return;
           card.style.display='';
-          if(r.error){ el.innerHTML='<p class="muted" style="padding:.6rem 0;">⚠️ Nepodařilo se načíst: '+esc(r.error.message)+'</p>'; return; }
+          if(r.error){ el.innerHTML='<p class="muted" style="padding:.6rem 0;">⚠️ Nepodařilo se načíst: '+esc(r.error.message)+'</p>'; FLAG_SOUHRN='rizika se nenačetla'; dnesekInfo(); return; }
           var rows=r.data||[];
-          if(!rows.length){ el.innerHTML='<p class="muted" style="padding:.6rem 0;">✅ Zatím žádný flag. Systém běží: jakmile AI zachytí rizikovou zprávu, objeví se tady a přijde ti mail.</p>'; return; }
+          if(!rows.length){ el.innerHTML='<p class="muted" style="padding:.6rem 0;">✅ Zatím žádný flag. Systém běží: jakmile AI zachytí rizikovou zprávu, objeví se tady a přijde ti mail.</p>'; FLAG_SOUHRN='0 rizikových zpráv'; dnesekInfo(); return; }
           var open=rows.filter(function(f){return f.status!=='resolved';});
+          FLAG_SOUHRN=open.length?('⚠️ '+open.length+' nevyřízených rizik'):'0 nevyřízených rizik'; dnesekInfo();
           var done=rows.filter(function(f){return f.status==='resolved';}).slice(0,15);
           open.sort(function(a,b){ return ((b.hard_stop?1:0)-(a.hard_stop?1:0)) || String(b.created_at).localeCompare(String(a.created_at)); });
           function radek(f){
@@ -1209,16 +1386,22 @@
                 .then(function(rr){ if(rr.error){ b.disabled=false; toast('Nepovedlo se: '+rr.error.message); } else { toast('Označeno jako vyřešené'); loadAiFlags(); } });
             });
           });
-        });
+        })
+        // ⛔ OPRAVA 8. 8. 2026: tenhle řetěz neměl .catch(). Při výpadku sítě se promise
+        // odmítla, karta zůstala SKRYTÁ a v konzoli visel unhandled rejection. Rizikové
+        // zprávy jsou to poslední, co smí zmizet potichu.
+        .catch(function(err){ cardFail('aiflags','aiflagsBody'); FLAG_SOUHRN='rizika se nenačetla'; dnesekInfo(); });
     }
 
     // 🩺 Dnešní puls — admin-pulse edge funkce (maily/fronta/leadi/prodeje/affiliate)
+    // ⚠️ Jde přes společné `api()`, aby i tahle karta dostala čerstvý token. Dřív si
+    // brala `token` napřímo a po hodině otevřeného adminu tiše vracela 403.
     function loadPulse(){
       var PULSE_FN = FN.replace('admin-api','admin-pulse');
-      fetch(PULSE_FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:'{}'})
-        .then(function(r){ return r.json(); })
-        .then(function(p){
-          if(!p||!p.ok){ cardFail('pulse','pulseBody'); return; }
+      api({},PULSE_FN)
+        .then(function(o){
+          var p=o.j;
+          if(!p||!p.ok){ cardFail('pulse','pulseBody'); sekInfo('dnesek','puls se nenačetl'); return; }
           var e=p.emails_today, q=p.queue, s=p.sales, rf=p.referral, wd=p.withdrawals||{pending:0};
           var capW = e.sent >= e.daily_cap ? ' style="color:#F6CD63"' : '';
           var err429 = e.resend429 ? '<div class="s"><b style="color:#ff6b6b">'+e.resend429+'</b><span>Resend 429 dnes ⚠️</span></div>' : '';
@@ -1245,8 +1428,15 @@
             ' · Follow-upy: '+(q.followups_enabled?'<b style="color:#7bd88f">zapnuté</b>':'<b style="color:#ff6b6b">vypnuté</b>')+
             (e.last_error?' · Poslední chyba: <span style="color:#F6CD63">'+esc(e.last_error)+'</span>':'')+'</p>';
           $('pulse').style.display='';
-        }).catch(function(){ cardFail('pulse','pulseBody'); });
+          PULS_SOUHRN=e.sent+' mailů dnes · '+q.due_now+' ve frontě'+(wd.pending?' · ⚠️ '+wd.pending+' odstoupení':'');
+          dnesekInfo();
+        }).catch(function(){ cardFail('pulse','pulseBody'); PULS_SOUHRN='puls se nenačetl'; dnesekInfo(); });
     }
+    // Hlavička sekce Dnešek skládá dva nezávislé zdroje (puls a rizikové zprávy), které
+    // dobíhají každý svým tempem. Drží se proto zvlášť a spojují se až při vykreslení,
+    // jinak by pomalejší z nich přepsal to, co už napsal ten rychlejší.
+    var PULS_SOUHRN='', FLAG_SOUHRN='';
+    function dnesekInfo(){ sekInfo('dnesek',[FLAG_SOUHRN,PULS_SOUHRN].filter(Boolean).join(' · ')); }
 
     // 📬 Fronta mailů — email_scheduled (kdo/co/kdy) + per-lead akce pauza/obnovit/přeřadit
     var TRACKS=[]; // sekvence z email_templates (pro dropdown přeřazení)
@@ -1296,6 +1486,7 @@
         if(!rows.length&&QS.offset>0&&QS.total>0){ QS.offset=Math.max(0,Math.floor((QS.total-1)/QS.limit)*QS.limit); return loadQueue(); }
         var overdue=rows.filter(function(r){return r.overdue;}).length;
         $('queueSub').textContent='Naplánováno: '+QS.total+(overdue?' · ⚠️ po termínu na stránce (odejde nejbližším cronem): '+overdue:'')+' · komu, co a kdy odejde — a tady to zastavíš nebo přeřadíš';
+        sekInfo('mailing',QS.total+' mailů naplánováno');
         var trs=rows.map(function(r){
           var when=r.overdue?'<span style="color:#F6CD63;">'+fmtDate(r.next_send_at)+' ⚠️</span>':fmtDate(r.next_send_at);
           return '<tr><td style="white-space:nowrap;" class="muted">'+when+'</td>'
@@ -1332,7 +1523,14 @@
         var qp=$('qPrev'); if(qp) qp.addEventListener('click',function(){ if(QS.offset>0){ QS.offset=Math.max(0,QS.offset-QS.limit); loadQueue(); } });
         var qn=$('qNext'); if(qn) qn.addEventListener('click',function(){ if(QS.offset+QS.limit<QS.total){ QS.offset+=QS.limit; loadQueue(); } });
         $('queue').style.display='';
-      }).catch(function(){ var qt2=$('qTable'); if(qt2) qt2.innerHTML='<p class="muted">Chyba spojení — zkus obnovit.</p>'; });
+      // ⛔ OPRAVA 8. 8. 2026: tahle větev psala hlášku do `qTable`, ale kartu `#queue`
+      // NEZOBRAZILA (ta startuje s display:none). Při výpadku spojení proto fronta mailů
+      // z adminu beze stopy zmizela, místo aby řekla, že se nenačetla.
+      }).catch(function(){
+        var qt2=$('qTable'); if(qt2) qt2.innerHTML='<p class="muted" style="padding:.6rem 0;">⚠️ Chyba spojení, frontu se nepodařilo načíst. Zkus obnovit stránku.</p>';
+        var qc=$('queue'); if(qc) qc.style.display='';
+        sekInfo('mailing','fronta se nenačetla');
+      });
     }
 
     // 📮 Letáky (QR) — kolik leadů přišlo z QR letáků (utm_source přes /start passthrough)
@@ -1585,6 +1783,7 @@
             +'<td style="padding:7px 10px;font-size:.82rem;white-space:nowrap;">'+badge+'</td></tr>';
         }).join('');
         $('progSub').textContent='Členů: '+rows.length+' · 🔥 aktivní 7 dní: '+akt7+' · 💤 spí 14+ dní: '+spici+' · nezačali: '+nezacali;
+        sekInfo('obsah',rows.length+' členů · '+akt7+' aktivních tento týden');
         $('progBody').innerHTML='<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">'
           +'<thead><tr style="text-align:left;color:#8a7e6d;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;">'
           +'<th style="padding:7px 10px;">E-mail</th><th style="padding:7px 10px;">Videokurz /'+p.vk_total+'</th><th style="padding:7px 10px;">Academy /'+p.ac_total+'</th><th style="padding:7px 10px;">Aktivita</th></tr></thead>'
@@ -1595,13 +1794,19 @@
 
     function renderStats(s){
       // třetí prvek = na co karta filtruje (prázdné = Všichni; '@maillog' = otevře e-mail log)
-      var items=[['Kontaktů',s.contacts,''],['Leadů celkem',(s.leads_total!=null?s.leads_total:'—'),''],['Academy',s.academy,'academy'],['Videokurz',s.videokurz,'videokurz'],['Coaching',s.coaching,'coaching'],['Registrovaní',s.registered,'registered'],['Mailů odesláno',s.sent_total,'@maillog']];
+      // ⚠️ „Koučink" je od 8. 8. 2026 počet AKTIVNÍCH nároků, ne značek. Dřív tu stálo 39,
+      // protože se sčítali i bývalí klienti a kontakty se zastaralou značkou; skutečných
+      // klientů bylo 13. Bývalí mají vlastní dlaždici, ať se to číslo neztratí.
+      var items=[['Kontaktů',s.contacts,''],['Leadů celkem',(s.leads_total!=null?s.leads_total:'—'),''],['Academy',s.academy,'academy'],['Videokurz',s.videokurz,'videokurz'],['Koučink',s.coaching,'coaching'],['Koučink bývalí',(s.coaching_ex!=null?s.coaching_ex:'—'),'coaching-ex'],['Registrovaní',s.registered,'registered'],['Mailů odesláno',s.sent_total,'@maillog']];
       $('stats').innerHTML=items.map(function(i){return '<div class="s" data-filt="'+i[2]+'"><b>'+i[1]+'</b><span>'+i[0]+'</span></div>';}).join('');
       Array.prototype.forEach.call($('stats').querySelectorAll('.s'),function(c){
         c.addEventListener('click',function(){
           var f=c.getAttribute('data-filt');
           if(f==='@maillog'){ openMailLog(); return; }
           $('filt').value=f; renderRows(); syncStatCards();
+          // ⚠️ Tabulka je nově v sekci, která může být sbalená. Bez tohohle by klik na
+          // dlaždici filtr nastavil, ale nebylo by kam odrolovat a vypadalo by to mrtvě.
+          var sk=$('sek-kontakty'); if(sk) sk.open=true;
           var tb=document.querySelector('.toolbar'); if(tb) tb.scrollIntoView({behavior:'smooth',block:'center'});
         });
       });
@@ -1663,7 +1868,12 @@
         '<p class="traf-note">GA4 už na webu běží a sbírá data (návštěvnost, doba na webu, zařízení, země). Aby čísla — včetně <b>% muži/ženy a věk</b> — naskákala rovnou sem do adminu, chybí dvě jednorázové věci: zapnout <b>Google Signals</b> v GA4 (kvůli demografii) a vytvořit <b>service account</b> pro GA4 Data API. Pak se to napojí a tenhle box se sám naplní živými čísly.</p>';
     }
     function passFilter(r,f){
-      if(f==='coaching') return (r.tags||[]).some(function(t){return String(t).indexOf('coaching')===0;});
+      // ⛔ OPRAVA 8. 8. 2026: filtr „Coaching klienti" bral každou značku začínající na
+      // „coaching", tedy i `coaching-ex`. Bývalí klienti se tak ukazovali jako aktivní.
+      // Aktivní se teď poznají podle NÁROKU (`has_coaching` z entitlements), což je totéž,
+      // z čeho žije karta „Klienti koučinku"; bývalí mají vlastní volbu.
+      if(f==='coaching') return !!r.has_coaching;
+      if(f==='coaching-ex') return !r.has_coaching && (r.tags||[]).some(function(t){return String(t)==='coaching-ex';});
       if(f==='videokurz') return r.has_videokurz;
       if(f==='academy') return r.has_academy;
       if(f==='lead') return !r.has_academy&&!r.has_videokurz;
@@ -1825,7 +2035,27 @@
       'longtail-trener':'Dlouhodobá péče: trenéři',
       'longtail-kupci':'Dlouhodobá péče: kupci videokurzu',
       'nurture-pro-vas':'Nurture Academy (/pro-vas)',
-      'reaktivace-kviz':'Reaktivace kvízem (start ~září)'
+      'reaktivace-kviz':'Reaktivace kvízem (start ~září)',
+      // ⛔ DOPLNĚNO 8. 8. 2026. Změřeno proti `email_templates`: v DB je 37 sekvencí,
+      // tenhle seznam jich znal 23. Zbylých 15 se v adminu ukazovalo INTERNÍM KÓDEM
+      // (ve frontě mailů, v logu odeslaných, v mapě sekvencí i v detailu kontaktu),
+      // včetně živých tratí appky `tc-free` a `tc-magnet`. Názvy jsou odvozené
+      // z předmětu prvního mailu a z kódu, který lead na trať zakládá, nic vymyšleného.
+      'blast-academy-mesicni':'Rozesílka: Academy měsíčně',
+      'blast-omluva-dzin':'Rozesílka: omluva za nefunkční odkazy',
+      'blast-vk-resend':'Rozesílka: správný odkaz na videokurz',
+      'evergreen-consumer':'Evergreen: veřejnost',
+      'nahled-vraceni':'Náhledová trať (nikomu se neposílá)',
+      'onboarding-nakup-academy-mesicni':'Po nákupu: Academy měsíčně',
+      'onboarding-nakup-balicek':'Po nákupu: balíček receptů',
+      'onboarding-nakup-konzultace':'Po nákupu: konzultace',
+      'onboarding-nakup-tvujcoach':'Po nákupu: Tvůj Coach (appka)',
+      'rozlouceni-refund-dojezd':'Po vrácení peněz (přístup dojede)',
+      'rozlouceni-refund-hned':'Po vrácení peněz (konec hned)',
+      'tc-free':'Tvůj Coach: verze zdarma',
+      'tc-magnet':'Tvůj Coach: jídelníček na 7 dní',
+      'tc-trial-nabidka':'Tvůj Coach: nabídka zkušebky',
+      'tydenik':'Týdeník'
     };
     function trackName(t){ return TRACK_NAMES[t]||t||'—'; }
     var mlogAll=[];
@@ -1952,7 +2182,19 @@
       'longtail-trener':'Vstup: dojetý trener-kit bez koupě · 6 mailů à 30 dní · ⛔ stop při koupi Academy',
       'longtail-kupci':'Vstup: dojetý onboarding-videokurz (kupci) · 6 mailů à 21 dní · ⛔ stop při koupi Academy',
       'nurture-pro-vas':'Vstup: formulář na /pro-vas/ (B2C ochutnávka Academy) · ⛔ stop při koupi',
-      'reaktivace-kviz':'Ruční reaktivace spících leadů kvízem, 1 mail (připraveno, launch ~září)'
+      'reaktivace-kviz':'Ruční reaktivace spících leadů kvízem, 1 mail (připraveno, launch ~září)',
+      // Doplněno 8. 8. 2026 podle kódu, který lead na trať zakládá (dohledáno v edge
+      // funkcích, ne odhadnuto). Kde vstup dohledat nešlo, zůstává prázdno schválně:
+      // vymyšlený popis je horší než žádný.
+      'tc-magnet':'Vstup: reklamní provoz na jídelníčkový magnet (lead-capture, série B)',
+      'tc-free':'Vstup: registrace v appce Tvůj Coach (app-onboarding-hook)',
+      'onboarding-nakup-tvujcoach':'Vstup: zaplacené předplatné appky Tvůj Coach (app-onboarding-hook)',
+      'onboarding-nakup-academy-mesicni':'Vstup: zaplacená měsíční Academy (Stripe webhook)',
+      'onboarding-nakup-balicek':'Vstup: zaplacený balíček receptů (Stripe webhook)',
+      'onboarding-nakup-konzultace':'Vstup: zaplacená konzultace (Stripe webhook)',
+      'rozlouceni-refund-hned':'Vstup: vrácení peněz, přístup končí hned (Stripe / SimpleShop webhook)',
+      'rozlouceni-refund-dojezd':'Vstup: vrácení peněz, přístup dojede do konce období (Stripe webhook)',
+      'tydenik':'Obsahový týdeník · ⛔ nestopuje se nikomu, chodí i kupcům'
     };
     var TPLS=[], TPL_ONTRACK={};
     function openSeqMap(){
@@ -2099,6 +2341,7 @@
     $('seqmap').addEventListener('click',function(e){ if(e.target===$('seqmap')) $('seqmap').classList.remove('on'); });
 
     var _ml=$('mlogBtn'); if(_ml) _ml.addEventListener('click',openMailLog);
+    var _mll=$('mlogLink'); if(_mll) _mll.addEventListener('click',function(e){ e.preventDefault(); openMailLog(); });
     var _mlx=$('mlogX'); if(_mlx) _mlx.addEventListener('click',function(){ $('mlog').classList.remove('on'); });
     var _tc=$('tcBtn'); if(_tc) _tc.addEventListener('click',openTcLog);
     var _tcx=$('tclogX'); if(_tcx) _tcx.addEventListener('click',function(){ $('tclog').classList.remove('on'); });
