@@ -827,7 +827,22 @@ Deno.serve(async (req) => {
         .order("k_vyplate", { ascending: false });
       if (error) return json({ error: error.message }, 500);
       const rows = (data ?? []).map((r) => ({ ...r, owner_email: low(r.owner_email) }));
-      return json({ ok: true, partneri: rows });
+      // ⭐ DOPLNENO 8. 8. 2026: souhrn KODU, aby prazdny stav karty umel rict, PROC je prazdny.
+      // View filtruje na `partner_type='affiliate'`, takze kdyz existuji jen clenske kody,
+      // vraci nula radku a admin dosud napsal jen „zatim zadna partnerka". Martin z toho
+      // nepoznal, jestli se ceka na partnera, nebo je neco rozbite.
+      // ⛔ Cisla se POCITAJI, nepisou se do textu natvrdo: hardcoded „2 kody" by zestaralo
+      // pri prvnim dalsim kodu a nikde by to nekriklo.
+      const { data: kodyRaw } = await admin.from("referral_codes").select("partner_type,rate_monthly,rate_oneoff");
+      const kody = { celkem: 0, affiliate: 0, member: 0, affiliate_bez_sazeb: 0 };
+      for (const k of kodyRaw ?? []) {
+        kody.celkem++;
+        if (String(k.partner_type ?? "") === "affiliate") {
+          kody.affiliate++;
+          if (k.rate_monthly == null && k.rate_oneoff == null) kody.affiliate_bez_sazeb++;
+        } else kody.member++;
+      }
+      return json({ ok: true, partneri: rows, kody });
     }
 
     if (action === "referral_set_status") {

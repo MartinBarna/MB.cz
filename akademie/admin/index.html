@@ -1796,9 +1796,30 @@
         var ps=o.j.partneri||[];
         var kVyplate=ps.reduce(function(s,p){ return s+(Number(p.k_vyplate)||0); },0);
         var ceka=ps.reduce(function(s,p){ return s+(Number(p.provize_pending)||0); },0);
-        $('afilSub').textContent='Partnerek: '+ps.length+' · k výplatě celkem: '+kVyplate+' Kč · čeká na potvrzení: '+ceka+' Kč';
+        // Tři nuly vedle sebe nic neřeknou, u prázdného stavu se proto podnadpis mění.
+        $('afilSub').textContent = ps.length
+          ? 'Partnerek: '+ps.length+' · k výplatě celkem: '+kVyplate+' Kč · čeká na potvrzení: '+ceka+' Kč'
+          : 'Affiliate program běží, ale zatím bez partnerek';
         if(!ps.length){
-          $('afilBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádná partnerka s affiliate kódem. Jakmile nějaká přivede zákazníka, objeví se tady i s částkou k výplatě.</p>';
+          // ⭐ 8. 8. 2026: prázdný stav musí říct PROČ je prázdný. Dřív tu stálo jen „zatím
+          // žádná partnerka" a z toho Martin nepoznal, jestli se čeká na partnera, nebo je
+          // něco rozbité. Počty kódů chodí ze serveru, do textu se NEPÍŠOU natvrdo.
+          // ⚠️ Kandidáti na kódy jsou i v kartě „Aktuální stav". Kdo je tam mění, ať mrkne i sem.
+          var k=o.j.kody;
+          var kodu=function(n){ return n+(n===1?' kód':(n>=2&&n<=4?' kódy':' kódů')); };
+          var proc='';
+          if(k){
+            if(!k.celkem) proc='V systému zatím není žádný doporučovací kód.';
+            else if(!k.affiliate) proc='V systému '+(k.celkem===1?'je':'jsou')+' '+kodu(k.celkem)+', ale '+(k.celkem===1?'ten je':(k.celkem===2?'oba jsou':'všechny jsou'))+' typu člen, a ty do výplat partnerkám nepatří. Affiliate kód zatím žádný.';
+            else if(k.affiliate_bez_sazeb) proc=kodu(k.affiliate)+' typu affiliate už '+(k.affiliate===1?'existuje':'existují')+', ale bez vyplněných sazeb, takže se z '+(k.affiliate===1?'něj':'nich')+' nedá počítat provize.';
+            else proc=kodu(k.affiliate)+' typu affiliate '+(k.affiliate===1?'existuje':'existují')+', jen zatím '+(k.affiliate===1?'nepřivedl':'nepřivedly')+' zákazníka.';
+          }
+          $('afilBody').innerHTML='<p class="muted" style="padding:.6rem 0;line-height:1.65;">'
+            +'<b style="color:#F6CD63;">Zatím není co vyplácet.</b><br>'
+            +(proc?esc(proc)+'<br>':'')
+            +'Karta se naplní sama, jakmile vznikne kód s typem affiliate a vyplněnými sazbami. '
+            +'Čeká se na pokyn „jedem" od partnerů, kandidáti jsou THAIBOX10, OBOCZKO10 a JIRKA10.'
+            +'</p>';
           $('afil').style.display=''; return;
         }
         var trs=ps.map(function(p){
