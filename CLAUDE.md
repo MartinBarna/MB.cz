@@ -234,6 +234,42 @@ zatímco `longtail-consumer` měl 12 hotových mailů a **dva lidi uvnitř**.
 - Detail, čísla a proč to nejde řešit checklistem: paměť
   `feedback-mailing-serie-musi-mit-vystup` a `mb-drip-engine`.
 
+## ⛔ STANDING RULE: číslo v adminu ověř DOTAZEM, ne přečtením popisku (8. 8. 2026)
+
+Při revizi `akademie/admin/index.html` se ukázalo, že **čtyři různá čísla měřila něco jiného,
+než tvrdil jejich popisek**. Nic nespadlo, všechno se poctivě vykreslilo a bylo to nepravdivé:
+
+| Popisek | Co to počítalo | Pravda |
+|---|---|---|
+| „Leadů z letáků celkem: 293" | všechny `utm_source` | 1 z letáku, 292 z reklam |
+| dlaždice „Coaching 39" | značky `coaching*` včetně `coaching-ex` | 13 aktivních nároků |
+| „Aktivní předplatné 7 · VIP (499 Kč)" | kdokoli má přístup | 0 platících přes Stripe |
+| „zatím 0 – nechodí?" | posledních 2000 událostí | 1108 odeslaných celkem |
+
+**Proč to vzniká:** popisek se napíše ve chvíli, kdy dotaz opravdu dělá, co říká. Pak přibude
+reklama s `utm`, značka `coaching-ex`, přístup zdarma k Academy nebo naroste log přes strop.
+**Dotaz se nezmění a popisek taky ne, jenom už spolu nesouvisí.** A nikde to nekřikne.
+
+- **Než uvěříš číslu v adminu, polož si vedle něj `select` na tutéž otázku.** Všechny čtyři
+  případy byly z kódu neviditelné a z porovnání s DB okamžitě zřejmé.
+- **Pozor hlavně na:** filtr podle prefixu (`indexOf('coaching')===0` chytne i `coaching-ex`),
+  chybějící filtr, useknuté okno (`limit 2000`) vydávané za celek, a **„má přístup" vydávané
+  za „platí"**. `subscriptions.source` na to nestačí: `grant_app_access` do něj ukládá natvrdo
+  `'academy'` bez ohledu na volajícího, takže platícího pozná jen `stripe_subscription_id`.
+- **Jedno takové číslo je vzorek, ne výjimka.** Když jedno najdeš, projdi všechna na té obrazovce.
+- Detail a obecné pravidlo: paměť `feedback-cislo-meri-neco-jineho-nez-tvrdi-popisek`
+  a `mb-admin-revize-2026-08-08`.
+
+## ⛔ STANDING RULE: v adminu ber token ze session PŘED KAŽDÝM voláním (8. 8. 2026)
+
+`akademie/admin/index.html` si opsal `access_token` jednou při startu a už ho neaktualizoval.
+supabase-js si session na pozadí obnovuje, stránka ale dál posílala hodinu starý JWT.
+⇒ **Admin nechaný otevřený déle než hodinu vracel 403 na všechno**, včetně pozvání klienta
+a uložení šablony. Obnovení stránky to spravilo, takže to vypadalo náhodně.
+Opraveno v `api()`: token ze session před každým voláním + jedno zopakování při 401/403.
+**Kdo sem přidá nové volání API, MUSÍ ho vést přes `api()`, ne přes vlastní `fetch` s `token`.**
+Detail: paměť `feedback-token-nabrany-jednou-zestarne`.
+
 ## ⛔ STANDING RULE: jak číst `email_events` (jinak z nich vyjde OPAČNÝ závěr)
 
 Měření otevření a kliků běží od 22. 7. 2026. **Tři pasti, na které se naletělo hned první den**
