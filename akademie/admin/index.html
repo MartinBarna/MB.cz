@@ -2142,18 +2142,20 @@
     }
     function renderMailSummary(){
       var by={}, zCeleHistorie=!!mlogSouhrn;
+      var BEZ_TRATE='—';   // událost bez trati; jediný výskyt, ať se placeholder nerozejde
+      var kbelik=function(r){ var t=r.track||BEZ_TRATE; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0}; return by[t]; };
       MLOG_TRACKS.forEach(function(t){ by[t]={sent:0,err:0,test:0,tot:0}; });
       if(zCeleHistorie){
         mlogSouhrn.forEach(function(r){
-          var t=r.track||'—'; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0};
-          by[t].sent=Number(r.sent)||0; by[t].err=Number(r.error)||0; by[t].test=Number(r.test)||0;
-          by[t].tot=by[t].sent+by[t].err+by[t].test;
+          var b=kbelik(r);
+          b.sent=Number(r.sent)||0; b.err=Number(r.error)||0; b.test=Number(r.test)||0;
+          b.tot=b.sent+b.err+b.test;
         });
       } else {
         mlogAll.forEach(function(r){
-          var t=r.track||'—'; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0};
-          by[t].tot++;
-          if(r.type==='sent') by[t].sent++; else if(r.type==='error') by[t].err++; else if(r.type==='test') by[t].test++;
+          var b=kbelik(r);
+          b.tot++;
+          if(r.type==='sent') b.sent++; else if(r.type==='error') b.err++; else if(r.type==='test') b.test++;
         });
       }
       var cur=($('mlogTrack').value||'');
