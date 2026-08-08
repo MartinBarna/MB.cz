@@ -14,7 +14,13 @@
   div[style*="overflow-x:auto"]{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
   .wrap{max-width:1200px;}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px;margin:1.4rem 0}
-  .stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 12px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+  /* ⛔ OPRAVA 8. 8. 2026 (mobil 375 px): dlaždice je položka gridu a ta má implicitně
+     `min-width:auto`, takže se nesmrskne pod svůj nejdelší NEZALOMITELNÝ text. V pulsu
+     je jím `app_config.drip_daily_cap` (25 znaků), který roztáhl první sloupec na 201 px
+     místo 102 a vytlačil TŘETÍ dlaždici za okraj obrazovky. Tam ji `overflow-x:clip`
+     na `html` uřízl, takže Martinovi na mobilu úplně zmizely „leadů dnes" a „affiliate
+     kredit". Nic nekřičelo, jen tam ty dlaždice nebyly. */
+  .stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 12px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;min-width:0;overflow-wrap:anywhere}
   .stats .s:hover{border-color:rgba(246,205,99,.5);background:rgba(235,177,44,.08)}
   .stats .s.on{border-color:rgba(246,205,99,.65);background:rgba(235,177,44,.12)}
   .stats .s b{display:block;font-size:1.6rem;color:#F6CD63;font-weight:800;line-height:1}
@@ -1444,10 +1450,11 @@
           var days7 = dayKeys.map(function(k){ return '<span style="display:inline-block;margin-right:10px;color:#b7ab9b;">'+k.slice(8,10)+'.'+k.slice(5,7)+'.&nbsp;<b style="color:#F6CD63">'+p.leads.days[k]+'</b></span>'; }).join('');
           $('pulseBody').innerHTML =
             '<div class="stats" style="margin:.8rem 0 0;">'+
-              // „strop fronty" čte app_config.drip_daily_cap, mění se JEN tam.
-              // Dřív tu vedle stálo natvrdo „Resend max 100", což byl limit FREE tarifu;
-              // na placeném Resend denní limit nemá (Martin 20. 7. 2026, totéž říká daily-digest).
-              '<div class="s"><b'+capW+'>'+e.sent+'</b><span>mailů dnes · strop fronty '+e.daily_cap+' (app_config.drip_daily_cap) · Resend bez denního limitu</span></div>'+
+              // ⛔ 8. 8. 2026: odsud se vyndal technický řetězec `app_config.drip_daily_cap`.
+              // Nešel zalomit, takže na mobilu roztáhl sloupec gridu na dvojnásobek,
+              // vytlačil třetí dlaždici za okraj obrazovky a `overflow-x:clip` ji uřízl.
+              // Poznámka o tom, kde se strop mění, je pod dlaždicemi, kde má místo.
+              '<div class="s"><b'+capW+'>'+e.sent+'</b><span>mailů dnes · strop fronty '+e.daily_cap+'</span></div>'+
               '<div class="s"><b>'+q.due_now+'</b><span>ve frontě k odeslání</span></div>'+
               '<div class="s"><b>'+leadsToday+'</b><span>leadů dnes</span></div>'+
               '<div class="s"><b>'+s.videokurz_30d+'</b><span>prodeje videokurz 30 dní</span></div>'+
@@ -1456,6 +1463,10 @@
               wdW + err429 +
             '</div>'+
             '<p class="muted" style="margin:.9rem 0 0;font-size:.82rem;">Leadi 7 dní: '+days7+'</p>'+
+            // Strop fronty se mění JEN v app_config.drip_daily_cap. Dřív tu vedle stálo
+            // natvrdo „Resend max 100", což byl limit FREE tarifu; na placeném Resendu
+            // denní limit není (Martin 20. 7. 2026, totéž říká daily-digest).
+            '<p class="muted" style="margin:.5rem 0 0;font-size:.78rem;">Strop fronty se mění v <code>app_config.drip_daily_cap</code>. Resend sám denní limit nemá.</p>'+
             '<p class="muted" style="margin:.35rem 0 0;font-size:.82rem;">Dnešní leadi podle zdroje: '+srcs+
             ' · Follow-upy: '+(q.followups_enabled?'<b style="color:#7bd88f">zapnuté</b>':'<b style="color:#ff6b6b">vypnuté</b>')+
             (e.last_error?' · Poslední chyba: <span style="color:#F6CD63">'+esc(e.last_error)+'</span>':'')+'</p>';
