@@ -660,12 +660,30 @@
         // ⚠️ Rozpad po tierech se drží ZVLÁŠŤ pro každý stav. Kdyby se sčítal dohromady,
         // stálo by u „Aktivní 7" napsáno „ai_basic 14×" (aktivní + trial) a vypadalo by to,
         // že aktivních je dvakrát tolik.
-        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {};
+        // ⛔ 8. 8. 2026: „Aktivní předplatné 7 · VIP (499 Kč)" se čte jako sedm platících
+        // zákazníků, tedy ~3 500 Kč měsíčně. Změřeno v DB appky: z těch sedmi je
+        // 5× přístup V CENĚ ACADEMY, 1× převod a 1× tester, a ani jeden nemá stripe
+        // subscription. Za appku samotnou tedy neplatí NIKDO. Rozdíl mezi „má přístup"
+        // a „platí" je tu celý obrat, takže se rozpad podle zdroje ukazuje natvrdo.
+        // ⚠️ `zdroj` umí vrátit až novější `tc_overview()`. Dokud nedorazí, chová se
+        // karta jako dřív a NIC si nedomýšlí.
+        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {}, zdrojeA = {}, maZdroj = false;
         pp.forEach(function(x){
           var n = Number(x.pocet) || 0;
-          if(x.status === 'active'){ aktivni += n; tieryA[x.tier] = (tieryA[x.tier] || 0) + n; }
+          if(x.zdroj != null) maZdroj = true;
+          if(x.status === 'active'){
+            aktivni += n; tieryA[x.tier] = (tieryA[x.tier] || 0) + n;
+            if(x.zdroj != null) zdrojeA[x.zdroj] = (zdrojeA[x.zdroj] || 0) + n;
+          }
           if(x.status === 'trialing'){ trial += n; tieryT[x.tier] = (tieryT[x.tier] || 0) + n; }
         });
+        var ZDROJ_NAZVY = { stripe:'platí přes Stripe', academy:'v ceně Academy', 'koucink-klient':'v ceně koučinku',
+                            prevod:'převod', tester:'tester', manual:'ručně', 'admin-panel':'ručně z adminu', trial:'zkušebka' };
+        var plati = Number(zdrojeA.stripe || 0);
+        var popisZdroju = function(m){
+          return Object.keys(m).sort(function(a,b){ return m[b]-m[a]; })
+            .map(function(z){ return esc(ZDROJ_NAZVY[z] || z) + ' ' + m[z] + '×'; }).join(' · ');
+        };
         // ⚠️ Interní kódy tierů jsou pro Martina matoucí (`ai_basic` vypadá jako „Basic",
         // ale je to VIP za 499; `basic` je Basic za 249). Ven jdou VŽDY lidské názvy.
         var TIER_NAZVY = { basic:'Basic (249 Kč)', ai_basic:'VIP (499 Kč)', gold:'Gold (koučink)', diamond:'Diamond (koučink)' };
@@ -679,7 +697,10 @@
           + tcTile('Registrací', r.celkem != null ? r.celkem : '—', 'bez testovacích')
           + tcTile('Za 7 dní', r.za_7_dni != null ? r.za_7_dni : '—', '')
           + tcTile('Za 30 dní', r.za_30_dni != null ? r.za_30_dni : '—', '')
-          + tcTile('Aktivní předplatné', aktivni, popisTieru(tieryA), aktivni ? '#7BD88F' : '')
+          + (maZdroj
+              ? tcTile('Platí za appku', plati, 'přes Stripe', plati ? '#7BD88F' : '#ff9b9b')
+                + tcTile('Aktivní přístup', aktivni, popisZdroju(zdrojeA) || popisTieru(tieryA), aktivni ? '#7BD88F' : '')
+              : tcTile('Aktivní předplatné', aktivni, popisTieru(tieryA), aktivni ? '#7BD88F' : ''))
           + tcTile('Ve zkušebce', trial, popisTieru(tieryT) || '14 dní zdarma', trial ? '#F6CD63' : '')
           + tcTile('Testovací účty', r.testovacich != null ? r.testovacich : '—', 'do součtů výš NEPATŘÍ', '#8F8A99')
           + '</div>';
@@ -718,7 +739,8 @@
         }
         $('tcpBody').innerHTML = h;
         $('tcp').style.display = '';
-        sekInfo('prodej', (r.celkem != null ? r.celkem + ' registrací v appce' : 'appka: bez čísel') + ' · ' + aktivni + ' aktivních předplatných');
+        sekInfo('prodej', (r.celkem != null ? r.celkem + ' registrací v appce' : 'appka: bez čísel')
+          + ' · ' + (maZdroj ? (plati + ' platících, ' + aktivni + ' s přístupem') : (aktivni + ' aktivních předplatných')));
       }).catch(function(){ cardFail('tcp','tcpBody'); sekInfo('prodej','appka neodpověděla'); });
     }
 
