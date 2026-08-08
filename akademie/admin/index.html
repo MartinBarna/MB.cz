@@ -1872,7 +1872,12 @@
       // „coaching", tedy i `coaching-ex`. Bývalí klienti se tak ukazovali jako aktivní.
       // Aktivní se teď poznají podle NÁROKU (`has_coaching` z entitlements), což je totéž,
       // z čeho žije karta „Klienti koučinku"; bývalí mají vlastní volbu.
-      if(f==='coaching') return !!r.has_coaching;
+      // ⚠️ Pojistka na pořadí nasazení: `has_coaching` umí až nová verze admin-api.
+      // Kdyby se nasadil jen web, `undefined` by znamenalo „nikdo", a filtr by tiše
+      // vracel prázdno. Když pole nedorazí, spadne se zpátky na značky.
+      if(f==='coaching') return r.has_coaching==null
+        ? (r.tags||[]).some(function(t){return String(t)==='coaching-active';})
+        : !!r.has_coaching;
       if(f==='coaching-ex') return !r.has_coaching && (r.tags||[]).some(function(t){return String(t)==='coaching-ex';});
       if(f==='videokurz') return r.has_videokurz;
       if(f==='academy') return r.has_academy;
