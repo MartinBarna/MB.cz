@@ -75,8 +75,9 @@ Deno.serve(async (req) => {
   ]);
 
   // zakladajici clenove: realne prodeje pres SimpleShop + rucni offset (app_config
-  // academy_founders_offset — prodeje grantnute rucne, testovaci ucty se nepocitaji);
-  // verejny slib: cena 8 900 plati pro prvnich 50, pak zdrazit
+  // academy_founders_offset: prodeje grantnute rucne, testovaci ucty se nepocitaji).
+  // Prvnich 50 = zakladajici clenove (status a pocta). ⛔ Slib o zdrazeni na 12 900
+  // po 50. clenovi Martin 8. 8. 2026 ZRUSIL, cena je 8 900 natrvalo.
   const founders = (acadSold.count ?? 0) + (Number(cmap.academy_founders_offset ?? "") || 0);
   const foundersLeft = Math.max(0, 50 - founders);
 
@@ -270,7 +271,11 @@ Deno.serve(async (req) => {
     alerts += warn(gaveUp + "× odstavený kontakt po opakovaném selhání (" +
       Array.from(gaveUpTracks).join(", ") + "). U follow-upů je to v pořádku, jen ať o tom víš.");
   }
-  if (founders >= 45) alerts += warn("Blíží se 50. zakládající člen Academy (" + founders + "/50). Podle slibu na webu pak cena roste na 12 900 Kč. Připrav zdražení (objednávka + akademie + JSON-LD).");
+  // ⛔ 8. 8. 2026 tu byl alert „blíží se 50. člen, připrav zdražení na 12 900 Kč".
+  // Martin toho dne zdražení ZRUŠIL, cena zůstává 8 900 natrvalo, takže ten alert
+  // vyzýval k akci, která už neplatí. Počítadlo zůstává jako informace (řádek níž),
+  // protože „zakládající člen" žije dál jako status a pocta prvním padesáti.
+  // Kdo by chtěl alert vrátit, musí nejdřív obnovit veřejný slib o ceně.
 
   // --- Zaplatil Academy a nedostal uvítačku? -------------------------------
   // ⛔ Přibylo 29. 7. 2026 NÁHRADOU za alert, který posílal `academy-stripe-webhook`
