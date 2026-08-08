@@ -17,7 +17,7 @@ var q=new URLSearchParams(location.search);
 var s=m[q.get('s')]||auto||'youtube';
 /* m=c (vychozi) = pripnute komentare, m=d = popisky videi. Oddelene kampane,
    jinak by kliky z popisku prevalcovaly mereni kampane pin-balicek. */
-var mm={c:{med:'comment',camp:'pin-balicek'},d:{med:'description',camp:'desc-balicek'}};
+var mm={c:{med:'comment',camp:'pin-balicek'},d:{med:'description',camp:'desc-balicek'},s:{med:'social',camp:'post-balicek'}};
 var mk=mm[q.get('m')]||mm.c;
 location.replace('https://martinbarna.cz/recepty-a-odpovedi/?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
 </script>

@@ -16,7 +16,7 @@ var auto=/facebook\.|fb\./.test(r)?'facebook':/instagram\./.test(r)?'instagram':
 var q=new URLSearchParams(location.search);
 var s=m[q.get('s')]||auto||'youtube';
 /* m=c (vychozi) = komentare, m=d = popisky videi. Oddelene kampane. */
-var mm={c:{med:'comment',camp:'pin-kurz'},d:{med:'description',camp:'desc-kurz'}};
+var mm={c:{med:'comment',camp:'pin-kurz'},d:{med:'description',camp:'desc-kurz'},s:{med:'social',camp:'post-kurz'}};
 var mk=mm[q.get('m')]||mm.c;
 location.replace('https://martinbarna.cz/videokurz?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
 </script>

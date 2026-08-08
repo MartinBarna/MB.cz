@@ -17,7 +17,7 @@ var q=new URLSearchParams(location.search);
 var s=m[q.get('s')]||auto||'youtube';
 /* m=c (vychozi) = pripnute komentare, m=d = popisky videi. Oddelene kampane,
    jinak by kliky z popisku prevalcovaly mereni kampane pin-tc. */
-var mm={c:{med:'comment',camp:'pin-tc'},d:{med:'description',camp:'desc-tc'}};
+var mm={c:{med:'comment',camp:'pin-tc'},d:{med:'description',camp:'desc-tc'},s:{med:'social',camp:'post-tc'}};
 var mk=mm[q.get('m')]||mm.c;
 location.replace('https://tvujcoach.cz/?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
 </script>
