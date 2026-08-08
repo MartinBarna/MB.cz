@@ -494,6 +494,24 @@ Deno.serve(async (req: Request) => {
   // komu clenstvi PLATI. Bez teto podminky by expirovany mesicni clen zustal navzdy
   // mezi kupci, prisel by o pristup a ZAROVEN by mu nikdy neprisla nabidka obnovy.
   // NULL = dozivotni, tedy plati porad. Detail: pamet `mb-academy-pricing-mise`.
+  // ⛔ DRUHA POJISTKA: EX-KLIENTI KOUCINKU (8. 8. 2026).
+  // Prvni pojistka jsou enroll funkce (migrace `upsell_enroll_vylouceni_ex_koucink_klientu`
+  // z 8. 8.), ktere nikoho s koucink historii do upsell trati uz nezaradi. Tahle vrstva
+  // stoji az u ODESLANI: kdyby leada na `upsell-coaching` dostal kdokoli rucne nebo cestou,
+  // kterou dnes neznam, mail se stejne neposle.
+  // PROC to nejde pres `owns.coaching`: ten se plni jen z AKTIVNICH entitlementu. Offboard
+  // (`admin-api` akce `client_offboard`) coaching entitlement DEAKTIVUJE, takze ex-klient
+  // z `owns.coaching` druhy den zmizi a upsell by mu zacal chodit. Proto samostatny dotaz
+  // BEZ filtru `active`.
+  // Co se stalo bez teto vrstvy: klientce po 13 tydnech koucinku odesel mail
+  // "Videokurz mas. Chces pomoc i ode me osobne?". Detail: pamet `mb-koucink-offboard-automat`.
+  // ⚠️ Fail-safe je tu zamerne stejny jako jinde v teto funkci, tedy SMEREM K ODESLANI:
+  // kdyz dotaz selze, mnozina je prazdna a mail odejde. Prvni pojistka (enroll) drzi dal.
+  const { data: exCoachRows } = await admin.from('entitlements').select('email').eq('product', 'coaching');
+  const exCoaching = new Set<string>(
+    (exCoachRows ?? []).map((r: { email: string }) => String(r.email ?? '').toLowerCase()).filter(Boolean),
+  );
+
   const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true)
     .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString())
     .in('product', ['videokurz', 'academy', 'coaching']);
@@ -506,7 +524,12 @@ Deno.serve(async (req: Request) => {
     if (t === 'longtail-consumer') return ownsAny(em);
     if (t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci') return owns.academy.has(em);
     if (t === 'trener-kit') return step > 0 && owns.academy.has(em);
-    if (t === 'upsell-coaching') return owns.coaching.has(em);
+    // ⛔ `exCoaching` je tu NAVIC k `owns.coaching` a ta redundance je zamerna: `owns.coaching`
+    // kryje aktivni klienty i v pripade, ze by dotaz nad `exCoaching` selhal, a `exCoaching`
+    // kryje ty po offboardu, ktere `owns.coaching` uz neobsahuje.
+    // ⛔ NEROZSIROVAT tim `ownsAny` ani ostatni trate: ex-klient je legitimni cil akvizice
+    // (obsah, appka, Academy). Zakazana mu je jen nabidka koucinku, ktery prave dokoncil.
+    if (t === 'upsell-coaching') return owns.coaching.has(em) || exCoaching.has(em);
     // [2026-08-06] TRATE APPKY (tc-free = registrace v appce, tc-magnet = jidelnickovy magnet).
     // Prodavaji predplatne Tvuj Coach. Kdo si koupi predplatne PRIMO v appce, prepne se pryc
     // sam (app-onboarding-hook ho hodi do onboarding-nakup-tvujcoach), takze na nej tohle
