@@ -91,6 +91,16 @@
     for (var k in props) { if (props.hasOwnProperty(k)) { fbProps[k] = props[k]; gaProps[k] = props[k]; } }
     if (window.fbq)  fbq('track', 'Lead', fbProps, { eventID: evId('lead') });
     if (window.gtag) gtag('event', 'generate_lead', gaProps);
+    // Atribuce doputovala na server, v prohlížeči už ji držet nemusíme (GDPR:
+    // nedrží se déle, než je k čemu). Stejné chování má appka po registraci.
+    // ⛔ JEN u odeslání, která atribuci OPRAVDU nesou: `lead_magnet` (lead-form.js)
+    // a `kviz` (kviz/index.html) ji přikládají k datům. Registrace do Academy jde
+    // přes `BA.signUp()` BEZ atribuce, takže smazat zrcadlo i tam by zahodilo
+    // zdroj, který se nikam nezapsal, a člověk by po pozdějším nákupu vypadal
+    // jako přímá návštěva.
+    if (method === 'lead_magnet' || method === 'kviz') {
+      try { if (window.MBAttr && window.MBAttr.smazZrcadlo) window.MBAttr.smazZrcadlo(); } catch (e) {}
+    }
   }
   window.mbTrackLead = trackLead;
   function wireConversions() {
@@ -209,8 +219,10 @@
    2) Odkazy na tvujcoach.cz vedly holé, takže na hranici domény stopa končila
       a registraci v appce nešlo spárovat s kampaní.
    ŘEŠENÍ: první stránka s reklamními parametry si je uloží do sessionStorage
-   (žije jen do zavření panelu, je to první strana, žádné sledování napříč weby)
-   a formuláře i odkazy do appky si je odtud vezmou.
+   a zároveň do localStorage jako zrcadlo s platností 7 dní (obojí je úložiště
+   první strany, žádné sledování napříč weby; podrobné zdůvodnění u `KEY_ZRCADLO`
+   níž). Formuláře i odkazy do appky si je odtud vezmou. Po odeslání formuláře
+   se zrcadlo maže.
    Nový klik z reklamy vlastní parametry přepíše = last touch v rámci návštěvy. */
 (function () {
   var KEY = 'mb_attr_v1';
@@ -243,11 +255,54 @@
     } catch (e) { return {}; }
   }
 
+  /* ⚠️ ZRCADLO DO localStorage (schválil Martin 8. 8. 2026). Doslovný protějšek toho,
+     co appka dostala 4. 8. (`src/lib/attribution.ts`), včetně platnosti i mazání.
+     PROČ: samotné sessionStorage žije jen v JEDNOM panelu. Odkazy z reklam, z mailů
+     a z komentářů na sítích se ale na mobilu otevírají ve VESTAVĚNÉM prohlížeči
+     aplikace, a jakmile člověk přejde do svého skutečného prohlížeče (nebo panel
+     zavře a vrátí se jiný den), sessionStorage je prázdné a zdroj je nenávratně pryč.
+     Změřeno v appce 4. 8. 2026: z 27 profilů nenesl `utm_campaign` ANI JEDEN, přestože
+     se parametry z URL zachytávaly správně. Web měl tutéž vadu o čtyři dny déle.
+     GDPR: obojí je úložiště PRVNÍ STRANY a neslouží k profilování napříč weby.
+     Zrcadlo má platnost 7 dní a po odeslání formuláře se SMAŽE, takže se nedrží
+     déle, než je k čemu. */
+  var KEY_ZRCADLO = KEY + '_zrcadlo';
+  var ZRCADLO_PLATNOST_MS = 7 * 24 * 60 * 60 * 1000;
+
+  function ctiZrcadlo() {
+    try {
+      var raw = localStorage.getItem(KEY_ZRCADLO);
+      if (!raw) return {};
+      var parsed = JSON.parse(raw) || {};
+      var ulozeno = Number(parsed.ulozeno) || 0;
+      if (!ulozeno || Date.now() - ulozeno > ZRCADLO_PLATNOST_MS) { smazZrcadlo(); return {}; }
+      var data = parsed.data;
+      return (data && typeof data === 'object') ? data : {};
+    } catch (e) { return {}; }
+  }
+  function zapisZrcadlo(o) {
+    try { localStorage.setItem(KEY_ZRCADLO, JSON.stringify({ ulozeno: Date.now(), data: o })); }
+    catch (e) { /* privátní režim nebo plné úložiště: atribuce se prostě nepřenese */ }
+  }
+  function smazZrcadlo() {
+    try { localStorage.removeItem(KEY_ZRCADLO); } catch (e) { /* nevadí, vyprší samo */ }
+  }
+
   function read() {
-    try { return JSON.parse(sessionStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; }
+    try {
+      var raw = sessionStorage.getItem(KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') return parsed;
+      }
+    } catch (e) { /* padáme na zrcadlo níž */ }
+    // Session je prázdná: buď nový panel (typicky přechod z vestavěného prohlížeče
+    // do skutečného), nebo se člověk vrátil jiný den.
+    return ctiZrcadlo();
   }
   function save(o) {
     try { sessionStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* privátní režim */ }
+    zapisZrcadlo(o);
   }
 
   // Uloží jen tehdy, když URL reklamní parametry opravdu nese. Prosté prokliknutí
@@ -263,7 +318,7 @@
     for (var b in cur) if (cur.hasOwnProperty(b)) out[b] = cur[b];   // aktuální URL má přednost
     return out;
   }
-  window.MBAttr = { get: get, key: KEY };
+  window.MBAttr = { get: get, key: KEY, smazZrcadlo: smazZrcadlo };
 
   // Odkazy na appku dostanou atribuci do URL. Cross-domain jinak nejde: appka
   // běží na jiné doméně (Vercel), takže se k sessionStorage martinbarna.cz nedostane.
