@@ -349,22 +349,24 @@
       </details>
 
       <details class="sek" id="sek-novinky">
-        <summary>🆕 Novinky &amp; co sledovat <span class="sekpop">ruční poznámky</span><span class="sekinfo" id="info-novinky"></span></summary>
+        <summary>🆕 Aktuální stav <span class="sekpop">ruční nástěnka</span><span class="sekinfo" id="info-novinky"></span></summary>
         <div class="sek-in">
 
-      <!-- ⚠️ Tuhle kartu píše ručně Claude, žádná data se do ní netahají. Datum poslední
+      <!-- ⚠️ Tuhle kartu píše ručně člověk, žádná data se do ní netahají. Datum poslední
            úpravy je proto NATVRDO v `data-stari`; kdo kartu aktualizuje, MUSÍ ho přepsat,
            jinak si admin dál myslí, že je karta čerstvá. Stáří se pod nadpisem dopočítá
-           samo, ať se nestane, že tu měsíce visí neplatné poznámky a nikde to nekřikne. -->
-      <div class="traf" id="news" data-stari="2026-07-10">
-        <h3>🆕 Novinky &amp; co sledovat <span class="muted" style="font-size:.75rem;font-weight:400;">(aktualizace 10. 7. 2026)</span></h3>
-        <div class="sub">Co je nově živé a na co koukat — kartu ti Claude průběžně aktualizuje</div>
+           samo, ať se nestane, že tu měsíce visí neplatné poznámky a nikde to nekřikne.
+           (8. 8. 2026 tu visely 4 týdny staré poznámky, které si odporovaly s živým ceníkem.) -->
+      <div class="traf" id="news" data-stari="2026-08-08">
+        <h3>🆕 Aktuální stav <span class="muted" style="font-size:.75rem;font-weight:400;">(8. 8. 2026)</span></h3>
+        <div class="sub">Ruční nástěnka: co je právě teď živé a s čím počítat</div>
         <p id="newsStari" style="margin:.5rem 0 0;font-size:.84rem;"></p>
         <ul style="margin:.5rem 0 .2rem;padding-left:1.2rem;line-height:1.75;font-size:.92rem;color:#e7e0d5;">
-          <li><b style="color:#F6CD63;">Trychtýř pro trenéry je živý:</b> reklamy → <a href="/pro-trenery/" target="_blank" rel="noopener" style="color:#F6CD63;">/pro-trenery/</a> (kit zdarma) → 5mailová sekvence „Kit pro trenéry" → nabídka Academy. Leady a prodeje sleduj níž v kartě <b>🎯 Trenéři — trychtýř</b>, maily v mapě sekvencí.</li>
-          <li><b style="color:#F6CD63;">FB kampaň „Academy – TOFU – Startovací kit pro trenéry" běží</b> (110 Kč/den): 4 reklamy soupeří (systém / nástroje / AI / certifikace), Meta přelévá rozpočet vítězi sama. Cena za lead je vodítko — <b>severka je cena za prodej Academy</b> (konverze uvidíš v kartě trychtýře).</li>
-          <li><b style="color:#F6CD63;">Nový obsah:</b> 3 blog články pro trenéry (kategorie „Pro trenéry"), srovnání kurz vs. systém + splátky 3× 3 000 Kč na /akademie/, modul 24 „AI pro trenéry" (13 lekcí + prompt knihovna) — Academy má 256 lekcí.</li>
-          <li>⏰ <b>Hlídat:</b> po 50. prodeji Academy zdražit 8 900 → 12 900. Testovací lead (fitness.barna+kittest@…) ti jede sekvencí do inboxu — klidně nech doběhnout, ať vidíš všech 5 mailů.</li>
+          <li><b style="color:#F6CD63;">Academy:</b> mise <b>990 Kč měsíčně</b> nebo <b>8 900 Kč doživotně</b>. Dřívější plán zdražit po 50. prodeji je <b>ZRUŠENÝ</b>, nahradila ho tahle mise.</li>
+          <li><b style="color:#F6CD63;">Affiliate program je živý:</b> 30 % z měsíčních plateb, 20 % z jednorázových. Partneři v pipeline: Patrik (THAIBOX10), Zuzka / oboczko (OBOCZKO10), Langmajer (JIRKA10). Kódy se aktivují, až partner řekne jedem.</li>
+          <li><b style="color:#F6CD63;">Appka Tvůj Coach:</b> zkušebka 14 dní → Basic 249 Kč / VIP 499 Kč. Členové Academy mají VIP na rok.</li>
+          <li><b style="color:#F6CD63;">Balíček 349 Kč</b> (40 receptů + 48 odpovědí) je nejlevnější vstup do ekosystému.</li>
+          <li><b style="color:#F6CD63;">Infografiky:</b> série 18 vzdělávacích dílů startuje v srpnu.</li>
         </ul>
       </div>
 
@@ -559,10 +561,11 @@
       if(isNaN(d)){ sekInfo('novinky','bez data'); return; }
       var dni=Math.floor((Date.now()-d)/86400000);
       var stara=dni>21;
+      var kdy = dni<=0 ? 'dnes' : (dni===1 ? 'včera' : 'před '+dni+' dny');
       p.innerHTML=stara
         ? '<span style="color:#F6CD63;">⚠️ Tahle karta je ruční a nikdo ji '+dni+' dní neaktualizoval. Ber ji jako poznámku k datu, ne jako aktuální stav.</span>'
-        : '<span class="muted">Naposledy aktualizováno před '+dni+' dny.</span>';
-      sekInfo('novinky',(stara?'⚠️ ':'')+'ruční poznámky, '+dni+' dní staré');
+        : '<span class="muted">Aktualizováno '+kdy+'.</span>';
+      sekInfo('novinky',(stara?'⚠️ ruční nástěnka, '+dni+' dní stará':'ruční nástěnka, aktualizováno '+kdy));
     }
     function initSekce(){
       newsStari();
