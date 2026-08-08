@@ -6,6 +6,14 @@
 // Pozn.: zdrojak je zamerne bez znaku uvozovek a zpetnych lomitek (kvuli snadnemu deployi).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { maPreskocitKrok, PRESKOC_KROK_KDYZ_VLASTNI } from './preskoc.ts';
+// Rozhodovaci pravidla (koho stopnout, kam smi vest most, jaky odstup) zijou ve vlastnim
+// souboru, aby sla testovat bez nastartovani serveru. Viz `pravidla.test.ts`.
+import {
+  mostBlokujeVlastnictvi,
+  odstupDnu,
+  shouldStop as pravidlaShouldStop,
+  vyberMost,
+} from './pravidla.ts';
 
 const NL = String.fromCharCode(10);   // newline
 const DQ = String.fromCharCode(34);   // double-quote char
@@ -517,37 +525,13 @@ Deno.serve(async (req: Request) => {
     .in('product', ['videokurz', 'academy', 'coaching', 'balicek']);
   const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set(), balicek: new Set() };
   for (const b of (buyersRows ?? []) as { email: string; product: string }[]) owns[b.product]?.add(b.email.toLowerCase());
-  // ⛔ `balicek` je v `owns` SCHVALNE, ale v `ownsAny` SCHVALNE NENI, a to se nesmi „opravit".
-  // `owns.balicek` slouzi vyhradne brance v `preskoc.ts` (aby se nabidka balicku neposlala
-  // tomu, kdo si ho uz koupil). Kdyby `balicek` pribyl i do `ownsAny`, clovek, ktery koupil
-  // JEN balicek za 349, by se okamzite stopnul na akvizicnich tratich i na `longtail-consumer`
-  // (status 'purchased') a prestal by dostavat obsah. Balicek je nejlevnejsi schod pyramidy,
-  // tedy duvod pokracovat v peci, ne duvod cloveka umlcet.
-  const ownsAny = (em: string) => owns.videokurz.has(em) || owns.academy.has(em) || owns.coaching.has(em);
-  const shouldStop = (track: string, step: number, em: string): boolean => {
-    const t = String(track || '');
-    if (['lead-magnet', 'existing-leadmagnet', 'nurture-'].some((p) => t.indexOf(p) === 0)) return step > 0 && ownsAny(em);
-    if (t === 'longtail-consumer') return ownsAny(em);
-    if (t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci') return owns.academy.has(em);
-    if (t === 'trener-kit') return step > 0 && owns.academy.has(em);
-    // ⛔ `exCoaching` je tu NAVIC k `owns.coaching` a ta redundance je zamerna: `owns.coaching`
-    // kryje aktivni klienty i v pripade, ze by dotaz nad `exCoaching` selhal, a `exCoaching`
-    // kryje ty po offboardu, ktere `owns.coaching` uz neobsahuje.
-    // ⛔ NEROZSIROVAT tim `ownsAny` ani ostatni trate: ex-klient je legitimni cil akvizice
-    // (obsah, appka, Academy). Zakazana mu je jen nabidka koucinku, ktery prave dokoncil.
-    if (t === 'upsell-coaching') return owns.coaching.has(em) || exCoaching.has(em);
-    // [2026-08-06] TRATE APPKY (tc-free = registrace v appce, tc-magnet = jidelnickovy magnet).
-    // Prodavaji predplatne Tvuj Coach. Kdo si koupi predplatne PRIMO v appce, prepne se pryc
-    // sam (app-onboarding-hook ho hodi do onboarding-nakup-tvujcoach), takze na nej tohle
-    // pravidlo neni. Diru maji ale dva pripady, ktere hook nikdy neuvidi:
-    //   - kdo koupil ACADEMY, ma appku VIP na rok (pamet tvujcoach-academy-vip-na-rok),
-    //   - kdo ma KOUCINK, plati Martinovi nejvyssi ticket, jaky prodavame.
-    // Obema by od kroku 5 chodilo "zkusebka ti skonci / doběhla, odemkni si appku za 249",
-    // coz je u prvniho lez a u druheho trapne. Kroky 0 az 4 jsou obsahove (vazeni, prumery,
-    // generatory, AI kouc) a davaji smysl i jim, proto se stopuje az od kroku 5.
-    if (t === 'tc-free' || t === 'tc-magnet') return step >= 5 && (owns.academy.has(em) || owns.coaching.has(em));
-    return false;
-  };
+  // ⛔ `balicek` je v `owns` SCHVALNE: slouzi brance v `preskoc.ts`, aby se nabidka balicku
+  // neposlala tomu, kdo si ho uz koupil. Do otazky „je to uz zakaznik?" ale patrit NESMI,
+  // duvod je u `vlastniCokoli` v `pravidla.ts`.
+  // Samotna pravidla (koho stopnout na ktere trati) jsou v `pravidla.ts` a maji testy.
+  // Tady zustava jen tenka obalka, aby volani na trech mistech nize zustala beze zmeny.
+  const shouldStop = (track: string, step: number, em: string): boolean =>
+    pravidlaShouldStop(track, step, em, owns, exCoaching);
 
   // MOST NA DALSI TRAT: vola se v jedinou chvili, kdy trat pro leada skoncila.
   // Vraci nazev cilove trati (= lead byl prepsan), nebo null (= necha se dobehnout).
@@ -564,17 +548,12 @@ Deno.serve(async (req: Request) => {
   // vyzkouset jedine naostro na zivych lidech.
   // deno-lint-ignore no-explicit-any
   const kamDal = async (l: any): Promise<string | null> => {
-    const cil = MOSTY[String(l.track || '')];
-    if (!cil || typeof cil.track !== 'string' || !cil.track || cil.track === l.track) return null;
+    const cil = vyberMost(MOSTY, String(l.track || ''));
+    if (!cil) return null;
     const em = String(l.email).toLowerCase();
-    // ⛔ ZAMERNE KROK 1, NE 0. shouldStop ma pro akvizicni trate (lead-magnet*,
-    // existing-leadmagnet, nurture-*) tvar `step > 0 && ownsAny`, protoze KROK 0 je
-    // slibeny freebie a ten se posila i tomu, kdo uz koupil. Pri volani s nulou by
-    // ochrana kupujiciho pro tyhle trate NIKDY nesepnula (mrtva paka) a most by
-    // platiciho zakaznika prehodil do akvizicni trate s nabidkou na to, co uz ma.
-    // Toho, koho prehazujeme mostem, se freebie netyka: on si o nej neposlal.
-    // Nasel to druhy chat pri revizi 6. 8. 2026, viz pamet feedback-nova-cesta-stare-pravidlo.
-    if (shouldStop(cil.track, 1, em)) return null;
+    // ⛔ Pta se ZAMERNE na krok 1, ne 0. Plny duvod je u `KROK_PRO_MOST` v `pravidla.ts`
+    // a hlida to test „dukaz, ze na kroku 0 by ochrana nesepnula".
+    if (mostBlokujeVlastnictvi(cil.track, em, owns, exCoaching)) return null;
     if (!(await getTpl(cil.track, 0))) return null;
     const { data: uzTamByl } = await admin.from('email_events')
       .select('id').eq('lead_id', l.id).eq('type', 'sent').eq('detail->>track', cil.track).limit(1);
@@ -586,12 +565,9 @@ Deno.serve(async (req: Request) => {
     const cilTrack = await kamDal(l);
     if (!cilTrack) return null;
     // Odstup po poslednim mailu puvodni trate, at cloveku neprijdou dva maily po sobe.
-    // ⛔ FAIL-SAFE SMEREM K CEKANI, NE K ODESLANI. `?? 7` kryje jen CHYBEJICI klic;
-    // preklep (`"sedm"` misto 7) dava NaN a driv z nej `|| 0` udelalo nulu, tedy mail
-    // z nove trate HNED a dva po sobe — presne to, cemu ma tenhle parametr branit.
-    // Proto se nevalidni hodnota chova stejne jako chybejici: 7 dni.
-    const poDnechRaw = Number(MOSTY[String(l.track || '')]?.po_dnech ?? 7);
-    const poDnech = Number.isFinite(poDnechRaw) && poDnechRaw >= 0 ? poDnechRaw : 7;
+    // Fail-safe smeruje k CEKANI, ne k odeslani; duvod a historie vady jsou u `odstupDnu`
+    // v `pravidla.ts`, hlida to sada testu vcetne preklepu „sedm".
+    const poDnech = odstupDnu(MOSTY[String(l.track || '')]?.po_dnech);
     await admin.from('leads').update({
       track: cilTrack, step: 0,
       next_send_at: new Date(Date.now() + poDnech * 86400000).toISOString(),
