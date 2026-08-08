@@ -191,6 +191,23 @@
       .path .pm .arr{color:var(--muted);font-size:.75rem;}
       .paths-note{color:var(--muted);font-size:.78rem;margin:10px 0 0;}
     </style>
+    <!-- Rozcestník pro nové členy. Vede na `/akademie/studium/kudy-zacit/`, kde je cesta
+         popsaná celá (studijní cesta, AI Martin, appka, týdenní rytmus). Je tady schválně
+         NAD výběrem cest: kdo je v Academy poprvé, potřebuje nejdřív vědět, že nějaká cesta
+         existuje. Kdo tu není poprvé, box přeskočí, je jednořádkový. -->
+    <style>
+      .zacatek{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(135deg,rgba(235,177,44,.12),rgba(255,255,255,.02));border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:13px 18px;margin:0 0 16px;text-decoration:none;color:var(--muted-2);}
+      .zacatek:hover{border-color:rgba(235,177,44,.55);}
+      .zacatek b{color:#fff;display:block;margin-bottom:1px;}
+      .zacatek .zt span{font-size:.86rem;line-height:1.45;display:block;}
+      .zacatek .zc{background:rgba(235,177,44,.16);border:1px solid rgba(235,177,44,.35);color:var(--gold-soft);font-weight:800;padding:9px 18px;border-radius:50px;white-space:nowrap;font-size:.88rem;}
+      @media(max-width:430px){.zacatek .zc{width:100%;text-align:center;}}
+    </style>
+    <a class="zacatek" href="/akademie/studium/kudy-zacit/">
+      <span class="zt"><b>Nový v Academy?</b><span>Přes 250 lekcí je poklad i past. Ukážu ti cestu, ať z toho máš výsledky a ne zahlcení.</span></span>
+      <span class="zc">Kudy začít →</span>
+    </a>
+
     <div class="paths">
       <h3 class="paths-h">🧭 Kudy studovat? Vyber si cestu</h3>
       <p class="paths-sub">Nemusíš jet moduly popořadě. Klikni na číslo modulu, cesta tě provede podle toho, kde právě jsi.</p>
