@@ -667,19 +667,26 @@
         // a „platí" je tu celý obrat, takže se rozpad podle zdroje ukazuje natvrdo.
         // ⚠️ `zdroj` umí vrátit až novější `tc_overview()`. Dokud nedorazí, chová se
         // karta jako dřív a NIC si nedomýšlí.
-        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {}, zdrojeA = {}, maZdroj = false;
+        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {}, zdrojeA = {}, maZdroj = false, plati = 0;
         pp.forEach(function(x){
           var n = Number(x.pocet) || 0;
           if(x.zdroj != null) maZdroj = true;
+          // ⚠️ „Platí" se pozná podle Stripe předplatného, NE podle `source`. Funkce
+          // `grant_app_access` v appce ukládá do `subscriptions.source` natvrdo 'academy'
+          // bez ohledu na to, co jí přijde (ověřeno 8. 8. v pg_proc), takže pod „academy"
+          // jsou dohromady kupci Academy, ruční granty z adminu i klienti koučinku.
+          // Jediné, co spolehlivě odděluje platícího, je existence Stripe předplatného.
+          var jePlatici = (x.plati === true) || (x.plati == null && x.zdroj === 'stripe');
           if(x.status === 'active'){
             aktivni += n; tieryA[x.tier] = (tieryA[x.tier] || 0) + n;
+            if(jePlatici) plati += n;
             if(x.zdroj != null) zdrojeA[x.zdroj] = (zdrojeA[x.zdroj] || 0) + n;
           }
           if(x.status === 'trialing'){ trial += n; tieryT[x.tier] = (tieryT[x.tier] || 0) + n; }
         });
-        var ZDROJ_NAZVY = { stripe:'platí přes Stripe', academy:'v ceně Academy', 'koucink-klient':'v ceně koučinku',
-                            prevod:'převod', tester:'tester', manual:'ručně', 'admin-panel':'ručně z adminu', trial:'zkušebka' };
-        var plati = Number(zdrojeA.stripe || 0);
+        var ZDROJ_NAZVY = { stripe:'platí přes Stripe', academy:'uděleno (Academy, koučink nebo ručně)',
+                            'koucink-klient':'v ceně koučinku', prevod:'převod', tester:'tester',
+                            manual:'ručně', 'admin-panel':'ručně z adminu', trial:'zkušebka' };
         var popisZdroju = function(m){
           return Object.keys(m).sort(function(a,b){ return m[b]-m[a]; })
             .map(function(z){ return esc(ZDROJ_NAZVY[z] || z) + ' ' + m[z] + '×'; }).join(' · ');
