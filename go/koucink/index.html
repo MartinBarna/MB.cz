@@ -8,16 +8,21 @@
 <meta property="og:description" content="Se svými klienty pracuju online 1:1. Výživa a trénink na míru, týdenní úpravy podle reálných dat.">
 <meta property="og:image" content="https://martinbarna.cz/assets/og/koucing.jpg">
 <meta property="og:url" content="https://martinbarna.cz/">
-<noscript><meta http-equiv="refresh" content="0; url=https://martinbarna.cz/?utm_medium=comment&utm_campaign=pin-koucink"></noscript>
+<noscript><meta http-equiv="refresh" content="0; url=https://martinbarna.cz/"></noscript>
 <script>
 var m={yt:'youtube',fb:'facebook',ig:'instagram',tt:'tiktok',li:'linkedin',x:'x',th:'threads'};
 var r=document.referrer||'';
 var auto=/facebook\.|fb\./.test(r)?'facebook':/instagram\./.test(r)?'instagram':/youtube\.|youtu\.be/.test(r)?'youtube':/tiktok\./.test(r)?'tiktok':/linkedin\./.test(r)?'linkedin':/twitter\.|\/\/x\.com|\/\/t\.co/.test(r)?'x':/threads\./.test(r)?'threads':null;
-var s=m[new URLSearchParams(location.search).get('s')]||auto||'youtube';
-location.replace('https://martinbarna.cz/?utm_source='+s+'&utm_medium=comment&utm_campaign=pin-koucink');
+var q=new URLSearchParams(location.search);
+var s=m[q.get('s')]||auto||'youtube';
+/* m=c (vychozi) = pripnute komentare, m=d = popisky videi. Oddelene kampane,
+   jinak by kliky z popisku prevalcovaly mereni kampane pin-koucink. */
+var mm={c:{med:'comment',camp:'pin-koucink'},d:{med:'description',camp:'desc-koucink'}};
+var mk=mm[q.get('m')]||mm.c;
+location.replace('https://martinbarna.cz/?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
 </script>
 </head>
 <body>
-<p><a href="https://martinbarna.cz/?utm_medium=comment&utm_campaign=pin-koucink">Pokračovat na martinbarna.cz</a></p>
+<p><a href="https://martinbarna.cz/">Pokračovat na martinbarna.cz</a></p>
 </body>
 </html>

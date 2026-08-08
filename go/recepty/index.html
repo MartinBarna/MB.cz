@@ -8,16 +8,21 @@
 <meta property="og:description" content="Balíček receptů s vypočítanými makry a odpovědi na nejčastější otázky mých klientů.">
 <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg">
 <meta property="og:url" content="https://martinbarna.cz/recepty-a-odpovedi/">
-<noscript><meta http-equiv="refresh" content="0; url=https://martinbarna.cz/recepty-a-odpovedi/?utm_medium=comment&utm_campaign=pin-balicek"></noscript>
+<noscript><meta http-equiv="refresh" content="0; url=https://martinbarna.cz/recepty-a-odpovedi/"></noscript>
 <script>
 var m={yt:'youtube',fb:'facebook',ig:'instagram',tt:'tiktok',li:'linkedin',x:'x',th:'threads'};
 var r=document.referrer||'';
 var auto=/facebook\.|fb\./.test(r)?'facebook':/instagram\./.test(r)?'instagram':/youtube\.|youtu\.be/.test(r)?'youtube':/tiktok\./.test(r)?'tiktok':/linkedin\./.test(r)?'linkedin':/twitter\.|\/\/x\.com|\/\/t\.co/.test(r)?'x':/threads\./.test(r)?'threads':null;
-var s=m[new URLSearchParams(location.search).get('s')]||auto||'youtube';
-location.replace('https://martinbarna.cz/recepty-a-odpovedi/?utm_source='+s+'&utm_medium=comment&utm_campaign=pin-balicek');
+var q=new URLSearchParams(location.search);
+var s=m[q.get('s')]||auto||'youtube';
+/* m=c (vychozi) = pripnute komentare, m=d = popisky videi. Oddelene kampane,
+   jinak by kliky z popisku prevalcovaly mereni kampane pin-balicek. */
+var mm={c:{med:'comment',camp:'pin-balicek'},d:{med:'description',camp:'desc-balicek'}};
+var mk=mm[q.get('m')]||mm.c;
+location.replace('https://martinbarna.cz/recepty-a-odpovedi/?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
 </script>
 </head>
 <body>
-<p><a href="https://martinbarna.cz/recepty-a-odpovedi/?utm_medium=comment&utm_campaign=pin-balicek">Pokračovat na Recepty a odpovědi</a></p>
+<p><a href="https://martinbarna.cz/recepty-a-odpovedi/">Pokračovat na Recepty a odpovědi</a></p>
 </body>
 </html>

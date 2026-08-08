@@ -8,16 +8,21 @@
 <meta property="og:description" content="Appka, která ti postaví tréninkový plán na míru a každý týden přepočítá kalorie podle reálného progresu. Vyzkoušej zdarma.">
 <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg">
 <meta property="og:url" content="https://tvujcoach.cz/">
-<noscript><meta http-equiv="refresh" content="0; url=https://tvujcoach.cz/?utm_medium=comment&utm_campaign=pin-tc"></noscript>
+<noscript><meta http-equiv="refresh" content="0; url=https://tvujcoach.cz/"></noscript>
 <script>
 var m={yt:'youtube',fb:'facebook',ig:'instagram',tt:'tiktok',li:'linkedin',x:'x',th:'threads'};
 var r=document.referrer||'';
 var auto=/facebook\.|fb\./.test(r)?'facebook':/instagram\./.test(r)?'instagram':/youtube\.|youtu\.be/.test(r)?'youtube':/tiktok\./.test(r)?'tiktok':/linkedin\./.test(r)?'linkedin':/twitter\.|\/\/x\.com|\/\/t\.co/.test(r)?'x':/threads\./.test(r)?'threads':null;
-var s=m[new URLSearchParams(location.search).get('s')]||auto||'youtube';
-location.replace('https://tvujcoach.cz/?utm_source='+s+'&utm_medium=comment&utm_campaign=pin-tc');
+var q=new URLSearchParams(location.search);
+var s=m[q.get('s')]||auto||'youtube';
+/* m=c (vychozi) = pripnute komentare, m=d = popisky videi. Oddelene kampane,
+   jinak by kliky z popisku prevalcovaly mereni kampane pin-tc. */
+var mm={c:{med:'comment',camp:'pin-tc'},d:{med:'description',camp:'desc-tc'}};
+var mk=mm[q.get('m')]||mm.c;
+location.replace('https://tvujcoach.cz/?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
 </script>
 </head>
 <body>
-<p><a href="https://tvujcoach.cz/?utm_medium=comment&utm_campaign=pin-tc">Pokračovat na Tvůj Coach</a></p>
+<p><a href="https://tvujcoach.cz/">Pokračovat na Tvůj Coach</a></p>
 </body>
 </html>
