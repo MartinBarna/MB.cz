@@ -248,8 +248,8 @@
       </div>
 
       <div class="traf" id="qr" style="display:none;">
-        <h3>📮 Letáky (QR)</h3>
-        <div class="sub" id="qrSub">Kolik leadů přišlo z QR na letácích (podle zdroje)</div>
+        <h3>📮 Odkud přišli leadi (letáky a ostatní zdroje)</h3>
+        <div class="sub" id="qrSub">Leady podle utm_source, letáky vyčíslené zvlášť</div>
         <div id="qrBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
@@ -1533,26 +1533,46 @@
       });
     }
 
-    // 📮 Letáky (QR) — kolik leadů přišlo z QR letáků (utm_source přes /start passthrough)
+    // 📮 Odkud přišli leadi (utm_source). Letáky se drží ZVLÁŠŤ.
+    // ⛔ OPRAVA 8. 8. 2026: karta se jmenovala „Letáky (QR)", tvrdila „Leadů z letáků
+    // celkem: N" a do toho čísla počítala VŠECHNY utm_source. Reálně to bylo 293 leadů,
+    // z toho 292 z placených reklam (fb, facebook, ig, meta, google-ads) a jediný
+    // opravdu z letáku. Karta tedy nadhodnocovala výkon letáků skoro 300×, a přesně
+    // podle ní se rozhoduje, jestli letáky tisknout dál. Reklamní zdroje se nemažou,
+    // jen se přestaly vydávat za letáky.
+    var jeLetak=function(s){ return String(s||'').toLowerCase().indexOf('letak')===0; };
     function loadQrStats(){
       api({action:'qr_stats'}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('qr','qrBody'); return; }
         var rows=o.j.rows||[];
-        $('qrSub').textContent='Leadů z letáků celkem: '+(o.j.total||0)+' · zdrojů: '+rows.length;
-        if(!rows.length){
-          $('qrBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné leady z QR letáků. Jakmile někdo naskenuje QR na letáku a nechá e-mail, objeví se tu podle zdroje (letak-fitko / letak-solarko / letak-yoga…).<br><span style="font-size:.8rem;">Kolik lidí QR jen naskenovalo (i bez registrace) uvidíš v GA4 podle stejného utm_source.</span></p>';
-          $('qr').style.display=''; return;
+        var letaky=rows.filter(function(r){ return jeLetak(r.source); });
+        var ostatni=rows.filter(function(r){ return !jeLetak(r.source); });
+        var soucet=function(a){ return a.reduce(function(n,r){ return n+(Number(r.leads)||0); },0); };
+        // české skloňování: 1 lead, 2 až 4 leady, 5 a víc leadů
+        var leadu=function(n){ return n+(n===1?' lead':(n>=2&&n<=4?' leady':' leadů')); };
+        $('qrSub').textContent='Z letáků: '+leadu(soucet(letaky))+' · z ostatních zdrojů (hlavně reklamy): '+leadu(soucet(ostatni));
+        var tabulka=function(a,popisSloupce){
+          return '<div style="overflow-x:auto;"><table>'
+            +'<thead><tr><th>'+popisSloupce+'</th><th>Leadů</th><th>Poslední</th><th>Médium</th></tr></thead><tbody>'
+            +a.map(function(r){
+              return '<tr><td><b style="color:#F6CD63;">'+esc(r.source)+'</b></td>'
+                +'<td class="tcount">'+r.leads+'</td>'
+                +'<td class="muted" style="white-space:nowrap;">'+fmtDay(r.last)+'</td>'
+                +'<td class="muted">'+esc(r.medium||'—')+'</td></tr>';
+            }).join('')
+            +'</tbody></table></div>';
+        };
+        var h='<h4 style="margin:.4rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Letáky (QR)</h4>';
+        h += letaky.length
+          ? tabulka(letaky,'Zdroj (leták)')
+          : '<p class="muted" style="padding:.2rem 0 .4rem;">Zatím žádný lead z letáku. Jakmile někdo naskenuje QR na letáku a nechá e-mail, objeví se tu podle zdroje (letak-fitko / letak-solarko / letak-yoga…).</p>';
+        if(ostatni.length){
+          h += '<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Ostatní zdroje (reklamy a další)</h4>'
+            + '<p class="muted" style="margin:0 0 .3rem;font-size:.78rem;">Tohle NEJSOU letáky. Drží se tu, ať je vidět, odkud leadi opravdu chodí.</p>'
+            + tabulka(ostatni,'Zdroj (utm_source)');
         }
-        var trs=rows.map(function(r){
-          return '<tr><td><b style="color:#F6CD63;">'+esc(r.source)+'</b></td>'
-            +'<td class="tcount">'+r.leads+'</td>'
-            +'<td class="muted" style="white-space:nowrap;">'+fmtDay(r.last)+'</td>'
-            +'<td class="muted">'+esc(r.medium||'—')+'</td></tr>';
-        }).join('');
-        $('qrBody').innerHTML='<div style="overflow-x:auto;"><table>'
-          +'<thead><tr><th>Zdroj (leták)</th><th>Leadů</th><th>Poslední</th><th>Médium</th></tr></thead>'
-          +'<tbody>'+trs+'</tbody></table></div>'
-          +'<p class="muted" style="margin:.6rem 0 0;font-size:.8rem;">Skeny bez registrace (kolik lidí QR jen naskenovalo) najdeš v GA4 podle stejného utm_source. Už vytištěné letáky s holým odkazem na /start se do zdrojů nepočítají.</p>';
+        h += '<p class="muted" style="margin:.6rem 0 0;font-size:.8rem;">Skeny bez registrace (kolik lidí QR jen naskenovalo) najdeš v GA4 podle stejného utm_source. Už vytištěné letáky s holým odkazem na /start se do zdrojů nepočítají.</p>';
+        $('qrBody').innerHTML=h;
         $('qr').style.display='';
       }).catch(function(){ cardFail('qr','qrBody'); });
     }
