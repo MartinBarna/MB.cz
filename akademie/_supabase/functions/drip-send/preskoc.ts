@@ -14,13 +14,18 @@
 // hned pri importu, takze by ho test nemohl nacist, aniz by nastartoval server.
 // Stejny vzor uz v repu je: `ai-martin/preflag.ts` + `preflag.test.ts`.
 
-export type Produkt = 'videokurz' | 'academy' | 'coaching';
+export type Produkt = 'videokurz' | 'academy' | 'coaching' | 'balicek';
 
 /** Klic je `track/step`, hodnota je produkt, ktery ten konkretni mail prodava. */
 export const PRESKOC_KROK_KDYZ_VLASTNI: Record<string, Produkt> = {
   // krok 2 trate balicku = sablona `balicek-2-videokurz`,
   // subject "Recepty ti reknou co. Kurz ti rekne proc"
   'onboarding-nakup-balicek/2': 'videokurz',
+  // krok 12 longtailu = sablona `lt-balicek`, nabidka balicku "40 receptu a 48 odpovedi".
+  // ⚠️ `shouldStop` tenhle pripad NEPOKRYVA: pro `longtail-consumer` stopuje na `ownsAny`
+  // a v tom `balicek` zamerne neni (duvod je u `ownsAny` v index.ts). Bez teto branky
+  // by nabidka balicku chodila i tomu, kdo si balicek uz koupil.
+  'longtail-consumer/12': 'balicek',
 };
 
 /**
