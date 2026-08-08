@@ -372,6 +372,8 @@
     function show(id){ ['load','gate','app'].forEach(function(x){ $(x).style.display=(x===id?'':'none'); }); }
     function toast(m){ var t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){t.classList.remove('on');},1600); }
     function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    // 'YYYY-MM-DD' → '20. 7. 2027'. Cokoli jiného vrací beze změny (ať datum nikdy nezmizí).
+    function czDatum(s){ var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(s||'')); return m ? (+m[3])+'. '+(+m[2])+'. '+m[1] : String(s||''); }
     function fmtDate(s){ if(!s) return '—'; var d=new Date(s); return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); }
     function fmtDay(s){ if(!s) return '—'; return new Date(s).toLocaleDateString('cs-CZ'); }
     function api(payload){ return fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)}).then(function(r){ return r.json().then(function(j){return {status:r.status,j:j};}); }); }
@@ -494,9 +496,13 @@
           if(x.status === 'active'){ aktivni += n; tieryA[x.tier] = (tieryA[x.tier] || 0) + n; }
           if(x.status === 'trialing'){ trial += n; tieryT[x.tier] = (tieryT[x.tier] || 0) + n; }
         });
+        // ⚠️ Interní kódy tierů jsou pro Martina matoucí (`ai_basic` vypadá jako „Basic",
+        // ale je to VIP za 499; `basic` je Basic za 249). Ven jdou VŽDY lidské názvy.
+        var TIER_NAZVY = { basic:'Basic (249 Kč)', ai_basic:'VIP (499 Kč)', gold:'Gold (koučink)', diamond:'Diamond (koučink)' };
+        var tierNazev = function(t){ return TIER_NAZVY[t] || t; };
         var popisTieru = function(m){
           var k = Object.keys(m);
-          return k.length ? k.map(function(t){ return esc(t) + (k.length > 1 ? ' ' + m[t] + '×' : ''); }).join(' · ') : '';
+          return k.length ? k.map(function(t){ return esc(tierNazev(t)) + (k.length > 1 ? ' ' + m[t] + '×' : ''); }).join(' · ') : '';
         };
 
         var h = '<div class="kdtiles" style="margin-bottom:12px;">'
@@ -524,7 +530,10 @@
                 return '<tr' + (test ? ' style="opacity:.55"' : '') + '>'
                   + '<td>' + esc(x.email || '') + (test ? ' <span class="muted" style="font-size:.75rem;">TEST</span>' : '') + '</td>'
                   + '<td style="white-space:nowrap;">' + esc(x.registrace || '—') + '</td>'
-                  + '<td>' + (x.tier ? esc(x.tier) : '<span class="muted">bez předplatného</span>') + '</td>'
+                  + '<td>' + (x.tier ? esc(tierNazev(x.tier))
+                      // roční přístup (Academy, převod): ukázat dokdy platí, jinak nic
+                      + (x.plati_do ? '<br><span class="muted" style="font-size:.75rem;white-space:nowrap;">na rok, do ' + esc(czDatum(x.plati_do)) + '</span>' : '')
+                    : '<span class="muted">bez předplatného</span>') + '</td>'
                   + '<td style="color:' + barva + ';font-weight:700;">' + esc(stav) + '</td>'
                   + '<td>' + (x.zdroj ? esc(x.zdroj) : '<span class="muted">—</span>') + '</td>'
                   + '<td>' + atrTxt + '</td></tr>';
