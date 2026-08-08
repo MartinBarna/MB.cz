@@ -1157,10 +1157,10 @@ Deno.serve(async (req) => {
         let tcGrant = def.tcGrant ? "preskoceno" : "netyka-se";
         let referral = "preskoceno";
         let bonusVideokurz = def.videokurzBonus ? "preskoceno" : "netyka-se";
-        // Stav dokladu jde do odpovědi funkce, ať je v logu Stripu vidět, jestli odešel.
-        // ⚠️ Od 7. 8. 2026 se doklad týká VŠECH jednorázových produktů, ne jen balíčku,
-        // takže tu už není `klic === "balicek" ? … : "netyka-se"`.
-        let doklad = "neodeslano";
+        // Stav dokladu jde do odpovědi funkce, ať je v logu Stripu vidět, co se dělo.
+        // Od 8. 8. 2026 je hodnota konstantní: vlastní doklad je vypnutý a posílá ho
+        // Stripe (viz komentáře u obou původních volacích míst níž).
+        const doklad = "vypnuto-posila-stripe";
         if (novyDozivotni) {
           if (def.tcGrant) {
             tcGrant = await grantTvujCoach(emailL, typeof obj.id === "string" ? obj.id : null);
@@ -1250,11 +1250,13 @@ Deno.serve(async (req) => {
                 kucharka_url: await podepis("Kucharka 40 + receptu.pdf", "Martin-Barna-Kucharka-40-receptu.pdf"),
                 otazky_url: await podepis("Otazky klientu EBook.pdf", "Martin-Barna-48-odpovedi.pdf"),
                 // ⭐ DOKLAD O ZAPLACENÍ VE VLASTNÍM MAILU (7. 8. 2026).
-                // ⛔ Stripe zákaznické účtenky NEPOSÍLÁ. Ověřeno 7. 8. průchodem Martinova
-                //    Gmailu: za dva týdny testovacích nákupů nedorazila ani jedna účtenka
-                //    od Martina Barny, jen účtenky cizích firem a Stripe faktura ZA poplatky
-                //    (ta je adresovaná jemu, ne zákazníkovi). Zapíná se to v dashboardu,
-                //    kam se nikdo kromě Martina nedostane, takže doklad posíláme sami.
+                // ⚠️ STAV SE ZMĚNIL 8. 8. 2026: Stripe zákaznické účtenky UŽ POSÍLÁ
+                //    (Settings → Customer emails → Successful payments zapnul Martin).
+                //    Do té doby neposílal a ověřeno to bylo 7. 8. průchodem jeho Gmailu,
+                //    proto jsme si doklad posílali sami; to je od 8. 8. VYPNUTÉ.
+                // ⚠️ Tyhle proměnné ale NEJSOU druhý mail, jsou to jen údaje o platbě
+                //    UVNITŘ uvítacího mailu. Nechávají se: duplicitu mailů nedělají.
+                //    Kdyby je Martin chtěl z uvítačky pryč, je to úprava ŠABLONY v DB.
                 // ⚠️ `amount_total` je v haléřích a MĚNÍ HO SLEVOVÝ KÓD, takže se bere
                 //    ze session, ne z ceníku. Jinak by doklad tvrdil jinou částku, než
                 //    kolik člověk reálně zaplatil.
@@ -1292,7 +1294,12 @@ Deno.serve(async (req) => {
           //    takže „zaplaceno jednorázově" = „patří mu doklad", bez výjimky.
           //    Do 7. 8. 2026 tu stálo `if (klic === "balicek")` a kupec videokurzu,
           //    upgradu ani konzultace doklad nikdy nedostal.
-          doklad = await posliDoklad(emailL, obj, def);
+          // ⛔ VLASTNÍ DOKLAD VYPNUT (8. 8. 2026, rozhodl Martin).
+          // Doklady jedou VÝHRADNĚ přes Stripe receipty
+          // (Settings → Customer emails → Successful payments, zapnuto 8. 8. 2026).
+          // Náš český doklad se vypnul proto, aby u jednorázovek nechodily DVA maily.
+          // Funkce `posliDoklad` zůstává v souboru schválně: kdyby se Martin vrátil
+          // k vlastnímu dokladu, stačí sem vrátit volání. Historie: git + task #29.
 
           // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
           // a domluvit termín. Bez tohohle upozornění by zákazník zaplatil 2 990 Kč
@@ -1408,9 +1415,12 @@ Deno.serve(async (req) => {
                 co_delat: "⛔ Pošli mu kuchařku a e-book ručně A vrať mu 349 Kč. Zaplatil a nedostal nic.",
               });
             }
-            // ⛔ DOKLAD I ZA DRUHOU PLATBU. Peníze přišly znovu, takže doklad patří znovu.
-            //    Schválně až tady, mimo `try`: i když odkazy selhaly, platba proběhla.
-            doklad = await posliDoklad(emailL, obj, def);
+            // ⛔ VLASTNÍ DOKLAD VYPNUT (8. 8. 2026, rozhodl Martin), i za druhou platbu.
+            // Doklady jedou VÝHRADNĚ přes Stripe receipty
+            // (Settings → Customer emails → Successful payments, zapnuto 8. 8. 2026).
+            // Vypnuto proto, aby u jednorázovek nechodily DVA maily. Funkce
+            // `posliDoklad` zůstává v souboru; návrat = vrátit sem volání.
+            // Historie: git + task #29.
           }
         }
 
