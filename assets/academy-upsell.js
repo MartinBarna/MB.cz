@@ -1,4 +1,4 @@
-/* Academy upsell — nenásilný pop-up v členské sekci videokurzu.
+/* Academy upsell: nenásilný pop-up v členské sekci videokurzu.
    Ukáže se JEN přihlášenému majiteli videokurzu, který NEMÁ Academy.
    Frequency cap: max 1× za 6 dní (localStorage). Spustí se po chvíli studia.
    Cíl: posunout klienta videokurzu → Barna Academy (premium). */
@@ -68,9 +68,9 @@
         '<button class="x" aria-label="Zavřít">×</button>' +
         '<span class="kick">🎓 Pro majitele videokurzu</span>' +
         '<h3>Videokurz tě naučil <b>jak</b>. Academy ti ukáže <b>proč</b>.</h3>' +
-        '<p>Posuň se z „umím si poradit" na „umím to vést u klientů". Barna Academy je celá věda za výživou, tréninkem i chováním — a certifikace.</p>' +
+        '<p>Posuň se z „umím si poradit" na „umím to vést u klientů". Barna Academy je celá věda za výživou, tréninkem i chováním. A certifikace.</p>' +
         '<ul><li>24 modulů a 256 lekcí + diagramy a kvízy</li><li>Nástroje pro trenéry: generátory + databáze 120 cviků</li><li>Certifikát Barna Academy</li><li>Doživotní přístup, i budoucí obsah</li></ul>' +
-        '<p class="price">Zaváděcí cena <s>12 900 Kč</s> → <b>8 900 Kč</b>.</p>' +
+        '<p class="price"><b>8 900 Kč</b> jednorázově.</p>' +
         '<a class="cta" href="/akademie/#cena">Prohlédnout Academy →</a>' +
         '<button class="later" type="button">Teď ne, díky</button>' +
         '</div>';
