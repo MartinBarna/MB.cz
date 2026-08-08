@@ -2119,6 +2119,16 @@
         }
       }).catch(function(){ $('tclogFoot').textContent='Chyba spojení.'; });
     }
+    // ⛔ OPRAVA 8. 8. 2026: dlaždice souhrnu se počítaly z `mlogAll`, tedy z POSLEDNÍCH
+    // 2000 událostí, ale tvářily se jako celková čísla a u nuly napsaly „zatím 0 – nechodí?".
+    // Změřeno v živé DB: `onboarding-videokurz` má 1108 odeslaných mailů za celou historii
+    // a 0 v posledních 2000, `existing-leadmagnet` 157 a 0, `onboarding-coaching` 34 a 0.
+    // Tři sekvence, které prokazatelně odesílaly, tedy admin hlásil jako „nechodí?".
+    // Souhrn se proto bere z akce `email_summary`, která agreguje CELOU historii
+    // (stránkovaně přes fetchAllRows). Ta akce v admin-api existovala už dřív, jen ji
+    // nikdo nevolal, takže správný výpočet ležel vedle špatného a nikdo o něm nevěděl.
+    // Tabulka pod tím zůstává pohledem na posledních 2000 událostí a říká to nahlas.
+    var mlogSouhrn=null;
     function openMailLog(){
       $('mlog').classList.add('on'); $('mlogRows').innerHTML=''; $('mlogSum').innerHTML=''; $('mlogFoot').textContent='Načítám…';
       // limit:2000 → stáhni CELÝ log, ať onboarding blast nepřebije lead-magnet/follow-up řádky
@@ -2126,22 +2136,37 @@
         if(o&&o.j&&o.j.ok&&o.j.rows){ mlogAll=o.j.rows; renderMailSummary(); renderMailLog(); }
         else { $('mlogFoot').textContent='Log se nepodařilo načíst — zkus zavřít a otevřít znovu.'; }
       }).catch(function(){ $('mlogFoot').textContent='Chyba spojení.'; });
+      api({action:'email_summary'}).then(function(o){
+        if(o&&o.j&&o.j.ok&&o.j.rows){ mlogSouhrn=o.j.rows; renderMailSummary(); }
+      }).catch(function(){ /* dlaždice pak dopočítá z posledních 2000 a řekne to */ });
     }
     function renderMailSummary(){
-      var by={}; MLOG_TRACKS.forEach(function(t){ by[t]={sent:0,err:0,test:0,tot:0}; });
-      mlogAll.forEach(function(r){
-        var t=r.track||'—'; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0};
-        by[t].tot++;
-        if(r.type==='sent') by[t].sent++; else if(r.type==='error') by[t].err++; else if(r.type==='test') by[t].test++;
-      });
+      var by={}, zCeleHistorie=!!mlogSouhrn;
+      MLOG_TRACKS.forEach(function(t){ by[t]={sent:0,err:0,test:0,tot:0}; });
+      if(zCeleHistorie){
+        mlogSouhrn.forEach(function(r){
+          var t=r.track||'—'; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0};
+          by[t].sent=Number(r.sent)||0; by[t].err=Number(r.error)||0; by[t].test=Number(r.test)||0;
+          by[t].tot=by[t].sent+by[t].err+by[t].test;
+        });
+      } else {
+        mlogAll.forEach(function(r){
+          var t=r.track||'—'; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0};
+          by[t].tot++;
+          if(r.type==='sent') by[t].sent++; else if(r.type==='error') by[t].err++; else if(r.type==='test') by[t].test++;
+        });
+      }
       var cur=($('mlogTrack').value||'');
       var keys=MLOG_TRACKS.concat(Object.keys(by).filter(function(k){return MLOG_TRACKS.indexOf(k)<0;}));
       $('mlogSum').innerHTML=keys.map(function(t){
         var s=by[t]||{sent:0,err:0,test:0,tot:0};
         var sub=[]; if(s.err) sub.push(s.err+' chyb'); if(s.test) sub.push(s.test+' testů');
+        // „nechodí?" smí padnout jen tehdy, když je číslo za CELOU historii. Nad useknutým
+        // oknem by to byl falešný poplach u sekvence, která jen chvíli neodesílala.
+        var prazdno=zCeleHistorie?'zatím 0, nikdy neodešlo':'0 v posledních 2000 událostech';
         return '<div class="sc'+(cur===t?' on':'')+'" data-track="'+esc(t)+'"><div class="n">'+s.sent+'</div>'+
           '<div class="l">'+esc(trackName(t))+'</div>'+
-          '<div class="sub">'+(sub.length?sub.join(' · '):(s.sent?'odesláno':'zatím 0 – nechodí?'))+'</div></div>';
+          '<div class="sub">'+(sub.length?sub.join(' · '):(s.sent?'odesláno':prazdno))+'</div></div>';
       }).join('');
       Array.prototype.forEach.call($('mlogSum').querySelectorAll('.sc'),function(c){
         c.addEventListener('click',function(){ var t=c.getAttribute('data-track'); $('mlogTrack').value=($('mlogTrack').value===t?'':t); renderMailSummary(); renderMailLog(); });
@@ -2161,7 +2186,10 @@
         var name=r.subject?esc(r.subject):(esc(trackName(r.track))+' #'+esc(r.step));
         return '<tr class="mlog-row" data-track="'+esc(r.track)+'" data-step="'+esc(r.step)+'" data-email="'+esc(r.email)+'"><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'—')+'</td><td>'+name+'</td><td>'+st+'</td></tr>';
       }).join('')||'<tr><td colspan="4" class="muted" style="padding:1rem;">Nic nenalezeno.</td></tr>';
-      $('mlogFoot').textContent=list.length+' záznamů';
+      // ⚠️ Tabulka vykresluje jen prvních 500 řádků a log stahuje posledních 2000 událostí.
+      // Dřív tu stálo jen „N záznamů", což vypadalo, že je to všechno.
+      $('mlogFoot').textContent=(list.length>500?'Zobrazeno prvních 500 z '+list.length:list.length+' záznamů')
+        +' · tabulka ukazuje posledních 2000 událostí, dlaždice nahoře počítají celou historii';
       Array.prototype.forEach.call($('mlogRows').querySelectorAll('.mlog-row'),function(tr){
         tr.addEventListener('click',function(){ openMailPreview(tr.getAttribute('data-track'),tr.getAttribute('data-step'),tr.getAttribute('data-email')); });
       });
