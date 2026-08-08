@@ -13,6 +13,7 @@ type Case = {
 const s = (...emaily: string[]) => new Set(emaily);
 const MA_VK = { videokurz: s('kupec@example.com'), academy: s(), coaching: s() };
 const NEMA_NIC = { videokurz: s(), academy: s(), coaching: s() };
+const MA_BALICEK = { videokurz: s(), academy: s(), coaching: s(), balicek: s('kupec@example.com') };
 
 const CASES: Case[] = [
   // --- JADRO OPRAVY ---
@@ -42,7 +43,29 @@ const CASES: Case[] = [
   },
   {
     track: 'longtail-consumer', step: 2, email: 'kupec@example.com', owns: MA_VK,
-    expect: null, why: 'prodejni trate resi shouldStop, ne tahle branka',
+    expect: null, why: 'jiny krok teze trate se branky tykat nesmi (chyta se jen krok 12)',
+  },
+
+  // --- NABIDKA BALICKU NA KONCI LONGTAILU (krok 12 = sablona `lt-balicek`) ---
+  {
+    track: 'longtail-consumer', step: 12, email: 'kupec@example.com', owns: MA_BALICEK,
+    expect: 'balicek', why: 'kdo uz balicek ma, nesmi dostat nabidku balicku',
+  },
+  {
+    track: 'longtail-consumer', step: 12, email: 'novy@example.com', owns: MA_BALICEK,
+    expect: null, why: 'kdo balicek nema, nabidku dostat MA (to je smysl toho kroku)',
+  },
+  {
+    track: 'longtail-consumer', step: 12, email: 'kupec@example.com', owns: MA_VK,
+    expect: null, why: 'majitel videokurzu bez balicku nabidku dostat MA (a klic `balicek` v mape vlastnictvi vubec neni)',
+  },
+  {
+    track: 'longtail-consumer', step: 11, email: 'kupec@example.com', owns: MA_BALICEK,
+    expect: null, why: 'sousedni krok 11 "Kam dal" se branky tykat nesmi',
+  },
+  {
+    track: 'longtail-consumer', step: 12, email: 'KUPEC@Example.COM', owns: MA_BALICEK,
+    expect: 'balicek', why: 'i u balicku se e-mail porovnava case-insensitive',
   },
 
   // --- VLASTNICTVI JINEHO PRODUKTU NESTACI ---
@@ -86,7 +109,7 @@ for (const c of CASES) {
 
 // Pojistka proti tichemu rozsireni mapy: kdyz nekdo prida dalsi krok, musi pribyt i test.
 const KLICE = Object.keys(PRESKOC_KROK_KDYZ_VLASTNI).sort();
-const OCEKAVANE_KLICE = ['onboarding-nakup-balicek/2'];
+const OCEKAVANE_KLICE = ['longtail-consumer/12', 'onboarding-nakup-balicek/2'];
 if (JSON.stringify(KLICE) !== JSON.stringify(OCEKAVANE_KLICE)) {
   selhalo++;
   console.error(`✗ mapa PRESKOC_KROK_KDYZ_VLASTNI se zmenila: ${JSON.stringify(KLICE)}. Dopln test a uprav OCEKAVANE_KLICE.`);

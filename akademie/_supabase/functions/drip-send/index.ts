@@ -496,9 +496,15 @@ Deno.serve(async (req: Request) => {
   // NULL = dozivotni, tedy plati porad. Detail: pamet `mb-academy-pricing-mise`.
   const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true)
     .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString())
-    .in('product', ['videokurz', 'academy', 'coaching']);
-  const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set() };
+    .in('product', ['videokurz', 'academy', 'coaching', 'balicek']);
+  const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set(), balicek: new Set() };
   for (const b of (buyersRows ?? []) as { email: string; product: string }[]) owns[b.product]?.add(b.email.toLowerCase());
+  // ⛔ `balicek` je v `owns` SCHVALNE, ale v `ownsAny` SCHVALNE NENI, a to se nesmi „opravit".
+  // `owns.balicek` slouzi vyhradne brance v `preskoc.ts` (aby se nabidka balicku neposlala
+  // tomu, kdo si ho uz koupil). Kdyby `balicek` pribyl i do `ownsAny`, clovek, ktery koupil
+  // JEN balicek za 349, by se okamzite stopnul na akvizicnich tratich i na `longtail-consumer`
+  // (status 'purchased') a prestal by dostavat obsah. Balicek je nejlevnejsi schod pyramidy,
+  // tedy duvod pokracovat v peci, ne duvod cloveka umlcet.
   const ownsAny = (em: string) => owns.videokurz.has(em) || owns.academy.has(em) || owns.coaching.has(em);
   const shouldStop = (track: string, step: number, em: string): boolean => {
     const t = String(track || '');
