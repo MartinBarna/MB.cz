@@ -331,7 +331,10 @@ Deno.serve(async (req) => {
     `<p style="margin:0 0 14px;color:#888">za ${dY}</p>` + alerts +
     `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
     row("Nové leady", String(leadsYc) + (leadsYc ? " (" + Object.entries(bySrc).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
-    row("Prodeje (SimpleShop)", String(salesYc) + (salesYc ? " (" + Object.entries(salesY).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
+    // Label „SimpleShop" byl relikt (SimpleShop zrušen 29. 7. 2026, prodeje jdou
+    // ze Stripe) a 8. 8. zmátl Martina, který kvůli němu řešil, jestli SimpleShop
+    // pořád žije. Počítadlo bylo správně, lhal jen nápis.
+    row("Prodeje (Stripe)", String(salesYc) + (salesYc ? " (" + Object.entries(salesY).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
     // "Resend max 100/den" bylo z free tarifu a od prechodu na placeny uz to neplatilo.
     // Zavadejici udaj: 30. 6. 2026 prave tenhle denni limit vyrobil 307 chyb.
     row("Odeslané e-maily", String(sent) + " · strop fronty " + cap + " · Resend bez denního limitu") +
