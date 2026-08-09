@@ -62,7 +62,14 @@ function renderBlocks(blocks: Block[], v: Record<string, string>): string {
     //    do vetve pro tlacitko a cte b.href a b.text, ktere obrazek nema).
     if (b.t === "img")
       return `<img src='${attr(fill(b.src, v))}' alt='${attr(fill(b.alt, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
-    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    if (b.t === "btn")
+      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // ⛔ VYSLOVNY pripad pro neznamy typ. Driv tady byl HOLY return s tlacitkem, takze
+    //    kazdy typ, ktery renderer nezna, se tise zpracoval jako tlacitko a spadl na tom,
+    //    ze nema href ani text. Radsi chyba se JMENEM typu: zachranny mail k objednavce
+    //    s tise vynechanym blokem muze prijit bez odkazu na platbu, a to je horsi
+    //    nez mail, ktery nedojde a je videt v chybach behu.
+    throw new Error("neznamy_typ_bloku:" + (b as { t: string }).t);
   }).join("\n");
 }
 function wrap(preheader: string, body: string): string {
