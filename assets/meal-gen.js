@@ -118,6 +118,16 @@
     prefs = prefs || {};
     var exclCat = prefs.excludeCat || [];     // např. ['dairy']
     var exclId = prefs.excludeId || [];
+    // ⛔⛔ POJISTKA PROTI NASAZENÍ VE ŠPATNÉM POŘADÍ. Změřeno 9. 8. 2026: nad databází BEZ
+    // dietních tagů vrátí generátor se zapnutým dietním filtrem den se čtyřmi jídly a NULOU
+    // položek, 0 kcal, bez chybové hlášky. Tichý prázdný jídelníček je horší než pád.
+    // Nastane jedině tehdy, když se kód a data rozejdou (edge funkce si food-db stahuje
+    // z martinbarna.cz za běhu). ⛔ Stejná pojistka je v appce (meal-gen-core.ts).
+    if ((prefs.vegan || prefs.bezLaktozy || prefs.bezLepku) &&
+        !db.some(function (f) { return Array.isArray(f.obsahuje); })) {
+      throw new Error('meal-gen: databáze potravin nemá dietní tagy (pole `obsahuje`), ale je ' +
+        'zapnutý dietní filtr. Nejdřív musí být venku nová food-db.json, teprve pak to, co ji filtruje.');
+    }
     return db.filter(function (f) {
       if (exclCat.indexOf(f.cat) !== -1) return false;
       if (exclId.indexOf(f.id) !== -1) return false;
