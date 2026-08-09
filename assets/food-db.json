@@ -755,7 +755,10 @@
     },
     "portion": 30,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "bambusove-vyhonky",
@@ -1464,7 +1467,10 @@
     "portion": 200,
     "bezny": true,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "bramborova-placka",
@@ -1584,7 +1590,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne",
-      "laktoza"
+      "laktoza",
+      "lepek"
     ],
     "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
@@ -2999,7 +3006,10 @@
     },
     "portion": 300,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "dalamanek",
@@ -3443,7 +3453,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "dyne-hokaido",
@@ -4437,7 +4450,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "gallo-pinto",
@@ -4584,7 +4600,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "gomen",
@@ -5718,7 +5737,10 @@
     },
     "portion": 300,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "chapati",
@@ -6870,7 +6892,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kantonske-pecene-kure",
@@ -6888,7 +6913,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kapr",
@@ -7542,7 +7570,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kofta-jehneci",
@@ -7560,7 +7591,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kokos",
@@ -8411,7 +8445,10 @@
     "portion": 30,
     "bezny": true,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kukuricne-testoviny-bezlepkove",
@@ -8550,7 +8587,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kureci-nozky-ve-fazolove-omacce",
@@ -8568,7 +8608,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kureci-prsa",
@@ -8662,7 +8705,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kuskus",
@@ -10422,7 +10468,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "medunka-lekarska",
@@ -13029,7 +13078,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "pecorino-romano",
@@ -13081,7 +13133,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "pekingska-kachna",
@@ -13099,7 +13154,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "pelmeni-smetanovy-preliv",
@@ -13875,7 +13933,10 @@
       "zivocisne",
       "laktoza"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "provolone",
@@ -14396,7 +14457,10 @@
       "zivocisne",
       "laktoza"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "rapikaty-celer",
@@ -14865,7 +14929,10 @@
     },
     "portion": 30,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "rostlinna-smetana-na-vareni-2",
@@ -14880,7 +14947,10 @@
     },
     "portion": 50,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "rostlinna-zakysana-smetana",
@@ -15093,7 +15163,10 @@
     },
     "portion": 20,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "rostlinny-parmazan",
@@ -16013,7 +16086,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "sardele",
@@ -16181,7 +16257,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "satay-omacka",
@@ -16254,7 +16333,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "scone",
@@ -16405,7 +16487,10 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "sitake",
@@ -17911,7 +17996,10 @@
       "zivocisne",
       "laktoza"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "syrovatkovy-protein",
@@ -17931,7 +18019,10 @@
       "zivocisne",
       "laktoza"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "syrove-tycinky",
@@ -18170,7 +18261,10 @@
       "zivocisne",
       "laktoza"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "taveny-syr-smetanovy",
@@ -18188,7 +18282,10 @@
       "zivocisne",
       "laktoza"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "tazene-filo-testo",
@@ -18723,7 +18820,10 @@
     "portion": 30,
     "bezny": true,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "tortilla-psenicna",
@@ -19553,7 +19653,10 @@
     },
     "portion": 20,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "vegansky-parek",
@@ -19586,7 +19689,10 @@
     },
     "portion": 20,
     "obsahuje": [],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "vejce",
@@ -20402,6 +20508,9 @@
     "obsahuje": [
       "zivocisne"
     ],
-    "nejiste": []
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   }
 ]
