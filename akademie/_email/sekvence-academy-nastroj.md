@@ -1,3 +1,8 @@
+> ⛔ **Poznámka k 9. 8. 2026:** dokument místy počítá se zdražením Academy na 12 900 Kč
+> po 50. zakládajícím členovi. **Ten slib Martin 8. 8. 2026 ZRUŠIL, cena zůstává 8 900 Kč**
+> (status „zakládající člen" zůstal jako pocta, cenová hrozba ne). Web i mailové šablony
+> jsou vyčištěné; tenhle text je ponechán jako historický záznam. Nepoužívej ho jako podklad.
+
 # Nurture sekvence `academy-nastroj` (NÁVRH — čeká na test + schválení)
 
 Pro leady, kteří použili FREE generátor (jídelníček/trénink) na `/nastroje-zdarma/` a nechali e-mail.

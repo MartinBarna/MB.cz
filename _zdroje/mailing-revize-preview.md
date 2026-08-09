@@ -1,3 +1,8 @@
+> ⛔ **Poznámka k 9. 8. 2026:** dokument místy počítá se zdražením Academy na 12 900 Kč
+> po 50. zakládajícím členovi. **Ten slib Martin 8. 8. 2026 ZRUŠIL, cena zůstává 8 900 Kč**
+> (status „zakládající člen" zůstal jako pocta, cenová hrozba ne). Web i mailové šablony
+> jsou vyčištěné; tenhle text je ponechán jako historický záznam. Nepoužívej ho jako podklad.
+
 # Mailing revize — červenec 2026 (přehled pro Martina)
 
 Tenhle dokument shrnuje **všechny změny mailingu** z revize 16. 7. 2026. Samotné změny jsou

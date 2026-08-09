@@ -1,3 +1,11 @@
+-- ⛔⛔ HISTORICKÝ SNÍMEK, NENÍ ZDROJ PRAVDY (ověřeno 9. 8. 2026).
+-- Živé texty mailů žijí v tabulce `email_templates`, tenhle soubor je za nimi pozadu
+-- (např. předmět upsell mailu tu zněl „8 900 místo 12 900", v DB stálo „8 900, později
+-- 12 900"). ⇒ NESPOUŠTĚT proti živé DB, přepsalo by to novější texty.
+-- ⛔ A obsahuje ZRUŠENÝ slib zdražení Academy na 12 900 Kč (Martin ho zrušil 8. 8. 2026,
+-- cena zůstává 8 900). Web i DB jsou od zmínek vyčištěné, tenhle soubor NE.
+-- Srovnání se skutečností = regenerace z DB, samostatný úkol.
+
 -- ============================================================
 -- Barna Academy — LONGTAIL sekvence (14. 7. 2026, schváleno Martinem „zelená")
 -- Řeší díru: všechny sekvence končily terminálem a lead/kupec pak navždy mlčel.

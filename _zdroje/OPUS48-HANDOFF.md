@@ -1,3 +1,8 @@
+> ⛔ **Poznámka k 9. 8. 2026:** dokument místy počítá se zdražením Academy na 12 900 Kč
+> po 50. zakládajícím členovi. **Ten slib Martin 8. 8. 2026 ZRUŠIL, cena zůstává 8 900 Kč**
+> (status „zakládající člen" zůstal jako pocta, cenová hrozba ne). Web i mailové šablony
+> jsou vyčištěné; tenhle text je ponechán jako historický záznam. Nepoužívej ho jako podklad.
+
 # HANDOFF: Fable 5 → Opus 4.8 (mise MB.cz)
 
 Datum předání: stav k **7. 7. 2026 večer** (poslední den Fable 5 mise, limit vyčerpán).
