@@ -68,7 +68,16 @@ function renderBlocks(blocks: Block[], v: Record<string, string>): string {
     //    (vk-complete) img blok ma, takze bez tohohle se gratulacni mail neposle vubec.
     if (b.t === "img")
       return `<img src='${attr(fill(b.src, v))}' alt='${attr(fill(b.alt, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
-    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    if (b.t === "btn")
+      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // ⛔ VYSLOVNY pripad pro neznamy typ. Driv tady byl HOLY return s tlacitkem, takze
+    //    kazdy typ, ktery renderer nezna, se tise zpracoval jako tlacitko. Presne tak
+    //    se sem dostal blok img: precetl b.href a b.text, ktere nema, a shodil
+    //    "Cannot read properties of undefined". Ze to spadlo, bylo STESTI; kdyby posledni
+    //    vetev cetla pole, ktere novy typ nahodou ma, mail by ODESEL s nesmyslem v tele.
+    //    Radsi chyba se JMENEM typu: mail s tise vynechanym blokem muze prijit bez nabidky
+    //    nebo bez odhlaseni, a to je pod Martinovym jmenem horsi nez mail, ktery nedojde.
+    throw new Error("neznamy_typ_bloku:" + (b as { t: string }).t);
   }).join("\n");
 }
 function wrap(preheader: string, body: string, unsubUrl = ""): string {
