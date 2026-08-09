@@ -64,7 +64,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "alfalfa-klicky",
@@ -238,7 +239,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "angrest",
@@ -303,7 +305,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "appenzeller",
@@ -464,7 +467,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "artycok",
@@ -548,7 +552,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "ayib",
@@ -698,7 +703,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "baladi",
@@ -800,7 +806,8 @@
     ],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "batat-fialovy-peceny",
@@ -1260,7 +1267,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "bily-jogurt",
@@ -1374,7 +1382,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "bok-choy",
@@ -1557,7 +1566,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "Mražené bramborové výrobky mívají kvůli křupavosti pšeničný obal."
   },
   {
     "id": "brambory-gratinovane",
@@ -1575,7 +1585,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "brambory-pecene",
@@ -1797,7 +1808,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "buchta-tvarohova",
@@ -1836,7 +1848,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "bulgur",
@@ -1945,7 +1958,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "camembert",
@@ -3057,7 +3071,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "detska-mlecna-kase-krupicova",
@@ -3096,7 +3111,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "detska-mlecna-kase-ryzova",
@@ -3131,7 +3147,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "detska-nemlecna-kase-ryzova",
@@ -3322,7 +3339,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "dorada",
@@ -3406,7 +3424,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "dusene-veprove-zebirko-s-fazolovou-omackou",
@@ -3861,7 +3880,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "farofa",
@@ -3878,7 +3898,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "fattoush",
@@ -4433,7 +4454,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "gambas-al-ajillo",
@@ -4471,7 +4493,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "gervais-smetanovy-syr",
@@ -4509,7 +4532,8 @@
     ],
     "nejiste": [
       "laktoza"
-    ]
+    ],
+    "duvod": "Přepuštěné máslo je zbavené mléčné sušiny, ale stopy laktózy v něm zůstávají. Pro citlivého člověka to nemusí být nula."
   },
   {
     "id": "gnocchi-bramborove",
@@ -4578,7 +4602,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "gorgonzola",
@@ -4719,7 +4744,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "gravlax",
@@ -4853,7 +4879,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "halibut",
@@ -4958,7 +4985,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "hermelin",
@@ -5045,7 +5073,8 @@
       "zivocisne",
       "laktoza",
       "lepek"
-    ]
+    ],
+    "duvod": "Hořká čokoláda bývá vyráběná na lince s mléčnou a nese varování o stopách mléka."
   },
   {
     "id": "horka-tykev",
@@ -5453,7 +5482,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "Mražené bramborové výrobky mívají kvůli křupavosti pšeničný obal."
   },
   {
     "id": "hranolky-velke",
@@ -5471,7 +5501,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "Mražené bramborové výrobky mívají kvůli křupavosti pšeničný obal."
   },
   {
     "id": "hrasek-zeleny-konzerva",
@@ -5707,7 +5738,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "chapati-roti",
@@ -5727,7 +5759,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "char-siu",
@@ -5747,7 +5780,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "char-siu-bao",
@@ -6032,7 +6066,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "chouricao",
@@ -6052,7 +6087,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "chrest",
@@ -6115,7 +6151,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "irish-soda-bread",
@@ -6376,7 +6413,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "jam",
@@ -6411,7 +6449,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "jamon-serrano",
@@ -6431,7 +6470,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "japchae-nudle",
@@ -6500,7 +6540,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "jeseter",
@@ -6607,7 +6648,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kabanos",
@@ -6627,7 +6669,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "kaderavek",
@@ -6950,7 +6993,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kartoffelsalat",
@@ -7084,7 +7128,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "kedluben",
@@ -7137,7 +7182,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "kesu",
@@ -7230,7 +7276,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "king-oyster",
@@ -7345,7 +7392,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "klobasa-domaci",
@@ -7365,7 +7413,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "klouzek-slizky",
@@ -7457,7 +7506,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "knedlik-ovocny",
@@ -8234,7 +8284,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "kukurice",
@@ -8442,7 +8493,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "kureci-jatra",
@@ -9027,7 +9079,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "libecek-lekarsky",
@@ -9450,7 +9503,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "low-carb-keto-chleb",
@@ -10028,7 +10082,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "mangold-syrovy",
@@ -10432,7 +10487,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "mikrobylinky-mix",
@@ -10546,7 +10602,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "mlecna-kase-ryzova-cokoladova",
@@ -10675,7 +10732,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "moin-moin",
@@ -10693,7 +10751,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "morbier",
@@ -10803,7 +10862,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "moruse",
@@ -10955,7 +11015,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "Mražené bramborové výrobky mívají kvůli křupavosti pšeničný obal."
   },
   {
     "id": "mrazene-bramboracky",
@@ -11009,7 +11070,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "Mražené bramborové výrobky mívají kvůli křupavosti pšeničný obal."
   },
   {
     "id": "mrazene-houskove-knedliky",
@@ -11029,7 +11091,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "mrazene-hranolky",
@@ -11047,7 +11110,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "Mražené bramborové výrobky mívají kvůli křupavosti pšeničný obal."
   },
   {
     "id": "mrazene-lesni-ovoce",
@@ -11169,7 +11233,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "mucenka",
@@ -11384,12 +11449,12 @@
     },
     "portion": 30,
     "portionLabel": "1 ks ~30 g",
-    "obsahuje": [
+    "obsahuje": [],
+    "nejiste": [
+      "zivocisne",
       "lepek"
     ],
-    "nejiste": [
-      "zivocisne"
-    ]
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "naan",
@@ -11568,7 +11633,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "nektarinka",
@@ -11689,7 +11755,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "ochuceny-jogurt-boruvkovy",
@@ -12050,7 +12117,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesna-kase-instantni-ovocna",
@@ -12067,7 +12135,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesna-kase-varena-na-vode",
@@ -12085,7 +12154,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesna-mouka",
@@ -12103,7 +12173,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesne-mleko-barista",
@@ -12120,7 +12191,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesne-otruby",
@@ -12136,10 +12208,11 @@
     },
     "portion": 15,
     "bezny": true,
-    "obsahuje": [
+    "obsahuje": [],
+    "nejiste": [
       "lepek"
     ],
-    "nejiste": []
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesne-vlocky",
@@ -12159,7 +12232,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesne-vlocky-jemne",
@@ -12177,7 +12251,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesne-vlocky-jemne-2",
@@ -12195,7 +12270,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovesny-jogurt",
@@ -12212,7 +12288,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "ovocna-kapsicka",
@@ -12334,7 +12411,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "ovocno-zeleninova-kapsicka-jablko-mrkev-dyne",
@@ -12736,7 +12814,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "parmazan",
@@ -13040,7 +13119,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "penne",
@@ -13475,7 +13555,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "polnicek",
@@ -13593,7 +13674,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "porridge-na-mlece",
@@ -13613,7 +13695,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "portobello",
@@ -13715,7 +13798,8 @@
     ],
     "nejiste": [
       "laktoza"
-    ]
+    ],
+    "duvod": "Přepuštěné máslo je zbavené mléčné sušiny, ale stopy laktózy v něm zůstávají. Pro citlivého člověka to nemusí být nula."
   },
   {
     "id": "prosciutto-crudo",
@@ -13735,7 +13819,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "proteinove-pecivo-low-carb",
@@ -14530,7 +14615,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "renekloda",
@@ -14685,7 +14771,8 @@
       "zivocisne",
       "laktoza",
       "lepek"
-    ]
+    ],
+    "duvod": "Mražené bramborové výrobky mívají kvůli křupavosti pšeničný obal."
   },
   {
     "id": "rostlinna-klobasa",
@@ -14702,7 +14789,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "rostlinna-mozzarella",
@@ -14824,7 +14912,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "rostlinne-kureci-kousky",
@@ -14841,7 +14930,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "rostlinne-mlete-maso",
@@ -14858,7 +14948,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "rostlinne-platky-syra",
@@ -14905,7 +14996,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "rostlinny-cedar-platky",
@@ -14937,7 +15029,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "rostlinny-jogurt-kokosovy",
@@ -14969,7 +15062,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Oves sám lepek nemá, ale běžně se kontaminuje v mlýně, kde se mele i pšenice. Certifikovaný bezlepkový oves se proto prodává zvlášť a je to jiná potravina. NEOPRAVOVAT na bezlepkové."
   },
   {
     "id": "rostlinny-jogurt-sojovy-bily",
@@ -15154,7 +15248,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "roti-john-omacka",
@@ -15172,7 +15267,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "rotkohl",
@@ -15189,7 +15285,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "rozinky",
@@ -15241,7 +15338,8 @@
     ],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "rukola",
@@ -15722,7 +15820,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "sadlo",
@@ -15793,7 +15892,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "salam-napoli",
@@ -15813,7 +15913,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "salam-vysocina",
@@ -15833,7 +15934,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "salat-dubovy-list",
@@ -16060,7 +16162,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "satay-kureci-spizy-s-arasidovou-omackou",
@@ -16096,7 +16199,8 @@
     "nejiste": [
       "zivocisne",
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "sate-padang",
@@ -16116,7 +16220,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "sauerkraut",
@@ -16833,7 +16938,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "sojove-maso",
@@ -16851,7 +16957,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "sojove-mleko-cokoladove",
@@ -17379,7 +17486,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "sumec",
@@ -17432,7 +17540,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "sunka-kureci-libova",
@@ -17453,7 +17562,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "sunka-od-kosti",
@@ -17475,7 +17585,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "sunka-veprova-nejvyssi-jakost",
@@ -17496,7 +17607,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "sunkovy-narez",
@@ -17516,7 +17628,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "susena-cocka",
@@ -17763,7 +17876,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "svestky",
@@ -17981,7 +18095,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "tandoori-kure",
@@ -18001,7 +18116,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "tatarska-omacka",
@@ -18155,7 +18271,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "termix-vanilkovy",
@@ -18286,7 +18403,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "tilapie",
@@ -18342,7 +18460,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "tlacenka-domaci",
@@ -18362,7 +18481,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "tlacenka-svetla",
@@ -18382,7 +18502,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "toastovy-chleb-bily",
@@ -18450,7 +18571,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "tofu-marinovane-2",
@@ -18467,7 +18589,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "tofu-uzene",
@@ -18485,7 +18608,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Marinády a omáčky stojí na sójové omáčce, a ta bývá vařená z pšenice."
   },
   {
     "id": "tolstolobik",
@@ -18952,7 +19076,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "tvaroh-mekky",
@@ -19137,7 +19262,8 @@
     ],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "uhor-cerstvy",
@@ -19375,7 +19501,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "veganske-nugety",
@@ -19392,7 +19519,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "vegansky-burger",
@@ -19409,7 +19537,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Rostlinné náhrady masa a smažené luštěninové kuličky mívají jako pojivo pšeničnou bílkovinu nebo mouku. Liší se to podle výrobce a receptury."
   },
   {
     "id": "vegansky-cezar-dresink",
@@ -19441,7 +19570,8 @@
     "obsahuje": [],
     "nejiste": [
       "lepek"
-    ]
+    ],
+    "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
     "id": "vegansky-ranch-dresink",
@@ -19807,7 +19937,8 @@
     "obsahuje": [],
     "nejiste": [
       "zivocisne"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "wafle",
@@ -19827,7 +19958,8 @@
     "nejiste": [
       "zivocisne",
       "laktoza"
-    ]
+    ],
+    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
     "id": "yorkshire-pudding",
