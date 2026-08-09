@@ -111,7 +111,10 @@
       </div>
       <div class="chips">
         <label class="chip"><input type="checkbox" id="vegetarian"> Vegetariánský</label>
+        <label class="chip" title="Nic živočišného: kromě masa i vejce, mléčné výrobky a med."><input type="checkbox" id="vegan"> Veganský</label>
         <label class="chip"><input type="checkbox" id="nodairy"> Bez mléčných výrobků</label>
+        <label class="chip" title="Skládám jen z potravin, u kterých to mám ověřené. Kde se složení liší výrobek od výrobku, potravinu radši vynechám."><input type="checkbox" id="bezLaktozy"> Bez laktózy</label>
+        <label class="chip" title="Skládám jen z potravin, u kterých to mám ověřené. Uzeniny, rostlinné náhrady masa ani oves sem nepouštím, protože u nich rozhoduje výrobce. U kupovaných výrobků čti etiketu."><input type="checkbox" id="bezLepku"> Bez lepku</label>
         <label class="chip" title="Kalorie a bílkoviny drží tvůj cíl, sacharidy ~8 % kalorií, zbytek dorovná tuk. Bez příloh, nízkosacharidová zelenina a bobule."><input type="checkbox" id="keto"> Keto / low-carb</label>
       </div>
       <details class="brandbox" id="brandbox">
@@ -201,6 +204,11 @@
       var p={excludeCat:[],excludeId:[]};
       if($('nodairy').checked) p.excludeCat.push('dairy');
       if($('vegetarian').checked) p.vegetarian=true;
+      // Vegan je nadmnožina vegetariána: posílám oba, ať jedna změna v enginu nikdy
+      // neznamená volnější jídelníček, než si člověk zvolil.
+      if($('vegan').checked) { p.vegan=true; p.vegetarian=true; }
+      if($('bezLaktozy').checked) p.bezLaktozy=true;
+      if($('bezLepku').checked) p.bezLepku=true;
       return p;
     }
     function mealHtml(m, mi, withSwap){

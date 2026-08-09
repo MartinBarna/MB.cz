@@ -94,6 +94,25 @@
     return false;
   }
 
+  // [2026-08-09] Smí tahle potravina do jídelníčku, který má být bez dané věci?
+  //
+  // ⛔⛔ POLARITA JE OPAČNÁ NEŽ U `nonveg` A JE TO ZÁMĚR.
+  // Projde jen položka, u které osa NENÍ ani v `obsahuje`, ani v `nejiste`, a která
+  // vůbec MÁ pole `obsahuje`. Neprotříděná potravina tedy neprojde nikdy. `nonveg` má
+  // polaritu opačnou (co není označené, projde jako bezmasé) a přesně tudy v červenci
+  // 2026 proteklo vegetariánům 89 druhů masa. Nová potravina smí propadnout leda směrem
+  // k přísnosti, nikdy k tvrzení.
+  //
+  // ⛔ `nejiste` je plnohodnotná odpověď, ne nedodělek. U salámu nebo rostlinného burgeru
+  // rozhoduje o lepku výrobce, ne druh potraviny, takže se nic netvrdí. U lepku je chyba
+  // zdravotní: celiak, který uvěří našemu „bez lepku", onemocní.
+  // ⛔ Stejná funkce je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+  function neobsahuje(f, osa) {
+    if (!Array.isArray(f.obsahuje)) return false; // neprotříděno = neručíme za nic
+    if (f.obsahuje.indexOf(osa) !== -1) return false;
+    return !(Array.isArray(f.nejiste) && f.nejiste.indexOf(osa) !== -1);
+  }
+
   // filtr DB podle preferencí (vyloučení kategorií/ id)
   function filterDb(db, prefs) {
     prefs = prefs || {};
@@ -108,6 +127,10 @@
       if (prefs.vegetarian && (f.nonveg ||
           /kure|krut|hovez|veprov|losos|tunak|treska|sunka|sardin|stehno|mlete|krevet/.test(f.id))) return false;
       if (exclCat.indexOf('dairy') !== -1 && isDairyExtra(f.id)) return false;
+      // Vegan je přísnější než vegetarián: mimo maso vylučuje i vejce, mléčné a med.
+      if (prefs.vegan && !neobsahuje(f, 'zivocisne')) return false;
+      if (prefs.bezLaktozy && !neobsahuje(f, 'laktoza')) return false;
+      if (prefs.bezLepku && !neobsahuje(f, 'lepek')) return false;
       return true;
     });
   }
