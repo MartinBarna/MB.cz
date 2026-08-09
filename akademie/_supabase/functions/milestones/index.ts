@@ -21,7 +21,7 @@ const json = (b: unknown, status = 200) =>
 const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 
 // --- mini render (kompatibilni s email_templates blocks; gender pro cleny = 'other') ---
-type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string };
+type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string } | { t: "img"; src: string; alt: string };
 function gender(s: string): string {
   // clenove nemaji segment -> muzsky rod ([[zena||muz]] -> muz, [a] -> '')
   let out = "", i = 0;
@@ -50,12 +50,24 @@ function merge(s: string, v: Record<string, string>): string {
   return out;
 }
 const fill = (s: string, v: Record<string, string>) => merge(gender(s), v);
+// HTML atributy jsou tady v JEDNODUCHYCH uvozovkach, takze se escapuje i apostrof,
+// jinak by text z atributu vyskocil. Shodne s attr() v drip-send.
+const attr = (s: string) =>
+  s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;")
+    .split('"').join("&quot;").split("'").join("&#39;");
 function renderBlocks(blocks: Block[], v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === "p") return `<p style='margin:0 0 14px'>${fill(b.html, v)}</p>`;
     if (b.t === "ps") return `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, v)}</p>`;
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` + b.items.map((li) => `<li style='margin:0 0 9px'>${fill(li, v)}</li>`).join("") + `</ul>`;
+    // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
+    // Vsechny styly inline, mailove klienty externi CSS ignoruji. Drz 1:1 s drip-send.
+    // ⛔ Bez teto vetve propadne img do vetve pro tlacitko, ktera cte b.href a b.text,
+    //    ty obrazek nema, a cely mail SPADNE na TypeError. Sablona milestone-videokurz/100
+    //    (vk-complete) img blok ma, takze bez tohohle se gratulacni mail neposle vubec.
+    if (b.t === "img")
+      return `<img src='${attr(fill(b.src, v))}' alt='${attr(fill(b.alt, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
     return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
   }).join("\n");
 }
