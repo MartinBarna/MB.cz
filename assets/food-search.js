@@ -5,8 +5,15 @@
 (function (global) {
   'use strict';
 
-  // „rohlik" i „rohlík" matchne stejně — pryč diakritika, lowercase
+  // „rohlik" i „rohlík" matchne stejně - pryč diakritika, lowercase
   function normName(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+
+  // Kategorie, které znamenají HOTOVÉ JÍDLO, ne surovinu. Musí souhlasit s migrací 0105
+  // v appce (`search_curated_foods`) a s `KATEGORIE_HOTOVYCH_JIDEL` v `src/data/foods.ts`,
+  // jinak se web a appka rozejdou v pořadí výsledků.
+  // ⚠️ Položka bez kategorie se schválně bere jako SUROVINA (nepropadne za jídla),
+  // stejně jako `coalesce(f.category, '')` v té migraci.
+  var JE_HOTOVE_JIDLO = { 'hotová jídla': 1, 'polévky': 1, 'dezerty': 1, 'saláty': 1 };
 
   // hledání v curated + RANKING: přesná shoda → od začátku s koncem slova → celé slovo
   //   → od začátku, ale slovo pokračuje → podřetězec → všechna slova (v libovolném pořadí)
@@ -85,10 +92,22 @@
           var vsechna = slova.every(function (w) { return n.indexOf(w) >= 0; });
           if (vsechna) rank = 5;
         }
+        // SUROVINA PŘED HOTOVÝM JÍDLEM: suroviny zůstávají 1 až 5, hotová jídla
+        // dostanou 11 až 15, takže celá skupina surovin je nad celou skupinou jídel.
+        // ⛔ Přesná shoda (0) sem NEPATŘÍ a musí zůstat úplně první: kdyby ji surovina
+        // přeskočila, dotaz „falafel" by nevrátil položku `Falafel` na prvním místě.
+        if (rank > 0 && rank < 9 && JE_HOTOVE_JIDLO[it.category]) rank += 10;
         return { it: it, rank: rank };
       })
-      .filter(function (x) { return x.rank < 9; })
-      .sort(function (a, b) { return a.rank - b.rank; }) // JS sort stabilní → drží pořadí zdroje
+      // ⛔ POZOR NA 9: je to značka „netrefeno", ne stupeň. Nesmí se filtrovat
+      // porovnáním `rank < 9`, protože hotová jídla mají 11 až 15 a vypadla by VŠECHNA.
+      .filter(function (x) { return x.rank !== 9; })
+      .sort(function (a, b) {
+        // Uvnitř stupně kratší název napřed („Feta sýr" před „Ayib (etiopský…)"),
+        // pak drží stabilní sort pořadí zdroje, a to je abecední (export je řazený
+        // podle názvu stejně jako `order by name` v databázi appky).
+        return (a.rank - b.rank) || (a.it.name.length - b.it.name.length);
+      })
       .slice(0, limit)
       .map(function (x) { return x.it; });
   }
