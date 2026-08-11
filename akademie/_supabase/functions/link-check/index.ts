@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // LINK-CHECK: denní kontrola, že odkazy v mailech a na klíčových stránkách ŽIJÍ.
 //
 // ⛔ PROČ TO EXISTUJE. Od 22. do 27. 7. 2026 vracela tracking doména Resendu 400
@@ -110,7 +110,21 @@ async function zkontroluj(url: string, kde: string): Promise<Vysledek> {
   try {
     // GET, ne HEAD: statické hostingy i Stripe na HEAD občas vrací 405 a vyrobily by
     // falešný poplach. GET je dražší, ale 72 odkazů denně je zanedbatelné.
-    const r = await fetch(url, { method: "GET", redirect: "follow", signal: ctrl.signal });
+    // ⚠️ HLAVIČKY PROHLÍŽEČE JSOU NOSNÉ, ne kosmetika. 11. 8. 2026 začal Wedos vracet
+    //    401 na KAŽDÝ request bez browser User-Agent (holý Deno fetch) a kontrola
+    //    ohlásila „69 z 110 rozbitých", zatímco web lidem normálně jel. Falešný poplach
+    //    učí adresáta mail ignorovat, což je horší než ticho. Marker LinkCheck na konci
+    //    UA zůstává schválně: v logách Wedosu je poznat, že jsme to my, a WAF projde.
+    const r = await fetch(url, {
+      method: "GET",
+      redirect: "follow",
+      signal: ctrl.signal,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 LinkCheck-MartinBarna",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "cs-CZ,cs;q=0.9",
+      },
+    });
     const telo = (await r.text().catch(() => "")).slice(0, 4000);
 
     if (!r.ok) return { url, kde, http_status: r.status, ok: false, poznamka: "HTTP " + r.status };
