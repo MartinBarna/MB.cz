@@ -94,11 +94,40 @@
     return false;
   }
 
+  // [2026-08-09] Smí tahle potravina do jídelníčku, který má být bez dané věci?
+  //
+  // ⛔⛔ POLARITA JE OPAČNÁ NEŽ U `nonveg` A JE TO ZÁMĚR.
+  // Projde jen položka, u které osa NENÍ ani v `obsahuje`, ani v `nejiste`, a která
+  // vůbec MÁ pole `obsahuje`. Neprotříděná potravina tedy neprojde nikdy. `nonveg` má
+  // polaritu opačnou (co není označené, projde jako bezmasé) a přesně tudy v červenci
+  // 2026 proteklo vegetariánům 89 druhů masa. Nová potravina smí propadnout leda směrem
+  // k přísnosti, nikdy k tvrzení.
+  //
+  // ⛔ `nejiste` je plnohodnotná odpověď, ne nedodělek. U salámu nebo rostlinného burgeru
+  // rozhoduje o lepku výrobce, ne druh potraviny, takže se nic netvrdí. U lepku je chyba
+  // zdravotní: celiak, který uvěří našemu „bez lepku", onemocní.
+  // ⛔ Stejná funkce je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+  function neobsahuje(f, osa) {
+    if (!Array.isArray(f.obsahuje)) return false; // neprotříděno = neručíme za nic
+    if (f.obsahuje.indexOf(osa) !== -1) return false;
+    return !(Array.isArray(f.nejiste) && f.nejiste.indexOf(osa) !== -1);
+  }
+
   // filtr DB podle preferencí (vyloučení kategorií/ id)
   function filterDb(db, prefs) {
     prefs = prefs || {};
     var exclCat = prefs.excludeCat || [];     // např. ['dairy']
     var exclId = prefs.excludeId || [];
+    // ⛔⛔ POJISTKA PROTI NASAZENÍ VE ŠPATNÉM POŘADÍ. Změřeno 9. 8. 2026: nad databází BEZ
+    // dietních tagů vrátí generátor se zapnutým dietním filtrem den se čtyřmi jídly a NULOU
+    // položek, 0 kcal, bez chybové hlášky. Tichý prázdný jídelníček je horší než pád.
+    // Nastane jedině tehdy, když se kód a data rozejdou (edge funkce si food-db stahuje
+    // z martinbarna.cz za běhu). ⛔ Stejná pojistka je v appce (meal-gen-core.ts).
+    if ((prefs.vegan || prefs.bezLaktozy || prefs.bezLepku) &&
+        !db.some(function (f) { return Array.isArray(f.obsahuje); })) {
+      throw new Error('meal-gen: databáze potravin nemá dietní tagy (pole `obsahuje`), ale je ' +
+        'zapnutý dietní filtr. Nejdřív musí být venku nová food-db.json, teprve pak to, co ji filtruje.');
+    }
     return db.filter(function (f) {
       if (exclCat.indexOf(f.cat) !== -1) return false;
       if (exclId.indexOf(f.id) !== -1) return false;
@@ -108,6 +137,10 @@
       if (prefs.vegetarian && (f.nonveg ||
           /kure|krut|hovez|veprov|losos|tunak|treska|sunka|sardin|stehno|mlete|krevet/.test(f.id))) return false;
       if (exclCat.indexOf('dairy') !== -1 && isDairyExtra(f.id)) return false;
+      // Vegan je přísnější než vegetarián: mimo maso vylučuje i vejce, mléčné a med.
+      if (prefs.vegan && !neobsahuje(f, 'zivocisne')) return false;
+      if (prefs.bezLaktozy && !neobsahuje(f, 'laktoza')) return false;
+      if (prefs.bezLepku && !neobsahuje(f, 'lepek')) return false;
       return true;
     });
   }

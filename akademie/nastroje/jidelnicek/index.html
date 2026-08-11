@@ -111,7 +111,10 @@
       </div>
       <div class="chips">
         <label class="chip"><input type="checkbox" id="vegetarian"> Vegetariánský</label>
+        <label class="chip" title="Nic živočišného: kromě masa i vejce, mléčné výrobky a med."><input type="checkbox" id="vegan"> Veganský</label>
         <label class="chip"><input type="checkbox" id="nodairy"> Bez mléčných výrobků</label>
+        <label class="chip" title="Skládám jen z potravin, u kterých to mám ověřené. Kde se složení liší výrobek od výrobku, potravinu radši vynechám."><input type="checkbox" id="bezLaktozy"> Bez laktózy</label>
+        <label class="chip" title="Skládám jen z potravin, u kterých to mám ověřené. Uzeniny, rostlinné náhrady masa ani oves sem nepouštím, protože u nich rozhoduje výrobce. U kupovaných výrobků čti etiketu."><input type="checkbox" id="bezLepku"> Bez lepku</label>
         <label class="chip" title="Kalorie a bílkoviny drží tvůj cíl, sacharidy ~8 % kalorií, zbytek dorovná tuk. Bez příloh, nízkosacharidová zelenina a bobule."><input type="checkbox" id="keto"> Keto / low-carb</label>
       </div>
       <details class="brandbox" id="brandbox">
@@ -155,7 +158,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/meal-gen.js?v=20260806d"></script>
+  <script src="/assets/meal-gen.js?v=20260811a"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null, lastPlan=null, lastWeek=null, swapSeed=0;
@@ -187,7 +190,7 @@
       }
     }catch(e){}
 
-    fetch('/assets/food-db.json?v=20260805b').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/food-db.json?v=20260811a').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
       if(fromCalc) generate(false);
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
@@ -201,6 +204,11 @@
       var p={excludeCat:[],excludeId:[]};
       if($('nodairy').checked) p.excludeCat.push('dairy');
       if($('vegetarian').checked) p.vegetarian=true;
+      // Vegan je nadmnožina vegetariána: posílám oba, ať jedna změna v enginu nikdy
+      // neznamená volnější jídelníček, než si člověk zvolil.
+      if($('vegan').checked) { p.vegan=true; p.vegetarian=true; }
+      if($('bezLaktozy').checked) p.bezLaktozy=true;
+      if($('bezLepku').checked) p.bezLepku=true;
       return p;
     }
     function mealHtml(m, mi, withSwap){
