@@ -2190,6 +2190,7 @@
     },
     "portion": 40,
     "obsahuje": [
+      "zivocisne",
       "lepek"
     ],
     "nejiste": []
@@ -7793,6 +7794,8 @@
     },
     "portion": 120,
     "obsahuje": [
+      "zivocisne",
+      "laktoza",
       "lepek"
     ],
     "nejiste": []
@@ -18037,6 +18040,8 @@
     },
     "portion": 25,
     "obsahuje": [
+      "zivocisne",
+      "laktoza",
       "lepek"
     ],
     "nejiste": []
@@ -20506,7 +20511,8 @@
     "portion": 150,
     "nonveg": true,
     "obsahuje": [
-      "zivocisne"
+      "zivocisne",
+      "laktoza"
     ],
     "nejiste": [
       "lepek"
