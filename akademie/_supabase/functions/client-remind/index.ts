@@ -16,6 +16,17 @@ const CTA_URL = "https://martinbarna.cz/akademie/klient/";
 // coz je u cloveka bez uctu slepa ulicka). &amp; kvuli platnosti HTML v href.
 const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2Fakademie%2Fklient%2F";
 
+// JEDNORÁZOVÁ zmínka o novém návodu klientské sekce (Martin rozhodl 11. 8. 2026: starý
+// návod neseděl s okénky v reportu, nahlásila to klientka).
+// ⛔ OKNO, ne přesný den. Kdyby pondělní běh vypadl (cron, výpadek, Resend), s podmínkou
+//    `dnes === "2026-08-18"` by se omluva neposlala NIKDY a nikdo by si toho nevšiml.
+//    Funkce běží 1× týdně, takže uvnitř okna proběhne právě jednou.
+// ⚠️ Ruční spuštění uvnitř okna by ji poslalo znovu; testovací režim jde jen na test adresu.
+// ⏰ Po 24. 8. 2026 je tenhle blok mrtvý kód a smaže se (i s druhou přílohou).
+const NAVOD_OD = "2026-08-18";
+const NAVOD_DO = "2026-08-24";
+const NAVOD_SOUBOR = "klientska-sekce-navod.pdf";
+
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
 const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
@@ -50,7 +61,7 @@ function vokativ(fn: string): string {
   return fn;
 }
 
-function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean): string {
+function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean, sNavodem = false): string {
   const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
   const cta = (href: string, label: string) =>
     `<p style='margin:4px 0 18px'><a class='mb-btn' href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
@@ -96,6 +107,10 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
     `<div class='mb-brand' style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
     p(osloveni ? "Ahoj " + osloveni + "," : "Ahoj,") +
     telo +
+    // Jednorázová zmínka o novém návodu. Až se blok bude mazat, smaž i konstanty nahoře.
+    (sNavodem
+      ? p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Ještě jedna věc: <strong>přepsal jsem návod ke klientské sekci</strong>. Ten starý neseděl s tím, co v reportu doopravdy vidíš, pár okének v něm chybělo. Omlouvám se, jestli tě to zdrželo. Nový je v příloze a najdeš ho i v sekci mezi dokumenty.</span>")
+      : "") +
     p("<strong>Be Effective!</strong><br>Martin") +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div class='mb-mut' style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · připomínka pro klienty koučinku. Nechceš je? Odepiš mi na tenhle mail a vypnu ti je.</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
@@ -173,17 +188,29 @@ Deno.serve(async (req: Request) => {
         ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
       ];
 
-  // KT návod jako příloha (stáhne se jednou pro všechny; best effort — bez něj mail stejně odejde)
-  let attachments: { filename: string; content: string }[] | undefined;
-  try {
-    const { data: pdf } = await admin.storage.from("client-docs").download("shared/kaloricke-tabulky-navod.pdf");
-    if (pdf) {
+  // Přílohy ze storage (stáhnou se jednou pro všechny; best effort, bez nich mail stejně odejde)
+  async function priloha(soubor: string): Promise<{ filename: string; content: string } | null> {
+    try {
+      const { data: pdf } = await admin.storage.from("client-docs").download("shared/" + soubor);
+      if (!pdf) return null;
       const buf = new Uint8Array(await pdf.arrayBuffer());
       let bin = "";
       for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-      attachments = [{ filename: "kaloricke-tabulky-navod.pdf", content: btoa(bin) }];
-    }
-  } catch (_e) { /* příloha je bonus, ne blokace */ }
+      return { filename: soubor, content: btoa(bin) };
+    } catch (_e) { return null; /* příloha je bonus, ne blokace */ }
+  }
+  const ktNavod = await priloha("kaloricke-tabulky-navod.pdf");
+  let attachments: { filename: string; content: string }[] | undefined = ktNavod ? [ktNavod] : undefined;
+
+  // Jednorázové okno: přiložit i nový návod klientské sekce a zmínit ho v textu.
+  // ⛔ Datum bereme z hodin běhu, ne z parametru: parametr by šel omylem poslat kdykoli.
+  const dnes = new Date().toISOString().slice(0, 10);
+  const oknoNavodu = dnes >= NAVOD_OD && dnes <= NAVOD_DO;
+  const sekceNavod = oknoNavodu ? await priloha(NAVOD_SOUBOR) : null;
+  // Zmínku posíláme JEN když příloha opravdu je. Jinak by text sliboval přílohu,
+  // která v mailu není, a to je horší než nezmínit nic.
+  const zminNavod = !!sekceNavod;
+  if (sekceNavod) attachments = [...(attachments ?? []), sekceNavod];
 
   let sent = 0;
   const errors: string[] = [];
@@ -197,7 +224,7 @@ Deno.serve(async (req: Request) => {
           from: FROM,
           to: [tgt.email],
           subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)" : "Pondělní report ✍️ (3 minuty)",
-          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!attachments && !isReg),
+          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!ktNavod && !isReg, zminNavod && !isReg),
           reply_to: "martin@martinbarna.cz",
           // Pri testu je bcc zbytecne (mail uz jde na Martina) a mate: prisel by dvakrat.
           ...(testEmail ? {} : { bcc: ["fitness.barna@gmail.com"] }),
@@ -209,5 +236,5 @@ Deno.serve(async (req: Request) => {
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, priloha: !!attachments, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, priloha: !!ktNavod, okno_navodu: oknoNavodu, navod_prilozen: zminNavod, errors });
 });
