@@ -194,7 +194,7 @@
     </div>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260806d"></script>
+  <script src="/assets/meal-gen.js?v=20260811a"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null;
@@ -214,7 +214,7 @@
       }
     }catch(e){}
 
-    fetch('/assets/food-db.json?v=20260805b').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/food-db.json?v=20260811a').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
       if(fromCalc) generate(false);
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
