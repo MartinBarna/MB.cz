@@ -155,7 +155,7 @@
           if(lg) lg.addEventListener('click', function(e){ e.preventDefault(); window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); });
           window.BA.getUser().then(function(u){
             if(!u){
-              // Možná právě dorazil magic-link a session se teprve ustavuje z URL —
+              // Možná právě dorazil magic-link a session se teprve ustavuje z URL,
               // počkej na auth event místo okamžitého odskoku (jinak vzniká smyčka login ↔ hub).
               var settled=false;
               window.BA.onAuth(function(uu){ if(uu && !settled){ settled=true; location.reload(); } });
@@ -186,6 +186,15 @@
                       var mb=document.getElementById('appBadge'); if(mb) mb.textContent='📱 VIP v ceně členství';
                       var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. VIP verzi máš v ceně členství, po celou dobu, co ti běží.';
                     });
+                  } else if(r[2]){
+                    // ⭐ Koučink klient má appku VIP v ceně koučinku (Martin potvrdil 11. 8. 2026,
+                    // podnět Hana K.: dlaždice ji posílala na prodejní /pro-vas/, protože se tu
+                    // kontrolovalo jen členství Academy). Stejná cesta jako Academy člen:
+                    // přihlášení stejným e-mailem, párování jede přes e-mail.
+                    ap.setAttribute('href','https://coach.martinbarna.cz/sign-in?email='+encodeURIComponent(u.email||'')+'&from=academy');
+                    var aplK=ap.querySelector('.go .lbl'); if(aplK) aplK.textContent='Otevřít appku';
+                    var apbK=document.getElementById('appBadge'); if(apbK) apbK.textContent='🤝 VIP v ceně koučinku';
+                    var apdK=document.getElementById('appDesc'); if(apdK) apdK.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. VIP verzi máš v ceně koučinku. Přihlas se stejným e-mailem jako tady.';
                   } else {
                     ap.setAttribute('href','/pro-vas/'); ap.removeAttribute('target');
                     var apl2=ap.querySelector('.go .lbl'); if(apl2) apl2.textContent='Chci ji → rok VIP v Academy';
