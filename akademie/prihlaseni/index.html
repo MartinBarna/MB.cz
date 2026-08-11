@@ -190,20 +190,56 @@
 
       function show(kind, text) { msg.className = 'msg ' + kind; msg.textContent = text; }
 
+      // Účet na ten e-mail už existuje. Vlastní funkce, protože se to řeší na dvou
+      // místech (text chyby i automatické poslání odkazu na heslo).
+      function jeUzRegistrovany(e) {
+        var s = (e || '').toLowerCase();
+        return s.indexOf('already registered') >= 0 || s.indexOf('already been registered') >= 0
+          || s.indexOf('user already') >= 0 || s.indexOf('already exists') >= 0;
+      }
+
       // Přelož časté (anglické) chyby Supabase do srozumitelné češtiny pro laiky.
+      // ⛔ Fallback NIKDY nevrací původní anglickou větu: laik z ní nic nemá a působí
+      // jako rozbitý web. Originál jde do konzole, ať se dá dohledat.
       function friendlyErr(e) {
         var s = (e || '').toLowerCase();
         if (s.indexOf('invalid login') >= 0 || s.indexOf('invalid credentials') >= 0)
-          return 'E-mail nebo heslo nesedí. Zkontroluj překlepy. Hlásíš se poprvé po koupi? Dej „Vytvořit účet".';
-        if (s.indexOf('already registered') >= 0 || s.indexOf('already been registered') >= 0 || s.indexOf('user already') >= 0)
-          return 'Na tenhle e-mail už účet existuje - přepni nahoře na „Přihlásit se" a zadej heslo.';
+          return 'E-mail nebo heslo nesedí. Jestli ses sem naposledy dostal(a) odkazem z e-mailu, žádné heslo ještě nemáš: dej „Zapomněl(a) jsi heslo?" a nastav si ho. Účet ještě nemáš? Přepni nahoře na „Vytvořit účet".';
+        if (jeUzRegistrovany(s))
+          return 'Na tenhle e-mail už účet existuje. Jestli heslo znáš, přepni nahoře na „Přihlásit se". Jestli ne, dej „Zapomněl(a) jsi heslo?" a nastav si ho.';
         if (s.indexOf('password') >= 0 && s.indexOf('6') >= 0)
           return 'Heslo musí mít aspoň 6 znaků.';
+        if (s.indexOf('weak') >= 0 || s.indexOf('pwned') >= 0 || s.indexOf('leaked') >= 0)
+          return 'Tohle heslo je moc slabé nebo se často objevuje v únicích dat. Zvol prosím jiné.';
         if (s.indexOf('not confirmed') >= 0 || s.indexOf('email not confirmed') >= 0)
           return 'Účet ještě není potvrzený. Mrkni do e-mailu (i do spamu), nebo napiš na martin@martinbarna.cz.';
-        if (s.indexOf('rate limit') >= 0 || s.indexOf('too many') >= 0)
+        if (s.indexOf('rate limit') >= 0 || s.indexOf('too many') >= 0 || s.indexOf('for security purposes') >= 0)
           return 'Moc pokusů po sobě. Dej tomu chvilku a zkus to znovu.';
-        return e || 'Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.';
+        if (s.indexOf('unable to validate email') >= 0 || s.indexOf('invalid email') >= 0 || s.indexOf('invalid format') >= 0)
+          return 'E-mail nevypadá správně, zkontroluj překlepy.';
+        if (s.indexOf('signup') >= 0 && (s.indexOf('disabled') >= 0 || s.indexOf('not allowed') >= 0))
+          return 'Zakládání účtů je teď vypnuté. Napiš prosím na martin@martinbarna.cz.';
+        if (e) { try { console.warn('[BA] nepřeložená auth chyba:', e); } catch (_) {} }
+        return 'Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.';
+      }
+
+      // Registrace na e-mail, který už účet má. Rada „přepni na Přihlásit se" je pro
+      // většinu těchhle lidí SLEPÁ ULIČKA: účet jim vznikl přihlášením přes odkaz
+      // z e-mailu (shouldCreateUser:true), takže žádné heslo nemají a přihlášení
+      // heslem jim vrátí „E-mail nebo heslo nesedí". Změřeno 11. 8. 2026: 10 ze 64
+      // účtů Academy takhle vzniklo a 6 z nich skončilo na obnově hesla.
+      // ⇒ Místo chyby mu rovnou pošleme odkaz, na kterém si heslo nastaví.
+      function posliNastaveniHesla(email) {
+        show('ok', 'Účet na ' + email + ' už existuje. Posílám ti odkaz pro nastavení hesla…');
+        window.BA.resetPassword(email).then(function (r) {
+          if (r.ok) {
+            setMode('in');
+            show('ok', '📧 Účet na ' + email + ' už existuje, nejspíš ti vznikl při koupi nebo když ses přihlásil(a) odkazem z e-mailu. Poslali jsme ti tam odkaz, na kterém si nastavíš heslo (mrkni i do spamu). Pak se sem přihlásíš e-mailem a heslem. Jestli heslo znáš, rovnou ho zadej níž.');
+          } else {
+            setMode('in');
+            show('err', 'Účet na ' + email + ' už existuje, ale odkaz pro nastavení hesla se teď nepodařilo odeslat. Zkus to přes „Zapomněl(a) jsi heslo?", nebo napiš na martin@martinbarna.cz.');
+          }
+        });
       }
 
       window.BA.ready.then(function () {
@@ -252,7 +288,14 @@
             });
           } else if (mode === 'up') {
             window.BA.signUp(email, pass, fname).then(function (r) {
-              if (!r.ok) { submit.disabled = false; show('err', r.error || 'Registrace se nezdařila.'); return; }
+              if (!r.ok) {
+                submit.disabled = false;
+                // ⛔ Tady se dřív ukazovala HOLÁ anglická věta ze Supabase
+                // („User already registered"), jako jediná ze tří větví bez friendlyErr.
+                if (jeUzRegistrovany(r.error)) { posliNastaveniHesla(email); return; }
+                show('err', friendlyErr(r.error));
+                return;
+              }
               if (window.mbTrackLead) window.mbTrackLead('registrace', { value: 0, currency: 'CZK' });
               // Autoconfirm: po registraci je uživatel rovnou přihlášený → pusť ho dovnitř bez druhého kroku.
               // (Kdyby bylo ověření e-mailu zapnuté, getUser vrátí null → ukáž instrukci k přihlášení.)
