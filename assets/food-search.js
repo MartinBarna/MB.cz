@@ -35,15 +35,26 @@
   // ⚠️ A po každé změně bumpni `food-search.js?v=` v akademie/nastroje/potraviny/,
   // jinak vracející se návštěvník dostane z cache starý soubor.
   //
-  // ⚠️ JEDEN ROZDÍL PROTI APPCE JE ZÁMĚRNÝ A JE ZMĚŘENÝ, neopravuj ho jako opomenutí:
-  // appka uvnitř přihrádky řadí ještě podle DÉLKY názvu, tenhle web ne (drží pořadí
-  // zdroje, a `food-db.json` je abecední). Proto tu „sýr" vrací „Ayib (etiopský...)"
-  // a v appce „Feta sýr". Dorovnání podle délky bylo 11. 8. 2026 změřeno plošně
-  // (705 dotazů z prvních slov názvů, 1 191 sledovaných položek) a vyšlo NEROZHODNĚ:
-  // 206 položek nahoru proti 210 dolů, 39 nově do první pětky proti 39 ven z ní.
-  // ⇒ Na šesti běžných dotazech vypadá líp (Feta sýr, Rýže bílá, Kuřecí prsa), plošně
-  // ale ne, takže se to živému webu nemění bez Martinova rozhodnutí. Kdo to bude
-  // otevírat znovu, ať měří na tom, CO lidé opravdu hledají, ne na posunu položek.
+  // ⛔⛔ KTEROU DATABÁZI TENHLE HLEDÁČ DOSTÁVÁ: `assets/curated-foods.json`
+  // (2382 položek, klíč `category` s hodnotami „hotová jídla", „maso", „mléčné"…),
+  // volá ho `akademie/nastroje/potraviny/index.html` kolem řádku 105.
+  // ⚠️ NE `assets/food-db.json` (1192 položek, klíč `cat` = protein/carb/veg). Ten patří
+  // GENERÁTORU jídelníčku. Kdo si je splete, měří něco jiného, než co uživatel vidí;
+  // stalo se to 11. 8. 2026 a vedlo to k nepravdivému závěru „web to neumí".
+  //
+  // ⚠️ DVA ROZDÍLY PROTI APPCE, oba změřené (11. 8. 2026 nad curated-foods.json):
+  // 1. Appka uvnitř přihrádky řadí ještě podle DÉLKY názvu, tenhle web ne (drží pořadí
+  //    zdroje). Dorovnání je plošně NEROZHODNÉ: 1335 dotazů, 2374 sledovaných položek,
+  //    485 nahoru proti 495 dolů, 85 nově do první pětky proti 85 ven z ní.
+  // 2. ⏳ Appka od migrace 0105 řadí SUROVINU PŘED HOTOVÝM JÍDLEM (podle `category`),
+  //    tenhle web zatím NE. **Tady to jde a pomohlo by to**: dnes „sýr" vrací
+  //    „Burrito bean & cheese (fazole a sýr)", s tím pravidlem by vrátil „Feta sýr";
+  //    „kuřecí" vrací „Kuřecí biryani", vrátilo by „Kuřecí prsa".
+  //    ⛔ Čeká to na rozhodnutí, není to hotová věc, kterou by někdo zapomněl.
+  //    ⚠️ A pozor: `curated-foods.json` je ZASTARALÝ ruční export bez generujícího
+  //    skriptu (2382 položek proti 2369 v appce) a nemá opravu kategorií z migrace 0105,
+  //    takže „kuře" by i s tím pravidlem vrátilo Tandoori kuře, ne kuřecí prsa.
+  //    Kdo to bude dělat, začne obnovením exportu, ne řazením.
   function searchCurated(curated, query, limit) {
     limit = limit || 24;
     var qn = normName((query || '').trim());
