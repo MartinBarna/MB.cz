@@ -841,7 +841,7 @@ async function zapisRecurringProvizi(buyerEmail: string, invoice: any): Promise<
     if (!Number.isFinite(halere) || halere <= 0) return "nulova-faktura";
     const castkaKc = Math.round(halere) / 100;
 
-    await admin.from("referrals").insert({
+    const insRec = await admin.from("referrals").insert({
       code: kod, buyer_email: email, product: "academy",
       amount: castkaKc,
       order_id: fakturaId, source: "coupon", status: "pending",
@@ -849,6 +849,13 @@ async function zapisRecurringProvizi(buyerEmail: string, invoice: any): Promise<
       reward_amount: Math.round(castkaKc * sazba * 100) / 100,
       partner_type: "affiliate",
     });
+    // ⚠️ supabase-js VÝJIMKU NEVYHAZUJE, chybu vrací v `error`. Bez téhle kontroly
+    //    by selhaný insert (např. souběh dvou doručení téže faktury na unikátním
+    //    indexu order_id) vrátil „zapsano", i když se nezapsalo nic.
+    if (insRec.error) {
+      if (insRec.error.code === "23505") return "duplicita-faktura";
+      throw new Error("insert: " + insRec.error.message);
+    }
     return "zapsano";
   } catch (e) {
     // Best-effort jako u jednorázové atribuce: provize NIKDY nesmí shodit obnovu
@@ -936,7 +943,7 @@ async function atribuujReferral(
       ? Math.round(castkaKc * sazbaJednoraz * 100) / 100
       : (ODMENA[produkt] ?? 0);
 
-    await admin.from("referrals").insert({
+    const ins = await admin.from("referrals").insert({
       code: ref, buyer_email: email, product: produkt,
       order_id: orderId || null, source: "coupon", status: "pending",
       // 'cash' je v CHECK constraintu povolený (ověřeno proti živé DB 7. 8. 2026).
@@ -948,6 +955,13 @@ async function atribuujReferral(
       amount: castkaKc,
       partner_type: partnerType,
     });
+    // ⚠️ supabase-js VÝJIMKU NEVYHAZUJE, chybu vrací v `error`. Bez téhle kontroly by
+    //    selhaný insert vrátil „zapsano", i když DB zápis odmítla (nález 11. 8. 2026
+    //    při follow-upu revize: souběh na `referrals_order_uidx` by tiše lhal).
+    if (ins.error) {
+      if (ins.error.code === "23505") return "duplicita-order";
+      throw new Error("insert: " + ins.error.message);
+    }
     return "zapsano-" + (zdrojKodu || "?");
   } catch (e) {
     // Best-effort: atribuce NIKDY nesmí shodit nákup. Selhání jde do alertu, ne do 500.
@@ -1391,7 +1405,9 @@ Deno.serve(async (req) => {
             balicekZnovu = "preskoceno-chybi-payment-intent";
             await alertAdmin("🔴 Stripe: BALÍČEK koupen znovu, ale CHYBÍ payment_intent", {
               email: emailL, session: String(obj.id ?? ""),
-              co_delat: "⛔ Pošli mu soubory ručně. Zaplatil a automatika mu nic neposlala.",
+              co_delat: "⛔ Pošli mu soubory ručně. Zaplatil a automatika mu nic neposlala. "
+                + "A zkontroluj provizi partnerovi: bez payment_intent se atribuce nespustila, "
+                + "kdyby nákup přišel přes affiliate kód, zapiš ji do referrals ručně.",
             });
           } else if (predchoziPi === pi || (jizPoslano ?? []).length > 0) {
             balicekZnovu = "preskoceno-prehrana-udalost";

@@ -305,9 +305,19 @@ check('R4 atribuce v opakovane vetvi je za posliDoklad (mimo try s odkazy)',
   blokZnovu.indexOf('posliDoklad') > 0
     && blokZnovu.indexOf('await atribuujReferral(') > blokZnovu.indexOf('posliDoklad'),
   '');
-// Celkem prave DVE volani atribuce (novy nakup + opakovany balicek), zadne dalsi.
+// Aspon dve volani atribuce (novy nakup + opakovany balicek). Presny pocet schvalne
+// nehlidat: legitimni treti volaci misto by z toho udelalo trvaly falesny poplach
+// (nalez revize P28 11. 8. 2026).
 const volaniAtribuce = (zdrojWebhook.match(/await atribuujReferral\(/g) ?? []).length;
-check('R5 atribuujReferral se vola prave 2x', volaniAtribuce === 2, `volani=${volaniAtribuce}`);
+check('R5 atribuujReferral se vola aspon 2x', volaniAtribuce >= 2, `volani=${volaniAtribuce}`);
+
+// --- 14) INSERT PROVIZE CTE `error` (supabase-js vyjimku nevyhazuje) ---
+// Bez kontroly by selhany zapis (soubeh na referrals_order_uidx) vratil "zapsano".
+const insertyProvizi = [...zdrojWebhook.matchAll(/const ins\w* = await admin\.from\("referrals"\)\.insert\(/g)].length;
+check('R6 oba inserty provize ukladaji vysledek do promenne', insertyProvizi === 2, `nalezeno=${insertyProvizi}`);
+const kontrolyChyby = [...zdrojWebhook.matchAll(/if \(ins\w*\.error\)/g)].length;
+check('R7 oba inserty kontroluji error a 23505 prevadi na duplicitni navrat', kontrolyChyby === 2
+  && zdrojWebhook.includes('"23505"'), `kontrol=${kontrolyChyby}`);
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
