@@ -22,9 +22,12 @@ const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2F
 //    `dnes === "2026-08-18"` by se omluva neposlala NIKDY a nikdo by si toho nevšiml.
 //    Funkce běží 1× týdně, takže uvnitř okna proběhne právě jednou.
 // ⚠️ Ruční spuštění uvnitř okna by ji poslalo znovu; testovací režim jde jen na test adresu.
-// ⏰ Po 24. 8. 2026 je tenhle blok mrtvý kód a smaže se (i s druhou přílohou).
-const NAVOD_OD = "2026-08-18";
-const NAVOD_DO = "2026-08-24";
+// ⏰ Po 23. 8. 2026 je tenhle blok mrtvý kód a smaže se (i s druhou přílohou).
+// Okno posunuto 11. 8. z 18.-24. na 17.-23.: Martin chce omluvu v pondělním běhu 17. 8.
+// (cron jede po 01:00 UTC = 03:00 lokálně; porovnává se UTC datum, 17. 8. padne dovnitř,
+// další pondělí 24. 8. už je venku, jednorázovost drží).
+const NAVOD_OD = "2026-08-17";
+const NAVOD_DO = "2026-08-23";
 const NAVOD_SOUBOR = "klientska-sekce-navod.pdf";
 
 const json = (b: unknown, status = 200) =>
