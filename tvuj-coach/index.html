@@ -139,6 +139,27 @@
         .incl-pair { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; margin:2rem 0 0; }
         .incl-pair .incl { margin:0; max-width:none; }
         .incl b { color:var(--acc-l); }
+        /* Řádek s ročním bonusem v kartě tarifu. Schválně vlastní element, ne dovnitř
+           `.plan-year`: ten skript níž přepisuje celý `textContent` z ceníku, takže
+           cokoli vloženého do něj by po doběhnutí dotazu zmizelo. */
+        .bonus { background:rgba(235,177,44,.09); border:1px solid rgba(235,177,44,.28); border-radius:12px; padding:.6rem .8rem; margin:0 0 1rem; color:#e9e2d8; font-size:.86rem; line-height:1.5; }
+        .bonus b { color:var(--acc-l); }
+        /* Srovnávací tabulka. Mobil-first: značky jsou úzké sloupce s pevnou šířkou,
+           text se láme, takže se to vejde na 360 px BEZ vodorovného scrollu. Proto
+           grid a ne `<table>`; ta by se na telefonu buď rozjela do strany, nebo by
+           v ní zbyl na popisek jeden slabikář. */
+        .cmp { max-width:820px; margin:2rem auto 0; border:1px solid rgba(255,255,255,.1); border-radius:16px; overflow:hidden; }
+        .cmp-h, .cmp-r { display:grid; grid-template-columns:1fr 2.4rem 2.4rem 3rem; align-items:center; gap:.3rem; padding:.7rem .8rem; }
+        .cmp-h { background:rgba(255,255,255,.05); font-size:.74rem; letter-spacing:.04em; text-transform:uppercase; color:var(--mut); }
+        .cmp-h span { font-weight:700; }
+        .cmp-h b { color:#fff; font-weight:700; text-align:center; font-size:.72rem; }
+        .cmp-h b.ours { color:var(--acc-l); }
+        .cmp-r { border-top:1px solid rgba(255,255,255,.07); font-size:.9rem; }
+        .cmp-r span { color:var(--txt); }
+        .cmp-r i { font-style:normal; text-align:center; color:var(--mut); font-size:1.05rem; }
+        .cmp-r i.ours { color:var(--acc); font-weight:800; }
+        .cmp-leg { max-width:820px; margin:.9rem auto 0; color:var(--mut); font-size:.82rem; line-height:1.6; }
+        @media (min-width:641px) { .cmp-h, .cmp-r { grid-template-columns:1fr 6rem 6rem 7rem; padding:.8rem 1.2rem; } .cmp-h b { font-size:.76rem; } }
         .faq-i { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.09); border-radius:14px; padding:1.1rem 1.3rem; margin-bottom:.8rem; max-width:820px; margin-left:auto; margin-right:auto; }
         .faq-i b { color:#fff; display:block; margin-bottom:.25rem; }
         .faq-i p { color:var(--warm); font-size:.93rem; margin:0; }
@@ -261,6 +282,43 @@
     </div>
 </section>
 
+<!-- SROVNAVACI BLOK (11. 8. 2026). Stoji schvalne TESNE PRED cenikem: odpovida na otazku
+     „proc bych za tohle platil, kdyz mam neco zdarma", a tu si clovek klade prave ve chvili,
+     kdy uvidi cenu.
+     ⛔ ZAMERNE BEZ JMEN KONKURENCE, a jsou pro to dva duvody, ne jen slusnost:
+       1. jmenovat je znamena delat jim reklamu na nasi vlastni prodejni strance,
+       2. tvrzeni o cizim produktu zestara pri jejich prvnim updatu a zustane tu jako lez.
+     Proto se srovnavaji KATEGORIE nastroju („denik", „tracker") a tvrzeni jsou drzena na
+     urovni „co takova kategorie obvykle uma", nikdy „appka X to nema". Legenda pod tabulkou
+     to rika nahlas, at to nevypada jako schovavani.
+     ⛔ SCHVALNE TU NENI RADEK O POCTU POTRAVIN. Velke deniky nas v tom cisle porazeji
+     nasobne a stavet srovnani na poli, kde prohravame, je vlastni gol. Tez to odporuje
+     rozhodnuti nezavodit v poctech (viz `konkurence-nagram-kt-2026-08-11.md`). -->
+<section class="sec" style="background:#121014;">
+    <div class="wrap">
+        <h2 class="center">Jedna appka místo dvou</h2>
+        <p class="sec-sub">Kdo řeší jídlo i trénink, platí obvykle dva nástroje, a ani jeden z nich neví, co dělá ten druhý. Tady je obojí v jednom systému, takže trénink ví o jídle a jídlo o tréninku.</p>
+        <div class="cmp">
+            <div class="cmp-h">
+                <span>Co od toho čekáš</span>
+                <b>Deník</b><b>Tracker</b><b class="ours">Tvůj Coach</b>
+            </div>
+            <div class="cmp-r"><span>Zápis jídla za vteřiny: kód, hlas, fotka talíře</span><i>✓</i><i>–</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Tréninkový plán na míru a cviky s ukázkou</span><i>–</i><i>✓</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Objem po partiích: málo, akorát, nebo moc</span><i>–</i><i>◐</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Jídlo i trénink v jednom, jedno předplatné</span><i>–</i><i>–</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Cíle se hýbou podle reálného zápisu a váhy</span><i>–</i><i>–</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Jídelníček na tvoje čísla, i s nákupem</span><i>–</i><i>–</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>„Co si můžu ještě dnes dát?" ze zbytku maker</span><i>–</i><i>–</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Kouč, který má před sebou tvoje čísla<span class="vip-tag">VIP</span></span><i>–</i><i>–</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Řekne, když tvým číslům nevěří, a cíli nehne</span><i>–</i><i>–</i><i class="ours">✓</i></div>
+            <div class="cmp-r"><span>Za appkou člověk, kterému napíšeš, co chybí</span><i>–</i><i>–</i><i class="ours">✓</i></div>
+        </div>
+        <p class="cmp-leg"><b>✓</b> obvykle má &nbsp;·&nbsp; <b>◐</b> někdy, podle appky &nbsp;·&nbsp; <b>–</b> obvykle nemá<br>
+        „Deníkem" myslím běžnou appku na zapisování jídla, „trackerem" appku na zapisování tréninku. Srovnávám kategorie nástrojů, ne konkrétní appky: co která umí dnes, může být za měsíc jinak. Když ti v tvojí appce něco z pravého sloupce nechybí, klidně u ní zůstaň.</p>
+    </div>
+</section>
+
 <section class="sec" id="cenik">
     <div class="wrap">
         <h2 class="center">Kolik to stojí</h2>
@@ -282,6 +340,10 @@
                 <div class="plan-name">Basic</div>
                 <div class="plan-price" data-price="basic:month">249 Kč <small>/ měsíc</small></div>
                 <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
+                <!-- ⛔ Ceny 349 a 800 Kc NEJSOU v `pricing_plans`, jsou to produkty Academy
+                     (Stripe). Skript nize je proto neprepisuje a jsou tu natvrdo.
+                     ⇒ Kdo je zmeni, musi je zmenit i TADY: `tvujcoach-cenik-zmena-checklist`. -->
+                <p class="bonus">🎁 <b>K ročnímu navíc:</b> balíček <a href="/recepty-a-odpovedi/">40 receptů a 48 odpovědí</a> ke stažení v PDF, v hodnotě 349 Kč.</p>
                 <ul class="feat">
                     <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
                     <li>Generátory jídelníčků a tréninků</li>
@@ -300,6 +362,13 @@
                 <div class="plan-name">VIP</div>
                 <div class="plan-price" data-price="ai_basic:month">499 Kč <small>/ měsíc</small></div>
                 <p class="plan-year" data-year="ai_basic">nebo 4 990 Kč na rok, ušetříš 998 Kč (dva měsíce zdarma)</p>
+                <!-- Poradi je zamerne: videokurz PRVNI, protoze je to vetsi cislo i vetsi vec.
+                     ⚠️ A schvalne se u balicku rika „ke stazeni v PDF": jeho obsah je z videokurzu
+                     vystrizeny (proto existuje upgrade 349 → 800 za 450 Kc). Kdyby tu stalo jen
+                     „balicek + videokurz", ctenar, ktery si to spocita, najde prekryv a bude mit
+                     pravdu. Takhle je pojmenovana ta cast, ktera se opravdu nepřekryva: soubory,
+                     ktere si stahne a zustanou mu. -->
+                <p class="bonus">🎁 <b>K ročnímu navíc:</b> celý <a href="/videokurz">videokurz výživy</a> (800 Kč) a balíček <a href="/recepty-a-odpovedi/">40 receptů a 48 odpovědí</a> ke stažení v PDF (349 Kč). Dohromady 1 149 Kč, které neplatíš.</p>
                 <ul class="feat">
                     <li>Vše z Basicu</li>
                     <li>AI kouč 24/7 mým hlasem, ovládá appku za tebe</li>
@@ -341,6 +410,7 @@
         <h2 class="center">Časté otázky</h2>
         <div style="margin-top:1.8rem;">
             <div class="faq-i"><b>Je Free verze fakt zdarma?</b><p>Ano, navždy a bez karty. Zapisuješ jídlo i trénink bez omezení, máš adaptivní cíle i check-iny, historii vidíš 14 dní zpátky. Plnou historii, generátory a exporty má Basic, AI kouče VIP.</p></div>
+            <div class="faq-i"><b>Proč je VIP dražší než Basic?</b><p>Ve VIP ti odpovídá kouč, který má před sebou tvoje čísla. Než napíše první slovo, projde, co jsi zapsal, jak se ti hýbe váha a co vyšlo z posledního check-inu. Každá taková odpověď je skutečný výpočet na serveru a u někoho, kdo se ptá denně, se jich za měsíc nasčítá hodně. Ten rozdíl v ceně je přesně tohle, provoz kouče. Basic zůstává celý systém i s generátory a adaptivními cíli, jen bez kouče, a proto může být levnější.</p></div>
             <div class="faq-i"><b>Jak VIP zruším?</b><p>Kdykoliv na dvě klepnutí přímo v appce (Profil → Předplatné). Doběhne zaplacené období a dál nic neplatíš.</p></div>
             <div class="faq-i"><b>Funguje na mobilu i počítači?</b><p>Ano. Zatím běží jako webová aplikace, otevřeš ji v prohlížeči na mobilu i počítači a data máš všude stejná. Appku pro iPhone a Android chystáme.</p></div>
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč bych měl zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Deník ti řekne, co jsi snědl. Tvůj Coach ti řekne, co s tím dál. Už ve Free ti každý týden přepočítá kalorie a makra podle toho, jak ti to reálně jde, ne podle tabulky z registrace. V Basicu ti k tomu poskládá jídelníček na tvoje čísla i s nákupním seznamem a napíše tréninkový plán. Ve VIP se na to můžeš zeptat AI kouče, který vidí tvoje data. Nemusíš nic rušit. Vyzkoušej Free vedle toho, co máš, a nech si to, co ti dává větší smysl.</p></div>
