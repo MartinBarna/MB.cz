@@ -37,8 +37,8 @@
   //
   // ⚠️ JEDEN ROZDÍL PROTI APPCE JE ZÁMĚRNÝ A JE ZMĚŘENÝ, neopravuj ho jako opomenutí:
   // appka uvnitř přihrádky řadí ještě podle DÉLKY názvu, tenhle web ne (drží pořadí
-  // zdroje, a `food-db.json` je abecední). Proto tu „sýr" vrací „Ayib (etiopský…)“
-  // a v appce „Feta sýr“. Dorovnání podle délky bylo 11. 8. 2026 změřeno plošně
+  // zdroje, a `food-db.json` je abecední). Proto tu „sýr" vrací „Ayib (etiopský...)"
+  // a v appce „Feta sýr". Dorovnání podle délky bylo 11. 8. 2026 změřeno plošně
   // (705 dotazů z prvních slov názvů, 1 191 sledovaných položek) a vyšlo NEROZHODNĚ:
   // 206 položek nahoru proti 210 dolů, 39 nově do první pětky proti 39 ven z ní.
   // ⇒ Na šesti běžných dotazech vypadá líp (Feta sýr, Rýže bílá, Kuřecí prsa), plošně
