@@ -1,0 +1,62 @@
+name: Mesicni prehled pro affiliate partnery
+
+# Prvni den v mesici posle kazdemu aktivnimu affiliate partnerovi (Jirka a dalsi)
+# mail s prehledem za minuly mesic: nakupy, obrat, provize, k vyplate.
+# Martin dostava BCC kazdeho mailu. Detail logiky: edge funkce
+# akademie/_supabase/functions/affiliate-mesicni-report/index.ts (Academy projekt).
+#
+# Bezpecnost: funkce odpovi jen na spravny x-report-secret a bez nastaveneho
+# secretu neodpovi nikomu (fail closed). Tyz retezec na dvou mistech:
+#   1. Supabase -> Barna Academy -> Edge Functions -> Secrets -> AFFILIATE_REPORT_SECRET
+#   2. GitHub -> repo MB.cz -> Settings -> Secrets -> Actions -> AFFILIATE_REPORT_SECRET
+
+on:
+  schedule:
+    - cron: '0 7 1 * *' # 1. den v mesici, 09:00 Praha v lete (cron bezi v UTC)
+  workflow_dispatch:
+    inputs:
+      dry:
+        description: 'Nasucho: jen spocita, co by slo, a nic neposle'
+        type: boolean
+        default: false
+      mesic:
+        description: 'Prehled za konkretni mesic (YYYY-MM), jinak minuly'
+        type: string
+        default: ''
+
+concurrency: affiliate-report
+
+jobs:
+  poslat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Zavolat edge funkci
+        env:
+          SECRET: ${{ secrets.AFFILIATE_REPORT_SECRET }}
+          DRY: ${{ inputs.dry }}
+          MESIC: ${{ inputs.mesic }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SECRET}" ]; then
+            echo "Chybi secret AFFILIATE_REPORT_SECRET (GitHub Settings -> Secrets -> Actions"
+            echo "a TENTYZ retezec v Supabase Academy -> Edge Functions -> Secrets)."
+            exit 1
+          fi
+          URL="https://uhmrpfsdcujbhbtumqye.functions.supabase.co/affiliate-mesicni-report"
+          QS=""
+          if [ "${DRY}" = "true" ]; then QS="dry=1"; fi
+          if [ -n "${MESIC}" ]; then QS="${QS:+${QS}&}mesic=${MESIC}"; fi
+          if [ -n "${QS}" ]; then URL="${URL}?${QS}"; fi
+
+          KOD=$(curl -sS -o /tmp/odpoved.json -w '%{http_code}' -X POST "${URL}" \
+                 -H "x-report-secret: ${SECRET}" -H "Content-Type: application/json" -d '{}')
+          echo "HTTP ${KOD}"
+          cat /tmp/odpoved.json; echo
+
+          if [ "${KOD}" -lt 200 ] || [ "${KOD}" -ge 300 ]; then
+            echo "Edge funkce vratila chybu."; exit 1
+          fi
+          # ok:false = u nektereho partnera to selhalo; musi to byt cervene.
+          if grep -q '"ok":false' /tmp/odpoved.json; then
+            echo "Nektere prehledy se nepovedly, viz vysledky vyse."; exit 1
+          fi
