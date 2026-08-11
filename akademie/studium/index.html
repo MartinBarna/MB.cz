@@ -248,10 +248,10 @@
         <b>Tvůj Coach - appka (web, běží i na mobilu)<span class="litebadge" id="tcBadge" style="display:inline-block;background:#EBB12C;color:#161616;border:none;">🎁 NOVÉ · VIP na rok</span></b>
         <!-- Doživotní člen: rok VIP je v ceně. -->
         <span id="tcTextLifetime">Kompletní koučovací appka: <b>zápis jídla čárovým kódem nebo hlasem</b>, <b>generátor tréninků a 120 cviků s fotkou</b>, appka ti <b>sama upravuje cíle</b> podle týdenních check-inů, <b>vyfotíš talíř a spočítá makra</b>, a máš v ní <b>AI kouče</b>. <b style="color:var(--gold-soft)">Přihlas se do appky stejným e-mailem jako do Academy</b> - rok VIP verze máš v ceně členství, hodnota 4 990 Kč.</span>
-        <!-- ⛔ Měsíční člen (990 Kč) appku v ceně NEMÁ. Text výše by mu lhal a poslal
-             ho do appky, která ho nepustí dál. Přepíná se v boot() podle
-             academy_membership_kind(). Rozhodnutí 2 mise `mb-academy-pricing-mise`. -->
-        <span id="tcTextMonthly" style="display:none;">Teorii máš tady. Appka ti ji pohlídá v praxi: zapisuješ jídlo i trénink, cíle se upravují podle tvých dat a AI kouč ti odpoví kdykoli. <b style="color:var(--gold-soft)">V měsíčním členství appku v ceně nemáš</b>, přidáš si ji za 499 Kč měsíčně.</span>
+        <!-- ⭐ Měsíční člen (990 Kč) má od 11. 8. 2026 appku ve VIP taky, ale ne „na rok":
+             má ji po dobu, co mu běží členství. Proto vlastní text, ne skrytá varianta.
+             Přepíná se v boot() podle academy_membership_kind(). -->
+        <span id="tcTextMonthly" style="display:none;">Teorii máš tady. Appka ti ji pohlídá v praxi: zapisuješ jídlo i trénink, cíle se upravují podle tvých dat a AI kouč ti odpoví kdykoli. <b style="color:var(--gold-soft)">Přihlas se do appky stejným e-mailem jako do Academy</b> - VIP verzi máš v ceně členství, po celou dobu, co ti běží.</span>
       </div>
       <span class="bbtn" id="tcBtn">Otevřít appku →</span>
     </a>
@@ -900,8 +900,11 @@
                   if(has && u.email){ _tc.setAttribute('href','https://coach.martinbarna.cz/sign-in?email='+encodeURIComponent(u.email)+'&from=academy'); }
                   else { _tc.setAttribute('href','/pro-vas/'); _tc.removeAttribute('target'); }
                 }
-                // Kachlice Tvůj Coach podle DRUHU členství. Doživotní má rok VIP v ceně,
-                // měsíční ne, a text „máš v ceně členství" by mu tedy lhal.
+                // Kachlice Tvůj Coach podle DRUHU členství. Obě varianty appku V CENĚ MAJÍ,
+                // liší se jen doba: doživotní rok, měsíční po dobu běžícího členství.
+                // ⛔ Odkaz ani tlačítko se u měsíčního NEPŘEPISUJÍ. Vede na přihlášení
+                // stejným e-mailem (nastaveno o pár řádků výš), protože appku má v ceně;
+                // poslat ho na prodejní stránku by mu nabízelo něco, co už zaplatil.
                 // Pojistka: kdyby prohlížeč podal starou verzi ba-academy.js z cache,
                 // funkce ještě neexistuje. Pak se nic nepřepíná (dosavadní chování).
                 if(has && typeof window.BA.membershipKind === 'function'){
@@ -910,15 +913,9 @@
                     var lt=document.getElementById('tcTextLifetime');
                     var mo=document.getElementById('tcTextMonthly');
                     var bd=document.getElementById('tcBadge');
-                    var bt=document.getElementById('tcBtn');
                     if(lt) lt.style.display='none';
                     if(mo) mo.style.display='';
-                    if(bd) bd.textContent='📱 PŘIDAT ZA 499 Kč / MĚS';
-                    if(bt) bt.textContent='Vyzkoušet Tvůj Coach →';
-                    if(_tc){
-                      _tc.setAttribute('href','https://tvujcoach.cz/?utm_source=academy&utm_medium=studio&utm_campaign=tc-kachlice');
-                      _tc.setAttribute('target','_blank');
-                    }
+                    if(bd) bd.textContent='📱 VIP V CENĚ ČLENSTVÍ';
                   });
                 }
                 applyFreeMode();

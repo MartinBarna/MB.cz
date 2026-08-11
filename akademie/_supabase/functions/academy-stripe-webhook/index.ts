@@ -4,14 +4,25 @@
 // ⚠️ 29. 7. 2026 se sem přidala DOŽIVOTNÍ varianta 8 900 Kč. Do té doby tady stálo
 // „doživotní jde dál přes SimpleShop", a to už NEPLATÍ. SimpleShop dál obsluhuje
 // jen videokurz a doběh starých objednávek; produkt `Xgl8g` se schválně nemaže.
-//   • měsíční 990 Kč  = `mode=subscription`, expirace období + 5 dní, BEZ appky
+//   • měsíční 990 Kč  = `mode=subscription`, expirace období + 5 dní, appka po dobu členství
 //   • doživotní 8 900 = `mode=payment`, expirace NULL, S appkou Tvůj Coach na rok
 // Ta dvě čísla se nesmí splést, viz whitelisty odkazů níž.
 //
-// ⛔ NEVOLÁ `academy-grant` appky Tvůj Coach. Měsíční členství appku V CENĚ NEMÁ
-//    (rozhodnutí 2 mise `mb-academy-pricing-mise`). Roční VIP appky zůstává
-//    exkluzivní výhodou doživotní varianty, je to hlavní důvod k upgradu.
-//    Kdo sem TC grant přidá, zabije ten důvod a rozdá appku zadarmo.
+// ⭐ ZMĚNA 11. 8. 2026 (Martinovo rozhodnutí, obrat proti stavu z 28. 7.): MĚSÍČNÍ ČLEN
+//    DOSTÁVÁ APPKU TVŮJ COACH VE VIP PO DOBU ČLENSTVÍ. Do té doby tady stálo, že ji
+//    v ceně nemá, a byl to vědomý zákaz: roční VIP appky měla být exkluzivní důvod
+//    k upgradu na doživotních 8 900. Rozhodlo se jinak, důvod je retence: měsíční člen,
+//    který appku denně používá, členství neruší. Argument „0 dokoupení TC za 499"
+//    ⚠️ ten obrat NEPODPÍRÁ, protože měsíční Academy nemá ani jednoho skutečného
+//    zákazníka (oba řádky `stripe-monthly` jsou Martinovy testy) a nemá kdo dokupovat.
+//
+// ⛔ GRANT SE UDÍLÍ Z `invoice.paid`, NE z `checkout.session.completed`, a expirace jde
+//    Z FAKTURY. Jen tak se appka a Academy nemůžou rozejít: obojí končí týmž datem.
+//    Grant zapisuje ABSOLUTNÍ datum, takže dvojí doručení téže faktury nic nezkazí.
+//
+// ⛔ VEŘEJNÉ TEXTY MUSÍ JÍT VEN SPOLU S TÍMHLE KÓDEM. Web na několika místech tvrdí
+//    „v měsíčním appku v ceně nemáš, přidáš si ji za 499". Kód bez textů = lžeme na webu,
+//    texty bez kódu = slibujeme, co nedodáme.
 //
 // ⛔ NEENROLLUJE do `onboarding-nakup-academy`. Ta trať je psaná pro doživotní
 //    nákup a její step 0 slibuje appku Tvůj Coach jako dárek včetně přihlašovacího
@@ -646,12 +657,25 @@ async function udelDozivotni(
   return { novyDozivotni: !bylDozivotni, zruseneMesicni, predchoziPi };
 }
 
-// --- Appka Tvůj Coach na rok (jen doživotní varianta) -----------------------
+// --- Appka Tvůj Coach ------------------------------------------------------
 // Vzor 1:1 podle `simpleshop-webhook`, ať se doživotní nákup chová stejně bez ohledu
-// na to, kudy peníze přišly. ⚠️ tier `ai_basic` = VIP appky na JEDEN ROK (délku řeší
-// SQL `grant_app_access` v repu appky, větví se podle `source`). Neregistrovanému
-// se grant uloží jako pending a sedne si, až se zaregistruje.
-async function grantTvujCoach(email: string, sessionId: string | null): Promise<string> {
+// na to, kudy peníze přišly. ⚠️ tier `ai_basic` = VIP appky. Neregistrovanému se grant
+// uloží jako pending a sedne si, až se zaregistruje.
+//
+// DVĚ POUŽITÍ, LIŠÍ SE JEN `source` A EXPIRACÍ:
+//   • doživotní nákup → `academy-nakup`, bez expirace ⇒ délku (rok) dopočítá SQL sama
+//   • měsíční členství → `academy-mesicni` + `expiresAt` Z FAKTURY (konec období + grace)
+//
+// ⛔ U `academy-mesicni` JE `expiresAt` POVINNÝ a SQL bez něj grant ODMÍTNE. Není to
+//    zbytečná přísnost: `grant_app_access` si expiraci dopočítává `case`em podle `source`
+//    a neznámý zdroj v něm padá do větve BEZ OMEZENÍ, tedy VIP navěky. Tichá škoda,
+//    která by se poznala až za rok. Radši ať grant hlasitě selže a přijde alert.
+async function grantTvujCoach(
+  email: string,
+  sessionId: string | null,
+  opts?: { source?: string; expiresAt?: string | null },
+): Promise<string> {
+  const zdroj = opts?.source ?? "academy-nakup";
   let vysledek = "no-secret";
   try {
     const { data: gs } = await admin
@@ -663,16 +687,23 @@ async function grantTvujCoach(email: string, sessionId: string | null): Promise<
         headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
         body: JSON.stringify({
           email, action: "grant", tier: "ai_basic",
-          source: "academy-nakup", academy_order_id: sessionId,
+          source: zdroj, academy_order_id: sessionId,
+          // Posílá se jen když nějaká je: bez pole se appka chová přesně jako dřív.
+          ...(opts?.expiresAt ? { expires_at: opts.expiresAt } : {}),
         }),
       }).catch(() => null);
       if (r && r.ok) {
         const jj = await r.json().catch(() => ({}));
         vysledek = String((jj as { result?: string }).result || "ok");
-      } else vysledek = r ? "http-" + r.status : "fetch-fail";
+      } else {
+        // ⚠️ I TĚLO ODPOVĚDI, ne jen číslo. Když grant odmítne SQL (chybějící expirace),
+        // je důvod právě tam a bez něj by se hledal v logu cizího projektu.
+        const telo = r ? await r.text().catch(() => "") : "";
+        vysledek = r ? "http-" + r.status + " " + telo.slice(0, 120) : "fetch-fail";
+      }
     }
     await admin.from("tvujcoach_grants")
-      .insert({ email, action: "grant", result: vysledek, source: "academy-nakup" });
+      .insert({ email, action: "grant", result: vysledek, source: zdroj });
   } catch { /* best-effort, nikdy nesmí shodit nákup */ }
   return vysledek;
 }
@@ -1535,6 +1566,34 @@ Deno.serve(async (req) => {
       // netýká: ten je JEDNORÁZOVÁ odměna za doporučení, ne podíl z předplatného.
       const provize = await zapisRecurringProvizi(email, obj);
 
+      // ⭐⭐ APPKA TVŮJ COACH PO DOBU ČLENSTVÍ (11. 8. 2026). Odůvodnění v hlavičce souboru.
+      // ⛔ EXPIRACE JDE Z TÉŽE PROMĚNNÉ JAKO PŘÍSTUP DO ACADEMY, ne z vlastního výpočtu.
+      //    Kdyby se počítala zvlášť („+30 dní"), obojí by se postupně rozešlo a člověk by
+      //    měl appku o pár dní jinak než členství, aniž by kdokoli poznal proč.
+      // ⛔ ZÁMĚRNĚ AŽ TADY, ne u `checkout.session.completed`: tam je expirace jen odhad
+      //    (35 dní) a appce bychom slíbili dobu, kterou neznáme. Faktura zná přesný konec
+      //    období a dorazí i při prvním nákupu, takže se na nic nečeká.
+      // ⚠️ Grant zapisuje ABSOLUTNÍ datum, nikdy nepřičítá, takže dvojí doručení téže
+      //    faktury (Stripe to běžně dělá) nemůže přístup prodloužit. Idempotence je
+      //    v TVARU operace, ne v kontrole „už jsem to jednou udělal".
+      // ⚠️ Best-effort jako všechno ostatní tady: appka NESMÍ shodit obnovu předplatného.
+      const tcGrant = await grantTvujCoach(
+        email,
+        typeof obj.id === "string" ? obj.id : null,
+        { source: "academy-mesicni", expiresAt: expirace },
+      );
+      // `already_has_paid` = má vlastní placené TC a nárok se mu uložil na později. To je
+      // v pořádku, ne chyba. Křičí se jen na to, po čem musí někdo sáhnout ručně.
+      if (!["granted", "pending", "already_has_paid"].includes(tcGrant)) {
+        await alertAdmin("🔴 Stripe: členství zaplaceno, ale APPKA se neudělila", {
+          email,
+          faktura: String(obj.id ?? ""),
+          vysledek: tcGrant,
+          co_delat: "⛔ Uděl mu VIP appky ručně v adminu appky, do " + datumCesky(expirace)
+            + ". Členství Academy má a appku mu slibujeme v ceně.",
+        });
+      }
+
       // ⛔ ODSUD SE UVÍTAČKA NEPOSÍLÁ NIKDY (oprava 28. 7. 2026).
       // Při prvním nákupu dorazí `checkout.session.completed` i `invoice.paid`
       // pár vteřin po sobě a OBA volaly `posliUvitani`. Ten resetuje leada na step 0
@@ -1557,7 +1616,7 @@ Deno.serve(async (req) => {
       // uvítačku", nezávodí s ničím a mlčí, když je vše v pořádku.
       // ⚠️ Poučení nad rámec tohohle místa: alert, který jednou zalže, se přestane číst,
       // a pak nezafunguje ani ve chvíli, kdy má pravdu.
-      return json({ ok: true, email, expirace, prvni, provize });
+      return json({ ok: true, email, expirace, prvni, provize, tc_grant: tcGrant });
     }
 
     // --- 3) Selhaná platba: NIC nezamykáme --------------------------------
@@ -1791,8 +1850,20 @@ Deno.serve(async (req) => {
       } catch { /* best-effort, nikdy nesmí shodit odebrání přístupu */ }
 
       // 3b) DOŽIVOTNÍ MĚL V CENĚ APPKU NA ROK ⇒ při vrácení peněz se odebírá taky.
-      // Měsíční ji nikdy nedostal, takže se u něj nesahá na nic. Vzor 1:1 podle storno
-      // větve `simpleshop-webhook`. Best-effort, odebrání Academy nesmí shodit.
+      // Vzor 1:1 podle storno větve `simpleshop-webhook`. Best-effort, odebrání Academy
+      // nesmí shodit.
+      //
+      // ⚠️ MĚSÍČNÍ ČLEN MÁ APPKU OD 11. 8. 2026 TAKY, ale při refundu se mu NEODEBÍRÁ,
+      // a je to vědomé rozhodnutí, ne opomenutí. `revoke_app_access` v appce nerozlišuje,
+      // z KTERÉHO titulu grant vznikl: do `subscriptions.source` se u všech zapisuje
+      // natvrdo 'academy', takže revoke sebere i přístup z jiného zdroje (třeba
+      // koučinkový `client_invite`). Dnes by to nepostihlo nikoho (7 aktivních grantů,
+      // všechny `ai_basic`, změřeno 11. 8. 2026), ale je to past nachystaná pro první
+      // koučinkový grant, a špatně odebraný přístup platícího klienta je horší škoda
+      // než měsíc appky navíc pro toho, komu jsme vrátili peníze.
+      // ⇒ Appka doběhne do konce zaplaceného období (max ~35 dní). V odpovědi níž je
+      //   to vidět jako `appka_dobehne`, ať se to při reklamaci dá dohledat.
+      const jeMesicni = ent.source === "stripe-monthly";
       let tcRevoke = "netyka-se";
       if (jeDozivotni) {
         tcRevoke = "no-secret";
@@ -1862,6 +1933,8 @@ Deno.serve(async (req) => {
         odebrani_appky: tcRevoke,
         bonus_videokurz_odebran: bonusOdebran,
         odstoupeni_uzavreno: odstoupeniUzavreno,
+        // Do kdy poběží appka měsíčnímu členovi, kterému jsme vrátili peníze (viz 3b).
+        appka_dobehne: jeMesicni ? (ent.expires_at ?? null) : null,
       });
     }
 

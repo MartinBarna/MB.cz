@@ -149,8 +149,9 @@
 
     // Druh členství Academy: 'lifetime' | 'monthly' | null.
     // Rozlišuje doživotní přístup (8 900 Kč) od měsíčního členství (990 Kč),
-    // protože appka Tvůj Coach je v ceně JEN u doživotního. hasEntitlement to neumí,
-    // vrací jen ano/ne. Vyžaduje DB funkci academy_membership_kind
+    // protože se u nich liší, JAK DLOUHO je appka Tvůj Coach v ceně: doživotní má rok VIP,
+    // měsíční VIP po dobu běžícího členství (od 11. 8. 2026; do té doby ji v ceně neměl
+    // vůbec). hasEntitlement to neumí, vrací jen ano/ne. Vyžaduje DB funkci academy_membership_kind
     // (migrace akademie/_supabase/academy-cenik-expirace.sql).
     // ⚠️ Když RPC selže (typicky: HTML nasazené dřív než migrace), vracíme 'lifetime',
     //    což je dosavadní chování a sedí na všechny členy, kteří existovali před

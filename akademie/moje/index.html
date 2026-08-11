@@ -175,16 +175,16 @@
                     ap.setAttribute('href','https://coach.martinbarna.cz/sign-in?email='+encodeURIComponent(u.email||'')+'&from=academy');
                     var apl=ap.querySelector('.go .lbl'); if(apl) apl.textContent='Otevřít appku';
                     var apb=document.getElementById('appBadge'); if(apb) apb.textContent='🎁 rok VIP v ceně';
-                    // ⛔ Měsíční člen (990 Kč) appku v ceně NEMÁ, tlačítko „Otevřít appku" by ho
-                    // poslalo tam, kam ho nepustí. hasEntitlement('academy') je na oba stejné,
-                    // rozliší je až academy_membership_kind(). Stejný vzor jako /akademie/studium/.
+                    // ⭐ Měsíční člen (990 Kč) má od 11. 8. 2026 appku ve VIP taky, ale ne „na rok":
+                    // má ji po dobu běžícího členství, proto vlastní znění odznaku i popisu.
+                    // ⛔ Odkaz „Otevřít appku" se schválně NEMĚNÍ: appku má v ceně, takže patří
+                    // na přihlášení stejným e-mailem, ne na prodejní stránku.
+                    // hasEntitlement('academy') je na obě varianty stejné, rozliší je až
+                    // academy_membership_kind(). Stejný vzor jako /akademie/studium/.
                     window.BA.membershipKind().then(function(kind){
                       if(kind !== 'monthly') return;   // doživotní necháváme, jak bylo
-                      ap.setAttribute('href','https://tvujcoach.cz/?utm_source=academy&utm_medium=moje&utm_campaign=tc-kachlice');
-                      ap.setAttribute('target','_blank');
-                      var mb=document.getElementById('appBadge'); if(mb) mb.textContent='📱 PŘIDAT ZA 499 Kč / MĚS';
-                      var ml=ap.querySelector('.go .lbl'); if(ml) ml.textContent='Vyzkoušet Tvůj Coach';
-                      var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. V měsíčním členství ji v ceně nemáš, přidáš si ji za 499 Kč měsíčně.';
+                      var mb=document.getElementById('appBadge'); if(mb) mb.textContent='📱 VIP v ceně členství';
+                      var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. VIP verzi máš v ceně členství, po celou dobu, co ti běží.';
                     });
                   } else {
                     ap.setAttribute('href','/pro-vas/'); ap.removeAttribute('target');
