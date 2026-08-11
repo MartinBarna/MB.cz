@@ -281,6 +281,34 @@ check('AD4 akce je AZ ZA admin branou (403 forbidden)',
 check('AD5 akce cte view, ne tabulku referrals naprimo',
   /from\("affiliate_prehled"\)/.test(zdrojAdmin), '');
 
+// --- 13) PROVIZE U OPAKOVANEHO NAKUPU (nalez z testu penezi 11. 8. 2026) ---
+// Duplicitni kontrola buyer+product smi blokovat jen MEMBER kredit; affiliate bere
+// provizi z kazde platby a idempotenci mu drzi order_id (payment_intent).
+const iDupOrder = zdrojWebhook.indexOf('return "duplicita-order"');
+const iDupProd = zdrojWebhook.indexOf('return "duplicita-produkt"');
+const blokDup = iDupProd > 0 ? zdrojWebhook.slice(Math.max(0, iDupProd - 400), iDupProd) : '';
+check('R1 dup-product check je podmineny (member, nebo affiliate bez orderId)',
+  /if \(partnerType !== "affiliate" \|\| !orderId\) \{/.test(blokDup),
+  blokDup.replace(/\s+/g, ' ').slice(-160));
+check('R2 duplicita-order zustava PRED dup-product (idempotence prehrani plati vzdy)',
+  iDupOrder > 0 && iDupProd > 0 && iDupOrder < iDupProd, `order=${iDupOrder} produkt=${iDupProd}`);
+
+// Opakovana vetev balicku musi atribuci VOLAT (druha platba = druha provize)...
+const iZnovu = zdrojWebhook.indexOf('BALÍČEK koupen PODRUHÉ, odkazy odeslány znovu');
+const blokZnovu = iZnovu > 0
+  ? zdrojWebhook.slice(iZnovu, zdrojWebhook.indexOf('return json({', iZnovu))
+  : '';
+check('R3 opakovany nakup balicku vola atribuujReferral', /await atribuujReferral\(/.test(blokZnovu),
+  'vetev nalezena=' + String(iZnovu > 0));
+// ...a az ZA dokladem, mimo try s odkazy (penize prisly i pri selhani odkazu).
+check('R4 atribuce v opakovane vetvi je za posliDoklad (mimo try s odkazy)',
+  blokZnovu.indexOf('posliDoklad') > 0
+    && blokZnovu.indexOf('await atribuujReferral(') > blokZnovu.indexOf('posliDoklad'),
+  '');
+// Celkem prave DVE volani atribuce (novy nakup + opakovany balicek), zadne dalsi.
+const volaniAtribuce = (zdrojWebhook.match(/await atribuujReferral\(/g) ?? []).length;
+check('R5 atribuujReferral se vola prave 2x', volaniAtribuce === 2, `volani=${volaniAtribuce}`);
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo`);

@@ -911,9 +911,18 @@ async function atribuujReferral(
       const { data: existing } = await admin.from("referrals").select("id").eq("order_id", orderId).limit(1);
       if (existing && existing.length) return "duplicita-order";
     }
-    const { data: dup } = await admin
-      .from("referrals").select("id").eq("buyer_email", email).eq("product", produkt).limit(1);
-    if (dup && dup.length) return "duplicita-produkt";
+    // ⚠️ „Jeden referral na kupujícího a produkt" platí JEN pro member KREDIT: kredit
+    // je jednorázová odměna za doporučení člověka. AFFILIATE bere PROVIZI Z KAŽDÉ
+    // PLATBY, takže opakovaný nákup (balíček podruhé kvůli propadlým odkazům) je nová
+    // provize; přehrání TÉŽE platby drží `duplicita-order` výš. Bez orderId se i
+    // affiliate chová konzervativně (jedna odměna), jinak by přehraná událost bez
+    // payment_intent zapsala dvakrát. (Nález z testu penězi 11. 8. 2026: druhá platba
+    // 349 Kč partnerovi tiše nepřipsala nic.)
+    if (partnerType !== "affiliate" || !orderId) {
+      const { data: dup } = await admin
+        .from("referrals").select("id").eq("buyer_email", email).eq("product", produkt).limit(1);
+      if (dup && dup.length) return "duplicita-produkt";
+    }
 
     // Kolik člověk reálně zaplatil. Ze SESSION, ne z ceníku: slevový kód částku mění
     // a u affiliate se z ní počítá provize, takže špatné číslo = špatně vyplacené peníze.
@@ -1442,6 +1451,17 @@ Deno.serve(async (req) => {
             // ⛔ DOKLAD I ZA DRUHOU PLATBU. Peníze přišly znovu, takže doklad patří znovu.
             //    Schválně až tady, mimo `try`: i když odkazy selhaly, platba proběhla.
             doklad = await posliDoklad(emailL, obj, def);
+            // ⭐ PROVIZE I ZA DRUHOU PLATBU (nález z testu penězi 11. 8. 2026): affiliate
+            //    partner bere podíl z každé platby, i když kupující produkt už vlastnil.
+            //    Idempotenci drží payment_intent (`duplicita-order`), member kredit se
+            //    podruhé nepřipíše (`duplicita-produkt`). Mimo `try` s odkazy ze stejného
+            //    důvodu jako doklad: peníze přišly i tehdy, když se odkazy poslat nepodařilo.
+            referral = await atribuujReferral(
+              emailL, def.produkt,
+              typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
+              pi || null,
+              obj,
+            );
           }
         }
 
