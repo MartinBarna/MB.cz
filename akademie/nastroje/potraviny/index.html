@@ -102,7 +102,7 @@
     }
     $('q').addEventListener('input',function(){ clearTimeout(t); t=setTimeout(doSearch,90); });
 
-    fetch('/assets/curated-foods.json?v=1').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/curated-foods.json?v=2').then(function(r){return r.json();}).then(function(d){
       FOODS=d; $('hint').textContent='Nezáleží na diakritice, „rohlik" najde „rohlík". '+d.length+' potravin.';
       if($('q').value.trim()) doSearch();
     }).catch(function(){ $('hint').textContent='⚠️ Databázi se nepodařilo načíst.'; });

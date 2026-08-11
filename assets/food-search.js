@@ -43,7 +43,8 @@
   // jinak vracející se návštěvník dostane z cache starý soubor.
   //
   // ⛔⛔ KTEROU DATABÁZI TENHLE HLEDÁČ DOSTÁVÁ: `assets/curated-foods.json`
-  // (2382 položek, klíč `category` s hodnotami „hotová jídla", „maso", „mléčné"…),
+  // (generovaný export `curated_foods`, k 11. 8. 2026 2369 položek, klíč `category`
+  // s hodnotami „hotová jídla", „maso", „mléčné"…),
   // volá ho `akademie/nastroje/potraviny/index.html` kolem řádku 105.
   // ⚠️ NE `assets/food-db.json` (1192 položek, klíč `cat` = protein/carb/veg). Ten patří
   // GENERÁTORU jídelníčku. Kdo si je splete, měří něco jiného, než co uživatel vidí;
@@ -53,15 +54,14 @@
   // 1. Appka uvnitř přihrádky řadí ještě podle DÉLKY názvu, tenhle web ne (drží pořadí
   //    zdroje). Dorovnání je plošně NEROZHODNÉ: 1335 dotazů, 2374 sledovaných položek,
   //    485 nahoru proti 495 dolů, 85 nově do první pětky proti 85 ven z ní.
-  // 2. ⏳ Appka od migrace 0105 řadí SUROVINU PŘED HOTOVÝM JÍDLEM (podle `category`),
-  //    tenhle web zatím NE. **Tady to jde a pomohlo by to**: dnes „sýr" vrací
-  //    „Burrito bean & cheese (fazole a sýr)", s tím pravidlem by vrátil „Feta sýr";
-  //    „kuřecí" vrací „Kuřecí biryani", vrátilo by „Kuřecí prsa".
-  //    ⛔ Čeká to na rozhodnutí, není to hotová věc, kterou by někdo zapomněl.
-  //    ⚠️ A pozor: `curated-foods.json` je ZASTARALÝ ruční export bez generujícího
-  //    skriptu (2382 položek proti 2369 v appce) a nemá opravu kategorií z migrace 0105,
-  //    takže „kuře" by i s tím pravidlem vrátilo Tandoori kuře, ne kuřecí prsa.
-  //    Kdo to bude dělat, začne obnovením exportu, ne řazením.
+  // 2. ✅ Od 11. 8. 2026 řadí i web SUROVINU PŘED HOTOVÝM JÍDLEM (JE_HOTOVE_JIDLO níž),
+  //    stejně jako appka od migrace 0105. Příklady po nasazení: „sýr" → Feta sýr
+  //    (dřív Burrito bean & cheese), „kuřecí" → Kuřecí prsa (dřív Kuřecí biryani).
+  //    ⚠️ `curated-foods.json` se od 11. 8. GENERUJE skriptem
+  //    scripts/export-curated-foods.mjs z živé tabulky `curated_foods` (service klíč,
+  //    anon dostane přes RLS prázdno). Ruční úpravy JSON se přepíšou dalším exportem;
+  //    obsahové změny patří do DB. Po každém exportu bumpni `curated-foods.json?v=`
+  //    v akademie/nastroje/potraviny/index.html.
   function searchCurated(curated, query, limit) {
     limit = limit || 24;
     var qn = normName((query || '').trim());
