@@ -3909,11 +3909,11 @@
       "fib": 6
     },
     "portion": 30,
-    "obsahuje": [],
-    "nejiste": [
-      "zivocisne"
+    "obsahuje": [
+      "zivocisne",
+      "laktoza"
     ],
-    "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
+    "nejiste": []
   },
   {
     "id": "fattoush",
