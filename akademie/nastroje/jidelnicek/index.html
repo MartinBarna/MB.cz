@@ -117,6 +117,11 @@
         <label class="chip" title="Skládám jen z potravin, u kterých to mám ověřené. Uzeniny, rostlinné náhrady masa ani oves sem nepouštím, protože u nich rozhoduje výrobce. U kupovaných výrobků čti etiketu."><input type="checkbox" id="bezLepku"> Bez lepku</label>
         <label class="chip" title="Kalorie a bílkoviny drží tvůj cíl, sacharidy ~8 % kalorií, zbytek dorovná tuk. Bez příloh, nízkosacharidová zelenina a bobule."><input type="checkbox" id="keto"> Keto / low-carb</label>
       </div>
+      <!-- ⛔ TENHLE TEXT MUSÍ BÝT VIDITELNÝ, NE V title. Tooltip se na dotykovém zařízení
+           nezobrazí vůbec, takže na mobilu by „Bez lepku" vypadalo jako záruka pro celiaka.
+           Znění je převzaté 1:1 z appky, kde je schválené. Pravidlo:
+           memory feedback-varovani-v-title-je-na-mobilu-neviditelne. -->
+      <p class="note" id="dietaPozn" hidden>Skládám jen z potravin, u kterých to mám ověřené. Kde se složení liší výrobek od výrobku (uzeniny, rostlinné náhrady masa, ovesné vločky), radši je vynechám, než abych ti tvrdil něco, co nevím. U kupovaných výrobků si vždycky přečti etiketu.</p>
       <details class="brandbox" id="brandbox">
         <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">projeví se ve výstupu i v PDF (uloží se ti)</span></summary>
         <div class="grid" style="margin-top:12px;">
@@ -190,7 +195,7 @@
       }
     }catch(e){}
 
-    fetch('/assets/food-db.json?v=20260811a').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/food-db.json?v=20260811b').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
       if(fromCalc) generate(false);
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
@@ -301,6 +306,17 @@
     $('gen').addEventListener('click',function(){ generate(false); });
     $('regen').addEventListener('click',function(){ generate(true); });
     $('print').addEventListener('click',function(){ window.print(); });
+
+    // Poznámka k dietním filtrům se ukáže, jakmile je zapnutý kterýkoli z nich (stejné
+    // pravidlo jako v appce). Bez tohohle by varování žilo jen v title a na mobilu nikde.
+    function syncDietaPozn(){
+      var p=$('dietaPozn'); if(!p) return;
+      p.hidden = !($('vegan').checked || $('bezLaktozy').checked || $('bezLepku').checked);
+    }
+    ['vegan','bezLaktozy','bezLepku'].forEach(function(id){
+      var el=$(id); if(el) el.addEventListener('change', syncDietaPozn);
+    });
+    syncDietaPozn();
 
     // Gating: plná verze pro Academy A PRO KOUČINKOVÉ KLIENTY (Martin 25. 7. 2026: koučinkový
     // klient má mít plný generátor jídelníčku i tréninku, je to součást jeho balíčku).
