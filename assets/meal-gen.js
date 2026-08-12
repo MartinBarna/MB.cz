@@ -241,6 +241,27 @@
     // to nevrátí. ⛔ Táž logika v appce, hlídá parita.
     var velikostDne = Math.max(0.6, Math.min(1, targets.kcal / 2200));
     function vg(g) { return Math.round(g * velikostDne); }
+    // [fix 2026-08-11] PODLAHA JE V GRAMECH, ROZPOČET DNE JE V KALORIÍCH. Změřeno na
+    // cíli 1000 kcal / 135 g bílkovin: den přestřelil o 21 % průměrně a o 35 % nejhůř,
+    // 12 dnů z 12 mimo 10 %. Vinu nese TAHLE podlaha, ne podlaha bílkoviny (ta neváže
+    // ani jednou) a ani „malý den" jako takový: týž den se 90 g bílkovin vyjde přesně.
+    // Rozhoduje POMĚR bílkovin ke kaloriím: po bílkovině zbylo ~290 kcal a tři přílohy
+    // na podlaze samy daly 286 kcal.
+    // ⛔ Jádro věci: 40 g suché jasmínové rýže je 142 kcal, 40 g pečených brambor 37 kcal.
+    // Táž „minimální rozumná porce" stojí čtyřnásobek podle toho, co na talíř padne.
+    // Proto se podlaha nově omezuje i energeticky: příloha nesmí sama sníst víc než
+    // MIN_PRILOHA_KCAL, zmenšené velikostí dne (menší den = menší miska, jako u pevných
+    // porcí výš). Na běžném dni (2200 kcal) je strop 150 kcal, do kterého se 40 g rýže
+    // vejde, takže se pro běžné dny NEMĚNÍ NIC.
+    // ⛔ Stejná logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+    var MIN_PRILOHA_KCAL = 150;
+    function podlahaPrilohy(f) {
+      var kcalNaGram = (f.per100.kcal || 0) / 100;
+      if (!(kcalNaGram > 0)) return MIN_PRILOHA_G; // bez energie nemá co omezovat
+      // Spodní hranice 15 g: pod ní už to není porce, ale drobek, a příloha má na talíři
+      // být vidět. Radši mírný přestřel kalorií než „rýže 6 g".
+      return Math.min(MIN_PRILOHA_G, Math.max(15, Math.round((MIN_PRILOHA_KCAL * velikostDne) / kcalNaGram)));
+    }
     // [fix 2026-07-26] ROTACE bilkovinnych zdroju pres den + denni strop na jednu potravinu.
     // Nalez z testu appky: vegetarian v deficitu dostal 780 g vajecneho bilku za den (asi
     // 24 kusu) a v tydennim nakupu 200 ks. Cisla pritom sedela na gram.
@@ -358,7 +379,7 @@
           var needC = (targets.carbs * dist[i]) - usedC;
           var cg = round((needC / (carb.per100.c || 1)) * 100, 10);
           // Hlavní jídlo bez keto cílů: příloha se zmenšuje, ale neruší (podlaha 40 g).
-          if (!lowCarb && (i === 0 || dist[i] >= 0.2)) cg = Math.max(cg, MIN_PRILOHA_G);
+          if (!lowCarb && (i === 0 || dist[i] >= 0.2)) cg = Math.max(cg, podlahaPrilohy(carb));
           if (cg > 10) items.push({ food: carb, grams: Math.min(cg, 320) });
         }
       }
@@ -471,7 +492,7 @@
         all.forEach(function (it) {
           if (it.food.cat === 'protein' && it.grams < 30) it.grams = 30;
           // podlaha přílohy drží i proti křížovému škálování (viz [fix 2026-08-05 večer])
-          if (!lowCarb && it.food.cat === 'carb' && it.grams < MIN_PRILOHA_G) it.grams = MIN_PRILOHA_G;
+          if (!lowCarb && it.food.cat === 'carb' && it.grams < podlahaPrilohy(it.food)) it.grams = podlahaPrilohy(it.food);
         });
       }
     }
@@ -593,7 +614,7 @@
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
       it.grams = Math.max(step, Math.round(it.grams / step) * step);
-      if (!lowCarb && it.food.cat === 'carb' && it.grams < MIN_PRILOHA_G) it.grams = MIN_PRILOHA_G;
+      if (!lowCarb && it.food.cat === 'carb' && it.grams < podlahaPrilohy(it.food)) it.grams = podlahaPrilohy(it.food);
       var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
     });
     // [fix 2026-07-14] minigramáže („přidej 1 g oleje") v klientském plánu nemají co dělat —
