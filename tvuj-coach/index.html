@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna</title>
-    <meta name="description" content="Appka Tvůj Coach: zápis jídla a tréninku, cíle, které se samy přizpůsobují tvým výsledkům, a AI kouč natrénovaný na metodice Martina Barny. Začni zdarma, na mobilu i počítači.">
+    <meta name="description" content="Appka Tvůj Coach: zápis jídla a tréninku, cíle, které se samy přizpůsobují tvým výsledkům, a AI kouč natrénovaný na metodice Martina Barny. Prvních 14 dní plná verze zdarma a bez karty, potom Free napořád.">
     <meta name="theme-color" content="#0f1113">
     <link rel="canonical" href="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:title" content="Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna">
-    <meta property="og:description" content="Zápis jídla a tréninku, adaptivní cíle a AI kouč Martinovým hlasem. Začni zdarma.">
+    <meta property="og:description" content="Zápis jídla a tréninku, adaptivní cíle a AI kouč Martinovým hlasem. Prvních 14 dní plná verze zdarma a bez karty.">
     <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
     <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
     <meta property="og:locale" content="cs_CZ">
@@ -126,10 +126,13 @@
         .feat li { padding:.42rem 0 .42rem 26px; position:relative; color:var(--txt); font-size:.94rem; }
         .feat li::before { content:"✓"; position:absolute; left:0; color:var(--acc); font-weight:800; }
         .plan .btn { text-align:center; margin-top:auto; }
-        /* Druhé tlačítko v kartě (roční koupě). Jediná odchylka od `.btn` je odsazení:
-           bez něj by mu `margin-top:auto` výš slepilo horní okraj s tlačítkem nad ním.
-           Velikost ani barvy se schválně NEMĚNÍ, ať je vzhled 1:1 se stávajícími CTA. */
-        .plan .btn.btn-year { margin-top:.6rem; }
+        /* Druhé tlačítko v kartě. Jediná odchylka od `.btn` je odsazení: bez něj by mu
+           `margin-top:auto` výš slepilo horní okraj s tlačítkem nad ním.
+           Velikost ani barvy se schválně NEMĚNÍ, ať je vzhled 1:1 se stávajícími CTA.
+           ⚠️ Pravidlo míří na POŘADÍ (`.btn + .btn`), ne na třídu `btn-year`: od 13. 8. je
+           roční tlačítko PRVNÍ, a kdyby si `.6rem` neslo s sebou, přebilo by si `margin-top:auto`
+           a dvojice tlačítek by se v kartě rozlepila (jedno nahoře, druhé přilepené dolů). */
+        .plan .btn + .btn { margin-top:.6rem; }
         .incl { background:rgba(235,177,44,.07); border:1px solid rgba(235,177,44,.25); border-radius:16px; padding:1.2rem 1.4rem; max-width:820px; margin:2rem auto 0; color:#e9e2d8; font-size:.95rem; }
         /* Dvojice zlatých boxů pod ceníkem. Bez tohohle je každý box samostatná buňka
            třísloupcové mřížky `.plans-3`, takže obsadí sloupce 1 a 2, třetí zůstane prázdný
@@ -156,13 +159,18 @@
 <header class="hero center">
     <div class="wrap">
         <span class="badge">📱 Appka Tvůj Coach</span>
-        <h1>Kouč, kterého máš pořád v&nbsp;kapse</h1>
-        <p class="lead">Zapíšeš jídlo i trénink za pár vteřin, cíle se ti samy přizpůsobují podle toho, jak ti to reálně jde, a když si nevíš rady, poradí AI kouč postavený na mé metodice. Na mobilu i počítači.</p>
+        <h1>Kouč v&nbsp;kapse, který vidí jídlo i&nbsp;trénink</h1>
+        <p class="lead">Tělo se mění v měsících a přesně tak je appka postavená. Prvních 14 dní máš plnou verzi zdarma a bez karty, pak ti appka zůstane zdarma napořád. Nesleduje jeden den, ale řadu týdnů: každý týden se podívá na tvoji váhu a na to, co jsi doopravdy zapsal, a podle toho ti pohne kaloriemi a makry. Za rok z toho vyjde něco, co ti jeden jídelníček nedá.</p>
         <div class="btn-row">
-            <a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušet zdarma →</a>
-            <a class="btn btn-ghost" href="https://tvujcoach.cz/sign-in">Přihlásit se</a>
+            <a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušej 14 dní zdarma →</a>
+            <a class="btn btn-ghost" href="#cenik">Vzít appku na rok →</a>
         </div>
-        <div class="trust"><span>✓ Začneš zdarma</span><span>✓ Česky a bez balastu</span><span>✓ Zrušíš kdykoliv</span></div>
+        <div class="trust"><span>✓ 14 dní plná verze bez karty</span><span>✓ Pak Free napořád</span><span>✓ Zrušíš kdykoliv</span></div>
+        <!-- Prihlaseni do APPKY. Puvodne bylo druhym tlacitkem v hero sekci; to je ted kotva
+             na cenik, takze by cesta dovnitr zmizela. „Prihlasit" v navigaci vede do ACADEMY
+             (/akademie/prihlaseni/), ne do appky, takze vracejici se uzivatel by zustal bez
+             odkazu. Proto tenhle tichy radek: neprebiji CTA a cestu drzi otevrenou. -->
+        <p style="margin:1.1rem 0 0;font-size:.9rem;color:var(--mut);">Už appku máš? <a href="https://tvujcoach.cz/sign-in">Přihlas se →</a></p>
         <figure class="shot shot-hero">
             <!-- 780x1688 = TÁŽ mobilní obrazovka nafocená ve dvojnásobném rozlišení (retina),
                  ne jiné rozvržení. Text má na displeji stejnou velikost, jen dvakrát tolik
@@ -194,7 +202,7 @@
 
         <figure class="shot">
             <img src="/assets/app/generator-jidelnicku-4.png?v=1" alt="Generátor jídelníčku v appce Tvůj Coach: celý den poskládaný z běžných potravin s gramážemi, kaloriemi a makry." width="390" height="844" loading="lazy" decoding="async">
-            <figcaption>Generátor ti poskládá celý den z běžných potravin, i s gramážemi.</figcaption>
+            <figcaption>Generátor ti poskládá celý den z běžných potravin i s gramážemi. Na celý týden k tomu přidá nákupní seznam v kusech.</figcaption>
         </figure>
 
         <h3 class="blok">Trénink ti appka napíše</h3>
@@ -213,9 +221,9 @@
         <h3 class="blok">A tady začíná koučink</h3>
         <div class="grid g4">
             <div class="card"><span class="em">🎯</span><h3>Cíle se hýbou s tebou</h3><p>Týdenní check-in přepočítá kalorie a makra podle reálné váhy a podle toho, co jsi doopravdy snědl.</p></div>
+            <div class="card"><span class="em">✍️</span><h3>Nebo si cíle nastavíš sám</h3><p>Máš čísla od lékaře nebo si věříš? Zadáš si vlastní kalorie a makra a appka ti je při check-inu nepřepíše. Jde to i ve Free verzi.</p></div>
             <div class="card"><span class="em">🧠</span><h3>„Co si můžu ještě dnes dát?"</h3><p>Zbývá ti 400 kcal a 30 g bílkovin. Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
             <div class="card"><span class="em">🤖</span><h3>AI kouč mým hlasem<span class="vip-tag">VIP</span></h3><p>Zeptáš se ve dvě ráno a dostaneš odpověď. A umí appku ovládat za tebe: zapsat, upravit, vysvětlit, proč ti zvedla sacharidy.</p></div>
-            <div class="card"><span class="em">🛑</span><h3>Umí říct, že svým číslům nevěří</h3><p>Když je den poskládaný hlavně z fotoodhadů, cíle nepřepočítá. Fotka podceňuje olej a omáčku a podle toho ti jídelníček přenastavovat nechci.</p></div>
         </div>
 
         <figure class="shot">
@@ -231,7 +239,7 @@
         <div class="grid g4" style="margin-top:2rem;">
             <div class="card"><span class="em">🧑‍🏫</span><h3>Za appkou stojí kouč</h3><p>Metodika, kterou prošlo přes 600 mých klientů, od nastavení cílů po práci s plateau. Appka ti řekne to, co bych ti řekl já.</p></div>
             <div class="card"><span class="em">🔢</span><h3>Čísla počítá systém, ne AI</h3><p>Kalorie a makra počítá pevný výpočet, aby seděly na gram. AI ti je vysvětlí a pomůže je naplnit, ale nikdy si je nevymýšlí.</p></div>
-            <div class="card"><span class="em">🤝</span><h3>Napojená na moje služby</h3><p>Klienti koučinku v ní zapisují a já vidím reálná data místo odhadů z paměti.</p></div>
+            <div class="card"><span class="em">🛑</span><h3>Umí říct, že svým číslům nevěří</h3><p>Když je den poskládaný hlavně z fotoodhadů, cíle nepřepočítá. Fotka podceňuje olej a omáčku a podle toho ti jídelníček přenastavovat nechci.</p></div>
             <div class="card"><span class="em">🔄</span><h3>Mění se každý týden</h3><p>Napíšeš mi, co ti v ní chybí, a já to zadám dál. Většina funkcí, které v appce dneska jsou, vznikla přesně takhle, z připomínek lidí, co ji používají.</p></div>
         </div>
     </div>
@@ -264,15 +272,16 @@
 <section class="sec" id="cenik">
     <div class="wrap">
         <h2 class="center">Kolik to stojí</h2>
-        <p class="sec-sub">Začneš zdarma a zůstat můžeš zdarma. VIP si vezmeš, až budeš chtít kouče.</p>
+        <p class="sec-sub">Po registraci máš 14 dní celou VIP verzi, ať víš, co si vybíráš. Kartu k tomu nepotřebuješ a po dvou týdnech ti appka zůstane ve Free verzi, dokud si sám neřekneš o víc.</p>
         <div class="plans plans-3">
             <div class="plan">
                 <div class="plan-name">Free</div>
                 <div class="plan-price">0 Kč</div>
                 <p class="plan-year">navždy, bez karty</p>
                 <ul class="feat">
-                    <li>Zápis jídla a tréninku bez omezení</li>
+                    <li>Zápis jídla i tréninku bez omezení, včetně čárového kódu</li>
                     <li>Vlastní kalorie a makra, která ti nikdo nepřepíše</li>
+                    <li>Knihovna receptů</li>
                     <li>Grafy a historie za posledních 14 dní</li>
                     <li>Webová aplikace, česky (appka pro iPhone a Android se chystá)</li>
                 </ul>
@@ -284,16 +293,20 @@
                 <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
                 <ul class="feat">
                     <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
-                    <li>Generátory jídelníčků a tréninků</li>
-                    <li>Export dat a týdenní report</li>
+                    <li><strong>Týdenní check-in, který ti přepočítá cíle</strong></li>
+                    <li><strong>Tréninkový plán, objem po partiích a mezocyklus</strong></li>
+                    <li>Generátor jídelníčku i s nákupním seznamem</li>
+                    <li>„Co si můžu ještě dnes dát", report ke sdílení a export dat</li>
                     <li>Bez AI kouče</li>
                 </ul>
-                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=basic">Vybrat Basic →</a>
-                <!-- Roční koupě rovnou. Vede na /sign-up, ne na úvod: kdo chce platit rok
-                     dopředu, je rozhodnutý a nemá se vracet přes landing. Klíč `basic-rok`
+                <!-- Roční koupě je od 13. 8. PRVNÍ tlačítko (rok je jednotka, ve které se tělo
+                     mění, a ceník má roční akcent). Vede na /sign-up, ne na úvod: kdo chce platit
+                     rok dopředu, je rozhodnutý a nemá se vracet přes landing. Klíč `basic-rok`
                      překládá appka na tier basic + interval year (src/lib/plan-param.ts).
-                     Skript níž tlačítko SCHOVÁ, když roční plán v ceníku není. -->
-                <a class="btn btn-ghost btn-year" data-year-cta="basic" href="https://tvujcoach.cz/sign-up?plan=basic-rok">Koupit roční →</a>
+                     ⚠️ Skript níž tlačítko SCHOVÁ, když roční plán v ceníku není. Proto musí
+                     měsíční tlačítko pod ním dávat smysl i samo o sobě (nese název tarifu). -->
+                <a class="btn btn-ghost btn-year" data-year-cta="basic" href="https://tvujcoach.cz/sign-up?plan=basic-rok">Vzít Basic na rok →</a>
+                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=basic">Vybrat Basic měsíčně →</a>
             </div>
             <div class="plan featured">
                 <span class="ribbon">★ S AI KOUČEM</span>
@@ -301,13 +314,14 @@
                 <div class="plan-price" data-price="ai_basic:month">499 Kč <small>/ měsíc</small></div>
                 <p class="plan-year" data-year="ai_basic">nebo 4 990 Kč na rok, ušetříš 998 Kč (dva měsíce zdarma)</p>
                 <ul class="feat">
-                    <li>Vše z Basicu</li>
+                    <li>Vše z Basicu včetně tréninku</li>
                     <li>AI kouč 24/7 mým hlasem, ovládá appku za tebe</li>
                     <li>Foto → makra: vyfotíš talíř, appka odhadne kalorie</li>
+                    <li>Hlasový zápis: řekneš, co jsi snědl</li>
                     <li>AI komentář k týdennímu check-inu</li>
                 </ul>
-                <a class="btn btn-acc" href="https://tvujcoach.cz/?plan=vip">Vyzkoušet VIP →</a>
-                <a class="btn btn-ghost btn-year" data-year-cta="ai_basic" href="https://tvujcoach.cz/sign-up?plan=vip-rok">Koupit roční →</a>
+                <a class="btn btn-acc btn-year" data-year-cta="ai_basic" href="https://tvujcoach.cz/sign-up?plan=vip-rok">Vzít VIP na rok →</a>
+                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">Vyzkoušet VIP měsíčně →</a>
             </div>
 
         <div class="legal-note" style="grid-column:1/-1;margin:1.4rem 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);font-size:.88rem;line-height:1.6;color:#A09AAD;">
@@ -346,7 +360,7 @@
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč bych měl zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Deník ti řekne, co jsi snědl. Tvůj Coach ti řekne, co s tím dál. V Basicu ti každý týden přepočítá kalorie a makra podle toho, jak ti to reálně jde, ne podle tabulky z registrace. K tomu ti poskládá jídelníček na tvoje čísla i s nákupním seznamem a napíše tréninkový plán. Ve VIP se na to můžeš zeptat AI kouče, který vidí tvoje data. Nemusíš nic rušit. Vyzkoušej Free vedle toho, co máš, a nech si to, co ti dává větší smysl.</p></div>
             <div class="faq-i"><b>Máte míň potravin než velké appky. Nevadí to?</b><p>Vadilo by, kdybych to schovával. Mám jich něco přes tisíc a jsou to ty, které lidi v Česku opravdu jedí. Skládám tu databázi sám, nepřidávají do ní cizí lidi, průběžně ji reviduju proti odborným zdrojům a dál doplňuju. V databázích, které plní sami uživatelé, se chyby množí rychleji, než je někdo stihne opravit, a člověk ani nemá jak špatnou hodnotu opravit. Když ti něco chybí, naskenuješ čárový kód a appka to dohledá v Open Food Facts, nebo mi napíšeš a doplním to.</p></div>
         </div>
-        <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušet Tvůj Coach zdarma →</a></p>
+        <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušej 14 dní zdarma →</a></p>
     </div>
 </section>
 
