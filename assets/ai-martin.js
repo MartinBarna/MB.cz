@@ -1,17 +1,17 @@
-/* AI Martin (#53/#68) — chat widget.
+/* AI Martin (#53/#68) - chat widget.
    PLACENÁ funkce Academy: členové píší, ne-členové vidí rozhraní zamčené + výzvu ke koupi.
-   Přístup ověřuje i server (edge funkce ai-martin) — klient jen řídí UX.
+   Přístup ověřuje i server (edge funkce ai-martin), klient jen řídí UX.
 
    Náhled designu bez backendu: přidej ?aimartin=test k URL (ukázková odpověď).
-   Zapnutí chatu: Martin doplní ANTHROPIC_API_KEY do edge funkce — pak členům naskočí. */
+   Zapnutí chatu: Martin doplní ANTHROPIC_API_KEY do edge funkce, pak členům naskočí. */
 (function () {
   'use strict';
   var CFG = {
     ENABLED: true,
     ENDPOINT: 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/ai-martin',
     CHECKOUT: '/akademie/objednavka/',
-    GREETING: 'Ahoj! Jsem AI Martin — umělá inteligence (chatbot) natrénovaná na tom, jak Martin reálně koučuje. Nemluvíš se skutečným Martinem. Zeptej se na výživu, trénink nebo jak začít — nebo 📷 vyfoť jídlo a odhadnu ti kalorie a makra. (Nejsem lékař, u zdravotních věcí běž za odborníkem.)',
-    LOCKED_INTRO: 'Ahoj! Jsem AI Martin — umělá inteligence (chatbot) natrénovaná na Martinově stylu a celém obsahu Academy. Nemluvíš se skutečným Martinem, ale poradím ti s výživou, tréninkem i konkrétními otázkami, kdykoliv potřebuješ. 💪\n\nJsem součást Barna Academy pro členy. Odemkni si plný přístup a začneme spolu makat.',
+    GREETING: 'Ahoj! Jsem AI Martin, umělá inteligence (chatbot) natrénovaná na tom, jak Martin reálně koučuje. Nemluvíš se skutečným Martinem. Zeptej se na výživu, trénink nebo jak začít. Nebo 📷 vyfoť jídlo a odhadnu ti kalorie a makra. (Nejsem lékař, u zdravotních věcí běž za odborníkem.)',
+    LOCKED_INTRO: 'Ahoj! Jsem AI Martin, umělá inteligence (chatbot) natrénovaná na Martinově stylu a celém obsahu Academy. Nemluvíš se skutečným Martinem, ale poradím ti s výživou, tréninkem i konkrétními otázkami, kdykoliv potřebuješ. 💪\n\nJsem součást Barna Academy pro členy. Odemkni si plný přístup a začneme spolu makat.',
     PLACEHOLDER: 'Napiš dotaz… např. „kolik bílkovin denně?"'
   };
   var PREVIEW = /[?&]aimartin=test/.test(location.search);
@@ -22,7 +22,7 @@
   function E(tag, css, html) { var e = document.createElement(tag); if (css) e.style.cssText = css; if (html != null) e.innerHTML = html; return e; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
 
-  // ---- zjištění přístupu (člen Academy?) — přes window.BA; když chybí, ber jako ne-člena ----
+  // ---- zjištění přístupu (člen Academy?) přes window.BA; když chybí, ber jako ne-člena ----
   function resolveAccess(cb) {
     if (PREVIEW) { cb(true); return; }
     if (!window.BA || !window.BA.ready) { cb(false); return; }
@@ -318,7 +318,7 @@
     busy = true; typing(true);
     setTimeout(function () {
       typing(false);
-      add('assistant', 'Tohle je ukázka rozhraní 🙂 Až Martin zapojí AI (dodá klíč), budu tady členům reálně odpovídat na výživu a trénink — natrénovaný na jeho stylu a obsahu Academy. Be Effective! 💪');
+      add('assistant', 'Tohle je ukázka rozhraní 🙂 Až Martin zapojí AI (dodá klíč), budu tady členům reálně odpovídat na výživu a trénink, natrénovaný na jeho stylu a obsahu Academy. Be Effective! 💪');
       busy = false;
     }, 650);
   }
