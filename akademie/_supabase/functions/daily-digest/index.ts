@@ -306,6 +306,35 @@ Deno.serve(async (req) => {
     }
   } catch { /* best-effort: doplňková kontrola nesmí shodit celý digest */ }
 
+  // --- Roční VIP appky: balíček se doručuje RUČNĚ -------------------------
+  // ⛔ VĚDOMÝ DLUH, NE VADA. K ročnímu VIP appky (4 990 Kč) patří videokurz A balíček
+  //    „40 receptů a 48 odpovědí". Videokurz uděluje most `app-purchase-bridge` sám
+  //    (entitlement JE ten produkt), ale u balíčku je doručení uvítací mail
+  //    s podepsanými odkazy na dvě PDF, a podepisování žije uvnitř
+  //    `academy-stripe-webhook`. Třetí opis té logiky se schválně nedělal.
+  // ⇒ Dokud se to nepřepíše do sdíleného modulu, musí balíček poslat člověk. A protože
+  //    „nezapomeň" není pojistka, ptáme se DAT: kdo dostal bonusový videokurz a nemá
+  //    `balicek`, ten na něj pořád čeká. Řádek zmizí sám, jakmile se balíček udělí.
+  // ⚠️ Není to alert z události, ale ze STAVU: přežije i to, když se digest jeden den
+  //    nepošle nebo když nákup přijde v noci.
+  try {
+    const { data: bonusovi } = await admin.from("entitlements")
+      .select("email").eq("product", "videokurz").eq("source", "rocni-vip-bonus").eq("active", true)
+      .limit(50);
+    const emaily = (bonusovi ?? []).map((r: { email: string }) => String(r.email));
+    if (emaily.length) {
+      const { data: majiBalicek } = await admin.from("entitlements")
+        .select("email").eq("product", "balicek").eq("active", true).in("email", emaily);
+      const s = new Set((majiBalicek ?? []).map((r: { email: string }) => String(r.email)));
+      const cekaji = emaily.filter((e) => !s.has(e));
+      if (cekaji.length) {
+        alerts += warn(`${cekaji.length}× ROČNÍ VIP ČEKÁ NA BALÍČEK (` + cekaji.slice(0, 5).join(", ") +
+          `). Videokurz dostali automaticky, balíček „40 receptů a 48 odpovědí" se zatím posílá ` +
+          `ručně. Pošli jim ho z adminu; tenhle řádek pak zmizí sám.`);
+      }
+    }
+  } catch { /* best-effort: doplňková kontrola nesmí shodit celý digest */ }
+
   // --- Denní kontrola odkazů (pojistka po incidentu s mrtvými odkazy 22. až 27. 7.) ---
   // ⚠️ „Žádný běh" NENÍ „všechno v pořádku". Když kontrola neproběhla, je to samo o sobě
   // poplach: přesně takhle se tehdy pět dní nevědělo, že odkazy nefungují.
