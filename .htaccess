@@ -68,14 +68,22 @@ RewriteRule ^tt/?$ https://martinbarna.cz/kviz/?utm_source=tiktok&utm_medium=org
 ErrorDocument 404 /404.html
 
 # --- 4) Přesměrování starých WordPress URL (parita, ať nic nespadne z Googlu) ---
-# produktové/objednávkové stránky → SimpleShop nebo nové stránky
-Redirect 301 /objednavka-konzultace/        https://form.simpleshop.cz/qG2yO/buy/
-Redirect 301 /objednavka-videokurzu/         https://form.simpleshop.cz/3Vbl/buy/
-Redirect 301 /objednavka-ebooku/             https://form.simpleshop.cz/eVJ6/buy/
-Redirect 301 /objednavka-receptu/            https://form.simpleshop.cz/mMB7/buy/
+# produktové/objednávkové stránky → vlastní prodejní stránky se ŽIVOU pokladnou
+# ⛔ 13. 8. 2026: všech ŠEST těchto cest mířilo na SimpleShop a VŠECHNY byly MRTVÉ.
+#    Každý formulář (qG2yO, 3Vbl, eVJ6, mMB7, xl6e, lQoO) vracel HTTP 200 se stránkou
+#    „Produkt se již neprodává." ⇒ zákazník ze starého odkazu (bio na sítích, rozeslané
+#    maily, staré příspěvky, PDF) nemohl koupit VŮBEC NIC a web přitom hlásil 200.
+#    Ověřeno stažením všech šesti, ne odhadem. SimpleShop se zrušil, prodej jede přes Stripe.
+# ⚠️ mod_alias k cíli připojí příchozí query string, takže utm parametry přežijí.
+Redirect 301 /objednavka-konzultace/         https://martinbarna.cz/konzultace/
+Redirect 301 /objednavka-videokurzu/         https://martinbarna.cz/videokurz
+Redirect 301 /objednavka-ebooku/             https://martinbarna.cz/videokurz
+Redirect 301 /objednavka-receptu/            https://martinbarna.cz/recepty-a-odpovedi/
 Redirect 301 /clanky/doporuceni-bisglycinatu-horciku-pro-vas-aktivni-zivotni-styl-2.html https://martinbarna.cz/clanky/doporuceni-bisglycinatu-horciku-pro-vas-aktivni-zivotni-styl.html
-Redirect 301 /objednavka-audiobooku/         https://form.simpleshop.cz/xl6e/buy/
-Redirect 301 /clenskasekce/objednavka/       https://form.simpleshop.cz/lQoO/buy/
+Redirect 301 /objednavka-audiobooku/         https://martinbarna.cz/videokurz
+# členská sekce jako PRODUKT zanikla (starý WP + SimpleShop). Nástupce placeného členství
+# je Barna Academy, takže nákupní úmysl míří na její prodejní stránku, ne na přihlášení.
+Redirect 301 /clenskasekce/objednavka/       https://martinbarna.cz/akademie/
 Redirect 301 /martin/                        https://martinbarna.cz/#omne
 Redirect 301 /muj-pribeh/                    https://martinbarna.cz/#omne
 Redirect 301 /team-martin-barna/             https://martinbarna.cz/#omne
