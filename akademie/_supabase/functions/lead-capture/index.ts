@@ -87,10 +87,28 @@ Deno.serve(async (req) => {
     if (utmId) meta.utm_id = utmId;
     if (gclid) meta.gclid = gclid;
     if (fbclid) meta.fbclid = fbclid;
+    // [2026-08-13] KVIZOVY PROFIL I DO `vars`, jinak s nim drip engine neumi pracovat.
+    // Kviz (/kviz/) roztridi cloveka do profilu a posila ho sem jako `goal` ve tvaru
+    // "kviz profil: vikend". Dosud koncil VYHRADNE v `meta`, odkud `drip-send` merge
+    // promennou vzit NEUMI: cte je z `leads.vars[track]` (viz `varsZLeada` v drip-send).
+    // Zmereno 13. 8. 2026: 130 kvizovych leadu (127 z placene Meta reklamy) melo
+    // `vars` NULL, takze zaplacena diagnoza se ulozila a v mailu se nepouzila.
+    // ⛔ Klic MUSI byt zanoreny pod nazvem trate. Plochy `vars.kviz_profil` by byl
+    //    mrtva paka: engine cte vyhradne `vars[track]` a plochy klic nikdy neuvidi.
+    // ⚠️ Token `{{kviz_profil}}` smi prijit jen do trate, kde ho maji VSICHNI prijemci.
+    //    Ve sdilene trati (dnes `lead-magnet`, kde sedi i nekvizove leady) by render
+    //    spadl na `unresolved_token`, mail by se neodeslal a po 5 pokusech by engine
+    //    leada odstavil na `paused`. Cisty postup je vlastni trat pro kvizove leady.
+    // ⚠️ Rozhoduje PREFIX v `goal`, ne `source`: kdyby kviz jednou zmenil `source`,
+    //    mechanismus jede dal. Jiny formular tenhle prefix neposila.
+    const KVIZ_PREFIX = "kviz profil: ";
+    const kvizProfil = goal.startsWith(KVIZ_PREFIX) ? goal.slice(KVIZ_PREFIX.length).trim().slice(0, 30) : "";
     const { error } = await supa.from("leads").insert({
       email, name, segment, source, phone,   // phone -> vlastni sloupec (Cowork migrace add_phone_to_leads)
       track,
       meta,
+      // `meta.goal` zustava zdrojem pravdy o profilu, `vars` je jeho podoba pro engine.
+      ...(kvizProfil ? { vars: { [track]: { kviz_profil: kvizProfil } } } : {}),
       next_send_at: new Date(Date.now() + (tool ? 24 * 3600000 : 0)).toISOString(),
     });
     // 23505 = unique violation (e-mail uz je v seznamu) -> bereme jako uspech (idempotentni)
