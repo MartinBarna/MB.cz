@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     //    kontroluje nerozřešené tokeny a vyhazuje `unresolved_token`. Kdyby
     //    `{{kviz_profil}}` přišel do sdílené `lead-magnet`/0, přestal by chodit uvítací
     //    mail VŠEM nekvízovým leadům a nikde by to nekřiklo (jen `error`, po 5 pokusech
-    //    `paused`). Šablony `kviz-*`/0 proto žádný nový token nemají, profilový odstavec
+    //    `paused`). Šablony `kviz-*` proto žádný nový token nemají, profilový text
     //    je v nich napevno.
     // ⛔ WHITELIST, NE HOLÝ PREFIX. `goal` je vstup ze stránky. Kdyby sem přišla jiná
     //    hodnota, vznikla by trať bez šablony a člověk by NEDOSTAL NIC (drip-send na
@@ -56,10 +56,13 @@ Deno.serve(async (req) => {
     //    `lead-magnet`, tedy na dnešní fungující cestu. Fail-safe míří k doručení.
     // ⚠️ Rozhoduje PREFIX v `goal`, ne `source`: kdyby kvíz jednou změnil `source`,
     //    mechanismus jede dál. Jiný formulář tenhle prefix neposílá.
-    // ⚠️ Kvízová trať má JEN krok 0. Zpátky do `lead-magnet` na KROK 1 (ne 0, to by byl
-    //    tentýž mail podruhé) přesouvá DB funkce `presun_kvizove_na_lead_magnet`, kterou
-    //    volá pg_cron `kviz-presun-10min`. Most (`app_config.navazujici_trate`) se použít
-    //    NEDÁ: ten cílový krok vždycky nastaví na 0.
+    // ⚠️ [13. 8. 2026] Kvízová trať má DVA kroky: 0 = doručení plánu s profilovým
+    //    odstavcem, 1 = nabídka appky Tvůj Coach na míru profilu. Po kroku 1 přesouvá
+    //    leada na `lead-magnet` KROK 2 DB funkce `presun_kvizove_na_lead_magnet`, kterou
+    //    volá pg_cron `kviz-presun-10min` (zdroj: `akademie/_supabase/kviz-presun.sql`).
+    //    Krok 2 proto, že kvízový krok 1 zabírá místo kroku 1 obecné tratě; krok 0 by byl
+    //    tentýž mail podruhé. Most (`app_config.navazujici_trate`) se použít NEDÁ:
+    //    ten cílový krok vždycky nastaví na 0.
     const KVIZ_PREFIX = "kviz profil: ";
     const KVIZ_PROFILY = ["data", "vikend", "vecer", "pohyb"];
     const kvizProfil = goal.startsWith(KVIZ_PREFIX) ? goal.slice(KVIZ_PREFIX.length).trim().slice(0, 30) : "";
