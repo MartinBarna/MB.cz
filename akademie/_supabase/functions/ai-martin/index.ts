@@ -385,14 +385,22 @@ const PRICE_PER_M: Record<string, { in: number; out: number; cached?: number }> 
 };
 // tcached = cast vstupu trefena z cache (xAI: usage.prompt_tokens_details.cached_tokens,
 // Anthropic: cache_read_input_tokens). Bez toho bychom ucetli plnou sazbu i za levny vstup.
-function parseUsage(u: unknown): { tin: number; tout: number; tcached: number } {
+function parseUsage(u: unknown): { tin: number; tout: number; tcached: number; treasoning: number; ticks: number } {
   const o = (u ?? {}) as Record<string, unknown>;
   const num = (v: unknown) => Number(v ?? 0) || 0;
   const details = (o.prompt_tokens_details ?? {}) as Record<string, unknown>;
+  const odetails = (o.completion_tokens_details ?? {}) as Record<string, unknown>;
   const tin = num(o.input_tokens ?? o.prompt_tokens);
   const tout = num(o.output_tokens ?? o.completion_tokens);
   const tcached = Math.min(num(details.cached_tokens ?? o.cache_read_input_tokens), tin);
-  return { tin, tout, tcached };
+  // xAI reasoning tokeny do `completion_tokens` NEDAVA (zmereno 13. 8. 2026:
+  // total_tokens = prompt + completion + reasoning), ale UCTUJE je sazbou vystupu.
+  // Bez tohohle byl naklad podhodnoceny az 3x a mesicni strop sepnul prilis pozde.
+  // Anthropic je do output_tokens zapocitava sam a tenhle klic nema, takze se nic nezdvoji.
+  const treasoning = num(odetails.reasoning_tokens);
+  // xAI posila i SVOJI cenu za volani; 1 tick = 1e-10 USD (overeno na trech volanich na cent).
+  const ticks = num(o.cost_in_usd_ticks);
+  return { tin, tout, tcached, treasoning, ticks };
 }
 function userIdFromToken(token: string): string | null {
   try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof p.sub === 'string' ? p.sub : null; } catch { return null; }
@@ -427,15 +435,24 @@ async function logFlag(userId: string | null, email: string | null, primary: str
 // best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď (fire-and-forget).
 function logUsage(userId: string | null, feature: string, usage: unknown): void {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
-  const { tin, tout, tcached } = parseUsage(usage);
+  const { tin, tout, tcached, treasoning, ticks } = parseUsage(usage);
   const p = PRICE_PER_M[MODEL] ?? { in: 3, out: 15 };
   // cached vstup se uctuje levnejsi sazbou; zbytek vstupu plnou
   const cachedRate = p.cached ?? p.in;
-  const cost = Number((((tin - tcached) / 1e6) * p.in + (tcached / 1e6) * cachedRate + (tout / 1e6) * p.out).toFixed(6));
+  // Uctovany VYSTUP = completion + reasoning (viz parseUsage); do ai_usage jde stejne cislo,
+  // at se da cena z radku dopocitat.
+  const billedOut = tout + treasoning;
+  const fromTable = ((tin - tcached) / 1e6) * p.in + (tcached / 1e6) * cachedRate + (billedOut / 1e6) * p.out;
+  // Prednost ma cena OD POSKYTOVATELE (prezije i zmenu ceniku). Tabulka je fallback
+  // a zaroven pojistka: pri radove jinem cisle (zmena jednotky ticku) ticky zahodime.
+  const fromTicks = ticks / 1e10;
+  const ticksOk = fromTicks > 0 && (fromTable <= 0 || (fromTicks >= fromTable * 0.2 && fromTicks <= fromTable * 5));
+  if (ticks > 0 && !ticksOk) console.error(`ai-martin: cost_in_usd_ticks mimo rozsah (${fromTicks} vs ${fromTable})`);
+  const cost = Number((ticksOk ? fromTicks : fromTable).toFixed(6));
   fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: tout, tokens_cached: tcached, est_cost_usd: cost }),
+    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: billedOut, tokens_cached: tcached, est_cost_usd: cost }),
   }).catch(() => {});
 }
 // --- P2: denní strop na člena (anti-abuse). Best-effort; při chybě pustí dál. ---
