@@ -277,7 +277,8 @@ $fn$;
 -- 5) VSTUPNI BOD PRO CRON
 -- ---------------------------------------------------------------------------
 -- Pondelni beh: kazda hodina nejdriv VRATI hotove z minule vlny, pak posle dalsi vlnu.
--- Hodina 7 UTC vlnu nespousti (viz bod 4 v hlavicce), hodiny 14 a 15 uz jen uklizeji.
+-- Hodina 7 UTC vlnu nespousti (viz bod 4 v hlavicce), od hodiny 15 se uz jen uklizi.
+-- Kapacita: 8 vln (6, 8 az 14 UTC) po 120 lidech = 960, publikum je dnes 809.
 create or replace function public.tydenik_cron()
 returns jsonb
 language plpgsql
@@ -299,10 +300,10 @@ begin
     return jsonb_build_object('ok', false, 'duvod', 'chybi_app_config_tydenik_cislo');
   end if;
 
-  v_force := v_hod >= 14;                 -- po skonceni okna uz nikdo nesmi zustat na cizi trati
+  v_force := v_hod >= 15;                 -- po skonceni okna uz nikdo nesmi zustat na cizi trati
   v_vraceni := public.tydenik_vraceni(v_cislo, v_force);
 
-  if v_hod in (6, 8, 9, 10, 11, 12, 13) then
+  if v_hod in (6, 8, 9, 10, 11, 12, 13, 14) then
     select coalesce(nullif(value, '')::int, 120) into v_limit
       from public.app_config where key = 'tydenik_vlna_limit';
     v_rozeslani := public.tydenik_rozeslani(v_cislo, false, coalesce(v_limit, 120));
@@ -352,7 +353,7 @@ $fn$;
 --    pg_cron umi jen UTC; kdyby to Martinovi vadilo, je to zmena jedne hodnoty.
 -- NASAZENO 13. 8. 2026 jako jobid 24 a 25:
 --   select cron.schedule('tydenik-test-nedele', '0 15 * * 0', $c$select public.tydenik_cron_test();$c$);
---   select cron.schedule('tydenik-pondeli',     '5 6-15 * * 1', $c$select public.tydenik_cron();$c$);
+--   select cron.schedule('tydenik-pondeli',     '5 6-16 * * 1', $c$select public.tydenik_cron();$c$);
 --
 -- ⛔ KLICE V app_config (nasazeno 13. 8.): `tydenik_cislo` = '2', `tydenik_vlna_limit` = '120'.
 --    `tydenik_go_2` ZAMERNE NEEXISTUJE. Bez nej se v pondeli neodesle nic a zaloguje se
