@@ -49,8 +49,20 @@ function mock(opts: {
   promo?: Record<string, string>;
   promoKlic?: boolean;
   zapsaneOrdery?: string[];
+  /**
+   * Ordery, které kontrola `jeOrderZapsany` NEVIDÍ, ale unikátní index je odmítne.
+   * Simuluje souběh dvou webhooků k téže faktuře: oba projdou kontrolou, druhého
+   * zastaví až DB. Věcně správný výsledek, který se nesmí hlásit jako selhání.
+   */
+  souzeniOrdery?: string[];
   /** Kód partnera z předchozího nákupu appky (ledger `referrals`), null = žádná historie. */
   historieKod?: string | null;
+  /**
+   * Ke kterému PŘEDPLATNÉMU ten starý řádek patří. `undefined` = 'sub_1' (tedy totéž
+   * předplatné, které platí dál), `null` = starý řádek zapsaný dřív, než sloupec
+   * `stripe_subscription_id` existoval.
+   */
+  historieSub?: string | null;
   entitlement?: { active: boolean; expires_at: string | null; source: string | null } | null;
   zapisSpadne?: boolean;
   grantSpadne?: boolean;
@@ -58,6 +70,9 @@ function mock(opts: {
   const stav: Stav = { referraly: [], entitlementy: [], alerty: [], logy: [], promoDotazy: [] };
   const kody = opts.kody ?? { JIRKA10: JIRKA };
   const ordery = new Set(opts.zapsaneOrdery ?? []);
+  // Co odmítne unikátní index `referrals_order_uidx`. Nadmnožina toho, co vidí
+  // předběžná kontrola: souběžný webhook stihl zapsat mezi kontrolou a insertem.
+  const orderyVIndexu = new Set([...(opts.zapsaneOrdery ?? []), ...(opts.souzeniOrdery ?? [])]);
   const deps: BridgeDeps = {
     najdiAktivniKod: (kod) => Promise.resolve(kody[kod] ?? null),
     rozlozPromoId: (id) => {
@@ -69,15 +84,30 @@ function mock(opts: {
     jeOrderZapsany: (id) => Promise.resolve(ordery.has(id)),
     // Kód z historie nákupů appky. ⚠️ Mock schválně NEfiltruje podle `kind`: kdyby se
     // jádro na historii zeptalo i u prvního nákupu, test to musí vidět.
-    najdiPredchoziKodProAppku: () => Promise.resolve(opts.historieKod ?? null),
+    // ⭐ Zrcadlí produkci: hledá se podle PŘEDPLATNÉHO, a teprve když se nic nenajde,
+    //   sáhne se po starém řádku, který předplatné neznal. Kdyby mock vracel kód
+    //   vždycky, prošel by i kód, který provizi platí ze špatné kapsy (vada V2).
+    najdiPredchoziKodProAppku: (_email, subscriptionId) => {
+      const kod = opts.historieKod ?? null;
+      if (!kod) return Promise.resolve(null);
+      const sub = opts.historieSub === undefined ? 'sub_1' : opts.historieSub;
+      if (sub === null) return Promise.resolve(kod); // starý řádek bez vazby: fallback přes e-mail
+      return Promise.resolve(subscriptionId && subscriptionId === sub ? kod : null);
+    },
     zapisReferral: (row) => {
       if (opts.zapisSpadne) throw new Error('db: spadlo');
-      stav.referraly.push(row);
       // Mock se chová jako DB s unique indexem `referrals_order_uidx`: co je jednou
       // zapsané, je od té chvíle „už zapsané". Bez toho by test opakovaného doručení
       // téže faktury prošel, i kdyby idempotence nefungovala.
-      if (typeof row.order_id === 'string') ordery.add(row.order_id);
-      return Promise.resolve();
+      if (typeof row.order_id === 'string' && orderyVIndexu.has(row.order_id)) {
+        return Promise.resolve('duplicita' as const);
+      }
+      stav.referraly.push(row);
+      if (typeof row.order_id === 'string') {
+        ordery.add(row.order_id);
+        orderyVIndexu.add(row.order_id);
+      }
+      return Promise.resolve('ok' as const);
     },
     zalogujNerozpoznanouSlevu: (promoId, jak) => {
       stav.logy.push({ promoId, jak });
@@ -370,6 +400,78 @@ async function main(): Promise<void> {
     check('obnova ročního VIP: entitlement nevznikl', stav.entitlementy.length === 0, String(stav.entitlementy.length));
     check('obnova ročního VIP: provize 30 % z 4990 = 1497', stav.referraly[0]?.reward_amount === 1497,
       String(stav.referraly[0]?.reward_amount));
+  }
+
+  // --- V2: NÁVRAT PŘÍMO, BEZ KÓDU. Starý partner už provizi brát nesmí ---------
+  // Reprodukce vady, kterou našla revize 13. 8. 2026: člověk přišel přes JIRKA10,
+  // předplatné zrušil a po půl roce se upsal SÁM a bez kódu. První faktura byla správně
+  // bez provize, ale obnovy nového předplatného platil zase Jirka, a to napořád.
+  {
+    const { deps, stav } = mock({ historieKod: 'JIRKA10', historieSub: 'sub_stare' });
+
+    // 1) nový PŘÍMÝ nákup bez kódu: nic se nepřipisuje (tohle fungovalo i dřív)
+    const prvni = await handleAppPurchase(
+      { ...ROCNI_VIP, affiliate_code: null, event_id: 'evt_navrat', subscription_id: 'sub_nove' },
+      deps,
+    );
+    check('návrat: první faktura nového předplatného je bez kódu', prvni.referral === 'bez-kodu', prvni.referral);
+
+    // 2) druhá a třetí faktura TÉHOŽ nového předplatného: taky nic
+    const druha = await handleAppPurchase(
+      { ...FAKTURA, order_id: 'in_navrat_2', event_id: 'evt_navrat_2', subscription_id: 'sub_nove' },
+      deps,
+    );
+    const treti = await handleAppPurchase(
+      { ...FAKTURA, order_id: 'in_navrat_3', event_id: 'evt_navrat_3', subscription_id: 'sub_nove' },
+      deps,
+    );
+    check('návrat: obnova NOVÉHO předplatného nedá provizi starému partnerovi',
+      druha.referral === 'bez-kodu' && treti.referral === 'bez-kodu', druha.referral + '/' + treti.referral);
+    check('návrat: v ledgeru nevznikl ani jeden řádek', stav.referraly.length === 0, String(stav.referraly.length));
+  }
+  {
+    // Naopak: obnova PŮVODNÍHO předplatného partnerovi dál patří.
+    const { deps, stav } = mock({ historieKod: 'JIRKA10', historieSub: 'sub_stare' });
+    const r = await handleAppPurchase({ ...FAKTURA, subscription_id: 'sub_stare' }, deps);
+    check('návrat: obnova PŮVODNÍHO předplatného partnerovi zůstává',
+      r.referral === 'zapsano-historie' && stav.referraly.length === 1, r.referral);
+  }
+  {
+    // Řádek musí vazbu na předplatné nést, jinak by ji další faktura neměla kde najít.
+    const { deps, stav } = mock({ historieKod: 'JIRKA10' });
+    await handleAppPurchase(FAKTURA, deps);
+    check('obnova: řádek nese vazbu na předplatné',
+      stav.referraly[0]?.stripe_subscription_id === 'sub_1', String(stav.referraly[0]?.stripe_subscription_id));
+    const { deps: d2, stav: s2 } = mock();
+    await handleAppPurchase(ROCNI_VIP, d2);
+    check('první nákup: řádek nese vazbu na předplatné',
+      s2.referraly[0]?.stripe_subscription_id === 'sub_1', String(s2.referraly[0]?.stripe_subscription_id));
+  }
+  {
+    // Řádky zapsané dřív, než sloupec existoval, se musí dohledat dál (přes e-mail).
+    const { deps, stav } = mock({ historieKod: 'JIRKA10', historieSub: null });
+    const r = await handleAppPurchase(FAKTURA, deps);
+    check('obnova: starý řádek bez vazby se pořád dohledá', r.referral === 'zapsano-historie', r.referral);
+    check('obnova: dopsaný řádek už vazbu má (příště se hledat nemusí)',
+      stav.referraly[0]?.stripe_subscription_id === 'sub_1', String(stav.referraly[0]?.stripe_subscription_id));
+  }
+  {
+    // Obnova bez ID předplatného (starší verze appky): historie se hledat nedá jinak
+    // než mezi starými řádky, a ty tady nejsou.
+    const { deps, stav } = mock({ historieKod: 'JIRKA10', historieSub: 'sub_1' });
+    const r = await handleAppPurchase({ ...FAKTURA, subscription_id: null }, deps);
+    check('obnova bez ID předplatného: radši nic než ze špatné kapsy',
+      r.referral === 'bez-kodu' && stav.referraly.length === 0, r.referral);
+  }
+
+  // --- V6: SOUBĚH dvou webhooků k téže faktuře NENÍ selhání --------------------
+  {
+    const { deps, stav } = mock({ historieKod: 'JIRKA10', souzeniOrdery: ['in_0001'] });
+    const r = await handleAppPurchase(FAKTURA, deps);
+    check('souběh: index odmítl druhý zápis a je to duplicita, ne chyba',
+      r.referral === 'duplicita-order', r.referral);
+    check('souběh: druhý řádek nevznikl', stav.referraly.length === 0, String(stav.referraly.length));
+    check('souběh: NEPŘIJDE falešný alert', stav.alerty.length === 0, JSON.stringify(stav.alerty.map((a) => a.predmet)));
   }
 
   // --- Vstupní kontroly ------------------------------------------------------

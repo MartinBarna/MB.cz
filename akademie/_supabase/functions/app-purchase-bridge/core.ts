@@ -83,15 +83,28 @@ export type BridgeDeps = {
   /** Je tenhle order_id už v `referrals`? (přehrání události Stripem) */
   jeOrderZapsany: (orderId: string) => Promise<boolean>;
   /**
-   * Kód partnera z NEJNOVĚJŠÍHO nezrušeného řádku `referrals` pro tenhle e-mail
-   * a produkt `appka`, nebo null. Používá se JEN u opakované platby: u dvanácté
+   * Kód partnera z NEJNOVĚJŠÍHO nezrušeného řádku `referrals` pro TOHLE PŘEDPLATNÉ
+   * (produkt `appka`), nebo null. Používá se JEN u opakované platby: u dvanácté
    * faktury už nikde nefiguruje ani `?ref=` z odkazu, ani promo kód z pokladny,
-   * takže jediné trvalé místo, kde vazba „kupující → partner" žije, je tenhle
-   * ledger. ⛔ Zrušené (`void`) řádky se ignorují: když Martin provizi shodil,
-   * nesmí se sama vrátit další fakturou.
+   * takže jediné trvalé místo, kde vazba „nákup → partner" žije, je tenhle ledger.
+   *
+   * ⛔⛔ KLÍČEM JE PŘEDPLATNÉ, NE E-MAIL, a je to celá oprava vady V2 z revize
+   * 13. 8. 2026. Podle e-mailu to fungovalo, dokud se člověk nevrátil: kdo přišel přes
+   * partnera, předplatné zrušil a po půl roce se upsal PŘÍMO bez kódu, měl první fakturu
+   * správně bez provize, ale od druhé bral zase starý partner, a to napořád. Reprodukováno,
+   * u jednoho vráceného VIP klienta ~1 800 Kč ročně z cizí kapsy.
+   *
+   * ⛔ Zrušené (`void`) řádky se ignorují: když Martin provizi shodil, nesmí se sama
+   * vrátit další fakturou.
    */
-  najdiPredchoziKodProAppku: (email: string) => Promise<string | null>;
-  zapisReferral: (row: Record<string, unknown>) => Promise<void>;
+  najdiPredchoziKodProAppku: (email: string, subscriptionId: string | null) => Promise<string | null>;
+  /**
+   * Zapíše řádek do `referrals`. Vrací `'duplicita'`, když ho odmítl unikátní index
+   * `referrals_order_uidx` (tuhle platbu už někdo zapsal), jinak `'ok'`. Ostatní chyby
+   * hází dál. ⛔ Duplicita NENÍ selhání: je to správný výsledek souběhu dvou webhooků
+   * k téže faktuře a nesmí z ní být alert (viz `atribuuj`).
+   */
+  zapisReferral: (row: Record<string, unknown>) => Promise<'ok' | 'duplicita'>;
   /** Sleva byla, ale kód se nepodařilo přečíst, ulož tvar, ať se to příště pozná. */
   zalogujNerozpoznanouSlevu: (promoId: string, jak: string) => Promise<void>;
   najdiEntitlement: (email: string, produkt: string) => Promise<EntitlementRow | null>;
@@ -160,8 +173,12 @@ export async function handleAppPurchase(
   //    zapíše provizi dvakrát, nebo podruhé vůbec.
   //    Poslední pojistka je unique index `referrals_order_uidx` na `order_id` v DB.
   const orderId = text(body.order_id) || text(body.payment_intent) || eventId;
+  // ⭐ Vazba na PŘEDPLATNÉ. Zapisuje se do každého řádku a u obnovy se podle ní hledá
+  //    partner. Prázdné být může (starší verze appky, jednorázová platba); pak se
+  //    historie dohledá jen mezi starými řádky, viz `najdiPredchoziKodProAppku`.
+  const subscriptionId = text(body.subscription_id) || null;
 
-  const referral = await atribuuj(email, orderId, jeObnova, body, deps);
+  const referral = await atribuuj(email, orderId, subscriptionId, jeObnova, body, deps);
   // ⛔ BONUS JEN U PRVNÍ AKTIVACE, a je to výslovná podmínka, ne náhoda. Bez ní by
   //    o něm rozhodoval jen `maNarokNaBonus` + „už to má", což je idempotence podle
   //    STAVU PŘÍSTUPU: kdyby si člověk videokurz mezitím sám smazal nebo mu vypršel,
@@ -174,6 +191,7 @@ export async function handleAppPurchase(
 async function atribuuj(
   email: string,
   orderId: string,
+  subscriptionId: string | null,
   jeObnova: boolean,
   body: PurchasePayload,
   deps: BridgeDeps,
@@ -210,8 +228,11 @@ async function atribuuj(
     //    v ledgeru, který stejně rozhoduje o výplatách.
     // ⛔ U PRVNÍHO nákupu se historie NEPOUŽÍVÁ: nový nákup bez kódu patří Martinovi,
     //    ne partnerovi, po kterém ten člověk přišel před rokem.
+    // ⛔ A od 13. 8. 2026 se ani u obnovy nehledá podle e-mailu, ale podle PŘEDPLATNÉHO:
+    //    jinak by „přišel přes partnera, odešel, vrátil se přímo" znamenalo, že provizi
+    //    z nového vlastního nákupu bere starý partner navždycky (V2 z revize P48).
     if (!kod && jeObnova) {
-      const zHistorie = await deps.najdiPredchoziKodProAppku(email);
+      const zHistorie = await deps.najdiPredchoziKodProAppku(email, subscriptionId);
       if (zHistorie) {
         kod = zHistorie.toUpperCase().trim();
         zdroj = 'historie';
@@ -254,7 +275,7 @@ async function atribuuj(
       });
     }
 
-    await deps.zapisReferral({
+    const zapis = await deps.zapisReferral({
       code: kod,
       buyer_email: email,
       product: PRODUKT_APPKA,
@@ -265,7 +286,17 @@ async function atribuuj(
       reward_type: partnerType === 'affiliate' ? 'cash' : 'credit',
       reward_amount: odmena,
       partner_type: partnerType,
+      // ⭐ Vazba na předplatné. Bez ní se u obnovy hledal partner podle e-mailu a provize
+      //    z nového přímého nákupu tekla starému partnerovi (V2). ⛔ Sloupec musí v DB
+      //    existovat DŘÍV, než se tahle verze nasadí, jinak insert spadne na neznámém poli.
+      stripe_subscription_id: subscriptionId,
     });
+    // ⛔ SOUBĚH NENÍ SELHÁNÍ. `jeOrderZapsany` a insert nejsou atomické, takže dva
+    //    webhooky k téže faktuře můžou projít kontrolou oba a druhého zastaví až
+    //    unikátní index. Výsledek je SPRÁVNÝ (jeden řádek). Kdyby to spadlo do obecného
+    //    catch níž, přišel by Martinovi alert „affiliate atribuce selhala" pokaždé, když
+    //    se nic nestalo, a na kanálu, který hlídá peníze, by příště zakryl skutečnou chybu.
+    if (zapis === 'duplicita') return 'duplicita-order';
     return 'zapsano-' + zdroj;
   } catch (e) {
     // Atribuce NIKDY nesmí shodit nákup ani odpověď mostu. Selhání jde do alertu.
