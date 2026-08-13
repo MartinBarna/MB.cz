@@ -40,6 +40,30 @@ Deno.serve(async (req) => {
     const utmSource = String(body.utm_source || "").trim().slice(0, 60);
     const utmMedium = String(body.utm_medium || "").trim().slice(0, 60);
     const utmCampaign = String(body.utm_campaign || "").trim().slice(0, 60);
+    // [2026-08-13] ⭐ KVÍZOVÝ PROFIL = VLASTNÍ TRAŤ (`kviz-data`, `kviz-vikend`, `kviz-vecer`, `kviz-pohyb`).
+    // Kvíz (/kviz/) roztřídí člověka do profilu a posílá ho sem jako `goal` ve tvaru
+    // "kviz profil: vikend". Do 13. 8. skončil každý kvízový lead na sdílené trati
+    // `lead-magnet` a zaplacená diagnóza se v mailu nikdy nepoužila.
+    // ⛔ PROČ VLASTNÍ TRAŤ A NE TOKEN VE SDÍLENÉ ŠABLONĚ: `drip-send` na konci renderu
+    //    kontroluje nerozřešené tokeny a vyhazuje `unresolved_token`. Kdyby
+    //    `{{kviz_profil}}` přišel do sdílené `lead-magnet`/0, přestal by chodit uvítací
+    //    mail VŠEM nekvízovým leadům a nikde by to nekřiklo (jen `error`, po 5 pokusech
+    //    `paused`). Šablony `kviz-*`/0 proto žádný nový token nemají, profilový odstavec
+    //    je v nich napevno.
+    // ⛔ WHITELIST, NE HOLÝ PREFIX. `goal` je vstup ze stránky. Kdyby sem přišla jiná
+    //    hodnota, vznikla by trať bez šablony a člověk by NEDOSTAL NIC (drip-send na
+    //    chybějící šabloně jen zhasne termín). Neznámý profil proto padá zpátky na
+    //    `lead-magnet`, tedy na dnešní fungující cestu. Fail-safe míří k doručení.
+    // ⚠️ Rozhoduje PREFIX v `goal`, ne `source`: kdyby kvíz jednou změnil `source`,
+    //    mechanismus jede dál. Jiný formulář tenhle prefix neposílá.
+    // ⚠️ Kvízová trať má JEN krok 0. Zpátky do `lead-magnet` na KROK 1 (ne 0, to by byl
+    //    tentýž mail podruhé) přesouvá DB funkce `presun_kvizove_na_lead_magnet`, kterou
+    //    volá pg_cron `kviz-presun-10min`. Most (`app_config.navazujici_trate`) se použít
+    //    NEDÁ: ten cílový krok vždycky nastaví na 0.
+    const KVIZ_PREFIX = "kviz profil: ";
+    const KVIZ_PROFILY = ["data", "vikend", "vecer", "pohyb"];
+    const kvizProfil = goal.startsWith(KVIZ_PREFIX) ? goal.slice(KVIZ_PREFIX.length).trim().slice(0, 30) : "";
+    const kvizTrat = KVIZ_PROFILY.includes(kvizProfil) ? "kviz-" + kvizProfil : "";
     // [2026-07-30] ⭐ REKLAMNÍ PROVOZ NA MAGNETY JDE DO SÉRIE B (`tc-magnet`), ne do `lead-magnet`.
     // Pozná se podle kampaně v adrese landing page, kterou `lead-form.js` posílá dál.
     // ⛔ Rozhoduje se podle utm_CAMPAIGN, ne podle utm_source: až přibude jiný kanál než Meta,
@@ -57,6 +81,10 @@ Deno.serve(async (req) => {
       : tool ? "lead-magnet-tool"
       : segRaw === "academy-pro-vas" ? "nurture-pro-vas"
       : jeReklamaMagnet ? "tc-magnet"
+      // ⚠️ Kvíz je ZÁMĚRNĚ až za reklamní podmínkou, ne před ní: je to zúžení dnešního
+      //    výchozího `lead-magnet` (tam dosud padalo všech 130 kvízových leadů), ne nové
+      //    přebíjení kanálů. Kdyby stál výš, přebral by provoz z `tc-leadgen` kampaní.
+      : kvizTrat ? kvizTrat
       : "lead-magnet";
     // utm_content = varianta kreativy (A/B test reklam) -> bez nej nejde z DB merit, ktera reklama lead privedla
     const utmContent = String(body.utm_content || "").trim().slice(0, 60);
@@ -87,27 +115,15 @@ Deno.serve(async (req) => {
     if (utmId) meta.utm_id = utmId;
     if (gclid) meta.gclid = gclid;
     if (fbclid) meta.fbclid = fbclid;
-    // [2026-08-13] KVIZOVY PROFIL I DO `vars`, jinak s nim drip engine neumi pracovat.
-    // Kviz (/kviz/) roztridi cloveka do profilu a posila ho sem jako `goal` ve tvaru
-    // "kviz profil: vikend". Dosud koncil VYHRADNE v `meta`, odkud `drip-send` merge
-    // promennou vzit NEUMI: cte je z `leads.vars[track]` (viz `varsZLeada` v drip-send).
-    // Zmereno 13. 8. 2026: 130 kvizovych leadu (127 z placene Meta reklamy) melo
-    // `vars` NULL, takze zaplacena diagnoza se ulozila a v mailu se nepouzila.
-    // ⛔ Klic MUSI byt zanoreny pod nazvem trate. Plochy `vars.kviz_profil` by byl
-    //    mrtva paka: engine cte vyhradne `vars[track]` a plochy klic nikdy neuvidi.
-    // ⚠️ Token `{{kviz_profil}}` smi prijit jen do trate, kde ho maji VSICHNI prijemci.
-    //    Ve sdilene trati (dnes `lead-magnet`, kde sedi i nekvizove leady) by render
-    //    spadl na `unresolved_token`, mail by se neodeslal a po 5 pokusech by engine
-    //    leada odstavil na `paused`. Cisty postup je vlastni trat pro kvizove leady.
-    // ⚠️ Rozhoduje PREFIX v `goal`, ne `source`: kdyby kviz jednou zmenil `source`,
-    //    mechanismus jede dal. Jiny formular tenhle prefix neposila.
-    const KVIZ_PREFIX = "kviz profil: ";
-    const kvizProfil = goal.startsWith(KVIZ_PREFIX) ? goal.slice(KVIZ_PREFIX.length).trim().slice(0, 30) : "";
     const { error } = await supa.from("leads").insert({
       email, name, segment, source, phone,   // phone -> vlastni sloupec (Cowork migrace add_phone_to_leads)
       track,
       meta,
-      // `meta.goal` zustava zdrojem pravdy o profilu, `vars` je jeho podoba pro engine.
+      // `meta.goal` zůstává zdrojem pravdy o profilu, `vars` je jeho podoba pro engine.
+      // ⛔ Klíč MUSÍ být zanořený pod názvem tratě (u kvízu tedy `kviz-vikend`): `drip-send`
+      //    čte výhradně `vars[track]` (viz `varsZLeada`), plochý `vars.kviz_profil` by byl
+      //    mrtvá páka. Dnes ho žádná šablona nepoužívá (odstavec je v `kviz-*`/0 napevno),
+      //    je to záloha pro případ, že by ho někdy nějaký krok kvízové tratě potřeboval.
       ...(kvizProfil ? { vars: { [track]: { kviz_profil: kvizProfil } } } : {}),
       next_send_at: new Date(Date.now() + (tool ? 24 * 3600000 : 0)).toISOString(),
     });
