@@ -380,6 +380,8 @@ async function postWithRetry(url: string, headers: Record<string, string>, bodyO
 const PRICE_PER_M: Record<string, { in: number; out: number; cached?: number }> = {
   'claude-opus-4-8': { in: 15, out: 75 }, 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5': { in: 1, out: 5 },
   'grok-4.3': { in: 1.25, out: 2.5, cached: 0.2 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6, cached: 0.5 },
+  // grok-4.6: ceny overene 13. 8. 2026 v docs.x.ai/docs/models (pasmo pod 200k tokenu).
+  'grok-4.6': { in: 2, out: 6, cached: 0.5 },
 };
 // tcached = cast vstupu trefena z cache (xAI: usage.prompt_tokens_details.cached_tokens,
 // Anthropic: cache_read_input_tokens). Bez toho bychom ucetli plnou sazbu i za levny vstup.
