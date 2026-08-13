@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Online konzultace | Martin Barna</title>
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Online konzultace na míru | Martin Barna">
+<meta property="og:description" content="Projdeme tvoje jídlo, trénink i čísla a odejdeš s plánem, který sedí na tvůj život.">
+<meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg">
+<meta property="og:url" content="https://martinbarna.cz/konzultace/">
+<noscript><meta http-equiv="refresh" content="0; url=https://martinbarna.cz/konzultace/"></noscript>
+<script>
+var m={yt:'youtube',fb:'facebook',ig:'instagram',tt:'tiktok',li:'linkedin',x:'x',th:'threads'};
+var r=document.referrer||'';
+var auto=/facebook\.|fb\./.test(r)?'facebook':/instagram\./.test(r)?'instagram':/youtube\.|youtu\.be/.test(r)?'youtube':/tiktok\./.test(r)?'tiktok':/linkedin\./.test(r)?'linkedin':/twitter\.|\/\/x\.com|\/\/t\.co/.test(r)?'x':/threads\./.test(r)?'threads':null;
+var q=new URLSearchParams(location.search);
+var s=m[q.get('s')]||auto||'youtube';
+/* m=c (vychozi) = pripnute komentare, m=d = popisky videi. Oddelene kampane,
+   jinak by kliky z popisku prevalcovaly mereni kampane pin-konzultace. */
+var mm={c:{med:'comment',camp:'pin-konzultace'},d:{med:'description',camp:'desc-konzultace'},s:{med:'social',camp:'post-konzultace'}};
+var mk=mm[q.get('m')]||mm.c;
+location.replace('https://martinbarna.cz/konzultace/?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
+</script>
+</head>
+<body>
+<p><a href="https://martinbarna.cz/konzultace/">Pokračovat na Online konzultace</a></p>
+</body>
+</html>
