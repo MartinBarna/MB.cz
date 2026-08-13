@@ -115,6 +115,21 @@ const deps: BridgeDeps = {
     const { data } = await admin.from("referrals").select("id").eq("order_id", orderId).limit(1);
     return Boolean(data && data.length);
   },
+  // Partner z historie: jediné TRVALÉ místo, kde vazba „kupující → partner" u appky žije.
+  // ⚠️ `buyer_email` se do `referrals` z tohohle mostu zapisuje vždycky malými písmeny
+  // (jádro ho lowercasuje), takže `.eq` stačí a nepotřebujeme `ilike`, který by podtržítko
+  // v adrese bral jako zástupný znak.
+  // ⚠️ Filtr na `product='appka'` je zároveň bezpečnostní hranice: řádky s tímhle produktem
+  // zapisuje jen tenhle most, takže se sem nemůže připlést atribuce z Academy.
+  async najdiPredchoziKodProAppku(email) {
+    const { data, error } = await admin
+      .from("referrals").select("code")
+      .eq("buyer_email", email).eq("product", "appka").neq("status", "void")
+      .order("created_at", { ascending: false }).limit(1);
+    if (error) throw new Error("db: " + error.message);
+    const kod = data?.[0]?.code;
+    return typeof kod === "string" && kod ? kod : null;
+  },
   async zapisReferral(row) {
     const { error } = await admin.from("referrals").insert(row);
     if (error) throw new Error("db: " + error.message);
@@ -161,7 +176,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   try {
     const result = await handleAppPurchase(body, deps);
     // Do logu i výsledek: když se něco nepřipíše, tohle je jediné místo, kde se pozná PROČ.
-    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} referral=${result.referral} bonus=${result.bonus}`);
+    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} kind=${String(body.kind ?? "first")} order=${String(body.order_id ?? body.payment_intent ?? "-")} referral=${result.referral} bonus=${result.bonus}`);
     return json(result);
   } catch (e) {
     if (e instanceof BridgeError) return json({ error: e.message }, e.status);

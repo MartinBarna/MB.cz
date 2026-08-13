@@ -37,15 +37,30 @@ export type PurchasePayload = {
   interval?: unknown;
   /** V HALÉŘÍCH (Stripe jednotka). Přepočet na koruny dělá tenhle soubor, jednou. */
   amount?: unknown;
-  /** 'session' = skutečně zaplaceno (po slevě), 'plan' = ceníková cena. Viz níž. */
+  /** 'session' = skutečně zaplaceno (po slevě), 'plan' = ceníková cena, 'invoice' = z faktury. */
   amount_source?: unknown;
   currency?: unknown;
   event_id?: unknown;
   payment_intent?: unknown;
+  /**
+   * ⭐ Klíč idempotence, když ho volající umí určit přesněji než my. U OPAKOVANÉ platby
+   * je to ID FAKTURY (`in_…`): jedna faktura = jedna provize, ať Stripe událost doručí
+   * kolikrát chce a ať přijde jako `invoice.paid` i `invoice.payment_succeeded`.
+   * ⛔ Schválně se neposílá v poli `payment_intent`: ID faktury není payment intent
+   * a pole, které měří něco jiného, než tvrdí jeho jméno, je past pro dalšího čtenáře.
+   */
+  order_id?: unknown;
   subscription_id?: unknown;
   affiliate_code?: unknown;
   promotion_code_id?: unknown;
+  /** 'first' (první aktivace, výchozí) nebo 'renewal' (další zaplacená faktura). */
+  kind?: unknown;
+  /** `invoice.billing_reason` ze Stripu. Jen do logu, rozhodnutí padlo už v appce. */
+  billing_reason?: unknown;
 };
+
+/** Opakovaná platba předplatného (další faktura), ne první aktivace. */
+export const KIND_RENEWAL = 'renewal';
 
 export type ReferralCodeRow = {
   owner_email: string;
@@ -67,6 +82,15 @@ export type BridgeDeps = {
   rozlozPromoId: (promoId: string) => Promise<{ kod: string; jak: string }>;
   /** Je tenhle order_id už v `referrals`? (přehrání události Stripem) */
   jeOrderZapsany: (orderId: string) => Promise<boolean>;
+  /**
+   * Kód partnera z NEJNOVĚJŠÍHO nezrušeného řádku `referrals` pro tenhle e-mail
+   * a produkt `appka`, nebo null. Používá se JEN u opakované platby: u dvanácté
+   * faktury už nikde nefiguruje ani `?ref=` z odkazu, ani promo kód z pokladny,
+   * takže jediné trvalé místo, kde vazba „kupující → partner" žije, je tenhle
+   * ledger. ⛔ Zrušené (`void`) řádky se ignorují: když Martin provizi shodil,
+   * nesmí se sama vrátit další fakturou.
+   */
+  najdiPredchoziKodProAppku: (email: string) => Promise<string | null>;
   zapisReferral: (row: Record<string, unknown>) => Promise<void>;
   /** Sleva byla, ale kód se nepodařilo přečíst, ulož tvar, ať se to příště pozná. */
   zalogujNerozpoznanouSlevu: (promoId: string, jak: string) => Promise<void>;
@@ -127,16 +151,22 @@ export async function handleAppPurchase(
 
   const tier = text(body.tier);
   const interval = text(body.interval);
+  const jeObnova = text(body.kind) === KIND_RENEWAL;
 
-  // ⛔ IDEMPOTENCE PODLE PLATBY, NE PODLE STAVU PŘÍSTUPU. `payment_intent` je přesnější
-  //    (jedna platba), `event_id` je záloha pro předplatné, kde payment_intent na session
-  //    není. Obojí je STÁLÉ i při přehrání události, kdežto „už to má" odpovídá na jinou
-  //    otázku a u opakovaného nákupu bere peníze a nedodá nic.
+  // ⛔ IDEMPOTENCE PODLE PLATBY, NE PODLE STAVU PŘÍSTUPU. `order_id` (u obnovy ID faktury)
+  //    je nejpřesnější, `payment_intent` je druhá volba, `event_id` je záloha pro první
+  //    aktivaci, kde ani jedno na session není. Všechno tři je STÁLÉ i při přehrání
+  //    události, kdežto „už to má" odpovídá na jinou otázku a u opakované platby buď
+  //    zapíše provizi dvakrát, nebo podruhé vůbec.
   //    Poslední pojistka je unique index `referrals_order_uidx` na `order_id` v DB.
-  const orderId = text(body.payment_intent) || eventId;
+  const orderId = text(body.order_id) || text(body.payment_intent) || eventId;
 
-  const referral = await atribuuj(email, orderId, body, deps);
-  const bonus = await udelBonus(email, tier, interval, body, deps);
+  const referral = await atribuuj(email, orderId, jeObnova, body, deps);
+  // ⛔ BONUS JEN U PRVNÍ AKTIVACE, a je to výslovná podmínka, ne náhoda. Bez ní by
+  //    o něm rozhodoval jen `maNarokNaBonus` + „už to má", což je idempotence podle
+  //    STAVU PŘÍSTUPU: kdyby si člověk videokurz mezitím sám smazal nebo mu vypršel,
+  //    dostal by ho jako dárek znovu při každé roční faktuře.
+  const bonus = jeObnova ? 'netyka-se-obnova' : await udelBonus(email, tier, interval, body, deps);
   return { ok: true, referral, bonus };
 }
 
@@ -144,6 +174,7 @@ export async function handleAppPurchase(
 async function atribuuj(
   email: string,
   orderId: string,
+  jeObnova: boolean,
   body: PurchasePayload,
   deps: BridgeDeps,
 ): Promise<string> {
@@ -169,6 +200,21 @@ async function atribuuj(
           await deps.zalogujNerozpoznanouSlevu(promoId, r.jak);
           return 'promo-neprecten:' + r.jak;
         }
+      }
+    }
+
+    // PRIORITA 3 (JEN U OPAKOVANÉ PLATBY): partner z historie v `referrals`.
+    // ⛔ Tohle je celý důvod, proč provize u appky dřív skončila po první platbě.
+    //    Kód z odkazu i promo kód z pokladny existují JEN v okamžiku nákupu; dvanáctá
+    //    faktura o nich neví nic. Trvalá vazba „kupující → partner" žije jedině tady,
+    //    v ledgeru, který stejně rozhoduje o výplatách.
+    // ⛔ U PRVNÍHO nákupu se historie NEPOUŽÍVÁ: nový nákup bez kódu patří Martinovi,
+    //    ne partnerovi, po kterém ten člověk přišel před rokem.
+    if (!kod && jeObnova) {
+      const zHistorie = await deps.najdiPredchoziKodProAppku(email);
+      if (zHistorie) {
+        kod = zHistorie.toUpperCase().trim();
+        zdroj = 'historie';
       }
     }
     if (!kod) return 'bez-kodu';

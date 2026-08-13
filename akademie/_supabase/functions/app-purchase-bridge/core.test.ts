@@ -49,6 +49,8 @@ function mock(opts: {
   promo?: Record<string, string>;
   promoKlic?: boolean;
   zapsaneOrdery?: string[];
+  /** Kód partnera z předchozího nákupu appky (ledger `referrals`), null = žádná historie. */
+  historieKod?: string | null;
   entitlement?: { active: boolean; expires_at: string | null; source: string | null } | null;
   zapisSpadne?: boolean;
   grantSpadne?: boolean;
@@ -65,9 +67,16 @@ function mock(opts: {
       return Promise.resolve(kod ? { kod, jak: 'lookup' } : { kod: '', jak: 'lookup-bez-code' });
     },
     jeOrderZapsany: (id) => Promise.resolve(ordery.has(id)),
+    // Kód z historie nákupů appky. ⚠️ Mock schválně NEfiltruje podle `kind`: kdyby se
+    // jádro na historii zeptalo i u prvního nákupu, test to musí vidět.
+    najdiPredchoziKodProAppku: () => Promise.resolve(opts.historieKod ?? null),
     zapisReferral: (row) => {
       if (opts.zapisSpadne) throw new Error('db: spadlo');
       stav.referraly.push(row);
+      // Mock se chová jako DB s unique indexem `referrals_order_uidx`: co je jednou
+      // zapsané, je od té chvíle „už zapsané". Bez toho by test opakovaného doručení
+      // téže faktury prošel, i kdyby idempotence nefungovala.
+      if (typeof row.order_id === 'string') ordery.add(row.order_id);
       return Promise.resolve();
     },
     zalogujNerozpoznanouSlevu: (promoId, jak) => {
@@ -272,6 +281,95 @@ async function main(): Promise<void> {
     const r = await handleAppPurchase(ROCNI_VIP, deps);
     check('selhání bonusu: provize se přesto zapíše', r.referral === 'zapsano-metadata' && r.bonus === 'chyba', r.bonus);
     check('selhání bonusu: přijde HLASITÝ alert', stav.alerty.length === 1 && String(stav.alerty[0].predmet).includes('bonusový videokurz'), JSON.stringify(stav.alerty[0]?.predmet));
+  }
+
+  // --- OPAKOVANÁ PLATBA (obnova předplatného) --------------------------------
+  // Měsíční VIP 499 Kč: partner má dostat 149,70 Kč z KAŽDÉ faktury, ne jen z první.
+  const FAKTURA = {
+    buyer_email: 'kupujici@example.com',
+    user_id: 'u1',
+    kind: 'renewal',
+    amount: 49900,
+    amount_source: 'invoice',
+    currency: 'czk',
+    event_id: 'evt_faktura_1',
+    order_id: 'in_0001',
+    subscription_id: 'sub_1',
+    affiliate_code: null,
+    billing_reason: 'subscription_cycle',
+  };
+  {
+    const { deps, stav } = mock({ historieKod: 'JIRKA10' });
+
+    const r1 = await handleAppPurchase(FAKTURA, deps);
+    check('obnova: partner dohledán z historie', r1.referral === 'zapsano-historie', r1.referral);
+    check('obnova: bonus se NEuděluje podruhé', r1.bonus === 'netyka-se-obnova', r1.bonus);
+    check('obnova: žádný entitlement navíc', stav.entitlementy.length === 0, String(stav.entitlementy.length));
+    const f1 = stav.referraly[0] ?? {};
+    check('obnova: order_id je ID FAKTURY', f1.order_id === 'in_0001', String(f1.order_id));
+    check('obnova: provize 30 % z 499 Kč = 149,70', f1.reward_amount === 149.7, String(f1.reward_amount));
+    check('obnova: částka z faktury v korunách', f1.amount === 499, String(f1.amount));
+    check('obnova: kód je partnerův', f1.code === 'JIRKA10', String(f1.code));
+
+    // Druhá faktura = druhý řádek. Přesně to, co do 13. 8. 2026 nevznikalo.
+    const r2 = await handleAppPurchase(
+      { ...FAKTURA, event_id: 'evt_faktura_2', order_id: 'in_0002' },
+      deps,
+    );
+    check('obnova: DRUHÁ faktura = DRUHÝ řádek', r2.referral === 'zapsano-historie', r2.referral);
+    check('obnova: po dvou fakturách jsou dva řádky', stav.referraly.length === 2, String(stav.referraly.length));
+
+    // Táž faktura doručená znovu (Stripe retry, nebo `invoice.paid`
+    // I `invoice.payment_succeeded` k téže faktuře) NESMÍ zaplatit dvakrát.
+    const r3 = await handleAppPurchase(
+      { ...FAKTURA, event_id: 'evt_faktura_1_znovu', order_id: 'in_0001' },
+      deps,
+    );
+    check('obnova: TÁŽ faktura podruhé = duplicita', r3.referral === 'duplicita-order', r3.referral);
+    check('obnova: pořád jen dva řádky', stav.referraly.length === 2, String(stav.referraly.length));
+  }
+  {
+    // ⛔ U PRVNÍHO nákupu se historie nesmí použít: nový nákup bez kódu patří Martinovi.
+    const { deps, stav } = mock({ historieKod: 'JIRKA10' });
+    const r = await handleAppPurchase(
+      { ...ROCNI_VIP, affiliate_code: null, event_id: 'evt_bez_kodu' },
+      deps,
+    );
+    check('první nákup: historie se NEPOUŽIJE', r.referral === 'bez-kodu', r.referral);
+    check('první nákup: bez kódu se nic nezapíše', stav.referraly.length === 0, String(stav.referraly.length));
+  }
+  {
+    // Obnova bez jakékoli historie (partner nikdy nebyl) nesmí nic vymýšlet.
+    const { deps, stav } = mock({ historieKod: null });
+    const r = await handleAppPurchase(FAKTURA, deps);
+    check('obnova: bez historie = bez kódu', r.referral === 'bez-kodu', r.referral);
+    check('obnova: bez historie se nic nezapíše', stav.referraly.length === 0, String(stav.referraly.length));
+  }
+  {
+    // Kód z metadat faktury má přednost před historií (kdyby Stripe metadata poslal).
+    const { deps, stav } = mock({ kody: { JIRKA10: JIRKA, LUCIE10: JIRKA }, historieKod: 'LUCIE10' });
+    const r = await handleAppPurchase({ ...FAKTURA, affiliate_code: 'JIRKA10' }, deps);
+    check('obnova: metadata mají přednost před historií', r.referral === 'zapsano-metadata', r.referral);
+    check('obnova: zapsal se kód z metadat', stav.referraly[0]?.code === 'JIRKA10', String(stav.referraly[0]?.code));
+  }
+  {
+    // Deaktivovaný kód: partner byl vypnutý, obnova mu už provizi nepřipíše.
+    const { deps, stav } = mock({ kody: {}, historieKod: 'JIRKA10' });
+    const r = await handleAppPurchase(FAKTURA, deps);
+    check('obnova: neaktivní kód = neznamy-kod', r.referral === 'neznamy-kod', r.referral);
+    check('obnova: neaktivní kód nic nezapíše', stav.referraly.length === 0, String(stav.referraly.length));
+  }
+  {
+    // Roční VIP obnova po roce: bonusový videokurz se NESMÍ udělit znovu.
+    const { deps, stav } = mock({ historieKod: 'JIRKA10' });
+    const r = await handleAppPurchase(
+      { ...FAKTURA, tier: 'ai_basic', interval: 'year', amount: 499000, order_id: 'in_rok_2' },
+      deps,
+    );
+    check('obnova ročního VIP: bonus se NEuděluje', r.bonus === 'netyka-se-obnova', r.bonus);
+    check('obnova ročního VIP: entitlement nevznikl', stav.entitlementy.length === 0, String(stav.entitlementy.length));
+    check('obnova ročního VIP: provize 30 % z 4990 = 1497', stav.referraly[0]?.reward_amount === 1497,
+      String(stav.referraly[0]?.reward_amount));
   }
 
   // --- Vstupní kontroly ------------------------------------------------------
