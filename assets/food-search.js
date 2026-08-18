@@ -8,6 +8,18 @@
   // „rohlik" i „rohlík" matchne stejně - pryč diakritika, lowercase
   function normName(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
 
+  // 6. pád značky řetězce → kanonický tvar. Stížnost 17. 8. 2026: „chléb šumavský
+  // z lidlu" nenašlo nic, protože filtr chtěl slovo „lidlu" a to v žádném názvu není.
+  // Značky se z filtru rovnou VYNECHÁVAJÍ: tahle databáze jsou generika bez značek,
+  // takže „chléb z lidlu" má hledat chléb, ne nic.
+  // ⛔ TÁŽ MAPA žije v appce (migrace 0113 + src/lib/food-query.ts). Kdo mění, mění obě.
+  // ⛔ NEPŘIDÁVAT slova, která jsou i potravina: „rohlik" (pečivo!), „hruska" (ovoce!).
+  var ALIAS_ZNACKY = { lidlu: 'lidl', tesca: 'tesco', tesku: 'tesco', albertu: 'albert',
+    pennyho: 'penny', kauflandu: 'kaufland', billu: 'billa', bille: 'billa',
+    globusu: 'globus', pilosu: 'pilos', boniho: 'boni', clevera: 'clever' };
+  var ZNACKY = { lidl: 1, tesco: 1, albert: 1, penny: 1, kaufland: 1, billa: 1,
+    globus: 1, pilos: 1, boni: 1, clever: 1 };
+
   // Kategorie, které znamenají HOTOVÉ JÍDLO, ne surovinu. Musí souhlasit s migrací 0105
   // v appce (`search_curated_foods`) a s `KATEGORIE_HOTOVYCH_JIDEL` v `src/data/foods.ts`,
   // jinak se web a appka rozejdou v pořadí výsledků.
@@ -76,7 +88,11 @@
       startWb = new RegExp('^' + esc + '([^a-z0-9]|$)');
     }
     // Slova dotazu. Jednopísmenná zahazujeme, nemají rozlišovací sílu.
-    var slova = qn.split(/[^a-z0-9]+/).filter(function (w) { return w.length > 1; });
+    // Značky řetězců se přemapují z 6. pádu a vyhodí (viz ALIAS_ZNACKY nahoře).
+    var slova = qn.split(/[^a-z0-9]+/)
+      .filter(function (w) { return w.length > 1; })
+      .map(function (w) { return ALIAS_ZNACKY[w] || w; })
+      .filter(function (w) { return !ZNACKY[w]; });
     return curated
       .map(function (it) {
         var n = normName(it.name);
@@ -88,7 +104,9 @@
           : n.indexOf(qn) === 0 ? 3
           : (n.indexOf(qn) >= 0 ? 4 : 9);
         // Fráze se netrefila, ale můžou tam být všechna slova přeházeně.
-        if (rank === 9 && slova.length > 1) {
+        // ⚠️ `>= 1`, ne `> 1`: po vyhození značky („chléb z lidlu" → [chleb]) je
+        // slovo JINÉ než celá fráze, takže i jedno slovo si zaslouží vlastní test.
+        if (rank === 9 && slova.length >= 1) {
           var vsechna = slova.every(function (w) { return n.indexOf(w) >= 0; });
           if (vsechna) rank = 5;
         }
