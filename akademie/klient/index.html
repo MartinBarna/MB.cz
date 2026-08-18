@@ -195,7 +195,7 @@
           <div class="gwrap"><h3>Kalorie</h3><p class="sub" id="gCsub">denní průměr v týdnu (kcal)</p><div id="gC"></div></div>
           <div class="gwrap"><h3>Bílkoviny</h3><p class="sub" id="gPsub">denní průměr v týdnu (g)</p><div id="gP"></div></div>
           <div class="gwrap"><h3>Kroky</h3><p class="sub">denní průměr v týdnu</p><div id="gK"></div></div>
-          <div class="gwrap"><h3>Energie a dodržení</h3><p class="sub">škály 1–5: dodržení plánu a síla (vyšší = líp) · únava (nižší = líp)</p><div id="gS"></div></div>
+          <div class="gwrap"><h3>Energie a dodržení</h3><p class="sub">škály 1–5: síla a únava (nižší = líp) · dodržení plánu (vyšší = líp)</p><div id="gS"></div></div>
         </div>
       </div>
 
@@ -1141,7 +1141,11 @@
           var s = a.scales || {};
           return fScale("f_unava", "Únava", s.unava, "1 = čerstvý/á", "5 = vyřízený/á")
             + fScale("f_hlad", "Hlad", s.hlad, "1 = žádný", "5 = pořád")
-            + fScale("f_sila", "Síla v tréninku", s.sila, "1 = slabota", "5 = nabušeno")
+            // Síla SJEDNOCENA s únavou a hladem 18. 8. 2026 (rozhodl Martin): 1 = nejlíp.
+            // Stará Google Sheets éra známkovala 1 = výborná; web do 18. 8. sbíral
+            // obráceně (1 = slabota) a klientům (Bednarz) tím „skočila" síla v grafu.
+            // Webová data do 18. 8. jsou v DB přemapovaná (6 - x), viz zápis šéfa.
+            + fScale("f_sila", "Síla v tréninku", s.sila, "1 = nabušeno", "5 = slabota")
             + fScale("f_spanekk", "Kvalita spánku", s.spanek_kvalita, "1 = mizerná", "5 = výborná")
             + fNum("f_spanekh", "Spánek: hodin průměrně", "h", "např. 7", s.spanek_h)
             + fScale("f_dodrz", "Dodržení plánu", s.dodrzeni, "1 = vůbec", "5 = na 100 %");
