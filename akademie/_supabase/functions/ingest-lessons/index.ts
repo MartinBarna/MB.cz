@@ -10,6 +10,10 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const BASE = Deno.env.get("SITE_BASE") ?? "https://www.martinbarna.cz";
+// [2026-08-18] WEDOS vraci ne-browser klientum 401 challenge misto stranky (zmereno:
+// fetch bez UA = 401 a v tele neni CURRICULUM, s browser UA = 200). Bez tehle hlavicky
+// parseCurriculum spadne a cela funkce vraci 500.
+const UA = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36" };
 
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
@@ -54,7 +58,7 @@ Deno.serve(async (req: Request) => {
   const from = Math.max(0, parseInt(url.searchParams.get("from") || "0", 10) || 0);
   const count = Math.min(120, Math.max(1, parseInt(url.searchParams.get("count") || "120", 10) || 120));
 
-  const idxHtml = await (await fetch(BASE + "/akademie/studium/")).text();
+  const idxHtml = await (await fetch(BASE + "/akademie/studium/", { headers: UA })).text();
   const curriculum = parseCurriculum(idxHtml);
   // deno-lint-ignore no-explicit-any
   const flat: { id: string; module: string; title: string; url: string }[] = [];
@@ -91,7 +95,7 @@ Deno.serve(async (req: Request) => {
         return { lesson_id: L.id, module: L.module, title: L.title, url: L.url, content: (L.title + ". " + fromDb).slice(0, 1500).trim() };
       }
       try {
-        const html = await (await fetch(BASE + L.url, { headers: { "Cache-Control": "no-cache" } })).text();
+        const html = await (await fetch(BASE + L.url, { headers: { "Cache-Control": "no-cache", ...UA } })).text();
         const content = extractContent(html, L.title);
         if (content.length < 40) return null;
         return { lesson_id: L.id, module: L.module, title: L.title, url: L.url, content };
