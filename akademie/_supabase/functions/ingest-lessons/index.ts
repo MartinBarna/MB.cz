@@ -10,9 +10,11 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const BASE = Deno.env.get("SITE_BASE") ?? "https://www.martinbarna.cz";
-// [2026-08-18] WEDOS vraci ne-browser klientum 401 challenge misto stranky (zmereno:
-// fetch bez UA = 401 a v tele neni CURRICULUM, s browser UA = 200). Bez tehle hlavicky
-// parseCurriculum spadne a cela funkce vraci 500.
+// [2026-08-18] ⛔ WEDOS vraci ne-browser klientum 401 JS challenge misto stranky.
+// UA hlavicka pomuze z bezne site (zmereno lokalne: bez UA 401, s UA 200), ale
+// Z AWS IP EDGE FUNKCE TO NESTACI: i s UA prisel challenge a funkce vracela 500.
+// ⇒ Crawl webu z edge funkce je aktualne MRTVA CESTA. RAG radek pro placenou lekci
+// jde doplnit primo v SQL replikou clean() logiky (viz pamet mb-wedos-blokuje-boty).
 const UA = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36" };
 
 const json = (b: unknown, status = 200) =>
