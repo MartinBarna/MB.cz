@@ -1,22 +1,30 @@
-// Testy mostu nákupů appky (11. 8. 2026).
+// Testy mostu nákupů appky (11. 8. 2026, rozšířeno o bonusy 18. 8. 2026).
 // Spusteni: npx --yes deno@2 run akademie/_supabase/functions/app-purchase-bridge/core.test.ts
 // (bez jakychkoli --allow-*: test necte sit, disk ani promenne prostredi)
 //
 // Co se tady hlida (a proc prave to):
-//  - bonus dostane JEN rocni VIP (mesicni ani Basic ne), jinak rozdavame 990 Kc zdarma
+//  - videokurz dostane KAZDA PRVNI PLATBA (Basic i VIP, mesicni i rocni), obnova NIC
+//  - rocni VIP si drzi source 'rocni-vip-bonus', jinak oslepne fronta balicku v daily-digest
+//  - mesic Academy na zkousku JEN u rocniho VIP, a NIKDY se nesahne na existujici radek
+//    (dozivotni clenstvi za 8 900 Kc se nesmi zkratit na mesic)
 //  - kdo videokurz uz ma, tomu se radek NEPREPISE, jinak se rozbije vazba na jeho platbu
 //  - idempotence podle PLATBY, ne podle stavu pristupu
 //  - anti-self a neznamy kod
 //  - chybejici sazba => radek SE ZAPISE s nulou a prijde alert (ne ticho)
 import {
+  ACADEMY_BONUS_SOURCE,
   BONUS_SOURCE,
+  BONUS_SOURCE_PRVNI_PLATBA,
   BridgeError,
   type BridgeDeps,
   handleAppPurchase,
+  konecZkusebnihoMesice,
+  maNarokNaAcademyMesic,
   maNarokNaBonus,
   PRODUKT_APPKA,
   type ReferralCodeRow,
   sazbaProAppku,
+  zdrojBonusu,
 } from './core.ts';
 
 let selhalo = 0;
@@ -27,6 +35,11 @@ function check(nazev: string, podminka: boolean, detail = ''): void {
     selhalo++;
     console.log('  FAIL ' + nazev + (detail ? '  [' + detail + ']' : ''));
   }
+}
+
+/** Udělené entitlementy jednoho produktu. Od 18. 8. 2026 jich vzniká víc než jeden. */
+function granty(stav: { entitlementy: Record<string, unknown>[] }, produkt: string): Record<string, unknown>[] {
+  return stav.entitlementy.filter((e) => e.product === produkt);
 }
 
 const JIRKA: ReferralCodeRow = {
@@ -63,7 +76,10 @@ function mock(opts: {
    * `stripe_subscription_id` existoval.
    */
   historieSub?: string | null;
+  /** Stávající řádek `entitlements` pro produkt `videokurz`. */
   entitlement?: { active: boolean; expires_at: string | null; source: string | null } | null;
+  /** Stávající řádek `entitlements` pro produkt `academy` (měsíc na zkoušku k ročnímu VIP). */
+  academyEnt?: { active: boolean; expires_at: string | null; source: string | null } | null;
   zapisSpadne?: boolean;
   grantSpadne?: boolean;
 } = {}): { deps: BridgeDeps; stav: Stav } {
@@ -113,7 +129,12 @@ function mock(opts: {
       stav.logy.push({ promoId, jak });
       return Promise.resolve();
     },
-    najdiEntitlement: () => Promise.resolve(opts.entitlement ?? null),
+    // ⛔ Mock MUSÍ rozlišovat produkt. Kdyby vracel týž řádek na `videokurz` i `academy`,
+    //    prošel by i kód, který se ptá na špatný produkt, a měsíc Academy by se
+    //    rozhodoval podle videokurzu (tedy skoro vždycky „už má", protože videokurz
+    //    dostane od 18. 8. 2026 každý kupující).
+    najdiEntitlement: (_email, produkt) =>
+      Promise.resolve((produkt === 'academy' ? opts.academyEnt : opts.entitlement) ?? null),
     udelEntitlement: (row) => {
       if (opts.grantSpadne) throw new Error('db: grant spadl');
       stav.entitlementy.push(row);
@@ -144,11 +165,46 @@ const ROCNI_VIP = {
 async function main(): Promise<void> {
   console.log('\n== app-purchase-bridge: jádro ==');
 
-  // --- Nárok na bonus (čistá funkce) ----------------------------------------
-  check('bonus: roční VIP ano', maNarokNaBonus('ai_basic', 'year'));
-  check('bonus: měsíční VIP NE', !maNarokNaBonus('ai_basic', 'month'));
-  check('bonus: roční Basic NE', !maNarokNaBonus('basic', 'year'));
-  check('bonus: neznámý interval NE', !maNarokNaBonus('ai_basic', ''));
+  // --- Nárok na videokurz (čistá funkce) ------------------------------------
+  // ⭐ Od 18. 8. 2026 KAŽDÁ první platba, ne jen roční VIP (rozhodnutí Martina:
+  //    tlačit lidi ze zkušebky do platby, i ta nejmenší je prodej).
+  check('videokurz: roční VIP ano', maNarokNaBonus('ai_basic', 'year'));
+  check('videokurz: měsíční VIP taky', maNarokNaBonus('ai_basic', 'month'));
+  check('videokurz: roční Basic taky', maNarokNaBonus('basic', 'year'));
+  check('videokurz: měsíční Basic taky', maNarokNaBonus('basic', 'month'));
+  check('videokurz: nezjištěný plán nárok neruší (peníze přišly)', maNarokNaBonus('', ''));
+
+  // --- Zdroj bonusu: roční VIP si MUSÍ nechat starý, ostatní mají vlastní -----
+  // ⛔ Kdyby roční VIP dostal nový zdroj, `daily-digest` by přestal vidět, komu se má
+  //    ručně poslat balíček „40 receptů a 48 odpovědí", a nikdo by se to nedozvěděl.
+  check('zdroj: roční VIP zůstává rocni-vip-bonus', zdrojBonusu('ai_basic', 'year') === BONUS_SOURCE,
+    zdrojBonusu('ai_basic', 'year'));
+  check('zdroj: měsíční VIP má prvni-platba-bonus',
+    zdrojBonusu('ai_basic', 'month') === BONUS_SOURCE_PRVNI_PLATBA, zdrojBonusu('ai_basic', 'month'));
+  check('zdroj: roční Basic má prvni-platba-bonus',
+    zdrojBonusu('basic', 'year') === BONUS_SOURCE_PRVNI_PLATBA, zdrojBonusu('basic', 'year'));
+  // Přetypování je tu schválně: bez něj TypeScript porovnání dvou různých literálů
+  // odmítne přeložit („nemají překryv"). Tou hláškou to sice hlídá taky, ale až
+  // v `deno check`, ne při běhu testu, který se pouští častěji.
+  check('zdroj: dva zdroje se nesmí rovnat',
+    (BONUS_SOURCE as string) !== (BONUS_SOURCE_PRVNI_PLATBA as string));
+
+  // --- Nárok na měsíc Academy: JEN roční VIP ---------------------------------
+  check('academy: roční VIP ano', maNarokNaAcademyMesic('ai_basic', 'year'));
+  check('academy: měsíční VIP NE', !maNarokNaAcademyMesic('ai_basic', 'month'));
+  check('academy: roční Basic NE', !maNarokNaAcademyMesic('basic', 'year'));
+  check('academy: neznámý plán NE', !maNarokNaAcademyMesic('', ''));
+
+  // Konec zkušebního měsíce: měsíc dopředu, nikdy do minulosti a nikdy null.
+  {
+    const od = new Date('2026-08-18T10:00:00.000Z');
+    check('academy: expirace je měsíc dopředu',
+      konecZkusebnihoMesice(od) === '2026-09-18T10:00:00.000Z', konecZkusebnihoMesice(od));
+    // 31. 1. + měsíc JS přeteče do března. Dva dny navíc, nikdy míň, a je to zapsané.
+    const konec31 = konecZkusebnihoMesice(new Date('2027-01-31T10:00:00.000Z'));
+    check('academy: 31. den přeteče DOPŘEDU, ne dozadu',
+      new Date(konec31).getTime() > new Date('2027-02-28T10:00:00.000Z').getTime(), konec31);
+  }
 
   // Sazba: předplatné bere rate_monthly i u ročního (rate_oneoff je pro jednorázovky).
   check('sazba: roční předplatné bere rate_monthly', sazbaProAppku(JIRKA) === 0.3);
@@ -171,11 +227,26 @@ async function main(): Promise<void> {
     check('roční VIP: order_id = event_id (subscription nemá payment_intent)',
       ref.order_id === 'evt_1', String(ref.order_id));
     check('roční VIP: bonus udělen', r.bonus === 'udelen', r.bonus);
-    const ent = stav.entitlementy[0] ?? {};
+    const ent = granty(stav, 'videokurz')[0] ?? {};
     check('roční VIP: bonus je videokurz', ent.product === 'videokurz', String(ent.product));
     check('roční VIP: bonus má vlastní source', ent.source === BONUS_SOURCE, String(ent.source));
     check('roční VIP: bonus je doživotní (expires_at výslovně null)',
       'expires_at' in ent && ent.expires_at === null, JSON.stringify(ent));
+
+    // ⭐ NOVÉ 18. 8. 2026: k ročnímu VIP patří i měsíc Academy na zkoušku.
+    check('roční VIP: měsíc Academy udělen', r.academy === 'udelen', r.academy);
+    const aca = granty(stav, 'academy')[0] ?? {};
+    check('roční VIP: Academy má vlastní source', aca.source === ACADEMY_BONUS_SOURCE, String(aca.source));
+    check('roční VIP: Academy NENÍ doživotní (expirace je datum, ne null)',
+      typeof aca.expires_at === 'string' && new Date(String(aca.expires_at)).getTime() > Date.now(),
+      JSON.stringify(aca.expires_at));
+    check('roční VIP: Academy expiruje do ~35 dnů (měsíc, ne rok)',
+      new Date(String(aca.expires_at)).getTime() < Date.now() + 35 * 86400000,
+      String(aca.expires_at));
+    check('roční VIP: Academy nese vazbu na předplatné',
+      aca.stripe_subscription_id === 'sub_1', String(aca.stripe_subscription_id));
+    check('roční VIP: vznikly právě dva entitlementy', stav.entitlementy.length === 2,
+      JSON.stringify(stav.entitlementy.map((e) => e.product)));
     check('roční VIP: žádný alert', stav.alerty.length === 0, JSON.stringify(stav.alerty));
   }
 
@@ -194,33 +265,125 @@ async function main(): Promise<void> {
     check('duplicita: druhý průchod nezapíše referral', r.referral === 'duplicita-order' && stav.referraly.length === 0, r.referral);
   }
 
-  // --- MĚSÍČNÍ VIP: provize ano, bonus NE ------------------------------------
+  // --- MĚSÍČNÍ VIP: provize ano, videokurz ANO (nově), Academy NE ------------
   {
     const { deps, stav } = mock();
     const r = await handleAppPurchase({ ...ROCNI_VIP, interval: 'month', amount: 49900 }, deps);
     check('měsíční VIP: provize 30 % ze 499 = 149,7', stav.referraly[0]?.reward_amount === 149.7, String(stav.referraly[0]?.reward_amount));
-    check('měsíční VIP: BONUS SE NEUDĚLÍ', r.bonus === 'netyka-se' && stav.entitlementy.length === 0, r.bonus);
+    check('měsíční VIP: videokurz UDĚLEN (změna 18. 8. 2026)', r.bonus === 'udelen', r.bonus);
+    check('měsíční VIP: videokurz má zdroj prvni-platba-bonus',
+      granty(stav, 'videokurz')[0]?.source === BONUS_SOURCE_PRVNI_PLATBA,
+      String(granty(stav, 'videokurz')[0]?.source));
+    check('měsíční VIP: videokurz je doživotní',
+      granty(stav, 'videokurz')[0]?.expires_at === null, String(granty(stav, 'videokurz')[0]?.expires_at));
+    check('měsíční VIP: ŽÁDNÁ Academy', r.academy === 'netyka-se' && granty(stav, 'academy').length === 0, r.academy);
   }
 
-  // --- ROČNÍ BASIC: provize ano, bonus NE ------------------------------------
+  // --- MĚSÍČNÍ BASIC (249 Kč): nejmenší nákup, taky dostane videokurz --------
+  {
+    const { deps, stav } = mock();
+    const r = await handleAppPurchase(
+      { ...ROCNI_VIP, tier: 'basic', interval: 'month', amount: 24900 }, deps);
+    check('měsíční Basic: videokurz UDĚLEN', r.bonus === 'udelen', r.bonus);
+    check('měsíční Basic: zdroj prvni-platba-bonus',
+      granty(stav, 'videokurz')[0]?.source === BONUS_SOURCE_PRVNI_PLATBA,
+      String(granty(stav, 'videokurz')[0]?.source));
+    check('měsíční Basic: ŽÁDNÁ Academy', r.academy === 'netyka-se' && granty(stav, 'academy').length === 0, r.academy);
+    check('měsíční Basic: vznikl právě jeden entitlement', stav.entitlementy.length === 1,
+      JSON.stringify(stav.entitlementy.map((e) => e.product)));
+  }
+
+  // --- ROČNÍ BASIC: provize ano, videokurz ANO (nově), Academy NE ------------
   {
     const { deps, stav } = mock();
     const r = await handleAppPurchase({ ...ROCNI_VIP, tier: 'basic', amount: 249000 }, deps);
-    check('roční Basic: BONUS SE NEUDĚLÍ', r.bonus === 'netyka-se' && stav.entitlementy.length === 0, r.bonus);
+    check('roční Basic: videokurz UDĚLEN', r.bonus === 'udelen', r.bonus);
+    check('roční Basic: zdroj prvni-platba-bonus, NE rocni-vip-bonus',
+      granty(stav, 'videokurz')[0]?.source === BONUS_SOURCE_PRVNI_PLATBA,
+      String(granty(stav, 'videokurz')[0]?.source));
+    check('roční Basic: ŽÁDNÁ Academy (990 Kč/měs se nerozdává k 249)',
+      r.academy === 'netyka-se' && granty(stav, 'academy').length === 0, r.academy);
     check('roční Basic: provize se přesto zapíše', stav.referraly.length === 1);
+  }
+
+  // --- Nezjištěný plán: peníze přišly, videokurz se udělí, Academy ne --------
+  // `intervalForPriceId` v appce je volitelný a vrací null, když price id není
+  // v `pricing_plans`. Bonus se kvůli tomu ztratit NESMÍ, Academy se kvůli tomu
+  // rozdat NESMÍ (nevíme, že jde o roční VIP).
+  {
+    const { deps, stav } = mock();
+    const r = await handleAppPurchase({ ...ROCNI_VIP, tier: null, interval: null }, deps);
+    check('neznámý plán: videokurz se přesto udělí', r.bonus === 'udelen', r.bonus);
+    check('neznámý plán: zdroj prvni-platba-bonus',
+      granty(stav, 'videokurz')[0]?.source === BONUS_SOURCE_PRVNI_PLATBA,
+      String(granty(stav, 'videokurz')[0]?.source));
+    check('neznámý plán: Academy NE', r.academy === 'netyka-se', r.academy);
   }
 
   // --- Kdo videokurz UŽ MÁ, tomu se řádek nepřepíše --------------------------
   {
     const { deps, stav } = mock({ entitlement: { active: true, expires_at: null, source: 'stripe-videokurz' } });
     const r = await handleAppPurchase(ROCNI_VIP, deps);
-    check('bonus: koupený videokurz se NEPŘEPÍŠE', r.bonus === 'uz-mel' && stav.entitlementy.length === 0, r.bonus);
+    check('bonus: koupený videokurz se NEPŘEPÍŠE',
+      r.bonus === 'uz-mel' && granty(stav, 'videokurz').length === 0, r.bonus);
   }
   {
     // Dočasný přístup (s expirací) se naopak povýšit MÁ, bonus je doživotní.
     const { deps, stav } = mock({ entitlement: { active: true, expires_at: '2026-09-01T00:00:00Z', source: 'admin-panel' } });
     const r = await handleAppPurchase(ROCNI_VIP, deps);
-    check('bonus: dočasný přístup se povýší na doživotní', r.bonus === 'udelen' && stav.entitlementy[0]?.expires_at === null, r.bonus);
+    check('bonus: dočasný přístup se povýší na doživotní',
+      r.bonus === 'udelen' && granty(stav, 'videokurz')[0]?.expires_at === null, r.bonus);
+  }
+  {
+    // Měsíční Basic, který si videokurz koupil za 800 Kč: ani po rozšíření bonusu
+    // se mu řádek nesmí přepsat na bonusový (rozbila by se vazba na jeho platbu).
+    const { deps, stav } = mock({ entitlement: { active: true, expires_at: null, source: 'stripe-videokurz' } });
+    const r = await handleAppPurchase({ ...ROCNI_VIP, tier: 'basic', interval: 'month', amount: 24900 }, deps);
+    check('měsíční Basic: koupený videokurz se NEPŘEPÍŠE',
+      r.bonus === 'uz-mel' && stav.entitlementy.length === 0, r.bonus);
+  }
+
+  // --- MĚSÍC ACADEMY: existujícímu řádku se NESAHÁ ---------------------------
+  {
+    // ⛔⛔ Nejdražší chyba, jakou tahle funkce může udělat: doživotní členství
+    //    za 8 900 Kč zkrátit na měsíc. Řádek se nesmí ani dotknout.
+    const { deps, stav } = mock({ academyEnt: { active: true, expires_at: null, source: 'stripe-lifetime' } });
+    const r = await handleAppPurchase(ROCNI_VIP, deps);
+    check('academy: DOŽIVOTNÍ členství se NESMÍ zkrátit na měsíc',
+      r.academy === 'uz-ma' && granty(stav, 'academy').length === 0, r.academy);
+    check('academy: videokurz se přesto udělí', r.bonus === 'udelen', r.bonus);
+  }
+  {
+    // Platící měsíční člen (990 Kč): přepis by mu přepsal source a rozbil vazbu
+    // na jeho předplatné, se kterou se řeší refund.
+    const { deps, stav } = mock({
+      academyEnt: { active: true, expires_at: '2027-01-01T00:00:00Z', source: 'stripe-monthly' },
+    });
+    const r = await handleAppPurchase(ROCNI_VIP, deps);
+    check('academy: platícímu členovi se řádek NEPŘEPÍŠE',
+      r.academy === 'uz-ma' && granty(stav, 'academy').length === 0, r.academy);
+  }
+  {
+    // ⚠️ Refund v Academy posune expiraci do minulosti, ale `active` NECHÁVÁ na true.
+    //    Takový člověk spadne do „už má". Je to záměr: radši bonus nedat, než přepsat
+    //    historii vráceného nákupu.
+    const { deps, stav } = mock({
+      academyEnt: { active: true, expires_at: '2026-01-01T00:00:00Z', source: 'simpleshop' },
+    });
+    const r = await handleAppPurchase(ROCNI_VIP, deps);
+    check('academy: vrácený nákup (expirace v minulosti, active=true) se NEPŘEPÍŠE',
+      r.academy === 'uz-ma' && granty(stav, 'academy').length === 0, r.academy);
+  }
+  {
+    // `active=false` v tomhle schématu NENÍ „vypršelo", ale „někdo přístup ODEBRAL"
+    // (admin, storno SimpleShopu, `splatky-guard` u nesplácených splátek). Grant by ho
+    // tiše vrátil a přepsáním `source` zahodil stav, podle kterého ho hlídač odebral.
+    const { deps, stav } = mock({
+      academyEnt: { active: false, expires_at: '2026-01-01T00:00:00Z', source: 'simpleshop' },
+    });
+    const r = await handleAppPurchase(ROCNI_VIP, deps);
+    check('academy: ODEBRANÝ přístup se bonusem tiše nevrací',
+      r.academy === 'odebrana-nesahat' && granty(stav, 'academy').length === 0, r.academy);
   }
 
   // --- Promo kód z pokladny (druhá cesta) ------------------------------------
@@ -310,7 +473,14 @@ async function main(): Promise<void> {
     const { deps, stav } = mock({ grantSpadne: true });
     const r = await handleAppPurchase(ROCNI_VIP, deps);
     check('selhání bonusu: provize se přesto zapíše', r.referral === 'zapsano-metadata' && r.bonus === 'chyba', r.bonus);
-    check('selhání bonusu: přijde HLASITÝ alert', stav.alerty.length === 1 && String(stav.alerty[0].predmet).includes('bonusový videokurz'), JSON.stringify(stav.alerty[0]?.predmet));
+    check('selhání bonusu: přijde HLASITÝ alert',
+      stav.alerty.some((a) => String(a.predmet).includes('bonusový videokurz')),
+      JSON.stringify(stav.alerty.map((a) => a.predmet)));
+    // ⛔ Selhání videokurzu NESMÍ spolknout Academy: jsou to dva samostatné sliby.
+    check('selhání bonusu: Academy se zkusí zvlášť a taky hlásí', r.academy === 'chyba', r.academy);
+    check('selhání bonusu: alert i za Academy',
+      stav.alerty.some((a) => String(a.predmet).includes('měsíc Academy')),
+      JSON.stringify(stav.alerty.map((a) => a.predmet)));
   }
 
   // --- OPAKOVANÁ PLATBA (obnova předplatného) --------------------------------
@@ -334,6 +504,7 @@ async function main(): Promise<void> {
     const r1 = await handleAppPurchase(FAKTURA, deps);
     check('obnova: partner dohledán z historie', r1.referral === 'zapsano-historie', r1.referral);
     check('obnova: bonus se NEuděluje podruhé', r1.bonus === 'netyka-se-obnova', r1.bonus);
+    check('obnova: Academy se NEuděluje podruhé', r1.academy === 'netyka-se-obnova', r1.academy);
     check('obnova: žádný entitlement navíc', stav.entitlementy.length === 0, String(stav.entitlementy.length));
     const f1 = stav.referraly[0] ?? {};
     check('obnova: order_id je ID FAKTURY', f1.order_id === 'in_0001', String(f1.order_id));
@@ -397,9 +568,26 @@ async function main(): Promise<void> {
       deps,
     );
     check('obnova ročního VIP: bonus se NEuděluje', r.bonus === 'netyka-se-obnova', r.bonus);
+    check('obnova ročního VIP: Academy se NEuděluje (jinak zkouška navěky)',
+      r.academy === 'netyka-se-obnova', r.academy);
     check('obnova ročního VIP: entitlement nevznikl', stav.entitlementy.length === 0, String(stav.entitlementy.length));
     check('obnova ročního VIP: provize 30 % z 4990 = 1497', stav.referraly[0]?.reward_amount === 1497,
       String(stav.referraly[0]?.reward_amount));
+  }
+
+  {
+    // ⛔⛔ NEJDŮLEŽITĚJŠÍ NOVÁ REGRESE 18. 8. 2026: videokurz teď dostává i měsíční
+    //    Basic. Kdyby se `kind='renewal'` někde ztratilo, dostal by ho KAŽDÝ MĚSÍC
+    //    a Martin by rozdával kurz za 800 Kč dvanáctkrát ročně jednomu člověku.
+    const { deps, stav } = mock({ historieKod: 'JIRKA10' });
+    const r = await handleAppPurchase(
+      { ...FAKTURA, tier: 'basic', interval: 'month', amount: 24900, order_id: 'in_basic_2' },
+      deps,
+    );
+    check('obnova měsíčního Basicu: videokurz se NEuděluje podruhé',
+      r.bonus === 'netyka-se-obnova', r.bonus);
+    check('obnova měsíčního Basicu: žádný entitlement',
+      stav.entitlementy.length === 0, JSON.stringify(stav.entitlementy.map((e) => e.product)));
   }
 
   // --- V2: NÁVRAT PŘÍMO, BEZ KÓDU. Starý partner už provizi brát nesmí ---------

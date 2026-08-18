@@ -2,10 +2,11 @@
 // Testovatelné JÁDRO funkce `app-purchase-bridge` (DI, bez Deno a bez sítě).
 //
 // CO TO JE: appka Tvůj Coach (jiný Supabase projekt, vlastní Stripe webhook) sem po
-// PRVNÍ aktivaci předplatného pošle fakta o nákupu. Tady se z nich udělají dvě věci,
+// PRVNÍ aktivaci předplatného pošle fakta o nákupu. Tady se z nich udělají tři věci,
 // které jdou udělat JEN na téhle straně, protože tady žijí data:
 //   1. AFFILIATE PROVIZE: katalog `referral_codes` a tabulka `referrals` jsou v Academy.
-//   2. BONUS K ROČNÍMU VIP: entitlement `videokurz` je taky v Academy.
+//   2. BONUS VIDEOKURZ: entitlement `videokurz` je taky v Academy.
+//   3. MĚSÍC ACADEMY NA ZKOUŠKU u ročního VIP: entitlement `academy`, dtto.
 //
 // ⛔ PROČ NOVÁ FUNKCE, A NE ROZŠÍŘENÍ `academy-stripe-webhook`: oba projekty jedou na
 //    TÉMŽE Stripe účtu a její katalog je klíčovaný PLATEBNÍMI ODKAZY. Nákup appky žádný
@@ -116,15 +117,32 @@ export type BridgeResult = {
   ok: true;
   /** Co se stalo s atribucí. Krátký kód, ať se dá hledat v logu. */
   referral: string;
-  /** Co se stalo s bonusem k ročnímu VIP. */
+  /** Co se stalo s bonusovým videokurzem. */
   bonus: string;
+  /** Co se stalo s měsícem Academy na zkoušku (jen roční VIP). */
+  academy: string;
 };
 
 /** Produkt v `referrals`. ⛔ CHECK constraint ho musí znát, jinak insert spadne. */
 export const PRODUKT_APPKA = 'appka';
-/** Zdroj bonusového videokurzu. Odlišuje ho od koupeného (`stripe-videokurz`) i od ručního. */
+/**
+ * Zdroj bonusového videokurzu u ROČNÍHO VIP. Odlišuje ho od koupeného
+ * (`stripe-videokurz`) i od ručního.
+ * ⛔⛔ TENHLE ŘETĚZEC SE ČTE JINDE A NESMÍ SE PŘEJMENOVAT: `daily-digest` (Academy)
+ *    se jím ptá, kdo dostal roční VIP a čeká na ruční doručení balíčku
+ *    „40 receptů a 48 odpovědí". Kdyby roční VIP dostal nový zdroj, hlídač balíčku
+ *    by TIŠE přestal vidět kohokoli a lidem by balíček nikdo neposlal.
+ */
 export const BONUS_SOURCE = 'rocni-vip-bonus';
-/** Tier appky, ke kterému bonus patří. `ai_basic` = VIP (Basic je `basic`). */
+/**
+ * Zdroj bonusového videokurzu u VŠECH OSTATNÍCH prvních plateb (od 18. 8. 2026).
+ * ⚠️ Schválně jiný než `BONUS_SOURCE`: k těmhle nákupům balíček NEPATŘÍ, takže se
+ *    nesmí objevit ve frontě `daily-digest`.
+ */
+export const BONUS_SOURCE_PRVNI_PLATBA = 'prvni-platba-bonus';
+/** Zdroj měsíce Academy na zkoušku k ročnímu VIP (od 18. 8. 2026). */
+export const ACADEMY_BONUS_SOURCE = 'rocni-vip-bonus-academy';
+/** Tier appky, ke kterému patří ty největší bonusy. `ai_basic` = VIP (Basic je `basic`). */
 const VIP_TIER = 'ai_basic';
 
 function text(v: unknown): string {
@@ -142,13 +160,61 @@ export function sazbaProAppku(kod: ReferralCodeRow): number {
   return Number.isFinite(r) && r > 0 ? r : 0;
 }
 
-/**
- * Má tenhle nákup dostat bonusový videokurz? JEN roční VIP.
- * ⚠️ Basic ho nedostává ani v ročním: bonusy k ročnímu Basicu jsou jiné a videokurz
- * mezi ně nepatří (viz srovnávací blok na `/tvuj-coach/`).
- */
-export function maNarokNaBonus(tier: string, interval: string): boolean {
+/** Roční VIP appky (4 990 Kč). Rozhoduje o zdroji bonusu i o měsíci Academy. */
+export function jeRocniVip(tier: string, interval: string): boolean {
   return interval === 'year' && tier === VIP_TIER;
+}
+
+/**
+ * Má tenhle nákup dostat bonusový videokurz (hodnota 800 Kč)?
+ *
+ * ⭐ OD 18. 8. 2026 ANO U KAŽDÉ PRVNÍ PLATBY, tedy Basic i VIP, měsíční i roční.
+ *    Do té doby ho dostával jen roční VIP. Rozhodl Martin 18. 8. 2026 a důvod je
+ *    prodejní, ne technický: cílem je dostat lidi ze 14denní zkušebky rovnou do
+ *    placení. I „koupím měsíc za 249 a zruším" je prodej za 249, což je pořád víc
+ *    než zkušebka zadarmo.
+ *
+ * ⛔ „PRVNÍ PLATBA" NEHLÍDÁ TAHLE FUNKCE, ale `handleAppPurchase` podmínkou
+ *    `kind !== 'renewal'`. Bez ní by videokurz chodil ke každé faktuře znovu.
+ *
+ * ⚠️ Funkce vrací true vždycky a je to schválně: je to jediné místo, kde je pravidlo
+ *    zapsané, a kdyby se rozsah zase zúžil, mění se tady (a v testech, které na ní visí).
+ *    Neznámý tier ani prázdný interval nárok neruší: sem se volá jen z aktivace
+ *    PLACENÉHO předplatného, takže peníze přišly, i když se plán nepodařilo pojmenovat.
+ */
+export function maNarokNaBonus(_tier: string, _interval: string): boolean {
+  return true;
+}
+
+/**
+ * Který `source` dostane bonusový videokurz. ⛔ NENÍ to kosmetika: roční VIP musí
+ * zůstat u `rocni-vip-bonus`, protože se tím jménem hlásí fronta balíčku
+ * v `daily-digest`. Zbytek dostává vlastní zdroj, jinak by hlídač balíčku začal
+ * hlásit i lidi, kterým balíček nepatří.
+ */
+export function zdrojBonusu(tier: string, interval: string): string {
+  return jeRocniVip(tier, interval) ? BONUS_SOURCE : BONUS_SOURCE_PRVNI_PLATBA;
+}
+
+/**
+ * Má nákup dostat MĚSÍC ACADEMY NA ZKOUŠKU? Jen roční VIP.
+ * ⛔ Trvalé Academy zdarma NE (Martin 18. 8. 2026): Academy stojí 990 Kč měsíčně
+ *    a rozdávat ji natrvalo by z ní udělala přílohu k appce.
+ */
+export function maNarokNaAcademyMesic(tier: string, interval: string): boolean {
+  return jeRocniVip(tier, interval);
+}
+
+/**
+ * Konec zkušebního měsíce Academy.
+ * ⚠️ Kalendářní měsíc, ne 30 dní. U 31. dne v měsíci JS přeteče do dalšího měsíce
+ *    (31. 1. + 1 měsíc = 3. 3.), takže člověk dostane o dva až tři dny VÍC. Nikdy míň,
+ *    takže se z toho nemůže stát zkrácený přístup, za který někdo zaplatil.
+ */
+export function konecZkusebnihoMesice(od: Date = new Date()): string {
+  const d = new Date(od.getTime());
+  d.setUTCMonth(d.getUTCMonth() + 1);
+  return d.toISOString();
 }
 
 export async function handleAppPurchase(
@@ -179,12 +245,14 @@ export async function handleAppPurchase(
   const subscriptionId = text(body.subscription_id) || null;
 
   const referral = await atribuuj(email, orderId, subscriptionId, jeObnova, body, deps);
-  // ⛔ BONUS JEN U PRVNÍ AKTIVACE, a je to výslovná podmínka, ne náhoda. Bez ní by
-  //    o něm rozhodoval jen `maNarokNaBonus` + „už to má", což je idempotence podle
-  //    STAVU PŘÍSTUPU: kdyby si člověk videokurz mezitím sám smazal nebo mu vypršel,
-  //    dostal by ho jako dárek znovu při každé roční faktuře.
+  // ⛔ BONUSY JEN U PRVNÍ AKTIVACE, a je to výslovná podmínka, ne náhoda. Bez ní by
+  //    o nich rozhodovalo jen „už to má", což je idempotence podle STAVU PŘÍSTUPU:
+  //    kdyby si člověk videokurz mezitím sám smazal nebo mu vypršel, dostal by ho
+  //    jako dárek znovu při každé faktuře. Od 18. 8. 2026 to platí dvojnásob: bonus
+  //    dostává KAŽDÝ tier, takže bez téhle podmínky by ho měsíční Basic bral měsíčně.
   const bonus = jeObnova ? 'netyka-se-obnova' : await udelBonus(email, tier, interval, body, deps);
-  return { ok: true, referral, bonus };
+  const academy = jeObnova ? 'netyka-se-obnova' : await udelAcademyMesic(email, tier, interval, body, deps);
+  return { ok: true, referral, bonus, academy };
 }
 
 /** Affiliate atribuce nákupu appky. Best-effort: nikdy nesmí shodit odpověď mostu. */
@@ -307,7 +375,7 @@ async function atribuuj(
   }
 }
 
-/** Bonusový videokurz k ročnímu VIP. Best-effort jako atribuce. */
+/** Bonusový videokurz ke každé první platbě appky. Best-effort jako atribuce. */
 async function udelBonus(
   email: string,
   tier: string,
@@ -330,7 +398,7 @@ async function udelBonus(
       email,
       product: 'videokurz',
       active: true,
-      source: BONUS_SOURCE,
+      source: zdrojBonusu(tier, interval),
       granted_at: new Date().toISOString(),
       // ⛔ Výslovně null, ne vynechat: kdo měl dočasný přístup, musí ho tímhle dostat
       //    natrvalo. Upsert, který pole neuvede, tam nechá staré datum a bonus by
@@ -342,11 +410,67 @@ async function udelBonus(
     });
     return 'udelen';
   } catch (e) {
-    // ⚠️ Alert je tu POVINNÝ, ne zdvořilost: člověk zaplatil 4 990 Kč za rok a bonus
-    // je součást toho, co si koupil. Když se neudělí, musí to někdo udělat ručně.
-    await deps.alert('🔴 Roční VIP: bonusový videokurz se NEUDĚLIL', {
+    // ⚠️ Alert je tu POVINNÝ, ne zdvořilost: člověk zaplatil a bonus je součást toho,
+    // co si koupil (od 18. 8. 2026 u každého tieru, ne jen u ročního VIP za 4 990 Kč).
+    // Když se neudělí, musí to někdo udělat ručně.
+    await deps.alert('🔴 Nákup appky: bonusový videokurz se NEUDĚLIL', {
       email, tier, interval, chyba: String(e).slice(0, 200),
-      co_delat: 'Uděl videokurz ručně v adminu (source rocni-vip-bonus).',
+      co_delat: 'Uděl videokurz ručně v adminu (source ' + zdrojBonusu(tier, interval) + ').',
+    });
+    return 'chyba';
+  }
+}
+
+/**
+ * MĚSÍC ACADEMY NA ZKOUŠKU k ročnímu VIP (Martin 18. 8. 2026). Best-effort jako zbytek.
+ *
+ * ⛔⛔ EXISTUJÍCÍMU ŘÁDKU `academy` SE NESAHÁ, AŤ JE V JAKÉMKOLI STAVU. Je to celý
+ *    rozdíl mezi „bonus" a „tichá škoda":
+ *    · `active=true` bez expirace = DOŽIVOTNÍ členství za 8 900 Kč. Upsert by ho
+ *      zkrátil na měsíc a člověk by o zaplacený přístup přišel, aniž by cokoli spadlo.
+ *    · `active=true` s expirací = platí měsíčně 990 Kč. Přepis by mu přepsal `source`
+ *      na bonusový, takže by se rozpadla vazba na jeho předplatné (a s ní refund).
+ *    · ⚠️ `active=true` s expirací V MINULOSTI = vrácené peníze. Refund tady expiraci
+ *      posune do minulosti, ale `active` NECHÁVÁ na true (viz `daily-digest`), takže
+ *      „expirovaný" člověk má pořád `active=true` a spadne do větve „už má". Je to
+ *      záměr: radši nedat bonus, než přepsat historii vráceného nákupu.
+ *    · `active=false` = přístup někdo VĚDOMĚ ODEBRAL (admin, storno SimpleShopu,
+ *      `splatky-guard` u nesplácených splátek). Grant by ho tiše vrátil a navíc
+ *      přepsáním `source` zahodil stav, podle kterého ho hlídače odebraly.
+ *    ⇒ Uděluje se JEN tomu, kdo řádek `academy` nemá vůbec. Kdo Academy má nebo měl,
+ *      ten dostane appku bez ní; je to viditelné v logu a Martin to vidí v adminu.
+ */
+async function udelAcademyMesic(
+  email: string,
+  tier: string,
+  interval: string,
+  body: PurchasePayload,
+  deps: BridgeDeps,
+): Promise<string> {
+  if (!maNarokNaAcademyMesic(tier, interval)) return 'netyka-se';
+  try {
+    const stavajici = await deps.najdiEntitlement(email, 'academy');
+    if (stavajici) return stavajici.active ? 'uz-ma' : 'odebrana-nesahat';
+
+    await deps.udelEntitlement({
+      email,
+      product: 'academy',
+      active: true,
+      source: ACADEMY_BONUS_SOURCE,
+      granted_at: new Date().toISOString(),
+      // ⛔ Výslovně datum, ne null: null je v `entitlements` DOŽIVOTNÍ přístup, a ten
+      //    je za 8 900 Kč. Tohle je zkouška na měsíc.
+      expires_at: konecZkusebnihoMesice(),
+      // Vazba na předplatné appky, ze kterého zkouška vznikla. Zatím se nikde nečte;
+      // je to podklad pro rozhodnutí, co s ní při refundu ročního VIP.
+      ...(text(body.subscription_id) ? { stripe_subscription_id: text(body.subscription_id) } : {}),
+    });
+    return 'udelen';
+  } catch (e) {
+    // ⚠️ Hlasitě: je to součást toho, co si člověk za 4 990 Kč koupil.
+    await deps.alert('🔴 Roční VIP: měsíc Academy na zkoušku se NEUDĚLIL', {
+      email, tier, interval, chyba: String(e).slice(0, 200),
+      co_delat: 'Uděl academy ručně v adminu na měsíc (source ' + ACADEMY_BONUS_SOURCE + ').',
     });
     return 'chyba';
   }

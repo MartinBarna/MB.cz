@@ -3,8 +3,9 @@
 //
 // Appka Tvůj Coach (projekt kfkmghvhqwqtsalqjmrp) sem po PRVNÍ aktivaci předplatného
 // pošle fakta o nákupu a SHARED SECRET v hlavičce `x-app-purchase-secret`.
-// Odsud se udělá affiliate provize (`referrals`) a bonusový videokurz u ročního VIP
-// (`entitlements`). Rozhodovací logika je v `core.ts`, tady je jen vodovod.
+// Odsud se udělá affiliate provize (`referrals`), bonusový videokurz ke KAŽDÉ první
+// platbě a měsíc Academy na zkoušku u ročního VIP (obojí `entitlements`).
+// Rozhodovací logika je v `core.ts`, tady je jen vodovod.
 //
 // ⛔ NEPOSLOUCHÁ STRIPE. Vstup je náš vlastní server-to-server hovor, ověřený secretem.
 //    Stripe eventy appky zpracovává webhook APPKY; sem se posílá až výsledek.
@@ -202,7 +203,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   try {
     const result = await handleAppPurchase(body, deps);
     // Do logu i výsledek: když se něco nepřipíše, tohle je jediné místo, kde se pozná PROČ.
-    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} kind=${String(body.kind ?? "first")} order=${String(body.order_id ?? body.payment_intent ?? "-")} referral=${result.referral} bonus=${result.bonus}`);
+    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} kind=${String(body.kind ?? "first")} order=${String(body.order_id ?? body.payment_intent ?? "-")} referral=${result.referral} bonus=${result.bonus} academy=${result.academy}`);
     return json(result);
   } catch (e) {
     if (e instanceof BridgeError) return json({ error: e.message }, e.status);
