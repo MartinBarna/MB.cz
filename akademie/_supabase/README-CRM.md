@@ -146,7 +146,8 @@ kolem 8642 (stav inventury; od 19. 8. mohlo přibýt odeslaných).
 - Žádný snapshot appky, žádný import Gmail/WhatsApp.
 - Žádný `pg_cron` na `crm_refresh_from_academy`.
 - Žádné ceny v tabulkách ani v komentářích.
-- Žádná admin stránka (to je zbytek fáze 1 mimo tuhle SQL dávku).
+- Admin prohlížeč jen pro čtení: `/akademie/admin/crm/` + edge `admin-crm`.
+  Nenasazeno, dokud to neschválíš. Žádný zápis, žádný service-role na klientu.
 
 ## Známé nejistoty (domyšleno, v návrhu nebylo bajtově)
 

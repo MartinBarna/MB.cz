@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM klienti | Barna Academy</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon-g3.ico" sizes="any">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r3">
+<style>
+  html,body{overflow-x:clip;max-width:100%;overscroll-behavior-x:none;}
+  div[style*="overflow-x:auto"]{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
+  .wrap{max-width:1200px;}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px;margin:1.4rem 0}
+  .stats .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 12px;text-align:center;min-width:0;overflow-wrap:anywhere}
+  .stats .s b{display:block;font-size:1.6rem;color:#F6CD63;font-weight:800;line-height:1}
+  .stats .s span{font-size:.74rem;color:#b7ab9b}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(3,1fr)}}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:1rem 0}
+  .toolbar input[type=search]{flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 14px;color:#fff;font-family:inherit;font-size:.95rem}
+  .toolbar select{background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 12px;color:#ece4d9;font-family:inherit;font-size:.9rem}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+  th{color:#b7ab9b;font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0;background:#140d06;cursor:pointer;user-select:none}
+  th:hover{color:#F6CD63}
+  th.on{color:#F6CD63}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:rgba(255,255,255,.04)}
+  tbody tr.on{background:rgba(235,177,44,.12)}
+  .badge{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:50px;margin:1px}
+  .b-ok{background:rgba(60,200,120,.16);color:#5fe0a0}
+  .b-no{background:rgba(255,255,255,.06);color:#8a7e6d}
+  .b-tag{background:rgba(235,177,44,.14);color:#F6CD63}
+  .b-warn{background:rgba(220,80,60,.16);color:#ff8b6b}
+  .muted{color:#8a7e6d}
+  .kc{font-variant-numeric:tabular-nums;white-space:nowrap}
+  #det{position:fixed;top:0;right:0;height:100vh;width:min(560px,94vw);background:#140d06;border-left:1px solid rgba(255,255,255,.12);box-shadow:-12px 0 40px rgba(0,0,0,.5);transform:translateX(100%);transition:transform .25s;overflow-y:auto;z-index:60;padding:22px}
+  #det.on{transform:translateX(0)}
+  #det h2{margin:.2rem 0 .4rem;color:#fff}
+  #det .close{position:absolute;top:14px;right:16px;cursor:pointer;color:#b7ab9b;font-size:1.4rem;background:none;border:none}
+  .dl{margin:.8rem 0;border-top:1px solid rgba(255,255,255,.08);padding-top:.7rem}
+  .dl h3{margin:0 0 .45rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:.86rem;margin:0}
+  .kv dt{color:#8a7e6d}
+  .kv dd{color:#ece4d9;margin:0;overflow-wrap:anywhere}
+  .note{white-space:pre-wrap;font-size:.86rem;color:#ece4d9;line-height:1.5}
+  #gate,#load{text-align:center;color:#b7ab9b;padding:3rem 0}
+  #gate a{color:#F6CD63}
+  .traf-links{display:flex;gap:8px;flex-wrap:wrap;margin:.6rem 0}
+  .traf-links a{font-size:.82rem;font-weight:700;color:#F6CD63;text-decoration:none;background:rgba(235,177,44,.1);border:1px solid rgba(235,177,44,.28);border-radius:50px;padding:7px 13px}
+</style>
+</head>
+<body class="ba">
+  <div class="top"><div class="in">
+    <a class="brand" href="/akademie/admin/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">CRM</span></span></a>
+    <div class="topr"><a href="/akademie/admin/">Zpět na admin</a><a id="logout">Odhlásit</a></div>
+  </div></div>
+
+  <div class="wrap">
+    <div id="load">Načítám CRM…</div>
+
+    <div id="gate" style="display:none;">
+      Tahle stránka je jen pro administrátora.<br><br>
+      <a href="/akademie/prihlaseni/?next=%2Fakademie%2Fadmin%2Fcrm%2F">Přihlásit se</a>
+    </div>
+
+    <div id="app" style="display:none;">
+      <span class="kick"><span class="dot"></span> Jen čtení</span>
+      <h1>CRM <span class="hl">klienti</span></h1>
+      <p class="lead">Prohlížení karet z Academy CRM a excelu Klienti Platby. Nic se odsud nemění.</p>
+
+      <div class="traf-links">
+        <a href="/akademie/admin/">← Hlavní admin</a>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="toolbar">
+        <input type="search" id="q" placeholder="Hledat jméno nebo e-mail…" autocomplete="off">
+        <select id="filt">
+          <option value="">Všichni</option>
+          <option value="koucink">Koučink (excel)</option>
+          <option value="academy">Jen Academy karta</option>
+          <option value="mail">Má e-mail</option>
+          <option value="nomail">Bez e-mailu</option>
+        </select>
+        <span class="muted" id="count"></span>
+      </div>
+
+      <div style="overflow-x:auto;max-height:70vh;">
+        <table>
+          <thead><tr>
+            <th data-sort="jmeno">Jméno</th>
+            <th data-sort="email">E-mail</th>
+            <th data-sort="soucet_kc" class="on">Útrata</th>
+            <th data-sort="posledni_obdobi_konec">Období</th>
+            <th>Zdroj</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="foot" style="margin-top:1.6rem">Barna Academy, CRM jen pro čtení · <span id="meta"></span></p>
+    </div>
+  </div>
+
+  <div id="det">
+    <button class="close" id="detClose">×</button>
+    <div id="detBody"></div>
+  </div>
+
+  <script src="/assets/ba-config.js?v=20260628b"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.6/dist/umd/supabase.min.js" integrity="sha384-GyhLKJoRcMXYwIJUTyx0/uSPYliVPdRYYXJm3G6zyMjKShNs8jLM7WaLpk8Vr4W/" crossorigin="anonymous"></script>
+  <script>
+  (function(){
+    var FN='https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/admin-crm';
+    var $=function(id){return document.getElementById(id);};
+    var sb=null, token=null, ALL=[], mojeEmail='', SORT='soucet_kc', SORTDIR=-1, OPENK='';
+    var LIFE={
+      'coaching-active':'aktivní koučink',
+      'coaching-ex':'ex koučink',
+      'lead-only':'jen lead',
+      'customer-and-lead':'zákazník + lead',
+      'member-academy':'člen Academy',
+      'customer-historical':'historický zákazník',
+      'other':'ostatní',
+      'unknown':'neznámý'
+    };
+    function show(id){ ['load','gate','app'].forEach(function(x){ $(x).style.display=(x===id?'':'none'); }); }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function dash(s){ return s ? String(s) : '–'; }
+    function czDen(s){
+      var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(s||''));
+      return m ? (+m[3])+'. '+(+m[2])+'. '+m[1] : '';
+    }
+    function kc(n){
+      if(n==null||n==='') return '–';
+      var x=Number(n);
+      if(!isFinite(x)) return '–';
+      return Math.round(x).toLocaleString('cs-CZ')+' Kč';
+    }
+    function obdobi(r){
+      var a=czDen(r.prvni_platba), b=czDen(r.posledni_obdobi_konec);
+      if(a&&b) return a+' až '+b;
+      return a||b||'';
+    }
+    function cerstvyToken(){
+      if(!sb) return Promise.resolve(token);
+      return sb.auth.getSession().then(function(res){
+        var s=res&&res.data&&res.data.session;
+        if(s&&s.access_token) token=s.access_token;
+        return token;
+      }).catch(function(){ return token; });
+    }
+    function apiRaw(payload,tok){
+      return fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify(payload)})
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return {status:r.status,j:j}; }); });
+    }
+    function api(payload){
+      return cerstvyToken().then(function(tok){
+        return apiRaw(payload,tok).then(function(o){
+          if(o.status!==401&&o.status!==403) return o;
+          return sb.auth.refreshSession().then(function(r){
+            var s=r&&r.data&&r.data.session;
+            if(!s||!s.access_token||s.access_token===tok) return o;
+            token=s.access_token;
+            return apiRaw(payload,token);
+          }).catch(function(){ return o; });
+        });
+      });
+    }
+    var booted=false;
+    function boot(tries){
+      tries=tries||0;
+      if(!window.BA_CONFIG||!window.supabase){ if(tries<40){ return setTimeout(function(){boot(tries+1);},150); } show('gate'); return; }
+      if(booted) return; booted=true;
+      sb=window.supabase.createClient(window.BA_CONFIG.url,window.BA_CONFIG.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
+      var lg=$('logout'); if(lg) lg.addEventListener('click',function(e){e.preventDefault();sb.auth.signOut().then(function(){location.href='/akademie/prihlaseni/';});});
+      getSessionRetry(0);
+    }
+    function getSessionRetry(tries){
+      sb.auth.getSession().then(function(res){
+        var s=res&&res.data&&res.data.session;
+        if(!s){ if(tries<6){ return setTimeout(function(){getSessionRetry(tries+1);},350); } location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/crm/'); return; }
+        token=s.access_token; mojeEmail=(s.user&&s.user.email)||''; load();
+      });
+    }
+    function gateNeniAdmin(){
+      show('gate');
+      $('gate').innerHTML='Tenhle účet nemá do adminu přístup.<br><br>'
+        +'Přihlášený jsi jako <b style="color:#F6CD63;">'+esc(mojeEmail||'neznámý účet')+'</b>.<br>'
+        +'<span class="muted" style="font-size:.88rem;">Admin funguje jen pod hlavním účtem. Odhlas se a přihlas tím správným.</span><br><br>'
+        +'<a href="#" id="gateOut">Odhlásit a přihlásit se jiným účtem</a><br><br>'
+        +'<a href="/akademie/moje/">Zpět na Academy</a>';
+      var g=$('gateOut');
+      if(g) g.addEventListener('click',function(e){
+        e.preventDefault();
+        sb.auth.signOut().then(function(){ location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/crm/'); });
+      });
+    }
+    function load(){
+      api({action:'list'}).then(function(o){
+        if(o.status===401||o.status===403){ gateNeniAdmin(); return; }
+        if(!o.j||!o.j.ok){
+          show('gate');
+          var msg='Nepovedlo se načíst data. Zkus obnovit stránku.';
+          if(o.status===500){
+            msg='Chyba serveru (500).';
+            if(o.j&&o.j.detail) msg+=' '+String(o.j.detail);
+          }
+          $('gate').textContent=msg;
+          return;
+        }
+        ALL=o.j.rows||[];
+        renderStats(o.j.meta||{});
+        renderRows();
+        show('app');
+        $('meta').textContent=ALL.length+' řádků · '+new Date().toLocaleString('cs-CZ');
+        var h=location.hash.replace(/^#/,'');
+        if(h.indexOf('i=')===0||h.indexOf('p=')===0) openFromHash(h);
+      }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
+    }
+    function renderStats(m){
+      $('stats').innerHTML=
+        tile(m.import_total,'Koučink excel')+
+        tile(m.import_with_email,'Excel s e-mailem')+
+        tile(m.cards_total,'Academy karet')+
+        tile(m.rows_total,'Řádků v seznamu')+
+        '<div class="s"><b>'+esc(kc(m.import_soucet_kc))+'</b><span>útrata excel celkem</span></div>';
+    }
+    function tile(n,label){
+      return '<div class="s"><b>'+esc(n==null?'?':String(n))+'</b><span>'+esc(label)+'</span></div>';
+    }
+    function filtered(){
+      var q=($('q').value||'').trim().toLowerCase();
+      var f=$('filt').value;
+      return ALL.filter(function(r){
+        if(f==='koucink' && r.zdroj==='academy') return false;
+        if(f==='academy' && r.zdroj!=='academy') return false;
+        if(f==='mail'){
+          if(!r.email && !(r.emaily_dalsi&&r.emaily_dalsi.length)) return false;
+        }
+        if(f==='nomail'){
+          if(r.email || (r.emaily_dalsi&&r.emaily_dalsi.length)) return false;
+        }
+        if(!q) return true;
+        var blob=(r.jmeno||'')+' '+(r.email||'')+' '+(Array.isArray(r.emaily_dalsi)?r.emaily_dalsi.join(' '):'');
+        return blob.toLowerCase().indexOf(q)!==-1;
+      }).slice().sort(function(a,b){
+        var av=a[SORT], bv=b[SORT];
+        if(SORT==='soucet_kc'||SORT==='pocet_plateb'){
+          av=av==null?-1:Number(av); bv=bv==null?-1:Number(bv);
+          return (bv-av)* (SORTDIR<0?1:-1);
+        }
+        av=String(av||''); bv=String(bv||'');
+        return av.localeCompare(bv,'cs')*SORTDIR;
+      });
+    }
+    function renderRows(){
+      var list=filtered();
+      $('count').textContent=list.length+' z '+ALL.length;
+      $('rows').innerHTML=list.map(function(r){
+        var mail=r.email||(r.emaily_dalsi&&r.emaily_dalsi[0])||'';
+        var badges='';
+        if(r.zdroj==='oboje') badges+='<span class="badge b-ok">karta</span> ';
+        if(r.zdroj==='academy') badges+='<span class="badge b-tag">Academy</span> ';
+        if(r.zdroj==='koucink') badges+='<span class="badge b-no">excel</span> ';
+        if(r.neposilat) badges+='<span class="badge b-warn">neposílat</span> ';
+        if(r.is_test) badges+='<span class="badge b-warn">test</span> ';
+        return '<tr data-k="'+esc(r.k)+'"'+(r.k===OPENK?' class="on"':'')+'>'
+          +'<td>'+esc(r.jmeno||'bez jména')+'</td>'
+          +'<td>'+(mail?esc(mail):'<span class="muted">–</span>')+'</td>'
+          +'<td class="kc">'+(r.soucet_kc==null?'<span class="muted">–</span>':esc(kc(r.soucet_kc)))+'</td>'
+          +'<td>'+(obdobi(r)?esc(obdobi(r)):'<span class="muted">–</span>')+'</td>'
+          +'<td>'+badges+'</td>'
+          +'</tr>';
+      }).join('');
+    }
+    function openFromHash(h){
+      var payload=null;
+      if(h.indexOf('i=')===0) payload={action:'card',import_id:h.slice(2)};
+      else if(h.indexOf('p=')===0) payload={action:'card',person_id:h.slice(2)};
+      if(!payload) return;
+      OPENK=h.indexOf('i=')===0?('i:'+h.slice(2)):('p:'+h.slice(2));
+      openCard(payload);
+    }
+    function openCard(payload){
+      $('det').classList.add('on');
+      $('detBody').innerHTML='<p class="muted">Načítám kartu…</p>';
+      api(payload).then(function(o){
+        if(!o.j||!o.j.ok){
+          var d=o.j&&o.j.detail?esc(String(o.j.detail)):'';
+          $('detBody').innerHTML='<p class="muted">Kartu se nepodařilo načíst.'+(d?' '+d:'')+'</p>';
+          return;
+        }
+        $('detBody').innerHTML=renderCard(o.j);
+      }).catch(function(){ $('detBody').innerHTML='<p class="muted">Chyba spojení.</p>'; });
+    }
+    function kv(label, val){
+      return '<dt>'+esc(label)+'</dt><dd>'+(val?val:'<span class="muted">–</span>')+'</dd>';
+    }
+    function life(s){ return LIFE[s]||s||''; }
+    function renderCard(d){
+      var imp=d.import||null, card=d.card||null, ids=d.identifiers||[];
+      var name=(imp&&imp.jmeno)||(card&&card.display_name)||'Bez jména';
+      var h='<h2>'+esc(name)+'</h2>';
+      h+='<p class="muted" style="margin:0 0 .8rem;font-size:.82rem;">jen čtení, nic se odsud nemění</p>';
+
+      h+='<div class="dl"><h3>Kontakty</h3><dl class="kv">';
+      var mails=[];
+      function pushMail(arr,e){
+        var s=String(e||'').trim();
+        if(!s) return;
+        var k=s.toLowerCase();
+        for(var i=0;i<arr.length;i++){ if(String(arr[i]).toLowerCase()===k) return; }
+        arr.push(s);
+      }
+      if(imp&&imp.email) pushMail(mails, imp.email);
+      if(card&&card.primary_email) pushMail(mails, card.primary_email);
+      var extra=[];
+      if(imp&&imp.emaily_dalsi!=null){
+        if(Array.isArray(imp.emaily_dalsi)) extra=imp.emaily_dalsi;
+        else if(typeof imp.emaily_dalsi==='string' && imp.emaily_dalsi.trim()) extra=imp.emaily_dalsi.split(/[,;|]+/);
+        else if(typeof imp.emaily_dalsi==='object') extra=Object.values(imp.emaily_dalsi);
+      }
+      ids.forEach(function(i){
+        if(i.kind==='email' && i.value_normalized) extra.push(i.value_normalized);
+      });
+      extra=extra.map(function(x){return String(x).trim();}).filter(Boolean);
+      var seenMail={};
+      extra=extra.filter(function(e){
+        var k=e.toLowerCase();
+        if(seenMail[k]) return false;
+        seenMail[k]=1;
+        return true;
+      });
+      h+=kv('E-mail', mails.length?esc(mails.join(', ')):'');
+      h+=kv('Další e-maily', extra.length?esc(extra.filter(function(e){ return mails.map(function(m){return m.toLowerCase();}).indexOf(e.toLowerCase())===-1; }).join(', ')):'');
+      if(imp&&imp.email_zdroj) h+=kv('Zdroj e-mailu', esc(imp.email_zdroj));
+      h+=kv('Telefon', card&&card.primary_phone?esc(card.primary_phone):'');
+      ids.filter(function(i){return i.kind==='phone';}).forEach(function(i){
+        h+=kv('Tel. '+esc(i.source||''), esc(i.value_raw||i.value_normalized||''));
+      });
+      h+='</dl></div>';
+
+      h+='<div class="dl"><h3>Útrata a období (excel koučinku)</h3><dl class="kv">';
+      if(imp){
+        h+=kv('Útrata', esc(kc(imp.soucet_kc)));
+        h+=kv('Počet plateb', imp.pocet_plateb==null?'':esc(String(imp.pocet_plateb)));
+        h+=kv('První platba', esc(czDen(imp.prvni_platba)||''));
+        h+=kv('Konec období', esc(czDen(imp.posledni_obdobi_konec)||''));
+        h+=kv('Stavy', imp.stavy?esc(imp.stavy):'');
+        h+=kv('Varianty jména', imp.jmeno_varianty?esc(imp.jmeno_varianty):'');
+      } else {
+        h+='<dt></dt><dd class="muted">V excelu Klienti Platby tenhle člověk není.</dd>';
+      }
+      h+='</dl></div>';
+
+      h+='<div class="dl"><h3>Poznámky</h3>';
+      h+='<div class="note">'+(imp&&imp.poznamky?esc(imp.poznamky):'<span class="muted">–</span>')+'</div></div>';
+
+      h+='<div class="dl"><h3>Karta CRM (crm_person_card)</h3>';
+      if(!card){
+        h+='<p class="muted">Ještě není spárovaný s Academy CRM (merge čeká).</p></div>';
+      } else {
+        h+='<dl class="kv">';
+        h+=kv('Životní cyklus', esc(life(card.lifecycle)));
+        h+=kv('Testovací', card.is_test?'ano':'ne');
+        h+=kv('Neposílat (SS)', card.ss_import_do_not_mail?'ano, tag ss-import-do-not-mail':'ne');
+        var tags=Array.isArray(card.tags)?card.tags:[];
+        h+=kv('Tagy', tags.length?tags.map(function(t){return '<span class="badge b-tag">'+esc(t)+'</span>';}).join(' '):'');
+        var attrs=card.attrs&&typeof card.attrs==='object'?card.attrs:{};
+        Object.keys(attrs).sort().forEach(function(k){
+          var a=attrs[k]||{};
+          var v=a.value!=null?a.value:a;
+          var shown='';
+          if(v===false) shown='ne';
+          else if(v===true) shown='ano';
+          else if(typeof v==='object') shown=JSON.stringify(v);
+          else if(v!=null&&v!=='') shown=String(v);
+          h+=kv(k, shown?esc(shown):'');
+        });
+        var prods=Array.isArray(card.products)?card.products:[];
+        h+=kv('Produkty', prods.length?esc(prods.map(function(p){return (p.product||'')+(p.active?'':' (neaktivní)');}).join(', ')):'');
+        var leads=Array.isArray(card.leads)?card.leads:[];
+        h+=kv('Mailová trať', leads.length?esc(leads.map(function(l){return (l.track||'')+' krok '+(l.step==null?'':l.step)+' ('+(l.status||'')+')';}).join('; ')):'');
+        var cons=Array.isArray(card.consents)?card.consents:[];
+        h+=kv('Souhlasy', cons.length?esc(cons.map(function(c){return (c.channel||'')+'/'+(c.purpose||'')+': '+(c.state||'');}).join('; ')):'');
+        var utm=Array.isArray(card.utm)?card.utm:[];
+        h+=kv('UTM', utm.length?esc(utm.map(function(u){return (u.key||'')+'='+(u.value||'');}).join(', ')):'');
+        h+='</dl></div>';
+      }
+      return h;
+    }
+
+    $('q').addEventListener('input', renderRows);
+    $('filt').addEventListener('change', renderRows);
+    $('detClose').addEventListener('click', function(){ $('det').classList.remove('on'); OPENK=''; renderRows(); history.replaceState(null,'',location.pathname); });
+    $('rows').addEventListener('click', function(e){
+      var tr=e.target.closest('tr'); if(!tr) return;
+      var k=tr.getAttribute('data-k'); if(!k) return;
+      OPENK=k;
+      renderRows();
+      var payload={action:'card'};
+      if(k.indexOf('i:')===0){ payload.import_id=k.slice(2); location.hash='i='+k.slice(2); }
+      else { payload.person_id=k.slice(2); location.hash='p='+k.slice(2); }
+      openCard(payload);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('th[data-sort]'), function(th){
+      th.addEventListener('click', function(){
+        var s=th.getAttribute('data-sort');
+        if(SORT===s) SORTDIR=-SORTDIR; else { SORT=s; SORTDIR=s==='soucet_kc'?-1:1; }
+        Array.prototype.forEach.call(document.querySelectorAll('th[data-sort]'), function(x){ x.classList.toggle('on', x.getAttribute('data-sort')===SORT); });
+        renderRows();
+      });
+    });
+    boot();
+  })();
+  </script>
+</body>
+</html>
