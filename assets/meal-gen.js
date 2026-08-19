@@ -614,9 +614,46 @@
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
       it.grams = Math.max(step, Math.round(it.grams / step) * step);
-      if (!lowCarb && it.food.cat === 'carb' && it.grams < podlahaPrilohy(it.food)) it.grams = podlahaPrilohy(it.food);
+      // [fix 2026-08-19] Po finálním kcal trimu podlahu přílohy NEOBNOVIT natvrdo.
+      // Trim už trefil cíl (+1,9 %); 10 g → 25-40 g vracelo přestřel (+13 %).
+      // Zvedni přílohu jen dokud se den vejde do +5 %, a na viditelných 15 g
+      // jen když se to ještě vejde (drobky na talíři). runScale podlahu dál
+      // drží proti křížovému škálování na běžném dni.
+      // ⛔ Stejná změna je v appce (`src/engine/meal-gen-core.ts`), hlídá parita.
+      if (!lowCarb && it.food.cat === 'carb' && it.grams < podlahaPrilohy(it.food)) {
+        var want = podlahaPrilohy(it.food);
+        var kcalPerG = (it.food.per100.kcal || 0) / 100;
+        var room = targets.kcal * 1.05 - totalKey('kcal');
+        if (kcalPerG > 0 && room > 0) {
+          it.grams += Math.min(want - it.grams, room / kcalPerG);
+        }
+        if (it.grams < 15 && kcalPerG > 0) {
+          var need = (15 - it.grams) * kcalPerG;
+          if (need <= Math.max(0, targets.kcal * 1.05 - totalKey('kcal'))) {
+            it.grams = 15;
+          }
+        }
+      }
       var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
     });
+    // Součet tří ifFits zdvihů umí přelézt +5 % o zaokrouhlení. Mikro-ořez jen
+    // sacharidů, nejdřív k 15 g (viditelná porce), pak k 10 g. Velký den sem
+    // nespadne: po trimu je pod +5 % a větev se nespustí.
+    if (!lowCarb && totalKey('kcal') > targets.kcal * 1.05) {
+      var orezK = function (minG) {
+        for (var oi = 0; oi < all.length; oi++) {
+          var it = all[oi];
+          if (it.food.cat !== 'carb' || it.grams <= minG) continue;
+          var over = totalKey('kcal') - targets.kcal * 1.05;
+          if (over <= 0) break;
+          var kcalPerG = (it.food.per100.kcal || 0) / 100;
+          if (kcalPerG <= 0) continue;
+          it.grams -= Math.min(it.grams - minG, over / kcalPerG);
+        }
+      };
+      orezK(15);
+      if (totalKey('kcal') > targets.kcal * 1.05) orezK(10);
+    }
     // [fix 2026-07-14] minigramáže („přidej 1 g oleje") v klientském plánu nemají co dělat —
     // nebílkovinné položky pod 8 g vyhodíme (pár kalorií totály poctivě ukážou);
     // bílkovinné zdroje drží podlahu 30 g z runScale, ty nemažeme.
