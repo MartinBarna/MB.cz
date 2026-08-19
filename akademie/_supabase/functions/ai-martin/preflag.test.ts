@@ -117,3 +117,33 @@ for (const c of CASES3) {
 }
 console.log(`V3: ${p3}/${p3 + f3} testů prošlo`);
 if (f3) process.exit(1);
+
+// === V4: adversariální mezery vrstvy A (opraveno 19. 8. 2026 v preflag.ts, sync s appkou f5caaeb) ===
+const CASES4: Case[] = [
+  { text: 'Chci si ublížit.', expect: { flagged: true, primary: 'crisis' }, why: 'obrácený slovosled' },
+  { text: 'Ublížím si.', expect: { flagged: true, primary: 'crisis' }, why: '1. osoba budoucí' },
+  { text: 'Čekáme miminko.', expect: { flagged: true, primary: 'pregnancy' }, why: 'množné číslo' },
+  { text: 'Jsem v očekávání.', expect: { flagged: true, primary: 'pregnancy' }, why: 'eufemismus' },
+  { text: 'Vyčítám si jídlo.', expect: { flagged: true, primary: 'eating_disorder' }, why: 'vina po jídle' },
+  { text: 'Po jídle si vyčítám každé sousto.', expect: { flagged: true, primary: 'eating_disorder' }, why: 'vina po jídle obráceně' },
+  { text: 'Bojím se najíst.', expect: { flagged: true, primary: 'eating_disorder' }, why: 'dokonavý vid' },
+  { text: 'Nemám důvod dál žít.', expect: { flagged: true, primary: 'crisis' }, why: 'vložené slovo' },
+  { text: 'Radši bych tu nebyl.', expect: { flagged: true, primary: 'crisis' }, why: 'krizová fráze m.' },
+  { text: 'Radši bych tu nebyla.', expect: { flagged: true, primary: 'crisis' }, why: 'krizová fráze ž.' },
+  { text: 'Skončím se životem.', expect: { flagged: true, primary: 'crisis' }, why: '1. osoba' },
+  { text: 'Chci zmizet.', expect: { flagged: true, primary: 'crisis' }, why: 'krizová fráze' },
+  { text: 'Chtěla bych zmizet.', expect: { flagged: true, primary: 'crisis' }, why: 'kondicionál ž.' },
+  // klidové věty: nové substringy nesmí střílet naslepo
+  { text: 'Miminko už jí příkrmy, kolik bílkovin?', expect: { flagged: false }, why: 'miminko bez „čekáme"' },
+  { text: 'Ta únava po obědě pak zmizí sama.', expect: { flagged: false }, why: 'zmizet bez krizového rámce' },
+];
+let p4 = 0, f4 = 0;
+for (const c of CASES4) {
+  const r = preflagMessage(c.text);
+  let ok = r.flagged === c.expect.flagged;
+  if (ok && c.expect.primary !== undefined) ok = r.primary === c.expect.primary;
+  if (ok) p4++;
+  else { f4++; console.log(`FAIL4: "${c.text}"`); console.log(`  očekáváno flagged=${c.expect.flagged} primary=${c.expect.primary ?? '-'} | dostal flagged=${r.flagged} primary=${r.primary} matched=${r.matched.join(',')}`); }
+}
+console.log(`V4: ${p4}/${p4 + f4} testů prošlo`);
+if (f4) process.exit(1);
