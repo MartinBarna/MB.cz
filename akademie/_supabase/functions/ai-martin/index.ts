@@ -11,6 +11,7 @@
 // └────────────────────────────────────────────────────────────────────────┘
 
 import { preflagMessage } from './preflag.ts';
+import { notifyCapReached, type CapKind } from './cap-notify.ts';
 
 const NL = String.fromCharCode(10);
 // Provider abstrakce (Anthropic default / xAI Grok) — přepínatelné přes AI_MARTIN_PROVIDER,
@@ -509,15 +510,45 @@ async function overMonthlyCap(userId: string | null): Promise<boolean> {
   }
 }
 // Sepnutý strop se zapíše do `ai_usage` s nulovým nákladem, ať jde spočítat, KOLIK LIDÍ
-// na něj naráží (`feature like '%_capped'`). Bez toho by se ticho dalo číst jako „nikdo
+// na něj naráží (`feature like '%capped%'`). Bez toho by se ticho dalo číst jako „nikdo
 // ho nepotřebuje" i ve chvíli, kdy o něj klienti denně zakopávají.
-function logCapped(userId: string | null, feature: string): void {
+// ⛔ Await, ne odpojená promise: tahle značka je i pojistka „už dnes šel mail".
+async function logCapped(userId: string | null, feature: string): Promise<void> {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
-  fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: 0, tokens_out: 0, tokens_cached: 0, est_cost_usd: 0 }),
-  }).catch(() => {});
+  });
+  if (!r.ok) throw new Error(`logCapped ${r.status}`);
+}
+
+// Mail Martinovi při nárazu na strop. ⛔ Pořadí (kontrola → await značka → mail)
+// hlídá `notifyCapReached`, ne tahle obálka. Značku proto NEZAPISUJ zvlášť.
+async function alertMartinCap(
+  userId: string | null,
+  email: string | null,
+  via: MemberVia,
+  feature: string,
+  kind: CapKind,
+): Promise<void> {
+  if (!userId) return;
+  try {
+    await notifyCapReached({
+      userId,
+      email,
+      via,
+      feature,
+      kind,
+      supabaseUrl: SUPABASE_URL,
+      serviceRole: SERVICE_ROLE,
+      resendKey: Deno.env.get('RESEND_API_KEY') ?? '',
+      notifyFrom: Deno.env.get('NOTIFY_FROM') ?? '',
+      zapisZnacku: () => logCapped(userId, feature),
+    });
+  } catch (e) {
+    console.error('[cap-notify] alertMartinCap selhal, uživateli jde běžná hláška o stropu:', e);
+  }
 }
 
 // --- STREAMING (jen Grok chat) ---
@@ -664,7 +695,7 @@ Deno.serve(async (req: Request) => {
 
   // P2 denní strop (safety hard-stop výše proběhl vždy; limit se týká jen placených LLM/vision volání).
   if (await overDailyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily', 'daily');
     return json({ reply: 'Na dnešek už jsme toho probrali slušně 💪 Denní limit chatu je vyčerpaný, pokračujeme zase zítra. Kdyby něco hořelo, napiš Martinovi.' }, CORS, 200);
   }
   // Měsíční nákladový strop. Stejné pořadí jako u denního: až ZA safety vrstvou, aby
@@ -672,7 +703,7 @@ Deno.serve(async (req: Request) => {
   // poli `reply`, ne chybový kód: klient non-2xx tělo nezobrazí a člen by viděl jen
   // obecnou chybu místo téhle věty.
   if (await overMonthlyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped', 'monthly');
     return json({ reply: 'Tenhle měsíc už toho máme v chatu hodně za sebou 💪 Limit se počítá za posledních 30 dní a uvolňuje se postupně, takže za pár dní se zase ozvi. Kdyby něco hořelo, napiš rovnou Martinovi.' }, CORS, 200);
   }
 
