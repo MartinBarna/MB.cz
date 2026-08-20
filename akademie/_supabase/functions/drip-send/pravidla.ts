@@ -65,16 +65,20 @@ export function shouldStop(
   // ⛔ NEROZSIROVAT tim `vlastniCokoli` ani ostatni trate: ex-klient je legitimni cil
   // akvizice (obsah, appka, Academy). Zakazana mu je jen nabidka koucinku, ktery dokoncil.
   if (t === 'upsell-coaching') return !!owns?.coaching?.has(em) || !!exCoaching?.has(em);
-  // [2026-08-06] TRATE APPKY (tc-free = registrace v appce, tc-magnet = jidelnickovy magnet).
-  // Prodavaji predplatne Tvuj Coach. Kdo si koupi predplatne PRIMO v appce, prepne se pryc
-  // sam (app-onboarding-hook ho hodi do onboarding-nakup-tvujcoach), takze na nej tohle
-  // pravidlo neni. Diru maji ale dva pripady, ktere hook nikdy neuvidi:
+  // [2026-08-06] TRATE APPKY (tc-free = stara registracni serie, tc-zkusebka = 14denni
+  // zkusebka dny 1/3/7/10, tc-magnet = jidelnickovy magnet). Prodavaji predplatne Tvuj
+  // Coach. Kdo si koupi predplatne PRIMO v appce, prepne se pryc sam (app-onboarding-hook
+  // ho hodi do onboarding-nakup-tvujcoach), takze na nej tohle pravidlo neni. Diru maji
+  // ale dva pripady, ktere hook nikdy neuvidi:
   //   - kdo koupil ACADEMY, ma appku VIP na rok (pamet tvujcoach-academy-vip-na-rok),
   //   - kdo ma KOUCINK, plati Martinovi nejvyssi ticket, jaky prodavame.
   // Obema by od kroku 5 chodilo "zkusebka ti skonci, odemkni si appku za 249", coz je
   // u prvniho lez a u druheho trapne. Kroky 0 az 4 jsou obsahove (vazeni, prumery,
   // generatory, AI kouc) a davaji smysl i jim, proto se stopuje az od kroku 5.
-  if (t === 'tc-free' || t === 'tc-magnet') {
+  // ⚠️ tc-zkusebka ma dnes jen kroky 0 az 3, takze tahle pojistka tam za ziva nesehne.
+  // Bez radku nize by ale trat vubec NEBYLA na seznamu zastavenych: shouldStop u nezname
+  // trate vraci false (= POSLI), neni to allow-list. Pridani sem je STOP, ne "pust trat".
+  if (t === 'tc-free' || t === 'tc-magnet' || t === 'tc-zkusebka') {
     return step >= 5 && (!!owns?.academy?.has(em) || !!owns?.coaching?.has(em));
   }
   return false;

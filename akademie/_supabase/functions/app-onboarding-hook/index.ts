@@ -30,19 +30,20 @@ const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 // se clovek zapise (nechceme, aby appka mohla poslat libovolny track).
 const TRACKY: Record<string, string> = {
   tvujcoach: "onboarding-nakup-tvujcoach",
-  // [2026-07-30] ⭐ REGISTRACE (ne nákup) z reklamní kampaně `tc-direct` → série A.
+  // [2026-08-20] ⭐ REGISTRACE (ne nákup) z reklamní kampaně `tc-direct` → `tc-zkusebka`.
   // Volá to trigger v appkové DB, který se pálí JEN když `profiles.signup_attribution`
   // nese `utm_campaign=tc-direct`. Organické registrace se sem vůbec nedostanou,
-  // filtr je v podmínce triggeru, ne tady.
-  "tvujcoach-registrace": "tc-free",
+  // filtr je v podmínce triggeru, ne tady. Kdo už leží v `tc-free`, tam zůstává:
+  // tenhle klíč mění jen NOVÉ zápisy, žádný backfill.
+  "tvujcoach-registrace": "tc-zkusebka",
 };
 
 // ⛔ AKVIZIČNÍ TRATĚ SE NEPŘEPISUJÍ. Kdo běží v magnetové nebo nurture sekvenci a mezitím
 // se zaregistruje v appce z reklamy, dojede svou sekvenci do konce. Přepnutí by ho vytrhlo
-// uprostřed příběhu, který mu slibujeme, a `tc-free` navíc nezačíná na `onboarding-`,
-// takže by ho stará podmínka níž nechytila. Registraci jen zapíšeme do `meta`, ať to
-// atribuce vidí. (Nákup je pořád silnější signál a přepnout smí, ten sem chodí jako
-// `product: tvujcoach`.)
+// uprostřed příběhu, který mu slibujeme. `tc-zkusebka` (dřív `tc-free`) nezačíná na
+// `onboarding-`, takže by ho stará podmínka níž nechytila. Registraci jen zapíšeme do
+// `meta`, ať to atribuce vidí. (Nákup je pořád silnější signál a přepnout smí, ten sem
+// chodí jako `product: tvujcoach`.)
 const AKVIZICNI = ["lead-magnet", "tc-magnet", "nurture-", "trener-kit", "longtail-"];
 const jeAkvizicni = (t: string) => AKVIZICNI.some((p) => t.startsWith(p));
 

@@ -69,6 +69,26 @@ zkontroluj('tc-free krok 5 klienta koucinku stopne', shouldStop('tc-free', 5, JA
 zkontroluj('tc-free krok 5 majitele videokurzu NEstopne', shouldStop('tc-free', 5, JA, MA_VK, BEZ_EX), false);
 zkontroluj('tc-magnet krok 5 clena Academy stopne', shouldStop('tc-magnet', 5, JA, MA_ACADEMY, BEZ_EX), true);
 
+// ---------- tc-zkusebka (20. 8. 2026): 4 maily, kroky 0 az 3, most na longtail ----------
+// Bod 2: dve serie naraz se tady neresi. `leads.track` je JEDEN sloupec, hook drzi
+// "jeden clovek = jeden beh". shouldStop na jedne trati tu druhou nespousti.
+// Most tc-zkusebka -> longtail-consumer je SEKVENCE, ne soubeh; kupci se most zablokuje.
+zkontroluj('most z tc-zkusebka do longtail-consumer je definovatelny', vyberMost({ 'tc-zkusebka': { track: 'longtail-consumer', po_dnech: 21 } }, 'tc-zkusebka')?.track, 'longtail-consumer');
+zkontroluj('most z tc-zkusebka do longtail-consumer se kupci ZABLOKUJE (ne druha serie)', mostBlokujeVlastnictvi('longtail-consumer', JA, MA_VK, BEZ_EX), true);
+zkontroluj('most z tc-zkusebka do longtail-consumer nekupci projde', mostBlokujeVlastnictvi('longtail-consumer', NIKDO, MA_VK, BEZ_EX), false);
+// Bod 3: nakup APPKY shouldStop nevidi (Academy entitlements appku nezna).
+// Zastaveni dela hook product=tvujcoach -> onboarding-nakup-tvujcoach, ne tahle funkce.
+// Ziva serie ma kroky 0-3, stop od 5 na ni nesehne i u clena Academy.
+zkontroluj('tc-zkusebka krok 0 bez entitlements se NEstopne (nakup appky tady neni)', shouldStop('tc-zkusebka', 0, JA, NIC, BEZ_EX), false);
+zkontroluj('tc-zkusebka krok 3 (posledni zivy mail) se NEstopne ani clenovi Academy', shouldStop('tc-zkusebka', 3, JA, MA_ACADEMY, BEZ_EX), false);
+zkontroluj('tc-zkusebka krok 3 klienta koucinku NEstopne', shouldStop('tc-zkusebka', 3, JA, MA_COACHING, BEZ_EX), false);
+zkontroluj('tc-zkusebka krok 5 clena Academy stopne (pojistka kdyby pribyly maily)', shouldStop('tc-zkusebka', 5, JA, MA_ACADEMY, BEZ_EX), true);
+zkontroluj('tc-zkusebka krok 5 klienta koucinku stopne', shouldStop('tc-zkusebka', 5, JA, MA_COACHING, BEZ_EX), true);
+zkontroluj('tc-zkusebka krok 5 majitele videokurzu NEstopne', shouldStop('tc-zkusebka', 5, JA, MA_VK, BEZ_EX), false);
+// Bod 4: smazani uctu shouldStop taky nevidi. Bez entitlements trat bezi dal.
+zkontroluj('tc-zkusebka po smazani uctu (zadny entitlement) se NEstopne', shouldStop('tc-zkusebka', 1, JA, NIC, BEZ_EX), false);
+zkontroluj('ex-klient NENI stopnuty na tc-zkusebka', shouldStop('tc-zkusebka', 5, JA, NIC, JE_EX), false);
+
 // ---------- BALICEK NESMI NIKOHO UMLCET (pojistka k `vlastniCokoli`) ----------
 zkontroluj('kdo ma JEN balicek, neni pro `vlastniCokoli` zakaznik', vlastniCokoli(MA_JEN_BALICEK, JA), false);
 zkontroluj('kdo ma JEN balicek, NENI stopnuty na lead-magnetu', shouldStop('lead-magnet', 1, JA, MA_JEN_BALICEK, BEZ_EX), false);
