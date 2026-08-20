@@ -677,7 +677,7 @@
         // a „platí" je tu celý obrat, takže se rozpad podle zdroje ukazuje natvrdo.
         // ⚠️ `zdroj` umí vrátit až novější `tc_overview()`. Dokud nedorazí, chová se
         // karta jako dřív a NIC si nedomýšlí.
-        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {}, zdrojeA = {}, maZdroj = false, plati = 0, vBonusu = 0;
+        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {}, tieryP = {}, zdrojeA = {}, maZdroj = false, plati = 0, vBonusu = 0;
         pp.forEach(function(x){
           var n = Number(x.pocet) || 0;
           if(x.zdroj != null) maZdroj = true;
@@ -697,6 +697,11 @@
           //    i do „Aktivní přístup" (přístup skutečně má) a do „Ve zkušebce" NE.
           if(jePlatici && (x.status === 'active' || x.status === 'trialing')){
             plati += n;
+            // ⭐ Rozpad platících po tarifech (Martin 20. 8.: „ať je vidět, kdo má 249
+            //    a kdo 499"). Sbírá se ZVLÁŠŤ od `tieryA`: tam jsou i granty a převody,
+            //    tedy lidé, co mají VIP a neplatí za něj nic. Sloučené by to tvrdilo,
+            //    že za VIP platí osm lidí, když platí jeden.
+            tieryP[x.tier] = (tieryP[x.tier] || 0) + n;
             if(x.status === 'trialing') vBonusu += n;
           }
           if(x.status === 'active' || (x.status === 'trialing' && jePlatici)){
@@ -720,13 +725,24 @@
           var k = Object.keys(m);
           return k.length ? k.map(function(t){ return esc(tierNazev(t)) + (k.length > 1 ? ' ' + m[t] + '×' : ''); }).join(' · ') : '';
         };
+        // U platících se počet píše VŽDY, i když je tarif jediný. „VIP (499 Kč)" samo
+        // o sobě nesděluje, kolik lidí to je, a právě to je u tržby ta informace.
+        // Řadí se od nejpočetnějšího, ať je nahoře to, co appku živí.
+        var popisTieruSPocty = function(m){
+          return Object.keys(m).sort(function(a,b){ return m[b] - m[a]; })
+            .map(function(t){ return esc(tierNazev(t)) + ' ' + m[t] + '×'; }).join(' · ');
+        };
+        var popisPlaticich = function(){
+          var zaklad = popisTieruSPocty(tieryP) || 'přes Stripe';
+          return vBonusu ? zaklad + ' · z toho ' + vBonusu + '× v bonusovém období' : zaklad;
+        };
 
         var h = '<div class="kdtiles" style="margin-bottom:12px;">'
           + tcTile('Registrací', r.celkem != null ? r.celkem : '—', 'bez testovacích')
           + tcTile('Za 7 dní', r.za_7_dni != null ? r.za_7_dni : '—', '')
           + tcTile('Za 30 dní', r.za_30_dni != null ? r.za_30_dni : '—', '')
           + (maZdroj
-              ? tcTile('Platí za appku', plati, vBonusu ? 'přes Stripe · z toho ' + vBonusu + '× v bonusovém období' : 'přes Stripe', plati ? '#7BD88F' : '#ff9b9b')
+              ? tcTile('Platí za appku', plati, popisPlaticich(), plati ? '#7BD88F' : '#ff9b9b')
                 + tcTile('Aktivní přístup', aktivni, popisZdroju(zdrojeA) || popisTieru(tieryA), aktivni ? '#7BD88F' : '')
               : tcTile('Aktivní předplatné', aktivni, popisTieru(tieryA), aktivni ? '#7BD88F' : ''))
           + tcTile('Ve zkušebce', trial, popisTieru(tieryT) || '14 dní zdarma', trial ? '#F6CD63' : '')
