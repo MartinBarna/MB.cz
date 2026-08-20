@@ -3,8 +3,9 @@
 //
 // Appka Tvůj Coach (projekt kfkmghvhqwqtsalqjmrp) sem po PRVNÍ aktivaci předplatného
 // pošle fakta o nákupu a SHARED SECRET v hlavičce `x-app-purchase-secret`.
-// Odsud se udělá affiliate provize (`referrals`) a bonusový videokurz u ročního VIP
-// (`entitlements`). Rozhodovací logika je v `core.ts`, tady je jen vodovod.
+// Odsud se udělá affiliate provize (`referrals`), bonusový videokurz ke KAŽDÉ první
+// platbě a měsíc Academy na zkoušku u ročního VIP (obojí `entitlements`).
+// Rozhodovací logika je v `core.ts`, tady je jen vodovod.
 //
 // ⛔ NEPOSLOUCHÁ STRIPE. Vstup je náš vlastní server-to-server hovor, ověřený secretem.
 //    Stripe eventy appky zpracovává webhook APPKY; sem se posílá až výsledek.
@@ -115,9 +116,50 @@ const deps: BridgeDeps = {
     const { data } = await admin.from("referrals").select("id").eq("order_id", orderId).limit(1);
     return Boolean(data && data.length);
   },
+  // Partner z historie: jediné TRVALÉ místo, kde vazba „nákup → partner" u appky žije.
+  // ⚠️ Filtr na `product='appka'` je zároveň bezpečnostní hranice: řádky s tímhle produktem
+  // zapisuje jen tenhle most, takže se sem nemůže připlést atribuce z Academy.
+  async najdiPredchoziKodProAppku(email, subscriptionId) {
+    // 1) PŘESNÁ VAZBA na tohle předplatné. Od 13. 8. 2026 hlavní a skoro vždycky jediná
+    //    cesta; hledání podle e-mailu platilo provizi z nového přímého nákupu starému
+    //    partnerovi (V2 z revize P48).
+    if (subscriptionId) {
+      const { data, error } = await admin
+        .from("referrals").select("code")
+        .eq("stripe_subscription_id", subscriptionId).eq("product", "appka").neq("status", "void")
+        .order("created_at", { ascending: false }).limit(1);
+      if (error) throw new Error("db: " + error.message);
+      const kod = data?.[0]?.code;
+      if (typeof kod === "string" && kod) return kod;
+    }
+    // 2) STARÉ ŘÁDKY, zapsané dřív, než sloupec `stripe_subscription_id` existoval:
+    //    vazbu na předplatné nemají a jinak než přes e-mail se dohledat nedají. Bez téhle
+    //    větve by partner o provizi z už rozjetého předplatného přišel.
+    // ⛔ Schválně JEN řádky s prázdným `stripe_subscription_id`. Kdyby se hledalo přes
+    //    všechny, vrátila by se V2 zpátky: nový přímý nákup by zase platil starý partner.
+    // ⏰ Až budou všechny appkové řádky mít předplatné, tahle větev může zmizet.
+    // ⚠️ `buyer_email` se z tohohle mostu zapisuje vždycky malými písmeny (jádro ho
+    //    lowercasuje), takže `.eq` stačí a nepotřebujeme `ilike`, který by podtržítko
+    //    v adrese bral jako zástupný znak.
+    const { data, error } = await admin
+      .from("referrals").select("code")
+      .eq("buyer_email", email).eq("product", "appka").neq("status", "void")
+      .is("stripe_subscription_id", null)
+      .order("created_at", { ascending: false }).limit(1);
+    if (error) throw new Error("db: " + error.message);
+    const kod = data?.[0]?.code;
+    return typeof kod === "string" && kod ? kod : null;
+  },
   async zapisReferral(row) {
     const { error } = await admin.from("referrals").insert(row);
-    if (error) throw new Error("db: " + error.message);
+    if (!error) return "ok";
+    // 23505 = unique_violation. Na `referrals` může přijít jedině z `referrals_order_uidx`
+    // (jediný další unikátní index je primární klíč z identity, ten se pohádat nemůže),
+    // takže to znamená přesně „tuhle platbu už někdo zapsal". Není to selhání, ale
+    // idempotence, která dělá svou práci: jádro z toho udělá `duplicita-order` a alert
+    // se neposílá. Do 13. 8. 2026 z toho chodil Martinovi falešný poplach (V6).
+    if (error.code === "23505") return "duplicita";
+    throw new Error("db: " + error.message);
   },
   async zalogujNerozpoznanouSlevu(promoId, jak) {
     try {
@@ -161,7 +203,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   try {
     const result = await handleAppPurchase(body, deps);
     // Do logu i výsledek: když se něco nepřipíše, tohle je jediné místo, kde se pozná PROČ.
-    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} referral=${result.referral} bonus=${result.bonus}`);
+    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} kind=${String(body.kind ?? "first")} order=${String(body.order_id ?? body.payment_intent ?? "-")} referral=${result.referral} bonus=${result.bonus} academy=${result.academy}`);
     return json(result);
   } catch (e) {
     if (e instanceof BridgeError) return json({ error: e.message }, e.status);
