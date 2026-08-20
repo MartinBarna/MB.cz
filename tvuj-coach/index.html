@@ -134,6 +134,11 @@
            a dvojice tlačítek by se v kartě rozlepila (jedno nahoře, druhé přilepené dolů). */
         .plan .btn + .btn { margin-top:.6rem; }
         /* Bonusový řádek v kartě tarifu (videokurz zdarma k první platbě, živé od 18. 8. 2026).
+           ⛔ OD 20. 8. 2026 JEN U VIP. Martin: „videokurz máme dávat jen VIP za 499, Basic ho
+           mít nemá." Karta Basicu proto bonusový řádek NEMÁ a zpátky se nevrací bez jeho
+           pokynu. Gold/Diamond kurz mají přes Academy. Nárok hlídá i appka
+           (`shouldGrantVideokurzOnFirstPayment` = jen tier `ai_basic`), takže kdyby se
+           odrážka vrátila k Basicu, slibovala by něco, co server neudělá.
            ⚠️ SCHVÁLNĚ VLASTNÍ ELEMENT, ne text uvnitř `.plan-year`: cenový skript dole přepisuje
            `.plan-year` celý `textContent` z ceníku, takže by tam vložený bonus po doběhnutí
            dotazu TIŠE ZMIZEL a nikdo by si toho nevšiml.
@@ -187,7 +192,7 @@
         <!-- Bonus k první platbě, živý od 18. 8. 2026 (most `app-purchase-bridge` v5).
              Stojí PŘED tlačítky schválně: je to důvod, proč kliknout na ceník místo na
              zkušebku. Zkušebka zůstává, jen už není jediná nabídka na obrazovce. -->
-        <p class="hero-bonus">🎁 <b>Ke každé první platbě dostaneš videokurz výživy za 800 Kč zdarma</b>, a zůstane ti napořád. K ročnímu VIP navíc měsíc Barna Academy.</p>
+        <p class="hero-bonus">🎁 <b>K první platbě za VIP dostaneš videokurz výživy za 800 Kč zdarma</b>, a zůstane ti napořád. K ročnímu VIP navíc měsíc Barna Academy.</p>
         <div class="btn-row">
             <a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušej 14 dní zdarma →</a>
             <a class="btn btn-ghost" href="#cenik">Vzít appku na rok →</a>
@@ -371,7 +376,7 @@
 <section class="sec" id="cenik">
     <div class="wrap">
         <h2 class="center">Kolik to stojí</h2>
-        <p class="sec-sub">Po registraci máš 14 dní celou VIP verzi, ať víš, co si vybíráš. Kartu k tomu nepotřebuješ a po dvou týdnech ti appka zůstane ve Free verzi, dokud si sám neřekneš o víc. A ke každé první platbě přidávám videokurz výživy za 800 Kč zdarma, takže i za jeden nejlevnější měsíc odcházíš s víc, než jsi zaplatil.</p>
+        <p class="sec-sub">Po registraci máš 14 dní celou VIP verzi, ať víš, co si vybíráš. Kartu k tomu nepotřebuješ a po dvou týdnech ti appka zůstane ve Free verzi, dokud si sám neřekneš o víc. A k první platbě za VIP přidávám videokurz výživy za 800 Kč zdarma, takže i za jediný měsíc VIP odcházíš s víc, než jsi zaplatil.</p>
         <div class="plans plans-3">
             <div class="plan">
                 <div class="plan-name">Free</div>
@@ -391,7 +396,6 @@
                 <div class="plan-name">Basic</div>
                 <div class="plan-price" data-price="basic:month">249 Kč <small>/ měsíc</small></div>
                 <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
-                <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě.</b> 182 videí v hodnotě 800 Kč, doživotní přístup. Dostaneš ho i tehdy, když si vezmeš jediný měsíc.</p>
                 <ul class="feat">
                     <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
                     <li><strong>Týdenní check-in, který ti přepočítá cíle</strong></li>
@@ -457,7 +461,7 @@
         <h2 class="center">Časté otázky</h2>
         <div style="margin-top:1.8rem;">
             <div class="faq-i"><b>Je Free verze fakt zdarma?</b><p>Ano, navždy a bez karty. Zapisuješ jídlo i trénink bez omezení, včetně čárových kódů, a můžeš si nastavit vlastní kalorie a makra. Historii vidíš 14 dní zpátky. Týdenní check-in, který ti cíle přepočítává, tréninkový plán a generátory má Basic, AI kouče a focení jídla VIP.</p></div>
-            <div class="faq-i"><b>Jak dostanu ten videokurz zdarma?</b><p>Sám od sebe a hned. Jakmile projde tvoje první platba za Basic nebo VIP, přiřadím videokurz k e-mailu, kterým platíš. Přihlásíš se s ním do <a href="/akademie/prihlaseni/">členské sekce</a> a kurz tam na tebe čeká, 182 videí a přes 20 hodin. Nemusíš o nic psát ani nic zadávat. Zůstává ti napořád, i kdybys předplatné za měsíc zrušil, protože je to dárek k nákupu, ne půjčka. Když si vezmeš VIP na rok, přidám k tomu ještě měsíc <a href="/akademie/">Barna Academy</a> na zkoušku, pokud v ní ještě nejsi. A jestli videokurz už koupený máš, nic ti nepřepisuju, zůstává ti ten tvůj.</p></div>
+            <div class="faq-i"><b>Jak dostanu ten videokurz zdarma?</b><p>Sám od sebe a hned. Jakmile projde tvoje první platba za VIP, přiřadím videokurz k e-mailu, kterým platíš. Přihlásíš se s ním do <a href="/akademie/prihlaseni/">členské sekce</a> a kurz tam na tebe čeká, 182 videí a přes 20 hodin. Nemusíš o nic psát ani nic zadávat. Zůstává ti napořád, i kdybys předplatné za měsíc zrušil, protože je to dárek k nákupu, ne půjčka. Když si vezmeš VIP na rok, přidám k tomu ještě měsíc <a href="/akademie/">Barna Academy</a> na zkoušku, pokud v ní ještě nejsi. A jestli videokurz už koupený máš, nic ti nepřepisuju, zůstává ti ten tvůj.</p></div>
             <div class="faq-i"><b>Jak VIP zruším?</b><p>Kdykoliv na dvě klepnutí přímo v appce (Profil → Předplatné). Doběhne zaplacené období a dál nic neplatíš.</p></div>
             <div class="faq-i"><b>Funguje na mobilu i počítači?</b><p>Ano. Zatím běží jako webová aplikace, otevřeš ji v prohlížeči na mobilu i počítači a data máš všude stejná. Appku pro iPhone a Android chystáme.</p></div>
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč bych měl zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Deník ti řekne, co jsi snědl. Tvůj Coach ti řekne, co s tím dál. V Basicu ti každý týden přepočítá kalorie a makra podle toho, jak ti to reálně jde, ne podle tabulky z registrace. K tomu ti poskládá jídelníček na tvoje čísla i s nákupním seznamem a napíše tréninkový plán. Ve VIP se na to můžeš zeptat AI kouče, který vidí tvoje data. Nemusíš nic rušit. Vyzkoušej Free vedle toho, co máš, a nech si to, co ti dává větší smysl.</p></div>
