@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna</title>
-    <meta name="description" content="Appka Tvůj Coach: AI kouč, který ti z fotky talíře odhadne makra, cíle, co se samy přepočítávají podle tvých výsledků, a generátory jídelníčku i tréninku. Metodika 13 let laděná s klienty. K první platbě videokurz výživy zdarma.">
+    <!-- ⛔ [2026-08-21] Popisek i og:description vedly AI koučem a fotkou talíře, tedy
+         VIP za 499. Náhled odkazu a výsledek ve vyhledávači jsou první, co člověk uvidí,
+         takže prodávaly dražší plán než samotná stránka. Teď vedou obsahem Basicu. -->
+    <meta name="description" content="Appka Tvůj Coach: cíle, které se ti každý týden přepočítají podle reálných dat, generátor jídelníčku i tréninku na míru a plná historie. Od 249 Kč měsíčně. Metodika 13 let laděná s klienty. K první platbě videokurz výživy zdarma.">
     <meta name="theme-color" content="#0f1113">
     <link rel="canonical" href="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:title" content="Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna">
-    <meta property="og:description" content="AI kouč mým hlasem, foto talíře na makra a cíle, které se samy přepočítávají. K první platbě videokurz výživy, 182 videí, zdarma a napořád.">
+    <meta property="og:description" content="Cíle, které se ti každý týden přepočítají, generátor jídelníčku i tréninku na míru, plná historie. Od 249 Kč měsíčně. K první platbě videokurz výživy, 182 videí, zdarma a napořád.">
     <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
     <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
     <meta property="og:locale" content="cs_CZ">
@@ -20,6 +23,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-g3.png">
     <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
     <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <!-- ⛔⛔ CENY NATVRDO. Jinde na téhle stránce se doplňují z databáze (`pricing_plans`),
+         ale strukturovaná data čte vyhledávač dřív, než doběhne skript, takže tady musí
+         být staticky. ⇒ KDO MĚNÍ CENÍK, MUSÍ SÁHNOUT I SEM. Postup je v paměti
+         `tvujcoach-cenik-zmena-checklist` (další místo s cenami natvrdo jsou mailové
+         šablony). Stav k 21. 8. 2026: Basic 249 / 2 490, VIP 499 / 4 990. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -28,10 +36,13 @@
       "operatingSystem": "Web",
       "applicationCategory": "HealthApplication",
       "url": "https://tvujcoach.cz",
-      "description": "Appka pro výživu a trénink: zápis jídla, adaptivní kalorické cíle a AI kouč na metodice Martina Barny.",
+      "description": "Appka pro výživu a trénink: zápis jídla, cíle přepočítávané podle reálných dat, generátor jídelníčku i tréninku a AI kouč na metodice Martina Barny.",
       "offers": [
         { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "CZK" },
-        { "@type": "Offer", "name": "VIP s AI koučem (měsíčně)", "price": "499", "priceCurrency": "CZK" }
+        { "@type": "Offer", "name": "Basic (měsíčně)", "price": "249", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "Basic (ročně)", "price": "2490", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "VIP s AI koučem (měsíčně)", "price": "499", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "VIP s AI koučem (ročně)", "price": "4990", "priceCurrency": "CZK" }
       ],
       "author": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" }
     }
@@ -100,6 +111,9 @@
         .card h3 { font-size:1.05rem; margin:0 0 .45rem; }
         .card p { color:var(--warm); font-size:.93rem; margin:0; }
         .vip-tag { display:inline-block; background:rgba(235,177,44,.16); color:var(--acc-l); font-weight:700; font-size:.68rem; letter-spacing:.08em; padding:.15rem .55rem; border-radius:50px; vertical-align:middle; margin-left:.35rem; }
+        /* Štítek Basicu (21. 8. 2026). Bez něj vypadaly funkce Basicu jako Free
+           a jediná označená dlaždice v mřížce byla ta nejdražší, VIP. */
+        .basic-tag { display:inline-block; background:rgba(255,255,255,.13); color:#F0EADF; font-weight:700; font-size:.68rem; letter-spacing:.08em; padding:.15rem .55rem; border-radius:50px; vertical-align:middle; margin-left:.35rem; }
         .plans { display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; max-width:820px; margin:0 auto; }
         .plans-3 { grid-template-columns:repeat(3,1fr); max-width:1000px; }
         /* ⛔ `position:relative` patří na .plan, ne jen na .plan.featured: od 21. 8. 2026
@@ -253,11 +267,19 @@
     <div class="wrap">
         <h2 class="center">Co appka umí</h2>
         <p class="sec-sub">Žádná další tabulka na kalorie. Systém, který jsem 13 let ladil s klienty koučinku, přetavený do appky.</p>
+        <!-- ⛔ [2026-08-21] Do 21. 8. tu byly jen ČTYŘI dlaždice a jediná označená byla
+             VIP s AI koučem. Celý tréninkový mozek a oba generátory, tedy to, co člověk
+             dostane za 249 a co nás nic nestojí, se na téhle stránce neprodávaly vůbec.
+             Štítky drž v souladu s tabulkou `tier_features` v databázi appky. -->
         <div class="grid g4">
-            <div class="card"><span class="em">🍽️</span><h3>Rychlý zápis jídla</h3><p>Databáze tisíců potravin s makry, hledání i bez diakritiky, oblíbená jídla na jeden klepnutí.</p></div>
-            <div class="card"><span class="em">🎯</span><h3>Cíle, které žijí s tebou</h3><p>Týdenní check-in přepočítá kalorie a makra podle reálného vývoje váhy a zápisů. Žádné mrtvé tabulkové cíle.</p></div>
+            <div class="card"><span class="em">🍽️</span><h3>Rychlý zápis jídla</h3><p>Databáze tisíců potravin s makry, hledání i bez diakritiky, oblíbená jídla na jeden klepnutí. Zdarma.</p></div>
+            <div class="card"><span class="em">🎯</span><h3>Cíle, které žijí s tebou<span class="basic-tag">BASIC</span></h3><p>Týdenní check-in přepočítá kalorie a makra podle reálného vývoje váhy a zápisů. Žádné mrtvé tabulkové cíle.</p></div>
+            <div class="card"><span class="em">🥗</span><h3>Generátor jídelníčku<span class="basic-tag">BASIC</span></h3><p>Zadáš cíl a appka poskládá celý den z běžných potravin i s gramážemi. Rovnou z toho udělá nákupní seznam.</p></div>
+            <div class="card"><span class="em">🏋️</span><h3>Generátor tréninků<span class="basic-tag">BASIC</span></h3><p>Řekneš, kde cvičíš a s čím, a dostaneš plán ze 120 cviků i se sériemi. Knihovnu cviků s technikou máš zdarma.</p></div>
+            <div class="card"><span class="em">📈</span><h3>Tréninkový mozek<span class="basic-tag">BASIC</span></h3><p>Objem po partiích, jestli jsi pod optimem nebo v přepalu, mezocyklus s deloadem a návrh další série.</p></div>
+            <div class="card"><span class="em">🧠</span><h3>Co si můžu ještě dnes dát<span class="basic-tag">BASIC</span></h3><p>Zbývá ti 400 kcal a 30 g bílkovin? Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
             <div class="card"><span class="em">🤖</span><h3>AI kouč 24/7<span class="vip-tag">VIP</span></h3><p>Vyfotíš jídlo a odhadne makra. Zeptáš se a odpoví mým hlasem. A umí appku ovládat za tebe: zapsat, upravit, vysvětlit.</p></div>
-            <div class="card"><span class="em">📊</span><h3>Grafy a přehledy</h3><p>Váha, míry, kroky, voda i trénink na jednom místě. Vidíš trend, ne jen dnešní číslo.</p></div>
+            <div class="card"><span class="em">📊</span><h3>Grafy a přehledy<span class="basic-tag">BASIC</span></h3><p>Váha, míry, kroky, voda i trénink na jednom místě. Vidíš trend, ne jen dnešní číslo. Ve Free 14 dní zpátky.</p></div>
         </div>
     </div>
 </section>
