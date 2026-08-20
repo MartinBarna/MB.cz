@@ -677,10 +677,20 @@
         // a „platí" je tu celý obrat, takže se rozpad podle zdroje ukazuje natvrdo.
         // ⚠️ `zdroj` umí vrátit až novější `tc_overview()`. Dokud nedorazí, chová se
         // karta jako dřív a NIC si nedomýšlí.
-        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {}, tieryP = {}, zdrojeA = {}, maZdroj = false, plati = 0, vBonusu = 0;
+        var aktivni = 0, trial = 0, tieryA = {}, tieryT = {}, tieryP = {}, zdrojeA = {}, maZdroj = false, plati = 0, vBonusu = 0, problemPlatby = 0, prosleZkusebky = 0;
         pp.forEach(function(x){
           var n = Number(x.pocet) || 0;
           if(x.zdroj != null) maZdroj = true;
+          // ⛔⛔ STAV JE VĚČNÝ, PLATNOST KONČÍ. `trialing` nic nepřeklápí zpátky,
+          //    doběhne jen `current_period_end`. Změřeno 20. 8.: z 29 zkušebek jich
+          //    9 už bylo prošlých (nejstarší od 10. 8.), a přesto se počítaly do
+          //    „Ve zkušebce", podle které se rozhoduje o marketingu.
+          // ⭐ `bezi` počítá `tc_overview()` PŘESNĚ TOUŽ podmínkou jako
+          //    `has_entitlement`, tedy funkce, která rozhoduje o skutečném přístupu.
+          //    Dlaždice se s realitou proto nemůžou rozejít.
+          // ⚠️ `!== false` schválně: starší `tc_overview()` pole neposílá a tam se
+          //    karta musí chovat jako dřív, ne všechno vynulovat.
+          var bezi = x.bezi !== false;
           // ⚠️ „Platí" se pozná podle Stripe předplatného, NE podle `source`. Funkce
           // `grant_app_access` v appce ukládá do `subscriptions.source` natvrdo 'academy'
           // bez ohledu na to, co jí přijde (ověřeno 8. 8. v pg_proc), takže pod „academy"
@@ -695,7 +705,13 @@
           //    14denní zkušebka zdarma. Ty dva se NESMÍ slít: první je tržba,
           //    druhý je zájemce. Proto se platící ze zkušebky počítá do „Platí"
           //    i do „Aktivní přístup" (přístup skutečně má) a do „Ve zkušebce" NE.
-          if(jePlatici && (x.status === 'active' || x.status === 'trialing')){
+          // ⛔⛔ `past_due` = SELHANÁ OBNOVA, ne odchod. Webhook ho zapíše bez
+          //    jakéhokoli alertu a `has_entitlement` přístup do konce období dál
+          //    pouští. Kdyby tenhle stav ve výčtu chyběl, den po neúspěšné platbě
+          //    by dlaždice svítila „Platí za appku 0" červeně, přestože zákazník
+          //    appku používá. Při jednom platícím je to rozdíl mezi „mám zákazníka"
+          //    a „nemám žádného". Počítá se tedy dál mezi platící a zvlášť se hlásí.
+          if(jePlatici && bezi && (x.status === 'active' || x.status === 'trialing' || x.status === 'past_due')){
             plati += n;
             // ⭐ Rozpad platících po tarifech (Martin 20. 8.: „ať je vidět, kdo má 249
             //    a kdo 499"). Sbírá se ZVLÁŠŤ od `tieryA`: tam jsou i granty a převody,
@@ -703,12 +719,16 @@
             //    že za VIP platí osm lidí, když platí jeden.
             tieryP[x.tier] = (tieryP[x.tier] || 0) + n;
             if(x.status === 'trialing') vBonusu += n;
+            if(x.status === 'past_due') problemPlatby += n;
           }
-          if(x.status === 'active' || (x.status === 'trialing' && jePlatici)){
+          if(bezi && (x.status === 'active' || ((x.status === 'trialing' || x.status === 'past_due') && jePlatici))){
             aktivni += n; tieryA[x.tier] = (tieryA[x.tier] || 0) + n;
             if(x.zdroj != null) zdrojeA[x.zdroj] = (zdrojeA[x.zdroj] || 0) + n;
           }
-          if(x.status === 'trialing' && !jePlatici){ trial += n; tieryT[x.tier] = (tieryT[x.tier] || 0) + n; }
+          if(x.status === 'trialing' && !jePlatici){
+            if(bezi){ trial += n; tieryT[x.tier] = (tieryT[x.tier] || 0) + n; }
+            else { prosleZkusebky += n; }
+          }
         });
         var ZDROJ_NAZVY = { stripe:'platí přes Stripe', academy:'uděleno (Academy, koučink nebo ručně)',
                             'koucink-klient':'v ceně koučinku', prevod:'převod', tester:'tester',
@@ -733,8 +753,17 @@
             .map(function(t){ return esc(tierNazev(t)) + ' ' + m[t] + '×'; }).join(' · ');
         };
         var popisPlaticich = function(){
-          var zaklad = popisTieruSPocty(tieryP) || 'přes Stripe';
-          return vBonusu ? zaklad + ' · z toho ' + vBonusu + '× v bonusovém období' : zaklad;
+          var casti = [popisTieruSPocty(tieryP) || 'přes Stripe'];
+          if(vBonusu) casti.push('z toho ' + vBonusu + '× v bonusovém období');
+          // ⛔ Selhaná platba se hlásí NAHLAS. Systém o ní sám nikomu nenapíše
+          //    (ověřeno v nasazeném webhooku), takže tenhle řádek je jediné místo,
+          //    kde se Martin dozví, že je co zachraňovat.
+          if(problemPlatby) casti.push('⚠️ ' + problemPlatby + '× selhala platba, zkontroluj Stripe');
+          return casti.join(' · ');
+        };
+        var popisZkusebky = function(){
+          var zaklad = popisTieru(tieryT) || '14 dní zdarma';
+          return prosleZkusebky ? zaklad + ' · dalších ' + prosleZkusebky + ' už doběhlo' : zaklad;
         };
 
         var h = '<div class="kdtiles" style="margin-bottom:12px;">'
@@ -745,7 +774,7 @@
               ? tcTile('Platí za appku', plati, popisPlaticich(), plati ? '#7BD88F' : '#ff9b9b')
                 + tcTile('Aktivní přístup', aktivni, popisZdroju(zdrojeA) || popisTieru(tieryA), aktivni ? '#7BD88F' : '')
               : tcTile('Aktivní předplatné', aktivni, popisTieru(tieryA), aktivni ? '#7BD88F' : ''))
-          + tcTile('Ve zkušebce', trial, popisTieru(tieryT) || '14 dní zdarma', trial ? '#F6CD63' : '')
+          + tcTile('Ve zkušebce', trial, popisZkusebky(), trial ? '#F6CD63' : '')
           + tcTile('Testovací účty', r.testovacich != null ? r.testovacich : '—', 'do součtů výš NEPATŘÍ', '#8F8A99')
           + '</div>';
 
