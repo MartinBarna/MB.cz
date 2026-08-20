@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Připomínky | Tvůj Coach</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0C0B10">
+    <link rel="icon" href="/favicon-g3.ico" sizes="any">
+    <!-- Stránka, na kterou vede odkaz „vypnout připomínky" z patičky mailů appky.
+         ⛔ PROČ TU JE A NENÍ TO ROVNOU V EDGE FUNKCI: Supabase servíruje odpovědi
+         edge funkcí natvrdo jako `text/plain` a přidává `nosniff` i sandbox CSP
+         (změřeno 20. 8. 2026: `Cache-Control` z kódu projde, `Content-Type` ne).
+         HTML z edge funkce se proto v prohlížeči NEVYKRESLÍ, ukáže se syrový kód
+         s rozsypanou diakritikou. Funkce `pripominky-vypnout` proto jen přesměruje
+         sem, na náš vlastní web, kde stránka vypadá jako stránka. -->
+    <style>
+        body { margin:0; padding:0; background:#0C0B10; color:#F0EADF;
+               font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+               line-height:1.6; display:flex; min-height:100vh; align-items:center;
+               justify-content:center; }
+        .box { max-width:560px; padding:40px 24px; text-align:center; }
+        .znacka { border-left:3px solid #EBB12C; padding-left:10px; font-weight:800;
+                  font-size:13px; letter-spacing:.2em; text-transform:uppercase;
+                  color:#EBB12C; display:inline-block; margin-bottom:28px; }
+        h1 { font-size:1.5rem; margin:0 0 14px; color:#fff; }
+        p { margin:0 0 16px; color:#cabfb1; }
+        a.btn { display:inline-block; margin-top:10px; background:linear-gradient(145deg,#F6CD63,#EBB12C);
+                color:#1A1222; text-decoration:none; padding:13px 26px; border-radius:50px;
+                font-weight:700; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="znacka">Martin Barna</div>
+        <h1 id="nadpis">Připomínky jsou vypnuté</h1>
+        <p id="text">Už ti nebudeme posílat pošťouchnutí, když si den zapomeneš zapsat. Zapnout je můžeš kdykoliv v appce v Profilu.</p>
+        <a class="btn" href="https://tvujcoach.cz/client">Otevřít appku</a>
+    </div>
+    <script>
+        // Edge funkce sem posílá `?stav=ok` po vypnutí a `?stav=neplatny`, když odkaz nesedí.
+        // ⛔ U neplatného odkazu se schválně neříká, jestli takový účet existuje.
+        if (new URLSearchParams(location.search).get('stav') === 'neplatny') {
+            document.getElementById('nadpis').textContent = 'Ten odkaz nefunguje';
+            document.getElementById('text').textContent =
+                'Nejspíš je starý nebo se cestou zlomil. Připomínky si můžeš vypnout přímo v appce v Profilu.';
+        }
+    </script>
+</body>
+</html>
