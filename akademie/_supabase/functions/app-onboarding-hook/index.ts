@@ -30,12 +30,32 @@ const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 // se clovek zapise (nechceme, aby appka mohla poslat libovolny track).
 const TRACKY: Record<string, string> = {
   tvujcoach: "onboarding-nakup-tvujcoach",
-  // [2026-07-30] ⭐ REGISTRACE (ne nákup) z reklamní kampaně `tc-direct` → série A.
+  // [2026-07-30] REGISTRACE (ne nákup) z reklamní kampaně `tc-direct`.
   // Volá to trigger v appkové DB, který se pálí JEN když `profiles.signup_attribution`
-  // nese `utm_campaign=tc-direct`. Organické registrace se sem vůbec nedostanou,
-  // filtr je v podmínce triggeru, ne tady.
-  "tvujcoach-registrace": "tc-free",
+  // nese `utm_campaign=tc-direct`.
+  // [2026-08-20] ⭐ ZMĚNA CÍLE: `tc-free` (série A, 12 mailů) → `tc-zkusebka` (4 maily).
+  // Důvod: od zavedení 14denní zkušebky je KAŽDÁ registrace zkušebka, a mosty z appky
+  // (`onboarding-bridge`) posílají registrace všech lidí, ne jen z reklamy. Kdyby každá
+  // cesta mířila jinam, člověk z reklamy by dostal první mail série A a vzápětí by ho
+  // druhý most přehodil do zkušebkové trati od kroku 0. Jeden cíl = žádné přehazování.
+  // ⚠️ Lidé, kteří v `tc-free` UŽ BĚŽÍ, tam zůstávají a dojedou ji; mění se jen to,
+  //    kam padají NOVÍ.
+  "tvujcoach-registrace": "tc-zkusebka",
+  // Alias na tentýž cíl. Appka historicky mluví o produktu `tvujcoach-zkusebka`;
+  // ať je jedno, který klíč pošle, oba musí skončit ve stejné trati, jinak by
+  // deduplikace níž lidi přehazovala tam a zpět.
+  "tvujcoach-zkusebka": "tc-zkusebka",
 };
+
+// Produkty, které znamenají REGISTRACI (ne nákup). Drží pohromadě kvůli ochraně
+// akvizičních tratí níž: nákup přebít smí, registrace ne.
+const REGISTRACNI = new Set(["tvujcoach-registrace", "tvujcoach-zkusebka"]);
+
+// ⛔ SMAZÁNÍ ÚČTU NEZAKLÁDÁ SEKVENCI, ZASTAVUJE JI. Lead v Academy DB přežije výmaz
+// účtu v appce, takže by mu série jela dál na schránku, kterou už nikdo nečte.
+// `paused` + `next_send_at = null` je tady zavedený způsob, jak lead odstavit:
+// `drip-send` bere do fronty jen `status='active'` a `enroll_*` funkce `paused` neberou.
+const PRODUKT_SMAZANI = "tvujcoach-smazani";
 
 // ⛔ AKVIZIČNÍ TRATĚ SE NEPŘEPISUJÍ. Kdo běží v magnetové nebo nurture sekvenci a mezitím
 // se zaregistruje v appce z reklamy, dojede svou sekvenci do konce. Přepnutí by ho vytrhlo
@@ -64,6 +84,22 @@ Deno.serve(async (req: Request) => {
   const source = low(body?.source) || "app-stripe";
 
   if (!email.includes("@")) return json({ error: "invalid_email" }, 400);
+
+  // SMAZÁNÍ ÚČTU: zastavit, co běží. Nikdy nezakládat nový lead, člověk právě odešel.
+  if (product === PRODUKT_SMAZANI) {
+    const { data: l, error: cteniErr } = await admin
+      .from("leads").select("id, track, status").eq("email", email).maybeSingle();
+    if (cteniErr) return json({ error: "lookup_failed", detail: cteniErr.message }, 500);
+    if (!l) return json({ ok: true, status: "neni_v_zadne_sekvenci" });
+    // Odhlášení a bounce nepřepisujeme: jsou to silnější stavy a mají svůj význam.
+    if (l.status !== "active") return json({ ok: true, status: "uz_neaktivni", byl: l.status });
+    const { error } = await admin.from("leads").update({
+      status: "paused", next_send_at: null, updated_at: new Date().toISOString(),
+    }).eq("id", l.id);
+    if (error) return json({ error: "pause_failed", detail: error.message }, 500);
+    return json({ ok: true, status: "pauznuto", track: l.track });
+  }
+
   const track = TRACKY[product];
   if (!track) return json({ error: "unknown_product", got: product }, 400);
 
@@ -80,7 +116,7 @@ Deno.serve(async (req: Request) => {
     }
     // ⭐ REGISTRACE Z REKLAMY nepřebíjí rozjetou akviziční trať (viz komentář u AKVIZICNI).
     // Jen si k leadovi poznamenáme, že se registroval, ať atribuce nepřijde o informaci.
-    if (product === "tvujcoach-registrace" && jeAkvizicni(String(lead.track ?? ""))) {
+    if (REGISTRACNI.has(product) && jeAkvizicni(String(lead.track ?? ""))) {
       const meta = { ...(lead.meta as Record<string, unknown> ?? {}), "tc-direct-registrace": new Date().toISOString() };
       const { error } = await admin.from("leads")
         .update({ meta, updated_at: new Date().toISOString() }).eq("id", lead.id);
