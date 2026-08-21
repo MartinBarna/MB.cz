@@ -128,6 +128,10 @@
   .seknav{display:flex;gap:7px;flex-wrap:wrap;margin:1.1rem 0 .2rem}
   .seknav a{font-size:.8rem;font-weight:700;color:#cbbfae;text-decoration:none;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:6px 13px}
   .seknav a:hover{border-color:rgba(246,205,99,.5);color:#F6CD63}
+  .nv-chart{display:flex;align-items:flex-end;gap:3px;height:120px;margin:12px 0 2px}
+  .nv-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;height:100%}
+  .nv-bar{width:100%;max-width:26px;background:linear-gradient(180deg,#F6CD63,#EBB12C);border-radius:3px 3px 0 0;min-height:2px}
+  .nv-lbl{font-size:.62rem;color:#8a7e6d;margin-top:4px;white-space:nowrap}
 </style>
 </head>
 <body class="ba">
@@ -183,6 +187,21 @@
         <div id="cmsgBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+        </div>
+      </details>
+
+      <details class="sek" id="sek-navstevnost" open>
+        <summary>👀 Návštěvnost <span class="sekpop">vlastní měření webu, 7 nebo 30 dní</span><span class="sekinfo" id="info-navstevnost"></span></summary>
+        <div class="sek-in">
+      <div class="traf" id="navst">
+        <h3>👀 Návštěvnost webu</h3>
+        <div class="sub" id="navstSub">Vlastní měření martinbarna.cz. Počítá se až po souhlasu s cookies.</div>
+        <div class="nv-toggle" style="margin:.7rem 0 .2rem;">
+          <button type="button" class="kdrod on" id="nv7" data-nv-days="7">7 dní</button>
+          <button type="button" class="kdrod" id="nv30" data-nv-days="30">30 dní</button>
+        </div>
+        <div id="navstBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+      </div>
         </div>
       </details>
 
@@ -547,7 +566,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadTcPrehled();
+        renderStats(st.j); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadTcPrehled(); loadNavstevnost();
         sekInfo('kontakty',ALL.length+' kontaktů');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
@@ -556,7 +575,7 @@
     // ---------- SEKCE: rozcestník, zapamatovaný stav, souhrn v nadpisu ----------
     // Karty jsou beze změny, sekce je jen obal. Sbalený stav se pamatuje v localStorage,
     // ať Martin nemusí po každém obnovení zavírat totéž.
-    var SEKCE=[['dnesek','🩺 Dnešek'],['klienti','🤝 Klienti'],['prodej','💰 Prodej'],
+    var SEKCE=[['dnesek','🩺 Dnešek'],['navstevnost','👀 Návštěvnost'],['klienti','🤝 Klienti'],['prodej','💰 Prodej'],
                ['mailing','📬 Mailing'],['kontakty','👥 Kontakty'],['obsah','📈 Progres'],['novinky','🆕 Novinky']];
     // Souhrn do hlavičky sekce, ať je stav vidět i když je sekce sbalená.
     function sekInfo(id,text){ var el=$('info-'+id); if(el) el.textContent=text||''; }
@@ -1960,6 +1979,92 @@
         var df=c.getAttribute('data-filt');
         c.classList.toggle('on', df!=='@maillog' && df===f);
       });
+    }
+
+    // Vlastní návštěvnost webu (page_views přes edge funkci page-view).
+    // GA4 karta dál žije v sekci Progres. Tady jsou jen naše čísla.
+    var nvDays = 7;
+    function loadNavstevnost(){
+      var b7 = $('nv7'), b30 = $('nv30');
+      function wire(btn){
+        if(!btn || btn.getAttribute('data-nv-wired')) return;
+        btn.setAttribute('data-nv-wired','1');
+        btn.addEventListener('click', function(){
+          nvDays = Number(btn.getAttribute('data-nv-days')) === 30 ? 30 : 7;
+          if(b7) b7.classList.toggle('on', nvDays===7);
+          if(b30) b30.classList.toggle('on', nvDays===30);
+          fetchNavstevnost();
+        });
+      }
+      wire(b7); wire(b30);
+      fetchNavstevnost();
+    }
+    function fetchNavstevnost(){
+      var NV_FN = FN.replace('admin-api','page-view');
+      var body = $('navstBody');
+      if(body) body.innerHTML = '<p class="muted" style="padding:.8rem 0;">Načítám…</p>';
+      api({action:'summary', days:nvDays}, NV_FN).then(function(o){
+        if(!o || !o.j || !o.j.ok){ cardFail('navst','navstBody'); sekInfo('navstevnost','nenačetlo se'); return; }
+        renderNavstevnost(o.j);
+      }).catch(function(){ cardFail('navst','navstBody'); sekInfo('navstevnost','nenačetlo se'); });
+    }
+    function nvNum(n){ return (n==null?0:Number(n)).toLocaleString('cs-CZ'); }
+    function nvDevLabel(k){
+      if(k==='mobile') return 'mobil';
+      if(k==='desktop') return 'počítač';
+      if(k==='tablet') return 'tablet';
+      return k || 'neznámé';
+    }
+    function nvBars(title, arr, labelFn){
+      arr = arr || [];
+      if(!arr.length) return '<div class="tbox"><h4>'+esc(title)+'</h4><span class="muted">zatím nic</span></div>';
+      var tot = arr.reduce(function(a,x){ return a+(Number(x.n)||0); },0) || 1;
+      var rows = arr.map(function(x){
+        var n = Number(x.n)||0;
+        var pct = Math.round(n/tot*100);
+        var name = labelFn ? labelFn(x.k||x.path||'') : (x.k||x.path||'');
+        return '<div class="tbar"><span>'+esc(name)+'</span><span class="v">'+nvNum(n)+' · '+pct+' %</span></div>';
+      }).join('');
+      return '<div class="tbox"><h4>'+esc(title)+'</h4>'+rows+'</div>';
+    }
+    function nvChart(daily){
+      daily = daily || [];
+      if(!daily.length) return '<p class="muted">Graf se objeví, až přijdou první návštěvy.</p>';
+      var max = 0;
+      daily.forEach(function(d){ if((Number(d.n)||0)>max) max=Number(d.n)||0; });
+      if(max<1) max=1;
+      var cols = daily.map(function(d){
+        var n = Number(d.n)||0;
+        var h = Math.max(2, Math.round(n/max*100));
+        var day = String(d.day||'');
+        var lbl = day.length>=10 ? String(+day.slice(8,10))+'.' : day;
+        return '<div class="nv-col" title="'+esc(day)+': '+nvNum(n)+'"><div class="nv-bar" style="height:'+h+'%"></div><div class="nv-lbl">'+esc(lbl)+'</div></div>';
+      }).join('');
+      return '<div class="nv-chart">'+cols+'</div>';
+    }
+    function renderNavstevnost(d){
+      d = d||{};
+      var visits = Number(d.visits)||0;
+      var sessions = Number(d.sessions)||0;
+      sekInfo('navstevnost', nvNum(visits)+' návštěv / '+nvNum(sessions)+' relací');
+      var sub = $('navstSub');
+      if(sub) sub.textContent = 'Vlastní měření martinbarna.cz za posledních '+nvDays+' dní. Počítá se až po souhlasu s cookies.';
+      var empty = visits===0
+        ? '<p class="traf-note">Zatím žádné návštěvy. Čísla naskáčou, až se nasadí měření na web a někdo přijme cookies.</p>'
+        : '';
+      $('navstBody').innerHTML =
+        '<div class="tgrid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">'+
+          '<div class="s"><b>'+nvNum(visits)+'</b><span>návštěv</span></div>'+
+          '<div class="s"><b>'+nvNum(sessions)+'</b><span>unikátních relací</span></div>'+
+        '</div>'+
+        empty+
+        '<h4 style="margin:1rem 0 .2rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em">Návštěvy po dnech</h4>'+
+        nvChart(d.daily)+
+        '<div class="twrap">'+
+          nvBars('10 nejnavštěvovanějších stránek', d.pages, function(p){ return p; })+
+          nvBars('Odkud lidi chodí', d.sources)+
+          nvBars('Mobil vs. počítač', d.devices, nvDevLabel)+
+        '</div>';
     }
 
     // Statistiky návštěvnosti z GA4 (přes admin-api action 'ga_stats' → GA4 Data API).

@@ -164,6 +164,7 @@
     applyConsent(mode);
     if (mode === 'granted') loadMetaPixelAndConvert();
     if (box) box.remove();
+    try { document.dispatchEvent(new CustomEvent('mb-consent', { detail: mode })); } catch (e) {}
   }
   function showBanner() {
     var old = document.getElementById('mb-cookie');
@@ -203,12 +204,103 @@
 
   var saved;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (saved === 'granted') { applyConsent('granted'); loadMetaPixelAndConvert(); return; }
-  if (saved === 'analytics') { applyConsent('analytics'); return; }
+  if (saved === 'granted') { applyConsent('granted'); loadMetaPixelAndConvert(); try { document.dispatchEvent(new CustomEvent('mb-consent', { detail: 'granted' })); } catch (e) {} return; }
+  if (saved === 'analytics') { applyConsent('analytics'); try { document.dispatchEvent(new CustomEvent('mb-consent', { detail: 'analytics' })); } catch (e) {} return; }
   if (saved === 'denied') { applyConsent('denied'); return; }
 
   if (document.body) showBanner();
   else document.addEventListener('DOMContentLoaded', showBanner);
+})();
+
+/* ===== Vlastní cookieless měření návštěv (page-view → Supabase) ============
+   Jeden ping na načtení stránky. Žádná IP, žádné cookie, session_hash žije
+   jen v sessionStorage (zavřeš kartu = pryč). Neposílá se, když návštěvník
+   odmítl analytické cookies. sendBeacon, ať to nezdržuje načtení. */
+(function () {
+  var FN = 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/page-view';
+  var SID_KEY = 'mb_pv_sid';
+  var sent = false;
+
+  function hasAnalyticsConsent(mode) {
+    if (mode === 'granted' || mode === 'analytics') return true;
+    var saved = '';
+    try { saved = localStorage.getItem('mb_consent_v1') || ''; } catch (e) {}
+    return saved === 'granted' || saved === 'analytics';
+  }
+
+  function sessionHash() {
+    try {
+      var s = sessionStorage.getItem(SID_KEY);
+      if (s && s.length >= 8 && s.length <= 64) return s;
+      var n = '';
+      if (window.crypto && crypto.getRandomValues) {
+        var a = new Uint8Array(16);
+        crypto.getRandomValues(a);
+        n = Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+      } else {
+        n = Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+      }
+      sessionStorage.setItem(SID_KEY, n);
+      return n;
+    } catch (e) { return ''; }
+  }
+
+  function device() {
+    var ua = navigator.userAgent || '';
+    if (/iPad|Tablet|PlayBook/i.test(ua)) return 'tablet';
+    if (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua)) return 'tablet';
+    if (/Mobi|Android|iPhone|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua)) return 'mobile';
+    return 'desktop';
+  }
+
+  function utm() {
+    var out = { utm_source: '', utm_medium: '', utm_campaign: '' };
+    try {
+      var attr = (window.MBAttr && window.MBAttr.get) ? window.MBAttr.get() : {};
+      var p = new URLSearchParams(location.search);
+      out.utm_source = String(attr.utm_source || p.get('utm_source') || '').trim().slice(0, 80);
+      out.utm_medium = String(attr.utm_medium || p.get('utm_medium') || '').trim().slice(0, 80);
+      out.utm_campaign = String(attr.utm_campaign || p.get('utm_campaign') || '').trim().slice(0, 80);
+    } catch (e) {}
+    return out;
+  }
+
+  function payload() {
+    var u = utm();
+    return {
+      path: (location.pathname || '/').slice(0, 299),
+      referrer: (document.referrer || '').slice(0, 500),
+      utm_source: u.utm_source || undefined,
+      utm_medium: u.utm_medium || undefined,
+      utm_campaign: u.utm_campaign || undefined,
+      device: device(),
+      session_hash: sessionHash() || undefined
+    };
+  }
+
+  function send() {
+    if (sent) return;
+    if (!hasAnalyticsConsent()) return;
+    var path = location.pathname || '/';
+    if (path.indexOf('/akademie/admin') === 0) return;
+    sent = true;
+    var body = JSON.stringify(payload());
+    try {
+      if (navigator.sendBeacon) {
+        var blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+        if (navigator.sendBeacon(FN, blob)) return;
+      }
+    } catch (e) {}
+    try {
+      fetch(FN, { method: 'POST', body: body, keepalive: true, mode: 'cors' }).catch(function () {});
+    } catch (e) {}
+  }
+
+  document.addEventListener('mb-consent', function (e) {
+    var mode = e && e.detail;
+    if (mode === 'granted' || mode === 'analytics') send();
+  });
+  if (hasAnalyticsConsent()) setTimeout(send, 0);
 })();
 
 /* ===== Atribuce reklam napříč stránkami i doménou ===========================
