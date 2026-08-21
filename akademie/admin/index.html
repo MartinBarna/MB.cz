@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Barna Academy</title>
+<title>Admin - Barna Academy</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="/favicon-g3.ico" sizes="any">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
@@ -36,7 +36,7 @@
   .qg button:hover{background:#F6CD63}
   .qg .rm{background:rgba(255,255,255,.08);color:#ffb59a}
   table{width:100%;border-collapse:collapse;font-size:.86rem}
-  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.07);overflow-wrap:anywhere}
   th{color:#b7ab9b;font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0;background:#140d06}
   tbody tr{cursor:pointer}
   tbody tr:hover{background:rgba(255,255,255,.04)}
@@ -67,7 +67,7 @@
   .traf h3{margin:0 0 .2rem;color:#fff;font-size:1.05rem}
   .traf .sub{color:#8a7e6d;font-size:.8rem}
   .tgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:1rem 0 .4rem}
-  .tgrid .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 10px;text-align:center}
+  .tgrid .s{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 10px;text-align:center;min-width:0;overflow-wrap:anywhere}
   .tgrid .s b{display:block;font-size:1.3rem;color:#F6CD63;font-weight:800;line-height:1}
   .tgrid .s span{font-size:.7rem;color:#b7ab9b}
   @media(max-width:760px){.tgrid{grid-template-columns:repeat(3,1fr)}}
@@ -78,7 +78,8 @@
   @media(max-width:640px){.twrap{grid-template-columns:1fr}}
   .tbox{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px}
   .tbox h4{margin:0 0 .5rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}
-  .tbar{display:flex;justify-content:space-between;font-size:.82rem;color:#ece4d9;padding:3px 0}
+  .tbar{display:flex;justify-content:space-between;gap:8px;font-size:.82rem;color:#ece4d9;padding:3px 0}
+  .tbar span:first-child{min-width:0;overflow-wrap:anywhere}
   .tbar .v{color:#b7ab9b;font-variant-numeric:tabular-nums}
   .mlogbtn{cursor:pointer;border:1px solid rgba(235,177,44,.3);background:rgba(235,177,44,.08);color:#F6CD63;font-family:inherit;font-weight:700;font-size:.85rem;padding:9px 14px;border-radius:10px;white-space:nowrap}
   .mlogbtn:hover{background:rgba(235,177,44,.16)}
@@ -128,8 +129,8 @@
   .seknav{display:flex;gap:7px;flex-wrap:wrap;margin:1.1rem 0 .2rem}
   .seknav a{font-size:.8rem;font-weight:700;color:#cbbfae;text-decoration:none;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:6px 13px}
   .seknav a:hover{border-color:rgba(246,205,99,.5);color:#F6CD63}
-  .nv-chart{display:flex;align-items:flex-end;gap:3px;height:120px;margin:12px 0 2px}
-  .nv-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;height:100%}
+  .nv-chart{display:flex;align-items:flex-end;gap:3px;height:120px;margin:12px 0 2px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nv-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:18px;height:100%}
   .nv-bar{width:100%;max-width:26px;background:linear-gradient(180deg,#F6CD63,#EBB12C);border-radius:3px 3px 0 0;min-height:2px}
   .nv-lbl{font-size:.62rem;color:#8a7e6d;margin-top:4px;white-space:nowrap}
 </style>
@@ -171,19 +172,19 @@
 
       <div class="traf" id="pulse" style="display:none;">
         <h3>🩺 Dnešní puls</h3>
-        <div class="sub">Maily, fronta dripu, leadi a prodeje — živě z databáze</div>
+        <div class="sub">Maily, fronta dripu, leadi a prodeje. Živě z databáze</div>
         <div id="pulseBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
       <div class="traf" id="aiflags" style="display:none;border-color:rgba(220,80,60,.45);">
-        <h3>🚨 AI chat — rizikové zprávy</h3>
+        <h3>🚨 AI chat: rizikové zprávy</h3>
         <div class="sub">Zprávy, u kterých AI zachytila riziko (krize, poruchy příjmu potravy, zdraví, těhotenství, nezletilí). Hard-stopy jsou nahoře červeně. Úryvek zprávy je vidět jen tady, mailem chodí pouze typ a čas. Flagy z appky Tvůj Coach chodí zvlášť mailem.</div>
         <div id="aiflagsBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
       <div class="traf" id="cmsg" style="display:none;">
         <h3>📨 Formuláře z webu</h3>
-        <div class="sub" id="cmsgSub">Poptávky z kontaktního formuláře — relevantní vs. potenciální spam</div>
+        <div class="sub" id="cmsgSub">Poptávky z kontaktního formuláře: relevantní vs. potenciální spam</div>
         <div id="cmsgBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
@@ -220,7 +221,7 @@
       </div>
 
       <div class="traf" id="kli" style="display:none;border-color:rgba(235,177,44,.45);">
-        <h3>🤝 Klienti koučinku — klientská sekce</h3>
+        <h3>🤝 Klienti koučinku: klientská sekce</h3>
         <div class="sub">Týdenní reporty, dotazníky, dokumenty a poznámky · ⚠️ = report chybí déle než 8 dní</div>
         <div id="kliBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.9rem 0 .2rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.08);">
@@ -234,7 +235,7 @@
           </select>
           <button class="mlogbtn" id="kiSend">📨 Zapnout přístup + poslat mail</button>
         </div>
-        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména — zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.</p>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména. Zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.7rem 0 .2rem;">
           <span class="muted" style="font-size:.85rem;font-weight:700;">📁 Dokument pro VŠECHNY klienty:</span>
           <input type="file" id="kiSharedFile" style="font-size:.82rem;color:#b7ab9b;max-width:250px;">
@@ -268,7 +269,7 @@
       </div>
 
       <div class="traf" id="trf" style="display:none;">
-        <h3>🎯 Trenéři — trychtýř</h3>
+        <h3>🎯 Trenéři: trychtýř</h3>
         <div class="sub" id="trfSub">Startovací kit → mailová sekvence → prodej Academy</div>
         <div id="trfBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
@@ -305,7 +306,7 @@
 
       <div class="traf" id="queue" style="display:none;">
         <h3>📬 Fronta mailů</h3>
-        <div class="sub" id="queueSub">Komu, co a kdy odejde — a tady to můžeš pozastavit nebo přeřadit</div>
+        <div class="sub" id="queueSub">Komu, co a kdy odejde. Tady to můžeš pozastavit nebo přeřadit</div>
         <div id="queueBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
@@ -398,7 +399,7 @@
 
         </div>
       </details>
-      <p class="foot" style="margin-top:1.6rem">Barna Academy — admin · data jen pro tebe · <span id="meta"></span></p>
+      <p class="foot" style="margin-top:1.6rem">Barna Academy · admin · data jen pro tebe · <span id="meta"></span></p>
     </div>
   </div>
 
@@ -409,8 +410,8 @@
 
   <div class="ovl" id="tclog"><div class="box">
     <button class="x" id="tclogX">×</button>
-    <h2>🎁 Tvůj Coach — přístup do appky</h2>
-    <p class="muted" style="margin:.1rem 0 .9rem;font-size:.9rem;line-height:1.5">Kdo koupí (nebo dostane od tebe v adminu) <b>Academy</b>, dostane automaticky i přístup do appky <b>Tvůj Coach</b> (<a href="https://coach.martinbarna.cz" target="_blank" rel="noopener" style="color:#F6CD63">coach.martinbarna.cz</a>) — páruje se podle e-mailu. <b>„čeká na registraci"</b> = uživatel si appku ještě nezaložil; přístup se aktivuje sám, jakmile se zaregistruje stejným e-mailem. Odebrání Academy appku zase zamkne.</p>
+    <h2>🎁 Tvůj Coach: přístup do appky</h2>
+    <p class="muted" style="margin:.1rem 0 .9rem;font-size:.9rem;line-height:1.5">Kdo koupí (nebo dostane od tebe v adminu) <b>Academy</b>, dostane automaticky i přístup do appky <b>Tvůj Coach</b> (<a href="https://coach.martinbarna.cz" target="_blank" rel="noopener" style="color:#F6CD63">coach.martinbarna.cz</a>). Páruje se podle e-mailu. <b>„čeká na registraci"</b> = uživatel si appku ještě nezaložil; přístup se aktivuje sám, jakmile se zaregistruje stejným e-mailem. Odebrání Academy appku zase zamkne.</p>
     <div style="overflow-x:auto;">
       <table>
         <thead><tr><th>Kdy</th><th>E-mail</th><th>Akce</th><th>Výsledek</th><th>Zdroj</th></tr></thead>
@@ -457,7 +458,7 @@
   <div class="ovl" id="seqmap"><div class="box" style="max-width:1040px;">
     <button class="x" id="seqmapX">×</button>
     <h2>🗺️ Sekvence &amp; šablony</h2>
-    <p class="muted" style="margin:.2rem 0 .8rem;font-size:.85rem;">Klikni na kterýkoliv mail a uprav ho — změna platí okamžitě pro všechny další odeslání.</p>
+    <p class="muted" style="margin:.2rem 0 .8rem;font-size:.85rem;">Klikni na kterýkoliv mail a uprav ho. Změna platí okamžitě pro všechny další odeslání.</p>
     <div id="seqmapBody"><p class="muted">Načítám…</p></div>
   </div></div>
 
@@ -481,8 +482,8 @@
     function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
     // 'YYYY-MM-DD' → '20. 7. 2027'. Cokoli jiného vrací beze změny (ať datum nikdy nezmizí).
     function czDatum(s){ var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(s||'')); return m ? (+m[3])+'. '+(+m[2])+'. '+m[1] : String(s||''); }
-    function fmtDate(s){ if(!s) return '—'; var d=new Date(s); return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); }
-    function fmtDay(s){ if(!s) return '—'; return new Date(s).toLocaleDateString('cs-CZ'); }
+    function fmtDate(s){ if(!s) return '-'; var d=new Date(s); return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); }
+    function fmtDay(s){ if(!s) return '-'; return new Date(s).toLocaleDateString('cs-CZ'); }
     // ⛔ OPRAVA 8. 8. 2026: `token` se nabíral JEDNOU při startu (`getSessionRetry`) a už se
     // nikdy neaktualizoval. supabase-js si session na pozadí obnovuje (`autoRefreshToken`),
     // ale admin dál posílal starý JWT. Access token platí hodinu, takže admin nechaný
@@ -517,11 +518,11 @@
         });
       });
     }
-    // Chyba načtení karty NESMÍ kartu tiše schovat (vypadala by jako neexistující) — ukaž hlášku.
+    // Chyba načtení karty NESMÍ kartu tiše schovat (vypadala by jako neexistující) - ukaž hlášku.
     function cardFail(cardId,bodyId){ var c=$(cardId); if(c) c.style.display=''; var b=$(bodyId); if(b) b.innerHTML='<p class="muted" style="padding:.6rem 0;">⚠️ Nepodařilo se načíst (zkus obnovit stránku).</p>'; }
 
     // ROBUSTNÍ GATE: počkej na knihovny (ba-config + supabase CDN) i na session; nerozhoduj
-    // "nejsi admin" na přechodně prázdném stavu (fix async race — admin se zamykal ven po reloadu).
+    // "nejsi admin" na přechodně prázdném stavu (fix async race - admin se zamykal ven po reloadu).
     var booted=false;
     function boot(tries){
       tries=tries||0;
@@ -623,8 +624,8 @@
     // a v grafech by to kreslilo propady, které se nestaly. Prázdný řetězec i nesmysl
     // vracely null správně už dřív, mění se jen ty dva případy.
     function kliNum(v){ if(v==null) return null; var s=String(v).trim(); if(s==='') return null; var n=Number(s.replace(',','.')); return isFinite(n)?n:null; }
-    function kliCz(v){ var n=kliNum(v); return n==null?'—':String(n).replace('.',','); }
-    // jednoduchý odhad 5. pádu — Martin ho v poli vidí a může opravit
+    function kliCz(v){ var n=kliNum(v); return n==null?'-':String(n).replace('.',','); }
+    // jednoduchý odhad 5. pádu - Martin ho v poli vidí a může opravit
     // výjimky + ženská jména na souhlásku: 1:1 s drip-send/client-remind (Pavel→Pavle, ne „Paveli")
     var KLI_VOK_EXC={'jan':'Jene','pavel':'Pavle','karel':'Karle','havel':'Havle','pavol':'Pavle','zdenek':'Zdenku','zdeněk':'Zdeňku','zbynek':'Zbynku','zbyněk':'Zbyňku','josef':'Josefe','luboš':'Luboši','lubos':'Luboši','bartoloměj':'Bartoloměji','vavřinec':'Vavřinče','vavrinec':'Vavrinče','němec':'Němče'};
     var KLI_FEM=['ester','dagmar','miriam','karin','karyn','nikol','ingrid','rút','rut','judit','edit','ráchel','rachel','dolores','doris','agnes','mercedes','karmen','carmen','sarah','deborah','abigail','gwen','lilian','vivien','kristin','kristýn','katrin','madlen','jennifer','žaneta'];
@@ -656,13 +657,13 @@
       return 'm';
     }
     // Stav appky Tvuj Coach u klienta. Prichazi ze ZIVEHO stavu appky (academy-grant,
-    // action access-status), ne z logu pozvanek — ten se po registraci uz neaktualizuje.
+    // action access-status), ne z logu pozvanek - ten se po registraci uz neaktualizuje.
     // "?" = appka se nepodarilo zeptat; schvalne se NEtvari jako "nema", to by lhalo.
     function kliApp(stav){
       if(stav==='aktivni') return '✅';
       if(stav==='ceka_na_registraci') return '<span class="muted" title="Přístup je přichystaný, ale klient se do appky ještě nezaregistroval">čeká na registraci</span>';
       if(stav==='vyprselo') return '<span style="color:#F6CD63" title="Přístup vypršel">vypršelo</span>';
-      if(stav==='zadny') return '<span class="muted">—</span>';
+      if(stav==='zadny') return '<span class="muted">-</span>';
       return '<span class="muted" title="Appka neodpověděla, stav neznámý">?</span>';
     }
     // ---------- 📱 PŘEHLED TVŮJ COACH ----------
@@ -786,15 +787,15 @@
         };
 
         var h = '<div class="kdtiles" style="margin-bottom:12px;">'
-          + tcTile('Registrací', r.celkem != null ? r.celkem : '—', 'bez testovacích')
-          + tcTile('Za 7 dní', r.za_7_dni != null ? r.za_7_dni : '—', '')
-          + tcTile('Za 30 dní', r.za_30_dni != null ? r.za_30_dni : '—', '')
+          + tcTile('Registrací', r.celkem != null ? r.celkem : '-', 'bez testovacích')
+          + tcTile('Za 7 dní', r.za_7_dni != null ? r.za_7_dni : '-', '')
+          + tcTile('Za 30 dní', r.za_30_dni != null ? r.za_30_dni : '-', '')
           + (maZdroj
               ? tcTile('Platí za appku', plati, popisPlaticich(), plati ? '#7BD88F' : '#ff9b9b')
                 + tcTile('Aktivní přístup', aktivni, popisZdroju(zdrojeA) || popisTieru(tieryA), aktivni ? '#7BD88F' : '')
               : tcTile('Aktivní předplatné', aktivni, popisTieru(tieryA), aktivni ? '#7BD88F' : ''))
           + tcTile('Ve zkušebce', trial, popisZkusebky(), trial ? '#F6CD63' : '')
-          + tcTile('Testovací účty', r.testovacich != null ? r.testovacich : '—', 'do součtů výš NEPATŘÍ', '#8F8A99')
+          + tcTile('Testovací účty', r.testovacich != null ? r.testovacich : '-', 'do součtů výš NEPATŘÍ', '#8F8A99')
           + '</div>';
 
         if(po.length){
@@ -802,23 +803,23 @@
             + '<th>E-mail</th><th>Registrace</th><th>Tier</th><th>Stav</th><th>Zdroj</th><th>Atribuce</th></tr></thead><tbody>'
             + po.map(function(x){
                 var test = x.je_test === true;
-                var stav = x.status || '—', barva = stav === 'active' ? '#7BD88F' : (stav === 'trialing' ? '#F6CD63' : '#8F8A99');
+                var stav = x.status || '-', barva = stav === 'active' ? '#7BD88F' : (stav === 'trialing' ? '#F6CD63' : '#8F8A99');
                 // Atribuce bude zatím skoro všude prázdná: sbírat se začala až po opravě
                 // z 4. 8. Prázdno tu proto NEZNAMENÁ „přišel odnikud".
-                var atr = x.atribuce, atrTxt = '<span class="muted">—</span>';
+                var atr = x.atribuce, atrTxt = '<span class="muted">-</span>';
                 if(atr && typeof atr === 'object'){
                   var kus = atr.utm_campaign || atr.utm_source || atr.referrer_host;
                   if(kus) atrTxt = esc(String(kus));
                 }
                 return '<tr' + (test ? ' style="opacity:.55"' : '') + '>'
                   + '<td>' + esc(x.email || '') + (test ? ' <span class="muted" style="font-size:.75rem;">TEST</span>' : '') + '</td>'
-                  + '<td style="white-space:nowrap;">' + esc(x.registrace || '—') + '</td>'
+                  + '<td style="white-space:nowrap;">' + esc(x.registrace || '-') + '</td>'
                   + '<td>' + (x.tier ? esc(tierNazev(x.tier))
                       // roční přístup (Academy, převod): ukázat dokdy platí, jinak nic
                       + (x.plati_do ? '<br><span class="muted" style="font-size:.75rem;white-space:nowrap;">na rok, do ' + esc(czDatum(x.plati_do)) + '</span>' : '')
                     : '<span class="muted">bez předplatného</span>') + '</td>'
                   + '<td style="color:' + barva + ';font-weight:700;">' + esc(stav) + '</td>'
-                  + '<td>' + (x.zdroj ? esc(x.zdroj) : '<span class="muted">—</span>') + '</td>'
+                  + '<td>' + (x.zdroj ? esc(x.zdroj) : '<span class="muted">-</span>') + '</td>'
                   + '<td>' + atrTxt + '</td></tr>';
               }).join('')
             + '</tbody></table></div>'
@@ -844,7 +845,7 @@
     var PREH = { razeni: 'dni', sestupne: true, data: null };
 
     function prZmena(v, jed, dolu){
-      if(v == null) return '<span class="muted">—</span>';
+      if(v == null) return '<span class="muted">-</span>';
       if(Math.abs(v) < 0.05) return '<span class="muted">0</span>';
       var dobre = dolu ? (v < 0) : (v > 0);
       return '<b style="color:' + (dobre ? '#7BD88F' : '#ff9b9b') + '">' + (v > 0 ? '+' : '') + kliCz(v) + (jed ? ' ' + jed : '') + '</b>';
@@ -852,7 +853,7 @@
     // Odchylka od zadání. ⛔ Když cíl NENÍ nastavený, píše se to natvrdo („bez cíle"),
     // nikdy se nedopočítává: klient bez zadání nesmí vypadat jako „přesně na cíli".
     function prOdch(m){
-      if(m == null || m.prumer == null) return '<span class="muted">—</span>';
+      if(m == null || m.prumer == null) return '<span class="muted">-</span>';
       if(m.cil == null) return kliCz(m.prumer) + ' <span class="muted" style="font-size:.78rem;">bez cíle</span>';
       var p = m.odchylka_pct, barva = '#7BD88F';
       if(p != null && Math.abs(p) >= PR_ODCH_KRIT) barva = '#ff9b9b';
@@ -934,12 +935,12 @@
           + '<td style="white-space:nowrap;">' + prOdch(r.kcal) + '</td>'
           + '<td style="white-space:nowrap;">' + prOdch(r.protein) + '</td>'
           + '<td style="white-space:nowrap;">' + prOdch(r.kroky) + '</td>'
-          + '<td>' + (r.dodrzeni.prumer != null ? kliCz(r.dodrzeni.prumer) + '<span class="muted" style="font-size:.78rem;">/5</span>' : '<span class="muted">—</span>') + '</td>'
+          + '<td>' + (r.dodrzeni.prumer != null ? kliCz(r.dodrzeni.prumer) + '<span class="muted" style="font-size:.78rem;">/5</span>' : '<span class="muted">-</span>') + '</td>'
           + '<td style="white-space:nowrap;">' + (function(){
               // souhrnný sloupec: největší odchylka napříč metrikami, tedy „jak daleko od zadání"
               if(!r.ma_zadani) return '<span class="muted" style="font-size:.8rem;">nezadáno</span>';
               var x = prNejvetsiOdch(r);
-              if(x == null) return '<span class="muted">—</span>';
+              if(x == null) return '<span class="muted">-</span>';
               var b = x >= PR_ODCH_KRIT ? '#ff9b9b' : (x >= PR_ODCH_VARUJ ? '#F6CD63' : '#7BD88F');
               return '<b style="color:' + b + '">' + x + ' %</b>';
             })() + '</td>'
@@ -986,9 +987,9 @@
           // U byvaleho klienta varovani „dlouho neposlal report" nedava smysl, uz ho posilat nema.
           var warn=(!jeByvaly&&(days==null||days>8))?' <b style="color:#F6CD63">⚠️</b>':'';
           return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
-            +'<td>'+esc(r.name||'—')+'</td>'
+            +'<td>'+esc(r.name||'-')+'</td>'
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
-            +'<td>'+(r.has_intake?'✅':'<span class="muted">—</span>')+'</td>'
+            +'<td>'+(r.has_intake?'✅':'<span class="muted">-</span>')+'</td>'
             +'<td>'+kliApp(r.app)+'</td>'
             +'<td class="tcount">'+r.reports+'</td>'
             +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
@@ -996,10 +997,10 @@
         var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
         var html = rows.length
           ? '<div style="overflow-x:auto;"><table>'+HLAVICKA+'<tbody>'+rows.map(function(r){return radek(r,false);}).join('')+'</tbody></table></div>'
-          : '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti — pozvi prvního formulářem níže.</p>';
+          : '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti. Pozvi prvního formulářem níže.</p>';
         if(byvali.length){
           html += '<details style="margin-top:1.1rem;">'
-            + '<summary style="cursor:pointer;color:#8F8A99;font-size:.92rem;">Bývalí klienti ('+byvali.length+') — koučink ukončen, data zůstávají</summary>'
+            + '<summary style="cursor:pointer;color:#8F8A99;font-size:.92rem;">Bývalí klienti ('+byvali.length+'): koučink ukončen, data zůstávají</summary>'
             + '<p class="muted" style="margin:.5rem 0 .6rem;font-size:.86rem;">Nechodí jim pondělní reporty ani upomínky. Reporty a poznámky se neztratily, klikni na e-mail. Když se vrátí, stačí ho znovu pozvat formulářem níž.</p>'
             + '<div style="overflow-x:auto;opacity:.72;"><table>'+HLAVICKA+'<tbody>'+byvali.map(function(r){return radek(r,true);}).join('')+'</tbody></table></div>'
             + '</details>';
@@ -1150,7 +1151,7 @@
     // je smysluplnější PRŮMĚR (jeden týden nic neřekne), u váhy a měr poslední hodnota.
     function kdDlazdice(reps, m, dnu, tg){
       var b=kdBody(reps, m, dnu);
-      if(!b.length) return '<div class="kdtile"><span class="kdt-n">'+esc(m.nazev)+'</span><span class="kdt-v">—</span><span class="kdt-z muted">bez dat</span></div>';
+      if(!b.length) return '<div class="kdtile"><span class="kdt-n">'+esc(m.nazev)+'</span><span class="kdt-v">-</span><span class="kdt-z muted">bez dat</span></div>';
       // Kalorie, bílkoviny, kroky a dodržení kolísají týden od týdne, takže dlaždice
       // ukazuje PRŮMĚR. Váha a míry jsou stavové, tam dává smysl poslední hodnota.
       var prumerovat=(m.id==='kcal'||m.id==='protein'||m.id==='kroky'||m.id==='dodrz');
@@ -1217,11 +1218,11 @@
       var d=KDET.data, email=KDET.email;
       var reps=(d.reports||[]).slice().reverse(); // nejnovější nahoře
       var h='<h2 style="margin:0 0 2px;">🤝 '+esc(email)+'</h2>'
-        +'<p class="muted" style="margin:0 0 .4rem;font-size:.85rem;">'+(d.reports||[]).length+' reportů · dotazník '+(d.intake?'✅':'—')
+        +'<p class="muted" style="margin:0 0 .4rem;font-size:.85rem;">'+(d.reports||[]).length+' reportů · dotazník '+(d.intake?'✅':'-')
         +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a></p>'
-        // per-klient vypnutí pondělní připomínky ("stop připomínky") — čte ji client-remind fn
+        // per-klient vypnutí pondělní připomínky ("stop připomínky") - čte ji client-remind fn
         +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>';
-      // 🎯 ZADÁNÍ pro klienta — JEDINÉ místo, kde cíl vzniká. Klient ho vidí ve své sekci a
+      // 🎯 ZADÁNÍ pro klienta - JEDINÉ místo, kde cíl vzniká. Klient ho vidí ve své sekci a
       // počítá se z něj odchylka („bílkoviny +18 g proti cíli"). Prázdné pole = cíl nenastaven,
       // klientovi se pak nezobrazí nic (nikdy ne dopočítaná nula). Nedopočítávat z TDEE.
       var tg=d.targets||{};
@@ -1262,11 +1263,11 @@
           var sportMin=kliNum(a.sport_min);
           if(sportMin==null&&(kliNum(a.fitko_min)!=null||kliNum(a.kardio_min)!=null)) sportMin=(kliNum(a.fitko_min)||0)+(kliNum(a.kardio_min)||0);
           var pn=a.plan_next||{};
-          var plan=(kliNum(pn.kroky)!=null||kliNum(pn.sport_min)!=null)?(kliCz(pn.kroky)+' kr / '+kliCz(pn.sport_min)+' min'+(pn.stejne?' (=)':'')):'—';
-          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'—')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'—')+'</td><td style="max-width:min(260px,58vw);white-space:normal;">'+esc(txt)+'</td></tr>';
+          var plan=(kliNum(pn.kroky)!=null||kliNum(pn.sport_min)!=null)?(kliCz(pn.kroky)+' kr / '+kliCz(pn.sport_min)+' min'+(pn.stejne?' (=)':'')):'-';
+          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'-')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'-')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'-')+'</td><td style="max-width:min(260px,58vw);white-space:normal;">'+esc(txt)+'</td></tr>';
           if(dnyArr.length){
-            var dt='<table style="font-size:.76rem;border-collapse:collapse;"><tr><th style="padding:2px 8px;color:#8F8A99;">Den</th><th style="padding:2px 8px;color:#8F8A99;">kcal</th><th style="padding:2px 8px;color:#8F8A99;">B</th><th style="padding:2px 8px;color:#8F8A99;">S</th><th style="padding:2px 8px;color:#8F8A99;">T</th><th style="padding:2px 8px;color:#8F8A99;">Vl</th></tr>'
-              +(n.dny||[]).map(function(d){ if(!d) return ''; return '<tr><td style="padding:2px 8px;color:#8F8A99;">'+esc(d.den||'')+'</td><td style="padding:2px 8px;">'+kliCz(d.kcal)+'</td><td style="padding:2px 8px;">'+kliCz(d.p)+'</td><td style="padding:2px 8px;">'+kliCz(d.c)+'</td><td style="padding:2px 8px;">'+kliCz(d.f)+'</td><td style="padding:2px 8px;">'+kliCz(d.fib)+'</td></tr>'; }).join('')+'</table>';
+            var dt='<div style="overflow-x:auto;"><table style="font-size:.76rem;border-collapse:collapse;"><tr><th style="padding:2px 8px;color:#8F8A99;">Den</th><th style="padding:2px 8px;color:#8F8A99;">kcal</th><th style="padding:2px 8px;color:#8F8A99;">B</th><th style="padding:2px 8px;color:#8F8A99;">S</th><th style="padding:2px 8px;color:#8F8A99;">T</th><th style="padding:2px 8px;color:#8F8A99;">Vl</th></tr>'
+              +(n.dny||[]).map(function(d){ if(!d) return ''; return '<tr><td style="padding:2px 8px;color:#8F8A99;">'+esc(d.den||'')+'</td><td style="padding:2px 8px;">'+kliCz(d.kcal)+'</td><td style="padding:2px 8px;">'+kliCz(d.p)+'</td><td style="padding:2px 8px;">'+kliCz(d.c)+'</td><td style="padding:2px 8px;">'+kliCz(d.f)+'</td><td style="padding:2px 8px;">'+kliCz(d.fib)+'</td></tr>'; }).join('')+'</table></div>';
             h+='<tr id="kdnyrow'+ri+'" style="display:none;"><td colspan="21" style="background:rgba(235,177,44,.05);padding:6px 12px;">🍽️ Denní rozpis (z Kalorických tabulek / ručně):<br>'+dt+'</td></tr>';
           }
         });
@@ -1296,7 +1297,7 @@
         }
       }
       // data z appky Tvůj Coach (bonus vedle reportů)
-      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach — reálný zápis jídla</h4>'
+      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach: reálný zápis jídla</h4>'
         +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky (14 dní)</button> <span class="muted" style="font-size:.8rem;">Pokud klient zapisuje v naší appce, uvidíš tady jeho reálná data automaticky.</span></div>';
       // poznámky kouče
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🗒️ Tvoje poznámky (klient je nevidí)</h4>'
@@ -1420,18 +1421,18 @@
         api({action:'client_app_data',email:email,days:14}).then(function(o){
           var j=o.j||{};
           if(!j.ok){
-            // rozliš: výpadek appky ≠ „klient v appce není" — jinak Martin dostane nepravdivou info
+            // rozliš: výpadek appky ≠ „klient v appce není" - jinak Martin dostane nepravdivou info
             var rs=String(j.reason||'');
             var why=(rs==='fetch-fail'||rs.indexOf('http-5')===0)?'appka teď neodpovídá, zkus to za chvíli'
               :rs==='no-secret'?'chybí propojovací klíč'
               :(rs==='http-404'||rs==='app-neumi')?'appka vrátila neočekávanou odpověď'
               :'klient v appce nejspíš není ('+esc(rs||'?')+')';
-            host.innerHTML='<p class="muted" style="font-size:.85rem;">📱 Data nedostupná — '+why+'.</p>'; return;
+            host.innerHTML='<p class="muted" style="font-size:.85rem;">📱 Data nedostupná: '+why+'.</p>'; return;
           }
           var d=j.data||{};
           if(d.found===false){ host.innerHTML='<p class="muted" style="font-size:.85rem;">Klient se v appce zatím neregistroval (nebo nic nezapsal).</p>'; return; }
           var hh='';
-          // avg je null, když klient nemá zapsané jídlo — poslední váha ale může existovat (jen se váží)
+          // avg je null, když klient nemá zapsané jídlo - poslední váha ale může existovat (jen se váží)
           if(d.avg||d.posledni_vaha!=null) hh+='<p style="margin:.2rem 0;font-size:.88rem;">'
             +(d.avg?'Ø za '+(d.dny_zapsano!=null?d.dny_zapsano+' zapsaných dní':'období')+': <b>'+kliCz(d.avg.kcal)+' kcal</b> · B '+kliCz(d.avg.protein)+' g · S '+kliCz(d.avg.carbs)+' g · T '+kliCz(d.avg.fat)+' g'+(d.avg.fiber!=null?' · Vl '+kliCz(d.avg.fiber)+' g':''):'Jídlo zatím nezapisuje')
             +(d.posledni_vaha!=null?' · poslední váha <b>'+kliCz(d.posledni_vaha)+' kg</b>':'')+'</p>';
@@ -1466,9 +1467,9 @@
       setTimeout(function(){ URL.revokeObjectURL(u); },30000);
     }
 
-    // 🚨 AI rizikové zprávy — čte tabulku ai_flags napřímo přes RLS (admin SELECT/UPDATE
+    // 🚨 AI rizikové zprávy - čte tabulku ai_flags napřímo přes RLS (admin SELECT/UPDATE
     // politika na e-mail admina). Hard-stopy (krize, PPP) nahoře červeně. „Vyřešeno" jen
-    // přepne status, nic nemaže — historie flagů se drží celá.
+    // přepne status, nic nemaže - historie flagů se drží celá.
     var AIF_KAT={crisis:'🔴 KRIZE',eating_disorder:'🔴 Porucha příjmu potravy',medical:'🟠 Zdravotní',pregnancy:'🟠 Těhotenství',minor:'🟠 Nezletilý'};
     function loadAiFlags(){
       sb.from('ai_flags').select('id,created_at,category,hard_stop,user_email,note,status,resolved_at').order('created_at',{ascending:false}).limit(200)
@@ -1488,7 +1489,7 @@
             var akce=f.status==='resolved'
               ? '<span class="muted">vyřešeno '+fmtDay(f.resolved_at)+'</span>'
               : '<button data-aif="'+esc(f.id)+'" class="mlogbtn">Vyřešeno ✓</button>';
-            return '<tr style="'+styl+'"><td style="white-space:nowrap;">'+fmtDate(f.created_at)+'</td><td style="white-space:nowrap;font-weight:700;">'+kat+'</td><td>'+esc(f.user_email||'—')+'</td><td style="max-width:min(360px,58vw);white-space:normal;">'+esc(f.note||'')+'</td><td>'+akce+'</td></tr>';
+            return '<tr style="'+styl+'"><td style="white-space:nowrap;">'+fmtDate(f.created_at)+'</td><td style="white-space:nowrap;font-weight:700;">'+kat+'</td><td>'+esc(f.user_email||'-')+'</td><td style="max-width:min(360px,58vw);white-space:normal;">'+esc(f.note||'')+'</td><td>'+akce+'</td></tr>';
           }
           el.innerHTML=(open.length?'<p style="margin:.2rem 0 .6rem;font-weight:700;color:#e07f6f;">Nevyřízené: '+open.length+'</p>':'<p class="muted" style="margin:.2rem 0 .6rem;">Vše vyřízené ✅</p>')
             +'<div style="overflow-x:auto;"><table><thead><tr><th>Kdy</th><th>Typ</th><th>Kdo</th><th>Úryvek zprávy</th><th></th></tr></thead><tbody>'
@@ -1507,7 +1508,7 @@
         .catch(function(err){ cardFail('aiflags','aiflagsBody'); FLAG_SOUHRN='rizika se nenačetla'; dnesekInfo(); });
     }
 
-    // 🩺 Dnešní puls — admin-pulse edge funkce (maily/fronta/leadi/prodeje/affiliate)
+    // 🩺 Dnešní puls - admin-pulse edge funkce (maily/fronta/leadi/prodeje/affiliate)
     // ⚠️ Jde přes společné `api()`, aby i tahle karta dostala čerstvý token. Dřív si
     // brala `token` napřímo a po hodině otevřeného adminu tiše vracela 403.
     function loadPulse(){
@@ -1520,7 +1521,7 @@
           var capW = e.sent >= e.daily_cap ? ' style="color:#F6CD63"' : '';
           var err429 = e.resend429 ? '<div class="s"><b style="color:#ff6b6b">'+e.resend429+'</b><span>Resend 429 dnes ⚠️</span></div>' : '';
           var wdW = wd.pending ? '<div class="s"><b style="color:#ff6b6b">'+wd.pending+'</b><span>odstoupení čeká ⚠️</span></div>' : '';
-          var srcs = Object.keys(p.leads.today_by_source||{}).map(function(k){ return esc(k)+': '+p.leads.today_by_source[k]; }).join(' · ') || '—';
+          var srcs = Object.keys(p.leads.today_by_source||{}).map(function(k){ return esc(k)+': '+p.leads.today_by_source[k]; }).join(' · ') || '-';
           var dayKeys = Object.keys(p.leads.days||{}).sort();
           var leadsToday = p.leads.days[dayKeys[dayKeys.length-1]] || 0;
           var days7 = dayKeys.map(function(k){ return '<span style="display:inline-block;margin-right:10px;color:#b7ab9b;">'+k.slice(8,10)+'.'+k.slice(5,7)+'.&nbsp;<b style="color:#F6CD63">'+p.leads.days[k]+'</b></span>'; }).join('');
@@ -1557,7 +1558,7 @@
     var PULS_SOUHRN='', FLAG_SOUHRN='';
     function dnesekInfo(){ sekInfo('dnesek',[FLAG_SOUHRN,PULS_SOUHRN].filter(Boolean).join(' · ')); }
 
-    // 📬 Fronta mailů — email_scheduled (kdo/co/kdy) + per-lead akce pauza/obnovit/přeřadit
+    // 📬 Fronta mailů - email_scheduled (kdo/co/kdy) + per-lead akce pauza/obnovit/přeřadit
     var TRACKS=[]; // sekvence z email_templates (pro dropdown přeřazení)
     function loadTracks(){
       if(TRACKS.length) return Promise.resolve(TRACKS);
@@ -1582,7 +1583,7 @@
       });
     }
     // Fronta: serverové filtrování (e-mail, sekvence) + stránkování po 100.
-    // Toolbar se renderuje JEDNOU (mimo přepisovanou tabulku) — hledání neztrácí fokus.
+    // Toolbar se renderuje JEDNOU (mimo přepisovanou tabulku) - hledání neztrácí fokus.
     var QS={offset:0,q:'',track:'',limit:100,total:0};
     function ensureQueueToolbar(){
       if($('qTools')) return;
@@ -1604,14 +1605,14 @@
         // po akci na poslední stránce může offset ukázat za konec → skoč na poslední stránku
         if(!rows.length&&QS.offset>0&&QS.total>0){ QS.offset=Math.max(0,Math.floor((QS.total-1)/QS.limit)*QS.limit); return loadQueue(); }
         var overdue=rows.filter(function(r){return r.overdue;}).length;
-        $('queueSub').textContent='Naplánováno: '+QS.total+(overdue?' · ⚠️ po termínu na stránce (odejde nejbližším cronem): '+overdue:'')+' · komu, co a kdy odejde — a tady to zastavíš nebo přeřadíš';
+        $('queueSub').textContent='Naplánováno: '+QS.total+(overdue?' · ⚠️ po termínu na stránce (odejde nejbližším cronem): '+overdue:'')+' · komu, co a kdy odejde. Tady to zastavíš nebo přeřadíš';
         sekInfo('mailing',QS.total+' mailů naplánováno');
         var trs=rows.map(function(r){
           var when=r.overdue?'<span style="color:#F6CD63;">'+fmtDate(r.next_send_at)+' ⚠️</span>':fmtDate(r.next_send_at);
           return '<tr><td style="white-space:nowrap;" class="muted">'+when+'</td>'
             +'<td>'+esc(r.email)+'</td>'
             +'<td>'+esc(trackName(r.track))+' <span class="muted">#'+esc(r.step)+'</span></td>'
-            +'<td>'+esc(r.subject||'—')+'</td>'
+            +'<td>'+esc(r.subject||'-')+'</td>'
             +'<td style="white-space:nowrap;">'
               +'<button class="qa" data-op="pause" data-email="'+esc(r.email)+'" title="Pozastavit sekvenci">⏸</button> '
               +'<button class="qa" data-op="retrack" data-email="'+esc(r.email)+'" title="Přeřadit do jiné sekvence">🔁</button> '
@@ -1627,7 +1628,7 @@
         $('qTable').innerHTML=(rows.length
             ? '<div style="overflow-x:auto;max-height:46vh;overflow-y:auto;"><table>'
               +'<thead><tr><th>Kdy</th><th>E-mail</th><th>Sekvence</th><th>Předmět</th><th>Akce</th></tr></thead>'
-              +'<tbody>'+trs+'</tbody></table></div>':'<p class="muted" style="padding:.6rem 0;">Nic nenalezeno'+(QS.q||QS.track?' pro zadaný filtr':' — fronta je prázdná')+'.</p>')
+              +'<tbody>'+trs+'</tbody></table></div>':'<p class="muted" style="padding:.6rem 0;">Nic nenalezeno'+(QS.q||QS.track?' pro zadaný filtr'. Fronta je prázdná')+'.</p>')
           +pager;
         Array.prototype.forEach.call($('qTable').querySelectorAll('.qa'),function(b){
           b.style.cssText='cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#ece4d9;border-radius:8px;padding:4px 8px;font-size:.85rem;font-family:inherit;'+(b.disabled?'opacity:.4;':'');
@@ -1635,7 +1636,7 @@
           b.addEventListener('click',function(){
             var em=b.getAttribute('data-email'), op=b.getAttribute('data-op');
             if(op==='prev'){ openMailPreview(b.getAttribute('data-track'),b.getAttribute('data-step'),em); return; }
-            if(op==='pause'){ if(!confirm('Pozastavit maily pro '+em+'? (Jde kdykoliv obnovit — v detailu kontaktu.)')) return; leadAction(em,'pause',null,loadQueue); return; }
+            if(op==='pause'){ if(!confirm('Pozastavit maily pro '+em+'? (Jde kdykoliv obnovit v detailu kontaktu.)')) return; leadAction(em,'pause',null,loadQueue); return; }
             if(op==='retrack'){ retrackPrompt(em,loadQueue); }
           });
         });
@@ -1677,7 +1678,7 @@
               return '<tr><td><b style="color:#F6CD63;">'+esc(r.source)+'</b></td>'
                 +'<td class="tcount">'+r.leads+'</td>'
                 +'<td class="muted" style="white-space:nowrap;">'+fmtDay(r.last)+'</td>'
-                +'<td class="muted">'+esc(r.medium||'—')+'</td></tr>';
+                +'<td class="muted">'+esc(r.medium||'-')+'</td></tr>';
             }).join('')
             +'</tbody></table></div>';
         };
@@ -1696,14 +1697,14 @@
       }).catch(function(){ cardFail('qr','qrBody'); });
     }
 
-    // 🎯 Trenéři — trychtýř: kit leady, kroky sekvence, konverze na Academy (e-mail match)
+    // 🎯 Trenéři: trychtýř: kit leady, kroky sekvence, konverze na Academy (e-mail match)
     function loadTrenerFunnel(){
       api({action:'trener_funnel'}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('trf','trfBody'); return; }
         var j=o.j, conv=j.conversions||[];
         $('trfSub').textContent='Leadů: '+j.total+' · aktivních v sekvenci: '+j.active+' · koupilo Academy: '+conv.length+(j.total?' ('+Math.round(100*conv.length/j.total)+' %)':'');
         if(!j.total){
-          $('trfBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné leady. Jakmile si někdo stáhne startovací kit na /pro-trenery/ (z reklam i organicky), objeví se tady — krok sekvence, zdroj i případný nákup Academy.</p>';
+          $('trfBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné leady. Jakmile si někdo stáhne startovací kit na /pro-trenery/ (z reklam i organicky), objeví se tady: krok sekvence, zdroj i případný nákup Academy.</p>';
           $('trf').style.display=''; return;
         }
         var html='';
@@ -1726,21 +1727,21 @@
         var rec=j.recent||[];
         html+='<h4 style="margin:.8rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Poslední leady</h4>'
           +'<div style="overflow-x:auto;"><table><thead><tr><th>E-mail</th><th>Jméno</th><th>Krok</th><th>Stav</th><th>Zdroj</th><th>Kdy</th></tr></thead><tbody>'
-          +rec.map(function(r){return '<tr><td>'+esc(r.email)+'</td><td>'+esc(r.name||'—')+'</td><td class="tcount">'+esc(r.step)+'</td><td class="muted">'+esc(r.status)+'</td><td class="muted">'+esc(r.source||'—')+'</td><td class="muted" style="white-space:nowrap;">'+fmtDay(r.created_at)+'</td></tr>';}).join('')
+          +rec.map(function(r){return '<tr><td>'+esc(r.email)+'</td><td>'+esc(r.name||'-')+'</td><td class="tcount">'+esc(r.step)+'</td><td class="muted">'+esc(r.status)+'</td><td class="muted">'+esc(r.source||'-')+'</td><td class="muted" style="white-space:nowrap;">'+fmtDay(r.created_at)+'</td></tr>';}).join('')
           +'</tbody></table></div>';
         $('trfBody').innerHTML=html;
         $('trf').style.display='';
       }).catch(function(){ cardFail('trf','trfBody'); });
     }
 
-    // 📨 Formuláře z webu — kontaktní poptávky (relevantní vs potenciální spam)
+    // 📨 Formuláře z webu - kontaktní poptávky (relevantní vs potenciální spam)
     function loadContactMsgs(){
       api({action:'contact_messages'}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('cmsg','cmsgBody'); return; }
         var rel=o.j.relevant||[], spam=o.j.spam||[];
         $('cmsgSub').textContent='Relevantní: '+rel.length+' · potenciální spam: '+spam.length;
         if(!rel.length&&!spam.length){
-          $('cmsgBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné formuláře. Jakmile někdo napíše přes kontaktní formulář na webu, objeví se to tady — rozdělené na relevantní poptávky a potenciální spam.</p>';
+          $('cmsgBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné formuláře. Jakmile někdo napíše přes kontaktní formulář na webu, objeví se to tady, rozdělené na relevantní poptávky a potenciální spam.</p>';
           $('cmsg').style.display=''; return;
         }
         // ⛔ NATVRDO 440px ROZBILO ADMIN NA TELEFONU (Martin, 21. 8. 2026): buňka byla širší
@@ -1766,7 +1767,7 @@
         }
         if(spam.length){
           html+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Potenciální spam ('+spam.length+')</h4>'
-            +'<p class="muted" style="margin:0 0 .3rem;font-size:.78rem;">Tyhle formuláře systém zablokoval (nedošly ti mailem). Zkontroluj, jestli mezi nimi náhodou není skutečná poptávka — pokud ano, odpověz ručně.</p>'
+            +'<p class="muted" style="margin:0 0 .3rem;font-size:.78rem;">Tyhle formuláře systém zablokoval (nedošly ti mailem). Zkontroluj, jestli mezi nimi náhodou není skutečná poptávka. Pokud ano, odpověz ručně.</p>'
             +'<div style="overflow-x:auto;"><table><thead><tr><th>Datum</th><th>Jméno</th><th>E-mail</th><th>Zpráva</th><th>Důvod</th><th></th></tr></thead><tbody>'
             +spam.map(function(r){
               return '<tr style="opacity:.72;"><td class="muted" style="white-space:nowrap;">'+fmtDate(r.created_at)+'</td>'
@@ -1790,7 +1791,7 @@
         if(!rows.length){ $('chkBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné check-iny. Jakmile klienti začnou posílat týdenní check-in, uvidíš tu trendy váhy, pasu i kredit. <a href="/akademie/check-in/" style="color:#F6CD63;">Stránka check-inu →</a></p>'; $('chk').style.display=''; return; }
         var now=Date.now(), d14=14*864e5, drop=0;
         var trend=function(a,b,unit,downGood){
-          if(a==null||b==null) return '<span class="muted">—</span>';
+          if(a==null||b==null) return '<span class="muted">-</span>';
           var d=Math.round((b-a)*10)/10;
           if(!d) return '<span class="muted">beze změny</span>';
           var good=downGood?d<0:d>0;
@@ -1798,13 +1799,13 @@
         };
         var trs=rows.map(function(r){
           var stale=r.last&&(now-new Date(r.last).getTime()>d14); if(stale) drop++;
-          var cr=r.credit?(r.credit.credit_czk||0)+' Kč'+(r.credit.milestone_2cm?' 🏅':''):'—';
+          var cr=r.credit?(r.credit.credit_czk||0)+' Kč'+(r.credit.milestone_2cm?' 🏅':''):'-';
           return '<tr><td>'+esc(r.email)+'</td>'
             +'<td style="white-space:nowrap;">'+fmtDay(r.last)+(stale?' <span style="color:#ff9c93;">💤</span>':'')+'</td>'
             +'<td class="tcount">'+r.n+'</td>'
             +'<td>'+trend(r.weight_from,r.weight_to,'kg',true)+'</td>'
             +'<td>'+trend(r.waist_from,r.waist_to,'cm',true)+'</td>'
-            +'<td class="tcount">'+(r.adherence_avg!=null?r.adherence_avg+'/5':'—')+'</td>'
+            +'<td class="tcount">'+(r.adherence_avg!=null?r.adherence_avg+'/5':'-')+'</td>'
             +'<td class="tcount">'+esc(cr)+'</td></tr>';
         }).join('');
         $('chkSub').textContent='Klientů s check-iny: '+rows.length+(drop?' · 💤 vypadli (14+ dní): '+drop:'');
@@ -1828,7 +1829,7 @@
         else {
           if(pending.length){
             html+='<h4 style="margin:.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Čeká na schválení</h4><div style="overflow-x:auto;"><table><thead><tr><th>Datum</th><th>Partner</th><th>Kupující</th><th>Produkt</th><th>Odměna</th><th>Zdroj</th><th>Akce</th></tr></thead><tbody>'
-              +pending.map(function(r){ return '<tr><td class="muted" style="white-space:nowrap;">'+fmtDay(r.created_at)+'</td><td>'+esc(r.owner_email||'—')+'</td><td>'+esc(r.buyer_email)+'</td><td>'+esc(r.product)+'</td><td class="tcount">'+esc(r.reward_amount||0)+' Kč ('+esc(r.reward_type)+')</td><td>'+esc(r.source)+'</td>'
+              +pending.map(function(r){ return '<tr><td class="muted" style="white-space:nowrap;">'+fmtDay(r.created_at)+'</td><td>'+esc(r.owner_email||'-')+'</td><td>'+esc(r.buyer_email)+'</td><td>'+esc(r.product)+'</td><td class="tcount">'+esc(r.reward_amount||0)+' Kč ('+esc(r.reward_type)+')</td><td>'+esc(r.source)+'</td>'
                 +'<td style="white-space:nowrap;"><button class="ra" data-id="'+r.id+'" data-st="confirmed">✓ Schválit</button> <button class="ra" data-id="'+r.id+'" data-st="void">✕ Zamítnout</button></td></tr>'; }).join('')
               +'</tbody></table></div>';
           }
@@ -1857,7 +1858,7 @@
               var em=b.getAttribute('data-email'), bal=b.getAttribute('data-bal');
               var amt=prompt('Kolik Kč jsi vyplatil partnerovi '+em+'?\n(K výplatě má: '+bal+' Kč)',bal);
               if(!amt) return; var n=parseInt(amt,10); if(!n||n<=0){ toast('Neplatná částka'); return; }
-              var note=prompt('Poznámka (nepovinné — např. „kredit na Academy" / „převod na účet"):')||'';
+              var note=prompt('Poznámka (nepovinné, např. „kredit na Academy" / „převod na účet"):')||'';
               api({action:'referral_payout_add',owner_email:em,amount_czk:n,note:note}).then(function(r){ if(r.j&&r.j.ok){ toast('💸 Výplata zapsána'); loadReferrals(); } else toast('Chyba: '+((r.j&&r.j.error)||r.status)); });
             });
           }
@@ -1920,7 +1921,7 @@
       }).catch(function(){ cardFail('afil','afilBody'); });
     }
 
-    // 📈 Progres klientů — kolik lekcí mají členové splněno (autoplay je dopisuje automaticky)
+    // 📈 Progres klientů - kolik lekcí mají členové splněno (autoplay je dopisuje automaticky)
     function loadProgress(){
       api({action:'progress_overview'}).then(function(r){
         var p=r.j;
@@ -1937,14 +1938,14 @@
         var trs=rows.map(function(x){
           var la=x.last_activity?new Date(x.last_activity).getTime():0;
           var badge;
-          if(!la){ badge='<span style="color:#8a7e6d;">— nezačal(a)</span>'; nezacali++; }
+          if(!la){ badge='<span style="color:#8a7e6d;">ještě nezačal(a)</span>'; nezacali++; }
           else if(now-la<d7){ badge='<span style="color:#7bd88f;">🔥 aktivní</span>'; akt7++; }
           else if(now-la>d14){ badge='<span style="color:#ff9c93;">💤 '+Math.round((now-la)/864e5)+' dní</span>'; spici++; }
           else badge='<span style="color:#cabfb1;">'+Math.round((now-la)/864e5)+' dní</span>';
           return '<tr style="border-bottom:1px solid rgba(255,255,255,.05);">'
             +'<td style="padding:7px 10px;font-size:.85rem;">'+esc(x.email)+'</td>'
-            +'<td style="padding:7px 10px;">'+(x.has_videokurz?bar(x.vk_done,p.vk_total):'<span class="muted" style="font-size:.78rem;">—</span>')+'</td>'
-            +'<td style="padding:7px 10px;">'+(x.has_academy?bar(x.ac_done,p.ac_total):'<span class="muted" style="font-size:.78rem;">—</span>')+'</td>'
+            +'<td style="padding:7px 10px;">'+(x.has_videokurz?bar(x.vk_done,p.vk_total):'<span class="muted" style="font-size:.78rem;">-</span>')+'</td>'
+            +'<td style="padding:7px 10px;">'+(x.has_academy?bar(x.ac_done,p.ac_total):'<span class="muted" style="font-size:.78rem;">-</span>')+'</td>'
             +'<td style="padding:7px 10px;font-size:.82rem;white-space:nowrap;">'+badge+'</td></tr>';
         }).join('');
         $('progSub').textContent='Členů: '+rows.length+' · 🔥 aktivní 7 dní: '+akt7+' · 💤 spí 14+ dní: '+spici+' · nezačali: '+nezacali;
@@ -1962,7 +1963,7 @@
       // ⚠️ „Koučink" je od 8. 8. 2026 počet AKTIVNÍCH nároků, ne značek. Dřív tu stálo 39,
       // protože se sčítali i bývalí klienti a kontakty se zastaralou značkou; skutečných
       // klientů bylo 13. Bývalí mají vlastní dlaždici, ať se to číslo neztratí.
-      var items=[['Kontaktů',s.contacts,''],['Leadů celkem',(s.leads_total!=null?s.leads_total:'—'),''],['Academy',s.academy,'academy'],['Videokurz',s.videokurz,'videokurz'],['Koučink',s.coaching,'coaching'],['Koučink bývalí',(s.coaching_ex!=null?s.coaching_ex:'—'),'coaching-ex'],['Registrovaní',s.registered,'registered'],['Mailů odesláno',s.sent_total,'@maillog']];
+      var items=[['Kontaktů',s.contacts,''],['Leadů celkem',(s.leads_total!=null?s.leads_total:'-'),''],['Academy',s.academy,'academy'],['Videokurz',s.videokurz,'videokurz'],['Koučink',s.coaching,'coaching'],['Koučink bývalí',(s.coaching_ex!=null?s.coaching_ex:'-'),'coaching-ex'],['Registrovaní',s.registered,'registered'],['Mailů odesláno',s.sent_total,'@maillog']];
       $('stats').innerHTML=items.map(function(i){return '<div class="s" data-filt="'+i[2]+'"><b>'+i[1]+'</b><span>'+i[0]+'</span></div>';}).join('');
       Array.prototype.forEach.call($('stats').querySelectorAll('.s'),function(c){
         c.addEventListener('click',function(){
@@ -2086,18 +2087,18 @@
     function trafFail(){
       $('trafBody').innerHTML='<p class="traf-note">⚠️ Statistiky se teď nepodařilo stáhnout (dočasný výpadek GA4 nebo spojení). Zkus za chvíli obnovit stránku. Kdyby to přetrvávalo, mrkni přímo do <a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener" style="color:#F6CD63;">GA4 →</a></p>';
     }
-    function num(n){ return (n==null?'—':Number(n).toLocaleString('cs-CZ')); }
-    function dur(sec){ if(sec==null) return '—'; sec=Math.round(sec); var m=Math.floor(sec/60), s=sec%60; return m+'m '+s+'s'; }
+    function num(n){ return (n==null?'-':Number(n).toLocaleString('cs-CZ')); }
+    function dur(sec){ if(sec==null) return '-'; sec=Math.round(sec); var m=Math.floor(sec/60), s=sec%60; return m+'m '+s+'s'; }
     function distBox(title,arr){
       if(!arr||!arr.length) return '';
       var tot=arr.reduce(function(a,x){return a+(Number(x.v)||0);},0)||1;
-      var rows=arr.slice(0,6).map(function(x){ var pct=Math.round((Number(x.v)||0)/tot*100); return '<div class="tbar"><span>'+esc(x.k||'—')+'</span><span class="v">'+pct+' %</span></div>'; }).join('');
+      var rows=arr.slice(0,6).map(function(x){ var pct=Math.round((Number(x.v)||0)/tot*100); return '<div class="tbar"><span>'+esc(x.k||'-')+'</span><span class="v">'+pct+' %</span></div>'; }).join('');
       return '<div class="tbox"><h4>'+esc(title)+'</h4>'+rows+'</div>';
     }
     function renderTraf(d){
       d=d||{};
-      var tiles=[['Návštěvníci',num(d.users)],['Návštěvy',num(d.sessions)],['Zobrazení',num(d.pageviews)],['Ø doba na webu',dur(d.avg_engagement_sec)],['Noví',num(d.new_users)],['Míra odchodů',(d.bounce_rate!=null?Math.round(d.bounce_rate*100)+' %':'—')]];
-      var pages=(d.pages||[]).slice(0,6).map(function(p){return '<div class="tbar"><span>'+esc(p.path)+'</span><span class="v">'+num(p.views)+'</span></div>';}).join('')||'<span class="muted">—</span>';
+      var tiles=[['Návštěvníci',num(d.users)],['Návštěvy',num(d.sessions)],['Zobrazení',num(d.pageviews)],['Ø doba na webu',dur(d.avg_engagement_sec)],['Noví',num(d.new_users)],['Míra odchodů',(d.bounce_rate!=null?Math.round(d.bounce_rate*100)+' %':'-')]];
+      var pages=(d.pages||[]).slice(0,6).map(function(p){return '<div class="tbar"><span>'+esc(p.path)+'</span><span class="v">'+num(p.views)+'</span></div>';}).join('')||'<span class="muted">-</span>';
       $('trafBody').innerHTML=
         '<div class="tgrid">'+tiles.map(function(t){return '<div class="s"><b>'+t[1]+'</b><span>'+t[0]+'</span></div>';}).join('')+'</div>'+
         '<div class="twrap">'+
@@ -2116,7 +2117,7 @@
           '<a href="https://analytics.google.com/analytics/web/#/p/realtime/overview" target="_blank" rel="noopener">V reálném čase →</a>'+
           '<a href="https://business.facebook.com/events_manager2/list/pixel/277526073774099/overview" target="_blank" rel="noopener">Meta Pixel →</a>'+
         '</div>'+
-        '<p class="traf-note">GA4 už na webu běží a sbírá data (návštěvnost, doba na webu, zařízení, země). Aby čísla — včetně <b>% muži/ženy a věk</b> — naskákala rovnou sem do adminu, chybí dvě jednorázové věci: zapnout <b>Google Signals</b> v GA4 (kvůli demografii) a vytvořit <b>service account</b> pro GA4 Data API. Pak se to napojí a tenhle box se sám naplní živými čísly.</p>';
+        '<p class="traf-note">GA4 už na webu běží a sbírá data (návštěvnost, doba na webu, zařízení, země). Aby čísla (včetně <b>% muži/ženy a věk</b>) naskákala rovnou sem do adminu, chybí dvě jednorázové věci: zapnout <b>Google Signals</b> v GA4 (kvůli demografii) a vytvořit <b>service account</b> pro GA4 Data API. Pak se to napojí a tenhle box se sám naplní živými čísly.</p>';
     }
     function passFilter(r,f){
       // ⛔ OPRAVA 8. 8. 2026: filtr „Coaching klienti" bral každou značku začínající na
@@ -2137,7 +2138,7 @@
       if(f==='unregistered') return !r.registered;
       return true;
     }
-    // tabulka vykresluje po 500 řádcích (výkon) — „Načíst dalších 500" přidá další dávku;
+    // tabulka vykresluje po 500 řádcích (výkon) - „Načíst dalších 500" přidá další dávku;
     // změna hledání/filtru vrací na první dávku
     var ROWS_CAP=500, rowsKey='';
     function renderRows(){
@@ -2151,10 +2152,10 @@
       $('count').textContent=list.length+' / '+ALL.length;
       var shown=list.slice(0,ROWS_CAP);
       $('rows').innerHTML=shown.map(function(r){
-        var seg=(r.tags||[]).map(function(t){return '<span class="badge b-tag">'+esc(t)+'</span>';}).join('')||'<span class="muted">—</span>';
+        var seg=(r.tags||[]).map(function(t){return '<span class="badge b-tag">'+esc(t)+'</span>';}).join('')||'<span class="muted">-</span>';
         return '<tr data-email="'+esc(r.email)+'">'+
           '<td>'+esc(r.email)+'</td>'+
-          '<td>'+esc(r.name||'—')+'</td>'+
+          '<td>'+esc(r.name||'-')+'</td>'+
           '<td>'+seg+'</td>'+
           '<td>'+(r.has_academy?'<span class="badge b-ok">ANO</span>':'<span class="badge b-no">ne</span>')+'</td>'+
           '<td>'+(r.has_videokurz?'<span class="badge b-ok">ANO</span>':'<span class="badge b-no">ne</span>')+'</td>'+
@@ -2203,13 +2204,13 @@
         var hasA=ents.some(function(e){return e.product==='academy'&&e.active;});
         var hasV=ents.some(function(e){return e.product==='videokurz'&&e.active;});
         var tags=(c.tags||[]);
-        // Mailing sekvence — stav leadu + akce (pauza / obnovit / přeřadit)
+        // Mailing sekvence - stav leadu + akce (pauza / obnovit / přeřadit)
         var lead=(d.leads&&d.leads[0])||null;
         var seqHtml='';
         if(lead){
           var stBadge = lead.status==='active' ? '<span class="badge b-ok">běží</span>'
             : lead.status==='paused' ? '<span class="badge" style="background:rgba(246,205,99,.16);color:#F6CD63">pozastaveno</span>'
-            : lead.status==='purchased' ? '<span class="badge b-tag">koupil(a) — stop</span>'
+            : lead.status==='purchased' ? '<span class="badge b-tag">koupil(a), stop</span>'
             : '<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">'+esc(lead.status)+'</span>';
           var nextTxt = lead.next_send_at ? 'další mail '+fmtDate(lead.next_send_at) : 'sekvence dokončena';
           seqHtml='<div class="tl"><b style="color:#cbbfae;font-size:.8rem;">Mailing sekvence</b>'
@@ -2313,13 +2314,13 @@
       'tc-trial-nabidka':'Tvůj Coach: nabídka zkušebky',
       'tydenik':'Týdeník'
     };
-    function trackName(t){ return TRACK_NAMES[t]||t||'—'; }
+    function trackName(t){ return TRACK_NAMES[t]||t||'-'; }
     var mlogAll=[];
     // hlavní sekvence, které chceme mít v souhrnu vždy vidět (i s nulou), ať Martin pozná, že nechodí
     var MLOG_TRACKS=['lead-magnet','existing-leadmagnet','nurture-videokurz','trener-kit','upsell-coaching','upsell-academy','onboarding-videokurz','onboarding-coaching','onboarding-nakup-videokurz','onboarding-nakup-academy'];
     // dropdown filtru napln ze VŠECH známých sekvencí
     (function(){ var sel=$('mlogTrack'); if(!sel) return; Object.keys(TRACK_NAMES).forEach(function(t){ var o=document.createElement('option'); o.value=t; o.textContent=TRACK_NAMES[t]; sel.appendChild(o); }); })();
-    // …a po přihlášení doplň i sekvence, které jsou v DB, ale v TRACK_NAMES (zatím) chybí —
+    // …a po přihlášení doplň i sekvence, které jsou v DB, ale v TRACK_NAMES (zatím) chybí -
     // filtry tak nedriftují, když přibude nová sekvence (DB = zdroj pravdy, akce 'tracks')
     function appendDbTracks(){
       loadTracks().then(function(ts){
@@ -2330,7 +2331,7 @@
         });
       });
     }
-    // Tvuj Coach — prehled udeleni pristupu do appky (akce admin-api: tvujcoach_grants -> {ok, grants:[]})
+    // Tvuj Coach - prehled udeleni pristupu do appky (akce admin-api: tvujcoach_grants -> {ok, grants:[]})
     function openTcLog(){
       $('tclog').classList.add('on'); $('tclogRows').innerHTML=''; $('tclogFoot').textContent='Načítám…';
       api({action:'tvujcoach_grants'}).then(function(o){
@@ -2340,13 +2341,13 @@
             var res = r.result==='granted' ? '<span class="badge b-ok">udělen</span>'
               : (r.result==='pending' ? '<span class="badge" style="background:rgba(246,205,99,.16);color:#F6CD63">čeká na registraci</span>'
               : (r.result==='revoked' ? '<span class="badge b-no">odebrán</span>'
-              : '<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">'+esc(r.result||'—')+'</span>'));
+              : '<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">'+esc(r.result||'-')+'</span>'));
             var act = r.action==='revoke' ? 'odebrání' : 'udělení';
-            return '<tr><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'—')+'</td><td>'+act+'</td><td>'+res+'</td><td class="muted">'+esc(r.source||'—')+'</td></tr>';
-          }).join('')||'<tr><td colspan="5" class="muted" style="padding:1rem;">Zatím žádné přidělení — objeví se po prvním nákupu Academy nebo ručním udělení.</td></tr>';
+            return '<tr><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'-')+'</td><td>'+act+'</td><td>'+res+'</td><td class="muted">'+esc(r.source||'-')+'</td></tr>';
+          }).join('')||'<tr><td colspan="5" class="muted" style="padding:1rem;">Zatím žádné přidělení. Objeví se po prvním nákupu Academy nebo ručním udělení.</td></tr>';
           $('tclogFoot').textContent=rows.length+' záznamů';
         } else {
-          $('tclogFoot').textContent='Přehled se nepodařilo načíst — zkus zavřít a otevřít znovu.';
+          $('tclogFoot').textContent='Přehled se nepodařilo načíst. Zkus zavřít a otevřít znovu.';
         }
       }).catch(function(){ $('tclogFoot').textContent='Chyba spojení.'; });
     }
@@ -2365,7 +2366,7 @@
       // limit:2000 → stáhni CELÝ log, ať onboarding blast nepřebije lead-magnet/follow-up řádky
       api({action:'email_log',limit:2000}).then(function(o){
         if(o&&o.j&&o.j.ok&&o.j.rows){ mlogAll=o.j.rows; renderMailSummary(); renderMailLog(); }
-        else { $('mlogFoot').textContent='Log se nepodařilo načíst — zkus zavřít a otevřít znovu.'; }
+        else { $('mlogFoot').textContent='Log se nepodařilo načíst. Zkus zavřít a otevřít znovu.'; }
       }).catch(function(){ $('mlogFoot').textContent='Chyba spojení.'; });
       api({action:'email_summary'}).then(function(o){
         if(o&&o.j&&o.j.ok&&o.j.rows){ mlogSouhrn=o.j.rows; renderMailSummary(); }
@@ -2373,7 +2374,7 @@
     }
     function renderMailSummary(){
       var by={}, zCeleHistorie=!!mlogSouhrn;
-      var BEZ_TRATE='—';   // událost bez trati; jediný výskyt, ať se placeholder nerozejde
+      var BEZ_TRATE='-';   // událost bez trati; jediný výskyt, ať se placeholder nerozejde
       var kbelik=function(r){ var t=r.track||BEZ_TRATE; if(!by[t]) by[t]={sent:0,err:0,test:0,tot:0}; return by[t]; };
       MLOG_TRACKS.forEach(function(t){ by[t]={sent:0,err:0,test:0,tot:0}; });
       if(zCeleHistorie){
@@ -2417,7 +2418,7 @@
       $('mlogRows').innerHTML=list.slice(0,500).map(function(r){
         var st=r.type==='sent'?'<span class="badge b-ok">odesláno</span>':r.type==='error'?'<span class="badge" style="background:rgba(255,90,60,.16);color:#ff8b6b">chyba</span>':'<span class="badge b-no">'+esc(r.type)+'</span>';
         var name=r.subject?esc(r.subject):(esc(trackName(r.track))+' #'+esc(r.step));
-        return '<tr class="mlog-row" data-track="'+esc(r.track)+'" data-step="'+esc(r.step)+'" data-email="'+esc(r.email)+'"><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'—')+'</td><td>'+name+'</td><td>'+st+'</td></tr>';
+        return '<tr class="mlog-row" data-track="'+esc(r.track)+'" data-step="'+esc(r.step)+'" data-email="'+esc(r.email)+'"><td class="muted" style="white-space:nowrap">'+fmtDate(r.created_at)+'</td><td>'+esc(r.email||'-')+'</td><td>'+name+'</td><td>'+st+'</td></tr>';
       }).join('')||'<tr><td colspan="4" class="muted" style="padding:1rem;">Nic nenalezeno.</td></tr>';
       // ⚠️ Tabulka vykresluje jen prvních 500 řádků a log stahuje posledních 2000 událostí.
       // Dřív tu stálo jen „N záznamů", což vypadalo, že je to všechno.
@@ -2432,7 +2433,7 @@
       api({action:'email_preview',track:track,step:step,email:email||null}).then(function(o){
         var d=o&&o.j&&o.j.ok?o.j:null;
         if(!d||(!d.html&&!d.subject&&!d.text)){
-          $('mprevBody').innerHTML='<h2>Náhled e-mailu</h2><p class="muted">'+esc(trackName(track))+' #'+esc(step)+(email?' · '+esc(email):'')+'</p><p class="muted" style="margin-top:.7rem;">Náhled se nepodařilo vykreslit — šablona pro tenhle krok možná už neexistuje.</p>';
+          $('mprevBody').innerHTML='<h2>Náhled e-mailu</h2><p class="muted">'+esc(trackName(track))+' #'+esc(step)+(email?' · '+esc(email):'')+'</p><p class="muted" style="margin-top:.7rem;">Náhled se nepodařilo vykreslit. Šablona pro tenhle krok možná už neexistuje.</p>';
           return;
         }
         var att=(d.attachments||[]).map(function(a){ return '<a href="'+esc(a.url)+'" target="_blank" rel="noopener">📎 '+esc(a.name||'příloha')+'</a>'; }).join('');
@@ -2440,25 +2441,25 @@
           '<div class="mprev-meta muted" style="font-size:.85rem;">'+esc(trackName(track))+' #'+esc(step)+(email?' · '+esc(email):'')+'</div>'+
           (att?'<div class="att">'+att+'</div>':'')+
           (d.html?'<iframe class="mprev-frame" sandbox=""></iframe>':'')+
-          (d.text&&!d.html?'<pre style="white-space:pre-wrap;color:#ece4d9;font-family:inherit;font-size:.9rem;margin-top:.7rem;">'+esc(d.text)+'</pre>':'');
+          (d.text&&!d.html?'<pre style="white-space:pre-wrap;max-height:56vh;overflow:auto;color:#ece4d9;font-family:inherit;font-size:.9rem;margin-top:.7rem;">'+esc(d.text)+'</pre>':'');
         if(d.html){ var f=$('mprevBody').querySelector('iframe'); if(f) f.srcdoc=d.html; }
       }).catch(function(){ $('mprevBody').innerHTML='<p class="muted">Chyba spojení.</p>'; });
     }
     // ---- 🗺️ Sekvence & šablony: vizuální mapa + editor mailů ----
     var ENTRY_DESC={
       'lead-magnet':'Vstup: formulář na webu (makro plán / forma zpět) · ⛔ stop při koupi videokurzu',
-      'lead-magnet-tool':'Vstup: generátory zdarma — uvítačka se zpožděním 24 h · ⛔ stop při koupi',
+      'lead-magnet-tool':'Vstup: generátory zdarma: uvítačka se zpožděním 24 h · ⛔ stop při koupi',
       'existing-leadmagnet':'Vstup: import starších leadů · ⛔ stop při koupi videokurzu',
-      'nurture-videokurz':'Vstup: denní cron 7:35 — lead, kterému dojela sekvence a nekoupil · ⛔ stop při koupi',
-      'active-no-buy':'Vstup: denní cron 6:30 — registrovaný 14+ dní, aktivní, bez koupě',
+      'nurture-videokurz':'Vstup: denní cron 7:35: lead, kterému dojela sekvence a nekoupil · ⛔ stop při koupi',
+      'active-no-buy':'Vstup: denní cron 6:30: registrovaný 14+ dní, aktivní, bez koupě',
       'onboarding-videokurz':'Vstup: jednorázový import stávajících majitelů videokurzu',
       'onboarding-coaching':'Vstup: jednorázový import koučovacích klientů',
       'onboarding-nakup-videokurz':'Vstup: zaplacená objednávka videokurzu (Stripe webhook)',
       'onboarding-nakup-academy':'Vstup: zaplacená objednávka Academy (Stripe webhook)',
       'onboarding-grant-videokurz':'Vstup: ruční udělení přístupu tady v adminu',
       'onboarding-grant-academy':'Vstup: ruční udělení přístupu tady v adminu',
-      'upsell-coaching':'Vstup: denní cron 7:20 (max 25/den) — členové bez koučinku',
-      'upsell-academy':'Vstup: výběrově — členové videokurzu bez Academy',
+      'upsell-coaching':'Vstup: denní cron 7:20 (max 25/den): členové bez koučinku',
+      'upsell-academy':'Vstup: výběrově: členové videokurzu bez Academy',
       'milestone-videokurz':'Posílá funkce milestones při 50 / 100 dokončených lekcích (mimo frontu)',
       'reactivation-member':'Reaktivace spícího člena (ruční / připravená)',
       'rescue-videokurz':'Posílá order-rescue u nedokončené objednávky, okno 3–72 h (mimo frontu)',
@@ -2570,7 +2571,7 @@
       }).join('');
       $('tpleditBody').innerHTML=
         '<h2 style="margin:.1rem 0 .1rem;">✎ '+esc(trackName(TE.track))+' · mail #'+TE.step+'</h2>'
-        +'<p class="muted" style="margin:0 0 .8rem;font-size:.8rem;">'+esc(TE.track)+' · klíč '+esc(TE.key)+' · Tokeny: {{first_name}}, [[žena||muž]], [a] — náhled je zkontroluje.</p>'
+        +'<p class="muted" style="margin:0 0 .8rem;font-size:.8rem;">'+esc(TE.track)+' · klíč '+esc(TE.key)+' · Tokeny: {{first_name}}, [[žena||muž]], [a]. Náhled je zkontroluje.</p>'
         +'<div style="margin-bottom:8px;"><span class="muted" style="font-size:.74rem;">Předmět</span><div id="teSubj">'+teInput(TE.subject)+'</div></div>'
         +'<div style="margin-bottom:8px;"><span class="muted" style="font-size:.74rem;">Preheader (šedý text vedle předmětu ve schránce)</span><div id="tePre">'+teInput(TE.preheader)+'</div></div>'
         +'<div style="margin-bottom:12px;"><span class="muted" style="font-size:.74rem;">Pauza PO tomhle mailu (dny; prázdné = konec sekvence)</span><div id="teWait" style="max-width:130px;">'+teInput(TE.wait_days==null?'':String(TE.wait_days))+'</div></div>'
@@ -2627,7 +2628,7 @@
         api({action:'template_preview',segment:seg,subject:TE.subject,preheader:TE.preheader,blocks:TE.blocks}).then(function(o){
           if(o.j&&o.j.ok){ var bx=$('tePrevBox'); bx.style.display=''; bx.querySelector('iframe').srcdoc=o.j.html; toast('Předmět: '+o.j.subject); }
           else toast('Náhled selhal: '+((o.j&&o.j.error)||'?'));
-        }).catch(function(){ toast('Chyba spojení — náhled se nepovedl'); });
+        }).catch(function(){ toast('Chyba spojení, náhled se nepovedl'); });
       }
       $('tePrevF').addEventListener('click',function(){ doPreview('zeny'); });
       $('tePrevM').addEventListener('click',function(){ doPreview('muzi'); });
@@ -2637,11 +2638,11 @@
         if(!confirm('Uložit změny mailu „'+TE.subject+'"?\nZměna platí OKAMŽITĚ pro všechna další odeslání.')) return;
         api({action:'template_save',track:TE.track,step:TE.step,subject:TE.subject,preheader:TE.preheader,wait_days:TE.wait_days,blocks:TE.blocks}).then(function(o){
           if(o.j&&o.j.ok){ toast('💾 Uloženo'); $('tpledit').classList.remove('on'); openSeqMap(); }
-          else if(o.j&&o.j.error==='render_failed') toast('❌ Neuloženo — rozbitý token: '+(o.j.detail||''));
+          else if(o.j&&o.j.error==='render_failed') toast('❌ Neuloženo: rozbitý token: '+(o.j.detail||''));
           // srozumitelná hláška místo holého kódu ze serveru (bad_block_img a spol.)
           else if(o.j&&TPL_CHYBY[o.j.error]) toast('❌ Neuloženo: '+TPL_CHYBY[o.j.error]);
           else toast('Chyba: '+((o.j&&o.j.error)||o.status));
-        }).catch(function(){ toast('⚠️ Chyba spojení — NEuloženo, zkus Uložit znovu'); });
+        }).catch(function(){ toast('⚠️ Chyba spojení. NEuloženo, zkus Uložit znovu'); });
       });
     }
     var _sq=$('seqBtn'); if(_sq) _sq.addEventListener('click',openSeqMap);
@@ -2661,7 +2662,7 @@
     var _mly=$('mlogType'); if(_mly) _mly.addEventListener('change',renderMailLog);
     $('mlog').addEventListener('click',function(e){ if(e.target===$('mlog')) $('mlog').classList.remove('on'); });
     $('mprev').addEventListener('click',function(e){ if(e.target===$('mprev')) $('mprev').classList.remove('on'); });
-    // ESC zavírá odshora: nejdřív náhled, pak editor (s potvrzením), pak mapu/log — jeden ESC = jedno zavření
+    // ESC zavírá odshora: nejdřív náhled, pak editor (s potvrzením), pak mapu/log - jeden ESC = jedno zavření
     document.addEventListener('keydown',function(e){
       if(e.key!=='Escape') return;
       if($('mprev').classList.contains('on')){ $('mprev').classList.remove('on'); return; }
