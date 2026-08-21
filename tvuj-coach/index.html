@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna</title>
-    <meta name="description" content="Appka Tvůj Coach: zápis jídla a tréninku, cíle, které se samy přizpůsobují tvým výsledkům, a AI kouč natrénovaný na metodice Martina Barny. Prvních 14 dní plná verze zdarma a bez karty, potom Free napořád.">
+    <!-- ⛔ [2026-08-21] Popisek i og:description slibovaly „prvních 14 dní plná verze
+         zdarma". Zkušebka byla 20. 8. zrušena. Zároveň vedly AI koučem, tedy VIP za 499,
+         zatímco hlavní prodávaný plán je Basic za 249. -->
+    <meta name="description" content="Appka Tvůj Coach: zápis jídla a tréninku, cíle, které se ti každý týden přepočítají podle reálných dat, a generátor jídelníčku i tréninku na míru. Od 249 Kč měsíčně, Free verze napořád zdarma. Metodika Martina Barny.">
     <meta name="theme-color" content="#0f1113">
     <link rel="canonical" href="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:title" content="Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna">
-    <meta property="og:description" content="Zápis jídla a tréninku, adaptivní cíle a AI kouč Martinovým hlasem. Prvních 14 dní plná verze zdarma a bez karty.">
+    <meta property="og:description" content="Cíle, které se ti každý týden přepočítají podle reálných dat, generátor jídelníčku i tréninku na míru, plná historie. Od 249 Kč měsíčně.">
     <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
     <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
     <meta property="og:locale" content="cs_CZ">
@@ -98,6 +101,9 @@
         h3.blok:first-of-type { margin-top:.6rem; }
         .card h3 { font-size:1.05rem; margin:0 0 .45rem; }
         .card p { color:var(--warm); font-size:.93rem; margin:0; }
+        /* Štítek Basicu (21. 8. 2026). Bez něj vypadaly funkce Basicu jako Free
+           a jediné označené dlaždice v mřížce byly ty nejdražší, VIP. */
+        .basic-tag { display:inline-block; background:rgba(255,255,255,.13); color:#F0EADF; font-weight:700; font-size:.68rem; letter-spacing:.08em; padding:.15rem .55rem; border-radius:50px; vertical-align:middle; margin-left:.35rem; }
         .vip-tag { display:inline-block; background:rgba(235,177,44,.16); color:var(--acc-l); font-weight:700; font-size:.68rem; letter-spacing:.08em; padding:.15rem .55rem; border-radius:50px; vertical-align:middle; margin-left:.35rem; }
         /* Nahled appky. Clovek kupuje neco, co jinak nikdy nevidel, takze u kazdeho bloku
            funkci stoji jeden skutecny snimek obrazovky. Obrazky se nacitaji az kdyz na ne
@@ -115,8 +121,13 @@
         @media (max-width:640px) { .shot { margin-top:1.2rem; max-width:300px; } .shot-hero { margin-top:1.8rem; } }
         .plans { display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; max-width:820px; margin:0 auto; }
         .plans-3 { grid-template-columns:repeat(3,1fr); max-width:1000px; }
-        .plan { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:1.8rem 1.6rem; display:flex; flex-direction:column; }
-        .plan.featured { border-color:rgba(235,177,44,.55); background:linear-gradient(160deg,rgba(235,177,44,.10),rgba(235,177,44,.02)); position:relative; }
+        /* ⛔ `position:relative` patří na .plan, ne jen na .plan.featured: od 21. 8. 2026
+           nosí štítek i nezvýrazněná karta VIP a bez tohohle by ji .ribbon (absolutní)
+           ukotvil k jinému prvku a odletěl mimo kartu. */
+        .plan { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:1.8rem 1.6rem; display:flex; flex-direction:column; position:relative; }
+        .plan.featured { border-color:rgba(235,177,44,.55); background:linear-gradient(160deg,rgba(235,177,44,.10),rgba(235,177,44,.02)); }
+        /* Štítek nezvýrazněné karty nesmí křičet stejně jako ten na doporučeném plánu. */
+        .plan:not(.featured) .ribbon { background:rgba(255,255,255,.14); color:#F0EADF; font-weight:700; }
         .ribbon { position:absolute; top:-13px; left:50%; transform:translateX(-50%); background:linear-gradient(145deg,var(--acc-l),var(--acc)); color:#1A1222; font-weight:800; font-size:.74rem; letter-spacing:.06em; padding:.3rem .9rem; border-radius:50px; white-space:nowrap; }
         .plan-name { font-weight:800; color:#fff; font-size:1.25rem; }
         .plan-price { font-size:2rem; font-weight:800; color:#fff; margin:.4rem 0 .1rem; }
@@ -183,16 +194,25 @@
     <div class="wrap">
         <span class="badge">📱 Appka Tvůj Coach</span>
         <h1>Kouč v&nbsp;kapse, který vidí jídlo i&nbsp;trénink</h1>
-        <p class="lead">Tělo se mění v měsících a přesně tak je appka postavená. Prvních 14 dní máš plnou verzi zdarma a bez karty, pak ti appka zůstane zdarma napořád. Nesleduje jeden den, ale řadu týdnů: každý týden se podívá na tvoji váhu a na to, co jsi doopravdy zapsal, a podle toho ti pohne kaloriemi a makry. Za rok z toho vyjde něco, co ti jeden jídelníček nedá.</p>
+        <!-- ⛔⛔ [2026-08-21] TADY SE SLIBOVALA ZKUŠEBKA, KTERÁ UŽ NEEXISTUJE.
+             Do 21. 8. ráno stálo v leadu „Prvních 14 dní máš plnou verzi zdarma a bez
+             karty", hlavní tlačítko bylo „Vyzkoušej 14 dní zdarma" a v pásu důvěry
+             „✓ 14 dní plná verze bez karty". Zkušebka byla zrušena 20. 8. večer
+             (migrace `20260820224500`), takže tahle stránka lidem slibovala něco, co
+             appka nedá, a to zrovna na místě, kudy přicházejí.
+             ⭐ Zbytek leadu je schválně zachovaný: „tělo se mění v měsících" je přesně
+             argument pro Basic (týdenní přepočet cílů), jen se k němu doplnily
+             generátory. Free zůstává napořád, jen se přestalo nabízet první.
+             Proč Basic a ne VIP: paměť `tvujcoach-basic-je-hlavni-produkt`. -->
+        <p class="lead">Tělo se mění v měsících a přesně tak je appka postavená. Nesleduje jeden den, ale řadu týdnů: každý týden se podívá na tvoji váhu a na to, co jsi doopravdy zapsal, a podle toho ti pohne kaloriemi a makry. K tomu ti poskládá jídelníček i trénink na míru. Za rok z toho vyjde něco, co ti jeden jídelníček nedá.</p>
         <!-- Bonus k první platbě, živý od 18. 8. 2026 (most `app-purchase-bridge` v5).
-             Stojí PŘED tlačítky schválně: je to důvod, proč kliknout na ceník místo na
-             zkušebku. Zkušebka zůstává, jen už není jediná nabídka na obrazovce. -->
+             Stojí PŘED tlačítky schválně: je to důvod, proč kliknout na nákup. -->
         <p class="hero-bonus">🎁 <b>Ke každé první platbě dostaneš videokurz výživy za 800 Kč zdarma</b>, a zůstane ti napořád. K ročnímu VIP navíc měsíc Barna Academy.</p>
         <div class="btn-row">
-            <a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušej 14 dní zdarma →</a>
-            <a class="btn btn-ghost" href="#cenik">Vzít appku na rok →</a>
+            <a class="btn btn-acc" href="https://tvujcoach.cz/?plan=basic">Vzít si Basic →</a>
+            <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">S AI koučem →</a>
         </div>
-        <div class="trust"><span>✓ 14 dní plná verze bez karty</span><span>✓ Pak Free napořád</span><span>✓ Zrušíš kdykoliv</span></div>
+        <div class="trust"><span>✓ Free verze napořád, i bez placení</span><span>✓ 600+ klientů od 2013</span><span>✓ Zrušíš kdykoliv</span></div>
         <!-- Prihlaseni do APPKY. Puvodne bylo druhym tlacitkem v hero sekci; to je ted kotva
              na cenik, takze by cesta dovnitr zmizela. „Prihlasit" v navigaci vede do ACADEMY
              (/akademie/prihlaseni/), ne do appky, takze vracejici se uzivatel by zustal bez
@@ -217,7 +237,7 @@
             <div class="card"><span class="em">📷</span><h3>Namíříš na čárový kód</h3><p>Kamera přečte obal a jídlo je v deníku. Přes 25 000 potravin včetně zboží z Lidlu, Tesca, Alberta či Globusu.</p></div>
             <div class="card"><span class="em">🎙️</span><h3>Nebo to řekneš nahlas<span class="vip-tag">VIP</span></h3><p>„Rohlík, tvaroh dvě stě gramů a tři deci vody." Appka větu rozebere a zapíše ji za tebe.</p></div>
             <div class="card"><span class="em">🍽️</span><h3>Vyfotíš talíř<span class="vip-tag">VIP</span></h3><p>Na domácí kuchyni, kde žádný obal není. Odhadne, co na talíři leží, a spočítá makra.</p></div>
-            <div class="card"><span class="em">⚡</span><h3>Šablony a historie</h3><p>Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím. A dohledáš cokoli, cos kdy jedl.</p></div>
+            <div class="card"><span class="em">⚡</span><h3>Šablony a historie</h3><p>Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím. Šablony i 14 dní historie zpět máš zdarma, neomezenou historii odemyká Basic.</p></div>
         </div>
 
         <!-- Sekce o zapisovani jidla dosud zadny snimek nemela, prvni byl az generator.
@@ -234,10 +254,10 @@
 
         <h3 class="blok">Trénink ti appka napíše</h3>
         <div class="grid g4">
-            <div class="card"><span class="em">🏋️</span><h3>Plán podle toho, kde cvičíš</h3><p>Fitko, doma, hřiště. Vlastní tělo, činky, všechno. Zadáš cíl a kolik dní v týdnu máš, a plán je hotový.</p></div>
+            <div class="card"><span class="em">🏋️</span><h3>Plán podle toho, kde cvičíš<span class="basic-tag">BASIC</span></h3><p>Fitko, doma, hřiště. Vlastní tělo, činky, všechno. Zadáš cíl a kolik dní v týdnu máš, a plán je hotový.</p></div>
             <div class="card"><span class="em">📖</span><h3>120 cviků s technikou a nejčastějšími chybami</h3><p>U každého provedení a popis česky. Tatáž databáze, kterou používám s klienty.</p></div>
             <div class="card"><span class="em">📈</span><h3>Pamatuje si, kolik jsi zvedl</h3><p>Zapíšeš série a příště ti řekne: „Zkus 60 kg × 10, minule ti zbývala rezerva."</p></div>
-            <div class="card"><span class="em">🧩</span><h3>Objem po svalových partiích</h3><p>Kolik sérií týdně padlo na záda a kolik na nohy. Barevně uvidíš, jestli je to málo, akorát, nebo už moc. Tohle si trenéři počítají ručně.</p></div>
+            <div class="card"><span class="em">🧩</span><h3>Objem po svalových partiích<span class="basic-tag">BASIC</span></h3><p>Kolik sérií týdně padlo na záda a kolik na nohy. Barevně uvidíš, jestli je to málo, akorát, nebo už moc. Tohle si trenéři počítají ručně.</p></div>
         </div>
 
         <figure class="shot">
@@ -247,9 +267,9 @@
 
         <h3 class="blok">A tady začíná koučink</h3>
         <div class="grid g4">
-            <div class="card"><span class="em">🎯</span><h3>Cíle se hýbou s tebou</h3><p>Týdenní check-in přepočítá kalorie a makra podle reálné váhy a podle toho, co jsi doopravdy snědl.</p></div>
+            <div class="card"><span class="em">🎯</span><h3>Cíle se hýbou s tebou<span class="basic-tag">BASIC</span></h3><p>Týdenní check-in přepočítá kalorie a makra podle reálné váhy a podle toho, co jsi doopravdy snědl.</p></div>
             <div class="card"><span class="em">✍️</span><h3>Nebo si cíle nastavíš sám</h3><p>Máš čísla od lékaře nebo si věříš? Zadáš si vlastní kalorie a makra a appka ti je při check-inu nepřepíše. Jde to i ve Free verzi.</p></div>
-            <div class="card"><span class="em">🧠</span><h3>„Co si můžu ještě dnes dát?"</h3><p>Zbývá ti 400 kcal a 30 g bílkovin. Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
+            <div class="card"><span class="em">🧠</span><h3>„Co si můžu ještě dnes dát?"<span class="basic-tag">BASIC</span></h3><p>Zbývá ti 400 kcal a 30 g bílkovin. Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
             <div class="card"><span class="em">🤖</span><h3>AI kouč mým hlasem<span class="vip-tag">VIP</span></h3><p>Zeptáš se ve dvě ráno a dostaneš odpověď. A umí appku ovládat za tebe: zapsat, upravit, vysvětlit, proč ti zvedla sacharidy.</p></div>
         </div>
 
@@ -371,8 +391,60 @@
 <section class="sec" id="cenik">
     <div class="wrap">
         <h2 class="center">Kolik to stojí</h2>
-        <p class="sec-sub">Po registraci máš 14 dní celou VIP verzi, ať víš, co si vybíráš. Kartu k tomu nepotřebuješ a po dvou týdnech ti appka zůstane ve Free verzi, dokud si sám neřekneš o víc. A ke každé první platbě přidávám videokurz výživy za 800 Kč zdarma, takže i za jeden nejlevnější měsíc odcházíš s víc, než jsi zaplatil.</p>
+        <!-- ⛔ [2026-08-21] Tenhle podnadpis sliboval „po registraci máš 14 dní celou VIP
+             verzi". Zkušebka byla 20. 8. zrušena, takže to byla nepravda. Zbytek
+             (videokurz k první platbě) platí a zůstává, je to nejsilnější argument. -->
+        <p class="sec-sub">Zapisovat můžeš zdarma napořád a kartu k tomu nepotřebuješ. Za 249 dostaneš to hlavní: cíle, které se ti každý týden přepočítají podle reálných dat, generátor jídelníčku i tréninku a plnou historii. A ke každé první platbě přidávám videokurz výživy za 800 Kč zdarma, takže i za jeden nejlevnější měsíc odcházíš s víc, než jsi zaplatil.</p>
+        <!-- ⭐ [2026-08-21] POŘADÍ KARET JE ZÁMĚRNÉ: Basic, VIP, Free, a zvýrazněný
+             (`featured` + ribbon) je BASIC, ne VIP. Do 21. 8. bylo Free první a zlatý
+             důraz měl VIP za 499. PROČ SE TO OTOČILO: ani jedna ze sedmi schopností
+             Basicu nevolá AI, takže Basic nemá variabilní náklad, zatímco všechny čtyři
+             navíc ve VIP pálí API. Při jednom platícím je úzkým hrdlem první platba,
+             ne její výše. VIP zůstává hned vedle jako krok nahoru i cenová kotva.
+             Free se nikomu nebere, jen se přestalo nabízet první.
+             Detail: paměť `tvujcoach-basic-je-hlavni-produkt`. -->
         <div class="plans plans-3">
+            <div class="plan featured">
+                <span class="ribbon">★ NEJČASTĚJŠÍ VOLBA</span>
+                <div class="plan-name">Basic</div>
+                <div class="plan-price" data-price="basic:month">249 Kč <small>/ měsíc</small></div>
+                <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
+                <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě.</b> 182 videí v hodnotě 800 Kč, doživotní přístup. Dostaneš ho i tehdy, když si vezmeš jediný měsíc.</p>
+                <ul class="feat">
+                    <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
+                    <li><strong>Týdenní check-in, který ti přepočítá cíle</strong></li>
+                    <li><strong>Tréninkový plán, objem po partiích a mezocyklus</strong></li>
+                    <li>Generátor jídelníčku i s nákupním seznamem</li>
+                    <li>„Co si můžu ještě dnes dát", report ke sdílení a export dat</li>
+                    <li>Všechno tohle počítá engine, žádnou AI k tomu nepotřebuješ</li>
+                </ul>
+                <!-- Roční koupě je od 13. 8. PRVNÍ tlačítko (rok je jednotka, ve které se tělo
+                     mění, a ceník má roční akcent). Vede na /sign-up, ne na úvod: kdo chce platit
+                     rok dopředu, je rozhodnutý a nemá se vracet přes landing. Klíč `basic-rok`
+                     překládá appka na tier basic + interval year (src/lib/plan-param.ts).
+                     ⚠️ Skript níž tlačítko SCHOVÁ, když roční plán v ceníku není. Proto musí
+                     měsíční tlačítko pod ním dávat smysl i samo o sobě (nese název tarifu). -->
+                <a class="btn btn-acc btn-year" data-year-cta="basic" href="https://tvujcoach.cz/sign-up?plan=basic-rok">Vzít Basic na rok →</a>
+                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=basic">Vybrat Basic měsíčně →</a>
+            </div>
+            <div class="plan">
+                <span class="ribbon">S AI KOUČEM</span>
+                <div class="plan-name">VIP</div>
+                <div class="plan-price" data-price="ai_basic:month">499 Kč <small>/ měsíc</small></div>
+                <p class="plan-year" data-year="ai_basic">nebo 4 990 Kč na rok, ušetříš 998 Kč (dva měsíce zdarma)</p>
+                <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě</b> (182 videí, hodnota 800 Kč, doživotní přístup). <b>K ročnímu navíc měsíc Barna Academy na zkoušku</b>, ta jinak stojí 990 Kč měsíčně.</p>
+                <ul class="feat">
+                    <li>Vše z Basicu včetně tréninku</li>
+                    <li>AI kouč 24/7 mým hlasem, ovládá appku za tebe</li>
+                    <li>Foto → makra: vyfotíš talíř, appka odhadne kalorie</li>
+                    <li>Hlasový zápis: řekneš, co jsi snědl</li>
+                    <li>AI komentář k týdennímu check-inu</li>
+                </ul>
+                <a class="btn btn-ghost btn-year" data-year-cta="ai_basic" href="https://tvujcoach.cz/sign-up?plan=vip-rok">Vzít VIP na rok →</a>
+                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">Vzít VIP měsíčně →</a>
+            </div>
+            <!-- Free je poslední a tiché. Nikomu se nebere (Martin: „free je navždy"),
+                 jen přestalo být tím, co nabízíme první. -->
             <div class="plan">
                 <div class="plan-name">Free</div>
                 <div class="plan-price">0 Kč</div>
@@ -385,45 +457,7 @@
                     <li>Grafy a historie za posledních 14 dní</li>
                     <li>Webová aplikace, česky (appka pro iPhone a Android se chystá)</li>
                 </ul>
-                <a class="btn btn-ghost" href="https://tvujcoach.cz">Začít zdarma →</a>
-            </div>
-            <div class="plan">
-                <div class="plan-name">Basic</div>
-                <div class="plan-price" data-price="basic:month">249 Kč <small>/ měsíc</small></div>
-                <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
-                <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě.</b> 182 videí v hodnotě 800 Kč, doživotní přístup. Dostaneš ho i tehdy, když si vezmeš jediný měsíc.</p>
-                <ul class="feat">
-                    <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
-                    <li><strong>Týdenní check-in, který ti přepočítá cíle</strong></li>
-                    <li><strong>Tréninkový plán, objem po partiích a mezocyklus</strong></li>
-                    <li>Generátor jídelníčku i s nákupním seznamem</li>
-                    <li>„Co si můžu ještě dnes dát", report ke sdílení a export dat</li>
-                    <li>Bez AI kouče</li>
-                </ul>
-                <!-- Roční koupě je od 13. 8. PRVNÍ tlačítko (rok je jednotka, ve které se tělo
-                     mění, a ceník má roční akcent). Vede na /sign-up, ne na úvod: kdo chce platit
-                     rok dopředu, je rozhodnutý a nemá se vracet přes landing. Klíč `basic-rok`
-                     překládá appka na tier basic + interval year (src/lib/plan-param.ts).
-                     ⚠️ Skript níž tlačítko SCHOVÁ, když roční plán v ceníku není. Proto musí
-                     měsíční tlačítko pod ním dávat smysl i samo o sobě (nese název tarifu). -->
-                <a class="btn btn-ghost btn-year" data-year-cta="basic" href="https://tvujcoach.cz/sign-up?plan=basic-rok">Vzít Basic na rok →</a>
-                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=basic">Vybrat Basic měsíčně →</a>
-            </div>
-            <div class="plan featured">
-                <span class="ribbon">★ S AI KOUČEM</span>
-                <div class="plan-name">VIP</div>
-                <div class="plan-price" data-price="ai_basic:month">499 Kč <small>/ měsíc</small></div>
-                <p class="plan-year" data-year="ai_basic">nebo 4 990 Kč na rok, ušetříš 998 Kč (dva měsíce zdarma)</p>
-                <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě</b> (182 videí, hodnota 800 Kč, doživotní přístup). <b>K ročnímu navíc měsíc Barna Academy na zkoušku</b>, ta jinak stojí 990 Kč měsíčně.</p>
-                <ul class="feat">
-                    <li>Vše z Basicu včetně tréninku</li>
-                    <li>AI kouč 24/7 mým hlasem, ovládá appku za tebe</li>
-                    <li>Foto → makra: vyfotíš talíř, appka odhadne kalorie</li>
-                    <li>Hlasový zápis: řekneš, co jsi snědl</li>
-                    <li>AI komentář k týdennímu check-inu</li>
-                </ul>
-                <a class="btn btn-acc btn-year" data-year-cta="ai_basic" href="https://tvujcoach.cz/sign-up?plan=vip-rok">Vzít VIP na rok →</a>
-                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">Vyzkoušet VIP měsíčně →</a>
+                <a class="btn btn-ghost" href="https://tvujcoach.cz">Založit Free účet →</a>
             </div>
 
         <div class="legal-note" style="grid-column:1/-1;margin:1.4rem 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);font-size:.88rem;line-height:1.6;color:#A09AAD;">
@@ -466,7 +500,7 @@
                  stovky položek každý: Tesco, Lidl, Albert, Globus, Billa, Kaufland i Penny. -->
             <div class="faq-i"><b>Najdu tam potraviny z českých obchodů?</b><p>Jo, a přesně na tom si zakládám. V databázi je <strong>přes 25 000 potravin včetně zboží z Lidlu, Tesca, Alberta, Globusu, Billy, Kauflandu i Penny</strong>, takže rohlík, skyr nebo šumavský chléb najdeš pod názvem, na který jsi zvyklý z regálu. K tomu přes dva tisíce položek, které jsem prošel osobně proti odborným zdrojům, v appce je poznáš podle značky Ověřeno Martinem. U všeho baleného funguje i čárový kód. A když ti něco chybí, napíšeš mi a doplním to.</p></div>
         </div>
-        <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz">Vyzkoušej 14 dní zdarma →</a></p>
+        <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz/?plan=basic">Vzít si Basic i videokurz →</a></p>
     </div>
 </section>
 

@@ -55,8 +55,8 @@
         <span class="lockbadge" id="appBadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">🎁 rok VIP v ceně</span>
         <div class="ico" style="color:#EBB12C;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/><path d="m9.5 10.5 1.5 1.5 3.5-3.5"/></svg></div>
         <h2>Tvůj Coach: appka</h2>
-        <p class="desc" id="appDesc">Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. K doživotnímu přístupu ji máš rok ve VIP verzi.</p>
-        <div class="chips"><span class="chip">Foto → makra</span><span class="chip">Adaptivní cíle</span><span class="chip">AI kouč</span></div>
+        <p class="desc" id="appDesc">Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků, poskládá ti jídelníček i tréninkový plán na míru a AI kouč ti radí Martinovým hlasem. K doživotnímu přístupu ji máš rok ve VIP verzi.</p>
+        <div class="chips"><span class="chip">Foto → makra</span><span class="chip">Adaptivní cíle</span><span class="chip">Generátory</span><span class="chip">Tréninkový mozek</span><span class="chip">AI kouč</span></div>
         <span class="go"><span class="lbl">Otevřít appku</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
@@ -184,7 +184,7 @@
                     window.BA.membershipKind().then(function(kind){
                       if(kind !== 'monthly') return;   // doživotní necháváme, jak bylo
                       var mb=document.getElementById('appBadge'); if(mb) mb.textContent='📱 VIP v ceně členství';
-                      var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. VIP verzi máš v ceně členství, po celou dobu, co ti běží.';
+                      var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků, poskládá ti jídelníček i tréninkový plán na míru a AI kouč ti radí Martinovým hlasem. VIP verzi máš v ceně členství, po celou dobu, co ti běží.';
                     });
                   } else if(r[2]){
                     // ⭐ Koučink klient má appku VIP v ceně koučinku (Martin potvrdil 11. 8. 2026,
@@ -194,7 +194,7 @@
                     ap.setAttribute('href','https://coach.martinbarna.cz/sign-in?email='+encodeURIComponent(u.email||'')+'&from=academy');
                     var aplK=ap.querySelector('.go .lbl'); if(aplK) aplK.textContent='Otevřít appku';
                     var apbK=document.getElementById('appBadge'); if(apbK) apbK.textContent='🤝 VIP v ceně koučinku';
-                    var apdK=document.getElementById('appDesc'); if(apdK) apdK.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. VIP verzi máš v ceně koučinku. Přihlas se stejným e-mailem jako tady.';
+                    var apdK=document.getElementById('appDesc'); if(apdK) apdK.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků, poskládá ti jídelníček i tréninkový plán na míru a AI kouč ti radí Martinovým hlasem. VIP verzi máš v ceně koučinku. Přihlas se stejným e-mailem jako tady.';
                   } else {
                     ap.setAttribute('href','/pro-vas/'); ap.removeAttribute('target');
                     var apl2=ap.querySelector('.go .lbl'); if(apl2) apl2.textContent='Chci ji → rok VIP v Academy';
