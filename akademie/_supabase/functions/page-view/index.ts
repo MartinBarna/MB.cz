@@ -50,6 +50,29 @@ function normPath(raw: unknown): string | null {
   return p;
 }
 
+/**
+ * Odkazující stránka BEZ query stringu a bez kotvy.
+ *
+ * ⛔⛔ PROČ TO NENÍ ZBYTEČNÁ OPATRNOST: `document.referrer` nese CELOU adresu, ze které
+ * člověk přišel, včetně parametrů. Tam se běžně veze e-mail, token z odhlašovacího odkazu,
+ * hledaný dotaz nebo id objednávky. Ukládat to celé by rozporovalo slib „žádná IP, žádný
+ * e-mail, žádné jméno", na kterém tahle tabulka stojí, a byla by to osobní data ve smyslu
+ * GDPR bez důvodu. Pro přehled návštěvnosti stačí `origin` a cesta.
+ *
+ * ⚠️ Ořezává se na SERVERU schválně, ne v prohlížeči: klient se dá obejít, tohle ne.
+ */
+function normReferrer(raw: unknown): string | null {
+  const s = String(raw ?? "").trim();
+  if (!s) return null;
+  try {
+    const u = new URL(s);
+    if (u.protocol !== "http:" && u.protocol !== "https:") return null;
+    return (u.origin + u.pathname).slice(0, 300);
+  } catch {
+    return null; // nesrozumitelný referrer radši zahodíme, než abychom uložili neznámo co
+  }
+}
+
 function countryOf(req: Request, body: Record<string, unknown>): string | null {
   const fromBody = String(body.country ?? "").trim().toUpperCase();
   if (/^[A-Z]{2}$/.test(fromBody)) return fromBody;
@@ -117,7 +140,7 @@ Deno.serve(async (req: Request) => {
     const admin = createClient(SUPABASE_URL, SERVICE, { auth: { persistSession: false } });
     await admin.from("page_views").insert({
       path,
-      referrer: clip(body.referrer, 500),
+      referrer: normReferrer(body.referrer),
       utm_source: clip(body.utm_source, 80),
       utm_medium: clip(body.utm_medium, 80),
       utm_campaign: clip(body.utm_campaign, 80),

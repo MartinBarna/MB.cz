@@ -103,3 +103,42 @@ $$;
 
 revoke all on function public.admin_page_views_summary(integer) from public, anon, authenticated;
 grant execute on function public.admin_page_views_summary(integer) to service_role;
+
+-- ============================================================================
+-- RETENCE: starší než 180 dní se maže samo.
+--
+-- ⛔ PROČ TO TU MUSÍ BÝT. Endpoint `page-view` je ZÁMĚRNĚ veřejný (`verify_jwt=false`),
+--    protože ho volá web nepřihlášeného návštěvníka. Kontrola `Origin`/`Referer` odfiltruje
+--    omyly, ale **nikoli útok**: obě hlavičky si skript nastaví, jak chce. Kdo tu adresu
+--    najde, může do tabulky sypat řádky. Škoda není únik (nic osobního tam není), ale
+--    nafouknutá databáze a znehodnocená čísla.
+-- ⇒ Retence je STROP, ne ochrana. Kdyby čísla začala vypadat nesmyslně, první podezřelý
+--    je tohle, ne chyba měření. Kontrola: `select count(*) from page_views where created_at > now() - interval '1 day'`.
+-- ⚠️ 180 dní stačí na meziměsíční srovnání. Srovnání proti loňsku možné NENÍ a je to
+--    vědomý kompromis; delší okno ať je rozhodnutí, ne tichý růst tabulky.
+-- ============================================================================
+create or replace function public.page_views_uklid()
+returns integer
+language sql
+security definer
+set search_path = public
+as $$
+  with smazane as (
+    delete from public.page_views where created_at < now() - interval '180 days' returning 1
+  )
+  select count(*)::int from smazane;
+$$;
+
+revoke all on function public.page_views_uklid() from public, anon, authenticated;
+grant execute on function public.page_views_uklid() to service_role;
+
+-- Úklid jednou denně ve 3:40 UTC. `unschedule` napřed, ať opakované spuštění
+-- tohohle souboru nevyrobí druhou úlohu se stejným jménem.
+do $$
+begin
+  perform cron.unschedule('page-views-uklid');
+exception when others then
+  null; -- úloha ještě neexistuje, to je v pořádku
+end $$;
+
+select cron.schedule('page-views-uklid', '40 3 * * *', $$select public.page_views_uklid();$$);
