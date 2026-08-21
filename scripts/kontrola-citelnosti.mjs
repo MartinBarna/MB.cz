@@ -39,6 +39,9 @@ const JMENA_BAREV = {
   transparent: null, inherit: null, currentcolor: null, unset: null, initial: null,
 };
 
+/** Pod touhle průhledností je pozadí jen nádech, ne plocha, přes kterou text zmizí. */
+const PRAH_PRUHLEDNOSTI = 0.25;
+
 function naRgb(hodnota) {
   if (!hodnota) return null;
   const h = hodnota.trim().toLowerCase().replace(/\s*!important\s*$/, '');
@@ -51,7 +54,12 @@ function naRgb(hodnota) {
   if (m) {
     const c = m[1].split(/[,/]/).map((s) => parseFloat(s));
     // ⛔ Průhledné pozadí není pozadí. Kdyby se bralo jako barva, kontrola by lhala.
-    if (c.length >= 4 && c[3] === 0) return null;
+    // ⚠️ A slabé podbarvení taky ne. První ostrý běh 21. 8. 2026 vrátil 27 nálezů
+    //    a VŠECHNY byly `rgba(255,255,255,.04)` nebo `rgba(235,177,44,.06)`, tedy
+    //    tónování na 4 až 6 %. Přes takový nádech je vidět podklad a čitelnost to
+    //    převrátit nemůže. Hlásit to znamená vyrobit 27 planých poplachů a pojistku
+    //    tím zabít (stejná lekce jako filtr sdílené šablony níž).
+    if (c.length >= 4 && c[3] < PRAH_PRUHLEDNOSTI) return null;
     return [c[0], c[1], c[2]];
   }
   return null; // gradient, var(), hsl a spol. neřešíme, radši mlčíme než hádáme
@@ -62,8 +70,16 @@ const jas = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 /** Rozseká `<style>` blok na dvojice selektor a telo. Bez parseru, stačí to. */
 function pravidla(css) {
   const out = [];
+  // ⛔⛔ KOMENTÁŘE PRYČ JAKO PRVNÍ. Bez toho se `/* ... */` nalepí na následující
+  //    selektor a stane se jeho součástí. 21. 8. 2026 to zabilo tuhle kontrolu:
+  //    do článku jsem nad `.tyden-box` napsal dlouhé varování, ve kterém je zmíněný
+  //    `marketing-dark.css`, a síto „řeší to tmavý styl" pak v tom textu našlo shodu
+  //    a vadu propustilo. Kontrola tedy přestala fungovat kvůli komentáři, který měl
+  //    tu vadu připomínat. ⇒ Je to potřetí za den, co kontrola sedla na vlastní komentář
+  //    (viz `feedback-pojistka-cti-co-vidi-clovek`). Komentář není kód, zahoď ho.
+  const bezKomentaru = css.replace(/\/\*[\s\S]*?\*\//g, ' ');
   // média a keyframes zahodíme, ať se nesnažíme parsovat vnořené bloky
-  const bezMedii = css.replace(/@(media|supports|keyframes)[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, ' ');
+  const bezMedii = bezKomentaru.replace(/@(media|supports|keyframes)[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, ' ');
   const re = /([^{}]+)\{([^{}]*)\}/g;
   let m;
   while ((m = re.exec(bezMedii)) !== null) out.push({ selektor: m[1].trim(), telo: m[2] });
@@ -94,6 +110,40 @@ function hlas(soubor, kde, problem, detail) {
 const PRAH_SABLONY = 4; // selektor v >= tolika souborech bereme jako sdílenou šablonu
 const cetnostSelektoru = new Map();
 
+// ⛔⛔ DVĚ DALŠÍ SÍTA, BEZ NICHŽ KONTROLA HLÁSÍ NESMYSLY (doladěno 21. 8. 2026).
+// Po filtru šablony a průhlednosti zbyly dva nálezy a OBA byly plané. Ověřeno
+// v prohlížeči na produkci, ne odhadem:
+//   `.recipe`  (hydratace-deti-sport)  → `marketing-dark.css` ho zná a přepisuje
+//        pozadí na průhledné. Živě: `backgroundColor: rgba(0,0,0,0)`, text bílý. V pořádku.
+//   `.fig`     (kolik-spanku)          → tmavý styl ho nezná a pozadí ZŮSTANE bílé,
+//        ale autor barvu textu nastavil potomkům (`.fig figcaption { color:#6a7269 }`)
+//        a popisky grafu jsou SVG, které se barví přes `fill`, ne přes `color`.
+//        Živě: tmavý text na bílé kartě, čitelné.
+// ⇒ Skutečná vada (`.tyden-box`) neměla ANI JEDNO: `background:#fff4e8`, žádný `color`,
+//   žádná barva potomkům, a `marketing-dark.css` o ní nikdy neslyšel.
+const TMAVY_STYL = (() => {
+  try { return readFileSync(join('assets', 'marketing-dark.css'), 'utf8'); } catch { return ''; }
+})();
+
+/** Zná tmavý motiv tenhle selektor? Pak si pozadí řídí sám a není to nález. */
+function resiTmavyStyl(selektor) {
+  if (!TMAVY_STYL) return false;
+  return selektor.split(',').some((cast) => {
+    const m = cast.trim().match(/\.[A-Za-z0-9_-]+/g);
+    return m && m.some((trida) => TMAVY_STYL.includes(trida));
+  });
+}
+
+/** Nastavil autor barvu textu potomkům (`.fig figcaption { color: ... }`)? Pak na to myslel. */
+function maBarvuPotomku(selektor, vsechnaPravidla) {
+  const zaklad = selektor.trim().split(',')[0].trim();
+  if (!zaklad) return false;
+  return vsechnaPravidla.some((p) => {
+    const s = p.selektor.trim();
+    return s !== zaklad && s.startsWith(zaklad) && /(^|;|\{|\s)color\s*:/i.test(p.telo);
+  });
+}
+
 function spoctiSelektory(html) {
   const videno = new Set();
   for (const blok of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)) {
@@ -105,18 +155,21 @@ function spoctiSelektory(html) {
 function zkontroluj(soubor, html) {
   // 1) pravidla ve vložených <style> blocích
   for (const blok of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)) {
-    for (const { selektor, telo } of pravidla(blok[1])) {
+    const vsechna = pravidla(blok[1]);
+    for (const { selektor, telo } of vsechna) {
       const bgRaw = vlastnost(telo, ['background-color', 'background']);
       const fgRaw = vlastnost(telo, ['color']);
       // gradient v `background` není plocha pod textem, přeskoč
       if (bgRaw && /gradient|url\(/i.test(bgRaw)) continue;
       const bg = naRgb(bgRaw);
       const fg = naRgb(fgRaw);
-      // Sdílenou šablonu přeskoč, řeší ji `marketing-dark.css` (viz komentář u PRAH_SABLONY).
-      const jeSablona = (cetnostSelektoru.get(selektor) ?? 0) >= PRAH_SABLONY;
+      // Tři síta, každé zavřelo jednu třídu planých poplachů (viz komentáře výš).
+      const bezpecne = (cetnostSelektoru.get(selektor) ?? 0) >= PRAH_SABLONY
+        || resiTmavyStyl(selektor)
+        || maBarvuPotomku(selektor, vsechna);
 
       if (bg && !fgRaw) {
-        if (!jeSablona) {
+        if (!bezpecne) {
           hlas(soubor, selektor, 'pozadi bez barvy textu',
             `background:${bgRaw.trim()} a zadny color; pri tmavem motivu text zesvetli a zmizi`);
         }
