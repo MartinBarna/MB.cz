@@ -126,11 +126,43 @@ Deno.serve(async (req: Request) => {
     // ⭐ REGISTRACE Z REKLAMY nepřebíjí rozjetou akviziční trať (viz komentář u AKVIZICNI).
     // Jen si k leadovi poznamenáme, že se registroval, ať atribuce nepřijde o informaci.
     if (REGISTRACNI.has(product) && jeAkvizicni(String(lead.track ?? ""))) {
-      const meta = { ...(lead.meta as Record<string, unknown> ?? {}), "tc-direct-registrace": new Date().toISOString() };
+      const puvodniMeta = (lead.meta as Record<string, unknown>) ?? {};
+      // ⛔ IDEMPOTENCE: razítko `tc-direct-registrace` slouží ZÁROVEŇ jako značka
+      //    „aktivační mail už odešel". Kdo se zaregistruje podruhé (nový účet na tutéž
+      //    adresu), druhý mail nedostane. Čte se PŘED zápisem, jinak by bylo vždy true.
+      const uzPoslano = Boolean(puvodniMeta["tc-direct-registrace"]);
+      const meta = { ...puvodniMeta, "tc-direct-registrace": new Date().toISOString() };
       const { error } = await admin.from("leads")
         .update({ meta, updated_at: new Date().toISOString() }).eq("id", lead.id);
       if (error) return json({ error: "meta_update_failed", detail: error.message }, 500);
-      return json({ ok: true, status: "ponechan_v_akvizicni_trati", track: lead.track });
+
+      // ⭐⭐ [2026-08-21, schválil Martin] JEDNORÁZOVÝ AKTIVAČNÍ MAIL K APPCE.
+      // Trať člověka se NEMĚNÍ, jeho série běží dál. Důvod: 91 % leadů (846 z 929)
+      // běží na akviziční trati, takže registrace je do onboardingu nepustí. Přepnout
+      // je nesmíme (utnulo by to rozjetý prodej Academy za 8 900), ale mlčet je škoda,
+      // registrace je nejsilnější signál zájmu, jaký máme.
+      // ⛔ FIRE-AND-FORGET s `catch`: výpadek odesílače NESMÍ shodit odpověď mostu.
+      //    Tohle je marketingový mail, ne součást registrace.
+      let aktivacniMail = "preskocen_uz_byl";
+      if (!uzPoslano) {
+        try {
+          const { data: ds } = await admin.from("app_config")
+            .select("value").eq("key", "drip_invoke_secret").maybeSingle();
+          if (!ds?.value) {
+            aktivacniMail = "chybi_drip_secret";
+          } else {
+            const r = await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "x-drip-secret": String(ds.value) },
+              body: JSON.stringify({ oneoff_email: email, track: "tc-aktivace", step: 0 }),
+            });
+            aktivacniMail = r.ok ? "odeslan" : "selhal_" + r.status;
+          }
+        } catch (e) {
+          aktivacniMail = "vyjimka_" + String(e).slice(0, 60);
+        }
+      }
+      return json({ ok: true, status: "ponechan_v_akvizicni_trati", track: lead.track, aktivacni_mail: aktivacniMail });
     }
     // Byl jen v nurture nebo lead-magnetu: nakup je silnejsi signal, prepneme ho.
     const { error } = await admin.from("leads").update({
