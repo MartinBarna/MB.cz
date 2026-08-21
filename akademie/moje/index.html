@@ -55,8 +55,8 @@
         <span class="lockbadge" id="appBadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">🎁 rok VIP v ceně</span>
         <div class="ico" style="color:#EBB12C;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/><path d="m9.5 10.5 1.5 1.5 3.5-3.5"/></svg></div>
         <h2>Tvůj Coach: appka</h2>
-        <p class="desc" id="appDesc">Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. K doživotnímu přístupu ji máš rok ve VIP verzi.</p>
-        <div class="chips"><span class="chip">Foto → makra</span><span class="chip">Adaptivní cíle</span><span class="chip">AI kouč</span></div>
+        <p class="desc" id="appDesc">Web, běží i na mobilu: vygeneruje ti jídelníček i tréninkový plán ze 120 cviků, hlídá objem po partiích a mezocyklus, sama upravuje cíle podle tvých výsledků, nafotíš jídlo a spočítá makra a AI kouč ti radí Martinovým hlasem. K doživotnímu přístupu ji máš rok ve VIP verzi.</p>
+        <div class="chips"><span class="chip">Generátory</span><span class="chip">Tréninkový mozek</span><span class="chip">Adaptivní cíle</span><span class="chip">Foto → makra</span><span class="chip">AI kouč</span></div>
         <span class="go"><span class="lbl">Otevřít appku</span> <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </a>
 
@@ -184,12 +184,12 @@
                       ap.setAttribute('target','_blank');
                       var mb=document.getElementById('appBadge'); if(mb) mb.textContent='📱 PŘIDAT ZA 499 Kč / MĚS';
                       var ml=ap.querySelector('.go .lbl'); if(ml) ml.textContent='Vyzkoušet Tvůj Coach';
-                      var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků a AI kouč ti radí Martinovým hlasem. V měsíčním členství ji v ceně nemáš, přidáš si ji za 499 Kč měsíčně.';
+                      var md=document.getElementById('appDesc'); if(md) md.textContent='Web, běží i na mobilu: vygeneruje ti jídelníček i tréninkový plán ze 120 cviků, hlídá objem po partiích a mezocyklus, sama upravuje cíle podle tvých výsledků, nafotíš jídlo a spočítá makra a AI kouč ti radí Martinovým hlasem. V měsíčním členství ji v ceně nemáš, přidáš si ji za 499 Kč měsíčně.';
                     });
                   } else {
                     ap.setAttribute('href','/pro-vas/'); ap.removeAttribute('target');
                     var apl2=ap.querySelector('.go .lbl'); if(apl2) apl2.textContent='Chci ji → rok VIP v Academy';
-                    var apd=document.getElementById('appDesc'); if(apd) apd.textContent='Kompletní koučovací appka (web, běží i na mobilu): vyfotíš jídlo a spočítá makra, sama upravuje cíle podle výsledků, AI kouč. K doživotnímu přístupu do Academy ji máš rok ve VIP verzi.';
+                    var apd=document.getElementById('appDesc'); if(apd) apd.textContent='Kompletní koučovací appka (web, běží i na mobilu): generátor jídelníčku i tréninkového plánu ze 120 cviků, objem po partiích a mezocyklus, sama upravuje cíle podle výsledků, vyfotíš jídlo a spočítá makra, AI kouč. K doživotnímu přístupu do Academy ji máš rok ve VIP verzi.';
                     var apb2=document.getElementById('appBadge'); if(apb2) apb2.textContent='🎁 rok VIP v Academy';
                   }
                 }
