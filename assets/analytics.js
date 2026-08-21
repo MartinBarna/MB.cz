@@ -1,6 +1,6 @@
-/* Martin Barna — GA4 (G-C3JC8G3FS0) s Google Consent Mode v2 + jednoduchá cookie lišta.
+/* Martin Barna - GA4 (G-C3JC8G3FS0) s Google Consent Mode v2 + jednoduchá cookie lišta.
    Měření je defaultně VYPNuté (analytics_storage: denied) a zapne se až po souhlasu.
-   Sdílený soubor — odkazuje se z každé stránky jedním <script defer src="/assets/analytics.js">. */
+   Sdílený soubor - odkazuje se z každé stránky jedním <script defer src="/assets/analytics.js">. */
 (function () {
   var GA_ID = 'G-C3JC8G3FS0';
   var KEY = 'mb_consent_v1';
@@ -10,7 +10,7 @@
   window.gtag = gtag;
   gtag('js', new Date());
 
-  // Consent Mode v2 — vše defaultně zamítnuté, dokud návštěvník nesouhlasí
+  // Consent Mode v2 - vše defaultně zamítnuté, dokud návštěvník nesouhlasí
   gtag('consent', 'default', {
     ad_storage: 'denied',
     ad_user_data: 'denied',
@@ -39,7 +39,7 @@
     });
   }
 
-  // Meta (Facebook) Pixel — načte se a odpálí AŽ po souhlasu (kvůli GDPR).
+  // Meta (Facebook) Pixel - načte se a odpálí AŽ po souhlasu (kvůli GDPR).
   var PIXEL_ID = '277526073774099';
   function loadMetaPixel() {
     if (window.fbq) return;
@@ -52,7 +52,7 @@
     window.fbq('track', 'PageView');
   }
 
-  // ===== Konverzní eventy (Meta Pixel + GA4) — aby se reklamy učily a retargetovaly =====
+  // ===== Konverzní eventy (Meta Pixel + GA4) - aby se reklamy učily a retargetovaly =====
   function onReady(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
   // Unikátní eventID pro deduplikaci s budoucím serverovým CAPI.
   function rnd() { return new Date().getTime().toString(36) + Math.random().toString(36).slice(2, 10); }
@@ -60,7 +60,7 @@
   // Která konverze patří k aktuální stránce.
   // DŮLEŽITÉ: Purchase se měří VÝHRADNĚ SERVEROVĚ přes Meta CAPI + GA4 MP
   // (SimpleShop produkt 42679 → webhook → Cloudflare Worker „ss-capi", dedup přes
-  // event_id = číslo objednávky). Klientský Purchase tady ZÁMĚRNĚ NEEXISTUJE — jinak
+  // event_id = číslo objednávky). Klientský Purchase tady ZÁMĚRNĚ NEEXISTUJE - jinak
   // by se nákup dubloval a rozbil dedup s CAPI. Děkovací stránky (/dekuji-*) neměří nic.
   // Kdyby kdy přibyl client-side Purchase, MUSÍ mít eventID = pouze order_number.
   function pageConv() {
@@ -72,12 +72,12 @@
   }
   function fireConvFB() {
     var c = pageConv(); if (!c || !window.fbq) return;
-    // Pouze ViewContent (horní trychtýř) — žádný client-side Purchase.
+    // Pouze ViewContent (horní trychtýř) - žádný client-side Purchase.
     fbq('track', 'ViewContent', { content_name: c.name, content_type: 'product', content_ids: [c.id], value: c.value, currency: 'CZK' }, { eventID: evId('view') });
   }
   function fireConvGA() {
     var c = pageConv(); if (!c || !window.gtag) return;
-    // Pouze view_item — purchase posílá do GA4 server-side (Measurement Protocol).
+    // Pouze view_item - purchase posílá do GA4 server-side (Measurement Protocol).
     gtag('event', 'view_item', { value: c.value, currency: 'CZK', items: [{ item_id: c.id, item_name: c.name, price: c.value }] });
   }
   function loadMetaPixelAndConvert() { loadMetaPixel(); fireConvFB(); }
@@ -322,7 +322,7 @@
   var UTM = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id'];
 
   // Reklamní parametry z aktuální URL. Stejná pravidla jako v lead-form.js:
-  // utm_* max 60 znaků, klik ID celé (max 200) — zkrácený gclid je pro offline
+  // utm_* max 60 znaků, klik ID celé (max 200) - zkrácený gclid je pro offline
   // import konverzí do Google Ads nepoužitelný.
   function fromUrl() {
     try {
@@ -438,7 +438,7 @@
    Problém: klik na wa.me na PC je k ničemu (otevře přihlášení do WhatsApp Webu).
    Řešení: na desktopu klik na jakýkoli WhatsApp odkaz NEnaviguje, ale ukáže QR
    (naskenuješ mobilem → otevře se chat s předvyplněnou zprávou). Na mobilu se
-   odkaz chová normálně (otevře appku se zprávou) — tam QR netřeba. */
+   odkaz chová normálně (otevře appku se zprávou) - tam QR netřeba. */
 (function () {
   var PHONE = '420603229831';
   function isDesktop() {
@@ -470,7 +470,7 @@
       '<div style="background:#fff;color:#161616;border-radius:18px;max-width:340px;width:100%;padding:24px 22px 20px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35);position:relative;">' +
         '<button type="button" aria-label="Zavřít" data-x style="position:absolute;top:8px;right:12px;border:none;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer;color:#9a948c;">×</button>' +
         '<div style="display:flex;align-items:center;justify-content:center;gap:9px;font-weight:800;font-size:1.08rem;margin-bottom:.3rem;"><span style="width:13px;height:13px;border-radius:50%;background:#EBB12C;display:inline-block;"></span>WhatsApp</div>' +
-        '<p style="margin:.2rem 0 1rem;color:#5a5045;font-size:.9rem;line-height:1.45;">Naskenuj QR kód mobilem — otevře se ti chat se mnou i s předvyplněnou zprávou. Nebo napiš na <b>+420&nbsp;603&nbsp;229&nbsp;831</b>.</p>' +
+        '<p style="margin:.2rem 0 1rem;color:#5a5045;font-size:.9rem;line-height:1.45;">Naskenuj QR kód mobilem a otevře se ti chat se mnou i s předvyplněnou zprávou. Nebo napiš na <b>+420&nbsp;603&nbsp;229&nbsp;831</b>.</p>' +
         '<img src="' + qrFileFor(href) + '" alt="WhatsApp QR kód" width="210" height="210" style="width:210px;height:210px;display:block;margin:0 auto;border:1px solid #eee;border-radius:10px;padding:8px;background:#fff;">' +
         '<a href="' + webHref(href) + '" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;background:#EBB12C;color:#fff;font-weight:700;text-decoration:none;padding:11px 22px;border-radius:50px;font-size:.92rem;">Otevřít WhatsApp Web</a>' +
         '<div style="margin-top:10px;"><a href="' + href + '" target="_blank" rel="noopener" style="color:#9a948c;font-size:.82rem;">Mám appku v počítači → otevřít rovnou</a></div>' +
