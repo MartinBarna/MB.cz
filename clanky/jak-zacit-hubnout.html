@@ -76,7 +76,12 @@
         .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
         .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
-        .tyden-box { background:#fff4e8; border-left:5px solid #EBB12C; border-radius:0 14px 14px 0; padding:1rem 1.3rem; margin:1.4rem 0; font-weight:600; }
+        /* ⛔ BARVU POZADÍ I TEXTU PIŠ VŽDY SPOLU. Na tenhle web se načítá `marketing-dark.css`,
+           který stránku překlopí do tmavého motivu a přebarví text na světlý. Světlé pozadí
+           bez vlastní barvy textu = bílá na bílé. Stalo se to 21. 8. 2026 přímo v produkci
+           a našel to Martin, ne kontrola: strukturální ověření text NAŠLO, protože v DOM byl,
+           jen nebyl vidět. Proto je tady tmavé pozadí a barva textu natvrdo. */
+        .tyden-box { background:#161616; color:#fff; border-left:5px solid #EBB12C; border-radius:0 14px 14px 0; padding:1rem 1.3rem; margin:1.4rem 0; font-weight:700; }
     </style>
     <script type="application/ld+json">
 {
