@@ -51,6 +51,19 @@ function gitSha(buf) {
 
 const results = { ok: 0, mismatch: [], missing: [], challenge: [], error: [] };
 
+// ⛔⛔ POZOR NA `?nc=`: ten parametr je NUTNÝ (bez něj by CDN mohla vrátit starou verzi
+// souboru a ověření by svítilo zeleně nad nenasazeným obsahem), ALE má tvrdý vedlejší
+// účinek. Změřeno 21. 8. 2026: WEDOS Global CDN **necachuje nic s query stringem**, takže
+// každý z 1415 požadavků je zaručený cache MISS a jde na origin. A právě cesta při MISS
+// je ta nestabilní: origin přímo odpovídá do 0,3 s, přes CDN při MISS až 18 s, občas
+// spojení spadne úplně. ⇒ Tenhle skript si sám vyrábí přesně ten provoz, na kterém pak umírá.
+// Detail a čísla: paměť `mb-wedos-pomaly-origin-a-utm-cache`.
+const POKUSU_NA_SPOJENI = 4; // chyba spojení není nález, je to hosting: zkoušej víc a s pauzou
+
+/** Chyba přenosu (spadlé spojení), ne odpověď serveru. Tyhle se nesmí počítat jako nález. */
+const jeChybaSpojeni = (e) =>
+  /socket hang up|ECONNRESET|ETIMEDOUT|EPIPE|ECONNREFUSED|EAI_AGAIN|timeout|aborted/i.test(String(e && e.message));
+
 async function check(f, attempt = 0) {
   const url = BASE + f.path.split('/').map(encodeURIComponent).join('/') + '?nc=' + NC + '-' + attempt;
   try {
@@ -60,7 +73,11 @@ async function check(f, attempt = 0) {
       /altcha|security verification|wedos.?protection/i.test(bodyStr) && !f.path.includes('odhlasit') && gitSha(r.body) !== f.sha;
     if (r.status === 404) { results.missing.push(f.path); return; }
     if (r.status !== 200) {
-      if (attempt < 1) return check(f, attempt + 1);
+      // 502/503 od CDN je totéž jako spadlé spojení: server se nedostal k obsahu.
+      if (attempt < POKUSU_NA_SPOJENI) {
+        await new Promise((s) => setTimeout(s, 400 * (attempt + 1)));
+        return check(f, attempt + 1);
+      }
       results.error.push(f.path + ' HTTP ' + r.status); return;
     }
     if (gitSha(r.body) === f.sha) { results.ok++; return; }
@@ -71,7 +88,12 @@ async function check(f, attempt = 0) {
     if (attempt < 1) return check(f, attempt + 1); // jednorazovy retry (cache/propagace)
     results.mismatch.push(f.path);
   } catch (e) {
-    if (attempt < 1) return check(f, attempt + 1);
+    // ⚠️ Rozlišuj: spadlé spojení zkoušej znovu s narůstající pauzou, jiná chyba jen jednou.
+    const limit = jeChybaSpojeni(e) ? POKUSU_NA_SPOJENI : 1;
+    if (attempt < limit) {
+      if (attempt > 0) await new Promise((s) => setTimeout(s, 400 * attempt));
+      return check(f, attempt + 1);
+    }
     results.error.push(f.path + ' ' + e.message);
   }
 }
@@ -95,9 +117,29 @@ async function check(f, attempt = 0) {
   console.log('MISSING/404 (' + results.missing.length + '):'); results.missing.slice(0, 20).forEach((p) => console.log('  ' + p));
   console.log('CHALLENGE (' + results.challenge.length + '):'); results.challenge.slice(0, 10).forEach((p) => console.log('  ' + p));
   console.log('ERROR (' + results.error.length + '):'); results.error.slice(0, 10).forEach((p) => console.log('  ' + p));
-  const bad = results.mismatch.length + results.missing.length + results.challenge.length + results.error.length;
-  if (bad > 0) {
-    console.error('DEPLOY NENÍ KONZISTENTNÍ: ' + bad + ' souborů neodpovídá ' + REF + '.');
+
+  // ⛔⛔ ROZDĚL NÁLEZ OD HOSTINGU, JINAK POJISTCE NIKDO NEVĚŘÍ.
+  // Do 21. 8. 2026 shodila běh i chyba spojení. Běh #629 (20. 8.) tak hlásil „failure"
+  // při MISMATCH 0, MISSING 0, CHALLENGE 0 a jen 16 spadlých spojení na obrázcích, ačkoli
+  // se nasadilo správně. Takové maily „Run failed" naučí člověka poplach ignorovat, a pak
+  // přehlédne i ten pravý. ⇒ Padá se JEN na důkazu o špatném obsahu.
+  const nalezy = results.mismatch.length + results.missing.length + results.challenge.length;
+  const strop = Math.max(20, Math.ceil(files.length * 0.05)); // 5 % je už výpadek, ne škytnutí
+
+  if (nalezy > 0) {
+    console.error('DEPLOY NENÍ KONZISTENTNÍ: ' + nalezy + ' souborů neodpovídá ' + REF + '.');
     process.exitCode = 1;
+  } else if (results.error.length > strop) {
+    // Když spadne půlka požadavků, nevíme nic. Tichá zelená by tady lhala.
+    console.error('NEOVĚŘENO: ' + results.error.length + ' spojení spadlo (strop ' + strop + ').');
+    console.error('Obsah se nepodařilo zkontrolovat, ber to jako neúspěch, ne jako čistý deploy.');
+    process.exitCode = 1;
+  } else if (results.error.length > 0) {
+    console.log('');
+    console.log('⚠️ HOSTING, NE DEPLOY: ' + results.error.length + ' spojení spadlo i po ' +
+      POKUSU_NA_SPOJENI + ' pokusech.');
+    console.log('   Obsah, který se stáhnout podařilo, sedí na ' + REF + ' (0 neshod, 0 chybějících).');
+    console.log('   Je to známá nestabilita WEDOS CDN při cache MISS, ne chyba nasazení.');
+    console.log('   Běh proto NEshazuji. Kdyby se to množilo, je to podklad pro podporu.');
   }
 })();

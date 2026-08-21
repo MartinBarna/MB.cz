@@ -15,11 +15,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # ⛔ Node 20 je od 19. 9. 2025 na runnerech mrtvý a GitHub obě akce vynuceně
+      # přepínal na Node 24 (varování v běhu #629). Povýšeno 21. 8. 2026 na verze,
+      # které Node 24 deklarují samy: checkout v5 a FTP akce v4.4.0 (její jediná
+      # změna proti v4.3.5 je právě „Update to node 24").
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Nahrát na Wedos přes FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
