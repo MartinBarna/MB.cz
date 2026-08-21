@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poznatky o firmě | Barna Academy</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{ --bg:#0C0B10; --card:#181520; --line:#262232; --text:#F0EADF; --muted:#9a92a8; --acc:#C9A227; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.55}
+  .wrap{max-width:1100px;margin:0 auto;padding:1.2rem}
+  h1{font-size:1.5rem;margin:0 0 .2rem}
+  .muted{color:var(--muted);font-size:.9rem}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:1rem;margin:1rem 0}
+  .row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:.7rem 1rem;min-width:130px}
+  .stat b{display:block;font-size:1.5rem;color:var(--acc)}
+  label{display:block;font-size:.85rem;color:var(--muted);margin:.5rem 0 .2rem}
+  input,select,textarea{width:100%;background:#0f0d15;border:1px solid var(--line);color:var(--text);
+    border-radius:3px;padding:.5rem;font:inherit}
+  textarea{min-height:110px;resize:vertical}
+  button{background:var(--acc);color:#1a1508;border:0;border-radius:3px;padding:.55rem 1rem;font:inherit;
+    font-weight:600;cursor:pointer}
+  button.ghost{background:transparent;color:var(--text);border:1px solid var(--line);font-weight:400}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  @media(max-width:640px){ .grid2{grid-template-columns:1fr} }
+  .p{border:1px solid var(--line);border-radius:4px;padding:.8rem;margin:.6rem 0;background:#141119}
+  .p h3{margin:0 0 .3rem;font-size:1.05rem}
+  .tags{display:flex;gap:.35rem;flex-wrap:wrap;margin:.35rem 0}
+  .t{font-size:.72rem;border:1px solid var(--line);border-radius:99px;padding:.1rem .55rem;color:var(--muted)}
+  .t.zmereno{border-color:#2e6b3f;color:#7fd39a}
+  .t.hlaseni{border-color:#6b5a2e;color:#d8c07f}
+  .t.odhad{border-color:#6b2e2e;color:#d99}
+  .t.akce{border-color:var(--acc);color:var(--acc)}
+  .p.vyrizeno{opacity:.5}
+  .cislo{color:var(--acc);font-weight:700}
+  #gate,#load{padding:3rem 1rem;text-align:center}
+  a{color:var(--acc)}
+</style>
+</head>
+<body>
+<div id="load">Načítám...</div>
+<div id="gate" style="display:none"></div>
+
+<div id="app" class="wrap" style="display:none">
+  <h1>Poznatky o firmě</h1>
+  <p class="muted">Sdílené místo pro Martina, Clauda a Elona. Co je tady, platí pro všechny tři.
+    <a href="/akademie/admin/">Zpět do adminu</a></p>
+
+  <div class="row" id="stats"></div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <strong>Přidat poznatek</strong>
+      <button class="ghost" id="toggle">Otevřít formulář</button>
+    </div>
+    <div id="form" style="display:none;margin-top:.8rem">
+      <div class="grid2">
+        <div><label>Kdo to píše</label>
+          <select id="f_autor">
+            <option value="martin">Martin</option><option value="claude">Claude</option>
+            <option value="elon">Elon</option><option value="jiny">někdo jiný</option>
+          </select></div>
+        <div><label>Oblast</label>
+          <select id="f_oblast">
+            <option value="mailing">mailing</option><option value="klienti">klienti</option>
+            <option value="produkt">produkt</option><option value="ceny">ceny</option>
+            <option value="reklama">reklama</option><option value="web">web</option>
+            <option value="appka">appka</option><option value="provoz">provoz</option>
+            <option value="jine">jiné</option>
+          </select></div>
+      </div>
+      <label>Nadpis (co to je, jednou větou)</label>
+      <input id="f_nadpis" maxlength="200" placeholder="Například: Bývalí klienti nedostávají maily">
+      <label>Text (co se zjistilo a co z toho plyne)</label>
+      <textarea id="f_text" placeholder="Piš tak, aby to pochopil někdo, kdo u toho nebyl."></textarea>
+      <div class="grid2">
+        <div><label>Klíčové číslo (nepovinné)</label><input id="f_cislo" placeholder="283 proti 60"></div>
+        <div><label>K jakému datu to platí</label><input id="f_kdy" type="date"></div>
+      </div>
+      <div class="grid2">
+        <div><label>Odkud to je</label><input id="f_zdroj" placeholder="dotaz do DB / Gmail / Stripe"></div>
+        <div><label>Jak jistě to víme</label>
+          <select id="f_duvera">
+            <option value="zmereno">změřeno (mám důkaz)</option>
+            <option value="hlaseni">někdo to tvrdí</option>
+            <option value="odhad" selected>odhad</option>
+          </select></div>
+      </div>
+      <label>Kdo s tím má něco udělat</label>
+      <select id="f_akce">
+        <option value="">nikdo konkrétní</option><option value="martin">Martin</option>
+        <option value="claude">Claude</option><option value="elon">Elon</option>
+      </select>
+      <p class="muted" style="margin:.6rem 0">⚠️ „Změřeno" nastav jen když máš zdroj. Bez zdroje se to
+        uloží jako „někdo to tvrdí", aby se odhad nevydával za měření.</p>
+      <button id="save">Uložit poznatek</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <select id="fl_oblast" style="width:auto"><option value="">všechny oblasti</option></select>
+      <select id="fl_stav" style="width:auto">
+        <option value="aktivni">jen aktivní</option><option value="">všechny stavy</option>
+        <option value="vyrizeno">vyřízené</option><option value="neplatne">neplatné</option>
+      </select>
+      <select id="fl_autor" style="width:auto">
+        <option value="">kdokoli</option><option value="claude">Claude</option>
+        <option value="elon">Elon</option><option value="martin">Martin</option>
+      </select>
+      <button class="ghost" id="refresh">Načíst znovu</button>
+    </div>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script src="/assets/ba-config.js?v=20260628b"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.6/dist/umd/supabase.min.js" integrity="sha384-GyhLKJoRcMXYwIJUTyx0/uSPYliVPdRYYXJm3G6zyMjKShNs8jLM7WaLpk8Vr4W/" crossorigin="anonymous"></script>
+<script>
+(function(){
+  var FN='https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/poznatky-api';
+  var $=function(id){return document.getElementById(id);};
+  var sb=null, token=null;
+  function show(id){ ['load','gate','app'].forEach(function(x){ $(x).style.display=(x===id?'':'none'); }); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function den(s){ if(!s) return ''; return new Date(s).toLocaleDateString('cs-CZ'); }
+  function api(p){ return fetch(FN,{method:'POST',headers:{'Content-Type':'application/json',
+    'Authorization':'Bearer '+token},body:JSON.stringify(p)})
+    .then(function(r){ return r.json().then(function(j){return {status:r.status,j:j};}); }); }
+
+  // Stejny robustni gate jako hlavni admin: pockej na knihovny i na session,
+  // nerozhoduj "nejsi admin" na prechodne prazdnem stavu.
+  var booted=false;
+  function boot(tries){
+    tries=tries||0;
+    if(!window.BA_CONFIG||!window.supabase){ if(tries<40){ return setTimeout(function(){boot(tries+1);},150); }
+      show('gate'); $('gate').textContent='Nepovedlo se načíst knihovny. Zkus obnovit stránku.'; return; }
+    if(booted) return; booted=true;
+    sb=window.supabase.createClient(window.BA_CONFIG.url,window.BA_CONFIG.anonKey,
+      {auth:{persistSession:true,autoRefreshToken:true}});
+    sess(0);
+  }
+  function sess(tries){
+    sb.auth.getSession().then(function(res){
+      var s=res&&res.data&&res.data.session;
+      if(!s){ if(tries<6){ return setTimeout(function(){sess(tries+1);},350); }
+        location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/poznatky/'); return; }
+      token=s.access_token; nacti(true);
+    });
+  }
+
+  var OBLASTI=['mailing','klienti','produkt','ceny','reklama','web','appka','provoz','jine'];
+  OBLASTI.forEach(function(o){ var op=document.createElement('option'); op.value=o; op.textContent=o; $('fl_oblast').appendChild(op); });
+
+  function nacti(allowRefresh){
+    api({action:'list',oblast:$('fl_oblast').value,stav:$('fl_stav').value,autor:$('fl_autor').value})
+    .then(function(r){
+      if(r.status===403){
+        if(allowRefresh){ return sb.auth.refreshSession().then(function(x){
+          var s=x&&x.data&&x.data.session; if(s&&s.access_token) token=s.access_token; nacti(false); }); }
+        show('gate'); $('gate').innerHTML='Tenhle účet nemá admin přístup.<br><br><a href="/akademie/moje/">Zpět na Academy</a>'; return;
+      }
+      if(!r.j||!r.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
+      var s=r.j.souhrn||{};
+      $('stats').innerHTML=
+        '<div class="stat"><b>'+(s.celkem||0)+'</b><span class="muted">poznatků</span></div>'+
+        '<div class="stat"><b>'+(s.aktivni||0)+'</b><span class="muted">aktivních</span></div>'+
+        '<div class="stat"><b>'+(s.pro_martina||0)+'</b><span class="muted">čeká na Martina</span></div>'+
+        '<div class="stat"><b>'+(s.jen_odhady||0)+'</b><span class="muted">není změřeno</span></div>';
+      vypis(r.j.rows||[]); show('app');
+    }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
+  }
+
+  function vypis(rows){
+    if(!rows.length){ $('list').innerHTML='<p class="muted">Zatím tu nic není.</p>'; return; }
+    $('list').innerHTML=rows.map(function(p){
+      var akce=p.akce_pro&&p.akce_pro!=='nikdo' ? '<span class="t akce">čeká: '+esc(p.akce_pro)+'</span>' : '';
+      var cis=p.cislo ? '<span class="cislo">'+esc(p.cislo)+'</span> · ' : '';
+      var kdy=p.zmereno_kdy ? 'platí k '+den(p.zmereno_kdy) : 'bez data';
+      return '<div class="p '+(p.stav==='vyrizeno'?'vyrizeno':'')+'">'+
+        '<h3>'+esc(p.nadpis)+'</h3>'+
+        '<div class="tags"><span class="t">'+esc(p.oblast)+'</span>'+
+          '<span class="t '+esc(p.duvera)+'">'+esc(p.duvera)+'</span>'+
+          '<span class="t">'+esc(p.autor)+'</span>'+akce+
+          (p.stav!=='aktivni'?'<span class="t">'+esc(p.stav)+'</span>':'')+'</div>'+
+        '<p style="margin:.4rem 0;white-space:pre-wrap">'+esc(p.text)+'</p>'+
+        '<p class="muted">'+cis+esc(kdy)+(p.zdroj?' · zdroj: '+esc(p.zdroj):'')+'</p>'+
+        '<div class="row" style="margin-top:.4rem">'+
+          (p.stav==='aktivni'
+            ? '<button class="ghost" data-hotovo="'+esc(p.id)+'">Označit jako vyřízené</button>'+
+              '<button class="ghost" data-neplatne="'+esc(p.id)+'">Už neplatí</button>'
+            : '<button class="ghost" data-zpet="'+esc(p.id)+'">Vrátit mezi aktivní</button>')+
+        '</div></div>';
+    }).join('');
+    $('list').querySelectorAll('[data-hotovo],[data-neplatne],[data-zpet]').forEach(function(b){
+      b.addEventListener('click',function(){
+        var id=b.getAttribute('data-hotovo')||b.getAttribute('data-neplatne')||b.getAttribute('data-zpet');
+        var stav=b.hasAttribute('data-hotovo')?'vyrizeno':(b.hasAttribute('data-neplatne')?'neplatne':'aktivni');
+        b.disabled=true;
+        api({action:'update',id:id,stav:stav}).then(function(){ nacti(false); });
+      });
+    });
+  }
+
+  $('toggle').addEventListener('click',function(){
+    var f=$('form'); var open=f.style.display==='none';
+    f.style.display=open?'':'none'; $('toggle').textContent=open?'Zavřít formulář':'Otevřít formulář';
+  });
+  $('refresh').addEventListener('click',function(){ nacti(false); });
+  ['fl_oblast','fl_stav','fl_autor'].forEach(function(id){ $(id).addEventListener('change',function(){ nacti(false); }); });
+
+  $('save').addEventListener('click',function(){
+    var nadpis=$('f_nadpis').value.trim(), text=$('f_text').value.trim();
+    if(nadpis.length<3){ alert('Napiš nadpis, aspoň tři znaky.'); return; }
+    if(text.length<10){ alert('Napiš text, aspoň deset znaků.'); return; }
+    $('save').disabled=true;
+    api({action:'add',autor:$('f_autor').value,oblast:$('f_oblast').value,nadpis:nadpis,text:text,
+      cislo:$('f_cislo').value.trim(),zmereno_kdy:$('f_kdy').value,zdroj:$('f_zdroj').value.trim(),
+      duvera:$('f_duvera').value,akce_pro:$('f_akce').value})
+    .then(function(r){
+      $('save').disabled=false;
+      if(!r.j||!r.j.ok){ alert('Nepovedlo se uložit: '+((r.j&&r.j.error)||'neznámá chyba')); return; }
+      ['f_nadpis','f_text','f_cislo','f_zdroj'].forEach(function(id){ $(id).value=''; });
+      nacti(false);
+    }).catch(function(){ $('save').disabled=false; alert('Chyba spojení.'); });
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>
