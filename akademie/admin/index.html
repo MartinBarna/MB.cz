@@ -1263,7 +1263,7 @@
           if(sportMin==null&&(kliNum(a.fitko_min)!=null||kliNum(a.kardio_min)!=null)) sportMin=(kliNum(a.fitko_min)||0)+(kliNum(a.kardio_min)||0);
           var pn=a.plan_next||{};
           var plan=(kliNum(pn.kroky)!=null||kliNum(pn.sport_min)!=null)?(kliCz(pn.kroky)+' kr / '+kliCz(pn.sport_min)+' min'+(pn.stejne?' (=)':'')):'—';
-          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'—')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'—')+'</td><td style="max-width:260px;white-space:normal;">'+esc(txt)+'</td></tr>';
+          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'—')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'—')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'—')+'</td><td style="max-width:min(260px,58vw);white-space:normal;">'+esc(txt)+'</td></tr>';
           if(dnyArr.length){
             var dt='<table style="font-size:.76rem;border-collapse:collapse;"><tr><th style="padding:2px 8px;color:#8F8A99;">Den</th><th style="padding:2px 8px;color:#8F8A99;">kcal</th><th style="padding:2px 8px;color:#8F8A99;">B</th><th style="padding:2px 8px;color:#8F8A99;">S</th><th style="padding:2px 8px;color:#8F8A99;">T</th><th style="padding:2px 8px;color:#8F8A99;">Vl</th></tr>'
               +(n.dny||[]).map(function(d){ if(!d) return ''; return '<tr><td style="padding:2px 8px;color:#8F8A99;">'+esc(d.den||'')+'</td><td style="padding:2px 8px;">'+kliCz(d.kcal)+'</td><td style="padding:2px 8px;">'+kliCz(d.p)+'</td><td style="padding:2px 8px;">'+kliCz(d.c)+'</td><td style="padding:2px 8px;">'+kliCz(d.f)+'</td><td style="padding:2px 8px;">'+kliCz(d.fib)+'</td></tr>'; }).join('')+'</table>';
@@ -1488,7 +1488,7 @@
             var akce=f.status==='resolved'
               ? '<span class="muted">vyřešeno '+fmtDay(f.resolved_at)+'</span>'
               : '<button data-aif="'+esc(f.id)+'" class="mlogbtn">Vyřešeno ✓</button>';
-            return '<tr style="'+styl+'"><td style="white-space:nowrap;">'+fmtDate(f.created_at)+'</td><td style="white-space:nowrap;font-weight:700;">'+kat+'</td><td>'+esc(f.user_email||'—')+'</td><td style="max-width:360px;white-space:normal;">'+esc(f.note||'')+'</td><td>'+akce+'</td></tr>';
+            return '<tr style="'+styl+'"><td style="white-space:nowrap;">'+fmtDate(f.created_at)+'</td><td style="white-space:nowrap;font-weight:700;">'+kat+'</td><td>'+esc(f.user_email||'—')+'</td><td style="max-width:min(360px,58vw);white-space:normal;">'+esc(f.note||'')+'</td><td>'+akce+'</td></tr>';
           }
           el.innerHTML=(open.length?'<p style="margin:.2rem 0 .6rem;font-weight:700;color:#e07f6f;">Nevyřízené: '+open.length+'</p>':'<p class="muted" style="margin:.2rem 0 .6rem;">Vše vyřízené ✅</p>')
             +'<div style="overflow-x:auto;"><table><thead><tr><th>Kdy</th><th>Typ</th><th>Kdo</th><th>Úryvek zprávy</th><th></th></tr></thead><tbody>'
@@ -1743,7 +1743,12 @@
           $('cmsgBody').innerHTML='<p class="muted" style="padding:.6rem 0;">Zatím žádné formuláře. Jakmile někdo napíše přes kontaktní formulář na webu, objeví se to tady — rozdělené na relevantní poptávky a potenciální spam.</p>';
           $('cmsg').style.display=''; return;
         }
-        var msgCell=function(m){ return '<div style="max-width:440px;white-space:pre-wrap;word-break:break-word;">'+esc(m||'')+'</div>'; };
+        // ⛔ NATVRDO 440px ROZBILO ADMIN NA TELEFONU (Martin, 21. 8. 2026): buňka byla širší
+        //    než displej, tabulka utekla do strany a zpráva s hodně odřádkováními (Martinovi
+        //    ji poslala Česká televize) nafoukla řádek do několika obrazovek prázdna, protože
+        //    `pre-wrap` každý enter respektuje. ⇒ Šířka se řídí displejem a výška se stropuje;
+        //    delší zpráva se uvnitř buňky roluje, řádek zůstane nízký.
+        var msgCell=function(m){ return '<div style="max-width:min(440px,58vw);max-height:8.5em;overflow:auto;white-space:pre-wrap;word-break:break-word;">'+esc(m||'')+'</div>'; };
         var replyBtn=function(email){ return '<a href="mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent('Re: Tvoje zpráva z webu')+'" style="display:inline-block;cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#ece4d9;border-radius:8px;padding:4px 9px;font-size:.8rem;text-decoration:none;white-space:nowrap;">✉️ Odpovědět</a>'; };
         var html='';
         html+='<h4 style="margin:.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">Relevantní poptávky ('+rel.length+')</h4>';
