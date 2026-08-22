@@ -14,6 +14,7 @@ const FROM = "Martin Barna <news@martinbarna.cz>";
 const unsubLink = (token: string) => SUPABASE_URL + "/functions/v1/unsubscribe?token=" + encodeURIComponent(token);
 const VK_TOTAL = 182;
 const HALF = Math.ceil(VK_TOTAL / 2);
+const P30 = Math.ceil(VK_TOTAL * 0.3);   // 55 lekci = 30 %
 const MAX_PER_RUN = 20; // pojistka pod denni limit Resendu
 
 const json = (b: unknown, status = 200) =>
@@ -202,7 +203,8 @@ Deno.serve(async (req) => {
 
   // TEST: posli nahled Martinovi, nic nezapisuj
   if (typeof body.test_email === "string" && body.test_email.includes("@")) {
-    const ms = Number(body.milestone) === 100 ? 100 : 50;
+    const msIn = Number(body.milestone);
+    const ms = msIn === 100 ? 100 : msIn === 30 ? 30 : 50;
     const tpl = await getTpl(ms);
     if (!tpl) return json({ error: "no_template" }, 400);
     const v = vars(String(body.name ?? ""));
@@ -241,8 +243,8 @@ Deno.serve(async (req) => {
   const cnt = new Map<string, number>();
   for (const p of prg.data ?? []) cnt.set(String(p.user_id), (cnt.get(String(p.user_id)) ?? 0) + 1);
 
-  const tpl50 = await getTpl(50), tpl100 = await getTpl(100);
-  if (!tpl50 || !tpl100) return json({ error: "no_templates" }, 500);
+  const tpl30 = await getTpl(30), tpl50 = await getTpl(50), tpl100 = await getTpl(100);
+  if (!tpl30 || !tpl50 || !tpl100) return json({ error: "no_templates" }, 500);
 
   let sends = 0, marked = 0;
   const results: Record<string, unknown>[] = [];
@@ -262,12 +264,22 @@ Deno.serve(async (req) => {
         await send(email, fill(tpl100.subject, v), wrap(fill(tpl100.preheader, v), renderBlocks(tpl100.blocks, v), unsub), unsub);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 100 });
         // 50 uz neposilat nikdy (prekonano) — zapis bez mailu
-        if (!already.has(email + ":50")) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 }); marked++; }
+        for (const nizsi of [30, 50]) {
+          if (!already.has(email + ":" + nizsi)) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: nizsi }); marked++; }
+        }
         sends++; results.push({ email, milestone: 100, done });
       } else if (done >= HALF && !already.has(email + ":50")) {
         await send(email, fill(tpl50.subject, v), wrap(fill(tpl50.preheader, v), renderBlocks(tpl50.blocks, v), unsub), unsub);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 });
+        // 30 uz neposilat (prekonano) - zapis bez mailu, stejny vzor jako u 100 vs 50
+        if (!already.has(email + ":30")) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 }); marked++; }
         sends++; results.push({ email, milestone: 50, done });
+      } else if (done >= P30 && !already.has(email + ":30")) {
+        // 30 % (55 lekci): vetsina lidi kurz nedokonci a necekame to. Zmereno 22. 8. 2026:
+        // 100 % nemel NIKDO, 50 az 99 % dva lide, a sest lidi skoncilo na 1 az 3 lekcich.
+        await send(email, fill(tpl30.subject, v), wrap(fill(tpl30.preheader, v), renderBlocks(tpl30.blocks, v), unsub), unsub);
+        await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 });
+        sends++; results.push({ email, milestone: 30, done });
       }
     } catch (e) {
       results.push({ email, error: String(e).slice(0, 100) });
