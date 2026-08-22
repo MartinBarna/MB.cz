@@ -47,7 +47,7 @@
   <div class="wrap">
     <span class="kick"><span class="dot"></span> Nástroj</span>
     <h1>Databáze potravin</h1>
-    <p class="lead">Najdi jakoukoli potravinu a hned uvidíš její kalorie a makra: na 100 g i na porci. Zadej gramáž a přepočítá se ti to na míru. Přes 2 300 českých potravin.</p>
+    <p class="lead">Najdi jakoukoli potravinu a hned uvidíš její kalorie a makra: na 100 g i na porci. Zadej gramáž a přepočítá se ti to na míru. Přes 4 400 českých potravin.</p>
 
     <div id="lock" class="lock hidden">🔒 Plná verze je součástí <b>Barna Academy</b>. <a href="/akademie/" style="color:var(--gold-soft)">Získat přístup →</a></div>
 
@@ -102,7 +102,7 @@
     }
     $('q').addEventListener('input',function(){ clearTimeout(t); t=setTimeout(doSearch,90); });
 
-    fetch('/assets/curated-foods.json?v=2').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/curated-foods.json?v=3').then(function(r){return r.json();}).then(function(d){
       FOODS=d; $('hint').textContent='Nezáleží na diakritice, „rohlik" najde „rohlík". '+d.length+' potravin.';
       if($('q').value.trim()) doSearch();
     }).catch(function(){ $('hint').textContent='⚠️ Databázi se nepodařilo načíst.'; });
