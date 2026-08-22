@@ -148,6 +148,13 @@
             measurements: val('measures'),
             note: val('note'),
             website: document.getElementById('website').value,
+            // Odkud člověk přišel. Sbírá to analytics.js do localStorage při první návštěvě
+            // s UTM parametry a drží to napříč stránkami, takže tady je i reklama, která
+            // ho přivedla. Bez toho nejde poznat, která kampaň poptávku vyrobila.
+            attribution: (function () {
+              try { return (window.MBAttr && window.MBAttr.get) ? window.MBAttr.get() : null; }
+              catch (e) { return null; }
+            })(),
             t: Date.now() - loaded
           })
         }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
