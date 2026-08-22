@@ -63,6 +63,27 @@ const KLICOVE_STRANKY = [
   // se prodávat nejdražší produkt a nikde jinde to nekřikne. Hlídač na to je právě.
   "https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04",     // Academy 8 900 doživotně (Stripe)
 ];
+
+// ⛔ ODSTAVENÉ POKLADNY. Adresa se z kontroly NEMAŽE (kdyby ji někdo někam vrátil,
+// ať to křikne), ale její mrtvý produkt je OČEKÁVANÝ stav, ne porucha. Bez tohohle
+// rozlišení by detektor `jeMrtvyProdukt()` níž posílal poplach každý den a člověk
+// by si na něj zvykl. Falešný poplach je horší než ticho, viz komentář u alertu.
+const ODSTAVENE_POKLADNY = new Set<string>([
+  "https://form.simpleshop.cz/Xgl8g/buy/",   // Academy 8 900 doživotně, od 29. 7. 2026 nahrazeno Stripe
+]);
+
+// ⛔⛔ ODKAZY SCHOVANÉ ZA MERGE TOKENEM. Tohle je díra, kvůli které tenhle hlídač
+// hlásil zeleně, zatímco maily vodily lidi na zrušenou pokladnu SimpleShopu.
+// `urlyZeSablon()` čte jen adresy napsané v šabloně NATVRDO. Token `{{course_url}}`
+// se dosazuje až v odesílateli (konstanta `COURSE_URL` v edge funkci `drip-send`),
+// takže v šabloně žádná adresa není a hlídač o ní nevěděl. Změřeno 22. 8. 2026:
+// v tabulce `link_check` se `form.simpleshop.cz/3Vbl` nevyskytuje ANI JEDNOU.
+// ⇒ Kdo přidá do šablon nový token s adresou, přidá ho SEM.
+// ⭐ Kontroluje se jen token, který v nějaké šabloně opravdu je, takže až token
+//    ze šablon zmizí, tenhle seznam sám ztichne a nedělá falešný poplach.
+const TOKENY_S_ADRESOU_V_KODU: Record<string, string> = {
+  course_url: "https://form.simpleshop.cz/3Vbl/buy/",   // drip-send v62, konstanta COURSE_URL
+};
 // ✅ DETEKTOR OVĚŘEN 28. 7. 2026 KANÁRKEM, ne jen přečtením kódu.
 // Do seznamu se dočasně přidala schválně neexistující adresa
 // `martinbarna.cz/tahle-stranka-neexistuje-kanarek/`. Výsledek: HTTP 404, ok=false,
@@ -165,6 +186,19 @@ function jeVyzvaOchrany(r: Response, telo: string): boolean {
   return chranenoKym.includes("wedos") || /wedos\.protection|security verification/i.test(telo);
 }
 
+// ⛔ MRTVÁ POKLADNA VRACÍ HTTP 200. Změřeno 22. 8. 2026: `form.simpleshop.cz/Xgl8g/buy/`
+// odpoví 200 a 1787 B s titulkem „Produkt se již neprodává.“. Stavový kód to nechytí,
+// vzor soft-404 taky ne (nejsou tam slova o nenalezené stránce) a strop 200 B už vůbec.
+// ⇒ Hlídač tu adresu deset dní po sobě zapsal jako `ok=true, poznamka=null`, doloženo
+//   v tabulce `link_check`. Věta výš „mrtvá pokladna je nejdražší porucha ze všech“
+//   byla do 22. 8. 2026 jen komentář, kód ji poznat neuměl.
+// ⚠️ Vzory pro Stripe jsou odhad podle jeho chybových stránek, NEOVĚŘENÉ mrtvým
+//   Stripe odkazem (žádný takový k dispozici nebyl). SimpleShop vzor ověřen měřením.
+function jeMrtvyProdukt(telo: string): boolean {
+  return /produkt se ji[žz] neprod[áa]v[áa]|produkt nebyl nalezen|formul[áa][řr] ji[žz] nen[íi] aktivn[íi]|no longer active|no longer accepting payments|this link is inactive/i
+    .test(telo);
+}
+
 // Jeden odchozí požadavek. Následuje přesměrování, hlídá i „soft 404" (200, ale
 // stránka je chybová). Hlavičky prohlížeče bere z PROHLIZEC_HLAVICKY, jinde se
 // odchozí požadavek na kontrolovaný odkaz nedělá.
@@ -189,6 +223,22 @@ async function jedenPokus(url: string, kde: string): Promise<Mereni> {
       };
     }
     if (!r.ok) return { url, kde, http_status: r.status, ok: false, blokovano: false, poznamka: `HTTP ${r.status} | ${diagnostika(r, telo)}` };
+
+    // Mrtvý produkt: pokladna odpoví 200 a normální stránkou, jen na ní stojí, že se
+    // produkt už neprodává. Musí se testovat PŘED soft-404, protože žádné z jeho slov
+    // neobsahuje a jinak by propadl jako zdravý odkaz.
+    if (jeMrtvyProdukt(telo)) {
+      if (ODSTAVENE_POKLADNY.has(url)) {
+        return {
+          url, kde, http_status: r.status, ok: true, blokovano: false,
+          poznamka: "odstavená pokladna: mrtvý produkt je tu OČEKÁVANÝ stav, viz ODSTAVENE_POKLADNY",
+        };
+      }
+      return {
+        url, kde, http_status: r.status, ok: false, blokovano: false,
+        poznamka: `MRTVÁ POKLADNA: HTTP ${r.status}, ale prodejce na stránce hlásí, že produkt se už neprodává | ${diagnostika(r, telo)}`,
+      };
+    }
 
     // Soft 404: server řekne 200, ale obsah je chybová stránka. Tohle by samotný
     // stavový kód nechytil a je to přesně ten tichý případ, kvůli kterému to stavíme.
@@ -275,12 +325,29 @@ Deno.serve(async (req) => {
     await alertAdmin("Link-check: nepodařilo se načíst šablony", { chyba: chybaSablon.message });
     return json({ error: "db", detail: chybaSablon.message }, 500);
   }
-  const zeSablon = urlyZeSablon((sablony ?? []).map((s) => JSON.stringify(s.blocks)).join(" "));
+  const blobSablon = (sablony ?? []).map((s) => JSON.stringify(s.blocks)).join(" ");
+  const zeSablon = urlyZeSablon(blobSablon);
 
-  // 2) + klíčové stránky, bez duplicit
+  // 1b) adresy schované za merge tokenem (viz TOKENY_S_ADRESOU_V_KODU). Berou se jen
+  //     tokeny, které v šablonách OPRAVDU jsou, ať seznam po jejich vymýcení ztichne.
+  const zTokenu: { url: string; kde: string }[] = [];
+  const tokenyNalezene: string[] = [];
+  for (const [token, url] of Object.entries(TOKENY_S_ADRESOU_V_KODU)) {
+    if (!blobSablon.includes("{{" + token + "}}")) continue;
+    tokenyNalezene.push(token);
+    zTokenu.push({ url, kde: "token:" + token });
+  }
+  // Tokeny tvaru {{neco_url}}, ke kterým adresu NEZNÁME. Nemůžu je zkontrolovat,
+  // ale musí být VIDĚT v odpovědi, jinak se díra zase zamete pod koberec.
+  const nalezeneTokeny: string[] = blobSablon.match(/\{\{[a-z0-9_]+_url\}\}/gi) ?? [];
+  const tokenyBezAdresy = [...new Set(nalezeneTokeny.map((t) => t.slice(2, -2).toLowerCase()))]
+    .filter((t) => !(t in TOKENY_S_ADRESOU_V_KODU));
+
+  // 2) + klíčové stránky a adresy z tokenů, bez duplicit
   const vse: { url: string; kde: string }[] = [];
   const videno = new Set<string>();
   for (const u of KLICOVE_STRANKY) { if (!videno.has(u)) { videno.add(u); vse.push({ url: u, kde: "stranka" }); } }
+  for (const t of zTokenu)         { if (!videno.has(t.url)) { videno.add(t.url); vse.push(t); } }
   for (const u of zeSablon)        { if (!videno.has(u)) { videno.add(u); vse.push({ url: u, kde: "sablona" }); } }
 
   if (vse.length > MAX_URL) {
@@ -345,7 +412,11 @@ Deno.serve(async (req) => {
     v_poradku: vysledky.filter((v) => v.ok).length,
     rozbitych: rozbite.length,
     neovereno_kvuli_ochrane: blokovane.length,
-    preskoceno_s_promennou: "odkazy s {{ }} a unsubscribe tokenem se neověřují",
+    // ⛔ Tahle věta dřív říkala jen „odkazy s {{ }} se neověřují“ a tím se ta díra
+    //   zametla pod koberec. Teď je vidět, které tokeny se dohledaly a které ne.
+    tokeny_dohledane: tokenyNalezene,
+    tokeny_v_sablonach_bez_adresy: tokenyBezAdresy,
+    preskoceno_s_promennou: "adresy s {{ }} uvnitř se neověřují; tokeny s adresou v kódu jsou v TOKENY_S_ADRESOU_V_KODU",
     rozbite: rozbite.map((v) => ({ url: v.url, status: v.http_status, poznamka: v.poznamka })),
     blokovane_hosty: [...stav.blokovane],
   });
