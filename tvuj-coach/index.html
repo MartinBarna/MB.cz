@@ -240,10 +240,7 @@
             <div class="card"><span class="em">⚡</span><h3>Šablony a historie</h3><p>Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím. Šablony i 14 dní historie zpět máš zdarma, neomezenou historii odemyká Basic.</p></div>
         </div>
 
-        <!-- Sekce o zapisovani jidla dosud zadny snimek nemela, prvni byl az generator.
-             Tenhle ukazuje samotne hledani potraviny. POZOR: snimek je z doby, kdy appka
-             jeste ukazovala znacku „Overeno Martinem". Ta je od 22. 8. 2026 pryc,
-             snimek se musi prefotit. -->
+        <!-- Snimek hledani potraviny. TODO: prefotit, je z 08/2026. -->
         <figure class="shot">
             <img src="/assets/app/zapis-jidla.webp?v=1" alt="Vyhledávání potraviny v appce Tvůj Coach: zadaný název a výsledky s kaloriemi na 100 g." width="780" height="1688" loading="lazy" decoding="async">
             <figcaption>Najdeš potravinu, ťukneš a je zapsaná. Vybíráš z více než 27 000 potravin, i ze supermarketů v ČR.</figcaption>
@@ -497,18 +494,8 @@
             <div class="faq-i"><b>Jak VIP zruším?</b><p>Kdykoliv na dvě klepnutí přímo v appce (Profil → Předplatné). Doběhne zaplacené období a dál nic neplatíš.</p></div>
             <div class="faq-i"><b>Funguje na mobilu i počítači?</b><p>Ano. Zatím běží jako webová aplikace, otevřeš ji v prohlížeči na mobilu i počítači a data máš všude stejná. Appku pro iPhone a Android chystáme.</p></div>
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč bych měl zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Deník ti řekne, co jsi snědl. Tvůj Coach ti řekne, co s tím dál. V Basicu ti každý týden přepočítá kalorie a makra podle toho, jak ti to reálně jde, ne podle tabulky z registrace. K tomu ti poskládá jídelníček na tvoje čísla i s nákupním seznamem a napíše tréninkový plán. Ve VIP se na to můžeš zeptat AI kouče, který vidí tvoje data. Nemusíš nic rušit. Vyzkoušej Free vedle toho, co máš, a nech si to, co ti dává větší smysl.</p></div>
-            <!-- Čísla přeměřená v živé DB 22. 8. 2026: foods_cache 24 572 + curated_foods 3 156
-                 = 27 728, píšeme konzervativně „přes 27 000". Receptů je 90 (is_public
-                 a moderation_status='approved'). Řetězce mají v DB stovky položek každý:
-                 Tesco, Lidl, Albert, Globus, Billa, Kaufland i Penny.
-                 ⛔⛔ ODSUD ZMIZEL SLIB „přes dva tisíce položek, které jsem prošel osobně
-                 ... poznáš podle značky Ověřeno Martinem". Byl nepravdivý: z 3 156 řádků
-                 `curated_foods` je Martinových 165 (migrace 0003 z jeho CSV), 2 188 přidaly
-                 AI expanze 0033 až 0047 bez zdroje a 803 srpnoví agenti. Odznak je od
-                 22. 8. vypnutý i v appce (`src/data/foods.ts`, `curatedToItem`).
-                 Martin 22. 8.: „Ověření Martinem tam nedávej a mluvme tam o celkové
-                 databázi potravin a receptů." Kdo ho sem vrací, musí nejdřív doložit,
-                 kolik položek Martin opravdu prošel. -->
+            <!-- Cisla merena v zive DB 22. 8. 2026. Nez je zmenis, zmer je znovu a projdi
+                 i landing appky: hlida to `npm run kontrola:slib`. Kontext v commitu 6176a1e. -->
             <div class="faq-i"><b>Najdu tam potraviny z českých obchodů?</b><p>Jo, a přesně na tom si zakládám. V databázi je <strong>přes 27 000 potravin včetně zboží z Lidlu, Tesca, Alberta, Globusu, Billy, Kauflandu i Penny</strong>, takže rohlík, skyr nebo šumavský chléb najdeš pod názvem, na který jsi zvyklý z regálu. K tomu knihovna 90 receptů s makry na porci. U všeho baleného funguje i čárový kód. A když ti něco chybí, napíšeš mi a doplním to.</p></div>
         </div>
         <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz/?plan=basic">Vzít si Basic i videokurz →</a></p>
