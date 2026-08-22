@@ -162,6 +162,20 @@ type Block =
   | { t: 'ps'; html: string }
   | { t: 'img'; src: string; alt: string };
 
+// Pojistka pro typ bloku, ktery zadny renderer nezna.
+// Historie: 21. 8. 2026 pribyl do sablon typ `img`, oba renderery ho neznaly a propadl
+// do posledniho `return`. Ten sahl na `b.href` (HTML) a `b.html` (text), ktere obrazek
+// nema, takze mail spadl na hlasce "Cannot read properties of undefined (reading
+// 'indexOf')". Z te hlasky nesel poznat typ bloku a nez se prislo na pricinu, neodeslo
+// se 69 mailu 35 lidem. Zprava proto typ VYSLOVNE jmenuje.
+// NEMENIT na tiche preskoceni bloku: chybejici tlacitko v prodejnim mailu nikdo
+// nenahlasi, kdezto spadly mail se zapise do `email_events` jako `error`.
+// Parametr `never` je hlavni pojistka: kdo prida do `Block` novy typ a zapomene ho
+// osetrit v OBOU rendererech, neprojde uz `deno check`, tedy jeste pred nasazenim.
+function neznamyBlok(b: never): never {
+  const typ = (b as { t?: unknown } | null)?.t;
+  throw new Error('drip-send: neznamy typ bloku v sablone: ' + JSON.stringify(typ ?? null));
+}
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === 'p') return `<p style='margin:0 0 14px'>${fill(b.html, seg, v)}</p>`;
@@ -173,7 +187,9 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     // Vsechny styly inline, mailove klienty externi CSS ignoruji.
     if (b.t === 'img')
       return `<img src='${attr(fill(b.src, seg, v))}' alt='${attr(fill(b.alt, seg, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
-    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
+    if (b.t === 'btn')
+      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
+    return neznamyBlok(b);
   }).join(NL);
 }
 function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): string {
@@ -181,7 +197,8 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === 'bullets') return b.items.map((li) => '- ' + inlineToText(fill(li, seg, v))).join(NL);
     if (b.t === 'btn') return fill(b.text, seg, v) + ': ' + fill(b.href, seg, v);
     if (b.t === 'img') return '[obrázek: ' + inlineToText(fill(b.alt, seg, v)) + ']';
-    return inlineToText(fill(b.html, seg, v));
+    if (b.t === 'p' || b.t === 'ps') return inlineToText(fill(b.html, seg, v));
+    return neznamyBlok(b);
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
