@@ -5,6 +5,15 @@
 // Auth: hlavicka x-drip-secret == app_config drip_invoke_secret. Klice jen z env.
 // Pozn.: zdrojak je zamerne bez znaku uvozovek a zpetnych lomitek (kvuli snadnemu deployi).
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { maPreskocitKrok, PRESKOC_KROK_KDYZ_VLASTNI } from './preskoc.ts';
+// Rozhodovaci pravidla (koho stopnout, kam smi vest most, jaky odstup) zijou ve vlastnim
+// souboru, aby sla testovat bez nastartovani serveru. Viz `pravidla.test.ts`.
+import {
+  mostBlokujeVlastnictvi,
+  odstupDnu,
+  shouldStop as pravidlaShouldStop,
+  vyberMost,
+} from './pravidla.ts';
 
 const NL = String.fromCharCode(10);   // newline
 const DQ = String.fromCharCode(34);   // double-quote char
@@ -14,7 +23,15 @@ const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
 const FROM = 'Martin Barna <news@martinbarna.cz>';
 const SITE = 'https://martinbarna.cz';
-const COURSE_URL = 'https://form.simpleshop.cz/3Vbl/buy/';
+// ⛔ 6. 8. 2026: bylo tu 'https://form.simpleshop.cz/3Vbl/buy/'. Martin SimpleShop
+// i Comgate pred par dny ZRUSIL, vsechno jde pres Stripe. Web uz na Stripe jel
+// (overeno na vsech sesti prodejnich strankach, nula vyskytu simpleshop/comgate),
+// ale maily posilaly lidi porad na SimpleShop, protoze tuhle konstantu nikdo
+// neprepsal. Formular tam navic vracel HTTP 200, takze to nevypadalo rozbite.
+// Tenhle odkaz pouziva 13 sablon pres {{course_url}}, takze zmena jednoho radku
+// spravi vsechny najednou. Je to tentyz odkaz, ktery je na /videokurz pod
+// tlacitkem „Koupit za 800 Kc".
+const COURSE_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06?locale=cs';
 const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
 const COURSE_PRICE = 800;
 const DISCOUNT_CODE = 'ZACNI15';
@@ -81,6 +98,10 @@ function vokativ(fn: string, seg: Seg): string {
 
 const esc = (s: string) =>
   s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(DQ).join('&quot;');
+// HTML atributy jsou v tomhle souboru v JEDNODUCHYCH uvozovkach (soubor zamerne neobsahuje znak ").
+// esc() apostrof neresi, takze do atributu se musi escapovat navic, jinak by text z nej vyskocil.
+const SQ = String.fromCharCode(39);   // single-quote char
+const attr = (s: string) => esc(s).split(SQ).join('&#39;');
 
 // gender expanze: [[zena||muz]] a [a] (bez regexu)
 function gender(s: string, seg: Seg): string {
@@ -138,7 +159,8 @@ type Block =
   | { t: 'p'; html: string }
   | { t: 'bullets'; items: string[] }
   | { t: 'btn'; text: string; href: string }
-  | { t: 'ps'; html: string };
+  | { t: 'ps'; html: string }
+  | { t: 'img'; src: string; alt: string };
 
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
@@ -147,6 +169,10 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === 'bullets')
       return `<ul style='margin:0 0 14px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
+    // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
+    // Vsechny styly inline, mailove klienty externi CSS ignoruji.
+    if (b.t === 'img')
+      return `<img src='${attr(fill(b.src, seg, v))}' alt='${attr(fill(b.alt, seg, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
     return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
   }).join(NL);
 }
@@ -154,6 +180,7 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   return blocks.map((b) => {
     if (b.t === 'bullets') return b.items.map((li) => '- ' + inlineToText(fill(li, seg, v))).join(NL);
     if (b.t === 'btn') return fill(b.text, seg, v) + ': ' + fill(b.href, seg, v);
+    if (b.t === 'img') return '[obrázek: ' + inlineToText(fill(b.alt, seg, v)) + ']';
     return inlineToText(fill(b.html, seg, v));
   }).join(NL + NL);
 }
@@ -197,7 +224,22 @@ function wrapHtml(preheader: string, body: string, footerHtml: string): string {
     `</td></tr></table></td></tr></table></body></html>`;
 }
 
-function buildVars(name: string, seg: Seg, unsub: string, email: string): Record<string, string> {
+// `extra` = volitelné proměnné z těla invoku (`vars`). Slouží mailům, které nesou
+// hodnoty známé až za běhu (částka refundu, název produktu…). Před tím uměl engine
+// jen pevný seznam a jakákoli neznámá {{proměnná}} shodila render výjimkou
+// `unresolved_token`, takže šablona vypadala hotově a mail nikdy neodešel.
+//
+// ⛔ BEZPEČNOSTNÍ PRAVIDLO: `extra` smí jen PŘIDÁVAT nové klíče. Vestavěné NIKDY
+// nepřepíše, při kolizi vyhrává vestavěná hodnota a zaloguje se varování.
+// Bez toho by chybný nebo kompromitovaný volající mohl podvrhnout `unsubscribe_url`
+// a odhlašovací odkaz je právní povinnost, ne kosmetika.
+function buildVars(
+  name: string,
+  seg: Seg,
+  unsub: string,
+  email: string,
+  extra?: Record<string, unknown> | null,
+): Record<string, string> {
   // jmeno leada je user input: pryc s HTML a tokenovymi znaky, at nerozbije render ani markup
   const BADCH = '{}[]<>&' + DQ + String.fromCharCode(39);
   let clean = '';
@@ -208,7 +250,7 @@ function buildVars(name: string, seg: Seg, unsub: string, email: string): Record
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : '', seg);
   const dprice = Math.round(COURSE_PRICE * (1 - DISCOUNT_PCT / 100));
   const d2price = Math.round(COURSE_PRICE * (1 - DISCOUNT2_PCT / 100));
-  return {
+  const vestavene: Record<string, string> = {
     first_name: fn, fn_space: fn ? ' ' + fn : '', fn_suffix: fn ? ', ' + fn : '', fn_prefix: fn ? fn + ', ' : '',
     lead_magnet_url: seg === 'muzi' ? SITE + '/download/forma-zpet-muzi.pdf' : SITE + '/download/makro-plan-zeny.pdf',
     plan_page_url: seg === 'muzi' ? SITE + '/forma-zpet' : SITE + '/makro-plan',
@@ -219,6 +261,22 @@ function buildVars(name: string, seg: Seg, unsub: string, email: string): Record
     email: email, email_url: encodeURIComponent(email),
     unsubscribe_url: unsub,
   };
+
+  if (!extra || typeof extra !== 'object') return vestavene;
+
+  // Pridavame POUZE klice, ktere vestavena mapa nema. Kolize se zahazuje a loguje.
+  const pridane: Record<string, string> = {};
+  for (const [k, val] of Object.entries(extra)) {
+    if (Object.prototype.hasOwnProperty.call(vestavene, k)) {
+      console.warn('[drip-send] vars: klic "' + k + '" je vestaveny, hodnota z invoku ZAHOZENA');
+      continue;
+    }
+    if (val === null || val === undefined) continue;
+    pridane[k] = String(val);
+  }
+  // Poradi je zamerne: vestavene se rozbaluji POSLEDNI, takze pri jakemkoli prehlednuti
+  // nahore stejne vyhraji ony. Dve pojistky na tutez vec, protoze jde o unsubscribe_url.
+  return { ...pridane, ...vestavene };
 }
 
 interface Tpl { subject: string; preheader: string; blocks: Block[]; wait_days: number | null; key: string }
@@ -268,7 +326,7 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy', 'navazujici_trate']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
@@ -318,6 +376,26 @@ Deno.serve(async (req: Request) => {
   const CLENSKE_PREFIXY = String(fMap.clenske_track_prefixy ?? '')
     .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
   if (CLENSKE_PREFIXY.length === 0) CLENSKE_PREFIXY.push('onboarding', 'milestone', 'reactivation', 'rescue');
+  // MOSTY MEZI TRATEMI (Martin schvalil 6. 8. 2026: "pocitejme s tim obecne u mailingu").
+  // PROC: kdyz trat dojede posledni mail, engine jen zhasnul next_send_at a lead tam
+  // zustal lezet. Nikde to nekriklo. 6. 8. tak sedelo 53 lidi na poslednim kroku
+  // lead-magnetu, zatimco longtail-consumer mel 12 hotovych mailu a DVA lidi uvnitr.
+  // Zapis do longtailu se do te doby delal rucne SQL, tedy jen kdyz si nekdo vzpomnel.
+  // ⛔ TOHLE JE ODCHOZI MAIL. Fail-safe je NEPRESUNOUT: kdyz klic v app_config chybi
+  // nebo je rozbity, most se nepostavi a chova se to jako driv. Nikdy naopak.
+  // Format: {"zdrojova-trat":{"track":"cilova-trat","po_dnech":7}}
+  // Zmena = jeden SQL update app_config, bez redeploye (stejne jako clenske_track_prefixy).
+  let MOSTY: Record<string, { track: string; po_dnech?: number }> = {};
+  try {
+    const raw = String(fMap.navazujici_trate ?? '').trim();
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) MOSTY = parsed;
+    }
+  } catch (e) {
+    console.warn('[drip-send] navazujici_trate: nevalidni JSON, mosty VYPNUTE: ' + String(e));
+    MOSTY = {};
+  }
   let lastSendAt = 0;
   const pace = async () => {
     const wait = lastSendAt + SEND_GAP_MS - Date.now();
@@ -341,6 +419,21 @@ Deno.serve(async (req: Request) => {
     return tplCache.get(k)!;
   };
 
+  // Volitelne promenne z tela invoku (`vars`). Pouzivaji je maily, ktere nesou hodnoty
+  // zname az za behu (castka refundu, nazev produktu). Detail a bezpecnostni pravidlo
+  // viz `buildVars`: vestavene klice se NIKDY neprepisuji.
+  //
+  // ⛔ POVOLENO JEN U JEDNOHO PRIJEMCE (`test_email` nebo `only_email`).
+  // Pri davkovem behu by se tataz castka dosadila VSEM lidem ve fronte, coz je presne
+  // ten druh tiche skody, kterou nikdo nezpozoruje, dokud nekomu neprijde cizi cislo.
+  const jeJedenPrijemce = (typeof body.test_email === 'string' && body.test_email.includes('@'))
+    || (typeof body.only_email === 'string' && body.only_email.includes('@'));
+  let extraVars: Record<string, unknown> | null = null;
+  if (body.vars && typeof body.vars === 'object') {
+    if (jeJedenPrijemce) extraVars = body.vars as Record<string, unknown>;
+    else console.warn('[drip-send] vars: ZAHOZENY, davkovy beh nesmi dosazovat stejne hodnoty vsem');
+  }
+
   // TEST
   if (typeof body.test_email === 'string' && body.test_email.includes('@')) {
     const track = String(body.track ?? 'existing-leadmagnet');
@@ -349,7 +442,7 @@ Deno.serve(async (req: Request) => {
     const tpl = await getTpl(track, step);
     if (!tpl) return json({ ok: false, mode: 'test', error: 'no_template:' + track + ':' + step }, 400);
     try {
-      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email));
+      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email), extraVars);
       const m = renderEmail(tpl, seg, v, footer);
       const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
       await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } });
@@ -400,7 +493,7 @@ Deno.serve(async (req: Request) => {
   // due leady (only_email = zpracuj jen jeden konkretni lead -> bezpecny instant-send bez zavodu)
   const limit = Number(body.limit ?? 200);
   const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : '';
-  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token,next_send_at';
+  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token,next_send_at,vars';
   const dueBase = () => admin.from('leads').select(FIELDS)
     .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso)
     .order('next_send_at', { ascending: true }).limit(limit);
@@ -443,33 +536,119 @@ Deno.serve(async (req: Request) => {
   //  - upsell-coaching prodava koucink -> stop pri coaching
   //  - longtail-kupci = pece o kupce videokurzu + upgrade na Academy -> stop pri academy
   // Clenske tracky (onboarding, milestone, reactivation, rescue) cili na zakazniky -> nikdy nestopovat.
-  const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true).in('product', ['videokurz', 'academy', 'coaching']);
-  const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set() };
+  // ⚠️ Expirace (28. 7. 2026, mesicni clenstvi Academy): za kupce se pocita jen ten,
+  // komu clenstvi PLATI. Bez teto podminky by expirovany mesicni clen zustal navzdy
+  // mezi kupci, prisel by o pristup a ZAROVEN by mu nikdy neprisla nabidka obnovy.
+  // NULL = dozivotni, tedy plati porad. Detail: pamet `mb-academy-pricing-mise`.
+  // ⛔ DRUHA POJISTKA: EX-KLIENTI KOUCINKU (8. 8. 2026).
+  // Prvni pojistka jsou enroll funkce (migrace `upsell_enroll_vylouceni_ex_koucink_klientu`
+  // z 8. 8.), ktere nikoho s koucink historii do upsell trati uz nezaradi. Tahle vrstva
+  // stoji az u ODESLANI: kdyby leada na `upsell-coaching` dostal kdokoli rucne nebo cestou,
+  // kterou dnes neznam, mail se stejne neposle.
+  // PROC to nejde pres `owns.coaching`: ten se plni jen z AKTIVNICH entitlementu. Offboard
+  // (`admin-api` akce `client_offboard`) coaching entitlement DEAKTIVUJE, takze ex-klient
+  // z `owns.coaching` druhy den zmizi a upsell by mu zacal chodit. Proto samostatny dotaz
+  // BEZ filtru `active`.
+  // Co se stalo bez teto vrstvy: klientce po 13 tydnech koucinku odesel mail
+  // "Videokurz mas. Chces pomoc i ode me osobne?". Detail: pamet `mb-koucink-offboard-automat`.
+  // ⚠️ Fail-safe je tu zamerne stejny jako jinde v teto funkci, tedy SMEREM K ODESLANI:
+  // kdyz dotaz selze, mnozina je prazdna a mail odejde. Prvni pojistka (enroll) drzi dal.
+  const { data: exCoachRows } = await admin.from('entitlements').select('email').eq('product', 'coaching');
+  const exCoaching = new Set<string>(
+    (exCoachRows ?? []).map((r: { email: string }) => String(r.email ?? '').toLowerCase()).filter(Boolean),
+  );
+
+  const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true)
+    .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString())
+    .in('product', ['videokurz', 'academy', 'coaching', 'balicek']);
+  const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set(), balicek: new Set() };
   for (const b of (buyersRows ?? []) as { email: string; product: string }[]) owns[b.product]?.add(b.email.toLowerCase());
-  const ownsAny = (em: string) => owns.videokurz.has(em) || owns.academy.has(em) || owns.coaching.has(em);
-  const shouldStop = (track: string, step: number, em: string): boolean => {
-    const t = String(track || '');
-    if (['lead-magnet', 'existing-leadmagnet', 'nurture-'].some((p) => t.indexOf(p) === 0)) return step > 0 && ownsAny(em);
-    if (t === 'longtail-consumer') return ownsAny(em);
-    if (t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci') return owns.academy.has(em);
-    if (t === 'trener-kit') return step > 0 && owns.academy.has(em);
-    if (t === 'upsell-coaching') return owns.coaching.has(em);
-    return false;
+  // ⛔ `balicek` je v `owns` SCHVALNE: slouzi brance v `preskoc.ts`, aby se nabidka balicku
+  // neposlala tomu, kdo si ho uz koupil. Do otazky „je to uz zakaznik?" ale patrit NESMI,
+  // duvod je u `vlastniCokoli` v `pravidla.ts`.
+  // Samotna pravidla (koho stopnout na ktere trati) jsou v `pravidla.ts` a maji testy.
+  // Tady zustava jen tenka obalka, aby volani na trech mistech nize zustala beze zmeny.
+  const shouldStop = (track: string, step: number, em: string): boolean =>
+    pravidlaShouldStop(track, step, em, owns, exCoaching);
+
+  // MOST NA DALSI TRAT: vola se v jedinou chvili, kdy trat pro leada skoncila.
+  // Vraci nazev cilove trati (= lead byl prepsan), nebo null (= necha se dobehnout).
+  // ⛔ Ctyri pojistky, kazda umi most sama zrusit. Poradi je zamerne od nejlevnejsi:
+  //   1. neni definovany most -> nic (vychozi stav pro vsechny trate)
+  //   2. clovek uz vlastni to, co cilova trat prodava -> nic (tataz pravidla jako shouldStop)
+  //   3. cilova trat nema krok 0 -> nic (jinak bychom ho poslali do prazdna a on by ztichl
+  //      uplne stejne, jen o trat vedle a hur dohledatelne)
+  //   4. tuhle trat uz jednou dostal -> nic (bez toho by se dva mosty daly zacyklit
+  //      a clovek by dostaval tytez maily dokola)
+  // Odhlaseni a bounce resit nemusime: due fronta bere jen status='active'.
+  // Rozhodovaci cast je ODDELENA od zapisu schvalne: `dry` beh ji smi zavolat taky
+  // a ukazat, kam by kdo sel, aniz by cokoli prepsal. Bez toho by se most dal
+  // vyzkouset jedine naostro na zivych lidech.
+  // deno-lint-ignore no-explicit-any
+  const kamDal = async (l: any): Promise<string | null> => {
+    const cil = vyberMost(MOSTY, String(l.track || ''));
+    if (!cil) return null;
+    const em = String(l.email).toLowerCase();
+    // ⛔ Pta se ZAMERNE na krok 1, ne 0. Plny duvod je u `KROK_PRO_MOST` v `pravidla.ts`
+    // a hlida to test „dukaz, ze na kroku 0 by ochrana nesepnula".
+    if (mostBlokujeVlastnictvi(cil.track, em, owns, exCoaching)) return null;
+    if (!(await getTpl(cil.track, 0))) return null;
+    const { data: uzTamByl } = await admin.from('email_events')
+      .select('id').eq('lead_id', l.id).eq('type', 'sent').eq('detail->>track', cil.track).limit(1);
+    if ((uzTamByl ?? []).length > 0) return null;
+    return cil.track;
+  };
+  // deno-lint-ignore no-explicit-any
+  const mostNaDalsiTrat = async (l: any): Promise<string | null> => {
+    const cilTrack = await kamDal(l);
+    if (!cilTrack) return null;
+    // Odstup po poslednim mailu puvodni trate, at cloveku neprijdou dva maily po sobe.
+    // Fail-safe smeruje k CEKANI, ne k odeslani; duvod a historie vady jsou u `odstupDnu`
+    // v `pravidla.ts`, hlida to sada testu vcetne preklepu „sedm".
+    const poDnech = odstupDnu(MOSTY[String(l.track || '')]?.po_dnech);
+    await admin.from('leads').update({
+      track: cilTrack, step: 0,
+      next_send_at: new Date(Date.now() + poDnech * 86400000).toISOString(),
+      updated_at: nowIso,
+    }).eq('id', l.id);
+    // Stopa v logu: bez ni by prechod byl neviditelny a nikdo by nedohledal, proc
+    // clovek dostava maily z jine trate, nez do ktere se prihlasil.
+    // ⚠️ `track` v detailu je POVINNE, i kdyz je duplicitni k `z`: adminsky log sklada
+    // sloupec trate i predmet z `detail->>track` a bez nej se radek zobrazi prazdny.
+    await admin.from('email_events').insert({
+      lead_id: l.id, step: l.step, type: 'bridged',
+      detail: { track: l.track, z: l.track, na: cilTrack, po_dnech: poDnech },
+    });
+    return cilTrack;
   };
 
   // DRY
   if (body.dry === true) {
     const byStep: Record<string, number> = {};
-    let would = 0, bought = 0, invalid = 0;
+    const byBridge: Record<string, number> = {};
+    let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0;
     for (const l of leads) {
       // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
       if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; }
+      // Preskoceni kroku, ktery prodava uz vlastneny produkt (viz preskoc.ts).
+      // V dry behu se jen zapocita, at je videt, kolik mailu oprava zadrzi, nez se nasadi.
+      if (maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns)) { wouldSkipOwns++; continue; }
       const tpl = await getTpl(l.track, l.step);
-      if (!tpl) { invalid++; continue; }
+      if (!tpl) {
+        const na = await kamDal(l);
+        if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; }
+        else invalid++;
+        continue;
+      }
+      // Posledni mail trate (wait_days = null): po jeho odeslani se rozhoduje o mostu.
+      if (tpl.wait_days == null) {
+        const na = await kamDal(l);
+        if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; }
+      }
       const key = l.track + '/step' + l.step + ':' + tpl.key;
       byStep[key] = (byStep[key] ?? 0) + 1; would++;
     }
-    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, invalid_track_step: invalid, by_step: byStep });
+    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), by_step: byStep });
   }
 
   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
@@ -479,14 +658,20 @@ Deno.serve(async (req: Request) => {
   const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
 
   // LIVE
-  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, capped = false, timeUp = false;
+  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, skippedOwns = 0, capped = false, timeUp = false;
   const byStep: Record<string, number> = {};
+  const byBridge: Record<string, number> = {};
   for (const l of leads) {
     if (sent >= remaining) { capped = true; break; }
     if (Date.now() - runStart > RUN_DEADLINE_MS) { timeUp = true; break; }
     const seg = normSeg(l.segment);
     const tpl = await getTpl(l.track, l.step);
-    if (!tpl) { await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue; }
+    // Krok bez sablony = trat skoncila (nebo ji nekdo zkratil). Driv se tu jen zhasl termin.
+    if (!tpl) {
+      const na = await mostNaDalsiTrat(l);
+      if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; continue; }
+      await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue;
+    }
     // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
     if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) {
       await admin.from('leads').update({ status: 'purchased', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
@@ -498,16 +683,70 @@ Deno.serve(async (req: Request) => {
       .eq('detail->>track', l.track).maybeSingle();   // dedupe per track (pri prerazeni leadu jinam se kroky nepreskakuji)
     const advance = async () => {
       const ns = l.step + 1;
+      // ⛔⛔ KDO SE ODHLASIL A PAK KOUPIL, DOSTANE JEN DORUCENI. Nic vic. (7. 8. 2026)
+      // `posliUvitani` v academy-stripe-webhook nastavuje `status: 'active'` bez podminky,
+      // takze nakup ODHLASENEHO cloveka ho vratil do rozesilky natrvalo: dostal nejen
+      // doruceni (spravne, to je plneni smlouvy), ale i upsell a vsechen budouci marketing.
+      // Ten webhook proto nove pri odhlasenem leadovi zapise do `vars` znacku
+      // `_byl_odhlaseny: true` a tady se podle ni po PRVNIM mailu trate lead vrati zpatky
+      // mezi odhlasene. ⇒ Zaplacene dostane, marketing uz ne.
+      // ⚠️ Znacka je na NEJVYSSI urovni `vars`, tedy vedle klicu trati. Kolize nehrozi,
+      //    protoze trate se jmenuji bez podtrzitka na zacatku a cte se vyhradne `vars[track]`.
+      // ⚠️ Kontroluje se `l.step === 0`, ne posledni krok. Zamerne: krok 0 je doruceni,
+      //    kroky 1 a 2 uz jsou „jak na to" a upsell, a ty odhlaseny clovek dostat nema.
+      const bylOdhlaseny = !!(l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars)
+        && (l.vars as Record<string, unknown>)._byl_odhlaseny);
+      if (bylOdhlaseny && l.step === 0 && String(l.track || '').startsWith('onboarding-nakup-')) {
+        await admin.from('leads').update({
+          status: 'unsubscribed', next_send_at: null, step: ns, updated_at: nowIso,
+        }).eq('id', l.id);
+        await admin.from('email_events').insert({
+          lead_id: l.id, step: l.step, type: 'stop_odhlaseny_kupec',
+          detail: { track: l.track, duvod: 'koupil po odhlaseni, doruceni odeslano, marketing ne' },
+        });
+        finished++;
+        return;
+      }
       if (tpl.wait_days == null) {
+        // wait_days = null znamena POSLEDNI mail trate. Tady se rozhoduje, jestli
+        // clovek pokracuje jinam, nebo definitivne ztichne. Viz MOSTY vyse.
+        // ⛔ TEN `return` JE NOSNY, NESMAZAT. Most uz leada prepsal na cilovou trat
+        // a krok 0. Kdyby se pokracovalo dal, update nize by mu nastavil step = 8
+        // (dalsi krok PUVODNI trate) nad uz prepsanym leadem a clovek by v nove trati
+        // preskocil osm mailu z dvanacti. Track by se neprepsal, ale krok ano.
+        const na = await mostNaDalsiTrat(l);
+        if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; return; }
         await admin.from('leads').update({ step: ns, next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++;
       } else {
         const next = new Date(Date.now() + tpl.wait_days * 86400000).toISOString();
         await admin.from('leads').update({ step: ns, next_send_at: next, updated_at: nowIso }).eq('id', l.id);
       }
     };
+    // ⛔ NENABIZEJ, CO UZ CLOVEK MA. Bez teto branky dostal kupec balicku, ktery uz
+    // videokurz vlastni, mail "Kurz ti rekne proc" s nabidkou na koupi kurzu, ktery ma.
+    // ⚠️ MUSI se volat `advance()`, ne jen `continue`: krok 2 balicku je POSLEDNI mail
+    // trate (wait_days = null) a prave za nim se rozhoduje o mostu do dalsi trate.
+    // Holy `continue` by leada nechal navzdy viset na tomhle kroku a hodinova davka
+    // by ho brala donekonecna dokola.
+    const preskocProdukt = maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns);
+    if (preskocProdukt) {
+      await admin.from('email_events').insert({
+        lead_id: l.id, step: l.step, type: 'skip_owns_product',
+        detail: { track: l.track, key: tpl.key, produkt: preskocProdukt },
+      });
+      await advance(); skippedOwns++; continue;
+    }
     if (already) { await advance(); skippedAlready++; continue; }
     try {
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email));
+      // ZALOHA PRO OPAKOVANY POKUS: `vars` z tela invoku existuji jen jednou. Kdyz odeslani
+      // selze, dalsi pokus jede z hodinove davky, ktera zadne telo nema — a mail by spadl
+      // na `unresolved_token` uz navzdy (viz leads-vars.sql). Proto se ctou i z leada.
+      // ⛔ Vyhradne `l.vars[l.track]`, nikdy plosne: zaznam patrici jine trati nesmi
+      // prosaknout do mailu, ktery si nahodou pojmenoval promennou stejne.
+      const varsZLeada = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars))
+        ? (l.vars as Record<string, unknown>)[String(l.track)] as Record<string, unknown> | undefined
+        : undefined;
+      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars ?? varsZLeada ?? null);
       const m = renderEmail(tpl, seg, v, footer);
       await pace();   // rozestup mezi volanimi Resendu, viz SEND_GAP_MS vyse
       const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);
@@ -552,5 +791,5 @@ Deno.serve(async (req: Request) => {
       }
     }
   }
-  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, finished, errors, gave_up: gaveUp, by_step: byStep });
+  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
 });
