@@ -11,6 +11,7 @@
 // └────────────────────────────────────────────────────────────────────────┘
 
 import { preflagMessage } from './preflag.ts';
+import { notifyCapReached, type CapKind } from './cap-notify.ts';
 
 const NL = String.fromCharCode(10);
 // Provider abstrakce (Anthropic default / xAI Grok) — přepínatelné přes AI_MARTIN_PROVIDER,
@@ -380,27 +381,17 @@ async function postWithRetry(url: string, headers: Record<string, string>, bodyO
 const PRICE_PER_M: Record<string, { in: number; out: number; cached?: number }> = {
   'claude-opus-4-8': { in: 15, out: 75 }, 'claude-sonnet-5': { in: 3, out: 15 }, 'claude-haiku-4-5': { in: 1, out: 5 },
   'grok-4.3': { in: 1.25, out: 2.5, cached: 0.2 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6, cached: 0.5 },
-  // grok-4.6: ceny overene 13. 8. 2026 v docs.x.ai/docs/models (pasmo pod 200k tokenu).
-  'grok-4.6': { in: 2, out: 6, cached: 0.5 },
 };
 // tcached = cast vstupu trefena z cache (xAI: usage.prompt_tokens_details.cached_tokens,
 // Anthropic: cache_read_input_tokens). Bez toho bychom ucetli plnou sazbu i za levny vstup.
-function parseUsage(u: unknown): { tin: number; tout: number; tcached: number; treasoning: number; ticks: number } {
+function parseUsage(u: unknown): { tin: number; tout: number; tcached: number } {
   const o = (u ?? {}) as Record<string, unknown>;
   const num = (v: unknown) => Number(v ?? 0) || 0;
   const details = (o.prompt_tokens_details ?? {}) as Record<string, unknown>;
-  const odetails = (o.completion_tokens_details ?? {}) as Record<string, unknown>;
   const tin = num(o.input_tokens ?? o.prompt_tokens);
   const tout = num(o.output_tokens ?? o.completion_tokens);
   const tcached = Math.min(num(details.cached_tokens ?? o.cache_read_input_tokens), tin);
-  // xAI reasoning tokeny do `completion_tokens` NEDAVA (zmereno 13. 8. 2026:
-  // total_tokens = prompt + completion + reasoning), ale UCTUJE je sazbou vystupu.
-  // Bez tohohle byl naklad podhodnoceny az 3x a mesicni strop sepnul prilis pozde.
-  // Anthropic je do output_tokens zapocitava sam a tenhle klic nema, takze se nic nezdvoji.
-  const treasoning = num(odetails.reasoning_tokens);
-  // xAI posila i SVOJI cenu za volani; 1 tick = 1e-10 USD (overeno na trech volanich na cent).
-  const ticks = num(o.cost_in_usd_ticks);
-  return { tin, tout, tcached, treasoning, ticks };
+  return { tin, tout, tcached };
 }
 function userIdFromToken(token: string): string | null {
   try { const p = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return typeof p.sub === 'string' ? p.sub : null; } catch { return null; }
@@ -435,24 +426,15 @@ async function logFlag(userId: string | null, email: string | null, primary: str
 // best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď (fire-and-forget).
 function logUsage(userId: string | null, feature: string, usage: unknown): void {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
-  const { tin, tout, tcached, treasoning, ticks } = parseUsage(usage);
+  const { tin, tout, tcached } = parseUsage(usage);
   const p = PRICE_PER_M[MODEL] ?? { in: 3, out: 15 };
   // cached vstup se uctuje levnejsi sazbou; zbytek vstupu plnou
   const cachedRate = p.cached ?? p.in;
-  // Uctovany VYSTUP = completion + reasoning (viz parseUsage); do ai_usage jde stejne cislo,
-  // at se da cena z radku dopocitat.
-  const billedOut = tout + treasoning;
-  const fromTable = ((tin - tcached) / 1e6) * p.in + (tcached / 1e6) * cachedRate + (billedOut / 1e6) * p.out;
-  // Prednost ma cena OD POSKYTOVATELE (prezije i zmenu ceniku). Tabulka je fallback
-  // a zaroven pojistka: pri radove jinem cisle (zmena jednotky ticku) ticky zahodime.
-  const fromTicks = ticks / 1e10;
-  const ticksOk = fromTicks > 0 && (fromTable <= 0 || (fromTicks >= fromTable * 0.2 && fromTicks <= fromTable * 5));
-  if (ticks > 0 && !ticksOk) console.error(`ai-martin: cost_in_usd_ticks mimo rozsah (${fromTicks} vs ${fromTable})`);
-  const cost = Number((ticksOk ? fromTicks : fromTable).toFixed(6));
+  const cost = Number((((tin - tcached) / 1e6) * p.in + (tcached / 1e6) * cachedRate + (tout / 1e6) * p.out).toFixed(6));
   fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: billedOut, tokens_cached: tcached, est_cost_usd: cost }),
+    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: tout, tokens_cached: tcached, est_cost_usd: cost }),
   }).catch(() => {});
 }
 // --- P2: denní strop na člena (anti-abuse). Best-effort; při chybě pustí dál. ---
@@ -528,15 +510,45 @@ async function overMonthlyCap(userId: string | null): Promise<boolean> {
   }
 }
 // Sepnutý strop se zapíše do `ai_usage` s nulovým nákladem, ať jde spočítat, KOLIK LIDÍ
-// na něj naráží (`feature like '%_capped'`). Bez toho by se ticho dalo číst jako „nikdo
+// na něj naráží (`feature like '%capped%'`). Bez toho by se ticho dalo číst jako „nikdo
 // ho nepotřebuje" i ve chvíli, kdy o něj klienti denně zakopávají.
-function logCapped(userId: string | null, feature: string): void {
+// ⛔ Await, ne odpojená promise: tahle značka je i pojistka „už dnes šel mail".
+async function logCapped(userId: string | null, feature: string): Promise<void> {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
-  fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: 0, tokens_out: 0, tokens_cached: 0, est_cost_usd: 0 }),
-  }).catch(() => {});
+  });
+  if (!r.ok) throw new Error(`logCapped ${r.status}`);
+}
+
+// Mail Martinovi při nárazu na strop. ⛔ Pořadí (kontrola → await značka → mail)
+// hlídá `notifyCapReached`, ne tahle obálka. Značku proto NEZAPISUJ zvlášť.
+async function alertMartinCap(
+  userId: string | null,
+  email: string | null,
+  via: MemberVia,
+  feature: string,
+  kind: CapKind,
+): Promise<void> {
+  if (!userId) return;
+  try {
+    await notifyCapReached({
+      userId,
+      email,
+      via,
+      feature,
+      kind,
+      supabaseUrl: SUPABASE_URL,
+      serviceRole: SERVICE_ROLE,
+      resendKey: Deno.env.get('RESEND_API_KEY') ?? '',
+      notifyFrom: Deno.env.get('NOTIFY_FROM') ?? '',
+      zapisZnacku: () => logCapped(userId, feature),
+    });
+  } catch (e) {
+    console.error('[cap-notify] alertMartinCap selhal, uživateli jde běžná hláška o stropu:', e);
+  }
 }
 
 // --- STREAMING (jen Grok chat) ---
@@ -683,7 +695,7 @@ Deno.serve(async (req: Request) => {
 
   // P2 denní strop (safety hard-stop výše proběhl vždy; limit se týká jen placených LLM/vision volání).
   if (await overDailyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily', 'daily');
     return json({ reply: 'Na dnešek už jsme toho probrali slušně 💪 Denní limit chatu je vyčerpaný, pokračujeme zase zítra. Kdyby něco hořelo, napiš Martinovi.' }, CORS, 200);
   }
   // Měsíční nákladový strop. Stejné pořadí jako u denního: až ZA safety vrstvou, aby
@@ -691,7 +703,7 @@ Deno.serve(async (req: Request) => {
   // poli `reply`, ne chybový kód: klient non-2xx tělo nezobrazí a člen by viděl jen
   // obecnou chybu místo téhle věty.
   if (await overMonthlyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped', 'monthly');
     return json({ reply: 'Tenhle měsíc už toho máme v chatu hodně za sebou 💪 Limit se počítá za posledních 30 dní a uvolňuje se postupně, takže za pár dní se zase ozvi. Kdyby něco hořelo, napiš rovnou Martinovi.' }, CORS, 200);
   }
 
