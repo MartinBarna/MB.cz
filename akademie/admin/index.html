@@ -1905,7 +1905,10 @@
         }
         var trs=ps.map(function(p){
           var kv=Number(p.k_vyplate)||0;
-          var sazby=(Number(p.rate_monthly)||0)+' % měs. / '+(Number(p.rate_oneoff)||0)+' % jedn.';
+          // Sazby jsou v DB zlomkem (0.3 = 30 %). Pojistka <=1: kdyby nekdy prisla
+          // uz hotova procenta, nevynasobi se podruhe na 3000 %.
+          var pct=function(x){ x=Number(x)||0; return Math.round(x<=1 ? x*100 : x); };
+          var sazby=pct(p.rate_monthly)+' % měs. / '+pct(p.rate_oneoff)+' % jedn.';
           return '<tr><td style="white-space:nowrap;">'+esc(p.code)+'</td><td>'+esc(p.owner_email||'–')+'</td>'
             +'<td class="muted" style="white-space:nowrap;">'+esc(sazby)+'</td>'
             +'<td class="tcount">'+(Number(p.provize_confirmed)||0)+' Kč</td>'
