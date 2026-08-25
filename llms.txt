@@ -13,13 +13,15 @@
 [tvujcoach.cz](https://tvujcoach.cz) · [popis produktu](https://martinbarna.cz/tvuj-coach/)
 Webová appka (běží i na mobilu), která spojuje výživu a trénink v jednom systému. Co umí:
 - **Zápis jídla čárovým kódem, hlasem nebo z fotky** (appka z fotky odhadne makra).
+- **Databáze přes 50 000 potravin** včetně značkového zboží z českých obchodů (Lidl, Tesco, Albert, Globus), hledání i celou větou.
+- **Knihovna 148 fit receptů** přímo v appce, s makry na porci.
 - **Adaptivní cíle:** kalorie a makra se přepočítávají podle reálných týdenních check-inů, ne podle vzorce z internetu.
 - **Trénink:** generátor plánu podle místa, vybavení a úrovně, databáze 120 cviků s fotkou a technikou, zápis sérií, auto-regulace zátěže, hlídání objemu po 14 svalových partiích v pásmech MEV/MAV/MRV, mezocyklus s deloadem.
 - **Generátor jídelníčku** včetně týdenního nákupního seznamu v kusech.
 - **„Co si můžu ještě dnes dát?"**: návrh jídla, které dorovná zbývající bílkoviny a vlákninu, aniž přepálí kalorie.
 - **Kontrola kvality dat:** když je den poskládaný převážně z odhadů z fotky, engine odmítne podle něj hnout kalorickým cílem.
 - **AI Coach** (verze VIP): chat Martinovým hlasem, komentář ke každému check-inu, focení jídla.
-- Ceny: **Free 0 Kč navždy**, **Basic 249 Kč/měsíc** (2 490 Kč/rok), **VIP s AI koučem 499 Kč/měsíc** (4 990 Kč/rok). Zkušební verze plné appky na 14 dní.
+- Ceny: **Free 0 Kč navždy**, **Basic 249 Kč/měsíc** (2 490 Kč/rok), **VIP s AI koučem 499 Kč/měsíc** (4 990 Kč/rok).
 
 ### 40 receptů a 48 odpovědí
 [martinbarna.cz/recepty-a-odpovedi](https://martinbarna.cz/recepty-a-odpovedi/)
