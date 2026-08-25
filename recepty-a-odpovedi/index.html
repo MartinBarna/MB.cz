@@ -44,14 +44,17 @@
   /* Pozadi MUSI byt nepruhledne. S alfou 0.92 prosvital text pod listou pri scrollovani
      (overeno renderem: backdrop-filter se tady neaplikoval, computed filter byl 'none'). */
   .nav { border-bottom:1px solid var(--line); background:#0f1113; position:sticky; top:0; z-index:50; }
-  .nav .wrap { max-width:1180px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding-top:12px; padding-bottom:12px; }
-  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; }
+  .nav .wrap { max-width:1320px; display:flex; align-items:center; justify-content:space-between; gap:22px; padding-top:12px; padding-bottom:12px; position:relative; }
+  .brand { display:flex; align-items:center; gap:9px; text-decoration:none; color:#fff; font-weight:800; flex-shrink:0; }
   .brand img { width:30px; height:30px; }
   .navlinks { display:flex; align-items:center; gap:16px; font-size:.9rem; }
   .navlinks a { color:#cfc6b9; text-decoration:none; }
   .navlinks a:hover { color:#fff; }
-  .navlinks .nav-koupit { background:linear-gradient(145deg,var(--gold-soft),var(--gold)); color:var(--ink); font-weight:700; padding:9px 18px; border-radius:50px; }
-  @media (max-width:960px) { .hide-sm { display:none; } }
+  .navlinks .nav-koupit { background:linear-gradient(145deg,var(--gold-soft),var(--gold)); color:var(--ink); font-weight:700; padding:9px 18px; border-radius:50px; white-space:nowrap; }
+  .nav-toggle{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+  .nav-burger{display:none;background:none;border:1px solid rgba(255,255,255,.25);color:#cfc6b9;border-radius:8px;padding:5px 11px;font-size:1.2rem;line-height:1;cursor:pointer;flex-shrink:0;}
+  @media (max-width:1400px){ .navlinks { gap:11px; } .navlinks a { font-size:.88rem; } .navlinks .nav-koupit { padding:8px 14px; } }
+  @media (max-width:1259px){ .nav-burger{display:block;} .navlinks{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:#181520;flex-direction:column;align-items:stretch;gap:2px;padding:8px 20px 16px;box-shadow:0 12px 26px rgba(0,0,0,.35);border-top:1px solid #262232;} .nav-toggle:checked ~ .navlinks{display:flex;} .navlinks .hide-sm{display:block;padding:10px 2px;font-size:1rem;border-bottom:1px solid rgba(255,255,255,.06);} .navlinks .nav-koupit{text-align:center;margin-top:8px;padding:12px 20px;} }
   /* ⛔ NEPOJMENOVAVAT TOHLE `.hero` ANI `.cta`. Sdileny app-brand-override.css ma na
      obe tridy pravidla s !important (tmavy fialovy gradient), takze by prebil zlate
      tlacitko i pozadi a na uvodnim bloku by udelal orizly pruh siroky jen jako obsah.
@@ -91,13 +94,19 @@
 
 <div class="nav"><div class="wrap">
   <a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna, logo" decoding="async"><span>Martin Barna</span></a>
+  <input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Otevřít menu">☰</label>
   <nav class="navlinks" aria-label="Hlavní navigace">
     <a class="hide-sm" href="/koucing/">Koučink</a>
     <a class="hide-sm" href="/konzultace/">Konzultace</a>
-    <a class="hide-sm" href="/videokurz">Videokurz</a><a class="hide-sm" href="/recepty-a-odpovedi/">Recepty</a>
+    <a class="hide-sm" href="/videokurz">Videokurz</a>
+    <a class="hide-sm" href="/recepty-a-odpovedi/" aria-current="page">Recepty</a>
     <a class="hide-sm" href="/akademie/">Academy</a>
     <a class="hide-sm" href="/tvuj-coach/">Appka</a>
+    <a class="hide-sm" href="/treninky">Tréninky</a>
+    <a class="hide-sm" href="/prednasky/">Přednášky</a>
     <a class="hide-sm" href="/clanky/">Blog</a>
+    <a class="hide-sm" href="/reference/">Reference</a>
+    <a class="hide-sm" href="/akademie/prihlaseni/">Přihlásit</a>
     <a class="nav-koupit" href="https://buy.stripe.com/4gMbJ0ezBc3wcjC0Pd3ks09?utm_source=web&amp;utm_medium=nav&amp;utm_campaign=balicek&amp;locale=cs">Koupit za 349 Kč</a>
   </nav>
 </div></div>
@@ -183,6 +192,6 @@
 </footer>
 
 <script defer src="/assets/analytics.js?v=g11"></script>
-<script defer src="/assets/scroll-top.js?v=g5"></script>
+<script defer src="/assets/scroll-top.js?v=g6"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
 </html>

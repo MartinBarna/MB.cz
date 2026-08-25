@@ -48,9 +48,17 @@
   .mailbox input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:inherit;font-size:1rem;padding:12px 14px;margin:8px 0 10px;}
   .small{font-size:.8rem;color:#8F8A99;line-height:1.5;}
   .hidden{display:none;}
+  .top{border-bottom:1px solid rgba(255,255,255,.08);background:rgba(12,11,10,.55);}
+  .top .in{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:12px;}
+  .top .brand{display:flex;align-items:center;gap:10px;color:#F0EADF;text-decoration:none;font-weight:800;font-size:.95rem;}
+  .top .brand .mark{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;font-size:.86rem;}
+  .mainmenu{display:flex;align-items:center;gap:.85rem;margin-left:auto;margin-right:.9rem;flex-wrap:wrap}.mainmenu a{color:inherit;opacity:.78;text-decoration:none;font-weight:600;font-size:.84rem;white-space:nowrap}.mainmenu a:hover{opacity:1}@media(max-width:1150px){.mainmenu{display:none}}
 </style>
 </head>
 <body>
+<header class="top"><div class="in">
+  <a class="brand" href="/"><span class="mark">MB</span><span>Martin Barna</span></a><nav class="mainmenu" aria-label="Hlavní navigace"><a href="/koucing/">Koučink</a><a href="/konzultace/">Konzultace</a><a href="/videokurz">Videokurz</a><a href="/recepty-a-odpovedi/">Recepty</a><a href="/akademie/">Academy</a><a href="/tvuj-coach/">Appka</a><a href="/treninky">Tréninky</a><a href="/prednasky/">Přednášky</a><a href="/clanky/">Blog</a><a href="/reference/">Reference</a><a href="/akademie/prihlaseni/">Přihlásit</a></nav>
+</div></header>
 <div class="wrap">
   <span class="kick">Kvíz zdarma · 60 vteřin</span>
   <h1>Co ti <span style="color:#EBB12C;">reálně</span> brání zhubnout?</h1>
@@ -176,5 +184,6 @@
   if(document.readyState!=='loading') show(); else document.addEventListener('DOMContentLoaded', show);
 })();
 </script>
+<script src="/assets/scroll-top.js?v=g6" defer></script>
 </body>
 </html>
