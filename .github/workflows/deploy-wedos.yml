@@ -59,7 +59,13 @@ jobs:
       # Plošné ověření: každý nasazovaný soubor se stáhne z produkce a porovná s commitem
       # (git blob SHA). FTP akce umí kvůli sync-state souboru tiše přeskočit soubory
       # (stalo se 22. 7., run #438) — tenhle krok to shodí jako failed místo tichého úspěchu.
-      - name: Ověření nasazení (live obsah = commit)
+      # ⛔ NE proti HEAD: generátory výš mění pracovní strom (sitemap.xml, cviky),
+      # takže se ověřuje proti `git stash create` = otisku PRACOVNÍHO STROMU po
+      # generování. Proti HEAD to 25. 8. dvakrát falešně spadlo na sitemap.xml
+      # a vyrobilo zmatek „co je vlastně nasazené".
+      - name: Ověření nasazení (live obsah = nahrávaný strom)
         run: |
           sleep 8
-          node scripts/verify-deploy.js HEAD
+          git config user.email ci@local && git config user.name CI
+          REF=$(git stash create || true)
+          node scripts/verify-deploy.js "${REF:-HEAD}"
