@@ -14,6 +14,14 @@ import {
   shouldStop as pravidlaShouldStop,
   vyberMost,
 } from './pravidla.ts';
+// Vetveni mailu podle prvniho zapisu jidla v appce. Mapa je dnes PRAZDNA, tedy vypnuto;
+// dokud ji nekdo nenaplni, nize se neposle ani jeden dotaz do appky. Viz `aktivace.test.ts`.
+import {
+  KROK_PODLE_ZAPISU,
+  maPreskocitPodleZapisu,
+  type StavZapisu,
+  trateSeSignalem,
+} from './aktivace.ts';
 
 const NL = String.fromCharCode(10);   // newline
 const DQ = String.fromCharCode(34);   // double-quote char
@@ -600,6 +608,67 @@ Deno.serve(async (req: Request) => {
   const shouldStop = (track: string, step: number, em: string): boolean =>
     pravidlaShouldStop(track, step, em, owns, exCoaching);
 
+  // ⭐ ZAPSAL UZ CLOVEK JIDLO V APPCE? (25. 8. 2026)
+  // Data o zapisech zijou v JINEM Supabase projektu (appka `kfkmghvhqwqtsalqjmrp`), takze
+  // se na ne nedotazeme SQL dotazem. Ptame se pres edge funkci appky `aktivace-stav`.
+  //
+  // ⛔ PROC PRES EDGE FUNKCI A NE PRIMO DO DB APPKY: primy dotaz by znamenal mit v Academy
+  //    service-role klic appky, tedy plnou moc nad druhou databazi kvuli jedne booleovske
+  //    otazce. Funkce appky si sama sahne do sve DB a vrati JEN seznam adres, ktere zapsaly.
+  // ⛔ PROC NE NOVY SECRET: pouziva se TENTYZ sdileny secret, kterym uz appka vola nas
+  //    `app-onboarding-hook` (`app_config.app_onboarding_secret`, v appce env
+  //    `ACADEMY_ONBOARDING_SECRET`). Nova hodnota by musela projit clovekem a to je
+  //    zbytecne riziko; duveryhodna dvojice je tataz, jen se otaci smer volani.
+  // ⛔ PTAME SE JEN NA LIDI, KTERYCH SE TO TYKA (lead na trati s vetvenym krokem). Adresy
+  //    ostatnich nikam neodchazeji. Kdyz je mapa `KROK_PODLE_ZAPISU` prazdna, neodejde
+  //    ani jeden pozadavek a funkce se chova presne jako pred touhle zmenou.
+  // ⚠️ FAIL-SAFE SMEREM K ODESLANI: cokoli selze (secret, sit, HTTP, tvar odpovedi) -> stav
+  //    `nevime` -> nic se nepreskoci. Zadrzeny mail nikde nekrici, zbytecny ano.
+  const APP_AKTIVACE_URL = 'https://kfkmghvhqwqtsalqjmrp.supabase.co/functions/v1/aktivace-stav';
+  const TRATE_SE_SIGNALEM = trateSeSignalem(KROK_PODLE_ZAPISU);
+  let zapsaliJidlo: Set<string> | null = null;   // null = nevime (vypnuto nebo selhalo)
+  let aktivaceStav = 'vypnuto';
+  if (TRATE_SE_SIGNALEM.size > 0) {
+    const ptameSeNa = [...new Set(
+      leads.filter((l: { track?: string }) => TRATE_SE_SIGNALEM.has(String(l.track || '')))
+        .map((l: { email: string }) => String(l.email ?? '').toLowerCase())
+        .filter((e: string) => e.includes('@')),
+    )];
+    if (ptameSeNa.length === 0) {
+      aktivaceStav = 'nikdo_na_vetvene_trati';
+    } else {
+      try {
+        const { data: hs } = await admin.from('app_config').select('value').eq('key', 'app_onboarding_secret').maybeSingle();
+        if (!hs?.value) {
+          aktivaceStav = 'chybi_secret';
+        } else {
+          const r = await fetch(APP_AKTIVACE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-app-secret': String(hs.value) },
+            body: JSON.stringify({ emaily: ptameSeNa }),
+          });
+          const telo = await r.json().catch(() => ({}));
+          // Za odpoved se bere jen VYSLOVNE pole `zapsali`. Prazdne pole je platna odpoved
+          // („nikdo z nich nezapsal"), chybejici pole je selhani a musi skoncit v `nevime`.
+          if (r.ok && Array.isArray(telo?.zapsali)) {
+            zapsaliJidlo = new Set<string>(
+              (telo.zapsali as unknown[]).map((e) => String(e ?? '').toLowerCase()).filter(Boolean),
+            );
+            aktivaceStav = 'ok';
+          } else {
+            aktivaceStav = 'odpoved_' + r.status;
+          }
+        }
+      } catch (e) {
+        aktivaceStav = 'vyjimka_' + String(e).slice(0, 60);
+      }
+    }
+  }
+  const stavZapisu = (em: string): StavZapisu =>
+    zapsaliJidlo === null ? 'nevime' : (zapsaliJidlo.has(em.toLowerCase()) ? 'zapsal' : 'nezapsal');
+  const preskocitPodleZapisu = (track: string, step: number, em: string) =>
+    maPreskocitPodleZapisu(track, step, stavZapisu(em));
+
   // MOST NA DALSI TRAT: vola se v jedinou chvili, kdy trat pro leada skoncila.
   // Vraci nazev cilove trati (= lead byl prepsan), nebo null (= necha se dobehnout).
   // ⛔ Ctyri pojistky, kazda umi most sama zrusit. Poradi je zamerne od nejlevnejsi:
@@ -655,13 +724,23 @@ Deno.serve(async (req: Request) => {
   if (body.dry === true) {
     const byStep: Record<string, number> = {};
     const byBridge: Record<string, number> = {};
-    let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0;
+    let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0, wouldSkipZapis = 0;
+    const byZapis: Record<string, number> = {};
     for (const l of leads) {
       // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
       if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; }
       // Preskoceni kroku, ktery prodava uz vlastneny produkt (viz preskoc.ts).
       // V dry behu se jen zapocita, at je videt, kolik mailu oprava zadrzi, nez se nasadi.
       if (maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns)) { wouldSkipOwns++; continue; }
+      // Vetveni podle prvniho zapisu (viz aktivace.ts). Dry beh je JEDINY zpusob, jak si
+      // dopad overit, aniz by se dotkl ziveho cloveka: ukaze pocet i rozpad po krocich.
+      const zapisDuvod = preskocitPodleZapisu(String(l.track || ''), l.step, String(l.email));
+      if (zapisDuvod) {
+        wouldSkipZapis++;
+        const k = l.track + '/step' + l.step + ':' + zapisDuvod;
+        byZapis[k] = (byZapis[k] ?? 0) + 1;
+        continue;
+      }
       const tpl = await getTpl(l.track, l.step);
       if (!tpl) {
         const na = await kamDal(l);
@@ -677,7 +756,7 @@ Deno.serve(async (req: Request) => {
       const key = l.track + '/step' + l.step + ':' + tpl.key;
       byStep[key] = (byStep[key] ?? 0) + 1; would++;
     }
-    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), by_step: byStep });
+    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), zapis_signal: aktivaceStav, would_skip_zapis: wouldSkipZapis, by_zapis: byZapis, by_step: byStep });
   }
 
   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
@@ -687,7 +766,7 @@ Deno.serve(async (req: Request) => {
   const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
 
   // LIVE
-  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, skippedOwns = 0, capped = false, timeUp = false;
+  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, skippedOwns = 0, skippedZapis = 0, capped = false, timeUp = false;
   const byStep: Record<string, number> = {};
   const byBridge: Record<string, number> = {};
   for (const l of leads) {
@@ -765,6 +844,19 @@ Deno.serve(async (req: Request) => {
       });
       await advance(); skippedOwns++; continue;
     }
+    // ⭐ VETVENI PODLE PRVNIHO ZAPISU JIDLA (viz aktivace.ts).
+    // ⚠️ Stejne jako o kus vyse se MUSI volat `advance()`, ne holy `continue`: kdyby byl
+    // vetveny krok POSLEDNI v trati (`wait_days = null`), holy `continue` by na nem leada
+    // nechal viset navzdy a hodinova davka by ho brala dokola. `advance()` navic korektne
+    // pusti most na navaznou trat, takze clovek nezustane trcet uprostred serie.
+    const zapisDuvod = preskocitPodleZapisu(String(l.track || ''), l.step, String(l.email));
+    if (zapisDuvod) {
+      await admin.from('email_events').insert({
+        lead_id: l.id, step: l.step, type: 'skip_podle_zapisu',
+        detail: { track: l.track, key: tpl.key, podminka: zapisDuvod, stav: stavZapisu(String(l.email)) },
+      });
+      await advance(); skippedZapis++; continue;
+    }
     if (already) { await advance(); skippedAlready++; continue; }
     try {
       // ZALOHA PRO OPAKOVANY POKUS: `vars` z tela invoku existuji jen jednou. Kdyz odeslani
@@ -820,5 +912,5 @@ Deno.serve(async (req: Request) => {
       }
     }
   }
-  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
+  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, skipped_zapis: skippedZapis, zapis_signal: aktivaceStav, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
 });
