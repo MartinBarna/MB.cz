@@ -8,8 +8,8 @@
  * Nikdo si toho nevsimne. Tahle hlidka je jedine misto, kde zamrzla automatika
  * zacne KRICET.
  *
- * Pouziti:
- *   ACADEMY_SERVICE_ROLE_KEY=... node scripts/kontrola-cisla-stari.mjs
+ * Pouziti (klic uz neni potreba, cte se anonymne pres RPC `cisla_pro_web`):
+ *   node scripts/kontrola-cisla-stari.mjs
  *   node scripts/kontrola-cisla-stari.mjs --json vzorek.json     (offline, bez site)
  *   node scripts/kontrola-cisla-stari.mjs --limit-hodin 12
  *
@@ -27,14 +27,15 @@
  *   Navrh mel v kapitole 5a 48 h; sef zvolil 26 h, tedy prisneji. Zvednout limit
  *   smi jen clovek a jen s duvodem, protoze tim se hlidka oslepuje.
  *
- * ⛔ SLUZEBNI KLIC: `app_config` ma RLS bez policy a lezi v ni `cisla_sync_secret`.
- *    Anonymni klic vraci HTTP 200 a prazdne pole. Detail a zakaz pridavat policy
- *    pro anon: scripts/cisla-zdroj.mjs.
+ * ⛔ CTE SE RPC `cisla_pro_web()`, NE TABULKA `app_config`. Ta ma RLS bez policy
+ *    a lezi v ni `cisla_sync_secret`; anonymni GET na ni vraci HTTP 200 a prazdne
+ *    pole a policy pro anon se tam pridavat NESMI. Detail: scripts/cisla-zdroj.mjs.
+ *    Service-role klic v prostredi je uz jen zaloha, kdyby RPC vypadla.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { KLICE_CISEL, mapaZRadku, parseCislo, stahniAppConfig } from "./cisla-zdroj.mjs";
+import { mapaZRadku, nactiCisla, parseCislo } from "./cisla-zdroj.mjs";
 
 export const LIMIT_HODIN_VYCHOZI = 26;
 
@@ -149,8 +150,7 @@ async function main(argv) {
   }
   if (arg.help) {
     console.log(
-      "Pouziti: ACADEMY_SERVICE_ROLE_KEY=... node scripts/kontrola-cisla-stari.mjs " +
-        "[--limit-hodin 26] [--json vzorek.json]",
+      "Pouziti: node scripts/kontrola-cisla-stari.mjs [--limit-hodin 26] [--json vzorek.json]",
     );
     process.exit(0);
   }
@@ -165,11 +165,16 @@ async function main(argv) {
     const raw = JSON.parse(fs.readFileSync(abs, "utf8"));
     mapa = Array.isArray(raw) ? mapaZRadku(raw) : raw;
   } else {
+    // ⚠️ Po sitovem fetch() se NESMI volat process.exit() natvrdo: na Windows/Node
+    // to umi spadnout na "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)"
+    // (fetch/undici jeste zavira socket), a to i PO uspesnem vypisu "OK". Misto
+    // toho se nastavi process.exitCode a funkce se vrati, Node ukonci sam.
     try {
-      mapa = await stahniAppConfig({ klice: KLICE_CISEL });
+      mapa = await nactiCisla();
     } catch (e) {
-      console.error("Cteni app_config selhalo: " + String(e.message ?? e));
-      process.exit(1);
+      console.error("Cteni verejnych cisel selhalo: " + String(e.message ?? e));
+      process.exitCode = 1;
+      return;
     }
   }
 
@@ -184,10 +189,11 @@ async function main(argv) {
   for (const w of v.varovani) console.log("VAROVANI: " + w);
   if (v.ok) {
     console.log("OK: cisla jsou cerstva.");
-    process.exit(0);
+    process.exitCode = 0;
+    return;
   }
   for (const c of v.chyby) console.error("CHYBA: " + c);
-  process.exit(1);
+  process.exitCode = 1;
 }
 
 const jeHlavni = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);

@@ -29,6 +29,23 @@ jobs:
           node scripts/gen-cviky-html.mjs
           node scripts/gen-sitemap-lastmod.mjs
 
+      # Veřejná čísla (potraviny, recepty, Academy) do HTML a llms.txt.
+      # Musí běžet PŘED FTP, aby se nahrála už přepsaná verze; ověření níž
+      # porovnává živý web proti `git stash create`, tedy proti pracovnímu stromu
+      # PO tomhle kroku, takže mu přepis nevadí.
+      # ⛔ NESMÍ SHODIT DEPLOY: nasazení webu je důležitější než stáří čísla.
+      # Skript při chybě nezapíše NIC (dva průchody), takže se nahraje poslední
+      # ručně ověřená hodnota: starší, ale pořád pravdivá. `::warning::` je tam
+      # proto, aby se selhání neztratilo v zeleném běhu.
+      # Klíč není potřeba: čte se anonymně přes RPC `cisla_pro_web()`. Secret je
+      # jen záloha, když RPC vypadne, a když neexistuje, prostě se nepoužije.
+      - name: Veřejná čísla do HTML a llms.txt
+        env:
+          ACADEMY_SERVICE_ROLE_KEY: ${{ secrets.ACADEMY_SERVICE_ROLE_KEY }}
+        run: |
+          node scripts/sync-cisla-web.mjs \
+            || echo "::warning title=Veřejná čísla nepřepsána::sync-cisla-web.mjs selhal, web se nasazuje se stávajícími čísly. Důvod je v logu tohohle kroku."
+
       - name: Nahrát na Wedos přes FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:

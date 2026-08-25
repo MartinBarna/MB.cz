@@ -12,6 +12,7 @@ import {
   hodnotyProZnacky,
   najdiHtml,
   pocetVExportu,
+  prepisLlms,
   prepisZnacky,
 } from "./sync-cisla-web.mjs";
 
@@ -134,6 +135,60 @@ test("mezery kolem znacky se toleruji", () => {
   const v = prepisZnacky(html, H);
   assert.deepEqual(v.chyby, []);
   assert.equal(v.text, "<!-- cislo:recepty -->140<!-- /cislo -->");
+});
+
+/* ---------------------------------------------------------------- llms.txt */
+
+const LLMS = [
+  "# Martin Barna",
+  "- **Databáze přes 50 000 potravin** včetně značkového zboží z českých obchodů.",
+  "- **Knihovna přes 140 fit receptů** přímo v appce, s makry na porci.",
+  "- databáze 120 cviků s fotkou a technikou.",
+].join("\n");
+
+test("llms.txt: prepise jen cislice, veta i tucne hvezdicky zustanou", () => {
+  const v = prepisLlms(LLMS, H);
+  assert.deepEqual(v.chyby, []);
+  assert.equal(v.zmeny.length, 1); // recepty uz sedi (140), meni se jen potraviny
+  assert.ok(v.text.includes("**Databáze přes 60 000 potravin** včetně"));
+  assert.ok(v.text.includes("**Knihovna přes 140 fit receptů** přímo"));
+});
+
+test("llms.txt: cislo cviku se nesmi hnout", () => {
+  // 120 cviku je kuratorsky seznam v repu appky, do teto automatiky nepatri.
+  const v = prepisLlms(LLMS, H);
+  assert.ok(v.text.includes("databáze 120 cviků"));
+});
+
+test("llms.txt: preformulovana veta = chyba a nic se neprepise", () => {
+  const rozbite = LLMS.replace("Databáze přes 50 000 potravin", "Máme 50 000 potravin");
+  const v = prepisLlms(rozbite, H);
+  assert.equal(v.chyby.length, 1);
+  assert.match(v.chyby[0], /sedi 0x/);
+  assert.equal(v.text, rozbite);
+  assert.deepEqual(v.zmeny, []);
+});
+
+test("llms.txt: dva vyskyty stejneho vzoru = chyba, ne prepis jednoho z nich", () => {
+  const v = prepisLlms(LLMS + "\n- **Databáze přes 50 000 potravin** podruhe.", H);
+  assert.equal(v.chyby.length, 1);
+  assert.match(v.chyby[0], /sedi 2x/);
+  assert.deepEqual(v.zmeny, []);
+});
+
+test("llms.txt: stejna hodnota = zadna zmena", () => {
+  const v = prepisLlms(LLMS, { potraviny: "50 000", recepty: "140" });
+  assert.deepEqual(v.chyby, []);
+  assert.deepEqual(v.zmeny, []);
+  assert.equal(v.text, LLMS);
+});
+
+test("llms.txt: nedelitelna mezera v cisle se pozna a prepise", () => {
+  const nbsp = LLMS.replace("50 000", "50\u00a0000");
+  const v = prepisLlms(nbsp, H);
+  assert.deepEqual(v.chyby, []);
+  assert.equal(v.zmeny[0].nova, "60 000");
+  assert.ok(v.text.includes("Databáze přes 60 000 potravin"));
 });
 
 test("pocetVExportu zvlada oba tvary exportu", () => {

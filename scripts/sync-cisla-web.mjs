@@ -2,12 +2,17 @@
 /**
  * sync:cisla-web  (kapitola 4b navrhu automatiky cisel)
  *
- * Tydenni prepis verejnych cisel do STATICKEHO HTML martinbarna.cz.
- * Cislo zustava primo v HTML, takze ho vidi crawler i AI a nic se nemusi
+ * Prepis verejnych cisel do STATICKEHO HTML martinbarna.cz a do `llms.txt`.
+ * Cislo zustava primo v souboru, takze ho vidi crawler i AI a nic se nemusi
  * dotahovat za behu. Zdroj pravdy je `app_config` v Academy DB, kterou plni
- * edge funkce `cisla-sync` z RPC `verejna_cisla()` v DB appky.
+ * edge funkce `cisla-sync` z RPC `verejna_cisla()` v DB appky; sem se cte
+ * anonymne pres RPC `cisla_pro_web()` (viz scripts/cisla-zdroj.mjs).
  *
- * ZNACKY V HTML (konvence, zatim NIKDE nenasazena, o zavedeni rozhodne sef):
+ * ⭐ SPOUSTI SE SAM pri kazdem deployi: krok "Verejna cisla" ve workflow
+ *    `.github/workflows/deploy-wedos.yml`, jeste PRED nahranim na FTP. Tam je
+ *    zamerne NEFATALNI, protoze nasazeni webu je dulezitejsi nez cerstvost cisla.
+ *
+ * ZNACKY V HTML:
  *
  *     <p>Databaze <!-- cislo:potraviny -->50 000<!-- /cislo --> potravin.</p>
  *
@@ -21,10 +26,10 @@
  *                    dolu na 10 000). Pise se VZDY za slovem "pres".
  *
  *   cislo:recepty    z app_config.pocet_receptu, ale ZAOKROUHLENE DOLU NA DESITKY
- *                    (148 -> 140). Staticke HTML se prepisuje jednou tydne, takze
- *                    presne cislo by po odverejneni jednoho receptu tyden lhalo
- *                    nahoru. Presne cislo (148) patri do mailu a do SPA, ktere
- *                    se obnovuji cesto, ne sem.
+ *                    (148 -> 140). Staticky web se prepisuje jen pri deployi, takze
+ *                    presne cislo by po odverejneni jednoho receptu lhalo nahoru.
+ *                    Presne cislo (148) patri do mailu a do SPA, ktere se obnovuji
+ *                    casto, ne sem. Proto se ve vete pise "pres 140", ne "140".
  *
  *   cislo:academy    ⛔⛔ NE Z DATABAZE. Nastroj "Databaze potravin" v Academy cte
  *                    STATICKY EXPORT `assets/curated-foods.min.json`, ne zivou
@@ -38,24 +43,24 @@
  *    a cislo generatoru (1 192 z `src/engine/food-db.json`). Ani jedno neni pocet
  *    radku v DB a cislo generatoru do prodejniho textu nepatri vubec.
  *
- * Pouziti:
- *   ACADEMY_SERVICE_ROLE_KEY=... node scripts/sync-cisla-web.mjs           (zapise)
- *   ACADEMY_SERVICE_ROLE_KEY=... node scripts/sync-cisla-web.mjs --dry     (jen ukaze)
- *   node scripts/sync-cisla-web.mjs --json vzorek.json --dry               (bez site)
+ * Pouziti (klic uz neni potreba, cisla se ctou anonymne):
+ *   node scripts/sync-cisla-web.mjs                            (zapise)
+ *   node scripts/sync-cisla-web.mjs --dry                      (jen ukaze)
+ *   node scripts/sync-cisla-web.mjs --json vzorek.json --dry   (bez site)
  *
  * Exit 0 = hotovo (se zmenou i bez ni).  Exit 1 = jakakoli nejednoznacnost:
- * neznamy typ znacky, neuzavrena znacka, neciselny obsah, nesmyslna nebo
- * chybejici zdrojova hodnota. Radeji nezapsat nic nez zapsat nesmysl.
+ * neznamy typ znacky, neuzavrena znacka, neciselny obsah, nesedici vzor v
+ * llms.txt, nesmyslna nebo chybejici zdrojova hodnota. Pri chybe se nezapise
+ * NIC, ani do souboru, ktery byl v poradku. Radeji nezapsat nic nez nesmysl.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   formatujMezerou,
-  KLICE_CISEL,
   mapaZRadku,
+  nactiCisla,
   parseCislo,
-  stahniAppConfig,
   zaokrouhliDolu,
 } from "./cisla-zdroj.mjs";
 
@@ -179,6 +184,79 @@ export function prepisZnacky(html, hodnoty, kdeProHlasku = "") {
   return { text, zmeny, chyby };
 }
 
+/* ------------------------------------------------------------------ llms.txt */
+
+export const LLMS_TXT = "llms.txt";
+
+/**
+ * llms.txt je HOLY TEXT PRO ROBOTY, ne HTML. Komentar `<!-- cislo:... -->` by se
+ * v nem cetl jako obsah stranky, takze se cisla musi hledat jinak.
+ *
+ * PROC REGEX NA ZNAMOU VETU A NE PLACEHOLDER `{{pocet_potravin}}`:
+ *   Placeholder by musel byt v souboru ulozenem v gitu. Tim by llms.txt byl mezi
+ *   behy skriptu ROZBITY (robot by cetl "Databaze pres {{pocet_potravin}}
+ *   potravin") a musela by vzniknout dvojice sablona + generovany soubor, tedy
+ *   dalsi misto, kde se da zapomenout a kde se daji rozejit. Regex proti tomu
+ *   nechava soubor po celou dobu spravny a cely: v gitu i na webu stoji skutecne
+ *   cislo a skript prepisuje jen cislice mezi znamymi slovy.
+ *   Cena: kdyz nekdo vetu preformuluje, kotva zmizi. Prave proto se vyzaduje
+ *   PRESNE JEDNA shoda; pri nule i pri dvou skript KONCI CHYBOU a nesaha na nic
+ *   (ani na HTML), aby nemohl prepsat neco jineho nez cislo.
+ *
+ * Zaokrouhluje se stejne jako v HTML (potraviny na 10 000, recepty na desitky):
+ * llms.txt se nasazuje tymz deployem jako staticky web, takze presne cislo by
+ * mezi deployi stejne stihlo zestarnout smerem nahoru.
+ */
+export const PRAVIDLA_LLMS = [
+  {
+    typ: "potraviny",
+    popis: "Databáze přes <cislo> potravin",
+    re: /(Databáze přes )([0-9][0-9 \u00a0]*)( potravin)/g,
+  },
+  {
+    typ: "recepty",
+    popis: "Knihovna přes <cislo> fit receptů",
+    re: /(Knihovna přes )([0-9][0-9 \u00a0]*)( fit receptů)/g,
+  },
+];
+
+/**
+ * Prepise cisla v llms.txt. Vraci { text, zmeny, chyby } ve stejnem tvaru jako
+ * `prepisZnacky`, aby se s obojim dalo v mainu zachazet jednotne.
+ */
+export function prepisLlms(text, hodnoty, kdeProHlasku = LLMS_TXT, pravidla = PRAVIDLA_LLMS) {
+  const kde = kdeProHlasku ? kdeProHlasku + ": " : "";
+  const chyby = [];
+  const zmeny = [];
+  let out = text;
+
+  for (const { typ, popis, re } of pravidla) {
+    const nova = hodnoty[typ];
+    if (nova === undefined) {
+      chyby.push(
+        kde + "neznam hodnotu pro `" + typ + "`. Znam: " + Object.keys(hodnoty).join(", ") + ".",
+      );
+      continue;
+    }
+    const nalezy = [...out.matchAll(re)];
+    if (nalezy.length !== 1) {
+      chyby.push(
+        kde + "vzor `" + popis + "` sedi " + nalezy.length + "x, cekam presne jednou. " +
+          "Bud nekdo tu vetu preformuloval, nebo pribyla druha. Nesahl jsem na nic.",
+      );
+      continue;
+    }
+    const [cely, pred, stare, po] = nalezy[0];
+    const stara = stare.trim();
+    if (stara === nova) continue;
+    out = out.replace(cely, () => pred + nova + po);
+    zmeny.push({ typ, stara, nova });
+  }
+
+  if (chyby.length) return { text, zmeny: [], chyby };
+  return { text: out, zmeny, chyby };
+}
+
 /** Projde repo a vrati relativni cesty HTML souboru, do kterych se smi sahat. */
 export function najdiHtml(korenAbs, preskocit = PRESKOCIT) {
   const out = [];
@@ -228,7 +306,7 @@ async function main(argv) {
       const raw = JSON.parse(fs.readFileSync(path.resolve(arg.json), "utf8"));
       mapa = Array.isArray(raw) ? mapaZRadku(raw) : raw;
     } else {
-      mapa = await stahniAppConfig({ klice: KLICE_CISEL });
+      mapa = await nactiCisla();
     }
   } catch (e) {
     console.error("Cteni cisel selhalo: " + String(e.message ?? e));
@@ -266,18 +344,27 @@ async function main(argv) {
   const chyby = [];
   const kZapisu = [];
   let zmenCelkem = 0;
+  const pridej = (abs, rel, v) => {
+    if (v.chyby.length) {
+      chyby.push(...v.chyby);
+      return;
+    }
+    if (!v.zmeny.length) return;
+    zmenCelkem += v.zmeny.length;
+    kZapisu.push({ abs, rel, text: v.text, zmeny: v.zmeny });
+  };
+
   for (const rel of najdiHtml(ROOT)) {
     const abs = path.join(ROOT, rel);
     const puvodni = fs.readFileSync(abs, "utf8");
     if (!/<!--\s*cislo:/.test(puvodni)) continue;
-    const v = prepisZnacky(puvodni, hodnoty, rel);
-    if (v.chyby.length) {
-      chyby.push(...v.chyby);
-      continue;
-    }
-    if (!v.zmeny.length) continue;
-    zmenCelkem += v.zmeny.length;
-    kZapisu.push({ abs, rel, text: v.text, zmeny: v.zmeny });
+    pridej(abs, rel, prepisZnacky(puvodni, hodnoty, rel));
+  }
+
+  // llms.txt jde touz branou jako HTML, jen jinou konvenci (viz PRAVIDLA_LLMS).
+  const llmsAbs = path.join(ROOT, LLMS_TXT);
+  if (fs.existsSync(llmsAbs)) {
+    pridej(llmsAbs, LLMS_TXT, prepisLlms(fs.readFileSync(llmsAbs, "utf8"), hodnoty, LLMS_TXT));
   }
 
   if (chyby.length) {
