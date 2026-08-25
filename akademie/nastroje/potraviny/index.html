@@ -114,7 +114,7 @@
       if(FOODS || loading) return;
       loading=true; loadErr=false;
       $('hint').textContent='Načítám databázi…';
-      fetch('/assets/curated-foods.min.json?v=2').then(function(r){return r.json();}).then(function(min){
+      fetch('/assets/curated-foods.min.json?v=3').then(function(r){return r.json();}).then(function(min){
         FOODS=window.FoodSearch.fromMin(min);
         loading=false;
         $('hint').textContent=HINT_DEFAULT+' '+FOODS.length+' potravin.';
