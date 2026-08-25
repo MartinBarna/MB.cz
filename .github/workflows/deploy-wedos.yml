@@ -21,6 +21,13 @@ jobs:
       # změna proti v4.3.5 je právě „Update to node 24").
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Sitemap lastmod + staticky seznam cviku
+        run: |
+          node scripts/gen-cviky-html.mjs
+          node scripts/gen-sitemap-lastmod.mjs
 
       - name: Nahrát na Wedos přes FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
