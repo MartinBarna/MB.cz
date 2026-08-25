@@ -162,6 +162,20 @@ type Block =
   | { t: 'ps'; html: string }
   | { t: 'img'; src: string; alt: string };
 
+// Pojistka pro typ bloku, ktery zadny renderer nezna.
+// Historie: 21. 8. 2026 pribyl do sablon typ `img`, oba renderery ho neznaly a propadl
+// do posledniho `return`. Ten sahl na `b.href` (HTML) a `b.html` (text), ktere obrazek
+// nema, takze mail spadl na hlasce "Cannot read properties of undefined (reading
+// 'indexOf')". Z te hlasky nesel poznat typ bloku a nez se prislo na pricinu, neodeslo
+// se 69 mailu 35 lidem. Zprava proto typ VYSLOVNE jmenuje.
+// NEMENIT na tiche preskoceni bloku: chybejici tlacitko v prodejnim mailu nikdo
+// nenahlasi, kdezto spadly mail se zapise do `email_events` jako `error`.
+// Parametr `never` je hlavni pojistka: kdo prida do `Block` novy typ a zapomene ho
+// osetrit v OBOU rendererech, neprojde uz `deno check`, tedy jeste pred nasazenim.
+function neznamyBlok(b: never): never {
+  const typ = (b as { t?: unknown } | null)?.t;
+  throw new Error('drip-send: neznamy typ bloku v sablone: ' + JSON.stringify(typ ?? null));
+}
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === 'p') return `<p style='margin:0 0 14px'>${fill(b.html, seg, v)}</p>`;
@@ -173,7 +187,9 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     // Vsechny styly inline, mailove klienty externi CSS ignoruji.
     if (b.t === 'img')
       return `<img src='${attr(fill(b.src, seg, v))}' alt='${attr(fill(b.alt, seg, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
-    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
+    if (b.t === 'btn')
+      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
+    return neznamyBlok(b);
   }).join(NL);
 }
 function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): string {
@@ -181,7 +197,8 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === 'bullets') return b.items.map((li) => '- ' + inlineToText(fill(li, seg, v))).join(NL);
     if (b.t === 'btn') return fill(b.text, seg, v) + ': ' + fill(b.href, seg, v);
     if (b.t === 'img') return '[obrázek: ' + inlineToText(fill(b.alt, seg, v)) + ']';
-    return inlineToText(fill(b.html, seg, v));
+    if (b.t === 'p' || b.t === 'ps') return inlineToText(fill(b.html, seg, v));
+    return neznamyBlok(b);
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
@@ -238,7 +255,8 @@ function buildVars(
   seg: Seg,
   unsub: string,
   email: string,
-  extra?: Record<string, unknown> | null,
+  extra: Record<string, unknown> | null,
+  cisla: Record<string, string>,
 ): Record<string, string> {
   // jmeno leada je user input: pryc s HTML a tokenovymi znaky, at nerozbije render ani markup
   const BADCH = '{}[]<>&' + DQ + String.fromCharCode(39);
@@ -260,6 +278,7 @@ function buildVars(
     discount2_pct: String(DISCOUNT2_PCT), discount2_price: String(d2price), discount2_code: DISCOUNT2_CODE,
     email: email, email_url: encodeURIComponent(email),
     unsubscribe_url: unsub,
+    ...cisla,            // ZAMERNE mezi vestavenymi: telo invoku je NESMI podvrhnout
   };
 
   if (!extra || typeof extra !== 'object') return vestavene;
@@ -326,11 +345,21 @@ Deno.serve(async (req: Request) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
 
-  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy', 'navazujici_trate']);
+  const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy', 'navazujici_trate', 'pocet_potravin', 'pocet_receptu']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
   const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
   const archiveBcc = fMap.archive_bcc ?? '';   // skryta kopie vsech ostrych sendu na Martinuv mail (prazdne = vypnuto)
+  // CISLA DATABAZE do mailu. Plni je edge `cisla-sync` (Academy cron, 4x denne) z RPC
+  // `verejna_cisla()` v DB appky. Hodnota je UZ ZAOKROUHLENA DOLU a pise se za slovem pres.
+  // FALLBACK NENI KOSMETIKA: kdyby klic v app_config chybel, `merge()` necha token v textu
+  //    a `hasToken()` shodi CELY mail na `unresolved_token`. Konstanty niz jsou proto
+  //    posledni zname overene minimum (zmereno 25. 8. 2026: 59 024 unikatnich nazvu, 148 receptu).
+  //    Zvedat je smi jen clovek, a jen po zelene z `kontrola:slib`.
+  const CISLA = {
+    pocet_potravin: (fMap.pocet_potravin ?? '').trim() || '50 000',
+    pocet_receptu:  (fMap.pocet_receptu  ?? '').trim() || '140',
+  };
   // BRANA: follow-up/transakcni tracky (non-onboarding) se posilaji jen kdyz je followups_enabled='true'.
   // Absence/jina hodnota = drzet (test-first). Prepnuti ostro = 1 SQL update, bez redeploye.
   const followupsEnabled = (fMap.followups_enabled ?? '') === 'true';
@@ -442,7 +471,7 @@ Deno.serve(async (req: Request) => {
     const tpl = await getTpl(track, step);
     if (!tpl) return json({ ok: false, mode: 'test', error: 'no_template:' + track + ':' + step }, 400);
     try {
-      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email), extraVars);
+      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email), extraVars, CISLA);
       const m = renderEmail(tpl, seg, v, footer);
       const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
       await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } });
@@ -480,7 +509,7 @@ Deno.serve(async (req: Request) => {
     if (l.status !== 'active') return json({ ok: true, mode: 'oneoff', status: 'preskoceno', duvod: l.status });
     try {
       const seg = normSeg(body.segment ?? l.segment);
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, to);
+      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, to, null, CISLA);
       const m = renderEmail(tpl, seg, v, footer);
       const id = await sendViaResend(to, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
       await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track } });
@@ -746,7 +775,7 @@ Deno.serve(async (req: Request) => {
       const varsZLeada = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars))
         ? (l.vars as Record<string, unknown>)[String(l.track)] as Record<string, unknown> | undefined
         : undefined;
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars ?? varsZLeada ?? null);
+      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars ?? varsZLeada ?? null, CISLA);
       const m = renderEmail(tpl, seg, v, footer);
       await pace();   // rozestup mezi volanimi Resendu, viz SEND_GAP_MS vyse
       const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);

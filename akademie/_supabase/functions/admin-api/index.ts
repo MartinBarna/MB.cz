@@ -255,6 +255,9 @@ function buildVars(name: string, seg: Seg, unsub: string, email = "vzorek@exampl
     discount2_pct: String(DISCOUNT2_PCT), discount2_price: String(d2price), discount2_code: DISCOUNT2_CODE,
     email: email, email_url: encodeURIComponent(email),
     unsubscribe_url: unsub,
+    // Stejna sada jako drip-send CISLA. Fallback = posledni overene minimum (25. 8. 2026).
+    pocet_potravin: "50 000",
+    pocet_receptu: "140",
   };
 }
 function renderEmailPreview(tpl: { subject: string; preheader: string; blocks: Block[] }, seg: Seg, v: Record<string, string>, footer: { html: string; text: string }) {

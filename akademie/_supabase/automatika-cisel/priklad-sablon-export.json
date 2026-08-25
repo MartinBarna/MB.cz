@@ -1,0 +1,18 @@
+[
+  {
+    "track": "tc-free",
+    "step": 0,
+    "key": "tcf-0-start",
+    "subject": "Ahoj{{fn_space}}, tady je start",
+    "preheader": "Pres {{pocet_potravin}} potravin",
+    "blocks": [{ "t": "p", "html": "Knihovna {{pocet_receptu}} receptu." }]
+  },
+  {
+    "track": "refund-test",
+    "step": 0,
+    "key": "refund",
+    "subject": "Vracime {{castka}} za {{produkt}}",
+    "preheader": "",
+    "blocks": []
+  }
+]
