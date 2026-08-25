@@ -7,7 +7,7 @@
    sloupec (jsou generické), viz CLAUDE.md appky. Plný `assets/curated-foods.json`
    (zdroj pro appku i DB export) `note` pořád má, zmenšená webová kopie
    (`curated-foods.min.json`) místo něj nese jen compact `hledaci` (0/1, viz
-   export-curated-foods-min.mjs) — ať searchCurated pozná „Tvar hledání"/„Alias
+   export-curated-foods-min.mjs), ať searchCurated pozná „Tvar hledání"/„Alias
    hledání" bez tahání celého textu. */
 (function (global) {
   'use strict';
@@ -132,31 +132,33 @@
           var vsechna = slova.every(function (w) { return n.indexOf(w) >= 0; });
           if (vsechna) rank = 5;
         }
-        // UVNITŘ PŘIHRÁDKY (rank 1-5), nejsilnější demotice první, zrcadlí appku
-        // (`rankCuratedHit` v src/lib/food-query.ts, koeficienty 16/8/4/2):
-        //   1. hledací tvar / alias z importu (nejsilnější)
-        //   2. čistý tuk (kcal ≥ 700 a bílkoviny < 3), NEodsouvá se, když dotaz
-        //      sám tuk hledá
-        //   3. „kůže" v názvu, NEodsouvá se, když dotaz kůži sám hledá
-        //   4. hotové jídlo (nejslabší, PŮVODNÍ demotice z 11. 8. 2026)
-        // Váhy (100/20/10) jsou schválně tak daleko od sebe, že součet slabších
-        // stupňů nikdy nepřebije ten silnější (20+10=30 < 100; 10 < 20) a přesná
-        // shoda (0) i netrefeno (9) zůstávají mimo tenhle blok.
+        // PŘIHRÁDKA SHODY JE NEJSILNĚJŠÍ SIGNÁL, zrcadlí appku 1:1 (`rankCuratedHit`
+        // v src/lib/food-query.ts): rank = přihrádka*16 + alias*8 + tukKuze*4 + jídlo*2.
+        // Uvnitř STEJNÉ přihrádky nejsilnější demotice první:
+        //   1. hledací tvar / alias z importu (8)
+        //   2. čistý tuk (kcal ≥ 700 a bílkoviny < 3) NEBO „kůže" v názvu (4),
+        //      NEodsouvá se, když dotaz sám tuk/kůži hledá
+        //   3. hotové jídlo (2, PŮVODNÍ demotice z 11. 8. 2026)
+        // Součet nižších stupňů (8+4+2=14) je vždy menší než jeden krok přihrádky
+        // (16), takže lepší shoda jména VŽDY vyhraje nad demotovanou horší shodou
+        // (appkový test: „Kuře tučné" v přihrádce 1 porazí „Kuřecí prsa" v přihrádce
+        // 3, i když je tučné). Přesná shoda (0) i netrefeno (9) zůstávají mimo tenhle blok.
         if (rank > 0 && rank < 9) {
           var kcal = Number(it.kcal_100g);
           var protein = Number(it.protein_100g);
           if (!isFinite(protein)) protein = 0;
           var cistyTuk = isFinite(kcal) && kcal >= 700 && protein < 3 && !chceTuk;
           var kuze = n.indexOf('kuze') >= 0 && !chceKuze;
-          var alias = jeHledaciTvar(it);
-          var jidlo = !!JE_HOTOVE_JIDLO[it.category];
-          rank += (alias ? 100 : 0) + ((cistyTuk || kuze) ? 20 : 0) + (jidlo ? 10 : 0);
+          var alias = jeHledaciTvar(it) ? 1 : 0;
+          var tukKuze = (cistyTuk || kuze) ? 1 : 0;
+          var jidlo = JE_HOTOVE_JIDLO[it.category] ? 1 : 0;
+          rank = rank * 16 + alias * 8 + tukKuze * 4 + jidlo * 2;
         }
         return { it: it, rank: rank };
       })
       // ⛔ POZOR NA 9: je to značka „netrefeno", ne stupeň. Nesmí se filtrovat
-      // porovnáním `rank < 9`, protože demotice (alias/tuk/kůže/jídlo výš) posouvá
-      // rank klidně na 135 a vypadla by VŠECHNA.
+      // porovnáním `rank < 9`, protože demotice (přihrádka*16 + alias/tuk-kůže/jídlo
+      // výš) posouvá rank klidně na 94 a vypadla by VŠECHNA.
       .filter(function (x) { return x.rank !== 9; })
       .sort(function (a, b) {
         // Uvnitř stupně kratší název napřed („Feta sýr" před „Ayib (etiopský…)"),
