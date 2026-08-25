@@ -1,0 +1,27 @@
+Značky jsou v HTML. Přepisovač z větve `automatika-cisel` je teď má kam sáhnout.
+
+Konvence, kterou ten skript už umí:
+
+```html
+Přes <!-- cislo:potraviny -->50 000<!-- /cislo --> potravin
+```
+
+Mezi značkami je **jen číslo**. Slovo „přes“ i jednotka zůstávají venku, ať je skript nepřepíše.
+
+**13 značek v 5 souborech:**
+
+| Typ | Odkud se bere | Kde |
+|---|---|---|
+| `cislo:potraviny` (4×) | živá DB appky, „přes 50 000“ | `/tvuj-coach/` |
+| `cislo:recepty` (2×) | totéž, dnes 148 | ceník Free + FAQ na `/tvuj-coach/` |
+| `cislo:academy` (7×) | statický export, „přes 40 000“ | landing Academy, objednávka, nástroje |
+
+Typy jsou schválně tři: Academy čte export (43 130), appka živou DB. Kdo by obě značky sjednotil, slíbil by hledáčku o 16 tisíc položek víc, než v něm je.
+
+Článek o výdělku trenéra (40 000 Kč) a kuchařka „40 receptů“ jsem nesahel. Čip `40 000+` má plus venku ze značky.
+
+**Co skript zatím nepřečte:** `llms.txt` (dál říká „přes 50 000“ a „148 fit receptů“). Přepisovač bere jen `.html`. HTML komentář v text/plain by crawler viděl jako surový text.
+
+**Až poleze první ostrý běh:** 148 v HTML spadne na **140** (zaokrouhlení dolů na desítky, ať týdenní zpoždění nelže nahoru). Čísla jsem teď neměnil, jen obalil.
+
+Nic jsem necommitoval ani nenasazoval.
