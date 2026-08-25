@@ -139,6 +139,14 @@
             //    (plink_1U1VnF…), od 6. 8. 2026. Bez tohohle řádku spadne do `stripe-other`
             //    s hodnotou 0, přesně ta tichá chyba, kterou popisuje komentář výš.
             : href.indexOf('4gMbJ0ezBc3wcjC0Pd3ks09') !== -1 ? { id: 'balicek', name: '40 receptů a 48 odpovědí', val: 349 }
+            // Dárkové poukazy (od 25. 8. 2026, stránka /poukaz/). Vlastní odkazy schválně:
+            // kupující je DÁRCE, ne uživatel produktu, a děkovačka i plnění se liší
+            // (PDF poukaz do 24 h, přístup vzniká až obdarovanému). Slít je s běžnými
+            // produktovými odkazy by rozbilo jak měření, tak doručení.
+            : href.indexOf('14A14mdvx8Rk83m9lJ3ks0d') !== -1 ? { id: 'poukaz-konzultace', name: 'Poukaz: konzultace', val: 2990 }
+            : href.indexOf('3cI14m4Z10kOdnGgOb3ks0e') !== -1 ? { id: 'poukaz-videokurz', name: 'Poukaz: videokurz', val: 800 }
+            : href.indexOf('9B66oGfDF0kOdnG41p3ks0f') !== -1 ? { id: 'poukaz-academy', name: 'Poukaz: Barna Academy', val: 8900 }
+            : href.indexOf('cNi28qajlebE1EY1Th3ks0g') !== -1 ? { id: 'poukaz-balicek', name: 'Poukaz: 40 receptů a 48 odpovědí', val: 349 }
             // ⚠️ SimpleShop varianta ZŮSTÁVÁ schválně: web je od 30. 7. přepnutý na Stripe,
             // ale staré odkazy pořád žijí v už rozeslaných mailech. Kdyby tenhle řádek zmizel,
             // klik ze starého mailu by se měřil s hodnotou 0.

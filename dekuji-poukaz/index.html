@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ⚠️ Děkovačka po koupi DÁRKOVÉHO POUKAZU (/poukaz/). Success URL čtyř Stripe linků
+     poukaz-konzultace / poukaz-videokurz / poukaz-academy / poukaz-balicek.
+     ⭐ Mluví na DÁRCE, ne na uživatele produktu: on nedostává přístup, dostává PDF poukaz.
+     Proto tu NENÍ „mrkni do e-mailu, máš přístup" ani návod na přihlášení; kdo to sem
+     dopíše podle vzoru ostatních děkovaček, slíbí dárci produkt, který nekupoval.
+     ⛔ Plnění je dnes RUČNÍ (Martin vyrábí PDF sám), proto slib „do 24 hodin".
+     ⛔ NENASAZENO, platební linky na poukazy zatím neexistují. -->
+<title>Děkuji za objednávku poukazu | Martin Barna</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://martinbarna.cz/dekuji-poukaz/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/highend.css?v=r2">
+<style>
+  :root { --green:#EBB12C; --green-dark:#161616; --ink:#161616; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--ink); background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  /* Šířka karty i typografie podle /dekuji-balicek/: 580 px vypadalo na velkém monitoru
+     jako mobil (Martin 7. 8. 2026). Kdo to zúží zpátky, vrací tu stížnost. */
+  .card { background:#fff; border-radius:24px; box-shadow:0 24px 70px rgba(0,0,0,.12); max-width:860px; width:100%;
+    padding:48px 40px; text-align:center; }
+  @media (min-width:900px) {
+    .card { padding:64px 72px; }
+    h1 { font-size:2.4rem; }
+    .card > p { font-size:1.08rem; }
+    .steps { padding:26px 34px; }
+    .steps li { font-size:1.02rem; margin:.7rem 0; }
+  }
+  .mark { width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg,#F6CD63,#EBB12C);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 1.4rem; box-shadow:0 12px 30px rgba(235,177,44,.35); }
+  .mark svg { width:42px; height:42px; }
+  h1 { font-size:1.9rem; margin:.2rem 0 .6rem; line-height:1.15; }
+  p { color:#555; line-height:1.6; margin:.5rem 0; }
+  .steps { text-align:left; background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:20px 22px; margin:1.6rem 0; }
+  .steps li { margin:.5rem 0; color:#333; }
+  .btn { display:inline-block; background:var(--green); color:#161616; font-weight:700; text-decoration:none;
+    padding:14px 34px; border-radius:50px; margin-top:.6rem; transition:.2s; }
+  .btn:hover { background:var(--green-dark); color:#fff; transform:translateY(-2px); }
+  .muted { font-size:.9rem; color:#888; margin-top:1.4rem; }
+  a.plain { color:var(--green); font-weight:600; }
+</style>
+<script defer src="/assets/analytics.js?v=g12"></script><script defer src="/assets/referral.js?v=g1"></script>
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=r3">
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r2">
+</head>
+<body>
+  <main class="card">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h1>Děkuju, dárek máš vyřešený! 🎁</h1>
+    <p>Poukaz je zaplacený a teď je řada na mně.</p>
+    <ol class="steps">
+      <li>📧 <strong>PDF poukaz se jménem obdarovaného ti pošlu e-mailem do 24 hodin</strong>, na adresu, kterou jsi zadal<span aria-hidden="true">(a)</span> u platby. Připravuju ho ručně, proto ne hned.</li>
+      <li>🖨️ <strong>Předáš ho, jak chceš.</strong> Můžeš ho vytisknout na A4, nebo prostě přeposlat e-mail dál. Poukaz platí <strong>rok od zakoupení</strong>.</li>
+      <li>🗓️ <strong>Termín neřeš.</strong> Až bude obdarovaný chtít začít, napíše mi s kódem z poukazu a domluvíme se přímo s ním.</li>
+    </ol>
+    <p class="muted">⚠️ Nedorazil poukaz do 24 hodin? Koukni do spamu a do záložky Hromadné. Kdyby tam nebyl, napiš mi na <a class="plain" href="mailto:martin@martinbarna.cz?subject=Nedorazil%20darkovy%20poukaz">martin@martinbarna.cz</a> nebo na <a class="plain" href="https://wa.me/420603229831?text=Ahoj%20Martine,%20nedorazil%20mi%20d%C3%A1rkov%C3%BD%20poukaz">WhatsApp</a> a pošlu ti ho obratem.</p>
+    <p class="muted">🙋 Chceš, aby na poukazu bylo jiné jméno, nebo jsi ho zadal<span aria-hidden="true">(a)</span> s překlepem? Napiš mi, dokud poukaz není uplatněný, přepíšu ho bez řečí.</p>
+    <!-- ⛔ /odstoupeni/ zatím NEMÁ volbu „poukaz" v rozbalovátku, proto `jine`.
+         Kdyby se sem napsalo ?product=poukaz, formulář by hodnotu zahodil a tiše nechal
+         předvybraný videokurz. Až tam volba přibude, přepsat i tenhle odkaz. -->
+    <p class="muted" style="margin-top:.6rem;font-size:.82rem;">Máš <strong>14 dní na odstoupení od smlouvy</strong>, dokud poukaz není uplatněný. Stačí <a class="plain" href="/odstoupeni/?product=poukaz">odstoupit od smlouvy online</a> (potvrzení přijde hned e-mailem). · <a class="plain" href="/">Zpět na web</a></p>
+
+    <p class="muted" style="margin-top:1.9rem;padding-top:1.2rem;border-top:1px solid rgba(0,0,0,.08);">A kdyby ses při té příležitosti chtěl<span aria-hidden="true">(a)</span> pustit do něčeho i sám<span aria-hidden="true">(a)</span>: nejčastěji se začíná <a class="plain" href="/konzultace/">online konzultací</a> nebo <a class="plain" href="/videokurz">videokurzem výživy</a>. Ale dneska jsi tu kvůli někomu jinému, tak s tím neotálím.</p>
+  </main>
+  <script src="/assets/scroll-top.js?v=g6" defer></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
+</html>
