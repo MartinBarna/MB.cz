@@ -1,10 +1,14 @@
 /* Barna Academy — vyhledávání v databázi potravin. Čistě klientské, deterministické.
-   Port z appky Tvůj Coach (src/data/foods.ts). Diakritika-insensitive + ranking.
-   curated položka: {name, category, kcal_100g, protein_100g, carb_100g, fat_100g, fiber_100g, serving_g}.
-   Pozn.: `note` (volný text, občas s EAN) se do nástroje na webu od 25. 8. 2026 NENESE,
-   nikde se nečte a nezobrazuje; curated_foods nemají strukturovaný EAN sloupec (jsou
-   generické), viz CLAUDE.md appky. Plný `assets/curated-foods.json` (zdroj pro appku
-   i DB export) `note` pořád má, jen zmenšená webová kopie ho vynechává. */
+   Port z appky Tvůj Coach (src/data/foods.ts + src/lib/food-query.ts). Diakritika-
+   insensitive + ranking. curated položka: {name, category, kcal_100g, protein_100g,
+   carb_100g, fat_100g, fiber_100g, serving_g, hledaci?, note?}.
+   Pozn.: plný text `note` (volný text, občas s EAN) se do nástroje na webu od
+   25. 8. 2026 NENESE, nikde se nezobrazuje; curated_foods nemají strukturovaný EAN
+   sloupec (jsou generické), viz CLAUDE.md appky. Plný `assets/curated-foods.json`
+   (zdroj pro appku i DB export) `note` pořád má, zmenšená webová kopie
+   (`curated-foods.min.json`) místo něj nese jen compact `hledaci` (0/1, viz
+   export-curated-foods-min.mjs) — ať searchCurated pozná „Tvar hledání"/„Alias
+   hledání" bez tahání celého textu. */
 (function (global) {
   'use strict';
 
@@ -29,6 +33,15 @@
   // ⚠️ Položka bez kategorie se schválně bere jako SUROVINA (nepropadne za jídla),
   // stejně jako `coalesce(f.category, '')` v té migraci.
   var JE_HOTOVE_JIDLO = { 'hotová jídla': 1, 'polévky': 1, 'dezerty': 1, 'saláty': 1 };
+
+  // Hledací tvar / alias z importu, ne kanonický název (appka: `jeHledaciTvar`
+  // v src/lib/food-query.ts). Zmenšený export nese jen compact `hledaci` (0/1),
+  // ale funkce umí i fallback na plný `note`, kdyby ho položka měla.
+  function jeHledaciTvar(it) {
+    if (it.hledaci) return true;
+    var nn = normName(it.note || '');
+    return nn.indexOf('tvar hledani') >= 0 || nn.indexOf('alias hledani') >= 0;
+  }
 
   // hledání v curated + RANKING: přesná shoda → od začátku s koncem slova → celé slovo
   //   → od začátku, ale slovo pokračuje → podřetězec → všechna slova (v libovolném pořadí)
@@ -98,6 +111,10 @@
       .filter(function (w) { return w.length > 1; })
       .map(function (w) { return ALIAS_ZNACKY[w] || w; })
       .filter(function (w) { return !ZNACKY[w]; });
+    // Vypínací slova pro demotici tuku/kůže: kdo je sám hledá, nemá se odsouvat.
+    // Stejný regex jako appka (`jeDemotovanyTukNeboKuze`), žádné „škvarky" navíc.
+    var chceTuk = /(tuk|olej|sadlo|maslo|ghi)/.test(qn);
+    var chceKuze = qn.indexOf('kuze') >= 0;
     return curated
       .map(function (it) {
         var n = normName(it.name);
@@ -115,15 +132,31 @@
           var vsechna = slova.every(function (w) { return n.indexOf(w) >= 0; });
           if (vsechna) rank = 5;
         }
-        // SUROVINA PŘED HOTOVÝM JÍDLEM: suroviny zůstávají 1 až 5, hotová jídla
-        // dostanou 11 až 15, takže celá skupina surovin je nad celou skupinou jídel.
-        // ⛔ Přesná shoda (0) sem NEPATŘÍ a musí zůstat úplně první: kdyby ji surovina
-        // přeskočila, dotaz „falafel" by nevrátil položku `Falafel` na prvním místě.
-        if (rank > 0 && rank < 9 && JE_HOTOVE_JIDLO[it.category]) rank += 10;
+        // UVNITŘ PŘIHRÁDKY (rank 1-5), nejsilnější demotice první, zrcadlí appku
+        // (`rankCuratedHit` v src/lib/food-query.ts, koeficienty 16/8/4/2):
+        //   1. hledací tvar / alias z importu (nejsilnější)
+        //   2. čistý tuk (kcal ≥ 700 a bílkoviny < 3), NEodsouvá se, když dotaz
+        //      sám tuk hledá
+        //   3. „kůže" v názvu, NEodsouvá se, když dotaz kůži sám hledá
+        //   4. hotové jídlo (nejslabší, PŮVODNÍ demotice z 11. 8. 2026)
+        // Váhy (100/20/10) jsou schválně tak daleko od sebe, že součet slabších
+        // stupňů nikdy nepřebije ten silnější (20+10=30 < 100; 10 < 20) a přesná
+        // shoda (0) i netrefeno (9) zůstávají mimo tenhle blok.
+        if (rank > 0 && rank < 9) {
+          var kcal = Number(it.kcal_100g);
+          var protein = Number(it.protein_100g);
+          if (!isFinite(protein)) protein = 0;
+          var cistyTuk = isFinite(kcal) && kcal >= 700 && protein < 3 && !chceTuk;
+          var kuze = n.indexOf('kuze') >= 0 && !chceKuze;
+          var alias = jeHledaciTvar(it);
+          var jidlo = !!JE_HOTOVE_JIDLO[it.category];
+          rank += (alias ? 100 : 0) + ((cistyTuk || kuze) ? 20 : 0) + (jidlo ? 10 : 0);
+        }
         return { it: it, rank: rank };
       })
       // ⛔ POZOR NA 9: je to značka „netrefeno", ne stupeň. Nesmí se filtrovat
-      // porovnáním `rank < 9`, protože hotová jídla mají 11 až 15 a vypadla by VŠECHNA.
+      // porovnáním `rank < 9`, protože demotice (alias/tuk/kůže/jídlo výš) posouvá
+      // rank klidně na 135 a vypadla by VŠECHNA.
       .filter(function (x) { return x.rank !== 9; })
       .sort(function (a, b) {
         // Uvnitř stupně kratší název napřed („Feta sýr" před „Ayib (etiopský…)"),
