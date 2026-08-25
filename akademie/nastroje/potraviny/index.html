@@ -52,7 +52,7 @@
     <div id="lock" class="lock hidden">🔒 Plná verze je součástí <b>Barna Academy</b>. <a href="/akademie/" style="color:var(--gold-soft)">Získat přístup →</a></div>
 
     <div id="tool">
-      <div class="searchbox"><span class="si">🔍</span><input id="q" type="search" placeholder="Hledej potravinu… (např. rýže, tvaroh, banán)" autocomplete="off" autofocus></div>
+      <div class="searchbox"><span class="si">🔍</span><input id="q" type="search" placeholder="Hledej potravinu… (např. rýže, tvaroh, banán)" autocomplete="off"></div>
       <p class="hint" id="hint">Nezáleží na diakritice, „rohlik" najde „rohlík".</p>
       <div class="count" id="count"></div>
       <div id="results"></div>
@@ -62,11 +62,12 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/food-search.js?v=7"></script>
+  <script src="/assets/food-search.js?v=8"></script>
   <script>
   (function(){
     var $=function(id){return document.getElementById(id);};
-    var FOODS=null;
+    var FOODS=null, loading=false, loadErr=false;
+    var HINT_DEFAULT='Nezáleží na diakritice, „rohlik" najde „rohlík".';
     function r(n){return Math.round(n);}
     function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
     function macHtml(m){
@@ -95,17 +96,37 @@
     }
     var t=null;
     function doSearch(){
-      if(!FOODS) return;
       var q=$('q').value;
-      if(!q.trim()){ $('results').innerHTML=''; $('count').textContent=''; return; }
+      if(!q.trim()){ if(!loading){ $('results').innerHTML=''; $('count').textContent=''; } return; }
+      if(!FOODS){
+        loadFoods();
+        $('results').innerHTML='<div class="empty">'+(loadErr?'⚠️ Databázi se nepodařilo načíst, zkus obnovit stránku.':'Načítám databázi potravin…')+'</div>';
+        $('count').textContent='';
+        return; // po dotažení loadFoods() zavolá doSearch() znovu
+      }
       render(window.FoodSearch.search(FOODS, q, 30));
     }
+    // JSON (43 130 potravin, ~3 MB) se stahuje až tady, ne při načtení stránky - to je
+    // celý smysl téhle úpravy (25. 8. 2026: dřív se stahovalo hned, 10,6 MB, na mobilu znát).
+    // Spouští se z fokusu i z prvního úhozu (na mobilu focus event u vyhledávacích polí
+    // nespolehlivě předchází inputu), ale jen jednou.
+    function loadFoods(){
+      if(FOODS || loading) return;
+      loading=true; loadErr=false;
+      $('hint').textContent='Načítám databázi…';
+      fetch('/assets/curated-foods.min.json?v=1').then(function(r){return r.json();}).then(function(min){
+        FOODS=window.FoodSearch.fromMin(min);
+        loading=false;
+        $('hint').textContent=HINT_DEFAULT+' '+FOODS.length+' potravin.';
+        doSearch();
+      }).catch(function(){
+        loading=false; loadErr=true;
+        $('hint').textContent='⚠️ Databázi se nepodařilo načíst.';
+        if($('q').value.trim()) $('results').innerHTML='<div class="empty">⚠️ Databázi se nepodařilo načíst, zkus obnovit stránku.</div>';
+      });
+    }
+    $('q').addEventListener('focus',loadFoods);
     $('q').addEventListener('input',function(){ clearTimeout(t); t=setTimeout(doSearch,90); });
-
-    fetch('/assets/curated-foods.json?v=4').then(function(r){return r.json();}).then(function(d){
-      FOODS=d; $('hint').textContent='Nezáleží na diakritice, „rohlik" najde „rohlík". '+d.length+' potravin.';
-      if($('q').value.trim()) doSearch();
-    }).catch(function(){ $('hint').textContent='⚠️ Databázi se nepodařilo načíst.'; });
 
     // Gating: plná verze jen pro Academy. Bez přístupu → zámek. Demo/bez BA běží.
     if(window.BA){ window.BA.ready.then(function(){

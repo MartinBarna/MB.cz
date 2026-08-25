@@ -1,7 +1,10 @@
 /* Barna Academy — vyhledávání v databázi potravin. Čistě klientské, deterministické.
    Port z appky Tvůj Coach (src/data/foods.ts). Diakritika-insensitive + ranking.
-   curated položka: {name, category, kcal_100g, protein_100g, carb_100g, fat_100g, fiber_100g, serving_g, note, ean?}.
-   Pozn.: EAN se nese dál (klíč pro budoucí affiliate objednávku), i když curated potraviny jsou generické (bez EAN). */
+   curated položka: {name, category, kcal_100g, protein_100g, carb_100g, fat_100g, fiber_100g, serving_g}.
+   Pozn.: `note` (volný text, občas s EAN) se do nástroje na webu od 25. 8. 2026 NENESE,
+   nikde se nečte a nezobrazuje; curated_foods nemají strukturovaný EAN sloupec (jsou
+   generické), viz CLAUDE.md appky. Plný `assets/curated-foods.json` (zdroj pro appku
+   i DB export) `note` pořád má, jen zmenšená webová kopie ho vynechává. */
 (function (global) {
   'use strict';
 
@@ -54,10 +57,12 @@
   // ⚠️ A po každé změně bumpni `food-search.js?v=` v akademie/nastroje/potraviny/,
   // jinak vracející se návštěvník dostane z cache starý soubor.
   //
-  // ⛔⛔ KTEROU DATABÁZI TENHLE HLEDÁČ DOSTÁVÁ: `assets/curated-foods.json`
-  // (generovaný export `curated_foods`, k 11. 8. 2026 2369 položek, klíč `category`
-  // s hodnotami „hotová jídla", „maso", „mléčné"…),
-  // volá ho `akademie/nastroje/potraviny/index.html` kolem řádku 105.
+  // ⛔⛔ KTEROU DATABÁZI TENHLE HLEDÁČ DOSTÁVÁ: obsahově `assets/curated-foods.json`
+  // (generovaný export `curated_foods`, klíč `category` s hodnotami „hotová jídla",
+  // „maso", „mléčné"…), ale nástroj od 25. 8. 2026 stahuje ZMENŠENOU variantu
+  // `assets/curated-foods.min.json` (fromMin() níž ji převede zpátky na stejný tvar
+  // objektů) a až při prvním použití vyhledávání, ne při načtení stránky
+  // (`akademie/nastroje/potraviny/index.html`, viz export-curated-foods-min.mjs).
   // ⚠️ NE `assets/food-db.json` (1192 položek, klíč `cat` = protein/carb/veg). Ten patří
   // GENERÁTORU jídelníčku. Kdo si je splete, měří něco jiného, než co uživatel vidí;
   // stalo se to 11. 8. 2026 a vedlo to k nepravdivému závěru „web to neumí".
@@ -139,5 +144,19 @@
     };
   }
 
-  global.FoodSearch = { normName: normName, search: searchCurated, macrosFor: macrosFor };
+  // Zmenšený export (assets/curated-foods.min.json, viz export-curated-foods-min.mjs):
+  // {cols:[...], rows:[[...],...]} místo pole objektů — kvůli 43 130 položkám na
+  // mobilu. Převede se zpátky na pole objektů se STEJNÝM tvarem jako plný export,
+  // aby searchCurated/macrosFor/render v index.html zůstaly beze změny.
+  function fromMin(min) {
+    if (!min || !min.cols || !min.rows) return [];
+    var cols = min.cols;
+    return min.rows.map(function (row) {
+      var o = {};
+      for (var i = 0; i < cols.length; i++) o[cols[i]] = row[i];
+      return o;
+    });
+  }
+
+  global.FoodSearch = { normName: normName, search: searchCurated, macrosFor: macrosFor, fromMin: fromMin };
 })(window);
