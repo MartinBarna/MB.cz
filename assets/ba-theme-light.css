@@ -1,0 +1,429 @@
+/* ============================================================
+   Barna Academy: světlý režim jako OVERRIDE vrstva.
+   Nesahej na HTML stovek stránek. Pravidla žijí pod [data-theme=light]
+   a přebíjejí inline tmavé barvy (color:#fff, rgba bílé karty, arena panely).
+   Načti ZA ba-ui.css. Na stránkách s arena.css na konci <body> načti
+   TENTÝŽ soubor ještě jednou za arena.css, ať vyhraje kaskáda.
+   ============================================================ */
+
+/* Přepínač (landing akademie/index nenačítá ba-ui.css, styly musí být i tady) */
+.mb-theme-toggle{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;padding:0;margin:0 0 0 8px;flex-shrink:0;
+  border:1px solid rgba(22,19,16,.18);border-radius:10px;
+  background:rgba(255,255,255,.12);color:inherit;cursor:pointer;
+  font:inherit;line-height:0;
+}
+.ba .mb-theme-toggle{border-color:var(--line-2,rgba(255,255,255,.14));background:var(--card);color:var(--ink);}
+.mb-theme-toggle:hover{border-color:rgba(235,177,44,.45);}
+.mb-theme-toggle:focus-visible{outline:2px solid #EBB12C;outline-offset:2px;}
+.mb-theme-toggle svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.mb-theme-toggle .mb-ico-sun{display:none;}
+[data-theme="light"] .mb-theme-toggle .mb-ico-sun{display:block;}
+[data-theme="light"] .mb-theme-toggle .mb-ico-moon{display:none;}
+[data-theme="light"] body:not(.ba) .mb-theme-toggle{
+  border-color:rgba(22,19,16,.18);background:#fff;color:#161310;
+}
+[data-theme="light"] html{color-scheme:light;}
+[data-theme="light"] body.ba{
+  background:var(--ba-bg,#F7F3EB) !important;
+  color:var(--ink,#161310) !important;
+  color-scheme:light;
+}
+/* body.ba: solid --bg, ne gradient --ba-bg (shorthand s !important
+   vynuluje background-color na transparent). html kvůli overscrollu. */
+html[data-theme="light"]{
+  background:var(--bg,#F7F3EB);
+}
+html[data-theme="light"] body.ba{
+  background:var(--bg,#F7F3EB) !important;
+  color:var(--ink,#161310) !important;
+}
+
+/* --- společný chrome členské sekce (přebije inline color:#fff) --- */
+[data-theme="light"] .ba h1,
+[data-theme="light"] .ba h2,
+[data-theme="light"] .ba h3,
+[data-theme="light"] .ba h4,
+[data-theme="light"] .ba strong,
+[data-theme="light"] .ba b,
+[data-theme="light"] .ba .lead,
+[data-theme="light"] .ba .desc{
+  color:var(--ink,#161310);
+}
+[data-theme="light"] .ba h1 .hl,
+[data-theme="light"] .ba .hl{
+  background:none !important;
+  -webkit-text-fill-color:var(--gold-soft,#6B4E08);
+  color:var(--gold-soft,#6B4E08) !important;
+}
+[data-theme="light"] .ba .lead{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba .kick{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .ba .crumb{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .ba a.back,
+[data-theme="light"] .ba .top a.back{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba .top a.back:hover{color:var(--ink,#161310) !important;}
+[data-theme="light"] .ba [style*="color:#a89e94"]{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba [style*="color:#fff"]{color:var(--ink,#161310) !important;}
+[data-theme="light"] .ba [style*="color:#F6CD63"]{color:var(--gold-soft,#6B4E08) !important;}
+
+/* karty / panely: z průhledné bílé na krémovou plochu */
+[data-theme="light"] .ba .card,
+[data-theme="light"] .ba .panel,
+[data-theme="light"] .ba .hello,
+[data-theme="light"] .ba .points,
+[data-theme="light"] .ba .quiz,
+[data-theme="light"] .ba .praxe,
+[data-theme="light"] .ba .freebanner,
+[data-theme="light"] .ba .bonus,
+[data-theme="light"] .ba .cert-card,
+[data-theme="light"] .ba .mfree,
+[data-theme="light"] .ba .path,
+[data-theme="light"] .ba .tool,
+[data-theme="light"] .ba .binfo{
+  background:#fff !important;
+  border-color:var(--line,rgba(22,19,16,.12)) !important;
+  color:var(--ink,#161310) !important;
+  box-shadow:0 12px 32px -18px rgba(22,19,16,.18) !important;
+}
+[data-theme="light"] .ba .chip,
+[data-theme="light"] .ba .pill{
+  background:#F3EEE4 !important;
+  border-color:var(--line-2,rgba(22,19,16,.20)) !important;
+  color:var(--muted-2,#3F3A34) !important;
+}
+[data-theme="light"] .ba .chip.on,
+[data-theme="light"] .ba .chip[aria-pressed="true"]{
+  background:linear-gradient(145deg,var(--gold-2,#E0A820),var(--gold,#EBB12C)) !important;
+  color:#1A1222 !important;
+  border-color:transparent !important;
+}
+
+/* vstupy */
+[data-theme="light"] .ba input,
+[data-theme="light"] .ba select,
+[data-theme="light"] .ba textarea,
+[data-theme="light"] .ba .fin,
+[data-theme="light"] .ba .lsearch{
+  background:#fff !important;
+  color:var(--ink,#161310) !important;
+  border-color:var(--line-2,rgba(22,19,16,.20)) !important;
+  color-scheme:light;
+}
+[data-theme="light"] .ba input::placeholder,
+[data-theme="light"] .ba textarea::placeholder{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba select option{background:#fff !important;color:#161310 !important;}
+
+/* zlaté CTA drží tmavý text (WCAG 9,36:1) */
+[data-theme="light"] .ba .go,
+[data-theme="light"] .ba .btn:not(.ghost):not(.kbtn2),
+[data-theme="light"] .ba .kbtn{
+  color:#1A1222 !important;
+}
+[data-theme="light"] .ba .go.ghost,
+[data-theme="light"] .ba .btn.ghost{
+  background:#F3EEE4 !important;
+  color:var(--muted-2,#3F3A34) !important;
+  border-color:var(--line-2) !important;
+}
+
+/* drawer z scroll-top.js */
+[data-theme="light"] .mb-drawer{
+  background:#F7F3EB !important;
+  color:#161310 !important;
+}
+[data-theme="light"] .mb-drawer a{color:#161310 !important;}
+[data-theme="light"] .mb-burger{border-color:rgba(22,19,16,.25) !important;color:#161310 !important;}
+
+/* ============================================================
+   moje / nastroje / check-in: lokální <style> s color:#fff
+   ============================================================ */
+[data-theme="light"] .ba .note{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba .muted{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba .fld>label{color:var(--ink,#161310) !important;}
+[data-theme="light"] .ba .credit{color:var(--ink,#161310) !important;background:rgba(235,177,44,.10) !important;}
+[data-theme="light"] .ba .credit b{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .wrap a{color:var(--gold-soft,#6B4E08);}
+
+/* nastroje index karty */
+[data-theme="light"] .ba .card p,
+[data-theme="light"] .ba .card .chip{color:var(--muted-2,#3F3A34) !important;}
+[data-theme="light"] .ba .card h2{color:var(--ink,#161310) !important;}
+
+/* ============================================================
+   klientská sekce (vlastní třídy kcard/kstat/wiz, bez arena.css)
+   ============================================================ */
+[data-theme="light"] .kcard,
+[data-theme="light"] .gwrap,
+[data-theme="light"] .doc,
+[data-theme="light"] .fitem,
+[data-theme="light"] .sumg{
+  background:#fff !important;
+  border-color:var(--line,rgba(22,19,16,.12)) !important;
+  color:var(--ink,#161310) !important;
+}
+[data-theme="light"] .kcard h3,
+[data-theme="light"] .kstat,
+[data-theme="light"] .kcta h2,
+[data-theme="light"] .gwrap h3,
+[data-theme="light"] .win h2{color:var(--ink,#161310) !important;}
+[data-theme="light"] .kcard p,
+[data-theme="light"] .kcta p,
+[data-theme="light"] .kstat .u,
+[data-theme="light"] .gwrap .sub,
+[data-theme="light"] .doc .sz,
+[data-theme="light"] .fitem .fd,
+[data-theme="light"] .win .help,
+[data-theme="light"] .frow label,
+[data-theme="light"] .wback,
+[data-theme="light"] .wclose{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .kcta{
+  background:linear-gradient(150deg,rgba(235,177,44,.14),rgba(235,177,44,.04)) !important;
+  border-color:rgba(235,177,44,.45) !important;
+}
+[data-theme="light"] .ksec{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .kbtn2{color:var(--gold-soft,#6B4E08) !important;border-color:rgba(107,78,8,.45) !important;}
+[data-theme="light"] table.hist th{color:var(--muted,#5C564C) !important;border-bottom-color:var(--line) !important;}
+[data-theme="light"] table.hist td{color:var(--ink,#161310) !important;border-bottom-color:var(--line) !important;}
+[data-theme="light"] #wiz{background:#F7F3EB !important;}
+[data-theme="light"] .wbar{background:rgba(22,19,16,.10) !important;}
+[data-theme="light"] .fin{background:#fff !important;color:#161310 !important;border-color:rgba(22,19,16,.20) !important;}
+[data-theme="light"] .chips2 button,
+[data-theme="light"] .scale5 button{
+  background:#fff !important;
+  border-color:rgba(22,19,16,.18) !important;
+  color:var(--ink,#161310) !important;
+}
+[data-theme="light"] .chips2 button.on,
+[data-theme="light"] .scale5 button.on{
+  background:linear-gradient(145deg,#EBB12C,#E0762C) !important;
+  color:#1A1222 !important;
+  border-color:transparent !important;
+}
+[data-theme="light"] .sumg .kv span:first-child{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .sumg .kv span:last-child{color:var(--ink,#161310) !important;}
+[data-theme="light"] .sumg h4{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .toast{
+  background:#fff !important;
+  color:#161310 !important;
+  border-color:rgba(235,177,44,.5) !important;
+}
+[data-theme="light"] .fitem img{background:#EDE6D8 !important;}
+
+/* ============================================================
+   Lekce studia + videokurz + nástěnky.
+   data-theme je na <html>, proto [data-theme=light] body.ba
+   (ne body.ba[data-theme=light], to by nesedělo).
+   Inline <style> lekcí (h1{color:#fff}) se NEPŘEPISUJE: vyšší
+   specificita + !important přebije pozdější page <style>.
+   ============================================================ */
+[data-theme="light"] body.ba h1,
+[data-theme="light"] body.ba h2,
+[data-theme="light"] body.ba h3,
+[data-theme="light"] body.ba h4,
+[data-theme="light"] body.ba p,
+[data-theme="light"] body.ba li,
+[data-theme="light"] body.ba td,
+[data-theme="light"] body.ba th,
+[data-theme="light"] body.ba strong,
+[data-theme="light"] body.ba b,
+[data-theme="light"] body.ba .lt,
+[data-theme="light"] body.ba .t{
+  color:var(--ink,#161310) !important;
+}
+[data-theme="light"] body.ba .lead,
+[data-theme="light"] body.ba .sub,
+[data-theme="light"] body.ba em,
+[data-theme="light"] body.ba .src,
+[data-theme="light"] body.ba .src summary,
+[data-theme="light"] body.ba figcaption,
+[data-theme="light"] body.ba .autop,
+[data-theme="light"] body.ba .vlock,
+[data-theme="light"] body.ba .foot,
+[data-theme="light"] body.ba .demo-note,
+[data-theme="light"] body.ba .prog-lbl,
+[data-theme="light"] body.ba .bigpct{
+  color:var(--muted,#5C564C) !important;
+}
+[data-theme="light"] body.ba .eq{
+  background:#fff !important;
+  color:var(--ink,#161310) !important;
+  border-color:rgba(235,177,44,.45) !important;
+}
+[data-theme="light"] body.ba .q .aa{
+  background:#F3EEE4 !important;
+  color:var(--muted-2,#3F3A34) !important;
+  border-color:var(--line,rgba(22,19,16,.12)) !important;
+}
+[data-theme="light"] body.ba .bar,
+[data-theme="light"] body.ba .modcard .mbar,
+[data-theme="light"] body.ba .bigbar,
+[data-theme="light"] body.ba .ranktier .rt-bar{
+  background:rgba(22,19,16,.08) !important;
+}
+[data-theme="light"] body.ba .hello,
+[data-theme="light"] body.ba .mod,
+[data-theme="light"] body.ba .modcard,
+[data-theme="light"] body.ba .matcard,
+[data-theme="light"] body.ba .module,
+[data-theme="light"] body.ba .mat,
+[data-theme="light"] body.ba .prio .row,
+[data-theme="light"] body.ba .acard,
+[data-theme="light"] body.ba .order,
+[data-theme="light"] body.ba .st,
+[data-theme="light"] body.ba .buy-card,
+[data-theme="light"] body.ba .ba-fig,
+[data-theme="light"] body.ba .searchres a{
+  background:#fff !important;
+  border-color:var(--line,rgba(22,19,16,.12)) !important;
+  color:var(--ink,#161310) !important;
+  box-shadow:0 12px 32px -18px rgba(22,19,16,.18) !important;
+}
+[data-theme="light"] body.ba .upsell,
+[data-theme="light"] body.ba [data-upsell]{
+  background:linear-gradient(135deg,rgba(235,177,44,.14),rgba(235,177,44,.05)) !important;
+  color:var(--muted-2,#3F3A34) !important;
+  border-color:rgba(235,177,44,.45) !important;
+}
+[data-theme="light"] body.ba .praxe b{
+  color:var(--gold-soft,#6B4E08) !important;
+}
+[data-theme="light"] body.ba .upsell b,
+[data-theme="light"] body.ba [data-upsell] b,
+[data-theme="light"] body.ba .hello h1,
+[data-theme="light"] body.ba .mod-h h3,
+[data-theme="light"] body.ba .modcard h3,
+[data-theme="light"] body.ba .mhead h2,
+[data-theme="light"] body.ba .matcard h2,
+[data-theme="light"] body.ba .minfo b,
+[data-theme="light"] body.ba .secnav .nm,
+[data-theme="light"] body.ba .ranktier .rt-name,
+[data-theme="light"] body.ba .prod b,
+[data-theme="light"] body.ba .price .now,
+[data-theme="light"] body.ba .price .anchor,
+[data-theme="light"] body.ba .ahero h1,
+[data-theme="light"] body.ba .incl li b,
+[data-theme="light"] body.ba .bonus .btxt b,
+[data-theme="light"] body.ba .cert-card h3,
+[data-theme="light"] body.ba .freebanner .fb-txt b{
+  color:var(--ink,#161310) !important;
+}
+[data-theme="light"] body.ba [style*="color:#e9e2d8"],
+[data-theme="light"] body.ba [style*="color:#cfc6b8"]{
+  color:var(--muted,#5C564C) !important;
+}
+[data-theme="light"] body.ba .btn.ghost:hover,
+[data-theme="light"] body.ba .btn.otpb:hover,
+[data-theme="light"] body.ba .backlink:hover,
+[data-theme="light"] body.ba .rt-share:hover,
+[data-theme="light"] body.ba .note a:hover{
+  color:var(--ink,#161310) !important;
+}
+[data-theme="light"] body.ba .btn.is-done{
+  color:#fff !important;
+}
+[data-theme="light"] body.ba .freetag{
+  background:var(--gold,#EBB12C) !important;
+  color:#1A1222 !important;
+}
+[data-theme="light"] body.ba .tabs{
+  background:#F3EEE4 !important;
+}
+[data-theme="light"] body.ba .lsearch{
+  background:#fff !important;
+  color:var(--ink,#161310) !important;
+}
+[data-theme="light"] body.ba .lsearch:focus{
+  background:#fff !important;
+}
+[data-theme="light"] body.ba .les .ck,
+[data-theme="light"] body.ba .lesson .chk{
+  border-color:rgba(22,19,16,.28) !important;
+}
+[data-theme="light"] body.ba .lesson-nav a{
+  background:#fff !important;
+  color:var(--muted-2,#3F3A34) !important;
+}
+[data-theme="light"] body.ba .chip{
+  color:var(--muted-2,#3F3A34) !important;
+}
+
+/* ============================================================
+   akademie/index.html: prodejní landing (highend + marketing-dark)
+   Světlý režim vrátí původní světlé sekce. Hero, pricebox a patička
+   zůstávají tmavé pásy, tak byly i v původním světlém návrhu.
+   ============================================================ */
+[data-theme="light"] body:not(.ba){
+  background:#F7F3EB !important;
+  color:#161310 !important;
+  color-scheme:light;
+}
+[data-theme="light"] body:not(.ba) .nav{
+  background:rgba(255,255,255,.92) !important;
+  border-bottom:1px solid rgba(22,19,16,.08) !important;
+  box-shadow:0 2px 14px rgba(0,0,0,.06) !important;
+}
+[data-theme="light"] body:not(.ba) .nav a,
+[data-theme="light"] body:not(.ba) .nav a.back,
+[data-theme="light"] body:not(.ba) .brand,
+[data-theme="light"] body:not(.ba) .brand span{color:#161310 !important;}
+[data-theme="light"] body:not(.ba) .nav a.cta{
+  background:linear-gradient(145deg,#F6CD63,#EBB12C) !important;
+  color:#161616 !important;
+}
+[data-theme="light"] body:not(.ba) .nav-burger{
+  border-color:#d8d8d8 !important;
+  color:#161310 !important;
+}
+[data-theme="light"] body:not(.ba) .navlinks{
+  background:#fff;
+}
+[data-theme="light"] .sec-head h2,
+[data-theme="light"] .sec-head h3,
+[data-theme="light"] body:not(.ba) h2,
+[data-theme="light"] body:not(.ba) h3{color:#161310 !important;}
+[data-theme="light"] .sec-head p,
+[data-theme="light"] .section-head p{color:#5C564C !important;}
+[data-theme="light"] .bg-soft{background:#fff4e8 !important;border-color:transparent !important;}
+[data-theme="light"] .card-ac,
+[data-theme="light"] .mod,
+[data-theme="light"] .faq-item,
+[data-theme="light"] .sample,
+[data-theme="light"] .feature-ac{
+  background:#fff !important;
+  border-color:#f0e7dc !important;
+  color:#161310 !important;
+  box-shadow:0 8px 28px rgba(0,0,0,.05) !important;
+}
+[data-theme="light"] .card-ac h3,
+[data-theme="light"] .card-ac h5,
+[data-theme="light"] .mod h5,
+[data-theme="light"] .faq-item button{color:#161310 !important;}
+[data-theme="light"] .mod p,
+[data-theme="light"] .faq-item .a{color:#5a5650 !important;}
+[data-theme="light"] .mod .num{
+  background:#fff4e8 !important;
+  color:#6B4E08 !important;
+}
+
+/* hero + cena + patička: nech tmavé (původní světlý návrh je tak měl) */
+[data-theme="light"] .ac-hero,
+[data-theme="light"] .ac-hero h1,
+[data-theme="light"] .ac-hero .lead,
+[data-theme="light"] .ac-hero p{color:#fff !important;}
+[data-theme="light"] .pricebox,
+[data-theme="light"] .pricebox h2,
+[data-theme="light"] .pricebox h3,
+[data-theme="light"] .pricebox li,
+[data-theme="light"] .pricebox p{color:#fff !important;}
+[data-theme="light"] .footer-ac{background:#0d0d0d !important;color:#bbb !important;}
+[data-theme="light"] .footer-ac a{color:#EBB12C !important;}
+[data-theme="light"] .footer-ac strong{color:#fff !important;}
+
+/* formulář v tmavém priceboxu zůstává světlý text */
+[data-theme="light"] .pricebox .ac-form input,
+[data-theme="light"] .pricebox .ac-form select{
+  background:rgba(255,255,255,.06) !important;
+  color:#fff !important;
+  border-color:rgba(255,255,255,.18) !important;
+}

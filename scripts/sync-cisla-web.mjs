@@ -35,8 +35,15 @@
  *                    STATICKY EXPORT `assets/curated-foods.min.json`, ne zivou
  *                    tabulku. Kdo tam napise cislo z DB, slibi hledacku pres
  *                    16 tisic polozek, ktere v nem nejsou. Skript proto pro tenhle
- *                    typ pocita delku exportu a zaokrouhli ji dolu na 10 000.
- *                    Zvednout se smi az PO
+ *                    typ pocita radky exportu, kde sloupec `hledaci` NENI 1, a
+ *                    zaokrouhli dolu na 10 000.
+ *                    PROC bez aliasu: `hledaci=1` jsou hledaci pomucky (tvar
+ *                    hledani / alias), ne potraviny. Verejne cislo nesmi lhat
+ *                    a tvrdit, ze v nastroji je 40 000 potravin, kdyz skutecnych
+ *                    je ~30 000. Index sloupce se cte dynamicky z `cols`; kdyz
+ *                    `hledaci` v `cols` chybi, skript KONCI CHYBOU (exit 1),
+ *                    zadny fallback na celkovou delku (to by zase zapocitalo
+ *                    aliasy). Zvednout se smi az PO
  *                    `SUPABASE_SERVICE_ROLE_KEY=... node scripts/export-curated-foods.mjs`.
  *
  * ⛔ CO SE SEM ZAMERNE NEDAVA: pocet cviku (120, kuratorsky seznam v repu appky)
@@ -80,13 +87,31 @@ const PAR = /<!--\s*cislo:([a-zA-Z_-]+)\s*-->([\s\S]*?)<!--\s*\/cislo\s*-->/g;
 const JEN_CISLO = /^[0-9][0-9 \u00a0]*$/;
 
 /**
- * Spocita polozky ve statickem exportu pro Academy.
- * Podporuje oba tvary: pole objektu (`curated-foods.json`) i zhustene
- * `{cols:[...], rows:[[...]]}` (`curated-foods.min.json`).
+ * Spocita SKUTECNE potraviny ve statickem exportu pro Academy (bez hledacich
+ * aliasu). Aliasy (`hledaci=1`) jsou hledaci pomucky, ne potraviny; verejne
+ * cislo je nesmi zapocitat. Podporuje oba tvary: pole objektu
+ * (`curated-foods.json`) i zhustene `{cols:[...], rows:[[...]]}`
+ * (`curated-foods.min.json`). Index sloupce `hledaci` se cte z `cols`, neni
+ * natvrdo. Chybejici sloupec = vyjimka, zadny fallback na `rows.length`.
  */
 export function pocetVExportu(json) {
-  if (Array.isArray(json)) return json.length;
-  if (json && typeof json === "object" && Array.isArray(json.rows)) return json.rows.length;
+  if (Array.isArray(json)) {
+    return json.filter((it) => it && it.hledaci !== 1).length;
+  }
+  if (json && typeof json === "object" && Array.isArray(json.rows)) {
+    if (!Array.isArray(json.cols)) {
+      throw new Error("export potravin: cekam pole nebo {cols, rows}");
+    }
+    const idx = json.cols.indexOf("hledaci");
+    if (idx < 0) {
+      throw new Error(
+        "export potravin: sloupec 'hledaci' v cols chybi. Bez nej by verejne " +
+          "cislo zapocitalo i hledaci aliasy, ktere nejsou potraviny. Zadny " +
+          "fallback na celkovou delku.",
+      );
+    }
+    return json.rows.filter((row) => Array.isArray(row) && row[idx] !== 1).length;
+  }
   throw new Error("export potravin: cekam pole nebo {cols, rows}");
 }
 

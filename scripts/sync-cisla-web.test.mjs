@@ -24,19 +24,20 @@ const APP_CONFIG = {
 };
 
 test("hodnoty: potraviny se berou zaokrouhlene, recepty se srazi na desitky", () => {
-  const h = hodnotyProZnacky(APP_CONFIG, 43130);
+  const h = hodnotyProZnacky(APP_CONFIG, 30043);
   assert.equal(h.potraviny, "50 000");
   // 148 -> 140: staticke HTML se prepisuje tydne, presne cislo by po odverejneni
   // jednoho receptu tyden slibovalo vic, nez kolik jich je.
   assert.equal(h.recepty, "140");
-  assert.equal(h.academy, "40 000");
+  // 30043 skutecnych potravin (bez aliasu) -> pres 30 000.
+  assert.equal(h.academy, "30 000");
 });
 
 test("academy cislo je z EXPORTU, ne z DB", () => {
   // Nejdulezitejsi past cele automatiky: nastroj Academy cte staticky soubor.
-  const h = hodnotyProZnacky(APP_CONFIG, 43130);
+  const h = hodnotyProZnacky(APP_CONFIG, 30043);
   assert.notEqual(h.academy, h.potraviny);
-  assert.equal(h.academy, "40 000");
+  assert.equal(h.academy, "30 000");
 });
 
 test("bez exportu se znacka academy vubec nenabizi", () => {
@@ -193,8 +194,42 @@ test("llms.txt: nedelitelna mezera v cisle se pozna a prepise", () => {
 
 test("pocetVExportu zvlada oba tvary exportu", () => {
   assert.equal(pocetVExportu([{ name: "a" }, { name: "b" }]), 2);
-  assert.equal(pocetVExportu({ cols: ["name"], rows: [["a"], ["b"], ["c"]] }), 3);
+  assert.equal(
+    pocetVExportu({ cols: ["name", "hledaci"], rows: [["a", 0], ["b", 0], ["c", 0]] }),
+    3,
+  );
   assert.throws(() => pocetVExportu({ items: [] }), /cekam pole/);
+});
+
+test("pocetVExportu nepocita hledaci aliasy, index sloupce cte z cols", () => {
+  // Aliasy (hledaci=1) jsou hledaci pomucky, ne potraviny. Index neni natvrdo:
+  // `hledaci` je schvalne uprostred, ne na konci.
+  const compact = {
+    cols: ["name", "hledaci", "kcal_100g"],
+    rows: [
+      ["jablko", 0, 52],
+      ["apple", 1, 52],
+      ["banan", 0, 89],
+      ["banana", 1, 89],
+      ["hruska", 0, 57],
+    ],
+  };
+  assert.equal(pocetVExportu(compact), 3);
+  assert.equal(
+    pocetVExportu([
+      { name: "jablko", hledaci: 0 },
+      { name: "apple", hledaci: 1 },
+      { name: "banan" },
+    ]),
+    2,
+  );
+});
+
+test("pocetVExportu bez sloupce hledaci pada, neni fallback na delku", () => {
+  assert.throws(
+    () => pocetVExportu({ cols: ["name"], rows: [["a"], ["b"], ["c"]] }),
+    /hledaci/,
+  );
 });
 
 test("najdiHtml preskoci zalohy a nabere podslozky", () => {
