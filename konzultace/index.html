@@ -74,13 +74,17 @@
     }
     </script>
     <style>
-        :root { --acc:#EBB12C; --acc-l:#F6CD63; --txt:#f0eadf; --mut:#aeb4ba; --warm:#cabfb1; }
+        :root { --acc:#EBB12C; --acc-l:#F6CD63; --txt:#f0eadf; --mut:#aeb4ba; --warm:#cabfb1; --bg:#0f1113; --panel:#1a1c20; }
         html[data-theme="light"] {
-          --txt:var(--mb-text,#161310); --mut:var(--mb-muted,#5C564C); --warm:var(--bd-muted2,#3F3A34);
+          --txt:#161310; --mut:#5C564C; --warm:#3F3A34;
+          --bg:#F7F3EB; --panel:#ffffff;
           color-scheme:light;
         }
-        html[data-theme="light"] body { background:var(--mb-bg,#F7F3EB); }
-        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 { color:var(--mb-text,#161310); }
+        html[data-theme="light"] body { background:var(--bg)!important; }
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 { color:var(--txt); }
+        html[data-theme="light"] .about [style*="color:#fff"] { color:var(--txt)!important; }
+        html[data-theme="light"] .price-tag .now,
+        html[data-theme="light"] .pricecard .big { color:var(--txt); }
         * { box-sizing:border-box; }
         html { scroll-behavior:smooth; }
         body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--txt); background:linear-gradient(180deg,#15171a 0%,#0f1113 100%); line-height:1.6; }

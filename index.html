@@ -129,17 +129,32 @@
   --radius:20px;
 }
 html[data-theme="light"]{
-  --bg:var(--mb-bg,#F7F3EB);
-  --surface:var(--mb-surface,#ffffff);
-  --surface-2:var(--mb-bg2,#F3EEE4);
-  --text:var(--mb-text,#161310);
-  --muted:var(--mb-muted,#5C564C);
-  --line:var(--bd-line,rgba(22,19,16,.12));
+  --bg:#F7F3EB;
+  --surface:#ffffff;
+  --surface-2:#F3EEE4;
+  --text:#161310;
+  --muted:#5C564C;
+  --line:rgba(22,19,16,.12);
+  --on-dark:#ffffff;
   color-scheme:light;
 }
 html[data-theme="light"] .btn-ghost{color:var(--text);border-color:var(--line)}
+html[data-theme="light"] .hero,
+html[data-theme="light"] .hero h1,
+html[data-theme="light"] .hero h2,
+html[data-theme="light"] .hero p,
+html[data-theme="light"] .hero .lead,
+html[data-theme="light"] .hero .micro,
+html[data-theme="light"] .hero .trust,
+html[data-theme="light"] .hero .btn-ghost{color:var(--text)!important;}
+html[data-theme="light"] .hero .lead,
+html[data-theme="light"] .hero p,
+html[data-theme="light"] .hero .micro{color:var(--muted)!important;}
 html[data-theme="light"] .hero-cta .quiet,
-html[data-theme="light"] .hero .micro b{color:var(--text)}
+html[data-theme="light"] .hero .micro b{color:var(--text)!important;}
+html[data-theme="light"] .hero h1 .gold{color:var(--gold)!important;}
+html[data-theme="light"] .hero .kick{color:var(--gold)!important;}
+html[data-theme="light"] .hero .btn-ghost{border-color:var(--line)!important;}
 html[data-theme="light"] .trust{color:var(--muted)}
 html[data-theme="light"] .konz-box p b,
 html[data-theme="light"] .quiz-result p b,
@@ -148,8 +163,25 @@ html[data-theme="light"] .feat li{color:var(--text)}
 html[data-theme="light"] .review p{color:var(--muted)}
 html[data-theme="light"] .rev-sum .src a{color:var(--text);background:var(--surface)}
 html[data-theme="light"] .cform input,
-html[data-theme="light"] .cform textarea{color:var(--on-dark,#ffffff)}
-html[data-theme="light"] .cta-bar .cb-quiz{color:var(--text)}
+html[data-theme="light"] .cform textarea{
+  color:var(--text)!important;
+  background:var(--surface-2)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .cform input::placeholder,
+html[data-theme="light"] .cform textarea::placeholder{color:var(--muted)!important;}
+html[data-theme="light"] .quiz-opts button{
+  color:var(--text)!important;
+  background:var(--surface)!important;
+  border-color:var(--line)!important;
+}
+html[data-theme="light"] .quiz-bar{background:var(--line)}
+html[data-theme="light"] .terms{background:var(--surface-2)}
+html[data-theme="light"] .cta-bar{
+  background:color-mix(in srgb, var(--bg) 94%, transparent);
+  border-top-color:var(--line);
+}
+html[data-theme="light"] .cta-bar .cb-quiz{color:var(--text);background:var(--surface)}
 html[data-theme="light"] .bento .wide{background:var(--surface);color:var(--text)}
 html[data-theme="light"] .bento .wide .price{color:var(--text)}
 html[data-theme="light"] .pcard.cta-card{background:var(--surface)}
@@ -159,7 +191,7 @@ html[data-theme="light"] .story-body h3,
 html[data-theme="light"] .contact,
 html[data-theme="light"] .contact h2,
 html[data-theme="light"] .bcard.plum,
-html[data-theme="light"] .bcard.plum h3{color:var(--on-dark,#ffffff)!important}
+html[data-theme="light"] .bcard.plum h3{color:var(--on-dark)!important}
 *{margin:0;padding:0;box-sizing:border-box}
 /* smooth scroll zapíná až JS po load - jinak Chromium přeruší skok na kotvu při načítání stránky */
 html{scroll-padding-top:84px}
