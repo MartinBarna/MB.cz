@@ -2,6 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
     <script src="/assets/theme-boot.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Uvítací balíček pro nového klienta: průvodce</title>
@@ -13,6 +14,13 @@
     --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
     --soft:#221a12; --line:#2e2620; --paper:#17120e;
   }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
   *{box-sizing:border-box;}
   html,body{margin:0;}
   body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
@@ -55,6 +63,7 @@
   @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
 </style>
     <link rel="stylesheet" href="/assets/app-brand-override.css?v=r3">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l3">
 </head>
 <body>
   <div class="toolbar">
@@ -158,5 +167,5 @@
   })();
   document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
 </script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a7"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a7"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l3"></body>
 </html>

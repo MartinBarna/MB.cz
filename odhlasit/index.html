@@ -14,6 +14,10 @@
     font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     background: #0C0B10; margin: 0; padding: 40px 16px; color: #F0EADF;
   }
+  html[data-theme="light"]{color-scheme:light;}
+  html[data-theme="light"] body{background:#F7F3EB;color:#161310;color-scheme:light;}
+  html[data-theme="light"] .card{background:#fff;border-color:rgba(22,19,16,.12);}
+  html[data-theme="light"] p,html[data-theme="light"] .muted,html[data-theme="light"] .muted a,html[data-theme="light"] a.gdpr,html[data-theme="light"] .foot a{color:#5C564C;}
   .card {
     max-width: 480px; margin: 0 auto; background: #181520;
     border: 1px solid #262232; border-radius: 2px; padding: 32px; text-align: center;
@@ -36,6 +40,7 @@
   .foot { margin: 18px 0 0; }
   .foot a { color: #8F8A99; font-size: 13px; text-decoration: none; }
 </style>
+    <link rel="stylesheet" href="/assets/theme-light.css?v=l3">
 </head>
 <body>
   <div class="card">
@@ -125,5 +130,6 @@
   render();
 })();
 </script>
+<script src="/assets/scroll-top.js?v=g10" defer></script>
 </body>
 </html>

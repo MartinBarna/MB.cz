@@ -427,3 +427,23 @@ html[data-theme="light"] body.ba{
   color:#fff !important;
   border-color:rgba(255,255,255,.18) !important;
 }
+
+/* nastroje-zdarma: hardcoded zbytky nad ba-ui tokeny */
+[data-theme="light"] .ba .tcard{
+  background:var(--card,#ffffff) !important;
+  border-color:var(--line) !important;
+}
+[data-theme="light"] .ba .tcard b,
+[data-theme="light"] .ba .meal h3{color:var(--ink,#161310) !important;}
+[data-theme="light"] .ba .meal h3{background:rgba(235,177,44,.10) !important;}
+[data-theme="light"] .ba .ticks,
+[data-theme="light"] .ba .ticks li,
+[data-theme="light"] .ba .chip{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba .tools{
+  background:rgba(247,243,235,.94) !important;
+}
+[data-theme="light"] .ba .hero-cta b{color:var(--ink,#161310) !important;}
+[data-theme="light"] body.ba,
+[data-theme="light"] .ba input,
+[data-theme="light"] .ba select{color-scheme:light;}
+@media print{.mb-theme-toggle{display:none !important;}}

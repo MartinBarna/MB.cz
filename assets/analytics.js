@@ -177,9 +177,24 @@
   function showBanner() {
     var old = document.getElementById('mb-cookie');
     if (old) old.remove();
-    var st = document.createElement('style');
-    st.textContent = '@media(max-width:991px){#mb-cookie{left:12px!important;right:12px!important;bottom:92px!important;max-width:none!important}}';
-    document.head.appendChild(st);
+    if (!document.getElementById('mb-cookie-css')) {
+      var st = document.createElement('style');
+      st.id = 'mb-cookie-css';
+      st.textContent =
+        '@media(max-width:991px){#mb-cookie{left:12px!important;right:12px!important;bottom:92px!important;max-width:none!important}}' +
+        'html[data-theme="light"] #mb-cookie{' +
+          'background:linear-gradient(180deg,var(--mb-surface,#ffffff),var(--mb-bg,#F7F3EB))!important;' +
+          'color:var(--mb-text,#161310)!important;' +
+          'border-color:var(--bd-line,rgba(22,19,16,.12))!important;' +
+          'box-shadow:0 18px 50px rgba(22,19,16,.16)!important;' +
+        '}' +
+        'html[data-theme="light"] #mb-cookie .mb-c-title{color:var(--mb-text,#161310)!important;}' +
+        'html[data-theme="light"] #mb-cookie .mb-c-text{color:var(--bd-muted,#5C564C)!important;}' +
+        'html[data-theme="light"] #mb-cookie .mb-c-text a{color:var(--bd-gold-soft,#6B4E08)!important;}' +
+        'html[data-theme="light"] #mb-c-no{border-color:rgba(22,19,16,.22)!important;color:var(--mb-text,#161310)!important;}' +
+        'html[data-theme="light"] #mb-c-an{color:var(--bd-muted,#5C564C)!important;}';
+      document.head.appendChild(st);
+    }
     var box = document.createElement('div');
     box.id = 'mb-cookie';
     box.setAttribute('role', 'dialog');
@@ -190,8 +205,8 @@
       'box-shadow:0 18px 50px rgba(0,0,0,.55);padding:18px 18px 16px;font-family:Poppins,Arial,sans-serif;' +
       'font-size:.92rem;line-height:1.5;';
     box.innerHTML =
-      '<div style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
-      '<div style="color:#f3ece2">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.</div>' +
+      '<div class="mb-c-title" style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
+      '<div class="mb-c-text" style="color:#f3ece2">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.</div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
         '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#160d04;font-weight:700;padding:10px 12px;border-radius:2px">Přijmout</button>' +
         '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:2px">Odmítnout</button>' +

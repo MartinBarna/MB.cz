@@ -26,6 +26,16 @@
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <style>
   :root{color-scheme:dark;}
+  html[data-theme="light"]{color-scheme:light;}
+  html[data-theme="light"] body{color-scheme:light;background:var(--mb-bg,#F7F3EB);color:var(--mb-text,#161310);}
+  html[data-theme="light"] h1,html[data-theme="light"] .q,html[data-theme="light"] .res b{color:var(--mb-text,#161310);}
+  html[data-theme="light"] .lead,html[data-theme="light"] .res p,html[data-theme="light"] .res li,html[data-theme="light"] .small{color:var(--bd-muted,#5C564C);}
+  html[data-theme="light"] .card,html[data-theme="light"] .mailbox{background:var(--mb-surface,#ffffff);border-color:var(--bd-line,rgba(22,19,16,.12));}
+  html[data-theme="light"] .opts button{background:#fff;border-color:var(--bd-line,rgba(22,19,16,.12));color:var(--mb-text,#161310);}
+  html[data-theme="light"] .top{background:rgba(255,255,255,.92);border-bottom-color:var(--bd-line,rgba(22,19,16,.12));}
+  html[data-theme="light"] .top .brand{color:var(--mb-text,#161310);}
+  html[data-theme="light"] .mailbox input{background:#fff;border-color:var(--bd-line,rgba(22,19,16,.12));color:var(--mb-text,#161310);}
+  html[data-theme="light"] .bar{background:rgba(22,19,16,.08);}
   *{box-sizing:border-box;}
   body{margin:0;font-family:'Poppins',Arial,sans-serif;background:linear-gradient(160deg,#15171a 0%,#0f1113 100%);color:#F0EADF;min-height:100vh;}
   .wrap{max-width:640px;margin:0 auto;padding:36px 20px 80px;}
@@ -55,6 +65,7 @@
   .top .brand .mark{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;font-size:.86rem;}
   .mainmenu{display:flex;align-items:center;gap:.85rem;margin-left:auto;margin-right:.9rem;flex-wrap:wrap}.mainmenu a{color:inherit;opacity:.78;text-decoration:none;font-weight:600;font-size:.84rem;white-space:nowrap}.mainmenu a:hover{opacity:1}@media(max-width:1150px){.mainmenu{display:none}}
 </style>
+    <link rel="stylesheet" href="/assets/theme-light.css?v=l3">
 </head>
 <body>
 <header class="top"><div class="in">
@@ -71,7 +82,7 @@
   <div class="res hidden" id="rbox"></div>
 </div>
 
-<script src="/assets/analytics.js?v=g12" defer></script>
+<script src="/assets/analytics.js?v=g13" defer></script>
 <script src="/assets/lead-form.js?v=g6" defer></script>
 <script>
 (function(){
@@ -185,6 +196,6 @@
   if(document.readyState!=='loading') show(); else document.addEventListener('DOMContentLoaded', show);
 })();
 </script>
-<script src="/assets/scroll-top.js?v=g9" defer></script>
+<script src="/assets/scroll-top.js?v=g10" defer></script>
 </body>
 </html>

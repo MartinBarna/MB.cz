@@ -47,14 +47,32 @@
 
   // ---- panel ----
   var panel = E('div', 'position:fixed;right:22px;bottom:92px;z-index:99999;width:360px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 130px);background:#141210;border:1px solid rgba(235,177,44,.32);border-radius:18px;box-shadow:0 28px 70px -20px rgba(0,0,0,.7);display:none;flex-direction:column;overflow:hidden;font-family:Poppins,Arial,sans-serif');
+  panel.id = 'amPanel';
   panel.innerHTML =
-    '<div style="padding:14px 16px;background:linear-gradient(145deg,#23211e,#0c0c0c);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:11px;">' +
+    '<div class="am-head" style="padding:14px 16px;background:linear-gradient(145deg,#23211e,#0c0c0c);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:11px;">' +
       '<span style="width:38px;height:38px;border-radius:50%;background:linear-gradient(145deg,#F6CD63,#EBB12C);display:flex;align-items:center;justify-content:center;font-weight:800;color:#1A1222;flex-shrink:0;">MB</span>' +
-      '<div style="flex:1;"><div style="color:#fff;font-weight:700;font-size:.98rem;">AI Martin</div><div id="amStatus" style="color:#cabfae;font-size:.74rem;font-weight:600;">AI chatbot · automatické odpovědi</div></div>' +
+      '<div style="flex:1;"><div class="am-title" style="color:#fff;font-weight:700;font-size:.98rem;">AI Martin</div><div id="amStatus" style="color:#cabfae;font-size:.74rem;font-weight:600;">AI chatbot · automatické odpovědi</div></div>' +
       '<button id="amX" aria-label="Zavřít" style="background:rgba(255,255,255,.08);border:none;color:#cabfb4;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.05rem;line-height:1;">×</button>' +
     '</div>' +
     '<div id="amBody" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#0e0d0b;"></div>' +
     '<div id="amFoot" style="border-top:1px solid rgba(255,255,255,.08);background:#141210;"></div>';
+  if (!document.getElementById('am-theme-css')) {
+    var amCss = document.createElement('style');
+    amCss.id = 'am-theme-css';
+    amCss.textContent =
+      'html[data-theme="light"] #amPanel{background:var(--mb-surface,#ffffff)!important;border-color:var(--bd-line,rgba(22,19,16,.12))!important;box-shadow:0 28px 70px -20px rgba(22,19,16,.18)!important;}' +
+      'html[data-theme="light"] #amPanel .am-head{background:linear-gradient(145deg,var(--mb-surface,#ffffff),var(--mb-bg,#F7F3EB))!important;border-bottom-color:var(--bd-line,rgba(22,19,16,.12))!important;}' +
+      'html[data-theme="light"] #amPanel .am-title{color:var(--mb-text,#161310)!important;}' +
+      'html[data-theme="light"] #amStatus{color:var(--bd-muted,#5C564C)!important;}' +
+      'html[data-theme="light"] #amX{background:rgba(22,19,16,.06)!important;color:var(--mb-text,#161310)!important;}' +
+      'html[data-theme="light"] #amBody{background:var(--mb-bg,#F7F3EB)!important;}' +
+      'html[data-theme="light"] #amFoot{background:var(--mb-surface,#ffffff)!important;border-top-color:var(--bd-line,rgba(22,19,16,.12))!important;}' +
+      'html[data-theme="light"] #amIn{background:#fff!important;border-color:var(--bd-line,rgba(22,19,16,.20))!important;color:var(--mb-text,#161310)!important;}' +
+      'html[data-theme="light"] #amCam{background:#fff!important;border-color:var(--bd-line,rgba(22,19,16,.20))!important;}' +
+      'html[data-theme="light"] .am-bot{background:#fff!important;color:var(--mb-text,#161310)!important;border-color:var(--bd-line,rgba(22,19,16,.12))!important;}' +
+      'html[data-theme="light"] .am-src{color:var(--bd-muted,#5C564C)!important;}';
+    document.head.appendChild(amCss);
+  }
 
   var FORM_HTML =
     '<form id="amForm" style="padding:12px;display:flex;gap:8px;align-items:center;">' +
@@ -75,6 +93,7 @@
     var b = E('div', 'max-width:84%;padding:10px 14px;border-radius:14px;font-size:.92rem;line-height:1.5;white-space:pre-wrap;' +
       (me ? 'align-self:flex-end;background:linear-gradient(145deg,#EBB12C,#C8901F);color:#1A1222;font-weight:600;border-bottom-right-radius:4px;'
           : 'align-self:flex-start;background:rgba(255,255,255,.06);color:#ece3d8;border:1px solid rgba(255,255,255,.08);border-bottom-left-radius:4px;'));
+    b.className = me ? 'am-bubble am-me' : 'am-bubble am-bot';
     b.textContent = text;
     return b;
   }
@@ -86,6 +105,7 @@
   var SRC_PREFIX = 'https://martinbarna.cz/akademie/studium/';
   function sourcesBlock(sources) {
     var wrap = E('div', 'align-self:flex-start;max-width:84%;margin:-2px 0 2px 4px;font-size:.74rem;line-height:1.5;color:#9a8f84;');
+    wrap.className = 'am-src';
     var head = E('div', 'margin-bottom:2px;');
     head.textContent = 'Kde to najdeš';
     wrap.appendChild(head);

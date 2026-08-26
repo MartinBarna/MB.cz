@@ -15,11 +15,24 @@
     }
   }
 
+  function applyChrome(theme) {
+    try { document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark"; } catch (e) {}
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) {
+      if (!meta.getAttribute("data-theme-color-dark")) {
+        meta.setAttribute("data-theme-color-dark", meta.getAttribute("content") || "#0C0B10");
+      }
+      meta.setAttribute("content", theme === "light" ? "#F7F3EB" : meta.getAttribute("data-theme-color-dark"));
+    }
+    var cs = document.querySelector('meta[name="color-scheme"]');
+    if (cs) cs.setAttribute("content", theme === "light" ? "light" : "dark");
+  }
+
   function apply(theme) {
     var root = document.documentElement;
     if (theme === "light") root.setAttribute("data-theme", "light");
     else root.removeAttribute("data-theme");
-    try { root.style.colorScheme = theme === "light" ? "light" : "dark"; } catch (e) {}
+    applyChrome(theme);
     var btns = document.querySelectorAll(".mb-theme-toggle");
     for (var i = 0; i < btns.length; i++) {
       btns[i].setAttribute("aria-pressed", theme === "light" ? "true" : "false");

@@ -322,3 +322,35 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .hero .btn-ghost{border-color:rgba(255,255,255,.45)!important;}
 [data-theme="light"] .hero .hero-meta,
 [data-theme="light"] .hero .tag{color:var(--on-dark)!important;}
+
+/* ============================================================
+   KROK 4: legal / díky / funnel chrome bez .navlinks
+   ============================================================ */
+[data-theme="light"] .top{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-bottom:1px solid var(--bd-line)!important;
+}
+[data-theme="light"] .top .brand,
+[data-theme="light"] .top .brand b,
+[data-theme="light"] .top .brand span{color:var(--mb-text)!important;}
+[data-theme="light"] .top a.back{color:var(--bd-muted)!important;}
+[data-theme="light"] .steps{
+  background:var(--green-light)!important;
+  border-color:var(--bd-line)!important;
+}
+[data-theme="light"] .steps li,
+[data-theme="light"] .steps li strong{color:var(--mb-text)!important;}
+[data-theme="light"] .choice{
+  background:var(--mb-surface)!important;
+  border-color:var(--bd-line)!important;
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] .choice h2{color:var(--mb-text)!important;}
+[data-theme="light"] .choice p,
+[data-theme="light"] .choice .tag{color:var(--bd-muted)!important;}
+[data-theme="light"] .sub,
+[data-theme="light"] .trust{color:var(--bd-muted)!important;}
+[data-theme="light"] .trust b,
+[data-theme="light"] .brand{color:var(--mb-text)!important;}
+@media print{.mb-theme-toggle{display:none!important;}}
