@@ -241,10 +241,16 @@ const STRIPE_RAW_VZHLED_TO_CANONICAL: Record<string, string> = {
 /** Syrovou hodnotu z `extractVzhled` (kanonickou, syrovou Stripe, nebo '')
  *  převede na hodnotu bezpečnou k uložení do `poukazy.vzhled` - VŽDY jednu
  *  z 'tmava'/'svetla'/'slavnostni', nikdy ''  a nikdy syrový Stripe tvar.
- *  Nikdy nehodí výjimku. */
-function normalizeVzhledForStorage(raw: string): string {
+ *  Neznámá/chybějící hodnota se zaloguje (surová hodnota + session id) a
+ *  padne na tmavou. Nikdy nehodí výjimku. */
+function normalizeVzhledForStorage(raw: string, sessionId?: string): string {
   if (raw === 'tmava' || raw === 'svetla' || raw === 'slavnostni') return raw;
-  return STRIPE_RAW_VZHLED_TO_CANONICAL[raw] ?? 'tmava';
+  const mapped = STRIPE_RAW_VZHLED_TO_CANONICAL[raw];
+  if (mapped) return mapped;
+  console.error(
+    `[poukaz-vydat] neznámý/chybějící vzhled poukazu, padám na tmava; raw=${JSON.stringify(raw)} sessionId=${JSON.stringify(sessionId ?? null)}`,
+  );
+  return 'tmava';
 }
 
 /** `payment_link` je normálně string ID; expandovaný objekt `{id,...}` se taky
@@ -399,7 +405,7 @@ export async function handleStripeEvent(
   // hodnot). Bez normalizace by šly TYHLE řetězce do sloupce `vzhled`
   // nezměněné a DB by nebyla trojhodnotová, jak slibuje komentář u migrace.
   // `normalizeVzhledForStorage` níž řeší oboje najednou (prázdné i syrové).
-  const vzhledRaw = normalizeVzhledForStorage(extractVzhled(session.custom_fields));
+  const vzhledRaw = normalizeVzhledForStorage(extractVzhled(session.custom_fields), session.id);
   const now = deps.now();
   const validUntilDate = addYears(now, 1);
   const validUntilIso = isoDate(validUntilDate);
