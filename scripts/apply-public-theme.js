@@ -18,7 +18,7 @@ const SKIP_DIR = new Set([
 ]);
 
 const BOOT = '<script src="/assets/theme-boot.js"></script>';
-const LIGHT_HREF = '/assets/theme-light.css?v=l1';
+const LIGHT_HREF = '/assets/theme-light.css?v=l2';
 const LIGHT_LINK = '<link rel="stylesheet" href="' + LIGHT_HREF + '">';
 
 const FLAGSHIP = new Set([
