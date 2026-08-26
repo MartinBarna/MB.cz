@@ -158,7 +158,7 @@
     }).filter(function (l) { return l.t; });
     if (!links.length) return;
     var css = ''
-      + '.nav .mb-burger{display:inline-flex;flex-direction:column;background:none;border:none;cursor:pointer;padding:9px;margin-left:auto;line-height:0;-webkit-tap-highlight-color:transparent;}'
+      + '.nav .mb-burger{display:inline-flex;flex-direction:column;background:none;border:none;cursor:pointer;padding:9px;margin-left:8px;line-height:0;-webkit-tap-highlight-color:transparent;}'
       + '.nav .mb-burger span{display:block;width:25px;height:2px;background:#EBB12C;margin:5px 0;border-radius:2px;transition:transform .25s,opacity .2s;}'
       + '.nav.mbopen .mb-burger span:nth-child(1){transform:translateY(12px) rotate(45deg);}'
       + '.nav.mbopen .mb-burger span:nth-child(2){opacity:0;}'
@@ -169,7 +169,18 @@
       + '.nav .mb-drawer a:hover{background:rgba(235,177,44,.08);color:#EBB12C;}'
       + '.nav .mb-drawer a.cta{color:#1A1222;background:#EBB12C;margin:10px 16px 4px;border-radius:50px;text-align:center;border-bottom:none;font-weight:700;}'
       + '@media (max-width:1319px){ .nav .navlinks{display:none!important;} .nav .nav-burger{display:none!important;} }'
-      + '@media (min-width:1320px){ .nav .mb-drawer,.nav .mb-burger{display:none!important;} }';
+      + '@media (min-width:1320px){ .nav .mb-drawer,.nav .mb-burger{display:none!important;} }'
+      + '.nav .mb-theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;margin-left:auto;flex-shrink:0;border:1px solid rgba(240,234,223,.22);border-radius:10px;background:rgba(255,255,255,.08);color:#F0EADF;cursor:pointer;font:inherit;line-height:0;}'
+      + '.nav .mb-theme-toggle:hover{border-color:rgba(235,177,44,.45);}'
+      + '.nav .mb-theme-toggle svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}'
+      + '.nav .mb-theme-toggle .mb-ico-sun{display:none;}'
+      + '[data-theme="light"] .nav .mb-theme-toggle .mb-ico-sun{display:block;}'
+      + '[data-theme="light"] .nav .mb-theme-toggle .mb-ico-moon{display:none;}'
+      + '[data-theme="light"] .nav .mb-theme-toggle{border-color:rgba(22,19,16,.18);background:#fff;color:#161310;}'
+      + '[data-theme="light"] .nav .mb-drawer{background:#F7F3EB;color:#161310;border-top-color:rgba(22,19,16,.12);box-shadow:0 26px 54px -14px rgba(22,19,16,.18);}'
+      + '[data-theme="light"] .nav .mb-drawer a{color:#161310;border-bottom-color:rgba(22,19,16,.12);}'
+      + '[data-theme="light"] .nav .mb-drawer a:hover{background:rgba(235,177,44,.10);color:#EBB12C;}'
+      + '[data-theme="light"] .nav .mb-drawer a.cta{color:#1A1222;background:#EBB12C;}';
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     if (getComputedStyle(bar).position === 'static') bar.style.position = 'relative';
     var b = document.createElement('button');
@@ -182,6 +193,71 @@
     b.addEventListener('click', function (e) { e.stopPropagation(); var open=bar.classList.toggle('mbopen'); b.setAttribute('aria-expanded', open?'true':'false'); });
     d.addEventListener('click', function (e) { if (e.target.tagName==='A') bar.classList.remove('mbopen'); });
     document.addEventListener('click', function (e) { if (!bar.contains(e.target)) bar.classList.remove('mbopen'); });
+  });
+})();
+
+/* Světlý / tmavý režim. Klíč localStorage: mb-theme (stejný jako Academy).
+   Tlačítko do .nav .wrap vedle burgeru. FOUC řeší assets/theme-boot.js v <head>. */
+(function () {
+  var KEY = 'mb-theme';
+  var SVG =
+    '<svg class="mb-ico-moon" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M21 14.3A8.5 8.5 0 0 1 9.7 3 7 7 0 1 0 21 14.3z"/>' +
+    '</svg>' +
+    '<svg class="mb-ico-sun" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<circle cx="12" cy="12" r="4"/>' +
+      '<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>' +
+    '</svg>';
+
+  function read() {
+    try { return localStorage.getItem(KEY) === 'light' ? 'light' : 'dark'; }
+    catch (e) { return 'dark'; }
+  }
+  function save(theme) {
+    try { localStorage.setItem(KEY, theme); } catch (e) {}
+  }
+  function apply(theme) {
+    var root = document.documentElement;
+    if (theme === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    try { root.style.colorScheme = theme === 'light' ? 'light' : 'dark'; } catch (e) {}
+    var btns = document.querySelectorAll('.mb-theme-toggle');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+      btns[i].setAttribute('aria-label', theme === 'light' ? 'Zapnout tmavý režim' : 'Zapnout světlý režim');
+      btns[i].title = theme === 'light' ? 'Tmavý režim' : 'Světlý režim';
+    }
+  }
+  function makeBtn() {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'mb-theme-toggle';
+    btn.innerHTML = SVG;
+    btn.addEventListener('click', function () {
+      var next = read() === 'light' ? 'dark' : 'light';
+      save(next);
+      apply(next);
+    });
+    return btn;
+  }
+
+  window.mountThemeToggle = function (wrap, burger) {
+    if (document.querySelector('.mb-theme-toggle')) { apply(read()); return; }
+    if (!wrap) wrap = document.querySelector('.nav .wrap');
+    if (!wrap) return;
+    var btn = makeBtn();
+    if (burger && burger.parentNode === wrap) wrap.insertBefore(btn, burger);
+    else wrap.appendChild(btn);
+    apply(read());
+  };
+
+  function ready(fn){ document.readyState!=='loading'?fn():document.addEventListener('DOMContentLoaded',fn); }
+  ready(function () {
+    if (!document.querySelector('.nav .navlinks')) return;
+    if (document.querySelector('.mb-theme-toggle')) { apply(read()); return; }
+    var wrap = document.querySelector('.nav .wrap');
+    var burger = wrap && wrap.querySelector('.mb-burger');
+    window.mountThemeToggle(wrap, burger);
   });
 })();
 

@@ -4,7 +4,7 @@
    Přidává se NAVRCH stávajícího CSS → markup/funkce/skripty netknuté.
    Kontrasty ověřeny WCAG (skript contrast.js). Anti-AI: bez svítících koulí.
    ============================================================ */
-:root{
+html:not([data-theme="light"]){
   --green:#EBB12C; --gold:#EBB12C;      /* akcent: oranžová → zlatá */
   --acc:#EBB12C; --acc-l:#F6CD63; --acc-d:#C8901F;  /* podstránkový accent token → zlatá (pojistka) */
   --green-light:#0E0D13;                 /* "soft" plochy → tmavá */
@@ -13,168 +13,168 @@
   --mb-gold:#EBB12C; --mb-gold-light:#F6CD63; --mb-on-gold:#1A1222;
   --mb-plum:#5E1A4F; --mb-plum-light:#7C2A6A; --mb-plum-soft:#241026;
 }
-html,body{ background:var(--mb-bg) !important; }
-body{ background:linear-gradient(180deg,var(--mb-bg),var(--mb-bg2)) !important; color:var(--mb-text) !important; }
+html:not([data-theme="light"]), html:not([data-theme="light"]) body{ background:var(--mb-bg) !important; }
+html:not([data-theme="light"]) body{ background:linear-gradient(180deg,var(--mb-bg),var(--mb-bg2)) !important; color:var(--mb-text) !important; }
 
 /* ---- Text: co bylo tmavé na světlé → světlé na tmavé ---- */
-h1,h2,h3,h4,h5,h6,.card-title,.navbar-brand,.plan-name,.plan-price,.wa-head,.wa-num{ color:var(--mb-text) !important; }
-.section-head p,.stat p,.plan-sub,.plan-microtrust,.plan-trust,.wa-sub,.text-muted,.plan-price small{ color:var(--mb-muted) !important; }
-.plan-feat li{ color:#E7E2EE !important; }
-.plan-feat li::before{ color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) h1, html:not([data-theme="light"]) h2, html:not([data-theme="light"]) h3, html:not([data-theme="light"]) h4, html:not([data-theme="light"]) h5, html:not([data-theme="light"]) h6, html:not([data-theme="light"]) .card-title, html:not([data-theme="light"]) .navbar-brand, html:not([data-theme="light"]) .plan-name, html:not([data-theme="light"]) .plan-price, html:not([data-theme="light"]) .wa-head, html:not([data-theme="light"]) .wa-num{ color:var(--mb-text) !important; }
+html:not([data-theme="light"]) .section-head p, html:not([data-theme="light"]) .stat p, html:not([data-theme="light"]) .plan-sub, html:not([data-theme="light"]) .plan-microtrust, html:not([data-theme="light"]) .plan-trust, html:not([data-theme="light"]) .wa-sub, html:not([data-theme="light"]) .text-muted, html:not([data-theme="light"]) .plan-price small{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .plan-feat li{ color:#E7E2EE !important; }
+html:not([data-theme="light"]) .plan-feat li::before{ color:var(--mb-gold) !important; }
 
 /* ---- Akcentní čísla = zlatá ---- */
-.stat h3,.review-box .big{ color:var(--mb-gold-light) !important; }
+html:not([data-theme="light"]) .stat h3, html:not([data-theme="light"]) .review-box .big{ color:var(--mb-gold-light) !important; }
 
 /* ---- Karty / plochy → tmavé ---- */
-.card,.calc-wrap,.review-box,.plan{ background:var(--mb-surface) !important; border:1px solid var(--mb-border) !important;
+html:not([data-theme="light"]) .card, html:not([data-theme="light"]) .calc-wrap, html:not([data-theme="light"]) .review-box, html:not([data-theme="light"]) .plan{ background:var(--mb-surface) !important; border:1px solid var(--mb-border) !important;
   box-shadow:0 20px 50px -28px rgba(0,0,0,.8) !important; }
-.bg-soft{ background:#0E0D13 !important; }
-.plan-terms{ background:#12101A !important; }
-.card-title{ color:var(--mb-text) !important; }
+html:not([data-theme="light"]) .bg-soft{ background:#0E0D13 !important; }
+html:not([data-theme="light"]) .plan-terms{ background:#12101A !important; }
+html:not([data-theme="light"]) .card-title{ color:var(--mb-text) !important; }
 
 /* ---- Nav ---- */
-.navbar,.navbar.bg-white{ background:rgba(12,11,16,.72) !important; border-bottom:1px solid var(--mb-border) !important;
+html:not([data-theme="light"]) .navbar, html:not([data-theme="light"]) .navbar.bg-white{ background:rgba(12,11,16,.72) !important; border-bottom:1px solid var(--mb-border) !important;
   box-shadow:none !important; -webkit-backdrop-filter:saturate(140%) blur(12px); backdrop-filter:saturate(140%) blur(12px); }
-.nav-link{ color:var(--mb-muted) !important; }
-.nav-link:hover{ color:var(--mb-text) !important; }
-.nav-link::after{ background:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .nav-link{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .nav-link:hover{ color:var(--mb-text) !important; }
+html:not([data-theme="light"]) .nav-link::after{ background:var(--mb-gold) !important; }
 
 /* ---- Tlačítka: oranžová → zlatá s tmavým textem ---- */
-.btn-grn,.btn-gold,.btn-white{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important;
+html:not([data-theme="light"]) .btn-grn, html:not([data-theme="light"]) .btn-gold, html:not([data-theme="light"]) .btn-white{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important;
   color:var(--mb-on-gold) !important; box-shadow:0 8px 22px -8px rgba(235,177,44,.4) !important; }
-.btn-grn:hover,.btn-gold:hover,.btn-white:hover{ color:var(--mb-on-gold) !important; }
-.btn-out{ background:transparent !important; border:2px solid var(--mb-gold) !important; color:var(--mb-gold) !important; }
-.btn-out:hover{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .btn-grn:hover, html:not([data-theme="light"]) .btn-gold:hover, html:not([data-theme="light"]) .btn-white:hover{ color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .btn-out{ background:transparent !important; border:2px solid var(--mb-gold) !important; color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .btn-out:hover{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
 /* ---- Hero: tmavo-švestkový, ANTI-AI: pryč koule + glow ---- */
-.hero{ background:linear-gradient(160deg,#241026 0%, #0C0B10 62%) !important; color:var(--mb-text) !important; }
-.hero-orbs{ display:none !important; }
-.hero::before{ display:none !important; }
-.hero::after{ opacity:.22 !important; }
-.hero .badges span{ background:rgba(255,255,255,.08) !important; }
-.hero .btn-outline-light{ border-color:rgba(255,255,255,.6) !important; }
-.hero-photo{ border:4px solid rgba(235,177,44,.25) !important; box-shadow:0 30px 64px rgba(0,0,0,.6), 0 14px 54px rgba(94,26,79,.35) !important; }
-.hero-trust .ht-stars{ color:var(--mb-gold-light) !important; }
+html:not([data-theme="light"]) .hero{ background:linear-gradient(160deg,#241026 0%, #0C0B10 62%) !important; color:var(--mb-text) !important; }
+html:not([data-theme="light"]) .hero-orbs{ display:none !important; }
+html:not([data-theme="light"]) .hero::before{ display:none !important; }
+html:not([data-theme="light"]) .hero::after{ opacity:.22 !important; }
+html:not([data-theme="light"]) .hero .badges span{ background:rgba(255,255,255,.08) !important; }
+html:not([data-theme="light"]) .hero .btn-outline-light{ border-color:rgba(255,255,255,.6) !important; }
+html:not([data-theme="light"]) .hero-photo{ border:4px solid rgba(235,177,44,.25) !important; box-shadow:0 30px 64px rgba(0,0,0,.6), 0 14px 54px rgba(94,26,79,.35) !important; }
+html:not([data-theme="light"]) .hero-trust .ht-stars{ color:var(--mb-gold-light) !important; }
 
 /* ---- Podtržení nadpisů sekcí: zlatá (bez druhé barvy = čistší) ---- */
-.section-head h2::after{ background:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .section-head h2::after{ background:var(--mb-gold) !important; }
 
 /* ---- Statistiky / kroky / odznaky ---- */
-.step-num{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
-.feature .ico{ background:var(--mb-plum-soft) !important; color:var(--mb-gold-light) !important; border:1px solid #3a1f38; }
-.metric-badge.kg{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
-.metric-badge.time{ background:rgba(94,26,79,.92) !important; color:#fff !important; }
-.role-badge{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
-.story-card{ border:1px solid var(--mb-border) !important; }
+html:not([data-theme="light"]) .step-num{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .feature .ico{ background:var(--mb-plum-soft) !important; color:var(--mb-gold-light) !important; border:1px solid #3a1f38; }
+html:not([data-theme="light"]) .metric-badge.kg{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .metric-badge.time{ background:rgba(94,26,79,.92) !important; color:#fff !important; }
+html:not([data-theme="light"]) .role-badge{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .story-card{ border:1px solid var(--mb-border) !important; }
 
 /* ---- Pricing: gold border, švestková jako co-star (save/save chip) ---- */
-.plan.featured{ border:2px solid var(--mb-gold) !important; box-shadow:0 30px 70px -34px rgba(235,177,44,.4) !important; }
-.ribbon-top{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
-.save{ background:var(--mb-plum) !important; color:#fff !important; }
-.cap-note{ background:#12101A !important; border:1px solid var(--mb-border) !important; color:var(--mb-muted) !important; }
-.cap-note .mb-ico{ color:var(--mb-gold) !important; }
-.plan-trust .ht-stars{ color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .plan.featured{ border:2px solid var(--mb-gold) !important; box-shadow:0 30px 70px -34px rgba(235,177,44,.4) !important; }
+html:not([data-theme="light"]) .ribbon-top{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .save{ background:var(--mb-plum) !important; color:#fff !important; }
+html:not([data-theme="light"]) .cap-note{ background:#12101A !important; border:1px solid var(--mb-border) !important; color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .cap-note .mb-ico{ color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .plan-trust .ht-stars{ color:var(--mb-gold) !important; }
 
 /* ---- Kalkulačka: result plum, inputy tmavé, makro bary ---- */
-.result{ background:linear-gradient(160deg,var(--mb-plum) 0%, #1b0f1d 100%) !important; color:#fff !important; }
-.macro{ background:rgba(255,255,255,.10) !important; }
-.calc-wrap .form-control,.calc-wrap .form-select,.form-control,.form-select{ background:#0C0B10 !important; color:#fff !important; border:1px solid var(--mb-border) !important; }
-.calc-wrap label{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .result{ background:linear-gradient(160deg,var(--mb-plum) 0%, #1b0f1d 100%) !important; color:#fff !important; }
+html:not([data-theme="light"]) .macro{ background:rgba(255,255,255,.10) !important; }
+html:not([data-theme="light"]) .calc-wrap .form-control, html:not([data-theme="light"]) .calc-wrap .form-select, html:not([data-theme="light"]) .form-control, html:not([data-theme="light"]) .form-select{ background:#0C0B10 !important; color:#fff !important; border:1px solid var(--mb-border) !important; }
+html:not([data-theme="light"]) .calc-wrap label{ color:var(--mb-muted) !important; }
 
 /* ---- Videokurz banner (už tmavý) + tag ---- */
-.vk-tag{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .vk-tag{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
 /* ---- Social proof marquee → tmavý pás ---- */
-.proof-marquee{ background:#12101A !important; border-color:var(--mb-border) !important; }
-.pm-track span{ color:var(--mb-muted) !important; }
-.pm-track span b{ color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .proof-marquee{ background:#12101A !important; border-color:var(--mb-border) !important; }
+html:not([data-theme="light"]) .pm-track span{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .pm-track span b{ color:var(--mb-gold) !important; }
 
 /* ---- Recenze (inline #fff karty) → přebít na tmavé ---- */
-#reference .col-md-4 > div{ background:var(--mb-surface) !important; box-shadow:0 20px 50px -28px rgba(0,0,0,.8) !important; }
-#reference .col-md-4 > div > div:first-child{ color:var(--mb-gold) !important; }
-#reference .col-md-4 p{ color:#E7E2EE !important; }
-#reference .col-md-4 > div > div:last-child{ color:#fff !important; }
-.review-box .stars,.stars{ color:var(--mb-gold) !important; }
-.src-btn{ background:#12101A !important; color:#fff !important; border:1px solid var(--mb-border) !important; }
-.src-btn:hover{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) #reference .col-md-4 > div{ background:var(--mb-surface) !important; box-shadow:0 20px 50px -28px rgba(0,0,0,.8) !important; }
+html:not([data-theme="light"]) #reference .col-md-4 > div > div:first-child{ color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) #reference .col-md-4 p{ color:#E7E2EE !important; }
+html:not([data-theme="light"]) #reference .col-md-4 > div > div:last-child{ color:#fff !important; }
+html:not([data-theme="light"]) .review-box .stars, html:not([data-theme="light"]) .stars{ color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .src-btn{ background:#12101A !important; color:#fff !important; border:1px solid var(--mb-border) !important; }
+html:not([data-theme="light"]) .src-btn:hover{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
 /* ---- Lead-magnet karty (jedna má inline #fff) ---- */
-#plan-zdarma .card{ background:var(--mb-surface) !important; }
-#plan-zdarma .card h3{ color:var(--mb-text) !important; }
-#plan-zdarma .card p{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) #plan-zdarma .card{ background:var(--mb-surface) !important; }
+html:not([data-theme="light"]) #plan-zdarma .card h3{ color:var(--mb-text) !important; }
+html:not([data-theme="light"]) #plan-zdarma .card p{ color:var(--mb-muted) !important; }
 
 /* ---- Kontakt (CTA) sekce: plum → black ---- */
-.cta{ background:linear-gradient(160deg,#241026 0%, #0C0B10 65%) !important; color:#fff !important; }
-.cta .bg-white{ background:var(--mb-surface) !important; }
-.cta .text-dark{ color:#fff !important; }
-.social a{ background:rgba(255,255,255,.10) !important; color:#fff !important; }
+html:not([data-theme="light"]) .cta{ background:linear-gradient(160deg,#241026 0%, #0C0B10 65%) !important; color:#fff !important; }
+html:not([data-theme="light"]) .cta .bg-white{ background:var(--mb-surface) !important; }
+html:not([data-theme="light"]) .cta .text-dark{ color:#fff !important; }
+html:not([data-theme="light"]) .social a{ background:rgba(255,255,255,.10) !important; color:#fff !important; }
 
 /* ---- Footer (byl #161616, jen dolaď odkazy na zlatou) ---- */
-footer{ background:#0A090E !important; color:var(--mb-muted) !important; border-top:1px solid var(--mb-border); }
-footer a{ color:var(--mb-gold-light) !important; }
+html:not([data-theme="light"]) footer{ background:#0A090E !important; color:var(--mb-muted) !important; border-top:1px solid var(--mb-border); }
+html:not([data-theme="light"]) footer a{ color:var(--mb-gold-light) !important; }
 
 /* ---- WhatsApp modal: tmavá karta, QR NECHAT bílé (scan!) ---- */
-.wa-card{ background:var(--mb-surface) !important; color:#fff !important; }
-.wa-qr{ background:#fff !important; }
-.btn-wa-copy{ background:#12101A !important; color:#fff !important; }
-.btn-wa-open{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .wa-card{ background:var(--mb-surface) !important; color:#fff !important; }
+html:not([data-theme="light"]) .wa-qr{ background:#fff !important; }
+html:not([data-theme="light"]) .btn-wa-copy{ background:#12101A !important; color:#fff !important; }
+html:not([data-theme="light"]) .btn-wa-open{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
 /* ---- Drobné akcenty ---- */
-a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,.navbar-toggler:focus-visible{ outline-color:var(--mb-gold) !important; }
-::selection{ background:var(--mb-gold); color:var(--mb-on-gold); }
-#scrollProgress{ background:linear-gradient(90deg,var(--mb-gold),var(--mb-gold-light)) !important; box-shadow:0 0 8px rgba(235,177,44,.55) !important; }
-.to-top{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
-.cta-bar{ background:rgba(12,11,16,.9) !important; border-top:1px solid var(--mb-border) !important; }
-.cta-bar .cb-kurz{ background:var(--mb-plum) !important; color:#fff !important; }
-.cta-bar .cb-konz{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
-.skip-link{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) a:focus-visible, html:not([data-theme="light"]) button:focus-visible, html:not([data-theme="light"]) input:focus-visible, html:not([data-theme="light"]) textarea:focus-visible, html:not([data-theme="light"]) select:focus-visible, html:not([data-theme="light"]) .navbar-toggler:focus-visible{ outline-color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) ::selection{ background:var(--mb-gold); color:var(--mb-on-gold); }
+html:not([data-theme="light"]) #scrollProgress{ background:linear-gradient(90deg,var(--mb-gold),var(--mb-gold-light)) !important; box-shadow:0 0 8px rgba(235,177,44,.55) !important; }
+html:not([data-theme="light"]) .to-top{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .cta-bar{ background:rgba(12,11,16,.9) !important; border-top:1px solid var(--mb-border) !important; }
+html:not([data-theme="light"]) .cta-bar .cb-kurz{ background:var(--mb-plum) !important; color:#fff !important; }
+html:not([data-theme="light"]) .cta-bar .cb-konz{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .skip-link{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
 /* ---- Bootstrap text-dark catch-all → světlé na tmavé ---- */
-.text-dark{ color:#fff !important; }
+html:not([data-theme="light"]) .text-dark{ color:#fff !important; }
 /* ---- FAQ accordion (Bootstrap světlý) → tmavý ---- */
-.accordion-item{ background:var(--mb-surface) !important; border:1px solid var(--mb-border) !important; }
-.accordion-button{ background:var(--mb-surface) !important; color:#fff !important; box-shadow:none !important; }
-.accordion-button:not(.collapsed){ background:#12101A !important; color:var(--mb-gold-light) !important; }
-.accordion-button::after{ filter:invert(1) grayscale(1) brightness(1.6) !important; }
-.accordion-body{ color:var(--mb-muted) !important; }
-.accordion-body a{ color:var(--mb-gold-light) !important; }
+html:not([data-theme="light"]) .accordion-item{ background:var(--mb-surface) !important; border:1px solid var(--mb-border) !important; }
+html:not([data-theme="light"]) .accordion-button{ background:var(--mb-surface) !important; color:#fff !important; box-shadow:none !important; }
+html:not([data-theme="light"]) .accordion-button:not(.collapsed){ background:#12101A !important; color:var(--mb-gold-light) !important; }
+html:not([data-theme="light"]) .accordion-button::after{ filter:invert(1) grayscale(1) brightness(1.6) !important; }
+html:not([data-theme="light"]) .accordion-body{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .accordion-body a{ color:var(--mb-gold-light) !important; }
 /* ---- "Co dál" feature nadpisy ---- */
-.feature h6{ color:#fff !important; }
-#dalsi .feature p{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .feature h6{ color:#fff !important; }
+html:not([data-theme="light"]) #dalsi .feature p{ color:var(--mb-muted) !important; }
 /* ---- Kontakt: úspěšná hláška tmavší (zůstává zelená = success) ---- */
-#formDiky.alert-success{ background:#153a2a !important; color:#bfe8d2 !important; border-color:#1f5a40 !important; }
+html:not([data-theme="light"]) #formDiky.alert-success{ background:#153a2a !important; color:#bfe8d2 !important; border-color:#1f5a40 !important; }
 /* ---- Blog karty: nadpis světlý ---- */
-#blog .card-title{ color:#fff !important; }
+html:not([data-theme="light"]) #blog .card-title{ color:#fff !important; }
 
 /* ---- Zbylé oranžové prvky (odhaleno testem) ---- */
-.navbar .nav-item .btn{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; box-shadow:0 6px 18px rgba(235,177,44,.25) !important; }
-#quizBar{ background:linear-gradient(90deg,var(--mb-gold),var(--mb-gold-light)) !important; }
-section.cta, #kontakt.cta{ background:linear-gradient(160deg,#241026 0%, #0C0B10 65%) !important; }
+html:not([data-theme="light"]) .navbar .nav-item .btn{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; box-shadow:0 6px 18px rgba(235,177,44,.25) !important; }
+html:not([data-theme="light"]) #quizBar{ background:linear-gradient(90deg,var(--mb-gold),var(--mb-gold-light)) !important; }
+html:not([data-theme="light"]) section.cta, html:not([data-theme="light"]) #kontakt.cta{ background:linear-gradient(160deg,#241026 0%, #0C0B10 65%) !important; }
 /* cookie lišta (analytics.js) — accept tlačítko na zlatou */
-#mb-cookie #mb-c-ok, #mb-c-ok{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) #mb-cookie #mb-c-ok, html:not([data-theme="light"]) #mb-c-ok{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
 
 /* ============ VLNA 1 — doladění po auditu (landing/custom) ============ */
 /* podstránkové oranžové tokeny (marketing-dark / ba-ui) → zlatá, pojistka */
-:root{ --bd-gold:#EBB12C; --bd-gold2:#F6CD63; --bd-gold-soft:#F6CD63;
+html:not([data-theme="light"]){ --bd-gold:#EBB12C; --bd-gold2:#F6CD63; --bd-gold-soft:#F6CD63;
        --gold-2:#F6CD63; --gold-soft:#F6CD63; --orange:#EBB12C; --orange-dark:#C8901F; }
 /* blog filtr — neaktivní bílé pilulky → tmavé, aktivní zlatá */
-.blogfilter button{ background:var(--mb-surface) !important; color:#F0EADF !important; border:2px solid var(--mb-border) !important; }
-.blogfilter button:hover{ border-color:var(--mb-gold) !important; }
-.blogfilter button.active{ background:var(--mb-gold) !important; border-color:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .blogfilter button{ background:var(--mb-surface) !important; color:#F0EADF !important; border:2px solid var(--mb-border) !important; }
+html:not([data-theme="light"]) .blogfilter button:hover{ border-color:var(--mb-gold) !important; }
+html:not([data-theme="light"]) .blogfilter button.active{ background:var(--mb-gold) !important; border-color:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 /* 404 hlavní CTA (bílé → zlaté) */
-.btn-main{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .btn-main{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
 /* děkovačky: kroky (tmavý #333 na tmavém boxu → světlý, čitelný) */
-.steps li{ color:#E7E2EE !important; }
-.steps li strong{ color:#fff !important; }
+html:not([data-theme="light"]) .steps li{ color:#E7E2EE !important; }
+html:not([data-theme="light"]) .steps li strong{ color:#fff !important; }
 /* recenze — zdrojové pilulky Google/Facebook (bílé → tmavé) */
-.proof figcaption .src, .proof .src{ background:var(--mb-surface) !important; color:var(--mb-muted) !important; border-color:var(--mb-border) !important; }
+html:not([data-theme="light"]) .proof figcaption .src, html:not([data-theme="light"]) .proof .src{ background:var(--mb-surface) !important; color:var(--mb-muted) !important; border-color:var(--mb-border) !important; }
 /* sekundární „Pro ženy 30+" tlačítka (bílá → švestková, sesterská ke zlaté „Pro muže") */
-a.btn[style*="#fff"], .btn.alt{ background:var(--mb-plum) !important; color:#fff !important; border:1px solid var(--mb-plum-light) !important; }
+html:not([data-theme="light"]) a.btn[style*="#fff"], html:not([data-theme="light"]) .btn.alt{ background:var(--mb-plum) !important; color:#fff !important; border:1px solid var(--mb-plum-light) !important; }
 
 /* ---- Lead-magnet formulare (byly svetle: .form-sec cream, .form-card #fff, bile inputy) ---- */
-.form-sec{ background:var(--mb-bg) !important; }
-.form-card{ background:var(--mb-surface) !important; border:1px solid var(--mb-border) !important; box-shadow:0 20px 50px -28px rgba(0,0,0,.8) !important; }
-.form-card h1,.form-card h2,.form-card h3,.form-card h4,.form-card b,.form-card strong{ color:#fff !important; }
-.form-card p,.form-fallback,.lead-form label{ color:var(--mb-muted) !important; }
-.lead-form input,.lead-form select,.lead-form textarea{ background:var(--mb-bg) !important; color:#fff !important; border:1px solid var(--mb-border) !important; }
-.lead-form input::placeholder{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .form-sec{ background:var(--mb-bg) !important; }
+html:not([data-theme="light"]) .form-card{ background:var(--mb-surface) !important; border:1px solid var(--mb-border) !important; box-shadow:0 20px 50px -28px rgba(0,0,0,.8) !important; }
+html:not([data-theme="light"]) .form-card h1, html:not([data-theme="light"]) .form-card h2, html:not([data-theme="light"]) .form-card h3, html:not([data-theme="light"]) .form-card h4, html:not([data-theme="light"]) .form-card b, html:not([data-theme="light"]) .form-card strong{ color:#fff !important; }
+html:not([data-theme="light"]) .form-card p, html:not([data-theme="light"]) .form-fallback, html:not([data-theme="light"]) .lead-form label{ color:var(--mb-muted) !important; }
+html:not([data-theme="light"]) .lead-form input, html:not([data-theme="light"]) .lead-form select, html:not([data-theme="light"]) .lead-form textarea{ background:var(--mb-bg) !important; color:#fff !important; border:1px solid var(--mb-border) !important; }
+html:not([data-theme="light"]) .lead-form input::placeholder{ color:var(--mb-muted) !important; }

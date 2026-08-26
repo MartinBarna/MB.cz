@@ -2,6 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
+    <script src="/assets/theme-boot.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="Q4AupBdDB2BlOMSx354EKwMyPteIP7z4EGmWyjEyzQQ" />
     <title>Martin Barna | Online výživa a fitness koučink</title>
@@ -127,6 +128,38 @@
   --line:rgba(255,255,255,.08);
   --radius:20px;
 }
+html[data-theme="light"]{
+  --bg:var(--mb-bg,#F7F3EB);
+  --surface:var(--mb-surface,#ffffff);
+  --surface-2:var(--mb-bg2,#F3EEE4);
+  --text:var(--mb-text,#161310);
+  --muted:var(--mb-muted,#5C564C);
+  --line:var(--bd-line,rgba(22,19,16,.12));
+  color-scheme:light;
+}
+html[data-theme="light"] .btn-ghost{color:var(--text);border-color:var(--line)}
+html[data-theme="light"] .hero-cta .quiet,
+html[data-theme="light"] .hero .micro b{color:var(--text)}
+html[data-theme="light"] .trust{color:var(--muted)}
+html[data-theme="light"] .konz-box p b,
+html[data-theme="light"] .quiz-result p b,
+html[data-theme="light"] .rev-sum .lbl b{color:var(--text)}
+html[data-theme="light"] .feat li{color:var(--text)}
+html[data-theme="light"] .review p{color:var(--muted)}
+html[data-theme="light"] .rev-sum .src a{color:var(--text);background:var(--surface)}
+html[data-theme="light"] .cform input,
+html[data-theme="light"] .cform textarea{color:var(--on-dark,#ffffff)}
+html[data-theme="light"] .cta-bar .cb-quiz{color:var(--text)}
+html[data-theme="light"] .bento .wide{background:var(--surface);color:var(--text)}
+html[data-theme="light"] .bento .wide .price{color:var(--text)}
+html[data-theme="light"] .pcard.cta-card{background:var(--surface)}
+html[data-theme="light"] .cap-note{color:var(--text);background:var(--surface-2)}
+html[data-theme="light"] .story-body,
+html[data-theme="light"] .story-body h3,
+html[data-theme="light"] .contact,
+html[data-theme="light"] .contact h2,
+html[data-theme="light"] .bcard.plum,
+html[data-theme="light"] .bcard.plum h3{color:var(--on-dark,#ffffff)!important}
 *{margin:0;padding:0;box-sizing:border-box}
 /* smooth scroll zapíná až JS po load - jinak Chromium přeruší skok na kotvu při načítání stránky */
 html{scroll-padding-top:84px}
@@ -454,6 +487,7 @@ footer a{color:var(--gold-light)}
     </style>
     <script defer src="/assets/analytics.js?v=g12"></script><script defer src="/assets/referral.js?v=g1"></script>
     <script defer src="/assets/lead-popup.js?v=r2"></script>
+    <link rel="stylesheet" href="/assets/theme-light.css?v=l1">
 </head>
 <body>
     <!-- SVG ikony (sprite) - jednotná brand sada místo emoji -->
@@ -1100,6 +1134,6 @@ footer a{color:var(--gold-light)}
 })();
 </script>
 <script src="/assets/ai-martin.js?v=g6" defer></script>
-<script defer src="/assets/scroll-top.js?v=g8"></script>
+<script defer src="/assets/scroll-top.js?v=g9"></script>
 </body>
 </html>

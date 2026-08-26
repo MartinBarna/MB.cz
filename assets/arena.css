@@ -7,7 +7,7 @@
    (typograficke kickery misto pill), fotky (B&W + gold duotone).
    ============================================================ */
 
-:root{
+html:not([data-theme="light"]){
   --ar-gold:#EBB12C; --ar-gold2:#F6CD63; --ar-ink:#141017;
   --ar-panel:#15141a; --ar-line:#2a2731; --ar-line2:#3a3542;
   --ar-display:'Barlow Condensed','Arial Narrow',Arial,sans-serif;
@@ -16,15 +16,15 @@
 }
 
 /* ---------- 1) TYPOGRAFIE ---------- */
-h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em;line-height:1.04;}
-.hero h1,.ac-hero h1{font-weight:800;text-transform:uppercase;letter-spacing:.01em;}
+html:not([data-theme="light"]) h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em;line-height:1.04;}
+html:not([data-theme="light"]) .hero h1, html:not([data-theme="light"]) .ac-hero h1{font-weight:800;text-transform:uppercase;letter-spacing:.01em;}
 /* sekcni nadpisy na marketingu -> display; clankove h2 nechavame citelne v Poppins */
-.sec-head h2,.section-head h2,.hero h2,.ac-hero h2{font-family:var(--ar-display);font-weight:700;letter-spacing:.01em;}
+html:not([data-theme="light"]) .sec-head h2, html:not([data-theme="light"]) .section-head h2, html:not([data-theme="light"]) .hero h2, html:not([data-theme="light"]) .ac-hero h2{font-family:var(--ar-display);font-weight:700;letter-spacing:.01em;}
 /* velka cisla / statistiky */
-.ac-meta div span,.stat b,.stats b,.num{font-family:var(--ar-display)!important;font-variant-numeric:tabular-nums;}
+html:not([data-theme="light"]) .ac-meta div span, html:not([data-theme="light"]) .stat b, html:not([data-theme="light"]) .stats b, html:not([data-theme="light"]) .num{font-family:var(--ar-display)!important;font-variant-numeric:tabular-nums;}
 
 /* ---------- 2) TLACITKA: kapsle -> seriznuty roh ---------- */
-.btn-gold,.btn-grn,.btn-white,.btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light),.navlinks a.cta,.done-row .btn,.copy{
+html:not([data-theme="light"]) .btn-gold, html:not([data-theme="light"]) .btn-grn, html:not([data-theme="light"]) .btn-white, html:not([data-theme="light"]) .btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light), html:not([data-theme="light"]) .navlinks a.cta, html:not([data-theme="light"]) .done-row .btn, html:not([data-theme="light"]) .copy{
 /* outline tlacitka (ghost/out) mimo clip-path: pri DPR 1.25/1.5 clip orezaval spodni linku ramecku */
   border-radius:0!important;
   clip-path:var(--ar-cut);
@@ -35,7 +35,7 @@ h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em
   font-size:1.02em;
   box-shadow:none!important;
 }
-.btn-ghost,.btn-out,.btn-outline-light,.btn.ghost{
+html:not([data-theme="light"]) .btn-ghost, html:not([data-theme="light"]) .btn-out, html:not([data-theme="light"]) .btn-outline-light, html:not([data-theme="light"]) .btn.ghost{
   border-radius:0!important;
   font-family:var(--ar-display)!important;
   font-weight:600!important;
@@ -45,12 +45,12 @@ h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em
   backdrop-filter:none!important;
 }
 /* klidnejsi hover: zadne poskakovani */
-.btn-gold:hover,.btn-grn:hover,.btn-white:hover,.btn:hover,.navlinks a.cta:hover{transform:none!important;filter:brightness(1.07);}
-.btn-ghost:hover,.btn-out:hover,.btn.ghost:hover{transform:none!important;border-color:var(--ar-gold)!important;color:#fff!important;}
+html:not([data-theme="light"]) .btn-gold:hover, html:not([data-theme="light"]) .btn-grn:hover, html:not([data-theme="light"]) .btn-white:hover, html:not([data-theme="light"]) .btn:hover, html:not([data-theme="light"]) .navlinks a.cta:hover{transform:none!important;filter:brightness(1.07);}
+html:not([data-theme="light"]) .btn-ghost:hover, html:not([data-theme="light"]) .btn-out:hover, html:not([data-theme="light"]) .btn.ghost:hover{transform:none!important;border-color:var(--ar-gold)!important;color:#fff!important;}
 
 /* ---------- 3) BADGES / KICKERY: pill -> typograficky kicker ---------- */
-.ac-tag,.cover-tag,.hero .tag,.kick .dot{border-radius:0!important;}
-.ac-tag,.cover-tag,.hero .tag{
+html:not([data-theme="light"]) .ac-tag, html:not([data-theme="light"]) .cover-tag, html:not([data-theme="light"]) .hero .tag, html:not([data-theme="light"]) .kick .dot{border-radius:0!important;}
+html:not([data-theme="light"]) .ac-tag, html:not([data-theme="light"]) .cover-tag, html:not([data-theme="light"]) .hero .tag{
   background:transparent!important;
   border:none!important;
   padding:0 0 0 26px!important;
@@ -61,102 +61,101 @@ h1{font-family:var(--ar-display)!important;font-weight:700;letter-spacing:.005em
   color:var(--ar-gold2)!important;
   text-transform:uppercase;
 }
-.ac-tag::before,.cover-tag::before,.hero .tag::before{
+html:not([data-theme="light"]) .ac-tag::before, html:not([data-theme="light"]) .cover-tag::before, html:not([data-theme="light"]) .hero .tag::before{
   content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);
 }
 
 /* ---------- 4) KARTY: rgba-sklo -> plne panely s ostrou hranou ---------- */
-.card-ac,.mod,.ba .card,.ba .points,.ba .praxe,.ba .quiz,.ba .p,
-.pricing-card,.faq-card,.day,.cell{
+html:not([data-theme="light"]) .card-ac, html:not([data-theme="light"]) .mod, html:not([data-theme="light"]) .ba .card, html:not([data-theme="light"]) .ba .points, html:not([data-theme="light"]) .ba .praxe, html:not([data-theme="light"]) .ba .quiz, html:not([data-theme="light"]) .ba .p, html:not([data-theme="light"]) .pricing-card, html:not([data-theme="light"]) .faq-card, html:not([data-theme="light"]) .day, html:not([data-theme="light"]) .cell{
   border-radius:2px!important;
   background:var(--ar-panel)!important;
   border:1px solid var(--ar-line)!important;
 }
-.ba .praxe{border-left:3px solid var(--ar-gold)!important;background:#171410!important;}
-.card-ac:hover,.mod:hover{transform:none!important;border-color:rgba(235,177,44,.55)!important;box-shadow:none!important;}
+html:not([data-theme="light"]) .ba .praxe{border-left:3px solid var(--ar-gold)!important;background:#171410!important;}
+html:not([data-theme="light"]) .card-ac:hover, html:not([data-theme="light"]) .mod:hover{transform:none!important;border-color:rgba(235,177,44,.55)!important;box-shadow:none!important;}
 /* ikony nastroju: puvodni barevne emoji na zlatem ctverci (Martin chce barevne), jen ostry roh */
-.card .ico,.ico{border-radius:4px!important;}
+html:not([data-theme="light"]) .card .ico, html:not([data-theme="light"]) .ico{border-radius:4px!important;}
 
 /* ---------- 5) GLOW ORBY & GRADIENTY pryc (zname vzory) ---------- */
-.hero::before,.ac-hero::before{display:none!important;}
+html:not([data-theme="light"]) .hero::before, html:not([data-theme="light"]) .ac-hero::before{display:none!important;}
 
 /* ---------- 6) FOTKY: editorial treatment ---------- */
-.arena-photo{position:relative;overflow:hidden;}
-.arena-photo img{display:block;width:100%;}
-.arena-photo::after{content:none;}
-.arena-cap{position:absolute;bottom:12px;right:14px;z-index:2;font-family:var(--ar-display);
+html:not([data-theme="light"]) .arena-photo{position:relative;overflow:hidden;}
+html:not([data-theme="light"]) .arena-photo img{display:block;width:100%;}
+html:not([data-theme="light"]) .arena-photo::after{content:none;}
+html:not([data-theme="light"]) .arena-cap{position:absolute;bottom:12px;right:14px;z-index:2;font-family:var(--ar-display);
   font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:#cabfae;
   background:rgba(10,10,12,.72);padding:5px 10px;}
 
 /* ---------- 7) PROTOKOL prvky (Academy / data) ---------- */
-.ba .crumb,.ba .top .tag,.meta-mono{font-family:var(--ar-mono)!important;letter-spacing:.08em!important;font-size:.7rem!important;text-transform:uppercase;}
-.ledger{border:1px solid var(--ar-line);background:#131210;}
-.ledger .lrow{display:grid;grid-template-columns:92px 1fr 110px;gap:10px;padding:11px 16px;border-bottom:1px solid #221f1a;font-size:.88rem;align-items:baseline;}
-.ledger .lrow:last-child{border-bottom:none;}
-.ledger .id{font-family:var(--ar-mono);color:#6e6759;font-size:.72rem;}
-.ledger .val{text-align:right;font-family:var(--ar-mono);color:var(--ar-gold);font-weight:600;font-variant-numeric:tabular-nums;}
-.ba .eq{border-radius:2px!important;font-family:var(--ar-mono)!important;font-weight:600!important;letter-spacing:.02em;}
+html:not([data-theme="light"]) .ba .crumb, html:not([data-theme="light"]) .ba .top .tag, html:not([data-theme="light"]) .meta-mono{font-family:var(--ar-mono)!important;letter-spacing:.08em!important;font-size:.7rem!important;text-transform:uppercase;}
+html:not([data-theme="light"]) .ledger{border:1px solid var(--ar-line);background:#131210;}
+html:not([data-theme="light"]) .ledger .lrow{display:grid;grid-template-columns:92px 1fr 110px;gap:10px;padding:11px 16px;border-bottom:1px solid #221f1a;font-size:.88rem;align-items:baseline;}
+html:not([data-theme="light"]) .ledger .lrow:last-child{border-bottom:none;}
+html:not([data-theme="light"]) .ledger .id{font-family:var(--ar-mono);color:#6e6759;font-size:.72rem;}
+html:not([data-theme="light"]) .ledger .val{text-align:right;font-family:var(--ar-mono);color:var(--ar-gold);font-weight:600;font-variant-numeric:tabular-nums;}
+html:not([data-theme="light"]) .ba .eq{border-radius:2px!important;font-family:var(--ar-mono)!important;font-weight:600!important;letter-spacing:.02em;}
 
 /* ---------- 8) BLOG CLANKY (svetly ground, stejne primitivy) ---------- */
-article .cta-box{border-radius:2px!important;box-shadow:none!important;border:1px solid #eadfce;}
-.nav{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
-article .hero .tag{color:#fff!important;}
-article .hero .tag::before{background:#fff;}
+html:not([data-theme="light"]) article .cta-box{border-radius:2px!important;box-shadow:none!important;border:1px solid #eadfce;}
+html:not([data-theme="light"]) .nav{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+html:not([data-theme="light"]) article .hero .tag{color:#fff!important;}
+html:not([data-theme="light"]) article .hero .tag::before{background:#fff;}
 
 /* ---------- 9) HERO PRVKY (arena kompozice) ---------- */
-.ar-kick{display:inline-block;position:relative;padding-left:26px;font-family:var(--ar-display);
+html:not([data-theme="light"]) .ar-kick{display:inline-block;position:relative;padding-left:26px;font-family:var(--ar-display);
   font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ar-gold2);font-size:.82rem;margin-bottom:14px;}
-.ar-kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
-.ar-ghost{color:transparent;-webkit-text-stroke:1.5px #55505c;}
-.hero-photo{border-radius:0!important;box-shadow:none!important;border:none!important;}
-.hero .badges span{background:transparent!important;border:1px solid var(--ar-line2)!important;border-radius:0!important;
+html:not([data-theme="light"]) .ar-kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
+html:not([data-theme="light"]) .ar-ghost{color:transparent;-webkit-text-stroke:1.5px #55505c;}
+html:not([data-theme="light"]) .hero-photo{border-radius:0!important;box-shadow:none!important;border:none!important;}
+html:not([data-theme="light"]) .hero .badges span{background:transparent!important;border:1px solid var(--ar-line2)!important;border-radius:0!important;
   font-family:var(--ar-display);text-transform:uppercase;letter-spacing:.08em;padding:6px 14px!important;font-size:.82rem!important;}
-.hero-photo-wrap{max-width:460px;margin:0 auto;}
+html:not([data-theme="light"]) .hero-photo-wrap{max-width:460px;margin:0 auto;}
 
 /* ---------- 10) OBECNE DOLADENI ---------- */
-.fab-wa{box-shadow:0 4px 14px rgba(0,0,0,.35)!important;}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+html:not([data-theme="light"]) .fab-wa{box-shadow:0 4px 14px rgba(0,0,0,.35)!important;}
+@media (prefers-reduced-motion:reduce){html:not([data-theme="light"]) *{animation:none!important;transition:none!important;}}
 
 /* ---------- 11) D2: foto v hero wrapperu + meta cisla ---------- */
-.hero-photo img{border-radius:0!important;box-shadow:none!important;}
-.hero .meta div{font-family:var(--ar-display);letter-spacing:.04em;text-transform:uppercase;font-size:.95rem;}
+html:not([data-theme="light"]) .hero-photo img{border-radius:0!important;box-shadow:none!important;}
+html:not([data-theme="light"]) .hero .meta div{font-family:var(--ar-display);letter-spacing:.04em;text-transform:uppercase;font-size:.95rem;}
 /* D2: dalsi tridy badge/CTA napric podstrankami */
-.badge,.tb-cta,.btn-acc,.pill{border-radius:0!important;}
-.tb-cta,.btn-acc{clip-path:var(--ar-cut);font-family:var(--ar-display)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.07em;box-shadow:none!important;}
-.tb-cta:hover,.btn-acc:hover{transform:none!important;filter:brightness(1.07);}
-.badge{background:transparent!important;border:none!important;padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);letter-spacing:.22em!important;}
-.badge::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
+html:not([data-theme="light"]) .badge, html:not([data-theme="light"]) .tb-cta, html:not([data-theme="light"]) .btn-acc, html:not([data-theme="light"]) .pill{border-radius:0!important;}
+html:not([data-theme="light"]) .tb-cta, html:not([data-theme="light"]) .btn-acc{clip-path:var(--ar-cut);font-family:var(--ar-display)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.07em;box-shadow:none!important;}
+html:not([data-theme="light"]) .tb-cta:hover, html:not([data-theme="light"]) .btn-acc:hover{transform:none!important;filter:brightness(1.07);}
+html:not([data-theme="light"]) .badge{background:transparent!important;border:none!important;padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);letter-spacing:.22em!important;}
+html:not([data-theme="light"]) .badge::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
 /* D2b: chips + eyebrow kickery napric vlajkovymi */
-.chip,.pill{border-radius:2px!important;}
-.eyebrow,.fp-kick{border-radius:0!important;background:transparent!important;border:none!important;
+html:not([data-theme="light"]) .chip, html:not([data-theme="light"]) .pill{border-radius:2px!important;}
+html:not([data-theme="light"]) .eyebrow, html:not([data-theme="light"]) .fp-kick{border-radius:0!important;background:transparent!important;border:none!important;
   padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);
   font-weight:600;letter-spacing:.22em!important;text-transform:uppercase;color:var(--ar-gold2)!important;}
-.eyebrow::before,.fp-kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
+html:not([data-theme="light"]) .eyebrow::before, html:not([data-theme="light"]) .fp-kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
 /* D3: blog author box do systemu */
-.author-box{border-radius:2px!important;background:var(--ar-panel)!important;border:1px solid var(--ar-line)!important;box-shadow:none!important;}
+html:not([data-theme="light"]) .author-box{border-radius:2px!important;background:var(--ar-panel)!important;border:1px solid var(--ar-line)!important;box-shadow:none!important;}
 /* D4: clenska sekce Academy (studium/moje) */
-.ba .hello,.ba .freebanner,.ba .bonus,.ba .cert-card,.ba .mfree,.ba .path,.ba .tool,.ba .binfo{
+html:not([data-theme="light"]) .ba .hello, html:not([data-theme="light"]) .ba .freebanner, html:not([data-theme="light"]) .ba .bonus, html:not([data-theme="light"]) .ba .cert-card, html:not([data-theme="light"]) .ba .mfree, html:not([data-theme="light"]) .ba .path, html:not([data-theme="light"]) .ba .tool, html:not([data-theme="light"]) .ba .binfo{
   border-radius:2px!important;background:var(--ar-panel)!important;border:1px solid var(--ar-line)!important;box-shadow:none!important;}
-.ba .hello::after{display:none!important;}
-.ba .contbtn,.ba .bbtn,.ba .fb-cta{border-radius:0!important;clip-path:var(--ar-cut);
+html:not([data-theme="light"]) .ba .hello::after{display:none!important;}
+html:not([data-theme="light"]) .ba .contbtn, html:not([data-theme="light"]) .ba .bbtn, html:not([data-theme="light"]) .ba .fb-cta{border-radius:0!important;clip-path:var(--ar-cut);
   font-family:var(--ar-display)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.06em;box-shadow:none!important;}
-.ba .contbtn:hover,.ba .bbtn:hover,.ba .fb-cta:hover{transform:none!important;filter:brightness(1.07);}
-.ba .lsearch,.ba .lsearch input{border-radius:2px!important;}
-.ba .bdg,.ba .litebadge,.ba .badge-soon{border-radius:2px!important;}
+html:not([data-theme="light"]) .ba .contbtn:hover, html:not([data-theme="light"]) .ba .bbtn:hover, html:not([data-theme="light"]) .ba .fb-cta:hover{transform:none!important;filter:brightness(1.07);}
+html:not([data-theme="light"]) .ba .lsearch, html:not([data-theme="light"]) .ba .lsearch input{border-radius:2px!important;}
+html:not([data-theme="light"]) .ba .bdg, html:not([data-theme="light"]) .ba .litebadge, html:not([data-theme="light"]) .ba .badge-soon{border-radius:2px!important;}
 /* D4b: ba kick badge -> kicker, go buttony cut */
-.ba .kick{border-radius:0!important;background:transparent!important;border:none!important;
+html:not([data-theme="light"]) .ba .kick{border-radius:0!important;background:transparent!important;border:none!important;
   padding:0 0 0 26px!important;position:relative;font-family:var(--ar-display);letter-spacing:.22em!important;}
-.ba .kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
-.ba .kick .dot{display:none!important;}
-.card .go{border-radius:0!important;clip-path:var(--ar-cut);font-family:var(--ar-display)!important;
+html:not([data-theme="light"]) .ba .kick::before{content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--ar-gold);}
+html:not([data-theme="light"]) .ba .kick .dot{display:none!important;}
+html:not([data-theme="light"]) .card .go{border-radius:0!important;clip-path:var(--ar-cut);font-family:var(--ar-display)!important;
   font-weight:700!important;text-transform:uppercase;letter-spacing:.06em;}
 /* ZV Hana 10.7.: na mobilu hero CTA tlacitka na stred (text je centrovany, flex radek byl vlevo) */
 @media (max-width:991.98px){
-  .hero .d-flex.flex-wrap{justify-content:center;}
+  html:not([data-theme="light"]) .hero .d-flex.flex-wrap{justify-content:center;}
 }
 
 /* ZV Martin 10.7.: velka clenska CTA (Pokracovat, bonusy, free banner, nastroje) byla
    v plnem gradientu prilis syta a spatne citelna -> kremova zlata (svetly vrch prevazuje) */
-.ba .contbtn,.ba .bbtn,.ba .fb-cta,.ba .btn,.card .go{
+html:not([data-theme="light"]) .ba .contbtn, html:not([data-theme="light"]) .ba .bbtn, html:not([data-theme="light"]) .ba .fb-cta, html:not([data-theme="light"]) .ba .btn, html:not([data-theme="light"]) .card .go{
   background:linear-gradient(160deg,#FAE7A9,#F6CD63 60%,#F2C24E)!important;color:#161616!important;}
-.ba .contbtn:hover,.ba .bbtn:hover,.ba .fb-cta:hover,.ba .btn:hover,.card .go:hover{filter:brightness(1.04)!important;}
+html:not([data-theme="light"]) .ba .contbtn:hover, html:not([data-theme="light"]) .ba .bbtn:hover, html:not([data-theme="light"]) .ba .fb-cta:hover, html:not([data-theme="light"]) .ba .btn:hover, html:not([data-theme="light"]) .card .go:hover{filter:brightness(1.04)!important;}

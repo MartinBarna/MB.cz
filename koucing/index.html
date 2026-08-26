@@ -2,6 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
+    <script src="/assets/theme-boot.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online koučink na míru: vedení každý týden | Martin Barna</title>
     <meta name="description" content="Online výživový a fitness koučink na míru. Čísla spočítaná za tebe, jídlo které tě baví a týdenní kontroly s úpravou plánu. Od roku 2013, 600+ klientů, bez jojo efektu.">
@@ -67,6 +68,12 @@
     </script>
     <style>
         :root { --acc:#EBB12C; --acc-l:#F6CD63; --txt:#f0eadf; --mut:#aeb4ba; --warm:#cabfb1; }
+        html[data-theme="light"] {
+          --txt:var(--mb-text,#161310); --mut:var(--mb-muted,#5C564C); --warm:var(--bd-muted2,#3F3A34);
+          color-scheme:light;
+        }
+        html[data-theme="light"] body { background:var(--mb-bg,#F7F3EB); }
+        html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 { color:var(--mb-text,#161310); }
         * { box-sizing:border-box; }
         html { scroll-behavior:smooth; }
         body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--txt); background:linear-gradient(180deg,#15171a 0%,#0f1113 100%); line-height:1.6; }
@@ -213,7 +220,8 @@
         }
         @media (max-width: 520px) { .g4 { grid-template-columns:1fr; } .sec { padding:3.2rem 0; } }
     </style>
-    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r2">
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r3">
+    <link rel="stylesheet" href="/assets/theme-light.css?v=l1">
 </head>
 <body>
 
@@ -491,6 +499,6 @@
 </script>
 <script defer src="/assets/analytics.js?v=g12"></script>
 <script defer src="/assets/lead-popup.js?v=r2"></script>
-<script defer src="/assets/scroll-top.js?v=g8"></script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
+<script defer src="/assets/scroll-top.js?v=g9"></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a7"><link rel="stylesheet" href="/assets/theme-light.css?v=l1"></body>
 </html>
