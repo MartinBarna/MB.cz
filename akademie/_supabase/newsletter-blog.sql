@@ -79,10 +79,10 @@ language sql stable security definer set search_path to 'public' as $fn$
   from public.leads l
   where l.status = 'active'
     and l.consent                                        -- ⭐ souhlas výslovně, ne implicitně
-    -- ⭐ ŠÉFOVO ROZHODNUTÍ: kdo je v běžící trati, dostane newsletter až po jejím dojetí.
-    -- ⚠️ Změřeno 27. 8. 2026: tahle jediná podmínka srazí publikum z 832 na 61 lidí.
-    --    Vypnout ji smí jen Martin; varianta bez ní je popsaná v reportu.
-    and l.next_send_at is null
+    -- ⭐ ŠIROKÁ VARIANTA dle Martinova GO 27. 8. 2026 („Test mail ok a go" na doporučení
+    --    z nástěnky): newsletter jde všem se souhlasem, úzká podmínka `next_send_at is null`
+    --    (jen 61 lidí kvůli řetězení tratí) je ZRUŠENÁ. Ochranu dělá podmínka níž:
+    --    nikdo nedostane dva maily v jednom dni. Takhle to 27. 8. běží i v ŽIVÉ DB.
     -- ⭐ rodina má trvalý free a do prodejních vln nejde (mb-rodina-trvaly-free-nemailovat)
     and lower(l.email) not in ('ivanabarnova@seznam.cz','barnamaro@gmail.com','barnaxxx@seznam.cz')
     and lower(l.email) not like 'fitness.barna%'          -- ⭐ Martinovy testovací adresy
