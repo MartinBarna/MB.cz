@@ -179,9 +179,186 @@ function dodrzUvozovky(s) {
 const NADPIS = (t) => `<span style='font-size:19px;font-weight:800;color:#EBB12C'>${t}</span>`;
 const PODNADPIS = (t) => `<span style='font-size:16px;font-weight:800;color:#F0EADF'>${t}</span>`;
 
+/* ---------- PRODUKTOVÁ CTA (nahrazují magnety zdarma) ---------- */
+
+// ⛔ ROZHODNUTÍ MARTIN 27. 8. 2026: newsletter jde lidem, kteří kontakt UŽ dali,
+// většina právě výměnou za plány zdarma (/makro-plan/, /forma-zpet/). Nabízet jim
+// týž magnet podruhé je promarněný mail. CTA boxy z článku se proto NEPŘEBÍRAJÍ
+// a nahrazuje je jedna prodejní nabídka v půlce a jedna na konci.
+//
+// ⛔ CO SE ZAHAZUJE: celý `div.cta-box` (btn i doprovodné "je zdarma" odstavce)
+// a navíc KAŽDÝ odstavec nebo odrážka s odkazem na magnet. Šest článků fronty má
+// magnet vepsaný přímo do věty ("ženy tady, muži tady"), takže odstranit jen box
+// nestačí a pouhé rozbalení odkazu by po sobě nechalo nesmyslnou větu.
+const MAGNET = /(makro-plan|forma-zpet|plan-zeny|plan-muzi|plan-zdarma|\/kviz\/)/i;
+
+// ⛔ CENY V TEXTU: jen u videokurzu (800 Kč, změřeno na živé stránce 27. 8. 2026),
+// tam je to v mailech zavedené. Appka se popisuje jako "Basic, nejlevnější placený
+// plán" BEZ čísla: ceník se mění a mailové šablony jsou jediné místo, kde cena
+// visí natvrdo (viz tvujcoach-cenik-zmena-checklist). Konzultace ani koučink
+// cenu v mailu nemají vůbec.
+//
+// ⛔ RODNĚ NEUTRÁLNÍ TEXT: `drip-send` sice umí gender segmenty, ale token [a]
+// kontroly níž zabíjejí, takže se tu nesmí objevit minulý čas ani rodové koncovky.
+const NABIDKY = {
+  appka: {
+    popis: 'APPKA (Tvůj Coach, Basic)',
+    url: 'https://tvujcoach.cz/?plan=basic',
+    hlavni: {
+      p: 'Tohle za tebe spočítá appka <strong>Tvůj Coach</strong>. Zapíšeš jídlo, ona sečte den a po týdnu ti sama řekne, jestli má cíl zůstat, nebo se posunout. Zápis jídla i tréninku je zdarma a bez karty, týdenní přepočet cílů a oba generátory patří k Basicu, nejlevnějšímu placenému plánu.',
+      btn: 'Vyzkoušet Tvůj Coach',
+    },
+    zaver: {
+      p: 'A jestli si tohle chceš hlídat v číslech místo od oka, appka <strong>Tvůj Coach</strong> ti den sečte za pár vteřin. Začít můžeš zdarma a bez zadávání karty.',
+      btn: 'Otevřít appku',
+    },
+  },
+  videokurz: {
+    popis: 'VIDEOKURZ (800 Kč jednorázově)',
+    url: 'https://martinbarna.cz/videokurz',
+    hlavni: {
+      p: 'Jestli tohle chceš pochopit celé, a ne po kouskách, natočil jsem o tom <strong>videokurz výživy</strong>. 182 videí od kalorií a maker až po nákup a vaření. Jednorázově 800 Kč a zůstane ti napořád.',
+      btn: 'Prohlédnout videokurz',
+    },
+    zaver: {
+      p: 'Celý systém, ze kterého tenhle článek vychází, mám natočený ve <strong>videokurzu výživy</strong>. 182 videí, 800 Kč jednorázově, přístup napořád.',
+      btn: 'Mrknout na videokurz',
+    },
+  },
+  koucink: {
+    popis: 'KOUČINK 1:1',
+    url: 'https://martinbarna.cz/koucing/',
+    hlavni: {
+      p: 'Tohle se nejlíp ladí s někým, kdo ti na čísla kouká každý týden. Přesně to dělám v <strong>individuálním koučinku</strong>: plán na míru, pravidelné check-iny a úpravy podle toho, jak tělo reaguje.',
+      btn: 'Jak koučink funguje',
+    },
+    zaver: {
+      p: 'A jestli to nechceš řešit na vlastní pěst, vedu lidi v <strong>individuálním koučinku</strong> přesně přes tyhle situace.',
+      btn: 'Mrknout na koučink',
+    },
+  },
+  konzultace: {
+    popis: 'KONZULTACE (jednorázová)',
+    url: 'https://martinbarna.cz/konzultace/',
+    hlavni: {
+      p: 'Jestli tohle chceš probrat na tvoje čísla, a ne obecně, je na to <strong>jednorázová konzultace</strong>. Projdeme spolu jídelníček, trénink i to, co ti vychází z odběrů, a odcházíš s konkrétním plánem.',
+      btn: 'Objednat konzultaci',
+    },
+    zaver: {
+      p: 'A když to chceš probrat na tvoje konkrétní čísla, stačí hodina. Na <strong>konzultaci</strong> projdeme, co máš, a odcházíš s plánem, co dělat dál.',
+      btn: 'Prohlédnout konzultaci',
+    },
+  },
+  academy: {
+    popis: 'BARNA ACADEMY (pro trenéry)',
+    url: 'https://martinbarna.cz/akademie/',
+    hlavni: {
+      p: 'Jestli tohle učíš svoje klienty, mám to celé rozebrané v <strong>Barna Academy</strong>: 256 lekcí ve 24 modulech, generátory jídelníčků a tréninků pod tvou značkou a certifikace.',
+      btn: 'Co všechno Academy obsahuje',
+    },
+    zaver: {
+      p: 'Trenérům tohle rozebírám do hloubky v <strong>Barna Academy</strong>.',
+      btn: 'Prohlédnout Academy',
+    },
+  },
+};
+
+// MAPOVÁNÍ TÉMA → NABÍDKA pro 25 článků fronty (`newsletter_fronta`, step 0 až 24).
+// Klíč je slug, hodnota [hlavní CTA v půlce, CTA na konci]. Druhá nabídka smí být
+// jiná, ale TŘETÍ se nepřidává: víc než dvě nabídky v jednom mailu si konkurují.
+//
+// Pravidla, podle kterých je to poskládané (a podle kterých se doplňuje nový článek):
+//   kalorie, deficit, jídelníček, zapisování, potraviny  → appka
+//   mýty, "co říká věda", komplexní pochopení výživy      → videokurz
+//   hubnutí po 40/50, přechod, dlouhodobá změna, příběhy  → koučink (alternativa konzultace)
+//   zdravotní téma, kde je potřeba individuální posouzení → konzultace
+//   téma mířené na trenéry                                → academy
+const MAPOVANI = {
+  'hubnuti-po-40':                         ['koucink', 'konzultace'],
+  'jak-zacit-hubnout':                     ['appka', 'videokurz'],
+  'jak-zhubnout-v-obliceji':               ['videokurz', 'appka'],
+  'kaloricky-deficit-kolik-jist':          ['appka', 'videokurz'],
+  'vyhrez-plotenky':                       ['koucink', 'konzultace'],
+  'elonga-hrv-veda-nebo-marketing':        ['videokurz', 'appka'],
+  'vikendove-prejidani':                   ['appka', 'videokurz'],
+  'hubnuti-a-vek-mozku':                   ['videokurz', 'koucink'],
+  'kolik-spanku-delka-pravidelnost':       ['videokurz', 'koucink'],
+  'cholesterol-co-snizuje-ldl':            ['videokurz', 'konzultace'],
+  'inzulinova-rezistence-prediabetes':     ['konzultace', 'videokurz'],
+  'menopauza-a-pribyvani-vahy':            ['koucink', 'konzultace'],
+  'sarkopenie-svaly-po-50':                ['koucink', 'appka'],
+  'vitamin-d-na-co-ma-smysl':              ['videokurz', 'appka'],
+  'kreatin-pro-zeny':                      ['videokurz', 'appka'],
+  'prerusovany-pust-co-rikaji-studie':     ['videokurz', 'appka'],
+  'rostlinne-vs-zivocisne-bilkoviny-svaly': ['appka', 'videokurz'],
+  'co-jist-pri-hubnuti':                   ['appka', 'videokurz'],
+  'injekce-na-hubnuti-ozempic':            ['konzultace', 'videokurz'],
+  'jak-rychle-zhubnout':                   ['koucink', 'appka'],
+  'jak-zhubnout-bricho':                   ['appka', 'videokurz'],
+  'silovy-trenink-pro-zeny':               ['appka', 'koucink'],
+  'vzorovy-jidelnicek-na-hubnuti':         ['appka', 'videokurz'],
+  'jist-vecer-tloustne':                   ['videokurz', 'appka'],
+  'silovy-trenink-zlepsuje-mobilitu':      ['appka', 'videokurz'],
+};
+
+// Fallback pro článek, který v tabulce ještě není. Pořadí ROZHODUJE, bere se
+// první shoda; proto jdou úzká témata (trenéři, přechod) před širokými (kalorie).
+const FALLBACK = [
+  [/trener|trenér|klient|akademi|certifikac|podnika/i, ['academy', 'videokurz']],
+  [/po-40|po-50|menopauz|prechod|přechod|sarkopeni|hormon/i, ['koucink', 'konzultace']],
+  [/lek|lék|ozempic|injekc|diabet|inzulin|cholesterol|stitna|štítná|krevni|krevní/i, ['konzultace', 'videokurz']],
+  [/mytus|mýtus|veda|věda|studie|pust|půst|detox|zazrac|zázrač/i, ['videokurz', 'appka']],
+  [/kalori|deficit|makra|jidelnicek|jídelníček|potravin|zapisov|hubnut|trenink|trénink/i, ['appka', 'videokurz']],
+];
+
+// Basic je hlavní prodávaný plán, takže když nic nesedí, jde se na appku.
+const VYCHOZI = ['appka', 'videokurz'];
+
+function vyberNabidky(slug, subject) {
+  if (MAPOVANI[slug]) return { volba: MAPOVANI[slug], zdroj: 'tabulka' };
+  const text = slug + ' ' + (subject || '');
+  for (const [re, volba] of FALLBACK) if (re.test(text)) return { volba, zdroj: 'fallback' };
+  return { volba: VYCHOZI, zdroj: 'vychozi' };
+}
+
+// UTM si u CTA lepíme sami: `sUtm` cizí doménu záměrně nešahá, a appka běží
+// na tvujcoach.cz. Bez toho by proklik z newsletteru spadl do organiky.
+// ⛔ NEPOUŽÍVAT https://martinbarna.cz/go/tc/: ten přesměrovač si utm_source
+// PŘEPÍŠE na youtube/pin-tc (viz go/tc/index.html), takže by newsletter měřil cizí kanál.
+function ctaBloky(klic, kde, slug, utm) {
+  const n = NABIDKY[klic];
+  if (!n) throw new Error('neznama nabidka: ' + klic);
+  const t = n[kde];
+  let url = n.url;
+  if (utm) {
+    const spoj = url.includes('?') ? '&' : '?';
+    url += spoj + 'utm_source=newsletter&utm_medium=email&utm_campaign=clanek-' + slug;
+  }
+  return [{ t: 'p', html: t.p }, { t: 'btn', text: t.btn, href: url }];
+}
+
+// Hlavní CTA patří do půlky článku, ale ne doprostřed myšlenky: hledáme nadpis
+// (h2) nejblíž středu a vkládáme těsně před něj. Bez nadpisu padne přesně doprostřed.
+function vlozHlavniCta(bloky, cta) {
+  if (!bloky.length) return [...cta];
+  const stred = Math.floor(bloky.length / 2);
+  let kam = -1;
+  let nejlepsi = Infinity;
+  for (let i = 1; i < bloky.length; i++) {
+    const b = bloky[i];
+    if (b.t !== 'p' || typeof b.html !== 'string') continue;
+    if (!b.html.startsWith("<span style='font-size:19px")) continue;
+    const d = Math.abs(i - stred);
+    if (d < nejlepsi) { nejlepsi = d; kam = i; }
+  }
+  if (kam < 0) kam = stred;
+  return [...bloky.slice(0, kam), ...cta, ...bloky.slice(kam)];
+}
+
 function naBloky(telolHtml, slug, opts) {
   const bloky = [];
   const obrazky = [];
+  const zahozeno = [];        // co jsme vyhodili, ať je to v souhrnu vidět
   let sekci = 0;
   let utnuto = false;
 
@@ -209,6 +386,9 @@ function naBloky(telolHtml, slug, opts) {
     if (u.tag === 'h3' || u.tag === 'h4') { bloky.push({ t: 'p', html: PODNADPIS(inline(u.html, slug, opts.utm)) }); continue; }
 
     if (u.tag === 'p') {
+      // Odstavec, který láká na magnet zdarma, jde celý pryč. Rozbalit jen odkaz
+      // nejde: zbyla by věta typu "ženy tady, muži tady".
+      if (MAGNET.test(u.html)) { zahozeno.push('odstavec s magnetem: ' + strip(dec(u.html)).slice(0, 70)); continue; }
       if (trida.includes('faq-q')) { bloky.push({ t: 'p', html: PODNADPIS(inline(u.html, slug, opts.utm)) }); continue; }
       const h = inline(u.html, slug, opts.utm);
       if (h) bloky.push({ t: 'p', html: h });
@@ -216,8 +396,12 @@ function naBloky(telolHtml, slug, opts) {
     }
 
     if (u.tag === 'ul' || u.tag === 'ol') {
-      const items = [...u.html.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)]
-        .map((x) => inline(x[1], slug, opts.utm)).filter(Boolean);
+      const items = [];
+      for (const x of u.html.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)) {
+        if (MAGNET.test(x[1])) { zahozeno.push('odrážka s magnetem: ' + strip(dec(x[1])).slice(0, 70)); continue; }
+        const h = inline(x[1], slug, opts.utm);
+        if (h) items.push(h);
+      }
       if (items.length) bloky.push({ t: 'bullets', items });
       continue;
     }
@@ -239,18 +423,14 @@ function naBloky(telolHtml, slug, opts) {
       continue;
     }
 
+    // ⛔ CTA box z článku se do mailu NEPŘEBÍRÁ, ani když nevede na magnet.
+    // Články jich mají dva až šest a mířily na webového návštěvníka, který kontakt
+    // teprve dává. Čtenář newsletteru ho už dal, takže dostane místo nich jednu
+    // prodejní nabídku v půlce a jednu na konci (viz NABIDKY a MAPOVANI nahoře).
     if (u.tag === 'div' && trida.includes('cta-box')) {
-      const nadpis = (u.html.match(/<h3\b[^>]*>([\s\S]*?)<\/h3>/i) || [])[1];
-      if (nadpis) bloky.push({ t: 'p', html: PODNADPIS(esc(dec(strip(nadpis)))) });
-      for (const p of u.html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)) {
-        const h = inline(p[1], slug, opts.utm);
-        if (h) bloky.push({ t: 'p', html: h });
-      }
-      for (const a of u.html.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/gi)) {
-        const href = (a[0].match(/href="([^"]*)"/) || [])[1];
-        if (!href) continue;
-        bloky.push({ t: 'btn', text: strip(dec(a[0])), href: sUtm(absolutni(href, slug), slug, opts.utm) });
-      }
+      const nadpis = strip(dec((u.html.match(/<h3\b[^>]*>([\s\S]*?)<\/h3>/i) || [, ''])[1]));
+      const cile = [...u.html.matchAll(/href="([^"]*)"/gi)].map((x) => x[1]).join(' ');
+      zahozeno.push('cta-box: ' + (nadpis || '(bez nadpisu)').slice(0, 50) + ' → ' + cile.slice(0, 90));
       continue;
     }
   }
@@ -267,7 +447,7 @@ function naBloky(telolHtml, slug, opts) {
     for (const o of obrazky) bloky.push({ t: 'img', src: o.src, alt: o.alt || 'Ilustrace k článku' });
   }
 
-  return { bloky, obrazky, utnuto };
+  return { bloky, obrazky, utnuto, zahozeno };
 }
 
 // Konec značky se stejným jménem, s ohledem na vnoření.
@@ -301,6 +481,10 @@ function ocas(slug, meta, dalsi, opts) {
     b.push({ t: 'p', html: PODNADPIS('Další ke čtení') });
     b.push({ t: 'bullets', items: dalsi.map((d) => `<a href='${sUtm(ORIGIN + '/clanky/' + d.slug + '.html', slug, opts.utm)}' style='color:#F6CD63'>${esc(d.titulek)}</a>`) });
   }
+  // Závěrečná nabídka jde AŽ ZA odkazy na další články, ať mail končí nabídkou
+  // a ne rozcestníkem. Tlačítko "Otevřít článek" se jako nabídka nepočítá,
+  // vede na týž text, který člověk zrovna čte.
+  b.push(...ctaBloky(meta.zaver, 'zaver', slug, opts.utm));
   b.push({ t: 'ps', html: 'Odepsat na tenhle mail můžeš, čtu to já.' });
   return b;
 }
@@ -340,6 +524,19 @@ function kontroly(subject, preheader, bloky) {
   for (const m of JSON.stringify(bloky).matchAll(/href=\\?'([^']*)'/g)) {
     if (!m[1].startsWith('https://')) chyby.push('relativni odkaz v tele: ' + m[1]);
   }
+
+  // ⛔ MAGNET ZDARMA V NEWSLETTERU = VADA, ne varování. Adresát kontakt už dal,
+  // druhá nabídka téhož plánu je promarněný mail (Martin 27. 8. 2026).
+  const cely = JSON.stringify(bloky);
+  if (MAGNET.test(cely)) {
+    const kde = (cely.match(MAGNET) || [])[0];
+    chyby.push('odkaz na magnet zdarma zustal v mailu: ' + kde);
+  }
+  // Nabídky se počítají podle tlačítek mimo odkaz na samotný článek.
+  const nabidkovych = bloky.filter((b) => b.t === 'btn' && !b.href.includes('/clanky/')).length;
+  if (nabidkovych > 2) chyby.push('mail ma ' + nabidkovych + ' prodejnich tlacitek, povolene jsou nejvyse 2');
+  if (nabidkovych < 2) varovani.push('mail ma jen ' + nabidkovych + ' prodejni tlacitko');
+
   if (subject.length > 78) varovani.push('predmet ma ' + subject.length + ' znaku, v seznamu posty se urizne');
   if (!bloky.some((b) => b.t === 'btn')) varovani.push('mail nema zadne tlacitko');
   return { chyby, varovani };
@@ -426,13 +623,17 @@ function main() {
   const preheader = dec(strip(ld.description || popis || '')).slice(0, 140);
 
   const opts = { zkratit: a.zkratit, obrazky: a.obrazky, utm: a.utm };
-  const { bloky, obrazky, utnuto } = naBloky(telo(html), slug, opts);
+  const { bloky, obrazky, utnuto, zahozeno } = naBloky(telo(html), slug, opts);
   const dalsi = a.dalsi
     ? a.dalsi.map((s) => ({ slug: s, titulek: s.split('-').join(' ') }))
     : dalsiZIndexu(slug, 3);
   const maRozcestnik = bloky.some((b) => b.t === 'p' && typeof b.html === 'string'
     && /Mohlo by tě zajímat|Související články|Další ke čtení/.test(b.html));
-  const vse = [...bloky, ...ocas(slug, { utnuto, maRozcestnik }, dalsi, opts)];
+
+  const { volba, zdroj } = vyberNabidky(slug, subject);
+  const [hlavni, zaver] = volba;
+  const sCtou = vlozHlavniCta(bloky, ctaBloky(hlavni, 'hlavni', slug, opts.utm));
+  const vse = [...sCtou, ...ocas(slug, { utnuto, maRozcestnik, zaver }, dalsi, opts)];
 
   const { chyby, varovani } = kontroly(subject, preheader, vse);
   if (chyby.length) {
@@ -451,6 +652,7 @@ function main() {
     datePublished: ld.datePublished || null,
     subject,
     preheader,
+    nabidka: { hlavni, zaver, zdroj },
     blocks: vse,
   };
   const fBlocks = path.join(out, slug + '.blocks.json');
@@ -467,6 +669,10 @@ function main() {
   console.log('článek:   ' + slug + (ld.datePublished ? '  (vydáno ' + ld.datePublished + ')' : ''));
   console.log('předmět:  ' + subject + '  [' + subject.length + ' znaků]');
   console.log('preheader:' + preheader);
+  console.log('nabídky:  půlka = ' + NABIDKY[hlavni].popis + '   konec = ' + NABIDKY[zaver].popis
+    + '  (' + zdroj + ')');
+  console.log('zahozeno: ' + zahozeno.length + ' bloků z článku');
+  for (const z of zahozeno) console.log('          - ' + z);
   console.log('bloků:    ' + vse.length + '  (' + ['p', 'ps', 'bullets', 'btn', 'img'].map((t) => t + '=' + vse.filter((b) => b.t === t).length).join(' ') + ')');
   console.log('text:     ' + znaku + ' znaků' + (utnuto ? '  ⚠️ UTNUTO na ' + a.zkratit + ' sekcích' : ''));
   console.log('obrázků v článku: ' + obrazky.length + (a.obrazky ? ' (VLOŽENY)' : ' (vynechány)'));
