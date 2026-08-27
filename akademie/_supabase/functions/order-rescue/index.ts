@@ -4,10 +4,16 @@
 // Pojistky: 1 pripominka na objednavku (reminded_at), zadny mail kdyz uz ma entitlement,
 // max 10 mailu na beh. Auth: x-drip-secret. TEST: {test_email, product, name}.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// VLASTNI mereni otevreni a prokliku (protejsky: edge funkce mail-pixel a mail-klik).
+// ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a milestones/stopa.ts;
+//    hlida to test `drip-send/stopa.test.ts`.
+import { ostopkuj } from "./stopa.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+// ⛔ Secret na podpis mericich odkazu. Jen z env. Kdyz chybi, mail odejde nezmereny.
+const MAIL_TRACK_SECRET = Deno.env.get("MAIL_TRACK_SECRET") ?? "";
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const MAX_PER_RUN = 10;
 
@@ -16,7 +22,7 @@ const json = (b: unknown, status = 200) =>
 const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 
 // --- mini render (kompatibilni s email_templates blocks; gender = muzsky default) ---
-type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string };
+type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string } | { t: "img"; src: string; alt: string };
 function gender(s: string): string {
   let out = "", i = 0;
   while (true) {
@@ -44,13 +50,32 @@ function merge(s: string, v: Record<string, string>): string {
   return out;
 }
 const fill = (s: string, v: Record<string, string>) => merge(gender(s), v);
+// HTML atributy jsou tady v JEDNODUCHYCH uvozovkach, takze se escapuje i apostrof,
+// jinak by text z atributu vyskocil. Shodne s attr() v drip-send.
+const attr = (s: string) =>
+  s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;")
+    .split('"').join("&quot;").split("'").join("&#39;");
 function renderBlocks(blocks: Block[], v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === "p") return `<p style='margin:0 0 14px'>${fill(b.html, v)}</p>`;
     if (b.t === "ps") return `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, v)}</p>`;
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` + b.items.map((li) => `<li style='margin:0 0 9px'>${fill(li, v)}</li>`).join("") + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
+    // Vsechny styly inline, mailove klienty externi CSS ignoruji. Drz 1:1 s drip-send.
+    // ⛔ Tratim rescue-* dnes img blok NIKDO nedal, ale az ho tam nekdo da, bez teto
+    //    vetve by zachranny mail k nedokoncene objednavce SPADL na TypeError (img propadne
+    //    do vetve pro tlacitko a cte b.href a b.text, ktere obrazek nema).
+    if (b.t === "img")
+      return `<img src='${attr(fill(b.src, v))}' alt='${attr(fill(b.alt, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
+    if (b.t === "btn")
+      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // ⛔ VYSLOVNY pripad pro neznamy typ. Driv tady byl HOLY return s tlacitkem, takze
+    //    kazdy typ, ktery renderer nezna, se tise zpracoval jako tlacitko a spadl na tom,
+    //    ze nema href ani text. Radsi chyba se JMENEM typu: zachranny mail k objednavce
+    //    s tise vynechanym blokem muze prijit bez odkazu na platbu, a to je horsi
+    //    nez mail, ktery nedojde a je videt v chybach behu.
+    throw new Error("neznamy_typ_bloku:" + (b as { t: string }).t);
   }).join("\n");
 }
 function wrap(preheader: string, body: string): string {
@@ -160,8 +185,8 @@ Deno.serve(async (req) => {
 
   const getTpl = async (product: string) => {
     const track = product === "academy" ? "rescue-academy" : "rescue-videokurz";
-    const { data } = await admin.from("email_templates").select("subject,preheader,blocks").eq("track", track).eq("step", 0).maybeSingle();
-    return data as { subject: string; preheader: string; blocks: Block[] } | null;
+    const { data } = await admin.from("email_templates").select("subject,preheader,blocks,key").eq("track", track).eq("step", 0).maybeSingle();
+    return data ? { ...(data as { subject: string; preheader: string; blocks: Block[]; key: string }), track } : null;
   };
 
   // TEST: nahled Martinovi, nic nezapisovat
@@ -169,6 +194,8 @@ Deno.serve(async (req) => {
     const tpl = await getTpl(String(body.product || "videokurz"));
     if (!tpl) return json({ error: "no_template" }, 400);
     const v = vars(String(body.name ?? ""));
+    // ⛔ TEST rezim se ZAMERNE nemeri: nahled Martinovi by vyrobil otevreni a proklik
+    //    bez odpovidajiciho odeslani a nafoukl by statistiku trate.
     await send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v)));
     return json({ ok: true, mode: "test" });
   }
@@ -202,8 +229,26 @@ Deno.serve(async (req) => {
     if (!tpl) { skipped++; continue; }
     try {
       const v = vars(String(p.name ?? ""));
-      await send(email, fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v)));
+      // MERENI: zachranny mail nese odkaz na PLATBU, takze proklik je tady nejcennejsi
+      // cislo v celem mailingu. Lead nemusi existovat (objednavka chodi i od cloveka, ktery
+      // nikdy nebyl v `leads`); pak se zmeri trat a krok, jen to nejde pripsat osobe.
+      const { data: ld } = await admin.from("leads").select("id").eq("email", email).maybeSingle();
+      const leadId = ld?.id ? String(ld.id) : null;
+      const holeHtml = wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v));
+      const html = await ostopkuj(holeHtml, { track: tpl.track, step: 0, key: String(tpl.key ?? ""), lead_id: leadId }, MAIL_TRACK_SECRET, SUPABASE_URL);
+      await send(email, fill(tpl.subject, v), html);
       await admin.from("pending_orders").update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);
+      // ⛔ Jmenovatel pro open a click rate. `order-rescue` do `email_events` historicky
+      //    nezapisovala nic, takze bez tohohle by otevrenost vychazela proti nule odeslanych.
+      //    Typ je `px_odeslano`, ne `sent`, aby se nezmenila cisla v `email_summary`,
+      //    `daily-digest` ani denni strop v `drip-send`.
+      // ⚠️ Chyba se jen loguje: `reminded_at` uz je zapsane a vyjimka by z uspesne
+      //    odeslaneho mailu udelala chybu v `results`.
+      const { error: evErr } = await admin.from("email_events").insert({
+        lead_id: leadId, step: 0, type: "px_odeslano",
+        detail: { track: tpl.track, key: String(tpl.key ?? ""), fn: "order-rescue" },
+      });
+      if (evErr) console.error("[order-rescue] zapis px_odeslano selhal: " + evErr.message);
       sent++; results.push({ order: p.order_id, product: p.product });
     } catch (e) {
       results.push({ order: p.order_id, error: String(e).slice(0, 100) });

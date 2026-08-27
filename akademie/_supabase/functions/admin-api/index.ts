@@ -712,6 +712,141 @@ Deno.serve(async (req) => {
       return json({ ok: true, rows, total: count ?? rows.length, offset, limit });
     }
 
+    // 📈 VLASTNI MERENI MAILU (pixel + presmerovani prokliku).
+    // Zdroj: udalosti `px_odeslano`, `px_open`, `px_click` z `email_events`, ktere zapisuji
+    // edge funkce `mail-pixel` a `mail-klik`. ⛔ Se starymi typy `open`/`click` (Resend,
+    // 22.–27. 7. 2026, rozbite okno) se to ZAMERNE nemicha ani se nezobrazuje dohromady.
+    //
+    // ⚠️ CO TA CISLA ZNAMENAJI (a proc UI musi psat varovani):
+    //  - OTEVRENI je horni odhad. Gmail i Apple si mericí obrazek casto stahnou samy jeste
+    //    pred clovekem. Presne proto vychazel Resendu open rate 95 az 100 %.
+    //  - OTEVRENI je zaroven dolni odhad opakovani: Gmail si obrazek cachuje, takze druhe
+    //    a dalsi otevreni tehoz mailu se uz nezmeri vubec. Merime PRVNI otevreni, ne pocet.
+    //  - PROKLIK je jediny signal, kde clovek neco udelal. I ten ale delaji antispamove
+    //    skenery, proto filtr nize.
+    //  ⇒ Verdikt o tom, jestli nabidka prodava, se stavi na `entitlements`, ne na tomhle.
+    if (action === "mail_mereni") {
+      const dnu = Math.min(180, Math.max(1, Number(body.dnu) || 30));
+      const od = new Date(Date.now() - dnu * 86400000).toISOString();
+      const evs = await fetchAllRows((f, t) =>
+        admin.from("email_events").select("lead_id,step,type,detail,created_at")
+          .gte("created_at", od)
+          .in("type", ["sent", "oneoff", "px_odeslano", "px_open", "px_click"])
+          .order("id").range(f, t)
+      );
+
+      type Radek = {
+        track: string; step: number; key: string;
+        odeslano: number; otevreno: number; otevreno_stroj: number;
+        klikli: number; klikli_stroj: number; bez_podpisu: number;
+      };
+      const tab = new Map<string, Radek>();
+      const klic = (track: string, step: number) => track + "|" + step;
+      const radek = (track: string, step: number): Radek => {
+        const k = klic(track, step);
+        if (!tab.has(k)) {
+          tab.set(k, { track, step, key: "", odeslano: 0, otevreno: 0, otevreno_stroj: 0, klikli: 0, klikli_stroj: 0, bez_podpisu: 0 });
+        }
+        return tab.get(k)!;
+      };
+      // Prokliky se sbiraji po osobach a az potom vyhodnocuji, protoze skener se pozna
+      // az z CELE skupiny udalosti jednoho cloveka nad jednim mailem, ne z jedne radky.
+      type Klik = { cas: number; url: string; klient: string; podpis: string };
+      const klikyOsoby = new Map<string, Klik[]>();
+
+      let poslednePxOdeslano = "", posledneSent = "", poslednePxUdalost = "";
+      for (const e of evs) {
+        const det = (e.detail && typeof e.detail === "object") ? (e.detail as Record<string, unknown>) : {};
+        const track = String(det.track ?? "");
+        const step = Number.isFinite(Number(e.step)) ? Number(e.step) : -1;
+        const r = radek(track, step);
+        if (!r.key && det.key) r.key = String(det.key);
+        const cas = String(e.created_at ?? "");
+        if (e.type === "sent" || e.type === "oneoff") {
+          // ⛔ `oneoff` je plnohodnotny odeslany mail (830 kusu od 21. 8. 2026), jen se
+          //    posila mimo frontu. Bez nej by jmenovatel chybel a otevrenost by vysla nesmyslne.
+          r.odeslano++;
+          if (cas > posledneSent) posledneSent = cas;
+        } else if (e.type === "px_odeslano") {
+          // `milestones` a `order-rescue` do `email_events` typ `sent` nezapisuji vubec,
+          // maji vlastni tabulky. Tohle je jejich jmenovatel.
+          r.odeslano++;
+          if (cas > poslednePxOdeslano) poslednePxOdeslano = cas;
+          if (cas > poslednePxUdalost) poslednePxUdalost = cas;
+        } else if (e.type === "px_open") {
+          r.otevreno++;
+          const klient = String(det.klient ?? "");
+          if (klient && klient !== "jiny") r.otevreno_stroj++;
+          if (cas > poslednePxUdalost) poslednePxUdalost = cas;
+        } else if (e.type === "px_click") {
+          if (String(det.podpis ?? "") !== "ok") r.bez_podpisu++;
+          const kdo = String(e.lead_id ?? "anonym") + "|" + klic(track, step);
+          if (!klikyOsoby.has(kdo)) klikyOsoby.set(kdo, []);
+          klikyOsoby.get(kdo)!.push({
+            cas: new Date(cas).getTime(),
+            url: String(det.url ?? ""),
+            klient: String(det.klient ?? ""),
+            podpis: String(det.podpis ?? ""),
+          });
+          if (cas > poslednePxUdalost) poslednePxUdalost = cas;
+        }
+      }
+
+      // FILTR SKENERU. Poradi je zamerne: nejdriv DEDUP, teprve pak rozhodnuti o stroji.
+      // ⚠️ Dvojice prokliku sama o sobe stroj NEDOKAZUJE (26. 7. 2026: dvojici mel uplne
+      //    kazdy klik vcetne neviného stazeni PDF, protoze webhook ukladal jednu udalost
+      //    dvakrat). Proto je dvouvterinove okno jen dedup, ne dukaz.
+      // Za stroj se povazuje ten, kdo behem 10 s otevre DVE RUZNE adresy z tehoz mailu,
+      // nebo koho hlasi user-agent jako proxy/bota.
+      for (const [kdo, seznam] of klikyOsoby) {
+        const track = kdo.split("|")[1] ?? "";
+        const step = Number(kdo.split("|")[2] ?? -1);
+        const r = radek(track, step);
+        seznam.sort((a, b) => a.cas - b.cas);
+        const ponechane: Klik[] = [];
+        for (const k of seznam) {
+          const dvojnik = ponechane.some((p) => p.url === k.url && Math.abs(p.cas - k.cas) < 2000);
+          if (!dvojnik) ponechane.push(k);
+        }
+        const ruzneRychle = ponechane.filter((k) => k.cas - ponechane[0].cas < 10000);
+        const ruznychUrl = new Set(ruzneRychle.map((k) => k.url)).size;
+        const stroj = ruznychUrl >= 2 || ponechane.some((k) => k.klient && k.klient !== "jiny");
+        if (stroj) r.klikli_stroj++;
+        else r.klikli++;
+      }
+
+      const rows = [...tab.values()]
+        .filter((r) => r.odeslano > 0 || r.otevreno > 0 || r.klikli > 0 || r.klikli_stroj > 0)
+        .sort((a, b) => (b.odeslano - a.odeslano) || a.track.localeCompare(b.track) || a.step - b.step);
+
+      // ⭐ POJISTKA PROTI TICHEMU VYPADKU. Presne tohle u Resendu chybelo: tracking byl
+      // pet dni rozbity, udalosti chodily dal a nikdo si nevsiml. Kdyz se za poslednich
+      // 7 dni prokazatelne odesilalo a NEPRISLA ani jedna `px_*` udalost, je to porucha,
+      // ne "nikdo neotevrel". Nejcastejsi priciny: smazany `MAIL_TRACK_SECRET`, nenasazena
+      // funkce `mail-pixel`, nebo zapnuty `archive_bcc` (ten pixel schvalne vypina).
+      const pred7 = new Date(Date.now() - 7 * 86400000).toISOString();
+      const odeslanoTyden = evs.filter((e) =>
+        (e.type === "sent" || e.type === "oneoff" || e.type === "px_odeslano") && String(e.created_at) >= pred7
+      ).length;
+      const pxTyden = evs.filter((e) => String(e.type).startsWith("px_") && String(e.created_at) >= pred7).length;
+      const stav = odeslanoTyden === 0
+        ? "nic_se_neposilalo"
+        : (pxTyden === 0 ? "PODEZRENI_NA_VYPADEK_MERENI" : "ok");
+
+      return json({
+        ok: true,
+        dnu,
+        stav,
+        odeslano_za_tyden: odeslanoTyden,
+        px_udalosti_za_tyden: pxTyden,
+        posledni_sent: posledneSent || null,
+        posledni_px_odeslano: poslednePxOdeslano || null,
+        posledni_px_udalost: poslednePxUdalost || null,
+        rows,
+        varovani: "Otevreni je horni odhad (Gmail a Apple si pixel stahnou samy) a zaroven se nepocitaji opakovana otevreni (Gmail si obrazek cachuje). Proklik je silnejsi signal, ale i ten delaji skenery. Verdikt o penezich stav na entitlements.",
+      });
+    }
+
     if (action === "templates_list") {
       // vsechny sablony pro mapu sekvenci (bez blocks — ty tahne template_get)
       const { data } = await admin.from("email_templates").select("track,step,key,subject,preheader,wait_days,updated_at");

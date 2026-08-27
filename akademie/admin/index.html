@@ -301,6 +301,7 @@
       <div class="traf-links" style="margin:.6rem 0 .2rem;">
         <a href="#" id="seqLink">🗺️ Sekvence &amp; šablony (mapa + editor mailů) →</a>
         <a href="#" id="mlogLink">📧 Odeslané e-maily →</a>
+        <a href="#" id="merLink">📈 Měření mailů (otevření a prokliky) →</a>
       </div>
 
       <div class="traf" id="queue" style="display:none;">
@@ -340,6 +341,7 @@
         <span class="muted" id="count"></span>
         <button class="mlogbtn" id="seqBtn">🗺️ Sekvence &amp; šablony</button>
         <button class="mlogbtn" id="mlogBtn">📧 Odeslané e-maily</button>
+        <button class="mlogbtn" id="merBtn">📈 Měření mailů</button>
       </div>
 
       <div style="overflow-x:auto;">
@@ -442,6 +444,36 @@
       <table><thead><tr><th>Datum</th><th>E-mail</th><th>Který mail</th><th>Stav</th></tr></thead><tbody id="mlogRows"></tbody></table>
     </div>
     <p class="muted" id="mlogFoot" style="margin-top:.8rem;"></p>
+  </div></div>
+
+  <div class="ovl" id="mer"><div class="box">
+    <button class="x" id="merX">×</button>
+    <h2>📈 Měření mailů</h2>
+    <!-- ⛔ Varování NENÍ kosmetika. Otevření je horní odhad (Gmail a Apple si měřicí obrázek
+         stáhnou samy) a zároveň se nepočítají opakovaná otevření (Gmail si obrázek cachuje).
+         Bez téhle věty z toho někdo udělá „maily se čtou z 95 %", což je přesně ten závěr,
+         kvůli kterému se opouštěl Resend tracking. -->
+    <p class="muted" style="margin:.2rem 0 .8rem;line-height:1.5;">
+      <strong>Otevření ber jako horní odhad.</strong> Gmail a Apple si měřicí obrázek často stáhnou
+      samy dřív, než mail někdo otevře, a opakovaná otevření se neměří vůbec (obrázek si Gmail
+      uloží k sobě). <strong>Proklik je silnější signál</strong>, ale i ten dělají antispamové
+      skenery, proto je sloupec „z toho stroje" zvlášť.
+      Verdikt o tom, jestli nabídka prodává, stav na skutečných nákupech, ne na těchhle číslech.
+    </p>
+    <div style="display:flex;gap:8px;margin:.7rem 0;flex-wrap:wrap;align-items:center;">
+      <select id="merDnu" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 13px;color:#fff;font-family:inherit;font-size:.92rem;">
+        <option value="30">Posledních 30 dní</option>
+        <option value="7">Posledních 7 dní</option>
+        <option value="90">Posledních 90 dní</option>
+      </select>
+      <span class="muted" id="merStav"></span>
+    </div>
+    <div style="overflow-x:auto;max-height:56vh;overflow-y:auto;">
+      <table><thead><tr>
+        <th>Sekvence</th><th>Krok</th><th>Odesláno</th><th>Otevřelo</th><th>z toho stroje</th><th>Kliklo lidí</th><th>z toho stroje</th>
+      </tr></thead><tbody id="merRows"></tbody></table>
+    </div>
+    <p class="muted" id="merFoot" style="margin-top:.8rem;"></p>
   </div></div>
 
   <div class="ovl" id="mprev"><div class="box">
@@ -2653,6 +2685,43 @@
     var _tex=$('tpleditX'); if(_tex) _tex.addEventListener('click',function(){ if(confirm('Zavřít editor? Neuložené změny se ztratí.')) $('tpledit').classList.remove('on'); });
     $('seqmap').addEventListener('click',function(e){ if(e.target===$('seqmap')) $('seqmap').classList.remove('on'); });
 
+    // 📈 Měření mailů — vlastní pixel + přesměrování prokliků (akce `mail_mereni`).
+    // ⛔ Nemíchá se se starými typy `open`/`click` z Resendu (22.–27. 7. 2026): tehdy
+    //    tracking vracel 400 na všechny odkazy, takže ta data jsou horší než žádná.
+    function openMailMereni(){
+      $('mer').classList.add('on'); $('merRows').innerHTML=''; $('merFoot').textContent='Načítám…'; $('merStav').textContent='';
+      var dnu=Number($('merDnu').value)||30;
+      api({action:'mail_mereni',dnu:dnu}).then(function(o){
+        if(!(o&&o.j&&o.j.ok)){ $('merFoot').textContent='Přehled se nepodařilo načíst — zkus zavřít a otevřít znovu.'; return; }
+        var d=o.j, rows=d.rows||[];
+        // ⭐ Tichý výpadek měření se musí ozvat sám. Když se posílalo a nepřišla ani jedna
+        //    měřicí událost, je to porucha, ne „nikdo neotevřel". U Resendu přesně tohle
+        //    chybělo a rozbité to bylo pět dní.
+        if(d.stav==='PODEZRENI_NA_VYPADEK_MERENI'){
+          $('merStav').innerHTML='<strong style="color:#ff9c9c">⚠️ Za týden odešlo '+d.odeslano_za_tyden+' mailů a nepřišla ANI JEDNA měřicí událost. Zkontroluj secret MAIL_TRACK_SECRET a nasazení funkcí mail-pixel / mail-klik.</strong>';
+        } else if(d.stav==='nic_se_neposilalo'){
+          $('merStav').textContent='Za posledních 7 dní neodešel žádný mail, takže není co měřit.';
+        } else {
+          $('merStav').textContent='Měření běží (za týden '+d.px_udalosti_za_tyden+' událostí).';
+        }
+        var pct=function(a,b){ return b>0?Math.round(a*100/b)+' %':'—'; };
+        $('merRows').innerHTML=rows.map(function(r){
+          return '<tr><td>'+esc(r.track||'—')+'<div class="muted" style="font-size:.8em">'+esc(r.key||'')+'</div></td>'+
+            '<td>'+r.step+'</td><td>'+r.odeslano+'</td>'+
+            '<td>'+r.otevreno+' <span class="muted">('+pct(r.otevreno,r.odeslano)+')</span></td>'+
+            '<td class="muted">'+r.otevreno_stroj+'</td>'+
+            '<td>'+r.klikli+' <span class="muted">('+pct(r.klikli,r.odeslano)+')</span></td>'+
+            '<td class="muted">'+r.klikli_stroj+(r.bez_podpisu?' · '+r.bez_podpisu+' bez podpisu':'')+'</td></tr>';
+        }).join('');
+        $('merFoot').textContent=rows.length+' řádků za posledních '+d.dnu+' dní. Poslední měřicí událost: '+(d.posledni_px_udalost||'zatím žádná')+'.';
+      }).catch(function(){ $('merFoot').textContent='Chyba spojení.'; });
+    }
+    var _mer=$('merBtn'); if(_mer) _mer.addEventListener('click',openMailMereni);
+    var _merl=$('merLink'); if(_merl) _merl.addEventListener('click',function(e){ e.preventDefault(); openMailMereni(); });
+    var _merx=$('merX'); if(_merx) _merx.addEventListener('click',function(){ $('mer').classList.remove('on'); });
+    var _merd=$('merDnu'); if(_merd) _merd.addEventListener('change',openMailMereni);
+    $('mer').addEventListener('click',function(e){ if(e.target===$('mer')) $('mer').classList.remove('on'); });
+
     var _ml=$('mlogBtn'); if(_ml) _ml.addEventListener('click',openMailLog);
     var _mll=$('mlogLink'); if(_mll) _mll.addEventListener('click',function(e){ e.preventDefault(); openMailLog(); });
     var _mlx=$('mlogX'); if(_mlx) _mlx.addEventListener('click',function(){ $('mlog').classList.remove('on'); });
@@ -2670,6 +2739,7 @@
       if($('mprev').classList.contains('on')){ $('mprev').classList.remove('on'); return; }
       if($('tpledit').classList.contains('on')){ if(confirm('Zavřít editor? Neuložené změny se ztratí.')) $('tpledit').classList.remove('on'); return; }
       if($('seqmap').classList.contains('on')){ $('seqmap').classList.remove('on'); return; }
+      if($('mer').classList.contains('on')){ $('mer').classList.remove('on'); return; }
       $('mlog').classList.remove('on');
     });
   })();
