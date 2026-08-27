@@ -30,7 +30,7 @@ function norm(s: string): string {
 const SUBSTR: Record<FlagCategory, string[]> = {
   pregnancy: [
     'tehotn', 'otehotn', 'kojim', 'kojen', 'v jinem stavu', 'cekam miminko', 'cekam dite',
-    // [safety 2026-08-19] mezery z adversariálních testů: množné číslo a eufemismus.
+    // [safety 2026-08-19] mezery z adversarialnich testu: mnozne cislo a eufemismus.
     'cekame miminko', 'cekame dite', 'jsem v ocekavani',
     'pregnant', 'breastfeed',
   ],
@@ -45,7 +45,7 @@ const SUBSTR: Record<FlagCategory, string[]> = {
     // Samotne sousloví se dosud neflagovalo, chytaly se jen konkretni diagnozy.
     'porucha prijmu potravy', 'poruchu prijmu potravy', 'poruchou prijmu potravy', 'poruch prijmu potravy', 'obsesivn', 'hladovk', 'hladovim', 'hladovis', 'vyhladovet',
     'drzet hlad', 'bojim se jist', 'strach z jidla', 'strach se najist',
-    // [safety 2026-08-19] mezery z adversariálních testů: vina po jídle a dokonavý vid.
+    // [safety 2026-08-19] mezery z adversarialnich testu: vina po jidle a dokonavy vid.
     'bojim se najist', 'vycitam si jidl', 'po jidle si vycitam',
   ],
   medical: [
@@ -78,9 +78,9 @@ const SUBSTR: Record<FlagCategory, string[]> = {
     'chci umrit', 'chci zemrit', 'chci chcipnout', 'nechci zit', 'nechci uz zit', 'nechci tu byt',
     'ublizit si', 'sebeposkoz', 'podrezat', 'ukoncit svuj zivot', 'nemam duvod zit',
     'nema smysl zit', 'skoncit se zivotem',
-    // [safety 2026-08-19] mezera z adversariálních testů: obrácený slovosled a 1. osoba
-    // („chci si ublížit", „ublížím si"), + konkrétní krizová fráze se „zmizet".
-    // ⛔ Holé 'zmizet'/'nezvladam' sem NEpatří (běžná řeč o dietě, false positives).
+    // [safety 2026-08-19] mezera z adversarialnich testu: obraceny slovosled a 1. osoba,
+    // plus konkretni krizova fraze se 'zmizet'.
+    // Hole 'zmizet'/'nezvladam' sem NEpatri (bezna rec o diete, false positives).
     'si ublizit', 'si ublizim', 'ublizim si',
     'chci zmizet', 'chtel bych zmizet', 'chtela bych zmizet',
     'nemam duvod dal zit', 'skoncim se zivotem', 'radsi bych tu nebyl', 'radsi bych tu nebyla',

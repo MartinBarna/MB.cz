@@ -11,6 +11,7 @@
 // └────────────────────────────────────────────────────────────────────────┘
 
 import { preflagMessage } from './preflag.ts';
+import { notifyCapReached, type CapKind } from './cap-notify.ts';
 
 const NL = String.fromCharCode(10);
 // Provider abstrakce (Anthropic default / xAI Grok) — přepínatelné přes AI_MARTIN_PROVIDER,
@@ -528,15 +529,97 @@ async function overMonthlyCap(userId: string | null): Promise<boolean> {
   }
 }
 // Sepnutý strop se zapíše do `ai_usage` s nulovým nákladem, ať jde spočítat, KOLIK LIDÍ
-// na něj naráží (`feature like '%_capped'`). Bez toho by se ticho dalo číst jako „nikdo
+// na něj naráží (`feature like '%capped%'`). Bez toho by se ticho dalo číst jako „nikdo
 // ho nepotřebuje" i ve chvíli, kdy o něj klienti denně zakopávají.
-function logCapped(userId: string | null, feature: string): void {
+// ⛔ Await, ne odpojená promise: tahle značka je i pojistka „už dnes šel mail".
+async function logCapped(userId: string | null, feature: string): Promise<void> {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
-  fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: 0, tokens_out: 0, tokens_cached: 0, est_cost_usd: 0 }),
-  }).catch(() => {});
+  });
+  if (!r.ok) throw new Error(`logCapped ${r.status}`);
+}
+
+// --- NABÍDKA KONZULTACE S MARTINEM (25. 8. 2026) ---
+// Časová brána: max 1× za 7 dní na člena. Značka je řádek v `ai_usage` s nulovým nákladem,
+// stejný vzor jako `logCapped` výš, tedy BEZ migrace. Vlastní `feature`, ať jde odlišit od
+// značky z appky Tvůj Coach (ta má `coaching_offer`, tohle je web).
+// ⛔ Jen pro `via === 'academy'`. Klient koučinku (`via === 'coaching'`) osobní vedení Martina
+//    UŽ MÁ a platí za něj; nabízet mu ho je logická chyba, ne příležitost.
+// ⚠️ Řádek se počítá do DENNÍHO stropu: `overDailyCap` čte `ai_usage` BEZ filtru na feature,
+//    takže jednou za 7 dní ubere členovi 1 z 60 zpráv. Vědomý kompromis za nulovou migraci.
+const COACHING_OFFER_FEATURE = 'coaching_offer_web';
+const COACHING_OFFER_COOLDOWN_DNI = 7;
+
+/** true = za posledních 7 dní člen značku nedostal, tedy nabídka smí. Fail-safe je MLČET. */
+async function coachingOfferThrottleOk(userId: string | null): Promise<boolean> {
+  if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return false;
+  try {
+    const since = new Date(Date.now() - COACHING_OFFER_COOLDOWN_DNI * 86400000).toISOString();
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage?select=id&user_id=eq.${userId}&feature=eq.${COACHING_OFFER_FEATURE}&created_at=gte.${since}`, {
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, Prefer: 'count=exact', Range: '0-0' },
+    });
+    if (!r.ok) { console.error('coaching_offer_throttle_failed', r.status); return false; }
+    const total = Number((r.headers.get('content-range') || '').split('/')[1] || '0') || 0;
+    return total === 0;
+  } catch (e) { console.error('coaching_offer_throttle_failed', String(e).slice(0, 200)); return false; }
+}
+
+/** Zapíše značku. true JEN když řádek opravdu vznikl: bez něj by throttle příště nic nenašel
+ *  a nabídka by se objevila v KAŽDÉ zprávě. */
+async function zapisNabidkuKoucinku(userId: string | null): Promise<boolean> {
+  if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return false;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+      method: 'POST',
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ user_id: userId, feature: COACHING_OFFER_FEATURE, provider: PROVIDER, model: MODEL, tokens_in: 0, tokens_out: 0, tokens_cached: 0, est_cost_usd: 0 }),
+    });
+    if (!r.ok) { console.error('coaching_offer_zapis_failed', r.status); return false; }
+    return true;
+  } catch (e) { console.error('coaching_offer_zapis_failed', String(e).slice(0, 200)); return false; }
+}
+
+// Instrukce i text jdou do VOLATILNÍ části, ne do SYSTEM. Dva důvody: SYSTEM musí zůstat
+// bajt po bajtu stejný kvůli prompt cache, a hlavně, když blok v kontextu chybí, model
+// o nabídce nemá odkud vědět (stejná záruka jako u peekPoznamka výš).
+const NABIDKA_KOUCINKU = NL + NL + [
+  '# NABÍDKA KONZULTACE (smíš ji zmínit JEN v téhle odpovědi, a nejvýš jednou)',
+  'Tady smíš nenásilně nabídnout placenou konzultaci s Martinem. Nejdřív normálně odpověz na to, s čím člen přišel, a tohle přidej až na konec. Nabídka, ne prodej.',
+  '⛔ Vynech ji, když je konverzace citlivá (nemoc, léky, těhotenství, poruchy příjmu potravy, nezletilý, beznaděj), když člen řeší provozní věc (přístup, faktura, přehrávání lekce), nebo když se zrovna ptá na ceny a nákup. V takové zprávě nabídku prostě neuváděj.',
+  'Drž jádro, cenu i odkaz, formulaci si přizpůsob tónu konverzace:',
+  '„Lekce ti dají systém. Co ti nedají, je pohled zvenku na tvůj vlastní týden. Na to je hodina s Martinem naživo: 2 990 Kč, a když do 14 dnů navážeš koučinkem, máš ji zpátky celou: martinbarna.cz/konzultace/"',
+  'Tahle JEDNA cena je výjimka z pravidla CENY, NÁKUP A VRÁCENÍ: ber ji přesně odsud a nedopočítávej ji. Žádnou jinou cenu ani kapacitu z hlavy dál neuváděj.',
+].join(NL);
+
+// Mail Martinovi při nárazu na strop. ⛔ Pořadí (kontrola → await značka → mail)
+// hlídá `notifyCapReached`, ne tahle obálka. Značku proto NEZAPISUJ zvlášť.
+async function alertMartinCap(
+  userId: string | null,
+  email: string | null,
+  via: MemberVia,
+  feature: string,
+  kind: CapKind,
+): Promise<void> {
+  if (!userId) return;
+  try {
+    await notifyCapReached({
+      userId,
+      email,
+      via,
+      feature,
+      kind,
+      supabaseUrl: SUPABASE_URL,
+      serviceRole: SERVICE_ROLE,
+      resendKey: Deno.env.get('RESEND_API_KEY') ?? '',
+      notifyFrom: Deno.env.get('NOTIFY_FROM') ?? '',
+      zapisZnacku: () => logCapped(userId, feature),
+    });
+  } catch (e) {
+    console.error('[cap-notify] alertMartinCap selhal, uživateli jde běžná hláška o stropu:', e);
+  }
 }
 
 // --- STREAMING (jen Grok chat) ---
@@ -683,7 +766,7 @@ Deno.serve(async (req: Request) => {
 
   // P2 denní strop (safety hard-stop výše proběhl vždy; limit se týká jen placených LLM/vision volání).
   if (await overDailyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily', 'daily');
     return json({ reply: 'Na dnešek už jsme toho probrali slušně 💪 Denní limit chatu je vyčerpaný, pokračujeme zase zítra. Kdyby něco hořelo, napiš Martinovi.' }, CORS, 200);
   }
   // Měsíční nákladový strop. Stejné pořadí jako u denního: až ZA safety vrstvou, aby
@@ -691,7 +774,7 @@ Deno.serve(async (req: Request) => {
   // poli `reply`, ne chybový kód: klient non-2xx tělo nezobrazí a člen by viděl jen
   // obecnou chybu místo téhle věty.
   if (await overMonthlyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped', 'monthly');
     return json({ reply: 'Tenhle měsíc už toho máme v chatu hodně za sebou 💪 Limit se počítá za posledních 30 dní a uvolňuje se postupně, takže za pár dní se zase ozvi. Kdyby něco hořelo, napiš rovnou Martinovi.' }, CORS, 200);
   }
 
@@ -717,7 +800,14 @@ Deno.serve(async (req: Request) => {
   // Stav nakouknutí čteme JEN pro klienty koučinku (člen Academy žádný strop nemá),
   // ať se členům nepřidává dotaz do DB na každou zprávu.
   const stavPeek = via === 'coaching' ? await peekStav(email) : { pouzito: 0, lekce: new Set<string>() };
-  const volatile = ragContext + safeSuffix + peekPoznamka(via, stavPeek);
+  // NABÍDKA KONZULTACE: jen člen Academy, ne klient koučinku, ne v rizikové konverzaci,
+  // a max 1× za 7 dní. Značku zapisujeme PŘED voláním modelu a blok přidáme, JEN když zápis
+  // prošel (jinak by throttle příště nic nenašel a nabídka by šla v každé zprávě).
+  // ⚠️ Fotka jídla se sem nedostane, vision větev se vrací výš, takže značku nepálí.
+  const nabidka = (via === 'academy' && !risky
+    && await coachingOfferThrottleOk(userId)
+    && await zapisNabidkuKoucinku(userId)) ? NABIDKA_KOUCINKU : '';
+  const volatile = ragContext + safeSuffix + peekPoznamka(via, stavPeek) + nabidka;
 
   try {
     let reply = '';
