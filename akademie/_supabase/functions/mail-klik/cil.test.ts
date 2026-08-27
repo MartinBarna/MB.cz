@@ -38,14 +38,18 @@ Deno.test('⛔ bez platneho podpisu se na Stripe nejde, na nas web ano', () => {
   assertEquals(S('https://martinbarna.cz/videokurz', false)?.startsWith('https://martinbarna.cz/videokurz'), true);
 });
 
-Deno.test('UTM se dolepi jen na nase weby a jen kdyz tam jeste nejsou', () => {
+Deno.test('⚡ UTM se z ciloveho odkazu na nase weby ODSTRANUJE (rychlost: Wedos CDN cache HIT); funkcni parametry zustavaji', () => {
   const nas = S('https://martinbarna.cz/videokurz')!;
-  assertEquals(new URL(nas).searchParams.get('utm_campaign'), 'lead-magnet');
-  assertEquals(new URL(nas).searchParams.get('utm_content'), 'lm-3');
+  assertEquals(new URL(nas).searchParams.has('utm_campaign'), false);
+  assertEquals(new URL(nas).searchParams.has('utm_source'), false);
 
   const uzMa = S('https://martinbarna.cz/videokurz?utm_source=vlastni&utm_campaign=puvodni')!;
-  assertEquals(new URL(uzMa).searchParams.get('utm_source'), 'vlastni');
-  assertEquals(new URL(uzMa).searchParams.get('utm_campaign'), 'puvodni');
+  assertEquals(new URL(uzMa).searchParams.has('utm_source'), false);
+  assertEquals(new URL(uzMa).searchParams.has('utm_campaign'), false);
+
+  const funkcni = S('https://tvujcoach.cz/?plan=basic&utm_source=newsletter&utm_medium=email')!;
+  assertEquals(new URL(funkcni).searchParams.get('plan'), 'basic');
+  assertEquals(new URL(funkcni).searchParams.has('utm_source'), false);
 
   const stripe = S('https://buy.stripe.com/abc')!;
   assertEquals(new URL(stripe).searchParams.has('utm_source'), false);

@@ -33,14 +33,19 @@ export function bezpecnyCil(raw: string, duveryhodny: boolean, track: string, ke
   const host = u.hostname.toLowerCase();
   const povoleno = duveryhodny ? POVOLENI_HOSTE : NASE_WEBY;
   if (!povoleno.includes(host)) return null;
-  // UTM jen na nase weby a jen kdyz uz tam neni: sablony si casto nesou vlastni znacky
-  // a prepsat je by znamenalo rozbit dosavadni mereni na cilove strane (`analytics.js`).
-  if (NASE_WEBY.includes(host) && !u.searchParams.has('utm_source')) {
-    u.searchParams.set('utm_source', 'email');
-    u.searchParams.set('utm_medium', 'drip');
-    if (track) u.searchParams.set('utm_campaign', track);
-    if (key) u.searchParams.set('utm_content', key);
+  // ⚡ ZMENA 27. 8. 2026 (Martin: „musí to jet vše svižně"): UTM se z CILOVE adresy
+  // naopak ODSTRANUJI. Wedos CDN bere kazdou unikatni kombinaci query jako cache MISS
+  // (pamet mb-wedos-pomaly-origin-a-utm-cache) a klik z mailu pak cekal na pomaly origin.
+  // O atribuci neprichazime: klik uz je zapsany jako `px_click` VCETNE puvodni URL s UTM
+  // (urlProLog dostava `raw`), takze zdroj mame presneji nez z analytics.js.
+  // Funkcni parametry (`plan`, `tab`, `email`...) zustavaji nedotcene, mazou se JEN utm_*.
+  if (NASE_WEBY.includes(host)) {
+    for (const k of [...u.searchParams.keys()]) {
+      if (k.toLowerCase().startsWith('utm_')) u.searchParams.delete(k);
+    }
   }
+  // parametry track/key zamerne nevyuzity pro cil; zustavaji v signature payloadu pro log
+  void track; void key;
   return u.toString();
 }
 
