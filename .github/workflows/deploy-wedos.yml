@@ -56,10 +56,15 @@ jobs:
           server-dir: ${{ vars.FTP_SERVER_DIR || '/www/' }}
           local-dir: ./
           dangerous-clean-slate: false
+          # ⛔ `clanky-fronta/**` je fronta nevydaných článků, na web nepatří.
+          #    Kdo ten řádek mění, musí změnit i EXCL v scripts/verify-deploy.js,
+          #    jinak ověření níž hlásí 404 na nenahraných souborech a shodí deploy.
+          #    (Tady komentář být nesmí: obsah `exclude` se čte jako seznam globů.)
           exclude: |
             **/.git*
             **/.git*/**
             **/.github/**
+            clanky-fronta/**
             _import/**
             _zaloha/**
             _zdroje/**

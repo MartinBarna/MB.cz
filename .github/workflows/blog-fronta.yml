@@ -1,0 +1,109 @@
+name: Blog fronta (vyda naplanovane clanky)
+
+# Vydá články naplánované v clanky-fronta/manifest.json BEZ Clauda a bez Martinova PC.
+# Denně: co má date <= dnes, se vygeneruje do clanky/, dostane kartu ve výpisu
+# a záznam v sitemapě, commitne se do main a spustí se existující deploy na Wedos.
+#
+# ⛔ Deploy workflow ("Deploy na Wedos (FTP)") je JEN workflow_dispatch, proto ho
+#    tenhle běh spouští sám přes `gh workflow run` (potřebuje permissions: actions: write).
+#    Dispatch přes GITHUB_TOKEN běh VYTVOŘÍ (workflow_dispatch je výjimka z pravidla,
+#    že akce GITHUB_TOKENu nespouštějí další workflow); push do main by ho nespustil.
+#
+# ⛔ Když není co vydat, běh skončí zeleně a NIC necommitne ani nenasadí.
+
+on:
+  schedule:
+    - cron: '5 8 * * *' # 08:05 UTC = 10:05 v ČR (v zimě 09:05)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write # commit + push vydaného článku do main
+  actions: write # spuštění deploy workflow
+
+concurrency:
+  group: blog-fronta
+  cancel-in-progress: false
+
+jobs:
+  vydej:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0 # kvůli sitemap lastmod v deployi i kvůli čitelné historii
+
+      - name: Vydat splatne clanky z fronty
+        id: fronta
+        run: node scripts/blog-fronta-vydej.mjs
+
+      - name: Commit a push
+        id: push
+        if: steps.fronta.outputs.pocet != '0' && steps.fronta.outputs.pocet != ''
+        run: |
+          set -euo pipefail
+          git config user.name  'blog-automat'
+          git config user.email 'blog-automat@users.noreply.github.com'
+          git add clanky clanky-fronta sitemap.xml
+          if git diff --cached --quiet; then
+            echo "::error::Skript hlásí ${{ steps.fronta.outputs.pocet }} vydaných článků, ale v pracovním stromu není žádná změna."
+            exit 1
+          fi
+          git commit -m "Blog automat: vydano ${{ steps.fronta.outputs.slugy }}"
+          git push origin HEAD:main
+          # ⛔ Push ověřit, ne mu věřit: bez toho by se nasadila stará verze.
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" \
+            || { echo "::error::Push neprošel, origin/main se liší od HEAD."; exit 1; }
+          echo "Pushnuto: $(git rev-parse HEAD)"
+
+      - name: Spustit deploy na Wedos
+        if: steps.fronta.outputs.pocet != '0' && steps.fronta.outputs.pocet != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy-wedos.yml --ref main
+
+      # Ověření děláme na živém webu, ne na hlášení deploye: článek je NOVÝ soubor,
+      # takže ho Wedos CDN nemá v cache a stará verze se vracet nemůže. Naopak
+      # clanky/index.html a sitemap.xml jsou PŘEPSANÉ soubory a CDN je chvíli držet může,
+      # proto se tady schválně nekontrolují (viz report, řádek "co NEOVĚŘENO").
+      - name: Post-check na zivem webu
+        if: steps.fronta.outputs.pocet != '0' && steps.fronta.outputs.pocet != ''
+        env:
+          URLS: ${{ steps.fronta.outputs.urls }}
+          # Bez prohlížečové hlavičky vrací martinbarna.cz holému klientovi 401.
+          UA: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0 Safari/537.36'
+        run: |
+          set -uo pipefail
+          selhalo=0
+          for url in $URLS; do
+            ok=0
+            # Deploy (FTP celého webu + jeho vlastní ověření) trvá jednotky minut.
+            for pokus in $(seq 1 40); do
+              sleep 20
+              kod=$(curl -s -o /tmp/clanek.html -w '%{http_code}' \
+                     -A "$UA" -H 'Cache-Control: no-cache' "$url?nc=$(date +%s)" || echo 000)
+              if [ "$kod" = "200" ] && grep -qi '<h1' /tmp/clanek.html; then
+                echo "OK  $url (HTTP 200, H1 je na stránce, po $((pokus*20)) s)"
+                ok=1
+                break
+              fi
+            done
+            if [ "$ok" != "1" ]; then
+              echo "::error::Článek se do 13 minut neobjevil živě: $url (poslední HTTP $kod)"
+              selhalo=1
+            fi
+          done
+          exit $selhalo
+
+      - name: Shrnuti
+        if: always()
+        run: |
+          {
+            echo "### Blog fronta"
+            echo ""
+            echo "- vydáno článků: **${{ steps.fronta.outputs.pocet || '0' }}**"
+            echo "- slugy: ${{ steps.fronta.outputs.slugy || '(žádné)' }}"
+            echo "- URL: ${{ steps.fronta.outputs.urls || '(žádné)' }}"
+          } >> "$GITHUB_STEP_SUMMARY"
