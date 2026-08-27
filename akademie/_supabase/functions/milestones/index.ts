@@ -6,10 +6,17 @@
 // Auth: x-drip-secret == app_config drip_invoke_secret. Cron se zapoji az po schvaleni.
 // TEST rezim: POST {test_email, milestone: 50|100, name} -> [TEST] mail, nic se nezapisuje.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// VLASTNI mereni otevreni a prokliku (protejsky: edge funkce mail-pixel a mail-klik).
+// ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a order-rescue/stopa.ts;
+//    hlida to test `drip-send/stopa.test.ts`.
+import { ostopkuj } from "./stopa.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+// ⛔ Secret na podpis mericich odkazu. Jen z env. Kdyz chybi, mail odejde nezmereny.
+const MAIL_TRACK_SECRET = Deno.env.get("MAIL_TRACK_SECRET") ?? "";
+const TRACK = "milestone-videokurz";
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const unsubLink = (token: string) => SUPABASE_URL + "/functions/v1/unsubscribe?token=" + encodeURIComponent(token);
 const VK_TOTAL = 182;
@@ -196,9 +203,9 @@ Deno.serve(async (req) => {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
 
   const getTpl = async (step: number) => {
-    const { data } = await admin.from("email_templates").select("subject,preheader,blocks")
+    const { data } = await admin.from("email_templates").select("subject,preheader,blocks,key")
       .eq("track", "milestone-videokurz").eq("step", step).maybeSingle();
-    return data as { subject: string; preheader: string; blocks: Block[] } | null;
+    return data as { subject: string; preheader: string; blocks: Block[]; key: string } | null;
   };
 
   // TEST: posli nahled Martinovi, nic nezapisuj
@@ -208,6 +215,8 @@ Deno.serve(async (req) => {
     const tpl = await getTpl(ms);
     if (!tpl) return json({ error: "no_template" }, 400);
     const v = vars(String(body.name ?? ""));
+    // ⛔ TEST rezim se ZAMERNE nemeri: nahled Martinovi by vyrobil otevreni a proklik
+    //    bez odpovidajiciho odeslani a nafoukl by statistiku trate.
     await send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v)));
     return json({ ok: true, mode: "test", milestone: ms });
   }
@@ -231,11 +240,11 @@ Deno.serve(async (req) => {
     if (uerr || batch.length < 1000) break;
   }
   // leads = zdroj odhlaseni/bounce + unsubscribe tokenu (strankovane po 1000)
-  const leadInfo = new Map<string, { status: string; token: string }>();
+  const leadInfo = new Map<string, { id: string; status: string; token: string }>();
   for (let from = 0; ; from += 1000) {
     const { data: lrows, error: lerr } = await admin.from("leads")
-      .select("email,status,unsubscribe_token").order("id").range(from, from + 999);
-    for (const l of lrows ?? []) leadInfo.set(low(l.email), { status: String(l.status ?? ""), token: String(l.unsubscribe_token ?? "") });
+      .select("id,email,status,unsubscribe_token").order("id").range(from, from + 999);
+    for (const l of lrows ?? []) leadInfo.set(low(l.email), { id: String(l.id ?? ""), status: String(l.status ?? ""), token: String(l.unsubscribe_token ?? "") });
     if (lerr || (lrows ?? []).length < 1000) break;
   }
   const members = new Set((ents.data ?? []).map((e) => low(e.email)));
@@ -245,6 +254,32 @@ Deno.serve(async (req) => {
 
   const tpl30 = await getTpl(30), tpl50 = await getTpl(50), tpl100 = await getTpl(100);
   if (!tpl30 || !tpl50 || !tpl100) return json({ error: "no_templates" }, 500);
+
+  // JEDNO MISTO, KTERE MILNIKOVY MAIL SLOZI, ZMERI A ODESLE.
+  // ⛔ `px_odeslano` je jmenovatel pro open a click rate. `milestones` do `email_events`
+  //    historicky NEZAPISOVALA nic (ma vlastni `milestone_sent`), takze bez tohohle radku
+  //    by u milniku vysla otevrenost proti nule odeslanych, tedy nesmysl.
+  // ⛔ Typ je zamerne `px_odeslano`, ne `sent`: `sent` cte `email_summary`, `daily-digest`
+  //    i denni strop v `drip-send` a pridani milniku by jim tise zmenilo cisla.
+  // ⚠️ Chyba zapisu se JEN loguje. Kdyby shodila vyjimku, nezapsal by se `milestone_sent`
+  //    a tentyz gratulacni mail by cloveku prisel znovu druhy den.
+  const posliMilnik = async (
+    email: string,
+    leadId: string | null,
+    tpl: { subject: string; preheader: string; blocks: Block[]; key: string },
+    v: Record<string, string>,
+    unsub: string,
+    milnik: number,
+  ) => {
+    const holeHtml = wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v), unsub);
+    const html = await ostopkuj(holeHtml, { track: TRACK, step: milnik, key: String(tpl.key ?? ""), lead_id: leadId }, MAIL_TRACK_SECRET, SUPABASE_URL);
+    await send(email, fill(tpl.subject, v), html, unsub);
+    const { error } = await admin.from("email_events").insert({
+      lead_id: leadId, step: milnik, type: "px_odeslano",
+      detail: { track: TRACK, key: String(tpl.key ?? ""), fn: "milestones" },
+    });
+    if (error) console.error("[milestones] zapis px_odeslano selhal: " + error.message);
+  };
 
   let sends = 0, marked = 0;
   const results: Record<string, unknown>[] = [];
@@ -256,12 +291,13 @@ Deno.serve(async (req) => {
     const li = leadInfo.get(email);
     if (li && (li.status === "unsubscribed" || li.status === "bounced")) continue;
     const unsub = li?.token ? unsubLink(li.token) : "";
+    const leadId = li?.id ? li.id : null;   // bez leada se mail posle dal, jen nebude komu pripsat
     const done = cnt.get(String(u.id)) ?? 0;
     const name = String((u.user_metadata as Record<string, unknown>)?.full_name ?? "");
     const v = vars(name);
     try {
       if (done >= VK_TOTAL && !already.has(email + ":100")) {
-        await send(email, fill(tpl100.subject, v), wrap(fill(tpl100.preheader, v), renderBlocks(tpl100.blocks, v), unsub), unsub);
+        await posliMilnik(email, leadId, tpl100, v, unsub, 100);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 100 });
         // 50 uz neposilat nikdy (prekonano) — zapis bez mailu
         for (const nizsi of [30, 50]) {
@@ -269,7 +305,7 @@ Deno.serve(async (req) => {
         }
         sends++; results.push({ email, milestone: 100, done });
       } else if (done >= HALF && !already.has(email + ":50")) {
-        await send(email, fill(tpl50.subject, v), wrap(fill(tpl50.preheader, v), renderBlocks(tpl50.blocks, v), unsub), unsub);
+        await posliMilnik(email, leadId, tpl50, v, unsub, 50);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 });
         // 30 uz neposilat (prekonano) - zapis bez mailu, stejny vzor jako u 100 vs 50
         if (!already.has(email + ":30")) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 }); marked++; }
@@ -277,7 +313,7 @@ Deno.serve(async (req) => {
       } else if (done >= P30 && !already.has(email + ":30")) {
         // 30 % (55 lekci): vetsina lidi kurz nedokonci a necekame to. Zmereno 22. 8. 2026:
         // 100 % nemel NIKDO, 50 az 99 % dva lide, a sest lidi skoncilo na 1 az 3 lekcich.
-        await send(email, fill(tpl30.subject, v), wrap(fill(tpl30.preheader, v), renderBlocks(tpl30.blocks, v), unsub), unsub);
+        await posliMilnik(email, leadId, tpl30, v, unsub, 30);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 });
         sends++; results.push({ email, milestone: 30, done });
       }

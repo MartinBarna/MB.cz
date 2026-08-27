@@ -22,6 +22,10 @@ import {
   type StavZapisu,
   trateSeSignalem,
 } from './aktivace.ts';
+// VLASTNI mereni otevreni a prokliku. Prilepuje pixel a prepisuje odkazy az do HOTOVEHO
+// HTML, tesne pred odeslanim. ⛔ Nesaha na text mailu, na odhlasovaci ani auth odkazy.
+// Chybi-li `MAIL_TRACK_SECRET`, vrati HTML beze zmeny a mail odejde nezmereny. Viz `stopa.ts`.
+import { ostopkuj } from './stopa.ts';
 
 const NL = String.fromCharCode(10);   // newline
 const DQ = String.fromCharCode(34);   // double-quote char
@@ -29,6 +33,9 @@ const DQ = String.fromCharCode(34);   // double-quote char
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
+// ⛔ Secret na podpis mericich odkazu. Jen z env, nikdy v gitu. Kdyz chybi, mereni se
+// tise vypne (mail odejde spravne, jen se nezmeri). Nastaveni viz `mail-mereni-README.md`.
+const MAIL_TRACK_SECRET = Deno.env.get('MAIL_TRACK_SECRET') ?? '';
 const FROM = 'Martin Barna <news@martinbarna.cz>';
 const SITE = 'https://martinbarna.cz';
 // ⛔ 6. 8. 2026: bylo tu 'https://form.simpleshop.cz/3Vbl/buy/'. Martin SimpleShop
@@ -368,6 +375,15 @@ Deno.serve(async (req: Request) => {
     pocet_potravin: (fMap.pocet_potravin ?? '').trim() || '50 000',
     pocet_receptu:  (fMap.pocet_receptu  ?? '').trim() || '140',
   };
+  // STAV MERENI do odpovedi behu. ⛔ Bez tohohle radku by se dalo mereni tise vypnout
+  // (smazany secret) nebo tise okleštit (zapnuty archive_bcc) a nikdo by to nepoznal,
+  // presne jako u Resendu, kde eventy chodily dal a odkazy byly mrtve.
+  const stopaStav = !MAIL_TRACK_SECRET
+    ? 'vypnuto_chybi_secret'
+    : (archiveBcc ? 'jen_odkazy_archive_bcc_zapnuty' : 'odkazy_i_pixel');
+  if (MAIL_TRACK_SECRET && archiveBcc) {
+    console.warn('[drip-send] archive_bcc je zapnuty -> mericí pixel se neprilepuje, meri se jen prokliky');
+  }
   // BRANA: follow-up/transakcni tracky (non-onboarding) se posilaji jen kdyz je followups_enabled='true'.
   // Absence/jina hodnota = drzet (test-first). Prepnuti ostro = 1 SQL update, bez redeploye.
   const followupsEnabled = (fMap.followups_enabled ?? '') === 'true';
@@ -519,7 +535,11 @@ Deno.serve(async (req: Request) => {
       const seg = normSeg(body.segment ?? l.segment);
       const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, to, null, CISLA);
       const m = renderEmail(tpl, seg, v, footer);
-      const id = await sendViaResend(to, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
+      // Jednorazovka jde skutecnemu cloveku, takze se meri stejne jako davkovy mail.
+      // ⚠️ V souhrnech je jeji odeslani typu `oneoff`, ne `sent`; kdo pocita open rate,
+      //    musi tenhle typ zapocitat do jmenovatele (akce `mail_mereni` v admin-api to dela).
+      const htmlOneoff = await ostopkuj(m.html, { track, step, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL);
+      const id = await sendViaResend(to, m.subject, htmlOneoff, m.text, v.unsubscribe_url, replyTo, '');
       await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track } });
       return json({ ok: true, mode: 'oneoff', provider_id: id, track, step });
     } catch (e) {
@@ -756,7 +776,7 @@ Deno.serve(async (req: Request) => {
       const key = l.track + '/step' + l.step + ':' + tpl.key;
       byStep[key] = (byStep[key] ?? 0) + 1; would++;
     }
-    return json({ ok: true, mode: 'dry', followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), zapis_signal: aktivaceStav, would_skip_zapis: wouldSkipZapis, by_zapis: byZapis, by_step: byStep });
+    return json({ ok: true, mode: 'dry', stopa: stopaStav, followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), zapis_signal: aktivaceStav, would_skip_zapis: wouldSkipZapis, by_zapis: byZapis, by_step: byStep });
   }
 
   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
@@ -869,8 +889,13 @@ Deno.serve(async (req: Request) => {
         : undefined;
       const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars ?? varsZLeada ?? null, CISLA);
       const m = renderEmail(tpl, seg, v, footer);
+      // MERENI: az tady, nad hotovym HTML. Poradi je zamerne za `renderEmail`, protoze ten
+      // hlida nerozresene tokeny; mericí odkazy zadny token nenesou a kontrolu by jen matly.
+      // ⛔ `!archiveBcc`: kdyz jede archivni kopie, pixel se NEPRILEPUJE. Duvod je u
+      //    `ostopkuj` v `stopa.ts` (BCC kopie nese tentyz pixel a Gmail si ho predstahne).
+      const htmlSeStopou = await ostopkuj(m.html, { track: String(l.track), step: l.step, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL, !archiveBcc);
       await pace();   // rozestup mezi volanimi Resendu, viz SEND_GAP_MS vyse
-      const id = await sendViaResend(l.email, m.subject, m.html, m.text, v.unsubscribe_url, replyTo, archiveBcc);
+      const id = await sendViaResend(l.email, m.subject, htmlSeStopou, m.text, v.unsubscribe_url, replyTo, archiveBcc);
       const { error: logErr } = await admin.from('email_events')
         .insert({ lead_id: l.id, step: l.step, type: 'sent', provider_id: id, detail: { track: l.track, key: tpl.key } });
       if (logErr && !String(logErr.code).includes('23505')) throw new Error('log:' + logErr.message);
@@ -912,5 +937,5 @@ Deno.serve(async (req: Request) => {
       }
     }
   }
-  return json({ ok: true, mode: 'live', followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, skipped_zapis: skippedZapis, zapis_signal: aktivaceStav, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
+  return json({ ok: true, mode: 'live', stopa: stopaStav, followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, skipped_zapis: skippedZapis, zapis_signal: aktivaceStav, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
 });
