@@ -106,6 +106,35 @@
   .mlog-sum .sc .n{font-size:1.2rem;font-weight:800;color:#fff}
   .mlog-sum .sc .l{font-size:.72rem;color:#b8ad9e;line-height:1.25;margin-top:2px}
   .mlog-sum .sc .sub{font-size:.68rem;color:#8f8778;margin-top:2px}
+  /* 📈 MĚŘENÍ MAILŮ. ⛔ Martin čte admin na mobilu (375 px), takže nic tady nesmí stát na
+     najetí myší: sloupec grafu se dá ťuknout a popis se vypíše pod graf. Tabulky mají
+     vlastní vodorovný scroll, stránka se nekýve (viz pravidlo nahoře). */
+  .mer-t{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:8px;margin:.5rem 0 .2rem}
+  .mer-t .c{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 11px;min-width:0}
+  .mer-t .c .n{font-size:1.25rem;font-weight:800;color:#fff;line-height:1.15;overflow-wrap:anywhere}
+  .mer-t .c .l{font-size:.7rem;color:#b8ad9e;line-height:1.25;margin-top:2px}
+  .mer-t .c .s{font-size:.66rem;color:#8f8778;margin-top:1px}
+  .mer-t .c.zluta .n{color:#F6CD63}
+  .mer-t .c.zelena .n{color:#5fe0a0}
+  .mer-t .c.cervena .n{color:#ff8b6b}
+  .mer-graf{display:flex;align-items:flex-end;gap:2px;height:112px;margin:.6rem 0 .3rem;padding:0 1px;border-bottom:1px solid rgba(255,255,255,.12)}
+  .mer-graf .d{flex:1 1 0;min-width:3px;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;height:100%}
+  .mer-graf .d:hover{background:rgba(255,255,255,.05)}
+  .mer-graf .d i{display:block;width:100%;font-style:normal}
+  .mer-graf .d .zb{background:rgba(255,255,255,.13);border-radius:2px 2px 0 0}
+  .mer-graf .d .ot{background:#EBB12C}
+  .mer-graf .d .kl{background:#5fe0a0}
+  .mer-leg{display:flex;gap:12px;flex-wrap:wrap;font-size:.72rem;color:#8a7e6d;margin:.1rem 0 .5rem}
+  .mer-leg b{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:baseline}
+  .mer-sec{border:1px solid rgba(255,255,255,.09);border-radius:12px;margin:.9rem 0;background:rgba(255,255,255,.015)}
+  .mer-sec>summary{cursor:pointer;list-style:none;padding:11px 14px;font-weight:800;color:#F6CD63;font-size:.92rem}
+  .mer-sec>summary::-webkit-details-marker{display:none}
+  .mer-sec>summary::before{content:'▸';color:#8a7e6d;font-size:.8rem;margin-right:7px;display:inline-block;transition:transform .15s}
+  .mer-sec[open]>summary::before{transform:rotate(90deg)}
+  .mer-sec .in{padding:0 14px 12px}
+  .mer-sec table{font-size:.8rem}
+  .mer-sec th,.mer-sec td{padding:7px 8px;white-space:nowrap}
+  .mer-url{max-width:230px;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:bottom}
   select{cursor:pointer}
   select option{background:#1a1712;color:#f3ede3}
   .att a,.mprev-meta a{display:inline-block;margin:.3rem .4rem 0 0;font-size:.82rem;color:#F6CD63;background:rgba(235,177,44,.1);border:1px solid rgba(235,177,44,.28);border-radius:50px;padding:6px 12px;text-decoration:none}
@@ -468,11 +497,76 @@
       </select>
       <span class="muted" id="merStav"></span>
     </div>
-    <div style="overflow-x:auto;max-height:56vh;overflow-y:auto;">
-      <table><thead><tr>
-        <th>Sekvence</th><th>Krok</th><th>Odesláno</th><th>Otevřelo</th><th>z toho stroje</th><th>Kliklo lidí</th><th>z toho stroje</th>
-      </tr></thead><tbody id="merRows"></tbody></table>
+
+    <!-- SOUHRN. Dlaždice jsou první, protože na mobilu je vidět jen první obrazovka. -->
+    <div class="mer-t" id="merSouhrn"></div>
+
+    <!-- DENNÍ GRAF. Sloupec = jeden den, celá výška = odesláno; zdola zelená (prokliky),
+         žlutá (otevřeno) a zbytek šedý. ⛔ Bez knihovny: admin se načítá i na mobilních
+         datech a graf nesmí být důvod, proč se stránka nenačte. -->
+    <div class="mer-graf" id="merGraf"></div>
+    <div class="mer-leg">
+      <span><b style="background:rgba(255,255,255,.13)"></b>odesláno</span>
+      <span><b style="background:#EBB12C"></b>otevřelo</span>
+      <span><b style="background:#5fe0a0"></b>prokliky lidí</span>
+      <span class="muted" id="merGrafPopis">ťukni na sloupec pro čísla dne</span>
     </div>
+
+    <details class="mer-sec" open><summary>Po tratích</summary><div class="in">
+      <div style="overflow-x:auto;">
+        <table><thead><tr>
+          <th>Trať</th><th>Kroků</th><th>Odesláno</th><th>Otevřelo</th><th>Kliklo</th><th>Odhlásilo</th><th>Bounce</th><th>Chyby</th>
+        </tr></thead><tbody id="merTrateRows"></tbody></table>
+      </div>
+    </div></details>
+
+    <details class="mer-sec" open><summary>Po krocích (jednotlivé maily)</summary><div class="in">
+      <div style="overflow-x:auto;max-height:52vh;overflow-y:auto;">
+        <table><thead><tr>
+          <th>Sekvence</th><th>Krok</th><th>Odesláno</th><th>Otevřelo</th><th>z toho stroje</th><th>Kliklo lidí</th><th>z toho stroje</th><th>Odhlásilo</th><th>Bounce / chyby</th>
+        </tr></thead><tbody id="merRows"></tbody></table>
+      </div>
+    </div></details>
+
+    <details class="mer-sec"><summary>Nejklikanější odkazy</summary><div class="in">
+      <p class="muted" style="font-size:.8rem;line-height:1.5;margin:.2rem 0 .5rem;">
+        Adresy jsou bez UTM značek, jinak by se tentýž odkaz rozpadl na deset řádků.
+        Sloupec „stroje" jsou prokliky vyhodnocené jako antispamový skener, ne lidé.
+      </p>
+      <div style="overflow-x:auto;max-height:44vh;overflow-y:auto;">
+        <table><thead><tr>
+          <th>Odkaz</th><th>Kategorie</th><th>Prokliků</th><th>Lidí</th><th>Stroje</th>
+        </tr></thead><tbody id="merOdkazyRows"></tbody></table>
+      </div>
+    </div></details>
+
+    <details class="mer-sec"><summary>Konverzní prokliky po tratích</summary><div class="in">
+      <!-- ⛔ Tohle NENÍ prodej. Je to jen počet lidských prokliků na cíl dané kategorie.
+           Kolik z nich se registrovalo nebo zaplatilo, se z mailových dat zjistit nedá:
+           chybí spojení proklik → registrace. Popsané jako další krok v reportu. -->
+      <p class="muted" style="font-size:.8rem;line-height:1.5;margin:.2rem 0 .5rem;">
+        Kam lidé z mailů chodí. <strong>Proklik na pokladnu není platba</strong> a proklik do appky není
+        registrace. Kolik z těchhle lidí opravdu zaplatilo, se odsud zjistit nedá, na to je Stripe
+        a tabulka nároků.
+      </p>
+      <div style="overflow-x:auto;">
+        <table><thead><tr>
+          <th>Trať</th><th>Appka</th><th>Pokladna</th><th>Videokurz</th><th>Academy</th><th>Koučink</th><th>Nástroje</th><th>Články</th><th>Ostatní</th>
+        </tr></thead><tbody id="merKonvRows"></tbody></table>
+      </div>
+    </div></details>
+
+    <details class="mer-sec"><summary>Stav tratí (kdo kde stojí teď)</summary><div class="in">
+      <p class="muted" style="font-size:.8rem;line-height:1.5;margin:.2rem 0 .5rem;">
+        Krok je ten, který se pošle <strong>příště</strong>. Tohle je stav k této chvíli, ne za zvolené období.
+      </p>
+      <div style="overflow-x:auto;max-height:44vh;overflow-y:auto;">
+        <table><thead><tr>
+          <th>Trať</th><th>Čeká na krok</th><th>Aktivní</th><th>Odhlášení</th><th>Bounce</th><th>Pauza</th><th>Koupili</th>
+        </tr></thead><tbody id="merStavRows"></tbody></table>
+      </div>
+    </div></details>
+
     <p class="muted" id="merFoot" style="margin-top:.8rem;"></p>
   </div></div>
 
@@ -2688,8 +2782,20 @@
     // 📈 Měření mailů — vlastní pixel + přesměrování prokliků (akce `mail_mereni`).
     // ⛔ Nemíchá se se starými typy `open`/`click` z Resendu (22.–27. 7. 2026): tehdy
     //    tracking vracel 400 na všechny odkazy, takže ta data jsou horší než žádná.
+    // Data denního grafu drží proměnná, aby ťuknutí na sloupec nemuselo znovu na server.
+    var MER_DNY=[];
+    function merDenPopis(i){
+      var d=MER_DNY[i]; if(!d) return;
+      $('merGrafPopis').textContent=merDatum(d.den)+': odesláno '+d.odeslano+', otevřelo '+d.otevreno+', prokliky '+d.klikli;
+    }
+    function merDatum(s){
+      var p=String(s).split('-'); if(p.length!==3) return String(s);
+      return Number(p[2])+'. '+Number(p[1])+'.';
+    }
     function openMailMereni(){
       $('mer').classList.add('on'); $('merRows').innerHTML=''; $('merFoot').textContent='Načítám…'; $('merStav').textContent='';
+      $('merSouhrn').innerHTML=''; $('merGraf').innerHTML=''; $('merTrateRows').innerHTML='';
+      $('merOdkazyRows').innerHTML=''; $('merKonvRows').innerHTML=''; $('merStavRows').innerHTML='';
       var dnu=Number($('merDnu').value)||30;
       api({action:'mail_mereni',dnu:dnu}).then(function(o){
         if(!(o&&o.j&&o.j.ok)){ $('merFoot').textContent='Přehled se nepodařilo načíst — zkus zavřít a otevřít znovu.'; return; }
@@ -2705,21 +2811,99 @@
           $('merStav').textContent='Měření běží (za týden '+d.px_udalosti_za_tyden+' událostí).';
         }
         var pct=function(a,b){ return b>0?Math.round(a*100/b)+' %':'—'; };
+        var s=d.souhrn||{};
+
+        // SOUHRN. Každá dlaždice říká i to, čemu se nesmí věřit doslova.
+        var tile=function(cls,n,l,sub){
+          return '<div class="c '+cls+'"><div class="n">'+n+'</div><div class="l">'+l+'</div>'+
+            (sub?'<div class="s">'+sub+'</div>':'')+'</div>';
+        };
+        $('merSouhrn').innerHTML=
+          tile('',s.odeslano||0,'odesláno mailů',(s.prijemcu||0)+' příjemců')+
+          tile('zluta',pct(s.otevreno||0,s.odeslano||0),'otevřelo','horní odhad · '+(s.otevreno||0)+' lidí')+
+          tile('zelena',pct(s.klikli||0,s.odeslano||0),'proklik',(s.klikli||0)+' prokliků · '+(s.klikli_lidi||0)+' lidí')+
+          tile((s.odhlaseni?'cervena':''),s.odhlaseni||0,'odhlásilo se',pct(s.odhlaseni||0,s.odeslano||0)+' z odeslaných')+
+          tile((s.bounce?'cervena':''),s.bounce||0,'nedoručeno',(s.chyby||0)+' chyb odeslání')+
+          tile((s.stiznosti?'cervena':''),s.stiznosti||0,'stížností na spam','')+
+          tile('',(s.otevreno_stroj||0)+' / '+(s.klikli_stroj||0),'stroje','otevření / prokliky skenerů');
+
+        // DENNÍ GRAF. Výška sloupce = odesláno; zdola prokliky, otevření, zbytek.
+        MER_DNY=d.dny||[];
+        var max=0; MER_DNY.forEach(function(x){ if(x.odeslano>max) max=x.odeslano; });
+        $('merGraf').innerHTML=MER_DNY.map(function(x,i){
+          var c=x.odeslano||0;
+          var kl=Math.min(x.klikli||0,c), ot=Math.min(Math.max((x.otevreno||0)-kl,0),c-kl), zb=c-kl-ot;
+          var h=function(v){ return max>0?(v*100/max):0; };
+          return '<div class="d" data-i="'+i+'" title="'+esc(merDatum(x.den))+'">'+
+            '<i class="zb" style="height:'+h(zb).toFixed(2)+'%"></i>'+
+            '<i class="ot" style="height:'+h(ot).toFixed(2)+'%"></i>'+
+            '<i class="kl" style="height:'+h(kl).toFixed(2)+'%"></i></div>';
+        }).join('');
+        $('merGrafPopis').textContent=MER_DNY.length?('ťukni na sloupec · '+merDatum(MER_DNY[0].den)+' až '+merDatum(MER_DNY[MER_DNY.length-1].den)):'';
+
+        // PO TRATÍCH
+        $('merTrateRows').innerHTML=(d.trate||[]).map(function(t){
+          return '<tr><td>'+esc(t.track||'–')+'</td><td class="muted">'+t.kroku+'</td><td>'+t.odeslano+'</td>'+
+            '<td>'+t.otevreno+' <span class="muted">('+pct(t.otevreno,t.odeslano)+')</span></td>'+
+            '<td>'+t.klikli+' <span class="muted">('+pct(t.klikli,t.odeslano)+')</span></td>'+
+            '<td>'+(t.odhlaseni||0)+'</td><td class="muted">'+(t.bounce||0)+'</td><td class="muted">'+(t.chyba||0)+'</td></tr>';
+        }).join('')||'<tr><td colspan="8" class="muted">Za zvolené období nic.</td></tr>';
+
+        // PO KROCÍCH
         $('merRows').innerHTML=rows.map(function(r){
           return '<tr><td>'+esc(r.track||'—')+'<div class="muted" style="font-size:.8em">'+esc(r.key||'')+'</div></td>'+
             '<td>'+r.step+'</td><td>'+r.odeslano+'</td>'+
             '<td>'+r.otevreno+' <span class="muted">('+pct(r.otevreno,r.odeslano)+')</span></td>'+
             '<td class="muted">'+r.otevreno_stroj+'</td>'+
             '<td>'+r.klikli+' <span class="muted">('+pct(r.klikli,r.odeslano)+')</span></td>'+
-            '<td class="muted">'+r.klikli_stroj+(r.bez_podpisu?' · '+r.bez_podpisu+' bez podpisu':'')+'</td></tr>';
-        }).join('');
-        $('merFoot').textContent=rows.length+' řádků za posledních '+d.dnu+' dní. Poslední měřicí událost: '+(d.posledni_px_udalost||'zatím žádná')+'.';
+            '<td class="muted">'+r.klikli_stroj+(r.bez_podpisu?' · '+r.bez_podpisu+' bez podpisu':'')+'</td>'+
+            '<td>'+(r.odhlaseni||0)+'</td>'+
+            '<td class="muted">'+(r.bounce||0)+' / '+(r.chyba||0)+'</td></tr>';
+        }).join('')||'<tr><td colspan="9" class="muted">Za zvolené období nic.</td></tr>';
+
+        // ODKAZY
+        $('merOdkazyRows').innerHTML=(d.odkazy||[]).map(function(u){
+          return '<tr><td><span class="mer-url" title="'+esc(u.url)+'">'+esc(u.url)+'</span></td>'+
+            '<td><span class="badge b-tag">'+esc(u.kategorie||'?')+'</span></td>'+
+            '<td>'+u.kliku+'</td><td>'+u.lidi+'</td><td class="muted">'+u.stroje+'</td></tr>';
+        }).join('')||'<tr><td colspan="5" class="muted">Zatím nikdo na nic neklikl (měření prokliků běží od 27. 8. 2026).</td></tr>';
+
+        // KONVERZNÍ PROKLIKY
+        var KAT=['appka','pokladna','videokurz','academy','koucink','nastroje','clanky','ostatni'];
+        $('merKonvRows').innerHTML=(d.konverze||[]).map(function(k){
+          return '<tr><td>'+esc(k.track||'–')+'</td>'+KAT.map(function(n){
+            return '<td'+(k[n]?'':' class="muted"')+'>'+(k[n]||0)+'</td>';
+          }).join('')+'</tr>';
+        }).join('')||'<tr><td colspan="9" class="muted">Zatím žádné lidské prokliky.</td></tr>';
+
+        // STAV TRATÍ
+        $('merStavRows').innerHTML=(d.traty_stav||[]).map(function(t){
+          return '<tr><td>'+esc(t.track||'(bez tratě)')+'</td><td>'+(t.step<0?'–':t.step)+'</td>'+
+            '<td>'+t.active+'</td><td class="muted">'+t.unsubscribed+'</td><td class="muted">'+t.bounced+'</td>'+
+            '<td class="muted">'+t.paused+'</td><td class="muted">'+t.purchased+'</td></tr>';
+        }).join('')||'<tr><td colspan="7" class="muted">Žádné leady.</td></tr>';
+
+        var pozn=rows.length+' kroků za posledních '+d.dnu+' dní. Poslední měřicí událost: '+(d.posledni_px_udalost||'zatím žádná')+'.';
+        // ⛔ Nepřiřazená odhlášení se musí přiznat: bez téhle věty by součet sloupce
+        //    „odhlásilo" nesouhlasil s dlaždicí a vypadalo by to jako chyba.
+        if(s.odhlaseni_neprirazeno) pozn+=' Z odhlášení se '+s.odhlaseni_neprirazeno+' nedalo přiřadit ke kroku (poslední mail je starší než zvolené období).';
+        if(s.bounce_lidi) pozn+=' Nedoručitelných adres vyřazených z rozesílky: '+s.bounce_lidi+'.';
+        // `error` zapisují i funkce mimo rozesílku (link-check, stripe webhook). V tabulce
+        // by to mátlo, tak se jen přizná číslem.
+        if(s.chyby_mimo_maily) pozn+=' Dalších '+s.chyby_mimo_maily+' chyb je mimo rozesílku (hlídače a webhooky), v tabulce nejsou.';
+        $('merFoot').textContent=pozn;
       }).catch(function(){ $('merFoot').textContent='Chyba spojení.'; });
     }
     var _mer=$('merBtn'); if(_mer) _mer.addEventListener('click',openMailMereni);
     var _merl=$('merLink'); if(_merl) _merl.addEventListener('click',function(e){ e.preventDefault(); openMailMereni(); });
     var _merx=$('merX'); if(_merx) _merx.addEventListener('click',function(){ $('mer').classList.remove('on'); });
     var _merd=$('merDnu'); if(_merd) _merd.addEventListener('change',openMailMereni);
+    // Ťuknutí na sloupec grafu vypíše čísla dne. ⛔ Delegace na kontejneru: sloupce se
+    //    překreslují při každé změně období a vlastní handlery by se ztratily.
+    var _merg=$('merGraf'); if(_merg) _merg.addEventListener('click',function(e){
+      var t=e.target; while(t&&t!==_merg&&!t.getAttribute('data-i')) t=t.parentNode;
+      if(t&&t!==_merg) merDenPopis(Number(t.getAttribute('data-i')));
+    });
     $('mer').addEventListener('click',function(e){ if(e.target===$('mer')) $('mer').classList.remove('on'); });
 
     var _ml=$('mlogBtn'); if(_ml) _ml.addEventListener('click',openMailLog);

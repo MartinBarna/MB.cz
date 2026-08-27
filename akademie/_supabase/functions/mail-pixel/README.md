@@ -28,6 +28,26 @@ Tohle je náhrada, kterou celou vlastníme, a je postavená proti té zkušenost
 
 ⇒ Verdikt „prodává ta nabídka?" se staví na `entitlements`, ne na těchhle číslech.
 
+## Co panel ukazuje (rozšířeno 27. 8. 2026)
+
+Souhrn za období, denní sloupcový graf, rozpad po tratích i po krocích, nejklikanější odkazy,
+konverzní prokliky po tratích a stav tratí (kdo kde stojí teď). Tři věci, na kterých se dá
+naletět, a proto jsou pojmenované i v UI:
+
+- **Otevření se počítá po LIDECH, ne po událostech.** Jeden člověk může pixel stáhnout vícekrát
+  a otevřenost by přelezla 100 %. Syrový počet je v poli `otevreno_udalosti`.
+- **Odhlášení se přiřazuje k POSLEDNÍMU odeslanému mailu** před změnou `leads.updated_at`.
+  Přesné to být nemůže: odhlašovací odkaz se schválně neměří. Co se přiřadit nedá, se přizná
+  v poli `odhlaseni_neprirazeno` a vypíše pod tabulkou.
+- **Typ `error` zapisují i funkce mimo rozesílku** (`link-check`, `academy-stripe-webhook`)
+  a `detail.track` mají název sebe sama. V tabulce mailů proto nejsou, jen v souhrnu
+  (`chyby_mimo_maily`).
+
+⛔ **Kolik lidí se z mailu registrovalo nebo zaplatilo, se odsud zjistit NEDÁ.** `px_click` nese
+cílovou URL, ale nic, co by šlo spárovat s registrací na druhé straně. Proklik na pokladnu není
+platba. Další krok: propsat `lead_id` do UTM (`utm_term`) v `mail-klik/cil.ts` a párovat na
+straně `intake-capture` / Stripe.
+
 ## Nasazení (přesné kroky)
 
 1. **Migrace** (jen indexy, nic nemaže):

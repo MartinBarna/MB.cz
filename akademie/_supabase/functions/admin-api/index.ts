@@ -728,31 +728,64 @@ Deno.serve(async (req) => {
     if (action === "mail_mereni") {
       const dnu = Math.min(180, Math.max(1, Number(body.dnu) || 30));
       const od = new Date(Date.now() - dnu * 86400000).toISOString();
+      // ⛔ `bounce`, `complaint` a `error` se pridavaji jen jako DOPROVODNA cisla (nedorucitelnost
+      //    a stiznosti). Do jmenovatele odeslanych se nikdy nepocitaji, jinak by se odeslani
+      //    zapocitalo dvakrat (jednou jako `sent`, podruhe jako jeho bounce).
       const evs = await fetchAllRows((f, t) =>
         admin.from("email_events").select("lead_id,step,type,detail,created_at")
           .gte("created_at", od)
-          .in("type", ["sent", "oneoff", "px_odeslano", "px_open", "px_click"])
+          .in("type", ["sent", "oneoff", "px_odeslano", "px_open", "px_click", "bounce", "complaint", "error"])
           .order("id").range(f, t)
+      );
+      // Leady se tahaji CELE (ne jen za okno): stav trati je odpoved na otazku „kdo kde stoji
+      // TED", ne „kdo se pohnul za 30 dni". Odhlaseni se z nich filtruje az podle `updated_at`.
+      const leady = await fetchAllRows((f, t) =>
+        admin.from("leads").select("id,track,step,status,updated_at").order("id").range(f, t)
       );
 
       type Radek = {
         track: string; step: number; key: string;
-        odeslano: number; otevreno: number; otevreno_stroj: number;
+        odeslano: number; otevreno: number; otevreno_udalosti: number; otevreno_stroj: number;
         klikli: number; klikli_stroj: number; bez_podpisu: number;
+        bounce: number; stiznost: number; chyba: number; odhlaseni: number;
       };
       const tab = new Map<string, Radek>();
       const klic = (track: string, step: number) => track + "|" + step;
       const radek = (track: string, step: number): Radek => {
         const k = klic(track, step);
         if (!tab.has(k)) {
-          tab.set(k, { track, step, key: "", odeslano: 0, otevreno: 0, otevreno_stroj: 0, klikli: 0, klikli_stroj: 0, bez_podpisu: 0 });
+          tab.set(k, {
+            track, step, key: "", odeslano: 0, otevreno: 0, otevreno_udalosti: 0, otevreno_stroj: 0,
+            klikli: 0, klikli_stroj: 0, bez_podpisu: 0, bounce: 0, stiznost: 0, chyba: 0, odhlaseni: 0,
+          });
         }
         return tab.get(k)!;
       };
+      // ⚠️ OTEVRENI SE POCITA PO LIDECH, NE PO UDALOSTECH. Jeden clovek muze pixel stahnout
+      //    vickrat (proxy si ho obcas natahne znovu) a pak by otevrenost prelezla 100 %,
+      //    coz je presne to cislo, kvuli kteremu se prestal verit Resendu. Syrovy pocet
+      //    udalosti zustava v `otevreno_udalosti`.
+      const otevreliOsoby = new Map<string, Set<string>>();
+      // Denni rada pro sloupcovy graf. Den se pocita v prazskem case, ne v UTC: mail odchazi
+      // v 9:00 UTC, ale Martin se diva na „dnes" podle sveho.
+      const denFmt = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Prague" });
+      const den = (iso: string) => { try { return denFmt.format(new Date(iso)); } catch { return String(iso).slice(0, 10); } };
+      type Den = { den: string; odeslano: number; otevreno: number; klikli: number };
+      const dny = new Map<string, Den>();
+      const denRadek = (d: string): Den => {
+        if (!dny.has(d)) dny.set(d, { den: d, odeslano: 0, otevreno: 0, klikli: 0 });
+        return dny.get(d)!;
+      };
+      // Posledni odeslany mail kazdeho leada. Slouzi k tomu, aby se odhlaseni dalo pripsat
+      // KROKU, po kterem prislo. Odhlasovaci odkaz se zamerne NIKDY nemeri (`stopa.ts`:
+      // je to pravni povinnost a nesmi viset na nasem presmerovaci), takze jinak nez
+      // pres posledni odeslany mail se to priradit neda.
+      const posledniMail = new Map<string, { track: string; step: number; cas: number }[]>();
       // Prokliky se sbiraji po osobach a az potom vyhodnocuji, protoze skener se pozna
       // az z CELE skupiny udalosti jednoho cloveka nad jednim mailem, ne z jedne radky.
-      type Klik = { cas: number; url: string; klient: string; podpis: string };
+      type Klik = { cas: number; den: string; url: string; klient: string; podpis: string };
       const klikyOsoby = new Map<string, Klik[]>();
+      const dnyOtev = new Map<string, Set<string>>();
 
       let poslednePxOdeslano = "", posledneSent = "", poslednePxUdalost = "";
       for (const e of evs) {
@@ -762,19 +795,39 @@ Deno.serve(async (req) => {
         const r = radek(track, step);
         if (!r.key && det.key) r.key = String(det.key);
         const cas = String(e.created_at ?? "");
-        if (e.type === "sent" || e.type === "oneoff") {
+        if (e.type === "sent" || e.type === "oneoff" || e.type === "px_odeslano") {
           // ⛔ `oneoff` je plnohodnotny odeslany mail (830 kusu od 21. 8. 2026), jen se
           //    posila mimo frontu. Bez nej by jmenovatel chybel a otevrenost by vysla nesmyslne.
-          r.odeslano++;
-          if (cas > posledneSent) posledneSent = cas;
-        } else if (e.type === "px_odeslano") {
           // `milestones` a `order-rescue` do `email_events` typ `sent` nezapisuji vubec,
-          // maji vlastni tabulky. Tohle je jejich jmenovatel.
+          // maji vlastni tabulky; jejich jmenovatel je `px_odeslano`.
           r.odeslano++;
-          if (cas > poslednePxOdeslano) poslednePxOdeslano = cas;
-          if (cas > poslednePxUdalost) poslednePxUdalost = cas;
+          denRadek(den(cas)).odeslano++;
+          if (e.lead_id) {
+            const sez = posledniMail.get(String(e.lead_id)) ?? [];
+            sez.push({ track, step, cas: new Date(cas).getTime() });
+            posledniMail.set(String(e.lead_id), sez);
+          }
+          if (e.type === "px_odeslano") {
+            if (cas > poslednePxOdeslano) poslednePxOdeslano = cas;
+            if (cas > poslednePxUdalost) poslednePxUdalost = cas;
+          } else if (cas > posledneSent) posledneSent = cas;
+        } else if (e.type === "bounce") {
+          r.bounce++;
+        } else if (e.type === "complaint") {
+          r.stiznost++;
+        } else if (e.type === "error") {
+          // Odeslani selhalo u Resendu. Neni to bounce (mail vubec neodesel) a do jmenovatele
+          // nepatri, ale mlcet se o tom nema: je to mail, ktery clovek nikdy nedostal.
+          r.chyba++;
         } else if (e.type === "px_open") {
-          r.otevreno++;
+          r.otevreno_udalosti++;
+          const kdoO = String(e.lead_id ?? ("anon:" + cas));
+          const kO = klic(track, step);
+          if (!otevreliOsoby.has(kO)) otevreliOsoby.set(kO, new Set());
+          otevreliOsoby.get(kO)!.add(kdoO);
+          const dO = den(cas);
+          if (!dnyOtev.has(dO)) dnyOtev.set(dO, new Set());
+          dnyOtev.get(dO)!.add(kdoO + "|" + kO);
           const klient = String(det.klient ?? "");
           if (klient && klient !== "jiny") r.otevreno_stroj++;
           if (cas > poslednePxUdalost) poslednePxUdalost = cas;
@@ -784,6 +837,7 @@ Deno.serve(async (req) => {
           if (!klikyOsoby.has(kdo)) klikyOsoby.set(kdo, []);
           klikyOsoby.get(kdo)!.push({
             cas: new Date(cas).getTime(),
+            den: den(cas),
             url: String(det.url ?? ""),
             klient: String(det.klient ?? ""),
             podpis: String(det.podpis ?? ""),
@@ -798,6 +852,35 @@ Deno.serve(async (req) => {
       //    dvakrat). Proto je dvouvterinove okno jen dedup, ne dukaz.
       // Za stroj se povazuje ten, kdo behem 10 s otevre DVE RUZNE adresy z tehoz mailu,
       // nebo koho hlasi user-agent jako proxy/bota.
+      // ⭐ KAM SE KLIKALO. Odkazy i konverzni kategorie se plni JEN z lidskych prokliku:
+      //    skener projde salvou celou nabidku vcetne pokladny a udelal by z toho zajem,
+      //    ktery neexistuje. Strojove prokliky se drzi zvlast, aby slo poznat vypadek.
+      type Odkaz = { url: string; lidi: number; kliku: number; stroje: number; kategorie: string; traty: Record<string, number> };
+      const odkazy = new Map<string, Odkaz>();
+      // Kategorie odkazu. ⚠️ Je to POPIS CILE, ne dukaz nakupu: proklik na pokladnu neznamena
+      //    zaplaceno. Skutecne penize se ctou z `entitlements` a ze Stripu, ne odsud.
+      const kategorie = (raw: string): string => {
+        let u: URL;
+        try { u = new URL(raw); } catch { return "ostatni"; }
+        const host = u.hostname.toLowerCase().replace("www.", "");
+        const cesta = u.pathname.toLowerCase();
+        if (host === "buy.stripe.com") return "pokladna";
+        if (host === "tvujcoach.cz") return "appka";
+        if (cesta.startsWith("/videokurz") || cesta.startsWith("/akademie/videokurz")) return "videokurz";
+        if (cesta.startsWith("/akademie")) return "academy";
+        if (cesta.startsWith("/koucing") || cesta.startsWith("/konzultace")) return "koucink";
+        if (cesta.startsWith("/kviz") || cesta.startsWith("/kalkulacka") || cesta.startsWith("/nastroje-zdarma") || cesta.startsWith("/download")) return "nastroje";
+        if (cesta.startsWith("/clanky")) return "clanky";
+        return "ostatni";
+      };
+      // ⛔ V klici odkazu NESMI zustat query: UTM znacky se lisi mail od mailu, takze by
+      //    se tentyz odkaz rozpadl na deset radku. Cela adresa vcetne query zustava
+      //    v `email_events`, kdyby ji nekdo potreboval.
+      const bezQuery = (raw: string): string => {
+        try { const u = new URL(raw); return u.origin + u.pathname; } catch { return String(raw).slice(0, 120); }
+      };
+      const kliklyLidi = new Set<string>();
+      const konverze = new Map<string, Record<string, number>>();
       for (const [kdo, seznam] of klikyOsoby) {
         const track = kdo.split("|")[1] ?? "";
         const step = Number(kdo.split("|")[2] ?? -1);
@@ -812,12 +895,131 @@ Deno.serve(async (req) => {
         const ruznychUrl = new Set(ruzneRychle.map((k) => k.url)).size;
         const stroj = ruznychUrl >= 2 || ponechane.some((k) => k.klient && k.klient !== "jiny");
         if (stroj) r.klikli_stroj++;
-        else r.klikli++;
+        else {
+          r.klikli++;
+          kliklyLidi.add(kdo.split("|")[0] ?? kdo);
+        }
+        const videneUrl = new Set<string>();
+        for (const k of ponechane) {
+          const key = bezQuery(k.url);
+          if (!odkazy.has(key)) odkazy.set(key, { url: key, lidi: 0, kliku: 0, stroje: 0, kategorie: kategorie(k.url), traty: {} });
+          const o = odkazy.get(key)!;
+          if (stroj) { o.stroje++; continue; }
+          o.kliku++;
+          denRadek(k.den).klikli++;
+          if (!videneUrl.has(key)) { o.lidi++; videneUrl.add(key); }
+          o.traty[track] = (o.traty[track] ?? 0) + 1;
+          const kat = o.kategorie;
+          if (!konverze.has(track)) konverze.set(track, {});
+          const kt = konverze.get(track)!;
+          kt[kat] = (kt[kat] ?? 0) + 1;
+        }
       }
 
-      const rows = [...tab.values()]
-        .filter((r) => r.odeslano > 0 || r.otevreno > 0 || r.klikli > 0 || r.klikli_stroj > 0)
+      // Otevreni po lidech se dopocita az tady, protoze se sbiralo do mnozin.
+      for (const [k, mn] of otevreliOsoby) {
+        const t = k.split("|")[0] ?? "";
+        const s = Number(k.split("|")[1] ?? -1);
+        radek(t, s).otevreno = mn.size;
+      }
+      for (const [d, mn] of dnyOtev) denRadek(d).otevreno = mn.size;
+
+      // ⭐ ODHLASENI PO KROKU. Prirazuje se k POSLEDNIMU odeslanemu mailu pred odhlasenim.
+      // ⚠️ Presne to neni a ani byt nemuze: odhlasovaci odkaz se schvalne nemeri, takze
+      //    se pouziva `leads.updated_at`. Kdo se odhlasil po mailu starsim nez okno, spadne
+      //    do `odhlaseni_neprirazeno`. `updated_at` navic hybe i jina zmena leada, takze
+      //    datum odhlaseni je horni odhad stari, ne razitko kliknuti.
+      const odMs = new Date(od).getTime();
+      let odhlaseniCelkem = 0, odhlaseniNeprirazeno = 0, bounceLidi = 0;
+      for (const l of leady) {
+        const st = String(l.status ?? "");
+        if (st !== "unsubscribed" && st !== "bounced") continue;
+        const kdy = new Date(String(l.updated_at ?? "")).getTime();
+        if (!Number.isFinite(kdy) || kdy < odMs) continue;
+        if (st === "bounced") { bounceLidi++; continue; }
+        odhlaseniCelkem++;
+        const sez = posledniMail.get(String(l.id)) ?? [];
+        let posl: { track: string; step: number; cas: number } | null = null;
+        for (const m of sez) if (m.cas <= kdy && (!posl || m.cas > posl.cas)) posl = m;
+        if (!posl) { odhlaseniNeprirazeno++; continue; }
+        radek(posl.track, posl.step).odhlaseni++;
+      }
+
+      // STAV TRATI: kdo kde stoji TED. `leads.step` je krok, ktery se posle PRISTE
+      // (drip-send ho po odeslani posouva), proto sloupec v UI rika „ceka na krok".
+      const stavTrati = new Map<string, { track: string; step: number; active: number; unsubscribed: number; bounced: number; paused: number; purchased: number; jine: number }>();
+      for (const l of leady) {
+        const t = String(l.track ?? "");
+        const s = Number.isFinite(Number(l.step)) ? Number(l.step) : -1;
+        const k = t + "|" + s;
+        if (!stavTrati.has(k)) stavTrati.set(k, { track: t, step: s, active: 0, unsubscribed: 0, bounced: 0, paused: 0, purchased: 0, jine: 0 });
+        const c = stavTrati.get(k)!;
+        const st = String(l.status ?? "");
+        if (st === "active") c.active++;
+        else if (st === "unsubscribed") c.unsubscribed++;
+        else if (st === "bounced") c.bounced++;
+        else if (st === "paused") c.paused++;
+        else if (st === "purchased") c.purchased++;
+        else c.jine++;
+      }
+
+      // ⚠️ TYP `error` NENI JEN CHYBA MAILU. Zapisuji ho i funkce, ktere s rozesilkou
+      //    nesouvisi (`link-check`, `academy-stripe-webhook`) a `detail.track` maji nazev
+      //    SEBE SAMA, ne trate. Takove radky by v tabulce mailu byly matouci, tak se
+      //    nezobrazuji, ale ani se nezahazuji: jejich pocet jde do souhrnu zvlast.
+      const vsechnyRadky = [...tab.values()];
+      const rows = vsechnyRadky
+        .filter((r) => r.odeslano > 0 || r.otevreno > 0 || r.klikli > 0 || r.klikli_stroj > 0 || r.bounce > 0 || r.odhlaseni > 0)
         .sort((a, b) => (b.odeslano - a.odeslano) || a.track.localeCompare(b.track) || a.step - b.step);
+
+      // ROZPAD PO TRATICH: soucet kroku jedne trate. Pocty lidi se scitat NESMI (jeden
+      // clovek otevre vic kroku), takze `otevreno` je tu „otevreni mailu", ne „lidi".
+      type Trat = { track: string; kroku: number; odeslano: number; otevreno: number; klikli: number; klikli_stroj: number; bounce: number; chyba: number; odhlaseni: number };
+      const trateMap = new Map<string, Trat>();
+      for (const r of rows) {
+        if (!trateMap.has(r.track)) trateMap.set(r.track, { track: r.track, kroku: 0, odeslano: 0, otevreno: 0, klikli: 0, klikli_stroj: 0, bounce: 0, chyba: 0, odhlaseni: 0 });
+        const t = trateMap.get(r.track)!;
+        t.kroku++; t.odeslano += r.odeslano; t.otevreno += r.otevreno; t.klikli += r.klikli;
+        t.klikli_stroj += r.klikli_stroj; t.bounce += r.bounce; t.chyba += r.chyba; t.odhlaseni += r.odhlaseni;
+      }
+      const trate = [...trateMap.values()].sort((a, b) => b.odeslano - a.odeslano);
+
+      // SOUHRN za cele okno. `odeslano` je jmenovatel obou procent.
+      const souhrn = {
+        odeslano: rows.reduce((s, r) => s + r.odeslano, 0),
+        otevreno: rows.reduce((s, r) => s + r.otevreno, 0),
+        otevreno_udalosti: rows.reduce((s, r) => s + r.otevreno_udalosti, 0),
+        otevreno_stroj: rows.reduce((s, r) => s + r.otevreno_stroj, 0),
+        klikli: rows.reduce((s, r) => s + r.klikli, 0),
+        klikli_stroj: rows.reduce((s, r) => s + r.klikli_stroj, 0),
+        klikli_lidi: kliklyLidi.size,
+        bounce: rows.reduce((s, r) => s + r.bounce, 0),
+        stiznosti: rows.reduce((s, r) => s + r.stiznost, 0),
+        chyby: rows.reduce((s, r) => s + r.chyba, 0),
+        chyby_mimo_maily: vsechnyRadky.filter((r) => r.odeslano === 0).reduce((s, r) => s + r.chyba, 0),
+        odhlaseni: odhlaseniCelkem,
+        odhlaseni_neprirazeno: odhlaseniNeprirazeno,
+        bounce_lidi: bounceLidi,
+        prijemcu: new Set(evs.filter((e) => e.lead_id && (e.type === "sent" || e.type === "oneoff" || e.type === "px_odeslano")).map((e) => String(e.lead_id))).size,
+      };
+
+      // DENNI RADA. Doplni se i dny, kdy se nic nedelo, jinak by graf lhal o rozestupech.
+      const dnySeznam: Den[] = [];
+      for (let i = dnu - 1; i >= 0; i--) {
+        const d = den(new Date(Date.now() - i * 86400000).toISOString());
+        dnySeznam.push(dny.get(d) ?? { den: d, odeslano: 0, otevreno: 0, klikli: 0 });
+      }
+
+      const odkazyTop = [...odkazy.values()]
+        .sort((a, b) => (b.kliku - a.kliku) || (b.stroje - a.stroje))
+        .slice(0, 30);
+
+      const konverzeRows = [...konverze.entries()]
+        .map(([track, kat]) => ({ track, ...kat, celkem: Object.values(kat).reduce((s, n) => s + n, 0) }))
+        .sort((a, b) => b.celkem - a.celkem);
+
+      const traty_stav = [...stavTrati.values()]
+        .sort((a, b) => a.track.localeCompare(b.track) || a.step - b.step);
 
       // ⭐ POJISTKA PROTI TICHEMU VYPADKU. Presne tohle u Resendu chybelo: tracking byl
       // pet dni rozbity, udalosti chodily dal a nikdo si nevsiml. Kdyz se za poslednich
@@ -842,7 +1044,14 @@ Deno.serve(async (req) => {
         posledni_sent: posledneSent || null,
         posledni_px_odeslano: poslednePxOdeslano || null,
         posledni_px_udalost: poslednePxUdalost || null,
+        mereni_od: "2026-08-27",
         rows,
+        souhrn,
+        trate,
+        dny: dnySeznam,
+        odkazy: odkazyTop,
+        konverze: konverzeRows,
+        traty_stav,
         varovani: "Otevreni je horni odhad (Gmail a Apple si pixel stahnou samy) a zaroven se nepocitaji opakovana otevreni (Gmail si obrazek cachuje). Proklik je silnejsi signal, ale i ten delaji skenery. Verdikt o penezich stav na entitlements.",
       });
     }
