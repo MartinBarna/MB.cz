@@ -1,6 +1,6 @@
 # Cukr, tloustnutí a cukrovka
 
-„Cukr je bílý jed." Slyšel jsi to a možná tomu i věříš. Zní to děsivě a hlavně jednoduše: vyhodíš cukr, a problém zmizí. Jenže takhle tělo nefunguje. Cukr tě sám o sobě neztloustí, nedá ti cukrovku a rozhodně tě „neotráví". Pojďme si to rozebrat narovinu: co o cukru platí, co je strašení a co máš reálně hlídat.
+„Cukr je bílý jed." Slyšel jsi to a možná tomu i věříš. Zní to děsivě a hlavně jednoduše: vyhodíš cukr, a problém zmizí. Jenže takhle tělo nefunguje. Cukr tě sám o sobě neztloustí, nedá ti cukrovku a rozhodně tě „neotráví". Tady je to narovinu: co o cukru platí, co je strašení a co máš reálně hlídat.
 
 ## „Dávka dělá jed", a tahle věta platí o všem
 

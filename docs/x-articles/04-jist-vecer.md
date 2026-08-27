@@ -1,6 +1,6 @@
 # Jíst večer a tloustnutí
 
-„Po šesté večer už ani sousto, jinak to máš na bocích." Klasika, kterou slyšel skoro každý, kdo někdy chtěl zhubnout. Zní to logicky: večer se nehýbeš, tak se to přece musí uložit. Jenže když se podíváš, co o tom víme, je to jinak. Kvůli samotné hodině na hodinách neztloustneš. Rozhodují celkové kalorie za den. Zároveň to ale není úplně černobílé: dřívější večeře může s hubnutím trochu pomoct. Pojďme si to rozklíčovat.
+„Po šesté večer už ani sousto, jinak to máš na bocích." Klasika, kterou slyšel skoro každý, kdo někdy chtěl zhubnout. Zní to logicky: večer se nehýbeš, tak se to přece musí uložit. Jenže když se podíváš, co o tom víme, je to jinak. Kvůli samotné hodině na hodinách neztloustneš. Rozhodují celkové kalorie za den. Zároveň to ale není úplně černobílé: dřívější večeře může s hubnutím trochu pomoct.
 
 ## Nejdřív to hlavní: rozhoduje celková kalorická bilance
 
@@ -41,7 +41,7 @@ Takže řešení je mít večerní příjem pod kontrolou: vědět, kolik toho j
 
 ## Co s tím prakticky
 
-- Řeš celkový denní příjem, ne hodiny. Deficit v součtu za den rozhoduje o hubnutí. Jak ho nastavit, mám tady: https://martinbarna.cz/clanky/kaloricky-deficit.html
+- Řeš celkový denní příjem, ne hodiny. Deficit v součtu za den rozhoduje o hubnutí. Jak ho nastavit, mám tady: https://martinbarna.cz/clanky/kaloricky-deficit-kolik-jist.html
 - Nech si dost jídla na večer. Když se odsoudíš k hladu po šesté, večerní nájezd na lednici je skoro jistý. Naplánuj si slušnou večeři, klidně i pozdě.
 - Dej si pozor na bezmyšlenkovité uzobávání. Reálná past je sáček brambůrek u seriálu.
 - Bílkoviny a vláknina do večeře. Zasytí a udrží tě v klidu, takže se večer líp ubráníš mlsání.

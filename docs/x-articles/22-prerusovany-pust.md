@@ -11,7 +11,7 @@ Vědci porovnali s klasickým kalorickým deficitem (prostě jíst míň každý
 - Jedna forma, **střídání „hladového" a normálního dne**, vyšla o něco líp (asi 1,3 kg navíc), ale hlavně v krátkých studiích do půl roku. V delších už rozdíl zmizel.
 - Na dlouhé trati (6 a víc měsíců) fungovaly všechny přístupy podobně. Vyhrával ten, u kterého člověk vydržel.
 
-Víc o deficitu samotném: https://martinbarna.cz/clanky/kaloricky-deficit.html
+Víc o deficitu samotném: https://martinbarna.cz/clanky/kaloricky-deficit-kolik-jist.html
 
 ## Proč půst vlastně funguje
 

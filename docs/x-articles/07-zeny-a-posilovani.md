@@ -64,6 +64,12 @@ Ten vysněný „tonus" je doslova trochu svalu + málo tuku nad ním. Sval post
 
 Lokální spalování tuku neexistuje. Tělo ubírá tuk plošně z celého těla, ne z místa, které zrovna zatížíš.
 
+## Zdroje
+
+1. Rozdíl v testosteronu mezi pohlavími: Handelsman DJ, Hirschberg AL, Bermon S. Circulating Testosterone as the Hormonal Basis of Sex Differences in Athletic Performance. Endocr Rev. 2018;39(5):803-829. PMID: 30010735 (cirkulující testosteron u mužů přesahuje ženské hodnoty více než patnáctinásobně, tedy ženský testosteron tvoří jen jednotky procent mužského)
+
+2. Zátěžový trénink a hustota kostí u žen po menopauze: Watson SL, et al. High-Intensity Resistance and Impact Training Improves Bone Mineral Density and Physical Function in Postmenopausal Women With Osteopenia and Osteoporosis: The LIFTMOR Randomized Controlled Trial. J Bone Miner Res. 2018;33(2):211-220. PMID: 28975661
+
 Další články, kalkulačku i praktické nástroje najdeš na https://martinbarna.cz/.
 
 ---

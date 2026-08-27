@@ -8,7 +8,7 @@ Hubnutí stojí a padá na jedné věci: na kalorickém deficitu. To znamená, �
 
 Deficit ale nemá být drastický. Extrémní hladovky vedou k jojo efektu, ztrátě svalů a k tomu, že to prostě nevydržíš. Cíl je udržitelný mírný deficit, u kterého se dá normálně fungovat. Když chceš vědět, kde přibližně jsi, spočítej si příjem v kalkulačce na webu: https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/
 
-Víc o mechanice deficitu najdeš tady: https://martinbarna.cz/clanky/kaloricky-deficit.html
+Víc o mechanice deficitu najdeš tady: https://martinbarna.cz/clanky/kaloricky-deficit-kolik-jist.html
 
 ## Bílkoviny: základ sytosti i udržení svalů
 

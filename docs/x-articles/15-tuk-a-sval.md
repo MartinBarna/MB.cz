@@ -1,6 +1,6 @@
 # Tuk a sval na jednom těle
 
-„Začni cvičit a tuk se ti přemění ve sval. A jak přestaneš, sval se zase přemění zpátky v tuk." Slyšel jsem to stokrát: v posilovně, od kamarádů, dokonce i od lidí, co to myslí dobře. Zní to jednoduše a logicky. Jenže tuk a sval jsou dvě úplně různé tkáně a jedna se v druhou přeměnit nedokáže. Pojď si to rozebrat, protože tahle představa lidem reálně škodí: bojí se kvůli ní posilovat.
+„Začni cvičit a tuk se ti přemění ve sval. A jak přestaneš, sval se zase přemění zpátky v tuk." Slyšel jsem to stokrát: v posilovně, od kamarádů, dokonce i od lidí, co to myslí dobře. Zní to jednoduše a logicky. Jenže tuk a sval jsou dvě úplně různé tkáně a jedna se v druhou přeměnit nedokáže. Tahle představa lidem reálně škodí: bojí se kvůli ní posilovat.
 
 ## Tuk a sval jsou dvě úplně jiné tkáně
 

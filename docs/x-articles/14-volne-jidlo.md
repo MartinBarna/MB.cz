@@ -4,7 +4,7 @@ Odmakáš celý týden a přijde víkend. S ním otázka, jestli si dát volno. 
 
 ## Kde je s celým volným dnem problém
 
-Pojďme si to spočítat. Celý týden držíš deficit 500 kcal denně, to máš 3 500 kcal „k dobru". Pak dorazí den bez zábran a sníst 2 000 až 3 000 kcal navíc je úplně snadné. A je hotovo, týden snažení je během jednoho odpoledne pryč. Jeden den ti smaže pět dní práce.
+Je to prostá matematika. Celý týden držíš deficit 500 kcal denně, to máš 3 500 kcal „k dobru". Pak dorazí den bez zábran a sníst 2 000 až 3 000 kcal navíc je úplně snadné. A je hotovo, týden snažení je během jednoho odpoledne pryč. Jeden den ti smaže pět dní práce.
 
 Vidím to u klientů pořád. Pátek večer začne „zaslouženě", sobota už jede volně a v neděli je plán v troskách. Váha v pondělí naskočí o kilo, dva, hlavně vodou a obsahem střev, a v hlavě se rozsvítí „selhal jsem". Pak přijde trestná dieta. A kolo se točí.
 

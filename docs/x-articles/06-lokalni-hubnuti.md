@@ -1,6 +1,6 @@
 # Lokální hubnutí a cviky na břicho
 
-„Dělám sklapovačky každý den a břicho mi pořád nikde." Slyšel jsem to snad od stovky lidí. Logika zní rozumně: chci ploché břicho, tak makám na břiše. Jenže tělo takhle nefunguje. Tuk nezmizí z místa, které procvičuješ. Můžeš udělat tisíc sklapovaček a tuk na pase si toho ani nevšimne. Pojďme si vysvětlit, proč to tak je a co s tím doopravdy hne.
+„Dělám sklapovačky každý den a břicho mi pořád nikde." Slyšel jsem to snad od stovky lidí. Logika zní rozumně: chci ploché břicho, tak makám na břiše. Jenže tělo takhle nefunguje. Tuk nezmizí z místa, které procvičuješ. Můžeš udělat tisíc sklapovaček a tuk na pase si toho ani nevšimne.
 
 ## Co je vlastně „spot reduction"
 
@@ -18,9 +18,9 @@ Tuk odejde z celého těla, v pořadí, které ti určuje genetika, ne počet sk
 
 ## Co na to říká věda
 
-Tohle není jen teorie od stolu. Spot reduction je v posilovacím prostředí jedno z nejlépe prověřených témat. V kontrolovaných studiích nechali účastníky po řadu týdnů posilovat jen jednu nohu nebo jednu paži a pak porovnávali, jestli z procvičované končetiny ubyl tuk víc než z té druhé. Kdyby spot reduction fungovala, trénovaná končetina by zhubla výrazně víc. To se nepotvrdilo: případný rozdíl mezi končetinami byl tak malý, že nemá praktický význam, a tuk ubýval plošně z celého těla.
+Tohle není jen teorie od stolu. Spot reduction je v posilovacím prostředí jedno z nejlépe prověřených témat. V kontrolované studii nechali účastníky dvanáct týdnů posilovat jen jednu (nedominantní) nohu a pak porovnávali, jestli z procvičované končetiny ubyl tuk víc než z té druhé. Kdyby spot reduction fungovala, trénovaná noha by zhubla výrazně víc. To se nepotvrdilo: tuk z trénované nohy neubýval o nic víc než z netrénované, tuk navíc ubyl i na místech, která vůbec necvičili (Ramírez-Campillo, 2013, PMID 23222084).
 
-Stejně dopadají i studie, kde lidé týdny dělali velké objemy břišních cviků. Břišní sval zesílil a vytrvalost vzrostla, ale obvod pasu ani množství tuku na břiše se proti kontrolní skupině prakticky nezměnily. Závěr je pokaždé stejný: cvičení svalu posílí ten sval, na odbourání tuku nad ním ale samo o sobě nestačí.
+Stejně dopadají i studie, kde lidé týdny dělali velké objemy břišních cviků. V šestitýdenní kontrolované studii se břišní sval zesílil a vytrvalost vzrostla (skupina po tréninku zvládla v průměru 47 shybů do sedu proti 32 v kontrolní skupině), ale obvod pasu ani množství podkožního tuku na břiše se proti kontrolní skupině nezměnily (Vispute, 2011, PMID 21804427). Závěr je pokaždé stejný: cvičení svalu posílí ten sval, na odbourání tuku nad ním ale samo o sobě nestačí.
 
 ## Proč ten sval stejně necítíš
 
@@ -49,6 +49,12 @@ Stejně tak platí, že lépe vyvinutý břišní sval bude víc vidět, až tuk
 - Tisíc sklapovaček = ploché břicho? Sklapovačky posílí sval, ale tuk navrch shodíš jen celkovým deficitem.
 - Nemám břišáky? Máš je. Jsou jen schované pod vrstvou tuku, kterou je potřeba sundat.
 - Cvičit břicho je zbytečné? Smysl má: pro sílu středu a držení těla. Jen ne na lokální tuk.
+
+## Zdroje
+
+1. Jednostranný trénink nohy: Ramírez-Campillo R, et al. Regional fat changes induced by localized muscle endurance resistance training. J Strength Cond Res. 2013;27(8):2219-2224. PMID: 23222084
+
+2. Objem břišních cviků: Vispute SS, et al. The effect of abdominal exercise on abdominal fat. J Strength Cond Res. 2011;25(9):2559-2564. PMID: 21804427
 
 Další články, kalkulačku i praktické nástroje najdeš na https://martinbarna.cz/.
 

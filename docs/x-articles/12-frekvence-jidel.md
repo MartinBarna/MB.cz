@@ -1,6 +1,6 @@
 # Frekvence jídel a metabolismus
 
-„Jez každé tři hodiny, ať se ti nezastaví metabolismus." „Bez svačiny tělo přejde do úsporného režimu." Tahle věta zní tak často, že ji většina lidí bere jako fakt. Jenže metabolismus není kamna, co vyhasnou, když do nich chvíli nepřiložíš. Mezi jídly se ti nic „nevypíná" ani „nezpomaluje". Pojďme si rozebrat, odkud se ten mýtus vzal a co o frekvenci jídel doopravdy platí.
+„Jez každé tři hodiny, ať se ti nezastaví metabolismus." „Bez svačiny tělo přejde do úsporného režimu." Tahle věta zní tak často, že ji většina lidí bere jako fakt. Jenže metabolismus není kamna, co vyhasnou, když do nich chvíli nepřiložíš. Mezi jídly se ti nic „nevypíná" ani „nezpomaluje". Tady je, odkud se ten mýtus vzal a co o frekvenci jídel doopravdy platí.
 
 ## Odkud se ten mýtus vzal
 

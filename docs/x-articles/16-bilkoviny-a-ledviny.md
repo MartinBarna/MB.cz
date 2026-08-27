@@ -12,7 +12,7 @@ Bílkoviny se omezují tomu, kdo už ledviny nemocné má. Z toho ale nevyplýv�
 
 ## Co na to říká věda u zdravých lidí
 
-Tady je jádro věci. Když se vědci podívali konkrétně na zdravé lidi, ten strašák se rozpadl. Existují přehledy studií, které posbíraly kontrolované pokusy a porovnaly lidi na vyšším a nižším příjmu bílkovin. A u jedinců se zdravými ledvinami vyšší příjem bílkovin nezhoršoval funkci ledvin. Sledovaným ukazatelem je tu obvykle glomerulární filtrace, zjednodušeně řečeno „výkon" ledvin. A ten u zdravých lidí na vyšším příjmu bílkovin klesat nezačal.
+Tady je jádro věci. Když se vědci podívali konkrétně na zdravé lidi, ten strašák se rozpadl. Metaanalýza 28 kontrolovaných studií a 1 358 lidí bez onemocnění ledvin porovnala lidi na vyšším a nižším či běžném příjmu bílkovin. Sledovaným ukazatelem je tu glomerulární filtrace (GFR), zjednodušeně řečeno „výkon" ledvin, a její změna se mezi skupinami nelišila: vyšší příjem bílkovin funkci ledvin u zdravých lidí nezhoršil (Devries, 2018, PMID 30383278).
 
 Možná teď namítneš: „Ale vždyť po jídle s hodně bílkovinama se ledviny rozjedou víc, ne?" Ano, a je to úplně normální. Filtraci si po bílkovině krátkodobě zvýší. Jenže to je adaptace, ne poškození. Je to jako když při běhu zrychlí srdce. Z toho, že ti tep při sprintu vyletí, nikdo nevyvozuje, že běh ničí srdce. U zdravých ledvin nemáme data, která by tuhle přechodnou reakci spojovala s tím, že by se časem opotřebovaly.
 
@@ -68,6 +68,10 @@ Z rady pro nemocné: lidem s onemocněním ledvin se bílkoviny opravdu omezují
 **Co je to krátkodobé zvýšení výkonu ledvin po jídle s bílkovinami?**
 
 Normální adaptace, ne poškození. Stejně jako když ti při běhu zrychlí srdce.
+
+## Zdroje
+
+1. Devries MC, et al. Changes in Kidney Function Do Not Differ between Healthy Adults Consuming Higher- Compared with Lower- or Normal-Protein Diets: A Systematic Review and Meta-Analysis. J Nutr. 2018;148(11):1760-1775. PMID: 30383278
 
 Další články, kalkulačku i praktické nástroje najdeš na https://martinbarna.cz/.
 
