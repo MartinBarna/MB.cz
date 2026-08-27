@@ -16,7 +16,7 @@ const json = (b: unknown, status = 200) =>
 const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 
 // --- mini render (kompatibilni s email_templates blocks; gender = muzsky default) ---
-type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string };
+type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string } | { t: "img"; src: string; alt: string };
 function gender(s: string): string {
   let out = "", i = 0;
   while (true) {
@@ -44,13 +44,32 @@ function merge(s: string, v: Record<string, string>): string {
   return out;
 }
 const fill = (s: string, v: Record<string, string>) => merge(gender(s), v);
+// HTML atributy jsou tady v JEDNODUCHYCH uvozovkach, takze se escapuje i apostrof,
+// jinak by text z atributu vyskocil. Shodne s attr() v drip-send.
+const attr = (s: string) =>
+  s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;")
+    .split('"').join("&quot;").split("'").join("&#39;");
 function renderBlocks(blocks: Block[], v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === "p") return `<p style='margin:0 0 14px'>${fill(b.html, v)}</p>`;
     if (b.t === "ps") return `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, v)}</p>`;
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` + b.items.map((li) => `<li style='margin:0 0 9px'>${fill(li, v)}</li>`).join("") + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
+    // Vsechny styly inline, mailove klienty externi CSS ignoruji. Drz 1:1 s drip-send.
+    // ⛔ Tratim rescue-* dnes img blok NIKDO nedal, ale az ho tam nekdo da, bez teto
+    //    vetve by zachranny mail k nedokoncene objednavce SPADL na TypeError (img propadne
+    //    do vetve pro tlacitko a cte b.href a b.text, ktere obrazek nema).
+    if (b.t === "img")
+      return `<img src='${attr(fill(b.src, v))}' alt='${attr(fill(b.alt, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
+    if (b.t === "btn")
+      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // ⛔ VYSLOVNY pripad pro neznamy typ. Driv tady byl HOLY return s tlacitkem, takze
+    //    kazdy typ, ktery renderer nezna, se tise zpracoval jako tlacitko a spadl na tom,
+    //    ze nema href ani text. Radsi chyba se JMENEM typu: zachranny mail k objednavce
+    //    s tise vynechanym blokem muze prijit bez odkazu na platbu, a to je horsi
+    //    nez mail, ktery nedojde a je videt v chybach behu.
+    throw new Error("neznamy_typ_bloku:" + (b as { t: string }).t);
   }).join("\n");
 }
 function wrap(preheader: string, body: string): string {

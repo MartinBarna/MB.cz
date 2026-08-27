@@ -14,6 +14,7 @@ const FROM = "Martin Barna <news@martinbarna.cz>";
 const unsubLink = (token: string) => SUPABASE_URL + "/functions/v1/unsubscribe?token=" + encodeURIComponent(token);
 const VK_TOTAL = 182;
 const HALF = Math.ceil(VK_TOTAL / 2);
+const P30 = Math.ceil(VK_TOTAL * 0.3);   // 55 lekci = 30 %
 const MAX_PER_RUN = 20; // pojistka pod denni limit Resendu
 
 const json = (b: unknown, status = 200) =>
@@ -21,7 +22,7 @@ const json = (b: unknown, status = 200) =>
 const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 
 // --- mini render (kompatibilni s email_templates blocks; gender pro cleny = 'other') ---
-type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string };
+type Block = { t: "p"; html: string } | { t: "bullets"; items: string[] } | { t: "btn"; text: string; href: string } | { t: "ps"; html: string } | { t: "img"; src: string; alt: string };
 function gender(s: string): string {
   // clenove nemaji segment -> muzsky rod ([[zena||muz]] -> muz, [a] -> '')
   let out = "", i = 0;
@@ -50,13 +51,34 @@ function merge(s: string, v: Record<string, string>): string {
   return out;
 }
 const fill = (s: string, v: Record<string, string>) => merge(gender(s), v);
+// HTML atributy jsou tady v JEDNODUCHYCH uvozovkach, takze se escapuje i apostrof,
+// jinak by text z atributu vyskocil. Shodne s attr() v drip-send.
+const attr = (s: string) =>
+  s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;")
+    .split('"').join("&quot;").split("'").join("&#39;");
 function renderBlocks(blocks: Block[], v: Record<string, string>): string {
   return blocks.map((b) => {
     if (b.t === "p") return `<p style='margin:0 0 14px'>${fill(b.html, v)}</p>`;
     if (b.t === "ps") return `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, v)}</p>`;
     if (b.t === "bullets")
       return `<ul style='margin:0 0 14px;padding-left:20px'>` + b.items.map((li) => `<li style='margin:0 0 9px'>${fill(li, v)}</li>`).join("") + `</ul>`;
-    return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
+    // Vsechny styly inline, mailove klienty externi CSS ignoruji. Drz 1:1 s drip-send.
+    // ⛔ Bez teto vetve propadne img do vetve pro tlacitko, ktera cte b.href a b.text,
+    //    ty obrazek nema, a cely mail SPADNE na TypeError. Sablona milestone-videokurz/100
+    //    (vk-complete) img blok ma, takze bez tohohle se gratulacni mail neposle vubec.
+    if (b.t === "img")
+      return `<img src='${attr(fill(b.src, v))}' alt='${attr(fill(b.alt, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
+    if (b.t === "btn")
+      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${fill(b.text, v)}</a></p>`;
+    // ⛔ VYSLOVNY pripad pro neznamy typ. Driv tady byl HOLY return s tlacitkem, takze
+    //    kazdy typ, ktery renderer nezna, se tise zpracoval jako tlacitko. Presne tak
+    //    se sem dostal blok img: precetl b.href a b.text, ktere nema, a shodil
+    //    "Cannot read properties of undefined". Ze to spadlo, bylo STESTI; kdyby posledni
+    //    vetev cetla pole, ktere novy typ nahodou ma, mail by ODESEL s nesmyslem v tele.
+    //    Radsi chyba se JMENEM typu: mail s tise vynechanym blokem muze prijit bez nabidky
+    //    nebo bez odhlaseni, a to je pod Martinovym jmenem horsi nez mail, ktery nedojde.
+    throw new Error("neznamy_typ_bloku:" + (b as { t: string }).t);
   }).join("\n");
 }
 function wrap(preheader: string, body: string, unsubUrl = ""): string {
@@ -181,7 +203,8 @@ Deno.serve(async (req) => {
 
   // TEST: posli nahled Martinovi, nic nezapisuj
   if (typeof body.test_email === "string" && body.test_email.includes("@")) {
-    const ms = Number(body.milestone) === 100 ? 100 : 50;
+    const msIn = Number(body.milestone);
+    const ms = msIn === 100 ? 100 : msIn === 30 ? 30 : 50;
     const tpl = await getTpl(ms);
     if (!tpl) return json({ error: "no_template" }, 400);
     const v = vars(String(body.name ?? ""));
@@ -220,8 +243,8 @@ Deno.serve(async (req) => {
   const cnt = new Map<string, number>();
   for (const p of prg.data ?? []) cnt.set(String(p.user_id), (cnt.get(String(p.user_id)) ?? 0) + 1);
 
-  const tpl50 = await getTpl(50), tpl100 = await getTpl(100);
-  if (!tpl50 || !tpl100) return json({ error: "no_templates" }, 500);
+  const tpl30 = await getTpl(30), tpl50 = await getTpl(50), tpl100 = await getTpl(100);
+  if (!tpl30 || !tpl50 || !tpl100) return json({ error: "no_templates" }, 500);
 
   let sends = 0, marked = 0;
   const results: Record<string, unknown>[] = [];
@@ -241,12 +264,22 @@ Deno.serve(async (req) => {
         await send(email, fill(tpl100.subject, v), wrap(fill(tpl100.preheader, v), renderBlocks(tpl100.blocks, v), unsub), unsub);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 100 });
         // 50 uz neposilat nikdy (prekonano) — zapis bez mailu
-        if (!already.has(email + ":50")) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 }); marked++; }
+        for (const nizsi of [30, 50]) {
+          if (!already.has(email + ":" + nizsi)) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: nizsi }); marked++; }
+        }
         sends++; results.push({ email, milestone: 100, done });
       } else if (done >= HALF && !already.has(email + ":50")) {
         await send(email, fill(tpl50.subject, v), wrap(fill(tpl50.preheader, v), renderBlocks(tpl50.blocks, v), unsub), unsub);
         await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 });
+        // 30 uz neposilat (prekonano) - zapis bez mailu, stejny vzor jako u 100 vs 50
+        if (!already.has(email + ":30")) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 }); marked++; }
         sends++; results.push({ email, milestone: 50, done });
+      } else if (done >= P30 && !already.has(email + ":30")) {
+        // 30 % (55 lekci): vetsina lidi kurz nedokonci a necekame to. Zmereno 22. 8. 2026:
+        // 100 % nemel NIKDO, 50 az 99 % dva lide, a sest lidi skoncilo na 1 az 3 lekcich.
+        await send(email, fill(tpl30.subject, v), wrap(fill(tpl30.preheader, v), renderBlocks(tpl30.blocks, v), unsub), unsub);
+        await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 });
+        sends++; results.push({ email, milestone: 30, done });
       }
     } catch (e) {
       results.push({ email, error: String(e).slice(0, 100) });
