@@ -13,10 +13,10 @@
 //
 // CO MĚŘÍ
 //   Headless Chrome (systémový) + lokální statický server nad kořenem repa.
-//   Každá HTML stránka, oba motivy, mobil 390×844 (tam to Martin viděl).
+//   Každá HTML stránka, oba motivy, mobil 390×844 I desktop 1366×900.
 //   U každého viditelného textového uzlu: computed color vs. efektivní pozadí
 //   (rodiče k prvnímu neprůhlednému, polotransparentní a gradient se skládají).
-//   Práh: kontrastní poměr < 2,0 (bílá na krému, ne WCAG AA 4,5).
+//   Do reportu jde vše pod 4,5 (WCAG AA), kódem 1 skript končí až pod 3,0.
 //
 // SPUSTIT
 //   node scripts/kontrola-kontrastu-temat.mjs
@@ -43,9 +43,28 @@ const DOCS = path.join(ROOT, 'docs');
 const REPORT_MD = path.join(DOCS, 'svetly-rezim-kontrast-report.md');
 const REPORT_JSON = path.join(DOCS, 'svetly-rezim-kontrast-data.json');
 const DARK_PRED = path.join(DOCS, 'svetly-rezim-kontrast-tmavy-pred.json');
+// Vědomě ponechané nálezy světlého motivu pod PRAH_BLOKUJE. Skript selže jen
+// na nálezu, který v tomhle seznamu NENÍ, takže brána hlídá REGRESE, ne stav.
+// Seznam se má zmenšovat: co z něj vyškrtneš, to se už nesmí vrátit.
+const SVETLY_POVOLENE = path.join(DOCS, 'svetly-rezim-kontrast-svetly-povolene.json');
 
-const PRAH = 2.0;
-const VIEWPORT = { width: 390, height: 844, deviceScaleFactor: 1, isMobile: true };
+// PRAHY (zvednuto 27. 8. 2026 po plošném auditu):
+//   PRAH        – co se vůbec zapíše do reportu. 4,5 = WCAG AA pro běžný text.
+//   PRAH_BLOKUJE– kdy skript skončí kódem 1. 3,0 chytí i třídu vad, kterou práh
+//                 2,0 schovával: patička #6b4e08 na #161310 měla 2,40 a prošla
+//                 na 164 stránkách. Nad 3,0 report jen informuje, neblokuje
+//                 (zlatý akcent na krému má 1,3-1,9 a Martin ho označil za OK).
+//   PRAH_OTISK  – otisk tmavého motivu. MUSÍ zůstat 2,0, jinak by se nedal
+//                 porovnat s baseline v docs/svetly-rezim-kontrast-tmavy-pred.json.
+const PRAH = 4.5;
+const PRAH_BLOKUJE = 3.0;
+const PRAH_OTISK = 2.0;
+// Měří se OBA viewporty. Mobil je ten, kde Martin vadu našel; desktop chyběl
+// a pojistka tak neviděla nic, co se láme až na široké obrazovce.
+const VIEWPORTY = [
+  { nazev: 'mobil', width: 390, height: 844, deviceScaleFactor: 1, isMobile: true },
+  { nazev: 'desktop', width: 1366, height: 900, deviceScaleFactor: 1, isMobile: false },
+];
 const PRESKOCIT_DIR = new Set([
   '.git', 'node_modules', '_zaloha', '_zdroje', '_cursor-logs', '.cursor',
   'supabase', 'akademie/_ai', 'go',
@@ -153,6 +172,9 @@ function findChrome() {
     '/usr/bin/google-chrome',
     '/usr/bin/chromium',
     '/usr/bin/chromium-browser',
+    // Windows (Martinův stroj) – bez toho skript hlásil „Chrome není v PATH“.
+    'C:/Program Files/Google/Chrome/Application/chrome.exe',
+    'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   ].filter(Boolean);
   for (const p of candidates) {
     if (fs.existsSync(p)) return p;
@@ -175,13 +197,28 @@ function ensurePuppeteer() {
   return require('puppeteer-core');
 }
 
+// Otisk tmavého motivu: jen mobil a jen pod 2,0, aby zůstal srovnatelný
+// s baseline, který vznikl PŘED zvednutím prahu a přidáním desktopu.
 function proOtisk(nalezy) {
   return (nalezy || []).filter((n) => {
     const s = String(n.stranka || '');
     if (s.startsWith('go/')) return false;
     if (/\bsvg\b/i.test(String(n.selektor || ''))) return false;
+    if (n.viewport && n.viewport !== 'mobil') return false;
+    if (typeof n.pomer === 'number' && n.pomer >= PRAH_OTISK) return false;
     return true;
   });
+}
+
+// Klíč nálezu pro seznam povolených. Bez :nth-of-type, aby drobný posun
+// v pořadí sourozenců neudělal z povoleného nálezu „nový“.
+function klicNalezu(n) {
+  return [
+    n.stranka,
+    String(n.selektor || '').replace(/:nth-of-type\(\d+\)/g, ''),
+    n.popredi,
+    n.pozadi,
+  ].join('|');
 }
 
 function otiskNalezu(nalezy) {
@@ -488,7 +525,7 @@ function scannerFn(prah) {
   return hits;
 }
 
-async function scanPage(page, origin, rel, theme) {
+async function scanPage(page, origin, rel, theme, viewport) {
   const url = origin + '/' + rel.split(path.sep).join('/');
   const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
   await page.waitForSelector('body', { timeout: 8000 }).catch(() => {});
@@ -497,7 +534,7 @@ async function scanPage(page, origin, rel, theme) {
   return {
     stranka: rel,
     status: resp ? resp.status() : 0,
-    nalezy: hits.map((h) => ({ ...h, stranka: rel, motiv: theme })),
+    nalezy: hits.map((h) => ({ ...h, stranka: rel, motiv: theme, viewport })),
   };
 }
 
@@ -525,10 +562,12 @@ function renderReport({ light, dark, staticRizika, runtimeOk, chyby, darkCmp, li
   lines.push('');
   lines.push('## Metodika');
   lines.push('');
-  lines.push('- Lokální statický server nad kořenem repa, headless Chrome, viewport **390×844** (mobil, tam Martin našel osnovu videokurzu).');
+  lines.push(`- Lokální statický server nad kořenem repa, headless Chrome, viewporty **${VIEWPORTY.map((v) => v.width + '×' + v.height + ' (' + v.nazev + ')').join('** a **')}**.`);
   lines.push('- Motiv: `localStorage.mb-theme` = `light` | `dark` (stejný klíč jako `theme-boot.js` / `ba-theme.js`).');
   lines.push('- U každého viditelného textového uzlu: WCAG 2 kontrast *computed color* vs. efektivní pozadí (rodiče k prvnímu neprůhlednému; polotransparentní vrstvy a gradientové stopy se skládají, u gradientu se bere nejhorší stopa).');
-  lines.push('- Práh **2,0**. Pod ním je text prakticky nečitelný (bílá na krému). Není to WCAG AA 4,5.');
+  lines.push(`- Do reportu jde vše pod **${PRAH}** (WCAG AA pro běžný text). Skript **selže** (kód 1) až při nálezu pod **${PRAH_BLOKUJE}**; mezi ${PRAH_BLOKUJE} a ${PRAH} report jen informuje (zlatý akcent na krému má 1,3-1,9 a je vědomě ponechaný).`);
+  lines.push(`- Otisk tmavého motivu se pořád počítá jen z **mobilu a jen pod ${PRAH_OTISK}**, aby byl srovnatelný s baseline z doby před zvednutím prahu.`);
+  lines.push('- Brána hlídá **regrese, ne stav**: nálezy pod blokujícím prahem, které už jsou v `docs/svetly-rezim-kontrast-svetly-povolene.json`, skript nezastaví. Ten seznam se má zmenšovat, a co z něj vyškrtneš, se už nesmí vrátit.');
   lines.push('- Tmavý motiv se v CSS nesmí změnit: otisk nálezů tmavého před opravou a po opravě musí být totožný.');
   lines.push('- Přesměrovací stuby `go/` se neměří (`location.replace` na produkci, není to obsah webu).');
   lines.push('- SVG `<text>` se neměří (výplň kresby, ne sázecí text).');
@@ -547,13 +586,13 @@ function renderReport({ light, dark, staticRizika, runtimeOk, chyby, darkCmp, li
   }
   lines.push('## Finální stav');
   lines.push('');
-  lines.push('| Motiv | Nálezů pod 2,0 | Poznámka |');
-  lines.push('|---|---:|---|');
-  lines.push(`| světlý | **${light.length}** | cíl: 0 |`);
+  lines.push(`| Motiv | Nálezů pod ${PRAH} | Z toho pod ${PRAH_BLOKUJE} (blokuje) | Poznámka |`);
+  lines.push('|---|---:|---:|---|');
+  lines.push(`| světlý | ${light.length} | **${light.filter((n) => n.pomer < PRAH_BLOKUJE).length}** | cíl: 0 blokujících |`);
   const darkNote = darkCmp
     ? (darkCmp.stejne ? 'otisk totožný s baseline před opravou' : 'OTISK SE LIŠÍ OD BASELINE')
     : 'baseline (první běh, před opravou)';
-  lines.push(`| tmavý | ${dark.length} | ${darkNote} |`);
+  lines.push(`| tmavý | ${dark.length} | ${dark.filter((n) => n.pomer < PRAH_BLOKUJE).length} | ${darkNote} |`);
   lines.push('');
   if (darkCmp) {
     lines.push('### Důkaz: tmavý motiv beze změny');
@@ -565,10 +604,11 @@ function renderReport({ light, dark, staticRizika, runtimeOk, chyby, darkCmp, li
     lines.push('');
   }
   if (lightPred != null) {
-    lines.push(`Světlý režim před opravou: **${lightPred}** nálezů pod 2,0. Po opravě: **${light.length}**.`);
-    const vk = light.filter((n) => /videokurz/i.test(n.stranka)).length;
+    const light20 = light.filter((n) => n.pomer < PRAH_OTISK && n.viewport === 'mobil').length;
+    lines.push(`Světlý režim před opravou: **${lightPred}** nálezů pod ${PRAH_OTISK} (mobil). Po opravě: **${light20}**.`);
+    const vk = light.filter((n) => /videokurz/i.test(n.stranka) && n.pomer < PRAH_OTISK).length;
     lines.push('');
-    lines.push(`Martinův případ \`/videokurz.html\` (osnova \`.module h6\`, bílé nadpisy na krému): **${vk}** nálezů pod 2,0.`);
+    lines.push(`Martinův případ \`/videokurz.html\` (osnova \`.module h6\`, bílé nadpisy na krému): **${vk}** nálezů pod ${PRAH_OTISK}.`);
     lines.push('Zbývající nálezy už skoro nejsou „bílá na krému“, ale zlatý akcent (\`#ebb12c\` / \`#f6cd63\`) na krému (poměr cca 1,3–1,9) a pár tmavých ostrovů, kam spadl ink z globálního \`h2\`/\`h5\`. Tmavý motiv se nezměnil.');
     lines.push('');
   }
@@ -586,19 +626,19 @@ function renderReport({ light, dark, staticRizika, runtimeOk, chyby, darkCmp, li
       lines.push(`| ${g.n} | ${g.stranek.size} | \`${mdEscape(g.selektor).slice(0, 80)}\` | ${mdEscape(p.text).slice(0, 60)} | ${p.popredi} na ${p.pozadi} | ${p.pomer} |`);
     }
     lines.push('');
-    lines.push('## Nálezy po prvcích (světlý, poměr < 2,0)');
+    lines.push(`## Nálezy po prvcích (světlý, poměr < ${PRAH})`);
     lines.push('');
-    lines.push('| Stránka | Selektor | Text | Popředí | Pozadí | Pomer | Motiv |');
+    lines.push('| Stránka | Selektor | Text | Popředí | Pozadí | Pomer | Viewport |');
     lines.push('|---|---|---|---|---|---:|---|');
-    for (const n of light) {
-      lines.push(`| ${mdEscape(n.stranka)} | \`${mdEscape(n.selektor).slice(0, 90)}\` | ${mdEscape(n.text).slice(0, 60)} | ${n.popredi} | ${n.pozadi} | ${n.pomer} | ${n.motiv} |`);
+    for (const n of [...light].sort((a, b) => a.pomer - b.pomer)) {
+      lines.push(`| ${mdEscape(n.stranka)} | \`${mdEscape(n.selektor).slice(0, 90)}\` | ${mdEscape(n.text).slice(0, 60)} | ${n.popredi} | ${n.pozadi} | ${n.pomer} | ${n.viewport || 'mobil'} |`);
     }
     lines.push('');
   }
 
   lines.push('## Nálezy tmavý motiv (shrnutí)');
   lines.push('');
-  lines.push(`Celkem ${dark.length} prvků pod 2,0. Tento seznam se opravou světlého režimu **nesmí** změnit.`);
+  lines.push(`Celkem ${dark.length} prvků pod ${PRAH}. Otisk (mobil, pod ${PRAH_OTISK}) se opravou světlého režimu **nesmí** změnit.`);
   lines.push('');
   if (dark.length) {
     lines.push('| Výskytů | Stránek | Selektor (zkrácený) | Příklad | Pomer |');
@@ -678,9 +718,12 @@ async function main() {
           args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-extensions'],
         });
 
-        async function makePage(theme) {
+        async function makePage(theme, vp) {
           const page = await browser.newPage();
-          await page.setViewport(VIEWPORT);
+          await page.setViewport({
+            width: vp.width, height: vp.height,
+            deviceScaleFactor: vp.deviceScaleFactor, isMobile: vp.isMobile,
+          });
           await page.setCacheEnabled(false);
           await page.evaluateOnNewDocument((t) => {
             try { localStorage.setItem('mb-theme', t); } catch (e) {}
@@ -705,31 +748,36 @@ async function main() {
         }
 
         for (const theme of ['light', 'dark']) {
-          log(`Motiv ${theme} …`);
-          const q = htmlFiles.slice();
-          const workers = await Promise.all(Array.from({ length: WORKERS }, () => makePage(theme)));
-          const done = [];
-          await Promise.all(workers.map(async (page) => {
-            while (q.length) {
-              const rel = q.shift();
-              if (!rel) break;
-              try {
-                done.push(await scanPage(page, origin, rel, theme));
-              } catch (e) {
-                done.push({ stranka: rel, status: 0, nalezy: [], error: String(e && e.message || e) });
-              }
-            }
-          }));
-          for (const p of workers) await p.close().catch(() => {});
           const hits = [];
-          for (const r of done) {
-            if (r.error) scanned.errors.push({ stranka: r.stranka, motiv: theme, error: r.error });
-            hits.push(...r.nalezy);
+          let stranek = 0;
+          for (const vp of VIEWPORTY) {
+            log(`Motiv ${theme}, viewport ${vp.nazev} …`);
+            const q = htmlFiles.slice();
+            const workers = await Promise.all(Array.from({ length: WORKERS }, () => makePage(theme, vp)));
+            const done = [];
+            await Promise.all(workers.map(async (page) => {
+              while (q.length) {
+                const rel = q.shift();
+                if (!rel) break;
+                try {
+                  done.push(await scanPage(page, origin, rel, theme, vp.nazev));
+                } catch (e) {
+                  done.push({ stranka: rel, status: 0, nalezy: [], error: String(e && e.message || e) });
+                }
+              }
+            }));
+            for (const p of workers) await p.close().catch(() => {});
+            for (const r of done) {
+              if (r.error) scanned.errors.push({ stranka: r.stranka, motiv: theme, viewport: vp.nazev, error: r.error });
+              hits.push(...r.nalezy);
+            }
+            stranek += done.length;
+            log(`  ${theme}/${vp.nazev}: ${done.reduce((s, d) => s + d.nalezy.length, 0)} nálezů pod ${PRAH} (${done.length} stránek, chyb ${done.filter((d) => d.error).length})`);
           }
-          scanned[theme] = done.length;
+          scanned[theme] = stranek;
           if (theme === 'light') light = hits;
           else dark = hits;
-          log(`  ${theme}: ${hits.length} nálezů pod ${PRAH} (${done.length} stránek, chyb ${done.filter((d) => d.error).length})`);
+          log(`  ${theme} celkem: ${hits.length} nálezů pod ${PRAH}; pod ${PRAH_BLOKUJE}: ${hits.filter((h) => h.pomer < PRAH_BLOKUJE).length}`);
         }
 
         await browser.close();
@@ -778,7 +826,9 @@ async function main() {
   const payload = {
     kdy: new Date().toISOString(),
     prah: PRAH,
-    viewport: VIEWPORT,
+    prahBlokuje: PRAH_BLOKUJE,
+    prahOtisk: PRAH_OTISK,
+    viewporty: VIEWPORTY,
     stranek: htmlFiles.length,
     runtimeOk,
     chyby: chyby || null,
@@ -798,7 +848,30 @@ async function main() {
   log(`Report: ${path.relative(ROOT, REPORT_MD)}`);
   log(`JSON:   ${path.relative(ROOT, REPORT_JSON)}`);
 
-  if (runtimeOk && light.length) process.exitCode = 1;
+  const blokujici = light.filter((n) => n.pomer < PRAH_BLOKUJE);
+  let nove = [];
+  if (runtimeOk && !ONLY) {
+    if (!fs.existsSync(SVETLY_POVOLENE)) {
+      fs.writeFileSync(SVETLY_POVOLENE, JSON.stringify({
+        kdy: new Date().toISOString(),
+        prah: PRAH_BLOKUJE,
+        poznamka: 'Vědomě ponechané nálezy světlého motivu pod prahem. Skript selže jen na nálezu, který tu NENÍ. Seznam se má zmenšovat; co odsud vyškrtneš, to se už nesmí vrátit.',
+        klice: [...new Set(blokujici.map(klicNalezu))].sort(),
+      }, null, 2));
+      log(`Uložen seznam povolených nálezů (${new Set(blokujici.map(klicNalezu)).size}).`);
+    } else {
+      let povolene = new Set();
+      try { povolene = new Set(JSON.parse(fs.readFileSync(SVETLY_POVOLENE, 'utf8')).klice || []); } catch { /* ignore */ }
+      nove = blokujici.filter((n) => !povolene.has(klicNalezu(n)));
+      log(`Blokující nálezy pod ${PRAH_BLOKUJE}: ${blokujici.length}, z toho NOVÝCH: ${nove.length}.`);
+      if (nove.length) {
+        for (const n of nove.slice(0, 20)) {
+          log(`  NOVÝ ${n.pomer} ${n.popredi} na ${n.pozadi} | ${n.stranka} | ${n.selektor}`);
+        }
+      }
+    }
+  }
+  if (runtimeOk && nove.length) process.exitCode = 1;
 }
 
 main().catch((e) => {

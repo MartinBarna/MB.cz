@@ -191,6 +191,20 @@
         html[data-theme="light"] [style*="color:#e6dfd2"]{color:var(--win)!important;}
         html[data-theme="light"] [style*="background:rgba(255,255,255,.04)"]{background:var(--glass)!important;}
         html[data-theme="light"] [style*="background:rgba(0,0,0,.35)"]{background:var(--input-fill)!important;color:var(--ink)!important;}
+        /* Kontrast 27. 8. 2026: zlatá jako TEXT (--gold, --gold2) je na krému
+           1,3-1,9:1. Stránka nenačítá theme-light.css, tak se to řeší tady.
+           Token nepřepisuju: --gold2 je i výplň CTA v hlavičce. */
+        html[data-theme="light"] a:not(.btn):not(.cta),
+        html[data-theme="light"] footer a,
+        html[data-theme="light"] .tool .tcta,
+        html[data-theme="light"] .tool .inacad,
+        html[data-theme="light"] .kitbox .khead,
+        html[data-theme="light"] .ar-kick,
+        html[data-theme="light"] .nums .num b,
+        html[data-theme="light"] blockquote span,
+        html[data-theme="light"] #kit p span{color:#6B4E08!important;}
+        html[data-theme="light"] .ar-kick::before{background:#6B4E08;}
+        html[data-theme="light"] .tool .free{color:#2F6B22!important;}
 
         @media (max-width: 860px) {
             .hero .grid { flex-direction:column; }

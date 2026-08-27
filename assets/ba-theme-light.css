@@ -669,4 +669,60 @@ html[data-theme="light"]{
   --line:rgba(22,19,16,.12);
 }
 
+/* ============================================================
+   VLNA 2 (27. 8. 2026): plošný audit kontrastu světlého režimu
+   (_Claude-dokumenty/kontrast-plosny-audit-2026-08-27.md).
+   Stránky Academy načítají JEN tenhle soubor, ne theme-light.css,
+   takže se stejné opravy musí udělat na obou stranách.
+   ============================================================ */
+
+/* Tmavé ostrovy: zlatý TEXT tam musí zůstat světle zlatý. Token se dědí,
+   takže všechna `color:var(--gold-soft,#6B4E08)` uvnitř dostanou #F6CD63. */
+[data-theme="light"] footer,
+[data-theme="light"] .hero,
+[data-theme="light"] .ac-hero,
+[data-theme="light"] .pricebox,
+[data-theme="light"] .colv,
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"],
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"],
+[data-theme="light"] [style*="background:#100e14"],
+[data-theme="light"] [style*="background:#101114"],
+[data-theme="light"] [style*="background:#0C0B10"],
+[data-theme="light"] [style*="background:#0c0b10"]{
+  --gold-soft:#F6CD63;
+  --bd-gold-soft:#F6CD63;
+}
+
+/* /akademie/ „Otevřít Academy →“ leží na fialovém pásu. Pravidlo výš
+   (.uk-note a) prohrávalo s `p a:not()x4`, proto stejný počet :not(). */
+[data-theme="light"] .uk-note a:not(.btn):not(.btn-gold):not(.cta):not(.btn-ghost){color:#fff !important;}
+
+/* /akademie/ „zakládajícího člena“: inline #e8d8c8 na krému (1,26). */
+[data-theme="light"] [style*="color:#e8d8c8"],
+[data-theme="light"] [style*="color:#E8D8C8"]{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .hero [style*="color:#e8d8c8"],
+[data-theme="light"] .ac-hero [style*="color:#e8d8c8"],
+[data-theme="light"] .pricebox [style*="color:#e8d8c8"],
+[data-theme="light"] footer [style*="color:#e8d8c8"]{color:rgba(255,255,255,.82) !important;}
+
+/* Záruka UVNITŘ tmavého priceboxu: světlá zelená (pravidlo výš je pro
+   světlý podklad a v priceboxu dávalo 1,43). */
+[data-theme="light"] .pricebox .vk-guarantee{
+  background:rgba(47,174,87,.14) !important;
+  color:#bfe9cb !important;
+  border-color:rgba(47,174,87,.35) !important;
+}
+[data-theme="light"] .pricebox .vk-guarantee strong,
+[data-theme="light"] .pricebox .vk-guarantee span,
+[data-theme="light"] .pricebox .vk-guarantee b{color:#86e29a !important;}
+
+/* /akademie/nastroje/prompty/: box „Než začneš, dvě pravidla“ (GDPR
+   instrukce) a zámky kategorií měly #e9e2d8 na krému (1,12). */
+[data-theme="light"] .rules,
+[data-theme="light"] .rules p,
+[data-theme="light"] .lockbox,
+[data-theme="light"] .lockbox span{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .rules b{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .badge-free{color:#1d6b34 !important;}
+
 @media print{.mb-theme-toggle{display:none !important;}}

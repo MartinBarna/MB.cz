@@ -622,4 +622,127 @@ html[data-theme="light"]{background:var(--mb-bg);}
 /* Footer: zlatý odkaz patří na tmavý ostrov, ne na krém. */
 [data-theme="light"] footer a{color:var(--bd-gold2)!important;}
 
+/* ============================================================
+   VLNA 2 (27. 8. 2026): plošný audit kontrastu světlého režimu
+   (_Claude-dokumenty/kontrast-plosny-audit-2026-08-27.md, 16 vad).
+   Všechna pravidla žijí pod [data-theme=light], tmavý motiv je nevidí.
+   ============================================================ */
+
+/* --- 1) TMAVÉ OSTROVY: zlatý TEXT tam musí zůstat SVĚTLE zlatý -----------
+   Bloky výše barví zlatý text hnědou --bd-gold-soft (#6B4E08). Na krému je
+   to správně (7:1), na tmavém ostrovu je to 2,4:1. Token se DĚDÍ, takže
+   stačí ho uvnitř ostrova přemapovat: všechna `color:var(--bd-gold-soft)`
+   pravidla dostanou #F6CD63 bez souboje o specificitu.
+   Tohle jedno pravidlo řeší patičku na 164 stránkách (815 výskytů).
+   ⛔ --brand a --mb-gold NEpřemapovávat: jsou to VÝPLNĚ, ne text. */
+[data-theme="light"] footer,
+[data-theme="light"] .hero:not(.hero-svetly),
+[data-theme="light"] .ac-hero,
+[data-theme="light"] .pricebox,
+[data-theme="light"] section.contact,
+[data-theme="light"] .play-card,
+[data-theme="light"] .colv,
+[data-theme="light"] .day-sample,
+[data-theme="light"] .academy-box,
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"],
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"],
+[data-theme="light"] [style*="background:#100e14"],
+[data-theme="light"] [style*="background:#101114"],
+[data-theme="light"] [style*="background:#0f1113"],
+[data-theme="light"] [style*="background:#15141a"],
+[data-theme="light"] [style*="background:#0C0B10"],
+[data-theme="light"] [style*="background:#0c0b10"]{
+  --bd-gold-soft:#F6CD63;
+  --gold-soft:#F6CD63;
+}
+
+/* --- 2) Tmavý hero: zbytky, kam spadl inkoust z globálních pravidel ------ */
+[data-theme="light"] .hero:not(.hero-svetly) .ticks li,
+[data-theme="light"] .hero:not(.hero-svetly) .price-tag .now,
+[data-theme="light"] .hero:not(.hero-svetly) .price-tag span{color:var(--on-dark)!important;}
+
+/* --- 3) Tmavý ostrov s inline pozadím #0C0B10 (/makro-plan/ ref-proof) --- */
+[data-theme="light"] [style*="background:#0C0B10"],
+[data-theme="light"] [style*="background:#0c0b10"]{color:var(--on-dark)!important;}
+[data-theme="light"] [style*="background:#0C0B10"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div),
+[data-theme="light"] [style*="background:#0c0b10"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div){color:var(--on-dark)!important;}
+[data-theme="light"] [style*="background:#0C0B10"] :is(figcaption,small,.text-muted),
+[data-theme="light"] [style*="background:#0c0b10"] :is(figcaption,small,.text-muted){color:rgba(255,255,255,.78)!important;}
+
+/* --- 4) Kontaktní sekce homepage: fialový ostrov, ne krém --------------- */
+/* `section.contact` je JEN homepage; koucing/konzultace/poukaz mají
+   `div.contact` jako světlý grid, ty se tímhle nesmí chytit. */
+[data-theme="light"] section.contact p,
+[data-theme="light"] section.contact .sub,
+[data-theme="light"] section.contact li,
+[data-theme="light"] section.contact small{color:rgba(255,255,255,.88)!important;}
+[data-theme="light"] section.contact h2,
+[data-theme="light"] section.contact h3{color:var(--on-dark)!important;}
+/* Formulářová karta uvnitř té sekce je naopak BÍLÁ, tam musí platit opak. */
+[data-theme="light"] section.contact .cform{--bd-gold-soft:#6B4E08;--gold-soft:#6B4E08;}
+[data-theme="light"] section.contact .cform,
+[data-theme="light"] section.contact .cform :is(h1,h2,h3,h4,b,strong,li,label,td){color:var(--mb-text)!important;}
+[data-theme="light"] section.contact .cform :is(p,span,small,.note,.sub){color:var(--bd-muted)!important;}
+
+/* --- 5) Světlý hero lead-magnetů (/makro-plan/) -------------------------- */
+/* Z CSS se nedá poznat, že tenhle hero má ve světlém režimu KRÉMOVÉ pozadí
+   (gradient var(--cream) → var(--cream2)), proto je v HTML označen třídou
+   .hero-svetly. Bez toho na něj sedne globální „hero je tmavý ostrov“. */
+[data-theme="light"] .hero.hero-svetly,
+[data-theme="light"] .hero.hero-svetly :is(h1,h2,h3,h4,b,strong,li,label,td),
+[data-theme="light"] .hero.hero-svetly .ticks li{color:var(--mb-text)!important;}
+[data-theme="light"] .hero.hero-svetly :is(p,span,small,.sub,.lead,.micro,.hero-meta){color:var(--bd-muted)!important;}
+[data-theme="light"] .hero.hero-svetly{--bd-gold-soft:#6B4E08;--gold-soft:#6B4E08;}
+[data-theme="light"] .hero.hero-svetly .hl,
+[data-theme="light"] .hero.hero-svetly .kick,
+[data-theme="light"] .hero.hero-svetly .eyebrow,
+[data-theme="light"] .hero.hero-svetly .stars,
+[data-theme="light"] .hero.hero-svetly p > span.stars{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .hero.hero-svetly .btn-ghost{color:var(--mb-text)!important;border-color:var(--ar-line2)!important;}
+/* Popisek přes fotku je tmavá pilulka i ve světlém heru. */
+[data-theme="light"] .hero.hero-svetly .photo-cap,
+[data-theme="light"] .hero.hero-svetly .photo-cap i{color:var(--on-dark)!important;}
+
+/* --- 6) Inline color:#fff uvnitř už zesvětlené inline věty --------------- */
+/* Když jsme rodiči s inline světlou barvou přiznali, že leží na krému,
+   musí jeho bílé dítě jít dolů taky (/koucing/ „videokurzem za 800 Kč“). */
+[data-theme="light"] :is([style*="color:#cfcabf"],[style*="color:#cabfb1"],[style*="color:#cabfb4"],[style*="color:#cfc6b8"],[style*="color:#d7cfc2"],[style*="color:#e9e2d8"],[style*="color:#ebe3d8"],[style*="color:#f0eadf"],[style*="color:#c7cbd0"],[style*="color:#d9d2c6"],[style*="color:#bbb"]) [style*="color:#fff"]{
+  color:var(--mb-text)!important;
+}
+
+/* --- 7) Jednotlivá místa z auditu --------------------------------------- */
+/* /spoluprace/: „Vyzkoušíš zdarma.“ bílá na bílé kartě (1,00). */
+[data-theme="light"] .step b{color:var(--mb-text)!important;}
+/* /spoluprace/: box .hl (div, ne inline zvýraznění v h1) měl #F0EADF. */
+[data-theme="light"] div.hl{color:var(--mb-text)!important;}
+/* /tvuj-coach/: stužka nezvýrazněné karty byla #f0eadf na bílé (1,20). */
+[data-theme="light"] .plan:not(.featured) .ribbon{
+  background:rgba(22,19,16,.10)!important;
+  color:var(--mb-text)!important;
+}
+/* /tvuj-coach/: právní blok o opakované platbě, inline #A09AAD (2,47). */
+[data-theme="light"] .legal-note{color:var(--bd-muted)!important;}
+[data-theme="light"] .legal-note p,
+[data-theme="light"] .legal-note li{color:var(--bd-muted)!important;}
+/* /poukaz/: štítky nabídek, bledě zlatá na bledě zlaté pilulce (1,26). */
+[data-theme="light"] .offer .tag{
+  background:rgba(107,78,8,.12)!important;
+  color:var(--bd-gold-soft)!important;
+}
+/* /myty/: popisky karet, vybledlé #b4a99a na krému (2,10). */
+[data-theme="light"] .mcard p{color:var(--bd-muted)!important;}
+/* Inline #e8d8c8 (bledý krém) na krémovém pozadí. */
+[data-theme="light"] [style*="color:#e8d8c8"],
+[data-theme="light"] [style*="color:#E8D8C8"]{color:var(--bd-muted)!important;}
+[data-theme="light"] .hero:not(.hero-svetly) [style*="color:#e8d8c8"],
+[data-theme="light"] footer [style*="color:#e8d8c8"],
+[data-theme="light"] .pricebox [style*="color:#e8d8c8"]{color:rgba(255,255,255,.82)!important;}
+
+/* --- 8) Patička: zlatý odkaz musí přebít i `p a:not()x4` ---------------- */
+/* Specificita: [data-theme]+footer+p+a+4×:not(.trida) = (0,6,2). */
+[data-theme="light"] footer a:not(.btn):not(.btn-gold):not(.cta):not(.btn-ghost),
+[data-theme="light"] footer p a:not(.btn):not(.btn-gold):not(.cta):not(.btn-ghost){
+  color:var(--bd-gold2)!important;
+}
+
 @media print{.mb-theme-toggle{display:none!important;}}
