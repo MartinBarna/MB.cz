@@ -13,8 +13,11 @@ const REF = process.argv[2] || 'origin/main';
 const BASE = 'https://martinbarna.cz/';
 const NC = Date.now();
 
+// ⛔ MUSÍ SEDĚT S `exclude:` v .github/workflows/deploy-wedos.yml. Co se nenahrává,
+//    se nesmí ověřovat: jinak to tady spadne na 404 a shodí jinak správný deploy.
 const EXCL = [
-  /^\.git/, /\/\.git/, /^\.github\//, /^_import\//, /^_zaloha\//, /^_zdroje\//,
+  /^\.git/, /\/\.git/, /^\.github\//, /^clanky-fronta\//,
+  /^_import\//, /^_zaloha\//, /^_zdroje\//,
   /^Logo-rebrand\//, /^scripts\//, /^akademie\/_ai\//, /^akademie\/_pdf\//,
   /^akademie\/_supabase\//, /^akademie\/_videokurz\//, /\.md$/, /^CNAME$/, /^\.nojekyll$/,
   /^\.htaccess$/, // Apache ho přes HTTP záměrně nevydává (401) — zvenku neověřitelný

@@ -1,0 +1,4 @@
+{
+  "_napoveda": "Fronta blogu. Kazda polozka: date (YYYY-MM-DD, den vydani) + draft (jmeno .md souboru v teto slozce). Slug a titulek se berou Z DRAFTU, sem se nepisou. Postup: clanky-fronta/README.md",
+  "clanky": []
+}

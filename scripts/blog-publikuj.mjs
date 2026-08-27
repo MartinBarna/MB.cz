@@ -171,7 +171,7 @@ export function parseSlugFromUrl(raw) {
   const s = String(raw || '').trim();
   if (!s) throw new Error('Chybí Navržená URL.');
   let pathPart = s;
-  pathPart = pathPart.replace(/^https?:\/\/(www\.)?martinbarna\.cz/i, '');
+  pathPart = pathPart.replace(/^(https?:\/\/)?(www\.)?martinbarna\.cz/i, '');
   pathPart = pathPart.replace(/^\/+/, '');
   pathPart = pathPart.replace(/^clanky\//, '');
   pathPart = pathPart.replace(/\.html$/i, '');
