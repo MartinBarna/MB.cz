@@ -21,6 +21,20 @@ html[data-theme="light"]{
   --mb-elev:#ffffff;
   --mb-border:rgba(22,19,16,.12);
   --mb-muted:#5C564C;
+  /* Lead-magnety a nativní landings mají vlastní :root (--ink světlé, --paper tmavé).
+     html[data-theme] je specifičtější než :root, takže se stránka ve světlém
+     režimu překlopí bez zásahu do HTML. --gold NECH: je výplň tlačítek.
+     --brand ANO: materiály jím barví TEXT (callout, td.sets), ne výplň CTA. */
+  --ink:#161310;
+  --muted:#5C564C;
+  --muted-2:#3F3A34;
+  --soft:#F3EEE4;
+  --paper:#ffffff;
+  --line:rgba(22,19,16,.12);
+  --gold-soft:#6B4E08;
+  /* Materiály a lead-magnety barví TEXT přes --brand (callout b, td.sets).
+     Výplň tlačítek drží --gold/--mb-gold. Logo-kostičky níž vrátí zlatou. */
+  --brand:#6B4E08;
   --mb-text:#161310;
   --mb-gold:#EBB12C;
   --mb-gold-light:#F6CD63;
@@ -220,7 +234,8 @@ html[data-theme="light"]{background:var(--mb-bg);}
   color:var(--on-dark)!important;
   border-top:1px solid var(--ar-line)!important;
 }
-[data-theme="light"] footer a{color:var(--bd-gold2)!important;}
+[data-theme="light"] footer a,
+[data-theme="light"] footer p a:not(.btn):not(.btn-gold):not(.cta){color:var(--bd-gold2)!important;}
 [data-theme="light"] footer span{color:var(--on-dark-muted);}
 
 /* ============================================================
@@ -306,22 +321,28 @@ html[data-theme="light"]{background:var(--mb-bg);}
 }
 
 /* Hero pásy (články, videokurz, blog, nativní landings): ZŮSTANOU tmavé.
-   Nepřepisuj pozadí. Jen pojisti světlý text na tom pásu. */
+   Nepřepisuj pozadí. Jen pojisti světlý text na tom pásu.
+   .hero .tag na článcích je mrazivé sklo (bílá 20 %) na tmavém pásu, ne zlatá
+   pilulka. Tmavý ink (--mb-on-gold) na tom pásu byl Martinův případ naruby.
+   Zlatá pilulka (videokurz .hero .tag { background:var(--gold) }) níž. */
 [data-theme="light"] .hero,
 [data-theme="light"] .hero h1,
 [data-theme="light"] .hero h2,
 [data-theme="light"] .hero p,
 [data-theme="light"] .hero .lead,
 [data-theme="light"] .hero .sub,
-[data-theme="light"] .hero .tag,
 [data-theme="light"] .hero .meta,
+[data-theme="light"] .hero .hero-meta,
 [data-theme="light"] .hero .trust,
 [data-theme="light"] .hero .btn-ghost{color:var(--on-dark)!important;}
 [data-theme="light"] .hero .lead,
-[data-theme="light"] .hero p{color:rgba(255,255,255,.88)!important;}
+[data-theme="light"] .hero p,
+[data-theme="light"] .hero .hero-meta{color:rgba(255,255,255,.88)!important;}
 [data-theme="light"] .hero .btn-ghost{border-color:rgba(255,255,255,.45)!important;}
-[data-theme="light"] .hero .hero-meta,
-[data-theme="light"] .hero .tag{color:var(--on-dark)!important;}
+[data-theme="light"] .hero .tag{
+  background:var(--mb-gold)!important;
+  color:var(--mb-on-gold)!important;
+}
 
 /* ============================================================
    KROK 4: legal / díky / funnel chrome bez .navlinks
@@ -353,4 +374,252 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .trust{color:var(--bd-muted)!important;}
 [data-theme="light"] .trust b,
 [data-theme="light"] .brand{color:var(--mb-text)!important;}
+
+/* ============================================================
+   Kontrast < 2,0 (QA 26. 8. 2026). Page-level kopie tmavého overlaye
+   (color:#fff na h5/h6/.module, zlatý text, leftover --ink na krému).
+   Ostrov .hero / footer výše zůstává tmavý. Tmavý motiv tento blok
+   nevidí ([data-theme=light] only).
+   ============================================================ */
+[data-theme="light"] h5,
+[data-theme="light"] h6,
+[data-theme="light"] .card h5,
+[data-theme="light"] .card h6,
+[data-theme="light"] .card .fw-bold,
+[data-theme="light"] .module h6,
+[data-theme="light"] .pricebox .now,
+[data-theme="light"] .nm,
+[data-theme="light"] .card .nm,
+[data-theme="light"] .buy-h,
+[data-theme="light"] .basic-tag{color:var(--mb-text)!important;}
+[data-theme="light"] .pl,
+[data-theme="light"] .card .pl,
+[data-theme="light"] .check li,
+[data-theme="light"] .uk-head p,
+[data-theme="light"] .uk-cert p,
+[data-theme="light"] figcaption,
+[data-theme="light"] figcaption .t,
+[data-theme="light"] .acard p,
+[data-theme="light"] .txt{color:var(--bd-muted)!important;}
+[data-theme="light"] .kick,
+[data-theme="light"] .uk-kick,
+[data-theme="light"] .ar-kick,
+[data-theme="light"] .kicker,
+[data-theme="light"] .stars,
+[data-theme="light"] .st,
+[data-theme="light"] .cat-badge,
+[data-theme="light"] .badge-ac,
+[data-theme="light"] .ago,
+[data-theme="light"] .mgo,
+[data-theme="light"] .tagp,
+[data-theme="light"] .bdg,
+[data-theme="light"] .feature-ac a,
+[data-theme="light"] .feature-ac .ic,
+[data-theme="light"] .ic,
+[data-theme="light"] .ico,
+[data-theme="light"] a.plain,
+[data-theme="light"] #brandWeb,
+[data-theme="light"] td.sets,
+[data-theme="light"] .cb,
+[data-theme="light"] .stats b,
+[data-theme="light"] .stats-grid b,
+[data-theme="light"] .stat b,
+[data-theme="light"] .kcalbadge b,
+[data-theme="light"] .mrow .mv,
+[data-theme="light"] .note b,
+[data-theme="light"] .scol h4,
+[data-theme="light"] .arr{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .chip.b,
+[data-theme="light"] .chip.t,
+[data-theme="light"] .ac-tag,
+[data-theme="light"] .btn-gold,
+[data-theme="light"] a.btn-gold,
+[data-theme="light"] .btn.gold{color:var(--mb-on-gold)!important;}
+[data-theme="light"] .t-train{color:#8a4b00!important;}
+[data-theme="light"] .play-card,
+[data-theme="light"] .play-card h5,
+[data-theme="light"] .play-card p{color:var(--on-dark)!important;}
+[data-theme="light"] [style*="color:var(--gold)"],
+[data-theme="light"] [style*="color: var(--gold)"]{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .bg-soft a:not(.btn):not(.btn-gold){color:var(--bd-gold-soft)!important;}
+
+/* Inline zbytky světlého textu z kopie overlaye (ne hero/footer). */
+[data-theme="light"] [style*="color:#cfcabf"],
+[data-theme="light"] [style*="color:#cabfb1"],
+[data-theme="light"] [style*="color:#cabfb4"],
+[data-theme="light"] [style*="color:#cfc6b8"],
+[data-theme="light"] [style*="color:#d7cfc2"],
+[data-theme="light"] [style*="color:#e9e2d8"],
+[data-theme="light"] [style*="color:#ebe3d8"],
+[data-theme="light"] [style*="color:#f0eadf"],
+[data-theme="light"] [style*="color:#c7cbd0"],
+[data-theme="light"] [style*="color:#d9d2c6"],
+[data-theme="light"] [style*="color:#bbb"]{color:var(--bd-muted)!important;}
+
+/* Tmavý ostrov, který není .hero: certifikační pás, CTA videokurzu. */
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"],
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"]{color:var(--on-dark)!important;}
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"] :is(h1,h2,h3,h4,h5,h6,p,span,li,strong,b,div,small,label):not(.btn):not(.btn-gold):not(.ac-tag):not(.tag):not(.chip),
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"] :is(h1,h2,h3,h4,h5,h6,p,span,li,strong,b,div,small,label):not(.btn):not(.btn-gold):not(.ac-tag):not(.tag):not(.chip){
+  color:var(--on-dark)!important;
+}
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"] :is(.btn-gold,.ac-tag,.tag,.chip),
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"] :is(.btn-gold,.ac-tag,.tag,.chip){
+  color:var(--mb-on-gold)!important;
+}
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"] a:not(.btn):not(.btn-gold),
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"] a:not(.btn):not(.btn-gold){
+  color:var(--on-dark)!important;
+}
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"] :is(p,small,.text-muted,.lead){
+  color:rgba(255,255,255,.82)!important;
+}
+
+/* Pricebox: page CSS nechává průhledný gradient, overlay v light vypne,
+   text zůstal bílý na krému. Ostrov jako hero. */
+[data-theme="light"] .pricebox{
+  background:linear-gradient(135deg,#1d1a16 0%,#0b0a09 100%)!important;
+  color:var(--on-dark)!important;
+  border-color:rgba(235,177,44,.28)!important;
+}
+[data-theme="light"] .pricebox :is(h2,h3,h4,p,li,.now,.check li,strong,b){color:var(--on-dark)!important;}
+[data-theme="light"] .vk-guarantee{color:#bfe9cb!important;background:rgba(47,174,87,.14)!important;border-color:rgba(47,174,87,.35)!important;}
+[data-theme="light"] .vk-guarantee strong{color:#86e29a!important;}
+
+[data-theme="light"] .navbar.bg-white,
+[data-theme="light"] .navbar.sticky-top{
+  background:rgba(255,255,255,.92)!important;
+  border-bottom:1px solid var(--bd-line)!important;
+  box-shadow:0 2px 14px rgba(0,0,0,.06)!important;
+}
+[data-theme="light"] .navbar-brand,
+[data-theme="light"] .navbar-brand span,
+[data-theme="light"] .nav-link{color:var(--mb-text)!important;}
+[data-theme="light"] .nav-link:hover,
+[data-theme="light"] .nav-link.active{color:var(--mb-gold)!important;}
+
+/* Logo-kostičky a čísla kroků: --brand je teď textová hnědá, výplň vrať na zlato. */
+[data-theme="light"] .logo-fallback,
+[data-theme="light"] .brand .mk,
+[data-theme="light"] .brand .mark,
+[data-theme="light"] .step .n,
+[data-theme="light"] .step .si,
+[data-theme="light"] .time .t,
+[data-theme="light"] .module .n{
+  background:var(--mb-gold)!important;
+  color:var(--mb-on-gold)!important;
+}
+
+/* Zlatá jako TEXT na krému (ne tlačítko). */
+[data-theme="light"] .callout b,
+[data-theme="light"] .callout strong,
+[data-theme="light"] .sgo,
+[data-theme="light"] .save,
+[data-theme="light"] .who,
+[data-theme="light"] .inacad,
+[data-theme="light"] a.tcta,
+[data-theme="light"] .tcta,
+[data-theme="light"] .khead,
+[data-theme="light"] .vip-tag,
+[data-theme="light"] .badge-s,
+[data-theme="light"] .badge:not(.btn),
+[data-theme="light"] span.save,
+[data-theme="light"] .nums b,
+[data-theme="light"] .nums .num b,
+[data-theme="light"] .doc .cb,
+[data-theme="light"] .contact a,
+[data-theme="light"] .clist a,
+[data-theme="light"] .faq a,
+[data-theme="light"] .note a,
+[data-theme="light"] .legal-note a,
+[data-theme="light"] .incl a,
+[data-theme="light"] .plans a:not(.btn):not(.btn-gold),
+[data-theme="light"] p a:not(.btn):not(.btn-gold):not(.cta):not(.btn-ghost),
+[data-theme="light"] .price-link,
+[data-theme="light"] .more-link,
+[data-theme="light"] .inacad,
+[data-theme="light"] .tcta,
+[data-theme="light"] span.gold,
+[data-theme="light"] .gold,
+[data-theme="light"] [style*="color:#EBB12C"],
+[data-theme="light"] [style*="color:#ebb12c"],
+[data-theme="light"] [style*="color:#F6CD63"],
+[data-theme="light"] [style*="color:#f6cd63"],
+[data-theme="light"] [style*="color:#ffd166"]{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .hero [style*="color:#EBB12C"],
+[data-theme="light"] .hero [style*="color:#ebb12c"],
+[data-theme="light"] .hero [style*="color:#F6CD63"],
+[data-theme="light"] .hero [style*="color:#f6cd63"],
+[data-theme="light"] .hero [style*="color:#ffd166"],
+[data-theme="light"] .ac-hero [style*="color:#F6CD63"],
+[data-theme="light"] .ac-hero [style*="color:#ffd166"],
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"] [style*="color:#F6CD63"],
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"] [style*="color:#ffd166"]{
+  color:var(--bd-gold2)!important;
+}
+
+/* Průhledné „tmavé karty“ (rgba bílá 5 %): overlay vypne, zbyde krém. */
+[data-theme="light"] [style*="linear-gradient(180deg,rgba(255,255,255,.05"],
+[data-theme="light"] [style*="linear-gradient(180deg, rgba(255,255,255,.05"],
+[data-theme="light"] [style*="linear-gradient(180deg,rgba(255,255,255,.045"]{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-color:var(--bd-line)!important;
+}
+[data-theme="light"] [style*="linear-gradient(180deg,rgba(255,255,255,.05"] :is(h1,h2,h3,h4,h5,h6,p,span,li,strong,b,div),
+[data-theme="light"] [style*="linear-gradient(180deg,rgba(255,255,255,.045"] :is(h1,h2,h3,h4,h5,h6,p,span,li,strong,b,div){
+  color:var(--mb-text)!important;
+}
+
+/* Tmavé sekce s natvrdo #100e14 / #15141a (srovnání Academy). */
+[data-theme="light"] [style*="background:#100e14"],
+[data-theme="light"] [style*="background:#101114"],
+[data-theme="light"] [style*="background:#0f1113"],
+[data-theme="light"] [style*="background:#15141a"],
+[data-theme="light"] .colv,
+[data-theme="light"] .day-sample,
+[data-theme="light"] .academy-box{
+  color:var(--on-dark)!important;
+}
+[data-theme="light"] [style*="background:#100e14"] :is(h1,h2,h3,h4,p,span,li),
+[data-theme="light"] .colv h3,
+[data-theme="light"] .day-sample h2,
+[data-theme="light"] .academy-box h3{color:var(--on-dark)!important;}
+
+/* Zbytek overlaye: hardcoded #fff mimo ostrovy. */
+[data-theme="light"] summary,
+[data-theme="light"] .faq b,
+[data-theme="light"] .faq summary,
+[data-theme="light"] .meal-txt,
+[data-theme="light"] .price,
+[data-theme="light"] .ticks li,
+[data-theme="light"] .buy-h,
+[data-theme="light"] .cite,
+[data-theme="light"] .cite em,
+[data-theme="light"] label,
+[data-theme="light"] .clean li,
+[data-theme="light"] .tpl span,
+[data-theme="light"] .mico,
+[data-theme="light"] .incl,
+[data-theme="light"] .legal-note b,
+[data-theme="light"] .bonus,
+[data-theme="light"] .seg{color:var(--mb-text)!important;}
+[data-theme="light"] .clean li,
+[data-theme="light"] .cite,
+[data-theme="light"] label,
+[data-theme="light"] .tpl span,
+[data-theme="light"] .incl{color:var(--bd-muted)!important;}
+
+/* Číslo na zlatém kolečku (stejná barva textu i výplně). */
+[data-theme="light"] .hero .badge,
+[data-theme="light"] section.hero .badge{color:var(--on-dark)!important;}
+[data-theme="light"] .step.hot,
+[data-theme="light"] .step.hot .st,
+[data-theme="light"] .step.hot .st b,
+[data-theme="light"] .step.hot .st span,
+[data-theme="light"] .step.hot .sgo{color:var(--bd-gold2)!important;}
+
+/* Footer: zlatý odkaz patří na tmavý ostrov, ne na krém. */
+[data-theme="light"] footer a{color:var(--bd-gold2)!important;}
+
 @media print{.mb-theme-toggle{display:none!important;}}
