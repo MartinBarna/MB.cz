@@ -214,7 +214,7 @@ function e_slugZChyby(draftPath) {
   if (!m) throw new Error(`Nešlo přečíst slug z draftu ${draftPath}`);
   return m[1]
     .trim()
-    .replace(/^https?:\/\/(www\.)?martinbarna\.cz/i, '')
+    .replace(/^(https?:\/\/)?(www\.)?martinbarna\.cz/i, '')
     .replace(/^\/+/, '')
     .replace(/^clanky\//, '')
     .replace(/\.html$/i, '')
