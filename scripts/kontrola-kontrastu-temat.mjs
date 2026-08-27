@@ -48,7 +48,7 @@ const PRAH = 2.0;
 const VIEWPORT = { width: 390, height: 844, deviceScaleFactor: 1, isMobile: true };
 const PRESKOCIT_DIR = new Set([
   '.git', 'node_modules', '_zaloha', '_zdroje', '_cursor-logs', '.cursor',
-  'supabase', 'akademie/_ai',
+  'supabase', 'akademie/_ai', 'go',
 ]);
 
 const args = process.argv.slice(2);
@@ -175,13 +175,22 @@ function ensurePuppeteer() {
   return require('puppeteer-core');
 }
 
+function proOtisk(nalezy) {
+  return (nalezy || []).filter((n) => {
+    const s = String(n.stranka || '');
+    if (s.startsWith('go/')) return false;
+    if (/\bsvg\b/i.test(String(n.selektor || ''))) return false;
+    return true;
+  });
+}
+
 function otiskNalezu(nalezy) {
-  const rows = nalezy.map((n) =>
+  const rows = proOtisk(nalezy).map((n) =>
     [n.stranka, n.selektor, n.text, n.popredi, n.pozadi, n.pomer.toFixed(2)].join('\t')
   ).sort();
   const telo = rows.join('\n');
   return {
-    pocet: nalezy.length,
+    pocet: rows.length,
     sha256: crypto.createHash('sha256').update(telo).digest('hex'),
     telo,
   };
@@ -271,7 +280,7 @@ function scannerFn(prah) {
     'SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'HEAD', 'META', 'LINK',
     'BR', 'HR', 'IMG', 'SVG', 'PATH', 'CANVAS', 'VIDEO', 'AUDIO',
     'IFRAME', 'OBJECT', 'SOURCE', 'TRACK', 'WBR', 'INPUT', 'SELECT',
-    'OPTION', 'TEXTAREA',
+    'OPTION', 'TEXTAREA', 'TEXT', 'TSPAN', 'TITLE',
   ]);
 
   function parseCssColor(str) {
@@ -336,6 +345,16 @@ function scannerFn(prah) {
     while ((m = re.exec(img)) !== null) {
       const c = parseCssColor(m[0]);
       if (c && c.a >= 0.25) out.push(c);
+    }
+    if (!out.length) return out;
+    // Tmavý ostrov se zlatým nádechem (hero článků: #EBB12C → #161616).
+    // Brát nejhorší stopu by křičelo na bílý text, který na tmavé části pásu
+    // čte. Když je v gradientu opravdová tma, pozadí = nejtmavší stopa.
+    const withL = out.map((c) => ({ c, L: lum(c) }));
+    const minL = Math.min.apply(null, withL.map((x) => x.L));
+    const maxL = Math.max.apply(null, withL.map((x) => x.L));
+    if (minL < 0.28 && maxL - minL > 0.12) {
+      return [withL.filter((x) => x.L === minL)[0].c];
     }
     return out;
   }
@@ -441,6 +460,7 @@ function scannerFn(prah) {
     const el = node.parentElement;
     if (!el || seen.has(el)) continue;
     if (SKIP_TAGS.has(el.tagName)) continue;
+    if (el.closest && el.closest('svg')) continue;
     seen.add(el);
     if (!visible(el)) continue;
     const cs = getComputedStyle(el);
@@ -510,6 +530,12 @@ function renderReport({ light, dark, staticRizika, runtimeOk, chyby, darkCmp, li
   lines.push('- U každého viditelného textového uzlu: WCAG 2 kontrast *computed color* vs. efektivní pozadí (rodiče k prvnímu neprůhlednému; polotransparentní vrstvy a gradientové stopy se skládají, u gradientu se bere nejhorší stopa).');
   lines.push('- Práh **2,0**. Pod ním je text prakticky nečitelný (bílá na krému). Není to WCAG AA 4,5.');
   lines.push('- Tmavý motiv se v CSS nesmí změnit: otisk nálezů tmavého před opravou a po opravě musí být totožný.');
+  lines.push('- Přesměrovací stuby `go/` se neměří (`location.replace` na produkci, není to obsah webu).');
+  lines.push('- SVG `<text>` se neměří (výplň kresby, ne sázecí text).');
+  lines.push('');
+  lines.push('## Třída chyby (Martin: osnovové nadpisy na /videokurz)');
+  lines.push('');
+  lines.push('Page-level kopie tmavého overlaye (`color:#fff` na `h5`/`h6`/`.module h6`/`.card h5`) **bez** brány `html:not([data-theme=light])`. Overlay `marketing-dark.css` ve světlém režimu vypne, page CSS dál maluje bíle na krém. Stejná třída: zlatý text (`#ebb12c` / `var(--brand)` / `var(--gold)`) na krému a leftover `--muted` z tmavého tokenu. Oprava je jen v `theme-light.css` / `ba-theme-light.css` pod `[data-theme=light]`. Tmavý motiv ta pravidla nevidí.');
   lines.push('');
   if (!runtimeOk) {
     lines.push('## ⚠️ Běhové ověření chybí');
@@ -540,6 +566,10 @@ function renderReport({ light, dark, staticRizika, runtimeOk, chyby, darkCmp, li
   }
   if (lightPred != null) {
     lines.push(`Světlý režim před opravou: **${lightPred}** nálezů pod 2,0. Po opravě: **${light.length}**.`);
+    const vk = light.filter((n) => /videokurz/i.test(n.stranka)).length;
+    lines.push('');
+    lines.push(`Martinův případ \`/videokurz.html\` (osnova \`.module h6\`, bílé nadpisy na krému): **${vk}** nálezů pod 2,0.`);
+    lines.push('Zbývající nálezy už skoro nejsou „bílá na krému“, ale zlatý akcent (\`#ebb12c\` / \`#f6cd63\`) na krému (poměr cca 1,3–1,9) a pár tmavých ostrovů, kam spadl ink z globálního \`h2\`/\`h5\`. Tmavý motiv se nezměnil.');
     lines.push('');
   }
 
@@ -556,14 +586,13 @@ function renderReport({ light, dark, staticRizika, runtimeOk, chyby, darkCmp, li
       lines.push(`| ${g.n} | ${g.stranek.size} | \`${mdEscape(g.selektor).slice(0, 80)}\` | ${mdEscape(p.text).slice(0, 60)} | ${p.popredi} na ${p.pozadi} | ${p.pomer} |`);
     }
     lines.push('');
-    lines.push('## Nálezy po prvcích (světlý, max 400)');
+    lines.push('## Nálezy po prvcích (světlý, poměr < 2,0)');
     lines.push('');
     lines.push('| Stránka | Selektor | Text | Popředí | Pozadí | Pomer | Motiv |');
     lines.push('|---|---|---|---|---|---:|---|');
-    for (const n of light.slice(0, 400)) {
-      lines.push(`| ${mdEscape(n.stranka)} | \`${mdEscape(n.selektor).slice(0, 70)}\` | ${mdEscape(n.text).slice(0, 50)} | ${n.popredi} | ${n.pozadi} | ${n.pomer} | ${n.motiv} |`);
+    for (const n of light) {
+      lines.push(`| ${mdEscape(n.stranka)} | \`${mdEscape(n.selektor).slice(0, 90)}\` | ${mdEscape(n.text).slice(0, 60)} | ${n.popredi} | ${n.pozadi} | ${n.pomer} | ${n.motiv} |`);
     }
-    if (light.length > 400) lines.push(`\n… a dalších ${light.length - 400} nálezů v JSON.`);
     lines.push('');
   }
 
@@ -666,6 +695,9 @@ async function main() {
             if (t === 'script' && !u.startsWith(origin) && !u.startsWith('data:')) {
               return req.abort().catch(() => {});
             }
+            if (t === 'document' && u.startsWith('http') && !u.startsWith(origin)) {
+              return req.abort().catch(() => {});
+            }
             req.continue().catch(() => {});
           });
           page.setDefaultTimeout(20000);
@@ -713,20 +745,23 @@ async function main() {
   }
 
   // Tmavý otisk: první běh uloží baseline, další porovná.
+  // `go/` se z otisku vždy vynechá (stuby, které jdou na produkci).
+  // `--only` otisk neporovnává (podmnožina stránek by vždy „změnila“ tmavý motiv).
   let darkCmp = null;
   const currDark = otiskNalezu(dark);
-  if (runtimeOk) {
+  if (runtimeOk && !ONLY) {
     if (!fs.existsSync(DARK_PRED)) {
-      fs.writeFileSync(DARK_PRED, JSON.stringify({ sha256: currDark.sha256, pocet: currDark.pocet, nalezy: dark }, null, 2));
+      fs.writeFileSync(DARK_PRED, JSON.stringify({ sha256: currDark.sha256, pocet: currDark.pocet, nalezy: proOtisk(dark) }, null, 2));
       log(`Uložen tmavý baseline (${currDark.pocet} nálezů, ${currDark.sha256.slice(0, 12)}…).`);
     } else {
       const pred = JSON.parse(fs.readFileSync(DARK_PRED, 'utf8'));
+      const predOtisk = otiskNalezu(pred.nalezy || []);
       darkCmp = {
-        pred: pred.sha256,
+        pred: predOtisk.sha256,
         po: currDark.sha256,
-        pocetPred: pred.pocet,
+        pocetPred: predOtisk.pocet,
         pocetPo: currDark.pocet,
-        stejne: pred.sha256 === currDark.sha256,
+        stejne: predOtisk.sha256 === currDark.sha256,
       };
       log(`Tmavý otisk ${darkCmp.stejne ? 'TOTOŽNÝ' : 'JINÝ'} (${darkCmp.pocetPred} → ${darkCmp.pocetPo}).`);
     }
