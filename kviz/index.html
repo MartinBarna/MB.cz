@@ -55,6 +55,13 @@
   .res b{color:#fff;}
   .cta{display:inline-block;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;text-decoration:none;font-weight:800;padding:14px 26px;border-radius:12px;margin:6px 10px 6px 0;border:none;cursor:pointer;font-family:inherit;font-size:1rem;}
   .cta2{display:inline-block;background:transparent;color:#F6CD63;border:1px solid rgba(235,177,44,.55);text-decoration:none;font-weight:700;padding:13px 22px;border-radius:12px;margin:6px 0;}
+  .offer{background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.35);border-radius:14px;padding:18px;margin:18px 0;}
+  .offer h3{color:#fff;font-size:1.1rem;margin:0 0 8px;line-height:1.3;}
+  .offer p{margin:0 0 12px;}
+  .offer .cta{display:block;text-align:center;}
+  html[data-theme="light"] .offer{background:rgba(235,177,44,.12);border-color:rgba(235,177,44,.5);}
+  html[data-theme="light"] .offer h3{color:var(--mb-text,#161310);}
+  html[data-theme="light"] .offer p{color:var(--bd-muted,#5C564C);}
   .mailbox{background:rgba(0,0,0,.25);border:1px solid rgba(235,177,44,.35);border-radius:14px;padding:16px;margin-top:22px;}
   .mailbox input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:inherit;font-size:1rem;padding:12px 14px;margin:8px 0 10px;}
   .small{font-size:.8rem;color:#8F8A99;line-height:1.5;}
@@ -150,9 +157,18 @@
         +(sEmailem?'<p class="small" style="color:#7fc98b;margin:0 0 10px;">✅ Jídelníček ti letí do schránky (mrkni i do promoakcí).</p>':'')
         +'<p>'+P.d+'</p>'
         +'<p style="margin-top:14px;"><b style="color:#F6CD63;">Co s tím, 3 kroky:</b></p><ol>'+P.kroky.map(function(k){ return '<li>'+k+'</li>'; }).join('')+'</ol>'
+        // Placena nabidka hned za 3 kroky: kviz sbira maily, ale plati se az v appce.
+        // Odkaz vede rovnou na checkout Basicu (?plan=basic), UTM meri, kolik z kvizu prislo.
+        +'<div class="offer"><h3>Nečekej na mail, začni hned</h3>'
+        +'<p>V appce Tvůj Coach máš tyhle kroky po ruce každý den. Týdenní check-in ti přepočítá cíl podle toho, kolik jsi reálně snědl a jak se hnula váha, takže se plán posouvá s tebou.</p>'
+        +'<p>K tomu generátor jídelníčku i tréninku a přehled „co si můžu ještě dnes dát“, ať nemusíš nic dopočítávat po večerech.</p>'
+        +'<a class="cta" id="kvBasic" style="margin:0;" href="https://tvujcoach.cz/?plan=basic&amp;utm_source=web&amp;utm_medium=kviz&amp;utm_campaign=kviz-vysledek">Vzít Basic za 249 Kč měsíčně</a>'
+        +'<p class="small" style="margin:10px 0 0;">Basic je nejlevnější placený plán, zrušit ho můžeš kdykoliv v appce.</p></div>'
         +(P.pdf?'<a class="cta" href="'+P.pdf+'">'+P.pdfT+'</a>':'')
         +'<a class="cta'+(P.pdf?'2':'')+'" href="/kalkulacka-kalorii-a-makrozivin/">Spočítat si kalorie zdarma</a>'
         +'<p style="margin-top:16px;">A jestli chceš celý systém od výpočtu po udržení, přesně tohle učím ve <a href="/videokurz" style="color:#F6CD63;font-weight:700;">videokurzu za 800 Kč</a> (182 videí, doživotně).</p></div>';
+      var kvB=document.getElementById('kvBasic');
+      if(kvB) kvB.addEventListener('click',function(){ kvTrack('kviz_basic_klik',{profil:best, s_emailem:!!sEmailem}); });
     }
     var kvIn=document.getElementById('kvEmail');
     kvIn.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('kvSend').click(); } });
