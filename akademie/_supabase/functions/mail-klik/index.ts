@@ -23,17 +23,14 @@
 //    zapisu, ten obrazec z dat zmizi a skener uz nepoznas. Filtruje se az pri CTENI,
 //    viz akce `mail_mereni` v `admin-api`.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+// Rozhodnuti o cili a cisteni ukladane adresy zije ve vlastnim souboru, aby slo
+// otestovat bez nastartovani serveru. Je to jedine misto, kde by mohl vzniknout
+// otevreny redirect. Viz `cil.test.ts`.
+import { bezpecnyCil, NOUZOVY_CIL, urlProLog } from './cil.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const SECRET = Deno.env.get('MAIL_TRACK_SECRET') ?? '';
-
-// Kam se vubec smi presmerovat. ⛔ Pridani hostitele je bezpecnostni rozhodnuti, ne kosmetika.
-const POVOLENI_HOSTE = ['martinbarna.cz', 'www.martinbarna.cz', 'tvujcoach.cz', 'www.tvujcoach.cz', 'buy.stripe.com'];
-// Nase vlastni weby: sem se smi i pri chybnem podpisu (skodit se tim neda) a jen sem se
-// dolepuji UTM znacky. Na Stripe UTM nepatri, ten si query hlida sam.
-const NASE_WEBY = ['martinbarna.cz', 'www.martinbarna.cz', 'tvujcoach.cz', 'www.tvujcoach.cz'];
-const NOUZOVY_CIL = 'https://martinbarna.cz/';
 
 const b64urlToText = (s: string): string => {
   const b64 = s.split('-').join('+').split('_').join('/');
@@ -76,47 +73,6 @@ function stitekKlienta(ua: string): string {
 
 const presmeruj = (kam: string) =>
   new Response(null, { status: 302, headers: { Location: kam, 'Cache-Control': 'no-store' } });
-
-// Vrati bezpecny cil, nebo null. `duveryhodny` = podpis sedel.
-function bezpecnyCil(raw: string, duveryhodny: boolean, track: string, key: string): string | null {
-  let u: URL;
-  try {
-    u = new URL(raw);
-  } catch {
-    return null;
-  }
-  if (u.protocol !== 'https:') return null;   // http ani mailto/javascript nikdy
-  const host = u.hostname.toLowerCase();
-  const povoleno = duveryhodny ? POVOLENI_HOSTE : NASE_WEBY;
-  if (!povoleno.includes(host)) return null;
-  // UTM jen na nase weby a jen kdyz uz tam neni: sablony si nekdy nesou vlastni znacky
-  // a prepsat je by znamenalo rozbit dosavadni mereni na cilove strane (`analytics.js`).
-  if (NASE_WEBY.includes(host) && !u.searchParams.has('utm_source')) {
-    u.searchParams.set('utm_source', 'email');
-    u.searchParams.set('utm_medium', 'drip');
-    if (track) u.searchParams.set('utm_campaign', track);
-    if (key) u.searchParams.set('utm_content', key);
-  }
-  return u.toString();
-}
-
-// ⛔ NEZ SE URL ULOZI, VYHOD Z NI OSOBNI UDAJE. Nektere sablony maji v odkazu e-mail
-//    prijemce (napr. `/akademie/prihlaseni/?tab=up&email=...`, aby se formular predvyplnil).
-//    Do `email_events` patri, NA CO clovek klikl, ne KDO to je; toho nese `lead_id`.
-//    Presmerovani samo dostane adresu nedotcenou, jinak by se predvyplneni rozbilo.
-function urlProLog(raw: string): string {
-  try {
-    const u = new URL(raw);
-    for (const [k, v] of [...u.searchParams.entries()]) {
-      if (k.toLowerCase() === 'email' || k.toLowerCase() === 'mail' || v.includes('@')) {
-        u.searchParams.set(k, '(skryto)');
-      }
-    }
-    return u.toString().slice(0, 500);
-  } catch {
-    return raw.slice(0, 200);
-  }
-}
 
 interface Stopa { tr?: string; st?: number; kl?: string; ld?: string | null; url?: string }
 
