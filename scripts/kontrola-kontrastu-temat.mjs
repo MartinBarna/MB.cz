@@ -338,7 +338,7 @@ function scannerFn(prah) {
 
   function colorsFromBgImage(img) {
     if (!img || img === 'none') return [];
-    // url(...) neznáme — ignoruj, ať se jde dál k rodiči
+    // url(...) neznáme, tak ho ignoruj a jdi dál k rodiči
     const out = [];
     const re = /#(?:[0-9a-f]{3,8})\b|rgba?\([^)]+\)/gi;
     let m;
