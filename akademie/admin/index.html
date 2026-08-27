@@ -2821,7 +2821,9 @@
         $('merSouhrn').innerHTML=
           tile('',s.odeslano||0,'odesláno mailů',(s.prijemcu||0)+' příjemců')+
           tile('zluta',pct(s.otevreno||0,s.odeslano||0),'otevřelo','horní odhad · '+(s.otevreno||0)+' lidí')+
-          tile('zelena',pct(s.klikli||0,s.odeslano||0),'proklik',(s.klikli||0)+' prokliků · '+(s.klikli_lidi||0)+' lidí')+
+          // ⚠️ `klikli` je počet dvojic člověk+mail, ne počet kliknutí ani počet lidí.
+          //    Popisek to musí říct, jinak z toho vznikne „tolikrát někdo klikl", což to není.
+          tile('zelena',pct(s.klikli||0,s.odeslano||0),'proklik',(s.klikli||0)+' proklikaných mailů · '+(s.klikli_lidi||0)+' lidí')+
           tile((s.odhlaseni?'cervena':''),s.odhlaseni||0,'odhlásilo se',pct(s.odhlaseni||0,s.odeslano||0)+' z odeslaných')+
           tile((s.bounce?'cervena':''),s.bounce||0,'nedoručeno',(s.chyby||0)+' chyb odeslání')+
           tile((s.stiznosti?'cervena':''),s.stiznosti||0,'stížností na spam','')+
