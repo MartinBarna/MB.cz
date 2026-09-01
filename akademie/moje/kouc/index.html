@@ -47,7 +47,7 @@
   <div class="wrap">
     <span class="kick"><span class="dot"></span> Přehled pro kouče</span>
     <h1>Týdenní <span class="hl">check-iny klientů</span></h1>
-    <p class="lead">Rychlý přehled, kde koho řešit. Flagy ti napoví, u koho hoří: klesající energie, rostoucí chutě, nízká adherence nebo vynechané tréninky.</p>
+    <p class="lead">Rychlý přehled, kde koho řešit. Flagy ti napoví, u koho hoří: slabota v tréninku, rostoucí chutě, mizerný spánek, nízká adherence nebo vynechané tréninky. Škály jdou tak, jak je klient vyplňuje: síla 1 = nabušeno, spánek 5 = výborná, chutě 5 = pořád. Prázdná škála nic neflaguje.</p>
 
     <div id="dash" style="display:none;">
       <div class="sum">
@@ -63,7 +63,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260728a"></script>
+  <script src="/assets/ba-academy.js?v=20260901a"></script>
   <script>
     (function () {
       var ADMINS = ['martin@martinbarna.cz', 'fitness.barna@gmail.com'];
@@ -86,7 +86,7 @@
         if (prev !== null && mondayOf(new Date()) - prev > 7 * 864e5) pct = Math.max(pct - 6, 0);
         return { streak: streak, loyalty_pct: pct };
       }
-      function render(rows, loyMap) {
+      function render(rows, loyMap, tgMap) {
         // seskup dle emailu, seřaď check-iny každého klienta dle created_at desc (už jsou desc)
         var byEmail = {};
         rows.forEach(function (r) { (byEmail[r.email] = byEmail[r.email] || []).push(r); });
@@ -96,13 +96,27 @@
         emails.forEach(function (em) {
           var list = byEmail[em], cur = list[0], prev = list[1];
           var thisWeek = cur.iso_week === wk; if (thisWeek) weekCnt++;
+          // Plánované tréninky: nejdřív snímek uložený v reportu (ten platí pro ten týden),
+          // a když ho report nemá, živé zadání z `client_targets`. Snímek je dnes prázdný
+          // u všech reportů, takže reálně se skoro vždy použije to živé.
+          // ⛔ `tgMap[em]` může být i null (řádek zadání existuje, tréninky nevyplněné),
+          // proto se testuje `!= null`, ne pravdivost.
+          var planTr = cur.workouts_planned != null ? cur.workouts_planned
+            : ((tgMap && tgMap[String(em).toLowerCase()] != null) ? tgMap[String(em).toLowerCase()] : null);
           var flags = [];
           if (!thisWeek) flags.push('nevyplnil tento týden');
-          if (cur.cravings >= 4) flags.push('chutě ↑');
-          if (cur.energy <= 2) flags.push('energie ↓');
-          if (cur.sleep <= 2) flags.push('spánek ↓');
+          // ⛔ Chybějící hodnotu nikdy neflagovat: v JS je `null <= 2` pravda, takže do
+          // 1. 9. 2026 svítil „spánek ↓" u celé staré historie z Excelu (41 ze 73 reportů
+          // škálu spánku nemá, 25 nemá sílu). Každé porovnání tady proto začíná `!= null`.
+          // ⛔ Škála síly je od 18. 8. 2026 obrácená proti spánku: 1 = nabušeno,
+          // 5 = slabota. Hoří tedy u VYSOKÉHO čísla, ne u nízkého.
+          if (cur.cravings != null && cur.cravings >= 4) flags.push('chutě ↑');
+          if (cur.sila != null && cur.sila >= 4) flags.push('síla ↓');
+          if (cur.sleep != null && cur.sleep <= 2) flags.push('spánek ↓');
           if (cur.plan_adherence_pct != null && cur.plan_adherence_pct < 60) flags.push('adherence < 60 %');
-          if ((cur.workouts_planned || 0) > 0 && (cur.workouts_done || 0) === 0) flags.push('0 tréninků');
+          // Bez plánu (ani v reportu, ani v zadání) není nula tréninků nález.
+          // `workouts_done === 0` schválně, ne `|| 0`: chybějící hodnota flag nespustí.
+          if (planTr != null && planTr > 0 && cur.workouts_done === 0) flags.push('0 tréninků');
           if (flags.length) flagCnt++;
           var dW = (prev && cur.weight_kg != null && prev.weight_kg != null) ? (cur.weight_kg - prev.weight_kg) : null;
           var dWs = dW == null ? '' : '<span class="d ' + (dW < 0 ? 'up' : (dW > 0 ? 'down' : '')) + '">' + (dW > 0 ? '+' : '') + dW.toFixed(1) + ' kg</span>';
@@ -115,10 +129,12 @@
             '<div class="mx">' +
               '<div class="m"><b>' + (cur.weight_kg != null ? cur.weight_kg : '–') + '</b><span class="d">kg</span> ' + dWs + '</div>' +
               '<div class="m">adherence<b>' + (cur.plan_adherence_pct != null ? cur.plan_adherence_pct + ' %' : '–') + '</b></div>' +
-              '<div class="m">energie<b>' + (cur.energy || '–') + '/5</b></div>' +
-              '<div class="m">spánek<b>' + (cur.sleep || '–') + '/5</b></div>' +
-              '<div class="m">chutě<b>' + (cur.cravings || '–') + '/5</b></div>' +
-              '<div class="m">tréninky<b>' + (cur.workouts_done || 0) + '/' + (cur.workouts_planned || 0) + '</b></div>' +
+              '<div class="m">síla<b>' + (cur.sila != null ? cur.sila + '/5' : '–') + '</b><span class="d">1 = nabušeno</span></div>' +
+              '<div class="m">spánek<b>' + (cur.sleep != null ? cur.sleep + '/5' : '–') + '</b><span class="d">5 = výborná</span></div>' +
+              '<div class="m">chutě<b>' + (cur.cravings != null ? cur.cravings + '/5' : '–') + '</b><span class="d">5 = pořád</span></div>' +
+              '<div class="m">tréninky<b>' + (cur.workouts_done != null ? cur.workouts_done : '–') +
+                (planTr != null ? '/' + planTr : '') + '</b>' +
+                (planTr == null ? '<span class="d">bez plánu</span>' : '') + '</div>' +
               '<div class="m">sport<b>' + (cur.sport_min != null ? cur.sport_min + ' min' : '–') + '</b></div>' +
             '</div>' +
             (cur.plan_next && (cur.plan_next.kroky != null || cur.plan_next.sport_min != null)
@@ -146,12 +162,16 @@
         window.BA.getUser().then(function (u) {
           if (!u) { location.href = '/akademie/prihlaseni/?next=' + encodeURIComponent('/akademie/moje/kouc/'); return; }
           if (ADMINS.indexOf((u.email || '').toLowerCase()) === -1) { gate.style.display = ''; gate.textContent = 'Tento přehled je jen pro kouče.'; return; }
-          window.BA.getAllCheckins().then(function (rows) {
+          // Zadání se tahá vedle reportů, protože jmenovatel tréninků v reportech chybí.
+          // Když se nenačte, mapa je prázdná a dlaždice napíše 'bez plánu'; stránka se kvůli
+          // tomu nesmí rozbít, proto Promise.all s vlastním catchem uvnitř getAllTargets.
+          Promise.all([window.BA.getAllCheckins(), window.BA.getAllTargets()]).then(function (vys) {
+            var rows = vys[0] || [], tgMap = vys[1] || {};
             var byUser = {};
             rows.forEach(function (r) { (byUser[r.user_id] = byUser[r.user_id] || []).push(r); });
             var loyMap = {};
             Object.keys(byUser).forEach(function (id) { loyMap[id] = computeLoyalty(byUser[id]); });
-            render(rows, loyMap);
+            render(rows, loyMap, tgMap);
           });
         });
       });

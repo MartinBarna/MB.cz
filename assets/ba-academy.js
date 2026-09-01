@@ -389,6 +389,27 @@
     // je pozustatek formulare, ktery se nakonec nepouziva, a je trvale prazdna. Prehled pro
     // kouce proto do 20. 7. 2026 ukazoval nuly, i kdyz klienti reporty poctive posilali.
     // Tvary obou tabulek se lisi, takze tady prevadime na to, co prehled ocekava.
+    // Zadani od Martina (client_targets). Cte se PRESNE toutez cestou jako reporty:
+    // supabase klient pod prihlasenym uzivatelem. RLS pousti cely seznam jen adminskym
+    // adresam (politika client_targets_select_admin, tytez dve adresy jako gate stranky),
+    // klientovi by vratila nanejvys jeho vlastni radek. Vraci mapu {email: treninky}.
+    // ⛔ Snimek "client_reports.targets.treninky" je dnes null u VSECH 73 reportu
+    // (64 nema targets vubec, u zbylych 9 je klic null), takze jmenovatel treninku
+    // musi pochazet odsud, jinak by prehled psal "bez planu" napric.
+    getAllTargets: function () {
+      if (!LIVE) return Promise.resolve({});
+      return client.from("client_targets").select("email,treninky")
+        .then(function (r) {
+          var m = {};
+          (r.data || []).forEach(function (row) {
+            var e = String(row.email == null ? "" : row.email).trim().toLowerCase();
+            if (!e) return;
+            var v = row.treninky;
+            m[e] = (v === null || v === undefined || v === "") ? null : Number(v);
+          });
+          return m;
+        }).catch(function () { return {}; });
+    },
     getAllCheckins: function () {
       if (!LIVE) return Promise.resolve([]);
       var self = this;
@@ -409,11 +430,21 @@
               iso_week: self._isoWeekOf(row.report_date),
               weight_kg: num(row.weight),
               plan_adherence_pct: adh == null ? null : Math.round(adh * 20),
-              energy: num(s.sila),           // "sila" je nejblizsi tomu, co prehled zove energii
+              // 18. 8. 2026 Martin sjednotil skalu sily s unavou a hladem: 1 = nabuseno,
+              // 5 = slabota (definice je v pruvodci reportem, akademie/klient/index.html).
+              // Do 1. 9. 2026 se hodnota vracela pod jmenem "energy" a prehled kouce ji
+              // cetl jako energii, tedy obracene: flag svitil prave u nejsilnejsich klientu.
+              // Jmeno "sila" je verne tomu, co se opravdu sbira. Nemenit zpatky.
+              sila: num(s.sila),
               sleep: num(s.spanek_kvalita),
               cravings: num(s.hlad),
               workouts_done: num(ac.fitko),
-              workouts_planned: null,        // formular planovany pocet treninku nesbira
+              // Snimek zadani ulozeny primo v reportu. Je to spravny zdroj (tentyz, proti
+              // kteremu pocita odchylky klientska sekce, rozhodnuti z 25. 7.), ale zmereno
+              // 1. 9. 2026 je dnes null u VSECH 73 reportu: 64 nema `targets` vubec a
+              // u zbylych 9 je klic `treninky` prazdny. Zivy plan proto dotahuje prehled
+              // kouce z `client_targets` pres getAllTargets a bere ho jako zalohu.
+              workouts_planned: num((row.targets || {}).treninky),
               // minuty sportu za tyden; stare import-sheet reporty je maji zvlast (fitko_min +
               // kardio_min, stejna jednotka -> soucet je poctivy). Pocty na minuty neprepocitavat.
               sport_min: num(ac.sport_min) != null ? num(ac.sport_min)

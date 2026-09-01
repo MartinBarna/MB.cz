@@ -359,6 +359,142 @@ Deno.serve(async (req) => {
     alerts += warn("Kontrola odkazů se nedá přečíst: " + String(e).slice(0, 120));
   }
 
+  // --- 🤝 KOUČINK: co dnes potřebuje Martinovu ruku -----------------------
+  // ⛔ PŘIBYLO 1. 9. 2026. Do té doby neměl ranní přehled o koučinkových klientech
+  // ANI JEDEN ŘÁDEK (ověřeno greppem), přestože je to nejdražší produkt a jediný,
+  // kde udržení stojí na tom, že si Martin všimne včas. Přehled v adminu je lepší,
+  // ale musí si pro něj dojít; tenhle mail chodí sám.
+  // Jen ČTENÍ z DB plus jeden dotaz na appku. Nic se nikam nezapisuje.
+  // ⚠️ Martinovy testovací účty se vyhazují (`fitness.barna%` a adresy s `+`), jinak
+  // by si četl vlastní zkoušky jako klienty (past `feedback-cisla-z-testovacich-uctu-nejsou-provoz`).
+  // ⛔ Celý blok je v try/catch a musí přežít prázdná data: nula klientů dá nuly,
+  // ne pád. Kdyby spadl, digest se pošle bez něj, ne vůbec.
+  let koucinkHtml = "";
+  try {
+    const lowE = (v: unknown) => String(v ?? "").trim().toLowerCase();
+    const escT = (s: string) => s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string));
+    const jeTest = (e: string) => e.startsWith("fitness.barna") || e.includes("+");
+    const [entsC, repsC, tgsC] = await Promise.all([
+      admin.from("entitlements").select("email,active,expires_at").eq("product", "coaching"),
+      admin.from("client_reports").select("email,report_date,created_at"),
+      admin.from("client_targets").select("email,kcal,protein"),
+    ]);
+    // ⛔ Chybu dotazu NIKDY nespolknout. `x.data ?? []` udělá z rozbitého dotazu
+    // prázdný seznam, takže by mail hlásil „Aktivních klientů 0" a vypadal by,
+    // že je klid. Táž tichá vada se v tomhle souboru už jednou stala u počítadla
+    // zakládajících (28. 7. 2026, `select` neexistujícího sloupce).
+    const chybyDotazu: string[] = [];
+    if (entsC.error) chybyDotazu.push("entitlements (" + entsC.error.message + ")");
+    if (repsC.error) chybyDotazu.push("client_reports (" + repsC.error.message + ")");
+    if (tgsC.error) chybyDotazu.push("client_targets (" + tgsC.error.message + ")");
+
+    const nowMs = now.getTime();
+    // ⚠️ `active` samo nestačí: skončený koučink má `active` dál true a jen prošlé
+    // `expires_at`. Bez té podmínky by Martin dostával seznam bývalých klientů.
+    const klienti = (entsC.data ?? [])
+      .map((r: { email: string; active: boolean | null; expires_at: string | null }) =>
+        ({ email: lowE(r.email), active: r.active === true, exp: r.expires_at }))
+      .filter((r) => r.email && !jeTest(r.email) && r.active &&
+        (!r.exp || Date.parse(String(r.exp)) > nowMs));
+    const aktivni = new Set(klienti.map((k) => k.email));
+
+    // Křestní jméno z `customer_contacts`. Když ho neznáme, jde do mailu adresa:
+    // Martin podle ní člověka najde, a jinde v tomhle přehledu už adresy jsou.
+    // ⛔ Ptáme se JEN na adresy koučinkových klientů. Celá tabulka má 822 řádků
+    // a PostgREST vrací nanejvýš 1000, takže by se dotaz bez filtru časem tiše
+    // usekl a někomu by v mailu zmizelo jméno, aniž by cokoli spadlo.
+    // Adresy v `customer_contacts` jsou všechny malými písmeny (ověřeno, 0 výjimek),
+    // takže lowercase klíče z entitlements sedí. Prázdný seznam se do filtru neposílá.
+    const contactsC = klienti.length
+      ? await admin.from("customer_contacts").select("email,name").in("email", klienti.map((k) => k.email))
+      : { data: [] as Array<{ email: string; name: string | null }>, error: null };
+    if (contactsC.error) chybyDotazu.push("customer_contacts (" + contactsC.error.message + ")");
+    if (chybyDotazu.length) {
+      alerts += warn("🔴 KOUČINKOVÝ BLOK NEPŘEČETL VŠECHNA DATA: " + chybyDotazu.join(", ") +
+        ". Čísla o klientech pod tím jsou tím pádem nižší, než mají být, a nula tam dnes " +
+        "neznamená klid. Ber je jako neplatná a řekni Claudovi, ať to prověří.");
+    }
+    const jmenoBy = new Map<string, string>();
+    for (const c of contactsC.data ?? []) {
+      if (c.name) jmenoBy.set(lowE(c.email), String(c.name).trim().split(/\s+/)[0]);
+    }
+    const jmeno = (e: string) => escT(jmenoBy.get(e) || e);
+
+    // Poslední report a reporty za 24 h. ⛔ Časy se porovnávají přes Date.parse,
+    // ne jako řetězce: PostgREST vrací "+00:00" a toISOString() vrací "Z",
+    // takže textové porovnání by tiše lhalo.
+    const posledni = new Map<string, number>();
+    let novychReportu = 0;
+    const novaJmena: string[] = [];
+    for (const r of repsC.data ?? []) {
+      const e = lowE(r.email); if (!e || !aktivni.has(e)) continue;
+      const den = Date.parse(String(r.report_date ?? ""));
+      if (!isNaN(den) && den > (posledni.get(e) ?? -Infinity)) posledni.set(e, den);
+      const vzniklo = Date.parse(String(r.created_at ?? ""));
+      if (!isNaN(vzniklo) && nowMs - vzniklo <= 86400000) {
+        novychReportu++;
+        const j = jmeno(e); if (!novaJmena.includes(j)) novaJmena.push(j);
+      }
+    }
+    const bezReportu: string[] = [];
+    for (const k of klienti) {
+      const den = posledni.get(k.email);
+      if (den === undefined) { bezReportu.push(jmeno(k.email) + " (nikdy)"); continue; }
+      const dni = Math.floor((nowMs - den) / 86400000);
+      if (dni >= 7) bezReportu.push(jmeno(k.email) + " (" + dni + " d)");
+    }
+
+    // Zadání se počítá za nastavené, až když má aspoň kalorie nebo bílkoviny.
+    // Prázdný řádek v `client_targets` klientovi v jeho sekci neukáže žádný cíl,
+    // takže by se počítal jako „má zadání" a nikdo by se k němu nevrátil.
+    const maZadani = new Set((tgsC.data ?? [])
+      .filter((t: { kcal: number | null; protein: number | null }) => t.kcal != null || t.protein != null)
+      .map((t: { email: string }) => lowE(t.email)));
+    const bezZadani = klienti.filter((k) => !maZadani.has(k.email)).map((k) => jmeno(k.email));
+
+    // Stav appky. ⛔ NEBRAT z tabulky `tvujcoach_grants`, ta se zapisuje při pozvání
+    // a už se neaktualizuje. Živý stav umí appka přes `academy-grant` action
+    // `access-status`, týmž kanálem jako admin. Best-effort: když appka neodpoví,
+    // napíše se to narovinu, prázdno by se tvářilo jako „všichni appku mají".
+    let appkaRadek = klienti.length ? "appka neodpověděla, stav neznámý" : "žádní klienti";
+    if (klienti.length) {
+      try {
+        const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+        const gsec = gs?.value ? String(gs.value) : "";
+        if (gsec) {
+          const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+            body: JSON.stringify({ action: "access-status", emails: klienti.map((k) => k.email) }),
+            signal: AbortSignal.timeout(10_000),
+          });
+          if (r.ok) {
+            const jj = await r.json().catch(() => null);
+            const ceka = ((jj?.rows ?? []) as Array<{ email?: string; stav?: string }>)
+              .filter((s) => String(s?.stav ?? "") === "ceka_na_registraci")
+              .map((s) => jmeno(lowE(s.email)));
+            appkaRadek = ceka.length ? ceka.length + "× " + ceka.slice(0, 8).join(", ") : "nikdo nečeká";
+          }
+        }
+      } catch { /* stav appky je doplněk, nesmí shodit koučinkový blok */ }
+    }
+
+    const vypis = (a: string[], max = 8) =>
+      a.length ? ": " + a.slice(0, max).join(", ") + (a.length > max ? " a další " + (a.length - max) : "") : "";
+    koucinkHtml =
+      `<h3 style="margin:18px 0 6px;font-size:15px">🤝 Koučink</h3>` +
+      `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
+      row("Aktivních klientů", String(klienti.length)) +
+      row("Bez reportu 7 a víc dní", String(bezReportu.length) + vypis(bezReportu)) +
+      row("Bez zadání", String(bezZadani.length) + vypis(bezZadani)) +
+      row("Nové reporty za 24 h k odpovědi", String(novychReportu) + vypis(novaJmena)) +
+      row("Čeká na vyzvednutí appky", appkaRadek) +
+      `</table>`;
+  } catch (e) {
+    koucinkHtml = info("Koučinkový blok se dnes nepovedlo spočítat: " + String(e).slice(0, 140) +
+      ". Zbytek přehledu platí, jen o klientech dnes nevíš nic.");
+  }
+
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;color:#222;max-width:560px;margin:0 auto">` +
     `<h2 style="margin:0 0 4px">🌅 Ranní přehled</h2>` +
@@ -377,7 +513,7 @@ Deno.serve(async (req) => {
     row("Affiliate čeká na potvrzení", String(refPending)) +
     row("Zakládající členové Academy", founders + " / 50 · zbývá " + foundersLeft) +
     row("Odkazy v mailech a na webu", odkazyRadek) +
-    `</table>` +
+    `</table>` + koucinkHtml +
     `<p style="margin:14px 0 4px;color:#666;font-size:13px">Leadi 7 dní: ${trendStr || "—"}</p>` +
     `<p style="margin:14px 0 0;font-size:13px"><a href="https://martinbarna.cz/akademie/admin/" style="color:#c45e00">Otevřít admin →</a></p></div>`;
 
