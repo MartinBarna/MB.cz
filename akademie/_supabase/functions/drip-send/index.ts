@@ -204,17 +204,23 @@ function neznamyBlok(b: never): never {
 }
 function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): string {
   return blocks.map((b) => {
-    if (b.t === 'p') return `<p style='margin:0 0 14px'>${fill(b.html, seg, v)}</p>`;
-    if (b.t === 'ps') return `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, seg, v)}</p>`;
+    if (b.t === 'p') return `<p style='margin:0 0 15px'>${fill(b.html, seg, v)}</p>`;
+    if (b.t === 'ps') return `<p class='mb-ps' style='margin:18px 0 0;color:#A09AAD;font-style:italic'>${fill(b.html, seg, v)}</p>`;
     if (b.t === 'bullets')
-      return `<ul style='margin:0 0 14px;padding-left:20px'>` +
-        b.items.map((li) => `<li style='margin:0 0 7px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
+      return `<ul style='margin:0 0 15px;padding-left:20px'>` +
+        b.items.map((li) => `<li style='margin:0 0 8px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
     // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
     // Vsechny styly inline, mailove klienty externi CSS ignoruji.
     if (b.t === 'img')
       return `<img src='${attr(fill(b.src, seg, v))}' alt='${attr(fill(b.alt, seg, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
+    // Tlacitko jako tabulka s `bgcolor`: div/odkaz s barvou pozadi Outlook na Windows
+    // casto zahodi a zustane holy text. Barvy jsou z webu (zlata #EBB12C, tmavy text
+    // #1A1222, pilulka 50 px), tvar i barva tedy sedi s tlacitky na martinbarna.cz.
     if (b.t === 'btn')
-      return `<p style='margin:4px 0 18px'><a class='mb-btn' href='${fill(b.href, seg, v)}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;border-radius:0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${esc(fill(b.text, seg, v))}</a></p>`;
+      return `<table role='presentation' cellpadding='0' cellspacing='0' border='0' style='margin:6px 0 20px'><tr>` +
+        `<td class='mb-btn' bgcolor='#EBB12C' style='background-color:#EBB12C;border-radius:50px'>` +
+        `<a class='mb-btna' href='${fill(b.href, seg, v)}' style='display:inline-block;padding:14px 30px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;font-weight:700;line-height:1.25;color:#1A1222;text-decoration:none'>${esc(fill(b.text, seg, v))}</a>` +
+        `</td></tr></table>`;
     return neznamyBlok(b);
   }).join(NL);
 }
@@ -228,42 +234,69 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
-  // Tabulkovy layout + bgcolor = tmava karta drzi i v Outlooku (div-background Outlook ignoruje).
-  // DARK-MODE FIX: color-scheme 'light dark' + <style> override. Gmail app (iOS/Android) v dark rezimu
-  // prebarvoval mail (zlata #EBB12C sla do hneda, tmava karta se invertovala na svetlou) — prebarveny
-  // strom oznacuje atributy [data-ogsc]/[data-ogsb], pres ktere zlate/kartu/pozadi zamykame zpet.
-  // Apple Mail resi @media (prefers-color-scheme: dark). Barvy zamykame pres tridy .mb-* !important.
+  // ⭐ VZHLED = ZIVY WEB martinbarna.cz (Martin 1. 9. 2026: „kovane cerne pozadi mailu, jako web“).
+  // Barvy jsou ODMERENE na zive homepage (`getComputedStyle` nad `:root` a body), ne odhadnute:
+  //   pozadi #0C0B10 · karta (--surface) #16131D · vyssi karta #1C1826 · zlata #EBB12C ·
+  //   svetlejsi zlata (odkazy) #F6CD63 · tmavy text na zlate #1A1222 · tlumena #A09AAD ·
+  //   linka rgba(255,255,255,.08) = po slozeni nad kartou zhruba #262231 · paticka webu #0A090D.
+  // Text v tele nechavam #F0EADF zamerne: TATAZ hodnota je natvrdo v desitkach sablon v DB
+  // (`<span style='color:#F0EADF'>` u mezinadpisu), takze zmena tady by je rozladila.
+  //
+  // „Kovane“ resi (a) jemny svisly prechod na pozadi kolem karty a (b) zlata vlasova linka
+  // pres horni hranu karty. ⛔ Zadny obrazek na pozadi: Gmail obrazky z martinbarna.cz
+  // netahne (proxy dostava 401, viz `mb-obrazky-v-mailech-hosting-blokuje-gmail`).
+  // ⛔ Prechod je JEN na vnejsim pozadi, kde neni zadny text. Na kartu se davat nesmi:
+  // gradient si Gmail v tmavem rezimu neprebarvi, ale text nad nim ano, a vznikl by tmavy
+  // text na tmavem podkladu (past z `mb-mail-dark-mode-fix`).
+  //
+  // DARK-MODE FIX (beze zmeny mechaniky z 22. 7. 2026): Gmail app v dark rezimu prebarvoval
+  // mail (zlata sla do hneda, tmava karta se invertovala na svetlou). Prebarveny strom
+  // oznacuje Outlook atributy [data-ogsc]/[data-ogsb], Apple Mail resi
+  // @media (prefers-color-scheme: dark). Barvy zamykame pres tridy .mb-* s !important.
+  // Poradi v `color-scheme` je nove `dark light` (mail JE tmavy, tedy tmave je preferovane);
+  // obe hodnoty ale zustavaji, aby si zadny klient nemyslel, ze si smi tmavy rezim dodelat sam.
   // Inline styly zustavaji jako fallback pro klienty bez podpory <style> (Outlook Windows).
-  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='light dark'><meta name='supported-color-schemes' content='light dark'>` +
-    `<style>` +
-    `:root{color-scheme:light dark;supported-color-schemes:light dark}` +
-    `@media (prefers-color-scheme: dark){` +
-    `.mb-bg{background:#0C0B10!important}` +
-    `.mb-card{background:#181520!important}` +
+  const ZAMKY = `.mb-bg{background-color:#0C0B10!important}` +
+    `.mb-card{background-color:#16131D!important}` +
+    `.mb-rule{background-color:#EBB12C!important}` +
     `.mb-body{color:#F0EADF!important}` +
-    `.mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
-    `.mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
-    `.mb-mut{color:#8F8A99!important}` +
+    `.mb-brand{color:#F6CD63!important;border-left-color:#EBB12C!important}` +
+    `.mb-btn{background-color:#EBB12C!important}` +
+    `.mb-btna{color:#1A1222!important}` +
+    `.mb-foot{background-color:#100E16!important}` +
+    `.mb-mut{color:#A09AAD!important}` +
     `.mb-ps{color:#A09AAD!important}` +
-    `.mb-link{color:#F6CD63!important}` +
-    `}` +
-    `[data-ogsc] .mb-bg,[data-ogsb] .mb-bg{background:#0C0B10!important}` +
-    `[data-ogsc] .mb-card,[data-ogsb] .mb-card{background:#181520!important}` +
+    `.mb-link{color:#F6CD63!important}`;
+  return `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta name='color-scheme' content='dark light'><meta name='supported-color-schemes' content='dark light'>` +
+    `<style>` +
+    `:root{color-scheme:dark light;supported-color-schemes:dark light}` +
+    `body,table,td,p,li,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}` +
+    `.mb-body a{color:#F6CD63}.mb-body a.mb-btna{color:#1A1222}` +
+    `@media (prefers-color-scheme: dark){${ZAMKY}.mb-body a{color:#F6CD63!important}.mb-body a.mb-btna{color:#1A1222!important}}` +
+    `[data-ogsc] .mb-bg,[data-ogsb] .mb-bg{background-color:#0C0B10!important}` +
+    `[data-ogsc] .mb-card,[data-ogsb] .mb-card{background-color:#16131D!important}` +
+    `[data-ogsc] .mb-rule,[data-ogsb] .mb-rule{background-color:#EBB12C!important}` +
     `[data-ogsc] .mb-body,[data-ogsb] .mb-body{color:#F0EADF!important}` +
-    `[data-ogsc] .mb-brand,[data-ogsb] .mb-brand{color:#EBB12C!important;border-left-color:#EBB12C!important}` +
-    `[data-ogsc] .mb-btn,[data-ogsb] .mb-btn{background:#EBB12C!important;color:#1A1222!important}` +
-    `[data-ogsc] .mb-mut,[data-ogsb] .mb-mut{color:#8F8A99!important}` +
+    `[data-ogsc] .mb-brand,[data-ogsb] .mb-brand{color:#F6CD63!important;border-left-color:#EBB12C!important}` +
+    `[data-ogsc] .mb-btn,[data-ogsb] .mb-btn{background-color:#EBB12C!important}` +
+    `[data-ogsc] .mb-btna,[data-ogsb] .mb-btna,[data-ogsc] .mb-body a.mb-btna,[data-ogsb] .mb-body a.mb-btna{color:#1A1222!important}` +
+    `[data-ogsc] .mb-foot,[data-ogsb] .mb-foot{background-color:#100E16!important}` +
+    `[data-ogsc] .mb-mut,[data-ogsb] .mb-mut{color:#A09AAD!important}` +
     `[data-ogsc] .mb-ps,[data-ogsb] .mb-ps{color:#A09AAD!important}` +
     `[data-ogsc] .mb-link,[data-ogsb] .mb-link{color:#F6CD63!important}` +
+    `@media only screen and (max-width:620px){.mb-pad{padding:26px 20px 22px!important}.mb-fpad{padding:16px 20px 20px!important}}` +
     `</style></head>` +
-    `<body class='mb-bg' style='margin:0;padding:0;background:#0C0B10'>` +
+    `<body class='mb-bg' style='margin:0;padding:0;background-color:#0C0B10;background-image:linear-gradient(180deg,#17131F 0%,#0C0B10 46%,#0A0910 100%)'>` +
     `<span style='display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden'>${esc(preheader)}</span>` +
-    `<table role='presentation' class='mb-bg' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>` +
-    `<table role='presentation' class='mb-card' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td class='mb-body' style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
-    `<div class='mb-brand' style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
+    `<table role='presentation' class='mb-bg' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background-color:#0C0B10;background-image:linear-gradient(180deg,#17131F 0%,#0C0B10 46%,#0A0910 100%)'><tr><td align='center' style='padding:24px 12px 30px'>` +
+    `<table role='presentation' class='mb-card' width='600' cellpadding='0' cellspacing='0' border='0' bgcolor='#16131D' style='width:100%;max-width:600px;background-color:#16131D;border-radius:2px;border:1px solid #262231'>` +
+    `<tr><td class='mb-rule' bgcolor='#EBB12C' height='3' style='height:3px;line-height:3px;font-size:2px;background-color:#EBB12C'>&nbsp;</td></tr>` +
+    `<tr><td class='mb-body mb-pad' style='padding:30px 32px 26px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.6;color:#F0EADF'>` +
+    `<div class='mb-brand' style='border-left:3px solid #EBB12C;padding-left:12px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#F6CD63;margin:0 0 22px'>Martin Barna</div>` +
     body +
-    `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'>` +
-    `<div class='mb-mut' style='font-size:12px;line-height:1.5;color:#8F8A99'>${footerHtml}</div>` +
+    `</td></tr>` +
+    `<tr><td class='mb-foot mb-fpad' bgcolor='#100E16' style='padding:18px 32px 22px;background-color:#100E16;border-top:1px solid #262231'>` +
+    `<div class='mb-mut' style='font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:12px;line-height:1.55;color:#A09AAD'>${footerHtml}</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
 }
 
