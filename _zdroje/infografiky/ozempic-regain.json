@@ -10,6 +10,6 @@
     { "kind": "vs", "kicker": "Praxe", "title": "Bílkoviny na papíře,<br>apetit na nule", "yes": { "h": "Co svaly udrží", "items": ["Bílkoviny <b>1,6 až 2,2 g/kg</b> denně", "Silový trénink jako povinnost, ne bonus", "Bílkovinu naplánovat, ne čekat na chuť"] }, "no": { "h": "Co se běžně děje", "items": ["Sníš 800 kcal a nic tě neláká", "Bílkoviny sotva na polovině cíle", "Váha padá i se svaly a kostmi"] } },
     { "kind": "point", "kicker": "Než se rozhodneš", "title": "Tohle není<br>diagnóza z Instagramu", "body": "Pro někoho s BMI nad 35, vysokým tlakem a inzulinovou rezistencí může být GLP-1 doslova záchrana. Jestli je to tvůj případ, posoudí lékař po vyšetření.<br><br>Léky se nenasazují ani nevysazují podle příspěvku na sítích.", "callout": "Máš zdravotní potíže nebo GLP-1 už bereš? Řeš to se svým lékařem, ne v komentářích." },
     { "kind": "quote", "text": "Žádná z těch cest není morálně lepší. Jen se liší důsledky.", "note": "Lék tlumí chuť k jídlu. Systém drží výsledek i potom, co lék skončí. Ty důsledky máš znát dřív, než se rozhodneš." },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 1 490 Kč)</b>"] }
   ]
 }

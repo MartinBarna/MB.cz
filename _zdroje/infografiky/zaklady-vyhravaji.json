@@ -10,6 +10,6 @@
     { "kind": "vs", "kicker": "Prakticky", "title": "Posun,<br>nebo kolotoč?", "yes": { "h": "Takhle to jde nahoru", "items": ["Zapisuješ si váhy a opakování", "Každých pár týdnů přidáš kilo nebo opakování", "Bílkoviny a spánek řešíš dřív než doplňky"] }, "no": { "h": "Takhle stojíš na místě", "items": ["Trénuješ podle pocitu, nic si nepíšeš", "Váhy se rok nehnuly, ale plán měníš každý měsíc", "Řešíš spalovač a nevíš, kolik jíš"] } },
     { "kind": "point", "kicker": "Háček", "title": "Kdy základy<br>nestačí", "body": "Přidávat donekonečna nejde. Přijde plató a tam zabere spíš deload, změna cviku nebo pár týdnů v udržovacím příjmu. Přitlačit ještě víc obvykle nepomůže.<br><br>A když jedeš základy poctivě, tělo nereaguje a něco tě trápí, nech se vyšetřit.", "callout": "Diagnózu z Instagramu ti nedá nikdo. Ani já." },
     { "kind": "quote", "text": "Základy nejsou sexy. Fungují i ve chvíli, kdy se na ně vykašle celý internet.", "note": "Průměrný plán, který dodržíš půl roku, porazí dokonalý plán, co vydrží dva týdny." },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 1 490 Kč)</b>"] }
   ]
 }

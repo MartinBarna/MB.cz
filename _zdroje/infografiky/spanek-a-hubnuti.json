@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Háček", "title": "Fyzika<br>platí dál", "body": "Směny ti rozhodí chuť k jídlu, spánek i energii na pohyb. Kalorický deficit tím ale nezmizí, termodynamika neselhává.<br><br>Zhoršují ti <b>udržitelnost</b>, ne fyziku." },
     { "kind": "bullets", "kicker": "Prakticky", "title": "Co s tím<br>na směně", "items": ["Hlavní jídlo dej <b>před směnou nebo po ní</b>, ne doprostřed", "Jídlo si připrav z domu, nabídka v práci bývá bída", "Spánek je priorita, ne důvod k většímu deficitu", "Strategický šlofík <b>20 až 30 minut</b> uprostřed směny"] },
     { "kind": "quote", "text": "Počítání kalorií ti dá přesnost. Načasování jídla a spánek ti dají to, že to vydržíš.", "note": "U zdravotníků na nočních to vidím pořád. Plán, který sedne na směnu, udělá víc než tvrdší deficit." },
-    { "kind": "cta", "title": "Chceš plán, co sedne na <span class=\"hl\">tvoje směny?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš plán, co sedne na <span class=\"hl\">tvoje směny?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 1 490 Kč)</b>"] }
   ]
 }

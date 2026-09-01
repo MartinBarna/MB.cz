@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Háček", "title": "Z rituálu<br>křehkost", "body": "Když uvěříš, že bez sacharidů trénovat nejde, vypěstuješ si na nich závislost v hlavě.<br><br>Den, kdy je nedáš, je horší. Ale kvůli hlavě, ne kvůli energii." },
     { "kind": "vs", "kicker": "Prakticky", "title": "Kdy je vzít,<br>kdy je pustit", "yes": { "h": "Reálně pomůžou", "items": ["Trénink po <b>8 a víc hodinách</b> nalačno", "Objemová dřina, <b>10 a víc sérií</b> na partii", "Trénink <b>přes 45 minut</b>"] }, "no": { "h": "Jedeš ze zvyku", "items": ["Trénuješ najezený, pár hodin po jídle", "Krátký trénink o pár sériích", "Banán dáváš ze strachu, že bez něj to nezvládneš"] } },
     { "kind": "quote", "text": "Banán před tréninkem ti sílu nepřidá. Strach, že bez něj nemůžeš, ti ji sebere.", "note": "Rituál je v pohodě. Závislost na něm už ne." },
-    { "kind": "cta", "title": "Chceš v tom mít <span class=\"hl\">jasno?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš v tom mít <span class=\"hl\">jasno?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 1 490 Kč)</b>"] }
   ]
 }
