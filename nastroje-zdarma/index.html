@@ -30,6 +30,7 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:1.8rem;}
   .card{display:block;text-decoration:none;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:1.6rem 1.7rem;transition:transform .2s,border-color .2s;}
   .card:hover{transform:translateY(-4px);border-color:rgba(235,177,44,.45);}
+  .card-appka{border-color:rgba(235,177,44,.45);background:linear-gradient(180deg,rgba(235,177,44,.10),rgba(235,177,44,.02));}
   .card .ico{width:56px;height:56px;border-radius:14px;background:linear-gradient(145deg,var(--gold-2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem;}
   .card h2{color:#fff;font-size:1.3rem;margin:0 0 .4rem;letter-spacing:-.01em;}
   .card p{color:var(--muted-2);font-size:.97rem;margin:0 0 1rem;line-height:1.5;}
@@ -88,6 +89,17 @@
         <p>6 otázek, 60 vteřin. Žádné „typy metabolismu“. Podle tvých odpovědí ti řeknu, kde se hubnutí nejspíš sype a jaké 3 kroky s tím udělat.</p>
         <div class="chips"><span class="chip">6 otázek</span><span class="chip">60 vteřin</span><span class="chip">Výsledek hned</span></div>
         <span class="go">Spustit kvíz →</span>
+      </a>
+
+      <!-- Appka. Zlatý rámeček ji odlišuje od nástrojů nad ní: ty jsou celé zdarma
+           a bez registrace, tady je zdarma jen zápis a generátory odemyká Basic.
+           Bez toho rozlišení by dlaždice slibovala něco, co appka bez placení nedá. -->
+      <a class="card card-appka" href="/tvuj-coach/?utm_source=web&amp;utm_medium=nastroje&amp;utm_campaign=nastroje">
+        <div class="ico">📱</div>
+        <h2>Appka Tvůj Coach</h2>
+        <p>Nástroje nahoře ti spočítají jeden plán. Appka jede dál: zapisuješ jídlo i trénink, cíle se ti každý týden přepočítají podle váhy a zápisů a generátor ti poskládá celý týden i s nákupním seznamem.</p>
+        <div class="chips"><span class="chip">Zápis jídla zdarma</span><span class="chip">Generátory od 249 Kč měsíčně</span></div>
+        <span class="go">Mrknout na appku →</span>
       </a>
     </div>
 

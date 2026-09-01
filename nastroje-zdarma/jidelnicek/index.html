@@ -59,6 +59,12 @@
   .brandline{color:var(--muted);font-size:.85rem;}
   .note{color:var(--muted);font-size:.82rem;margin-top:.7rem;line-height:1.5;}
   .hidden{display:none;}
+  /* Nabídka appky nad blokem Academy. Vlastní třída, ne `.upsell`: Academy je nabídka
+     pro trenéry (lead form, segment academy-jidelnicek) a appka pro člověka, který si
+     tu právě vygeneroval vlastní den. Dva různé zájmy, dva různé bloky. */
+  .appka-blok{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(235,177,44,.4);border-radius:18px;padding:1.5rem 1.6rem;margin:1.4rem 0;}
+  .appka-blok h2{color:#fff;font-size:1.3rem;margin:0 0 .4rem;letter-spacing:-.01em;}
+  .appka-blok p{color:#e9e2d8;font-size:.97rem;line-height:1.55;margin:0 0 1.1rem;}
   /* upsell + lead-capture do Academy */
   .upsell{background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.04));border:1px solid rgba(235,177,44,.4);border-radius:18px;padding:1.6rem 1.6rem;margin:1.4rem 0;}
   .upsell h2{color:#fff;font-size:1.35rem;margin:0 0 .4rem;letter-spacing:-.01em;}
@@ -71,7 +77,7 @@
   .seg{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.8rem;margin:1.2rem 0 0;}
   .seg::before,.seg::after{content:"";flex:1;height:1px;background:var(--line);}
   @media print{
-    .top,.actions,.no-print,.upsell,.ticks,.lead{display:none!important;}
+    .top,.actions,.no-print,.upsell,.appka-blok,.ticks,.lead{display:none!important;}
     body{background:#fff!important;color:#161616!important;}
     .panel,.meal,.tcard{border-color:#ddd!important;background:#fff!important;color:#161616!important;}
     .meal h3{background:#f3ede4!important;color:#161616!important;} .meal td{color:#222!important;}
@@ -89,7 +95,14 @@
 <body class="ba">
   <div class="top"><div class="in">
     <a class="brand" href="/"><span class="mark">MB</span><span><b>Martin Barna</b><span class="tag">Generátor jídelníčku zdarma</span></span></a>
-    <a class="back" href="/nastroje-zdarma/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Nástroje zdarma</a>
+    <!-- Odkaz na appku v hlavičce: bez něj tahle stránka nemá kam poslat člověka,
+         který se ke generování ani nedostane (blok appky níž žije uvnitř výsledku).
+         Oba odkazy jsou v jednom obalu, ať `justify-content:space-between` v `.top .in`
+         nerozhodí značku a nerozhází je po celé šířce. -->
+    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;">
+      <a href="/tvuj-coach/?utm_source=web&amp;utm_medium=nastroje&amp;utm_campaign=jidelnicek" style="color:#a89e94;text-decoration:none;font-size:.85rem;">Appka Tvůj Coach</a>
+      <a class="back" href="/nastroje-zdarma/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Nástroje zdarma</a>
+    </span>
   </div></div>
 
   <div class="wrap">
@@ -154,6 +167,15 @@
           <button class="btn ghost" id="regen">↻ Vygenerovat jiný den</button>
           <a class="btn ghost" href="/nastroje-zdarma/trenink/">🏋️ Vyzkoušet i generátor tréninku →</a>
         </div>
+      </div>
+
+      <!-- Nabídka appky. Stojí PŘED blokem Academy schválně: člověk, který si tu právě
+           vygeneroval vlastní den, hledá pokračování pro sebe, ne školu pro trenéry.
+           Blok Academy pod tím zůstává beze změny. -->
+      <div class="appka-blok">
+        <h2>Chceš tohle každý den?</h2>
+        <p>Tenhle generátor ti dá jeden den. V appce Tvůj Coach ti poskládá celý týden, přidá nákupní seznam v kusech a hlídá, jestli ti to vychází do maker. Zápis jídla máš zdarma, generátory odemyká Basic za 249 Kč měsíčně.</p>
+        <a class="btn" href="/tvuj-coach/?utm_source=web&amp;utm_medium=nastroje&amp;utm_campaign=jidelnicek">Mrknout na appku →</a>
       </div>
 
       <!-- UPSELL + LEAD CAPTURE do Academy -->
