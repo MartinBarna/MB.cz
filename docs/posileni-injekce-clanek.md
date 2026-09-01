@@ -128,7 +128,7 @@ Suffix `| Martin Barna` do limitu 60 **nepočítám**. Když zůstane v `<title>
 | Varianta | Text | Znaků |
 | --- | --- | ---: |
 | Klasika | Injekce na hubnutí: co studie ukazují po vysazení | 49 |
-| Z hloubky | Injekce na hubnutí: lék shodí kila, návyky je drží | 50 |
+| Z hloubky | Injekce na hubnutí: kila jdou dolů, a co po vysazení | 52 |
 
 Obě drží GSC frázi „injekce na hubnutí“ vepředu. Klasika tlačí nový obsah (studie + vysazení). Z hloubky říká Martinovu tezi bez názvů studií.
 
@@ -136,8 +136,8 @@ Obě drží GSC frázi „injekce na hubnutí“ vepředu. Klasika tlačí nový
 
 | Varianta | Text | Znaků |
 | --- | --- | ---: |
-| Klasika | Injekce na hubnutí: studie STEP 1 a SURMOUNT ukazují velký úbytek. Po vysazení se váha často vrací, pokud se nezmění jídlo a pohyb. | 131 |
-| Z hloubky | Injekce na hubnutí: STEP 1 a SURMOUNT ukazují silný úbytek. Po vysazení se vrací většina kil. Jídlo a pohyb drží výsledek. Předepisuje jen lékař. | 145 |
+| Klasika | Injekce na hubnutí: studie STEP 1 a SURMOUNT ukazují velký úbytek. Po vysazení se váha většinou vrací. Co dělat, ať ti výsledek vydrží. | 136 |
+| Z hloubky | Injekce na hubnutí: STEP 1 a SURMOUNT ukazují silný úbytek. Po vysazení se vrací většina kil. Předepisuje jen lékař. A co dál, až jehla skončí. | 142 |
 
 ---
 
@@ -155,7 +155,7 @@ Obě drží GSC frázi „injekce na hubnutí“ vepředu. Klasika tlačí nový
 <p>SURMOUNT-1 (Jastreboff a kol., 2022) zkoušela tirzepatid u 2539 lidí. Za 72 týdnů průměrný úbytek 15,0 %, 19,5 % a 20,9 % podle ramen, placebo 3,1 %. V nejvyšším rameni shodilo 20 % a víc 57 % lidí, na placebu 3 %.</p>
 <p>Lék hlad utlumí, ty sníš méně, vznikne deficit. Pořád platí příjem versus výdej.</p>
 <p>Po vysazení přijde druhá část. V prodloužení STEP 1 (Wilding a kol., 2022) 327 lidí po 68 týdnech vysadilo lék i režimovou podporu. Skupina po semaglutidu zhubla 17,3 %. Do týdne 120 nabrala 11,6 procentního bodu zpět, čistý zůstatek 5,6 % pod startem. Autoři píší, že se za rok vrátila zhruba dvě třetiny úbytku. SURMOUNT-4 (Aronne a kol., 2024): po 36 týdnech tirzepatidu průměrný úbytek 20,9 %. Kdo pak dostal placebo, nabral za 52 týdnů 14,0 % váhy. Kdo v léčbě zůstal, ještě 5,5 % shodil.</p>
-<p>Vidím to u klientů stejně. Injekce ti může uvolnit hlad. Návyky drží, co zhubneš. Když se mezitím nezmění jídlo a pohyb, kila naskočí zpátky. To není selhání charakteru. Hlad se vrátí a tělo si brání váhu, na kterou bylo zvyklé.</p>
+<p>Co z toho plyne? Studie neměřily, co přesně váhu po vysazení udrží. V SURMOUNT-4 se kila vracela i lidem, kteří měli dál podporu se stravou a pohybem. Z praxe u klientů ale vím, že bez pevných návyků nemá váha po vysazení co držet. Injekce ti uvolní hlad, jíst tě nenaučí. To není selhání charakteru. Hlad se vrátí a tělo si brání váhu, na kterou bylo zvyklé.</p>
 <p>Předepisuje to jen lékař. Já ti lék nevybírám. Koučink řeší tu část, která zůstane, až jehla odejde.</p>
 ```
 
@@ -171,7 +171,7 @@ Lék hlad utlumí, ty sníš méně, vznikne deficit. Pořád platí příjem ve
 
 Po vysazení přijde druhá část. V prodloužení STEP 1 (Wilding a kol., 2022) 327 lidí po 68 týdnech vysadilo lék i režimovou podporu. Skupina po semaglutidu zhubla 17,3 %. Do týdne 120 nabrala 11,6 procentního bodu zpět, čistý zůstatek 5,6 % pod startem. Autoři píší, že se za rok vrátila zhruba dvě třetiny úbytku. SURMOUNT-4 (Aronne a kol., 2024): po 36 týdnech tirzepatidu průměrný úbytek 20,9 %. Kdo pak dostal placebo, nabral za 52 týdnů 14,0 % váhy. Kdo v léčbě zůstal, ještě 5,5 % shodil.
 
-Vidím to u klientů stejně. Injekce ti může uvolnit hlad. Návyky drží, co zhubneš. Když se mezitím nezmění jídlo a pohyb, kila naskočí zpátky. To není selhání charakteru. Hlad se vrátí a tělo si brání váhu, na kterou bylo zvyklé.
+Co z toho plyne? Studie neměřily, co přesně váhu po vysazení udrží. V SURMOUNT-4 se kila vracela i lidem, kteří měli dál podporu se stravou a pohybem. Z praxe u klientů ale vím, že bez pevných návyků nemá váha po vysazení co držet. Injekce ti uvolní hlad, jíst tě nenaučí. To není selhání charakteru. Hlad se vrátí a tělo si brání váhu, na kterou bylo zvyklé.
 
 Předepisuje to jen lékař. Já ti lék nevybírám. Koučink řeší tu část, která zůstane, až jehla odejde.
 
@@ -181,6 +181,6 @@ Předepisuje to jen lékař. Já ti lék nevybírám. Koučink řeší tu část
 
 - [ ] Vybrat title (klasika / z hloubky) a meta (klasika / z hloubky).
 - [ ] Vložit H2, upravit překryv se stávající sekcí o studiích a s „háčkem“.
-- [ ] Doplnit `dateModified` a případně zdroje pod článek (PMID).
+- [ ] Doplnit `dateModified` a POVINNĚ zdroje pod článek (PMID/DOI u každého čísla; QA 1. 9.: autor a rok v textu nestačí).
 - [ ] Bump cache `?v=` jen pokud se sahá na sdílený CSS/JS (tady ne).
 - [ ] Po publikaci: title ≤60, meta ≤155, žádná dlouhá pomlčka v novém textu.
