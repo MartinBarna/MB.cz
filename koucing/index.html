@@ -62,7 +62,7 @@
         {"@type":"Question","name":"Jak probíhají týdenní kontroly?","acceptedAnswer":{"@type":"Answer","text":"Jednou týdně vyplníš v klientské sekci krátký report, z mobilu za tři minuty: váhu (pracuju s týdenním průměrem), míry, stravu, kroky a minuty sportu, plus plán na další týden. Já všechno projdu, napíšu ti analýzu a upravím kalorie, makra i plán. Každý týden tak víš, na čem jsi."}},
         {"@type":"Question","name":"Budu se muset vzdát oblíbených jídel?","acceptedAnswer":{"@type":"Answer","text":"Ne. Učím flexibilní stravování: jíš normální jídlo, které tě baví, jen ve správném množství. Vejde se i pizza nebo zmrzlina."}},
         {"@type":"Question","name":"Jak dlouho spolupráce trvá?","acceptedAnswer":{"@type":"Answer","text":"Balíčky jsou na 1, 3 nebo 6 měsíců - a čím delší období, tím výhodnější cena. Co dává smysl pro tvůj cíl, ti doporučím na konzultaci nebo v první zprávě."}},
-        {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Chceš-li vedení na míru s týdenními úpravami a podporou, vyber koučink Gold nebo Diamond. Chceš-li se učit vlastním tempem, je ideální videokurz výživy."}}
+        {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Chceš-li vedení na míru s týdenními úpravami a podporou, vyber koučink. Doporučuju Gold, jde do něj většina lidí a výsledky má stejné jako Diamond. Diamond ber, jen když chceš navíc hovor každý týden. Chceš-li se učit vlastním tempem, je ideální videokurz výživy."}}
       ]
     }
     </script>
@@ -154,6 +154,7 @@
         .plan-name { font-weight:800; font-size:1.35rem; color:var(--acc-l); }
         .plan.featured .plan-name { color:#fff; }
         .plan-sub { color:var(--mut); font-size:.88rem; margin-bottom:1rem; }
+        .plan-why { color:var(--txt); font-size:.9rem; background:rgba(235,177,44,.1); border-left:3px solid var(--acc); border-radius:0 10px 10px 0; padding:.6rem .8rem; margin:0 0 1rem; }
         .plan-price { font-size:1.7rem; font-weight:800; color:#fff; margin-bottom:1.1rem; }
         .plan-price small { font-size:.85rem; color:var(--mut); font-weight:600; }
         .terms { border:1px solid rgba(255,255,255,.1); border-radius:12px; margin-bottom:1.1rem; overflow:hidden; }
@@ -312,11 +313,13 @@
 <section class="sec" id="balicky" style="padding-top:1rem;">
     <div class="wrap">
         <h2 class="center">Vyber si svůj balíček</h2>
-        <p class="sec-sub">Online koučink na míru s týdenním vedením. Čím déle jdeme společně, tím víc ušetříš.</p>
+        <p class="sec-sub">Online koučink na míru s týdenním vedením. Doporučuju Gold, jde do něj většina lidí. Čím déle jdeme společně, tím víc ušetříš.</p>
         <div class="plans">
-            <div class="plan">
+            <div class="plan featured">
+                <span class="ribbon">★ NEJČASTĚJŠÍ VOLBA</span>
                 <div class="plan-name">Gold</div>
-                <div class="plan-sub">Pro samostatné: vedení na dálku</div>
+                <div class="plan-sub">Vedení na dálku, tohle si vybírá většina</div>
+                <p class="plan-why">Každý týden dostaneš upravený plán a odpovědi na WhatsAppu. Hovory navíc nepotřebuješ, výsledky jsou stejné.</p>
                 <div class="plan-price">6 450 Kč <small>/ měsíc</small></div>
                 <div class="terms">
                     <div class="rl"><span>1 měsíc</span><strong>6 450 Kč</strong></div>
@@ -335,13 +338,12 @@
                     <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
                     <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
                 </ul>
-                <a href="#kontakt" class="btn btn-ghost">Chci Gold</a>
+                <a href="#kontakt" class="btn btn-acc">Chci Gold</a>
                 <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
             </div>
-            <div class="plan featured">
-                <span class="ribbon">★ NEJŽÁDANĚJŠÍ</span>
+            <div class="plan">
                 <div class="plan-name">Diamond</div>
-                <div class="plan-sub">Když to chceš dotáhnout co nejrychleji</div>
+                <div class="plan-sub">Pro ty, kdo chtějí navíc hovor každý týden. Míst je málo.</div>
                 <div class="plan-price">8 950 Kč <small>/ měsíc</small></div>
                 <div class="terms">
                     <div class="rl"><span>1 měsíc</span><strong>8 950 Kč</strong></div>
@@ -353,7 +355,7 @@
                     <li>Zvukové zprávy na WhatsApp = rychlejší odpovědi</li>
                     <li>1 video či audio hovor týdně</li>
                 </ul>
-                <a href="#kontakt" class="btn btn-acc">Chci Diamond</a>
+                <a href="#kontakt" class="btn btn-ghost">Chci Diamond</a>
                 <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
             </div>
         </div>
@@ -410,7 +412,7 @@
             <details><summary>Jak probíhají týdenní kontroly?</summary><p>Jednou týdně vyplníš v klientské sekci krátký report, z mobilu za tři minuty: váhu (pracuju s týdenním průměrem), míry, stravu, kroky a minuty sportu, plus plán na další týden. Já všechno projdu, napíšu ti analýzu a upravím kalorie, makra i plán. Každý týden tak víš, na čem jsi.</p></details>
             <details><summary>Budu se muset vzdát oblíbených jídel?</summary><p>Ne. Učím flexibilní stravování: jíš normální jídlo, které tě baví, jen ve správném množství. Vejde se i pizza nebo zmrzlina.</p></details>
             <details><summary>Jak dlouho spolupráce trvá?</summary><p>Balíčky jsou na 1, 3 nebo 6 měsíců. A čím delší období, tím výhodnější cena. Co dává smysl pro tvůj cíl, ti doporučím na konzultaci nebo v první zprávě.</p></details>
-            <details><summary>Je lepší koučink, nebo videokurz?</summary><p>Chceš-li vedení na míru s týdenními úpravami a podporou, vyber koučink Gold nebo Diamond. Chceš-li se učit vlastním tempem, je ideální <a href="/videokurz">videokurz výživy</a>.</p></details>
+            <details><summary>Je lepší koučink, nebo videokurz?</summary><p>Chceš-li vedení na míru s týdenními úpravami a podporou, vyber koučink. Doporučuju Gold, jde do něj většina lidí a výsledky má stejné jako Diamond. Diamond ber, jen když chceš navíc hovor každý týden. Chceš-li se učit vlastním tempem, je ideální <a href="/videokurz">videokurz výživy</a>.</p></details>
         </div>
     </div>
 </section>
