@@ -540,7 +540,11 @@ Deno.serve(async (req: Request) => {
       //    musi tenhle typ zapocitat do jmenovatele (akce `mail_mereni` v admin-api to dela).
       const htmlOneoff = await ostopkuj(m.html, { track, step, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL);
       const id = await sendViaResend(to, m.subject, htmlOneoff, m.text, v.unsubscribe_url, replyTo, '');
-      await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track } });
+      // ⛔ `key` MUSI byt v detailu. Do 1. 9. 2026 se tady zapisoval jen `track`, takze
+      //    837 z 8 369 odeslani za 30 dni nemelo sablonu a nesla dohledat. Nejvetsi vlna
+      //    mesice (poukazy 26. a 27. 8., 823 lidi) tim vypadla ze vsech vykonovych reportu:
+      //    dotazy nad `email_events` parujou sablonu pres `detail->>'key'`, ne pres krok.
+      await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track, key: tpl.key } });
       return json({ ok: true, mode: 'oneoff', provider_id: id, track, step });
     } catch (e) {
       return json({ ok: false, mode: 'oneoff', error: String(e) }, 500);
