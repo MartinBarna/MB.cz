@@ -1,8 +1,21 @@
 {
   "_napoveda": "Fronta blogu. Kazda polozka: date (YYYY-MM-DD, den vydani) + draft (jmeno .md souboru v teto slozce). Slug a titulek se berou Z DRAFTU, sem se nepisou. Postup: clanky-fronta/README.md",
   "clanky": [
-    { "date": "2026-09-24", "draft": "silovy-trenink-dlouhovekost.md" },
-    { "date": "2026-10-08", "draft": "kolik-kavy-denne.md" },
-    { "date": "2026-10-22", "draft": "vaha-stoji-plateau.md" }
+    {
+      "date": "2026-09-24",
+      "draft": "silovy-trenink-dlouhovekost.md"
+    },
+    {
+      "date": "2026-10-08",
+      "draft": "kolik-kavy-denne.md"
+    },
+    {
+      "date": "2026-10-22",
+      "draft": "vaha-stoji-plateau.md"
+    },
+    {
+      "date": "2026-11-05",
+      "draft": "jak-zhubnout-po-porodu.md"
+    }
   ]
 }
