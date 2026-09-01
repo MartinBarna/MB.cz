@@ -45,10 +45,21 @@ const SITE = 'https://martinbarna.cz';
 // neprepsal. Formular tam navic vracel HTTP 200, takze to nevypadalo rozbite.
 // Tenhle odkaz pouziva 13 sablon pres {{course_url}}, takze zmena jednoho radku
 // spravi vsechny najednou. Je to tentyz odkaz, ktery je na /videokurz pod
-// tlacitkem „Koupit za 800 Kc".
-const COURSE_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06?locale=cs';
+// tlacitkem na koupi kurzu.
+// ⛔ 1. 9. 2026: zdrazeni videokurzu na 1 490 znamena JINY platebni odkaz.
+//    Bylo tu '...dRmeVcbnpaZs5VedBZ3ks06' (pokladna na 800 Kc), zatimco
+//    COURSE_PRICE uz rikal 1490. Mail tedy sliboval jednu cenu a pokladna
+//    brala jinou. Cena a odkaz se od ted meni VZDY spolu, v jednom kroku.
+const COURSE_URL = 'https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs';
 const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
-const COURSE_PRICE = 800;
+// ⛔ 1. 9. 2026: 800 -> 1490 (Martinovo rozhodnuti o zdrazeni videokurzu).
+// Konstanta plni token {{course_price}} (53 sablon) a pocitaji se z ni {{discount_price}}
+// a {{discount2_price}} (dnes je nepouziva zadna sablona).
+// ⛔⛔ TATAZ KONSTANTA JE JESTE V `admin-api/index.ts` (nahled sablon v admin panelu).
+//    Kdo zmeni jen jednu, rozejde se mailing s nahledem. Nasazovat obe najednou
+//    a ve stejnem kroku jako cenu na `martinbarna.cz/videokurz` a ve Stripu,
+//    jinak mail slibuje jinou cenu, nez bere pokladna.
+const COURSE_PRICE = 1490;
 const DISCOUNT_CODE = 'ZACNI15';
 const DISCOUNT_PCT = 15;
 // druha (posledni) sleva - drzet v sablonach pres {{discount2_*}}, ne natvrdo
@@ -540,7 +551,11 @@ Deno.serve(async (req: Request) => {
       //    musi tenhle typ zapocitat do jmenovatele (akce `mail_mereni` v admin-api to dela).
       const htmlOneoff = await ostopkuj(m.html, { track, step, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL);
       const id = await sendViaResend(to, m.subject, htmlOneoff, m.text, v.unsubscribe_url, replyTo, '');
-      await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track } });
+      // ⛔ `key` MUSI byt v detailu. Do 1. 9. 2026 se tady zapisoval jen `track`, takze
+      //    837 z 8 369 odeslani za 30 dni nemelo sablonu a nesla dohledat. Nejvetsi vlna
+      //    mesice (poukazy 26. a 27. 8., 823 lidi) tim vypadla ze vsech vykonovych reportu:
+      //    dotazy nad `email_events` parujou sablonu pres `detail->>'key'`, ne pres krok.
+      await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track, key: tpl.key } });
       return json({ ok: true, mode: 'oneoff', provider_id: id, track, step });
     } catch (e) {
       return json({ ok: false, mode: 'oneoff', error: String(e) }, 500);

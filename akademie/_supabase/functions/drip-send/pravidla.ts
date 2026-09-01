@@ -36,6 +36,11 @@ export function vlastniCokoli(owns: Vlastnictvi, em: string): boolean {
  *    (trener-kit krok 0 = slibeny kit zdarma -> posli vzdy, stop az od kroku 1)
  *  - upsell-coaching prodava koucink -> stop pri coaching, vcetne EX-klientu
  *  - longtail-kupci = pece o kupce videokurzu + upgrade na Academy -> stop pri academy
+ *  - academy-vk-serie = jednorazova serie pro majitele videokurzu bez Academy
+ *    (C1, 1. 9. 2026) -> stop pri academy. Trat je docasna: lidi do ni prehazuje
+ *    SQL a po dojeti je vraci zpet, takze bez tohohle radku by cloveku, ktery
+ *    Academy uprostred serie koupi, odesly zbyle dva prodejni maily na to,
+ *    co uz zaplatil.
  * Clenske tracky (onboarding, milestone, reactivation, rescue) cili na zakazniky,
  * ty se nestopuji nikdy.
  *
@@ -53,7 +58,10 @@ export function shouldStop(
     return step > 0 && vlastniCokoli(owns, em);
   }
   if (t === 'longtail-consumer') return vlastniCokoli(owns, em);
-  if (t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci') {
+  if (
+    t === 'longtail-trener' || t === 'upsell-academy' || t === 'longtail-kupci' ||
+    t === 'academy-vk-serie'
+  ) {
     return !!owns?.academy?.has(em);
   }
   if (t === 'trener-kit') return step > 0 && !!owns?.academy?.has(em);
