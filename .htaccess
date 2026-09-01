@@ -27,6 +27,8 @@ RewriteCond %{REQUEST_URI} !^/reference/$
 RewriteRule ^reference/?$ /reference/ [NC,R=301,L]
 RewriteCond %{REQUEST_URI} !^/clanky/$
 RewriteRule ^clanky/?$ /clanky/ [NC,R=301,L]
+# Sloučení dvou článků o ultra-zpracovaných (1. 9. 2026, Martinovo GO):
+RewriteRule ^clanky/ultra-zpracovane-potraviny-studie\.html$ /clanky/ultra-zpracovana-jidla.html [R=301,L]
 RewriteCond %{REQUEST_URI} !^/makro-plan/$
 RewriteRule ^makro-plan/?$ /makro-plan/ [NC,R=301,L]
 RewriteCond %{REQUEST_URI} !^/forma-zpet/$
