@@ -374,11 +374,10 @@ Deno.serve(async (req) => {
     const lowE = (v: unknown) => String(v ?? "").trim().toLowerCase();
     const escT = (s: string) => s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string));
     const jeTest = (e: string) => e.startsWith("fitness.barna") || e.includes("+");
-    const [entsC, repsC, tgsC, contactsC] = await Promise.all([
+    const [entsC, repsC, tgsC] = await Promise.all([
       admin.from("entitlements").select("email,active,expires_at").eq("product", "coaching"),
       admin.from("client_reports").select("email,report_date,created_at"),
       admin.from("client_targets").select("email,kcal,protein"),
-      admin.from("customer_contacts").select("email,name"),
     ]);
     // ⛔ Chybu dotazu NIKDY nespolknout. `x.data ?? []` udělá z rozbitého dotazu
     // prázdný seznam, takže by mail hlásil „Aktivních klientů 0" a vypadal by,
@@ -388,12 +387,6 @@ Deno.serve(async (req) => {
     if (entsC.error) chybyDotazu.push("entitlements (" + entsC.error.message + ")");
     if (repsC.error) chybyDotazu.push("client_reports (" + repsC.error.message + ")");
     if (tgsC.error) chybyDotazu.push("client_targets (" + tgsC.error.message + ")");
-    if (contactsC.error) chybyDotazu.push("customer_contacts (" + contactsC.error.message + ")");
-    if (chybyDotazu.length) {
-      alerts += warn("🔴 KOUČINKOVÝ BLOK NEPŘEČETL VŠECHNA DATA: " + chybyDotazu.join(", ") +
-        ". Čísla o klientech pod tím jsou tím pádem nižší, než mají být, a nula tam dnes " +
-        "neznamená klid. Ber je jako neplatná a řekni Claudovi, ať to prověří.");
-    }
 
     const nowMs = now.getTime();
     // ⚠️ `active` samo nestačí: skončený koučink má `active` dál true a jen prošlé
@@ -407,6 +400,20 @@ Deno.serve(async (req) => {
 
     // Křestní jméno z `customer_contacts`. Když ho neznáme, jde do mailu adresa:
     // Martin podle ní člověka najde, a jinde v tomhle přehledu už adresy jsou.
+    // ⛔ Ptáme se JEN na adresy koučinkových klientů. Celá tabulka má 822 řádků
+    // a PostgREST vrací nanejvýš 1000, takže by se dotaz bez filtru časem tiše
+    // usekl a někomu by v mailu zmizelo jméno, aniž by cokoli spadlo.
+    // Adresy v `customer_contacts` jsou všechny malými písmeny (ověřeno, 0 výjimek),
+    // takže lowercase klíče z entitlements sedí. Prázdný seznam se do filtru neposílá.
+    const contactsC = klienti.length
+      ? await admin.from("customer_contacts").select("email,name").in("email", klienti.map((k) => k.email))
+      : { data: [] as Array<{ email: string; name: string | null }>, error: null };
+    if (contactsC.error) chybyDotazu.push("customer_contacts (" + contactsC.error.message + ")");
+    if (chybyDotazu.length) {
+      alerts += warn("🔴 KOUČINKOVÝ BLOK NEPŘEČETL VŠECHNA DATA: " + chybyDotazu.join(", ") +
+        ". Čísla o klientech pod tím jsou tím pádem nižší, než mají být, a nula tam dnes " +
+        "neznamená klid. Ber je jako neplatná a řekni Claudovi, ať to prověří.");
+    }
     const jmenoBy = new Map<string, string>();
     for (const c of contactsC.data ?? []) {
       if (c.name) jmenoBy.set(lowE(c.email), String(c.name).trim().split(/\s+/)[0]);
