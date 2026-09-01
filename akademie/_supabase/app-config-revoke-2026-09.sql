@@ -1,0 +1,40 @@
+-- ============================================================
+-- BEZPECNOST 1. 9. 2026: app_config uz nema granty pro anon
+-- ani pro prihlaseneho uzivatele
+-- ------------------------------------------------------------
+-- Proc: v public.app_config lezi drip_invoke_secret a
+-- academy_grant_secret, tedy klice, kterymi se da rozesilat posta
+-- a udelovat pristup do appky. Tabulka ma zapnute RLS a NULA politik,
+-- takze dnes zvenku nikdo nic neprecte (overeno anonymnim klicem,
+-- HTTP 200 a prazdne pole). Jenze je to jednovrstva obrana: kdo
+-- v budoucnu prida na app_config jedinou permisivni politiku (treba
+-- aby web mohl cist jednu neskodnou hodnotu), otevre tim rovnou
+-- i tajemstvi, protoze grant tam uz je.
+--
+-- Zmereno pred zapisem (information_schema.role_table_grants):
+--   anon          = SELECT, INSERT, UPDATE, DELETE, REFERENCES, TRIGGER, TRUNCATE
+--   authenticated = totez
+--   postgres, service_role = totez (ty zustavaji)
+-- Granty visi primo na rolich anon a authenticated, ne na PUBLIC;
+-- revoke tedy zabere. PUBLIC je ve vyctu jen jako pojistka, aby se
+-- neopakoval incident z 27. 8. (revoke od anon je mrtva paka, kdyz
+-- grant visi na PUBLIC).
+--
+-- Co to NErozbije (overeno greppem pres cely repo):
+--   * zadna stranka ani skript v repu necte app_config anonymnim
+--     ani uzivatelskym klicem. Jediny primy REST dotaz je
+--     scripts/cisla-zdroj.mjs a ten pouziva ACADEMY_SERVICE_ROLE_KEY.
+--   * edge funkce ctou app_config service-role klientem; anonymni
+--     klic v nich slouzi jen k auth.getUser().
+--   * vsech 12 funkci, ktere app_config ctou, je SECURITY DEFINER
+--     s vlastnikem postgres, vcetne cisla_pro_web() volatelne anonymne.
+--     Ty po revoke ctou dal.
+--
+-- Overeni PO aplikaci:
+--   select grantee, privilege_type from information_schema.role_table_grants
+--   where table_schema='public' and table_name='app_config';
+--   -> zbydou jen postgres a service_role
+--   select cisla_pro_web();  -- musi porad vracet cisla
+-- ============================================================
+
+REVOKE ALL ON TABLE public.app_config FROM PUBLIC, anon, authenticated;
