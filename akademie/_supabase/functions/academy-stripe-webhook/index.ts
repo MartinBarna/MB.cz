@@ -1902,6 +1902,29 @@ Deno.serve(async (req) => {
       const jeMesicni = ent.source === "stripe-monthly";
       let tcRevoke = "netyka-se";
       if (jeDozivotni) {
+        // ⛔ POJISTKA (stejný vzor jako v admin-api): kdo je AKTIVNÍ koučinkový klient,
+        // o appku refundem Academy PŘIJÍT NESMÍ. `revoke_app_access` v appce nerozlišuje,
+        // z kterého titulu grant vznikl (`subscriptions.source` je natvrdo 'academy'),
+        // takže by revoke sebral i přístup placený koučinkem.
+        // ⛔ FAIL-CLOSED: když se koučink NEPODAŘÍ přečíst, chováme se, jako by ho měl.
+        // ⛔ Čte se i `expires_at`: refund nastavuje JEN expires_at a `active` nechá true
+        // (adversární revize 1. 9., nález 1); samotné `active` by chránilo navždy.
+        let maKoucink = false;
+        let koucinkNecitelny = false;
+        {
+          const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active, expires_at")
+            .eq("email", ent.email).eq("product", "coaching").limit(1).maybeSingle();
+          koucinkNecitelny = !!coachErr;
+          maKoucink = coachErr ? true
+            : (!!coachEnt?.active && (!coachEnt.expires_at || Date.parse(String(coachEnt.expires_at)) > Date.now()));
+        }
+        if (maKoucink) {
+          tcRevoke = koucinkNecitelny ? "skip-koucink-necitelny" : "skip-koucink";
+          try {
+            await admin.from("tvujcoach_grants")
+              .insert({ email: ent.email, action: "revoke", result: tcRevoke, source: "academy-storno" });
+          } catch { /* best-effort */ }
+        } else {
         tcRevoke = "no-secret";
         try {
           const { data: gs } = await admin
@@ -1924,6 +1947,7 @@ Deno.serve(async (req) => {
           await admin.from("tvujcoach_grants")
             .insert({ email: ent.email, action: "revoke", result: tcRevoke, source: "academy-storno" });
         } catch { /* best-effort */ }
+        }
       }
 
       // 4) hlásit. U sporu a u nezrušeného předplatného VŽDY, jinak by to zůstalo tiché.
@@ -1939,8 +1963,11 @@ Deno.serve(async (req) => {
       // předplatného, je to naopak správný poplach. Proto ta podmínka na jednorázovost.
       const zruseniSelhalo = zruseno !== "ok" && zruseno !== "nema-predplatne"
                              && !(jeJednorazovy && zruseno === "nebylo-co");
+      // „skip-koucink" je vědomé rozhodnutí guardu výše, ne selhání ⇒ bez alertu.
+      // „skip-koucink-necitelny" naopak ALERT dostane: nic se nezkontrolovalo.
       const tcRevokeSelhal = jeDozivotni && tcRevoke !== "ok" && tcRevoke !== "granted"
-                             && tcRevoke !== "revoked" && tcRevoke !== "pending";
+                             && tcRevoke !== "revoked" && tcRevoke !== "pending"
+                             && tcRevoke !== "skip-koucink";
       if (jeSpor || zruseniSelhalo || chybaRevoke || tcRevokeSelhal) {
         await alertAdmin(
           jeSpor ? "🔴 Stripe: SPOR (chargeback) u " + nazevProduktu + ", přístup odebrán"

@@ -172,7 +172,27 @@ Deno.serve(async (req) => {
       // Pozastaveni Academy zamkne i appku Tvuj Coach. Symetricke: dalsi splatka pres
       // simpleshop-webhook appku zase odemkne (grant blok tam bezi pri kazde uhrazene splatce).
       // Best-effort: nikdy neshodi guard. Loguje do tvujcoach_grants.
+      // ⛔ POJISTKA (stejny vzor jako v admin-api a academy-stripe-webhook): kdo je
+      // AKTIVNI koucinkovy klient, o appku defaultem splatky PRIJIT NESMI.
+      // `revoke_app_access` v appce nerozlisuje puvod grantu (source='academy' natvrdo),
+      // takze by revoke sebral i pristup placeny koucinkem. Academy (kurz) se pozastavi
+      // vyse tak jako tak; appka koucinkoveho klienta zustava.
+      // ⛔ FAIL-CLOSED: kdyz se koucink NEPODARI precist, chovame se, jako by ho mel.
+      // ⛔ Cte se i `expires_at`: refund nastavuje JEN expires_at a `active` necha true
+      // (adversarni revize 1. 9., nalez 1); samotne `active` by chranilo navzdy.
       try {
+        let maKoucink = false;
+        let koucinkNecitelny = false;
+        {
+          const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active, expires_at")
+            .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+          koucinkNecitelny = !!coachErr;
+          maKoucink = coachErr ? true
+            : (!!coachEnt?.active && (!coachEnt.expires_at || Date.parse(String(coachEnt.expires_at)) > Date.now()));
+        }
+        if (maKoucink) {
+          await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: koucinkNecitelny ? "skip-koucink-necitelny" : "skip-koucink", source: "splatky-default" });
+        } else {
         const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
         const gsec = gs?.value ? String(gs.value) : "";
         let gres = "no-secret";
@@ -186,6 +206,7 @@ Deno.serve(async (req) => {
           else gres = gr ? "http-" + gr.status : "fetch-fail";
         }
         await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: gres, source: "splatky-default" });
+        }
       } catch { /* best-effort */ }
       const m = suspendEmail(name, seg);
       await sendMail(email, m.subject, m.html);

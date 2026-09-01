@@ -433,18 +433,26 @@ Deno.serve(async (req) => {
           // odkud grant prisel: rusi vsechno se source='academy' bez Stripe, tedy i koucink.
           // ⛔ FAIL-CLOSED: kdyz se koucink NEPODARI precist, chovame se, jako by ho mel.
           // Tichy fail-open by vratil starou skodlivou vetev (revoke platicimu klientovi).
+          // ⛔ Cte se i `expires_at`: refund nastavuje JEN expires_at a `active` necha true
+          // (adversarni revize 1. 9., nalez 1). Samotne `active` by chranilo i cloveka,
+          // kteremu byly vraceny penize.
           let maKoucink = false;
+          let koucinkNecitelny = false;
           if (!active) {
-            const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active")
+            const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active, expires_at")
               .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
-            maKoucink = coachErr ? true : !!coachEnt?.active;
+            koucinkNecitelny = !!coachErr;
+            maKoucink = coachErr ? true
+              : (!!coachEnt?.active && (!coachEnt.expires_at || Date.parse(String(coachEnt.expires_at)) > Date.now()));
           }
           const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
           const gsec = gs?.value ? String(gs.value) : "";
           const act = active ? "grant" : "revoke";
           let gres = "no-secret";
           if (!active && maKoucink) {
-            gres = "preskoceno-ma-koucink";
+            // Rozliseni „opravdu ma koucink" od „entitlements se nepodarilo precist":
+            // obe vetve preskakuji (fail-closed), ale v logu musi jit poznat, ktera to byla.
+            gres = koucinkNecitelny ? "preskoceno-koucink-necitelny" : "preskoceno-ma-koucink";
           } else if (gsec) {
             const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
               method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
@@ -1819,9 +1827,13 @@ Deno.serve(async (req) => {
       // ⛔ FAIL-CLOSED: kdyz se Academy NEPODARI precist, chovame se, jako by ji mel
       // (set-expiry misto revoke). Vzit appku cloveku, ktery si Academy koupil za
       // 8 900 Kc, je horsi nez nechat rok navic tomu, kdo ji nema.
-      const { data: academyEnt, error: acadErr } = await admin.from("entitlements").select("active")
+      // ⛔ Cte se i `expires_at`: refund Academy nastavuje JEN expires_at a `active` necha
+      // true (adversarni revize 1. 9., nalez 1). Bez teto podminky by clovek s refundovanou
+      // Academy dostal offboardem rok appky zdarma.
+      const { data: academyEnt, error: acadErr } = await admin.from("entitlements").select("active, expires_at")
         .eq("email", email).eq("product", "academy").limit(1).maybeSingle();
-      const maAcademy = acadErr ? true : !!academyEnt?.active;
+      const maAcademy = acadErr ? true
+        : (!!academyEnt?.active && (!academyEnt.expires_at || Date.parse(String(academyEnt.expires_at)) > Date.now()));
 
       // ⭐ 1. 9. 2026: kdo ma zaplacenou Academy, appka mu NEZUSTAVA navzdy (to byl
       // koucinkovy rezim), ale prepne se na rocni Academy grant: rok od konce koucinku.
