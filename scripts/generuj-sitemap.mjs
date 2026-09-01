@@ -32,6 +32,20 @@ const CLEAN_FILE_URL = {
   'treninky.html': '/treninky',
 };
 
+/**
+ * Šest ukázkových lekcí je veřejných (text je přímo v HTML, ne v `lesson_content`)
+ * a od 1. 9. 2026 je chceme ve vyhledávačích. Zbytek `akademie/studium` zůstává venku.
+ * Kdo tenhle seznam mění, musí zároveň sundat `noindex` v hlavičce té lekce.
+ */
+const VOLNE_LEKCE = new Set([
+  'akademie/studium/m1-l1/index.html',
+  'akademie/studium/m1-l2/index.html',
+  'akademie/studium/m1-l3/index.html',
+  'akademie/studium/m2-l1/index.html',
+  'akademie/studium/m3-l1/index.html',
+  'akademie/studium/m6-l1/index.html',
+]);
+
 const excluded = {
   admin: 0,
   klient: 0,
@@ -74,7 +88,7 @@ function pathCategory(rel) {
     || startsWithPath(rel, 'akademie/test')
     || startsWithPath(rel, 'akademie/overit')
     || startsWithPath(rel, 'akademie/check-in')
-    || startsWithPath(rel, 'akademie/studium')
+    || (startsWithPath(rel, 'akademie/studium') && !VOLNE_LEKCE.has(rel))
     || /^akademie\/videokurz\/v\d+/.test(rel)
     || /(^|\/)_[^/]+\//.test(rel)
   ) {

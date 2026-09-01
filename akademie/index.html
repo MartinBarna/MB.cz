@@ -60,6 +60,17 @@
         .ac-trust { display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:1.4rem; font-size:.92rem; opacity:.95; }
         .ac-trust span { display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap; }
         @media (max-width:576px) { .ac-trust span { white-space:normal; display:inline; } }
+        /* Mobil 375x812: úvodní odstavec zabíral 13 řádků a druhé zlaté tlačítko bylo
+           už pod hranou obrazovky (změřeno 1. 9. 2026). Na úzkém displeji proto zůstává
+           jen první polovina úvodu a kotva na moduly; obsah se nikam neztrácí, kdo scrolluje,
+           projde stejné sekce. Na desktopu je text i tlačítko beze změny. */
+        @media (max-width:576px) { .ac-hero .lead-vic, .ac-hero .hero-kotva { display:none; } }
+        /* Sběr e-mailu pod ceníkem. Pole jsou bílá s tmavým textem, ať drží kontrast
+           v tmavém i světlém motivu (ba-theme-light.css přebíjí inline barvy !důležitě). */
+        .ac-kit { max-width:620px; margin:2.4rem auto 0; background:rgba(235,177,44,.08); border:1px solid rgba(235,177,44,.35); border-radius:20px; padding:24px 22px; }
+        .ac-kit label { display:block; font-weight:600; margin:14px 0 6px; }
+        .ac-kit input, .ac-kit select { width:100%; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(0,0,0,.18); border-radius:10px; background:#fff; color:#161616; font-family:inherit; font-size:1rem; }
+        .ac-kit input:focus, .ac-kit select:focus { border-color:var(--gold); outline:none; }
         /* trimmed bootstrap build nema display utility -> mobilni "Koupit" tlacitko skryj na desktopu rucne */
         @media (min-width:1200px) { .navbar .d-xl-none { display:none !important; } }
         .ac-meta { display:flex; flex-wrap:wrap; gap:1.6rem; margin-top:2rem; }
@@ -188,7 +199,7 @@
       }
     }
     </script>
-    <script defer src="/assets/analytics.js?v=g16"></script><script defer src="/assets/referral.js?v=g3"></script>
+    <script defer src="/assets/analytics.js?v=g16"></script><script defer src="/assets/referral.js?v=g3"></script><script defer src="/assets/lead-form.js?v=g6"></script>
     <script src="/assets/ba-theme.js"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r3">
     <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l6">
@@ -202,7 +213,7 @@
         <div class="container">
             <span class="ac-tag">🎓 VZDĚLÁVACÍ PROGRAM PRO TRENÉRY · SPUŠTĚNO</span>
             <h1>Staň se trenérem a&nbsp;výživovým poradcem, kterému klienti věří</h1>
-            <p class="lead">Barna Academy je škola, kde tě naučím to, co fakt funguje: vědecky podloženou výživu, psychologii chování, anatomii, byznys a nově i maximální využití AI v tvé praxi. Je to 13 let praxe na 600+ klientech, vydestilovaných do 256 lekcí a nástrojů. Přeskočíš roky pokusů a omylů a odneseš si know-how, se kterým získáš výsledky u klientů a vybuduješ si jméno. A když sám/sama závodíš (bikini, physique, kulturistika), naučíš se připravit se, včetně peak weeku a soutěžní diety bez mýtů a bez gearu.</p>
+            <p class="lead">Barna Academy je škola, kde tě naučím to, co fakt funguje: vědecky podloženou výživu, psychologii chování, anatomii, byznys a nově i maximální využití AI v tvé praxi. Je to 13 let praxe na 600+ klientech, vydestilovaných do 256 lekcí a nástrojů.<span class="lead-vic"> Přeskočíš roky pokusů a omylů a odneseš si know-how, se kterým získáš výsledky u klientů a vybuduješ si jméno. A když sám/sama závodíš (bikini, physique, kulturistika), naučíš se připravit se, včetně peak weeku a soutěžní diety bez mýtů a bez gearu.</span></p>
             <!-- ⚠️ 30. 7. 2026: měsíční vstup za 990 Kč byl v heru jen podtržený text v poznámce
                  pod tlačítky a Martin ho na mobilu přehlédl. Teď je z něj druhé zlaté tlačítko,
                  tedy stejná vizuální váha jako u doživotního vstupu. Poznámka pod tlačítky
@@ -218,7 +229,13 @@
             <div class="mt-4 d-flex flex-wrap gap-2">
                 <a href="https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04?utm_source=web&amp;utm_medium=hero&amp;utm_campaign=academy&amp;locale=cs" class="btn-gold">Chci Academy: 8 900 Kč →</a>
                 <a href="https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00?utm_source=web&amp;utm_medium=hero&amp;utm_campaign=academy&amp;locale=cs" class="btn-gold">Začít za 990 Kč měsíčně →</a>
-                <a href="#moduly" class="btn-ghost">Co se naučím?</a>
+                <!-- ⭐ Třetí CTA pro toho, kdo ještě nechce platit: první lekce je celá
+                     veřejná, bez účtu a bez karty. ⛔ ZÁMĚRNĚ BEZ UTM: `MBAttr` v analytics.js
+                     bere UTM z aktuální adresy jako last touch a přepsal by jimi reklamní
+                     atribuci člověka, který sem přišel z placeného prokliku. Průchod se měří
+                     přes `page_views.referrer`. -->
+                <a href="/akademie/studium/m1-l1/" class="btn-ghost">Pusť si volnou lekci</a>
+                <a href="#moduly" class="btn-ghost hero-kotva">Co se naučím?</a>
             </div>
             <p style="margin:.9rem 0 0;font-size:.95rem;color:#e8d8c8;max-width:56ch;">Doživotní vstup je jednorázově 8 900 Kč, bez dalších plateb.</p>
             <div class="ac-trust">
@@ -275,7 +292,7 @@
                 <div class="col-md-4"><div class="feature-ac" style="height:100%;border-color:rgba(235,177,44,.6);background:linear-gradient(145deg,rgba(235,177,44,.12),rgba(235,177,44,.03));"><div class="ic">📱</div><h5 class="fw-bold">Appka Tvůj Coach <span class="badge-new">Nové · VIP na rok</span></h5><p class="text-muted small">Kompletní koučovací appka (web, běží i na mobilu). U doživotního přístupu máš rok VIP verze v hodnotě 4 990 Kč: zápis jídla čárovým kódem nebo hlasem, generátor tréninků a 120 cviků s technikou a nejčastějšími chybami, cíle se přepočítávají podle týdenních check-inů, vyfotíš talíř a spočítá makra, a máš v ní AI kouče.</p></div></div>
                 <div class="col-md-4"><div class="feature-ac" style="height:100%;"><div class="ic">🎨</div><h5 class="fw-bold">Rebrandovatelné science-based materiály</h5><p class="text-muted small">Profi přílohy, kuchařky, plány a průvodce, přebrandované na tvoje jméno a barvy. Působíš profesionálně od prvního dne.</p></div></div>
                 <div class="col-md-4"><div class="feature-ac" style="height:100%;border-color:rgba(235,177,44,.4);"><div class="ic">🔊</div><h5 class="fw-bold">Poslech lekcí jedním klikem <span class="badge-new">Nové</span></h5><p class="text-muted small">Každá lekce má tlačítko Poslechnout a nechá se ti přečíst nahlas: v autě, na procházce, v posilovně. A videokurz si pustíš jako podcast: lekce se přepínají samy.</p></div></div>
-                <div class="col-md-4"><div class="feature-ac" style="height:100%;"><div class="ic">🏅</div><h5 class="fw-bold">Certifikace + videokurz zdarma</h5><p class="text-muted small">Po složení závěrečného testu certifikát Barna Academy. A celý Videokurz výživy (182 videí) máš v ceně. Doživotní přístup ke všemu i budoucímu obsahu.</p></div></div>
+                <div class="col-md-4"><div class="feature-ac" style="height:100%;"><div class="ic">🏅</div><h5 class="fw-bold">Certifikace + videokurz zdarma</h5><p class="text-muted small">Certifikát Barna Academy po testu a případovce, kterou čtu osobně. A celý Videokurz výživy (182 videí) máš v ceně. Doživotní přístup ke všemu i budoucímu obsahu.</p></div></div>
             </div>
             <div class="text-center mt-4"><a class="btn-gold" href="#cena" style="padding:13px 34px;">Chci to celé →</a></div>
         </div>
@@ -421,7 +438,7 @@
 
                 <div class="uk-cert">
                     <span class="n">06</span>
-                    <p>A na konci? Závěrečný test a certifikát Barna Academy.</p>
+                    <p>A na konci? Závěrečný test, případovka reálného klienta, kterou čtu osobně, a certifikát Barna Academy.</p>
                 </div>
             </div>
 
@@ -538,7 +555,7 @@
                 <a class="acard" href="/akademie/studium/"><span class="ai">🎨</span><span><h5>Rebrandovatelné science-based přílohy</h5><p>Profi PDF pod tvým jménem a logem. Dáš je klientům za svoje.</p><span class="ago">Otevřít v Academy →</span></span></a>
                 <a class="acard" href="/akademie/studium/"><span class="ai">🔊</span><span><h5>Poslech lekcí</h5><p>Každá lekce se ti umí přečíst nahlas. Poslouchej v autě, na procházce nebo v posilce.</p><span class="ago">Otevřít v Academy →</span></span></a>
                 <a class="acard" href="/akademie/studium/"><span class="ai">🎓</span><span><h5>256 lekcí ve 24 modulech</h5><p>Výživa, trénink, práce s klientem, byznys i věda: od základů po pokročilé.</p><span class="ago">Otevřít v Academy →</span></span></a>
-                <a class="acard" href="/akademie/studium/"><span class="ai">🏅</span><span><h5>Certifikace + videokurz v ceně</h5><p>Certifikát po složení závěrečného testu a celý videokurz výživy jako součást balíčku.</p><span class="ago">Otevřít v Academy →</span></span></a>
+                <a class="acard" href="/akademie/studium/"><span class="ai">🏅</span><span><h5>Certifikace + videokurz v ceně</h5><p>Certifikát po testu a případovce, kterou čtu osobně, a celý videokurz výživy jako součást balíčku.</p><span class="ago">Otevřít v Academy →</span></span></a>
             </div>
             <div class="zcta">
                 <a class="btn-see" href="/akademie/studium/">Podívej se dovnitř Academy →</a>
@@ -555,7 +572,7 @@
                 <div class="col-md-3"><div class="feature-ac"><div class="ic">📖</div><h5 class="fw-bold">Psané lekce</h5><p class="text-muted small">Srozumitelně, do hloubky, s vědeckými zdroji. Studuj svým tempem.</p></div></div>
                 <div class="col-md-3"><div class="feature-ac"><div class="ic">✅</div><h5 class="fw-bold">Kvízy a úkoly</h5><p class="text-muted small">Po každé lekci si ověříš pochopení a převedeš to do praxe.</p></div></div>
                 <div class="col-md-3"><div class="feature-ac"><div class="ic">∞</div><h5 class="fw-bold">Doživotní přístup, i ke všemu budoucímu</h5><p class="text-muted small">U doživotního přístupu zaplatíš jednou a máš to napořád. Academy poroste: nové moduly, lekce i bonusy dostaneš v ceně, zdarma.</p></div></div>
-                <div class="col-md-3"><div class="feature-ac"><div class="ic">🏅</div><h5 class="fw-bold">Certifikát</h5><p class="text-muted small">Po složení závěrečného testu získáš certifikát Barna Academy.</p></div></div>
+                <div class="col-md-3"><div class="feature-ac"><div class="ic">🏅</div><h5 class="fw-bold">Certifikát</h5><p class="text-muted small">Certifikát Barna Academy získáš po testu a po případovce, kterou čtu osobně.</p></div></div>
             </div>
         </div>
     </section>
@@ -589,7 +606,7 @@
                 <div class="col-md-3 col-6"><div style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:1.3rem; height:100%;"><div style="color:#F6CD63; font-weight:800; font-size:1.3rem;">1</div><h5 style="color:#fff; font-size:1rem; margin:.4rem 0 .3rem;">Projdeš lekce</h5><p style="color:#bbb; font-size:.88rem; margin:0;">Každý modul s kvízem, který ověří pochopení.</p></div></div>
                 <div class="col-md-3 col-6"><div style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:1.3rem; height:100%;"><div style="color:#F6CD63; font-weight:800; font-size:1.3rem;">2</div><h5 style="color:#fff; font-size:1rem; margin:.4rem 0 .3rem;">Splníš praktické úkoly</h5><p style="color:#bbb; font-size:.88rem; margin:0;">Úkoly u modulů převedou teorii do praxe: u reálného, nebo modelového klienta.</p></div></div>
                 <div class="col-md-3 col-6"><div style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:1.3rem; height:100%;"><div style="color:#F6CD63; font-weight:800; font-size:1.3rem;">3</div><h5 style="color:#fff; font-size:1rem; margin:.4rem 0 .3rem;">Složíš závěrečný test</h5><p style="color:#bbb; font-size:.88rem; margin:0;">Komplexní zkouška, která prověří, že to fakt umíš.</p></div></div>
-                <div class="col-md-3 col-6"><div style="background:rgba(235,177,44,.14); border:1px solid rgba(235,177,44,.35); border-radius:16px; padding:1.3rem; height:100%;"><div style="color:#F6CD63; font-weight:800; font-size:1.3rem;">4</div><h5 style="color:#fff; font-size:1rem; margin:.4rem 0 .3rem;">Získáš certifikát 🏅</h5><p style="color:#e8d8c8; font-size:.88rem; margin:0;">Prestižní certifikát Barna Academy: pečeť tvé kvality.</p></div></div>
+                <div class="col-md-3 col-6"><div style="background:rgba(235,177,44,.14); border:1px solid rgba(235,177,44,.35); border-radius:16px; padding:1.3rem; height:100%;"><div style="color:#F6CD63; font-weight:800; font-size:1.3rem;">4</div><h5 style="color:#fff; font-size:1rem; margin:.4rem 0 .3rem;">Mistrovská pečeť 🏅</h5><p style="color:#e8d8c8; font-size:.88rem; margin:0;">Pošleš mi případovou studii reálného klienta. Čtu ji osobně a certifikát vydám, až mě přesvědčí.</p></div></div>
             </div>
             <div style="max-width:760px; margin:2.4rem auto 0; text-align:center;">
                 <p style="color:#cfcabf; margin:0;">Proč to dává smysl: obor mě zná a uznává. Certifikát <strong style="color:#fff;">„vyškolil mě Barna“</strong> proto tvým klientům řekne, že jsou v dobrých rukou. Vyšší důvěra znamená vyšší ceny i víc klientů. A pro nejlepší absolventy jsem připravený být <strong style="color:#fff;">referencí, co otevírá dveře</strong>.</p>
@@ -783,6 +800,29 @@
             </div>
 
             <p style="opacity:.72;font-size:.83rem;margin:.9rem 0 0;text-align:center;">Prvních 50 členů má status <strong style="color:#e8d8c8;">zakládajícího člena</strong> Academy.</p>
+            <!-- ⭐ SBĚR E-MAILU (1. 9. 2026). Do teď měl návštěvník jen dvě možnosti: zaplatit hned,
+                 nebo odejít navždy. Formulář je stejný mechanismus jako na /pro-trenery/
+                 (`assets/lead-form.js` → edge funkce `lead-capture`), žádný nový endpoint.
+                 ⛔ O TRATI ROZHODUJE `data-segment`, NE `data-source`. `segment="trener"` posílá
+                 leada do existující tratě `trener-kit` (kit zdarma, pak čísla k Academy), která
+                 se podle `pravidla.ts` sama zastaví, jakmile člověk Academy koupí. Kdyby tu bylo
+                 jen `data-source="academy-zajemce"`, spadl by do výchozí tratě `lead-magnet`,
+                 která slibuje sedmidenní jídelníček a prodává videokurz. `data-source` je tady
+                 jen na to, aby šlo v `leads` poznat, že přišel z ceníku Academy.
+                 ⚠️ Text bloku musí sedět s tím, co trať doopravdy pošle (startovací kit). -->
+            <div class="ac-kit" id="kit-academy">
+                <h3 style="color:#fff;font-size:1.15rem;margin:0 0 .5rem;">Ještě váháš? Začni startovacím kitem</h3>
+                <p style="color:#cfcabf;font-size:.95rem;line-height:1.6;margin:0 0 .4rem;">Pošlu ti na e-mail čtyři věci, které používám u vlastních klientů: vstupní dotazník, osnovu první konzultace, týdenní check-in a postup, jak sehnat prvních pět klientů. Zdarma. Pak ti napíšu, jak u mě vypadá práce s klientem, a pošlu konkrétní čísla k Academy.</p>
+                <form data-lead-form data-segment="trener" data-source="academy-zajemce" data-pdf="/download/startovaci-kit-trener.pdf" data-noun="Kit" data-upsell='Až budeš chtít celý systém, cena je <a href="#cena" style="color:#F6CD63;text-decoration:underline;">kousek výš</a>.'>
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
+                    <label>Jméno <input name="name" type="text" required autocomplete="given-name" placeholder="Jak ti mám říkat?"></label>
+                    <label>E-mail <input name="email" type="email" required autocomplete="email" placeholder="Kam ti mám kit poslat?"></label>
+                    <label>Kde teď jsi? <span style="font-weight:500;opacity:.7;">(nepovinné)</span> <select name="goal"><option value="">- vyber -</option><option>Začínám, klienty ještě nemám</option><option>Mám prvních pár klientů</option><option>Mám praxi a chci růst</option></select></label>
+                    <button type="submit" class="btn-gold w-100" style="margin-top:16px;">Poslat startovací kit zdarma →</button>
+                    <p data-msg style="font-size:.86rem;margin:8px 0 0;text-align:center;"></p>
+                    <p style="font-size:.76rem;opacity:.72;margin:8px 0 0;text-align:center;">Odesláním souhlasíš se zasláním kitu a občasných tipů pro trenérskou praxi. Odhlásit se můžeš kdykoli.</p>
+                </form>
+            </div>
         </div>
     </section>
 
@@ -791,6 +831,7 @@
         <div class="container" style="max-width:760px;">
             <div class="sec-head"><h2>Časté otázky</h2></div>
             <div class="faq-item"><button type="button">Potřebuju předchozí vzdělání? <span class="chev">⌄</span></button><div class="a"><p>Ne. Academy začíná od úplných základů. A jestli už praxi máš, dostaneš hloubku a systém, který ti chyběl.</p></div></div>
+            <div class="faq-item"><button type="button">Jak se dostanu k certifikátu? <span class="chev">⌄</span></button><div class="a"><p>Ve třech krocích. Projdeš lekce a kvízy, složíš písemný test na 80 procent a pak mi pošleš případovou studii reálného klienta: profil, analýzu, plán, komunikaci a hranice. Tu čtu osobně a certifikát vydám, až mě přesvědčí. Právě proto má váhu a jde ověřit na <a href="/akademie/overit/">martinbarna.cz/akademie/overit</a>.</p></div></div>
             <div class="faq-item"><button type="button">V jaké formě je obsah? <span class="chev">⌄</span></button><div class="a"><p>Prémiové psané lekce s kvízy a úkoly + <strong>poslech lekcí jedním klikem</strong> (každá lekce se ti umí přečíst nahlas), ať se učíš i v autě nebo na procházce. Doživotní přístup. Videonástavbu plánujeme přidat jako další bonus.</p></div></div>
             <div class="faq-item"><button type="button">Je to vědecky podložené? <span class="chev">⌄</span></button><div class="a"><p>Ano. Každá lekce stojí na vědeckých zdrojích, které jsou v textu odcitované a převedené do srozumitelné, použitelné podoby.</p></div></div>
             <div class="faq-item"><button type="button">Kolik Academy stojí? <span class="chev">⌄</span></button><div class="a"><p>Buď <strong>990 Kč měsíčně</strong> (zrušíš kdykoli), nebo jednorázově <strong>8 900 Kč</strong> s doživotním přístupem. Obsah je v obou variantách stejný.</p></div></div>
@@ -815,7 +856,7 @@
                     <li>Kvízy a úkoly do praxe u každé lekce</li>
                     <li><strong>Doživotní přístup ke všemu, i k budoucímu obsahu</strong> v ceně, zdarma</li>
                     <li>Přístup do affiliate programu. Vydělávej doporučením</li>
-                    <li>Certifikát Barna Academy po složení závěrečného testu</li>
+                    <li>Certifikát Barna Academy po testu a případovce, kterou čtu osobně</li>
                 </ul>
                 <div class="mt-3 d-flex flex-column gap-2">
                     <a href="#cena" class="btn-gold w-100">Koupit Academy: 8 900 Kč →</a>
