@@ -48,7 +48,14 @@ const SITE = 'https://martinbarna.cz';
 // tlacitkem „Koupit za 800 Kc".
 const COURSE_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06?locale=cs';
 const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
-const COURSE_PRICE = 800;
+// ⛔ 1. 9. 2026: 800 -> 1490 (Martinovo rozhodnuti o zdrazeni videokurzu).
+// Konstanta plni token {{course_price}} (53 sablon) a pocitaji se z ni {{discount_price}}
+// a {{discount2_price}} (dnes je nepouziva zadna sablona).
+// ⛔⛔ TATAZ KONSTANTA JE JESTE V `admin-api/index.ts` (nahled sablon v admin panelu).
+//    Kdo zmeni jen jednu, rozejde se mailing s nahledem. Nasazovat obe najednou
+//    a ve stejnem kroku jako cenu na `martinbarna.cz/videokurz` a ve Stripu,
+//    jinak mail slibuje jinou cenu, nez bere pokladna.
+const COURSE_PRICE = 1490;
 const DISCOUNT_CODE = 'ZACNI15';
 const DISCOUNT_PCT = 15;
 // druha (posledni) sleva - drzet v sablonach pres {{discount2_*}}, ne natvrdo
