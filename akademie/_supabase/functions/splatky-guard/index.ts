@@ -178,15 +178,20 @@ Deno.serve(async (req) => {
       // takze by revoke sebral i pristup placeny koucinkem. Academy (kurz) se pozastavi
       // vyse tak jako tak; appka koucinkoveho klienta zustava.
       // ⛔ FAIL-CLOSED: kdyz se koucink NEPODARI precist, chovame se, jako by ho mel.
+      // ⛔ Cte se i `expires_at`: refund nastavuje JEN expires_at a `active` necha true
+      // (adversarni revize 1. 9., nalez 1); samotne `active` by chranilo navzdy.
       try {
         let maKoucink = false;
+        let koucinkNecitelny = false;
         {
-          const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active")
+          const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active, expires_at")
             .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
-          maKoucink = coachErr ? true : !!coachEnt?.active;
+          koucinkNecitelny = !!coachErr;
+          maKoucink = coachErr ? true
+            : (!!coachEnt?.active && (!coachEnt.expires_at || Date.parse(String(coachEnt.expires_at)) > Date.now()));
         }
         if (maKoucink) {
-          await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: "skip-koucink", source: "splatky-default" });
+          await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: koucinkNecitelny ? "skip-koucink-necitelny" : "skip-koucink", source: "splatky-default" });
         } else {
         const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
         const gsec = gs?.value ? String(gs.value) : "";

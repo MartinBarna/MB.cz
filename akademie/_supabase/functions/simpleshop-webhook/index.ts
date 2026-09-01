@@ -299,6 +299,23 @@ Deno.serve(async (req: Request) => {
     let tcRevoke = "netyka-se";
     if (stornoProdukt === "academy") {
       try {
+        // ⛔ POJISTKA (stejny vzor jako admin-api / academy-stripe-webhook / splatky-guard,
+        // dopnena adversarni revizi 1. 9., nalez 2): kdo je AKTIVNI koucinkovy klient,
+        // o appku stornem Academy PRIJIT NESMI (`revoke_app_access` nerozlisuje puvod
+        // grantu). Cte se `active` i `expires_at` (refund necha active=true).
+        // ⛔ FAIL-CLOSED: nectitelne entitlements = chovame se, jako by koucink mel.
+        let maKoucink = false;
+        let koucinkNecitelny = false;
+        {
+          const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active, expires_at")
+            .eq("email", stornoEmail).eq("product", "coaching").limit(1).maybeSingle();
+          koucinkNecitelny = !!coachErr;
+          maKoucink = coachErr ? true
+            : (!!coachEnt?.active && (!coachEnt.expires_at || Date.parse(String(coachEnt.expires_at)) > Date.now()));
+        }
+        if (maKoucink) {
+          tcRevoke = koucinkNecitelny ? "skip-koucink-necitelny" : "skip-koucink";
+        } else {
         const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
         const gsec = gs?.value ? String(gs.value) : "";
         if (!gsec) tcRevoke = "no-secret";
@@ -309,6 +326,7 @@ Deno.serve(async (req: Request) => {
           }).catch(() => null);
           tcRevoke = r && r.ok ? "ok" : (r ? "http-" + r.status : "fetch-fail");
         }
+        }
         await admin.from("tvujcoach_grants").insert({ email: stornoEmail, action: "revoke", result: tcRevoke, source: "academy-storno" });
       } catch { /* best-effort, nikdy neshodi odebrani pristupu */ }
     }
@@ -316,7 +334,8 @@ Deno.serve(async (req: Request) => {
     // 3) rozluckovy mail (pristup konci ihned -> vetev "hned")
     try { await sendRozlouceni(admin, stornoEmail, stornoProdukt, oid); } catch { /* best-effort */ }
 
-    if (chybaRevoke || (stornoProdukt === "academy" && tcRevoke !== "ok" && tcRevoke !== "netyka-se")) {
+    // „skip-koucink" je vedome rozhodnuti guardu, ne selhani; „-necitelny" alert dostane.
+    if (chybaRevoke || (stornoProdukt === "academy" && tcRevoke !== "ok" && tcRevoke !== "netyka-se" && tcRevoke !== "skip-koucink")) {
       await alertAdmin(admin, "SimpleShop: storno zpracováno, ale něco se nepovedlo", {
         email: stornoEmail, produkt: stornoProdukt,
         odebrani_pristupu: chybaRevoke ? "SELHALO: " + chybaRevoke.message : "ok",
