@@ -51,6 +51,21 @@ function vahaNaCislo(v: unknown): number | null {
   return Math.round(n * 10) / 10;
 }
 
+// Z čeho poptávka přišla (mb_attr_v1 z webu). ⛔ Hodnoty pocházejí z URL parametrů,
+// tedy od návštěvníka. Bereme proto JEN známé klíče a tvrdě je zkracujeme, ať se do DB
+// ani do alertu nedostane balast nebo pokus o vložení cizího obsahu.
+const ATTR_KLICE = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+function atribuce(v: unknown): Record<string, string> | null {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
+  const zdroj = v as Record<string, unknown>;
+  const out: Record<string, string> = {};
+  for (const k of ATTR_KLICE) {
+    const h = clip(zdroj[k], 200);
+    if (h) out[k] = h;
+  }
+  return Object.keys(out).length ? out : null;
+}
+
 async function resend(to: string, subject: string, html: string, replyTo?: string) {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
   const res = await fetch("https://api.resend.com/emails", {
@@ -85,6 +100,7 @@ Deno.serve(async (req: Request) => {
     note: clip(body.note, 2000),
   };
   const weight = vahaNaCislo(body.weight_kg);
+  const attribution = atribuce(body.attribution);
   const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim();
 
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
@@ -101,7 +117,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const ins = await admin.from("consultation_intake")
-    .insert({ email, ...odpovedi, weight_kg: weight, ip: ip || null })
+    .insert({ email, ...odpovedi, weight_kg: weight, ip: ip || null, attribution })
     .select("id, created_at").single();
   if (ins.error || !ins.data) return json({ error: "db" }, 500, origin);
 
@@ -144,6 +160,7 @@ Deno.serve(async (req: Request) => {
       R("Ranní váha", weight === null ? "" : weight + " kg") +
       R("Míry (pas, boky)", odpovedi.measurements) +
       R("Co mám vědět předem", odpovedi.note) +
+      R("Odkud přišel", attribution ? Object.keys(attribution).map((k) => k + "=" + attribution[k]).join(" · ") : "") +
       `</table>` +
       `<p style="color:#666;font-size:13px">Zdraví v dotazníku není schválně, patří na hovor.</p></div>`,
       email);
