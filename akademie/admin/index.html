@@ -1339,12 +1339,25 @@
       var g=document.getElementById('kdGrafBox'); if(g) g.innerHTML=kdVyvojGraf(reps,tg);
     }
 
+    // Telefon na klienta má web uložený JEDINĚ ve vstupním dotazníku
+    // (`client_intake.data.telefon`), v klientských tabulkách žádný sloupec s číslem není.
+    // `client_detail` vrací celý řádek dotazníku, takže se nikam nedotazujeme navíc.
+    // wa.me chce holé číslice s předvolbou: bez plus, mezer a pomlček.
+    function kdWaCislo(s){
+      var c=String(s==null?'':s).replace(/[^0-9]/g,'');
+      if(c.slice(0,2)==='00') c=c.slice(2);
+      if(c.length===9) c='420'+c;              // české číslo bez předvolby
+      return (c.length>=11&&c.length<=15)?c:'';   // nesmysl radši nezobrazit než nabídnout špatný odkaz
+    }
     function renderKlient(){
       var d=KDET.data, email=KDET.email;
       var reps=(d.reports||[]).slice().reverse(); // nejnovější nahoře
+      var kdWa=kdWaCislo(((d.intake||{}).data||{}).telefon);
       var h='<h2 style="margin:0 0 2px;">🤝 '+esc(email)+'</h2>'
         +'<p class="muted" style="margin:0 0 .4rem;font-size:.85rem;">'+(d.reports||[]).length+' reportů · dotazník '+(d.intake?'✅':'—')
-        +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a></p>'
+        +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a>'
+        +(kdWa?' · <a href="https://wa.me/'+kdWa+'" target="_blank" rel="noopener" style="color:#25D366;">💬 WhatsApp</a>':'')
+        +'</p>'
         // per-klient vypnutí pondělní připomínky ("stop připomínky") — čte ji client-remind fn
         +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>';
       // 🎯 ZADÁNÍ pro klienta — JEDINÉ místo, kde cíl vzniká. Klient ho vidí ve své sekci a
