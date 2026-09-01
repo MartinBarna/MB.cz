@@ -172,7 +172,22 @@ Deno.serve(async (req) => {
       // Pozastaveni Academy zamkne i appku Tvuj Coach. Symetricke: dalsi splatka pres
       // simpleshop-webhook appku zase odemkne (grant blok tam bezi pri kazde uhrazene splatce).
       // Best-effort: nikdy neshodi guard. Loguje do tvujcoach_grants.
+      // ⛔ POJISTKA (stejny vzor jako v admin-api a academy-stripe-webhook): kdo je
+      // AKTIVNI koucinkovy klient, o appku defaultem splatky PRIJIT NESMI.
+      // `revoke_app_access` v appce nerozlisuje puvod grantu (source='academy' natvrdo),
+      // takze by revoke sebral i pristup placeny koucinkem. Academy (kurz) se pozastavi
+      // vyse tak jako tak; appka koucinkoveho klienta zustava.
+      // ⛔ FAIL-CLOSED: kdyz se koucink NEPODARI precist, chovame se, jako by ho mel.
       try {
+        let maKoucink = false;
+        {
+          const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active")
+            .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+          maKoucink = coachErr ? true : !!coachEnt?.active;
+        }
+        if (maKoucink) {
+          await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: "skip-koucink", source: "splatky-default" });
+        } else {
         const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
         const gsec = gs?.value ? String(gs.value) : "";
         let gres = "no-secret";
@@ -186,6 +201,7 @@ Deno.serve(async (req) => {
           else gres = gr ? "http-" + gr.status : "fetch-fail";
         }
         await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: gres, source: "splatky-default" });
+        }
       } catch { /* best-effort */ }
       const m = suspendEmail(name, seg);
       await sendMail(email, m.subject, m.html);
