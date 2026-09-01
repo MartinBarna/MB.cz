@@ -47,7 +47,7 @@
   <div class="wrap">
     <span class="kick"><span class="dot"></span> Přehled pro kouče</span>
     <h1>Týdenní <span class="hl">check-iny klientů</span></h1>
-    <p class="lead">Rychlý přehled, kde koho řešit. Flagy ti napoví, u koho hoří: klesající energie, rostoucí chutě, nízká adherence nebo vynechané tréninky.</p>
+    <p class="lead">Rychlý přehled, kde koho řešit. Flagy ti napoví, u koho hoří: slabota v tréninku, rostoucí chutě, mizerný spánek, nízká adherence nebo vynechané tréninky. Škály jdou tak, jak je klient vyplňuje: síla 1 = nabušeno, spánek 5 = výborná, chutě 5 = pořád. Prázdná škála nic neflaguje.</p>
 
     <div id="dash" style="display:none;">
       <div class="sum">
@@ -63,7 +63,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260728a"></script>
+  <script src="/assets/ba-academy.js?v=20260901a"></script>
   <script>
     (function () {
       var ADMINS = ['martin@martinbarna.cz', 'fitness.barna@gmail.com'];
@@ -98,11 +98,18 @@
           var thisWeek = cur.iso_week === wk; if (thisWeek) weekCnt++;
           var flags = [];
           if (!thisWeek) flags.push('nevyplnil tento týden');
-          if (cur.cravings >= 4) flags.push('chutě ↑');
-          if (cur.energy <= 2) flags.push('energie ↓');
-          if (cur.sleep <= 2) flags.push('spánek ↓');
+          // ⛔ Chybějící hodnotu nikdy neflagovat: v JS je `null <= 2` pravda, takže do
+          // 1. 9. 2026 svítil „spánek ↓" u celé staré historie z Excelu (41 ze 73 reportů
+          // škálu spánku nemá, 25 nemá sílu). Každé porovnání tady proto začíná `!= null`.
+          // ⛔ Škála síly je od 18. 8. 2026 obrácená proti spánku: 1 = nabušeno,
+          // 5 = slabota. Hoří tedy u VYSOKÉHO čísla, ne u nízkého.
+          if (cur.cravings != null && cur.cravings >= 4) flags.push('chutě ↑');
+          if (cur.sila != null && cur.sila >= 4) flags.push('síla ↓');
+          if (cur.sleep != null && cur.sleep <= 2) flags.push('spánek ↓');
           if (cur.plan_adherence_pct != null && cur.plan_adherence_pct < 60) flags.push('adherence < 60 %');
-          if ((cur.workouts_planned || 0) > 0 && (cur.workouts_done || 0) === 0) flags.push('0 tréninků');
+          // Jmenovatel je snímek zadání z reportu. Když ho klient nemá, plán neexistuje
+          // a nula tréninků není nález. `workouts_done === 0` schválně, ne `|| 0`.
+          if (cur.workouts_planned != null && cur.workouts_planned > 0 && cur.workouts_done === 0) flags.push('0 tréninků');
           if (flags.length) flagCnt++;
           var dW = (prev && cur.weight_kg != null && prev.weight_kg != null) ? (cur.weight_kg - prev.weight_kg) : null;
           var dWs = dW == null ? '' : '<span class="d ' + (dW < 0 ? 'up' : (dW > 0 ? 'down' : '')) + '">' + (dW > 0 ? '+' : '') + dW.toFixed(1) + ' kg</span>';
@@ -115,10 +122,12 @@
             '<div class="mx">' +
               '<div class="m"><b>' + (cur.weight_kg != null ? cur.weight_kg : '–') + '</b><span class="d">kg</span> ' + dWs + '</div>' +
               '<div class="m">adherence<b>' + (cur.plan_adherence_pct != null ? cur.plan_adherence_pct + ' %' : '–') + '</b></div>' +
-              '<div class="m">energie<b>' + (cur.energy || '–') + '/5</b></div>' +
-              '<div class="m">spánek<b>' + (cur.sleep || '–') + '/5</b></div>' +
-              '<div class="m">chutě<b>' + (cur.cravings || '–') + '/5</b></div>' +
-              '<div class="m">tréninky<b>' + (cur.workouts_done || 0) + '/' + (cur.workouts_planned || 0) + '</b></div>' +
+              '<div class="m">síla<b>' + (cur.sila != null ? cur.sila + '/5' : '–') + '</b><span class="d">1 = nabušeno</span></div>' +
+              '<div class="m">spánek<b>' + (cur.sleep != null ? cur.sleep + '/5' : '–') + '</b><span class="d">5 = výborná</span></div>' +
+              '<div class="m">chutě<b>' + (cur.cravings != null ? cur.cravings + '/5' : '–') + '</b><span class="d">5 = pořád</span></div>' +
+              '<div class="m">tréninky<b>' + (cur.workouts_done != null ? cur.workouts_done : '–') +
+                (cur.workouts_planned != null ? '/' + cur.workouts_planned : '') + '</b>' +
+                (cur.workouts_planned == null ? '<span class="d">bez plánu</span>' : '') + '</div>' +
               '<div class="m">sport<b>' + (cur.sport_min != null ? cur.sport_min + ' min' : '–') + '</b></div>' +
             '</div>' +
             (cur.plan_next && (cur.plan_next.kroky != null || cur.plan_next.sport_min != null)

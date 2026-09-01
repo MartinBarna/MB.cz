@@ -409,11 +409,20 @@
               iso_week: self._isoWeekOf(row.report_date),
               weight_kg: num(row.weight),
               plan_adherence_pct: adh == null ? null : Math.round(adh * 20),
-              energy: num(s.sila),           // "sila" je nejblizsi tomu, co prehled zove energii
+              // 18. 8. 2026 Martin sjednotil skalu sily s unavou a hladem: 1 = nabuseno,
+              // 5 = slabota (definice je v pruvodci reportem, akademie/klient/index.html).
+              // Do 1. 9. 2026 se hodnota vracela pod jmenem "energy" a prehled kouce ji
+              // cetl jako energii, tedy obracene: flag svitil prave u nejsilnejsich klientu.
+              // Jmeno "sila" je verne tomu, co se opravdu sbira. Nemenit zpatky.
+              sila: num(s.sila),
               sleep: num(s.spanek_kvalita),
               cravings: num(s.hlad),
               workouts_done: num(ac.fitko),
-              workouts_planned: null,        // formular planovany pocet treninku nesbira
+              // Jmenovatel treninku bere snimek zadani ulozeny primo v reportu, tedy tentyz
+              // zdroj, proti kteremu pocita odchylky klientska sekce (rozhodnuti z 25. 7.).
+              // Formular sam planovany pocet treninku nesbira, takze u vetsiny reportu tohle
+              // vyjde null a prehled musi napsat "bez planu", ne vypsat jmenovatel 0.
+              workouts_planned: num((row.targets || {}).treninky),
               // minuty sportu za tyden; stare import-sheet reporty je maji zvlast (fitko_min +
               // kardio_min, stejna jednotka -> soucet je poctivy). Pocty na minuty neprepocitavat.
               sport_min: num(ac.sport_min) != null ? num(ac.sport_min)
