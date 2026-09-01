@@ -1,14 +1,30 @@
-// page-view — cookieless ping návštěvy z martinbarna.cz.
-// verify_jwt=false (veřejný web, žádný uživatel). CORS jen martinbarna.cz.
+// page-view: cookieless ping návštěvy z martinbarna.cz a z tvujcoach.cz.
+// verify_jwt=false (veřejný web, žádný uživatel). CORS jen povolené weby.
 // POST tělo s path → vloží řádek, vrací 204.
 // POST {action:'summary', days:7|30} + admin JWT → souhrn pro admin panel.
+//
+// ⛔ Sloupec `site` říká, ZE KTERÉHO webu ping přišel, a odvozuje se ze SERVERU
+// (Origin, jinak Referer), nikdy z těla požadavku. Kdyby ho posílal klient, mohl by
+// si kdokoli přepsat, do jakých statistik se zapíše. Neznámý web = default
+// martinbarna.cz, ale ten se stejně nedostane přes `originOk`.
+// ⚠️ Souhrn pro admin panel MB.cz filtruje `site = 'martinbarna.cz'` uvnitř RPC
+// `admin_page_views_summary`, ať appka nezvedne čísla webu. Kdo tam sahá, čte
+// akademie/_supabase/page-views-site.sql.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const ANON = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 
-const ALLOWED = new Set(["https://martinbarna.cz", "https://www.martinbarna.cz"]);
+// Origin → hodnota do sloupce `site`. Varianta s www i bez ní ukládá stejný web.
+const SITE_BY_ORIGIN: Record<string, string> = {
+  "https://martinbarna.cz": "martinbarna.cz",
+  "https://www.martinbarna.cz": "martinbarna.cz",
+  "https://tvujcoach.cz": "tvujcoach.cz",
+  "https://www.tvujcoach.cz": "tvujcoach.cz",
+};
+const DEFAULT_SITE = "martinbarna.cz";
+const ALLOWED = new Set(Object.keys(SITE_BY_ORIGIN));
 const DEVICES = new Set(["mobile", "desktop", "tablet"]);
 
 function corsFor(req: Request): Record<string, string> {
@@ -22,12 +38,28 @@ function corsFor(req: Request): Record<string, string> {
   };
 }
 
+function refererOrigin(req: Request): string | null {
+  const ref = req.headers.get("Referer") ?? "";
+  for (const origin of ALLOWED) {
+    if (ref === origin || ref.startsWith(origin + "/")) return origin;
+  }
+  return null;
+}
+
 function originOk(req: Request): boolean {
   const origin = req.headers.get("Origin") ?? "";
   if (ALLOWED.has(origin)) return true;
-  const ref = req.headers.get("Referer") ?? "";
-  return ref.startsWith("https://martinbarna.cz/") ||
-    ref.startsWith("https://www.martinbarna.cz/");
+  return refererOrigin(req) !== null;
+}
+
+/** Ze kterého webu ping přišel. Jen z hlaviček, nikdy z těla požadavku. */
+function siteOf(req: Request): string {
+  const origin = req.headers.get("Origin") ?? "";
+  const fromOrigin = SITE_BY_ORIGIN[origin];
+  if (fromOrigin) return fromOrigin;
+  const ref = refererOrigin(req);
+  if (ref) return SITE_BY_ORIGIN[ref] ?? DEFAULT_SITE;
+  return DEFAULT_SITE;
 }
 
 function clip(v: unknown, max: number): string | null {
@@ -139,6 +171,7 @@ Deno.serve(async (req: Request) => {
   try {
     const admin = createClient(SUPABASE_URL, SERVICE, { auth: { persistSession: false } });
     await admin.from("page_views").insert({
+      site: siteOf(req),
       path,
       referrer: normReferrer(body.referrer),
       utm_source: clip(body.utm_source, 80),

@@ -3,6 +3,12 @@
 -- Spustit v SQL editoru projektu uhmrpfsdcujbhbtumqye (nebo supabase db push).
 -- Stejný obsah jako supabase/migrations/20260821120000_page_views.sql
 -- (ta složka je v gitu ignorovaná, proto je kopie tady).
+--
+-- ⛔ TENHLE SOUBOR JE STAV K 21. 8. 2026, NENÍ TO CELÝ ŽIVÝ STAV. Sloupec `site`
+--    a filtr `site = 'martinbarna.cz'` v souhrnu přidává page-views-site.sql.
+--    Kdo spustí jen tenhle soubor, PŘEPÍŠE admin_page_views_summary zpět na verzi
+--    bez filtru a do čísel martinbarna.cz se tiše přimíchá tvujcoach.cz.
+--    ⇒ Po tomhle souboru vždy spusť i page-views-site.sql.
 
 create table if not exists public.page_views (
   id           uuid primary key default gen_random_uuid(),
