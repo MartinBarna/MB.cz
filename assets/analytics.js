@@ -124,7 +124,11 @@
       // `4gM00ibnpgjMerK7dB3ks04` = Academy doživotně 8 900 Kč (plink_1TyQXw…).
       // `9B6aEW6356Jc4Ra55t3ks05` = Academy doživotně po odečtu videokurzu, 8 100 Kč.
       // `bJe9AS3UXgjMcjC8hF3ks00` = Academy měsíčně 990 Kč (hodnota = první platba).
-      // `dRmeVcbnpaZs5VedBZ3ks06` = Videokurz výživy 800 Kč (plink_1TymiH…), od 30. 7. 2026.
+      // `7sYeVc6356Jc4Ra8hF3ks0h` = Videokurz výživy 1 490 Kč (plink_1UAy87…), od 1. 9. 2026.
+      // `3cIaEWezBebE2J22Xl3ks0i` = doplatek z balíčku 349 na videokurz, 1 140 Kč (plink_1UAyAO…).
+      // `dRmeVcbnpaZs5VedBZ3ks06` = Videokurz výživy za STAROU cenu 800 Kč (plink_1TymiH…),
+      //    od 30. 7. 2026. Na webu už nikde není, ale žije v rozeslaných mailech, takže se
+      //    dál měří na 800: kdo klikne ze starého mailu, tolik na pokladně opravdu zaplatí.
       // `bJe6oG8bdc3wcjCdBZ3ks08` = Konzultace 2 990 Kč (plink_1Tyrn5…), od 30. 7. 2026.
       // `6oU8wO3UX3x00AU55t3ks07` = Konzultace 2 190 Kč pro majitele videokurzu (plink_1Typhu…).
       //    ⚠️ Dva různé `id` schválně: dodává se totéž, ale reklamy se musí učit na skutečně
@@ -132,6 +136,8 @@
       var c = href.indexOf('4gM00ibnpgjMerK7dB3ks04') !== -1 ? { id: 'academy', name: 'Barna Academy', val: 8900 }
             : href.indexOf('9B6aEW6356Jc4Ra55t3ks05') !== -1 ? { id: 'academy-upgrade', name: 'Barna Academy (odečet videokurzu)', val: 8100 }
             : href.indexOf('bJe9AS3UXgjMcjC8hF3ks00') !== -1 ? { id: 'academy-mesicne', name: 'Barna Academy měsíčně', val: 990 }
+            : href.indexOf('7sYeVc6356Jc4Ra8hF3ks0h') !== -1 ? { id: 'videokurz', name: 'Videokurz výživy', val: 1490 }
+            : href.indexOf('3cIaEWezBebE2J22Xl3ks0i') !== -1 ? { id: 'videokurz-doplatek', name: 'Videokurz (doplatek z balíčku)', val: 1140 }
             : href.indexOf('dRmeVcbnpaZs5VedBZ3ks06') !== -1 ? { id: 'videokurz', name: 'Videokurz výživy', val: 800 }
             : href.indexOf('bJe6oG8bdc3wcjCdBZ3ks08') !== -1 ? { id: 'konzultace', name: 'Konzultace', val: 2990 }
             : href.indexOf('6oU8wO3UX3x00AU55t3ks07') !== -1 ? { id: 'konzultace-vk', name: 'Konzultace (majitel videokurzu)', val: 2190 }

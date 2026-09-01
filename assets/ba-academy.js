@@ -431,7 +431,7 @@
   window.BA = BA;
   // ---- upsell podle vlastnictvi ---------------------------------
   // Free ukazkove lekce maji v HTML vyzvu k nakupu (spravne pro navstevnika bez pristupu).
-  // Kdo produkt UZ MA, nesmi videt "Odemknout za 8 900 / 800 Kc" u obsahu, ktery vlastni.
+  // Kdo produkt UZ MA, nesmi videt "Odemknout za 8 900 / 1 490 Kc" u obsahu, ktery vlastni.
   // Prvky jsou znacene atributem data-upsell="academy" | "videokurz".
   function hideOwnedUpsells() {
     var els = document.querySelectorAll("[data-upsell]");
