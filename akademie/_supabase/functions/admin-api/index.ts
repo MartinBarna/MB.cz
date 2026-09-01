@@ -85,7 +85,7 @@ function gaPages(report: any): { path: string; views: number }[] {
 const NL = String.fromCharCode(10);
 const DQ = String.fromCharCode(34);
 const SITE = "https://martinbarna.cz";
-const COURSE_URL = "https://form.simpleshop.cz/3Vbl/buy/";
+const COURSE_URL = "https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs";
 const FREE_LESSONS_URL = "https://www.martinbarna.cz/videokurz#zdarma";
 const COURSE_PRICE = 1490;
 const DISCOUNT_CODE = "ZACNI15";
