@@ -207,9 +207,17 @@
                  pod tlačítky a Martin ho na mobilu přehlédl. Teď je z něj druhé zlaté tlačítko,
                  tedy stejná vizuální váha jako u doživotního vstupu. Poznámka pod tlačítky
                  tu větu už NENESE, jinak by tam ta nabídka byla dvakrát. -->
+            <!-- ⭐ Obě zlatá tlačítka vedla na kotvu #cena, tedy o 530 řádků níž, kde stojí
+                 tytéž dvě tlačítka, jen už s odkazem do pokladny. Kdo se rozhodl v hlavičce,
+                 musel se rozhodnout podruhé. Teď vedou rovnou do Stripu.
+                 ⚠️ Adresy jsou 1:1 s ceníkovými tlačítky (karty A a B v sekci #cena),
+                 jen s vlastním utm_medium=hero, ať se dá měřit, kolik lidí kupuje z hlavičky.
+                 Ceníková tlačítka žádné UTM nenesla, tady je konvence `utm_source=web`
+                 stejná jako u ostatních odkazů na webu. Kdo mění odkaz v ceníku, mění ho
+                 i tady. Kotva #cena zůstává pro všechny ostatní odkazy na stránce. -->
             <div class="mt-4 d-flex flex-wrap gap-2">
-                <a href="#cena" class="btn-gold">Chci Academy: 8 900 Kč →</a>
-                <a href="#cena" class="btn-gold">Začít za 990 Kč měsíčně →</a>
+                <a href="https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04?utm_source=web&amp;utm_medium=hero&amp;utm_campaign=academy&amp;locale=cs" class="btn-gold">Chci Academy: 8 900 Kč →</a>
+                <a href="https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00?utm_source=web&amp;utm_medium=hero&amp;utm_campaign=academy&amp;locale=cs" class="btn-gold">Začít za 990 Kč měsíčně →</a>
                 <a href="#moduly" class="btn-ghost">Co se naučím?</a>
             </div>
             <p style="margin:.9rem 0 0;font-size:.95rem;color:#e8d8c8;max-width:56ch;">Doživotní vstup je jednorázově 8 900 Kč, bez dalších plateb.</p>
