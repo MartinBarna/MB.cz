@@ -428,11 +428,22 @@ Deno.serve(async (req) => {
       // Academy pristup zrcadli i appku Tvuj Coach: grant kdyz active, revoke kdyz odebiras. Best-effort + log.
       if (product === "academy") {
         try {
+          // ⛔ POJISTKA (protejsek te v client_offboard): kdo je AKTIVNI koucinkovy klient,
+          // o appku odebranim Academy PRIJIT NESMI. `revoke_app_access` neumi rozlisit,
+          // odkud grant prisel: rusi vsechno se source='academy' bez Stripe, tedy i koucink.
+          let maKoucink = false;
+          if (!active) {
+            const { data: coachEnt } = await admin.from("entitlements").select("active")
+              .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+            maKoucink = !!coachEnt?.active;
+          }
           const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
           const gsec = gs?.value ? String(gs.value) : "";
           const act = active ? "grant" : "revoke";
           let gres = "no-secret";
-          if (gsec) {
+          if (!active && maKoucink) {
+            gres = "preskoceno-ma-koucink";
+          } else if (gsec) {
             const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
               method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
               // ai_basic = VIP verze APPKY, kterou Academy opravdu prodava (na rok, viz migrace
@@ -1806,15 +1817,22 @@ Deno.serve(async (req) => {
         .eq("email", email).eq("product", "academy").limit(1).maybeSingle();
       const maAcademy = !!academyEnt?.active;
 
-      let gres = maAcademy ? "preskoceno-ma-academy" : "no-secret";
-      if (!maAcademy) {
+      // ⭐ 1. 9. 2026: kdo ma zaplacenou Academy, appka mu NEZUSTAVA navzdy (to byl
+      // koucinkovy rezim), ale prepne se na rocni Academy grant: rok od konce koucinku.
+      // Jde pres akci `set-expiry` (SQL set_app_access_expiry, 0120), protoze pojistka
+      // v grant_app_access degradaci neomezeneho grantu schvalne blokuje.
+      let gres = "no-secret";
+      {
         try {
           const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
           const gsec = gs?.value ? String(gs.value) : "";
           if (gsec) {
+            const payload = maAcademy
+              ? { email, action: "set-expiry", expires_at: new Date(Date.now() + 365 * 864e5).toISOString(), source: "academy" }
+              : { email, action: "revoke", source: "koucink-konec" };
             const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
               method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-              body: JSON.stringify({ email, action: "revoke", source: "koucink-konec" }),
+              body: JSON.stringify(payload),
             }).catch(() => null);
             // deno-lint-ignore no-explicit-any
             if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
@@ -1823,7 +1841,7 @@ Deno.serve(async (req) => {
         } catch { /* best-effort, odchod z koucinku to neshodi */ }
       }
       try {
-        await admin.from("tvujcoach_grants").insert({ email, action: "revoke", result: gres, source: "koucink-konec" });
+        await admin.from("tvujcoach_grants").insert({ email, action: maAcademy ? "set-expiry" : "revoke", result: gres, source: "koucink-konec" });
       } catch { /* log je bonus */ }
 
       // 3) Prehodit znacku v marketingovych kontaktech: coaching-active -> coaching-ex.
