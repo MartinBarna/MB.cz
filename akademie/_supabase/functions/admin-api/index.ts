@@ -431,11 +431,13 @@ Deno.serve(async (req) => {
           // ⛔ POJISTKA (protejsek te v client_offboard): kdo je AKTIVNI koucinkovy klient,
           // o appku odebranim Academy PRIJIT NESMI. `revoke_app_access` neumi rozlisit,
           // odkud grant prisel: rusi vsechno se source='academy' bez Stripe, tedy i koucink.
+          // ⛔ FAIL-CLOSED: kdyz se koucink NEPODARI precist, chovame se, jako by ho mel.
+          // Tichy fail-open by vratil starou skodlivou vetev (revoke platicimu klientovi).
           let maKoucink = false;
           if (!active) {
-            const { data: coachEnt } = await admin.from("entitlements").select("active")
+            const { data: coachEnt, error: coachErr } = await admin.from("entitlements").select("active")
               .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
-            maKoucink = !!coachEnt?.active;
+            maKoucink = coachErr ? true : !!coachEnt?.active;
           }
           const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
           const gsec = gs?.value ? String(gs.value) : "";
@@ -1813,9 +1815,12 @@ Deno.serve(async (req) => {
       // a ten zdroj se do `subscriptions` zapisuje natvrdo i u koucinku. Bez tehle kontroly
       // by odchod z koucinku sebral appku i cloveku, ktery si Academy koupil za 8 900 Kc.
       // (Kdo si TC plati sam pres Stripe, je v poradku, toho `revoke_app_access` nesaha.)
-      const { data: academyEnt } = await admin.from("entitlements").select("active")
+      // ⛔ FAIL-CLOSED: kdyz se Academy NEPODARI precist, chovame se, jako by ji mel
+      // (set-expiry misto revoke). Vzit appku cloveku, ktery si Academy koupil za
+      // 8 900 Kc, je horsi nez nechat rok navic tomu, kdo ji nema.
+      const { data: academyEnt, error: acadErr } = await admin.from("entitlements").select("active")
         .eq("email", email).eq("product", "academy").limit(1).maybeSingle();
-      const maAcademy = !!academyEnt?.active;
+      const maAcademy = acadErr ? true : !!academyEnt?.active;
 
       // ⭐ 1. 9. 2026: kdo ma zaplacenou Academy, appka mu NEZUSTAVA navzdy (to byl
       // koucinkovy rezim), ale prepne se na rocni Academy grant: rok od konce koucinku.
