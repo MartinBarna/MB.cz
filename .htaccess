@@ -99,7 +99,9 @@ RedirectMatch 301 ^/blog/?$                  https://martinbarna.cz/clanky/
 # staré produktové stránky → videokurz (hlavní low-cost produkt, vše je v něm)
 RedirectMatch 301 ^/ebook/?$                 https://martinbarna.cz/videokurz
 RedirectMatch 301 ^/kucharka/?$              https://martinbarna.cz/videokurz
-RedirectMatch 301 ^/recepty/?$               https://martinbarna.cz/videokurz
+# /recepty mířilo na videokurz z dob, kdy vlastní stránka receptů nebyla; od vzniku
+# /recepty-a-odpovedi/ (produkt 349 Kč, vede tam i menu) patří recepty tam (audit 31. 8.).
+RedirectMatch 301 ^/recepty/?$               https://martinbarna.cz/recepty-a-odpovedi/
 RedirectMatch 301 ^/audiobook/?$             https://martinbarna.cz/videokurz
 RedirectMatch 301 ^/audiokniha/?$            https://martinbarna.cz/videokurz
 # členská sekce = přihlášení existujících členů (odkaz žije na Linktree!), ne prodejní stránka
@@ -128,6 +130,11 @@ RedirectMatch 301 (?i)^/kalkulacka/?$           https://martinbarna.cz/kalkulack
 RedirectMatch 301 (?i)^/trenink/?$              https://martinbarna.cz/treninky
 # /plan/ bez podstránky nemá index (vracel 403) → rozcestník nástrojů
 RedirectMatch 301 ^/plan/?$                     https://martinbarna.cz/nastroje-zdarma/
+# hádané tvary z auditu 31. 8. 2026 (všechny vracely 404): appka, množné poukazy, přihlášení
+RedirectMatch 301 (?i)^/appka/?$                https://martinbarna.cz/tvuj-coach/
+RedirectMatch 301 (?i)^/poukazy/?$              https://martinbarna.cz/poukaz/
+RedirectMatch 301 (?i)^/prihlasit(\.html)?/?$   https://martinbarna.cz/akademie/prihlaseni/
+RedirectMatch 301 (?i)^/prihlaseni/?$           https://martinbarna.cz/akademie/prihlaseni/
 # staré WP články, které se nemigrovaly (odkazované jen textem) → blog
 RedirectMatch 301 ^/5-mytu-o-cukru/?$                                https://martinbarna.cz/clanky/
 RedirectMatch 301 ^/6-duvodu-proc-glykemicky-index-nehraje-roli/?$   https://martinbarna.cz/clanky/
