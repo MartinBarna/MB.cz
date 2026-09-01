@@ -392,11 +392,11 @@ Deno.serve(async (req) => {
   for (const u of KLICOVE_STRANKY) pridej(u, "stranka");
   for (const t of zTokenu)         pridej(t.url, t.kde);
   for (const u of zeSablon)        pridej(u, "sablona");
-  const sloucenoUtmVariant = KLICOVE_STRANKY.length + zTokenu.length + zeSablon.length - vse.length;
+  const sloucenoDuplicit = KLICOVE_STRANKY.length + zTokenu.length + zeSablon.length - vse.length;
 
   if (vse.length > MAX_URL) {
     await alertAdmin("Link-check: podezřele moc odkazů, kontrola zkrácena", {
-      nalezeno: vse.length, strop: MAX_URL, slouceno_utm_variant: sloucenoUtmVariant,
+      nalezeno: vse.length, strop: MAX_URL, slouceno_duplicit: sloucenoDuplicit,
       co_to_znamena: "Přes strop se kontrola oříznula a na zbytek se dnes NESÁHLO. Tohle už NEJSOU UTM varianty téhož odkazu, ty se slučují; do šablon opravdu přibylo tolik různých stránek.",
     });
     vse.length = MAX_URL;
@@ -456,7 +456,7 @@ Deno.serve(async (req) => {
     ok: true,
     run_at: runAt,
     kontrolovano: vysledky.length,
-    slouceno_utm_variant: sloucenoUtmVariant,
+    slouceno_duplicit: sloucenoDuplicit,
     v_poradku: vysledky.filter((v) => v.ok).length,
     rozbitych: rozbite.length,
     neovereno_kvuli_ochrane: blokovane.length,
