@@ -58,8 +58,21 @@
   // (písmena, číslice, `-` a `_`, do 200 znaků; náš formát BARNA-XXXX se vejde).
   // Bez něj by doporučitel o odměnu přišel a nikde by se to nerozsvítilo.
   // ⚠️ Kód se připojuje i tehdy, když člověk e-mail NEZADÁ: odměna stojí na kódu, ne na mailu.
+  //
+  // ⛔⛔ A OD 1. 9. 2026 JE V TOM POLI JEŠTĚ NĚCO: `analytics.js` do něj dotaguje
+  // atribuci reklamy (`src-meta_med-cpc_…`) na KAŽDÝ odkaz na buy.stripe.com.
+  // Stripe nese jen JEDNU hodnotu a peníze partnera mají přednost, takže se stará
+  // hodnota nejdřív odstraní. Bez toho by v adrese byly parametry DVA, Stripe by si
+  // vybral sám a doporučitel by o odměnu přišel podle toho, jak se zrovna trefil.
   function sParametry(url, email, jeStripe, ref) {
     var u = url;
+    if (jeStripe && ref) {
+      try {
+        var bez = new URL(u, location.href);
+        bez.searchParams.delete('client_reference_id');
+        u = bez.toString();
+      } catch (e) { /* nevalidní adresu necháme být, kód se připojí za ni */ }
+    }
     function pridej(klic, hodnota) {
       u += (u.indexOf('?') >= 0 ? '&' : '?') + klic + '=' + encodeURIComponent(hodnota);
     }

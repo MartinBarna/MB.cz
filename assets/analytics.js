@@ -435,20 +435,74 @@
   }
   window.MBAttr = { get: get, key: KEY, smazZrcadlo: smazZrcadlo };
 
+  /* ⭐ ATRIBUCE DO STRIPE POKLADNY (1. 9. 2026) ================================
+     Payment Link umí do Checkout Session propsat z adresy JEN `client_reference_id`
+     (písmena, číslice, `-`, `_`, max 200 znaků) a `prefilled_email`. UTM parametry
+     v odkazu se do session NEDOSTANOU. Konzultace za 2 990 Kč prodaná z Meta reklamy
+     proto dorazila do Stripu bez jediné stopy po kampani a nešlo říct, co ji prodalo.
+     Skládáme je tedy do toho jednoho povoleného pole.
+
+     Formát: `src-meta_med-cpc_cmp-koucink-warm_cnt-koucink-warm-portret`
+     `_` odděluje pole, uvnitř hodnot se proto nesmí objevit (čistička ho mění na `-`).
+     Bez uložené atribuce se posílá `src-direct`: v datech se pak pozná „přímá návštěva"
+     od „skript vůbec neběžel" (tam pole chybí celé).
+
+     ⛔⛔ ROZEBÍRÁ TO EDGE FUNKCE `academy-stripe-webhook` (funkce `rozdelClientRef`).
+     Kdo mění formát nebo předpony, mění OBĚ strany. Kdyby to webhook neuměl rozebrat,
+     vzal by atribuci jako kód doporučitele, lookup by vrátil „neznamy-kod" a fallback
+     na `referral_click` by se nespustil ⇒ partner tiše přijde o provizi. */
+  function ocistiHodnotu(v) {
+    return String(v == null ? '' : v).toLowerCase()
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 40)
+      .replace(/-$/, '');            // useknutí uprostřed nesmí nechat koncovou pomlčku
+  }
+  var CREF_POLE = [['src', 'utm_source'], ['med', 'utm_medium'], ['cmp', 'utm_campaign'], ['cnt', 'utm_content']];
+  function clientRefAtribuce(attr) {
+    var casti = [];
+    CREF_POLE.forEach(function (p) {
+      var v = ocistiHodnotu(attr[p[1]]);
+      if (v) casti.push(p[0] + '-' + v);
+    });
+    // 4 pole po nejvýš 44 znacích a 3 oddělovače = 179, do stropu se to vejde vždy.
+    // `slice` je pojistka pro případ, že by pole někdy přibylo.
+    return casti.length ? casti.join('_').slice(0, 200) : 'src-direct';
+  }
+
   // Odkazy na appku dostanou atribuci do URL. Cross-domain jinak nejde: appka
   // běží na jiné doméně (Vercel), takže se k sessionStorage martinbarna.cz nedostane.
   // Vlastní parametry odkazu (např. ?plan=vip z ceníku) zůstávají, atribuce jen doplňuje.
   function decorate() {
     var attr = get(), keys = [];
     for (var k in attr) if (attr.hasOwnProperty(k)) keys.push(k);
-    if (!keys.length) return;
-    var links = document.querySelectorAll('a[href*="tvujcoach.cz"]');
-    Array.prototype.forEach.call(links, function (a) {
+    if (keys.length) {
+      var links = document.querySelectorAll('a[href*="tvujcoach.cz"]');
+      Array.prototype.forEach.call(links, function (a) {
+        var href = a.getAttribute('href') || '';
+        if (href.indexOf('tvujcoach.cz') === -1) return;
+        try {
+          var u = new URL(href, location.href);
+          keys.forEach(function (k) { if (!u.searchParams.has(k)) u.searchParams.set(k, attr[k]); });
+          a.setAttribute('href', u.toString());
+        } catch (e) { /* nevalidní href necháme být */ }
+      });
+    }
+
+    // Stripe se dotaguje VŽDY, i bez uložené atribuce (viz `src-direct` výš).
+    var cref = clientRefAtribuce(attr);
+    var stripeOdkazy = document.querySelectorAll('a[href*="buy.stripe.com"]');
+    Array.prototype.forEach.call(stripeOdkazy, function (a) {
       var href = a.getAttribute('href') || '';
-      if (href.indexOf('tvujcoach.cz') === -1) return;
+      if (href.indexOf('buy.stripe.com') === -1) return;
       try {
         var u = new URL(href, location.href);
-        keys.forEach(function (k) { if (!u.searchParams.has(k)) u.searchParams.set(k, attr[k]); });
+        // ⛔ Hodnotu, kterou tam někdo napsal ručně, nepřepisujeme: nevíme, co jí měřil.
+        // Kód doporučitele se sem NEDOSTANE, ten připojuje až při kliknutí `referral.js`
+        // a ten si tuhle atribuci přepíše (peníze partnera mají přednost).
+        if (u.searchParams.has('client_reference_id')) return;
+        u.searchParams.set('client_reference_id', cref);
         a.setAttribute('href', u.toString());
       } catch (e) { /* nevalidní href necháme být */ }
     });

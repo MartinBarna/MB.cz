@@ -56,7 +56,7 @@ function isPrintSheet(rel) {
 
 function bumpVersions(html) {
   let next = html;
-  next = next.replace(/\/assets\/analytics\.js\?v=g\d+/g, '/assets/analytics.js?v=g13');
+  next = next.replace(/\/assets\/analytics\.js\?v=g\d+/g, '/assets/analytics.js?v=g14');
   next = next.replace(/\/assets\/scroll-top\.js\?v=g\d+/g, '/assets/scroll-top.js?v=g10');
   next = next.replace(/\/assets\/lead-popup\.js\?v=r\d+/g, '/assets/lead-popup.js?v=r3');
   next = next.replace(/\/assets\/ai-martin\.js\?v=g\d+/g, '/assets/ai-martin.js?v=g7');

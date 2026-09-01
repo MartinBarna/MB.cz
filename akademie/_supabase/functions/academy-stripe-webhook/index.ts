@@ -867,6 +867,74 @@ async function zapisRecurringProvizi(buyerEmail: string, invoice: any): Promise<
   }
 }
 
+// --- `client_reference_id`: kód doporučitele NEBO atribuce reklamy ----------
+// Payment Link propíše do Checkout Session z adresy JEN tohle pole a `prefilled_email`.
+// UTM parametry v odkazu se do session nedostanou, takže do 1. 9. 2026 dorazila
+// konzultace za 2 990 Kč prodaná z Meta reklamy bez jediné stopy po kampani.
+// Od té doby do pole skládá `assets/analytics.js` i atribuci, ve tvaru
+// `src-meta_med-cpc_cmp-koucink-warm_cnt-koucink-warm-portret`.
+//
+// ⛔⛔ PROČ SE TO MUSÍ ROZDĚLIT: `atribuujReferral` bere NEPRÁZDNÉ `client_reference_id`
+// jako kód doporučitele a fallback na `referral_click` zkouší jen tehdy, když je kód
+// prázdný. Kdyby sem atribuce přišla jako kód, lookup by vrátil „neznamy-kod",
+// fallback by se NIKDY nespustil a partner by tiše přišel o provizi u každého nákupu
+// z reklamy. Nic by nespadlo, jen by se přestaly připisovat peníze.
+//
+// ⚠️ Obojí najednou v poli běžně NEBUDE: `referral.js` si atribuci při kliknutí přepíše
+// (peníze partnera mají přednost). Parser to přesto zvládne, aby se to rozhodnutí dalo
+// otočit bez nasazování obou stran naráz.
+//
+// ⚠️ Neznámý tvar se chová jako dřív (celá hodnota = kód), takže staré odkazy
+// v už rozeslaných mailech fungují dál.
+const ATTR_PREFIX: Record<string, string> = {
+  src: "utm_source", med: "utm_medium", cmp: "utm_campaign", cnt: "utm_content",
+};
+function rozdelClientRef(raw: string | null): { kod: string; atribuce: Record<string, string> | null } {
+  const s = (raw ?? "").trim();
+  if (!s) return { kod: "", atribuce: null };
+  const out: Record<string, string> = {};
+  const zbytek: string[] = [];
+  for (const cast of s.split("_")) {
+    if (!cast) continue;
+    const pomlcka = cast.indexOf("-");
+    const klic = pomlcka > 0 ? ATTR_PREFIX[cast.slice(0, pomlcka).toLowerCase()] : undefined;
+    // Hodnota pochází z URL, tedy od návštěvníka: bereme jen známé předpony
+    // a tvrdě krátíme, ať se do DB nedostane balast.
+    if (klic && !out[klic]) out[klic] = cast.slice(pomlcka + 1).slice(0, 60);
+    else zbytek.push(cast);
+  }
+  return { kod: zbytek.join("_"), atribuce: Object.keys(out).length ? out : null };
+}
+
+/**
+ * Odkud přišel nákup (Meta, Sklik, mail). Ukládá se k ENTITLEMENTU, protože jiná
+ * tabulka nákupů na téhle straně neexistuje: `entitlements` je jediný řádek, který
+ * o zaplaceném produktu vzniká.
+ *
+ * ⛔ NIKDY NEPŘEPISUJE (`is("attribution", null)`). Zajímá nás kampaň, která zákazníka
+ *    PŘIVEDLA. Obnova předplatného ani opakovaný nákup ji nesmí přepsat na `src-direct`.
+ * ⛔ Best-effort, jako doklad i provize: měření nikdy nesmí shodit nákup. Když sloupec
+ *    ještě neexistuje (migrace `entitlements-atribuce.sql` neproběhla), vrátí se chyba
+ *    do odpovědi funkce a nákup jede dál.
+ */
+async function zapisAtribuciNakupu(
+  email: string,
+  produkt: string,
+  atribuce: Record<string, string> | null,
+): Promise<string> {
+  if (!atribuce) return "bez-atribuce";
+  try {
+    const { data, error } = await admin.from("entitlements")
+      .update({ attribution: atribuce })
+      .eq("email", email).eq("product", produkt).is("attribution", null)
+      .select("email");
+    if (error) return "chyba:" + error.message.slice(0, 60);
+    return (data?.length ?? 0) > 0 ? "zapsano" : "uz-mel";
+  } catch (e) {
+    return "chyba:" + String(e).slice(0, 60);
+  }
+}
+
 async function atribuujReferral(
   buyerEmail: string,
   produkt: string,
@@ -1210,6 +1278,12 @@ Deno.serve(async (req) => {
         // (nebo přehrání téže události Stripem) nesmí poslat druhý mail ani druhý grant.
         let tcGrant = def.tcGrant ? "preskoceno" : "netyka-se";
         let referral = "preskoceno";
+        // Kód doporučitele a atribuce reklamy jedou jedním polem, rozdělí se jednou
+        // a použijí se na dvou místech (provize partnerovi × „která reklama prodala").
+        const cref = rozdelClientRef(
+          typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
+        );
+        let atribuce = "preskoceno";
         let bonusVideokurz = def.videokurzBonus ? "preskoceno" : "netyka-se";
         // Stav dokladu jde do odpovědi funkce, ať je v logu Stripu vidět, jestli odešel.
         // ⚠️ Od 7. 8. 2026 se doklad týká VŠECH jednorázových produktů, ne jen balíčku,
@@ -1364,12 +1438,15 @@ Deno.serve(async (req) => {
           // nezaloží druhý referral. Vlastní idempotenci má funkce i uvnitř.
           referral = await atribuujReferral(
             emailL, def.produkt,
-            typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
+            cref.kod || null,
             typeof obj.payment_intent === "string" ? obj.payment_intent : null,
             // ⭐ Celá session kvůli promo kódu a částce. Předává se AŽ SEM, ne dřív:
             // funkce si z ní bere jen `discounts` a `amount_total`.
             obj,
           );
+          // Z které reklamy tenhle nákup je. Až po provizi: peníze mají přednost
+          // před měřením a měření nesmí shodit ani jedno.
+          atribuce = await zapisAtribuciNakupu(emailL, def.produkt, cref.atribuce);
         }
 
         // ⭐⭐ OPAKOVANÝ NÁKUP BALÍČKU: PENÍZE PŘIŠLY, TAK SE MUSÍ NĚCO POSLAT.
@@ -1474,17 +1551,21 @@ Deno.serve(async (req) => {
             //    důvodu jako doklad: peníze přišly i tehdy, když se odkazy poslat nepodařilo.
             referral = await atribuujReferral(
               emailL, def.produkt,
-              typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
+              cref.kod || null,
               pi || null,
               obj,
             );
+            // ⛔ ATRIBUCI TADY SCHVÁLNĚ NEZAPISUJEME. Opakovaný nákup balíčku (typicky
+            //    proto, že vypršely odkazy) není akvizice a přepsal by zdroj, který
+            //    zákazníka doopravdy přivedl. Provize se platí z každé platby, měření
+            //    zajímá jen ta první.
           }
         }
 
         return json({
           ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
           novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
-          referral, bonus_videokurz: bonusVideokurz, balicek_znovu: balicekZnovu,
+          referral, atribuce, bonus_videokurz: bonusVideokurz, balicek_znovu: balicekZnovu,
           doklad,
         });
       }
@@ -1526,7 +1607,18 @@ Deno.serve(async (req) => {
           });
         }
       }
-      return json({ ok: true, email, prvni });
+      // Z které reklamy je i měsíční členství. Referral se tu vědomě neřeší (viz
+      // poznámka u `buyInfo` v `assets/referral.js`), atribuce ale patří i sem:
+      // je to platba jako každá jiná. Zápis nikdy nepřepisuje, takže obnova
+      // předplatného původní zdroj nezahodí.
+      // ⚠️ Schválně až za uvítacím mailem: měření nesmí zdržovat to, co vidí zákazník.
+      const atribuceMesicni = await zapisAtribuciNakupu(
+        email, "academy",
+        rozdelClientRef(
+          typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
+        ).atribuce,
+      );
+      return json({ ok: true, email, prvni, atribuce: atribuceMesicni });
     }
 
     // --- 2) Zaplacená faktura: první i každá další obnova ------------------
