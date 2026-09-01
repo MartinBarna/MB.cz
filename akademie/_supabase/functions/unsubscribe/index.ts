@@ -34,13 +34,64 @@ function cors(req: Request): Record<string, string> {
 const json = (b: unknown, c: Record<string, string>, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { ...c, 'Content-Type': 'application/json' } });
 
+// MERENI ODHLASENI (1. 9. 2026). Do te doby se datum odhlaseni nedalo zjistit vubec:
+// jedine voditko byl `leads.updated_at`, ktery ale prepisuje KAZDY hromadny UPDATE nad
+// tabulkou (uklid `next_send_at`, import, prepnuti trate). Revize 1. 9. z nej vycetla
+// 14 odhlaseni za den, kdy se ve skutecnosti neodhlasil nikdo. Proto vlastni sloupec
+// `leads.unsubscribed_at` (migrace `leads-unsubscribed-at.sql`) a udalost `unsub`
+// v `email_events`, ktera navic drzi trat a klic sablony posledniho odeslaneho mailu.
+// ⛔ Mereni nesmi shodit odhlaseni: cely zapis udalosti je v try/catch a jeho selhani
+//    se jen zaloguje. Odhlasit se je pravni povinnost, statistika je az druha.
+async function zapisOdhlaseni(
+  a: ReturnType<typeof admin>,
+  lead: { id: string; track?: string | null; step?: number | null },
+): Promise<void> {
+  try {
+    // Posledni mail, ktery cloveku odesel. Az z nej se pozna, ktera trat a ktera
+    // sablona odhlaseni spustila; bez toho by slo rict jen „nekdo se odhlasil".
+    const { data: last } = await a.from('email_events')
+      .select('step,detail,created_at').eq('lead_id', lead.id)
+      .in('type', ['sent', 'oneoff'])
+      .order('created_at', { ascending: false }).limit(1).maybeSingle();
+    const d = (last?.detail && typeof last.detail === 'object')
+      ? last.detail as Record<string, unknown>
+      : {};
+    await a.from('email_events').insert({
+      lead_id: lead.id,
+      step: last?.step ?? lead.step ?? 0,
+      type: 'unsub',
+      detail: {
+        via: 'unsubscribe',
+        track: d.track ?? lead.track ?? null,
+        key: d.key ?? null,
+        po_mailu_z: last?.created_at ?? null,
+      },
+    });
+  } catch (e) {
+    console.error('[unsubscribe] mereni selhalo, odhlaseni ale probehlo:', String(e));
+  }
+}
+
 async function unsubscribe(token: string): Promise<boolean> {
   if (!token || token === 'test-no-op') return false;
-  const { data, error } = await admin().from('leads')
-    .update({ status: 'unsubscribed', next_send_at: null, updated_at: new Date().toISOString() })
-    .eq('unsubscribe_token', token).select('id');
+  const a = admin();
+  const kdy = new Date().toISOString();
+  // `select` vraci stav PO updatu, ale `unsubscribed_at` tenhle update nemeni, takze
+  // se z nej pozna, jestli uz clovek odhlaseny byl driv.
+  const { data, error } = await a.from('leads')
+    .update({ status: 'unsubscribed', next_send_at: null, updated_at: kdy })
+    .eq('unsubscribe_token', token).select('id,track,step,unsubscribed_at');
   if (error) return false;
-  return (data?.length ?? 0) > 0;
+  const lead = data?.[0];
+  if (!lead) return false;
+  // Datum i udalost jen pri PRVNIM odhlaseni. Opakovany klik na tyz odkaz (a mailove
+  // skenery, ktere One-Click POST posilaji samy) nesmi prerazitkovat puvodni datum ani
+  // nafouknout pocet odhlaseni. Odpoved zustava `ok: true` jako driv.
+  if (!lead.unsubscribed_at) {
+    await a.from('leads').update({ unsubscribed_at: kdy }).eq('id', lead.id);
+    await zapisOdhlaseni(a, lead);
+  }
+  return true;
 }
 
 async function erase(token: string): Promise<boolean> {

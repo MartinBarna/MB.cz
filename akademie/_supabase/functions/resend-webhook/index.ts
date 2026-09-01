@@ -125,6 +125,13 @@ Deno.serve(async (req) => {
       status: t === "bounce" ? "bounced" : "unsubscribed",
       next_send_at: null,
       updated_at: new Date().toISOString(),
+      // Stiznost na spam JE odhlaseni, jen prislo pres postovni schranku. Datum patri do
+      // stejneho sloupce jako u tlacitka v paticce (`unsubscribed_at`), jinak by mericí
+      // dotaz cast odhlaseni nevidel. U `bounce` se NEZAPISUJE: mrtva adresa neni
+      // rozhodnuti cloveka a smichat to dohromady by cislo nafouklo.
+      // ⚠️ Prepisuje i drivejsi datum. Vic nez jedna stiznost od tehoz cloveka se zatim
+      //    nestala (4 stiznosti celkem od 11. 7. 2026) a stat se to nema.
+      ...(t === "complaint" ? { unsubscribed_at: new Date().toISOString() } : {}),
     }).eq("id", lead_id);
   }
   return json({ ok: true, type: t });
