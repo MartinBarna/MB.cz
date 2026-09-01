@@ -51,6 +51,16 @@ zkontroluj('upsell-academy stopne na Academy', shouldStop('upsell-academy', 1, J
 zkontroluj('longtail-kupci stopne na Academy', shouldStop('longtail-kupci', 2, JA, MA_ACADEMY, BEZ_EX), true);
 zkontroluj('longtail-kupci majitele videokurzu NEstopne (to je jeho publikum)', shouldStop('longtail-kupci', 2, JA, MA_VK, BEZ_EX), false);
 zkontroluj('trener-kit krok 0 je slibeny kit, projde i clenovi Academy', shouldStop('trener-kit', 0, JA, MA_ACADEMY, BEZ_EX), false);
+
+// ---------- ACADEMY-VK-SERIE: docasna serie pro majitele videokurzu bez Academy (C1, 1. 9. 2026) ----------
+// Trat prodava Academy, takze se stopuje na Academy a NE na videokurzu: videokurz ma
+// z definice kazdy, komu tahle serie chodi (je to duvod, proc ma cenu 8 100 misto 8 900).
+zkontroluj('academy-vk-serie stopne clena Academy uz na kroku 0 (zadny freebie tam neni)', shouldStop('academy-vk-serie', 0, JA, MA_ACADEMY, BEZ_EX), true);
+zkontroluj('academy-vk-serie stopne clena Academy i na poslednim kroku', shouldStop('academy-vk-serie', 2, JA, MA_ACADEMY, BEZ_EX), true);
+zkontroluj('academy-vk-serie majitele videokurzu NEstopne (to je cele jeji publikum)', shouldStop('academy-vk-serie', 1, JA, MA_VK, BEZ_EX), false);
+zkontroluj('academy-vk-serie cizi adresu neresi', shouldStop('academy-vk-serie', 1, NIKDO, MA_ACADEMY, BEZ_EX), false);
+zkontroluj('academy-vk-serie ex-klienta koucinku pusti (Academy je pro nej legitimni nabidka)', shouldStop('academy-vk-serie', 1, JA, MA_VK, JE_EX), false);
+zkontroluj('most do academy-vk-serie se clenu Academy zablokuje', mostBlokujeVlastnictvi('academy-vk-serie', JA, MA_ACADEMY, BEZ_EX), true);
 zkontroluj('trener-kit krok 1 clena Academy stopne', shouldStop('trener-kit', 1, JA, MA_ACADEMY, BEZ_EX), true);
 
 // ---------- UPSELL-COACHING VCETNE EX-KLIENTU (oprava 8. 8. 2026) ----------
