@@ -45,8 +45,12 @@ const SITE = 'https://martinbarna.cz';
 // neprepsal. Formular tam navic vracel HTTP 200, takze to nevypadalo rozbite.
 // Tenhle odkaz pouziva 13 sablon pres {{course_url}}, takze zmena jednoho radku
 // spravi vsechny najednou. Je to tentyz odkaz, ktery je na /videokurz pod
-// tlacitkem „Koupit za 800 Kc".
-const COURSE_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06?locale=cs';
+// tlacitkem na koupi kurzu.
+// ⛔ 1. 9. 2026: zdrazeni videokurzu na 1 490 znamena JINY platebni odkaz.
+//    Bylo tu '...dRmeVcbnpaZs5VedBZ3ks06' (pokladna na 800 Kc), zatimco
+//    COURSE_PRICE uz rikal 1490. Mail tedy sliboval jednu cenu a pokladna
+//    brala jinou. Cena a odkaz se od ted meni VZDY spolu, v jednom kroku.
+const COURSE_URL = 'https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs';
 const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
 // ⛔ 1. 9. 2026: 800 -> 1490 (Martinovo rozhodnuti o zdrazeni videokurzu).
 // Konstanta plni token {{course_price}} (53 sablon) a pocitaji se z ni {{discount_price}}
