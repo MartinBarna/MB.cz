@@ -485,7 +485,11 @@
                     <li>Grafy a historie za posledních 14 dní</li>
                     <li>Webová aplikace, česky (appka pro iPhone a Android se chystá)</li>
                 </ul>
-                <a class="btn btn-ghost" href="https://tvujcoach.cz">Založit Free účet →</a>
+                <!-- ⛔ Holé `https://tvujcoach.cz` vedlo na DRUHOU prodejní stránku, ne na
+                     zakládání účtu: člověk rozhodnutý pro Free si musel znovu projít celý
+                     landing a teprve tam hledat registraci. `?plan=free` appka chápe jako
+                     výslovné přání a na checkout ho neposílá. -->
+                <a class="btn btn-ghost" href="https://tvujcoach.cz/sign-up?plan=free">Založit Free účet →</a>
             </div>
 
         <div class="legal-note" style="grid-column:1/-1;margin:1.4rem 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);font-size:.88rem;line-height:1.6;color:#A09AAD;">
