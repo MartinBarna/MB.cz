@@ -461,20 +461,28 @@
   // JEDINÝ zdroj cílů je tabulka client_targets (vyplňuje Martin v adminu). Když řádek není
   // nebo je pole prázdné, nezobrazuje se nic a nikde se nepočítá odchylka. Radši žádné číslo
   // než vymyšlené: dopočítat cíl z reportů by znamenalo měřit klienta proti jeho vlastní minulosti.
+  // Prioritní trojice (kcal, bílkoviny, vláknina) se zobrazuje přednostně a velká;
+  // sacharidy a tuky jsou doplňkové, proto menší a v řádku pod tím (Martin 1. 9. 2026).
   var TG_POLE = [
     { k: "kcal", label: "Kalorie", unit: "kcal/den" },
     { k: "protein", label: "Bílkoviny", unit: "g/den" },
+    { k: "fiber", label: "Vláknina", unit: "g/den" },
     { k: "kroky", label: "Kroky", unit: "Ø/den" },
     { k: "sport_min", label: "Sport celkem", unit: "min/týden" },
     { k: "treninky", label: "Tréninky", unit: "×/týden" }
+  ];
+  var TG_POLE_VEDLEJSI = [
+    { k: "carbs", label: "Sacharidy", unit: "g/den" },
+    { k: "fat", label: "Tuky", unit: "g/den" }
   ];
   function tgVal(k){ return targets ? toNum(targets[k]) : null; }
   function cele(v){ return Math.round(v).toLocaleString("cs-CZ"); }
   function renderTargets(){
     if(!targets) return;
     var filled = TG_POLE.filter(function(p){ return tgVal(p.k) != null; });
+    var filledVed = TG_POLE_VEDLEJSI.filter(function(p){ return tgVal(p.k) != null; });
     var note = String((targets && targets.note) || "").trim();
-    if(!filled.length && !note) return;
+    if(!filled.length && !filledVed.length && !note) return;
     el("tgCard").innerHTML = '<div class="kcta" style="align-items:flex-start;"><div style="flex:1;min-width:260px;">'
       + '<h2>🎯 Tvoje zadání na tento týden</h2>'
       + '<div style="display:flex;flex-wrap:wrap;gap:20px;margin:12px 0 0;">'
@@ -483,6 +491,12 @@
             + '<div style="font-size:.78rem;color:#8F8A99;">' + p.label + ' <span style="color:#6d6879;">(' + p.unit + ')</span></div></div>';
         }).join("")
       + '</div>'
+      + (filledVed.length ? '<div style="display:flex;flex-wrap:wrap;gap:14px;margin:10px 0 0;">'
+          + filledVed.map(function(p){
+              return '<div><div class="kstat" style="font-size:1rem;color:#cbbfae;">' + cele(tgVal(p.k)) + '</div>'
+                + '<div style="font-size:.72rem;color:#6d6879;">' + p.label + ' (' + p.unit + ')</div></div>';
+            }).join("")
+          + '</div>' : "")
       + (note ? '<p style="margin:14px 0 0;font-size:.92rem;color:#E8E3EF;">💬 ' + escH(note) + '</p>' : "")
       + '<p style="margin:10px 0 0;font-size:.78rem;color:#8F8A99;">Zadal Martin'
       + (targets.updated_at ? " " + dateCz(String(targets.updated_at).slice(0, 10)) : "")

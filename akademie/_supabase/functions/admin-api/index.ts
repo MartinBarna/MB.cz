@@ -1586,10 +1586,11 @@ Deno.serve(async (req) => {
       // pod service_role. Cil se NIKDY nedopocitava z TDEE ani z reportu, je to Martinovo
       // rozhodnuti; prazdna hodnota = cil nenastaven a vsechna zobrazovaci mista nesmi nic ukazat.
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      // Meze drzi 1:1 s CHECK constraintami v client-targets.sql — jinak by uzivatel dostal
-      // syrovou chybu z Postgresu misto srozumitelne hlasky.
+      // Meze drzi 1:1 s CHECK constraintami v client-targets.sql a client-targets-makra.sql,
+      // jinak by uzivatel dostal syrovou chybu z Postgresu misto srozumitelne hlasky.
       const MEZE: Record<string, [number, number]> = {
-        kcal: [500, 8000], protein: [20, 500], kroky: [0, 60000], sport_min: [0, 3000], treninky: [0, 14],
+        kcal: [500, 8000], protein: [20, 500], carbs: [0, 1200], fat: [0, 400], fiber: [0, 150],
+        kroky: [0, 60000], sport_min: [0, 3000], treninky: [0, 14],
       };
       const row: Record<string, unknown> = { email, updated_at: new Date().toISOString() };
       for (const [pole, [min, max]] of Object.entries(MEZE)) {

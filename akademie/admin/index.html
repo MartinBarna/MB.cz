@@ -1361,6 +1361,17 @@
         +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;">'
         + kdTgIn('kcal','Kalorie','kcal/den','1800')
         + kdTgIn('protein','Bílkoviny','g/den','140')
+        + kdTgIn('fiber','Vláknina','g/den','30')
+        +'</div>'
+        // sacharidy a tuky jsou vedlejší k prioritní trojici kcal/bílkoviny/vláknina výš,
+        // proto menší a pod tím (Martin 1. 9. 2026: „kcal / bílkoviny / vláknina je prioritní")
+        +'<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);">'
+        +'<div class="muted" style="font-size:.72rem;text-transform:uppercase;margin-bottom:4px;">Doplňkově</div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:6px;max-width:260px;">'
+        + kdTgIn('carbs','Sacharidy','g/den','180')
+        + kdTgIn('fat','Tuky','g/den','60')
+        +'</div></div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:8px;">'
         + kdTgIn('kroky','Kroky','Ø/den','9000')
         + kdTgIn('sport_min','Sport celkem','min/týden','240')
         + kdTgIn('treninky','Tréninky','×/týden','3')
@@ -1516,7 +1527,7 @@
       $('kdTgSave').addEventListener('click',function(){
         var b=$('kdTgSave'); if(b.disabled) return;
         var p={action:'client_targets_save',email:email,note:($('kdTg_note').value||'').trim()};
-        ['kcal','protein','kroky','sport_min','treninky'].forEach(function(k){ p[k]=($('kdTg_'+k).value||'').trim(); });
+        ['kcal','protein','carbs','fat','fiber','kroky','sport_min','treninky'].forEach(function(k){ p[k]=($('kdTg_'+k).value||'').trim(); });
         var t0=b.textContent; b.disabled=true; b.textContent='Ukládám…';
         api(p).then(function(o){
           b.disabled=false; b.textContent=t0;
