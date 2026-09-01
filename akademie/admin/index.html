@@ -1422,6 +1422,22 @@
         });
         h+='</tbody></table></div>';
       } else h+='<p class="muted" style="padding:.4rem 0;">Zatím žádné reporty.</p>';
+      // ✍️ KONCEPT ODPOVĚDI NA REPORT (E1, 1. 9. 2026)
+      // AI napíše návrh, Martin ho tady přepíše, zkopíruje a ODEŠLE SÁM ze své schránky.
+      // ⛔ Admin klientovi nic neposílá a posílat nebude. Tenhle blok jen ukazuje text.
+      // ⛔ Téma týdne je ruční vstup. Martin ho v pondělí posílá všem naráz a u někoho ho
+      // schválně prohodí, takže se NESMÍ odvozovat (změřeno 27. 7. 2026 na skutečné poště).
+      if(reps.length){
+        h+='<h4 style="margin:1.4rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">✍️ Koncept odpovědi <span class="muted" style="text-transform:none;font-weight:400;">(napíše AI, odesíláš Ty)</span></h4>'
+          +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;">'
+          +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">'
+          +'<label style="font-size:.78rem;color:#8F8A99;">Na který report<br><select id="kdDrRep" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;">'
+          + reps.slice(0,6).map(function(r){ return '<option value="'+esc(r.id)+'">'+fmtDay(r.report_date)+'</option>'; }).join('')
+          +'</select></label>'
+          +'<label style="flex:1;min-width:200px;font-size:.78rem;color:#8F8A99;">Téma týdne <span style="color:#6d6879;">(nech prázdné, když žádné neposíláš)</span><br><input type="text" id="kdDrTema" placeholder="např. víkendové přejídání" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
+          +'<button class="mlogbtn" id="kdDrBtn">Připravit odpověď</button>'
+          +'</div><div id="kdDrOut" style="margin-top:10px;"></div></div>';
+      }
       // dotazník
       if(d.intake&&d.intake.data){
         var idata=d.intake.data;
@@ -1547,6 +1563,45 @@
           if(o.j&&o.j.ok){ toast('🎯 Zadání uloženo, klient ho vidí ve své sekci'); openKlient(email); }
           else toast('Chyba: '+((o.j&&o.j.error)||o.status));
         }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
+      });
+      // ✍️ Koncept odpovědi: jedno volání, výsledek do textarey. Chyba nikdy neshodí stránku,
+      // vždycky skončí hláškou v bloku. ⛔ Nikde tu není odesílání, jen kopírování textu.
+      var kdDrBtn=$('kdDrBtn');
+      if(kdDrBtn) kdDrBtn.addEventListener('click',function(){
+        if(kdDrBtn.disabled) return;
+        var rid=$('kdDrRep').value, tema=($('kdDrTema').value||'').trim(), out=$('kdDrOut');
+        var t0=kdDrBtn.textContent; kdDrBtn.disabled=true; kdDrBtn.textContent='Píšu…';
+        out.innerHTML='<p class="muted" style="font-size:.85rem;">Píšu koncept, může to trvat půl minuty…</p>';
+        api({action:'report_draft',report_id:rid,tema:tema}).then(function(o){
+          kdDrBtn.disabled=false; kdDrBtn.textContent=t0;
+          var j=o.j||{};
+          if(!j.ok){
+            var e=String(j.error||o.status);
+            var why=e==='ai_nedostupne'?'AI teď neodpovídá, zkus to za chvíli'
+              :e==='chybi_klic'?'v projektu chybí API klíč k AI'
+              :e==='ai_prazdno'?'AI vrátila prázdný text, zkus to znovu'
+              :e==='chybi_tabulka'?'chybí tabulka report_drafts, je potřeba nasadit migraci'
+              :e==='report_nenalezen'?'report se nenašel'
+              :'chyba ('+esc(e)+')';
+            out.innerHTML='<p class="muted" style="font-size:.85rem;">⚠️ Koncept se nepovedl: '+why+'.</p>'; return;
+          }
+          var hh='';
+          if((j.upozorneni||[]).length) hh+='<p style="margin:0 0 6px;font-size:.85rem;color:#ffb4b4;">⚠️ V reportu je téma '+esc((j.upozorneni||[]).join(', '))+'. AI k němu schválně nic neradí, tohle patří Tobě osobně.</p>';
+          hh+='<p class="muted" style="margin:0 0 6px;font-size:.78rem;">🤖 Koncept od AI, před odesláním přečti. Odesíláš ho Ty ze své schránky, admin sám neposílá nic.'+(j.znovu?' (Tenhle koncept už byl hotový, nový se dá zadat za pár minut.)':'')+'</p>'
+            +'<textarea id="kdDrText" rows="9" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 11px;color:#fff;font-family:inherit;font-size:.9rem;line-height:1.5;">'+esc(j.draft||'')+'</textarea>'
+            +'<div style="display:flex;gap:8px;align-items:center;margin-top:6px;"><button class="mlogbtn" id="kdDrCopy">Kopírovat text</button></div>';
+          if(j.navrh_zmen) hh+='<p style="margin:8px 0 0;font-size:.85rem;color:#F6CD63;">🎯 Návrh jen pro Tebe (klient tohle nevidí): '+esc(j.navrh_zmen)+'</p>';
+          out.innerHTML=hh;
+          $('kdDrCopy').addEventListener('click',function(){
+            var ta=$('kdDrText'); ta.focus(); ta.select();
+            function hotovo(){ toast('📋 Zkopírováno'); }
+            if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(ta.value).then(hotovo,function(){ try{ document.execCommand('copy'); hotovo(); }catch(x){ toast('Zkopíruj prosím ručně'); } }); }
+            else { try{ document.execCommand('copy'); hotovo(); }catch(x){ toast('Zkopíruj prosím ručně'); } }
+          });
+        }).catch(function(){
+          kdDrBtn.disabled=false; kdDrBtn.textContent=t0;
+          out.innerHTML='<p class="muted" style="font-size:.85rem;">⚠️ Chyba spojení.</p>';
+        });
       });
       $('kdNoteSave').addEventListener('click',function(){
         var v=($('kdNote').value||'').trim(); if(!v) return;

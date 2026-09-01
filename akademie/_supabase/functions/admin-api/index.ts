@@ -317,6 +317,273 @@ async function listAllUsers(admin: ReturnType<typeof createClient>) {
   return users;
 }
 
+// =============================================================================
+// KONCEPT ODPOVĚDI NA TÝDENNÍ REPORT (bod E1 revize z 1. 9. 2026)
+//
+// Odpověď na report je Martinova největší opakovaná časová položka u koučinku.
+// Tahle část připraví KONCEPT. ⛔ Nic z toho nikdy neodchází klientovi: koncept se
+// jen uloží a ukáže v adminu, Martin ho přečte, přepíše a odešle SÁM ze své schránky.
+// Tabulka: `report_drafts` (migrace `akademie/_supabase/report-drafts.sql`).
+//
+// ⛔ ENGINE POČÍTÁ, AI MLUVÍ: všechna čísla v konceptu spočítá `rdFakta` níž z reportu
+// a ze zadání. Model dostane hotová čísla a smí je jen okomentovat, nikdy dopočítat.
+// =============================================================================
+
+// Provider je stejná abstrakce jako v edge fn `ai-martin` (klíč VŽDY z env, nikdy v kódu).
+// Když je nastavený XAI_API_KEY/GROK_API_KEY, jede Grok, jinak Anthropic.
+const RD_PROVIDER = (Deno.env.get("AI_MARTIN_PROVIDER") ??
+  ((Deno.env.get("XAI_API_KEY") || Deno.env.get("GROK_API_KEY")) ? "grok" : "anthropic")).toLowerCase();
+const RD_API_KEY = RD_PROVIDER === "grok"
+  ? (Deno.env.get("XAI_API_KEY") ?? Deno.env.get("GROK_API_KEY") ?? "")
+  : (Deno.env.get("ANTHROPIC_API_KEY") ?? "");
+const RD_MODEL = Deno.env.get("REPORT_DRAFT_MODEL") ??
+  (RD_PROVIDER === "grok" ? "grok-4-latest" : "claude-sonnet-5");
+const RD_TIMEOUT_MS = 30_000;   // delší čekání se nevyplatí, admin by visel naslepo
+const RD_ODSTUP_MIN = 10;       // ochrana nákladu: druhý klik do 10 minut vrátí ten samý koncept
+const RD_DELKA = "80 až 140 slov";
+
+// ⛔⛔ TADY SE MĚNÍ, JAK KONCEPT ZNÍ. Jinde v kódu žádný prompt není.
+// Pravidla hlasu jsou zkrácený výtah z `_Claude-dokumenty/HLAS-MARTINA.md` a z rozboru
+// osmi skutečných Martinových odpovědí (`_Claude-dokumenty/reporty-vzory-analyza.md`).
+// ⚠️ Skutečná Martinova odpověď má osobní část 1 500 až 3 500 znaků. Tenhle koncept je
+// schválně kratší jádro (tak zní zadání E1), zbytek si Martin doplní. Když se to má
+// prodloužit, mění se RD_DELKA výš a bod 3 níž, nic jiného.
+const RD_SYSTEM = [
+  "Jsi asistent Martina Barny, online výživového a fitness kouče z Česka.",
+  "Píšeš KONCEPT jeho odpovědi na týdenní report klienta. Koncept čte Martin, upraví ho a odešle sám.",
+  "Nikdy nepíšeš klientovi přímo a nikdy nic neodesíláš.",
+  "",
+  "HLAS:",
+  "- Tykej. Piš česky, mluvenou, ne úřední češtinou.",
+  "- Buď konkrétní: používej čísla z bloku FAKTA, nikdy obecné fráze typu 'skvělá práce, jen tak dál'.",
+  "- Martin nahlas přiznává nejistotu: 'počítám, že', 'je to nástřel', 'kdyžtak dej echo, kdybych byl mimo'.",
+  "- Občasné ':)' je v pořádku. Moderní emoji nikdy.",
+  "",
+  "ZAKÁZANÉ OBRATY (poznávací znaky AI textu):",
+  "- Dlouhá pomlčka nikde. Odděluj čárkou, dvojtečkou nebo krátkou pomlčkou.",
+  "- Žádné 'je důležité si uvědomit', 'nezapomeň, že', 'v neposlední řadě', 'klíčové je', 'na závěr'.",
+  "- Žádné trojice typu 'rychle, jednoduše a efektivně' a žádné 'nejen ..., ale i ...'.",
+  "- Nepiš předmět mailu, oslovení ani podpis. Jen tělo odpovědi.",
+  "",
+  "STAVBA KONCEPTU (v tomhle pořadí, " + RD_DELKA + "):",
+  "1. Jedna věta poděkování za report.",
+  "2. Jedna pochvala za konkrétní věc, kterou klient DRŽÍ, podloženou číslem z FAKT.",
+  "3. Jedna až dvě konkrétní úpravy na příští týden: co přesně udělat, ne obecná rada.",
+  "4. Otázka na konec, na kterou klient odpoví jednou větou.",
+  "",
+  "TVRDÁ PRAVIDLA:",
+  "- Čísla ber VÝHRADNĚ z bloku FAKTA. Nic nedopočítávej, nepřepočítávej a neodhaduj.",
+  "- NESMÍŠ měnit zadání (kalorie, bílkoviny, kroky, tréninky). Když si myslíš, že by se",
+  "  mělo změnit, napiš to do pole navrh_zmen, které čte JEN Martin. Do textu pro klienta to nepatří.",
+  "- Chybějící hodnota není nula. Co ve FAKTECH není, o tom nepiš.",
+  "- NEDIAGNOSTIKUJEŠ a nedáváš zdravotní rady. Jakmile je v reportu zmínka o lécích, těhotenství,",
+  "  poruchách příjmu potravy, bolesti, zranění nebo diagnóze, napiš jednu větu, že to Martin probere",
+  "  osobně, a nic k tomu neradíš. U zdravotního tématu vždy odkaz na Martina nebo na lékaře.",
+  "- Když je téma týdne prázdné, o žádné příloze ani tématu se nezmiňuj.",
+  "",
+  "ODPOVĚĎ VRAŤ JAKO ČISTÝ JSON, bez markdown bloku, přesně v tomhle tvaru:",
+  '{"draft":"text pro klienta","navrh_zmen":"co bych zvážil změnit v zadání, jen pro Martina, nebo prázdný řetězec"}',
+].join(NL);
+
+// Normalizace na porovnání (malá písmena, bez diakritiky), stejný trik jako ai-martin/preflag.ts.
+function rdNorm(s: unknown): string {
+  return String(s ?? "").toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").replace(/\s+/g, " ").trim();
+}
+// ⚠️ TOHLE NENÍ bezpečnostní brána chatu. Úplný seznam je `ai-martin/preflag.ts` a ten se
+// sem schválně nekopíruje (nechceme třetí verzi, která se tiše rozejde). Tohle je užší
+// seznam, který jen VYVĚSÍ Martinovi upozornění nad konceptem.
+const RD_CITLIVA: [string, string][] = [
+  ["tehotn", "těhotenství"], ["otehotn", "těhotenství"], ["kojim", "kojení"], ["kojen", "kojení"],
+  ["anorex", "porucha příjmu potravy"], ["bulimi", "porucha příjmu potravy"],
+  ["porucha prijmu", "porucha příjmu potravy"], ["poruchu prijmu", "porucha příjmu potravy"],
+  ["projimadl", "porucha příjmu potravy"], ["vyzvrac", "porucha příjmu potravy"],
+  ["lek na", "léky"], ["leky na", "léky"], ["prasky na", "léky"], ["prasek na", "léky"],
+  ["beru lek", "léky"], ["na predpis", "léky"], ["antidepres", "léky"], ["antikoncepc", "léky"],
+  ["ozempi", "léky"], ["semaglutid", "léky"], ["mounjaro", "léky"], ["wegovy", "léky"], ["saxend", "léky"],
+  ["stitn", "diagnóza"], ["hashimot", "diagnóza"], ["diabet", "diagnóza"], ["cukrovk", "diagnóza"],
+  ["depres", "diagnóza"], ["uzkost", "diagnóza"], ["diagnoz", "diagnóza"],
+  ["bolest", "bolest nebo zranění"], ["boli me", "bolest nebo zranění"], ["zranen", "bolest nebo zranění"],
+  ["plotenk", "bolest nebo zranění"], ["operac", "bolest nebo zranění"], ["uraz", "bolest nebo zranění"],
+];
+function rdUpozorneni(texty: string[]): string[] {
+  const hay = rdNorm(texty.filter(Boolean).join(" "));
+  const out: string[] = [];
+  for (const [k, popis] of RD_CITLIVA) if (hay.includes(k) && !out.includes(popis)) out.push(popis);
+  return out;
+}
+
+// Číslo z JSONu reportu. Prázdný řetězec i null musí zůstat null, nikdy 0
+// (stejná past, jakou 3. 8. řešil `kliNum` v adminu).
+function rdNum(v: unknown): number | null {
+  if (v === null || v === undefined || v === "") return null;
+  const n = Number(String(v).replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+}
+const rdFmt = (v: number | null, jed = ""): string =>
+  v === null ? "neuvedeno" : (Math.round(v * 10) / 10).toString().replace(".", ",") + (jed ? " " + jed : "");
+// Tvar "128 g (cíl 140 g, o 12 g níž)". Rozdíl počítá kód, ne model.
+function rdProtiCili(v: number | null, cil: number | null, jed: string): string {
+  if (v === null) return "neuvedeno";
+  if (cil === null) return rdFmt(v, jed) + " (cíl není nastavený)";
+  const d = Math.round((v - cil) * 10) / 10;
+  const smer = d === 0 ? "přesně na cíli" : d > 0 ? "o " + rdFmt(Math.abs(d), jed) + " výš" : "o " + rdFmt(Math.abs(d), jed) + " níž";
+  return rdFmt(v, jed) + " (cíl " + rdFmt(cil, jed) + ", " + smer + ")";
+}
+
+type RdRow = Record<string, unknown>;
+const rdJ = (r: RdRow, k: string): Record<string, unknown> => (r[k] ?? {}) as Record<string, unknown>;
+
+/** Deterministický blok FAKTA. Model dostane hotová čísla a smí je jen okomentovat. */
+function rdFakta(rep: RdRow, drive: RdRow[], tg: RdRow | null, intake: RdRow | null, app: RdRow | null, poradi: number, tema: string): string {
+  const m = rdJ(rep, "measurements"), n = rdJ(rep, "nutrition"), a = rdJ(rep, "activity"), s = rdJ(rep, "scales"), t = rdJ(rep, "notes");
+  const prev = drive[0] ?? null;                       // nejbližší starší report
+  const L: string[] = [];
+  L.push("KLIENT: " + String(rep.email) + " · tohle je jeho " + poradi + ". report · kanál " + String(rep.source ?? "?"));
+  L.push("DATUM REPORTU: " + String(rep.report_date));
+  L.push("TÉMA TÝDNE OD MARTINA: " + (tema ? tema : "nezadané, o příloze ani tématu nepiš"));
+
+  const cil = (k: string) => (tg ? rdNum(tg[k]) : null);
+  // ⛔ Rádek `client_targets` může existovat a být celý prázdný (1. 9. 2026: žádný z 6 neměl
+  // vyplněné sacharidy, tuky ani vlákninu). Prázdný výčet se musí číst jako "cíl není", ne jako nula.
+  const zadaniList = [["kcal", "kcal"], ["protein", "g bílkovin"], ["carbs", "g sacharidů"], ["fat", "g tuků"],
+    ["fiber", "g vlákniny"], ["kroky", "kroků/den"], ["sport_min", "min sportu/týden"], ["treninky", "tréninků/týden"]]
+    .map(([k, j]) => (cil(k) === null ? null : rdFmt(cil(k), j))).filter(Boolean);
+  L.push(zadaniList.length
+    ? "ZADÁNÍ OD MARTINA: " + zadaniList.join(", ")
+    : "ZADÁNÍ OD MARTINA: není nastavené, o odchylkách od cíle tedy nepiš");
+
+  const vaha = rdNum(rep.weight), vahaPrev = prev ? rdNum(prev.weight) : null;
+  L.push("VÁHA: " + rdFmt(vaha, "kg") +
+    (vaha !== null && vahaPrev !== null
+      ? " (minule " + rdFmt(vahaPrev, "kg") + ", změna " + (vaha - vahaPrev >= 0 ? "+" : "-") + rdFmt(Math.abs(vaha - vahaPrev), "kg") + ")"
+      : ""));
+
+  const mPrev = prev ? rdJ(prev, "measurements") : {};
+  const miry = [["prsa", "hruď"], ["pas", "pas"], ["boky", "boky"], ["zadek", "zadek"], ["p_stehno", "pravé stehno"], ["l_stehno", "levé stehno"]]
+    .map(([k, jm]) => {
+      const v = rdNum(m[k]);
+      if (v === null) return null;
+      const p = rdNum(mPrev[k]);
+      return jm + " " + rdFmt(v, "cm") + (p !== null ? " (změna " + (v - p >= 0 ? "+" : "-") + rdFmt(Math.abs(v - p), "cm") + ")" : "");
+    }).filter(Boolean);
+  L.push("MÍRY: " + (miry.length ? miry.join(", ") : "neuvedeny"));
+
+  L.push("JÍDLO (průměr týdne): kcal " + rdProtiCili(rdNum(n.kcal), cil("kcal"), "kcal") +
+    " · bílkoviny " + rdProtiCili(rdNum(n.protein), cil("protein"), "g") +
+    " · vláknina " + rdProtiCili(rdNum(n.fiber), cil("fiber"), "g") +
+    " · sacharidy " + rdFmt(rdNum(n.carbs), "g") + " · tuky " + rdFmt(rdNum(n.fat), "g") +
+    " · zapsaných dní " + rdFmt(rdNum(n.dny_zapsano)));
+
+  // Starý import z Excelu nemá `sport_min`, ale má `fitko_min` + `kardio_min` (táž jednotka).
+  let sportMin = rdNum(a.sport_min);
+  if (sportMin === null && (rdNum(a.fitko_min) !== null || rdNum(a.kardio_min) !== null)) {
+    sportMin = (rdNum(a.fitko_min) ?? 0) + (rdNum(a.kardio_min) ?? 0);
+  }
+  L.push("POHYB: kroky " + rdProtiCili(rdNum(a.kroky), cil("kroky"), "kroků/den") +
+    " · sport " + rdProtiCili(sportMin, cil("sport_min"), "min") +
+    " · tréninků " + rdProtiCili(rdNum(a.fitko), cil("treninky"), "×"));
+
+  // ⛔ Škály nemají všechny stejný směr (síla sjednocena 18. 8. 2026 na 1 = nejlíp, ale
+  // spánek a dodržení jedou obráceně). Model si to nesmí domýšlet, proto je směr u každé.
+  L.push("ŠKÁLY 1 až 5, u každé je napsáno, co je která strana: " +
+    "únava " + rdFmt(rdNum(s.unava)) + " (1 = čerstvý, 5 = vyřízený)" +
+    " · hlad " + rdFmt(rdNum(s.hlad)) + " (1 = žádný, 5 = pořád)" +
+    " · síla v tréninku " + rdFmt(rdNum(s.sila)) + " (1 = nabušeno, 5 = slabota)" +
+    " · kvalita spánku " + rdFmt(rdNum(s.spanek_kvalita)) + " (1 = mizerná, 5 = výborná)" +
+    " · spánek " + rdFmt(rdNum(s.spanek_h), "h") +
+    " · dodržení plánu " + rdFmt(rdNum(s.dodrzeni)) + " (1 = vůbec, 5 = na 100 %)");
+
+  const pnPrev = prev ? ((rdJ(prev, "activity").plan_next ?? {}) as Record<string, unknown>) : {};
+  if (rdNum(pnPrev.kroky) !== null || rdNum(pnPrev.sport_min) !== null) {
+    L.push("CO SI KLIENT SÁM SLÍBIL MINULÝ TÝDEN: " + rdFmt(rdNum(pnPrev.kroky), "kroků/den") + " a " + rdFmt(rdNum(pnPrev.sport_min), "min sportu"));
+  }
+  const pn = (a.plan_next ?? {}) as Record<string, unknown>;
+  if (rdNum(pn.kroky) !== null || rdNum(pn.sport_min) !== null) {
+    L.push("CO SI SLIBUJE NA PŘÍŠTÍ TÝDEN: " + rdFmt(rdNum(pn.kroky), "kroků/den") + " a " + rdFmt(rdNum(pn.sport_min), "min sportu"));
+  }
+
+  const slovne = [["povedlo", "co se povedlo"], ["drhlo", "co drhlo"], ["otazky", "otázky"], ["dalsi", "cokoli dalšího"]]
+    .map(([k, jm]) => { const v = String(t[k] ?? "").trim(); return v ? jm + ": " + v.slice(0, 700) : null; }).filter(Boolean);
+  L.push("KLIENT NAPSAL VLASTNÍMI SLOVY: " + (slovne.length ? slovne.join(" | ") : "nic nenapsal"));
+
+  if (drive.length) {
+    L.push("PŘEDCHOZÍ TÝDNY, od nejnovějšího: " + drive.map((r) => {
+      const rn = rdJ(r, "nutrition"), ra = rdJ(r, "activity");
+      return String(r.report_date) + ": váha " + rdFmt(rdNum(r.weight), "kg") + ", " + rdFmt(rdNum(rn.kcal), "kcal") + ", " + rdFmt(rdNum(ra.kroky), "kroků");
+    }).join(" | "));
+  }
+
+  if (app && app.found !== false) {
+    const avg = (app.avg ?? null) as Record<string, unknown> | null;
+    if (avg) {
+      L.push("APPKA TVŮJ COACH, posledních 14 dní (zapsáno " + rdFmt(rdNum(app.dny_zapsano)) + " dní): " +
+        rdFmt(rdNum(avg.kcal), "kcal") + ", bílkoviny " + rdFmt(rdNum(avg.protein), "g") + ", vláknina " + rdFmt(rdNum(avg.fiber), "g"));
+    }
+  }
+
+  if (intake) {
+    const d = rdJ(intake, "data");
+    const zdr = [["zdravi", "omezení"], ["leky", "léky"], ["alergie", "alergie"]]
+      .map(([k, jm]) => { const v = String(d[k] ?? "").trim(); return v ? jm + ": " + v.slice(0, 300) : null; }).filter(Boolean);
+    if (zdr.length) L.push("ZE VSTUPNÍHO DOTAZNÍKU, jen kontext, NERADÍŠ k tomu: " + zdr.join(" | "));
+    const cilTxt = String(d.cil ?? "").trim();
+    if (cilTxt) L.push("CÍL KLIENTA Z DOTAZNÍKU: " + cilTxt.slice(0, 300));
+  }
+  return L.join(NL);
+}
+
+/** Zavolá poskytovatele podle RD_PROVIDER a vrátí syrový text. Timeout je v AbortSignal. */
+async function rdCallAI(userPrompt: string): Promise<string> {
+  const sig = AbortSignal.timeout(RD_TIMEOUT_MS);
+  if (RD_PROVIDER === "grok") {
+    const r = await fetch("https://api.x.ai/v1/chat/completions", {
+      method: "POST",
+      headers: { authorization: "Bearer " + RD_API_KEY, "content-type": "application/json" },
+      body: JSON.stringify({
+        model: RD_MODEL,
+        max_tokens: 1200,
+        temperature: 0.4,
+        messages: [{ role: "system", content: RD_SYSTEM }, { role: "user", content: userPrompt }],
+      }),
+      signal: sig,
+    });
+    if (!r.ok) throw new Error("ai-" + r.status);
+    const d = await r.json();
+    return String(d?.choices?.[0]?.message?.content ?? "");
+  }
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "x-api-key": RD_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+    body: JSON.stringify({
+      model: RD_MODEL,
+      max_tokens: 1200,
+      temperature: 0.4,
+      system: RD_SYSTEM,
+      messages: [{ role: "user", content: userPrompt }],
+    }),
+    signal: sig,
+  });
+  if (!r.ok) throw new Error("ai-" + r.status);
+  const d = await r.json();
+  return String(d?.content?.[0]?.text ?? "");
+}
+
+// Pojistka na dlouhou pomlčku: každý AI přepis ji vrací, i když ji prompt zakazuje.
+const rdBezPomlcky = (s: string) => s.split("—").join(" - ").split("–").join("-");
+
+/** Model má vracet čistý JSON. Když ho zabalí do markdownu nebo do věty, vytáhneme ho. */
+function rdParse(raw: string): { draft: string; navrh_zmen: string } {
+  const t = raw.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+  const a = t.indexOf("{"), b = t.lastIndexOf("}");
+  if (a >= 0 && b > a) {
+    try {
+      const o = JSON.parse(t.slice(a, b + 1));
+      return { draft: rdBezPomlcky(String(o.draft ?? "").trim()), navrh_zmen: rdBezPomlcky(String(o.navrh_zmen ?? "").trim()) };
+    } catch { /* spadne na fallback níž */ }
+  }
+  return { draft: rdBezPomlcky(t), navrh_zmen: "" };   // radši celý text než prázdno
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -1676,6 +1943,111 @@ Deno.serve(async (req) => {
       // stará verze app endpointu neznámou akci tiše bere jako grant → poznáme podle action v odpovědi
       if (jj.action && jj.action !== "weekly-summary" && !("dny" in jj) && !("found" in jj)) return json({ ok: false, reason: "app-neumi" });
       return json({ ok: true, data: jj });
+    }
+
+    // KONCEPT ODPOVĚDI NA REPORT (E1, 1. 9. 2026). Podrobnosti v hlavičce u RD_SYSTEM výš.
+    // ⛔ Tahle akce NIKDY nic neodesílá. Vrátí text, uloží ho do `report_drafts` a končí.
+    // Odesílá výhradně Martin ručně ze své schránky.
+    if (action === "report_draft") {
+      const reportId = String(body.report_id ?? "").trim();
+      if (!/^[0-9a-fA-F-]{36}$/.test(reportId)) return json({ error: "no_report_id" }, 400);
+      // ⛔ Téma týdne je VSTUP, nikdy se neodvozuje. Martin ho v pondělí posílá všem naráz
+      // a u někoho ho schválně prohodí (změřeno 27. 7. 2026 na skutečné poště).
+      const tema = String(body.tema ?? "").trim().slice(0, 200);
+
+      const { data: rep } = await admin.from("client_reports").select("*").eq("id", reportId).maybeSingle();
+      if (!rep) return json({ error: "report_nenalezen" }, 404);
+      const email = low(rep.email);
+
+      // Ochrana nákladu: druhý klik do RD_ODSTUP_MIN minut AI nevolá, vrátí ten samý koncept.
+      const { data: last, error: lastErr } = await admin.from("report_drafts")
+        .select("draft, meta, created_at").eq("report_id", reportId)
+        .order("created_at", { ascending: false }).limit(1).maybeSingle();
+      // ⛔ Bez té tabulky by strop "1 koncept za 10 minut" neexistoval a každý klik by platil AI.
+      // Radši nenapíšeme nic, než abychom tiše jeli bez pojistky. Migrace: report-drafts.sql.
+      if (lastErr) return json({ error: "chybi_tabulka", detail: String(lastErr.message).slice(0, 200) }, 503);
+      if (last && Date.now() - Date.parse(String(last.created_at)) < RD_ODSTUP_MIN * 60_000) {
+        const meta = (last.meta ?? {}) as Record<string, unknown>;
+        return json({
+          ok: true, znovu: true, draft: String(last.draft ?? ""),
+          navrh_zmen: String(meta.navrh_zmen ?? ""),
+          upozorneni: Array.isArray(meta.upozorneni) ? meta.upozorneni : [],
+        });
+      }
+      if (!RD_API_KEY) {
+        return json({ error: "chybi_klic", detail: "V projektu chybí ANTHROPIC_API_KEY nebo XAI_API_KEY." }, 503);
+      }
+
+      // Kontext: 4 nejbližší starší reporty, zadání, vstupní dotazník. Pořadí reportu
+      // (kolikátý je) se počítá zvlášť, protože první report má u Martina vlastní režii.
+      const [driveRes, tgRes, intakeRes, poradiRes] = await Promise.all([
+        admin.from("client_reports").select("report_date, weight, measurements, nutrition, activity, scales")
+          .eq("email", email).lt("report_date", String(rep.report_date))
+          .order("report_date", { ascending: false }).limit(4),
+        admin.from("client_targets").select("*").eq("email", email).maybeSingle(),
+        admin.from("client_intake").select("data").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+        admin.from("client_reports").select("id", { count: "exact", head: true })
+          .eq("email", email).lte("report_date", String(rep.report_date)),
+      ]);
+
+      // Data z appky Tvůj Coach jsou bonus, ne podmínka: má ji jen část koučinkových klientů.
+      // Když appka nevrátí nic, koncept se napíše bez ní a nikde se to nehlásí jako chyba.
+      let appData: Record<string, unknown> | null = null;
+      try {
+        const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+        const gsec = gs?.value ? String(gs.value) : "";
+        if (gsec) {
+          const ar = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+            method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+            body: JSON.stringify({ email, action: "weekly-summary", days: 14 }),
+            signal: AbortSignal.timeout(8_000),
+          });
+          if (ar.ok) {
+            const aj = await ar.json().catch(() => null);
+            if (aj && aj.ok !== false && ("dny" in aj || "found" in aj || "avg" in aj)) appData = aj;
+          }
+        }
+      } catch { /* appka je bonus, výpadek koncept neshodí */ }
+
+      const nRep = rdJ(rep as Record<string, unknown>, "notes");
+      const iData = intakeRes.data ? rdJ(intakeRes.data as Record<string, unknown>, "data") : {};
+      const upozorneni = rdUpozorneni([
+        String(nRep.povedlo ?? ""), String(nRep.drhlo ?? ""), String(nRep.otazky ?? ""), String(nRep.dalsi ?? ""),
+        String(iData.zdravi ?? ""), String(iData.leky ?? ""), String(iData.alergie ?? ""),
+      ]);
+
+      const fakta = rdFakta(
+        rep as Record<string, unknown>,
+        (driveRes.data ?? []) as Record<string, unknown>[],
+        (tgRes.data ?? null) as Record<string, unknown> | null,
+        (intakeRes.data ?? null) as Record<string, unknown> | null,
+        appData,
+        Number(poradiRes.count ?? 1) || 1,
+        tema,
+      );
+      const userPrompt = "FAKTA (jediný zdroj čísel):" + NL + fakta + NL + NL +
+        (upozorneni.length
+          ? "CITLIVÁ TÉMATA V REPORTU: " + upozorneni.join(", ") + "." + NL +
+            "K nim NIC neradíš. Napiš jednu větu, že se na to Martin ozve osobně." + NL + NL
+          : "") +
+        "Napiš koncept odpovědi podle pravidel výš a vrať ho jako JSON.";
+
+      let raw = "";
+      try {
+        raw = await rdCallAI(userPrompt);
+      } catch (e) {
+        // Timeout i chyba poskytovatele končí hláškou v adminu, ne pádem stránky.
+        return json({ error: "ai_nedostupne", detail: String(e).slice(0, 200) }, 502);
+      }
+      const { draft, navrh_zmen } = rdParse(raw);
+      if (!draft) return json({ error: "ai_prazdno" }, 502);
+
+      const { error: insErr } = await admin.from("report_drafts").insert({
+        report_id: reportId, client_email: email, draft,
+        meta: { provider: RD_PROVIDER, model: RD_MODEL, tema, navrh_zmen, upozorneni, poradi: Number(poradiRes.count ?? 1) || 1 },
+      });
+      // Neuložený koncept není důvod ho Martinovi zatajit, jen se o tom musí vědět.
+      return json({ ok: true, draft, navrh_zmen, upozorneni, ulozeno: !insErr, model: RD_MODEL });
     }
 
     if (action === "client_invite") {
