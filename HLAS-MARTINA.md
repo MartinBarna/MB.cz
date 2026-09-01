@@ -33,7 +33,22 @@ Tykání. Empowering, anti-shame. Bez vykřičníků a clickbaitu. Emoji stříd
 4. ⛔ Absolutna: „musí/vždy/nikdy/zaručeně/100%/jediný způsob" → změkčit
    („u většiny klientů", „pro něj rychlejší cesta").
 5. ⛔ „Tady je proč..." v těle textu; uhlazené přechody (lidi píší zlomenějc).
+6. ⛔ „Pojďme se ponořit", „tapisérie/mozaika možností", „V dnešní (uspěchané) době",
+   „Ať už jsi X, nebo Y", „Věc se má tak", „Doufám, že to pomůže", „Po zralé úvaze",
+   „jen krátký update". Vata, škrtnout a začít pointou. (Doplněno 1. 9. 2026.)
+7. ⛔ „Většina lidí..." jako líné zobecnění bez dat → konkrétní číslo nebo pozorování z praxe.
+8. ⛔ Adverbia polidšťující věci: „appka tiše hlídá", „X elegantně řeší Y". Věci nic
+   nedělají potichu ani elegantně.
+9. ⛔ „Robustní / bezešvý / revoluční / game-changer" → česky a konkrétně, co to dělá.
 Test každé věty: „Řekl by tohle Martin klientovi, nebo to zní jako landing page z 2023?"
+
+## Postup nad textem (šest průchodů, doplněno 1. 9. 2026)
+1. Draft v Martinově hlase podle tohohle souboru, ne v defaultu modelu.
+2. Před psaním si načíst 3-5 Martinových SKUTEČNÝCH postů/mailů k tématu a psát vedle nich.
+3. Editorský průchod: každá věta a slovo si musí místo zasloužit, jinak ven.
+4. Fakta: každé číslo a citaci dohledat ke zdroji; čísla o firmě měřit v DB, neopisovat.
+5. Anti-AI rytmus: rozbít stejně dlouhé věty a symetrické odstavce, projet zákazy výše.
+6. Druhé čtení s odstupem: označit a spravit slabé věty dřív, než je uvidí čtenář.
 
 ## Odborné pozice (NEPŘEPISOVAT proti nim)
 - CICO/deficit je top priorita, „termodynamika neselhává". Pomůcky (spánek, sladidla,
