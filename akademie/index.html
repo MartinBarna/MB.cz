@@ -65,6 +65,12 @@
            jen první polovina úvodu a kotva na moduly; obsah se nikam neztrácí, kdo scrolluje,
            projde stejné sekce. Na desktopu je text i tlačítko beze změny. */
         @media (max-width:576px) { .ac-hero .lead-vic, .ac-hero .hero-kotva { display:none; } }
+        /* Sběr e-mailu pod ceníkem. Pole jsou bílá s tmavým textem, ať drží kontrast
+           v tmavém i světlém motivu (ba-theme-light.css přebíjí inline barvy !důležitě). */
+        .ac-kit { max-width:620px; margin:2.4rem auto 0; background:rgba(235,177,44,.08); border:1px solid rgba(235,177,44,.35); border-radius:20px; padding:24px 22px; }
+        .ac-kit label { display:block; font-weight:600; margin:14px 0 6px; }
+        .ac-kit input, .ac-kit select { width:100%; box-sizing:border-box; padding:13px 14px; border:1px solid rgba(0,0,0,.18); border-radius:10px; background:#fff; color:#161616; font-family:inherit; font-size:1rem; }
+        .ac-kit input:focus, .ac-kit select:focus { border-color:var(--gold); outline:none; }
         /* trimmed bootstrap build nema display utility -> mobilni "Koupit" tlacitko skryj na desktopu rucne */
         @media (min-width:1200px) { .navbar .d-xl-none { display:none !important; } }
         .ac-meta { display:flex; flex-wrap:wrap; gap:1.6rem; margin-top:2rem; }
@@ -193,7 +199,7 @@
       }
     }
     </script>
-    <script defer src="/assets/analytics.js?v=g15"></script><script defer src="/assets/referral.js?v=g3"></script>
+    <script defer src="/assets/analytics.js?v=g15"></script><script defer src="/assets/referral.js?v=g3"></script><script defer src="/assets/lead-form.js?v=g6"></script>
     <script src="/assets/ba-theme.js"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r3">
     <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l6">
@@ -794,6 +800,29 @@
             </div>
 
             <p style="opacity:.72;font-size:.83rem;margin:.9rem 0 0;text-align:center;">Prvních 50 členů má status <strong style="color:#e8d8c8;">zakládajícího člena</strong> Academy.</p>
+            <!-- ⭐ SBĚR E-MAILU (1. 9. 2026). Do teď měl návštěvník jen dvě možnosti: zaplatit hned,
+                 nebo odejít navždy. Formulář je stejný mechanismus jako na /pro-trenery/
+                 (`assets/lead-form.js` → edge funkce `lead-capture`), žádný nový endpoint.
+                 ⛔ O TRATI ROZHODUJE `data-segment`, NE `data-source`. `segment="trener"` posílá
+                 leada do existující tratě `trener-kit` (kit zdarma, pak čísla k Academy), která
+                 se podle `pravidla.ts` sama zastaví, jakmile člověk Academy koupí. Kdyby tu bylo
+                 jen `data-source="academy-zajemce"`, spadl by do výchozí tratě `lead-magnet`,
+                 která slibuje sedmidenní jídelníček a prodává videokurz. `data-source` je tady
+                 jen na to, aby šlo v `leads` poznat, že přišel z ceníku Academy.
+                 ⚠️ Text bloku musí sedět s tím, co trať doopravdy pošle (startovací kit). -->
+            <div class="ac-kit" id="kit-academy">
+                <h3 style="color:#fff;font-size:1.15rem;margin:0 0 .5rem;">Ještě váháš? Začni startovacím kitem</h3>
+                <p style="color:#cfcabf;font-size:.95rem;line-height:1.6;margin:0 0 .4rem;">Pošlu ti na e-mail čtyři věci, které používám u vlastních klientů: vstupní dotazník, osnovu první konzultace, týdenní check-in a postup, jak sehnat prvních pět klientů. Zdarma. Pak ti napíšu, jak u mě vypadá práce s klientem, a pošlu konkrétní čísla k Academy.</p>
+                <form data-lead-form data-segment="trener" data-source="academy-zajemce" data-pdf="/download/startovaci-kit-trener.pdf" data-noun="Kit" data-upsell='Až budeš chtít celý systém, cena je <a href="#cena" style="color:#F6CD63;text-decoration:underline;">kousek výš</a>.'>
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
+                    <label>Jméno <input name="name" type="text" required autocomplete="given-name" placeholder="Jak ti mám říkat?"></label>
+                    <label>E-mail <input name="email" type="email" required autocomplete="email" placeholder="Kam ti mám kit poslat?"></label>
+                    <label>Kde teď jsi? <span style="font-weight:500;opacity:.7;">(nepovinné)</span> <select name="goal"><option value="">- vyber -</option><option>Začínám, klienty ještě nemám</option><option>Mám prvních pár klientů</option><option>Mám praxi a chci růst</option></select></label>
+                    <button type="submit" class="btn-gold w-100" style="margin-top:16px;">Poslat startovací kit zdarma →</button>
+                    <p data-msg style="font-size:.86rem;margin:8px 0 0;text-align:center;"></p>
+                    <p style="font-size:.76rem;opacity:.72;margin:8px 0 0;text-align:center;">Odesláním souhlasíš se zasláním kitu a občasných tipů pro trenérskou praxi. Odhlásit se můžeš kdykoli.</p>
+                </form>
+            </div>
         </div>
     </section>
 
