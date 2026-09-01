@@ -229,8 +229,28 @@
     <div class="wrap">
         <span class="badge">📱 Appka Tvůj Coach</span>
         <h1>Kouč v&nbsp;kapse, který vidí jídlo i&nbsp;trénink</h1>
-        <!-- ⛔⛔ [2026-08-21] TADY SE SLIBOVALA ZKUŠEBKA, KTERÁ UŽ NEEXISTUJE.
-             Do 21. 8. ráno stálo v leadu „Prvních 14 dní máš plnou verzi zdarma a bez
+        <!-- ⭐ [2026-09-01] POŘADÍ JE ZÁMĚRNÉ: tlačítka jsou HNED POD H1, lead odstavec až
+             pod nimi. Do dneška stál mezi nadpisem a tlačítky osmiřádkový lead a bonusový
+             box, takže hlavní tlačítko začínalo na y 676. Cookie lišta zabírá na 375x812
+             pásmo 444 až 720 px, tedy tlačítko zakrývala přesně prvnímu návštěvníkovi,
+             který přijde z reklamy, a ten lištu vidí vždycky. Lišta se nezkracovala
+             (obsah souhlasu se krátit nemá, měřeno: ani po maximálním zúžení CSS neklesne
+             pod 197 px), tak uhnulo tlačítko.
+             ⛔ Kdo sem vrací text nad tlačítka, přeměří y horní hrany tlačítka na 375 px.
+             Nad ~420 px ho cookie lišta zase překryje. -->
+        <div class="btn-row">
+            <a class="btn btn-acc" href="https://tvujcoach.cz/?plan=basic">Vzít si Basic →</a>
+            <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">S AI koučem →</a>
+        </div>
+        <!-- Bonus k první platbě, živý od 18. 8. 2026 (most `app-purchase-bridge` v5).
+             Stál PŘED tlačítky, dokud tlačítka ležela až pod leadem: byl to důvod, proč
+             kliknout. Teď jsou tlačítka nahoře a bonus nad nimi by je posunul zpátky
+             do pásma cookie lišty, tak je hned POD nimi. Pořád v jednom pohledu
+             s tlačítky, ale rozhodnutí už nic neodsouvá. -->
+        <p class="hero-bonus">🎁 <b>Ke každé první platbě dostaneš videokurz výživy za 800 Kč zdarma</b>, a zůstane ti napořád. K ročnímu VIP navíc měsíc Barna Academy.</p>
+        <div class="trust"><span>✓ Free verze napořád, i bez placení</span><span>✓ 600+ klientů od 2013</span><span>✓ Zrušíš kdykoliv</span></div>
+        <!-- ⛔⛔ [2026-08-21] V LEADU SE SLIBOVALA ZKUŠEBKA, KTERÁ UŽ NEEXISTUJE.
+             Do 21. 8. ráno tu stálo „Prvních 14 dní máš plnou verzi zdarma a bez
              karty", hlavní tlačítko bylo „Vyzkoušej 14 dní zdarma" a v pásu důvěry
              „✓ 14 dní plná verze bez karty". Zkušebka byla zrušena 20. 8. večer
              (migrace `20260820224500`), takže tahle stránka lidem slibovala něco, co
@@ -240,14 +260,6 @@
              generátory. Free zůstává napořád, jen se přestalo nabízet první.
              Proč Basic a ne VIP: paměť `tvujcoach-basic-je-hlavni-produkt`. -->
         <p class="lead">Tělo se mění v měsících a přesně tak je appka postavená. Pracuje s řadou týdnů: každý týden se podívá na tvoji váhu a na tvoje zápisy a podle toho ti pohne kaloriemi a makry. K tomu ti poskládá jídelníček i trénink na míru. Za rok z toho vyjde něco, co ti jeden jídelníček nedá.</p>
-        <!-- Bonus k první platbě, živý od 18. 8. 2026 (most `app-purchase-bridge` v5).
-             Stojí PŘED tlačítky schválně: je to důvod, proč kliknout na nákup. -->
-        <p class="hero-bonus">🎁 <b>Ke každé první platbě dostaneš videokurz výživy za 800 Kč zdarma</b>, a zůstane ti napořád. K ročnímu VIP navíc měsíc Barna Academy.</p>
-        <div class="btn-row">
-            <a class="btn btn-acc" href="https://tvujcoach.cz/?plan=basic">Vzít si Basic →</a>
-            <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">S AI koučem →</a>
-        </div>
-        <div class="trust"><span>✓ Free verze napořád, i bez placení</span><span>✓ 600+ klientů od 2013</span><span>✓ Zrušíš kdykoliv</span></div>
         <!-- Prihlaseni do APPKY. Puvodne bylo druhym tlacitkem v hero sekci; to je ted kotva
              na cenik, takze by cesta dovnitr zmizela. „Prihlasit" v navigaci vede do ACADEMY
              (/akademie/prihlaseni/), ne do appky, takze vracejici se uzivatel by zustal bez
