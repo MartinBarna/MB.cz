@@ -380,6 +380,21 @@ Deno.serve(async (req) => {
       admin.from("client_targets").select("email,kcal,protein"),
       admin.from("customer_contacts").select("email,name"),
     ]);
+    // ⛔ Chybu dotazu NIKDY nespolknout. `x.data ?? []` udělá z rozbitého dotazu
+    // prázdný seznam, takže by mail hlásil „Aktivních klientů 0" a vypadal by,
+    // že je klid. Táž tichá vada se v tomhle souboru už jednou stala u počítadla
+    // zakládajících (28. 7. 2026, `select` neexistujícího sloupce).
+    const chybyDotazu: string[] = [];
+    if (entsC.error) chybyDotazu.push("entitlements (" + entsC.error.message + ")");
+    if (repsC.error) chybyDotazu.push("client_reports (" + repsC.error.message + ")");
+    if (tgsC.error) chybyDotazu.push("client_targets (" + tgsC.error.message + ")");
+    if (contactsC.error) chybyDotazu.push("customer_contacts (" + contactsC.error.message + ")");
+    if (chybyDotazu.length) {
+      alerts += warn("🔴 KOUČINKOVÝ BLOK NEPŘEČETL VŠECHNA DATA: " + chybyDotazu.join(", ") +
+        ". Čísla o klientech pod tím jsou tím pádem nižší, než mají být, a nula tam dnes " +
+        "neznamená klid. Ber je jako neplatná a řekni Claudovi, ať to prověří.");
+    }
+
     const nowMs = now.getTime();
     // ⚠️ `active` samo nestačí: skončený koučink má `active` dál true a jen prošlé
     // `expires_at`. Bez té podmínky by Martin dostával seznam bývalých klientů.
