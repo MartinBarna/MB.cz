@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "A ještě jeden mýtus", "title": "Zvyk prý<br>efekt zabije", "body": "Traduje se, že kdo pije kafe denně, z předtréninkové dávky nevytěží nic.<br><br>Metaanalýza 60 studií (Carvalho 2022) to <b>nepotvrdila</b>. Běžný denní příjem akutní efekt neruší." },
     { "kind": "vs", "kicker": "Prakticky", "title": "Nástroj,<br>nebo zvyk?", "yes": { "h": "Funguje jako nástroj", "items": ["<b>3 až 6 mg/kg</b> zhruba hodinu před výkonem", "Nasadíš ho, když na výkonu fakt záleží", "Počítáš i kofein z kávy a energiťáků"] }, "no": { "h": "Jede jen ze zvyku", "items": ["Kafe ráno co ráno bez ohledu na trénink", "Dáš si hrnek a čekáš zázrak", "Pozdě odpoledne, pak nespíš"] } },
     { "kind": "quote", "text": "Kofein zabere. Míň, než čekáš, a ne proto, že v něj věříš.", "note": "Efekt je reálný, ale malý. Rozhoduje trénink, jídlo a spánek, ne hrnek před dřepem." },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 1 490 Kč)</b>"] }
   ]
 }

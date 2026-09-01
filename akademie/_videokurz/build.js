@@ -1,4 +1,11 @@
-// Videokurz builder — z videos.tsv vygeneruje nástěnku + stránku každého videa.
+// Videokurz builder: z videos.tsv vygeneruje nástěnku + stránku každého videa.
+// ⛔ POZOR (1. 9. 2026): tenhle builder je ROZEŠLÝ s tím, co je v akademie/videokurz/.
+// Zkušební běh přepsáním vrátí 183 souborů o kus zpátky: staré favicony (favicon.ico místo
+// favicon-g3.ico), staré verze skriptů (ba-academy.js?v=20260702c, scroll-top.js bez ?v),
+// dlouhé pomlčky v titulcích i textech a ztrátu atributu data-upsell="videokurz"
+// (bez něj vidí majitel kurzu nabídku, ať si ho koupí znovu). Cena a odkaz tu jsou
+// srovnané s webem, ZBYTEK NE: před příštím během se builder musí nejdřív doladit
+// podle živých stránek, jinak web spadne o měsíce zpátky.
 // Mechanické (žádné agenty): vloží YouTube embed do branded šablony.
 const fs = require('fs');
 const path = require('path');
@@ -117,7 +124,7 @@ SECTIONS.forEach(s => {
 ordered.forEach((v, i) => { v.n = i + 1; v.slug = 'v' + String(i + 1).padStart(3, '0'); v.lid = 'vk-' + v.slug; });
 // Free tier (#35/#37): ochutnávka napříč kurzem — Modul 1 první 4 lekce + první lekce
 // z každého dalšího modulu (m2–m8), ať návštěvník vidí šíři kurzu → silnější upsell na koupi.
-const BUY_URL = 'https://buy.stripe.com/dRmeVcbnpaZs5VedBZ3ks06?locale=cs';
+const BUY_URL = 'https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs';
 const _secSeen = {};
 ordered.forEach((v) => {
   const k = v.sec; _secSeen[k] = (_secSeen[k] || 0) + 1; const idx = _secSeen[k];
@@ -195,7 +202,7 @@ function videoPage(v) {
 
     <div class="nav">${navPrev || '<span></span>'}${navNext || '<span></span>'}</div>
 
-    ${v.free ? `<a class="upsell" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz — 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců) — odemkneš jednorázově za 800 Kč, s kódem <b>ZACNI15</b> jen 680 Kč. Doživotně.<span class="go2">Odemknout celý kurz — 680 Kč s ZACNI15 →</span></a>` : ''}
+    ${v.free ? `<a class="upsell" data-upsell="videokurz" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz: 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců), odemkneš jednorázově za 1 490 Kč. Doživotně.<span class="go2">Odemknout celý kurz za 1 490 Kč →</span></a>` : ''}
 
     <p class="foot">© Videokurz Martin Barna.${v.free ? ' Tato lekce je dostupná zdarma jako ochutnávka.' : ' Video je dostupné jen přihlášeným s aktivním přístupem.'}</p>
   </div>
@@ -457,8 +464,8 @@ function dashboard() {
     </div>
 
     <a id="freeBanner" class="freebanner" href="${BUY_URL}" style="display:none;">
-      <span class="fb-txt"><b>🎁 Máš ochutnávku zdarma</b><span>Odemčené máš ukázky napříč všemi moduly — vidíš, co tě v kurzu čeká. Celý kurz — 182 videí + všechny bonusy — odemkneš jednorázově za 800 Kč, s kódem ZACNI15 jen 680 Kč. Doživotně, bez měsíčních poplatků.</span></span>
-      <span class="fb-cta">Odemknout — 680 Kč s ZACNI15 →</span>
+      <span class="fb-txt"><b>🎁 Máš ochutnávku zdarma</b><span>Odemčené máš ukázky napříč všemi moduly, ať vidíš, co tě v kurzu čeká. Celý kurz (182 videí + všechny bonusy) odemkneš jednorázově za 1 490 Kč. Doživotně, bez měsíčních poplatků.</span></span>
+      <span class="fb-cta">Odemknout za 1 490 Kč →</span>
     </a>
 
     <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05));border:1px solid rgba(235,177,44,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">

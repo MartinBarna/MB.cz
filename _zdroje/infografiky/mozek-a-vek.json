@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Co s tím", "title": "Nudná páka,<br>co funguje", "body": "Štíhlost, silový trénink a kvalitní strava. Úbytek svalů a síly tím prokazatelně zpomalíš. U mozku je efekt slibný, ale zaručit ho nikdo neumí.<br><br>Žádný zázrak. Roky práce, které si po padesátce vyberou úroky." },
     { "kind": "vs", "kicker": "Prakticky", "title": "Roky výkonu:<br>držet, nebo pustit?", "yes": { "h": "Drží ti je", "items": ["Silový trénink celoživotně, ne v epizodách", "Dost bílkovin, ať máš z čeho držet svaly", "Štíhlejší postava držená celoročně"] }, "no": { "h": "Berou ti je", "items": ["Roky bez odporového tréninku", "Hubnutí ve vlnách, každý rok o kus svalů míň", "Čekání, až se to samo nějak srovná"] } },
     { "kind": "quote", "text": "Mozek má vrchol kolem šedesátky. Tělo rozhodne, jestli si ho užiješ.", "note": "Trénink a strava dnes kupují formu na roky, kdy ti hlava pojede naplno." },
-    { "kind": "cta", "title": "Chceš tam dojet ve <span class=\"hl\">formě?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 800 Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš tam dojet ve <span class=\"hl\">formě?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 1 490 Kč)</b>"] }
   ]
 }

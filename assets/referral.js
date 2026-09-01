@@ -39,7 +39,13 @@
     // ⚠️ SimpleShop varianta ZŮSTÁVÁ: web je od 30. 7. 2026 na Stripu, ale staré odkazy
     // žijí v už rozeslaných mailech a doporučitel by u nich přišel o odměnu.
     if (href.indexOf('simpleshop.cz/3Vbl') >= 0) return { url: href, prod: 'videokurz' };
-    // Videokurz na Stripu (`plink_1TymiH…`), 800 Kč.
+    // Videokurz na Stripu, 1 490 Kč od 1. 9. 2026 (`plink_1UAy87…`).
+    if (href.indexOf('7sYeVc6356Jc4Ra8hF3ks0h') >= 0) return { url: href, prod: 'videokurz', stripe: true };
+    // Doplatek z balíčku 349 na videokurz, 1 140 Kč (`plink_1UAyAO…`). Dodává TÝŽ produkt,
+    // jen levněji, proto stejný `prod` (stejně jako Academy s odečtem níž).
+    if (href.indexOf('3cIaEWezBebE2J22Xl3ks0i') >= 0) return { url: href, prod: 'videokurz', stripe: true };
+    // Stará cena 800 Kč (`plink_1TymiH…`) ZŮSTÁVÁ: na webu už není, ale žije v rozeslaných
+    // mailech a doporučitel by u těch nákupů jinak o odměnu přišel.
     if (href.indexOf('dRmeVcbnpaZs5VedBZ3ks06') >= 0) return { url: href, prod: 'videokurz', stripe: true };
     if (href.indexOf('simpleshop.cz/Xgl8g') >= 0) return { url: href, prod: 'academy' };
     if (href.indexOf('4gM00ibnpgjMerK7dB3ks04') >= 0) return { url: href, prod: 'academy', stripe: true };
