@@ -89,7 +89,7 @@
         {"@type":"Question","name":"Musím držet drastickou dietu?","acceptedAnswer":{"@type":"Answer","text":"Ne. Učím tě flexibilní stravování: jíš normální jídlo, které tě baví, jen ve správném množství. Hlady chodit nebudeš."}},
         {"@type":"Question","name":"Jak rychle uvidím výsledky?","acceptedAnswer":{"@type":"Answer","text":"Záleží na startu a cíli, ale první změny většinou vidíš během pár týdnů. Jedeme tempem, které dlouhodobě udržíš."}},
         {"@type":"Question","name":"Co když nevím, jak začít?","acceptedAnswer":{"@type":"Answer","text":"Od toho jsem tu já. Ozveš se mi a společně vymyslíme první krok."}},
-        {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Chceš-li vedení na míru s týdenními úpravami, vyber balíček Gold nebo Diamond. Chceš-li jet vlastním tempem, je ideální videokurz."}}
+        {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Chceš-li vedení na míru s týdenními úpravami, vyber koučink. Doporučuju Gold, jde do něj většina lidí. Diamond ber, jen když chceš navíc hovor každý týden. Chceš-li jet vlastním tempem, je ideální videokurz."}}
       ]
     }
     </script>
@@ -355,6 +355,8 @@ section{padding:88px 0}
 .plan-name{font-size:1.5rem;font-weight:800}
 .plan-name.gold{color:var(--gold)}
 .plan-sub{color:var(--muted);font-size:.92rem;margin-top:.15rem}
+.plan-why{color:#DDD7E4;font-size:.92rem;background:rgba(235,177,44,.09);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:10px 14px;margin-top:.9rem}
+html[data-theme="light"] .plan-why{color:var(--text)}
 .plan-price{font-size:clamp(1.9rem,4vw,2.4rem);font-weight:800;margin:.9rem 0 .2rem;font-variant-numeric:tabular-nums}
 .plan-price small{font-size:.95rem;color:var(--muted);font-weight:600}
 .terms{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:.9rem 0 1.1rem;font-size:.93rem}
@@ -396,8 +398,8 @@ section{padding:88px 0}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
 /* ============ ROZCESTNÍK ============ */
-.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.bento .wide{grid-column:span 3;display:grid;grid-template-columns:1.4fr auto;gap:26px;align-items:center;background:linear-gradient(160deg,#1A1420,#0F0D14);border:1px solid var(--line);border-radius:24px;padding:30px 34px}
+.bento{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.bento .wide{grid-column:span 2;display:grid;grid-template-columns:1.4fr auto;gap:26px;align-items:center;background:linear-gradient(160deg,#1A1420,#0F0D14);border:1px solid var(--line);border-radius:24px;padding:30px 34px}
 .bento .wide h3{font-size:1.5rem;margin:.7rem 0 .45rem}
 .bento .wide p{color:var(--muted);max-width:60ch}
 .bento .wide .price{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:2.1rem;color:#fff;margin-bottom:.5rem;text-align:right}
@@ -690,7 +692,7 @@ footer a{color:var(--gold-light)}
         <div class="sec-head rv">
           <span class="kick">Online koučink</span>
           <h2>Vyber si svůj balíček</h2>
-          <p>Koučink na míru s týdenním vedením. Čím déle jdeme společně, tím víc ušetříš.</p>
+          <p>Koučink na míru s týdenním vedením. Doporučuju Gold, jde do něj většina lidí. Čím déle jdeme společně, tím víc ušetříš.</p>
           <div class="rule"></div>
           <p class="cap-note"><span class="ic"><svg><use href="#ic-trophy"/></svg></span><span>Koučink beru jen v <b>omezeném počtu</b>, aby měl každý klient mou plnou pozornost a výsledky.</span></p>
         </div>
@@ -704,10 +706,12 @@ footer a{color:var(--gold-light)}
         </div>
 
         <div class="plans">
-          <div class="plan rv">
+          <div class="plan featured rv">
+            <div class="ribbon">★ Nejčastější volba</div>
             <div class="plan-in">
               <div class="plan-name gold">Gold</div>
-              <div class="plan-sub">Pro samostatné: vedení na dálku</div>
+              <div class="plan-sub">Vedení na dálku, tohle si vybírá většina</div>
+              <p class="plan-why">Každý týden dostaneš upravený plán a odpovědi na WhatsAppu. Hovory navíc nepotřebuješ, výsledky jsou stejné.</p>
               <div class="plan-price">6 450 Kč <small>/ měsíc</small></div>
               <div class="terms">
                 <div class="rowl"><span>1 měsíc</span><b>6 450 Kč</b></div>
@@ -726,15 +730,14 @@ footer a{color:var(--gold-light)}
                 <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
                 <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
               </ul>
-              <a class="btn btn-ghost" href="#kontakt">Chci Gold</a>
+              <a class="btn btn-gold" href="#kontakt">Chci Gold</a>
               <p class="microtrust">Nezávazně. Nejdřív si napíšeme a doladíme detaily.</p>
             </div>
           </div>
-          <div class="plan featured rv">
-            <div class="ribbon">★ Nejžádanější</div>
+          <div class="plan rv">
             <div class="plan-in">
               <div class="plan-name">Diamond</div>
-              <div class="plan-sub">Když to chceš dotáhnout co nejrychleji</div>
+              <div class="plan-sub">Pro ty, kdo chtějí navíc hovor každý týden. Míst je málo.</div>
               <div class="plan-price">8 950 Kč <small>/ měsíc</small></div>
               <div class="terms">
                 <div class="rowl"><span>1 měsíc</span><b>8 950 Kč</b></div>
@@ -746,7 +749,7 @@ footer a{color:var(--gold-light)}
                 <li>Zvukové zprávy na WhatsApp = rychlejší odpovědi</li>
                 <li>1 video či audio hovor týdně</li>
               </ul>
-              <a class="btn btn-gold" href="#kontakt">Chci Diamond</a>
+              <a class="btn btn-ghost" href="#kontakt">Chci Diamond</a>
               <p class="microtrust">Nezávazně. Nejdřív si napíšeme a doladíme detaily.</p>
             </div>
           </div>
@@ -825,6 +828,14 @@ footer a{color:var(--gold-light)}
               <div class="price">800 Kč <small>· jednorázově</small></div>
               <a class="btn btn-gold" href="/videokurz">Chci kurz za 800 Kč →</a>
               <p class="free"><span class="ic"><svg><use href="#ic-gift"/></svg></span> 11 lekcí si pustíš zdarma</p>
+            </div>
+          </div>
+          <div class="bcard rv">
+            <span class="tag">Balíček za 349 Kč</span>
+            <h3>40 receptů a 48 odpovědí</h3>
+            <p>Nejlevnější vstup: 40 receptů s makry a 48 odpovědí na otázky, které mi lidi píšou nejčastěji. Jednou zaplatíš, máš napořád.</p>
+            <div class="links">
+              <a href="/recepty-a-odpovedi/">Chci balíček za 349 Kč →</a>
             </div>
           </div>
           <div class="bcard rv">
@@ -922,7 +933,7 @@ footer a{color:var(--gold-light)}
           </details>
           <details>
             <summary>Je lepší koučink, nebo videokurz?</summary>
-            <div class="a">Chceš-li vedení na míru s týdenními úpravami, vyber <a href="#balicky">balíček Gold nebo Diamond</a>. Chceš-li jet vlastním tempem, je ideální <a href="/videokurz">videokurz</a>.</div>
+            <div class="a">Chceš-li vedení na míru s týdenními úpravami, vyber <a href="#balicky">koučink</a>. Doporučuju Gold, jde do něj většina lidí. Diamond ber, jen když chceš navíc hovor každý týden. Chceš-li jet vlastním tempem, je ideální <a href="/videokurz">videokurz</a>.</div>
           </details>
         </div>
       </div>
