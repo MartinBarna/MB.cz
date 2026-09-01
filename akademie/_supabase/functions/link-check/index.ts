@@ -114,6 +114,27 @@ function hostZ(url: string): string {
   try { return new URL(url).hostname; } catch { return "?"; }
 }
 
+// ⛔⛔ SLEDOVACÍ PARAMETRY ROZMNOŽUJÍ TÝŽ ODKAZ. Změřeno 1. 9. 2026 přímo
+// v `email_templates`: 352 různých adres, ale jen 119 různých STRÁNEK. Zbytek jsou
+// UTM varianty téhož cíle (`utm_source` 308×) a k tomu 135× i pomrvená dvojčata
+// `&amp;utm_...`, jak se do šablon dostal HTML zápis ampersandu.
+// ⇒ Kvůli tomu chodil od 29. 8. 2026 denně poplach „nalezeno 363, strop 200"
+//   a zbytek se TICHO odřízl (`vse.length = MAX_URL`), takže se nekontrolovalo to,
+//   co se nevešlo, a nikdo nevěděl co.
+// ⇒ A ještě hůř: každá UTM varianta je na WEDOSu VŽDY cache MISS
+//   ([[mb-wedos-pomaly-origin-a-utm-cache]]), takže 264 požadavků na martinbarna.cz
+//   si samo vyrábělo blokaci. 29. až 31. 8. bylo ze 200 odkazů 150 „nelze ověřit".
+// ⚠️ Netrackovací parametry (`plan`, `locale`, `tab`) v adrese ZŮSTÁVAJÍ, protože
+//    mění cíl. Ořezávají se jen ty, které o obsahu stránky nerozhodují.
+const SLEDOVACI_PARAMETRY = /^(amp;)?(utm_[a-z_]+|fbclid|gclid|mc_cid|mc_eid)=/i;
+
+function bezSledovani(url: string): string {
+  const q = url.indexOf("?");
+  if (q < 0) return url;
+  const zbyle = url.slice(q + 1).split("&").filter((p) => p && !SLEDOVACI_PARAMETRY.test(p));
+  return zbyle.length ? url.slice(0, q) + "?" + zbyle.join("&") : url.slice(0, q);
+}
+
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
 // Vysledek = přesně sloupce tabulky `link_check`. Nic navíc se do insertu nesmí dostat.
@@ -220,6 +241,19 @@ async function jedenPokus(url: string, kde: string): Promise<Mereni> {
       return {
         url, kde, http_status: r.status, ok: false, blokovano: true,
         poznamka: `NELZE OVĚŘIT: ochrana webu vrátila ověřovací stránku, ne obsah. HTTP ${r.status} | ${diagnostika(r, telo)}`,
+      };
+    }
+    // ⛔ HTTP 429 NENÍ ROZBITÝ ODKAZ, je to „moc požadavků z téhle IP". Patří do
+    // stejné přihrádky jako ověřovací výzva WEDOSu: odmítli NÁS, ne uživatele.
+    // Změřeno: Instagram vrací 429 na profilový odkaz z šablony každý den nejmíň
+    // od 14. 8. 2026, a hlídač z toho denně dělal „1 z 200 odkazů NEFUNGUJE".
+    // Týž odkaz i s celým UTM chvostem odpověděl 1. 9. 2026 z domácí linky
+    // HTTP 200 a 619 kB obsahu. ⇒ Odkaz žije, jen se nedá měřit z datacentra.
+    // Falešný poplach naučí adresáta mail ignorovat, což je horší než ticho.
+    if (r.status === 429) {
+      return {
+        url, kde, http_status: 429, ok: false, blokovano: true,
+        poznamka: `NELZE OVĚŘIT: ${hostZ(url)} odmítl kontrolu kvůli množství požadavků (HTTP 429), stránka sama tím rozbitá NENÍ | ${diagnostika(r, telo)}`,
       };
     }
     if (!r.ok) return { url, kde, http_status: r.status, ok: false, blokovano: false, poznamka: `HTTP ${r.status} | ${diagnostika(r, telo)}` };
@@ -343,15 +377,28 @@ Deno.serve(async (req) => {
   const tokenyBezAdresy = [...new Set(nalezeneTokeny.map((t) => t.slice(2, -2).toLowerCase()))]
     .filter((t) => !(t in TOKENY_S_ADRESOU_V_KODU));
 
-  // 2) + klíčové stránky a adresy z tokenů, bez duplicit
+  // 2) + klíčové stránky a adresy z tokenů, bez duplicit.
+  // ⚠️ Sjednocuje se na adresu BEZ sledovacích parametrů (viz `bezSledovani`) a ta se
+  // i doopravdy stahuje. Kontroluje se tak každá stránka jednou místo jednou za
+  // kampaň, a požadavek jde na adresu, kterou má WEDOS v cache.
   const vse: { url: string; kde: string }[] = [];
   const videno = new Set<string>();
-  for (const u of KLICOVE_STRANKY) { if (!videno.has(u)) { videno.add(u); vse.push({ url: u, kde: "stranka" }); } }
-  for (const t of zTokenu)         { if (!videno.has(t.url)) { videno.add(t.url); vse.push(t); } }
-  for (const u of zeSablon)        { if (!videno.has(u)) { videno.add(u); vse.push({ url: u, kde: "sablona" }); } }
+  const pridej = (url: string, kde: string) => {
+    const cista = bezSledovani(url);
+    if (videno.has(cista)) return;
+    videno.add(cista);
+    vse.push({ url: cista, kde });
+  };
+  for (const u of KLICOVE_STRANKY) pridej(u, "stranka");
+  for (const t of zTokenu)         pridej(t.url, t.kde);
+  for (const u of zeSablon)        pridej(u, "sablona");
+  const sloucenoUtmVariant = KLICOVE_STRANKY.length + zTokenu.length + zeSablon.length - vse.length;
 
   if (vse.length > MAX_URL) {
-    await alertAdmin("Link-check: podezřele moc odkazů, kontrola zkrácena", { nalezeno: vse.length, strop: MAX_URL });
+    await alertAdmin("Link-check: podezřele moc odkazů, kontrola zkrácena", {
+      nalezeno: vse.length, strop: MAX_URL, slouceno_utm_variant: sloucenoUtmVariant,
+      co_to_znamena: "Přes strop se kontrola oříznula a na zbytek se dnes NESÁHLO. Tohle už NEJSOU UTM varianty téhož odkazu, ty se slučují; do šablon opravdu přibylo tolik různých stránek.",
+    });
     vse.length = MAX_URL;
   }
 
@@ -396,7 +443,7 @@ Deno.serve(async (req) => {
   } else if (blokovane.length) {
     await alertAdmin(`Link-check: ${blokovane.length} odkazů se NEPODAŘILO OVĚŘIT (ochrana webu nás odmítá)`, {
       co_to_znamena: "Tyhle odkazy NEJSOU prokazatelně rozbité. Ochrana webu vrátila ověřovací stránku místo obsahu, takže kontrola u nich dnes neproběhla.",
-      co_s_tim: "Kontrola běží z IP datacentra a WEDOS Global Protection jim z velké části nedůvěřuje. Spravit to jde jen na straně WEDOSu (povolit naše IP nebo zmírnit ochranu), z appky ne.",
+      co_s_tim: "Kontrola běží z IP datacentra. U martinbarna.cz jim WEDOS Global Protection z velké části nedůvěřuje a spravit to jde jen na jeho straně (povolit naše IP nebo zmírnit ochranu), z appky ne. U sítí (Instagram, TikTok) jde o jejich vlastní strop požadavků, HTTP 429; tam se nedá dělat nic a je to v pořádku.",
       hosty: [...new Set(blokovane.map((v) => v.url.split("/")[2]))].join(", "),
       prvni: blokovane.slice(0, 3).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
       overeno_v_poradku: vysledky.filter((v) => v.ok).length,
@@ -409,6 +456,7 @@ Deno.serve(async (req) => {
     ok: true,
     run_at: runAt,
     kontrolovano: vysledky.length,
+    slouceno_utm_variant: sloucenoUtmVariant,
     v_poradku: vysledky.filter((v) => v.ok).length,
     rozbitych: rozbite.length,
     neovereno_kvuli_ochrane: blokovane.length,
