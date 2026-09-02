@@ -440,11 +440,20 @@
       if (!S.cile.kcal || !S.cile.protein) { toast('Nejdřív vyplň kalorie a bílkoviny, AI je dostává jako fakta.'); return; }
       var t0 = btn.textContent; btn.disabled = true; btn.textContent = 'Píšu…';
       $('pgTextyStav').innerHTML = '<p class="muted" style="font-size:.82rem;">Píšu texty, může to trvat půl minuty…</p>';
+      // ⛔ `vylouceni` se posílá JEN kvůli otisku zadání na serveru (aby odstup 10 minut
+      // nevrátil starý text ke změněným číslům nebo k jinému filtru). Generátor běží tady
+      // v prohlížeči, server do něj nesahá. `rod` potřebuje model na minulý čas.
       ctx.api({
         action: 'pruvodce_text', email: ctx.email,
-        osloveni: ($('pgVok').value || '').trim(),
+        osloveni: ($('pgVok').value || '').trim(), rod: ctx.rod || '',
         kcal: S.cile.kcal, protein: S.cile.protein, fiber: S.cile.fiber,
-        carbs: S.cile.carbs, fat: S.cile.fat, jidel: S.pocetJidel
+        carbs: S.cile.carbs, fat: S.cile.fat, jidel: S.pocetJidel,
+        vylouceni: S.prefs.excludeId.concat(
+          S.prefs.bezLepku ? ['dieta:bezLepku'] : [],
+          S.prefs.bezLaktozy ? ['dieta:bezLaktozy'] : [],
+          S.prefs.vegetarian ? ['dieta:vegetarian'] : [],
+          S.prefs.vegan ? ['dieta:vegan'] : []
+        )
       }).then(function (o) {
         btn.disabled = false; btn.textContent = t0;
         var j = o.j || {};
@@ -520,6 +529,7 @@
       return {
         jmeno: ($('pgJmeno').value || '').trim(),
         osloveni: ($('pgVok').value || '').trim(),
+        rod: ctx.rod || '',
         datum: dnesCz(),
         cile: S.cile,
         proteinPozn: ($('pgProtPozn').value || '').trim(),

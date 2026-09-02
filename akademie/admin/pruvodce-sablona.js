@@ -32,7 +32,10 @@
   }
   function r0(n) { return Math.round(Number(n) || 0); }
   // Desetinná ČÁRKA, jak se píše česky (HLAS-MARTINA.md).
+  // ⛔ Chybějící hodnota NENÍ nula. `cz(null)` psalo do tabulky „Vláknina 0 g a více",
+  // což je číslo, které klientovi nikdo nezadal. Prázdná hodnota se musí přiznat.
   function cz(n, des) {
+    if (n === null || n === undefined || n === '') return 'neuvedeno';
     var x = Number(n) || 0;
     var s = des ? (Math.round(x * 10) / 10).toFixed(1) : String(Math.round(x));
     return s.replace('.', ',');
@@ -45,15 +48,26 @@
   function bezPomlcky(s) { return String(s == null ? '' : s).split('—').join(' - '); }
 
   // ---- pevné texty (psal člověk, viz hlavička) ----
-  var T_TRI_VECI = [
-    ['Bílkovina v každém jídle.', 'Rozděl ji do dne, zhruba 25 až 35 g na jídlo. Zasytí a je to surovina, ze které se sval opravuje. Trénink ho jen nastartuje.'],
-    ['Vláknina a objem.', 'Celozrnné pečivo, vločky, luštěniny, zelenina a ovoce. Drží zažívání v klidu a ubere hlad, který jinak přijde večer.'],
-    ['Pití.', 'Vody potřebuješ víc, než by sis řekl, hlavně při vyšší vláknině a trénincích. Voda je základ, zbytek je bonus.']
-  ];
+  // ⛔ Po revizi 2. 9. 2026 jsou psané BEZRODĚ. Klientka nemá dostat dokument v mužském
+  // rodě jen proto, že se to při psaní nezvážilo. Rod se předává jen do AI textů, kde ho
+  // model potřebuje na minulý čas.
+  // ⛔ A bez negační kadence „X, ne Y" a bez sloganů (HLAS-MARTINA.md, body 1 a 2).
+
+  // Bílkovina na jídlo se NESLIBUJE natvrdo. Rozpětí se počítá z těch dvou dnů, které klient
+  // v dokumentu opravdu má. Fixní věta „25 až 35 g na jídlo" tam byla, přestože engine sype
+  // zbytek dne do večeře a ta v měření vyšla 68 a 70 g. (Nález 6 revize 2. 9. 2026.)
+  function triVeci(rozsah) {
+    return [
+      ['Bílkovina v každém jídle.', 'Rozděl ji do dne. ' + rozsah +
+        ' Zasytí a je to surovina, ze které se sval opravuje. Trénink ho jen nastartuje.'],
+      ['Vláknina a objem.', 'Celozrnné pečivo, vločky, luštěniny, zelenina a ovoce. Drží zažívání v klidu a ubere hlad, který jinak přijde večer.'],
+      ['Pití.', 'Vody potřebuješ víc, než to vypadá, hlavně při vyšší vláknině a trénincích.']
+    ];
+  }
   var T_PRAVIDLA = [
     ['Zapisuj všechno.', 'I tu svačinu mezi jídly. Přesnost zápisu rozhoduje o tom, jak rychle se dá s čísly pracovat. Lidi si příjem podceňují o 20 až 50 %, a pak nesedí, co se děje s váhou.'],
     ['Bílkovinu neošiď.', 'Když nestíháš vařit, dej tvaroh, skyr nebo protein. Denní číslo si nasbírej tak jako tak.'],
-    ['Važ se jednou týdně.', 'Ráno po probuzení, nalačno, po záchodě. Sleduj týdenní průměr, ne jednotlivé dny. Váha kolísá vodou a je to normální.'],
+    ['Važ se jednou týdně.', 'Ráno po probuzení, nalačno, po záchodě. Rozhoduje týdenní průměr. Jednotlivé dny kolísají vodou a je to normální.'],
     ['Sacharidy a tuky flexibilně.', 'Hlídej kalorie, bílkoviny a vlákninu. Poměr zbytku si uprav podle chuti a podle toho, co máš doma.'],
     ['Spánek.', 'Nejlevnější věc, co s výsledkem uděláš. Bez něj jde chuť k jídlu mimo kontrolu a výkon v tréninku dolů.']
   ];
@@ -66,24 +80,31 @@
   var T_VYPADEK =
     'Jeden den mimo plán s výsledkem nic neudělá. Vidím to u klientů pořád, problém dělá až ten týden, ' +
     'který po jednom výkyvu přijde ve stylu „stejně už je to rozbité".\n\n' +
-    'Co s tím: druhý den se vrať k normálnímu jídlu. Bez hladovky, bez trestu v podobě dvou hodin kardia. ' +
+    'Co s tím: druhý den se vrať k normálnímu jídlu. Hladovka ani dvě hodiny kardia navíc to nespraví. ' +
     'Zapiš i ten den, ať víme, co se stalo. Ve váze uvidíš skok nahoru, za dva až tři dny bude zpátky, ' +
     'protože je to voda a obsah střev.\n\n' +
     'Když se ti to opakuje každý víkend, nemá cenu to řešit vůlí. Napiš mi to v reportu a najdeme, čím to je.';
   var T_ETIKETA = [
-    'Podívej se do záhlaví tabulky, jestli jsou hodnoty „na 100 g" nebo „na porci". Porce bývá 30 g a kdo si toho nevšimne, zapíše si třetinu toho, co snědl.',
-    'U rýže, těstovin a vloček platí údaj na syrový stav, pokud výrobce nenapíše jinak. Vařením se mění hmotnost, hodnoty na obalu ne.',
+    'Podívej se do záhlaví tabulky, jestli jsou hodnoty „na 100 g" nebo „na porci". Porce bývá 30 g a kdo si toho nevšimne, zapíše si třetinu skutečné porce.',
+    'U rýže, těstovin a vloček platí údaj na syrový stav, pokud výrobce nenapíše jinak. Vařením se mění hmotnost, hodnoty na obalu zůstávají.',
     'Sacharidy na české etiketě jsou bez vlákniny, ta má svůj řádek. U dovozových výrobků z USA bývají sacharidy včetně vlákniny, proto tam číslo vychází vyšší.',
     'Kus váží pokaždé jinak. Rohlík má na obalu 43 g a v obchodě jich koupíš pět různých, takže u pečiva se vyplatí váha.'
   ];
+  // ⛔ VĚTA MUSÍ ODPOVÍDAT DATŮM, NE PŘÁNÍ. Databáze má u části položek stav přímo v názvu
+  // („Rýže natural (vařená)", „Hovězí kližka (syrová)") a generátor je do dne pouští obojí.
+  // Původní znění „množství vážíš v syrovém stavu" tedy u vařené rýže lhalo trojnásobně:
+  // 125 g suché rýže je kolem 450 kcal místo 150 a nikdo si toho nevšimne.
+  // (Nález 5 revize 2. 9. 2026.)
   var T_SYROVE =
-    '<strong>Množství vážíš v syrovém stavu</strong> (maso, ryby, rýže, těstoviny, vločky, luštěniny, brambory), ' +
-    'není-li u položky napsáno jinak. Zeleninu a ovoce počítat tak přesně nemusíš, těch si klidně přidej. ' +
+    '<strong>Jak vážit:</strong> u každé položky platí přesně ten stav, který je za ní napsaný. ' +
+    '„vážíš vařené" znamená po uvaření, „vážíš syrové" před tepelnou úpravou, „vážíš suché" ' +
+    'sypké před vodou. Kde není napsáno nic, váž potravinu tak, jak ji kupuješ. ' +
+    'Zeleninu a ovoce počítat tak přesně nemusíš, těch si klidně přidej. ' +
     'Porce se dají posouvat o pár gramů nahoru dolů, hlavně ať den jako celek sedí.';
   var T_LEPEK =
     '<strong>Bez lepku.</strong> Do plánu jsem pustil jen potraviny, u kterých je bezlepkovost jistá, ' +
     'a všechno ostatní generátor odmítl. U zpracovaných věcí (salámy, koření, hotové omáčky, vločky) ale ' +
-    'rozhoduje výrobce a konkrétní šarže, ne druh potraviny. Etiketu si přečti i tam, kde bys to nečekal.';
+    'rozhoduje výrobce a konkrétní šarže. Etiketu si přečti i tam, kde bys to nečekal.';
 
   // ---- styl (bajtově shodný se třemi ručními ukázkami, plus tři nové třídy) ----
   var STYL = [
@@ -123,8 +144,55 @@
     // ⛔ Tisk: tlačítko se nesmí objevit na papíře ani v PDF.
     '@media print { .netisknout { display: none !important; } }',
     '.netisknout { margin: 0 0 14px; }',
-    '.netisknout button { font: inherit; font-size: 10pt; padding: 6px 14px; border: 1px solid #E07B39; background: #FDF3EC; color: #1a1a1a; border-radius: 6px; cursor: pointer; }'
+    '.netisknout button { font: inherit; font-size: 10pt; padding: 6px 14px; border: 1px solid #E07B39; background: #FDF3EC; color: #1a1a1a; border-radius: 6px; cursor: pointer; }',
+    // ⛔ TISK: bez tohohle zůstal nadpis jídla na patě strany a jeho položky přešly na další,
+    // a dvousloupcový nákupní seznam se lámal přes hranici stránky (nejkřehčí kombinace,
+    // jakou v Chromu v tisku můžeš mít). Nález 8 revize 2. 9. 2026.
+    '@media print {',
+    '  h1, h2 { break-after: avoid; page-break-after: avoid; }',
+    '  .jidlo { break-after: avoid; page-break-after: avoid; }',
+    '  .blok-jidla, ul.pol { break-inside: avoid; page-break-inside: avoid; }',
+    '  .ram, .soucet, table { break-inside: avoid; page-break-inside: avoid; }',
+    '  ul.nakup { column-count: 1; }',
+    '}'
   ].join('\n  ');
+
+  // ⛔ Stav potraviny, jak ho nese NÁZEV v databázi. Samostatné pole na syrové versus vařené
+  // databáze nemá (syrová a vařená verze jsou dvě položky s vlastním id), takže se čte z názvu
+  // a NIC SE NEDOMÝŠLÍ. Kde název stav neuvádí, dokument mlčí a platí obecná věta v rámečku.
+  // Domyslet „(syrové)" u kuřecího by se trefilo, u knäckebrotu by to byla tichá chyba,
+  // a rozlišit ty dva případy nemáme čím. (Nález 5 revize 2. 9. 2026.)
+  function stavPolozky(name) {
+    var n = String(name || '').toLowerCase();
+    if (/\([^)]*(vařen|uvařen|pečen|dušen|grilovan)/.test(n)) return 'vážíš vařené';
+    if (/\([^)]*syrov/.test(n)) return 'vážíš syrové';
+    if (/\([^)]*(such|sušen)/.test(n)) return 'vážíš suché';
+    return '';
+  }
+
+  // Skutečné rozpětí bílkovin na jídlo v těch dvou dnech, které klient opravdu dostane.
+  // ⛔ Nesmí to být fixní slib. Věta „25 až 35 g na jídlo" tam byla, přestože engine sype
+  // zbytek dne do posledního jídla a večeře v měření vyšly 68 a 70 g, tedy dvojnásobek
+  // toho, co dokument o dvě sekce výš doporučoval. (Nález 6 revize 2. 9. 2026.)
+  function rozsahBilkovin(dny) {
+    var hlavni = [], svaciny = [];
+    dny.forEach(function (b) {
+      var denKcal = ((b.den || {}).totals || {}).kcal || 1;
+      ((b.den || {}).meals || []).forEach(function (m) {
+        var t = m.totals || {};
+        (((t.kcal || 0) / denKcal) >= 0.18 ? hlavni : svaciny).push(Math.round(t.p || 0));
+      });
+    });
+    function pasmo(a) {
+      if (!a.length) return '';
+      var lo = Math.min.apply(null, a), hi = Math.max.apply(null, a);
+      return lo === hi ? (lo + ' g') : (lo + ' až ' + hi + ' g');
+    }
+    var h = pasmo(hlavni), sv = pasmo(svaciny);
+    if (!h && !sv) return 'Kolik jí padne na které jídlo, vidíš u každého jídla v obou dnech.';
+    if (!sv) return 'V tomhle plánu vychází na jídlo ' + h + '.';
+    return 'V tomhle plánu vychází na hlavní jídla ' + h + ' a na svačiny ' + sv + '.';
+  }
 
   // ---- jeden vzorový den ----
   function denHtml(blok, poradi) {
@@ -134,12 +202,14 @@
     meals.forEach(function (m, i) {
       var nazev = (nazvy[i] && String(nazvy[i]).trim()) || m.name || ('Jídlo ' + (i + 1));
       var t = m.totals || { kcal: 0, p: 0 };
-      h += '<p class="jidlo">' + esc(bezPomlcky(nazev))
+      h += '<div class="blok-jidla"><p class="jidlo">' + esc(bezPomlcky(nazev))
         + ' <span>&asymp; ' + r0(t.kcal) + ' kcal &middot; ' + r0(t.p) + ' g B</span></p><ul class="pol">';
       (m.items || []).forEach(function (it) {
-        h += '<li>' + esc(it.food.name) + ' ' + r0(it.grams) + ' g</li>';
+        var stav = stavPolozky(it.food.name);
+        h += '<li>' + esc(it.food.name) + ' ' + r0(it.grams) + ' g'
+          + (stav ? ' <span style="color:#666;">(' + stav + ')</span>' : '') + '</li>';
       });
-      h += '</ul>';
+      h += '</ul></div>';
     });
     var dt = den.totals || { kcal: 0, p: 0, fib: 0 };
     h += '<div class="soucet">Celkem za den: ' + r0(dt.kcal) + ' kcal &middot; ' + r0(dt.p)
@@ -160,7 +230,15 @@
     return global.MealGen.shoppingListFromDays(opak);
   }
 
-  // ---- záměny s gramážemi na stejné kalorie ----
+  // ---- záměny s gramážemi ----
+  // ⛔⛔ BÍLKOVINNÉ ZDROJE SE ROVNAJÍ NA BÍLKOVINU, NE NA KALORIE. Když se rovnaly na
+  // kalorie, vypadla z toho rovnice „tuňák v oleji 115 g = tuňák ve vlastní šťávě 190 g",
+  // kde krajní členy dělí 25 g bílkovin na jednu porci, tedy dvojnásobek. Klient, který
+  // se drží pokynu z dokumentu, tak mine denní cíl o desítky gramů, a přitom mu tentýž
+  // dokument o dvě sekce výš říká, že bílkovina je první ze tří věcí, na kterých to stojí.
+  // Přílohy, tuky a ovoce se dál rovnají na kalorie, tam je energie ta správná osa.
+  // U každé položky se proto píše OBOJÍ číslo, ať je rozdíl vidět. (Nález 4 revize 2. 9. 2026.)
+  //
   // ⛔ Kandidáti se berou VÝHRADNĚ z potravin, které v obou dnech reálně jsou. Ty prošly
   // dietním filtrem generátoru, takže se do záměn nemůže dostat nic vyloučeného. Sahat sem
   // pro „hezčí" nabídku do celé databáze by tuhle jistotu zrušilo (filtr `filterDb` není
@@ -177,27 +255,51 @@
       });
     });
     var skupiny = [
-      { cat: 'protein', label: 'Bílkovina' },
-      { cat: 'carb', label: 'Příloha a pečivo' },
-      { cat: 'fat', label: 'Tuk' }
+      { cat: 'protein', label: 'Bílkovina', osa: 'protein' },
+      { cat: 'carb', label: 'Příloha a pečivo', osa: 'kcal' },
+      { cat: 'fat', label: 'Tuk', osa: 'kcal' }
     ];
+    var mf = (global.MealGen && global.MealGen.macrosFor) || null;
+    function makra(f, g) {
+      if (mf) return mf(f, g);
+      var k = g / 100;
+      return { kcal: (f.per100.kcal || 0) * k, p: (f.per100.p || 0) * k };
+    }
     var out = [];
-    skupiny.forEach(function (s) {
+    skupiny.forEach(function (sk) {
       var cleny = poradi.map(function (id) { return pouzite[id]; })
-        .filter(function (x) { return x.food.cat === s.cat && (x.food.per100.kcal || 0) > 0; });
+        .filter(function (x) {
+          if (x.food.cat !== sk.cat) return false;
+          // bez energie (nebo u bílkovinné osy bez bílkoviny) není z čeho přepočítávat
+          return sk.osa === 'protein' ? (x.food.per100.p || 0) > 0 : (x.food.per100.kcal || 0) > 0;
+        });
       if (cleny.length < 2) return;
-      // kotva = položka s největší porcí v kaloriích, od ní se počítají ostatní
+      // kotva = největší porce na dané ose, od ní se počítají ostatní
       cleny.sort(function (a, b) {
-        return (b.food.per100.kcal * b.gramy) - (a.food.per100.kcal * a.gramy);
+        var ma = makra(a.food, a.gramy), mb = makra(b.food, b.gramy);
+        return (sk.osa === 'protein' ? (mb.p - ma.p) : (mb.kcal - ma.kcal));
       });
       var kotva = cleny[0];
-      var kotvaKcal = kotva.food.per100.kcal / 100 * kotva.gramy;
-      var radek = [{ name: kotva.food.name, gramy: Math.round(kotva.gramy / 5) * 5 }];
-      cleny.slice(1, 5).forEach(function (x) {
-        var g = kotvaKcal / (x.food.per100.kcal / 100);
-        radek.push({ name: x.food.name, gramy: Math.max(5, Math.round(g / 5) * 5) });
+      var mKotva = makra(kotva.food, kotva.gramy);
+      var cil = sk.osa === 'protein' ? mKotva.p : mKotva.kcal;
+      var radek = cleny.slice(0, 5).map(function (x, idx) {
+        var g;
+        if (idx === 0) g = kotva.gramy;
+        else {
+          var na100 = sk.osa === 'protein' ? x.food.per100.p : x.food.per100.kcal;
+          g = Math.max(5, Math.round((cil / (na100 / 100)) / 5) * 5);
+        }
+        var m = makra(x.food, g);
+        return { name: x.food.name, gramy: Math.round(g / 5) * 5, kcal: Math.round(m.kcal), prot: Math.round(m.p) };
       });
-      out.push({ label: s.label, kcal: Math.round(kotvaKcal), radek: radek });
+      out.push({
+        label: sk.label,
+        osa: sk.osa,
+        popis: sk.osa === 'protein'
+          ? ('stejně bílkovin, kolem ' + Math.round(cil) + ' g')
+          : ('stejně kalorií, kolem ' + Math.round(cil) + ' kcal'),
+        radek: radek
+      });
     });
     return out;
   }
@@ -272,7 +374,9 @@
       + (data.datum ? ' &middot; ' + esc(data.datum) : '') + '</p>\n'
       + '<hr class="top">\n';
 
-    h += '<p>Ahoj ' + esc(bezPomlcky(data.osloveni || '')) + '! 👋</p>\n' + odstavce(bezPomlcky(t.uvod));
+    // Prázdné oslovení dávalo „Ahoj !". Bez jména se pozdraví obecně, jako to dělá drip-send.
+    var osl = bezPomlcky(String(data.osloveni || '').trim());
+    h += '<p>Ahoj' + (osl ? ' ' + esc(osl) : '') + '! 👋</p>\n' + odstavce(bezPomlcky(t.uvod));
 
     // 1. čísla
     h += '<h2>1. Tvoje čísla</h2>'
@@ -286,14 +390,19 @@
     if (t.proc_tyhle_tri) h += '<div class="ram"><strong>Proč zrovna tyhle tři?</strong> ' + esc(bezPomlcky(t.proc_tyhle_tri)) + '</div>';
     if (t.zadani_navic) h += '<div class="ram"><strong>Tvoje zadání navíc:</strong> ' + esc(bezPomlcky(t.zadani_navic)) + '</div>';
 
-    // 2. tři věci
+    // 2. tři věci. ⛔ Rozpětí bílkovin se počítá z DNŮ TOHOHLE KLIENTA, nikdy se neslibuje.
     h += '<h2>2. Tři věci, na kterých to stojí</h2><ul class="body">'
-      + T_TRI_VECI.map(function (x) { return '<li><strong>' + x[0] + '</strong> ' + x[1] + '</li>'; }).join('')
+      + triVeci(rozsahBilkovin(dny)).map(function (x) { return '<li><strong>' + x[0] + '</strong> ' + x[1] + '</li>'; }).join('')
       + '</ul>';
 
-    // 3. a 4. vzorové dny
+    // ⛔ Čísla sekcí se počítají, nepíšou se natvrdo. Nákupní seznam se vykreslí jen když
+    // něco obsahuje, a s pevnými čísly by klient uviděl posloupnost 3, 4, 6, 7.
+    var cis = 2;
+    var dalsi = function () { cis += 1; return cis; };
+
+    // vzorové dny
     dny.forEach(function (b, i) {
-      h += denHtml({ den: b.den, nazvy: b.nazvy, cislo: 3 + i, nadpis: 'Vzorový den ' + (i + 1) }, i + 1);
+      h += denHtml({ den: b.den, nazvy: b.nazvy, cislo: dalsi(), nadpis: 'Vzorový den ' + (i + 1) }, i + 1);
     });
     h += '<div class="ram">' + T_SYROVE + '</div>';
     if ((data.prefs || {}).bezLepku) h += '<div class="ram">' + T_LEPEK + '</div>';
@@ -302,7 +411,7 @@
     // 5. nákupní seznam
     var nakup = nakupTyden(dny);
     if (nakup.length) {
-      h += '<h2>5. Nákupní seznam na týden</h2>'
+      h += '<h2>' + dalsi() + '. Nákupní seznam na týden</h2>'
         + '<p>Sedm dní podle těhle dvou vzorů: den 1 čtyřikrát, den 2 třikrát. Zeleninu a ovoce ber s rezervou, '
         + 'těch si klidně přidáš. Seřazeno zhruba podle oddělení v obchodě.</p><ul class="nakup">';
       nakup.forEach(function (s) {
@@ -314,14 +423,19 @@
 
     // 6. záměny s gramážemi
     var zam = zamenySkupiny(dny);
-    h += '<h2>6. Záměny, když něco nemáš doma</h2>'
-      + '<p>Vyměňuj v rámci skupiny. Gramáže jsou přepočítané na stejné kalorie, takže se nemusíš nic domýšlet.</p>';
+    h += '<h2>' + dalsi() + '. Záměny, když něco nemáš doma</h2>'
+      + '<p>Vyměňuj v rámci skupiny. U každé skupiny je napsáno, na co je gramáž dorovnaná: '
+      + 'u bílkovin na stejné množství bílkovin, u příloh a tuků na stejné kalorie. '
+      + 'Druhé číslo v závorce ti ukáže, co se tou výměnou posune.</p>';
     if (zam.length) {
       h += '<ul class="body">';
       zam.forEach(function (z) {
-        h += '<li><strong>' + esc(z.label) + ':</strong> '
-          + z.radek.map(function (x) { return esc(x.name) + ' ' + cz(x.gramy) + ' g'; }).join(' = ')
-          + ' <span style="color:#666;">(' + cz(z.kcal) + ' kcal)</span></li>';
+        h += '<li><strong>' + esc(z.label) + '</strong> <span style="color:#666;">(' + esc(z.popis) + ')</span><br>'
+          + z.radek.map(function (x) {
+            return esc(x.name) + ' ' + cz(x.gramy) + ' g <span style="color:#666;">('
+              + cz(x.kcal) + ' kcal, ' + cz(x.prot) + ' g B)</span>';
+          }).join(' = ')
+          + '</li>';
       });
       h += '</ul>';
     }
@@ -329,7 +443,7 @@
       + 'těch je v malém objemu hodně.</p>';
 
     // 7. pravidla a vlastní den (sloučené sekce 6 a 7 z ručních ukázek)
-    h += '<h2>7. Co to drží pohromadě a jak si den složíš sám</h2><ol class="body">'
+    h += '<h2>' + dalsi() + '. Co to drží pohromadě a jak si den složíš sám</h2><ol class="body">'
       + T_PRAVIDLA.map(function (x) { return '<li><strong>' + x[0] + '</strong> ' + x[1] + '</li>'; }).join('')
       + '</ol>'
       + '<p style="margin-top:10px;">Až budeš chtít den poskládat po svém, postup je pořád stejný:</p><ol class="body">'
@@ -337,17 +451,17 @@
       + '</ol>';
 
     // 8. výpadek z plánu
-    h += '<h2>8. Když se přejím nebo vypadnu z plánu</h2>' + odstavce(T_VYPADEK);
+    h += '<h2>' + dalsi() + '. Když se přejím nebo vypadnu z plánu</h2>' + odstavce(T_VYPADEK);
 
     // 9. etiketa
-    h += '<h2>9. Jak číst etiketu</h2><ul class="body">'
+    h += '<h2>' + dalsi() + '. Jak číst etiketu</h2><ul class="body">'
       + T_ETIKETA.map(function (x) { return '<li>' + x + '</li>'; }).join('')
       + '</ul>';
 
     // na závěr
     if (t.na_zaver) h += '<h2>Na závěr</h2>' + odstavce(bezPomlcky(t.na_zaver));
     h += '<p>Kdyby ti cokoli nesedlo, nebo něco z plánu prostě nejíš, napiš mi a vyměníme to. '
-      + 'Plán se má přizpůsobit tobě, ne naopak.</p>'
+      + 'Plán se má přizpůsobit tobě.</p>'
       + '<p><strong>Be Effective!</strong><br>Martin</p>'
       + '<div class="pata">Martin Barna, Online Výživa a Fitness &middot; martinbarna.cz &middot; Be Effective!</div>';
 
