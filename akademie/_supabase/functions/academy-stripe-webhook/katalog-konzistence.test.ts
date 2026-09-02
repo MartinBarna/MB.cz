@@ -374,6 +374,37 @@ check('KO12 koucinkove odkazy jsou bud skutecne, nebo viditelne oznacene DOPLNIT
   koucPlaceholdery.length === 0 || koucPlaceholdery.length === 6,
   JSON.stringify(koucPlaceholdery));
 
+// KO13: TRI MISTA S ODKAZY SE NESMI ROZEJIT.
+// Webhook zna `plink_...` (ID objektu z eventu), web a referral.js kratkou cast adresy
+// za buy.stripe.com/. Jsou to RUZNE identifikatory tehoz odkazu, takze je porovnat
+// nejde; porovnatelne jsou jen web vs. referral.js, plus pocty na vsech trech mistech.
+// Kdyz se ID doplni jen na web a ne do webhooku, clovek zaplati desetitisice a webhook
+// to odbavi jako „foreign-price".
+const zdrojKoucWeb = await Deno.readTextFile(KOREN + 'koucing/index.html');
+const zdrojReferral = await Deno.readTextFile(KOREN + 'assets/referral.js');
+// ⚠️ `var AK =` je v souboru DVAKRÁT (druhý blok je až za ODKAZY), takže konec výseku
+// se hledá AŽ OD začátku ODKAZY. Jinak je výsek prázdný a test hlásí „na webu nic".
+const zacatekWebOdkazu = zdrojKoucWeb.indexOf('var ODKAZY = {');
+const blokWebOdkazy = zacatekWebOdkazu < 0 ? '' : zdrojKoucWeb.slice(
+  zacatekWebOdkazu,
+  zdrojKoucWeb.indexOf('var AK =', zacatekWebOdkazu),
+);
+const webKody = [...blokWebOdkazy.matchAll(/https:\/\/buy\.stripe\.com\/([A-Za-z0-9_]+)/g)].map((m) => m[1]);
+const blokRefOdkazy = zdrojReferral.slice(
+  zdrojReferral.indexOf('var KOUCINK_ODKAZY = ['),
+  zdrojReferral.indexOf('function buyInfo('),
+);
+const refKody = [...blokRefOdkazy.matchAll(/'([A-Za-z0-9_]{10,})'/g)].map((m) => m[1]);
+const pocetKoucPlinku = [...blokOdkazy.matchAll(/"(plink_[A-Za-z0-9_]+)=coaching-/g)].length;
+const vsudeSest = pocetKoucPlinku === 6 && webKody.length === 6 && refKody.length === 6;
+const vsudeNula = pocetKoucPlinku === 0 && webKody.length === 0 && refKody.length === 0;
+check('KO13a odkazy koucinku jsou doplnene na vsech TRECH mistech, nebo na zadnem',
+  vsudeSest || vsudeNula || koucPlaceholdery.length === 6,
+  `webhook=${pocetKoucPlinku} web=${webKody.length} referral=${refKody.length}`);
+check('KO13b web a referral.js maji TYTEZ kratke kody odkazu, ve stejnem poradi',
+  JSON.stringify(webKody) === JSON.stringify(refKody),
+  `web=${JSON.stringify(webKody)} referral=${JSON.stringify(refKody)}`);
+
 // --- 16) MIGRACE KOUCINKU ---
 const MIG_KOUC = KOREN + 'akademie/_supabase/koucink-stripe.sql';
 let sqlKouc = '';

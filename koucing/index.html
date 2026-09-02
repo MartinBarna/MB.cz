@@ -536,10 +536,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
     /* ⭐⭐ KOUPIT HNED: koučink přes Stripe (2. 9. 2026).
        Martin: „když někdo kouká a chce se hecnout, koupí hned; bariéra kontakt = dny a nekoupí."
 
-       ⛔⛔ ODKAZY ZATÍM NEEXISTUJÍ. Dokud jsou prázdné, blok se NEUKÁŽE a stránka se chová
-          přesně jako dřív. Až Martin vytvoří ve Stripu šest cen a šest Payment Linků,
-          vyplní se sem adresy (a TÁŽ ID musí být v `academy-stripe-webhook`, jinak platba
-          projde a nárok nevznikne).
+       ⛔⛔ ŠEST ŽIVÝCH ODKAZŮ ZE STRIPU, doplněno 2. 9. 2026. TÁŽ ID musí být i
+          v `academy-stripe-webhook` (mapa ODKAZ_NA_PRODUKT) a v `assets/referral.js`
+          (pole KOUCINK_ODKAZY), jinak platba projde a nárok nevznikne. Prázdná adresa
+          u kteréhokoli období znamená, že se to období nenabízí a pošle na formulář.
        ⛔ Kupón se u koučinku NEPŘEDVYPLŇUJE (`referral.js`, `bezKuponu`): sleva 10 %
           z 59 500 Kč je jiná liga než z videokurzu a je to obchodní rozhodnutí, ne default.
           Kód partnera se přesto veze v `client_reference_id`, takže provize funguje.
@@ -547,12 +547,12 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
           na buy.stripe.com. Tady se o ni nestaráme. */
     (function () {
         var ODKAZY = {
-            'gold-1': '',      // TODO Stripe Payment Link, Gold 1 měsíc, 6 450 Kč
-            'gold-3': '',      // TODO Gold 3 měsíce, 16 950 Kč
-            'gold-6': '',      // TODO Gold 6 měsíců, 31 950 Kč
-            'diamond-1': '',   // TODO Diamond 1 měsíc, 11 900 Kč
-            'diamond-3': '',   // TODO Diamond 3 měsíce, 32 900 Kč
-            'diamond-6': ''    // TODO Diamond 6 měsíců, 59 500 Kč
+            'gold-1': 'https://buy.stripe.com/eVqbJ08bdffI5VebtR3ks0l',      // Gold 1 měsíc, 6 450 Kč
+            'gold-3': 'https://buy.stripe.com/aFaaEW0IL8Rk97qgOb3ks0m',      // Gold 3 měsíce, 16 950 Kč
+            'gold-6': 'https://buy.stripe.com/00wfZg779aZs4Ra2Xl3ks0n',      // Gold 6 měsíců, 31 950 Kč
+            'diamond-1': 'https://buy.stripe.com/cNi9ASbnpaZs97q0Pd3ks0o',   // Diamond 1 měsíc, 11 900 Kč
+            'diamond-3': 'https://buy.stripe.com/5kQbJ00IL5F84Ra9lJ3ks0p',   // Diamond 3 měsíce, 32 900 Kč
+            'diamond-6': 'https://buy.stripe.com/cNi3cuajl1oSerKapN3ks0q'    // Diamond 6 měsíců, 59 500 Kč
         };
         var AK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
         var bloky = [].slice.call(document.querySelectorAll('.buynow'));

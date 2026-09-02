@@ -432,18 +432,18 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     //    videokurzu ten krok přeskakuje drip-send/preskoc.ts). Na web NEPATŘÍ: veřejná
     //    cena kurzu je 800 Kč a odečet 349 má vidět jen ten, komu skutečně náleží.
     "plink_1U1oe9Bq3rKubW9k7212caGt=videokurz-upgrade," +
-    // ⭐⭐ KOUČINK (2. 9. 2026): ŠEST ODKAZŮ, KTERÉ JEŠTĚ NEEXISTUJÍ.
-    // ⛔ Tyhle `plink_DOPLNIT_*` jsou PLACEHOLDERY. Dokud je někdo nenahradí skutečnými
-    //    ID ze Stripu, žádná koučinková platba se nespáruje (spadne do „foreign-price").
-    //    Prodejní strana proto tlačítka „Koupit hned" schovává, dokud nemá adresy odkazů.
-    // ⚠️ Nahradit se to dá i BEZ deploye: `STRIPE_ONETIME_LINKS` v prostředí funkce
+    // ⭐⭐ KOUČINK (2. 9. 2026): ŠEST ŽIVÝCH ODKAZŮ ZE STRIPU, doplněno 2. 9. 2026.
+    //    Gold 6 450 / 16 950 / 31 950, Diamond 11 900 / 32 900 / 59 500 Kč.
+    //    Táž ID musí být i v `koucing/index.html` (objekt ODKAZY, celé adresy)
+    //    a v `assets/referral.js` (pole KOUCINK_ODKAZY, část adresy za buy.stripe.com/).
+    // ⚠️ Změnit se to dá i BEZ deploye: `STRIPE_ONETIME_LINKS` v prostředí funkce
     //    tenhle fallback CELÝ přebije, takže tam musí být i všechny řádky nad tímhle.
-    "plink_DOPLNIT_KOUCINK_GOLD_1=coaching-gold-1," +
-    "plink_DOPLNIT_KOUCINK_GOLD_3=coaching-gold-3," +
-    "plink_DOPLNIT_KOUCINK_GOLD_6=coaching-gold-6," +
-    "plink_DOPLNIT_KOUCINK_DIAMOND_1=coaching-diamond-1," +
-    "plink_DOPLNIT_KOUCINK_DIAMOND_3=coaching-diamond-3," +
-    "plink_DOPLNIT_KOUCINK_DIAMOND_6=coaching-diamond-6",
+    "plink_1UBIcrBq3rKubW9k9Nk4oIYr=coaching-gold-1," +
+    "plink_1UBIfiBq3rKubW9kp0q1AUxI=coaching-gold-3," +
+    "plink_1UBIiOBq3rKubW9k11UDGjpr=coaching-gold-6," +
+    "plink_1UBIk6Bq3rKubW9kMEMQVTFO=coaching-diamond-1," +
+    "plink_1UBIlhBq3rKubW9kVSQr0sXf=coaching-diamond-3," +
+    "plink_1UBIp5Bq3rKubW9kcMse38lm=coaching-diamond-6",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??

@@ -68,10 +68,10 @@
   // modal by se neukázal a doporučitel by o odměnu přišel, aniž by kdokoli poznal proč.
   // `4gM00ibnpgjMerK7dB3ks04` = odkaz Academy doživotně (plink_1TyQXw…).
   /* Odkazy koučinku (Gold i Diamond, 1/3/6 měsíců). Vyplňuje se TÝMIŽ ID, jaká jsou
-     v `koucing/index.html` a v `academy-stripe-webhook`. Prázdné = odkaz ještě nevznikl. */
+     v `koucing/index.html` a v `academy-stripe-webhook`. Doplněno 2. 9. 2026. */
   var KOUCINK_ODKAZY = [
-    '', '', '',   // gold 1 / 3 / 6
-    '', '', ''    // diamond 1 / 3 / 6
+    'eVqbJ08bdffI5VebtR3ks0l', 'aFaaEW0IL8Rk97qgOb3ks0m', '00wfZg779aZs4Ra2Xl3ks0n',   // gold 1 / 3 / 6
+    'cNi9ASbnpaZs97q0Pd3ks0o', '5kQbJ00IL5F84Ra9lJ3ks0p', 'cNi3cuajl1oSerKapN3ks0q'    // diamond 1 / 3 / 6
   ];
 
   function buyInfo(href) {
