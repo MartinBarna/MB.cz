@@ -401,6 +401,24 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             <p style="margin:0;color:var(--mut);font-size:.9rem;">Platit kartou nechceš? Napiš mi a pošlu ti fakturu na převod. Cena je stejná.</p>
         </div>
         <p class="center" style="color:var(--mut); margin-top:1.6rem;">Nevíš, který balíček je pro tebe ten pravý? <a href="#kontakt" style="font-weight:700;">Napiš mi a poradím ti zdarma.</a></p>
+        <!-- ⭐ [2026-09-02] MEZISTUPEŇ MEZI APPKOU A KOUČINKEM: appka ve VIP verzi
+             plus písemná kontrola ode mě jednou za 14 dní (tier `ai_kontrola`).
+             ⛔ ŽÁDNÁ CENA ANI POČET MÍST TADY. Ceny appky žijí v `pricing_plans`
+             a mění se v adminu; kdyby se napsaly sem, zestárly by potichu a
+             stránka by prodávala něco jiného než appka (past
+             `tvujcoach-cenik-zmena-checklist`). Odkaz vede na stránku appky,
+             kde se cena bere z ceníku.
+             ⚠️ Rozdíl proti koučinku musí zůstat čitelný: kontrola je písemná,
+             hovory a jídelníček na míru zůstávají koučinku. Kdo tuhle větu smaže,
+             smaže důvod, proč si někdo kupuje Gold.
+             ⛔⛔ BLOK JE SKRYTÝ a odkrývá ho až skript na konci stránky, když je
+             tarif v ceníku appky opravdu `active`. Do té doby nemá Stripe cenu a
+             na cílové stránce o něm nebude ani slovo, takže by tlačítko vedlo do
+             prázdna. Nález revize 2. 9. 2026 (R3). -->
+        <div id="kontrolaBlok" style="display:none;max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">
+            <p style="margin:0 0 .7rem;color:#d9d2c6;">Nechceš celý koučink? Vezmi si <strong style="color:#fff;">appku a kontrolu ode mě</strong>. Appka tě vede každý den, počítá cíle a přepisuje je podle toho, jak jde váha. Já se ti jednou za 14 dní podívám na data a napíšu ti, co v nich vidím a co bych na dalších 14 dní změnil. Kontrola je písemná, chodí mailem a najdeš ji i v appce. Hovory, WhatsApp a jídelníček na míru zůstávají koučinku.</p>
+            <a class="btn btn-ghost" href="/tvuj-coach/?utm_source=web&amp;utm_medium=koucing&amp;utm_campaign=tc-kontrola">Mrknout na appku s kontrolou →</a>
+        </div>
         <div style="max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">
             <p style="margin:0 0 .7rem;color:#d9d2c6;">Zatím ti to cenově nesedí? Nevadí, začni <strong style="color:#fff;">videokurzem za 1&nbsp;490&nbsp;Kč</strong>. Stejný systém, který učím klienty v koučinku, k samostudiu: 182 videí, kalkulačka, recepty. Doživotně.</p>
             <a class="btn btn-ghost" href="/videokurz">Mrknout na videokurz →</a>
@@ -622,6 +640,27 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         if (_form) _form.style.display = 'none';
         if (_diky) _diky.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+</script>
+<script>
+// Blok "appka s kontrolou ode mne" se ukaze JEN kdyz je tarif v ceniku appky
+// aktivni (dotaz filtruje active=eq.true). Bez toho by stranka nabizela tarif,
+// ktery Stripe jeste neumi prodat, a tlacitko by vedlo na stranku, kde o nem
+// neni ani slovo. Stejny mechanismus ma i blok na /tvuj-coach/.
+// ⛔ Zadna cena se tu NEZOBRAZUJE: ceny appky ziji v pricing_plans a na teto
+//    strance by potichu zestarly. Skript jen rozhoduje, jestli blok ukazat.
+(function () {
+  var API = 'https://kfkmghvhqwqtsalqjmrp.supabase.co/rest/v1/pricing_plans?select=tier,interval,active&active=eq.true';
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtma21naHZocXdxdHNhbHFqbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODA2NjQsImV4cCI6MjA5NTQ1NjY2NH0.8meIfIw51xCttJQa2WHMuX7ArbuCh4kK7t-ZWG7JSQA';
+  fetch(API, { headers: { apikey: KEY, Authorization: 'Bearer ' + KEY } })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (rows) {
+      if (!rows) return;
+      var jde = rows.some(function (x) { return x.tier === 'ai_kontrola' && x.interval === 'month'; });
+      var blok = document.getElementById('kontrolaBlok');
+      if (blok && jde) blok.style.display = '';
+    })
+    .catch(function () { /* blok zustane skryty, to je bezpecna varianta */ });
+})();
 </script>
 <script defer src="/assets/analytics.js?v=g18"></script><script defer src="/assets/referral.js?v=g7"></script>
 <script defer src="/assets/lead-popup.js?v=r3"></script>
