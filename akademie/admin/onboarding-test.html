@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onboarding klienta: testovací stránka (jen pro vývoj)</title>
+<!--
+  ⛔ VÝVOJOVÝ NÁSTROJ, NENÍ ODNIKUD ODKAZOVANÝ A NENÍ V NAVIGACI.
+  Pouští `onboarding.js` + engine `/assets/onboarding-cile.js` mimo admin, s vymyšleným
+  klientem a s falešným `api`, takže jde vyzkoušet výpočet variant, zdravotní brána,
+  výběr, koncepty mailů i odkaz do Gmailu bez přihlášení do adminu.
+
+  Jak spustit: v kořeni repa `npx serve -l 3000 .` a otevřít
+  http://localhost:3000/akademie/admin/onboarding-test.html
+
+  ⛔ Falešné `api` NIC neukládá a NIC nepropisuje do appky. Volání se jen vypíší do konzole.
+  Přepínačem dole se dá zkusit i odpověď „klient nemá účet v appce".
+-->
+<style>
+  body { background:#17151c; color:#e8e2d8; font-family:"Segoe UI",Arial,sans-serif; margin:0; padding:20px; }
+  .muted { color:#8F8A99; }
+  .mlogbtn { font:inherit; font-size:.85rem; padding:6px 12px; border:1px solid rgba(235,177,44,.5);
+             background:rgba(235,177,44,.1); color:#F6CD63; border-radius:8px; cursor:pointer; }
+  .mlogbtn:disabled { opacity:.5; cursor:default; }
+  .kdrod { font:inherit; font-size:.82rem; padding:5px 11px; margin-right:6px; border-radius:8px; cursor:pointer;
+           border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.05); color:#cbbfae; }
+  .kdrod.on { border-color:#EBB12C; background:rgba(235,177,44,.15); color:#F6CD63; }
+  h1 { font-size:1.1rem; }
+  #toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+           background:#2a2530; border:1px solid rgba(235,177,44,.4); color:#F6CD63;
+           padding:8px 16px; border-radius:10px; font-size:.85rem; display:none; }
+</style>
+</head>
+<body>
+<h1>🚀 Onboarding klienta: testovací stránka</h1>
+<p class="muted" style="font-size:.85rem;">Vývojový nástroj. Klient je vymyšlený, nic se neukládá ani nepropisuje.</p>
+<p style="font-size:.85rem;">Profil:
+  <button class="mlogbtn" data-prof="martin">muž 20 let, MMA, nabírání (Martinův referenční klient)</button>
+  <button class="mlogbtn" data-prof="obezita">žena 42 let, BMI 38, hubnutí</button>
+  <button class="mlogbtn" data-prof="citliva">žena 31 let, těhotenství a léky (zdravotní brána)</button>
+  <button class="mlogbtn" data-prof="bezuctu">muž 35 let, bez účtu v appce</button>
+</p>
+<div id="ob"></div>
+<div id="toast"></div>
+
+<script src="/akademie/admin/onboarding.js?v=20260902a"></script>
+<script>
+(function(){
+  function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; }, 2600); }
+
+  var PROFILY = {
+    martin: { name:'Tomáš Novák', vok:'Tomáši', rod:'m', appka:true, intake:{
+      vek:'20', vyska:'181', vaha:'64', kroky:'9000', dny_treninku:'6', sport:'MMA',
+      cil:'nabrat svaly', prace:'student, sedavá', aktivita:'sedavá', spanek:'8 hodin',
+      jidel_denne:'5', alergie:'', neji:'', vareni:'vaří máma', zdravi:'', leky:'', diety:'' } },
+    obezita: { name:'Jana Nováková', vok:'Jano', rod:'z', appka:true, intake:{
+      vek:'42', vyska:'165', vaha:'104', kroky:'4000', dny_treninku:'0', sport:'',
+      cil:'zhubnout', prace:'kancelář', aktivita:'sedavá', spanek:'6 hodin',
+      jidel_denne:'4', alergie:'', neji:'ryby', vareni:'vařím si sama', zdravi:'', leky:'', diety:'zkoušela jsem keto' } },
+    citliva: { name:'Petra Dvořáková', vok:'Petro', rod:'z', appka:true, intake:{
+      vek:'31', vyska:'170', vaha:'68', kroky:'7000', dny_treninku:'2', sport:'jóga',
+      cil:'zhubnout po porodu', prace:'na mateřské', aktivita:'lehká', spanek:'5 hodin',
+      jidel_denne:'4', alergie:'', neji:'', vareni:'vařím si sama',
+      zdravi:'kojím, mám hypotyreózu', leky:'Euthyrox', diety:'' } },
+    bezuctu: { name:'Karel Svoboda', vok:'Karle', rod:'m', appka:false, intake:{
+      vek:'35', vyska:'178', vaha:'82', kroky:'11000', dny_treninku:'4', sport:'posilovna a běh',
+      cil:'zpevnit postavu', prace:'prodavač', aktivita:'střední', spanek:'7 hodin',
+      jidel_denne:'5', alergie:'', neji:'', vareni:'vařím si sám', zdravi:'', leky:'', diety:'' } }
+  };
+
+  var maUcet = true;
+  function api(payload){
+    console.log('[test] api()', payload);
+    if(payload.action==='client_targets_save'){
+      return Promise.resolve({status:200, j:{ok:true}});
+    }
+    if(payload.action==='tc_goals_push'){
+      return new Promise(function(ok){ setTimeout(function(){
+        ok(maUcet ? {status:200, j:{ok:true, prepsano:true, user_id_8:'8f3a1c2d'}}
+                  : {status:200, j:{ok:false, duvod:'ucet_neexistuje'}});
+      }, 300); });
+    }
+    return Promise.resolve({status:400, j:{error:'test_neznama_akce'}});
+  }
+
+  function spust(klic){
+    var p = PROFILY[klic];
+    maUcet = p.appka;
+    var host = document.getElementById('ob');
+    host.innerHTML = '';
+    window.Onboarding.mount(host, {
+      email:'test@example.com', name:p.name, vok:p.vok, rod:p.rod,
+      intake:p.intake, targets:null, api:api, toast:toast,
+      poVyberu:function(cile){ console.log('[test] poVyberu →', cile); }
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-prof]'), function(b){
+    b.addEventListener('click', function(){ spust(b.getAttribute('data-prof')); });
+  });
+  spust('martin');
+})();
+</script>
+</body>
+</html>
