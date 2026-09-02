@@ -546,49 +546,51 @@ Deno.serve(async (req) => {
   // --- 📱 APPKA: nova aktivni predplatna za 24 h ---------------------
   // ⛔ PRIBYLO 2. 9. 2026. Do te doby cetl prehled jen Academy `entitlements`, takze den,
   // kdy appka Tvuj Coach prodala prvni dve predplatna, hlasil „0 prodeju". Radek
-  // „PRODEJE (STRIPE)" vys je JEN ACADEMY (videokurz, konzultace, balicek, dozivotni
-  // clenstvi); predplatne appky zije v UPLNE JINEM Supabase projektu
+  // „PRODEJE ACADEMY (STRIPE)" vys je JEN ACADEMY (videokurz, konzultace, balicek,
+  // dozivotni clenstvi); predplatne appky zije v UPLNE JINEM Supabase projektu
   // (kfkmghvhqwqtsalqjmrp) a do toho radku se nikdy nezapocita. Proto vlastni radek,
   // ne rozsireni seznamu zdroju vys.
   //
-  // ⛔ PROC PRES MOST A NE PRIMO DO DB APPKY: primy dotaz by znamenal drzet v Academy
-  // service-role klic appky, tedy plnou moc nad druhou databazi kvuli jednomu cislu.
-  // Tentyz zaver je sepsany v `drip-send` u dotazu `aktivace-stav`. Pouziva se TENTYZ most
-  // a TENTYZ secret, kterym sem uz chodi admin i koucinkovy blok nize
-  // (`app_config.academy_grant_secret`, v appce env `ACADEMY_GRANT_SECRET`).
-  // ⇒ ZADNY NOVY SECRET SE NEZAKLADA.
+  // ⛔ PROC VEREJNA RPC A NE SERVICE-ROLE KLIC APPKY: primy dotaz do jeji DB by znamenal
+  // drzet v Academy plnou moc nad druhou databazi kvuli trem cislum. Vzorem je proto
+  // `verejna_cisla()`, kterou uz `anon` vola z webu: RPC `nova_predplatna_24h()` vraci
+  // POUZE souctY (basic, vip, celkem), zadnou adresu ani ID. Staci tedy VEREJNY anon klic
+  // appky, ktery uz je stejne v HTML na martinbarna.cz/tvuj-coach/ (soubor
+  // `tvuj-coach/index.html`, tamtez se z teze databaze tahaji ceny).
+  // ⇒ ZADNY NOVY SECRET SE NEZAKLADA. Klic jde prebit env `TC_SUPABASE_ANON_KEY`,
+  //   kdyby ho appka nekdy rotovala; bez nej se pouzije tentyz verejny klic jako na webu.
   //
-  // ⚠️ NEDODELANE NA STRANE APPKY: akce `tc-nove-predplatne` v `academy-grant` zatim
-  // NEEXISTUJE (2. 9. 2026 umi grant, revoke, set-expiry, weekly-summary, access-status
-  // a tc-overview). Dokud ji tam nekdo nedoplni a nenasadi, vrati most 404 a radek
-  // poctive rekne „nedostupne". ⛔ Nula se tu misto toho zobrazit NESMI: veta
-  // „0 prodeju" je prave to, kvuli cemu tenhle blok vznikl.
-  let appkaPredplatna = "nedostupné (chybí secret academy_grant_secret)";
+  // ⚠️ DOKUD SE NEAPLIKUJE MIGRACE `20260902120000_nova_predplatna_24h.sql` v repu
+  // appky, vrati PostgREST 404 a radek poctive rekne „nedostupne". ⛔ Nula se misto
+  // toho zobrazit NESMI: veta „0 prodeju" je prave to, kvuli cemu tenhle blok vznikl.
+  const TC_URL = "https://kfkmghvhqwqtsalqjmrp.supabase.co/rest/v1/rpc/nova_predplatna_24h";
+  const TC_ANON = Deno.env.get("TC_SUPABASE_ANON_KEY") ??
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtma21naHZocXdxdHNhbHFqbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODA2NjQsImV4cCI6MjA5NTQ1NjY2NH0.8meIfIw51xCttJQa2WHMuX7ArbuCh4kK7t-ZWG7JSQA";
+  let appkaPredplatna = "nedostupné (appka neodpověděla)";
   let appkaPocet: number | null = null;
   try {
-    const { data: gsA } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
-    const gsecA = gsA?.value ? String(gsA.value) : "";
-    if (gsecA) {
-      appkaPredplatna = "nedostupné (appka neodpověděla)";
-      const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-academy-secret": gsecA },
-        body: JSON.stringify({ action: "tc-nove-predplatne", hodin: 24 }),
-        signal: AbortSignal.timeout(10_000),
-      });
-      if (r.status === 404) appkaPredplatna = "nedostupné (most zatím neumí akci tc-nove-predplatne)";
-      else if (!r.ok) appkaPredplatna = "nedostupné (most vrátil HTTP " + r.status + ")";
-      else {
-        const jj = await r.json().catch(() => null);
-        // ⛔ Cisla musi prijit jako cisla. Kdyz v odpovedi nejsou, je to porucha mostu,
-        // ne nula prodeju, a musi to byt videt.
-        const nc = Number(jj?.celkem), nb = Number(jj?.basic), nv = Number(jj?.vip);
-        if ([nc, nb, nv].every((x) => Number.isFinite(x))) {
-          appkaPocet = nc;
-          appkaPredplatna = nc + " (Basic " + nb + ", VIP " + nv + ")";
-        } else {
-          appkaPredplatna = "nedostupné (odpověď mostu nemá čísla)";
-        }
+    const r = await fetch(TC_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": TC_ANON,
+        "Authorization": "Bearer " + TC_ANON,
+      },
+      body: "{}",
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (r.status === 404) appkaPredplatna = "nedostupné (appka zatím nemá RPC nova_predplatna_24h)";
+    else if (!r.ok) appkaPredplatna = "nedostupné (appka vrátila HTTP " + r.status + ")";
+    else {
+      const jj = await r.json().catch(() => null);
+      // ⛔ Cisla musi prijit jako cisla. Kdyz v odpovedi nejsou, je to porucha RPC,
+      // ne nula prodeju, a musi to byt videt.
+      const nc = Number(jj?.celkem), nb = Number(jj?.basic), nv = Number(jj?.vip);
+      if ([nc, nb, nv].every((x) => Number.isFinite(x))) {
+        appkaPocet = nc;
+        appkaPredplatna = nc + " (Basic " + nb + ", VIP " + nv + ")";
+      } else {
+        appkaPredplatna = "nedostupné (odpověď RPC nemá čísla)";
       }
     }
   } catch (e) {
