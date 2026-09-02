@@ -90,3 +90,25 @@ Deno.test("pgFakta: strop délky 600 znaků na pole", () => {
   const dlouhy = f.split("\n").filter((r: string) => r.indexOf("vzkaz v dotazníku") === 0)[0] ?? "";
   tvrd(dlouhy.length < 700, "dlouhé pole se ořízlo (délka " + dlouhy.length + ")");
 });
+
+// [2026-09-02, po revizi] Rozsah zdravotních údajů v promptu. `alergie` a `diety` jídelníček
+// potřebuje, `léky` ne a nesmí tam být; `zdraví` je jen kontext ke stravě a má kratší strop.
+// Editor to Martinovi doslova slibuje (proužek v `akademie/admin/pruvodce.js`), takže se to
+// hlídá testem, ne dobrým úmyslem.
+Deno.test("pgFakta: léky do promptu nejdou, alergie a diety ano", () => {
+  const f = mod.pgFakta({ kcal: 2100, protein: 150, carbs: 229, fat: 65, fiber: 35 }, 5, "Petře", {
+    alergie: "laktoza", diety: "keto v roce 2019", leky: "levotyroxin 75 mikrogramu", zdravi: "stitna zlaza",
+  });
+  tvrd(f.indexOf("levotyroxin") === -1, "léky se do promptu nedostaly");
+  tvrd(f.indexOf("laktoza") > -1, "alergie v promptu jsou");
+  tvrd(f.indexOf("keto v roce 2019") > -1, "dřívější diety v promptu jsou");
+  tvrd(f.indexOf("stitna zlaza") > -1, "zdravotní omezení v promptu je");
+});
+
+Deno.test("pgFakta: zdraví má kratší strop (300 znaků)", () => {
+  const f = mod.pgFakta({ kcal: 2100, protein: 150, carbs: 229, fat: 65, fiber: 35 }, 5, "Petře", {
+    zdravi: "y".repeat(5000),
+  });
+  const radek = f.split("\n").filter((r: string) => r.indexOf("zdravotní omezení") === 0)[0] ?? "";
+  tvrd(radek.length > 300 && radek.length < 400, "zdraví se ořízlo na 300 znaků (délka " + radek.length + ")");
+});
