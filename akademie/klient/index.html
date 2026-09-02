@@ -356,9 +356,35 @@
       }).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; });
     });
   }
+  // ⛔ HTML dokumenty se OTEVÍRAJÍ, ostatní se stahují.
+  // Martin od 2. 9. 2026 ukládá klientům jídelníček na míru jako `.html`. Stažený soubor
+  // otevře člověk na počítači, ale na telefonu s tím většina lidí neuspěje (iOS ho ze
+  // Souborů otevře jen oklikou), takže by hlavní hodnota vstupu do koučinku spadla na
+  // technické tření. HTML se proto otevře v nové kartě přes PODEPSANOU adresu.
+  // ⛔ Schválně podepsaná adresa a ne `blob:`: blob dědí origin martinbarna.cz, takže by
+  // skript v nahraném HTML viděl přihlášení klienta. Podepsaná adresa běží na supabase.co,
+  // tedy na cizím originu, a k ničemu našemu se nedostane.
+  // ⛔ Okno se otevírá SYNCHRONNĚ, ještě před fetchem. Po `await` ho prohlížeč blokuje.
+  function jeHtml(nameTxt){ return /\.html?$/i.test(String(nameTxt || "")); }
   function openDoc(path, nameTxt){
+    var cesta = path.split("/").map(encodeURIComponent).join("/");
+    if (jeHtml(nameTxt)) {
+      var w = window.open("", "_blank");
+      window.BA.getToken().then(function(t){
+        return fetch(CFG.url + "/storage/v1/object/sign/client-docs/" + cesta, {
+          method: "POST",
+          headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t, "Content-Type": "application/json" },
+          body: JSON.stringify({ expiresIn: 3600 })
+        }).then(function(r){ return r.ok ? r.json() : null; });
+      }).then(function(j){
+        if (j && j.signedURL) { if (w) w.location = CFG.url + "/storage/v1" + j.signedURL; else toast("Prohlížeč zablokoval nové okno."); return; }
+        if (w) w.close();
+        toast("Dokument se nepodařilo otevřít, zkus to znovu.");
+      }).catch(function(){ if (w) w.close(); toast("Dokument se nepodařilo otevřít, zkus to znovu."); });
+      return;
+    }
     window.BA.getToken().then(function(t){
-      fetch(CFG.url + "/storage/v1/object/authenticated/client-docs/" + path.split("/").map(encodeURIComponent).join("/"),
+      fetch(CFG.url + "/storage/v1/object/authenticated/client-docs/" + cesta,
         { headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t } })
       .then(function(r){ if(!r.ok) throw 0; return r.blob(); })
       .then(function(b){
