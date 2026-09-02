@@ -52,6 +52,14 @@ export type PurchasePayload = {
    */
   order_id?: unknown;
   subscription_id?: unknown;
+  /**
+   * ⭐ Stripe zákazník (`cus_…`) z appky. Ukládá se k bonusovému videokurzu, aby
+   * ho refundová větev `academy-stripe-webhook` uměla spárovat s platbou, ze
+   * které vznikl. ⛔ Do 2. 9. 2026 se neposílal a bonusový řádek měl NULL
+   * v `stripe_customer_id` i `stripe_payment_intent`; refund appky proto kurz
+   * nenašel a přístup zůstal.
+   */
+  customer_id?: unknown;
   affiliate_code?: unknown;
   promotion_code_id?: unknown;
   /** 'first' (první aktivace, výchozí) nebo 'renewal' (další zaplacená faktura). */
@@ -407,6 +415,20 @@ async function udelBonus(
       // Vazba na předplatné, ze kterého bonus vznikl. Zatím se nikde nečte; je to
       // podklad pro budoucí rozhodnutí, co s bonusem při refundu ročního VIP.
       ...(text(body.subscription_id) ? { stripe_subscription_id: text(body.subscription_id) } : {}),
+      // ⛔ TOHLE JE PÁROVACÍ KLÍČ REFUNDU, ne evidence. `academy-stripe-webhook`
+      //    hledá řádek podle `stripe_payment_intent` a `stripe_customer_id`; když
+      //    jsou oba NULL, refund appky bonusový kurz nenajde a přístup zůstane
+      //    (stalo se 2. 9. 2026, odebíralo se ručně).
+      // ⚠️ Jen když hodnota přišla: prázdný string by přepsal existující vazbu na NULL.
+      ...(text(body.customer_id) ? { stripe_customer_id: text(body.customer_id) } : {}),
+      // ⛔⛔ `stripe_payment_intent` SE K BONUSU NEZAPISUJE, A JE TO ZÁMĚR (R3, 2. 9. 2026).
+      //    `academy-stripe-webhook` páruje placené produkty dotazem
+      //    `.eq("stripe_payment_intent", platba).maybeSingle()` BEZ filtru na produkt.
+      //    Druhý řádek s toutéž platbou by z něj udělal chybu, webhook by vrátil 500
+      //    a Stripe by refund opakoval pořád dokola. Refund bonusu proto páruje
+      //    `stripe_customer_id` (a u starých řádků e-mail), viz `refund-bonus.ts`.
+      //    Kdo tohle pole bude chtít zapnout, musí NEJDŘÍV omezit ten dotaz na
+      //    placené produkty.
     });
     return 'udelen';
   } catch (e) {

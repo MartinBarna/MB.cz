@@ -28,6 +28,8 @@ import {
   type GrantDeps,
 } from "./core.ts";
 
+import { ZDROJE_BONUS_APPKA } from "../academy-stripe-webhook/refund-bonus.ts";
+
 let selhalo = 0;
 function check(nazev: string, podminka: boolean, detail = ""): void {
   if (podminka) {
@@ -422,6 +424,15 @@ async function main(): Promise<void> {
     }
     check("vstup: chybí event_id → 400", status === 400);
   }
+
+  // ⛔ R4 (2. 9. 2026): zdroje, které tahle funkce a most umí vyrobit, MUSÍ být
+  //    v seznamu, podle kterého refund appky bonus poznává. Jinak by po refundu
+  //    zůstal přístup, jako 2. 9. 2026 u klientky K.
+  check("R4: SOURCE je v ZDROJE_BONUS_APPKA", ZDROJE_BONUS_APPKA.includes(SOURCE), SOURCE);
+  check("R4: SOURCE_ROCNI je v ZDROJE_BONUS_APPKA",
+    ZDROJE_BONUS_APPKA.includes(SOURCE_ROCNI), SOURCE_ROCNI);
+  check("R4: kazdy tichy bonus je v ZDROJE_BONUS_APPKA",
+    TICHE_BONUSY.every((z) => ZDROJE_BONUS_APPKA.includes(z)), TICHE_BONUSY.join(","));
 
   console.log(selhalo === 0 ? "\nVSE ZELENE\n" : `\n${selhalo} SELHANI\n`);
   if (selhalo > 0) throw new Error(String(selhalo) + " selhani");
