@@ -122,11 +122,16 @@
   var TVAR_ATRIB_POLE = /^(src|med|cmp|cnt)-[a-z0-9-]+$/i;
   var CREF_MAX = 200;
   function slozClientRef(ref, puvodni) {
-    var casti = [ref], delka = ref.length;
+    var casti = [ref], delka = ref.length, uzMam = {};
     String(puvodni || '').split('_').forEach(function (c) {
       if (!TVAR_ATRIB_POLE.test(c)) return;
+      // ⛔ Druhy vyskyt teze predpony si `rozdelClientRef` nevezme (bere jen prvni)
+      // a prilepi ho ke KODU, cimz lookup tise selze. Dnes to `clientRefAtribuce`
+      // vyrobit neumi, ale stoji to jeden radek.
+      var predpona = c.slice(0, c.indexOf('-')).toLowerCase();
+      if (uzMam[predpona]) return;
       if (delka + 1 + c.length > CREF_MAX) return;
-      casti.push(c); delka += 1 + c.length;
+      casti.push(c); delka += 1 + c.length; uzMam[predpona] = true;
     });
     return casti.join('_');
   }

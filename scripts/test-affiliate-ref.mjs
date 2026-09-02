@@ -130,6 +130,14 @@ console.log('\n2) Stripe odkaz nese kod partnera i jeho vlastni kupon');
     urlJunk.searchParams.get('client_reference_id') === 'KRISTINA10',
     urlJunk.searchParams.get('client_reference_id'));
 
+  // Druhy vyskyt teze predpony webhook pricte ke KODU, takze se zahazuje.
+  const dvakrat = nactiReferral({ query: '?ref=KRISTINA10' });
+  const urlDvakrat = new URL(klikniAPreskoc(dvakrat,
+    'https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04?client_reference_id=cnt-prvni_cnt-druhy'));
+  overit('druha stejna predpona se nepripoji',
+    urlDvakrat.searchParams.get('client_reference_id') === 'KRISTINA10_cnt-prvni',
+    urlDvakrat.searchParams.get('client_reference_id'));
+
   // Strop Stripu je 200 znaku: kdyz se nevejde vse, uriznout se musi MERENI, ne kod.
   const dlouha = 'cmp-' + 'x'.repeat(190);
   const strop = nactiReferral({ query: '?ref=KRISTINA10' });
