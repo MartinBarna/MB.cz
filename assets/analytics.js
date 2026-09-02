@@ -484,7 +484,18 @@
   function decorate() {
     var attr = get(), keys = [];
     for (var k in attr) if (attr.hasOwnProperty(k)) keys.push(k);
-    if (keys.length) {
+
+    /* ⭐ KÓD PARTNERA DO ODKAZŮ NA APPKU (2. 9. 2026).
+       Partnerka posílá lidi na `martinbarna.cz/?ref=KRISTINA10`. Když takový člověk
+       klikne na appku, doména se mění (tvujcoach.cz běží na Vercelu) a kód by zůstal
+       v localStorage martinbarna.cz, kam appka nevidí ⇒ registrace v appce by o partnera
+       přišla. Proto se `ref` veze v adrese, stejně jako atribuce reklamy nad tím.
+       ⛔ Kód a jeho expiraci vlastní `assets/referral.js` (klíče `ba_ref`/`ba_ref_t`,
+       60 dní); čteme ho jedině přes `window.MBRef.get()`, ať nevznikne druhá definice. */
+    var refPartnera = '';
+    try { refPartnera = (window.MBRef && window.MBRef.get && window.MBRef.get()) || ''; } catch (e) {}
+
+    if (keys.length || refPartnera) {
       var links = document.querySelectorAll('a[href*="tvujcoach.cz"]');
       Array.prototype.forEach.call(links, function (a) {
         var href = a.getAttribute('href') || '';
@@ -492,6 +503,8 @@
         try {
           var u = new URL(href, location.href);
           keys.forEach(function (k) { if (!u.searchParams.has(k)) u.searchParams.set(k, attr[k]); });
+          // Ruční `?ref=` v odkazu (zkratky /go/*) má přednost, nepřepisujeme ho.
+          if (refPartnera && !u.searchParams.has('ref')) u.searchParams.set('ref', refPartnera);
           a.setAttribute('href', u.toString());
         } catch (e) { /* nevalidní href necháme být */ }
       });
@@ -514,8 +527,12 @@
       } catch (e) { /* nevalidní href necháme být */ }
     });
   }
+  // ⛔ Deferovaný skript běží se `readyState === 'interactive'`, takže první průchod
+  // proběhne JEŠTĚ PŘED `referral.js` (načítá se za analytics.js) a `window.MBRef` by
+  // v něm neexistoval ⇒ kód partnera by v odkazech na appku chyběl. Druhý průchod na
+  // DOMContentLoaded ho doplní. Opakování je neškodné: co v odkazu je, se nepřepisuje.
   if (document.readyState !== 'loading') decorate();
-  else document.addEventListener('DOMContentLoaded', decorate);
+  document.addEventListener('DOMContentLoaded', decorate);
 })();
 
 /* ===== WhatsApp na počítači → QR popup =====================================

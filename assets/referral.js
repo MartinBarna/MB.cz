@@ -1,19 +1,45 @@
-/* Martin Barna — referral capture (doporučovací program, Cesta A).
-   1) Zachytí ?ref=BARNA-XXXX z odkazu doporučitele → localStorage (60 dní).
+/* Martin Barna - referral capture (doporučovací i affiliate program).
+   1) Zachytí ?ref=KOD z odkazu doporučitele nebo partnera → localStorage (60 dní).
    2) Když kamarád klikne na buy odkaz videokurzu (3Vbl) nebo Academy (Xgl8g)
       A MÁ uložený ref → sebere e-mail (kvůli spárování odměny), pošle {ref,email}
       do referral-click a předvyplní ?email= do SimpleShop odkazu.
-   Bez uloženého refu je skript neaktivní — běžný nakupující nic nepozná.
-   Sdílený soubor, načítá se z každé stránky za analytics.js. */
+   Bez uloženého refu je skript neaktivní - běžný nakupující nic nepozná.
+   Sdílený soubor, načítá se z každé stránky za analytics.js.
+
+   ⭐ DVA DRUHY KÓDŮ (od 2. 9. 2026):
+   - Členský `BARNA-XXXX` (doporučovací program): sleva `DOPORUC10`.
+   - Affiliate partner (`LUCIE10`, `KRISTINA10`, …): slevový kód se rovná KÓDU SAMÉMU.
+   Do 2. 9. 2026 se přijímal jen tvar `BARNA-`, takže `martinbarna.cz/?ref=KRISTINA10`
+   se nikam neuložil, klik se nezalogoval a partnerka o provizi tiše přišla. */
 (function () {
   var CLICK_FN = 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/referral-click';
   var LS = 'ba_ref', LS_T = 'ba_ref_t', MAX_DAYS = 60;
 
   // ---- 1) zachyť ?ref= ----
+  // Tvar je schválně široký: platnost kódu ověřuje server (`referral-click` hledá řádek
+  // v `referral_codes` a junk zahodí), tady jen odfiltrujeme zjevný nesmysl a držíme
+  // strop 32 znaků, který má i ta funkce.
+  //
+  // ⛔ VYJÍMÁME kódy začínající `SRC-`, `MED-`, `CMP-`, `CNT-`: přesně tyhle předpony
+  // rozebírá `rozdelClientRef` v `academy-stripe-webhook` jako atribuci reklamy, takže
+  // by takový kód ve `client_reference_id` zmizel a partner by tiše přišel o provizi.
+  // Žádný takový kód dnes neexistuje, tohle je pojistka pro budoucí zakládání kódů.
+  var TVAR_KODU = /^[A-Z0-9][A-Z0-9_-]{2,31}$/;
+  var TVAR_ATRIBUCE = /^(SRC|MED|CMP|CNT)-/;
+  function platnyKod(k) { return TVAR_KODU.test(k) && !TVAR_ATRIBUCE.test(k); }
+  /** Členský kód doporučovacího programu (sleva DOPORUC10) vs. affiliate partner. */
+  function jeClensky(k) { return /^BARNA-/.test(k); }
+
+  function refZUrl() {
+    try {
+      var k = (new URLSearchParams(location.search).get('ref') || '').trim().toUpperCase();
+      return platnyKod(k) ? k : '';
+    } catch (e) { return ''; }
+  }
+
   try {
-    var qs = new URLSearchParams(location.search);
-    var ref = (qs.get('ref') || '').trim().toUpperCase();
-    if (/^BARNA-[A-Z0-9]{4,10}$/.test(ref)) {
+    var ref = refZUrl();
+    if (ref) {
       localStorage.setItem(LS, ref);
       localStorage.setItem(LS_T, String(Date.now()));
     }
@@ -23,11 +49,18 @@
     try {
       var t = parseInt(localStorage.getItem(LS_T) || '0', 10);
       if (t && (Date.now() - t) > MAX_DAYS * 864e5) {
-        localStorage.removeItem(LS); localStorage.removeItem(LS_T); return '';
+        localStorage.removeItem(LS); localStorage.removeItem(LS_T); return refZUrl();
       }
-      return localStorage.getItem(LS) || '';
-    } catch (e) { return ''; }
+      // Adresa má přednost: kdo přišel z odkazu partnera, patří partnerovi z odkazu.
+      // Zároveň to drží kód i tam, kde je localStorage zakázaný (privátní režim).
+      return refZUrl() || localStorage.getItem(LS) || '';
+    } catch (e) { return refZUrl(); }
   }
+
+  // Export pro `analytics.js`, který kód dotaguje do odkazů na tvujcoach.cz.
+  // ⛔ Klíče `ba_ref`/`ba_ref_t` definuje JEN tenhle soubor; druhá definice jinde
+  // by se dřív nebo později rozešla (jiná expirace, jiný tvar kódu).
+  window.MBRef = { get: getRef, jeClensky: jeClensky };
 
   // ---- 2) je to buy odkaz produktu v referralu? ----
   // ⛔ Od 29. 7. 2026 jde Academy přes STRIPE, ne SimpleShop. Bez řádku pro Stripe
@@ -70,6 +103,7 @@
   // Stripe nese jen JEDNU hodnotu a peníze partnera mají přednost, takže se stará
   // hodnota nejdřív odstraní. Bez toho by v adrese byly parametry DVA, Stripe by si
   // vybral sám a doporučitel by o odměnu přišel podle toho, jak se zrovna trefil.
+  function slevovyKod(ref) { return (!ref || jeClensky(ref)) ? 'DOPORUC10' : ref; }
   function sParametry(url, email, jeStripe, ref) {
     var u = url;
     if (jeStripe && ref) {
@@ -83,9 +117,14 @@
       u += (u.indexOf('?') >= 0 ? '&' : '?') + klic + '=' + encodeURIComponent(hodnota);
     }
     if (jeStripe && ref) pridej('client_reference_id', ref);
-    // Kupón DOPORUC10 se předvyplní sám (ověřeno živým checkoutem 8. 8. 2026);
+    // Kupón se předvyplní sám (ověřeno živým checkoutem 8. 8. 2026);
     // bez tohohle musel kamarád kód ručně opsat a část jich to vzdala.
-    if (jeStripe) pridej('prefilled_promo_code', 'DOPORUC10');
+    // ⚠️ Členský program má jeden společný kupón `DOPORUC10`, affiliate partner má
+    // ve Stripu kupón POJMENOVANÝ STEJNĚ jako svůj kód (LUCIE10, KRISTINA10, …).
+    // Poslat partnerovu zákazníkovi `DOPORUC10` by mu sice dalo slevu, ale ve Stripe
+    // session by se objevil cizí promo kód a `zjistiPromoKod` ve webhooku ho bere
+    // s NEJVYŠŠÍ prioritou ⇒ provize by šla mimo partnera.
+    if (jeStripe) pridej('prefilled_promo_code', slevovyKod(ref));
     if (email) pridej(jeStripe ? 'prefilled_email' : 'email', email);
     return u;
   }
@@ -107,8 +146,8 @@
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     var ov = document.createElement('div'); ov.id = 'ba-ref-ov'; ov.style.display = 'none';
     ov.innerHTML = '<div class="bx" role="dialog" aria-modal="true">'
-      + '<h3>Máš slevu −10 % 🎉</h3>'
-      + '<p>Kamarád ti poslal doporučení. Zadej svůj e-mail, ať ti slevu spárujeme. Pak tě pošleme k platbě, kde se ti sleva načte sama (kdyby ne, vlož kód <b>DOPORUC10</b> do pole „Přidat kód promoakce").</p>'
+      + '<h3>Máš slevu 10 % 🎉</h3>'
+      + '<p id="ba-ref-txt"></p>'
       + '<input type="email" id="ba-ref-em" placeholder="tvuj@email.cz" autocomplete="email">'
       + '<input type="text" id="ba-ref-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">'
       + '<div class="err" id="ba-ref-err"></div>'
@@ -129,6 +168,16 @@
     var go = document.getElementById('ba-ref-go');
     var skip = document.getElementById('ba-ref-skip');
     err.textContent = ''; em.value = ''; setTimeout(function () { em.focus(); }, 50);
+
+    // Text sedí na to, odkud člověk přišel. „Kamarád ti poslal doporučení" u nákupu
+    // z odkazu partnerky nedává smysl a kód k ručnímu opsání je u obou jiný.
+    var kupon = slevovyKod(ref);
+    document.getElementById('ba-ref-txt').innerHTML =
+      (jeClensky(ref)
+        ? 'Kamarád ti poslal doporučení. Zadej svůj e-mail, ať ti slevu spárujeme.'
+        : 'Přišel jsi přes partnera, který ti dal slevu 10 %. Zadej svůj e-mail, ať ji spárujeme.')
+      + ' Pak tě pošleme k platbě, kde se sleva načte sama (kdyby ne, vlož kód <b>'
+      + kupon.replace(/[<>&]/g, '') + '</b> do pole „Přidat kód promoakce").';
 
     function close() { ov.style.display = 'none'; }
     function proceed(url) { close(); location.href = url; }
