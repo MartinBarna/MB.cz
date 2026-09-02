@@ -140,6 +140,30 @@ async function main(): Promise<void> {
     check('roční VIP: žádný alert', stav.alerty.length === 0, JSON.stringify(stav.alerty));
   }
 
+  // --- Párovací klíče refundu na bonusovém řádku (2. 9. 2026) ----------------
+  // ⛔ Bez nich refundová větev `academy-stripe-webhook` bonus nenajde a přístup
+  //    po vrácení peněz zůstane. Přesně to se stalo 2. 9. 2026.
+  {
+    const { deps, stav } = mock();
+    await handleAppPurchase(
+      { ...ROCNI_VIP, customer_id: 'cus_TEST', stripe_payment_intent: 'pi_TEST' },
+      deps,
+    );
+    const ent = stav.entitlementy[0] ?? {};
+    check('bonus nese stripe_customer_id', ent.stripe_customer_id === 'cus_TEST', JSON.stringify(ent));
+    check('bonus nese stripe_payment_intent', ent.stripe_payment_intent === 'pi_TEST', JSON.stringify(ent));
+    check('bonus nese stripe_subscription_id', ent.stripe_subscription_id === 'sub_1', JSON.stringify(ent));
+  }
+  {
+    // Když identifikátory nedorazí, pole se do upsertu VŮBEC nedostanou: prázdný
+    // string by přepsal existující vazbu na NULL.
+    const { deps, stav } = mock();
+    await handleAppPurchase(ROCNI_VIP, deps);
+    const ent = stav.entitlementy[0] ?? {};
+    check('bez customer_id se pole nezapisuje', !('stripe_customer_id' in ent), JSON.stringify(ent));
+    check('bez payment_intent se pole nezapisuje', !('stripe_payment_intent' in ent), JSON.stringify(ent));
+  }
+
   // --- payment_intent má přednost před event_id ------------------------------
   {
     const { deps, stav } = mock();

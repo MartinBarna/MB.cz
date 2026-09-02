@@ -148,6 +148,14 @@ type JednorazovyProdukt = {
 // stejné, nešlo by to rozhodnout a refund konzultace by lidem bral kurz, který si koupili.
 const ZDROJ_BONUS_VIDEOKURZ = "konzultace-bonus";
 
+// ⛔⛔ ZDROJE VIDEOKURZU, KTERÝ ROZDALA APPKA ZDARMA k předplatnému Tvůj Coach
+// (`app-purchase-bridge`, `grant-videokurz-z-appky`). Nikdo za tenhle kurz neplatil
+// zvlášť, takže když se vrátí peníze za předplatné appky, bonus jde s ním.
+// ⛔ NESMÍ tu být `stripe-videokurz` ani `simpleshop` (koupený kurz) ani
+// `konzultace-bonus` (ten řeší vlastní větev u refundu konzultace) ani `admin-panel`
+// (ruční dárek). Refund appky nikdy nesmí sebrat kurz, který si člověk koupil sám.
+const ZDROJE_BONUS_APPKA = ["prvni-platba-bonus", "rocni-vip-bonus", "appka-vip"];
+
 const KATALOG: Record<string, JednorazovyProdukt> = {
   // Academy doživotně 8 900 Kč. Od 29. 7. 2026 nahrazuje SimpleShop.
   // Produkt `prod_UyNGi6oRQPZLOe` „Barna Academy doživotní přístup",
@@ -1819,15 +1827,89 @@ Deno.serve(async (req) => {
       }
 
       if (!ent) {
+        // ⭐⭐ REFUND PŘEDPLATNÉHO APPKY BERE I BONUSOVÝ VIDEOKURZ (od 2. 9. 2026).
+        // Tenhle kurz appka rozdává zdarma k první platbě, takže po vrácení peněz
+        // není za co ho nechat. Do dneška se to nedělo: bonusový řádek neměl
+        // `stripe_payment_intent` ani `stripe_customer_id`, párování výš nenašlo nic
+        // a zůstal jen alert „PŘÍSTUP NEBYL ODEBRÁN" (klientka 2. 9. 2026).
+        // ⛔ Odebírá se VÝHRADNĚ `product='videokurz'` se `source` z `ZDROJE_BONUS_APPKA`.
+        //    Zaplacený videokurz ani Academy se kvůli refundu appky nesahá NIKDY.
+        // ⛔ Částečný refund tady stejně jako níž nic neodebírá.
+        const castkaB = Number(obj.amount ?? 0);
+        const vracenoB = Number(obj.amount_refunded ?? 0);
+        const castecnyB = !jeSpor && castkaB > 0 && vracenoB > 0 && vracenoB < castkaB;
+
+        const emailZPlatby = String(
+          obj.billing_details?.email ?? obj.receipt_email ?? "",
+        ).trim().toLowerCase();
+
+        // ⚠️ POŘADÍ: platba je jednoznačná, zákazník taky (bonus se váže na jedno
+        // předplatné). E-mail je až třetí a SÁM O SOBĚ NESTAČÍ na jistotu, že refund
+        // patří appce, proto se do alertu píše, podle čeho se rozhodlo.
+        let bonusy: Array<{ email: string; source: string | null }> = [];
+        let podle = "";
+        if (!castecnyB && platba) {
+          const { data } = await admin.from("entitlements")
+            .select("email, source").eq("stripe_payment_intent", platba)
+            .eq("product", "videokurz").eq("active", true).in("source", ZDROJE_BONUS_APPKA);
+          if (data?.length) { bonusy = data; podle = "payment_intent"; }
+        }
+        if (!castecnyB && !bonusy.length && zakaznik) {
+          const { data } = await admin.from("entitlements")
+            .select("email, source").eq("stripe_customer_id", zakaznik)
+            .eq("product", "videokurz").eq("active", true).in("source", ZDROJE_BONUS_APPKA);
+          if (data?.length) { bonusy = data; podle = "stripe_customer_id"; }
+        }
+        if (!castecnyB && !bonusy.length && emailZPlatby) {
+          const { data } = await admin.from("entitlements")
+            .select("email, source").eq("email", emailZPlatby)
+            .eq("product", "videokurz").eq("active", true).in("source", ZDROJE_BONUS_APPKA);
+          if (data?.length) { bonusy = data; podle = "e-mail z platby"; }
+        }
+
+        if (bonusy.length) {
+          const konecBonus = new Date().toISOString();
+          const emailyBonus = [...new Set(bonusy.map((b) => b.email))];
+          const { error: chybaBonusApp } = await admin.from("entitlements")
+            .update({ active: false, expires_at: konecBonus })
+            .in("email", emailyBonus).eq("product", "videokurz")
+            .in("source", ZDROJE_BONUS_APPKA);
+          if (chybaBonusApp) {
+            await alertAdmin("🔴 Stripe: refund appky, bonusový videokurz se NEODEBRAL", {
+              email: emailyBonus.join(", "),
+              zakaznik: zakaznik || "(žádný)",
+              platba: platba || "(žádná)",
+              chyba: chybaBonusApp.message,
+              co_delat: "⛔ NEODEBRÁNO, důvod: zápis do entitlements selhal. Odeber "
+                + "videokurz ručně v adminu. ⚠️ NEJDŘÍV zkontroluj `source`: odebírá se "
+                + "jen bonus z appky (" + ZDROJE_BONUS_APPKA.join(", ") + ").",
+            });
+          } else {
+            await alertAdmin("Stripe: refund appky, bonusový videokurz ODEBRÁN AUTOMATICKY", {
+              email: emailyBonus.join(", "),
+              zdroj_radku: bonusy.map((b) => b.source ?? "-").join(", "),
+              sparovano_podle: podle,
+              zakaznik: zakaznik || "(žádný)",
+              platba: platba || "(žádná)",
+              co_delat: "✅ ODEBRÁNO AUTOMATICKY, nic dělat nemusíš. Placené produkty "
+                + "(Academy, koupený videokurz) se refundem appky nesahají.",
+            });
+          }
+          return json({
+            ok: true,
+            odebrano: !chybaBonusApp,
+            bonus_appky: true,
+            sparovano_podle: podle,
+            pocet: emailyBonus.length,
+          });
+        }
+
         // Není náš zákazník (typicky refund předplatného appky). Ticho je tu SPRÁVNÉ,
         // takových refundů chodí spousta a alert by se z nich stal šum.
         // ⭐ ALE: než mlčky odejdeme, zkusíme e-mail z platby jako POSLEDNÍ pojistku.
         // ⛔ Podle e-mailu se nikdy NEJEDNÁ (Academy a appka sdílí Stripe účet, takže
         // refund appky by sebral Academy), jen se KŘIČÍ. Tím se tahle třída chyby příště
         // pozná do minuty místo až z reklamace, a přitom nehrozí špatné odebrání.
-        const emailZPlatby = String(
-          obj.billing_details?.email ?? obj.receipt_email ?? "",
-        ).trim().toLowerCase();
         if (emailZPlatby) {
           // ⛔ BEZ FILTRU NA PRODUKT. Dokud tu stálo `product = "academy"`, byla tahle
           // pojistka u každého jiného produktu MRTVÁ, a to je horší než žádná: vypadá,
@@ -1842,8 +1924,12 @@ Deno.serve(async (req) => {
               zdroj: podleMailu.source,
               zakaznik: zakaznik || "(žádný)",
               platba: platba || "(žádná)",
-              co_delat: "⛔ PŘÍSTUP NEBYL ODEBRÁN. Odeber ho ručně v adminu a nahlas to, "
-                + "protože párování mělo zafungovat samo.",
+              co_delat: "⛔ NEODEBRÁNO, důvod: platba se nespárovala na žádný řádek "
+                + "(payment_intent ani stripe_customer_id nesedí) a podle e-mailu se "
+                + "SCHVÁLNĚ nejedná, protože Academy i appka jedou na jednom Stripe účtu. "
+                + "Odeber přístup ručně v adminu a nahlas to, párování mělo zafungovat samo. "
+                + "⚠️ Bonusový videokurz z appky se odebírá automaticky, tenhle alert je "
+                + "o něčem jiném.",
             });
           }
         }
