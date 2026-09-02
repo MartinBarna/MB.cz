@@ -1287,8 +1287,12 @@
       var origTxt=b.textContent; b.disabled=true; b.textContent='📨 Posílám…';
       api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind,plan:plan}).then(function(o){
         b.disabled=false; b.textContent=origTxt;
-        if(o.j&&o.j.ok){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value=''; loadKlienti(); }
-        else toast('Chyba: '+((o.j&&(o.j.error||o.j.mail_status))||o.status));
+        /* ⛔ `ok` z API znamená ZAPSANÝ NÁROK, ne odeslaný mail. Když nárok je a mail
+           selhal, klient přístup MÁ a stačí mail poslat znovu; hlásí se to jinak než
+           „nezapsalo se nic", protože každá z těch dvou situací se řeší jinak. */
+        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value=''; loadKlienti(); }
+        else if(o.j&&o.j.ok){ toast('⚠️ Přístup zapsán, ale MAIL NEODEŠEL ('+((o.j.mail_status)||'?')+'). Pošli ho znovu.'); loadKlienti(); }
+        else toast('🔴 Přístup se NEZAPSAL: '+((o.j&&(o.j.entitlement||o.j.error))||o.status));
       }).catch(function(){ b.disabled=false; b.textContent=origTxt; toast('Chyba spojení'); });
     });
     // ---- detail klienta ----

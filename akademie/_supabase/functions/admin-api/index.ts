@@ -2847,7 +2847,22 @@ Deno.serve(async (req) => {
         plan: body.plan === "diamond" ? "diamond" : (body.plan === "gold" ? "gold" : undefined),
         resendKey: RESEND_KEY,
       });
-      return json({ ok: vysledek.ok, mail_status: vysledek.mail_status, priloha: vysledek.priloha, app_grant: vysledek.app_grant });
+      // ⛔⛔ `ok` ZNAMENÁ „NÁROK JE ZAPSANÝ", ne „mail odešel" (oprava po revizi 2. 9. 2026).
+      // `onboardKoucink` vrací `ok` jen podle stavu Resendu. Kdyby se sem propsalo samo,
+      // admin by hlásil „📨 Posláno" i tehdy, když upsert do `entitlements` spadl (typicky
+      // když se nasadí funkce PŘED migrací, která zakládá sloupce `plan`/`months`).
+      // Klientovi by přišel uvítací mail, přihlásil by se a neměl nic. Je to táž chyba jako
+      // incident 27. 7. 2026, jen o patro výš. Selhání mailu se hlásí ZVLÁŠŤ: přístup
+      // zapsaný je, mail se dá poslat znovu.
+      const narokOk = vysledek.entitlement === "ok";
+      return json({
+        ok: narokOk,
+        entitlement: vysledek.entitlement,
+        mail_ok: vysledek.ok,
+        mail_status: vysledek.mail_status,
+        priloha: vysledek.priloha,
+        app_grant: vysledek.app_grant,
+      });
     }
 
     // Ukonceni koucinku: odebere klientskou sekci, s ni i appku Tvuj Coach, a posle mail

@@ -1414,7 +1414,12 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
     months: k.months,
     // Chybějící pole = na sloupec se nesahá, takže přístup bez konce zůstává bez konce.
     ...(expiresAt ? { expiresAt } : {}),
-    academyPo3m: k.plan === "diamond" && novyKlient,
+    // ⛔ POSÍLÁ SE JEN `true`, NIKDY `false` (oprava po revizi 2. 9. 2026). Modul zapisuje
+    //    pokaždé, když hodnota není `undefined`. Nový Diamond na měsíc dostane `true`;
+    //    kdyby si za měsíc koupil další (a `novyKlient` byl už `false`), přepsalo by se
+    //    to na `false` přesně ve chvíli, kdy se ke třem zaplaceným měsícům blíží.
+    //    Příznak je jediné trvalé místo, kde Martin vidí, komu Academy zůstává napořád.
+    ...(k.plan === "diamond" && novyKlient ? { academyPo3m: true } : {}),
     // ⛔ Uvítací mail JEN při prvním grantu: při prodloužení by vyzýval k vyplnění
     //    vstupního dotazníku, který ten člověk dávno vyplnil.
     uvitani: novyKlient,
@@ -2058,7 +2063,14 @@ Deno.serve(async (req) => {
       // ⚠️ `plan` a `months` jsou tu kvůli koučinku (2. 9. 2026): šest klíčů katalogu
       // sdílí jeden `source`, takže podle zdroje by rozlučkový mail řekl "Gold (1 měsíc)"
       // i člověku, který vracel Diamond na půl roku.
-      const SLOUPCE_ENT = "email, product, source, expires_at, stripe_subscription_id, plan, months";
+      // ⛔⛔ SCHVÁLNĚ `*`, NE VÝČET SLOUPCŮ (oprava po revizi 2. 9. 2026). Kdyby tu stál
+      // výčet se sloupci `plan, months`, které zakládá až migrace `koucink-stripe.sql`,
+      // pak by nasazení téhle funkce PŘED migrací shodilo oba párovací dotazy na neznámý
+      // sloupec: `data` by bylo `undefined`, `ent` zůstalo `null` a refund by spadl do
+      // větve „nic jsem nenašel". A to u VŠECH produktů, ne jen u koučinku, takže vrácená
+      // Academy za 8 900 Kč by přístup neodebrala. Tiše, s návratovým kódem 200.
+      // `*` je proti pořadí nasazení odolné a nic navíc nestojí.
+      const SLOUPCE_ENT = "*";
       const zakaznik = typeof obj.customer === "string" ? obj.customer : "";
       const platba = typeof obj.payment_intent === "string" ? obj.payment_intent : "";
       if (!zakaznik && !platba) return json({ ok: true, ignored: "bez-identifikatoru" });

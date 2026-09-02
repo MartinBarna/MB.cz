@@ -154,6 +154,20 @@
             : href.indexOf('00w8wO0IL3x0bfyeG33ks0j') !== -1 ? { id: 'poukaz-videokurz', name: 'Poukaz: videokurz', val: 1490 }
             : href.indexOf('9B66oGfDF0kOdnG41p3ks0f') !== -1 ? { id: 'poukaz-academy', name: 'Poukaz: Barna Academy', val: 8900 }
             : href.indexOf('cNi28qajlebE1EY1Th3ks0g') !== -1 ? { id: 'poukaz-balicek', name: 'Poukaz: 40 receptů a 48 odpovědí', val: 349 }
+            // ⭐⭐ ONLINE KOUČINK GOLD A DIAMOND (od 2. 9. 2026, stránka /koucing/).
+            // Šest odkazů = šest období, každé s jinou cenou. KAŽDÉ má vlastní `id`
+            // a vlastní hodnotu schválně, ze stejného důvodu jako dvě konzultace výš:
+            // reklamy se musí učit na částce, která opravdu přišla. Slít Gold na měsíc
+            // (6 450) s Diamondem na půl roku (59 500) by měřilo devítinásobně vedle.
+            // ⛔ Bez těchhle šesti řádků padá nejdražší produkt na webu do větve
+            // `stripe-other` s hodnotou 0. Táž ID musí být i v `koucing/index.html`
+            // (mapa ODKAZY), v `assets/referral.js` (KOUCINK_ODKAZY) a ve webhooku.
+            : href.indexOf('eVqbJ08bdffI5VebtR3ks0l') !== -1 ? { id: 'koucink-gold-1', name: 'Online koučink Gold (1 měsíc)', val: 6450 }
+            : href.indexOf('aFaaEW0IL8Rk97qgOb3ks0m') !== -1 ? { id: 'koucink-gold-3', name: 'Online koučink Gold (3 měsíce)', val: 16950 }
+            : href.indexOf('00wfZg779aZs4Ra2Xl3ks0n') !== -1 ? { id: 'koucink-gold-6', name: 'Online koučink Gold (6 měsíců)', val: 31950 }
+            : href.indexOf('cNi9ASbnpaZs97q0Pd3ks0o') !== -1 ? { id: 'koucink-diamond-1', name: 'Online koučink Diamond (1 měsíc)', val: 11900 }
+            : href.indexOf('5kQbJ00IL5F84Ra9lJ3ks0p') !== -1 ? { id: 'koucink-diamond-3', name: 'Online koučink Diamond (3 měsíce)', val: 32900 }
+            : href.indexOf('cNi3cuajl1oSerKapN3ks0q') !== -1 ? { id: 'koucink-diamond-6', name: 'Online koučink Diamond (6 měsíců)', val: 59500 }
             // ⚠️ SimpleShop varianta ZŮSTÁVÁ schválně: web je od 30. 7. přepnutý na Stripe,
             // ale staré odkazy pořád žijí v už rozeslaných mailech. Kdyby tenhle řádek zmizel,
             // klik ze starého mailu by se měřil s hodnotou 0.

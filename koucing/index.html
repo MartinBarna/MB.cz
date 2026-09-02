@@ -543,8 +543,13 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
        ⛔ Kupón se u koučinku NEPŘEDVYPLŇUJE (`referral.js`, `bezKuponu`): sleva 10 %
           z 59 500 Kč je jiná liga než z videokurzu a je to obchodní rozhodnutí, ne default.
           Kód partnera se přesto veze v `client_reference_id`, takže provize funguje.
-       ⚠️ Atribuci reklamy do adresy dopisuje `analytics.js` sám, na každý odkaz
-          na buy.stripe.com. Tady se o ni nestaráme. */
+       ⛔⛔ ADRESY SE DOSAZUJÍ SYNCHRONNĚ, NEZÁVISLE NA DOTAZU KAPACITY. Atribuci reklamy
+          (`client_reference_id`) dopisuje `analytics.js` ve funkci `decorate()`, a ta běží
+          při načtení skriptu a znovu na `DOMContentLoaded`, tedy PŘED tím, než se vrátí
+          síťový dotaz na kapacitu. Dokud tlačítka měla `href="#kontakt"` až do `.then()`,
+          `decorate()` na téhle stránce žádný odkaz na buy.stripe.com nenašel a u nejdražšího
+          produktu na webu by nešlo zjistit, která reklama ho prodala. Kapacita proto
+          přepíná JEN viditelnost. */
     (function () {
         var ODKAZY = {
             'gold-1': 'https://buy.stripe.com/eVqbJ08bdffI5VebtR3ks0l',      // Gold 1 měsíc, 6 450 Kč
@@ -578,9 +583,15 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         var zapnute = bloky.filter(function (b) { return maAsponJeden(b.getAttribute('data-plan')); });
         if (!zapnute.length) return;   // odkazy ještě nejsou, stránka zůstává jako dřív
 
-        /* KAPACITA: 10 míst. Čte se živě z RPC `koucink_kapacita()` (vrací jen tři čísla,
-           žádné e-maily). ⛔ Když dotaz selže, tlačítka se UKÁŽOU: výpadek databáze nesmí
-           zavřít prodej. Naopak plno se musí projevit hned, proto se nečeká na build. */
+        /* ⛔ ADRESY HNED, JEŠTĚ PŘED DOTAZEM NA KAPACITU: `analytics.js` je čte na
+           `DOMContentLoaded` a na nic nečeká. Skrytý blok se dotagovat dá, nedosazená
+           adresa ne. */
+        zapnute.forEach(nastav);
+
+        /* KAPACITA: strop je v `app_config.koucink_kapacita`, čte se živě z RPC
+           `koucink_kapacita()` (vrací jen tři čísla, žádné e-maily). ⛔ Když dotaz selže,
+           tlačítka se UKÁŽOU: výpadek databáze nesmí zavřít prodej. Naopak plno se musí
+           projevit hned, proto se nečeká na build. */
         function zobraz(volno) {
             var plno = (volno !== null && volno <= 0);
             document.getElementById('koucinkPlno').hidden = !plno;
@@ -588,7 +599,6 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             zapnute.forEach(function (b) {
                 b.hidden = plno;
                 if (plno) return;
-                nastav(b);
                 /* Dokud odkazy nejsou, zůstává hlavní tlačítko „Chci Gold" na formuláři
                    a stránka se chová jako dřív. Jakmile jde koupit hned, stane se z něj
                    druhá volba pro toho, kdo se chce nejdřív zeptat. */
@@ -613,7 +623,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         if (_diky) _diky.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 </script>
-<script defer src="/assets/analytics.js?v=g17"></script><script defer src="/assets/referral.js?v=g7"></script>
+<script defer src="/assets/analytics.js?v=g18"></script><script defer src="/assets/referral.js?v=g7"></script>
 <script defer src="/assets/lead-popup.js?v=r3"></script>
 <script defer src="/assets/scroll-top.js?v=g10"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a7"><link rel="stylesheet" href="/assets/theme-light.css?v=l6"></body>
