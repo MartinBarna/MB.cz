@@ -1020,7 +1020,7 @@ Deno.serve(async (req) => {
       const [ccRows, ldsRows, entsRows, evsRows, allUsers] = await Promise.all([
         fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name,tags,status,audience,onboarding_sent_at").order("email").range(f, t)),
         fetchAllRows((f, t) => admin.from("leads").select("id,email,name,segment,source,track,step,status,next_send_at").order("id").range(f, t)),
-        fetchAllRows((f, t) => admin.from("entitlements").select("email,product,active").order("email").order("product").range(f, t)),
+        fetchAllRows((f, t) => admin.from("entitlements").select("email,product,active,expires_at").order("email").order("product").range(f, t)),
         fetchAllRows((f, t) => admin.from("email_events").select("lead_id,type,created_at").not("lead_id", "is", null).order("id").range(f, t)),
         listAllUsers(admin),
       ]);
@@ -1052,7 +1052,10 @@ Deno.serve(async (req) => {
         // aktivnich klientu je 13 a presne tolik jich ukazuje karta „Klienti koucinku".
         // Dva ukazatele tehoz v jednom adminu si nesmi odporovat, takze se ted oba
         // pocitaji z `entitlements`, coz je jediny zdroj, ktery rozhoduje o pristupu.
-        if (e.product === "coaching" && e.active) r.has_coaching = true;
+        // ⚠️ Od 2. 9. 2026 může být koučinkový nárok ČASOVANÝ (zaplacené období přes Stripe).
+        // `active` sám o sobě proto nestačí: propadlý nárok už klientem nedělá.
+        if (e.product === "coaching" && e.active
+            && (!e.expires_at || new Date(e.expires_at).getTime() > Date.now())) r.has_coaching = true;
       }
       for (const u of allUsers) {
         const k = low(u.email); if (!k) continue;
@@ -2065,7 +2068,7 @@ Deno.serve(async (req) => {
         // ⭐ 2. 9. 2026: i `plan`, `months`, `expires_at` a `source`. Od te doby jde koucink
         // koupit pres Stripe, takze Martin musi na seznamu poznat, KTERY balicek clovek ma,
         // do kdy ma zaplaceno a jestli si to koupil sam, nebo mu to zalozil rucne.
-        admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source").eq("product", "coaching"),
+        admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source,academy_po_3m").eq("product", "coaching"),
         admin.from("client_reports").select("email,report_date"),
         // `created_at` kvůli frontě „dotazníky ke zpracování" v UI. Klient může poslat
         // dotazník víckrát, bereme ten nejnovější (viz `intakeAt` níž).
@@ -2107,6 +2110,9 @@ Deno.serve(async (req) => {
           // `plan` je null u nikoho, kdo prisel po migraci `koucink-stripe.sql` (ta dopsala
           // vsem stavajicim `gold`). Null se proto cte jako "nevime", ne jako Gold.
           plan: e.plan ?? null, months: e.months ?? null, expires_at: e.expires_at ?? null,
+          // Diamond nového klienta: Academy mu po 3 zaplacených měsících zůstává napořád.
+          // Přidělí ji Martin ručně, tohle je jediné trvalé místo, kde to uvidí.
+          academy_po_3m: e.academy_po_3m === true,
           // "stripe" = koupil si sam z webu, "rucni" = zalozil Martin v adminu.
           zdroj: String(e.source ?? "").startsWith("stripe-") ? "stripe" : "rucni", reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), intake_at: intakeAt.get(k) ?? null, targets_at: targetsAt.get(k) ?? null, app: "?" as string };
       }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
@@ -2174,7 +2180,8 @@ Deno.serve(async (req) => {
       const OKNO = 30;                                        // klouzavé okno pro průměry a změny
       const hranice = new Date(Date.now() - OKNO * 86400000).toISOString().slice(0, 10);
       const [ents, reps, targets, cc] = await Promise.all([
-        admin.from("entitlements").select("email,active").eq("product", "coaching"),
+        // ⚠️ `expires_at` kvůli časovaným nárokům (Stripe): propadlý klient do přehledu nepatří.
+        admin.from("entitlements").select("email,active,expires_at").eq("product", "coaching"),
         admin.from("client_reports").select("email,report_date,weight,measurements,nutrition,activity,scales").order("report_date", { ascending: true }),
         admin.from("client_targets").select("*"),
         admin.from("customer_contacts").select("email,name"),
@@ -2199,7 +2206,9 @@ Deno.serve(async (req) => {
         const a = repBy.get(k); if (a) a.push(r); else repBy.set(k, [r]);
       }
 
-      const rows = (ents.data ?? []).map((e) => {
+      const rows = (ents.data ?? []).filter((e) =>
+        !e.expires_at || new Date(e.expires_at).getTime() > Date.now()
+      ).map((e) => {
         const k = low(e.email);
         const vse = repBy.get(k) ?? [];
         const okno = vse.filter((r) => r.report_date >= hranice);

@@ -18,15 +18,14 @@
 export type KoucinkPlan = "gold" | "diamond";
 
 /**
- * Kolik lidí Martin bere najednou. Strop je obchodní rozhodnutí (10 míst), ne technické:
- * když je plno, prodejní strana schová „Koupit hned" a nabídne čekací listinu.
- * ⛔ Strop NEHLÍDÁ platbu. Stripe odkaz zná každý, kdo si ho uložil, takže se přes
- *    naplněnou kapacitu dá zaplatit dál. Proto webhook při překročení posílá alert
- *    a Martin platbu buď vezme, nebo vrátí. Tiše to spolknout by bylo horší.
+ * Výchozí strop, když v `app_config` klíč `koucink_kapacita` chybí nebo je nečitelný.
+ * ⛔ Skutečný strop patří do `app_config`, ne sem: Martin ho musí umět změnit bez deploye.
+ * ⛔ Kapacita NEHLÍDÁ platbu. Stripe odkaz zná každý, kdo si ho uložil, takže se přes
+ *    plno dá zaplatit. Proto webhook při překročení pošle alert a Martin platbu buď
+ *    vezme, nebo vrátí. Tiše to spolknout by bylo horší.
  */
-export const KOUCINK_KAPACITA = 10;
+export const KOUCINK_KAPACITA_VYCHOZI = 25;
 
-/** Zdroj nároku u nákupu přes Stripe. ⛔ Musí zůstat odlišný od `admin-klient-invite`, jinak nepoznáme, co se prodalo samo. */
 export const KOUCINK_SOURCE_STRIPE = "stripe-koucink";
 
 /**
@@ -57,21 +56,43 @@ export function koucinkNazev(plan: KoucinkPlan, months: number): string {
 }
 
 /**
- * Kolik lidí má PRÁVĚ TEĎ aktivní koučink. Počítá se z `entitlements`, protože jiný
- * seznam klientů neexistuje (značky v `customer_contacts` se s nároky dávno rozešly,
- * viz komentář u `clients_list` v admin-api).
- * ⚠️ Propadlý nárok (expires_at v minulosti) se nepočítá: místo je zase volné.
+ * KAPACITA: kolik míst je obsazených a jaký je strop.
+ *
+ * ⛔⛔ OPRAVA PO REVIZI (2. 9. 2026). První verze počítala každý aktivní nárok
+ * `coaching`. Živě jich je 17, všechny bez expirace, takže by kapacita hlásila plno
+ * a prodejní strana by se v den spuštění zavřela místo otevřela.
+ * Za obsazené místo se proto počítá:
+ *   - nárok s expirací v budoucnu (zaplacené období, ať už ze Stripu, nebo z adminu),
+ *   - nárok bez expirace POUZE tehdy, když přišel ze Stripu (to by nemělo nastat,
+ *     je to pojistka proti tichému nepočítání placeného místa).
+ * Nepočítá se NIKDY `test-claude` a nepočítají se historické ruční přístupy do sekce
+ * bez expirace. ⚠️ Kolik z nich jsou pořád klienti, ví jedině Martin.
+ *
+ * ⚠️ Strop není v kódu: čte se z `app_config` klíče `koucink_kapacita`, aby ho Martin
+ * změnil bez nasazování. Chybějící nebo nečíselná hodnota = KOUCINK_KAPACITA_VYCHOZI.
  */
-export async function koucinkPocetAktivnich(admin: any): Promise<number> {
+export async function koucinkKapacita(admin: any): Promise<{ kapacita: number; obsazeno: number; volno: number }> {
   const { data } = await admin
     .from("entitlements")
-    .select("email,expires_at")
+    .select("email,expires_at,source")
     .eq("product", "coaching")
     .eq("active", true);
   const ted = Date.now();
-  return (data ?? []).filter((r: { expires_at: string | null }) =>
-    !r.expires_at || new Date(r.expires_at).getTime() > ted
-  ).length;
+  const obsazeno = (data ?? []).filter((r: { expires_at: string | null; source: string | null }) => {
+    const zdroj = String(r.source ?? "");
+    if (zdroj === "test-claude") return false;
+    if (r.expires_at) return new Date(r.expires_at).getTime() > ted;
+    return zdroj.startsWith("stripe");
+  }).length;
+
+  let kapacita = KOUCINK_KAPACITA_VYCHOZI;
+  try {
+    const { data: cfg } = await admin.from("app_config").select("value").eq("key", "koucink_kapacita").maybeSingle();
+    const n = Number(String(cfg?.value ?? "").replace(/[^0-9]/g, ""));
+    if (Number.isFinite(n) && n > 0) kapacita = n;
+  } catch { /* strop je pomůcka, výpadek nesmí shodit nákup */ }
+
+  return { kapacita, obsazeno, volno: Math.max(0, kapacita - obsazeno) };
 }
 
 export type OnboardVstup = {
@@ -89,6 +110,12 @@ export type OnboardVstup = {
   /** Diamond nového klienta: po 3 zaplacených měsících mu Academy zůstává napořád. Jen příznak pro Martina, žádný automat. */
   academyPo3m?: boolean;
   stripe?: { customer?: string | null; paymentIntent?: string | null };
+  /**
+   * Poslat uvítací mail? Výchozí ano.
+   * ⛔ U PRODLOUŽENÍ musí být `false`: mail „Vítej v týmu" vyzývá k vyplnění vstupního
+   *    dotazníku, který ten člověk dávno vyplnil, a působí, jako by o něm Martin nevěděl.
+   */
+  uvitani?: boolean;
   resendKey: string;
 };
 
@@ -184,6 +211,10 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
         products: ["coaching"], tags: ["coaching-active"],
       });
     }
+  }
+
+  if (v.uvitani === false) {
+    return { ok: true, entitlement: entErr ? "chyba: " + entErr.message : "ok", app_grant: gres, mail_status: 0, priloha: false };
   }
 
   if (!v.resendKey) {

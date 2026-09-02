@@ -46,11 +46,10 @@ import {
 // z tohohle modulu: `katalog-konzistence.test.ts` čte zdroják jako text a přes
 // konstantu by zdroj neviděl, takže by přestal hlídat, že ho zná i `daily-digest`.
 import {
-  KOUCINK_KAPACITA,
   type KoucinkPlan,
   koucinkExpirace,
+  koucinkKapacita,
   koucinkNazev,
-  koucinkPocetAktivnich,
   onboardKoucink,
 } from "../_shared/koucink-onboarding.ts";
 
@@ -1390,15 +1389,22 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
     return json({ ok: true, produkt: "coaching", stav: "prehrana-udalost", payment_intent: pi });
   }
 
+  // Nový klient = ten, kdo koučink právě teď nemá. Rozhoduje o třech věcech:
+  // uvítací mail s dotazníkem, příznak Academy u Diamondu a text alertu Martinovi.
+  const novyKlient = !(stavajici?.active === true);
+
+  // ⛔⛔ PŘÍSTUP BEZ KONCE SE NIKDY NEZKRACUJE (oprava po revizi, 2. 9. 2026).
+  // Všech 17 dnešních koučinkových nároků má `expires_at = null`, tedy bez konce.
+  // Kdyby si kterýkoli z těch lidí koupil přes Stripe jeden měsíc, původní verze by mu
+  // z neomezeného přístupu udělala měsíční. To je přesně to, co zákaz „nikomu nic
+  // nerušit" zakazuje. Takovému člověku se zapíše jen balíček a délka, konec zůstává
+  // prázdný a Martin dostane alert, ať s tím naloží jako člověk.
+  const bezKonce = stavajici?.active === true && !stavajici.expires_at;
   const stareDo = stavajici?.active && stavajici.expires_at
     ? new Date(stavajici.expires_at)
     : null;
   const zaklad = stareDo && stareDo.getTime() > Date.now() ? stareDo : new Date();
-  const expiresAt = koucinkExpirace(k.months, zaklad);
-
-  // Nový klient = ten, kdo koučink právě teď nemá. Rozhoduje o tom, jestli mu Diamond
-  // sjednává Academy napořád (Martinovo rozhodnutí: jen pro NOVÉ klienty).
-  const novyKlient = !(stavajici?.active === true);
+  const expiresAt = bezKonce ? null : koucinkExpirace(k.months, zaklad);
 
   const ob = await onboardKoucink(admin, {
     email,
@@ -1406,14 +1412,25 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
     source: def.source,
     plan: k.plan,
     months: k.months,
-    expiresAt,
+    // Chybějící pole = na sloupec se nesahá, takže přístup bez konce zůstává bez konce.
+    ...(expiresAt ? { expiresAt } : {}),
     academyPo3m: k.plan === "diamond" && novyKlient,
+    // ⛔ Uvítací mail JEN při prvním grantu: při prodloužení by vyzýval k vyplnění
+    //    vstupního dotazníku, který ten člověk dávno vyplnil.
+    uvitani: novyKlient,
     stripe: {
       customer: typeof obj.customer === "string" ? obj.customer : null,
       paymentIntent: pi,
     },
     resendKey: RESEND_KEY,
   });
+  if (bezKonce) {
+    await alertAdmin("⚠️ Stripe: koučink koupil člověk s PŘÍSTUPEM BEZ KONCE", {
+      email, produkt: koucinkNazev(k.plan, k.months),
+      poznamka: "Přístup jsem NEZKRÁTIL: `expires_at` zůstává prázdné, zapsal jsem jen balíček a délku.",
+      co_delat: "Rozhodni, jestli mu má období začít běžet (pak doplň konec v adminu), nebo ne.",
+    });
+  }
   if (ob.entitlement !== "ok") {
     await alertAdmin("🔴 Stripe: KOUČINK zaplacen, ale nárok se nezapsal", {
       email, produkt: koucinkNazev(k.plan, k.months), chyba: ob.entitlement,
@@ -1440,23 +1457,27 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
   // ⛔ KAPACITA JE OBCHODNÍ STROP, NE ZÁMEK. Odkaz zná každý, kdo si ho uložil, takže
   // se přes plno dá zaplatit. Blokovat platbu po zaplacení nejde, ale Martin to musí
   // vědět hned: buď si to místo udělá, nebo peníze vrátí.
-  const obsazeno = await koucinkPocetAktivnich(admin);
-  if (obsazeno > KOUCINK_KAPACITA) {
+  // ⚠️ Strop se čte z `app_config` (`koucink_kapacita`) a počítají se jen placená
+  // a časovaná místa, ne historické ruční přístupy. Alert jde ven jen tehdy, když strop
+  // překročil právě proběhlý NÁKUP; jinak by první opravdový alert zapadl mezi falešné.
+  const kap = await koucinkKapacita(admin);
+  if (kap.obsazeno > kap.kapacita) {
     await alertAdmin("🔴 Stripe: KOUČINK KOUPEN PŘES PLNOU KAPACITU", {
-      email, obsazeno, kapacita: KOUCINK_KAPACITA,
-      co_delat: "Rozhodni: vzít nad rámec, nebo vrátit peníze ve Stripu a napsat mu.",
+      email, obsazeno: kap.obsazeno, kapacita: kap.kapacita,
+      co_delat: "Rozhodni: vzít nad rámec, nebo vrátit peníze ve Stripu a napsat mu. "
+        + "Strop zvedneš v `app_config`, klíč `koucink_kapacita`.",
     });
   }
 
   await alertAdmin(def.alertPoNakupu ?? "Stripe: zaplacený koučink", {
     email,
     produkt: koucinkNazev(k.plan, k.months),
-    plati_do: datumCesky(expiresAt),
+    plati_do: expiresAt ? datumCesky(expiresAt) : "beze změny (přístup bez konce)",
     novy_klient: novyKlient ? "ano" : "ne (prodloužení)",
     academy_po_3m: k.plan === "diamond" && novyKlient
       ? "⚠️ Diamond nového klienta: po 3 zaplacených měsících mu Academy zůstává napořád. Přiděl ji ručně."
       : "netýká se",
-    obsazenost: `${obsazeno} z ${KOUCINK_KAPACITA}`,
+    obsazenost: `${kap.obsazeno} z ${kap.kapacita}`,
     co_delat: "Ozvi se mu, jakmile pošle vstupní dotazník.",
   });
 
@@ -1464,7 +1485,8 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
     ok: true, produkt: "coaching", plan: k.plan, months: k.months,
     plati_do: expiresAt, novy_klient: novyKlient,
     entitlement: ob.entitlement, app_grant: ob.app_grant, uvitani: ob.mail_status,
-    doklad, referral, atribuce, obsazeno,
+    doklad, referral, atribuce, obsazeno: kap.obsazeno, kapacita: kap.kapacita,
+    bez_konce: bezKonce, uvitani_odeslano: novyKlient,
   });
 }
 
@@ -1501,6 +1523,26 @@ Deno.serve(async (req) => {
         const klic = ODKAZ_NA_PRODUKT[plinkL];
         const def = klic ? KATALOG[klic] : undefined;
         if (!def) {
+          // ⛔⛔ TICHO TADY STÁLO PENÍZE (oprava po revizi, 2. 9. 2026).
+          // Cizí jednorázové platby z téhož Stripe účtu (typicky appka) sem chodí běžně
+          // a alert u každé z nich by se přestal číst. Ale scénář „ID odkazu se doplní
+          // na web a zapomene se na webhook" byl do teď ÚPLNĚ tichý: člověk zaplatí
+          // za koučink až 59 500 Kč, dostane HTTP 200 a nikdo se nic nedozví.
+          // ⇒ Hranice podle částky: appka prodává za 249 a 499 Kč, takže cokoli
+          //    od 5 000 Kč výš je platba, kterou tahle funkce má znát.
+          // ⚠️ Hranice je v haléřích, `amount_total` taky.
+          const HRANICE_ALERTU_HALERU = 500_000;
+          const castkaH = Number(obj.amount_total ?? 0);
+          if (Number.isFinite(castkaH) && castkaH >= HRANICE_ALERTU_HALERU) {
+            await alertAdmin("🔴 Stripe: ZAPLACENO PŘES NEZNÁMÝ ODKAZ, přístup NEUDĚLEN", {
+              payment_link: plinkL || "(žádný)",
+              castka: castkaText(castkaH, String(obj.currency ?? "czk")),
+              email: String(obj.customer_details?.email ?? obj.customer_email ?? "(neznámý)"),
+              session: String(obj.id ?? ""),
+              co_delat: "⛔ Doplň ID odkazu do `ODKAZ_NA_PRODUKT` ve webhooku (nebo do proměnné "
+                + "`STRIPE_ONETIME_LINKS`, ta kód přebíjí) a přístup zatím uděl ručně v adminu.",
+            });
+          }
           return json({ ok: true, ignored: "foreign-price", mode: "payment", payment_link: plinkL || null });
         }
         const emailL = String(

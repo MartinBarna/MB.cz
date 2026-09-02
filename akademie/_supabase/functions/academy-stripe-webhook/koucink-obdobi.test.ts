@@ -6,7 +6,7 @@
 // jak dlouho člověk dostává službu za 6 450 až 59 500 Kč. Chyba se pozná až ve chvíli,
 // kdy klientovi předčasně zmizí klientská sekce, tedy pozdě a u platícího.
 import {
-  KOUCINK_KAPACITA,
+  KOUCINK_KAPACITA_VYCHOZI,
   koucinkExpirace,
   koucinkNazev,
 } from "../_shared/koucink-onboarding.ts";
@@ -58,8 +58,21 @@ check("N1 gold 1", koucinkNazev("gold", 1) === "Online koučink Gold (1 měsíc)
 check("N2 gold 3", koucinkNazev("gold", 3) === "Online koučink Gold (3 měsíce)", koucinkNazev("gold", 3));
 check("N3 diamond 6", koucinkNazev("diamond", 6) === "Online koučink Diamond (6 měsíců)", koucinkNazev("diamond", 6));
 
-// --- 8) Kapacita je 10 míst (Martinovo obchodní rozhodnutí) ---
-check("K1 kapacita je 10", KOUCINK_KAPACITA === 10, String(KOUCINK_KAPACITA));
+// --- 8) Kapacita: strop patří do `app_config`, v kódu je jen výchozí hodnota ---
+// ⛔ Kdyby se strop vrátil do kódu, Martin ho nezmění bez nasazování a prodej se
+// zavře přesně ve chvíli, kdy si toho nikdo nevšimne.
+check("K1 vychozi strop je 25", KOUCINK_KAPACITA_VYCHOZI === 25, String(KOUCINK_KAPACITA_VYCHOZI));
+const zdrojModulu = await Deno.readTextFile(
+  new URL("../_shared/koucink-onboarding.ts", import.meta.url),
+);
+check("K2 kapacita se cte z app_config klice koucink_kapacita",
+  zdrojModulu.includes('eq("key", "koucink_kapacita")'), "");
+check("K3 test-claude se do kapacity nepocita nikdy",
+  zdrojModulu.includes('zdroj === "test-claude"'), "");
+check("K4 rucni narok bez expirace neobsazuje misto (jen stripe)",
+  zdrojModulu.includes('return zdroj.startsWith("stripe");'), "");
+check("K5 uvitaci mail jde vypnout pri prodlouzeni",
+  zdrojModulu.includes("v.uvitani === false"), "");
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? "  ok" : "FAIL"}  ${c.name}${c.pass ? "" : "  -> " + c.detail}`);

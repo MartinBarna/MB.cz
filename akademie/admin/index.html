@@ -261,6 +261,12 @@
             <option value="novy">Nový klient (dotazník)</option>
             <option value="stavajici">Stávající klient (Konec Excelu)</option>
           </select>
+          <!-- Balíček se posílá do `client_invite`. Bez něj by ručně pozvaný klient měl
+               v tabulce „?" a nešlo by ho odlišit od Diamondu. -->
+          <select id="kiPlan" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+            <option value="gold">Gold</option>
+            <option value="diamond">Diamond</option>
+          </select>
           <button class="mlogbtn" id="kiSend">📨 Zapnout přístup + poslat mail</button>
         </div>
         <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména — zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.</p>
@@ -1154,7 +1160,11 @@
             doKdy = '<br><span class="muted" style="font-size:.8rem;">bez konce</span>';
           }
           var zdroj = r.zdroj==='stripe' ? ' <span class="muted" title="koupeno na webu přes Stripe">💳</span>' : '';
-          return jmeno+delka+zdroj+doKdy;
+          // Diamond nového klienta: po 3 zaplacených měsících mu Academy zůstává napořád.
+          // ⛔ Nic to nepřidělí samo. Bez tohohle řádku by byl jedinou stopou jednorázový
+          //    alert v mailu, který za tři měsíce nikdo nenajde.
+          var academy = r.academy_po_3m ? '<br><span style="color:#F6CD63;font-size:.8rem;" title="Po 3 zaplacených měsících mu Academy zůstává napořád. Přiděl ručně.">🎓 Academy po 3 měs.</span>' : '';
+          return jmeno+delka+zdroj+doKdy+academy;
         }
         function radek(r, jeByvaly){
           var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
@@ -1270,12 +1280,12 @@
     $('kiName').addEventListener('input',function(){ $('kiVok').value=kliVok($('kiName').value); });
     $('kiSend').addEventListener('click',function(){
       var b=$('kiSend'); if(b.disabled) return; // dvojklik = dvojitý mail klientovi
-      var email=($('kiEmail').value||'').trim().toLowerCase(), name=($('kiName').value||'').trim(), vok=($('kiVok').value||'').trim(), kind=$('kiKind').value;
+      var email=($('kiEmail').value||'').trim().toLowerCase(), name=($('kiName').value||'').trim(), vok=($('kiVok').value||'').trim(), kind=$('kiKind').value, plan=$('kiPlan').value;
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast('Zadej platný e-mail'); return; }
       var what=kind==='stavajici'?'„Konec Excelu" (stávající klient)':'pozvánka s dotazníkem (nový klient)';
-      if(!confirm('Zapnout klientskou sekci pro '+email+' a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"')) return;
+      if(!confirm('Zapnout klientskou sekci pro '+email+' ('+(plan==='diamond'?'Diamond':'Gold')+') a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"')) return;
       var origTxt=b.textContent; b.disabled=true; b.textContent='📨 Posílám…';
-      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind}).then(function(o){
+      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind,plan:plan}).then(function(o){
         b.disabled=false; b.textContent=origTxt;
         if(o.j&&o.j.ok){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value=''; loadKlienti(); }
         else toast('Chyba: '+((o.j&&(o.j.error||o.j.mail_status))||o.status));

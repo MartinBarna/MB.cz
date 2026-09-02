@@ -146,7 +146,13 @@ Deno.serve(async (req: Request) => {
     return json({ error: "test_email_invalid", hint: 'cekam prazdne telo (ostry beh) nebo {"test_email":"nekdo@domena.cz"}', got: klice }, 400);
 
   // klienti s aktivním coaching entitlementem
-  const { data: ents } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
+  // ⛔ Od 2. 9. 2026 může být koučinkový nárok ČASOVANÝ (zaplacené období přes Stripe).
+  // Bez podmínky na expiraci by bývalému klientovi chodila pondělní připomínka reportu
+  // dál, i když mu koučink skončil. Prázdná expirace = přístup bez konce, ten platí.
+  const nyni = new Date().toISOString();
+  const { data: ents } = await admin.from("entitlements").select("email")
+    .eq("product", "coaching").eq("active", true)
+    .or("expires_at.is.null,expires_at.gt." + nyni);
   const clients = [...new Set((ents ?? []).map((e) => low(e.email)))].filter(Boolean);
   if (!clients.length) return json({ ok: true, sent: 0 });
 

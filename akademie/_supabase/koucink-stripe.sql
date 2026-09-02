@@ -48,16 +48,52 @@ comment on column public.entitlements.academy_po_3m is
 -- Dnešní klienti jsou Gold. ⛔ Bez tohohle by `plan is null` znamenal zároveň „historický
 -- Gold" i „nevíme", a admin by u nich ukazoval prázdno místo balíčku, který si koupili.
 -- (Diamond klienty, pokud mezi nimi jsou, přepíše Martin ručně; víme to jen z mailů.)
+-- ⚠️ Omezeno datem SCHVÁLNĚ (nález revize): bez něj by opakované spuštění po startu
+-- prodeje označilo jako Gold i pozdější ruční nárok, který balíček zatím nemá.
 update public.entitlements
    set plan = 'gold'
- where product = 'coaching' and plan is null;
+ where product = 'coaching' and plan is null
+   and granted_at < timestamptz '2026-09-03 00:00:00+02';
+
+-- --- PROVIZE Z KOUČINKU: CHECK v `referrals` o koučinku neví -----------------
+-- ⛔⛔ Bez tohohle se provize NIKDY nezapíše. Živý constraint zná jen
+--    academy | videokurz | balicek | konzultace | appka, takže insert po zaplaceném
+--    koučinku spadne, `atribuujReferral` chybu převede na alert a partner o peníze
+--    tiše přijde. Čtyři aktivní partneři mají sazbu 0,20, takže u Diamondu
+--    na 6 měsíců jde o 11 900 Kč z jednoho prodeje.
+-- ⚠️ Jestli se provize z koučinku vyplácet má a v jaké výši, rozhoduje Martin.
+--    Tahle migrace jen umožňuje zápis; sazby zůstávají ty, co má partner v `referral_codes`.
+do $$
+begin
+  if exists (select 1 from pg_constraint where conname = 'referrals_product_check') then
+    alter table public.referrals drop constraint referrals_product_check;
+  end if;
+  alter table public.referrals
+    add constraint referrals_product_check
+    check (product in ('academy', 'videokurz', 'balicek', 'konzultace', 'appka', 'coaching'));
+end$$;
 
 -- --- KAPACITA: kolik míst je obsazených a kolik zbývá ------------------------
 -- Čte se z prodejní strany `/koucing/`, aby se „Koupit hned" schovalo, když je plno.
 -- ⛔ Vrací JEN tři čísla, žádné e-maily. Grant je pro `anon`, takže cokoli navíc
 --    v návratové hodnotě by bylo zveřejnění klientských dat.
--- ⚠️ Nová funkce, žádná starší varianta se stejným jménem neexistuje (ověřeno v pg_proc),
---    takže `create or replace` tu nevyrobí druhou funkci s jinou signaturou.
+--
+-- ⛔⛔ CO SE POČÍTÁ ZA OBSAZENÉ MÍSTO (oprava po revizi, 2. 9. 2026):
+--    První verze počítala každý aktivní nárok `coaching`. Živě jich je 17 a VŠECHNY
+--    jsou bez expirace, takže RPC by vrátila „plno" a prodejní stránka by se v den
+--    spuštění zavřela místo otevřela. Proto:
+--      - `test-claude` se nepočítá NIKDY (testovací řádky),
+--      - ruční nároky BEZ expirace se nepočítají: jsou to historické přístupy do sekce,
+--        ne obsazené místo. ⚠️ Otázka na Martina: kolik z těch 15 lidí jsou pořád
+--        aktivní klienti? Dokud to nevíme, kapacita měří jen placená a časovaná místa.
+--      - co má expiraci v budoucnu, se počítá (ať už přišlo ze Stripu, nebo z adminu);
+--        propadlé nároky místo uvolňují.
+-- ⚠️ Strop NENÍ v kódu: leží v `app_config` pod klíčem `koucink_kapacita`, aby ho
+--    Martin změnil bez nasazování. Chybějící nebo nečíselná hodnota = 25.
+insert into public.app_config (key, value)
+values ('koucink_kapacita', '25')
+on conflict (key) do nothing;
+
 create or replace function public.koucink_kapacita()
 returns jsonb
 language sql
@@ -66,21 +102,31 @@ security definer
 set search_path to 'public', 'pg_temp'
 as $function$
   select jsonb_build_object(
-    'kapacita', 10,
+    'kapacita', k.kapacita,
     'obsazeno', c.obsazeno,
-    'volno', greatest(0, 10 - c.obsazeno)
+    'volno', greatest(0, k.kapacita - c.obsazeno)
   )
   from (
+    select coalesce(
+      (select nullif(regexp_replace(value, '[^0-9]', '', 'g'), '')::int
+         from public.app_config where key = 'koucink_kapacita'),
+      25) as kapacita
+  ) k,
+  (
     select count(*)::int as obsazeno
     from public.entitlements
     where product = 'coaching'
       and active = true
-      and (expires_at is null or expires_at > now())
+      and coalesce(source, '') <> 'test-claude'
+      and (
+        expires_at > now()
+        or (expires_at is null and source like 'stripe%')
+      )
   ) c;
 $function$;
 
 comment on function public.koucink_kapacita() is
-  'Veřejná čísla o kapacitě koučinku (10 míst). Bez osobních údajů, volatelné anonymně z /koucing/.';
+  'Veřejná čísla o kapacitě koučinku (strop v app_config.koucink_kapacita). Počítá placená a časovaná místa, ne historické ruční přístupy. Bez osobních údajů.';
 
 -- ⛔ Grant patří `public`, ne jen `anon`: revoke od `anon` je mrtvá páka, když právo
 --    visí na `public` (incident 27. 8. 2026, `tydenik_rozeslani`). Tady je to naopak

@@ -405,6 +405,55 @@ check('KS3 webhook onboarding importuje, nema vlastni kopii',
 check('KS4 uvitaci mail koucinku je jen ve sdilenem modulu',
   zdrojShared.includes('Vítej v týmu'), '');
 
+// --- 18) OPRAVY PO REVIZI (2. 9. 2026) ---
+// Tyhle tri vady by pri zapnuti prodeje stály penize nebo prodej rovnou zavrely.
+// Padaly by jen naostro, proto jsou tady jako pojistka proti navratu.
+
+// R-A) Kapacita nesmi pocitat historicke rucni pristupy, jinak je "plno" uz v den startu.
+check('RA1 migrace bere strop z app_config, ne z kodu',
+  /koucink_kapacita/.test(sqlKouc) && /insert into public\.app_config/.test(sqlKouc), '');
+check('RA2 RPC nepocita test-claude', /<> 'test-claude'/.test(sqlKouc), '');
+check('RA3 RPC nepocita rucni narok bez expirace',
+  /expires_at is null and source like 'stripe%'/.test(sqlKouc), '');
+check('RA4 webhook cte kapacitu pres koucinkKapacita (app_config), ne pres konstantu',
+  /koucinkKapacita\(admin\)/.test(zdrojWebhook) && !/KOUCINK_KAPACITA/.test(zdrojWebhook), '');
+
+// R-B) Provize z koucinku se bez rozsireni CHECKu nikdy nezapise.
+check('RB1 migrace pridava coaching do referrals_product_check',
+  /add constraint referrals_product_check[\s\S]{0,200}'coaching'/.test(sqlKouc), '');
+check('RB2 drop constraint je podmineny (idempotence)',
+  /if exists \(select 1 from pg_constraint where conname = 'referrals_product_check'\)/.test(sqlKouc), '');
+
+// R-C) Neznamy odkaz uz nesmi byt uplne tichy.
+check('RC1 neznamy payment link posle alert nad hranici castky',
+  /ZAPLACENO PŘES NEZNÁMÝ ODKAZ/.test(zdrojWebhook) && /HRANICE_ALERTU_HALERU/.test(zdrojWebhook), '');
+
+// R-D) Pristup BEZ KONCE se nesmi zkratit prodlouzenim (zakaz "nikomu nic nerusit").
+check('RD1 webhook pozna narok bez konce a expiraci neprepisuje',
+  /const bezKonce = stavajici\?\.active === true && !stavajici\.expires_at/.test(zdrojWebhook)
+  && /\.\.\.\(expiresAt \? \{ expiresAt \} : \{\}\)/.test(zdrojWebhook), '');
+check('RD2 clovek s pristupem bez konce vyvola alert, ne ticho',
+  /PŘÍSTUPEM BEZ KONCE/.test(zdrojWebhook), '');
+
+// R-E) Uvitaci mail s dotaznikem jen pri PRVNIM grantu.
+check('RE1 prodlouzeni uvitaci mail neposila', /uvitani: novyKlient/.test(zdrojWebhook), '');
+check('RE2 modul umi uvitani vypnout', /v\.uvitani === false/.test(zdrojShared), '');
+
+// R-F) Admin: balicek se posila i pri rucni pozvance a academy_po_3m je videt.
+let zdrojAdminUi = '';
+try { zdrojAdminUi = await Deno.readTextFile(KOREN + 'akademie/admin/index.html'); } catch { /* nevadi */ }
+check('RF1 admin posila plan pri rucni pozvance',
+  /client_invite'[^)]*plan:plan/.test(zdrojAdminUi) && /id="kiPlan"/.test(zdrojAdminUi), '');
+check('RF2 admin-api vybira academy_po_3m', /academy_po_3m/.test(zdrojAdmin), '');
+check('RF3 sloupec Balicek ukazuje academy_po_3m',
+  /r\.academy_po_3m/.test(zdrojAdminUi), '');
+
+// R-G) Propadly narok uz neni klient: pondelni pripominka mu chodit nesmi.
+let zdrojRemind = '';
+try { zdrojRemind = await Deno.readTextFile(KOREN + 'akademie/_supabase/functions/client-remind/index.ts'); } catch { /* nevadi */ }
+check('RG1 client-remind respektuje expiraci',
+  /expires_at\.is\.null,expires_at\.gt\./.test(zdrojRemind), '');
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo`);
