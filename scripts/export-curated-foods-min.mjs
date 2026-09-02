@@ -16,6 +16,13 @@
  *   node scripts/export-curated-foods-min.mjs
  * a bumpne `curated-foods.min.json?v=` v akademie/nastroje/potraviny/index.html.
  *
+ * SLOUPEC `baleny` (0/1, přidán 2. 9. 2026): 1 = kurátorský řádek nese EAN, tedy
+ * je to konkrétní balený výrobek, ne obecná potravina. Odvozuje se z textu `note`
+ * („... EAN 8594045605495."), protože plný export sloupec `ean` nenese. Řídí nový
+ * řadicí klíč „obecná položka před baleným výrobkem" v searchCurated
+ * (assets/food-search.js), zrcadlo `maEan` v appce. Starý min.json bez tohohle
+ * sloupce = všechno vyjde jako obecné a pořadí zůstane jako dřív (nic se nerozbije).
+ *
  * SLOUPEC `hledaci` (0/1, přidán 25. 8. 2026): odvozený z `note` (obsahuje-li
  * „Tvar hledání" nebo „Alias hledání", bez diakritiky/case), NE celý text note.
  * Řídí demotici hledacích tvarů v searchCurated (assets/food-search.js), zrcadlí
@@ -36,6 +43,10 @@ function normName(s) {
   return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
 
+function jeBalenyVyrobek(note) {
+  return /\bEAN\s*[0-9]{6,14}\b/i.test(String(note ?? '')) ? 1 : 0;
+}
+
 function jeHledaciTvar(note) {
   const n = normName(note ?? '');
   return n.includes('tvar hledani') || n.includes('alias hledani') ? 1 : 0;
@@ -43,14 +54,20 @@ function jeHledaciTvar(note) {
 
 // Sloupce, které nástroj skutečně čte (index.html + food-search.js). Plný `note`
 // se schválně vynechává (nikde se nezobrazuje), jen se z něj napřed odvodí `hledaci`.
-const SLOUPCE = ['name', 'category', 'kcal_100g', 'protein_100g', 'carb_100g', 'fat_100g', 'fiber_100g', 'serving_g', 'hledaci'];
+const SLOUPCE = ['name', 'category', 'kcal_100g', 'protein_100g', 'carb_100g', 'fat_100g', 'fiber_100g', 'serving_g', 'hledaci', 'baleny'];
 
 const zdroj = JSON.parse(readFileSync(ZDROJ, 'utf8'));
 if (!Array.isArray(zdroj) || zdroj.length === 0) {
   throw new Error('assets/curated-foods.json je prázdný nebo má neočekávaný tvar');
 }
 
-const rows = zdroj.map((it) => SLOUPCE.map((k) => (k === 'hledaci' ? jeHledaciTvar(it.note) : it[k] ?? null)));
+const rows = zdroj.map((it) =>
+  SLOUPCE.map((k) => {
+    if (k === 'hledaci') return jeHledaciTvar(it.note);
+    if (k === 'baleny') return jeBalenyVyrobek(it.note);
+    return it[k] ?? null;
+  }),
+);
 const vysledek = { cols: SLOUPCE, rows };
 
 writeFileSync(CIL, JSON.stringify(vysledek) + '\n', 'utf8');
