@@ -182,7 +182,7 @@
     function saveState(){ try{ localStorage.setItem('ba_workout_last', JSON.stringify({ location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:$('daysCount').value, client:$('client').value, seed:seed })); }catch(e){} }
     function loadState(){ try{ return JSON.parse(localStorage.getItem('ba_workout_last')||'null'); }catch(e){ return null; } }
 
-    fetch('/assets/exercise-db.json?v=20260722c').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/exercise-db.json?v=20260902c').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' cviků připraveno';
       var st=loadState();
       if(st){

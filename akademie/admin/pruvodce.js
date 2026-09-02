@@ -20,8 +20,8 @@
   'use strict';
 
   var FOOD = null;          // pole potravin, načte se jednou za život stránky
-  var MG_URL = '/assets/meal-gen.js?v=20260902b';
-  var DB_URL = '/assets/food-db.json?v=20260811b';
+  var MG_URL = '/assets/meal-gen.js?v=20260902c';
+  var DB_URL = '/assets/food-db.json?v=20260902c';
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -118,10 +118,16 @@
       // ⛔ [2026-09-02] Podlaha vlákniny se sem UŽ NEPÍŠE číslem. Do té doby tu stálo 25,
       // zatímco appka i onboarding počítaly s 20, takže admin viděl u téhož klienta jiné
       // číslo než klient. Martin rozhodl JEDNO ČÍSLO VŠUDE, a jediné místo, kde na webu
-      // žije, je `FIBER_FLOOR_G` v `assets/meal-gen.js`. `MealGen` je tvrdá závislost
-      // téhle stránky (níž se volá `assembleDay` i `macrosFor`), takže se čte přímo.
+      // žije, je `FIBER_FLOOR_G` v `assets/meal-gen.js`.
+      // ⛔⛔ POJISTKA PROTI `NaN`, a je tam schválně (nález revize 2. 9. 2026):
+      // když si prohlížeč přinese z cache STAROU `meal-gen.js` pod stejnou adresou,
+      // `FIBER_FLOOR_G` je `undefined` a `Math.max(undefined, 18)` je `NaN`, takže by
+      // Martin dostal v průvodci klienta cíl vlákniny „NaN". `Number(...) || 20` z toho
+      // udělá 20. To dvacet tady je JEDINÁ povolená druhá kopie čísla: uplatní se
+      // výhradně ve chvíli, kdy je ta pravá konstanta nedosažitelná.
       if (c.fiber == null) {
-        c.fiber = Math.max(global.MealGen.FIBER_FLOOR_G, Math.round(c.kcal / 1000 * 14));
+        var podlahaVlakniny = Number(global.MealGen && global.MealGen.FIBER_FLOOR_G) || 20;
+        c.fiber = Math.max(podlahaVlakniny, Math.round(c.kcal / 1000 * 14));
       }
     }
     return { cile: c, zdroj: zdroj };
