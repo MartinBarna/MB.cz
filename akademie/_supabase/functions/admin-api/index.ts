@@ -584,6 +584,118 @@ function rdParse(raw: string): { draft: string; navrh_zmen: string } {
   return { draft: rdBezPomlcky(t), navrh_zmen: "" };   // radši celý text než prázdno
 }
 
+// =============================================================================
+// 🍽️ TEXTY DO NUTRIČNÍHO PRŮVODCE NA MÍRU (akce `pruvodce_text`, 2. 9. 2026)
+//
+// Sourozenec `report_draft` výš: stejný provider, stejný hlas, stejná brána na citlivá
+// témata, stejná ochrana nákladu. Liší se jen tím, co se píše.
+// Tabulka: `pruvodce_drafts` (migrace `akademie/_supabase/pruvodce-drafts.sql`).
+//
+// ⛔ ČÍSLA JSOU VSTUP, NE VÝSTUP. Kalorie, makra, gramáže a součty počítá generátor
+// `assets/meal-gen.js` v prohlížeči admina. Model je dostává jako hotová fakta a nesmí
+// je měnit ani dopočítávat. Kdo tohle rozvolní, rozbije pravidlo „engine počítá, AI mluví".
+//
+// ⛔ VYLOUČENÍ NEJDE PŘÍMO DO GENERÁTORU. Model vrací jen VÝRAZY z volného textu
+// dotazníku („ořech", „jogurt"). Admin je rozbalí na konkrétní potraviny a Martin je
+// odklikne. Slugy 1192 položek databáze model neuhodne a vymyšlené id by tiše
+// nevyloučilo nic, což je přesně ta tichá chyba, které se tu vyhýbáme.
+// =============================================================================
+const PG_SYSTEM = [
+  "Jsi asistent Martina Barny, online výživového a fitness kouče z Česka.",
+  "Píšeš KONCEPT osobních částí nutričního průvodce pro nového klienta. Koncept čte Martin,",
+  "upraví ho a dokument odesílá sám. Nikdy nepíšeš klientovi přímo a nikdy nic neodesíláš.",
+  "",
+  "HLAS:",
+  "- Tykej. Piš česky, mluvenou, ne úřední češtinou. Desetinná čárka (0,5 g).",
+  "- Buď konkrétní: používej čísla a údaje z bloku FAKTA, žádné obecné fráze.",
+  "- Martin nahlas přiznává nejistotu: 'počítám, že', 'je to nástřel', 'kdyžtak dej echo'.",
+  "- Občasné ':)' je v pořádku. Moderní emoji v odborném textu ne.",
+  "",
+  "ZAKÁZANÉ OBRATY (poznávací znaky AI textu):",
+  "- Dlouhá pomlčka NIKDE. Odděluj čárkou, dvojtečkou nebo krátkou pomlčkou. Rozsahy typu 10-15 jsou v pořádku.",
+  "- Žádné 'není X, je Y', 'ne X, ale Y', 'bez X, jen Y'.",
+  "- Žádné paralelní trojky typu 'rychle, jednoduše a efektivně'.",
+  "- Žádné 'je důležité si uvědomit', 'nezapomeň, že', 'v neposlední řadě', 'klíčové je', 'pojďme se ponořit'.",
+  "- Žádná absolutna 'musí / vždy / nikdy / zaručeně / jediný způsob'.",
+  "- Nepiš nadpisy, oslovení ani podpis. Ty doplní šablona.",
+  "",
+  "CO PÍŠEŠ (čtyři texty):",
+  "1. uvod: 2 až 4 věty hned pod oslovení. Reaguj na situaci klienta z FAKT (jeho cíl, režim, počet jídel).",
+  "2. proc_tyhle_tri: JEDEN odstavec (3 až 5 vět) do rámečku. Vysvětli, proč se hlídají kalorie, bílkoviny a vláknina",
+  "   a proč je poměr sacharidů a tuků volnější. Formuluj podle jeho cíle.",
+  "3. zadani_navic: JEDEN odstavec (3 až 5 vět) do rámečku. Kroky, tréninky, tempo, pití, spánek podle FAKT.",
+  "   Řekni i to, že čísla nejsou vytesaná do kamene a upraví se podle pondělních reportů.",
+  "4. na_zaver: 2 až 5 vět. Odpověz na to, co klient napsal v dotazníku (jeho 'proč', termín, otázka).",
+  "   Konec drž povzbudivý a konkrétní, bez pathosu.",
+  "",
+  "TVRDÁ PRAVIDLA:",
+  "- Čísla ber VÝHRADNĚ z bloku FAKTA. Nic nedopočítávej, nepřepočítávej, neodhaduj a nenavrhuj jiná.",
+  "- Nepiš gramáže jídel ani skladbu dne. Ty počítá generátor a v dokumentu už jsou.",
+  "- Chybějící hodnota není nula. Co ve FAKTECH není, o tom nepiš.",
+  "- NEDIAGNOSTIKUJEŠ a nedáváš zdravotní rady. U zmínky o lécích, těhotenství, kojení, poruchách příjmu",
+  "  potravy, bolesti, zranění nebo diagnóze napiš jednu větu, že to Martin probere osobně, a nic k tomu neradíš.",
+  "- Žádná konkrétní procenta tělesného tuku jako cíl.",
+  "",
+  "VYLOUČENÍ POTRAVIN (pole vylouceni_navrh):",
+  "- Z polí ALERGIE, NEJÍ, ZDRAVÍ a DIETY vypiš krátké české VÝRAZY toho, co klient nejí nebo nesmí.",
+  "- Jeden až dva výrazy na položku, v prvním pádu jednotného čísla ('ořech', 'jogurt', 'houba').",
+  "- Nic si nedomýšlej. Co tam není napsané, do seznamu nepatří. Když není co vyloučit, vrať prázdné pole.",
+  "- Je to NÁVRH pro Martina, ne příkaz. Nikdy nepiš, že jsi něco vyloučil.",
+  "",
+  "ODPOVĚĎ VRAŤ JAKO ČISTÝ JSON, bez markdown bloku, přesně v tomhle tvaru:",
+  '{"uvod":"","proc_tyhle_tri":"","zadani_navic":"","na_zaver":"","vylouceni_navrh":[]}',
+].join(NL);
+
+/** Stejná logika jako `rdParse`, jen jiná pole. Model má vracet čistý JSON. */
+function pgParse(raw: string): { texty: Record<string, string>; vylouceni: string[] } {
+  const t = raw.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+  const a = t.indexOf("{"), b = t.lastIndexOf("}");
+  const prazdno = { texty: {} as Record<string, string>, vylouceni: [] as string[] };
+  if (a < 0 || b <= a) return prazdno;
+  let o: Record<string, unknown>;
+  try { o = JSON.parse(t.slice(a, b + 1)); } catch { return prazdno; }
+  const texty: Record<string, string> = {};
+  for (const k of ["uvod", "proc_tyhle_tri", "zadani_navic", "na_zaver"]) {
+    texty[k] = rdBezPomlcky(String(o[k] ?? "").trim());
+  }
+  const vyl = Array.isArray(o.vylouceni_navrh)
+    ? o.vylouceni_navrh.map((x) => rdBezPomlcky(String(x ?? "").trim()).slice(0, 40)).filter(Boolean).slice(0, 12)
+    : [];
+  return { texty, vylouceni: vyl };
+}
+
+/** Blok FAKTA. ⛔ Skládá ho KÓD, ne model, a čísla do něj chodí hotová z generátoru. */
+function pgFakta(cile: Record<string, number | null>, jidel: number, osloveni: string, i: Record<string, unknown>): string {
+  const s = (v: unknown) => String(v ?? "").trim();
+  const rad: string[] = [];
+  const pridej = (k: string, v: string) => { if (v) rad.push(k + ": " + v); };
+  pridej("Oslovení (5. pád)", osloveni);
+  pridej("Denní kalorie", cile.kcal ? cile.kcal + " kcal" : "");
+  pridej("Bílkoviny", cile.protein ? cile.protein + " g" : "");
+  pridej("Vláknina", cile.fiber ? cile.fiber + " g a více" : "");
+  pridej("Sacharidy a tuky", (cile.carbs && cile.fat) ? (cile.carbs + " g a " + cile.fat + " g, poměr je volnější") : "");
+  pridej("Počet jídel denně", String(jidel));
+  pridej("Věk, výška, váha", [s(i.vek), s(i.vyska), s(i.vaha)].filter(Boolean).join(" / "));
+  pridej("Cíl klienta", s(i.cil));
+  pridej("Proč to chce", s(i.proc));
+  pridej("Termín", s(i.termin));
+  pridej("Denní aktivita", s(i.aktivita));
+  pridej("Kroky za den", s(i.kroky));
+  pridej("Práce", s(i.prace));
+  pridej("Spánek", s(i.spanek));
+  pridej("Tréninky za týden", s(i.dny_treninku));
+  pridej("Sport", s(i.sport));
+  pridej("Kde cvičí", s(i.kde_cvici));
+  pridej("Jak vaří", s(i.vareni));
+  pridej("Dřívější diety", s(i.diety));
+  pridej("Alergie", s(i.alergie));
+  pridej("Nejí", s(i.neji));
+  pridej("Zdraví", s(i.zdravi));
+  pridej("Léky", s(i.leky));
+  pridej("Vzkaz v dotazníku", s(i.poznamka));
+  return rad.join(NL);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -2048,6 +2160,82 @@ Deno.serve(async (req) => {
       });
       // Neuložený koncept není důvod ho Martinovi zatajit, jen se o tom musí vědět.
       return json({ ok: true, draft, navrh_zmen, upozorneni, ulozeno: !insErr, model: RD_MODEL });
+    }
+
+    // 🍽️ TEXTY DO PRŮVODCE NA MÍRU (2. 9. 2026). Podrobnosti v hlavičce u PG_SYSTEM výš.
+    // ⛔ Tahle akce NIKDY nic neodesílá a NIKDY nesahá na čísla. Vrátí texty a návrh
+    // vyloučení, uloží je do `pruvodce_drafts` a končí. Dokument nahrává Martin klikem.
+    if (action === "pruvodce_text") {
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      const osloveni = String(body.osloveni ?? "").trim().slice(0, 60);
+
+      // Meze jsou 1:1 s `client_targets_save` výš. Mimo rozsah = někde se stala chyba
+      // ve výpočtu a text psaný kolem takového čísla by lhal, takže se nic nepíše.
+      const MEZE: Record<string, [number, number]> = {
+        kcal: [500, 8000], protein: [20, 500], carbs: [0, 1200], fat: [0, 400], fiber: [0, 150],
+      };
+      const cile: Record<string, number | null> = {};
+      for (const [pole, [min, max]] of Object.entries(MEZE)) {
+        const n = rdNum(body[pole]);
+        if (n === null) { cile[pole] = null; continue; }
+        if (n < min || n > max) return json({ error: `${pole}: hodnota mimo rozsah ${min} az ${max}` }, 400);
+        cile[pole] = Math.round(n);
+      }
+      if (!cile.kcal || !cile.protein) return json({ error: "chybi_cisla" }, 400);
+      const jidel = Math.min(6, Math.max(2, Number(body.jidel) || 5));
+
+      // Ochrana nákladu: druhý klik do RD_ODSTUP_MIN minut AI nevolá, vrátí ten samý koncept.
+      // Obě tlačítka v adminu (texty i návrh vyloučení) vedou sem, takže druhé z nich je zdarma.
+      const { data: last, error: lastErr } = await admin.from("pruvodce_drafts")
+        .select("texty, vylouceni_navrh, meta, created_at").eq("client_email", email)
+        .order("created_at", { ascending: false }).limit(1).maybeSingle();
+      // ⛔ Bez té tabulky by strop neexistoval a každý klik by platil AI. Migrace: pruvodce-drafts.sql.
+      if (lastErr) return json({ error: "chybi_tabulka", detail: String(lastErr.message).slice(0, 200) }, 503);
+      if (last && Date.now() - Date.parse(String(last.created_at)) < RD_ODSTUP_MIN * 60_000) {
+        const meta = (last.meta ?? {}) as Record<string, unknown>;
+        return json({
+          ok: true, znovu: true,
+          texty: (last.texty ?? {}) as Record<string, string>,
+          vylouceni_navrh: Array.isArray(last.vylouceni_navrh) ? last.vylouceni_navrh : [],
+          upozorneni: Array.isArray(meta.upozorneni) ? meta.upozorneni : [],
+        });
+      }
+      if (!RD_API_KEY) {
+        return json({ error: "chybi_klic", detail: "V projektu chybí ANTHROPIC_API_KEY nebo XAI_API_KEY." }, 503);
+      }
+
+      const { data: intakeRow } = await admin.from("client_intake").select("data")
+        .eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
+      const iData = intakeRow ? rdJ(intakeRow as Record<string, unknown>, "data") : {};
+
+      const upozorneni = rdUpozorneni([
+        String(iData.zdravi ?? ""), String(iData.leky ?? ""), String(iData.alergie ?? ""),
+        String(iData.diety ?? ""), String(iData.poznamka ?? ""), String(iData.proc ?? ""),
+      ]);
+
+      const userPrompt = "FAKTA (jediný zdroj čísel a údajů o klientovi):" + NL +
+        pgFakta(cile, jidel, osloveni, iData) + NL + NL +
+        (upozorneni.length
+          ? "CITLIVÁ TÉMATA V DOTAZNÍKU: " + upozorneni.join(", ") + "." + NL +
+            "K nim NIC neradíš. Napiš jednu větu, že se na to Martin ozve osobně." + NL + NL
+          : "") +
+        "Napiš čtyři texty podle pravidel výš a vrať je jako JSON.";
+
+      let raw = "";
+      try {
+        raw = await rdCallAI(userPrompt);
+      } catch (e) {
+        return json({ error: "ai_nedostupne", detail: String(e).slice(0, 200) }, 502);
+      }
+      const { texty, vylouceni } = pgParse(raw);
+      if (!texty.uvod && !texty.proc_tyhle_tri && !texty.na_zaver) return json({ error: "ai_prazdno" }, 502);
+
+      const { error: insErr } = await admin.from("pruvodce_drafts").insert({
+        client_email: email, texty, vylouceni_navrh: vylouceni,
+        meta: { provider: RD_PROVIDER, model: RD_MODEL, upozorneni, cile, jidel },
+      });
+      // Neuložený koncept není důvod ho Martinovi zatajit, jen se o tom musí vědět.
+      return json({ ok: true, texty, vylouceni_navrh: vylouceni, upozorneni, ulozeno: !insErr, model: RD_MODEL });
     }
 
     if (action === "client_invite") {

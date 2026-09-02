@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Průvodce na míru: testovací stránka (jen pro vývoj)</title>
+<!--
+  ⛔ VÝVOJOVÝ NÁSTROJ, NENÍ ODNIKUD ODKAZOVANÝ A NENÍ V NAVIGACI.
+  Pouští `pruvodce.js` a `pruvodce-sablona.js` mimo admin, s vymyšleným klientem a
+  s falešným `api`, takže se dá vyzkoušet generování dnů, záměny, gramáže, náhled i tisk
+  bez přihlášení do adminu a bez volání AI (to by stálo peníze a v adminu se testovat nedá).
+
+  Jak spustit: v kořeni repa `npx serve -l 3000 .` a otevřít
+  http://localhost:3000/akademie/admin/pruvodce-test.html
+
+  ⛔ Falešné `api` NIC neposílá a NIC neukládá. Akce `client_doc_upload` se jen vypíše
+  do konzole, aby se nedalo omylem zapsat do živého bucketu.
+-->
+<style>
+  body { background:#17151c; color:#e8e2d8; font-family:"Segoe UI",Arial,sans-serif; margin:0; padding:20px; }
+  .muted { color:#8F8A99; }
+  .mlogbtn { font:inherit; font-size:.85rem; padding:6px 12px; border:1px solid rgba(235,177,44,.5);
+             background:rgba(235,177,44,.1); color:#F6CD63; border-radius:8px; cursor:pointer; }
+  .mlogbtn:disabled { opacity:.5; cursor:default; }
+  h1 { font-size:1.1rem; }
+  #toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+           background:#2a2530; border:1px solid rgba(235,177,44,.4); color:#F6CD63;
+           padding:8px 16px; border-radius:10px; font-size:.85rem; display:none; }
+</style>
+</head>
+<body>
+<h1>🍽️ Průvodce na míru: testovací stránka</h1>
+<p class="muted" style="font-size:.85rem;">Vývojový nástroj. Klient je vymyšlený, AI se nevolá, nic se neukládá.</p>
+<div id="pg"></div>
+<div id="toast"></div>
+
+<script src="/akademie/admin/pruvodce.js?v=20260902a"></script>
+<script>
+(function(){
+  function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.style.display='block';
+    setTimeout(function(){ t.style.display='none'; }, 2200); }
+
+  // Falešná odpověď AI. Tvar je 1:1 s tím, co vrací akce `pruvodce_text` v `admin-api`.
+  var FALESNA_AI = {
+    ok:true,
+    texty:{
+      uvod:'Tady máš jídelníček poskládaný na tvoje čísla. Testovací text, aby bylo vidět, jak se odstavce zalomí.\n\nDruhý odstavec kvůli kontrole zlomů.',
+      proc_tyhle_tri:'Testovací rámeček o tom, proč se hlídají kalorie, bílkoviny a vláknina.',
+      zadani_navic:'Testovací rámeček se zadáním navíc: kroky, tréninky a pití.',
+      na_zaver:'Testovací závěr. Ptal ses v dotazníku na to, jestli to půjde bez posilovny.'
+    },
+    vylouceni_navrh:['ořech','jogurt'],
+    upozorneni:[]
+  };
+
+  // Falešné `api`. Vrací {status, j} jako to pravé v adminu.
+  function api(payload){
+    console.log('[test] api()', payload);
+    if(payload.action==='pruvodce_text'){
+      return new Promise(function(ok){ setTimeout(function(){ ok({status:200, j:FALESNA_AI}); }, 400); });
+    }
+    if(payload.action==='client_doc_upload'){
+      console.log('[test] ULOŽENÍ SE NEPROVÁDÍ, délka HTML:', (payload.content_base64||'').length);
+      return Promise.resolve({status:200, j:{ok:true, path:'(test, nic se neuložilo)'}});
+    }
+    return Promise.resolve({status:400, j:{error:'test_neznama_akce'}});
+  }
+
+  window.Pruvodce.mount(document.getElementById('pg'), {
+    email:'test@example.com',
+    name:'Testovací Klient',
+    vok:'Testovací',
+    rod:'m',
+    // klíče stejné jako `client_intake.data`
+    intake:{
+      vek:'34', vyska:'182', vaha:'88', aktivita:'Lehce aktivní', kroky:'9000',
+      cil:'Zhubnout a udržet sílu', proc:'Chci se cítit líp', termin:'do léta',
+      jidel_denne:'5', alergie:'Lepek', neji:'moc nemám rád ořechy a jogurty',
+      vareni:'vařím si sám', dny_treninku:'3', sport:'posilovna', prace:'sedavá',
+      spanek:'6 hodin', zdravi:'', leky:'', diety:'zkoušel jsem keto'
+    },
+    // klíče stejné jako `client_targets`; nech null a zkusí se dopočet z dotazníku
+    targets:{ kcal:2100, protein:150, carbs:null, fat:null, fiber:35 },
+    api:api, toast:toast
+  });
+})();
+</script>
+</body>
+</html>
