@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Test: reakce na report (šablona + odkaz do Gmailu)</title>
+<!--
+  Náhled šablony reakce na týdenní report. Stejný účel jako `pruvodce-test.html`:
+  zkontrolovat tvar výstupu, aniž by se sahalo na živá data nebo na AI.
+
+  ⛔ Data na téhle stránce jsou VYMYŠLENÁ. Jméno, adresa ani čísla nepatří žádnému
+     skutečnému klientovi a nikdy sem takové údaje nepatří.
+  ⛔ Stránka nic neodesílá. Tlačítko jen otevře Gmail s předvyplněným mailem.
+  ⚠️ Blok čísel je tu NATVRDO, přesně jak ho vyplivl `report-engine.mjs`. Tahle stránka
+     ho nepočítá; počítání hlídá `node scripts/report-reakce-test.mjs`.
+-->
+<style>
+  body{margin:0;background:#0C0B10;color:#F0EADF;font:15px/1.6 -apple-system,Segoe UI,Roboto,Arial,sans-serif;padding:24px}
+  h1{font-size:1.1rem;color:#EBB12C;margin:0 0 4px}
+  p.m{color:#8F8A99;font-size:.86rem;margin:0 0 18px}
+  .box{background:#181520;border:1px solid #262232;border-radius:10px;padding:16px;margin:0 0 16px;max-width:760px}
+  label{display:block;font-size:.78rem;color:#8F8A99;margin:0 0 10px}
+  input,textarea{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:8px 11px;color:#fff;font:inherit;margin-top:3px}
+  textarea{min-height:360px;line-height:1.55}
+  button{background:#EBB12C;color:#1A1222;border:0;border-radius:6px;padding:10px 18px;font-weight:700;cursor:pointer;margin-right:8px}
+  code{color:#F6CD63}
+</style>
+</head>
+<body>
+<h1>Test: reakce na report</h1>
+<p class="m">Vymyšlená data. Nic se neodesílá, tlačítko jen otevře předvyplněný Gmail.</p>
+
+<div class="box">
+  <label>Oslovení (5. pád)<input id="vok" value="Testíku"></label>
+  <label>Adresa příjemce (test)<input id="komu" value="fitness.barna@gmail.com"></label>
+  <label>Datum reportu<input id="datum" value="2026-09-01"></label>
+  <label>Téma týdne (volitelné)<input id="tema" value="Bílkoviny a high-protein receptář"></label>
+  <label>Odkaz na přílohu (volitelný)<input id="temaurl" value="https://drive.google.com/file/d/TEST/view"></label>
+  <button id="prekresli">Přegenerovat</button>
+</div>
+
+<div class="box">
+  <p style="margin:0 0 6px">Předmět: <b id="subj"></b></p>
+  <textarea id="mail"></textarea>
+  <p style="margin:10px 0 0"><button id="gmail">Otevřít v Gmailu</button>
+  <span class="m" id="pozn"></span></p>
+</div>
+
+<script src="/akademie/admin/report-reakce-sablona.js"></script>
+<script>
+  // Blok čísel: doslovný výstup `report-engine.mjs` pro vymyšlený report.
+  var STAV = [
+    "Váha 94,2 kg (od minule -0,6 kg)",
+    "Od startu -2,5 kg (start 96,7 kg)",
+    "Pas 107 cm (minule 104, +3 cm; od startu -2 cm)",
+    "Boky 104 cm (minule 105, -1 cm; od startu -4 cm)",
+    "Zápis 7 ze 7 dní",
+    "Průměr 2060 kcal (cíl 2000 kcal, +60 kcal)",
+    "Bílkoviny 103 g (cíl 160 g, -57 g)",
+    "Kroky 6694 (plán 12000, -5306)",
+    "Tréninky 0 x (plán 3 x)",
+    "Spánek 6,5 h, kvalita 3/5"
+  ];
+  // Próza: takhle vypadá to, co vrací AI (bod 4 až 8 kostry).
+  var PROZA = [
+    "Váha dolů o 0,6 kg a od startu jsi na 2,5 kg. Pas se sice zvedl na 107, ale ten se ti kýve",
+    "pořád (109, 105, 107, 104), takže z jednoho měření paniku nedělám. Rozhoduje ta linka dolů.",
+    "",
+    "Zápis 7 ze 7 dní beru jako hlavní výhru týdne. Tohle je ta laťka, o které jsme se bavili.",
+    "",
+    "Cíl 2060 kcal nechávám, sedí na zadání a není co snižovat. Co drhne, jsou bílkoviny:",
+    "103 g proti cíli 160. A kroky 6 694 proti plánu 12 000, to je půlka.",
+    "",
+    "Na tenhle týden dvě věci: dostat bílkoviny nad 140 g denně a vrátit kroky přes 10 000.",
+    "",
+    "Zvládneš to nachodit i ve všední dny, nebo to nacpeme do víkendu? :)"
+  ].join("\n");
+
+  function prekresli(){
+    var R = window.ReportReakce;
+    if(!R){ document.getElementById("pozn").textContent = "Šablona se nenačetla."; return; }
+    var vok = document.getElementById("vok").value.trim();
+    var datum = document.getElementById("datum").value.trim();
+    var predmet = R.predmet(vok, datum);
+    var telo = R.telo({
+      osloveni: vok, datum: datum, stavRadky: STAV, textAi: PROZA,
+      tema: document.getElementById("tema").value.trim(),
+      temaOdkaz: document.getElementById("temaurl").value.trim()
+    });
+    document.getElementById("subj").textContent = predmet;
+    document.getElementById("mail").value = telo;
+    var g = R.gmailOdkaz(document.getElementById("komu").value.trim(), predmet, telo);
+    document.getElementById("pozn").textContent =
+      "délka odkazu " + g.delka + " znaků, " + (g.vejdeSe ? "tělo se do odkazu vejde" : "tělo se NEVEJDE, otevře se prázdný mail a text se kopíruje");
+  }
+  document.getElementById("prekresli").addEventListener("click", prekresli);
+  document.getElementById("gmail").addEventListener("click", function(){
+    var R = window.ReportReakce;
+    var g = R.gmailOdkaz(document.getElementById("komu").value.trim(),
+      document.getElementById("subj").textContent, document.getElementById("mail").value);
+    window.open(g.url, "_blank", "noopener");
+  });
+  window.addEventListener("DOMContentLoaded", prekresli);
+  if (window.ReportReakce) prekresli();
+</script>
+</body>
+</html>

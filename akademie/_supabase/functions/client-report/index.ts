@@ -322,8 +322,17 @@ Deno.serve(async (req: Request) => {
     return `<div class='mb-sect' style='font-weight:800;color:#F6CD63;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px'>➡️ Co teď udělat</div>` +
       `<table role='presentation' class='mb-box' width='100%' cellpadding='0' cellspacing='0' style='background:#211d2b;border:1px solid #2e2940;border-radius:10px;margin:0 0 18px'><tr><td style='padding:16px 20px'>` +
       radky.map((t) => `<p class='mb-body' style='margin:0 0 8px;font-size:14px;line-height:1.5'>${t}</p>`).join("") +
+      // ⛔ ŽÁDNÝ KONCEPT SE TÍMHLE MAILEM NEPŘIPRAVUJE ANI NEODESÍLÁ. Je to jen věta
+      // s odkazem: koncept se píše až na Martinův klik v adminu, protože engine bez
+      // vybraného směru (hubnutí / udržení / nabírání) o kaloriích nic nenavrhne
+      // a předpřipravený koncept by byl vždycky ta slabší verze. Navíc by AI běžela
+      // i u reportu, na který Martin odpoví na WhatsAppu, tedy zaplaceno k ničemu.
+      `<p class='mb-body' style='margin:0 0 8px;font-size:14px;line-height:1.5'>` +
+      `✍️ <b>Koncept odpovědi</b> na tenhle report si necháš napsat dole v kartě klienta, ` +
+      `blok „Koncept odpovědi". Čísla do mailu spočítá engine, prózu AI, odesíláš ho Ty z Gmailu. ` +
+      `Až mail odejde, dej v tom bloku „Označit jako odesláno", ať zmizí z fronty „Reporty ke zpracování".</p>` +
       `<p style='margin:12px 0 4px'><a class='mb-btn' href='${odkaz}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:12px 22px;font-weight:700;font-size:14px;border-radius:6px'>Upravit zadání klienta</a></p>` +
-      `<p class='mb-mut' style='margin:6px 0 0;font-size:12px;color:#8F8A99'>Odkaz otevře admin rovnou na detailu tohoto klienta, zadání je hned nahoře pod jeho e-mailem. Co tam uložíš, uvidí klient ve své sekci.</p>` +
+      `<p class='mb-mut' style='margin:6px 0 0;font-size:12px;color:#8F8A99'>Odkaz otevře admin rovnou na detailu tohoto klienta, zadání je hned nahoře pod jeho e-mailem. Co tam uložíš, uvidí klient ve své sekci. Koncept odpovědi je na téže stránce níž.</p>` +
       `</td></tr></table>`;
   }
 

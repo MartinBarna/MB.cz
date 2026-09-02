@@ -1,5 +1,11 @@
 // Barna Academy admin-api (CRM/mailing dashboard backend). Manual JWT + admin allowlist auth.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// ⛔ ENGINE POČÍTÁ, AI MLUVÍ. Čísla a návrh úpravy zadání po týdenním reportu počítá
+// tenhle modul, ne model. Tentýž soubor pouští i test `scripts/report-reakce-test.mjs`.
+// ⛔⛔ DEPLOY: `supabase functions deploy admin-api` musí nahrát CELOU složku, ne jen
+// `index.ts`. Když se nahraje jen index, funkce spadne na chybějícím importu.
+// Past: paměť `mb-deploy-kopiruje-jen-index-past`.
+import { pripravFakta } from "./report-engine.mjs";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -339,8 +345,63 @@ const RD_API_KEY = RD_PROVIDER === "grok"
 const RD_MODEL = Deno.env.get("REPORT_DRAFT_MODEL") ??
   (RD_PROVIDER === "grok" ? "grok-4-latest" : "claude-sonnet-5");
 const RD_TIMEOUT_MS = 30_000;   // delší čekání se nevyplatí, admin by visel naslepo
+// ⛔ Skutečné UUID, ne „36 znaků z povolené abecedy". Původní `/^[0-9a-fA-F-]{36}$/` pustil
+// dál i 36 pomlček; Postgres to pak shodil chybou 22P02 a admin dostal HTTP 500 místo
+// čistého 400 (revize 2. 9. 2026, nález l).
+const RD_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const RD_ODSTUP_MIN = 10;       // ochrana nákladu: druhý klik do 10 minut vrátí ten samý koncept
-const RD_DELKA = "80 až 140 slov";
+// ⚠️ Změřeno na deseti skutečných odpovědích z 17. 8. až 1. 9. 2026: osobní část (bez
+// bloku čísel a bez patičky) má 1 500 až 3 500 znaků. Původních „80 až 140 slov" bylo
+// zhruba třetina, takže koncept vedle Martinova mailu vypadal jako odbytý. Blok čísel
+// AI nepíše, ten dodává engine, takže se tenhle rozsah týká jen prózy.
+const RD_DELKA = "180 až 320 slov";
+
+// ⛔⛔ UKÁZKY JSOU ANONYMIZOVANÉ A ZŮSTANOU ANONYMIZOVANÉ. Jsou to zkrácené přepisy dvou
+// skutečných odpovědí (přesnost zápisu / progres navzdory cestování). Jména, adresy,
+// konkrétní váhy a míry skutečných lidí sem NIKDY nepatří: tenhle text odchází do API
+// třetí strany při každém volání. Čísla v ukázkách jsou vymyšlená a slouží jen k tomu,
+// aby model viděl, JAK se s číslem pracuje ve větě, ne jaká čísla má psát.
+// ⛔ TÝKÁ SE TO I PŘEZDÍVEK A OSLOVENÍ. V první verzi tu stálo oslovení přezdívkou; nikdo
+// neuměl doložit, čí ta přezdívka je, a do API třetí strany nesmí odejít nic, co Martin
+// výslovně neschválil (revize 2. 9. 2026, nález e). Ukázky proto začínají rovnou větou:
+// oslovení stejně píše šablona, ne model, takže mu ve vzoru k ničemu není.
+const RD_UKAZKY = [
+  "UKÁZKA 1 (tón, když jde o přesnost zápisu):",
+  "Kroky 6 700 a minule 5 900. V červenci jsi měl přes 9 000, takže víme, že to jde.",
+  "Na jídle je pořád třeba přitvrdit. Průměr teď píšeš 1 480, minule 1 570. Obě čísla jsou podle mě",
+  "o stovky kcal podhodnocená a pas se přitom nehnul, takže tam ta nepřesnost bude větší, než to vypadá.",
+  "Zápis 7 ze 7 dní je bomba, to drž. Ale zapisovat můžeme klidně celý život, dokud nebudeme mít",
+  "kontrolu nad tím, co do zápisu nespadne, můžeme takhle stát dál.",
+  "Na tenhle týden dvě věci: vrátit kroky nad 9 000 a vážit každou porci, i tu odpolední.",
+  "Fitko a box je tvoje nejsilnější stránka, sport problém není. Rozumíme si? :)",
+  "",
+  "UKÁZKA 2 (tón, když to jde i přes nabitý týden):",
+  "Vnoučata, restaurace, výlet. A váha přesto dolů. Moc schválím! :))",
+  "Pas kolísá, 109, 105, 107, 104. Měření beru s rezervou, ono to v praxi nikdy nejde jen křivka",
+  "dolů, kýve se to krátkodobě, ale dlouhodobě jsi menší a menší.",
+  "Bílkoviny byly 103 g a cíl máme 160. Posledních pět týdnů jsi měl kolem 120, teď je to níž.",
+  "Tohle hlídej, k tomu vlákninu a co nejvíc gramů jídla za svoje kalorie.",
+  "Kroky 6 700 proti plánu 12 300. Vím, bylo cestování. Ale choďte a sbírejte oba maximum.",
+  "Cíl 1 990 kcal nechávám, není třeba snižovat, je třeba to přesněji dodržet.",
+  "Pamatuj, je to maraton, ne sprint. Chceš na tenhle týden přepadovky na WA, nebo tě to štve? :)",
+].join(NL);
+
+// Kostra, kterou má koncept držet. ⛔ Body 1, 2, 3 a 9 píše ŠABLONA v prohlížeči
+// (`akademie/admin/report-reakce-sablona.js`), ne model. Model píše jen prózu mezi nimi.
+const RD_KOSTRA = [
+  "KOSTRA ODPOVĚDI (z rozboru deseti skutečných Martinových mailů):",
+  "1. Přání dne a oslovení. NEPÍŠEŠ, doplní šablona.",
+  "2. Poděkování za report. NEPÍŠEŠ, doplní šablona.",
+  "3. Blok 'Takhle vypadá stav:' s čísly. NEPÍŠEŠ, čísla jsou už vypsaná nad tvým textem.",
+  "4. Zhodnocení: co ta čísla znamenají. Dvě až čtyři věty. Krátkodobé kolísání měr pojmenuj",
+  "   jako normální a postav nad něj dlouhodobý trend.",
+  "5. Pochvala za jednu konkrétní věc, podloženou číslem z FAKT.",
+  "6. Co měnit a proč. Číslo si NEVYMÝŠLÍŠ, bereš ho z bloku DOPORUČENÍ ENGINU. Když engine",
+  "   říká, že se nic nemění, napiš to nahlas ('cíl nechávám') a řekni proč.",
+  "7. Jeden až dva úkoly na příští týden. Měřitelné: kroky, dny zápisu, gramy bílkovin.",
+  "8. Otázka na konec, na kterou klient odpoví jednou větou.",
+  "9. Příloha, WhatsApp, 'Be Effective!' a podpis. NEPÍŠEŠ, doplní šablona.",
+].join(NL);
 
 // ⛔⛔ VOLNÝ TEXT OD KLIENTA JE DATA, NE POKYN (nález 2 revize 2. 9. 2026).
 // Do promptu chodí věty, které si klient napsal sám a bez dozoru (report i vstupní dotazník).
@@ -371,9 +432,11 @@ function rdCitBlok(radky: string[]): string {
 // ⛔⛔ TADY SE MĚNÍ, JAK KONCEPT ZNÍ. Jinde v kódu žádný prompt není.
 // Pravidla hlasu jsou zkrácený výtah z `_Claude-dokumenty/HLAS-MARTINA.md` a z rozboru
 // osmi skutečných Martinových odpovědí (`_Claude-dokumenty/reporty-vzory-analyza.md`).
-// ⚠️ Skutečná Martinova odpověď má osobní část 1 500 až 3 500 znaků. Tenhle koncept je
-// schválně kratší jádro (tak zní zadání E1), zbytek si Martin doplní. Když se to má
-// prodloužit, mění se RD_DELKA výš a bod 3 níž, nic jiného.
+// ⚠️ Skutečná Martinova odpověď má osobní část 1 500 až 3 500 znaků a koncept na ni míří:
+// `RD_DELKA` je proto 180 až 320 slov, ne původních 80 až 140. Původní znění tohohle
+// komentáře slibovalo „schválně kratší jádro" a odkazovalo na bod, který už neexistuje
+// (revize 2. 9. 2026, nález c). Když se má délka změnit, mění se `RD_DELKA` výš a NIC
+// jiného: blok čísel model nepíše, ten skládá engine.
 const RD_SYSTEM = [
   "Jsi asistent Martina Barny, online výživového a fitness kouče z Česka.",
   "Píšeš KONCEPT jeho odpovědi na týdenní report klienta. Koncept čte Martin, upraví ho a odešle sám.",
@@ -391,16 +454,18 @@ const RD_SYSTEM = [
   "- Žádné trojice typu 'rychle, jednoduše a efektivně' a žádné 'nejen ..., ale i ...'.",
   "- Nepiš předmět mailu, oslovení ani podpis. Jen tělo odpovědi.",
   "",
-  "STAVBA KONCEPTU (v tomhle pořadí, " + RD_DELKA + "):",
-  "1. Jedna věta poděkování za report.",
-  "2. Jedna pochvala za konkrétní věc, kterou klient DRŽÍ, podloženou číslem z FAKT.",
-  "3. Jedna až dvě konkrétní úpravy na příští týden: co přesně udělat, ne obecná rada.",
-  "4. Otázka na konec, na kterou klient odpoví jednou větou.",
+  RD_KOSTRA,
+  "",
+  "PÍŠEŠ TEDY JEN BODY 4 AŽ 8, souvislý text v odstavcích, " + RD_DELKA + ".",
+  "Nezačínej pozdravem ani poděkováním a nekonči podpisem, ty už v mailu jsou.",
   "",
   "TVRDÁ PRAVIDLA:",
-  "- Čísla ber VÝHRADNĚ z bloku FAKTA. Nic nedopočítávej, nepřepočítávej a neodhaduj.",
-  "- NESMÍŠ měnit zadání (kalorie, bílkoviny, kroky, tréninky). Když si myslíš, že by se",
-  "  mělo změnit, napiš to do pole navrh_zmen, které čte JEN Martin. Do textu pro klienta to nepatří.",
+  "- Čísla ber VÝHRADNĚ z bloku FAKTA a z bloku DOPORUČENÍ ENGINU. Nic nedopočítávej,",
+  "  nepřepočítávej a neodhaduj. Ani procenta, ani úbytek za měsíc, ani kolik to dělá kcal.",
+  "- Blok čísel je nad tvým textem už napsaný. Neopakuj celý výčet, vyzobni jen to, o čem mluvíš.",
+  "- ⛔ ZADÁNÍ MĚNÍ ENGINE, NE TY. Když blok DOPORUČENÍ ENGINU navrhuje nové číslo, napiš ho",
+  "  přesně tak, jak je tam uvedené. Když říká, že se nic nemění, žádné nové číslo nevymýšlíš",
+  "  a nenaznačuješ ho. Vlastní nápad na změnu patří do pole navrh_zmen, které čte JEN Martin.",
   "- Chybějící hodnota není nula. Co ve FAKTECH není, o tom nepiš.",
   "- NEDIAGNOSTIKUJEŠ a nedáváš zdravotní rady. Jakmile je v reportu zmínka o lécích, těhotenství,",
   "  poruchách příjmu potravy, bolesti, zranění nebo diagnóze, napiš jednu větu, že to Martin probere",
@@ -409,6 +474,9 @@ const RD_SYSTEM = [
   "",
   "",
   RD_CIT_PRAVIDLO,
+  "",
+  "TAKHLE TO ZNÍ, KDYŽ TO PÍŠE MARTIN. Ber z toho RYTMUS A TÓN, ne obsah a ne čísla:",
+  RD_UKAZKY,
   "",
   "ODPOVĚĎ VRAŤ JAKO ČISTÝ JSON, bez markdown bloku, přesně v tomhle tvaru:",
   '{"draft":"text pro klienta","navrh_zmen":"co bych zvážil změnit v zadání, jen pro Martina, nebo prázdný řetězec"}',
@@ -2196,15 +2264,60 @@ Deno.serve(async (req) => {
       return json({ ok: true, prepsano: true, user_id_8: String(jj.user_id_8 ?? "") });
     }
 
+    // FRONTA „REPORTY KE ZPRACOVÁNÍ" (2. 9. 2026). Reporty, u kterých Martin ještě
+    // neodklikl, že odpověděl. Migrace: `akademie/_supabase/report-reakce.sql`.
+    // ⛔ Prázdný příznak NEZNAMENÁ „klient nedostal odpověď". Znamená „neodklikuto".
+    if (action === "reporty_fronta") {
+      const { data, error } = await admin.from("client_reports")
+        .select("id, email, report_date, weight")
+        .is("reakce_odeslana", null)
+        .order("report_date", { ascending: false }).limit(30);
+      // ⛔ Chybějící sloupec se NESMÍ tvářit jako prázdná fronta: Martin by koukal na
+      // „všechno hotovo" a přitom by jen chyběla migrace.
+      if (error) return json({ error: "chybi_sloupec", detail: String(error.message).slice(0, 200) }, 503);
+      // Jména dotáhneme z pozvánek, ať ve frontě nesvítí jen adresy.
+      const maily = [...new Set((data ?? []).map((r) => low(r.email)))];
+      const jmena: Record<string, string> = {};
+      if (maily.length) {
+        // Stejný zdroj jmen jako `clients_list` výš, ať fronta a tabulka klientů
+        // neukazují u téhož člověka jednou jméno a podruhé adresu.
+        const { data: inv } = await admin.from("customer_contacts").select("email, name").in("email", maily);
+        for (const i of inv ?? []) if (i.name) jmena[low(i.email)] = String(i.name);
+      }
+      return json({
+        ok: true,
+        rows: (data ?? []).map((r) => ({ id: r.id, email: r.email, name: jmena[low(r.email)] ?? "", report_date: r.report_date })),
+      });
+    }
+
+    // Ruční odklik „na tenhle report jsem odpověděl". Jediná věc, která příznak mění.
+    if (action === "report_reakce_hotovo") {
+      const reportId = String(body.report_id ?? "").trim();
+      if (!RD_UUID.test(reportId)) return json({ error: "no_report_id" }, 400);
+      const hotovo = body.hotovo !== false;   // výchozí je označit, `false` odznačí (překlik)
+      const { error } = await admin.from("client_reports")
+        .update({ reakce_odeslana: hotovo ? new Date().toISOString() : null }).eq("id", reportId);
+      if (error) return json({ error: "db", detail: String(error.message).slice(0, 200) }, 500);
+      return json({ ok: true, hotovo });
+    }
+
     // KONCEPT ODPOVĚDI NA REPORT (E1, 1. 9. 2026). Podrobnosti v hlavičce u RD_SYSTEM výš.
     // ⛔ Tahle akce NIKDY nic neodesílá. Vrátí text, uloží ho do `report_drafts` a končí.
     // Odesílá výhradně Martin ručně ze své schránky.
     if (action === "report_draft") {
       const reportId = String(body.report_id ?? "").trim();
-      if (!/^[0-9a-fA-F-]{36}$/.test(reportId)) return json({ error: "no_report_id" }, 400);
+      if (!RD_UUID.test(reportId)) return json({ error: "no_report_id" }, 400);
       // ⛔ Téma týdne je VSTUP, nikdy se neodvozuje. Martin ho v pondělí posílá všem naráz
       // a u někoho ho schválně prohodí (změřeno 27. 7. 2026 na skutečné poště).
       const tema = String(body.tema ?? "").trim().slice(0, 200);
+      // Oslovení v 5. pádu, rod a směr cíle jsou VSTUP z admina, ne odhad serveru.
+      // ⛔ Směr (hubnutí / udržení / nabírání) v `client_targets` NENÍ a v dotazníku je jen
+      // ve volném textu. Kdyby si ho engine hádal z klíčových slov, mohl by klientovi, který
+      // nabírá, navrhnout řez kalorií. Bez směru se tedy o kaloriích prostě nerozhoduje.
+      const osloveni = String(body.osloveni ?? "").trim().slice(0, 60);
+      const rod = body.rod === "z" ? "z" : body.rod === "m" ? "m" : "";
+      const smer = ["hubnuti", "udrzeni", "nabirani"].includes(String(body.smer ?? ""))
+        ? String(body.smer) : "";
 
       const { data: rep } = await admin.from("client_reports").select("*").eq("id", reportId).maybeSingle();
       if (!rep) return json({ error: "report_nenalezen" }, 404);
@@ -2219,10 +2332,15 @@ Deno.serve(async (req) => {
       if (lastErr) return json({ error: "chybi_tabulka", detail: String(lastErr.message).slice(0, 200) }, 503);
       if (last && Date.now() - Date.parse(String(last.created_at)) < RD_ODSTUP_MIN * 60_000) {
         const meta = (last.meta ?? {}) as Record<string, unknown>;
+        // ⛔ Vrací se i blok čísel a návrh enginu. Bez nich by admin po druhém kliknutí
+        // složil mail bez čísel a Martin by to poznal až v Gmailu.
         return json({
           ok: true, znovu: true, draft: String(last.draft ?? ""),
           navrh_zmen: String(meta.navrh_zmen ?? ""),
           upozorneni: Array.isArray(meta.upozorneni) ? meta.upozorneni : [],
+          stav_radky: Array.isArray(meta.stav_radky) ? meta.stav_radky : [],
+          navrh: meta.navrh ?? null,
+          report_date: String(rep.report_date),
         });
       }
       if (!RD_API_KEY) {
@@ -2231,7 +2349,7 @@ Deno.serve(async (req) => {
 
       // Kontext: 4 nejbližší starší reporty, zadání, vstupní dotazník. Pořadí reportu
       // (kolikátý je) se počítá zvlášť, protože první report má u Martina vlastní režii.
-      const [driveRes, tgRes, intakeRes, poradiRes] = await Promise.all([
+      const [driveRes, tgRes, intakeRes, poradiRes, prvniRes] = await Promise.all([
         admin.from("client_reports").select("report_date, weight, measurements, nutrition, activity, scales")
           .eq("email", email).lt("report_date", String(rep.report_date))
           .order("report_date", { ascending: false }).limit(4),
@@ -2239,6 +2357,10 @@ Deno.serve(async (req) => {
         admin.from("client_intake").select("data").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_reports").select("id", { count: "exact", head: true })
           .eq("email", email).lte("report_date", String(rep.report_date)),
+        // ⛔ „Od startu" se počítá z PRVNÍHO reportu, ne ze čtyř nejbližších. Martin píše
+        // obojí (od minule i od startu) a bez tohohle dotazu by druhé číslo chybělo.
+        admin.from("client_reports").select("report_date, weight, measurements")
+          .eq("email", email).order("report_date", { ascending: true }).limit(1).maybeSingle(),
       ]);
 
       // Data z appky Tvůj Coach jsou bonus, ne podmínka: má ji jen část koučinkových klientů.
@@ -2276,7 +2398,30 @@ Deno.serve(async (req) => {
         Number(poradiRes.count ?? 1) || 1,
         tema,
       );
+      // ⛔ ENGINE POČÍTÁ, AI MLUVÍ. Blok čísel do mailu i návrh úpravy zadání vzniká TADY,
+      // deterministicky (`report-engine.mjs`). Model je dostane jako hotová fakta.
+      const drive = (driveRes.data ?? []) as Record<string, unknown>[];
+      const eng = pripravFakta({
+        posledni: rep as Record<string, unknown>,
+        // ⛔ `drive` (až 4 starší reporty od nejnovějšího) je tu kvůli KLOUZAVÉMU PRŮMĚRU
+        // váhy. Bez něj engine počítal stagnaci z rozdílu dvou vážení a dvě vážení „po
+        // sobotě" umí trend zamaskovat i vyrobit. Appka na to má `TRAILING_WEEKS_DEFAULT`.
+        drive,
+        predchozi: drive[0] ?? null,
+        predpredchozi: drive[1] ?? null,
+        prvni: (prvniRes.data ?? null) as Record<string, unknown> | null,
+        cile: (tgRes.data ?? null) as Record<string, unknown> | null,
+        smer, pohlavi: rod,
+      });
+
       const userPrompt = "FAKTA (jediný zdroj čísel):" + NL + fakta + NL + NL +
+        "BLOK ČÍSEL, KTERÝ UŽ JE V MAILU NAPSANÝ NAD TVÝM TEXTEM (neopisuj ho celý):" + NL +
+        eng.text + NL + NL +
+        "DOPORUČENÍ ENGINU (hotové rozhodnutí, TOHLE JE PRAVDA O ZMĚNĚ ZADÁNÍ):" + NL +
+        "páka: " + eng.navrh.paka +
+        (eng.navrh.novyKcal ? " · nový cíl kalorií: " + eng.navrh.novyKcal + " kcal" : " · cíl kalorií se NEMĚNÍ") + NL +
+        "zdůvodnění pro tebe: " + eng.navrh.duvod + NL +
+        "Tohle přelož do své věty. Jiné číslo cíle nenapíšeš a změnu, kterou tu nevidíš, nenavrhneš." + NL + NL +
         (upozorneni.length
           ? "CITLIVÁ TÉMATA V REPORTU: " + upozorneni.join(", ") + "." + NL +
             "K nim NIC neradíš. Napiš jednu větu, že se na to Martin ozve osobně." + NL + NL
@@ -2295,10 +2440,19 @@ Deno.serve(async (req) => {
 
       const { error: insErr } = await admin.from("report_drafts").insert({
         report_id: reportId, client_email: email, draft,
-        meta: { provider: RD_PROVIDER, model: RD_MODEL, tema, navrh_zmen, upozorneni, poradi: Number(poradiRes.count ?? 1) || 1 },
+        meta: {
+          provider: RD_PROVIDER, model: RD_MODEL, tema, navrh_zmen, upozorneni,
+          poradi: Number(poradiRes.count ?? 1) || 1,
+          // Otisk toho, co engine spočítal. Když se za měsíc ptáme, proč koncept radil
+          // zrovna tohle, je to tady, a nemusí se to dopočítávat ze starých reportů.
+          stav_radky: eng.radky, navrh: eng.navrh, smer, rod, osloveni,
+        },
       });
       // Neuložený koncept není důvod ho Martinovi zatajit, jen se o tom musí vědět.
-      return json({ ok: true, draft, navrh_zmen, upozorneni, ulozeno: !insErr, model: RD_MODEL });
+      return json({
+        ok: true, draft, navrh_zmen, upozorneni, ulozeno: !insErr, model: RD_MODEL,
+        stav_radky: eng.radky, navrh: eng.navrh, report_date: String(rep.report_date),
+      });
     }
 
     // 🍽️ TEXTY DO PRŮVODCE NA MÍRU (2. 9. 2026). Podrobnosti v hlavičce u PG_SYSTEM výš.
