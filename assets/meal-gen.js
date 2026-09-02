@@ -67,9 +67,10 @@
     // Cílová vláknina: 14 g / 1000 kcal (US Dietary Guidelines), min. 25 g pro dospělého.
     // ⛔ [2026-09-02] Strop 60 g doplněn: generátor níž vlákninu nad `FIBER_CAP_G` nepustí,
     // takže bez tohohle clampu by kalkulačka u velmi vysokých cílů (nad 4 300 kcal) slíbila
-    // číslo, které jídelníček vědomě nesplní. ⚠️ Podlaha 25 g je dál JEN na webu, appka ji
-    // nemá (`goals.ts` počítá `min(60, kcal/1000*14)` bez podlahy). Sjednotit ji je
-    // odborné rozhodnutí pro Martina, ne úklid, tak se tu nemění.
+    // číslo, které jídelníček vědomě nesplní. ⚠️ Podlaha je tady 25 g, appka a onboarding
+    // mají od 2. 9. 2026 podlahu 20 g (`FIBER_FLOOR_G` / `VLAKNINA_MIN`). Rozdíl je vědomý:
+    // tahle kalkulačka nikdy neslíbí MÍŇ než appka, jen víc, a srazit ji z 25 na 20 by byl
+    // odborný krok dolů. Sjednocení na jedno číslo je rozhodnutí pro Martina, ne úklid.
     var fiber = Math.min(FIBER_CAP_G, Math.max(25, Math.round(kcal / 1000 * 14)));
     return { kcal: kcal, protein: protein, carbs: carbs, fat: fat, fiber: fiber,
              bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label,

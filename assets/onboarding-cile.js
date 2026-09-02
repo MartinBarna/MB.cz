@@ -54,12 +54,15 @@
     // ⚠️ Následek sjednocení: klient na nízkém příjmu dostane MÍŇ vlákniny než dřív
     // (žena na 1300 kcal 18 g místo 25 g) a VÍC tuku. Je to vědomé, parita s appkou
     // má přednost, aby klient koučinku a klient appky neviděli dvě různá čísla.
+    // ⭐ [2. 9. 2026] Podlaha se z části vrací: `VLAKNINA_MIN` = 20 g, stejně jako
+    // `FIBER_FLOOR_G` v appce. Ta žena na 1300 kcal dostane 20 g, ne 18.
     TUK_G_PER_KG: 0.8,           // BMI < 30: cílový tuk = referenční váha × tohle (appka FAT_G_PER_KG_DEFAULT)
     TUK_OBEZITA_PCT_KCAL: 25,    // BMI >= 30: cílový tuk = % kalorií (appka FAT_OBESE_PCT_KCAL)
     TUK_MIN_PCT_KCAL: 22,        // podlaha, appka fatFloorG
     SACHARIDY_PODLAHA_G: 100,
     VLAKNINA_NA_1000: 14,
     VLAKNINA_MAX: 60,
+    VLAKNINA_MIN: 20,            // podlaha, appka FIBER_FLOOR_G
     STROP_DEFICITU_PCT_TDEE: 25,
     KROKY_ZAPOCTENE_OD: 3000,     // do násobiče běžného dne se vejde ~3000 kroků
     KCAL_NA_KROK_NA_KG: 0.0005,   // 9000 kroků, 64 kg, po odečtení základu = 192 kcal
@@ -306,9 +309,10 @@
     return { protein: bilk, fat: tuk, carbs: s, na_podlaze: s < K.SACHARIDY_PODLAHA_G };
   }
 
-  /** ⭐ 1:1 s appkou `fiberTargetG`: 14 g na 1000 kcal, strop 60, ŽÁDNÁ podlaha. */
+  /** ⭐ 1:1 s appkou `fiberTargetG`: 14 g na 1000 kcal, strop 60, podlaha 20. */
   function vlakninaG(kcal) {
-    return Math.min(K.VLAKNINA_MAX, Math.round(kcal / 1000 * K.VLAKNINA_NA_1000));
+    return Math.min(K.VLAKNINA_MAX,
+      Math.max(K.VLAKNINA_MIN, Math.round(kcal / 1000 * K.VLAKNINA_NA_1000)));
   }
 
   // ---------------------------------------------------------------------------

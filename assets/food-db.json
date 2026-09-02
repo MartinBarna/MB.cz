@@ -728,10 +728,10 @@
     "name": "Balkánský sýr",
     "cat": "dairy",
     "per100": {
-      "kcal": 260,
-      "p": 14,
-      "c": 1,
-      "f": 22,
+      "kcal": 256,
+      "p": 20,
+      "c": 1.8,
+      "f": 19,
       "fib": 0
     },
     "portion": 40,
@@ -3464,11 +3464,11 @@
     "name": "Dýně Hokaido",
     "cat": "veg",
     "per100": {
-      "kcal": 63,
-      "p": 1.4,
-      "c": 13,
-      "f": 0.5,
-      "fib": 2.6
+      "kcal": 37,
+      "p": 1.1,
+      "c": 7.7,
+      "f": 0.6,
+      "fib": 2.0
     },
     "portion": 150,
     "bezny": true,
@@ -3480,11 +3480,11 @@
     "name": "Dýně Hokkaido",
     "cat": "veg",
     "per100": {
-      "kcal": 26,
-      "p": 1,
-      "c": 6.5,
-      "f": 0.1,
-      "fib": 1.4
+      "kcal": 37,
+      "p": 1.1,
+      "c": 7.7,
+      "f": 0.6,
+      "fib": 2.0
     },
     "portion": 150,
     "obsahuje": [],
@@ -3495,11 +3495,11 @@
     "name": "Dýně hokkaido (uchiki kuri)",
     "cat": "veg",
     "per100": {
-      "kcal": 63,
-      "p": 1.4,
-      "c": 15,
-      "f": 0.5,
-      "fib": 2.5
+      "kcal": 37,
+      "p": 1.1,
+      "c": 7.7,
+      "f": 0.6,
+      "fib": 2.0
     },
     "portion": 150,
     "obsahuje": [],
@@ -7181,10 +7181,10 @@
     "name": "Kefír",
     "cat": "dairy",
     "per100": {
-      "kcal": 43,
-      "p": 3.8,
-      "c": 4.8,
-      "f": 1,
+      "kcal": 50,
+      "p": 3.3,
+      "c": 4,
+      "f": 2,
       "fib": 0
     },
     "portion": 250,
@@ -19189,10 +19189,10 @@
     "name": "Tvaroh měkký polotučný",
     "cat": "protein",
     "per100": {
-      "kcal": 90,
-      "p": 10,
-      "c": 3.5,
-      "f": 4,
+      "kcal": 93,
+      "p": 10.4,
+      "c": 3.8,
+      "f": 4.1,
       "fib": 0
     },
     "portion": 125,
@@ -19209,9 +19209,9 @@
     "name": "Tvaroh měkký nízkotučný",
     "cat": "dairy",
     "per100": {
-      "kcal": 72,
-      "p": 16,
-      "c": 3.5,
+      "kcal": 67,
+      "p": 12,
+      "c": 4,
       "f": 0.3,
       "fib": 0
     },
@@ -19228,9 +19228,9 @@
     "name": "Tvaroh měkký odtučněný",
     "cat": "dairy",
     "per100": {
-      "kcal": 72,
-      "p": 15,
-      "c": 3.5,
+      "kcal": 67,
+      "p": 12,
+      "c": 4,
       "f": 0.3,
       "fib": 0
     },
@@ -19266,10 +19266,10 @@
     "name": "Tvaroh tučný",
     "cat": "dairy",
     "per100": {
-      "kcal": 150,
-      "p": 12,
-      "c": 3,
-      "f": 10,
+      "kcal": 132,
+      "p": 8.9,
+      "c": 3.4,
+      "f": 9.3,
       "fib": 0
     },
     "portion": 100,

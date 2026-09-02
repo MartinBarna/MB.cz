@@ -866,7 +866,7 @@
 "fitko",
 "doma"
 ],
-"level": "pokrocily",
+"level": "zacatecnik",
 "unit": "reps",
 "tip": "Činky veď podél stehen, záda drž rovná a hrudník vepředu.",
 "desc": "S jednoručkami u stehen, kolena lehce pokrčená. Boky posílej dozadu a spouštěj činky podél nohou do protažení hamstringů, záda rovná. Vrať se propnutím boků. Jednoručky umožní přirozenější dráhu.",
@@ -2836,6 +2836,124 @@
 "Přidáváš objem/tempo moc rychle: navyšuj postupně, ať předejdeš přetížení.",
 "Došlapuješ daleko před tělo na paty: došlapuj pod těžiště s vyšší kadencí.",
 "Hrbíš se: drž trup vzpřímený a ramena uvolněná."
+]
+},
+{
+"id": "rumunsky-tah-jednonoz",
+"name": "Rumunský mrtvý tah na jedné noze",
+"plain": "Předklon v bocích na jedné noze s jednoručkou v ruce.",
+"muscle": "zada",
+"pattern": "hinge",
+"equip": [
+"cinky",
+"kettlebell"
+],
+"location": [
+"fitko",
+"doma"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Zadní noha jde dozadu jako protiváha, boky drž rovně jako talíř s vodou.",
+"desc": "Postav se na jednu nohu, koleno nech měkké, jednoručku drž v ruce na straně stojné nohy. Boky posílej dozadu a trup klop dopředu, zatímco se volná noha natahuje dozadu do stejné linie se zády. Klesej jen tam, kam dosáhneš s rovnými zády a bez otočení pánve, vzadu ucítíš tah v hamstringu stojné nohy. Zpátky se vytáhni zapnutím hýždě, ne škubnutím zad. Odcvič celou sérii na jedné noze, pak vyměň.",
+"cues": [
+"Boky se otevřou do strany: drž je čtvercové k zemi, jako bys na kříži nesl podnos.",
+"Zaokrouhlená záda: radši zkrať dráhu, hloubka není cíl.",
+"Padáš z rovnováhy: dívej se na jedno místo na zemi asi metr před sebou a druhou rukou se lehce opři o zeď."
+]
+},
+{
+"id": "hip-thrust-jednorucka",
+"name": "Hip thrust s jednoručkou",
+"plain": "Zvedání boků v opoře o lavičku se zátěží položenou na bocích.",
+"muscle": "hyzde",
+"pattern": "hinge",
+"equip": [
+"cinky",
+"lavka",
+"kettlebell"
+],
+"location": [
+"fitko",
+"doma"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Nahoře zmáčkni hýždě a zastav se, žebra drž dole. Bederní páteří se nevyklenuj.",
+"desc": "Opři si lopatky o hranu lavičky nebo gauče, chodidla polož na šířku boků asi 30 cm od zadku. Jednoručku si polož naplocho na boky a přidržuj ji oběma rukama, pod ni dej ručník, ať to netlačí. Bradu drž přitaženou k hrudníku a boky vytlač vzhůru, dokud nejsou trup a stehna v jedné rovině. Nahoře zadrž vteřinu se zmáčknutými hýžděmi, pak pusť boky pomalu dolů, ale nepokládej je až na zem.",
+"cues": [
+"Zvedáš se do luku přes bedra místo přes hýždě: žebra dolů, pánev podsazená.",
+"Chodidla moc daleko: pak to táhne hamstringy, přisuň je blíž k zadku.",
+"Zátěž tlačí do kostí: dej pod ni srolovaný ručník nebo podložku."
+]
+},
+{
+"id": "zakopavani-slider",
+"name": "Zakopávání vleže se sliderem",
+"plain": "Vleže na zádech přitahuješ paty k zadku po kluzké podložce.",
+"muscle": "nohy",
+"pattern": "izolace",
+"equip": [
+"telo"
+],
+"location": [
+"fitko",
+"doma"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Boky drž celou dobu nahoře. Jakmile klesnou, hamstringy práci předaly zádům.",
+"desc": "Lehni si na záda, pod paty dej slidery, dva ručníky na hladké podlaze nebo talířky na koberci. Zvedni boky do mostu a v téhle výšce je nech po celou sérii. Odsouvej paty od sebe, dokud nemáš nohy skoro natažené, a pak je pomalu přitahuj zpátky k zadku. Sunutí ven je ta těžká část, tak ji dělej pomalu, klidně na tři vteřiny. Když už boky neudržíš nahoře, série skončila.",
+"cues": [
+"Boky padají k zemi: zkrať dráhu, ať nohy natahuješ jen tam, kam boky udržíš.",
+"Křeč v lýtku: netlač na špičky, kontakt s podložkou drž patou.",
+"Nohy klouzají moc rychle: zpomal, tenhle cvik roste z pomalého natažení, ne z počtu opakování."
+]
+},
+{
+"id": "dobre-rano-guma",
+"name": "Dobré ráno s gumou",
+"plain": "Předklon v bocích s gumou přes ramena, kolena zůstávají měkká.",
+"muscle": "zada",
+"pattern": "hinge",
+"equip": [
+"guma"
+],
+"location": [
+"fitko",
+"doma",
+"hriste"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Boky dozadu, ne kolena dolů. Tohle není dřep, je to zavírání dveří v kyčli.",
+"desc": "Stoupni si doprostřed gumy na šířku boků a druhý konec si přehoď přes ramena za krkem, jako by tam ležela osa. Kolena nech měkká a boky posílej dozadu, trup klop dopředu s rovnými zády. Jdi tak hluboko, dokud cítíš tah v zadní straně stehen a záda drží rovinu, obvykle to je někde nad vodorovnou pozicí. Zpátky se narovnej vytlačením boků vpřed a zmáčknutím hýždí.",
+"cues": [
+"Ohýbáš kolena a děláš dřep: kolena skoro nehýbej, pohyb dělá kyčel.",
+"Kulatá záda: zpevni střed těla a hrudník drž otevřený, radši menší rozsah.",
+"Guma klouže z ramen: přidrž si ji rukama u krku a stoupni si přesně doprostřed."
+]
+},
+{
+"id": "upazovani-kladka",
+"name": "Upažování na kladce jednoruč",
+"plain": "Zvedání paže do strany proti odporu spodní kladky.",
+"muscle": "ramena",
+"pattern": "izolace",
+"equip": [
+"kladka"
+],
+"location": [
+"fitko"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Veď loket, ne ruku. Nahoře stačí do výšky ramene, výš už pracují trapézy.",
+"desc": "Nastav kladku do nejnižší polohy, postav se k ní bokem a rukojeť chytni vzdálenější rukou tak, aby lano vedlo před tělem. Druhou rukou se přidrž stojanu. Paži veď obloukem do strany, loket lehce pokrčený a o kousek výš než zápěstí, až do výšky ramene. Dolů pouštěj pomalu a nedovol, aby tě zátěž stáhla, napětí drž celou dobu. Odcvič celou sérii jednou rukou a pak se otoč.",
+"cues": [
+"Krčíš rameno k uchu: rameno drž stažené dolů, jinak to bere trapéz.",
+"Houpeš tělem: uber váhu, tenhle sval je malý a švih ho mine.",
+"Zvedáš nad rameno: nad tou výškou už boční delta nepřidá, jen se zapojí trapéz."
 ]
 }
 ]

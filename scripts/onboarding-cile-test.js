@@ -92,8 +92,9 @@ PROFILY.forEach(function (p) {
     ok(k.kcal >= (p.pohlavi === 'z' ? 1200 : 1500), '   ' + k.nazev + ': kalorie nad podlahou');
     ok(k.bilkoviny_g_kg >= 1.19 && k.bilkoviny_g_kg <= 2.21, '   ' + k.nazev + ': bílkoviny 1,2 až 2,2 g/kg referenční váhy');
     ok(k.fat * 9 >= k.kcal * 0.215, '   ' + k.nazev + ': tuk nad podlahou 22 % kalorií');
-    ok(k.fiber === Math.min(60, Math.round(k.kcal / 1000 * 14)),
-      '   ' + k.nazev + ': vláknina 1:1 s appkou (14 g/1000 kcal, strop 60, bez podlahy)');
+    ok(k.fiber === Math.min(60, Math.max(20, Math.round(k.kcal / 1000 * 14))),
+      '   ' + k.nazev + ': vláknina 1:1 s appkou (14 g/1000 kcal, strop 60, podlaha 20)');
+    ok(k.fiber >= 20, '   ' + k.nazev + ': vláknina nikdy pod podlahou 20 g');
     ok(k.fat === appkaTuk(k.kcal, r.ref_kg, r.bmi),
       '   ' + k.nazev + ': tuk 1:1 s appkou (' + k.fat + ' vs ' + appkaTuk(k.kcal, r.ref_kg, r.bmi) + ' g)');
     ok(Math.abs(soucet - k.kcal) / k.kcal <= 0.05, '   ' + k.nazev + ': součet maker sedí na kalorie (' + soucet + ' vs ' + k.kcal + ')');
