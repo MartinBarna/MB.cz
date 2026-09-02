@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <script src="/assets/theme-boot.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna</title>
+    <!-- ⛔ Titulek nese týž slib jako H1 a jako landing appky: Basic za 249, ne kouč v kapse. -->
+    <title>Tvůj Coach: cíle, jídelníček i trénink za 249 Kč měsíčně | Martin Barna</title>
     <!-- ⛔ [2026-08-21] Popisek i og:description slibovaly „prvních 14 dní plná verze
          zdarma". Zkušebka byla 20. 8. zrušena. Zároveň vedly AI koučem, tedy VIP za 499,
          zatímco hlavní prodávaný plán je Basic za 249. -->
@@ -13,7 +14,7 @@
     <link rel="canonical" href="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://martinbarna.cz/tvuj-coach/">
-    <meta property="og:title" content="Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna">
+    <meta property="og:title" content="Tvůj Coach: cíle, jídelníček i trénink za 249 Kč měsíčně | Martin Barna">
     <meta property="og:description" content="Cíle, které se ti každý týden přepočítají podle tvé váhy a zápisů, generátor jídelníčku i tréninku na míru, plná historie. Od 249 Kč měsíčně.">
     <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
     <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -197,20 +198,6 @@
            a lišta narostla z 62 na 89 px. `nowrap` je pojistka, ať to znovu nezaláme. */
         .mbar .m1 { flex:1.7; white-space:nowrap; background:linear-gradient(145deg,var(--acc-l),var(--acc)); color:#1A1222; }
         .mbar .m2 { border:1.5px solid rgba(255,255,255,.25); color:#fff; }
-        /* ⛔ [2026-09-02] COOKIE LIŠTA PŘEKRÝVALA TLAČÍTKO „Vzít si Basic 249 Kč".
-           Souhlasové okno (`#mb-cookie` z /assets/analytics.js) je `position:fixed;
-           left:16px; bottom:16px` se `z-index:3000`, zatímco mobilní nákupní lišta
-           `.mbar` sedí na `bottom:0` se `z-index:120`. Jakmile člověk odscrolloval
-           600 px, lišta se ukázala POD cookie oknem a hlavní tlačítko na mobilu bylo
-           zakryté přesně u prvního návštěvníka z reklamy, protože ten cookie okno vidí
-           vždycky. Okno se proto na mobilu zvedne nad lištu.
-           ⚠️ `!important` je nutné: analytics.js si `bottom` píše inline (cssText).
-           ⚠️ Zvednutí platí i než se lišta ukáže; 78 px prázdna dole nikomu nevadí,
-           zakryté tlačítko ano. Šířka ani strana okna se nemění.
-           ⛔ Kdo tohle přenáší jinam, musí to udělat na KAŽDÉ stránce s `.mbar`
-           (dnes i /konzultace/), v analytics.js se to opravit nedá jedním číslem:
-           výška lišty se liší podle popisků. */
-        @media (max-width:900px) { #mb-cookie { bottom:calc(78px + env(safe-area-inset-bottom))!important; } }
         /* Demo videa (hotlink z tvujcoach.cz). Vlastní třídy, ať arena.css / app-brand
            nepřepíše pozadí bez barvy textu. Pozadí i color natvrdo. */
         .dv-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:1.1rem; }
@@ -242,7 +229,15 @@
 <header class="hero center">
     <div class="wrap">
         <span class="badge">📱 Appka Tvůj Coach</span>
-        <h1>Kouč v&nbsp;kapse, který vidí jídlo i&nbsp;trénink</h1>
+        <!-- ⛔⛔ [2026-09-02] HLAVNÍ SLIB JE JEDEN A JE SHODNÝ S tvujcoach.cz (rozhodl Martin).
+             Do dneška tu stálo „Kouč v kapse, který vidí jídlo i trénink", zatímco landing appky
+             vedl Basicem za 249. Dvě stránky, dva sliby, obě z placené reklamy.
+             ⛔ Kdo mění tenhle nadpis, mění ho ZÁROVEŇ v `src/app/index.tsx` v repu appky
+             (a v `<title>` i `og:title` obou stran). Formulace se smí lišit délkou, ne slibem.
+             ⚠️ Cena je tu natvrdo, protože crawler nečeká na dotaz do `pricing_plans`; landing
+             appky si totéž číslo bere z DB. Kdo mění ceník, přepíše i tohle
+             (checklist `tvujcoach-cenik-zmena-checklist`). -->
+        <h1>Cíle, jídelníček i&nbsp;trénink za 249&nbsp;Kč měsíčně.</h1>
         <!-- ⭐ [2026-09-01] POŘADÍ JE ZÁMĚRNÉ: tlačítka jsou HNED POD H1, lead odstavec až
              pod nimi. Do dneška stál mezi nadpisem a tlačítky osmiřádkový lead a bonusový
              box, takže hlavní tlačítko začínalo na y 676. Cookie lišta zabírá na 375x812
@@ -536,7 +531,7 @@
             </div>
 
         <div class="legal-note" style="grid-column:1/-1;margin:1.4rem 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);font-size:.88rem;line-height:1.6;color:#A09AAD;">
-        <p style="margin:0 0 .5rem;"><b style="color:#F0EADF;">Předplatné je opakovaná platba.</b> Obnovuje se automaticky na konci každého období (měsíc, nebo rok) za stejnou cenu, dokud ho nezrušíš. Zrušit ho můžeš kdykoliv v appce v sekci Profil → Předplatné. Zaplacené období vždy doběhne do konce a další platba se už nestrhne.</p>
+        <p style="margin:0 0 .5rem;"><b style="color:#F0EADF;">Předplatné je opakovaná platba.</b> Obnovuje se automaticky na konci každého období (měsíc, nebo rok) za stejnou cenu, dokud ho nezrušíš. Zrušit ho můžeš kdykoliv v appce: Profil → Předplatné → Spravovat předplatné, kde se otevře správa platby, nebo mi napiš. Zaplacené období vždy doběhne do konce a další platba se už nestrhne.</p>
         <p style="margin:0;"><b style="color:#F0EADF;">Odstoupení do 14 dnů.</b> Jde o digitální službu poskytovanou online. Jako spotřebitel máš právo odstoupit od smlouvy do 14 dnů od jejího uzavření. Placené funkce se odemykají ihned po zaplacení, takže při objednávce uděluješ výslovný souhlas se zahájením plnění před uplynutím této lhůty a bereš na vědomí, že tím právo na odstoupení zaniká (§ 1837 občanského zákoníku). Odstoupení i případné vrácení peněz vyřídíš formulářem na <a href="https://tvujcoach.cz/odstoupeni" style="color:#EBB12C;">tvujcoach.cz/odstoupeni</a>. Podrobnosti v <a href="/obchodni-podminky/" style="color:#EBB12C;">obchodních podmínkách</a>.</p>
         <p style="margin:.5rem 0 0;"><b style="color:#F0EADF;">Garance vrácení peněz 14 dnů.</b> Přesto ti dávám svoje slovo navíc: když ti to do 14 dnů od začátku předplatného nesedne, napiš na <a href="mailto:martin@martinbarna.cz" style="color:#EBB12C;">martin@martinbarna.cz</a> a vrátím ti celou částku. Bez udání důvodu. Je to můj dobrovolný závazek nad rámec zákona.</p>
       </div>
@@ -569,10 +564,10 @@
             <div class="faq-i"><b>Jak dostanu ten videokurz zdarma?</b><p>Sám od sebe a hned. Jakmile projde tvoje první platba za Basic nebo VIP, přiřadím videokurz k e-mailu, kterým platíš. Přihlásíš se s ním do <a href="/akademie/prihlaseni/">členské sekce</a> a kurz tam na tebe čeká, 182 videí a přes 20 hodin. Nemusíš o nic psát ani nic zadávat. Zůstává ti napořád, i kdybys předplatné za měsíc zrušil, protože je to dárek k nákupu. Když si vezmeš VIP na rok, přidám k tomu ještě měsíc <a href="/akademie/">Barna Academy</a> na zkoušku, pokud v ní ještě nejsi. A jestli videokurz už koupený máš, nic ti nepřepisuju, zůstává ti ten tvůj.</p></div>
             <!-- ⛔ [2026-09-02] Otázka se jmenovala „Jak VIP zruším?", takže člověk, který
                  zvažuje Basic za 249, se na svoji odpověď nedostal. Ruší se stejně u obou. -->
-            <div class="faq-i"><b>Jak předplatné zruším?</b><p>Kdykoliv na dvě klepnutí přímo v appce (Profil → Předplatné). Platí to stejně pro Basic i VIP. Doběhne zaplacené období a dál nic neplatíš.</p></div>
+            <div class="faq-i"><b>Jak předplatné zruším?</b><p>Kdykoliv a sám: v appce Profil → Předplatné → Spravovat předplatné, tam se otevře správa platby a zrušení potvrdíš. Nebo mi napiš a zruším ti ho. Platí to stejně pro Basic i VIP. Doběhne zaplacené období a dál nic neplatíš.</p></div>
             <!-- Táž otázka i táž odpověď je na tvujcoach.cz. Znění záruky je doslova
                  to z právního boxu nad ceníkem, ať se dvě čísla neperou. -->
-            <div class="faq-i"><b>Co když mi to za měsíc nesedne?</b><p>Zrušíš v appce (Profil → Předplatné), zaplacené období doběhne a dál se nic nestrhne. A když ti to do 14 dnů od začátku předplatného nesedne, napiš mi na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> a vrátím ti celou částku, bez udání důvodu. Videokurz ti zůstane tak jako tak.</p></div>
+            <div class="faq-i"><b>Co když mi to za měsíc nesedne?</b><p>Zrušíš kdykoliv v appce: Profil → Předplatné → Spravovat předplatné (otevře se správa platby), nebo mi napiš. Zaplacené období doběhne a dál se nic nestrhne. A když ti to do 14 dnů od začátku předplatného nesedne, napiš mi na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> a vrátím ti celou částku, bez udání důvodu. Videokurz ti nechám tak jako tak.</p></div>
             <div class="faq-i"><b>Kolik mi to denně zabere?</b><p>Balené jídlo naskenuješ podle čárového kódu, to je otázka dvou vteřin. Snídani, kterou máš pořád dokola, si uložíš jako šablonu a příště ji zapíšeš jedním ťuknutím. Zbytek najdeš v databázi podle názvu. Check-in je jednou týdně a je na pár minut.</p></div>
             <div class="faq-i"><b>Funguje na mobilu i počítači?</b><p>Ano. Zatím běží jako webová aplikace, otevřeš ji v prohlížeči na mobilu i počítači a data máš všude stejná. Appku pro iPhone a Android chystáme.</p></div>
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč bych měl zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Deník ti řekne, co jsi snědl. Tvůj Coach ti řekne, co s tím dál. V Basicu ti každý týden přepočítá kalorie a makra podle toho, jak ti to jde v posledních týdnech. K tomu ti poskládá jídelníček na tvoje čísla i s nákupním seznamem a napíše tréninkový plán. Ve VIP se na to můžeš zeptat AI kouče, který vidí tvoje data. Nemusíš nic rušit. Vyzkoušej Free vedle toho, co máš, a nech si to, co ti dává větší smysl.</p></div>
