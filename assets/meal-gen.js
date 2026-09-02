@@ -31,7 +31,13 @@
     var bmr = 10 * w + 6.25 * h - 5 * age + (inp.sex === 'zena' ? -161 : 5);
     var tdee = bmr * (ACT[inp.activity] || 1.375);
     var g = GOAL[inp.goal] || GOAL.udrzeni;
-    var kcal = Math.round(tdee * g.kcal);
+    // ⛔ [2026-09-02, Martin, nález E19] Bezpečnostní kalorická podlaha: 1200 žena,
+    // 1500 muž. Cíl je zatím jen procento z TDEE, takže drobná žena nebo muž se
+    // sedavým režimem mohl dostat pod hranici, pod kterou hubnutí patří pod dohled.
+    // ⛔ Táž podlaha je v appce (`kcalFloorForSex` v src/engine/goals.ts) a platí tam
+    // pro startovací cíl, ruční cíl I týdenní adaptaci. Kdo ji mění, mění obě strany.
+    var kcalFloor = inp.sex === 'zena' ? 1200 : 1500;
+    var kcal = Math.max(kcalFloor, Math.round(tdee * g.kcal));
     // [fix 2026-07-14] u výrazné nadváhy počítej bílkoviny z upravené hmotnosti (výška−100,
     // min. 75 % váhy) — 2 g × 115 kg = 230 g bílkovin v deficitu je nesmysl, který se nedá
     // ani poskládat z jídla; pro běžné váhy se nic nemění.
