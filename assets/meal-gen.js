@@ -239,16 +239,28 @@
   }
 
   /**
-   * [2026-09-02] Rozložení kalorií do jídel. Šestijídlový den je konzervativní:
-   * večerní svačina je malá (7 %), hlavní jídla drží nad 20 %, aby se nezměnilo,
-   * které jídlo dostane přílohu a zeleninu (rozhoduje `dist[i] >= 0.2`).
+   * [2026-09-02] Rozložení kalorií do jídel. Svačina se pozná podle TYPU jídla, ne podle
+   * podílu kalorií, takže rozdělení není svázané hranicí 20 % jako dřív.
+   *
+   * ⛔ [oprava po revizi 2026-09-02] Šestijídlový den měl původně
+   * `[0.20, 0.10, 0.28, 0.10, 0.25, 0.07]` a bylo to měřitelně špatně: revize naměřila,
+   * že při 1800 kcal skončila večerní svačina pod 150 kcal ve 125 dnech ze 150
+   * (nejmenší mělo 77 kcal a 1,3 g bílkovin, tedy jedno jablko), a obě denní svačiny
+   * v 71 a 72 případech. Sedm procent z 1800 kcal prostě není porce, na kterou se dá
+   * pověsit bílkovina.
+   *
+   * Nové rozdělení zvedá všechny tři svačiny na 15 % na úkor hlavních jídel. Změřeno
+   * na 900 jídlech pro každý cíl: jídel pod 150 kcal kleslo z 268 na 2 při 1800 kcal,
+   * z 85 na 1 při 2500 a z 27 na 0 při 3300. ⚠️ NENÍ to nula: zbylé případy jsou svačiny,
+   * kterým pod úzkým filtrem (vegan a zároveň bez lepku) vypadne bílkovinný zdroj,
+   * a to rozdělením kalorií spravit nejde.
    * ⛔ Táž tabulka je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
    */
   function distProJidla(meals) {
     if (meals === 3) return [0.30, 0.40, 0.30];
     if (meals === 4) return [0.28, 0.34, 0.13, 0.25]; // svačina = malá (snack), ne druhý oběd
     if (meals === 5) return [0.22, 0.10, 0.30, 0.10, 0.28];
-    return [0.20, 0.10, 0.28, 0.10, 0.25, 0.07];
+    return [0.19, 0.15, 0.20, 0.15, 0.16, 0.15];
   }
 
   /** Výchozí popisky jídel. Vlastní si volající předá přes `opts.mealNames`. */
@@ -444,14 +456,20 @@
           var needC = (targets.carbs * dist[i]) - usedC;
           var cg = round((needC / (carb.per100.c || 1)) * 100, 10);
           // Hlavní jídlo bez keto cílů: příloha se zmenšuje, ale neruší (podlaha 40 g).
-          if (!lowCarb && (kind === 'breakfast' || dist[i] >= 0.2)) cg = Math.max(cg, podlahaPrilohy(carb));
+          // ⛔ [oprava po revizi 2026-09-02] Hlavní jídlo se pozná podle TYPU, ne podle
+          // podílu kalorií. Dřív tu stálo `kind === 'breakfast' || dist[i] >= 0.2`, což je
+          // pro 3, 4 i 5 jídel totéž (ověřeno paritou), ale svazovalo to rozdělení kalorií:
+          // jakmile by šestijídlový den dal večeři míň než 20 %, tiše by přišla o podlahu
+          // přílohy i o zeleninu. Blok navíc už běží uvnitř `if (!isSnack)`.
+          if (!lowCarb) cg = Math.max(cg, podlahaPrilohy(carb));
           if (cg > 10) items.push({ food: carb, grams: Math.min(cg, 320) });
         }
       }
       // 3) zelenina pro objem (u hlavních jídel)
       // [fix 2026-07-22] aromatická zelenina (cibule, česnek, chilli, bylinky…) není samostatná
       // příloha — 150 g cibule k večeři je nesmysl. Do dochucení patří, na talíř jako zelenina ne.
-      if (dist[i] >= 0.2) {
+      // ⛔ [oprava po revizi 2026-09-02] Podmínka je TYP jídla, ne podíl kalorií (viz výš).
+      if (!isSnack) {
         // [fix 2026-08-06 kolo 3] V keto režimu jen nízkosacharidová zelenina. Táž logika v appce.
         var sideVegDb = db.filter(function (f) {
           return f.cat !== 'veg' || (!/cibul|cesnek|chilli|zazvor|kren|bylink|petrzel|koriandr|kopr|pazitk|medvedi/.test(f.id) && (!lowCarb || f.per100.c <= 5));
@@ -903,15 +921,26 @@
 
       // M2: přesun gramů z nejchudší položky na vlákninu do nejbohatší, při stejných kaloriích.
       for (var kolo2 = 0; kolo2 < 6 && den('fib') < cilVlakniny; kolo2++) {
-        var kandidati = polozky().filter(function (it) {
-          return VLAK_KAT.indexOf(it.food.cat) !== -1 && it.food.per100.kcal > 0;
+        // ⛔ [oprava po revizi 2026-09-02] Tie-break MUSÍ být na POZICI (index jídla a index
+        // položky), ne na id potraviny. Táž potravina se ve dni vyskytne dvakrát v 9 % dnů
+        // a `(a.id < b.id ? -1 : 1)` pro dvě shodná id vrátí 1 v obou směrech. Takový
+        // komparátor porušuje antisymetrii a pořadí pak závisí na implementaci `sort`,
+        // takže „která porce naroste" by se lišilo mezi V8 a Safari. Parita by to nechytila:
+        // harness pouští webový engine v Node, tedy taky pod V8. Pozice je jednoznačná vždy.
+        var kandidati = [];
+        out.forEach(function (m2, mi2) {
+          m2.items.forEach(function (it2, ii2) {
+            if (VLAK_KAT.indexOf(it2.food.cat) !== -1 && it2.food.per100.kcal > 0) {
+              kandidati.push({ it: it2, mi: mi2, ii: ii2 });
+            }
+          });
         });
         if (kandidati.length < 2) break;
         var podleHustoty = kandidati.slice().sort(function (a, b) {
-          return (hustotaVl(b.food) - hustotaVl(a.food)) || (a.food.id < b.food.id ? -1 : 1);
+          return (hustotaVl(b.it.food) - hustotaVl(a.it.food)) || (a.mi - b.mi) || (a.ii - b.ii);
         });
-        var rust = podleHustoty[0];
-        var ubytek = podleHustoty[podleHustoty.length - 1];
+        var rust = podleHustoty[0].it;
+        var ubytek = podleHustoty[podleHustoty.length - 1].it;
         if (rust === ubytek || hustotaVl(rust.food) - hustotaVl(ubytek.food) < 0.001) break;
         var prostor = stropPolozky(rust.food) - rust.grams;
         // Ubírat jde jen do viditelné porce; pod 15 g už to na talíři není porce, ale drobek.
@@ -1087,6 +1116,17 @@
 
   // ---- 5) Tréninkový vs netréninkový den ----
   /**
+   * Kalorická podlaha pro NEZNÁMÉ pohlaví, tedy výchozí hodnota pro `cileTreninkVolno`.
+   * ⛔⛔ ZDROJ PRAVDY je `kcalFloorForSex` v appce (`src/engine/goals.ts`): žena 1200,
+   * muž i „other" 1500, bez pohlaví 1200. Sem se neimportuje (tenhle soubor je čistá
+   * IIFE bez závislostí), takže se podlaha PŘEDÁVÁ třetím parametrem. Kdo zná pohlaví
+   * klienta, musí ho poslat, jinak platí opatrných 1200.
+   * ⚠️ `computeTargets` výš vlastní kalorickou podlahu NEMÁ, takže tohle je jediné místo,
+   * kde na webu podlaha vzniká.
+   * ⛔ Táž konstanta i tentýž default jsou v appce, hlídá parita.
+   */
+  var KCAL_PODLAHA_NEZNAME = 1200;
+  /**
    * [2026-09-02] Z jednoho denního cíle a počtu tréninků v týdnu udělá DVA cíle.
    * Týdenní součet kalorií zůstává stejný, přesouvají se jen mezi dny.
    *
@@ -1104,26 +1144,45 @@
    * `treninkuTydne` mimo 1 až 6 vrací dvakrát původní cíl.
    * ⛔ Táž funkce je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
    */
-  function cileTreninkVolno(t, treninkuTydne) {
+  function cileTreninkVolno(t, treninkuTydne, kcalPodlaha) {
     var d = Math.round(treninkuTydne);
-    var kopie = function (kcal, rozdil) {
+    if (kcalPodlaha == null) kcalPodlaha = KCAL_PODLAHA_NEZNAME;
+    var kopie = function () {
       var o = {};
       for (var k in t) o[k] = t[k];
-      if (kcal != null) {
-        o.kcal = kcal;
-        o.carbs = Math.max(40, Math.round(t.carbs + rozdil / 4));
-      }
       return o;
     };
-    if (!(d >= 1 && d <= 6)) return { training: kopie(null, 0), rest: kopie(null, 0) };
+    // Rozdíl jde do SACHARIDŮ. Když narazí na podlahu 40 g, zbytek jde do tuku,
+    // a co se nevejde ani tam, se z kalorií prostě neodečte.
+    // ⛔ [oprava po revizi 2026-09-02] Bez tohohle dopočtu vracela funkce vnitřně
+    // nekonzistentní cíl: `carbs` se zastavily na 40 g, ale `kcal` klesaly dál
+    // (naměřeno na 1400 kcal / 45 g sach.: carbs 40 a kcal 1295 vs. 1260). Engine pak
+    // skládá den na kalorie, které z maker nevycházejí. Kalorie se proto dopočítají
+    // ze SKUTEČNĚ provedeného posunu.
+    var sPosunem = function (rozdilKcal) {
+      var carbs = Math.max(40, Math.round(t.carbs + rozdilKcal / 4));
+      var zbytek = rozdilKcal - (carbs - t.carbs) * 4;
+      var fat = Math.abs(zbytek) < 1 ? t.fat : Math.max(20, Math.round(t.fat + zbytek / 9));
+      var aplikovano = (carbs - t.carbs) * 4 + (fat - t.fat) * 9;
+      var o = kopie();
+      o.kcal = Math.round(t.kcal + aplikovano);
+      o.carbs = carbs;
+      o.fat = fat;
+      return o;
+    };
+    // ⛔ [oprava po revizi 2026-09-02] Posun kalorií nesmí protlačit volný den pod
+    // kalorickou podlahu. Omezení bylo jen relativní (±10 %), takže cíl 1200 kcal
+    // se 6 tréninky dal volný den 1080 kcal a cíl 1300 dal 1170. Podlaha se řeší
+    // ZMENŠENÍM PŘESUNU, ne dodatečným zvednutím volného dne: kdyby se volný den
+    // zvedl až potom, přestal by týdenní součet sedět a klient by týdně jedl víc,
+    // než mu engine spočítal.
+    var posunMax = Math.max(0, (t.kcal - kcalPodlaha) * (7 - d));
+    if (!(d >= 1 && d <= 6) || posunMax <= 0) return { training: kopie(), rest: kopie() };
     // X = kolik kalorií se za týden přesune z volných dnů do tréninkových.
-    var x = Math.min(t.kcal * 0.1 * d, t.kcal * 0.1 * (7 - d));
+    var x = Math.min(t.kcal * 0.1 * d, t.kcal * 0.1 * (7 - d), posunMax);
     var naTrenink = Math.round(x / d);
     var zVolna = Math.round(x / (7 - d));
-    return {
-      training: kopie(t.kcal + naTrenink, naTrenink),
-      rest: kopie(t.kcal - zVolna, -zVolna)
-    };
+    return { training: sPosunem(naTrenink), rest: sPosunem(-zVolna) };
   }
 
   // ---- 6) Nouzový den na cesty (bez vaření) ----
@@ -1145,6 +1204,14 @@
     'dusena-sunka-vyberova', 'tunak-vlastni-stava', 'tunak-v-oleji-konzerva', 'sardinky',
     'sardinky-v-tomate', 'losos-uzeny', 'makrela-uzena', 'pstruh-uzeny', 'zavinac',
     'tvaroh-mekky', 'tvaroh-tvrdy', 'skyr', 'syrovatkovy-protein',
+    // ⛔ [oprava po revizi 2026-09-02] ROSTLINNÁ BÍLKOVINA. Bez ní dostal vegan den
+    // s 55 až 70 g bílkovin proti cíli 150 (revize naměřila −80 až −96 g), a kalorie
+    // přitom seděly, takže kontrolní pruh postavený na kaloriích by ukázal zelenou.
+    // Příčina: `assembleDay` bere bílkovinu jen z kategorií `protein` a `dairy`, takže
+    // hummus a luštěniny z konzervy (kategorie `legume`) na základ jídla nikdy nesáhly.
+    // Tyhle tři v kategorii `protein` jsou, jsou vegan a v obchodě se prodávají hotové.
+    'tofu', 'tempeh', 'seitan',
+    'sojovy-jogurt-bily',
     // mléčné
     'cottage-syr', 'cottage-syr-light', 'eidam-30', 'gouda', 'mozzarella', 'mozzarella-light',
     'recky-jogurt-bily', 'recky-jogurt-0', 'bily-jogurt', 'bily-jogurt-nizkotucny',
@@ -1153,8 +1220,21 @@
     'knackebrot', 'celozrnne-krekry', 'chleb-zitny-tmavy', 'chleb-celozrnny', 'chleb-kvaskovy',
     'toustovy-chleb-celozrnny', 'rohlik', 'houska-celozrnna', 'kaiserka', 'pita-chleb',
     'tortilla-psenicna', 'musli-bez-cukru', 'granola-bez-pridaneho-cukru', 'ovesne-vlocky',
-    // luštěniny z konzervy
+    // ⛔ [oprava po revizi 2026-09-02] BEZLEPKOVÁ PŘÍLOHA. Ze čtrnácti příloh výše obsahuje
+    // lepek třináct a u ovesných vloček za něj neručíme, takže celiakovi po filtru nezbyla
+    // v kategorii `carb` ANI JEDNA položka: revize naměřila den až 27 % mimo kalorie
+    // (chybělo 540 kcal z 2000) a pod cílem vlákniny, a engine mlčel.
+    // Kukuřice z konzervy je jediná bezlepková příloha, která je zároveň `bezny`, takže
+    // ji `pick` vybere; bezlepkové pečivo `bezny` není a slouží jako záložní nabídka
+    // (a jako kandidát záměn), ⛔ `bezny` se kvůli tomu v datech nepřepisuje.
+    'kukurice', 'bezlepkovy-chleb-2', 'bezlepkovy-chleb-toustovy', 'bezlepkovy-knackebrot',
+    'bezlepkova-tortilla',
+    // luštěniny z konzervy a tofu (kategorie `legume`)
+    // ⚠️ `assembleDay` kategorii `legume` sám nevybírá, tyhle položky se tedy do dne
+    // dostanou jen záměnou. V seznamu jsou proto, že bez vaření prokazatelně jsou,
+    // a aby seznam dával smysl člověku, který ho čte.
     'cizrna-v-konzerve', 'fazole-bila-v-konzerve', 'hrasek-zeleny-konzerva', 'hummus',
+    'tofu-uzene', 'tofu-marinovane',
     // zelenina, kterou stačí opláchnout
     'rajce', 'cherry-rajcata', 'okurka', 'mrkev', 'paprika-cervena', 'paprika-zelena',
     'ledovy-salat', 'rukola', 'redkvicka', 'kysela-okurka-nakladana', 'polnicek',
@@ -1183,12 +1263,55 @@
     if (!uzka.length) {
       throw new Error('meal-gen: nouzový den nemá z čeho skládat, v databázi není ani jedna položka ze seznamu BEZ_VARENI_ID.');
     }
-    return assembleDay(targets, { meals: 3, prefs: opts.prefs, seed: opts.seed,
+    var den = assembleDay(targets, { meals: 3, prefs: opts.prefs, seed: opts.seed,
       mealNames: opts.mealNames, db: uzka });
+    den.warnings = nouzoveVarovani(den, targets, uzka, opts.prefs);
+    return den;
+  }
+
+  /**
+   * ⛔⛔ [oprava po revizi 2026-09-02] NOUZOVÝ DEN MUSÍ UMĚT ŘÍCT, ŽE SE NEPOVEDL.
+   *
+   * Zúžená nabídka se s dietním filtrem umí složit tak, že den mine cíl o stovky kalorií
+   * nebo o desítky gramů bílkovin, a engine přitom nespadne: `assembleDay` vždycky nějaký
+   * den vrátí. Naměřeno revizí před opravou seznamu: celiak −27 % kalorií, vegan −96 g
+   * bílkovin (a u vegana kalorie SEDĚLY, takže kontrola postavená na kaloriích mlčela).
+   *
+   * ⛔ Kontrolní pruh v adminu tohle pole MUSÍ zobrazit; kdo nouzový den někam pustí bez
+   * zobrazení varování, vyrobí přesně ten tichý druh chyby, kvůli kterému funkce vznikla.
+   * ⛔ Táž kontrola i táž znění vět jsou v appce, hlídá parita-jidelnicku.mjs.
+   */
+  function nouzoveVarovani(den, targets, uzka, prefs) {
+    var varovani = [];
+    // 1) Zbyla po dietním filtru vůbec příloha a zdroj bílkovin? Tohle je příčina,
+    //    zbytek jsou její následky, a člověk potřebuje slyšet příčinu.
+    var poFiltru = filterDb(uzka, prefs);
+    var maPrilohu = poFiltru.some(function (f) { return f.cat === 'carb'; });
+    var maBilkovinu = poFiltru.some(function (f) { return f.cat === 'protein' || f.cat === 'dairy'; });
+    if (!maPrilohu) {
+      varovani.push('Nouzový den nemá k dispozici žádnou přílohu bez vaření, která by prošla dietním filtrem. Doplň ji ručně.');
+    }
+    if (!maBilkovinu) {
+      varovani.push('Nouzový den nemá k dispozici žádný zdroj bílkovin bez vaření, který by prošel dietním filtrem. Doplň ho ručně.');
+    }
+    // 2) Kalorie: pásmo ±10 %. Širší než u běžného dne schválně, protože nabídka je zúžená.
+    var rozdilKcal = den.totals.kcal - targets.kcal;
+    if (Math.abs(rozdilKcal) > targets.kcal * 0.1) {
+      varovani.push('Nouzový den mine kalorický cíl o ' + Math.round(rozdilKcal) + ' kcal ('
+        + Math.round(den.totals.kcal) + ' místo ' + Math.round(targets.kcal)
+        + '). Nabídka bez vaření na tenhle cíl nestačí.');
+    }
+    // 3) Bílkovina: podlaha 80 % cíle. Jen dolů; víc bílkovin problém není.
+    if (targets.protein > 0 && den.totals.p < targets.protein * 0.8) {
+      varovani.push('Nouzový den má jen ' + Math.round(den.totals.p) + ' g bílkovin proti cíli '
+        + Math.round(targets.protein) + ' g. Přidej bílkovinu ručně, tenhle den se na cíl nesloží.');
+    }
+    return varovani.length ? varovani : undefined;
   }
 
   global.MealGen = { computeTargets: computeTargets, ketoTargets: ketoTargets, assembleDay: assembleDay,
     assembleWeek: assembleWeek, shoppingListFromDays: shoppingListFromDays, swapItem: swapItem,
     macrosFor: macrosFor, cileTreninkVolno: cileTreninkVolno, nouzovyDen: nouzovyDen,
-    typyJidel: typyJidel, BEZ_VARENI_ID: BEZ_VARENI_ID, GOAL: GOAL, ACT: ACT };
+    typyJidel: typyJidel, BEZ_VARENI_ID: BEZ_VARENI_ID,
+    KCAL_PODLAHA_NEZNAME: KCAL_PODLAHA_NEZNAME, GOAL: GOAL, ACT: ACT };
 })(window);
