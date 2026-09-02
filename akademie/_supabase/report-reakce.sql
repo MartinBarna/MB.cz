@@ -20,6 +20,24 @@ alter table public.client_reports
 comment on column public.client_reports.reakce_odeslana is
   'Kdy Martin v adminu odklikl, ze na tenhle report uz odpovedel. Rucni priznak, nic ho nenastavuje samo. NULL = neodkliknuto (ne nutne neodpovezeno).';
 
+-- ⛔⛔ ZPĚTNÉ DOPLNĚNÍ. Bez něj by fronta v den nasazení ukázala 30 nejnovějších reportů,
+-- na které Martin dávno odpověděl (změřeno 2. 9. 2026 v živé DB: 73 reportů celkem, z toho
+-- jen 9 mladších čtrnácti dnů). Nástroj, který má říkat „na tohle jsi neodpověděl", by tak
+-- první obrazovkou lhal a ztratil by důvěru dřív, než by ji získal.
+--
+-- Hranice je 14 dní: co je starší, bere se za vyřízené; co je mladší, zůstane ve frontě,
+-- protože tam Martin opravdu může mít rozdělanou práci. Čas se bere z reportu, ne z `now()`,
+-- ať to v datech nevypadá, že Martin odpověděl 64 lidem v jedné vteřině při migraci.
+--
+-- IDEMPOTENTNÍ: podmínka `reakce_odeslana is null` znamená, že druhé spuštění nic nepřepíše,
+-- a ručně odznačený report (Martin si ho vrátí do fronty) se opakovaným během nezruší,
+-- dokud je mladší než 14 dní. ⛔ Pouštět PŘED `create index`, jinak se index staví nad daty,
+-- která se hned poté celá vyprázdní.
+update public.client_reports
+   set reakce_odeslana = (report_date + interval '1 day')
+ where reakce_odeslana is null
+   and report_date < current_date - interval '14 days';
+
 -- Podle tohohle indexu se tahá fronta „co ještě čeká". Bez něj by se s rostoucím počtem
 -- reportů skenovala celá tabulka při každém otevření karty Klienti.
 create index if not exists client_reports_ceka_idx

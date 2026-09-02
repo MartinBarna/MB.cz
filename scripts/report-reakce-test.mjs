@@ -9,6 +9,8 @@
 import {
   spocitejBlok, navrhni, pripravFakta, podlaha,
   REZ_PCT, PRIDANI_PCT, DNY_ZAPISU_MIN,
+  PASMO_KCAL_POD_PCT, NEVEROHODNY_KCAL_STROP, UNAVA_HLAD_STOP, MIRA_POKLES_CM,
+  RYCHLE_MAX_KG_TYDEN, PODLAHA,
 } from "../akademie/_supabase/functions/admin-api/report-engine.mjs";
 
 let chyb = 0, ok = 0;
@@ -144,6 +146,161 @@ scenar("5) Bezpečnost a nabírání: rychlý úbytek zvedá příjem, stojící
   // Bez cíle není co upravovat.
   const n4 = navrhni({ cisla: Object.assign({}, bulk.cisla, { kcalCil: null }), smer: "hubnuti", pohlavi: "m" });
   tvrd(n4.paka === "zadna" && n4.jistota === "chybi_data", "bez zadání se nové číslo nevymýšlí");
+});
+
+
+// ---------------------------------------------------------------------------
+// SCÉNÁŘE 6 AŽ 11 PŘIBYLY PO ADVERSÁRNÍ REVIZI 2. 9. 2026. Každý z nich byl PŘED
+// opravou vidět naživo: engine v něm doporučil řez kalorií, který by appka nikdy
+// nevydala. Test drží paritu s `proposeAdjustment` v appce (`src/lib/engine/engine.ts`).
+
+scenar("6) Nevěrohodně nízký zápis: NIKDY se neřeže (appka: plaus.implausiblyLow)", () => {
+  // Jí prý o 27 % míň, než má, a přesto stojí. Před opravou: kcal_dolu na 1870.
+  const b = spocitejBlok({
+    posledni: rep("2026-09-01", 92.0, { nutrition: { kcal: 1450, protein: 150, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 92.0),
+    cile: { kcal: 1990, protein: 160, kroky: 10000 },
+  });
+  const n = navrhni({ cisla: b.cisla, predchoziCisla: { tempoPct: 0 }, smer: "hubnuti", pohlavi: "m" });
+  tvrd(n.paka === "zadna", "hluboko pod cílem se NEŘEŽE (je " + n.paka + ")");
+  tvrd(n.novyKcal === null, "a nenavrhuje se žádné nové číslo");
+  tvrd(n.jistota === "neverohodny_zapis", "důvod je nevěrohodný zápis (je " + n.jistota + ")");
+  tvrd(n.duvod.indexOf("sedí na cíli") === -1, "a nikde netvrdí, že příjem sedí na cíli");
+  tvrd(PASMO_KCAL_POD_PCT === 15, "práh 'hluboko pod cílem' je 15 %");
+
+  // Druhá půlka téhož pravidla, převzatá z appky 1:1: zápis na tvrdé podlaze 1200.
+  const naPodlaze = spocitejBlok({
+    posledni: rep("2026-09-01", 92.0, { nutrition: { kcal: 1180, protein: 150, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 92.0),
+    cile: { kcal: 1250, protein: 160, kroky: 10000 },
+  });
+  const n2 = navrhni({ cisla: naPodlaze.cisla, predchoziCisla: { tempoPct: 0 }, smer: "hubnuti", pohlavi: "z" });
+  tvrd(n2.jistota === "neverohodny_zapis", "zápis na podlaze 1200 při stojícím těle je taky nevěrohodný");
+  tvrd(NEVEROHODNY_KCAL_STROP === 1200, "strop je 1200, shodně s HARD_KCAL_FLOOR_DEFAULT appky");
+
+  // ⛔ Ale když tělo KLESÁ, nízký zápis nevěrohodný není a pravidlo se neuplatní.
+  const klesa = spocitejBlok({
+    posledni: rep("2026-09-01", 91.2, { nutrition: { kcal: 1450, protein: 150, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 92.0),
+    cile: { kcal: 1990, protein: 160, kroky: 10000 },
+  });
+  const n3 = navrhni({ cisla: klesa.cisla, predchoziCisla: { tempoPct: -0.9 }, smer: "hubnuti", pohlavi: "m" });
+  tvrd(n3.jistota !== "neverohodny_zapis", "u klesajícího těla se zápis za nevěrohodný neoznačuje");
+});
+
+// ---------------------------------------------------------------------------
+scenar("7) Rekompozice: váha stojí, míry dolů, engine NEŘEŽE (appka: detectRecomp)", () => {
+  const stav = {
+    posledni: rep("2026-09-01", 92.0, {
+      miry: { pas: 101 },
+      nutrition: { kcal: 1990, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 },
+    }),
+    predchozi: rep("2026-08-25", 92.0, { miry: { pas: 104 } }),
+    predpredchozi: rep("2026-08-18", 92.0, { miry: { pas: 105 } }),
+    prvni: rep("2026-06-08", 103.0, { miry: { pas: 112 } }),
+    cile: { kcal: 1990, protein: 160, kroky: 10000 },
+    smer: "hubnuti", pohlavi: "m",
+  };
+  const f = pripravFakta(stav);
+  tvrd(f.navrh.paka === "zadna", "při rekompozici se nic nemění (je " + f.navrh.paka + ")");
+  tvrd(f.navrh.jistota === "recomp", "a je to pojmenované jako rekompozice (je " + f.navrh.jistota + ")");
+  tvrd(f.navrh.duvod.indexOf("rekompozice") !== -1, "důvod to říká Martinovi nahlas");
+  tvrd(MIRA_POKLES_CM === 0.5, "práh poklesu míry je 0,5 cm, shodně s appkou");
+
+  // Kontrola opačným směrem: stojící váha BEZ poklesu míry rekompozice není.
+  const bez = pripravFakta({
+    posledni: rep("2026-09-01", 92.0, { miry: { pas: 104 }, nutrition: { kcal: 1990, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 92.0, { miry: { pas: 104 } }),
+    predpredchozi: rep("2026-08-18", 92.0, { miry: { pas: 104 } }),
+    cile: { kcal: 1990, protein: 160, kroky: 10000 }, smer: "hubnuti", pohlavi: "m",
+  });
+  tvrd(bez.navrh.jistota !== "recomp", "beze změny měr to rekompozice není");
+});
+
+// ---------------------------------------------------------------------------
+scenar("8) Únava a hlad 5/5: deficit se NEPROHLUBUJE (appka: subjectiveGuardrail)", () => {
+  const stav = {
+    posledni: rep("2026-09-01", 92.0, {
+      nutrition: { kcal: 1990, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 },
+      scales: { unava: 5, hlad: 5 },
+    }),
+    predchozi: rep("2026-08-25", 92.0, { scales: { unava: 5, hlad: 5 } }),
+    predpredchozi: rep("2026-08-18", 92.0, { scales: { unava: 5, hlad: 5 } }),
+    cile: { kcal: 1990, protein: 160, kroky: 10000 }, smer: "hubnuti", pohlavi: "m",
+  };
+  const f = pripravFakta(stav);
+  tvrd(f.navrh.paka === "zadna", "s únavou a hladem 5/5 se neřeže (je " + f.navrh.paka + ")");
+  tvrd(f.navrh.novyKcal === null, "a nepadá žádné nové číslo");
+  tvrd(f.navrh.jistota === "diet_break", "dva týdny v řadě eskalují na diet break (je " + f.navrh.jistota + ")");
+  tvrd(f.navrh.duvod.indexOf("diet break") !== -1, "diet break je ve větě důvodu pojmenovaný");
+  tvrd(UNAVA_HLAD_STOP === 4, "práh je 4 z 5, shodně s FATIGUE_HIGH a HUNGER_HIGH appky");
+
+  // Jen jeden týden: brzda platí, ale diet break se ještě nenabízí.
+  const jeden = pripravFakta(Object.assign({}, stav, { predchozi: rep("2026-08-25", 92.0, { scales: { unava: 2, hlad: 2 } }) }));
+  tvrd(jeden.navrh.paka === "zadna", "i po jednom týdnu se deficit neprohlubuje");
+  tvrd(jeden.navrh.jistota === "guardrail", "ale je to jen brzda, ne diet break (je " + jeden.navrh.jistota + ")");
+
+  // Přesně na prahu 4 to platí taky, pod ním ne.
+  const ctyri = navrhni({ cisla: Object.assign({}, f.cisla, { unava: 4, hlad: 1 }), predchoziCisla: null, smer: "hubnuti", pohlavi: "m" });
+  tvrd(ctyri.jistota === "guardrail", "únava 4 z 5 brzdu spouští");
+  const tri = navrhni({ cisla: Object.assign({}, f.cisla, { unava: 3, hlad: 3 }), predchoziCisla: { tempoPct: 0 }, smer: "hubnuti", pohlavi: "m" });
+  tvrd(tri.jistota !== "guardrail" && tri.jistota !== "diet_break", "únava 3 z 5 brzdu nespouští");
+});
+
+// ---------------------------------------------------------------------------
+scenar("9) Podlaha kcal se nikdy neodhaduje, drží paritu s appkou (1200 ž / 1500 m)", () => {
+  tvrd(PODLAHA.z === 1200 && PODLAHA.m === 1500, "podlahy jsou 1200 žena a 1500 muž");
+  tvrd(podlaha("") === 1500 && podlaha(undefined) === 1500, "neznámé pohlaví bere PŘÍSNĚJŠÍ 1500");
+  tvrd(podlaha("z") === 1200 && podlaha("m") === 1500, "vybrané pohlaví se respektuje");
+});
+
+// ---------------------------------------------------------------------------
+scenar("10) Bezpečnostní páka platí i bez vybraného směru a má strop v kg", () => {
+  // 2 kg za týden u 95 kg, ale směr Martin nevybral. Dřív engine mlčel.
+  const b = spocitejBlok({
+    posledni: rep("2026-09-01", 93.0, { nutrition: { kcal: 1950, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 95.0),
+    cile: { kcal: 2000, protein: 160, kroky: 10000 },
+  });
+  const n = navrhni({ cisla: b.cisla, predchoziCisla: null, smer: "", pohlavi: "m" });
+  tvrd(n.paka === "prilis_rychle", "rychlý úbytek se pojmenuje i bez směru (je " + n.paka + ")");
+  tvrd(n.novyKcal === null, "ale konkrétní číslo se bez směru nevymýšlí");
+
+  // Strop je MENŠÍ z 1 % váhy a 1 kg (appka: maxCutRateKgPerWeek). U 120 kg tedy 1 kg.
+  const tezky = spocitejBlok({
+    posledni: rep("2026-09-01", 118.9, { nutrition: { kcal: 2400, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 120.0),
+    cile: { kcal: 2400, protein: 160, kroky: 10000 },
+  });
+  const n2 = navrhni({ cisla: tezky.cisla, predchoziCisla: null, smer: "hubnuti", pohlavi: "m" });
+  tvrd(n2.paka === "kcal_nahoru", "1,1 kg u 120 kg je nad stropem 1 kg, i když je to jen 0,9 % (je " + n2.paka + ")");
+  tvrd(RYCHLE_MAX_KG_TYDEN === 1.0, "absolutní strop je 1 kg za týden, shodně s MAX_RATE_KG_PER_WEEK");
+});
+
+// ---------------------------------------------------------------------------
+scenar("11) První report: žádná díra ve větě ani řádek 'od startu 0 kg'", () => {
+  const prvniRep = rep("2026-09-01", 92.0, { nutrition: { kcal: 1990, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 } });
+  const f = pripravFakta({ posledni: prvniRep, predchozi: null, prvni: prvniRep, cile: { kcal: 1990, protein: 160, kroky: 10000 }, smer: "hubnuti", pohlavi: "m" });
+  tvrd(f.text.indexOf("Od startu") === -1, "u prvního reportu se řádek 'od startu' nepíše");
+  tvrd(f.navrh.duvod.indexOf("( ") === -1 && f.navrh.duvod.indexOf("()") === -1, "ve větě není prázdná závorka");
+  tvrd(f.navrh.duvod.indexOf("  ") === -1, "ani dvojitá mezera");
+  tvrd(f.text.indexOf("\u2014") === -1, "a nikde dlouhá pomlčka");
+
+  // Tempo z jednoho vážení se přizná, tempo z průměru tří ne.
+  const jedno = pripravFakta({
+    posledni: rep("2026-09-01", 92.0, { nutrition: { kcal: 1990, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 92.0),
+    predpredchozi: rep("2026-08-18", 92.0),
+    cile: { kcal: 1990, protein: 160, kroky: 10000 }, smer: "hubnuti", pohlavi: "m",
+  });
+  tvrd(jedno.cisla.tempoZdroj === "jedno_vazeni", "se dvěma váženími je zdroj 'jedno_vazeni' (je " + jedno.cisla.tempoZdroj + ")");
+  const prumer = pripravFakta({
+    posledni: rep("2026-09-01", 92.0, { nutrition: { kcal: 1990, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 92.0),
+    drive: [rep("2026-08-25", 92.0), rep("2026-08-18", 92.2), rep("2026-08-11", 92.4), rep("2026-08-04", 92.6)],
+    cile: { kcal: 1990, protein: 160, kroky: 10000 }, smer: "hubnuti", pohlavi: "m",
+  });
+  tvrd(prumer.cisla.tempoZdroj === "prumer3", "se čtyřmi váženími se počítá klouzavý průměr (je " + prumer.cisla.tempoZdroj + ")");
 });
 
 // ---------------------------------------------------------------------------

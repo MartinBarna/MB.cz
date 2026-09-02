@@ -7,7 +7,7 @@
  *
  * Kdo tenhle soubor mění, ať ví, kde je co:
  *   • TVAR MAILU (oslovení, pořadí bloků, závěr) je TADY. Skládá ho prohlížeč.
- *   • ČÍSLA počítá `akademie/_supabase/functions/admin-api/report-engine.js`.
+ *   • ČÍSLA počítá `akademie/_supabase/functions/admin-api/report-engine.mjs`.
  *   • PRAVIDLA PRO AI (co smí napsat) jsou v `admin-api/index.ts` u konstanty RD_SYSTEM.
  *   Jsou to tři různé věci, ne tři kopie téhož. Nekopíruj mezi nimi čísla ani pravidla.
  *

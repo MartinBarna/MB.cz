@@ -345,6 +345,10 @@ const RD_API_KEY = RD_PROVIDER === "grok"
 const RD_MODEL = Deno.env.get("REPORT_DRAFT_MODEL") ??
   (RD_PROVIDER === "grok" ? "grok-4-latest" : "claude-sonnet-5");
 const RD_TIMEOUT_MS = 30_000;   // delší čekání se nevyplatí, admin by visel naslepo
+// ⛔ Skutečné UUID, ne „36 znaků z povolené abecedy". Původní `/^[0-9a-fA-F-]{36}$/` pustil
+// dál i 36 pomlček; Postgres to pak shodil chybou 22P02 a admin dostal HTTP 500 místo
+// čistého 400 (revize 2. 9. 2026, nález l).
+const RD_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const RD_ODSTUP_MIN = 10;       // ochrana nákladu: druhý klik do 10 minut vrátí ten samý koncept
 // ⚠️ Změřeno na deseti skutečných odpovědích z 17. 8. až 1. 9. 2026: osobní část (bez
 // bloku čísel a bez patičky) má 1 500 až 3 500 znaků. Původních „80 až 140 slov" bylo
@@ -357,9 +361,13 @@ const RD_DELKA = "180 až 320 slov";
 // konkrétní váhy a míry skutečných lidí sem NIKDY nepatří: tenhle text odchází do API
 // třetí strany při každém volání. Čísla v ukázkách jsou vymyšlená a slouží jen k tomu,
 // aby model viděl, JAK se s číslem pracuje ve větě, ne jaká čísla má psát.
+// ⛔ TÝKÁ SE TO I PŘEZDÍVEK A OSLOVENÍ. V první verzi tu stálo oslovení přezdívkou; nikdo
+// neuměl doložit, čí ta přezdívka je, a do API třetí strany nesmí odejít nic, co Martin
+// výslovně neschválil (revize 2. 9. 2026, nález e). Ukázky proto začínají rovnou větou:
+// oslovení stejně píše šablona, ne model, takže mu ve vzoru k ničemu není.
 const RD_UKAZKY = [
   "UKÁZKA 1 (tón, když jde o přesnost zápisu):",
-  "Marťasi, kroky 6 700 a minule 5 900. V červenci jsi měl přes 9 000, takže víme, že to jde.",
+  "Kroky 6 700 a minule 5 900. V červenci jsi měl přes 9 000, takže víme, že to jde.",
   "Na jídle je pořád třeba přitvrdit. Průměr teď píšeš 1 480, minule 1 570. Obě čísla jsou podle mě",
   "o stovky kcal podhodnocená a pas se přitom nehnul, takže tam ta nepřesnost bude větší, než to vypadá.",
   "Zápis 7 ze 7 dní je bomba, to drž. Ale zapisovat můžeme klidně celý život, dokud nebudeme mít",
@@ -424,9 +432,11 @@ function rdCitBlok(radky: string[]): string {
 // ⛔⛔ TADY SE MĚNÍ, JAK KONCEPT ZNÍ. Jinde v kódu žádný prompt není.
 // Pravidla hlasu jsou zkrácený výtah z `_Claude-dokumenty/HLAS-MARTINA.md` a z rozboru
 // osmi skutečných Martinových odpovědí (`_Claude-dokumenty/reporty-vzory-analyza.md`).
-// ⚠️ Skutečná Martinova odpověď má osobní část 1 500 až 3 500 znaků. Tenhle koncept je
-// schválně kratší jádro (tak zní zadání E1), zbytek si Martin doplní. Když se to má
-// prodloužit, mění se RD_DELKA výš a bod 3 níž, nic jiného.
+// ⚠️ Skutečná Martinova odpověď má osobní část 1 500 až 3 500 znaků a koncept na ni míří:
+// `RD_DELKA` je proto 180 až 320 slov, ne původních 80 až 140. Původní znění tohohle
+// komentáře slibovalo „schválně kratší jádro" a odkazovalo na bod, který už neexistuje
+// (revize 2. 9. 2026, nález c). Když se má délka změnit, mění se `RD_DELKA` výš a NIC
+// jiného: blok čísel model nepíše, ten skládá engine.
 const RD_SYSTEM = [
   "Jsi asistent Martina Barny, online výživového a fitness kouče z Česka.",
   "Píšeš KONCEPT jeho odpovědi na týdenní report klienta. Koncept čte Martin, upraví ho a odešle sám.",
@@ -2218,7 +2228,7 @@ Deno.serve(async (req) => {
     // Ruční odklik „na tenhle report jsem odpověděl". Jediná věc, která příznak mění.
     if (action === "report_reakce_hotovo") {
       const reportId = String(body.report_id ?? "").trim();
-      if (!/^[0-9a-fA-F-]{36}$/.test(reportId)) return json({ error: "no_report_id" }, 400);
+      if (!RD_UUID.test(reportId)) return json({ error: "no_report_id" }, 400);
       const hotovo = body.hotovo !== false;   // výchozí je označit, `false` odznačí (překlik)
       const { error } = await admin.from("client_reports")
         .update({ reakce_odeslana: hotovo ? new Date().toISOString() : null }).eq("id", reportId);
@@ -2231,7 +2241,7 @@ Deno.serve(async (req) => {
     // Odesílá výhradně Martin ručně ze své schránky.
     if (action === "report_draft") {
       const reportId = String(body.report_id ?? "").trim();
-      if (!/^[0-9a-fA-F-]{36}$/.test(reportId)) return json({ error: "no_report_id" }, 400);
+      if (!RD_UUID.test(reportId)) return json({ error: "no_report_id" }, 400);
       // ⛔ Téma týdne je VSTUP, nikdy se neodvozuje. Martin ho v pondělí posílá všem naráz
       // a u někoho ho schválně prohodí (změřeno 27. 7. 2026 na skutečné poště).
       const tema = String(body.tema ?? "").trim().slice(0, 200);
@@ -2328,6 +2338,10 @@ Deno.serve(async (req) => {
       const drive = (driveRes.data ?? []) as Record<string, unknown>[];
       const eng = pripravFakta({
         posledni: rep as Record<string, unknown>,
+        // ⛔ `drive` (až 4 starší reporty od nejnovějšího) je tu kvůli KLOUZAVÉMU PRŮMĚRU
+        // váhy. Bez něj engine počítal stagnaci z rozdílu dvou vážení a dvě vážení „po
+        // sobotě" umí trend zamaskovat i vyrobit. Appka na to má `TRAILING_WEEKS_DEFAULT`.
+        drive,
         predchozi: drive[0] ?? null,
         predpredchozi: drive[1] ?? null,
         prvni: (prvniRes.data ?? null) as Record<string, unknown> | null,

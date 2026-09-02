@@ -608,7 +608,9 @@
     // 'YYYY-MM-DD' → '20. 7. 2027'. Cokoli jiného vrací beze změny (ať datum nikdy nezmizí).
     function czDatum(s){ var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(s||'')); return m ? (+m[3])+'. '+(+m[2])+'. '+m[1] : String(s||''); }
     function fmtDate(s){ if(!s) return '—'; var d=new Date(s); return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'}); }
-    function fmtDay(s){ if(!s) return '—'; return new Date(s).toLocaleDateString('cs-CZ'); }
+    // ⛔ ŽÁDNÁ DLOUHÁ POMLČKA. Volá to i nová fronta „Reporty ke zpracování", takze by
+    // znak, který nemá být nikde, nově vyskočil v UI (revize 2. 9. 2026, nález h).
+    function fmtDay(s){ if(!s) return '-'; return new Date(s).toLocaleDateString('cs-CZ'); }
     // ⛔ OPRAVA 8. 8. 2026: `token` se nabíral JEDNOU při startu (`getSessionRetry`) a už se
     // nikdy neaktualizoval. supabase-js si session na pozadí obnovuje (`autoRefreshToken`),
     // ale admin dál posílal starý JWT. Access token platí hodinu, takže admin nechaný
@@ -1468,8 +1470,13 @@
           // jeden klik navíc než návrh řezu člověku, který nabírá.
           +'<label style="font-size:.78rem;color:#8F8A99;">Kam jedeme<br><select id="kdDrSmer" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;">'
           +'<option value="">(nevybráno, o kcal neradí)</option><option value="hubnuti">hubnutí</option><option value="udrzeni">udržení</option><option value="nabirani">nabírání</option></select></label>'
+          // ⛔⛔ PODLAHA SE NIKDY NEODHADUJE Z JMÉNA. `kliRod` je odhad z tvaru slova (má to
+          // napsané i u sebe) a špatný odhad směrem k „žena" by SNÍŽIL bezpečnostní podlahu
+          // z 1500 na 1200, tedy povolil hlubší řez. Opačný směr je bezpečný, tenhle ne.
+          // Výchozí je proto „nevybráno", což engine bere jako přísnějších 1500. Martin
+          // pohlaví klienta zná a je to jeden klik (revize 2. 9. 2026, nález 5).
           +'<label style="font-size:.78rem;color:#8F8A99;">Podlaha kcal<br><select id="kdDrRod" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;">'
-          +'<option value="m"'+(kliRod(KDET.name)==='m'?' selected':'')+'>muž (1500)</option><option value="z"'+(kliRod(KDET.name)==='z'?' selected':'')+'>žena (1200)</option></select></label>'
+          +'<option value="">(nevybráno, bere 1500)</option><option value="m">muž (1500)</option><option value="z">žena (1200)</option></select></label>'
           +'<label style="flex:1;min-width:200px;font-size:.78rem;color:#8F8A99;">Téma týdne <span style="color:#6d6879;">(nech prázdné, když žádné neposíláš)</span><br><input type="text" id="kdDrTema" placeholder="např. víkendové přejídání" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
           +'<label style="flex:1;min-width:200px;font-size:.78rem;color:#8F8A99;">Odkaz na přílohu <span style="color:#6d6879;">(volitelný)</span><br><input type="text" id="kdDrTemaUrl" placeholder="https://drive.google.com/..." style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
           +'<button class="mlogbtn" id="kdDrBtn">Připravit odpověď</button>'
@@ -1644,13 +1651,21 @@
           var nv=j.navrh||null;
           if(nv){
             var barva = nv.paka==='zadna' ? '#8F8A99' : '#F6CD63';
+            // ⛔ Páka bez nového čísla NENÍ „zadání se nemění": engine takhle hlásí i to, že
+            // klient hubne moc rychle, jen mu chybí vybraný směr na dopočet (revize, nález k).
+            // Kdyby se to slilo do jedné věty, přečetl by si Martin uklidnění místo varování.
+            var hlavicka = nv.novyKcal ? '<b>cíl kalorií '+esc(nv.novyKcal)+' kcal</b>'
+              : (nv.paka==='zadna' ? '<b>zadání se nemění</b>' : '<b>⚠️ pozor, viz níž</b>');
             hh+='<p style="margin:0 0 6px;font-size:.85rem;color:'+barva+';">📐 Engine: '
-              +(nv.novyKcal?'<b>cíl kalorií '+esc(nv.novyKcal)+' kcal</b>':'<b>zadání se nemění</b>')
+              +hlavicka
               +' · '+esc(nv.duvod)
               +(nv.jistota&&nv.jistota!=='jista'?' <span class="muted">('+esc(nv.jistota)+')</span>':'')+'</p>';
           }
           hh+='<p class="muted" style="margin:0 0 6px;font-size:.78rem;">🤖 Prózu psala AI, čísla spočítal engine. Před odesláním přečti. Odesíláš Ty ze své schránky, admin sám neposílá nic.'+(j.znovu?' (Tenhle koncept už byl hotový, nový se dá zadat za pár minut.)':'')+'</p>'
-            +'<p style="margin:0 0 4px;font-size:.85rem;">Předmět: <b id="kdDrSubj">'+esc(predmetTxt)+'</b></p>'
+            // ⛔ Předmět je INPUT, ne <b>. Při vstupu deep linkem (`#klient=`) je `KDET.name`
+            // prázdné, takže oslovení vyjde prázdné a předmět „Report 1/9 :)". Přepsat se to
+            // musí dát tady, ne až v Gmailu (revize 2. 9. 2026, nález f).
+            +'<label style="display:block;margin:0 0 4px;font-size:.85rem;">Předmět: <input type="text" id="kdDrSubj" value="'+esc(predmetTxt)+'" style="width:min(420px,100%);box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
             +'<textarea id="kdDrText" rows="16" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 11px;color:#fff;font-family:inherit;font-size:.9rem;line-height:1.5;">'+esc(celyMail)+'</textarea>'
             +'<div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">'
             +'<button class="mlogbtn" id="kdDrGmail">Otevřít v Gmailu</button>'
@@ -1670,7 +1685,7 @@
           // (tichý ořez = odeslaný půlmail) a místo toho se text zkopíruje do schránky.
           $('kdDrGmail').addEventListener('click',function(){
             var ta=$('kdDrText');
-            var g=R.gmailOdkaz(email,($('kdDrSubj').textContent||''),ta.value);
+            var g=R.gmailOdkaz(email,($('kdDrSubj').value||''),ta.value);
             if(g.vejdeSe){ window.open(g.url,'_blank','noopener'); $('kdDrPozn').textContent='Gmail otevřen, mail je předvyplněný. Odesíláš Ty.'; }
             else {
               zkopiruj(function(){ toast('📋 Text zkopírován, vlož ho v Gmailu (Ctrl+V)'); });
