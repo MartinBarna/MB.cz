@@ -60,12 +60,6 @@ export type PurchasePayload = {
    * nenašel a přístup zůstal.
    */
   customer_id?: unknown;
-  /**
-   * Payment intent té platby, když ho volající zná (u předplatného ho appka při
-   * první aktivaci nemá). ⛔ Schválně NE `payment_intent`: to pole je záloha pro
-   * `order_id`, tedy klíč idempotence provize, a jeho význam se nesmí hnout.
-   */
-  stripe_payment_intent?: unknown;
   affiliate_code?: unknown;
   promotion_code_id?: unknown;
   /** 'first' (první aktivace, výchozí) nebo 'renewal' (další zaplacená faktura). */
@@ -427,9 +421,14 @@ async function udelBonus(
       //    (stalo se 2. 9. 2026, odebíralo se ručně).
       // ⚠️ Jen když hodnota přišla: prázdný string by přepsal existující vazbu na NULL.
       ...(text(body.customer_id) ? { stripe_customer_id: text(body.customer_id) } : {}),
-      ...(text(body.stripe_payment_intent)
-        ? { stripe_payment_intent: text(body.stripe_payment_intent) }
-        : {}),
+      // ⛔⛔ `stripe_payment_intent` SE K BONUSU NEZAPISUJE, A JE TO ZÁMĚR (R3, 2. 9. 2026).
+      //    `academy-stripe-webhook` páruje placené produkty dotazem
+      //    `.eq("stripe_payment_intent", platba).maybeSingle()` BEZ filtru na produkt.
+      //    Druhý řádek s toutéž platbou by z něj udělal chybu, webhook by vrátil 500
+      //    a Stripe by refund opakoval pořád dokola. Refund bonusu proto páruje
+      //    `stripe_customer_id` (a u starých řádků e-mail), viz `refund-bonus.ts`.
+      //    Kdo tohle pole bude chtít zapnout, musí NEJDŘÍV omezit ten dotaz na
+      //    placené produkty.
     });
     return 'udelen';
   } catch (e) {

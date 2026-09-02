@@ -145,23 +145,32 @@ async function main(): Promise<void> {
   //    po vrácení peněz zůstane. Přesně to se stalo 2. 9. 2026.
   {
     const { deps, stav } = mock();
-    await handleAppPurchase(
-      { ...ROCNI_VIP, customer_id: 'cus_TEST', stripe_payment_intent: 'pi_TEST' },
-      deps,
-    );
+    await handleAppPurchase({ ...ROCNI_VIP, customer_id: 'cus_TEST' }, deps);
     const ent = stav.entitlementy[0] ?? {};
     check('bonus nese stripe_customer_id', ent.stripe_customer_id === 'cus_TEST', JSON.stringify(ent));
-    check('bonus nese stripe_payment_intent', ent.stripe_payment_intent === 'pi_TEST', JSON.stringify(ent));
     check('bonus nese stripe_subscription_id', ent.stripe_subscription_id === 'sub_1', JSON.stringify(ent));
+    // ⛔ R3: payment intent se k bonusu NESMÍ dostat, hlavní párovací dotaz refundu
+    //    nad tím sloupcem jede přes `maybeSingle()`.
+    check('bonus NEMÁ stripe_payment_intent (ani když ho někdo pošle)',
+      !('stripe_payment_intent' in ent), JSON.stringify(ent));
   }
   {
-    // Když identifikátory nedorazí, pole se do upsertu VŮBEC nedostanou: prázdný
+    // I kdyby volající pole poslal, most ho ignoruje.
+    const { deps, stav } = mock();
+    await handleAppPurchase(
+      { ...ROCNI_VIP, customer_id: 'cus_X', stripe_payment_intent: 'pi_X' } as Record<string, unknown>,
+      deps,
+    );
+    check('poslany payment_intent se do entitlementu nedostane',
+      !('stripe_payment_intent' in (stav.entitlementy[0] ?? {})), JSON.stringify(stav.entitlementy[0]));
+  }
+  {
+    // Když identifikátor nedorazí, pole se do upsertu VŮBEC nedostane: prázdný
     // string by přepsal existující vazbu na NULL.
     const { deps, stav } = mock();
     await handleAppPurchase(ROCNI_VIP, deps);
     const ent = stav.entitlementy[0] ?? {};
     check('bez customer_id se pole nezapisuje', !('stripe_customer_id' in ent), JSON.stringify(ent));
-    check('bez payment_intent se pole nezapisuje', !('stripe_payment_intent' in ent), JSON.stringify(ent));
   }
 
   // --- payment_intent má přednost před event_id ------------------------------

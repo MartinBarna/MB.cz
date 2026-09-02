@@ -33,6 +33,11 @@
 // Env: STRIPE_WEBHOOK_SECRET (whsec_...), SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  ZDROJE_BONUS_APPKA,
+  bezBonusuAppky,
+  najdiBonusyAppky,
+} from "./refund-bonus.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -148,13 +153,6 @@ type JednorazovyProdukt = {
 // stejné, nešlo by to rozhodnout a refund konzultace by lidem bral kurz, který si koupili.
 const ZDROJ_BONUS_VIDEOKURZ = "konzultace-bonus";
 
-// ⛔⛔ ZDROJE VIDEOKURZU, KTERÝ ROZDALA APPKA ZDARMA k předplatnému Tvůj Coach
-// (`app-purchase-bridge`, `grant-videokurz-z-appky`). Nikdo za tenhle kurz neplatil
-// zvlášť, takže když se vrátí peníze za předplatné appky, bonus jde s ním.
-// ⛔ NESMÍ tu být `stripe-videokurz` ani `simpleshop` (koupený kurz) ani
-// `konzultace-bonus` (ten řeší vlastní větev u refundu konzultace) ani `admin-panel`
-// (ruční dárek). Refund appky nikdy nesmí sebrat kurz, který si člověk koupil sám.
-const ZDROJE_BONUS_APPKA = ["prvni-platba-bonus", "rocni-vip-bonus", "appka-vip"];
 
 const KATALOG: Record<string, JednorazovyProdukt> = {
   // Academy doživotně 8 900 Kč. Od 29. 7. 2026 nahrazuje SimpleShop.
@@ -1809,7 +1807,12 @@ Deno.serve(async (req) => {
       if (!ent && zakaznik) {
         const { data } = await admin.from("entitlements").select(SLOUPCE_ENT)
           .eq("stripe_customer_id", zakaznik).eq("active", true);
-        const radky = data ?? [];
+        // ⛔⛔ BONUS Z APPKY SEM NEPATŘÍ (R1, 2. 9. 2026). Od chvíle, kdy nese
+        //    `stripe_customer_id`, by ho tenhle dotaz našel jako jediný řádek a refund
+        //    appky by jel cestou placeného produktu: rozlučkový mail o Academy, kterou
+        //    člověk nikdy neměl, a pokus zrušit appčí předplatné z Academy klíče.
+        //    Bonus má vlastní větev níž (`najdiBonusyAppky`).
+        const radky = bezBonusuAppky(data ?? []);
         if (radky.length === 1) ent = radky[0];
         else if (radky.length > 1) dvojznacne = radky.map((r: { product: string }) => r.product);
       }
@@ -1829,47 +1832,40 @@ Deno.serve(async (req) => {
       if (!ent) {
         // ⭐⭐ REFUND PŘEDPLATNÉHO APPKY BERE I BONUSOVÝ VIDEOKURZ (od 2. 9. 2026).
         // Tenhle kurz appka rozdává zdarma k první platbě, takže po vrácení peněz
-        // není za co ho nechat. Do dneška se to nedělo: bonusový řádek neměl
+        // není za co ho nechat. Do 2. 9. 2026 se to nedělo: bonusový řádek neměl
         // `stripe_payment_intent` ani `stripe_customer_id`, párování výš nenašlo nic
         // a zůstal jen alert „PŘÍSTUP NEBYL ODEBRÁN" (klientka 2. 9. 2026).
-        // ⛔ Odebírá se VÝHRADNĚ `product='videokurz'` se `source` z `ZDROJE_BONUS_APPKA`.
-        //    Zaplacený videokurz ani Academy se kvůli refundu appky nesahá NIKDY.
-        // ⛔ Částečný refund tady stejně jako níž nic neodebírá.
+        // ⛔ Rozhodování je v `refund-bonus.ts`, ať jde otestovat bez Deno a bez DB.
+        //    Odebírá se VÝHRADNĚ `videokurz` se `source` ze `ZDROJE_BONUS_APPKA`.
         const castkaB = Number(obj.amount ?? 0);
         const vracenoB = Number(obj.amount_refunded ?? 0);
-        const castecnyB = !jeSpor && castkaB > 0 && vracenoB > 0 && vracenoB < castkaB;
-
         const emailZPlatby = String(
           obj.billing_details?.email ?? obj.receipt_email ?? "",
         ).trim().toLowerCase();
 
-        // ⚠️ POŘADÍ: platba je jednoznačná, zákazník taky (bonus se váže na jedno
-        // předplatné). E-mail je až třetí a SÁM O SOBĚ NESTAČÍ na jistotu, že refund
-        // patří appce, proto se do alertu píše, podle čeho se rozhodlo.
-        let bonusy: Array<{ email: string; source: string | null }> = [];
-        let podle = "";
-        if (!castecnyB && platba) {
-          const { data } = await admin.from("entitlements")
-            .select("email, source").eq("stripe_payment_intent", platba)
-            .eq("product", "videokurz").eq("active", true).in("source", ZDROJE_BONUS_APPKA);
-          if (data?.length) { bonusy = data; podle = "payment_intent"; }
-        }
-        if (!castecnyB && !bonusy.length && zakaznik) {
-          const { data } = await admin.from("entitlements")
-            .select("email, source").eq("stripe_customer_id", zakaznik)
-            .eq("product", "videokurz").eq("active", true).in("source", ZDROJE_BONUS_APPKA);
-          if (data?.length) { bonusy = data; podle = "stripe_customer_id"; }
-        }
-        if (!castecnyB && !bonusy.length && emailZPlatby) {
-          const { data } = await admin.from("entitlements")
-            .select("email, source").eq("email", emailZPlatby)
-            .eq("product", "videokurz").eq("active", true).in("source", ZDROJE_BONUS_APPKA);
-          if (data?.length) { bonusy = data; podle = "e-mail z platby"; }
-        }
+        const SLOUPCE_BONUS = "email, product, source, stripe_customer_id";
+        const { bonusy, podle } = await najdiBonusyAppky({
+          castecny: !jeSpor && castkaB > 0 && vracenoB > 0 && vracenoB < castkaB,
+          zakaznik,
+          emailZPlatby,
+        }, {
+          podleZakaznika: async (cus) => {
+            const { data } = await admin.from("entitlements").select(SLOUPCE_BONUS)
+              .eq("stripe_customer_id", cus).eq("product", "videokurz").eq("active", true);
+            return data ?? [];
+          },
+          podleMailu: async (mail) => {
+            const { data } = await admin.from("entitlements").select(SLOUPCE_BONUS)
+              .eq("email", mail).eq("product", "videokurz").eq("active", true);
+            return data ?? [];
+          },
+        });
 
         if (bonusy.length) {
           const konecBonus = new Date().toISOString();
           const emailyBonus = [...new Set(bonusy.map((b) => b.email))];
+          // ⛔ `source` je i v UPDATE, ne jen ve výběru: mezi čtením a zápisem se nic
+          //    změnit nestihne, ale kdyby ano, nesmí zápis trefit placený řádek.
           const { error: chybaBonusApp } = await admin.from("entitlements")
             .update({ active: false, expires_at: konecBonus })
             .in("email", emailyBonus).eq("product", "videokurz")
