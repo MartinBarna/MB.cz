@@ -746,11 +746,16 @@ export function pgFakta(cile: Record<string, number | null>, jidel: number, oslo
   dej("sport", i.sport);
   dej("kde cvičí", i.kde_cvici);
   dej("jak vaří", i.vareni);
+  // ⛔ [2026-09-02, po revizi] Zdravotní údaje jdou modelu jen v rozsahu, který jídelníček
+  // opravdu potřebuje. `alergie`, `nejí` a `diety` ANO, bez nich se jídelníček napsat nedá.
+  // `léky` je z promptu PRYČ: model o nich stejně nesmí nic psát a se skladbou jídla nemají
+  // co dělat. Brána na citlivá témata (`rdUpozorneni`) je čte dál, ta běží u nás.
+  // `zdraví` zůstává jen jako kontext k omezení stravy a s kratším stropem, ať se do promptu
+  // nevleje celá anamnéza. Táž oprava jako u `tpFakta` pro trénink.
   dej("dřívější diety", i.diety);
-  dej("alergie", i.alergie);
+  dej("alergie a intolerance", i.alergie);
   dej("nejí", i.neji);
-  dej("zdraví", i.zdravi);
-  dej("léky", i.leky);
+  dej("zdravotní omezení, pokud ovlivňuje stravu", rdCit(i.zdravi, 300));
   dej("vzkaz v dotazníku", i.poznamka);
   if (cit.length) {
     rad.push("");

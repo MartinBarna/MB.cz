@@ -240,7 +240,8 @@
         + '<div id="pgHledejOut" style="margin-top:6px;"></div>'
         + '<div id="pgNavrhOut" style="margin-top:8px;"></div>'
         + '<div id="pgVyl" style="margin-top:8px;"></div>'
-        + '<p class="muted" style="margin:8px 0 0;font-size:.75rem;">⛔ Do generátoru jde jen to, co je tady v seznamu. Návrh od AI se sám nezapíná.</p>'
+        + '<p class="muted" style="margin:8px 0 0;font-size:.75rem;">⛔ Do generátoru jde jen to, co je tady v seznamu. Návrh od AI se sám nezapíná. '
+        + '⚠️ „Navrhni z dotazníku" je volání AI, takže odešle tytéž věty z dotazníku jako tlačítko v sekci 3, včetně zdravotních omezení. Podrobnosti u něj.</p>'
         + '</div>';
 
       // 3) texty
@@ -249,6 +250,14 @@
         + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">'
         + '<button class="mlogbtn" id="pgTextyBtn">Napsat texty (AI)</button>'
         + '<span class="muted" style="font-size:.78rem;">AI dostane čísla jako hotová fakta a nesmí je měnit. Přečti je a přepiš, jdou ven pod Tvým jménem.</span></div>'
+        // ⛔ [2026-09-02] Editor mlčel o tom, že do promptu jdou i věty z dotazníku o zdraví.
+        // Martin se podle toho rozhoduje, co do adminu vůbec pustí, takže se to musí říct
+        // nahlas a přesně. Táž oprava jako u tréninkového plánu (`trenink.js`).
+        + '<p style="margin:0 0 8px;font-size:.78rem;background:rgba(255,180,110,.12);border:1px solid rgba(255,180,110,.35);border-radius:8px;padding:7px 9px;">'
+        + '🤖 <b>Co z dotazníku dostane AI:</b> cíl, proč to chce, termín, věk, výšku a váhu, aktivitu, kroky, práci, spánek, tréninky, sport, kde cvičí, jak vaří, dřívější diety, '
+        + 'alergie a intolerance, co nejí, zdravotní omezení (zkrácené, jen jako kontext ke stravě) a vzkaz z dotazníku. '
+        + '<b>Léky se do promptu neposílají.</b> AI o zdraví nic neradí, smí napsat jedinou větu, že se ozveš osobně. '
+        + '<b>Model běží u AI třetí strany</b> (Anthropic nebo xAI), takže tyhle věty odejdou ven.</p>'
         + '<div id="pgTextyStav"></div>'
         + ta('pgT_uvod', 'Úvod (pod „Ahoj …!")', 4)
         + ta('pgT_proc', 'Rámeček „Proč zrovna tyhle tři"', 4)
