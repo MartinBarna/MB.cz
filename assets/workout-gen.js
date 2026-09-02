@@ -5,7 +5,7 @@
 // výsledky podle toho, kudy přišli, a nikde to nekřikne.
 // Hlídá to pre-commit hook přes `node scripts/hlidac-dvou-verzi.mjs` v repu appky.
 // Commit, který obě strany rozejde, NEPROJDE. Detail: paměť `tvujcoach-jeden-generator-cil`.
-/* Barna Academy — engine generátoru tréninkových plánů.
+/* Barna Academy: engine generátoru tréninkových plánů.
    Čistě klientský, deterministický. Žádný backend.
    Vstupy: místo (fitko/doma/hriste), vybavení, úroveň, cíl, dny/týden.
    → vybere split → z exercise-db.json poskládá plán se sériemi/opakováními.
@@ -27,15 +27,25 @@
     vydrz:   { label:'Vytrvalost / tonus',   sets:3, reps:'15–20', rest:'30–45 s', accessReps:'15–25' }
   };
 
-  // sloty: {by:'pattern'|'muscle', val, access?:true} — access = doplňkový (méně sérií, víc opakování)
+  // sloty: {by:'pattern'|'muscle', val, access?:true}; access = doplňkový (méně sérií, víc opakování)
   var P = function (v) { return { by:'pattern', val:v }; };
   var M = function (v, a) { return { by:'muscle', val:v, access:a }; };
   var T = {
-    FBA: [P('drep'), P('tlak-horizontalni'), P('tah-horizontalni'), P('tlak-vertikalni'), M('bricho', true)],
+    // [2026-09-02] FBA měla DVA tlaky (horizontální + vertikální) a JEDEN tah. Změřeno na
+    // mřížce 1296 zadání: přední delty nad MAV ve 43 % plánů, záda pod MEV. Full-body den se
+    // staví tlak : tah = 1 : 1; vertikální tah navíc dopraví záda a biceps, které v dvoudenním
+    // plánu jinak nedostanou nic. Vertikální tlak zůstává v FBB.
+    // ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+    FBA: [P('drep'), P('tlak-horizontalni'), P('tah-horizontalni'), P('tah-vertikalni'), M('bricho', true)],
     FBB: [P('hinge'), P('tlak-vertikalni'), P('tah-vertikalni'), M('nohy'), M('bricho', true)],
     FBC: [P('vypad'), P('tlak-horizontalni'), P('tah-horizontalni'), M('hyzde'), M('bricho', true)],
     UPPER: [P('tlak-horizontalni'), P('tah-horizontalni'), P('tlak-vertikalni'), P('tah-vertikalni'), M('ramena', true), M('biceps', true), M('triceps', true)],
-    LOWER: [P('drep'), P('hinge'), P('vypad'), M('hyzde'), M('lytka', true), M('bricho', true)],
+    // [2026-09-02] Dolní den měl ČTYŘI zdroje hýždí: dřep (sekundárně), hinge, výpad a k tomu
+    // ještě vlastní slot M('hyzde'). Hýždě mají MRV 16, takže plán přetekl skoro pokaždé
+    // a autoBalance to řešil vyhazováním cviků z DRUHÉHO dolního dne (dropWeakest sahá
+    // na pozdější dny). Naměřeno: „Dolní partie B" běžně vyšla na jeden dřep a lýtka.
+    // ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+    LOWER: [P('drep'), P('hinge'), P('vypad'), M('lytka', true), M('bricho', true)],
     PUSH: [P('tlak-horizontalni'), P('tlak-vertikalni'), M('ramena', true), M('triceps', true), M('prsa', true)],
     PULL: [P('tah-vertikalni'), P('tah-horizontalni'), M('biceps', true), M('zada', true)],
     LEGS: [P('drep'), P('hinge'), P('vypad'), M('hyzde'), M('lytka', true)]
@@ -65,10 +75,24 @@
     return top.length ? top : cand;
   }
 
+  /**
+   * [2026-09-02] Hinge, který netrénuje hamstringy, není hinge.
+   * Slot P('hinge') bral kandidáty jen podle pattern, takže na něj běžně padly mosty
+   * a žabí mosty (hinge + partie hyzde), které jdou přes hýždě a hamstringy nechají být.
+   * Změřeno na mřížce 1296 zadání: hamstringy pod MEV v 91 % plánů, zatímco hýždě přes MAV.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+   */
+  function preferHamstrings(cand) {
+    var ham = cand.filter(function (e) {
+      return musclesFromDb(e.muscle, e.pattern, e.name).primary.indexOf('hamstrings') !== -1;
+    });
+    return ham.length ? ham : cand;
+  }
+
   function splitFor(days) {
     days = Math.min(5, Math.max(2, days));
-    if (days === 2) return [['Trénink A — celé tělo', T.FBA], ['Trénink B — celé tělo', T.FBB]];
-    if (days === 3) return [['Trénink A — celé tělo', T.FBA], ['Trénink B — celé tělo', T.FBB], ['Trénink C — celé tělo', T.FBC]];
+    if (days === 2) return [['Trénink A (celé tělo)', T.FBA], ['Trénink B (celé tělo)', T.FBB]];
+    if (days === 3) return [['Trénink A (celé tělo)', T.FBA], ['Trénink B (celé tělo)', T.FBB], ['Trénink C (celé tělo)', T.FBC]];
     if (days === 4) return [['Horní partie A', T.UPPER], ['Dolní partie A', T.LOWER], ['Horní partie B', T.UPPER], ['Dolní partie B', T.LOWER]];
     return [['Push (tlaky)', T.PUSH], ['Pull (tahy)', T.PULL], ['Nohy', T.LEGS], ['Horní partie', T.UPPER], ['Dolní partie', T.LOWER]];
   }
@@ -84,7 +108,7 @@
       if (e.location.indexOf(loc) === -1) return false;
       if ((LEVELS[e.level] || 1) > maxLvl) return false;
       // [fix 2026-07-22] Cviky, které v NÁZVU předepisují gumu nebo TRX, do režimů „tělo"
-      // a „jednoručky" nepatří vůbec — uživatel to náčiní neuvedl a „dřep s gumou" bez gumy
+      // a „jednoručky" nepatří vůbec, uživatel to náčiní neuvedl a „dřep s gumou" bez gumy
       // je prostě jiný cvik. (Nezávislé na equip datech, kde má guma/TRX často i 'telo'.)
       // [fix 2026-07-26] Filtruje se podle POLE `equip`, ne podle názvu. Regex `/guma|trx/`
       // nad id propouštěl `drep-s-gumou`, `kliky-s-gumou` a `pritahy-gumy`, protože v id je
@@ -97,7 +121,7 @@
       if (equipMode === 'telo' && NAZEV_NACINI.test(e.name)) return false;
       if (equipMode === 'telo') return e.equip.indexOf('telo') !== -1;
       if (equipMode === 'cinky') {
-        // Režim „jednoručky/doma" — jen náčiní, které reálně máš (tělo + činky + kettlebell).
+        // Režim „jednoručky/doma": jen náčiní, které reálně máš (tělo + činky + kettlebell).
         // 'lavka'/'hrazda' jsou jen doplňky, ne signál „jde to lehce".
         return e.equip.some(function (x) { return ['telo', 'cinky', 'kettlebell'].indexOf(x) !== -1; });
       }
@@ -112,7 +136,7 @@
   var MUS_ORDER = ['chest','back','side_delts','front_delts','rear_delts','traps','biceps','triceps','forearms','quads','hamstrings','glutes','calves','abs'];
   var LANDMARKS = { chest:{mev:8,mav:16,mrv:22}, front_delts:{mev:0,mav:8,mrv:12}, side_delts:{mev:8,mav:16,mrv:26}, rear_delts:{mev:6,mav:12,mrv:20}, back:{mev:10,mav:18,mrv:25}, traps:{mev:0,mav:12,mrv:20}, biceps:{mev:8,mav:14,mrv:20}, triceps:{mev:6,mav:12,mrv:18}, forearms:{mev:2,mav:8,mrv:15}, quads:{mev:8,mav:14,mrv:20}, hamstrings:{mev:6,mav:12,mrv:16}, glutes:{mev:0,mav:8,mrv:16}, calves:{mev:8,mav:14,mrv:20}, abs:{mev:0,mav:16,mrv:25} };
   function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim(); }
-  // Pořadí ROZHODUJE — specifičtější vzory dřív (rumunský před mrtvým tahem, reverse fly před fly). První shoda vyhrává.
+  // Pořadí ROZHODUJE, specifičtější vzory dřív (rumunský před mrtvým tahem, reverse fly před fly). První shoda vyhrává.
   var RULES = [
     { re:/rumunsk|rdl|romanian/, primary:['hamstrings','glutes'], secondary:[] },
     { re:/mrtv[yý] tah|deadlift|mrtvol/, primary:['back','hamstrings','glutes'], secondary:[] },
@@ -183,7 +207,7 @@
       default: return { primary:[], secondary:[] };
     }
   }
-  // „Bulharský výpad (split dřep)" i „Bulharský výpad" je týž cvik — druhá šance přes základ
+  // „Bulharský výpad (split dřep)" i „Bulharský výpad" je týž cvik, druhá šance přes základ
   // bez závorek (parita s appkou, src/engine/muscle.ts). Plná shoda má vždy přednost.
   function stripParen(s) { return norm(s).replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim(); }
   var DB_BY_NAME = null, DB_BY_BASE = null;
@@ -250,7 +274,7 @@
   }
 
   // ===== Auto-balance objemu =====
-  // Tabulka objemu hlásila „nad MRV" u plánu, který vyrobil sám generátor — opravit to má tedy
+  // Tabulka objemu hlásila „nad MRV" u plánu, který vyrobil sám generátor. Opravit to má tedy
   // generátor, ne uživatel. Dokud je partie nad MRV, ubíráme série u nejméně prioritních cviků
   // té partie, a to přednostně tak, aby to jiný sval neshodilo pod MEV.
   var MIN_SETS = 2;
@@ -357,7 +381,7 @@
 
   // „Doplnit objem" u partie pod MEV (typicky boční delty, lýtka): nejdřív zkusí přidat cvik,
   // který sval trénuje primárně, teprve pak přidává série. Nikdy nepřetáhne jiný sval nad MRV.
-  function addVolume(plan, muscle) {
+  function addVolume(plan, muscle, stropSerii, nejdrivSerie) {
     var lm = LANDMARKS[muscle]; if (!lm || !plan || !plan.days) return false;
     var g = plan.goal || GOALS.svaly, pool = plan.pool || [], changed = false;
     function cur() {
@@ -389,8 +413,11 @@
     }
 
     // série navíc u cviku, který sval trénuje primárně
+    // `stropSerii` (výchozí = série cíle): ruční tlačítko v UI drží počet sérií na hodnotě
+    // cíle, ale autoFill smí o jednu přetáhnout. Bez toho zůstal sval půl série pod MEV.
     function tryAddSet() {
-      var c = contributorsFor(plan.days, muscle).filter(function (x) { return x.primary && x.pe.sets < g.sets; });
+      var strop = stropSerii == null ? g.sets : stropSerii;
+      var c = contributorsFor(plan.days, muscle).filter(function (x) { return x.primary && x.pe.sets < strop; });
       for (var i = 0; i < c.length; i++) {
         c[i].pe.sets++;
         if (anyOver()) { c[i].pe.sets--; continue; }
@@ -401,10 +428,14 @@
 
     // Pořadí záměrně: nejdřív plnohodnotný cvik, pak série u stávajících, a teprve nakonec
     // cvik na gumu/tělo. Jinak by ve vybaveném fitku přibyla guma i tam, kde stačí přidat sérii.
+    // [2026-09-02] `nejdrivSerie` obrací pořadí pro automatické doplnění při stavbě plánu.
+    // Ruční tlačítko chce NOVÝ cvik, ale generátor má nejdřív dosypat sérii tomu, co v plánu
+    // už je. Bez toho vycházely dny se třemi různými výpony na lýtka vedle sebe.
     var loadedOnly = plan.equip === 'vse';
     for (var guard = 0; guard < 40 && cur() < lm.mev; guard++) {
+      if (nejdrivSerie && tryAddSet()) continue;
       if (tryAddExercise(loadedOnly)) continue;
-      if (tryAddSet()) continue;
+      if (!nejdrivSerie && tryAddSet()) continue;
       if (loadedOnly && tryAddExercise(false)) continue;
       break;
     }
@@ -412,6 +443,28 @@
     plan.volume = planVolume(plan);
     plan.coverage = planCoverage(plan);
     return changed;
+  }
+
+  /**
+   * [2026-09-02] Plán se dosud srovnával jen SHORA (autoBalance, nic nad MRV). Partie pod MEV
+   * se doplňovala jen ručním tlačítkem, takže vygenerovaný plán rovnou ukázal tabulku
+   * s nálepkou „málo" a bez návrhu, co s tím. Změřeno na mřížce 1296 zadání: boční delty pod
+   * MEV v 98 % plánů (žádný full-body split nemá upažování), hamstringy v 91 %.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+   */
+  function autoFill(plan) {
+    MUS_ORDER.forEach(function (mu) {
+      var lm = LANDMARKS[mu];
+      if (!lm || lm.mev <= 0) return;
+      var row = plan.volume.filter(function (v) { return v.muscle === mu; })[0];
+      if (row && row.sets >= lm.mev) return;
+      addVolume(plan, mu, plan.goal.sets + 1, true);
+    });
+    plan.days.forEach(function (d) {
+      d.exercises.sort(function (a, b) { return orderRank(a.ex.pattern) - orderRank(b.ex.pattern); });
+    });
+    plan.volume = planVolume(plan);
+    plan.coverage = planCoverage(plan);
   }
 
   function buildPlan(db, opts) {
@@ -425,10 +478,19 @@
     var usedWeek = {};   // pestrost napříč celým týdnem: preferuj cviky tento týden nepoužité
 
     // preferuj kandidáty, kteří se tento týden ještě neobjevili; teprve když dojdou, opakuj
-    function pickVaried(cand, idx) {
+    // [2026-09-02] `sirsi` = nezúžený seznam kandidátů pro daný slot. Preference zatíženého
+    // náčiní (preferLoaded) umí seznam srazit na JEDINOU položku, a ta se pak objeví v každém
+    // tréninku týdne. Konkrétně břicho: ve vybaveném fitku je z deseti core cviků „zatížený"
+    // jenom rusky-twist, takže třídenní full-body plán dostal ruský twist třikrát. Změřeno
+    // na mřížce 1296 zadání: 86 % plánů mělo aspoň jeden cvik dvakrát.
+    // ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+    function pickVaried(cand, idx, sirsi) {
+      function vyber(list) { return list[((idx % list.length) + list.length) % list.length]; }
       var fresh = cand.filter(function (e) { return !usedWeek[e.id]; });
-      var list = fresh.length ? fresh : cand;
-      return list[((idx % list.length) + list.length) % list.length];
+      if (fresh.length) return vyber(fresh);
+      var freshSirsi = (sirsi || []).filter(function (e) { return !usedWeek[e.id]; });
+      if (freshSirsi.length) return vyber(freshSirsi);
+      return vyber(cand);
     }
 
     split.forEach(function (entry, di) {
@@ -441,7 +503,7 @@
           var mm = musMap[slot.val];
           cand = pool.filter(function (e) { return e.muscle === mm && !used[e.id]; });
         }
-        // access (doplňkový) svalový slot preferuj jako IZOLACI — ať M('ramena',true) dá boční/zadní
+        // access (doplňkový) svalový slot preferuj jako IZOLACI, ať M('ramena',true) dá boční/zadní
         // delty (ne druhý tlak nad hlavu) a M('prsa',true) rozpažku (ne další bench). Když izolace
         // není, spadne zpět na cokoli pro daný sval.
         if (slot.by === 'muscle' && slot.access) {
@@ -449,8 +511,10 @@
           if (iso.length) cand = iso;
         }
         if (!cand.length) return;
+        if (slot.by === 'pattern' && slot.val === 'hinge') cand = preferHamstrings(cand);
+        var sirsi = cand;
         cand = preferLoaded(cand, opts.equip);
-        var pick = pickVaried(cand, seed + di * 3 + si);
+        var pick = pickVaried(cand, seed + di * 3 + si, sirsi);
         used[pick.id] = 1; usedWeek[pick.id] = 1;
         exercises.push({
           ex: pick,
@@ -506,12 +570,174 @@
       days.push({ name: dayName, day: di + 1, exercises: exercises });
     });
 
-    // objem srovnej PŘED vrácením plánu — uživatel nemá dostat plán, o kterém mu tabulka rovnou řekne „uber"
+    // objem srovnej PŘED vrácením plánu: uživatel nemá dostat plán, o kterém mu tabulka rovnou řekne „uber"
     autoBalance(days, opts.orezStyl || 'velke');
 
-    return { days: days, goal: g, rest: g.rest, pool: pool, equip: opts.equip, poolSize: pool.length, coverage: planCoverage({ days: days }), volume: planVolume({ days: days }) };
+    var plan = { days: days, goal: g, rest: g.rest, pool: pool, equip: opts.equip, poolSize: pool.length, coverage: planCoverage({ days: days }), volume: planVolume({ days: days }) };
+    autoFill(plan);
+    return plan;
   }
 
-  global.WorkoutGen = { buildPlan: buildPlan, planCoverage: planCoverage, planVolume: planVolume, addVolume: addVolume, GOALS: GOALS,
+
+  // ===========================================================================
+  // assembleProgram: plán na míru pro poloautomatický onboarding koučinku.
+  // ⛔⛔ TAKY EXISTUJE DVAKRÁT: appka Tvůj Coach → src/engine/workout-gen.ts.
+  //
+  // buildPlan vrací SKLADBU (které cviky, kolik sérií). Trenér ale klientovi předává
+  // dokument, ve kterém je navíc pauza, RIR, tempo, náhrada, rozvrh týdne a co dělat
+  // příští čtyři týdny. Tohle je ta vrstva. Nepočítá nic nového o objemu, jen dosazuje
+  // deterministická trenérská pravidla nad hotový plán. „Engine počítá, AI mluví."
+  // ===========================================================================
+
+  // Cíl z dotazníku koučinku na cíl generátoru. „Kondice" je u nás vytrvalostní režim,
+  // „hubnutí" je hypertrofie s kardio finisherem (viz GOALS.kondice, oprava 2. 9. 2026).
+  var CIL_NA_GOAL = { hubnuti: 'kondice', svaly: 'svaly', sila: 'sila', kondice: 'vydrz' };
+
+  // Rozložení tréninků do týdne: dost odpočinku mezi dny s toutéž partií a víkend spíš
+  // volný, protože ten lidi vynechávají nejčastěji.
+  var ROZVRH_DNU = {
+    2: ['Pondělí', 'Čtvrtek'],
+    3: ['Pondělí', 'Středa', 'Pátek'],
+    4: ['Pondělí', 'Úterý', 'Čtvrtek', 'Pátek'],
+    5: ['Pondělí', 'Úterý', 'Středa', 'Pátek', 'Sobota']
+  };
+
+  // Tempo = sekundy dolů, dole, nahoru. Excentrická (spouštěcí) fáze dělá největší část
+  // práce a začátečník ji odbývá nejvíc.
+  function tempoPro(pattern, doplnkovy) {
+    if (pattern === 'kardio') return 'plynule, bez zastavení';
+    if (pattern === 'core') return 'výdrž, dýchej';
+    if (doplnkovy || pattern === 'izolace') return '2-1-1 (dolů 2 s, dole 1 s, nahoru 1 s)';
+    return '2-0-1 (dolů 2 s, bez pauzy, nahoru 1 s)';
+  }
+
+  // RIR (kolik opakování zbývá v záloze) podle cíle a role cviku v tréninku.
+  function rirPro(goal, pattern, doplnkovy) {
+    if (pattern === 'kardio') return 'nesnaž se o maximum, udrž tempo';
+    if (goal === 'sila') return '2 až 3 v záloze';
+    if (pattern === 'core') return '1 až 2 v záloze';
+    return doplnkovy ? '0 až 1 v záloze' : '1 až 2 v záloze';
+  }
+
+  // Pauza mezi sériemi. Doplňkový cvik nepotřebuje tolik co dřep, ať klient zbytečně nestojí.
+  function pauzaPro(g, pattern, doplnkovy) {
+    if (pattern === 'kardio') return 'bez pauzy, je to finisher';
+    if (pattern === 'core') return '45 až 60 s';
+    return doplnkovy ? '45 až 60 s' : g.rest;
+  }
+
+  // Rozehřátí podle toho, co se ten den dělá. Bez konkrétních pohybů to nikdo nedělá.
+  function rozehratiPro(cviky) {
+    var out = ['5 minut svižné chůze, rotopedu nebo švihadla, ať se zvedne tep'];
+    var p = {};
+    cviky.forEach(function (c) { p[c.pattern] = 1; });
+    if (p.drep || p.vypad || p.hinge) out.push('10 hlubokých dřepů s vlastní vahou a 10 nakopnutí pat k hýždím');
+    if (p['tlak-horizontalni'] || p['tlak-vertikalni']) out.push('15 kroužení rameny vzad a 10 kliků o stěnu');
+    if (p['tah-horizontalni'] || p['tah-vertikalni']) out.push('15 zapažení s gumou nebo bez ní, ať se probudí lopatky');
+    out.push('U prvního velkého cviku dvě rozcvičovací série s poloviční vahou. Do appky je zapiš jako rozcvičku, do objemu se pak nepočítají.');
+    return out;
+  }
+
+  // Náhrada: jiný cvik z téhož poolu na tentýž pohyb (nebo aspoň partii), který v plánu není.
+  function nahradaPro(pool, cvik, obsazene) {
+    function volny(e) { return e.id !== cvik.id && !obsazene[e.id]; }
+    var stejnyVzor = pool.filter(function (e) { return volny(e) && e.pattern === cvik.pattern && e.muscle === cvik.muscle; });
+    var stejnaPartie = pool.filter(function (e) { return volny(e) && e.muscle === cvik.muscle; });
+    var jenVzor = pool.filter(function (e) { return volny(e) && e.pattern === cvik.pattern; });
+    // Poslední možnost: cvik, který v plánu UŽ je. Lepší než prázdná kolonka.
+    var zbytek = pool.filter(function (e) { return e.id !== cvik.id && e.muscle === cvik.muscle; });
+    var list = stejnyVzor.length ? stejnyVzor : (stejnaPartie.length ? stejnaPartie : (jenVzor.length ? jenVzor : zbytek));
+    return list.length ? list[0] : null;
+  }
+
+  /**
+   * Čtyřtýdenní blok. Týdny 1 až 3 jsou náběh: série drží, ubývá záloha (RIR), tedy roste
+   * úsilí, ne objem. Čtvrtý týden je lehčí, aby se tělo dotáhlo.
+   * ⚠️ Vědomě to NENÍ rampa objemu z mezocyklu (MEV → MRV). Ta míří na MRV a u partií
+   * s MEV 0 vyrábí nesmysly (nález E12 z auditu 2. 9. 2026).
+   */
+  function progreseCtyriTydny(goal) {
+    var rir = goal === 'sila'
+      ? ['3 až 4 v záloze', '2 až 3 v záloze', '2 v záloze']
+      : ['3 v záloze', '2 v záloze', '1 v záloze'];
+    return [
+      { tyden: 1, popis: 'Zajížděcí týden. Vol váhy, se kterými bys zvládl ještě tři opakování navíc. Zapiš je, jsou to tvoje výchozí čísla.', rir: rir[0], serieKoef: 1, deload: false },
+      { tyden: 2, popis: 'U každého cviku přidej buď jedno opakování, nebo nejmenší možnou váhu. Jedno z toho, ne obojí.', rir: rir[1], serieKoef: 1, deload: false },
+      { tyden: 3, popis: 'Nejtěžší týden bloku. Poslední série u hlavních cviků má být na hraně, ale technika musí držet.', rir: rir[2], serieKoef: 1, deload: false },
+      { tyden: 4, popis: 'Lehčí týden. Ubírej polovinu sérií a asi 10 % váhy. Netrénuješ míň, jen dovolíš tělu dohnat, co jsi mu naložil.', rir: '3 až 4 v záloze', serieKoef: 0.5, deload: true }
+    ];
+  }
+
+  /**
+   * Postaví hotový plán na míru včetně rozvrhu, progrese a všeho, co trenér píše na papír.
+   * Deterministické: stejný vstup dá vždy stejný výstup.
+   * ⛔ `vstup.vyloucene_partie` a `vyloucene_cviky` jsou VÝČTY, které v adminu odklikne
+   * člověk. Volný text o zdraví („bolí mě rameno") engine nečte a číst nesmí.
+   */
+  function assembleProgram(db, vstup) {
+    vstup = vstup || {};
+    var goal = CIL_NA_GOAL[vstup.cil] || 'svaly';
+    var dny = Math.min(5, Math.max(2, Math.round(vstup.dny_treninku || 3)));
+    var zakazanePartie = {}, zakazaneCviky = {};
+    (vstup.vyloucene_partie || []).forEach(function (x) { zakazanePartie[x] = 1; });
+    (vstup.vyloucene_cviky || []).forEach(function (x) { zakazaneCviky[x] = 1; });
+
+    // Omezení se uplatní na DATECH, ne dodatečným škrtáním v hotovém plánu. Kdyby se
+    // škrtalo až potom, zůstala by po cviku díra a objemová tabulka by lhala.
+    var filtrovana = (db || []).filter(function (e) { return !zakazanePartie[e.muscle] && !zakazaneCviky[e.id]; });
+
+    var plan = buildPlan(filtrovana, {
+      location: vstup.kde_cvici, equip: vstup.vybaveni, level: vstup.level,
+      goal: goal, days: dny, seed: vstup.seed || 0, orezStyl: vstup.orezStyl
+    });
+
+    var jmenaDnu = ROZVRH_DNU[dny] || ROZVRH_DNU[3];
+    var obsazene = {};
+    plan.days.forEach(function (d) { d.exercises.forEach(function (pe) { obsazene[pe.ex.id] = 1; }); });
+
+    var rozvrh = plan.days.map(function (d, i) {
+      var cviky = d.exercises.map(function (pe) {
+        var kardio = pe.ex.pattern === 'kardio';
+        var doplnkovy = !!pe.access;
+        var n = kardio ? null : nahradaPro(plan.pool, pe.ex, obsazene);
+        return {
+          id: pe.ex.id, nazev: pe.ex.name, partie: pe.ex.muscle, pattern: pe.ex.pattern,
+          serie: pe.sets, opakovani: pe.reps,
+          pauza: pauzaPro(plan.goal, pe.ex.pattern, doplnkovy),
+          rir: rirPro(goal, pe.ex.pattern, doplnkovy),
+          tempo: tempoPro(pe.ex.pattern, doplnkovy),
+          nahrada: kardio ? 'cokoli, co drží tep nahoře: rotoped, běžecký pás, švihadlo' : (n ? n.name : null),
+          nahradaId: n ? n.id : null,
+          kardio: kardio, tip: pe.ex.tip || '', doplnkovy: doplnkovy
+        };
+      });
+      return { poradi: i + 1, den: jmenaDnu[i] || ('Den ' + (i + 1)), nazev: d.name, rozehrati: rozehratiPro(cviky), cviky: cviky };
+    });
+
+    var omezeni = [];
+    var partieList = Object.keys(zakazanePartie);
+    if (partieList.length) omezeni.push('Z plánu jsou vyřazené tyhle partie: ' + partieList.join(', ') + '. Objem po partiích je proto počítaný bez nich.');
+    var cvikyList = Object.keys(zakazaneCviky);
+    if (cvikyList.length) omezeni.push('Z plánu je vyřazeno ' + cvikyList.length + ' konkrétních cviků. Náhradu máš u každého řádku v tabulce.');
+
+    return {
+      rozvrh: rozvrh,
+      progrese: progreseCtyriTydny(goal),
+      cil: plan.goal,
+      cilKlic: vstup.cil,
+      objem: plan.volume,
+      omezeni: omezeni,
+      poznamky: {
+        rozehrati: 'Rozehřátí není trénink navíc, je to pojistka. Pět minut na tep a dvě lehké série u prvního velkého cviku.',
+        tempo: 'Tempo čti jako tři čísla: sekundy dolů, sekundy dole, sekundy nahoru. Nejvíc práce je ve spouštění, tam se to nesmí odbýt.',
+        pauzy: 'Mezi sériemi hlavních cviků ' + plan.rest + '. Kratší pauza nespálí víc, jen sníží váhu, kterou zvedneš.',
+        kdyPridat: 'Když poslední sérii uděláš v horní hranici opakování a zbývají ti ještě dvě v záloze, příště přidej nejmenší možnou váhu a vrať se na spodní hranici opakování.',
+        kdyzVynechas: 'Vynechaný trénink se nenahání dvojitou dávkou. Pokračuj tam, kde jsi skončil, jen si posuň dny. Blok má čtyři týdny, ne čtyři termíny.',
+        sport: vstup.sport ? ('Klient dělá navíc: ' + vstup.sport + '. Tenhle plán s tím automaticky nepočítá, objem uber ručně tam, kde se to kryje.') : null
+      }
+    };
+  }
+
+  global.WorkoutGen = { buildPlan: buildPlan, assembleProgram: assembleProgram, planCoverage: planCoverage, planVolume: planVolume, addVolume: addVolume, GOALS: GOALS,
     muscles: { musclesFromDb: musclesFromDb, matchMuscles: matchMuscles, resolveMuscles: resolveMuscles, weeklySetsByMuscle: weeklySetsByMuscle, setDb: setMuscleDb, LANDMARKS: LANDMARKS, zoneFor: zoneFor, LABELS: MUS_LABEL, ORDER: MUS_ORDER } };
 })(window);

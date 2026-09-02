@@ -1467,8 +1467,14 @@
       // na „Otevřít", ať karta klienta nestahuje 400 kB u každého otevření.
       h+='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🍽️ Průvodce na míru <span class="muted" style="text-transform:none;font-weight:400;">(jídelníček, který klientovi uložíš do jeho sekce)</span></h4>'
         +'<div id="kdPgWrap"><button class="mlogbtn" id="kdPgOpen">Otevřít editor průvodce</button> <span class="muted" style="font-size:.8rem;">Čísla vezme ze zadání, dny poskládá generátor, texty napíše AI a Ty je přepíšeš.</span></div>';
+      // 🏋️ TRÉNINKOVÝ PLÁN NA MÍRU: sourozenec průvodce, sekce hned pod ním. Celá logika
+      // žije v `trenink.js` a šablona v `trenink-sablona.js`, tady je jen místo, kam se to
+      // pověsí. ⛔ Záměrně minimální zásah do index.html: jeden <section> a jeden posluchač,
+      // ať se to nebije se souběžně stavěnou sekcí Onboarding.
+      h+='<section id="trenink-plan"><h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🏋️ Tréninkový plán na míru <span class="muted" style="text-transform:none;font-weight:400;">(trénink, který klientovi uložíš do jeho sekce)</span></h4>'
+        +'<div id="tpWrap"><button class="mlogbtn" id="kdTpOpen">Otevřít editor tréninku</button> <span class="muted" style="font-size:.8rem;">Zadání odhadne z dotazníku, plán poskládá generátor, texty napíše AI a Ty je přepíšeš.</span></div></section>';
       // data z appky Tvůj Coach (bonus vedle reportů)
-      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach — reálný zápis jídla</h4>'
+      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach: reálný zápis jídla</h4>'
         +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky (14 dní)</button> <span class="muted" style="font-size:.8rem;">Pokud klient zapisuje v naší appce, uvidíš tady jeho reálná data automaticky.</span></div>';
       // poznámky kouče
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🗒️ Tvoje poznámky (klient je nevidí)</h4>'
@@ -1619,6 +1625,16 @@
           email:email, name:KDET.name, vok:kliVok(KDET.name), rod:kliRod(KDET.name),
           intake:((KDET.data||{}).intake||{}).data||{}, targets:(KDET.data||{}).targets||null,
           api:api, toast:toast
+        });
+      });
+      // Tréninkový plán: stejná linka jako u průvodce, engine a databáze cviků se stáhnou
+      // až po kliknutí (workout-gen.js + exercise-db.json).
+      var kdTpOpen=$('kdTpOpen');
+      if(kdTpOpen) kdTpOpen.addEventListener('click',function(){
+        if(!window.TreninkPlan){ toast('Modul tréninku se nenačetl, obnov stránku.'); return; }
+        window.TreninkPlan.render({
+          email:email, name:KDET.name, vok:kliVok(KDET.name), rod:kliRod(KDET.name),
+          intake:((KDET.data||{}).intake||{}).data||{}, api:api, toast:toast
         });
       });
       $('kdNoteSave').addEventListener('click',function(){
@@ -3028,6 +3044,7 @@
   })();
   </script>
   <script src="/akademie/admin/pruvodce.js?v=20260902a" defer></script>
+  <script src="/akademie/admin/trenink.js?v=20260902a" defer></script>
   <script src="/assets/scroll-top.js?v=g5" defer></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
 </html>
