@@ -193,5 +193,70 @@ console.log('\n4) analytics.js dotaguje ref do odkazu na appku');
     new URL(dekoruj({ ref: 'LUCIE10', href: 'https://tvujcoach.cz/?plan=vip' })).searchParams.get('plan') === 'vip');
 }
 
+console.log('\n5) Academy: ?ref=KRISTINA10 da Stripe odkazum na akademii vlastni kupon');
+{
+  const stranka = fs.readFileSync('akademie/index.html', 'utf8');
+
+  // Bez OBOU skriptu by na akademii nebyl ani `window.MBRef`, ani modal: partnerka
+  // by prisla o provizi prave na strance, kam ji posila jeji vlastni grafika.
+  const poziceAnalytics = stranka.indexOf('/assets/analytics.js?v=');
+  const poziceReferral = stranka.indexOf('/assets/referral.js?v=');
+  overit('akademie/index.html nacita analytics.js', poziceAnalytics > -1);
+  overit('akademie/index.html nacita referral.js', poziceReferral > -1);
+  overit('poradi je analytics.js pred referral.js',
+    poziceAnalytics > -1 && poziceReferral > poziceAnalytics,
+    'referral.js musi bezet az po analytics.js, jinak decorate() nevidi MBRef');
+
+  // Platebni odkazy, ktere na strance Academy opravdu jsou.
+  const odkazy = [...new Set(stranka.match(/https:\/\/buy\.stripe\.com\/[A-Za-z0-9]+/g) || [])];
+  overit('na akademii je aspon jeden Stripe odkaz', odkazy.length > 0, `nasel jsem ${odkazy.length}`);
+
+  const ACADEMY_DOZIVOTNE = 'https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04';
+  overit('dozivotni Academy je mezi odkazy na strance', odkazy.indexOf(ACADEMY_DOZIVOTNE) > -1);
+
+  const a = nactiReferral({ query: '?ref=KRISTINA10' });
+  const cil = klikniAPreskoc(a, ACADEMY_DOZIVOTNE + '?locale=cs');
+  overit('modal se otevrel', cil !== null);
+  const url = new URL(cil);
+  overit('prefilled_promo_code = KRISTINA10', url.searchParams.get('prefilled_promo_code') === 'KRISTINA10');
+  overit('client_reference_id = KRISTINA10', url.searchParams.get('client_reference_id') === 'KRISTINA10');
+  overit('vlastni parametry odkazu zustavaji', url.searchParams.get('locale') === 'cs');
+
+  // Odkaz Academy s odectem videokurzu je tatáz cesta, jen levnejsi produkt.
+  const b = nactiReferral({ query: '?ref=KRISTINA10' });
+  const cil2 = new URL(klikniAPreskoc(b, 'https://buy.stripe.com/9B6aEW6356Jc4Ra55t3ks05'));
+  overit('Academy s odectem taky nese kupon partnera',
+    cil2.searchParams.get('prefilled_promo_code') === 'KRISTINA10');
+
+  // Mesicni clenstvi je v `buyInfo` VEDOME vynechane (obchodni rozhodnuti, jestli se
+  // za predplatne vyplaci odmena). Test to drzi zapsane, at se to nezmeni omylem.
+  const c = nactiReferral({ query: '?ref=KRISTINA10' });
+  overit('mesicni clenstvi Academy referral nechyta',
+    klikniAPreskoc(c, 'https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00?locale=cs') === null);
+}
+
+console.log('\n6) Zkratky /go/* miri, kam maji');
+{
+  const ocekavane = [
+    ['go/lucie/index.html', 'https://tvujcoach.cz/?ref=LUCIE10&utm_source=lucik.en&utm_medium=affiliate'],
+    ['go/kristina/index.html', 'https://tvujcoach.cz/?ref=KRISTINA10&utm_source=kristinadittrich&utm_medium=affiliate'],
+    ['go/jirka/index.html', 'https://tvujcoach.cz/?ref=JIRKA10&utm_source=jirka-langmajer&utm_medium=affiliate'],
+    ['go/marek/index.html', 'https://tvujcoach.cz/?ref=MAREK10&utm_source=marek-barna&utm_medium=affiliate'],
+    ['go/lucie-academy/index.html', 'https://martinbarna.cz/akademie/?ref=LUCIE10&utm_source=lucik.en&utm_medium=affiliate'],
+    ['go/kristina-academy/index.html', 'https://martinbarna.cz/akademie/?ref=KRISTINA10&utm_source=kristinadittrich&utm_medium=affiliate'],
+    ['go/jirka-academy/index.html', 'https://martinbarna.cz/akademie/?ref=JIRKA10&utm_source=jirka-langmajer&utm_medium=affiliate'],
+    ['go/marek-academy/index.html', 'https://martinbarna.cz/akademie/?ref=MAREK10&utm_source=marek-barna&utm_medium=affiliate'],
+  ];
+  for (const [soubor, cil] of ocekavane) {
+    const s = fs.readFileSync(soubor, 'utf8');
+    // location.replace, <noscript> refresh i klikaci zaloha musi mirit na TOTEZ.
+    const holy = s.split(cil).length - 1;
+    const escapovany = s.split(cil.replace(/&/g, '&amp;')).length - 1;
+    overit(`${soubor} miri 3x na spravny cil`, holy + escapovany === 3,
+      `holy ${holy}, s &amp; ${escapovany}`);
+    overit(`${soubor} ma noindex`, s.indexOf('<meta name="robots" content="noindex, nofollow">') > -1);
+  }
+}
+
 console.log(spadlo ? `\nSPADLO: ${spadlo}` : '\nVSE PROSLO');
 process.exit(spadlo ? 1 : 0);
