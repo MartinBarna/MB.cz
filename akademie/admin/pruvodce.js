@@ -20,7 +20,7 @@
   'use strict';
 
   var FOOD = null;          // pole potravin, načte se jednou za život stránky
-  var MG_URL = '/assets/meal-gen.js?v=20260819a';
+  var MG_URL = '/assets/meal-gen.js?v=20260902b';
   var DB_URL = '/assets/food-db.json?v=20260811b';
 
   function esc(s) {
