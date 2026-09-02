@@ -44,6 +44,14 @@
       "author": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" }
     }
     </script>
+    <!-- ⛔ AŽ PO AKTIVACI TARIFU „VIP + Kontrola od Martina" (Stripe Price doplněná
+         v pricing_plans a `active = true`) přidej do `offers` výš tyhle dva řádky:
+           { "@type": "Offer", "name": "VIP + Kontrola od Martina (měsíčně)", "price": "1990", "priceCurrency": "CZK" },
+           { "@type": "Offer", "name": "VIP + Kontrola od Martina (3 měsíce)", "price": "5490", "priceCurrency": "CZK" }
+         Dřív ne: JSON-LD čte crawler a ten nečeká na skript, který nabídku odkrývá,
+         takže by Google ukazoval cenu produktu, který se nedá koupit.
+         ⛔ A komentář sem, ne dovnitř JSON-LD: HTML komentář uvnitř `application/ld+json`
+         rozbije JSON a Google zahodí strukturovaná data CELÉ stránky. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -540,6 +548,25 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         <p style="margin:.5rem 0 0;"><b style="color:#F0EADF;">Garance vrácení peněz 14 dnů.</b> Přesto ti dávám svoje slovo navíc: když ti to do 14 dnů od začátku předplatného nesedne, napiš na <a href="mailto:martin@martinbarna.cz" style="color:#EBB12C;">martin@martinbarna.cz</a> a vrátím ti celou částku. Bez udání důvodu. Je to můj dobrovolný závazek nad rámec zákona.</p>
       </div>
 
+      <!-- ⭐ [2026-09-02] TARIF „VIP + KONTROLA OD MARTINA" (tier `ai_kontrola`).
+           ⛔⛔ BLOK JE SCHVÁLNĚ SKRYTÝ A ODKRÝVÁ HO AŽ SKRIPT DOLE, když je plán
+           v ceníku opravdu `active`. Do té doby nemá Stripe cenu a nedá se koupit;
+           viditelná nabídka na neprodejný tarif je slib, který skončí u zákazníka
+           na prázdném výběru. Statický fallback tady tedy NENÍ (na rozdíl od Basicu
+           a VIP, ty se prodávají).
+           ⛔ Ceny se do textu nepíšou natvrdo, doplní je týž skript z `pricing_plans`.
+           ⚠️ Slib je úzký schválně: písemný rozbor co 14 dní, nic víc. Žádný WhatsApp,
+           žádný hovor, žádný jídelníček na míru; to je koučink Gold za jiné peníze. -->
+      <div class="incl" id="kontrolaBlok" style="display:none;border-color:rgba(235,177,44,.45);background:linear-gradient(90deg,rgba(235,177,44,.12),rgba(235,177,44,.03));">
+        📬 <b>Chceš, aby se na tvoje čísla podíval i člověk?</b>
+        K VIP verzi appky si můžeš přikoupit <b>kontrolu ode mě</b>: jednou za 14 dní si projdu tvoje
+        data, tedy váhu, zápisy, tréninky i check-iny, a napíšu ti, co v nich vidím a co bych na
+        dalších 14 dní změnil. Přijde ti to mailem a najdeš to i v appce.
+        Appka tě vede, já kontroluju. <span data-price="ai_kontrola:month"></span><span data-price="ai_kontrola:quarter"></span>
+        Není v tom WhatsApp ani hovor, na to je <a href="/koucing/">koučink</a>.
+        <a href="https://tvujcoach.cz/sign-up?plan=kontrola&amp;utm_source=web&amp;utm_medium=tc-landing&amp;utm_campaign=tc-kontrola">Vzít appku s kontrolou →</a>
+      </div>
+
       <!-- Cross-sell na Academy. Kdo zvazuje rocni VIP za 4 990, doplati 3 910 a ma k tomu
            celou Academy za 8 900. Cislo 4 990 je skutecna cena rocniho VIP z ceniku
            (pricing_plans, tier ai_basic, interval year), ne odhad. Pri zmene ceniku prepsat
@@ -651,6 +678,19 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         var elCta = document.querySelector('[data-year-cta="' + tier + '"]');
         if (elCta && !y) elCta.style.display = 'none';
       });
+
+      // Tarif s kontrolou od Martina se ukáže JEN když je v ceníku aktivní (dotaz
+      // filtruje `active=eq.true`). Bez toho by stránka nabízela tarif, který
+      // Stripe ještě neumí prodat, a člověk by skončil na prázdném výběru plánů.
+      var kMesic = find('ai_kontrola', 'month'), kCtvrt = find('ai_kontrola', 'quarter');
+      var blok = document.getElementById('kontrolaBlok');
+      if (blok && kMesic) {
+        var elKM = document.querySelector('[data-price="ai_kontrola:month"]');
+        if (elKM) elKM.textContent = 'Stojí ' + kc(kMesic) + ' měsíčně';
+        var elKQ = document.querySelector('[data-price="ai_kontrola:quarter"]');
+        if (elKQ) elKQ.textContent = kCtvrt ? ', nebo ' + kc(kCtvrt) + ' na tři měsíce.' : '.';
+        blok.style.display = '';
+      }
     })
     .catch(function () { /* fallback: zustanou hodnoty z HTML */ });
 })();
