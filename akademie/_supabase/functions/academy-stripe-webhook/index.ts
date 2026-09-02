@@ -292,6 +292,15 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // počítal jinak, než ukazoval (sleva 533,33 místo 800). Samostatná cena tuhle
     // třídu chyby vylučuje: není co přepočítávat.
     "plink_1TyUPQBq3rKubW9kj5P2YjCB=academy-lifetime," +
+    // ⭐ ODEČET PRO MĚSÍČNÍ ČLENY: 5 930 Kč = 8 900 minus tři zaplacené měsíce (3 × 990).
+    // Odkaz `buy.stripe.com/fZu5kCgHJaZs97q7dB3ks0k`, cena `price_1UB9yuBq3rKubW9kuwqMzNmY`
+    // (5 930 CZK, jednorázová, DPH v ceně) na produktu `prod_UyNGi6oRQPZLOe`, tedy na TÉMŽE
+    // produktu jako plných 8 900. Redirect po platbě /akademie/vitejte/, Limited use No.
+    // Dodává se ÚPLNĚ TOTÉŽ jako za 8 900, proto týž klíč katalogu: doživotní přístup,
+    // rok appky, uvítačka, započítání do padesátky. Předplatné zruší `udelDozivotni` samo.
+    // ⛔ Nabízí se VÝHRADNĚ v kroku 1 trati `onboarding-nakup-academy-mesicni`. Na web
+    //    nepatří jako tlačítko: veřejná cena je 8 900 a odečet má vidět jen ten, komu náleží.
+    "plink_1UBA1iBq3rKubW9kAcC0eIlq=academy-lifetime," +
     // ⭐ VIDEOKURZ 800 Kč (`plink_1TymiH…`, cena `price_1TyaJv…`), vytvořeno 30. 7. 2026.
     // Vede na klíč `videokurz`, tedy JINÝ produkt, jiný zdroj, jinou uvítací trať
     // a BEZ appky. Kdyby tenhle řádek chyběl, zaplacený videokurz by spadl do větve
