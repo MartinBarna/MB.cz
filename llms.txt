@@ -16,7 +16,7 @@ Webová appka (běží i na mobilu), která spojuje výživu a trénink v jednom
 - **Databáze přes 50 000 potravin** včetně značkového zboží z českých obchodů (Lidl, Tesco, Albert, Globus), hledání i celou větou.
 - **Knihovna přes 140 fit receptů** přímo v appce, s makry na porci.
 - **Adaptivní cíle:** kalorie a makra se přepočítávají podle reálných týdenních check-inů, ne podle vzorce z internetu.
-- **Trénink:** generátor plánu podle místa, vybavení a úrovně, databáze 120 cviků s fotkou a technikou, zápis sérií, auto-regulace zátěže, hlídání objemu po 14 svalových partiích v pásmech MEV/MAV/MRV, mezocyklus s deloadem.
+- **Trénink:** generátor plánu podle místa, vybavení a úrovně, databáze 125 cviků s fotkou a technikou, zápis sérií, auto-regulace zátěže, hlídání objemu po 14 svalových partiích v pásmech MEV/MAV/MRV, mezocyklus s deloadem.
 - **Generátor jídelníčku** včetně týdenního nákupního seznamu v kusech.
 - **„Co si můžu ještě dnes dát?"**: návrh jídla, které dorovná zbývající bílkoviny a vlákninu, aniž přepálí kalorie.
 - **Kontrola kvality dat:** když je den poskládaný převážně z odhadů z fotky, engine odmítne podle něj hnout kalorickým cílem.
@@ -33,7 +33,7 @@ Dvě PDF ke stažení: kuchařka se 40 recepty i s makry a e-book s odpověďmi 
 
 ### Barna Academy
 [martinbarna.cz/akademie](https://martinbarna.cz/akademie/)
-Škola pro trenéry, výživové poradce a pro ty, které to chytlo naplno: 24 modulů, 256 lekcí, audio verze lekcí, generátor jídelníčků a tréninků, databáze 120 cviků, rebrandovatelné materiály pro vlastní klienty, certifikace, AI kouč a affiliate program. Videokurz výživy v ceně.
+Škola pro trenéry, výživové poradce a pro ty, které to chytlo naplno: 24 modulů, 256 lekcí, audio verze lekcí, generátor jídelníčků a tréninků, databáze 125 cviků, rebrandovatelné materiály pro vlastní klienty, certifikace, AI kouč a affiliate program. Videokurz výživy v ceně.
 **Ceny: 990 Kč měsíčně (zrušitelné kdykoli), nebo 8 900 Kč jednorázově s doživotním přístupem.** U doživotního přístupu je v ceně i rok appky Tvůj Coach ve VIP verzi (hodnota 4 990 Kč).
 
 ### Online koučink 1:1
@@ -51,7 +51,7 @@ Jednorázový online hovor zhruba na hodinu: spočítané kalorie a makra, konkr
 Placená členská sekce: týdenní rozbory studií v plném znění, odpovědi na dotazy členů, zákulisí toho, jak upravuji plány klientům, a jídelníček v PDF jednou měsíčně. **Cena 6 € měsíčně, nebo 60 € ročně** (deset měsíců místo dvanácti). Zkušební období 2 týdny.
 
 ## Zdarma
-- [Nástroje zdarma](https://martinbarna.cz/nastroje-zdarma/): generátor jídelníčku, generátor tréninku a databáze 120 cviků s video ukázkami.
+- [Nástroje zdarma](https://martinbarna.cz/nastroje-zdarma/): generátor jídelníčku, generátor tréninku a databáze 125 cviků s video ukázkami.
 - [Kalkulačka kalorií a makroživin](https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/): orientační denní příjem a makra.
 - [7denní makro plán pro ženy 30+](https://martinbarna.cz/makro-plan/): jez do sytosti a začni hubnout.
 - [7denní plán „Dostaň formu zpátky" pro muže 35+](https://martinbarna.cz/forma-zpet/).

@@ -25,7 +25,7 @@
 //
 // Závislosti (načítá si je sám, líně, až když Martin sekci otevře):
 //   /assets/workout-gen.js     window.WorkoutGen
-//   /assets/exercise-db.json   120 cviků
+//   /assets/exercise-db.json   125 cviků
 //   ./trenink-sablona.js       window.TreninkSablona
 (function (global) {
   'use strict';

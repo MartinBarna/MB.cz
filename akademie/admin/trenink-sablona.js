@@ -73,7 +73,7 @@
     'Svalová bolest den po tréninku je něco jiného a je v pořádku. ' +
     'Když si nejsi jistý, napiš mi to a než se ozvu, ten cvik vynech nebo použij náhradu.';
   var T_KNIHOVNA =
-    '<strong>Nevíš, jak cvik vypadá?</strong> V Academy je databáze všech 120 cviků s popisem provedení ' +
+    '<strong>Nevíš, jak cvik vypadá?</strong> V Academy je databáze všech 125 cviků s popisem provedení ' +
     'a s nejčastějšími chybami: <a href="https://martinbarna.cz/akademie/cviky/">martinbarna.cz/akademie/cviky</a>. ' +
     'Vyhledej cvik podle názvu z tabulky, jsou psané stejně. Stejnou databázi máš i v appce Tvůj Coach, ' +
     'kde si rovnou zapíšeš série a appka ti pak řekne, kolik zkusit příště.';
