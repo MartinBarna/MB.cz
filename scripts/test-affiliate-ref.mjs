@@ -114,18 +114,68 @@ console.log('\n2) Stripe odkaz nese kod partnera i jeho vlastni kupon');
 
   const a = nactiReferral({ query: '?ref=KRISTINA10' });
   const url = new URL(klikniAPreskoc(a, STRIPE));
-  overit('client_reference_id = kod partnera', url.searchParams.get('client_reference_id') === 'KRISTINA10');
-  overit('atribuce reklamy z odkazu je pryc (jedna hodnota, penize partnera prednost)',
+  // Od 2. 9. 2026 se kod a atribuce VEZOU SPOLU (`rozdelClientRef` je zase rozdeli).
+  // Driv se atribuce zahazovala a kazdy nakup pres partnera vypadal jako bez kampane.
+  overit('client_reference_id nese kod partnera i atribuci reklamy',
+    url.searchParams.get('client_reference_id') === 'KRISTINA10_src-meta_med-cpc',
+    url.searchParams.get('client_reference_id'));
+  overit('v adrese je jen JEDNA hodnota client_reference_id',
     url.searchParams.getAll('client_reference_id').length === 1);
+
+  // Cokoli, co neni atribuce, se prilepit NESMI: webhook by to pricetl ke KODU.
+  const junk = nactiReferral({ query: '?ref=KRISTINA10' });
+  const urlJunk = new URL(klikniAPreskoc(junk,
+    'https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04?client_reference_id=neco-ciziho'));
+  overit('cizi rucni hodnota se ke kodu neprilepi',
+    urlJunk.searchParams.get('client_reference_id') === 'KRISTINA10',
+    urlJunk.searchParams.get('client_reference_id'));
+
+  // Strop Stripu je 200 znaku: kdyz se nevejde vse, uriznout se musi MERENI, ne kod.
+  const dlouha = 'cmp-' + 'x'.repeat(190);
+  const strop = nactiReferral({ query: '?ref=KRISTINA10' });
+  const urlStrop = new URL(klikniAPreskoc(strop,
+    'https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04?client_reference_id=src-meta_' + dlouha));
+  const hodnota = urlStrop.searchParams.get('client_reference_id');
+  overit('pres strop 200 znaku se uriznou pole atribuce, kod zustava',
+    hodnota.length <= 200 && hodnota.split('_')[0] === 'KRISTINA10', `${hodnota.length} znaku`);
   overit('prefilled_promo_code = kod partnera', url.searchParams.get('prefilled_promo_code') === 'KRISTINA10');
 
   const b = nactiReferral({ query: '?ref=BARNA-AB12' });
   const url2 = new URL(klikniAPreskoc(b, STRIPE));
   overit('clensky kod ma dal DOPORUC10', url2.searchParams.get('prefilled_promo_code') === 'DOPORUC10');
-  overit('clensky client_reference_id = BARNA-AB12', url2.searchParams.get('client_reference_id') === 'BARNA-AB12');
+  overit('clensky client_reference_id nese kod i atribuci',
+    url2.searchParams.get('client_reference_id') === 'BARNA-AB12_src-meta_med-cpc',
+    url2.searchParams.get('client_reference_id'));
 
   const c = nactiReferral({ query: '' });
   overit('bez kodu se modal neotevre a odkaz jde beze zmeny', klikniAPreskoc(c, STRIPE) === null);
+}
+
+console.log('\n2b) Doplatek videokurzu: kupony nebere, tak je ani neslibujeme');
+{
+  // Zmereno v pokladne 2. 9. 2026: na `3cIaEW…` (1 140 Kc) nesnizi castku ani
+  // KRISTINA10, ani DOPORUC10. Modal proto u nej slevu slibovat NESMI.
+  const DOPLATEK = 'https://buy.stripe.com/3cIaEWezBebE2J22Xl3ks0i?locale=cs';
+  const a = nactiReferral({ query: '?ref=KRISTINA10' });
+  const url = new URL(klikniAPreskoc(a, DOPLATEK));
+  overit('doplatek NEDOSTANE prefilled_promo_code',
+    url.searchParams.get('prefilled_promo_code') === null,
+    String(url.searchParams.get('prefilled_promo_code')));
+  overit('kod partnera se u doplatku posila dal (provize na kuponu nestoji)',
+    url.searchParams.get('client_reference_id') === 'KRISTINA10');
+  overit('nadpis modalu slevu neslibuje',
+    a.prvky['ba-ref-h'].textContent.indexOf('slev') === -1 &&
+    a.prvky['ba-ref-h'].textContent.indexOf('10 %') === -1,
+    a.prvky['ba-ref-h'].textContent);
+  overit('text modalu nenabizi kupon k opsani',
+    a.prvky['ba-ref-txt'].innerHTML.indexOf('KRISTINA10') === -1,
+    a.prvky['ba-ref-txt'].innerHTML);
+
+  // Plna cena videokurzu kupon dal bere, at se to nezasekne obracene.
+  const b = nactiReferral({ query: '?ref=KRISTINA10' });
+  const url2 = new URL(klikniAPreskoc(b, 'https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs'));
+  overit('plna cena videokurzu kupon partnera porad dostane',
+    url2.searchParams.get('prefilled_promo_code') === 'KRISTINA10');
 }
 
 console.log('\n3) rozdelClientRef ve webhooku vezme kod jako kod, ne jako atribuci');
@@ -149,6 +199,12 @@ console.log('\n3) rozdelClientRef ve webhooku vezme kod jako kod, ne jako atribu
   for (const kod of ['KRISTINA10', 'LUCIE10', 'JIRKA10', 'MAREK10', 'BARNA-AB12']) {
     overit(`"${kod}" projde jako kod`, rozdelClientRef(kod).kod === kod);
   }
+  // Slozena hodnota z `slozClientRef`: webhook z ni musi dostat OBOJI.
+  const oboji = rozdelClientRef('KRISTINA10_src-meta_med-cpc');
+  overit('ze slozene hodnoty vypadne kod partnera', oboji.kod === 'KRISTINA10', oboji.kod);
+  overit('ze slozene hodnoty vypadne i atribuce reklamy',
+    oboji.atribuce && oboji.atribuce.utm_source === 'meta' && oboji.atribuce.utm_medium === 'cpc',
+    JSON.stringify(oboji.atribuce));
 }
 
 console.log('\n4) analytics.js dotaguje ref do odkazu na appku');
@@ -233,6 +289,26 @@ console.log('\n5) Academy: ?ref=KRISTINA10 da Stripe odkazum na akademii vlastni
   const c = nactiReferral({ query: '?ref=KRISTINA10' });
   overit('mesicni clenstvi Academy referral nechyta',
     klikniAPreskoc(c, 'https://buy.stripe.com/bJe9AS3UXgjMcjC8hF3ks00?locale=cs') === null);
+}
+
+console.log('\n5b) Stranky videokurzu nacitaji oba skripty');
+{
+  // 183 stranek videokurzu (prehled + v001..v182) nese zivy odkaz na koupi za 1 490 Kc.
+  // Do 2. 9. 2026 nenacitaly ani referral.js, ani analytics.js, takze nakup z ochutnavky
+  // nedostal ani kod partnera, ani atribuci reklamy.
+  const slozky = fs.readdirSync('akademie/videokurz').filter((n) => /^v\d+$/.test(n));
+  const soubory = ['akademie/videokurz/index.html'].concat(slozky.map((n) => `akademie/videokurz/${n}/index.html`));
+  overit('stranek videokurzu je 183', soubory.length === 183, String(soubory.length));
+  let bezSkriptu = 0, spatnePoradi = 0;
+  for (const f of soubory) {
+    const t = fs.readFileSync(f, 'utf8');
+    const a = t.indexOf('/assets/analytics.js?v=');
+    const r = t.indexOf('/assets/referral.js?v=');
+    if (a < 0 || r < 0) bezSkriptu++;
+    else if (r < a) spatnePoradi++;
+  }
+  overit('vsechny stranky videokurzu nacitaji oba skripty', bezSkriptu === 0, `${bezSkriptu} bez skriptu`);
+  overit('poradi je vsude analytics.js pred referral.js', spatnePoradi === 0, `${spatnePoradi} spatne`);
 }
 
 console.log('\n6) Zkratky /go/* miri, kam maji');

@@ -102,7 +102,24 @@ check('C3 atribuce se nikdy neprepisuje (zapis jen do prazdne hodnoty)',
 // --- 4) referral.js: kod doporucitele nesmi skoncit jako DRUHY parametr ---
 check('D1 referral.js pred pripojenim kodu smaze stavajici client_reference_id',
   /searchParams\.delete\('client_reference_id'\)/.test(zdrojReferral), '');
-check('D2 referral.js kod dal pripojuje', /pridej\('client_reference_id', ref\)/.test(zdrojReferral), '');
+check('D2 referral.js kod dal pripojuje',
+  /pridej\('client_reference_id', slozClientRef\(ref, puvodniCref\)\)/.test(zdrojReferral), '');
+// ⭐ Od 2. 9. 2026 se atribuce nezahazuje, veze se ZA kodem v temze poli.
+// Kdyby `slozClientRef` zmizel, nakup pres partnera by zase vypadal jako bez kampane.
+check('D3 referral.js sklada kod a atribuci do jednoho pole',
+  /function slozClientRef\(/.test(zdrojReferral), '');
+
+// --- 5) webhook: neznamy kod z adresy nesmi umlcet fallback na referral_click ---
+// ⛔ Do 2. 9. 2026 se `referral_click` hledal jen kdyz bylo pole PRAZDNE, takze cizi
+//    `?ref=nejakyweb` prebil poctivy klik partnera a provize tise nevznikla.
+const blokFallback = zdrojWebhook.slice(
+  zdrojWebhook.indexOf('const kandidati'),
+  zdrojWebhook.indexOf('if (!ref) return "bez-kodu"'),
+);
+check('E1 kandidati se zkousi postupne (smycka pres kandidaty)',
+  /for \(const k of kandidati\)/.test(blokFallback), '');
+check('E2 fallback na referral_click se pousti i pri neplatnem kodu, ne jen pri prazdnem',
+  /if \(!nalez\)[\s\S]{0,600}referral_click/.test(blokFallback), '');
 
 // --- vysledek ---
 let spadlo = 0;

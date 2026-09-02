@@ -960,42 +960,73 @@ async function atribuujReferral(
 ): Promise<string> {
   try {
     const email = buyerEmail.toLowerCase().trim();
+
+    // ⚠️ Hledá se ÚPLNĚ STEJNĚ pro všechny tři zdroje: `code` + `active`. Promo kód
+    // nemá vlastní cestu, jinak by se dva zdroje mohly rozejít v tom, co je platný kód.
+    type Nalez = { owner: string; partnerType: string; sazba: number };
+    const najdiKod = async (kod: string): Promise<Nalez | null> => {
+      const { data: codes } = await admin
+        .from("referral_codes").select("owner_email,partner_type,rate_oneoff")
+        .eq("code", kod).eq("active", true).limit(1);
+      const owner = codes?.[0]?.owner_email ? String(codes[0].owner_email).toLowerCase() : "";
+      if (!owner) return null;
+      return {
+        owner,
+        // Sloupce přibyly migrací `referral-affiliate-partner-type.sql`. Fallback na 'member'
+        // je schválně: kdyby migrace ještě neproběhla, atribuce se chová jako dřív.
+        partnerType: codes?.[0]?.partner_type === "affiliate" ? "affiliate" : "member",
+        sazba: Number(codes?.[0]?.rate_oneoff ?? 0),
+      };
+    };
+
+    // ⛔⛔ KANDIDÁTI SE ZKOUŠEJÍ POSTUPNĚ, ne jen ten první (oprava 2. 9. 2026).
+    // Do té doby platilo: neprázdné `client_reference_id` fallback na `referral_click`
+    // ÚPLNĚ VYPNULO. Od 2. 9. si `assets/referral.js` ukládá i široký tvar kódu, takže
+    // se do pole dostane i cizí `?ref=nejakyweb` z odkazu odjinud. Takový nesmysl pak
+    // přebil poctivý klik partnera v DB, lookup vrátil „neznamy-kod" a provize TIŠE
+    // nevznikla. Teď se na dalšího kandidáta jde jedině tehdy, když ten předchozí
+    // NEODPOVÍDÁ řádku v `referral_codes`; kde první kandidát platí, se nemění nic.
     // PRIORITA 1: promo kód ze session (nejsilnější signál, člověk ho zadal).
-    let ref = "";
-    let zdrojKodu = "";
+    // PRIORITA 2: kód z odkazu. PRIORITA 3: poslední klik do `referral_click`.
+    const kandidati: Array<{ kod: string; zdroj: string }> = [];
     if (session) {
       const promo = await zjistiPromoKod(session);
-      if (promo.kod) { ref = promo.kod; zdrojKodu = "promo"; }
+      if (promo.kod) kandidati.push({ kod: promo.kod, zdroj: "promo" });
       else if (promo.jak !== "bez-slevy") await zalogujNerozpoznanouSlevu(session, promo.jak);
     }
-    // PRIORITA 2: kód z odkazu.
-    if (!ref) {
-      ref = (clientRef ?? "").toUpperCase().trim();
-      if (ref) zdrojKodu = "client_reference_id";
-    }
+    const zOdkazu = (clientRef ?? "").toUpperCase().trim();
+    if (zOdkazu) kandidati.push({ kod: zOdkazu, zdroj: "client_reference_id" });
 
-    if (!ref) {
+    let ref = "";
+    let zdrojKodu = "";
+    let nalez: Nalez | null = null;
+    for (const k of kandidati) {
+      // První kandidát se drží i když neplatí, ať se v odpovědi pozná, co přišlo.
+      if (!ref) { ref = k.kod; zdrojKodu = k.zdroj; }
+      const r = await najdiKod(k.kod);
+      if (r) { ref = k.kod; zdrojKodu = k.zdroj; nalez = r; break; }
+    }
+    // Klik se dohledává až tehdy, když z adresy ani ze session nic platného nepřišlo
+    // (dotaz navíc na každém nákupu je zbytečný).
+    if (!nalez) {
       const cutoff = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString();
       const { data: clicks } = await admin
         .from("referral_click").select("ref").eq("email", email).gt("created_at", cutoff)
         .order("created_at", { ascending: false }).limit(1);
-      ref = clicks?.[0]?.ref ? String(clicks[0].ref).toUpperCase().trim() : "";
-      if (ref) zdrojKodu = "referral_click";
+      const zKliku = clicks?.[0]?.ref ? String(clicks[0].ref).toUpperCase().trim() : "";
+      if (zKliku) {
+        const r = await najdiKod(zKliku);
+        if (r || !ref) { ref = zKliku; zdrojKodu = "referral_click"; }
+        if (r) nalez = r;
+      }
     }
     if (!ref) return "bez-kodu";
+    if (!nalez) return "neznamy-kod";
 
-    // ⚠️ Hledá se ÚPLNĚ STEJNĚ pro všechny tři zdroje: `code` + `active`. Promo kód
-    // nemá vlastní cestu, jinak by se dva zdroje mohly rozejít v tom, co je platný kód.
-    const { data: codes } = await admin
-      .from("referral_codes").select("owner_email,partner_type,rate_oneoff")
-      .eq("code", ref).eq("active", true).limit(1);
-    const owner = codes?.[0]?.owner_email ? String(codes[0].owner_email).toLowerCase() : "";
-    if (!owner) return "neznamy-kod";
+    const owner = nalez.owner;
     if (owner === email) return "self-referral";
-    // Sloupce přibyly migrací `referral-affiliate-partner-type.sql`. Fallback na 'member'
-    // je schválně: kdyby migrace ještě neproběhla, atribuce se chová jako dřív.
-    const partnerType = codes?.[0]?.partner_type === "affiliate" ? "affiliate" : "member";
-    const sazbaJednoraz = Number(codes?.[0]?.rate_oneoff ?? 0);
+    const partnerType = nalez.partnerType;
+    const sazbaJednoraz = nalez.sazba;
 
     if (orderId) {
       const { data: existing } = await admin.from("referrals").select("id").eq("order_id", orderId).limit(1);
