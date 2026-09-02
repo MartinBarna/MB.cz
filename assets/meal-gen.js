@@ -31,7 +31,29 @@
     var bmr = 10 * w + 6.25 * h - 5 * age + (inp.sex === 'zena' ? -161 : 5);
     var tdee = bmr * (ACT[inp.activity] || 1.375);
     var g = GOAL[inp.goal] || GOAL.udrzeni;
-    var kcal = Math.round(tdee * g.kcal);
+    // ⛔ [2026-09-02, Martin, nález E19] Bezpečnostní kalorická podlaha: 1200 žena,
+    // 1500 muž. Cíl je zatím jen procento z TDEE, takže drobná žena nebo muž se
+    // sedavým režimem mohl dostat pod hranici, pod kterou hubnutí patří pod dohled.
+    // ⛔ Táž podlaha je v appce (`kcalFloorForSex` v src/engine/goals.ts) a platí tam
+    // pro startovací cíl, ruční cíl I týdenní adaptaci. Kdo ji mění, mění obě strany.
+    var kcalFloor = inp.sex === 'zena' ? 1200 : 1500;
+    var kcalBezPodlahy = Math.round(tdee * g.kcal);
+    var kcal = Math.max(kcalFloor, kcalBezPodlahy);
+    // [revize R5] Podlaha nesmí být tichá. Když zvedne cíl, uživatel se to dozví,
+    // a když ho zvedne až NAD denní výdej (drobný nebo starší muž se sedavým režimem),
+    // není to plán na hubnutí a nesmí se tak tvářit. Appka na to má
+    // `rate_capped_kg_per_week`, web to dosud neměl vůbec.
+    var podlahaZvedla = kcal > kcalBezPodlahy;
+    var nadVydejem = podlahaZvedla && kcal >= Math.round(tdee);
+    var poznamkaPodlahy = null;
+    if (nadVydejem) {
+      poznamkaPodlahy = 'Bezpečnostní podlaha ' + kcalFloor + ' kcal je u tebe výš než tvůj '
+        + 'denní výdej (' + Math.round(tdee) + ' kcal). Tenhle plán proto není deficit. '
+        + 'Ubírat jídlo pod tuhle hranici nemá smysl, tempo se řeší pohybem.';
+    } else if (podlahaZvedla) {
+      poznamkaPodlahy = 'Cíl drží bezpečnostní podlaha ' + kcalFloor + ' kcal. '
+        + 'Spočítané číslo bylo nižší (' + kcalBezPodlahy + ' kcal) a níž nejdeme.';
+    }
     // [fix 2026-07-14] u výrazné nadváhy počítej bílkoviny z upravené hmotnosti (výška−100,
     // min. 75 % váhy) — 2 g × 115 kg = 230 g bílkovin v deficitu je nesmysl, který se nedá
     // ani poskládat z jídla; pro běžné váhy se nic nemění.
@@ -45,7 +67,10 @@
     // Cílová vláknina: 14 g / 1000 kcal (US Dietary Guidelines), min. 25 g pro dospělého.
     var fiber = Math.max(25, Math.round(kcal / 1000 * 14));
     return { kcal: kcal, protein: protein, carbs: carbs, fat: fat, fiber: fiber,
-             bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label };
+             bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label,
+             // [revize R5] příznaky podlahy pro UI; obdoba `rate_capped_kg_per_week` v appce
+             kcalFloor: kcalFloor, rateCapped: podlahaZvedla,
+             floorAboveTdee: nadVydejem, floorNote: poznamkaPodlahy };
   }
 
   /**

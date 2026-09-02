@@ -18,7 +18,12 @@
   var GOALS = {
     sila:    { label:'Síla',                 sets:5, reps:'3–5',   rest:'2–3 min', accessReps:'6–8' },
     svaly:   { label:'Svaly (hypertrofie)',  sets:4, reps:'8–12',  rest:'60–90 s', accessReps:'10–15' },
-    kondice: { label:'Hubnutí / kondice',    sets:3, reps:'12–15', rest:'45–60 s', accessReps:'12–20' },
+    // [2026-09-02, Martin] Hubnutí = hypertrofické opakování, ne „tonizační“ 12–15.
+    // V deficitu je úkol silového tréninku UDRŽET svalovou hmotu, k tomu je potřeba zátěž,
+    // ne víc opakování a kratší pauzy. Proti cíli „Svaly“ se liší už jen OBJEMEM (3 série
+    // místo 4) a kardio finisherem, který se přidává níž v buildPlan.
+    // ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+    kondice: { label:'Hubnutí / kondice',    sets:3, reps:'8–12',  rest:'60–90 s', accessReps:'10–15' },
     vydrz:   { label:'Vytrvalost / tonus',   sets:3, reps:'15–20', rest:'30–45 s', accessReps:'15–25' }
   };
 

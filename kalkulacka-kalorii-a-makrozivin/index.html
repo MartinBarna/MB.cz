@@ -186,6 +186,7 @@
                             <div class="col-6 col-md-3"><div class="macro"><div class="num" id="r-vlak">-</div><div class="lbl">Vláknina (g)</div></div></div>
                         </div>
                         <p class="small mt-2 mb-0" id="r-meta" style="opacity:.85;"></p>
+                        <p class="small mt-2 mb-0" id="r-podlaha" style="display:none;opacity:.95;"></p>
                         <a href="/#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
                         <a href="/videokurz" class="btn btn-grn mt-2 w-100">Chci se naučit s kaloriemi pracovat: videokurz za 1 490 Kč →</a>
                         <a id="gen-link" href="/nastroje-zdarma/jidelnicek/" class="btn mt-2 w-100" style="background:transparent;color:#fff;border:2px solid rgba(255,255,255,.7);">Poskládej si z toho hned ukázkový den zdarma →</a>
@@ -240,6 +241,12 @@
             document.getElementById('r-vlak').textContent = t.fiber;
             var meta = document.getElementById('r-meta');
             if (meta) meta.textContent = 'Bazální metabolismus ' + t.bmr.toLocaleString('cs-CZ') + ' kcal · celkový denní výdej ' + t.tdee.toLocaleString('cs-CZ') + ' kcal';
+            // [revize R5] Bezpečnostní podlaha nesmí být tichá: když zvedla cíl, řekni to.
+            var podlaha = document.getElementById('r-podlaha');
+            if (podlaha) {
+                podlaha.textContent = t.floorNote || '';
+                podlaha.style.display = t.floorNote ? '' : 'none';
+            }
             // Předej spočítané údaje do generátoru jídelníčku (předvyplní se a rovnou vygeneruje)
             var genLink = document.getElementById('gen-link');
             if (genLink) {
