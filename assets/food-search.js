@@ -43,6 +43,28 @@
     return nn.indexOf('tvar hledani') >= 0 || nn.indexOf('alias hledani') >= 0;
   }
 
+  // Balený výrobek = kurátorský řádek s EANem (appka: `maEan` v rankCuratedHit).
+  // Zmenšený export nese compact sloupec `baleny` (0/1), plný export ho nemá,
+  // ale má `note` s textem „EAN 8594…", tak se dopočítá odtud.
+  // ⚠️ Starý min.json bez sloupce `baleny` = všechno vyjde jako obecné, tedy
+  // stejné pořadí jako dřív; nic se nerozbije, jen se demotice neprojeví.
+  function jeBaleny(it) {
+    if (it.baleny) return true;
+    if (it.ean) return true;
+    return /\bEAN\s*[0-9]{6,14}\b/i.test(String(it.note || ''));
+  }
+
+  // Číslo v názvu: gramáž balení („Máslo 250 g") nebo procento varianty
+  // („Cottage 0 %"). Nejslabší demotice, základní potravina se jmenuje bez čísla.
+  function maCisloVNazvu(name) { return /[0-9]/.test(String(name)); }
+
+  // Obsahuje dotaz značku řetězce? Pak balený výrobek MÁ zůstat vpředu a
+  // demotice EANu se vypíná (appka: `jeZnackovyDotaz`).
+  function jeZnackovyDotaz(slovaSeZnackami) {
+    for (var i = 0; i < slovaSeZnackami.length; i++) if (ZNACKY[slovaSeZnackami[i]]) return true;
+    return false;
+  }
+
   // hledání v curated + RANKING: přesná shoda → od začátku s koncem slova → celé slovo
   //   → od začátku, ale slovo pokračuje → podřetězec → všechna slova (v libovolném pořadí)
   //
@@ -107,10 +129,11 @@
     }
     // Slova dotazu. Jednopísmenná zahazujeme, nemají rozlišovací sílu.
     // Značky řetězců se přemapují z 6. pádu a vyhodí (viz ALIAS_ZNACKY nahoře).
-    var slova = qn.split(/[^a-z0-9]+/)
+    var slovaVse = qn.split(/[^a-z0-9]+/)
       .filter(function (w) { return w.length > 1; })
-      .map(function (w) { return ALIAS_ZNACKY[w] || w; })
-      .filter(function (w) { return !ZNACKY[w]; });
+      .map(function (w) { return ALIAS_ZNACKY[w] || w; });
+    var znackovy = jeZnackovyDotaz(slovaVse);
+    var slova = slovaVse.filter(function (w) { return !ZNACKY[w]; });
     // Vypínací slova pro demotici tuku/kůže: kdo je sám hledá, nemá se odsouvat.
     // Stejný regex jako appka (`jeDemotovanyTukNeboKuze`), žádné „škvarky" navíc.
     var chceTuk = /(tuk|olej|sadlo|maslo|ghi)/.test(qn);
@@ -132,34 +155,49 @@
           var vsechna = slova.every(function (w) { return n.indexOf(w) >= 0; });
           if (vsechna) rank = 5;
         }
-        // PŘIHRÁDKA SHODY JE NEJSILNĚJŠÍ SIGNÁL, zrcadlí appku 1:1 (`rankCuratedHit`
-        // v src/lib/food-query.ts): rank = přihrádka*16 + alias*8 + tukKuze*4 + jídlo*2.
-        // Uvnitř STEJNÉ přihrádky nejsilnější demotice první:
-        //   1. hledací tvar / alias z importu (8)
-        //   2. čistý tuk (kcal ≥ 700 a bílkoviny < 3) NEBO „kůže" v názvu (4),
-        //      NEodsouvá se, když dotaz sám tuk/kůži hledá
-        //   3. hotové jídlo (2, PŮVODNÍ demotice z 11. 8. 2026)
-        // Součet nižších stupňů (8+4+2=14) je vždy menší než jeden krok přihrádky
-        // (16), takže lepší shoda jména VŽDY vyhraje nad demotovanou horší shodou
-        // (appkový test: „Kuře tučné" v přihrádce 1 porazí „Kuřecí prsa" v přihrádce
-        // 3, i když je tučné). Přesná shoda (0) i netrefeno (9) zůstávají mimo tenhle blok.
-        if (rank > 0 && rank < 9) {
+        // ⭐ POŘADÍ KLÍČŮ OD 2. 9. 2026 (audit vyhledávače, bod a). Zrcadlí
+        // `rankCuratedHit` v appce (src/lib/food-query.ts) a `search_curated_foods`
+        // v její DB (migrace 20260902161000). Shora dolů:
+        //   1. hledací tvar / alias z importu VŽDY dole
+        //   2. balený výrobek (má EAN) pod obecnou položkou, JEN u neznačkového dotazu
+        //   3. přihrádka shody názvu
+        //   4. čistý tuk (kcal ≥ 700 a bílkoviny < 3) nebo „kůže" v názvu, NEodsouvá
+        //      se, když dotaz sám tuk/kůži hledá
+        //   5. hotové jídlo (původní demotice z 11. 8. 2026)
+        //   6. číslo v názvu (gramáž balení, procento varianty)
+        //
+        // ⛔ ALIAS A BALENÉ JSOU NAD PŘIHRÁDKOU SCHVÁLNĚ: dokud byly pod ní, přesná
+        // shoda držela balený výrobek nahoře („cottage" = 233 kcal místo 98) a alias
+        // taky („chléb" vracel řádek „Alias hledání"). Kvůli tomu odešla klientka.
+        // ⚠️ VÁHY JSOU JINÉ NEŽ V APPCE (48/24/4/2/1/0,25 proti 40/20/4/2/1/0,5/0,25),
+        // protože tenhle hledáček má o jednu přihrádku navíc (5 = všechna slova
+        // přeházeně) a naopak nemá klíč „shoda jen ve značce". Pořadí klíčů je
+        // stejné, což je to, co se musí držet. Každý klíč váží víc než součet všech
+        // nižších (24 > 5*4+3,25; 48 > 24+23,25), takže se nedá přeskočit součtem.
+        // Netrefeno (9) zůstává mimo tenhle blok, je to značka, ne stupeň.
+        // ⛔ A NESMÍ SE POZNÁVAT PODLE ČÍSLA: nové váhy umí vyrobit součet přesně 9
+        // (přihrádka 2 + hotové jídlo = 8+1) a takový řádek by z výsledků vypadl.
+        // Proto se „netrefeno" nese vedle ranku jako vlastní příznak.
+        var trefeno = rank < 9;
+        if (trefeno) {
           var kcal = Number(it.kcal_100g);
           var protein = Number(it.protein_100g);
           if (!isFinite(protein)) protein = 0;
           var cistyTuk = isFinite(kcal) && kcal >= 700 && protein < 3 && !chceTuk;
           var kuze = n.indexOf('kuze') >= 0 && !chceKuze;
           var alias = jeHledaciTvar(it) ? 1 : 0;
+          var balene = (!znackovy && jeBaleny(it)) ? 1 : 0;
           var tukKuze = (cistyTuk || kuze) ? 1 : 0;
           var jidlo = JE_HOTOVE_JIDLO[it.category] ? 1 : 0;
-          rank = rank * 16 + alias * 8 + tukKuze * 4 + jidlo * 2;
+          var cislo = maCisloVNazvu(it.name) ? 1 : 0;
+          rank = alias * 48 + balene * 24 + rank * 4 + tukKuze * 2 + jidlo * 1 + cislo * 0.25;
         }
-        return { it: it, rank: rank };
+        return { it: it, rank: rank, trefeno: trefeno };
       })
       // ⛔ POZOR NA 9: je to značka „netrefeno", ne stupeň. Nesmí se filtrovat
-      // porovnáním `rank < 9`, protože demotice (přihrádka*16 + alias/tuk-kůže/jídlo
-      // výš) posouvá rank klidně na 94 a vypadla by VŠECHNA.
-      .filter(function (x) { return x.rank !== 9; })
+      // porovnáním ranku (ani `!== 9`, ani `< 9`), protože demotice posouvá rank
+      // klidně na 94 a některé kombinace dávají přesně 9. Filtruje se příznak.
+      .filter(function (x) { return x.trefeno; })
       .sort(function (a, b) {
         // Uvnitř stupně kratší název napřed („Feta sýr" před „Ayib (etiopský…)"),
         // pak drží stabilní sort pořadí zdroje, a to je abecední (export je řazený

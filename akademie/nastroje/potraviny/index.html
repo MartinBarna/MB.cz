@@ -64,7 +64,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/food-search.js?v=9"></script>
+  <script src="/assets/food-search.js?v=10"></script>
   <script>
   (function(){
     var $=function(id){return document.getElementById(id);};
@@ -116,7 +116,7 @@
       if(FOODS || loading) return;
       loading=true; loadErr=false;
       $('hint').textContent='Načítám databázi…';
-      fetch('/assets/curated-foods.min.json?v=5').then(function(r){return r.json();}).then(function(min){
+      fetch('/assets/curated-foods.min.json?v=6').then(function(r){return r.json();}).then(function(min){
         FOODS=window.FoodSearch.fromMin(min);
         loading=false;
         $('hint').textContent=HINT_DEFAULT+' '+FOODS.length+' potravin.';
