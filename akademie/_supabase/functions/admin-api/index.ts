@@ -1830,16 +1830,19 @@ Deno.serve(async (req) => {
 
     // ================= KLIENTSKÁ SEKCE (osobní koučink) =================
     if (action === "clients_list") {
-      const [ents, reps, intakes, users, cc] = await Promise.all([
+      const [ents, reps, intakes, users, cc, tgs] = await Promise.all([
         // ⛔ OPRAVA 27. 7. 2026: sloupec se jmenuje `granted_at`, ne `created_at`.
         // Kvůli tomu tenhle select vracel chybu, `ents.data` bylo null, seznam vyšel prázdný
         // a admin hlásil „zatím žádní klienti", i když jich bylo dvanáct. Kdo přidal klienta,
         // neměl jak si ověřit, že tam opravdu je. Přesně na tohle 27. 7. narazil Martin.
         admin.from("entitlements").select("email,active,granted_at").eq("product", "coaching"),
         admin.from("client_reports").select("email,report_date"),
-        admin.from("client_intake").select("email"),
+        // `created_at` kvůli frontě „dotazníky ke zpracování" v UI. Klient může poslat
+        // dotazník víckrát, bereme ten nejnovější (viz `intakeAt` níž).
+        admin.from("client_intake").select("email,created_at"),
         listAllUsers(admin),
         admin.from("customer_contacts").select("email,name"),
+        admin.from("client_targets").select("email,updated_at"),
       ]);
       const nameBy = new Map<string, string>();
       for (const c of cc.data ?? []) if (c.name) nameBy.set(low(c.email), String(c.name));
@@ -1851,13 +1854,26 @@ Deno.serve(async (req) => {
         else { cur.count++; if (r.report_date > cur.last) cur.last = r.report_date; }
       }
       const intakeSet = new Set((intakes.data ?? []).map((i) => low(i.email)));
+      // Nejnovejsi dotaznik a posledni zmena zadani per klient. Fronta v UI porovnava
+      // tyhle dve hodnoty: dotaznik bez zadani (nebo zadani starsi nez dotaznik) = ke zpracovani.
+      const intakeAt = new Map<string, string>();
+      for (const i of intakes.data ?? []) {
+        const k = low(i.email); const at = String(i.created_at ?? "");
+        if (!at) continue;
+        if (!intakeAt.has(k) || at > (intakeAt.get(k) as string)) intakeAt.set(k, at);
+      }
+      const targetsAt = new Map<string, string>();
+      for (const t of tgs.data ?? []) {
+        const at = String(t.updated_at ?? "");
+        if (at) targetsAt.set(low(t.email), at);
+      }
       // ⚠️ Dřív tu bylo `.filter((e) => e.active)`, takže ukončený klient ze seznamu
       // ZMIZEL a nedal se dohledat. Martin 27. 7.: „zůstanou jejich data v databázi
       // a půjde je dohledat." Vracíme proto i bývalé a rozlišuje je pole `active`;
       // roztřídit je do dvou tabulek je věc UI, ne dat.
       const rows = (ents.data ?? []).map((e) => {
         const k = low(e.email); const rep = repBy.get(k);
-        return { email: k, name: nameBy.get(k) ?? "", active: e.active === true, registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), app: "?" as string };
+        return { email: k, name: nameBy.get(k) ?? "", active: e.active === true, registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), intake_at: intakeAt.get(k) ?? null, targets_at: targetsAt.get(k) ?? null, app: "?" as string };
       }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
 
       // Stav appky Tvůj Coach. ⛔ NEBRAT z tabulky `tvujcoach_grants` — ta se zapisuje
@@ -2129,6 +2145,53 @@ Deno.serve(async (req) => {
       // stará verze app endpointu neznámou akci tiše bere jako grant → poznáme podle action v odpovědi
       if (jj.action && jj.action !== "weekly-summary" && !("dny" in jj) && !("found" in jj)) return json({ ok: false, reason: "app-neumi" });
       return json({ ok: true, data: jj });
+    }
+
+    // 🚀 PROPSÁNÍ CÍLŮ DO APPKY Tvůj Coach (Martin 2. 9. 2026: „ať mu tam ty cíle nechám
+    // propsat automaticky"). Martin vybere v adminu variantu, tahle akce ji zapíše do
+    // `goals` v databázi appky a přepne klienta na ruční režim, aby mu je týdenní
+    // adaptace nepřepsala.
+    //
+    // ⛔ CESTA JE STEJNÁ JAKO U OSTATNÍCH MOSTŮ: edge funkce appky `academy-grant`
+    //    + sdílený secret `academy_grant_secret`. Nový veřejný RPC volaný anon klíčem
+    //    tu SCHVÁLNĚ NENÍ: appka má na tuhle třídu (funkce, která sahá na konkrétního
+    //    člověka) vlastní psané rozhodnutí u `zapsali_jidlo` (grant jen service_role,
+    //    zvenčí se chodí přes edge funkci se secretem). Zápis cílů je ještě citlivější
+    //    než čtení, takže se drží téhož vzoru.
+    // ⚠️ Tahle akce klientovi NIC neodesílá.
+    if (action === "tc_goals_push") {
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      // Meze 1:1 s `client_targets_save`. Číslo mimo rozsah = chyba ve výpočtu a do cizí
+      // databáze se takové nepíše.
+      const MEZE: Record<string, [number, number]> = {
+        kcal: [500, 8000], protein: [20, 500], carbs: [0, 1200], fat: [0, 400], fiber: [0, 150],
+      };
+      const cile: Record<string, number> = {};
+      for (const [pole, [min, max]] of Object.entries(MEZE)) {
+        const n = Number(String(body[pole] ?? "").replace(",", ".").trim());
+        if (!isFinite(n) || n < min || n > max) return json({ ok: false, duvod: `${pole}_mimo_rozsah` }, 400);
+        cile[pole] = Math.round(n);
+      }
+      const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+      const gsec = gs?.value ? String(gs.value) : "";
+      if (!gsec) return json({ ok: false, duvod: "chybi_secret" });
+      const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+        method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+        body: JSON.stringify({
+          email, action: "set-goals",
+          kcal: cile.kcal, protein_g: cile.protein, carb_g: cile.carbs, fat_g: cile.fat, fiber_g: cile.fiber,
+          note: String(body.note ?? "").trim().slice(0, 200),
+        }),
+        signal: AbortSignal.timeout(10_000),
+      }).catch(() => null);
+      if (!r) return json({ ok: false, duvod: "appka_neodpovida" });
+      const jj = await r.json().catch(() => null);
+      // Stará verze funkce appky neznámou akci odmítá 404 (dohoda v `core.ts`). Když
+      // přijde cokoli jiného než naše odpověď, radši to řekneme, než abychom tvrdili hotovo.
+      if (!r.ok || !jj) return json({ ok: false, duvod: r.status === 404 ? "appka_akci_neumi" : "http-" + r.status });
+      if (jj.ok === false) return json({ ok: false, duvod: String(jj.duvod ?? jj.error ?? "appka_odmitla") });
+      if (jj.prepsano !== true) return json({ ok: false, duvod: "appka_neumi" });
+      return json({ ok: true, prepsano: true, user_id_8: String(jj.user_id_8 ?? "") });
     }
 
     // KONCEPT ODPOVĚDI NA REPORT (E1, 1. 9. 2026). Podrobnosti v hlavičce u RD_SYSTEM výš.

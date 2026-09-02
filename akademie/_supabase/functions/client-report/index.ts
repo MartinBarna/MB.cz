@@ -372,7 +372,14 @@ Deno.serve(async (req: Request) => {
     const { error } = await admin.from("client_intake").insert({ email, data });
     if (error) return json({ error: "db", detail: error.message }, C, 500);
     const html = intakeMail(name, data as Record<string, string>);
-    const coachMail = wrap("Martin Barna · vstupní dotazník", html, `Dotazník od ${esc(email)} · klientská sekce martinbarna.cz`);
+    // ⭐ Odkaz rovnou do karty klienta v adminu, kde nová sekce Onboarding spočítá tři
+    // varianty cílů z tohohle dotazníku. Stejný tvar odkazu jako u týdenního reportu výš.
+    // ⚠️ Jen do MARTINOVY kopie, klientovi se posílá tělo bez něj.
+    const adminOdkaz = `https://martinbarna.cz/akademie/admin/#klient=${encodeURIComponent(email)}`;
+    const todo = `<p class='mb-body' style='margin:0 0 14px;padding:10px 12px;background:#241f2e;border-left:3px solid #EBB12C;font-size:14px;color:#F0EADF'>` +
+      `Nový vstupní dotazník. <a href='${adminOdkaz}' style='color:#EBB12C'>Otevři kartu klienta v adminu</a>, ` +
+      `sekce Onboarding z něj spočítá varianty cílů a připraví koncept uvítacího mailu.</p>`;
+    const coachMail = wrap("Martin Barna · vstupní dotazník", todo + html, `Dotazník od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · vstupní dotazník", html +
       `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! Martin</p>`,
       "Kopie dotazníku pro tvůj přehled. Martin Barna · martinbarna.cz");

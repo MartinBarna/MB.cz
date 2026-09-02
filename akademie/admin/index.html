@@ -1120,7 +1120,27 @@
             +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
         }
         var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
-        var html = rows.length
+        // 🚀 FRONTA: kdo vyplnil dotazník a ještě nemá z něj postavené zadání. Data vrací
+        // `clients_list` (intake_at, targets_at). Podmínka je schválně „targets starší než
+        // dotazník", ne jen „targets chybí": když klient pošle dotazník znovu (změnil se
+        // mu režim), staré zadání už neplatí a je potřeba se na něj podívat.
+        var fronta=rows.filter(function(r){
+          if(!r.intake_at) return false;
+          return !r.targets_at || String(r.targets_at) < String(r.intake_at);
+        });
+        var html='';
+        if(fronta.length){
+          html+='<div style="background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.4);border-radius:10px;padding:12px;margin-bottom:1rem;">'
+            +'<p style="margin:0 0 6px;font-size:.9rem;color:#F6CD63;"><b>🚀 Dotazníky ke zpracování ('+fronta.length+')</b></p>'
+            +'<p class="muted" style="margin:0 0 8px;font-size:.82rem;">Klient poslal vstupní dotazník a zadání z něj zatím není. Otevři kartu, sekce Onboarding spočítá varianty cílů.</p>'
+            +fronta.map(function(r){
+              return '<p style="margin:.2rem 0;font-size:.88rem;"><a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;">'+esc(r.email)+'</a>'
+                +(r.name?' <span class="muted">'+esc(r.name)+'</span>':'')
+                +' <span class="muted">dotazník '+fmtDay(String(r.intake_at).slice(0,10))+(r.targets_at?', zadání je starší než dotazník':'')+'</span></p>';
+            }).join('')
+            +'</div>';
+        }
+        html += rows.length
           ? '<div style="overflow-x:auto;"><table>'+HLAVICKA+'<tbody>'+rows.map(function(r){return radek(r,false);}).join('')+'</tbody></table></div>'
           : '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti — pozvi prvního formulářem níže.</p>';
         if(byvali.length){
@@ -1461,6 +1481,15 @@
           h+='<p style="margin:.5rem 0 0;font-size:.85rem;">📷 Výchozí fotky: '+idata.fotky.map(function(p,pi){ return '<a href="#" data-kdoc="'+esc(p)+'" style="color:#F6CD63;">foto '+(pi+1)+'</a>'; }).join(' · ')+'</p>';
         }
       }
+      // 🚀 ONBOARDING: tři varianty cílů z dotazníku, výběr jedné, propsání do zadání
+      // i do appky a dva koncepty mailů. Logika je v `onboarding.js` a v enginu
+      // `/assets/onboarding-cile.js`, tady je jen místo a předání kontextu.
+      // ⛔ Vědomě NAD průvodcem: nejdřív se rozhodne o číslech, teprve pak se z nich
+      // skládá jídelníček. Obráceně by Martin generoval dny na cíle, které ještě nevybral.
+      h += '<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🚀 Onboarding <span class="muted" style="text-transform:none;font-weight:400;">(varianty cílů z dotazníku, výběr, maily)</span></h4>'
+        + '<div id="kdObWrap">' + (d.intake && d.intake.data
+          ? '<button class="mlogbtn" id="kdObOpen">Spočítat varianty cílů</button> <span class="muted" style="font-size:.8rem;">Deterministický výpočet z dotazníku, žádná AI. Vybranou variantu uloží do zadání výš.</span>'
+          : '<p class="muted" style="font-size:.85rem;">Klient zatím nevyplnil vstupní dotazník, není z čeho počítat.</p>') + '</div>';
       // 🍽️ PRŮVODCE NA MÍRU: editor jídelníčku pro nového klienta. Celá logika žije
       // v `pruvodce.js` a šablona v `pruvodce-sablona.js`, tady je jen místo, kam se to
       // pověsí, a předání kontextu. Engine a databáze potravin se načtou až po kliknutí
@@ -1607,6 +1636,27 @@
         }).catch(function(){
           kdDrBtn.disabled=false; kdDrBtn.textContent=t0;
           out.innerHTML='<p class="muted" style="font-size:.85rem;">⚠️ Chyba spojení.</p>';
+        });
+      });
+      // 🚀 Onboarding: mount až na kliknutí (stahuje engine cílů). `poVyberu` přepíše
+      // cíle v paměti karty, takže editor průvodce otevřený POTOM se předvyplní z právě
+      // vybrané varianty. ⛔ Do DB zapisuje modul sám přes `client_targets_save`, tohle
+      // je jen synchronizace toho, co má karta v paměti.
+      var kdObOpen=$('kdObOpen');
+      if(kdObOpen) kdObOpen.addEventListener('click',function(){
+        if(!window.Onboarding){ toast('Modul onboardingu se nenačetl, obnov stránku.'); return; }
+        var w=$('kdObWrap'); w.innerHTML='';
+        window.Onboarding.mount(w,{
+          email:email, name:KDET.name, vok:kliVok(KDET.name), rod:kliRod(KDET.name),
+          intake:((KDET.data||{}).intake||{}).data||{}, targets:(KDET.data||{}).targets||null,
+          api:api, toast:toast,
+          poVyberu:function(cile){
+            if(!KDET.data) return;
+            KDET.data.targets=Object.assign({},KDET.data.targets||{},cile);
+            ['kcal','protein','carbs','fat','fiber'].forEach(function(k){
+              var inp=$('kdTg_'+k); if(inp) inp.value=cile[k]==null?'':String(cile[k]);
+            });
+          }
         });
       });
       // ⛔ Mount až na kliknutí: `pruvodce.js` si dotahuje meal-gen.js a food-db.json
@@ -3027,6 +3077,7 @@
     });
   })();
   </script>
+  <script src="/akademie/admin/onboarding.js?v=20260902a" defer></script>
   <script src="/akademie/admin/pruvodce.js?v=20260902a" defer></script>
   <script src="/assets/scroll-top.js?v=g5" defer></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
