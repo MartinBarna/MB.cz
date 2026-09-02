@@ -213,11 +213,47 @@
     return list[((seed * 2654435761) >>> 0) % list.length];
   }
 
+  /**
+   * [2026-09-02] Rozložení kalorií do jídel. Šestijídlový den je konzervativní:
+   * večerní svačina je malá (7 %), hlavní jídla drží nad 20 %, aby se nezměnilo,
+   * které jídlo dostane přílohu a zeleninu (rozhoduje `dist[i] >= 0.2`).
+   * ⛔ Táž tabulka je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+   */
+  function distProJidla(meals) {
+    if (meals === 3) return [0.30, 0.40, 0.30];
+    if (meals === 4) return [0.28, 0.34, 0.13, 0.25]; // svačina = malá (snack), ne druhý oběd
+    if (meals === 5) return [0.22, 0.10, 0.30, 0.10, 0.28];
+    return [0.20, 0.10, 0.28, 0.10, 0.25, 0.07];
+  }
+
+  /** Výchozí popisky jídel. Vlastní si volající předá přes `opts.mealNames`. */
+  function vychoziNazvyJidel(meals) {
+    if (meals === 3) return ['Snídaně','Oběd','Večeře'];
+    if (meals === 4) return ['Snídaně','Oběd','Svačina','Večeře'];
+    if (meals === 5) return ['Snídaně','Dopolední svačina','Oběd','Odpolední svačina','Večeře'];
+    return ['Snídaně','Dopolední svačina','Oběd','Odpolední svačina','Večeře','Večerní svačina'];
+  }
+
+  /**
+   * [2026-09-02] TYP JÍDLA: 'breakfast' | 'snack' | 'lunch' | 'dinner' | 'late'.
+   * ⛔ NAHRAZUJE hádání z názvu jídla (dřív se hledaly podřetězce „sníd" a „svačin").
+   * Jakmile si někdo jídla přejmenuje na „Snídaně před prací" nebo „Večeře po tréninku",
+   * stringový parsing buď náhodou vyjde, nebo TIŠE vybere špatné potraviny.
+   * `late` = večerní svačina u šestijídlového dne, chová se jako svačina.
+   * ⛔ Táž funkce je v appce, hlídá parita-jidelnicku.mjs.
+   */
+  function typyJidel(meals) {
+    if (meals === 3) return ['breakfast','lunch','dinner'];
+    if (meals === 4) return ['breakfast','lunch','snack','dinner'];
+    if (meals === 5) return ['breakfast','snack','lunch','snack','dinner'];
+    return ['breakfast','snack','lunch','snack','dinner','late'];
+  }
+
   // ---- 2) Sestav den ----
-  // opts: { meals: 3..5, prefs, seed }
+  // opts: { meals: 3..6, prefs, seed, db, mealNames }
   function assembleDay(targets, opts) {
     opts = opts || {};
-    var meals = Math.min(5, Math.max(3, opts.meals || 4));
+    var meals = Math.min(6, Math.max(3, opts.meals || 4));
     var seed = opts.seed || 0;
     var db = filterDb(opts.db, opts.prefs);
 
@@ -320,26 +356,28 @@
       return pick(db, 'carb', s, prefer);
     }
 
-    // rozložení kalorií do jídel
-    var dist;
-    if (meals === 3) dist = [0.30, 0.40, 0.30];
-    else if (meals === 4) dist = [0.28, 0.34, 0.13, 0.25]; // svačina = malá (snack), ne druhý oběd
-    else dist = [0.22, 0.10, 0.30, 0.10, 0.28];
-    var names = meals === 3 ? ['Snídaně','Oběd','Večeře']
-            : meals === 4 ? ['Snídaně','Oběd','Svačina','Večeře']
-            : ['Snídaně','Dopolední svačina','Oběd','Odpolední svačina','Večeře'];
+    // rozložení kalorií do jídel + typy a popisky (viz distProJidla / typyJidel výš)
+    var dist = distProJidla(meals);
+    var kinds = typyJidel(meals);
+    var vychozi = vychoziNazvyJidel(meals);
+    var vlastniNazvy = opts.mealNames || [];
+    // Popisek je JEN text; o výběru potravin rozhoduje `kinds[i]`, ne název jídla.
+    var names = vychozi.map(function (n, ix) {
+      return vlastniNazvy[ix] != null ? vlastniNazvy[ix] : n;
+    });
 
     var out = [];
     for (var i = 0; i < meals; i++) {
       var mKcal = targets.kcal * dist[i];
       var mProt = targets.protein * dist[i];
       var mFat = targets.fat * dist[i];
-      var isSnack = dist[i] < 0.18;
+      var kind = kinds[i];
+      var isSnack = (kind === 'snack' || kind === 'late');
       var items = [];
 
       // 1) bílkovinný základ — dávkuj na bílkovinný cíl jídla
       // snídaně/svačina dostanou vhodnější zdroj (vejce, tvaroh, skyr…), ne kuřecí prsa
-      var protPrefer = (i === 0) ? BREAKFAST_PROT : (isSnack ? SNACK_PROT : null);
+      var protPrefer = (kind === 'breakfast') ? BREAKFAST_PROT : (isSnack ? SNACK_PROT : null);
       var prot = pickProt(seed + i, protPrefer, isSnack ? mProt : undefined);
       if (prot) {
         var pg = round((mProt / (prot.per100.p || 1)) * 100, 10);
@@ -356,7 +394,7 @@
         }
         // Kombinovaná snídaně: uzenina ořezaná na 80 g nese málo bílkovin, zbytek doplní
         // vejce/tvaroh/skyr (viz [fix 2026-08-06 kolo 3] výš).
-        if (i === 0 && UZENINA_RE.test(prot.id)) {
+        if (kind === 'breakfast' && UZENINA_RE.test(prot.id)) {
           var chybiP = mProt - macrosFor(prot, Math.min(pg, UZENINA_MAX_G)).p;
           if (chybiP >= 8) {
             var druhy = pickProt(seed + i + 11, SNIDANE_DOPLNEK_PROT);
@@ -370,16 +408,18 @@
           }
         }
       }
-      // 2) sacharidová příloha (ne u poslední menší svačiny)
-      if (!isSnack || i === 0) {
-        var carb = (i === 0) ? (pickCarb(seed + i + 7, BREAKFAST_CARB)) : pickCarb(seed + i + 3, MAIN_CARB);
+      // 2) sacharidová příloha (ne u svačin)
+      // Snídaně nikdy není svačina, takže stará podmínka `!isSnack || i === 0`
+      // je po zavedení typů jídel prostě `!isSnack`. Chování se nemění.
+      if (!isSnack) {
+        var carb = (kind === 'breakfast') ? (pickCarb(seed + i + 7, BREAKFAST_CARB)) : pickCarb(seed + i + 3, MAIN_CARB);
         if (carb) {
           // dopočítej gramy sacharidů zbývající po proteinu
           var usedC = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).c; }, 0);
           var needC = (targets.carbs * dist[i]) - usedC;
           var cg = round((needC / (carb.per100.c || 1)) * 100, 10);
           // Hlavní jídlo bez keto cílů: příloha se zmenšuje, ale neruší (podlaha 40 g).
-          if (!lowCarb && (i === 0 || dist[i] >= 0.2)) cg = Math.max(cg, podlahaPrilohy(carb));
+          if (!lowCarb && (kind === 'breakfast' || dist[i] >= 0.2)) cg = Math.max(cg, podlahaPrilohy(carb));
           if (cg > 10) items.push({ food: carb, grams: Math.min(cg, 320) });
         }
       }
@@ -393,11 +433,11 @@
         });
         // [fix 2026-08-05 večer] Snídaňová zelenina bez špenátu: 150 g syrových listů
         // k toustu nikdo nejí. K vaječné snídani patří rajče, okurka, paprika.
-        var veg = pick(sideVegDb, 'veg', seed + i + 5, (i === 0) ? /rajce|okurka|paprika/ : null);
+        var veg = pick(sideVegDb, 'veg', seed + i + 5, (kind === 'breakfast') ? /rajce|okurka|paprika/ : null);
         if (veg) items.push({ food: veg, grams: vg(150) });
       }
       // 4) ovoce u snídaně/svačin
-      if (i === 0 || isSnack) {
+      if (kind === 'breakfast' || isSnack) {
         // V keto režimu z ovoce jen bobule a menší porce; jiné ovoce nese moc sacharidů.
         var fruit = pick(db, 'fruit', seed + i + 2, lowCarb ? /malin|boruvk|jahod|ostruzin|rybiz/ : null);
         if (fruit) {
@@ -428,7 +468,7 @@
         }
       }
 
-      out.push({ name: names[i], targetKcal: Math.round(mKcal), items: items });
+      out.push({ name: names[i], kind: kind, targetKcal: Math.round(mKcal), items: items });
     }
 
     // ---- normalizační pass: doraz makra na denní cíl škálováním hlavních zdrojů ----
@@ -737,6 +777,143 @@
       });
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // [2026-09-02] VLÁKNINA JAKO CÍL. Jeden optimalizační průchod nad hotovým dnem.
+    //
+    // ⛔ Spustí se JEN když cíl přijde (`targets.fiber > 0`). Bez něj se nezmění ani gram,
+    // takže stávající chování, parita 360/360 i naměřená přesnost zůstávají netknuté.
+    // ⚠️ POZOR: `computeTargets` výš vlákninu VRACÍ, takže kalkulačka, která pošle celý
+    // výsledek do assembleDay, tenhle průchod nově zapne. Je to záměr, ne nedopatření.
+    //
+    // Filozofie: kalorie a bílkovina už sedí, tak se na ně nesahá. Vláknina se doplňuje
+    // dvěma tahy, které jsou z principu kaloricky neutrální:
+    //   M1 ZÁMĚNA: položka za vlákninatější ze STEJNÉ kategorie při stejných kaloriích
+    //              (bílá rýže → natural, houska → celozrnný chleba, hrášek → čočka).
+    //   M2 PŘESUN: pár gramů z nejchudší položky na vlákninu do té nejbohatší
+    //              (míň rýže, víc luštěnin nebo zeleniny) při stejných kaloriích.
+    // Obojí se po každém kroku ověří proti kalorickému pásmu i bílkovině; když by tah
+    // pásmo porušil, VRÁTÍ SE a průchod končí. Radši nižší vláknina než rozbitý den.
+    //
+    // ⚠️ Není to záruka, že se cíl trefí. Vláknina je vedlejší produkt výběru potravin,
+    // a když v povolené nabídce nic vlákninatějšího není, den prostě skončí níž.
+    // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+    // ─────────────────────────────────────────────────────────────────────────
+    if (typeof targets.fiber === 'number' && targets.fiber > 0) {
+      var cilVlakniny = targets.fiber;
+      var VLAK_KAT = ['carb', 'legume', 'veg', 'fruit', 'snack'];
+      var polozky = function () {
+        var a = [];
+        out.forEach(function (m) { m.items.forEach(function (it) { a.push(it); }); });
+        return a;
+      };
+      var den = function (key) {
+        return polozky().reduce(function (s2, it) { return s2 + macrosFor(it.food, it.grams)[key]; }, 0);
+      };
+      // Pásmo je ±3 % cíle, ale nikdy přísnější, než jak den dopadl PŘED průchodem.
+      // Jinak by průchod na dni, který už mimo pásmo je, neudělal vůbec nic.
+      var kcalPredVl = den('kcal');
+      var pasmoVl = Math.max(targets.kcal * 0.03, Math.abs(kcalPredVl - targets.kcal));
+      var kcalOkVl = function () { return Math.abs(den('kcal') - targets.kcal) <= pasmoVl + 0.5; };
+      // Bílkovina je PODLAHA, ne cíl k dorovnání. Ubrat se z ní smí jen to, co je nad
+      // cílem: den, který je pod cílem bílkovin, se kvůli vláknině nesmí zhoršit ani o gram.
+      // (První verze pouštěla pokles na 98 % dosažené hodnoty; tady na webu, kde kalkulačka
+      // posílá cíl vlákniny z computeTargets rovnou do assembleDay, tím v tools-test vyrostla
+      // nejhorší odchylka bílkovin z 19 na 25 g.)
+      var bilkovinaPredVl = den('p');
+      var bilkovinaPodlahaVl = Math.min(bilkovinaPredVl, targets.protein);
+      var bilkovinaOkVl = function () { return den('p') >= bilkovinaPodlahaVl - 0.5; };
+      // Gramů vlákniny na 1 kcal: chceme víc vlákniny za tytéž kalorie, ne víc jídla.
+      var hustotaVl = function (f) { return (f.per100.fib || 0) / Math.max(1, f.per100.kcal || 0); };
+      var stropPolozky = function (f) {
+        var c = FOOD_CAP[f.id] != null ? FOOD_CAP[f.id] : CAP[f.cat];
+        return c != null ? c : 400;
+      };
+
+      // M1: záměna za vlákninatější položku téže kategorie při stejných kaloriích.
+      // ⚠️ Zamítnutá záměna NESMÍ ukončit celý průchod. Nejvlákninatější kandidát bývá
+      // zároveň ten, který nejvíc rozhodí kalorie nebo bílkovinu; když se po jeho vrácení
+      // skončí, průchod na spoustě dnů neudělá vůbec nic (změřeno: 15 dnů ze 400 mělo
+      // vlákninu beze změny, přestože v nabídce lepší položky byly). Proto se zamítnutá
+      // potravina jen odloží a zkusí se další v pořadí.
+      var zamitnute = {};
+      for (var kolo1 = 0; kolo1 < 12 && den('fib') < cilVlakniny; kolo1++) {
+        var pouziteVl = {};
+        polozky().forEach(function (it) { pouziteVl[it.food.id] = 1; });
+        var nej = null;
+        for (var mi = 0; mi < out.length; mi++) {
+          var mm1 = out[mi];
+          for (var ii = 0; ii < mm1.items.length; ii++) {
+            var it1 = mm1.items[ii];
+            if (VLAK_KAT.indexOf(it1.food.cat) === -1) continue;
+            var kcalIt = macrosFor(it1.food, it1.grams).kcal;
+            if (kcalIt <= 0) continue;
+            var fibIt = macrosFor(it1.food, it1.grams).fib;
+            // Příloha musí zůstat vhodná k typu jídla, jinak by k snídani přistála rýže.
+            var vhodnost = it1.food.cat === 'carb' ? preferForMeal('carb', mm1.kind) : null;
+            for (var di = 0; di < db.length; di++) {
+              var f1 = db[di];
+              if (f1.cat !== it1.food.cat || !f1.bezny || pouziteVl[f1.id] || zamitnute[f1.id]) continue;
+              if (!(f1.per100.kcal > 0)) continue;
+              if (hustotaVl(f1) <= hustotaVl(it1.food)) continue;
+              if (vhodnost && !vhodnost.test(f1.id)) continue;
+              var g1 = Math.round((kcalIt / f1.per100.kcal) * 100 / 5) * 5;
+              g1 = Math.min(g1, stropPolozky(f1));
+              if (g1 < 8) continue;
+              var zisk = macrosFor(f1, g1).fib - fibIt;
+              if (zisk <= 0.2) continue;
+              if (!nej || zisk > nej.zisk + 1e-9 || (Math.abs(zisk - nej.zisk) <= 1e-9 && f1.id < nej.f.id)) {
+                nej = { it: it1, f: f1, g: g1, zisk: zisk };
+              }
+            }
+          }
+        }
+        if (!nej) break;
+        var puvodF = nej.it.food, puvodG = nej.it.grams;
+        nej.it.food = nej.f; nej.it.grams = nej.g;
+        if (!kcalOkVl() || !bilkovinaOkVl()) {
+          nej.it.food = puvodF; nej.it.grams = puvodG;
+          zamitnute[nej.f.id] = 1;
+        }
+      }
+
+      // M2: přesun gramů z nejchudší položky na vlákninu do nejbohatší, při stejných kaloriích.
+      for (var kolo2 = 0; kolo2 < 6 && den('fib') < cilVlakniny; kolo2++) {
+        var kandidati = polozky().filter(function (it) {
+          return VLAK_KAT.indexOf(it.food.cat) !== -1 && it.food.per100.kcal > 0;
+        });
+        if (kandidati.length < 2) break;
+        var podleHustoty = kandidati.slice().sort(function (a, b) {
+          return (hustotaVl(b.food) - hustotaVl(a.food)) || (a.food.id < b.food.id ? -1 : 1);
+        });
+        var rust = podleHustoty[0];
+        var ubytek = podleHustoty[podleHustoty.length - 1];
+        if (rust === ubytek || hustotaVl(rust.food) - hustotaVl(ubytek.food) < 0.001) break;
+        var prostor = stropPolozky(rust.food) - rust.grams;
+        // Ubírat jde jen do viditelné porce; pod 15 g už to na talíři není porce, ale drobek.
+        var lzeUbrat = ubytek.grams - 15;
+        if (prostor < 5 || lzeUbrat < 5) break;
+        var kcalGr = rust.food.per100.kcal / 100;
+        var kcalGu = ubytek.food.per100.kcal / 100;
+        var pridej = Math.min(prostor, 20);
+        var uber = (pridej * kcalGr) / kcalGu;
+        if (uber > lzeUbrat) {
+          uber = lzeUbrat;
+          pridej = (uber * kcalGu) / kcalGr;
+        }
+        pridej = Math.round(pridej / 5) * 5;
+        uber = Math.round(uber / 5) * 5;
+        if (pridej < 5 || uber < 5) break;
+        var fibPred = den('fib');
+        rust.grams += pridej;
+        ubytek.grams -= uber;
+        if (den('fib') <= fibPred || !kcalOkVl() || !bilkovinaOkVl()) {
+          rust.grams -= pridej;
+          ubytek.grams += uber;
+          break;
+        }
+      }
+    }
+
     // přepočítej totály po normalizaci
     out.forEach(function (m) {
       m.totals = m.items.reduce(function (s, it) {
@@ -757,7 +934,8 @@
     opts = opts || {}; days = days || 7;
     var base = opts.seed || 0, out = [];
     for (var i = 0; i < days; i++) {
-      out.push(assembleDay(targets, { meals: opts.meals, prefs: opts.prefs, db: opts.db, seed: base + i * 7 }));
+      out.push(assembleDay(targets, { meals: opts.meals, prefs: opts.prefs, db: opts.db,
+        mealNames: opts.mealNames, seed: base + i * 7 }));
     }
     return out;
   }
@@ -817,13 +995,29 @@
   // ---- 4) Výměna jedné položky za jinou ze stejné kategorie (~stejné kcal) ----
   // Vhodnost pro snídani/svačinu se drží podle názvu jídla; seed cykluje nabídku,
   // takže opakované kliknutí projde postupně všechny kandidáty. Mutuje plán a vrací ho.
-  function preferForMeal(cat, mealName) {
-    var n = String(mealName || '').toLowerCase();
-    var isB = n.indexOf('sníd') !== -1 || n.indexOf('snid') !== -1;
-    var isS = n.indexOf('svačin') !== -1 || n.indexOf('svacin') !== -1;
+  /**
+   * Vhodnostní regex pro danou kategorii podle TYPU jídla.
+   * ⛔ Bere `kind`, ne název. Do 2. 9. 2026 se typ hádal z názvu (podřetězce „sníd"
+   * a „svačin"), takže „Snídaně před prací" vyšla náhodou a „Večeře po tréninku" se
+   * chovala jako hlavní jídlo jen shodou okolností. ⛔ Táž funkce je v appce.
+   */
+  function preferForMeal(cat, kind) {
+    var isB = kind === 'breakfast';
+    var isS = (kind === 'snack' || kind === 'late');
     if (cat === 'protein') return isB ? BREAKFAST_PROT : (isS ? SNACK_PROT : null);
     if (cat === 'carb') return isB ? BREAKFAST_CARB : MAIN_CARB;
     return null;
+  }
+  /**
+   * Záchranná síť pro dny sestavené STARŠÍ verzí enginu (uložený plán), které pole
+   * `kind` ještě nemají. Nová cesta ho má vždy z assembleDay.
+   * ⛔ Nepoužívat pro nová jídla: přesně tohle hádání se nahrazuje.
+   */
+  function typZNazvu(mealName) {
+    var n = String(mealName || '').toLowerCase();
+    if (n.indexOf('sníd') !== -1 || n.indexOf('snid') !== -1) return 'breakfast';
+    if (n.indexOf('svačin') !== -1 || n.indexOf('svacin') !== -1) return 'snack';
+    return 'lunch';
   }
   function swapItem(day, mealIndex, itemIndex, opts) {
     opts = opts || {};
@@ -834,7 +1028,7 @@
     var catAll = db.filter(function (f) { return f.cat === cat; });
     if (!catAll.filter(function (f) { return f.id !== item.food.id; }).length) return day;
     var list = catAll;
-    var prefer = preferForMeal(cat, meal.name);
+    var prefer = preferForMeal(cat, meal.kind || typZNazvu(meal.name));
     if (prefer) {
       var sub = catAll.filter(function (f) { return prefer.test(f.id); });
       if (sub.filter(function (f) { return f.id !== item.food.id; }).length) list = sub;
@@ -866,7 +1060,110 @@
     return day;
   }
 
+  // ---- 5) Tréninkový vs netréninkový den ----
+  /**
+   * [2026-09-02] Z jednoho denního cíle a počtu tréninků v týdnu udělá DVA cíle.
+   * Týdenní součet kalorií zůstává stejný, přesouvají se jen mezi dny.
+   *
+   * Proč takhle a ne přes `assembleDay(opts.dayType)`: engine nemá vědět, jestli dnes
+   * klient cvičí. Když to udělá čistá funkce nad cíli, dá se výsledek ukázat člověku
+   * PŘED skládáním dne (v adminu i v appce), zkontrolovat a případně ručně přepsat.
+   * Generátor se nemění vůbec, jen dostane jiný cíl.
+   *
+   * ⭐ Přesouvají se SACHARIDY. Bílkovina je podlaha (drží svalovou hmotu bez ohledu
+   * na trénink) a tuk drží hormonální funkci, takže obojí zůstává na obou dnech stejné.
+   * ⛔ Přesun je omezený z OBOU stran: tréninkový den nejvýš +10 %, volný nejvýš −10 %.
+   * Při šesti trénincích týdně vyjde bonus malý (volných dnů je málo, na kolika se dá
+   * ušetřit), a to je správně: víc by znamenalo hladovět ve volnu.
+   * Vláknina i další doprovodná pole cíle se přenášejí beze změny.
+   * `treninkuTydne` mimo 1 až 6 vrací dvakrát původní cíl.
+   * ⛔ Táž funkce je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+   */
+  function cileTreninkVolno(t, treninkuTydne) {
+    var d = Math.round(treninkuTydne);
+    var kopie = function (kcal, rozdil) {
+      var o = {};
+      for (var k in t) o[k] = t[k];
+      if (kcal != null) {
+        o.kcal = kcal;
+        o.carbs = Math.max(40, Math.round(t.carbs + rozdil / 4));
+      }
+      return o;
+    };
+    if (!(d >= 1 && d <= 6)) return { training: kopie(null, 0), rest: kopie(null, 0) };
+    // X = kolik kalorií se za týden přesune z volných dnů do tréninkových.
+    var x = Math.min(t.kcal * 0.1 * d, t.kcal * 0.1 * (7 - d));
+    var naTrenink = Math.round(x / d);
+    var zVolna = Math.round(x / (7 - d));
+    return {
+      training: kopie(t.kcal + naTrenink, naTrenink),
+      rest: kopie(t.kcal - zVolna, -zVolna)
+    };
+  }
+
+  // ---- 6) Nouzový den na cesty (bez vaření) ----
+  /**
+   * ⛔⛔ DATABÁZE NEMÁ TAG „hotovka / bez vaření". Osy jsou dnes jen `zivocisne`,
+   * `laktoza` a `lepek`, a tagy si tu nikdo nevymýšlí (data se nemění podle odhadu).
+   * Než tag vznikne, stojí nouzový den na TOMHLE VÝČTU ID, který je ručně sepsaný
+   * a dá se přečíst očima. Je to podlaha, ne záruka:
+   *  - výčet je záměrně krátký (běžné věci z pultu a z regálu, ne úplnost),
+   *  - co v databázi není, se tiše přeskočí,
+   *  - `assembleDay` dostane tenhle výčet jako svou databázi, takže do dne nemůže
+   *    padnout nic mimo něj.
+   * ⇒ Až tag v databázi bude, seznam se nahradí filtrem a nic dalšího se nemění.
+   * ⛔ Stejný výčet je v appce (`src/engine/meal-gen-core.ts`), hlídá parita.
+   */
+  var BEZ_VARENI_ID = [
+    // bílkovina z pultu a z konzervy
+    'sunka-veprova-nejvyssi-jakost', 'sunka-od-kosti', 'sunka-kureci-libova', 'kruti-sunka',
+    'dusena-sunka-vyberova', 'tunak-vlastni-stava', 'tunak-v-oleji-konzerva', 'sardinky',
+    'sardinky-v-tomate', 'losos-uzeny', 'makrela-uzena', 'pstruh-uzeny', 'zavinac',
+    'tvaroh-mekky', 'tvaroh-tvrdy', 'skyr', 'syrovatkovy-protein',
+    // mléčné
+    'cottage-syr', 'cottage-syr-light', 'eidam-30', 'gouda', 'mozzarella', 'mozzarella-light',
+    'recky-jogurt-bily', 'recky-jogurt-0', 'bily-jogurt', 'bily-jogurt-nizkotucny',
+    'kefir', 'proteinovy-jogurt', 'tvaroh-mekky-nizkotucny',
+    // pečivo a suché přílohy
+    'knackebrot', 'celozrnne-krekry', 'chleb-zitny-tmavy', 'chleb-celozrnny', 'chleb-kvaskovy',
+    'toustovy-chleb-celozrnny', 'rohlik', 'houska-celozrnna', 'kaiserka', 'pita-chleb',
+    'tortilla-psenicna', 'musli-bez-cukru', 'granola-bez-pridaneho-cukru', 'ovesne-vlocky',
+    // luštěniny z konzervy
+    'cizrna-v-konzerve', 'fazole-bila-v-konzerve', 'hrasek-zeleny-konzerva', 'hummus',
+    // zelenina, kterou stačí opláchnout
+    'rajce', 'cherry-rajcata', 'okurka', 'mrkev', 'paprika-cervena', 'paprika-zelena',
+    'ledovy-salat', 'rukola', 'redkvicka', 'kysela-okurka-nakladana', 'polnicek',
+    // ovoce
+    'banan', 'jablko', 'hruska', 'mandarinka', 'pomeranc', 'kiwi', 'hroznove-vino',
+    'boruvky', 'jahody', 'maliny', 'broskev', 'nektarinka', 'svestky',
+    'rozinky', 'susene-merunky', 'susene-svestky', 'datle-susene',
+    // tuky a svačiny
+    'mandle', 'vlasske-orechy', 'kesu', 'arasidy', 'liskove-orechy', 'araside-maslo',
+    'mandlove-maslo', 'avokado', 'olivovy-olej', 'dynova-seminka', 'slunecnicova-seminka',
+    'ryzove-chlebicky', 'horka-cokolada-70'
+  ];
+
+  /**
+   * Nouzový den ze tří jídel, u kterých se nevaří (cesty, nemoc, den bez kuchyně).
+   * Skládá ho běžný `assembleDay`, jen s databází zúženou na `BEZ_VARENI_ID`, takže
+   * platí všechna pravidla enginu včetně dietních filtrů a cíle vlákniny.
+   * ⚠️ Zúžená nabídka trefuje makra hůř než plná; kontrolní pruh musí čísla ukázat.
+   */
+  function nouzovyDen(targets, opts) {
+    opts = opts || {};
+    var plna = opts.db || [];
+    var povolene = {};
+    BEZ_VARENI_ID.forEach(function (id) { povolene[id] = 1; });
+    var uzka = plna.filter(function (f) { return povolene[f.id]; });
+    if (!uzka.length) {
+      throw new Error('meal-gen: nouzový den nemá z čeho skládat, v databázi není ani jedna položka ze seznamu BEZ_VARENI_ID.');
+    }
+    return assembleDay(targets, { meals: 3, prefs: opts.prefs, seed: opts.seed,
+      mealNames: opts.mealNames, db: uzka });
+  }
+
   global.MealGen = { computeTargets: computeTargets, ketoTargets: ketoTargets, assembleDay: assembleDay,
     assembleWeek: assembleWeek, shoppingListFromDays: shoppingListFromDays, swapItem: swapItem,
-    macrosFor: macrosFor, GOAL: GOAL, ACT: ACT };
+    macrosFor: macrosFor, cileTreninkVolno: cileTreninkVolno, nouzovyDen: nouzovyDen,
+    typyJidel: typyJidel, BEZ_VARENI_ID: BEZ_VARENI_ID, GOAL: GOAL, ACT: ACT };
 })(window);

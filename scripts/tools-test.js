@@ -3,7 +3,11 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const REPO = 'C:/Users/fitne/Desktop/MB.cz';
+// [2026-09-02] Kořen se dá přebít proměnnou TOOLS_TEST_REPO. Bez toho testoval harness
+// VŽDY strom 'Desktop/MB.cz', tedy ne ten, ve kterém se právě pracuje (dnes se pracuje
+// ve worktree mb-wt-*), takže hlásil výsledek cizího kódu. Stejný princip jako
+// PARITA_WEB v repu appky.
+const REPO = process.env.TOOLS_TEST_REPO || 'C:/Users/fitne/Desktop/MB.cz';
 
 global.window = global; // enginy se věší na window
 eval(fs.readFileSync(path.join(REPO, 'assets/meal-gen.js'), 'utf8'));
