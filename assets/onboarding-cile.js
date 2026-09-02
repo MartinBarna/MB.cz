@@ -641,7 +641,7 @@
     radky.push('');
     radky.push('posílám Ti průvodce na míru. Máš tam dva vzorové dny, nákupní seznam na týden a záměny, kterými si jídla můžeš prohodit, a nemusíš u toho počítat.');
     radky.push('');
-    radky.push('Nejsou to dny, které musíš jíst přesně. Jsou to dva příklady toho, jak vypadá den, který Ti sedne do čísel. Když si něco prohodíš podle záměn, sedí to dál.');
+    radky.push('Ber je jako dva příklady dne, který Ti sedne do čísel, přesně podle nich jíst nemusíš. Když si něco prohodíš podle záměn, sedí to dál.');
     radky.push('');
     radky.push('Najdeš ho v klientské sekci: ' + ODKAZY.sekce);
     radky.push('');
