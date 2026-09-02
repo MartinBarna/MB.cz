@@ -67,6 +67,10 @@
     }
     </script>
     <style>
+        .buynow{margin:0 0 .6rem;padding:.8rem .9rem;background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.32);border-radius:12px;}
+        .buynow label{display:block;font-size:.85rem;color:#d9d2c6;margin:0 0 .4rem;}
+        .buysel{width:100%;margin:0 0 .6rem;padding:10px 11px;border-radius:10px;background:#14161a;color:#f0eadf;border:1px solid rgba(255,255,255,.18);font:inherit;}
+        .buynow .btn{width:100%;text-align:center;}
         :root { --acc:#EBB12C; --acc-l:#F6CD63; --txt:#f0eadf; --mut:#aeb4ba; --warm:#cabfb1; --bg:#0f1113; --panel:#1a1c20; }
         html[data-theme="light"] {
           --txt:#161310; --mut:#5C564C; --warm:#3F3A34;
@@ -343,7 +347,17 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                     <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
                     <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
                 </ul>
-                <a href="#kontakt" class="btn btn-acc">Chci Gold</a>
+                <div class="buynow" data-plan="gold" hidden>
+                    <label for="selGold">Chci začít hned, na jak dlouho:</label>
+                    <select id="selGold" class="buysel">
+                        <option value="1">1 měsíc · 6 450 Kč</option>
+                        <option value="3" selected>3 měsíce · 16 950 Kč</option>
+                        <option value="6">6 měsíců · 31 950 Kč</option>
+                    </select>
+                    <a class="btn btn-acc buygo" href="#kontakt" rel="nofollow">Koupit hned →</a>
+                    <p class="microtrust">Platba kartou přes Stripe. Dotazník ti přijde na mail hned po zaplacení.</p>
+                </div>
+                <a href="#kontakt" class="btn btn-acc" data-cta="gold">Chci Gold</a>
                 <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
             </div>
             <div class="plan">
@@ -361,9 +375,30 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                     <li>Zvukové zprávy na WhatsApp = rychlejší odpovědi</li>
                     <li>1 video či audio hovor týdně</li>
                 </ul>
-                <a href="#kontakt" class="btn btn-ghost">Chci Diamond</a>
+                <div class="buynow" data-plan="diamond" hidden>
+                    <label for="selDiamond">Chci začít hned, na jak dlouho:</label>
+                    <select id="selDiamond" class="buysel">
+                        <option value="1">1 měsíc · 11 900 Kč</option>
+                        <option value="3" selected>3 měsíce · 32 900 Kč</option>
+                        <option value="6">6 měsíců · 59 500 Kč</option>
+                    </select>
+                    <a class="btn btn-acc buygo" href="#kontakt" rel="nofollow">Koupit hned →</a>
+                    <p class="microtrust">Platba kartou přes Stripe. Beru do Diamondu nejvýš 3 lidi najednou.</p>
+                </div>
+                <a href="#kontakt" class="btn btn-ghost" data-cta="diamond">Chci Diamond</a>
                 <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
             </div>
+        </div>
+        <div id="koucinkPlno" hidden style="max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">
+            <p style="margin:0 0 .7rem;color:#d9d2c6;">Teď mám <strong style="color:#fff;">plno</strong>. Beru jen tolik lidí, abych měl na každého čas. Napiš mi a dám ti vědět, jakmile se místo uvolní.</p>
+            <a class="btn btn-acc" href="#kontakt">Napsat Martinovi (čekací listina) →</a>
+        </div>
+        <div id="jakToProbiha" hidden style="max-width:760px;margin:1.6rem auto 0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:1.2rem 1.5rem;">
+            <h3 style="margin:0 0 .6rem;font-size:1.05rem;">Jak to po zaplacení probíhá</h3>
+            <p style="margin:0 0 .6rem;color:#d9d2c6;">Zaplatíš kartou a obratem ti přijde mail s odkazem na vstupní dotazník. Vyplníš ho zhruba za deset minut: cíl, zdraví, co rád jíš, kdy stíháš trénovat.</p>
+            <p style="margin:0 0 .6rem;color:#d9d2c6;">Do 48 hodin od tebe máš spočítané kalorie a makra, jídelníček a trénink. Zároveň ti naskočí klientská sekce a appka Tvůj Coach na stejný e-mail, kterým jsi platil.</p>
+            <p style="margin:0 0 .6rem;color:#d9d2c6;">Pak jedeme týden po týdnu. Pošleš report za tři minuty z mobilu, já ho projdu, napíšu ti analýzu a upravím čísla.</p>
+            <p style="margin:0;color:var(--mut);font-size:.9rem;">Platit kartou nechceš? Napiš mi a pošlu ti fakturu na převod. Cena je stejná.</p>
         </div>
         <p class="center" style="color:var(--mut); margin-top:1.6rem;">Nevíš, který balíček je pro tebe ten pravý? <a href="#kontakt" style="font-weight:700;">Napiš mi a poradím ti zdarma.</a></p>
         <div style="max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">
@@ -498,6 +533,87 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             }).catch(function () { if (btn) { btn.textContent = orig; btn.disabled = false; } });
         });
     })();
+    /* ⭐⭐ KOUPIT HNED: koučink přes Stripe (2. 9. 2026).
+       Martin: „když někdo kouká a chce se hecnout, koupí hned; bariéra kontakt = dny a nekoupí."
+
+       ⛔⛔ ŠEST ŽIVÝCH ODKAZŮ ZE STRIPU, doplněno 2. 9. 2026. TÁŽ ID musí být i
+          v `academy-stripe-webhook` (mapa ODKAZ_NA_PRODUKT) a v `assets/referral.js`
+          (pole KOUCINK_ODKAZY), jinak platba projde a nárok nevznikne. Prázdná adresa
+          u kteréhokoli období znamená, že se to období nenabízí a pošle na formulář.
+       ⛔ Kupón se u koučinku NEPŘEDVYPLŇUJE (`referral.js`, `bezKuponu`): sleva 10 %
+          z 59 500 Kč je jiná liga než z videokurzu a je to obchodní rozhodnutí, ne default.
+          Kód partnera se přesto veze v `client_reference_id`, takže provize funguje.
+       ⛔⛔ ADRESY SE DOSAZUJÍ SYNCHRONNĚ, NEZÁVISLE NA DOTAZU KAPACITY. Atribuci reklamy
+          (`client_reference_id`) dopisuje `analytics.js` ve funkci `decorate()`, a ta běží
+          při načtení skriptu a znovu na `DOMContentLoaded`, tedy PŘED tím, než se vrátí
+          síťový dotaz na kapacitu. Dokud tlačítka měla `href="#kontakt"` až do `.then()`,
+          `decorate()` na téhle stránce žádný odkaz na buy.stripe.com nenašel a u nejdražšího
+          produktu na webu by nešlo zjistit, která reklama ho prodala. Kapacita proto
+          přepíná JEN viditelnost. */
+    (function () {
+        var ODKAZY = {
+            'gold-1': 'https://buy.stripe.com/eVqbJ08bdffI5VebtR3ks0l',      // Gold 1 měsíc, 6 450 Kč
+            'gold-3': 'https://buy.stripe.com/aFaaEW0IL8Rk97qgOb3ks0m',      // Gold 3 měsíce, 16 950 Kč
+            'gold-6': 'https://buy.stripe.com/00wfZg779aZs4Ra2Xl3ks0n',      // Gold 6 měsíců, 31 950 Kč
+            'diamond-1': 'https://buy.stripe.com/cNi9ASbnpaZs97q0Pd3ks0o',   // Diamond 1 měsíc, 11 900 Kč
+            'diamond-3': 'https://buy.stripe.com/5kQbJ00IL5F84Ra9lJ3ks0p',   // Diamond 3 měsíce, 32 900 Kč
+            'diamond-6': 'https://buy.stripe.com/cNi3cuajl1oSerKapN3ks0q'    // Diamond 6 měsíců, 59 500 Kč
+        };
+        var AK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
+        var bloky = [].slice.call(document.querySelectorAll('.buynow'));
+        if (!bloky.length) return;
+
+        function odkaz(plan, mesice) { return ODKAZY[plan + '-' + mesice] || ''; }
+        function maAsponJeden(plan) { return !!(odkaz(plan, 1) || odkaz(plan, 3) || odkaz(plan, 6)); }
+
+        function nastav(blok) {
+            var plan = blok.getAttribute('data-plan');
+            var sel = blok.querySelector('.buysel');
+            var go = blok.querySelector('.buygo');
+            function prekresli() {
+                var u = odkaz(plan, sel.value);
+                // Období bez odkazu se nenabízí jako slepá ulička: pošle se na formulář.
+                go.setAttribute('href', u || '#kontakt');
+                go.textContent = u ? 'Koupit hned →' : 'Napsat Martinovi →';
+            }
+            sel.addEventListener('change', prekresli);
+            prekresli();
+        }
+
+        var zapnute = bloky.filter(function (b) { return maAsponJeden(b.getAttribute('data-plan')); });
+        if (!zapnute.length) return;   // odkazy ještě nejsou, stránka zůstává jako dřív
+
+        /* ⛔ ADRESY HNED, JEŠTĚ PŘED DOTAZEM NA KAPACITU: `analytics.js` je čte na
+           `DOMContentLoaded` a na nic nečeká. Skrytý blok se dotagovat dá, nedosazená
+           adresa ne. */
+        zapnute.forEach(nastav);
+
+        /* KAPACITA: strop je v `app_config.koucink_kapacita`, čte se živě z RPC
+           `koucink_kapacita()` (vrací jen tři čísla, žádné e-maily). ⛔ Když dotaz selže,
+           tlačítka se UKÁŽOU: výpadek databáze nesmí zavřít prodej. Naopak plno se musí
+           projevit hned, proto se nečeká na build. */
+        function zobraz(volno) {
+            var plno = (volno !== null && volno <= 0);
+            document.getElementById('koucinkPlno').hidden = !plno;
+            document.getElementById('jakToProbiha').hidden = plno;
+            zapnute.forEach(function (b) {
+                b.hidden = plno;
+                if (plno) return;
+                /* Dokud odkazy nejsou, zůstává hlavní tlačítko „Chci Gold" na formuláři
+                   a stránka se chová jako dřív. Jakmile jde koupit hned, stane se z něj
+                   druhá volba pro toho, kdo se chce nejdřív zeptat. */
+                var cta = document.querySelector('[data-cta="' + b.getAttribute('data-plan') + '"]');
+                if (cta) { cta.textContent = 'Chci se nejdřív zeptat'; cta.className = 'btn btn-ghost'; }
+            });
+        }
+        fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/rest/v1/rpc/koucink_kapacita', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': AK, 'Authorization': 'Bearer ' + AK },
+            body: '{}'
+        }).then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (j) { zobraz(j && typeof j.volno === 'number' ? j.volno : null); })
+          .catch(function () { zobraz(null); });
+    })();
     // Po odeslání formuláře (FormSubmit redirect ?odeslano=1) zobraz poděkování
     if (location.search.indexOf('odeslano=1') !== -1) {
         var _diky = document.getElementById('formDiky');
@@ -507,7 +623,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         if (_diky) _diky.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 </script>
-<script defer src="/assets/analytics.js?v=g17"></script>
+<script defer src="/assets/analytics.js?v=g18"></script><script defer src="/assets/referral.js?v=g7"></script>
 <script defer src="/assets/lead-popup.js?v=r3"></script>
 <script defer src="/assets/scroll-top.js?v=g10"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a7"><link rel="stylesheet" href="/assets/theme-light.css?v=l6"></body>

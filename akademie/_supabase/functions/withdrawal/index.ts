@@ -46,6 +46,10 @@ const PRODUCT_LABEL: Record<string, string> = {
   videokurz: "Videokurz výživy",
   academy: "Barna Academy",
   konzultace: "Konzultace / koučink",
+  // ⭐ 2. 9. 2026: koučink jde koupit přes Stripe a doklad o zaplacení posílá na
+  // `/odstoupeni/?product=coaching`. Bez téhle položky by se hodnota z odkazu zahodila
+  // a odstoupení od koučinku za 32 900 Kč by dorazilo jako "Jiný produkt".
+  coaching: "Online koučink",
   balicek: "40 receptů a 48 odpovědí",
   jine: "Jiný produkt",
 };

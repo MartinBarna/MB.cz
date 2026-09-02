@@ -67,6 +67,13 @@
   // by referral u doživotní Academy TIŠE PŘESTAL FUNGOVAT: `buyInfo` by vrátilo null,
   // modal by se neukázal a doporučitel by o odměnu přišel, aniž by kdokoli poznal proč.
   // `4gM00ibnpgjMerK7dB3ks04` = odkaz Academy doživotně (plink_1TyQXw…).
+  /* Odkazy koučinku (Gold i Diamond, 1/3/6 měsíců). Vyplňuje se TÝMIŽ ID, jaká jsou
+     v `koucing/index.html` a v `academy-stripe-webhook`. Doplněno 2. 9. 2026. */
+  var KOUCINK_ODKAZY = [
+    'eVqbJ08bdffI5VebtR3ks0l', 'aFaaEW0IL8Rk97qgOb3ks0m', '00wfZg779aZs4Ra2Xl3ks0n',   // gold 1 / 3 / 6
+    'cNi9ASbnpaZs97q0Pd3ks0o', '5kQbJ00IL5F84Ra9lJ3ks0p', 'cNi3cuajl1oSerKapN3ks0q'    // diamond 1 / 3 / 6
+  ];
+
   function buyInfo(href) {
     if (!href) return null;
     // ⚠️ SimpleShop varianta ZŮSTÁVÁ: web je od 30. 7. 2026 na Stripu, ale staré odkazy
@@ -89,6 +96,18 @@
     if (href.indexOf('4gM00ibnpgjMerK7dB3ks04') >= 0) return { url: href, prod: 'academy', stripe: true };
     // Odkaz s odečtem videokurzu (8 100 Kč) dodává TÝŽ produkt, jen levněji, proto stejný `prod`.
     if (href.indexOf('9B6aEW6356Jc4Ra55t3ks05') >= 0) return { url: href, prod: 'academy', stripe: true };
+    /* ⭐⭐ KOUČINK GOLD A DIAMOND (2. 9. 2026), šest odkazů, 1/3/6 měsíců.
+       ⛔ ŠEST ŽIVÝCH ID JE V `KOUCINK_ODKAZY` výš. Táž ID musí být i v `koucing/index.html`
+          (mapa ODKAZY), v `assets/analytics.js` (hodnota pro reklamy) a ve webhooku
+          (mapa ODKAZ_NA_PRODUKT). Kdyby některé chybělo tady, modal se neukáže a
+          doporučitel přijde o odměnu, aniž by to kdekoli křiklo.
+       ⛔ `bezKuponu: true` SCHVÁLNĚ: 10 % z 59 500 Kč je jiná liga než z videokurzu
+          a plošná sleva na koučink není rozhodnutá. Slíbit v modalu slevu, kterou
+          pokladna nedá, je horší než ji neslíbit. `client_reference_id` se posílá dál,
+          takže provize partnera na kupónu nestojí. */
+    if (KOUCINK_ODKAZY.some(function (id) { return id && href.indexOf(id) >= 0; })) {
+      return { url: href, prod: 'coaching', stripe: true, bezKuponu: true };
+    }
     // ⬜ Měsíční členství (`bJe9AS3UXgjMcjC8hF3ks00`) tu VĚDOMĚ NENÍ: jestli se za předplatné
     //    má vyplácet odměna za doporučení, je obchodní rozhodnutí, ne technické. Až padne, přidat sem.
     return null;
@@ -213,9 +232,16 @@
       ? 'Ještě jedna věc'
       : 'Máš slevu 10 % 🎉';
     skip.textContent = info.bezKuponu ? 'Pokračovat bez e-mailu' : 'Pokračovat bez slevy';
+    // ⛔ DVA RŮZNÉ DŮVODY, PROČ SLEVA NENÍ (2. 9. 2026). U doplatku videokurzu je cena
+    //    už zvýhodněná, u koučinku sleva prostě není v nabídce. Slovo „doplatek" u
+    //    Diamondu za 59 500 Kč zní jako chyba v e-shopu, proto se text větví podle
+    //    produktu, ne podle příznaku `bezKuponu`.
     document.getElementById('ba-ref-txt').innerHTML = info.bezKuponu
-      ? 'Přišel jsi přes partnera. Zadej svůj e-mail, ať tě spárujeme, a pošleme tě k platbě. '
-        + 'Doplatek už je zvýhodněná cena, další sleva na něj neplatí.'
+      ? (info.prod === 'coaching'
+        ? 'Přišel jsi přes partnera. Zadej svůj e-mail, ať tě spárujeme, a pošleme tě k platbě. '
+          + 'Sleva partnera se u koučinku neuplatňuje, provize partnerovi ano.'
+        : 'Přišel jsi přes partnera. Zadej svůj e-mail, ať tě spárujeme, a pošleme tě k platbě. '
+          + 'Doplatek už je zvýhodněná cena, další sleva na něj neplatí.')
       : (jeClensky(ref)
         ? 'Kamarád ti poslal doporučení. Zadej svůj e-mail, ať ti slevu spárujeme.'
         : 'Přišel jsi přes partnera, který ti dal slevu 10 %. Zadej svůj e-mail, ať ji spárujeme.')

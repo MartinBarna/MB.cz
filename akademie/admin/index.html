@@ -261,6 +261,12 @@
             <option value="novy">Nový klient (dotazník)</option>
             <option value="stavajici">Stávající klient (Konec Excelu)</option>
           </select>
+          <!-- Balíček se posílá do `client_invite`. Bez něj by ručně pozvaný klient měl
+               v tabulce „?" a nešlo by ho odlišit od Diamondu. -->
+          <select id="kiPlan" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+            <option value="gold">Gold</option>
+            <option value="diamond">Diamond</option>
+          </select>
           <button class="mlogbtn" id="kiSend">📨 Zapnout přístup + poslat mail</button>
         </div>
         <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména — zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.</p>
@@ -1135,6 +1141,31 @@
         // Martin je chce mit dohledatelne, ne smazane, ale v hlavni tabulce prekazeji.
         var rows=vsechny.filter(function(r){ return r.active!==false; });
         var byvali=vsechny.filter(function(r){ return r.active===false; });
+        // Balicek, delka a do kdy ma zaplaceno. Od 2. 9. 2026 jde koucink koupit pres
+        // Stripe, takze Martin musi na prvni pohled poznat Gold od Diamondu a hlavne
+        // to, komu obdobi konci. Zdroj "stripe" = koupil si sam, "rucni" = pozvanka z adminu.
+        // ⛔ Prazdny `plan` NENI Gold: rucni granty pred migraci ho maji doplneny, cokoli
+        //    bez nej je opravdu neznamy balicek a ma se to priznat, ne dohadovat.
+        function kliBalicek(r){
+          var jmeno = r.plan==='diamond' ? '💎 Diamond' : (r.plan==='gold' ? 'Gold' : '<span class="muted">?</span>');
+          var delka = r.months ? ' <span class="muted">'+r.months+' měs.</span>' : '';
+          var doKdy = '';
+          if(r.expires_at){
+            var d=new Date(r.expires_at), dnu=Math.round((d.getTime()-now)/86400000);
+            var barva = dnu<0 ? '#ff8b6b' : (dnu<14 ? '#F6CD63' : '#8F8A99');
+            doKdy = '<br><span style="color:'+barva+';font-size:.8rem;">'
+              + (dnu<0 ? 'skončilo ' : 'do ') + fmtDay(String(r.expires_at).slice(0,10))
+              + (dnu>=0 ? ' ('+dnu+' d)' : '') + '</span>';
+          } else {
+            doKdy = '<br><span class="muted" style="font-size:.8rem;">bez konce</span>';
+          }
+          var zdroj = r.zdroj==='stripe' ? ' <span class="muted" title="koupeno na webu přes Stripe">💳</span>' : '';
+          // Diamond nového klienta: po 3 zaplacených měsících mu Academy zůstává napořád.
+          // ⛔ Nic to nepřidělí samo. Bez tohohle řádku by byl jedinou stopou jednorázový
+          //    alert v mailu, který za tři měsíce nikdo nenajde.
+          var academy = r.academy_po_3m ? '<br><span style="color:#F6CD63;font-size:.8rem;" title="Po 3 zaplacených měsících mu Academy zůstává napořád. Přiděl ručně.">🎓 Academy po 3 měs.</span>' : '';
+          return jmeno+delka+zdroj+doKdy+academy;
+        }
         function radek(r, jeByvaly){
           var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
           var days=lastMs?Math.floor((now-lastMs)/86400000):null;
@@ -1145,10 +1176,11 @@
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
             +'<td>'+(r.has_intake?'✅':'<span class="muted">—</span>')+'</td>'
             +'<td>'+kliApp(r.app)+'</td>'
+            +'<td>'+kliBalicek(r)+'</td>'
             +'<td class="tcount">'+r.reports+'</td>'
             +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
         }
-        var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
+        var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Balíček</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
         // 🚀 FRONTA: kdo vyplnil dotazník a ještě nemá z něj postavené zadání. Data vrací
         // `clients_list` (intake_at, targets_at). Podmínka je schválně „targets starší než
         // dotazník", ne jen „targets chybí": když klient pošle dotazník znovu (změnil se
@@ -1248,15 +1280,19 @@
     $('kiName').addEventListener('input',function(){ $('kiVok').value=kliVok($('kiName').value); });
     $('kiSend').addEventListener('click',function(){
       var b=$('kiSend'); if(b.disabled) return; // dvojklik = dvojitý mail klientovi
-      var email=($('kiEmail').value||'').trim().toLowerCase(), name=($('kiName').value||'').trim(), vok=($('kiVok').value||'').trim(), kind=$('kiKind').value;
+      var email=($('kiEmail').value||'').trim().toLowerCase(), name=($('kiName').value||'').trim(), vok=($('kiVok').value||'').trim(), kind=$('kiKind').value, plan=$('kiPlan').value;
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast('Zadej platný e-mail'); return; }
       var what=kind==='stavajici'?'„Konec Excelu" (stávající klient)':'pozvánka s dotazníkem (nový klient)';
-      if(!confirm('Zapnout klientskou sekci pro '+email+' a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"')) return;
+      if(!confirm('Zapnout klientskou sekci pro '+email+' ('+(plan==='diamond'?'Diamond':'Gold')+') a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"')) return;
       var origTxt=b.textContent; b.disabled=true; b.textContent='📨 Posílám…';
-      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind}).then(function(o){
+      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind,plan:plan}).then(function(o){
         b.disabled=false; b.textContent=origTxt;
-        if(o.j&&o.j.ok){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value=''; loadKlienti(); }
-        else toast('Chyba: '+((o.j&&(o.j.error||o.j.mail_status))||o.status));
+        /* ⛔ `ok` z API znamená ZAPSANÝ NÁROK, ne odeslaný mail. Když nárok je a mail
+           selhal, klient přístup MÁ a stačí mail poslat znovu; hlásí se to jinak než
+           „nezapsalo se nic", protože každá z těch dvou situací se řeší jinak. */
+        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value=''; loadKlienti(); }
+        else if(o.j&&o.j.ok){ toast('⚠️ Přístup zapsán, ale MAIL NEODEŠEL ('+((o.j.mail_status)||'?')+'). Pošli ho znovu.'); loadKlienti(); }
+        else toast('🔴 Přístup se NEZAPSAL: '+((o.j&&(o.j.entitlement||o.j.error))||o.status));
       }).catch(function(){ b.disabled=false; b.textContent=origTxt; toast('Chyba spojení'); });
     });
     // ---- detail klienta ----

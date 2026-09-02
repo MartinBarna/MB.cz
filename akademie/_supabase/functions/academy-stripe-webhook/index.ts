@@ -38,6 +38,20 @@ import {
   bezBonusuAppky,
   najdiBonusyAppky,
 } from "./refund-bonus.ts";
+// ⛔ Onboarding koučinku je SPOLEČNÝ s ruční pozvánkou v adminu (`admin-api`,
+// akce `client_invite`). Zaplacený klient musí dostat přesně totéž co ten ruční:
+// nárok, appku, kontakt v CRM a uvítací mail s odkazem na vstupní dotazník.
+// ⚠️ Deploy téhle funkce proto nese i `_shared/koucink-onboarding.ts`.
+// ⚠️ `source: "stripe-koucink"` je v KATALOGu napsaný LITERÁLEM, ne přes konstantu
+// z tohohle modulu: `katalog-konzistence.test.ts` čte zdroják jako text a přes
+// konstantu by zdroj neviděl, takže by přestal hlídat, že ho zná i `daily-digest`.
+import {
+  type KoucinkPlan,
+  koucinkExpirace,
+  koucinkKapacita,
+  koucinkNazev,
+  onboardKoucink,
+} from "../_shared/koucink-onboarding.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -145,6 +159,11 @@ type JednorazovyProdukt = {
   // Má po nákupu přijít Martinovi upozornění, že se má něco udělat ručně?
   // U konzultace ano: musí se ozvat a domluvit termín, jinak zákazník čeká.
   alertPoNakupu?: string;
+  // ⭐ KOUČINK (2. 9. 2026). Když je vyplněný, nejde o doživotní přístup, ale
+  // o zaplacené OBDOBÍ, a celé doručení jede jinou větví (`onboardKoucink`).
+  // ⛔ `produkt` u něj musí zůstat `coaching`: je to přístupový klíč klientské sekce
+  //    i AI Martina, viz komentář v migraci `koucink-stripe.sql`.
+  koucink?: { plan: KoucinkPlan; months: number };
 };
 
 // ⛔⛔ ZDROJ BONUSOVÉHO VIDEOKURZU. Nesmí se slévat s `stripe-videokurz` (samostatný nákup
@@ -256,6 +275,62 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
     nazev: "Videokurz výživy",
     varianta: "upgrade z balíčku",
   },
+
+  // ⭐⭐ ONLINE KOUČINK GOLD A DIAMOND (2. 9. 2026). Martin: „když někdo kouká a chce
+  // se hecnout, koupí hned; bariéra kontakt = dny a nekoupí." Dlouhodobí klienti
+  // a ti, co napíšou, platí dál převodem, tahle cesta je pro studenou návštěvu webu.
+  //
+  // ⛔⛔ ŠEST KLÍČŮ, NE JEDEN S PARAMETREM. Payment Link je jediné, co Stripe u
+  //    `mode=payment` spolehlivě přenese, a délka období z něj jinak nejde přečíst:
+  //    `checkout.session.completed` nenese ani cenu. Kdyby se délka hádala z částky,
+  //    slevový kód by ji rozbil a klient by zaplatil šest měsíců a dostal jeden.
+  // ⛔ `tcGrant: false` a prázdný `welcome` SCHVÁLNĚ: appku i uvítací mail dodává
+  //    `onboardKoucink` (společný s ruční pozvánkou z adminu), ne obecná větev.
+  // ⛔ `source: "stripe-koucink"` musí zůstat odlišný od `admin-klient-invite`,
+  //    jinak v datech nepoznáme, co se prodalo samo a co Martin založil rukou.
+  //    ⚠️ Nový zdroj patří i do `daily-digest`, jinak se prodej nezapočítá do denního
+  //    přehledu a nikde to nekřikne (hlídá test K11).
+  "coaching-gold-1": {
+    produkt: "coaching", source: "stripe-koucink", welcome: "", tcGrant: false,
+    nazev: "Online koučink Gold", varianta: "1 měsíc",
+    koucink: { plan: "gold", months: 1 },
+    alertPoNakupu: "🏋️ Stripe: ZAPLACENÝ KOUČINK GOLD (1 měsíc)",
+  },
+  "coaching-gold-3": {
+    produkt: "coaching", source: "stripe-koucink", welcome: "", tcGrant: false,
+    nazev: "Online koučink Gold", varianta: "3 měsíce",
+    koucink: { plan: "gold", months: 3 },
+    alertPoNakupu: "🏋️ Stripe: ZAPLACENÝ KOUČINK GOLD (3 měsíce)",
+  },
+  "coaching-gold-6": {
+    produkt: "coaching", source: "stripe-koucink", welcome: "", tcGrant: false,
+    nazev: "Online koučink Gold", varianta: "6 měsíců",
+    koucink: { plan: "gold", months: 6 },
+    alertPoNakupu: "🏋️ Stripe: ZAPLACENÝ KOUČINK GOLD (6 měsíců)",
+  },
+  // ⚠️ Diamond má v ceně Barnu Academy po dobu koučinku a NOVÉMU klientovi po třech
+  //    zaplacených měsících zůstává napořád. Academy se tady NEUDĚLUJE: rozhodnutí
+  //    „jen pro nové klienty" umí posoudit jedině člověk, takže se do nároku zapíše
+  //    příznak `academy_po_3m` a Martin dostane alert. Automat by ji rozdal i těm,
+  //    komu nepatří, a zpátky se přístup bere blbě.
+  "coaching-diamond-1": {
+    produkt: "coaching", source: "stripe-koucink", welcome: "", tcGrant: false,
+    nazev: "Online koučink Diamond", varianta: "1 měsíc",
+    koucink: { plan: "diamond", months: 1 },
+    alertPoNakupu: "💎 Stripe: ZAPLACENÝ KOUČINK DIAMOND (1 měsíc)",
+  },
+  "coaching-diamond-3": {
+    produkt: "coaching", source: "stripe-koucink", welcome: "", tcGrant: false,
+    nazev: "Online koučink Diamond", varianta: "3 měsíce",
+    koucink: { plan: "diamond", months: 3 },
+    alertPoNakupu: "💎 Stripe: ZAPLACENÝ KOUČINK DIAMOND (3 měsíce)",
+  },
+  "coaching-diamond-6": {
+    produkt: "coaching", source: "stripe-koucink", welcome: "", tcGrant: false,
+    nazev: "Online koučink Diamond", varianta: "6 měsíců",
+    koucink: { plan: "diamond", months: 6 },
+    alertPoNakupu: "💎 Stripe: ZAPLACENÝ KOUČINK DIAMOND (6 měsíců)",
+  },
 };
 
 // Který odkaz vede na který klíč katalogu. Formát: `plink_A=academy-lifetime,plink_B=videokurz`.
@@ -356,7 +431,19 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // ⛔ Odkaz se nabízí VÝHRADNĚ v kroku 2 trati `onboarding-nakup-balicek` (majitele
     //    videokurzu ten krok přeskakuje drip-send/preskoc.ts). Na web NEPATŘÍ: veřejná
     //    cena kurzu je 800 Kč a odečet 349 má vidět jen ten, komu skutečně náleží.
-    "plink_1U1oe9Bq3rKubW9k7212caGt=videokurz-upgrade",
+    "plink_1U1oe9Bq3rKubW9k7212caGt=videokurz-upgrade," +
+    // ⭐⭐ KOUČINK (2. 9. 2026): ŠEST ŽIVÝCH ODKAZŮ ZE STRIPU, doplněno 2. 9. 2026.
+    //    Gold 6 450 / 16 950 / 31 950, Diamond 11 900 / 32 900 / 59 500 Kč.
+    //    Táž ID musí být i v `koucing/index.html` (objekt ODKAZY, celé adresy)
+    //    a v `assets/referral.js` (pole KOUCINK_ODKAZY, část adresy za buy.stripe.com/).
+    // ⚠️ Změnit se to dá i BEZ deploye: `STRIPE_ONETIME_LINKS` v prostředí funkce
+    //    tenhle fallback CELÝ přebije, takže tam musí být i všechny řádky nad tímhle.
+    "plink_1UBIcrBq3rKubW9k9Nk4oIYr=coaching-gold-1," +
+    "plink_1UBIfiBq3rKubW9kp0q1AUxI=coaching-gold-3," +
+    "plink_1UBIiOBq3rKubW9k11UDGjpr=coaching-gold-6," +
+    "plink_1UBIk6Bq3rKubW9kMEMQVTFO=coaching-diamond-1," +
+    "plink_1UBIlhBq3rKubW9kVSQr0sXf=coaching-diamond-3," +
+    "plink_1UBIp5Bq3rKubW9kcMse38lm=coaching-diamond-6",
 );
 
 const ALLOWED_PLINKS = (Deno.env.get("ACADEMY_ALLOWED_PLINKS") ??
@@ -739,7 +826,12 @@ async function grantTvujCoach(
 // ⚠️ Pravidla (platný aktivní kód, zákaz self-referralu, idempotence, výše odměn) jsou
 // schválně TOTOŽNÁ se SimpleShopem. Kdyby se rozešla, dostal by doporučitel jinou odměnu
 // podle toho, kudy kupující náhodou prošel.
-const ODMENA: Record<string, number> = { academy: 300, videokurz: 150 };
+// ⬜ `coaching: 300` je ČLENSKÝ KREDIT za doporučení koučinku, srovnaný s Academy
+//    (nejdražší dosavadní produkt). Affiliate partner se tímhle číslem neřídí, ten
+//    bere procento z reálně zaplacené částky. Kdyby tu koučink chyběl, člen by
+//    doporučil klienta za 31 950 Kč a dostal by tiše NULU.
+//    Číslo je návrh k potvrzení Martinem, ne jeho rozhodnutí.
+const ODMENA: Record<string, number> = { academy: 300, videokurz: 150, coaching: 300 };
 
 // ⭐ TŘETÍ ZDROJ KÓDU: promo kód ze Stripe session (7. 8. 2026, affiliate program).
 // Má NEJVYŠŠÍ prioritu, protože ho člověk fyzicky opsal do pokladny. `client_reference_id`
@@ -1269,6 +1361,140 @@ async function posliDoklad(email: string, obj: any, def: JednorazovyProdukt): Pr
   }
 }
 
+// --- KOUČINK: zaplacené OBDOBÍ, ne doživotní přístup ------------------------
+// ⛔⛔ VLASTNÍ VĚTEV SCHVÁLNĚ, `udelDozivotni` se sem nepoužije. Ta funkce zapisuje
+// `expires_at: null` (doživotně) a chrání doživotní členy před degradací. U koučinku
+// je konec období to hlavní, co se prodává; skrz `udelDozivotni` by klient dostal
+// koučink navěky a nikde by to nekřiklo.
+//
+// ⛔ PRODLOUŽENÍ SE POČÍTÁ OD KONCE STÁVAJÍCÍHO OBDOBÍ, ne ode dneška. Kdo si měsíc
+// před koncem dokoupí dalších šest, nesmí o ten zbytek přijít.
+//
+// Idempotence: rozhoduje `payment_intent`, ne „už má přístup". Stripe tutéž událost
+// běžně doručuje víckrát a druhé doručení nesmí prodloužit období podruhé.
+// deno-lint-ignore no-explicit-any
+async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt): Promise<Response> {
+  const k = def.koucink!;
+  const pi = typeof obj.payment_intent === "string" ? obj.payment_intent : null;
+
+  // ⛔ ČTE SE PŘED ZÁPISEM. Kdo si tuhle hodnotu přečte až po upsertu, porovná platbu
+  //    sama se sebou, vyjde mu shoda a druhý nákup vyhodnotí jako přehranou událost.
+  //    Přesně tahle třída chyby stála 7. 8. 2026 Martina zaplacený balíček bez doručení.
+  const { data: stavajici } = await admin
+    .from("entitlements")
+    .select("active, expires_at, stripe_payment_intent")
+    .eq("email", email).eq("product", "coaching").maybeSingle();
+
+  if (pi && stavajici?.stripe_payment_intent === pi) {
+    return json({ ok: true, produkt: "coaching", stav: "prehrana-udalost", payment_intent: pi });
+  }
+
+  // Nový klient = ten, kdo koučink právě teď nemá. Rozhoduje o třech věcech:
+  // uvítací mail s dotazníkem, příznak Academy u Diamondu a text alertu Martinovi.
+  const novyKlient = !(stavajici?.active === true);
+
+  // ⛔⛔ PŘÍSTUP BEZ KONCE SE NIKDY NEZKRACUJE (oprava po revizi, 2. 9. 2026).
+  // Všech 17 dnešních koučinkových nároků má `expires_at = null`, tedy bez konce.
+  // Kdyby si kterýkoli z těch lidí koupil přes Stripe jeden měsíc, původní verze by mu
+  // z neomezeného přístupu udělala měsíční. To je přesně to, co zákaz „nikomu nic
+  // nerušit" zakazuje. Takovému člověku se zapíše jen balíček a délka, konec zůstává
+  // prázdný a Martin dostane alert, ať s tím naloží jako člověk.
+  const bezKonce = stavajici?.active === true && !stavajici.expires_at;
+  const stareDo = stavajici?.active && stavajici.expires_at
+    ? new Date(stavajici.expires_at)
+    : null;
+  const zaklad = stareDo && stareDo.getTime() > Date.now() ? stareDo : new Date();
+  const expiresAt = bezKonce ? null : koucinkExpirace(k.months, zaklad);
+
+  const ob = await onboardKoucink(admin, {
+    email,
+    kind: "novy",
+    source: def.source,
+    plan: k.plan,
+    months: k.months,
+    // Chybějící pole = na sloupec se nesahá, takže přístup bez konce zůstává bez konce.
+    ...(expiresAt ? { expiresAt } : {}),
+    // ⛔ POSÍLÁ SE JEN `true`, NIKDY `false` (oprava po revizi 2. 9. 2026). Modul zapisuje
+    //    pokaždé, když hodnota není `undefined`. Nový Diamond na měsíc dostane `true`;
+    //    kdyby si za měsíc koupil další (a `novyKlient` byl už `false`), přepsalo by se
+    //    to na `false` přesně ve chvíli, kdy se ke třem zaplaceným měsícům blíží.
+    //    Příznak je jediné trvalé místo, kde Martin vidí, komu Academy zůstává napořád.
+    ...(k.plan === "diamond" && novyKlient ? { academyPo3m: true } : {}),
+    // ⛔ Uvítací mail JEN při prvním grantu: při prodloužení by vyzýval k vyplnění
+    //    vstupního dotazníku, který ten člověk dávno vyplnil.
+    uvitani: novyKlient,
+    stripe: {
+      customer: typeof obj.customer === "string" ? obj.customer : null,
+      paymentIntent: pi,
+    },
+    resendKey: RESEND_KEY,
+  });
+  if (bezKonce) {
+    await alertAdmin("⚠️ Stripe: koučink koupil člověk s PŘÍSTUPEM BEZ KONCE", {
+      email, produkt: koucinkNazev(k.plan, k.months),
+      poznamka: "Přístup jsem NEZKRÁTIL: `expires_at` zůstává prázdné, zapsal jsem jen balíček a délku.",
+      co_delat: "Rozhodni, jestli mu má období začít běžet (pak doplň konec v adminu), nebo ne.",
+    });
+  }
+  if (ob.entitlement !== "ok") {
+    await alertAdmin("🔴 Stripe: KOUČINK zaplacen, ale nárok se nezapsal", {
+      email, produkt: koucinkNazev(k.plan, k.months), chyba: ob.entitlement,
+      co_delat: "⛔ Přidej mu koučink ručně v adminu (Pozvat klienta). Zaplatil a nemá nic.",
+    });
+  }
+  if (!ob.ok) {
+    await alertAdmin("🔴 Stripe: KOUČINK zaplacen, ale uvítací mail NEODEŠEL", {
+      email, mail_status: ob.mail_status,
+      co_delat: "⛔ Ozvi se mu sám a pošli odkaz na vstupní dotazník. Přístup má, mail ne.",
+    });
+  }
+
+  // Doklad o zaplacení. Stejná pravidla jako u ostatních jednorázovek: částka ze session
+  // (mění ji slevový kód), odešle se při každé zaplacené platbě.
+  const doklad = await posliDoklad(email, obj, def);
+
+  const cref = rozdelClientRef(
+    typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
+  );
+  const referral = await atribuujReferral(email, "coaching", cref.kod || null, pi, obj);
+  const atribuce = await zapisAtribuciNakupu(email, "coaching", cref.atribuce);
+
+  // ⛔ KAPACITA JE OBCHODNÍ STROP, NE ZÁMEK. Odkaz zná každý, kdo si ho uložil, takže
+  // se přes plno dá zaplatit. Blokovat platbu po zaplacení nejde, ale Martin to musí
+  // vědět hned: buď si to místo udělá, nebo peníze vrátí.
+  // ⚠️ Strop se čte z `app_config` (`koucink_kapacita`) a počítají se jen placená
+  // a časovaná místa, ne historické ruční přístupy. Alert jde ven jen tehdy, když strop
+  // překročil právě proběhlý NÁKUP; jinak by první opravdový alert zapadl mezi falešné.
+  const kap = await koucinkKapacita(admin);
+  if (kap.obsazeno > kap.kapacita) {
+    await alertAdmin("🔴 Stripe: KOUČINK KOUPEN PŘES PLNOU KAPACITU", {
+      email, obsazeno: kap.obsazeno, kapacita: kap.kapacita,
+      co_delat: "Rozhodni: vzít nad rámec, nebo vrátit peníze ve Stripu a napsat mu. "
+        + "Strop zvedneš v `app_config`, klíč `koucink_kapacita`.",
+    });
+  }
+
+  await alertAdmin(def.alertPoNakupu ?? "Stripe: zaplacený koučink", {
+    email,
+    produkt: koucinkNazev(k.plan, k.months),
+    plati_do: expiresAt ? datumCesky(expiresAt) : "beze změny (přístup bez konce)",
+    novy_klient: novyKlient ? "ano" : "ne (prodloužení)",
+    academy_po_3m: k.plan === "diamond" && novyKlient
+      ? "⚠️ Diamond nového klienta: po 3 zaplacených měsících mu Academy zůstává napořád. Přiděl ji ručně."
+      : "netýká se",
+    obsazenost: `${kap.obsazeno} z ${kap.kapacita}`,
+    co_delat: "Ozvi se mu, jakmile pošle vstupní dotazník.",
+  });
+
+  return json({
+    ok: true, produkt: "coaching", plan: k.plan, months: k.months,
+    plati_do: expiresAt, novy_klient: novyKlient,
+    entitlement: ob.entitlement, app_grant: ob.app_grant, uvitani: ob.mail_status,
+    doklad, referral, atribuce, obsazeno: kap.obsazeno, kapacita: kap.kapacita,
+    bez_konce: bezKonce, uvitani_odeslano: novyKlient,
+  });
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
 
@@ -1302,6 +1528,26 @@ Deno.serve(async (req) => {
         const klic = ODKAZ_NA_PRODUKT[plinkL];
         const def = klic ? KATALOG[klic] : undefined;
         if (!def) {
+          // ⛔⛔ TICHO TADY STÁLO PENÍZE (oprava po revizi, 2. 9. 2026).
+          // Cizí jednorázové platby z téhož Stripe účtu (typicky appka) sem chodí běžně
+          // a alert u každé z nich by se přestal číst. Ale scénář „ID odkazu se doplní
+          // na web a zapomene se na webhook" byl do teď ÚPLNĚ tichý: člověk zaplatí
+          // za koučink až 59 500 Kč, dostane HTTP 200 a nikdo se nic nedozví.
+          // ⇒ Hranice podle částky: appka prodává za 249 a 499 Kč, takže cokoli
+          //    od 5 000 Kč výš je platba, kterou tahle funkce má znát.
+          // ⚠️ Hranice je v haléřích, `amount_total` taky.
+          const HRANICE_ALERTU_HALERU = 500_000;
+          const castkaH = Number(obj.amount_total ?? 0);
+          if (Number.isFinite(castkaH) && castkaH >= HRANICE_ALERTU_HALERU) {
+            await alertAdmin("🔴 Stripe: ZAPLACENO PŘES NEZNÁMÝ ODKAZ, přístup NEUDĚLEN", {
+              payment_link: plinkL || "(žádný)",
+              castka: castkaText(castkaH, String(obj.currency ?? "czk")),
+              email: String(obj.customer_details?.email ?? obj.customer_email ?? "(neznámý)"),
+              session: String(obj.id ?? ""),
+              co_delat: "⛔ Doplň ID odkazu do `ODKAZ_NA_PRODUKT` ve webhooku (nebo do proměnné "
+                + "`STRIPE_ONETIME_LINKS`, ta kód přebíjí) a přístup zatím uděl ručně v adminu.",
+            });
+          }
           return json({ ok: true, ignored: "foreign-price", mode: "payment", payment_link: plinkL || null });
         }
         const emailL = String(
@@ -1314,6 +1560,10 @@ Deno.serve(async (req) => {
           });
           return json({ error: "no-email" }, 422);
         }
+
+        // ⭐ KOUČINK má vlastní větev: prodává se ZAPLACENÉ OBDOBÍ, ne doživotní přístup,
+        // a onboarding jede společnou cestou s ruční pozvánkou z adminu.
+        if (def.koucink) return await zpracujKoucink(emailL, obj, def);
 
         const { novyDozivotni, zruseneMesicni, predchoziPi } = await udelDozivotni(emailL, def, {
           customer: typeof obj.customer === "string" ? obj.customer : null,
@@ -1810,7 +2060,17 @@ Deno.serve(async (req) => {
       // nákup s refundem, je `payment_intent`.
       // ⚠️ 29. 7. 2026 tady stálo jen to první a doživotní refund proto TIŠE NEUDĚLAL NIC:
       // vrácených 8 900 Kč a zákazník si nechal Academy navždy i appku na rok.
-      const SLOUPCE_ENT = "email, product, source, expires_at, stripe_subscription_id";
+      // ⚠️ `plan` a `months` jsou tu kvůli koučinku (2. 9. 2026): šest klíčů katalogu
+      // sdílí jeden `source`, takže podle zdroje by rozlučkový mail řekl "Gold (1 měsíc)"
+      // i člověku, který vracel Diamond na půl roku.
+      // ⛔⛔ SCHVÁLNĚ `*`, NE VÝČET SLOUPCŮ (oprava po revizi 2. 9. 2026). Kdyby tu stál
+      // výčet se sloupci `plan, months`, které zakládá až migrace `koucink-stripe.sql`,
+      // pak by nasazení téhle funkce PŘED migrací shodilo oba párovací dotazy na neznámý
+      // sloupec: `data` by bylo `undefined`, `ent` zůstalo `null` a refund by spadl do
+      // větve „nic jsem nenašel". A to u VŠECH produktů, ne jen u koučinku, takže vrácená
+      // Academy za 8 900 Kč by přístup neodebrala. Tiše, s návratovým kódem 200.
+      // `*` je proti pořadí nasazení odolné a nic navíc nestojí.
+      const SLOUPCE_ENT = "*";
       const zakaznik = typeof obj.customer === "string" ? obj.customer : "";
       const platba = typeof obj.payment_intent === "string" ? obj.payment_intent : "";
       if (!zakaznik && !platba) return json({ ok: true, ignored: "bez-identifikatoru" });
@@ -1989,7 +2249,9 @@ Deno.serve(async (req) => {
       // ⚠️ `KATALOG` obsahuje VÝHRADNĚ jednorázové produkty, takže „našel jsem ho tam"
       // je zároveň odpověď na otázku „může tenhle produkt vůbec mít předplatné?".
       const jeJednorazovy = !!katalogZdroje;
-      const nazevProduktu = katalogZdroje?.nazev ?? "Barna Academy";
+      const nazevProduktu = ent.product === "coaching" && ent.plan
+        ? koucinkNazev(ent.plan === "diamond" ? "diamond" : "gold", Number(ent.months ?? 1))
+        : (katalogZdroje?.nazev ?? "Barna Academy");
       const variantaProduktu = katalogZdroje?.varianta ?? (jeDozivotni ? "doživotní přístup" : "měsíční členství");
       let zruseno = jeDozivotni ? "nema-predplatne" : "nebylo-co";
       if (!jeDozivotni && ent.stripe_subscription_id) {
