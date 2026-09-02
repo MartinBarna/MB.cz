@@ -278,6 +278,10 @@
   // generátor, ne uživatel. Dokud je partie nad MRV, ubíráme série u nejméně prioritních cviků
   // té partie, a to přednostně tak, aby to jiný sval neshodilo pod MEV.
   var MIN_SETS = 2;
+  // Strop sérií na JEDEN cvik. Nad šest sérií v jedné položce už kouč napíše druhý cvik, ne
+  // další sérii, a hlídá to i scripts/tools-test.js (`sets <= 6`).
+  // ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+  var MAX_SETS = 6;
 
   function entryMuscles(pe) { return musclesFromDb(pe.ex.muscle, pe.ex.pattern, pe.ex.name); }
 
@@ -320,6 +324,23 @@
   }
 
   // krajní pojistka: když už nejde ubrat série (všechno na minimu), vyhoď nejméně prioritní cvik
+  /**
+   * [2026-09-02, po revizi] Zadní řetězec se z dolního dne nesmí vyhodit úplně.
+   * Symptom, který revize našla u pětidenního pokročilého plánu: „Dolní partie" vyšla na
+   * sumo dřep, výpony a ruský twist, tedy den nohou bez jediného hinge. dropWeakest sahá
+   * přednostně na POZDĚJŠÍ dny, a v pětidenním splitu je dolní den poslední. Poměr předního
+   * a zadního řetězce je zranění, ne kosmetika, takže poslední hinge (nebo cvik s primárními
+   * hamstringy) v daném dni zůstává.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+   */
+  function jeZadniRetezec(pe) {
+    return pe.ex.pattern === 'hinge'
+      || musclesFromDb(pe.ex.muscle, pe.ex.pattern, pe.ex.name).primary.indexOf('hamstrings') !== -1;
+  }
+  function posledniZadniRetezecVeDni(d, pe) {
+    return jeZadniRetezec(pe) && d.exercises.filter(jeZadniRetezec).length <= 1;
+  }
+
   function dropWeakest(days, muscle, styl) {
     // `pestrost` drží počet různých cviků za každou cenu, takže se nevyhazuje.
     if (styl === 'pestrost') return false;
@@ -330,6 +351,7 @@
     for (var i = 0; i < cands.length; i++) {
       var d = days[cands[i].di], ix = d.exercises.indexOf(cands[i].pe);
       if (ix === -1 || d.exercises.length <= 3) continue;
+      if (posledniZadniRetezecVeDni(d, cands[i].pe)) continue;
       d.exercises.splice(ix, 1);
       return true;
     }
@@ -381,7 +403,7 @@
 
   // „Doplnit objem" u partie pod MEV (typicky boční delty, lýtka): nejdřív zkusí přidat cvik,
   // který sval trénuje primárně, teprve pak přidává série. Nikdy nepřetáhne jiný sval nad MRV.
-  function addVolume(plan, muscle, stropSerii, nejdrivSerie) {
+  function addVolume(plan, muscle, stropSerii, nejdrivSerie, jednaIzolaceNaDen) {
     var lm = LANDMARKS[muscle]; if (!lm || !plan || !plan.days) return false;
     var g = plan.goal || GOALS.svaly, pool = plan.pool || [], changed = false;
     function cur() {
@@ -405,6 +427,26 @@
       cand.sort(function (a, b) { return orderRank(b.pattern) - orderRank(a.pattern); });   // izolace/core dřív
       var pick = cand[0], need = Math.ceil(lm.mev - cur());
       var day = bestDayFor(plan.days, muscle);
+      // [2026-09-02, po revizi] Dvě izolace na TUTÉŽ partii v jednom dni. Změřeno na mřížce
+      // 1296 zadání: starý engine 0 výskytů, po zavedení autoFill 480 dnů se dvěma výpony
+      // na lýtka a 191 se dvěma izolacemi na tutéž hlavu ramene. Kouč napíše jeden cvik ve
+      // čtyřech sériích, ne dva po dvou. Generátor proto druhou izolaci na tutéž partii
+      // posílá do JINÉHO dne, a když volný den není, cvik nepřidá vůbec a dosype sérii
+      // stávajícímu. ⛔ Zákaz platí jen pro automatické doplnění, ruční tlačítko ho NEMÁ.
+      // ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+      if (jednaIzolaceNaDen && pick.pattern === 'izolace') {
+        var maIzolaci = function (d) {
+          return d.exercises.some(function (pe) {
+            return pe.ex.pattern === 'izolace'
+              && musclesFromDb(pe.ex.muscle, pe.ex.pattern, pe.ex.name).primary.indexOf(muscle) !== -1;
+          });
+        };
+        if (maIzolaci(day)) {
+          var volne = plan.days.filter(function (d) { return !maIzolaci(d); });
+          if (!volne.length) return false;
+          day = bestDayFor(volne, muscle);
+        }
+      }
       day.exercises.push({ ex: pick, sets: Math.max(MIN_SETS, Math.min(g.sets, need)), reps: g.accessReps, access: true });
       if (anyOver()) { day.exercises.pop(); return false; }
       day.exercises.sort(function (a, b) { return orderRank(a.ex.pattern) - orderRank(b.ex.pattern); });
@@ -458,7 +500,9 @@
       if (!lm || lm.mev <= 0) return;
       var row = plan.volume.filter(function (v) { return v.muscle === mu; })[0];
       if (row && row.sets >= lm.mev) return;
-      addVolume(plan, mu, plan.goal.sets + 1, true);
+      // `+ 2` (po revizi místo `+ 1`): když se druhá izolace na tutéž partii přidat nesmí,
+      // musí mít existující cvik kam růst, jinak by partie zůstala pod minimem.
+      addVolume(plan, mu, Math.min(MAX_SETS, plan.goal.sets + 2), true, true);
     });
     plan.days.forEach(function (d) {
       d.exercises.sort(function (a, b) { return orderRank(a.ex.pattern) - orderRank(b.ex.pattern); });
@@ -638,16 +682,33 @@
     return out;
   }
 
-  // Náhrada: jiný cvik z téhož poolu na tentýž pohyb (nebo aspoň partii), který v plánu není.
-  function nahradaPro(pool, cvik, obsazene) {
-    function volny(e) { return e.id !== cvik.id && !obsazene[e.id]; }
-    var stejnyVzor = pool.filter(function (e) { return volny(e) && e.pattern === cvik.pattern && e.muscle === cvik.muscle; });
-    var stejnaPartie = pool.filter(function (e) { return volny(e) && e.muscle === cvik.muscle; });
-    var jenVzor = pool.filter(function (e) { return volny(e) && e.pattern === cvik.pattern; });
-    // Poslední možnost: cvik, který v plánu UŽ je. Lepší než prázdná kolonka.
-    var zbytek = pool.filter(function (e) { return e.id !== cvik.id && e.muscle === cvik.muscle; });
-    var list = stejnyVzor.length ? stejnyVzor : (stejnaPartie.length ? stejnaPartie : (jenVzor.length ? jenVzor : zbytek));
-    return list.length ? list[0] : null;
+  /**
+   * Náhrada: jiný cvik z téhož poolu na TENTÝŽ pohyb a TUTÉŽ partii.
+   * [2026-09-02, po revizi] Dřív se při nouzi sahalo i na „aspoň partii" nebo „aspoň vzor",
+   * a protože `muscle` v databázi je hrubá skupina (`ramena` = přední, boční i zadní delty
+   * plus trapézy), nabízel dokument předpažování jako náhradu za shrugy i za rozpažování
+   * v předklonu a rumunský mrtvý tah jako náhradu za Supermana. Náhrada, která trénuje jiný
+   * sval, není náhrada, proto se shoda testuje i na detailních svalech z musclesFromDb.
+   * Když nic nesedí, vrací se null a šablona napíše „zeptej se mě".
+   * `pouzite` drží, co už bylo nabídnuto jinému cviku, ať jednu náhradu nesdílí jedenáct řádků.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
+   */
+  function nahradaPro(pool, cvik, obsazene, pouzite) {
+    var mmC = musclesFromDb(cvik.muscle, cvik.pattern, cvik.name);
+    function stejnySval(e) {
+      var mm = musclesFromDb(e.muscle, e.pattern, e.name);
+      return mm.primary.length === mmC.primary.length && mm.primary.every(function (p, i) { return p === mmC.primary[i]; });
+    }
+    function sedi(e) {
+      return e.id !== cvik.id && e.pattern === cvik.pattern && e.muscle === cvik.muscle && stejnySval(e);
+    }
+    var kandidati = pool.filter(sedi);
+    var volny = kandidati.filter(function (e) { return !obsazene[e.id]; });
+    // 1) mimo plán a ještě nikomu nenabídnutý, 2) mimo plán, 3) i cvik, který v plánu už je
+    var list = volny.filter(function (e) { return !pouzite[e.id]; });
+    var vybrany = (list.length ? list : (volny.length ? volny : kandidati))[0] || null;
+    if (vybrany) pouzite[vybrany.id] = 1;
+    return vybrany;
   }
 
   /**
@@ -694,12 +755,14 @@
     var jmenaDnu = ROZVRH_DNU[dny] || ROZVRH_DNU[3];
     var obsazene = {};
     plan.days.forEach(function (d) { d.exercises.forEach(function (pe) { obsazene[pe.ex.id] = 1; }); });
+    // Co už bylo nabídnuto jako náhrada, ať jeden cvik neslouží jako náhrada jedenácti řádkům.
+    var pouziteNahrady = {};
 
     var rozvrh = plan.days.map(function (d, i) {
       var cviky = d.exercises.map(function (pe) {
         var kardio = pe.ex.pattern === 'kardio';
         var doplnkovy = !!pe.access;
-        var n = kardio ? null : nahradaPro(plan.pool, pe.ex, obsazene);
+        var n = kardio ? null : nahradaPro(plan.pool, pe.ex, obsazene, pouziteNahrady);
         return {
           id: pe.ex.id, nazev: pe.ex.name, partie: pe.ex.muscle, pattern: pe.ex.pattern,
           serie: pe.sets, opakovani: pe.reps,

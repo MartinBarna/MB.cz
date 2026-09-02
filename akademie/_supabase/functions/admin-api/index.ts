@@ -890,14 +890,18 @@ export function tpFakta(
   dej("tréninky za týden", i.dny_treninku);
   dej("kde cvičí", i.kde_cvici);
   dej("vybavení", i.vybaveni);
-  dej("sport", i.sport);
-  dej("zkušenosti s tréninkem", i.zkusenosti);
+  dej("sport dřív a teď", i.sport);
   dej("denní aktivita", i.aktivita);
   dej("práce", i.prace);
   dej("spánek", i.spanek);
-  dej("zdraví", i.zdravi);
-  dej("zranění", i.zraneni);
-  dej("léky", i.leky);
+  // ⛔ [2026-09-02, po revizi] Zdravotní údaje jdou modelu jen v rozsahu nutném pro
+  // BEZPEČNOST TRÉNINKU: omezení, zranění a vzkaz z dotazníku. Léky a alergie se do promptu
+  // neposílají, model o nich stejně nesmí nic psát a s výběrem cviků nemají co dělat;
+  // bránu na citlivá témata (`rdUpozorneni`) čtou dál, ta běží u nás.
+  // ⛔ `zkušenosti s tréninkem` je pryč: dotazník takové pole nemá (ověřeno v živé DB),
+  // takže se do promptu nikdy nedostalo a jen předstíralo, že model něco takového ví.
+  dej("zdravotní omezení", i.zdravi);
+  dej("zranění a omezení (upravil Martin)", i.zraneni);
   dej("vzkaz v dotazníku", i.poznamka);
   if (cit.length) {
     rad.push("");
@@ -910,8 +914,10 @@ export function tpFakta(
 /** Otisk zadání. Stejná role jako `pgOtisk`: poznat, že Martin mezitím změnil plán,
  * a nevrátit mu starý text psaný k jinému tréninku. */
 export function tpOtisk(v: Record<string, unknown>, dnyPopis: string[], vyloucene: string[]): string {
+  // ⛔ `zraneni` je v otisku schválně: když Martin text o zranění přepíše, musí se text psát
+  // znovu, ne vrátit starý koncept psaný k jinému zadání. Táž past jako u kalorií u průvodce.
   return JSON.stringify([
-    v.dny, v.kde, v.vybaveni, v.level, v.cil, dnyPopis, vyloucene.slice().sort(),
+    v.dny, v.kde, v.vybaveni, v.level, v.cil, v.zraneni ?? "", dnyPopis, vyloucene.slice().sort(),
   ]);
 }
 
@@ -2414,7 +2420,11 @@ Deno.serve(async (req) => {
       // Obě tlačítka v adminu (texty i návrh vyloučení) vedou sem, takže druhé z nich je zdarma.
       const { data: last, error: lastErr } = await admin.from("pruvodce_drafts")
         .select("texty, vylouceni_navrh, meta, created_at").eq("client_email", email)
-        .contains("meta", { typ: "pruvodce" })
+        // ⛔ [2026-09-02, po revizi] `contains` samo o sobě je past: řádky z doby před
+        // zavedením `meta.typ` klíč nemají, filtr je nechytí a Martinovi, který má rozepsaný
+        // koncept, první klik PŘEPÍŠE textareu novým textem z AI. Řádek bez `typ` je vždycky
+        // průvodce (trénink `typ` má od první verze), takže se bere taky.
+        .or("meta->>typ.eq.pruvodce,meta->>typ.is.null")
         .order("created_at", { ascending: false }).limit(1).maybeSingle();
       // ⛔ Bez té tabulky by strop neexistoval a každý klik by platil AI. Migrace: pruvodce-drafts.sql.
       if (lastErr) return json({ error: "chybi_tabulka", detail: String(lastErr.message).slice(0, 200) }, 503);
@@ -2492,8 +2502,12 @@ Deno.serve(async (req) => {
       const cil = V_CIL.includes(String(body.cil)) ? String(body.cil) : "";
       if (!kde || !vybaveni || !level || !cil) return json({ error: "chybi_zadani" }, 400);
 
+      // ⛔ Text o zranění píše (nebo aspoň schvaluje) MARTIN v editoru. Dotazník pole
+      // `zraneni` nemá, takže ho server nemá odkud vzít; brát ho z `client_intake` by
+      // znamenalo posílat modelu vždycky prázdno. Ověřeno dotazem do živé Academy DB.
+      const zraneni = String(body.zraneni ?? "").trim().slice(0, 600);
       const vstup = {
-        dny, kde, vybaveni, level, cil,
+        dny, kde, vybaveni, level, cil, zraneni,
         rezim: String(body.rezim ?? "").slice(0, 60),
         pauzy: String(body.pauzy ?? "").slice(0, 40),
       };
@@ -2530,13 +2544,18 @@ Deno.serve(async (req) => {
         .eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
       const iData = intakeRow ? rdJ(intakeRow as Record<string, unknown>, "data") : {};
 
+      // ⛔ Brána na citlivá témata čte VÍC než prompt: i léky a alergie, protože jejím úkolem
+      // je Martina upozornit, ne modelu něco podsunout. `zraneni` z dotazníku neexistuje,
+      // čte se proto Martinův text z editoru.
       const upozorneni = rdUpozorneni([
-        String(iData.zdravi ?? ""), String(iData.zraneni ?? ""), String(iData.leky ?? ""),
+        String(iData.zdravi ?? ""), zraneni, String(iData.leky ?? ""), String(iData.alergie ?? ""),
         String(iData.diety ?? ""), String(iData.poznamka ?? ""), String(iData.proc ?? ""),
       ]);
 
+      // Do promptu jde `zraneni` od Martina, ne neexistující pole z dotazníku.
+      const iProPrompt = { ...iData, zraneni };
       const userPrompt = "FAKTA (jediný zdroj údajů o klientovi a o plánu):" + NL +
-        tpFakta(vstup, dnyPopis, vyloucene, osloveni, iData, rod) + NL + NL +
+        tpFakta(vstup, dnyPopis, vyloucene, osloveni, iProPrompt, rod) + NL + NL +
         (upozorneni.length
           ? "CITLIVÁ TÉMATA V DOTAZNÍKU: " + upozorneni.join(", ") + "." + NL +
             "K nim NIC neradíš a nerozhoduješ o cvicích. Napiš jednu větu, že se na to Martin ozve osobně." + NL + NL

@@ -11,11 +11,17 @@
 //   • úvod, závěr, vlastní rámeček ................................ AI napíše, Martin přepíše
 //   • odeslání klientovi .......................................... jen Martin, ručně
 //
-// ⛔⛔ ZDRAVOTNÍ OMEZENÍ NEČTE STROJ. V dotazníku je volný text („po operaci ramene",
-// „občas mě bolí koleno"). Ani engine, ani AI z něj nesmí vyvodit zákaz cviku: „bolí mě
-// rameno" může znamenat vynechat tlaky nad hlavu, nebo taky nic z toho. Text se Martinovi
-// jen ukáže a on odklikne konkrétní partie a cviky. Tohle je ta samá hranice jako
-// u dietních filtrů v nutričním průvodci, jen se tady chybou platí zraněním.
+// ⛔⛔ ZDRAVOTNÍ OMEZENÍ NEČTE ENGINE. V dotazníku je volný text („po operaci ramene",
+// „občas mě bolí koleno"). Engine z něj nikdy nevyvodí zákaz cviku: „bolí mě rameno" může
+// znamenat vynechat tlaky nad hlavu, nebo taky nic z toho. Text se Martinovi ukáže a on
+// odklikne konkrétní partie a cviky. Tatáž hranice jako u dietních filtrů v nutričním
+// průvodci, jen se tady chybou platí zraněním.
+// ⚠️ AI ho ale VIDÍ, a musí se to říkat nahlas. `admin-api` posílá do promptu zdravotní
+// omezení, vzkaz z dotazníku a Martinův text z pole „Zranění a omezení"; léky ani alergie
+// ne. Model běží u třetí strany (Anthropic nebo xAI). Systémový prompt mu k tomu zakazuje
+// cokoli radit i o čemkoli rozhodovat, smí napsat jedinou větu, že se Martin ozve osobně.
+// ⛔ Do 2. 9. 2026 tu editor tvrdil „nečte to ani engine, ani AI". Nebyla to pravda a Martin
+// se podle toho rozhoduje, co do adminu vůbec napíše.
 //
 // Závislosti (načítá si je sám, líně, až když Martin sekci otevře):
 //   /assets/workout-gen.js     window.WorkoutGen
@@ -63,14 +69,17 @@
     if (!global.WorkoutGen) kroky.push(nactiSkript(WG_URL));
     if (!global.TreninkSablona) kroky.push(nactiSkript('/akademie/admin/trenink-sablona.js?v=20260902a'));
     return Promise.all(kroky).then(function () {
+      // ⛔ POJISTKA: bez `assembleProgram` je načtená stará verze enginu z cache a plán
+      // by vyšel bez tempa, RIR a náhrad, tedy jako holý seznam cviků. Radši to řekneme.
+      // [2026-09-02, po revizi] Kontrola musí být PŘED `if (DB) return DB;`. Dřív byla za ní,
+      // takže při druhém otevření editoru v témže životě stránky se přeskočila a stará verze
+      // enginu projela tiše.
+      if (!global.WorkoutGen || !global.WorkoutGen.assembleProgram) {
+        return Promise.reject(new Error('workout-gen.js je starší verze bez assembleProgram, zvedni ?v= v adrese'));
+      }
       if (DB) return DB;
       return fetch(DB_URL).then(function (r) { return r.json(); }).then(function (d) {
         DB = Array.isArray(d) ? d : (d.items || []);
-        // ⛔ POJISTKA: bez `assembleProgram` je načtená stará verze enginu z cache a plán
-        // by vyšel bez tempa, RIR a náhrad, tedy jako holý seznam cviků. Radši to řekneme.
-        if (!global.WorkoutGen || !global.WorkoutGen.assembleProgram) {
-          throw new Error('workout-gen.js je starší verze bez assembleProgram, zvedni ?v= v adrese');
-        }
         return DB;
       });
     });
@@ -98,10 +107,21 @@
     if (/cink|kettleb|jednoruc|zavazi/.test(s)) return 'cinky';
     return 'telo';
   }
-  function odhadUrovne(t) {
+  /**
+   * ⛔ [2026-09-02, po revizi] Dotazník NEMÁ otázku na zkušenosti s tréninkem.
+   * Ověřeno dotazem do živé Academy DB (klíče v `client_intake.data`) i ve zdroji formuláře
+   * `akademie/klient/index.html`: pole `zkusenosti` ani `zraneni` v datech neexistují.
+   * Odhad proto smí sahat jen na to, co tam opravdu je: „Sport dřív a teď" (`sport`),
+   * počet tréninků týdně (`dny_treninku`) a volný vzkaz. Je to NÁVRH, Martin ho v selectu
+   * „Úroveň" přepíše, a vedle je vidět, z čeho se odhadovalo.
+   */
+  function odhadUrovne(t, dny) {
     var s = bezDia(t);
-    if (/zacatecn|zacinam|nikdy|nezacvic|zadn[ae] zkusen/.test(s)) return 'zacatecnik';
-    if (/pokrocil|nekolik let|dlouho|zkusen/.test(s)) return 'pokrocily';
+    if (/zacatecn|zacinam|nikdy|nezacvic|zadn[ae] zkusen|po pauze|nesportuj/.test(s)) return 'zacatecnik';
+    if (/nekolik let|leta|roky|zavodn|kulturist|silovy trojboj|zkuseny/.test(s)) return 'zkuseny';
+    if (/pokrocil|dlouho|pravideln|posilovn|fitko|zkusen/.test(s)) return 'pokrocily';
+    // Kdo reálně stíhá čtyři a víc tréninků týdně, začátečník obvykle není.
+    if (Number(dny) >= 4) return 'pokrocily';
     return 'zacatecnik';
   }
   function odhadCile(t) {
@@ -134,6 +154,9 @@
         cil: 'svaly', sport: '', seed: 0, vyloucene_partie: [], vyloucene_cviky: []
       },
       program: null,
+      // Volný text „Zranění a omezení". Předvyplní se ze `zdravi` z dotazníku a Martin ho
+      // upraví. ⛔ Engine ho NEČTE; jde jen do AI promptu jako citace a do ničeho jiného.
+      omezeni: '',
       texty: { uvod: '', zaver: '', poznamka: '' }
     };
 
@@ -143,9 +166,10 @@
       S.vstup.dny_treninku = odhadDnu(idata.dny_treninku);
       S.vstup.kde_cvici = misto;
       S.vstup.vybaveni = odhadVybaveni([idata.vybaveni, idata.kde_cvici].join(' '), misto);
-      S.vstup.level = odhadUrovne([idata.zkusenosti, idata.trenink, idata.sport, idata.poznamka].join(' '));
+      S.vstup.level = odhadUrovne([idata.sport, idata.poznamka, idata.proc, idata.prace, idata.aktivita].join(' '), S.vstup.dny_treninku);
       S.vstup.cil = odhadCile(String(idata.cil || ''));
       S.vstup.sport = String(idata.sport || '').trim();
+      S.omezeni = String(idata.zdravi || '').trim();
       kostra();
       generuj();
     }).catch(function (e) {
@@ -168,10 +192,12 @@
       var h = '';
 
       // 1) zadání
+      // ⛔ Jen klíče, které v `client_intake.data` doopravdy jsou (ověřeno v živé DB 2. 9. 2026).
+      // `zkusenosti` ani `zraneni` dotazník nesbírá, popisek slibující je by lhal.
       var dotaznikText = [
         ['Tréninky týdně', idata.dny_treninku], ['Kde cvičí', idata.kde_cvici],
-        ['Vybavení', idata.vybaveni], ['Sport', idata.sport],
-        ['Zkušenosti', idata.zkusenosti], ['Cíl', idata.cil]
+        ['Vybavení', idata.vybaveni], ['Sport dřív a teď', idata.sport],
+        ['Práce a režim', idata.prace], ['Denní aktivita', idata.aktivita], ['Cíl', idata.cil]
       ].filter(function (x) { return x[1] && String(x[1]).trim(); })
         .map(function (x) { return '<b>' + esc(x[0]) + ':</b> ' + esc(x[1]); }).join('<br>');
 
@@ -179,7 +205,8 @@
         + '<div class="muted" style="font-size:.75rem;text-transform:uppercase;margin-bottom:6px;">1. Zadání do generátoru</div>'
         + (dotaznikText ? '<p style="margin:0 0 8px;font-size:.8rem;background:rgba(235,177,44,.08);border-radius:8px;padding:7px 9px;">' + dotaznikText + '</p>'
           : '<p class="muted" style="margin:0 0 8px;font-size:.8rem;">V dotazníku není nic o trénincích, vyplň to ručně.</p>')
-        + '<p class="muted" style="margin:0 0 8px;font-size:.78rem;">Předvyplněno odhadem z dotazníku. Cokoli tu přepíšeš platí jen pro tenhle dokument.</p>'
+        + '<p class="muted" style="margin:0 0 8px;font-size:.78rem;">Předvyplněno odhadem z dotazníku. Cokoli tu přepíšeš platí jen pro tenhle dokument. '
+        + '⚠️ <b>Úroveň dotazník nezjišťuje</b>, odhaduje se z odpovědi „Sport dřív a teď" a z počtu tréninků, takže ji zkontroluj vždycky.</p>'
         + '<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end;">'
         + sel('tpDny', 'Dní týdně', [[2, '2'], [3, '3'], [4, '4'], [5, '5']].map(function (x) { return [String(x[0]), x[1]]; }), String(S.vstup.dny_treninku))
         + sel('tpMisto', 'Kde cvičí', MISTA, S.vstup.kde_cvici)
@@ -194,14 +221,29 @@
         + '</div>';
 
       // 2) omezení
-      var zdravi = [['Zdraví', idata.zdravi], ['Zranění', idata.zraneni], ['Léky', idata.leky], ['Vzkaz', idata.poznamka]]
+      // ⛔ `zraneni` v dotazníku NENÍ (ověřeno v živé DB 2. 9. 2026), popisek s ním sliboval
+      // informaci, která nikdy nepřijde. Zdravotní sekce dotazníku sbírá `zdravi`, `leky`
+      // a `alergie`; `poznamka` je volný vzkaz.
+      var zdravi = [['Zdravotní omezení a diagnózy', idata.zdravi], ['Léky a doplňky', idata.leky],
+        ['Alergie a intolerance', idata.alergie], ['Vzkaz v dotazníku', idata.poznamka]]
         .filter(function (x) { return x[1] && String(x[1]).trim(); })
         .map(function (x) { return '<b>' + esc(x[0]) + ':</b> ' + esc(x[1]); }).join('<br>');
       h += '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-top:10px;">'
         + '<div class="muted" style="font-size:.75rem;text-transform:uppercase;margin-bottom:6px;">2. Co z plánu vyřadit</div>'
         + (zdravi ? '<p style="margin:0 0 8px;font-size:.8rem;background:rgba(255,107,107,.1);border-radius:8px;padding:7px 9px;">' + zdravi + '</p>'
           : '<p class="muted" style="margin:0 0 8px;font-size:.8rem;">V dotazníku není nic o zdraví ani o zraněních.</p>')
-        + '<p class="muted" style="margin:0 0 8px;font-size:.78rem;">⛔ Tenhle text nečte ani engine, ani AI. Rozhodnutí, co vyřadit, je Tvoje.</p>'
+        + '<p class="muted" style="margin:0 0 8px;font-size:.78rem;">⛔ <b>Engine tenhle text nečte a sám podle něj nikdy nic nevyřadí.</b> '
+        + 'Co z plánu vypadne, rozhoduješ Ty zaškrtnutím níž.</p>'
+        // ⛔ [2026-09-02, po revizi] Dřív tu stálo „nečte ani engine, ani AI". U AI to nebyla
+        // pravda: `admin-api` posílá do promptu zdravotní omezení, vzkaz z dotazníku i text
+        // z pole níž. Martin se podle téhle věty rozhoduje, co do adminu vůbec pustí, takže
+        // musí být přesná. Model běží u třetí strany (Anthropic nebo xAI, podle nastavení).
+        + '<p style="margin:0 0 8px;font-size:.78rem;background:rgba(255,180,110,.12);border:1px solid rgba(255,180,110,.35);border-radius:8px;padding:7px 9px;">'
+        + '🤖 <b>Co z téhle sekce dostane AI:</b> zdravotní omezení, vzkaz z dotazníku a text, který napíšeš do pole „Zranění a omezení" níž. '
+        + 'Léky ani alergie se do promptu neposílají. AI o tom smí napsat jedinou větu, že se ozveš osobně, a o cvicích nerozhoduje. '
+        + '<b>Model běží u AI třetí strany</b> (Anthropic nebo xAI), takže co sem napíšeš, odejde ven. Co tam mít nemá, smaž.</p>'
+        + '<label style="display:block;font-size:.75rem;color:#8F8A99;margin-bottom:8px;">Zranění a omezení (předvyplněno ze „Zdravotní omezení" v dotazníku, uprav na to, co je pro trénink podstatné)'
+        + '<textarea id="tpOmezeni" rows="2" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:8px 10px;color:#fff;font-family:inherit;font-size:.88rem;line-height:1.45;">' + esc(S.omezeni) + '</textarea></label>'
         + '<div style="margin-bottom:8px;">' + PARTIE.map(function (p) {
           return '<label style="cursor:pointer;font-size:.85rem;color:#cbbfae;margin-right:14px;white-space:nowrap;">'
             + '<input type="checkbox" data-tppartie="' + p[0] + '" style="accent-color:#EBB12C;vertical-align:-2px;margin-right:5px;">' + esc(p[1]) + '</label>';
@@ -259,6 +301,8 @@
       S.vstup.level = $('tpLevel').value;
       S.vstup.cil = $('tpCil').value;
       S.vstup.seed = Math.max(0, Math.min(99, Number($('tpSeed').value) || 0));
+      var om = $('tpOmezeni');
+      if (om) S.omezeni = (om.value || '').trim();
       S.vstup.vyloucene_partie = [];
       el.querySelectorAll('[data-tppartie]').forEach(function (ch) {
         if (ch.checked) S.vstup.vyloucene_partie.push(ch.getAttribute('data-tppartie'));
@@ -367,7 +411,10 @@
           return d.den + ': ' + d.nazev + ' (' + d.cviky.filter(function (c) { return !c.doplnkovy && !c.kardio; })
             .map(function (c) { return c.nazev; }).join(', ') + ')';
         }),
-        vyloucene: S.vstup.vyloucene_partie.concat(S.vstup.vyloucene_cviky)
+        vyloucene: S.vstup.vyloucene_partie.concat(S.vstup.vyloucene_cviky),
+        // ⛔ Kurátorovaný text od Martina, ne surové pole z dotazníku (to v `client_intake`
+        // neexistuje). Server ho vloží do promptu jako citaci a do ničeho jiného.
+        zraneni: S.omezeni.slice(0, 600)
       }).then(function (o) {
         btn.disabled = false; btn.textContent = t0;
         var j = o.j || {};
