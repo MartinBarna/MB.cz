@@ -1124,8 +1124,17 @@
         // `clients_list` (intake_at, targets_at). Podmínka je schválně „targets starší než
         // dotazník", ne jen „targets chybí": když klient pošle dotazník znovu (změnil se
         // mu režim), staré zadání už neplatí a je potřeba se na něj podívat.
+        // OPRAVENO PO REVIZI: podminka poustela i klienta, ktereho Martin davno vyresil
+        // mimo client_targets (dotaznik 46 dni stary, 1 odeslany report). Fronta, ve ktere
+        // sviti hotovy clovek, se prestane cist.
+        // Ven jde tedy jen ten, kdo NEMA jediny report A zaroven nema novejsi zadani.
+        // rows je uz bez ukoncenych klientu (ti jsou v byvali), takze byvaly klient
+        // se starym dotaznikem sem nespadne.
+        // Porovnani je retezcove. Funguje, protoze obe hodnoty vraci PostgREST jako ISO
+        // 8601 v UTC (timestamptz); u timestamp bez zony by tise lhalo.
         var fronta=rows.filter(function(r){
           if(!r.intake_at) return false;
+          if(r.reports>0) return false;
           return !r.targets_at || String(r.targets_at) < String(r.intake_at);
         });
         var html='';

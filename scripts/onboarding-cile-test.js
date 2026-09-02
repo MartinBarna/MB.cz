@@ -17,6 +17,19 @@ function ok(podminka, popis) {
 }
 function pct(a, b) { return Math.round((a - b) / b * 1000) / 10; }
 
+// Vzorec tuku PREPSANY Z APPKY (`src/engine/goals.ts`: fatTargetG + macroSplit).
+// Slouzi jako nezavisla kontrola parity, ktera se pri zmene enginu rozsviti.
+//   BMI >= 30  -> 25 % kalorii
+//   jinak      -> referencni vaha * 0,8 g/kg
+//   podlaha    -> 22 % kalorii (fatFloorG), strop -> co se vejde vedle bilkovin
+function appkaTuk(kcal, refKg, bmiHodnota) {
+  const podlaha = Math.round((22 / 100) * kcal / 9);
+  const cil = (bmiHodnota != null && bmiHodnota >= 30)
+    ? Math.round((25 / 100) * kcal / 9)
+    : Math.round(refKg * 0.8);
+  return Math.max(podlaha, cil);
+}
+
 const PROFILY = [
   {
     nazev: 'Martinův referenční klient (muž, nabírání, MMA)',
@@ -79,7 +92,10 @@ PROFILY.forEach(function (p) {
     ok(k.kcal >= (p.pohlavi === 'z' ? 1200 : 1500), '   ' + k.nazev + ': kalorie nad podlahou');
     ok(k.bilkoviny_g_kg >= 1.19 && k.bilkoviny_g_kg <= 2.21, '   ' + k.nazev + ': bílkoviny 1,2 až 2,2 g/kg referenční váhy');
     ok(k.fat * 9 >= k.kcal * 0.215, '   ' + k.nazev + ': tuk nad podlahou 22 % kalorií');
-    ok(k.fiber >= 25 && k.fiber <= 60, '   ' + k.nazev + ': vláknina 25 až 60 g');
+    ok(k.fiber === Math.min(60, Math.round(k.kcal / 1000 * 14)),
+      '   ' + k.nazev + ': vláknina 1:1 s appkou (14 g/1000 kcal, strop 60, bez podlahy)');
+    ok(k.fat === appkaTuk(k.kcal, r.ref_kg, r.bmi),
+      '   ' + k.nazev + ': tuk 1:1 s appkou (' + k.fat + ' vs ' + appkaTuk(k.kcal, r.ref_kg, r.bmi) + ' g)');
     ok(Math.abs(soucet - k.kcal) / k.kcal <= 0.05, '   ' + k.nazev + ': součet maker sedí na kalorie (' + soucet + ' vs ' + k.kcal + ')');
     // deficit nikdy nad 25 % výdeje
     ok(k.kcal >= r.vydej.tdee * 0.75 - 1 || k.kcal === (p.pohlavi === 'z' ? 1200 : 1500),
@@ -131,11 +147,53 @@ ok(pr[0].indexOf('Spánek') === 0, 'spánek je první priorita');
 const pr2 = OC.priority({ spanek: '8', dny_treninku: 4, kroky: 11000, sport: 'posilovna' });
 ok(pr2.length === 2 && pr2[0].indexOf('Držet pohyb') === 0, 'bez slabin se použije záložní dvojice');
 
-// Citlivá pole
+// Citlivá pole (zdravotní brána). Regresní sada z revize na pěti skutečných dotaznících.
 const c = OC.citliva({ zdravi: 'jsem těhotná ve 3. měsíci', leky: '', diety: '' });
 ok(c.indexOf('těhotenství') > -1, 'těhotenství se pozná v poli zdraví');
 ok(OC.citliva({ zdravi: '', leky: 'metformin', diety: '' }).indexOf('cukrovka') > -1, 'cukrovka se pozná podle léku');
 ok(OC.citliva({ zdravi: 'nic', leky: '', diety: '' }).length === 0, 'čistý dotazník nehlásí nic');
+// ⛔ Kojení bylo schované v poli `prace`, ne ve `zdravi`. Brána musí číst všechna pole.
+ok(OC.citliva({ prace: 'ted hodne sedim jak krmim a nosim prcka', cil: 'kondice po porodu' }).indexOf('kojení') > -1,
+  'kojení se pozná i z pole práce');
+ok(OC.citliva({ cil: 'shodit po porodu' }).indexOf('těhotenství') > -1, 'porod se pozná i z pole cíl');
+// ⛔ „spokojenost" obsahuje „kojen". Krátké kmeny musí mít hranici slova.
+ok(OC.citliva({ proc: 'deti a moje osobni spokojenost' }).length === 0,
+  '„spokojenost" nespustí bránu na kojení');
+ok(OC.citliva({ zdravi: 'vyhodilo se mi koleno' }).indexOf('kojení') === -1, '„koleno" nespustí kojení');
+// ⛔ Vyplněné pole Léky spustí bránu i bez známého slova (klient tam píše názvy přípravků).
+ok(OC.citliva({ leky: 'Detralex, minoxidil, horcik, omega 3' }).indexOf('vyplněné pole Léky') > -1,
+  'osm preparátů v poli Léky spustí bránu');
+// ...ale „zatím žádné" je odpověď „nic", ne nález. Brána, co svítí vždycky, se přestane číst.
+ok(OC.citliva({ leky: 'Taky zadne', zdravi: 'Zatim zadne', alergie: 'Nic' }).length === 0,
+  '„zatím žádné" bránu nespustí');
+ok(OC.citliva({ zdravi: 'Žádná omezení neuvedl' }).length === 0, '„žádná omezení neuvedl" bránu nespustí');
+ok(OC.citliva({ leky: 'eutyrox' }).indexOf('štítná žláza') > -1, 'překlep „eutyrox" bez h se pozná');
+ok(OC.citliva({ sport: 'nekontrolovatelně se přejídá o svátcích' }).indexOf('porucha příjmu potravy') > -1,
+  'přejídání se pozná i z pole sport');
+
+// Aktuální sport vs historie
+const rHist = OC.varianty({ pohlavi: 'z', vek: 36, vyska: 157, vaha: 70, kroky: 3000, dny_treninku: 1,
+  sport: 'Dřív: fitness aerobic, voltyž, karate, aikido. Teď: nic jen procházky', aktivita: 'Sedavá' });
+ok(rHist.vydej.met === 3.5, 'z „Dřív karate, Teď procházky" se bere procházka (MET 3,5), ne karate');
+const rMin = OC.varianty({ pohlavi: 'm', vek: 20, vyska: 181, vaha: 64, kroky: 9000, dny_treninku: 6,
+  sport: 'MMA 6x tydne po 90 minut', aktivita: 'sedavá' });
+ok(rMin.vydej.trenink_minut === 90, 'délka tréninku se vyčte z popisu sportu, když pole chybí');
+
+// Násobič aktivity: pořadí regexů a oddělení polí (obojí našla revize na živých datech)
+ok(OC.varianty({ pohlavi: 'm', vek: 20, vyska: 181, vaha: 64, aktivita: 'Lehce aktivní' }).vydej.nasobic === 1.375,
+  '„Lehce aktivní" dá 1,375, ne 1,55');
+ok(OC.varianty({ pohlavi: 'm', vek: 48, vyska: 187, vaha: 77, aktivita: 'Aktivní',
+  prace: '50% práce u pc, 50% pohyb - gastronomie' }).vydej.nasobic === 1.55,
+  'pole aktivita má přednost před textem práce');
+ok(OC.varianty({ pohlavi: 'm', vek: 40, vyska: 180, vaha: 80, nasobic: 1.2, aktivita: 'Aktivní' }).vydej.nasobic === 1.2,
+  'ruční přepis násobiče z adminu přebije odhad');
+
+// Cíl: odhad je jen předvýběr, přepínač z adminu rozhoduje
+const rCil = OC.varianty({ pohlavi: 'm', vek: 33, vyska: 188, vaha: 105, cil: 'Cílová váha 92 kg' });
+ok(rCil.cil_potvrzen === false, 'bez přepínače je cíl jen odhad');
+const rCil2 = OC.varianty({ pohlavi: 'm', vek: 33, vyska: 188, vaha: 105, cil: 'Cílová váha 92 kg', cil_rezim: 'hubnuti' });
+ok(rCil2.cil === 'hubnuti' && rCil2.cil_potvrzen === true, 'přepínač cíle přebije odhad z textu');
+ok(rCil2.karty[0].klic === 'klidne', 'po přepnutí na hubnutí přijde sada hubnutí');
 
 // Chybějící údaje
 const bez = OC.varianty({ pohlavi: 'm', vek: 30, vaha: 80 });

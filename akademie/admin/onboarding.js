@@ -21,14 +21,18 @@
   // celý, včetně diakritiky, apostrofu v předmětu a odřádkování. Zadání počítalo
   // s ~1800 znaky; při tom čísle by KAŽDÝ uvítací mail spadl do náhradní cesty
   // (zkopírovat a vložit), takže hlavní funkce by se nikdy nepoužila.
-  // 6000 znaků je zhruba 11 kB adresy, pořád hluboko pod limitem prohlížeče.
+  // ⚠️ SNÍŽENO NA 4000 PO REVIZI: změřený je jen bod 2171 znaků těla (4007 v adrese).
+  // Poměr je zhruba 1,85x, takže 6000 znaků těla dá adresu kolem 11 000 znaků, a mezi
+  // 4 000 a 11 000 je pás, kde může Gmail tělo utnout TIŠE (prohlížeč unese 32 kB, Gmail
+  // svůj limit nikde nepíše). 4000 je nejbližší kulaté číslo nad změřeným bodem, u kterého
+  // se pořád vejde celý uvítací mail. Zvedat se smí, ale až po měření dlouhým konceptem.
   // ⚠️ Náhradní cesta zůstává: když text přeteče, Gmail se otevře jen s příjemcem
   // a předmětem a text se zkopíruje do schránky.
-  var GMAIL_BODY_MAX = 6000;
+  var GMAIL_BODY_MAX = 4000;
 
   function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
   function nactiSkript(src) {
@@ -69,12 +73,19 @@
       pohlavi: ctx.rod === 'z' ? 'z' : 'm',
       trenink_minut: '',
       bilkoviny_g_kg: '',
+      nasobic: '',              // prázdné = odhad z dotazníku
+      met: '',                  // prázdné = odhad ze sportu
+      cil_rezim: '',            // prázdné = odhad z textu cíle
       vysledek: null,
       vybrana: null,
       zdravi_odkliknuto: false,
       appka: 'nevim',           // 'propsano' | 'neni' | 'nevim'
       appka_uid: '',
-      auto_propsat: true
+      // ⛔ VÝCHOZÍ VYPNUTO (revize 2. 9. 2026). Dřív tu bylo `true`, takže jedno kliknutí
+      // na „Vybrat" zapsalo cíle do appky platícího klienta bez jediného potvrzení, a
+      // překliknutí na sousední kartu vyrobilo další řádek v `goals`. Zpět se `goals_mode`
+      // vrací jen ručně v DB nebo klientem v appce, takže to nebyla vratná akce.
+      auto_propsat: false
     };
 
     el.innerHTML = '<p class="muted" style="font-size:.85rem;">Načítám engine cílů…</p>';
@@ -91,9 +102,13 @@
         vek: idata.vek, vyska: idata.vyska, vaha: idata.vaha,
         kroky: idata.kroky, dny_treninku: idata.dny_treninku,
         trenink_minut: S.trenink_minut, bilkoviny_g_kg: S.bilkoviny_g_kg,
+        nasobic: S.nasobic, met: S.met, cil_rezim: S.cil_rezim,
         aktivita: idata.aktivita, prace: idata.prace, sport: idata.sport,
-        spanek: idata.spanek, cil: idata.cil,
-        zdravi: idata.zdravi, leky: idata.leky, diety: idata.diety
+        spanek: idata.spanek, cil: idata.cil, proc: idata.proc, termin: idata.termin,
+        // ⛔ Zdravotní brána čte VŠECHNA textová pole, ne tři vybraná. Kdo tenhle výčet
+        // zkrátí, vypne bránu u polí, ve kterých se kojení a diagnózy reálně našly.
+        zdravi: idata.zdravi, leky: idata.leky, diety: idata.diety,
+        alergie: idata.alergie, neji: idata.neji, poznamka: idata.poznamka
       });
       kresli();
     }
@@ -136,6 +151,35 @@
         + '<input type="text" inputmode="decimal" id="obBil" value="' + esc(S.bilkoviny_g_kg) + '" placeholder="podle cíle" style="width:110px;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'
         + '<button class="mlogbtn" id="obPrepocet">Přepočítat</button>'
         + '</div>'
+        // ⛔ CÍL SE NEHÁDÁ. Revize našla dva skutečné dotazníky, kde text („Cílová váha 92 kg")
+        // žádnému regexu nesedl a engine nabídl sadu pro udržení člověku, který chce hubnout.
+        // Předvyplněno odhadem, rozhoduje Martin.
+        + '<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);">'
+        + '<span style="display:block;font-size:.76rem;color:#8F8A99;margin-bottom:4px;">Cíl '
+        + '<span style="color:#6d6879;">(' + (r.cil_potvrzen ? 'potvrdil jsi Ty' : 'odhad z textu „' + esc(String(v.cil || '').slice(0, 40)) + '", zkontroluj') + ')</span></span>'
+        + [['hubnuti', 'hubnutí'], ['udrzeni', 'udržení'], ['postava', 'postava a rekompozice'], ['nabirani', 'nabírání']]
+            .map(function (x) {
+              return '<button type="button" class="kdrod' + (r.cil === x[0] ? ' on' : '') + '" data-obcil="' + x[0] + '">' + x[1] + '</button>';
+            }).join('')
+        + '</div>'
+        // Násobič aktivity: škála z appky. Předvýběr z dotazníku, Martin přepne.
+        + '<div style="margin-top:10px;">'
+        + '<span style="display:block;font-size:.76rem;color:#8F8A99;margin-bottom:4px;">Násobič běžného dne '
+        + '<span style="color:#6d6879;">(dotazník říká „' + esc(String(v.aktivita || 'nic').slice(0, 30)) + '")</span></span>'
+        + [[1.2, 'sedavý 1,2'], [1.375, 'lehce aktivní 1,375'], [1.55, 'aktivní 1,55'], [1.725, 'velmi aktivní 1,725']]
+            .map(function (x) {
+              return '<button type="button" class="kdrod' + (vy.nasobic === x[0] ? ' on' : '') + '" data-obnas="' + x[0] + '">' + x[1] + '</button>';
+            }).join('')
+        + '</div>'
+        // Intenzita sportu (MET). Pole `sport` je vyprávění, ne výčet, takže odhad umí minout.
+        + '<div style="margin-top:10px;">'
+        + '<span style="display:block;font-size:.76rem;color:#8F8A99;margin-bottom:4px;">Intenzita tréninku '
+        + '<span style="color:#6d6879;">(teď: „' + esc((vy.sport_ted || 'nic').slice(0, 40)) + '")</span></span>'
+        + [[3.5, 'chůze a jóga'], [6, 'posilovna'], [8, 'míčové hry'], [9, 'běh a plavání'], [10, 'MMA a HIIT']]
+            .map(function (x) {
+              return '<button type="button" class="kdrod' + (vy.met === x[0] ? ' on' : '') + '" data-obmet="' + x[0] + '">' + x[1] + '</button>';
+            }).join('')
+        + '</div>'
         + '<p class="muted" style="margin:8px 0 0;font-size:.8rem;">Výdej ' + Math.round(vy.tdee) + ' kcal = klid '
         + Math.round(vy.bmr) + ' × ' + vy.nasobic + ' běžný den + ' + Math.round(vy.kroky_kcal) + ' kcal kroky ('
         + (v.kroky == null ? 'neuvedeny' : v.kroky) + ') + ' + Math.round(vy.trenink_kcal) + ' kcal trénink ('
@@ -149,8 +193,12 @@
       h += '</div>';
 
       // karty
+      // ⛔ Zámek nezakrývá jen tlačítko, ale i ČÍSLA. Revize: „brána skrývá jen tlačítko,
+      // čísla ukazuje pořád", takže si je Martin mohl přečíst a opsat do mailu, aniž by
+      // se podíval na zdraví. Zašedlé karty ho donutí odkliknout kontrolu dřív.
       var zamek = r.citliva.length && !S.zdravi_odkliknuto;
-      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;">';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;'
+        + (zamek ? 'opacity:.35;filter:blur(2px);pointer-events:none;user-select:none;' : '') + '">';
       r.karty.forEach(function (k) {
         var vybrana = S.vybrana && S.vybrana.klic === k.klic;
         h += '<div style="background:rgba(255,255,255,' + (vybrana ? '.08' : '.04') + ');border:1px solid '
@@ -184,6 +232,15 @@
       if (z) z.addEventListener('change', function () { S.zdravi_odkliknuto = z.checked; kresli(); });
       Array.prototype.forEach.call(el.querySelectorAll('[data-obrod]'), function (b) {
         b.addEventListener('click', function () { S.pohlavi = b.getAttribute('data-obrod'); S.vybrana = null; prepocti(); });
+      });
+      [['data-obcil', 'cil_rezim'], ['data-obnas', 'nasobic'], ['data-obmet', 'met']].forEach(function (par) {
+        Array.prototype.forEach.call(el.querySelectorAll('[' + par[0] + ']'), function (b) {
+          b.addEventListener('click', function () {
+            S[par[1]] = b.getAttribute(par[0]);
+            // Změna vstupu ruší výběr: karty se přepočítají a Martin musí vybrat znovu.
+            S.vybrana = null; prepocti();
+          });
+        });
       });
       var pp = $('obPrepocet');
       if (pp) pp.addEventListener('click', function () {
@@ -219,7 +276,8 @@
         } else toast('Zadání se neuložilo: ' + ((o.j && o.j.error) || o.status));
       }).catch(function () { toast('Zadání se neuložilo, chyba spojení'); });
 
-      // 2) propsání do appky, když to má Martin zapnuté
+      // 2) propsání do appky JEN když si to Martin výslovně zapnul (výchozí je vypnuto).
+      // ⛔ Zápis do cizí databáze platícímu klientovi nesmí být vedlejší účinek výběru karty.
       if (S.auto_propsat) propsatDoAppky();
     }
 
@@ -279,10 +337,19 @@
       host.innerHTML = h;
 
       $('obAuto').addEventListener('change', function () { S.auto_propsat = $('obAuto').checked; });
-      $('obPush').addEventListener('click', function () { propsatDoAppky(); });
+      $('obPush').addEventListener('click', function () {
+        // Potvrzení, protože zpátky to jde jen ručně: `goals_mode` zůstane 'manual',
+        // dokud ho někdo nepřepne v DB nebo klient sám v appce.
+        var k = S.vybrana;
+        if (!global.confirm('Propsat do appky Tvůj Coach klientovi ' + ctx.email + '?\n\n'
+          + k.kcal + ' kcal · B ' + k.protein + ' g · S ' + k.carbs + ' g · T ' + k.fat + ' g · vláknina ' + k.fiber + ' g\n\n'
+          + 'Vznikne mu nový cíl a týdenní check-in mu ho přestane přepisovat (režim „ruční cíle"). '
+          + 'Zpátky to jde jen ručně v databázi nebo přepínačem v appce.')) return;
+        propsatDoAppky();
+      });
       $('obPruvodce').addEventListener('click', function () {
         var b = document.getElementById('kdPgOpen');
-        if (b) { b.click(); b.scrollIntoView ? null : null; }
+        if (b) b.click();
         else toast('Editor průvodce už je otevřený níž.');
       });
       [['ob1', m1], ['ob2', m2]].forEach(function (par) {

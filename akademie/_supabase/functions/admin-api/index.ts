@@ -2161,10 +2161,12 @@ Deno.serve(async (req) => {
     // ⚠️ Tahle akce klientovi NIC neodesílá.
     if (action === "tc_goals_push") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      // Meze 1:1 s `client_targets_save`. Číslo mimo rozsah = chyba ve výpočtu a do cizí
-      // databáze se takové nepíše.
+      // Meze jsou 1:1 s SQL `admin_set_goals` a s `academy-grant`, NE s `client_targets_save`.
+      // Podlaha je proto 1200 kcal, ne 500: kdyby tady prošlo 900, odmítla by to až databáze
+      // a admin by uživateli ukázal http-400 bez důvodu. Číslo mimo rozsah znamená chybu
+      // ve výpočtu na téhle straně, ne hodnotu, kterou má někdo opatrně uložit.
       const MEZE: Record<string, [number, number]> = {
-        kcal: [500, 8000], protein: [20, 500], carbs: [0, 1200], fat: [0, 400], fiber: [0, 150],
+        kcal: [1200, 8000], protein: [20, 500], carbs: [0, 1200], fat: [0, 400], fiber: [0, 150],
       };
       const cile: Record<string, number> = {};
       for (const [pole, [min, max]] of Object.entries(MEZE)) {

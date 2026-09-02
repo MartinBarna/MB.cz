@@ -48,12 +48,17 @@
     BILKOVINY_MIN: 1.8,
     BILKOVINY_MAX: 2.2,
     BILKOVINY_ABS_MIN: 1.2,      // g/kg referenční váhy, pod tohle se nejde nikdy
-    TUK_PCT_KCAL: 25,
-    TUK_MIN_PCT_KCAL: 22,
-    TUK_MIN_G_PER_KG: 0.6,
+    // ⭐ TUK A VLÁKNINA JSOU OD 2. 9. 2026 PŘEVZATÉ Z APPKY 1:1 (`src/engine/goals.ts`).
+    // Revize změřila, že se dřív rozcházely: tuk až o 25 % (tady 25 % kcal, appka 0,8 g/kg
+    // referenční váhy) a vláknina až o 39 % (tady podlaha 25 g, appka žádnou nemá).
+    // ⚠️ Následek sjednocení: klient na nízkém příjmu dostane MÍŇ vlákniny než dřív
+    // (žena na 1300 kcal 18 g místo 25 g) a VÍC tuku. Je to vědomé, parita s appkou
+    // má přednost, aby klient koučinku a klient appky neviděli dvě různá čísla.
+    TUK_G_PER_KG: 0.8,           // BMI < 30: cílový tuk = referenční váha × tohle (appka FAT_G_PER_KG_DEFAULT)
+    TUK_OBEZITA_PCT_KCAL: 25,    // BMI >= 30: cílový tuk = % kalorií (appka FAT_OBESE_PCT_KCAL)
+    TUK_MIN_PCT_KCAL: 22,        // podlaha, appka fatFloorG
     SACHARIDY_PODLAHA_G: 100,
     VLAKNINA_NA_1000: 14,
-    VLAKNINA_MIN: 25,
     VLAKNINA_MAX: 60,
     STROP_DEFICITU_PCT_TDEE: 25,
     KROKY_ZAPOCTENE_OD: 3000,     // do násobiče běžného dne se vejde ~3000 kroků
@@ -65,8 +70,15 @@
     TEMPO_VAROVANI_PCT_TYDNE: 1.0 // rychlejší hubnutí než 1 % váhy za týden = varování
   };
 
-  // Násobič BĚŽNÉHO dne (bez sportu). Sport a kroky se přičítají zvlášť, viz hlavička.
-  var NASOBIC_DNE = { sedavy: 1.2, lehka: 1.3, stredni: 1.4, vysoka: 1.5 };
+  // Násobič aktivity. ⭐ Hodnoty jsou od 2. 9. 2026 TÉŽE ŠKÁLY JAKO APPKA
+  // (`ACTIVITY_MULTIPLIERS` v `src/engine/goals.ts`), aby Martin viděl stejná čísla
+  // jako klient v appce: sedavý 1,2 · lehce aktivní 1,375 · aktivní 1,55 · velmi aktivní 1,725.
+  // ⚠️⚠️ POZOR NA DVOJÍ ZAPOČTENÍ: appka tímhle násobičem pokrývá I sport, tady se kroky
+  // a tréninky přičítají ZVLÁŠŤ (dotazník je má jako čísla). Kdo vybere „aktivní" klientovi,
+  // který zároveň trénuje, dostane sport dvakrát. Engine to pozná a napíše varování;
+  // Martin má v adminu přepínač, takže si může vybrat: buď nižší stupeň, nebo nula tréninků.
+  var NASOBIC_DNE = { sedavy: 1.2, lehce: 1.375, aktivni: 1.55, velmi: 1.725 };
+  var NASOBIC_POPIS = { 1.2: 'sedavý', 1.375: 'lehce aktivní', 1.55: 'aktivní', 1.725: 'velmi aktivní' };
 
   // MET podle toho, co klient napsal do „sport". Čísla z běžného compendia aktivit.
   // Bere se PRVNÍ pravidlo, které sedí; když nesedí nic, platí 6 (posilovna).
@@ -81,19 +93,52 @@
   ];
   var SPORT_MET_VYCHOZI = 6;
 
-  // Citlivá slova ve `zdravi`, `leky`, `diety`. Nález = červený proužek nad kartami
-  // a Martin musí odškrtnout, že to zkontroloval. Je to podlaha, ne záruka.
+  // NEPREKROCITELNE PRAVIDLO 2 PROJEKTU: zdravotni brana.
+  //
+  // PREPSANO 2. 9. 2026 PO REVIZI, ktera pustila starou verzi na PETI skutecnych
+  // dotaznicich z zive databaze: nechytila CTYRI z peti.
+  //   - Kojici matka po cisari se stitnou zlazou a Euthyroxem: slovo "kojim" bylo
+  //     v poli `prace` a "po porodu" v poli `cil`, ale brana cetla jen `zdravi`,
+  //     `leky` a `diety`. Zachranila to nahoda, ze v `zdravi` bylo "stitna".
+  //   - Klientka s osmi preparaty v poli Leky: brana hledala SLOVO "leky" v OBSAHU
+  //     toho pole, jenze tam lide pisou nazvy pripravku. Nespustila se vubec.
+  //   - "eutyrox" (bezny preklep bez h) stary regex nechytil.
+  //
+  // Dnes plati trojí pojistka:
+  //   1) ctou se VSECHNA textova pole dotazniku, ne tri vybrana (`CITLIVA_POLE`),
+  //   2) slovnik niz hleda diagnozy a stavy, s diakritikou i bez ni (text se zbavuje
+  //      diakritiky pres `bezDia`, takze regexy jsou schvalne psane bez ni),
+  //   3) jakykoli neprazdny obsah poli `leky`, `zdravi` a `alergie` branu spusti sam
+  //      o sobe (`VYPLNENE_JE_SIGNAL`), i kdyz v nem zadne zname slovo neni.
+  //      Whitelist prazdnych odpovedi je v `PRAZDNE_ODPOVEDI`.
+  //
+  // Je to PODLAHA, ne zaruka. Brana Martina zastavi, nerozhoduje za nej.
+  var CITLIVA_POLE = ['zdravi', 'leky', 'diety', 'alergie', 'neji', 'poznamka', 'prace', 'cil', 'proc', 'sport', 'termin'];
+  var VYPLNENE_JE_SIGNAL = [['leky', 'vyplněné pole Léky'], ['zdravi', 'vyplněné pole Zdraví'], ['alergie', 'vyplněné pole Alergie']];
+  // Odpovedi, ktere znamenaji "nic". Porovnava se CELA hodnota bez diakritiky, aby
+  // "Zatim zadne" nebo "Zadna omezeni neuvedl" nespoustelo branu zbytecne. Kdyz se brana
+  // rozsviti u kazdeho klienta, prestane si ji clovek cist, a to je horsi nez kdyby nebyla.
+  var PRAZDNE_ODPOVEDI = /^(zatim |taky |ted |momentalne |uz |asi |snad )?(ne|nic|nemam|neberu|nevim|zadne|zadna|zadny|zadnych|x|0|-{1,2})( omezeni| problemy| nemam| neuvedl| neuvedla| zvlastniho| nic| leky| lieky)?( neuvedl| neuvedla)?[.!]?$/;
+  // ⛔ KRATKE KMENY MUSI MIT HRANICI SLOVA (\b). Zmereno 2. 9. 2026 na skutecnem dotazniku:
+  // "spokojenost" obsahuje "kojen", takze brana hlasila KOJENI u 45lete zeny, ktera
+  // do kolonky "proc" napsala "deti a moje osobni spokojenost". Falesny poplach je
+  // levnejsi nez zmeskany nalez, ale ne zadarmo: kdo bere branu jako sum, prestane ji cist.
   var CITLIVA_SLOVA = [
-    ['těhotenství', /tehot|těhot|gravid/],
-    ['kojení', /kojen|kojím|kojim/],
-    ['porucha příjmu potravy', /anorex|bulim|porucha prijmu|porucha příjmu|ppp\b|zachvat|záchvat|prejida|přejídá/],
-    ['cukrovka', /diabet|cukrovk|inzulin|inzulín|metformin/],
-    ['štítná žláza', /stitn|štítn|hashimoto|thyrox|euthyrox|letrox/],
-    ['léky', /lek |lék |leky|léky|antidepres|kortiko|prednison|warfarin|beta.?blok|antikonc/],
-    ['srdce a tlak', /srdc|infarkt|arytmi|vysoky tlak|vysoký tlak|hypertenz/],
-    ['ledviny a játra', /ledvin|jatr|játr|cirhoz|dialyz/],
-    ['operace', /operac|po operaci|rekonvalescen/],
-    ['celiakie', /celiaki|celiakl/]
+    ['těhotenství', /\btehot|\bgravid|\bcisar|po porodu|sestinedel/],
+    // "krmim" je slabsi signal (da se krmit i pes), ale u zeny po porodu to byla jedina
+    // stopa v poli `prace` ve skutecnem dotazniku. Falesny poplach stoji jedno kliknuti.
+    ['kojení', /\bkoj(en|im|ic)|\blaktac|\bkrmim|\bkrmen[ií]/],
+    ['porucha příjmu potravy', /\banorex|\bbulim|poruch\w* prijmu|\bppp\b|zachvatovit|\bprejida/],
+    ['cukrovka', /\bdiabet|\bcukrovk|\binzulin|\bmetformin|\bglukofag|\bsiofor/],
+    ['štítná žláza', /\bstitn|hashimoto|thyrox|eutyrox|letrox|levothyrox|hypotyre|hypertyre/],
+    ['duševní zdraví', /\bdepres|antidepres|\buzkost|\bpanick|escitalopram|sertralin|bupropion/],
+    ['hormonální léčba', /antikonc|hormonaln|\bpcos\b|endometri|menopauz|estrogen/],
+    ['léky', /kortiko|prednison|warfarin|beta.?blok|\bstatin|\bopioid/],
+    ['srdce a tlak', /\bsrdc|\binfarkt|\barytmi|vysoky tlak|hypertenz|na tlak/],
+    ['ledviny a játra', /\bledvin|\bjatr|\bcirhoz|\bdialyz/],
+    ['operace', /\boperac|po operaci|rekonvalescen|zlomenin/],
+    ['celiakie a střeva', /\bceliaki|\bcrohn|\bcolitid|ulcerozn|\breflux|zaludecn|\bvred/],
+    ['astma a alergie', /\bastma|anafyl|\bepipen/]
   ];
 
   // ---------------------------------------------------------------------------
@@ -138,16 +183,57 @@
   }
   function podlahaKcal(pohlavi) { return pohlavi === 'z' ? 1200 : 1500; }
 
-  function nasobicDne(text) {
-    var s = bezDia(text);
-    if (/sedav|kancel|u pocitace|u pc|za stolem|ridic|řidič/.test(s)) return NASOBIC_DNE.sedavy;
-    if (/velmi aktivn|fyzick|manual|stavb|sklad|zdravotn sestr|cisnic|číšnic|servirk|na nohou cely/.test(s)) return NASOBIC_DNE.vysoka;
-    if (/stredn|aktivn|casto chodim|hodne chodim|chodim|prodavac|ucitel/.test(s)) return NASOBIC_DNE.stredni;
-    if (/lehk|obcas|castecne/.test(s)) return NASOBIC_DNE.lehka;
-    return NASOBIC_DNE.sedavy;
+  /**
+   * Odhad násobiče z textu. ⭐ Je to jen PŘEDVÝBĚR, Martin ho v adminu přepíná.
+   * ⛔ POŘADÍ JE ZÁVAZNÉ a opravené 2. 9. 2026 po revizi na skutečných dotaznících:
+   *   • „Lehce aktivní" dřív spadlo do větve /aktivn/ a dalo 1,4 místo 1,3. Proto se
+   *     nejdřív ptáme na „lehce", teprve pak na „aktivní".
+   *   • „50 % práce u pc, 50 % pohyb" + aktivita „Aktivní" dřív spadlo do /u pc/ a dalo
+   *     1,2 místo 1,55, tedy TDEE o 11 % níž. Proto se pole ODDĚLUJÍ: rozhoduje pole
+   *     `aktivita` (klient si tam vybírá stupeň), a text práce se čte jen tehdy,
+   *     když aktivita mlčí.
+   */
+  function nasobicZTextu(s) {
+    if (!s) return null;
+    if (/velmi aktivn|extremn/.test(s)) return NASOBIC_DNE.velmi;
+    if (/lehce aktivn|lehk|obcas|castecne/.test(s)) return NASOBIC_DNE.lehce;
+    if (/stredn|aktivn|casto chodim|hodne chodim/.test(s)) return NASOBIC_DNE.aktivni;
+    if (/sedav|kancel|u pocitace|u pc|za stolem|ridic/.test(s)) return NASOBIC_DNE.sedavy;
+    if (/fyzick|manual|stavb|sklad|na nohou cely/.test(s)) return NASOBIC_DNE.velmi;
+    if (/chodim|prodavac|ucitel/.test(s)) return NASOBIC_DNE.aktivni;
+    return null;
   }
+  function nasobicDne(aktivita, prace) {
+    return nasobicZTextu(bezDia(aktivita)) || nasobicZTextu(bezDia(prace)) || NASOBIC_DNE.sedavy;
+  }
+
+  /**
+   * Z popisu sportu vytáhne jen to, co klient dělá TEĎ.
+   * ⛔ Přidáno 2. 9. 2026 po revizi: pole `sport` je vyprávění, ne výčet. Skutečný
+   * dotazník obsahoval „Dřív: fitness aerobic, voltyž, karate, aikido. Teď: nic jen
+   * procházky" a engine z něj vytáhl karate (MET 10), tedy 94 kcal denně bojového
+   * sportu ženě, která chodí na procházky.
+   */
+  function aktualniSport(text) {
+    var s = String(text == null ? '' : text);
+    var m = s.match(/(te[dď]|nyn[ií]|aktu[aá]ln|moment[aá]ln|posledn[ií] dobou)\s*[:,-]?\s*([\s\S]*)$/i);
+    if (m && m[2] && m[2].trim()) return m[2];
+    // Když se mluví jen o minulosti a žádné „teď" tam není, nemáme co započítat.
+    if (/d[rř][ií]v|kdysi|p[rř]estal|nesportuj|nyn[ií] nic/i.test(s) && !m) return '';
+    return s;
+  }
+
+  /** Délka jednoho tréninku vyčtená z textu („6x týdně 90 minut"). Dotazník pole nemá. */
+  function minutyZTextu(text) {
+    var m = bezDia(text).match(/(\d{2,3})\s*(min|minut)/);
+    if (!m) return null;
+    var n = Number(m[1]);
+    return isFinite(n) && n >= 10 && n <= K.TRENINK_MINUT_STROP ? n : null;
+  }
+
   function metSportu(text) {
-    var s = bezDia(text);
+    var s = bezDia(aktualniSport(text));
+    if (!s.trim()) return SPORT_MET_VYCHOZI;
     for (var i = 0; i < SPORT_MET.length; i++) if (SPORT_MET[i][0].test(s)) return SPORT_MET[i][1];
     return SPORT_MET_VYCHOZI;
   }
@@ -155,22 +241,26 @@
   /** Rozpad denního výdeje. Vrací i jednotlivé díly, ať se dá v adminu ukázat, z čeho to je. */
   function vydej(v) {
     var b = bmr(v.pohlavi, v.vaha, v.vyska, v.vek);
-    var nas = nasobicDne((v.prace || '') + ' ' + (v.aktivita || ''));
+    var nas = v.nasobic != null ? v.nasobic : nasobicDne(v.aktivita, v.prace);
     var zaklad = b * nas;
 
     var kroky = clamp(v.kroky == null ? 0 : v.kroky, 0, K.KROKY_STROP);
     var krokyKcal = Math.max(0, kroky - K.KROKY_ZAPOCTENE_OD) * v.vaha * K.KCAL_NA_KROK_NA_KG;
 
     var dni = clamp(v.dny_treninku == null ? 0 : v.dny_treninku, 0, K.TRENINK_DNI_STROP);
-    var minut = clamp(v.trenink_minut == null ? K.TRENINK_MINUT_VYCHOZI : v.trenink_minut, 0, K.TRENINK_MINUT_STROP);
-    var met = metSportu(v.sport);
+    // Délka tréninku: ruční přepis z adminu > číslo vyčtené z popisu sportu > 60 minut.
+    var minutZdroj = v.trenink_minut != null ? v.trenink_minut : minutyZTextu(v.sport);
+    var minut = clamp(minutZdroj == null ? K.TRENINK_MINUT_VYCHOZI : minutZdroj, 0, K.TRENINK_MINUT_STROP);
+    var met = v.met != null ? v.met : metSportu(v.sport);
     // Čistý výdej: od METu se odečítá 1 (klidový metabolismus se v BMR počítá už jednou).
     var kcalZaMinutu = (met - 1) * 3.5 * v.vaha / 200;
     var treninkKcal = dni * minut * kcalZaMinutu / 7;
 
     return {
-      bmr: b, nasobic: nas, zaklad: zaklad, kroky_kcal: krokyKcal, trenink_kcal: treninkKcal,
+      bmr: b, nasobic: nas, nasobic_popis: NASOBIC_POPIS[nas] || String(nas),
+      zaklad: zaklad, kroky_kcal: krokyKcal, trenink_kcal: treninkKcal,
       met: met, trenink_minut: minut, trenink_dni: dni,
+      minut_z_dotazniku: minutyZTextu(v.sport), sport_ted: aktualniSport(v.sport).trim(),
       tdee: zaklad + krokyKcal + treninkKcal
     };
   }
@@ -184,12 +274,14 @@
    *   2) teprve pak bílkoviny dolů, ale nikdy pod 1,2 g/kg referenční váhy,
    *   3) když ani to nestačí, sacharidy zůstanou pod podlahou a je z toho varování.
    */
-  function makra(kcal, bilkovinyG, refKg) {
-    var tukPodlahaG = Math.max(
-      Math.round((K.TUK_MIN_PCT_KCAL / 100) * kcal / 9),
-      Math.round(refKg * K.TUK_MIN_G_PER_KG)
-    );
-    var tukCilG = Math.round((K.TUK_PCT_KCAL / 100) * kcal / 9);
+  function makra(kcal, bilkovinyG, refKg, obezita) {
+    // ⭐ 1:1 s appkou: podlaha je JEN 22 % kalorií (`fatFloorG`), ne navíc 0,6 g/kg.
+    // V appce je 0,6 minimum vstupního parametru `fatPerKg`, ne podlaha výsledku.
+    var tukPodlahaG = Math.round((K.TUK_MIN_PCT_KCAL / 100) * kcal / 9);
+    // ⭐ 1:1 s appkou `fatTargetG`: BMI >= 30 → 25 % kalorií, jinak 0,8 g/kg referenční váhy.
+    var tukCilG = obezita
+      ? Math.round((K.TUK_OBEZITA_PCT_KCAL / 100) * kcal / 9)
+      : Math.round(refKg * K.TUK_G_PER_KG);
     var bilk = Math.round(bilkovinyG);
     var maxTuk = Math.floor((kcal - bilk * 4) / 9);
     var tuk = Math.max(tukPodlahaG, Math.min(tukCilG, maxTuk));
@@ -214,8 +306,9 @@
     return { protein: bilk, fat: tuk, carbs: s, na_podlaze: s < K.SACHARIDY_PODLAHA_G };
   }
 
+  /** ⭐ 1:1 s appkou `fiberTargetG`: 14 g na 1000 kcal, strop 60, ŽÁDNÁ podlaha. */
   function vlakninaG(kcal) {
-    return clamp(Math.round(kcal / 1000 * K.VLAKNINA_NA_1000), K.VLAKNINA_MIN, K.VLAKNINA_MAX);
+    return Math.min(K.VLAKNINA_MAX, Math.round(kcal / 1000 * K.VLAKNINA_NA_1000));
   }
 
   // ---------------------------------------------------------------------------
@@ -240,15 +333,15 @@
         proc: 'Bez deficitu. Dává smysl na začátek u někoho, kdo dlouho držel diety, nebo jako pauza uprostřed hubnutí.' }
     ],
     nabirani: [
-      { klic: 'udrzeni_sila', nazev: 'Udržení a síla', posun: 0, bilkoviny: 1.8,
+      { klic: 'udrzeni_sila', nazev: 'Udržení a síla', posun: 0, bilkoviny: 2.0,
         proc: 'Kalorie kolem výdeje, roste hlavně síla. Nejčistší varianta, jen je pomalá.' },
-      { klic: 'lehke', nazev: 'Lehké nabírání', posun: 0.08, bilkoviny: 1.8,
+      { klic: 'lehke', nazev: 'Lehké nabírání', posun: 0.08, bilkoviny: 2.0,
         proc: 'Mírný přebytek. Váha roste pomalu a většina přírůstku je sval, ne tuk.' },
-      { klic: 'rychlejsi', nazev: 'Rychlejší nabírání', posun: 0.15, bilkoviny: 1.8,
+      { klic: 'rychlejsi', nazev: 'Rychlejší nabírání', posun: 0.15, bilkoviny: 2.0,
         proc: 'Větší přebytek pro toho, kdo přibírá těžko. Počítej s tím, že část přírůstku bude tuk.' }
     ],
     udrzeni: [
-      { klic: 'udrzeni', nazev: 'Udržení', posun: 0, bilkoviny: 1.8,
+      { klic: 'udrzeni', nazev: 'Udržení', posun: 0, bilkoviny: 2.0,
         proc: 'Kalorie kolem výdeje. Váha se drží, mění se složení stravy a pravidelnost.' },
       { klic: 'recomp', nazev: 'Rekompozice', posun: 0, bilkoviny: 2.2,
         proc: 'Stejné kalorie, ale výrazně víc bílkovin. Váha stojí, mění se poměr svalu a tuku. Trvá to déle a je to vidět spíš na mírách než na váze.' },
@@ -293,13 +386,31 @@
   // ---------------------------------------------------------------------------
   // Citlivá pole
   // ---------------------------------------------------------------------------
+  /** Je hodnota realna odpoved, nebo jen "nic"? */
+  function neprazdne(hodnota) {
+    var s = bezDia(hodnota).trim();
+    if (!s) return false;
+    return !PRAZDNE_ODPOVEDI.test(s);
+  }
+  /**
+   * Vrati seznam nalezu. Prazdne pole = brana se nespusti.
+   * Cte VSECHNA pole z `CITLIVA_POLE`, ne tri vybrana. Viz komentar u slovniku.
+   */
   function citliva(v) {
-    var text = bezDia([v.zdravi, v.leky, v.diety].filter(Boolean).join(' | '));
-    var out = [];
-    for (var i = 0; i < CITLIVA_SLOVA.length; i++) {
-      if (CITLIVA_SLOVA[i][1].test(text)) out.push(CITLIVA_SLOVA[i][0]);
+    var casti = [];
+    for (var i = 0; i < CITLIVA_POLE.length; i++) {
+      var h = v[CITLIVA_POLE[i]];
+      if (h != null && String(h).trim() !== '') casti.push(String(h));
     }
-    return out;
+    var text = bezDia(casti.join(' | '));
+    var out = [];
+    for (var j = 0; j < CITLIVA_SLOVA.length; j++) {
+      if (CITLIVA_SLOVA[j][1].test(text)) out.push(CITLIVA_SLOVA[j][0]);
+    }
+    for (var k = 0; k < VYPLNENE_JE_SIGNAL.length; k++) {
+      if (neprazdne(v[VYPLNENE_JE_SIGNAL[k][0]])) out.push(VYPLNENE_JE_SIGNAL[k][1]);
+    }
+    return out.filter(function (x, idx) { return out.indexOf(x) === idx; });
   }
 
   // ---------------------------------------------------------------------------
@@ -320,9 +431,13 @@
       // zatímco pravidlo pro nabírání říká 1,8. Neohýbám kvůli tomu vzorec, ale nechávám
       // páku, aby to nemusel přepisovat ručně v mailu.
       bilkoviny_g_kg: num(vstup.bilkoviny_g_kg),
+      // Rucni prepisy z adminu (prazdne = odhad z dotazniku). Martin je vidi a meni.
+      nasobic: num(vstup.nasobic), met: num(vstup.met),
+      cil_rezim: vstup.cil_rezim || null,
       aktivita: vstup.aktivita || '', prace: vstup.prace || '', sport: vstup.sport || '',
-      spanek: vstup.spanek, cil: vstup.cil || '',
-      zdravi: vstup.zdravi || '', leky: vstup.leky || '', diety: vstup.diety || ''
+      spanek: vstup.spanek, cil: vstup.cil || '', proc: vstup.proc || '', termin: vstup.termin || '',
+      zdravi: vstup.zdravi || '', leky: vstup.leky || '', diety: vstup.diety || '',
+      alergie: vstup.alergie || '', neji: vstup.neji || '', poznamka: vstup.poznamka || ''
     };
 
     var chybi = [];
@@ -333,19 +448,40 @@
       return { ok: false, chybi: chybi, karty: [], citliva: citliva(v), varovani: [], vstup: v };
     }
 
-    var varovani = [];
-    if (v.kroky == null) varovani.push('Kroky v dotazníku nejsou, počítám s ' + K.KROKY_ZAPOCTENE_OD + ' za den (jen běžný pohyb). Doplň je, výdej se posune.');
-    if (v.dny_treninku == null) varovani.push('Počet tréninků v dotazníku není, počítám s nulou. Doplň ho, výdej se posune.');
-    if (v.trenink_minut == null && v.dny_treninku) varovani.push('Délka tréninku v dotazníku není, počítám ' + K.TRENINK_MINUT_VYCHOZI + ' minut. Přepiš ji, když trénuje déle.');
-
     var vy = vydej(v);
+    var varovani = [];
+    if (v.kroky == null) varovani.push('Kroky v dotazníku nejsou, počítám jen běžný pohyb (kroky přidávají 0 kcal). Doplň je, výdej se posune.');
+    if (v.dny_treninku == null) varovani.push('Počet tréninků v dotazníku není, počítám s nulou. Doplň ho, výdej se posune.');
+    if (v.trenink_minut == null && vy.trenink_dni) {
+      varovani.push(vy.minut_z_dotazniku != null
+        ? ('Délku tréninku dotazník nemá jako pole, vyčetl jsem ' + vy.minut_z_dotazniku + ' minut z popisu sportu. Zkontroluj to.')
+        : ('Délka tréninku nikde není, počítám ' + K.TRENINK_MINUT_VYCHOZI + ' minut. Přepiš ji, když trénuje déle nebo kratší dobu.'));
+    }
+    // Dvojí započtení sportu: násobič ze škály appky pokrývá i pohyb, tady se tréninky
+    // přičítají zvlášť. Radši to řekneme, než abychom klientovi nadsadili výdej.
+    if (vy.nasobic > 1.2 && vy.trenink_dni > 0) {
+      varovani.push('Násobič je „' + vy.nasobic_popis + '" (' + cz(vy.nasobic) + ') a zároveň počítám '
+        + vy.trenink_dni + ' tréninků týdně zvlášť. Škála je z appky, kde jeden násobič pokrývá i sport, '
+        + 'takže se tady může pohyb započítat dvakrát. Buď dej „sedavý", nebo tréninky vynuluj.');
+    }
+    if (vy.sport_ted !== String(v.sport || '').trim()) {
+      varovani.push(vy.sport_ted
+        ? ('Z popisu sportu beru jen to, co klient dělá teď: „' + vy.sport_ted.slice(0, 80) + '".')
+        : 'V popisu sportu je jen minulost, žádný aktuální pohyb. Beru výchozí intenzitu, zkontroluj to.');
+    }
     var b = bmi(v.vaha, v.vyska);
     var refKg = referencniVaha(v.vaha, v.vyska);
     if (b != null && b >= K.OBEZITA_BMI) {
       varovani.push('BMI ' + cz(Math.round(b * 10) / 10) + ', tedy 30 a víc. Bílkoviny a tuk počítám z referenční váhy '
         + cz(Math.round(refKg * 10) / 10) + ' kg, ne z aktuální. Jinak by bílkoviny snědly skoro celý denní příjem.');
     }
-    var cil = odhadCile(v.cil);
+    // Cil se NEHADA. `odhadCile` je jen PREDVYBER pro prepinac v adminu; kdyz Martin
+    // vybere, prijde sem jako `cil_rezim` a text dotazniku se ignoruje.
+    // Revize nasla dva skutecne dotazniky, kde text (napr. "Cilova vaha 92 kg") zadnemu
+    // regexu nesedl a engine nabidl sadu pro udrzeni cloveku, ktery chce hubnout.
+    // Bez prepinace to Martin nemel cim opravit.
+    var cilOdhad = odhadCile(v.cil + ' ' + (v.proc || ''));
+    var cil = SADY[v.cil_rezim] ? v.cil_rezim : cilOdhad;
     var podlaha = podlahaKcal(v.pohlavi);
     var stropDeficitu = (K.STROP_DEFICITU_PCT_TDEE / 100) * vy.tdee;
 
@@ -365,7 +501,7 @@
       }
 
       var bilkPerKg = clamp(v.bilkoviny_g_kg == null ? s.bilkoviny : v.bilkoviny_g_kg, K.BILKOVINY_MIN, K.BILKOVINY_MAX);
-      var m = makra(kcal, refKg * bilkPerKg, refKg);
+      var m = makra(kcal, refKg * bilkPerKg, refKg, b != null && b >= K.OBEZITA_BMI);
       if (m.na_podlaze) {
         kartaVar.push('Sacharidy zůstaly pod 100 g. Na tomhle příjmu se bílkoviny, tuk i sacharidy nevejdou naráz, hlídej energii v tréninku.');
       }
@@ -395,7 +531,7 @@
     });
 
     return {
-      ok: true, chybi: [], cil: cil, vydej: vy, bmi: b == null ? null : Math.round(b * 10) / 10,
+      ok: true, chybi: [], cil: cil, cil_odhad: cilOdhad, cil_potvrzen: !!SADY[v.cil_rezim], vydej: vy, bmi: b == null ? null : Math.round(b * 10) / 10,
       ref_kg: Math.round(refKg * 10) / 10, podlaha_kcal: podlaha,
       karty: karty, citliva: citliva(v), varovani: varovani, vstup: v
     };
@@ -503,7 +639,7 @@
     var radky = [];
     radky.push('Ahoj ' + (o.osloveni || o.jmeno || '') + ',');
     radky.push('');
-    radky.push('posílám Ti průvodce na míru. Máš tam dva vzorové dny, nákupní seznam na týden a záměny, kterými si jídla můžeš prohodit, aniž bys musel počítat.');
+    radky.push('posílám Ti průvodce na míru. Máš tam dva vzorové dny, nákupní seznam na týden a záměny, kterými si jídla můžeš prohodit, a nemusíš u toho počítat.');
     radky.push('');
     radky.push('Nejsou to dny, které musíš jíst přesně. Jsou to dva příklady toho, jak vypadá den, který Ti sedne do čísel. Když si něco prohodíš podle záměn, sedí to dál.');
     radky.push('');
@@ -517,7 +653,8 @@
   }
 
   return {
-    K: K, varianty: varianty, priority: priority, citliva: citliva,
+    K: K, NASOBIC_DNE: NASOBIC_DNE, NASOBIC_POPIS: NASOBIC_POPIS, SADY: SADY,
+    varianty: varianty, priority: priority, citliva: citliva,
     mailUvitaci: mailUvitaci, mailPruvodce: mailPruvodce,
     _vnitrni: { bmr: bmr, bmi: bmi, referencniVaha: referencniVaha, vydej: vydej, makra: makra, vlakninaG: vlakninaG, odhadCile: odhadCile, metSportu: metSportu, nasobicDne: nasobicDne }
   };
