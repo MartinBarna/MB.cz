@@ -39,19 +39,13 @@
         { "@type": "Offer", "name": "Basic (měsíčně)", "price": "249", "priceCurrency": "CZK" },
         { "@type": "Offer", "name": "Basic (ročně, dva měsíce zdarma)", "price": "2490", "priceCurrency": "CZK" },
         { "@type": "Offer", "name": "VIP s AI koučem (měsíčně)", "price": "499", "priceCurrency": "CZK" },
-        { "@type": "Offer", "name": "VIP s AI koučem (ročně, dva měsíce zdarma)", "price": "4990", "priceCurrency": "CZK" }
+        { "@type": "Offer", "name": "VIP s AI koučem (ročně, dva měsíce zdarma)", "price": "4990", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "VIP + Kontrola od Martina (měsíčně)", "price": "1990", "priceCurrency": "CZK" },
+        { "@type": "Offer", "name": "VIP + Kontrola od Martina (3 měsíce)", "price": "5490", "priceCurrency": "CZK" }
       ],
       "author": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" }
     }
     </script>
-    <!-- ⛔ AŽ PO AKTIVACI TARIFU „VIP + Kontrola od Martina" (Stripe Price doplněná
-         v pricing_plans a `active = true`) přidej do `offers` výš tyhle dva řádky:
-           { "@type": "Offer", "name": "VIP + Kontrola od Martina (měsíčně)", "price": "1990", "priceCurrency": "CZK" },
-           { "@type": "Offer", "name": "VIP + Kontrola od Martina (3 měsíce)", "price": "5490", "priceCurrency": "CZK" }
-         Dřív ne: JSON-LD čte crawler a ten nečeká na skript, který nabídku odkrývá,
-         takže by Google ukazoval cenu produktu, který se nedá koupit.
-         ⛔ A komentář sem, ne dovnitř JSON-LD: HTML komentář uvnitř `application/ld+json`
-         rozbije JSON a Google zahodí strukturovaná data CELÉ stránky. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
