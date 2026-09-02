@@ -65,7 +65,12 @@
     // dorovnej kcal po zaokrouhlení
     kcal = protein * 4 + carbs * 4 + fat * 9;
     // Cílová vláknina: 14 g / 1000 kcal (US Dietary Guidelines), min. 25 g pro dospělého.
-    var fiber = Math.max(25, Math.round(kcal / 1000 * 14));
+    // ⛔ [2026-09-02] Strop 60 g doplněn: generátor níž vlákninu nad `FIBER_CAP_G` nepustí,
+    // takže bez tohohle clampu by kalkulačka u velmi vysokých cílů (nad 4 300 kcal) slíbila
+    // číslo, které jídelníček vědomě nesplní. ⚠️ Podlaha 25 g je dál JEN na webu, appka ji
+    // nemá (`goals.ts` počítá `min(60, kcal/1000*14)` bez podlahy). Sjednotit ji je
+    // odborné rozhodnutí pro Martina, ne úklid, tak se tu nemění.
+    var fiber = Math.min(FIBER_CAP_G, Math.max(25, Math.round(kcal / 1000 * 14)));
     return { kcal: kcal, protein: protein, carbs: carbs, fat: fat, fiber: fiber,
              bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label,
              // [revize R5] příznaky podlahy pro UI; obdoba `rate_capped_kg_per_week` v appce
@@ -193,6 +198,22 @@
   // ⚠️ KOTVENÉ `^(...)$`: nekotvené `maslo` chytá i `mandlove-maslo`. ⛔ Táž logika v appce.
   var SLADKY_TUK = /^(mandle|vlasske-orechy|liskove-orechy|kesu|araside|arasidy|mandlove-maslo|araside-maslo|chia-seminka|lnene-seminko|pistacie)$/;
   var SLANY_TUK = /^(olivovy-olej|repkovy-olej|slunecnicovy-olej|maslo|ghi|avokado|dynova-seminka|slunecnicova-seminka)$/;
+
+  // ⛔⛔ HYGIENICKÝ STROP VLÁKNINY (g/den). V appce žije v `src/engine/meal-gen-core.ts`
+  // jako exportovaná `FIBER_CAP_G` a `goals.ts` si ho odtud importuje, aby nikde nebyla
+  // druhá kopie čísla. Tady je jeho zrcadlo pro web, hlídá parita-jidelnicku.mjs.
+  // ⚠️ Cíl vlákniny je PODLAHA, tohle je STROP. Nad 60 g denně je vláknina trávicí
+  // problém (nadýmání, průjem, horší vstřebávání minerálů), ne bonus. Audit 2. 9. 2026
+  // naměřil 18 % dnů nad stropem a rekord 96 g vlákniny za den.
+  var FIBER_CAP_G = 60;
+  // Kolik smí být vlákniny nad cílem, než se to začne řešit (cíl je podlaha, mírný
+  // přebytek je v pořádku a nemá cenu kvůli němu měnit potraviny).
+  var FIBER_PASMO_NAD_CILEM = 1.1;
+  // ⛔ STROP HMOTNOSTI JEDNOHO JÍDLA (gramy všeho na talíři dohromady). Audit našel jedno
+  // jídlo o 1 257 g: každá položka byla pod svým stropem (`CAP`), ale součet jídla nikdo
+  // nehlídal. ⚠️ ROZHODNUTÍ, ne doložené číslo (viz komentář v appkovém jádru).
+  var STROP_HLAVNI_JIDLO_G = 700;
+  var STROP_SVACINA_G = 400;
 
   // [2026-08-06 kolo 3] Keto varianta cílů: sacharidy na ~8 % kalorií, bílkoviny drží,
   // zbytek kalorií dorovná tuk. Jediná keto matematika pro web, appku i AI kouče.
@@ -344,6 +365,21 @@
     // ⛔ Stejna oprava je v appce (src/engine/meal-gen.ts), oba generatory se musi chovat
     // stejne. Hlida to `npm run parita:generatory` v repu appky.
     var pouziteProt = {};
+    // Bílkoviny z předchozích dnů týdne (plní `assembleWeek`, viz opts.nedavnoPouzite).
+    var nedavno = {};
+    var nedavnoPocet = 0;
+    (opts.nedavnoPouzite || []).forEach(function (id) {
+      if (!nedavno[id]) { nedavno[id] = 1; nedavnoPocet++; }
+    });
+    // [oprava po auditu 2026-09-02] Co bylo v posledních dvou dnech, jde stranou.
+    // Audit naměřil veganský týden, kde seitan a rostlinné kousky padly 7 dnů ze 7,
+    // protože `assembleWeek` mezi dny žádnou paměť neměla. Fallback na plnou nabídku
+    // drží průchodnost úzkých diet (vegan má běžné bílkoviny jen tři).
+    function nebylNedavno(list) {
+      if (!nedavnoPocet) return list;
+      var cerstve = list.filter(function (f) { return !nedavno[f.id]; });
+      return cerstve.length ? cerstve : list;
+    }
     function jesteNebyl(list) {
       var cerstve = list.filter(function (f) { return !pouziteProt[f.id]; });
       return cerstve.length ? cerstve : list;
@@ -372,11 +408,11 @@
         return varene.length ? varene : list;
       }
       if (leanOnly) {
-        var leanDb = sedneNaPorci(uzeninaAzNakonec(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); })))));
+        var leanDb = sedneNaPorci(uzeninaAzNakonec(bezPrasku(nebylNedavno(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); }))))));
         var p = pick(leanDb, 'protein', s, prefer) || pick(leanDb, 'dairy', s, prefer);
         if (p) return p;
       }
-      var cely = sedneNaPorci(uzeninaAzNakonec(bezPrasku(jesteNebyl(db))));
+      var cely = sedneNaPorci(uzeninaAzNakonec(bezPrasku(nebylNedavno(jesteNebyl(db)))));
       return pick(cely, 'protein', s, prefer) || pick(cely, 'dairy', s, prefer);
     }
     var gramyDnes = {};
@@ -757,11 +793,17 @@
     // Roste se jen na NOSIČÍCH SACHARIDŮ (carb, pak fruit) — zelenina se schválně
     // nezvětšuje, 250 g špenátu navíc přidá pár kalorií a klientovi to nedává smysl.
     // ⛔ Stejná oprava je v appce (`src/engine/meal-gen.ts`), hlídá parita.
+    // ⛔⛔ [oprava 2026-09-02] SČÍTAT SE MUSÍ PO JÍDLECH, ne položku po položce do jedné
+    // proměnné. Appka sčítá vnořeně (`out.reduce` → `m.items.reduce`) a web plochým
+    // `mel +=`; je to táž matematika, ale JINÉ pořadí sčítání, takže se výsledky liší
+    // v posledním bitu. Naměřeno: chybějící kalorie vyšly 159,6 v appce a
+    // 159,60000000000002 na webu, `Math.ceil(chybi / naGram / 5)` z toho udělal 14 a 15,
+    // a klient dostal na webu o 5 g pečiva víc. Základní paritní mřížka to nechytila
+    // (360/360 shoda), našlo se to až na týdnu přes assembleWeek.
     var chybiKcal = function () {
-      var mel = 0;
-      out.forEach(function (m) {
-        m.items.forEach(function (it) { mel += macrosFor(it.food, it.grams).kcal; });
-      });
+      var mel = out.reduce(function (s, m) {
+        return s + m.items.reduce(function (q, it) { return q + macrosFor(it.food, it.grams).kcal; }, 0);
+      }, 0);
       return targets.kcal - mel;
     };
     // ⚠️ POŘADÍ JE ZÁMĚRNÉ. První verze (27. 7.) nafukovala rovnou ovoce do stropu a kalorie
@@ -842,8 +884,24 @@
     // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
     // ─────────────────────────────────────────────────────────────────────────
     if (typeof targets.fiber === 'number' && targets.fiber > 0) {
-      var cilVlakniny = targets.fiber;
-      var VLAK_KAT = ['carb', 'legume', 'veg', 'fruit', 'snack'];
+      // ⛔⛔ [oprava po auditu 2026-09-02] PRŮCHOD MÍŘÍ NA PÁSMO, NE „NAHORU, DOKUD NEPŘETEČE".
+      // Dřív byla podmínka smyček jen `fib < cíl`, takže průchod skončil AŽ V OKAMŽIKU,
+      // KDY cíl překročil, a vybíral se tah s NEJVĚTŠÍM ziskem vlákniny, tedy ten, který
+      // přestřelí nejvíc. Naměřeno na 1440 dnech: medián přestřelení 44 %, 18 % dnů nad
+      // stropem 60 g, rekord 96 g. Nově má den pásmo ⟨cíl; cíl+10 %⟩, shora tvrdě omezené
+      // `FIBER_CAP_G`, a engine se do něj trefuje z OBOU stran (dřív uměl jen přidávat).
+      var cilVlakniny = Math.min(targets.fiber, FIBER_CAP_G);
+      var hornihranice = Math.min(cilVlakniny * FIBER_PASMO_NAD_CILEM, FIBER_CAP_G);
+      /** Jak daleko je den od povoleného pásma. Nula = v pásmu, jinak vzdálenost v gramech. */
+      var mimoPasmo = function (fib) {
+        if (fib < cilVlakniny) return cilVlakniny - fib;
+        if (fib > hornihranice) return fib - hornihranice;
+        return 0;
+      };
+      // ⛔ `fat` v seznamu PŘIBYLO a je to podstatné: chia semínka, lněné a slunečnicové
+      // semínko jsou kategorie `fat` a nesou 10 až 17 g vlákniny na porci. Bez nich neměl
+      // průchod na nejhorších dnech na čem ubrat.
+      var VLAK_KAT = ['carb', 'legume', 'veg', 'fruit', 'snack', 'fat'];
       var polozky = function () {
         var a = [];
         out.forEach(function (m) { m.items.forEach(function (it) { a.push(it); }); });
@@ -865,6 +923,11 @@
       var bilkovinaPredVl = den('p');
       var bilkovinaPodlahaVl = Math.min(bilkovinaPredVl, targets.protein);
       var bilkovinaOkVl = function () { return den('p') >= bilkovinaPodlahaVl - 0.5; };
+      // ⛔ Hlídat se musí i TUK, protože průchod nově sahá i na kategorii `fat`. Výměna
+      // „chia semínka za olivový olej" drží kalorie, ale přesouvá je do čistého tuku.
+      var tukPredVl = den('f');
+      var tukPasmoVl = Math.max(targets.fat * 0.15, Math.abs(tukPredVl - targets.fat));
+      var tukOkVl = function () { return Math.abs(den('f') - targets.fat) <= tukPasmoVl + 0.5; };
       // Gramů vlákniny na 1 kcal: chceme víc vlákniny za tytéž kalorie, ne víc jídla.
       var hustotaVl = function (f) { return (f.per100.fib || 0) / Math.max(1, f.per100.kcal || 0); };
       var stropPolozky = function (f) {
@@ -879,7 +942,13 @@
       // vlákninu beze změny, přestože v nabídce lepší položky byly). Proto se zamítnutá
       // potravina jen odloží a zkusí se další v pořadí.
       var zamitnute = {};
-      for (var kolo1 = 0; kolo1 < 12 && den('fib') < cilVlakniny; kolo1++) {
+      // ⚠️ 60 kol, ne 12: jedno kolo spotřebuje i tah, který se VRÁTÍ (typicky výměna
+      // celozrnných těstovin za rýži, která by ubrala bílkovinu). Změřeno: při 24 kolech
+      // zůstalo 9 dnů z 1440 nad stropem, při 60 ani jeden.
+      for (var kolo1 = 0; kolo1 < 60; kolo1++) {
+        var fibTed = den('fib');
+        var chybaTed = mimoPasmo(fibTed);
+        if (chybaTed <= 0.01) break;
         var pouziteVl = {};
         polozky().forEach(function (it) { pouziteVl[it.food.id] = 1; });
         var nej = null;
@@ -892,20 +961,30 @@
             if (kcalIt <= 0) continue;
             var fibIt = macrosFor(it1.food, it1.grams).fib;
             // Příloha musí zůstat vhodná k typu jídla, jinak by k snídani přistála rýže.
-            var vhodnost = it1.food.cat === 'carb' ? preferForMeal('carb', mm1.kind) : null;
+            // Tuk se páruje k charakteru jídla stejným pravidlem jako při skládání, jinak
+            // by výměna kvůli vláknině přinesla chia do slaného oběda.
+            var maOvoceJ = mm1.items.some(function (x) { return x.food.cat === 'fruit'; });
+            var maZeleninuJ = mm1.items.some(function (x) { return x.food.cat === 'veg'; });
+            var vhodnost = it1.food.cat === 'carb'
+              ? preferForMeal('carb', mm1.kind)
+              : (it1.food.cat === 'fat'
+                ? (maOvoceJ && !maZeleninuJ ? SLADKY_TUK : (maZeleninuJ ? SLANY_TUK : null))
+                : null);
             for (var di = 0; di < db.length; di++) {
               var f1 = db[di];
               if (f1.cat !== it1.food.cat || !f1.bezny || pouziteVl[f1.id] || zamitnute[f1.id]) continue;
               if (!(f1.per100.kcal > 0)) continue;
-              if (hustotaVl(f1) <= hustotaVl(it1.food)) continue;
               if (vhodnost && !vhodnost.test(f1.id)) continue;
               var g1 = Math.round((kcalIt / f1.per100.kcal) * 100 / 5) * 5;
               g1 = Math.min(g1, stropPolozky(f1));
               if (g1 < 8) continue;
-              var zisk = macrosFor(f1, g1).fib - fibIt;
-              if (zisk <= 0.2) continue;
-              if (!nej || zisk > nej.zisk + 1e-9 || (Math.abs(zisk - nej.zisk) <= 1e-9 && f1.id < nej.f.id)) {
-                nej = { it: it1, f: f1, g: g1, zisk: zisk };
+              // ⛔ Rozhoduje VÝSLEDNÁ vzdálenost dne od pásma, ne zisk vlákniny. Tah, který
+              // by cíl přeskočil (nebo den ještě víc přetáhl), tím vypadne sám.
+              var novaFib = fibTed - fibIt + macrosFor(f1, g1).fib;
+              var chyba = mimoPasmo(novaFib);
+              if (chyba >= chybaTed - 0.2) continue;
+              if (!nej || chyba < nej.chyba - 1e-9 || (Math.abs(chyba - nej.chyba) <= 1e-9 && f1.id < nej.f.id)) {
+                nej = { it: it1, f: f1, g: g1, chyba: chyba };
               }
             }
           }
@@ -913,14 +992,20 @@
         if (!nej) break;
         var puvodF = nej.it.food, puvodG = nej.it.grams;
         nej.it.food = nej.f; nej.it.grams = nej.g;
-        if (!kcalOkVl() || !bilkovinaOkVl()) {
+        if (!kcalOkVl() || !bilkovinaOkVl() || !tukOkVl()) {
           nej.it.food = puvodF; nej.it.grams = puvodG;
           zamitnute[nej.f.id] = 1;
         }
       }
 
-      // M2: přesun gramů z nejchudší položky na vlákninu do nejbohatší, při stejných kaloriích.
-      for (var kolo2 = 0; kolo2 < 6 && den('fib') < cilVlakniny; kolo2++) {
+      // M2: přesun gramů mezi nejchudší a nejbohatší položkou na vlákninu, při stejných
+      // kaloriích. ⛔ [oprava po auditu 2026-09-02] Přesun jde OBĚMA SMĚRY: když je vlákniny
+      // málo, roste položka bohatá na úkor chudé, když je jí moc, přesně naopak.
+      for (var kolo2 = 0; kolo2 < 8; kolo2++) {
+        var fibPredKolem = den('fib');
+        var chybaPredKolem = mimoPasmo(fibPredKolem);
+        if (chybaPredKolem <= 0.01) break;
+        var nahoru = fibPredKolem < cilVlakniny;
         // ⛔ [oprava po revizi 2026-09-02] Tie-break MUSÍ být na POZICI (index jídla a index
         // položky), ne na id potraviny. Táž potravina se ve dni vyskytne dvakrát v 9 % dnů
         // a `(a.id < b.id ? -1 : 1)` pro dvě shodná id vrátí 1 v obou směrech. Takový
@@ -939,9 +1024,11 @@
         var podleHustoty = kandidati.slice().sort(function (a, b) {
           return (hustotaVl(b.it.food) - hustotaVl(a.it.food)) || (a.mi - b.mi) || (a.ii - b.ii);
         });
-        var rust = podleHustoty[0].it;
-        var ubytek = podleHustoty[podleHustoty.length - 1].it;
-        if (rust === ubytek || hustotaVl(rust.food) - hustotaVl(ubytek.food) < 0.001) break;
+        var nejbohatsi = podleHustoty[0].it;
+        var nejchudsi = podleHustoty[podleHustoty.length - 1].it;
+        if (nejbohatsi === nejchudsi || hustotaVl(nejbohatsi.food) - hustotaVl(nejchudsi.food) < 0.001) break;
+        var rust = nahoru ? nejbohatsi : nejchudsi;
+        var ubytek = nahoru ? nejchudsi : nejbohatsi;
         var prostor = stropPolozky(rust.food) - rust.grams;
         // Ubírat jde jen do viditelné porce; pod 15 g už to na talíři není porce, ale drobek.
         var lzeUbrat = ubytek.grams - 15;
@@ -957,15 +1044,78 @@
         pridej = Math.round(pridej / 5) * 5;
         uber = Math.round(uber / 5) * 5;
         if (pridej < 5 || uber < 5) break;
-        var fibPred = den('fib');
         rust.grams += pridej;
         ubytek.grams -= uber;
-        if (den('fib') <= fibPred || !kcalOkVl() || !bilkovinaOkVl()) {
+        if (mimoPasmo(den('fib')) >= chybaPredKolem || !kcalOkVl() || !bilkovinaOkVl() || !tukOkVl()) {
           rust.grams -= pridej;
           ubytek.grams += uber;
           break;
         }
       }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // [oprava po auditu 2026-09-02] PŘETÍŽENÉ JÍDLO SE PŘEROZDĚLÍ, NIC SE NEMAŽE.
+    // Součet gramů jednoho jídla nikdo nehlídal (detail u STROP_HLAVNI_JIDLO_G výš).
+    // Řeší se PŘESUNEM celé položky do jiného jídla, ne zmenšením porce: přesun nemění
+    // ani gram denních maker, takže všechna dorovnání a stropy výš zůstávají platné.
+    // Když se položka nemá kam přesunout (málo jídel, vysoký cíl), zůstane, kde je.
+    // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+    // ─────────────────────────────────────────────────────────────────────────
+    var stropJidla = function (k) {
+      return (k === 'snack' || k === 'late') ? STROP_SVACINA_G : STROP_HLAVNI_JIDLO_G;
+    };
+    var hmotnostJidla = function (m) {
+      return m.items.reduce(function (s3, it) { return s3 + it.grams; }, 0);
+    };
+    var neresitelne = {};
+    for (var koloH = 0; koloH < 12; koloH++) {
+      var zdroj = -1, nejvic = 0;
+      out.forEach(function (m3, i3) {
+        if (neresitelne[i3]) return;
+        var nad = hmotnostJidla(m3) - stropJidla(m3.kind);
+        if (nad > nejvic) { nejvic = nad; zdroj = i3; }
+      });
+      if (zdroj < 0) break;
+      var jidlo = out[zdroj];
+      // Základ jídla se nestěhuje: první bílkovinný zdroj a první příloha. Bez nich by
+      // z oběda zbyla zelenina a klient by dostal talíř bez masa a bez přílohy.
+      var drzet = [];
+      var zaklad = jidlo.items.filter(function (it) { return it.food.cat === 'protein' || it.food.cat === 'dairy'; })[0];
+      if (zaklad) drzet.push(zaklad);
+      var prilohaH = jidlo.items.filter(function (it) { return it.food.cat === 'carb'; })[0];
+      if (prilohaH) drzet.push(prilohaH);
+      var stehovatelne = jidlo.items.filter(function (it) { return drzet.indexOf(it) === -1; })
+        .slice()
+        .sort(function (a, b) { return (b.grams - a.grams) || (a.food.id < b.food.id ? -1 : 1); });
+      var presunuto = false;
+      // ⛔ Přesun nesmí vyrobit jídlo, které už není jídlo. Prahem je 150 kcal, týž práh,
+      // na kterém stojí rozdělení kalorií do jídel (viz `distProJidla`): pod ním je to
+      // jedno jablko, ne svačina.
+      var kcalJidla = function (m) {
+        return m.items.reduce(function (s4, it) { return s4 + macrosFor(it.food, it.grams).kcal; }, 0);
+      };
+      var kcalZdroje = kcalJidla(jidlo);
+      for (var si = 0; si < stehovatelne.length; si++) {
+        var itH = stehovatelne[si];
+        if (kcalZdroje - macrosFor(itH.food, itH.grams).kcal < 150) continue;
+        var cilIdx = -1, nejRezerva = -1;
+        /* eslint-disable no-loop-func */
+        out.forEach(function (c3, i4) {
+          if (i4 === zdroj) return;
+          // Táž potravina dvakrát v jednom jídle nedává smysl na talíři.
+          if (c3.items.some(function (x) { return x.food.id === itH.food.id; })) return;
+          var rezerva = stropJidla(c3.kind) - hmotnostJidla(c3) - itH.grams;
+          if (rezerva >= 0 && rezerva > nejRezerva) { cilIdx = i4; nejRezerva = rezerva; }
+        });
+        /* eslint-enable no-loop-func */
+        if (cilIdx < 0) continue;
+        jidlo.items = jidlo.items.filter(function (x) { return x !== itH; });
+        out[cilIdx].items.push(itH);
+        presunuto = true;
+        break;
+      }
+      if (!presunuto) neresitelne[zdroj] = 1;
     }
 
     // přepočítej totály po normalizaci
@@ -984,12 +1134,33 @@
 
   // ---- 3) Týden + nákupní seznam (stejné chování jako appka Tvůj Coach, src/engine/meal-gen.ts) ----
   // Seed se mezi dny posouvá o 7, ať se dny opakují co nejméně.
+  // ⛔ [oprava po auditu 2026-09-02] Týden má PAMĚŤ. Do téhle opravy se každý den skládal
+  // úplně samostatně a lišil se jen seedem, takže nic nebránilo tomu, aby stejná bílkovina
+  // padla do všech sedmi dnů (audit to naměřil na veganovi: seitan a rostlinné kousky 7/7).
+  // Předává se seznam bílkovinných zdrojů z POSLEDNÍCH DVOU dnů; není to zákaz, jen
+  // penalizace, jinak by se u úzkých diet den nesložil vůbec.
+  // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
   function assembleWeek(targets, opts, days) {
     opts = opts || {}; days = days || 7;
     var base = opts.seed || 0, out = [];
+    var historie = [];
     for (var i = 0; i < days; i++) {
-      out.push(assembleDay(targets, { meals: opts.meals, prefs: opts.prefs, db: opts.db,
-        mealNames: opts.mealNames, seed: base + i * 7 }));
+      var nedavnoT = [];
+      historie.slice(Math.max(0, historie.length - 2)).forEach(function (denniDen) {
+        denniDen.forEach(function (id) { if (nedavnoT.indexOf(id) === -1) nedavnoT.push(id); });
+      });
+      var denT = assembleDay(targets, { meals: opts.meals, prefs: opts.prefs, db: opts.db,
+        mealNames: opts.mealNames, seed: base + i * 7, nedavnoPouzite: nedavnoT });
+      out.push(denT);
+      var dnesni = [];
+      denT.meals.forEach(function (m4) {
+        m4.items.forEach(function (it) {
+          if ((it.food.cat === 'protein' || it.food.cat === 'dairy') && dnesni.indexOf(it.food.id) === -1) {
+            dnesni.push(it.food.id);
+          }
+        });
+      });
+      historie.push(dnesni);
     }
     return out;
   }
