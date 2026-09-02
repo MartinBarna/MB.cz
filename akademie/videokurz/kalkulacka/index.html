@@ -112,6 +112,7 @@
           <div class="macro"><div class="num" id="r-vlak">-</div><div class="lbl">Vláknina (g)</div></div>
         </div>
         <p class="disc" id="r-meta"></p>
+        <p class="disc" id="r-podlaha" style="display:none;"></p>
         <p class="disc">Orientační startovní bod (Mifflin–St Jeor). Není lékařským doporučením, při zdravotních potížích se poraď s lékařem.</p>
       </div>
     </div>
@@ -142,6 +143,9 @@
       document.getElementById('r-vlak').textContent = t.fiber;
       var meta = document.getElementById('r-meta');
       if (meta) meta.textContent = 'Bazální metabolismus ' + t.bmr.toLocaleString('cs-CZ') + ' kcal · celkový denní výdej ' + t.tdee.toLocaleString('cs-CZ') + ' kcal';
+      // [revize R5] Bezpečnostní podlaha nesmí být tichá: když zvedla cíl, řekni to.
+      var podlaha = document.getElementById('r-podlaha');
+      if (podlaha) { podlaha.textContent = t.floorNote || ''; podlaha.style.display = t.floorNote ? '' : 'none'; }
     }
     document.getElementById('calcBtn').addEventListener('click', spocitej);
   </script>
