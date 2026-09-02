@@ -64,14 +64,12 @@
     var carbs = Math.max(40, Math.round(carbsKcal / 4)); // g, pojistka
     // dorovnej kcal po zaokrouhlení
     kcal = protein * 4 + carbs * 4 + fat * 9;
-    // Cílová vláknina: 14 g / 1000 kcal (US Dietary Guidelines), min. 25 g pro dospělého.
+    // Cílová vláknina: 14 g / 1000 kcal (US Dietary Guidelines), podlaha `FIBER_FLOOR_G`.
     // ⛔ [2026-09-02] Strop 60 g doplněn: generátor níž vlákninu nad `FIBER_CAP_G` nepustí,
     // takže bez tohohle clampu by kalkulačka u velmi vysokých cílů (nad 4 300 kcal) slíbila
-    // číslo, které jídelníček vědomě nesplní. ⚠️ Podlaha je tady 25 g, appka a onboarding
-    // mají od 2. 9. 2026 podlahu 20 g (`FIBER_FLOOR_G` / `VLAKNINA_MIN`). Rozdíl je vědomý:
-    // tahle kalkulačka nikdy neslíbí MÍŇ než appka, jen víc, a srazit ji z 25 na 20 by byl
-    // odborný krok dolů. Sjednocení na jedno číslo je rozhodnutí pro Martina, ne úklid.
-    var fiber = Math.min(FIBER_CAP_G, Math.max(25, Math.round(kcal / 1000 * 14)));
+    // číslo, které jídelníček vědomě nesplní. Podlaha je od téhož dne 20 g, stejně jako
+    // v appce; dřív tu bylo 25 a ta dvě čísla si na 1300 kcal odporovala.
+    var fiber = Math.min(FIBER_CAP_G, Math.max(FIBER_FLOOR_G, Math.round(kcal / 1000 * 14)));
     return { kcal: kcal, protein: protein, carbs: carbs, fat: fat, fiber: fiber,
              bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label,
              // [revize R5] příznaky podlahy pro UI; obdoba `rate_capped_kg_per_week` v appce
@@ -207,6 +205,13 @@
   // problém (nadýmání, průjem, horší vstřebávání minerálů), ne bonus. Audit 2. 9. 2026
   // naměřil 18 % dnů nad stropem a rekord 96 g vlákniny za den.
   var FIBER_CAP_G = 60;
+  // ⛔⛔ PODLAHA VLÁKNINY (g/den). Rozhodnutí Martina 2. 9. 2026: JEDNO ČÍSLO VŠUDE.
+  // Do té doby měla tahle kalkulačka 25 g, appka a onboarding 20, takže klient na
+  // 1300 kcal viděl na webu 25 a v appce 20. Teď je to 20 na obou stranách.
+  // Zrcadlo appkové `FIBER_FLOOR_G` (`src/engine/goals.ts`) a `K.VLAKNINA_MIN`
+  // v `assets/onboarding-cile.js`. Exportuje se na `window.MealGen`, aby si ho
+  // `akademie/admin/pruvodce.js` nemusel psát podruhé.
+  var FIBER_FLOOR_G = 20;
   // ⛔ STROP HMOTNOSTI JEDNOHO JÍDLA (gramy všeho na talíři dohromady). Audit našel jedno
   // jídlo o 1 257 g: každá položka byla pod svým stropem (`CAP`), ale součet jídla nikdo
   // nehlídal. ⚠️ ROZHODNUTÍ, ne doložené číslo (viz komentář v appkovém jádru).
@@ -1532,5 +1537,6 @@
     assembleWeek: assembleWeek, shoppingListFromDays: shoppingListFromDays, swapItem: swapItem,
     macrosFor: macrosFor, cileTreninkVolno: cileTreninkVolno, nouzovyDen: nouzovyDen,
     typyJidel: typyJidel, BEZ_VARENI_ID: BEZ_VARENI_ID,
-    KCAL_PODLAHA_NEZNAME: KCAL_PODLAHA_NEZNAME, GOAL: GOAL, ACT: ACT };
+    KCAL_PODLAHA_NEZNAME: KCAL_PODLAHA_NEZNAME, GOAL: GOAL, ACT: ACT,
+    FIBER_FLOOR_G: FIBER_FLOOR_G, FIBER_CAP_G: FIBER_CAP_G };
 })(window);

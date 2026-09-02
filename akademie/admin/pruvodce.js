@@ -115,7 +115,14 @@
     if (c.kcal && c.protein) {
       if (c.fat == null) c.fat = Math.round(c.kcal * 0.28 / 9);
       if (c.carbs == null) c.carbs = Math.max(40, Math.round((c.kcal - c.protein * 4 - c.fat * 9) / 4));
-      if (c.fiber == null) c.fiber = Math.max(25, Math.round(c.kcal / 1000 * 14));
+      // ⛔ [2026-09-02] Podlaha vlákniny se sem UŽ NEPÍŠE číslem. Do té doby tu stálo 25,
+      // zatímco appka i onboarding počítaly s 20, takže admin viděl u téhož klienta jiné
+      // číslo než klient. Martin rozhodl JEDNO ČÍSLO VŠUDE, a jediné místo, kde na webu
+      // žije, je `FIBER_FLOOR_G` v `assets/meal-gen.js`. `MealGen` je tvrdá závislost
+      // téhle stránky (níž se volá `assembleDay` i `macrosFor`), takže se čte přímo.
+      if (c.fiber == null) {
+        c.fiber = Math.max(global.MealGen.FIBER_FLOOR_G, Math.round(c.kcal / 1000 * 14));
+      }
     }
     return { cile: c, zdroj: zdroj };
   }
