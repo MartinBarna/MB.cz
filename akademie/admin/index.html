@@ -1098,6 +1098,33 @@
       }).catch(function(){ cardFail('prehled','prehledBody'); });
     }
 
+    // 📥 REPORTY KE ZPRACOVÁNÍ (2. 9. 2026)
+    // Reporty, u kterých Martin ještě neodklikl „Odesláno". ⛔ Prázdný příznak neznamená
+    // „klient nedostal odpověď", znamená „neodkliknuto" (Martin odpovídá i na WhatsAppu).
+    // Proto tu není žádné varování ani automatika, jen seznam a odkaz do detailu.
+    function loadFronta(){
+      var box=$('kliFronta'); if(!box) return;
+      api({action:'reporty_fronta'}).then(function(o){
+        var j=o.j||{};
+        if(!j.ok){
+          // ⛔ Chybějící migrace se NESMÍ tvářit jako prázdná fronta.
+          if(j.error==='chybi_sloupec') box.innerHTML='<p class="muted" style="font-size:.85rem;margin:0 0 1rem;">📥 Fronta reportů zatím neběží: chybí sloupec <code>reakce_odeslana</code>, nasaď <code>akademie/_supabase/report-reakce.sql</code>.</p>';
+          return;
+        }
+        var rows=j.rows||[];
+        if(!rows.length){ box.innerHTML='<p class="muted" style="font-size:.85rem;margin:0 0 1rem;">📥 Reporty ke zpracování: žádné, všechno odkliknuté.</p>'; return; }
+        box.innerHTML='<div style="background:rgba(235,177,44,.06);border:1px solid rgba(235,177,44,.28);border-radius:10px;padding:12px;margin:0 0 1.1rem;">'
+          +'<div style="font-weight:700;color:#F6CD63;font-size:.86rem;margin:0 0 .4rem;">📥 Reporty ke zpracování ('+rows.length+')</div>'
+          +'<p class="muted" style="margin:0 0 .5rem;font-size:.78rem;">Klikni na klienta, dole v jeho kartě je „Koncept odpovědi". Až mail odešleš z Gmailu, dej „Odesláno".</p>'
+          +'<div style="display:flex;flex-wrap:wrap;gap:6px;">'
+          + rows.map(function(r){ return '<a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:4px 11px;font-size:.84rem;text-decoration:none;">'+esc(r.name||r.email)+' <span class="muted">'+fmtDay(r.report_date)+'</span></a>'; }).join('')
+          +'</div></div>';
+        box.querySelectorAll('[data-kli]').forEach(function(a){
+          a.addEventListener('click',function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli'),a.getAttribute('data-kliname')); });
+        });
+      }).catch(function(){ /* fronta je pomůcka, výpadek nesmí shodit kartu Klienti */ });
+    }
+
     function loadKlienti(){
       api({action:'clients_list'}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('kli','kliBody'); return; }
@@ -1130,7 +1157,8 @@
             + '<div style="overflow-x:auto;opacity:.72;"><table>'+HLAVICKA+'<tbody>'+byvali.map(function(r){return radek(r,true);}).join('')+'</tbody></table></div>'
             + '</details>';
         }
-        $('kliBody').innerHTML = html;
+        $('kliBody').innerHTML = '<div id="kliFronta"></div>' + html;
+        loadFronta();
         $('kliBody').querySelectorAll('[data-kli]').forEach(function(a){
           a.addEventListener('click',function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli'),a.getAttribute('data-kliname')); });
         });
@@ -1434,7 +1462,16 @@
           +'<label style="font-size:.78rem;color:#8F8A99;">Na který report<br><select id="kdDrRep" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;">'
           + reps.slice(0,6).map(function(r){ return '<option value="'+esc(r.id)+'">'+fmtDay(r.report_date)+'</option>'; }).join('')
           +'</select></label>'
+          +'<label style="font-size:.78rem;color:#8F8A99;">Oslovení (5. pád)<br><input type="text" id="kdDrVok" value="'+esc(kliVok(KDET.name))+'" style="width:110px;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
+          // ⛔ SMĚR NENÍ V DATECH. `client_targets` ho nemá a v dotazníku je jen ve volném
+          // textu, takže si ho engine NEHÁDÁ. Bez něj o kaloriích nic nenavrhne. Radši
+          // jeden klik navíc než návrh řezu člověku, který nabírá.
+          +'<label style="font-size:.78rem;color:#8F8A99;">Kam jedeme<br><select id="kdDrSmer" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;">'
+          +'<option value="">(nevybráno, o kcal neradí)</option><option value="hubnuti">hubnutí</option><option value="udrzeni">udržení</option><option value="nabirani">nabírání</option></select></label>'
+          +'<label style="font-size:.78rem;color:#8F8A99;">Podlaha kcal<br><select id="kdDrRod" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;">'
+          +'<option value="m"'+(kliRod(KDET.name)==='m'?' selected':'')+'>muž (1500)</option><option value="z"'+(kliRod(KDET.name)==='z'?' selected':'')+'>žena (1200)</option></select></label>'
           +'<label style="flex:1;min-width:200px;font-size:.78rem;color:#8F8A99;">Téma týdne <span style="color:#6d6879;">(nech prázdné, když žádné neposíláš)</span><br><input type="text" id="kdDrTema" placeholder="např. víkendové přejídání" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
+          +'<label style="flex:1;min-width:200px;font-size:.78rem;color:#8F8A99;">Odkaz na přílohu <span style="color:#6d6879;">(volitelný)</span><br><input type="text" id="kdDrTemaUrl" placeholder="https://drive.google.com/..." style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
           +'<button class="mlogbtn" id="kdDrBtn">Připravit odpověď</button>'
           +'</div><div id="kdDrOut" style="margin-top:10px;"></div></div>';
       }
@@ -1576,9 +1613,11 @@
       if(kdDrBtn) kdDrBtn.addEventListener('click',function(){
         if(kdDrBtn.disabled) return;
         var rid=$('kdDrRep').value, tema=($('kdDrTema').value||'').trim(), out=$('kdDrOut');
+        var temaUrl=($('kdDrTemaUrl').value||'').trim();
+        var vok=($('kdDrVok').value||'').trim(), smer=$('kdDrSmer').value, rod=$('kdDrRod').value;
         var t0=kdDrBtn.textContent; kdDrBtn.disabled=true; kdDrBtn.textContent='Píšu…';
         out.innerHTML='<p class="muted" style="font-size:.85rem;">Píšu koncept, může to trvat půl minuty…</p>';
-        api({action:'report_draft',report_id:rid,tema:tema}).then(function(o){
+        api({action:'report_draft',report_id:rid,tema:tema,osloveni:vok,smer:smer,rod:rod}).then(function(o){
           kdDrBtn.disabled=false; kdDrBtn.textContent=t0;
           var j=o.j||{};
           if(!j.ok){
@@ -1591,18 +1630,62 @@
               :'chyba ('+esc(e)+')';
             out.innerHTML='<p class="muted" style="font-size:.85rem;">⚠️ Koncept se nepovedl: '+why+'.</p>'; return;
           }
+          // ⛔ ČÍSLA SKLÁDÁ ŠABLONA Z ENGINU, ne AI. `j.stav_radky` přišla ze serveru
+          // hotová; kdyby chyběla (starší nasazená verze funkce), mail se složí bez
+          // bloku stavu, ale NIKDY se nedopočítává tady v prohlížeči.
+          var R=window.ReportReakce;
+          if(!R){ out.innerHTML='<p class="muted" style="font-size:.85rem;">⚠️ Šablona reakce se nenačetla (report-reakce-sablona.js), obnov stránku.</p>'; return; }
+          var datum=j.report_date||'';
+          var predmetTxt=R.predmet(vok,datum);
+          var celyMail=R.telo({osloveni:vok,datum:datum,stavRadky:j.stav_radky||[],textAi:j.draft||'',tema:tema,temaOdkaz:temaUrl});
           var hh='';
           if((j.upozorneni||[]).length) hh+='<p style="margin:0 0 6px;font-size:.85rem;color:#ffb4b4;">⚠️ V reportu je téma '+esc((j.upozorneni||[]).join(', '))+'. AI k němu schválně nic neradí, tohle patří Tobě osobně.</p>';
-          hh+='<p class="muted" style="margin:0 0 6px;font-size:.78rem;">🤖 Koncept od AI, před odesláním přečti. Odesíláš ho Ty ze své schránky, admin sám neposílá nic.'+(j.znovu?' (Tenhle koncept už byl hotový, nový se dá zadat za pár minut.)':'')+'</p>'
-            +'<textarea id="kdDrText" rows="9" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 11px;color:#fff;font-family:inherit;font-size:.9rem;line-height:1.5;">'+esc(j.draft||'')+'</textarea>'
-            +'<div style="display:flex;gap:8px;align-items:center;margin-top:6px;"><button class="mlogbtn" id="kdDrCopy">Kopírovat text</button></div>';
+          // Návrh enginu je vidět ZVLÁŠŤ nad textem, ať se pozná, co je spočítané a co je próza.
+          var nv=j.navrh||null;
+          if(nv){
+            var barva = nv.paka==='zadna' ? '#8F8A99' : '#F6CD63';
+            hh+='<p style="margin:0 0 6px;font-size:.85rem;color:'+barva+';">📐 Engine: '
+              +(nv.novyKcal?'<b>cíl kalorií '+esc(nv.novyKcal)+' kcal</b>':'<b>zadání se nemění</b>')
+              +' · '+esc(nv.duvod)
+              +(nv.jistota&&nv.jistota!=='jista'?' <span class="muted">('+esc(nv.jistota)+')</span>':'')+'</p>';
+          }
+          hh+='<p class="muted" style="margin:0 0 6px;font-size:.78rem;">🤖 Prózu psala AI, čísla spočítal engine. Před odesláním přečti. Odesíláš Ty ze své schránky, admin sám neposílá nic.'+(j.znovu?' (Tenhle koncept už byl hotový, nový se dá zadat za pár minut.)':'')+'</p>'
+            +'<p style="margin:0 0 4px;font-size:.85rem;">Předmět: <b id="kdDrSubj">'+esc(predmetTxt)+'</b></p>'
+            +'<textarea id="kdDrText" rows="16" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:9px 11px;color:#fff;font-family:inherit;font-size:.9rem;line-height:1.5;">'+esc(celyMail)+'</textarea>'
+            +'<div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">'
+            +'<button class="mlogbtn" id="kdDrGmail">Otevřít v Gmailu</button>'
+            +'<button class="mlogbtn" id="kdDrCopy">Kopírovat text</button>'
+            +'<button class="mlogbtn" id="kdDrHotovo">Označit jako odesláno</button>'
+            +'<span class="muted" id="kdDrPozn" style="font-size:.78rem;"></span></div>';
           if(j.navrh_zmen) hh+='<p style="margin:8px 0 0;font-size:.85rem;color:#F6CD63;">🎯 Návrh jen pro Tebe (klient tohle nevidí): '+esc(j.navrh_zmen)+'</p>';
           out.innerHTML=hh;
-          $('kdDrCopy').addEventListener('click',function(){
+          function zkopiruj(hotovo){
             var ta=$('kdDrText'); ta.focus(); ta.select();
-            function hotovo(){ toast('📋 Zkopírováno'); }
             if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(ta.value).then(hotovo,function(){ try{ document.execCommand('copy'); hotovo(); }catch(x){ toast('Zkopíruj prosím ručně'); } }); }
             else { try{ document.execCommand('copy'); hotovo(); }catch(x){ toast('Zkopíruj prosím ručně'); } }
+          }
+          $('kdDrCopy').addEventListener('click',function(){ zkopiruj(function(){ toast('📋 Zkopírováno'); }); });
+          // ⛔ Gmail se jen OTEVŘE s předvyplněným mailem. Odesílá Martin klikem v Gmailu.
+          // Když je text delší, než unese adresní řádek, tělo se do odkazu NEDÁVÁ vůbec
+          // (tichý ořez = odeslaný půlmail) a místo toho se text zkopíruje do schránky.
+          $('kdDrGmail').addEventListener('click',function(){
+            var ta=$('kdDrText');
+            var g=R.gmailOdkaz(email,($('kdDrSubj').textContent||''),ta.value);
+            if(g.vejdeSe){ window.open(g.url,'_blank','noopener'); $('kdDrPozn').textContent='Gmail otevřen, mail je předvyplněný. Odesíláš Ty.'; }
+            else {
+              zkopiruj(function(){ toast('📋 Text zkopírován, vlož ho v Gmailu (Ctrl+V)'); });
+              window.open(g.url,'_blank','noopener');
+              $('kdDrPozn').textContent='Text je moc dlouhý na odkaz, zkopíroval jsem ho do schránky. V Gmailu ho vlož.';
+            }
+          });
+          // ⛔ Tohle NEODESÍLÁ. Jen si zapíše, že jsi na tenhle report odpověděl, ať
+          // zmizí z fronty. Odesláno je to až tehdy, kdy jsi v Gmailu klikl Odeslat.
+          $('kdDrHotovo').addEventListener('click',function(){
+            var b=$('kdDrHotovo'); if(b.disabled) return; b.disabled=true;
+            api({action:'report_reakce_hotovo',report_id:rid,hotovo:true}).then(function(o2){
+              if(o2.j&&o2.j.ok){ b.textContent='✓ Odklikuto'; toast('✓ Report označen jako vyřízený'); loadFronta(); }
+              else { b.disabled=false; toast('Chyba: '+((o2.j&&o2.j.error)||o2.status)); }
+            }).catch(function(){ b.disabled=false; toast('Chyba spojení'); });
           });
         }).catch(function(){
           kdDrBtn.disabled=false; kdDrBtn.textContent=t0;
@@ -3027,6 +3110,8 @@
     });
   })();
   </script>
+  <!-- Sablona reakce na tydenni report: tvar mailu + odkaz do Gmailu. NIC neodesila. -->
+  <script src="/akademie/admin/report-reakce-sablona.js?v=20260902a" defer></script>
   <script src="/akademie/admin/pruvodce.js?v=20260902a" defer></script>
   <script src="/assets/scroll-top.js?v=g5" defer></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"></body>
