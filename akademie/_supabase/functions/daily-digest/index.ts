@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
   const d7 = new Date(now.getTime() - 7 * 86400000).toISOString();
 
   const [leadsY, leads7, evY, due, entsY, wdr, refs, acadSold] = await Promise.all([
-    admin.from("leads").select("source").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
+    admin.from("leads").select("email,source").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
     admin.from("leads").select("created_at").gte("created_at", d7),
     admin.from("email_events").select("type,detail").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
     admin.from("leads").select("id").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", now.toISOString()),
@@ -81,9 +81,49 @@ Deno.serve(async (req) => {
   const founders = (acadSold.count ?? 0) + (Number(cmap.academy_founders_offset ?? "") || 0);
   const foundersLeft = Math.max(0, 50 - founders);
 
+  // ===== Nove leady vs. reaktivace (2. 9. 2026) =====
+  // ⛔ PROC: 2. 9. rano hlasil prehled „52 leadů za 24 h" a vypadalo to jako nejlepsi den
+  // v historii. Padesat z nich byla reaktivacni vlna 392, tedy radky ZNOVU zalozene starym
+  // kontaktum, ktere Martin zna roky. Cislo, ktere ma merit prisun NOVYCH lidi, jde takhle
+  // nafouknout jakoukoli hromadnou akci a Martin podle nej nepozna ani uspech reklamy,
+  // ani jeji vypadek.
+  // ⇒ „Nove leady" pocitaji jen ty, koho jsme dosud neznali. Zbytek jde na vlastni radek.
+  // Za NEnoveho se bere: (a) zdroj zacinajici `reaktivace-` nebo `import`,
+  //                      (b) e-mail, ktery uz DRIV byl v `customer_contacts`.
+  // ⚠️ Duplicitni radek v `leads` tohle NEPOZNA: `leads` ma e-mail unikatni a hromadne vlny
+  // stavajici radek prepisuji, takze zadny starsi radek se stejnou adresou nevznikne.
+  // Zmereno 2. 9. 2026: u vsech 50 radku vlny bylo 0 starsich radku v `leads`, ale 50 z 50
+  // adres bylo v `customer_contacts`. Registr znamych kontaktu je tedy jediny spolehlivy
+  // znak, proto se ptame jeho, ne `leads`.
+  const lowEm = (v: unknown) => String(v ?? "").trim().toLowerCase();
+  const leadsYrows = (leadsY.data ?? []) as Array<{ email?: string; source?: string }>;
+  const leadEmaily = [...new Set(leadsYrows.map((l) => lowEm(l.email)).filter((e) => e.includes("@")))];
+  // ⛔ Ptame se JEN na vcerejsi adresy, ne na celou tabulku: `customer_contacts` ma pres
+  // 800 radku a PostgREST vraci nanejvys 1000, takze dotaz bez filtru by se casem TISE usekl
+  // a vlna by se zase zacala pocitat jako novi lide. Tataz past je popsana u koucinku niz.
+  const znamiC = leadEmaily.length
+    ? await admin.from("customer_contacts").select("email,created_at").in("email", leadEmaily)
+    : { data: [] as Array<{ email: string; created_at: string }>, error: null };
+  // ⛔ Chybu dotazu NESPOLKNOUT. Prazdny seznam znamena „nikoho neznam", takze by prehled
+  // vlnu zase vydaval za nove leady, jen tentokrat potichu. Hlasi se to alertem niz.
+  const znamiChyba = znamiC.error ? String(znamiC.error.message).slice(0, 120) : "";
+  const znamiOd = new Map<string, number>();
+  for (const c of znamiC.data ?? []) znamiOd.set(lowEm(c.email), Date.parse(String(c.created_at ?? "")) || 0);
+  const jeReaktivace = (src: string) => src.startsWith("reaktivace-") || src.startsWith("import");
   const bySrc: Record<string, number> = {};
-  for (const l of leadsY.data ?? []) bySrc[String(l.source ?? "?")] = (bySrc[String(l.source ?? "?")] ?? 0) + 1;
-  const leadsYc = (leadsY.data ?? []).length;
+  const stariBySrc: Record<string, number> = {};
+  let leadsYc = 0;
+  let leadsStari = 0;
+  for (const l of leadsYrows) {
+    const src = String(l.source ?? "?");
+    const znamyOd = znamiOd.get(lowEm(l.email));
+    // Kontakt musi byt znamy DRIV, nez lead vznikl. Zapis leadu si casto zalozi i radek
+    // v `customer_contacts`, takze bez teto podminky by byl „znamy" uplne kazdy a
+    // „Nove leady" by ukazovaly natvrdo nulu.
+    const znamy = znamyOd !== undefined && znamyOd < yStart.getTime();
+    if (jeReaktivace(src) || znamy) { leadsStari++; stariBySrc[src] = (stariBySrc[src] ?? 0) + 1; }
+    else { leadsYc++; bySrc[src] = (bySrc[src] ?? 0) + 1; }
+  }
 
   let sent = 0, errs = 0, lastErr = "";
   // Od 20. 7. 2026 umi drip-send po MAX_TRIES neuspesich leada odstavit (udalost 'gave_up',
@@ -215,7 +255,10 @@ Deno.serve(async (req) => {
   // vedle mazání: kdyby úklid někdy selhal, statistika zůstane pravdivá.
   const [lastContact, lastLead] = await Promise.all([
     admin.from("contact_messages").select("created_at").neq("name", KANAREK_JMENO).order("created_at", { ascending: false }).limit(1),
-    admin.from("leads").select("created_at").order("created_at", { ascending: false }).limit(1),
+    // ⛔ Reaktivacni a importni radky se sem NEPOCITAJI. Detektor ticha ma hlidat, jestli
+    // chodi NOVI lide z reklam. Jedna hromadna vlna by ho jinak umlcela na dalsi dny
+    // a rozbity lead-capture by se schoval za nasi vlastni akci.
+    admin.from("leads").select("created_at").not("source", "like", "reaktivace-%").not("source", "like", "import%").order("created_at", { ascending: false }).limit(1),
   ]);
   const daysSince = (v: unknown) => v ? Math.floor((now.getTime() - new Date(String(v)).getTime()) / 86400000) : 9999;
   const dContact = daysSince(lastContact.data?.[0]?.created_at);
@@ -229,6 +272,11 @@ Deno.serve(async (req) => {
   const info = (t: string) => `<p style="margin:10px 0;padding:10px 14px;background:#f2f4f7;border-radius:10px;color:#555">${t}</p>`;
 
   let alerts = "";
+  if (znamiChyba) {
+    alerts += warn("Registr známých kontaktů se nepodařilo přečíst (" + znamiChyba + "). Číslo "
+      + "„Nové leady“ je proto nafouknuté o reaktivace a znovu přihlášené staré kontakty. "
+      + "Ber ho dnes jako neplatné.");
+  }
   if (corsBad.length > 0) {
     alerts += warn("🔴 FORMULÁŘOVÁ CESTA MŮŽE BÝT ROZBITÁ (CORS): " + corsBad.join(", ") +
       ". Prohlížeč návštěvníka pak odeslání zablokuje bez stopy na serveru. Stejná chyba v červenci " +
@@ -495,18 +543,74 @@ Deno.serve(async (req) => {
       ". Zbytek přehledu platí, jen o klientech dnes nevíš nic.");
   }
 
+  // --- 📱 APPKA: nova aktivni predplatna za 24 h ---------------------
+  // ⛔ PRIBYLO 2. 9. 2026. Do te doby cetl prehled jen Academy `entitlements`, takze den,
+  // kdy appka Tvuj Coach prodala prvni dve predplatna, hlasil „0 prodeju". Radek
+  // „PRODEJE (STRIPE)" vys je JEN ACADEMY (videokurz, konzultace, balicek, dozivotni
+  // clenstvi); predplatne appky zije v UPLNE JINEM Supabase projektu
+  // (kfkmghvhqwqtsalqjmrp) a do toho radku se nikdy nezapocita. Proto vlastni radek,
+  // ne rozsireni seznamu zdroju vys.
+  //
+  // ⛔ PROC PRES MOST A NE PRIMO DO DB APPKY: primy dotaz by znamenal drzet v Academy
+  // service-role klic appky, tedy plnou moc nad druhou databazi kvuli jednomu cislu.
+  // Tentyz zaver je sepsany v `drip-send` u dotazu `aktivace-stav`. Pouziva se TENTYZ most
+  // a TENTYZ secret, kterym sem uz chodi admin i koucinkovy blok nize
+  // (`app_config.academy_grant_secret`, v appce env `ACADEMY_GRANT_SECRET`).
+  // ⇒ ZADNY NOVY SECRET SE NEZAKLADA.
+  //
+  // ⚠️ NEDODELANE NA STRANE APPKY: akce `tc-nove-predplatne` v `academy-grant` zatim
+  // NEEXISTUJE (2. 9. 2026 umi grant, revoke, set-expiry, weekly-summary, access-status
+  // a tc-overview). Dokud ji tam nekdo nedoplni a nenasadi, vrati most 404 a radek
+  // poctive rekne „nedostupne". ⛔ Nula se tu misto toho zobrazit NESMI: veta
+  // „0 prodeju" je prave to, kvuli cemu tenhle blok vznikl.
+  let appkaPredplatna = "nedostupné (chybí secret academy_grant_secret)";
+  let appkaPocet: number | null = null;
+  try {
+    const { data: gsA } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+    const gsecA = gsA?.value ? String(gsA.value) : "";
+    if (gsecA) {
+      appkaPredplatna = "nedostupné (appka neodpověděla)";
+      const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-academy-secret": gsecA },
+        body: JSON.stringify({ action: "tc-nove-predplatne", hodin: 24 }),
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (r.status === 404) appkaPredplatna = "nedostupné (most zatím neumí akci tc-nove-predplatne)";
+      else if (!r.ok) appkaPredplatna = "nedostupné (most vrátil HTTP " + r.status + ")";
+      else {
+        const jj = await r.json().catch(() => null);
+        // ⛔ Cisla musi prijit jako cisla. Kdyz v odpovedi nejsou, je to porucha mostu,
+        // ne nula prodeju, a musi to byt videt.
+        const nc = Number(jj?.celkem), nb = Number(jj?.basic), nv = Number(jj?.vip);
+        if ([nc, nb, nv].every((x) => Number.isFinite(x))) {
+          appkaPocet = nc;
+          appkaPredplatna = nc + " (Basic " + nb + ", VIP " + nv + ")";
+        } else {
+          appkaPredplatna = "nedostupné (odpověď mostu nemá čísla)";
+        }
+      }
+    }
+  } catch (e) {
+    appkaPredplatna = "nedostupné (" + String(e).slice(0, 80) + ")";
+  }
+
   const html =
     `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;color:#222;max-width:560px;margin:0 auto">` +
     `<h2 style="margin:0 0 4px">🌅 Ranní přehled</h2>` +
     `<p style="margin:0 0 14px;color:#888">za ${dY}</p>` + alerts +
     `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
     row("Nové leady", String(leadsYc) + (leadsYc ? " (" + Object.entries(bySrc).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
+    // Reaktivace na VLASTNIM radku a schvalne az pod novymi leady: jsou to lide, ktere uz
+    // znas, takze do cisla o prisunu novych nepatri, ale vedet o vlne potrebujes.
+    (leadsStari ? row("Reaktivace a známé kontakty", String(leadsStari) + " (" + Object.entries(stariBySrc).map(([k, v]) => k + " " + v).join(", ") + ")") : "") +
     // Label „SimpleShop" byl relikt (SimpleShop zrušen 29. 7. 2026, prodeje jdou
     // ze Stripe) a 8. 8. zmátl Martina, který kvůli němu řešil, jestli SimpleShop
     // pořád žije. Počítadlo bylo správně, lhal jen nápis.
-    row("Prodeje (Stripe)", String(salesYc) + (salesYc ? " (" + Object.entries(salesY).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
+    row("Prodeje Academy (Stripe)", String(salesYc) + (salesYc ? " (" + Object.entries(salesY).map(([k, v]) => k + " " + v).join(", ") + ")" : "")) +
     // "Resend max 100/den" bylo z free tarifu a od prechodu na placeny uz to neplatilo.
     // Zavadejici udaj: 30. 6. 2026 prave tenhle denni limit vyrobil 307 chyb.
+    row("Appka: nová aktivní předplatná za 24 h", appkaPredplatna) +
     row("Odeslané e-maily", String(sent) + " · strop fronty " + cap + " · Resend bez denního limitu") +
     row("Fronta e-mailů teď", String((due.data ?? []).length)) +
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
@@ -523,10 +627,10 @@ Deno.serve(async (req) => {
     headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
     body: JSON.stringify({
       from: "Barna Academy <news@martinbarna.cz>", to: [to],
-      subject: `🌅 Ranní přehled: ${leadsYc} leadů, ${salesYc} prodejů` + (wdrPending ? `, ⚠️ ${wdrPending} odstoupení` : ""),
+      subject: `🌅 Ranní přehled: ${leadsYc} leadů, ${salesYc} prodejů Academy` + (appkaPocet ? `, ${appkaPocet}× appka` : "") + (wdrPending ? `, ⚠️ ${wdrPending} odstoupení` : ""),
       html,
     }),
   });
   if (!res.ok) return json({ error: "resend_" + res.status }, 500);
-  return json({ ok: true, to, leads: leadsYc, sales: salesYc, sent, errors: errs, withdrawals_pending: wdrPending, watchdog: { corsBad, dContact, dLead, kanarek: { ok: kanarekOk, chyba: kanarekChyba } } });
+  return json({ ok: true, to, leads: leadsYc, leads_reaktivace: leadsStari, sales: salesYc, app_subs: appkaPocet, app_subs_text: appkaPredplatna, sent, errors: errs, withdrawals_pending: wdrPending, watchdog: { corsBad, dContact, dLead, kanarek: { ok: kanarekOk, chyba: kanarekChyba } } });
 });
