@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <script src="/assets/theme-boot.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna</title>
+    <!-- ⛔ Titulek nese týž slib jako H1 a jako landing appky: Basic za 249, ne kouč v kapse. -->
+    <title>Tvůj Coach: cíle, jídelníček i trénink za 249 Kč měsíčně | Martin Barna</title>
     <!-- ⛔ [2026-08-21] Popisek i og:description slibovaly „prvních 14 dní plná verze
          zdarma". Zkušebka byla 20. 8. zrušena. Zároveň vedly AI koučem, tedy VIP za 499,
          zatímco hlavní prodávaný plán je Basic za 249. -->
@@ -13,7 +14,7 @@
     <link rel="canonical" href="https://martinbarna.cz/tvuj-coach/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://martinbarna.cz/tvuj-coach/">
-    <meta property="og:title" content="Appka Tvůj Coach: výživa a trénink s koučem v kapse | Martin Barna">
+    <meta property="og:title" content="Tvůj Coach: cíle, jídelníček i trénink za 249 Kč měsíčně | Martin Barna">
     <meta property="og:description" content="Cíle, které se ti každý týden přepočítají podle tvé váhy a zápisů, generátor jídelníčku i tréninku na míru, plná historie. Od 249 Kč měsíčně.">
     <meta property="og:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
     <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -217,7 +218,7 @@
 </head>
 <body>
 
-<div class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a><input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Otevřít menu">☰</label><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="/koucing/">Koučink</a><a class="hide-sm" href="/konzultace/">Konzultace</a><a class="hide-sm" href="/videokurz">Videokurz</a><a class="hide-sm" href="/recepty-a-odpovedi/">Balíček 349 Kč</a><a class="hide-sm" href="/akademie/">Academy</a><a class="hide-sm" href="/tvuj-coach/" aria-current="page">Appka</a><a class="hide-sm" href="/treninky">Tréninky</a><a class="hide-sm" href="/prednasky/">Přednášky</a><a class="hide-sm" href="/clanky/">Blog</a><a class="hide-sm" href="/reference/">Reference</a><a class="hide-sm" href="/poukaz/">Poukazy</a><a class="hide-sm" href="/akademie/prihlaseni/">Přihlásit</a><a class="cta" href="https://tvujcoach.cz/?plan=basic&amp;utm_source=web&amp;utm_medium=nav&amp;utm_campaign=tc-landing">Vzít si Basic →</a></nav></div></div>
+<div class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a><input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Otevřít menu">☰</label><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="/koucing/">Koučink</a><a class="hide-sm" href="/konzultace/">Konzultace</a><a class="hide-sm" href="/videokurz">Videokurz</a><a class="hide-sm" href="/recepty-a-odpovedi/">Balíček 349 Kč</a><a class="hide-sm" href="/akademie/">Academy</a><a class="hide-sm" href="/tvuj-coach/" aria-current="page">Appka</a><a class="hide-sm" href="/treninky">Tréninky</a><a class="hide-sm" href="/prednasky/">Přednášky</a><a class="hide-sm" href="/clanky/">Blog</a><a class="hide-sm" href="/reference/">Reference</a><a class="hide-sm" href="/poukaz/">Poukazy</a><a class="hide-sm" href="/akademie/prihlaseni/">Přihlásit</a><a class="cta" href="https://tvujcoach.cz/sign-up?plan=basic&amp;utm_source=web&amp;utm_medium=nav&amp;utm_campaign=tc-landing">Vzít si Basic →</a></nav></div></div>
 <!-- ⭐ Jediné tlačítko v navigaci prodávalo na TÉHLE stránce konzultaci za 2 990 Kč,
      tedy nejdražší produkt, na stránce, kam člověk přišel kvůli appce za 249 Kč.
      Na ostatních stránkách zůstává konzultace, tady vede Basic.
@@ -228,7 +229,15 @@
 <header class="hero center">
     <div class="wrap">
         <span class="badge">📱 Appka Tvůj Coach</span>
-        <h1>Kouč v&nbsp;kapse, který vidí jídlo i&nbsp;trénink</h1>
+        <!-- ⛔⛔ [2026-09-02] HLAVNÍ SLIB JE JEDEN A JE SHODNÝ S tvujcoach.cz (rozhodl Martin).
+             Do dneška tu stálo „Kouč v kapse, který vidí jídlo i trénink", zatímco landing appky
+             vedl Basicem za 249. Dvě stránky, dva sliby, obě z placené reklamy.
+             ⛔ Kdo mění tenhle nadpis, mění ho ZÁROVEŇ v `src/app/index.tsx` v repu appky
+             (a v `<title>` i `og:title` obou stran). Formulace se smí lišit délkou, ne slibem.
+             ⚠️ Cena je tu natvrdo, protože crawler nečeká na dotaz do `pricing_plans`; landing
+             appky si totéž číslo bere z DB. Kdo mění ceník, přepíše i tohle
+             (checklist `tvujcoach-cenik-zmena-checklist`). -->
+        <h1>Cíle, jídelníček i&nbsp;trénink za 249&nbsp;Kč měsíčně.</h1>
         <!-- ⭐ [2026-09-01] POŘADÍ JE ZÁMĚRNÉ: tlačítka jsou HNED POD H1, lead odstavec až
              pod nimi. Do dneška stál mezi nadpisem a tlačítky osmiřádkový lead a bonusový
              box, takže hlavní tlačítko začínalo na y 676. Cookie lišta zabírá na 375x812
@@ -239,8 +248,8 @@
              ⛔ Kdo sem vrací text nad tlačítka, přeměří y horní hrany tlačítka na 375 px.
              Nad ~420 px ho cookie lišta zase překryje. -->
         <div class="btn-row">
-            <a class="btn btn-acc" href="https://tvujcoach.cz/?plan=basic">Vzít si Basic →</a>
-            <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">S AI koučem →</a>
+            <a class="btn btn-acc" href="https://tvujcoach.cz/sign-up?plan=basic">Vzít si Basic →</a>
+            <a class="btn btn-ghost" href="https://tvujcoach.cz/sign-up?plan=vip">S AI koučem →</a>
         </div>
         <!-- Bonus k první platbě, živý od 18. 8. 2026 (most `app-purchase-bridge` v5).
              Stál PŘED tlačítky, dokud tlačítka ležela až pod leadem: byl to důvod, proč
@@ -313,7 +322,12 @@
 
         <h3 class="blok">A tady začíná koučink</h3>
         <div class="grid g4">
-            <div class="card"><span class="em">🎯</span><h3>Cíle se hýbou s tebou<span class="basic-tag">BASIC</span></h3><p>Týdenní check-in přepočítá kalorie a makra podle tvé váhy a podle toho, co jsi přes týden snědl.</p></div>
+            <!-- ⛔ [2026-09-02] TAHLE DLAŽDICE SLIBOVALA MÍŇ, NEŽ APPKA DÁVÁ. Ověřeno
+                 v kódu appky (`src/app/client/checkin.tsx` + migrace 0084): check-in si
+                 Free udělá CELÝ a rozbor uvidí, `weekly_checkin` (Basic) odemyká až to,
+                 že se podle něj PŘEPÍŠOU denní cíle. Landing appky to říkal správně,
+                 tahle strana dělala z celého check-inu placenou funkci. -->
+            <div class="card"><span class="em">🎯</span><h3>Cíle se hýbou s tebou<span class="basic-tag">BASIC</span></h3><p>Check-in i s rozborem, kam se posouváš, si uděláš zdarma. S Basicem ti podle něj appka přepočítá kalorie a makra na další týden, podle tvé váhy a podle toho, co jsi přes týden snědl.</p></div>
             <div class="card"><span class="em">✍️</span><h3>Nebo si cíle nastavíš sám</h3><p>Máš čísla od lékaře nebo si věříš? Zadáš si vlastní kalorie a makra a appka ti je při check-inu nepřepíše. Jde to i ve Free verzi.</p></div>
             <div class="card"><span class="em">🧠</span><h3>„Co si můžu ještě dnes dát?"<span class="basic-tag">BASIC</span></h3><p>Zbývá ti 400 kcal a 30 g bílkovin. Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
             <div class="card"><span class="em">🤖</span><h3>AI kouč mým hlasem<span class="vip-tag">VIP</span></h3><p>Zeptáš se ve dvě ráno a dostaneš odpověď. A umí appku ovládat za tebe: zapíše jídlo, upraví ho a vysvětlí ti, proč ti zvedla sacharidy.</p></div>
@@ -342,21 +356,13 @@
     <div class="wrap">
         <h2 class="center">Podívej se, jak appka funguje</h2>
         <p class="sec-sub">Krátké ukázky přímo z appky. Klikni na poster a video se spustí.</p>
+        <!-- ⛔ [2026-09-02] POŘADÍ JE PRODEJNÍ, NE NÁHODNÉ. Do dneska vedl AI kouč,
+             tedy funkce za 499, a na mobilu je první dlaždice to jediné, co člověk uvidí bez
+             scrollování. Teď vede sken kódu (zdarma) a VIP ukázky jsou na konci a označené.
+             Štítky sedí s tier_features: generátor = generators, „co si ještě dát“ = suggest_food
+             (Basic); AI kouč = ai_chat, foto jídla = ai_vision (VIP). Totéž pořadí má landing
+             appky (src/components/landing-demo-videos.tsx), mění se na OBOU stranách. -->
         <div class="dv-grid" id="dv-grid">
-            <article class="dv-card" data-dv-id="ai-kouc">
-                <div class="dv-frame">
-                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/ai-kouc-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
-                    <button type="button" class="dv-playbtn" aria-label="Přehrát AI kouč"><span class="dv-play" aria-hidden="true">▶</span></button>
-                </div>
-                <p class="dv-caption">AI kouč</p>
-            </article>
-            <article class="dv-card" data-dv-id="foto-jidla">
-                <div class="dv-frame">
-                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/foto-jidla-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
-                    <button type="button" class="dv-playbtn" aria-label="Přehrát Foto jídla"><span class="dv-play" aria-hidden="true">▶</span></button>
-                </div>
-                <p class="dv-caption">Foto jídla</p>
-            </article>
             <article class="dv-card" data-dv-id="sken-ean">
                 <div class="dv-frame">
                     <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/sken-ean-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
@@ -364,19 +370,12 @@
                 </div>
                 <p class="dv-caption">Sken kódu</p>
             </article>
-            <article class="dv-card" data-dv-id="generator-jidelnicku">
+            <article class="dv-card" data-dv-id="zapis-hledanim">
                 <div class="dv-frame">
-                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/generator-jidelnicku-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
-                    <button type="button" class="dv-playbtn" aria-label="Přehrát Generátor jídelníčku"><span class="dv-play" aria-hidden="true">▶</span></button>
+                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/zapis-hledanim-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
+                    <button type="button" class="dv-playbtn" aria-label="Přehrát Zápis hledáním"><span class="dv-play" aria-hidden="true">▶</span></button>
                 </div>
-                <p class="dv-caption">Generátor jídelníčku</p>
-            </article>
-            <article class="dv-card" data-dv-id="trening">
-                <div class="dv-frame">
-                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/trening-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
-                    <button type="button" class="dv-playbtn" aria-label="Přehrát Trénink"><span class="dv-play" aria-hidden="true">▶</span></button>
-                </div>
-                <p class="dv-caption">Trénink</p>
+                <p class="dv-caption">Zápis hledáním</p>
             </article>
             <article class="dv-card" data-dv-id="check-in">
                 <div class="dv-frame">
@@ -385,19 +384,40 @@
                 </div>
                 <p class="dv-caption">Check-in</p>
             </article>
+            <article class="dv-card" data-dv-id="generator-jidelnicku">
+                <div class="dv-frame">
+                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/generator-jidelnicku-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
+                    <button type="button" class="dv-playbtn" aria-label="Přehrát Generátor jídelníčku"><span class="dv-play" aria-hidden="true">▶</span></button>
+                </div>
+                <p class="dv-caption">Generátor jídelníčku<span class="basic-tag">BASIC</span></p>
+            </article>
+            <article class="dv-card" data-dv-id="trening">
+                <div class="dv-frame">
+                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/trening-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
+                    <button type="button" class="dv-playbtn" aria-label="Přehrát Trénink"><span class="dv-play" aria-hidden="true">▶</span></button>
+                </div>
+                <p class="dv-caption">Trénink</p>
+            </article>
             <article class="dv-card" data-dv-id="co-si-dat">
                 <div class="dv-frame">
                     <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/co-si-dat-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
                     <button type="button" class="dv-playbtn" aria-label="Přehrát Co si ještě dát"><span class="dv-play" aria-hidden="true">▶</span></button>
                 </div>
-                <p class="dv-caption">Co si ještě dát</p>
+                <p class="dv-caption">Co si ještě dát<span class="basic-tag">BASIC</span></p>
             </article>
-            <article class="dv-card" data-dv-id="zapis-hledanim">
+            <article class="dv-card" data-dv-id="ai-kouc">
                 <div class="dv-frame">
-                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/zapis-hledanim-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
-                    <button type="button" class="dv-playbtn" aria-label="Přehrát Zápis hledáním"><span class="dv-play" aria-hidden="true">▶</span></button>
+                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/ai-kouc-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
+                    <button type="button" class="dv-playbtn" aria-label="Přehrát AI kouč"><span class="dv-play" aria-hidden="true">▶</span></button>
                 </div>
-                <p class="dv-caption">Zápis hledáním</p>
+                <p class="dv-caption">AI kouč<span class="vip-tag">VIP</span></p>
+            </article>
+            <article class="dv-card" data-dv-id="foto-jidla">
+                <div class="dv-frame">
+                    <img class="dv-poster" src="https://tvujcoach.cz/demo-videa/foto-jidla-poster.jpg" alt="" width="540" height="960" loading="lazy" decoding="async">
+                    <button type="button" class="dv-playbtn" aria-label="Přehrát Foto jídla"><span class="dv-play" aria-hidden="true">▶</span></button>
+                </div>
+                <p class="dv-caption">Foto jídla<span class="vip-tag">VIP</span></p>
             </article>
             <article class="dv-card" data-dv-id="gamifikace">
                 <div class="dv-frame">
@@ -458,7 +478,7 @@
                 <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě.</b> 182 videí v hodnotě 1 490 Kč, doživotní přístup. Dostaneš ho i tehdy, když si vezmeš jediný měsíc.</p>
                 <ul class="feat">
                     <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
-                    <li><strong>Týdenní check-in, který ti přepočítá cíle</strong></li>
+                    <li><strong>Cíle, které ti check-in každý týden přepočítá</strong></li>
                     <li><strong>Tréninkový plán, objem po partiích a mezocyklus</strong></li>
                     <li>Generátor jídelníčku i s nákupním seznamem</li>
                     <li>„Co si můžu ještě dnes dát", report ke sdílení a export dat</li>
@@ -471,7 +491,7 @@
                      ⚠️ Skript níž tlačítko SCHOVÁ, když roční plán v ceníku není. Proto musí
                      měsíční tlačítko pod ním dávat smysl i samo o sobě (nese název tarifu). -->
                 <a class="btn btn-acc btn-year" data-year-cta="basic" href="https://tvujcoach.cz/sign-up?plan=basic-rok">Vzít Basic na rok →</a>
-                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=basic">Vybrat Basic měsíčně →</a>
+                <a class="btn btn-ghost" href="https://tvujcoach.cz/sign-up?plan=basic">Vybrat Basic měsíčně →</a>
             </div>
             <div class="plan">
                 <span class="ribbon">S AI KOUČEM</span>
@@ -487,7 +507,7 @@
                     <li>AI komentář k týdennímu check-inu</li>
                 </ul>
                 <a class="btn btn-ghost btn-year" data-year-cta="ai_basic" href="https://tvujcoach.cz/sign-up?plan=vip-rok">Vzít VIP na rok →</a>
-                <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=vip">Vzít VIP měsíčně →</a>
+                <a class="btn btn-ghost" href="https://tvujcoach.cz/sign-up?plan=vip">Vzít VIP měsíčně →</a>
             </div>
             <!-- Free je poslední a tiché. Nikomu se nebere (Martin: „free je navždy"),
                  jen přestalo být tím, co nabízíme první. -->
@@ -511,7 +531,7 @@
             </div>
 
         <div class="legal-note" style="grid-column:1/-1;margin:1.4rem 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03);font-size:.88rem;line-height:1.6;color:#A09AAD;">
-        <p style="margin:0 0 .5rem;"><b style="color:#F0EADF;">Předplatné je opakovaná platba.</b> Obnovuje se automaticky na konci každého období (měsíc, nebo rok) za stejnou cenu, dokud ho nezrušíš. Zrušit ho můžeš kdykoliv v appce v sekci Profil → Předplatné. Zaplacené období vždy doběhne do konce a další platba se už nestrhne.</p>
+        <p style="margin:0 0 .5rem;"><b style="color:#F0EADF;">Předplatné je opakovaná platba.</b> Obnovuje se automaticky na konci každého období (měsíc, nebo rok) za stejnou cenu, dokud ho nezrušíš. Zrušit ho můžeš kdykoliv v appce: Profil → Předplatné → Spravovat předplatné, kde se otevře správa platby, nebo mi napiš. Zaplacené období vždy doběhne do konce a další platba se už nestrhne.</p>
         <p style="margin:0;"><b style="color:#F0EADF;">Odstoupení do 14 dnů.</b> Jde o digitální službu poskytovanou online. Jako spotřebitel máš právo odstoupit od smlouvy do 14 dnů od jejího uzavření. Placené funkce se odemykají ihned po zaplacení, takže při objednávce uděluješ výslovný souhlas se zahájením plnění před uplynutím této lhůty a bereš na vědomí, že tím právo na odstoupení zaniká (§ 1837 občanského zákoníku). Odstoupení i případné vrácení peněz vyřídíš formulářem na <a href="https://tvujcoach.cz/odstoupeni" style="color:#EBB12C;">tvujcoach.cz/odstoupeni</a>. Podrobnosti v <a href="/obchodni-podminky/" style="color:#EBB12C;">obchodních podmínkách</a>.</p>
         <p style="margin:.5rem 0 0;"><b style="color:#F0EADF;">Garance vrácení peněz 14 dnů.</b> Přesto ti dávám svoje slovo navíc: když ti to do 14 dnů od začátku předplatného nesedne, napiš na <a href="mailto:martin@martinbarna.cz" style="color:#EBB12C;">martin@martinbarna.cz</a> a vrátím ti celou částku. Bez udání důvodu. Je to můj dobrovolný závazek nad rámec zákona.</p>
       </div>
@@ -540,16 +560,22 @@
     <div class="wrap">
         <h2 class="center">Časté otázky</h2>
         <div style="margin-top:1.8rem;">
-            <div class="faq-i"><b>Je Free verze fakt zdarma?</b><p>Ano, navždy a bez karty. Zapisuješ jídlo i trénink bez omezení, včetně čárových kódů, a můžeš si nastavit vlastní kalorie a makra. Historii vidíš 14 dní zpátky. Týdenní check-in, který ti cíle přepočítává, tréninkový plán a generátory má Basic, AI kouče a focení jídla VIP.</p></div>
+            <div class="faq-i"><b>Je Free verze fakt zdarma?</b><p>Ano, navždy a bez karty. Zapisuješ jídlo i trénink bez omezení, včetně čárových kódů, a můžeš si nastavit vlastní kalorie a makra. Historii vidíš 14 dní zpátky. Týdenní check-in i s rozborem si uděláš taky zdarma, jen ti podle něj appka nepřepíše cíle: to, tréninkový plán a generátory má Basic. AI kouče, hlasový zápis a focení jídla VIP.</p></div>
             <div class="faq-i"><b>Jak dostanu ten videokurz zdarma?</b><p>Sám od sebe a hned. Jakmile projde tvoje první platba za Basic nebo VIP, přiřadím videokurz k e-mailu, kterým platíš. Přihlásíš se s ním do <a href="/akademie/prihlaseni/">členské sekce</a> a kurz tam na tebe čeká, 182 videí a přes 20 hodin. Nemusíš o nic psát ani nic zadávat. Zůstává ti napořád, i kdybys předplatné za měsíc zrušil, protože je to dárek k nákupu. Když si vezmeš VIP na rok, přidám k tomu ještě měsíc <a href="/akademie/">Barna Academy</a> na zkoušku, pokud v ní ještě nejsi. A jestli videokurz už koupený máš, nic ti nepřepisuju, zůstává ti ten tvůj.</p></div>
-            <div class="faq-i"><b>Jak VIP zruším?</b><p>Kdykoliv na dvě klepnutí přímo v appce (Profil → Předplatné). Doběhne zaplacené období a dál nic neplatíš.</p></div>
+            <!-- ⛔ [2026-09-02] Otázka se jmenovala „Jak VIP zruším?", takže člověk, který
+                 zvažuje Basic za 249, se na svoji odpověď nedostal. Ruší se stejně u obou. -->
+            <div class="faq-i"><b>Jak předplatné zruším?</b><p>Kdykoliv a sám: v appce Profil → Předplatné → Spravovat předplatné, tam se otevře správa platby a zrušení potvrdíš. Nebo mi napiš a zruším ti ho. Platí to stejně pro Basic i VIP. Doběhne zaplacené období a dál nic neplatíš.</p></div>
+            <!-- Táž otázka i táž odpověď je na tvujcoach.cz. Znění záruky je doslova
+                 to z právního boxu nad ceníkem, ať se dvě čísla neperou. -->
+            <div class="faq-i"><b>Co když mi to za měsíc nesedne?</b><p>Zrušíš kdykoliv v appce: Profil → Předplatné → Spravovat předplatné (otevře se správa platby), nebo mi napiš. Zaplacené období doběhne a dál se nic nestrhne. A když ti to do 14 dnů od začátku předplatného nesedne, napiš mi na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> a vrátím ti celou částku, bez udání důvodu. Videokurz ti nechám tak jako tak.</p></div>
+            <div class="faq-i"><b>Kolik mi to denně zabere?</b><p>Balené jídlo naskenuješ podle čárového kódu, to je otázka dvou vteřin. Snídani, kterou máš pořád dokola, si uložíš jako šablonu a příště ji zapíšeš jedním ťuknutím. Zbytek najdeš v databázi podle názvu. Check-in je jednou týdně a je na pár minut.</p></div>
             <div class="faq-i"><b>Funguje na mobilu i počítači?</b><p>Ano. Zatím běží jako webová aplikace, otevřeš ji v prohlížeči na mobilu i počítači a data máš všude stejná. Appku pro iPhone a Android chystáme.</p></div>
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč bych měl zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Deník ti řekne, co jsi snědl. Tvůj Coach ti řekne, co s tím dál. V Basicu ti každý týden přepočítá kalorie a makra podle toho, jak ti to jde v posledních týdnech. K tomu ti poskládá jídelníček na tvoje čísla i s nákupním seznamem a napíše tréninkový plán. Ve VIP se na to můžeš zeptat AI kouče, který vidí tvoje data. Nemusíš nic rušit. Vyzkoušej Free vedle toho, co máš, a nech si to, co ti dává větší smysl.</p></div>
             <!-- Cisla merena v zive DB 22. 8. 2026. Nez je zmenis, zmer je znovu a projdi
                  i landing appky: hlida to `npm run kontrola:slib`. Kontext v commitu 6176a1e. -->
             <div class="faq-i"><b>Najdu tam potraviny z českých obchodů?</b><p>Jo, a přesně na tom si zakládám. V databázi je <strong>přes <!-- cislo:potraviny -->50 000<!-- /cislo --> potravin včetně zboží z Lidlu, Tesca, Alberta, Globusu, Billy, Kauflandu i Penny</strong>, takže rohlík, skyr nebo šumavský chléb najdeš pod názvem, na který jsi zvyklý z regálu. K tomu knihovna přes <!-- cislo:recepty -->140<!-- /cislo --> receptů s makry na porci. U všeho baleného funguje i čárový kód. A když ti něco chybí, napíšeš mi a doplním to.</p></div>
         </div>
-        <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz/?plan=basic">Vzít si Basic i videokurz →</a></p>
+        <p class="center" style="margin-top:2.2rem;"><a class="btn btn-acc" href="https://tvujcoach.cz/sign-up?plan=basic">Vzít si Basic i videokurz →</a></p>
     </div>
 </section>
 
@@ -566,7 +592,7 @@
      a v meta description. Kdo mění ceník, přepíše i tohle
      (paměť `tvujcoach-cenik-zmena-checklist`). -->
 <div class="mbar" id="mbar" aria-label="Rychlý nákup">
-    <a class="m1" href="https://tvujcoach.cz/?plan=basic&amp;utm_source=web&amp;utm_medium=mbar&amp;utm_campaign=tc-landing">Vzít si Basic 249 Kč →</a>
+    <a class="m1" href="https://tvujcoach.cz/sign-up?plan=basic&amp;utm_source=web&amp;utm_medium=mbar&amp;utm_campaign=tc-landing">Vzít si Basic 249 Kč →</a>
     <a class="m2" href="#cenik">Ceník</a>
 </div>
 
