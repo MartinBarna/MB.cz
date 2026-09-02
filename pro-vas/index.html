@@ -53,8 +53,12 @@
         .navlinks { gap:11px; } .navlinks a { font-size:.88rem; } .navlinks a.cta { padding:8px 14px; } /* kompakt vzdy: 13 polozek se plnou velikosti nevejde do wrapu 1320 */ .nav-toggle{position:absolute;opacity:0;width:0;height:0;pointer-events:none;} .nav-burger{display:none;background:none;border:1px solid #d8d8d8;color:var(--ink);border-radius:8px;padding:5px 11px;font-size:1.2rem;line-height:1;cursor:pointer;flex-shrink:0;} @media (max-width:1259px){ .nav-burger{display:block;} .navlinks{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:2px;padding:8px 20px 16px;box-shadow:0 12px 26px rgba(0,0,0,.14);border-top:1px solid #eee;} .nav-toggle:checked ~ .navlinks{display:flex;} .navlinks .hide-sm{display:block;padding:10px 2px;font-size:1rem;border-bottom:1px solid #f0f0f0;} .navlinks a.cta{text-align:center;margin-top:8px;padding:12px 20px;} } @media (min-width:1260px) and (max-width:1319px){ .navlinks{gap:6px} .navlinks a{font-size:.78rem} .navlinks a.cta{padding:6px 10px} }
         .nav { background:rgba(255,255,255,.78)!important; -webkit-backdrop-filter:saturate(180%) blur(12px); backdrop-filter:saturate(180%) blur(12px); }
         /* ===== Sjednocená hlavička: tmavá vrstva (tato stránka nenačítá marketing-dark.css; hodnoty = marketing-dark.css .nav) ===== */
-        .nav { background:rgba(12,11,10,.82)!important; border-bottom:1px solid rgba(255,255,255,.08)!important; -webkit-backdrop-filter:none!important; backdrop-filter:none!important; }
+        .nav { background:#0c0b0a!important; border-bottom:1px solid rgba(255,255,255,.08)!important; -webkit-backdrop-filter:none!important; backdrop-filter:none!important; }
         .nav a, .nav a.back { color:#cabfb4!important; }
+/* rozbalene mobilni menu: bez tohohle zustane panel bily se svetlymi odkazy (audit 2026-09-02) */
+html:not([data-theme="light"]) .navlinks { background:#0c0b0a!important; border-top:1px solid rgba(255,255,255,.08)!important; box-shadow:0 12px 26px rgba(0,0,0,.6)!important; }
+html:not([data-theme="light"]) .navlinks .hide-sm { border-bottom:1px solid rgba(255,255,255,.08)!important; }
+html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-color:rgba(255,255,255,.18)!important; background:transparent!important; }
         .nav a.cta, .navlinks a.cta { background:linear-gradient(145deg,#F6CD63,#EBB12C)!important; color:#161616!important; }
         .nav a.cta:hover, .navlinks a.cta:hover { background:#EBB12C!important; color:#161616!important; }
 

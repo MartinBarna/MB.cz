@@ -45,7 +45,10 @@ html:not([data-theme="light"]) .section-head h2, html:not([data-theme="light"]) 
 html:not([data-theme="light"]) .section-head p, html:not([data-theme="light"]) .sec-head p, html:not([data-theme="light"]) .lead{ color:var(--bd-muted2)!important; }
 html:not([data-theme="light"]) .text-muted, html:not([data-theme="light"]) .text-secondary, html:not([data-theme="light"]) small.text-muted{ color:var(--bd-muted)!important; }
 html:not([data-theme="light"]) .text-dark, html:not([data-theme="light"]) .text-black{ color:var(--bd-ink)!important; }
-html:not([data-theme="light"]) a{ color:inherit; }
+/* Tlacitka si barvu textu urcuji sama (tmavy text na zlate). Bez vyjimky by
+   color:inherit prebilo pravidlo stranky a zlate CTA by melo svetly text
+   (audit 2026-09-02: 1,62 az 1,93 na akademii, clancich, referencich). */
+html:not([data-theme="light"]) a:not(.btn):not([class*="btn-"]):not(.cta):not(.skip-link){ color:inherit; }
 html:not([data-theme="light"]) .text-center p, html:not([data-theme="light"]) p{ color:var(--bd-ink); }
 
 /* ---------- cards (Bootstrap + vlastní varianty) ---------- */
@@ -281,3 +284,53 @@ html:not([data-theme="light"]) .btn.ghost, html:not([data-theme="light"]) .btn-o
    <strong> na zlatý, protože počítá s tmavým podkladem. Uvnitř bílého boxu
    ho musíme nechat tmavý. */
 html:not([data-theme="light"]) [style*="background:#fff"] strong[style*="#161616"], html:not([data-theme="light"]) [style*="background:#fff"] b[style*="#161616"]{ color:#161616!important; }  /* zlatá na bílé → 1,52 */
+
+/* ============================================================
+   AUDIT KONTRASTU 2026-09-02 (Martinuv screenshot z mobilu, tmavy rezim,
+   mereni renderu pres puppeteer, 390 px, oba rezimy).
+   ============================================================ */
+
+/* 1) Zdrojove pilulky na /reference/ ("Google - 46 recenzi", "Facebook - 53
+   doporuceni"). Stranka je psana ve svetlem designu: .shot-src a ma
+   background:#fff a color:var(--green-dark). Tmavou barvu textu prebilo
+   pravidlo a{color:inherit} vys, bile pozadi neprebilo nic -> skoro bily
+   text na bilem. Namereno 1,20. Delame z nich zlatou obrysovou pilulku. */
+html:not([data-theme="light"]) .shot-src a{
+  background:rgba(235,177,44,.10)!important;
+  border-color:rgba(235,177,44,.45)!important;
+  color:var(--bd-gold-soft)!important;
+}
+html:not([data-theme="light"]) .shot-src a:hover{
+  background:rgba(235,177,44,.22)!important;
+  border-color:var(--bd-gold2)!important;
+  color:#fff!important;
+}
+
+/* 2) Sticky hlavicka .nav byla v tmavem rezimu pruhledna na 82 % a arena.css
+   ji zaroven vypina backdrop blur -> obsah, ktery pod ni projizdi, skrz ni
+   prosvital (Martin: text CTA pres logo). Pozadi delame plne kryci. */
+html:not([data-theme="light"]) .nav{ background:#0c0b0a!important; }
+
+/* 3) Rozbalene mobilni menu (.navlinks pod .nav) melo v CSS stranek
+   background:#fff, zatimco odkazy dedi svetlou barvu z pravidla .nav a
+   -> svetle sedy text na bilem panelu, namereno 1,71. Plati pro vsechny
+   stranky s touhle hlavickou, tedy i clanky. */
+html:not([data-theme="light"]) .nav .navlinks{
+  background:#0c0b0a!important;
+  border-top:1px solid var(--bd-line)!important;
+  box-shadow:0 12px 26px rgba(0,0,0,.6)!important;
+}
+html:not([data-theme="light"]) .nav .navlinks .hide-sm{ border-bottom:1px solid var(--bd-line)!important; }
+html:not([data-theme="light"]) .nav-burger{ color:#cabfb4!important; border-color:rgba(255,255,255,.18)!important; background:transparent!important; }
+
+/* 4) Lead-magnet landingy (/makro-plan/, /forma-zpet/): zavereci blok .final ma
+   oranzove pozadi a stranka si uz tmavy text vynucuje !important. Jenze
+   app-brand-override.css ma stejne specificke pravidlo pro h2 a nacita se az za
+   nim, takze nadpis zustal bily na oranzove (2,32) a .fine svetly (1,82).
+   Predrazime specificitou, ne poradim. */
+html:not([data-theme="light"]) .final h2,
+html:not([data-theme="light"]) .final h3,
+html:not([data-theme="light"]) .final p,
+html:not([data-theme="light"]) .final .fine,
+html:not([data-theme="light"]) .final .sign,
+html:not([data-theme="light"]) .final a:not(.btn){ color:#161616!important; opacity:1!important; }
