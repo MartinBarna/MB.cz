@@ -1135,6 +1135,27 @@
         // Martin je chce mit dohledatelne, ne smazane, ale v hlavni tabulce prekazeji.
         var rows=vsechny.filter(function(r){ return r.active!==false; });
         var byvali=vsechny.filter(function(r){ return r.active===false; });
+        // Balicek, delka a do kdy ma zaplaceno. Od 2. 9. 2026 jde koucink koupit pres
+        // Stripe, takze Martin musi na prvni pohled poznat Gold od Diamondu a hlavne
+        // to, komu obdobi konci. Zdroj "stripe" = koupil si sam, "rucni" = pozvanka z adminu.
+        // ⛔ Prazdny `plan` NENI Gold: rucni granty pred migraci ho maji doplneny, cokoli
+        //    bez nej je opravdu neznamy balicek a ma se to priznat, ne dohadovat.
+        function kliBalicek(r){
+          var jmeno = r.plan==='diamond' ? '💎 Diamond' : (r.plan==='gold' ? 'Gold' : '<span class="muted">?</span>');
+          var delka = r.months ? ' <span class="muted">'+r.months+' měs.</span>' : '';
+          var doKdy = '';
+          if(r.expires_at){
+            var d=new Date(r.expires_at), dnu=Math.round((d.getTime()-now)/86400000);
+            var barva = dnu<0 ? '#ff8b6b' : (dnu<14 ? '#F6CD63' : '#8F8A99');
+            doKdy = '<br><span style="color:'+barva+';font-size:.8rem;">'
+              + (dnu<0 ? 'skončilo ' : 'do ') + fmtDay(String(r.expires_at).slice(0,10))
+              + (dnu>=0 ? ' ('+dnu+' d)' : '') + '</span>';
+          } else {
+            doKdy = '<br><span class="muted" style="font-size:.8rem;">bez konce</span>';
+          }
+          var zdroj = r.zdroj==='stripe' ? ' <span class="muted" title="koupeno na webu přes Stripe">💳</span>' : '';
+          return jmeno+delka+zdroj+doKdy;
+        }
         function radek(r, jeByvaly){
           var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
           var days=lastMs?Math.floor((now-lastMs)/86400000):null;
@@ -1145,10 +1166,11 @@
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
             +'<td>'+(r.has_intake?'✅':'<span class="muted">—</span>')+'</td>'
             +'<td>'+kliApp(r.app)+'</td>'
+            +'<td>'+kliBalicek(r)+'</td>'
             +'<td class="tcount">'+r.reports+'</td>'
             +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
         }
-        var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
+        var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Balíček</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
         // 🚀 FRONTA: kdo vyplnil dotazník a ještě nemá z něj postavené zadání. Data vrací
         // `clients_list` (intake_at, targets_at). Podmínka je schválně „targets starší než
         // dotazník", ne jen „targets chybí": když klient pošle dotazník znovu (změnil se

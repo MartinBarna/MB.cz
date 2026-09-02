@@ -319,6 +319,92 @@ const kontrolyChyby = [...zdrojWebhook.matchAll(/if \(ins\w*\.error\)/g)].length
 check('R7 oba inserty kontroluji error a 23505 prevadi na duplicitni navrat', kontrolyChyby === 2
   && zdrojWebhook.includes('"23505"'), `kontrol=${kontrolyChyby}`);
 
+// --- 15) KOUČINK PŘES STRIPE (2. 9. 2026) ---
+// Šest klíčů (Gold i Diamond × 1/3/6 měsíců). Chyba v kterémkoli z nich znamená,
+// že člověk zaplatí až 59 500 Kč a nedostane přístup, nebo dostane špatně dlouhý.
+const koucKlice = klice.filter((k) => k.startsWith('coaching-'));
+check('KO1 katalog zna vsech sest koucinkovych klicu', koucKlice.length === 6, JSON.stringify(koucKlice));
+for (const k of ['coaching-gold-1', 'coaching-gold-3', 'coaching-gold-6',
+                 'coaching-diamond-1', 'coaching-diamond-3', 'coaching-diamond-6']) {
+  check(`KO2 klic ${k} je v katalogu`, klice.includes(k), JSON.stringify(klice));
+}
+// ⛔ `product='coaching'` je pristupovy klic klientske sekce, AI Martina, adminu
+// a offboardnich pojistek. Vlastni hodnota by klienta odriznula, aniz by co spadlo.
+const koucBloky = koucKlice.map((k) => {
+  const i = blokKatalog.indexOf('"' + k + '"');
+  return blokKatalog.slice(i, blokKatalog.indexOf('},', i) + 1);
+});
+check('KO3 vsechny koucinkove klice davaji produkt "coaching"',
+  koucBloky.every((t) => /produkt:\s*"coaching"/.test(t)), '');
+// Appku i uvitaci mail dodava `onboardKoucink`, ne obecna vetev. Kdyby tu byl
+// `tcGrant: true` nebo neprazdna trat, klient by dostal grant nebo mail dvakrat.
+check('KO4 koucink nedava appku obecnou vetvi (tcGrant false)',
+  koucBloky.every((t) => /tcGrant:\s*false/.test(t)), '');
+check('KO5 koucink nema obecnou uvitaci trat (welcome je prazdny)',
+  koucBloky.every((t) => /welcome:\s*""/.test(t)), '');
+check('KO6 kazdy koucinkovy klic ma namapovany odkaz',
+  koucKlice.every((k) => mapovani.some((m) => m.klic === k)),
+  JSON.stringify(mapovani.filter((m) => m.klic.startsWith('coaching-'))));
+// Vetev se musi volat DRIV nez `udelDozivotni`, jinak by koucink dostal expiraci null
+// (tedy koucink navzdy) a nikde by to nekriklo.
+const iKouc = zdrojWebhook.indexOf('if (def.koucink) return await zpracujKoucink');
+const iDoz = zdrojWebhook.indexOf('const { novyDozivotni, zruseneMesicni, predchoziPi } = await udelDozivotni');
+check('KO7 koucinkova vetev je pred udelDozivotni', iKouc > 0 && iDoz > iKouc, `kouc=${iKouc} doz=${iDoz}`);
+// Idempotence stoji na payment_intent PRECTENEM PRED zapisem (past ze 7. 8. 2026).
+const blokKouc = zdrojWebhook.slice(
+  zdrojWebhook.indexOf('async function zpracujKoucink'),
+  zdrojWebhook.indexOf('Deno.serve('),
+);
+check('KO8 idempotence koucinku stoji na payment_intent',
+  /stavajici\?\.stripe_payment_intent === pi/.test(blokKouc), '');
+check('KO9 prodlouzeni se pocita od konce stavajiciho obdobi, ne ode dneska',
+  /stareDo\.getTime\(\) > Date\.now\(\)/.test(blokKouc), '');
+check('KO10 koucink zapisuje expiraci (jinak by platil navzdy)',
+  /expiresAt/.test(blokKouc) && /koucinkExpirace\(/.test(blokKouc), '');
+// Bez teto polozky by clen doporucil klienta za desetitisice a dostal tise nulu.
+check('KO11 ODMENA zna produkt coaching', /coaching:\s*\d+/.test(zdrojWebhook), '');
+// Placeholdery odkazu musi jit najit, dokud je nekdo nenahradi ID ze Stripu.
+const koucPlaceholdery = (zdrojWebhook.match(/plink_DOPLNIT_KOUCINK_[A-Z0-9_]+/g) ?? []);
+if (koucPlaceholdery.length) {
+  console.warn('\n⚠️  UPOZORNENI: koucinkove odkazy jsou porad PLACEHOLDERY: '
+    + koucPlaceholdery.join(', '));
+  console.warn('   Dokud tam nebudou skutecna ID ze Stripu, zaplaceny koucink NEDODA pristup.\n');
+}
+check('KO12 koucinkove odkazy jsou bud skutecne, nebo viditelne oznacene DOPLNIT',
+  koucPlaceholdery.length === 0 || koucPlaceholdery.length === 6,
+  JSON.stringify(koucPlaceholdery));
+
+// --- 16) MIGRACE KOUCINKU ---
+const MIG_KOUC = KOREN + 'akademie/_supabase/koucink-stripe.sql';
+let sqlKouc = '';
+try { sqlKouc = await Deno.readTextFile(MIG_KOUC); } catch { /* chybi */ }
+check('KM1 migrace koucink-stripe.sql existuje', sqlKouc.length > 0, MIG_KOUC);
+for (const sloupec of ['plan', 'months', 'academy_po_3m']) {
+  check(`KM2 migrace pridava ${sloupec}`,
+    new RegExp(`add column if not exists ${sloupec}`).test(sqlKouc), '');
+}
+check('KM3 migrace zaklada RPC kapacity a pousti ji anonymne',
+  /create or replace function public\.koucink_kapacita/.test(sqlKouc)
+  && /grant execute on function public\.koucink_kapacita\(\) to anon/.test(sqlKouc), '');
+// RPC se cte z verejne stranky, takze nesmi vracet nic osobniho.
+check('KM4 RPC kapacity nevraci e-maily', !/select\s+email/i.test(sqlKouc), '');
+
+// --- 17) ONBOARDING JE JEN NA JEDNOM MISTE ---
+// Uvitaci mail koucinku zil do 2. 9. 2026 v admin-api. Kdyby si ho webhook zkopiroval,
+// obe verze by se rozesly a rucne pozvany klient by dostal jiny mail nez ten placeny.
+const SHARED = KOREN + 'akademie/_supabase/functions/_shared/koucink-onboarding.ts';
+let zdrojShared = '';
+try { zdrojShared = await Deno.readTextFile(SHARED); } catch { /* chybi */ }
+check('KS1 sdileny modul onboardingu existuje', zdrojShared.length > 0, SHARED);
+check('KS2 admin-api onboarding importuje, nema vlastni kopii',
+  /from "\.\.\/_shared\/koucink-onboarding\.ts"/.test(zdrojAdmin)
+  && !zdrojAdmin.includes('Vítej v týmu'), '');
+check('KS3 webhook onboarding importuje, nema vlastni kopii',
+  /from "\.\.\/_shared\/koucink-onboarding\.ts"/.test(zdrojWebhook)
+  && !zdrojWebhook.includes('Vítej v týmu'), '');
+check('KS4 uvitaci mail koucinku je jen ve sdilenem modulu',
+  zdrojShared.includes('Vítej v týmu'), '');
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo`);

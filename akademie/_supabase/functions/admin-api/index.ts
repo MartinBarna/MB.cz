@@ -6,6 +6,9 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // `index.ts`. Když se nahraje jen index, funkce spadne na chybějícím importu.
 // Past: paměť `mb-deploy-kopiruje-jen-index-past`.
 import { pripravFakta } from "./report-engine.mjs";
+// ⛔ Onboarding koučinku je SPOLEČNÝ s nákupem přes Stripe (`academy-stripe-webhook`).
+// Deploy admin-api proto veze i `_shared/koucink-onboarding.ts`.
+import { onboardKoucink } from "../_shared/koucink-onboarding.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -2059,7 +2062,10 @@ Deno.serve(async (req) => {
         // Kvůli tomu tenhle select vracel chybu, `ents.data` bylo null, seznam vyšel prázdný
         // a admin hlásil „zatím žádní klienti", i když jich bylo dvanáct. Kdo přidal klienta,
         // neměl jak si ověřit, že tam opravdu je. Přesně na tohle 27. 7. narazil Martin.
-        admin.from("entitlements").select("email,active,granted_at").eq("product", "coaching"),
+        // ⭐ 2. 9. 2026: i `plan`, `months`, `expires_at` a `source`. Od te doby jde koucink
+        // koupit pres Stripe, takze Martin musi na seznamu poznat, KTERY balicek clovek ma,
+        // do kdy ma zaplaceno a jestli si to koupil sam, nebo mu to zalozil rucne.
+        admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source").eq("product", "coaching"),
         admin.from("client_reports").select("email,report_date"),
         // `created_at` kvůli frontě „dotazníky ke zpracování" v UI. Klient může poslat
         // dotazník víckrát, bereme ten nejnovější (viz `intakeAt` níž).
@@ -2097,7 +2103,12 @@ Deno.serve(async (req) => {
       // roztřídit je do dvou tabulek je věc UI, ne dat.
       const rows = (ents.data ?? []).map((e) => {
         const k = low(e.email); const rep = repBy.get(k);
-        return { email: k, name: nameBy.get(k) ?? "", active: e.active === true, registered: regSet.has(k), since: e.granted_at, reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), intake_at: intakeAt.get(k) ?? null, targets_at: targetsAt.get(k) ?? null, app: "?" as string };
+        return { email: k, name: nameBy.get(k) ?? "", active: e.active === true, registered: regSet.has(k), since: e.granted_at,
+          // `plan` je null u nikoho, kdo prisel po migraci `koucink-stripe.sql` (ta dopsala
+          // vsem stavajicim `gold`). Null se proto cte jako "nevime", ne jako Gold.
+          plan: e.plan ?? null, months: e.months ?? null, expires_at: e.expires_at ?? null,
+          // "stripe" = koupil si sam z webu, "rucni" = zalozil Martin v adminu.
+          zdroj: String(e.source ?? "").startsWith("stripe-") ? "stripe" : "rucni", reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), intake_at: intakeAt.get(k) ?? null, targets_at: targetsAt.get(k) ?? null, app: "?" as string };
       }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
 
       // Stav appky Tvůj Coach. ⛔ NEBRAT z tabulky `tvujcoach_grants` — ta se zapisuje
@@ -2811,114 +2822,23 @@ Deno.serve(async (req) => {
       const osloveni = String(body.osloveni ?? "").trim().slice(0, 60); // vokativ — Martin vidí a může opravit v UI
       const kind = body.kind === "stavajici" ? "stavajici" : "novy";
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
-      // ⛔ OPRAVA 27. 7. 2026: `entitlements` NEMÁ sloupec `id`. Klíč je (email, product).
-      // Dřív se tu vybíralo "id,active", což skončilo chybou, `ent` bylo vždycky null,
-      // a tak se pokaždé zkusil INSERT. U NOVÉHO klienta to prošlo, ale u VRACEJÍCÍHO SE
-      // (dřív odebraného, active=false) insert narazil na primární klíč, tiše selhal,
-      // a přístup se NEOBNOVIL. Admin přesto ohlásil úspěch a uvítací mail odešel.
-      // `upsert` s onConflict řeší oba případy naráz a nemá jak selhat na klíči.
-      await admin.from("entitlements").upsert(
-        { email, product: "coaching", active: true, source: "admin-klient-invite" },
-        { onConflict: "email,product" },
-      );
-      // Koučink klient dostává i appku Tvůj Coach (best-effort, pozvánku to nikdy neshodí).
-      // ⚠️ Online koučink a appka jsou DVĚ ODDĚLENÉ SLUŽBY. Jediná spojitost je tahle:
-      // klientská sekce webu dává přístup i do appky. Nemíchat je dohromady.
-      // tier "ai_basic" = VIP verze appky. Do 26. 7. 2026 se posílalo "diamond", ale
-      // `gold` a `diamond` jsou v appce prázdné nálepky: jejich jediné vlastní příznaky
-      // `one_on_one` a `voice` nejsou v kódu appky nikde použity, takže reálně dávají totéž.
-      // ⛔ Roční limit se koučinkových klientů NETÝKÁ, ten je jen pro Academy (migrace 0077
-      // v repu appky větví podle `source`). Proto tady musí zůstat `source: "koucink-klient"`.
-      try {
-        const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
-        const gsec = gs?.value ? String(gs.value) : "";
-        let gres = "no-secret";
-        if (gsec) {
-          const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
-            method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-            body: JSON.stringify({ email, action: "grant", tier: "ai_basic", source: "koucink-klient" }),
-          }).catch(() => null);
-          // deno-lint-ignore no-explicit-any
-          if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
-          else gres = r ? "http-" + r.status : "fetch-fail";
-        }
-        await admin.from("tvujcoach_grants").insert({ email, action: "grant", result: gres, source: "koucink-klient" });
-      } catch { /* best-effort, pozvánku neshodí */ }
-      // ⛔ OPRAVA 28. 7. 2026: tady dřív stálo `if (cc2 && !cc2.name) update(...)`, tedy
-      // jméno se zapsalo JEN když kontakt už existoval. U nově pozvaného klienta žádný
-      // neexistuje, takže se jméno TIŠE ZAHODILO a nikde to nekřiklo. Martin ho vyplnil
-      // u Milana i u Lenky, UI mu ukázalo správné „Ahoj Milane", a v databázi nebylo nic.
-      // Teď se kontakt v tom případě založí. Existující jméno se nepřepisuje.
-      if (name) {
-        const { data: cc2 } = await admin.from("customer_contacts").select("email,name").eq("email", email).maybeSingle();
-        if (!cc2) {
-          await admin.from("customer_contacts").insert({
-            email, name, audience: "customer", source: "admin-klient-invite",
-            products: ["coaching"], tags: ["coaching-active"],
-          });
-        } else if (!cc2.name) {
-          await admin.from("customer_contacts").update({ name }).eq("email", email);
-        }
-      }
+      // ⭐ ONBOARDING KOUČINKU LEŽÍ V `_shared/koucink-onboarding.ts` (2. 9. 2026).
+      // Do té doby byl celý tady. Přestěhoval se ve chvíli, kdy koučink začal jít koupit
+      // i přes Stripe: zaplacený klient musí dostat přesně totéž co ručně pozvaný
+      // (nárok, appku, kontakt v CRM a uvítací mail s odkazem na vstupní dotazník).
+      // ⛔ Kdo mění ten mail, mění ho TAM. Druhá kopie by se tiše rozešla.
+      // ⚠️ `expiresAt` se odsud ÚMYSLNĚ NEPOSÍLÁ: ruční pozvánka expiraci nemá (tak to
+      //    bylo vždycky) a modul na sloupec bez ní nesáhá, takže prodloužení koupené
+      //    přes Stripe nepřijde o své datum.
       const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
       if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
-      const ahoj = osloveni ? "Ahoj " + escd(osloveni) + "," : "Ahoj,";
-      const CTA_URL = "https://martinbarna.cz/akademie/prihlaseni/?next=%2Fakademie%2Fklient%2F";
-      const btn = (label: string) => `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
-      const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
-      let subject: string, inner: string;
-      if (kind === "stavajici") {
-        subject = "Konec Excelu 🎉 Tvoje klientská sekce je tady";
-        inner = p(ahoj) +
-          p("mám pro tebe upgrade naší spolupráce: od teď máš na mém webu <strong>vlastní klientskou sekci</strong>. Žádné vyplňování Excelu a posílání mailem, všechno na pár kliknutí, i z mobilu.") +
-          `<p style='margin:0 0 8px'><strong>Co v ní najdeš:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
-          `<li style='margin:0 0 7px'>📊 <strong>Grafy tvého pokroku</strong>: váha, míry, kroky… celá tvoje cesta na jednom místě</li>` +
-          `<li style='margin:0 0 7px'>📝 <strong>Pondělní report naklikáš za 3 minuty</strong>, provede tě to krok za krokem a kopie přijde nám oběma</li>` +
-          `<li style='margin:0 0 7px'>📁 <strong>Dokumenty ode mě</strong>: všechny podklady pohromadě, žádné hledání v mailech</li>` +
-          `<li style='margin:0 0 7px'>📸 <strong>Appka Tvůj Coach v ceně</strong>: vyfotíš jídlo a máš spočítaná makra (coach.martinbarna.cz, stejný e-mail)</li>` +
-          `<li style='margin:0 0 7px'>🎬 <strong>Videokurz (182 videí)</strong> máš v ceně koučinku</li>` +
-          `<li style='margin:0 0 7px'>🎓 <strong>Sleva 20 % na Barna Academy</strong> s kódem <strong>KLIENT20</strong>, jen pro mé klienty</li></ul>` +
-          p("<strong>Jak dovnitř:</strong> přihlas se tímhle e-mailem (na který ti píšu) a přístup naskočí automaticky:") +
-          btn("Otevřít moji sekci") +
-          p("<strong>Be Effective!</strong><br>Martin") +
-          `<p style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>P.S. V příloze máš jednostránkový návod (najdeš ho i ve své sekci mezi Dokumenty). Kdyby cokoliv drhlo, odepiš a vyřešíme to spolu.</p>`;
-      } else {
-        subject = "Vítej v týmu 💪 První krok: 10 minut o tobě";
-        inner = p(ahoj) +
-          p("vítej v koučinku! Od teď na tvé formě pracujeme spolu. A aby byl plán od prvního dne přesně na tebe, potřebuju tě nejdřív poznat.") +
-          p("Připravil jsem <strong>vstupní dotazník</strong>. Proklikáš ho krok za krokem za ~10 minut (cíle, zdraví, co rád jíš, kdy stíháš trénovat…). Nic se nedá zkazit, všechno jde později upravit:") +
-          btn("Vyplnit vstupní dotazník") +
-          `<p style='margin:0 0 8px'><strong>Co bude dál:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
-          `<li style='margin:0 0 7px'>1️⃣ Do <strong>48 hodin</strong> ti nastavím jídelníček, makra a trénink na míru</li>` +
-          `<li style='margin:0 0 7px'>2️⃣ Každé <strong>pondělí ráno</strong> ti přijde připomínka na týdenní report (3 minuty klikání)</li>` +
-          `<li style='margin:0 0 7px'>3️⃣ Já každý report projdu, upravím plán a ozvu se ti</li></ul>` +
-          p("Ve tvé sekci najdeš i <strong>videokurz zdarma</strong> (182 videí), <strong>appku Tvůj Coach</strong> na zapisování jídla (vyfotíš a máš makra), dokumenty ode mě a grafy pokroku, které spolu budeme plnit.") +
-          p("<strong>Be Effective!</strong><br>Martin");
-      }
-      const html = `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='color-scheme' content='dark'></head><body style='margin:0;padding:0;background:#0C0B10'>` +
-        `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10'><tr><td align='center' style='padding:16px'>` +
-        `<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>` +
-        `<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
-        inner +
-        `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · osobní mail pro klienty koučinku</div>` +
-        `</td></tr></table></td></tr></table></body></html>`;
-      // návod PDF ze sdílených dokumentů jako příloha (best effort — bez něj mail stejně odejde)
-      let attachments: { filename: string; content: string }[] | undefined;
-      try {
-        const { data: pdf } = await admin.storage.from("client-docs").download("shared/klientska-sekce-navod.pdf");
-        if (pdf) {
-          const buf = new Uint8Array(await pdf.arrayBuffer());
-          let bin = "";
-          for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
-          attachments = [{ filename: "klientska-sekce-navod.pdf", content: btoa(bin) }];
-        }
-      } catch (_e) { /* příloha je bonus */ }
-      const rs = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html, reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"], ...(attachments ? { attachments } : {}) }),
+      const vysledek = await onboardKoucink(admin, {
+        email, name, osloveni, kind,
+        source: "admin-klient-invite",
+        plan: body.plan === "diamond" ? "diamond" : (body.plan === "gold" ? "gold" : undefined),
+        resendKey: RESEND_KEY,
       });
-      return json({ ok: rs.status === 200, mail_status: rs.status, priloha: !!attachments });
+      return json({ ok: vysledek.ok, mail_status: vysledek.mail_status, priloha: vysledek.priloha, app_grant: vysledek.app_grant });
     }
 
     // Ukonceni koucinku: odebere klientskou sekci, s ni i appku Tvuj Coach, a posle mail

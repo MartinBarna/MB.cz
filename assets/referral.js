@@ -67,6 +67,13 @@
   // by referral u doživotní Academy TIŠE PŘESTAL FUNGOVAT: `buyInfo` by vrátilo null,
   // modal by se neukázal a doporučitel by o odměnu přišel, aniž by kdokoli poznal proč.
   // `4gM00ibnpgjMerK7dB3ks04` = odkaz Academy doživotně (plink_1TyQXw…).
+  /* Odkazy koučinku (Gold i Diamond, 1/3/6 měsíců). Vyplňuje se TÝMIŽ ID, jaká jsou
+     v `koucing/index.html` a v `academy-stripe-webhook`. Prázdné = odkaz ještě nevznikl. */
+  var KOUCINK_ODKAZY = [
+    '', '', '',   // gold 1 / 3 / 6
+    '', '', ''    // diamond 1 / 3 / 6
+  ];
+
   function buyInfo(href) {
     if (!href) return null;
     // ⚠️ SimpleShop varianta ZŮSTÁVÁ: web je od 30. 7. 2026 na Stripu, ale staré odkazy
@@ -89,6 +96,17 @@
     if (href.indexOf('4gM00ibnpgjMerK7dB3ks04') >= 0) return { url: href, prod: 'academy', stripe: true };
     // Odkaz s odečtem videokurzu (8 100 Kč) dodává TÝŽ produkt, jen levněji, proto stejný `prod`.
     if (href.indexOf('9B6aEW6356Jc4Ra55t3ks05') >= 0) return { url: href, prod: 'academy', stripe: true };
+    /* ⭐⭐ KOUČINK GOLD A DIAMOND (2. 9. 2026), šest odkazů, 1/3/6 měsíců.
+       ⛔ ODKAZY ZATÍM NEEXISTUJÍ: dokud sem nikdo nedoplní skutečná ID ze Stripu,
+          `buyInfo` u koučinku nic nevrátí a modal se neukáže. Prodejní strana svá
+          tlačítka do té doby schovává, takže se to nikde neprojeví.
+       ⛔ `bezKuponu: true` SCHVÁLNĚ: 10 % z 59 500 Kč je jiná liga než z videokurzu
+          a plošná sleva na koučink není rozhodnutá. Slíbit v modalu slevu, kterou
+          pokladna nedá, je horší než ji neslíbit. `client_reference_id` se posílá dál,
+          takže provize partnera na kupónu nestojí. */
+    if (KOUCINK_ODKAZY.some(function (id) { return id && href.indexOf(id) >= 0; })) {
+      return { url: href, prod: 'coaching', stripe: true, bezKuponu: true };
+    }
     // ⬜ Měsíční členství (`bJe9AS3UXgjMcjC8hF3ks00`) tu VĚDOMĚ NENÍ: jestli se za předplatné
     //    má vyplácet odměna za doporučení, je obchodní rozhodnutí, ne technické. Až padne, přidat sem.
     return null;
