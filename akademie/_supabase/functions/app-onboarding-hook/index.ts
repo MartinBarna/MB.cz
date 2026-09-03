@@ -66,12 +66,9 @@ const REGISTRACNI = new Set(["tvujcoach-registrace", "tvujcoach-zkusebka"]);
 // `drip-send` bere do fronty jen `status='active'` a `enroll_*` funkce `paused` neberou.
 const PRODUKT_SMAZANI = "tvujcoach-smazani";
 
-// ⛔ AKVIZIČNÍ TRATĚ SE NEPŘEPISUJÍ. Kdo běží v magnetové nebo nurture sekvenci a mezitím
-// se zaregistruje v appce z reklamy, dojede svou sekvenci do konce. Přepnutí by ho vytrhlo
-// uprostřed příběhu, který mu slibujeme, a `tc-free` navíc nezačíná na `onboarding-`,
-// takže by ho stará podmínka níž nechytila. Registraci jen zapíšeme do `meta`, ať to
-// atribuce vidí. (Nákup je pořád silnější signál a přepnout smí, ten sem chodí jako
-// `product: tvujcoach`.)
+// [2026-09-03] Akviziční tratě UŽ registrace PŘEBÍJÍ (viz komentář v těle). Seznam
+// slouží jen k tomu, aby se původní trať a krok uložily do `meta.puvodni_trat`,
+// kdyby se člověk měl někdy vrátit nebo kdybychom chtěli změřit, odkud přišel.
 const AKVIZICNI = ["lead-magnet", "tc-magnet", "nurture-", "trener-kit", "longtail-"];
 const jeAkvizicni = (t: string) => AKVIZICNI.some((p) => t.startsWith(p));
 
@@ -116,57 +113,36 @@ Deno.serve(async (req: Request) => {
   // Kdyz uz nejakou onboarding sekvenci ma (treba koupil driv Academy), nezakladame druhou,
   // jinak by mu chodily dve rady mailu naraz.
   const { data: lead } = await admin
-    .from("leads").select("id, track, status, purchased, meta").eq("email", email).maybeSingle();
+    .from("leads").select("id, track, step, status, purchased, meta").eq("email", email).maybeSingle();
 
   if (lead) {
     if (lead.track === track) return json({ ok: true, status: "uz_v_teto_sekvenci" });
     if (String(lead.track ?? "").startsWith("onboarding-")) {
       return json({ ok: true, status: "uz_v_jinem_onboardingu", track: lead.track });
     }
-    // ⭐ REGISTRACE Z REKLAMY nepřebíjí rozjetou akviziční trať (viz komentář u AKVIZICNI).
-    // Jen si k leadovi poznamenáme, že se registroval, ať atribuce nepřijde o informaci.
-    if (REGISTRACNI.has(product) && jeAkvizicni(String(lead.track ?? ""))) {
-      const puvodniMeta = (lead.meta as Record<string, unknown>) ?? {};
-      // ⛔ IDEMPOTENCE: razítko `tc-direct-registrace` slouží ZÁROVEŇ jako značka
-      //    „aktivační mail už odešel". Kdo se zaregistruje podruhé (nový účet na tutéž
-      //    adresu), druhý mail nedostane. Čte se PŘED zápisem, jinak by bylo vždy true.
-      const uzPoslano = Boolean(puvodniMeta["tc-direct-registrace"]);
-      const meta = { ...puvodniMeta, "tc-direct-registrace": new Date().toISOString() };
-      const { error } = await admin.from("leads")
-        .update({ meta, updated_at: new Date().toISOString() }).eq("id", lead.id);
-      if (error) return json({ error: "meta_update_failed", detail: error.message }, 500);
-
-      // ⭐⭐ [2026-08-21, schválil Martin] JEDNORÁZOVÝ AKTIVAČNÍ MAIL K APPCE.
-      // Trať člověka se NEMĚNÍ, jeho série běží dál. Důvod: 91 % leadů (846 z 929)
-      // běží na akviziční trati, takže registrace je do onboardingu nepustí. Přepnout
-      // je nesmíme (utnulo by to rozjetý prodej Academy za 8 900), ale mlčet je škoda,
-      // registrace je nejsilnější signál zájmu, jaký máme.
-      // ⛔ FIRE-AND-FORGET s `catch`: výpadek odesílače NESMÍ shodit odpověď mostu.
-      //    Tohle je marketingový mail, ne součást registrace.
-      let aktivacniMail = "preskocen_uz_byl";
-      if (!uzPoslano) {
-        try {
-          const { data: ds } = await admin.from("app_config")
-            .select("value").eq("key", "drip_invoke_secret").maybeSingle();
-          if (!ds?.value) {
-            aktivacniMail = "chybi_drip_secret";
-          } else {
-            const r = await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "x-drip-secret": String(ds.value) },
-              body: JSON.stringify({ oneoff_email: email, track: "tc-aktivace", step: 0 }),
-            });
-            aktivacniMail = r.ok ? "odeslan" : "selhal_" + r.status;
-          }
-        } catch (e) {
-          aktivacniMail = "vyjimka_" + String(e).slice(0, 60);
-        }
+    // ⭐⭐ [2026-09-03, Martin: „udělej to tak, abychom začali vydělávat"] REGISTRACE
+    // V APPCE PŘEBÍJÍ I AKVIZIČNÍ TRAŤ. Do 3. 9. platil kompromis z 21. 8.: trať se
+    // nechala běžet (prodej Academy za 8 900) a člověk dostal jeden mail `tc-aktivace`.
+    // Pitva 3. 9. (60 dní): akviziční tratě studeným lidem Academy neprodaly ani jednou
+    // (longtail 0 nákupů, kvíz 162 lidí a 0 nákupů), zatímco aktivace v appce je jediné
+    // hrdlo, kde se rozhoduje o platbě (58 registrací → 3 check-iny → 0 platících).
+    // Proto registrace přepíná do `tc-zkusebka` od kroku 0. Razítko `tc-direct-registrace`
+    // v `meta` zůstává kvůli atribuci a jako stopa, odkud člověk přišel.
+    // ⚠️ Konstanta AKVIZICNI výš zůstává jen pro záznam do `meta.puvodni_trat`.
+    const puvodniMeta = (lead.meta as Record<string, unknown>) ?? {};
+    const meta = REGISTRACNI.has(product)
+      ? {
+        ...puvodniMeta,
+        "tc-direct-registrace": new Date().toISOString(),
+        ...(jeAkvizicni(String(lead.track ?? "")) && !puvodniMeta["puvodni_trat"]
+          ? { puvodni_trat: lead.track, puvodni_krok: (lead as Record<string, unknown>).step ?? null }
+          : {}),
       }
-      return json({ ok: true, status: "ponechan_v_akvizicni_trati", track: lead.track, aktivacni_mail: aktivacniMail });
-    }
-    // Byl jen v nurture nebo lead-magnetu: nakup je silnejsi signal, prepneme ho.
+      : puvodniMeta;
+    // Nakup i registrace jsou silnejsi signal nez akvizicni serie, prepneme ho.
     const { error } = await admin.from("leads").update({
-      track, step: 0, status: "active", next_send_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      track, step: 0, status: "active", meta,
+      next_send_at: new Date().toISOString(), updated_at: new Date().toISOString(),
     }).eq("id", lead.id);
     if (error) return json({ error: "update_failed", detail: error.message }, 500);
     return json({ ok: true, status: "prepnut_do_onboardingu", z: lead.track });
