@@ -55,7 +55,9 @@ import {
 // ⚠️ Deploy téhle funkce nese i `_shared/provize.ts` (sazba provize z koučinku).
 import {
   PRESKOCENO_DB_CHYBA,
+  STAV_REFUND,
   duvodPreskoceniProvize,
+  idPlatebProRefund,
   kontrolovatRadekProduktu,
   nactiSazbuKoucinku,
   sazbaProvize,
@@ -978,6 +980,93 @@ async function zapisRecurringProvizi(buyerEmail: string, invoice: any): Promise<
     // předplatného. Kdyby zápis selhal, přijde alert a dohledá se ručně.
     await alertAdmin("Stripe: recurring provize se nezapsala", {
       email: buyerEmail, faktura: String(invoice?.id ?? ""), chyba: String(e).slice(0, 200),
+    });
+    return "chyba";
+  }
+}
+
+/**
+ * ⭐ VRÁCENÉ PENÍZE RUŠÍ PROVIZI (rozhodnutí Martina 3. 9. 2026).
+ *
+ * „Pokud vrátíme peníze, affiliate odměnu nedostane." Platí pro provizi partnera
+ * i pro členský kredit 300 Kč a stejně pro celý i ČÁSTEČNÝ refund: co se vrátilo,
+ * z toho odměna nevzniká.
+ *
+ * ⛔⛔ BEZ TOHOHLE KROKU JE TO TICHÁ ŠKODA. Refund nastavuje jen `expires_at`,
+ *    `active` nechává `true`, a auto-confirm `referral_confirm_due()` po 14 dnech
+ *    potvrdí každý `pending` řádek, jehož kupující má aktivní nárok. Vrácený koučink
+ *    za 59 500 Kč by se sám překlopil na potvrzenou provizi 5 950 Kč k výplatě
+ *    a v měsíčním reportu by partnerovi odešla jako peníze, které dostane.
+ *
+ * ⛔ VOLÁ SE PŘED PÁROVÁNÍM NA `entitlements`, ne až uvnitř úspěšné větve. Refund se
+ *    o nárok opřít nemůže: u částečného refundu se přístup schválně neodebírá, u appky
+ *    se řádek v Academy nenajde vůbec a u dvojznačného párování se automatika záměrně
+ *    nerozhoduje. Provize se přitom v žádném z těch případů přiznat nemá.
+ *
+ * ⚠️ Nejdřív ČTE, pak zapisuje: po `update` už je ve stavu `void` a nešlo by poznat,
+ *    jestli provize byla teprve `pending`, nebo dávno `confirmed` (a tedy nejspíš
+ *    i vyplacená). To je pro Martina ten podstatný rozdíl.
+ *
+ * ⚠️ Best-effort jako všechno kolem provizí: nikdy nesmí shodit odebrání přístupu.
+ *    Když zápis selže, jde ven alert, ne 500.
+ */
+async function zneplatniProvizeRefundem(
+  idsPlateb: string[],
+  jeSpor: boolean,
+): Promise<string> {
+  if (!idsPlateb.length) return "bez-identifikatoru";
+  try {
+    const { data: radky, error: chybaCteni } = await admin
+      .from("referrals")
+      .select("id, code, product, buyer_email, reward_type, reward_amount, status")
+      .in("order_id", idsPlateb)
+      .neq("status", STAV_REFUND);
+    if (chybaCteni) throw new Error("cteni: " + chybaCteni.message);
+    if (!radky || !radky.length) return "zadna-provize";
+
+    const { error: chybaZapisu } = await admin
+      .from("referrals")
+      .update({ status: STAV_REFUND })
+      .in("order_id", idsPlateb)
+      .neq("status", STAV_REFUND);
+    if (chybaZapisu) throw new Error("zapis: " + chybaZapisu.message);
+
+    // Potvrzená provize už mohla odejít partnerovi na účet: view `affiliate_prehled`
+    // ji počítá do „k výplatě" a Martin platí ručně podle něj. Zneplatnění ji z čísla
+    // odečte, ale zaplacené peníze zpátky nevrátí, takže o tom musí vědět.
+    const potvrzene = radky.filter((r: { status: string }) => r.status === "confirmed");
+    const souhrn = radky
+      .map((r: { code: string; product: string; reward_amount: number; status: string }) =>
+        r.code + " / " + r.product + " / " + r.reward_amount + " Kč (" + r.status + ")")
+      .join("; ");
+    await alertAdmin(
+      potvrzene.length
+        ? "🔴 " + (jeSpor ? "Spor" : "Refund") + ": zrušena UŽ POTVRZENÁ provize"
+        : (jeSpor ? "Spor" : "Refund") + ": provize zrušena, partner ji nedostane",
+      {
+        zruseno_radku: radky.length,
+        detail: souhrn,
+        platby: idsPlateb.join(", "),
+        co_delat: potvrzene.length
+          ? "⛔ Provize byla potvrzená, tedy mohla už být VYPLACENÁ. Zkontroluj "
+            + "`referral_payouts` a v přehledu výplat si to srovnej s partnerem. "
+            + "Automatika ji jen přestala počítat, peníze zpátky nevzala."
+          : "✅ Nic dělat nemusíš. Provize čekala na potvrzení a teď se nepotvrdí "
+            + "ani nezapočítá do výplaty."
+          + (jeSpor
+            ? " ⚠️ Spor lze u banky vyhrát. Když ho vyhraješ, vrať i provizi ručně "
+              + "(status zpátky na `pending`)."
+            : ""),
+      },
+    );
+    return "zneplatneno-" + radky.length;
+  } catch (e) {
+    await alertAdmin("🔴 Stripe: provize se po refundu NEZRUŠILA", {
+      platby: idsPlateb.join(", "),
+      chyba: String(e).slice(0, 200),
+      co_delat: "⛔ Přepiš `referrals.status` na `void` ručně podle `order_id` výš. "
+        + "Jinak se provize po 14 dnech sama potvrdí a partnerovi se vyplatí "
+        + "odměna za nákup, za který jsme vrátili peníze.",
     });
     return "chyba";
   }
@@ -2182,7 +2271,20 @@ Deno.serve(async (req) => {
       const SLOUPCE_ENT = "*";
       const zakaznik = typeof obj.customer === "string" ? obj.customer : "";
       const platba = typeof obj.payment_intent === "string" ? obj.payment_intent : "";
-      if (!zakaznik && !platba) return json({ ok: true, ignored: "bez-identifikatoru" });
+
+      // ⭐ PROVIZE SE RUŠÍ JAKO PRVNÍ, PŘED PÁROVÁNÍM NA `entitlements`
+      // (rozhodnutí Martina 3. 9. 2026: „Pokud vrátíme peníze, affiliate odměnu
+      // nedostane."). Nesmí viset na tom, jestli se najde nárok: u částečného refundu
+      // se přístup schválně neodebírá, u appky řádek v Academy vůbec není a u
+      // dvojznačného párování se automatika záměrně nerozhoduje. Ve všech třech
+      // případech peníze odešly zpátky, takže odměna vzniknout nemá.
+      // ⚠️ Běží i před `bez-identifikatoru`: bez `payment_intent` i bez `invoice`
+      //    není co spárovat, funkce to sama pozná a vrátí „bez-identifikatoru".
+      const provizeZrusena = await zneplatniProvizeRefundem(idPlatebProRefund(obj), jeSpor);
+
+      if (!zakaznik && !platba) {
+        return json({ ok: true, ignored: "bez-identifikatoru", provize_zrusena: provizeZrusena });
+      }
 
       // ⛔⛔ PÁROVACÍ KLÍČ JE PLATBA, NE PRODUKT. Do 30. 7. 2026 bylo v obou dotazech
       // `.eq("product","academy")` a refund VIDEOKURZU proto TIŠE NEUDĚLAL NIC: nic nenašel,
@@ -2226,7 +2328,10 @@ Deno.serve(async (req) => {
             + "ručně v adminu. Nastalo to proto, že týž zákazník má víc aktivních produktů "
             + "a refund nenesl `payment_intent`, podle kterého se páruje jednoznačně.",
         });
-        return json({ ok: true, odebrano: false, duvod: "dvojznacne-parovani", produkty: dvojznacne });
+        return json({
+          ok: true, odebrano: false, duvod: "dvojznacne-parovani",
+          produkty: dvojznacne, provize_zrusena: provizeZrusena,
+        });
       }
 
       if (!ent) {
@@ -2297,6 +2402,7 @@ Deno.serve(async (req) => {
             bonus_appky: true,
             sparovano_podle: podle,
             pocet: emailyBonus.length,
+            provize_zrusena: provizeZrusena,
           });
         }
 
@@ -2329,7 +2435,10 @@ Deno.serve(async (req) => {
             });
           }
         }
-        return json({ ok: true, ignored: "not-ours", zakaznik: zakaznik || null, platba: platba || null });
+        return json({
+          ok: true, ignored: "not-ours", zakaznik: zakaznik || null,
+          platba: platba || null, provize_zrusena: provizeZrusena,
+        });
       }
 
       // ⚠️ ČÁSTEČNÝ REFUND PŘÍSTUP NEODEBÍRÁ. Vrácení 200 Kč z 990 není konec
@@ -2341,7 +2450,7 @@ Deno.serve(async (req) => {
           email: ent.email, vraceno_haleru: vraceno, celkem_haleru: castka,
           poznamka: "Rozhodni ručně. Automatika u částečného refundu přístup neodebírá.",
         });
-        return json({ ok: true, castecny_refund: true, odebrano: false });
+        return json({ ok: true, castecny_refund: true, odebrano: false, provize_zrusena: provizeZrusena });
       }
 
       // 1) zastavit další strhávání
@@ -2581,6 +2690,7 @@ Deno.serve(async (req) => {
         odebrani_appky: tcRevoke,
         bonus_videokurz_odebran: bonusOdebran,
         odstoupeni_uzavreno: odstoupeniUzavreno,
+        provize_zrusena: provizeZrusena,
         // Do kdy poběží appka měsíčnímu členovi, kterému jsme vrátili peníze (viz 3b).
         appka_dobehne: jeMesicni ? (ent.expires_at ?? null) : null,
       });

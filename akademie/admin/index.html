@@ -426,7 +426,7 @@
         <p id="newsStari" style="margin:.5rem 0 0;font-size:.84rem;"></p>
         <ul style="margin:.5rem 0 .2rem;padding-left:1.2rem;line-height:1.75;font-size:.92rem;color:#e7e0d5;">
           <li><b style="color:#F6CD63;">Academy:</b> mise <b>990 Kč měsíčně</b> nebo <b>8 900 Kč doživotně</b>. Dřívější plán zdražit po 50. prodeji je <b>ZRUŠENÝ</b>, nahradila ho tahle mise.</li>
-          <li><b style="color:#F6CD63;">Affiliate program je živý:</b> 30 % z měsíčních plateb, 20 % z jednorázových, <b>u koučinku 10 %</b> (sazba leží v <code>app_config</code>, klíč <code>provize_koucink</code>, ne v sazbě partnera). Partneři v pipeline: Patrik (THAIBOX10), Zuzka / oboczko (OBOCZKO10), Langmajer (JIRKA10). Kódy se aktivují, až partner řekne jedem.</li>
+          <li><b style="color:#F6CD63;">Affiliate program je živý:</b> 30 % z měsíčních plateb, 20 % z jednorázových, <b>u koučinku 10 %</b> (sazba leží v <code>app_config</code>, klíč <code>provize_koucink</code>, ne v sazbě partnera). Vrácená platba provizi ruší: webhook přepíše <code>referrals.status</code> na <code>void</code>, takže se nepotvrdí ani nezapočítá do výplaty. Partneři v pipeline: Patrik (THAIBOX10), Zuzka / oboczko (OBOCZKO10), Langmajer (JIRKA10). Kódy se aktivují, až partner řekne jedem.</li>
           <li><b style="color:#F6CD63;">Appka Tvůj Coach:</b> zkušebka 14 dní → Basic 249 Kč / VIP 499 Kč. Členové Academy mají VIP na rok.</li>
           <li><b style="color:#F6CD63;">Balíček 349 Kč</b> (40 receptů + 48 odpovědí) je nejlevnější vstup do ekosystému.</li>
           <li><b style="color:#F6CD63;">Infografiky:</b> série 18 vzdělávacích dílů startuje v srpnu.</li>

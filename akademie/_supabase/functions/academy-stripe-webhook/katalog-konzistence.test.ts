@@ -13,7 +13,9 @@
 import {
   PRESKOCENO_DB_CHYBA,
   PROVIZE_KOUCINK_FALLBACK,
+  STAV_REFUND,
   duvodPreskoceniProvize,
+  idPlatebProRefund,
   kontrolovatRadekProduktu,
   nactiSazbuKoucinku,
   sazbaProvize,
@@ -653,6 +655,128 @@ check('RJ11 nepriznana provize posle alert Martinovi',
 check('RJ12 preskoceni kvuli opakovanemu nakupu je v alertu Martinovi',
   /provize: provizePoznamka/.test(zdrojWebhook)
   && /opakovaný nákup, provize podle pravidla nevzniká/.test(zdrojWebhook), '');
+
+// --- R-K) REFUND RUSI PROVIZI (rozhodnuti Martina 3. 9. 2026) ---
+// „Pokud vratime penize, affiliate odmenu nedostane." Simuluje se cely retez nad
+// falesnou tabulkou `referrals`: zapis provize, refund, nocni auto-confirm a mesicni
+// report. Chytana trida chyby je TICHA: refund provizi nezrusil, cron ji po 14 dnech
+// potvrdil a partnerovi odesel report s penezi za nakup, ktery jsme vratili.
+type RefRadek = {
+  order_id: string;
+  code: string;
+  product: string;
+  reward_amount: number;
+  status: 'pending' | 'confirmed' | 'void';
+  dniOdNakupu: number;
+};
+
+/** Co dela webhook: prepise stav na `void` u radku se sedicim `order_id`. */
+function refunduj(tab: RefRadek[], obj: Record<string, unknown>): number {
+  const ids = idPlatebProRefund(obj);
+  if (!ids.length) return 0;
+  const zasazene = tab.filter((r) => ids.includes(r.order_id) && r.status !== STAV_REFUND);
+  for (const r of zasazene) r.status = 'void';
+  return zasazene.length;
+}
+
+/** Co dela nocni `referral_confirm_due()`: potvrdi jen `pending` starsi 14 dni. */
+function cronPotvrd(tab: RefRadek[]): void {
+  for (const r of tab) if (r.status === 'pending' && r.dniOdNakupu >= 14) r.status = 'confirmed';
+}
+
+/** Co dela mesicni report: `.neq("status","void")`, tedy vracene radky nesecte. */
+function reportProvize(tab: RefRadek[], code: string): number {
+  return tab.filter((r) => r.code === code && r.status !== 'void')
+    .reduce((s, r) => s + r.reward_amount, 0);
+}
+
+const KOUCINK_RADEK: RefRadek = {
+  order_id: 'pi_koucink', code: 'JIRKA10', product: 'coaching',
+  reward_amount: 5950, status: 'pending', dniOdNakupu: 20,
+};
+
+// 1) Refund PRED potvrzenim: cron uz nema co potvrdit a report nesecte nic.
+const tabA: RefRadek[] = [{ ...KOUCINK_RADEK }];
+const zasazenoA = refunduj(tabA, { payment_intent: 'pi_koucink' });
+check('RK1 refund prepise stav na void', zasazenoA === 1 && tabA[0].status === 'void', tabA[0].status);
+cronPotvrd(tabA);
+check('RK2 cron uz void radek nepotvrdi', tabA[0].status === 'void', tabA[0].status);
+check('RK3 report vracenou provizi nesecte', reportProvize(tabA, 'JIRKA10') === 0,
+  String(reportProvize(tabA, 'JIRKA10')));
+
+// 2) Refund PO potvrzeni: stav se prepise stejne a report ji prestane pocitat.
+const tabB: RefRadek[] = [{ ...KOUCINK_RADEK }];
+cronPotvrd(tabB);
+check('RK4 bez refundu se provize po 14 dnech potvrdi', tabB[0].status === 'confirmed', tabB[0].status);
+check('RK5 potvrzena provize se jeste pocita', reportProvize(tabB, 'JIRKA10') === 5950, '');
+const zasazenoB = refunduj(tabB, { payment_intent: 'pi_koucink' });
+check('RK6 refund po potvrzeni stav taky prepise', zasazenoB === 1 && tabB[0].status === 'void', tabB[0].status);
+check('RK7 report ji uz nesecte', reportProvize(tabB, 'JIRKA10') === 0, String(reportProvize(tabB, 'JIRKA10')));
+
+// 3) Clensky kredit 300 Kc: stejne pravidlo, zadna vyjimka.
+const tabC: RefRadek[] = [{
+  order_id: 'pi_clen', code: 'BARNA-A7K2', product: 'academy',
+  reward_amount: 300, status: 'pending', dniOdNakupu: 20,
+}];
+refunduj(tabC, { payment_intent: 'pi_clen' });
+cronPotvrd(tabC);
+check('RK8 clensky kredit 300 Kc se po refundu taky nepotvrdi',
+  tabC[0].status === 'void' && reportProvize(tabC, 'BARNA-A7K2') === 0, tabC[0].status);
+
+// 4) Cizi refund se nesmi dotknout niceho jineho.
+const tabD: RefRadek[] = [{ ...KOUCINK_RADEK }];
+check('RK9 refund cizi platby necha provizi na pokoji',
+  refunduj(tabD, { payment_intent: 'pi_neco_jineho' }) === 0 && tabD[0].status === 'pending', tabD[0].status);
+check('RK10 refund bez identifikatoru nezneplatni nic',
+  refunduj(tabD, {}) === 0 && tabD[0].status === 'pending', tabD[0].status);
+
+// 5) Opakovana provize z predplatneho ma v `order_id` ID FAKTURY, ne platbu.
+const tabE: RefRadek[] = [{
+  order_id: 'in_faktura', code: 'JIRKA10', product: 'academy',
+  reward_amount: 297, status: 'pending', dniOdNakupu: 20,
+}];
+check('RK11 refund faktury predplatneho provizi taky zrusi',
+  refunduj(tabE, { payment_intent: 'pi_jina', invoice: 'in_faktura' }) === 1 && tabE[0].status === 'void',
+  tabE[0].status);
+
+// 6) Idempotence: druhe doruceni tehoz refundu uz nema co menit.
+const tabF: RefRadek[] = [{ ...KOUCINK_RADEK }];
+refunduj(tabF, { payment_intent: 'pi_koucink' });
+check('RK12 druhe doruceni refundu uz nic nemeni',
+  refunduj(tabF, { payment_intent: 'pi_koucink' }) === 0 && tabF[0].status === 'void', tabF[0].status);
+
+// 7) Parsovani ID z udalosti Stripu.
+check('RK13 z Charge se berou payment_intent i invoice',
+  JSON.stringify(idPlatebProRefund({ payment_intent: 'pi_1', invoice: 'in_1' })) === '["pi_1","in_1"]',
+  JSON.stringify(idPlatebProRefund({ payment_intent: 'pi_1', invoice: 'in_1' })));
+check('RK14 charge.id ani dispute.id se nepouzivaji (do order_id se nikdy nezapisuji)',
+  idPlatebProRefund({ id: 'ch_1', charge: 'ch_1' }).length === 0, '');
+check('RK15 STAV_REFUND je void, tedy stav z CHECK constraintu tabulky', STAV_REFUND === 'void', STAV_REFUND);
+
+// 8) Webhook to opravdu vola, a PRED parovanim na entitlements.
+check('RK16 refundova vetev vola zneplatniProvizeRefundem',
+  /const provizeZrusena = await zneplatniProvizeRefundem\(idPlatebProRefund\(obj\), jeSpor\)/.test(zdrojWebhook), '');
+check('RK17 provize se rusi PRED hledanim naroku (jinak by castecny refund a appka propadly)',
+  zdrojWebhook.indexOf('const provizeZrusena = await zneplatniProvizeRefundem')
+    < zdrojWebhook.lastIndexOf('.eq("stripe_payment_intent", platba).maybeSingle()'), '');
+check('RK18 castecny refund provizi taky rusi (Martin: vratime penize = bez odmeny)',
+  /castecny_refund: true, odebrano: false, provize_zrusena: provizeZrusena/.test(zdrojWebhook), '');
+check('RK19 zapisuje se stav z konstanty, ne literal',
+  /\.update\(\{ status: STAV_REFUND \}\)/.test(zdrojWebhook), '');
+check('RK20 nejdriv se cte, pak zapisuje (jinak nepoznam pending od confirmed)',
+  zdrojWebhook.indexOf('.select("id, code, product, buyer_email, reward_type, reward_amount, status")')
+    < zdrojWebhook.indexOf('.update({ status: STAV_REFUND })'), '');
+check('RK21 zruseni UZ POTVRZENE provize ma vlastni alert (mohla byt vyplacena)',
+  /zrušena UŽ POTVRZENÁ provize/.test(zdrojWebhook), '');
+check('RK22 selhani zapisu neni ticho', /provize se po refundu NEZRUŠILA/.test(zdrojWebhook), '');
+
+// 9) Mesicni report: vracene radky nesecte a ukaze je zvlast.
+const zdrojReport = await Deno.readTextFile(
+  KOREN + 'akademie/_supabase/functions/affiliate-mesicni-report/index.ts',
+);
+check('RK23 report void radky do cisel nebere', /\.neq\("status", "void"\)/.test(zdrojReport), '');
+check('RK24 report vracene platby ukazuje zvlast',
+  /Vrácené platby \(bez provize\)/.test(zdrojReport) && /eq\("status", "void"\)/.test(zdrojReport), '');
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);

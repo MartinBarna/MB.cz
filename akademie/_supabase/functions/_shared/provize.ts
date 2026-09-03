@@ -150,3 +150,46 @@ export function vetaProvizeRucne(kod: string, castkaKc: number | null): string {
     + (kod || "neznámý")
     + ", částka " + (castkaKc === null ? "neznámá" : String(castkaKc) + " Kč");
 }
+
+// --- REFUND RUŠÍ PROVIZI ------------------------------------------------------
+// ⭐ ROZHODNUTÍ MARTINA (3. 9. 2026): „Pokud vrátíme peníze, affiliate odměnu nedostane."
+//    Platí pro affiliate provizi i pro členský kredit 300 Kč, pro celý i částečný refund.
+//
+// ⛔ DO 3. 9. 2026 SE TO NEDĚLO A BYLA TO TICHÁ DÍRA: větev `charge.refunded` ve
+//    `academy-stripe-webhook` se tabulky `referrals` vůbec nedotkla, refund navíc
+//    nastavuje jen `expires_at` a `active` nechává `true`. Auto-confirm
+//    `referral_confirm_due()` po 14 dnech potvrdí každý `pending` řádek, jehož kupující
+//    má aktivní nárok, takže vrácený koučink za 59 500 Kč se sám překlopil na
+//    potvrzenou provizi 5 950 Kč k výplatě. Sesterské cesty (`simpleshop-webhook`,
+//    `referral-webhook`) přitom `status='void'` uměly od začátku.
+//
+// `void` je jeden ze tří stavů v CHECK constraintu (`pending`, `confirmed`, `void`)
+// a všechno počítání ho už umí vynechat: `referral_confirm_due()` potvrzuje jen
+// `pending`, view `affiliate_prehled` sčítá jen `pending` a `confirmed`, měsíční report
+// řádky s `void` do čísel nebere. Stačí tedy stav přepsat, nikde jinde se nesahá.
+
+/** Stav řádku `referrals` po vrácení peněz. */
+export const STAV_REFUND = "void";
+
+/**
+ * Podle kterých ID se u refundu hledá řádek v `referrals`.
+ *
+ * Zapisovatelé používají dva tvary `order_id`:
+ *  • jednorázové nákupy (koučink, Academy doživotně, videokurz, konzultace, appka)
+ *    ⇒ `payment_intent`,
+ *  • opakovaná provize z předplatného (`zapisRecurringProvizi`) ⇒ ID FAKTURY.
+ * Refundovaný Charge nese obojí (`payment_intent`, `invoice`), Dispute jen platbu.
+ *
+ * ⛔ SCHVÁLNĚ NIC JINÉHO. `charge.id` ani `dispute.id` se do `order_id` nikdy
+ *    nezapisují, takže by je hledání jen zbytečně rozšířilo o tvary, které nemůžou
+ *    sedět. Párování musí být přesné: `order_id` je unikátní a zneplatnit cizí řádek
+ *    znamená sebrat partnerovi peníze, na které nárok má.
+ */
+// deno-lint-ignore no-explicit-any
+export function idPlatebProRefund(obj: any): string[] {
+  const out: string[] = [];
+  for (const v of [obj?.payment_intent, obj?.invoice]) {
+    if (typeof v === "string" && v && !out.includes(v)) out.push(v);
+  }
+  return out;
+}

@@ -117,6 +117,18 @@ Deno.serve(async (req) => {
         .reduce((s, r) => s + Number(r.reward_amount ?? 0), 0);
       const cekajici = provize - potvrzene;
 
+      // ⭐ VRÁCENÉ PLATBY SE UKAZUJÍ ZVLÁŠŤ (rozhodnutí Martina 3. 9. 2026:
+      // „Pokud vrátíme peníze, affiliate odměnu nedostane."). Do obratu ani do provize
+      // se nepočítají, to dělá `.neq("status","void")` výš. Bez téhle řádky by nákup
+      // z čísel jen zmizel a partner by se ptal, kam se poděl.
+      // ⚠️ Počítá se podle DATA NÁKUPU, stejně jako všechna ostatní čísla v mailu.
+      //    Refund, který přijde až po odeslání reportu za daný měsíc, se proto v žádném
+      //    mailu neobjeví; z čísel k výplatě ale zmizí hned (view `affiliate_prehled`).
+      const { data: vracene } = await admin
+        .from("referrals").select("id").eq("code", code).eq("status", "void")
+        .gte("created_at", od).lt("created_at", doD);
+      const vracenoKs = (vracene ?? []).length;
+
       // Celkovy stav z admin view (tehoz, ktery vidi Martin ve Vyplatach).
       const { data: prehled } = await admin
         .from("affiliate_prehled").select("provize_confirmed, vyplaceno, k_vyplate")
@@ -124,7 +136,7 @@ Deno.serve(async (req) => {
       const kVyplate = Number(prehled?.[0]?.k_vyplate ?? 0);
       const vyplaceno = Number(prehled?.[0]?.vyplaceno ?? 0);
 
-      Object.assign(zaznam, { nakupu, obrat, provize, potvrzene, cekajici, kVyplate });
+      Object.assign(zaznam, { nakupu, obrat, provize, potvrzene, cekajici, vracenoKs, kVyplate });
 
       if (dry) { zaznam.stav = "dry"; vysledky.push(zaznam); continue; }
       if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
@@ -142,11 +154,15 @@ Deno.serve(async (req) => {
         + radek("Obrat", kc(obrat))
         + radek("Tvoje provize za měsíc", kc(provize))
         + (cekajici > 0 ? radek("z toho čeká na potvrzení", kc(cekajici)) : "")
+        + (vracenoKs > 0 ? radek("Vrácené platby (bez provize)", String(vracenoKs)) : "")
         + radek("Celkem k výplatě", kc(kVyplate))
         + (vyplaceno > 0 ? radek("Už vyplaceno dřív", kc(vyplaceno)) : "")
         + `</table>`
         + (cekajici > 0
           ? `<p style="color:#555;font-size:14px">Provize se potvrzuje 14 dní po nákupu (ochrana proti vráceným platbám), pak se překlopí do částky k výplatě.</p>`
+          : "")
+        + (vracenoKs > 0
+          ? `<p style="color:#555;font-size:14px">Za vrácené platby provize nevzniká, proto je vidíš zvlášť a v obratu ani v provizi nejsou.</p>`
           : "")
         + `<p>${kVyplate > 0 ? "Peníze ti pošlu na účet jako obvykle. Kdyby něco nesedělo, napiš mi." : "Tenhle měsíc bez výplaty. Kdyby něco nesedělo nebo jsi chtěl cokoliv doladit, napiš mi."}</p>`
         + `<p>Díky, že v tom jedeš se mnou.<br>Martin Barna<br>martinbarna.cz</p></div>`;
