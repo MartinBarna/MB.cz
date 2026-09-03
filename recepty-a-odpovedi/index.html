@@ -52,7 +52,7 @@
   .navlinks a:hover { color:var(--green); }
   .navlinks a.cta { white-space:nowrap; background:var(--green); color:#161616; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
   .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
-  .navlinks { gap:11px; } .navlinks a { font-size:.88rem; } .navlinks a.cta { padding:8px 14px; } /* kompakt vzdy: 13 polozek se plnou velikosti nevejde do wrapu 1320 */ .nav-toggle{position:absolute;opacity:0;width:0;height:0;pointer-events:none;} .nav-burger{display:none;background:none;border:1px solid #d8d8d8;color:var(--nav-ink);border-radius:8px;padding:5px 11px;font-size:1.2rem;line-height:1;cursor:pointer;flex-shrink:0;} @media (max-width:1259px){ .nav-burger{display:block;} .navlinks{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:2px;padding:8px 20px 16px;box-shadow:0 12px 26px rgba(0,0,0,.14);border-top:1px solid #eee;} .nav-toggle:checked ~ .navlinks{display:flex;} .navlinks .hide-sm{display:block;padding:10px 2px;font-size:1rem;border-bottom:1px solid #f0f0f0;} .navlinks a.cta{text-align:center;margin-top:8px;padding:12px 20px;} } @media (min-width:1260px) and (max-width:1319px){ .navlinks{gap:6px} .navlinks a{font-size:.78rem} .navlinks a.cta{padding:6px 10px} }
+  .navlinks { gap:11px; } .navlinks a { font-size:.88rem; } .navlinks a[href="/recepty-a-odpovedi/"] { white-space:nowrap; } .navlinks a.cta { padding:8px 14px; } /* kompakt vzdy: 13 polozek se plnou velikosti nevejde do wrapu 1320 */ .nav-toggle{position:absolute;opacity:0;width:0;height:0;pointer-events:none;} .nav-burger{display:none;background:none;border:1px solid #d8d8d8;color:var(--nav-ink);border-radius:8px;padding:5px 11px;font-size:1.2rem;line-height:1;cursor:pointer;flex-shrink:0;} @media (max-width:1259px){ .nav-burger{display:block;} .navlinks{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:2px;padding:8px 20px 16px;box-shadow:0 12px 26px rgba(0,0,0,.14);border-top:1px solid #eee;} .nav-toggle:checked ~ .navlinks{display:flex;} .navlinks .hide-sm{display:block;padding:10px 2px;font-size:1rem;border-bottom:1px solid #f0f0f0;} .navlinks a.cta{text-align:center;margin-top:8px;padding:12px 20px;} } @media (min-width:1260px) and (max-width:1319px){ .navlinks{gap:6px} .navlinks a{font-size:.78rem} .navlinks a.cta{padding:6px 10px} }
   /* ===== Sjednocená hlavička: tmavá vrstva (tato stránka nenačítá marketing-dark.css; hodnoty = marketing-dark.css .nav) ===== */
   .nav { background:#0c0b0a!important; border-bottom:1px solid rgba(255,255,255,.08)!important; -webkit-backdrop-filter:none!important; backdrop-filter:none!important; }
   .nav a, .nav a.back { color:#cabfb4!important; }
@@ -107,7 +107,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
     <a class="hide-sm" href="/koucing/">Koučink</a>
     <a class="hide-sm" href="/konzultace/">Konzultace</a>
     <a class="hide-sm" href="/videokurz">Videokurz</a>
-    <a class="hide-sm" href="/recepty-a-odpovedi/" aria-current="page">Balíček 349 Kč</a>
+    <a class="hide-sm" href="/recepty-a-odpovedi/" aria-current="page">Balíček 349</a>
     <a class="hide-sm" href="/akademie/">Academy</a>
     <a class="hide-sm" href="/tvuj-coach/">Appka</a>
     <a class="hide-sm" href="/treninky">Tréninky</a>
