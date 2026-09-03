@@ -217,7 +217,19 @@
   // Sojove mleko cokoladove 300 g + pohanka + polnicek jako veceri.
   // Kotva je pryc: v cele DB neni jedina SLANA polozka, ktera by mela `mleko` v id.
   // ⛔ Stejny regex je v appce, hlida parita-jidelnicku.mjs.
-  var SLADKY_ZAKLAD = /tvaroh|skyr|cottage|jogurt|syrovatkovy-protein|proteinovy-pudink|kefir|podmasli|acidofilni|mleko/;
+  // [vlna 2, 2026-09-03] Doplneny sladke mlecne polozky BEZ klicoveho slova z vyctu vys:
+  // `termix-vanilkovy`, `mlecna-kase-*` (krupicova vanilkova, ovesna jablko-skorice,
+  // ryzova cokoladova, i detske varianty) a `ryzova-kase-mlecna`. Vsechny maji v DB
+  // `cat='dairy'`, takze bez tohohle spadly do SLANE vetve a dostaly pecivo a zeleninu.
+  // Regex `mlecna-kase` NECHYTA `nemlecna-pohankova-kase-hruska`, overeno pres celou DB.
+  var SLADKY_ZAKLAD = /tvaroh|skyr|cottage|jogurt|syrovatkovy-protein|proteinovy-pudink|kefir|podmasli|acidofilni|mleko|termix|mlecna-kase|ryzova-kase-mlecna/;
+  // [R7 2026-09-03, rozhodnuti sefa] SLADKY MLECNY ZAKLAD NENI ZAKLAD OBEDA ANI VECERE.
+  // Hlavni jidlo stoji na mase, rybe, vejcich, lusteninach nebo tofu/tempehu; syr je
+  // doplnek, ne zaklad. Tvaroh, skyr, jogurt, mleko a mlecne dezerty patri do snidane
+  // a svacin. Zmereno na mrizce 1152 dnu: 713 obedu a veceri stalo na skyru nebo tvarohu.
+  // ⚠️ KOTVENE `^(...)`: nekotvene `syr` chyta i `syrovatkovy-protein`.
+  // ⛔ Taz logika je v appce, hlida parita.
+  var SYR_RE = /^(eidam|gouda|mozzarella|cedar|emental|feta|brie|hermelin|niva|parmazan|balkansky-syr|kozi-syr|uzeny-syr|taveny-syr|halloumi|bryndza|olomoucke-tvaruzky|ricotta|lucina|zerve)/;
   // Pečivo jako příloha ke slanému základu. Vločky a müsli tu schválně NEJSOU.
   var PECIVO_RE = /chleb|rohlik|houska|knackebrot|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy/;
   // [R6 2026-09-03] Strop na JEDNO jídlo u pečiva, vloček a müsli. Bez něj vyšel
@@ -233,6 +245,62 @@
   // TUKY zůstávají jak jsou: 8 g oleje je normální gramáž na lžičku.
   // ⛔ Táž hodnota je v appce, hlídá parita.
   var MIN_PORCE_G = 20;
+  // [R8 2026-09-03, rozhodnuti sefa] STROPY TUKU NA JEDNO JIDLO.
+  // Zmereno na mrizce 1152 dnu: 449 jidel s pridanym tukem nad 15 g (rekord 50 g ghi),
+  // 666 jidel s orechy nebo seminky nad 30 g a 413 jidel s chia nebo lnenym seminkem
+  // nad 20 g (rekord 50 g chia). Chybejici tuk se ma dorovnat tucnejsim zdrojem
+  // bilkoviny nebo avokadem, ne litrem oleje.
+  // ⚠️ PORADI TESTU JE ZAMERNE: `kokosovy-olej` chytne PRIDANY_TUK_RE driv, nez by ho
+  // vzal ORECHY_SEMINKA_RE pres „kokos"; `mandlove-maslo` a `araside-maslo` maji projit
+  // jako orechove maslo (strop 30 g), proto je maslo KOTVENE `^maslo$`. Avokado v zadnem
+  // z nich neni a drzi si strop kategorie. ⛔ Tytez hodnoty i poradi jsou v appce.
+  var PRIDANY_TUK_RE = /olej|^maslo$|^ghi$|^sadlo|prepustene-maslo|majone|smetana/;
+  var CHIA_LEN_RE = /chia|lnene/;
+  var ORECHY_SEMINKA_RE = /orech|mandle|kesu|arasid|pistacie|liskove|makadam|seminka|seminko|slunecnice|^mak$|kokos/;
+  var STROP_PRIDANY_TUK_G = 15;
+  var STROP_CHIA_G = 20;
+  var STROP_ORECHY_G = 30;
+  /** [R8] Strop porce tuku na JEDNO jidlo. `null` = kategorie si strop resi sama. */
+  function stropTuku(f) {
+    if (f.cat !== 'fat') return null;
+    if (PRIDANY_TUK_RE.test(f.id)) return STROP_PRIDANY_TUK_G;
+    if (CHIA_LEN_RE.test(f.id)) return STROP_CHIA_G;
+    if (ORECHY_SEMINKA_RE.test(f.id)) return STROP_ORECHY_G;
+    return null;
+  }
+  // [R9 2026-09-03, rozhodnuti sefa] HLAVNI JIDLO MA ZELENINU A ROZUMNOU PRILOHU.
+  // Zelenina aspon 100 g (na malem dni ji `velikostDne` srazel na 95 g, a u jidel,
+  // ktera zeleninu ztratila prerozdelenim pretizeneho taliře, na nulu).
+  // Priloha nejvys 300 g VARENE hmotnosti. DB ma oboje: varene polozky (ryze varena
+  // 123 kcal/100 g, brambory 86, testoviny 150) i suche (ryze 360, quinoa 368, bulgur
+  // 342). Sucha se uvarenim zhruba ztrojnasobi, takze 300 g varene je asi 100 g suche.
+  // Hranice 200 kcal/100 g je v DB cista mezera: nejvyssi varena polozka ma 160 kcal,
+  // nejnizsi sucha 218 (a ta je pecivo, osetrene stropem 120 g).
+  // ⛔ Tytez hodnoty jsou v appce, hlida parita.
+  var MIN_ZELENINA_HLAVNI_G = 100;
+  var STROP_PRILOHA_VARENA_G = 300;
+  var STROP_PRILOHA_SUCHA_G = 100;
+  var SUCHA_PRILOHA_KCAL = 200;
+  // [R10 2026-09-03, rozhodnuti sefa] ZELENINA K HLAVNIMU JIDLU JE ZE „SLANEHO" OKRUHU.
+  // Sladka kukurice, pastinak a cervena repa se k rybe ani k veprovemu nedavaji; SuperGrok
+  // je nasel na 48 dnech devetkrat (Pangasius + sladka kukurice + pastinak, Tunak +
+  // jasminova ryze + cervena repa, Veprova kyta + kukurice + repa).
+  // ⛔ Pravidlo stoji na SEZNAMU z DB, ne na hadani. Sladke OVOCE se k hlavnimu jidlu
+  // nedostane uz pres R2 (ovoce jde jen ke sladkemu zakladu, a ten u obeda a vecere
+  // podle R7 byt nesmi). ⛔ Tytez seznamy jsou v appce, hlida parita.
+  var SLANA_ZELENINA_RE = /^(brokolice|spenat|paprika|rajce|cherry-rajcata|okurka|kysela-okurka|ledovy-salat|salat|rukola|polnicek|cuketa|zeli|kysane-zeli|fazolky|mrkev|kvetak|kapusta|ruzickova-kapusta|kedluben|chrest|lilek|zampiony|hliva|redkvicka|celer|porek|cinske-zeli|kaderavek|dyne-hokaido|zeleny-hrasek)/;
+  var SLADKA_ZELENINA_RE = /kukurice|pastinak|cervena-repa|nakladana-repa/;
+  /** [R10] Sladka PRILOHA (kukurice jako `cat='carb'`) se nepáruje s rybou ani s veprovym. */
+  var SLADKA_PRILOHA_RE = /kukurice/;
+  var RYBA_VEPROVE_RE = /^(treska|losos|tunak|pangasius|makrela|sardink|platys|pstruh|kapr|candat|sled|zavinac|krevety|veprov|debrecin)/;
+  // [R11 2026-09-03, rozhodnuti sefa] KETO/LOW-CARB NEDOSTANE OBILOVINY.
+  // Do teto vlny `lowCarb` jen vypinal PODLAHU prilohy, takze se do keto dne porad
+  // dostal zitny chleb 20 g, bulgur vareny 90 g nebo testoviny 35 g (zmereno 170 polozek
+  // na 1152 dnech). Drobek obiloviny keto cil nesplni a na taliři vypada jako chyba.
+  // Nove se v keto rezimu priloha NESKLADA vubec, ovoce se tvrde zuzuje na bobule a kdyz
+  // se cil nesejde, den to REKNE (pole `warnings`), misto aby zamichal obiloviny.
+  // ⛔ Taz logika je v appce, hlida parita.
+  var BOBULE_RE = /malin|boruvk|jahod|ostruzin|rybiz|brusink|lesni-ovoce/;
   // [R2] Je základ jídla sladký (mlékárenský), nebo slaný? Co není sladké, je slané.
   function jeSladkyZaklad(f) { return !!f && SLADKY_ZAKLAD.test(f.id); }
   // [fix 2026-08-06 kolo 4] Párování tuku k charakteru jídla (detail u použití níž).
@@ -439,6 +507,17 @@
     }
     function jesteNebyl(list) {
       var cerstve = list.filter(function (f) { return !pouziteProt[f.id]; });
+      // ⛔⛔ [oprava po revizi 2026-09-03] TAZ PAST JAKO U `nebylNedavno` VYS, jen o den
+      // kratsi: filtr bezi nad CELOU nabidkou, ne nad kategorii, ze ktere se teprve
+      // vybira. `cerstve.length` je skoro vzdy nenulove (zustala zelenina a prilohy),
+      // takze se fallback nespustil, a kdyz byly vsechny bilkoviny z `protein` uz dnes
+      // pouzite, `pick(…, 'protein')` vratil null a vyber TISE spadl na `dairy`.
+      // Zmereno: vegan bez lepku (v `protein` mu zbydou jen tofu a tempeh) dostal
+      // pri peti jidlech obed i veceri postavene na sojovem jogurtu, coz porusuje R7.
+      // ⇒ Penalizace se uplatni, JEN KDYZ nevyprazdni kategorii `protein`.
+      var melProtein = list.some(function (f) { return f.cat === 'protein'; });
+      var maProtein = cerstve.some(function (f) { return f.cat === 'protein'; });
+      if (melProtein && !maProtein) return list;
       return cerstve.length ? cerstve : list;
     }
     function pickProt(s, prefer, protCilJidla) {
@@ -451,17 +530,30 @@
         var sedne = list.filter(function (f) { return (protCilJidla / (f.per100.p || 1)) * 100 >= 30; });
         return sedne.length ? sedne : list;
       }
-      // U hlavních jídel (bez snídaňové/svačinové preference) vyřaď prášky a bílek
-      // ze základu jídla; fallback na plnou nabídku drží průchodnost úzkých filtrů.
+      // Prasky, cisty bilek, vnitrnosti a strouhaci tvaroh ven ze ZAKLADU jidla.
+      // ⛔ [oprava po revizi 2026-09-03] Driv tu stalo `if (prefer) return list;`, a protoze
+      // `prefer` je neprazdne pro snidani i svacinu, platil zamek fakticky jen pro obed
+      // a veceri. Vegetarian tak porad dostaval „tvaroh tvrdy (na strouhani)" jako zaklad
+      // svaciny. Guard ted plati VZDY; fallback na plnou nabidku drzi pruchodnost uzkych
+      // filtru. ⚠️ SNACK_PROT jmenuje `syrovatkovy-protein`, ten tim ze svacin vypadava,
+      // a je to zamer: prasek je doplnek, ne zaklad jidla.
       function bezPrasku(list) {
-        if (prefer) return list;
         var poctive = list.filter(function (f) { return !NENI_ZAKLAD_JIDLA.test(f.id); });
         return poctive.length ? poctive : list;
       }
-      // Uzeniny až za vařené zdroje (viz UZENINA_RE výš); měkké pravidlo s fallbackem.
+      // [R7 2026-09-03] Sladky mlecny zaklad (tvaroh, skyr, jogurt, mleko, mlecny dezert)
+      // nepatri na obed ani na veceri. Mekke pravidlo s fallbackem, at se uzke filtry
+      // nezaseknou; v praxi tam zbydou tofu, tempeh, seitan a lusteniny.
+      function bezMlecnehoZakladu(list) {
+        if (prefer) return list;
+        var slane = list.filter(function (f) { return !SLADKY_ZAKLAD.test(f.id); });
+        return slane.length ? slane : list;
+      }
+      // Uzeniny a syry az za varene zdroje; mekke pravidlo s fallbackem.
+      // [R7] Syr pribyl: k hlavnimu jidlu patri jako doplnek, ne jako zaklad.
       function uzeninaAzNakonec(list) {
         if (prefer) return list;
-        var varene = list.filter(function (f) { return !UZENINA_RE.test(f.id); });
+        var varene = list.filter(function (f) { return !UZENINA_RE.test(f.id) && !SYR_RE.test(f.id); });
         return varene.length ? varene : list;
       }
       // Bílkovina se bere z `protein`, a teprve když tam nic není, z `dairy`.
@@ -485,11 +577,11 @@
         return sP;
       };
       if (leanOnly) {
-        var leanDb = sedneNaPorci(uzeninaAzNakonec(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); })))));
+        var leanDb = sedneNaPorci(uzeninaAzNakonec(bezMlecnehoZakladu(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); }))))));
         var p = sPenalizaci(leanDb);
         if (p) return p;
       }
-      var cely = sedneNaPorci(uzeninaAzNakonec(bezPrasku(jesteNebyl(db))));
+      var cely = sedneNaPorci(uzeninaAzNakonec(bezMlecnehoZakladu(bezPrasku(jesteNebyl(db)))));
       return sPenalizaci(cely);
     }
     var gramyDnes = {};
@@ -497,13 +589,17 @@
     // [fix 2026-07-22] totéž pro přílohy: velká DB má i tučné sacharidové zdroje (opékané
     // brambory, plněné těstoviny, saláty s majonézou). Při napjatém tukovém rozpočtu ber
     // přílohy do 4 g tuku/100 g (rýže, brambory, těstoviny…); jinak by skrytý tuk přetekl.
-    function pickCarb(s, prefer) {
+    // [R10 2026-09-03] `zakaz` vyradi prilohy, ktere se k zakladu jidla nehodi (dnes
+    // sladka kukurice k rybe a k veprovemu). Je to FILTR NABIDKY, ne preference: `pick`
+    // by u preference sahl po zakazane polozce, kdyby podseznam vysel prazdny.
+    function pickCarb(s, prefer, zakaz) {
+      var zaklDb = zakaz ? db.filter(function (f) { return f.cat !== 'carb' || !zakaz.test(f.id); }) : db;
       if (leanOnly) {
-        var leanDb = db.filter(function (f) { return f.cat !== 'carb' || f.per100.f <= 4; });
+        var leanDb = zaklDb.filter(function (f) { return f.cat !== 'carb' || f.per100.f <= 4; });
         var c = pick(leanDb, 'carb', s, prefer);
         if (c) return c;
       }
-      return pick(db, 'carb', s, prefer);
+      return pick(zaklDb, 'carb', s, prefer);
     }
 
     // rozložení kalorií do jídel + typy a popisky (viz distProJidla / typyJidel výš)
@@ -586,11 +682,18 @@
       // 2) sacharidová příloha (ne u svačin)
       // Snídaně nikdy není svačina, takže stará podmínka `!isSnack || i === 0`
       // je po zavedení typů jídel prostě `!isSnack`. Chování se nemění.
-      if (!isSnack || slanaSvacina) {
+      // ⛔ [R11 2026-09-03] V KETO REZIMU SE PRILOHA NESKLADA VUBEC. Driv `lowCarb` jen
+      // vypnul podlahu a brana `cg > 10` pustila do keto dne „zitny chleb 20 g" nebo
+      // „bulgur vareny 90 g": obiloviny, ktere keto cil nesplni a na taliři jsou drobek.
+      // Chybejici kalorie dozenou bilkovina, zelenina a tuk; kdyz ani to nestaci, den
+      // to zahlasi v `warnings` (viz konec funkce), misto aby zamichal obiloviny.
+      if ((!isSnack || slanaSvacina) && !lowCarb) {
         var pecivove = (kind === 'breakfast') || slanaSvacina;
+        // [R10] Sladka kukurice neni priloha k rybe ani k veprovemu.
+        var zakladJeRybaVeprove = items.length > 0 && RYBA_VEPROVE_RE.test(items[0].food.id);
         var carb = pecivove
           ? pickCarb(seed + i + 7, sladkeJidlo ? BREAKFAST_CARB : PECIVO_RE)
-          : pickCarb(seed + i + 3, MAIN_CARB);
+          : pickCarb(seed + i + 3, MAIN_CARB, zakladJeRybaVeprove ? SLADKA_PRILOHA_RE : null);
         if (carb) {
           // dopočítej gramy sacharidů zbývající po proteinu
           var usedC = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).c; }, 0);
@@ -632,12 +735,26 @@
         // Fallback na plnou nabídku drží průchodnost úzkých filtrů a keto režimu.
         var cerstvaVeg = sideVegDb.filter(function (f) { return f.cat !== 'veg' || !pouziteVeg[f.id]; });
         var vegDb = cerstvaVeg.some(function (f) { return f.cat === 'veg'; }) ? cerstvaVeg : sideVegDb;
+        // [R10 2026-09-03] Z HLAVNIHO JIDLA VEN sladka zelenina (kukurice, pastinak,
+        // cervena repa). Je to FILTR NABIDKY, ne preference: kdyby to byla jen preference
+        // v `pick`, prazdny podseznam by ji vratil zpatky. Fallback je pojistka proti
+        // prazdne nabidce u extremne uzkeho filtru.
+        var hlavniJidlo = (kind === 'lunch' || kind === 'dinner');
+        if (hlavniJidlo) {
+          var slanaVegDb = vegDb.filter(function (f) { return f.cat !== 'veg' || !SLADKA_ZELENINA_RE.test(f.id); });
+          if (slanaVegDb.some(function (f) { return f.cat === 'veg'; })) vegDb = slanaVegDb;
+        }
         // [fix 2026-08-05 večer] Snídaňová zelenina bez špenátu: 150 g syrových listů
         // k toustu nikdo nejí. K vaječné snídani patří rajče, okurka, paprika.
-        var veg = pick(vegDb, 'veg', seed + i + 5, (kind === 'breakfast') ? /rajce|okurka|paprika/ : null);
+        // [R10] U obeda a vecere se prednostne saha do „slaneho" okruhu zeleniny.
+        var vegPrefer = (kind === 'breakfast') ? /rajce|okurka|paprika/ : (hlavniJidlo ? SLANA_ZELENINA_RE : null);
+        var veg = pick(vegDb, 'veg', seed + i + 5, vegPrefer);
         if (veg) {
           pouziteVeg[veg.id] = true;
-          items.push({ food: veg, grams: vg(150) });
+          // [R9 2026-09-03] Hlavni jidlo ma zeleniny aspon 100 g. `velikostDne` ji na malem
+          // dni srazel na 95 g, coz pod slibem „aspon 100 g" byt nema.
+          var vegG = hlavniJidlo ? Math.max(MIN_ZELENINA_HLAVNI_G, vg(150)) : vg(150);
+          items.push({ food: veg, grams: vegG });
         }
       }
       // 4) ovoce u snídaně/svačin
@@ -648,7 +765,16 @@
         // [R4] Táž logika bez opakování v jednom dni jako u zeleniny výš.
         var cerstveFruit = db.filter(function (f) { return f.cat !== 'fruit' || !pouziteFruit[f.id]; });
         var fruitDb = cerstveFruit.some(function (f) { return f.cat === 'fruit'; }) ? cerstveFruit : db;
-        var fruit = pick(fruitDb, 'fruit', seed + i + 2, lowCarb ? /malin|boruvk|jahod|ostruzin|rybiz/ : null);
+        // ⛔ [R11 2026-09-03] V keto rezimu jsou bobule FILTR, ne preference. Jako preference
+        // je `pick` obchazel, kdykoli podseznam vysel prazdny: na 1152 dnech se tudy do keto
+        // dne dostal banan, kiwi i mango (20 nalezu).
+        if (lowCarb) {
+          var bobuleDb = fruitDb.filter(function (f) { return f.cat !== 'fruit' || BOBULE_RE.test(f.id); });
+          fruitDb = bobuleDb.some(function (f) { return f.cat === 'fruit'; })
+            ? bobuleDb
+            : fruitDb.filter(function (f) { return f.cat !== 'fruit'; });
+        }
+        var fruit = pick(fruitDb, 'fruit', seed + i + 2, lowCarb ? BOBULE_RE : null);
         if (fruit) {
           pouziteFruit[fruit.id] = true;
           var fg0 = vg(lowCarb ? 80 : (fruit.portion || 120));
@@ -674,7 +800,10 @@
         var fat = pick(db, 'fat', seed + i + 1, maOvoce && !maZeleninu ? SLADKY_TUK : (maZeleninu ? SLANY_TUK : null));
         if (fat && fat.per100.f) {
           var fg = round((needF / fat.per100.f) * 100, 1);
-          fg = Math.min(Math.max(fg, 5), 30);
+          // [R8 2026-09-03] Strop na tuk uz tady, ne az v `capPass`: pridany tuk (olej,
+          // maslo, ghi, sadlo) 15 g, chia a lnene seminko 20 g, ostatni orechy a seminka 30 g.
+          var stropF = stropTuku(fat);
+          fg = Math.min(Math.max(fg, 5), stropF != null ? stropF : 30);
           items.push({ food: fat, grams: fg });
         }
       }
@@ -722,6 +851,15 @@
       if (FOOD_CAP[f.id] != null) return FOOD_CAP[f.id];
       if (PECIVO_VLOCKY_RE.test(f.id)) return STROP_PECIVO_G;
       if (f.cat === 'fruit') return STROP_OVOCE_G;
+      // [R8 2026-09-03] Pridany tuk 15 g, chia a lnene 20 g, ostatni orechy a seminka 30 g.
+      var tuk = stropTuku(f);
+      if (tuk != null) return tuk;
+      // [R9 2026-09-03] Varena priloha nejvys 300 g varene hmotnosti; u suche polozky
+      // (nad 200 kcal/100 g) je to zhruba 100 g suche vahy. Pecivo, vlocky a musli maji
+      // vlastni strop vys, tudy neprojdou.
+      if (jeVarenaPriloha(f)) {
+        return (f.per100.kcal || 0) > SUCHA_PRILOHA_KCAL ? STROP_PRILOHA_SUCHA_G : STROP_PRILOHA_VARENA_G;
+      }
       if (nouzeBilkovin && (f.cat === 'protein' || f.cat === 'dairy')) return STROP_PROT_NOUZE;
       return CAP[f.cat];
     };
@@ -794,6 +932,16 @@
         var noBilek = swapCand.filter(function (f) { return f.id !== 'bilek'; });
         if (noBilek.length) swapCand = noBilek;
       }
+      // ⛔ [R7 2026-09-03] TAHLE VYMENA OBCHAZELA R7. Je to nejlibovejsi zdroj, co se najde,
+      // takze u keto vegana bez lepku vymenila tofu za „sojovy jogurt bily" a vecere stala
+      // na jogurtu (zmereno: 8 dnu z 1152). Sladky mlecny zdroj se do hlavniho jidla nesmi
+      // dostat ani zachrannou vymenou; prasky a vnitrnosti tudy taky ne.
+      if (!swapPref) {
+        var poctiveCand = swapCand.filter(function (f) {
+          return !SLADKY_ZAKLAD.test(f.id) && !NENI_ZAKLAD_JIDLA.test(f.id);
+        });
+        if (poctiveCand.length) swapCand = poctiveCand;
+      }
       if (!swapCand.length) break;
       swapCand.sort(function (a, b) { return fatRatio(a) - fatRatio(b) || (a.id < b.id ? -1 : 1); });
       var lean = swapCand[(seed + sw) % Math.min(3, swapCand.length)]; // rotace mezi 3 nejlibovějšími = pestrost
@@ -860,6 +1008,12 @@
         // `MAIN_CARB`), doplňkovým blokem (přílohy míří do posledního jídla, což
         // u šesti jídel je večerní svačina) a přerozdělením přetíženého jídla.
         if (jeVarenaPriloha(food) && (out[i5].kind === 'snack' || out[i5].kind === 'late')) return false;
+        // ⛔ [R7 2026-09-03] Bilkovinny doplnek se poklada jen do jidla BEZ bilkoviny,
+        // takze se v nem stane zakladem. Sladky mlecny zdroj tedy do obeda ani do vecere
+        // nesmi ani touhle cestou (`kamSDoplnkem` saha po `tvaroh-mekky`).
+        if (jeProt && jeSladky && (out[i5].kind === 'lunch' || out[i5].kind === 'dinner')) return false;
+        // ⛔ [R11 2026-09-03] Do keto dne se priloha nedoplnuje ani doplnkovym blokem.
+        if (lowCarb && food.cat === 'carb') return false;
         return true;
       };
       var chtene = Math.min(mealIdx, out.length - 1);
@@ -870,6 +1024,11 @@
     function addExtra(food, grams, mealIdx) {
       if (!food) return false;
       if (all.some(function (it) { return it.food.id === food.id; })) return false;
+      // ⛔ [oprava po revizi 2026-09-03] GUARD `NENI_ZAKLAD_JIDLA` SE TU DRIV NEVOLAL VUBEC.
+      // Doplnek miri JEN do jidla bez bilkoviny (viz `kamSDoplnkem`), takze se v nem stane
+      // zakladem, a seznam niz jmenoval napevno `syrovatkovy-protein`, tedy polozku, kterou
+      // `NENI_ZAKLAD_JIDLA` vyslovne zakazuje. Zamek stal jen na datech, ne na kodu.
+      if ((food.cat === 'protein' || food.cat === 'dairy') && NENI_ZAKLAD_JIDLA.test(food.id)) return false;
       var cil = kamSDoplnkem(food, mealIdx);
       if (cil < 0) return false;
       var it = { food: food, grams: grams };
@@ -880,8 +1039,11 @@
     if (totalKey('kcal') < targets.kcal * 0.94) {
       var mainIdx = out.length >= 3 ? Math.floor(out.length / 2) : 0; // oběd / prostřední jídlo
       // Gramáže doplňků úměrně velikosti dne (velikostDne/vg deklarované u MIN_PRILOHA_G).
-      addExtra(byId('syrovatkovy-protein'), vg(30), mainIdx);
-      addExtra(byId('ovesne-vlocky'), vg(50), 0);
+      // ⛔ [oprava po revizi 2026-09-03] `syrovatkovy-protein` z tohohle seznamu ZMIZEL.
+      // Doplnek jde jen do jidla bez bilkoviny, tedy by se v nem stal ZAKLADEM, a prasek
+      // zaklad jidla neni (`NENI_ZAKLAD_JIDLA`). Novy guard v `addExtra` by ho stejne
+      // odmitl; nechavat tu mrtvy radek by matlo.
+      if (!lowCarb) addExtra(byId('ovesne-vlocky'), vg(50), 0);
       runScale();
       if (totalKey('kcal') < targets.kcal * 0.94 || totalKey('p') < targets.protein * 0.88) {
         // druhý zdroj bílkovin k večeři (bez shaku: tvaroh; bez mléčných: tuňák; vege: tofu/tempeh)
@@ -890,10 +1052,11 @@
           if (addExtra(byId(protPool[pi]), vg(150), out.length - 1)) break;
         }
         addExtra(byId('mandle'), vg(25), out.length - 1);
-        addExtra(byId('banan'), vg(100), 0);
+        // [R11] Banan je v keto rezimu sladke ovoce mimo bobule, do keto dne nepatri.
+        if (!lowCarb) addExtra(byId('banan'), vg(100), 0);
         runScale();
         if (totalKey('kcal') < targets.kcal * 0.94) {
-          var carbPool = ['ryze-natural-varena', 'brambory-varene', 'testoviny-celozrnne-varene', 'bulgur-vareny'];
+          var carbPool = lowCarb ? [] : ['ryze-natural-varena', 'brambory-varene', 'testoviny-celozrnne-varene', 'bulgur-vareny'];
           for (var ci = 0; ci < carbPool.length; ci++) {
             if (addExtra(byId(carbPool[ci]), vg(150), out.length - 1)) break;
           }
@@ -936,6 +1099,16 @@
       if (carbK > 0) {
         var cf2 = Math.max(0.3, Math.min(2.4, (carbK - overKcal) / carbK));
         all.forEach(function (it) { if (it.food.cat === 'carb') it.grams *= cf2; });
+      } else if (overKcal > 0) {
+        // ⛔ [oprava 2026-09-03] DEN BEZ JEDINE POLOZKY `carb` SE NEDAL SNIZIT. Sacharidovy
+        // cil mu pokrylo ovoce a rostlinne mlecne vyrobky, takze tenhle krok byl prazdna
+        // operace a prestrel zustal (zmereno: vegan bez lepku, 1400 kcal, 6 jidel, +9,8 %).
+        // Nosic sacharidu je pak OVOCE, a to se smi zmensit; nikdy ne pod polovinu porce.
+        var fruitK = sumP('fruit', 'kcal');
+        if (fruitK > 0) {
+          var ffr = Math.max(0.5, Math.min(1, (fruitK - overKcal) / fruitK));
+          all.forEach(function (it) { if (it.food.cat === 'fruit') it.grams *= ffr; });
+        }
       }
       // Zbývající PŘESTŘEL dorovnej ubráním tuku. Nahoru se tuk nepřidává, má floor.
       overKcal = totalKey('kcal') - targets.kcal;
@@ -979,10 +1152,11 @@
     // sacharidů, nejdřív k 15 g (viditelná porce), pak k 10 g. Velký den sem
     // nespadne: po trimu je pod +5 % a větev se nespustí.
     if (!lowCarb && totalKey('kcal') > targets.kcal * 1.05) {
-      var orezK = function (minG) {
+      var orezK = function (minG, kat) {
+        var katOrez = kat || 'carb';
         for (var oi = 0; oi < all.length; oi++) {
           var it = all[oi];
-          if (it.food.cat !== 'carb' || it.grams <= minG) continue;
+          if (it.food.cat !== katOrez || it.grams <= minG) continue;
           var over = totalKey('kcal') - targets.kcal * 1.05;
           if (over <= 0) break;
           var kcalPerG = (it.food.per100.kcal || 0) / 100;
@@ -996,6 +1170,12 @@
       // median odchylky kcal na 48 dnech 1,26 % proti 1,16 %.
       orezK(15);
       if (totalKey('kcal') > targets.kcal * 1.05) orezK(10);
+      // ⛔ [oprava 2026-09-03] DEN BEZ POLOZKY `carb` NEMEL NA CEM UBRAT. Vegan bez lepku
+      // na 1 400 kcal a sesti jidlech stoji na rostlinnych jogurtech (kategorie `dairy`,
+      // kterou normalizace zamerne neskaluje) a nema ani prilohu, ani tuk; orez tak byl
+      // prazdna operace a den prestrelil o 9,8 %. Nosicem sacharidu je tam OVOCE.
+      var maCarb = all.some(function (it) { return it.food.cat === 'carb'; });
+      if (totalKey('kcal') > targets.kcal * 1.05 && !maCarb) orezK(MIN_PORCE_G, 'fruit');
     }
     // [fix 2026-07-14] minigramáže („přidej 1 g oleje") v klientském plánu nemají co dělat —
     // nebílkovinné položky pod 8 g vyhodíme (pár kalorií totály poctivě ukážou);
@@ -1055,7 +1235,9 @@
       var maPrilohu = out.some(function (m) {
         return m.items.some(function (it) { return it.food.cat === 'carb'; });
       });
-      if (chybiKcal() > targets.kcal * 0.05 && !maPrilohu) {
+      // [R11 2026-09-03] V keto rezimu se priloha NEPRIDAVA ani jako posledni zachrana.
+      // Den, ktery cil nesplni, to radsi zahlasi (viz `warnings` niz).
+      if (chybiKcal() > targets.kcal * 0.05 && !maPrilohu && !lowCarb) {
         for (var pi = 0; pi < PRILOHY.length; pi++) {
           var f = byId(PRILOHY[pi]);
           if (!f) continue;
@@ -1070,6 +1252,93 @@
             all.push(novaPolozka);
           }
           break;
+        }
+      }
+      // 2b) ⛔ [R9 2026-09-03] DRUHA PRILOHA DO DRUHEHO HLAVNIHO JIDLA.
+      // Strop prilohy (300 g varene, 100 g suche) je nova podminka a na velkem dni
+      // s malo jidly ji den nedokaze obejit zvetsenim: 3 000 kcal ve trech jidlech
+      // skoncilo 6 az 10 % pod cilem (zmereno 12 dnu z 768). Kucharsky spravna odpoved
+      // neni hora ryze na jednom taliři, ale priloha i ke druhemu hlavnimu jidlu.
+      // ⛔ Jen do OBEDA nebo VECERE, ktere prilohu jeste nemaji, a jen mimo keto.
+      if (chybiKcal() > targets.kcal * 0.05 && !lowCarb) {
+        for (var p2 = 0; p2 < PRILOHY.length; p2++) {
+          if (chybiKcal() <= targets.kcal * 0.05) break;
+          var f2 = byId(PRILOHY[p2]);
+          if (!f2) continue;
+          var uz2 = all.some(function (it) { return it.food.id === f2.id; });
+          if (uz2) continue;
+          var naGram2 = f2.per100.kcal / 100;
+          if (naGram2 <= 0) continue;
+          // Nejdriv hlavni jidlo BEZ prilohy. Kdyz takove neni a den je porad vic nez 5 %
+          // pod cilem, smi dostat druhou prilohu i talir, ktery uz jednu ma.
+          // ⚠️ VEDOMY ustupek: dve skrobove prilohy na jednom taliři jsou kucharsky sporne,
+          // ale jeste horsi je den, ktery o 20 az 40 % mine cil u objemoveho profilu
+          // (115 kg, narust, 3 jidla = 4 598 kcal). Jen jako posledni zachrana, nikdy pri
+          // beznem skladani dne, a nejvys dve prilohy na jedno hlavni jidlo.
+          var cil2 = -1;
+          for (var m2 = 0; m2 < out.length; m2++) {
+            if (out[m2].kind !== 'lunch' && out[m2].kind !== 'dinner') continue;
+            var maC2 = out[m2].items.some(function (it) { return it.food.cat === 'carb'; });
+            if (!maC2) { cil2 = m2; break; }
+          }
+          if (cil2 < 0) {
+            for (var m2b = 0; m2b < out.length; m2b++) {
+              if (out[m2b].kind !== 'lunch' && out[m2b].kind !== 'dinner') continue;
+              var pocetC = out[m2b].items.filter(function (it) { return it.food.cat === 'carb'; }).length;
+              if (pocetC < 2) { cil2 = m2b; break; }
+            }
+          }
+          if (cil2 < 0) break;
+          var cap2 = stropG(f2);
+          var g2 = Math.min(cap2 != null ? cap2 : Infinity, Math.ceil(chybiKcal() / naGram2 / 5) * 5);
+          if (g2 < MIN_PORCE_G) continue;
+          var it2 = { food: f2, grams: g2 };
+          out[cil2].items.push(it2);
+          all.push(it2);
+        }
+      }
+      // 2c) ⛔ [R8 2026-09-03] CHYBEJICI KALORIE DOROVNA TUK, NE HORA PRILOHY.
+      // Presne to rika rozhodnuti sefa u R8: „chybejici tuk se dorovnava tucnejsim zdrojem
+      // bilkoviny nebo avokadem, ne litrem oleje". Kdyz je den i po prilohach pod cilem
+      // (typicky 3 000 kcal ve trech jidlech, kde priloha narazila na strop 300 g a zakladem
+      // je extremne libove maso), prida se do hlavniho jidla hrst semínek, avokado, nebo
+      // lzice oleje, kazde do sveho stropu z R8.
+      if (chybiKcal() > targets.kcal * 0.05) {
+        // ⚠️ Jen tuky ze `SLANY_TUK`: hlavni jidlo je slane a hrst mandli k masu se
+        // zeleninou je presne ten neparujici tuk, ktery engine resil v srpnu.
+        var TUKY_ZACHRANA = ['dynova-seminka', 'slunecnicova-seminka', 'avokado', 'olivovy-olej'];
+        for (var t2 = 0; t2 < TUKY_ZACHRANA.length; t2++) {
+          if (chybiKcal() <= targets.kcal * 0.05) break;
+          // ⛔ Tuk je tu ZAPLATA NA KALORIE, ne cesta, jak prestrelit tukovy cil. Den, ktery
+          // uz na tuku je (tucne maso nese svuj vlastni), tuhle vypomoc nedostane. Bez
+          // teto brany vysel tydenni den 3 300 kcal s tukem +31,5 % nad cilem. Prah 1,15
+          // je tyz jako u pojistky na skryty tuk vys.
+          if (totalKey('f') > targets.fat * 1.15) break;
+          var f3 = byId(TUKY_ZACHRANA[t2]);
+          if (!f3) continue;
+          var uz3 = all.some(function (it) { return it.food.id === f3.id; });
+          if (uz3) continue;
+          var naGram3 = f3.per100.kcal / 100;
+          if (naGram3 <= 0) continue;
+          // ⚠️ Bere se hlavni jidlo s NEJVETSIM schodkem, a kdyz je nad cilem kazde, tak to
+          // nejmene preplnene. Kdyby se braly jen podstrelene, den, jehoz schodek sedi ve
+          // svacinach, by vypomoc nedostal vubec (zmereno na tydennim dni 3 300 kcal / 6 jidel).
+          var cil3 = -1;
+          var nejhorsi3 = -Infinity;
+          for (var m3 = 0; m3 < out.length; m3++) {
+            if (out[m3].kind !== 'lunch' && out[m3].kind !== 'dinner') continue;
+            var kcalM3 = out[m3].items.reduce(function (q, it) { return q + macrosFor(it.food, it.grams).kcal; }, 0);
+            var chybiM3 = out[m3].targetKcal - kcalM3;
+            if (chybiM3 > nejhorsi3) { nejhorsi3 = chybiM3; cil3 = m3; }
+          }
+          if (cil3 < 0) break;
+          var stropT3 = stropTuku(f3);
+          var strop3 = stropT3 != null ? stropT3 : CAP[f3.cat];
+          var g3 = Math.min(strop3, Math.ceil(chybiKcal() / naGram3 / 5) * 5);
+          if (g3 < 8) continue;
+          var it3 = { food: f3, grams: g3 };
+          out[cil3].items.push(it3);
+          all.push(it3);
         }
       }
       // 3) Teprve zbytek dolaď na ovoci, a jen MÍRNĚ (nejvýš o polovinu původní porce),
@@ -1227,9 +1496,20 @@
               if (f1.cat !== it1.food.cat || !f1.bezny || pouziteVl[f1.id] || zamitnute[f1.id]) continue;
               if (!(f1.per100.kcal > 0)) continue;
               if (vhodnost && !vhodnost.test(f1.id)) continue;
+              // [R11 2026-09-03] Optimalizace vlakniny nesmi do keto dne vratit obilovinu
+              // ani sladke ovoce zadnimi vratky (zamena „maliny → hruska" kvuli vlaknine).
+              if (lowCarb && f1.cat === 'carb') continue;
+              if (lowCarb && f1.cat === 'fruit' && !BOBULE_RE.test(f1.id)) continue;
+              // [R10 2026-09-03] A do hlavniho jidla nesmi vratit sladkou zeleninu.
+              if (f1.cat === 'veg' && SLADKA_ZELENINA_RE.test(f1.id)
+                && (mm1.kind === 'lunch' || mm1.kind === 'dinner')) continue;
               var g1 = Math.round((kcalIt / f1.per100.kcal) * 100 / 5) * 5;
               g1 = Math.min(g1, stropPolozky(f1));
               if (g1 < (f1.cat === 'fat' ? 8 : MIN_PORCE_G)) continue; // [R5] drobek na talíři ne
+              // [R9 2026-09-03] Zamena kvuli vlaknine nesmi srazit zeleninu hlavniho jidla
+              // pod 100 g (hustsi zelenina za stejne kalorie = mensi porce).
+              if (f1.cat === 'veg' && (mm1.kind === 'lunch' || mm1.kind === 'dinner')
+                && g1 < MIN_ZELENINA_HLAVNI_G) continue;
               // ⛔ Rozhoduje VÝSLEDNÁ vzdálenost dne od pásma, ne zisk vlákniny. Tah, který
               // by cíl přeskočil (nebo den ještě víc přetáhl), tím vypadne sám.
               var novaFib = fibTed - fibIt + macrosFor(f1, g1).fib;
@@ -1276,7 +1556,7 @@
         out.forEach(function (m2, mi2) {
           m2.items.forEach(function (it2, ii2) {
             if (VLAK_KAT.indexOf(it2.food.cat) !== -1 && it2.food.per100.kcal > 0) {
-              kandidati.push({ it: it2, mi: mi2, ii: ii2 });
+              kandidati.push({ it: it2, mi: mi2, ii: ii2, hlavni: (m2.kind === 'lunch' || m2.kind === 'dinner') });
             }
           });
         });
@@ -1284,16 +1564,23 @@
         var podleHustoty = kandidati.slice().sort(function (a, b) {
           return (hustotaVl(b.it.food) - hustotaVl(a.it.food)) || (a.mi - b.mi) || (a.ii - b.ii);
         });
-        var nejbohatsi = podleHustoty[0].it;
-        var nejchudsi = podleHustoty[podleHustoty.length - 1].it;
+        var nejbohatsiK = podleHustoty[0];
+        var nejchudsiK = podleHustoty[podleHustoty.length - 1];
+        var nejbohatsi = nejbohatsiK.it;
+        var nejchudsi = nejchudsiK.it;
         if (nejbohatsi === nejchudsi || hustotaVl(nejbohatsi.food) - hustotaVl(nejchudsi.food) < 0.001) break;
         var rust = nahoru ? nejbohatsi : nejchudsi;
-        var ubytek = nahoru ? nejchudsi : nejbohatsi;
+        var ubytekK = nahoru ? nejchudsiK : nejbohatsiK;
+        var ubytek = ubytekK.it;
         var prostor = stropPolozky(rust.food) - rust.grams;
         // Ubírat jde jen do viditelné porce; pod minimální porci už to není porce, ale
         // drobek. [R5 2026-09-03] Podlaha zvednutá z 15 g na MIN_PORCE_G (u tuků 8 g,
         // tam jsou malé gramáže normální).
-        var podlahaUbytku = ubytek.food.cat === 'fat' ? 8 : MIN_PORCE_G;
+        // [R9 2026-09-03] Zelenina hlavniho jidla ma podlahu 100 g, ne 20: presun gramu
+        // kvuli vlaknine z ni jinak udelal 40 g prilohy k obedu (zmereno 125 pripadu).
+        var podlahaUbytku = ubytek.food.cat === 'fat'
+          ? 8
+          : ((ubytek.food.cat === 'veg' && ubytekK.hlavni) ? MIN_ZELENINA_HLAVNI_G : MIN_PORCE_G);
         var lzeUbrat = ubytek.grams - podlahaUbytku;
         if (prostor < 5 || lzeUbrat < 5) break;
         var kcalGr = rust.food.per100.kcal / 100;
@@ -1383,6 +1670,13 @@
       if (zaklad) drzet.push(zaklad);
       var prilohaH = jidlo.items.filter(function (it) { return it.food.cat === 'carb'; })[0];
       if (prilohaH) drzet.push(prilohaH);
+      // ⛔ [R9 2026-09-03] U OBEDA A VECERE SE NESTEHUJE ANI ZELENINA. Presne tudy vznikl
+      // obed „Tempeh 75 g + 495 g varenych testovin" bez jedine zeleniny: talir prelezl
+      // strop 700 g a jedina stehovatelna polozka byla zelenina, takze odesla ona.
+      if (jidlo.kind === 'lunch' || jidlo.kind === 'dinner') {
+        var zeleninaH = jidlo.items.filter(function (it) { return it.food.cat === 'veg'; })[0];
+        if (zeleninaH) drzet.push(zeleninaH);
+      }
       var stehovatelne = jidlo.items.filter(function (it) { return drzet.indexOf(it) === -1; })
         .slice()
         .sort(function (a, b) { return (b.grams - a.grams) || (a.food.id < b.food.id ? -1 : 1); });
@@ -1434,7 +1728,37 @@
       s.kcal += m.totals.kcal; s.p += m.totals.p; s.c += m.totals.c; s.f += m.totals.f; s.fib += m.totals.fib; return s;
     }, { kcal:0, p:0, c:0, f:0, fib:0 });
 
-    return { meals: out, totals: dayTot, targets: targets };
+    // ⛔⛔ [2026-09-03] KAZDY DEN, KTERY MINE KALORICKY CIL O VIC NEZ 5 %, TO REKNE.
+    // Do vlny 2 umel engine cil dohnat i tim, ze do jidla nasypal 50 g oleje (440 kcal
+    // z jedne polozky). R8 to zakazuje, takze cast dnu ted cil minout MUZE, a jedine
+    // spravne chovani je priznat to, ne tise vratit den, ktery vypada hotove.
+    // ⛔ Kontrolni pruh tohle pole ZOBRAZUJE. Taz kontrola i totez zneni vety jsou v appce.
+    var varovaniDne = [];
+    var rozdilKcalD = dayTot.kcal - targets.kcal;
+    if (targets.kcal > 0 && Math.abs(rozdilKcalD) > targets.kcal * 0.05) {
+      varovaniDne.push(
+        'Den mine kalorický cíl o ' + Math.round(rozdilKcalD) + ' kcal '
+        + '(' + Math.round(dayTot.kcal) + ' místo ' + Math.round(targets.kcal) + '). '
+        + 'Z povolených porcí se přesnější den poskládat nedal.'
+      );
+    }
+    // [R11 2026-09-03] Keto den navic rekne, PROC: obiloviny do nej engine schvalne nedava.
+    if (lowCarb) {
+      if (dayTot.kcal < targets.kcal * 0.94) {
+        varovaniDne.push(
+          'Je to nízkosacharidový cíl: obiloviny, pečivo, brambory, rýži ani těstoviny do něj engine '
+          + 'schválně nepřidává (R11). Zvyš porci tuku nebo bílkoviny, nebo povol víc sacharidů.'
+        );
+      }
+      if (dayTot.p < targets.protein * 0.88) {
+        varovaniDne.push(
+          'Bílkovina zůstala na ' + Math.round(dayTot.p) + ' g proti cíli ' + Math.round(targets.protein) + ' g. '
+          + 'V nízkosacharidovém režimu je nabídka užší; přidej si zdroj bílkoviny navíc.'
+        );
+      }
+    }
+
+    return { meals: out, totals: dayTot, targets: targets, warnings: varovaniDne.length ? varovaniDne : undefined };
   }
 
   // ---- 3) Týden + nákupní seznam (stejné chování jako appka Tvůj Coach, src/engine/meal-gen.ts) ----
