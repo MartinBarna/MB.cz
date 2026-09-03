@@ -11,14 +11,18 @@
 // ktera o sobe navzajem nevi (KATALOG, ODKAZ_NA_PRODUKT, seznam zdroju v daily-digest).
 
 import {
+  DNI_OKNO_PROVIZE_APPKY,
   PRESKOCENO_DB_CHYBA,
   PROVIZE_KOUCINK_FALLBACK,
   STAV_REFUND,
+  coDelatPoZruseniProvize,
   duvodPreskoceniProvize,
   idPlatebProRefund,
   kontrolovatRadekProduktu,
   nactiSazbuKoucinku,
+  oknoProvizeAppkyIso,
   sazbaProvize,
+  vetaOSporu,
   vetaProvizeRucne,
 } from '../_shared/provize.ts';
 
@@ -28,6 +32,9 @@ const DIGEST = KOREN + 'akademie/_supabase/functions/daily-digest/index.ts';
 
 const zdrojWebhook = await Deno.readTextFile(WEBHOOK);
 const zdrojDigest = await Deno.readTextFile(DIGEST);
+const zdrojProvize = await Deno.readTextFile(
+  KOREN + 'akademie/_supabase/functions/_shared/provize.ts',
+);
 
 type Kontrola = { name: string; pass: boolean; detail: string };
 const cases: Kontrola[] = [];
@@ -754,10 +761,11 @@ check('RK14 charge.id ani dispute.id se nepouzivaji (do order_id se nikdy nezapi
 check('RK15 STAV_REFUND je void, tedy stav z CHECK constraintu tabulky', STAV_REFUND === 'void', STAV_REFUND);
 
 // 8) Webhook to opravdu vola, a PRED parovanim na entitlements.
-check('RK16 refundova vetev vola zneplatniProvizeRefundem',
-  /const provizeZrusena = await zneplatniProvizeRefundem\(idPlatebProRefund\(obj\), jeSpor\)/.test(zdrojWebhook), '');
+check('RK16 refundova vetev vola zneplatniProvizeRefundem s filtrem na order_id',
+  /const idsPlateb = idPlatebProRefund\(obj\)/.test(zdrojWebhook)
+  && /q\.in\("order_id", idsPlateb\)/.test(zdrojWebhook), '');
 check('RK17 provize se rusi PRED hledanim naroku (jinak by castecny refund a appka propadly)',
-  zdrojWebhook.indexOf('const provizeZrusena = await zneplatniProvizeRefundem')
+  zdrojWebhook.indexOf('const idsPlateb = idPlatebProRefund(obj)')
     < zdrojWebhook.lastIndexOf('.eq("stripe_payment_intent", platba).maybeSingle()'), '');
 check('RK18 castecny refund provizi taky rusi (Martin: vratime penize = bez odmeny)',
   /castecny_refund: true, odebrano: false, provize_zrusena: provizeZrusena/.test(zdrojWebhook), '');
@@ -777,6 +785,96 @@ const zdrojReport = await Deno.readTextFile(
 check('RK23 report void radky do cisel nebere', /\.neq\("status", "void"\)/.test(zdrojReport), '');
 check('RK24 report vracene platby ukazuje zvlast',
   /Vrácené platby \(bez provize\)/.test(zdrojReport) && /eq\("status", "void"\)/.test(zdrojReport), '');
+
+// --- R-L) OPRAVY PO REVIZI (3. 9. 2026) ---
+// 1) Priorita `+` proti `?:`: veta o sporu patrila JEN do jedne vetve `co_delat`.
+//    Test si obe varianty VYPISE, aby se to dalo precist ocima, ne jen odhadnout.
+const VETA_SPORU = 'Při vyhraném sporu vrať provizi ručně na `pending`';
+const variantyCoDelat: Array<[string, string]> = [
+  ['refund + pending  ', coDelatPoZruseniProvize(0, false)],
+  ['refund + confirmed', coDelatPoZruseniProvize(1, false)],
+  ['SPOR   + pending  ', coDelatPoZruseniProvize(0, true)],
+  ['SPOR   + confirmed', coDelatPoZruseniProvize(1, true)],
+];
+console.log('\n  --- co_delat po zruseni provize (RL1 az RL4) ---');
+for (const [jak, text] of variantyCoDelat) console.log(`  ${jak} | ${text}`);
+console.log('');
+
+check('RL1 refund + pending vetu o sporu NEMA',
+  !variantyCoDelat[0][1].includes(VETA_SPORU), variantyCoDelat[0][1]);
+check('RL2 refund + confirmed vetu o sporu NEMA',
+  !variantyCoDelat[1][1].includes(VETA_SPORU), variantyCoDelat[1][1]);
+check('RL3 SPOR + pending vetu o sporu MA',
+  variantyCoDelat[2][1].includes(VETA_SPORU), variantyCoDelat[2][1]);
+check('RL4 SPOR + confirmed vetu o sporu MA (tohle byla ta chyba)',
+  variantyCoDelat[3][1].includes(VETA_SPORU), variantyCoDelat[3][1]);
+check('RL5 u confirmed zustava varovani o mozna vyplacenych penezich',
+  variantyCoDelat[3][1].includes('mohla už být VYPLACENÁ')
+  && variantyCoDelat[1][1].includes('mohla už být VYPLACENÁ'), '');
+check('RL6 vetaOSporu je prazdna u obycejneho refundu',
+  vetaOSporu(false) === '' && vetaOSporu(true).includes(VETA_SPORU), vetaOSporu(true));
+check('RL7 webhook uz text neskláda sam (jinak by se priorita vratila)',
+  /co_delat: coDelatPoZruseniProvize\(potvrzene\.length, jeSpor\)/.test(zdrojWebhook)
+  && !/\+ vetaSporu/.test(zdrojWebhook), '');
+check('RL8 i alert o selhani zapisu nese vetu o sporu',
+  /\+ vetaOSporu\(jeSpor\)/.test(zdrojWebhook), '');
+
+// 2) REFUND APPKY. `order_id` u appky je VZDY `evt_…`, protoze most dostava telo
+//    jen s `event_id`. Parovani podle `order_id` proto nikdy nesedne a musi byt
+//    druha cesta: e-mail + product='appka' + okno 30 dni.
+check('RL9 id z udalosti neobsahuji evt_ (a ani nemuzou)',
+  idPlatebProRefund({ payment_intent: 'pi_1', id: 'evt_1' }).includes('evt_1') === false, '');
+
+type AppkaRadek = RefRadek & { buyer_email: string; dniStary: number };
+/** Druha cesta: e-mail + product='appka' + okno DNI_OKNO_PROVIZE_APPKY dni. */
+function zneplatniAppku(tab: AppkaRadek[], email: string): number {
+  const zasazene = tab.filter((r) =>
+    r.buyer_email === email && r.product === 'appka'
+    && r.dniStary <= DNI_OKNO_PROVIZE_APPKY && r.status !== STAV_REFUND);
+  for (const r of zasazene) r.status = 'void';
+  return zasazene.length;
+}
+
+const tabG: AppkaRadek[] = [
+  { order_id: 'evt_novy', buyer_email: 'klient@example.com', code: 'JIRKA10', product: 'appka',
+    reward_amount: 150, status: 'pending', dniOdNakupu: 20, dniStary: 3 },
+  { order_id: 'evt_stary', buyer_email: 'klient@example.com', code: 'JIRKA10', product: 'appka',
+    reward_amount: 150, status: 'confirmed', dniOdNakupu: 400, dniStary: 400 },
+  { order_id: 'pi_koucink', buyer_email: 'klient@example.com', code: 'JIRKA10', product: 'coaching',
+    reward_amount: 5950, status: 'confirmed', dniOdNakupu: 20, dniStary: 5 },
+];
+check('RL10 parovani podle order_id u appky NIKDY nesedne (evt_ v udalosti neni)',
+  refunduj(tabG, { payment_intent: 'pi_neco', invoice: 'in_neco' }) === 0, '');
+const zasazenoG = zneplatniAppku(tabG, 'klient@example.com');
+check('RL11 druha cesta zrusi provizi za appku v okne', zasazenoG === 1 && tabG[0].status === 'void',
+  String(zasazenoG));
+check('RL12 provize za appku starsi nez okno zustava (partner ji poctive dostal)',
+  tabG[1].status === 'confirmed', tabG[1].status);
+check('RL13 provize za koucink se refundem appky NEDOTKNE',
+  tabG[2].status === 'confirmed', tabG[2].status);
+check('RL14 refund appky jineho cloveka nesahne na nic',
+  zneplatniAppku(tabG, 'nekdo@jiny.cz') === 0, '');
+
+check('RL15 okno je 30 dni', DNI_OKNO_PROVIZE_APPKY === 30, String(DNI_OKNO_PROVIZE_APPKY));
+{
+  const ted = new Date('2026-09-03T12:00:00.000Z');
+  check('RL16 okno se pocita zpetne od ted',
+    oknoProvizeAppkyIso(ted) === '2026-08-04T12:00:00.000Z', oknoProvizeAppkyIso(ted));
+}
+
+check('RL17 webhook druhou cestu opravdu ma, a jen u product=appka',
+  /\.eq\("buyer_email", emailZPlatby\)\.eq\("product", "appka"\)/.test(zdrojWebhook), '');
+check('RL18 druha cesta je AZ ve vetvi, kde se nic nesparovalo na entitlements',
+  zdrojWebhook.indexOf('if (!ent) {') < zdrojWebhook.indexOf('const provizeAppky = emailZPlatby'), '');
+check('RL19 druha cesta ma okno, ne cely cas',
+  /\.gte\("created_at", oknoAppky\)/.test(zdrojWebhook), '');
+check('RL20 obe cesty jedou stejnym telem (jeden zapis, jeden alert)',
+  (zdrojWebhook.match(/await zneplatniProvizeRefundem\(/g) ?? []).length === 2,
+  String((zdrojWebhook.match(/await zneplatniProvizeRefundem\(/g) ?? []).length));
+check('RL21 alert rika, podle ceho se rusilo', /sparovano_podle: popisParovani/.test(zdrojWebhook), '');
+check('RL22 komentar v provize.ts uz netvrdi, ze appka jede pres payment_intent',
+  !/videokurz, konzultace, appka\)\n \*    ⇒ `payment_intent`/.test(zdrojProvize)
+  && /APPKA SEM NEPATŘÍ A NEJDE JI SEM DOSTAT/.test(zdrojProvize), '');
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);

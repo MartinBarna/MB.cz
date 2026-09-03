@@ -175,12 +175,21 @@ export const STAV_REFUND = "void";
  * Podle kterých ID se u refundu hledá řádek v `referrals`.
  *
  * Zapisovatelé používají dva tvary `order_id`:
- *  • jednorázové nákupy (koučink, Academy doživotně, videokurz, konzultace, appka)
- *    ⇒ `payment_intent`,
+ *  • nákupy zapsané ve `academy-stripe-webhook` (koučink, Academy doživotně,
+ *    videokurz, konzultace, balíček) ⇒ `payment_intent`,
  *  • opakovaná provize z předplatného (`zapisRecurringProvizi`) ⇒ ID FAKTURY.
  * Refundovaný Charge nese obojí (`payment_intent`, `invoice`), Dispute jen platbu.
  *
- * ⛔ SCHVÁLNĚ NIC JINÉHO. `charge.id` ani `dispute.id` se do `order_id` nikdy
+ * ⛔⛔ APPKA SEM NEPATŘÍ A NEJDE JI SEM DOSTAT. Most `app-purchase-bridge` skládá
+ *    `order_id` jako `body.order_id || body.payment_intent || event_id`
+ *    (`app-purchase-bridge/core.ts:249`), jenže volající, tedy `stripe-webhook`
+ *    appky, posílá v těle jen `event_id` (ověřeno 3. 9. 2026 na větvi
+ *    `p41-nad-p28`, `supabase/functions/stripe-webhook/index.ts:682` a `:814`).
+ *    Řádek za appku má tedy v `order_id` VŽDY `evt_…`, které v refundované události
+ *    není. Proto má appka vlastní párování podle e-mailu a okna, viz
+ *    `DNI_OKNO_PROVIZE_APPKY`.
+ *
+ * ⛔ JINAK SCHVÁLNĚ NIC DALŠÍHO. `charge.id` ani `dispute.id` se do `order_id` nikdy
  *    nezapisují, takže by je hledání jen zbytečně rozšířilo o tvary, které nemůžou
  *    sedět. Párování musí být přesné: `order_id` je unikátní a zneplatnit cizí řádek
  *    znamená sebrat partnerovi peníze, na které nárok má.
@@ -192,4 +201,69 @@ export function idPlatebProRefund(obj: any): string[] {
     if (typeof v === "string" && v && !out.includes(v)) out.push(v);
   }
   return out;
+}
+
+// --- REFUND APPKY: párování podle e-mailu a okna --------------------------------
+// ⛔⛔ PROČ VŮBEC JINAK. Provize za předplatné appky zapisuje most `app-purchase-bridge`
+//    z appčího `stripe-webhook`, a ten do těla mostu dává jen `event_id`. V `order_id`
+//    tedy stojí `evt_…`, které v refundované události Stripu nikde není, takže párování
+//    podle `order_id` u appky NIKDY nesedne. Bez druhé cesty by refund appky provizi
+//    nezrušil a auto-confirm by ji po 14 dnech potvrdil (přesně ta mezera, kterou
+//    `referral-affiliate.sql` popisuje u větve `r.product = 'appka'`).
+//
+// ⚠️ Academy tu událost VIDÍ: appka i Academy jedou na jednom Stripe účtu
+//    (acct_1TqQ56Bq3rKubW9k) a webhook dostává události celého účtu. Dnes takový refund
+//    skončí ve větvi „not-ours", protože se nespáruje na žádný nárok v Academy.
+//
+// ⛔ ZÁMĚRNĚ ÚZKÉ. Sahá se JEN na řádky s `product = 'appka'` a jen tehdy, když se
+//    refund nespároval na žádný nárok Academy. Provize za koučink, Academy ani videokurz
+//    se tímhle dotknout nemůže. Je to heuristika, ne jistota: `referrals` si ID
+//    předplatného neukládá, takže přesnější klíč v datech neexistuje.
+
+/** Kolik dní zpátky se u refundu appky hledá řádek provize. */
+export const DNI_OKNO_PROVIZE_APPKY = 30;
+
+/**
+ * Od kdy (ISO) se u refundu appky berou řádky `referrals` v úvahu.
+ *
+ * ⚠️ Okno je nutné: bez něj by refund pátého měsíce zneplatnil i provizi z první
+ *    platby před rokem, kterou partner poctivě dostal a která se refundu netýká.
+ *    30 dní pokrývá měsíční i roční předplatné, protože provize vzniká u KAŽDÉ
+ *    zaplacené faktury, tedy nejpozději měsíc před jejím vrácením.
+ */
+export function oknoProvizeAppkyIso(ted: Date = new Date()): string {
+  return new Date(ted.getTime() - DNI_OKNO_PROVIZE_APPKY * 24 * 60 * 60 * 1000).toISOString();
+}
+
+// --- Co má Martin dělat, když se provize zrušila -------------------------------
+// ⛔⛔ VLASTNÍ FUNKCE KVŮLI PRIORITĚ OPERÁTORŮ (oprava po revizi 3. 9. 2026).
+//    Věta o sporu byla ve webhooku napsaná jako `a ? x : y + vetaSporu`, jenže `+`
+//    váže silněji než `?:`, takže se přilepila JEN k větvi `y`. U sporu nad UŽ
+//    POTVRZENOU provizí, tedy přesně tam, kde jde o největší peníze, tak chyběla.
+//    Tady je to jedno místo a test si obě varianty vypíše, místo aby to hlídal regex.
+
+/**
+ * Text `co_delat` do alertu po zrušení provize.
+ *
+ * @param potvrzenych kolik ze zrušených řádků bylo ve stavu `confirmed`
+ * @param jeSpor      `charge.dispute.created` místo `charge.refunded`
+ *
+ * ⛔ Věta o sporu patří do OBOU větví: vyhraný spor znamená vrátit provizi ručně
+ *    bez ohledu na to, jestli byla teprve `pending`, nebo už `confirmed`.
+ */
+export function coDelatPoZruseniProvize(potvrzenych: number, jeSpor: boolean): string {
+  const zaklad = potvrzenych > 0
+    ? "⛔ Provize byla potvrzená, tedy mohla už být VYPLACENÁ. Zkontroluj "
+      + "`referral_payouts` a v přehledu výplat si to srovnej s partnerem. "
+      + "Automatika ji jen přestala počítat, peníze zpátky nevzala."
+    : "✅ Nic dělat nemusíš. Provize čekala na potvrzení a teď se nepotvrdí "
+      + "ani nezapočítá do výplaty.";
+  return zaklad + vetaOSporu(jeSpor);
+}
+
+/** Dovětek o sporu. Prázdný u obyčejného refundu. */
+export function vetaOSporu(jeSpor: boolean): string {
+  return jeSpor
+    ? " ⚠️ Spor lze u banky vyhrát. Při vyhraném sporu vrať provizi ručně na `pending`."
+    : "";
 }

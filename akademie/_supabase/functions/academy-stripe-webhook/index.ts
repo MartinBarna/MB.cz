@@ -54,13 +54,17 @@ import {
 } from "../_shared/koucink-onboarding.ts";
 // ⚠️ Deploy téhle funkce nese i `_shared/provize.ts` (sazba provize z koučinku).
 import {
+  DNI_OKNO_PROVIZE_APPKY,
   PRESKOCENO_DB_CHYBA,
   STAV_REFUND,
+  coDelatPoZruseniProvize,
   duvodPreskoceniProvize,
   idPlatebProRefund,
   kontrolovatRadekProduktu,
   nactiSazbuKoucinku,
+  oknoProvizeAppkyIso,
   sazbaProvize,
+  vetaOSporu,
   vetaProvizeRucne,
 } from "../_shared/provize.ts";
 
@@ -998,10 +1002,10 @@ async function zapisRecurringProvizi(buyerEmail: string, invoice: any): Promise<
  *    za 59 500 Kč by se sám překlopil na potvrzenou provizi 5 950 Kč k výplatě
  *    a v měsíčním reportu by partnerovi odešla jako peníze, které dostane.
  *
- * ⛔ VOLÁ SE PŘED PÁROVÁNÍM NA `entitlements`, ne až uvnitř úspěšné větve. Refund se
- *    o nárok opřít nemůže: u částečného refundu se přístup schválně neodebírá, u appky
- *    se řádek v Academy nenajde vůbec a u dvojznačného párování se automatika záměrně
- *    nerozhoduje. Provize se přitom v žádném z těch případů přiznat nemá.
+ * ⚠️ FILTR SE PŘEDÁVÁ ZVENČÍ, protože párovací klíče jsou DVA a nedají se sloučit:
+ *    `order_id` u všeho, co zapisuje tenhle webhook, a e-mail plus okno u appky
+ *    (viz `oknoProvizeAppkyIso`). Tělo, tedy čtení, zápis i alert, je pro obě cesty
+ *    stejné a nesmí se rozejít.
  *
  * ⚠️ Nejdřív ČTE, pak zapisuje: po `update` už je ve stavu `void` a nešlo by poznat,
  *    jestli provize byla teprve `pending`, nebo dávno `confirmed` (a tedy nejspíš
@@ -1011,24 +1015,25 @@ async function zapisRecurringProvizi(buyerEmail: string, invoice: any): Promise<
  *    Když zápis selže, jde ven alert, ne 500.
  */
 async function zneplatniProvizeRefundem(
-  idsPlateb: string[],
+  // Doplní na dotaz párovací podmínky. Tentýž filtr jede na čtení i na zápis.
+  // deno-lint-ignore no-explicit-any
+  filtr: (q: any) => any,
+  /** Jak se to spárovalo. Jde do alertu, ať Martin pozná, podle čeho se rušilo. */
+  popisParovani: string,
   jeSpor: boolean,
 ): Promise<string> {
-  if (!idsPlateb.length) return "bez-identifikatoru";
+  const slovoUdalosti = jeSpor ? "Spor" : "Refund";
   try {
-    const { data: radky, error: chybaCteni } = await admin
-      .from("referrals")
-      .select("id, code, product, buyer_email, reward_type, reward_amount, status")
-      .in("order_id", idsPlateb)
-      .neq("status", STAV_REFUND);
+    const { data: radky, error: chybaCteni } = await filtr(
+      admin.from("referrals")
+        .select("id, code, product, buyer_email, reward_type, reward_amount, status"),
+    ).neq("status", STAV_REFUND);
     if (chybaCteni) throw new Error("cteni: " + chybaCteni.message);
     if (!radky || !radky.length) return "zadna-provize";
 
-    const { error: chybaZapisu } = await admin
-      .from("referrals")
-      .update({ status: STAV_REFUND })
-      .in("order_id", idsPlateb)
-      .neq("status", STAV_REFUND);
+    const { error: chybaZapisu } = await filtr(
+      admin.from("referrals").update({ status: STAV_REFUND }),
+    ).neq("status", STAV_REFUND);
     if (chybaZapisu) throw new Error("zapis: " + chybaZapisu.message);
 
     // Potvrzená provize už mohla odejít partnerovi na účet: view `affiliate_prehled`
@@ -1041,32 +1046,26 @@ async function zneplatniProvizeRefundem(
       .join("; ");
     await alertAdmin(
       potvrzene.length
-        ? "🔴 " + (jeSpor ? "Spor" : "Refund") + ": zrušena UŽ POTVRZENÁ provize"
-        : (jeSpor ? "Spor" : "Refund") + ": provize zrušena, partner ji nedostane",
+        ? "🔴 " + slovoUdalosti + ": zrušena UŽ POTVRZENÁ provize"
+        : slovoUdalosti + ": provize zrušena, partner ji nedostane",
       {
         zruseno_radku: radky.length,
         detail: souhrn,
-        platby: idsPlateb.join(", "),
-        co_delat: potvrzene.length
-          ? "⛔ Provize byla potvrzená, tedy mohla už být VYPLACENÁ. Zkontroluj "
-            + "`referral_payouts` a v přehledu výplat si to srovnej s partnerem. "
-            + "Automatika ji jen přestala počítat, peníze zpátky nevzala."
-          : "✅ Nic dělat nemusíš. Provize čekala na potvrzení a teď se nepotvrdí "
-            + "ani nezapočítá do výplaty."
-          + (jeSpor
-            ? " ⚠️ Spor lze u banky vyhrát. Když ho vyhraješ, vrať i provizi ručně "
-              + "(status zpátky na `pending`)."
-            : ""),
+        sparovano_podle: popisParovani,
+        // ⛔ Věta o sporu patří do OBOU větví, proto je stavba textu ve `provize.ts`
+        //    a otestovaná; napsaná tady za ternárním operátorem se kvůli prioritě
+        //    `+` proti `?:` lepila jen k jedné z nich.
+        co_delat: coDelatPoZruseniProvize(potvrzene.length, jeSpor),
       },
     );
     return "zneplatneno-" + radky.length;
   } catch (e) {
     await alertAdmin("🔴 Stripe: provize se po refundu NEZRUŠILA", {
-      platby: idsPlateb.join(", "),
+      sparovano_podle: popisParovani,
       chyba: String(e).slice(0, 200),
-      co_delat: "⛔ Přepiš `referrals.status` na `void` ručně podle `order_id` výš. "
+      co_delat: "⛔ Přepiš `referrals.status` na `void` ručně podle párování výš. "
         + "Jinak se provize po 14 dnech sama potvrdí a partnerovi se vyplatí "
-        + "odměna za nákup, za který jsme vrátili peníze.",
+        + "odměna za nákup, za který jsme vrátili peníze." + vetaOSporu(jeSpor),
     });
     return "chyba";
   }
@@ -2280,7 +2279,14 @@ Deno.serve(async (req) => {
       // případech peníze odešly zpátky, takže odměna vzniknout nemá.
       // ⚠️ Běží i před `bez-identifikatoru`: bez `payment_intent` i bez `invoice`
       //    není co spárovat, funkce to sama pozná a vrátí „bez-identifikatoru".
-      const provizeZrusena = await zneplatniProvizeRefundem(idPlatebProRefund(obj), jeSpor);
+      const idsPlateb = idPlatebProRefund(obj);
+      const provizeZrusena = idsPlateb.length
+        ? await zneplatniProvizeRefundem(
+          (q) => q.in("order_id", idsPlateb),
+          "order_id " + idsPlateb.join(", "),
+          jeSpor,
+        )
+        : "bez-identifikatoru";
 
       if (!zakaznik && !platba) {
         return json({ ok: true, ignored: "bez-identifikatoru", provize_zrusena: provizeZrusena });
@@ -2348,6 +2354,36 @@ Deno.serve(async (req) => {
           obj.billing_details?.email ?? obj.receipt_email ?? "",
         ).trim().toLowerCase();
 
+        // ⭐ DRUHÁ CESTA: PROVIZE ZA APPKU (doplněno po revizi 3. 9. 2026).
+        // ⛔ Párování podle `order_id` výš u appky NIKDY nesedne: most
+        //    `app-purchase-bridge` skládá `order_id` z `body.order_id ||
+        //    body.payment_intent || event_id` (`core.ts:249`), ale appčí
+        //    `stripe-webhook` posílá v těle jen `event_id` (ověřeno 3. 9. 2026 na
+        //    `p41-nad-p28`, `supabase/functions/stripe-webhook/index.ts:682` a `:814`).
+        //    V `referrals.order_id` tedy stojí `evt_…`, které v refundované události
+        //    není. Bez téhle větve by refund appky provizi nezrušil a auto-confirm
+        //    by ji po 14 dnech potvrdil.
+        // ⚠️ Most se při refundu NEVOLÁ VŮBEC (jediná dvě volání `posliDoMostu` jsou
+        //    první platba a obnova), takže druhá strana o vrácení peněz sama neřekne.
+        //    Academy tu událost ale VIDÍ: obě appky jedou na jednom Stripe účtu.
+        // ⛔ ÚMYSLNĚ AŽ TADY, uvnitř větve „nespárovalo se na žádný nárok Academy".
+        //    Refund Academy, koučinku nebo videokurzu se sem nedostane, protože ten
+        //    se spároval výš. K tomu filtr `product = 'appka'` a okno
+        //    `DNI_OKNO_PROVIZE_APPKY` dní zpátky, ať se nesahá na provizi z první
+        //    platby před rokem, kterou partner poctivě dostal.
+        // ⚠️ Je to heuristika, ne jistota: `referrals` si ID předplatného neukládá,
+        //    takže přesnější klíč v datech neexistuje. Alert řekne, podle čeho se
+        //    rušilo, aby to šlo v případě sporu dohledat.
+        const oknoAppky = oknoProvizeAppkyIso();
+        const provizeAppky = emailZPlatby
+          ? await zneplatniProvizeRefundem(
+            (q) => q.eq("buyer_email", emailZPlatby).eq("product", "appka")
+              .gte("created_at", oknoAppky),
+            "appka, e-mail " + emailZPlatby + ", " + DNI_OKNO_PROVIZE_APPKY + " dní zpět",
+            jeSpor,
+          )
+          : "bez-emailu";
+
         const SLOUPCE_BONUS = "email, product, source, stripe_customer_id";
         const { bonusy, podle } = await najdiBonusyAppky({
           castecny: !jeSpor && castkaB > 0 && vracenoB > 0 && vracenoB < castkaB,
@@ -2403,6 +2439,7 @@ Deno.serve(async (req) => {
             sparovano_podle: podle,
             pocet: emailyBonus.length,
             provize_zrusena: provizeZrusena,
+            provize_appky_zrusena: provizeAppky,
           });
         }
 
@@ -2438,6 +2475,7 @@ Deno.serve(async (req) => {
         return json({
           ok: true, ignored: "not-ours", zakaznik: zakaznik || null,
           platba: platba || null, provize_zrusena: provizeZrusena,
+          provize_appky_zrusena: provizeAppky,
         });
       }
 
