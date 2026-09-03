@@ -67,7 +67,9 @@
   /* Číslo s jednotkou. `null` je „nemám", nikdy ne nula: nula je tvrzení. */
   function cis(v, jed) {
     if (v == null || v === "") return "nemám";
-    return String(v) + (jed ? " " + jed : "");
+    // esc() i u čísel: dnes sem chodí jen čísla z enginu, ale je to jediné místo
+    // v souboru, kde by se do HTML dostala neescapovaná hodnota (nález revize).
+    return esc(String(v)) + (jed ? " " + esc(jed) : "");
   }
 
   /* KRÁTKODOBĚ: čísla, ze kterých se koncept skládal. Berou se ze sloupce `souhrn`
@@ -123,6 +125,10 @@
       + '<div class="muted" style="font-size:.78rem;margin:2px 0 0;">Období ' + den(r.obdobi_od) + " až " + den(r.obdobi_do)
       + " · " + esc(stavPopis(r.stav)) + "</div>"
       + kratkodobe(r.souhrn)
+      + (r.sent_at && r.stav !== "odeslano"
+        ? '<p style="color:#E0A03A;font-size:.82rem;margin:6px 0 0;">Odesílání tohohle rozboru už jednou začalo (' + den(String(r.sent_at).slice(0, 10))
+          + '), ale nedoběhlo. Zkontroluj poštu: mail mohl odejít. Server druhé odeslání odmítne.</p>'
+        : "")
       + '<details data-dlouhodobe style="margin-top:6px;"><summary style="cursor:pointer;color:#F6CD63;font-size:.8rem;">Dlouhodobá data (po týdnech)</summary>'
       + '<div data-tydny><p class="muted" style="font-size:.8rem;margin:6px 0 0;">Načtu po rozkliknutí.</p></div></details>'
       + (bezDat
@@ -246,7 +252,16 @@
             }
             hotovo("Odesláno klientovi.");
             if (opts.toast) opts.toast("Rozbor odeslán");
-          }).catch(function () { zamkni(false); zpetNaZaklad(); rekni("Nepovedlo se, zkus to znovu."); });
+          }).catch(function () {
+            // ⛔⛔ TADY SE NESMI RIKAT „zkus to znovu". Spojeni muze vyprset i u mailu,
+            //    ktery UZ ODESEL (admin ma timeout kratsi, nez umi trvat odeslani),
+            //    a druhy klik by klientovi poslal tentyz rozbor podruhe. Server to
+            //    sice od 3. 9. blokuje zabranim radku, ale text nema nikoho pobizet
+            //    k akci, kterou pak server odmitne.
+            zamkni(false);
+            zpetNaZaklad();
+            rekni("Spojení vypršelo. Mail už mohl odejít, zkontroluj poštu a frontu; neposílej ho znovu naslepo.");
+          });
         });
       });
 

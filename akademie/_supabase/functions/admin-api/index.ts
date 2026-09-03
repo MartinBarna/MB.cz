@@ -2561,9 +2561,15 @@ Deno.serve(async (req) => {
     if (action === "tc_grant_tier") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
       const tier = String(body.tier ?? "").trim();
-      // Bílá listina schválně: `gold` a `diamond` jsou v appce prázdné nálepky
-      // (26. 7. 2026) a nový tier tudy nesmí proklouznout bez rozhodnutí.
-      if (!["ai_basic", "ai_kontrola"].includes(tier)) return json({ ok: false, duvod: "neznamy_tier" }, 400);
+      // ⛔⛔ JEN `ai_kontrola`, `ai_basic` tudy SCHVÁLNĚ NEJDE (nález revize 3. 9. 2026).
+      //    Živá `grant_app_access` u zdrojů academy / academy-nakup / admin-panel
+      //    prodlužuje přístup na „aspoň rok" a `handle_new_user` totéž u člověka,
+      //    který se registruje až po grantu. Tlačítko „na 3 měsíce" by tedy
+      //    u VIP dalo rok a lhalo by. Pro VIP je tu `set_access` výš, který
+      //    tohle pravidlo má jako záměr. `ai_kontrola` má od 3. 9. vlastní větev,
+      //    kde poslané datum platí přesně.
+      // ⛔ `gold` a `diamond` jsou v appce prázdné nálepky (26. 7. 2026).
+      if (tier !== "ai_kontrola") return json({ ok: false, duvod: "neznamy_tier" }, 400);
       const mesice = Math.round(Number(body.mesice ?? 1));
       if (!isFinite(mesice) || mesice < 1 || mesice > 24) return json({ ok: false, duvod: "mesice_mimo_rozsah" }, 400);
       const do_ = new Date();
@@ -2571,6 +2577,9 @@ Deno.serve(async (req) => {
       const out = await tcMost(admin, {
         email, action: "grant", tier, source: "admin-panel", expires_at: do_.toISOString(),
       });
+      // ⚠️ Appka umí odpovědět HLASITOU chybou (klient má neomezený přístup, viz
+      //    migrace 20260903101000). Ta hláška se protahuje beze změny, protože
+      //    obsahuje návod, co udělat; přepsat ji na „nepovedlo se" by ho zahodilo.
       const vysledek = out.ok ? String(out.data.result ?? "ok") : out.duvod;
       // Log pokusu, stejně jako u `set_access`. ⛔ Není to stav přístupu, jen záznam.
       await admin.from("tvujcoach_grants")
