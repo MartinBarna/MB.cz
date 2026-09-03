@@ -10,7 +10,7 @@
 // slabsi, ale chyta presne tu tridu chyby, o kterou tady jde: ROZEJITI TRI MIST,
 // ktera o sobe navzajem nevi (KATALOG, ODKAZ_NA_PRODUKT, seznam zdroju v daily-digest).
 
-import { PROVIZE_KOUCINK_FALLBACK, sazbaProvize } from '../_shared/provize.ts';
+import { PROVIZE_KOUCINK_FALLBACK, nactiSazbuKoucinku, sazbaProvize } from '../_shared/provize.ts';
 
 const KOREN = new URL('../../../../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const WEBHOOK = KOREN + 'akademie/_supabase/functions/academy-stripe-webhook/index.ts';
@@ -517,6 +517,25 @@ let sqlProvize = '';
 try { sqlProvize = await Deno.readTextFile(KOREN + 'akademie/_supabase/provize-koucink.sql'); } catch { /* nevadi */ }
 check('RH11 migrace zaklada klic provize_koucink idempotentne',
   /provize_koucink/.test(sqlProvize) && /on conflict \(key\) do nothing/.test(sqlProvize), '');
+// RH13 az RH17: sazba je PODIL, ne procento. `10` v app_config je preklep a musi
+// spadnout na fallback, jinak by z Diamondu za 59 500 Kc vysla provize 595 000 Kc.
+// Testuje se cela cesta vcetne cteni z DB (falesny `admin`, zadne pripojeni).
+const fakeAdmin = (value: unknown) => ({
+  from: () => ({ select: () => ({ eq: () => ({ maybeSingle: () => Promise.resolve({ data: value === undefined ? null : { value } }) }) }) }),
+});
+const zDb = async (value: unknown) =>
+  sazbaProvize({ product: 'coaching', partnerRate: 0.30, configRate: await nactiSazbuKoucinku(fakeAdmin(value)) });
+
+check('RH13 hodnota 10 (preklep misto 0.10) spadne na fallback 0.10', await zDb('10') === 0.10, String(await zDb('10')));
+check('RH14 hodnota 0.5 projde jako 50 %', await zDb('0.5') === 0.5, String(await zDb('0.5')));
+check('RH15 hodnota -1 spadne na fallback 0.10', await zDb('-1') === 0.10, String(await zDb('-1')));
+check('RH16 hodnota 0.10 projde beze zmeny', await zDb('0.10') === 0.10, String(await zDb('0.10')));
+check('RH17 chybejici radek v app_config = fallback 0.10', await zDb(undefined) === 0.10, String(await zDb(undefined)));
+check('RH18 sazba partnera nad 100 % se taky zahodi (0, ne 12)',
+  sazbaProvize({ product: 'academy', partnerRate: 12, configRate: null }) === 0, '');
+check('RH19 sazba presne 1 (100 %) je jeste platna',
+  sazbaProvize({ product: 'coaching', partnerRate: 0.2, configRate: 1 }) === 1, '');
+
 check('RH12 na 59 500 Kc dela provize 5 950 Kc',
   Math.round(59500 * sazbaProvize({ product: 'coaching', partnerRate: 0.20, configRate: null }) * 100) / 100 === 5950, '');
 

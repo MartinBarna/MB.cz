@@ -32,8 +32,9 @@ export type SazbaVstup = {
  * - `coaching`: sazba z `app_config`, jinak 10 %. Sazba partnera se ignoruje.
  * - ostatní produkty: sazba partnera beze změny (0, když chybí).
  *
- * Záporná ani nečíselná hodnota se nikdy nevrátí: záporná provize by z výplaty
- * partnera udělala dluh a `NaN` by se do DB zapsal jako prázdno.
+ * Vrácená hodnota je vždy podíl mezi 0 a 1. Záporná, nečíselná ani větší než 1 se
+ * nikdy nevrátí: záporná provize by z výplaty partnera udělala dluh, `NaN` by se do DB
+ * zapsal jako prázdno a `10` místo `0.10` by vyplatilo desetinásobek ceny.
  */
 export function sazbaProvize(vstup: SazbaVstup): number {
   // ⛔ `Number(null)` je NULA, ne NaN. Bez téhle explicitní kontroly by chybějící klíč
@@ -45,11 +46,19 @@ export function sazbaProvize(vstup: SazbaVstup): number {
   return cislo(vstup.partnerRate) ?? 0;
 }
 
-/** Nezáporné konečné číslo, nebo `null`. Prázdno, `null` a nesmysl dopadnou stejně. */
+/**
+ * Sazba jako PODÍL, nebo `null`. Prázdno, `null` i nesmysl dopadnou stejně.
+ *
+ * ⛔⛔ MEZE JSOU 0 AŽ 1 (tedy 0 % až 100 %), protože v DB je sazba podíl, ne procento.
+ *    Kdyby někdo napsal do `app_config` hodnotu `10` v dobré víře, že zapisuje deset
+ *    procent, provize by vyšla DESETINÁSOBEK ceny: z Diamondu na 6 měsíců (59 500 Kč)
+ *    by partnerovi vzniklo 595 000 Kč k výplatě. Hodnota mimo meze se proto zahazuje
+ *    přesně jako nesmysl a volající spadne na fallback, ne na to číslo.
+ */
 function cislo(v: number | null | undefined): number | null {
   if (v === null || v === undefined) return null;
   const n = Number(v);
-  return Number.isFinite(n) && n >= 0 ? n : null;
+  return Number.isFinite(n) && n >= 0 && n <= 1 ? n : null;
 }
 
 /**
@@ -66,7 +75,8 @@ export async function nactiSazbuKoucinku(admin: any): Promise<number | null> {
       .from("app_config").select("value").eq("key", "provize_koucink").maybeSingle();
     if (data?.value === null || data?.value === undefined || data?.value === "") return null;
     const n = Number(String(data.value).trim().replace(",", "."));
-    return Number.isFinite(n) && n >= 0 ? n : null;
+    // Tytéž meze jako v `cislo()`: `10` místo `0.10` je překlep, ne desetinásobná provize.
+    return Number.isFinite(n) && n >= 0 && n <= 1 ? n : null;
   } catch {
     return null;
   }
