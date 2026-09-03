@@ -52,6 +52,15 @@ import {
   koucinkNazev,
   onboardKoucink,
 } from "../_shared/koucink-onboarding.ts";
+// ⚠️ Deploy téhle funkce nese i `_shared/provize.ts` (sazba provize z koučinku).
+import {
+  PRESKOCENO_DB_CHYBA,
+  duvodPreskoceniProvize,
+  kontrolovatRadekProduktu,
+  nactiSazbuKoucinku,
+  sazbaProvize,
+  vetaProvizeRucne,
+} from "../_shared/provize.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -1049,6 +1058,11 @@ async function atribuujReferral(
   orderId: string | null,
   // deno-lint-ignore no-explicit-any
   session: any = null,
+  /**
+   * Jen u koučinku: měl ten člověk už PŘED tímhle nákupem zaplacený koučink přes Stripe?
+   * Musí se zjistit PŘED zápisem nároku, jinak vidíme řádek z právě probíhající platby.
+   */
+  uzPlatilDriv: boolean | null = false,
 ): Promise<string> {
   try {
     const email = buyerEmail.toLowerCase().trim();
@@ -1118,7 +1132,18 @@ async function atribuujReferral(
     const owner = nalez.owner;
     if (owner === email) return "self-referral";
     const partnerType = nalez.partnerType;
-    const sazbaJednoraz = nalez.sazba;
+    // ⭐ SAZBA U KOUČINKU NENÍ SAZBA PARTNERA (rozhodnutí Martina 3. 9. 2026):
+    // je to 10 % z `app_config.provize_koucink`. U ostatních produktů se nemění nic.
+    // Dotaz do `app_config` se dělá JEN u koučinku affiliate partnera, ať se
+    // ostatním nákupům nepřidává čtení navíc.
+    const sazbaKonfig = produkt === "coaching" && partnerType === "affiliate"
+      ? await nactiSazbuKoucinku(admin)
+      : null;
+    const sazbaJednoraz = sazbaProvize({
+      product: produkt,
+      partnerRate: nalez.sazba,
+      configRate: sazbaKonfig,
+    });
 
     if (orderId) {
       const { data: existing } = await admin.from("referrals").select("id").eq("order_id", orderId).limit(1);
@@ -1131,17 +1156,61 @@ async function atribuujReferral(
     // affiliate chová konzervativně (jedna odměna), jinak by přehraná událost bez
     // payment_intent zapsala dvakrát. (Nález z testu penězi 11. 8. 2026: druhá platba
     // 349 Kč partnerovi tiše nepřipsala nic.)
-    if (partnerType !== "affiliate" || !orderId) {
-      const { data: dup } = await admin
+    //
+    // ⭐ KOUČINK JE VÝJIMKA (rozhodnutí Martina 3. 9. 2026 ráno): provize se platí JEN
+    // Z PRVNÍ PLATBY klienta, 10 % jednorázově. Prodloužení ani další nákup koučinku
+    // provizi nedává, takže se kontrola dělá i u affiliate S `order_id`.
+    // Bez téhle výjimky by partner u Diamondu na měsíc bral 10 % každý měsíc donekonečna.
+    // ⚠️ Rozhodovací pravidlo je v `_shared/provize.ts` (`duvodPreskoceniProvize`), aby
+    // se dalo otestovat bez nastartování serveru; tady zůstává jen dotaz do DB.
+    const jenPrvniPlatba = produkt === "coaching";
+    const klic = { product: produkt, partnerType, orderId };
+    // ⛔⛔ CHYBA ČTENÍ NENÍ „NEMÁ ŘÁDEK" (revize 3. 9. 2026). `supabase-js` výjimku
+    //    nevyhazuje, chybu vrací v `error`, takže původní `!!(dup && dup.length)`
+    //    z výpadku DB tiše udělal „je to první nákup" a provizi VYPLATIL.
+    //    `null` = nevíme, a nevíme znamená nezapisovat.
+    let maRadekProdukt: boolean | null = false;
+    if (kontrolovatRadekProduktu(klic)) {
+      const { data: dup, error: dupErr } = await admin
         .from("referrals").select("id").eq("buyer_email", email).eq("product", produkt).limit(1);
-      if (dup && dup.length) return "duplicita-produkt";
+      maRadekProdukt = dupErr ? null : !!(dup && dup.length);
     }
-
+    // DRUHÁ POJISTKA U KOUČINKU: řádek v `referrals` vznikne jen tehdy, když první nákup
+    // přišel s affiliate kódem. Kdo si koučink koupil přes Stripe DŘÍV bez kódu a teď se
+    // vrací s kódem partnera, taky není nový klient. Rozhoduje stav nároku PŘED tímhle
+    // nákupem, který zjistil volající (`zpracujKoucink` čte `entitlements` ještě před
+    // zápisem, jinak by viděl řádek, který právě sám založil).
+    // ⛔ Ruční granty z adminu se za platbu NEPOČÍTAJÍ, viz `koucinkUzPlatilPresStripe`.
     // Kolik člověk reálně zaplatil. Ze SESSION, ne z ceníku: slevový kód částku mění
     // a u affiliate se z ní počítá provize, takže špatné číslo = špatně vyplacené peníze.
+    // ⚠️ Počítá se PŘED rozhodnutím o přeskočení: když provizi nepřiznáme kvůli chybě DB,
+    //    musí být částka v alertu, jinak ji Martin nemá z čeho dopočítat.
     const castkaKc = session && Number.isFinite(Number(session.amount_total))
       ? Math.round(Number(session.amount_total)) / 100
       : null;
+
+    const preskocit = duvodPreskoceniProvize({ ...klic, maRadekProdukt, uzPlatilDriv });
+    if (preskocit === PRESKOCENO_DB_CHYBA) {
+      // ⛔⛔ FAIL-CLOSED: provize se nezapisuje, protože nevíme, jestli vzniknout měla.
+      //    Alert je tady jediná pojistka, jinak by opomenutá provize byla TICHÁ.
+      const veta = vetaProvizeRucne(ref, castkaKc);
+      console.log("🔴 " + veta + " (produkt " + produkt + ", kupující " + email + ")");
+      await alertAdmin("🔴 Stripe: PROVIZE NEPŘIZNÁNA, DB neodpověděla", {
+        email, produkt, kod: ref, castka: castkaKc === null ? "neznámá" : castkaKc + " Kč",
+        co_delat: "⛔ Ověř v `referrals`, jestli tenhle nákup provizi zakládá, a zapiš ji ručně. "
+          + "Funkce ji ZÁMĚRNĚ nezapsala, aby nevyplatila provizi, která vzniknout neměla.",
+      });
+      return veta;
+    }
+    if (preskocit) {
+      if (jenPrvniPlatba) {
+        console.log(
+          "provize přeskočena: opakovaný nákup koučinku ("
+            + (maRadekProdukt ? "už má řádek v referrals" : "dřívější platba přes Stripe") + ")",
+        );
+      }
+      return preskocit;
+    }
     // ⚠️ Member dostává KREDIT v pevné částce (ODMENA), affiliate PROVIZI procentem
     // z ceny. Když sazba u affiliate chybí, spadne se na ODMENU místo na nulu:
     // nula by tiše znamenala „prodal a nedostane nic".
@@ -1367,6 +1436,31 @@ async function posliDoklad(email: string, obj: any, def: JednorazovyProdukt): Pr
 // je konec období to hlavní, co se prodává; skrz `udelDozivotni` by klient dostal
 // koučink navěky a nikde by to nekřiklo.
 //
+/**
+ * Zaplatil ten člověk koučink přes Stripe UŽ DŘÍV, před tímhle nákupem?
+ *
+ * ⭐ Rozhoduje o provizi: ta se od 3. 9. 2026 platí jen z PRVNÍ platby klienta.
+ *
+ * ⛔ RUČNÍ GRANT Z ADMINU SE ZA PLATBU NEPOČÍTÁ. Všech 17 dnešních koučinkových nároků
+ *    založil admin ručně a žádný z nich nešel přes web; kdyby se braly jako „už platil",
+ *    partner by u prvního opravdového prodeje takovému člověku nedostal nic.
+ *    Rozlišuje se dvěma znaky, které ruční grant nemá:
+ *      1) `source` začíná na `stripe` (KATALOG zapisuje `stripe-koucink`; stejné pravidlo
+ *         používá i RPC `koucink_kapacita` v `koucink-stripe.sql`),
+ *      2) vyplněné `stripe_payment_intent` z JINÉ platby, než je ta právě probíhající.
+ *    Druhý znak je pojistka pro případ, že by se `source` časem přejmenoval.
+ */
+function koucinkUzPlatilPresStripe(
+  // deno-lint-ignore no-explicit-any
+  narok: any,
+  pi: string | null,
+): boolean {
+  if (!narok) return false;
+  if (String(narok.source ?? "").startsWith("stripe")) return true;
+  const drivejsiPi = narok.stripe_payment_intent ? String(narok.stripe_payment_intent) : "";
+  return drivejsiPi !== "" && drivejsiPi !== (pi ?? "");
+}
+
 // ⛔ PRODLOUŽENÍ SE POČÍTÁ OD KONCE STÁVAJÍCÍHO OBDOBÍ, ne ode dneška. Kdo si měsíc
 // před koncem dokoupí dalších šest, nesmí o ten zbytek přijít.
 //
@@ -1380,10 +1474,16 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
   // ⛔ ČTE SE PŘED ZÁPISEM. Kdo si tuhle hodnotu přečte až po upsertu, porovná platbu
   //    sama se sebou, vyjde mu shoda a druhý nákup vyhodnotí jako přehranou událost.
   //    Přesně tahle třída chyby stála 7. 8. 2026 Martina zaplacený balíček bez doručení.
-  const { data: stavajici } = await admin
+  const { data: stavajici, error: stavErr } = await admin
     .from("entitlements")
-    .select("active, expires_at, stripe_payment_intent")
+    .select("active, expires_at, stripe_payment_intent, source")
     .eq("email", email).eq("product", "coaching").maybeSingle();
+  // ⛔ ČTE SE TAKY PŘED ZÁPISEM: provize z koučinku je jen z PRVNÍ platby, a `onboardKoucink`
+  //    níž nárok přepíše na `stripe-koucink` s tímhle `payment_intent`. Kdyby se to zjišťovalo
+  //    až potom, každý první nákup by vypadal jako opakovaný a partner by nedostal nic.
+  // ⛔ `null` (ne `false`) při chybě čtení: fail-closed, provize se radši nezapíše
+  //    a Martin dostane alert. Viz `duvodPreskoceniProvize`.
+  const uzPlatilDriv = stavErr ? null : koucinkUzPlatilPresStripe(stavajici, pi);
 
   if (pi && stavajici?.stripe_payment_intent === pi) {
     return json({ ok: true, produkt: "coaching", stav: "prehrana-udalost", payment_intent: pi });
@@ -1456,7 +1556,7 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
   const cref = rozdelClientRef(
     typeof obj.client_reference_id === "string" ? obj.client_reference_id : null,
   );
-  const referral = await atribuujReferral(email, "coaching", cref.kod || null, pi, obj);
+  const referral = await atribuujReferral(email, "coaching", cref.kod || null, pi, obj, uzPlatilDriv);
   const atribuce = await zapisAtribuciNakupu(email, "coaching", cref.atribuce);
 
   // ⛔ KAPACITA JE OBCHODNÍ STROP, NE ZÁMEK. Odkaz zná každý, kdo si ho uložil, takže
@@ -1474,9 +1574,18 @@ async function zpracujKoucink(email: string, obj: any, def: JednorazovyProdukt):
     });
   }
 
+  // ⭐ PROVIZE PATŘÍ DO ALERTU (revize 3. 9. 2026). Do té doby se stav provize dozvěděl
+  // jen ten, kdo si přečetl JSON odpověď webhooku, tedy nikdo. Přeskočená provize
+  // u opakovaného nákupu je normální stav podle pravidla, ale Martin ho musí vidět:
+  // partner se ho zeptá, proč mu za druhý nákup nic nepřišlo.
+  const provizePoznamka = referral === "koucink-jen-prvni-platba"
+    ? "opakovaný nákup, provize podle pravidla nevzniká (10 % jen z první platby klienta)"
+    : referral;
+
   await alertAdmin(def.alertPoNakupu ?? "Stripe: zaplacený koučink", {
     email,
     produkt: koucinkNazev(k.plan, k.months),
+    provize: provizePoznamka,
     plati_do: expiresAt ? datumCesky(expiresAt) : "beze změny (přístup bez konce)",
     novy_klient: novyKlient ? "ano" : "ne (prodloužení)",
     academy_po_3m: k.plan === "diamond" && novyKlient

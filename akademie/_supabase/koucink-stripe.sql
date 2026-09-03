@@ -62,7 +62,10 @@ update public.entitlements
 --    tiše přijde. Čtyři aktivní partneři mají sazbu 0,20, takže u Diamondu
 --    na 6 měsíců jde o 11 900 Kč z jednoho prodeje.
 -- ⚠️ Jestli se provize z koučinku vyplácet má a v jaké výši, rozhoduje Martin.
---    Tahle migrace jen umožňuje zápis; sazby zůstávají ty, co má partner v `referral_codes`.
+--    Tahle migrace jen umožňuje zápis.
+-- ⭐ ROZHODNUTO 3. 9. 2026: z koučinku je provize 10 %, NE sazba partnera z
+--    `referral_codes`. Číslo leží v `app_config` pod klíčem `provize_koucink`
+--    (migrace `provize-koucink.sql`), webhook ho čte přes `_shared/provize.ts`.
 do $$
 begin
   if exists (select 1 from pg_constraint where conname = 'referrals_product_check') then
