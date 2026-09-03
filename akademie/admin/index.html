@@ -1183,17 +1183,35 @@
       pripojOdebraniTieru();
     }
 
-    // Co appka odpověděla o jednom místě (předplatné / čekající nárok). Věty jsou
-    // schválně konkrétní: „nepovedlo se" by zakrylo, že tam prostě nic k odebrání
-    // nebylo, nebo že tam je něco jiného, na co tohle tlačítko sahat nesmí.
-    function tcOffPopis(kod){
-      if(kod==='expiry_set'||kod==='pending_only'||kod==='zruseny') return 'odebráno';
-      if(kod==='jiny_tier') return 'nechal jsem být, má tam jiný tarif';
-      if(kod==='jiny_zdroj') return 'nechal jsem být, přístup je odjinud';
-      if(kod==='uz_zruseny') return 'už bylo zrušené dřív';
-      if(kod==='zadny'||kod==='zadny_zasah') return 'nic k odebrání';
-      return String(kod||'?');
+    // Co appka opravdu udelala. ⛔⛔ NALEZ REVIZE 3. 9. 2026: driv se `pending_only`
+    // prekladalo na „odebrano" a `zadny_zasah` na „nic k odebrani". Obojí umelo LHAT:
+    // platici pres Stripe je proti odebrani chraneny (`stripe_subscription_id is null`
+    // ve WHERE), takze u nej zasah mine 0 radku, a clovek se zdrojem manual / tester /
+    // prevod / rodina-trvaly-pristup pristup dal MA. Martin by se spolehl na vetu
+    // „vypnuto" a napsal to klientovi. Vety proto rozlisuji „nic tam nebylo" od
+    // „je tam pristup, na ktery tohle tlacitko nesmi".
+    function tcOffVetaPredplatne(kod, stav, tierPred){
+      if(kod==='expiry_set') return 'Předplatné: odebráno.';
+      if(kod==='jiny_tier') return 'Předplatné: nechal jsem být, má tam tarif '+(tierPred||'jiný')+'.';
+      // Sem spadne Stripe platba i zdroje, na ktere SQL funkce nesaha (manual, tester,
+      // prevod, rodina-trvaly-pristup). Rozlisuje se podle toho, jestli appka pristup vidi.
+      if(kod==='zadny_zasah'||kod==='pending_only'){
+        if(stav==='aktivni'||stav==='vyprselo'){
+          return 'Předplatné: NEPODAŘILO se vypnout. Přístup drží něco, na co tohle tlačítko sahat nesmí: buď platba přes Stripe, nebo přístup z jiného zdroje. Vyřeš to v kartě klienta.';
+        }
+        return 'Předplatné: žádné z Academy ani z adminu. Pokud v appce přístup přesto vidí, má ho odjinud (zkušebka, Stripe, ruční přístup) a tohle tlačítko na něj nedosáhne.';
+      }
+      return 'Předplatné: '+String(kod||'?');
     }
+    function tcOffVetaNarok(kod){
+      if(kod==='zruseny') return 'Čekající nárok: zrušen.';
+      if(kod==='jiny_tier') return 'Čekající nárok: nechal jsem být, je na jiný tarif.';
+      if(kod==='jiny_zdroj') return 'Čekající nárok: nechal jsem být, je z jiného zdroje.';
+      if(kod==='uz_zruseny') return 'Čekající nárok: byl zrušený už dřív.';
+      if(kod==='zadny') return 'Čekající nárok: žádný.';
+      return 'Čekající nárok: '+String(kod||'?');
+    }
+
 
     // 🎟️ Odebrani rucne udeleneho tieru. ⛔ Bere zpatky JEN tenhle tier a jen grant
     // z adminu nebo Academy; Stripe predplatne, koucink ani rodinny pristup ne.
@@ -1218,8 +1236,16 @@
             stav.textContent=(window.AdminRozbory?window.AdminRozbory.chybaPopis(j.duvod):String(j.duvod||'Nepovedlo se.'));
             return;
           }
-          stav.textContent='Předplatné: '+tcOffPopis(j.predplatne)+'. Čekající nárok: '+tcOffPopis(j.cekajici_narok)+'.';
-          toast('Přístup vypnut');
+          // Blokujici stav z revize: ukonceni predplatneho by jako vedlejsi ucinek
+          // prepsalo cekajici narok, na ktery se sahat nesmi. Neudelalo se NIC.
+          if(j.predplatne==='narok_by_se_prepsal'){
+            stav.textContent='Nesáhl jsem na nic. U toho e-mailu visí čekající nárok na jiný tarif nebo z jiného zdroje a vypnutí by ho přepsalo. Tohle je potřeba vyřešit ručně.';
+            return;
+          }
+          stav.textContent=tcOffVetaPredplatne(j.predplatne,j.stav_pred,j.tier_pred)+' '+tcOffVetaNarok(j.cekajici_narok);
+          // Toast jen kdyz se opravdu neco zmenilo; jinak by „hotovo" prekrylo vetu,
+          // ktera rika, ze se nestalo nic.
+          if(j.predplatne==='expiry_set'||j.cekajici_narok==='zruseny') toast('Přístup vypnut');
         }).catch(function(){ b.disabled=false; stav.textContent='Nepovedlo se, zkus to znovu.'; });
       });
     }
