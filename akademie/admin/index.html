@@ -248,6 +248,38 @@
         <div id="prehledBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
+      <!-- 🧾 KONTROLA OD MARTINA (3. 9. 2026). Fronta konceptu ctrnactidennich rozboru
+           pro tarif „VIP + Kontrola od Martina". Koncept vyrabi automat v appce,
+           odesila ho VYHRADNE Martin odsud. Logika je v `rozbory.js`, tady je jen
+           misto, kam se to pripoji. ⛔ Odeslani je nevratne, proto dvoukrokove
+           potvrzeni; ⛔ zadne hromadne odeslani. -->
+      <div class="traf" id="rozbory" style="display:none;border-color:rgba(235,177,44,.45);">
+        <h3>🧾 Kontrola od Martina</h3>
+        <div class="sub">Rozbory ke kontrole · text jde klientovi pod tvým jménem, odesílá se až po tvém potvrzení</div>
+        <div id="rozboryBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+        <!-- 🎟️ RUCNI PRISTUP DO APPKY S VYSLOVNYM KONCEM.
+             ⛔⛔ MESICE JSOU POVINNE. Grant bez data konce znamena v databazi appky
+             pristup NAVEKY (vetev `else null` v grant_app_access) a u tarifu za
+             1 990 Kc/mesic by jeden klik rozdal nejdrazsi plan zdarma. Appka takovy
+             grant od 3. 9. 2026 rovnou odmita; datum pocita server z tohohle pole. -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.9rem 0 .2rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.08);">
+          <span class="muted" style="font-size:.85rem;font-weight:700;">🎟️ Dát přístup do appky:</span>
+          <input type="email" id="tcgEmail" placeholder="e-mail klienta" autocomplete="off" style="min-width:200px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;">
+          <select id="tcgTier" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+            <option value="ai_kontrola">VIP + Kontrola od Martina</option>
+          </select>
+          <select id="tcgMesice" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+            <option value="1">na 1 měsíc</option>
+            <option value="3">na 3 měsíce</option>
+            <option value="6">na 6 měsíců</option>
+            <option value="12">na 12 měsíců</option>
+          </select>
+          <button class="mlogbtn" id="tcgBtn">Zapnout přístup</button>
+          <span class="muted" id="tcgStav" style="font-size:.8rem;"></span>
+        </div>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Přístup skončí sám. Prodloužit ho jde stejným tlačítkem, delší už udělený přístup se nezkracuje. Samotné VIP se dává v kartě klienta (Academy přístup), tohle je jen tarif s rozbory.</p>
+      </div>
+
       <div class="traf" id="kli" style="display:none;border-color:rgba(235,177,44,.45);">
         <h3>🤝 Klienti koučinku — klientská sekce</h3>
         <div class="sub">Týdenní reporty, dotazníky, dokumenty a poznámky · ⚠️ = report chybí déle než 8 dní</div>
@@ -668,7 +700,7 @@
     function getSessionRetry(tries){
       sb.auth.getSession().then(function(res){
         var s=res&&res.data&&res.data.session;
-        if(!s){ if(tries<6){ return setTimeout(function(){getSessionRetry(tries+1);},350); } location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'); return; }
+        if(!s){ if(tries<6){ return setTimeout(function(){getSessionRetry(tries+1);},350); } location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'+(location.search||'')); return; }
         token=s.access_token; mojeEmail=(s.user&&s.user.email)||''; load();
       });
     }
@@ -700,7 +732,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadTcPrehled(); loadNavstevnost();
+        renderStats(st.j); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
         sekInfo('kontakty',ALL.length+' kontaktů');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
@@ -1104,6 +1136,44 @@
         if(s) s.textContent = 'Změny a průměry za posledních ' + (o.j.okno_dnu || 30) + ' dní, odchylka proti zadání, které klientovi nastavuješ';
         renderPrehled();
       }).catch(function(){ cardFail('prehled','prehledBody'); });
+    }
+
+    // 🧾 KONTROLA OD MARTINA (3. 9. 2026)
+    // ⛔ Karta se ukazuje, i kdyz je fronta prazdna: kdyby se schovavala, nesla by
+    //    odlisit prazdna fronta od rozbite karty (a proklik z mailu by skoncil
+    //    na strance, kde nic neni).
+    // ⛔ Proklik z mailu `?rozbor=<id>` doroluje na konkretniho cloveka. Adresa se
+    //    z radku prohlizece NEMAZE: po prihlaseni se stranka nacita znovu.
+    function loadRozbory(){
+      var karta=$('rozbory'); if(!karta||!window.AdminRozbory) return;
+      karta.style.display='';
+      var m=/[?&]rozbor=([0-9a-fA-F-]{36})/.exec(location.search);
+      window.AdminRozbory.mountFronta({
+        box: $('rozboryBody'), api: api, toast: toast, zvyraznit: m ? m[1] : null,
+      });
+      pripojGrantTieru();
+    }
+
+    // 🎟️ Rucni grant tieru do appky s vyslovnym koncem. Datum pocita server
+    // (`tc_grant_tier`) z poctu mesicu; tady se jen posbira zadani.
+    function pripojGrantTieru(){
+      var b=$('tcgBtn'); if(!b) return;
+      b.addEventListener('click',function(){
+        if(b.disabled) return;
+        var email=($('tcgEmail').value||'').trim().toLowerCase();
+        var stav=$('tcgStav');
+        if(!email||email.indexOf('@')<0){ stav.textContent='Zadej e-mail klienta.'; return; }
+        b.disabled=true; stav.textContent='Zapínám…';
+        api({action:'tc_grant_tier',email:email,tier:$('tcgTier').value,mesice:Number($('tcgMesice').value)}).then(function(o){
+          b.disabled=false;
+          var j=o.j||{};
+          if(!j.ok){ stav.textContent=(window.AdminRozbory?window.AdminRozbory.chybaPopis(j.duvod):String(j.duvod||'Nepovedlo se.')); return; }
+          // `pending` = clovek se jeste nezaregistroval, narok na nej ceka. Neni to chyba.
+          stav.textContent=(j.result==='pending'?'Nárok uložen, naskočí mu po registraci.':'Hotovo, přístup platí.')
+            +' Do '+czDatum(String(j.expires_at||'').slice(0,10));
+          toast('Přístup nastaven');
+        }).catch(function(){ b.disabled=false; stav.textContent='Nepovedlo se, zkus to znovu.'; });
+      });
     }
 
     // 📥 REPORTY KE ZPRACOVÁNÍ (2. 9. 2026)
@@ -1594,6 +1664,13 @@
       // data z appky Tvůj Coach (bonus vedle reportů)
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach: reálný zápis jídla</h4>'
         +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky (14 dní)</button> <span class="muted" style="font-size:.8rem;">Pokud klient zapisuje v naší appce, uvidíš tady jeho reálná data automaticky.</span></div>';
+      // 🧾 KONTROLA OD MARTINA: posledni rozbor tohohle klienta.
+      // ⛔ Tady se schvalne NEODESILA. Odesila se v karte „Kontrola od Martina" vys,
+      //    kde je videt cely text a dvoukrokove potvrzeni.
+      // ⛔ Klient bez appky NENI chyba: vetsina koucinkovych klientu appku nema,
+      //    napise se to slovy.
+      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🧾 Kontrola od Martina</h4>'
+        +'<div id="kdRozbory"><p class="muted" style="font-size:.8rem;margin:0;">Načítám rozbory…</p></div>';
       // poznámky kouče
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🗒️ Tvoje poznámky (klient je nevidí)</h4>'
         +'<div style="display:flex;gap:8px;margin:.3rem 0 .5rem;"><input type="text" id="kdNote" placeholder="nová poznámka…" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;"><button class="mlogbtn" id="kdNoteSave">Uložit</button></div>';
@@ -1624,6 +1701,9 @@
       $('kdetBody').innerHTML=h;
       // handlery
       $('kdCsv').addEventListener('click',function(e){ e.preventDefault(); exportKlientCsv(); });
+      // Rozbory se dotahuji az po vykresleni karty: je to volani do appky pres most
+      // a vypadek NESMI shodit kartu klienta (modul si hlasku vypise sam).
+      if(window.AdminRozbory) window.AdminRozbory.mountKlient({ box: $('kdRozbory'), api: api, email: email });
       // 📈 přepínače vývoje: mění jen pohled na už načtená data, nic se nedotahuje
       Array.prototype.forEach.call(document.querySelectorAll('.kdvokno'),function(b){
         b.addEventListener('click',function(){
@@ -3239,6 +3319,7 @@
   <script src="/akademie/admin/onboarding.js?v=20260902a" defer></script>
   <!-- Sablona reakce na tydenni report: tvar mailu + odkaz do Gmailu. NIC neodesila. -->
   <script src="/akademie/admin/report-reakce-sablona.js?v=20260902a" defer></script>
+  <script src="/akademie/admin/rozbory.js?v=20260903a" defer></script>
   <script src="/akademie/admin/pruvodce.js?v=20260902a" defer></script>
   <script src="/akademie/admin/trenink.js?v=20260902a" defer></script>
   <script src="/assets/scroll-top.js?v=g5" defer></script>
