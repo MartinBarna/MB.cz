@@ -154,6 +154,7 @@
         <div class="targets" id="targets"></div>
         <div id="meals"></div>
         <div class="mt" id="daytotwrap" style="border-radius:12px;border:1px solid var(--line);margin-top:6px;"><b style="color:#fff;">Den celkem</b><span id="daytot"></span></div>
+        <p class="note" id="dayWarnNote" hidden></p>
         <p class="note">Hodnoty jsou orientační (běžné potravinové tabulky). Generátor je výchozí bod, uprav porce podle klienta, chutí a reality. Cílové makro = ze vstupních údajů, sestava ±10 %. Tlačítkem ⇄ u položky ji vyměníš za jinou ze stejné kategorie (gramáž se dopočítá na stejné kalorie).</p>
         <div class="actions no-print">
           <button class="btn" id="regen">↻ Přegenerovat</button>
@@ -218,6 +219,26 @@
       if($('bezLepku').checked) p.bezLepku=true;
       return p;
     }
+    // [KETO-OPRAVA 2026-09-03, port appky] `assembleDay`/`assembleWeek` umí vrátit
+    // `warnings` (den mimo kalorický cíl o víc než 5 %, nebo keto den bez sacharidové
+    // přílohy pod cílem), ale nikde se nezobrazovalo. Text NENÍ 1:1 přepis `plan.warnings`
+    // (ten je technický, kcal na jednotky), je to lidská věta s procenty, stejná jako
+    // v appce (src/app/client/meal-plan.tsx).
+    function dayWarnText(plan){
+      if(!plan.warnings || !plan.warnings.length) return null;
+      if(!(plan.targets.kcal>0)) return null;
+      var pct=Math.abs(plan.totals.kcal-plan.targets.kcal)/plan.targets.kcal*100;
+      var pctStr=pct.toFixed(1).replace('.', ',');
+      var smer=(plan.totals.kcal<plan.targets.kcal)?'pod':'nad';
+      var text='Den vyšel o '+pctStr+' % '+smer+' cílem. U téhle kombinace diety a počtu jídel to '+
+        'z běžných potravin líp nesložím, přidej si tuk nebo bílkovinu podle chuti.';
+      var ketoOn=$('keto').checked;
+      var veganVeg=$('vegan').checked || $('vegetarian').checked;
+      if(ketoOn && veganVeg){
+        text+=' Keto bez živočišných zdrojů se skládá špatně, zvaž víc jídel denně.';
+      }
+      return text;
+    }
     function mealHtml(m, mi, withSwap){
       var html='<div class="meal"><h3>'+m.name+' <small>'+fmt(m.totals.kcal)+' kcal</small></h3><table>';
       m.items.forEach(function(it, ii){
@@ -260,6 +281,9 @@
       $('meals').innerHTML=html;
       $('daytotwrap').style.display='';
       $('daytot').textContent=macros(plan.totals);
+      var wt=dayWarnText(plan);
+      var wn=$('dayWarnNote');
+      if(wn){ wn.hidden=!wt; wn.textContent=wt||''; }
       renderCommon(plan.targets);
     }
     function renderWeek(days){
@@ -267,6 +291,8 @@
       var html='';
       days.forEach(function(d, di){
         html+='<h3 style="color:#fff;margin:'+(di?'1.5rem':'0.4rem')+' 0 .6rem;font-size:1.12rem;">Den '+(di+1)+' <small style="color:var(--muted);font-weight:600;">'+macros(d.totals)+'</small></h3>';
+        var dwt=dayWarnText(d);
+        if(dwt) html+='<p class="note">'+esc(dwt)+'</p>';
         d.meals.forEach(function(m){ html+=mealHtml(m, -1, false); });
       });
       // nákupní seznam za celý týden (sloučené položky, po odděleních)
@@ -280,6 +306,7 @@
       html+='</table></div><p class="note">Gramáže v syrovém stavu podle jídelníčku; u kusového zboží je přepočet na kusy orientační, zaokrouhli podle balení v obchodě.</p>';
       $('meals').innerHTML=html;
       $('daytotwrap').style.display='none';
+      var wn2=$('dayWarnNote'); if(wn2) wn2.hidden=true;
       renderCommon(days[0].targets);
     }
     function generate(newSeed){

@@ -130,8 +130,14 @@ function assert(cond, area, msg) { if (cond) ok(); else fail(area, msg); }
             const pdev = plan.totals.p - t.protein;
             if (dev > worstKcal) { worstKcal = dev; worstCase = `kcal ${Math.round(plan.totals.kcal)}/${t.kcal} (${sex},${goal},${w}kg,${mealsN}j,${JSON.stringify(pref)})`; }
             if (Math.abs(pdev) > Math.abs(worstP)) worstP = pdev;
-            assert(dev <= 0.12, 'meal-assemble', `kcal odchylka ${(dev * 100).toFixed(1)} % — ${sex},${goal},${w}kg,${mealsN} jídel,${JSON.stringify(pref)}`);
-            assert(pdev >= -18 && pdev <= 40, 'meal-assemble', `protein ${Math.round(plan.totals.p)} vs cíl ${t.protein} — ${sex},${goal},${w}kg,${mealsN}j`);
+            // ⛔ [vlna 2, 2026-09-03] MINOUT CÍL SMÍ JEN DEN, KTERÝ TO ŘEKNE.
+            // R8 zakázala dorovnávat kalorie 50 g oleje v jedné položce (strop 15 g) a R9
+            // dala příloze strop 300 g vařené hmotnosti. Objemové profily (115 kg, nárůst,
+            // 3 jídla = 4 598 kcal) se z realistických porcí prostě nesloží. Engine takový
+            // den nově vrací s `warnings`; tichý miss je to, co má tenhle test chytat.
+            const rekl = Array.isArray(plan.warnings) && plan.warnings.length > 0;
+            assert(dev <= 0.12 || rekl, 'meal-assemble', `kcal odchylka ${(dev * 100).toFixed(1)} % bez varování - ${sex},${goal},${w}kg,${mealsN} jídel,${JSON.stringify(pref)}`);
+            assert((pdev >= -18 && pdev <= 40) || rekl, 'meal-assemble', `protein ${Math.round(plan.totals.p)} vs cíl ${t.protein} bez varování - ${sex},${goal},${w}kg,${mealsN}j`);
             for (const meal of plan.meals) for (const it of meal.items) {
               assert(it.grams >= 5 && it.grams <= 700, 'meal-assemble', `gramáž ${it.food.name}=${it.grams}`);
               if (prefs.vegetarian) assert(!['meat', 'fish'].includes(it.food.cat), 'meal-prefs', `vegetarián dostal ${it.food.name} (${it.food.cat})`);
