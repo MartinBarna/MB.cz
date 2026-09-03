@@ -4,6 +4,7 @@
 // Shrnuje VCEREJSEK + aktualni stav: leadi, maily, prodeje (simpleshop),
 // fronta, odstoupeni, affiliate, chyby. Cisla pocita kod, zadne odhady.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { hlidkaCisla } from "./hlidky.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -16,7 +17,7 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy"]);
+  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v"]);
   const cmap = Object.fromEntries((cfg ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const provided = req.headers.get("x-drip-secret") || "";
   if (!cmap.drip_invoke_secret || provided !== cmap.drip_invoke_secret) return json({ error: "unauthorized" }, 401);
@@ -414,6 +415,21 @@ Deno.serve(async (req) => {
     alerts += warn("Kontrola odkazů se nedá přečíst: " + String(e).slice(0, 120));
   }
 
+  // --- 🔭 HLÍDKA: presunuto z drahe Claude rutiny (3. 9. 2026) ------------
+  // "cisla nezamrzla": Academy app_config.pocet_cisel_mereno_v, plni ho cron
+  // cisla-sync-6h. Anomalie (chybi/nesmyslne/stare > 26 h) jde jako alert NAHORU,
+  // radek do sekce Hlidky je vzdy.
+  // ⛔ ROZHODNUTI SEFA 3. 9. 2026: hlidka "prihlaseni appky" se do mailu NEDAVA
+  // (radek "nelze merit" kazdy den byl sum). Prihlaseni pokryva samostatna sonda
+  // kanarka, ktera se sama prihlasuje testovacim uctem kazde 2 h.
+  const hlidkaCislaR = hlidkaCisla(cmap.pocet_cisel_mereno_v, now.getTime());
+  if (hlidkaCislaR.alertText) alerts += warn(hlidkaCislaR.alertText);
+  const hlidkyHtml =
+    `<h3 style="margin:18px 0 6px;font-size:15px">🔭 Hlídky</h3>` +
+    `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
+    row("Čísla", hlidkaCislaR.radek) +
+    `</table>`;
+
   // --- 🤝 KOUČINK: co dnes potřebuje Martinovu ruku -----------------------
   // ⛔ PŘIBYLO 1. 9. 2026. Do té doby neměl ranní přehled o koučinkových klientech
   // ANI JEDEN ŘÁDEK (ověřeno greppem), přestože je to nejdražší produkt a jediný,
@@ -626,7 +642,7 @@ Deno.serve(async (req) => {
     row("Affiliate čeká na potvrzení", String(refPending)) +
     row("Zakládající členové Academy", founders + " / 50 · zbývá " + foundersLeft) +
     row("Odkazy v mailech a na webu", odkazyRadek) +
-    `</table>` + koucinkHtml +
+    `</table>` + hlidkyHtml + koucinkHtml +
     `<p style="margin:14px 0 4px;color:#666;font-size:13px">Leadi 7 dní: ${trendStr || "—"}</p>` +
     `<p style="margin:14px 0 0;font-size:13px"><a href="https://martinbarna.cz/akademie/admin/" style="color:#c45e00">Otevřít admin →</a></p></div>`;
 
