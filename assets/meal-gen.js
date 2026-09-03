@@ -211,7 +211,13 @@
   // pečivo a zelenina, ke sladkému (tvaroh, skyr, cottage, jogurt) vločky, müsli nebo
   // pečivo a ovoce. Co není sladké, bere se jako slané (maso, ryba, tofu → pečivo a zelenina).
   // ⛔ Táž logika je v appce, hlídá parita.
-  var SLADKY_ZAKLAD = /tvaroh|skyr|cottage|jogurt|syrovatkovy-protein|proteinovy-pudink|kefir|podmasli|acidofilni|^mleko/;
+  // [oprava po revizi 2026-09-03] Kotva `^mleko` mijela `kysane-mleko` (bezna potravina),
+  // `ryzove-mleko`, `sojove-mleko-cokoladove`, `ovesne-mleko-barista` i `mandlove-mleko-slazene`.
+  // Ty pak spadly do SLANE vetve a dostaly pecivo a zeleninu; revize namerila zive
+  // Sojove mleko cokoladove 300 g + pohanka + polnicek jako veceri.
+  // Kotva je pryc: v cele DB neni jedina SLANA polozka, ktera by mela `mleko` v id.
+  // ⛔ Stejny regex je v appce, hlida parita-jidelnicku.mjs.
+  var SLADKY_ZAKLAD = /tvaroh|skyr|cottage|jogurt|syrovatkovy-protein|proteinovy-pudink|kefir|podmasli|acidofilni|mleko/;
   // Pečivo jako příloha ke slanému základu. Vločky a müsli tu schválně NEJSOU.
   var PECIVO_RE = /chleb|rohlik|houska|knackebrot|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy/;
   // [R6 2026-09-03] Strop na JEDNO jídlo u pečiva, vloček a müsli. Bez něj vyšel
@@ -541,7 +547,16 @@
         if (kind === 'breakfast' && UZENINA_RE.test(prot.id)) {
           var chybiP = mProt - macrosFor(prot, Math.min(pg, UZENINA_MAX_G)).p;
           if (chybiP >= 8) {
-            var druhy = pickProt(seed + i + 11, SNIDANE_DOPLNEK_PROT);
+            // ⛔ [oprava po revizi 2026-09-03] Druhý zdroj se vybírá PŘÍMO z povolené množiny
+            // (vejce, sýr), ne přes `pickProt`. Ten totiž nejdřív odečte potraviny, které dnes
+            // už padly (`jesteNebyl`), a když tím povolený podseznam vyprázdní, spadne na CELOU
+            // nabídku a vrátí třeba kuřecí prsa. Ta pak neprojdou kontrolou R1 o řádek níž
+            // a snídaně zůstane na 80 g šunky, tedy asi 12 g bílkovin proti cíli jídla.
+            // Změřeno: tahle díra stála 4 z 36 deficitních plánů v `training.test.ts`.
+            // Pestrost nesmí přebít složení jídla, týž princip jako u `sPenalizaci` výš.
+            var doplnkoveDb = db.filter(function (f) { return SNIDANE_DOPLNEK_PROT.test(f.id); });
+            var druhy = pick(doplnkoveDb, 'protein', seed + i + 11, null)
+              || pick(doplnkoveDb, 'dairy', seed + i + 11, null);
             // [R1 2026-09-03] Musí to BÝT vejce nebo sýr, ne jen něco, co není uzenina.
             // `pickProt` má fallback na celou nabídku, takže sem uměla přijít kuřecí prsa
             // nebo tvaroh; obojí je na snídani s šunkou druhý plnohodnotný základ.
@@ -602,9 +617,12 @@
       // [fix 2026-07-22] aromatická zelenina (cibule, česnek, chilli, bylinky…) není samostatná
       // příloha — 150 g cibule k večeři je nesmysl. Do dochucení patří, na talíř jako zelenina ne.
       // ⛔ [oprava po revizi 2026-09-02] Podmínka je TYP jídla, ne podíl kalorií (viz výš).
-      // [R2 2026-09-03] Sladká snídaně zeleninu nedostane. 150 g syrové papriky vedle
-      // manga a müsli je nález syrova zelenina 150g+ k slazke snidani z 12 dnů ze 48.
-      if (!isSnack && !(kind === 'breakfast' && sladkeJidlo)) {
+      // ⛔ [R2, rozšířeno po revizi 2026-09-03] Zeleninu nedostane ŽÁDNÉ sladké jídlo,
+      // ne jen sladká snídaně. Původní podmínka si odporovala se dvěma dalšími místy
+      // (`kamSDoplnkem` a přerozdělení přetíženého jídla), která zeleninu blokují
+      // u sladkého jídla jakéhokoli typu. Revize to změřila na 1152 dnech: 559 zbylých
+      // případů, typicky skyr 250 g + hlíva ústřičná jako oběd. Jedno pravidlo pro tři místa.
+      if (!isSnack && !sladkeJidlo) {
         // [fix 2026-08-06 kolo 3] V keto režimu jen nízkosacharidová zelenina. Táž logika v appce.
         var sideVegDb = db.filter(function (f) {
           return f.cat !== 'veg' || (!/cibul|cesnek|chilli|zazvor|kren|bylink|petrzel|koriandr|kopr|pazitk|medvedi/.test(f.id) && (!lowCarb || f.per100.c <= 5));
@@ -697,10 +715,15 @@
     // 200 g, jinak strop potraviny nebo kategorie. Jedno místo pro všechny ořezy níž,
     // ať se strop nedá obejít tím, že se na kategorii sáhne jinou cestou.
     // ⛔ Táž funkce je v appce (`src/engine/meal-gen-core.ts`), hlídá parita.
+    // Nouzový režim bílkovin, viz STROP_PROT_NOUZE níž.
+    var nouzeBilkovin = false;
+    var STROP_PROT_NOUZE = 350;
     var stropG = function (f) {
+      if (FOOD_CAP[f.id] != null) return FOOD_CAP[f.id];
       if (PECIVO_VLOCKY_RE.test(f.id)) return STROP_PECIVO_G;
       if (f.cat === 'fruit') return STROP_OVOCE_G;
-      return FOOD_CAP[f.id] != null ? FOOD_CAP[f.id] : CAP[f.cat];
+      if (nouzeBilkovin && (f.cat === 'protein' || f.cat === 'dairy')) return STROP_PROT_NOUZE;
+      return CAP[f.cat];
     };
     function capPass() {
       all.forEach(function (it) {
@@ -797,7 +820,17 @@
     };
     var VLOCKY_MUSLI_RE = /ovesne-vlocky|musli|granola|ovesna-kase|ovesne-otruby/;
     // [R2] Doplněk, který patří jen na sladký talíř (ovoce, vločky, müsli).
-    var sladkyDoplnek = function (f) { return f.cat === 'fruit' || VLOCKY_MUSLI_RE.test(f.id); };
+    // ⛔ [oprava po revizi 2026-09-03] Sladký doplněk NENÍ jen ovoce a vločky. Musí sem
+    // patřit i sladké mlékárenské základy (tvaroh, skyr, jogurt, syrovátkový protein),
+    // jinak je `addExtra` i přerozdělení přetíženého jídla položí na slaný talíř.
+    // Přesně tudy vznikla snídaně šunka 80 g + syrovátkový protein 145 g.
+    var sladkyDoplnek = function (f) {
+      return f.cat === 'fruit' || VLOCKY_MUSLI_RE.test(f.id) || SLADKY_ZAKLAD.test(f.id);
+    };
+    // Slaný doplněk: zelenina a bílkovinné zdroje, které nejsou sladké mlékárenské.
+    var slanyDoplnek = function (f) {
+      return f.cat === 'veg' || ((f.cat === 'protein' || f.cat === 'dairy') && !SLADKY_ZAKLAD.test(f.id));
+    };
     // ⛔ [R1 + R2 2026-09-03] DOPLŇKOVÝ BLOK VYRÁBĚL PŘESNĚ TY VADY, které R1 a R2 zakazují:
     // `syrovatkovy-protein` míří do prostředního jídla a `tvaroh-mekky` do posledního,
     // a při pěti a šesti jídlech je to SVAČINA, která bílkovinu už dostala (druhý základ);
@@ -806,40 +839,31 @@
     // Radši den o kousek pod cílem než talíř, který nikdo nesní; ostatní dorovnání
     // (přílohy, ovoce, finální trim) mají prostor to dohnat.
     // ⛔ Táž logika je v appce, hlídá parita.
-    /** ⛔⛔ [R1 2026-09-03, MĚŘENÁ VÝJIMKA] U bílkovinného doplňku je brána MĚKKÁ.
-     *  Tvrdá brána (nemáš prázdné jídlo, tak se doplněk vynechá) rozbila vysoké cíle
-     *  bílkovin: `training.test.ts` naměřil 6 z 36 deficitních plánů mimo ±15 % bílkovin,
-     *  nejhorší den 252 g cíle proti 179 g skutečnosti, tedy −29 %. Je to přesně ten
-     *  případ, na který doplňkový blok existuje: 252 g bílkovin ze tří jídel je 84 g
-     *  na jídlo, což je 365 g kuřecích prsou, a strop porce je 300 g. Bez druhého zdroje
-     *  to nejde poskládat vůbec.
-     *  ⇒ Prázdné jídlo má PŘEDNOST (na běžném dni R1 platí a doplněk jde tam, kde
-     *  bílkovina chybí), ale když žádné není, doplněk se přidá i do obsazeného jídla.
-     *  Odborná správnost výživy je nad estetikou talíře. Ustoupí ale AŽ POD 88 % cíle
-     *  bílkovin, tedy na dni, který cíl vážně nesplní; těsné podstřelení (97 až 99 %)
-     *  druhý základ nedostane. Změřeno na 160 dnech: s prahem 0,95 padlo R1 osmkrát,
-     *  a přitom to dni přineslo 1 g bílkovin. S prahem 0,88 je R1 na téže mřížce
-     *  bez jediného nálezu a extrémní cíle (252 g ze tří jídel) se pořád poskládají.
-     *  Ostatní pravidla (R2, tedy slané proti sladkému) zůstávají tvrdá.
-     *  ⛔ Stejná výjimka je na webu (`assets/meal-gen.js`), hlídá parita-jidelnicku.mjs. */
+    /** ⛔⛔ [R1, ROZHODNUTO PO REVIZI 2026-09-03] BRÁNA JE TVRDÁ, výjimka neexistuje.
+     *  Mezikrok tu měl měkkou bránu: když den klesl pod 88 % cíle bílkovin, doplněk
+     *  se položil i do jídla, které bílkovinu už mělo. Revize to změřila na 2880 dnech
+     *  a je to špatně: s výjimkou 292 porušení R1 a 110 porušení R2, bez ní 130 a 0.
+     *  Těch 130 zbylých jsou legitimní snídaně šunka + vejce. Výjimka tedy stála
+     *  162 talířů se dvěma plnými základy (mimo jiné šunka 80 g + syrovátkový protein
+     *  145 g, tedy pět odměrek prášku k šunce) a kupovala za to 3,6 procentního bodu
+     *  přesnosti bílkovin. Vyrábělo to přesně tu vadu, kvůli které R1 vzniklo.
+     *  ⇒ Doplněk jde JEN do jídla, které bílkovinu nemá a charakterem sedí; jinak se
+     *  vynechá. Den s extrémním cílem bílkovin (250+ g z 2 800 kcal) zůstane pod cílem;
+     *  je to známé a měřené, ne přehlédnuté.
+     *  ⛔ Nezavádět zpátky. Stejná brána je v appce, hlídá parita. */
     var kamSDoplnkem = function (food, mealIdx) {
       var jeProt = food.cat === 'protein' || food.cat === 'dairy';
       var jeSladky = sladkyDoplnek(food);
+      var jeSlany = slanyDoplnek(food);
       var sedne = function (i5) {
         if (jeProt && maBilkovinu(out[i5])) return false;
         if (jeSladky && !jeSladkeJidlo(out[i5])) return false;
-        if (food.cat === 'veg' && jeSladkeJidlo(out[i5])) return false;
+        if (jeSlany && jeSladkeJidlo(out[i5])) return false;
         return true;
       };
       var chtene = Math.min(mealIdx, out.length - 1);
       if (sedne(chtene)) return chtene;
       for (var k5 = 0; k5 < out.length; k5++) if (sedne(k5)) return k5;
-      // Měkká brána pro bílkovinu (viz komentář výš): R2 drží dál, R1 ustoupí.
-      if (jeProt && !jeSladky && totalKey('p') < targets.protein * 0.88) {
-        if (!jeSladkeJidlo(out[chtene])) return chtene;
-        for (var k6 = 0; k6 < out.length; k6++) if (!jeSladkeJidlo(out[k6])) return k6;
-        return chtene;
-      }
       return -1;
     };
     function addExtra(food, grams, mealIdx) {
@@ -881,6 +905,19 @@
           runScale();
         }
       }
+    }
+
+    // ⛔ [oprava po revizi 2026-09-03] JEDNA VĚTŠÍ PORCE MÍSTO DRUHÉHO ZÁKLADU.
+    // Když je den výrazně pod cílem bílkovin a doplněk nemá kam jít (R1 drží tvrdě),
+    // zvedne se STROP PORCE hlavního zdroje z 300 na 350 g a den se přeškáluje.
+    // Jeden talíř s 350 g masa je pořád jedno jídlo; 300 g masa plus shake jsou dva
+    // základy, a přesně to R1 zakazuje. Spustí se jen pod 88 % cíle, tedy na dni,
+    // který cíl vážně nesplní: na mřížce 1152 dnů se to týká 11 dnů.
+    // ⛔ Uzenina si strop 80 g drží dál (`capPass`), tahle úleva je pro maso, ryby
+    // a mléčné zdroje, ne pro šunku.
+    if (totalKey('p') < targets.protein * 0.88) {
+      nouzeBilkovin = true;
+      runScale();
     }
 
     // [fix 2026-07-22] Finální dorovnání KALORIÍ při velké DB (stejný mechanismus, jaký má
@@ -1116,8 +1153,19 @@
       // posílá cíl vlákniny z computeTargets rovnou do assembleDay, tím v tools-test vyrostla
       // nejhorší odchylka bílkovin z 19 na 25 g.)
       var bilkovinaPredVl = den('p');
+      // ⛔ [oprava po revizi 2026-09-03] Podlaha je i RELATIVNÍ, ne jen cíl. Sama hodnota
+      // cíle nestačí: den, který na bílkovinu vyšel nad cíl (195 g proti 190), směl přijít
+      // o celý ten přebytek, a `training.test.ts` na to má vlastní kontrolu (bílkovina
+      // neklesne pod 98 % původní), kterou to porušovalo. Vláknina je vedlejší cíl,
+      // bílkovina hlavní: ubrat se z ní smí nejvýš 2 %.
       var bilkovinaPodlahaVl = Math.min(bilkovinaPredVl, targets.protein);
-      var bilkovinaOkVl = function () { return den('p') >= bilkovinaPodlahaVl - 0.5; };
+      // ⛔ DVE podlahy, kazda s vlastni toleranci. Absolutni (cil, nebo startovni hodnota
+      // pod cilem) smi mit 0,5 g vuli na zaokrouhleni. RELATIVNI ji mit NESMI: den, ktery
+      // na bilkovinu vysel nad cil (195 g proti 190), smel driv prijit o cely ten prebytek
+      // a `training.test.ts` na to ma kontrolu (bilkovina neklesne pod 98 % puvodni).
+      var bilkovinaOkVl = function () {
+        return den('p') >= bilkovinaPodlahaVl - 0.5 && den('p') >= bilkovinaPredVl * 0.98;
+      };
       // ⛔ Hlídat se musí i TUK, protože průchod nově sahá i na kategorii `fat`. Výměna
       // „chia semínka za olivový olej" drží kalorie, ale přesouvá je do čistého tuku.
       var tukPredVl = den('f');
@@ -1356,7 +1404,7 @@
           // hovězí mleté + těstoviny + rajče + POMERANČ 250 g jako oběd: přetížená
           // svačina odložila ovoce do hlavního jídla a nikdo se neptal, jestli tam patří.
           if (sladkyDoplnek(itH.food) && !jeSladkeJidlo(c3)) return;
-          if (itH.food.cat === 'veg' && jeSladkeJidlo(c3)) return;
+          if (slanyDoplnek(itH.food) && jeSladkeJidlo(c3)) return;
           // Táž potravina dvakrát v jednom jídle nedává smysl na talíři.
           if (c3.items.some(function (x) { return x.food.id === itH.food.id; })) return;
           var rezerva = stropJidla(c3.kind) - hmotnostJidla(c3) - itH.grams;
