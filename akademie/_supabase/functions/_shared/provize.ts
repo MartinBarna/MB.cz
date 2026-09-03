@@ -95,11 +95,20 @@ export type PreskoceniVstup = {
   partnerType: string;
   /** ID platby. Bez něj se i affiliate chová konzervativně (jedna odměna). */
   orderId: string | null;
-  /** Má už kupující v `referrals` řádek na tenhle produkt (jakýkoli stav)? */
-  maRadekProdukt: boolean;
-  /** Jen koučink: zaplatil ten člověk koučink přes Stripe už PŘED tímhle nákupem? */
-  uzPlatilDriv: boolean;
+  /**
+   * Má už kupující v `referrals` řádek na tenhle produkt (jakýkoli stav)?
+   * ⛔ `null` znamená NEVÍME, protože DB neodpověděla. Ne `false`.
+   */
+  maRadekProdukt: boolean | null;
+  /**
+   * Jen koučink: zaplatil ten člověk koučink přes Stripe už PŘED tímhle nákupem?
+   * ⛔ `null` znamená NEVÍME, protože DB neodpověděla. Ne `false`.
+   */
+  uzPlatilDriv: boolean | null;
 };
+
+/** Provize se nezapsala, protože DB neodpověděla. Martin ji musí přiznat ručně. */
+export const PRESKOCENO_DB_CHYBA = "db-neodpovedela";
 
 /** Kdy se má kontrolovat, jestli kupující už řádek na tenhle produkt má. */
 export function kontrolovatRadekProduktu(v: Pick<PreskoceniVstup, "product" | "partnerType" | "orderId">): boolean {
@@ -114,11 +123,30 @@ export function kontrolovatRadekProduktu(v: Pick<PreskoceniVstup, "product" | "p
  */
 export function duvodPreskoceniProvize(v: PreskoceniVstup): string | null {
   const jenPrvniPlatba = v.product === "coaching";
-  if (v.maRadekProdukt && kontrolovatRadekProduktu(v)) {
-    return jenPrvniPlatba ? "koucink-jen-prvni-platba" : "duplicita-produkt";
+  if (kontrolovatRadekProduktu(v)) {
+    // ⛔⛔ FAIL-CLOSED (revize 3. 9. 2026). Když DB neodpoví, NEVÍME, jestli ten člověk
+    //    už řádek má. Zapsat provizi „pro jistotu" znamená u opakovaného nákupu poslat
+    //    ven peníze, které vzniknout neměly, a nikdo se to nedozví. Radši ji nezapíšeme
+    //    a Martin dostane alert, ať ji přizná ručně: opomenutá provize je vidět,
+    //    vyplacená navíc není.
+    if (v.maRadekProdukt === null) return PRESKOCENO_DB_CHYBA;
+    if (v.maRadekProdukt) return jenPrvniPlatba ? "koucink-jen-prvni-platba" : "duplicita-produkt";
   }
   // Řádek v `referrals` vznikne jen u nákupu s kódem. Kdo koučink přes Stripe už
   // zaplatil bez kódu, taky není nový klient a provize se z něj podruhé neplatí.
-  if (jenPrvniPlatba && v.uzPlatilDriv) return "koucink-jen-prvni-platba";
+  if (jenPrvniPlatba) {
+    if (v.uzPlatilDriv === null) return PRESKOCENO_DB_CHYBA;
+    if (v.uzPlatilDriv) return "koucink-jen-prvni-platba";
+  }
   return null;
+}
+
+/**
+ * Věta do alertu Martinovi, když se provize nezapsala kvůli chybě čtení z DB.
+ * ⚠️ Musí obsahovat kód i částku, jinak nemá Martin z čeho provizi dopočítat.
+ */
+export function vetaProvizeRucne(kod: string, castkaKc: number | null): string {
+  return "provize nepřiznána, DB neodpověděla, přiznej ručně: kód "
+    + (kod || "neznámý")
+    + ", částka " + (castkaKc === null ? "neznámá" : String(castkaKc) + " Kč");
 }

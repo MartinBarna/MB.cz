@@ -11,11 +11,13 @@
 // ktera o sobe navzajem nevi (KATALOG, ODKAZ_NA_PRODUKT, seznam zdroju v daily-digest).
 
 import {
+  PRESKOCENO_DB_CHYBA,
   PROVIZE_KOUCINK_FALLBACK,
   duvodPreskoceniProvize,
   kontrolovatRadekProduktu,
   nactiSazbuKoucinku,
   sazbaProvize,
+  vetaProvizeRucne,
 } from '../_shared/provize.ts';
 
 const KOREN = new URL('../../../../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
@@ -619,6 +621,38 @@ check('RI14 rucni grant neni platba: rozlisuje se pres source stripe a payment_i
   /startsWith\("stripe"\)/.test(zdrojWebhook) && /stripe_payment_intent, source/.test(zdrojWebhook), '');
 check('RI15 preskocena provize se loguje',
   /provize přeskočena: opakovaný nákup koučinku/.test(zdrojWebhook), '');
+
+// --- R-J) FAIL-CLOSED U PENEZ VEN (revize 2, 3. 9. 2026) ---
+// Kdyz DB neodpovi, NEVIME, jestli provize vzniknout mela. Zapsat ji „pro jistotu"
+// znamena poslat ven penize, ktere vzniknout nemely, a nikdo se to nedozvi.
+const zaklad = { product: 'coaching', partnerType: 'affiliate', orderId: 'pi_1' };
+check('RJ1 chyba cteni referrals provizi NEZAPISE',
+  duvodPreskoceniProvize({ ...zaklad, maRadekProdukt: null, uzPlatilDriv: false }) === PRESKOCENO_DB_CHYBA, '');
+check('RJ2 chyba cteni entitlements provizi NEZAPISE',
+  duvodPreskoceniProvize({ ...zaklad, maRadekProdukt: false, uzPlatilDriv: null }) === PRESKOCENO_DB_CHYBA, '');
+check('RJ3 chyba cteni u OSTATNICH produktu taky nezapise (member kredit)',
+  duvodPreskoceniProvize({ product: 'academy', partnerType: 'member', orderId: 'pi_1', maRadekProdukt: null, uzPlatilDriv: null }) === PRESKOCENO_DB_CHYBA, '');
+check('RJ4 affiliate s order_id u academy se dotazu vubec neptá, chyba ho nezastavi',
+  duvodPreskoceniProvize({ product: 'academy', partnerType: 'affiliate', orderId: 'pi_1', maRadekProdukt: null, uzPlatilDriv: null }) === null, '');
+check('RJ5 kdyz DB odpovi, chova se to jako driv',
+  duvodPreskoceniProvize({ ...zaklad, maRadekProdukt: false, uzPlatilDriv: false }) === null
+  && duvodPreskoceniProvize({ ...zaklad, maRadekProdukt: true, uzPlatilDriv: false }) === 'koucink-jen-prvni-platba', '');
+check('RJ6 veta pro Martina nese kod i castku',
+  vetaProvizeRucne('JIRKA10', 59500) === 'provize nepřiznána, DB neodpověděla, přiznej ručně: kód JIRKA10, částka 59500 Kč',
+  vetaProvizeRucne('JIRKA10', 59500));
+check('RJ7 veta prezije chybejici kod i castku',
+  vetaProvizeRucne('', null) === 'provize nepřiznána, DB neodpověděla, přiznej ručně: kód neznámý, částka neznámá', '');
+check('RJ8 webhook chybu cteni referrals prevadi na null, ne na false',
+  /maRadekProdukt = dupErr \? null : /.test(zdrojWebhook), '');
+check('RJ9 webhook chybu cteni entitlements prevadi na null, ne na false',
+  /stavErr \? null : koucinkUzPlatilPresStripe/.test(zdrojWebhook), '');
+check('RJ10 castka se pocita PRED rozhodnutim o preskoceni (jinak neni co dat do alertu)',
+  zdrojWebhook.indexOf('const castkaKc = session &&') < zdrojWebhook.indexOf('const preskocit = duvodPreskoceniProvize'), '');
+check('RJ11 nepriznana provize posle alert Martinovi',
+  /PROVIZE NEPŘIZNÁNA, DB neodpověděla/.test(zdrojWebhook) && /vetaProvizeRucne\(ref, castkaKc\)/.test(zdrojWebhook), '');
+check('RJ12 preskoceni kvuli opakovanemu nakupu je v alertu Martinovi',
+  /provize: provizePoznamka/.test(zdrojWebhook)
+  && /opakovaný nákup, provize podle pravidla nevzniká/.test(zdrojWebhook), '');
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
