@@ -10,7 +10,13 @@
 // slabsi, ale chyta presne tu tridu chyby, o kterou tady jde: ROZEJITI TRI MIST,
 // ktera o sobe navzajem nevi (KATALOG, ODKAZ_NA_PRODUKT, seznam zdroju v daily-digest).
 
-import { PROVIZE_KOUCINK_FALLBACK, nactiSazbuKoucinku, sazbaProvize } from '../_shared/provize.ts';
+import {
+  PROVIZE_KOUCINK_FALLBACK,
+  duvodPreskoceniProvize,
+  kontrolovatRadekProduktu,
+  nactiSazbuKoucinku,
+  sazbaProvize,
+} from '../_shared/provize.ts';
 
 const KOREN = new URL('../../../../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const WEBHOOK = KOREN + 'akademie/_supabase/functions/academy-stripe-webhook/index.ts';
@@ -286,12 +292,16 @@ check('AD5 akce cte view, ne tabulku referrals naprimo',
 // --- 13) PROVIZE U OPAKOVANEHO NAKUPU (nalez z testu penezi 11. 8. 2026) ---
 // Duplicitni kontrola buyer+product smi blokovat jen MEMBER kredit; affiliate bere
 // provizi z kazde platby a idempotenci mu drzi order_id (payment_intent).
+// ⚠️ 3. 9. 2026 se rozhodovani presunulo do `_shared/provize.ts`, takze se uz netestuje
+// textem, ale chovanim funkce. Invariant je STEJNY: affiliate s order_id smi u ostatnich
+// produktu brat provizi z kazde platby (u koucinku ne, viz R-I).
 const iDupOrder = zdrojWebhook.indexOf('return "duplicita-order"');
-const iDupProd = zdrojWebhook.indexOf('return "duplicita-produkt"');
-const blokDup = iDupProd > 0 ? zdrojWebhook.slice(Math.max(0, iDupProd - 400), iDupProd) : '';
+const iDupProd = zdrojWebhook.indexOf('duvodPreskoceniProvize({');
 check('R1 dup-product check je podmineny (member, nebo affiliate bez orderId)',
-  /if \(partnerType !== "affiliate" \|\| !orderId\) \{/.test(blokDup),
-  blokDup.replace(/\s+/g, ' ').slice(-160));
+  kontrolovatRadekProduktu({ product: 'academy', partnerType: 'affiliate', orderId: 'pi_1' }) === false
+  && kontrolovatRadekProduktu({ product: 'academy', partnerType: 'member', orderId: 'pi_1' }) === true
+  && kontrolovatRadekProduktu({ product: 'academy', partnerType: 'affiliate', orderId: null }) === true
+  && kontrolovatRadekProduktu({ product: 'coaching', partnerType: 'affiliate', orderId: 'pi_1' }) === true, '');
 check('R2 duplicita-order zustava PRED dup-product (idempotence prehrani plati vzdy)',
   iDupOrder > 0 && iDupProd > 0 && iDupOrder < iDupProd, `order=${iDupOrder} produkt=${iDupProd}`);
 
@@ -538,6 +548,77 @@ check('RH19 sazba presne 1 (100 %) je jeste platna',
 
 check('RH12 na 59 500 Kc dela provize 5 950 Kc',
   Math.round(59500 * sazbaProvize({ product: 'coaching', partnerRate: 0.20, configRate: null }) * 100) / 100 === 5950, '');
+
+// --- R-I) PROVIZE Z KOUCINKU JEN Z PRVNI PLATBY (rozhodnuti Martina 3. 9. 2026 rano) ---
+// Simulace dvou nakupu tehoz cloveka nad falesnou tabulkou `referrals`. Zapisuje se
+// presne tam, kde by se zapsalo v webhooku: kdyz `duvodPreskoceniProvize` vrati null.
+type FakeRadek = { email: string; product: string };
+function simulujNakup(
+  tabulka: FakeRadek[],
+  email: string,
+  product: string,
+  opts: { partnerType?: string; orderId?: string | null; uzPlatilDriv?: boolean } = {},
+): string | null {
+  const klic = {
+    product,
+    partnerType: opts.partnerType ?? 'affiliate',
+    orderId: opts.orderId === undefined ? 'pi_' + Math.random().toString(36).slice(2) : opts.orderId,
+  };
+  const maRadekProdukt = kontrolovatRadekProduktu(klic)
+    ? tabulka.some((r) => r.email === email && r.product === product)
+    : false;
+  const duvod = duvodPreskoceniProvize({ ...klic, maRadekProdukt, uzPlatilDriv: opts.uzPlatilDriv ?? false });
+  if (!duvod) tabulka.push({ email, product });
+  return duvod;
+}
+
+const tab: FakeRadek[] = [];
+const prvni = simulujNakup(tab, 'klient@example.com', 'coaching');
+const druhy = simulujNakup(tab, 'klient@example.com', 'coaching');
+const treti = simulujNakup(tab, 'klient@example.com', 'coaching');
+check('RI1 prvni nakup koucinku provizi zapise', prvni === null, String(prvni));
+check('RI2 druhy nakup tehoz klienta neprida zadny radek', druhy === 'koucink-jen-prvni-platba', String(druhy));
+check('RI3 treti nakup taky ne', treti === 'koucink-jen-prvni-platba', String(treti));
+check('RI4 po trech nakupech je v referrals PRAVE JEDEN radek',
+  tab.filter((r) => r.product === 'coaching').length === 1, String(tab.length));
+
+const jiny = simulujNakup(tab, 'jiny@example.com', 'coaching');
+check('RI5 jiny klient dostane svuj radek', jiny === null, String(jiny));
+check('RI6 po nakupu jineho klienta jsou radky dva',
+  tab.filter((r) => r.product === 'coaching').length === 2, String(tab.length));
+
+// Klient, ktery koucink pres Stripe uz zaplatil DRIV bez kodu: v `referrals` nic nema,
+// presto uz neni prvni platba.
+const tab2: FakeRadek[] = [];
+const vraceny = simulujNakup(tab2, 'stary@example.com', 'coaching', { uzPlatilDriv: true });
+check('RI7 drivejsi platba pres Stripe bez kodu provizi taky zastavi',
+  vraceny === 'koucink-jen-prvni-platba' && tab2.length === 0, String(vraceny));
+check('RI8 rucni grant z adminu (uzPlatilDriv=false) prvni platbu NEBLOKUJE',
+  simulujNakup(tab2, 'rucni@example.com', 'coaching', { uzPlatilDriv: false }) === null, '');
+
+// Ostatni produkty se nemeni: affiliate s order_id bere provizi z kazde platby.
+const tab3: FakeRadek[] = [];
+simulujNakup(tab3, 'k@example.com', 'academy');
+const academyDruhy = simulujNakup(tab3, 'k@example.com', 'academy');
+check('RI9 u academy affiliate bere provizi i z druhe platby (beze zmeny)',
+  academyDruhy === null && tab3.length === 2, String(academyDruhy));
+check('RI10 member kredit zustava jednorazovy i u academy',
+  simulujNakup(tab3, 'm@example.com', 'academy', { partnerType: 'member' }) === null
+  && simulujNakup(tab3, 'm@example.com', 'academy', { partnerType: 'member' }) === 'duplicita-produkt', '');
+check('RI11 affiliate bez order_id se chova konzervativne',
+  simulujNakup(tab3, 'b@example.com', 'appka', { orderId: null }) === null
+  && simulujNakup(tab3, 'b@example.com', 'appka', { orderId: null }) === 'duplicita-produkt', '');
+
+// Webhook to opravdu pousti tudy a rozlisuje rucni grant od platby.
+check('RI12 webhook pousti rozhodnuti pres duvodPreskoceniProvize',
+  /duvodPreskoceniProvize\(\{/.test(zdrojWebhook) && /kontrolovatRadekProduktu\(klic\)/.test(zdrojWebhook), '');
+check('RI13 stav naroku se cte PRED zapisem (jinak by prvni nakup vypadal jako opakovany)',
+  zdrojWebhook.indexOf('const uzPlatilDriv = koucinkUzPlatilPresStripe') <
+    zdrojWebhook.indexOf('const ob = await onboardKoucink'), '');
+check('RI14 rucni grant neni platba: rozlisuje se pres source stripe a payment_intent',
+  /startsWith\("stripe"\)/.test(zdrojWebhook) && /stripe_payment_intent, source/.test(zdrojWebhook), '');
+check('RI15 preskocena provize se loguje',
+  /provize přeskočena: opakovaný nákup koučinku/.test(zdrojWebhook), '');
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);

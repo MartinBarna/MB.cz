@@ -81,3 +81,44 @@ export async function nactiSazbuKoucinku(admin: any): Promise<number | null> {
     return null;
   }
 }
+
+// --- Jen z první platby: kdy se provize NEZAPÍŠE -----------------------------
+// ⭐ ROZHODNUTÍ MARTINA (3. 9. 2026 ráno): z koučinku je provize JEN Z PRVNÍ PLATBY
+//    klienta, 10 % jednorázově. Prodloužení ani další nákup koučinku provizi nedává.
+//    U ostatních produktů se nic nemění: affiliate s `order_id` bere provizi z každé
+//    platby (rozhodnutí z 11. 8. 2026), member kredit je jednorázový.
+
+export type PreskoceniVstup = {
+  /** Produkt řádku v `referrals`. */
+  product: string;
+  /** 'affiliate' nebo 'member'. */
+  partnerType: string;
+  /** ID platby. Bez něj se i affiliate chová konzervativně (jedna odměna). */
+  orderId: string | null;
+  /** Má už kupující v `referrals` řádek na tenhle produkt (jakýkoli stav)? */
+  maRadekProdukt: boolean;
+  /** Jen koučink: zaplatil ten člověk koučink přes Stripe už PŘED tímhle nákupem? */
+  uzPlatilDriv: boolean;
+};
+
+/** Kdy se má kontrolovat, jestli kupující už řádek na tenhle produkt má. */
+export function kontrolovatRadekProduktu(v: Pick<PreskoceniVstup, "product" | "partnerType" | "orderId">): boolean {
+  return v.product === "coaching" || v.partnerType !== "affiliate" || !v.orderId;
+}
+
+/**
+ * Důvod, proč se provize NEZAPÍŠE, nebo `null`, když se zapsat má.
+ *
+ * ⚠️ `maRadekProdukt` se plní jen tehdy, když `kontrolovatRadekProduktu` řekne ano;
+ *    jinak zůstává `false` a dotaz do DB se vůbec nedělá.
+ */
+export function duvodPreskoceniProvize(v: PreskoceniVstup): string | null {
+  const jenPrvniPlatba = v.product === "coaching";
+  if (v.maRadekProdukt && kontrolovatRadekProduktu(v)) {
+    return jenPrvniPlatba ? "koucink-jen-prvni-platba" : "duplicita-produkt";
+  }
+  // Řádek v `referrals` vznikne jen u nákupu s kódem. Kdo koučink přes Stripe už
+  // zaplatil bez kódu, taky není nový klient a provize se z něj podruhé neplatí.
+  if (jenPrvniPlatba && v.uzPlatilDriv) return "koucink-jen-prvni-platba";
+  return null;
+}
