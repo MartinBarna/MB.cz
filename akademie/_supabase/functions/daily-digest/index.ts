@@ -4,7 +4,7 @@
 // Shrnuje VCEREJSEK + aktualni stav: leadi, maily, prodeje (simpleshop),
 // fronta, odstoupeni, affiliate, chyby. Cisla pocita kod, zadne odhady.
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { hlidkaCisla, hlidkaPrihlaseni } from "./hlidky.ts";
+import { hlidkaCisla } from "./hlidky.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -415,31 +415,19 @@ Deno.serve(async (req) => {
     alerts += warn("Kontrola odkazů se nedá přečíst: " + String(e).slice(0, 120));
   }
 
-  // --- 🔭 HLÍDKY: presunuto z drahych Claude rutin (3. 9. 2026) -----------
-  // Hlidka 1 "cisla nezamrzla": Academy app_config.pocet_cisel_mereno_v, plni ho cron
+  // --- 🔭 HLÍDKA: presunuto z drahe Claude rutiny (3. 9. 2026) ------------
+  // "cisla nezamrzla": Academy app_config.pocet_cisel_mereno_v, plni ho cron
   // cisla-sync-6h. Anomalie (chybi/nesmyslne/stare > 26 h) jde jako alert NAHORU,
-  // radek do sekce HLIDKY je vzdy.
+  // radek do sekce Hlidky je vzdy.
+  // ⛔ ROZHODNUTI SEFA 3. 9. 2026: hlidka "prihlaseni appky" se do mailu NEDAVA
+  // (radek "nelze merit" kazdy den byl sum). Prihlaseni pokryva samostatna sonda
+  // kanarka, ktera se sama prihlasuje testovacim uctem kazde 2 h.
   const hlidkaCislaR = hlidkaCisla(cmap.pocet_cisel_mereno_v, now.getTime());
   if (hlidkaCislaR.alertText) alerts += warn(hlidkaCislaR.alertText);
-
-  // Hlidka 2 "prihlaseni appky": auth.audit_log_entries appky (kfkmghvhqwqtsalqjmrp).
-  // ⛔ OVĚŘENO 3. 9. 2026 přímým dotazem: tabulka existuje a je čitelná ze service role,
-  // ale má TRVALE 0 řádků, přestože stejný den reálně proběhla přihlášení (auth.users.
-  // last_sign_in_at). GoTrue v tomto projektu posílá audit log jen do Logs Exploreru
-  // (auth_logs, Management API), ne do téhle Postgres tabulky.
-  // ⇒ Čtení by šlo přes Management API, ale to vyžaduje PAT v edge funkci — zadání
-  // to výslovně zakazuje. Bez nového secretu/deploye na appce se sem živá data nedostanou
-  // (jediná dnes existující cesta mezi projekty, `academy-grant`, tuhle akci nemá).
-  // Funkce hlidkaPrihlaseni() v ./hlidky.ts je hotová a otestovaná pro den, kdy tahle
-  // cesta vznikne; do té doby se sem jen napíše, PROČ dnes nic neměříme (žádná tichá nula).
-  // hlidkaPrihlaseni([], null) by pro prazdny vstup vratila presne tenhle radek;
-  // volani se schvalne nedela naprazdno (zadna data se dnes nikde nectou), viz komentar vys.
-  const hlidkaLoginRadek = hlidkaPrihlaseni([], null).radek;
   const hlidkyHtml =
     `<h3 style="margin:18px 0 6px;font-size:15px">🔭 Hlídky</h3>` +
     `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
     row("Čísla", hlidkaCislaR.radek) +
-    row("Přihlášení appky", hlidkaLoginRadek) +
     `</table>`;
 
   // --- 🤝 KOUČINK: co dnes potřebuje Martinovu ruku -----------------------
