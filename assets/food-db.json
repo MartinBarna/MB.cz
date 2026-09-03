@@ -3468,7 +3468,7 @@
       "p": 1.1,
       "c": 7.7,
       "f": 0.6,
-      "fib": 2.0
+      "fib": 2
     },
     "portion": 150,
     "bezny": true,
@@ -3484,7 +3484,7 @@
       "p": 1.1,
       "c": 7.7,
       "f": 0.6,
-      "fib": 2.0
+      "fib": 2
     },
     "portion": 150,
     "obsahuje": [],
@@ -3499,7 +3499,7 @@
       "p": 1.1,
       "c": 7.7,
       "f": 0.6,
-      "fib": 2.0
+      "fib": 2
     },
     "portion": 150,
     "obsahuje": [],
@@ -5177,7 +5177,6 @@
       "fib": 0
     },
     "portion": 100,
-    "bezny": true,
     "obsahuje": [
       "zivocisne"
     ],
@@ -8549,7 +8548,6 @@
     },
     "portion": 100,
     "nonveg": true,
-    "bezny": true,
     "obsahuje": [
       "zivocisne"
     ],
@@ -19292,7 +19290,6 @@
     },
     "portion": 100,
     "portionLabel": "100 g",
-    "bezny": false,
     "obsahuje": [
       "zivocisne",
       "laktoza"

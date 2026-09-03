@@ -182,7 +182,13 @@
   var SNACK_PROT     = /tvaroh|skyr|cottage|syrovatkovy-protein|recky-jogurt|bily-jogurt|sunka/;
   // [fix 2026-08-05 večer] Proteinový prášek a čistý bílek NEJSOU základ hlavního jídla
   // („syrovátkový protein 55 g + těstoviny + rajče" jako oběd nikdo jíst nebude).
-  var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$|^tvaroh-tvrdy$/;
+  // [R3 2026-09-03] Vnitřnosti jsou surovina pro kuchaře, ne základ vygenerovaného jídla.
+  // Změřeno na 48 dnech: hovězí a kuřecí játra padla jako oběd ve 14 dnech ze 48, protože
+  // jsou extrémně libová a `leanOnly` po nich v deficitu sáhne první. Zůstávají v záměnách
+  // a v zápisu deníku, jen se nevybírají do výchozího dne; v food-db.json obou stran jim
+  // navíc zmizel flag `bezny`. ⚠️ `jazyk` NEJDE jako podřetězec: `morsky-jazyk` je ryba.
+  // ⛔ Táž logika je v appce (src/engine/meal-gen-core.ts), hlídá parita.
+  var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$|^tvaroh-tvrdy$|jatra|ledvin|^srdce|(hovezi|veprovy|kruti|telaci)-jazyk|drstk/;
   // [fix 2026-08-06] Šunka a spol. NEJSOU hlavní bílkovina oběda/večeře: uzenina je na
   // chleba a do svačiny, na hlavní jídlo lidi vaří maso/rybu. U hlavních jídel se masné
   // výrobky řadí AŽ ZA vařené zdroje (měkce, s fallbackem). Uzené RYBY zůstávají.
@@ -192,7 +198,37 @@
   // základ snídaně nikdo nejí; snídaňová uzenina se ořeže na 80 g a zbytek bílkovin
   // doplní DRUHÝ zdroj (vejce/tvaroh/skyr/cottage). ⛔ Táž logika v appce, hlídá parita.
   var UZENINA_MAX_G = 80;
-  var SNIDANE_DOPLNEK_PROT = /vejce|tvaroh|skyr|cottage/;
+  // [R1 2026-09-03] Druhý snídaňový zdroj smí být JEN vejce nebo sýr, ne tvaroh/skyr/cottage.
+  // Slaná snídaně se sladkým mlékárenským zdrojem je nejčastější vada výstupu (šunka 70 g
+  // + tvaroh měkký 125 g + toust + paprika + jahody, profil a, seed 0). Vejce a sýr se
+  // k šunce na chleba hodí, tvaroh a skyr patří ke sladké snídani s ovocem.
+  // ⚠️ KOTVENÉ `^(...)`: podřetězec `syr` chytá i `syrovatkovy-protein`.
+  // ⛔ Táž logika je v appce, hlídá parita.
+  var SNIDANE_DOPLNEK_PROT = /^(vejce|eidam|gouda|mozzarella|cedar|emental|feta|brie|hermelin|niva|parmazan|balkansky-syr|kozi-syr|uzeny-syr|taveny-syr|halloumi|bryndza|olomoucke-tvaruzky)/;
+  // [R2 2026-09-03] SLANÝ A SLADKÝ ZÁKLAD SE NA JEDNOM TALÍŘI NEPOTKAJÍ.
+  // Změřeno na 48 dnech: 36 jídel míchalo uzeninu se sladkým základem a 12 dní dávalo
+  // 150 g syrové papriky ke sladké snídani. Ke slanému základu (uzenina, vejce, sýr) patří
+  // pečivo a zelenina, ke sladkému (tvaroh, skyr, cottage, jogurt) vločky, müsli nebo
+  // pečivo a ovoce. Co není sladké, bere se jako slané (maso, ryba, tofu → pečivo a zelenina).
+  // ⛔ Táž logika je v appce, hlídá parita.
+  var SLADKY_ZAKLAD = /tvaroh|skyr|cottage|jogurt|syrovatkovy-protein|proteinovy-pudink|kefir|podmasli|acidofilni|^mleko/;
+  // Pečivo jako příloha ke slanému základu. Vločky a müsli tu schválně NEJSOU.
+  var PECIVO_RE = /chleb|rohlik|houska|knackebrot|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy/;
+  // [R6 2026-09-03] Strop na JEDNO jídlo u pečiva, vloček a müsli. Bez něj vyšel
+  // toustový chléb celozrnný 350 g a müsli 320 g jako jedna položka snídaně
+  // (profil d, seedy 6 a 7); to je třetina kila. Vařené přílohy si strop 320/500 g drží.
+  var PECIVO_VLOCKY_RE = /chleb|rohlik|houska|knackebrot|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy|ovesne-vlocky|musli|granola|krekry|lupinky|otruby|tortilla/;
+  var STROP_PECIVO_G = 120;
+  // [R6 2026-09-03] Ovoce v jednom jídle. 250 g pomeranče k obědu je miska, ne ozdoba.
+  var STROP_OVOCE_G = 200;
+  // [R5 2026-09-03] MINIMÁLNÍ PORCE. Cokoli mimo kategorii `fat` musí být aspoň 20 g.
+  // Změřeno na 48 dnech: 63 položek pod 20 g (rozinky 15 g, slunečnicová semínka 11 g)
+  // jako plnohodnotná součást jídla. Klient to neodváží a v plánu to působí jako chyba.
+  // TUKY zůstávají jak jsou: 8 g oleje je normální gramáž na lžičku.
+  // ⛔ Táž hodnota je v appce, hlídá parita.
+  var MIN_PORCE_G = 20;
+  // [R2] Je základ jídla sladký (mlékárenský), nebo slaný? Co není sladké, je slané.
+  function jeSladkyZaklad(f) { return !!f && SLADKY_ZAKLAD.test(f.id); }
   // [fix 2026-08-06 kolo 4] Párování tuku k charakteru jídla (detail u použití níž).
   // ⚠️ KOTVENÉ `^(...)$`: nekotvené `maslo` chytá i `mandlove-maslo`. ⛔ Táž logika v appce.
   var SLADKY_TUK = /^(mandle|vlasske-orechy|liskove-orechy|kesu|araside|arasidy|mandlove-maslo|araside-maslo|chia-seminka|lnene-seminko|pistacie)$/;
@@ -368,6 +404,11 @@
     // ⛔ Stejna oprava je v appce (src/engine/meal-gen.ts), oba generatory se musi chovat
     // stejne. Hlida to `npm run parita:generatory` v repu appky.
     var pouziteProt = {};
+    // [R4 2026-09-03] Totéž pro zeleninu a ovoce: táž položka nejvýš jednou za den.
+    // Bílkoviny to umí od 26. 7., zelenina a ovoce ne, a bylo to vidět: paprika červená
+    // nebo mandlové máslo dvakrát v jednom dni, ve 12 dnech ze 48. ⛔ Táž logika je v appce.
+    var pouziteVeg = {};
+    var pouziteFruit = {};
     // Bílkoviny z předchozích dnů týdne (plní `assembleWeek`, viz opts.nedavnoPouzite).
     var nedavno = {};
     var nedavnoPocet = 0;
@@ -501,7 +542,10 @@
           var chybiP = mProt - macrosFor(prot, Math.min(pg, UZENINA_MAX_G)).p;
           if (chybiP >= 8) {
             var druhy = pickProt(seed + i + 11, SNIDANE_DOPLNEK_PROT);
-            if (druhy && !UZENINA_RE.test(druhy.id)) {
+            // [R1 2026-09-03] Musí to BÝT vejce nebo sýr, ne jen něco, co není uzenina.
+            // `pickProt` má fallback na celou nabídku, takže sem uměla přijít kuřecí prsa
+            // nebo tvaroh; obojí je na snídani s šunkou druhý plnohodnotný základ.
+            if (druhy && !UZENINA_RE.test(druhy.id) && SNIDANE_DOPLNEK_PROT.test(druhy.id)) {
               var dg = round((chybiP / (druhy.per100.p || 1)) * 100, 10);
               dg = Math.min(Math.max(dg, 30), druhy.cat === 'protein' ? 260 : 300);
               gramyDnes[druhy.id] = (gramyDnes[druhy.id] || 0) + dg;
@@ -511,11 +555,27 @@
           }
         }
       }
+      // ⛔ [R2 2026-09-03] CHARAKTER JÍDLA SE URČÍ ZE ZÁKLADU, a ten pak rozhoduje
+      // o příloze, zelenině i ovoci. Slaný základ (uzenina, vejce, sýr, maso, ryba, tofu)
+      // dostane pečivo a zeleninu, sladký (tvaroh, skyr, cottage, jogurt) vločky/müsli/pečivo
+      // a ovoce. Míchání obojího je nejčastější vada výstupu: 36 jídel ze 48 dnů.
+      // Jídlo bez bílkovinného základu (úzký filtr) se u snídaně a svačin bere jako sladké,
+      // ať nezmizí i ta poslední položka a svačina nezůstane prázdná.
+      // ⛔ Táž logika je v appce, hlídá parita.
+      var zakladJidla = items.length ? items[0].food : null;
+      var sladkeJidlo = zakladJidla ? jeSladkyZaklad(zakladJidla) : (kind === 'breakfast' || isSnack);
+      // Slaná svačina (šunka, sýr, vejce) dostane pečivo, ne ovoce: šunka + mango je
+      // přesně ten pár, který R2 zakazuje, a bez přílohy by zbyla samotná šunka.
+      var slanaSvacina = isSnack && !sladkeJidlo;
+
       // 2) sacharidová příloha (ne u svačin)
       // Snídaně nikdy není svačina, takže stará podmínka `!isSnack || i === 0`
       // je po zavedení typů jídel prostě `!isSnack`. Chování se nemění.
-      if (!isSnack) {
-        var carb = (kind === 'breakfast') ? (pickCarb(seed + i + 7, BREAKFAST_CARB)) : pickCarb(seed + i + 3, MAIN_CARB);
+      if (!isSnack || slanaSvacina) {
+        var pecivove = (kind === 'breakfast') || slanaSvacina;
+        var carb = pecivove
+          ? pickCarb(seed + i + 7, sladkeJidlo ? BREAKFAST_CARB : PECIVO_RE)
+          : pickCarb(seed + i + 3, MAIN_CARB);
         if (carb) {
           // dopočítej gramy sacharidů zbývající po proteinu
           var usedC = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).c; }, 0);
@@ -527,36 +587,60 @@
           // pro 3, 4 i 5 jídel totéž (ověřeno paritou), ale svazovalo to rozdělení kalorií:
           // jakmile by šestijídlový den dal večeři míň než 20 %, tiše by přišla o podlahu
           // přílohy i o zeleninu. Blok navíc už běží uvnitř `if (!isSnack)`.
-          if (!lowCarb) cg = Math.max(cg, podlahaPrilohy(carb));
-          if (cg > 10) items.push({ food: carb, grams: Math.min(cg, 320) });
+          if (!lowCarb && !slanaSvacina) cg = Math.max(cg, podlahaPrilohy(carb));
+          // [R2] Pečivo ve slané svačině se dopočítá na kalorie svačiny stejně, jako se to
+          // od kola 4 dělá s porcí ovoce ve sladké (viz níž). Jen ZVĚTŠUJEME.
+          if (slanaSvacina && !lowCarb && carb.per100.kcal > 0) {
+            var uzKcalS = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).kcal; }, 0);
+            var zbyvaS = (targets.kcal * dist[i]) - uzKcalS - (mFat * 9 * 0.3); // rezerva na dorovnání tuku
+            if (zbyvaS > 0) cg = Math.max(cg, (zbyvaS / carb.per100.kcal) * 100);
+          }
+          if (cg > 10) items.push({ food: carb, grams: Math.min(cg, slanaSvacina ? STROP_PECIVO_G : 320) });
         }
       }
       // 3) zelenina pro objem (u hlavních jídel)
       // [fix 2026-07-22] aromatická zelenina (cibule, česnek, chilli, bylinky…) není samostatná
       // příloha — 150 g cibule k večeři je nesmysl. Do dochucení patří, na talíř jako zelenina ne.
       // ⛔ [oprava po revizi 2026-09-02] Podmínka je TYP jídla, ne podíl kalorií (viz výš).
-      if (!isSnack) {
+      // [R2 2026-09-03] Sladká snídaně zeleninu nedostane. 150 g syrové papriky vedle
+      // manga a müsli je nález syrova zelenina 150g+ k slazke snidani z 12 dnů ze 48.
+      if (!isSnack && !(kind === 'breakfast' && sladkeJidlo)) {
         // [fix 2026-08-06 kolo 3] V keto režimu jen nízkosacharidová zelenina. Táž logika v appce.
         var sideVegDb = db.filter(function (f) {
           return f.cat !== 'veg' || (!/cibul|cesnek|chilli|zazvor|kren|bylink|petrzel|koriandr|kopr|pazitk|medvedi/.test(f.id) && (!lowCarb || f.per100.c <= 5));
         });
+        // [R4 2026-09-03] Táž zelenina nejvýš jednou za den (jako u bílkovin přes
+        // `pouziteProt`). Změřeno: paprika červená dvakrát v jednom dni ve 12 dnech ze 48.
+        // Fallback na plnou nabídku drží průchodnost úzkých filtrů a keto režimu.
+        var cerstvaVeg = sideVegDb.filter(function (f) { return f.cat !== 'veg' || !pouziteVeg[f.id]; });
+        var vegDb = cerstvaVeg.some(function (f) { return f.cat === 'veg'; }) ? cerstvaVeg : sideVegDb;
         // [fix 2026-08-05 večer] Snídaňová zelenina bez špenátu: 150 g syrových listů
         // k toustu nikdo nejí. K vaječné snídani patří rajče, okurka, paprika.
-        var veg = pick(sideVegDb, 'veg', seed + i + 5, (kind === 'breakfast') ? /rajce|okurka|paprika/ : null);
-        if (veg) items.push({ food: veg, grams: vg(150) });
+        var veg = pick(vegDb, 'veg', seed + i + 5, (kind === 'breakfast') ? /rajce|okurka|paprika/ : null);
+        if (veg) {
+          pouziteVeg[veg.id] = true;
+          items.push({ food: veg, grams: vg(150) });
+        }
       }
       // 4) ovoce u snídaně/svačin
-      if (kind === 'breakfast' || isSnack) {
+      // [R2 2026-09-03] Jen ke SLADKÉMU základu. Uzenina, vejce nebo sýr plus ovoce
+      // je ten zakázaný pár (36 jídel ze 48 dnů).
+      if ((kind === 'breakfast' || isSnack) && sladkeJidlo) {
         // V keto režimu z ovoce jen bobule a menší porce; jiné ovoce nese moc sacharidů.
-        var fruit = pick(db, 'fruit', seed + i + 2, lowCarb ? /malin|boruvk|jahod|ostruzin|rybiz/ : null);
+        // [R4] Táž logika bez opakování v jednom dni jako u zeleniny výš.
+        var cerstveFruit = db.filter(function (f) { return f.cat !== 'fruit' || !pouziteFruit[f.id]; });
+        var fruitDb = cerstveFruit.some(function (f) { return f.cat === 'fruit'; }) ? cerstveFruit : db;
+        var fruit = pick(fruitDb, 'fruit', seed + i + 2, lowCarb ? /malin|boruvk|jahod|ostruzin|rybiz/ : null);
         if (fruit) {
+          pouziteFruit[fruit.id] = true;
           var fg0 = vg(lowCarb ? 80 : (fruit.portion || 120));
           // [fix 2026-08-06 kolo 4] Ve svačině se porce ovoce dopočítá na kalorie svačiny
           // (pevná porce nechávala svačinu na mediánu 72 % jejího cíle). Jen ZVĚTŠUJEME.
           if (isSnack && !lowCarb && fruit.per100.kcal > 0) {
             var uzKcal = items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).kcal; }, 0);
             var zbyva = (targets.kcal * dist[i]) - uzKcal - (mFat * 9 * 0.3);
-            if (zbyva > 0) fg0 = Math.min(Math.max(fg0, (zbyva / fruit.per100.kcal) * 100), fg0 * 2, 250);
+            // [R6 2026-09-03] Strop porce ovoce v jednom jídle je 200 g, ne 250.
+            if (zbyva > 0) fg0 = Math.min(Math.max(fg0, (zbyva / fruit.per100.kcal) * 100), fg0 * 2, STROP_OVOCE_G);
           }
           items.push({ food: fruit, grams: round(fg0, 5) });
         }
@@ -609,9 +693,18 @@
     // stropy pro konkrétní potraviny (přebijí kategorii): 240 g syrových bílků na talíři
     // je „tabulkové" jídlo, ne snídaně — víc než ~5 bílků na jedno jídlo nedává smysl
     var FOOD_CAP = { bilek: 150 };
+    // [R6 2026-09-03] Strop porce na JEDNO jídlo. Pečivo, vločky a müsli 120 g, ovoce
+    // 200 g, jinak strop potraviny nebo kategorie. Jedno místo pro všechny ořezy níž,
+    // ať se strop nedá obejít tím, že se na kategorii sáhne jinou cestou.
+    // ⛔ Táž funkce je v appce (`src/engine/meal-gen-core.ts`), hlídá parita.
+    var stropG = function (f) {
+      if (PECIVO_VLOCKY_RE.test(f.id)) return STROP_PECIVO_G;
+      if (f.cat === 'fruit') return STROP_OVOCE_G;
+      return FOOD_CAP[f.id] != null ? FOOD_CAP[f.id] : CAP[f.cat];
+    };
     function capPass() {
       all.forEach(function (it) {
-        var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
+        var cap = stropG(it.food); if (cap && it.grams > cap) it.grams = cap;
         // Uzenina nikdy přes 80 g na talíři (drží i proti zpětnému škálování).
         if (UZENINA_RE.test(it.food.id) && it.grams > UZENINA_MAX_G) it.grams = UZENINA_MAX_G;
       });
@@ -692,11 +785,70 @@
     // k hlavnímu jídlu, vločky a banán k snídani, hrst mandlí) a znormalizujeme znovu —
     // přesně tohle by velkému klientovi poradil kouč.
     function byId(id) { return db.filter(function (f) { return f.id === id; })[0] || null; }
+    // Má jídlo bílkovinný základ?
+    var maBilkovinu = function (m) {
+      return m.items.some(function (it) { return it.food.cat === 'protein' || it.food.cat === 'dairy'; });
+    };
+    // [R2] Sladké, nebo slané jídlo? Bere se ze základu jídla, stejně jako při skládání.
+    var jeSladkeJidlo = function (m) {
+      var z = m.items.filter(function (it) { return it.food.cat === 'protein' || it.food.cat === 'dairy'; })[0];
+      if (z) return jeSladkyZaklad(z.food);
+      return m.kind === 'breakfast' || m.kind === 'snack' || m.kind === 'late';
+    };
+    var VLOCKY_MUSLI_RE = /ovesne-vlocky|musli|granola|ovesna-kase|ovesne-otruby/;
+    // [R2] Doplněk, který patří jen na sladký talíř (ovoce, vločky, müsli).
+    var sladkyDoplnek = function (f) { return f.cat === 'fruit' || VLOCKY_MUSLI_RE.test(f.id); };
+    // ⛔ [R1 + R2 2026-09-03] DOPLŇKOVÝ BLOK VYRÁBĚL PŘESNĚ TY VADY, které R1 a R2 zakazují:
+    // `syrovatkovy-protein` míří do prostředního jídla a `tvaroh-mekky` do posledního,
+    // a při pěti a šesti jídlech je to SVAČINA, která bílkovinu už dostala (druhý základ);
+    // `ovesne-vlocky` a `banan` míří do snídaně, i když stojí na šunce (sladké ke slanému).
+    // Doplněk se proto ukládá do jídla, které ho snese; když žádné takové není, vynechá se.
+    // Radši den o kousek pod cílem než talíř, který nikdo nesní; ostatní dorovnání
+    // (přílohy, ovoce, finální trim) mají prostor to dohnat.
+    // ⛔ Táž logika je v appce, hlídá parita.
+    /** ⛔⛔ [R1 2026-09-03, MĚŘENÁ VÝJIMKA] U bílkovinného doplňku je brána MĚKKÁ.
+     *  Tvrdá brána (nemáš prázdné jídlo, tak se doplněk vynechá) rozbila vysoké cíle
+     *  bílkovin: `training.test.ts` naměřil 6 z 36 deficitních plánů mimo ±15 % bílkovin,
+     *  nejhorší den 252 g cíle proti 179 g skutečnosti, tedy −29 %. Je to přesně ten
+     *  případ, na který doplňkový blok existuje: 252 g bílkovin ze tří jídel je 84 g
+     *  na jídlo, což je 365 g kuřecích prsou, a strop porce je 300 g. Bez druhého zdroje
+     *  to nejde poskládat vůbec.
+     *  ⇒ Prázdné jídlo má PŘEDNOST (na běžném dni R1 platí a doplněk jde tam, kde
+     *  bílkovina chybí), ale když žádné není, doplněk se přidá i do obsazeného jídla.
+     *  Odborná správnost výživy je nad estetikou talíře. Ustoupí ale AŽ POD 88 % cíle
+     *  bílkovin, tedy na dni, který cíl vážně nesplní; těsné podstřelení (97 až 99 %)
+     *  druhý základ nedostane. Změřeno na 160 dnech: s prahem 0,95 padlo R1 osmkrát,
+     *  a přitom to dni přineslo 1 g bílkovin. S prahem 0,88 je R1 na téže mřížce
+     *  bez jediného nálezu a extrémní cíle (252 g ze tří jídel) se pořád poskládají.
+     *  Ostatní pravidla (R2, tedy slané proti sladkému) zůstávají tvrdá.
+     *  ⛔ Stejná výjimka je na webu (`assets/meal-gen.js`), hlídá parita-jidelnicku.mjs. */
+    var kamSDoplnkem = function (food, mealIdx) {
+      var jeProt = food.cat === 'protein' || food.cat === 'dairy';
+      var jeSladky = sladkyDoplnek(food);
+      var sedne = function (i5) {
+        if (jeProt && maBilkovinu(out[i5])) return false;
+        if (jeSladky && !jeSladkeJidlo(out[i5])) return false;
+        if (food.cat === 'veg' && jeSladkeJidlo(out[i5])) return false;
+        return true;
+      };
+      var chtene = Math.min(mealIdx, out.length - 1);
+      if (sedne(chtene)) return chtene;
+      for (var k5 = 0; k5 < out.length; k5++) if (sedne(k5)) return k5;
+      // Měkká brána pro bílkovinu (viz komentář výš): R2 drží dál, R1 ustoupí.
+      if (jeProt && !jeSladky && totalKey('p') < targets.protein * 0.88) {
+        if (!jeSladkeJidlo(out[chtene])) return chtene;
+        for (var k6 = 0; k6 < out.length; k6++) if (!jeSladkeJidlo(out[k6])) return k6;
+        return chtene;
+      }
+      return -1;
+    };
     function addExtra(food, grams, mealIdx) {
       if (!food) return false;
       if (all.some(function (it) { return it.food.id === food.id; })) return false;
+      var cil = kamSDoplnkem(food, mealIdx);
+      if (cil < 0) return false;
       var it = { food: food, grams: grams };
-      out[Math.min(mealIdx, out.length - 1)].items.push(it);
+      out[cil].items.push(it);
       all.push(it);
       return true;
     }
@@ -783,7 +935,7 @@
           }
         }
       }
-      var cap = FOOD_CAP[it.food.id] || CAP[it.food.cat]; if (cap && it.grams > cap) it.grams = cap;
+      var cap = stropG(it.food); if (cap && it.grams > cap) it.grams = cap;
     });
     // Součet tří ifFits zdvihů umí přelézt +5 % o zaokrouhlení. Mikro-ořez jen
     // sacharidů, nejdřív k 15 g (viditelná porce), pak k 10 g. Velký den sem
@@ -800,6 +952,10 @@
           it.grams -= Math.min(it.grams - minG, over / kcalPerG);
         }
       };
+      // [R5 2026-09-03] Orez smi jit pod minimalni porci schvalne: pruchod minimalnich
+      // porci niz ten drobek stejne vyhodi, a pro den NAD cilem je vyhozeni to spravne
+      // reseni (posune ho k cili). Zvednout orez az na MIN_PORCE_G bylo meritelne horsi:
+      // median odchylky kcal na 48 dnech 1,26 % proti 1,16 %.
       orezK(15);
       if (totalKey('kcal') > targets.kcal * 1.05) orezK(10);
     }
@@ -809,6 +965,8 @@
     out.forEach(function (m) {
       m.items = m.items.filter(function (it) { return it.food.cat === 'protein' || it.grams >= 8; });
     });
+    // (Průchod minimálních porcí podle R5 běží až za vlákninou, viz níž: optimalizace
+    //  vlákniny umí gramáž ještě snížit, tak nemá smysl řešit ji dvakrát.)
 
     // [fix 2026-07-27] POSLEDNÍ ZÁCHRANA proti podstřelení. Den, který i po zaokrouhlení
     // a stropech zůstal víc než 5 % POD cílem, dorovnej na položkách, které mají do stropu
@@ -847,7 +1005,7 @@
           if (it.food.cat !== 'carb') return;
           var chybi = chybiKcal();
           if (chybi <= targets.kcal * 0.05) return;
-          var cap = FOOD_CAP[it.food.id] != null ? FOOD_CAP[it.food.id] : CAP[it.food.cat];
+          var cap = stropG(it.food);
           var rezerva = Math.max(0, (cap != null ? cap : Infinity) - it.grams);
           var naGram = it.food.per100.kcal / 100;
           if (rezerva < 5 || naGram <= 0) return;
@@ -866,9 +1024,9 @@
           if (all.some(function (it) { return it.food.id === f.id; })) continue;
           var naGramP = f.per100.kcal / 100;
           if (naGramP <= 0) continue;
-          var capP = FOOD_CAP[f.id] != null ? FOOD_CAP[f.id] : CAP[f.cat];
+          var capP = stropG(f);
           var g = Math.min(capP != null ? capP : Infinity, Math.ceil(chybiKcal() / naGramP / 5) * 5);
-          if (g >= 8) {
+          if (g >= MIN_PORCE_G) {
             var novaPolozka = { food: f, grams: g };
             out[out.length - 1].items.push(novaPolozka);
             all.push(novaPolozka);
@@ -883,7 +1041,7 @@
           if (it.food.cat !== 'fruit') return;
           var chybi = chybiKcal();
           if (chybi <= targets.kcal * 0.05) return;
-          var cap = FOOD_CAP[it.food.id] != null ? FOOD_CAP[it.food.id] : CAP[it.food.cat];
+          var cap = stropG(it.food);
           var rezerva = Math.min(Math.max(0, (cap != null ? cap : Infinity) - it.grams), it.grams * 0.5);
           var naGram = it.food.per100.kcal / 100;
           if (rezerva < 5 || naGram <= 0) return;
@@ -968,7 +1126,7 @@
       // Gramů vlákniny na 1 kcal: chceme víc vlákniny za tytéž kalorie, ne víc jídla.
       var hustotaVl = function (f) { return (f.per100.fib || 0) / Math.max(1, f.per100.kcal || 0); };
       var stropPolozky = function (f) {
-        var c = FOOD_CAP[f.id] != null ? FOOD_CAP[f.id] : CAP[f.cat];
+        var c = stropG(f);
         return c != null ? c : 400;
       };
 
@@ -1022,7 +1180,7 @@
               if (vhodnost && !vhodnost.test(f1.id)) continue;
               var g1 = Math.round((kcalIt / f1.per100.kcal) * 100 / 5) * 5;
               g1 = Math.min(g1, stropPolozky(f1));
-              if (g1 < 8) continue;
+              if (g1 < (f1.cat === 'fat' ? 8 : MIN_PORCE_G)) continue; // [R5] drobek na talíři ne
               // ⛔ Rozhoduje VÝSLEDNÁ vzdálenost dne od pásma, ne zisk vlákniny. Tah, který
               // by cíl přeskočil (nebo den ještě víc přetáhl), tím vypadne sám.
               var novaFib = fibTed - fibIt + macrosFor(f1, g1).fib;
@@ -1083,8 +1241,11 @@
         var rust = nahoru ? nejbohatsi : nejchudsi;
         var ubytek = nahoru ? nejchudsi : nejbohatsi;
         var prostor = stropPolozky(rust.food) - rust.grams;
-        // Ubírat jde jen do viditelné porce; pod 15 g už to na talíři není porce, ale drobek.
-        var lzeUbrat = ubytek.grams - 15;
+        // Ubírat jde jen do viditelné porce; pod minimální porci už to není porce, ale
+        // drobek. [R5 2026-09-03] Podlaha zvednutá z 15 g na MIN_PORCE_G (u tuků 8 g,
+        // tam jsou malé gramáže normální).
+        var podlahaUbytku = ubytek.food.cat === 'fat' ? 8 : MIN_PORCE_G;
+        var lzeUbrat = ubytek.grams - podlahaUbytku;
         if (prostor < 5 || lzeUbrat < 5) break;
         var kcalGr = rust.food.per100.kcal / 100;
         var kcalGu = ubytek.food.per100.kcal / 100;
@@ -1106,6 +1267,41 @@
         }
       }
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // [R5 2026-09-03] MINIMÁLNÍ PORCE 20 g u všeho kromě tuků.
+    //
+    // Běží až TADY, protože gramáže hýbe i finální trim kalorií a optimalizace vlákniny;
+    // dřív by se rozhodovalo nad čísly, která se ještě změní.
+    //
+    // Volba zvednout na 20 g, nebo vypustit se dělá podle toho, co MÍŇ rozhodí kalorie
+    // dne, protože přesnost dne je to, co engine slibuje. Prakticky to znamená: položka
+    // pod ~10 g je energeticky blíž nule a vypadne, položka nad ~10 g se dorovná na porci.
+    // Bílkovinný zdroj se NIKDY nevypouští (základ jídla), jen se případně zvedne.
+    // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita.
+    // ─────────────────────────────────────────────────────────────────────────
+    var kcalDne = function () {
+      return out.reduce(function (s6, m6) {
+        return s6 + m6.items.reduce(function (q6, it) { return q6 + macrosFor(it.food, it.grams).kcal; }, 0);
+      }, 0);
+    };
+    out.forEach(function (m) {
+      m.items = m.items.filter(function (it) {
+        if (it.food.cat === 'fat' || it.grams >= MIN_PORCE_G) return true;
+        var kcalNaGram = (it.food.per100.kcal || 0) / 100;
+        var ted = kcalDne();
+        var poZvednuti = Math.abs(ted + (MIN_PORCE_G - it.grams) * kcalNaGram - targets.kcal);
+        var poVypusteni = Math.abs(ted - it.grams * kcalNaGram - targets.kcal);
+        // Bilkovinny zdroj se nevypousti NIKDY, ani mlecny: bez nej by z jidla zbyla
+        // priloha se zeleninou. Merene: bez `dairy` v teto podmince spadl u jednoho dne
+        // z 80 test `vlaknina: bilkovina neklesne pod 98 % puvodni`.
+        if (it.food.cat === 'protein' || it.food.cat === 'dairy' || poZvednuti <= poVypusteni) {
+          it.grams = MIN_PORCE_G;
+          return true;
+        }
+        return false;
+      });
+    });
 
     // ─────────────────────────────────────────────────────────────────────────
     // [oprava po auditu 2026-09-02] PŘETÍŽENÉ JÍDLO SE PŘEROZDĚLÍ, NIC SE NEMAŽE.
@@ -1156,6 +1352,11 @@
         /* eslint-disable no-loop-func */
         out.forEach(function (c3, i4) {
           if (i4 === zdroj) return;
+          // ⛔ [R2 2026-09-03] Přesun nesmí smíchat slané a sladké. Přesně tudy vzniklo
+          // hovězí mleté + těstoviny + rajče + POMERANČ 250 g jako oběd: přetížená
+          // svačina odložila ovoce do hlavního jídla a nikdo se neptal, jestli tam patří.
+          if (sladkyDoplnek(itH.food) && !jeSladkeJidlo(c3)) return;
+          if (itH.food.cat === 'veg' && jeSladkeJidlo(c3)) return;
           // Táž potravina dvakrát v jednom jídle nedává smysl na talíři.
           if (c3.items.some(function (x) { return x.food.id === itH.food.id; })) return;
           var rezerva = stropJidla(c3.kind) - hmotnostJidla(c3) - itH.grams;
