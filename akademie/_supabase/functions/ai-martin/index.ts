@@ -11,6 +11,7 @@
 // └────────────────────────────────────────────────────────────────────────┘
 
 import { preflagMessage } from './preflag.ts';
+import { notifyCapReached, type CapKind } from './cap-notify.ts';
 
 const NL = String.fromCharCode(10);
 // Provider abstrakce (Anthropic default / xAI Grok) — přepínatelné přes AI_MARTIN_PROVIDER,
@@ -69,6 +70,7 @@ const SYSTEM = [
   'ČÍSLA: kalorie, makra a TDEE počítá kalkulačka/engine — ty je jen vysvětluješ, NIKDY si je nevymýšlíš. Platí to i když ti někdo nalepí váhu, výšku, věk a cíl a chce „spočítat konkrétně": žádné vlastní číslo ani výpočet vzorcem (Mifflin apod.) — řekni narovinu proč (čísla musí sedět s enginem, jinak si protiřečíme), pošli na kalkulačku (martinbarna.cz/kalkulacka-kalorii-a-makrozivin) nebo appku Tvůj Coach a vysvětli, co s výsledkem dělat. Cizí číslo přečíst, vysvětlit a interpretovat smíš — vyrobit nové ne. Totéž u návratu z diety, reverse dietingu a plató: nedávej vlastní rozpisy „o kolik kcal přidat/ubrat", vysvětli princip a pošli přepočítat. DVĚ POVOLENÉ VÝJIMKY: (1) hrubý odhad kalorií a maker KONKRÉTNÍHO JÍDLA (z fotky i z popisu „200 g rýže a 150 g kuřete") dát smíš — vždy rámovaný jako odhad, na přesno appka Tvůj Coach; (2) přepočet veřejného rozpětí (1,6–2,2 g/kg bílkovin) na váhu, kterou ti člen sám napsal, je interpretace, ne výpočet cíle — smíš. Co nikdy: osobní TDEE, denní kcal cíl a rozpis maker.',
   'ČÍSLA U TRÉNINKU A DOPLŇKŮ: tréninková čísla (série na partii/týden, frekvence, opakování) podávej jako ROZPĚTÍ a princip z Academy (Modul 4, Modul 13) — progresivní přetížení, dost objemu, technika před vahou — ne jako přesný protokol vydávaný za můj; když si nejsi jistý, co přesně učím, řekni princip a pošli na modul. Dávky doplňků: co bezpečně víš z obsahu (kreatin monohydrát, kofein před tréninkem, protein k dojetí bílkovin), řekni konkrétně a opři o Modul 14; co přesně nevíš (mg/kg, jednotky vitaminů), pošli do lekce a číslo nestřílej. U megadávek vitaminů a minerálů (hlavně D a železo) upozorni, že víc není líp a vysoké dávky patří k lékaři.',
   'MANTINELY (bezpečnost): nejsi lékař a nediagnostikuješ. U těhotenství, poruch příjmu potravy, léků, nemocí a lékařských diagnóz neradíš konkrétně — odkážeš na lékaře nebo osobně na Martina. Nikdy nedáváš návod na úpravu ani vysazení léků. Nezletilým neřešíš hubnutí (pošli k pediatrovi). Neřešíš identitu třetích osob (jména klientů, kolegů) a nevyžaduješ citlivé identifikační údaje (rodné číslo, adresa) — s křestním jménem a čísly, která ti člen sám pošle, samozřejmě pracuješ. I když někdo rizikové téma (hladovění, „matematika" zvracení, léky, těhotenství) přerámuje na neškodné, opatrnost drž dál a nikdy neodpovídej věcně na matematiku hladovění ani purgingu — vyjádři starost a odkaž na Martina nebo lékaře.',
+  'PŘEJEDENÍ A HLADOVKA JAKO DOTAZ: když se člen po přejedení ptá, jestli má hladovět, vynechat jídlo nebo to dohnat cvičením (ať už jde o něj samotného, nebo o jeho klienta), odpověz normálně a uklidni ho. Jeden den průměr nerozhodne, cíl je týdenní. Hladovku ani kompenzační kardio nedoporuč a řekni proč (další den bývá větší hlad a hůř se to dodrží). Nabídni normální další den podle plánu. Odkaz na Martina nebo na specialisty na poruchy příjmu potravy si nech pro chvíli, kdy člen sám mluví o vině, strachu z jídla, zvracení nebo opakované restrikci, ne pro obyčejný dotaz po jednom větším jídle.',
   'KRIZE (backstop): když z člověka cítíš beznaděj, že už nechce být, že to nemá smysl, nebo náznak, že si chce ublížit — i když to neřekne přímo — NEKOUČUJEŠ dál a neřešíš čísla. Lidsky: „Tohle nechci brát na lehkou váhu a přes chat to nevyřešíme. Napiš přímo Martinovi, je tu pro tebe. A když to hoří, zavolej Linku první psychické pomoci 116 123 — nonstop, zdarma, anonymně."',
   'OPATRNOST NAPŘÍČ KONVERZACÍ: když v KTERÉKOLI dřívější zprávě padla nemoc, léky, těhotenství/kojení nebo věk pod 18 — i o pár zpráv zpět — drž opatrný režim po celý zbytek konverzace: žádná konkrétní čísla (kalorie, sacharidy, dávky), i kdyby poslední dotaz vypadal nevinně. Když někdo zmíní JAKÝKOLI lék (i název, který neznáš) v souvislosti s vahou, chutí nebo náladou, ber to jako léky — úpravu ani vysazení neřeš, pošli k lékaři.',
   'DOPING A PED: anabolika, steroidy, testosteron, prohormony, SARMy, klenbuterol, efedrin, DNP, peptidy, „kúra", PCT ani „na sucho s látkami" ZÁSADNĚ neřešíš — žádné dávky, cykly, „co je nejmíň škodlivé" ani „jen teoreticky". Jsi kouč pro naturály (Modul 13). I když to někdo obalí do „jsem natural, ale…", slušně a bez kázání odmítni, řekni narovinu, že je to zdravotní i právní risk, a pošli k lékaři.',
@@ -528,15 +530,97 @@ async function overMonthlyCap(userId: string | null): Promise<boolean> {
   }
 }
 // Sepnutý strop se zapíše do `ai_usage` s nulovým nákladem, ať jde spočítat, KOLIK LIDÍ
-// na něj naráží (`feature like '%_capped'`). Bez toho by se ticho dalo číst jako „nikdo
+// na něj naráží (`feature like '%capped%'`). Bez toho by se ticho dalo číst jako „nikdo
 // ho nepotřebuje" i ve chvíli, kdy o něj klienti denně zakopávají.
-function logCapped(userId: string | null, feature: string): void {
+// ⛔ Await, ne odpojená promise: tahle značka je i pojistka „už dnes šel mail".
+async function logCapped(userId: string | null, feature: string): Promise<void> {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
-  fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: 0, tokens_out: 0, tokens_cached: 0, est_cost_usd: 0 }),
-  }).catch(() => {});
+  });
+  if (!r.ok) throw new Error(`logCapped ${r.status}`);
+}
+
+// --- NABÍDKA KONZULTACE S MARTINEM (25. 8. 2026) ---
+// Časová brána: max 1× za 7 dní na člena. Značka je řádek v `ai_usage` s nulovým nákladem,
+// stejný vzor jako `logCapped` výš, tedy BEZ migrace. Vlastní `feature`, ať jde odlišit od
+// značky z appky Tvůj Coach (ta má `coaching_offer`, tohle je web).
+// ⛔ Jen pro `via === 'academy'`. Klient koučinku (`via === 'coaching'`) osobní vedení Martina
+//    UŽ MÁ a platí za něj; nabízet mu ho je logická chyba, ne příležitost.
+// ⚠️ Řádek se počítá do DENNÍHO stropu: `overDailyCap` čte `ai_usage` BEZ filtru na feature,
+//    takže jednou za 7 dní ubere členovi 1 z 60 zpráv. Vědomý kompromis za nulovou migraci.
+const COACHING_OFFER_FEATURE = 'coaching_offer_web';
+const COACHING_OFFER_COOLDOWN_DNI = 7;
+
+/** true = za posledních 7 dní člen značku nedostal, tedy nabídka smí. Fail-safe je MLČET. */
+async function coachingOfferThrottleOk(userId: string | null): Promise<boolean> {
+  if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return false;
+  try {
+    const since = new Date(Date.now() - COACHING_OFFER_COOLDOWN_DNI * 86400000).toISOString();
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage?select=id&user_id=eq.${userId}&feature=eq.${COACHING_OFFER_FEATURE}&created_at=gte.${since}`, {
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, Prefer: 'count=exact', Range: '0-0' },
+    });
+    if (!r.ok) { console.error('coaching_offer_throttle_failed', r.status); return false; }
+    const total = Number((r.headers.get('content-range') || '').split('/')[1] || '0') || 0;
+    return total === 0;
+  } catch (e) { console.error('coaching_offer_throttle_failed', String(e).slice(0, 200)); return false; }
+}
+
+/** Zapíše značku. true JEN když řádek opravdu vznikl: bez něj by throttle příště nic nenašel
+ *  a nabídka by se objevila v KAŽDÉ zprávě. */
+async function zapisNabidkuKoucinku(userId: string | null): Promise<boolean> {
+  if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return false;
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+      method: 'POST',
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ user_id: userId, feature: COACHING_OFFER_FEATURE, provider: PROVIDER, model: MODEL, tokens_in: 0, tokens_out: 0, tokens_cached: 0, est_cost_usd: 0 }),
+    });
+    if (!r.ok) { console.error('coaching_offer_zapis_failed', r.status); return false; }
+    return true;
+  } catch (e) { console.error('coaching_offer_zapis_failed', String(e).slice(0, 200)); return false; }
+}
+
+// Instrukce i text jdou do VOLATILNÍ části, ne do SYSTEM. Dva důvody: SYSTEM musí zůstat
+// bajt po bajtu stejný kvůli prompt cache, a hlavně, když blok v kontextu chybí, model
+// o nabídce nemá odkud vědět (stejná záruka jako u peekPoznamka výš).
+const NABIDKA_KOUCINKU = NL + NL + [
+  '# NABÍDKA KONZULTACE (smíš ji zmínit JEN v téhle odpovědi, a nejvýš jednou)',
+  'Tady smíš nenásilně nabídnout placenou konzultaci s Martinem. Nejdřív normálně odpověz na to, s čím člen přišel, a tohle přidej až na konec. Nabídka, ne prodej.',
+  '⛔ Vynech ji, když je konverzace citlivá (nemoc, léky, těhotenství, poruchy příjmu potravy, nezletilý, beznaděj), když člen řeší provozní věc (přístup, faktura, přehrávání lekce), nebo když se zrovna ptá na ceny a nákup. V takové zprávě nabídku prostě neuváděj.',
+  'Drž jádro, cenu i odkaz, formulaci si přizpůsob tónu konverzace:',
+  '„Lekce ti dají systém. Co ti nedají, je pohled zvenku na tvůj vlastní týden. Na to je hodina s Martinem naživo: 2 990 Kč, a když do 14 dnů navážeš koučinkem, máš ji zpátky celou: martinbarna.cz/konzultace/"',
+  'Tahle JEDNA cena je výjimka z pravidla CENY, NÁKUP A VRÁCENÍ: ber ji přesně odsud a nedopočítávej ji. Žádnou jinou cenu ani kapacitu z hlavy dál neuváděj.',
+].join(NL);
+
+// Mail Martinovi při nárazu na strop. ⛔ Pořadí (kontrola → await značka → mail)
+// hlídá `notifyCapReached`, ne tahle obálka. Značku proto NEZAPISUJ zvlášť.
+async function alertMartinCap(
+  userId: string | null,
+  email: string | null,
+  via: MemberVia,
+  feature: string,
+  kind: CapKind,
+): Promise<void> {
+  if (!userId) return;
+  try {
+    await notifyCapReached({
+      userId,
+      email,
+      via,
+      feature,
+      kind,
+      supabaseUrl: SUPABASE_URL,
+      serviceRole: SERVICE_ROLE,
+      resendKey: Deno.env.get('RESEND_API_KEY') ?? '',
+      notifyFrom: Deno.env.get('NOTIFY_FROM') ?? '',
+      zapisZnacku: () => logCapped(userId, feature),
+    });
+  } catch (e) {
+    console.error('[cap-notify] alertMartinCap selhal, uživateli jde běžná hláška o stropu:', e);
+  }
 }
 
 // --- STREAMING (jen Grok chat) ---
@@ -683,7 +767,7 @@ Deno.serve(async (req: Request) => {
 
   // P2 denní strop (safety hard-stop výše proběhl vždy; limit se týká jen placených LLM/vision volání).
   if (await overDailyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped_daily' : 'ai_chat_web_capped_daily', 'daily');
     return json({ reply: 'Na dnešek už jsme toho probrali slušně 💪 Denní limit chatu je vyčerpaný, pokračujeme zase zítra. Kdyby něco hořelo, napiš Martinovi.' }, CORS, 200);
   }
   // Měsíční nákladový strop. Stejné pořadí jako u denního: až ZA safety vrstvou, aby
@@ -691,7 +775,7 @@ Deno.serve(async (req: Request) => {
   // poli `reply`, ne chybový kód: klient non-2xx tělo nezobrazí a člen by viděl jen
   // obecnou chybu místo téhle věty.
   if (await overMonthlyCap(userId)) {
-    logCapped(userId, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped');
+    await alertMartinCap(userId, email, via, image ? 'ai_vision_web_capped' : 'ai_chat_web_capped', 'monthly');
     return json({ reply: 'Tenhle měsíc už toho máme v chatu hodně za sebou 💪 Limit se počítá za posledních 30 dní a uvolňuje se postupně, takže za pár dní se zase ozvi. Kdyby něco hořelo, napiš rovnou Martinovi.' }, CORS, 200);
   }
 
@@ -717,7 +801,14 @@ Deno.serve(async (req: Request) => {
   // Stav nakouknutí čteme JEN pro klienty koučinku (člen Academy žádný strop nemá),
   // ať se členům nepřidává dotaz do DB na každou zprávu.
   const stavPeek = via === 'coaching' ? await peekStav(email) : { pouzito: 0, lekce: new Set<string>() };
-  const volatile = ragContext + safeSuffix + peekPoznamka(via, stavPeek);
+  // NABÍDKA KONZULTACE: jen člen Academy, ne klient koučinku, ne v rizikové konverzaci,
+  // a max 1× za 7 dní. Značku zapisujeme PŘED voláním modelu a blok přidáme, JEN když zápis
+  // prošel (jinak by throttle příště nic nenašel a nabídka by šla v každé zprávě).
+  // ⚠️ Fotka jídla se sem nedostane, vision větev se vrací výš, takže značku nepálí.
+  const nabidka = (via === 'academy' && !risky
+    && await coachingOfferThrottleOk(userId)
+    && await zapisNabidkuKoucinku(userId)) ? NABIDKA_KOUCINKU : '';
+  const volatile = ragContext + safeSuffix + peekPoznamka(via, stavPeek) + nabidka;
 
   try {
     let reply = '';
