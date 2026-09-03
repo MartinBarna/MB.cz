@@ -997,6 +997,44 @@ export function tpOtisk(v: Record<string, unknown>, dnyPopis: string[], vyloucen
   ]);
 }
 
+// =============================================================================
+// MOST DO APPKY „TVŮJ COACH" (edge `academy-grant` + sdílený secret).
+//
+// Stejná cesta, jakou už používají `set_access`, `client_app_data` a `tc_goals_push`.
+// Vzniká 3. 9. 2026 kvůli trojici akcí Kontroly od Martina, aby se volání nepsalo
+// potřetí a počtvrté.
+//
+// ⛔ SECRET SE ČTE Z `app_config`, ne z env: Martin ho umí vyměnit bez deploye.
+//    Když chybí, vrací se `chybi_secret`, NIKDY tichá prázdná odpověď: prázdno
+//    vypadá jako „appka nic nemá", což je nerozeznatelné od pravdy.
+// ⛔ Stará verze funkce appky odmítá neznámou akci 404 (dohoda v `core.ts`).
+//    Rozlišuje se to, aby admin uměl říct „appka tuhle akci ještě neumí",
+//    místo aby tvrdil hotovo.
+// deno-lint-ignore no-explicit-any
+async function tcMost(admin: any, telo: Record<string, unknown>): Promise<
+  { ok: true; data: any } | { ok: false; duvod: string; status?: number }
+> {
+  const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+  const gsec = gs?.value ? String(gs.value) : "";
+  if (!gsec) return { ok: false, duvod: "chybi_secret" };
+  const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+    body: JSON.stringify(telo),
+    signal: AbortSignal.timeout(20_000),   // odeslani mailu trva dyl nez cteni
+  }).catch(() => null);
+  if (!r) return { ok: false, duvod: "appka_neodpovida" };
+  const jj = await r.json().catch(() => null);
+  if (!r.ok || !jj) {
+    if (r.status === 404) return { ok: false, duvod: "appka_akci_neumi", status: 404 };
+    // Hláška z appky je psaná pro člověka (409 „už je odeslaný"), takže se protahuje.
+    const zprava = jj && typeof jj.error === "string" ? String(jj.error).slice(0, 200) : "http-" + r.status;
+    return { ok: false, duvod: zprava, status: r.status };
+  }
+  if (jj.ok === false) return { ok: false, duvod: String(jj.duvod ?? jj.error ?? "appka_odmitla") };
+  return { ok: true, data: jj };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -2438,6 +2476,108 @@ Deno.serve(async (req) => {
       if (jj.ok === false) return json({ ok: false, duvod: String(jj.duvod ?? jj.error ?? "appka_odmitla") });
       if (jj.prepsano !== true) return json({ ok: false, duvod: "appka_neumi" });
       return json({ ok: true, prepsano: true, user_id_8: String(jj.user_id_8 ?? "") });
+    }
+
+    // =========================================================================
+    // 🧾 KONTROLA OD MARTINA (tier `ai_kontrola`, 3. 9. 2026)
+    //
+    // Čtrnáctidenní písemný rozbor vyrábí jako KONCEPT automat v appce; odesílá
+    // ho výhradně člověk. Do 3. 9. se to dalo vyřídit jen v adminu appky, což
+    // znamenalo druhé okno. Martin chce jedno, takže se fronta obsluhuje odsud.
+    //
+    // ⛔⛔ GENEROVÁNÍ, NÁKLAD AI I MAIL ZŮSTÁVAJÍ V APPCE. Tady se jen čte fronta
+    //    a posílá se rozhodnutí. Kdyby se sem přesunulo skládání textu, vznikla
+    //    by druhá pravda o tom, co klient dostal.
+    // ⛔ ŽÁDNÉ HROMADNÉ ODESLÁNÍ. Každý rozbor odklikne Martin zvlášť, protože
+    //    text jde ven pod jeho jménem.
+    // =========================================================================
+    if (action === "rozbory_fronta") {
+      // Bez e-mailu: co čeká na Martina napříč klienty. S e-mailem: historie
+      // jednoho klienta (i odeslané), pro jeho kartu.
+      const email = low(body.email);
+      const out = await tcMost(admin, { action: "rozbory-fronta", email: email || undefined });
+      if (!out.ok) return json({ ok: false, duvod: out.duvod });
+      return json({
+        ok: true,
+        rows: Array.isArray(out.data.rows) ? out.data.rows : [],
+        // „zadny" = člověk v appce placený přístup nemá. Pro kartu klienta se to
+        // překládá na „bez appky"; není to chyba, většina koučinkových klientů
+        // appku nepoužívá a to je v pořádku.
+        stav_appky: out.data.stav_appky ?? null,
+      });
+    }
+
+    // 📊 DATA KLIENTA DO KARTY KONTROLY (3. 9. 2026). Martin: „vidím krásně
+    // všechna data, přehledně, krátkodobá i dlouhodobá."
+    // ⛔ NENÍ TO `client_app_data`. Ten vrací DENNÍ řádky za 14 dní (tlačítko 📱).
+    //    Tohle vrací hotová čísla proti cíli plus TÝDENNÍ historii od začátku,
+    //    aby šlo posoudit trend, ne jen poslední dva týdny.
+    // ⚠️ Klient bez appky vrací `found:false`. Není to chyba, většina koučinkových
+    //    klientů appku nepoužívá.
+    if (action === "klient_prehled") {
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      const out = await tcMost(admin, {
+        email, action: "klient-prehled",
+        days: Number(body.days) || 14, tydnu: Number(body.tydnu) || 26,
+      });
+      if (!out.ok) return json({ ok: false, duvod: out.duvod });
+      return json({ ok: true, data: out.data });
+    }
+
+    // ⚠️ NEVRATNÉ: odešle klientovi mail pod Martinovým jménem. Dvoukrokové
+    //    potvrzení je v prohlížeči (`rozbory.js`), server ho nenahradí.
+    if (action === "rozbor_odeslat") {
+      const rozborId = String(body.rozbor_id ?? "").trim();
+      if (!RD_UUID.test(rozborId)) return json({ error: "no_rozbor_id" }, 400);
+      // Upravený text je nepovinný. Prázdný se posílá jako „beze změny", ne jako
+      // smazání: prázdný mail by byl horší než neupravený.
+      const koncept = String(body.koncept ?? "").trim();
+      const out = await tcMost(admin, {
+        action: "rozbor-odeslat", rozbor_id: rozborId, koncept: koncept || undefined,
+      });
+      if (!out.ok) return json({ ok: false, duvod: out.duvod });
+      return json({ ok: true, odeslano: true, oznaceno: out.data.oznaceno !== false });
+    }
+
+    // Zahození konceptu. Žádný mail, jen stav `zamitnuto` v appce.
+    if (action === "rozbor_zahodit") {
+      const rozborId = String(body.rozbor_id ?? "").trim();
+      if (!RD_UUID.test(rozborId)) return json({ error: "no_rozbor_id" }, 400);
+      const out = await tcMost(admin, { action: "rozbor-zahodit", rozbor_id: rozborId });
+      if (!out.ok) return json({ ok: false, duvod: out.duvod });
+      return json({ ok: true, zahozeno: true });
+    }
+
+    // 🎟️ RUČNÍ PŘÍSTUP DO APPKY S VÝSLOVNOU EXPIRACÍ (3. 9. 2026).
+    //
+    // ⛔⛔ PROČ SE POSÍLÁ DATUM A NE JEN TIER: délku přístupu z Academy grantu
+    //    dopočítává SQL `grant_app_access` podle `source`. Zdroj, který ve větvení
+    //    není, spadne do `else null`, a to znamená PŘÍSTUP NAVĚKY. U tieru
+    //    `ai_kontrola` (1 990 Kč/měsíc) by jeden klik rozdal nejdražší plán zdarma
+    //    a nic by nekřiklo. Appka od 3. 9. grant bez `expires_at` u tohohle tieru
+    //    rovnou odmítá; datum se počítá TADY, protože délku zná ten, kdo grant dává.
+    // ⛔ `set_access` výš zůstává, jak je: ten zrcadlí Academy členství (tier
+    //    `ai_basic`, rok), tohle je vědomý ruční dárek nebo předplacené období.
+    if (action === "tc_grant_tier") {
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      const tier = String(body.tier ?? "").trim();
+      // Bílá listina schválně: `gold` a `diamond` jsou v appce prázdné nálepky
+      // (26. 7. 2026) a nový tier tudy nesmí proklouznout bez rozhodnutí.
+      if (!["ai_basic", "ai_kontrola"].includes(tier)) return json({ ok: false, duvod: "neznamy_tier" }, 400);
+      const mesice = Math.round(Number(body.mesice ?? 1));
+      if (!isFinite(mesice) || mesice < 1 || mesice > 24) return json({ ok: false, duvod: "mesice_mimo_rozsah" }, 400);
+      const do_ = new Date();
+      do_.setMonth(do_.getMonth() + mesice);
+      const out = await tcMost(admin, {
+        email, action: "grant", tier, source: "admin-panel", expires_at: do_.toISOString(),
+      });
+      const vysledek = out.ok ? String(out.data.result ?? "ok") : out.duvod;
+      // Log pokusu, stejně jako u `set_access`. ⛔ Není to stav přístupu, jen záznam.
+      await admin.from("tvujcoach_grants")
+        .insert({ email, action: "grant-" + tier, result: vysledek, source: "admin-panel" })
+        .then(() => undefined, () => undefined);
+      if (!out.ok) return json({ ok: false, duvod: out.duvod });
+      return json({ ok: true, result: vysledek, expires_at: do_.toISOString() });
     }
 
     // FRONTA „REPORTY KE ZPRACOVÁNÍ" (2. 9. 2026). Reporty, u kterých Martin ještě
