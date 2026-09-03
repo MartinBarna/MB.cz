@@ -416,16 +416,22 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
              na cílové stránce o něm nebude ani slovo, takže by tlačítko vedlo do
              prázdna. Nález revize 2. 9. 2026 (R3). -->
         <div id="kontrolaBlok" style="display:none;max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">
-            <p style="margin:0 0 .7rem;color:#d9d2c6;">Nechceš celý koučink? Vezmi si <strong style="color:#fff;">appku a kontrolu ode mě</strong>. Appka tě vede každý den, počítá cíle a přepisuje je podle toho, jak jde váha. Já se ti jednou za 14 dní podívám na data a napíšu ti, co v nich vidím a co bych na dalších 14 dní změnil. Kontrola je písemná, chodí mailem a najdeš ji i v appce. Hovory, WhatsApp a jídelníček na míru zůstávají koučinku.</p>
+            <p style="margin:0 0 .7rem;color:#d9d2c6;">Nechceš celý koučink? Vezmi si <strong style="color:#fff;">appku a písemnou kontrolu ode mě</strong>. Appka ti denně sčítá zápisy a podle váhy přepisuje cíle. Jednou za 14 dní si tvoje čísla přečtu já a napíšu ti text na 8 až 15 vět: váha, jak držíš kalorie a bílkoviny, tréninky, a jedna změna na dalších 14 dní. Přijde ti mailem a najdeš ji i v appce. Hovory, WhatsApp a jídelníček na míru patří ke koučinku. Tady dostaneš písemnou kontrolu dat.</p>
             <!-- ⛔ [2026-09-03] ODKAZ MÍŘÍ NA SEKCI, NE JEN NA STRÁNKU. Do dneška vedl
                  na /tvuj-coach/ bez kotvy a člověk, kterému jsem tarif právě popsal,
                  přistál na ceníku Basic/VIP, kde o kontrole nebylo ani slovo (našel
                  Martin 3. 9. 2026). `?plan=kontrola` nese tarif do atribuce a
-                 `#kontrola` doskočí na sekci, která ho vysvětluje a má tlačítko koupit.
-                 ⚠️ Landing appky má na kotvu VÝJIMKU v rozcestníku: bez ní by ho
-                 `?plan=` odklidil rovnou do registrace. Kdo kotvu přejmenuje na
-                 jedné straně, rozbije obě. -->
-            <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=kontrola&amp;utm_source=web&amp;utm_medium=koucing&amp;utm_campaign=tc-kontrola#kontrola">Mrknout na appku s kontrolou →</a>
+                 `sekce=kontrola` řekne landingu, že si ho má člověk PROHLÉDNOUT, ne rovnou
+                 kupovat; appka pak doskočí na sekci s cenou z ceníku a tlačítkem koupit.
+                 ⛔ NENÍ TO KOTVA `#kontrola`, i když by se to nabízelo: fragment se do
+                 appky nemusí dostat (Expo Router adresu při bootu přepíše a Navigation
+                 Timing ho nese jen podle prohlížeče), query ano.
+                 ⛔ SLOVESO ROZHODUJE: „mrknout" vede na sekci, „vzít"/„chci" rovnou do
+                 registrace (tak to má blok na /tvuj-coach/).
+                 ⚠️ Landing appky má na `sekce=kontrola` VÝJIMKU v rozcestníku
+                 (`landingMistoRegistrace`, otestovaná): bez ní by ho `?plan=` odklidil
+                 do registrace. Kdo parametr přejmenuje na jedné straně, rozbije obě. -->
+            <a class="btn btn-ghost" href="https://tvujcoach.cz/?plan=kontrola&amp;sekce=kontrola&amp;utm_source=web&amp;utm_medium=koucing&amp;utm_campaign=tc-kontrola">Mrknout na appku s kontrolou →</a>
         </div>
         <div style="max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">
             <p style="margin:0 0 .7rem;color:#d9d2c6;">Zatím ti to cenově nesedí? Nevadí, začni <strong style="color:#fff;">videokurzem za 1&nbsp;490&nbsp;Kč</strong>. Stejný systém, který učím klienty v koučinku, k samostudiu: 182 videí, kalkulačka, recepty. Doživotně.</p>
