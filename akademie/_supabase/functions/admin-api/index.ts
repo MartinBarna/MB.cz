@@ -2589,6 +2589,57 @@ Deno.serve(async (req) => {
       return json({ ok: true, result: vysledek, expires_at: do_.toISOString() });
     }
 
+    // 🎟️ CESTA ZPÁTKY: ODEBRÁNÍ RUČNĚ UDĚLENÉHO TIERU (3. 9. 2026).
+    //
+    // ⛔⛔ SCHVÁLNĚ TO NENÍ akce `revoke` na mostě. Ta je tupá: `revoke_app_access`
+    //    ruší v appce VŠECHNO se `source='academy'` bez Stripe a čekající nároky
+    //    ruší bez ohledu na zdroj. Sebrala by tedy appku i platícímu koučinkovému
+    //    klientovi nebo člověku s ročním VIP z Academy za 8 900 Kč. Akce
+    //    `tc-revoke-tier` v appce sundá jen ten tier, který se jí pojmenuje,
+    //    a jen grant ze zdrojů academy / academy-nakup / admin-panel.
+    // ⛔ Zrcadlí `tc_grant_tier` výš: umí sundat přesně to, co umí to tlačítko dát.
+    //    Roční VIP z Academy se odebírá v kartě klienta (`set_access`), ne tady.
+    // ⛔ POJISTKA NA KOUČINK (stejná jako v `set_access` a `client_offboard`):
+    //    aktivní koučinkový klient o appku tímhle tlačítkem přijít nesmí.
+    //    FAIL-CLOSED: když se `entitlements` nepodaří přečíst, chováme se, jako by
+    //    koučink měl. Čte se `active` I `expires_at`, protože refund nastavuje jen
+    //    `expires_at` a `active` nechá true (adversární revize 1. 9.).
+    if (action === "tc_revoke_tier") {
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      const tier = String(body.tier ?? "").trim();
+      if (tier !== "ai_kontrola") return json({ ok: false, duvod: "neznamy_tier" }, 400);
+
+      const { data: coachEnt, error: coachErr } = await admin.from("entitlements")
+        .select("active, expires_at").eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      const koucinkNecitelny = !!coachErr;
+      const maKoucink = coachErr ? true
+        : (!!coachEnt?.active && (!coachEnt.expires_at || Date.parse(String(coachEnt.expires_at)) > Date.now()));
+      if (maKoucink) {
+        // Dvě různé příčiny, dva různé záznamy: v logu musí jít poznat „opravdu má
+        // koučink" od „entitlements se nepodařilo přečíst". Obojí přeskakuje.
+        const duvod = koucinkNecitelny ? "koucink_necitelny" : "ma_koucink";
+        await admin.from("tvujcoach_grants")
+          .insert({ email, action: "revoke-" + tier, result: "preskoceno-" + duvod, source: "admin-panel" })
+          .then(() => undefined, () => undefined);
+        return json({ ok: false, duvod });
+      }
+
+      const out = await tcMost(admin, { email, action: "tc-revoke-tier", tier });
+      // Výsledek jsou DVĚ místa (předplatné + čekající nárok) a do logu patří obě:
+      // „nic se nestalo" u jednoho a „ukončeno" u druhého je běžný a správný stav.
+      const vysledek = out.ok
+        ? String(out.data.predplatne ?? "?") + "/" + String(out.data.cekajici_narok ?? "?")
+        : out.duvod;
+      await admin.from("tvujcoach_grants")
+        .insert({ email, action: "revoke-" + tier, result: vysledek, source: "admin-panel" })
+        .then(() => undefined, () => undefined);
+      if (!out.ok) return json({ ok: false, duvod: out.duvod });
+      return json({
+        ok: true, predplatne: out.data.predplatne, cekajici_narok: out.data.cekajici_narok,
+        stav_pred: out.data.stav_pred, tier_pred: out.data.tier_pred,
+      });
+    }
+
     // FRONTA „REPORTY KE ZPRACOVÁNÍ" (2. 9. 2026). Reporty, u kterých Martin ještě
     // neodklikl, že odpověděl. Migrace: `akademie/_supabase/report-reakce.sql`.
     // ⛔ Prázdný příznak NEZNAMENÁ „klient nedostal odpověď". Znamená „neodklikuto".

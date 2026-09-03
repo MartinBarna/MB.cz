@@ -275,9 +275,15 @@
             <option value="12">na 12 měsíců</option>
           </select>
           <button class="mlogbtn" id="tcgBtn">Zapnout přístup</button>
+          <!-- ⛔ CESTA ZPÁTKY (3. 9. 2026). Bez ní se dal tarif za 1 990 Kč/měsíc
+               jedním klikem dát, ale ničím vzít. Bere zpátky JEN tenhle tier a jen
+               grant z adminu nebo Academy: roční VIP, koučink ani rodinný přístup
+               tímhle tlačítkem nezmizí. Potvrzení je povinné, je to zásah do
+               přístupu živého člověka. -->
+          <button class="mlogbtn" id="tcgOff" style="background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.18);">Vypnout přístup</button>
           <span class="muted" id="tcgStav" style="font-size:.8rem;"></span>
         </div>
-        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Přístup skončí sám. Prodloužit ho jde stejným tlačítkem, delší už udělený přístup se nezkracuje. Samotné VIP se dává v kartě klienta (Academy přístup), tohle je jen tarif s rozbory.</p>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Přístup skončí sám. Prodloužit ho jde stejným tlačítkem, delší už udělený přístup se nezkracuje. Samotné VIP se dává v kartě klienta (Academy přístup), tohle je jen tarif s rozbory. „Vypnout přístup" bere zpátky jen tenhle tarif a jen tehdy, když ho udělil admin nebo Academy: zaplacené předplatné, koučink ani rodinný přístup neodebere.</p>
       </div>
 
       <div class="traf" id="kli" style="display:none;border-color:rgba(235,177,44,.45);">
@@ -1172,6 +1178,48 @@
           stav.textContent=(j.result==='pending'?'Nárok uložen, naskočí mu po registraci.':'Hotovo, přístup platí.')
             +' Do '+czDatum(String(j.expires_at||'').slice(0,10));
           toast('Přístup nastaven');
+        }).catch(function(){ b.disabled=false; stav.textContent='Nepovedlo se, zkus to znovu.'; });
+      });
+      pripojOdebraniTieru();
+    }
+
+    // Co appka odpověděla o jednom místě (předplatné / čekající nárok). Věty jsou
+    // schválně konkrétní: „nepovedlo se" by zakrylo, že tam prostě nic k odebrání
+    // nebylo, nebo že tam je něco jiného, na co tohle tlačítko sahat nesmí.
+    function tcOffPopis(kod){
+      if(kod==='expiry_set'||kod==='pending_only'||kod==='zruseny') return 'odebráno';
+      if(kod==='jiny_tier') return 'nechal jsem být, má tam jiný tarif';
+      if(kod==='jiny_zdroj') return 'nechal jsem být, přístup je odjinud';
+      if(kod==='uz_zruseny') return 'už bylo zrušené dřív';
+      if(kod==='zadny'||kod==='zadny_zasah') return 'nic k odebrání';
+      return String(kod||'?');
+    }
+
+    // 🎟️ Odebrani rucne udeleneho tieru. ⛔ Bere zpatky JEN tenhle tier a jen grant
+    // z adminu nebo Academy; Stripe predplatne, koucink ani rodinny pristup ne.
+    // Pojistky drzi server (`tc_revoke_tier` + akce `tc-revoke-tier` v appce), tady
+    // je jen potvrzeni: je to zasah do pristupu ziveho cloveka.
+    function pripojOdebraniTieru(){
+      var b=$('tcgOff'); if(!b) return;
+      b.addEventListener('click',function(){
+        if(b.disabled) return;
+        var email=($('tcgEmail').value||'').trim().toLowerCase();
+        var stav=$('tcgStav');
+        if(!email||email.indexOf('@')<0){ stav.textContent='Zadej e-mail klienta.'; return; }
+        var nazev=$('tcgTier').options[$('tcgTier').selectedIndex].text;
+        if(!confirm('Opravdu vypnout přístup „'+nazev+'" pro '+email+'?\n\nOdebere se jen tenhle tarif, a jen když ho udělil admin nebo Academy. Zaplacené předplatné ani koučink to nevezme.')) return;
+        b.disabled=true; stav.textContent='Vypínám…';
+        api({action:'tc_revoke_tier',email:email,tier:$('tcgTier').value}).then(function(o){
+          b.disabled=false;
+          var j=o.j||{};
+          if(!j.ok){
+            if(j.duvod==='ma_koucink'){ stav.textContent='Nechal jsem to být: je to aktivní koučinkový klient, appku mu takhle brát nechceme.'; return; }
+            if(j.duvod==='koucink_necitelny'){ stav.textContent='Nešlo ověřit, jestli má koučink, tak jsem nesáhl na nic. Zkus to znovu.'; return; }
+            stav.textContent=(window.AdminRozbory?window.AdminRozbory.chybaPopis(j.duvod):String(j.duvod||'Nepovedlo se.'));
+            return;
+          }
+          stav.textContent='Předplatné: '+tcOffPopis(j.predplatne)+'. Čekající nárok: '+tcOffPopis(j.cekajici_narok)+'.';
+          toast('Přístup vypnut');
         }).catch(function(){ b.disabled=false; stav.textContent='Nepovedlo se, zkus to znovu.'; });
       });
     }
