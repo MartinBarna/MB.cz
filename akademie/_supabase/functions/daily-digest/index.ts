@@ -394,7 +394,14 @@ Deno.serve(async (req) => {
       alerts += warn("Kontrola odkazů NIKDY neproběhla. Buď se nespustil cron link-check-daily, nebo padá. Zkontroluj to, tohle je pojistka proti mrtvým odkazům v mailech.");
     } else {
       const stari = (Date.now() - new Date(s.posledni_beh).getTime()) / 3600000;
+      const vlastniNeovereno = Number(s.vlastni_neovereno ?? 0);
       odkazyRadek = `${s.celkem} zkontrolováno · ${s.chyb} nefunguje`;
+      // ⛔ 3. 9. 2026: adresy na vlastní doméně, které blokla ochrana webu (WEDOS,
+      // HTTP 401), NEJSOU prokazatelně rozbité. `link_check_souhrn` je od teď počítá
+      // zvlášť do `vlastni_neovereno`, ne do `chyb`, ať to nevypadá jako poplach.
+      if (vlastniNeovereno > 0) {
+        odkazyRadek += ` · ${vlastniNeovereno} vlastních adres neověřeno (ochrana webu blokuje kontrolu, hlídá deploy)`;
+      }
       if (s.chyb > 0) {
         alerts += warn(`ROZBITÉ ODKAZY: ${s.chyb} z ${s.celkem} nefunguje. ${String(s.prvni_chyby ?? "").split("\n").slice(0, 5).join(" · ")}`);
       }
