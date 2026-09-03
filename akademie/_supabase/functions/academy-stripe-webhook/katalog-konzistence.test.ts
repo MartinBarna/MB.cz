@@ -10,6 +10,8 @@
 // slabsi, ale chyta presne tu tridu chyby, o kterou tady jde: ROZEJITI TRI MIST,
 // ktera o sobe navzajem nevi (KATALOG, ODKAZ_NA_PRODUKT, seznam zdroju v daily-digest).
 
+import { PROVIZE_KOUCINK_FALLBACK, sazbaProvize } from '../_shared/provize.ts';
+
 const KOREN = new URL('../../../../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const WEBHOOK = KOREN + 'akademie/_supabase/functions/academy-stripe-webhook/index.ts';
 const DIGEST = KOREN + 'akademie/_supabase/functions/daily-digest/index.ts';
@@ -484,6 +486,39 @@ let zdrojRemind = '';
 try { zdrojRemind = await Deno.readTextFile(KOREN + 'akademie/_supabase/functions/client-remind/index.ts'); } catch { /* nevadi */ }
 check('RG1 client-remind respektuje expiraci',
   /expires_at\.is\.null,expires_at\.gt\./.test(zdrojRemind), '');
+
+// --- R-H) PROVIZE Z KOUCINKU JE 10 %, NE SAZBA PARTNERA (rozhodnuti 3. 9. 2026) ---
+// Tady se NEcte zdrojak jako text:  je cista funkce bez ,
+// takze se da naimportovat a spocitat doopravdy.
+check('RH1 coaching bere sazbu z app_config, ne sazbu partnera',
+  sazbaProvize({ product: 'coaching', partnerRate: 0.30, configRate: 0.10 }) === 0.10,
+  String(sazbaProvize({ product: 'coaching', partnerRate: 0.30, configRate: 0.10 })));
+check('RH2 coaching bez klice v app_config spadne na 0.10, ne na sazbu partnera',
+  sazbaProvize({ product: 'coaching', partnerRate: 0.20, configRate: null }) === 0.10, '');
+check('RH3 coaching s necislenou hodnotou spadne na 0.10',
+  sazbaProvize({ product: 'coaching', partnerRate: 0.20, configRate: Number('x') }) === 0.10, '');
+check('RH4 fallback je 0.10', PROVIZE_KOUCINK_FALLBACK === 0.10, String(PROVIZE_KOUCINK_FALLBACK));
+check('RH5 Martin smi sazbu zmenit z app_config',
+  sazbaProvize({ product: 'coaching', partnerRate: 0.30, configRate: 0.15 }) === 0.15, '');
+check('RH6 ostatni produkty berou sazbu partnera beze zmeny',
+  sazbaProvize({ product: 'academy', partnerRate: 0.30, configRate: 0.10 }) === 0.30
+  && sazbaProvize({ product: 'videokurz', partnerRate: 0.20, configRate: 0.10 }) === 0.20
+  && sazbaProvize({ product: 'appka', partnerRate: 0.30, configRate: null }) === 0.30, '');
+check('RH7 chybejici sazba partnera u jinych produktu je 0, ne 0.10',
+  sazbaProvize({ product: 'academy', partnerRate: null, configRate: 0.10 }) === 0, '');
+check('RH8 zaporna sazba se nikdy nevrati',
+  sazbaProvize({ product: 'academy', partnerRate: -0.5, configRate: null }) === 0
+  && sazbaProvize({ product: 'coaching', partnerRate: 0.3, configRate: -0.5 }) === 0.10, '');
+check('RH9 webhook sazbu opravdu pousti pres sazbaProvize',
+  /sazbaProvize\(\{/.test(zdrojWebhook) && /nactiSazbuKoucinku/.test(zdrojWebhook), '');
+check('RH10 clensky kredit za koucink zustava 300 Kc',
+  /coaching:\s*300/.test(zdrojWebhook), '');
+let sqlProvize = '';
+try { sqlProvize = await Deno.readTextFile(KOREN + 'akademie/_supabase/provize-koucink.sql'); } catch { /* nevadi */ }
+check('RH11 migrace zaklada klic provize_koucink idempotentne',
+  /provize_koucink/.test(sqlProvize) && /on conflict \(key\) do nothing/.test(sqlProvize), '');
+check('RH12 na 59 500 Kc dela provize 5 950 Kc',
+  Math.round(59500 * sazbaProvize({ product: 'coaching', partnerRate: 0.20, configRate: null }) * 100) / 100 === 5950, '');
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);

@@ -52,6 +52,8 @@ import {
   koucinkNazev,
   onboardKoucink,
 } from "../_shared/koucink-onboarding.ts";
+// ⚠️ Deploy téhle funkce nese i `_shared/provize.ts` (sazba provize z koučinku).
+import { nactiSazbuKoucinku, sazbaProvize } from "../_shared/provize.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -1118,7 +1120,18 @@ async function atribuujReferral(
     const owner = nalez.owner;
     if (owner === email) return "self-referral";
     const partnerType = nalez.partnerType;
-    const sazbaJednoraz = nalez.sazba;
+    // ⭐ SAZBA U KOUČINKU NENÍ SAZBA PARTNERA (rozhodnutí Martina 3. 9. 2026):
+    // je to 10 % z `app_config.provize_koucink`. U ostatních produktů se nemění nic.
+    // Dotaz do `app_config` se dělá JEN u koučinku affiliate partnera, ať se
+    // ostatním nákupům nepřidává čtení navíc.
+    const sazbaKonfig = produkt === "coaching" && partnerType === "affiliate"
+      ? await nactiSazbuKoucinku(admin)
+      : null;
+    const sazbaJednoraz = sazbaProvize({
+      product: produkt,
+      partnerRate: nalez.sazba,
+      configRate: sazbaKonfig,
+    });
 
     if (orderId) {
       const { data: existing } = await admin.from("referrals").select("id").eq("order_id", orderId).limit(1);
