@@ -951,6 +951,74 @@
       runScale();
     }
 
+    // [KETO-OPRAVA 2026-09-03, port appky] Zrcadlo pojistky výš, pro opačný problém. Keto
+    // den, který i po normalizaci pořád citelně NEDOSAHUJE tukový cíl, vyměň nejlibovější
+    // bílkovinný zdroj dne za nejtučnější dostupný (opak pojistky na skrytý tuk). Bez tohohle
+    // se cíl tuku z porcí přidaného tuku (strop R8 15 g) a ořechů (strop 30 g) neposkládá
+    // a den systematicky podstřeluje kalorie (mřížka 1152 dnů, nejhorší keto den 18,8 %
+    // pod cílem před opravou, po ní 16,3 %). Práh `< 0,9 × cíl` je záměrně měkčí než
+    // pojistka výš (`> 1,15 × cíl`): tady nejde o obejití stropu, ale o to, aby den vůbec
+    // dosáhl svých kalorií. Stejná logika je v appce (`meal-gen-core.ts`), 1:1.
+    function fatniProt(f) { return f.per100.f / Math.max(1, f.per100.p || 0); }
+    for (var sw2 = 0; sw2 < 3 && lowCarb && totalKey('f') < targets.fat * 0.9; sw2++) {
+      // ⛔ SWAP SMÍ SÁHNOUT JEN NA JÍDLO S JEDNÍM SLANÝM ZÁKLADEM. Měněná položka drží svůj
+      // gramáž podle bílkoviny, ale MĚNÍ CHARAKTER jídla (sladký mléčný základ → slaný
+      // zdroj). Když jídlo mělo sladký doplněk (ovoce, vločky, R2 to povoluje ke sladkému
+      // základu) nebo dva bílkovinné základy (výjimka „šunka + vejce" z R1), výměna základu
+      // tu vlastnost rozbije a vyrobí přesně ty vady, které R1 a R2 zakazují.
+      var protItems2 = all.filter(function (it) {
+        if (it.food.cat !== 'protein' && it.food.cat !== 'dairy') return false;
+        var meal = null;
+        out.forEach(function (m) { if (m.items.indexOf(it) !== -1) meal = m; });
+        if (!meal) return false;
+        if (jeSladkeJidlo(meal)) return false;
+        var protCount = meal.items.filter(function (x) { return x.food.cat === 'protein' || x.food.cat === 'dairy'; }).length;
+        if (protCount >= 2) return false;
+        return true;
+      });
+      if (!protItems2.length) break;
+      protItems2.sort(function (a, b) { return fatniProt(a.food) - fatniProt(b.food); }); // nejlibovější první
+      var worst2 = protItems2[0];
+      if (fatniProt(worst2.food) >= 0.6) break; // všechny zdroje dne už jsou tučné
+      var usedIds2 = {};
+      all.forEach(function (it) { usedIds2[it.food.id] = 1; });
+      var swapCand2 = db.filter(function (f) {
+        return (f.cat === 'protein' || f.cat === 'dairy') && !usedIds2[f.id] &&
+          (f.per100.p || 0) >= 10 && fatniProt(f) > fatniProt(worst2.food) + 0.1;
+      });
+      // ⛔ NA ROZDÍL OD POJISTKY VÝŠ (libovější zdroj) tady fallback na NEBĚZNÉ položky
+      // NESMÍ nastat: neběžné tučné zdroje bývají garnýrovací porce (`rostlinny-parmezan`
+      // má typickou porci 10 g), a naškálované na plnou porci vyrobí nerealistický talíř.
+      // Když bezný tučný zdroj není, výměna se raději nekoná.
+      swapCand2 = swapCand2.filter(function (f) { return f.bezny; });
+      // ⛔ [R7] Sladký mléčný základ a prášky/vnitřnosti sem nesmí, stejně jako u pojistky
+      // výš — jinak tahle výměna vyrobí přesně tu vadu, kterou R7 zakazuje.
+      var poctiveCand2 = swapCand2.filter(function (f) {
+        return !SLADKY_ZAKLAD.test(f.id) && !NENI_ZAKLAD_JIDLA.test(f.id);
+      });
+      if (poctiveCand2.length) swapCand2 = poctiveCand2;
+      // Stejné pořadí jako R7: sýr a uzenina až za maso, rybu a vejce, měkce s fallbackem.
+      var vareneCand2 = swapCand2.filter(function (f) { return !UZENINA_RE.test(f.id) && !SYR_RE.test(f.id); });
+      if (vareneCand2.length) swapCand2 = vareneCand2;
+      if (!swapCand2.length) break;
+      swapCand2.sort(function (a, b) { return fatniProt(b) - fatniProt(a) || (a.id < b.id ? -1 : 1); });
+      // ⛔ TUČNĚJŠÍ ZDROJ MÁ ČASTO NIŽŠÍ BÍLKOVINU NA 100 g. Vzorec, který drží protein
+      // POLOŽKY (`keepP / tucny.p * 100`), tak umí vyrobit nerealistickou porci (vegan den
+      // vyměnil 210 g rostlinného burgeru za 300 g rostlinného parmazánu, p jen 15 g, den
+      // 36,6 % NAD cílem). Zdroj se proto smí vyměnit, jen když výsledná porce zůstane
+      // rozumná (≤ 250 g); první kandidát v pořadí od nejtučnějšího, který se do 250 g
+      // vejde, vyhrává.
+      var keepP2 = macrosFor(worst2.food, worst2.grams).p;
+      var tucny2 = null;
+      for (var ci2 = 0; ci2 < swapCand2.length; ci2++) {
+        if ((keepP2 / (swapCand2[ci2].per100.p || 1)) * 100 <= 250) { tucny2 = swapCand2[ci2]; break; }
+      }
+      if (!tucny2) break; // žádný tučnější zdroj nedá rozumnou porci, nemá smysl zkoušet dál
+      worst2.food = tucny2;
+      worst2.grams = Math.max(30, (keepP2 / (tucny2.per100.p || 1)) * 100);
+      runScale();
+    }
+
     // [fix 2026-07-14] Velké cíle (např. 230 g bílkovin / 3 000+ kcal ve 3 jídlech) se přes
     // stropy porcí nevejdou → den podstřeloval i o 20 %. Doplníme reálné doplňky (shake
     // k hlavnímu jídlu, vločky a banán k snídani, hrst mandlí) a znormalizujeme znovu —
