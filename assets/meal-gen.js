@@ -812,12 +812,6 @@
     var maBilkovinu = function (m) {
       return m.items.some(function (it) { return it.food.cat === 'protein' || it.food.cat === 'dairy'; });
     };
-    // [R2] Sladké, nebo slané jídlo? Bere se ze základu jídla, stejně jako při skládání.
-    var jeSladkeJidlo = function (m) {
-      var z = m.items.filter(function (it) { return it.food.cat === 'protein' || it.food.cat === 'dairy'; })[0];
-      if (z) return jeSladkyZaklad(z.food);
-      return m.kind === 'breakfast' || m.kind === 'snack' || m.kind === 'late';
-    };
     var VLOCKY_MUSLI_RE = /ovesne-vlocky|musli|granola|ovesna-kase|ovesne-otruby/;
     // [R2] Doplněk, který patří jen na sladký talíř (ovoce, vločky, müsli).
     // ⛔ [oprava po revizi 2026-09-03] Sladký doplněk NENÍ jen ovoce a vločky. Musí sem
@@ -859,6 +853,13 @@
         if (jeProt && maBilkovinu(out[i5])) return false;
         if (jeSladky && !jeSladkeJidlo(out[i5])) return false;
         if (jeSlany && jeSladkeJidlo(out[i5])) return false;
+        // ⛔ [oprava po revizi 2026-09-03] VAŘENÁ PŘÍLOHA DO SVAČINY NEPATŘÍ.
+        // Svačina má pečivo (chléb, rohlík, houska, knäckebrot, toust), nebo zeleninu.
+        // Rýže, brambory, těstoviny, bulgur, kuskus a spol. jsou k obědu a večeři.
+        // Vzniklo to třemi cestami: optimalizací vlákniny (ta brala pro svačinu
+        // `MAIN_CARB`), doplňkovým blokem (přílohy míří do posledního jídla, což
+        // u šesti jídel je večerní svačina) a přerozdělením přetíženého jídla.
+        if (jeVarenaPriloha(food) && (out[i5].kind === 'snack' || out[i5].kind === 'late')) return false;
         return true;
       };
       var chtene = Math.min(mealIdx, out.length - 1);
@@ -1217,7 +1218,7 @@
             var maOvoceJ = mm1.items.some(function (x) { return x.food.cat === 'fruit'; });
             var maZeleninuJ = mm1.items.some(function (x) { return x.food.cat === 'veg'; });
             var vhodnost = it1.food.cat === 'carb'
-              ? preferForMeal('carb', mm1.kind)
+              ? preferForMeal('carb', mm1.kind, jeSladkeJidlo(mm1))
               : (it1.food.cat === 'fat'
                 ? (maOvoceJ && !maZeleninuJ ? SLADKY_TUK : (maZeleninuJ ? SLANY_TUK : null))
                 : null);
@@ -1405,6 +1406,8 @@
           // svačina odložila ovoce do hlavního jídla a nikdo se neptal, jestli tam patří.
           if (sladkyDoplnek(itH.food) && !jeSladkeJidlo(c3)) return;
           if (slanyDoplnek(itH.food) && jeSladkeJidlo(c3)) return;
+          // Vařená příloha se nestěhuje do svačiny (viz jeVarenaPriloha).
+          if (jeVarenaPriloha(itH.food) && (c3.kind === 'snack' || c3.kind === 'late')) return;
           // Táž potravina dvakrát v jednom jídle nedává smysl na talíři.
           if (c3.items.some(function (x) { return x.food.id === itH.food.id; })) return;
           var rezerva = stropJidla(c3.kind) - hmotnostJidla(c3) - itH.grams;
@@ -1528,12 +1531,31 @@
    * a „svačin"), takže „Snídaně před prací" vyšla náhodou a „Večeře po tréninku" se
    * chovala jako hlavní jídlo jen shodou okolností. ⛔ Táž funkce je v appce.
    */
-  function preferForMeal(cat, kind) {
+  function preferForMeal(cat, kind, sladke) {
+    if (sladke === undefined) sladke = true;
     var isB = kind === 'breakfast';
     var isS = (kind === 'snack' || kind === 'late');
     if (cat === 'protein') return isB ? BREAKFAST_PROT : (isS ? SNACK_PROT : null);
-    if (cat === 'carb') return isB ? BREAKFAST_CARB : MAIN_CARB;
+    // ⛔ [oprava po revizi 2026-09-03] SVAČINA MÁ PEČIVO, NE VAŘENOU PŘÍLOHU, a slané
+    // jídlo nesmí dostat vločky ani müsli. Dřív tu pro svačinu stálo MAIN_CARB, takže
+    // optimalizace vlákniny vyměnila kaiserku ve svačině (šunka od kosti + kaiserka)
+    // za bulgur; změřeno na 1152 dnech s cílem vlákniny 38 takových svačin.
+    if (cat === 'carb') return (isB || isS) ? (sladke ? BREAKFAST_CARB : PECIVO_RE) : MAIN_CARB;
     return null;
+  }
+
+  // [R2] Sladké, nebo slané jídlo? Bere se z PRVNÍHO bílkovinného zdroje v jídle.
+  // ⛔ Jediná definice pro všechna místa (skládání dne, doplňky, přerozdělení, záměny).
+  function jeSladkeJidlo(meal) {
+    var z = meal.items.filter(function (it) { return it.food.cat === 'protein' || it.food.cat === 'dairy'; })[0];
+    if (z) return jeSladkyZaklad(z.food);
+    var k = meal.kind || typZNazvu(meal.name || '');
+    return k === 'breakfast' || k === 'snack' || k === 'late';
+  }
+
+  // Vařená příloha: sacharidový zdroj, který není pečivo, vločky ani müsli.
+  function jeVarenaPriloha(f) {
+    return f.cat === 'carb' && !PECIVO_VLOCKY_RE.test(f.id);
   }
   /**
    * Záchranná síť pro dny sestavené STARŠÍ verzí enginu (uložený plán), které pole
@@ -1555,7 +1577,7 @@
     var catAll = db.filter(function (f) { return f.cat === cat; });
     if (!catAll.filter(function (f) { return f.id !== item.food.id; }).length) return day;
     var list = catAll;
-    var prefer = preferForMeal(cat, meal.kind || typZNazvu(meal.name));
+    var prefer = preferForMeal(cat, meal.kind || typZNazvu(meal.name), jeSladkeJidlo(meal));
     if (prefer) {
       var sub = catAll.filter(function (f) { return prefer.test(f.id); });
       if (sub.filter(function (f) { return f.id !== item.food.id; }).length) list = sub;
