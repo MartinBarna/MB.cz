@@ -552,13 +552,24 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
            ⚠️ Slib je úzký schválně: písemný rozbor co 14 dní, nic víc. Žádný WhatsApp,
            žádný hovor, žádný jídelníček na míru; to je koučink Gold za jiné peníze. -->
       <div class="incl" id="kontrolaBlok" style="display:none;border-color:rgba(235,177,44,.45);background:linear-gradient(90deg,rgba(235,177,44,.12),rgba(235,177,44,.03));">
-        📬 <b>Chceš, aby se na tvoje čísla podíval i člověk?</b>
-        K VIP verzi appky si můžeš přikoupit <b>kontrolu ode mě</b>: jednou za 14 dní si projdu tvoje
-        data, tedy váhu, zápisy, tréninky i check-iny, a napíšu ti, co v nich vidím a co bych na
-        dalších 14 dní změnil. Přijde ti to mailem a najdeš to i v appce.
-        Appka tě vede, já kontroluju. <span data-price="ai_kontrola:month"></span><span data-price="ai_kontrola:quarter"></span>
-        Kontrola je písemná. Hovory, WhatsApp a jídelníček na míru patří ke <a href="/koucing/">koučinku</a>.
-        <a href="https://tvujcoach.cz/sign-up?plan=kontrola&amp;utm_source=web&amp;utm_medium=tc-landing&amp;utm_campaign=tc-kontrola">Vzít appku s kontrolou →</a>
+        📬 <b>Jednou za 14 dní ti napíšu, co v tvých číslech vidím.</b>
+        AI kouč ve VIP komentuje každý check-in hned. Tohle je něco jiného: jednou za 14 dní si
+        tvoje čísla přečtu já a napíšu ti, co s nimi. Přijde ti text na 8 až 15 vět: váha, jak
+        držíš kalorie a bílkoviny, tréninky, a jedna změna na dalších 14 dní. Žádná šablona,
+        čtu tvoje data. Chodí to mailem a najdeš to i v appce.
+        První kontrola přijde, jakmile máš v appce aspoň 3 dny zápisů. Když nezapisuješ, nemám
+        co číst a napíšu ti jen to. <span data-price="ai_kontrola:month"></span><span data-price="ai_kontrola:quarter"></span>
+        Hovory, WhatsApp a jídelníček na míru patří ke <a href="/koucing/">koučinku</a>. Tady dostaneš písemnou kontrolu dat.
+        Zrušit jde kdykoli v Předplatném, stejně jako VIP.
+        <!-- ⛔ [2026-09-03] VEDE ROVNOU DO REGISTRACE, na rozdíl od bloku na /koucing/.
+             SLOVESO ROZHODUJE: tady je záměr nákupní („Chci písemnou kontrolu") a tarif
+             je popsaný i s cenou už v tomhle bloku. Poslat člověka na landing appky by
+             znamenalo přečíst si podruhé totéž, odrolovat pod celý ceník Basic a VIP
+             a kliknout znovu, a na mobilu by ho k tlačítku dostal jedině doskok, tedy
+             nejkřehčí část celé změny. Blok na /koucing/ je prohlížecí, ten míří na sekci.
+             ⚠️ Ověřeno v kódu 3. 9. 2026: `/sign-up?plan=kontrola` čte tarif přes router
+             a po registraci pošle člověka na `/client/subscription?plan=kontrola`. -->
+        <a href="https://tvujcoach.cz/sign-up?plan=kontrola&amp;utm_source=web&amp;utm_medium=tc-landing&amp;utm_campaign=tc-kontrola">Chci písemnou kontrolu →</a>
       </div>
 
       <!-- Cross-sell na Academy. Kdo zvazuje rocni VIP za 4 990, doplati 3 910 a ma k tomu
