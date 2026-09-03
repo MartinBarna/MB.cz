@@ -182,7 +182,7 @@
   var SNACK_PROT     = /tvaroh|skyr|cottage|syrovatkovy-protein|recky-jogurt|bily-jogurt|sunka/;
   // [fix 2026-08-05 večer] Proteinový prášek a čistý bílek NEJSOU základ hlavního jídla
   // („syrovátkový protein 55 g + těstoviny + rajče" jako oběd nikdo jíst nebude).
-  var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$/;
+  var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$|^tvaroh-tvrdy$/;
   // [fix 2026-08-06] Šunka a spol. NEJSOU hlavní bílkovina oběda/večeře: uzenina je na
   // chleba a do svačiny, na hlavní jídlo lidi vaří maso/rybu. U hlavních jídel se masné
   // výrobky řadí AŽ ZA vařené zdroje (měkce, s fallbackem). Uzené RYBY zůstávají.

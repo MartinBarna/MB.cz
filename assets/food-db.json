@@ -19292,7 +19292,7 @@
     },
     "portion": 100,
     "portionLabel": "100 g",
-    "bezny": true,
+    "bezny": false,
     "obsahuje": [
       "zivocisne",
       "laktoza"
