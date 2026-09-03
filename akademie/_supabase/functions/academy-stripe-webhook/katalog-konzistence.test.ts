@@ -11,12 +11,18 @@
 // ktera o sobe navzajem nevi (KATALOG, ODKAZ_NA_PRODUKT, seznam zdroju v daily-digest).
 
 import {
+  DNI_OKNO_PROVIZE_APPKY,
   PRESKOCENO_DB_CHYBA,
   PROVIZE_KOUCINK_FALLBACK,
+  STAV_REFUND,
+  coDelatPoZruseniProvize,
   duvodPreskoceniProvize,
+  idPlatebProRefund,
   kontrolovatRadekProduktu,
   nactiSazbuKoucinku,
+  oknoProvizeAppkyIso,
   sazbaProvize,
+  vetaOSporu,
   vetaProvizeRucne,
 } from '../_shared/provize.ts';
 
@@ -26,6 +32,9 @@ const DIGEST = KOREN + 'akademie/_supabase/functions/daily-digest/index.ts';
 
 const zdrojWebhook = await Deno.readTextFile(WEBHOOK);
 const zdrojDigest = await Deno.readTextFile(DIGEST);
+const zdrojProvize = await Deno.readTextFile(
+  KOREN + 'akademie/_supabase/functions/_shared/provize.ts',
+);
 
 type Kontrola = { name: string; pass: boolean; detail: string };
 const cases: Kontrola[] = [];
@@ -653,6 +662,219 @@ check('RJ11 nepriznana provize posle alert Martinovi',
 check('RJ12 preskoceni kvuli opakovanemu nakupu je v alertu Martinovi',
   /provize: provizePoznamka/.test(zdrojWebhook)
   && /opakovaný nákup, provize podle pravidla nevzniká/.test(zdrojWebhook), '');
+
+// --- R-K) REFUND RUSI PROVIZI (rozhodnuti Martina 3. 9. 2026) ---
+// „Pokud vratime penize, affiliate odmenu nedostane." Simuluje se cely retez nad
+// falesnou tabulkou `referrals`: zapis provize, refund, nocni auto-confirm a mesicni
+// report. Chytana trida chyby je TICHA: refund provizi nezrusil, cron ji po 14 dnech
+// potvrdil a partnerovi odesel report s penezi za nakup, ktery jsme vratili.
+type RefRadek = {
+  order_id: string;
+  code: string;
+  product: string;
+  reward_amount: number;
+  status: 'pending' | 'confirmed' | 'void';
+  dniOdNakupu: number;
+};
+
+/** Co dela webhook: prepise stav na `void` u radku se sedicim `order_id`. */
+function refunduj(tab: RefRadek[], obj: Record<string, unknown>): number {
+  const ids = idPlatebProRefund(obj);
+  if (!ids.length) return 0;
+  const zasazene = tab.filter((r) => ids.includes(r.order_id) && r.status !== STAV_REFUND);
+  for (const r of zasazene) r.status = 'void';
+  return zasazene.length;
+}
+
+/** Co dela nocni `referral_confirm_due()`: potvrdi jen `pending` starsi 14 dni. */
+function cronPotvrd(tab: RefRadek[]): void {
+  for (const r of tab) if (r.status === 'pending' && r.dniOdNakupu >= 14) r.status = 'confirmed';
+}
+
+/** Co dela mesicni report: `.neq("status","void")`, tedy vracene radky nesecte. */
+function reportProvize(tab: RefRadek[], code: string): number {
+  return tab.filter((r) => r.code === code && r.status !== 'void')
+    .reduce((s, r) => s + r.reward_amount, 0);
+}
+
+const KOUCINK_RADEK: RefRadek = {
+  order_id: 'pi_koucink', code: 'JIRKA10', product: 'coaching',
+  reward_amount: 5950, status: 'pending', dniOdNakupu: 20,
+};
+
+// 1) Refund PRED potvrzenim: cron uz nema co potvrdit a report nesecte nic.
+const tabA: RefRadek[] = [{ ...KOUCINK_RADEK }];
+const zasazenoA = refunduj(tabA, { payment_intent: 'pi_koucink' });
+check('RK1 refund prepise stav na void', zasazenoA === 1 && tabA[0].status === 'void', tabA[0].status);
+cronPotvrd(tabA);
+check('RK2 cron uz void radek nepotvrdi', tabA[0].status === 'void', tabA[0].status);
+check('RK3 report vracenou provizi nesecte', reportProvize(tabA, 'JIRKA10') === 0,
+  String(reportProvize(tabA, 'JIRKA10')));
+
+// 2) Refund PO potvrzeni: stav se prepise stejne a report ji prestane pocitat.
+const tabB: RefRadek[] = [{ ...KOUCINK_RADEK }];
+cronPotvrd(tabB);
+check('RK4 bez refundu se provize po 14 dnech potvrdi', tabB[0].status === 'confirmed', tabB[0].status);
+check('RK5 potvrzena provize se jeste pocita', reportProvize(tabB, 'JIRKA10') === 5950, '');
+const zasazenoB = refunduj(tabB, { payment_intent: 'pi_koucink' });
+check('RK6 refund po potvrzeni stav taky prepise', zasazenoB === 1 && tabB[0].status === 'void', tabB[0].status);
+check('RK7 report ji uz nesecte', reportProvize(tabB, 'JIRKA10') === 0, String(reportProvize(tabB, 'JIRKA10')));
+
+// 3) Clensky kredit 300 Kc: stejne pravidlo, zadna vyjimka.
+const tabC: RefRadek[] = [{
+  order_id: 'pi_clen', code: 'BARNA-A7K2', product: 'academy',
+  reward_amount: 300, status: 'pending', dniOdNakupu: 20,
+}];
+refunduj(tabC, { payment_intent: 'pi_clen' });
+cronPotvrd(tabC);
+check('RK8 clensky kredit 300 Kc se po refundu taky nepotvrdi',
+  tabC[0].status === 'void' && reportProvize(tabC, 'BARNA-A7K2') === 0, tabC[0].status);
+
+// 4) Cizi refund se nesmi dotknout niceho jineho.
+const tabD: RefRadek[] = [{ ...KOUCINK_RADEK }];
+check('RK9 refund cizi platby necha provizi na pokoji',
+  refunduj(tabD, { payment_intent: 'pi_neco_jineho' }) === 0 && tabD[0].status === 'pending', tabD[0].status);
+check('RK10 refund bez identifikatoru nezneplatni nic',
+  refunduj(tabD, {}) === 0 && tabD[0].status === 'pending', tabD[0].status);
+
+// 5) Opakovana provize z predplatneho ma v `order_id` ID FAKTURY, ne platbu.
+const tabE: RefRadek[] = [{
+  order_id: 'in_faktura', code: 'JIRKA10', product: 'academy',
+  reward_amount: 297, status: 'pending', dniOdNakupu: 20,
+}];
+check('RK11 refund faktury predplatneho provizi taky zrusi',
+  refunduj(tabE, { payment_intent: 'pi_jina', invoice: 'in_faktura' }) === 1 && tabE[0].status === 'void',
+  tabE[0].status);
+
+// 6) Idempotence: druhe doruceni tehoz refundu uz nema co menit.
+const tabF: RefRadek[] = [{ ...KOUCINK_RADEK }];
+refunduj(tabF, { payment_intent: 'pi_koucink' });
+check('RK12 druhe doruceni refundu uz nic nemeni',
+  refunduj(tabF, { payment_intent: 'pi_koucink' }) === 0 && tabF[0].status === 'void', tabF[0].status);
+
+// 7) Parsovani ID z udalosti Stripu.
+check('RK13 z Charge se berou payment_intent i invoice',
+  JSON.stringify(idPlatebProRefund({ payment_intent: 'pi_1', invoice: 'in_1' })) === '["pi_1","in_1"]',
+  JSON.stringify(idPlatebProRefund({ payment_intent: 'pi_1', invoice: 'in_1' })));
+check('RK14 charge.id ani dispute.id se nepouzivaji (do order_id se nikdy nezapisuji)',
+  idPlatebProRefund({ id: 'ch_1', charge: 'ch_1' }).length === 0, '');
+check('RK15 STAV_REFUND je void, tedy stav z CHECK constraintu tabulky', STAV_REFUND === 'void', STAV_REFUND);
+
+// 8) Webhook to opravdu vola, a PRED parovanim na entitlements.
+check('RK16 refundova vetev vola zneplatniProvizeRefundem s filtrem na order_id',
+  /const idsPlateb = idPlatebProRefund\(obj\)/.test(zdrojWebhook)
+  && /q\.in\("order_id", idsPlateb\)/.test(zdrojWebhook), '');
+check('RK17 provize se rusi PRED hledanim naroku (jinak by castecny refund a appka propadly)',
+  zdrojWebhook.indexOf('const idsPlateb = idPlatebProRefund(obj)')
+    < zdrojWebhook.lastIndexOf('.eq("stripe_payment_intent", platba).maybeSingle()'), '');
+check('RK18 castecny refund provizi taky rusi (Martin: vratime penize = bez odmeny)',
+  /castecny_refund: true, odebrano: false, provize_zrusena: provizeZrusena/.test(zdrojWebhook), '');
+check('RK19 zapisuje se stav z konstanty, ne literal',
+  /\.update\(\{ status: STAV_REFUND \}\)/.test(zdrojWebhook), '');
+check('RK20 nejdriv se cte, pak zapisuje (jinak nepoznam pending od confirmed)',
+  zdrojWebhook.indexOf('.select("id, code, product, buyer_email, reward_type, reward_amount, status")')
+    < zdrojWebhook.indexOf('.update({ status: STAV_REFUND })'), '');
+check('RK21 zruseni UZ POTVRZENE provize ma vlastni alert (mohla byt vyplacena)',
+  /zrušena UŽ POTVRZENÁ provize/.test(zdrojWebhook), '');
+check('RK22 selhani zapisu neni ticho', /provize se po refundu NEZRUŠILA/.test(zdrojWebhook), '');
+
+// 9) Mesicni report: vracene radky nesecte a ukaze je zvlast.
+const zdrojReport = await Deno.readTextFile(
+  KOREN + 'akademie/_supabase/functions/affiliate-mesicni-report/index.ts',
+);
+check('RK23 report void radky do cisel nebere', /\.neq\("status", "void"\)/.test(zdrojReport), '');
+check('RK24 report vracene platby ukazuje zvlast',
+  /Vrácené platby \(bez provize\)/.test(zdrojReport) && /eq\("status", "void"\)/.test(zdrojReport), '');
+
+// --- R-L) OPRAVY PO REVIZI (3. 9. 2026) ---
+// 1) Priorita `+` proti `?:`: veta o sporu patrila JEN do jedne vetve `co_delat`.
+//    Test si obe varianty VYPISE, aby se to dalo precist ocima, ne jen odhadnout.
+const VETA_SPORU = 'Při vyhraném sporu vrať provizi ručně na `pending`';
+const variantyCoDelat: Array<[string, string]> = [
+  ['refund + pending  ', coDelatPoZruseniProvize(0, false)],
+  ['refund + confirmed', coDelatPoZruseniProvize(1, false)],
+  ['SPOR   + pending  ', coDelatPoZruseniProvize(0, true)],
+  ['SPOR   + confirmed', coDelatPoZruseniProvize(1, true)],
+];
+console.log('\n  --- co_delat po zruseni provize (RL1 az RL4) ---');
+for (const [jak, text] of variantyCoDelat) console.log(`  ${jak} | ${text}`);
+console.log('');
+
+check('RL1 refund + pending vetu o sporu NEMA',
+  !variantyCoDelat[0][1].includes(VETA_SPORU), variantyCoDelat[0][1]);
+check('RL2 refund + confirmed vetu o sporu NEMA',
+  !variantyCoDelat[1][1].includes(VETA_SPORU), variantyCoDelat[1][1]);
+check('RL3 SPOR + pending vetu o sporu MA',
+  variantyCoDelat[2][1].includes(VETA_SPORU), variantyCoDelat[2][1]);
+check('RL4 SPOR + confirmed vetu o sporu MA (tohle byla ta chyba)',
+  variantyCoDelat[3][1].includes(VETA_SPORU), variantyCoDelat[3][1]);
+check('RL5 u confirmed zustava varovani o mozna vyplacenych penezich',
+  variantyCoDelat[3][1].includes('mohla už být VYPLACENÁ')
+  && variantyCoDelat[1][1].includes('mohla už být VYPLACENÁ'), '');
+check('RL6 vetaOSporu je prazdna u obycejneho refundu',
+  vetaOSporu(false) === '' && vetaOSporu(true).includes(VETA_SPORU), vetaOSporu(true));
+check('RL7 webhook uz text neskláda sam (jinak by se priorita vratila)',
+  /co_delat: coDelatPoZruseniProvize\(potvrzene\.length, jeSpor\)/.test(zdrojWebhook)
+  && !/\+ vetaSporu/.test(zdrojWebhook), '');
+check('RL8 i alert o selhani zapisu nese vetu o sporu',
+  /\+ vetaOSporu\(jeSpor\)/.test(zdrojWebhook), '');
+
+// 2) REFUND APPKY. `order_id` u appky je VZDY `evt_…`, protoze most dostava telo
+//    jen s `event_id`. Parovani podle `order_id` proto nikdy nesedne a musi byt
+//    druha cesta: e-mail + product='appka' + okno 30 dni.
+check('RL9 id z udalosti neobsahuji evt_ (a ani nemuzou)',
+  idPlatebProRefund({ payment_intent: 'pi_1', id: 'evt_1' }).includes('evt_1') === false, '');
+
+type AppkaRadek = RefRadek & { buyer_email: string; dniStary: number };
+/** Druha cesta: e-mail + product='appka' + okno DNI_OKNO_PROVIZE_APPKY dni. */
+function zneplatniAppku(tab: AppkaRadek[], email: string): number {
+  const zasazene = tab.filter((r) =>
+    r.buyer_email === email && r.product === 'appka'
+    && r.dniStary <= DNI_OKNO_PROVIZE_APPKY && r.status !== STAV_REFUND);
+  for (const r of zasazene) r.status = 'void';
+  return zasazene.length;
+}
+
+const tabG: AppkaRadek[] = [
+  { order_id: 'evt_novy', buyer_email: 'klient@example.com', code: 'JIRKA10', product: 'appka',
+    reward_amount: 150, status: 'pending', dniOdNakupu: 20, dniStary: 3 },
+  { order_id: 'evt_stary', buyer_email: 'klient@example.com', code: 'JIRKA10', product: 'appka',
+    reward_amount: 150, status: 'confirmed', dniOdNakupu: 400, dniStary: 400 },
+  { order_id: 'pi_koucink', buyer_email: 'klient@example.com', code: 'JIRKA10', product: 'coaching',
+    reward_amount: 5950, status: 'confirmed', dniOdNakupu: 20, dniStary: 5 },
+];
+check('RL10 parovani podle order_id u appky NIKDY nesedne (evt_ v udalosti neni)',
+  refunduj(tabG, { payment_intent: 'pi_neco', invoice: 'in_neco' }) === 0, '');
+const zasazenoG = zneplatniAppku(tabG, 'klient@example.com');
+check('RL11 druha cesta zrusi provizi za appku v okne', zasazenoG === 1 && tabG[0].status === 'void',
+  String(zasazenoG));
+check('RL12 provize za appku starsi nez okno zustava (partner ji poctive dostal)',
+  tabG[1].status === 'confirmed', tabG[1].status);
+check('RL13 provize za koucink se refundem appky NEDOTKNE',
+  tabG[2].status === 'confirmed', tabG[2].status);
+check('RL14 refund appky jineho cloveka nesahne na nic',
+  zneplatniAppku(tabG, 'nekdo@jiny.cz') === 0, '');
+
+check('RL15 okno je 30 dni', DNI_OKNO_PROVIZE_APPKY === 30, String(DNI_OKNO_PROVIZE_APPKY));
+{
+  const ted = new Date('2026-09-03T12:00:00.000Z');
+  check('RL16 okno se pocita zpetne od ted',
+    oknoProvizeAppkyIso(ted) === '2026-08-04T12:00:00.000Z', oknoProvizeAppkyIso(ted));
+}
+
+check('RL17 webhook druhou cestu opravdu ma, a jen u product=appka',
+  /\.eq\("buyer_email", emailZPlatby\)\.eq\("product", "appka"\)/.test(zdrojWebhook), '');
+check('RL18 druha cesta je AZ ve vetvi, kde se nic nesparovalo na entitlements',
+  zdrojWebhook.indexOf('if (!ent) {') < zdrojWebhook.indexOf('const provizeAppky = emailZPlatby'), '');
+check('RL19 druha cesta ma okno, ne cely cas',
+  /\.gte\("created_at", oknoAppky\)/.test(zdrojWebhook), '');
+check('RL20 obe cesty jedou stejnym telem (jeden zapis, jeden alert)',
+  (zdrojWebhook.match(/await zneplatniProvizeRefundem\(/g) ?? []).length === 2,
+  String((zdrojWebhook.match(/await zneplatniProvizeRefundem\(/g) ?? []).length));
+check('RL21 alert rika, podle ceho se rusilo', /sparovano_podle: popisParovani/.test(zdrojWebhook), '');
+check('RL22 komentar v provize.ts uz netvrdi, ze appka jede pres payment_intent',
+  !/videokurz, konzultace, appka\)\n \*    ⇒ `payment_intent`/.test(zdrojProvize)
+  && /APPKA SEM NEPATŘÍ A NEJDE JI SEM DOSTAT/.test(zdrojProvize), '');
 
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
