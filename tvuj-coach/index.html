@@ -558,7 +558,11 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         dalších 14 dní změnil. Přijde ti to mailem a najdeš to i v appce.
         Appka tě vede, já kontroluju. <span data-price="ai_kontrola:month"></span><span data-price="ai_kontrola:quarter"></span>
         Kontrola je písemná. Hovory, WhatsApp a jídelníček na míru patří ke <a href="/koucing/">koučinku</a>.
-        <a href="https://tvujcoach.cz/sign-up?plan=kontrola&amp;utm_source=web&amp;utm_medium=tc-landing&amp;utm_campaign=tc-kontrola">Vzít appku s kontrolou →</a>
+        <!-- ⛔ [2026-09-03] Vede na SEKCI landingu, ne rovnou na registraci: obě
+             prodejní strany teď posílají na `?plan=kontrola#kontrola`, kde tarif stojí
+             i s cenou z ceníku a tlačítkem koupit. Tarif se cestou neztrácí (nese ho
+             `?plan=`), jen si ho člověk může před platbou přečíst. -->
+        <a href="https://tvujcoach.cz/?plan=kontrola&amp;utm_source=web&amp;utm_medium=tc-landing&amp;utm_campaign=tc-kontrola#kontrola">Vzít appku s kontrolou →</a>
       </div>
 
       <!-- Cross-sell na Academy. Kdo zvazuje rocni VIP za 4 990, doplati 3 910 a ma k tomu
