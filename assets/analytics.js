@@ -202,7 +202,12 @@
       var st = document.createElement('style');
       st.id = 'mb-cookie-css';
       st.textContent =
-        '@media(max-width:991px){#mb-cookie{left:12px!important;right:12px!important;bottom:92px!important;max-width:none!important}}' +
+        // Mobil (4. 9. 2026, nalez Groka: lista prekryvala CTA „ACADEMY 8 900" a „Chci Gold"):
+        // kompaktni karta, kratsi text, bez titulku, mensi tlacitka. Vyska ~120 px misto ~230.
+        '@media(max-width:991px){#mb-cookie{left:12px!important;right:12px!important;bottom:92px!important;max-width:none!important;padding:12px 14px 10px!important;font-size:.82rem!important;line-height:1.35!important}' +
+          '#mb-cookie .mb-c-title{display:none!important}#mb-cookie .mb-c-long{display:none!important}#mb-cookie .mb-c-short{display:inline!important}' +
+          '#mb-cookie #mb-c-ok,#mb-cookie #mb-c-no{padding:7px 10px!important;font-size:.85rem!important}#mb-cookie #mb-c-an{margin-top:4px!important;font-size:.76rem!important;padding:0!important}}' +
+        '#mb-cookie .mb-c-short{display:none}' +
         'html[data-theme="light"] #mb-cookie{' +
           'background:linear-gradient(180deg,var(--mb-surface,#ffffff),var(--mb-bg,#F7F3EB))!important;' +
           'color:var(--mb-text,#161310)!important;' +
@@ -227,7 +232,7 @@
       'font-size:.92rem;line-height:1.5;';
     box.innerHTML =
       '<div class="mb-c-title" style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
-      '<div class="mb-c-text" style="color:#f3ece2">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.</div>' +
+      '<div class="mb-c-text" style="color:#f3ece2"><span class="mb-c-long">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.</span><span class="mb-c-short">🍪 Cookies pro statistiku a měření reklam, jen s tvým souhlasem. <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">Zásady</a>.</span></div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
         '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#160d04;font-weight:700;padding:10px 12px;border-radius:2px">Přijmout</button>' +
         '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:2px">Odmítnout</button>' +
