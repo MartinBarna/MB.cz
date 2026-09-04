@@ -141,8 +141,37 @@
     return { url: bezTela, vejdeSe: false, delka: plny.length };
   }
 
+  /* ---------------------------------------------------------------------------
+   * HTML NÁHLED: stejný černo-zlatý styl jako skutečné klientské maily (1:1 s
+   * `wrapHtml`/`renderHtml` v `akademie/_supabase/functions/admin-api/index.ts`,
+   * jen bez tabulkového „preheader" řádku, který má smysl jen v poštovním klientovi).
+   * ⛔ CSS tady žije JEDNOU. Kdo potřebuje náhled mailu jinde v adminu (např.
+   * onboarding), zavolá tuhle funkci, nekopíruje styl ručně.
+   * ------------------------------------------------------------------------- */
+  function escHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /** Prosté tělo (přesně to, co jde do Gmailu) zabalené do HTML e-mailu. */
+  function mailHtml(teloTxt) {
+    var odstavce = String(teloTxt || "").split(/\n{2,}/).map(function (o) {
+      return "<p style='margin:0 0 14px'>" + escHtml(o).replace(/\n/g, "<br>") + "</p>";
+    }).join("");
+    return "<!doctype html><html lang='cs'><head><meta charset='utf-8'>"
+      + "<meta name='color-scheme' content='dark'><meta name='supported-color-schemes' content='dark'></head>"
+      + "<body style='margin:0;padding:0;background:#0C0B10'>"
+      + "<table role='presentation' width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='#0C0B10' style='background:#0C0B10'><tr><td align='center' style='padding:16px'>"
+      + "<table role='presentation' width='560' cellpadding='0' cellspacing='0' border='0' bgcolor='#181520' style='width:100%;max-width:560px;background:#181520;border-radius:2px;border:1px solid #262232'><tr><td style='padding:28px;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#F0EADF'>"
+      + "<div style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>"
+      + odstavce
+      + "</td></tr></table></td></tr></table></body></html>";
+  }
+
   root.ReportReakce = {
     KOSTRA: KOSTRA, STYL: STYL, PRANI: PRANI,
     prani: prani, denMesic: denMesic, predmet: predmet, telo: telo, gmailOdkaz: gmailOdkaz,
+    mailHtml: mailHtml,
   };
 })(typeof window !== "undefined" ? window : globalThis);

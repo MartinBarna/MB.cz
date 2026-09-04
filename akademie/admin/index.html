@@ -187,8 +187,17 @@
         <a href="/akademie/admin/crm/">📇 CRM databáze →</a>
         <a href="/akademie/moje/testy/">📝 Testy &amp; certifikáty →</a>
         <a href="/akademie/moje/kouc/">🏋️ Check-iny klientů →</a>
-        <a href="/akademie/studium/">📚 Studium →</a>
-        <a href="https://resend.com/emails" target="_blank" rel="noopener">✉️ Resend →</a>
+        <a href="/akademie/studium/">📚 Moje studium (jako student) →</a>
+        <a href="https://resend.com/emails" target="_blank" rel="noopener">✉️ Resend (externí web) ↗</a>
+      </div>
+      <!-- Zkratky na čtyři hlavní pracovní nástroje: všechny žijí v kartě konkrétního
+           klienta uvnitř sekce Klienti, proto vedou na TENTÝŽ cíl (#sek-klienti) a
+           TÝMŽ mechanismem jako rozcestník sekcí (data-sek, viz initSekce níž). -->
+      <div class="traf-links" style="margin:.2rem 0 1rem;">
+        <a href="#sek-klienti" data-sek="klienti">🚀 Onboarding →</a>
+        <a href="#sek-klienti" data-sek="klienti">✍️ Reakce na report →</a>
+        <a href="#sek-klienti" data-sek="klienti">🏋️ Tréninkový plán →</a>
+        <a href="#sek-klienti" data-sek="klienti">🍽️ Editor průvodce →</a>
       </div>
 
       <!-- Rozcestník sekcí. Klik otevře sbalenou sekci a odroluje na ni. -->
@@ -458,16 +467,18 @@
            jinak si admin dál myslí, že je karta čerstvá. Stáří se pod nadpisem dopočítá
            samo, ať se nestane, že tu měsíce visí neplatné poznámky a nikde to nekřikne.
            (8. 8. 2026 tu visely 4 týdny staré poznámky, které si odporovaly s živým ceníkem.) -->
-      <div class="traf" id="news" data-stari="2026-08-08">
-        <h3>🆕 Aktuální stav <span class="muted" style="font-size:.75rem;font-weight:400;">(8. 8. 2026)</span></h3>
+      <div class="traf" id="news" data-stari="2026-09-04">
+        <h3>🆕 Aktuální stav <span class="muted" style="font-size:.75rem;font-weight:400;">(4. 9. 2026)</span></h3>
         <div class="sub">Ruční nástěnka: co je právě teď živé a s čím počítat</div>
         <p id="newsStari" style="margin:.5rem 0 0;font-size:.84rem;"></p>
         <ul style="margin:.5rem 0 .2rem;padding-left:1.2rem;line-height:1.75;font-size:.92rem;color:#e7e0d5;">
-          <li><b style="color:#F6CD63;">Academy:</b> mise <b>990 Kč měsíčně</b> nebo <b>8 900 Kč doživotně</b>. Dřívější plán zdražit po 50. prodeji je <b>ZRUŠENÝ</b>, nahradila ho tahle mise.</li>
-          <li><b style="color:#F6CD63;">Affiliate program je živý:</b> 30 % z měsíčních plateb, 20 % z jednorázových, <b>u koučinku 10 %</b> (sazba leží v <code>app_config</code>, klíč <code>provize_koucink</code>, ne v sazbě partnera). Vrácená platba provizi ruší: webhook přepíše <code>referrals.status</code> na <code>void</code>, takže se nepotvrdí ani nezapočítá do výplaty. Partneři v pipeline: Patrik (THAIBOX10), Zuzka / oboczko (OBOCZKO10), Langmajer (JIRKA10). Kódy se aktivují, až partner řekne jedem.</li>
-          <li><b style="color:#F6CD63;">Appka Tvůj Coach:</b> zkušebka 14 dní → Basic 249 Kč / VIP 499 Kč. Členové Academy mají VIP na rok.</li>
-          <li><b style="color:#F6CD63;">Balíček 349 Kč</b> (40 receptů + 48 odpovědí) je nejlevnější vstup do ekosystému.</li>
-          <li><b style="color:#F6CD63;">Infografiky:</b> série 18 vzdělávacích dílů startuje v srpnu.</li>
+          <li><b style="color:#F6CD63;">Ceník:</b> Academy <b>990 Kč měsíčně</b> / <b>8 900 Kč doživotně</b> (odečet 5 930 za videokurz). Videokurz <b>1 490 Kč</b>. Konzultace <b>2 990 Kč</b> (majitelé videokurzu 2 190), je to záloha na koučink. Balíček <b>349 Kč</b>.</li>
+          <li><b style="color:#F6CD63;">Koučink:</b> kapacita 25 míst. Gold 6 450 / 16 950 / 31 950 Kč (1 / 3 / 6 měsíců). Diamond 11 900 / 32 900 / 59 500 Kč, nejvýš 3 lidi najednou. Platba kartou přes Stripe, homepage vede nejdřív na formulář.</li>
+          <li><b style="color:#F6CD63;">Appka Tvůj Coach:</b> zkušebka zdarma <b>NEEXISTUJE</b>. Hlavní plán Basic 249 Kč měsíčně (bez AI), VIP 499 Kč je upsell pro ty, kdo appku používají, VIP + Kontrola check-inu od Martina 1 990 Kč měsíčně. Členové Academy mají VIP na rok.</li>
+          <li><b style="color:#F6CD63;">Affiliate:</b> 30 % z měsíčních plateb, 20 % z jednorázových, u koučinku 10 % jen z první platby (klíč <code>app_config.provize_koucink</code>). Vrácená platba provizi ruší.</li>
+          <li><b style="color:#F6CD63;">Mailing:</b> od 3. 9. spící režim (kdo 3 maily po sobě neotevřel, dostane 1 mail za 30 dní). Studené tratě prodávají Basic 249, ne Academy. Registrace v appce přepne člověka do tratě tc-zkusebka.</li>
+          <li><b style="color:#F6CD63;">Reklamy:</b> Meta koučink 40 Kč/den do 10. 9., Basic 100 Kč/den do 15. 9. Google Ads vypnuté.</li>
+          <li><b style="color:#F6CD63;">Rutiny Claude:</b> všechny vypnuté (4. 9.). Hlídky jedou z edge funkcí a pg_cron, ranní přehled chodí mailem.</li>
         </ul>
       </div>
 
@@ -767,9 +778,10 @@
     }
     function initSekce(){
       newsStari();
-      var nav=$('seknav'); if(!nav) return;
-      nav.innerHTML=SEKCE.map(function(s){ return '<a href="#" data-sek="'+s[0]+'">'+esc(s[1])+'</a>'; }).join('');
-      Array.prototype.forEach.call(nav.querySelectorAll('[data-sek]'),function(a){
+      var nav=$('seknav');
+      if(nav) nav.innerHTML=SEKCE.map(function(s){ return '<a href="#" data-sek="'+s[0]+'">'+esc(s[1])+'</a>'; }).join('');
+      // Klikatelné i mimo rozcestník (např. zkratky nahoře v traf-links), TÝMŽ mechanismem.
+      Array.prototype.forEach.call(document.querySelectorAll('[data-sek]'),function(a){
         a.addEventListener('click',function(e){
           e.preventDefault();
           var d=$('sek-'+a.getAttribute('data-sek')); if(!d) return;
@@ -1631,7 +1643,7 @@
         +'<label style="display:block;margin-top:8px;font-size:.78rem;color:#8F8A99;">Vzkaz ke změně <span style="color:#6d6879;">(proč to měníš, klient to čte)</span>'
         +'<input type="text" id="kdTg_note" value="'+esc(tg.note||'')+'" placeholder="např. Přidáváme 100 kcal, energie v tréninku byla nízká." style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
         +'<div style="display:flex;gap:10px;align-items:center;margin-top:10px;"><button class="mlogbtn" id="kdTgSave">Uložit zadání</button>'
-        +'<span class="muted" style="font-size:.78rem;">'+(tg.updated_at?'naposled '+fmtDate(tg.updated_at):'zatím nenastaveno, klient nevidí žádné zadání')+'</span></div>'
+        +'<span class="muted" id="kdTgStat" style="font-size:.78rem;">'+(tg.updated_at?'naposled '+fmtDate(tg.updated_at):'zatím nenastaveno, klient nevidí žádné zadání')+'</span></div>'
         +'</div>';
       // 📈 VÝVOJ: souhrn a graf z CELÉ historie. `client_detail` vrací všechny reporty
       // bez limitu, takže se nikam nedotazuje, jen se počítá z toho, co už v paměti je.
@@ -1955,10 +1967,15 @@
           api:api, toast:toast,
           poVyberu:function(cile){
             if(!KDET.data) return;
-            KDET.data.targets=Object.assign({},KDET.data.targets||{},cile);
+            var ted=new Date().toISOString();
+            KDET.data.targets=Object.assign({},KDET.data.targets||{},cile,{updated_at:ted});
             ['kcal','protein','carbs','fat','fiber'].forEach(function(k){
               var inp=$('kdTg_'+k); if(inp) inp.value=cile[k]==null?'':String(cile[k]);
             });
+            // ⛔ Onboarding uloží zadání sám přes client_targets_save (viz onboarding.js),
+            // ale štítek „zatím nenastaveno" tady zůstával stát, protože se počítal jen
+            // při vykreslení karty. Bez týhle řádky vypadala uložená čísla jako neuložená.
+            var stat=$('kdTgStat'); if(stat) stat.textContent='naposled '+fmtDate(ted);
           }
         });
       });

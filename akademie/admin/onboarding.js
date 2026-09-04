@@ -59,6 +59,24 @@
       navigator.clipboard.writeText(text).then(hotovo, function () { if (toast) toast('Zkopíruj prosím ručně'); });
     } else if (toast) toast('Zkopíruj prosím ručně');
   }
+  // Gmail compose URL neumí HTML, jen prostý text (viz gmailUrl níž). Aby se dala
+  // do rozepsaného mailu vložit i barva a tučné písmo, kopíruje se do schránky obojí
+  // najednou (`text/html` i `text/plain`), Gmail si po Ctrl+V vezme to formátované sám.
+  function kopirujFormatovane(html, text, toast) {
+    function hotovo() { if (toast) toast('📋 Zkopírováno naformátované'); }
+    function zaloha() { kopiruj(text, toast); }
+    if (global.navigator && navigator.clipboard && navigator.clipboard.write && global.ClipboardItem) {
+      try {
+        var item = new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([text], { type: 'text/plain' })
+        });
+        navigator.clipboard.write([item]).then(hotovo, zaloha);
+        return;
+      } catch (e) { /* padá do zálohy níž */ }
+    }
+    zaloha();
+  }
   function gmailUrl(to, predmet, telo) {
     var zaklad = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to)
       + '&su=' + encodeURIComponent(predmet);
@@ -355,6 +373,12 @@
       [['ob1', m1], ['ob2', m2]].forEach(function (par) {
         var id = par[0], m = par[1];
         var ta = $(id + 'Text');
+        var preview = $(id + 'Preview');
+        function prekresliNahled() {
+          if (preview && global.ReportReakce) preview.srcdoc = global.ReportReakce.mailHtml(ta.value);
+        }
+        prekresliNahled();
+        ta.addEventListener('input', prekresliNahled);
         $(id + 'Gmail').addEventListener('click', function (e) {
           e.preventDefault();
           var telo = ta.value;
@@ -366,6 +390,10 @@
           window.open(url, '_blank');
         });
         $(id + 'Copy').addEventListener('click', function () { kopiruj(ta.value, toast); });
+        $(id + 'CopyHtml').addEventListener('click', function () {
+          if (!global.ReportReakce) { toast('Šablona reakce se nenačetla, obnov stránku.'); return; }
+          kopirujFormatovane(global.ReportReakce.mailHtml(ta.value), ta.value, toast);
+        });
       });
     }
 
@@ -381,8 +409,16 @@
         + '<div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">'
         + '<button class="mlogbtn" id="' + id + 'Gmail">Otevřít v Gmailu</button>'
         + '<button class="mlogbtn" id="' + id + 'Copy">Kopírovat text</button>'
+        + '<button class="mlogbtn" id="' + id + 'CopyHtml">Zkopírovat formátovaný mail</button>'
         + (dlouhy ? '<span style="font-size:.78rem;color:#F6CD63;">Text je delší než ' + GMAIL_BODY_MAX
           + ' znaků, do adresy se nevejde. Gmail se otevře s příjemcem a předmětem, text zkopíruju a vložíš ho sám.</span>' : '')
+        + '</div>'
+        + '<p class="muted" style="margin:4px 0 0;font-size:.76rem;">Gmail: otevři koncept, vlož zkopírovaný formátovaný text (Ctrl+V).</p>'
+        // Náhled ve stejném stylu jako klientské maily (černé pozadí, zlaté nadpisy),
+        // vykreslený funkcí `ReportReakce.mailHtml` v report-reakce-sablona.js. Izolovaný
+        // v iframu, ať se stránkové CSS admina nemíchá s tím, co uvidí klient v mailu.
+        + '<div style="margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.14);">'
+        + '<iframe id="' + id + 'Preview" title="Náhled mailu" style="width:100%;height:' + (id === 'ob1' ? 360 : 200) + 'px;border:0;display:block;background:#0C0B10;"></iframe>'
         + '</div></div>';
     }
   }
