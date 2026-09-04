@@ -169,9 +169,40 @@
       + "</td></tr></table></td></tr></table></body></html>";
   }
 
+  /* ---------------------------------------------------------------------------
+   * KOPÍROVÁNÍ NAFORMÁTOVANÉHO MAILU DO SCHRÁNKY
+   *
+   * Gmail compose URL (výše) neumí HTML, jen prostý text. Aby šlo do rozepsaného
+   * mailu vložit i barva a tučné písmo, kopíruje se do schránky obojí najednou
+   * (`text/html` i `text/plain`), Gmail si po Ctrl+V vezme to formátované sám.
+   * ⛔ JEDNA definice pro celý admin (report i onboarding), nekopírovat.
+   * ------------------------------------------------------------------------- */
+  function kopiruj(text, toast) {
+    function hotovo() { if (toast) toast("📋 Zkopírováno"); }
+    if (root.navigator && root.navigator.clipboard && root.navigator.clipboard.writeText) {
+      root.navigator.clipboard.writeText(text).then(hotovo, function () { if (toast) toast("Zkopíruj prosím ručně"); });
+    } else if (toast) toast("Zkopíruj prosím ručně");
+  }
+
+  function kopirujFormatovane(html, text, toast) {
+    function hotovo() { if (toast) toast("📋 Zkopírováno naformátované"); }
+    function zaloha() { kopiruj(text, toast); }
+    if (root.navigator && root.navigator.clipboard && root.navigator.clipboard.write && root.ClipboardItem) {
+      try {
+        var item = new root.ClipboardItem({
+          "text/html": new Blob([html], { type: "text/html" }),
+          "text/plain": new Blob([text], { type: "text/plain" })
+        });
+        root.navigator.clipboard.write([item]).then(hotovo, zaloha);
+        return;
+      } catch (e) { /* padá do zálohy níž */ }
+    }
+    zaloha();
+  }
+
   root.ReportReakce = {
     KOSTRA: KOSTRA, STYL: STYL, PRANI: PRANI,
     prani: prani, denMesic: denMesic, predmet: predmet, telo: telo, gmailOdkaz: gmailOdkaz,
-    mailHtml: mailHtml,
+    mailHtml: mailHtml, kopirujFormatovane: kopirujFormatovane,
   };
 })(typeof window !== "undefined" ? window : globalThis);

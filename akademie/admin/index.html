@@ -1916,8 +1916,16 @@
             +'<div style="display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap;">'
             +'<button class="mlogbtn" id="kdDrGmail">Otevřít v Gmailu</button>'
             +'<button class="mlogbtn" id="kdDrCopy">Kopírovat text</button>'
+            +'<button class="mlogbtn" id="kdDrCopyHtml">Zkopírovat formátovaný mail</button>'
             +'<button class="mlogbtn" id="kdDrHotovo">Označit jako odesláno</button>'
-            +'<span class="muted" id="kdDrPozn" style="font-size:.78rem;"></span></div>';
+            +'<span class="muted" id="kdDrPozn" style="font-size:.78rem;"></span></div>'
+            +'<p class="muted" style="margin:4px 0 0;font-size:.76rem;">Gmail: otevři koncept, vlož zkopírovaný formátovaný text (Ctrl+V).</p>'
+            // Náhled ve stejném stylu jako klientské maily (černé pozadí, zlaté nadpisy),
+            // vykreslený funkcí `ReportReakce.mailHtml` v report-reakce-sablona.js. Izolovaný
+            // v iframu, ať se stránkové CSS admina nemíchá s tím, co uvidí klient v mailu.
+            +'<div style="margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.14);">'
+            +'<iframe id="kdDrPreview" title="Náhled mailu" style="width:100%;height:360px;border:0;display:block;background:#0C0B10;"></iframe>'
+            +'</div>';
           if(j.navrh_zmen) hh+='<p style="margin:8px 0 0;font-size:.85rem;color:#F6CD63;">🎯 Návrh jen pro Tebe (klient tohle nevidí): '+esc(j.navrh_zmen)+'</p>';
           out.innerHTML=hh;
           function zkopiruj(hotovo){
@@ -1926,6 +1934,15 @@
             else { try{ document.execCommand('copy'); hotovo(); }catch(x){ toast('Zkopíruj prosím ručně'); } }
           }
           $('kdDrCopy').addEventListener('click',function(){ zkopiruj(function(){ toast('📋 Zkopírováno'); }); });
+          $('kdDrCopyHtml').addEventListener('click',function(){
+            R.kopirujFormatovane(R.mailHtml($('kdDrText').value),$('kdDrText').value,toast);
+          });
+          // Náhled se překresluje živě při editaci textu, ať Martin vidí přesně to, co
+          // uvidí klient v mailu, ne jen surový text v textarey.
+          var kdDrPreview=$('kdDrPreview');
+          function kdDrPrekresliNahled(){ if(kdDrPreview) kdDrPreview.srcdoc=R.mailHtml($('kdDrText').value); }
+          kdDrPrekresliNahled();
+          $('kdDrText').addEventListener('input',kdDrPrekresliNahled);
           // ⛔ Gmail se jen OTEVŘE s předvyplněným mailem. Odesílá Martin klikem v Gmailu.
           // Když je text delší, než unese adresní řádek, tělo se do odkazu NEDÁVÁ vůbec
           // (tichý ořez = odeslaný půlmail) a místo toho se text zkopíruje do schránky.
@@ -3407,9 +3424,9 @@
     });
   })();
   </script>
-  <script src="/akademie/admin/onboarding.js?v=20260902a" defer></script>
+  <script src="/akademie/admin/onboarding.js?v=20260904a" defer></script>
   <!-- Sablona reakce na tydenni report: tvar mailu + odkaz do Gmailu. NIC neodesila. -->
-  <script src="/akademie/admin/report-reakce-sablona.js?v=20260902a" defer></script>
+  <script src="/akademie/admin/report-reakce-sablona.js?v=20260904a" defer></script>
   <script src="/akademie/admin/rozbory.js?v=20260903a" defer></script>
   <script src="/akademie/admin/pruvodce.js?v=20260902a" defer></script>
   <script src="/akademie/admin/trenink.js?v=20260902a" defer></script>
