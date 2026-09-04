@@ -1080,8 +1080,10 @@ Deno.serve(async (req) => {
       }
       for (const e of entsRows) {
         const r = get(e.email);
-        if (e.product === "academy" && e.active) r.has_academy = true;
-        if (e.product === "videokurz" && e.active) r.has_videokurz = true;
+        // ⛔ Prosle `expires_at` = pristup NENI (`has_entitlement` ho cte), i kdyz `active` zustalo true.
+        const ziveEnt = e.active && (!e.expires_at || Date.parse(String(e.expires_at)) > Date.now());
+        if (e.product === "academy" && ziveEnt) r.has_academy = true;
+        if (e.product === "videokurz" && ziveEnt) r.has_videokurz = true;
         // ⛔ DOPLNENO 8. 8. 2026. Dlazdice „Coaching" i filtr v tabulce se pocitaly
         // ze ZNACEK (`tags` zacinajici na "coaching"), ne z narok. To davalo 39, protoze
         // se scitaly `coaching-client`, `coaching-active` I `coaching-ex`, tedy i lide,
@@ -1128,7 +1130,7 @@ Deno.serve(async (req) => {
       const [cc, lds, ents] = await Promise.all([
         admin.from("customer_contacts").select("*").eq("email", email).maybeSingle(),
         admin.from("leads").select("id,email,name,segment,source,track,step,status,next_send_at,created_at").eq("email", email),
-        admin.from("entitlements").select("product,active,source,granted_at").eq("email", email),
+        admin.from("entitlements").select("product,active,source,granted_at,expires_at").eq("email", email),
       ]);
       const leadIds = (lds.data ?? []).map((l) => l.id);
       let timeline: unknown[] = [];
@@ -1144,7 +1146,14 @@ Deno.serve(async (req) => {
     if (action === "set_access") {
       const email = low(body.email); const product = String(body.product); const active = !!body.active;
       if (!email || !["academy", "videokurz"].includes(product)) return json({ error: "bad_args" }, 400);
-      const { error } = await admin.from("entitlements").upsert({ email, product, active, source: "admin-panel", granted_at: new Date().toISOString() }, { onConflict: "email,product" });
+      // ⭐ DELKA (Martin 4. 9. 2026): `mesice` 0 nebo chybi = neomezene, jinak konec za N mesicu.
+      //    `expires_at` se zapisuje VZDY (i null): upsert bez toho pole nechal u znovu
+      //    zapnuteho cloveka viset stary konec (typicky po refundu) a pristup „ANO" nefungoval.
+      const mesiceRaw = Math.round(Number(body.mesice ?? 0));
+      if (!isFinite(mesiceRaw) || mesiceRaw < 0 || mesiceRaw > 24) return json({ ok: false, duvod: "mesice_mimo_rozsah" }, 400);
+      let expiresAt: string | null = null;
+      if (active && mesiceRaw > 0) { const d = new Date(); d.setMonth(d.getMonth() + mesiceRaw); expiresAt = d.toISOString(); }
+      const { error } = await admin.from("entitlements").upsert({ email, product, active, source: "admin-panel", granted_at: new Date().toISOString(), expires_at: expiresAt }, { onConflict: "email,product" });
       if (error) return json({ error: error.message }, 500);
       // Academy pristup zrcadli i appku Tvuj Coach: grant kdyz active, revoke kdyz odebiras. Best-effort + log.
       if (product === "academy") {
@@ -1182,7 +1191,8 @@ Deno.serve(async (req) => {
               // Do 26. 7. 2026 se tu posilalo "diamond". `gold` a `diamond` jsou v appce
               // prazdne nalepky: jejich jedine vlastni priznaky `one_on_one` a `voice` nejsou
               // v kodu appky nikde pouzity. Realne davaly totez co ai_basic, jen bez limitu.
-              body: JSON.stringify({ email, action: act, tier: "ai_basic", source: "admin-panel" }),
+              // Omezena Academy = omezene VIP v appce se stejnym koncem; neomezena = rok (pravidlo appky).
+              body: JSON.stringify({ email, action: act, tier: "ai_basic", source: "admin-panel", ...(active && expiresAt ? { expires_at: expiresAt } : {}) }),
             }).catch(() => null);
             // deno-lint-ignore no-explicit-any
             if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
@@ -1191,7 +1201,7 @@ Deno.serve(async (req) => {
           await admin.from("tvujcoach_grants").insert({ email, action: act, result: gres, source: "admin-panel" });
         } catch { /* best-effort */ }
       }
-      return json({ ok: true });
+      return json({ ok: true, expires_at: expiresAt });
     }
 
     // Prehled udeleni pristupu do appky Tvuj Coach (kdo/kdy/vysledek) — pro admin sekci.
@@ -2561,19 +2571,22 @@ Deno.serve(async (req) => {
     if (action === "tc_grant_tier") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
       const tier = String(body.tier ?? "").trim();
-      // ⛔⛔ JEN `ai_kontrola`, `ai_basic` tudy SCHVÁLNĚ NEJDE (nález revize 3. 9. 2026).
-      //    Živá `grant_app_access` u zdrojů academy / academy-nakup / admin-panel
-      //    prodlužuje přístup na „aspoň rok" a `handle_new_user` totéž u člověka,
-      //    který se registruje až po grantu. Tlačítko „na 3 měsíce" by tedy
-      //    u VIP dalo rok a lhalo by. Pro VIP je tu `set_access` výš, který
-      //    tohle pravidlo má jako záměr. `ai_kontrola` má od 3. 9. vlastní větev,
-      //    kde poslané datum platí přesně.
+      // ⭐ TARIFY (Martin 4. 9. 2026: „pridat pristup TC neomezene i omezene, urcim si
+      //    mesice"): `basic`, `ai_basic` (VIP) a `ai_kontrola`. Poslane `expires_at`
+      //    plati v appce PRESNE u registrovaneho (grant_app_access bere p_expires_at);
+      //    u cloveka, ktery se registruje az po grantu, to od migrace 20260904 drzi
+      //    i `handle_new_user` (drive dal u admin-panel „aspon rok").
       // ⛔ `gold` a `diamond` jsou v appce prázdné nálepky (26. 7. 2026).
-      if (tier !== "ai_kontrola") return json({ ok: false, duvod: "neznamy_tier" }, 400);
+      if (!["basic", "ai_basic", "ai_kontrola"].includes(tier)) return json({ ok: false, duvod: "neznamy_tier" }, 400);
       const mesice = Math.round(Number(body.mesice ?? 1));
-      if (!isFinite(mesice) || mesice < 1 || mesice > 24) return json({ ok: false, duvod: "mesice_mimo_rozsah" }, 400);
+      if (!isFinite(mesice) || mesice < 0 || mesice > 24) return json({ ok: false, duvod: "mesice_mimo_rozsah" }, 400);
+      // „Neomezene" = 0. ⛔ Neposila se null: v appce znamena null u zdroje admin-panel
+      //    „rok" (grant_app_access) a u `ai_kontrola` ho appka odmitne. Datum 2099 je
+      //    vedoma volba Martina (potvrzuje ji v adminu), ne tichy dar.
+      const neomezene = mesice === 0;
       const do_ = new Date();
-      do_.setMonth(do_.getMonth() + mesice);
+      if (neomezene) do_.setTime(Date.parse("2099-12-31T00:00:00.000Z"));
+      else do_.setMonth(do_.getMonth() + mesice);
       const out = await tcMost(admin, {
         email, action: "grant", tier, source: "admin-panel", expires_at: do_.toISOString(),
       });
@@ -2586,7 +2599,7 @@ Deno.serve(async (req) => {
         .insert({ email, action: "grant-" + tier, result: vysledek, source: "admin-panel" })
         .then(() => undefined, () => undefined);
       if (!out.ok) return json({ ok: false, duvod: out.duvod });
-      return json({ ok: true, result: vysledek, expires_at: do_.toISOString() });
+      return json({ ok: true, result: vysledek, expires_at: do_.toISOString(), neomezene });
     }
 
     // 🎟️ CESTA ZPÁTKY: ODEBRÁNÍ RUČNĚ UDĚLENÉHO TIERU (3. 9. 2026).
@@ -2607,7 +2620,10 @@ Deno.serve(async (req) => {
     if (action === "tc_revoke_tier") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
       const tier = String(body.tier ?? "").trim();
-      if (tier !== "ai_kontrola") return json({ ok: false, duvod: "neznamy_tier" }, 400);
+      // `basic` pribylo 4. 9. 2026: Academy ho nikdy nedava, takze sundani je bezpecne.
+      // ⛔ `ai_basic` tudy dal NEJDE: subscriptions.source je u grantu z adminu i z Academy
+      //    stejne ('academy'), rocni VIP za 8 900 Kc by se nedalo odlisit. Karta klienta.
+      if (!["ai_kontrola", "basic"].includes(tier)) return json({ ok: false, duvod: "neznamy_tier" }, 400);
 
       const { data: coachEnt, error: coachErr } = await admin.from("entitlements")
         .select("active, expires_at").eq("email", email).eq("product", "coaching").limit(1).maybeSingle();

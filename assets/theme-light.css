@@ -746,3 +746,34 @@ html[data-theme="light"]{background:var(--mb-bg);}
 }
 
 @media print{.mb-theme-toggle{display:none!important;}}
+
+/* ULTRA TMAVE INLINE BLOKY (Martin 4. 9. 2026: „zadne ultra tmave barvy u svetleho
+   rezimu"). Bannery na /clanky/, /myty/, boxy #181520 a spol. maji barvu natvrdo
+   v style="", takze je stylesheet bez !important neprebije. Hero pasy clanku
+   (zlaty gradient) zustavaji podle rozhodnuti nahore. Kdo pridava novy tmavy
+   inline blok, prida sem jeho barvu; lepsi je ale pouzit tridu. */
+[data-theme="light"] [style*="background:#0C0B10"],
+[data-theme="light"] [style*="background: #0C0B10"],
+[data-theme="light"] [style*="background:#0c0b10"],
+[data-theme="light"] [style*="background:linear-gradient(135deg,#241026,#0C0B10)"],
+[data-theme="light"] [style*="background:linear-gradient(135deg,#0C0B10,#241026)"],
+[data-theme="light"] [style*="background:#181520"],
+[data-theme="light"] [style*="background:#211d2b"],
+[data-theme="light"] [style*="background:#100e14"],
+[data-theme="light"] [style*="background:#121014"],
+[data-theme="light"] [style*="background:#191510"],
+[data-theme="light"] [style*="background:linear-gradient(135deg,#262626 0%,#000 100%)"],
+[data-theme="light"] [style*="background:linear-gradient(160deg,#15171a"]{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border:1px solid rgba(235,177,44,.45)!important;
+  box-shadow:0 8px 28px rgba(0,0,0,.06)!important;
+}
+[data-theme="light"] [style*="background:#0C0B10"] [style*="color:#fff"],
+[data-theme="light"] [style*="background:#181520"] [style*="color:#fff"],
+[data-theme="light"] [style*="background:#181520"] [style*="color:#F0EADF"],
+[data-theme="light"] [style*="background:#211d2b"] [style*="color:#fff"],
+[data-theme="light"] [style*="background:#100e14"] [style*="color:#fff"],
+[data-theme="light"] [style*="background:linear-gradient(135deg,#262626 0%,#000 100%)"] [style*="color:#fff"]{
+  color:var(--mb-text)!important;
+}

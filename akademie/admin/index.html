@@ -266,22 +266,27 @@
         <h3>🧾 Kontrola od Martina</h3>
         <div class="sub">Rozbory ke kontrole · text jde klientovi pod tvým jménem, odesílá se až po tvém potvrzení</div>
         <div id="rozboryBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
-        <!-- 🎟️ RUCNI PRISTUP DO APPKY S VYSLOVNYM KONCEM.
-             ⛔⛔ MESICE JSOU POVINNE. Grant bez data konce znamena v databazi appky
-             pristup NAVEKY (vetev `else null` v grant_app_access) a u tarifu za
-             1 990 Kc/mesic by jeden klik rozdal nejdrazsi plan zdarma. Appka takovy
-             grant od 3. 9. 2026 rovnou odmita; datum pocita server z tohohle pole. -->
+        <!-- 🎟️ RUCNI PRISTUP DO APPKY: TARIF + DELKA (Martin 4. 9. 2026: „pridat pristup
+             TC neomezene i omezene, urcim si mesice"). Delku pocita server (`tc_grant_tier`)
+             z poctu mesicu; „neomezene" = 0 a server posle appce datum 31. 12. 2099,
+             protoze grant bez data znamena v appce u zdroje admin-panel „rok" a u tarifu
+             VIP + Kontrola ho appka rovnou odmitne. -->
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.9rem 0 .2rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.08);">
           <span class="muted" style="font-size:.85rem;font-weight:700;">🎟️ Dát přístup do appky:</span>
           <input type="email" id="tcgEmail" placeholder="e-mail klienta" autocomplete="off" style="min-width:200px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;">
           <select id="tcgTier" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+            <option value="basic">Basic (bez AI)</option>
+            <option value="ai_basic">VIP</option>
             <option value="ai_kontrola">VIP + Kontrola od Martina</option>
           </select>
           <select id="tcgMesice" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
             <option value="1">na 1 měsíc</option>
+            <option value="2">na 2 měsíce</option>
             <option value="3">na 3 měsíce</option>
             <option value="6">na 6 měsíců</option>
             <option value="12">na 12 měsíců</option>
+            <option value="24">na 24 měsíců</option>
+            <option value="0">neomezeně</option>
           </select>
           <button class="mlogbtn" id="tcgBtn">Zapnout přístup</button>
           <!-- ⛔ CESTA ZPÁTKY (3. 9. 2026). Bez ní se dal tarif za 1 990 Kč/měsíc
@@ -292,7 +297,7 @@
           <button class="mlogbtn" id="tcgOff" style="background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.18);">Vypnout přístup</button>
           <span class="muted" id="tcgStav" style="font-size:.8rem;"></span>
         </div>
-        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Přístup skončí sám. Prodloužit ho jde stejným tlačítkem, delší už udělený přístup se nezkracuje. Samotné VIP se dává v kartě klienta (Academy přístup), tohle je jen tarif s rozbory. „Vypnout přístup" bere zpátky jen tenhle tarif a jen tehdy, když ho udělil admin nebo Academy: zaplacené předplatné, koučink ani rodinný přístup neodebere.</p>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Omezený přístup skončí sám. Prodloužit ho jde stejným tlačítkem, delší už udělený přístup se nezkracuje. ⚠️ Basic a VIP na měsíce u člověka, který se v appce ještě neregistroval: po registraci mu naskočí přesně ta délka. „Vypnout přístup" umí vzít zpátky Basic a VIP + Kontrola (jen granty z adminu nebo Academy); VIP se vypíná v kartě klienta („Academy: ne"). Zaplacené předplatné, koučink ani rodinný přístup neodebere.</p>
       </div>
 
       <div class="traf" id="kli" style="display:none;border-color:rgba(235,177,44,.45);">
@@ -402,6 +407,14 @@
       <div class="qg">
         <span class="lbl">Rychlé udělení přístupu:</span>
         <input type="email" id="qgEmail" placeholder="e-mail klienta (i takového, co ještě není v tabulce)…" autocomplete="off">
+        <select id="qgMesice" title="Na jak dlouho" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+          <option value="0">neomezeně</option>
+          <option value="1">na 1 měsíc</option>
+          <option value="2">na 2 měsíce</option>
+          <option value="3">na 3 měsíce</option>
+          <option value="6">na 6 měsíců</option>
+          <option value="12">na 12 měsíců</option>
+        </select>
         <button id="qgVid">+ Videokurz</button>
         <button id="qgAca">+ Academy</button>
         <button id="qgRm" class="rm">− Odebrat videokurz</button>
@@ -1181,14 +1194,18 @@
         var email=($('tcgEmail').value||'').trim().toLowerCase();
         var stav=$('tcgStav');
         if(!email||email.indexOf('@')<0){ stav.textContent='Zadej e-mail klienta.'; return; }
+        var mesice=Number($('tcgMesice').value);
+        var nazevTieru=$('tcgTier').options[$('tcgTier').selectedIndex].text;
+        // Neomezene je vedoma volba (Martin 4. 9. 2026), u nejdrazsiho tarifu s potvrzenim.
+        if(mesice===0 && !confirm('Opravdu dát „'+nazevTieru+'" pro '+email+' BEZ konce?')) return;
         b.disabled=true; stav.textContent='Zapínám…';
-        api({action:'tc_grant_tier',email:email,tier:$('tcgTier').value,mesice:Number($('tcgMesice').value)}).then(function(o){
+        api({action:'tc_grant_tier',email:email,tier:$('tcgTier').value,mesice:mesice}).then(function(o){
           b.disabled=false;
           var j=o.j||{};
           if(!j.ok){ stav.textContent=(window.AdminRozbory?window.AdminRozbory.chybaPopis(j.duvod):String(j.duvod||'Nepovedlo se.')); return; }
           // `pending` = clovek se jeste nezaregistroval, narok na nej ceka. Neni to chyba.
           stav.textContent=(j.result==='pending'?'Nárok uložen, naskočí mu po registraci.':'Hotovo, přístup platí.')
-            +' Do '+czDatum(String(j.expires_at||'').slice(0,10));
+            +(j.neomezene?' Bez konce.':' Do '+czDatum(String(j.expires_at||'').slice(0,10)));
           toast('Přístup nastaven');
         }).catch(function(){ b.disabled=false; stav.textContent='Nepovedlo se, zkus to znovu.'; });
       });
@@ -1237,6 +1254,7 @@
         var stav=$('tcgStav');
         if(!email||email.indexOf('@')<0){ stav.textContent='Zadej e-mail klienta.'; return; }
         var nazev=$('tcgTier').options[$('tcgTier').selectedIndex].text;
+        if($('tcgTier').value==='ai_basic'){ stav.textContent='VIP se vypíná v kartě klienta („Academy: ne"), tohle tlačítko umí Basic a VIP + Kontrola.'; return; }
         if(!confirm('Opravdu vypnout přístup „'+nazev+'" pro '+email+'?\n\nOdebere se jen tenhle tarif, a jen když ho udělil admin nebo Academy. Zaplacené předplatné ani koučink to nevezme.')) return;
         b.disabled=true; stav.textContent='Vypínám…';
         api({action:'tc_revoke_tier',email:email,tier:$('tcgTier').value}).then(function(o){
@@ -2800,10 +2818,11 @@
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast('Zadej platný e-mail'); return; }
       var btns=[$('qgVid'),$('qgAca'),$('qgRm'),$('qgRmA')];
       btns.forEach(function(b){ if(b) b.disabled=true; });
-      api({action:'set_access',email:em,product:product,active:active}).then(function(o){
+      var qm=$('qgMesice'); var mesice=active&&qm?Number(qm.value):0;
+      api({action:'set_access',email:em,product:product,active:active,mesice:mesice}).then(function(o){
         btns.forEach(function(b){ if(b) b.disabled=false; });
         if(o.j&&o.j.ok){
-          toast((active?'✓ Přístup udělen: ':'Přístup odebrán: ')+product+' · '+em);
+          toast((active?'✓ Přístup udělen'+(o.j.expires_at?' do '+czDatum(String(o.j.expires_at).slice(0,10)):'')+': ':'Přístup odebrán: ')+product+' · '+em);
           // hned aktualizuj tabulku, ať je vidět, že se to povedlo (dřív se nerefreshla → vypadalo to jako by nic)
           var row=(ALL||[]).filter(function(r){ return r.email===em; })[0];
           if(row){ if(product==='videokurz') row.has_videokurz=active; if(product==='academy') row.has_academy=active; renderRows(); }
@@ -2823,8 +2842,11 @@
       api({action:'contact',email:email}).then(function(out){
         if(!out.j.ok){ $('detBody').innerHTML='<p class="muted">Nepovedlo se načíst.</p>'; return; }
         var d=out.j, c=d.contact||{}, ents=d.entitlements||[];
-        var hasA=ents.some(function(e){return e.product==='academy'&&e.active;});
-        var hasV=ents.some(function(e){return e.product==='videokurz'&&e.active;});
+        // Prosle expires_at = pristup uz NENI (has_entitlement cte expires_at), i kdyz active zustalo true.
+        function zije(e){ return e.active && (!e.expires_at || Date.parse(e.expires_at) > Date.now()); }
+        function doKdy(pr){ var e=ents.filter(function(x){return x.product===pr;})[0]; return (e&&zije(e)&&e.expires_at)?' do '+czDatum(String(e.expires_at).slice(0,10)):''; }
+        var hasA=ents.some(function(e){return e.product==='academy'&&zije(e);});
+        var hasV=ents.some(function(e){return e.product==='videokurz'&&zije(e);});
         var tags=(c.tags||[]);
         // Mailing sekvence — stav leadu + akce (pauza / obnovit / přeřadit)
         var lead=(d.leads&&d.leads[0])||null;
@@ -2853,8 +2875,11 @@
           '<h2>'+esc(email)+'</h2>'+
           '<p class="muted">'+esc(c.name||'')+(c.status?' · '+esc(c.status):'')+'</p>'+
           '<div class="det-act">'+
-            '<button data-a="academy" class="'+(hasA?'on':'')+'">Academy: '+(hasA?'ANO':'ne')+'</button>'+
-            '<button data-a="videokurz" class="'+(hasV?'on':'')+'">Videokurz: '+(hasV?'ANO':'ne')+'</button>'+
+            '<button data-a="academy" class="'+(hasA?'on':'')+'">Academy: '+(hasA?'ANO'+doKdy('academy'):'ne')+'</button>'+
+            '<button data-a="videokurz" class="'+(hasV?'on':'')+'">Videokurz: '+(hasV?'ANO'+doKdy('videokurz'):'ne')+'</button>'+
+            '<select id="detMesice" title="Na jak dlouho (při zapnutí)" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:6px 9px;color:#ece4d9;font-family:inherit;font-size:.82rem;">'+
+              '<option value="0">neomezeně</option><option value="1">na 1 měsíc</option><option value="2">na 2 měsíce</option><option value="3">na 3 měsíce</option><option value="6">na 6 měsíců</option><option value="12">na 12 měsíců</option>'+
+            '</select>'+
             '<button data-a="unsub" class="danger">Odhlásit z mailů</button>'+
           '</div>'+
           '<div class="det-act" id="tagWrap">'+tags.map(function(t){return '<button data-tag="'+esc(t)+'" class="on">'+esc(t)+' ✕</button>';}).join('')+
@@ -2875,7 +2900,8 @@
             var a=btn.getAttribute('data-a');
             if(a==='unsub'){ if(!confirm('Odhlásit '+email+' z mailingu?')) return; api({action:'unsubscribe',email:email}).then(function(o){ if(o.j&&o.j.ok){ toast('Odhlášeno'); openDetail(email); loadQueue(); } else toast('Chyba: '+((o.j&&o.j.error)||o.status)); }).catch(function(){ toast('Chyba spojení'); }); return; }
             var nowOn=!btn.classList.contains('on');
-            api({action:'set_access',email:email,product:a,active:nowOn}).then(function(o){ if(o.j.ok){ btn.classList.toggle('on'); btn.textContent=(a==='academy'?'Academy: ':'Videokurz: ')+(nowOn?'ANO':'ne'); toast('Uloženo'); refreshRow(email,a,nowOn);} else toast('Chyba'); });
+            var dm=$('detMesice'); var mesice=nowOn&&dm?Number(dm.value):0;
+            api({action:'set_access',email:email,product:a,active:nowOn,mesice:mesice}).then(function(o){ if(o.j.ok){ btn.classList.toggle('on'); btn.textContent=(a==='academy'?'Academy: ':'Videokurz: ')+(nowOn?'ANO'+(o.j.expires_at?' do '+czDatum(String(o.j.expires_at).slice(0,10)):''):'ne'); toast('Uloženo'); refreshRow(email,a,nowOn);} else toast('Chyba'); });
           });
         });
         Array.prototype.forEach.call($('detBody').querySelectorAll('[data-tag]'),function(btn){
