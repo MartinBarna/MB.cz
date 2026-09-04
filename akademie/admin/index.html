@@ -294,10 +294,10 @@
                grant z adminu nebo Academy: roční VIP, koučink ani rodinný přístup
                tímhle tlačítkem nezmizí. Potvrzení je povinné, je to zásah do
                přístupu živého člověka. -->
-          <button class="mlogbtn" id="tcgOff" style="background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.18);">Vypnout přístup</button>
+          <button class="mlogbtn" id="tcgOff" style="background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.18);">Vypnout přístup (vše)</button>
           <span class="muted" id="tcgStav" style="font-size:.8rem;"></span>
         </div>
-        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Omezený přístup skončí sám. Prodloužit ho jde stejným tlačítkem, delší už udělený přístup se nezkracuje. ⚠️ Basic a VIP na měsíce u člověka, který se v appce ještě neregistroval: po registraci mu naskočí přesně ta délka. „Vypnout přístup" umí vzít zpátky Basic a VIP + Kontrola (jen granty z adminu nebo Academy); VIP se vypíná v kartě klienta („Academy: ne"). Zaplacené předplatné, koučink ani rodinný přístup neodebere.</p>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Omezený přístup skončí sám. Prodloužit ho jde stejným tlačítkem, delší už udělený přístup se nezkracuje. ⚠️ Basic a VIP na měsíce u člověka, který se v appce ještě neregistroval: po registraci mu naskočí přesně ta délka. „Vypnout přístup" vypne appku úplně: jakýkoli tarif udělený adminem nebo Academy (i roční VIP z Academy). Zaplacené předplatné přes Stripe, koučink ani rodinný přístup neodebere.</p>
       </div>
 
       <div class="traf" id="kli" style="display:none;border-color:rgba(235,177,44,.45);">
@@ -1253,11 +1253,10 @@
         var email=($('tcgEmail').value||'').trim().toLowerCase();
         var stav=$('tcgStav');
         if(!email||email.indexOf('@')<0){ stav.textContent='Zadej e-mail klienta.'; return; }
-        var nazev=$('tcgTier').options[$('tcgTier').selectedIndex].text;
-        if($('tcgTier').value==='ai_basic'){ stav.textContent='VIP se vypíná v kartě klienta („Academy: ne"), tohle tlačítko umí Basic a VIP + Kontrola.'; return; }
-        if(!confirm('Opravdu vypnout přístup „'+nazev+'" pro '+email+'?\n\nOdebere se jen tenhle tarif, a jen když ho udělil admin nebo Academy. Zaplacené předplatné ani koučink to nevezme.')) return;
+        // „Vypnout vse" (Martin 4. 9. 2026): bez ohledu na vybrany tarif vypne to, co clovek ma.
+        if(!confirm('Opravdu vypnout přístup do appky pro '+email+'?\n\nVypne jakýkoli tarif udělený adminem nebo Academy (i roční VIP z Academy). Zaplacené předplatné přes Stripe, koučink ani rodinný přístup to nevezme.')) return;
         b.disabled=true; stav.textContent='Vypínám…';
-        api({action:'tc_revoke_tier',email:email,tier:$('tcgTier').value}).then(function(o){
+        api({action:'tc_revoke_tier',email:email,tier:'vse'}).then(function(o){
           b.disabled=false;
           var j=o.j||{};
           if(!j.ok){

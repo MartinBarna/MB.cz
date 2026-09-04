@@ -2620,10 +2620,11 @@ Deno.serve(async (req) => {
     if (action === "tc_revoke_tier") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
       const tier = String(body.tier ?? "").trim();
-      // `basic` pribylo 4. 9. 2026: Academy ho nikdy nedava, takze sundani je bezpecne.
-      // ⛔ `ai_basic` tudy dal NEJDE: subscriptions.source je u grantu z adminu i z Academy
-      //    stejne ('academy'), rocni VIP za 8 900 Kc by se nedalo odlisit. Karta klienta.
-      if (!["ai_kontrola", "basic"].includes(tier)) return json({ ok: false, duvod: "neznamy_tier" }, 400);
+      // 4. 9. 2026 (Martin: „chci umet v adminu vypnout pristup vse"): `vse` = appka si
+      //    tier dohleda ze ziveho stavu; jednotlive tiery zustavaji pro skripty.
+      // ⚠️ Sundava i rocni VIP z Academy (source je u obou 'academy'); admin to potvrzuje
+      //    dialogem. Stripe predplatne tudy nejde nikdy (WHERE v SQL set_app_access_expiry).
+      if (!["vse", "ai_kontrola", "basic", "ai_basic"].includes(tier)) return json({ ok: false, duvod: "neznamy_tier" }, 400);
 
       const { data: coachEnt, error: coachErr } = await admin.from("entitlements")
         .select("active, expires_at").eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
