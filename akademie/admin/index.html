@@ -1205,7 +1205,7 @@
           if(!j.ok){ stav.textContent=(window.AdminRozbory?window.AdminRozbory.chybaPopis(j.duvod):String(j.duvod||'Nepovedlo se.')); return; }
           // `pending` = clovek se jeste nezaregistroval, narok na nej ceka. Neni to chyba.
           stav.textContent=(j.result==='pending'?'Nárok uložen, naskočí mu po registraci.':'Hotovo, přístup platí.')
-            +(j.neomezene?' Bez konce.':' Do '+czDatum(String(j.expires_at||'').slice(0,10)));
+            +(j.neomezene?' Bez konce.':' Do '+czDatum(String(j.expires_at||'').slice(0,10))+' (měl-li už delší nebo neomezený přístup, zůstává mu ten delší).');
           toast('Přístup nastaven');
         }).catch(function(){ b.disabled=false; stav.textContent='Nepovedlo se, zkus to znovu.'; });
       });
