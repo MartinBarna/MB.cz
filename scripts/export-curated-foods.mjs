@@ -34,6 +34,11 @@ const KOREN = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CIL = join(KOREN, 'assets/curated-foods.json');
 const URL_PROJEKTU = process.env.SUPABASE_URL || 'https://kfkmghvhqwqtsalqjmrp.supabase.co';
 const KLIC = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Cesta bez service klíče: `npx supabase db query --linked --project-ref kfkmghvhqwqtsalqjmrp
+//   -f dotaz.sql --output-format json > dump.json` (dotaz = select SLOUPCE from curated_foods order by name)
+// a pak `CURATED_CLI_JSON=dump.json node scripts/export-curated-foods.mjs`. CLI vrací čísla jako
+// řetězce ("3.30"), převádíme je; pojistky níž (úbytek, diff) platí stejně.
+const CLI_JSON = process.env.CURATED_CLI_JSON;
 const NASUCHO = process.argv.includes('--dry-run');
 const PRAH_UBYTKU = 5; // procenta
 
@@ -41,7 +46,7 @@ const PRAH_UBYTKU = 5; // procenta
 // jménem, takže přidání sloupce nevadí, ale přejmenování nebo vypuštění ho rozbije.
 const SLOUPCE = ['name', 'category', 'kcal_100g', 'protein_100g', 'carb_100g', 'fat_100g', 'fiber_100g', 'serving_g', 'note'];
 
-if (!KLIC) {
+if (!KLIC && !CLI_JSON) {
   console.error('\n🔴 Chybí SUPABASE_SERVICE_ROLE_KEY v prostředí.');
   console.error('   Spusť:  SUPABASE_SERVICE_ROLE_KEY=... node scripts/export-curated-foods.mjs');
   console.error('   ⛔ Anonymní klíč NESTAČÍ: RLS na `curated_foods` vrátí anonymovi prázdno,');
@@ -67,7 +72,17 @@ async function stahniVse() {
   return vse;
 }
 
-const nove = await stahniVse();
+const CISELNE = ['kcal_100g', 'protein_100g', 'carb_100g', 'fat_100g', 'fiber_100g', 'serving_g'];
+const zCli = () => {
+  const rows = JSON.parse(readFileSync(CLI_JSON, 'utf8')).rows;
+  if (!Array.isArray(rows)) throw new Error('CLI JSON nemá pole rows');
+  return rows.map((r) => {
+    const o = { ...r };
+    for (const k of CISELNE) o[k] = r[k] == null ? null : Number(r[k]);
+    return o;
+  });
+};
+const nove = CLI_JSON ? zCli() : await stahniVse();
 if (nove.length === 0) throw new Error('databáze vrátila 0 řádků, to je vždycky chyba, ne prázdná tabulka');
 
 // Normalizace: jen dohodnuté sloupce, v dohodnutém pořadí, seřazené podle názvu.
