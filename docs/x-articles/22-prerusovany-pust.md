@@ -1,4 +1,4 @@
-# Přerušovaný půst
+# Přerušovaný půst: funguje, ale ne kouzelně
 
 Přerušovaný půst má pověst zázraku. „Jez v okně osm hodin a zhubneš, aniž bys počítal kalorie." Zní to lákavě. V červnu 2025 vyšla v prestižním časopise BMJ zatím největší analýza na tohle téma: spojila 99 kontrolovaných studií a 6 582 lidí. A výsledek je hezky střízlivý: půst funguje bez kouzel.
 

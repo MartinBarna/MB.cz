@@ -1,4 +1,4 @@
-# Snídaně a hubnutí
+# Musíš snídat, abys zhubl? Mýtus
 
 „Snídaně je nejdůležitější jídlo dne. Kdo nesnídá, tloustne a zpomalí se mu metabolismus." Slyšel jsi to od babičky, z reklamy na cereálie i z půlky fitness účtů. Zní to jako neotřesitelná pravda. Jenže když se podíváš, odkud ta věta přišla a co o ní říkají data, zjistíš, že je to z velké části marketing. Jestli ráno jíš, nebo ne, samo o sobě nerozhodne, jestli zhubneš.
 

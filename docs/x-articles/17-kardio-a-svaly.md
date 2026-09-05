@@ -1,4 +1,4 @@
-# Kardio a svaly
+# Kardio ti sežere svaly? Mýtus o kardiu a síle
 
 „Nechoď na kardio, sežere ti to svaly." Slyšel jsem to snad tisíckrát: v posilovně, na sítích, od kluků, co se bojí, že po dvou rotopedech zmizí celá zima dřiny. Pravda je střízlivější: rozumné množství kardia ti svaly nesežere. Sval drží silový trénink, dost bílkovin a ne moc agresivní deficit. Kardio je v tom všem doplněk, ne nepřítel.
 
@@ -16,7 +16,7 @@ Háček je v tom slovním spojení *obrovský objem*. Bavíme se o člověku, kt
 
 Pár kardií týdně vedle silového tréninku ten konflikt nespustí. To není tvoje liga, pokud zrovna netrénuješ na maraton a maximální sílu zároveň.
 
-## Co svaly opravdu ujídá
+## Co svaly ujídá
 
 Když se v dietě ztratí kus svalu, vinu nese něco z téhle čtveřice. A všimni si, že je to o stravě, tréninku a regeneraci:
 

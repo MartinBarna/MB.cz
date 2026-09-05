@@ -1,4 +1,4 @@
-# Jíst večer a tloustnutí
+# Jíst večer tloustne? Mýtus jídla po 18. hodině
 
 „Po šesté večer už ani sousto, jinak to máš na bocích." Klasika, kterou slyšel skoro každý, kdo někdy chtěl zhubnout. Zní to logicky: večer se nehýbeš, tak se to přece musí uložit. Jenže když se podíváš, co o tom víme, je to jinak. Kvůli samotné hodině na hodinách neztloustneš. Rozhodují celkové kalorie za den. Zároveň to ale není úplně černobílé: dřívější večeře může s hubnutím trochu pomoct.
 

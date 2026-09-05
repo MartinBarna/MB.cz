@@ -1,4 +1,4 @@
-# Čisté stravování a zakázaná jídla
+# Čisté stravování a zakázaná jídla: mýtus
 
 „Tohle nejez, to je špinavý jídlo." „Musíš jíst čistě, jinak nezhubneš." Slýchám to pořád dokola a pokaždé mě to trochu zamrzí, protože za tím stojí spousta zbytečné viny a strachu z jídla. Pravda je nuda, ale osvobozující: žádná potravina není sama o sobě „čistá" ani „špinavá". Rozhoduje celek jídelníčku.
 

@@ -1,4 +1,4 @@
-# Frekvence jídel a metabolismus
+# Jíst 5 až 6× denně? Mýtus o častém jídle
 
 „Jez každé tři hodiny, ať se ti nezastaví metabolismus." „Bez svačiny tělo přejde do úsporného režimu." Tahle věta zní tak často, že ji většina lidí bere jako fakt. Jenže metabolismus není kamna, co vyhasnou, když do nich chvíli nepřiložíš. Mezi jídly se ti nic „nevypíná" ani „nezpomaluje". Tady je, odkud se ten mýtus vzal a co o frekvenci jídel doopravdy platí.
 

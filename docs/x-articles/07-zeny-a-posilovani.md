@@ -1,4 +1,4 @@
-# Ženy a posilování
+# Ženy a posilování: zmohutním od činek? Realita
 
 „Já k činkám nepůjdu, zmohutním a budu vypadat jako chlap." Slyšel jsem to od desítek klientek. A chápu, odkud to jde. Vidíš na Instagramu svalnaté kulturistky a bojíš se, že po měsíci dřepů budeš vypadat stejně. Jenže to je strach z něčeho, co se ti reálně stát nemůže. Ta „zpevněná, vyrýsovaná" postava, kterou většina žen chce, vzniká přesně tím, čeho se bojíš: těžkými činkami.
 

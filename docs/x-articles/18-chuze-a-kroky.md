@@ -1,4 +1,4 @@
-# Chůze a kroky při hubnutí
+# Kolik kroků denně? Chůze na hubnutí
 
 Když se řekne hubnutí, většina lidí si představí dřinu v posilovně nebo udýchané kardio. Přitom jeden z nejúčinnějších nástrojů máš pořád u sebe a skoro nic tě nestojí. Obyčejná chůze. V tomhle článku ti ukážu, proč funguje líp, než to vypadá, a kolik kroků má smysl mít zrovna ty.
 

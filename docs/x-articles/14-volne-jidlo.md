@@ -1,4 +1,4 @@
-# Volné jídlo a volný den
+# Volné jídlo, nebo volný den? Volnost bez sabotáže
 
 Odmakáš celý týden a přijde víkend. S ním otázka, jestli si dát volno. Celý den bez brzd vypadá jako zasloužená odměna, ale dokáže smazat celý týden v deficitu. Tady je, jak si volnost dopřát tak, aby ti pomáhala.
 

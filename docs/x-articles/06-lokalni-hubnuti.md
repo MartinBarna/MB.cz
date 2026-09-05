@@ -1,4 +1,4 @@
-# Lokální hubnutí a cviky na břicho
+# Lokální hubnutí je mýtus: břicho a sklapovačky
 
 „Dělám sklapovačky každý den a břicho mi pořád nikde." Slyšel jsem to snad od stovky lidí. Logika zní rozumně: chci ploché břicho, tak makám na břiše. Jenže tělo takhle nefunguje. Tuk nezmizí z místa, které procvičuješ. Můžeš udělat tisíc sklapovaček a tuk na pase si toho ani nevšimne.
 

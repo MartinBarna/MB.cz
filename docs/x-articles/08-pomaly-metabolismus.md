@@ -1,4 +1,4 @@
-# Pomalý metabolismus a hubnutí
+# Může za to pomalý metabolismus? Mýtus
 
 „Já fakt skoro nic nejím, a stejně nehubnu, mám asi rozbitý, pomalý metabolismus." Tuhle větu slyším pořád dokola a vždycky se za ní schovává stejná úleva: kdyby za to mohl metabolismus, nemůžu za to já. Jenže pravda je nepohodlnější. Pomalý metabolismus je málokdy ten skutečný důvod, proč to nejde dolů. A dokud ho budeš vinit, řešíš špatný problém.
 
@@ -6,11 +6,11 @@
 
 Začnu tím nejdůležitějším. Když porovnáš dva lidi stejné výšky, váhy a podobné svalové hmoty, jejich klidový energetický výdej (kolik kalorií spálí jen tím, že žijí a dýchají) je u nich většinou hodně podobný. Rozdíly mezi lidmi existují, ale jsou obvykle malé. Rozhodně ne tak velké, aby vysvětlily, proč jeden přibírá z „ničeho" a druhý ne.
 
-Skutečný viník bývá někde jinde a je mnohem prozaičtější: podceněný příjem a nadhodnocený výdej. Jíš víc, než si myslíš, a vydáš míň, než si myslíš. Není to nadávka, dělá to skoro každý a je to lidsky pochopitelné. Ale je to tam, kde se ta záhada skutečně skrývá.
+Skutečný viník bývá někde jinde a je mnohem prozaičtější: podceněný příjem a nadhodnocený výdej. Jíš víc, než si myslíš, a vydáš míň, než si myslíš. Není to nadávka, dělá to skoro každý a je to lidsky pochopitelné. Ale je to tam, kde se ta záhada skrývá.
 
 ## „Skoro nic nejím" obvykle neznamená málo
 
-Když si lidé, co „skoro nic nejedí a nehubnou", začnou skutečně přesně zapisovat, co snědí, výsledek bývá pokaždé stejný: snědí výrazně víc, než si mysleli. Lidi nelžou. Mají slepé místo. A těch slepých míst je překvapivě hodně:
+Když si lidé, co „skoro nic nejedí a nehubnou", začnou přesně zapisovat, co snědí, výsledek bývá pokaždé stejný: snědí výrazně víc, než si mysleli. Lidi nelžou. Mají slepé místo. A těch slepých míst je překvapivě hodně:
 
 - **Podhodnocené porce.** „Lžíce" oleje je často tři lžíce. „Kousek" sýra je půlka balíčku. Oko bez váhy odhaduje směrem dolů.
 - **Dojídání po dětech a ze servíru.** Pár soust z talíře, zbytek přílohy, co by se „vyhodil", nikam si to nezapíšeš, ale tělo to počítá.

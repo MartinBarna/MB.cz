@@ -1,4 +1,4 @@
-# Alkohol a hubnutí
+# Zhubneš i s alkoholem? Co na to věda
 
 Pivo, víno, panák. A přesto kila dolů. Hodně lidí čeká, že je jedna sklenka vína potopí. Tak co na to věda?
 

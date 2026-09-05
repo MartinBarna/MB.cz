@@ -1,4 +1,4 @@
-# Detox diety, čaje a očisty
+# Detox diety a čaje: mýtus, tělo se čistí samo
 
 Po svátcích nebo po týdnu oslav přijde ten pocit: „musím se vyčistit". A internet je hned po ruce: třídenní šťávová očista, detox čaj na měsíc, nálepky na chodidla, co přes noc zhnědnou „vytaženými toxiny". Zní to logicky a vypadá to jako péče o sebe. Jenže celá ta kategorie stojí na jedné prázdné kolonce: který toxin přesně se z tebe odstraňuje? Marketing ti ho nepojmenuje. A to je první stopa, že tě někdo tahá za nos.
 
@@ -28,7 +28,7 @@ U části produktů je to ještě prostší a nepříjemnější. Když si pře�
 
 A není to neškodné. Dráždivá projímadla braná pravidelně rozhodí minerály v krvi (elektrolyty), můžou způsobit křeče, dehydrataci a u dlouhodobého užívání i závislost střeva na nich. Platíš si za to, aby ses cítil hůř a abys měl pocit, že to „funguje", protože něco z tebe odešlo.
 
-## Co játra a ledviny opravdu ocení (a je to zadarmo)
+## Co játra a ledviny ocení (a je to zadarmo)
 
 Tahle část lidi občas zklame, protože není na prodej. Chceš svým orgánům fakt pomoct? Nepotřebuješ kupovat nic, stačí dělat věci, které znáš, jen je nedáváš dohromady:
 

@@ -1,4 +1,4 @@
-# Bílkoviny a ledviny
+# Ničí bílkoviny ledviny? Mýtus o proteinu
 
 „Dej si pozor na ty bílkoviny, zničíš si ledviny." Slyšel jsem to od klientů snad stokrát, někdy od jejich mámy, někdy od souseda, občas i z ordinace. Zní to opatrně a rozumně. Jenže u zdravého člověka je to mýtus. Vyšší příjem bílkovin tvoje ledviny nezničí. A v tomhle článku si projdeme, odkud ten strach vznikl a proč u většiny lidí prostě neplatí.
 
@@ -43,7 +43,7 @@ Jakmile přelezeš zhruba 2,2 g/kg, žádný bonus navíc už většinou nečeke
 
 Když jíš dost bílkovin, tělo musí vyloučit víc dusíkatých zplodin, a na to potřebuje vodu. Nic dramatického, žádný speciální „proteinový" režim: prostě se normálně rozumně napij přes den. Tmavší a koncentrovaná moč je signál, že vody dáváš málo. U zdravého člověka se vyšší příjem bílkovin a dostatek tekutin navzájem hezky doplňují. Víc k tomu v článku o pitném režimu: https://martinbarna.cz/clanky/pitny-rezim.html
 
-## Kdy to opravdu řešit s lékařem
+## Kdy to řešit s lékařem
 
 Celý článek mluví o zdravých lidech. To slovo je důležité. Jsou situace, kdy příjem bílkovin patří do rukou lékaře, ne na internet:
 
@@ -53,7 +53,7 @@ Celý článek mluví o zdravých lidech. To slovo je důležité. Jsou situace,
 
 Pro všechny ostatní, tedy pro většinu, platí: dost bílkovin je dobrý sluha, ne hrozba.
 
-Takže až ti příště někdo řekne, ať si dáš na bílkoviny pozor kvůli ledvinám, zeptej se: „A mám nemocné ledviny?" Pokud ne, je to strašák postavený na radě, která patří někomu jinému. Jez dost bílkovin, pij rozumně a buď na sebe přísný v tom, co opravdu rozhoduje. Be Effective!
+Takže až ti příště někdo řekne, ať si dáš na bílkoviny pozor kvůli ledvinám, zeptej se: „A mám nemocné ledviny?" Pokud ne, je to strašák postavený na radě, která patří někomu jinému. Jez dost bílkovin, pij rozumně a buď na sebe přísný v tom, co rozhoduje. Be Effective!
 
 ## Časté otázky
 

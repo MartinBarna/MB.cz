@@ -1,4 +1,4 @@
-# Cukr, tloustnutí a cukrovka
+# Cukr je jed? Mýtus o cukru, tloustnutí a cukrovce
 
 „Cukr je bílý jed." Slyšel jsi to a možná tomu i věříš. Zní to děsivě a hlavně jednoduše: vyhodíš cukr, a problém zmizí. Jenže takhle tělo nefunguje. Cukr tě sám o sobě neztloustí, nedá ti cukrovku a rozhodně tě „neotráví". Tady je to narovinu: co o cukru platí, co je strašení a co máš reálně hlídat.
 
@@ -18,7 +18,7 @@ Praxe to potvrzuje pořád. Lidi, co „vyhodili cukr", ale jinak jedli pořád 
 
 Tuk ukládá nadbytek energie, ať přišel z cukru, nebo z másla.
 
-## Cukrovka 2. typu: kde je opravdový spouštěč
+## Cukrovka 2. typu: kde je spouštěč
 
 Tady kraluje asi nejhouževnatější mýtus: „když budeš jíst cukr, dostaneš cukrovku." Logika zní svůdně: má v názvu cukr, tak ho musí způsobovat cukr. Jenže to je jen jazyková shoda, ne fyziologie.
 

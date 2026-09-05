@@ -1,4 +1,4 @@
-# Víkendové přejídání a pracovní týden
+# Víkendové přejídání: jak nezbourat týden
 
 Od pondělí do čtvrtka jedeš jak hodinky. Pak přijde pátek večer. A v neděli si říkáš, že v pondělí začneš znovu. Znáš to? Vidím to u klientů pořád. Stojí za tím špatně postavený systém.
 

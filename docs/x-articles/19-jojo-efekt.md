@@ -1,4 +1,4 @@
-# Jojo efekt a udržení váhy
+# Jojo efekt: proč se váha vrací a jak ho porazit
 
 Zhubl jsi, oslavil, a za pár měsíců máš kila zpátky. Někdy i s úroky. Tomuhle se říká jojo efekt a vážně v tom nejsi sám. Většinou za tím stojí špatně nastavený proces. A ten se dá změnit.
 
@@ -27,6 +27,12 @@ Proto je flexibilní stravování tak praktické. Oblíbená jídla v rozumné m
 - **Silový trénink**: dává tělu důvod sval si nechat.
 - **Postupné změny** místo revoluce přes noc.
 - **Sleduj trend** za týdny, ne výkyvy na váze ze dne na den.
+
+## Co tělo dělá ještě rok po dietě
+
+Když dohubneš, tělo se s tím nesmíří ze dne na den. Ve studii s 50 lidmi se hormony chuti ani rok po dietě nevrátily k normálu a hlad zůstal vyšší než před hubnutím (Sumithran, 2011, PMID 22029981). Proto máš po tvrdé dietě pocit, že tě to tahá zpátky. Není to tvoje chyba. Tělo si drží nastavení z doby, kdy jsi hubnul, a vůlí to ze dne na den nevypneš.
+
+Druhá studie je jiná liga. Čtrnáct účastníků extrémní televizní soutěže v hubnutí sledovali šest let a jejich klidový metabolismus zůstal zhruba o 700 kcal denně nižší než na začátku (Fothergill, 2016, PMID 27136388). To je extrémní případ, ne běžné hubnutí. U klientů s mírným deficitem vidím jiný průběh: hlava chce jíst jako dřív a tělo hlásí hlad déle, než čekáš. Čím víc dietu přeženeš, tím víc si tělo brání starou váhu. Proto jdu s klienty pomalu, se svaly a s návratem na udržovačku. Tělo potřebuje čas.
 
 ## Po dietě: nejdůležitější a nejvíc opomíjená část
 

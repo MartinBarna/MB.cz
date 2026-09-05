@@ -1,4 +1,4 @@
-# Kolik hodin spát a jak pravidelně
+# Kolik hodin spát? Délka vs. pravidelnost
 
 „Kolik mám spát?" je nejčastější otázka po jídelníčku a tréninku. A schovává se v ní vlastně trojice: jak dlouho, jak pravidelně a co obětovat, když se obojí nevejde. Tady je odpověď na všechny tři, s čísly ze studií, ne s dojmy.
 
