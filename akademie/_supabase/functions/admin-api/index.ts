@@ -477,6 +477,8 @@ const RD_SYSTEM = [
   "  ('Martin se ozve', 'Martinův názor'): celý text jde ven pod jeho jménem, Martin ho píše sám.",
   "  U zdravotního tématu vždy odkaz na sebe (Martina) nebo na lékaře.",
   "- Když je téma týdne prázdné, o žádné příloze ani tématu se nezmiňuj.",
+  "- Minulý čas piš v tom rodě, který je ve FAKTECH u položky Rod klienta ('slíbila sis', ne 'slíbil').",
+  "  Když tam rod není, formuluj bezrodě (místo 'jsi to zvládl' napiš 'zvládáš to').",
   "",
   "",
   RD_CIT_PRAVIDLO,
@@ -2833,12 +2835,13 @@ Deno.serve(async (req) => {
       if (zadaniZmeneno) {
         eng.navrh = {
           paka: "zadna", novyKcal: null, jistota: "jista",
-          duvod: "Zadání se od tohoto reportu změnilo (z " + tydenKcal + " na " + dnesKcal
-            + " kcal). Report se hodnotí proti " + tydenKcal + " kcal, nový cíl už platí, tenhle týden se nic dalšího nemění.",
+          duvod: "Od tohoto reportu platí nové zadání " + dnesKcal + " kcal. Tenhle týden hodnotím proti "
+            + tydenKcal + " kcal, které tehdy platily, a dál jedeme podle nového čísla, nic dalšího teď neměním.",
         } as typeof eng.navrh;
       }
 
-      const userPrompt = "FAKTA (jediný zdroj čísel):" + NL + fakta + NL + NL +
+      const userPrompt = "FAKTA (jediný zdroj čísel):" + NL + fakta + NL +
+        "Rod klienta (minulý čas piš v tomhle rodě): " + (rod === "z" ? "žena" : rod === "m" ? "muž" : "neuvedeno, piš bezrodě") + NL + NL +
         "BLOK ČÍSEL, KTERÝ UŽ JE V MAILU NAPSANÝ NAD TVÝM TEXTEM (neopisuj ho celý):" + NL +
         eng.text + NL + NL +
         "DOPORUČENÍ ENGINU (hotové rozhodnutí, TOHLE JE PRAVDA O ZMĚNĚ ZADÁNÍ):" + NL +
