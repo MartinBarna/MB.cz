@@ -15,34 +15,177 @@
   'use strict';
 
   var ACT = { sedavy:1.2, lehka:1.375, stredni:1.55, vysoka:1.725, extremni:1.9 };
+  // ⭐⭐ [2026-09-05, sjednocení s appkou po revizi B] GOAL už neříká „kolik % TDEE",
+  // ale jen TEMPO: % váhy za týden u hubnutí, kg za týden u nabírání. Přesně tak to
+  // dělá appka (`src/engine/goals.ts`, `computeStartingGoals`). Bílkoviny a tuk appka
+  // podle cíle nemění (vždy 1,8 g/kg a 0,8 g/kg), proto zmizely odsud a jsou to
+  // konstanty BILKOVINY_G_PER_KG a TUK_G_PER_KG níž.
+  // ⛔ Mapování nálepky na tempo je NAPEVNO, appka ho na webu jako volbu nemá:
+  // hubnutí 1,0 %/týden a mírné hubnutí 0,5 %/týden jsou appkové karty „Svižné" a
+  // „Pomalé" (CUT_TEMPO, src/app/onboarding/index.tsx), mírný nárůst +0,25 kg/týden
+  // a nárůst +0,5 kg/týden appkové karty „Pomalý" a „Svižný" (BULK_TEMPO, tamtéž).
   var GOAL = {
-    hubnuti:       { kcal:0.80, protein:2.0, fatPct:0.27, label:'Hubnutí' },
-    mirne_hubnuti: { kcal:0.88, protein:1.9, fatPct:0.28, label:'Mírné hubnutí' },
-    udrzeni:       { kcal:1.00, protein:1.8, fatPct:0.30, label:'Udržení' },
-    mirny_narust:  { kcal:1.10, protein:1.8, fatPct:0.28, label:'Mírný nárůst svalů' },
-    narust:        { kcal:1.15, protein:1.8, fatPct:0.27, label:'Nabírání svalů' }
+    hubnuti:       { kind:'cut',      pctVahyTyden:1.0,  label:'Hubnutí' },
+    mirne_hubnuti: { kind:'cut',      pctVahyTyden:0.5,  label:'Mírné hubnutí' },
+    udrzeni:       { kind:'maintain', label:'Udržení' },
+    mirny_narust:  { kind:'bulk',     kgTyden:0.25,      label:'Mírný nárůst svalů' },
+    narust:        { kind:'bulk',     kgTyden:0.5,       label:'Nabírání svalů' }
   };
 
   function round(n, step) { step = step || 1; return Math.round(n / step) * step; }
 
+  // ---------------------------------------------------------------------------
+  // ⭐⭐ [2026-09-05] Konstanty a pomocné funkce převzaté 1:1 z appky
+  // (`src/engine/goals.ts`), ať web pro stejný vstup počítá stejný cíl jako appka.
+  // Revize B (5. 9. 2026, `_Claude-dokumenty/2026-09-05_klientske-materialy-revize/
+  // B-kalkulacka-web-vs-appka.md`) změřila rozdíl 78 až 259 kcal u hubnutí: web dřív
+  // počítal deficit jako pevné procento TDEE podle nálepky cíle, appka jako tempo
+  // v procentech váhy za týden přes 7700 kcal/kg se stropem 25 % TDEE.
+  // ⛔ Kdo mění číslo tady, musí ho změnit i v goals.ts, nebo napsat proč se ho to
+  // netýká. Paritu appka/web hlídá `scripts/parita-cile.mjs` v repu appky.
+  // ---------------------------------------------------------------------------
+  var KCAL_NA_KG = 7700;              // appka KCAL_PER_KG
+  var STROP_DEFICITU_PCT_TDEE = 25;   // appka MAX_DEFICIT_PCT_TDEE
+  var CUT_TEMPO_MIN_PCT = 0.5;        // appka CUT_RATE_MIN_PCT, % váhy/týden
+  var CUT_TEMPO_MAX_PCT = 1.0;        // appka CUT_RATE_MAX_PCT, % váhy/týden
+  var CUT_TEMPO_STROP_KG = 1.0;       // appka ENGINE_CONFIG.MAX_RATE_KG_PER_WEEK
+  var BULK_TEMPO_STROP_KG = 0.5;      // appka BULK_RATE_MAX_KG
+  var BILKOVINY_G_PER_KG = 1.8;       // appka PROTEIN_G_PER_KG_DEFAULT
+  var TUK_G_PER_KG = 0.8;             // appka FAT_G_PER_KG_DEFAULT
+  var BILKOVINY_ABS_MIN_G_PER_KG = 1.2; // appka PROTEIN_G_PER_KG_ABS_MIN
+  var TUK_MIN_PCT_KCAL = 22;          // appka FAT_MIN_PCT_KCAL, podlaha tuku
+  var TUK_OBEZITA_PCT_KCAL = 25;      // appka FAT_OBESE_PCT_KCAL, od BMI 30
+  var OBEZITA_BMI = 30;               // appka OBESITY_BMI
+  var ADJ_PODIL_NADVAHY = 0.25;       // appka ADJ_EXCESS_FRACTION
+  var SACHARIDY_PODLAHA_G = 100;      // appka CARB_FLOOR_G (dřív tu bylo jen 40)
+
+  function clampNum(v, a, b) { return Math.min(b, Math.max(a, v)); }
+
+  /** Appka `kgText` z onboardingu: 0.49 -> „0,49" (česká desetinná čárka). */
+  function kgTydneText(n) { return n.toFixed(2).replace('.', ','); }
+
+  /**
+   * Appka `proteinReferenceWeightKg`: BMI pod 30 (nebo neznámá výška) vrací
+   * aktuální váhu beze změny. Od BMI 30 výš klinický vzorec „adjusted body
+   * weight": ideální váha při BMI 25 plus 25 % z nadbytku nad ní.
+   */
+  function referencniVahaKg(w, h) {
+    if (!h || h <= 0) return w;
+    var m = h / 100;
+    var bmiVal = w / (m * m);
+    if (!isFinite(bmiVal) || bmiVal < OBEZITA_BMI) return w;
+    var idealKg = 25 * m * m;
+    return idealKg + ADJ_PODIL_NADVAHY * (w - idealKg);
+  }
+  /** Appka `isObeseBmi`. Neznámá výška se chová jako „ne", stejně jako appka. */
+  function jeObezitaBmi(w, h) {
+    if (!h || h <= 0) return false;
+    var m = h / 100;
+    var bmiVal = w / (m * m);
+    return isFinite(bmiVal) && bmiVal >= OBEZITA_BMI;
+  }
+  /** Appka `capDeficitKcal`: deficit smí být max STROP_DEFICITU_PCT_TDEE % z TDEE. */
+  function stropDeficituKcal(tdee, deficitKcal) {
+    if (!isFinite(tdee) || tdee <= 0) return deficitKcal;
+    return Math.min(deficitKcal, (STROP_DEFICITU_PCT_TDEE / 100) * tdee);
+  }
+  /**
+   * Appka `clampCutRateKgPerWeek`: tempo hubnutí mezi CUT_TEMPO_MIN_PCT a
+   * CUT_TEMPO_MAX_PCT procenty váhy za týden, ale nikdy nad absolutní strop
+   * CUT_TEMPO_STROP_KG kg za týden (těžšímu člověku by procenta dala nesmysl).
+   */
+  function oriznoutTempoHubnuti(w, pozadovaneKgTyden) {
+    var minKg = (CUT_TEMPO_MIN_PCT / 100) * w;
+    var maxKg = Math.min(CUT_TEMPO_STROP_KG, (CUT_TEMPO_MAX_PCT / 100) * w);
+    return clampNum(Math.abs(pozadovaneKgTyden), minKg, Math.max(minKg, maxKg));
+  }
+  /** Appka `clampBulkRateKgPerWeek`: tempo nabírání 0 až BULK_TEMPO_STROP_KG kg/týden. */
+  function oriznoutTempoNarustu(pozadovaneKgTyden) {
+    return clampNum(Math.abs(pozadovaneKgTyden), 0, BULK_TEMPO_STROP_KG);
+  }
+  /** Appka `fatFloorG`: podlaha tuku, TUK_MIN_PCT_KCAL procent kalorií. */
+  function tukPodlahaG(kcal) { return Math.round((TUK_MIN_PCT_KCAL / 100) * kcal / 9); }
+  /** Appka `fatTargetG`: od BMI 30 procento kalorií, jinak g/kg referenční váhy. */
+  function tukCilG(kcal, w, h) {
+    if (jeObezitaBmi(w, h)) return Math.round((TUK_OBEZITA_PCT_KCAL / 100) * kcal / 9);
+    return Math.round(referencniVahaKg(w, h) * TUK_G_PER_KG);
+  }
+  /**
+   * Appka `macroSplit`: bílkoviny mají přednost (dané dopředu), tuk smí klesnout
+   * až k podlaze TUK_MIN_PCT_KCAL % kcal, sacharidy jsou zbytek s podlahou
+   * SACHARIDY_PODLAHA_G g. Když sacharidy pod podlahu spadnou, ustupuje nejdřív
+   * tuk (k jeho podlaze), pak bílkoviny (k proteinFloorG), a teprve když ani to
+   * nestačí, zůstanou sacharidy pod podlahou. Celkové kcal se přitom nemění.
+   */
+  function rozdelMakra(kcal, bilkovinyG, cilTukG, proteinFloorG) {
+    var floor = tukPodlahaG(kcal);
+    var maxTukCoSeVejde = Math.floor((kcal - bilkovinyG * 4) / 9);
+    var bilk = Math.round(bilkovinyG);
+    var tuk = Math.max(floor, Math.min(Math.round(cilTukG), maxTukCoSeVejde));
+    function sacharidy() { return Math.max(0, Math.round((kcal - bilk * 4 - tuk * 9) / 4)); }
+    var sach = sacharidy();
+
+    if (sach < SACHARIDY_PODLAHA_G) {
+      var mistoVTuku = tuk - floor;
+      if (mistoVTuku > 0) {
+        var potrebaKcal = (SACHARIDY_PODLAHA_G - sach) * 4;
+        tuk -= Math.min(mistoVTuku, Math.ceil(potrebaKcal / 9));
+        sach = sacharidy();
+      }
+    }
+    if (sach < SACHARIDY_PODLAHA_G && proteinFloorG != null) {
+      var mistoVBilk = bilk - Math.round(proteinFloorG);
+      if (mistoVBilk > 0) {
+        var potrebaKcal2 = (SACHARIDY_PODLAHA_G - sach) * 4;
+        bilk -= Math.min(mistoVBilk, Math.ceil(potrebaKcal2 / 4));
+        sach = sacharidy();
+      }
+    }
+    return { protein: bilk, fat: tuk, carbs: sach };
+  }
+
   // ---- 1) Cílové kalorie a makra ----
+  //
+  // ⭐⭐ [2026-09-05] Přepsáno na logiku appky (`computeStartingGoals` v goals.ts) po
+  // revizi B, viz komentář ke konstantám výš. Vstup i tvar výstupu jsou zachované
+  // (čte je kalkulačka, oba nástroje jídelníčku, obě kalkulačky v Academy i
+  // admin/pruvodce.js), mění se jen VÝPOČET deficitu/přebytku a tuku/sacharidů.
   function computeTargets(inp) {
     var w = +inp.weight, h = +inp.height, age = +inp.age;
-    var bmr = 10 * w + 6.25 * h - 5 * age + (inp.sex === 'zena' ? -161 : 5);
+    var zena = inp.sex === 'zena';
+    var bmr = 10 * w + 6.25 * h - 5 * age + (zena ? -161 : 5);
     var tdee = bmr * (ACT[inp.activity] || 1.375);
     var g = GOAL[inp.goal] || GOAL.udrzeni;
+
+    var targetKcal = tdee;
+    var pozadovanyDeficit = 0;
+    var jeHubnuti = g.kind === 'cut';
+    // „Vybrané" tempo přesně tak, jak by ho appka ukázala na kartě v onboardingu:
+    // NEoříznuté absolutním stropem, ten je jen interní pojistka pro výpočet deficitu.
+    var vybraneTempoKg = 0;
+
+    if (jeHubnuti) {
+      vybraneTempoKg = (g.pctVahyTyden / 100) * w;
+      var tempoOriznute = oriznoutTempoHubnuti(w, vybraneTempoKg);
+      pozadovanyDeficit = (tempoOriznute * KCAL_NA_KG) / 7;
+      targetKcal = tdee - stropDeficituKcal(tdee, pozadovanyDeficit);
+    } else if (g.kind === 'bulk') {
+      vybraneTempoKg = g.kgTyden;
+      var tempoNarustu = oriznoutTempoNarustu(vybraneTempoKg);
+      targetKcal = tdee + (tempoNarustu * KCAL_NA_KG) / 7;
+    }
+    // 'maintain': targetKcal zůstává tdee, vybraneTempoKg 0 (appka: „kolem udržovačky").
+
     // ⛔ [2026-09-02, Martin, nález E19] Bezpečnostní kalorická podlaha: 1200 žena,
-    // 1500 muž. Cíl je zatím jen procento z TDEE, takže drobná žena nebo muž se
-    // sedavým režimem mohl dostat pod hranici, pod kterou hubnutí patří pod dohled.
-    // ⛔ Táž podlaha je v appce (`kcalFloorForSex` v src/engine/goals.ts) a platí tam
-    // pro startovací cíl, ruční cíl I týdenní adaptaci. Kdo ji mění, mění obě strany.
-    var kcalFloor = inp.sex === 'zena' ? 1200 : 1500;
-    var kcalBezPodlahy = Math.round(tdee * g.kcal);
-    var kcal = Math.max(kcalFloor, kcalBezPodlahy);
+    // 1500 muž. Táž podlaha je v appce (`kcalFloorForSex` v src/engine/goals.ts) a
+    // platí tam pro startovací cíl, ruční cíl i týdenní adaptaci. Kdo ji mění, mění
+    // obě strany.
+    var kcalFloor = zena ? 1200 : 1500;
+    var kcalBezPodlahy = Math.round(targetKcal);
+    var kcal = Math.round(Math.max(targetKcal, kcalFloor));
     // [revize R5] Podlaha nesmí být tichá. Když zvedne cíl, uživatel se to dozví,
     // a když ho zvedne až NAD denní výdej (drobný nebo starší muž se sedavým režimem),
-    // není to plán na hubnutí a nesmí se tak tvářit. Appka na to má
-    // `rate_capped_kg_per_week`, web to dosud neměl vůbec.
+    // není to plán na hubnutí a nesmí se tak tvářit.
     var podlahaZvedla = kcal > kcalBezPodlahy;
     var nadVydejem = podlahaZvedla && kcal >= Math.round(tdee);
     var poznamkaPodlahy = null;
@@ -54,27 +197,52 @@
       poznamkaPodlahy = 'Cíl drží bezpečnostní podlaha ' + kcalFloor + ' kcal. '
         + 'Spočítané číslo bylo nižší (' + kcalBezPodlahy + ' kcal) a níž nejdeme.';
     }
-    // [fix 2026-07-14] u výrazné nadváhy počítej bílkoviny z upravené hmotnosti (výška−100,
-    // min. 75 % váhy) — 2 g × 115 kg = 230 g bílkovin v deficitu je nesmysl, který se nedá
-    // ani poskládat z jídla; pro běžné váhy se nic nemění.
-    var refW = Math.min(w, Math.max(h - 100, w * 0.75));
-    var protein = Math.round(refW * g.protein);       // g
-    var fat = Math.round((kcal * g.fatPct) / 9);      // g
-    var carbsKcal = kcal - (protein * 4 + fat * 9);
-    var carbs = Math.max(40, Math.round(carbsKcal / 4)); // g, pojistka
-    // dorovnej kcal po zaokrouhlení
-    kcal = protein * 4 + carbs * 4 + fat * 9;
-    // Cílová vláknina: 14 g / 1000 kcal (US Dietary Guidelines), podlaha `FIBER_FLOOR_G`.
-    // ⛔ [2026-09-02] Strop 60 g doplněn: generátor níž vlákninu nad `FIBER_CAP_G` nepustí,
-    // takže bez tohohle clampu by kalkulačka u velmi vysokých cílů (nad 4 300 kcal) slíbila
-    // číslo, které jídelníček vědomě nesplní. Podlaha je od téhož dne 20 g, stejně jako
-    // v appce; dřív tu bylo 25 a ta dvě čísla si na 1300 kcal odporovala.
+
+    // ⭐ [2026-09-05] Tempo po stropu, appka `rate_capped_kg_per_week`. Jedna a táž
+    // podmínka pokrývá oba stropy najednou: 25 % TDEE (promítlo se do targetKcal už
+    // výš) i kalorickou podlahu (promítla se do kcal o kus výš) - appka tohle hlásí
+    // jen u hubnutí (`tempoSrazenoText` v src/app/onboarding/index.tsx), nabírání
+    // appka nezpomaluje, proto se tempoNote počítá jen pro jeHubnuti.
+    var tempoKgTyden = Math.round(vybraneTempoKg * 100) / 100;
+    var tempoNote = null;
+    if (jeHubnuti) {
+      var skutecnyDeficit = tdee - kcal;
+      if (skutecnyDeficit < pozadovanyDeficit - 1) {
+        var skutecneTempoKg = Math.round((Math.max(0, skutecnyDeficit) * 7 * 100) / KCAL_NA_KG) / 100;
+        tempoKgTyden = skutecneTempoKg;
+        tempoNote = 'Vybrané tempo ' + kgTydneText(vybraneTempoKg) + ' kg týdně by u tvé váhy '
+          + 'znamenalo moc velký deficit. Plánuju ' + kgTydneText(skutecneTempoKg)
+          + ' kg týdně, rychleji by to nešlo udržet.';
+      }
+    }
+
+    // [fix 2026-07-14, přepsáno 2026-09-05 na appkovou definici] Bílkoviny (a od
+    // BMI 30 i tuk) se počítají z REFERENČNÍ váhy, ne rovnou z aktuální, viz
+    // `referencniVahaKg` výš. Appka referenční váhu mění až od BMI 30 (klinická
+    // „adjusted body weight"), ne od hranice „výška minus 100", takže se běžná
+    // nadváha (BMI 25 až 30) už nedotkne.
+    var refKg = referencniVahaKg(w, h);
+    var bilkovinyCilG = Math.round(refKg * BILKOVINY_G_PER_KG);
+    var bilkovinyPodlahaG = Math.round(refKg * BILKOVINY_ABS_MIN_G_PER_KG);
+    var makra = rozdelMakra(kcal, bilkovinyCilG, tukCilG(kcal, w, h), bilkovinyPodlahaG);
+    // ⛔ appka NEDOROVNÁVÁ kcal zpátky ze součtu maker (goals.ts, komentář u
+    // `macroSplit`): kcal cíl zůstává pevný, makra se kolem něj jen poskládají.
+    // Dřív web kcal přepočítal (protein*4 + carbs*4 + fat*9), takže součet sedřel
+    // vždy přesně; teď je to jako appka - součet se může lišit o pár kcal, je to
+    // známé a neškodné zaokrouhlení, ne chyba.
+
+    // Cílová vláknina: 14 g na 1000 kcal, podlaha `FIBER_FLOOR_G`, strop
+    // `FIBER_CAP_G` (appka `fiberTargetG`, obě konstanty jsou deklarované níž
+    // v tomhle souboru a appka je má stejné).
     var fiber = Math.min(FIBER_CAP_G, Math.max(FIBER_FLOOR_G, Math.round(kcal / 1000 * 14)));
-    return { kcal: kcal, protein: protein, carbs: carbs, fat: fat, fiber: fiber,
+    return { kcal: kcal, protein: makra.protein, carbs: makra.carbs, fat: makra.fat, fiber: fiber,
              bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label,
-             // [revize R5] příznaky podlahy pro UI; obdoba `rate_capped_kg_per_week` v appce
+             // příznaky podlahy pro UI, beze změny od revize R5
              kcalFloor: kcalFloor, rateCapped: podlahaZvedla,
-             floorAboveTdee: nadVydejem, floorNote: poznamkaPodlahy };
+             floorAboveTdee: nadVydejem, floorNote: poznamkaPodlahy,
+             // ⭐ [2026-09-05] nové: tempo hubnutí/nabírání a věta pro případ, kdy ho
+             // appka (a teď stejně i web) musela kvůli stropu zpomalit.
+             tempoKgTyden: tempoKgTyden, tempoNote: tempoNote };
   }
 
   /**
@@ -188,7 +356,12 @@
   // a v zápisu deníku, jen se nevybírají do výchozího dne; v food-db.json obou stran jim
   // navíc zmizel flag `bezny`. ⚠️ `jazyk` NEJDE jako podřetězec: `morsky-jazyk` je ryba.
   // ⛔ Táž logika je v appce (src/engine/meal-gen-core.ts), hlídá parita.
-  var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$|^tvaroh-tvrdy$|jatra|ledvin|^srdce|(hovezi|veprovy|kruti|telaci)-jazyk|drstk/;
+  // [CHYBA-1, revize 2026-09-05] DIPY A ROSTLINNÉ NÁPOJE TAKY NEJSOU ZÁKLAD JÍDLA.
+  // Raita a tzatziki jsou dip k pomazání, ne bílkovinný základ talíře; rýžové, mandlové,
+  // ovesné, sójové a kokosové mléko jsou nápoj, ne jogurt. Kefír a smetany se sem
+  // schválně NEDÁVAJÍ: bílkovinou jsou blízko (kefír 3 g/100 g) tomu, co pokrývá obecný
+  // práh `MIN_BILKOVINA_ZAKLAD_G` výš, ať to řeší číslo, ne další jméno v regexu.
+  var NENI_ZAKLAD_JIDLA = /syrovatkovy-protein|sojovy-protein-izolat|^bilek$|^tvaroh-tvrdy$|jatra|ledvin|^srdce|(hovezi|veprovy|kruti|telaci)-jazyk|drstk|^raita$|^tzatziki$|ryzove-mleko|mandlove-mleko|ovesne-mleko|sojove-mleko|kokosove-mleko/;
   // [fix 2026-08-06] Šunka a spol. NEJSOU hlavní bílkovina oběda/večeře: uzenina je na
   // chleba a do svačiny, na hlavní jídlo lidi vaří maso/rybu. U hlavních jídel se masné
   // výrobky řadí AŽ ZA vařené zdroje (měkce, s fallbackem). Uzené RYBY zůstávají.
@@ -322,6 +495,19 @@
   // v `assets/onboarding-cile.js`. Exportuje se na `window.MealGen`, aby si ho
   // `akademie/admin/pruvodce.js` nemusel psát podruhé.
   var FIBER_FLOOR_G = 20;
+  // ⛔⛔ [CHYBA-1, revize 2026-09-05] MINIMÁLNÍ BÍLKOVINA ZÁKLADU JÍDLA (g/100 g).
+  // Revize naměřila „Raita (jogurtový dip s okurkou) 300 g" jako večeři VŠECH SEDMI
+  // dnů týdne u vegetariána (3 g bílkovin/100 g) a u vegana bez lepku den, kde čtyři
+  // z šesti jídel stály na 300 g rostlinného mléka/jogurtu (0,3-4 g bílkovin/100 g).
+  // `pickProt` takovou položku naškáluje na strop kategorie (300 g u „dairy"), makra
+  // dne to dorovnají odjinud, ale KONKRÉTNÍ JÍDLO vypadá jako miska omáčky nebo
+  // sklenice mléka, ne jako jídlo. Práh je měkký: `dostBilkovin` v `pickProt` ho
+  // nejdřív zkusí na hlavní jídlo (tahle konstanta), a když by to vyprázdnilo nabídku
+  // (úzký dietní filtr), uvolní se na `MIN_BILKOVINA_ZAKLAD_SVACINA_G` a pak úplně;
+  // den o každém uvolnění dostane větu do `warnings`. Svačina má nižší práh rovnou.
+  // ⛔ Táž konstanta i logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita.
+  var MIN_BILKOVINA_ZAKLAD_G = 8;
+  var MIN_BILKOVINA_ZAKLAD_SVACINA_G = 5;
   // ⛔ STROP HMOTNOSTI JEDNOHO JÍDLA (gramy všeho na talíři dohromady). Audit našel jedno
   // jídlo o 1 257 g: každá položka byla pod svým stropem (`CAP`), ale součet jídla nikdo
   // nehlídal. ⚠️ ROZHODNUTÍ, ne doložené číslo (viz komentář v appkovém jádru).
@@ -489,6 +675,10 @@
     (opts.nedavnoPouzite || []).forEach(function (id) {
       if (!nedavno[id]) { nedavno[id] = 1; nedavnoPocet++; }
     });
+    // [CHYBA-1, revize 2026-09-05] Zapne se, kdyz `dostBilkovin` v `pickProt` musel uvolnit
+    // prah bilkoviny (viz `MIN_BILKOVINA_ZAKLAD_G` vys), protoze prisny prah by u tohohle
+    // dne vyprazdnil nabidku. Den o tom dostane vetu do `varovaniDne` (konec funkce).
+    var oslabenBilkovinovyZaklad = false;
     // [oprava po auditu 2026-09-02] Co bylo v posledních dvou dnech, jde stranou.
     // Audit naměřil veganský týden, kde seitan a rostlinné kousky padly 7 dnů ze 7,
     // protože `assembleWeek` mezi dny žádnou paměť neměla. Fallback na plnou nabídku
@@ -520,7 +710,7 @@
       if (melProtein && !maProtein) return list;
       return cerstve.length ? cerstve : list;
     }
-    function pickProt(s, prefer, protCilJidla) {
+    function pickProt(s, prefer, protCilJidla, jeSvacina) {
       // [fix 2026-08-06 kolo 4] Zdroj, který se do porce nevejde, do SVAČINY nevybírej:
       // koncentrovaný zdroj vyjde pod podlahu 30 g a položka se zahodí, takže ze svačiny
       // zbude samotné ovoce („Švestky 35 g" = 16 kcal). Schválně JEN u svačin, na hlavních
@@ -556,6 +746,28 @@
         var varene = list.filter(function (f) { return !UZENINA_RE.test(f.id) && !SYR_RE.test(f.id); });
         return varene.length ? varene : list;
       }
+      // [CHYBA-1, revize 2026-09-05] ZAKLAD JIDLA (protein/dairy role) MUSI NEST BILKOVINU.
+      // Bez tohohle projely pres filtry vys dal dipy a rostlinne napoje s 0,3-4 g
+      // bilkovin/100 g (raita, ryzove/mandlove/sojove mleko) - viz `MIN_BILKOVINA_ZAKLAD_G`
+      // a cele cislo z revize u nej. Mekke pravidlo se dvema ulevami: hlavni jidlo zkusi
+      // vyssi prah, a kdyz by to vyprazdnilo nabidku protein/dairy polozek, sahne na nizsi
+      // (svacinovy) a pak uplne; kazde uvolneni se nahlasi pres `oslabenBilkovinovyZaklad`
+      // (den o tom dostane vetu do `varovaniDne`, viz konec funkce). Svacina ma nizsi
+      // prah rovnou.
+      // ⛔ Stejna logika je v appce (`src/engine/meal-gen-core.ts`), hlida parita-jidelnicku.mjs.
+      function dostBilkovin(list) {
+        function maZaklad(l) { return l.some(function (f) { return f.cat === 'protein' || f.cat === 'dairy'; }); }
+        if (!maZaklad(list)) return list; // neni co filtrovat (viz filtry vys)
+        function filtr(prah) {
+          return list.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || (f.per100.p || 0) >= prah; });
+        }
+        var hlavniPrah = jeSvacina ? MIN_BILKOVINA_ZAKLAD_SVACINA_G : MIN_BILKOVINA_ZAKLAD_G;
+        var naProhu = filtr(hlavniPrah);
+        if (maZaklad(naProhu)) return naProhu;
+        oslabenBilkovinovyZaklad = true;
+        var uvolneno = filtr(MIN_BILKOVINA_ZAKLAD_SVACINA_G);
+        return maZaklad(uvolneno) ? uvolneno : list;
+      }
       // Bílkovina se bere z `protein`, a teprve když tam nic není, z `dairy`.
       var vyber = function (list) {
         return pick(list, 'protein', s, prefer) || pick(list, 'dairy', s, prefer);
@@ -577,11 +789,11 @@
         return sP;
       };
       if (leanOnly) {
-        var leanDb = sedneNaPorci(uzeninaAzNakonec(bezMlecnehoZakladu(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); }))))));
+        var leanDb = sedneNaPorci(dostBilkovin(uzeninaAzNakonec(bezMlecnehoZakladu(bezPrasku(jesteNebyl(db.filter(function (f) { return (f.cat !== 'protein' && f.cat !== 'dairy') || isLean(f); })))))));
         var p = sPenalizaci(leanDb);
         if (p) return p;
       }
-      var cely = sedneNaPorci(uzeninaAzNakonec(bezMlecnehoZakladu(bezPrasku(jesteNebyl(db)))));
+      var cely = sedneNaPorci(dostBilkovin(uzeninaAzNakonec(bezMlecnehoZakladu(bezPrasku(jesteNebyl(db))))));
       return sPenalizaci(cely);
     }
     var gramyDnes = {};
@@ -624,7 +836,7 @@
       // 1) bílkovinný základ — dávkuj na bílkovinný cíl jídla
       // snídaně/svačina dostanou vhodnější zdroj (vejce, tvaroh, skyr…), ne kuřecí prsa
       var protPrefer = (kind === 'breakfast') ? BREAKFAST_PROT : (isSnack ? SNACK_PROT : null);
-      var prot = pickProt(seed + i, protPrefer, isSnack ? mProt : undefined);
+      var prot = pickProt(seed + i, protPrefer, isSnack ? mProt : undefined, isSnack);
       if (prot) {
         var pg = round((mProt / (prot.per100.p || 1)) * 100, 10);
         pg = Math.min(pg, prot.cat === 'protein' ? 260 : 300);
@@ -1824,6 +2036,19 @@
           + 'V nízkosacharidovém režimu je nabídka užší; přidej si zdroj bílkoviny navíc.'
         );
       }
+    }
+    // [CHYBA-1, revize 2026-09-05] ZAKLAD NEKTEREHO JIDLA MEL PO UVOLNENI PRAHU MALO BILKOVIN.
+    // `dostBilkovin` v `pickProt` uvolnil prah (viz `MIN_BILKOVINA_ZAKLAD_G` vys), protoze
+    // prisny prah by u tohohle dne vyprazdnil nabidku (typicky uzky dietni filtr). Zbytek dne
+    // to makry dorovna jinde, ale KONKRETNI jidlo muze nest min bilkoviny, nez by cekal.
+    // ⛔ Kontrolni pruh v adminu tohle pole ZOBRAZUJE. Taz logika i totez zneni vety jsou
+    // v appce (`src/engine/meal-gen-core.ts`), hlida parita.
+    if (oslabenBilkovinovyZaklad) {
+      varovaniDne.push(
+        'U aspoň jednoho jídla dne nezbyl bílkovinný základ s dost bílkovinou na 100 g '
+        + '(úzký dietní filtr vyprázdnil nabídku), engine musel sáhnout po slabším zdroji. '
+        + 'Zkontroluj bílkovinu jednotlivých jídel dne.'
+      );
     }
 
     return { meals: out, totals: dayTot, targets: targets, warnings: varovaniDne.length ? varovaniDne : undefined };

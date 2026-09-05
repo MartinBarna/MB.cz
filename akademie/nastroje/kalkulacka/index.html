@@ -157,6 +157,8 @@
       $('meta').innerHTML='<span>Bazální metabolismus (BMR): <b>'+t.bmr+' kcal</b></span><span>Celkový výdej (TDEE): <b>'+t.tdee+' kcal</b></span>';
       // [revize R5] Bezpečnostní podlaha nesmí být tichá: když zvedla cíl, řekni to.
       if(t.floorNote) $('meta').innerHTML+='<span>'+esc(t.floorNote)+'</span>';
+      // [2026-09-05] Sjednoceno s appkou: zpomalené tempo (strop 25 % TDEE, podlaha) nesmí být tiché.
+      if(t.tempoNote) $('meta').innerHTML+='<span>'+esc(t.tempoNote)+'</span>';
       // branding (trenér) - sdílený ba_trainer_brand
       var c=$('client').value.trim(), tn=$('trainer').value.trim(), ac=$('accent').value, lg=(logoData||$('logo').value.trim()), ct=$('contact').value.trim();
       saveBrand();

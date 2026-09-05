@@ -121,8 +121,13 @@ function assert(cond, area, msg) { if (cond) ok(); else fail(area, msg); }
           for (const pref of [{}, { excludeCat: ['dairy'] }, { vegetarian: true }, { vegetarian: true, excludeCat: ['dairy'] }]) {
             const t = window.MealGen.computeTargets({ weight: w, height: sex === 'muz' ? 180 : 167, age: 35, sex, activity: acts[n % acts.length], goal });
             assert(t.kcal >= 1000 && t.kcal <= 4800, 'meal-targets', `kcal ${t.kcal} (${sex},${goal},${w}kg)`);
-            const refW = Math.min(w, Math.max((sex === 'muz' ? 180 : 167) - 100, w * 0.75));
-            assert(t.protein >= refW * 1.7 && t.protein <= refW * 2.1, 'meal-targets', `protein ${t.protein} pro ${w}kg/${goal} (refW ${refW})`);
+            // [2026-09-05] Referenční váha pro bílkoviny = definice appky (proteinReferenceWeightKg):
+            // celá váha do BMI 30, od BMI 30 ideální váha při BMI 25 + 25 % nadbytku. Stará webová
+            // definice min(w, max(h-100, 0,75w)) už neplatí, computeTargets jede appkovou logikou.
+            const hM = (sex === 'muz' ? 180 : 167) / 100;
+            const idealW = 25 * hM * hM;
+            const refW = (w / (hM * hM)) >= 30 ? idealW + 0.25 * (w - idealW) : w;
+            assert(t.protein >= refW * 1.7 && t.protein <= refW * 2.1, 'meal-targets', `protein ${t.protein} pro ${w}kg/${goal} (refW ${refW.toFixed(1)})`);
             assert(t.carbs >= 0, 'meal-targets', `záporné sacharidy ${t.carbs} (${sex},${goal},${w}kg)`);
             const prefs = Object.assign({ excludeCat: [] }, pref);
             const plan = window.MealGen.assembleDay(t, { meals: mealsN, prefs, db: FOODS, seed: n });

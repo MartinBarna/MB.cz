@@ -187,6 +187,7 @@
                         </div>
                         <p class="small mt-2 mb-0" id="r-meta" style="opacity:.85;"></p>
                         <p class="small mt-2 mb-0" id="r-podlaha" style="display:none;opacity:.95;"></p>
+                        <p class="small mt-2 mb-0" id="r-tempo" style="display:none;opacity:.95;"></p>
                         <a href="/#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
                         <a href="/videokurz" class="btn btn-grn mt-2 w-100">Chci se naučit s kaloriemi pracovat: videokurz za 1 490 Kč →</a>
                         <a id="gen-link" href="/nastroje-zdarma/jidelnicek/" class="btn mt-2 w-100" style="background:transparent;color:#fff;border:2px solid rgba(255,255,255,.7);">Poskládej si z toho hned ukázkový den zdarma →</a>
@@ -251,6 +252,15 @@
             if (podlaha) {
                 podlaha.textContent = t.floorNote || '';
                 podlaha.style.display = t.floorNote ? '' : 'none';
+            }
+            // [2026-09-05, sjednocení s appkou] Appka počítá deficit/přebytek z tempa
+            // (% váhy za týden u hubnutí, kg za týden u nabírání) se stropem 25 % TDEE.
+            // Když strop nebo kalorická podlaha tempo zpomalí, tempoNote to řekne stejně
+            // jako appka v onboardingu - nesmí to být tiché.
+            var tempo = document.getElementById('r-tempo');
+            if (tempo) {
+                tempo.textContent = t.tempoNote || '';
+                tempo.style.display = t.tempoNote ? '' : 'none';
             }
             // Předej spočítané údaje do generátoru jídelníčku (předvyplní se a rovnou vygeneruje)
             var genLink = document.getElementById('gen-link');
