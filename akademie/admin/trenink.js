@@ -25,14 +25,14 @@
 //
 // Závislosti (načítá si je sám, líně, až když Martin sekci otevře):
 //   /assets/workout-gen.js     window.WorkoutGen
-//   /assets/exercise-db.json   125 cviků
+//   /assets/exercise-db.json   128 cviků
 //   ./trenink-sablona.js       window.TreninkSablona
 (function (global) {
   'use strict';
 
   var DB = null;            // pole cviků, načte se jednou za život stránky
   var WG_URL = '/assets/workout-gen.js?v=20260902b';
-  var DB_URL = '/assets/exercise-db.json?v=20260905d';
+  var DB_URL = '/assets/exercise-db.json?v=20260906a';
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {

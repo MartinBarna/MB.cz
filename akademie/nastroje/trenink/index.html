@@ -204,7 +204,7 @@
       }
     }catch(e){}
 
-    fetch('/assets/exercise-db.json?v=20260905d').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/exercise-db.json?v=20260906a').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' cviků připraveno';
       var st=KLIENT ? null : loadState();
       if(st){

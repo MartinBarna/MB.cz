@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Vloží do nastroje-zdarma/cviky/index.html statický <ul> se 125 cviky
+ * Vloží do nastroje-zdarma/cviky/index.html statický <ul> se 128 cviky
  * (název + partie) z assets/exercise-db.json. Filtry a karty dál staví JS
  * přes fetch: to je progressive enhancement, robot čte tenhle seznam.
  *

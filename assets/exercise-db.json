@@ -2955,5 +2955,77 @@
 "Houpeš tělem: uber váhu, tenhle sval je malý a švih ho mine.",
 "Zvedáš nad rameno: nad tou výškou už boční delta nepřidá, jen se zapojí trapéz."
 ]
+},
+{
+"id": "face-pull-guma",
+"name": "Face pull s gumou (zadní delty)",
+"plain": "Přitahování gumy k obličeji s lokty do stran.",
+"muscle": "ramena",
+"pattern": "izolace",
+"equip": [
+"guma"
+],
+"location": [
+"fitko",
+"doma",
+"hriste"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Lokty táhni vysoko do stran, ruce končí u uší. Ramena drž dole, ne u uší.",
+"desc": "Gumu zahákni ve výšce obličeje o pevný bod a chyť oba konce nadhmatem. Udělej krok vzad, ať je guma napnutá už na začátku. Táhni ruce k obličeji, lokty vysoko a do stran, na konci stáhni lopatky k sobě a na vteřinu zadrž. Pomalu vrať. Zadní delty a horní záda, protiváha ke všem tlakům.",
+"cues": [
+"Lokty klesají dolů: pak z toho je veslování na záda, drž je ve výšce ramen.",
+"Trhání trupem: guma je moc silná, vezmi slabší nebo stoupni blíž.",
+"Ramena jedou k uším: stáhni je dolů, tah končí u uší, ne nad hlavou."
+]
+},
+{
+"id": "rozpazovani-trx",
+"name": "Rozpažování na TRX (zadní delty)",
+"plain": "V závěsu se zakloníš a rozpažením se přitáhneš nahoru.",
+"muscle": "ramena",
+"pattern": "izolace",
+"equip": [
+"trx"
+],
+"location": [
+"fitko",
+"doma",
+"hriste"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Tělo v přímce od hlavy k patám, paže natažené, tah jde ze zadních ramen. Obtížnost mění postavení chodidel.",
+"desc": "Chyť madla TRX, zakloň se s nataženýma rukama, tělo drž v přímce a zpevni břicho. Roztáhni paže do stran ve výšce ramen a přitáhni tak trup nahoru, na konci stáhni lopatky. Pomalu se spusť zpět. Čím víc jsou chodidla pod kotvou, tím je to těžší.",
+"cues": [
+"Boky se lámou: zpevni břicho a hýždě, tělo je prkno.",
+"Ohýbáš lokty: pak tahají bicepsy, ruce drž natažené s mírně měkkým loktem.",
+"Švih: nahoru dvě vteřiny, dolů dvě vteřiny, žádné houpání."
+]
+},
+{
+"id": "zvedani-pazi-t-vleze",
+"name": "Zvedání paží do T vleže na břiše (zadní delty)",
+"plain": "Leh na břiše, paže do stran, zvedáš je od země.",
+"muscle": "ramena",
+"pattern": "izolace",
+"equip": [
+"telo"
+],
+"location": [
+"fitko",
+"doma",
+"hriste"
+],
+"level": "zacatecnik",
+"unit": "reps",
+"tip": "Palce míří ke stropu, čelo zůstává u země. Malý rozsah, ale nahoře drž vteřinu.",
+"desc": "Lehni si na břicho, paže natáhni do stran do tvaru T, palce otoč nahoru. Zvedni paže od země, stáhni lopatky k sobě a nahoře vteřinu drž, pak pomalu polož. Bez náčiní, kdekoli. Ideální na začátek, když nemáš gumu ani činky.",
+"cues": [
+"Zvedáš hlavu a prohýbáš bedra: čelo nech u země, pracují jen paže a lopatky.",
+"Paže jdou dozadu k bokům: drž je kolmo k tělu, jinak cvičíš něco jiného.",
+"Rychle nahoru a dolů: pomalu, nahoře výdrž, dole nepokládat úplně."
+]
 }
 ]
