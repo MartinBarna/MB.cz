@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
-<link rel="stylesheet" href="/assets/ba-ui.css?v=r4">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r5">
 <script src="/assets/ba-theme.js"></script>
 <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l9">
 <style>
@@ -116,7 +116,7 @@
       if(FOODS || loading) return;
       loading=true; loadErr=false;
       $('hint').textContent='Načítám databázi…';
-      fetch('/assets/curated-foods.min.json?v=6').then(function(r){return r.json();}).then(function(min){
+      fetch('/assets/curated-foods.min.json?v=7').then(function(r){return r.json();}).then(function(min){
         FOODS=window.FoodSearch.fromMin(min);
         loading=false;
         $('hint').textContent=HINT_DEFAULT+' '+FOODS.length+' potravin.';

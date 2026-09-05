@@ -396,6 +396,19 @@
     consider(document.getElementById('baToTop') || document.getElementById('toTop'));
     var px = Math.round(b) + 'px';
     btn.style.bottom = px; panel.style.bottom = px;
+    reserveSpace(b);
+  }
+
+  // Na mobilu je bublina fixní přes celou šířku sloupce s textem (žádné boční okraje na
+  // úzkém displeji ji neobejdou), takže bez rezervy zakryje poslední řádky obsahu, kolem
+  // kterých zrovna scroluje. Přidá dolní odsazení hlavnímu sloupci, ať se s textem nekryje.
+  function reserveSpace(bottomPx) {
+    if (window.innerWidth > 640) return;
+    var host = document.querySelector('.wrap') || document.querySelector('main');
+    if (!host || host.dataset.amReserved) return;
+    var need = Math.round(bottomPx) + 60 /* výška bubliny */ + 20 /* rezerva */;
+    var cur = parseFloat(window.getComputedStyle(host).paddingBottom) || 0;
+    if (cur < need) { host.style.paddingBottom = need + 'px'; host.dataset.amReserved = '1'; }
   }
 
   function mount() {

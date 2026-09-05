@@ -69,6 +69,14 @@ body.ba{
 .ba .topr{display:flex;align-items:center;gap:20px;}
 .ba .topr a{color:var(--muted);font-size:.85rem;font-weight:500;transition:color .2s;cursor:pointer;}
 .ba .topr a:hover{color:var(--hover-ink);}
+/* Mobil (375 px): "Poznatky o firmě · Zpět na Academy · Odhlásit" v jedné řadě se do
+   šířky nevejde a poslední odkaz se ořízne mimo obrazovku (bez overflow-x tam nejde
+   doscrollovat). Na úzkém displeji ať se lišta zalomí na dva řádky místo ořezu. */
+@media(max-width:480px){
+  .ba .top .in{flex-wrap:wrap;row-gap:8px;}
+  .ba .topr{gap:12px;flex-wrap:wrap;}
+  .ba .topr a{font-size:.78rem;}
+}
 
 /* ---------- layout ---------- */
 .ba .wrap{max-width:1080px;margin:0 auto;padding:52px 22px 90px;}
