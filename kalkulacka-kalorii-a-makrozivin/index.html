@@ -228,6 +228,11 @@
             var vyska = parseFloat(document.getElementById('vyska').value);
             var vaha = parseFloat(document.getElementById('vaha').value);
             if (!vek || !vyska || !vaha) { alert('Vyplň prosím věk, výšku a váhu.'); return; }
+            // Stejné meze jako appka (validateCurrent v onboardingu): min/max v HTML tu nic
+            // nevynucuje, protože vstupy nejsou ve <form> a váha je textové pole kvůli čárce.
+            if (vek < 12 || vek > 100) { alert('Věk zadej v rozmezí 12 až 100 let.'); return; }
+            if (vyska < 100 || vyska > 250) { alert('Výšku zadej v centimetrech, v rozmezí 100 až 250 cm.'); return; }
+            if (vaha < 30 || vaha > 400) { alert('Váhu zadej v kilogramech, v rozmezí 30 až 400 kg.'); return; }
             if (!window.MealGen) { alert('Kalkulačka se nenačetla celá, zkus obnovit stránku.'); return; }
             var t = window.MealGen.computeTargets({
                 sex: pohlavi, age: vek, height: vyska, weight: vaha,

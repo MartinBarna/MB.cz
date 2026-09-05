@@ -57,7 +57,7 @@
   function pripravEngine() {
     var kroky = [];
     if (!global.MealGen) kroky.push(nactiSkript(MG_URL));
-    if (!global.PruvodceSablona) kroky.push(nactiSkript('/akademie/admin/pruvodce-sablona.js?v=20260902a'));
+    if (!global.PruvodceSablona) kroky.push(nactiSkript('/akademie/admin/pruvodce-sablona.js?v=20260905b'));
     return Promise.all(kroky).then(function () {
       if (FOOD) return FOOD;
       return fetch(DB_URL).then(function (r) { return r.json(); }).then(function (d) {

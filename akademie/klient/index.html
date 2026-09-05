@@ -220,6 +220,23 @@
       <div class="ksec">Dokumenty od Martina</div>
       <div id="docs"><p class="lead" style="font-size:.9rem;" id="docsEmpty">Zatím tu žádné dokumenty nejsou, jakmile ti Martin něco nahraje (plán, jídelníček, podklady), objeví se tady.</p></div>
 
+      <!-- jak na to: nejčastější otázky (revize klientských materiálů 5. 9. 2026). Text psal
+           člověk podle HLAS-MARTINA; odpovědi popisují, co stránka opravdu dělá (týdenní průměry,
+           odchylka proti cíli platnému v týdnu reportu, pásmo 5 %, nová karta u dokumentů). -->
+      <div class="ksec">Jak na to: nejčastější otázky</div>
+      <div class="kcard" id="faq" style="margin-bottom:22px;">
+        <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Kdy a jak často vyplnit report?</summary>
+          <p style="margin:6px 0 10px;">Jednou týdně, za celý uplynulý týden, nejlíp v neděli večer nebo v pondělí ráno. Formulář tě provede krok za krokem, kopie přijde tobě i mně. Já ho projdu a ozvu se ti s úpravami zadání.</p></details>
+        <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Co znamenají grafy a barvy v historii?</summary>
+          <p style="margin:6px 0 10px;">Váha a míry jsou týdenní průměry z reportů, jednotlivé dny kolísají vodou. Kalorie, bílkoviny a kroky srovnávám s cílem, který platil ten týden, proto se historie nepřebarví, když ti cíl posunu. Zelená znamená v pásmu 5 % kolem cíle (u bílkovin i nad ním), oranžová mimo.</p></details>
+        <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Zapomněl/a jsem den zapsat.</summary>
+          <p style="margin:6px 0 10px;">Nic se neděje. Doplň, co si pamatuješ, s rezervou nahoru, a v reportu uveď, kolik dní máš zapsaných. Počítám s tím a průměr beru jen ze zapsaných dní.</p></details>
+        <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Kdy mi psát rovnou a kdy počkat na report?</summary>
+          <p style="margin:6px 0 10px;">Zdravotní věci, bolest při tréninku a cokoli, co tě blokuje víc než pár dní, piš hned na WhatsApp. Chuť, hlad, kolísání váhy a běžné dotazy k jídlu patří do reportu, tam to vidím v souvislostech. Rychlé dotazy zodpoví i AI Martin (zlaté tlačítko vpravo dole), velké věci nech na mě.</p></details>
+        <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Jak otevřu dokumenty od Martina?</summary>
+          <p style="margin:6px 0 10px;">Klepni na název, dokument se otevře v nové kartě a PDF si můžeš uložit. Když se nic neotevře, povol vyskakovací okna pro martinbarna.cz nebo zkus jiný prohlížeč. Jídelníček a tréninkový plán si navíc kdykoli poskládáš sám v nástrojích nahoře, čísla od Martina už tam máš předvyplněná.</p></details>
+      </div>
+
       <!-- vyhody -->
       <div class="ksec">Tvoje výhody v ceně koučinku</div>
       <div class="kcards">
@@ -731,7 +748,12 @@
       var items = [];
       (res[0] || []).forEach(function(o){ if(o && o.name && o.id) items.push({ path: "shared/" + o.name, name: o.name, size: o.metadata && o.metadata.size, shared: true, at: o.created_at }); });
       (res[1] || []).forEach(function(o){ if(o && o.name && o.id) items.push({ path: myEmail + "/" + o.name, name: o.name, size: o.metadata && o.metadata.size, shared: false, at: o.created_at }); });
-      if(!items.length) return;
+      if(!items.length){
+        // storageList vrací null při chybě a [] při prázdné složce. „Nic tu není" a „nepodařilo se
+        // načíst" jsou dvě různé věci, klient s výpadkem sítě nesmí vidět tu první (revize 5. 9. 2026).
+        if(res[0] === null && res[1] === null) el("docsEmpty").textContent = "Dokumenty se teď nepodařilo načíst. Zkus obnovit stránku, kdyby to nepomohlo, napiš mi.";
+        return;
+      }
       el("docsEmpty").style.display = "none";
       items.sort(function(a, b){ return String(b.at || "").localeCompare(String(a.at || "")); });
       var host = el("docs");

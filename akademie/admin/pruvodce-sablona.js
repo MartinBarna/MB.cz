@@ -84,6 +84,21 @@
     'Zapiš i ten den, ať víme, co se stalo. Ve váze uvidíš skok nahoru, za dva až tři dny bude zpátky, ' +
     'protože je to voda a obsah střev.\n\n' +
     'Když se ti to opakuje každý víkend, nemá cenu to řešit vůlí. Napiš mi to v reportu a najdeme, čím to je.';
+  // Tři situace, na které se klienti ptají nejčastěji a v původním dokumentu chyběly
+  // (revize klientských materiálů 5. 9. 2026). Text psal člověk, průchod HLAS-MARTINA.
+  // Čísla u alkoholu jsou běžné tabulkové hodnoty (půllitr piva, dvě deci vína, panák),
+  // úpravu kalorií při stagnaci rozhoduje Martin z reportu, ne klient sám.
+  var T_COKDYZ = [
+    ['Váha stojí dva tři týdny.', 'Jeden týden bez pohybu je normální, voda a cyklus umí schovat i půl kila tuku dolů. ' +
+      'Když stojí třetí týden a zápis sedí, je čas hnout čísly: o 100 až 150 kcal dolů, nebo 2 000 kroků denně navíc. ' +
+      'Rozhodnu to z reportu, ty jen zapisuj dál a jídlo si na vlastní pěst neřež.'],
+    ['Alkohol.', 'Půllitr piva má kolem 200 kcal, dvě deci vína 150, panák 100. Zapiš ho jako všechno ostatní ' +
+      'a ten den uber na tuku nebo příloze, bílkovinu nech. Jeden večer za týden s výsledkem nic neudělá, ' +
+      'každý druhý den už ano. Druhý den ráno bude váha nahoře kvůli vodě, za dva dny je zpátky.'],
+    ['Restaurace.', 'Vyber jídlo, kde poznáš maso a přílohu, gramáž odhadni podle talíře a zapiš s rezervou nahoru. ' +
+      'Omáčky a smažené věci mají tuk, který na talíři nevidíš, počítej s ním. K jídlu si přidej zeleninu ' +
+      'a bílkovinu dožeň v dalším jídle. Jedno jídlo v restauraci týdně se v číslech ztratí, kvůli němu kamarády neodmítej.']
+  ];
   var T_ETIKETA = [
     'Podívej se do záhlaví tabulky, jestli jsou hodnoty „na 100 g" nebo „na porci". Porce bývá 30 g a kdo si toho nevšimne, zapíše si třetinu skutečné porce.',
     'U rýže, těstovin a vloček platí údaj na syrový stav, pokud výrobce nenapíše jinak. Vařením se mění hmotnost, hodnoty na obalu zůstávají.',
@@ -452,6 +467,11 @@
 
     // 8. výpadek z plánu
     h += '<h2>' + dalsi() + '. Když se přejím nebo vypadnu z plánu</h2>' + odstavce(T_VYPADEK);
+
+    // 8b. co když: stagnace, alkohol, restaurace (doplněno 5. 9. 2026)
+    h += '<h2>' + dalsi() + '. Co když: váha stojí, alkohol, restaurace</h2><ul class="body">'
+      + T_COKDYZ.map(function (x) { return '<li><strong>' + x[0] + '</strong> ' + x[1] + '</li>'; }).join('')
+      + '</ul>';
 
     // 9. etiketa
     h += '<h2>' + dalsi() + '. Jak číst etiketu</h2><ul class="body">'
