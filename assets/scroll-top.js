@@ -59,6 +59,7 @@
       + 'box-shadow:0 10px 26px -6px rgba(235,177,44,.6);opacity:0;visibility:hidden;transform:translateY(10px);'
       + 'transition:opacity .25s,transform .25s,visibility .25s,bottom .25s,right .25s;-webkit-tap-highlight-color:transparent;}'
       + '#baToTop.show{opacity:1;visibility:visible;transform:translateY(0);}'
+      + '@media(max-width:640px){#baToTop{display:none!important;}}' /* mobil: WhatsApp + AI Martin + lišta CTA už dole jsou, čtvrté tlačítko překrývalo text */
       + '#baToTop:hover{transform:translateY(-3px);box-shadow:0 16px 32px -6px rgba(235,177,44,.7);}'
       + '.fab-wa{position:fixed;right:20px;bottom:20px;border-radius:50%;background:#25D366;'
       + 'display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.28);z-index:1050;'
