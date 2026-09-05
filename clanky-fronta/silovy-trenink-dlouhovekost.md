@@ -1,7 +1,9 @@
-# Silový trénink a dlouhověkost: proč stačí hodina týdně
+# Silový trénink a dlouhověkost: stačí hodina týdně
 
 Klíčové slovo: silový trénink a dlouhověkost
 Navržená URL: martinbarna.cz/clanky/silovy-trenink-dlouhovekost.html
+Meta: Posilování se pojí s o 15 % nižší úmrtností a nejvíc vychází kolem hodiny týdně. Co data říkají, co neříkají a jak si tu hodinu poskládat.
+Popis: Hodina posilování týdně vychází v datech o úmrtnosti nejlíp. Co studie říkají a jak si ji poskládat, když začínáš.
 CTA:
 Chceš mít trénink zapsaný a nemuset ho vymýšlet?
 V appce Tvůj Coach si zapíšeš každou sérii a uvidíš historii i vývoj síly u jednotlivých cviků. Tahle část je zdarma. V placeném plánu k tomu přibude generátor tréninku a doporučení, kolik zkusit v další sérii.

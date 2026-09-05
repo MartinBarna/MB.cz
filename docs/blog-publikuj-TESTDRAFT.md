@@ -2,6 +2,7 @@
 
 Klíčové slovo: test blog publikuj
 Navržená URL: https://martinbarna.cz/clanky/test-blog-publikuj.html
+SEO title: Testovací článek blog-publikuj
 Kategorie: Hubnutí
 Emoji: 🧪
 Filtr: vyziva

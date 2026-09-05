@@ -1,7 +1,9 @@
-# Váha stojí: co dělat, když se po prvních kilech přestane hýbat
+# Váha stojí: co dělat, když se přestane hýbat
 
 Klíčové slovo: váha stojí (plateau při hubnutí)
 Navržená URL: martinbarna.cz/clanky/vaha-stoji-plateau.html
+Meta: Váha stojí a hubneš dál? Nejdřív týdenní průměr a sedm dní poctivého zápisu, pak teprve kalorie. Kdy ubrat, kdy ne a co je diet break.
+Popis: Co dělat, když se váha při hubnutí zastaví: zápis, adaptace, kdy ubrat kalorie a kdy si dát pauzu.
 CTA: makro-plan
 Zdroje:
 - Egan AM, Collins AL. Proc Nutr Soc 2022;81(2):199-212. PMID 35103583, DOI 10.1017/S0029665121003669

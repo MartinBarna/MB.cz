@@ -155,3 +155,20 @@ test('publishDraft --dry proti kopii kořene a --force je idempotentní', () => 
 
   fs.rmSync(tmp, { recursive: true, force: true });
 });
+
+test('SEO title přepíše jen <title>, h1 zůstává; dlouhý title tag běh shodí', () => {
+  const kratky = DRAFT.replace(/^# .*$/m, '# Testovací nadpis').replace(/^SEO title:.*$/m, 'SEO title: Kratší titulek');
+  const d = parseDraft(kratky);
+  assert.equal(d.title, 'Testovací nadpis');
+  assert.equal(d.seoTitle, 'Kratší titulek');
+  assert.equal(d.titleTag, 'Kratší titulek | Martin Barna');
+  const html = buildArticleHtml(d, loadChrome(TEMPLATE));
+  assert.ok(html.includes('<title>Kratší titulek | Martin Barna</title>'));
+  assert.ok(html.includes('<h1>Testovací nadpis</h1>'));
+  const dlouhy = DRAFT.replace(/^SEO title:.*\n/m, '').replace(/^# .*$/m, '# ' + 'Nadpis dlouhý jako týden bez kávy a bez spánku, opravdu hodně dlouhý');
+  assert.throws(() => parseDraft(dlouhy), /<title> má \d+ znaků/);
+  const bezSeo = parseDraft(DRAFT.replace(/^SEO title:.*\n/m, '').replace(/^# .*$/m, '# Krátký nadpis'));
+  assert.equal(bezSeo.seoTitle, bezSeo.title);
+  assert.ok(bezSeo.meta.length <= 170);
+});
+

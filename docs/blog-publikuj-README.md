@@ -19,7 +19,7 @@ Bez `--force` skončí, když `clanky/<slug>.html` už existuje. Druhé spuště
 
 Povinné: **Klíčové slovo**, **Navržená URL**, **CTA**, **Zdroje**. Nadpis je první řádek `# …`. První odstavec za hlavičkou je lead. Sekce `## Časté otázky` musí mít aspoň jednu otázku (`### otázka` + odstavec).
 
-Volitelné: `Kategorie`, `Emoji`, `Filtr` (`vyziva` / `trenink` / `myty` / `suplementy` / `trenerina`), `Popis` (OG + karta), `Meta`, `Datum` (`YYYY-MM-DD`, jinak dnešek), `Související`.
+Volitelné: `Kategorie`, `Emoji`, `Filtr` (`vyziva` / `trenink` / `myty` / `suplementy` / `trenerina`), `Popis` (OG + karta), `Meta`, `Datum` (`YYYY-MM-DD`, jinak dnešek), `Související`, `SEO title` (kratší text jen pro `<title>`; h1 zůstává z nadpisu). Hlídka: `<title>` včetně „| Martin Barna" max 70 znaků, `Meta` max 170 znaků, jinak běh spadne.
 
 ```markdown
 # Nadpis článku

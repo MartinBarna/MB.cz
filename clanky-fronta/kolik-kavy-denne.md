@@ -2,6 +2,8 @@
 
 Klíčové slovo: kolik kávy denně
 Navržená URL: martinbarna.cz/clanky/kolik-kavy-denne.html
+Meta: Nejnižší rizika vycházejí u 3 až 4 šálků denně, na hubnutí má káva malý vliv a šest hodin před spaním jí dej pokoj. Co říkají data a praxe.
+Popis: Kolik kávy denně dává podle dat smysl, co dělá s hubnutím a kdy ji pít, aby ti nevzala spánek.
 CTA:
 Chceš mít v jídelníčku pořádek?
 Připravil jsem 7denní makro plán s konkrétními jídly a porcemi, zdarma. Poznáš z něj, jak vypadá reálná porce a kolik z tvého dne snědí věci, které se běžně nezapisují. Třeba to velké latte.
@@ -129,6 +131,6 @@ probíhajícího úbytku o procenta, a jednotlivé studie se navzájem hodně ro
 řeší příjem a výdej, káva je doplněk.
 
 **Můžu pít kávu v těhotenství?**
-Tohle je jediná oblast, kde přehled v BMJ našel u kávy rizika, a je to otázka na tvého lékaře
+Těhotenství je vedle zlomenin u žen jedna ze dvou oblastí, kde přehled v BMJ našel u kávy rizika, a je to otázka na tvého lékaře
 nebo gynekologa, ne na výživového kouče. Doporučení se tam liší od běžné populace a rozhodnutí
 ti do jídelníčku nikdo schovat nemůže.

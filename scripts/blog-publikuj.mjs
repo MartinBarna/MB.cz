@@ -10,7 +10,9 @@
  *   node scripts/blog-publikuj.mjs <cesta-k-draftu.md> [--force] [--dry]
  *
  * Hlavička draftu (povinné): Klíčové slovo, Navržená URL, CTA, Zdroje.
- * Volitelné: Kategorie, Emoji, Filtr, Popis, Meta, Datum, Související.
+ * Volitelné: Kategorie, Emoji, Filtr, Popis, Meta, Datum, Související, SEO title
+ * (kratší text jen pro <title>; h1 i og:title zůstávají z nadpisu). <title> včetně
+ * " | Martin Barna" smí mít max 70 znaků, Meta max 170, jinak běh spadne.
  *
  * Idempotentní: druhý běh na týž slug nezdvojí kartu ani sitemap záznam.
  * Bez --force skončí, když clanky/<slug>.html už existuje.
@@ -67,7 +69,14 @@ const FIELD_ALIASES = new Map([
   ['related', 'related'],
   ['nadpis', 'title'],
   ['title', 'title'],
+  ['seo title', 'seoTitle'],
+  ['seo titulek', 'seoTitle'],
+  ['title tag', 'seoTitle'],
 ]);
+
+// <title> = nadpis + tenhle sufix; Google ho zkracuje kolem 60 až 65 znaků, nad 70 běh spadne.
+const TITLE_SUFFIX = ' | Martin Barna';
+const TITLE_TAG_MAX = 70;
 
 const MULTILINE_KEYS = new Set(['cta', 'sources', 'related']);
 
@@ -463,8 +472,16 @@ export function parseDraft(raw) {
     throw new Error(`Datum musí být YYYY-MM-DD, je: ${date}`);
   }
 
-  const og = (fields.og || '').trim() || clipSentence(lead, 180);
-  const meta = (fields.meta || '').trim() || clipSentence(lead, 220);
+  const og = (fields.og || '').trim() || clipSentence(lead, 160);
+  const meta = (fields.meta || '').trim() || clipSentence(lead, 160);
+  const seoTitle = (fields.seoTitle || '').trim() || title;
+  const titleTag = `${seoTitle}${TITLE_SUFFIX}`;
+  if (titleTag.length > TITLE_TAG_MAX) {
+    throw new Error(`<title> má ${titleTag.length} znaků (max ${TITLE_TAG_MAX} včetně "${TITLE_SUFFIX.trim()}"). Zkrať nadpis, nebo dej do hlavičky kratší \`SEO title:\`.`);
+  }
+  if (meta.length > 170) {
+    throw new Error(`Meta description má ${meta.length} znaků (max 170). Zkrať pole Meta.`);
+  }
   const sources = String(fields.sources).split('\n').map((l) => l.replace(/^\s+/, '')).filter((l) => l.trim());
   const cta = parseCta(fields.cta);
 
@@ -477,6 +494,8 @@ export function parseDraft(raw) {
 
   return {
     title,
+    seoTitle,
+    titleTag,
     keyword: fields.keyword.trim(),
     slug,
     canonical,
@@ -767,7 +786,7 @@ export function buildArticleHtml(draft, chrome) {
     chrome.authorAndDisclaimer,
   ].filter((x) => x !== '').join('\n');
 
-  return `${chrome.headPrefix}    <title>${escapeHtml(draft.title)} | Martin Barna</title>
+  return `${chrome.headPrefix}    <title>${escapeHtml(draft.seoTitle || draft.title)}${TITLE_SUFFIX}</title>
     <meta name="description" content="${escapeHtml(draft.meta)}">
     <meta name="theme-color" content="#EBB12C">
     <link rel="canonical" href="${escapeHtml(draft.canonical)}">
@@ -990,6 +1009,8 @@ export function publishDraft(opts) {
       sitemap: SITEMAP_REL,
     },
     checks: {
+      titleTag: draft.titleTag ? draft.titleTag.length : (draft.title + TITLE_SUFFIX).length,
+      metaLength: draft.meta.length,
       emDashes: emArticle,
       jsonLd: ld.types,
       faq: draft.faq.length,
@@ -1021,6 +1042,8 @@ function printSummary(result) {
   }
   console.log('kontrola:');
   console.log(`  dlouhe pomlcky:  ${result.checks.emDashes}`);
+  console.log(`  title tag:       ${result.checks.titleTag} znaku (max ${TITLE_TAG_MAX})`);
+  console.log(`  meta desc:       ${result.checks.metaLength} znaku (cil 120 az 160)`);
   console.log(`  JSON-LD bloky:   ${result.checks.jsonLd.length} validni (${result.checks.jsonLd.join(', ')})`);
   console.log(`  FAQ otazek:      ${result.checks.faq}`);
   console.log(`  zdroje:          ${result.checks.sources}`);

@@ -2,6 +2,8 @@
 
 Klíčové slovo: jak zhubnout po porodu
 Navržená URL: martinbarna.cz/clanky/jak-zhubnout-po-porodu.html
+Meta: Kdy začít hubnout po porodu, kolik se dá bezpečně ubrat při kojení a proč rozhoduje spánek. Shrnutí studií a praxe z koučinku.
+Popis: Bezpečné hubnutí po porodu podle studií: mírný deficit, bílkoviny, spánek a poporodní kontrola dřív než dieta.
 CTA:
 Chceš konkrétní čísla místo obecných rad?
 Stáhni si zdarma 7denní makro plán. Spočítá ti příjem i rozložení bílkovin, sacharidů a tuků, takže nemusíš hádat, kolik toho vlastně máš jíst. A pokud kojíš, vezmi si spočítaná čísla s sebou na poporodní kontrolu a nech si je odkývnout.
@@ -37,7 +39,7 @@ Je to pozorování, ne pokus, takže z toho příčinu vyčíst nejde. K tomu pr
 
 ## Proč se váha po porodu drží: spánek
 
-Přehled 13 studií (Xiao a kol., 2014, PMID 25306538) se díval na spánek, stres a depresi ve vztahu k tomu, kolik váhy po porodu zůstane. Všechny čtyři práce, které měřily krátký spánek, našly souvislost s vyšší zadrženou hmotností. U stresu nevyšla souvislost ani v jedné ze čtyř prací, u deprese to bylo čtyři ku třem. Autoři sami píší, že výzkumu je v téhle oblasti málo. A jedna důležitá věc mimo čísla: pokud na sobě pozoruješ příznaky poporodní deprese, patří to do rukou lékaře nebo psychologa, jídelníček to neřeší.
+Přehled 13 studií (Xiao a kol., 2014, PMID 25306538) se díval na spánek, stres a depresi ve vztahu k tomu, kolik váhy po porodu zůstane. Všechny čtyři práce, které měřily krátký spánek, našly souvislost s vyšší zadrženou hmotností. U stresu nevyšla souvislost ani v jedné ze čtyř prací, u deprese to bylo čtyři ku třem. Autoři sami píší, že výzkumu je v téhle oblasti málo. A jedna důležitá věc mimo čísla: pokud na sobě pozoruješ příznaky poporodní deprese, patří to do rukou lékaře nebo psychologa, jídelníček to neřeší. Když je ti zle teď hned, Linka první psychické pomoci má číslo 116 123.
 
 Novorozenecký spánek si nenaplánuješ. Co v tvé moci je, je nepřidávat na týden se špatným spaním ještě tvrdý deficit. Když je noc rozbitá, drž příjem blíž udržovačce a smiř se s tím, že váha ten týden nikam nepůjde. Víc o tom v článku [Málo spánku a hubnutí](https://martinbarna.cz/clanky/malo-spanku-a-hubnuti.html).
 
