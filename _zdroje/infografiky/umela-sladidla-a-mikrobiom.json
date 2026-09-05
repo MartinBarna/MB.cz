@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Proč to straší", "title": "Reverzní<br>kauzalita", "body": "Observační data ukazují, že light varianty pijí častěji lidé v riziku. Jenže po nich sahají právě ti, kdo chtějí hubnout a hlídat si cukr.<br><br>Příčina a následek se prohodí.", "callout": "Máš cukrovku nebo inzulinovou rezistenci? Tvoje reakce může být individuální. Řeš ji s lékařem, ne podle Instagramu." },
     { "kind": "vs", "kicker": "Do praxe", "title": "Základy,<br>nebo bakterie?", "yes": { "h": "Tohle rozhoduje", "items": ["<b>Kalorický příjem.</b> Váhu řídí on, druh sladidla na ní nic nemění", "Dost bílkovin a spánek", "Vláknina a pestrá strava"] }, "no": { "h": "Tohle je hrocení", "items": ["Vyměníš sladidlo a čekáš, že zhubneš", "Řešíš bakterie dřív než kalorie", "Bereš závěr z myší jako verdikt pro sebe"] } },
     { "kind": "quote", "text": "Mikrobiom se mění. Ke skoku „rozvrátí ti metabolismus“ ale data u lidí zatím nejsou.", "note": "Řeš kalorie, bílkoviny a spánek. Mikrobiom je až za nimi." },
-    { "kind": "cta", "title": "Chceš řešit <span class=\"hl\">základy?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí, 800&nbsp;Kč)</b>"] }
+    { "kind": "cta", "title": "Chceš řešit <span class=\"hl\">základy?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí)</b>"] }
   ]
 }
