@@ -441,12 +441,15 @@ function rdCitBlok(radky: string[]): string {
 // (revize 2. 9. 2026, nález c). Když se má délka změnit, mění se `RD_DELKA` výš a NIC
 // jiného: blok čísel model nepíše, ten skládá engine.
 const RD_SYSTEM = [
-  "Jsi asistent Martina Barny, online výživového a fitness kouče z Česka.",
-  "Píšeš KONCEPT jeho odpovědi na týdenní report klienta. Koncept čte Martin, upraví ho a odešle sám.",
+  "Píšeš JAKO Martin Barna, online výživový a fitness kouč z Česka, v PRVNÍ OSOBĚ jednotného čísla",
+  "('ozvu se ti', 'počítám', 'napiš mi'). Ty jsi Martin.",
+  "Píšeš KONCEPT odpovědi na týdenní report klienta. Koncept si Martin přečte, upraví a odešle sám.",
+  "⛔ O Martinovi nikdy nepiš ve 3. osobě ('Martin se ozve', 'Martin to probere'). Vždy 'ozvu se', 'proberu'.",
   "Nikdy nepíšeš klientovi přímo a nikdy nic neodesíláš.",
   "",
   "HLAS:",
-  "- Tykej. Piš česky, mluvenou, ne úřední češtinou.",
+  "- Tykej důsledně, i v rozkazech: 'zkus', 'drž', 'dej vědět'. Nikdy 'zkuste', 'dejte', 'máte', 'vám'.",
+  "  Piš česky, mluvenou, ne úřední češtinou.",
   "- Buď konkrétní: používej čísla z bloku FAKTA, nikdy obecné fráze typu 'skvělá práce, jen tak dál'.",
   "- Martin nahlas přiznává nejistotu: 'počítám, že', 'je to nástřel', 'kdyžtak dej echo, kdybych byl mimo'.",
   "- Občasné ':)' je v pořádku. Moderní emoji nikdy.",
@@ -697,6 +700,27 @@ function rdParse(raw: string): { draft: string; navrh_zmen: string } {
   return { draft: rdBezPomlcky(t), navrh_zmen: "" };   // radši celý text než prázdno
 }
 
+// Deterministická kontrola hlasu nad hotovým konceptem (5. 9. 2026). Nic neopravuje, jen
+// VYVĚSÍ Martinovi varování nad konceptem. Tři vady, které prošly promptem u Terezy Testové:
+// Martin ve 3. osobě, vykání uprostřed tykání, mužský minulý čas u klientky.
+export function rdVarovani(draft: string, rod: string): string[] {
+  const v: string[] = [];
+  if (/\bMartin(a|ovi|em|e)?\b/.test(draft)) v.push("Text mluví o Martinovi ve 3. osobě, má být v 1. osobě (ozvu se, proberu).");
+  if (/\b(zkuste|dejte|mějte|držte|pište|jezte|pijte|choďte|snažte|udělejte|zvládnete|máte|jste|vás|vám|váš|vaše|vaši)\b/i.test(draft)) v.push("V textu je vykání (zkuste, dejte, vám), zbytek tyká.");
+  // Minulý čas se hlídá jen vedle 2. osoby (jsi/sis/ses), protože Martin o sobě píše v mužském
+  // rodě oprávněně ('spočítal jsem'). Slova na -l/-la, která nejsou příčestí, jsou ve stoplistu.
+  // \b v JS nezná diakritiku (hranice by byla i uvnitř slova jídla), proto vlastní hranice slova.
+  const L = String.raw`a-záčďéěíňóřšťúůýž`;
+  const B0 = String.raw`(?<![${L}])`, B1 = String.raw`(?![${L}])`;
+  const M = String.raw`(?!(?:cíl|půl|sůl|styl|díl|kýl|gól)${B1})[${L}]+[^a\s]l`;
+  const Z = String.raw`(?!(?:jídla|kila|čísla|pravidla|těla|síla|kola|škola|tabulka|hodinka)${B1})[${L}]+la`;
+  const muz = new RegExp(String.raw`${B0}(jsi|sis|ses)${B1}(?:\s+\S+){0,2}\s+${B0}${M}${B1}|${B0}${M}\s+(jsi|sis|ses)${B1}`, "i");
+  const zena = new RegExp(String.raw`${B0}(jsi|sis|ses)\s+${B0}${Z}${B1}|${B0}${Z}\s+(jsi|sis|ses)${B1}`, "i");
+  if (rod === "z" && muz.test(draft)) v.push("Klientka je žena, ale v textu je mužský tvar minulého času (slíbil, zvládl).");
+  if (rod === "m" && zena.test(draft)) v.push("Klient je muž, ale v textu je ženský tvar minulého času (slíbila, zvládla).");
+  return v;
+}
+
 // =============================================================================
 // 🍽️ TEXTY DO NUTRIČNÍHO PRŮVODCE NA MÍRU (akce `pruvodce_text`, 2. 9. 2026)
 //
@@ -714,7 +738,8 @@ function rdParse(raw: string): { draft: string; navrh_zmen: string } {
 // nevyloučilo nic, což je přesně ta tichá chyba, které se tu vyhýbáme.
 // =============================================================================
 const PG_SYSTEM = [
-  "Jsi asistent Martina Barny, online výživového a fitness kouče z Česka.",
+  "Píšeš JAKO Martin Barna, online výživový a fitness kouč z Česka, v PRVNÍ OSOBĚ jednotného čísla",
+  "('ozvu se ti', 'počítám'). Ty jsi Martin. O Martinovi nikdy nepiš ve 3. osobě.",
   "Píšeš KONCEPT osobních částí nutričního průvodce pro nového klienta. Koncept čte Martin,",
   "upraví ho a dokument odesílá sám. Nikdy nepíšeš klientovi přímo a nikdy nic neodesíláš.",
   "",
@@ -871,7 +896,8 @@ export function pgOtisk(cile: Record<string, number | null>, jidel: number, vylo
 // tréninku a koncept jídelníčku pro téhož klienta míchaly v okně deseti minut.
 // =============================================================================
 const TP_SYSTEM = [
-  "Jsi asistent Martina Barny, online výživového a fitness kouče z Česka.",
+  "Píšeš JAKO Martin Barna, online výživový a fitness kouč z Česka, v PRVNÍ OSOBĚ jednotného čísla",
+  "('ozvu se ti', 'počítám'). Ty jsi Martin. O Martinovi nikdy nepiš ve 3. osobě.",
   "Píšeš KONCEPT osobních částí tréninkového plánu pro nového klienta. Koncept čte Martin,",
   "upraví ho a dokument odesílá sám. Nikdy nepíšeš klientovi přímo a nikdy nic neodesíláš.",
   "",
@@ -2864,6 +2890,7 @@ Deno.serve(async (req) => {
       }
       const { draft, navrh_zmen } = rdParse(raw);
       if (!draft) return json({ error: "ai_prazdno" }, 502);
+      const varovani = rdVarovani(draft, rod);
 
       const { error: insErr } = await admin.from("report_drafts").insert({
         report_id: reportId, client_email: email, draft,
@@ -2872,12 +2899,12 @@ Deno.serve(async (req) => {
           poradi: Number(poradiRes.count ?? 1) || 1,
           // Otisk toho, co engine spočítal. Když se za měsíc ptáme, proč koncept radil
           // zrovna tohle, je to tady, a nemusí se to dopočítávat ze starých reportů.
-          stav_radky: eng.radky, navrh: eng.navrh, smer, rod, osloveni,
+          stav_radky: eng.radky, navrh: eng.navrh, smer, rod, osloveni, varovani,
         },
       });
       // Neuložený koncept není důvod ho Martinovi zatajit, jen se o tom musí vědět.
       return json({
-        ok: true, draft, navrh_zmen, upozorneni, ulozeno: !insErr, model: RD_MODEL,
+        ok: true, draft, navrh_zmen, upozorneni, varovani, ulozeno: !insErr, model: RD_MODEL,
         stav_radky: eng.radky, navrh: eng.navrh, report_date: String(rep.report_date),
       });
     }
