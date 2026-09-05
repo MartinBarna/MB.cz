@@ -80,6 +80,9 @@
         html[data-theme="light"] body { background:var(--bg)!important; }
         html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 { color:var(--txt); }
         html[data-theme="light"] .about [style*="color:#fff"] { color:var(--txt)!important; }
+        html[data-theme="light"] .feat-toggle summary { color:var(--acc)!important; }
+        html[data-theme="light"] .feat-toggle summary:hover { color:var(--acc-l)!important; }
+        html[data-theme="light"] .feat-toggle details { background:none!important; border:none!important; }
         * { box-sizing:border-box; }
         html { scroll-behavior:smooth; }
         body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--txt); background:linear-gradient(180deg,#15171a 0%,#0f1113 100%); line-height:1.6; }
@@ -155,12 +158,13 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; }
 
         /* konzultace box */
-        .konz { background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05)); border:1.5px dashed rgba(235,177,44,.2); border-radius:20px; padding:1.8rem 2rem; max-width:780px; margin:0 auto; text-align:center; }
+        .konz { background:linear-gradient(135deg,rgba(235,177,44,.2),rgba(235,177,44,.06)); border:1.5px solid rgba(235,177,44,.4); border-radius:20px; padding:1.3rem 1.6rem; max-width:780px; margin:0 auto; text-align:center; }
         .konz b.t { color:var(--acc-l); display:block; font-size:1.08rem; margin-bottom:.4rem; }
         .konz p { color:var(--txt); font-size:.95rem; margin:0 0 1.1rem; }
 
         /* plans */
-        .plans { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.4rem; max-width:880px; margin:0 auto; align-items:stretch; }
+        .plans { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.4rem; max-width:1000px; margin:0 auto; align-items:stretch; }
+        @media (max-width:859px) { .plans { grid-template-columns:1fr; } }
         .plan { position:relative; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); border-radius:22px; padding:2rem 1.8rem 1.8rem; display:flex; flex-direction:column; }
         .plan.featured { border:1.5px solid rgba(235,177,44,.22); background:linear-gradient(180deg,rgba(235,177,44,.09),rgba(255,255,255,.03)); }
         .ribbon { position:absolute; top:-.85rem; left:50%; transform:translateX(-50%); background:linear-gradient(145deg,var(--acc-l),var(--acc)); color:#1A1222; font-weight:800; font-size:.75rem; letter-spacing:.06em; padding:.3rem 1rem; border-radius:50px; white-space:nowrap; }
@@ -177,7 +181,15 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .feat { list-style:none; margin:0 0 1.4rem; padding:0; flex:1; }
         .feat li { position:relative; padding-left:1.5rem; color:var(--txt); font-size:.92rem; margin-bottom:.55rem; }
         .feat li::before { content:"✓"; position:absolute; left:0; color:var(--acc); font-weight:800; }
+        .feat li.feat-toggle::before { content:none; }
+        .feat-toggle summary { cursor:pointer; color:var(--acc); font-weight:600; font-size:.9rem; list-style:none; display:inline-flex; align-items:center; gap:.35em; outline:none; }
+        .feat-toggle summary::-webkit-details-marker { display:none; }
+        .feat-toggle summary:hover { color:var(--acc-l); }
+        .feat-toggle summary::after { content:"▾"; font-size:.75em; transition:transform .2s ease; }
+        .feat-toggle details[open] summary::after { transform:rotate(180deg); }
+        .feat-toggle .feat-more { margin:.6rem 0 0; flex:none; }
         .plan .btn { text-align:center; }
+        .plan-cta { margin-top:auto; }
         .microtrust { color:var(--mut); font-size:.8rem; text-align:center; margin:.7rem 0 0; }
 
         /* reference */
@@ -227,7 +239,6 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             .hero-photo { max-width:420px; margin:0 auto; }
             .g4 { grid-template-columns:repeat(2,1fr); }
             .steps { grid-template-columns:1fr; gap:1.4rem; }
-            .plans { grid-template-columns:1fr; }
             .g3 { grid-template-columns:1fr; }
             .about { grid-template-columns:1fr; }
             .about img { max-width:340px; margin:0 auto; display:block; }
@@ -363,11 +374,18 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                     <li><strong>Novinka:</strong> moderní klientská sekce s grafy pokroku, report za 3 minuty z mobilu</li>
                     <li><strong>Novinka:</strong> AI Martin, AI kouč natrénovaný na mé metodice, k ruce 24/7</li>
                     <li>Appka Tvůj Coach v ceně po celou dobu koučinku: zápis jídla i tréninku, generátor plánů, 125 cviků s technikou a nejčastějšími chybami</li>
-                    <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
-                    <li>Kuchařka se 40+ recepty</li>
-                    <li>E-book Tajemství flexibilního stravování</li>
-                    <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
-                    <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
+                    <li class="feat-toggle">
+                        <details>
+                            <summary>Zobrazit dalších 5 výhod</summary>
+                            <ul class="feat feat-more">
+                                <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
+                                <li>Kuchařka se 40+ recepty</li>
+                                <li>E-book Tajemství flexibilního stravování</li>
+                                <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
+                                <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
+                            </ul>
+                        </details>
+                    </li>
                 </ul>
                 <div class="buynow" data-plan="gold" hidden>
                     <label for="selGold">Chci začít hned, na jak dlouho:</label>
@@ -379,8 +397,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                     <a class="btn btn-acc buygo" href="#kontakt" rel="nofollow">Koupit hned →</a>
                     <p class="microtrust">Platba kartou přes Stripe. Dotazník ti přijde na mail hned po zaplacení.</p>
                 </div>
-                <a href="#kontakt" class="btn btn-acc" data-cta="gold">Chci Gold</a>
-                <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
+                <div class="plan-cta">
+                    <a href="#kontakt" class="btn btn-acc" data-cta="gold">Chci Gold</a>
+                    <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
+                </div>
             </div>
             <div class="plan">
                 <div class="plan-name">Diamond</div>
@@ -407,8 +427,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                     <a class="btn btn-acc buygo" href="#kontakt" rel="nofollow">Koupit hned →</a>
                     <p class="microtrust">Platba kartou přes Stripe. Beru do Diamondu nejvýš 3 lidi najednou.</p>
                 </div>
-                <a href="#kontakt" class="btn btn-ghost" data-cta="diamond">Chci Diamond</a>
-                <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
+                <div class="plan-cta">
+                    <a href="#kontakt" class="btn btn-ghost" data-cta="diamond">Chci Diamond</a>
+                    <p class="microtrust">Nezávazně, nejdřív si napíšeme a doladíme detaily.</p>
+                </div>
             </div>
         </div>
         <div id="koucinkPlno" hidden style="max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">

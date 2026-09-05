@@ -70,6 +70,7 @@
         html[data-theme="light"] .dv-caption { color:var(--txt); }
         html[data-theme="light"] .plan-name,
         html[data-theme="light"] .faq-i b { color:var(--txt); }
+        html[data-theme="light"] .g4 > .card:first-child { border-left-color:var(--acc)!important; }
         * { box-sizing:border-box; }
         html { scroll-behavior:smooth; }
         body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--txt); background:linear-gradient(180deg,#15171a 0%,#0f1113 100%); line-height:1.6; }
@@ -117,6 +118,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .g3 { grid-template-columns:repeat(3,1fr); }
         .card { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.09); border-radius:18px; padding:1.5rem 1.4rem; transition:transform .2s ease,border-color .2s ease; }
         .card:hover { transform:translateY(-3px); border-color:rgba(235,177,44,.35); }
+        .g4 > .card:first-child { border-left:3px solid var(--acc); }
         /* Jednotna sada SVG ikon misto emoji (sprite hned za <body>). */
         .ic { display:block; width:1.9rem; height:1.9rem; color:var(--acc); margin-bottom:.6rem; }
         .ic svg { width:100%; height:100%; stroke:currentColor; stroke-width:1.75; fill:none; stroke-linecap:round; stroke-linejoin:round; }
@@ -220,7 +222,8 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .dv-frame video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; background:#000; }
         .dv-card.is-playing .dv-playbtn { display:none; }
         .dv-caption { margin:0; padding:.7rem 1rem .85rem; font-size:.95rem; font-weight:700; color:#f0eadf; line-height:1.3; }
-        @media (max-width: 900px) { .g4 { grid-template-columns:repeat(2,1fr); } .g3 { grid-template-columns:1fr; } .plans, .plans-3 { grid-template-columns:1fr; } .incl-pair { grid-template-columns:1fr; } .dv-grid { grid-template-columns:repeat(2, minmax(0,1fr)); } .mbar.show { display:flex; } }
+        @media (max-width: 900px) { .g3 { grid-template-columns:1fr; } .plans, .plans-3 { grid-template-columns:1fr; } .incl-pair { grid-template-columns:1fr; } .dv-grid { grid-template-columns:repeat(2, minmax(0,1fr)); } .mbar.show { display:flex; } }
+        @media (max-width: 700px) { .g4 { grid-template-columns:repeat(2,1fr); } }
         @media (max-width: 640px) { .dv-grid { grid-template-columns:minmax(0,1fr); } }
         @media (max-width: 520px) { .g4 { grid-template-columns:1fr; } .sec { padding:3.2rem 0; } }
     </style>

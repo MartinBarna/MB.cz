@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="Q4AupBdDB2BlOMSx354EKwMyPteIP7z4EGmWyjEyzQQ" />
     <title>Martin Barna | Online výživa a fitness koučink</title>
-    <meta name="description" content="Online výživový a fitness koučink od roku 2013. 600+ klientů, vědecky podloženo. Hubnutí, nabírání svalů a forma bez jojo efektu. Balíčky Gold a Diamond.">
+    <meta name="description" content="Online výživový a fitness koučink, appka Tvůj Coach od 249 Kč měsíčně a videokurz výživy. 600+ klientů, vědecky podloženo, bez jojo efektu.">
     <meta name="theme-color" content="#EBB12C">
     <link rel="canonical" href="https://martinbarna.cz/">
     <meta property="og:type" content="website">
@@ -355,12 +355,12 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 @media(max-width:860px){.about{grid-template-columns:1fr}.about-photo{width:min(300px,80vw)}}
 
 /* ============ BALÍČKY ============ */
-.konz-box{border:1.5px solid rgba(235,177,44,.55);background:linear-gradient(170deg,rgba(235,177,44,.08),rgba(235,177,44,.02));border-radius:var(--radius);padding:26px 30px;margin-bottom:34px;display:grid;grid-template-columns:1.5fr auto;gap:22px;align-items:center}
-.konz-box h3{color:var(--gold-light);font-size:1.25rem;margin-bottom:.45rem}
-.konz-box p{color:var(--muted);font-size:.95rem;max-width:64ch}
+.konz-box{border:1.5px solid rgba(235,177,44,.7);background:linear-gradient(170deg,rgba(235,177,44,.14),rgba(235,177,44,.04));border-radius:var(--radius);padding:18px 24px;margin-bottom:34px;display:grid;grid-template-columns:1.5fr auto;gap:22px;align-items:center}
+.konz-box h3{color:var(--gold-light);font-size:1.15rem;margin-bottom:.4rem}
+.konz-box p{color:var(--muted);font-size:.92rem;max-width:64ch}
 .konz-box p b{color:#fff}
 @media(max-width:820px){.konz-box{grid-template-columns:1fr}}
-.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:920px}
+.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:1000px;margin:0 auto}
 .plan{background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
 .plan.featured{border:1.5px solid var(--gold);background:linear-gradient(180deg,rgba(235,177,44,.06),var(--surface) 32%)}
 .plan .ribbon{background:var(--gold);color:var(--ink-on-gold);text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.14em;font-size:.9rem;padding:8px;text-transform:uppercase}
@@ -380,7 +380,19 @@ html[data-theme="light"] .plan-why{color:var(--text)}
 .feat{list-style:none;margin:0 0 1.5rem}
 .feat li{padding:.4rem 0 .4rem 1.7rem;position:relative;color:#DDD7E4;font-size:.95rem}
 .feat li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:800}
-.plan .btn{width:100%;margin-top:auto}
+.feat li.feat-toggle{padding-left:1.7rem;padding-top:.55rem}
+.feat li.feat-toggle::before{content:none}
+.feat-toggle summary{cursor:pointer;color:var(--gold);font-weight:600;font-size:.9rem;list-style:none;display:inline-flex;align-items:center;gap:.35em;outline:none}
+.feat-toggle summary::-webkit-details-marker{display:none}
+.feat-toggle summary:hover{color:var(--gold-light)}
+.feat-toggle summary::after{content:"▾";font-size:.75em;transition:transform .2s ease}
+.feat-toggle details[open] summary::after{transform:rotate(180deg)}
+.feat-toggle .feat-more{margin:.6rem 0 0}
+html[data-theme="light"] .feat-toggle summary{color:var(--gold)!important}
+html[data-theme="light"] .feat-toggle summary:hover{color:var(--gold-light)!important}
+html[data-theme="light"] .feat-toggle details{background:none!important;border:none!important}
+.plan-cta{margin-top:auto}
+.plan .btn{width:100%}
 .microtrust{color:var(--muted);font-size:.8rem;text-align:center;margin-top:.65rem}
 .cap-note{display:inline-flex;gap:.55rem;align-items:center;background:rgba(94,26,79,.35);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px 16px;color:#E7E1EE;font-size:.93rem;margin-top:1rem}
 .cap-note .ic{color:var(--gold);flex-shrink:0}
@@ -388,7 +400,7 @@ html[data-theme="light"] .plan-why{color:var(--text)}
 .plans-foot .stars{color:var(--gold);letter-spacing:1.5px}
 .plans-note{margin-top:1.1rem;color:var(--muted);font-size:.95rem}
 .plans-note a{font-weight:700}
-@media(max-width:820px){.plans{grid-template-columns:1fr}}
+@media(max-width:859px){.plans{grid-template-columns:1fr}}
 
 /* ============ KVÍZ ============ */
 .quiz-wrap{max-width:680px}
@@ -742,14 +754,23 @@ footer a{color:var(--gold-light)}
                 <li><strong>Novinka:</strong> moderní klientská sekce s grafy pokroku, report za 3 minuty z mobilu</li>
                 <li><strong>Novinka:</strong> AI Martin, AI kouč natrénovaný na mé metodice, k ruce 24/7</li>
                 <li>Appka Tvůj Coach v ceně po celou dobu koučinku: zápis jídla i tréninku, generátor plánů, 125 cviků s technikou a nejčastějšími chybami</li>
-                <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
-                <li>Kuchařka se 40+ recepty</li>
-                <li>E-book Tajemství flexibilního stravování</li>
-                <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
-                <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
+                <li class="feat-toggle">
+                  <details>
+                    <summary>Zobrazit dalších 5 výhod</summary>
+                    <ul class="feat feat-more">
+                      <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
+                      <li>Kuchařka se 40+ recepty</li>
+                      <li>E-book Tajemství flexibilního stravování</li>
+                      <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
+                      <li>Podpora na e-mailu a WhatsApp (po–pá)</li>
+                    </ul>
+                  </details>
+                </li>
               </ul>
-              <a class="btn btn-gold" href="#kontakt">Chci Gold</a>
-              <p class="microtrust">Nezávazně. Nejdřív si napíšeme a doladíme detaily.</p>
+              <div class="plan-cta">
+                <a class="btn btn-gold" href="#kontakt">Chci Gold</a>
+                <p class="microtrust">Nezávazně. Nejdřív si napíšeme a doladíme detaily.</p>
+              </div>
             </div>
           </div>
           <div class="plan rv">
@@ -768,8 +789,10 @@ footer a{color:var(--gold-light)}
                 <li>Zvukové zprávy na WhatsApp = rychlejší odpovědi</li>
                 <li>1 video či audio hovor týdně</li>
               </ul>
-              <a class="btn btn-ghost" href="#kontakt">Chci Diamond</a>
-              <p class="microtrust">Nezávazně. Nejdřív si napíšeme a doladíme detaily.</p>
+              <div class="plan-cta">
+                <a class="btn btn-ghost" href="#kontakt">Chci Diamond</a>
+                <p class="microtrust">Nezávazně. Nejdřív si napíšeme a doladíme detaily.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -923,7 +946,7 @@ footer a{color:var(--gold-light)}
           <div class="src">
             <a href="https://www.facebook.com/martinbarnaonlinevyzivaafitness" target="_blank" rel="noopener">Recenze na Facebooku</a>
             <a href="https://search.google.com/local/reviews?placeid=ChIJQ-8yTbnlE0cRJj3EiDujXRY" target="_blank" rel="noopener">Hodnocení na Google</a>
-            <a href="/reference/">66 vybraných recenzí →</a>
+            <a href="/reference/">66 z nich přepsaných v textu →</a>
           </div>
         </div>
       </div>
