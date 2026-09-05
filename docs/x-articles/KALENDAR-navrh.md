@@ -10,7 +10,7 @@ Pokrytí: **září a říjen 2026**, 22 draftů, kadence zhruba **dvakrát týd
 - **Titulky 04 až 22 sjednoceny s webem:** stejné znění jako `<title>` článku na martinbarna.cz (Martinovo GO 5. 9.), u 11 a 14 bez anglicismů (čisté stravování, volné jídlo). H1 v md souborech i tahle tabulka jsou aktuální.
 - **X Drafts (x.com/compose/articles):** ✅ 5. 9. 18:2x všech 19 draftů (04 až 22) má titulek z tabulky níže (44. šéf; pole `textarea[placeholder="Add a title"]`, nativní setter + event input, X uložil sám, ověřeno v seznamu draftů po reloadu). Kdo publikuje, otevře draft podle titulku z tabulky, Preview, Publish (audience Everyone, caption prázdná). Seznam draftů se v X načte jen ve viditelné kartě Chromu; skrytá karta se netočí, jen nic nevykreslí.
 - **19 Jojo efekt:** do md doplněna sekce „Co tělo dělá ještě rok po dietě“ (Sumithran 2011, Fothergill 2016) podle živého článku.
-- **FB a YT:** posty naplánované do 29. 9. (FB) a do 30. 10. (YT) mají v prvním řádku ještě starý titulek, tělo shodné. Nepřepisují se; nové texty platí pro X a pro všechno, co se plánuje od 5. 9. dál (FB říjen od 6. 10. zatím nenaplánován, okno 28 dní).
+- **FB a YT:** posty naplánované do 29. 9. (FB) a do 30. 10. (YT) mají v prvním řádku ještě starý titulek, tělo shodné. Nepřepisují se; nové texty platí pro X a pro všechno, co se plánuje od 5. 9. dál (FB říjen 6. 10. až 30. 10. plánuje automat Plánovače Windows „FB planovac serie clanku“, texty už s novými titulky, 16. 10. jojo se sekcí o studiích; log C:/Users/fitne/automaty/fb-planovac/clanky/log; 44. šéf 5. 9.).
 ## Frekvence
 
 Úterý a pátek dopoledne.
