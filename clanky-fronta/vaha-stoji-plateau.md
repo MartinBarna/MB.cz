@@ -12,7 +12,7 @@ Zdroje:
 - Buhl KM et al. J Am Diet Assoc 1995;95(12):1393-400. PMID 7594141, DOI 10.1016/S0002-8223(95)00367-3
 - Burke LE, Wang J, Sevick MA. J Am Diet Assoc 2011;111(1):92-102. PMID 21185970, DOI 10.1016/j.jada.2010.10.008
 
-První tři týdny šla váha dolů skoro sama. Pak přišel týden, kdy se nehnula. A po něm další. Přitom jíš stejně jako předtím a nic jsi nezměnil. Tohle je moment, kdy mi klienti píšou nejčastěji, a taky moment, kdy se dá udělat první opravdu zbytečná chyba: sáhnout po kaloriích dřív, než se podíváš na čísla.
+První tři týdny šla váha dolů skoro sama. Pak přišel týden, kdy se nehnula. A po něm další. Přitom jíš stejně jako předtím a nic jsi nezměnil. Tohle je moment, kdy mi klienti píšou nejčastěji, a taky moment, kdy se dá udělat první zbytečná chyba: sáhnout po kaloriích dřív, než se podíváš na čísla.
 
 ## Nejdřív zjisti, jestli je to vůbec plateau
 

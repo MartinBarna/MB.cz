@@ -57,7 +57,7 @@ Podobně se čte i třetí studie, kterou k tématu často uvidíš (López-Buen
 
 - **Dva tréninky po 30 minutách.** Celotělově. Při dvou trénincích týdně chceš každý sval zasáhnout dvakrát, a to se s dělením na partie nestihne.
 - **Čtyři až pět cviků na trénink.** Něco na dolní končetiny (dřep, výpad, leg press), tah (kladka, přítah), tlak (klik, tlak na ramena nebo lavička), a jeden cvik na střed těla.
-- **Dvě až tři série na cvik, 6 až 12 opakování.** Poslední dvě opakování mají být opravdu těžká. Do úplného selhání jít nemusíš.
+- **Dvě až tři série na cvik, 6 až 12 opakování.** Poslední dvě opakování mají být těžká. Do úplného selhání jít nemusíš.
 - **Zapisuj si to.** Váha, opakování, jak to šlo. Bez zápisu po pár týdnech nevíš, jestli přidáváš, nebo jen chodíš.
 - **Přidávej pomalu.** Když zvládneš horní hranici opakování ve všech sériích, příště přidej váhu.
 

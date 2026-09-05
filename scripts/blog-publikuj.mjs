@@ -482,7 +482,8 @@ export function parseDraft(raw) {
   if (meta.length > 170) {
     throw new Error(`Meta description má ${meta.length} znaků (max 170). Zkrať pole Meta.`);
   }
-  const sources = String(fields.sources).split('\n').map((l) => l.replace(/^\s+/, '')).filter((l) => l.trim());
+  // Odrazka "- " nebo "* " pred zdrojem se zahodi, jinak by ve vystupu bylo "1) - Autor...".
+  const sources = String(fields.sources).split('\n').map((l) => l.replace(/^\s+/, '').replace(/^[-*]\s+/, '')).filter((l) => l.trim());
   const cta = parseCta(fields.cta);
 
   if (!lead) throw new Error('Chybí úvodní odstavec (lead) za hlavičkou.');

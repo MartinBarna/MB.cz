@@ -172,3 +172,12 @@ test('SEO title přepíše jen <title>, h1 zůstává; dlouhý title tag běh sh
   assert.ok(bezSeo.meta.length <= 170);
 });
 
+test('Zdroje s odrážkou "- " se číslují bez pomlčky', () => {
+  const raw = DRAFT.replace(/^(Zdroje:\r?\n)/m, '$1- Bullet A. Autor. 2020. PMID 1\n- Bullet B. Autor. 2021. PMID 2\n');
+  const d = parseDraft(raw);
+  assert.equal(d.sources[0], 'Bullet A. Autor. 2020. PMID 1');
+  assert.ok(d.sources.every((x) => !x.startsWith('-')));
+  const html = buildArticleHtml(d, loadChrome(TEMPLATE));
+  assert.ok(html.includes('1) Bullet A. Autor. 2020. PMID 1'));
+  assert.ok(!html.includes('1) - Bullet'));
+});
