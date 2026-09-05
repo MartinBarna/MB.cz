@@ -14,7 +14,7 @@
 (function (global) {
   'use strict';
 
-  var OC_URL = '/assets/onboarding-cile.js?v=20260902a';
+  var OC_URL = '/assets/onboarding-cile.js?v=20260905a';
   // Strop délky těla mailu v adrese Gmailu.
   // ⭐ ZMĚŘENO 2. 9. 2026 v Martinově přihlášeném Chromu, ne odhadnuto: uvítací mail
   // (2148 znaků, po zakódování adresa 4007 znaků) se v okně Napsat zprávu předvyplnil
