@@ -726,3 +726,39 @@ html[data-theme="light"]{
 [data-theme="light"] .badge-free{color:#1d6b34 !important;}
 
 @media print{.mb-theme-toggle{display:none !important;}}
+
+/* Nav "Více" (details/summary) pro stránky s Academy motivem: kopie z theme-light.css,
+   proměnné přemapované na --paper/--ink/--brand. Bez toho se rozbalené menu vykreslí
+   inline do lišty (nález Martina 5. 9. 2026 na /akademie/). */
+.nav-more{position:relative;}
+.nav-more summary{cursor:pointer;font-weight:600;color:#cabfb4;font-size:.88rem;list-style:none;}
+.nav-more summary::-webkit-details-marker{display:none;}
+.nav-more summary:hover,
+.nav-more[open] summary{color:#EBB12C;}
+.nav-more>div{
+  position:absolute;top:calc(100% + 8px);left:0;min-width:180px;
+  display:flex;flex-direction:column;padding:8px;border-radius:12px;
+  background:#0c0b0a;border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 12px 26px rgba(0,0,0,.35);z-index:20;
+}
+.nav-more>div a{display:block;padding:8px 14px;border-radius:8px;white-space:nowrap;color:#cabfb4;font-weight:600;font-size:.88rem;}
+.nav-more>div a:hover{background:rgba(255,255,255,.08);color:#EBB12C;}
+@media (max-width:1259px){
+  .nav-more{position:static;}
+  .nav-more summary{padding:10px 2px;font-size:1rem;}
+  .nav-more>div{position:static;background:transparent;border:none;box-shadow:none;padding:0;border-radius:0;}
+  .nav-more>div a{padding:10px 2px 10px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-size:1rem;}
+}
+[data-theme="light"] .nav-more summary{color:var(--ink,#161310)!important;}
+[data-theme="light"] .nav-more summary:hover,
+[data-theme="light"] .nav-more[open] summary{color:var(--brand,#6B4E08)!important;}
+[data-theme="light"] .nav-more>div{
+  background:var(--paper,#ffffff)!important;
+  border-color:var(--line,rgba(22,19,16,.12))!important;
+  box-shadow:0 12px 26px rgba(0,0,0,.12)!important;
+}
+[data-theme="light"] .nav-more>div a{color:var(--ink,#161310)!important;}
+[data-theme="light"] .nav-more>div a:hover{background:var(--soft,#F3EEE4)!important;color:var(--brand,#6B4E08)!important;}
+@media (max-width:1259px){
+  [data-theme="light"] .nav-more>div a{border-bottom-color:var(--line,rgba(22,19,16,.12))!important;}
+}
