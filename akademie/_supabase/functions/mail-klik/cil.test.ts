@@ -38,14 +38,25 @@ Deno.test('⛔ bez platneho podpisu se na Stripe nejde, na nas web ano', () => {
   assertEquals(S('https://martinbarna.cz/videokurz', false)?.startsWith('https://martinbarna.cz/videokurz'), true);
 });
 
-Deno.test('UTM se dolepi jen na nase weby a jen kdyz tam jeste nejsou', () => {
-  const nas = S('https://martinbarna.cz/videokurz')!;
-  assertEquals(new URL(nas).searchParams.get('utm_campaign'), 'lead-magnet');
-  assertEquals(new URL(nas).searchParams.get('utm_content'), 'lm-3');
+Deno.test('martinbarna.cz (Wedos CDN): UTM se z cile MAZOU, funkcni parametry zustavaji', () => {
+  const nas = S('https://martinbarna.cz/videokurz?utm_source=vlastni&utm_campaign=puvodni&plan=basic')!;
+  assertEquals(new URL(nas).searchParams.has('utm_source'), false);
+  assertEquals(new URL(nas).searchParams.has('utm_campaign'), false);
+  assertEquals(new URL(nas).searchParams.get('plan'), 'basic');
+  const bezUtm = S('https://martinbarna.cz/videokurz')!;
+  assertEquals(new URL(bezUtm).searchParams.has('utm_source'), false);
+});
 
-  const uzMa = S('https://martinbarna.cz/videokurz?utm_source=vlastni&utm_campaign=puvodni')!;
-  assertEquals(new URL(uzMa).searchParams.get('utm_source'), 'vlastni');
-  assertEquals(new URL(uzMa).searchParams.get('utm_campaign'), 'puvodni');
+Deno.test('tvujcoach.cz (Vercel): UTM ze sablony ZUSTAVAJI, bez nich se dolepi zdroj/trat/krok', () => {
+  const svoje = S('https://tvujcoach.cz/start?utm_source=email&utm_medium=blast&utm_campaign=start-dotaznik')!;
+  assertEquals(new URL(svoje).searchParams.get('utm_medium'), 'blast');
+  assertEquals(new URL(svoje).searchParams.get('utm_campaign'), 'start-dotaznik');
+
+  const bez = S('https://tvujcoach.cz/?plan=basic')!;
+  assertEquals(new URL(bez).searchParams.get('utm_source'), 'email');
+  assertEquals(new URL(bez).searchParams.get('utm_campaign'), 'lead-magnet');
+  assertEquals(new URL(bez).searchParams.get('utm_content'), 'lm-3');
+  assertEquals(new URL(bez).searchParams.get('plan'), 'basic');
 
   const stripe = S('https://buy.stripe.com/abc')!;
   assertEquals(new URL(stripe).searchParams.has('utm_source'), false);

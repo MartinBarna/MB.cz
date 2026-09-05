@@ -14,6 +14,9 @@ export const POVOLENI_HOSTE = [
 // dolepuji UTM znacky. Na Stripe se pri chybnem podpisu nejde nikdy: podvrzeny platebni
 // odkaz je to jedine, cim by sel tenhle endpoint zneuzit.
 export const NASE_WEBY = ['martinbarna.cz', 'www.martinbarna.cz', 'tvujcoach.cz', 'www.tvujcoach.cz'];
+// Weby za Wedos CDN: kazda unikatni kombinace query je cache MISS a klik z mailu cekal na
+// pomaly origin (pamet mb-wedos-pomaly-origin-a-utm-cache). JEN tady se UTM z cile mazou.
+export const WEBY_ZA_CDN = ['martinbarna.cz', 'www.martinbarna.cz'];
 export const NOUZOVY_CIL = 'https://martinbarna.cz/';
 
 /**
@@ -33,9 +36,20 @@ export function bezpecnyCil(raw: string, duveryhodny: boolean, track: string, ke
   const host = u.hostname.toLowerCase();
   const povoleno = duveryhodny ? POVOLENI_HOSTE : NASE_WEBY;
   if (!povoleno.includes(host)) return null;
-  // UTM jen na nase weby a jen kdyz uz tam neni: sablony si casto nesou vlastni znacky
-  // a prepsat je by znamenalo rozbit dosavadni mereni na cilove strane (`analytics.js`).
-  if (NASE_WEBY.includes(host) && !u.searchParams.has('utm_source')) {
+  // ⚡ ZMENA 27. 8. 2026 (Martin: „musí to jet vše svižně"): na martinbarna.cz se UTM z CILOVE
+  // adresy ODSTRANUJI kvuli Wedos CDN (viz WEBY_ZA_CDN). Klik uz je zapsany jako `px_click`
+  // VCETNE puvodni URL s UTM (urlProLog dostava `raw`), o atribuci na webu se neprichazi.
+  // ⛔ OPRAVA 5. 9. 2026: tvujcoach.cz (Vercel, zadna CDN past) UTM POTREBUJE. Mazani platilo
+  // pro vsechny NASE_WEBY, takze 331 mailu blastu „Spocitej si, kolik mas jist" dorazilo na
+  // /start bez utm a trychtyr v `page_views` byl slepy (0 z 331), i kdyz lidi prosli az na
+  // /sign-up. Funkcni parametry (`plan`, `tab`, `email`...) zustavaji vzdy nedotcene.
+  if (WEBY_ZA_CDN.includes(host)) {
+    for (const k of [...u.searchParams.keys()]) {
+      if (k.toLowerCase().startsWith('utm_')) u.searchParams.delete(k);
+    }
+  } else if (NASE_WEBY.includes(host) && !u.searchParams.has('utm_source')) {
+    // Bez vlastnich znacek v sablone dostane cil aspon zdroj/trat/krok, aby sel klik z mailu
+    // v `page_views` odlisit od organiky. Sablona s vlastnim UTM ma prednost (neprepisuje se).
     u.searchParams.set('utm_source', 'email');
     u.searchParams.set('utm_medium', 'drip');
     if (track) u.searchParams.set('utm_campaign', track);
