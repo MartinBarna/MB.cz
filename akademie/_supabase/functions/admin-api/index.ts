@@ -469,10 +469,13 @@ const RD_SYSTEM = [
   "- ⛔ ZADÁNÍ MĚNÍ ENGINE, NE TY. Když blok DOPORUČENÍ ENGINU navrhuje nové číslo, napiš ho",
   "  přesně tak, jak je tam uvedené. Když říká, že se nic nemění, žádné nové číslo nevymýšlíš",
   "  a nenaznačuješ ho. Vlastní nápad na změnu patří do pole navrh_zmen, které čte JEN Martin.",
+  "  V navrh_zmen mluvíš k Martinovi přímo ('zvážil bych', 'mrkni na'), ne o něm ve třetí osobě.",
   "- Chybějící hodnota není nula. Co ve FAKTECH není, o tom nepiš.",
   "- NEDIAGNOSTIKUJEŠ a nedáváš zdravotní rady. Jakmile je v reportu zmínka o lécích, těhotenství,",
-  "  poruchách příjmu potravy, bolesti, zranění nebo diagnóze, napiš jednu větu, že to Martin probere",
-  "  osobně, a nic k tomu neradíš. U zdravotního tématu vždy odkaz na Martina nebo na lékaře.",
+  "  poruchách příjmu potravy, bolesti, zranění nebo diagnóze, napiš jednu větu V PRVNÍ OSOBĚ, jako Martin:",
+  "  'K tomu se ti ozvu osobně.' Nic k tomu neradíš. ⛔ Nikdy nepiš o Martinovi ve třetí osobě",
+  "  ('Martin se ozve', 'Martinův názor'): celý text jde ven pod jeho jménem, Martin ho píše sám.",
+  "  U zdravotního tématu vždy odkaz na sebe (Martina) nebo na lékaře.",
   "- Když je téma týdne prázdné, o žádné příloze ani tématu se nezmiňuj.",
   "",
   "",
@@ -741,7 +744,8 @@ const PG_SYSTEM = [
   "- Nepiš gramáže jídel ani skladbu dne. Ty počítá generátor a v dokumentu už jsou.",
   "- Chybějící hodnota není nula. Co ve FAKTECH není, o tom nepiš.",
   "- NEDIAGNOSTIKUJEŠ a nedáváš zdravotní rady. U zmínky o lécích, těhotenství, kojení, poruchách příjmu",
-  "  potravy, bolesti, zranění nebo diagnóze napiš jednu větu, že to Martin probere osobně, a nic k tomu neradíš.",
+  "  potravy, bolesti, zranění nebo diagnóze napiš jednu větu V PRVNÍ OSOBĚ, jako Martin ('K tomu se ti ozvu",
+  "  osobně.'), a nic k tomu neradíš. ⛔ Nikdy o Martinovi ve třetí osobě, dokument píše Martin sám.",
   "- Žádná konkrétní procenta tělesného tuku jako cíl.",
   "- Minulý čas piš v tom rodě, který je ve FAKTECH u položky Rod klienta. Když tam rod není,",
   "  formuluj bezrodě (místo 'jsi to zvládl' napiš 'zvládáš to').",
@@ -894,7 +898,8 @@ const TP_SYSTEM = [
   "- Nevypisuj celou tabulku tréninku, ta je v dokumentu hned pod tvým textem.",
   "- Chybějící hodnota není nula. Co ve FAKTECH není, o tom nepiš.",
   "- NEDIAGNOSTIKUJEŠ a nedáváš zdravotní rady. U zmínky o bolesti, zranění, operaci, lécích,",
-  "  těhotenství, kojení nebo diagnóze napiš jednu větu, že to Martin probere osobně, a nic k tomu neradíš.",
+  "  těhotenství, kojení nebo diagnóze napiš jednu větu V PRVNÍ OSOBĚ, jako Martin ('K tomu se ti ozvu",
+  "  osobně.'), a nic k tomu neradíš. ⛔ Nikdy o Martinovi ve třetí osobě, dokument píše Martin sám.",
   "- ⛔ Nikdy nerozhoduj, který cvik je kvůli zdraví nevhodný, a nikdy nepiš, že jsi něco vyřadil.",
   "  Vyřazení je Martinovo rozhodnutí a ve FAKTECH už je hotové.",
   "- Neslibuj konkrétní přírůstek síly, hmotnosti ani termín.",
@@ -2199,18 +2204,22 @@ Deno.serve(async (req) => {
 
     if (action === "client_detail") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      const [reps, intake, notes, docsOwn, remindCfg, targets] = await Promise.all([
+      const [reps, intake, notes, docsOwn, remindCfg, targets, contact] = await Promise.all([
         admin.from("client_reports").select("*").eq("email", email).order("report_date", { ascending: true }),
         admin.from("client_intake").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_notes").select("id,note,created_at").eq("email", email).order("created_at", { ascending: false }),
         admin.storage.from("client-docs").list(email, { limit: 100 }),
         admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle(),
         admin.from("client_targets").select("*").eq("email", email).maybeSingle(),
+        // ⛔ Jméno chybí při vstupu deep linkem z mailu (`#klient=<email>` volá openKlient
+        // bez jména): bez tohohle šlo KDET.name prázdné a maily/průvodce/trénink chodily
+        // ven bez oslovení. `customer_contacts` je tady jediný zdroj jména mimo dotazník.
+        admin.from("customer_contacts").select("email,name").eq("email", email).maybeSingle(),
       ]);
       const docs = (docsOwn.data ?? []).filter((o) => o.id)
         .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
       const remindOn = !String(remindCfg.data?.value ?? "").split(",").map((s) => low(s)).includes(email);
-      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs, remind_on: remindOn, targets: targets.data ?? null });
+      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs, remind_on: remindOn, targets: targets.data ?? null, name: contact.data?.name ?? null });
     }
 
     // Přehled VŠECH klientů koučinku na jedné obrazovce (Martin 3. 8. 2026: „nevidím
@@ -2782,10 +2791,23 @@ Deno.serve(async (req) => {
         String(iData.zdravi ?? ""), String(iData.leky ?? ""), String(iData.alergie ?? ""),
       ]);
 
+      // ⛔ CÍL PRO TENHLE TÝDEN = SNÍMEK V REPORTU, ne dnešní `client_targets`. Klientská sekce
+      // ukládá do `client_reports.targets` zadání platné v den odeslání (client-report/index.ts,
+      // „Cíl NEJDŘÍV, protože se ukládá jako SNÍMEK"). Bez toho koncept 5. 9. 2026 srovnal týden
+      // klientky s cílem nastaveným až po reportu (1790 proti 2143 místo proti 1750) a napsal
+      // „-353 kcal, příjem sedí". Dnešní zadání se použije jen pro větu, že se od té doby změnilo.
+      const snimek = rdJ(rep as Record<string, unknown>, "targets");
+      const cileTydne = (snimek && rdNum(snimek.kcal) !== null)
+        ? (snimek as Record<string, unknown>)
+        : ((tgRes.data ?? null) as Record<string, unknown> | null);
+      const dnesKcal = tgRes.data ? rdNum((tgRes.data as Record<string, unknown>).kcal) : null;
+      const tydenKcal = cileTydne ? rdNum(cileTydne.kcal) : null;
+      const zadaniZmeneno = dnesKcal !== null && tydenKcal !== null && dnesKcal !== tydenKcal;
+
       const fakta = rdFakta(
         rep as Record<string, unknown>,
         (driveRes.data ?? []) as Record<string, unknown>[],
-        (tgRes.data ?? null) as Record<string, unknown> | null,
+        cileTydne,
         (intakeRes.data ?? null) as Record<string, unknown> | null,
         appData,
         Number(poradiRes.count ?? 1) || 1,
@@ -2803,9 +2825,18 @@ Deno.serve(async (req) => {
         predchozi: drive[0] ?? null,
         predpredchozi: drive[1] ?? null,
         prvni: (prvniRes.data ?? null) as Record<string, unknown> | null,
-        cile: (tgRes.data ?? null) as Record<string, unknown> | null,
+        cile: cileTydne,
         smer, pohlavi: rod,
       });
+      // Zadání se od reportu změnilo (Martin ho přepsal, typicky z onboardingu): návrh enginu
+      // by upravoval číslo, které už neplatí. Řekne se to nahlas a nic se nenavrhuje.
+      if (zadaniZmeneno) {
+        eng.navrh = {
+          paka: "zadna", novyKcal: null, jistota: "jista",
+          duvod: "Zadání se od tohoto reportu změnilo (z " + tydenKcal + " na " + dnesKcal
+            + " kcal). Report se hodnotí proti " + tydenKcal + " kcal, nový cíl už platí, tenhle týden se nic dalšího nemění.",
+        } as typeof eng.navrh;
+      }
 
       const userPrompt = "FAKTA (jediný zdroj čísel):" + NL + fakta + NL + NL +
         "BLOK ČÍSEL, KTERÝ UŽ JE V MAILU NAPSANÝ NAD TVÝM TEXTEM (neopisuj ho celý):" + NL +
@@ -2817,7 +2848,7 @@ Deno.serve(async (req) => {
         "Tohle přelož do své věty. Jiné číslo cíle nenapíšeš a změnu, kterou tu nevidíš, nenavrhneš." + NL + NL +
         (upozorneni.length
           ? "CITLIVÁ TÉMATA V REPORTU: " + upozorneni.join(", ") + "." + NL +
-            "K nim NIC neradíš. Napiš jednu větu, že se na to Martin ozve osobně." + NL + NL
+            "K nim NIC neradíš. Napiš jednu větu v první osobě (píšeš jako Martin): že se k tomu ozveš osobně." + NL + NL
           : "") +
         "Napiš koncept odpovědi podle pravidel výš a vrať ho jako JSON.";
 
@@ -2920,7 +2951,7 @@ Deno.serve(async (req) => {
         pgFakta(cile, jidel, osloveni, iData, rod) + NL + NL +
         (upozorneni.length
           ? "CITLIVÁ TÉMATA V DOTAZNÍKU: " + upozorneni.join(", ") + "." + NL +
-            "K nim NIC neradíš. Napiš jednu větu, že se na to Martin ozve osobně." + NL + NL
+            "K nim NIC neradíš. Napiš jednu větu v první osobě (píšeš jako Martin): že se k tomu ozveš osobně." + NL + NL
           : "") +
         "Napiš čtyři texty podle pravidel výš a vrať je jako JSON.";
 
@@ -3019,7 +3050,7 @@ Deno.serve(async (req) => {
         tpFakta(vstup, dnyPopis, vyloucene, osloveni, iProPrompt, rod) + NL + NL +
         (upozorneni.length
           ? "CITLIVÁ TÉMATA V DOTAZNÍKU: " + upozorneni.join(", ") + "." + NL +
-            "K nim NIC neradíš a nerozhoduješ o cvicích. Napiš jednu větu, že se na to Martin ozve osobně." + NL + NL
+            "K nim NIC neradíš a nerozhoduješ o cvicích. Napiš jednu větu v první osobě (píšeš jako Martin): že se k tomu ozveš osobně." + NL + NL
           : "") +
         "Napiš dva texty podle pravidel výš a vrať je jako JSON.";
 

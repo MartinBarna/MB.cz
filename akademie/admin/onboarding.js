@@ -183,9 +183,9 @@
             }).join('')
         + '</div>'
         + '<p class="muted" style="margin:8px 0 0;font-size:.8rem;">Výdej ' + Math.round(vy.tdee) + ' kcal = klid '
-        + Math.round(vy.bmr) + ' × ' + vy.nasobic + ' běžný den + ' + Math.round(vy.kroky_kcal) + ' kcal kroky ('
+        + Math.round(vy.bmr) + ' × ' + String(vy.nasobic).replace('.', ',') + ' běžný den + ' + Math.round(vy.kroky_kcal) + ' kcal kroky ('
         + (v.kroky == null ? 'neuvedeny' : v.kroky) + ') + ' + Math.round(vy.trenink_kcal) + ' kcal trénink ('
-        + vy.trenink_dni + '× ' + vy.trenink_minut + ' min, MET ' + vy.met + ').'
+        + vy.trenink_dni + '× ' + vy.trenink_minut + ' min, MET ' + String(vy.met).replace('.', ',') + ').'
         + (r.bmi != null ? ' BMI ' + String(r.bmi).replace('.', ',') + '.' : '')
         + '</p>';
       if (r.varovani.length) {

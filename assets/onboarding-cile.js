@@ -131,11 +131,15 @@
     // "krmim" je slabsi signal (da se krmit i pes), ale u zeny po porodu to byla jedina
     // stopa v poli `prace` ve skutecnem dotazniku. Falesny poplach stoji jedno kliknuti.
     ['kojení', /\bkoj(en|im|ic)|\blaktac|\bkrmim|\bkrmen[ií]/],
-    ['porucha příjmu potravy', /\banorex|\bbulim|poruch\w* prijmu|\bppp\b|zachvatovit|\bprejida/],
+    ['porucha příjmu potravy', /\banorex|\bbulim|poruch\w* prijmu|\bppp\b/],
+    // ⛔ [2026-09-05, revize] „o víkendu se často přejídám" spadalo pod PPP a vyhodilo
+    // stejně tvrdý štítek jako anorexie/bulimie. Přejídání je samostatný, mírnější
+    // signál, ne automaticky porucha příjmu potravy.
+    ['přejídání (zkontroluj vztah k jídlu)', /zachvatovit|\bprejida/],
     ['cukrovka', /\bdiabet|\bcukrovk|\binzulin|\bmetformin|\bglukofag|\bsiofor/],
     ['štítná žláza', /\bstitn|hashimoto|thyrox|eutyrox|letrox|levothyrox|hypotyre|hypertyre/],
     ['duševní zdraví', /\bdepres|antidepres|\buzkost|\bpanick|escitalopram|sertralin|bupropion/],
-    ['hormonální léčba', /antikonc|hormonaln|\bpcos\b|endometri|menopauz|estrogen/],
+    ['hormonální antikoncepce nebo léčba', /antikonc|hormonaln|\bpcos\b|endometri|menopauz|estrogen/],
     ['léky', /kortiko|prednison|warfarin|beta.?blok|\bstatin|\bopioid/],
     ['srdce a tlak', /\bsrdc|\binfarkt|\barytmi|vysoky tlak|hypertenz|na tlak/],
     ['ledviny a játra', /\bledvin|\bjatr|\bcirhoz|\bdialyz/],

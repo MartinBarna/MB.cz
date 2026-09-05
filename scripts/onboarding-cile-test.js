@@ -169,8 +169,14 @@ ok(OC.citliva({ leky: 'Taky zadne', zdravi: 'Zatim zadne', alergie: 'Nic' }).len
   '„zatím žádné" bránu nespustí');
 ok(OC.citliva({ zdravi: 'Žádná omezení neuvedl' }).length === 0, '„žádná omezení neuvedl" bránu nespustí');
 ok(OC.citliva({ leky: 'eutyrox' }).indexOf('štítná žláza') > -1, 'překlep „eutyrox" bez h se pozná');
-ok(OC.citliva({ sport: 'nekontrolovatelně se přejídá o svátcích' }).indexOf('porucha příjmu potravy') > -1,
-  'přejídání se pozná i z pole sport');
+// ⛔ [2026-09-05, revize] „o víkendu se často přejídám" dřív vyhodilo stejný štítek
+// jako anorexie/bulimie. Přejídání je teď samostatný, mírnější štítek.
+ok(OC.citliva({ sport: 'nekontrolovatelně se přejídá o svátcích' }).indexOf('přejídání (zkontroluj vztah k jídlu)') > -1,
+  'přejídání se pozná i z pole sport, ale jako samostatný štítek');
+ok(OC.citliva({ sport: 'nekontrolovatelně se přejídá o svátcích' }).indexOf('porucha příjmu potravy') === -1,
+  'přejídání samo o sobě není porucha příjmu potravy');
+ok(OC.citliva({ zdravi: 'trpěla jsem bulimií' }).indexOf('porucha příjmu potravy') > -1,
+  'skutečná PPP (bulimie) zůstává pod „porucha příjmu potravy"');
 
 // Aktuální sport vs historie
 const rHist = OC.varianty({ pohlavi: 'z', vek: 36, vyska: 157, vaha: 70, kroky: 3000, dny_treninku: 1,

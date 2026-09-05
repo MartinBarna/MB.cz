@@ -351,24 +351,70 @@
     }
     // Hledání v názvu i v id, bez diakritiky. Běžné potraviny první, ať Martin nemusí
     // rolovat přes exotiku, kterou generátor stejně nepoužívá.
-    function hledej(q, limit) {
-      var s = bezDia(q).trim(); if (s.length < 2) return [];
+    function hledejPresne(s, limit) {
       var out = FOOD.filter(function (f) { return bezDia(f.name).indexOf(s) !== -1 || f.id.indexOf(s) !== -1; });
       out.sort(function (a, b) { return (b.bezny ? 1 : 0) - (a.bezny ? 1 : 0); });
       return out.slice(0, limit || 12);
     }
+    // Celý výraz od AI („vnitřnosti, ryba s kostmi") často nic nenajde. Zkusí se proto
+    // ještě první slovo výrazu a jeho kořen (prvních 5, pak 4 znaky bez diakritiky):
+    // oliva → oliv → najde Olivy. Kořen krátkého slova jako „ryba" → „ryb" Kapra
+    // nenajde, to je v pořádku, přesné hledání ručně dál funguje beze změny.
+    function hledej(q, limit) {
+      var s = bezDia(q).trim(); if (s.length < 2) return [];
+      var out = hledejPresne(s, limit);
+      if (out.length) return out;
+      var prvni = s.split(/\s+/)[0] || '';
+      if (prvni && prvni !== s && prvni.length >= 2) {
+        out = hledejPresne(prvni, limit);
+        if (out.length) return out;
+      }
+      for (var len = 5; len >= 4; len--) {
+        if (prvni.length > len) {
+          out = hledejPresne(prvni.slice(0, len), limit);
+          if (out.length) return out;
+        }
+      }
+      return [];
+    }
 
     // ---------- dny ----------
-    function generuj(index, seed) {
+    // Skóre dne: primárně vláknina ≥ cíl A |kcal odchylka| ≤ 5 % (bucket -1000, takže
+    // takový pokus vždycky vyhraje nad pokusem, co tuhle podmínku nesplní), sekundárně
+    // nejmenší |kcal odchylka| + |bílkoviny odchylka|. Nižší skóre je lepší.
+    function skoreDne(den, cile) {
+      var t = den.totals || {};
+      var kcalPct = cile.kcal ? Math.abs(t.kcal - cile.kcal) / cile.kcal : 0;
+      var protPct = cile.protein ? Math.abs(t.p - cile.protein) / cile.protein : 0;
+      var fibOk = cile.fiber == null || t.fib >= cile.fiber;
+      var sekundarni = kcalPct + protPct;
+      return (fibOk && kcalPct <= 0.05) ? sekundarni : (sekundarni + 1000);
+    }
+    // ⛔ Generátor umí vrátit den pod podlahou vlákniny nebo mimo kcal pásmo (nález
+    // revize: den 1 vláknina −28 %, den 2 kcal −3,7 %), a Martin by pak musel klikat
+    // „Vygenerovat jiný den" naslepo. Místo jednoho pokusu se jich zkusí až 8 s různým
+    // seedem a vybere se nejlepší podle skóre. Krok seedu je 2 a báze dnů (1 / 2) má
+    // vždy jinou paritu, takže dny 0 a 1 nikdy nesáhnou na stejný seed; navíc se
+    // seed druhého dne výslovně přeskočí, kdyby se báze parity někdy sešly (po
+    // „Vygenerovat jiný den", které bázi posouvá o 7).
+    function generujNejlepsi(index, seedBase) {
       var cile = { kcal: S.cile.kcal, protein: S.cile.protein, carbs: S.cile.carbs, fat: S.cile.fat };
-      S.seedy[index] = seed;
-      S.dny[index] = global.MealGen.assembleDay(cile, {
-        meals: S.pocetJidel, prefs: S.prefs, db: FOOD, seed: seed
-      });
-      // Popisky jídel se drží mimo engine (ten je má natvrdo). Editují se v šabloně,
-      // do výběru potravin nezasahují. Při změně počtu jídel se resetují.
+      var jinySeed = S.seedy[1 - index];
+      var nejlepsiDen = null, nejlepsiSeed = seedBase, nejlepsiSkore = Infinity, posledniChyba = null;
+      for (var i = 0; i < 8; i++) {
+        var seed = seedBase + i * 2;
+        if (seed === jinySeed) continue;
+        var den;
+        try { den = global.MealGen.assembleDay(cile, { meals: S.pocetJidel, prefs: S.prefs, db: FOOD, seed: seed }); }
+        catch (e) { posledniChyba = e; continue; }
+        var skore = skoreDne(den, S.cile);
+        if (skore < nejlepsiSkore) { nejlepsiSkore = skore; nejlepsiDen = den; nejlepsiSeed = seed; }
+      }
+      if (!nejlepsiDen) throw (posledniChyba || new Error('Generátor nevrátil žádný den.'));
+      S.seedy[index] = nejlepsiSeed;
+      S.dny[index] = nejlepsiDen;
       var nazvy = S.nazvy[index] || [];
-      S.nazvy[index] = S.dny[index].meals.map(function (m, i) { return nazvy[i] || m.name; });
+      S.nazvy[index] = nejlepsiDen.meals.map(function (m, i) { return nazvy[i] || m.name; });
     }
     function generujOba() {
       nactiCile();
@@ -376,8 +422,8 @@
       if (!S.cile.carbs || !S.cile.fat) { toast('Doplň sacharidy a tuky, generátor je potřebuje.'); return; }
       S.swapSeed = {};
       try {
-        generuj(0, S.seedy[0] || 1);
-        generuj(1, S.seedy[1] || 2);
+        generujNejlepsi(0, S.seedy[0] || 1);
+        generujNejlepsi(1, S.seedy[1] || 2);
       } catch (e) {
         $('pgDny').innerHTML = '<p style="font-size:.85rem;color:#ff9b9b;">⚠️ ' + esc(e.message || e) + '</p>';
         return;
@@ -419,7 +465,7 @@
           var di = Number(b.getAttribute('data-pgnew'));
           nactiCile();
           S.nazvy[di] = [];                    // jiný den = jiná jídla, staré popisky by lhaly
-          try { generuj(di, (S.seedy[di] || 1) + 7); } catch (e) { toast(String(e.message || e)); return; }
+          try { generujNejlepsi(di, (S.seedy[di] || 1) + 7); } catch (e) { toast(String(e.message || e)); return; }
           prekresliDny();
         });
       });
@@ -460,7 +506,14 @@
       if (btn.disabled) return;
       nactiCile();
       if (!S.cile.kcal || !S.cile.protein) { toast('Nejdřív vyplň kalorie a bílkoviny, AI je dostává jako fakta.'); return; }
-      var t0 = btn.textContent; btn.disabled = true; btn.textContent = 'Píšu…';
+      // ⛔ Obě tlačítka volají STEJNOU placenou akci `pruvodce_text`. Dřív se zamklo jen
+      // to kliknuté, takže klik na „Navrhni z dotazníku" a hned na „Napsat texty (AI)"
+      // udělal dvě volání AI pár sekund po sobě (ověřeno v pruvodce_drafts). Zamyká se
+      // proto vždy obojí, i to druhé jen kosmeticky (nemá vlastní requst k zablokování).
+      var druhe = btn === $('pgNavrhBtn') ? $('pgTextyBtn') : $('pgNavrhBtn');
+      var t0 = btn.textContent, t0d = druhe.textContent;
+      btn.disabled = true; btn.textContent = 'Píšu…';
+      druhe.disabled = true;
       $('pgTextyStav').innerHTML = '<p class="muted" style="font-size:.82rem;">Píšu texty, může to trvat půl minuty…</p>';
       // ⛔ `vylouceni` se posílá JEN kvůli otisku zadání na serveru (aby odstup 10 minut
       // nevrátil starý text ke změněným číslům nebo k jinému filtru). Generátor běží tady
@@ -477,7 +530,7 @@
           S.prefs.vegan ? ['dieta:vegan'] : []
         )
       }).then(function (o) {
-        btn.disabled = false; btn.textContent = t0;
+        btn.disabled = false; btn.textContent = t0; druhe.disabled = false; druhe.textContent = t0d;
         var j = o.j || {};
         if (!j.ok) {
           var e = String(j.error || o.status);
@@ -504,10 +557,12 @@
         }
         st += '<p class="muted" style="margin:0 0 8px;font-size:.78rem;">🤖 Návrh od AI, přečti a přepiš.'
           + (j.znovu ? ' (Tenhle koncept už byl hotový, nový se dá zadat za pár minut.)' : '') + '</p>';
+        // Bod 10: ať je vidět, který model texty psal (odpověď ho posílá jen když ho má).
+        if (j.model) st += '<p class="muted" style="margin:0 0 8px;font-size:.74rem;">Model: ' + esc(j.model) + '</p>';
         $('pgTextyStav').innerHTML = st;
         zobrazNavrh(j.vylouceni_navrh || []);
       }).catch(function () {
-        btn.disabled = false; btn.textContent = t0;
+        btn.disabled = false; btn.textContent = t0; druhe.disabled = false; druhe.textContent = t0d;
         $('pgTextyStav').innerHTML = '<p style="font-size:.82rem;color:#ff9b9b;">⚠️ Chyba spojení.</p>';
       });
     }
@@ -524,7 +579,7 @@
       var vid = 0;
       vyrazy.forEach(function (v) {
         var nal = hledej(v, 10);
-        if (!nal.length) { h += '<p class="muted" style="margin:2px 0;font-size:.78rem;">„' + esc(v) + '" v databázi nic nenašlo.</p>'; return; }
+        if (!nal.length) { h += '<p class="muted" style="margin:2px 0;font-size:.78rem;">„' + esc(v) + '" v databázi nic nenašlo, přidej ručně přes hledání.</p>'; return; }
         h += '<p style="margin:6px 0 2px;font-size:.78rem;color:#F6CD63;">„' + esc(v) + '"</p>';
         nal.forEach(function (f) {
           vid++;
@@ -533,8 +588,13 @@
             + esc(f.name) + '</label>';
         });
       });
-      h += '<div style="margin-top:6px;"><button class="mlogbtn" id="pgNavrhPridej" style="font-size:.78rem;padding:4px 10px;">Přidat zaškrtnuté do vyloučení</button></div></div>';
-      box.innerHTML = vid ? h : '';
+      // ⛔ Dřív box.innerHTML = vid ? h : '': když AI něco vyčetla, ale hledání nic
+      // nenašlo (vid===0), zůstal box prázdný a Martin nepoznal, že AI vůbec něco
+      // vrátila. Hlavička s vyčtenými výrazy se teď ukazuje VŽDY, tlačítko jen když
+      // je co přidat.
+      if (vid) h += '<div style="margin-top:6px;"><button class="mlogbtn" id="pgNavrhPridej" style="font-size:.78rem;padding:4px 10px;">Přidat zaškrtnuté do vyloučení</button></div>';
+      h += '</div>';
+      box.innerHTML = h;
       var pb = $('pgNavrhPridej');
       if (pb) pb.addEventListener('click', function () {
         var n = 0;
@@ -613,7 +673,12 @@
           content_type: 'text/html; charset=utf-8', content_base64: b64(hotovoHtml(false))
         }).then(function (o) {
           b.disabled = false; b.textContent = t0;
-          if (o.j && o.j.ok) toast('✅ Uloženo klientovi: ' + soubor);
+          if (o.j && o.j.ok) {
+            toast('✅ Uloženo klientovi: ' + soubor);
+            // ⛔ Bod 3: seznam dokumentů v kartě klienta zůstával „Zatím nic" do reloadu.
+            // ctx.poUlozeni přepíše jen ten seznam a stavový pruh, ne celou kartu.
+            if (ctx.poUlozeni) ctx.poUlozeni(ctx.email);
+          }
           else toast('Chyba: ' + ((o.j && o.j.error) || o.status));
         }).catch(function () { b.disabled = false; b.textContent = t0; toast('Chyba spojení'); });
       });

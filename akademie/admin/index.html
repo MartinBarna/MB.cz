@@ -1475,7 +1475,12 @@
       $('kdet').classList.add('on'); $('kdetBody').innerHTML='<p class="muted">Načítám…</p>';
       api({action:'client_detail',email:email}).then(function(o){
         if(!o.j||!o.j.ok){ $('kdetBody').innerHTML='<p class="muted">Nepovedlo se načíst detail.</p>'; return; }
-        KDET.data=o.j; renderKlient();
+        KDET.data=o.j;
+        // Deep link z mailu (#klient=) volá openKlient bez jména. Server ho zná
+        // z customer_contacts, tak ho doplníme PŘED vykreslením, ať maily a texty
+        // pod kartou (uvítací mail, průvodce, koncept reportu) nejdou ven bez oslovení.
+        if(!KDET.name && o.j.name) KDET.name=o.j.name;
+        renderKlient();
       }).catch(function(){ $('kdetBody').innerHTML='<p class="muted">Chyba spojení. Zavři a zkus znovu.</p>'; });
     }
     $('kdetX').addEventListener('click',function(){ $('kdet').classList.remove('on'); });
@@ -1617,27 +1622,96 @@
       if(c.length===9) c='420'+c;              // české číslo bez předvolby
       return (c.length>=11&&c.length<=15)?c:'';   // nesmysl radši nezobrazit než nabídnout špatný odkaz
     }
+    // Kompaktní přehled „Kde jsme": dotazník / zadání / průvodce / trénink / poslední
+    // report, hotové zeleně, chybějící žlutě. Každá položka skroluje na svou sekci
+    // uvnitř #kdetBody, žádné nové API (client_detail už všechna potřebná data vrací).
+    function kdStavPruh(d,tg,reps){
+      function findDoc(prefix){
+        var arr=(d.docs||[]).filter(function(x){ return String(x.name||'').indexOf(prefix)===0; });
+        if(!arr.length) return null;
+        arr.sort(function(a,b){ return String(a.name).localeCompare(String(b.name)); });
+        return arr[arr.length-1];
+      }
+      var pg=findDoc('pruvodce-'), tp=findDoc('trenink-'), posledniRep=reps.length?reps[0]:null;
+      function polozka(hotovo,label,cil){
+        var barva=hotovo?'#7BD88F':'#EBB12C', bg=hotovo?'rgba(123,216,143,.1)':'rgba(235,177,44,.12)';
+        return '<a href="#" data-kdscroll="'+cil+'" style="display:inline-block;margin:0 6px 6px 0;padding:3px 9px;border-radius:20px;background:'+bg+';color:'+barva+';text-decoration:none;font-size:.78rem;white-space:nowrap;">'+label+'</a>';
+      }
+      var it=[];
+      it.push(polozka(!!(d.intake&&d.intake.data), (d.intake&&d.intake.data)?('Dotazník '+fmtDay(d.intake.created_at)):'Dotazník chybí', 'kdSecDotaznik'));
+      it.push(polozka(tg.kcal!=null&&tg.kcal!=='', (tg.kcal!=null&&tg.kcal!=='')?('Zadání '+esc(String(tg.kcal))+' kcal'+(tg.updated_at?' · '+fmtDay(tg.updated_at):'')):'Zadání nenastaveno', 'kdSecZadani'));
+      it.push(polozka(!!pg, pg?('Průvodce '+fmtDay(pg.at)):'Průvodce chybí', 'kdPgWrap'));
+      it.push(polozka(!!tp, tp?('Trénink '+fmtDay(tp.at)):'Trénink chybí', 'trenink-plan'));
+      if(posledniRep){
+        var odpovezeno=!!posledniRep.reakce_odeslana;
+        it.push(polozka(odpovezeno, 'Report '+fmtDay(posledniRep.report_date)+' · '+(odpovezeno?'odpovězeno':'⚠️ čeká na odpověď'), 'kdDrBtn'));
+      } else it.push(polozka(false,'Report chybí','kdDrBtn'));
+      // id na wrapperu, ať to jde přepsat samostatně z refreshDocs (bod 3) bez
+      // překreslení celé karty.
+      return '<div id="kdStavPruh" style="margin:0 0 .8rem;">'+it.join('')+'</div>';
+    }
+    // Seznam dokumentů klienta jako samostatná šablona, ať ho refreshDocs() může
+    // přepsat bez překreslení celé karty (bod 3: po uploadu z pruvodce.js/trenink.js
+    // toast říkal „Uloženo", ale seznam zůstal „Zatím nic" až do reloadu).
+    function kdDocsListHtml(d){
+      return (d.docs||[]).length?(d.docs||[]).map(function(dc){ return '<p style="margin:.2rem 0;font-size:.85rem;"><a href="#" data-kdoc="'+esc(dc.path)+'" style="color:#F6CD63;">'+esc(dc.name)+'</a> <span class="muted">'+(dc.size?Math.max(1,Math.round(dc.size/1024))+' kB':'')+'</span> <a href="#" data-kdocdel="'+esc(dc.path)+'" style="color:#ff6b6b;text-decoration:none;">✕</a></p>'; }).join(''):'<p class="muted" style="font-size:.85rem;">Zatím nic.</p>';
+    }
+    // Naváže klik na odkaz/smazání dokumentu uvnitř daného kontejneru. Použito jak
+    // při plném vykreslení karty, tak po dílčím refreshDocs().
+    function kdBindDocLinks(container,email){
+      container.querySelectorAll('[data-kdoc]').forEach(function(a){
+        a.addEventListener('click',function(e){ e.preventDefault(); api({action:'client_doc_url',path:a.getAttribute('data-kdoc')}).then(function(o){ if(o.j&&o.j.url) window.open(o.j.url,'_blank'); else toast('Chyba'); }); });
+      });
+      container.querySelectorAll('[data-kdocdel]').forEach(function(a){
+        a.addEventListener('click',function(e){ e.preventDefault(); if(!confirm('Smazat dokument?')) return; api({action:'client_doc_delete',path:a.getAttribute('data-kdocdel')}).then(function(o){ if(o.j&&o.j.ok){ toast('🗑️ Smazáno'); refreshDocs(email); } else toast('Chyba: '+((o.j&&o.j.error)||o.status)); }).catch(function(){ toast('Chyba spojení'); }); });
+      });
+    }
+    // ⛔ Nevolá openKlient (přerenderuje celou kartu a smaže rozepsaný editor
+    // průvodce/tréninku). Přepíše jen seznam dokumentů a stavový pruh nahoře.
+    function refreshDocs(email){
+      api({action:'client_detail',email:email}).then(function(o){
+        if(!o.j||!o.j.ok||KDET.email!==email) return; // mezitím se karta mohla zavřít/přepnout
+        KDET.data=o.j;
+        var list=document.getElementById('kdDocsList');
+        if(list){ list.innerHTML=kdDocsListHtml(o.j); kdBindDocLinks(list,email); }
+        var pruh=document.getElementById('kdStavPruh');
+        if(pruh){
+          var reps=(o.j.reports||[]).slice().reverse();
+          pruh.outerHTML=kdStavPruh(o.j,o.j.targets||{},reps);
+          $('kdetBody').querySelectorAll('[data-kdscroll]').forEach(function(a){
+            a.addEventListener('click',function(e){ e.preventDefault(); var t=document.getElementById(a.getAttribute('data-kdscroll')); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); });
+          });
+        }
+      }).catch(function(){ /* tichý neúspěch: seznam zůstane starý, další upload to zkusí znovu */ });
+    }
     function renderKlient(){
       var d=KDET.data, email=KDET.email;
       var reps=(d.reports||[]).slice().reverse(); // nejnovější nahoře
       var kdWa=kdWaCislo(((d.intake||{}).data||{}).telefon);
+      // 🎯 ZADÁNÍ pro klienta — JEDINÉ místo, kde cíl vzniká. Klient ho vidí ve své sekci a
+      // počítá se z něj odchylka („bílkoviny +18 g proti cíli"). Prázdné pole = cíl nenastaven,
+      // klientovi se pak nezobrazí nic (nikdy ne dopočítaná nula). Nedopočítávat z TDEE.
+      // Počítá se tu nahoře, ať ho může použít i stavový pruh hned pod hlavičkou.
+      var tg=d.targets||{};
+      // Jméno chybí, když klient přišel deep linkem a není v customer_contacts (bod 1c).
+      // Ukládá se JEN do KDET.name pro tuhle relaci: žádná akce v API na zápis jména
+      // do customer_contacts není, přidávat ji sem nemám zadáno.
+      var kdNameBlock = KDET.name ? '' : '<div style="margin:0 0 .6rem;"><input type="text" id="kdNameIn" placeholder="Jméno klienta" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.85rem;width:200px;"> <button class="mlogbtn" id="kdNameSave" style="padding:6px 12px;">Uložit jméno</button> <span class="muted" style="font-size:.76rem;">(jen pro tuhle relaci, dotazník ani appka jméno nemá)</span></div>';
       var h='<h2 style="margin:0 0 2px;">🤝 '+esc(email)+'</h2>'
+        + kdNameBlock
         +'<p class="muted" style="margin:0 0 .4rem;font-size:.85rem;">'+(d.reports||[]).length+' reportů · dotazník '+(d.intake?'✅':'—')
         +' · <a href="#" id="kdCsv" style="color:#F6CD63;">📥 Export CSV (Excel)</a>'
         +(kdWa?' · <a href="https://wa.me/'+kdWa+'" target="_blank" rel="noopener" style="color:#25D366;">💬 WhatsApp</a>':'')
         +'</p>'
+        + kdStavPruh(d,tg,reps)
         // per-klient vypnutí pondělní připomínky ("stop připomínky") — čte ji client-remind fn
         +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>';
-      // 🎯 ZADÁNÍ pro klienta — JEDINÉ místo, kde cíl vzniká. Klient ho vidí ve své sekci a
-      // počítá se z něj odchylka („bílkoviny +18 g proti cíli"). Prázdné pole = cíl nenastaven,
-      // klientovi se pak nezobrazí nic (nikdy ne dopočítaná nula). Nedopočítávat z TDEE.
-      var tg=d.targets||{};
       function kdTgIn(id,label,unit,ph){
         var v=tg[id]==null?'':String(tg[id]);
         return '<label style="display:block;font-size:.78rem;color:#8F8A99;">'+label+(unit?' <span style="color:#6d6879;">('+unit+')</span>':'')
           +'<input type="text" inputmode="decimal" id="kdTg_'+id+'" value="'+esc(v)+'" placeholder="'+(ph||'')+'" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>';
       }
-      h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🎯 Zadání pro klienta <span class="muted" style="text-transform:none;font-weight:400;">(tohle klient VIDÍ ve své sekci)</span></h4>'
+      h+='<h4 id="kdSecZadani" style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🎯 Zadání pro klienta <span class="muted" style="text-transform:none;font-weight:400;">(tohle klient VIDÍ ve své sekci)</span></h4>'
         +'<div style="background:rgba(235,177,44,.06);border:1px solid rgba(235,177,44,.3);border-radius:10px;padding:12px;">'
         +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;">'
         + kdTgIn('kcal','Kalorie','kcal/den','1800')
@@ -1721,6 +1795,9 @@
           +'</div><div id="kdDrOut" style="margin-top:10px;"></div></div>';
       }
       // dotazník
+      // Anchor pro stavový pruh výš existuje vždy, i když dotazník chybí (jinak by
+      // klik na "Dotazník chybí" neměl kam skrolovat).
+      h+='<div id="kdSecDotaznik"></div>';
       if(d.intake&&d.intake.data){
         var idata=d.intake.data;
         var groups=[['O klientovi',[['Věk',idata.vek],['Výška',idata.vyska],['Váha',idata.vaha],['Telefon',idata.telefon]]],
@@ -1782,7 +1859,7 @@
       });
       // dokumenty klienta
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📁 Dokumenty pro tohoto klienta</h4>'
-        +((d.docs||[]).length?(d.docs||[]).map(function(dc){ return '<p style="margin:.2rem 0;font-size:.85rem;"><a href="#" data-kdoc="'+esc(dc.path)+'" style="color:#F6CD63;">'+esc(dc.name)+'</a> <span class="muted">'+(dc.size?Math.max(1,Math.round(dc.size/1024))+' kB':'')+'</span> <a href="#" data-kdocdel="'+esc(dc.path)+'" style="color:#ff6b6b;text-decoration:none;">✕</a></p>'; }).join(''):'<p class="muted" style="font-size:.85rem;">Zatím nic.</p>')
+        +'<div id="kdDocsList">'+kdDocsListHtml(d)+'</div>'
         +'<div style="display:flex;gap:8px;align-items:center;margin:.5rem 0;"><input type="file" id="kdFile" style="font-size:.82rem;color:#b7ab9b;"><button class="mlogbtn" id="kdUp">Nahrát klientovi</button></div>';
       // Ukončení koučinku. Zavře klientskou sekci, odebere appku Tvůj Coach a pošle mail
       // s nabídkou, jak může pokračovat bez koučinku (TC předplatné, Academy s KLIENT20).
@@ -1803,6 +1880,19 @@
         +'</div>';
       $('kdetBody').innerHTML=h;
       // handlery
+      // Stavový pruh: klik jen skroluje na sekci uvnitř karty, nic nenačítá.
+      $('kdetBody').querySelectorAll('[data-kdscroll]').forEach(function(a){
+        a.addEventListener('click',function(e){
+          e.preventDefault();
+          var t=document.getElementById(a.getAttribute('data-kdscroll'));
+          if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+        });
+      });
+      var kdNameSave=$('kdNameSave');
+      if(kdNameSave) kdNameSave.addEventListener('click',function(){
+        var v=($('kdNameIn').value||'').trim(); if(!v){ toast('Napiš jméno'); return; }
+        KDET.name=v; renderKlient(); toast('Jméno nastaveno jen pro tuhle relaci.');
+      });
       $('kdCsv').addEventListener('click',function(e){ e.preventDefault(); exportKlientCsv(); });
       // Rozbory se dotahuji az po vykresleni karty: je to volani do appky pres most
       // a vypadek NESMI shodit kartu klienta (modul si hlasku vypise sam).
@@ -2022,7 +2112,7 @@
         window.Pruvodce.mount(w,{
           email:email, name:KDET.name, vok:kliVok(KDET.name), rod:kliRod(KDET.name),
           intake:((KDET.data||{}).intake||{}).data||{}, targets:(KDET.data||{}).targets||null,
-          api:api, toast:toast
+          api:api, toast:toast, poUlozeni:refreshDocs
         });
       });
       // Tréninkový plán: stejná linka jako u průvodce, engine a databáze cviků se stáhnou
@@ -2032,7 +2122,7 @@
         if(!window.TreninkPlan){ toast('Modul tréninku se nenačetl, obnov stránku.'); return; }
         window.TreninkPlan.render({
           email:email, name:KDET.name, vok:kliVok(KDET.name), rod:kliRod(KDET.name),
-          intake:((KDET.data||{}).intake||{}).data||{}, api:api, toast:toast
+          intake:((KDET.data||{}).intake||{}).data||{}, api:api, toast:toast, poUlozeni:refreshDocs
         });
       });
       $('kdNoteSave').addEventListener('click',function(){

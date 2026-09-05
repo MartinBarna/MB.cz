@@ -119,7 +119,10 @@
     var s = bezDia(t);
     if (/zacatecn|zacinam|nikdy|nezacvic|zadn[ae] zkusen|po pauze|nesportuj/.test(s)) return 'zacatecnik';
     if (/nekolik let|leta|roky|zavodn|kulturist|silovy trojboj|zkuseny/.test(s)) return 'zkuseny';
-    if (/pokrocil|dlouho|pravideln|posilovn|fitko|zkusen/.test(s)) return 'pokrocily';
+    // ⛔ [2026-09-05, revize] Samotné „posilovn" nebo „fitko" nestačí: „2x týdně posilovna,
+    // občas běh" tím dřív vyšlo jako pokročilý. Slovo musí nést dobu nebo pravidelnost,
+    // ne jen místo. Počet dní zůstává druhá cesta k pokročilému (4+ týdně).
+    if (/pokrocil|dlouho|pravideln|roky|let[ y]|zkusen/.test(s)) return 'pokrocily';
     // Kdo reálně stíhá čtyři a víc tréninků týdně, začátečník obvykle není.
     if (Number(dny) >= 4) return 'pokrocily';
     return 'zacatecnik';
@@ -509,7 +512,12 @@
           content_type: 'text/html; charset=utf-8', content_base64: b64(hotovoHtml(false))
         }).then(function (o) {
           b.disabled = false; b.textContent = t0;
-          if (o.j && o.j.ok) toast('✅ Uloženo klientovi: ' + soubor);
+          if (o.j && o.j.ok) {
+            toast('✅ Uloženo klientovi: ' + soubor);
+            // ⛔ Bod 3: stejná oprava jako v pruvodce.js, ať seznam dokumentů nezůstane
+            // „Zatím nic" do reloadu stránky.
+            if (ctx.poUlozeni) ctx.poUlozeni(ctx.email);
+          }
           else toast('Chyba: ' + ((o.j && o.j.error) || o.status));
         }).catch(function () { b.disabled = false; b.textContent = t0; toast('Chyba spojení'); });
       });
