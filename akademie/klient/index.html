@@ -357,29 +357,42 @@
     });
   }
   // ⛔ HTML dokumenty se OTEVÍRAJÍ, ostatní se stahují.
-  // Martin od 2. 9. 2026 ukládá klientům jídelníček na míru jako `.html`. Stažený soubor
-  // otevře člověk na počítači, ale na telefonu s tím většina lidí neuspěje (iOS ho ze
-  // Souborů otevře jen oklikou), takže by hlavní hodnota vstupu do koučinku spadla na
-  // technické tření. HTML se proto otevře v nové kartě přes PODEPSANOU adresu.
-  // ⛔ Schválně podepsaná adresa a ne `blob:`: blob dědí origin martinbarna.cz, takže by
-  // skript v nahraném HTML viděl přihlášení klienta. Podepsaná adresa běží na supabase.co,
-  // tedy na cizím originu, a k ničemu našemu se nedostane.
+  // Martin od 2. 9. 2026 ukládá klientům průvodce, jídelníček a trénink jako `.html`. Stažený
+  // soubor otevře člověk na počítači, ale na telefonu s tím většina lidí neuspěje, takže se
+  // HTML otevře rovnou v nové kartě.
+  // ⛔ [5. 9. 2026] PODEPSANÁ ADRESA NEFUNGUJE: Supabase Storage servíruje text/html jako
+  //    text/plain (ochrana jejich domény), takže klient viděl holý zdrojový kód. Navíc
+  //    `encodeURIComponent` cesty (`%40` místo `@` v e-mailu) vracel InvalidSignature, tedy
+  //    žádný vlastní dokument nešel otevřít vůbec. Ověřeno na testovací klientce.
+  // ⭐ Řešení: obsah se stáhne přihlášeným fetchem a vykreslí v nové kartě uvnitř
+  //    <iframe sandbox> bez allow-same-origin a bez allow-scripts. Rámec má vlastní prázdný
+  //    origin, takže nahrané HTML nevidí přihlášení klienta (stejný důvod, proč tu dřív
+  //    nebyl `blob:`). Šablony průvodce i tréninku žádný skript nemají.
   // ⛔ Okno se otevírá SYNCHRONNĚ, ještě před fetchem. Po `await` ho prohlížeč blokuje.
   function jeHtml(nameTxt){ return /\.html?$/i.test(String(nameTxt || "")); }
+  function hezkyNazev(nameTxt){
+    var m = /^(pruvodce|trenink|jidelnicek)-(\d{4})-(\d{2})-(\d{2})\.html?$/i.exec(String(nameTxt || ""));
+    if (!m) return String(nameTxt || "").replace(/\.html?$/i, "");
+    var typ = { pruvodce: "Průvodce koučinkem", trenink: "Tréninkový plán", jidelnicek: "Jídelníček na míru" }[m[1].toLowerCase()];
+    return typ + " (" + Number(m[4]) + ". " + Number(m[3]) + ". " + m[2] + ")";
+  }
   function openDoc(path, nameTxt){
-    var cesta = path.split("/").map(encodeURIComponent).join("/");
+    // Cesta se NEKÓDUJE: Storage porovnává doslovný název objektu, mezery si `fetch` doplní sám.
+    var cesta = path;
     if (jeHtml(nameTxt)) {
       var w = window.open("", "_blank");
       window.BA.getToken().then(function(t){
-        return fetch(CFG.url + "/storage/v1/object/sign/client-docs/" + cesta, {
-          method: "POST",
-          headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t, "Content-Type": "application/json" },
-          body: JSON.stringify({ expiresIn: 3600 })
-        }).then(function(r){ return r.ok ? r.json() : null; });
-      }).then(function(j){
-        if (j && j.signedURL) { if (w) w.location = CFG.url + "/storage/v1" + j.signedURL; else toast("Prohlížeč zablokoval nové okno."); return; }
-        if (w) w.close();
-        toast("Dokument se nepodařilo otevřít, zkus to znovu.");
+        return fetch(CFG.url + "/storage/v1/object/authenticated/client-docs/" + cesta,
+          { headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t } })
+          .then(function(r){ if(!r.ok) throw 0; return r.text(); });
+      }).then(function(html){
+        if (!w) { toast("Prohlížeč zablokoval nové okno."); return; }
+        var titul = String(nameTxt).replace(/\.html?$/i, "").replace(/-\d{4}-\d{2}-\d{2}$/, "");
+        titul = titul === "pruvodce" ? "Průvodce koučinkem" : titul === "trenink" ? "Tréninkový plán" : titul === "jidelnicek" ? "Jídelníček na míru" : nameTxt;
+        var attr = html.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+        w.document.open();
+        w.document.write('<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + titul.replace(/</g, "&lt;") + ' · Martin Barna</title><style>html,body{margin:0;height:100%;background:#fff}iframe{border:0;width:100%;height:100%;display:block}</style></head><body><iframe sandbox="allow-popups allow-downloads allow-modals" srcdoc="' + attr + '"></iframe></body></html>');
+        w.document.close();
       }).catch(function(){ if (w) w.close(); toast("Dokument se nepodařilo otevřít, zkus to znovu."); });
       return;
     }
@@ -710,7 +723,8 @@
       items.forEach(function(it){
         var a = document.createElement("a");
         a.className = "doc"; a.href = "#";
-        a.innerHTML = '<span class="ic">📄</span><span>' + escH(it.name) + (it.shared ? ' <span style="color:#8F8A99;font-size:.78rem;">· pro všechny klienty</span>' : "") + '</span><span class="sz">' + (it.size ? Math.max(1, Math.round(it.size / 1024)) + " kB" : "") + "</span>";
+        // Lidský název místo souboru: `pruvodce-2026-09-05.html` je pro klienta šifra (5. 9. 2026).
+        a.innerHTML = '<span class="ic">' + (jeHtml(it.name) ? "📋" : "📄") + '</span><span>' + escH(hezkyNazev(it.name)) + (it.shared ? ' <span style="color:#8F8A99;font-size:.78rem;">· pro všechny klienty</span>' : "") + '</span><span class="sz">' + (it.size ? Math.max(1, Math.round(it.size / 1024)) + " kB" : "") + "</span>";
         a.addEventListener("click", function(e){ e.preventDefault(); openDoc(it.path, it.name); });
         host.appendChild(a);
       });
@@ -1362,7 +1376,17 @@
   function boot(u){
     myEmail = String(u.email || "").toLowerCase();
     myName = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || "";
-    el("hello").textContent = myName ? "Ahoj, " + vokativ(myName.split(" ")[0]) + "!" : "Ahoj!";
+    function pozdrav(){ el("hello").textContent = myName ? "Ahoj, " + vokativ(myName.split(" ")[0]) + "!" : "Ahoj!"; }
+    pozdrav();
+    // Jméno klienta zadává Martin v adminu (customer_contacts); magic link ho do
+    // user_metadata nedá, takže sekce zdravila „Ahoj!" a report šel s e-mailem
+    // místo jména. RPC my_client_name vrátí jen vlastní jméno (5. 9. 2026).
+    if(!myName){
+      window.BA.getToken().then(function(t){
+        return fetch(CFG.url + "/rest/v1/rpc/my_client_name", { method: "POST", headers: { apikey: CFG.anonKey, Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: "{}" })
+          .then(function(r){ return r.ok ? r.json() : ""; });
+      }).then(function(n){ if(typeof n === "string" && n.trim()){ myName = n.trim(); pozdrav(); } }).catch(function(){});
+    }
     var ap = el("tileAppka");
     if(ap) ap.setAttribute("href", "https://coach.martinbarna.cz/sign-in?email=" + encodeURIComponent(myEmail) + "&from=koucink");
     el("load").style.display = "none"; el("app").style.display = "";
