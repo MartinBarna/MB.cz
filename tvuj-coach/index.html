@@ -115,8 +115,13 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .grid { display:grid; gap:1.1rem; }
         .g4 { grid-template-columns:repeat(4,1fr); }
         .g3 { grid-template-columns:repeat(3,1fr); }
-        .card { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.09); border-radius:18px; padding:1.5rem 1.4rem; }
-        .card .em { font-size:1.9rem; display:block; margin-bottom:.6rem; }
+        .card { background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.09); border-radius:18px; padding:1.5rem 1.4rem; transition:transform .2s ease,border-color .2s ease; }
+        .card:hover { transform:translateY(-3px); border-color:rgba(235,177,44,.35); }
+        /* Jednotna sada SVG ikon misto emoji (sprite hned za <body>). */
+        .ic { display:block; width:1.9rem; height:1.9rem; color:var(--acc); margin-bottom:.6rem; }
+        .ic svg { width:100%; height:100%; stroke:currentColor; stroke-width:1.75; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+        .ic-inline { display:inline-flex; width:1em; height:1em; vertical-align:-.15em; margin-right:.35em; flex-shrink:0; }
+        .ic-inline svg { width:100%; height:100%; stroke:currentColor; stroke-width:1.9; fill:none; stroke-linecap:round; stroke-linejoin:round; }
         h3.blok { text-align:center; color:var(--acc-l); font-size:.82rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin:2.6rem 0 1.2rem; }
         h3.blok:first-of-type { margin-top:.6rem; }
         .card h3 { font-size:1.05rem; margin:0 0 .45rem; }
@@ -133,7 +138,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
            Telefonni snimek se na mobilu vykresli skoro 1:1 a na pocitaci vypada jako
            nahled z obchodu s aplikacemi. Proto uzky sloupec, ne roztazeni pres celou sirku. */
         .shot { margin:1.6rem auto 0; max-width:330px; }
-        .shot img { display:block; width:100%; height:auto; border-radius:22px; border:1px solid rgba(255,255,255,.14); box-shadow:0 18px 48px rgba(0,0,0,.5); background:#12101a; }
+        .shot img { display:block; width:100%; height:auto; border-radius:22px; border:1px solid rgba(255,255,255,.14); box-shadow:0 8px 24px rgba(0,0,0,.22); background:#12101a; }
         .shot figcaption { color:var(--mut); font-size:.86rem; text-align:center; margin-top:.7rem; }
         /* Snimek v hlavicce se nacita hned (fetchpriority=high), je to prvni vec,
            kterou clovek z reklamy uvidi, a rozhoduje o tom, jestli scrolluje dal. */
@@ -223,6 +228,31 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
     <link rel="stylesheet" href="/assets/theme-light.css?v=l8">
 </head>
 <body>
+<!-- SVG ikony (sprite) - jednotna sada misto emoji -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ic-barcode" viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M21 16v3a2 2 0 0 1-2 2h-3"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></symbol>
+    <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21M9 21h6"/></symbol>
+    <symbol id="ic-plate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></symbol>
+    <symbol id="ic-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></symbol>
+    <symbol id="ic-dumbbell" viewBox="0 0 24 24"><path d="M4 9v6M2.5 10.5v3M7 8v8M17 8v8M21.5 10.5v3M20 9v6M7 12h10"/></symbol>
+    <symbol id="ic-book" viewBox="0 0 24 24"><path d="M4 4.5C4 3.7 4.7 3 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5c0-.8-.7-1.5-1.5-1.5H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/></symbol>
+    <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M6 21V11M12 21V5M18 21v-8"/></symbol>
+    <symbol id="ic-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="ic-edit" viewBox="0 0 24 24"><path d="M4 20l1-4.5L15.5 5 19 8.5 8.5 19 4 20Z"/><path d="M13 7l4 4"/></symbol>
+    <symbol id="ic-brain" viewBox="0 0 24 24"><path d="M9 3.5a3 3 0 0 0-3 3v.3A3 3 0 0 0 4.5 12a3 3 0 0 0 1.5 5.6v.4a3 3 0 0 0 6 0V6.5A3 3 0 0 0 9 3.5Z"/><path d="M15 3.5a3 3 0 0 1 3 3v.3A3 3 0 0 1 19.5 12 3 3 0 0 1 18 17.6v.4a3 3 0 0 1-6 0V6.5a3 3 0 0 1 3-3Z"/></symbol>
+    <symbol id="ic-robot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4M9.5 4h5"/><circle cx="9" cy="13.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.3" fill="currentColor" stroke="none"/><path d="M9 17h6"/></symbol>
+    <symbol id="ic-teacher" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></symbol>
+    <symbol id="ic-calc" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M8 6.5h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/></symbol>
+    <symbol id="ic-stop" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6l7-3Z"/><path d="M10 9.5v5M14 9.5v5"/></symbol>
+    <symbol id="ic-refresh" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.66-5.66L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.66 5.66L4 16"/><path d="M4 20v-4h4"/></symbol>
+    <symbol id="ic-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4"/><rect x="5" y="12" width="14" height="9"/><path d="M12 8v13M12 8c-4.5 0-5.5-5.5-2-5.5C12 2.5 12 8 12 8Zm0 0c4.5 0 5.5-5.5 2-5.5C12 2.5 12 8 12 8Z"/></symbol>
+    <symbol id="ic-app" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></symbol>
+    <symbol id="ic-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
+    <symbol id="ic-cap" viewBox="0 0 24 24"><path d="m12 4 10 5-10 5L2 9l10-5Z"/><path d="M6.5 11.5V16c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3v-4.5"/></symbol>
+  </defs>
+</svg>
 
 <div class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a><input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Otevřít menu">☰</label><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="/koucing/">Koučink</a><a class="hide-sm" href="/konzultace/">Konzultace</a><a class="hide-sm" href="/videokurz">Videokurz</a><a class="hide-sm" href="/recepty-a-odpovedi/">Balíček 349</a><a class="hide-sm" href="/akademie/">Academy</a><a class="hide-sm" href="/tvuj-coach/" aria-current="page">Appka</a><a class="hide-sm" href="/treninky">Tréninky</a><a class="hide-sm" href="/prednasky/">Přednášky</a><a class="hide-sm" href="/clanky/">Blog</a><a class="hide-sm" href="/reference/">Reference</a><a class="hide-sm" href="/poukaz/">Poukazy</a><a class="hide-sm" href="/akademie/prihlaseni/">Přihlásit</a><a class="cta" href="https://tvujcoach.cz/koupit?plan=basic&amp;utm_source=web&amp;utm_medium=nav&amp;utm_campaign=tc-landing">Vzít si Basic →</a></nav></div></div>
 <!-- ⭐ Jediné tlačítko v navigaci prodávalo na TÉHLE stránce konzultaci za 2 990 Kč,
@@ -234,7 +264,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 
 <header class="hero center">
     <div class="wrap">
-        <span class="badge">📱 Appka Tvůj Coach</span>
+        <span class="badge"><span class="ic-inline"><svg><use href="#ic-app"/></svg></span>Appka Tvůj Coach</span>
         <!-- ⛔⛔ [2026-09-02] HLAVNÍ SLIB JE JEDEN A JE SHODNÝ S tvujcoach.cz (rozhodl Martin).
              Do dneška tu stálo „Kouč v kapse, který vidí jídlo i trénink", zatímco landing appky
              vedl Basicem za 249. Dvě stránky, dva sliby, obě z placené reklamy.
@@ -262,7 +292,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
              kliknout. Teď jsou tlačítka nahoře a bonus nad nimi by je posunul zpátky
              do pásma cookie lišty, tak je hned POD nimi. Pořád v jednom pohledu
              s tlačítky, ale rozhodnutí už nic neodsouvá. -->
-        <p class="hero-bonus">🎁 <b>Ke každé první platbě dostaneš videokurz výživy za 1 490 Kč zdarma</b>, a zůstane ti napořád. K ročnímu VIP navíc měsíc Barna Academy.</p>
+        <p class="hero-bonus"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span><b>Ke každé první platbě dostaneš videokurz výživy za 1 490 Kč zdarma</b>, a zůstane ti napořád. K ročnímu VIP navíc měsíc Barna Academy.</p>
         <!-- 5. 9. 2026: cesta „nejdřív hodnota, pak cena". Studený návštěvník z reklamy
              nekupoval naslepo (227 návštěv, 0 nákupů), tak dostane veřejný dotazník bez účtu:
              spočítá kalorie a makra a až pod výsledkem nabídne Basic. Tlačítka nad tím zůstávají.
@@ -302,10 +332,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 
         <h3 class="blok">Zapsat jídlo trvá vteřiny</h3>
         <div class="grid g4">
-            <div class="card"><span class="em">📷</span><h3>Namíříš na čárový kód</h3><p>Kamera přečte obal a jídlo je v deníku. Přes <!-- cislo:potraviny -->50 000<!-- /cislo --> potravin včetně zboží z Lidlu, Tesca, Alberta či Globusu.</p></div>
-            <div class="card"><span class="em">🎙️</span><h3>Nebo to řekneš nahlas<span class="vip-tag">VIP</span></h3><p>„Rohlík, tvaroh dvě stě gramů a tři deci vody." Appka větu rozebere a zapíše ji za tebe.</p></div>
-            <div class="card"><span class="em">🍽️</span><h3>Vyfotíš talíř<span class="vip-tag">VIP</span></h3><p>Na domácí kuchyni, kde žádný obal není. Odhadne, co na talíři leží, a spočítá makra.</p></div>
-            <div class="card"><span class="em">⚡</span><h3>Šablony a historie</h3><p>Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím. Šablony i 14 dní historie zpět máš zdarma, neomezenou historii odemyká Basic.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-barcode"/></svg></span><h3>Namíříš na čárový kód</h3><p>Kamera přečte obal a jídlo je v deníku. Přes <!-- cislo:potraviny -->50 000<!-- /cislo --> potravin včetně zboží z Lidlu, Tesca, Alberta či Globusu.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-mic"/></svg></span><h3>Nebo to řekneš nahlas<span class="vip-tag">VIP</span></h3><p>„Rohlík, tvaroh dvě stě gramů a tři deci vody." Appka větu rozebere a zapíše ji za tebe.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-plate"/></svg></span><h3>Vyfotíš talíř<span class="vip-tag">VIP</span></h3><p>Na domácí kuchyni, kde žádný obal není. Odhadne, co na talíři leží, a spočítá makra.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-bolt"/></svg></span><h3>Šablony a historie</h3><p>Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím. Šablony i 14 dní historie zpět máš zdarma, neomezenou historii odemyká Basic.</p></div>
         </div>
 
         <!-- Snimek hledani potraviny. TODO: prefotit, je z 08/2026. -->
@@ -321,10 +351,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 
         <h3 class="blok">Trénink ti appka napíše</h3>
         <div class="grid g4">
-            <div class="card"><span class="em">🏋️</span><h3>Plán podle toho, kde cvičíš<span class="basic-tag">BASIC</span></h3><p>Cvičíš ve fitku, doma nebo na hřišti, s činkami i s vlastním tělem. Zadáš cíl a kolik dní v týdnu máš, a plán je hotový.</p></div>
-            <div class="card"><span class="em">📖</span><h3>125 cviků s technikou a nejčastějšími chybami</h3><p>U každého provedení a popis česky. Tatáž databáze, kterou používám s klienty.</p></div>
-            <div class="card"><span class="em">📈</span><h3>Pamatuje si, kolik jsi zvedl<span class="basic-tag">BASIC</span></h3><p>Zápis sérií i vývoj síly máš zdarma. S Basicem ti navíc u příští série poradí: „Zkus 60 kg × 10, minule ti zbývala rezerva."</p></div>
-            <div class="card"><span class="em">🧩</span><h3>Objem po svalových partiích<span class="basic-tag">BASIC</span></h3><p>Kolik sérií týdně padlo na záda a kolik na nohy. Barevně uvidíš, jestli je to málo, akorát, nebo už moc. Tohle si trenéři počítají ručně.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-dumbbell"/></svg></span><h3>Plán podle toho, kde cvičíš<span class="basic-tag">BASIC</span></h3><p>Cvičíš ve fitku, doma nebo na hřišti, s činkami i s vlastním tělem. Zadáš cíl a kolik dní v týdnu máš, a plán je hotový.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-book"/></svg></span><h3>125 cviků s technikou a nejčastějšími chybami</h3><p>U každého provedení a popis česky. Tatáž databáze, kterou používám s klienty.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-chart"/></svg></span><h3>Pamatuje si, kolik jsi zvedl<span class="basic-tag">BASIC</span></h3><p>Zápis sérií i vývoj síly máš zdarma. S Basicem ti navíc u příští série poradí: „Zkus 60 kg × 10, minule ti zbývala rezerva."</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-grid"/></svg></span><h3>Objem po svalových partiích<span class="basic-tag">BASIC</span></h3><p>Kolik sérií týdně padlo na záda a kolik na nohy. Barevně uvidíš, jestli je to málo, akorát, nebo už moc. Tohle si trenéři počítají ručně.</p></div>
         </div>
 
         <figure class="shot">
@@ -339,10 +369,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                  Free udělá CELÝ a rozbor uvidí, `weekly_checkin` (Basic) odemyká až to,
                  že se podle něj PŘEPÍŠOU denní cíle. Landing appky to říkal správně,
                  tahle strana dělala z celého check-inu placenou funkci. -->
-            <div class="card"><span class="em">🎯</span><h3>Cíle se hýbou s tebou<span class="basic-tag">BASIC</span></h3><p>Check-in i s rozborem, kam se posouváš, si uděláš zdarma. S Basicem ti podle něj appka přepočítá kalorie a makra na další týden, podle tvé váhy a podle toho, co jsi přes týden snědl.</p></div>
-            <div class="card"><span class="em">✍️</span><h3>Nebo si cíle nastavíš sám</h3><p>Máš čísla od lékaře nebo si věříš? Zadáš si vlastní kalorie a makra a appka ti je při check-inu nepřepíše. Jde to i ve Free verzi.</p></div>
-            <div class="card"><span class="em">🧠</span><h3>„Co si můžu ještě dnes dát?"<span class="basic-tag">BASIC</span></h3><p>Zbývá ti 400 kcal a 30 g bílkovin. Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
-            <div class="card"><span class="em">🤖</span><h3>AI kouč mým hlasem<span class="vip-tag">VIP</span></h3><p>Zeptáš se ve dvě ráno a dostaneš odpověď. A umí appku ovládat za tebe: zapíše jídlo, upraví ho a vysvětlí ti, proč ti zvedla sacharidy.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-target"/></svg></span><h3>Cíle se hýbou s tebou<span class="basic-tag">BASIC</span></h3><p>Check-in i s rozborem, kam se posouváš, si uděláš zdarma. S Basicem ti podle něj appka přepočítá kalorie a makra na další týden, podle tvé váhy a podle toho, co jsi přes týden snědl.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-edit"/></svg></span><h3>Nebo si cíle nastavíš sám</h3><p>Máš čísla od lékaře nebo si věříš? Zadáš si vlastní kalorie a makra a appka ti je při check-inu nepřepíše. Jde to i ve Free verzi.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-brain"/></svg></span><h3>„Co si můžu ještě dnes dát?"<span class="basic-tag">BASIC</span></h3><p>Zbývá ti 400 kcal a 30 g bílkovin. Appka projde databázi a nabídne, čím to dorovnáš, aniž den přestřelíš.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-robot"/></svg></span><h3>AI kouč mým hlasem<span class="vip-tag">VIP</span></h3><p>Zeptáš se ve dvě ráno a dostaneš odpověď. A umí appku ovládat za tebe: zapíše jídlo, upraví ho a vysvětlí ti, proč ti zvedla sacharidy.</p></div>
         </div>
 
         <figure class="shot">
@@ -356,10 +386,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
     <div class="wrap">
         <h2 class="center">Čím se liší od běžného trackeru</h2>
         <div class="grid g4" style="margin-top:2rem;">
-            <div class="card"><span class="em">🧑‍🏫</span><h3>Za appkou stojí kouč</h3><p>Metodika, kterou prošlo přes 600 mých klientů, od nastavení cílů po práci s plateau. Appka ti řekne to, co bych ti řekl já.</p></div>
-            <div class="card"><span class="em">🔢</span><h3>Čísla počítá engine</h3><p>Kalorie a makra počítá pevný výpočet, aby seděly na gram. AI ti je vysvětlí a pomůže je naplnit, přepočet cílů zůstává na enginu.</p></div>
-            <div class="card"><span class="em">🛑</span><h3>Umí říct, že svým číslům nevěří</h3><p>Když je den poskládaný hlavně z fotoodhadů, cíle nepřepočítá. Fotka podceňuje olej a omáčku a podle toho ti jídelníček přenastavovat nechci.</p></div>
-            <div class="card"><span class="em">🔄</span><h3>Mění se každý týden</h3><p>Napíšeš mi, co ti v ní chybí, a já to zadám dál. Většina funkcí, které v appce dneska jsou, vznikla přesně takhle, z připomínek lidí, co ji používají.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-teacher"/></svg></span><h3>Za appkou stojí kouč</h3><p>Metodika, kterou prošlo přes 600 mých klientů, od nastavení cílů po práci s plateau. Appka ti řekne to, co bych ti řekl já.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-calc"/></svg></span><h3>Čísla počítá engine</h3><p>Kalorie a makra počítá pevný výpočet, aby seděly na gram. AI ti je vysvětlí a pomůže je naplnit, přepočet cílů zůstává na enginu.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-stop"/></svg></span><h3>Umí říct, že svým číslům nevěří</h3><p>Když je den poskládaný hlavně z fotoodhadů, cíle nepřepočítá. Fotka podceňuje olej a omáčku a podle toho ti jídelníček přenastavovat nechci.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-refresh"/></svg></span><h3>Mění se každý týden</h3><p>Napíšeš mi, co ti v ní chybí, a já to zadám dál. Většina funkcí, které v appce dneska jsou, vznikla přesně takhle, z připomínek lidí, co ji používají.</p></div>
         </div>
     </div>
 </section>
@@ -487,7 +517,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <div class="plan-name">Basic</div>
                 <div class="plan-price" data-price="basic:month">249 Kč <small>/ měsíc</small></div>
                 <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
-                <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě.</b> 182 videí v hodnotě 1 490 Kč, doživotní přístup. Dostaneš ho i tehdy, když si vezmeš jediný měsíc.</p>
+                <p class="bonus"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span><b>Videokurz výživy zdarma k první platbě.</b> 182 videí v hodnotě 1 490 Kč, doživotní přístup. Dostaneš ho i tehdy, když si vezmeš jediný měsíc.</p>
                 <ul class="feat">
                     <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
                     <li><strong>Cíle, které ti check-in každý týden přepočítá</strong></li>
@@ -510,7 +540,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <div class="plan-name">VIP</div>
                 <div class="plan-price" data-price="ai_basic:month">499 Kč <small>/ měsíc</small></div>
                 <p class="plan-year" data-year="ai_basic">nebo 4 990 Kč na rok, ušetříš 998 Kč (dva měsíce zdarma)</p>
-                <p class="bonus">🎁 <b>Videokurz výživy zdarma k první platbě</b> (182 videí, hodnota 1 490 Kč, doživotní přístup). <b>K ročnímu navíc měsíc Barna Academy na zkoušku</b>, ta jinak stojí 990 Kč měsíčně.</p>
+                <p class="bonus"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span><b>Videokurz výživy zdarma k první platbě</b> (182 videí, hodnota 1 490 Kč, doživotní přístup). <b>K ročnímu navíc měsíc Barna Academy na zkoušku</b>, ta jinak stojí 990 Kč měsíčně.</p>
                 <ul class="feat">
                     <li>Vše z Basicu včetně tréninku</li>
                     <li>AI kouč 24/7 mým hlasem, ovládá appku za tebe</li>
@@ -558,7 +588,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
            ⚠️ Slib je úzký schválně: písemný rozbor co 14 dní, nic víc. Žádný WhatsApp,
            žádný hovor, žádný jídelníček na míru; to je koučink Gold za jiné peníze. -->
       <div class="incl" id="kontrolaBlok" style="display:none;border-color:rgba(235,177,44,.45);background:linear-gradient(90deg,rgba(235,177,44,.12),rgba(235,177,44,.03));">
-        📬 <b>Jednou za 14 dní ti napíšu, co v tvých číslech vidím.</b>
+        <span class="ic-inline"><svg><use href="#ic-mail"/></svg></span><b>Jednou za 14 dní ti napíšu, co v tvých číslech vidím.</b>
         AI kouč ve VIP komentuje každý check-in hned. Tohle je něco jiného: jednou za 14 dní si
         tvoje čísla přečtu já a napíšu ti, co s nimi. Přijde ti mail s mým komentářem: co v číslech vidím a co bych na dalších 14 dní změnil. Žádná šablona,
         čtu tvoje data. Chodí to mailem a najdeš to i v appce.
@@ -583,7 +613,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
            i tady, viz `tvujcoach-cenik-zmena-checklist` v pameti. -->
       <div class="incl-pair">
       <div class="incl" style="border-color:rgba(235,177,44,.45);background:linear-gradient(90deg,rgba(235,177,44,.12),rgba(235,177,44,.03));">
-        🎓 <b>Chceš VIP na celý rok? Zvaž Barnu Academy.</b>
+        <span class="ic-inline"><svg><use href="#ic-cap"/></svg></span><b>Chceš VIP na celý rok? Zvaž Barnu Academy.</b>
         V členství je <b>rok VIP verze appky v hodnotě 4 990 Kč</b> a k tomu 256 lekcí, certifikace,
         generátory jídelníčků a tréninků i videokurz. Academy stojí 8 900 Kč jednorázově a máš ji napořád,
         takže proti samotnému ročnímu VIP doplácíš 3 910 Kč a dostáváš k tomu celé vzdělání.
@@ -591,7 +621,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         <a href="/akademie/?utm_source=web&amp;utm_medium=tc-landing&amp;utm_campaign=academy-crosssell">Mrknout na Academy →</a>
       </div>
 
-      <div class="incl">🎁 <b>Máš to v ceně?</b> Klienti <a href="/koucing/">koučinku</a> mají plnou appku po celou dobu spolupráce, členové <a href="/akademie/">Barna Academy</a> rok ve VIP verzi. Stačí se přihlásit stejným e-mailem.</div>
+      <div class="incl"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span><b>Máš to v ceně?</b> Klienti <a href="/koucing/">koučinku</a> mají plnou appku po celou dobu spolupráce, členové <a href="/akademie/">Barna Academy</a> rok ve VIP verzi. Stačí se přihlásit stejným e-mailem.</div>
       </div>
     </div>
     </div>

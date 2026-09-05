@@ -210,6 +210,9 @@ section{padding:88px 0}
 @media(max-width:640px){section{padding:60px 0}}
 
 .kick{font-family:'Barlow Condensed',Arial,sans-serif;font-weight:700;font-size:1.02rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+/* Prosty popisek nad nadpisem sekce - na rozdil od .kick (jen v hero) neni zlaty
+   ani verzalkovy, at eyebrow stitek nenese kazdy nadpis na strance. */
+.kicker{display:block;font-weight:600;font-size:.95rem;color:var(--muted);margin-bottom:.35rem}
 .tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(235,177,44,.13);color:var(--gold-light);padding:5px 14px;border-radius:8px}
 
 .sec-head{max-width:640px;margin-bottom:2.6rem}
@@ -269,7 +272,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 .trust{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin-top:1.5rem;font-size:.95rem;color:#E7E1EE;font-weight:600}
 .trust .stars{color:var(--gold);letter-spacing:2px}
 .hero-photo-wrap{position:relative;justify-self:end}
-.hero-photo{width:min(400px,100%);border-radius:24px;border:1px solid rgba(255,255,255,.13);box-shadow:0 34px 70px -26px rgba(0,0,0,.8)}
+.hero-photo{width:min(400px,100%);border-radius:24px;border:1px solid rgba(255,255,255,.13);box-shadow:0 8px 24px rgba(0,0,0,.18)}
 .photo-cap{position:absolute;left:14px;bottom:14px;background:rgba(12,11,16,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:10px;padding:7px 13px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.85rem;color:#fff}
 .photo-cap i{color:var(--gold);font-style:normal}
 @media(max-width:900px){
@@ -308,13 +311,19 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 .pcard .cap{padding:14px 18px}
 .pcard .cap h4{font-size:1rem;margin-bottom:.15rem}
 .pcard .cap p{color:var(--muted);font-size:.86rem;line-height:1.45}
-.badge-kg{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--ink-on-gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.03em;padding:5px 12px;border-radius:8px;box-shadow:0 8px 18px -6px rgba(0,0,0,.5);z-index:2}
+.badge-kg{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--ink-on-gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.03em;padding:5px 12px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.22);z-index:2}
 .badge-kg.dark{background:rgba(12,11,16,.85);color:#fff}
 .pcard.cta-card{display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(170deg,#241C0C,#16131D 70%);border-color:rgba(235,177,44,.35)}
 .pcard.cta-card .in{padding:28px 22px}
 .pcard.cta-card b{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:2rem;color:var(--gold)}
 .pcard.cta-card p{color:var(--muted);margin:.3rem 0 1.1rem}
 .more-link{display:inline-block;margin-top:1.6rem;font-weight:700}
+.more-toggle{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.pgrid .extra{display:none}
+.more-toggle:checked ~ .pgrid .extra{display:block}
+.more-toggle-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:1.4rem;font-weight:700;color:var(--gold);cursor:pointer}
+.more-toggle-btn:hover{color:var(--gold-light)}
+.more-toggle:checked ~ .more-toggle-btn{display:none}
 @media(max-width:860px){.pgrid{grid-template-columns:repeat(2,1fr)}.pcard img{height:210px}}
 @media(max-width:540px){.pgrid{grid-template-columns:1fr}.pcard img{height:auto}}
 
@@ -501,7 +510,7 @@ footer a{color:var(--gold-light)}
 @media(max-width:900px){.cta-bar.show~.fab-wa{bottom:calc(94px + env(safe-area-inset-bottom))}}
 .wa-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:4000;display:none;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .wa-modal.open{display:flex}
-.wa-card{background:#fff;border-radius:24px;max-width:360px;width:100%;padding:30px 26px 26px;text-align:center;position:relative;box-shadow:0 30px 70px rgba(0,0,0,.5);animation:fadeUp .35s ease both;color:#161616}
+.wa-card{background:#fff;border-radius:24px;max-width:360px;width:100%;padding:30px 26px 26px;text-align:center;position:relative;box-shadow:0 12px 32px rgba(0,0,0,.28);animation:fadeUp .35s ease both;color:#161616}
 .wa-close{position:absolute;top:10px;right:16px;background:none;border:none;font-size:1.7rem;line-height:1;color:#aaa;cursor:pointer}
 .wa-close:hover{color:#666}
 .wa-head{font-weight:800;font-size:1.3rem;color:#161616;display:flex;align-items:center;justify-content:center;gap:8px}
@@ -591,7 +600,7 @@ footer a{color:var(--gold-light)}
     <section id="vysledky">
       <div class="container">
         <div class="sec-head rv">
-          <span class="kick">Výsledky z praxe</span>
+          <span class="kicker">Výsledky z praxe</span>
           <h2>Výsledky mých klientů</h2>
           <p>Proměny lidí, kteří to se mnou dotáhli. Tvoje může být další.</p>
           <div class="rule"></div>
@@ -611,6 +620,10 @@ footer a{color:var(--gold-light)}
           </div>
         </div>
 
+        <!-- Zobraz jen 3 nejsilnejsi promeny hned, zbytek az po kliknuti (bez JS,
+             checkbox + CSS). Ať sekce na mobilu neni 3000+ px dlouha driv, nez
+             clovek dojde k cenikum. -->
+        <input type="checkbox" id="vysledkyMore" class="more-toggle">
         <div class="pgrid">
           <div class="pcard rv"><span class="badge-kg">−12 kg</span>
             <img src="/assets/foto/promeny/muz-97-85.webp" alt="Proměna −12 kg, ze 97 na 85 kg, s Martinem Barnou" width="1100" height="982" loading="lazy" decoding="async">
@@ -627,11 +640,11 @@ footer a{color:var(--gold-light)}
             <img src="/assets/foto/promeny/kuba-v3.webp" alt="Kuba Navrátil - proměna před a po" width="900" height="594" loading="lazy" decoding="async">
             <div class="cap"><h4>Kuba Navrátil</h4><p>Zhubl tak, že mu lékař podle krevních testů potvrdil znatelné zlepšení zdraví.</p></div>
           </div>
-          <div class="pcard rv">
+          <div class="pcard rv extra">
             <img src="/assets/foto/promeny/abs.webp" alt="Zhubnutí a vyrýsované břišní svaly s Martinem Barnou" width="1054" height="1050" loading="lazy" decoding="async">
             <div class="cap"><h4>Vyrýsované břicho</h4><p>Zhubnutí a viditelné břišní svaly bez drastických diet.</p></div>
           </div>
-          <div class="pcard rv">
+          <div class="pcard rv extra">
             <img src="/assets/foto/promeny/zpevneni-bok.webp" alt="Zpevnění a vytvarování postavy z profilu s Martinem Barnou" width="880" height="1100" loading="lazy" decoding="async">
             <div class="cap"><h4>Zpevnění postavy</h4><p>Méně tuku, pevnější a vytvarovanější postava.</p></div>
           </div>
@@ -643,6 +656,7 @@ footer a{color:var(--gold-light)}
             </div>
           </div>
         </div>
+        <label for="vysledkyMore" class="more-toggle-btn">Zobrazit další proměny <span aria-hidden="true">↓</span></label>
         <a class="more-link" href="/reference/">Všechny proměny a 66 vybraných recenzí →</a>
       </div>
     </section>
@@ -651,7 +665,7 @@ footer a{color:var(--gold-light)}
     <section id="jak">
       <div class="container">
         <div class="sec-head rv">
-          <span class="kick">Bez stresu a napořád</span>
+          <span class="kicker">Bez stresu a napořád</span>
           <h2>Jak online koučink probíhá</h2>
           <p>Jednoduše, bez stresu a hlavně tak, aby ti to vydrželo.</p>
           <div class="rule"></div>
@@ -675,7 +689,7 @@ footer a{color:var(--gold-light)}
         <div class="about">
           <img class="about-photo rv" src="/assets/foto/martin/portret.webp" alt="Martin Barna - výživový kouč a fitness trenér" width="640" height="641" loading="lazy" decoding="async">
           <div>
-            <span class="kick">Kdo tě povede</span>
+            <span class="kicker">Kdo tě povede</span>
             <h2>Jmenuji se Martin Barna</h2>
             <p class="big rv">Výživě, tréninku a zdravému životnímu stylu se profesionálně věnuji už od roku 2013.</p>
             <p class="txt rv">Mám za sebou 13+ let praxe jako fitness trenér, přes 13 let ve výživě, mezinárodní trenérskou certifikaci, certifikaci výživového poradce a pokročilá koučovací studia. Přes 600 klientů, vědecky podložený přístup. Pomáhám lidem zhubnout, vytvarovat postavu, nabrat svaly a zvýšit výkon. Udržitelně, bez jojo efektu.</p>
@@ -694,7 +708,7 @@ footer a{color:var(--gold-light)}
     <section id="balicky">
       <div class="container">
         <div class="sec-head rv">
-          <span class="kick">Online koučink</span>
+          <span class="kicker">Online koučink</span>
           <h2>Vyber si svůj balíček</h2>
           <p>Koučink na míru s týdenním vedením. Doporučuju Gold, jde do něj většina lidí. Čím déle jdeme společně, tím víc ušetříš.</p>
           <div class="rule"></div>
@@ -775,7 +789,7 @@ footer a{color:var(--gold-light)}
     <section id="kviz">
       <div class="container">
         <div class="sec-head rv">
-          <span class="kick">Rozcestník na 30 sekund</span>
+          <span class="kicker">Rozcestník na 30 sekund</span>
           <h2>Nevíš, kde začít?</h2>
           <p>Tři otázky a doporučím ti přesně to, co ti sedne.</p>
           <div class="rule"></div>
@@ -818,7 +832,7 @@ footer a{color:var(--gold-light)}
       <span id="plan-zdarma"></span><span id="kalkulacka"></span>
       <div class="container">
         <div class="sec-head rv">
-          <span class="kick">Pro každého něco jiného</span>
+          <span class="kicker">Pro každého něco jiného</span>
           <h2>Hledáš něco jiného než koučink?</h2>
           <p>Koučink je nejrychlejší cesta, ale ne jediná. Vyber si, co sedne tobě.</p>
           <div class="rule"></div>
@@ -881,7 +895,7 @@ footer a{color:var(--gold-light)}
     <section id="reference">
       <div class="container">
         <div class="sec-head rv">
-          <span class="kick">Slovo mají klienti</span>
+          <span class="kicker">Slovo mají klienti</span>
           <h2>Co říkají klienti</h2>
           <p>Přes 100 hodnocení od klientů na Facebooku i Google.</p>
           <div class="rule"></div>
@@ -919,7 +933,7 @@ footer a{color:var(--gold-light)}
     <section id="faq">
       <div class="container">
         <div class="sec-head rv">
-          <span class="kick">Na rovinu</span>
+          <span class="kicker">Na rovinu</span>
           <h2>Časté otázky</h2>
           <p>Chybí ti tu odpověď? Napiš mi a rád ti poradím.</p>
           <div class="rule"></div>
@@ -950,7 +964,7 @@ footer a{color:var(--gold-light)}
       <div class="container">
         <div class="contact-grid">
           <div>
-            <span class="kick" style="color:var(--gold-light)">První krok je zpráva</span>
+            <span class="kicker" style="color:rgba(255,255,255,.78)">První krok je zpráva</span>
             <h2>Pojďme do toho spolu</h2>
             <p class="sub">Napiš mi a domluvíme si <b>konzultaci na míru</b>. Společně zjistíme, který balíček ti sedne a jak tě dostanu k cíli.</p>
             <ul class="clist">

@@ -129,7 +129,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .trust { display:flex; flex-wrap:wrap; gap:.5rem 1.4rem; margin-top:1.6rem; color:var(--mut); font-size:.9rem; font-weight:600; }
         .trust .st { color:var(--acc-l); letter-spacing:2px; }
         .hero-photo { position:relative; }
-        .hero-photo img { width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; border-radius:22px; border:1px solid rgba(255,255,255,.12); box-shadow:0 24px 60px rgba(0,0,0,.5); display:block; }
+        .hero-photo img { width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; border-radius:22px; border:1px solid rgba(255,255,255,.12); box-shadow:0 8px 24px rgba(0,0,0,.22); display:block; }
         .cap-note { margin-top:1.2rem; display:flex; gap:.5rem; align-items:flex-start; color:var(--warm); font-size:.88rem; }
 
         /* cards */
@@ -137,8 +137,13 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .grid { display:grid; gap:1.1rem; }
         .g4 { grid-template-columns:repeat(4,1fr); }
         .g3 { grid-template-columns:repeat(3,1fr); }
-        .card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:18px; padding:1.5rem 1.4rem; }
-        .card .em { font-size:1.6rem; display:block; margin-bottom:.6rem; }
+        .card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:18px; padding:1.5rem 1.4rem; transition:transform .2s ease,border-color .2s ease; }
+        .card:hover { transform:translateY(-3px); border-color:rgba(235,177,44,.35); }
+        /* Jednotna sada SVG ikon misto emoji (sprite hned za <body>). */
+        .ic { display:block; width:1.6rem; height:1.6rem; color:var(--acc); margin-bottom:.6rem; }
+        .ic svg { width:100%; height:100%; stroke:currentColor; stroke-width:1.75; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+        .ic-inline { display:inline-flex; width:1em; height:1em; vertical-align:-.15em; margin-right:.35em; flex-shrink:0; }
+        .ic-inline svg { width:100%; height:100%; stroke:currentColor; stroke-width:1.9; fill:none; stroke-linecap:round; stroke-linejoin:round; }
         .card h3 { font-size:1.05rem; font-weight:700; margin-bottom:.45rem; }
         .card p { color:var(--mut); font-size:.92rem; margin:0; }
 
@@ -235,6 +240,23 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
     <link rel="stylesheet" href="/assets/theme-light.css?v=l8">
 </head>
 <body>
+<!-- SVG ikony (sprite) - jednotna sada misto emoji -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M6 21V11M12 21V5M18 21v-8"/></symbol>
+    <symbol id="ic-refresh" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.66-5.66L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.66 5.66L4 16"/><path d="M4 20v-4h4"/></symbol>
+    <symbol id="ic-plate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.2"/></symbol>
+    <symbol id="ic-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12Z"/></symbol>
+    <symbol id="ic-app" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></symbol>
+    <symbol id="ic-robot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4M9.5 4h5"/><circle cx="9" cy="13.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.3" fill="currentColor" stroke="none"/><path d="M9 17h6"/></symbol>
+    <symbol id="ic-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M16 4v16M3 9h5M16 9h5M3 15h5M16 15h5"/></symbol>
+    <symbol id="ic-gift" viewBox="0 0 24 24"><rect x="3.5" y="8" width="17" height="4"/><rect x="5" y="12" width="14" height="9"/><path d="M12 8v13M12 8c-4.5 0-5.5-5.5-2-5.5C12 2.5 12 8 12 8Zm0 0c4.5 0 5.5-5.5 2-5.5C12 2.5 12 8 12 8Z"/></symbol>
+    <symbol id="ic-trophy" viewBox="0 0 24 24"><path d="M7 4h10v4.5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v1a4 4 0 0 0 4 4M17 6h3v1a4 4 0 0 1-4 4"/><path d="M12 13.5V17"/><path d="M8.5 21h7l-1-4h-5Z"/></symbol>
+    <symbol id="ic-phone" viewBox="0 0 24 24"><path d="M5 2.5h3.4l1.7 4.3-2.2 1.4a11 11 0 0 0 5 5l1.4-2.2 4.3 1.7V19a2.5 2.5 0 0 1-2.7 2.5A16.5 16.5 0 0 1 2.5 5.2 2.5 2.5 0 0 1 5 2.5Z"/></symbol>
+    <symbol id="ic-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
+    <symbol id="ic-warn" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 9.5v5M12 17.5h.01"/></symbol>
+  </defs>
+</svg>
 
 <div class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a><input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Otevřít menu">☰</label><nav class="navlinks" aria-label="Hlavní navigace"><a class="hide-sm" href="/koucing/">Koučink</a><a class="hide-sm" href="/tvuj-coach/">Appka</a><a class="hide-sm" href="/videokurz">Videokurz</a><a class="hide-sm" href="/akademie/">Academy</a><a class="hide-sm" href="/reference/">Reference</a><a class="hide-sm" href="/clanky/">Blog</a><details class="nav-more hide-sm"><summary>Více</summary><div><a href="/konzultace/">Konzultace</a><a href="/recepty-a-odpovedi/">Balíček 349</a><a href="/treninky">Tréninky</a><a href="/prednasky/">Přednášky</a><a href="/poukaz/">Poukazy</a></div></details><a class="hide-sm" href="/akademie/prihlaseni/">Přihlásit</a><a class="cta" href="/koucing/#balicky">Chci koučink</a></nav></div></div>
 
@@ -250,12 +272,12 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <a class="btn btn-ghost" href="#kontakt">Nezávazně mi napsat</a>
             </div>
             <div class="trust">
-                <span>🏆 600+ klientů</span>
+                <span><span class="ic-inline"><svg><use href="#ic-trophy"/></svg></span>600+ klientů</span>
                 <span><span class="st">★★★★★</span> 100+ recenzí</span>
                 <span>v oboru od roku 2013</span>
                 <span>bez jojo efektu</span>
             </div>
-            <p class="cap-note">⚠️ <span>Koučink beru jen v <strong>omezeném počtu</strong>, aby měl každý klient mou plnou pozornost a výsledky.</span></p>
+            <p class="cap-note"><span class="ic-inline"><svg><use href="#ic-warn"/></svg></span><span>Koučink beru jen v <strong>omezeném počtu</strong>, aby měl každý klient mou plnou pozornost a výsledky.</span></p>
         </div>
         <div class="hero-photo arena-photo">
             <img src="/assets/foto/martin/hero.webp" alt="Martin Barna - online výživový a fitness kouč" width="480" height="600" fetchpriority="high">
@@ -270,10 +292,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         <h2 class="center">Co v koučinku dostaneš</h2>
         <p class="sec-sub">Učím tě systém a vedu tě, dokud nejsi u cíle. Jídelníček do šuplíku ode mě nečekej.</p>
         <div class="grid g4">
-            <div class="card"><span class="em">📊</span><h3>Čísla spočítaná za tebe</h3><p>Kalorie, bílkoviny a makra nastavené na tvé tělo a cíl. Počítání nech na mně, ty jedeš podle plánu.</p></div>
-            <div class="card"><span class="em">🔁</span><h3>Týdenní vedení</h3><p>Každý týden projdu tvoji váhu, míry a to, jak šel týden, a upravím cíle i aktivity.</p></div>
-            <div class="card"><span class="em">🍕</span><h3>Jídlo, které tě baví</h3><p>Flexibilní stravování: jíš normální jídlo, jen ve správném množství. Vejde se i pizza.</p></div>
-            <div class="card"><span class="em">💬</span><h3>Podpora po ruce</h3><p>E-mail a WhatsApp (po–pá). U balíčku Diamond navíc každý týden hovor.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-chart"/></svg></span><h3>Čísla spočítaná za tebe</h3><p>Kalorie, bílkoviny a makra nastavené na tvé tělo a cíl. Počítání nech na mně, ty jedeš podle plánu.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-refresh"/></svg></span><h3>Týdenní vedení</h3><p>Každý týden projdu tvoji váhu, míry a to, jak šel týden, a upravím cíle i aktivity.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-plate"/></svg></span><h3>Jídlo, které tě baví</h3><p>Flexibilní stravování: jíš normální jídlo, jen ve správném množství. Vejde se i pizza.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-chat"/></svg></span><h3>Podpora po ruce</h3><p>E-mail a WhatsApp (po–pá). U balíčku Diamond navíc každý týden hovor.</p></div>
         </div>
     </div>
 </section>
@@ -285,10 +307,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         <h2 class="center">Koučink + technologie, kterou jinde nedostaneš</h2>
         <p class="sec-sub">Ke koučinku dostaneš vlastní digitální zázemí, v ceně každého balíčku.</p>
         <div class="grid g4">
-            <div class="card"><span class="em">📱</span><h3>Moderní klientská sekce</h3><p>Týdenní report naklikáš za 3 minuty z mobilu. Grafy váhy, měr a pokroku: celá tvoje cesta pohromadě, excel můžeš vyhodit.</p></div>
-            <div class="card"><span class="em">🍽️</span><h3><a href="/tvuj-coach/" style="color:inherit;text-decoration:none;">Appka Tvůj Coach ↗</a></h3><p>Zápis jídla i tréninku, generátor jídelníčku i tréninkového plánu, 125 cviků s fotkami a cíle, které se přepočítají podle check-inu. Jídlo zapíšeš i z fotky. A já vidím přesně to, co sis zapsal.</p></div>
-            <div class="card"><span class="em">🤖</span><h3>AI Martin: kouč 24/7</h3><p>Rychlý dotaz ve tři ráno? AI vytrénovaná na mé metodice a obsahu Academy odpoví hned. Velké věci pak řešíme spolu osobně.</p></div>
-            <div class="card"><span class="em">🎬</span><h3>Videokurz v ceně</h3><p>182 videí o výživě a tréninku k samostudiu, ať rozumíš tomu, co děláme a proč. Včetně generátoru receptů podle tvých kalorií. Zůstane ti i po konci koučinku.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-app"/></svg></span><h3>Moderní klientská sekce</h3><p>Týdenní report naklikáš za 3 minuty z mobilu. Grafy váhy, měr a pokroku: celá tvoje cesta pohromadě, excel můžeš vyhodit.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-plate"/></svg></span><h3><a href="/tvuj-coach/" style="color:inherit;text-decoration:none;">Appka Tvůj Coach ↗</a></h3><p>Zápis jídla i tréninku, generátor jídelníčku i tréninkového plánu, 125 cviků s fotkami a cíle, které se přepočítají podle check-inu. Jídlo zapíšeš i z fotky. A já vidím přesně to, co sis zapsal.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-robot"/></svg></span><h3>AI Martin: kouč 24/7</h3><p>Rychlý dotaz ve tři ráno? AI vytrénovaná na mé metodice a obsahu Academy odpoví hned. Velké věci pak řešíme spolu osobně.</p></div>
+            <div class="card"><span class="ic"><svg><use href="#ic-film"/></svg></span><h3>Videokurz v ceně</h3><p>182 videí o výživě a tréninku k samostudiu, ať rozumíš tomu, co děláme a proč. Včetně generátoru receptů podle tvých kalorií. Zůstane ti i po konci koučinku.</p></div>
         </div>
     </div>
 </section>
@@ -310,7 +332,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 <section class="sec">
     <div class="wrap">
         <div class="konz">
-            <b class="t">🎁 Konzultace 2 990 Kč. A fakticky zdarma, když to myslíš vážně.</b>
+            <b class="t"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span>Konzultace 2 990 Kč. A fakticky zdarma, když to myslíš vážně.</b>
             <p>Objednáš-li si do <strong>14 dní</strong> po konzultaci online koučink, <strong>cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku</strong>. Buď je to start tvé proměny, nebo férová cena za můj čas. Plán, který si odneseš, ti zůstává tak jako tak.</p>
             <a class="btn btn-acc" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=nav&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat konzultaci →</a>
         </div>
@@ -498,8 +520,8 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <h2>Pojďme do toho spolu</h2>
                 <p style="color:var(--warm);">Napiš mi a domluvíme detaily. Společně zjistíme, který balíček ti sedne a jak tě dostanu k cíli, nezávazně.</p>
                 <ul class="clist">
-                    <li>📱 WhatsApp / telefon: <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20dotaz%20ohledn%C4%9B%20kou%C4%8Dinku">+420 603 229 831</a></li>
-                    <li>✉️ E-mail: <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></li>
+                    <li><span class="ic-inline"><svg><use href="#ic-phone"/></svg></span>WhatsApp / telefon: <a href="https://wa.me/420603229831?text=Ahoj%20Martine,%20m%C3%A1m%20dotaz%20ohledn%C4%9B%20kou%C4%8Dinku">+420 603 229 831</a></li>
+                    <li><span class="ic-inline"><svg><use href="#ic-mail"/></svg></span>E-mail: <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></li>
                 </ul>
                 <p style="color:var(--mut); font-size:.88rem;">Ozvu se ti zpátky co nejdřív, obvykle do 24 hodin (po–pá).</p>
             </div>
@@ -517,7 +539,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                         <option value="Konzultace">Zatím jen konzultace</option>
                     </select>
                     <textarea name="Zpráva" rows="3" placeholder="S čím chceš pomoct? Klidně napiš i svůj cíl a s čím bojuješ." required></textarea>
-                    <button type="submit" class="btn btn-acc">✉️ Odeslat poptávku</button>
+                    <button type="submit" class="btn btn-acc"><span class="ic-inline"><svg><use href="#ic-mail"/></svg></span>Odeslat poptávku</button>
                 </form>
             </div>
         </div>
