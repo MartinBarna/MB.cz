@@ -182,9 +182,31 @@
     function saveState(){ try{ localStorage.setItem('ba_workout_last', JSON.stringify({ location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:$('daysCount').value, client:$('client').value, seed:seed })); }catch(e){} }
     function loadState(){ try{ return JSON.parse(localStorage.getItem('ba_workout_last')||'null'); }catch(e){ return null; } }
 
+    // Režim klienta koučinku (?klient=1, volitelně &days=&goal= z klientské sekce): stránka
+    // mluví ke klientovi, ne k trenérovi, „Jméno klienta" a „Moje značka" se schovají a počet
+    // dní i cíl se předvyplní ze zadání od Martina. Poslední uložený plán se tu neobnovuje,
+    // aby klient nedostal cizí zadání z téhož prohlížeče. Generátor sám se nemění.
+    var KLIENT=false;
+    try{
+      var qp=new URLSearchParams(location.search);
+      if(qp.get('klient')==='1'){
+        KLIENT=true;
+        var kk=document.querySelector('.kick'); if(kk) kk.innerHTML='<span class="dot"></span> Pro klienty koučinku';
+        var cl=$('client'); if(cl&&cl.parentElement) cl.parentElement.style.display='none';
+        var bb=$('brandbox'); if(bb) bb.style.display='none';
+        var dn=qp.get('days'), dnOk=false, ds=$('daysCount');
+        if(dn && ds){ for(var i=0;i<ds.options.length;i++){ if(ds.options[i].value===dn){ ds.value=dn; dnOk=true; } } }
+        var gl=qp.get('goal'), gs=$('goal');
+        if(gl && gs && gs.querySelector('option[value="'+gl.replace(/[^a-z_]/g,'')+'"]')) gs.value=gl;
+        var ld=document.querySelector('.lead');
+        if(ld) ld.textContent='Vyber, kde cvičíš, s čím a jak jsi na tom, a poskládám ti týdenní plán s cviky, sériemi i opakováními.'
+          + (dnOk ? ' Počet dní v týdnu máš předvyplněný podle zadání od Martina, kdyžtak si ho uprav.' : '');
+      }
+    }catch(e){}
+
     fetch('/assets/exercise-db.json?v=20260902c').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' cviků připraveno';
-      var st=loadState();
+      var st=KLIENT ? null : loadState();
       if(st){
         if(st.location)$('location').value=st.location; if(st.equip)$('equip').value=st.equip;
         if(st.level)$('level').value=st.level; if(st.goal)$('goal').value=st.goal;

@@ -155,7 +155,7 @@
         <div id="meals"></div>
         <div class="mt" id="daytotwrap" style="border-radius:12px;border:1px solid var(--line);margin-top:6px;"><b style="color:#fff;">Den celkem</b><span id="daytot"></span></div>
         <p class="note" id="dayWarnNote" hidden></p>
-        <p class="note">Hodnoty jsou orientační (běžné potravinové tabulky). Generátor je výchozí bod, uprav porce podle klienta, chutí a reality. Cílové makro = ze vstupních údajů, sestava ±10 %. Tlačítkem ⇄ u položky ji vyměníš za jinou ze stejné kategorie (gramáž se dopočítá na stejné kalorie).</p>
+        <p class="note" id="genNote">Hodnoty jsou orientační (běžné potravinové tabulky). Generátor je výchozí bod, uprav porce podle klienta, chutí a reality. Cílové makro = ze vstupních údajů, sestava ±10 %. Tlačítkem ⇄ u položky ji vyměníš za jinou ze stejné kategorie (gramáž se dopočítá na stejné kalorie).</p>
         <div class="actions no-print">
           <button class="btn" id="regen">↻ Přegenerovat</button>
           <button class="btn ghost" id="print">🖨️ Uložit / tisk (PDF)</button>
@@ -188,6 +188,12 @@
 
     // Předvyplnění z kalkulačky (?sex=&age=&w=&h=&act=&goal=) - po načtení DB se rovnou vygeneruje
     var fromCalc=false;
+    // Režim klienta koučinku (?klient=1, volitelně &kcal=&protein=&fiber=&carbs=&fat= z klientské
+    // sekce): stránka mluví ke klientovi, ne k trenérovi, pole „Jméno klienta" a „Moje značka"
+    // se schovají a cíl se bere z čísel od Martina místo přepočtu z tabulek. Co v adrese chybí,
+    // dopočítá se stejně jako v computeTargets (tuk 28 % kcal, vláknina 14 g na 1000 kcal,
+    // podlaha 20 g a strop 60 g). Engine se nemění, jen odkud bere cíl.
+    var fixedTargets=null;
     try{
       var qp=new URLSearchParams(location.search);
       if(qp.get('w')){
@@ -196,11 +202,36 @@
         setV('height',qp.get('h')); setV('activity',qp.get('act')); setV('goal',qp.get('goal'));
         fromCalc=true;
       }
+      if(qp.get('klient')==='1'){
+        var hideWrap=function(id){ var x=$(id); if(x&&x.parentElement) x.parentElement.style.display='none'; };
+        var kk=document.querySelector('.kick'); if(kk) kk.innerHTML='<span class="dot"></span> Pro klienty koučinku';
+        hideWrap('client'); var bb=$('brandbox'); if(bb) bb.style.display='none';
+        var gn=$('genNote'); if(gn) gn.textContent='Hodnoty jsou orientační (běžné potravinové tabulky). Jídelníček je výchozí bod: porce si posuň podle chuti a reality, hlavně ať den jako celek sedí na tvoje čísla. Tlačítkem ⇄ u položky ji vyměníš za jinou ze stejné kategorie (gramáž se dopočítá na stejné kalorie).';
+        var kc=+qp.get('kcal');
+        var ld=document.querySelector('.lead');
+        if(kc>0){
+          var pr=+qp.get('protein')||0, fa=+qp.get('fat')||0, ca=+qp.get('carbs')||0, fi=+qp.get('fiber')||0;
+          if(!(fa>0)) fa=Math.round(kc*0.28/9);
+          if(!(ca>0)) ca=Math.max(40, Math.round((kc-pr*4-fa*9)/4));
+          if(!(fi>0)) fi=Math.min(60, Math.max(20, Math.round(kc/1000*14)));
+          if(!(pr>0)) pr=Math.max(40, Math.round((kc-fa*9-ca*4)/4));
+          fixedTargets={ kcal:kc, protein:pr, carbs:ca, fat:fa, fiber:fi, goalLabel:'čísla od Martina',
+            kcalFloor:null, rateCapped:false, floorAboveTdee:false, floorNote:null };
+          ['sex','age','weight','height','activity','goal'].forEach(hideWrap);
+          if(ld) ld.textContent='Poskládej si den z běžných potravin přesně na čísla, která máš od Martina. Co ti nesedí, vyměň tlačítkem ⇄ u položky; celý týden si ulož i s nákupním seznamem do PDF.';
+          var f=$('form');
+          if(f){ var p=document.createElement('p'); p.className='note'; p.style.margin='0 0 14px';
+            p.innerHTML='🎯 Čísla od Martina: <b>'+kc+' kcal</b> · <b>'+pr+' g bílkovin</b> · <b>'+fi+' g vlákniny</b>. Jídelníček je poskládaný přesně na ně; nastav si jen počet jídel, rozsah a co nejíš.';
+            f.insertBefore(p, f.firstChild); }
+        } else if(ld){
+          ld.textContent='Zadej svoje údaje, spočítám kalorie i makra a poskládám ti den z běžných potravin: jeden den, nebo rovnou celý týden s nákupním seznamem. Až ti Martin zadá čísla, budou tu předvyplněná.';
+        }
+      }
     }catch(e){}
 
     fetch('/assets/food-db.json?v=20260902c').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' potravin připraveno';
-      if(fromCalc) generate(false);
+      if(fromCalc || fixedTargets) generate(false);
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
     loadBrand();
 
@@ -312,7 +343,7 @@
     function generate(newSeed){
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
-      lastTargets=window.MealGen.computeTargets(inputs());
+      lastTargets=fixedTargets ? JSON.parse(JSON.stringify(fixedTargets)) : window.MealGen.computeTargets(inputs());
       if($("keto").checked) lastTargets=window.MealGen.ketoTargets(lastTargets); // kolo 3: keto předvolba, matematika v enginu
       if($('range').value==='tyden'){
         lastWeek=window.MealGen.assembleWeek(lastTargets,{ meals:+$('mealsCount').value, prefs:prefs(), db:DB, seed:seed });

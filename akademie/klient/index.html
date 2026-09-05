@@ -524,6 +524,12 @@
   function tgVal(k){ return targets ? toNum(targets[k]) : null; }
   function cele(v){ return Math.round(v).toLocaleString("cs-CZ"); }
   function renderTargets(){
+    // Nástroje jídelníčku a tréninku jsou sdílené s trenéry z Academy. Klient koučinku je
+    // otevírá s ?klient=1: stránka pak mluví k němu (ne „zadej údaje klienta") a jídelníček
+    // dostane čísla od Martina rovnou v adrese, místo aby si je klient přepočítával z tabulek.
+    var tm = el("toolMeal"), tt = el("toolTrain");
+    if(tm) tm.href = "/akademie/nastroje/jidelnicek/?klient=1";
+    if(tt) tt.href = "/akademie/nastroje/trenink/?klient=1";
     if(!targets) return;
     var filled = TG_POLE.filter(function(p){ return tgVal(p.k) != null; });
     var filledVed = TG_POLE_VEDLEJSI.filter(function(p){ return tgVal(p.k) != null; });
@@ -548,6 +554,15 @@
       + (targets.updated_at ? " " + dateCz(String(targets.updated_at).slice(0, 10)) : "")
       + '. Co k tomu potřebuješ probrat, napiš do reportu.</p></div></div>';
     el("tgCard").style.display = "";
+    var q = ["klient=1"];
+    ["kcal", "protein", "fiber", "carbs", "fat"].forEach(function(k){
+      var v = tgVal(k); if(v != null && v > 0) q.push(k + "=" + Math.round(v));
+    });
+    if(tm) tm.href = "/akademie/nastroje/jidelnicek/?" + q.join("&");
+    var tr = tgVal("treninky");
+    if(tt) tt.href = "/akademie/nastroje/trenink/?klient=1"
+      + (tr != null && tr > 0 ? "&days=" + Math.min(5, Math.max(2, Math.round(tr))) : "")
+      + (/hubnut/i.test(note) ? "&goal=kondice" : "");
   }
   // Odchylka od cíle v HISTORII. ⛔ Bere se výhradně SNÍMEK cíle uloženého v tom reportu
   // (`r.targets`), NIKDY aktuální cíl. Jinak by zvýšení kalorií z 1800 na 2200 zpětně obarvilo
