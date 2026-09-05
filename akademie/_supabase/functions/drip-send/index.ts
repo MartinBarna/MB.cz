@@ -572,12 +572,17 @@ Deno.serve(async (req: Request) => {
     //    je porad obchodni mail a tyhle stavy znamenaji „nechte me byt".
     //    Zaroven se tim bere jeho SKUTECNY unsubscribe_token, ne testovaci.
     const { data: l } = await admin
-      .from('leads').select('id,name,segment,status,unsubscribe_token').eq('email', to).maybeSingle();
+      .from('leads').select('id,name,segment,status,unsubscribe_token,vars').eq('email', to).maybeSingle();
     if (!l) return json({ ok: false, mode: 'oneoff', error: 'lead_neexistuje' }, 404);
     if (l.status !== 'active') return json({ ok: true, mode: 'oneoff', status: 'preskoceno', duvod: l.status });
     try {
       const seg = normSeg(body.segment ?? l.segment);
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, to, null, CISLA);
+      // [2026-09-05] Jednorazovka cte promenne z `vars[track]` leada (napr. cisla z /start),
+      //    stejne pravidlo jako davka: jen vlastni trat, nikdy plosne.
+      const oneoffVars = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars))
+        ? (l.vars as Record<string, unknown>)[track] as Record<string, unknown> | undefined
+        : undefined;
+      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, to, oneoffVars ?? null, CISLA);
       const m = renderEmail(tpl, seg, v, footer);
       // Jednorazovka jde skutecnemu cloveku, takze se meri stejne jako davkovy mail.
       // ⚠️ V souhrnech je jeji odeslani typu `oneoff`, ne `sent`; kdo pocita open rate,

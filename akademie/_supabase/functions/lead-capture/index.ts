@@ -9,6 +9,30 @@ const CORS = {
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { ...CORS, "Content-Type": "application/json" } });
 
+// Cisla z /start: jen cela cisla v rozumnem rozsahu, cil jen z povolenych popisku.
+// Cokoli jineho se zahodi, at do mailu nejde nic, co by clovek napsal do requestu sam.
+function startCisla(v: unknown): Record<string, string> | null {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
+  const o = v as Record<string, unknown>;
+  const num = (k: string, lo: number, hi: number) => {
+    const n = Math.round(Number(o[k]));
+    return Number.isFinite(n) && n >= lo && n <= hi ? String(n) : null;
+  };
+  const kcal = num("kcal", 800, 6000);
+  if (!kcal) return null;
+  const CILE = ["Hubnutí", "Udržení", "Nabírání", "Rekompozice"];
+  const cil = CILE.includes(String(o.cil)) ? String(o.cil) : "";
+  return {
+    kcal,
+    protein_g: num("protein_g", 30, 400) ?? "",
+    fiber_g: num("fiber_g", 10, 80) ?? "",
+    carb_g: num("carb_g", 0, 900) ?? "",
+    fat_g: num("fat_g", 10, 300) ?? "",
+    tdee: num("tdee", 800, 7000) ?? "",
+    cil: cil || "tvůj cíl",
+  };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ ok: false, error: "method" }, 405);
@@ -79,7 +103,14 @@ Deno.serve(async (req) => {
     //    tu proměnnou používá stejně jako `lead-magnet` step 0. Kdo to začne přepisovat,
     //    pošle muži ženský jídelníček.
     const jeReklamaMagnet = utmCampaign.toLowerCase() === "tc-leadgen";
-    const track = source === "videokurz-free" ? "nurture-videokurz"
+    // [2026-09-05] Vysledek dotazniku /start (appka, bez uctu): clovek si necha poslat
+    //    sva cisla na e-mail. Vlastni kratka trat `tc-start` (2 maily), cisla jdou do
+    //    `vars['tc-start']`, sablona je cte pres {{kcal}} atd. Duplicitni e-mail dostane
+    //    jen jednorazovy prvni mail (drip-send oneoff cte vars z leada), trat mu nemenime.
+    const jeStart = source === "tc-start";
+    const startVars = jeStart ? startCisla(body.vars) : null;
+    const track = jeStart ? "tc-start"
+      : source === "videokurz-free" ? "nurture-videokurz"
       : (source === "pro-trenery" || segRaw === "trener") ? "trener-kit"
       : tool ? "lead-magnet-tool"
       : segRaw === "academy-pro-vas" ? "nurture-pro-vas"
@@ -128,6 +159,7 @@ Deno.serve(async (req) => {
       //    mrtvá páka. Dnes ho žádná šablona nepoužívá (odstavec je v `kviz-*`/0 napevno),
       //    je to záloha pro případ, že by ho někdy nějaký krok kvízové tratě potřeboval.
       ...(kvizProfil ? { vars: { [track]: { kviz_profil: kvizProfil } } } : {}),
+      ...(startVars ? { vars: { [track]: startVars } } : {}),
       next_send_at: new Date(Date.now() + (tool ? 24 * 3600000 : 0)).toISOString(),
     });
     // 23505 = unique violation (e-mail uz je v seznamu) -> bereme jako uspech (idempotentni)
@@ -139,6 +171,28 @@ Deno.serve(async (req) => {
     // u duplicitniho e-mailu doplnime telefon, jen kdyz v existujicim leadu chybi (neprepisujeme)
     if (duplicate && phone) {
       await supa.from("leads").update({ phone }).eq("email", email).is("phone", null);
+    }
+    // Duplicitni lead z /start: cisla se doplni do vars (ostatni trate se nemeni) a posle se
+    // jen prvni mail jako jednorazovka. `drip_invoke_secret` je stejny jako u okamzite uvitacky.
+    if (duplicate && startVars) {
+      const { data: l } = await supa.from("leads").select("vars,status").eq("email", email).maybeSingle();
+      const stare = (l?.vars && typeof l.vars === "object" && !Array.isArray(l.vars)) ? l.vars as Record<string, unknown> : {};
+      await supa.from("leads").update({ vars: { ...stare, "tc-start": startVars } }).eq("email", email);
+      if (l?.status === "active") {
+        const oneoff = (async () => {
+          try {
+            const { data: cfg } = await supa.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
+            if (!cfg?.value) return;
+            await fetch(SUPABASE_URL + "/functions/v1/drip-send", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "x-drip-secret": cfg.value },
+              body: JSON.stringify({ oneoff_email: email, track: "tc-start", step: 0 }),
+            });
+          } catch (e) { console.error("tc-start oneoff error", e); }
+        })();
+        // @ts-ignore EdgeRuntime background task
+        if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) EdgeRuntime.waitUntil(oneoff);
+      }
     }
 
     // OKAMZITE uvitaci mail: spust drip-send JEN pro tenhle novy lead, ale NIKDY neblokuj odpoved.
