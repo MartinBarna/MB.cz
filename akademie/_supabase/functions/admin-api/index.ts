@@ -705,13 +705,14 @@ function rdParse(raw: string): { draft: string; navrh_zmen: string } {
 // Martin ve 3. osobě, vykání uprostřed tykání, mužský minulý čas u klientky.
 export function rdVarovani(draft: string, rod: string): string[] {
   const v: string[] = [];
-  if (/\bMartin(a|ovi|em|e)?\b/.test(draft)) v.push("Text mluví o Martinovi ve 3. osobě, má být v 1. osobě (ozvu se, proberu).");
-  if (/\b(zkuste|dejte|mějte|držte|pište|jezte|pijte|choďte|snažte|udělejte|zvládnete|máte|jste|vás|vám|váš|vaše|vaši)\b/i.test(draft)) v.push("V textu je vykání (zkuste, dejte, vám), zbytek tyká.");
-  // Minulý čas se hlídá jen vedle 2. osoby (jsi/sis/ses), protože Martin o sobě píše v mužském
-  // rodě oprávněně ('spočítal jsem'). Slova na -l/-la, která nejsou příčestí, jsou ve stoplistu.
-  // \b v JS nezná diakritiku (hranice by byla i uvnitř slova jídla), proto vlastní hranice slova.
+  // ⛔ \b v JS nezná diakritiku: hranice slova by byla i uvnitř „nechávám" (…á|vám) nebo „jídla",
+  //    proto vlastní hranice z českých písmen. Falešné „vykání" u „nechávám" našel QA 5. 9. 2026.
   const L = String.raw`a-záčďéěíňóřšťúůýž`;
   const B0 = String.raw`(?<![${L}])`, B1 = String.raw`(?![${L}])`;
+  if (new RegExp(String.raw`${B0}Martin(a|ovi|em|e)?${B1}`).test(draft)) v.push("Text mluví o Martinovi ve 3. osobě, má být v 1. osobě (ozvu se, proberu).");
+  if (new RegExp(String.raw`${B0}(zkuste|dejte|mějte|držte|pište|jezte|pijte|choďte|snažte|udělejte|zvládnete|máte|jste|vás|vám|váš|vaše|vaši)${B1}`, "i").test(draft)) v.push("V textu je vykání (zkuste, dejte, vám), zbytek tyká.");
+  // Minulý čas se hlídá jen vedle 2. osoby (jsi/sis/ses), protože Martin o sobě píše v mužském
+  // rodě oprávněně ('spočítal jsem'). Slova na -l/-la, která nejsou příčestí, jsou ve stoplistu.
   const M = String.raw`(?!(?:cíl|půl|sůl|styl|díl|kýl|gól)${B1})[${L}]+[^a\s]l`;
   const Z = String.raw`(?!(?:jídla|kila|čísla|pravidla|těla|síla|kola|škola|tabulka|hodinka)${B1})[${L}]+la`;
   const muz = new RegExp(String.raw`${B0}(jsi|sis|ses)${B1}(?:\s+\S+){0,2}\s+${B0}${M}${B1}|${B0}${M}\s+(jsi|sis|ses)${B1}`, "i");
