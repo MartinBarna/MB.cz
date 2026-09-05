@@ -1,58 +1,52 @@
-// Videokurz builder: z videos.tsv vygeneruje nástěnku + stránku každého videa.
-// ⛔ POZOR (1. 9. 2026): tenhle builder je ROZEŠLÝ s tím, co je v akademie/videokurz/.
-// Zkušební běh přepsáním vrátí 183 souborů o kus zpátky: staré favicony (favicon.ico místo
-// favicon-g3.ico), staré verze skriptů (ba-academy.js?v=20260702c, scroll-top.js bez ?v),
-// dlouhé pomlčky v titulcích i textech a ztrátu atributu data-upsell="videokurz"
-// (bez něj vidí majitel kurzu nabídku, ať si ho koupí znovu). Cena a odkaz tu jsou
-// srovnané s webem, ZBYTEK NE: před příštím během se builder musí nejdřív doladit
-// podle živých stránek, jinak web spadne o měsíce zpátky.
-// ⭐ 2. 9. 2026 doplněno `analytics.js` + `referral.js` (partnerské kódy a atribuce reklamy);
-// bez nich nákup z ochutnávkové lekce partnerovi provizi nepřipsal.
-// Mechanické (žádné agenty): vloží YouTube embed do branded šablony.
+// Videokurz builder: z manifest.json vygeneruje nástěnku a stránku každého videa.
+// Stav 5. 9. 2026: zdroj dat je manifest.json (pořadí, sekce, zobrazovaný název, YouTube ID
+// i free flag u každého videa), ne videos.tsv. Soubor videos.tsv je zastaralý (naposledy
+// 25. 6., jiná ID i jiné pořadí než živé stránky) a skript ho už nikdy nečte; leží na disku
+// jen pro případné dohledání historie. Manifest.json skript jen ČTE, nikdy ho nepřepisuje:
+// je to ručně udržovaný zdroj pravdy (naposledy upraven 2. 7., kdy přibyl free flag).
+// Šablony (favicony, verze assetů ?v=, texty, data-upsell) jsou sladěné se živými stránkami
+// v akademie/videokurz/; pojistka: bez --out <složka> skript odmítne zapsat, aby nešel
+// omylem ostrý přepis živých stránek něčím neověřeným.
+//   Dry-run:  node akademie/_videokurz/build.js --out <docasna-slozka>
+//   Ověření:  diff -r <docasna-slozka> akademie/videokurz   (bez kalkulacka/ a recepty/,
+//             ty jsou samostatné a builder je negeneruje)
+//   Až je diff prázdný, ostrý zápis: node akademie/_videokurz/build.js --out akademie/videokurz
+// Mechanické (žádné agenty): vloží YouTube embed do brandované šablony.
 const fs = require('fs');
 const path = require('path');
-const ROOT = path.resolve(__dirname, '../..');
-const OUT = path.join(ROOT, 'akademie/videokurz');
 
-const rows = fs.readFileSync(path.join(__dirname, 'videos.tsv'), 'utf8')
-  .split('\n').map(l => l.trim()).filter(Boolean)
-  .map(l => { const p = l.split('\t'); return { ord: +p[0], id: p[1], title: p[2] }; });
+const _args = process.argv.slice(2);
+const _outIdx = _args.indexOf('--out');
+const _outArg = _outIdx !== -1 ? _args[_outIdx + 1] : null;
+if (!_outArg) {
+  console.error('Chybi --out <slozka>.');
+  console.error('Ostry zapis do akademie/videokurz je zakazany, dokud neni diff s zivymi strankami prazdny.');
+  console.error('Spust nejdriv dry-run do docasne slozky, napriklad:');
+  console.error('  node akademie/_videokurz/build.js --out scratchpad/videokurz-dryrun');
+  console.error('Vysledek porovnej: diff -r scratchpad/videokurz-dryrun akademie/videokurz');
+  process.exit(1);
+}
+const OUT = path.resolve(_outArg);
 
-// ---- normalizace názvu (z velkých písmen na hezčí) ----
-function nice(t) {
-  // sjednoť vícenásobné mezery
-  t = t.replace(/\s+/g, ' ').trim();
-  // názvy typu "1.13 MAKROŽIVINY SACHARIDY" → "Makroživiny sacharidy" (číslo dáme do crumbu)
-  return t;
-}
-// vytáhni číslo modulu "1.13", "4.2.2" → {mod, sub[]}
-function numinfo(t) {
-  const m = t.match(/^(\d+)(?:[.\s](\d+))?(?:\.(\d+))?\s/);
-  if (!m) return null;
-  return { mod: +m[1], sub: [m[2] ? +m[2] : 0, m[3] ? +m[3] : 0], raw: m[0].trim() };
-}
-function stripNum(t) { return t.replace(/^(\d+)(?:[.\s]\d+)?(?:\.\d+)?\s+/, '').trim(); }
-function titleCase(t) {
-  // jen pokud je celé velkými písmeny → převeď na "Věta s velkým prvním písmenem"
-  var letters = t.replace(/[^A-Za-zÁ-Žá-ž]/g, '');
-  var upp = letters && letters === letters.toUpperCase();
-  if (!upp) return t;
-  var low = t.toLowerCase();
-  return low.charAt(0).toUpperCase() + low.slice(1);
-}
+// Manifest je zdroj pravdy: každá položka už nese finální pořadí (n), slug, sekci (sec),
+// zobrazovaný název (title) i free flag. Build tenhle výpočet nikdy nepřepisuje.
+// LID je slug-based ('vk-v001'), NE YouTube ID: ID placených videí nesmí být ve statickém
+// HTML (nástěnka, progress klíče). Stará data progressu zmigrována v DB (vk-<ytid> → vk-v###).
+const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'manifest.json'), 'utf8'));
+const ordered = manifest.map(v => ({ n: v.n, slug: v.slug, id: v.id, sec: v.sec, disp: v.title, free: !!v.free, lid: 'vk-' + v.slug }));
 
-// ---- přiřazení sekce ----
+// ---- sekce (názvy a pořadí; přiřazení videa k sekci už nese manifest.json) ----
 const SECTIONS = [
-  { key: 'm1', name: 'Modul 1 — Základy výživy' },
-  { key: 'm2', name: 'Modul 2 — Výpočet jídelníčku' },
-  { key: 'm3', name: 'Modul 3 — Trénink' },
-  { key: 'm4', name: 'Modul 4 — Úpravy plánu a pokrok' },
-  { key: 'm5', name: 'Modul 5 — Suplementy' },
-  { key: 'm6', name: 'Modul 6 — Stravovací strategie' },
-  { key: 'm7', name: 'Modul 7 — Kalorické tabulky' },
-  { key: 'm8', name: 'Modul 8 — Udržení formy a mindset' },
+  { key: 'm1', name: 'Modul 1: Základy výživy' },
+  { key: 'm2', name: 'Modul 2: Výpočet jídelníčku' },
+  { key: 'm3', name: 'Modul 3: Trénink' },
+  { key: 'm4', name: 'Modul 4: Úpravy plánu a pokrok' },
+  { key: 'm5', name: 'Modul 5: Suplementy' },
+  { key: 'm6', name: 'Modul 6: Stravovací strategie' },
+  { key: 'm7', name: 'Modul 7: Kalorické tabulky' },
+  { key: 'm8', name: 'Modul 8: Udržení formy a mindset' },
   { key: 'techt', name: 'Cvičební technika' },
-  { key: 'biceps', name: 'Cviky na biceps — videoukázky' },
+  { key: 'biceps', name: 'Cviky na biceps: videoukázky' },
   { key: 'doma', name: 'Domácí tréninky' },
   { key: 'bloncka', name: 'Bloncka se ptá Coache' },
   { key: 'rozhovory', name: 'Rozhovory a studie' },
@@ -60,12 +54,15 @@ const SECTIONS = [
   { key: 'live', name: 'Livestreamy členské sekce' },
   { key: 'doplnkova', name: 'Doplňková videa a novinky' },
 ];
+SECTIONS.forEach(s => { s.list = ordered.filter(v => v.sec === s.key); });
+
 // Materiály ke stažení (hostované v Supabase Storage bucketu 'videokurz-materialy').
-// 'link' = otevře web (kalkulačka), 'file' = stáhne přes podepsanou URL.
+// 'link' = otevře web (kalkulačka, generátor receptů), 'file' = stáhne přes podepsanou URL.
 const BUCKET = 'videokurz-materialy';
 const MATERIALS = [
   { ico: '🧮', t: 'Kalkulačka kalorií a makroživin', d: 'Online kalkulačka přímo v kurzu', link: '/akademie/videokurz/kalkulacka/' },
-  { ico: '🍳', t: 'Kuchařka — 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'Kucharka 40 + receptu.pdf' },
+  { ico: '🥘', t: 'Generátor receptů', d: 'NOVÉ: recepty s makry přímo v kurzu', link: '/akademie/videokurz/recepty/' },
+  { ico: '🍳', t: 'Kuchařka: 40+ receptů', d: 'Sbírka receptů (PDF)', file: 'Kucharka 40 + receptu.pdf' },
   { ico: '📘', t: 'E-book: Jak hubnout efektivně', d: 'E-book ke stažení (PDF)', file: 'Ebook jak hubnout efektivne.pdf' },
   { ico: '📗', t: 'E-book: Nejčastější otázky klientů', d: 'E-book ke stažení (PDF)', file: 'Otazky klientu EBook.pdf' },
   { ico: '📄', t: 'Výpočty hubnutí a nabírání', d: 'Tahák s výpočty (PDF)', file: 'Vypoctyhubnutianabirani.pdf' },
@@ -73,68 +70,32 @@ const MATERIALS = [
   { ico: '⚖️', t: 'Proč vážit jídlo', d: 'Infografika (PDF)', file: 'Proc vazit jidlo.pdf' },
   { ico: '🧺', t: 'Nákupní košík', d: 'Vzorový nákup (obrázek)', file: 'nakupni kosik.png' },
   { ico: '📊', t: 'Report pro coache', d: 'Šablona s grafem (Excel)', file: 'Report tabulka.xlsx' },
-  // --- NOVÉ bonusové materiály (token-driven, hostované staticky na /materialy/pdf/) ---
-  { ico: '😴', t: 'Spánek & regenerace', d: 'NOVÉ — průvodce pro klienty (PDF)', link: '/materialy/pdf/spanek-a-regenerace.pdf?v=20260629' },
-  { ico: '✋', t: 'Porce bez vážení', d: 'NOVÉ — porcování rukou (PDF)', link: '/materialy/pdf/porce-bez-vazeni.pdf?v=20260629' },
-  { ico: '✅', t: 'Deník návyků', d: 'NOVÉ — týdenní tracker (PDF)', link: '/materialy/pdf/denik-navyku.pdf?v=20260629' },
-  { ico: '📦', t: 'Uvítací balíček', d: 'NOVÉ — onboarding klienta (PDF)', link: '/materialy/pdf/uvitaci-balicek.pdf?v=20260629' },
-  { ico: '🍕', t: 'Flexibilní stravování', d: 'NOVÉ — průvodce pro klienty (PDF)', link: '/materialy/pdf/flexibilni-strava.pdf?v=20260629' },
-  { ico: '🍳', t: 'High-protein receptář', d: 'NOVÉ — 12 receptů s makry (PDF)', link: '/materialy/pdf/high-protein-recepty.pdf?v=20260629' },
-  { ico: '🏋️', t: 'Tréninkový plán (full-body)', d: 'NOVÉ — 3denní plán pro začátečníky (PDF)', link: '/materialy/pdf/treninkovy-plan.pdf?v=20260629' },
-  { ico: '💊', t: 'Suplementy — co funguje', d: 'NOVÉ — evidence-based průvodce (PDF)', link: '/materialy/pdf/suplementy-co-funguje.pdf?v=20260629' },
-  { ico: '💧', t: 'Hydratace a pitný režim', d: 'NOVÉ — kolik pít a proč (PDF)', link: '/materialy/pdf/hydratace-pitny-rezim.pdf?v=20260629' },
-  { ico: '🍽️', t: 'Jídlo v restauraci a na cestách', d: 'NOVÉ — forma i venku (PDF)', link: '/materialy/pdf/jidlo-v-restauraci.pdf?v=20260629' },
-  { ico: '🚶', t: 'Kroky, NEAT a cardio', d: 'NOVÉ — kolik a kdy (PDF)', link: '/materialy/pdf/kroky-a-cardio.pdf?v=20260629' },
-  { ico: '🧘', t: 'Stres, kortizol a hubnutí', d: 'NOVÉ — mýtus vs realita (PDF)', link: '/materialy/pdf/stres-a-kortizol.pdf?v=20260629' },
-  { ico: '🔬', t: 'Jak číst vědecké studie', d: 'NOVÉ — hierarchie důkazů (PDF)', link: '/materialy/pdf/jak-cist-studie.pdf?v=20260629' },
-  { ico: '🔰', t: 'Jak začít cvičit', d: 'NOVÉ — průvodce pro začátečníky (PDF)', link: '/materialy/pdf/zacni-cvicit.pdf?v=20260629' },
-  { ico: '📉', t: 'Plató — když se váha zastaví', d: 'NOVÉ — co dělat (PDF)', link: '/materialy/pdf/plato-zastavena-vaha.pdf?v=20260629' },
+  // --- bonusové materiály (token-driven, hostované staticky na /materialy/pdf/) ---
+  { ico: '😴', t: 'Spánek & regenerace', d: 'NOVÉ: průvodce pro klienty (PDF)', link: '/materialy/pdf/spanek-a-regenerace.pdf?v=20260629' },
+  { ico: '✋', t: 'Porce bez vážení', d: 'NOVÉ: porcování rukou (PDF)', link: '/materialy/pdf/porce-bez-vazeni.pdf?v=20260629' },
+  { ico: '✅', t: 'Deník návyků', d: 'NOVÉ: týdenní tracker (PDF)', link: '/materialy/pdf/denik-navyku.pdf?v=20260629' },
+  { ico: '📦', t: 'Uvítací balíček', d: 'NOVÉ: onboarding klienta (PDF)', link: '/materialy/pdf/uvitaci-balicek.pdf?v=20260629' },
+  { ico: '🍕', t: 'Flexibilní stravování', d: 'NOVÉ: průvodce pro klienty (PDF)', link: '/materialy/pdf/flexibilni-strava.pdf?v=20260629' },
+  { ico: '🍳', t: 'High-protein receptář', d: 'NOVÉ: 12 receptů s makry (PDF)', link: '/materialy/pdf/high-protein-recepty.pdf?v=20260629' },
+  { ico: '🏋️', t: 'Tréninkový plán (full-body)', d: 'NOVÉ: 3denní plán pro začátečníky (PDF)', link: '/materialy/pdf/treninkovy-plan.pdf?v=20260629' },
+  { ico: '💊', t: 'Suplementy: co funguje', d: 'NOVÉ: evidence-based průvodce (PDF)', link: '/materialy/pdf/suplementy-co-funguje.pdf?v=20260629' },
+  { ico: '💧', t: 'Hydratace a pitný režim', d: 'NOVÉ: kolik pít a proč (PDF)', link: '/materialy/pdf/hydratace-pitny-rezim.pdf?v=20260629' },
+  { ico: '🍽️', t: 'Jídlo v restauraci a na cestách', d: 'NOVÉ: forma i venku (PDF)', link: '/materialy/pdf/jidlo-v-restauraci.pdf?v=20260629' },
+  { ico: '🚶', t: 'Kroky, NEAT a cardio', d: 'NOVÉ: kolik a kdy (PDF)', link: '/materialy/pdf/kroky-a-cardio.pdf?v=20260629' },
+  { ico: '🧘', t: 'Stres, kortizol a hubnutí', d: 'NOVÉ: mýtus vs realita (PDF)', link: '/materialy/pdf/stres-a-kortizol.pdf?v=20260629' },
+  { ico: '🔬', t: 'Jak číst vědecké studie', d: 'NOVÉ: hierarchie důkazů (PDF)', link: '/materialy/pdf/jak-cist-studie.pdf?v=20260629' },
+  { ico: '🔰', t: 'Jak začít cvičit', d: 'NOVÉ: průvodce pro začátečníky (PDF)', link: '/materialy/pdf/zacni-cvicit.pdf?v=20260629' },
+  { ico: '📉', t: 'Plató: když se váha zastaví', d: 'NOVÉ: co dělat (PDF)', link: '/materialy/pdf/plato-zastavena-vaha.pdf?v=20260629' },
+  { ico: '📅', t: 'Jak zvládnout víkendové přejídání', d: 'NOVÉ: systém týdenního průměru (PDF)', link: '/materialy/pdf/vikendove-prejidani.pdf?v=20260714' },
 ];
+// Počet materiálů popsaných jako "(PDF)": používá se v upsell textu u free lekcí, ať
+// nedrifuje od skutečného počtu (oprava 5. 9.: bylo natvrdo "7", reálně jich je 22).
+const PDF_COUNT = MATERIALS.filter(m => /\(PDF\)/.test(m.d)).length;
 
-function assign(v) {
-  const ni = numinfo(v.title);
-  if (ni && ni.mod >= 1 && ni.mod <= 8) return 'm' + ni.mod;
-  const t = v.title;
-  if (/Bloncka se ptá Coache/i.test(t)) return 'bloncka';
-  if (/procvičit biceps|Procvičit Biceps/i.test(t)) return 'biceps';
-  if (/Domácí|Kruhový trénink na doma/i.test(t)) return 'doma';
-  if (/livestream/i.test(t)) return 'live';
-  if (/^Studie:/i.test(t)) return 'rozhovory';
-  if (/Rozhovor|Institut Moderní Výživy|Skalská|Vágnerová|Misař/i.test(t)) return 'rozhovory';
-  if (/nakoupit|LIDL|JIP|Tesco/i.test(t)) return 'nakupy';
-  if (/Nováčci|držení těla|Jak začít cvičit|série, opakování|Rozbor Těla|Sezení v autě|Rozdělení tréninku|Opakování v rezervě|Progresivní přetížení|Reps In Reserve|S tímhle TRENÉREM|Greatest legs|TOM PLATZ/i.test(t)) return 'techt';
-  return 'doplnkova';
-}
-
-rows.forEach(v => { v.sec = assign(v); v.ni = numinfo(v.title); v.disp = titleCase(stripNum(v.title)); });
-
-// seřaď: uvnitř modulů 1-8 podle čísla; ostatní podle pořadí v playlistu
-const ordered = [];
-SECTIONS.forEach(s => {
-  let list = rows.filter(v => v.sec === s.key);
-  if (/^m[1-8]$/.test(s.key)) {
-    list.sort((a, b) => (a.ni.sub[0] - b.ni.sub[0]) || (a.ni.sub[1] - b.ni.sub[1]) || (a.ord - b.ord));
-  } else {
-    list.sort((a, b) => a.ord - b.ord);
-  }
-  s.list = list;
-  list.forEach(v => ordered.push(v));
-});
-// přiřaď výsledné pořadové číslo + slug složky
-// LID je slug-based ('vk-v001'), NE YouTube ID — ID placených videí nesmí být ve statickém
-// HTML (nástěnka, progress klíče). Stará data progressu zmigrována v DB (vk-<ytid> → vk-v###).
-ordered.forEach((v, i) => { v.n = i + 1; v.slug = 'v' + String(i + 1).padStart(3, '0'); v.lid = 'vk-' + v.slug; });
-// Free tier (#35/#37): ochutnávka napříč kurzem — Modul 1 první 4 lekce + první lekce
+// Free tier (#35/#37): ochutnávka napříč kurzem, Modul 1 první 4 lekce + první lekce
 // z každého dalšího modulu (m2–m8), ať návštěvník vidí šíři kurzu → silnější upsell na koupi.
+// Kdo je free, už určuje manifest.json (pole "free" u každé položky), tady se nepočítá.
 const BUY_URL = 'https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs';
-const _secSeen = {};
-ordered.forEach((v) => {
-  const k = v.sec; _secSeen[k] = (_secSeen[k] || 0) + 1; const idx = _secSeen[k];
-  if (k === 'm1') v.free = idx <= 4;
-  else if (/^m[2-8]$/.test(k)) v.free = idx <= 1;
-  else v.free = false;
-});
-const FREE_COUNT = ordered.filter((v) => v.free).length;
 
 function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -149,14 +110,14 @@ function videoPage(v) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(v.disp)} — Videokurz · Martin Barna</title>
+<title>${esc(v.disp)} | Videokurz · Martin Barna</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" href="/favicon-g3.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-g3.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
-<link rel="stylesheet" href="/assets/ba-ui.css?v=r4">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r5">
 <script src="/assets/ba-theme.js"></script>
-<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l6">
+<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l9">
 <style>
   .wrap { max-width:880px; margin:0 auto; padding:30px 18px 80px; }
   .crumb { color:var(--gold-soft); font-size:.74rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
@@ -169,7 +130,7 @@ function videoPage(v) {
   .done-row { margin-top:1.7rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
   .autop { display:flex; align-items:center; gap:8px; color:var(--muted-2); font-size:.88rem; cursor:pointer; user-select:none; }
   .autop input { accent-color:var(--gold); width:17px; height:17px; cursor:pointer; }
-  .btn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:13px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.55); transition:transform .2s; }
+  .btn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:13px 24px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; display:inline-block; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.22); transition:transform .2s; }
   .btn:hover { transform:translateY(-2px); }
   .btn.ghost { background:rgba(255,255,255,.05); border:1px solid var(--line-2); color:var(--muted-2); box-shadow:none; }
   .btn.ghost:hover { border-color:rgba(235,177,44,.4); color:#fff; transform:none; }
@@ -199,21 +160,21 @@ function videoPage(v) {
     <div class="done-row">
       <button class="btn" id="doneBtn">Označit jako zhlédnuté ✓</button>
       <a class="btn ghost" href="/akademie/videokurz/">Zpět na přehled</a>
-      <label class="autop" title="Po dohrání videa se automaticky pustí další lekce — ideální na poslech se sluchátky."><input type="checkbox" id="autoNext" checked> Po dohrání pustit další lekci ▶</label>
+      <label class="autop" title="Po dohrání videa se automaticky pustí další lekce - ideální na poslech se sluchátky."><input type="checkbox" id="autoNext" checked> Po dohrání pustit další lekci ▶</label>
     </div>
 
     <div class="nav">${navPrev || '<span></span>'}${navNext || '<span></span>'}</div>
 
-    ${v.free ? `<a class="upsell" data-upsell="videokurz" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz: 182 videí + všechny bonusy (kuchařka, e-booky, 7 PDF průvodců), odemkneš jednorázově za 1 490 Kč. Doživotně.<span class="go2">Odemknout celý kurz za 1 490 Kč →</span></a>` : ''}
+    ${v.free ? `<a class="upsell" data-upsell="videokurz" href="${BUY_URL}"><b>🎁 Tohle je ochutnávka zdarma.</b> Celý videokurz: 182 videí + všechny bonusy (kuchařka, e-booky, ${PDF_COUNT} PDF průvodců), odemkneš jednorázově za 1 490 Kč. Doživotně.<span class="go2">Odemknout celý kurz za 1 490 Kč →</span></a>` : ''}
 
     <p class="foot">© Videokurz Martin Barna.${v.free ? ' Tato lekce je dostupná zdarma jako ochutnávka.' : ' Video je dostupné jen přihlášeným s aktivním přístupem.'}</p>
   </div>
 
   <script src="/assets/ba-config.js"></script>
-  <script src="/assets/ba-academy.js?v=20260702c"></script>
+  <script src="/assets/ba-academy.js?v=20260728a"></script>
   <script src="/assets/academy-upsell.js?v=g3" defer></script>
-  <script defer src="/assets/analytics.js?v=g17"></script><script defer src="/assets/referral.js?v=g6"></script>
-  <script src="/assets/scroll-top.js" defer></script>
+  <script defer src="/assets/analytics.js?v=g19"></script><script defer src="/assets/referral.js?v=g7"></script>
+  <script src="/assets/scroll-top.js?v=g11" defer></script>
   <script>
     var LID='${v.lid}', SLUG='${v.slug}', PRODUCT='videokurz', FREE=${v.free ? 'true' : 'false'}, GUEST=false, state={done:false};
     var TOTAL=${ordered.length}, BUY='${BUY_URL}';
@@ -230,7 +191,7 @@ function videoPage(v) {
       }
     }
     function attachFree(){ ytApi(function(){ if(!player && document.getElementById('ytframe')) player=new YT.Player('ytframe',{events:{onStateChange:onState}}); }); }
-    // Placené video: YouTube ID není v HTML — načte se z DB manifestu až po ověření přístupu (RLS).
+    // Placené video: YouTube ID není v HTML - načte se z DB manifestu až po ověření přístupu (RLS).
     function mountVideo(){
       if (FREE || !window.BA || typeof window.BA.getVideoId !== 'function') return;
       window.BA.getVideoId(SLUG).then(function(id){
@@ -248,7 +209,7 @@ function videoPage(v) {
     }
 
     // --- autoplay řetěz: konec videa -> označ zhlédnuté -> pusť další lekci v témže přehrávači
-    // (bez načtení stránky, takže mobil nezablokuje zvuk — funguje i se sluchátky v kapse) ---
+    // (bez načtení stránky, takže mobil nezablokuje zvuk - funguje i se sluchátky v kapse) ---
     function onState(e){
       if (e.data !== 0) return;   // 0 = ENDED
       markDone(true);
@@ -264,7 +225,7 @@ function videoPage(v) {
       loadChain(function(ch){
         var i=-1; for(var k=0;k<ch.length;k++){ if(ch[k].s===SLUG){ i=k; break; } }
         var nx = i>=0 ? ch[i+1] : null;
-        if (!nx){ endNote('🎉 Gratuluji — dojel[a] jsi na konec kurzu!'); return; }
+        if (!nx){ endNote('🎉 Gratuluji - dojel[a] jsi na konec kurzu!'); return; }
         if (GUEST && !nx.f){ upsellOverlay(); return; }
         window.BA.getVideoId(nx.s).then(function(id){
           if (!id){ if(!nx.f) upsellOverlay(); return; }
@@ -276,7 +237,7 @@ function videoPage(v) {
       SLUG = nx.s; LID = 'vk-' + nx.s;
       state.done = !!prog[LID]; paint();
       var h=document.querySelector('h1'); if(h) h.textContent=nx.t;
-      document.title = nx.t + ' — Videokurz · Martin Barna';
+      document.title = nx.t + ' - Videokurz · Martin Barna';
       var cr=document.querySelector('.crumb'); if(cr) cr.textContent='Video ' + (idx+1) + ' / ' + TOTAL;
       try{ history.replaceState(null, '', '/akademie/videokurz/' + nx.s + '/'); }catch(e){}
       var nav=document.querySelector('.nav');
@@ -332,7 +293,7 @@ function videoPage(v) {
     btn.addEventListener('click', function(){ markDone(!state.done); });
     load();
   </script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l6"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l9"></body>
 </html>`;
 }
 
@@ -358,14 +319,14 @@ function dashboard() {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Videokurz — Martin Barna</title>
+<title>Videokurz | Martin Barna</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" href="/favicon-g3.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-g3.png">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
-<link rel="stylesheet" href="/assets/ba-ui.css?v=r4">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r5">
 <script src="/assets/ba-theme.js"></script>
-<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l6">
+<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l9">
 <style>
   .wrap { max-width:900px; }
   .hero .kick { margin-bottom:14px; }
@@ -401,7 +362,7 @@ function dashboard() {
   .minfo { flex:1; display:flex; flex-direction:column; min-width:0; }
   .minfo b { color:#fff; font-size:.92rem; line-height:1.25; overflow-wrap:break-word; }
   .minfo small { color:var(--muted); font-size:.78rem; }
-  .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(235,177,44,.6); transition:transform .2s; }
+  .mbtn { background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:9px 15px; border-radius:50px; border:none; cursor:pointer; text-decoration:none; font-family:inherit; font-size:.82rem; white-space:nowrap; box-shadow:0 8px 18px -8px rgba(235,177,44,.2); transition:transform .2s; }
   .mbtn:hover { transform:translateY(-1px); }
   .mbtn[disabled] { opacity:.5; cursor:default; transform:none; }
 
@@ -428,8 +389,8 @@ function dashboard() {
   .secnav .prev { background:rgba(255,255,255,.03); }
   .secnav .next { background:linear-gradient(145deg,rgba(235,177,44,.16),rgba(235,177,44,.05)); border-color:rgba(235,177,44,.35); text-align:right; align-items:flex-end; }
   .secnav .next .nm { color:var(--gold-soft); }
-  .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(235,177,44,.35); border-color:rgba(235,177,44,.5); }
-  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.55); transition:transform .2s; text-decoration:none; }
+  .secnav a:hover { transform:translateY(-3px); box-shadow:0 22px 40px -26px rgba(235,177,44,.35); border-color:rgba(235,177,44,.2); }
+  .contbtn { display:inline-flex; align-items:center; gap:8px; margin-top:1.2rem; background:linear-gradient(145deg,var(--gold-2),var(--gold)); color:#1A1222; font-weight:700; padding:12px 24px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; box-shadow:0 12px 26px -8px rgba(235,177,44,.22); transition:transform .2s; text-decoration:none; }
   .contbtn:hover { transform:translateY(-2px); }
   /* free tier (ochutnávka) */
   .freebanner { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; text-decoration:none; background:linear-gradient(135deg,rgba(235,177,44,.2),rgba(235,177,44,.05)); border:1px solid rgba(235,177,44,.45); border-radius:18px; padding:18px 22px; margin:8px 0 4px; transition:transform .2s,border-color .2s; }
@@ -461,7 +422,7 @@ function dashboard() {
     <div class="hero">
       <span class="kick"><span class="dot"></span> Videokurz výživy</span>
       <h1>Videokurz o hubnutí, nabírání a fitness</h1>
-      <p>${ordered.length} video lekcí — od základů výživy přes tréninky až po livestreamy a bonusy.</p>
+      <p>${ordered.length} video lekcí: od základů výživy přes tréninky až po livestreamy a bonusy.</p>
       <div class="bigbar"><span id="bigbar"></span></div>
       <div class="bigpct" id="bigpct">Tvůj postup: 0 / ${ordered.length} zhlédnuto</div>
     </div>
@@ -471,23 +432,56 @@ function dashboard() {
       <span class="fb-cta">Odemknout za 1 490 Kč →</span>
     </a>
 
-    <a href="/akademie/?from=videokurz" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05));border:1px solid rgba(235,177,44,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
-      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(235,177,44,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje — celá věda za výživou a tréninkem (24 modulů, 256 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
+    <a href="/akademie/?from=videokurz" data-upsell="academy" style="display:block;text-decoration:none;background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.05));border:1px solid rgba(235,177,44,.32);border-radius:18px;padding:20px 24px;margin:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span style="min-width:240px;flex:1;"><span style="display:inline-block;background:rgba(235,177,44,.18);color:var(--gold-soft);font-weight:700;font-size:.7rem;letter-spacing:.04em;padding:3px 10px;border-radius:50px;margin-bottom:7px;">PRO MAJITELE VIDEOKURZU</span><b style="color:#fff;font-size:1.08rem;display:block;">🎓 Další krok: Barna Academy</b><span style="color:var(--muted-2);font-size:.92rem;">Videokurz tě naučil <b style="color:#fff;">jak</b> jíst. Academy ti ukáže <b style="color:#fff;">proč</b> to funguje: celá věda za výživou a tréninkem (24 modulů, 256 lekcí) + certifikace, ať to umíš vysvětlit i klientům.</span></span>
       <span style="background:linear-gradient(145deg,var(--gold-2),var(--gold));color:#1A1222;font-weight:700;padding:11px 22px;border-radius:50px;white-space:nowrap;">Prohlédnout Academy →</span>
     </a>
 
+    <style>
+      .vk-badges{display:none;margin:2px 0 6px;}
+      .vk-badges .bh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 10px;}
+      .vk-badges .bh b{color:#fff;font-size:1rem;} .vk-badges .bh span{color:var(--muted);font-size:.85rem;}
+      .vk-badges .row{display:flex;gap:9px;flex-wrap:wrap;}
+      .vkb{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);border-radius:50px;padding:7px 14px 7px 10px;font-size:.85rem;background:rgba(255,255,255,.03);color:var(--muted);}
+      .vkb .ic{font-size:1.15rem;filter:grayscale(1) opacity(.5);}
+      .vkb.on{border-color:rgba(235,177,44,.2);background:rgba(235,177,44,.1);color:#fff;font-weight:600;}
+      .vkb.on .ic{filter:none;}
+      .vkb.sec{border-color:rgba(47,174,87,.4);background:rgba(47,174,87,.1);color:#bfe9cb;font-weight:700;}
+    </style>
+    <div class="vk-badges" id="vkBadges"></div>
+
     <div id="modules"></div>
+
+    <!-- Co dál po kurzu: nejteplejší moment pro další krok (koučink / Academy) -->
+    <div id="vkNext" style="margin-top:2.4rem;">
+      <p style="font-weight:800;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:#F6CD63;margin:0 0 10px;">Co dál, až tohle zvládneš?</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">
+        <a href="/koucing/" style="text-decoration:none;display:block;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px 20px;color:inherit;">
+          <h3 style="margin:0 0 6px;color:#fff;font-size:1.05rem;">🤝 Chci vedení 1:1</h3>
+          <p style="margin:0;font-size:.88rem;color:#B9B3C4;line-height:1.5;">Kurz tě naučil JAK, koučink ti to nastaví na míru a povedu tě týden po týdnu. Vlastní klientská sekce a appka Tvůj Coach v ceně po celou dobu koučinku: generátor jídelníčku i tréninku, 125 cviků a k tomu AI kouč.</p>
+        </a>
+        <a id="vkNextAca" href="/akademie/" style="text-decoration:none;display:block;background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.4);border-radius:14px;padding:18px 20px;color:inherit;">
+          <h3 style="margin:0 0 6px;color:#fff;font-size:1.05rem;">🎓 Chci jít do hloubky</h3>
+          <p style="margin:0;font-size:.88rem;color:#B9B3C4;line-height:1.5;">Barna Academy: 256 lekcí, generátory jídelníčků a tréninků, rok appky Tvůj Coach ve VIP verzi v ceně. Jako majitel videokurzu máš odečet: doživotní přístup tě vyjde na <b style="color:#F6CD63;">8 100 Kč</b>.</p>
+        </a>
+      </div>
+    </div>
 
     <p class="note" id="modeNote">Ukázka prostředí. Přihlášení a uložení postupu se aktivuje po koupi (Supabase).</p>
   </div>
 
   <script src="/assets/ba-config.js"></script>
-  <script src="/assets/ba-academy.js?v=20260702c"></script>
+  <script src="/assets/ba-academy.js?v=20260728a"></script>
   <script src="/assets/academy-upsell.js?v=g3" defer></script>
-  <script defer src="/assets/analytics.js?v=g17"></script><script defer src="/assets/referral.js?v=g6"></script>
-  <script src="/assets/scroll-top.js" defer></script>
+  <script defer src="/assets/analytics.js?v=g19"></script><script defer src="/assets/referral.js?v=g7"></script>
+  <script src="/assets/scroll-top.js?v=g11" defer></script>
   <script>
     (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();
+    // „Co dál": Academy kartu neukazuj členům Academy (mají ji); koučink kartu neukazuj klientům koučinku
+    (function(){ if(!window.BA||!window.BA.ready) return; window.BA.ready.then(function(){ if(window.BA.mode!=='live') return;
+      window.BA.hasEntitlement('academy').then(function(h){ if(h){ var a=document.getElementById('vkNextAca'); if(a) a.style.display='none'; } }).catch(function(){});
+      window.BA.hasEntitlement('coaching').then(function(h){ if(h){ var k=document.querySelector('#vkNext a[href="/koucing/"]'); if(k) k.style.display='none'; } }).catch(function(){});
+    }); })();
     var TOTAL=${ordered.length};
     var SECS=${secsJson};
     var MATS=${matsJson};
@@ -505,7 +499,7 @@ function dashboard() {
     }
     function renderOverview(){
       var h='<div class="modgrid">';
-      // Přílohy jako PRVNÍ dlaždice — před Modulem 1.
+      // Přílohy jako PRVNÍ dlaždice - před Modulem 1.
       h+='<a class="modcard matcard-tile" href="#materialy"><div class="top"><span class="ix">📎</span><h3>Přílohy ke stažení</h3></div><div class="mfoot"><span class="cnt">'+MATS.length+' materiálů</span><span class="pct">'+(FREEMODE?'🔒 v ceně kurzu':'Otevřít →')+'</span></div></a>';
       SECS.forEach(function(s,i){ var d=secDone(s), t=s.videos.length, p=t?Math.round(d/t*100):0;
         h+='<a class="modcard'+(t&&d===t?' done-all':'')+'" href="#s'+(i+1)+'"><div class="top"><span class="ix">'+(i+1)+'</span><h3>'+s.name+'</h3></div><div class="mbar"><span style="width:'+p+'%"></span></div><div class="mfoot"><span class="cnt">'+t+' videí</span><span class="pct">'+p+' %</span></div></a>';
@@ -540,7 +534,7 @@ function dashboard() {
       try{ window.scrollTo(0,0); }catch(e){}
     }
     function firstUnfinished(){ for(var i=0;i<SECS.length;i++){ if(secDone(SECS[i])<SECS[i].videos.length) return i; } return -1; }
-    // #34 „Pokračovat, kde jsi skončil" — první nedokončené a přístupné video (deep-link do lekce).
+    // #34 „Pokračovat, kde jsi skončil" - první nedokončené a přístupné video (deep-link do lekce).
     function nextVideo(){
       for(var i=0;i<SECS.length;i++){ var vs=SECS[i].videos;
         for(var j=0;j<vs.length;j++){ var v=vs[j]; if(!DONE[v.lid] && (!FREEMODE || v.free)) return v; } }
@@ -548,12 +542,26 @@ function dashboard() {
     }
     function startedAny(){ for(var k in DONE){ if(DONE.hasOwnProperty(k) && DONE[k]) return true; } return false; }
     function route(){ var hsh=(location.hash||'').replace('#',''); if(hsh==='materialy'){ renderMaterials(); return; } var m=hsh.match(/^s(\\d+)$/); if(m) renderSection(parseInt(m[1],10)-1); else renderOverview(); }
+    // Gamifikace: odznaky za zhlédnutá videa a kompletní sekce.
+    function paintBadges(cnt){
+      var el=document.getElementById('vkBadges'); if(!el) return;
+      if(cnt<1){ el.style.display='none'; return; }
+      var secMastered=0; SECS.forEach(function(s){ if(s.videos.length>0 && secDone(s)===s.videos.length) secMastered++; });
+      var mile=[{k:1,ic:'🌱',n:'První video'},{k:10,ic:'🔥',n:'Rozkoukáno'},{k:25,ic:'⚡',n:'25 videí'},{k:50,ic:'💪',n:'50 videí'},{k:100,ic:'🏆',n:'100 videí'},{k:150,ic:'🎓',n:'150 videí'}];
+      var pills='';
+      mile.forEach(function(b){ var on=cnt>=b.k; pills+='<span class="vkb'+(on?' on':'')+'" title="'+(on?'Získáno':'Zbývá '+(b.k-cnt)+' videí')+'"><span class="ic">'+b.ic+'</span>'+b.n+'</span>'; });
+      pills+='<span class="vkb'+(cnt>=TOTAL?' on':'')+'" title="Zhlédni celý kurz"><span class="ic">👑</span>Celý kurz</span>';
+      pills+='<span class="vkb sec" title="Sekce, kde máš zhlédnutá všechna videa"><span class="ic">🥇</span>Sekce: '+secMastered+' / '+SECS.length+'</span>';
+      el.innerHTML='<div class="bh"><b>🏅 Tvoje odznaky</b><span>'+cnt+' videí zhlédnuto · '+secMastered+' sekcí kompletních</span></div><div class="row">'+pills+'</div>';
+      el.style.display='block';
+    }
     function render(done){
       DONE=done||{};
       var cnt=0; SECS.forEach(function(s){ cnt+=secDone(s); });
       var pct=TOTAL?Math.round(cnt/TOTAL*100):0;
       document.getElementById('bigbar').style.width=pct+'%';
       document.getElementById('bigpct').textContent='Tvůj postup: '+cnt+' / '+TOTAL+' zhlédnuto ('+pct+' %)';
+      paintBadges(cnt);
       var hero=document.querySelector('.hero'), cb=document.getElementById('contBtn'), nv=nextVideo();
       if(!cb&&hero){ cb=document.createElement('a'); cb.id='contBtn'; cb.className='contbtn'; hero.appendChild(cb); }
       if(cb){ if(nv){ cb.style.display='inline-flex'; cb.textContent=(startedAny()?'▶ Pokračovat: ':'▶ Začít: ')+nv.disp; cb.href='/akademie/videokurz/'+nv.slug+'/'; } else { cb.style.display='none'; } }
@@ -569,7 +577,7 @@ function dashboard() {
                 // Nepřihlášený návštěvník → ochutnávka zdarma (žádný redirect na přihlášení).
                 FREEMODE = true; applyFreeMode();
                 var n0=document.getElementById('modeNote');
-                if(n0) n0.textContent='Máš ochutnávku zdarma — odemčené máš ukázky napříč všemi moduly. Zbytek kurzu odemkneš jednorázovou koupí.';
+                if(n0) n0.textContent='Máš ochutnávku zdarma: odemčené máš ukázky napříč všemi moduly. Zbytek kurzu odemkneš jednorázovou koupí.';
                 try{ render(JSON.parse(localStorage.getItem('ba_progress_v1')||'{}')); }catch(e){ render({}); }
                 return;
               }
@@ -579,7 +587,7 @@ function dashboard() {
                 var n=document.getElementById('modeNote');
                 if(n) n.textContent = has
                   ? 'Tvůj postup se ukládá k účtu a synchronizuje se napříč zařízeními.'
-                  : 'Máš ochutnávku zdarma — odemčené máš ukázky napříč všemi moduly. Zbytek kurzu odemkneš jednorázovou koupí.';
+                  : 'Máš ochutnávku zdarma: odemčené máš ukázky napříč všemi moduly. Zbytek kurzu odemkneš jednorázovou koupí.';
                 window.BA.getProgress().then(render);
               });
             });
@@ -609,7 +617,7 @@ function dashboard() {
     wireMaterials();
     boot();
   </script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l6"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l9"></body>
 </html>`;
 }
 
@@ -626,6 +634,5 @@ fs.writeFileSync(path.join(OUT, 'index.html'), dashboard());
 const counts = SECTIONS.filter(s => s.list.length).map(s => '  ' + s.name + ': ' + s.list.length);
 console.log('Vygenerováno ' + ordered.length + ' videí + nástěnka.');
 console.log(counts.join('\n'));
-fs.writeFileSync(path.join(__dirname, 'manifest.json'), JSON.stringify(ordered.map(v => ({ n: v.n, slug: v.slug, id: v.id, sec: v.sec, title: v.disp, free: !!v.free })), null, 2));
-// Verejny retez lekci pro autoplay (s=slug, t=nazev, f=free) — BEZ YouTube ID (ta zustavaji za RLS).
+// Verejny retez lekci pro autoplay (s=slug, t=nazev, f=free), bez YouTube ID (ta zustavaji za RLS).
 fs.writeFileSync(path.join(OUT, 'chain.json'), JSON.stringify(ordered.map(v => ({ s: v.slug, t: v.disp, f: v.free ? 1 : 0 }))));

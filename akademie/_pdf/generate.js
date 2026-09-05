@@ -76,7 +76,7 @@ function build(dir) {
   out += '\n' + body + '\n';
   if (taskInner) out += `\n  <div class="points"><b>📌 Úkol do praxe:</b> ${taskInner}</div>\n`;
   if (sources) out += `\n  <div class="src">\n    <b>Vědecké zdroje (výběr):</b>\n    <ol>\n${sources}\n    </ol>\n  </div>\n`;
-  out += `  <div class="foot"><b>© Barna Academy</b> — Martin Barna · martinbarna.cz · materiál pro studenty Akademie</div>\n</body>\n</html>`;
+  out += `  <div class="foot"><b>© Barna Academy</b>, Martin Barna · martinbarna.cz · materiál pro studenty Akademie</div>\n</body>\n</html>`;
 
   // sanity
   const issues = [];
