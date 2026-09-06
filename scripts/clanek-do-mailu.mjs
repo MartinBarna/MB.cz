@@ -501,6 +501,28 @@ function dalsiZIndexu(slug, kolik) {
   return vse.slice(0, kolik);
 }
 
+/* ---------- preheader: bez emoji, bez zopakovaného předmětu, konec na celém slově ---------- */
+// Gmail ukazuje v seznamu zhruba 100 znaků. Uříznuté slovo uprostřed vypadá jako chyba,
+// zopakovaný předmět zabere místo, které nic nepřidá (53. šéf 6. 9. 2026).
+export function zkratPreheader(popis, subject = '', limit = 120) {
+  const bezEmoji = (x) =>
+    x.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  let t = bezEmoji(popis);
+  const s = bezEmoji(subject);
+  if (s && t.toLowerCase().startsWith(s.toLowerCase())) {
+    t = t.slice(s.length).replace(/^[\s\-–:.,!?]+/, '');
+  }
+  if (t.length <= limit) return t;
+  const rez = t.slice(0, limit + 1);
+  // nejdřív zkus skončit celou větou, teprve pak celým slovem
+  const veta = Math.max(rez.lastIndexOf('. '), rez.lastIndexOf('! '), rez.lastIndexOf('? '));
+  if (veta > 55) return t.slice(0, veta + 1);
+  const mezera = rez.lastIndexOf(' ');
+  return (mezera > 40 ? rez.slice(0, mezera) : t.slice(0, limit)).replace(/[\s\-–:,;(]+$/, '');
+}
+
 /* ---------- kontroly, které smí zabít běh ---------- */
 
 function kontroly(subject, preheader, bloky) {
@@ -622,7 +644,7 @@ function main() {
   const h1 = (html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i) || [])[1];
   const subject = dec(strip(ld.headline || h1 || slug));
   const popis = (html.match(/<meta name="description" content="([^"]*)"/i) || [])[1];
-  const preheader = dec(strip(ld.description || popis || '')).slice(0, 140);
+  const preheader = zkratPreheader(dec(strip(ld.description || popis || '')), subject);
 
   const opts = { zkratit: a.zkratit, obrazky: a.obrazky, utm: a.utm };
   const { bloky, obrazky, utnuto, zahozeno } = naBloky(telo(html), slug, opts);
