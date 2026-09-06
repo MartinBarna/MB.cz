@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Důležité", "title": "Není to<br>hračka na gains", "body": "GLP-1 jsou léky s vedlejšími účinky a patří do rukou lékaře. Pro zdravého trénujícího nejsou zkratka na svaly ani na testosteron.<br><br>Nasazení i vysazení řeš s lékařem, ne podle Instagramu." },
     { "kind": "vs", "kicker": "Prakticky", "title": "Než sáhneš<br>po TRT", "yes": { "h": "Zvedá testosteron zdravě", "items": ["Shodit břišní tuk", "Spánek 7 až 9 hodin", "Silový trénink a míň alkoholu"] }, "no": { "h": "Slepá ulička", "items": ["GLP-1 kvůli „gains“", "TRT jako první krok bez vyšetření", "Boostery a zázračné pilulky"] } },
     { "kind": "quote", "text": "Testosteron zvedlo hubnutí. Lék byl jen cesta, jak k němu dojít.", "note": "Ať zhubneš jakkoli, tělo ti poděkuje. Lék je jen jedna z cest, a ne pro každého." },
-    { "kind": "cta", "title": "Chceš to <span class=\"hl\">bez léků?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí)</b>"] }
+    { "kind": "cta", "title": "Chceš to <span class=\"hl\">bez léků?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Cíle, jídelníček i trénink na každý den: <b>appka Tvůj Coach</b>"] }
   ]
 }

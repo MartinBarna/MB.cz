@@ -10,6 +10,6 @@
     { "kind": "vs", "kicker": "Prakticky", "title": "Co s tím<br>udělat", "yes": { "h": "Dává smysl", "items": ["Chrápání a denní únavu řekneš praktikovi", "Držíš deficit dál, i pomalý pokrok kruh otáčí", "Přidáš aerobní pohyb, pomáhá i bez velkého úbytku"] }, "no": { "h": "Nikam nevede", "items": ["Řežeš kalorie ještě víc, protože „to musí jít“", "Hodíš to na slabou vůli a vzdáš to", "Diagnostikuješ se podle příspěvku na síti"] } },
     { "kind": "point", "kicker": "Důležité", "title": "Diagnózu<br>dělá lékař", "body": "Chrápeš, budíš se nevyspalý, přes den tě válcuje únava a hubnutí drhne? Řekni o tom praktikovi.<br><br>Vyšetření je dostupné. A když se apnoe potvrdí, dá se s ní pracovat.", "callout": "Tohle není diagnóza z Instagramu. Apnoi potvrdí jedině vyšetření, spánková poradna nebo praktik. Poznáváš se v příznacích? Nepodceň to." },
     { "kind": "quote", "text": "Apnoe rozbíjí udržitelnost, ne termodynamiku.", "note": "Tracking ti dá přesnost, spánek dá udržitelnost. Deficit platí dál." },
-    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí)</b>"] }
+    { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Cíle, jídelníček i trénink na každý den: <b>appka Tvůj Coach</b>"] }
   ]
 }

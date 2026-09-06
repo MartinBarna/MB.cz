@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Háček", "title": "Komu to jde<br>a komu hůř", "body": "Nejrychleji nováčkům, navrátilcům po pauze a lidem s vyšším procentem tuku.<br><br>Pokročilý cvičenec blízko svého stropu obvykle líp pojede klasické cyklování nabírání a hubnutí. Píšou to i sami autoři studie." },
     { "kind": "bullets", "kicker": "Do praxe", "title": "Za jakých<br>podmínek", "items": ["Silový trénink s progresivním přetížením, <b>3 až 5krát týdně</b>", "Bílkoviny <b>1,6 až 2,2 g/kg</b>, ve studii jeli až 2,5 g/kg", "Mírný deficit kolem <b>10 až 20 %</b>, žádné hladovění", "Spánek <b>aspoň sedm hodin</b>", "Progres měř obvody, fotkami a výkonem v posilovně"] },
     { "kind": "quote", "text": "V deficitu se sval postavit dá. Chce to trpělivost, bílkoviny a činku, co se hýbe nahoru.", "note": "V rekompozici se neřiď číslem na váze. Glykogen, voda a sůl s ní zahýbou o kilo dvě ze dne na den." },
-    { "kind": "cta", "title": "Chceš to postavit <span class=\"hl\">chytře?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí)</b>"] }
+    { "kind": "cta", "title": "Chceš to postavit <span class=\"hl\">chytře?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Cíle, jídelníček i trénink na každý den: <b>appka Tvůj Coach</b>"] }
   ]
 }

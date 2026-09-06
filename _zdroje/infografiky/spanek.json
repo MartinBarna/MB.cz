@@ -10,6 +10,6 @@
     { "kind": "bullets", "kicker": "Kam to patří", "title": "Top čtyřka<br>priorit", "items": ["<b>1.</b> Kalorický deficit", "<b>2.</b> Dost bílkovin", "<b>3.</b> Silový trénink", "<b>4.</b> Spánek", "A teprve potom zbytek"] },
     { "kind": "point", "kicker": "Férově", "title": "Jedna noc<br>dietu<br>nezruinuje", "body": "Horší noc se stane každému. Kdo spí <b>7 až 9 hodin</b> pravidelně, řeší jiné věci.<br><br>A ta mutace DEC2, co prý stačí na pár hodin spánku? Popsali ji u hrstky rodin na světě. To nejspíš nejsi ty.", "callout": "Spíš dost a pořád jsi rozbitý? Tohle patří k lékaři, ne na Instagram.", "zdroj": { "kdo": "He et al. (2009), Science - DEC2 mutation. American Academy of Sleep Medicine 2015 - 7+ h doporučení" } },
     { "kind": "quote", "text": "Počítání kalorií ti dá přesnost. Spánek ti dá to, že plán vůbec udržíš.", "note": "Jedno bez druhého kulhá. Váha jde dolů podle kalorií, poměr tuku a svalu se láme v posteli." },
-    { "kind": "cta", "title": "Spíš pod <span class=\"hl\">7 hodin?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí)</b>"] }
+    { "kind": "cta", "title": "Spíš pod <span class=\"hl\">7 hodin?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Cíle, jídelníček i trénink na každý den: <b>appka Tvůj Coach</b>"] }
   ]
 }

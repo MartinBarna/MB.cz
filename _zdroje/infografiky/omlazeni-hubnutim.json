@@ -10,6 +10,6 @@
     { "kind": "point", "kicker": "Druhá studie", "title": "Tuk si obezitu<br>pamatuje", "body": "Druhá práce ukazuje, že si tuková tkáň obezitu „pamatuje“ i po zhubnutí. U lidí zůstává otisk v aktivitě genů, u myší i v epigenetice a ty pak nabíraly zpátky rychleji.<br><br>Když váhu nabereš zpátky, tkáň sklouzne do starého režimu.", "callout": "Dvě studie z Nature. Atlas 171 247 buněk od 70 lidí.", "zdroj": { "kdo": "Hinte et al. (2024)", "kde": "Nature", "doi": "10.1038/s41586-024-08165-7" } },
     { "kind": "vs", "kicker": "Prakticky", "title": "Kilo dolů<br>a nechat ho tam", "yes": { "h": "Vyplatí se", "items": ["Tempo, které opravdu udržíš", "Udržovačka jako fáze plánu", "Váha dole i za rok"] }, "no": { "h": "Sebere ti to zpátky", "items": ["Drastická dieta na pár týdnů", "Poslední den diety a zpátky ke starému", "Jojo nahoru a dolů"] } },
     { "kind": "quote", "text": "Každé kilo dolů má buněčný smysl. Udržet ho je samostatná dovednost.", "note": "Pomalé tempo, které udržíš, vyhraje nad rychlým, po kterém nabereš zpátky." },
-    { "kind": "cta", "title": "Chceš to i <span class=\"hl\">udržet?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (182 videí)</b>"] }
+    { "kind": "cta", "title": "Chceš to i <span class=\"hl\">udržet?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Cíle, jídelníček i trénink na každý den: <b>appka Tvůj Coach</b>"] }
   ]
 }
