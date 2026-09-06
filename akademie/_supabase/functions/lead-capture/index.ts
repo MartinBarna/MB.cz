@@ -20,7 +20,13 @@ function startCisla(v: unknown): Record<string, string> | null {
   };
   const kcal = num("kcal", 800, 6000);
   if (!kcal) return null;
-  const CILE = ["Hubnutí", "Udržení", "Nabírání", "Rekompozice"];
+  // ⛔ [7. 9. 2026] TENHLE SEZNAM MUSÍ SEDĚT S `GOAL_OPTIONS` V APPCE
+  // (`src/app/onboarding/index.tsx`). Appka posílá NÁZEV cíle, ne kód, a co v seznamu
+  // není, spadne na náhradní text. 6. 9. přibyl cíl „Zpevnění a tvar" a sem ho nikdo
+  // nedopsal, takže v mailu z `/start` stálo doslova „1 381 kcal na den (cíl: tvůj cíl)".
+  // Ověřeno celým řetězem: appka → `start-email.ts` → tahle funkce → šablona `tcs-0-cisla`.
+  // ⚠️ Kdo přidá další cíl, přidá ho na OBĚ místa, jinak to zase tiše vypadne.
+  const CILE = ["Hubnutí", "Udržení", "Nabírání", "Rekompozice", "Zpevnění a tvar"];
   const cil = CILE.includes(String(o.cil)) ? String(o.cil) : "";
   return {
     kcal,

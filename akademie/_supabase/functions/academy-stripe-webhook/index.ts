@@ -426,6 +426,16 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     "plink_1Tyrn5Bq3rKubW9k8n2VoeWL=konzultace," +
     // `plink_1Typhu…` = 2 190 Kč (`price_1TypdQ…`) pro majitele videokurzu, BEZ bonusu.
     "plink_1TyphuBq3rKubW9k1CHEIgDS=konzultace-vk," +
+    // ⛔⛔ [6. 9. 2026 pozdě večer] TESTOVACÍ ODKAZ ZA 15 Kč ODSUD ODSTRANĚN.
+    // Byl tu od 30. 7. namapovaný na `academy-lifetime`, a to je klíč s `tcGrant: true`:
+    // doživotní Academy za 8 900 Kč, rok VIP appky za 4 990 Kč a započítání do padesátky
+    // zakládajících. Za patnáct korun. Zaškrtávátko „smazat, až doběhne testování" zůstalo
+    // otevřené pět týdnů a dnešní dvě opravy mapy ten řádek obě minuly.
+    // ⚠️ Jestli je odkaz ve Stripu pořád aktivní, JSEM NEOVĚŘIL (Stripe nejde ověřit
+    //    holým fetchem). Tohle je proto opatření na straně, kterou ovládám: i kdyby
+    //    odkaz aktivní byl, platba přes něj už nic neudělí.
+    // ⛔ Kdo bude znovu testovat doživotní větev, ať to udělá postupem z 30. 7. níž
+    //    (dočasně přemapovat a přehrát už zaplacenou událost), ne trvalým řádkem tady.
     // testovací 15 Kč, ⬜ zamknout ve Stripu a smazat odsud, až doběhne testování
     // ⭐ POSTUP, KTERÝ SE 30. 7. VYPLATIL: konzultační větev se ověřila tím, že se tenhle
     // odkaz DOČASNĚ přemapoval na `konzultace` a přehrála se už zaplacená (a refundovaná)
@@ -434,7 +444,7 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // takže by zaplacená konzultace vracela 500 a NEPŘIŠEL BY ANI ALERT.
     // ⛔ Kdo to udělá znovu, MUSÍ ten řádek vrátit na `academy-lifetime`, jinak testovací
     //    odkaz za 15 Kč prodává produkt za 2 990.
-    "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime," +
+    // (odstraněno 6. 9. 2026: "plink_1TyPSiBq3rKubW9k3KRDDMtv=academy-lifetime")
     // ⭐ BALÍČEK 349 Kč („40 receptů a 48 odpovědí"), vytvořeno 6. 8. 2026.
     // Po zaplacení Stripe přesměruje na https://martinbarna.cz/dekuji-balicek/.
     "plink_1U1VnFBq3rKubW9kXK79LF0i=balicek," +
@@ -2132,6 +2142,19 @@ Deno.serve(async (req) => {
       // Tiché ignorování, ne alert: platby za appku jsou v pořádku, jen nejsou naše.
       const plink = typeof obj.payment_link === "string" ? obj.payment_link : "";
       if (!ALLOWED_PLINKS.includes(plink)) {
+        // ⚠️ [6. 9. 2026] TAHLE VĚTEV NEMÁ ALERT A JE TO ZATÍM ZÁMĚR, ne opomenutí.
+        // Jednorázová větev výš se dnes rozkřičela od 1 000 Kč. Tady to nejde stejně:
+        // předplatné appky (249, 499, 2 490, 4 990) chodí přes týž Stripe účet a alert
+        // u každého by se přestal číst, což je přesně to, jak se dnešní díra schovala.
+        // ⛔ ZBYLÉ RIZIKO: kdyby měsíční Academy dostala novou cenu a s ní nový odkaz
+        //    (a `ACADEMY_ALLOWED_PLINKS` v prostředí funkce NENÍ nastavená, ověřeno
+        //    6. 9. v `secrets list`, takže platí jen dva natvrdo psané odkazy z 28. 7.),
+        //    člen by platil každý měsíc a nedostal nic. Úplně tiše.
+        // ⇒ Než na to bude pořádná pojistka (rozlišit appkové předplatné od Academy),
+        //    aspoň to nechává stopu v logu funkce, ať se to dohledá za minutu, ne nikdy.
+        //    Otevřený bod pro Elona, popsaný v předávce.
+        console.log(`[academy-stripe-webhook] predplatne z NEZNAMEHO odkazu ignorovano: `
+          + `plink=${plink || "(zadny)"} castka=${obj.amount_total ?? "?"} session=${obj.id ?? "?"}`);
         return json({ ok: true, ignored: "foreign-price", payment_link: plink || null });
       }
       const email = String(
