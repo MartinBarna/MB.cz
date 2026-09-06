@@ -506,21 +506,49 @@ function dalsiZIndexu(slug, kolik) {
 // zopakovaný předmět zabere místo, které nic nepřidá (53. šéf 6. 9. 2026).
 export function zkratPreheader(popis, subject = '', limit = 120) {
   const bezEmoji = (x) =>
-    x.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu, '')
+    x
+      .replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu, '')
       .replace(/\s{2,}/g, ' ')
       .trim();
+
   let t = bezEmoji(popis);
   const s = bezEmoji(subject);
+  // popis často začíná zopakovaným titulkem, ten v náhledu jen zabírá místo
   if (s && t.toLowerCase().startsWith(s.toLowerCase())) {
     t = t.slice(s.length).replace(/^[\s\-–:.,!?]+/, '');
   }
-  if (t.length <= limit) return t;
-  const rez = t.slice(0, limit + 1);
-  // nejdřív zkus skončit celou větou, teprve pak celým slovem
-  const veta = Math.max(rez.lastIndexOf('. '), rez.lastIndexOf('! '), rez.lastIndexOf('? '));
-  if (veta > 55) return t.slice(0, veta + 1);
-  const mezera = rez.lastIndexOf(' ');
-  return (mezera > 40 ? rez.slice(0, mezera) : t.slice(0, limit)).replace(/[\s\-–:,;(]+$/, '');
+
+  // 1) zkrátit na limit: nejdřív na konec věty, teprve pak na celé slovo
+  if (t.length > limit) {
+    const rez = t.slice(0, limit + 1);
+    const veta = Math.max(rez.lastIndexOf('. '), rez.lastIndexOf('! '), rez.lastIndexOf('? '));
+    if (veta > 55) t = t.slice(0, veta + 1);
+    else {
+      const mezera = rez.lastIndexOf(' ');
+      t = (mezera > 40 ? rez.slice(0, mezera) : t.slice(0, limit));
+    }
+  }
+
+  // 2) ⛔ Uříznutý konec: popis v článku bývá sám o sobě useknutý (meta description),
+  //    takže preheader končil uprostřed slova („jako je maso a r“). Tady se dořeže
+  //    na poslední celou větu, jinak na poslední čistý předěl, jinak se fragment zahodí.
+  const konciVetou = (x) => /[.!?…]["»“”)]?$/.test(x);
+  // krátký popis bez tečky bývá záměrný titulek, ne useknutá věta; čistí se až od 60 znaků
+  if (!konciVetou(t) && t.length >= 60) {
+    const veta = Math.max(t.lastIndexOf('. '), t.lastIndexOf('! '), t.lastIndexOf('? '));
+    if (veta > 45) t = t.slice(0, veta + 1);
+    else {
+      const predel = Math.max(t.lastIndexOf(', '), t.lastIndexOf('; '), t.lastIndexOf(': '), t.lastIndexOf(') '));
+      if (predel > 35) t = t.slice(0, predel + (t[predel] === ')' ? 1 : 0));
+      else t = t.replace(/\s+\S*$/, '') + '…';
+    }
+  }
+
+  // 3) otevřená závorka bez páru vypadá jako chyba, radši se uřízne i s tím, co je za ní
+  const otevrene = (t.match(/\(/g) || []).length - (t.match(/\)/g) || []).length;
+  if (otevrene > 0) t = t.slice(0, t.lastIndexOf('(')).replace(/[\s\-–:,;(]+$/, '');
+
+  return t.replace(/[\s\-–:,;(]+$/, '').trim();
 }
 
 /* ---------- kontroly, které smí zabít běh ---------- */
