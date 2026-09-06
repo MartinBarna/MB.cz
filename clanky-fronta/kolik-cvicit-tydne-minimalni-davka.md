@@ -6,7 +6,7 @@ Kategorie: Trénink
 SEO title: Kolik cvičit týdně: minimální dávka, která staví svaly
 Emoji: 🏋️
 Filtr: trenink
-Meta: Dvakrát týdně na partii je podle metaanalýz lepší než jednou, minimum jsou zhruba 4 série na sval týdně, poslední série s 1 až 2 opakováními v záloze. Co dělat s málem času.
+Meta: Dvakrát týdně na partii je podle metaanalýz lepší než jednou, minimum jsou zhruba 4 série na sval týdně, poslední série s 1 až 2 v záloze. Co dělat s málem času.
 Popis: Kolik tréninků a sérií týdně stačí na svaly a sílu, když máš času málo. Čísla z metaanalýz a jak si podle nich postavit plán.
 CTA:
 Chceš mít v jídelníčku pořádek?
