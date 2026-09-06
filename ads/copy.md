@@ -14,7 +14,7 @@ Videokurz výživy · Online kurz hubnutí · Kurz výživy online · Nauč se p
 **Popisy (4):**
 1. Celý systém výživy – 182 video lekcí. Nauč se jíst a zhubni natrvalo.
 2. Sestav si jídelníček, který tě baví a funguje. Bez hladu a zákazů.
-3. Doživotní přístup, koukáš kdy chceš. 11 lekcí si pustíš zdarma — bez registrace.
+3. Doživotní přístup, koukáš kdy chceš. 11 lekcí si pustíš zdarma, stačí nechat e-mail.
 4. Od Martina Barny, online výživového kouče. 600+ proměn. Be Effective!
 
 ### RSA 2 — sestava „Hubnutí muži – Forma zpět" (201884358430) → https://www.martinbarna.cz/forma-zpet

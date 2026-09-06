@@ -462,7 +462,7 @@ function dashboard() {
         </a>
         <a id="vkNextAca" href="/akademie/" style="text-decoration:none;display:block;background:rgba(235,177,44,.07);border:1px solid rgba(235,177,44,.4);border-radius:14px;padding:18px 20px;color:inherit;">
           <h3 style="margin:0 0 6px;color:#fff;font-size:1.05rem;">🎓 Chci jít do hloubky</h3>
-          <p style="margin:0;font-size:.88rem;color:#B9B3C4;line-height:1.5;">Barna Academy: 256 lekcí, generátory jídelníčků a tréninků, rok appky Tvůj Coach ve VIP verzi v ceně. Jako majitel videokurzu máš odečet: doživotní přístup tě vyjde na <b style="color:#F6CD63;">8 100 Kč</b>.</p>
+          <p style="margin:0;font-size:.88rem;color:#B9B3C4;line-height:1.5;">Barna Academy: 256 lekcí, generátory jídelníčků a tréninků, rok appky Tvůj Coach ve VIP verzi v ceně. Jako majitel videokurzu máš zvýhodněnou cenu: doživotní přístup tě vyjde na <b style="color:#F6CD63;">8 100 Kč</b>.</p>
         </a>
       </div>
     </div>
