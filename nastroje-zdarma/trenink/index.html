@@ -211,7 +211,7 @@
     </div>
   </div>
 
-  <script src="/assets/workout-gen.js?v=20260906c"></script>
+  <script src="/assets/workout-gen.js?v=20260906d"></script>
   <script>
   (function(){
     var DB=null, seed=0;
@@ -267,12 +267,22 @@
     if ($('opakovani')) { $('opakovani').addEventListener('change', obnovOpakovaniText); obnovOpakovaniText(); }
 
 
+    // Ťuknutí na Vyměnit: klíč `poradiDne:puvodniIdCviku`, hodnota kolikrát klient ťukl.
+    var vymeny = {};
+    function obsazeneIds(plan){ var o={}; plan.days.forEach(function(d){ d.exercises.forEach(function(pe){ o[pe.ex.id]=1; }); }); return o; }
+
     function render(plan){
       var html='';
-      plan.days.forEach(function(d){
+      plan.days.forEach(function(d,di){
         html+='<div class="day"><h3>'+d.day+'. '+d.name+' <small>'+d.exercises.length+' cviků</small></h3><table>';
         d.exercises.forEach(function(it){
-          html+='<tr><td><div style="display:flex;gap:11px;align-items:flex-start"><img class="no-print" src="/assets/cviky/'+esc(it.ex.id)+'.jpg" alt="" loading="lazy" onerror="this.remove()" style="width:62px;height:46px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#191510;margin-top:2px"><div>'+esc(it.ex.name)+(it.ex.tip?'<span class="tip">💡 '+esc(it.ex.tip)+'</span>':'')+'</div></div></td><td class="sr">'+it.sets+' × '+it.reps+'</td></tr>';
+          // [Martin 6. 9. 2026] Cvik, který klient neumí nebo nemá rád, jde vyměnit za jiný
+          // na stejný vzorec a stejnou partii. Objem po partiích se tím nemění.
+          // ⛔ Totéž je v appce (src/app/client/workout-generator.tsx).
+          var klic=di+':'+(it.puvodniId||it.ex.id);
+          var lzeVymenit=it.ex.pattern!=='kardio'&&window.WorkoutGen.kandidatiVymeny(lastPlan.pool,it.ex,obsazeneIds(lastPlan)).length>0;
+          var tlacitko=lzeVymenit?'<button type="button" class="no-print vymenit" data-vymenit="'+esc(klic)+'" style="background:none;border:0;color:#EBB12C;cursor:pointer;font:inherit;font-size:.86em;padding:2px 0">Vyměnit tenhle cvik ⟳</button>':'';
+          html+='<tr><td><div style="display:flex;gap:11px;align-items:flex-start"><img class="no-print" src="/assets/cviky/'+esc(it.ex.id)+'.jpg" alt="" loading="lazy" onerror="this.remove()" style="width:62px;height:46px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#191510;margin-top:2px"><div>'+esc(it.ex.name)+(it.ex.tip?'<span class="tip">💡 '+esc(it.ex.tip)+'</span>':'')+(tlacitko?'<div>'+tlacitko+'</div>':'')+'</div></div></td><td class="sr">'+it.sets+' × '+it.reps+'</td></tr>';
         });
         html+='</table></div>';
       });
@@ -285,10 +295,19 @@
     function generate(newSeed){
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
+      vymeny={};
       var plan=window.WorkoutGen.buildPlan(DB, opts());
       if(!plan.poolSize){ $('dbstate').textContent='Pro tuhle kombinaci místa a vybavení nemám dost cviků, zkus jiné vybavení.'; return; }
       render(plan);
     }
+    $('days').addEventListener('click',function(e){
+      var b=e.target&&e.target.closest?e.target.closest('[data-vymenit]'):null;
+      if(!b||!lastPlan)return;
+      var k=b.getAttribute('data-vymenit');
+      vymeny[k]=(vymeny[k]||0)+1;
+      lastPlan=window.WorkoutGen.pouzijVymeny(window.WorkoutGen.buildPlan(DB, opts()), vymeny);
+      render(lastPlan);
+    });
     $('gen').addEventListener('click',function(){ generate(false); });
     $('regen').addEventListener('click',function(){ generate(true); });
   })();

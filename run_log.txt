@@ -1,0 +1,1301 @@
+=== [1] alkohol-a-hubnuti (step 901) ===
+článek:   alkohol-a-hubnuti  (vydáno 2026-06-23)
+předmět:  Zhubneš i s alkoholem? Co na to věda  [36 znaků]
+preheader:Pivo, víno, panák - a přesto kila dolů. Co rozhoduje a kde je rozumná hranice.
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=blog&amp;utm_campaig
+bloků:    23  (p=17 ps=1 bullets=2 btn=3 img=0)
+text:     4771 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\alkohol-a-hubnuti.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\alkohol-a-hubnuti.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\alkohol-a-hubnuti.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\alkohol-a-hubnuti.sql
+exit=0
+=== [2] bcaa-aminokyseliny-mytus (step 902) ===
+článek:   bcaa-aminokyseliny-mytus  (vydáno 2026-06-29)
+předmět:  Musíš brát BCAA na svaly? Mýtus o aminokyselinách  [49 znaků]
+preheader:Když jíš dost bílkovin z jídla, BCAA prášek ti nic nepřidá - kompletní bílkovina už BCAA obsahuje, a navíc všechny ostatní esenciální aminok
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti počítat aminokyseliny a hádat doplňky → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    32  (p=25 ps=1 bullets=3 btn=3 img=0)
+text:     6533 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bcaa-aminokyseliny-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bcaa-aminokyseliny-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bcaa-aminokyseliny-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bcaa-aminokyseliny-mytus.sql
+exit=0
+=== [3] bezlepkova-dieta-mytus (step 903) ===
+článek:   bezlepkova-dieta-mytus  (vydáno 2026-06-29)
+předmět:  Bezlepková dieta zhubne každého? Mýtus o bezlepkovém  [52 znaků]
+preheader:Lepek sám o sobě netloustí ani neškodí lidem bez celiakie. Když po jeho vyřazení zhubneš, je to obvykle proto, že vypadlo pečivo, pizza a ko
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti motat v módních dietách a nálepkách? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    40  (p=33 ps=1 bullets=3 btn=3 img=0)
+text:     8367 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bezlepkova-dieta-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bezlepkova-dieta-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bezlepkova-dieta-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bezlepkova-dieta-mytus.sql
+exit=0
+=== [4] bilkoviny-a-ledviny-mytus (step 904) ===
+článek:   bilkoviny-a-ledviny-mytus  (vydáno 2026-06-29)
+předmět:  Hodně bílkovin ničí ledviny? Mýtus o proteinu a zdraví  [54 znaků]
+preheader:U zdravých lidí vyšší příjem bílkovin ledviny nepoškozuje. Odkud mýtus vznikl a kolik proteinu reálně jíst.
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené, ať se nemusíš bát? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    38  (p=31 ps=1 bullets=3 btn=3 img=0)
+text:     7650 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bilkoviny-a-ledviny-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bilkoviny-a-ledviny-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bilkoviny-a-ledviny-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bilkoviny-a-ledviny-mytus.sql
+exit=0
+=== [5] bolave-svaly-doms-mytus (step 905) ===
+článek:   bolave-svaly-doms-mytus  (vydáno 2026-06-29)
+předmět:  Bolavé svaly = dobrý trénink? Mýtus o svalovce (DOMS)  [53 znaků]
+preheader:Svalovka (DOMS) je hlavně reakce na nezvyklý podnět, ne měřítko kvality tréninku ani růstu svalů. Sval roste z progresivního přetížení, dost
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat sám se sebou, jestli to „dost m → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    35  (p=27 ps=1 bullets=4 btn=3 img=0)
+text:     6649 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bolave-svaly-doms-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bolave-svaly-doms-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bolave-svaly-doms-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\bolave-svaly-doms-mytus.sql
+exit=0
+=== [6] clean-eating-mytus (step 906) ===
+článek:   clean-eating-mytus  (vydáno 2026-06-29)
+předmět:  Musíš jíst „čistě“? Mýtus o clean eating a zakázaných jídlech  [61 znaků]
+preheader:Dělení jídel na „čisté“ a „špinavé“ je umělé a nevědecké. Žádná potravina tě sama o sobě neztloustí ani neudělá zdravým. Rozhoduje celkový o
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit, co je „čisté" a co ne? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=27 ps=1 bullets=3 btn=3 img=0)
+text:     6887 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\clean-eating-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\clean-eating-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\clean-eating-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\clean-eating-mytus.sql
+exit=0
+=== [7] co-dela-stravu-zdravou (step 907) ===
+článek:   co-dela-stravu-zdravou  (vydáno 2026-06-23)
+předmět:  Co opravdu dělá stravu zdravou (není to matcha z Amazonu)  [57 znaků]
+preheader:Co mají společné Blue Zones - a jak to najdeš i v české kuchyni.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    22  (p=16 ps=1 bullets=2 btn=3 img=0)
+text:     4122 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\co-dela-stravu-zdravou.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\co-dela-stravu-zdravou.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\co-dela-stravu-zdravou.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\co-dela-stravu-zdravou.sql
+exit=0
+=== [8] cukr-je-jed-mytus (step 908) ===
+článek:   cukr-je-jed-mytus  (vydáno 2026-06-29)
+předmět:  Cukr je jed? Mýtus o cukru, tloustnutí a cukrovce  [49 znaků]
+preheader:Cukr není jed a sám o sobě tě neztloustí ani ti nezpůsobí cukrovku. Rozhoduje celkový příjem a životní styl. Co reálně hlídat a co je jen st
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat, kolik cukru je „moc"? → ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=blog&amp;utm_campaig
+bloků:    46  (p=41 ps=1 bullets=1 btn=3 img=0)
+text:     9598 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cukr-je-jed-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cukr-je-jed-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cukr-je-jed-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cukr-je-jed-mytus.sql
+exit=0
+=== [9] cviceni-pro-mozek-po-sedesatce (step 909) ===
+článek:   cviceni-pro-mozek-po-sedesatce  (vydáno 2026-06-23)
+předmět:  Nejlepší cvičení pro mozek po šedesátce  [39 znaků]
+preheader:Network meta-analýza 37 studií - a pořadí, které možná překvapí.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    18  (p=11 ps=1 bullets=3 btn=3 img=0)
+text:     3459 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cviceni-pro-mozek-po-sedesatce.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cviceni-pro-mozek-po-sedesatce.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cviceni-pro-mozek-po-sedesatce.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\cviceni-pro-mozek-po-sedesatce.sql
+exit=0
+=== [10] detox-diety-a-caje-mytus (step 910) ===
+článek:   detox-diety-a-caje-mytus  (vydáno 2026-06-29)
+předmět:  Detox diety, čaje a šťávové očisty: proč jsou mýtus (a co tělo opravdu čistí)  [77 znaků]
+preheader:Detox čaje, šťávové očisty, „odkyselení", nálepky na nohy. Tvoje játra a ledviny pracují 24/7 zadarmo - žádná šťáva to nedělá líp. Střízlivě
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit všechno sám? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    29  (p=23 ps=1 bullets=2 btn=3 img=0)
+text:     6249 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\detox-diety-a-caje-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\detox-diety-a-caje-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\detox-diety-a-caje-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\detox-diety-a-caje-mytus.sql
+exit=0
+=== [11] dna-testy-na-hubnuti (step 911) ===
+článek:   dna-testy-na-hubnuti  (vydáno 2026-06-23)
+předmět:  DNA testy a appky na hubnutí: vyplatí se?  [41 znaků]
+preheader:Co ukázala stanfordská studie DIETFITS na 609 lidech.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    21  (p=15 ps=1 bullets=2 btn=3 img=0)
+text:     3891 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\dna-testy-na-hubnuti.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\dna-testy-na-hubnuti.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\dna-testy-na-hubnuti.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\dna-testy-na-hubnuti.sql
+exit=0
+=== [12] ektomorf-mezomorf-endomorf (step 912) ===
+článek:   ektomorf-mezomorf-endomorf  (vydáno 2026-06-29)
+předmět:  Ektomorf, mezomorf, endomorf: proč je dělení na typy postavy mýtus  [66 znaků]
+preheader:Typy postavy nejsou genetická diagnóza ani osud. Je to jen aktuální poměr svalů a tuku - a ten si měníš tréninkem a jídlem.
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit „typy" a hádat? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    32  (p=26 ps=1 bullets=2 btn=3 img=0)
+text:     6073 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ektomorf-mezomorf-endomorf.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ektomorf-mezomorf-endomorf.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ektomorf-mezomorf-endomorf.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ektomorf-mezomorf-endomorf.sql
+exit=0
+=== [13] fat-burning-zona-mytus (step 913) ===
+článek:   fat-burning-zona-mytus  (vydáno 2026-06-29)
+předmět:  Spalovací tepová zóna na hubnutí? Mýtus o „fat burning zone“  [60 znaků]
+preheader:Nízká tepová frekvence pálí vyšší podíl tuku jako palivo - ale ne víc tuku z těla. Při vyšší intenzitě spálíš celkově víc kalorií za stejný 
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit, v jaké zóně máš jezdit? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    33  (p=25 ps=1 bullets=4 btn=3 img=0)
+text:     6443 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\fat-burning-zona-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\fat-burning-zona-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\fat-burning-zona-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\fat-burning-zona-mytus.sql
+exit=0
+=== [14] funguje-wobenzym (step 914) ===
+článek:   funguje-wobenzym  (vydáno 2025-09-25)
+předmět:  Funguje Wobenzym?  [17 znaků]
+preheader:Wobenzym je známý enzymový přípravek (nebo spíš lék v ČR), který se prodává jako podpora při zánětech, otocích, bolestech a imunitě. Pojďme 
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    37  (p=32 ps=1 bullets=1 btn=3 img=0)
+text:     6970 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funguje-wobenzym.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funguje-wobenzym.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funguje-wobenzym.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funguje-wobenzym.sql
+exit=0
+=== [15] funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje (step 915) ===
+článek:   funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje  (vydáno 2026-06-07)
+předmět:  🔥 FUNKČNÍ TRÉNINK VS. POCTIVÁ SÍLA – CO SKUTEČNĚ FUNGUJE?  [58 znaků]
+preheader:(Nová studie na elitních mladých fotbalistech to rozhodla jednoznačně) Představ si 48 profi fotbalistů 15–17 let. Už na startu dřepovali 1,4
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    39  (p=33 ps=1 bullets=2 btn=3 img=0)
+text:     4170 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje.sql
+exit=0
+=== [16] glykemicky-index-mytus (step 916) ===
+článek:   glykemicky-index-mytus  (vydáno 2026-06-29)
+předmět:  Glykemický index a hubnutí? Mýtus o GI potravin  [47 znaků]
+preheader:GI měří jen rychlost, jak po samotné potravině stoupne cukr v krvi - ne kalorie ani tloustnoucí potenciál. O hubnutí rozhoduje kalorická bil
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit GI tabulky a „zakázané" potravi → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=26 ps=1 bullets=4 btn=3 img=0)
+text:     7053 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\glykemicky-index-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\glykemicky-index-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\glykemicky-index-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\glykemicky-index-mytus.sql
+exit=0
+=== [17] hnedy-cukr-med-mytus (step 917) ===
+článek:   hnedy-cukr-med-mytus  (vydáno 2026-06-29)
+předmět:  Hnědý cukr a med zdravější než bílý? Mýtus o „přírodních“ sladidlech  [68 znaků]
+preheader:Med, hnědý a kokosový cukr, agáve i javorový sirup jsou pořád hlavně cukr a kalorie navíc. O hubnutí rozhoduje celkový příjem cukru a kalori
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti luštit, co je opravdu „zdravější"? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=27 ps=1 bullets=3 btn=3 img=0)
+text:     6722 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hnedy-cukr-med-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hnedy-cukr-med-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hnedy-cukr-med-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hnedy-cukr-med-mytus.sql
+exit=0
+=== [18] hubnuti-a-zdravi-mozku (step 918) ===
+článek:   hubnuti-a-zdravi-mozku  (vydáno 2026-06-23)
+předmět:  Hubnutí a zdraví mozku: co ukazují data  [39 znaků]
+preheader:Mírně nižší hmotnost a riziko demence - co o tom dnes víme.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    17  (p=10 ps=1 bullets=3 btn=3 img=0)
+text:     3229 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hubnuti-a-zdravi-mozku.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hubnuti-a-zdravi-mozku.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hubnuti-a-zdravi-mozku.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hubnuti-a-zdravi-mozku.sql
+exit=0
+=== [19] hydratace-deti-sport (step 919) ===
+článek:   hydratace-deti-sport  (vydáno 2026-06-28)
+předmět:  Hydratace dětí ve sportu: kdy stačí voda a kdy ne (a jak na domácí iontový nápoj)  [81 znaků]
+preheader:Trénuje vaše dítě v horku přes hodinu a pije jen vodu? Někdy to nestačí. Praktický průvodce hydratací mladého sportovce - kdy voda, kdy iont
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš mít stravu i hydrataci svého malého sportovc → /#kalkulacka /videokurz /koucing/
+bloků:    50  (p=39 ps=1 bullets=7 btn=3 img=0)
+text:     7087 znaků
+obrázků v článku: 0 (vynechány)
+⚠️  predmet ma 81 znaku, v seznamu posty se urizne
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hydratace-deti-sport.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hydratace-deti-sport.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hydratace-deti-sport.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\hydratace-deti-sport.sql
+exit=0
+=== [20] je-citlivost-na-lepek-realna-nebo-jen-v-hlave (step 920) ===
+článek:   je-citlivost-na-lepek-realna-nebo-jen-v-hlave  (vydáno 2025-12-12)
+předmět:  Je citlivost na lepek reálná nebo jen v hlavě? 😏  [49 znaků]
+preheader:Je citlivost na lepek reálná nebo jen v hlavě? 😏 Nová studie dala skupině zdravých lidí (s i bez samozvané citlivosti na lepek) jídla s i b
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    18  (p=12 ps=1 bullets=2 btn=3 img=0)
+text:     4831 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-citlivost-na-lepek-realna-nebo-jen-v-hlave.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-citlivost-na-lepek-realna-nebo-jen-v-hlave.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-citlivost-na-lepek-realna-nebo-jen-v-hlave.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-citlivost-na-lepek-realna-nebo-jen-v-hlave.sql
+exit=0
+=== [21] je-cola-zero-horsi-nez-obycejna-cola (step 921) ===
+článek:   je-cola-zero-horsi-nez-obycejna-cola  (vydáno 2025-10-16)
+předmět:  Je Cola Zero horší než obyčejná Cola? 🤔  [40 znaků]
+preheader:Je Cola Zero horší než obyčejná Cola? Překvapivě ne. Ve skutečnosti je to mnohem lepší. Když dietní sody nahradí slazené nápoje, lidi zhubno
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    11  (p=3 ps=1 bullets=4 btn=3 img=0)
+text:     2490 znaků
+obrázků v článku: 4 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-cola-zero-horsi-nez-obycejna-cola.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-cola-zero-horsi-nez-obycejna-cola.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-cola-zero-horsi-nez-obycejna-cola.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\je-cola-zero-horsi-nez-obycejna-cola.sql
+exit=0
+=== [22] jist-casteji-mytus (step 922) ===
+článek:   jist-casteji-mytus  (vydáno 2026-06-29)
+předmět:  Musíš jíst 5–6× denně? Mýtus o časté stravě a metabolismu  [57 znaků]
+preheader:Časté svačiny metabolismus „nerozjedou“ a tři jídla ho „nezpomalí“. Termický efekt potravy se počítá z celkového příjmu, ne z počtu jídel. O
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat, kolikrát denně máš jíst? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    39  (p=32 ps=1 bullets=3 btn=3 img=0)
+text:     7727 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-casteji-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-casteji-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-casteji-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-casteji-mytus.sql
+exit=0
+=== [23] jist-po-seste-vecer-se-tloustne-mytus (step 923) ===
+článek:   jist-po-seste-vecer-se-tloustne-mytus  (vydáno 2026-06-29)
+předmět:  Jíst po šesté večer se tloustne? Mýtus o časování jídla  [55 znaků]
+preheader:Kalorie nemají hodinky. O váze rozhoduje celkový denní a týdenní příjem, ne to, jestli jíš v šest nebo v devět večer.
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat s pověrami o jídle? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    37  (p=30 ps=1 bullets=3 btn=3 img=0)
+text:     8119 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-po-seste-vecer-se-tloustne-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-po-seste-vecer-se-tloustne-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-po-seste-vecer-se-tloustne-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jist-po-seste-vecer-se-tloustne-mytus.sql
+exit=0
+=== [24] jsou-umela-sladidla-zlo-pro-tvoje-streva (step 924) ===
+článek:   jsou-umela-sladidla-zlo-pro-tvoje-streva  (vydáno 2025-12-19)
+předmět:  Jsou umělá sladidla zlo pro tvoje střeva? 😏  [44 znaků]
+preheader:Jsou umělá sladidla zlo pro tvoje střeva? 😏 V roce 2014 studie v prestižním časopise Nature tvrdila, že běžná umělá sladidla (jako sacharin
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    18  (p=12 ps=1 bullets=2 btn=3 img=0)
+text:     4540 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jsou-umela-sladidla-zlo-pro-tvoje-streva.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jsou-umela-sladidla-zlo-pro-tvoje-streva.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jsou-umela-sladidla-zlo-pro-tvoje-streva.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\jsou-umela-sladidla-zlo-pro-tvoje-streva.sql
+exit=0
+=== [25] kaloricky-deficit (step 925) ===
+článek:   kaloricky-deficit  (vydáno 2026-06-20)
+předmět:  Kalorický deficit v kostce  [26 znaků]
+preheader:Co je kalorický deficit, jak ho správně nastavit a proč je základem hubnutí. Srozumitelně a bez mýtů od kouče Martina Barny.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 3 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: 🎯 Deficit chápeš. Tak proč to nejde? → /kviz/?utm_source=web&amp;utm_medium=clanek&amp;utm_campaign=kviz
+          - cta-box: Nechce se ti počítat všechno sám? → ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=blog&amp;utm_campaig
+bloků:    20  (p=13 ps=1 bullets=3 btn=3 img=0)
+text:     4145 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kaloricky-deficit.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kaloricky-deficit.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kaloricky-deficit.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kaloricky-deficit.sql
+exit=0
+=== [26] kardio-nici-svaly-mytus (step 926) ===
+článek:   kardio-nici-svaly-mytus  (vydáno 2026-06-29)
+předmět:  Kardio ti sežere svaly? Mýtus o kardiu a síle  [45 znaků]
+preheader:Rozumné množství kardia svaly nesežere. Drží je silový trénink, dost bílkovin a ne moc agresivní deficit. „Interference efekt“ platí jen v e
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat, jestli kardio bere svaly, nebo → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    38  (p=29 ps=1 bullets=5 btn=3 img=0)
+text:     7122 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-nici-svaly-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-nici-svaly-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-nici-svaly-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-nici-svaly-mytus.sql
+exit=0
+=== [27] kardio-spaluje-mene (step 927) ===
+článek:   kardio-spaluje-mene  (vydáno 2026-06-23)
+předmět:  Kardio spaluje míň, než si myslíš  [33 znaků]
+preheader:Tělo dožene až 70 % „spálených“ kalorií jinde. Co s tím.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    22  (p=17 ps=1 bullets=1 btn=3 img=0)
+text:     3635 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-spaluje-mene.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-spaluje-mene.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-spaluje-mene.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kardio-spaluje-mene.sql
+exit=0
+=== [28] kdy-ma-mozek-vrchol (step 928) ===
+článek:   kdy-ma-mozek-vrchol  (vydáno 2026-06-23)
+předmět:  Kdy má mozek vrchol? Není to ve třiceti  [39 znaků]
+preheader:Australská studie sledovala 9 oblastí výkonu od 18 do 85 let.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    17  (p=12 ps=1 bullets=1 btn=3 img=0)
+text:     2787 znaků
+obrázků v článku: 9 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kdy-ma-mozek-vrchol.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kdy-ma-mozek-vrchol.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kdy-ma-mozek-vrchol.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kdy-ma-mozek-vrchol.sql
+exit=0
+=== [29] kofein-a-jeho-bezpecna-konzumace (step 929) ===
+článek:   kofein-a-jeho-bezpecna-konzumace  (vydáno 2025-08-07)
+předmět:  Kofein a jeho bezpečná konzumace  [32 znaků]
+preheader:Kofein a jeho bezpečná konzumace Kofein je jedním z nejčastěji konzumovaných stimulantů na světě, který se nachází v kávě, čaji, energetický
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    42  (p=31 ps=1 bullets=7 btn=3 img=0)
+text:     6372 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-a-jeho-bezpecna-konzumace.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-a-jeho-bezpecna-konzumace.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-a-jeho-bezpecna-konzumace.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-a-jeho-bezpecna-konzumace.sql
+exit=0
+=== [30] kofein-pred-treninkem (step 930) ===
+článek:   kofein-pred-treninkem  (vydáno 2026-06-23)
+předmět:  Kofein před tréninkem: jistota, nebo spíš zvyk?  [47 znaků]
+preheader:Chytře udělaná studie ukázala něco, co tě možná zaskočí.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    21  (p=16 ps=1 bullets=1 btn=3 img=0)
+text:     3797 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-pred-treninkem.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-pred-treninkem.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-pred-treninkem.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kofein-pred-treninkem.sql
+exit=0
+=== [31] kolagen-na-slachy-a-klouby (step 931) ===
+článek:   kolagen-na-slachy-a-klouby  (vydáno 2025-10-23)
+předmět:  Kolagen na šlachy a klouby?  [27 znaků]
+preheader:Kolagen na šlachy a klouby? Kolagen je často nabízen jako dobrý pro zdraví spojivových tkání, jako šlachy a vazy. Teorie je, že kolagen, kte
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    51  (p=24 ps=1 bullets=23 btn=3 img=0)
+text:     8546 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-na-slachy-a-klouby.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-na-slachy-a-klouby.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-na-slachy-a-klouby.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-na-slachy-a-klouby.sql
+exit=0
+=== [32] kolagen-vs-bilkoviny (step 932) ===
+článek:   kolagen-vs-bilkoviny  (vydáno 2026-06-23)
+předmět:  Kolagen na klouby, nebo prostě bílkovina?  [41 znaků]
+preheader:Většina studií srovnává kolagen s cukrem. Postav ho proti bílkovině…
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    20  (p=14 ps=1 bullets=2 btn=3 img=0)
+text:     3965 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-vs-bilkoviny.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-vs-bilkoviny.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-vs-bilkoviny.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolagen-vs-bilkoviny.sql
+exit=0
+=== [33] kolik-let-pridava-zdravy-zivot (step 933) ===
+článek:   kolik-let-pridava-zdravy-zivot  (vydáno 2026-06-23)
+předmět:  Zdravý život ti přidá skoro deset let (a nemusíš být dokonalý)  [62 znaků]
+preheader:Studie na 60 000 lidech: nejzdravější třetina žila skoro o dekádu déle. A stačí konzistence, ne dokonalost.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    22  (p=15 ps=1 bullets=3 btn=3 img=0)
+text:     4636 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-let-pridava-zdravy-zivot.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-let-pridava-zdravy-zivot.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-let-pridava-zdravy-zivot.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-let-pridava-zdravy-zivot.sql
+exit=0
+=== [34] kolik-vajec-denne-cholesterol-mytus (step 934) ===
+článek:   kolik-vajec-denne-cholesterol-mytus  (vydáno 2026-06-29)
+předmět:  Kolik vajec denně? Mýtus o vejcích a cholesterolu  [49 znaků]
+preheader:Vejce nejsou cholesterolová bomba na jedno denně. U většiny zdravých lidí dietní cholesterol z vajec hladinu v krvi výrazně neovlivní - tělo
+nabídky:  půlka = KONZULTACE (jednorázová)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat o žloutky a hledat, čemu věřit? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    39  (p=32 ps=1 bullets=3 btn=3 img=0)
+text:     8180 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-vajec-denne-cholesterol-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-vajec-denne-cholesterol-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-vajec-denne-cholesterol-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kolik-vajec-denne-cholesterol-mytus.sql
+exit=0
+=== [35] korelace-neni-kauzalita (step 935) ===
+článek:   korelace-neni-kauzalita  (vydáno 2025-11-07)
+předmět:  Korelace není kauzalita  [23 znaků]
+preheader:Korelace není kauzalita Přátelé, pamatujete si na ten meme s kočkou, která „způsobila“ ohnutí střechy? 😂 „Remember… Correlation is not caus
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    29  (p=24 ps=1 bullets=1 btn=3 img=0)
+text:     5796 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\korelace-neni-kauzalita.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\korelace-neni-kauzalita.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\korelace-neni-kauzalita.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\korelace-neni-kauzalita.sql
+exit=0
+=== [36] kreatin-nejen-pro-svaly-ale-i-pro-mozek (step 936) ===
+článek:   kreatin-nejen-pro-svaly-ale-i-pro-mozek  (vydáno 2025-09-11)
+předmět:  Kreatin: Nejen pro svaly, ale i pro mozek  [41 znaků]
+preheader:Kreatin: Nejen pro svaly, ale i pro mozek Kreatin je přírodní sloučenina, kterou tělo produkuje a nachází se v potravinách, jako je maso a r
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    36  (p=29 ps=1 bullets=3 btn=3 img=0)
+text:     11627 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kreatin-nejen-pro-svaly-ale-i-pro-mozek.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kreatin-nejen-pro-svaly-ale-i-pro-mozek.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kreatin-nejen-pro-svaly-ale-i-pro-mozek.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kreatin-nejen-pro-svaly-ale-i-pro-mozek.sql
+exit=0
+=== [37] kroky-vs-presnost-jidla (step 937) ===
+článek:   kroky-vs-presnost-jidla  (vydáno 2026-06-23)
+předmět:  Chodíš 10 tisíc kroků a váha stojí? Proč  [40 znaků]
+preheader:Kroky vs. přesnost jídla - co má na hubnutí větší páku.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    19  (p=14 ps=1 bullets=1 btn=3 img=0)
+text:     3432 znaků
+obrázků v článku: 9 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kroky-vs-presnost-jidla.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kroky-vs-presnost-jidla.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kroky-vs-presnost-jidla.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\kroky-vs-presnost-jidla.sql
+exit=0
+=== [38] lokalni-hubnuti-cviky-na-bricho (step 938) ===
+článek:   lokalni-hubnuti-cviky-na-bricho  (vydáno 2026-06-29)
+předmět:  Lokální hubnutí je mýtus: proč ti tisíc sklapovaček neudělá ploché břicho  [73 znaků]
+preheader:„Budu cvičit břicho a zhubne mi břicho." Tělo to ale takhle nedělá - tuk neodbouráš z místa, které procvičuješ. Co na břišáky funguje doopra
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit všechno sám? → ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=blog&amp;utm_campaig
+bloků:    33  (p=27 ps=1 bullets=2 btn=3 img=0)
+text:     6851 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\lokalni-hubnuti-cviky-na-bricho.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\lokalni-hubnuti-cviky-na-bricho.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\lokalni-hubnuti-cviky-na-bricho.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\lokalni-hubnuti-cviky-na-bricho.sql
+exit=0
+=== [39] makroziviny-a-hubnuti (step 939) ===
+článek:   makroziviny-a-hubnuti  (vydáno 2026-06-23)
+předmět:  Na hubnutí nemusíš hlídat všechna makra  [39 znaků]
+preheader:Stačí kalorie a bílkoviny + vláknina. Co říká 32 kontrolovaných studií.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    17  (p=12 ps=1 bullets=1 btn=3 img=0)
+text:     3561 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\makroziviny-a-hubnuti.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\makroziviny-a-hubnuti.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\makroziviny-a-hubnuti.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\makroziviny-a-hubnuti.sql
+exit=0
+=== [40] malo-spanku-a-hubnuti (step 940) ===
+článek:   malo-spanku-a-hubnuti  (vydáno 2026-06-23)
+předmět:  Co dělá málo spánku s hubnutím (a hlavně s tukem)  [49 znaků]
+preheader:Co se stalo s tukem, když lidé spali míň - a jak to obrátit.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    20  (p=14 ps=1 bullets=2 btn=3 img=0)
+text:     4063 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\malo-spanku-a-hubnuti.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\malo-spanku-a-hubnuti.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\malo-spanku-a-hubnuti.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\malo-spanku-a-hubnuti.sql
+exit=0
+=== [41] maslo-a-kardiovaskularni-onemocneni (step 941) ===
+článek:   maslo-a-kardiovaskularni-onemocneni  (vydáno 2025-11-14)
+předmět:  Máslo a kardiovaskulární onemocnění  [35 znaků]
+preheader:Nějak jsme se ocitli v roce 2025 a stále ještě nazýváme máslo „superpotravinou“. 🤦‍♂️ Literatura o másle ukazuje neutrální až mírně vyšší c
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    24  (p=17 ps=1 bullets=3 btn=3 img=0)
+text:     5961 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\maslo-a-kardiovaskularni-onemocneni.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\maslo-a-kardiovaskularni-onemocneni.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\maslo-a-kardiovaskularni-onemocneni.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\maslo-a-kardiovaskularni-onemocneni.sql
+exit=0
+=== [42] melatonin-na-spanek (step 942) ===
+článek:   melatonin-na-spanek  (vydáno 2026-06-23)
+předmět:  Je melatonin prášek na spaní? Není. A v tom je háček  [52 znaků]
+preheader:Co od melatoninu reálně čekat a kdy opravdu pomůže.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    26  (p=18 ps=1 bullets=4 btn=3 img=0)
+text:     4533 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\melatonin-na-spanek.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\melatonin-na-spanek.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\melatonin-na-spanek.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\melatonin-na-spanek.sql
+exit=0
+=== [43] meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil (step 943) ===
+článek:   meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil  (vydáno 2025-11-28)
+předmět:  Měli byste počítat objem tréninku jako sety nebo opakování? Oboje! Další díl série Věda vs. Mýty v Tréninku.  [108 znaků]
+preheader:Měli byste počítat objem tréninku jako sety nebo opakování? Oboje! Další díl série Věda vs. Mýty v Tréninku. V poslední dekádě byl mýtus 6-1
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    25  (p=20 ps=1 bullets=1 btn=3 img=0)
+text:     5697 znaků
+obrázků v článku: 0 (vynechány)
+⚠️  predmet ma 108 znaku, v seznamu posty se urizne
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil.sql
+exit=0
+=== [44] mleko-a-mlecne-mytus (step 944) ===
+článek:   mleko-a-mlecne-mytus  (vydáno 2026-06-29)
+předmět:  Mléko škodí dospělým? Mýtus o mléčných výrobcích  [48 znaků]
+preheader:Mléko a mléčné výrobky nejsou pro zdravého dospělého jed. Naopak - skvělý zdroj kvalitních bílkovin, vápníku a sytosti. Zahleňování i zánětl
+nabídky:  půlka = KONZULTACE (jednorázová)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit, co jíst smíš a co ne? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=26 ps=1 bullets=4 btn=3 img=0)
+text:     6589 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\mleko-a-mlecne-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\mleko-a-mlecne-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\mleko-a-mlecne-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\mleko-a-mlecne-mytus.sql
+exit=0
+=== [45] namitky-proti-kalorickemu-deficitu (step 945) ===
+článek:   namitky-proti-kalorickemu-deficitu  (vydáno 2026-06-23)
+předmět:  5 námitek proti kalorickému deficitu (a proč ani jedna neplatí)  [63 znaků]
+preheader:„Mně deficit nefungoval.“ Pojďme si projít nejčastější výmluvy.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    27  (p=22 ps=1 bullets=1 btn=3 img=0)
+text:     3843 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\namitky-proti-kalorickemu-deficitu.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\namitky-proti-kalorickemu-deficitu.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\namitky-proti-kalorickemu-deficitu.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\namitky-proti-kalorickemu-deficitu.sql
+exit=0
+=== [46] nocni-smeny-a-hubnuti (step 946) ===
+článek:   nocni-smeny-a-hubnuti  (vydáno 2026-06-23)
+předmět:  Pracuješ v noci? Hubnutí je těžší, a věda ví proč (a co s tím)  [62 znaků]
+preheader:Noční a rotující směny hubnutí ztěžují. Co o tom říká věda, proč to není v hlavě a 4 konkrétní strategie, jak na to.
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Děláš na směny a chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    21  (p=14 ps=1 bullets=3 btn=3 img=0)
+text:     3435 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\nocni-smeny-a-hubnuti.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\nocni-smeny-a-hubnuti.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\nocni-smeny-a-hubnuti.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\nocni-smeny-a-hubnuti.sql
+exit=0
+=== [47] objem-treninku-v-diete (step 947) ===
+článek:   objem-treninku-v-diete  (vydáno 2026-06-23)
+předmět:  V dietě: hodně sérií, nebo míň? Nová studie překvapí  [52 znaků]
+preheader:Klasická rada zní logicky - čerstvá data ji ale nabourávají.
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    21  (p=16 ps=1 bullets=1 btn=3 img=0)
+text:     3433 znaků
+obrázků v článku: 9 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\objem-treninku-v-diete.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\objem-treninku-v-diete.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\objem-treninku-v-diete.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\objem-treninku-v-diete.sql
+exit=0
+=== [48] omega-3-oxidace (step 948) ===
+článek:   omega-3-oxidace  (vydáno 2026-06-23)
+předmět:  Většina rybího oleje je nejspíš zoxidovaná  [42 znaků]
+preheader:Proč jsou omega-3 doplňky citlivé na kyslík a jak vybrat dobrý.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    25  (p=19 ps=1 bullets=2 btn=3 img=0)
+text:     3902 znaků
+obrázků v článku: 9 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omega-3-oxidace.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omega-3-oxidace.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omega-3-oxidace.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omega-3-oxidace.sql
+exit=0
+=== [49] omlazeni-hubnutim (step 949) ===
+článek:   omlazeni-hubnutim  (vydáno 2026-06-23)
+předmět:  Hubnutí umí omladit tělo až na úrovni buněk  [43 znaků]
+preheader:Dvě studie z Nature - a jeden důležitý háček.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    17  (p=12 ps=1 bullets=1 btn=3 img=0)
+text:     2984 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omlazeni-hubnutim.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omlazeni-hubnutim.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omlazeni-hubnutim.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\omlazeni-hubnutim.sql
+exit=0
+=== [50] ovoce-a-cukr-mytus (step 950) ===
+článek:   ovoce-a-cukr-mytus  (vydáno 2026-06-29)
+předmět:  Ovoce má moc cukru? Mýtus o ovoci v dietě  [41 znaků]
+preheader:Ovoce tě samo o sobě neztloustí. Cukr v celém ovoci přichází s vlákninou, vodou a objemem, takže dobře sytí. Rozhoduje celkový kalorický pří
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat, co smíš a co ne? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    38  (p=30 ps=1 bullets=4 btn=3 img=0)
+text:     7265 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ovoce-a-cukr-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ovoce-a-cukr-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ovoce-a-cukr-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\ovoce-a-cukr-mytus.sql
+exit=0
+=== [51] pitny-rezim (step 951) ===
+článek:   pitny-rezim  (vydáno 2026-06-21)
+předmět:  Pitný režim a hubnutí: kolik pít a proč na tom záleží  [53 znaků]
+preheader:Kolik vody pít při hubnutí, jak pití ovlivňuje hlad a výkon a proč tekuté kalorie škodí. Praktický průvodce od kouče Martina Barny.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit všechno sám? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    20  (p=14 ps=1 bullets=2 btn=3 img=0)
+text:     3482 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pitny-rezim.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pitny-rezim.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pitny-rezim.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pitny-rezim.sql
+exit=0
+=== [52] planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu (step 952) ===
+článek:   planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu  (vydáno 2025-05-27)
+předmět:  Plánování jídel pro vytvoření kalorického deficitu: klíč k úspěšnému hubnutí  [76 znaků]
+preheader:Plánování jídel pro vytvoření kalorického deficitu: klíč k úspěšnému hubnutí Plánování jídel je jedním z nejdůležitějších kroků, pokud chcet
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    24  (p=19 ps=1 bullets=1 btn=3 img=0)
+text:     5125 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu.sql
+exit=0
+=== [53] poceni-a-spalovani-tuku-mytus (step 953) ===
+článek:   poceni-a-spalovani-tuku-mytus  (vydáno 2026-06-29)
+předmět:  Pocení znamená spalování tuku? Mýtus o saunách a zábalech  [57 znaků]
+preheader:Pot je termoregulace, ne tavení tuku. Po sauně, zábalu nebo cvičení v mikině zmizí z váhy voda, ne tuk. Tuk jde dolů jen v kalorickém defici
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti tipovat, co na hubnutí funguje a co j → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=27 ps=1 bullets=3 btn=3 img=0)
+text:     7208 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\poceni-a-spalovani-tuku-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\poceni-a-spalovani-tuku-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\poceni-a-spalovani-tuku-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\poceni-a-spalovani-tuku-mytus.sql
+exit=0
+=== [54] pohyb-a-nalada (step 954) ===
+článek:   pohyb-a-nalada  (vydáno 2026-06-23)
+předmět:  Pohyb a nálada: co říká velká Cochrane meta-analýza  [51 znaků]
+preheader:Proč je pravidelný pohyb jedna z mála věcí, co tě dlouhodobě nepřestane bavit.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    20  (p=15 ps=1 bullets=1 btn=3 img=0)
+text:     3072 znaků
+obrázků v článku: 9 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pohyb-a-nalada.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pohyb-a-nalada.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pohyb-a-nalada.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\pohyb-a-nalada.sql
+exit=0
+=== [55] posilovani-je-dobre-pro-vase-svaly-i-mozek (step 955) ===
+článek:   posilovani-je-dobre-pro-vase-svaly-i-mozek  (vydáno 2025-12-26)
+předmět:  Posilování je dobré pro vaše SVALY i MOZEK!  [43 znaků]
+preheader:Posilování je dobré pro vaše SVALY i MOZEK! Když jsem vyrůstal, svaly byly vždy zobrazovány v úzkém stereotypu: lidé se spoustou svalů byli 
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    19  (p=14 ps=1 bullets=1 btn=3 img=0)
+text:     4837 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\posilovani-je-dobre-pro-vase-svaly-i-mozek.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\posilovani-je-dobre-pro-vase-svaly-i-mozek.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\posilovani-je-dobre-pro-vase-svaly-i-mozek.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\posilovani-je-dobre-pro-vase-svaly-i-mozek.sql
+exit=0
+=== [56] probiotika-co-funguje (step 956) ===
+článek:   probiotika-co-funguje  (vydáno 2026-06-23)
+předmět:  Probiotika: co reálně funguje a co je hype  [42 znaků]
+preheader:Střevní ekosystém, fermentované potraviny a férový pohled na doplňky.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    23  (p=17 ps=1 bullets=2 btn=3 img=0)
+text:     5109 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\probiotika-co-funguje.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\probiotika-co-funguje.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\probiotika-co-funguje.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\probiotika-co-funguje.sql
+exit=0
+=== [57] protahovani-pred-treninkem-mytus (step 957) ===
+článek:   protahovani-pred-treninkem-mytus  (vydáno 2026-06-29)
+předmět:  Protahování před tréninkem chrání před zraněním? Mýtus o strečinku  [66 znaků]
+preheader:Statický strečink před výkonem zranění prokazatelně nesnižuje a může krátkodobě mírně srazit sílu. Co reálně pomáhá: dynamická rozcvička a n
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat, co před tréninkem dělat a co j → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    37  (p=29 ps=1 bullets=4 btn=3 img=0)
+text:     7955 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protahovani-pred-treninkem-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protahovani-pred-treninkem-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protahovani-pred-treninkem-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protahovani-pred-treninkem-mytus.sql
+exit=0
+=== [58] protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz (step 958) ===
+článek:   protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz  (vydáno 2025-10-02)
+předmět:  Protein a mortalita: Mýtus vyvrácen! Další díl série Věda vs. Mýty ve Výživě.  [77 znaků]
+preheader:Protein a mortalita: Mýtus vyvrácen! Další díl série Věda vs. Mýty ve Výživě. Podívejte se na vizualizaci – 2014 tvrzení vs. 2025 zjištění. 
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    19  (p=14 ps=1 bullets=1 btn=3 img=0)
+text:     5239 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz.sql
+exit=0
+=== [59] protein-po-treninku (step 959) ===
+článek:   protein-po-treninku  (vydáno 2026-06-23)
+předmět:  Protein hned po tréninku: musí to být?  [38 znaků]
+preheader:Anabolické okno pod drobnohledem - meta-analýzy a měření DXA.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    26  (p=21 ps=1 bullets=1 btn=3 img=0)
+text:     4809 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-po-treninku.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-po-treninku.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-po-treninku.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\protein-po-treninku.sql
+exit=0
+=== [60] rostliny-jsou-plne-jedu (step 960) ===
+článek:   rostliny-jsou-plne-jedu  (vydáno 2026-05-31)
+předmět:  🔥 „Rostliny jsou plné jedů!“  [29 znaků]
+preheader:…říká carnivore bro na každém rohu internetu 😅 A teď realita podložená vědou (Layne Norton, PhD to shrnul dokonale, já to jen přeložím + př
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    33  (p=26 ps=1 bullets=3 btn=3 img=0)
+text:     3611 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\rostliny-jsou-plne-jedu.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\rostliny-jsou-plne-jedu.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\rostliny-jsou-plne-jedu.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\rostliny-jsou-plne-jedu.sql
+exit=0
+=== [61] sacharidy-pred-treninkem (step 961) ===
+článek:   sacharidy-pred-treninkem  (vydáno 2026-06-23)
+předmět:  Banán před tréninkem: nutnost, nebo rituál?  [43 znaků]
+preheader:Co ukázala studie na silových sportovcích v roce 2025.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    21  (p=16 ps=1 bullets=1 btn=3 img=0)
+text:     3770 znaků
+obrázků v článku: 9 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sacharidy-pred-treninkem.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sacharidy-pred-treninkem.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sacharidy-pred-treninkem.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sacharidy-pred-treninkem.sql
+exit=0
+=== [62] silovy-trenink-zlepsuje-mozkove-funkce-studie (step 962) ===
+článek:   silovy-trenink-zlepsuje-mozkove-funkce-studie  (vydáno 2025-10-30)
+předmět:  Silový trénink zlepšuje mozkové funkce – studie  [47 znaků]
+preheader:Silový trénink zlepšuje mozkové funkce – studie Žiji osobně podle ideálů renesančního muže a starořeckých ideálů osobního rozvoje. Avšak být
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    20  (p=13 ps=1 bullets=3 btn=3 img=0)
+text:     4643 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\silovy-trenink-zlepsuje-mozkove-funkce-studie.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\silovy-trenink-zlepsuje-mozkove-funkce-studie.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\silovy-trenink-zlepsuje-mozkove-funkce-studie.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\silovy-trenink-zlepsuje-mozkove-funkce-studie.sql
+exit=0
+=== [63] sladidla-a-mikrobiom (step 963) ===
+článek:   sladidla-a-mikrobiom  (vydáno 2026-06-23)
+předmět:  Zničí ti sladidla střeva? Co je pravda a co se přehání  [54 znaků]
+preheader:Sladidla mění mikrobiom - ale co to reálně znamená pro tebe.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    19  (p=13 ps=1 bullets=2 btn=3 img=0)
+text:     3796 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sladidla-a-mikrobiom.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sladidla-a-mikrobiom.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sladidla-a-mikrobiom.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\sladidla-a-mikrobiom.sql
+exit=0
+=== [64] soja-a-hormony-mytus (step 964) ===
+článek:   soja-a-hormony-mytus  (vydáno 2026-06-29)
+předmět:  Sója zvyšuje estrogen a škodí mužům? Mýtus o sóji  [49 znaků]
+preheader:Fytoestrogeny ze sóji nejsou lidský estrogen - působí jinak a mnohem slaběji. V běžné stravě muže nefeminizují a testosteron nesráží. Navíc 
+nabídky:  půlka = KOUČINK 1:1   konec = KONZULTACE (jednorázová)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat, co smíš a co ne? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    32  (p=25 ps=1 bullets=3 btn=3 img=0)
+text:     6659 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\soja-a-hormony-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\soja-a-hormony-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\soja-a-hormony-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\soja-a-hormony-mytus.sql
+exit=0
+=== [65] spanek-vyziva-a-fitness-u-populace-40 (step 965) ===
+článek:   spanek-vyziva-a-fitness-u-populace-40  (vydáno 2025-09-04)
+předmět:  Spánek, výživa a fitness u populace 40+  [39 znaků]
+preheader:Dnes jsem pro Vás s pomocí Groka analyzoval pár studií na populaci 40+ ohledně spánku / výživy a fitness. Pokud Vám tento obsah něco dává, d
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    22  (p=17 ps=1 bullets=1 btn=3 img=0)
+text:     6279 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spanek-vyziva-a-fitness-u-populace-40.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spanek-vyziva-a-fitness-u-populace-40.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spanek-vyziva-a-fitness-u-populace-40.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spanek-vyziva-a-fitness-u-populace-40.sql
+exit=0
+=== [66] spankova-apnoe-a-hubnuti (step 966) ===
+článek:   spankova-apnoe-a-hubnuti  (vydáno 2026-06-23)
+předmět:  Děláš všechno správně a váha stojí? Možná je to spánková apnoe  [62 znaků]
+preheader:Porucha, kterou má spousta lidí a netuší o ní - a umí brzdit hubnutí.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    20  (p=14 ps=1 bullets=2 btn=3 img=0)
+text:     3867 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spankova-apnoe-a-hubnuti.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spankova-apnoe-a-hubnuti.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spankova-apnoe-a-hubnuti.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\spankova-apnoe-a-hubnuti.sql
+exit=0
+=== [67] stale-si-myslim-ze-kolagen-je-podvod (step 967) ===
+článek:   stale-si-myslim-ze-kolagen-je-podvod  (vydáno 2025-09-18)
+předmět:  Stále si myslím, že kolagen je PODVOD 👀 😅  [43 znaků]
+preheader:Stále si myslím, že kolagen je PODVOD 👀 😅 Dobře, podvod je možná příliš tvrdé slovo, ale jsem velmi skeptický. Tohle by mohl být nepopulár
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    23  (p=18 ps=1 bullets=1 btn=3 img=0)
+text:     3631 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\stale-si-myslim-ze-kolagen-je-podvod.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\stale-si-myslim-ze-kolagen-je-podvod.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\stale-si-myslim-ze-kolagen-je-podvod.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\stale-si-myslim-ze-kolagen-je-podvod.sql
+exit=0
+=== [68] superpotraviny-mytus (step 968) ===
+článek:   superpotraviny-mytus  (vydáno 2026-06-29)
+předmět:  Superpotraviny tě zachrání? Mýtus o superfoods  [46 znaků]
+preheader:„Superpotravina“ je marketingový pojem, ne vědecká kategorie. Žádné jedno jídlo nedělá zázraky ani nevyruší špatný jídelníček. Rozhoduje cel
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti hádat, co je „super" a co marketing? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=28 ps=1 bullets=2 btn=3 img=0)
+text:     6515 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\superpotraviny-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\superpotraviny-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\superpotraviny-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\superpotraviny-mytus.sql
+exit=0
+=== [69] svaly-v-kalorickem-deficitu (step 969) ===
+článek:   svaly-v-kalorickem-deficitu  (vydáno 2026-06-23)
+předmět:  Jde nabírat svaly v kalorickém deficitu? Ano, jde  [49 znaků]
+preheader:Vargas-Molina 2026, měřeno DXA - a co z toho plyne pro tebe.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    28  (p=23 ps=1 bullets=1 btn=3 img=0)
+text:     4230 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\svaly-v-kalorickem-deficitu.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\svaly-v-kalorickem-deficitu.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\svaly-v-kalorickem-deficitu.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\svaly-v-kalorickem-deficitu.sql
+exit=0
+=== [70] tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda (step 970) ===
+článek:   tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda  (vydáno 2025-12-05)
+předmět:  Těhotné ženy, netrapte se strachem z těžkých cviků! Další díl série Věda vs. Mýty v Tréninku. 😊  [96 znaků]
+preheader:Těhotné ženy, netrapte se strachem z těžkých cviků! Další díl série Věda vs. Mýty v Tréninku. 😊 Emilie Mass Dalhaug a tým zkoumali, jestli 
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    23  (p=18 ps=1 bullets=1 btn=3 img=0)
+text:     5133 znaků
+obrázků v článku: 0 (vynechány)
+⚠️  predmet ma 96 znaku, v seznamu posty se urizne
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda.sql
+exit=0
+=== [71] testosteron-4-paky (step 971) ===
+článek:   testosteron-4-paky  (vydáno 2026-06-23)
+předmět:  Testosteron po čtyřicítce: 4 páky, co nestojí ani korunu  [56 znaků]
+preheader:Co s testosteronem hýbe nejvíc - a kde plýtváš penězi za doplňky.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    17  (p=11 ps=1 bullets=2 btn=3 img=0)
+text:     2812 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\testosteron-4-paky.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\testosteron-4-paky.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\testosteron-4-paky.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\testosteron-4-paky.sql
+exit=0
+=== [72] toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o (step 972) ===
+článek:   toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o  (vydáno 2026-05-17)
+předmět:  Toxiny v jídle: Strach versus realita aneb 8 nejčastějších „toxinových“ obav 🤦‍♂️  [82 znaků]
+preheader:Toxiny v jídle: Strach versus realita aneb 8 nejčastějších „toxinových“ obav 🤦‍♂️ Co říká věda (a proč se nemusíš bát) 🤝 Ahoj všichni! 👋 
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    61  (p=56 ps=1 bullets=1 btn=3 img=0)
+text:     5940 znaků
+obrázků v článku: 0 (vynechány)
+⚠️  predmet ma 82 znaku, v seznamu posty se urizne
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o.sql
+exit=0
+=== [73] trenujes-tak-tvrde (step 973) ===
+článek:   trenujes-tak-tvrde  (vydáno 2026-06-23)
+předmět:  Trénuješ tak tvrdě, jak si myslíš? 160 sportovců napovídá  [57 znaků]
+preheader:Kolik opakování ti reálně zbývá v záloze - překvapivá data.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    21  (p=16 ps=1 bullets=1 btn=3 img=0)
+text:     4086 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\trenujes-tak-tvrde.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\trenujes-tak-tvrde.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\trenujes-tak-tvrde.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\trenujes-tak-tvrde.sql
+exit=0
+=== [74] tuk-a-sval-premena-mytus (step 974) ===
+článek:   tuk-a-sval-premena-mytus  (vydáno 2026-06-29)
+předmět:  Tuk se mění ve sval? Mýtus o přeměně tuku a svalů  [49 znaků]
+preheader:Tuk a sval jsou dvě různé tkáně - jedna se nemůže přeměnit v druhou. Vypadá to jako přeměna, ale jsou to dva paralelní procesy: ubývá tuk a 
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš pevnou postavu bez báchorek o „přeměně“? → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=26 ps=1 bullets=4 btn=3 img=0)
+text:     7040 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuk-a-sval-premena-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuk-a-sval-premena-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuk-a-sval-premena-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuk-a-sval-premena-mytus.sql
+exit=0
+=== [75] tuky-a-light-potraviny-mytus (step 975) ===
+článek:   tuky-a-light-potraviny-mytus  (vydáno 2026-06-29)
+předmět:  Tuk tě dělá tlustým? Mýtus o tucích a „light“ potravinách  [57 znaků]
+preheader:Tloustneš z přebytku kalorií, ne z toho, že jíš tuk. A „light“ potravina není automaticky zdravější - když se vyndá tuk, často se doplní cuk
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti luštit obaly a hádat se s mýty o tucí → ../index.html#plan-zdarma ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_m
+bloků:    34  (p=28 ps=1 bullets=2 btn=3 img=0)
+text:     7017 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuky-a-light-potraviny-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuky-a-light-potraviny-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuky-a-light-potraviny-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\tuky-a-light-potraviny-mytus.sql
+exit=0
+=== [76] umela-sladidla-mytus (step 976) ===
+článek:   umela-sladidla-mytus  (vydáno 2026-06-23)
+předmět:  Umělá sladidla: kolik je vlastně moc?  [37 znaků]
+preheader:Abys překročil bezpečný limit aspartamu, musel bys vypít neuvěřitelné množství.
+nabídky:  půlka = VIDEOKURZ ({{course_price}} Kč jednorázově)   konec = APPKA (Tvůj Coach, Basic)  (fallback)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    17  (p=12 ps=1 bullets=1 btn=3 img=0)
+text:     3430 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\umela-sladidla-mytus.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\umela-sladidla-mytus.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\umela-sladidla-mytus.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\umela-sladidla-mytus.sql
+exit=0
+=== [77] vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin (step 977) ===
+článek:   vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin  (vydáno 2026-06-21)
+předmět:  Většina lidí má za to, že po 30. létech jde mozek z kopce. Realita je jinde 👇  [78 znaků]
+preheader:Většina lidí má za to, že po 30. létech jde mozek z kopce. Realita je jinde Nová australská studie (Intelligence, 2025) sledovala 9 oblastí 
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_me
+bloků:    13  (p=8 ps=1 bullets=1 btn=3 img=0)
+text:     2927 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin.sql
+exit=0
+=== [78] vo2max-a-delsi-zivot (step 978) ===
+článek:   vo2max-a-delsi-zivot  (vydáno 2026-06-23)
+předmět:  Vysoký VO2max = delší život?  [28 znaků]
+preheader:70 000 lidí, studie 2025 - a otázka, co rozdělí internet.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš to mít nastavené na míru? → jojo-efekt.html ../index.html#kalkulacka ../videokurz https://tvujcoach.cz/start?utm_sourc
+bloků:    20  (p=15 ps=1 bullets=1 btn=3 img=0)
+text:     3758 znaků
+obrázků v článku: 10 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vo2max-a-delsi-zivot.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vo2max-a-delsi-zivot.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vo2max-a-delsi-zivot.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vo2max-a-delsi-zivot.sql
+exit=0
+=== [79] vyziva-deti (step 979) ===
+článek:   vyziva-deti  (vydáno 2026-06-27)
+předmět:  Výživa dětí A–Z: praktický průvodce pro rodiče (bez paniky a bez výmluv)  [72 znaků]
+preheader:Kompletní průvodce výživou dětí - talíř podle věku, bílkoviny, cukr, pití, vybíravost i doplňky. Vědecky podloženo, prakticky, bez strašení.
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Chceš mít s jídlem pořádek nejen u dětí, ale i u s → /#kalkulacka /videokurz /koucing/
+bloků:    57  (p=44 ps=1 bullets=9 btn=3 img=0)
+text:     10508 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-deti.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-deti.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-deti.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-deti.sql
+exit=0
+=== [80] vyziva-sportujiciho-ditete (step 980) ===
+článek:   vyziva-sportujiciho-ditete  (vydáno 2026-06-27)
+předmět:  Výživa sportujícího dítěte: proč nemůže jíst jako jeho nesportující sourozenec  [78 znaků]
+preheader:Trénuje vaše dítě skoro každý den? Pak nepotřebuje hlavně vitamíny - potřebuje dost energie a bílkovin. Průvodce výživou mladého sportovce: 
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Řešíš výživu svého malého sportovce a chceš to mít → /#kalkulacka /videokurz /koucing/
+bloků:    54  (p=42 ps=1 bullets=8 btn=3 img=0)
+text:     11014 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-sportujiciho-ditete.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-sportujiciho-ditete.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-sportujiciho-ditete.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\vyziva-sportujiciho-ditete.sql
+exit=0
+=== [81] zeny-a-posilovani-zmohutni (step 981) ===
+článek:   zeny-a-posilovani-zmohutni  (vydáno 2026-06-29)
+předmět:  Ženy a posilování: „zmohutním od činek jako kulturistka"? Tohle je realita  [74 znaků]
+preheader:Bojíš se, že od činek narosteš do šířky a budeš mít mužské svaly? Nestane se to. Vysvětlím proč - testosteron, tempo svalů a co reálně dělá 
+nabídky:  půlka = APPKA (Tvůj Coach, Basic)   konec = VIDEOKURZ ({{course_price}} Kč jednorázově)  (vychozi)
+zahozeno: 2 bloků z článku
+          - cta-box: 🎁 7denní plán na míru zdarma → /forma-zpet/ /makro-plan/
+          - cta-box: Nechce se ti řešit všechno sám? → ../videokurz https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=blog&amp;utm_campaig
+bloků:    37  (p=31 ps=1 bullets=2 btn=3 img=0)
+text:     7530 znaků
+obrázků v článku: 0 (vynechány)
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\zeny-a-posilovani-zmohutni.blocks.json
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\zeny-a-posilovani-zmohutni.nahled.html
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\zeny-a-posilovani-zmohutni.txt
+→ C:\Users\fitne\AppData\Local\Temp\claude\C--Users-fitne-Desktop-AI-Martin\f037c4e3-c562-4b69-8d27-945c179aef3a\scratchpad\newsletter-53\zeny-a-posilovani-zmohutni.sql
+exit=0

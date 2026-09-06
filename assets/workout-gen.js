@@ -794,6 +794,61 @@
    * `pouzite` drží, co už bylo nabídnuto jinému cviku, ať jednu náhradu nesdílí jedenáct řádků.
    * ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
    */
+  /**
+   * Cviky, kterými se dá daný cvik vyměnit: stejný vzorec pohybu, stejná partie a stejné
+   * hlavní svaly, a zároveň nejsou nikde v plánu (aby v jednom týdnu nebyly dvakrát).
+   * Pořadí je pořadí databáze, takže výběr je deterministický.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+   */
+  function kandidatiVymeny(pool, cvik, obsazene) {
+    var mmC = musclesFromDb(cvik.muscle, cvik.pattern, cvik.name);
+    return pool.filter(function (e) {
+      if (e.id === cvik.id || obsazene[e.id]) return false;
+      if (e.pattern !== cvik.pattern || e.muscle !== cvik.muscle) return false;
+      var mm = musclesFromDb(e.muscle, e.pattern, e.name);
+      return mm.primary.length === mmC.primary.length && mm.primary.every(function (p, i) { return p === mmC.primary[i]; });
+    });
+  }
+
+  /**
+   * Cvik po N ťuknutích na Vyměnit. `poradi` 0 nebo záporné vrátí původní cvik, takže
+   * plán bez výměn je tentýž jako dřív. Když kandidáti dojdou, jede se dokola.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+   */
+  function vymenenyCvik(pool, cvik, obsazene, poradi) {
+    if (!poradi || poradi <= 0) return cvik;
+    var kand = kandidatiVymeny(pool, cvik, obsazene);
+    if (!kand.length) return cvik;
+    return kand[(poradi - 1) % kand.length];
+  }
+
+  /**
+   * Promítne ťuknutí na Vyměnit rovnou do plánu, ať plán i dokument mluví o tomtéž cviku.
+   * Objemová tabulka se nepřepočítává schválně: vyměňuje se za stejný vzorec a stejnou
+   * partii, takže série na svaly zůstávají stejné.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+   */
+  function pouzijVymeny(plan, vymeny) {
+    if (!vymeny || Object.keys(vymeny).length === 0) return plan;
+    var obsazene = {};
+    plan.days.forEach(function (d) { d.exercises.forEach(function (pe) { obsazene[pe.ex.id] = 1; }); });
+    var kopie = Object.assign({}, plan);
+    kopie.days = plan.days.map(function (d, i) {
+      var den = Object.assign({}, d);
+      den.exercises = d.exercises.map(function (pe) {
+        if (pe.ex.pattern === 'kardio') return pe;
+        var ex = vymenenyCvik(plan.pool, pe.ex, obsazene, vymeny[i + ':' + pe.ex.id] || 0);
+        if (ex === pe.ex) return pe;
+        var novy = Object.assign({}, pe);
+        novy.ex = ex;
+        novy.puvodniId = pe.ex.id;
+        return novy;
+      });
+      return den;
+    });
+    return kopie;
+  }
+
   function nahradaPro(pool, cvik, obsazene, pouzite) {
     var mmC = musclesFromDb(cvik.muscle, cvik.pattern, cvik.name);
     function stejnySval(e) {
@@ -852,11 +907,13 @@
     // škrtalo až potom, zůstala by po cviku díra a objemová tabulka by lhala.
     var filtrovana = (db || []).filter(function (e) { return !zakazanePartie[e.muscle] && !zakazaneCviky[e.id]; });
 
-    var plan = buildPlan(filtrovana, {
+    // Ťuknutí na Vyměnit se promítne rovnou do plánu, ať dokument i plán mluví o tomtéž
+    // cviku. Bez mapy `vymeny` je `pouzijVymeny` no-op a plán je tentýž jako dřív.
+    var plan = pouzijVymeny(buildPlan(filtrovana, {
       location: vstup.kde_cvici, equip: vstup.vybaveni, level: vstup.level,
       goal: goal, days: dny, seed: vstup.seed || 0, orezStyl: vstup.orezStyl,
       struktura: vstup.struktura, opakovani: vstup.opakovani
-    });
+    }), vstup.vymeny);
 
     var jmenaDnu = ROZVRH_DNU[dny] || ROZVRH_DNU[3];
     var obsazene = {};
@@ -868,16 +925,19 @@
       var cviky = d.exercises.map(function (pe) {
         var kardio = pe.ex.pattern === 'kardio';
         var doplnkovy = !!pe.access;
-        var n = kardio ? null : nahradaPro(plan.pool, pe.ex, obsazene, pouziteNahrady);
+        var ex = pe.ex;
+        var n = kardio ? null : nahradaPro(plan.pool, ex, obsazene, pouziteNahrady);
         return {
-          id: pe.ex.id, nazev: pe.ex.name, partie: pe.ex.muscle, pattern: pe.ex.pattern,
+          id: ex.id, nazev: ex.name, partie: ex.muscle, pattern: ex.pattern,
           serie: pe.sets, opakovani: pe.reps,
-          pauza: pauzaPro(plan.goal, pe.ex.pattern, doplnkovy),
-          rir: rirPro(goal, pe.ex.pattern, doplnkovy),
-          tempo: tempoPro(pe.ex.pattern, doplnkovy),
+          pauza: pauzaPro(plan.goal, ex.pattern, doplnkovy),
+          rir: rirPro(goal, ex.pattern, doplnkovy),
+          tempo: tempoPro(ex.pattern, doplnkovy),
           nahrada: kardio ? 'cokoli, co drží tep nahoře: rotoped, běžecký pás, švihadlo' : (n ? n.name : null),
           nahradaId: n ? n.id : null,
-          kardio: kardio, tip: pe.ex.tip || '', doplnkovy: doplnkovy
+          kardio: kardio, tip: ex.tip || '', doplnkovy: doplnkovy,
+          vymenaKlic: i + ':' + (pe.puvodniId || pe.ex.id),
+          vymenaMozna: !kardio && kandidatiVymeny(plan.pool, ex, obsazene).length > 0
         };
       });
       return { poradi: i + 1, den: jmenaDnu[i] || ('Den ' + (i + 1)), nazev: d.name, rozehrati: rozehratiPro(cviky), cviky: cviky };
@@ -907,6 +967,6 @@
     };
   }
 
-  global.WorkoutGen = { buildPlan: buildPlan, assembleProgram: assembleProgram, planCoverage: planCoverage, planVolume: planVolume, addVolume: addVolume, GOALS: GOALS,
+  global.WorkoutGen = { buildPlan: buildPlan, assembleProgram: assembleProgram, pouzijVymeny: pouzijVymeny, kandidatiVymeny: kandidatiVymeny, vymenenyCvik: vymenenyCvik, planCoverage: planCoverage, planVolume: planVolume, addVolume: addVolume, GOALS: GOALS,
     muscles: { musclesFromDb: musclesFromDb, matchMuscles: matchMuscles, resolveMuscles: resolveMuscles, weeklySetsByMuscle: weeklySetsByMuscle, setDb: setMuscleDb, LANDMARKS: LANDMARKS, zoneFor: zoneFor, LABELS: MUS_LABEL, ORDER: MUS_ORDER } };
 })(window);
