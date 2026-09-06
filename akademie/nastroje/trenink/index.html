@@ -118,6 +118,7 @@
             <option value="lehci">Střední váhy, víc opakování</option>
           </select>
           <p class="orez-vysvetleni" id="opakovaniVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
+          <p class="orez-vysvetleni" id="opakovaniPoznamka" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78">Je to hlavně o tom, co tě baví. Zhruba od 5 do 30 opakování tělo staví svaly i sílu, pokud je úsilí stejné: poslední série s 1 až 2 opakováními v záloze (tolik bys ještě zvládl). Když je toho v týdnu moc a neregeneruješ, nech v záloze 3 až 4. Cvik, který neumíš nebo nemáš rád, vyměň za náhradu uvedenou u cviku, nebo si nech plán vygenerovat znovu.</p>
         </div>
         <div style="grid-column:1/-1">
           <label>Když se plán nevejde do objemu, co ubrat první?</label>
@@ -177,7 +178,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/workout-gen.js?v=20260906b"></script>
+  <script src="/assets/workout-gen.js?v=20260906c"></script>
   <script>
   (function(){
     var DB=null, seed=0, logoData='', lastPlan=null, restoring=false;
@@ -268,13 +269,16 @@
       if (el && sel) el.textContent = STRUKTURA_TEXT[sel.value] || '';
     }
     if ($('struktura')) { $('struktura').addEventListener('change', obnovStrukturaText); obnovStrukturaText(); }
-    // [2026-09-06] Opakování a váha (Martin 6. 9.). ⛔ Počet sérií se tím NEMĚNÍ, mění se
-    // opakování a pauza. Jedna věta na volbu, žádná není označená za správnou.
-    // ⛔ Tytéž texty má appka (`workout-generator.tsx`).
+    // [2026-09-06] Opakování a váha (Martin 6. 9.). ⛔ Je to PREFERENCE, ne otázka cíle ani
+    // úrovně: zhruba 5 až 30 opakování staví svaly i sílu stejně, když je stejné úsilí.
+    // Proto v textech není „pro začátečníky" ani „když si netroufáš". ⛔ Počet sérií se tím
+    // NEMĚNÍ, mění se opakování a pauza. Odstavec pod volbou (`opakovaniPoznamka`) je natvrdo
+    // v HTML, platí pro všechny tři možnosti.
+    // ⛔ Tytéž texty má appka (`workout-generator.tsx`) i `nastroje-zdarma/trenink`.
     var OPAKOVANI_TEXT = {
-      tezsi: 'Míň opakování a těžší váhy. Sedí tomu, kdo chce hlavně přidávat na čince a nevadí mu delší pauzy.',
-      standard: 'Opakování a pauzy přesně podle cíle, který sis vybral. Výchozí nastavení.',
-      lehci: 'Víc opakování se střední vahou a kratší pauzy. Sedí tomu, kdo si na těžké váhy netroufá nebo se vrací po pauze.'
+      tezsi: 'Míň opakování a těžší váhy. Sílu to přidá o něco víc a zvedne tvoje maximum na čince; svaly rostou stejně, když poslední série jde dostatečně nadoraz. Sedí tomu, koho baví zvedat těžké.',
+      standard: 'Opakování a pauzy podle zvoleného cíle. Výchozí nastavení.',
+      lehci: 'Víc opakování se střední vahou a kratší pauzy. Svaly i síla rostou i takhle, pokud poslední sérii dotáhneš skoro k selhání. Sedí tomu, koho baví delší série a nechce stát dlouhé pauzy.'
     };
     function obnovOpakovaniText(){
       var el = $('opakovaniVysvetleni'), sel = $('opakovani');

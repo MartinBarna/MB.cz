@@ -268,9 +268,13 @@
     p.rozvrh.forEach(function (d, i) { h += denHtml(d, i === 0); });
 
     // 4. progrese na čtyři týdny
+    // [Martin 6. 9. 2026, varianta B] Čtvrtý týden UŽ NENÍ lehčí napevno. Lehčí týden
+    // (polovina sérií, 3 až 4 opakování v záloze) si klient dá jen tehdy, když je toho
+    // na něj moc nebo neregeneruje. Musí to sedět s textem 4. týdne v `progreseCtyriTydny`.
     h += '<h2 class="zlom">4. Čtyři týdny, jak jdou za sebou</h2>'
       + '<p>Plán se čtyři týdny nemění v cvicích, mění se v tom, jak blízko chodíš k hranici. '
-      + 'Čtvrtý týden je lehčí schválně, tam se posun z předchozích tří týdnů dorovná.</p>'
+      + 'Ve čtvrtém týdnu jedeš dál jako ve třetím. Lehčí týden si dej jen tehdy, když je toho '
+      + 'na tebe moc a neregeneruješ; jak na to, je napsané u čtvrtého týdne v tabulce.</p>'
       + '<table><tr><th>Týden</th><th>Co se mění</th><th>Záloha v poslední sérii</th></tr>';
     p.progrese.forEach(function (w) {
       h += '<tr><td><strong>' + w.tyden + '.</strong>' + (w.deload ? '<br><span class="n">lehčí týden</span>' : '') + '</td>'

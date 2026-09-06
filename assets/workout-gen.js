@@ -749,12 +749,19 @@
     return '2-0-1 (dolů 2 s, bez pauzy, nahoru 1 s)';
   }
 
-  // RIR (kolik opakování zbývá v záloze) podle cíle a role cviku v tréninku.
+  /**
+   * RIR (kolik opakování zbývá v záloze) u cviku v plánu.
+   * [Martin 6. 9. 2026] Výchozí je 1 až 2 v záloze všude: u každého cíle, u hlavních
+   * i doplňkových cviků. Rozhoduje stejné úsilí, ne počet opakování. Na 3 až 4 v záloze
+   * se jde JEN při přetížení nebo když klient neregeneruje, a to je lehčí týden
+   * (viz progreseCtyriTydny), ne jiný předpis u cviku.
+   * `goal` a `doplnkovy` zůstávají v signatuře schválně, ať se rozdíl podle role cviku
+   * dá vrátit bez zásahu do volající strany.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+   */
   function rirPro(goal, pattern, doplnkovy) {
     if (pattern === 'kardio') return 'nesnaž se o maximum, udrž tempo';
-    if (goal === 'sila') return '2 až 3 v záloze';
-    if (pattern === 'core') return '1 až 2 v záloze';
-    return doplnkovy ? '0 až 1 v záloze' : '1 až 2 v záloze';
+    return '1 až 2 v záloze';
   }
 
   // Pauza mezi sériemi. Doplňkový cvik nepotřebuje tolik co dřep, ať klient zbytečně nestojí.
@@ -807,19 +814,23 @@
 
   /**
    * Čtyřtýdenní blok. Týdny 1 až 3 jsou náběh: série drží, ubývá záloha (RIR), tedy roste
-   * úsilí, ne objem. Čtvrtý týden je lehčí, aby se tělo dotáhlo.
+   * úsilí, ne objem.
+   * [Martin 6. 9. 2026, varianta B] Žebřík je STEJNÝ pro všechny cíle, Sílu nevyjímaje,
+   * a končí na 1 až 2 v záloze. Čtvrtý týden UŽ NENÍ lehčí napevno: lehčí týden si klient
+   * dá jen tehdy, když hlásí přetížení nebo neregeneruje, a proto je v textu jako podmínka,
+   * ne v číslech (serieKoef zůstává 1, deload false).
    * ⚠️ Vědomě to NENÍ rampa objemu z mezocyklu (MEV → MRV). Ta míří na MRV a u partií
    * s MEV 0 vyrábí nesmysly (nález E12 z auditu 2. 9. 2026).
+   * `goal` zůstává v signatuře schválně, ať se rozlišení podle cíle dá vrátit bez zásahu
+   * do volající strany i do appky.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
    */
   function progreseCtyriTydny(goal) {
-    var rir = goal === 'sila'
-      ? ['3 až 4 v záloze', '2 až 3 v záloze', '2 v záloze']
-      : ['3 v záloze', '2 v záloze', '1 v záloze'];
     return [
-      { tyden: 1, popis: 'Zajížděcí týden. Vol váhy, se kterými bys zvládl ještě tři opakování navíc. Zapiš je, jsou to tvoje výchozí čísla.', rir: rir[0], serieKoef: 1, deload: false },
-      { tyden: 2, popis: 'U každého cviku přidej buď jedno opakování, nebo nejmenší možnou váhu. Jedno z toho, ne obojí.', rir: rir[1], serieKoef: 1, deload: false },
-      { tyden: 3, popis: 'Nejtěžší týden bloku. Poslední série u hlavních cviků má být na hraně, ale technika musí držet.', rir: rir[2], serieKoef: 1, deload: false },
-      { tyden: 4, popis: 'Lehčí týden. Ubírej polovinu sérií a asi 10 % váhy. Netrénuješ míň, jen dovolíš tělu dohnat, co jsi mu naložil.', rir: '3 až 4 v záloze', serieKoef: 0.5, deload: true }
+      { tyden: 1, popis: 'Zajížděcí týden. Vol váhy, se kterými bys zvládl ještě dvě opakování navíc. Zapiš je, jsou to tvoje výchozí čísla.', rir: '2 v záloze', serieKoef: 1, deload: false },
+      { tyden: 2, popis: 'U každého cviku přidej buď jedno opakování, nebo nejmenší možnou váhu. Jedno z toho, ne obojí. Poslední série s jedním až dvěma opakováními v záloze.', rir: '1 až 2 v záloze', serieKoef: 1, deload: false },
+      { tyden: 3, popis: 'Nejtěžší týden bloku. Poslední série u hlavních cviků má být na hraně, jedno opakování v záloze, ale technika musí držet.', rir: '1 až 2 v záloze', serieKoef: 1, deload: false },
+      { tyden: 4, popis: 'Pokračuj jako ve třetím týdnu. Lehčí týden si dej jen tehdy, když cítíš, že je toho moc: špatně spíš, bolí klouby, váhy jdou dolů nebo se ti nechce. Pak uber polovinu sérií, nech 3 až 4 opakování v záloze a asi 10 % váhy. Jinak jeď dál a další blok začni s tím, co jsi zvedal ve třetím týdnu.', rir: '1 až 2 v záloze, lehčí týden 3 až 4', serieKoef: 1, deload: false }
     ];
   }
 

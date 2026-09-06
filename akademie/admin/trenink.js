@@ -31,7 +31,7 @@
   'use strict';
 
   var DB = null;            // pole cviků, načte se jednou za život stránky
-  var WG_URL = '/assets/workout-gen.js?v=20260906b';
+  var WG_URL = '/assets/workout-gen.js?v=20260906c';
   var DB_URL = '/assets/exercise-db.json?v=20260906b';
 
   function esc(s) {
@@ -67,7 +67,7 @@
   function pripravEngine() {
     var kroky = [];
     if (!global.WorkoutGen) kroky.push(nactiSkript(WG_URL));
-    if (!global.TreninkSablona) kroky.push(nactiSkript('/akademie/admin/trenink-sablona.js?v=20260902a'));
+    if (!global.TreninkSablona) kroky.push(nactiSkript('/akademie/admin/trenink-sablona.js?v=20260906c'));
     return Promise.all(kroky).then(function () {
       // ⛔ POJISTKA: bez `assembleProgram` je načtená stará verze enginu z cache a plán
       // by vyšel bez tempa, RIR a náhrad, tedy jako holý seznam cviků. Radši to řekneme.
