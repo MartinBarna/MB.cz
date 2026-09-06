@@ -412,6 +412,13 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // ⚠️ Starý osmisetkorunový odkaz ZŮSTÁVÁ: pořád může dorazit opožděný webhook
     //    nebo přehrání staré události.
     "plink_1UAy87Bq3rKubW9kVxFtxWss=videokurz," +
+    // ⛔⛔ DOPLATEK Z BALÍČKU 349 NA VIDEOKURZ, 1 140 Kč (`plink_1UAyAO…`, odkaz
+    // `buy.stripe.com/3cIaEWezBebE2J22Xl3ks0i`). TENHLE ŘÁDEK TU TAKY CHYBĚL.
+    // Posílá na něj živá mailová šablona `balicek-2-videokurz` i stránka `/dekuji-balicek/`,
+    // takže kdo doplatek zaplatil, kurz nedostal. V mapě byl jen jeho předchůdce na 450 Kč,
+    // který je ve Stripu vypnutý. Dodává se TÝŽ produkt jako za plnou cenu, proto týž klíč.
+    // Ověřeno 6. 9. 2026 otevřením pokladny: „Videokurz výživy, 1 140,00 Kč".
+    "plink_1UAyAOBq3rKubW9kKPpHPQVh=videokurz," +
     // ⭐ KONZULTACE, DVA ODKAZY NA TÝŽ PRODUKT, ALE JINÝ KLÍČ KATALOGU (30. 7. 2026).
     // Rozdíl je JEN v tom, jestli je v ceně videokurz, a právě proto to musí být dva
     // klíče a ne jeden: podle klíče se rozhoduje, jestli se udělí bonusový kurz.
