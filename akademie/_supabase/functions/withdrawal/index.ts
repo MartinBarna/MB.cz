@@ -51,6 +51,11 @@ const PRODUCT_LABEL: Record<string, string> = {
   // a odstoupení od koučinku za 32 900 Kč by dorazilo jako "Jiný produkt".
   coaching: "Online koučink",
   balicek: "40 receptů a 48 odpovědí",
+  // ⭐ 6. 9. 2026: darkovy poukaz je ve formulari od zavedeni poukazu (8 vydanych),
+  // sem ho nikdo nedopsal, takze odstoupeni od poukazu chodilo jako "Jiny produkt".
+  // Presne ten pripad, pred kterym varuje komentar vyse. Popisek je opsany z volby
+  // ve formulari na martinbarna.cz/odstoupeni/, aby zakonne potvrzeni sedelo doslova.
+  poukaz: "Dárkový poukaz",
   jine: "Jiný produkt",
 };
 
@@ -87,6 +92,10 @@ Deno.serve(async (req: Request) => {
   const orderNumber = clip(body.order_number, 100);
   const productKey = clip(body.product, 30).toLowerCase();
   const product = PRODUCT_LABEL[productKey] ? productKey : "jine";
+  // ⭐ 6. 9. 2026: az dosud se neznama hodnota prepsala na "jine" UPLNE TISE, takze
+  // rozchod formulare a tohohle seznamu nikdo nepoznal (poukaz tu chybel od zavedeni
+  // poukazu). Nova volba uz o sobe da vedet v alertu Martinovi, at se to neopakuje.
+  const productNeznamy = productKey !== "" && !PRODUCT_LABEL[productKey] ? productKey : "";
   const message = clip(body.message, 2000);
   const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim();
 
@@ -176,6 +185,12 @@ Deno.serve(async (req: Request) => {
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     await resend(to, "⚠️ Odstoupení od smlouvy: " + email,
       `<p>Zákazník podal online odstoupení od smlouvy:</p>` + summary +
+      (productNeznamy
+        ? `<p style="background:#fdecea;border-left:3px solid #b0372c;padding:8px 12px">` +
+          `<b>Pozor:</b> formulář poslal produkt <code>${productNeznamy.replaceAll("<", "&lt;")}</code>, ` +
+          `který edge funkce <code>withdrawal</code> nezná, takže se v potvrzení objevil jako „Jiný produkt". ` +
+          `Chce to doplnit hodnotu do <code>PRODUCT_LABEL</code>.</p>`
+        : "") +
       // ⛔ Tenhle navod byl do 6. 8. 2026 DVAKRAT spatne: posilal do SimpleShopu, ktery
       //    Martin uz zrusil (vsechno jde pres Stripe), a radil „deaktivovat pristup v adminu",
       //    coz maily NEZASTAVI (drip-send na entitlements nesaha). Prodejni maily zastavi
