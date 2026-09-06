@@ -5,6 +5,34 @@
   var GA_ID = 'G-C3JC8G3FS0';
   var KEY = 'mb_consent_v1';
 
+  // ⛔⛔ [6. 9. 2026] VOLBA SE UKLÁDÁ NA DVĚ MÍSTA, JINAK SE LIŠTA VRACÍ.
+  // Tester hlásil, že po kliknutí na „Odmítnout" lišta zůstává. Ve skutečnosti zmizí,
+  // ale volba se ukládala JEN do `localStorage`, a ten je v přísném režimu prohlížeče
+  // (blokované cookies třetích stran, privátní okno, „vymazat data při zavření") k dispozici
+  // jen zdánlivě: zápis vyhodí výjimku, kterou `try/catch` spolkne, a při dalším načtení
+  // se lišta objeví znovu. Člověk pak odmítá pořád dokola a vypadá to, že tlačítko nefunguje.
+  // ⇒ Zrcadlí se do cookie (rok, SameSite=Lax). Čte se `localStorage` a při prázdnu cookie.
+  // ⚠️ Je to nutné cookie ve smyslu ePrivacy (uchovává volbu souhlasu), takže žádný souhlas
+  //    nepotřebuje. Neukládá nic o člověku, jen jeho vlastní rozhodnutí.
+  function ulozVolbu(mode) {
+    try { localStorage.setItem(KEY, mode); } catch (e) { /* přísný režim, zkusíme cookie */ }
+    try {
+      document.cookie = KEY + '=' + encodeURIComponent(mode)
+        + ';path=/;max-age=31536000;SameSite=Lax'
+        + (location.protocol === 'https:' ? ';Secure' : '');
+    } catch (e) { /* i tak zmizí lišta aspoň do konce návštěvy */ }
+  }
+  function nactiVolbu() {
+    var v = null;
+    try { v = localStorage.getItem(KEY); } catch (e) {}
+    if (v) return v;
+    try {
+      var m = document.cookie.match('(?:^|; )' + KEY + '=([^;]*)');
+      if (m) return decodeURIComponent(m[1]);
+    } catch (e) {}
+    return null;
+  }
+
   window.dataLayer = window.dataLayer || [];
   function gtag() { dataLayer.push(arguments); }
   window.gtag = gtag;
@@ -66,7 +94,11 @@
   function pageConv() {
     var p = location.pathname;
     if (/dekuji/.test(p))    return null; // Purchase řeší výhradně server-side CAPI
-    if (/^\/videokurz/.test(p)) return { kind: 'view', name: 'Videokurz výživy', id: 'videokurz', value: 800 };
+    // ⛔ [6. 9. 2026] Hodnota byla 800 Kč i po zdražení z 1. 9. na 1 490. Reklamy se tak
+    //    učily na skoro poloviční hodnotě konverze, než jakou nákup opravdu má.
+    //    ⚠️ Řádky níž s hodnotou 800 jsou u STARÝCH odkazů a zůstávají správně: ty odkazy
+    //       účtovaly 800 a opožděný klik z rozeslaného mailu je pořád možný.
+    if (/^\/videokurz/.test(p)) return { kind: 'view', name: 'Videokurz výživy', id: 'videokurz', value: 1490 };
     if (/^\/akademie\/(objednavka\/?)?(index\.html)?$/.test(p)) return { kind: 'view', name: 'Barna Academy', id: 'academy', value: 8900 };
     return null;
   }
@@ -189,7 +221,7 @@
 
   // --- cookie lišta (karta vlevo dole, ať nekoliduje s CTA lištou) ---
   function setChoice(mode, box) {
-    try { localStorage.setItem(KEY, mode); } catch (e) {}
+    ulozVolbu(mode);
     applyConsent(mode);
     if (mode === 'granted') loadMetaPixelAndConvert();
     if (box) box.remove();
@@ -251,8 +283,7 @@
     if (el) { e.preventDefault(); showBanner(); }
   });
 
-  var saved;
-  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  var saved = nactiVolbu();
   if (saved === 'granted') { applyConsent('granted'); loadMetaPixelAndConvert(); try { document.dispatchEvent(new CustomEvent('mb-consent', { detail: 'granted' })); } catch (e) {} return; }
   if (saved === 'analytics') { applyConsent('analytics'); try { document.dispatchEvent(new CustomEvent('mb-consent', { detail: 'analytics' })); } catch (e) {} return; }
   if (saved === 'denied') { applyConsent('denied'); return; }
