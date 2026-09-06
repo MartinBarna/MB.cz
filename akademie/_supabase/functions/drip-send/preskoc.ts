@@ -26,6 +26,12 @@ export const PRESKOC_KROK_KDYZ_VLASTNI: Record<string, Produkt> = {
   // a v tom `balicek` zamerne neni (duvod je u `ownsAny` v index.ts). Bez teto branky
   // by nabidka balicku chodila i tomu, kdo si balicek uz koupil.
   'longtail-consumer/12': 'balicek',
+  // [2026-09-06, 51. sef] krok 1 evergreen-consumer = sablona `ev-1-kalkulacka`, P.S. prodava videokurz.
+  // Od 6. 9. sem mostem prichazi i majitel videokurzu z konce `evergreen-kupci`; tomu se ten jeden
+  // krok vynecha a trat bezi dal (shouldStop pro evergreen-consumer zamerne neni: obsah je pro vsechny).
+  'evergreen-consumer/1': 'videokurz',
+  // krok 4 evergreen-consumer = sablona `ev-4-checkin`, P.S. prodava koucink -> klientovi koucinku preskocit.
+  'evergreen-consumer/4': 'coaching',
 };
 
 /**

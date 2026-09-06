@@ -68,6 +68,25 @@ const CASES: Case[] = [
     expect: 'balicek', why: 'i u balicku se e-mail porovnava case-insensitive',
   },
 
+  // --- EVERGREEN-CONSUMER PO EVERGREEN-KUPCI (6. 9. 2026): kupec videokurzu sem prichazi mostem ---
+  {
+    track: 'evergreen-consumer', step: 1, email: 'kupec@example.com', owns: MA_VK,
+    expect: 'videokurz', why: 'evergreen-consumer krok 1 (P.S. prodava videokurz) se majiteli videokurzu preskoci',
+  },
+  {
+    track: 'evergreen-consumer', step: 1, email: 'novy@example.com', owns: MA_VK,
+    expect: null, why: 'kdo videokurz nema, evergreen-consumer krok 1 dostane',
+  },
+  {
+    track: 'evergreen-consumer', step: 4, email: 'kupec@example.com',
+    owns: { videokurz: s(), academy: s(), coaching: s('kupec@example.com') },
+    expect: 'coaching', why: 'evergreen-consumer krok 4 (P.S. prodava koucink) se klientovi koucinku preskoci',
+  },
+  {
+    track: 'evergreen-consumer', step: 2, email: 'kupec@example.com', owns: MA_VK,
+    expect: null, why: 'ostatni kroky evergreen-consumer jdou i majiteli videokurzu (obsah pro vsechny)',
+  },
+
   // --- VLASTNICTVI JINEHO PRODUKTU NESTACI ---
   {
     track: 'onboarding-nakup-balicek', step: 2, email: 'kupec@example.com',
@@ -109,7 +128,7 @@ for (const c of CASES) {
 
 // Pojistka proti tichemu rozsireni mapy: kdyz nekdo prida dalsi krok, musi pribyt i test.
 const KLICE = Object.keys(PRESKOC_KROK_KDYZ_VLASTNI).sort();
-const OCEKAVANE_KLICE = ['longtail-consumer/12', 'onboarding-nakup-balicek/2'];
+const OCEKAVANE_KLICE = ['evergreen-consumer/1', 'evergreen-consumer/4', 'longtail-consumer/12', 'onboarding-nakup-balicek/2'];
 if (JSON.stringify(KLICE) !== JSON.stringify(OCEKAVANE_KLICE)) {
   selhalo++;
   console.error(`✗ mapa PRESKOC_KROK_KDYZ_VLASTNI se zmenila: ${JSON.stringify(KLICE)}. Dopln test a uprav OCEKAVANE_KLICE.`);

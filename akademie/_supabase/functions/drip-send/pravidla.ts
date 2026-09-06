@@ -85,6 +85,14 @@ export function shouldStop(
   if (t === 'tc-free' || t === 'tc-magnet') {
     return step >= 5 && (!!owns?.academy?.has(em) || !!owns?.coaching?.has(em));
   }
+  // [2026-09-06, 51. sef] evergreen-kupci = dozivotni udrzovaci pece o majitele videokurzu, ktery uz
+  // dostal longtail-kupci i upsell-coaching. Pripomina, co si v kurzu koupil, a v P.S. nabizi appku.
+  // Koucink NEPRODAVA (posledni mail upsell-coaching slibil, ze byl ke koucinku posledni), proto tu
+  // `exCoaching` neni: ex-klient je legitimni cil obsahu i appky. Stopne se clen Academy (dostane
+  // onboarding-nakup-academy) a aktivni klient koucinku (o toho se stara Martin osobne).
+  // ⛔ Bez podminky na `step`: vola se i s KROK_PRO_MOST = 1 (viz `mostBlokujeVlastnictvi`); tvar
+  //    `step > 0 && …` by z pojistky mostu udelal mrtvou paku (incident 6. 8. 2026).
+  if (t === 'evergreen-kupci') return !!owns?.academy?.has(em) || !!owns?.coaching?.has(em);
   return false;
 }
 

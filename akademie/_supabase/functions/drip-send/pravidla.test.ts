@@ -128,5 +128,14 @@ zkontroluj('zaporne cislo da 7', odstupDnu(-3), 7);
 zkontroluj('cislo v retezci se prevede', odstupDnu('14'), 14);
 zkontroluj('odstup z mostu s preklepem da 7', odstupDnu(vyberMost(MOSTY, 'necislo')?.po_dnech), 7);
 
+// ---------- EVERGREEN-KUPCI (6. 9. 2026): koncova pece o majitele videokurzu ----------
+zkontroluj('evergreen-kupci: majitel videokurzu projde', shouldStop('evergreen-kupci', 0, JA, MA_VK, BEZ_EX), false);
+zkontroluj('evergreen-kupci: clen Academy se stopne', shouldStop('evergreen-kupci', 0, JA, MA_ACADEMY, BEZ_EX), true);
+zkontroluj('evergreen-kupci: aktivni klient koucinku se stopne', shouldStop('evergreen-kupci', 0, JA, MA_COACHING, BEZ_EX), true);
+zkontroluj('evergreen-kupci: EX-klient koucinku projde (trat koucink neprodava)', shouldStop('evergreen-kupci', 2, JA, MA_VK, JE_EX), false);
+zkontroluj('most do evergreen-kupci se clenovi Academy zablokuje', mostBlokujeVlastnictvi('evergreen-kupci', JA, MA_ACADEMY, BEZ_EX), true);
+zkontroluj('most do evergreen-kupci majitele videokurzu pusti', mostBlokujeVlastnictvi('evergreen-kupci', JA, MA_VK, BEZ_EX), false);
+zkontroluj('evergreen-consumer se nestopuje nikdy (obsah pro vsechny, kroky resi preskoc.ts)', shouldStop('evergreen-consumer', 1, JA, MA_ACADEMY, JE_EX), false);
+
 console.log(selhalo === 0 ? `\nHOTOVO: ${kontrol} kontrol, vse proslo.` : `\nSELHALO: ${selhalo} z ${kontrol}`);
 if (selhalo > 0) Deno.exit(1);
