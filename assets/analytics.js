@@ -234,7 +234,7 @@
       '<div class="mb-c-title" style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
       '<div class="mb-c-text" style="color:#f3ece2"><span class="mb-c-long">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.</span><span class="mb-c-short">🍪 Cookies pro statistiku a měření reklam, jen s tvým souhlasem. <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">Zásady</a>.</span></div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
-        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#160d04;font-weight:700;padding:10px 12px;border-radius:2px">Přijmout</button>' +
+        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:#EBB12C;color:#160d04;font-weight:700;padding:10px 12px;border-radius:2px">Přijmout</button>' +
         '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:2px">Odmítnout</button>' +
       '</div>' +
       '<button id="mb-c-an" style="width:100%;margin-top:8px;border:none;background:transparent;color:#cabfae;cursor:pointer;font-family:inherit;font-size:.82rem;text-decoration:underline;padding:2px">Povolit jen statistiku (bez reklamních cookies)</button>';

@@ -54,7 +54,7 @@ html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24p
   .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
   /* lišta nástrojů (na obrazovce, ne v tisku) */
   .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
-  .toolbar button{background:linear-gradient(145deg,var(--brand2),var(--brand));color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
   .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
   @media print{
     body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
@@ -62,8 +62,8 @@ html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24p
   }
   @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
 </style>
-    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r3">
-    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l9">
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l11">
 </head>
 <body>
   <div class="toolbar">
@@ -187,5 +187,5 @@ html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24p
   })();
   document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
 </script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a7"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l9"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l11"></body>
 </html>

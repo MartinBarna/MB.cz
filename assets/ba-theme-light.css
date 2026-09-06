@@ -196,7 +196,7 @@ html[data-theme="light"] body.ba{
 }
 [data-theme="light"] .chips2 button.on,
 [data-theme="light"] .scale5 button.on{
-  background:linear-gradient(145deg,#EBB12C,#E0762C) !important;
+  background:#EBB12C !important;
   color:#1A1222 !important;
   border-color:transparent !important;
 }
@@ -367,7 +367,7 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] body:not(.ba) .brand,
 [data-theme="light"] body:not(.ba) .brand span{color:#161310 !important;}
 [data-theme="light"] body:not(.ba) .nav a.cta{
-  background:linear-gradient(145deg,#F6CD63,#EBB12C) !important;
+  background:#EBB12C !important;
   color:#161616 !important;
 }
 [data-theme="light"] body:not(.ba) .nav-burger{
@@ -761,4 +761,52 @@ html[data-theme="light"]{
 [data-theme="light"] .nav-more>div a:hover{background:var(--soft,#F3EEE4)!important;color:var(--brand,#6B4E08)!important;}
 @media (max-width:1259px){
   [data-theme="light"] .nav-more>div a{border-bottom-color:var(--line,rgba(22,19,16,.12))!important;}
+}
+
+
+/* ============================================================
+   JEDNA ZLATA NA VSECH CTA - svetly motiv (Martin 6. 9. 2026)
+   Zrcadli pravidlo 2b z arena.css. Referencni tlacitko "Vybrat koucink":
+   plna #EBB12C, tmavy text #1A1222, hover #F6CD63. Zadne prechody.
+   Stavove varianty (.is-done/.done zelena, .dis/.disabled, .otpb, .dark, .alt)
+   a obrysova tlacitka (ghost/out) se vynechavaji.
+   ============================================================ */
+[data-theme="light"] .btn-gold,
+[data-theme="light"] .btn-grn,
+[data-theme="light"] .btn-white,
+[data-theme="light"] .btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light):not(.is-done):not(.done):not(.dis):not(.disabled):not(.otpb):not(.dark):not(.alt),
+[data-theme="light"] .mainmenu a.cta,
+[data-theme="light"] .copy:not(.done),
+[data-theme="light"] .kbtn,
+[data-theme="light"] .ba .kbtn{
+  background:#EBB12C!important;
+  color:#1A1222!important;
+}
+[data-theme="light"] .btn-gold:hover,
+[data-theme="light"] .btn-grn:hover,
+[data-theme="light"] .btn-white:hover,
+[data-theme="light"] .btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light):not(.is-done):not(.done):not(.dis):not(.disabled):not(.otpb):not(.dark):not(.alt):hover,
+[data-theme="light"] .mainmenu a.cta:hover,
+[data-theme="light"] .copy:not(.done):hover,
+[data-theme="light"] .kbtn:hover,
+[data-theme="light"] .ba .kbtn:hover{
+  background:#F6CD63!important;
+  color:#1A1222!important;
+  filter:none!important;
+}
+
+/* Klientska zona: .kbtn ma svuj prechod do oranzove primo v <style> stranky
+   /akademie/klient/, ktery se do tohoto souboru nedostane. Prebijime ho odsud,
+   protoze do te stranky se nesaha. Plati i pro tmavy motiv. */
+html:not([data-theme="light"]) .kbtn,
+html:not([data-theme="light"]) .ba .panel a.kbtn,
+html:not([data-theme="light"]) .ba .panel button.kbtn,
+html:not([data-theme="light"]) .chips2 button.on,
+html:not([data-theme="light"]) .scale5 button.on{
+  background:#EBB12C!important;
+  color:#1A1222!important;
+}
+html:not([data-theme="light"]) .kbtn:hover:not(:disabled){
+  background:#F6CD63!important;
+  color:#1A1222!important;
 }

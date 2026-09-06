@@ -39,7 +39,7 @@
   }
 
   // ---- bublina (plovoucí tlačítko) ----
-  var btn = E('button', 'position:fixed;right:22px;bottom:22px;z-index:99998;width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(145deg,#F6CD63,#EBB12C);box-shadow:0 12px 30px -8px rgba(235,177,44,.6);display:flex;align-items:center;justify-content:center;transition:transform .2s');
+  var btn = E('button', 'position:fixed;right:22px;bottom:22px;z-index:99998;width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;background:#EBB12C;box-shadow:0 12px 30px -8px rgba(235,177,44,.6);display:flex;align-items:center;justify-content:center;transition:transform .2s');
   btn.setAttribute('aria-label', 'Zeptej se AI Martina');
   btn.innerHTML = '<span style="font-family:Poppins,Arial,sans-serif;font-weight:800;color:#1A1222;font-size:1.05rem;letter-spacing:-.02em;">MB</span>';
   btn.onmouseenter = function () { btn.style.transform = 'scale(1.06)'; };
@@ -79,12 +79,12 @@
       '<input id="amFile" type="file" accept="image/*" style="display:none;">' +
       '<button type="button" id="amCam" aria-label="Vyfotit jídlo" title="Vyfoť jídlo a odhadnu kalorie" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:50%;width:42px;height:42px;cursor:pointer;color:#EBB12C;font-size:1.15rem;flex-shrink:0;line-height:1;">📷</button>' +
       '<input id="amIn" autocomplete="off" placeholder="' + esc(CFG.PLACEHOLDER) + '" style="flex:1;min-width:0;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.14);border-radius:50px;color:#fff;padding:11px 16px;font-family:inherit;font-size:.92rem;outline:none;">' +
-      '<button type="submit" aria-label="Odeslat" style="background:linear-gradient(145deg,#F6CD63,#EBB12C);border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;color:#1A1222;font-size:1.1rem;flex-shrink:0;">↑</button>' +
+      '<button type="submit" aria-label="Odeslat" style="background:#EBB12C;border:none;border-radius:50%;width:42px;height:42px;cursor:pointer;color:#1A1222;font-size:1.1rem;flex-shrink:0;">↑</button>' +
     '</form>';
 
   var LOCKED_HTML =
     '<div style="padding:14px 16px;text-align:center;">' +
-      '<a href="' + CFG.CHECKOUT + '" style="display:block;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;font-weight:800;text-decoration:none;padding:12px 16px;border-radius:50px;font-size:.95rem;">🔓 Získat plný přístup</a>' +
+      '<a href="' + CFG.CHECKOUT + '" style="display:block;background:#EBB12C;color:#1A1222;font-weight:800;text-decoration:none;padding:12px 16px;border-radius:50px;font-size:.95rem;">🔓 Získat plný přístup</a>' +
       '<div style="color:#9a8f84;font-size:.72rem;margin-top:8px;">AI Martin je součást členství v Barna Academy</div>' +
     '</div>';
 

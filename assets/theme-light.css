@@ -96,12 +96,12 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .navlinks a:hover{color:var(--mb-gold)!important;}
 [data-theme="light"] .nav a.cta,
 [data-theme="light"] .navlinks a.cta{
-  background:linear-gradient(145deg,var(--bd-gold2),var(--bd-gold))!important;
+  background:var(--bd-gold)!important;
   color:var(--mb-on-gold)!important;
 }
 [data-theme="light"] .nav a.cta:hover,
 [data-theme="light"] .navlinks a.cta:hover{
-  background:var(--bd-gold)!important;
+  background:var(--bd-gold2)!important;
   color:var(--mb-on-gold)!important;
 }
 [data-theme="light"] .nav-burger{
@@ -819,3 +819,31 @@ html[data-theme="light"]{background:var(--mb-bg);}
 /* Blog: druhe CTA (Spocitat si kalorie zdarma) jako obrys vedle plneho tlacitka (5. 9. 2026). */
 .cta-box .btn.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.55);color:#fff;}
 .cta-box .btn.btn-ghost:hover{border-color:#EBB12C;color:#EBB12C;}
+
+
+/* ============================================================
+   JEDNA ZLATA NA VSECH CTA - svetly motiv (Martin 6. 9. 2026)
+   Zrcadli pravidlo 2b z arena.css. Referencni tlacitko "Vybrat koucink":
+   plna #EBB12C, tmavy text #1A1222, hover #F6CD63. Zadne prechody.
+   Stavove varianty (.is-done/.done zelena, .dis/.disabled, .otpb, .dark, .alt)
+   a obrysova tlacitka (ghost/out) se vynechavaji.
+   ============================================================ */
+[data-theme="light"] .btn-gold,
+[data-theme="light"] .btn-grn,
+[data-theme="light"] .btn-white,
+[data-theme="light"] .btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light):not(.is-done):not(.done):not(.dis):not(.disabled):not(.otpb):not(.dark):not(.alt),
+[data-theme="light"] .mainmenu a.cta,
+[data-theme="light"] .copy:not(.done){
+  background:var(--bd-gold,#EBB12C)!important;
+  color:#1A1222!important;
+}
+[data-theme="light"] .btn-gold:hover,
+[data-theme="light"] .btn-grn:hover,
+[data-theme="light"] .btn-white:hover,
+[data-theme="light"] .btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light):not(.is-done):not(.done):not(.dis):not(.disabled):not(.otpb):not(.dark):not(.alt):hover,
+[data-theme="light"] .mainmenu a.cta:hover,
+[data-theme="light"] .copy:not(.done):hover{
+  background:var(--bd-gold2,#F6CD63)!important;
+  color:#1A1222!important;
+  filter:none!important;
+}

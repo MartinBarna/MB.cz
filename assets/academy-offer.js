@@ -60,7 +60,7 @@
         '<b style="color:#fff;display:block;font-size:1.02rem;margin-bottom:2px;">🎁 Vidím, že se vracíš — a Academy ti dává smysl.</b>' +
         'Tady máš <b style="color:#F6CD63;">−' + CFG.PCT + ' %</b> jen pro tebe. Kód <b style="color:#F6CD63;letter-spacing:.04em;">' + CFG.CODE + '</b> vlož v objednávce. Platí ještě <b id="baOfferCd" style="color:#fff;">…</b>.' +
       '</div>' +
-      '<a href="' + CFG.BUY_URL + '" style="background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;font-weight:800;padding:12px 22px;border-radius:50px;text-decoration:none;white-space:nowrap;font-size:.95rem;">Využít slevu →</a>' +
+      '<a href="' + CFG.BUY_URL + '" style="background:#EBB12C;color:#1A1222;font-weight:800;padding:12px 22px;border-radius:50px;text-decoration:none;white-space:nowrap;font-size:.95rem;">Využít slevu →</a>' +
       '<button type="button" id="baOfferX" aria-label="Zavřít" style="background:rgba(255,255,255,.08);border:none;color:#cabfb4;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.1rem;line-height:1;flex-shrink:0;">×</button>' +
     '</div>';
 

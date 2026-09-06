@@ -193,7 +193,7 @@
       + '#ba-ref-ov p{margin:.2rem 0 .9rem;color:#b7ab9b;font-size:.9rem;line-height:1.5}'
       + '#ba-ref-ov input[type=email]{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:11px;padding:12px 13px;color:#fff;font-family:inherit;font-size:.98rem;box-sizing:border-box}'
       + '#ba-ref-ov .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}'
-      + '#ba-ref-ov .go{width:100%;margin-top:12px;cursor:pointer;border:none;font-family:inherit;font-weight:800;font-size:1rem;padding:13px;border-radius:50px;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222}'
+      + '#ba-ref-ov .go{width:100%;margin-top:12px;cursor:pointer;border:none;font-family:inherit;font-weight:800;font-size:1rem;padding:13px;border-radius:50px;background:#EBB12C;color:#1A1222}'
       + '#ba-ref-ov .skip{display:block;width:100%;margin-top:10px;cursor:pointer;background:none;border:none;color:#8a7e6d;font-family:inherit;font-size:.82rem;text-decoration:underline}'
       + '#ba-ref-ov .err{color:#ff8b6b;font-size:.82rem;margin-top:6px;min-height:1em}';
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);

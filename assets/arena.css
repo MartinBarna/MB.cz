@@ -48,6 +48,36 @@ html:not([data-theme="light"]) .btn-ghost, html:not([data-theme="light"]) .btn-o
 html:not([data-theme="light"]) .btn-gold:hover, html:not([data-theme="light"]) .btn-grn:hover, html:not([data-theme="light"]) .btn-white:hover, html:not([data-theme="light"]) .btn:hover, html:not([data-theme="light"]) .navlinks a.cta:hover{transform:none!important;filter:brightness(1.07);}
 html:not([data-theme="light"]) .btn-ghost:hover, html:not([data-theme="light"]) .btn-out:hover, html:not([data-theme="light"]) .btn.ghost:hover{transform:none!important;border-color:var(--ar-gold)!important;color:#fff!important;}
 
+/* ---------- 2b) JEDNA ZLATA NA VSECH CTA (Martin 6. 9. 2026) ----------
+   Referencni tlacitko je "Vybrat koucink" na homepage: plna #EBB12C, tmavy text #1A1222,
+   hover #F6CD63. Zadne prechody do oranzove ani ze svetle do tmave zlate.
+   Stavove a druhotne varianty se VYNECHAVAJI, aby si nesly svou barvu dal:
+   .is-done/.done (zelena "hotovo"), .dis/.disabled (neaktivni), .otpb (druhotne prihlaseni),
+   .dark a .alt (zamerne tmave/bile), ghost a outline maji vlastni pravidlo vyse. */
+html:not([data-theme="light"]) .btn-gold,
+html:not([data-theme="light"]) .btn-grn,
+html:not([data-theme="light"]) .btn-white,
+html:not([data-theme="light"]) .btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light):not(.is-done):not(.done):not(.dis):not(.disabled):not(.otpb):not(.dark):not(.alt),
+html:not([data-theme="light"]) .nav a.cta,
+html:not([data-theme="light"]) .navlinks a.cta,
+html:not([data-theme="light"]) .mainmenu a.cta,
+html:not([data-theme="light"]) .copy:not(.done){
+  background:var(--ar-gold)!important;
+  color:#1A1222!important;
+}
+html:not([data-theme="light"]) .btn-gold:hover,
+html:not([data-theme="light"]) .btn-grn:hover,
+html:not([data-theme="light"]) .btn-white:hover,
+html:not([data-theme="light"]) .btn:not(.btn-ghost):not(.btn-out):not(.ghost):not(.btn-outline-light):not(.is-done):not(.done):not(.dis):not(.disabled):not(.otpb):not(.dark):not(.alt):hover,
+html:not([data-theme="light"]) .nav a.cta:hover,
+html:not([data-theme="light"]) .navlinks a.cta:hover,
+html:not([data-theme="light"]) .mainmenu a.cta:hover,
+html:not([data-theme="light"]) .copy:not(.done):hover{
+  background:var(--ar-gold2)!important;
+  color:#1A1222!important;
+  filter:none!important;
+}
+
 /* ---------- 3) BADGES / KICKERY: pill -> typograficky kicker ---------- */
 html:not([data-theme="light"]) .ac-tag, html:not([data-theme="light"]) .cover-tag, html:not([data-theme="light"]) .hero .tag, html:not([data-theme="light"]) .kick .dot{border-radius:0!important;}
 html:not([data-theme="light"]) .ac-tag, html:not([data-theme="light"]) .cover-tag, html:not([data-theme="light"]) .hero .tag{
@@ -155,7 +185,12 @@ html:not([data-theme="light"]) .card .go{border-radius:0!important;clip-path:var
 }
 
 /* ZV Martin 10.7.: velka clenska CTA (Pokracovat, bonusy, free banner, nastroje) byla
-   v plnem gradientu prilis syta a spatne citelna -> kremova zlata (svetly vrch prevazuje) */
-html:not([data-theme="light"]) .ba .contbtn, html:not([data-theme="light"]) .ba .bbtn, html:not([data-theme="light"]) .ba .fb-cta, html:not([data-theme="light"]) .ba .btn, html:not([data-theme="light"]) .card .go{
-  background:linear-gradient(160deg,#FAE7A9,#F6CD63 60%,#F2C24E)!important;color:#161616!important;}
-html:not([data-theme="light"]) .ba .contbtn:hover, html:not([data-theme="light"]) .ba .bbtn:hover, html:not([data-theme="light"]) .ba .fb-cta:hover, html:not([data-theme="light"]) .ba .btn:hover, html:not([data-theme="light"]) .card .go:hover{filter:brightness(1.04)!important;}
+   v plnem gradientu prilis syta a spatne citelna -> kremova zlata (svetly vrch prevazuje).
+   POZOR: 6. 9. 2026 to Martin prepsal: jedna zlata na celem webu, plna #EBB12C jako
+   "Vybrat koucink" na homepage. Kremovy prechod tim konci, jinak by clenska CTA
+   byla svetlejsi nez zbytek webu. */
+html:not([data-theme="light"]) .ba .contbtn, html:not([data-theme="light"]) .ba .bbtn, html:not([data-theme="light"]) .ba .fb-cta, html:not([data-theme="light"]) .ba .btn:not(.ghost):not(.is-done):not(.dis), html:not([data-theme="light"]) .card .go{
+  background:var(--ar-gold)!important;color:#1A1222!important;}
+html:not([data-theme="light"]) .ba .contbtn:hover, html:not([data-theme="light"]) .ba .bbtn:hover, html:not([data-theme="light"]) .ba .fb-cta:hover, html:not([data-theme="light"]) .card .go:hover{
+  background:var(--ar-gold2)!important;color:#1A1222!important;}
+html:not([data-theme="light"]) .ba .contbtn:hover, html:not([data-theme="light"]) .ba .bbtn:hover, html:not([data-theme="light"]) .ba .fb-cta:hover, html:not([data-theme="light"]) .ba .btn:not(.ghost):not(.is-done):not(.dis):hover, html:not([data-theme="light"]) .card .go:hover{filter:brightness(1.04)!important;}

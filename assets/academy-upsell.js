@@ -43,7 +43,7 @@
         '.ba-au li::before{content:"✓";position:absolute;left:0;color:#F6CD63;font-weight:800;}',
         '.ba-au .price{color:#cbbfae;font-size:.9rem;margin:0 0 16px;}',
         '.ba-au .price s{opacity:.55;}.ba-au .price b{color:#fff;font-size:1.05rem;}',
-        '.ba-au .cta{display:block;text-align:center;text-decoration:none;background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;font-weight:800;font-size:1.02rem;padding:15px 22px;border-radius:50px;box-shadow:0 12px 30px rgba(235,177,44,.32);transition:transform .18s;}',
+        '.ba-au .cta{display:block;text-align:center;text-decoration:none;background:#EBB12C;color:#1A1222;font-weight:800;font-size:1.02rem;padding:15px 22px;border-radius:50px;box-shadow:0 12px 30px rgba(235,177,44,.32);transition:transform .18s;}',
         '.ba-au .cta:hover{transform:translateY(-2px);}',
         '.ba-au .later{display:block;width:100%;margin-top:12px;background:none;border:none;color:#8a7e6d;font-size:.82rem;cursor:pointer;text-decoration:underline;font-family:inherit;}',
         '.ba-au .later:hover{color:#cbbfae;}',

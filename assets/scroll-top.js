@@ -54,7 +54,7 @@
     }
 
     var css = '#baToTop{position:fixed;right:20px;bottom:20px;width:48px;height:48px;border-radius:50%;'
-      + 'background:linear-gradient(145deg,#F6CD63,#EBB12C);color:#1A1222;border:none;cursor:pointer;'
+      + 'background:#EBB12C;color:#1A1222;border:none;cursor:pointer;'
       + 'display:flex;align-items:center;justify-content:center;font-size:1.45rem;font-weight:800;line-height:1;z-index:1090;'
       + 'box-shadow:0 10px 26px -6px rgba(235,177,44,.6);opacity:0;visibility:hidden;transform:translateY(10px);'
       + 'transition:opacity .25s,transform .25s,visibility .25s,bottom .25s,right .25s;-webkit-tap-highlight-color:transparent;}'
@@ -340,6 +340,10 @@
       + '.mb-mmhost.mbopen .mb-drawer{display:block;}'
       + '.mb-mmhost .mb-drawer a{display:block;padding:13px 22px;color:#F0EADF;text-decoration:none;font-weight:600;font-size:1.03rem;opacity:1;border-bottom:1px solid rgba(255,255,255,.05);}'
       + '.mb-mmhost .mb-drawer a:hover{background:rgba(235,177,44,.08);color:#EBB12C;}'
+      /* CTA v zasuvce musi byt zlate stejne jako v liste. Bez tohohle radku ho prebije
+         obecne .cta z app-brand-override.css (svestkove pozadi, bily text). */
+      + '.mb-mmhost .mb-drawer a.cta{color:#1A1222!important;background:#EBB12C!important;margin:10px 16px 4px;border-radius:50px;text-align:center;border-bottom:none;font-weight:700;}'
+      + '.mb-mmhost .mb-drawer a.cta:hover{color:#1A1222!important;background:#F6CD63!important;}'
       + '@media (max-width:1150px){ .mb-mmburger{display:inline-flex;} }'
       + '@media (min-width:1151px){ .mb-mmhost .mb-drawer{display:none!important;} }'
       + '[data-theme="light"] .mb-mmhost .mb-drawer{background:var(--mb-bg,#F7F3EB);color:var(--mb-text,#161310);border-top-color:var(--bd-line,rgba(22,19,16,.12));box-shadow:0 26px 54px -14px rgba(22,19,16,.18);}'

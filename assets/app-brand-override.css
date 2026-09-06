@@ -40,9 +40,9 @@ html:not([data-theme="light"]) .nav-link:hover{ color:var(--mb-text) !important;
 html:not([data-theme="light"]) .nav-link::after{ background:var(--mb-gold) !important; }
 
 /* ---- Tlačítka: oranžová → zlatá s tmavým textem ---- */
-html:not([data-theme="light"]) .btn-grn, html:not([data-theme="light"]) .btn-gold, html:not([data-theme="light"]) .btn-white{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important;
+html:not([data-theme="light"]) .btn-grn, html:not([data-theme="light"]) .btn-gold, html:not([data-theme="light"]) .btn-white{ background:var(--mb-gold) !important;
   color:var(--mb-on-gold) !important; box-shadow:0 8px 22px -8px rgba(235,177,44,.4) !important; }
-html:not([data-theme="light"]) .btn-grn:hover, html:not([data-theme="light"]) .btn-gold:hover, html:not([data-theme="light"]) .btn-white:hover{ color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .btn-grn:hover, html:not([data-theme="light"]) .btn-gold:hover, html:not([data-theme="light"]) .btn-white:hover{ background:var(--mb-gold-light) !important; color:var(--mb-on-gold) !important; }
 html:not([data-theme="light"]) .btn-out{ background:transparent !important; border:2px solid var(--mb-gold) !important; color:var(--mb-gold) !important; }
 html:not([data-theme="light"]) .btn-out:hover{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
@@ -123,10 +123,10 @@ html:not([data-theme="light"]) .btn-wa-open{ background:var(--mb-gold) !importan
 html:not([data-theme="light"]) a:focus-visible, html:not([data-theme="light"]) button:focus-visible, html:not([data-theme="light"]) input:focus-visible, html:not([data-theme="light"]) textarea:focus-visible, html:not([data-theme="light"]) select:focus-visible, html:not([data-theme="light"]) .navbar-toggler:focus-visible{ outline-color:var(--mb-gold) !important; }
 html:not([data-theme="light"]) ::selection{ background:var(--mb-gold); color:var(--mb-on-gold); }
 html:not([data-theme="light"]) #scrollProgress{ background:linear-gradient(90deg,var(--mb-gold),var(--mb-gold-light)) !important; box-shadow:0 0 8px rgba(235,177,44,.55) !important; }
-html:not([data-theme="light"]) .to-top{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .to-top{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 html:not([data-theme="light"]) .cta-bar{ background:rgba(12,11,16,.9) !important; border-top:1px solid var(--mb-border) !important; }
 html:not([data-theme="light"]) .cta-bar .cb-kurz{ background:var(--mb-plum) !important; color:#fff !important; }
-html:not([data-theme="light"]) .cta-bar .cb-konz{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .cta-bar .cb-konz{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 html:not([data-theme="light"]) .skip-link{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
 /* ---- Bootstrap text-dark catch-all → světlé na tmavé ---- */
@@ -147,11 +147,11 @@ html:not([data-theme="light"]) #formDiky.alert-success{ background:#153a2a !impo
 html:not([data-theme="light"]) #blog .card-title{ color:#fff !important; }
 
 /* ---- Zbylé oranžové prvky (odhaleno testem) ---- */
-html:not([data-theme="light"]) .navbar .nav-item .btn{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; box-shadow:0 6px 18px rgba(235,177,44,.25) !important; }
+html:not([data-theme="light"]) .navbar .nav-item .btn{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; box-shadow:0 6px 18px rgba(235,177,44,.25) !important; }
 html:not([data-theme="light"]) #quizBar{ background:linear-gradient(90deg,var(--mb-gold),var(--mb-gold-light)) !important; }
 html:not([data-theme="light"]) section.cta, html:not([data-theme="light"]) #kontakt.cta{ background:linear-gradient(160deg,#241026 0%, #0C0B10 65%) !important; }
 /* cookie lišta (analytics.js) — accept tlačítko na zlatou */
-html:not([data-theme="light"]) #mb-cookie #mb-c-ok, html:not([data-theme="light"]) #mb-c-ok{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) #mb-cookie #mb-c-ok, html:not([data-theme="light"]) #mb-c-ok{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 
 /* ============ VLNA 1 — doladění po auditu (landing/custom) ============ */
 /* podstránkové oranžové tokeny (marketing-dark / ba-ui) → zlatá, pojistka */
@@ -162,7 +162,7 @@ html:not([data-theme="light"]) .blogfilter button{ background:var(--mb-surface) 
 html:not([data-theme="light"]) .blogfilter button:hover{ border-color:var(--mb-gold) !important; }
 html:not([data-theme="light"]) .blogfilter button.active{ background:var(--mb-gold) !important; border-color:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 /* 404 hlavní CTA (bílé → zlaté) */
-html:not([data-theme="light"]) .btn-main{ background:linear-gradient(160deg,var(--mb-gold-light),var(--mb-gold)) !important; color:var(--mb-on-gold) !important; }
+html:not([data-theme="light"]) .btn-main{ background:var(--mb-gold) !important; color:var(--mb-on-gold) !important; }
 /* děkovačky: kroky (tmavý #333 na tmavém boxu → světlý, čitelný) */
 html:not([data-theme="light"]) .steps li{ color:#E7E2EE !important; }
 html:not([data-theme="light"]) .steps li strong{ color:#fff !important; }
