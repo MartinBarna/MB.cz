@@ -283,6 +283,34 @@
   // ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
   var MAX_SETS = 6;
 
+  /**
+   * ⛔⛔ STRUKTURA TRÉNINKU (rozhodnutí Martina 6. 9. 2026, „každý má jiný styl cvičení").
+   * Mění JEN to, jak se týdenní objem rozloží: kolik cviků den nese a kolik sérií na cvik.
+   * ⛔ OBJEM PO PARTIÍCH SE NEMĚNÍ. `autoBalance` (nic nad MRV) i `autoFill` (nic pod MEV)
+   * běží dál a nezávisle na téhle volbě.
+   * - `min_cviku`  méně cviků, víc sérií (základní cviky, až 5 až 6 sérií)
+   * - `standard`   výchozí, 4 série na cvik
+   * - `vic_cviku`  víc cviků, míň sérií (2 až 3 série)
+   *
+   * ⚠️ `standard` má strop ČTYŘI, ne šest. Do 6. 9. 2026 se strop počítal jako
+   * `goal.sets + 2`, takže `autoFill` běžně dosypal hlavní cvik na šest sérií a Martin
+   * dostal v revizi začátečnický plán se šesti sériemi rumunského mrtvého tahu na jedné
+   * noze. Šestka zůstává jen pro „Méně cviků, víc sérií", kde si ji klient vybral.
+   * ⚠️ Strop NESMÍ spadnout pod série cíle: „Síla" má z podstaty 5 sérií (GOALS.sila),
+   * a to je odborné rozhodnutí o cíli, ne o struktuře. Proto se bere Math.max.
+   * ⚠️ `vic_cviku` má strop 4, ne 3, a je to VĚDOMÝ ústupek popisku „2 až 3 série":
+   * změřeno na mřížce 1296 zadání, se stropem 3 zůstalo 18,7 % partií pod minimem
+   * (samotná lýtka 1112 plánů), se stropem 4 je to 9,6 %, skoro jako výchozí 8,5 %.
+   * Příčina je v datech: doma s vlastní vahou je na lýtka JEDINÝ cvik.
+   * ⛔ Táž tabulka je v appce (`src/engine/workout-gen.ts`), hlídá parita-generatoru.mjs.
+   */
+  var STRUKTURY = {
+    min_cviku: { serie: function (c) { return Math.min(MAX_SETS, c + 1); }, cvikuVeDni: 3, strop: function () { return MAX_SETS; } },
+    standard: { serie: function (c) { return c; }, cvikuVeDni: 4, strop: function (z) { return Math.max(z, 4); } },
+    vic_cviku: { serie: function (c) { return Math.max(MIN_SETS, Math.min(3, c - 1)); }, cvikuVeDni: 6, strop: function (z) { return Math.max(z, 4); } }
+  };
+  function strukturaSpec(s) { return STRUKTURY[s || 'standard'] || STRUKTURY.standard; }
+
   function entryMuscles(pe) { return musclesFromDb(pe.ex.muscle, pe.ex.pattern, pe.ex.name); }
 
   // všechny cviky plánu, které daný sval trénují; seřazené „nejméně prioritní první"
@@ -447,7 +475,12 @@
           day = bestDayFor(volne, muscle);
         }
       }
-      day.exercises.push({ ex: pick, sets: Math.max(MIN_SETS, Math.min(g.sets, need)), reps: g.accessReps, access: true });
+      // [2026-09-06] Nový cvik nesmí přeskočit STROP SÉRIÍ struktury (`stropSerii`).
+      // Dřív se bral `g.sets`, tedy série CÍLE, takže u „Víc cviků, méně sérií" přibývaly
+      // cviky rovnou po pěti sériích, přestože struktura povoluje tři.
+      // Ruční tlačítko v UI `stropSerii` nepředává, tam se dál použije `g.sets`.
+      var stropNoveho = stropSerii == null ? g.sets : stropSerii;
+      day.exercises.push({ ex: pick, sets: Math.max(MIN_SETS, Math.min(stropNoveho, need)), reps: g.accessReps, access: true });
       if (anyOver()) { day.exercises.pop(); return false; }
       day.exercises.sort(function (a, b) { return orderRank(a.ex.pattern) - orderRank(b.ex.pattern); });
       used[pick.id] = 1; changed = true;
@@ -494,15 +527,16 @@
    * MEV v 98 % plánů (žádný full-body split nemá upažování), hamstringy v 91 %.
    * ⛔ Totéž musí platit v appce → src/engine/workout-gen.ts.
    */
-  function autoFill(plan) {
+  function autoFill(plan, stropSerii) {
     MUS_ORDER.forEach(function (mu) {
       var lm = LANDMARKS[mu];
       if (!lm || lm.mev <= 0) return;
       var row = plan.volume.filter(function (v) { return v.muscle === mu; })[0];
       if (row && row.sets >= lm.mev) return;
-      // `+ 2` (po revizi místo `+ 1`): když se druhá izolace na tutéž partii přidat nesmí,
-      // musí mít existující cvik kam růst, jinak by partie zůstala pod minimem.
-      addVolume(plan, mu, Math.min(MAX_SETS, plan.goal.sets + 2), true, true);
+      // [2026-09-06] Strop dodává STRUKTURA TRÉNINKU (`STRUKTURY`), dřív to bylo natvrdo
+      // `min(6, goal.sets + 2)`. Právě ta šestka vyrobila začátečníkovi šest sérií
+      // rumunského mrtvého tahu na jedné noze.
+      addVolume(plan, mu, stropSerii, true, true);
     });
     plan.days.forEach(function (d) {
       d.exercises.sort(function (a, b) { return orderRank(a.ex.pattern) - orderRank(b.ex.pattern); });
@@ -517,6 +551,11 @@
     var pool = filterDb(db, opts);
     setMuscleDb(db);
     var g = GOALS[opts.goal] || GOALS.svaly;
+    // [2026-09-06] Struktura tréninku: kolik sérií na cvik a na kolik cviků se doplňuje
+    // hubený den. Cíl (`GOALS`) dál rozhoduje o opakováních, pauze a o tom, kolik sérií
+    // je pro daný cíl „základ"; struktura s tím číslem jen hýbe nahoru nebo dolů.
+    var st = strukturaSpec(opts.struktura);
+    var zakladniSerie = Math.max(MIN_SETS, st.serie(g.sets));
     var split = splitFor(opts.days);
     var days = [];
     var usedWeek = {};   // pestrost napříč celým týdnem: preferuj cviky tento týden nepoužité
@@ -562,7 +601,7 @@
         used[pick.id] = 1; usedWeek[pick.id] = 1;
         exercises.push({
           ex: pick,
-          sets: slot.access ? Math.max(2, g.sets - 1) : g.sets,
+          sets: slot.access ? Math.max(MIN_SETS, zakladniSerie - 1) : zakladniSerie,
           reps: slot.access ? g.accessReps : g.reps,
           // [fix 2026-07-26] Flag se sem MUSÍ zapsat. Bez něj je `pe.access` vždycky
           // undefined a dvě pravidla řazení v `contributorsFor` a `dropWeakest`
@@ -593,10 +632,18 @@
 
       // backfill proti „hubeným" dnům (min ~4 cviky z cílových svalů dne)
       // dva průchody jako v appce: nejdřív cviky tento týden nepoužité (pestrost), pak klidně opakuj
-      var bpool = preferLoaded(pool.filter(function (e) { return dayMuscles[e.muscle] && !used[e.id]; }), opts.equip);
-      for (var bpass = 0; bpass < 2 && exercises.length < 4; bpass++) {
+      // ⛔ [2026-09-06] `!used[e.id]` TU SCHVÁLNĚ NENÍ. Appka staví `bpool` z celého
+      // poolu cílových svalů a už použité cviky přeskakuje až v cyklu; kdo je vyfiltruje
+      // dopředu, dostane KRATŠÍ pole, a protože se z něj bere `(seed + di + bi) % délka`,
+      // vyjde jiný cvik. Rozdíl tu ležel tiše od začátku a parita ho neviděla, protože
+      // se při starém cíli „aspoň 4 cviky" backfill skoro nespouštěl. Po zavedení volby
+      // „Víc cviků, méně sérií" (cíl 6 cviků) se rozešlo 1254 z 15552 zadání.
+      var bpool = preferLoaded(pool.filter(function (e) { return dayMuscles[e.muscle]; }), opts.equip);
+      // [2026-09-06] Čtyřka je nově `st.cvikuVeDni`: „Víc cviků, méně sérií" doplňuje na
+      // šest, „Méně cviků, víc sérií" na tři, tedy fakticky nedoplňuje.
+      for (var bpass = 0; bpass < 2 && exercises.length < st.cvikuVeDni; bpass++) {
         var bi = 0;
-        while (exercises.length < 4 && bi < bpool.length) {
+        while (exercises.length < st.cvikuVeDni && bi < bpool.length) {
           var be = bpool[(seed + di + bi) % bpool.length];
           bi++;
           if (used[be.id]) continue;
@@ -604,7 +651,7 @@
           used[be.id] = 1; usedWeek[be.id] = 1;
           // access i tady: je to doplňkový cvik (bere accessReps), takže se má ubírat dřív
           // než hlavní. Appka to má taky (`src/engine/workout-gen.ts`).
-          exercises.push({ ex: be, sets: Math.max(2, g.sets - 1), reps: g.accessReps, access: true });
+          exercises.push({ ex: be, sets: Math.max(MIN_SETS, zakladniSerie - 1), reps: g.accessReps, access: true });
         }
       }
 
@@ -618,7 +665,7 @@
     autoBalance(days, opts.orezStyl || 'velke');
 
     var plan = { days: days, goal: g, rest: g.rest, pool: pool, equip: opts.equip, poolSize: pool.length, coverage: planCoverage({ days: days }), volume: planVolume({ days: days }) };
-    autoFill(plan);
+    autoFill(plan, st.strop(zakladniSerie));
     return plan;
   }
 
@@ -749,7 +796,8 @@
 
     var plan = buildPlan(filtrovana, {
       location: vstup.kde_cvici, equip: vstup.vybaveni, level: vstup.level,
-      goal: goal, days: dny, seed: vstup.seed || 0, orezStyl: vstup.orezStyl
+      goal: goal, days: dny, seed: vstup.seed || 0, orezStyl: vstup.orezStyl,
+      struktura: vstup.struktura
     });
 
     var jmenaDnu = ROZVRH_DNU[dny] || ROZVRH_DNU[3];

@@ -102,6 +102,15 @@
           <option value="zkuseny">Zkušený</option>
         </select></div>
         <div style="grid-column:1/-1">
+          <label>Struktura tréninku</label>
+          <select id="struktura">
+            <option value="min_cviku">Míň cviků, víc sérií</option>
+            <option value="standard" selected>Standard (doporučeno)</option>
+            <option value="vic_cviku">Víc cviků, míň sérií</option>
+          </select>
+          <p class="orez-vysvetleni" id="strukturaVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
+        </div>
+        <div style="grid-column:1/-1">
           <label>Když se plán nevejde do objemu, co ubrat první?</label>
           <select id="orezStyl">
             <option value="velke" selected>Držet velké cviky (doporučeno)</option>
@@ -159,7 +168,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/workout-gen.js?v=20260726d"></script>
+  <script src="/assets/workout-gen.js?v=20260906a"></script>
   <script>
   (function(){
     var DB=null, seed=0, logoData='', lastPlan=null, restoring=false;
@@ -179,7 +188,10 @@
 
     // Uložení posledního plánu: plán je deterministický (stejné zadání + seed = stejný plán),
     // takže stačí uložit vstupy a seed - po návratu se vykreslí přesně to, co trenér viděl.
-    function saveState(){ try{ localStorage.setItem('ba_workout_last', JSON.stringify({ location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:$('daysCount').value, client:$('client').value, seed:seed })); }catch(e){} }
+    // ⛔ `struktura` je NEPOVINNÁ i při čtení: záznamy uložené před 6. 9. 2026 ji nemají
+    // a musí se dál načíst. Bez klíče zůstane select na výchozím „Standard".
+    // ⚠️ `orezStyl` se tu neukládal a dál neukládá; to je stará mezera, ne moje změna.
+    function saveState(){ try{ localStorage.setItem('ba_workout_last', JSON.stringify({ location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:$('daysCount').value, client:$('client').value, seed:seed, struktura:($('struktura')?$('struktura').value:'standard') })); }catch(e){} }
     function loadState(){ try{ return JSON.parse(localStorage.getItem('ba_workout_last')||'null'); }catch(e){ return null; } }
 
     // Režim klienta koučinku (?klient=1, volitelně &days=&goal= z klientské sekce): stránka
@@ -204,13 +216,14 @@
       }
     }catch(e){}
 
-    fetch('/assets/exercise-db.json?v=20260906a').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/exercise-db.json?v=20260906b').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' cviků připraveno';
       var st=KLIENT ? null : loadState();
       if(st){
         if(st.location)$('location').value=st.location; if(st.equip)$('equip').value=st.equip;
         if(st.level)$('level').value=st.level; if(st.goal)$('goal').value=st.goal;
         if(st.days)$('daysCount').value=st.days; if(st.client)$('client').value=st.client;
+        if(st.struktura&&$('struktura')){ $('struktura').value=st.struktura; obnovStrukturaText(); }
         seed=st.seed||0;
         restoring=true; generate(false); restoring=false;
         $('dbstate').textContent='Obnovil jsem tvůj poslední plán (' + d.length + ' cviků připraveno).';
@@ -218,7 +231,7 @@
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
     loadBrand();
 
-    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed, orezStyl:($('orezStyl')?$('orezStyl').value:'velke') }; }
+    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed, orezStyl:($('orezStyl')?$('orezStyl').value:'velke'), struktura:($('struktura')?$('struktura').value:'standard') }; }
     // Vysvětlení přepínače stylu ořezu. Text je psaný pro laika: první věta říká, co se
     // stane, druhá komu to sedí. Schválně bez zkratek MEV, MAV a MRV a bez toho, aby byla
     // některá volba označená za správnou.
@@ -232,6 +245,19 @@
       if (el && sel) el.textContent = OREZ_TEXT[sel.value] || '';
     }
     if ($('orezStyl')) { $('orezStyl').addEventListener('change', obnovOrezText); obnovOrezText(); }
+    // [2026-09-06] Struktura tréninku. Zase pro laika a zase bez „správné" volby: rozdíl
+    // je ve stylu cvičení. ⛔ Objem po partiích se tím NEMĚNÍ, jen se jinak rozloží,
+    // a to musí být z textu poznat. ⛔ Tytéž texty má appka (`workout-generator.tsx`).
+    var STRUKTURA_TEXT = {
+      min_cviku: 'Míň cviků v tréninku, zato pět až šest sérií na cvik. Sedí tomu, kdo chce jít do hloubky u pár základních cviků a nemá rád dlouhé tréninky s přeskakováním.',
+      standard: 'Čtyři série na cvik. Zlatá střední cesta, se kterou vyjde většina lidí, a výchozí nastavení.',
+      vic_cviku: 'Víc různých cviků, dvě až tři série na každý (u slabších partií občas čtyři, aby se dodržel objem). Sedí tomu, kdo chce partii zasáhnout z víc úhlů a nechce dělat pořád totéž.'
+    };
+    function obnovStrukturaText(){
+      var el = $('strukturaVysvetleni'), sel = $('struktura');
+      if (el && sel) el.textContent = STRUKTURA_TEXT[sel.value] || '';
+    }
+    if ($('struktura')) { $('struktura').addEventListener('change', obnovStrukturaText); obnovStrukturaText(); }
 
 
     function render(plan){

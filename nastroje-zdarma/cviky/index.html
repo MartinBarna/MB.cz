@@ -263,7 +263,7 @@
     function label(map,v){return map[v]||v;}
     function img(e){return '/assets/cviky/'+e.id+'.jpg';}
 
-    fetch('/assets/exercise-db.json?v=20260906a').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/exercise-db.json?v=20260906b').then(function(r){return r.json();}).then(function(d){
       DB=d; buildFilters(); render();
       var st=$('cviky-static'); if(st) st.hidden=true;
     }).catch(function(){ $('count').textContent='⚠️ Databázi cviků se nepodařilo načíst.'; });

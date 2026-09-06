@@ -109,6 +109,15 @@
           <option value="zkuseny">Zkušený</option>
         </select></div>
         <div style="grid-column:1/-1">
+          <label>Struktura tréninku</label>
+          <select id="struktura">
+            <option value="min_cviku">Míň cviků, víc sérií</option>
+            <option value="standard" selected>Standard (doporučeno)</option>
+            <option value="vic_cviku">Víc cviků, míň sérií</option>
+          </select>
+          <p class="orez-vysvetleni" id="strukturaVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
+        </div>
+        <div style="grid-column:1/-1">
           <label>Když se plán nevejde do objemu, co ubrat první?</label>
           <select id="orezStyl">
             <option value="velke" selected>Držet velké cviky (doporučeno)</option>
@@ -192,18 +201,18 @@
     </div>
   </div>
 
-  <script src="/assets/workout-gen.js?v=20260726d"></script>
+  <script src="/assets/workout-gen.js?v=20260906a"></script>
   <script>
   (function(){
     var DB=null, seed=0;
     var $=function(id){return document.getElementById(id);};
     function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
 
-    fetch('/assets/exercise-db.json?v=20260906a').then(function(r){return r.json();}).then(function(d){
+    fetch('/assets/exercise-db.json?v=20260906b').then(function(r){return r.json();}).then(function(d){
       DB=d; $('dbstate').textContent=d.length+' cviků připraveno';
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
 
-    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed, orezStyl:($('orezStyl')?$('orezStyl').value:'velke') }; }
+    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed, orezStyl:($('orezStyl')?$('orezStyl').value:'velke'), struktura:($('struktura')?$('struktura').value:'standard') }; }
     // Vysvětlení přepínače stylu ořezu. Text je psaný pro laika: první věta říká, co se
     // stane, druhá komu to sedí. Schválně bez zkratek MEV, MAV a MRV a bez toho, aby byla
     // některá volba označená za správnou.
@@ -217,6 +226,19 @@
       if (el && sel) el.textContent = OREZ_TEXT[sel.value] || '';
     }
     if ($('orezStyl')) { $('orezStyl').addEventListener('change', obnovOrezText); obnovOrezText(); }
+    // [2026-09-06] Struktura tréninku. Zase pro laika a zase bez „správné" volby: rozdíl
+    // je ve stylu cvičení. ⛔ Objem po partiích se tím NEMĚNÍ, jen se jinak rozloží,
+    // a to musí být z textu poznat. ⛔ Tytéž texty má appka (`workout-generator.tsx`).
+    var STRUKTURA_TEXT = {
+      min_cviku: 'Míň cviků v tréninku, zato pět až šest sérií na cvik. Sedí tomu, kdo chce jít do hloubky u pár základních cviků a nemá rád dlouhé tréninky s přeskakováním.',
+      standard: 'Čtyři série na cvik. Zlatá střední cesta, se kterou vyjde většina lidí, a výchozí nastavení.',
+      vic_cviku: 'Víc různých cviků, dvě až tři série na každý (u slabších partií občas čtyři, aby se dodržel objem). Sedí tomu, kdo chce partii zasáhnout z víc úhlů a nechce dělat pořád totéž.'
+    };
+    function obnovStrukturaText(){
+      var el = $('strukturaVysvetleni'), sel = $('struktura');
+      if (el && sel) el.textContent = STRUKTURA_TEXT[sel.value] || '';
+    }
+    if ($('struktura')) { $('struktura').addEventListener('change', obnovStrukturaText); obnovStrukturaText(); }
 
 
     function render(plan){

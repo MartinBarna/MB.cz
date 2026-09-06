@@ -107,7 +107,7 @@
           <option value="mirny_narust">Mírný nárůst svalů</option>
           <option value="narust">Nabírání svalů</option>
         </select></div>
-        <div><label>Počet jídel</label><select id="mealsCount"><option>3</option><option selected>4</option><option>5</option></select></div>
+        <div><label>Počet jídel</label><select id="mealsCount"><option value="2">2 (přerušovaný půst)</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6 (menší porce)</option></select></div>
         <div><label>Rozsah</label><select id="range"><option value="den" selected>1 den</option><option value="tyden">Celý týden + nákupní seznam</option></select></div>
         <div><label>Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Jana"></div>
       </div>
@@ -166,7 +166,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/meal-gen.js?v=20260905d"></script>
+  <script src="/assets/meal-gen.js?v=20260906a"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null, lastPlan=null, lastWeek=null, swapSeed=0;

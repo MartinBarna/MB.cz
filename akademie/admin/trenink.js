@@ -31,8 +31,8 @@
   'use strict';
 
   var DB = null;            // pole cviků, načte se jednou za život stránky
-  var WG_URL = '/assets/workout-gen.js?v=20260902b';
-  var DB_URL = '/assets/exercise-db.json?v=20260906a';
+  var WG_URL = '/assets/workout-gen.js?v=20260906a';
+  var DB_URL = '/assets/exercise-db.json?v=20260906b';
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {

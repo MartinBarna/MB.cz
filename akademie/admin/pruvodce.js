@@ -20,7 +20,7 @@
   'use strict';
 
   var FOOD = null;          // pole potravin, načte se jednou za život stránky
-  var MG_URL = '/assets/meal-gen.js?v=20260905d';
+  var MG_URL = '/assets/meal-gen.js?v=20260906a';
   var DB_URL = '/assets/food-db.json?v=20260902c';
 
   function esc(s) {
@@ -186,7 +186,10 @@
       swapSeed: {}, navrh: []
     };
     var jidelDotaznik = num(idata.jidel_denne);
-    S.pocetJidel = jidelDotaznik ? Math.min(5, Math.max(3, jidelDotaznik)) : 5;
+    // [2026-09-06] Rozsah 2 az 6 jidel (rozhodnuti Martina): 2 = prerusovany pust,
+    // 6 = sest mensich jidel. Engine to umi na obou stranach, tak at ma pruvodce
+    // stejnou nabidku jako klient v appce a v generatoru na webu.
+    S.pocetJidel = jidelDotaznik ? Math.min(6, Math.max(2, jidelDotaznik)) : 5;
 
     el.innerHTML = '<p class="muted" style="font-size:.85rem;">Načítám generátor a databázi potravin…</p>';
     pripravEngine().then(function () {
@@ -225,7 +228,7 @@
         + '</div>'
         + '<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-top:10px;">'
         + '<label style="font-size:.75rem;color:#8F8A99;">Jídel denně<br><select id="pgJidel" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;">'
-        + [3, 4, 5].map(function (n) { return '<option value="' + n + '"' + (n === S.pocetJidel ? ' selected' : '') + '>' + n + '</option>'; }).join('')
+        + [2, 3, 4, 5, 6].map(function (n) { return '<option value="' + n + '"' + (n === S.pocetJidel ? ' selected' : '') + '>' + n + (n === 2 ? ' (prerusovany pust)' : n === 6 ? ' (mensi porce)' : '') + '</option>'; }).join('')
         + '</select></label>'
         + '<label style="flex:1;min-width:160px;font-size:.75rem;color:#8F8A99;">Jméno do hlavičky<br><input type="text" id="pgJmeno" value="' + esc(ctx.name || '') + '" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'
         + '<label style="min-width:120px;font-size:.75rem;color:#8F8A99;">Oslovení (5. pád)<br><input type="text" id="pgVok" value="' + esc(ctx.vok || '') + '" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'

@@ -132,7 +132,7 @@
           <option value="mirny_narust">Mírný nárůst svalů</option>
           <option value="narust">Nabírání svalů</option>
         </select></div>
-        <div><label>Počet jídel</label><select id="mealsCount"><option>3</option><option selected>4</option><option>5</option></select></div>
+        <div><label>Počet jídel</label><select id="mealsCount"><option value="2">2 (přerušovaný půst)</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6 (menší porce)</option></select></div>
       </div>
       <div class="chips">
         <label class="chip"><input type="checkbox" id="vegetarian"> Vegetariánský</label>
@@ -225,7 +225,7 @@
     </div>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260905d"></script>
+  <script src="/assets/meal-gen.js?v=20260906a"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null;

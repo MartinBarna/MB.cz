@@ -577,6 +577,11 @@
    * ⛔ Táž tabulka je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
    */
   function distProJidla(meals) {
+    // [2026-09-06, rozhodnutí Martina] DVĚ JÍDLA = PŘERUŠOVANÝ PŮST. Dva plnohodnotné
+    // chody v jednom okně, první o něco větší (55/45). Rovnoměrné 50/50 tu nedává smysl:
+    // druhé jídlo je večeře a ta se má spíš zmenšovat, ne zvětšovat.
+    // ⛔ Snídaně mezi ně NEPATŘÍ (viz `typyJidel`): kdo drží půst, ráno nejí.
+    if (meals === 2) return [0.55, 0.45];
     if (meals === 3) return [0.30, 0.40, 0.30];
     if (meals === 4) return [0.28, 0.34, 0.13, 0.25]; // svačina = malá (snack), ne druhý oběd
     if (meals === 5) return [0.22, 0.10, 0.30, 0.10, 0.28];
@@ -585,6 +590,7 @@
 
   /** Výchozí popisky jídel. Vlastní si volající předá přes `opts.mealNames`. */
   function vychoziNazvyJidel(meals) {
+    if (meals === 2) return ['První jídlo','Druhé jídlo'];
     if (meals === 3) return ['Snídaně','Oběd','Večeře'];
     if (meals === 4) return ['Snídaně','Oběd','Svačina','Večeře'];
     if (meals === 5) return ['Snídaně','Dopolední svačina','Oběd','Odpolední svačina','Večeře'];
@@ -600,6 +606,11 @@
    * ⛔ Táž funkce je v appce, hlídá parita-jidelnicku.mjs.
    */
   function typyJidel(meals) {
+    // [2026-09-06] Dvě jídla jsou DVA HLAVNÍ CHODY, ne snídaně a večeře. `breakfast` by
+    // pustil do prvního jídla sladký okruh (vločky, jogurt, ovoce) a při 55 % denních
+    // kalorií by z toho byla mísa müsli o 900 kcal. Půst se drží tak, že se ráno nejí,
+    // takže první jídlo dne je fakticky oběd.
+    if (meals === 2) return ['lunch','dinner'];
     if (meals === 3) return ['breakfast','lunch','dinner'];
     if (meals === 4) return ['breakfast','lunch','snack','dinner'];
     if (meals === 5) return ['breakfast','snack','lunch','snack','dinner'];
@@ -607,10 +618,10 @@
   }
 
   // ---- 2) Sestav den ----
-  // opts: { meals: 3..6, prefs, seed, db, mealNames }
+  // opts: { meals: 2..6, prefs, seed, db, mealNames }
   function assembleDay(targets, opts) {
     opts = opts || {};
-    var meals = Math.min(6, Math.max(3, opts.meals || 4));
+    var meals = Math.min(6, Math.max(2, opts.meals || 4));
     var seed = opts.seed || 0;
     var db = filterDb(opts.db, opts.prefs);
 
@@ -1059,21 +1070,37 @@
     // Nouzový režim bílkovin, viz STROP_PROT_NOUZE níž.
     var nouzeBilkovin = false;
     var STROP_PROT_NOUZE = 350;
+    /**
+     * ⛔⛔ [2026-09-06] STROPY PORCÍ JSOU NASTAVENÉ NA TALÍŘ, KTERÝ NESE ASI TŘETINU DNE.
+     * Při dvou jídlech (přerušovaný půst) nese jeden chod 45 až 55 % dne, takže tytéž
+     * stropy den systematicky podstřelí: změřeno na 800 dnech klasické stravy bez keto,
+     * 223 dnů mimo ±5 % kalorií, všechny na cílech 2400 a 3000 kcal, a hlášené varováním
+     * „z povolených porcí se přesnější den poskládat nedal". Faktor tedy zvedá strop
+     * ÚMĚRNĚ tomu, o kolik je talíř větší, nic víc.
+     * ⛔ NETÝKÁ SE `FOOD_CAP` (bílek 150 g) ani uzeniny (80 g): to nejsou stropy velikosti
+     * talíře, ale rozhodnutí, kolik té konkrétní věci se má sníst.
+     * ⛔ Táž konstanta i pravidlo jsou v appce (`src/engine/meal-gen-core.ts`).
+     */
+    var stropTalire = meals <= 2 ? 1.6 : 1;
+    /** ⛔ Zvětšený strop se zaokrouhlí na CELÝCH 5 g, a je to nutnost, ne kosmetika:
+     *  gramáž se na konci zaokrouhluje na 5 g a appka aplikuje strop AŽ PO zaokrouhlení,
+     *  zatímco web PŘED ním. Dokud jsou všechny stropy násobky pěti, vyjde to stejně. */
+    var vetsiTalir = function (g) { return stropTalire === 1 ? g : Math.round((g * stropTalire) / 5) * 5; };
     var stropG = function (f) {
       if (FOOD_CAP[f.id] != null) return FOOD_CAP[f.id];
-      if (PECIVO_VLOCKY_RE.test(f.id)) return STROP_PECIVO_G;
-      if (f.cat === 'fruit') return STROP_OVOCE_G;
+      if (PECIVO_VLOCKY_RE.test(f.id)) return vetsiTalir(STROP_PECIVO_G);
+      if (f.cat === 'fruit') return vetsiTalir(STROP_OVOCE_G);
       // [R8 2026-09-03] Pridany tuk 15 g, chia a lnene 20 g, ostatni orechy a seminka 30 g.
       var tuk = stropTuku(f);
-      if (tuk != null) return tuk;
+      if (tuk != null) return vetsiTalir(tuk);
       // [R9 2026-09-03] Varena priloha nejvys 300 g varene hmotnosti; u suche polozky
       // (nad 200 kcal/100 g) je to zhruba 100 g suche vahy. Pecivo, vlocky a musli maji
       // vlastni strop vys, tudy neprojdou.
       if (jeVarenaPriloha(f)) {
-        return (f.per100.kcal || 0) > SUCHA_PRILOHA_KCAL ? STROP_PRILOHA_SUCHA_G : STROP_PRILOHA_VARENA_G;
+        return vetsiTalir((f.per100.kcal || 0) > SUCHA_PRILOHA_KCAL ? STROP_PRILOHA_SUCHA_G : STROP_PRILOHA_VARENA_G);
       }
-      if (nouzeBilkovin && (f.cat === 'protein' || f.cat === 'dairy')) return STROP_PROT_NOUZE;
-      return CAP[f.cat];
+      if (nouzeBilkovin && (f.cat === 'protein' || f.cat === 'dairy')) return vetsiTalir(STROP_PROT_NOUZE);
+      return vetsiTalir(CAP[f.cat]);
     };
     function capPass() {
       all.forEach(function (it) {
@@ -1927,8 +1954,10 @@
     // Když se položka nemá kam přesunout (málo jídel, vysoký cíl), zůstane, kde je.
     // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
     // ─────────────────────────────────────────────────────────────────────────
+    // [2026-09-06] Týž faktor jako u porcí (`stropTalire`): dva chody denně jsou z podstaty
+    // větší talíře, jinak by přerozdělení hmotnosti stěhovalo položky, které nemají kam jít.
     var stropJidla = function (k) {
-      return (k === 'snack' || k === 'late') ? STROP_SVACINA_G : STROP_HLAVNI_JIDLO_G;
+      return vetsiTalir((k === 'snack' || k === 'late') ? STROP_SVACINA_G : STROP_HLAVNI_JIDLO_G);
     };
     var hmotnostJidla = function (m) {
       return m.items.reduce(function (s3, it) { return s3 + it.grams; }, 0);
