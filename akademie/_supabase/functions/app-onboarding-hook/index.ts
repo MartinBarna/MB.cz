@@ -66,6 +66,18 @@ const REGISTRACNI = new Set(["tvujcoach-registrace", "tvujcoach-zkusebka"]);
 // `drip-send` bere do fronty jen `status='active'` a `enroll_*` funkce `paused` neberou.
 const PRODUKT_SMAZANI = "tvujcoach-smazani";
 
+// ⛔ [2026-09-06] VRACENI PENEZ MUSI UMLCET PONAKUPNI MAILY.
+// Zmereno na zakaznici, ktera dostala refund 2. 9. v 11:42: pristup ji appka odebrala
+// spravne, ale maily placene trate jí chodily dal (`tc-48h-konzultace` 4. 9.,
+// `tc-ai` 5. 9.) a cekal ji jeste `tc-checkin` 10. 9., tedy mail o funkci, kterou uz nema.
+// Webhook appky pri refundu na Academy dosud nesahal vubec.
+//
+// ⚠️ PROC NE `tvujcoach-smazani`: ten da leadu `status='paused'`, cimz cloveku vypne
+//    i bezny newsletter. Kdo dostal penize zpet, se z mailu neodhlasil. Parkuje se proto
+//    stejne jako u odstoupeni od smlouvy (edge funkce `withdrawal`): jen trate
+//    `onboarding-nakup-%`, pres `next_send_at = null`, status zustava `active`.
+const PRODUKT_REFUND = "tvujcoach-refund";
+
 // [2026-09-03] Akviziční tratě UŽ registrace PŘEBÍJÍ (viz komentář v těle). Seznam
 // slouží jen k tomu, aby se původní trať a krok uložily do `meta.puvodni_trat`,
 // kdyby se člověk měl někdy vrátit nebo kdybychom chtěli změřit, odkud přišel.
@@ -104,6 +116,29 @@ Deno.serve(async (req: Request) => {
     }).eq("id", l.id);
     if (error) return json({ error: "pause_failed", detail: error.message }, 500);
     return json({ ok: true, status: "pauznuto", track: l.track });
+  }
+
+  // VRACENI PENEZ: zaparkovat ponakupni trate, bezny mailing nechat bezet.
+  if (product === PRODUKT_REFUND) {
+    const { data: parkovane, error: parkErr } = await admin
+      .from("leads")
+      .update({ next_send_at: null, updated_at: new Date().toISOString() })
+      .eq("email", email).eq("status", "active").like("track", "onboarding-nakup-%")
+      .select("id, track, step");
+    if (parkErr) return json({ error: "park_failed", detail: parkErr.message }, 500);
+    for (const p of parkovane ?? []) {
+      // Stopa v historii, at je pozdeji videt, PROC lead prestal dostavat maily.
+      // Selhani zapisu udalosti nesmi shodit uz provedene zaparkovani.
+      await admin.from("email_events").insert({
+        lead_id: p.id, step: p.step, type: "paused_refund",
+        detail: { track: p.track, duvod: "vraceni penez ve Stripu", zdroj: source },
+      }).then(() => {}, () => {});
+    }
+    return json({
+      ok: true,
+      status: (parkovane ?? []).length > 0 ? "zaparkovano" : "nic_k_parkovani",
+      trate: (parkovane ?? []).map((p) => p.track),
+    });
   }
 
   const track = TRACKY[product];

@@ -90,6 +90,24 @@ async function unsubscribe(token: string): Promise<boolean> {
   if (!lead.unsubscribed_at) {
     await a.from('leads').update({ unsubscribed_at: kdy }).eq('id', lead.id);
     await zapisOdhlaseni(a, lead);
+
+    // ⛔⛔ [6. 9. 2026, Martin] "Kdo se odhlasi, musi ven z databaze, aby se to nemohlo
+    // stavat." Do dneska tu koncil `status='unsubscribed'`, coz je zaznam v radku, ktery
+    // pri pristim importu ze SimpleShopu, Academy nebo formulare zase prepsal nekdo jiny.
+    // `odhlas_a_odstran` zapise adresu na trvaly seznam, zazalohuje cely radek, odpoji
+    // (a NESMAZE) historii mailu a teprve pak lead odstrani. Navrat pak zastavi trigger
+    // `leads_respektuj_odhlaseni` primo v databazi.
+    //
+    // ⚠️ Poradi je zamerne: mereni `zapisOdhlaseni` potrebuje lead_id, ktere po smazani
+    //    neexistuje, takze bezi PRED tim. Selhani tady odhlaseni neshodi, clovek uz
+    //    ma `status='unsubscribed'` a `next_send_at=null`, tedy zadne maily.
+    const { error: chybaOdstraneni } = await a.rpc('odhlas_a_odstran', {
+      p_lead_id: lead.id,
+      p_zdroj: 'unsubscribe-link',
+    });
+    if (chybaOdstraneni) {
+      console.error('[unsubscribe] odstraneni z databaze selhalo, odhlaseni ale plati:', chybaOdstraneni.message);
+    }
   }
   return true;
 }
