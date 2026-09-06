@@ -111,6 +111,15 @@
           <p class="orez-vysvetleni" id="strukturaVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
         </div>
         <div style="grid-column:1/-1">
+          <label>Opakování a váha</label>
+          <select id="opakovani">
+            <option value="tezsi">Těžší váhy, míň opakování</option>
+            <option value="standard" selected>Standard podle cíle</option>
+            <option value="lehci">Střední váhy, víc opakování</option>
+          </select>
+          <p class="orez-vysvetleni" id="opakovaniVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
+        </div>
+        <div style="grid-column:1/-1">
           <label>Když se plán nevejde do objemu, co ubrat první?</label>
           <select id="orezStyl">
             <option value="velke" selected>Držet velké cviky (doporučeno)</option>
@@ -168,7 +177,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/workout-gen.js?v=20260906a"></script>
+  <script src="/assets/workout-gen.js?v=20260906b"></script>
   <script>
   (function(){
     var DB=null, seed=0, logoData='', lastPlan=null, restoring=false;
@@ -188,10 +197,10 @@
 
     // Uložení posledního plánu: plán je deterministický (stejné zadání + seed = stejný plán),
     // takže stačí uložit vstupy a seed - po návratu se vykreslí přesně to, co trenér viděl.
-    // ⛔ `struktura` je NEPOVINNÁ i při čtení: záznamy uložené před 6. 9. 2026 ji nemají
-    // a musí se dál načíst. Bez klíče zůstane select na výchozím „Standard".
+    // ⛔ `struktura` i `opakovani` jsou NEPOVINNÉ i při čtení: záznamy uložené před
+    // 6. 9. 2026 je nemají a musí se dál načíst. Bez klíče zůstane select na „Standard".
     // ⚠️ `orezStyl` se tu neukládal a dál neukládá; to je stará mezera, ne moje změna.
-    function saveState(){ try{ localStorage.setItem('ba_workout_last', JSON.stringify({ location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:$('daysCount').value, client:$('client').value, seed:seed, struktura:($('struktura')?$('struktura').value:'standard') })); }catch(e){} }
+    function saveState(){ try{ localStorage.setItem('ba_workout_last', JSON.stringify({ location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:$('daysCount').value, client:$('client').value, seed:seed, struktura:($('struktura')?$('struktura').value:'standard'), opakovani:($('opakovani')?$('opakovani').value:'standard') })); }catch(e){} }
     function loadState(){ try{ return JSON.parse(localStorage.getItem('ba_workout_last')||'null'); }catch(e){ return null; } }
 
     // Režim klienta koučinku (?klient=1, volitelně &days=&goal= z klientské sekce): stránka
@@ -224,6 +233,7 @@
         if(st.level)$('level').value=st.level; if(st.goal)$('goal').value=st.goal;
         if(st.days)$('daysCount').value=st.days; if(st.client)$('client').value=st.client;
         if(st.struktura&&$('struktura')){ $('struktura').value=st.struktura; obnovStrukturaText(); }
+        if(st.opakovani&&$('opakovani')){ $('opakovani').value=st.opakovani; obnovOpakovaniText(); }
         seed=st.seed||0;
         restoring=true; generate(false); restoring=false;
         $('dbstate').textContent='Obnovil jsem tvůj poslední plán (' + d.length + ' cviků připraveno).';
@@ -231,7 +241,7 @@
     }).catch(function(){ $('dbstate').textContent='⚠️ Databázi se nepodařilo načíst.'; });
     loadBrand();
 
-    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed, orezStyl:($('orezStyl')?$('orezStyl').value:'velke'), struktura:($('struktura')?$('struktura').value:'standard') }; }
+    function opts(){ return { location:$('location').value, equip:$('equip').value, level:$('level').value, goal:$('goal').value, days:+$('daysCount').value, seed:seed, orezStyl:($('orezStyl')?$('orezStyl').value:'velke'), struktura:($('struktura')?$('struktura').value:'standard'), opakovani:($('opakovani')?$('opakovani').value:'standard') }; }
     // Vysvětlení přepínače stylu ořezu. Text je psaný pro laika: první věta říká, co se
     // stane, druhá komu to sedí. Schválně bez zkratek MEV, MAV a MRV a bez toho, aby byla
     // některá volba označená za správnou.
@@ -250,7 +260,7 @@
     // a to musí být z textu poznat. ⛔ Tytéž texty má appka (`workout-generator.tsx`).
     var STRUKTURA_TEXT = {
       min_cviku: 'Míň cviků v tréninku, zato pět až šest sérií na cvik. Sedí tomu, kdo chce jít do hloubky u pár základních cviků a nemá rád dlouhé tréninky s přeskakováním.',
-      standard: 'Čtyři série na cvik. Zlatá střední cesta, se kterou vyjde většina lidí, a výchozí nastavení.',
+      standard: 'Čtyři série na cvik. Zlatá střední cesta a výchozí nastavení.',
       vic_cviku: 'Víc různých cviků, dvě až tři série na každý (u slabších partií občas čtyři, aby se dodržel objem). Sedí tomu, kdo chce partii zasáhnout z víc úhlů a nechce dělat pořád totéž.'
     };
     function obnovStrukturaText(){
@@ -258,6 +268,19 @@
       if (el && sel) el.textContent = STRUKTURA_TEXT[sel.value] || '';
     }
     if ($('struktura')) { $('struktura').addEventListener('change', obnovStrukturaText); obnovStrukturaText(); }
+    // [2026-09-06] Opakování a váha (Martin 6. 9.). ⛔ Počet sérií se tím NEMĚNÍ, mění se
+    // opakování a pauza. Jedna věta na volbu, žádná není označená za správnou.
+    // ⛔ Tytéž texty má appka (`workout-generator.tsx`).
+    var OPAKOVANI_TEXT = {
+      tezsi: 'Míň opakování a těžší váhy. Sedí tomu, kdo chce hlavně přidávat na čince a nevadí mu delší pauzy.',
+      standard: 'Opakování a pauzy přesně podle cíle, který sis vybral. Výchozí nastavení.',
+      lehci: 'Víc opakování se střední vahou a kratší pauzy. Sedí tomu, kdo si na těžké váhy netroufá nebo se vrací po pauze.'
+    };
+    function obnovOpakovaniText(){
+      var el = $('opakovaniVysvetleni'), sel = $('opakovani');
+      if (el && sel) el.textContent = OPAKOVANI_TEXT[sel.value] || '';
+    }
+    if ($('opakovani')) { $('opakovani').addEventListener('change', obnovOpakovaniText); obnovOpakovaniText(); }
 
 
     function render(plan){

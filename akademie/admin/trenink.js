@@ -31,7 +31,7 @@
   'use strict';
 
   var DB = null;            // pole cviků, načte se jednou za život stránky
-  var WG_URL = '/assets/workout-gen.js?v=20260906a';
+  var WG_URL = '/assets/workout-gen.js?v=20260906b';
   var DB_URL = '/assets/exercise-db.json?v=20260906b';
 
   function esc(s) {
@@ -144,6 +144,12 @@
   var VYBAVENI = [['vse', 'všechno vybavení'], ['cinky', 'jednoručky a kettlebell'], ['telo', 'jen vlastní váha']];
   var UROVNE = [['zacatecnik', 'začátečník'], ['pokrocily', 'pokročilý'], ['zkuseny', 'zkušený']];
   var CILE = [['hubnuti', 'hubnutí'], ['svaly', 'svaly (hypertrofie)'], ['sila', 'síla'], ['kondice', 'vytrvalost / kondice']];
+  // [2026-09-06, Martin „ano i pro klienty"] Obě volby, které má klient v appce i na webu,
+  // má i tenhle adminní generátor. Bez nich by koučinkový klient dostal dokument postavený
+  // na výchozích hodnotách, i když si v appce vybral něco jiného, a nikde by to nekřiklo.
+  // ⛔ Objem po partiích ani jedna volba nemění, jen rozložení sérií a rozsah opakování.
+  var STRUKTURY = [['min_cviku', 'míň cviků, víc sérií'], ['standard', 'standard (4 série na cvik)'], ['vic_cviku', 'víc cviků, míň sérií']];
+  var OPAKOVANI = [['tezsi', 'těžší váhy, míň opakování'], ['standard', 'standard podle cíle'], ['lehci', 'střední váhy, víc opakování']];
 
   // =====================================================================
   //  MOUNT
@@ -154,7 +160,8 @@
     var S = {
       vstup: {
         dny_treninku: 3, kde_cvici: 'fitko', vybaveni: 'vse', level: 'zacatecnik',
-        cil: 'svaly', sport: '', seed: 0, vyloucene_partie: [], vyloucene_cviky: []
+        cil: 'svaly', struktura: 'standard', opakovani: 'standard',
+        sport: '', seed: 0, vyloucene_partie: [], vyloucene_cviky: []
       },
       program: null,
       // Volný text „Zranění a omezení". Předvyplní se ze `zdravi` z dotazníku a Martin ho
@@ -216,11 +223,15 @@
         + sel('tpVyb', 'Vybavení', VYBAVENI, S.vstup.vybaveni)
         + sel('tpLevel', 'Úroveň', UROVNE, S.vstup.level)
         + sel('tpCil', 'Cíl', CILE, S.vstup.cil)
+        + sel('tpStruktura', 'Struktura tréninku', STRUKTURY, S.vstup.struktura)
+        + sel('tpOpakovani', 'Opakování a váha', OPAKOVANI, S.vstup.opakovani)
         + '<label style="font-size:.75rem;color:#8F8A99;">Varianta<br><input type="number" id="tpSeed" min="0" max="99" value="' + S.vstup.seed + '" style="width:70px;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'
         + '<label style="flex:1;min-width:180px;font-size:.75rem;color:#8F8A99;">Jméno do hlavičky<br><input type="text" id="tpJmeno" value="' + esc(ctx.name || '') + '" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'
         + '<label style="min-width:120px;font-size:.75rem;color:#8F8A99;">Oslovení (5. pád)<br><input type="text" id="tpVok" value="' + esc(ctx.vok || '') + '" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'
         + '</div>'
-        + '<p class="muted" style="margin:8px 0 0;font-size:.75rem;">„Varianta" jen zamíchá výběrem cviků. Stejné zadání a stejná varianta dají vždycky totožný plán.</p>'
+        + '<p class="muted" style="margin:8px 0 0;font-size:.75rem;">„Varianta" jen zamíchá výběrem cviků. Stejné zadání a stejná varianta dají vždycky totožný plán. '
+        + '„Struktura" rozhodne, jestli bude v tréninku míň cviků po víc sériích, nebo naopak; „Opakování a váha" posune rozsah opakování a pauzy. '
+        + 'Ani jedna z nich nemění týdenní objem po partiích, jen jeho rozložení.</p>'
         + '</div>';
 
       // 2) omezení
@@ -303,6 +314,8 @@
       S.vstup.vybaveni = $('tpVyb').value;
       S.vstup.level = $('tpLevel').value;
       S.vstup.cil = $('tpCil').value;
+      if ($('tpStruktura')) S.vstup.struktura = $('tpStruktura').value;
+      if ($('tpOpakovani')) S.vstup.opakovani = $('tpOpakovani').value;
       S.vstup.seed = Math.max(0, Math.min(99, Number($('tpSeed').value) || 0));
       var om = $('tpOmezeni');
       if (om) S.omezeni = (om.value || '').trim();

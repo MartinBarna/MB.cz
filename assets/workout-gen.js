@@ -27,6 +27,51 @@
     vydrz:   { label:'Vytrvalost / tonus',   sets:3, reps:'15–20', rest:'30–45 s', accessReps:'15–25' }
   };
 
+  /**
+   * ⛔⛔ OPAKOVÁNÍ A VÁHA (rozhodnutí Martina 6. 9. 2026).
+   * Klient si volí, jestli chce jít do těžších vah s méně opakováními, nebo naopak.
+   * ⛔ OBJEM SE TÍM NEMĚNÍ. Mění se JEN `reps`, `accessReps` a `rest`, nikdy `sets`:
+   * o počtu sérií rozhoduje cíl (GOALS) a struktura tréninku (STRUKTURY), ne tahle volba.
+   * Chybějící hodnota = `standard`, tedy přesně dnešní čísla z GOALS.
+   *
+   * ⚠️ `sila` nemá `tezsi`, a je to záměr: 3–5 opakování už JE těžký konec a pod něj se
+   * v generátoru nechodí (jednorázová maxima si klient neplánuje z webu).
+   * ⚠️ ZAČÁTEČNÍK A TĚŽŠÍ VÁHY (Martin 6. 9. 2026): u hlavních cviků nikdy pod 6 opakování.
+   * Drží to samotná tabulka (`svaly` i `kondice` mají v `tezsi` 6–8, `vydrz` 12–15,
+   * `sila` se nemění), takže tu není žádná runtime podlaha navíc, která by nic nedělala.
+   * Podlahu hlídá test v appce (`src/engine/__tests__/training.test.ts`).
+   * ⛔ Táž tabulka je v appce (`src/engine/workout-gen-core.ts`), hlídá parita-generatoru.mjs.
+   */
+  var OPAKOVANI = {
+    // Síla: „těžší" chybí schválně (viz komentář nahoře), „lehčí" je pořád silový rozsah.
+    sila: {
+      lehci: { reps: '5–8', accessReps: '8–12', rest: '90–120 s' }
+    },
+    svaly: {
+      tezsi: { reps: '6–8', accessReps: '8–10', rest: '90–120 s' },
+      lehci: { reps: '12–15', accessReps: '15–20', rest: '45–60 s' }
+    },
+    // Hubnutí jede na stejných opakováních jako „Svaly" (rozhodnutí z 2. 9.), takže i tady
+    // musí mít stejné posuny. Liší se objemem a kardio finisherem, ne rozsahem opakování.
+    kondice: {
+      tezsi: { reps: '6–8', accessReps: '8–10', rest: '90–120 s' },
+      lehci: { reps: '12–15', accessReps: '15–20', rest: '45–60 s' }
+    },
+    vydrz: {
+      tezsi: { reps: '12–15', accessReps: '12–15', rest: '45–60 s' },
+      lehci: { reps: '20–25', accessReps: '20–30', rest: '30–45 s' }
+    }
+  };
+
+  /** Cíl s dosazenou volbou opakování. `label` i `sets` zůstávají z GOALS beze změny. */
+  function cilSOpakovanim(goal, volba) {
+    var g = GOALS[goal] || GOALS.svaly;
+    if (!volba || volba === 'standard') return g;
+    var spec = (OPAKOVANI[goal] || {})[volba];
+    if (!spec) return g;
+    return { label: g.label, sets: g.sets, reps: spec.reps, rest: spec.rest, accessReps: spec.accessReps };
+  }
+
   // sloty: {by:'pattern'|'muscle', val, access?:true}; access = doplňkový (méně sérií, víc opakování)
   var P = function (v) { return { by:'pattern', val:v }; };
   var M = function (v, a) { return { by:'muscle', val:v, access:a }; };
@@ -550,7 +595,9 @@
     var seed = opts.seed || 0;
     var pool = filterDb(db, opts);
     setMuscleDb(db);
-    var g = GOALS[opts.goal] || GOALS.svaly;
+    // [2026-09-06] Opakování a váha: volba přepíše reps, accessReps a rest cíle.
+    // ⛔ `sets` zůstává z GOALS, o objemu rozhoduje cíl a struktura, ne tahle volba.
+    var g = cilSOpakovanim(opts.goal, opts.opakovani);
     // [2026-09-06] Struktura tréninku: kolik sérií na cvik a na kolik cviků se doplňuje
     // hubený den. Cíl (`GOALS`) dál rozhoduje o opakováních, pauze a o tom, kolik sérií
     // je pro daný cíl „základ"; struktura s tím číslem jen hýbe nahoru nebo dolů.
@@ -797,7 +844,7 @@
     var plan = buildPlan(filtrovana, {
       location: vstup.kde_cvici, equip: vstup.vybaveni, level: vstup.level,
       goal: goal, days: dny, seed: vstup.seed || 0, orezStyl: vstup.orezStyl,
-      struktura: vstup.struktura
+      struktura: vstup.struktura, opakovani: vstup.opakovani
     });
 
     var jmenaDnu = ROZVRH_DNU[dny] || ROZVRH_DNU[3];
