@@ -859,14 +859,19 @@
     return kopie;
   }
 
-  function nahradaPro(pool, cvik, obsazene, pouzite) {
+  // Náhrada „když ho nemáš kde dělat". `vyhozene` je TVRDÝ zákaz, ne jen preference:
+  // poslední záchranná větev níž sahá i po cvicích, které v plánu už jsou, a bez toho
+  // zákazu by mezi ně spadl i cvik, který klient právě ťuknutím vyhodil. Radši žádná
+  // náhrada (null, volající s tím počítá) než nabídnout zpátky odmítnutý cvik.
+  // ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+  function nahradaPro(pool, cvik, obsazene, pouzite, vyhozene) {
     var mmC = musclesFromDb(cvik.muscle, cvik.pattern, cvik.name);
     function stejnySval(e) {
       var mm = musclesFromDb(e.muscle, e.pattern, e.name);
       return mm.primary.length === mmC.primary.length && mm.primary.every(function (p, i) { return p === mmC.primary[i]; });
     }
     function sedi(e) {
-      return e.id !== cvik.id && e.pattern === cvik.pattern && e.muscle === cvik.muscle && stejnySval(e);
+      return e.id !== cvik.id && !vyhozene[e.id] && e.pattern === cvik.pattern && e.muscle === cvik.muscle && stejnySval(e);
     }
     var kandidati = pool.filter(sedi);
     var volny = kandidati.filter(function (e) { return !obsazene[e.id]; });
@@ -927,7 +932,18 @@
 
     var jmenaDnu = ROZVRH_DNU[dny] || ROZVRH_DNU[3];
     var obsazene = {};
-    plan.days.forEach(function (d) { d.exercises.forEach(function (pe) { obsazene[pe.ex.id] = 1; }); });
+    // ⛔⛔ [6. 9. 2026 pozdě večer] VYHOZENÝ CVIK PATŘÍ MEZI OBSAZENÉ, i když v plánu už není.
+    // Bez `puvodniId` nabídla appka jako náhradu přesně ten cvik, který klient právě vyhodil
+    // (změřeno revizí: 70 % výměn). Tady na webu se `nahrada` sice nevykresluje, ale jádro
+    // musí být bajt v bajt stejné jako v appce, jinak se zrcadla rozejdou a hlídač spadne.
+    // ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+    var vyhozene = {};
+    plan.days.forEach(function (d) {
+      d.exercises.forEach(function (pe) {
+        obsazene[pe.ex.id] = 1;
+        if (pe.puvodniId) { obsazene[pe.puvodniId] = 1; vyhozene[pe.puvodniId] = 1; }
+      });
+    });
     // Co už bylo nabídnuto jako náhrada, ať jeden cvik neslouží jako náhrada jedenácti řádkům.
     var pouziteNahrady = {};
 
@@ -936,7 +952,7 @@
         var kardio = pe.ex.pattern === 'kardio';
         var doplnkovy = !!pe.access;
         var ex = pe.ex;
-        var n = kardio ? null : nahradaPro(plan.pool, ex, obsazene, pouziteNahrady);
+        var n = kardio ? null : nahradaPro(plan.pool, ex, obsazene, pouziteNahrady, vyhozene);
         return {
           id: ex.id, nazev: ex.name, partie: ex.muscle, pattern: ex.pattern,
           serie: pe.sets, opakovani: pe.reps,
