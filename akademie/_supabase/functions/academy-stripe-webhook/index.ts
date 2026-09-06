@@ -402,6 +402,16 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // a BEZ appky. Kdyby tenhle řádek chyběl, zaplacený videokurz by spadl do větve
     // „neznámý odkaz" a člověk by přístup nedostal, aniž by to kdekoli křiklo.
     "plink_1TymiHBq3rKubW9kz1vYnyP1=videokurz," +
+    // ⛔⛔ VIDEOKURZ 1 490 Kč (`plink_1UAy87…`), od 1. 9. 2026. TENHLE ŘÁDEK TU 5 DNÍ CHYBĚL.
+    // Commit `bcdd553a4` z 1. 9. zdražil kurz z 800 na 1 490 Kč a na web dal NOVÝ odkaz
+    // (`buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h`), ale do téhle mapy ho nikdo nedopsal.
+    // Každá platba za kurz od 1. 9. proto spadla do větve „neznámý odkaz": HTTP 200,
+    // žádný entitlement, žádná uvítací trať, žádná affiliate provize. A protože je
+    // 1 490 Kč pod hranicí alertu, nekřiklo to ani do mailu. Člověk zaplatil, na
+    // `/dekuji-videokurz/` si přečetl „videokurz se odemkne sám" a neodemklo se nic.
+    // ⚠️ Starý osmisetkorunový odkaz ZŮSTÁVÁ: pořád může dorazit opožděný webhook
+    //    nebo přehrání staré události.
+    "plink_1UAy87Bq3rKubW9kVxFtxWss=videokurz," +
     // ⭐ KONZULTACE, DVA ODKAZY NA TÝŽ PRODUKT, ALE JINÝ KLÍČ KATALOGU (30. 7. 2026).
     // Rozdíl je JEN v tom, jestli je v ceně videokurz, a právě proto to musí být dva
     // klíče a ne jeden: podle klíče se rozhoduje, jestli se udělí bonusový kurz.
@@ -1733,7 +1743,13 @@ Deno.serve(async (req) => {
           // ⇒ Hranice podle částky: appka prodává za 249 a 499 Kč, takže cokoli
           //    od 5 000 Kč výš je platba, kterou tahle funkce má znát.
           // ⚠️ Hranice je v haléřích, `amount_total` taky.
-          const HRANICE_ALERTU_HALERU = 500_000;
+          // ⛔⛔ [6. 9. 2026] HRANICE 5 000 Kč BYLA PŘÍLIŠ VYSOKO A PRÁVĚ TO TU DÍRU SCHOVALO.
+          //    Videokurz zdražil 1. 9. na 1 490 Kč, nový odkaz nikdo nedopsal do mapy výš,
+          //    a protože je 1 490 pod 5 000, nekřiklo to ani jednou. Pět dní ticho.
+          //    Nová hranice je 1 000 Kč: pod ni patří jen předplatné appky (249 a 499),
+          //    a to sem chodí jako `mode: subscription`, ne `payment`. Cokoli dražšího,
+          //    co tahle funkce nezná, je podezřelé a musí se ozvat.
+          const HRANICE_ALERTU_HALERU = 100_000;
           const castkaH = Number(obj.amount_total ?? 0);
           if (Number.isFinite(castkaH) && castkaH >= HRANICE_ALERTU_HALERU) {
             await alertAdmin("🔴 Stripe: ZAPLACENO PŘES NEZNÁMÝ ODKAZ, přístup NEUDĚLEN", {
