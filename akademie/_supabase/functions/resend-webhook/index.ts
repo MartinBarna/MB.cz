@@ -133,6 +133,24 @@ Deno.serve(async (req) => {
       //    nestala (4 stiznosti celkem od 11. 7. 2026) a stat se to nema.
       ...(t === "complaint" ? { unsubscribed_at: new Date().toISOString() } : {}),
     }).eq("id", lead_id);
+
+    // ⛔ [6. 9. 2026] STIZNOST NA SPAM PATRI NA TRVALY SEZNAM ODHLASENYCH.
+    // Do dneska tu koncil `status='unsubscribed'`, coz je zaznam v RADKU, ktery pri dalsim
+    // importu (SimpleShop, Academy, formular) prepise nekdo jiny. Kdo nas nahlasil jako spam,
+    // se nesmi vratit uz vubec. `odhlas_a_odstran` adresu zapise na seznam a lead zmrazi;
+    // od te chvile ho drzi trigger `leads_respektuj_odhlaseni` primo v databazi.
+    // ⚠️ JEN u `complaint`. Bounce je mrtva adresa, ne rozhodnuti cloveka, a na trvaly
+    //    seznam nepatri: az si ji nekdo opravi, ma mit pravo maily zase dostavat.
+    // Best-effort: pad tady nesmi shodit uz provedeny zapis stavu.
+    if (t === "complaint") {
+      const { error: chybaSeznamu } = await admin.rpc("odhlas_a_odstran", {
+        p_lead_id: lead_id,
+        p_zdroj: "spam-complaint",
+      });
+      if (chybaSeznamu) {
+        console.error("[resend-webhook] zapis stiznosti na trvaly seznam selhal:", chybaSeznamu.message);
+      }
+    }
   }
   return json({ ok: true, type: t });
 });
