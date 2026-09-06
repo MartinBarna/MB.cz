@@ -2220,7 +2220,14 @@
     var item = meal.items[itemIndex]; if (!item) return day;
     var db = filterDb(opts.db, opts.prefs);
     var cat = item.food.cat;
-    var catAll = db.filter(function (f) { return f.cat === cat; });
+    // ⛔⛔ [6. 9. 2026] KANDIDÁTI MUSÍ VYNECHAT I OSTATNÍ POLOŽKY TÉHOŽ JÍDLA.
+    // Do dneška se vylučovala jen ta právě měněná, takže ⇄ umělo dát do jedné snídaně
+    // tutéž potravinu dvakrát (změřeno: 60 g a 185 g dušené šunky ve dvou řádcích).
+    // ⚠️ Aktuální položka v seznamu ZŮSTÁVÁ schválně: stabilní indexování a posun o 1 při
+    //    kolizi je to, díky čemu se rostoucím seedem dostane na řadu každá potravina.
+    var vJidle = {};
+    meal.items.forEach(function (it, i) { if (i !== itemIndex) vJidle[it.food.id] = 1; });
+    var catAll = db.filter(function (f) { return f.cat === cat && !vJidle[f.id]; });
     if (!catAll.filter(function (f) { return f.id !== item.food.id; }).length) return day;
     var list = catAll;
     var prefer = preferForMeal(cat, meal.kind || typZNazvu(meal.name), jeSladkeJidlo(meal));
