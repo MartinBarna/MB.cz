@@ -154,6 +154,10 @@
           <h3>🏋️ Tréninkový plán</h3>
           <p>Sestav si tréninkový plán podle toho, kolikrát týdně stíháš a kde cvičíš. Databáze cviků s popisem techniky je součástí.</p>
         </a>
+        <a class="kcard" id="toolCalc" href="/akademie/nastroje/kalkulacka/" style="text-decoration:none;display:block;">
+          <h3>🧮 Výpočet kalorií a maker</h3>
+          <p>Spočítej si kalorie, bílkoviny, sacharidy, tuky i vlákninu podle váhy, aktivity a cíle. Když máš zadání od Martina, drž se jeho čísel.</p>
+        </a>
       </div>
 
       <!-- stat karty -->
@@ -228,13 +232,13 @@
         <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Kdy a jak často vyplnit report?</summary>
           <p style="margin:6px 0 10px;">Jednou týdně, za celý uplynulý týden, nejlíp v neděli večer nebo v pondělí ráno. Formulář tě provede krok za krokem, kopie přijde tobě i mně. Já ho projdu a ozvu se ti s úpravami zadání.</p></details>
         <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Co znamenají grafy a barvy v historii?</summary>
-          <p style="margin:6px 0 10px;">Váha a míry jsou týdenní průměry z reportů, jednotlivé dny kolísají vodou. Kalorie, bílkoviny a kroky srovnávám s cílem, který platil ten týden, proto se historie nepřebarví, když ti cíl posunu. Zelená znamená v pásmu 5 % kolem cíle (u bílkovin i nad ním), oranžová mimo.</p></details>
+          <p style="margin:6px 0 10px;">Váha a míry jsou týdenní průměry z reportů, jednotlivé dny kolísají díky fluktuacím tekutin. Kalorie, bílkoviny a kroky srovnávám s cílem, který platil ten týden, proto se historie nepřebarví, když ti cíl posunu. Zelená znamená v pásmu 5 % kolem cíle (u bílkovin i nad ním), oranžová mimo.</p></details>
         <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Zapomněl/a jsem den zapsat.</summary>
-          <p style="margin:6px 0 10px;">Nic se neděje. Doplň, co si pamatuješ, s rezervou nahoru, a v reportu uveď, kolik dní máš zapsaných. Počítám s tím a průměr beru jen ze zapsaných dní.</p></details>
+          <p style="margin:6px 0 10px;">Doplň, co si pamatuješ, snaž se ten odhad nepodcenit a v reportu uveď, kolik dní máš zapsaných. Počítám s tím a průměr beru jen ze zapsaných dní.</p></details>
         <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Kdy mi psát rovnou a kdy počkat na report?</summary>
-          <p style="margin:6px 0 10px;">Zdravotní věci, bolest při tréninku a cokoli, co tě blokuje víc než pár dní, piš hned na WhatsApp. Chuť, hlad, kolísání váhy a běžné dotazy k jídlu patří do reportu, tam to vidím v souvislostech. Rychlé dotazy zodpoví i AI Martin (zlaté tlačítko vpravo dole), velké věci nech na mě.</p></details>
+          <p style="margin:6px 0 10px;">Zdravotní věci, bolest při tréninku, situace, které vzniknou během týdne a potřebuješ se poradit, a cokoli, co tě blokuje víc než pár dní, piš hned na WhatsApp. Chuť, hlad, kolísání váhy, změny na mírách či plán na další týdny patří do reportu, tam to vidím v souvislostech. Rychlé dotazy zodpoví i AI Martin (zlaté tlačítko vpravo dole), velké věci nech na mě.</p></details>
         <details><summary style="cursor:pointer;font-weight:600;padding:6px 0;">Jak otevřu dokumenty od Martina?</summary>
-          <p style="margin:6px 0 10px;">Klepni na název, dokument se otevře v nové kartě a PDF si můžeš uložit. Když se nic neotevře, povol vyskakovací okna pro martinbarna.cz nebo zkus jiný prohlížeč. Jídelníček a tréninkový plán si navíc kdykoli poskládáš sám v nástrojích nahoře, čísla od Martina už tam máš předvyplněná.</p></details>
+          <p style="margin:6px 0 10px;">Klepni na název, dokument se otevře v nové kartě a PDF si můžeš uložit. Když se nic neotevře, povol vyskakovací okna pro martinbarna.cz nebo zkus jiný prohlížeč. Jídelníček, tréninkový plán i výpočet kalorií si navíc kdykoli uděláš sám v nástrojích nahoře, čísla od Martina už tam máš předvyplněná.</p></details>
       </div>
 
       <!-- vyhody -->
@@ -544,9 +548,10 @@
     // Nástroje jídelníčku a tréninku jsou sdílené s trenéry z Academy. Klient koučinku je
     // otevírá s ?klient=1: stránka pak mluví k němu (ne „zadej údaje klienta") a jídelníček
     // dostane čísla od Martina rovnou v adrese, místo aby si je klient přepočítával z tabulek.
-    var tm = el("toolMeal"), tt = el("toolTrain");
+    var tm = el("toolMeal"), tt = el("toolTrain"), tc = el("toolCalc");
     if(tm) tm.href = "/akademie/nastroje/jidelnicek/?klient=1";
     if(tt) tt.href = "/akademie/nastroje/trenink/?klient=1";
+    if(tc) tc.href = "/akademie/nastroje/kalkulacka/?klient=1";
     if(!targets) return;
     var filled = TG_POLE.filter(function(p){ return tgVal(p.k) != null; });
     var filledVed = TG_POLE_VEDLEJSI.filter(function(p){ return tgVal(p.k) != null; });

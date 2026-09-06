@@ -119,7 +119,7 @@
         </div>
         <div class="targets" id="targets" style="margin-top:1rem;"></div>
         <div class="meta" id="meta"></div>
-        <p class="note">Hodnoty jsou výchozí odhad (Mifflin–St Jeor + koeficient aktivity a cíle). Vždy je dolaď podle reálného vývoje klienta, pokud po 2–3 týdnech váha nejde podle plánu, uprav příjem.</p>
+        <p class="note" id="calcNote">Hodnoty jsou výchozí odhad (Mifflin–St Jeor + koeficient aktivity a cíle). Vždy je dolaď podle reálného vývoje klienta, pokud po 2–3 týdnech váha nejde podle plánu, uprav příjem.</p>
         <div class="actions no-print">
           <button class="btn ghost" id="print">🖨️ Uložit / tisk (PDF)</button>
           <a class="btn ghost" id="genLink" href="/akademie/nastroje/jidelnicek/">🥗 Chceš z toho hotový jídelníček? →</a>
@@ -146,6 +146,24 @@
     $('logofile').addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(!f)return; if(f.size>500000){ alert('Logo je moc velké (max ~500 kB) - zkus menší obrázek.'); this.value=''; return; } var r=new FileReader(); r.onload=function(){ logoData=r.result; $('logoclear').style.display=''; saveBrand(); }; r.readAsDataURL(f); });
     $('logoclear').addEventListener('click',function(){ logoData=''; $('logofile').value=''; $('logoclear').style.display='none'; saveBrand(); });
     loadBrand();
+
+    // Režim klienta koučinku (?klient=1 z klientské sekce): stránka mluví ke klientovi místo
+    // k trenérovi, pole „Jméno klienta" a „Moje značka" se schovají. Stejný přepínač má
+    // generátor jídelníčku i tréninku. ⛔ Výpočet se nemění, jen texty a co je vidět.
+    var klientMode=false;
+    try{
+      klientMode = new URLSearchParams(location.search).get('klient')==='1';
+      if(klientMode){
+        var kk=document.querySelector('.kick'); if(kk) kk.innerHTML='<span class="dot"></span> Pro klienty koučinku';
+        var cl=$('client'); if(cl&&cl.parentElement) cl.parentElement.style.display='none';
+        var bb=$('brandbox'); if(bb) bb.style.display='none';
+        var ld=document.querySelector('.lead');
+        if(ld) ld.textContent='Zadej svoje údaje a spočítám ti denní kalorie a makra (bílkoviny, sacharidy, tuky, vláknina) podle cíle. Počítá to stejně jako generátor jídelníčku, takže ti čísla budou sedět dohromady.';
+        var cn=$('calcNote');
+        if(cn) cn.textContent='Hodnoty jsou výchozí odhad (Mifflin–St Jeor + koeficient aktivity a cíle). Když máš zadání přímo od Martina, drž se jeho čísel; tenhle výpočet ukazuje hlavně to, odkud se berou. Pokud po 2–3 týdnech váha nejde podle plánu, napiš to do reportu.';
+      }
+    }catch(e){}
+
     function calc(){
       var t=window.MealGen.computeTargets({ sex:$('sex').value, age:$('age').value, weight:$('weight').value, height:$('height').value, activity:$('activity').value, goal:$('goal').value });
       $('targets').innerHTML=
@@ -171,12 +189,13 @@
       } else { bh.classList.add('empty'); bh.innerHTML=''; }
       var acc=/^#[0-9a-fA-F]{6}$/.test(ac)?ac:'#EBB12C';
       $('result').style.setProperty('--acc', acc);
-      $('goalLbl').textContent=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'')+' · cíl: '+t.goalLabel;
+      var lbl=(c?('Pro: '+c):'')+(tn?((c?' · ':'')+'připravil/a: '+tn):'');
+      $('goalLbl').textContent=(lbl?lbl+' · ':'')+'cíl: '+t.goalLabel;
       // předej zadání do generátoru jídelníčku (předvyplní se a rovnou vygeneruje)
       $('genLink').href='/akademie/nastroje/jidelnicek/?sex='+encodeURIComponent($('sex').value)+
         '&age='+encodeURIComponent($('age').value)+'&h='+encodeURIComponent($('height').value)+
         '&w='+encodeURIComponent($('weight').value)+'&act='+encodeURIComponent($('activity').value)+
-        '&goal='+encodeURIComponent($('goal').value);
+        '&goal='+encodeURIComponent($('goal').value)+(klientMode?'&klient=1':'');
       $('result').classList.remove('hidden');
       $('result').scrollIntoView({behavior:'smooth',block:'start'});
     }
