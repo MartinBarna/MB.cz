@@ -14,6 +14,27 @@
 <style>
   /* Mobil: horizontální scroll tabulek nekýve celou stránkou */
   html,body{overflow-x:clip;max-width:100%;overscroll-behavior-x:none;}
+
+  /* ⭐ Martin 6. 9. 2026: rohové štítky karet ("rok VIP v ceně", "Odměna za doporučení")
+     měly zlato-oranžový přechod #EBB12C→#E0762C. Teď mají brandovou švestkovou #5E1A4F,
+     stejnou jako --mb-plum v assets/app-brand-override.css a assets/theme-light.css
+     a jako plum v appce Tvůj Coach (src/theme/colors.ts). Zlatá zůstává tlačítkům
+     dole na kartě (.go), ta se nemění.
+     ⛔ Hex, ne var(--mb-plum): tahle stránka app-brand-override.css ani theme-light.css
+     NENAČÍTÁ, token by tu byl prázdný a odznak by zprůhledněl.
+     ⛔ Barva je ve třídě, ne v inline style: ba-theme-light.css má pravidlo
+     [data-theme="light"] .ba [style*="color:#fff"], které by ve světlém motivu
+     přebarvilo text odznaku na tmavý. Jedno pravidlo platí pro OBA motivy.
+     Světlejší okraj #7C2A6A (--mb-plum-light) dává odznaku obrys na tmavé kartě,
+     stejný vzor jako .btn.alt v app-brand-override.css. Bílá na #5E1A4F = 12,1:1. */
+  .ba .card .lockbadge.gift{
+    display:inline-flex!important;
+    background:#5E1A4F!important;
+    color:#fff!important;
+    border:1px solid #7C2A6A!important;
+    font-weight:800;
+  }
+  .ba .card .lockbadge.gift svg{stroke:#fff;}
 </style>
 </head>
 <body class="ba">
@@ -54,7 +75,7 @@
         <!-- ⛔ Výchozí znění je pro DOŽIVOTNÍ přístup (rok VIP v ceně). Měsíčnímu členovi
              (990 Kč) se to v boot() přepíše podle academy_membership_kind(), protože ten
              appku v ceně NEMÁ. Rozhodnutí 2 mise `mb-academy-pricing-mise`. -->
-        <span class="lockbadge" id="appBadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">🎁 rok VIP v ceně</span>
+        <span class="lockbadge gift" id="appBadge">🎁 rok VIP v ceně</span>
         <div class="ico" style="color:#EBB12C;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/><path d="m9.5 10.5 1.5 1.5 3.5-3.5"/></svg></div>
         <h2>Tvůj Coach: appka</h2>
         <p class="desc" id="appDesc">Web, běží i na mobilu: nafotíš jídlo a appka spočítá makra, hlídá kalorie i bílkoviny, sama upravuje cíle podle tvých výsledků, poskládá ti jídelníček i tréninkový plán na míru a AI kouč ti radí Martinovým hlasem. K doživotnímu přístupu ji máš rok ve VIP verzi.</p>
@@ -72,7 +93,7 @@
       </a>
 
       <a class="card" id="tileRef" href="/akademie/moje/doporuc/">
-        <span class="lockbadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">🎁 Odměna za doporučení</span>
+        <span class="lockbadge gift">🎁 Odměna za doporučení</span>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg></div>
         <h2>Doporuč kamarádovi</h2>
         <p class="desc">On ušetří 10 % na videokurzu nebo Academy, ty dostaneš 150 až 300 Kč kredit na další nákup. Stačí mu poslat svůj osobní odkaz, klidně jedním klikem přes WhatsApp.</p>
@@ -81,7 +102,7 @@
       </a>
 
       <a class="card" id="tileKlient" href="/akademie/klient/" style="display:none;border-color:rgba(235,177,44,.5);background:linear-gradient(150deg,rgba(235,177,44,.10),rgba(235,177,44,.02));">
-        <span class="lockbadge" style="display:inline-flex;background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border:none;font-weight:800;">⭐ Tvůj koučink</span>
+        <span class="lockbadge gift">⭐ Tvůj koučink</span>
         <div class="ico" style="color:#EBB12C;"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-6"/></svg></div>
         <h2>Klientská sekce</h2>
         <p class="desc">Tvůj koučink s Martinem na jednom místě: týdenní report na pár kliknutí, grafy pokroku, dokumenty od Martina i výhody navíc.</p>
@@ -143,7 +164,7 @@
           var tth=tt.querySelector('h2'); if(tth) tth.textContent='Nástroje na míru';
           var ttd=tt.querySelector('.desc'); if(ttd) ttd.textContent='Spočítej si vlastní jídelníček i makra, vygeneruj tréninkový plán a projdi databázi cviků. Lite verzi máš zdarma, plnou v Academy.';
           var ttc=tt.querySelector('.chips'); if(ttc) ttc.innerHTML='<span class="chip">Jídelníček</span><span class="chip">Trénink</span><span class="chip">Cviky</span>';
-          var ttlb=tt.querySelector('.lockbadge'); if(ttlb){ ttlb.style.display='inline-flex'; ttlb.style.background='linear-gradient(145deg,#EBB12C,#E0762C)'; ttlb.style.color='#1A1222'; ttlb.style.border='none'; ttlb.textContent='🎁 Lite zdarma'; }
+          var ttlb=tt.querySelector('.lockbadge'); if(ttlb){ ttlb.classList.add('gift'); ttlb.textContent='🎁 Lite zdarma'; }
         }
         var n=(hasA?1:0)+(hasV?1:0);
         if(n>0){ document.getElementById('cnt').textContent=n; document.getElementById('cntPill').style.display=''; }
