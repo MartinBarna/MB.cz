@@ -592,6 +592,31 @@ async function overPodpis(raw: string, hlavicka: string): Promise<boolean> {
   return false;
 }
 
+// Je tenhle platební odkaz DÁRKOVÝ POUKAZ? Poukazy obsluhuje funkce `poukaz-vydat`,
+// tahle je jen taky dostane (Stripe rozesílá událost na všechny odběratele) a bez téhle
+// kontroly by u každého prodaného poukazu poslala falešný alert „přístup NEUDĚLEN".
+// ⛔ Seznam se čte z tabulky `poukaz_varianty`, ze stejného sloupce, podle kterého poukaz
+// vydává `poukaz-vydat`. Kdyby se opsal do kódu, nový poukazový odkaz by tu zase chyběl,
+// a to je přesně ta třída chyby, kvůli které dnes pět dní tiše propadal videokurz.
+// ⚠️ Když dotaz selže, vrací se `false`, tedy alert JDE VEN. Radši falešný poplach než ticho.
+async function jePoukazovyOdkaz(plink: string): Promise<boolean> {
+  try {
+    const { data, error } = await admin
+      .from("poukaz_varianty")
+      .select("varianta")
+      .eq("payment_link_id", plink)
+      .maybeSingle();
+    if (error) {
+      console.error(`[academy-stripe-webhook] poukaz_varianty selhalo: ${error.message}`);
+      return false;
+    }
+    return Boolean(data);
+  } catch (e) {
+    console.error(`[academy-stripe-webhook] poukaz_varianty vyjimka: ${String(e)}`);
+    return false;
+  }
+}
+
 // Alert adminovi. Vzor 1:1 podle `simpleshop-webhook`, ať se to hlásí na jedno místo.
 // ⚠️ Zapisuje do `email_events` (type='error'), NE do vlastní tabulky. Tabulka
 // `admin_alerts` v tomhle projektu NEEXISTUJE (ověřeno v information_schema);
@@ -1756,8 +1781,21 @@ Deno.serve(async (req) => {
           //    Nová hranice je 1 000 Kč: pod ni patří jen předplatné appky (249 a 499),
           //    a to sem chodí jako `mode: subscription`, ne `payment`. Cokoli dražšího,
           //    co tahle funkce nezná, je podezřelé a musí se ozvat.
-          const HRANICE_ALERTU_HALERU = 100_000;
+          // ⭐ [6. 9. 2026 pozdě večer] VÝJIMKA: DÁRKOVÉ POUKAZY. Ty obsluhuje funkce
+          //    `poukaz-vydat`, ne tahle, a jsou nad novou hranicí (konzultace 2 990,
+          //    videokurz 1 490, Academy 8 900). Bez téhle výjimky by u každého prodaného
+          //    poukazu přišel alert „přístup NEUDĚLEN", přestože poukaz vyšel v pořádku.
+          //    ⛔ Seznam se NEPÍŠE do kódu schválně: je v tabulce `poukaz_varianty`
+          //    (sloupec `payment_link_id`), odkud ho čte i `poukaz-vydat`. Nový poukazový
+          //    odkaz se tak dopisuje na JEDNO místo. Zapsat ho sem znamená přesně tu
+          //    třídu chyby, kvůli které dnes pět dní tiše propadal zaplacený videokurz.
+          //    ⚠️ Když dotaz selže, alert JDE VEN. Radši falešný poplach než ticho.
           const castkaH = Number(obj.amount_total ?? 0);
+          if (plinkL && await jePoukazovyOdkaz(plinkL)) {
+            console.log(`[academy-stripe-webhook] poukaz ${plinkL}, obsluhuje poukaz-vydat, alert se neposila`);
+            return json({ ok: true, ignored: "poukaz", mode: "payment", payment_link: plinkL });
+          }
+          const HRANICE_ALERTU_HALERU = 100_000;
           if (Number.isFinite(castkaH) && castkaH >= HRANICE_ALERTU_HALERU) {
             await alertAdmin("🔴 Stripe: ZAPLACENO PŘES NEZNÁMÝ ODKAZ, přístup NEUDĚLEN", {
               payment_link: plinkL || "(žádný)",

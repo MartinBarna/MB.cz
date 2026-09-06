@@ -152,12 +152,18 @@ check('A1 promo kod se cte ze session.discounts',
   /discounts/.test(blokRef) && /promotion_code/.test(blokRef), '');
 
 // PRIORITA je jadro veci: promo kod musi prebit oba stare zdroje.
-const iPromo = blokRef.indexOf('zdrojKodu = "promo"');
-const iClient = blokRef.indexOf('zdrojKodu = "client_reference_id"');
+// ⚠️ [6. 9. 2026] Test hledal `zdrojKodu = "promo"` a `zdrojKodu = "client_reference_id"`.
+// Ty radky uz v kodu NEJSOU: atribuce se refaktorovala na pole `kandidati`, do ktereho se
+// zdroje pushuji v poradi priority a projizdi se cyklem. Test proto padal, ale KOD BYL
+// SPRAVNE. Ted se meri to same na nove strukture: promo se pushuje pred client_reference_id
+// a `referral_click` se dosazuje az ve vetvi `if (!nalez)`, tedy pod obema.
+const iPromo = blokRef.indexOf('zdroj: "promo"');
+const iClient = blokRef.indexOf('zdroj: "client_reference_id"');
+const iFallback = blokRef.indexOf('if (!nalez)');
 const iClick = blokRef.indexOf('zdrojKodu = "referral_click"');
 check('A2 priorita promo > client_reference_id > referral_click',
-  iPromo >= 0 && iClient > iPromo && iClick > iClient,
-  `promo=${iPromo} client=${iClient} click=${iClick}`);
+  iPromo >= 0 && iClient > iPromo && iFallback > iClient && iClick > iFallback,
+  `promo=${iPromo} client=${iClient} fallback=${iFallback} click=${iClick}`);
 
 // Lookup kodu v referral_codes musi byt JEDEN pro vsechny zdroje, jinak by se
 // „co je platny kod" mohlo mezi zdroji rozejit.
