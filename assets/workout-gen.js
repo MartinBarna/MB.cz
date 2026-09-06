@@ -844,10 +844,10 @@
         // takže druhá výměna nevěděla o první a klidně dosadila tentýž cvik podruhé.
         // Změřeno: po projití všech 23 tlačítek měl čtyřdenní plán 10 duplicit a
         // „Horní A" bylo stejné jako „Horní B", čímž se rozpadl celý smysl rozdělení.
-        // ⚠️ Vyměněný cvik se z množiny ODEBÍRÁ, protože v plánu už není, a nový se
-        //    PŘIDÁVÁ. Opakované ťuknutí na tentýž cvik tím netrpí: `pouzijVymeny` se
-        //    volá vždy na čerstvý plán, takže se množina pokaždé staví znovu.
-        delete obsazene[pe.ex.id];
+        // ⛔⛔ ODMÍTNUTÝ CVIK SE DO MNOŽINY VRACÍ, NE ODEBÍRÁ. První verze opravy ho
+        //    uvolňovala (v plánu už přece není), jenže tím se mohl objevit v jiném dni:
+        //    člověk ho vyhodil a systém mu ho vrátil jinam. Změřeno revizí: 9 z 25
+        //    vyhozených cviků se objevilo znovu. Množina proto jen ROSTE.
         obsazene[ex.id] = 1;
         var novy = Object.assign({}, pe);
         novy.ex = ex;

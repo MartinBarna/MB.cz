@@ -20,7 +20,7 @@
   'use strict';
 
   var FOOD = null;          // pole potravin, načte se jednou za život stránky
-  var MG_URL = '/assets/meal-gen.js?v=20260906a';
+  var MG_URL = '/assets/meal-gen.js?v=20260906b';
   var DB_URL = '/assets/food-db.json?v=20260902c';
 
   function esc(s) {
@@ -655,11 +655,43 @@
         });
       });
 
+      // ⛔ [6. 9. 2026] NÁHLED NESMÍ ZÁVISET NA VYSKAKOVACÍM OKNĚ.
+      // `window.open('','_blank')` blokuje většina prohlížečů i každý automat, a hláška
+      // o blokaci zmizela za 1,6 s dole na obrazovce, takže tlačítko vypadalo mrtvé
+      // (nález Testera 6. 9. 2026). Blob URL projde častěji, a když ne, zůstane na
+      // stránce trvalý odkaz, který si člověk klikne sám.
+      function otevriNahled(html, tlacitko) {
+        var url;
+        try {
+          url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+        } catch (e) {
+          toast('Náhled se nepovedlo připravit: ' + (e && e.message ? e.message : e));
+          return;
+        }
+        var w = null;
+        try { w = window.open(url, '_blank'); } catch (e) { w = null; }
+        if (w) { setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) {} }, 60000); return; }
+        // Okno zablokované: nabídneme odkaz, který nezmizí.
+        var stary = document.getElementById('nahledOdkaz');
+        if (stary) stary.remove();
+        var a = document.createElement('a');
+        a.id = 'nahledOdkaz';
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = 'Prohlížeč zablokoval nové okno. Otevřít náhled ručně →';
+        a.style.cssText = 'display:block;margin:10px 0;font-weight:700;color:#F6CD63;text-decoration:underline';
+        if (tlacitko && tlacitko.parentNode) tlacitko.parentNode.insertBefore(a, tlacitko.nextSibling);
+        else document.body.appendChild(a);
+        toast('Prohlížeč zablokoval nové okno, klikni na odkaz pod tlačítkem.');
+      }
+
       $('pgNahled').addEventListener('click', function () {
         if (!S.dny[0]) { toast('Nejdřív vygeneruj dny.'); return; }
-        var w = window.open('', '_blank');
-        if (!w) { toast('Prohlížeč zablokoval nové okno.'); return; }
-        w.document.write(hotovoHtml(true)); w.document.close();
+        var html;
+        try { html = hotovoHtml(true); }
+        catch (e) { toast('Náhled spadl: ' + (e && e.message ? e.message : e)); return; }
+        otevriNahled(html, $('pgNahled'));
       });
 
       $('pgUloz').addEventListener('click', function () {
