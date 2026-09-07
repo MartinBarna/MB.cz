@@ -173,7 +173,7 @@ function videoPage(v) {
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
   <script src="/assets/academy-upsell.js?v=g3" defer></script>
-  <script defer src="/assets/analytics.js?v=g19"></script><script defer src="/assets/referral.js?v=g7"></script>
+  <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
   <script src="/assets/scroll-top.js?v=g11" defer></script>
   <script>
     var LID='${v.lid}', SLUG='${v.slug}', PRODUCT='videokurz', FREE=${v.free ? 'true' : 'false'}, GUEST=false, state={done:false};
@@ -473,7 +473,7 @@ function dashboard() {
   <script src="/assets/ba-config.js"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
   <script src="/assets/academy-upsell.js?v=g3" defer></script>
-  <script defer src="/assets/analytics.js?v=g19"></script><script defer src="/assets/referral.js?v=g7"></script>
+  <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
   <script src="/assets/scroll-top.js?v=g11" defer></script>
   <script>
     (function(){ var lo=document.getElementById('logout'); if(lo) lo.addEventListener('click', function(e){ e.preventDefault(); if(window.BA && window.BA.signOut){ window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); } else { location.href='/akademie/prihlaseni/'; } }); })();

@@ -2142,20 +2142,36 @@ Deno.serve(async (req) => {
       // Tiché ignorování, ne alert: platby za appku jsou v pořádku, jen nejsou naše.
       const plink = typeof obj.payment_link === "string" ? obj.payment_link : "";
       if (!ALLOWED_PLINKS.includes(plink)) {
-        // ⚠️ [6. 9. 2026] TAHLE VĚTEV NEMÁ ALERT A JE TO ZATÍM ZÁMĚR, ne opomenutí.
-        // Jednorázová větev výš se dnes rozkřičela od 1 000 Kč. Tady to nejde stejně:
-        // předplatné appky (249, 499, 2 490, 4 990) chodí přes týž Stripe účet a alert
-        // u každého by se přestal číst, což je přesně to, jak se dnešní díra schovala.
-        // ⛔ ZBYLÉ RIZIKO: kdyby měsíční Academy dostala novou cenu a s ní nový odkaz
-        //    (a `ACADEMY_ALLOWED_PLINKS` v prostředí funkce NENÍ nastavená, ověřeno
-        //    6. 9. v `secrets list`, takže platí jen dva natvrdo psané odkazy z 28. 7.),
-        //    člen by platil každý měsíc a nedostal nic. Úplně tiše.
-        // ⇒ Než na to bude pořádná pojistka (rozlišit appkové předplatné od Academy),
-        //    aspoň to nechává stopu v logu funkce, ať se to dohledá za minutu, ne nikdy.
-        //    Otevřený bod pro Elona, popsaný v předávce.
+        // ⭐⭐ [7. 9. 2026] TADY UŽ ALERT JE, a jde odlišit appku od Academy ZADARMO.
+        // 6. 9. se tahle větev nechala tichá, protože „předplatné appky chodí přes týž
+        // Stripe účet a alert u každého by se přestal číst". To je pravda o ČÁSTCE,
+        // ne o způsobu vzniku, a právě ten způsob je rozlišovací znak:
+        //   • APPKA staví checkout přes Stripe API s `line_items`
+        //     (`supabase/functions/create-checkout` → `_shared/stripe.ts`,
+        //     `postForm(apiKey, "checkout/sessions", form)`), takže její session
+        //     `payment_link` NEMÁ, je prázdný.
+        //   • ACADEMY se prodává VÝHRADNĚ přes Payment Links, takže `payment_link` má.
+        // ⇒ Neprázdný a neznámý `payment_link` u předplatného může být jedině náš
+        //    odkaz, o kterém tahle funkce neví. To je přesně ta tichá díra: člen platí
+        //    každý měsíc a nedostane nic. Appkových plateb se to nedotkne, ty sem
+        //    padají s prázdným `plink` a mlčí dál, jako doteď.
+        // ⛔ `ACADEMY_ALLOWED_PLINKS` v prostředí funkce NENÍ nastavená (ověřeno
+        //    6. 9. v `secrets list`), takže platí dva natvrdo psané odkazy z 28. 7.
+        //    Kdo přidá nový měsíční odkaz, musí ho dopsat do `ALLOWED_PLINKS`.
+        if (plink) {
+          await alertAdmin("🔴 Stripe: MĚSÍČNÍ PLATBA PŘES NEZNÁMÝ ODKAZ, přístup NEUDĚLEN", {
+            payment_link: plink,
+            castka: castkaText(Number(obj.amount_total ?? 0), String(obj.currency ?? "czk")),
+            email: String(obj.customer_details?.email ?? obj.customer_email ?? "(neznámý)"),
+            session: String(obj.id ?? ""),
+            co_delat: "⛔ Tenhle člověk PLATÍ KAŽDÝ MĚSÍC a nedostává nic. Doplň ID odkazu "
+              + "do `ALLOWED_PLINKS` ve webhooku (nebo do proměnné `ACADEMY_ALLOWED_PLINKS`, "
+              + "ta kód přebíjí) a přístup zatím uděl ručně v adminu.",
+          });
+        }
         console.log(`[academy-stripe-webhook] predplatne z NEZNAMEHO odkazu ignorovano: `
           + `plink=${plink || "(zadny)"} castka=${obj.amount_total ?? "?"} session=${obj.id ?? "?"}`);
-        return json({ ok: true, ignored: "foreign-price", payment_link: plink || null });
+        return json({ ok: true, ignored: "foreign-price", payment_link: plink || null, alert: plink ? "odeslan" : "netreba" });
       }
       const email = String(
         obj.customer_details?.email ?? obj.customer_email ?? "",

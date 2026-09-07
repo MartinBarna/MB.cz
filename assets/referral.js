@@ -92,6 +92,23 @@
     // Stará cena 800 Kč (`plink_1TymiH…`) ZŮSTÁVÁ: na webu už není, ale žije v rozeslaných
     // mailech a doporučitel by u těch nákupů jinak o odměnu přišel.
     if (href.indexOf('dRmeVcbnpaZs5VedBZ3ks06') >= 0) return { url: href, prod: 'videokurz', stripe: true };
+    // ⭐⭐ [7. 9. 2026] BALÍČEK 349 Kč („40 receptů a 48 odpovědí"), `plink_1U1VnF…`,
+    // odkaz `4gMbJ0ezBc3wcjC0Pd3ks09` na `/recepty-a-odpovedi/` (dvakrát: ceník i patička).
+    // ⛔ DO 7. 9. TU CHYBĚL, a byla to tichá ztráta peněz PARTNERA, ne naše:
+    //    `buyInfo` vrátilo `null`, volající se na řádku „if (!info) return" otočil,
+    //    modal se neukázal a kód doporučitele se nedostal do `client_reference_id`.
+    //    Webhook přitom balíček mezi provizní produkty počítá (`_shared/provize.ts`,
+    //    komentář u `payment_intent`: „koučink, Academy doživotně, videokurz,
+    //    konzultace, balíček"). Nikde to nekřiklo, protože chybějící provize
+    //    nevypadá jako chyba, jen se nestane.
+    // ⚠️ `bezKuponu: true` je OPATRNÝ ODHAD, ne měření: jestli pokladna balíčku kupón
+    //    vezme, nikdo neověřil (Stripe se nedá ověřit fetchem, chce to otevřít pokladnu).
+    //    Slíbit slevu, kterou pokladna nedá, je horší než ji neslíbit; provize partnera
+    //    na kupónu nestojí, ta jede přes `client_reference_id`. Až to někdo v pokladně
+    //    změří a kupón projde, stačí `bezKuponu` smazat a sleva 10 % se zapne.
+    if (href.indexOf('4gMbJ0ezBc3wcjC0Pd3ks09') >= 0) {
+      return { url: href, prod: 'balicek', stripe: true, bezKuponu: true };
+    }
     if (href.indexOf('simpleshop.cz/Xgl8g') >= 0) return { url: href, prod: 'academy' };
     if (href.indexOf('4gM00ibnpgjMerK7dB3ks04') >= 0) return { url: href, prod: 'academy', stripe: true };
     // Odkaz s odečtem videokurzu (8 100 Kč) dodává TÝŽ produkt, jen levněji, proto stejný `prod`.
@@ -237,9 +254,15 @@
     //    Diamondu za 59 500 Kč zní jako chyba v e-shopu, proto se text větví podle
     //    produktu, ne podle příznaku `bezKuponu`.
     document.getElementById('ba-ref-txt').innerHTML = info.bezKuponu
+      // ⛔ TŘI RŮZNÉ DŮVODY, PROČ SLEVA NENÍ. Text se větví podle PRODUKTU, ne podle
+      //    příznaku: slovo „doplatek" u Diamondu za 59 500 Kč i u balíčku za 349 Kč
+      //    zní jako chyba v e-shopu. Balíček přibyl 7. 9. 2026.
       ? (info.prod === 'coaching'
         ? 'Přišel jsi přes partnera. Zadej svůj e-mail, ať tě spárujeme, a pošleme tě k platbě. '
           + 'Sleva partnera se u koučinku neuplatňuje, provize partnerovi ano.'
+        : info.prod === 'balicek'
+        ? 'Přišel jsi přes partnera. Zadej svůj e-mail, ať tě spárujeme, a pošleme tě k platbě. '
+          + 'Balíček je za 349 Kč a sleva se na něj nepočítá.'
         : 'Přišel jsi přes partnera. Zadej svůj e-mail, ať tě spárujeme, a pošleme tě k platbě. '
           + 'Doplatek už je zvýhodněná cena, další sleva na něj neplatí.')
       : (jeClensky(ref)
