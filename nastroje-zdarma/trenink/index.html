@@ -269,6 +269,11 @@
 
     // Ťuknutí na Vyměnit: klíč `poradiDne:puvodniIdCviku`, hodnota kolikrát klient ťukl.
     var vymeny = {};
+    // ⛔ [7. 9. 2026] NASTAVENÍ, ZE KTERÉHO VZNIKL VYKRESLENÝ PLÁN. Musí se zmrazit:
+    // formulář se dá přehodit bez ťuknutí na Sestavit a `opts()` by pak vrátilo něco
+    // jiného, než co má klient na obrazovce. Změřeno revizí: viditelnost tlačítek by se
+    // rozešla s plánem u 44 % řádků. Nové nastavení se projeví až ťuknutím na Sestavit.
+    var lastOpts = null;
     var lastPlan = null;
     // ⭐⭐ [7. 9. 2026] TLAČÍTKO SE PTÁ ENGINU, CO BY ŤUKNUTÍ UDĚLALO.
     // Do dneška se viditelnost počítala z obsazených id HOTOVÉHO plánu, jenže
@@ -277,11 +282,17 @@
     // tlačítek 404 (12 %) po ťuknutí nechalo tentýž cvik. Mrtvé tlačítko čte klient
     // jako rozbitý nástroj. Simulace ťuknutí je jediná odpověď, která nelže, protože
     // se ptá TÉŽE funkce, která pak opravdu vybírá.
-    // ⚠️ Cena je jeden `buildPlan` a N `pouzijVymeny` na překreslení (změřeno ~5 ms
-    //    na 25 řádků), ne na každý řádek zvlášť.
+    // ⚠️ Cena je jeden `buildPlan` a N `pouzijVymeny` na překreslení, ne na každý řádek
+    //    zvlášť. ROSTE s počtem už provedených výměn (každé volání `pouzijVymeny` sahá
+    //    na `kandidatiVymeny` za každý vyměněný řádek). Změřeno na plánu s 29 řádky:
+    //    2,1 ms u čerstvého plánu, 7,6 ms když jsou vyměněné všechny řádky; celé
+    //    ťuknutí i s obsluhou 10 až 26 ms. Měřeno v Node na desktopu, ne na telefonu.
+    // ⚠️ Řádek, který v ČERSTVÉM plánu není, nedostane klíč a tlačítko se u něj
+    //    neukáže. Dnes se to nestane (`+ doplnit objem` přidává jen série, ne cviky),
+    //    ale kdo sáhne na `autoFill` nebo landmarky, ať si to sem přijde přečíst.
     // ⛔ Totéž musí platit v /akademie/nastroje/trenink/index.html.
     function coZmeniTuknuti(){
-      var cerstvy=window.WorkoutGen.buildPlan(DB, opts());
+      var cerstvy=window.WorkoutGen.buildPlan(DB, lastOpts||opts());
       var ted=window.WorkoutGen.pouzijVymeny(cerstvy, vymeny);
       var m={};
       cerstvy.days.forEach(function(d,i){ d.exercises.forEach(function(pe,j){
@@ -324,7 +335,8 @@
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
       vymeny={};
-      var plan=window.WorkoutGen.buildPlan(DB, opts());
+      lastOpts=opts();
+      var plan=window.WorkoutGen.buildPlan(DB, lastOpts);
       if(!plan.poolSize){ $('dbstate').textContent='Pro tuhle kombinaci místa a vybavení nemám dost cviků, zkus jiné vybavení.'; return; }
       render(plan);
     }
@@ -333,7 +345,7 @@
       if(!b||!lastPlan)return;
       var k=b.getAttribute('data-vymenit');
       vymeny[k]=(vymeny[k]||0)+1;
-      lastPlan=window.WorkoutGen.pouzijVymeny(window.WorkoutGen.buildPlan(DB, opts()), vymeny);
+      lastPlan=window.WorkoutGen.pouzijVymeny(window.WorkoutGen.buildPlan(DB, lastOpts||opts()), vymeny);
       render(lastPlan);
     });
     $('gen').addEventListener('click',function(){ generate(false); });
