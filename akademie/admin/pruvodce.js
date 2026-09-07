@@ -234,10 +234,9 @@
         + '<label style="min-width:120px;font-size:.75rem;color:#8F8A99;">Oslovení (5. pád)<br><input type="text" id="pgVok" value="' + esc(ctx.vok || '') + '" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'
         + '<label style="flex:1;min-width:200px;font-size:.75rem;color:#8F8A99;">Poznámka u bílkovin<br><input type="text" id="pgProtPozn" placeholder="např. víc rozhodně nevadí" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 9px;color:#fff;font-family:inherit;font-size:.88rem;"></label>'
         + '</div>';
-      if (jidelDotaznik === 6) {
-        h += '<p style="margin:8px 0 0;font-size:.8rem;color:#F6CD63;">⚠️ V dotazníku je 6 jídel denně, generátor dnes umí nejvýš 5. '
-          + 'Nastaveno 5, poslední jídlo si klient klidně rozdělí. Šesté jídlo je otevřený úkol v enginu (obě strany naráz).</p>';
-      }
+      // ⛔ [7. 9. 2026] Tady stálo „generátor dnes umí nejvýš 5". UŽ NEPLATÍ: engine bere
+      // 2 až 6 jídel (`assets/meal-gen.js`, `assembleDay`) a select 6 nabízí i posílá.
+      // Hláška lhala a Martina zbytečně odrazovala od šesti jídel. (Nález testera.)
       h += '</div>';
 
       // 2) vyloučení
@@ -686,8 +685,28 @@
         toast('Prohlížeč zablokoval nové okno, klikni na odkaz pod tlačítkem.');
       }
 
+      // Trvalá věta pod tlačítkem. Toast po 1,6 s zmizí, tohle ne.
+      function zpravaUTlacitka(btn, text) {
+        var id = 'pgNahledZprava';
+        var stary = document.getElementById(id);
+        if (stary) stary.remove();
+        if (!text || !btn || !btn.parentNode) return;
+        var p = document.createElement('p');
+        p.id = id;
+        p.style.cssText = 'margin:6px 0 0;font-size:.8rem;color:#F6CD63;line-height:1.4;';
+        p.textContent = text;
+        btn.parentNode.insertBefore(p, btn.nextSibling);
+      }
+
       $('pgNahled').addEventListener('click', function () {
-        if (!S.dny[0]) { toast('Nejdřív vygeneruj dny.'); return; }
+        // ⛔ [7. 9. 2026] Toast mizí za 1,6 s, takže tlačítko vypadalo mrtvě
+        // (nález testera ADMIN_NAHLED_JIDLO). Věta teď zůstane vedle tlačítka.
+        if (!S.dny[0]) {
+          toast('Nejdřív vygeneruj dny.');
+          zpravaUTlacitka($('pgNahled'), 'Náhled nemám z čeho složit: dny ještě nejsou vygenerované. Vyplň kalorie a bílkoviny a ťukni na Vygenerovat oba dny.');
+          return;
+        }
+        zpravaUTlacitka($('pgNahled'), '');
         var html;
         try { html = hotovoHtml(true); }
         catch (e) { toast('Náhled spadl: ' + (e && e.message ? e.message : e)); return; }

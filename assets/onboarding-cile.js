@@ -653,7 +653,10 @@
     radky.push('');
     radky.push('Najdeš ho v klientské sekci: ' + ODKAZY.sekce);
     radky.push('');
-    radky.push('Přečti si to a napiš mi na WhatsApp, co Ti tam chybí nebo co bys nejedl. Upravím to.');
+    // ⛔ [7. 9. 2026] Věta byla v mužském rodě („co bys nejedl"), a mail se posílá i ženám.
+    // `mailPruvodce` pohlaví vůbec nedostává, takže se to nedalo skloňovat správně.
+    // Přepsáno bezrodě, aby seděla oběma. (Nález testera ADMIN_ONBOARDING.)
+    radky.push('Přečti si to a napiš mi na WhatsApp, co Ti tam chybí nebo co z toho vynechat. Upravím to.');
     radky.push('');
     radky.push('Be Effective!');
     radky.push('Tvůj Coach Marťas');

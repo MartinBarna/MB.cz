@@ -309,13 +309,18 @@
 
     // ---------- čtení stavu z formuláře ----------
     function nactiVstup() {
+      // ⛔ [7. 9. 2026] Každá hodnota má ZÁLOHU. Prázdné `kde_cvici` by v enginu vyhodilo
+      // úplně všechny cviky (`e.location.indexOf(loc) === -1`), plán by vyšel s prázdnými
+      // dny a náhled by otevřel dokument s prázdnými tabulkami. `assembleProgram` u toho
+      // nespadne, takže by si toho nikdo nevšiml. Dnešní selecty prázdnou volbu nemají,
+      // tohle je pojistka pro případ, že ji tam někdo přidá. (Nález testera ADMIN_NAHLED_TREN.)
       S.vstup.dny_treninku = Number($('tpDny').value) || 3;
-      S.vstup.kde_cvici = $('tpMisto').value;
-      S.vstup.vybaveni = $('tpVyb').value;
-      S.vstup.level = $('tpLevel').value;
-      S.vstup.cil = $('tpCil').value;
-      if ($('tpStruktura')) S.vstup.struktura = $('tpStruktura').value;
-      if ($('tpOpakovani')) S.vstup.opakovani = $('tpOpakovani').value;
+      S.vstup.kde_cvici = $('tpMisto').value || 'fitko';
+      S.vstup.vybaveni = $('tpVyb').value || 'vse';
+      S.vstup.level = $('tpLevel').value || 'zacatecnik';
+      S.vstup.cil = $('tpCil').value || 'svaly';
+      if ($('tpStruktura')) S.vstup.struktura = $('tpStruktura').value || 'standard';
+      if ($('tpOpakovani')) S.vstup.opakovani = $('tpOpakovani').value || 'standard';
       S.vstup.seed = Math.max(0, Math.min(99, Number($('tpSeed').value) || 0));
       var om = $('tpOmezeni');
       if (om) S.omezeni = (om.value || '').trim();
@@ -535,8 +540,28 @@
         toast('Prohlížeč zablokoval nové okno, klikni na odkaz pod tlačítkem.');
       }
 
+      // Trvalá věta pod tlačítkem. Toast po 1,6 s zmizí, tohle ne.
+      function zpravaUTlacitka(btn, text) {
+        var id = 'tpNahledZprava';
+        var stary = document.getElementById(id);
+        if (stary) stary.remove();
+        if (!text || !btn || !btn.parentNode) return;
+        var p = document.createElement('p');
+        p.id = id;
+        p.style.cssText = 'margin:6px 0 0;font-size:.8rem;color:#F6CD63;line-height:1.4;';
+        p.textContent = text;
+        btn.parentNode.insertBefore(p, btn.nextSibling);
+      }
+
       $('tpNahled').addEventListener('click', function () {
-        if (!S.program) { toast('Nejdřív vygeneruj plán.'); return; }
+        // ⛔ [7. 9. 2026] Toast mizí za 1,6 s, takže tlačítko vypadalo mrtvě
+        // (nález testera ADMIN_NAHLED_TREN). Věta teď zůstane vedle tlačítka.
+        if (!S.program) {
+          toast('Nejdřív vygeneruj plán.');
+          zpravaUTlacitka($('tpNahled'), 'Náhled nemám z čeho složit: plán ještě není hotový. Ťukni na Vygenerovat plán a počkej, až se objeví dny.');
+          return;
+        }
+        zpravaUTlacitka($('tpNahled'), '');
         var html;
         try { html = hotovoHtml(true); }
         catch (e) { toast('Náhled spadl: ' + (e && e.message ? e.message : e)); return; }

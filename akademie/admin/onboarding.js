@@ -14,7 +14,7 @@
 (function (global) {
   'use strict';
 
-  var OC_URL = '/assets/onboarding-cile.js?v=20260905a';
+  var OC_URL = '/assets/onboarding-cile.js?v=20260907a';
   // Strop délky těla mailu v adrese Gmailu.
   // ⭐ ZMĚŘENO 2. 9. 2026 v Martinově přihlášeném Chromu, ne odhadnuto: uvítací mail
   // (2148 znaků, po zakódování adresa 4007 znaků) se v okně Napsat zprávu předvyplnil
@@ -73,6 +73,15 @@
     var idata = ctx.intake || {};
     var S = {
       pohlavi: ctx.rod === 'z' ? 'z' : 'm',
+      // ⛔⛔ [7. 9. 2026] ODHAD POHLAVÍ PODLE JMÉNA NENÍ POTVRZENÍ (nález testera
+      // ADMIN_ONBOARDING). `kliRod` hádá ženu jen podle „-ová", „-á" a křestního na „-a";
+      // všechno ostatní, VČETNĚ prázdného jména, vyjde jako muž. Přitom pohlaví mění
+      // Mifflina (žena base − 161, muž base + 5) i podlahu kalorií (1 200 vs 1 500),
+      // takže špatný odhad tiše posune čísla, která pak jdou klientovi.
+      // ⇒ Karty se počítat smí (ať Martin vidí, o čem se bavíme), ale ULOŽIT zadání
+      //    jde teprve po výslovném ťuknutí na žena/muž. U týdenního reportu se to
+      //    takhle dělá už dnes (podlaha „nevybráno, bere 1500"), onboarding to neměl.
+      pohlavi_potvrzeno: false,
       trenink_minut: '',
       bilkoviny_g_kg: '',
       nasobic: '',              // prázdné = odhad z dotazníku
@@ -144,7 +153,7 @@
       var v = r.vstup, vy = r.vydej;
       h += '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;margin-bottom:10px;">'
         + '<div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;">'
-        + '<div><span style="display:block;font-size:.76rem;color:#8F8A99;margin-bottom:4px;">Pohlaví <span style="color:#6d6879;">(dotazník ho nemá, odhad podle jména)</span></span>'
+        + '<div><span style="display:block;font-size:.76rem;color:#8F8A99;margin-bottom:4px;">Pohlaví <span style="color:' + (S.pohlavi_potvrzeno ? '#6d6879' : '#F6CD63') + ';">' + (S.pohlavi_potvrzeno ? '(potvrzeno)' : '(zatím jen ODHAD podle jména, ťukni a potvrď)') + '</span></span>'
         + '<button type="button" class="kdrod' + (S.pohlavi === 'z' ? ' on' : '') + '" data-obrod="z">žena</button>'
         + '<button type="button" class="kdrod' + (S.pohlavi === 'm' ? ' on' : '') + '" data-obrod="m">muž</button></div>'
         + '<label style="font-size:.76rem;color:#8F8A99;">Délka tréninku <span style="color:#6d6879;">(min)</span><br>'
@@ -233,7 +242,12 @@
       var z = $('obZdravi');
       if (z) z.addEventListener('change', function () { S.zdravi_odkliknuto = z.checked; kresli(); });
       Array.prototype.forEach.call(el.querySelectorAll('[data-obrod]'), function (b) {
-        b.addEventListener('click', function () { S.pohlavi = b.getAttribute('data-obrod'); S.vybrana = null; prepocti(); });
+        b.addEventListener('click', function () {
+          S.pohlavi = b.getAttribute('data-obrod');
+          S.pohlavi_potvrzeno = true;   // ťuknutí = Martin to viděl a rozhodl
+          S.vybrana = null;
+          prepocti();
+        });
       });
       [['data-obcil', 'cil_rezim'], ['data-obnas', 'nasobic'], ['data-obmet', 'met']].forEach(function (par) {
         Array.prototype.forEach.call(el.querySelectorAll('[' + par[0] + ']'), function (b) {
@@ -259,6 +273,11 @@
     function vyber(klic) {
       var k = S.vysledek.karty.filter(function (x) { return x.klic === klic; })[0];
       if (!k) return;
+      // ⛔ Bez potvrzeného pohlaví se zadání NEUKLÁDÁ: čísla by stála na odhadu z jména.
+      if (!S.pohlavi_potvrzeno) {
+        toast('Nejdřív potvrď pohlaví. Je zatím jen odhadnuté podle jména a mění kalorie i podlahu.');
+        return;
+      }
       S.vybrana = k;
       kresli();
 

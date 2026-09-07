@@ -2037,6 +2037,26 @@
           // bloku stavu, ale NIKDY se nedopočítává tady v prohlížeči.
           var R=window.ReportReakce;
           if(!R){ out.innerHTML='<p class="muted" style="font-size:.85rem;">⚠️ Šablona reakce se nenačetla (report-reakce-sablona.js), obnov stránku.</p>'; return; }
+          // ⛔⛔ [7. 9. 2026] BEZ DAT SE KONCEPT NENABÍZÍ (nález testera ADMIN_REPORT_CHYBI_DATA).
+          // Když klient nevyplnil nic měřitelného, engine vrátí prázdný blok čísel a
+          // `jistota: 'chybi_data'`. Server přesto model zavolá a vrátí prózu, takže se
+          // Martinovi nabídl hotový mail, který reaguje na report, ve kterém nic není.
+          // Odeslat takový text pod svým jménem je horší než neodeslat nic.
+          // ⚠️ Blokuje se jen souběh OBOU podmínek: prázdný blok čísel A `chybi_data`.
+          //    Samotné `chybi_data` znamená jen „nemám cíl kalorií, není co upravit",
+          //    což u jinak vyplněného reportu koncept nediskvalifikuje.
+          // ⏰ Správně to patří na server (admin-api): nevolat model vůbec a vrátit
+          //    `error: 'chybi_data'`. Tady se jen nezobrazí, model se zavolá zbytečně.
+          var stavPrazdny = !(j.stav_radky && j.stav_radky.length);
+          var chybiData = j.navrh && j.navrh.jistota === 'chybi_data';
+          if(stavPrazdny && chybiData){
+            out.innerHTML='<p class="muted" style="font-size:.85rem;line-height:1.5;">⚠️ <b>Koncept nedělám, není z čeho.</b> '
+              + 'V tomhle reportu není jediné měřitelné číslo a klient nemá v zadání kalorie, '
+              + 'takže by AI psala reakci na prázdno.<br>'
+              + esc((j.navrh && j.navrh.duvod) || '')
+              + '<br>Doplň klientovi zadání (kalorie a bílkoviny) nebo počkej na report s daty, pak koncept půjde vygenerovat.</p>';
+            return;
+          }
           var datum=j.report_date||'';
           var predmetTxt=R.predmet(vok,datum);
           var celyMail=R.telo({osloveni:vok,datum:datum,stavRadky:j.stav_radky||[],textAi:j.draft||'',tema:tema,temaOdkaz:temaUrl});
@@ -3583,12 +3603,12 @@
     });
   })();
   </script>
-  <script src="/akademie/admin/onboarding.js?v=20260905a" defer></script>
+  <script src="/akademie/admin/onboarding.js?v=20260907a" defer></script>
   <!-- Sablona reakce na tydenni report: tvar mailu + odkaz do Gmailu. NIC neodesila. -->
   <script src="/akademie/admin/report-reakce-sablona.js?v=20260904a" defer></script>
   <script src="/akademie/admin/rozbory.js?v=20260903a" defer></script>
-  <script src="/akademie/admin/pruvodce.js?v=20260905a" defer></script>
-  <script src="/akademie/admin/trenink.js?v=20260906e" defer></script>
+  <script src="/akademie/admin/pruvodce.js?v=20260907a" defer></script>
+  <script src="/akademie/admin/trenink.js?v=20260907a" defer></script>
   <script src="/assets/scroll-top.js?v=g13" defer></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"></body>
 </html>
