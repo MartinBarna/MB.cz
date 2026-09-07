@@ -27,8 +27,8 @@
 -- ⭐ PRÁVNÍ STRÁNKA: doručení zaplaceného je plnění smlouvy, ne marketing. Odhlášení
 --    z obchodních sdělení ho zastavit nesmí. Naopak nedoručit ho je vada plnění.
 --
--- ⛔ VÝJIMKA JE ÚZKÁ SCHVÁLNĚ: jen KROK 0 tratí `onboarding-nakup-%`.
---    Krok 0 je u všech pěti tratí doručovací mail:
+-- ⛔ VÝJIMKA JE ÚZKÁ SCHVÁLNĚ: jen KROK 0 ŠESTI vyjmenovaných tratí.
+--    Krok 0 je u všech šesti doručovací mail:
 --      onboarding-nakup-academy          „Vítej v Barna Academy"
 --      onboarding-nakup-academy-mesicni  „Vítej v Barna Academy"
 --      onboarding-nakup-balicek          „Tady máš recepty i odpovědi"
@@ -52,6 +52,9 @@
 --   UPDATE, navazující prodej (krok 1): zablokován, stav zpět 'unsubscribed', termín NULL
 --   INSERT, doručení (krok 0) po GDPR výmazu leadu: řádek se ZALOŽIL, 'active', s termínem
 --   INSERT, marketing i krok 1 nákupní tratě: nezaložilo se nic, 2 záznamy 'INSERT'
+--   INSERT, vymyšlená trať `onboarding-nakup-vymyslena` krok 0: ZABLOKOVÁNA (po změně
+--     z prefixu na výčet; předtím prošla, našla to druhá revize)
+--   INSERT/UPDATE všech šesti skutečných tratí krok 0: prošly, 6 záznamů PROPUSTENO
 --   po rollbacku 67 odhlášených a 1013 leadů beze změny, funkce má pořád jednu variantu
 -- ============================================================================
 
@@ -77,7 +80,18 @@ begin
   -- ⚠️ Tabulka se jmenuje „blokováno", ale `operace` u těchhle řádků začíná PROPUSTENO,
   --    takže se od zablokovaných pokusů poznají. Vlastní tabulka za jeden druh záznamu
   --    nestojí; podstatné je, že tady nesmí být ŽÁDNÝ cizí klíč.
-  if new.track like 'onboarding-nakup-%' and coalesce(new.step, 0) = 0 then
+  -- ⛔⛔ [7. 9. 2026, druhá revize] VYJMENOVANÝ SEZNAM, NE PREFIX `onboarding-nakup-%`.
+  --    S prefixem prošla i vymyšlená trať `onboarding-nakup-cokoli` krok 0 (sonda to
+  --    ukázala). Dnes by to nevadilo, všech šest tratí toho tvaru jsou doručovací, ale kdo
+  --    příště založí trať s tímhle prefixem, propustil by ji odhlášeným bez jediné revize.
+  --    Novou trať sem musí někdo dopsat vědomě, a to je celý smysl.
+  if coalesce(new.step, 0) = 0 and new.track in (
+       'onboarding-nakup-academy',
+       'onboarding-nakup-academy-mesicni',
+       'onboarding-nakup-balicek',
+       'onboarding-nakup-konzultace',
+       'onboarding-nakup-tvujcoach',
+       'onboarding-nakup-videokurz') then
     insert into public.odhlaseni_blokovano (email, operace, trat, krok)
     values (lower(new.email), 'PROPUSTENO doruceni zaplaceneho (' || tg_op || ')', new.track, new.step);
     return new;
