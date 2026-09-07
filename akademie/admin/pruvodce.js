@@ -196,6 +196,13 @@
       var v = vychoziCile(ctx.targets, idata, ctx.rod);
       S.cile = v.cile;
       kostra(v.zdroj);
+      // ⭐ [7. 9. 2026] Dny se vygenerují samy, jako to dělá editor tréninku
+      // (`trenink.js` volá po sestavení kostry rovnou `generuj()`). Do dneška po otevření
+      // editoru jídla nebylo co ukázat a „Náhled a tisk" jen toastl, což vypadalo jako
+      // mrtvé tlačítko (nález testera ADMIN_NAHLED_JIDLO).
+      // ⚠️ Jen když jsou vstupy kompletní. Bez kalorií, bílkovin, sacharidů nebo tuků by
+      //    `generujOba` jen toastl a při otevření karty by to vypadalo jako chyba.
+      if (S.cile && S.cile.kcal && S.cile.protein && S.cile.carbs && S.cile.fat) generujOba();
     }).catch(function (e) {
       el.innerHTML = '<p style="font-size:.85rem;color:#ff9b9b;">⚠️ Průvodce se nedá spustit: ' + esc(e.message || e) + '</p>';
     });

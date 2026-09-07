@@ -39,6 +39,10 @@
   <button class="mlogbtn" data-prof="obezita">žena 42 let, BMI 38, hubnutí</button>
   <button class="mlogbtn" data-prof="citliva">žena 31 let, těhotenství a léky (zdravotní brána)</button>
   <button class="mlogbtn" data-prof="bezuctu">muž 35 let, bez účtu v appce</button>
+  <!-- ⛔ [7. 9. 2026] Profil, na kterém byla vidět vada ADMIN_ONBOARDING: příjmení, které
+       `kliRod` netrefí, takže odhad vyjde MUŽ, i když jde o ženu. Ostatní čtyři profily
+       předávaly `rod` natvrdo, a proto tuhle vadu test nikdy neukázal. -->
+  <button class="mlogbtn" data-prof="rodnetrefen">žena, příjmení bez „-ová" (odhad rodu selže)</button>
 </p>
 <div id="ob"></div>
 <div id="toast"></div>
@@ -63,6 +67,16 @@
       cil:'zhubnout po porodu', prace:'na mateřské', aktivita:'lehká', spanek:'5 hodin',
       jidel_denne:'4', alergie:'', neji:'', vareni:'vařím si sama',
       zdravi:'kojím, mám hypotyreózu', leky:'Euthyrox', diety:'' } },
+    // ⛔ Odhad rodu z příjmení sem SCHVÁLNĚ nedostane správnou odpověď: „Sofie Lang" nemá
+    // ani „-ová", ani „-á", ani křestní na „-a", takže `kliRod` vrátí `m`. Právě na tomhle
+    // se pozná, jestli onboarding odhad bere jako fakt, nebo si vyžádá potvrzení.
+    // `rod:'m'` NENÍ překlep: přesně tohle vrátí ostrý `kliRod` v adminu pro „Sofie Lang".
+    // Příjmení nekončí na „-ová" ani „-á", křestní nekončí na „-a" a v seznamu KLI_FEM
+    // (Ester, Dagmar, Nikol a spol.) „sofie" není. Admin tedy pošle do onboardingu muže.
+    rodnetrefen: { name:'Sofie Lang', vok:'Sofie', rod:'m', appka:true, intake:{
+      vek:'29', vyska:'168', vaha:'71', kroky:'8000', dny_treninku:'3', sport:'pilates',
+      cil:'zhubnout a zpevnit', prace:'grafička', aktivita:'sedavá', spanek:'7 hodin',
+      jidel_denne:'4', alergie:'', neji:'', vareni:'vařím si sama', zdravi:'', leky:'', diety:'' } },
     bezuctu: { name:'Karel Svoboda', vok:'Karle', rod:'m', appka:false, intake:{
       vek:'35', vyska:'178', vaha:'82', kroky:'11000', dny_treninku:'4', sport:'posilovna a běh',
       cil:'zpevnit postavu', prace:'prodavač', aktivita:'střední', spanek:'7 hodin',

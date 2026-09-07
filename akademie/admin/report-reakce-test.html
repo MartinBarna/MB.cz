@@ -38,6 +38,12 @@
   <label>Téma týdne (volitelné)<input id="tema" value="Bílkoviny a high-protein receptář"></label>
   <label>Odkaz na přílohu (volitelný)<input id="temaurl" value="https://drive.google.com/file/d/TEST/view"></label>
   <button id="prekresli">Přegenerovat</button>
+  <!-- ⛔ [7. 9. 2026] Do dneška měla stránka jen JEDEN případ: report s kompletními čísly.
+       Vada ADMIN_REPORT_CHYBI_DATA se proto nedala uvidět. Přepínač níž pouští i report,
+       ve kterém klient skoro nic nevyplnil, a report úplně prázdný. -->
+  <button id="dataPlny">Report s čísly</button>
+  <button id="dataChybi">Report s CHYBĚJÍCÍMI daty</button>
+  <button id="dataPrazdny">Report úplně prázdný</button>
 </div>
 
 <div class="box">
@@ -62,6 +68,19 @@
     "Tréninky 0 x (plán 3 x)",
     "Spánek 6,5 h, kvalita 3/5"
   ];
+  // ⛔ [7. 9. 2026] Report, ve kterém klient vyplnil skoro nic. Takhle vypadá výstup
+  // `report-engine.mjs`: řádek se do bloku PŘIDÁ jen tehdy, když hodnota existuje.
+  // Chybějící váha, kalorie ani kroky se nevypíšou jako 0 ani jako „undefined", prostě
+  // tam nejsou. Tohle je správné chování a stránka ho teď ukazuje.
+  var STAV_CHYBI = [
+    "Zápis 2 ze 7 dní",
+    "Spánek hodiny neuvedeny, kvalita 2/5"
+  ];
+  // ⛔ A tohle je ten případ, kvůli kterému vznikla brána v adminu: v reportu není JEDINÉ
+  // měřitelné číslo. Blok stavu se pak celý vynechá a mail by byl jen próza od AI, tedy
+  // reakce na prázdno. Admin proto koncept v tomhle případě vůbec nenabídne.
+  var STAV_PRAZDNY = [];
+
   // Próza: takhle vypadá to, co vrací AI (bod 4 až 8 kostry).
   var PROZA = [
     "Váha dolů o 0,6 kg a od startu jsi na 2,5 kg. Pas se sice zvedl na 107, ale ten se ti kýve",
@@ -77,6 +96,33 @@
     "Zvládneš to nachodit i ve všední dny, nebo to nacpeme do víkendu? :)"
   ].join("\n");
 
+  // Který případ se právě kreslí. Mění ho tři tlačítka nahoře.
+  var AKTIVNI = 'plny';
+  function stavRadky(){
+    if (AKTIVNI === 'chybi') return STAV_CHYBI;
+    if (AKTIVNI === 'prazdny') return STAV_PRAZDNY;
+    return STAV;
+  }
+
+  // ⛔⛔ [7. 9. 2026] NEJHORŠÍ VARIANTA: v bloku čísel řádek NENÍ, ale próza od AI o tom
+  // číslu mluví. Šablona ani engine to nepoznají, protože prózu nečtou. Klientovi pak
+  // přijde věta o váze, kterou nikdy nevyplnil. Tahle kontrola to na testovací stránce
+  // ukáže; v ostrém adminu si to musí přečíst Martin, než mail odešle.
+  function varovaniProza(telo){
+    var bloky = [
+      { klic: 'Váha', slova: /váh[aouy]|zhubl|přibral/i },
+      { klic: 'Kroky', slova: /krok/i },
+      { klic: 'Průměr', slova: /kcal|kalori/i },
+      { klic: 'Bílkoviny', slova: /bílkovin/i }
+    ];
+    var radky = stavRadky().join(' ');
+    var chybne = bloky.filter(function (b) {
+      return radky.indexOf(b.klic) < 0 && b.slova.test(telo);
+    }).map(function (b) { return b.klic.toLowerCase(); });
+    if (!chybne.length) return '';
+    return ' · ⚠️ próza mluví o tom, co v číslech NENÍ: ' + chybne.join(', ');
+  }
+
   function prekresli(){
     var R = window.ReportReakce;
     if(!R){ document.getElementById("pozn").textContent = "Šablona se nenačetla."; return; }
@@ -84,7 +130,7 @@
     var datum = document.getElementById("datum").value.trim();
     var predmet = R.predmet(vok, datum);
     var telo = R.telo({
-      osloveni: vok, datum: datum, stavRadky: STAV, textAi: PROZA,
+      osloveni: vok, datum: datum, stavRadky: stavRadky(), textAi: PROZA,
       tema: document.getElementById("tema").value.trim(),
       temaOdkaz: document.getElementById("temaurl").value.trim()
     });
@@ -92,9 +138,15 @@
     document.getElementById("mail").value = telo;
     var g = R.gmailOdkaz(document.getElementById("komu").value.trim(), predmet, telo);
     document.getElementById("pozn").textContent =
-      "délka odkazu " + g.delka + " znaků, " + (g.vejdeSe ? "tělo se do odkazu vejde" : "tělo se NEVEJDE, otevře se prázdný mail a text se kopíruje");
+      "délka odkazu " + g.delka + " znaků, " + (g.vejdeSe ? "tělo se do odkazu vejde" : "tělo se NEVEJDE, otevře se prázdný mail a text se kopíruje")
+      + (AKTIVNI === 'prazdny' ? " · ⚠️ tenhle případ admin vůbec nenabídne, blok čísel je prázdný a engine hlásí chybi_data" : "")
+      + (AKTIVNI === 'chybi' ? " · v bloku stavu schválně CHYBÍ řádky váhy, kalorií a kroků, to je správně" : "")
+      + varovaniProza(telo);
   }
   document.getElementById("prekresli").addEventListener("click", prekresli);
+  [['dataPlny','plny'],['dataChybi','chybi'],['dataPrazdny','prazdny']].forEach(function(par){
+    document.getElementById(par[0]).addEventListener("click", function(){ AKTIVNI = par[1]; prekresli(); });
+  });
   document.getElementById("gmail").addEventListener("click", function(){
     var R = window.ReportReakce;
     var g = R.gmailOdkaz(document.getElementById("komu").value.trim(),
