@@ -828,7 +828,11 @@
    * partii, takže série na svaly zůstávají stejné.
    * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
    */
-  function pouzijVymeny(plan, vymeny) {
+  /* Starý algoritmus (6. 9. 2026): hodnota = počet ťuknutí, množina obsazených roste
+     v pořadí dnů. Volá se UŽ JEN z `materializujVymeny`, aby uložené číslo dalo tentýž
+     cvik jako před přechodem na id. Nové ťuknutí sem nikdy nepřijde.
+     ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts. */
+  function pouzijVymenyCislem(plan, vymeny) {
     if (!vymeny || Object.keys(vymeny).length === 0) return plan;
     var obsazene = {};
     plan.days.forEach(function (d) { d.exercises.forEach(function (pe) { obsazene[pe.ex.id] = 1; }); });
@@ -857,6 +861,136 @@
       return den;
     });
     return kopie;
+  }
+
+  /* ⭐⭐ [7. 9. 2026] MNOŽINA OBSAZENÝCH PRO JEDEN SLOT.
+     Obsahuje všechny cviky z ČERSTVÉHO plánu (tedy i ten, který klient na tomhle řádku
+     vyhodil, aby se mu nevracel jinam) plus aktuální cviky VŠECH OSTATNÍCH slotů.
+     ⛔ Aktuální cvik TOHOTO slotu v ní schválně není: jinak by se nedalo cyklovat dál.
+     ⛔ Vrací OBJEKT, ne Set: `kandidatiVymeny` čte `obsazene[e.id]`. */
+  function obsazeneCizi(cerstvy, po, klic) {
+    var s = {};
+    cerstvy.days.forEach(function (d) {
+      d.exercises.forEach(function (pe) { s[pe.ex.id] = 1; });
+    });
+    po.days.forEach(function (d, i) {
+      d.exercises.forEach(function (pe) {
+        var k = i + ':' + (pe.puvodniId || pe.ex.id);
+        if (k !== klic) s[pe.ex.id] = 1;
+      });
+    });
+    return s;
+  }
+
+  /* Který cvik dá DALŠÍ ťuknutí. `null` = žádný, tlačítko se nemá ukazovat. */
+  function dalsiIdVymeny(pool, original, currentId, obsazene) {
+    var kand = kandidatiVymeny(pool, original, obsazene);
+    if (!kand.length) return null;
+    var idx = -1, i;
+    for (i = 0; i < kand.length; i++) if (kand[i].id === currentId) idx = i;
+    var next = kand[(idx + 1) % kand.length];
+    return next.id === currentId ? null : next.id;
+  }
+
+  /* ⭐⭐ [7. 9. 2026] PŘEVOD STARÉHO TVARU MAPY NA NOVÝ.
+     Do 7. 9. byla hodnota POČET ŤUKNUTÍ a plán se z ní skládal v pevném pořadí dnů, takže
+     přidání dřívějšího klíče posunulo kandidáty všech pozdějších výměn: ťuknutí na jeden
+     řádek přeházelo řádky, na které klient nesáhl (změřeno 1 114 z 5 612 ťuknutí shora
+     dolů, 3 969 z 11 155 zdola nahoru). Nově je hodnota ID zvolené náhrady.
+     ⛔ Uložené plány mají ještě čísla. Ta se tady JEDNOU přeženou původním algoritmem,
+        takže se plán na obrazovce nehne. */
+  function materializujVymeny(plan, vymeny) {
+    var out = {};
+    var ciselne = {};
+    if (vymeny) {
+      Object.keys(vymeny).forEach(function (k) {
+        var v = vymeny[k];
+        if (typeof v === 'number' && v > 0) ciselne[k] = v;
+        else if (typeof v === 'string' && v) out[k] = v;
+      });
+    }
+    if (Object.keys(ciselne).length) {
+      var legacy = pouzijVymenyCislem(plan, ciselne);
+      legacy.days.forEach(function (d, i) {
+        d.exercises.forEach(function (pe) {
+          if (pe.puvodniId) {
+            var k = i + ':' + pe.puvodniId;
+            if (!(k in out)) out[k] = pe.ex.id;
+          }
+        });
+      });
+    }
+    return out;
+  }
+
+  /**
+   * Promítne výměny do plánu. Hodnota v mapě je id náhrady; číslo je starý tvar a jednou
+   * se přepočítá. Objemová tabulka se nepřepočítává schválně: vyměňuje se za stejný vzorec
+   * a stejnou partii, takže série na svaly zůstávají stejné.
+   * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+   */
+  function pouzijVymeny(plan, vymeny) {
+    if (!vymeny || Object.keys(vymeny).length === 0) return plan;
+    var ids = materializujVymeny(plan, vymeny);
+    if (!Object.keys(ids).length) return plan;
+    var byId = {};
+    plan.pool.forEach(function (e) { byId[e.id] = e; });
+    // ⛔ COLLISION GUARD [7. 9. 2026]. Mapa drží id náhrady a bez téhle kontroly
+    // `pouzijVymeny` dosadí uložené id naslepo, i když ho už drží jiný slot.
+    // Politika při kolizi: nechat původní cvik, množina obsazených jen ROSTE.
+    var obsazene = {};
+    plan.days.forEach(function (d) { d.exercises.forEach(function (pe) { obsazene[pe.ex.id] = 1; }); });
+    var kopie = Object.assign({}, plan);
+    kopie.days = plan.days.map(function (d, i) {
+      var den = Object.assign({}, d);
+      den.exercises = d.exercises.map(function (pe) {
+        if (pe.ex.pattern === 'kardio') return pe;
+        var nid = ids[i + ':' + pe.ex.id];
+        if (!nid || nid === pe.ex.id) return pe;
+        if (obsazene[nid]) return pe;
+        var ex = byId[nid];
+        if (!ex) return pe;
+        obsazene[ex.id] = 1;
+        var novy = Object.assign({}, pe);
+        novy.ex = ex;
+        novy.puvodniId = pe.ex.id;
+        return novy;
+      });
+      return den;
+    });
+    return kopie;
+  }
+
+  /**
+   * Jedno ťuknutí na Vyměnit u jednoho klíče. Vrací CELOU mapu už jako id, takže se starý
+   * číselný tvar zahodí hned při prvním ťuknutí. Ostatní řádky zůstanou beze změny.
+   * ⛔ Tohle je jediné místo, kde ťuknutí vzniká.
+   */
+  function dalsiVymena(plan, vymeny, klic) {
+    var ids = materializujVymeny(plan, vymeny);
+    var po = pouzijVymeny(plan, ids);
+    var dvojtecka = klic.indexOf(':');
+    var di = Number(klic.slice(0, dvojtecka));
+    var origId = klic.slice(dvojtecka + 1);
+    var orig = null;
+    if (plan.days[di]) {
+      plan.days[di].exercises.forEach(function (pe) {
+        if (pe.ex.id === origId) orig = pe.ex;
+      });
+    }
+    var pe = null;
+    if (po.days[di]) {
+      po.days[di].exercises.forEach(function (x) {
+        if ((x.puvodniId || x.ex.id) === origId) pe = x;
+      });
+    }
+    if (!orig || !pe) return ids;
+    var nid = dalsiIdVymeny(plan.pool, orig, pe.ex.id, obsazeneCizi(plan, po, klic));
+    if (!nid) return ids;
+    var dalsi = {};
+    Object.keys(ids).forEach(function (k) { dalsi[k] = ids[k]; });
+    dalsi[klic] = nid;
+    return dalsi;
   }
 
   // Náhrada „když ho nemáš kde dělat". `vyhozene` je TVRDÝ zákaz, ne jen preference:
@@ -933,18 +1067,14 @@
 
     /**
      * ⭐⭐ [7. 9. 2026] UDĚLALO BY ŤUKNUTÍ NA VYMĚNIT U TOHOHLE ŘÁDKU VŮBEC NĚCO?
-     * Ptáme se enginu simulací, ne odhadem z hotového plánu. Do dneška se viditelnost
-     * počítala z `obsazene` postavené z HOTOVÉHO plánu, jenže `pouzijVymeny` si množinu
-     * staví od nuly a nechává ji RŮST v pořadí iterace, takže u dřívějších řádků je menší.
-     * Tlačítko se pak schovalo i tam, kde by výměna proběhla. Změřeno na mřížce 1 728
-     * konfigurací (klient ťuká na RŮZNÉ řádky, 14 ťuknutí): 4 950 falešně skrytých ze
-     * 418 174 auditů při ťukání shora dolů (850 konfigurací z 1 728), zdola nahoru
-     * 24 172 (1 674 z 1 728). Mrtvé tlačítko tu naopak nebylo ani jedno.
-     * ⚠️ Cena je N volání `pouzijVymeny` navíc a ROSTE s počtem už provedených výměn.
-     *    Na webu změřeno 2,1 ms u čerstvého plánu a 7,6 ms u úplně vyměněného (29 řádků).
+     * Ptáme se enginu simulací, ne odhadem z hotového plánu. Ťuknutí volá `dalsiVymena`
+     * a pak `pouzijVymeny`. Tlačítko se ukáže, jen když tentýž pár změní id tohoto řádku.
+     * Do 7. 9. rána se viditelnost počítala z `obsazene` hotového plánu a lhala.
+     * `(n || 0) + 1` po přechodu na id náhrady u řetězce spojuje text, nesimuluje ťuknutí.
+     * ⚠️ Cena je N volání `dalsiVymena` + `pouzijVymeny` na překreslení.
      * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
-     * ⛔ MĚŘENÍ: ťukat pořád na TENTÝŽ řádek vadu neukáže, množina obsazených skoro
-     *    neroste. Klient jde plánem a ťuká na různé řádky, tak se to musí i měřit.
+     * ⛔ MĚŘENÍ: ťukat pořád na TENTÝŽ řádek vadu neukáže. Klient jde plánem a ťuká
+     *    na různé řádky, a to v obou směrech (shora dolů i zdola nahoru).
      */
     var zmeniTuknuti = {};
     var mapaVymen = vstup.vymeny || {};
@@ -952,9 +1082,7 @@
       d.exercises.forEach(function (pe, j) {
         if (pe.ex.pattern === 'kardio') return;
         var klic = i + ':' + pe.ex.id;
-        var zkus = {};
-        for (var k in mapaVymen) zkus[k] = mapaVymen[k];
-        zkus[klic] = (zkus[klic] || 0) + 1;
+        var zkus = dalsiVymena(cerstvy, mapaVymen, klic);
         var po = pouzijVymeny(cerstvy, zkus);
         zmeniTuknuti[klic] = po.days[i].exercises[j].ex.id !== plan.days[i].exercises[j].ex.id;
       });
@@ -1023,6 +1151,6 @@
     };
   }
 
-  global.WorkoutGen = { buildPlan: buildPlan, assembleProgram: assembleProgram, pouzijVymeny: pouzijVymeny, kandidatiVymeny: kandidatiVymeny, vymenenyCvik: vymenenyCvik, planCoverage: planCoverage, planVolume: planVolume, addVolume: addVolume, GOALS: GOALS,
+  global.WorkoutGen = { buildPlan: buildPlan, assembleProgram: assembleProgram, pouzijVymeny: pouzijVymeny, dalsiVymena: dalsiVymena, kandidatiVymeny: kandidatiVymeny, vymenenyCvik: vymenenyCvik, planCoverage: planCoverage, planVolume: planVolume, addVolume: addVolume, GOALS: GOALS,
     muscles: { musclesFromDb: musclesFromDb, matchMuscles: matchMuscles, resolveMuscles: resolveMuscles, weeklySetsByMuscle: weeklySetsByMuscle, setDb: setMuscleDb, LANDMARKS: LANDMARKS, zoneFor: zoneFor, LABELS: MUS_LABEL, ORDER: MUS_ORDER } };
 })(window);

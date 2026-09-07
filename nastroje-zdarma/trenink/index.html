@@ -211,7 +211,7 @@
     </div>
   </div>
 
-  <script src="/assets/workout-gen.js?v=20260907a"></script>
+  <script src="/assets/workout-gen.js?v=20260907b"></script>
   <script>
   (function(){
     var DB=null, seed=0;
@@ -267,7 +267,10 @@
     if ($('opakovani')) { $('opakovani').addEventListener('change', obnovOpakovaniText); obnovOpakovaniText(); }
 
 
-    // Ťuknutí na Vyměnit: klíč `poradiDne:puvodniIdCviku`, hodnota kolikrát klient ťukl.
+    // Ťuknutí na Vyměnit: klíč `poradiDne:puvodniIdCviku`, hodnota je ID ZVOLENÉ NÁHRADY.
+    // ⛔ [7. 9. 2026] Do dneška to byl počet ťuknutí a engine z něj skládal plán v pevném
+    // pořadí dnů, takže ťuknutí na jeden řádek přeházelo řádky, na které klient nesáhl
+    // (změřeno 640 přeházených řádků při ťukání zdola nahoru, po opravě 0).
     var vymeny = {};
     // ⛔ [7. 9. 2026] NASTAVENÍ, ZE KTERÉHO VZNIKL VYKRESLENÝ PLÁN. Musí se zmrazit:
     // formulář se dá přehodit bez ťuknutí na Sestavit a `opts()` by pak vrátilo něco
@@ -298,8 +301,7 @@
       cerstvy.days.forEach(function(d,i){ d.exercises.forEach(function(pe,j){
         if(pe.ex.pattern==='kardio') return;
         var klic=i+':'+pe.ex.id;
-        var zkus={}; for(var k in vymeny) zkus[k]=vymeny[k];
-        zkus[klic]=(zkus[klic]||0)+1;
+        var zkus=window.WorkoutGen.dalsiVymena(cerstvy, vymeny, klic);
         var po=window.WorkoutGen.pouzijVymeny(cerstvy, zkus);
         m[klic]=po.days[i].exercises[j].ex.id!==ted.days[i].exercises[j].ex.id;
       }); });
@@ -344,8 +346,10 @@
       var b=e.target&&e.target.closest?e.target.closest('[data-vymenit]'):null;
       if(!b||!lastPlan)return;
       var k=b.getAttribute('data-vymenit');
-      vymeny[k]=(vymeny[k]||0)+1;
-      lastPlan=window.WorkoutGen.pouzijVymeny(window.WorkoutGen.buildPlan(DB, lastOpts||opts()), vymeny);
+      // ⛔ Ťuknutí vzniká JEN v enginu (`dalsiVymena`), ať sáhne na jediný řádek.
+      var cerstvyPlan=window.WorkoutGen.buildPlan(DB, lastOpts||opts());
+      vymeny=window.WorkoutGen.dalsiVymena(cerstvyPlan, vymeny, k);
+      lastPlan=window.WorkoutGen.pouzijVymeny(cerstvyPlan, vymeny);
       render(lastPlan);
     });
     $('gen').addEventListener('click',function(){ generate(false); });
