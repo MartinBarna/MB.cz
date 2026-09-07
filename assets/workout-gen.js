@@ -924,11 +924,41 @@
 
     // Ťuknutí na Vyměnit se promítne rovnou do plánu, ať dokument i plán mluví o tomtéž
     // cviku. Bez mapy `vymeny` je `pouzijVymeny` no-op a plán je tentýž jako dřív.
-    var plan = pouzijVymeny(buildPlan(filtrovana, {
+    var cerstvy = buildPlan(filtrovana, {
       location: vstup.kde_cvici, equip: vstup.vybaveni, level: vstup.level,
       goal: goal, days: dny, seed: vstup.seed || 0, orezStyl: vstup.orezStyl,
       struktura: vstup.struktura, opakovani: vstup.opakovani
-    }), vstup.vymeny);
+    });
+    var plan = pouzijVymeny(cerstvy, vstup.vymeny);
+
+    /**
+     * ⭐⭐ [7. 9. 2026] UDĚLALO BY ŤUKNUTÍ NA VYMĚNIT U TOHOHLE ŘÁDKU VŮBEC NĚCO?
+     * Ptáme se enginu simulací, ne odhadem z hotového plánu. Do dneška se viditelnost
+     * počítala z `obsazene` postavené z HOTOVÉHO plánu, jenže `pouzijVymeny` si množinu
+     * staví od nuly a nechává ji RŮST v pořadí iterace, takže u dřívějších řádků je menší.
+     * Tlačítko se pak schovalo i tam, kde by výměna proběhla. Změřeno na mřížce 1 728
+     * konfigurací (klient ťuká na RŮZNÉ řádky, 14 ťuknutí): 4 950 falešně skrytých ze
+     * 418 174 auditů při ťukání shora dolů (850 konfigurací z 1 728), zdola nahoru
+     * 24 172 (1 674 z 1 728). Mrtvé tlačítko tu naopak nebylo ani jedno.
+     * ⚠️ Cena je N volání `pouzijVymeny` navíc a ROSTE s počtem už provedených výměn.
+     *    Na webu změřeno 2,1 ms u čerstvého plánu a 7,6 ms u úplně vyměněného (29 řádků).
+     * ⛔ Totéž musí platit v appce → src/engine/workout-gen-core.ts.
+     * ⛔ MĚŘENÍ: ťukat pořád na TENTÝŽ řádek vadu neukáže, množina obsazených skoro
+     *    neroste. Klient jde plánem a ťuká na různé řádky, tak se to musí i měřit.
+     */
+    var zmeniTuknuti = {};
+    var mapaVymen = vstup.vymeny || {};
+    cerstvy.days.forEach(function (d, i) {
+      d.exercises.forEach(function (pe, j) {
+        if (pe.ex.pattern === 'kardio') return;
+        var klic = i + ':' + pe.ex.id;
+        var zkus = {};
+        for (var k in mapaVymen) zkus[k] = mapaVymen[k];
+        zkus[klic] = (zkus[klic] || 0) + 1;
+        var po = pouzijVymeny(cerstvy, zkus);
+        zmeniTuknuti[klic] = po.days[i].exercises[j].ex.id !== plan.days[i].exercises[j].ex.id;
+      });
+    });
 
     var jmenaDnu = ROZVRH_DNU[dny] || ROZVRH_DNU[3];
     var obsazene = {};
@@ -963,7 +993,7 @@
           nahradaId: n ? n.id : null,
           kardio: kardio, tip: ex.tip || '', doplnkovy: doplnkovy,
           vymenaKlic: i + ':' + (pe.puvodniId || pe.ex.id),
-          vymenaMozna: !kardio && kandidatiVymeny(plan.pool, ex, obsazene).length > 0
+          vymenaMozna: !kardio && zmeniTuknuti[i + ':' + (pe.puvodniId || pe.ex.id)] === true
         };
       });
       return { poradi: i + 1, den: jmenaDnu[i] || ('Den ' + (i + 1)), nazev: d.name, rozehrati: rozehratiPro(cviky), cviky: cviky };
