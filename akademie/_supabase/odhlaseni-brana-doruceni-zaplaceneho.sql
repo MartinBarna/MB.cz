@@ -1,6 +1,6 @@
 -- ============================================================================
 -- BRÁNA ODHLAŠOVÁNÍ: VÝJIMKA PRO DORUČENÍ ZAPLACENÉHO ZBOŽÍ
--- 6. 9. 2026 pozdě večer, 54. šéf chat
+-- 6. 9. 2026 pozdě večer, 54. šéf chat (oprava cizího klíče 7. 9. nad ránem)
 -- ============================================================================
 --
 -- CO SE OPRAVUJE
@@ -43,16 +43,15 @@
 --    do tratě `tc-zkusebka`, která prefix `onboarding-nakup-` nemá (viz `TRACKY`).
 --    Ověřeno čtením funkce, ne odhadem.
 --
--- STOPA: propuštění se zapisuje do `email_events` (type='info'), ne do
--- `odhlaseni_blokovano`. Ta tabulka znamená „zablokovaný pokus" a slévat do ní dva
--- významy je přesně ta chyba, na kterou projekt už jednou doplatil u
--- `moderation_status='pending'`.
+-- STOPA: propuštění se zapisuje do `odhlaseni_blokovano` s `operace` začínající slovem
+-- PROPUSTENO. Do `email_events` to jít NEMŮŽE, ta tabulka má cizí klíč na `leads` a na
+-- BEFORE INSERT řádek ještě neexistuje (viz komentář u výjimky níž).
 --
--- OVĚŘENO NA ŽIVÉ DB sondou v transakci, kterou jsem shodil:
---   doručení (krok 0) prošlo, propuštění zapsáno 1×
---   navazující prodejní mail (krok 1) zablokován
---   běžný marketing zablokován
---   výsledný stav 'unsubscribed', next_send_at NULL, 2 záznamy v odhlaseni_blokovano
+-- OVĚŘENO NA ŽIVÉ DB sondami v transakcích, které jsem vždy shodil, ČTYŘI CESTY:
+--   UPDATE, doručení (krok 0): prošlo, status 'active', termín zůstal, stopa PROPUSTENO 1×
+--   UPDATE, navazující prodej (krok 1): zablokován, stav zpět 'unsubscribed', termín NULL
+--   INSERT, doručení (krok 0) po GDPR výmazu leadu: řádek se ZALOŽIL, 'active', s termínem
+--   INSERT, marketing i krok 1 nákupní tratě: nezaložilo se nic, 2 záznamy 'INSERT'
 --   po rollbacku 67 odhlášených a 1013 leadů beze změny, funkce má pořád jednu variantu
 -- ============================================================================
 
@@ -68,11 +67,19 @@ begin
   end if;
 
   -- VÝJIMKA: doručení zaplaceného zboží. Podrobné zdůvodnění v hlavičce souboru.
+  -- ⛔⛔ [7. 9. 2026] STOPA JDE DO `odhlaseni_blokovano`, NE do `email_events`.
+  --    První verze psala do `email_events` s `lead_id = new.id`. Na BEFORE INSERT ten
+  --    řádek ještě NEEXISTUJE, takže cizí klíč `email_events_lead_id_fkey` spadl na 23503
+  --    a shodil CELÝ insert. Dopad byl HORŠÍ než původní vada: `simpleshop-webhook`,
+  --    který zakládá lead odhlášenému kupci, by dostal 500 místo aby doručil zboží.
+  --    Našel to revizní chat; cesta je reálná, `unsubscribe?action=erase` lead SMAŽE
+  --    a e-mail na trvalém seznamu nechá, takže se pak zakládá znovu.
+  -- ⚠️ Tabulka se jmenuje „blokováno", ale `operace` u těchhle řádků začíná PROPUSTENO,
+  --    takže se od zablokovaných pokusů poznají. Vlastní tabulka za jeden druh záznamu
+  --    nestojí; podstatné je, že tady nesmí být ŽÁDNÝ cizí klíč.
   if new.track like 'onboarding-nakup-%' and coalesce(new.step, 0) = 0 then
-    insert into public.email_events (lead_id, step, type, detail)
-    values (new.id, 0, 'info',
-            jsonb_build_object('duvod', 'odhlaseny kupec: propusteno doruceni zaplaceneho',
-                               'track', new.track, 'operace', tg_op));
+    insert into public.odhlaseni_blokovano (email, operace, trat, krok)
+    values (lower(new.email), 'PROPUSTENO doruceni zaplaceneho (' || tg_op || ')', new.track, new.step);
     return new;
   end if;
 
