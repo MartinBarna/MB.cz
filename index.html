@@ -380,17 +380,6 @@ html[data-theme="light"] .plan-why{color:var(--text)}
 .feat{list-style:none;margin:0 0 1.5rem}
 .feat li{padding:.4rem 0 .4rem 1.7rem;position:relative;color:#DDD7E4;font-size:.95rem}
 .feat li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:800}
-.feat li.feat-toggle{padding-left:1.7rem;padding-top:.55rem}
-.feat li.feat-toggle::before{content:none}
-.feat-toggle summary{cursor:pointer;color:var(--gold);font-weight:600;font-size:.9rem;list-style:none;display:inline-flex;align-items:center;gap:.35em;outline:none}
-.feat-toggle summary::-webkit-details-marker{display:none}
-.feat-toggle summary:hover{color:var(--gold-light)}
-.feat-toggle summary::after{content:"▾";font-size:.75em;transition:transform .2s ease}
-.feat-toggle details[open] summary::after{transform:rotate(180deg)}
-.feat-toggle .feat-more{margin:.6rem 0 0}
-html[data-theme="light"] .feat-toggle summary{color:var(--gold)!important}
-html[data-theme="light"] .feat-toggle summary:hover{color:var(--gold-light)!important}
-html[data-theme="light"] .feat-toggle details{background:none!important;border:none!important}
 .plan-cta{margin-top:auto}
 .plan .btn{width:100%}
 .microtrust{color:var(--muted);font-size:.8rem;text-align:center;margin-top:.65rem}
@@ -755,17 +744,10 @@ footer a{color:var(--gold-light)}
                 <li><strong>Novinka:</strong> moderní klientská sekce s grafy pokroku, report za 3 minuty z mobilu</li>
                 <li><strong>Novinka:</strong> AI Martin, AI kouč natrénovaný na mé metodice, k ruce 24/7</li>
                 <li>Appka Tvůj Coach v ceně po celou dobu koučinku: zápis jídla i tréninku, generátor plánů, 128 cviků s technikou a nejčastějšími chybami</li>
-                <li class="feat-toggle">
-                  <details>
-                    <summary>Zobrazit další 4 výhody</summary>
-                    <ul class="feat feat-more">
-                      <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
-                      <li>Kuchařka se 40+ recepty</li>
-                      <li>E-book Tajemství flexibilního stravování</li>
-                      <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
-                    </ul>
-                  </details>
-                </li>
+                <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
+                <li>Kuchařka se 40+ recepty</li>
+                <li>E-book Tajemství flexibilního stravování</li>
+                <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
               </ul>
               <div class="plan-cta">
                 <a class="btn btn-gold" href="#kontakt">Chci Gold</a>

@@ -80,9 +80,6 @@
         html[data-theme="light"] body { background:var(--bg)!important; }
         html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3 { color:var(--txt); }
         html[data-theme="light"] .about [style*="color:#fff"] { color:var(--txt)!important; }
-        html[data-theme="light"] .feat-toggle summary { color:var(--acc)!important; }
-        html[data-theme="light"] .feat-toggle summary:hover { color:var(--acc-l)!important; }
-        html[data-theme="light"] .feat-toggle details { background:none!important; border:none!important; }
         * { box-sizing:border-box; }
         html { scroll-behavior:smooth; }
         body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--txt); background:linear-gradient(180deg,#15171a 0%,#0f1113 100%); line-height:1.6; }
@@ -181,13 +178,6 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         .feat { list-style:none; margin:0 0 1.4rem; padding:0; flex:1; }
         .feat li { position:relative; padding-left:1.5rem; color:var(--txt); font-size:.92rem; margin-bottom:.55rem; }
         .feat li::before { content:"✓"; position:absolute; left:0; color:var(--acc); font-weight:800; }
-        .feat li.feat-toggle::before { content:none; }
-        .feat-toggle summary { cursor:pointer; color:var(--acc); font-weight:600; font-size:.9rem; list-style:none; display:inline-flex; align-items:center; gap:.35em; outline:none; }
-        .feat-toggle summary::-webkit-details-marker { display:none; }
-        .feat-toggle summary:hover { color:var(--acc-l); }
-        .feat-toggle summary::after { content:"▾"; font-size:.75em; transition:transform .2s ease; }
-        .feat-toggle details[open] summary::after { transform:rotate(180deg); }
-        .feat-toggle .feat-more { margin:.6rem 0 0; flex:none; }
         .plan .btn { text-align:center; }
         .plan-cta { margin-top:auto; }
         .microtrust { color:var(--mut); font-size:.8rem; text-align:center; margin:.7rem 0 0; }
@@ -375,17 +365,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                     <li><strong>Novinka:</strong> moderní klientská sekce s grafy pokroku, report za 3 minuty z mobilu</li>
                     <li><strong>Novinka:</strong> AI Martin, AI kouč natrénovaný na mé metodice, k ruce 24/7</li>
                     <li>Appka Tvůj Coach v ceně po celou dobu koučinku: zápis jídla i tréninku, generátor plánů, 128 cviků s technikou a nejčastějšími chybami</li>
-                    <li class="feat-toggle">
-                        <details>
-                            <summary>Zobrazit další 4 výhody</summary>
-                            <ul class="feat feat-more">
-                                <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
-                                <li>Kuchařka se 40+ recepty</li>
-                                <li>E-book Tajemství flexibilního stravování</li>
-                                <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
-                            </ul>
-                        </details>
-                    </li>
+                    <li>Vzdělávací příloha každý týden + desítky příloh v klientské sekci</li>
+                    <li>Kuchařka se 40+ recepty</li>
+                    <li>E-book Tajemství flexibilního stravování</li>
+                    <li>Videokurz (182 videí · 20+ hodin) + kalkulačka makroživin a generátor receptů</li>
                 </ul>
                 <div class="buynow" data-plan="gold" hidden>
                     <label for="selGold">Chci začít hned, na jak dlouho:</label>
