@@ -289,12 +289,36 @@
 
     // Ťuknutí na Vyměnit: klíč `poradiDne:puvodniIdCviku`, hodnota kolikrát klient ťukl.
     var vymeny = {};
-    function obsazeneIds(plan){ var o={}; plan.days.forEach(function(d){ d.exercises.forEach(function(pe){ o[pe.ex.id]=1; }); }); return o; }
+    // ⭐⭐ [7. 9. 2026] TLAČÍTKO SE PTÁ ENGINU, CO BY ŤUKNUTÍ UDĚLALO.
+    // Do dneška se viditelnost počítala z obsazených id HOTOVÉHO plánu, jenže
+    // `pouzijVymeny` vybírá z jiné množiny: drží i cviky, které klient už vyhodil.
+    // Změřeno na mřížce 480 konfigurací (ťukání shora dolů): ze 3 352 nabídnutých
+    // tlačítek 404 (12 %) po ťuknutí nechalo tentýž cvik. Mrtvé tlačítko čte klient
+    // jako rozbitý nástroj. Simulace ťuknutí je jediná odpověď, která nelže, protože
+    // se ptá TÉŽE funkce, která pak opravdu vybírá.
+    // ⚠️ Cena je jeden `buildPlan` a N `pouzijVymeny` na překreslení (změřeno ~5 ms
+    //    na 25 řádků), ne na každý řádek zvlášť.
+    // ⛔ Totéž musí platit v /nastroje-zdarma/trenink/index.html.
+    function coZmeniTuknuti(){
+      var cerstvy=window.WorkoutGen.buildPlan(DB, opts());
+      var ted=window.WorkoutGen.pouzijVymeny(cerstvy, vymeny);
+      var m={};
+      cerstvy.days.forEach(function(d,i){ d.exercises.forEach(function(pe,j){
+        if(pe.ex.pattern==='kardio') return;
+        var klic=i+':'+pe.ex.id;
+        var zkus={}; for(var k in vymeny) zkus[k]=vymeny[k];
+        zkus[klic]=(zkus[klic]||0)+1;
+        var po=window.WorkoutGen.pouzijVymeny(cerstvy, zkus);
+        m[klic]=po.days[i].exercises[j].ex.id!==ted.days[i].exercises[j].ex.id;
+      }); });
+      return m;
+    }
 
     function render(plan){
       // ⛔ Obsluha tlacitek (doplnit objem, vymenit cvik) si sahne na posledni vykresleny
       //    plan. Bez tohohle radku padal volny nastroj na ReferenceError: lastPlan.
       lastPlan=plan;
+      var zmeniTo=coZmeniTuknuti();
       var html='';
       plan.days.forEach(function(d,di){
         html+='<div class="day"><h3>'+d.day+'. '+d.name+' <small>'+d.exercises.length+' cviků</small></h3><table>';
@@ -303,7 +327,7 @@
           // na stejný vzorec a stejnou partii. Objem po partiích se tím nemění.
           // ⛔ Totéž je v appce (src/app/client/workout-generator.tsx).
           var klic=di+':'+(it.puvodniId||it.ex.id);
-          var lzeVymenit=it.ex.pattern!=='kardio'&&window.WorkoutGen.kandidatiVymeny(plan.pool,it.ex,obsazeneIds(plan)).length>0;
+          var lzeVymenit=it.ex.pattern!=='kardio'&&zmeniTo[klic]===true;
           var tlacitko=lzeVymenit?'<button type="button" class="no-print vymenit" data-vymenit="'+esc(klic)+'" style="background:none;border:0;color:#EBB12C;cursor:pointer;font:inherit;font-size:.86em;padding:2px 0">Vyměnit tenhle cvik ⟳</button>':'';
           html+='<tr><td><div style="display:flex;gap:11px;align-items:flex-start"><img class="no-print" src="/assets/cviky/'+esc(it.ex.id)+'.jpg" alt="" loading="lazy" onerror="this.remove()" style="width:62px;height:46px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#191510;margin-top:2px"><div>'+esc(it.ex.name)+(it.ex.tip?'<span class="tip">💡 '+esc(it.ex.tip)+'</span>':'')+(tlacitko?'<div>'+tlacitko+'</div>':'')+'</div></div></td><td class="sr">'+it.sets+' × '+it.reps+'</td></tr>';
         });
