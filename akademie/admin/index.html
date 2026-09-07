@@ -254,6 +254,14 @@
       <div class="traf" id="prehled" style="display:none;border-color:rgba(235,177,44,.45);">
         <h3>📊 Přehled klientů: s kým začít týden</h3>
         <div class="sub" id="prehledSub">Změny a průměry za posledních 30 dní, odchylka proti zadání, které klientovi nastavuješ</div>
+        <!-- 🔎 HLEDÁNÍ V PŘEHLEDU (Martin 7. 9. 2026: „ty křestní nestačí, je tam ted desítky
+             lidí a nemůžu najít toho klienta"). Pole je SCHVÁLNĚ mimo `prehledBody`:
+             `renderPrehled()` ten div přepisuje celý, takže uvnitř by se input při každém
+             písmenu zahodil i s kurzorem. Hledá se v e-mailu i ve jméně. -->
+        <div style="margin:.6rem 0 .2rem;">
+          <input type="search" id="prehQ" placeholder="Hledat klienta podle e-mailu nebo jména…" autocomplete="off"
+                 style="width:100%;max-width:420px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:#fff;font-family:inherit;font-size:.9rem;">
+        </div>
         <div id="prehledBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
       </div>
 
@@ -1038,7 +1046,7 @@
     // reportu, může být na dovolené; kdo 15, ten vypadl a Martin o tom má vědět sám.
     var PR_DNI_VARUJ = 8, PR_DNI_KRIT = 15;
     var PR_ODCH_VARUJ = 10, PR_ODCH_KRIT = 20;   // % od zadání
-    var PREH = { razeni: 'dni', sestupne: true, data: null };
+    var PREH = { razeni: 'dni', sestupne: true, data: null, hledani: '' };
 
     function prZmena(v, jed, dolu){
       if(v == null) return '<span class="muted">–</span>';
@@ -1069,6 +1077,22 @@
       var rows = (d.rows || []).filter(function(r){ return r.active !== false; });
       if(!rows.length){ $('prehledBody').innerHTML = '<p class="muted" style="padding:.6rem 0;">Zatím žádní aktivní klienti.</p>'; $('prehled').style.display=''; sekInfo('klienti','žádní aktivní klienti'); return; }
 
+      // 🔎 Hledání podle e-mailu nebo jména. Shrnutí a počty pod tím se počítají už
+      // z filtrovaného seznamu, jinak by hlavička tvrdila „12 aktivních" nad jedním řádkem.
+      var vsechRows = rows.length;
+      var hled = (PREH.hledani || '').trim().toLowerCase();
+      if(hled){
+        rows = rows.filter(function(r){
+          return String(r.email || '').toLowerCase().indexOf(hled) > -1
+              || String(r.name || '').toLowerCase().indexOf(hled) > -1;
+        });
+      }
+      if(!rows.length){
+        $('prehledBody').innerHTML = '<p class="muted" style="padding:.6rem 0;">Nikdo takový mezi ' + vsechRows + ' aktivními klienty není. Zkus jinou část e-mailu.</p>';
+        $('prehled').style.display=''; sekInfo('klienti', vsechRows + ' aktivních · hledání nic nenašlo');
+        return;
+      }
+
       // Řadicí klíče. ⚠️ Každý musí mít SVOU hlavičku ve `sl` níž, jinak je nedosažitelný:
       // klíč `odch` tu chvíli byl bez sloupce a řazení „kdo je od zadání nejdál" tím
       // fakticky neexistovalo, i když v kódu vypadalo hotově.
@@ -1096,7 +1120,10 @@
       var mlci = rows.filter(function(r){ return r.dni_od_reportu == null || r.dni_od_reportu >= PR_DNI_KRIT; });
       var daleko = rows.filter(function(r){ var x = prNejvetsiOdch(r); return x != null && x >= PR_ODCH_KRIT; });
       var bezZadani = rows.filter(function(r){ return !r.ma_zadani; });
-      sekInfo('klienti', rows.length+' aktivních'+(mlci.length?' · ⚠️ '+mlci.length+' bez reportu '+PR_DNI_KRIT+'+ dní':''));
+      // Při hledání se řekne OBOJÍ: kolik jich vyhovuje a kolik jich je celkem. Jinak by
+      // hlavička u vyfiltrovaného seznamu tvrdila „1 aktivních" a vypadalo by to, že klienti zmizeli.
+      sekInfo('klienti', (hled ? rows.length+' z '+vsechRows+' aktivních' : rows.length+' aktivních')
+        +(mlci.length?' · ⚠️ '+mlci.length+' bez reportu '+PR_DNI_KRIT+'+ dní':''));
       var shrn = [];
       if(mlci.length) shrn.push('<b style="color:#ff9b9b">' + mlci.length + '×</b> bez reportu ' + PR_DNI_KRIT + '+ dní');
       if(daleko.length) shrn.push('<b style="color:#F6CD63">' + daleko.length + '×</b> od zadání o víc než ' + PR_ODCH_KRIT + ' %');
@@ -1123,8 +1150,12 @@
           else if(dni >= PR_DNI_VARUJ) dniBarva = 'color:#F6CD63;';
         }
         return '<tr>'
+          // ⭐ [7. 9. 2026] E-MAIL POD JMÉNEM. Do té doby tu bylo `r.name || r.email`, tedy
+          // u kohokoli se jménem jen křestní jméno. Při desítkách klientů se podle toho
+          // nedá poznat, o koho jde, a při shodě jmen ani vybrat toho správného.
           + '<td><a href="#" data-kli="' + esc(r.email) + '" data-kliname="' + esc(r.name || '') + '" style="color:#F6CD63;">' + esc(r.name || r.email) + '</a>'
-            + (r.reportu ? ' <span class="muted" style="font-size:.78rem;">' + r.reportu + '×</span>' : '') + '</td>'
+            + (r.reportu ? ' <span class="muted" style="font-size:.78rem;">' + r.reportu + '×</span>' : '')
+            + (r.name ? '<br><span class="muted" style="font-size:.76rem;">' + esc(r.email) + '</span>' : '') + '</td>'
           + '<td style="white-space:nowrap;' + dniBarva + '">' + dniTxt + '</td>'
           + '<td style="white-space:nowrap;">' + prZmena(r.vaha.zmena, 'kg', true) + (r.vaha.ted != null ? ' <span class="muted" style="font-size:.78rem;">' + kliCz(r.vaha.ted) + '</span>' : '') + '</td>'
           + '<td style="white-space:nowrap;">' + prZmena(r.pas.zmena, 'cm', true) + (r.pas.ted != null ? ' <span class="muted" style="font-size:.78rem;">' + kliCz(r.pas.ted) + '</span>' : '') + '</td>'
@@ -1159,6 +1190,17 @@
         a.addEventListener('click', function(e){ e.preventDefault(); openKlient(a.getAttribute('data-kli'), a.getAttribute('data-kliname')); });
       });
     }
+    // Hledání v přehledu klientů. Navazuje se JEDNOU, ne v `renderPrehled()`: to se volá
+    // při každém překreslení a listener by se nasčítal. Filtruje se lokálně nad už staženými
+    // daty, takže žádný dotaz na server a odezva je okamžitá.
+    (function pripojHledaniPrehledu(){
+      var i = $('prehQ'); if(!i) return;
+      i.addEventListener('input', function(){
+        PREH.hledani = i.value;
+        if(PREH.data) renderPrehled();
+      });
+    })();
+
     function loadPrehled(){
       api({action:'clients_overview'}).then(function(o){
         if(!o.j || !o.j.ok){ cardFail('prehled','prehledBody'); return; }
