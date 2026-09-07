@@ -74,7 +74,15 @@ Deno.serve(async (req) => {
   let ev: { type?: string; data?: { email_id?: string; to?: string | string[]; click?: { link?: string } } };
   try { ev = JSON.parse(payload); } catch { return json({ error: "bad_json" }, 400); }
 
-  const map: Record<string, string> = { "email.opened": "open", "email.clicked": "click", "email.bounced": "bounce", "email.complained": "complaint" };
+  // ⭐⭐ [7. 9. 2026] `email.delivered` PŘIBYLO. Do té doby se sbíralo jen otevření, klik,
+  // odmítnutí a stížnost, tedy samé ŠPATNÉ zprávy. Chybělo POTVRZENÍ, že mail dorazil.
+  // Rozdíl je podstatný: „nepřišel bounce" není důkaz doručení, protože mail může
+  // uváznout i tiše. Bez `delivered` se nedá odpovědět na otázku „odešlo 15 připomínek
+  // klientům, dorazily?", a přesně ta padla 7. 9. ráno a nikdo ji zodpovědět neuměl.
+  // ⚠️ Událost musí být zapnutá i v Resendu (Webhooks → endpoint → LISTENING FOR),
+  //    sama od sebe chodit nezačne. Tady je jen příjem.
+  // ⚠️ Objem: ~2 700 mailů týdně, tedy ~2 700 řádků `delivered` týdně navíc.
+  const map: Record<string, string> = { "email.delivered": "delivered", "email.opened": "open", "email.clicked": "click", "email.bounced": "bounce", "email.complained": "complaint" };
   const t = map[String(ev?.type || "")];
   if (!t) return json({ ok: true, ignored: String(ev?.type || "") });
 
@@ -106,9 +114,14 @@ Deno.serve(async (req) => {
   // informace nez klik na odhlaseni. Bez URL v klici by se ulozil jen PRVNI klik na dany mail
   // a ten rozdil by se nedal precist (nalez z revize 24. 7.). Kdyz Resend URL nepošle,
   // chovame se jako driv (konzervativne jeden click na mail).
-  if (t === "open" || t === "click") {
+  // ⚠️ `delivered` se dedupuje VŽDY přes `provider_id`, ne přes (lead, step, track):
+  // doručení patří ke KONKRÉTNÍMU mailu, a kdyby se klíčovalo přes krok tratě, druhé
+  // odeslání téhož kroku (opakování, jednorázovka) by se tvářilo jako duplicita
+  // a v datech by chybělo. Retry z Resendu se tím odfiltruje, dvě různá odeslání ne.
+  if (t === "open" || t === "click" || t === "delivered") {
     let dq = admin.from("email_events").select("id").eq("type", t).limit(1);
-    if (lead_id && step != null) dq = dq.eq("lead_id", lead_id).eq("step", step).eq("detail->>track", track);
+    if (t === "delivered") dq = dq.eq("provider_id", emailId);
+    else if (lead_id && step != null) dq = dq.eq("lead_id", lead_id).eq("step", step).eq("detail->>track", track);
     else dq = dq.eq("provider_id", emailId);
     // URL az jako DALSI podminka nad obema vetvemi (nikdy mezi if a else — else by se navazal sem)
     if (t === "click" && clickUrl) dq = dq.eq("detail->>url", clickUrl);

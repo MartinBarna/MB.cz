@@ -136,7 +136,20 @@ Deno.serve(async (req) => {
   const CLENSKE_PREFIXY = String(cmap.clenske_track_prefixy ?? "")
     .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
   if (CLENSKE_PREFIXY.length === 0) CLENSKE_PREFIXY.push("onboarding", "milestone", "reactivation", "rescue");
+  // ⭐⭐ [7. 9. 2026] HLÍDKA DORUČENÍ. Do dneška se sbíraly jen ŠPATNÉ zprávy (bounce,
+  // stížnost) a chybělo potvrzení, že mail dorazil. „Nepřišel bounce" ale není důkaz:
+  // mail může uváznout i tiše. 7. 9. ráno padla otázka „odešlo 15 připomínek klientům,
+  // dorazily?" a nikdo ji zodpovědět neuměl.
+  // Od dneška posílá Resend i `email.delivered` (zapnuto v jeho dashboardu) a
+  // `resend-webhook` ho ukládá jako `delivered`. Tady se z toho počítá poměr.
+  // ⚠️ Poměr NENÍ 100 % ani ve zdravém stavu: `delivered` chodí se zpožděním a část
+  //    mailů odešlých k večeru se potvrdí až druhý den. Proto je to ČÍSLO V REPORTU,
+  //    ne alert při každém poklesu; křičí se, až když je potvrzených míň než polovina.
+  // ⛔ Do 8. 9. bude poměr nízký ze zřejmého důvodu: `delivered` se sbírá teprve ode dneška,
+  //    takže včerejší maily potvrzení nemají. První poctivé číslo je za 8. 9.
+  let delivered = 0;
   for (const e of evY.data ?? []) {
+    if (e.type === "delivered") delivered++;
     if (e.type === "sent") sent++;
     else if (e.type === "error") { errs++; lastErr = String((e.detail as Record<string, unknown>)?.error ?? "").slice(0, 120); }
     else if (e.type === "gave_up" || e.type === "gave_up_warn") {
@@ -637,6 +650,19 @@ Deno.serve(async (req) => {
     // Zavadejici udaj: 30. 6. 2026 prave tenhle denni limit vyrobil 307 chyb.
     row("Appka: nová aktivní předplatná za 24 h", appkaPredplatna) +
     row("Odeslané e-maily", String(sent) + " · strop fronty " + cap + " · Resend bez denního limitu") +
+    row("Z toho potvrzeno doručení", (function () {
+      if (!sent) return "žádný mail neodešel";
+      const pct = Math.round((delivered / sent) * 100);
+      const zaklad = String(delivered) + " z " + String(sent) + " (" + pct + " %)";
+      // Křičí se až pod polovinou. Nad tím je nižší číslo běžné: potvrzení chodí
+      // se zpožděním a večerní maily se často potvrdí až druhý den.
+      if (pct < 50) {
+        return "<b style='color:#c0392b'>" + zaklad + "</b> ⚠️ Míň než polovina. "
+          + "Zkontroluj v Resendu (Webhooks → endpoint), jestli je `email.delivered` "
+          + "pořád zapnutý a endpoint vrací 200.";
+      }
+      return zaklad;
+    })()) +
     row("Fronta e-mailů teď", String((due.data ?? []).length)) +
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
     row("Affiliate čeká na potvrzení", String(refPending)) +
