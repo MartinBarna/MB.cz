@@ -2867,6 +2867,23 @@ Deno.serve(async (req) => {
         } as typeof eng.navrh;
       }
 
+      // ⛔⛔ [7. 9. 2026] BEZ DAT SE MODEL NEVOLÁ (nález testera ADMIN_REPORT_CHYBI_DATA).
+      // Když klient nevyplnil jediné měřitelné číslo, `spocitejBlok` vrátí prázdný blok
+      // a `navrhni` hlásí `jistota: 'chybi_data'`. Do dneška se i tak zavolal model
+      // a vrátila se próza, takže se Martinovi nabídl hotový mail reagující na report,
+      // ve kterém nic není. Odeslat takový text pod svým jménem je horší než neposlat nic.
+      // ⚠️ Blokuje se jen SOUBĚH obou podmínek. Samotné `chybi_data` znamená pouze
+      //    „klient nemá v zadání kalorie, není co upravit", což u jinak vyplněného
+      //    reportu koncept nediskvalifikuje.
+      // ⚠️ Admin tenhle kód mapuje na větu (`akademie/admin/index.html`), kde je od 7. 9.
+      //    i vlastní brána pro případ, že by běžela starší verze téhle funkce.
+      if (!eng.radky.length && eng.navrh.jistota === "chybi_data") {
+        return json({
+          error: "chybi_data",
+          detail: eng.navrh.duvod,
+        }, 422);
+      }
+
       const userPrompt = "FAKTA (jediný zdroj čísel):" + NL + fakta + NL +
         "Rod klienta (minulý čas piš v tomhle rodě): " + (rod === "z" ? "žena" : rod === "m" ? "muž" : "neuvedeno, piš bezrodě") + NL + NL +
         "BLOK ČÍSEL, KTERÝ UŽ JE V MAILU NAPSANÝ NAD TVÝM TEXTEM (neopisuj ho celý):" + NL +

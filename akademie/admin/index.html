@@ -2024,6 +2024,17 @@
           var j=o.j||{};
           if(!j.ok){
             var e=String(j.error||o.status);
+            // ⛔⛔ [7. 9. 2026] Server od dneška při reportu BEZ JEDINÉHO ČÍSLA model vůbec
+            // nezavolá a vrátí `chybi_data` (422). Není to chyba systému, je to správné
+            // odmítnutí: koncept, který reaguje na prázdno, se nemá vyrábět. Proto vlastní
+            // věta místo obecného „chyba (chybi_data)".
+            if(e==='chybi_data'){
+              out.innerHTML='<p class="muted" style="font-size:.85rem;line-height:1.5;">⚠️ <b>Koncept nedělám, není z čeho.</b> '
+                + 'V tomhle reportu není jediné měřitelné číslo, takže by AI psala reakci na prázdno.<br>'
+                + esc(j.detail||'')
+                + '<br>Doplň klientovi zadání (kalorie a bílkoviny) nebo počkej na report s daty.</p>';
+              return;
+            }
             var why=e==='ai_nedostupne'?'AI teď neodpovídá, zkus to za chvíli'
               :e==='chybi_klic'?'v projektu chybí API klíč k AI'
               :e==='ai_prazdno'?'AI vrátila prázdný text, zkus to znovu'
