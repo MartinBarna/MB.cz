@@ -118,6 +118,8 @@ export type CoreDeps = {
     pdfBytes: Uint8Array;
     pdfFilename: string;
   }) => Promise<{ ok: boolean; error?: string }>;
+  /** Send-policy těsně před Resendem. Skip u bounced adresy NENÍ chyba doručení poukazu. */
+  guardMail?: (to: string) => Promise<{ action: "send" | "skip"; reason: string }>;
   generateCode: (year: number) => string;
   now: () => Date;
   logError: (message: string, meta: Record<string, unknown>) => void;
@@ -301,6 +303,19 @@ async function deliverVoucher(
     const testMode = !config.ostry;
     const to = testMode ? config.testRecipient : buyerEmail;
     const subject = (testMode ? '[TEST] ' : '') + 'Tvůj dárkový poukaz je tady 🎁';
+
+    if (deps.guardMail) {
+      const g = await deps.guardMail(to);
+      if (g.action === 'skip') {
+        deps.logError('mailing-guard skip, poukaz vydán, mail neodeslán', {
+          eventId,
+          voucherId,
+          reason: g.reason,
+        });
+        await deps.markMailSent(voucherId, deps.now());
+        return { status: 'mailed', retry: false, reason: 'mail skipped: ' + g.reason };
+      }
+    }
 
     const mailResult = await deps.sendMail({
       to,

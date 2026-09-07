@@ -503,3 +503,24 @@ Deno.test('prázdné jméno obdarovaného → mail dostane "pro tebe"', async ()
   await handleStripeEvent(checkoutEvent({ id: 'evt_noname', customFields: [] }), deps, CONFIG);
   assertEquals(capturedName, 'pro tebe');
 });
+
+Deno.test('mailing-guard skip (bounce): poukaz se vydá, mail se neposílá, Stripe nedostane retry', async () => {
+  const { deps, rows, mailCallsRef } = makeFakeDeps({ codesToReturn: ['MB-2026-BONG'] });
+  deps.guardMail = async () => ({ action: 'skip', reason: 'hard_bounce' });
+  const result = await handleStripeEvent(checkoutEvent({ id: 'evt_bounce' }), deps, CONFIG);
+  assertEquals(result.status, 'mailed');
+  assertEquals(result.retry, false);
+  assertEquals(result.reason, 'mail skipped: hard_bounce');
+  assertEquals(mailCallsRef(), 0);
+  assertEquals(rows.size, 1);
+  assertEquals([...rows.values()][0].mail_sent_at, '2026-08-25T12:00:01.000Z');
+
+  let secondMail = false;
+  deps.sendMail = async () => {
+    secondMail = true;
+    return { ok: true };
+  };
+  const second = await handleStripeEvent(checkoutEvent({ id: 'evt_bounce' }), deps, CONFIG);
+  assertEquals(second.status, 'duplicate_mailed');
+  assert(!secondMail, 'skip už uzavřel doručení, retry nesmí poslat mail');
+});
