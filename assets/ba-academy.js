@@ -118,6 +118,31 @@
       });
     },
 
+    // Záložní přihlášení číselným kódem z téhož magic e-mailu.
+    // Týž jednorázový token jako v odkazu, jen opsaný ručně (když skener pošty
+    // odkaz spotřebuje dřív než člověk). type:'email' pokrývá přihlášení i
+    // potvrzení nově založeného účtu. Šablona Magic Link musí obsahovat {{ .Token }}.
+    // ⛔ DÉLKU KÓDU TU NIKDE NEFIXUJ (serverové MAILER_OTP_LENGTH; u nás typicky 8).
+    verifyOtp: function (email, token) {
+      if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      var code = String(token || "").replace(/\D/g, "");
+      return client.auth.verifyOtp({
+        email: String(email || "").trim(),
+        token: code,
+        type: "email"
+      }).then(function (r) {
+        if (r.error) { try { console.error("verifyOtp error:", r.error, JSON.stringify(r.error)); } catch (e) {} }
+        var m = r.error && (r.error.message || r.error.error_description || r.error.msg || "");
+        if (m === "{}" || m === "[object Object]" || (m && m.trim() === "")) m = null;
+        var status = r.error && (r.error.status || r.error.code);
+        if (!m && status) m = "Server vrátil chybu " + status + " při ověření kódu.";
+        return { ok: !r.error, error: m };
+      }).catch(function (e) {
+        try { console.error("verifyOtp exception:", e); } catch (_) {}
+        return { ok: false, error: null };
+      });
+    },
+
     // Zapomenuté heslo: pošle e-mail s odkazem na nastavení nového hesla.
     // Odkaz vede na /akademie/nove-heslo/, kde stránka zavolá updatePassword.
     resetPassword: function (email) {
