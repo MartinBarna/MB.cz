@@ -425,8 +425,15 @@
         </select>
         <button id="qgVid">+ Videokurz</button>
         <button id="qgAca">+ Academy</button>
+        <select id="qgTcTier" title="Tarif appky Tvůj Coach" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+          <option value="basic" selected>Basic</option>
+          <option value="ai_basic">VIP</option>
+          <option value="ai_kontrola">VIP+Kontrola</option>
+        </select>
+        <button id="qgTc">+ Tvůj Coach</button>
         <button id="qgRm" class="rm">− Odebrat videokurz</button>
         <button id="qgRmA" class="rm">− Odebrat Academy</button>
+        <button id="qgTcOff" class="rm">− Odebrat TC přístup</button>
       </div>
 
       <div class="toolbar">
@@ -2977,14 +2984,19 @@
     $('q').addEventListener('input',renderRows); $('filt').addEventListener('change',function(){ renderRows(); syncStatCards(); });
 
     // Rychlé udělení/odebrání přístupu podle e-mailu (funguje i pro kontakt, který ještě není v tabulce)
-    function qg(product,active){
+    function qgBtns(){ return [$('qgVid'),$('qgAca'),$('qgTc'),$('qgRm'),$('qgRmA'),$('qgTcOff')]; }
+    function qgLock(on){ qgBtns().forEach(function(b){ if(b) b.disabled=!!on; }); }
+    function qgEmail(){
       var em=($('qgEmail').value||'').trim().toLowerCase();
-      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast('Zadej platný e-mail'); return; }
-      var btns=[$('qgVid'),$('qgAca'),$('qgRm'),$('qgRmA')];
-      btns.forEach(function(b){ if(b) b.disabled=true; });
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ toast('Zadej platný e-mail'); return ''; }
+      return em;
+    }
+    function qg(product,active){
+      var em=qgEmail(); if(!em) return;
+      qgLock(true);
       var qm=$('qgMesice'); var mesice=active&&qm?Number(qm.value):0;
       api({action:'set_access',email:em,product:product,active:active,mesice:mesice}).then(function(o){
-        btns.forEach(function(b){ if(b) b.disabled=false; });
+        qgLock(false);
         if(o.j&&o.j.ok){
           toast((active?'✓ Přístup udělen'+(o.j.expires_at?' do '+czDatum(String(o.j.expires_at).slice(0,10)):'')+': ':'Přístup odebrán: ')+product+' · '+em);
           // hned aktualizuj tabulku, ať je vidět, že se to povedlo (dřív se nerefreshla → vypadalo to jako by nic)
@@ -2994,12 +3006,54 @@
         } else {
           toast('Chyba: '+((o.j&&o.j.error)||o.status));
         }
-      }).catch(function(){ btns.forEach(function(b){ if(b) b.disabled=false; }); toast('Chyba spojení'); });
+      }).catch(function(){ qgLock(false); toast('Chyba spojení'); });
+    }
+    // Appka Tvůj Coach: stejné API jako karta rozborů (`pripojGrantTieru` / `pripojOdebraniTieru`).
+    // Délka z `qgMesice`. ⛔ Neomezeně = vědomá volba, u grantu potvrzení. Odebrání = `vse`,
+    // stejné jako `tcgOff` (Stripe / koučink / rodina se nesundá).
+    function qgTcGrant(){
+      var em=qgEmail(); if(!em) return;
+      var tierEl=$('qgTcTier');
+      var tier=tierEl?tierEl.value:'basic';
+      var nazev=tierEl?tierEl.options[tierEl.selectedIndex].text:'Basic';
+      var qm=$('qgMesice'); var mesice=qm?Number(qm.value):0;
+      if(mesice===0 && !confirm('Opravdu dát „'+nazev+'" pro '+em+' BEZ konce?')) return;
+      qgLock(true);
+      api({action:'tc_grant_tier',email:em,tier:tier,mesice:mesice}).then(function(o){
+        qgLock(false);
+        var j=o.j||{};
+        if(!j.ok){ toast('Chyba: '+(j.duvod||j.error||o.status)); return; }
+        toast((j.result==='pending'?'Nárok uložen, naskočí po registraci: ':'✓ Přístup udělen: ')+nazev+' · '+em
+          +(j.neomezene?' · bez konce':(j.expires_at?' do '+czDatum(String(j.expires_at).slice(0,10)):'')));
+      }).catch(function(){ qgLock(false); toast('Chyba spojení'); });
+    }
+    function qgTcRevoke(){
+      var em=qgEmail(); if(!em) return;
+      if(!confirm('Opravdu vypnout přístup do appky pro '+em+'?\n\nVypne jakýkoli tarif udělený adminem nebo Academy (i roční VIP z Academy). Zaplacené předplatné přes Stripe, koučink ani rodinný přístup to nevezme.')) return;
+      qgLock(true);
+      api({action:'tc_revoke_tier',email:em,tier:'vse'}).then(function(o){
+        qgLock(false);
+        var j=o.j||{};
+        if(!j.ok){
+          if(j.duvod==='ma_koucink'){ toast('Nechal jsem to být: aktivní koučinkový klient, appku mu takhle brát nechceme.'); return; }
+          if(j.duvod==='koucink_necitelny'){ toast('Nešlo ověřit koučink, nesáhl jsem na nic. Zkus to znovu.'); return; }
+          toast('Chyba: '+(j.duvod||j.error||o.status));
+          return;
+        }
+        if(j.predplatne==='narok_by_se_prepsal'){
+          toast('Nesáhl jsem na nic: visí čekající nárok na jiný tarif nebo z jiného zdroje.');
+          return;
+        }
+        if(j.predplatne==='expiry_set'||j.cekajici_narok==='zruseny') toast('Přístup do appky vypnut · '+em);
+        else toast(tcOffVetaPredplatne(j.predplatne,j.stav_pred,j.tier_pred)+' '+tcOffVetaNarok(j.cekajici_narok));
+      }).catch(function(){ qgLock(false); toast('Chyba spojení'); });
     }
     var _qv=$('qgVid'); if(_qv)_qv.addEventListener('click',function(){qg('videokurz',true);});
     var _qa=$('qgAca'); if(_qa)_qa.addEventListener('click',function(){qg('academy',true);});
+    var _qtc=$('qgTc'); if(_qtc)_qtc.addEventListener('click',qgTcGrant);
     var _qr=$('qgRm'); if(_qr)_qr.addEventListener('click',function(){qg('videokurz',false);});
     var _qra=$('qgRmA'); if(_qra)_qra.addEventListener('click',function(){qg('academy',false);});
+    var _qtcoff=$('qgTcOff'); if(_qtcoff)_qtcoff.addEventListener('click',qgTcRevoke);
 
     function openDetail(email){
       $('detBody').innerHTML='<p class="muted">Načítám…</p>'; $('det').classList.add('on');
