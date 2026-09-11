@@ -8,15 +8,6 @@
 // MED_CONTEXT_RE (kontext užívání vs. vzdělávací dotaz). App = ZDROJ PRAVDY: nad web verzí
 // navíc `\bdnp\b` (DNP je i v malé dávce smrtelné — web ho neměl) a PED substringy specifické
 // pro food-appku (ostarine/yohimbin/spalovač/stanozolol/nandrolon/eca stack). Drž identické s webem.
-//
-// [safety-sync 2026-09-03] SJEDNOCENO NAPRIC TREMI KOPIEMI. Zmereno tento den:
-//  * appka ai-coach-agent (importuje tenhle soubor) = tahle verze, nejnovejsi;
-//  * appka ai-martin nasazena zive (kfkmghvhqwqtsalqjmrp) = tahle verze MINUS FASTING_INTENT_RE;
-//  * Academy ai-martin (uhmrpfsdcujbhbtumqye), git i ziva verze, jsou shodne mezi sebou
-//    a proti teto verzi jim chybi FASTING_INTENT_RE a substring 'anabolik'.
-// Zadna z ostatnich kopii nema nic, co tady chybi. Rozdily 'hladovk' a 'drzet hlad'
-// jsou ZAMERNE SMAZANE (viz duvod u eating_disorder nize), nevracet je pri sjednocovani.
-// Kdo sahne na tenhle soubor, nasazuje vsechny tri funkce, nebo napise proc se druha strana netyka.
 // Kategorie: pregnancy | eating_disorder | medical | crisis | minor
 // =============================================================================
 
@@ -68,13 +59,20 @@ const SUBSTR: Record<FlagCategory, string[]> = {
     // ⚠️ `hladovim` / `hladovis` / `vyhladovet` ZŮSTÁVAJÍ: to už jsou slovesné tvary
     // o chování, ne podstatné jméno z otázky.
     'porucha prijmu potravy', 'poruchu prijmu potravy', 'poruchou prijmu potravy', 'poruch prijmu potravy', 'obsesivn', 'hladovim', 'hladovis', 'vyhladovet',
+    // ⛔ PŘEDPONOVÉ TVARY MUSÍ MÍT VLASTNÍ POLOŽKU (od 11. 9. 2026, kdy se začalo
+    // porovnávat od začátku slova). `vyhladovim` chytal do té doby podivnou náhodou
+    // podetězec `hladovim` uvnitř slova. Bez těchto dvou položek spadlo
+    // „Vyhladovím se, ať to zmizí." z přísné šablony (Anabell) na mírnější,
+    // protože zbyla jen značka `fasting_intent`, kterou `ED_MIRNE_ZNACKY` bere jako dotaz.
+    // Chytil to až `npm run test:agent` (případ E12), ne `test:safety`.
+    'vyhladovim', 'vyhladovis',
     'bojim se jist', 'strach z jidla', 'strach se najist',
     // [safety 2026-08-19] mezery z adversariálních testů: vina po jídle a dokonavý vid.
     'bojim se najist', 'vycitam si jidl', 'po jidle si vycitam',
   ],
   medical: [
     'stitn', 'hashimot', 'pcos', 'polycystick', 'inzulinova rezistence', 'inzulinov',
-    'apnoe', 'depres', 'uzkost', 'cukrovk', 'diabet', 'celiaki', 'crohn', 'zvrac',
+    'apnoe', 'depres', 'uzkost', 'cukrovk', 'diabet', 'celiaki', 'crohn', 'zvrac', 'pozvrac',
     'antidepres', 'metformin', 'levothyrox', 'eutyrox', 'ozempi', 'semaglutid', 'mounjaro',
     'statin', 'antikoncepc', 'warfarin',
     // [harden 2026-07-14] GLP-1/hubnoucí léky (kmeny kvůli skloňování: saxend = Saxenda/Saxendu/Saxendě):
