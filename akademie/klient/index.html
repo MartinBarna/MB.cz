@@ -302,15 +302,15 @@
   "use strict";
   var CFG = window.BA_CONFIG || {};
   var FN = (CFG.url || "") + "/functions/v1/client-report";
-  var myEmail = "", myName = "", reports = [], hasIntake = false;
+  var myEmail = "", myName = "", reports = [], hasIntake = false, intakeRow = null;
   // targets = týdenní zadání od Martina (tabulka client_targets, vyplňuje ho v adminu, klient jen čte).
   // ⚠️ Chybějící cíl je LEGITIMNÍ stav: pak se nikde nesmí zobrazit odchylka ani čára v grafu.
   // Nikdy cíl nedopočítávat z reportů, je to Martinovo rozhodnutí.
   var targets = null;
-  // VIEW = reporty po filtru období (přepínač 8/12/26 týdnů/vše). Grafy, tabulka historie
-  // a shrnutí bloku jedou nad VIEW; stat karty nahoře schválně zůstávají nad CELOU historií,
-  // protože říkají „od začátku" a filtr by z nich udělal lež.
-  var VIEW = [], periodWeeks = 0; // 0 = vše
+  // VIEW = skutečné reporty po filtru období (kcal, bílkoviny, kroky, škály, historie).
+  // VIEW_BODY = totéž plus startovní bod z dotazníku (jen váha a míry). Stat karty
+  // nahoře jedou nad CELOU historií, protože říkají „od začátku" a filtr by z nich udělal lež.
+  var VIEW = [], VIEW_BODY = [], periodWeeks = 0; // 0 = vše
 
   function el(id){ return document.getElementById(id); }
   function czk(n){ return (n==null||n==="") ? "-" : String(n).replace(".", ","); }
@@ -357,7 +357,33 @@
     return fn;
   }
   function dateCz(iso){ var d = new Date(iso + "T12:00:00"); return d.getDate()+". "+(d.getMonth()+1)+". "+d.getFullYear(); }
+  function denZ(iso){ return String(iso == null ? "" : iso).slice(0, 10); }
   function escH(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  // Startovní bod z vstupního dotazníku. Graf váhy/měr jinak začínal až od 1. reportu,
+  // takže u lidí s pauzou mezi dotazníkem a prvním reportem chyběl začátek cesty.
+  // source=intake-baseline, ať se to neplete se skutečným reportem (kcal, historie, stN).
+  function intakeBaseline(row){
+    if(!row || !row.data) return null;
+    var d = row.data;
+    var w = toNum(d.vaha);
+    var pas = toNum(d.mira_pas), boky = toNum(d.mira_boky), prsa = toNum(d.mira_prsa);
+    if(w == null && pas == null && boky == null && prsa == null) return null;
+    var day = denZ(row.created_at);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
+    return { report_date: day, weight: w, measurements: { pas: pas, boky: boky, prsa: prsa }, source: "intake-baseline" };
+  }
+  function mergeReportsWithIntake(reps, row){
+    var list = (reps || []).slice();
+    var base = intakeBaseline(row);
+    if(!base) return list;
+    var day = base.report_date;
+    for(var i = 0; i < list.length; i++){
+      if(denZ(list[i].report_date) === day) return list; // stejný den: report vyhrává
+    }
+    list.push(base);
+    list.sort(function(a, b){ return String(a.report_date).localeCompare(String(b.report_date)); });
+    return list;
+  }
   function toast(msg){ var t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 4200); }
 
   // ---------- data (REST + RLS: vidím jen svoje řádky) ----------
@@ -446,8 +472,11 @@
     var pad = Math.max((yMax - yMin) * 0.15, (opts && opts.minPad) || 0.5);
     yMin -= pad; yMax += pad;
     if(opts && opts.zeroMin) yMin = Math.max(0, yMin);
-    var dates = VIEW.map(function(r){ return r.report_date; });
+    // Osa z bodů série, ne z VIEW: gW/gM jedou nad sloučenou řadou (reporty + dotazník),
+    // kcal/bílkoviny/škály nad samotnými reporty. Sdílený VIEW by ty dvě osy slil dohromady.
+    var dates = (seriesList[0] && seriesList[0].pts) ? seriesList[0].pts.map(function(p){ return p.x; }) : [];
     var n = dates.length;
+    if(!n){ el(elId).innerHTML = '<p style="color:'+MUT+';font-size:.85rem;padding:8px 4px;">Zatím málo dat, doplní se z reportů.</p>'; return; }
     function X(i){ return n < 2 ? (pl + (w - pl - pr) / 2) : pl + (w - pl - pr) * (i / (n - 1)); }
     function Y(v){ return pt + (h - pt - pb) * (1 - (v - yMin) / (yMax - yMin || 1)); }
     var out = svgOpen(w, h);
@@ -620,12 +649,12 @@
   }
   function renderBlockSum(){
     var host = el("blockSum");
-    if(!VIEW.length){
+    if(!VIEW.length && !VIEW_BODY.length){
       host.innerHTML = '<div class="gwrap" style="margin:0 0 14px;"><p class="sub" style="padding:4px 4px 8px;">V tomhle období nemáš žádný report. Přepni na delší období.</p></div>';
       return;
     }
-    function prvni(get){ for(var i = 0; i < VIEW.length; i++){ var v = get(VIEW[i]); if(v != null) return v; } return null; }
-    function posledni(get){ for(var i = VIEW.length - 1; i >= 0; i--){ var v = get(VIEW[i]); if(v != null) return v; } return null; }
+    function prvni(list, get){ for(var i = 0; i < list.length; i++){ var v = get(list[i]); if(v != null) return v; } return null; }
+    function posledni(list, get){ for(var i = list.length - 1; i >= 0; i--){ var v = get(list[i]); if(v != null) return v; } return null; }
     function prumer(get){
       var a = VIEW.map(get).filter(function(v){ return v != null; });
       return a.length ? a.reduce(function(x, y){ return x + y; }, 0) / a.length : null;
@@ -636,10 +665,10 @@
       return (v > 0 ? "+" : v < 0 ? "−" : "") + czk(Math.abs(v)) + " " + unit;
     }
     var gW = function(r){ return toNum(r.weight); }, gPas = function(r){ return toNum((r.measurements || {}).pas); };
-    var w0 = prvni(gW), w1 = posledni(gW), p0 = prvni(gPas), p1 = posledni(gPas);
+    var w0 = prvni(VIEW_BODY, gW), w1 = posledni(VIEW_BODY, gW), p0 = prvni(VIEW_BODY, gPas), p1 = posledni(VIEW_BODY, gPas);
     var items = [];
-    if(w0 != null && w1 != null && VIEW.length > 1) items.push(["Váha", zmena(w1 - w0, "kg")]);
-    if(p0 != null && p1 != null && VIEW.length > 1) items.push(["Pas", zmena(p1 - p0, "cm")]);
+    if(w0 != null && w1 != null && VIEW_BODY.length > 1) items.push(["Váha", zmena(w1 - w0, "kg")]);
+    if(p0 != null && p1 != null && VIEW_BODY.length > 1) items.push(["Pas", zmena(p1 - p0, "cm")]);
     var pk = prumer(function(r){ return toNum((r.nutrition || {}).kcal); });
     var pp = prumer(function(r){ return toNum((r.nutrition || {}).protein); });
     var pkr = prumer(function(r){ return toNum((r.activity || {}).kroky); });
@@ -661,7 +690,8 @@
 
   // ---------- dashboard render ----------
   function renderDash(loadFailed){
-    if(!reports.length){
+    var merged = mergeReportsWithIntake(reports, intakeRow);
+    if(loadFailed || (!reports.length && !merged.length)){
       el("stats").style.display = "none"; el("graphs").style.display = "none"; el("histWrap").style.display = "none";
       el("reportCtaSub").textContent = loadFailed
         ? "Nepodařilo se načíst data. Zkus obnovit stránku."
@@ -669,35 +699,41 @@
       return;
     }
     if(reports.length >= 8) el("refCta").style.display = "";
-    el("stats").style.display = ""; el("graphs").style.display = ""; el("histWrap").style.display = "";
-    var last = reports[reports.length - 1], first = reports[0];
-    // Vychozi bod pro VAHU je prvni report, ktery vahu skutecne ma, ne prvni report v poradi.
-    // Klient muze prvni tyden vahu vynechat a pak by se zmena pocitala proti prazdne hodnote.
+    el("stats").style.display = ""; el("graphs").style.display = "";
+    el("histWrap").style.display = reports.length ? "" : "none";
+    var last = reports.length ? reports[reports.length - 1] : merged[merged.length - 1];
+    // Výchozí bod pro VÁHU je první bod se váhou ve sloučené řadě (dotazník, pak reporty).
+    // Klient může první týden váhu vynechat a pak by se změna počítala proti prázdné hodnotě.
     var firstW = null;
-    for(var fi = 0; fi < reports.length; fi++){ if(toNum(reports[fi].weight) != null){ firstW = reports[fi]; break; } }
-    el("reportCtaSub").textContent = "Poslední report: " + dateCz(last.report_date) + ". Kopie přijde tobě i Martinovi.";
+    for(var fi = 0; fi < merged.length; fi++){ if(toNum(merged[fi].weight) != null){ firstW = merged[fi]; break; } }
+    el("reportCtaSub").textContent = reports.length
+      ? ("Poslední report: " + dateCz(last.report_date) + ". Kopie přijde tobě i Martinovi.")
+      : "První report odemkne zbytek grafů. Startovní váhu a míry už máme z dotazníku.";
     var lw = toNum(last.weight), fw = firstW ? toNum(firstW.weight) : null;
     el("stW").innerHTML = lw != null ? czk(lw) + ' <span class="u">kg</span>' : "-";
-    el("stWsub").textContent = "z reportu " + dateCz(last.report_date);
+    el("stWsub").textContent = reports.length
+      ? ("z reportu " + dateCz(last.report_date))
+      : (firstW ? ("ze vstupního dotazníku " + dateCz(firstW.report_date)) : "");
     if(lw != null && fw != null && firstW !== last){
       var d = Math.round((lw - fw) * 10) / 10;
       el("stD").innerHTML = '<span class="' + (d <= 0 ? "pos" : "neg") + '" style="font-size:1.7rem;">' + (d > 0 ? "+" : d < 0 ? "−" : "") + czk(Math.abs(d)) + ' kg</span>';
       el("stDsub").textContent = "od začátku (" + dateCz(firstW.report_date) + ": " + czk(fw) + " kg)";
     } else { el("stD").textContent = "-"; el("stDsub").textContent = "doplní se, až pošleš váhu podruhé"; }
     el("stN").textContent = reports.length;
-    el("stNsub").textContent = "první " + dateCz(first.report_date);
+    el("stNsub").textContent = reports.length ? ("první " + dateCz(reports[0].report_date)) : "zatím žádný";
     var adh = reports.map(function(r){ return toNum((r.scales || {}).dodrzeni); }).filter(function(v){ return v != null; });
     el("stA").innerHTML = adh.length ? czk(Math.round(adh.reduce(function(a, b){ return a + b; }, 0) / adh.length * 10) / 10) + ' <span class="u">/ 5</span>' : "-";
 
-    // VIEW = okno, které klient zrovna sleduje. Grafy, historie i shrnutí bloku jedou nad ním.
+    // VIEW = skutečné reporty v okně (kcal, historie). VIEW_BODY = totéž + start z dotazníku.
     VIEW = filtrObdobi(reports);
+    VIEW_BODY = filtrObdobi(merged);
     renderBlockSum();
 
-    lineChart("gW", [{ name: "váha", color: GOLD, pts: VIEW.map(function(r){ return { x: r.report_date, y: toNum(r.weight) }; }) }], { minPad: .6 });
+    lineChart("gW", [{ name: "váha", color: GOLD, pts: VIEW_BODY.map(function(r){ return { x: r.report_date, y: toNum(r.weight) }; }) }], { minPad: .6 });
     lineChart("gM", [
-      { name: "pas", color: GOLD, pts: VIEW.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).pas) }; }) },
-      { name: "boky", color: "#e0a04f", pts: VIEW.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).boky) }; }) },
-      { name: "hruď", color: "#b9b3c4", pts: VIEW.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).prsa) }; }) }
+      { name: "pas", color: GOLD, pts: VIEW_BODY.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).pas) }; }) },
+      { name: "boky", color: "#e0a04f", pts: VIEW_BODY.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).boky) }; }) },
+      { name: "hruď", color: "#b9b3c4", pts: VIEW_BODY.map(function(r){ return { x: r.report_date, y: toNum((r.measurements || {}).prsa) }; }) }
     ], { minPad: 1 });
     // Kalorie a bílkoviny mají každá svůj graf schválně: na společné ose (1800 vs 140) by se
     // bílkoviny slisovaly do čáry u nuly a klient by z nich nic nevyčetl.
@@ -1443,14 +1479,15 @@
     var jaFiltr = "email=ilike." + encodeURIComponent(myEmail);
     Promise.all([
       api("client_reports?select=report_date,weight,measurements,nutrition,activity,scales,targets&" + jaFiltr + "&order=report_date.asc&limit=200"),
-      api("client_intake?select=id&" + jaFiltr + "&limit=1"),
+      api("client_intake?select=id,created_at,data&" + jaFiltr + "&limit=1"),
       // `limit=1` bez řazení vrací libovolný řádek. S filtrem je řádek stejně jen
       // jeden, ale řazení tu drží jako pojistka, ať to nikdy nezávisí na náhodě.
       api("client_targets?select=*&" + jaFiltr + "&order=updated_at.desc&limit=1")
     ]).then(function(res){
       var failed = res[0] === null;
       reports = Array.isArray(res[0]) ? res[0] : [];
-      hasIntake = Array.isArray(res[1]) && res[1].length > 0;
+      intakeRow = (Array.isArray(res[1]) && res[1].length) ? res[1][0] : null;
+      hasIntake = !!intakeRow;
       targets = (Array.isArray(res[2]) && res[2].length) ? res[2][0] : null;
       if(!hasIntake && res[1] !== null) el("intakeCta").style.display = ""; // při chybě nenutit dotazník stávajícímu klientovi
       renderTargets();
