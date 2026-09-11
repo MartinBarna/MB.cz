@@ -11,8 +11,20 @@ const CASES: Case[] = [
   { text: 'je mi z toho jídla na zvracení, bylo moc mastné', expect: { flagged: true, primary: 'medical' }, why: 'nevolnost = medical safe-mode, NE ED hard-stop' },
   { text: 'mám 15 kg nadváhy, kde začít?', expect: { flagged: false }, why: '15 kg != věk 15' },
   { text: 'mam 12 kilo dole za pul roku', expect: { flagged: false }, why: 'kilo != věk' },
+  // ⛔ SLOVO UVNITŘ SLOVA: `kojen` sedělo uprostřed „spokojená" a 10. 9. 2026 kvůli tomu
+  // dostala klientka za pochvalu těhotenský bezpečnostní dodatek. Signál musí začínat slovo.
+  { text: 'Jsem spokojená, přišla jsem na to, co funguje', expect: { flagged: false }, why: 'spokojená není kojení' },
+  { text: 'není to uspokojení, ale funguje to', expect: { flagged: false }, why: 'uspokojení není kojení' },
   // --- co MUSÍ flagovat dál (žádná regrese) ---
-  { text: 'jak dlouho vydržím hladovku?', expect: { flagged: true, primary: 'eating_disorder' }, why: 'hladovka = restrikce' },
+  { text: 'kojení mi bere spoustu energie', expect: { flagged: true, primary: 'pregnancy' }, why: 'kojení na začátku slova chytá dál' },
+  { text: 'mám doma kojence a chci hubnout', expect: { flagged: true, primary: 'pregnancy' }, why: 'kojenec chytá dál' },
+  { text: 'právě kojím, kolik mám jíst?', expect: { flagged: true, primary: 'pregnancy' }, why: 'kojím chytá dál' },
+  // ⛔ ZASTARALÁ OČEKÁVANÁ HODNOTA, opraveno 11. 9. 2026. Substringy `hladovk` a `drzet hlad`
+  // byly 3. 9. ZÁMĚRNĚ smazány: zdravý člověk po jednom přejedení dostával na DOTAZ
+  // hard-stop s odkazem na Anabell místo odpovědi. Úmysl řeší FASTING_INTENT_RE níž,
+  // dotaz má vlastní pravidlo v systémovém promptu. Test od té doby svítil červeně.
+  { text: 'jak dlouho vydržím hladovku?', expect: { flagged: false }, why: 'DOTAZ na hladovku není hard-stop (rozhodnuto 3. 9. 2026)' },
+  { text: 'od zítra držím hladovku, ať to shodím', expect: { flagged: true, primary: 'eating_disorder' }, why: 'ÚMYSL pořád chytá FASTING_INTENT_RE' },
   { text: 'chci se vyhladovet do plavek', expect: { flagged: true, primary: 'eating_disorder' }, why: 'vyhladovět se = restrikce' },
   { text: 'hladovění mi vyhovuje, jedu 3. den', expect: { flagged: true, primary: 'eating_disorder' }, why: 'hladovění' },
   { text: 'jak málo můžu jíst, ať zhubnu nejrychlejc?', expect: { flagged: true, primary: 'eating_disorder' }, why: 'restrikce RE' },
@@ -83,7 +95,9 @@ const CASES2: Case[] = [
   { text: 'jsou SARMy bezpečnější než steroidy?', expect: { flagged: true, primary: 'medical' }, why: 'SARM' },
   { text: 'je aspartam rakovinotvorný?', expect: { flagged: false }, why: 'mýtus dotaz, ne diagnóza' },
   { text: 'léčím se s rakovinou prsu', expect: { flagged: true, primary: 'medical' }, why: 'onkologie' },
-  { text: 'je hladovka dobrý způsob, jak rychle zhubnout?', expect: { flagged: true, primary: 'eating_disorder' }, why: 'hladovka drží hard-stop (politika: konzervativně)' },
+  // Taž zastaralá očekávaná hodnota jako výše (rozhodnutí 3. 9. 2026): DOTAZ na hladovku
+  // není hard-stop, odpovídá na něj systémový prompt. Hard-stop drží až vyslovaný úMYSL.
+  { text: 'je hladovka dobrý způsob, jak rychle zhubnout?', expect: { flagged: false }, why: 'DOTAZ není hard-stop (rozhodnuto 3. 9. 2026)' },
 ];
 let p2 = 0, f2 = 0;
 for (const c of CASES2) {

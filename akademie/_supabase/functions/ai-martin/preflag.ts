@@ -213,6 +213,26 @@ function detectMinorAge(t: string): boolean {
   return false;
 }
 
+// ⛔ SIGNÁL MUSÍ ZAČÍNAT NA ZAČÁTKU SLOVA, ne kdekoli uvnitř. Do 11. 9. 2026 se
+// porovnávalo holým `includes`, takže `kojen` se našlo uprostřed slova „spo-kojen-á".
+// 10. 9. kvůli tomu dostala klientka za pochvalu „jsem spokojená…" těhotenský
+// bezpečnostní dodatek k odpovědi a ještě přistála v admin frontě rizik.
+// ⚠ Neúhýbá to detekci: čeština ohybá na KONCI, takže `tehotn` dál chytá „těhotná"
+// i „těhotenství", a předponové tvary už mají vlastní položku (`otehotn`, `antidepres`,
+// `vyzvrac`). Víceslovné signály („v jinem stavu") se poznávají podle prvního slova.
+// ⚠ Kdo sem přidává signál, který má chytat i uprostřed slova, musí ho zapsat
+// včetně předpony jako samostatnou položku.
+function obsahujeOdZacatkuSlova(t: string, kw: string): boolean {
+  let od = 0;
+  for (;;) {
+    const i = t.indexOf(kw, od);
+    if (i < 0) return false;
+    const pred = i === 0 ? '' : t[i - 1];
+    if (!/[a-z0-9]/.test(pred)) return true;
+    od = i + 1;
+  }
+}
+
 const SEVERITY: FlagCategory[] = ['crisis', 'eating_disorder', 'medical', 'pregnancy', 'minor'];
 
 /** Deterministický pre-flag vstupní zprávy. */
@@ -225,7 +245,7 @@ export function preflagMessage(text: string): PreflagResult {
 
   (Object.keys(SUBSTR) as FlagCategory[]).forEach((cat) => {
     for (const kw of SUBSTR[cat]) {
-      if (t.includes(kw)) { categories.add(cat); matched.push(`${cat}:${kw}`); }
+      if (obsahujeOdZacatkuSlova(t, kw)) { categories.add(cat); matched.push(`${cat}:${kw}`); }
     }
   });
   for (const re of RESTRICTION_RE) {
