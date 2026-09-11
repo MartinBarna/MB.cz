@@ -10,15 +10,37 @@
 <meta property="og:url" content="https://tvujcoach.cz/">
 <noscript><meta http-equiv="refresh" content="0; url=https://tvujcoach.cz/"></noscript>
 <script>
+/* ⛔⛔ [12. 9. 2026] VÝCHOZÍ 'youtube' BYLA AKTIVNÍ LEŽ, A STÁLA MĚŘENÍ ORGANIKY.
+   Deset naplánovaných reels (změřeno v Business Suite 11. 9.) má v popisku holý
+   odkaz `martinbarna.cz/go/tc/` bez `?s=`. Vestavěný prohlížeč Facebooku ani
+   Instagramu NEPOSÍLÁ referrer, takže `auto` vyšlo null a klik se zapsal jako
+   „youtube / comment / pin-tc". Kvůli tomu nešlo říct, která síť lidi přivádí,
+   a v datech od 6. 8. nenesla ani jedna registrace kampaň organiky.
+   ⇒ Přidána detekce vestavěného prohlížeče z User-Agent a výchozí hodnota už
+   NENÍ youtube. Neznámý zdroj se přizná jako `unknown`; lepší prázdno než
+   číslo, které ukazuje na špatnou síť. */
 var m={yt:'youtube',fb:'facebook',ig:'instagram',tt:'tiktok',li:'linkedin',x:'x',th:'threads'};
 var r=document.referrer||'';
 var auto=/facebook\.|fb\./.test(r)?'facebook':/instagram\./.test(r)?'instagram':/youtube\.|youtu\.be/.test(r)?'youtube':/tiktok\./.test(r)?'tiktok':/linkedin\./.test(r)?'linkedin':/twitter\.|\/\/x\.com|\/\/t\.co/.test(r)?'x':/threads\./.test(r)?'threads':null;
+/* Vestavěný prohlížeč sítě. Značky jsou dokumentované a stabilní: Facebook posílá
+   FBAN/FBAV/FB_IAB, Instagram doplňuje „Instagram", TikTok „BytedanceWebview"
+   nebo „musical_ly". Pořadí je důležité: aplikace Instagramu nese v UA i FB značky
+   (běží na téže knihovně), takže Instagram se musí testovat DŘÍV než Facebook. */
+var ua=navigator.userAgent||'';
+var app=/Instagram/i.test(ua)?'instagram':/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)?'facebook':/BytedanceWebview|musical_ly|TikTok/i.test(ua)?'tiktok':null;
 var q=new URLSearchParams(location.search);
-var s=m[q.get('s')]||auto||'youtube';
+/* Pořadí zdrojů pravdy: výslovné `?s=` > referrer > vestavěný prohlížeč > unknown.
+   `?s=` je nejpřesnější (napsal ho člověk do popisku), referrer druhý nejlepší
+   (skutečná odkazující stránka), UA až třetí (řekne appku, ne konkrétní post). */
+var s=m[q.get('s')]||auto||app||'unknown';
 /* m=c (vychozi) = pripnute komentare, m=d = popisky videi. Oddelene kampane,
    jinak by kliky z popisku prevalcovaly mereni kampane pin-tc. */
 var mm={c:{med:'comment',camp:'pin-tc'},d:{med:'description',camp:'desc-tc'},s:{med:'social',camp:'post-tc'}};
 var mk=mm[q.get('m')]||mm.c;
+/* ⚠️ Když zdroj poznal až User-Agent, nešlo o připnutý komentář na YouTube, ale
+   o odkaz v popisku v mobilní appce. Medium `comment` by tam lhalo stejně jako
+   dřív zdroj, takže se přepne na `description`. */
+if(!m[q.get('s')]&&!auto&&app&&!q.get('m'))mk=mm.d;
 location.replace('https://tvujcoach.cz/?utm_source='+s+'&utm_medium='+mk.med+'&utm_campaign='+mk.camp);
 </script>
 </head>
