@@ -13,14 +13,26 @@ const REF = process.argv[2] || 'origin/main';
 const BASE = 'https://martinbarna.cz/';
 const NC = Date.now();
 
-// ⛔ MUSÍ SEDĚT S `exclude:` v .github/workflows/deploy-wedos.yml. Co se nenahrává,
-//    se nesmí ověřovat: jinak to tady spadne na 404 a shodí jinak správný deploy.
+// ⛔ VYLOUČIT SE MUSÍ ZE DVOU RŮZNÝCH DŮVODŮ, nepleť si je:
+// 1. CO SE NENAHRÁVÁ. Musí sedět s `exclude:` v .github/workflows/deploy-wedos.yml,
+//    jinak to tady spadne na 404 a shodí jinak správný deploy.
+// 2. CO SE NAHRÁVÁ, ALE SERVER TO NEVYDÁVÁ (`.htaccess`, `docs/`). Na FTP to je
+//    správně, přes HTTP se k tomu nedostaneš, takže se to zvenku ověřit NEDÁ.
+//    Tyhle položky v `exclude:` workflow schválně NEJSOU a nemají tam být.
 const EXCL = [
   /^\.git/, /\/\.git/, /^\.github\//, /^clanky-fronta\//,
   /^_import\//, /^_zaloha\//, /^_zdroje\//,
   /^Logo-rebrand\//, /^scripts\//, /^akademie\/_ai\//, /^akademie\/_pdf\//,
   /^akademie\/_supabase\//, /^akademie\/_videokurz\//, /\.md$/, /^CNAME$/, /^\.nojekyll$/,
   /^\.htaccess$/, // Apache ho přes HTTP záměrně nevydává (401) — zvenku neověřitelný
+  // ⛔ [12. 9. 2026] `docs/` server nevydává SCHVÁLNĚ: `/docs/` vrací 403 a soubory
+  //    v něm 401. Jsou to interní SQL a poznámky, které na webu nemají co dělat,
+  //    takže je to žádoucí stav, ne chyba. Ověřovací krok ale `docs/*.sql` hlásil
+  //    jako ERROR a kvůli JEDNOMU takovému souboru padal CELÝ deploy na červenou
+  //    (od 9. 9. 2026 tři běhy v řadě), přestože 1503 z 1505 souborů sedělo.
+  //    ⚠️ Hlídka, která svítí červeně na správném stavu, přestává být hlídkou:
+  //    Martin pak nepozná skutečný výpadek deploye od tohohle šumu.
+  /^docs\//,
 ];
 
 const lsRaw = execSync('git -c core.quotepath=false ls-tree -r ' + REF, { cwd: REPO, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
