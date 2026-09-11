@@ -72,6 +72,15 @@ const KLICOVE_STRANKY = [
 // ⚠️ Kdo sem bude sahat, ať si ten test zopakuje. Nula chyb může znamenat
 // „vše v pořádku" i „detektor je slepý", a rozdíl pozná jen kanárek.
 
+// ⛔ NAŠE cesty za penězi. Na nich se nic nesmí omlouvat jako „nelze ověřit":
+// mrtvá pokladna je nejdražší porucha ze všech a musí křičet. Úlevu níž dostávají
+// jen CIZÍ weby, které nás odmítají proto, že nejsme prohlížeč.
+const NASE_HOSTY = new Set([
+  "martinbarna.cz", "www.martinbarna.cz",
+  "tvujcoach.cz", "www.tvujcoach.cz",
+  "buy.stripe.com", "form.simpleshop.cz",
+]);
+
 const TIMEOUT_MS = 15000;
 const PAUZA_MS = 400;        // pauza mezi dvěma požadavky na TÝŽ host
 const HOSTU_SOUBEZNE = 6;    // různé hosty smí běžet souběžně, týž host NIKDY
@@ -98,7 +107,9 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession:
 // Vysledek = přesně sloupce tabulky `link_check`. Nic navíc se do insertu nesmí dostat.
 type Vysledek = { url: string; kde: string; http_status: number | null; ok: boolean; poznamka: string | null };
 // Mereni = Vysledek + interní příznak, který do DB NEJDE (viz sestavení `radky`).
-type Mereni = Vysledek & { blokovano: boolean };
+// `opakovat` rozlišuje DVA důvody, proč je měření neplatné: výzva ochrany webu
+// (opakování má smysl, stav se mění) a cizí anti-bot (opakování nemá smysl nikdy).
+type Mereni = Vysledek & { blokovano: boolean; opakovat?: boolean };
 // Stav jednoho běhu: které hosty nás zablokovaly a u kterých už se čekalo na druhou šanci.
 type Stav = { blokovane: Set<string>; druhaSanceVycerpana: Set<string> };
 
@@ -134,10 +145,23 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
 }
 
 // Vytáhne URL ze šablon. Regex schválně nebere uvozovky, závorky a lomené závorky.
+function orezNevyvazeneZavorky(u: string): string {
+  let out = u;
+  while (out.endsWith(")") && (out.match(/\)/g) ?? []).length > (out.match(/\(/g) ?? []).length) {
+    out = out.slice(0, -1);
+  }
+  return out;
+}
+
 function urlyZeSablon(blob: string): string[] {
-  const nalezene = blob.match(/https?:\/\/[^"'\\ )<>\]}]+/g) ?? [];
+  // ⛔ Závorka NEUKONČUJE adresu. DOI odkazy je mají uvnitř
+  // (…/S2468-1253(25)00090-1) a do 11. 9. 2026 se utnuly na první `)`, takže hlídka
+  // každý den hlásila jako rozbitý odkaz, který žije. Zavírací závorka se urežává
+  // až potom, a jen když nemá pár (to je případ `](url)` a `url(…)` v šabloně).
+  const nalezene = blob.match(/https?:\/\/[^"'\\ <>\]}]+/g) ?? [];
   const cisté = nalezene
     .map((u) => u.replace(/[.,;:]+$/, ""))          // uřízni interpunkci na konci
+    .map(orezNevyvazeneZavorky)
     .filter((u) => !u.includes("{{"))                // ⚠️ odkazy s merge proměnnou
     .filter((u) => !u.includes("unsubscribe_token")) //    nejdou ověřit naslepo
     .filter((u) => !/\.(png|jpg|jpeg|gif|svg|webp)$/i.test(u)); // obrázky neřešíme
@@ -184,8 +208,19 @@ async function jedenPokus(url: string, kde: string): Promise<Mereni> {
 
     if (jeVyzvaOchrany(r, telo)) {
       return {
-        url, kde, http_status: r.status, ok: false, blokovano: true,
+        url, kde, http_status: r.status, ok: false, blokovano: true, opakovat: true,
         poznamka: `NELZE OVĚŘIT: ochrana webu vrátila ověřovací stránku, ne obsah. HTTP ${r.status} | ${diagnostika(r, telo)}`,
+      };
+    }
+    // ⛔ Cizí weby nás odmítají proto, že nejsme prohlížeč, ne proto, že by odkaz byl
+    // mrtvý. Změřeno 11. 9. 2026: doi.org i mayoclinic.org vrací 403 i z domácí IP
+    // a čistého Chrome UA. To je „nezměřeno", ne „nefunguje", a nesmí to křičet
+    // každý den; falešný poplach naučí adresáta mail ignorovat.
+    // ⚠ Na NAŠICH hostech (`NASE_HOSTY`) tahle úuleva neplatí: tam je 403 porucha.
+    if (!r.ok && !NASE_HOSTY.has(hostZ(url)) && (r.status === 401 || r.status === 403 || r.status === 429)) {
+      return {
+        url, kde, http_status: r.status, ok: false, blokovano: true, opakovat: false,
+        poznamka: `NELZE OVĚŘIT: ${hostZ(url)} odmítá kontrolu bez prohlížeče (HTTP ${r.status}) | ${diagnostika(r, telo)}`,
       };
     }
     if (!r.ok) return { url, kde, http_status: r.status, ok: false, blokovano: false, poznamka: `HTTP ${r.status} | ${diagnostika(r, telo)}` };
@@ -224,7 +259,10 @@ async function zkontroluj(url: string, kde: string, stav: Stav): Promise<Mereni>
     };
   }
   let v = await jedenPokus(url, kde);
-  if (v.blokovano) {
+  // ⚠ Jen výzva ochrany webu se opakuje a blokuje celý host. U cizího anti-bota
+  // (`opakovat: false`) by opakování jen bralo čas a odepsat kvůli němu zbytek hosta
+  // by zalhalo: každý odkaz na něm se dá změřit zvlášť.
+  if (v.blokovano && v.opakovat) {
     // ⚠️ Druhá šance jen JEDNOU ZA HOST A BĚH. Kdyby se čekalo u každého odkazu,
     // 66 odkazů × RETRY_MS by přerostlo časový limit funkce a neuložilo by se NIC.
     // ⚠️ A nečekej od ní zázrak: celý běh jede z JEDNÉ odchozí IP, takže když ji
@@ -320,14 +358,28 @@ Deno.serve(async (req) => {
   // ochrana. Falešný poplach naučí adresáta mail ignorovat, což je horší než ticho.
   const blokovane = vysledky.filter((v) => v.blokovano);
   const rozbite = vysledky.filter((v) => !v.ok && !v.blokovano);
-  if (rozbite.length) {
-    await alertAdmin(`Link-check: ${rozbite.length} z ${vysledky.length} odkazů NEFUNGUJE`, {
-      rozbite: rozbite.slice(0, 12).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
+  // ⛔ NAŠE odkazy a CIZÍ zdroje se nesmí slévat do jednoho poplachu. Rozbitý náš
+  // odkaz je porucha na cestě za penězi; cizí vydavatel, který nám neodpověděl, je
+  // poznámka. Slité dohromady chodilo 8. až 11. 9. 2026 jako „9 z 200 NEFUNGUJE"
+  // každý den, ačkoli ani jeden z těch odkazů rozbitý nebyl.
+  const rozbiteNase = rozbite.filter((v) => NASE_HOSTY.has(hostZ(v.url)));
+  const rozbiteCizi = rozbite.filter((v) => !NASE_HOSTY.has(hostZ(v.url)));
+  if (rozbiteNase.length) {
+    await alertAdmin(`Link-check: ${rozbiteNase.length} NAŠICH odkazů NEFUNGUJE`, {
+      rozbite: rozbiteNase.slice(0, 12).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
       celkem_kontrolovano: vysledky.length,
-      neovereno_kvuli_ochrane_webu: blokovane.length,
+      cizí_zdroje_bez_odpovedi: rozbiteCizi.length,
+      neovereno: blokovane.length,
+    });
+  } else if (rozbiteCizi.length) {
+    await alertAdmin(`Link-check: naše odkazy OK, ${rozbiteCizi.length} cizích zdrojů neodpovědělo`, {
+      co_to_znamena: "Žádný náš odkaz není rozbitý. Tohle jsou odkazy na cizí weby (studie, úřady) a stojí za oční kontrolu, ne za poplach.",
+      zdroje: rozbiteCizi.slice(0, 12).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
+      celkem_kontrolovano: vysledky.length,
+      neovereno: blokovane.length,
     });
   } else if (blokovane.length) {
-    await alertAdmin(`Link-check: ${blokovane.length} odkazů se NEPODAŘILO OVĚŘIT (ochrana webu nás odmítá)`, {
+    await alertAdmin(`Link-check: ${blokovane.length} odkazů se NEPODAŘILO OVĚŘIT (ochrana webu nebo cizí anti-bot)`, {
       co_to_znamena: "Tyhle odkazy NEJSOU prokazatelně rozbité. Ochrana webu vrátila ověřovací stránku místo obsahu, takže kontrola u nich dnes neproběhla.",
       co_s_tim: "Kontrola běží z IP datacentra a WEDOS Global Protection jim z velké části nedůvěřuje. Spravit to jde jen na straně WEDOSu (povolit naše IP nebo zmírnit ochranu), z appky ne.",
       hosty: [...new Set(blokovane.map((v) => v.url.split("/")[2]))].join(", "),
