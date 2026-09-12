@@ -16,6 +16,12 @@
 //    TC volá až po úspěchu `app-purchase-bridge` (pořadí drží appka).
 // =============================================================================
 
+import {
+  decideSend,
+  shouldCreateMarketingLead,
+  type SuppressionSnapshot,
+} from "../_shared/mailing-guard.ts";
+
 export class GrantError extends Error {
   status: number;
   constructor(message: string, status = 400) {
@@ -85,6 +91,7 @@ export type GrantDeps = {
   udelEntitlement: (row: Record<string, unknown>) => Promise<void>;
   najdiLeada: (email: string) => Promise<LeadRow | null>;
   zalozLeada: (email: string, name: string | null) => Promise<LeadRow>;
+  nactiSuppression: (email: string) => Promise<SuppressionSnapshot>;
   uzVideliEvent: (eventId: string) => Promise<boolean>;
   uzOdeslanMail: (email: string) => Promise<boolean>;
   posliMail: (args: {
@@ -95,7 +102,7 @@ export type GrantDeps = {
     unsub: string;
   }) => Promise<string>;
   zalogujOdeslani: (args: {
-    leadId: string;
+    leadId: string | null;
     providerId: string;
     email: string;
     userId: string;
@@ -481,12 +488,35 @@ export async function handleGrant(
     };
   }
 
+  const snap = await deps.nactiSuppression(email);
+  const policy = decideSend({
+    email,
+    mailClass: "entitlement_delivery",
+    functionName: "grant-videokurz-z-appky",
+    path: "grant-videokurz-z-appky",
+    snapshot: snap,
+  });
+  if (policy.action === "skip") {
+    try {
+      await deps.zaznamPreskoceni({ eventId, grant: "mail-guard:" + policy.reason });
+    } catch {
+      /* best-effort */
+    }
+    return {
+      ok: true,
+      grant: d.akce === "udelit" ? "udelen" : d.grant,
+      mail: "preskoceno",
+    };
+  }
+
   let lead = await deps.najdiLeada(email);
-  if (!lead) {
+  if (!lead && shouldCreateMarketingLead(snap)) {
     lead = await deps.zalozLeada(email, jmenoZTela || null);
   }
-  const jmeno = jmenoZTela || lead.name || "";
-  const unsub = deps.unsubUrl(lead.unsubscribe_token);
+  const jmeno = jmenoZTela || lead?.name || "";
+  const unsub = lead
+    ? deps.unsubUrl(lead.unsubscribe_token)
+    : SITE + "/odhlasit/";
   const m = buildMail(email, jmeno, unsub, tier);
 
   try {
@@ -498,7 +528,7 @@ export async function handleGrant(
       unsub,
     });
     await deps.zalogujOdeslani({
-      leadId: lead.id,
+      leadId: lead ? lead.id : null,
       providerId,
       email,
       userId,

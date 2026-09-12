@@ -20,6 +20,7 @@
 // nekomu, kdo jeste nezacal; jakmile ma prvni, chodi mu i mesice s nulou).
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 
 const SB_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SB_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -168,19 +169,31 @@ Deno.serve(async (req) => {
         + `<p>Díky, že v tom jedeš se mnou.<br>Martin Barna<br>martinbarna.cz</p></div>`;
 
       const prijemce = test ? TEST_INBOX : ownerEmail;
-      const res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from: "Martin Barna <news@martinbarna.cz>",
-          to: [prijemce],
-          bcc: test ? undefined : [TEST_INBOX],
-          reply_to: "martin@martinbarna.cz",
-          subject: (test ? "[TEST] " : "") + `Tvůj partnerský přehled za ${jmeno}`,
-          html,
-        }),
+      const d = await sendIfAllowed(admin, {
+        email: prijemce,
+        mailClass: "partner_report",
+        functionName: "affiliate-mesicni-report",
+        path: "affiliate-mesicni-report",
+      }, async () => {
+        const res = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "Martin Barna <news@martinbarna.cz>",
+            to: [prijemce],
+            bcc: test ? undefined : [TEST_INBOX],
+            reply_to: "martin@martinbarna.cz",
+            subject: (test ? "[TEST] " : "") + `Tvůj partnerský přehled za ${jmeno}`,
+            html,
+          }),
+        });
+        if (!res.ok) throw new Error("resend_" + res.status + " " + (await res.text()).slice(0, 120));
       });
-      if (!res.ok) throw new Error("resend_" + res.status + " " + (await res.text()).slice(0, 120));
+      if (d.action === "skip") {
+        zaznam.stav = "preskoceno-guard:" + d.reason;
+        vysledky.push(zaznam);
+        continue;
+      }
 
       await admin.from("email_events").insert({
         lead_id: null, step: 0, type: typUdalosti,

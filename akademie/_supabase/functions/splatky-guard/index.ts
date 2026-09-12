@@ -9,6 +9,7 @@
 //    a status vrati na ok/completed) — guard uz nic resit nemusi
 // Test rezim: POST {"test_email":"..."} posle oba maily s [TEST] na zadanou adresu, data NEMENI.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -116,6 +117,26 @@ async function sendMail(to: string, subject: string, html: string): Promise<bool
   return res.ok;
 }
 
+async function sendMailGuarded(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+  to: string,
+  subject: string,
+  html: string,
+): Promise<{ sent: boolean; skipped: boolean; reason: string }> {
+  let sent = false;
+  const d = await sendIfAllowed(admin, {
+    email: to,
+    mailClass: "billing_transactional",
+    functionName: "splatky-guard",
+    path: "splatky-guard",
+  }, async () => {
+    sent = await sendMail(to, subject, html);
+  });
+  if (d.action === "skip") return { sent: false, skipped: true, reason: d.reason };
+  return { sent, skipped: false, reason: d.reason };
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
@@ -130,9 +151,9 @@ Deno.serve(async (req) => {
   if (body?.test_email) {
     const to = String(body.test_email);
     const w = warnEmail("Martin", "muzi"), s = suspendEmail("Martin", "muzi");
-    const ok1 = await sendMail(to, "[TEST] " + w.subject, w.html);
-    const ok2 = await sendMail(to, "[TEST] " + s.subject, s.html);
-    return json({ ok: true, mode: "test", to, warn_sent: ok1, suspend_sent: ok2 });
+    const ok1 = await sendMailGuarded(admin, to, "[TEST] " + w.subject, w.html);
+    const ok2 = await sendMailGuarded(admin, to, "[TEST] " + s.subject, s.html);
+    return json({ ok: true, mode: "test", to, warn_sent: ok1.sent, suspend_sent: ok2.sent, warn_skip: ok1.reason, suspend_skip: ok2.reason });
   }
 
   const now = Date.now();
@@ -157,13 +178,18 @@ Deno.serve(async (req) => {
 
     if (r.status === "ok" && r.last_paid_at && String(r.last_paid_at) < warnCutoff) {
       const m = warnEmail(name, seg);
-      const sent = await sendMail(email, m.subject, m.html);
-      if (sent) {
+      const out = await sendMailGuarded(admin, email, m.subject, m.html);
+      if (out.sent || out.skipped) {
         await admin.from("installment_status").update({
           status: "warned", warned_at: new Date().toISOString(), updated_at: new Date().toISOString(),
         }).eq("email", email);
         warned.push(email);
-        try { await admin.from("email_events").insert({ lead_id: null, step: 0, type: "sent", detail: { track: "splatky-guard", kind: "warn", email } }); } catch { /* log best-effort */ }
+        try {
+          await admin.from("email_events").insert({
+            lead_id: null, step: 0, type: out.skipped ? "info" : "sent",
+            detail: { track: "splatky-guard", kind: "warn", email, skipped: out.skipped, reason: out.reason },
+          });
+        } catch { /* log best-effort */ }
       }
     } else if (r.status === "warned" && r.warned_at && String(r.warned_at) < suspendCutoff) {
       // pozastav JEN simpleshop grant (rucni/admin granty nechavame byt)
@@ -209,7 +235,7 @@ Deno.serve(async (req) => {
         }
       } catch { /* best-effort */ }
       const m = suspendEmail(name, seg);
-      await sendMail(email, m.subject, m.html);
+      await sendMailGuarded(admin, email, m.subject, m.html);
       await admin.from("installment_status").update({
         status: "suspended", suspended_at: new Date().toISOString(), updated_at: new Date().toISOString(),
       }).eq("email", email);
