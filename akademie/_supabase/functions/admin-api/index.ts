@@ -6,6 +6,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // `index.ts`. Když se nahraje jen index, funkce spadne na chybějícím importu.
 // Past: paměť `mb-deploy-kopiruje-jen-index-past`.
 import { pripravFakta } from "./report-engine.mjs";
+import { applySyncPlan, type TcReport } from "./tc-report-sync.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s nákupem přes Stripe (`academy-stripe-webhook`).
 // Deploy admin-api proto veze i `_shared/koucink-onboarding.ts`.
 import { onboardKoucink } from "../_shared/koucink-onboarding.ts";
@@ -2475,6 +2476,112 @@ Deno.serve(async (req) => {
       // stará verze app endpointu neznámou akci tiše bere jako grant → poznáme podle action v odpovědi
       if (jj.action && jj.action !== "weekly-summary" && !("dny" in jj) && !("found" in jj)) return json({ ok: false, reason: "app-neumi" });
       return json({ ok: true, data: jj });
+    }
+
+    // ⭐ ZÁPIS TÝDENNÍCH DAT Z APPKY DO client_reports (8. 9. 2026).
+    // `client_app_data` je preview (denní řádky, nic neukládá). Tahle akce nahraje
+    // týdenní řádky jako běžné reporty, ať je Martin vidí v tabulce.
+    //
+    // ⛔ Cesta je TÁŽ: academy-grant + academy_grant_secret. Žádná druhá auth.
+    // ⛔ source='web' / 'import-sheet' se nepřepisuje. Žádný mail. Žádné mazání.
+    if (action === "academy_naporad") {
+      const email = low(body.email);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+
+      const { data: coach, error: coachErr } = await admin.from("entitlements")
+        .select("active, plan, academy_po_3m")
+        .eq("email", email).eq("product", "coaching").maybeSingle();
+      if (coachErr) return json({ error: coachErr.message }, 500);
+      if (!coach) return json({ error: "neni_klient" }, 404);
+
+      const { data: acad, error: acadErr } = await admin.from("entitlements")
+        .select("active, expires_at, source")
+        .eq("email", email).eq("product", "academy").maybeSingle();
+      if (acadErr) return json({ error: acadErr.message }, 500);
+      const uzMela = !!acad?.active && !acad.expires_at;
+
+      if (!uzMela) {
+        // ⛔ `expires_at` se zapisuje VŽDY (i null), stejné pravidlo jako `set_access`.
+        //    `stripe_*` se vynulují, ať pozdější refund měsíční Academy nesebral dárek.
+        const { error } = await admin.from("entitlements").upsert({
+          email,
+          product: "academy",
+          active: true,
+          source: "admin-panel",
+          granted_at: new Date().toISOString(),
+          expires_at: null,
+          stripe_payment_intent: null,
+          stripe_subscription_id: null,
+        }, { onConflict: "email,product" });
+        if (error) return json({ error: error.message }, 500);
+
+        // Appka: stejná cesta jako `set_access` s mesice=0 (neomezená Academy = rok v appce).
+        try {
+          const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+          const gsec = gs?.value ? String(gs.value) : "";
+          let gres = "no-secret";
+          if (gsec) {
+            const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+              body: JSON.stringify({ email, action: "grant", tier: "ai_basic", source: "admin-panel" }),
+            }).catch(() => null);
+            // deno-lint-ignore no-explicit-any
+            if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
+            else gres = r ? "http-" + r.status : "fetch-fail";
+          }
+          await admin.from("tvujcoach_grants").insert({ email, action: "grant", result: gres, source: "admin-panel" });
+        } catch { /* best-effort */ }
+      }
+
+      const { error: flagErr } = await admin.from("entitlements")
+        .update({ academy_po_3m: false })
+        .eq("email", email).eq("product", "coaching");
+      if (flagErr) return json({ error: flagErr.message }, 500);
+
+      return json({ ok: true, expires_at: null, uz_mela: uzMela, academy_po_3m: false });
+    }
+
+    // Prehled udeleni pristupu do appky Tvuj Coach (kdo/kdy/vysledek) — pro admin sekci.
+    if (action === "client_app_sync") {
+      const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
+      const tydnuRaw = Number(body.tydnu);
+      const tydnu = Number.isFinite(tydnuRaw) ? Math.min(52, Math.max(1, Math.round(tydnuRaw))) : 12;
+      const out = await tcMost(admin, { email, action: "report-sync", tydnu });
+      if (!out.ok) return json({ ok: false, duvod: out.duvod, status: out.status });
+      const data = out.data ?? {};
+      const empty = {
+        ok: true, found: false, registered: false, active: false,
+        synced: 0, skipped_web: 0, skipped_empty: 0, report_dates: [] as string[],
+      };
+      if (data.found === false) return json(empty);
+      const reports = Array.isArray(data.reports) ? data.reports as TcReport[] : [];
+      const dates = reports.map((x) => String(x.report_date ?? x.week_start ?? "").slice(0, 10)).filter(Boolean);
+      const existingByDate = new Map<string, string | null>();
+      if (dates.length) {
+        const { data: exist } = await admin.from("client_reports")
+          .select("report_date,source").eq("email", email).in("report_date", dates);
+        for (const row of exist ?? []) {
+          existingByDate.set(String(row.report_date), row.source == null ? null : String(row.source));
+        }
+      }
+      const { data: tgRow } = await admin.from("client_targets")
+        .select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle();
+      const plan = applySyncPlan(email, reports, existingByDate, tgRow ?? null);
+      if (plan.toUpsert.length) {
+        const { error } = await admin.from("client_reports").upsert(plan.toUpsert, { onConflict: "email,report_date" });
+        if (error) return json({ ok: false, duvod: "db", detail: String(error.message).slice(0, 200) }, 500);
+      }
+      return json({
+        ok: true,
+        found: true,
+        registered: data.registered !== false,
+        active: data.active === true,
+        synced: plan.synced,
+        skipped_web: plan.skipped_web,
+        skipped_empty: plan.skipped_empty,
+        report_dates: plan.report_dates,
+      });
     }
 
     // 🚀 PROPSÁNÍ CÍLŮ DO APPKY Tvůj Coach (Martin 2. 9. 2026: „ať mu tam ty cíle nechám
