@@ -1,8 +1,9 @@
 /* ============================================================
    Veřejný web: světlý režim jako OVERRIDE vrstva.
    Nesahej na HTML stovek stránek. Pravidla žijí pod [data-theme=light].
-   Tokeny jen tady (ne magická čísla v pravidlech). Hero pásy článků
-   a infografiky ?v=zlate NEpřebarvuj — zůstanou tmavé ostrovy.
+   Tokeny jen tady (ne magická čísla v pravidlech). Infografiky ?v=zlate
+   NEpřebarvuj. Ultra tmavé plochy (hero, pásy, karty) ve světlém režimu
+   jdou na krém, ne na ostrov. Patička a foto-karta .play-card zůstávají.
    Načti v <head> a znovu ZA arena.css na konci <body>, ať vyhraje kaskáda.
    ============================================================ */
 
@@ -358,28 +359,50 @@ html[data-theme="light"]{background:var(--mb-bg);}
   color:var(--mb-text)!important;
 }
 
-/* Hero pásy (články, videokurz, blog, nativní landings): ZŮSTANOU tmavé.
-   Nepřepisuj pozadí. Jen pojisti světlý text na tom pásu.
-   .hero .tag na článcích je mrazivé sklo (bílá 20 %) na tmavém pásu, ne zlatá
-   pilulka. Tmavý ink (--mb-on-gold) na tom pásu byl Martinův případ naruby.
-   Zlatá pilulka (videokurz .hero .tag { background:var(--gold) }) níž. */
-[data-theme="light"] .hero,
-[data-theme="light"] .hero h1,
-[data-theme="light"] .hero h2,
-[data-theme="light"] .hero p,
-[data-theme="light"] .hero .lead,
-[data-theme="light"] .hero .sub,
-[data-theme="light"] .hero .meta,
-[data-theme="light"] .hero .hero-meta,
-[data-theme="light"] .hero .trust,
-[data-theme="light"] .hero .btn-ghost{color:var(--on-dark)!important;}
-[data-theme="light"] .hero .lead,
-[data-theme="light"] .hero p,
-[data-theme="light"] .hero .hero-meta{color:rgba(255,255,255,.88)!important;}
-[data-theme="light"] .hero .btn-ghost{border-color:rgba(255,255,255,.45)!important;}
+/* Hero: ve světlém režimu KRÉM, ne ostrov. Třída .hero na nativních
+   landinzích má v page CSS #121014 / #262626-#000 / grafit. Inline
+   #121014 už 4. 9. zesvětloval, class hero ne, proto černý pás nad
+   světlou sekcí (Tvůj Coach). Infografiky jsou <img>, ty se neruší.
+   .play-card je fotka s překryvem, text na ní zůstává světlý. */
+[data-theme="light"] .hero{
+  background:var(--mb-bg)!important;
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] .hero :is(h1,h2,h3,h4,b,strong,li,label,td,.ticks li,.price-tag .now,.price-tag span){
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] .hero :is(p,.lead,.sub,.meta,.hero-meta,.trust,.micro,.sec-sub,small,figcaption){
+  color:var(--bd-muted)!important;
+}
+[data-theme="light"] .hero a:not(.btn):not(.cta):not(.btn-ghost):not(.btn-acc):not(.btn-gold):not(.btn-grn){
+  color:var(--bd-gold-soft)!important;
+}
+[data-theme="light"] .hero .btn-ghost{
+  color:var(--mb-text)!important;
+  border-color:var(--ar-line2)!important;
+}
 [data-theme="light"] .hero .tag{
   background:var(--mb-gold)!important;
   color:var(--mb-on-gold)!important;
+}
+[data-theme="light"] .hero .hl,
+[data-theme="light"] .hero .kick,
+[data-theme="light"] .hero .eyebrow,
+[data-theme="light"] .hero .stars,
+[data-theme="light"] .hero h1 .gold,
+[data-theme="light"] .hero .meta span{
+  color:var(--bd-gold-soft)!important;
+}
+[data-theme="light"] .hero .badge,
+[data-theme="light"] section.hero .badge{
+  background:rgba(235,177,44,.16)!important;
+  color:var(--bd-gold-soft)!important;
+}
+[data-theme="light"] .hero .photo-cap,
+[data-theme="light"] .hero .photo-cap i,
+[data-theme="light"] .hero .play-card,
+[data-theme="light"] .hero .play-card :is(h1,h2,h3,h4,h5,h6,p,span,div,small){
+  color:var(--on-dark)!important;
 }
 
 /* ============================================================
@@ -416,8 +439,8 @@ html[data-theme="light"]{background:var(--mb-bg);}
 /* ============================================================
    Kontrast < 2,0 (QA 26. 8. 2026). Page-level kopie tmavého overlaye
    (color:#fff na h5/h6/.module, zlatý text, leftover --ink na krému).
-   Ostrov .hero / footer výše zůstává tmavý. Tmavý motiv tento blok
-   nevidí ([data-theme=light] only).
+   Patička výše zůstává tmavá. Tmavý motiv tento blok nevidí
+   ([data-theme=light] only).
    ============================================================ */
 [data-theme="light"] h5,
 [data-theme="light"] h6,
@@ -494,35 +517,15 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] [style*="color:#d9d2c6"],
 [data-theme="light"] [style*="color:#bbb"]{color:var(--bd-muted)!important;}
 
-/* Tmavý ostrov, který není .hero: certifikační pás, CTA videokurzu. */
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"],
-[data-theme="light"] [style*="linear-gradient(135deg, #262626"]{color:var(--on-dark)!important;}
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"] :is(h1,h2,h3,h4,h5,h6,p,span,li,strong,b,div,small,label):not(.btn):not(.btn-gold):not(.ac-tag):not(.tag):not(.chip),
-[data-theme="light"] [style*="linear-gradient(135deg, #262626"] :is(h1,h2,h3,h4,h5,h6,p,span,li,strong,b,div,small,label):not(.btn):not(.btn-gold):not(.ac-tag):not(.tag):not(.chip){
-  color:var(--on-dark)!important;
-}
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"] :is(.btn-gold,.ac-tag,.tag,.chip),
-[data-theme="light"] [style*="linear-gradient(135deg, #262626"] :is(.btn-gold,.ac-tag,.tag,.chip){
-  color:var(--mb-on-gold)!important;
-}
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"] a:not(.btn):not(.btn-gold),
-[data-theme="light"] [style*="linear-gradient(135deg, #262626"] a:not(.btn):not(.btn-gold){
-  color:var(--on-dark)!important;
-}
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"] :is(p,small,.text-muted,.lead){
-  color:rgba(255,255,255,.82)!important;
-}
-
-/* Pricebox: page CSS nechává průhledný gradient, overlay v light vypne,
-   text zůstal bílý na krému. Ostrov jako hero. */
+/* Pricebox: dřív natvrdo tmavý gradient. Ve světlém režimu karta na krému. */
 [data-theme="light"] .pricebox{
-  background:linear-gradient(135deg,#1d1a16 0%,#0b0a09 100%)!important;
-  color:var(--on-dark)!important;
-  border-color:rgba(235,177,44,.28)!important;
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-color:var(--bd-line)!important;
 }
-[data-theme="light"] .pricebox :is(h2,h3,h4,p,li,.now,.check li,strong,b){color:var(--on-dark)!important;}
-[data-theme="light"] .vk-guarantee{color:#bfe9cb!important;background:rgba(47,174,87,.14)!important;border-color:rgba(47,174,87,.35)!important;}
-[data-theme="light"] .vk-guarantee strong{color:#86e29a!important;}
+[data-theme="light"] .pricebox :is(h2,h3,h4,p,li,.now,.check li,strong,b){color:var(--mb-text)!important;}
+[data-theme="light"] .vk-guarantee{color:#1d7a3c!important;background:#f2faf4!important;border-color:#cfe9d5!important;}
+[data-theme="light"] .vk-guarantee strong{color:#1d7a3c!important;}
 
 [data-theme="light"] .navbar.bg-white,
 [data-theme="light"] .navbar.sticky-top{
@@ -584,15 +587,8 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] [style*="color:#F6CD63"],
 [data-theme="light"] [style*="color:#f6cd63"],
 [data-theme="light"] [style*="color:#ffd166"]{color:var(--bd-gold-soft)!important;}
-[data-theme="light"] .hero [style*="color:#EBB12C"],
-[data-theme="light"] .hero [style*="color:#ebb12c"],
-[data-theme="light"] .hero [style*="color:#F6CD63"],
-[data-theme="light"] .hero [style*="color:#f6cd63"],
-[data-theme="light"] .hero [style*="color:#ffd166"],
 [data-theme="light"] .ac-hero [style*="color:#F6CD63"],
-[data-theme="light"] .ac-hero [style*="color:#ffd166"],
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"] [style*="color:#F6CD63"],
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"] [style*="color:#ffd166"]{
+[data-theme="light"] .ac-hero [style*="color:#ffd166"]{
   color:var(--bd-gold2)!important;
 }
 
@@ -609,20 +605,8 @@ html[data-theme="light"]{background:var(--mb-bg);}
   color:var(--mb-text)!important;
 }
 
-/* Tmavé sekce s natvrdo #100e14 / #15141a (srovnání Academy). */
-[data-theme="light"] [style*="background:#100e14"],
-[data-theme="light"] [style*="background:#101114"],
-[data-theme="light"] [style*="background:#0f1113"],
-[data-theme="light"] [style*="background:#15141a"],
-[data-theme="light"] .colv,
-[data-theme="light"] .day-sample,
-[data-theme="light"] .academy-box{
-  color:var(--on-dark)!important;
-}
-[data-theme="light"] [style*="background:#100e14"] :is(h1,h2,h3,h4,p,span,li),
-[data-theme="light"] .colv h3,
-[data-theme="light"] .day-sample h2,
-[data-theme="light"] .academy-box h3{color:var(--on-dark)!important;}
+/* Tmavé sekce s natvrdo #100e14 / #15141a: pozadí i text jdou na světlo
+   (blok ULTRA TMAVE níž přebíjí pozadí). */
 
 /* Zbytek overlaye: hardcoded #fff mimo ostrovy. */
 [data-theme="light"] summary,
@@ -648,14 +632,23 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .tpl span,
 [data-theme="light"] .incl{color:var(--bd-muted)!important;}
 
-/* Číslo na zlatém kolečku (stejná barva textu i výplně). */
-[data-theme="light"] .hero .badge,
-[data-theme="light"] section.hero .badge{color:var(--on-dark)!important;}
-[data-theme="light"] .step.hot,
+[data-theme="light"] .step.hot{
+  background:var(--green-light)!important;
+  color:var(--mb-text)!important;
+}
 [data-theme="light"] .step.hot .st,
 [data-theme="light"] .step.hot .st b,
 [data-theme="light"] .step.hot .st span,
-[data-theme="light"] .step.hot .sgo{color:var(--bd-gold2)!important;}
+[data-theme="light"] .step.hot .sgo{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .cta-calc{
+  background:var(--green-light)!important;
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] .toolbar{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-bottom:1px solid var(--bd-line)!important;
+}
 
 /* Footer: zlatý odkaz patří na tmavý ostrov, ne na krém. */
 [data-theme="light"] footer a{color:var(--bd-gold2)!important;}
@@ -674,38 +667,12 @@ html[data-theme="light"]{background:var(--mb-bg);}
    Tohle jedno pravidlo řeší patičku na 164 stránkách (815 výskytů).
    ⛔ --brand a --mb-gold NEpřemapovávat: jsou to VÝPLNĚ, ne text. */
 [data-theme="light"] footer,
-[data-theme="light"] .hero:not(.hero-svetly),
 [data-theme="light"] .ac-hero,
-[data-theme="light"] .pricebox,
 [data-theme="light"] section.contact,
-[data-theme="light"] .play-card,
-[data-theme="light"] .colv,
-[data-theme="light"] .day-sample,
-[data-theme="light"] .academy-box,
-[data-theme="light"] [style*="linear-gradient(135deg,#262626"],
-[data-theme="light"] [style*="linear-gradient(135deg, #262626"],
-[data-theme="light"] [style*="background:#100e14"],
-[data-theme="light"] [style*="background:#101114"],
-[data-theme="light"] [style*="background:#0f1113"],
-[data-theme="light"] [style*="background:#15141a"],
-[data-theme="light"] [style*="background:#0C0B10"],
-[data-theme="light"] [style*="background:#0c0b10"]{
+[data-theme="light"] .play-card{
   --bd-gold-soft:#F6CD63;
   --gold-soft:#F6CD63;
 }
-
-/* --- 2) Tmavý hero: zbytky, kam spadl inkoust z globálních pravidel ------ */
-[data-theme="light"] .hero:not(.hero-svetly) .ticks li,
-[data-theme="light"] .hero:not(.hero-svetly) .price-tag .now,
-[data-theme="light"] .hero:not(.hero-svetly) .price-tag span{color:var(--on-dark)!important;}
-
-/* --- 3) Tmavý ostrov s inline pozadím #0C0B10 (/makro-plan/ ref-proof) --- */
-[data-theme="light"] [style*="background:#0C0B10"],
-[data-theme="light"] [style*="background:#0c0b10"]{color:var(--on-dark)!important;}
-[data-theme="light"] [style*="background:#0C0B10"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div),
-[data-theme="light"] [style*="background:#0c0b10"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div){color:var(--on-dark)!important;}
-[data-theme="light"] [style*="background:#0C0B10"] :is(figcaption,small,.text-muted),
-[data-theme="light"] [style*="background:#0c0b10"] :is(figcaption,small,.text-muted){color:rgba(255,255,255,.78)!important;}
 
 /* --- 4) Kontaktní sekce homepage: fialový ostrov, ne krém --------------- */
 /* `section.contact` je JEN homepage; koucing/konzultace/poukaz mají
@@ -772,9 +739,7 @@ html[data-theme="light"]{background:var(--mb-bg);}
 /* Inline #e8d8c8 (bledý krém) na krémovém pozadí. */
 [data-theme="light"] [style*="color:#e8d8c8"],
 [data-theme="light"] [style*="color:#E8D8C8"]{color:var(--bd-muted)!important;}
-[data-theme="light"] .hero:not(.hero-svetly) [style*="color:#e8d8c8"],
-[data-theme="light"] footer [style*="color:#e8d8c8"],
-[data-theme="light"] .pricebox [style*="color:#e8d8c8"]{color:rgba(255,255,255,.82)!important;}
+[data-theme="light"] footer [style*="color:#e8d8c8"]{color:rgba(255,255,255,.82)!important;}
 
 /* --- 8) Patička: zlatý odkaz musí přebít i `p a:not()x4` ---------------- */
 /* Specificita: [data-theme]+footer+p+a+4×:not(.trida) = (0,6,2). */
@@ -801,7 +766,12 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] [style*="background:#121014"],
 [data-theme="light"] [style*="background:#191510"],
 [data-theme="light"] [style*="background:linear-gradient(135deg,#262626 0%,#000 100%)"],
-[data-theme="light"] [style*="background:linear-gradient(160deg,#15171a"]{
+[data-theme="light"] [style*="background:linear-gradient(160deg,#15171a"],
+[data-theme="light"] [style*="background:#0a0908"],
+[data-theme="light"] [style*="background:#070605"],
+[data-theme="light"] [style*="background:#14161a"],
+[data-theme="light"] [style*="background:#16131D"],
+[data-theme="light"] [style*="background:#1C1826"]{
   background:var(--mb-surface)!important;
   color:var(--mb-text)!important;
   border:1px solid rgba(235,177,44,.45)!important;
@@ -812,7 +782,14 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] [style*="background:#181520"] [style*="color:#F0EADF"],
 [data-theme="light"] [style*="background:#211d2b"] [style*="color:#fff"],
 [data-theme="light"] [style*="background:#100e14"] [style*="color:#fff"],
-[data-theme="light"] [style*="background:linear-gradient(135deg,#262626 0%,#000 100%)"] [style*="color:#fff"]{
+[data-theme="light"] [style*="background:linear-gradient(135deg,#262626 0%,#000 100%)"] [style*="color:#fff"],
+[data-theme="light"] [style*="background:#0C0B10"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div,figcaption,small),
+[data-theme="light"] [style*="background:#0c0b10"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div,figcaption,small),
+[data-theme="light"] [style*="background:#181520"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div),
+[data-theme="light"] [style*="background:#100e14"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div),
+[data-theme="light"] [style*="background:#121014"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div),
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div,small,label),
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div,small,label){
   color:var(--mb-text)!important;
 }
 
@@ -847,3 +824,72 @@ html[data-theme="light"]{background:var(--mb-bg);}
   color:#1A1222!important;
   filter:none!important;
 }
+
+/* ============================================================
+   VLNA 3: ultra tmavé PLOCHY podle třídy (Martin: ve světlém režimu
+   žádný ultra tmavý blok). Inline #121014 už řeší blok výše, class
+   .hero / .day-sample / .faq-i / .pricebox / .dv-card ne.
+   Tmavý motiv tahle pravidla nevidí.
+   ============================================================ */
+
+[data-theme="light"] .hero .hero-bonus,
+[data-theme="light"] .hero .hero-bonus b{color:var(--mb-text)!important;}
+[data-theme="light"] .hero .hero-note a{color:var(--bd-gold-soft)!important;}
+
+[data-theme="light"] .faq-i{
+  background:var(--mb-surface)!important;
+  border-color:var(--bd-line)!important;
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] .faq-i b{color:var(--mb-text)!important;}
+[data-theme="light"] .faq-i p{color:var(--bd-muted)!important;}
+
+[data-theme="light"] .dv-card{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-color:var(--bd-line)!important;
+}
+[data-theme="light"] .dv-caption{color:var(--mb-text)!important;}
+
+[data-theme="light"] .day-sample{
+  background:var(--mb-bg2)!important;
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] .day-sample :is(h1,h2,h3,.sh h2,.name){color:var(--mb-text)!important;}
+[data-theme="light"] .day-sample :is(p,.sh p,.kc){color:var(--bd-muted)!important;}
+[data-theme="light"] .meal{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-color:var(--bd-line)!important;
+}
+
+[data-theme="light"] .buysel{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-color:var(--ar-line2)!important;
+}
+
+[data-theme="light"] .cta-box .btn.btn-ghost{
+  background:transparent!important;
+  border:1.5px solid var(--ar-line2)!important;
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] .cta-box .btn.btn-ghost:hover{
+  border-color:var(--mb-gold)!important;
+  color:var(--bd-gold-soft)!important;
+}
+
+[data-theme="light"] .colv,
+[data-theme="light"] .academy-box{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border-color:var(--bd-line)!important;
+}
+[data-theme="light"] .colv h3,
+[data-theme="light"] .academy-box h3{color:var(--mb-text)!important;}
+[data-theme="light"] .colv li,
+[data-theme="light"] .academy-box p{color:var(--bd-muted)!important;}
+
+[data-theme="light"] .play-card,
+[data-theme="light"] .play-card :is(h5,p,span,div){color:var(--on-dark)!important;}
+
