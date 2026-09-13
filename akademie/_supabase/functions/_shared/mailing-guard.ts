@@ -34,6 +34,7 @@ export const PATH_CLASS = {
   "splatky-guard": "billing_transactional",
   "affiliate-mesicni-report": "partner_report",
   "poukaz-vydat": "purchase_delivery",
+  "videokurz-onboarding": "purchase_delivery",
   "grant-videokurz-z-appky": "entitlement_delivery",
   "admin-api.client_invite": "client_operational",
   "admin-api.client_offboard.confirm": "client_operational",

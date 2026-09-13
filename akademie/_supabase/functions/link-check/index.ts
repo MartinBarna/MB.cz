@@ -106,7 +106,8 @@ const TIMEOUT_MS = 15000;
 const PAUZA_MS = 400;        // pauza mezi dvěma požadavky na TÝŽ host
 const HOSTU_SOUBEZNE = 6;    // různé hosty smí běžet souběžně, týž host NIKDY
 const RETRY_MS = 8000;       // druhá šance, když ochrana webu vrátí ověřovací výzvu
-const MAX_URL = 200;         // pojistka proti splašené šabloně
+const MAX_URL = 200;         // denní strop fetchů: pojistka proti splašené šabloně i proti idle timeoutu 150 s
+const MS_NA_DEN = 86400000;
 
 // ⛔ JEDINÉ MÍSTO, kde se definují hlavičky odchozího požadavku. Každý odchozí
 // požadavek na kontrolovaný odkaz jde přes `jedenPokus()` a bere je odsud, takže
@@ -381,6 +382,21 @@ async function projdiHost(polozky: { url: string; kde: string }[], stav: Stav): 
   return out;
 }
 
+// Okno o délce `strop` posunuté o UTC den. Obaluje se, ať denní počet fetchů
+// zůstane MAX_URL a konec seznamu nezůstane natrvalo za `vse.length = MAX_URL`.
+function rotujOkno(
+  polozky: { url: string; kde: string }[],
+  strop: number,
+  den: number,
+): { davka: { url: string; kde: string }[]; offset: number } {
+  if (strop <= 0 || polozky.length === 0) return { davka: [], offset: 0 };
+  if (polozky.length <= strop) return { davka: polozky.slice(), offset: 0 };
+  const offset = (den * strop) % polozky.length;
+  const davka: { url: string; kde: string }[] = [];
+  for (let i = 0; i < strop; i++) davka.push(polozky[(offset + i) % polozky.length]);
+  return { davka, offset };
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
 
@@ -433,12 +449,26 @@ Deno.serve(async (req) => {
   for (const u of zeSablon)        pridej(u, "sablona");
   const sloucenoDuplicit = KLICOVE_STRANKY.length + zTokenu.length + zeSablon.length - vse.length;
 
+  const nalezeno = vse.length;
+  let rotaceOffset: number | null = null;
   if (vse.length > MAX_URL) {
-    await alertAdmin("Link-check: podezřele moc odkazů, kontrola zkrácena", {
-      nalezeno: vse.length, strop: MAX_URL, slouceno_duplicit: sloucenoDuplicit,
-      co_to_znamena: "Přes strop se kontrola oříznula a na zbytek se dnes NESÁHLO. Tohle už NEJSOU UTM varianty téhož odkazu, ty se slučují; do šablon opravdu přibylo tolik různých stránek.",
+    // Přednost (stranka / token) vždy. Ze šablon jen okno MAX_URL, posunuté dnem.
+    // Řazení URL: select("blocks") nemá order, bez něj by okno nemělo stabilní konec.
+    const prednost = vse.filter((v) => v.kde !== "sablona");
+    const zbytek = vse.filter((v) => v.kde === "sablona")
+      .slice()
+      .sort((a, b) => a.url < b.url ? -1 : a.url > b.url ? 1 : 0);
+    const kapacita = Math.max(0, MAX_URL - prednost.length);
+    const denUtc = Math.floor(Date.parse(runAt.slice(0, 10) + "T00:00:00.000Z") / MS_NA_DEN);
+    const { davka, offset } = rotujOkno(zbytek, kapacita, denUtc);
+    rotaceOffset = offset;
+    await alertAdmin("Link-check: podezřele moc odkazů, kontrola rotuje", {
+      nalezeno, strop: MAX_URL, slouceno_duplicit: sloucenoDuplicit,
+      prednost: prednost.length, sablony_celkem: zbytek.length,
+      sablony_dnes: davka.length, rotace_offset: offset,
+      co_to_znamena: "Unikátních stránek je víc než strop. Klíčové stránky a tokeny se berou vždy. Zbytek ze šablon se bere v okně posunutém podle UTC dne, ať stejný konec seznamu nezůstane bez kontroly. Denní počet fetchů zůstává MAX_URL (idle timeout edge funkce 150 s, pauza 400 ms na stejný host). Tohle už NEJSOU UTM varianty téhož odkazu, ty se slučují.",
     });
-    vse.length = MAX_URL;
+    vse.splice(0, vse.length, ...prednost, ...davka);
   }
 
   // 3) kontrola: seskupeno po hostech. Různé weby souběžně, týž web po jednom.
@@ -508,6 +538,9 @@ Deno.serve(async (req) => {
   return json({
     ok: true,
     run_at: runAt,
+    nalezeno,
+    strop: MAX_URL,
+    rotace_offset: rotaceOffset,
     kontrolovano: vysledky.length,
     slouceno_duplicit: sloucenoDuplicit,
     v_poradku: vysledky.filter((v) => v.ok).length,
