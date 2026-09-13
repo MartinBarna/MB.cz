@@ -191,6 +191,9 @@ Deno.serve(async (req) => {
     .gte("payments_n", 1).lt("payments_n", 3).in("status", ["ok", "warned"]);
 
   const warned: string[] = [], suspended: string[] = [];
+  // Komu se nepodarilo poslat ani alert Martinovi. Vraci se v odpovedi behu,
+  // aby to slo precist zvenci, kdyz Resend nefunguje v obou smerech.
+  const alertySelhaly: string[] = [];
   for (const r of rows ?? []) {
     const email = String(r.email);
     // jmeno + segment pro osloveni (best-effort z leads)
@@ -210,32 +213,41 @@ Deno.serve(async (req) => {
           status: "warned", warned_at: new Date().toISOString(), updated_at: new Date().toISOString(),
         }).eq("email", email);
         warned.push(email);
-        // ⛔⛔ [13. 9. 2026] SKIP NENI ODESLANI. Lhuta 7 dnu se rozjizdi tak jako tak
-        // (kdyby ne, neplatic by mel Academy zadarmo navzdy a cron by to zkousel denne),
-        // JENZE clovek se o varovani nedozvedel a za tyden prijde o pristup POTICHU.
-        // Presne ten vzor, ktery u poukazu znamenal zaplaceno a nedodano.
-        // ⇒ Aspon se to musi dozvedet Martin a ozvat se mu jinou cestou.
-        if (!out.sent) {
-          await alertAdmin(
-            admin,
-            `[VYRIDIT RUCNE] Varovani o splatce NEODESLO (${email})`,
-            `Klientovi ${email} se nepodarilo odeslat varovani o neuhrazene splatce.
-
-`
-              + `Duvod brany: ${out.reason}
-`
-              + `Lhuta uz bezi: za ${SUSPEND_AFTER_WARN_DAYS} dnu mu guard pozastavi pristup k Academy.
-
-`
-              + `Ozvi se mu jinou cestou (telefon, zprava). Jinak o pristup prijde, aniz by ho kdokoli varoval.`,
-          );
-        }
         try {
           await admin.from("email_events").insert({
             lead_id: null, step: 0, type: out.skipped ? "info" : "sent",
             detail: { track: "splatky-guard", kind: "warn", email, skipped: out.skipped, reason: out.reason },
           });
         } catch { /* log best-effort */ }
+      }
+      // ⛔⛔ [13. 9. 2026] ALERT JE SCHVALNE VENKU z podminky vyse, a to je cela pointa.
+      // Uvnitr by pokryl jen SKIP. Kdyz brana mail PUSTI a Resend ho neprijme
+      // (`sent` i `skipped` false), stav se neposune, cron to zitra zkusi znovu
+      // a Martin se nedozvi NIC. Prvni verze teto opravy tuhle diru mela
+      // a staticky test ji neodhalil, protoze hledal jen pritomnost `alertAdmin`.
+      // ⇒ Alert plati pro OBA pripady: neodeslano i preskoceno branou.
+      if (!out.sent) {
+        const doslo = await alertAdmin(
+          admin,
+          `[VYRIDIT RUCNE] Varovani o splatce NEODESLO (${email})`,
+          `Klientovi ${email} se nepodarilo odeslat varovani o neuhrazene splatce.
+
+`
+            + `Duvod: ${out.skipped ? "brana preskocila (" + out.reason + ")" : "odeslani selhalo (Resend nebo sit)"}
+`
+            + `Stav: ${out.skipped ? `lhuta bezi, za ${SUSPEND_AFTER_WARN_DAYS} dnu mu guard pozastavi pristup k Academy` : "lhuta NEBEZI, cron to zkusi znovu pri dalsim behu"}
+
+`
+            + `Ozvi se mu jinou cestou (telefon, zprava).`,
+        );
+        // ⛔ A kdyz neprojde ani alert, nesmi to zapadnout uplne: `alertAdmin` vraci
+        // false i pri 4xx/5xx z Resendu. Do logu funkce a do odpovedi behu, aby to
+        // slo precist zvenci (stejny duvod jako `if (!alert.ok)` u poukazu; tady
+        // neni co opakovat, cron zadne retry nema).
+        if (!doslo) {
+          console.error("[splatky-guard] ALERT MARTINOVI NEODESEL, warn, " + email);
+          alertySelhaly.push(email);
+        }
       }
     } else if (r.status === "warned" && r.warned_at && String(r.warned_at) < suspendCutoff) {
       // pozastav JEN simpleshop grant (rucni/admin granty nechavame byt)
@@ -292,7 +304,7 @@ Deno.serve(async (req) => {
       // nedozvedel. Zopakovat uz to nejde, radek ma stav "suspended" a z dotazu vypadne
       // (`in ("ok","warned")`), takze ta zprava je ztracena natrvalo.
       if (!outS.sent) {
-        await alertAdmin(
+        const doslo = await alertAdmin(
           admin,
           `[VYRIDIT RUCNE] Pozastaveni Academy: zprava klientovi NEODESLA (${email})`,
           `Klientovi ${email} byl prave pozastaven pristup k Academy za neuhrazenou splatku,
@@ -300,15 +312,19 @@ Deno.serve(async (req) => {
             + `ale zprava o tom mu NEODESLA.
 
 `
-            + `Duvod brany: ${outS.reason}
+            + `Duvod: ${outS.skipped ? "brana preskocila (" + outS.reason + ")" : "odeslani selhalo (Resend nebo sit)"}
 
 `
             + `Uz se nezopakuje (stav je "suspended" a z dotazu vypadl). Dej mu vedet jinou cestou.`,
         );
+        if (!doslo) {
+          console.error("[splatky-guard] ALERT MARTINOVI NEODESEL, suspend, " + email);
+          alertySelhaly.push(email);
+        }
       }
       try { await admin.from("email_events").insert({ lead_id: null, step: 0, type: outS.sent ? "sent" : "info", detail: { track: "splatky-guard", kind: "suspend", email, sent: outS.sent, skipped: outS.skipped, reason: outS.reason } }); } catch { /* log best-effort */ }
     }
   }
 
-  return json({ ok: true, checked: (rows ?? []).length, warned, suspended });
+  return json({ ok: true, checked: (rows ?? []).length, warned, suspended, alerty_selhaly: alertySelhaly });
 });

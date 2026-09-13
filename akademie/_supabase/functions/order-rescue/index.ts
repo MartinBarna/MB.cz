@@ -214,11 +214,19 @@ Deno.serve(async (req) => {
     .select("order_id,email,product,name,created_at")
     .eq("completed", false).is("reminded_at", null)
     .gte("created_at", from72).lte("created_at", to3)
-    .order("created_at", { ascending: true }).limit(MAX_PER_RUN);
+    // ⛔⛔ [13. 9. 2026] Nacita se VIC radku, nez kolik se smi odeslat mailu, a strop
+    // se pocita az z ODESLANYCH (`if (sent >= MAX_PER_RUN) break` nize). Duvod: radek,
+    // ktery se preskoci (uz ma pristup, chybi sablona, docasny skip brany), drive
+    // spotreboval jedno z deseti mist. Ve spojeni s `order by created_at` to znamenalo,
+    // ze deset nejstarsich zaseknutych objednavek drzelo celou frontu, dokud jim
+    // neuteklo okno 72 h, a novejsi kosik nedostal jedinou sanci. `MAX_PER_RUN` mel
+    // byt strop na MAILY (viz komentar v hlavicce souboru), ne na prectene radky.
+    .order("created_at", { ascending: true }).limit(MAX_PER_RUN * 3);
 
   let sent = 0, skipped = 0;
   const results: Record<string, unknown>[] = [];
   for (const p of pend ?? []) {
+    if (sent >= MAX_PER_RUN) break; // strop je na odeslane maily, ne na prectene radky
     const email = low(p.email);
     // pojistka: uz ma pristup (koupil pod jinou objednavkou)? -> oznac a preskoc
     // Expirace: expirovane clenstvi se NEpocita jako "uz ma pristup", jinak by clovek,
@@ -249,8 +257,8 @@ Deno.serve(async (req) => {
         path: "order-rescue",
       }, () => send(email, fill(tpl.subject, v), html));
       if (d.action === "skip") {
-        // Označ, ať cron nezkouší totéž okno znovu. Unsub je trvalý.
-        // ⛔⛔ [13. 9. 2026] ALE NE KAŽDÝ SKIP JE TRVALÝ. `mailing-guard` vrací
+        // ⛔⛔ [13. 9. 2026] Označ, ať cron nezkouší totéž okno znovu, ALE JEN KDYŽ
+        // JE DŮVOD TRVALÝ. (Dřív tu stálo jen "unsub je trvalý" a označovalo se vždy.) `mailing-guard` vrací
         // `suppression_load_failed`, když se mu nepodaří NAČÍST seznam odhlášených: třída
         // `optional_reminder` má bránu fail-closed, takže jedna chyba dotazu vypadá stejně
         // jako odhlášení. Spálit kvůli ní JEDINOU připomínku znamená, že člověk
