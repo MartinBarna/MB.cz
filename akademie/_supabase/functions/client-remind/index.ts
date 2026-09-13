@@ -6,6 +6,7 @@
 // Globální vypnutí: app_config.client_remind_enabled = 'false'.
 // Per-klient vypnutí: app_config.client_remind_optout = CSV e-mailů (zapisuje se v adminu).
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -221,11 +222,22 @@ Deno.serve(async (req: Request) => {
   const zminNavod = !!sekceNavod;
   if (sekceNavod) attachments = [...(attachments ?? []), sekceNavod];
 
-  let sent = 0;
+  let sent = 0, skipped = 0;
   const errors: string[] = [];
   for (const tgt of targets) {
     const isReg = tgt.kind === "register";
     try {
+      const d = await guardSend(admin, {
+        email: tgt.email,
+        mailClass: "client_operational",
+        functionName: "client-remind",
+        path: "client-remind",
+      });
+      if (d.action === "skip") {
+        await logMailSkip(admin, d);
+        skipped++;
+        continue;
+      }
       const r = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
@@ -245,5 +257,5 @@ Deno.serve(async (req: Request) => {
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, priloha: !!ktNavod, okno_navodu: oknoNavodu, navod_prilozen: zminNavod, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, okno_navodu: oknoNavodu, navod_prilozen: zminNavod, errors });
 });

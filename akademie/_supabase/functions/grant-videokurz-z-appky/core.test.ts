@@ -70,6 +70,8 @@ function mock(opts: {
   mailSpadne?: boolean;
   logSpadne?: boolean;
   jmenoLeada?: string | null;
+  inOdhlaseniTrvale?: boolean;
+  leadStatus?: string | null;
 } = {}): { deps: GrantDeps; stav: Stav } {
   const stav: Stav = { entitlementy: [], maily: [], logy: [], alerty: [], leady: 0, preskoceni: [] };
   const seenEvents = new Set<string>();
@@ -89,6 +91,15 @@ function mock(opts: {
       lead = { id: "Lnew", name, unsubscribe_token: "tok-new" };
       return Promise.resolve(lead);
     },
+    nactiSuppression: (email) => Promise.resolve({
+      email,
+      inOdhlaseniTrvale: Boolean(opts.inOdhlaseniTrvale),
+      leadStatus: opts.leadStatus === undefined
+        ? (lead ? "active" : null)
+        : opts.leadStatus,
+      leadId: lead ? lead.id : null,
+      loadError: false,
+    }),
     uzVideliEvent: (eventId) => Promise.resolve(Boolean(opts.uzEvent) || seenEvents.has(eventId)),
     uzOdeslanMail: () => Promise.resolve(Boolean(opts.uzMail)),
     posliMail: ({ to, subject, text, html }) => {
@@ -355,6 +366,37 @@ async function main(): Promise<void> {
     const { deps, stav } = mock({ lead: null });
     const r = await handleGrant(TELO, deps);
     check("bez leada: založí se kvůli odhlášení", stav.leady === 1 && r.mail === "odeslan");
+  }
+
+  {
+    const { deps, stav } = mock({ lead: null, inOdhlaseniTrvale: true, leadStatus: null });
+    const r = await handleGrant(TELO, deps);
+    check("unsub bez leada: přístup se udělí", r.grant === "udelen" && stav.entitlementy.length === 1);
+    check("unsub bez leada: aktivní marketingový lead se NEzakládá", stav.leady === 0);
+    check("unsub bez leada: přístupový mail jde (entitlement_delivery)", r.mail === "odeslan" && stav.maily.length === 1);
+  }
+
+  {
+    const { deps, stav } = mock({
+      lead: { id: "Lunsub", name: "Jana", unsubscribe_token: "tok-unsub" },
+      inOdhlaseniTrvale: true,
+      leadStatus: "unsubscribed",
+    });
+    const r = await handleGrant(TELO, deps);
+    check("unsub existující lead: žádný nový lead", stav.leady === 0 && r.mail === "odeslan");
+    check("unsub existující lead: mail použije stávající token",
+      Boolean(stav.maily[0]?.html?.includes("tok-unsub")));
+  }
+
+  {
+    const { deps, stav } = mock({ leadStatus: "bounced" });
+    const r = await handleGrant(TELO, deps);
+    check("bounce: přístup ZŮSTANE udělený", r.grant === "udelen" && stav.entitlementy.length === 1);
+    check("bounce: mail NE", r.mail === "preskoceno" && stav.maily.length === 0);
+    check("bounce: stopa skipu pro idempotenci",
+      stav.preskoceni.length === 1 && stav.preskoceni[0] === "evt_1");
+    const r2 = await handleGrant(TELO, deps);
+    check("bounce: stejný event podruhé je duplicate", r2.duplicate === true);
   }
 
   {

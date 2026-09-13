@@ -6,6 +6,7 @@
 // po odeslani orazitkuje onboarding_sent_at -> dalsi beh trefi jen nove pridane kontakty, nikdy nikoho 2x.
 // Rezimy POST JSON: {dry:true} | {test_email,variant,name} | {live:true,limit} . Auth: x-drip-secret == app_config.drip_invoke_secret.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { sendIfAllowed } from '../_shared/mailing-guard.ts';
 
 const NL = String.fromCharCode(10);
 const DQ = String.fromCharCode(34);
@@ -199,21 +200,39 @@ Deno.serve(async (req: Request) => {
   const { data: rows } = await admin.from('customer_contacts')
     .select('email,name,tags,unsubscribe_token').eq('status', 'active').is('onboarding_sent_at', null).limit(limit);
   const list = rows ?? [];
-  let sent = 0, errors = 0;
+  let sent = 0, skipped = 0, errors = 0;
   const errSample: string[] = [];
   for (const r of list) {
     const variant = variantOf(r.tags as string[]);
     const m = buildEmail(variant, String(r.email), String(r.name ?? ''), String(r.unsubscribe_token));
     try {
-      const id = await sendViaResend(String(r.email), m.subject, m.html, m.text, m.unsub);
-      await admin.from('customer_contacts').update({ onboarding_sent_at: nowIso, last_emailed_at: nowIso, updated_at: nowIso }).eq('email', r.email);
-      await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding', provider_id: id, detail: { variant, table: 'customer_contacts' } });
-      sent++;
+      // Brána před Resendem: hard bounce = skip (i pro doručení nákupu), odhlášení propustí
+      // (třída purchase_delivery). Při skipu se onboarding_sent_at NEorazítkuje: skip není odesláno.
+      const d = await sendIfAllowed(admin, {
+        email: String(r.email),
+        mailClass: 'purchase_delivery',
+        functionName: 'videokurz-onboarding',
+        path: 'videokurz-onboarding',
+      }, async () => {
+        const id = await sendViaResend(String(r.email), m.subject, m.html, m.text, m.unsub);
+        await admin.from('customer_contacts').update({ onboarding_sent_at: nowIso, last_emailed_at: nowIso, updated_at: nowIso }).eq('email', r.email);
+        await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding', provider_id: id, detail: { variant, table: 'customer_contacts' } });
+        sent++;
+      });
+      if (d.action === 'skip') {
+        skipped++;
+        // Mrtvá adresa (hard bounce) by jinak zůstala ve výběru `status='active' AND onboarding_sent_at IS NULL`
+        // napořád a při malém `limit` by vytlačila živé kontakty. Označit ji jako bounced NENÍ „odesláno",
+        // je to stav adresy (revize 13. 9. 2026). Ostatní důvody skipu (neplatný e-mail) se neoznačují.
+        if (d.reason === 'hard_bounce') {
+          await admin.from('customer_contacts').update({ status: 'bounced', updated_at: nowIso }).eq('email', r.email);
+        }
+      }
     } catch (e) {
       errors++;
       if (errSample.length < 5) errSample.push(String(e).slice(0, 200));
       await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding_error', detail: { variant, error: String(e).slice(0, 300) } });
     }
   }
-  return json({ ok: true, mode: 'live', attempted: list.length, sent, errors, error_sample: errSample });
+  return json({ ok: true, mode: 'live', attempted: list.length, sent, skipped, errors, error_sample: errSample });
 });

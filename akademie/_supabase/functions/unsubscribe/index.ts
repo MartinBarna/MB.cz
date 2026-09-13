@@ -83,7 +83,14 @@ async function unsubscribe(token: string): Promise<boolean> {
     .eq('unsubscribe_token', token).select('id,track,step,unsubscribed_at');
   if (error) return false;
   const lead = data?.[0];
-  if (!lead) return false;
+  // Token není z `leads`: může být z `customer_contacts` (uvítací mail videokurzu nese
+  // customer_contacts.unsubscribe_token). Do 13. 9. 2026 tu končilo `false` a odkaz byl mrtvý
+  // (změřeno: 480 dvojic, 0 shod tokenů). RPC zapíše trvalý seznam a zmrazí i lead téhož e-mailu.
+  if (!lead) {
+    const { data: k, error: chybaK } = await a.rpc('odhlas_kontakt', { p_token: token, p_zdroj: 'unsubscribe-link-kontakt' });
+    if (chybaK) { console.error('[unsubscribe] odhlas_kontakt selhalo:', chybaK.message); return false; }
+    return Boolean((k as { ok?: boolean } | null)?.ok);
+  }
   // Datum i udalost jen pri PRVNIM odhlaseni. Opakovany klik na tyz odkaz (a mailove
   // skenery, ktere One-Click POST posilaji samy) nesmi prerazitkovat puvodni datum ani
   // nafouknout pocet odhlaseni. Odpoved zustava `ok: true` jako driv.
@@ -112,12 +119,29 @@ async function unsubscribe(token: string): Promise<boolean> {
   return true;
 }
 
+// Znovupřihlášení (Martin 13. 9. 2026: odhlášení musí jít vzít zpět). RPC smaže e-mail z trvalého
+// seznamu a vrátí status active bez termínu: newsletter zase chodí, rozjetá trať se sama neprobudí.
+// Stížnost na spam zůstává trvalá (RPC vrátí duvod 'spam_complaint').
+async function resubscribe(token: string): Promise<{ ok: boolean; duvod?: string }> {
+  if (!token || token === 'test-no-op') return { ok: false, duvod: 'token' };
+  const { data, error } = await admin().rpc('prihlas_znovu', { p_token: token, p_zdroj: 'odhlasit-stranka' });
+  if (error) { console.error('[unsubscribe] prihlas_znovu selhalo:', error.message); return { ok: false, duvod: 'chyba' }; }
+  const r = (data ?? {}) as { ok?: boolean; duvod?: string };
+  return { ok: Boolean(r.ok), duvod: r.duvod };
+}
+
 async function erase(token: string): Promise<boolean> {
   if (!token || token === 'test-no-op') return false;
-  const { data, error } = await admin().from('leads')
+  const a = admin();
+  const { data, error } = await a.from('leads')
     .delete().eq('unsubscribe_token', token).select('id');
   if (error) return false;
-  return (data?.length ?? 0) > 0;
+  if ((data?.length ?? 0) > 0) return true;
+  // Token z customer_contacts (uvítací mail videokurzu): GDPR výmaz musí umět i ten (revize 13. 9. 2026).
+  const { data: k, error: chybaK } = await a.from('customer_contacts')
+    .delete().eq('unsubscribe_token', token).select('email');
+  if (chybaK) return false;
+  return (k?.length ?? 0) > 0;
 }
 
 Deno.serve(async (req: Request) => {
@@ -141,6 +165,9 @@ Deno.serve(async (req: Request) => {
     if (action === 'erase') {
       const gone = await erase(token);
       return json({ erased: gone }, C);
+    }
+    if (action === 'resubscribe') {
+      return json(await resubscribe(token), C);
     }
     const ok = await unsubscribe(token);
     return json({ ok }, C);

@@ -4,6 +4,7 @@
 // Pojistky: 1 pripominka na objednavku (reminded_at), zadny mail kdyz uz ma entitlement,
 // max 10 mailu na beh. Auth: x-drip-secret. TEST: {test_email, product, name}.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 // VLASTNI mereni otevreni a prokliku (protejsky: edge funkce mail-pixel a mail-klik).
 // ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a milestones/stopa.ts;
 //    hlida to test `drip-send/stopa.test.ts`.
@@ -196,8 +197,13 @@ Deno.serve(async (req) => {
     const v = vars(String(body.name ?? ""));
     // ⛔ TEST rezim se ZAMERNE nemeri: nahled Martinovi by vyrobil otevreni a proklik
     //    bez odpovidajiciho odeslani a nafoukl by statistiku trate.
-    await send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v)));
-    return json({ ok: true, mode: "test" });
+    const d = await sendIfAllowed(admin, {
+      email: String(body.test_email),
+      mailClass: "optional_reminder",
+      functionName: "order-rescue",
+      path: "order-rescue",
+    }, () => send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v))));
+    return json({ ok: true, mode: "test", mail: d.action, reason: d.reason });
   }
 
   // LIVE: objednavky 3-72 h stare, nedokoncene, bez pripominky
@@ -208,11 +214,19 @@ Deno.serve(async (req) => {
     .select("order_id,email,product,name,created_at")
     .eq("completed", false).is("reminded_at", null)
     .gte("created_at", from72).lte("created_at", to3)
-    .order("created_at", { ascending: true }).limit(MAX_PER_RUN);
+    // ⛔⛔ [13. 9. 2026] Nacita se VIC radku, nez kolik se smi odeslat mailu, a strop
+    // se pocita az z ODESLANYCH (`if (sent >= MAX_PER_RUN) break` nize). Duvod: radek,
+    // ktery se preskoci (uz ma pristup, chybi sablona, docasny skip brany), drive
+    // spotreboval jedno z deseti mist. Ve spojeni s `order by created_at` to znamenalo,
+    // ze deset nejstarsich zaseknutych objednavek drzelo celou frontu, dokud jim
+    // neuteklo okno 72 h, a novejsi kosik nedostal jedinou sanci. `MAX_PER_RUN` mel
+    // byt strop na MAILY (viz komentar v hlavicce souboru), ne na prectene radky.
+    .order("created_at", { ascending: true }).limit(MAX_PER_RUN * 3);
 
   let sent = 0, skipped = 0;
   const results: Record<string, unknown>[] = [];
   for (const p of pend ?? []) {
+    if (sent >= MAX_PER_RUN) break; // strop je na odeslane maily, ne na prectene radky
     const email = low(p.email);
     // pojistka: uz ma pristup (koupil pod jinou objednavkou)? -> oznac a preskoc
     // Expirace: expirovane clenstvi se NEpocita jako "uz ma pristup", jinak by clovek,
@@ -236,7 +250,28 @@ Deno.serve(async (req) => {
       const leadId = ld?.id ? String(ld.id) : null;
       const holeHtml = wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v));
       const html = await ostopkuj(holeHtml, { track: tpl.track, step: 0, key: String(tpl.key ?? ""), lead_id: leadId }, MAIL_TRACK_SECRET, SUPABASE_URL);
-      await send(email, fill(tpl.subject, v), html);
+      const d = await sendIfAllowed(admin, {
+        email,
+        mailClass: "optional_reminder",
+        functionName: "order-rescue",
+        path: "order-rescue",
+      }, () => send(email, fill(tpl.subject, v), html));
+      if (d.action === "skip") {
+        // ⛔⛔ [13. 9. 2026] Označ, ať cron nezkouší totéž okno znovu, ALE JEN KDYŽ
+        // JE DŮVOD TRVALÝ. (Dřív tu stálo jen "unsub je trvalý" a označovalo se vždy.) `mailing-guard` vrací
+        // `suppression_load_failed`, když se mu nepodaří NAČÍST seznam odhlášených: třída
+        // `optional_reminder` má bránu fail-closed, takže jedna chyba dotazu vypadá stejně
+        // jako odhlášení. Spálit kvůli ní JEDINOU připomínku znamená, že člověk
+        // s nedokončenou objednávkou už nedostane nic. Stejný vzor jako u poukázky.
+        // ⇒ Vypaluje se jen důvod, který je opravdu trvalý; při pochybnosti radši znovu.
+        const trvalyDuvod = d.reason === "invalid_email" || d.reason === "hard_bounce" || d.reason === "hard_unsubscribe";
+        if (trvalyDuvod) {
+          await admin.from("pending_orders").update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);
+        }
+        skipped++;
+        results.push({ order: p.order_id, skipped: d.reason, spaleno: trvalyDuvod });
+        continue;
+      }
       await admin.from("pending_orders").update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);
       // ⛔ Jmenovatel pro open a click rate. `order-rescue` do `email_events` historicky
       //    nezapisovala nic, takze bez tohohle by otevrenost vychazela proti nule odeslanych.

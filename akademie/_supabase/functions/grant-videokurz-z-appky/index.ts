@@ -36,6 +36,7 @@ import {
   type GrantDeps,
   handleGrant,
 } from "./core.ts";
+import { loadSuppressionFromSupabase } from "../_shared/mailing-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -148,6 +149,7 @@ const deps: GrantDeps = {
     const r = data[0];
     return { id: String(r.id), name: r.name ? String(r.name) : null, unsubscribe_token: String(r.unsubscribe_token) };
   },
+  nactiSuppression: (email) => loadSuppressionFromSupabase(admin, email),
   async uzVideliEvent(eventId) {
     const { data, error } = await admin
       .from("email_events")

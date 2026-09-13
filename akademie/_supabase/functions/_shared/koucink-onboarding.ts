@@ -14,6 +14,8 @@
 
 // deno-lint-ignore-file no-explicit-any
 
+import { guardSend, logMailSkip } from "./mailing-guard.ts";
+
 /** Balíček koučinku. Rozdíl je v ceně a v tom, co je v ní (hovor, Academy, hlasovky). */
 export type KoucinkPlan = "gold" | "diamond";
 
@@ -125,6 +127,7 @@ export type OnboardVysledek = {
   app_grant: string;
   mail_status: number;
   priloha: boolean;
+  mail_skip?: string;
 };
 
 /**
@@ -219,6 +222,24 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
 
   if (!v.resendKey) {
     return { ok: false, entitlement: entErr ? "chyba: " + entErr.message : "ok", app_grant: gres, mail_status: 0, priloha: false };
+  }
+
+  const inviteGuard = await guardSend(admin, {
+    email,
+    mailClass: "client_operational",
+    functionName: "admin-api",
+    path: "admin-api.client_invite",
+  });
+  if (inviteGuard.action === "skip") {
+    await logMailSkip(admin, inviteGuard);
+    return {
+      ok: false,
+      entitlement: entErr ? "chyba: " + entErr.message : "ok",
+      app_grant: gres,
+      mail_status: 0,
+      priloha: false,
+      mail_skip: inviteGuard.reason,
+    };
   }
 
   const escd = (s: string) => String(s).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c] as string));

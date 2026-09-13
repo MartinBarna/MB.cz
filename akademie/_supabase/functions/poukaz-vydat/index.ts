@@ -27,6 +27,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 import { verifyStripeSignature } from '../_shared/signature.ts';
+import { guardSend, logMailSkip } from '../_shared/mailing-guard.ts';
 import { handleStripeEvent, type CoreDeps, type ExistingVoucher, type StripeEvent } from './core.ts';
 import { generateVoucherCode } from './lib/codes.ts';
 import { buildVoucherPdf } from './lib/pdf.ts';
@@ -142,6 +143,16 @@ Deno.serve(async (req: Request): Promise<Response> => {
     },
     buildPdf: (input) => buildVoucherPdf(input),
     sendMail: (input) => sendVoucherMail(RESEND_KEY, input),
+    async guardMail(to) {
+      const d = await guardSend(admin, {
+        email: to,
+        mailClass: 'purchase_delivery',
+        functionName: 'poukaz-vydat',
+        path: 'poukaz-vydat',
+      });
+      if (d.action === 'skip') await logMailSkip(admin, d);
+      return { action: d.action, reason: d.reason };
+    },
     generateCode: (year) => generateVoucherCode(year),
     now: () => new Date(),
     logError: (message, meta) => console.error(`[poukaz-vydat] ${message}`, meta),

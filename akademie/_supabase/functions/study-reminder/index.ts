@@ -10,6 +10,7 @@
 //
 // TEST režim (obchází flag, nic nezapisuje): POST { test_email, name } -> jeden [TEST] mail.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -147,8 +148,13 @@ Deno.serve(async (req) => {
   if (body.test_email) {
     const name = String(body.name ?? "");
     const testUnsub = SUPABASE_URL + "/functions/v1/unsubscribe?token=test-no-op";
-    await send(String(body.test_email), "[TEST] Tento týden ses ještě neučil 🔥", emailHtml(name, testUnsub));
-    return json({ ok: true, mode: "test" });
+    const d = await sendIfAllowed(admin, {
+      email: String(body.test_email),
+      mailClass: "optional_reminder",
+      functionName: "study-reminder",
+      path: "study-reminder",
+    }, () => send(String(body.test_email), "[TEST] Tento týden ses ještě neučil 🔥", emailHtml(name, testUnsub)));
+    return json({ ok: true, mode: "test", mail: d.action, reason: d.reason });
   }
 
   // --- master přepínač (postaveno vypnuté) ---
@@ -185,7 +191,7 @@ Deno.serve(async (req) => {
     if (t > (last.get(id) ?? 0)) last.set(id, t);
   }
 
-  let sends = 0; const results: Record<string, unknown>[] = [];
+  let sends = 0, skipped = 0; const results: Record<string, unknown>[] = [];
   for (const u of ulist.data?.users ?? []) {
     if (sends >= MAX_PER_RUN) break;
     const email = low(u.email);
@@ -198,12 +204,22 @@ Deno.serve(async (req) => {
     const tok = tokenByEmail.get(email);
     const unsub = tok ? SUPABASE_URL + "/functions/v1/unsubscribe?token=" + encodeURIComponent(tok) : SITE + "/akademie/moje/";
     try {
-      await send(email, "Tento týden ses ještě neučil 🔥", emailHtml(name, unsub));
+      const d = await sendIfAllowed(admin, {
+        email,
+        mailClass: "optional_reminder",
+        functionName: "study-reminder",
+        path: "study-reminder",
+      }, () => send(email, "Tento týden ses ještě neučil 🔥", emailHtml(name, unsub)));
+      if (d.action === "skip") {
+        skipped++;
+        results.push({ email, skipped: d.reason, days: Math.round(days) });
+        continue;
+      }
       await admin.from("study_reminder_sent").insert({ email, week_key: thisWeek });
       sends++; results.push({ email, days: Math.round(days) });
     } catch (e) {
       results.push({ email, error: String(e).slice(0, 100) });
     }
   }
-  return json({ ok: true, sends, results });
+  return json({ ok: true, sends, skipped, results });
 });

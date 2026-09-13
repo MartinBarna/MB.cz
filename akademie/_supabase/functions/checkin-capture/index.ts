@@ -3,6 +3,7 @@
 // Režimy: POST check-in (z /akademie/check-in/) | POST {mode:'remind'}+x-drip-secret (týdenní cron)
 //         | GET ?stop=<reminder_token> (opt-out z připomínek).
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { analyzeCheckin, type Checkin } from "./analysis.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -100,7 +101,7 @@ Deno.serve(async (req) => {
     // — starý členský check-in by jim chodil duplicitně, tak je z připomínek vynecháváme
     const { data: coachEnts } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
     const coachSet = new Set((coachEnts ?? []).map((e) => low(e.email)));
-    let sent = 0; const MAX = 40;
+    let sent = 0, skipped = 0; const MAX = 40;
     for (const c of (creds ?? [])) {
       if (sent >= MAX) break;
       const email = low(c.email);
@@ -120,9 +121,18 @@ Deno.serve(async (req) => {
         foot,
       );
       const text = "Ahoj, čas na týdenní check-in: " + SITE + "/akademie/check-in/\n\nBe Effective! Martin";
-      try { await sendResend(email, "Čas na týdenní check-in 💪", html, text, replyTo); sent++; } catch { /* skip */ }
+      try {
+        const d = await sendIfAllowed(admin, {
+          email,
+          mailClass: "optional_reminder",
+          functionName: "checkin-capture",
+          path: "checkin-capture.remind",
+        }, () => sendResend(email, "Čas na týdenní check-in 💪", html, text, replyTo));
+        if (d.action === "skip") { skipped++; continue; }
+        sent++;
+      } catch { /* skip */ }
     }
-    return json({ ok: true, mode: "remind", sent });
+    return json({ ok: true, mode: "remind", sent, skipped });
   }
 
   // ---- SUBMIT MODE (z /akademie/check-in/) ----

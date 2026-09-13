@@ -209,6 +209,16 @@ jako **reálné UTF-8**, ne `\u` kódy, překlep `ď`(ď)→`ğ`(ğ) udělal „
   (smtp.resend.com:465, sender news@martinbarna.cz), od 2026-06-29 funkční, šablony česky.
   POZOR: auth maily sdílí Resend kvótu (free 100/den) s drip enginem.
 
+## ⛔ STANDING RULE: přímý Resend mimo drip musí přes mailing-guard (7. 9. 2026)
+
+Devět odesílacích cest (`study-reminder`, `client-remind`, `order-rescue`, `checkin-capture` remind, `splatky-guard`, `affiliate-mesicni-report`, `poukaz-vydat`, `grant-videokurz-z-appky`, `admin-api` client_invite/client_offboard) nečte `leads.status` ani `odhlaseni_trvale`. Drip brána je nechytí.
+
+Sdílená politika: `akademie/_supabase/functions/_shared/mailing-guard.ts`.
+Martin LOCK 7. 9. 2026: po hard unsub (`odhlaseni_trvale` / `leads` unsubscribed) STOP marketing + měkké nudge. KEEP: splátky, doručení nákupu a přístupu, důležitý provoz TC/koučinku (`client-remind`, invite, offboard potvrzení). Affiliate report zatím KEEP (smlouva). Hard bounce STOP u všech tříd.
+`client_offboard` prodejní blok = `marketing`. `grant-videokurz` nesmí založit aktivní marketingový lead trvale odhlášenému, přístup doručí.
+
+Nový `fetch` na `api.resend.com/emails` v těch funkcích až po `guardSend` / `sendIfAllowed`. Inventář a test: `_shared/resend-call-sites.md`. Deploy musí nahrát i `_shared` (ne jen `index.ts`).
+
 ## ⛔ STANDING RULE: každá mailová trať musí mít VÝSTUP, ne jen konec (6. 8. 2026)
 
 Martin: „počítejme s tím obecně u mailingů, co bychom stavěli či všech co máme."
