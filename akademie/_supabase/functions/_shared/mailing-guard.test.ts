@@ -97,6 +97,8 @@ async function main(): Promise<void> {
     PATH_CLASS["affiliate-mesicni-report"] === "partner_report");
   check("PATH_CLASS: poukaz je purchase_delivery",
     PATH_CLASS["poukaz-vydat"] === "purchase_delivery");
+  check("PATH_CLASS: videokurz-onboarding je purchase_delivery (uvítací mail = doručení nákupu)",
+    PATH_CLASS["videokurz-onboarding"] === "purchase_delivery");
   check("PATH_CLASS: grant je entitlement_delivery",
     PATH_CLASS["grant-videokurz-z-appky"] === "entitlement_delivery");
   check("PATH_CLASS: invite je client_operational",

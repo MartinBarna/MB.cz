@@ -219,7 +219,15 @@ Deno.serve(async (req: Request) => {
         await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding', provider_id: id, detail: { variant, table: 'customer_contacts' } });
         sent++;
       });
-      if (d.action === 'skip') skipped++;
+      if (d.action === 'skip') {
+        skipped++;
+        // Mrtvá adresa (hard bounce) by jinak zůstala ve výběru `status='active' AND onboarding_sent_at IS NULL`
+        // napořád a při malém `limit` by vytlačila živé kontakty. Označit ji jako bounced NENÍ „odesláno",
+        // je to stav adresy (revize 13. 9. 2026). Ostatní důvody skipu (neplatný e-mail) se neoznačují.
+        if (d.reason === 'hard_bounce') {
+          await admin.from('customer_contacts').update({ status: 'bounced', updated_at: nowIso }).eq('email', r.email);
+        }
+      }
     } catch (e) {
       errors++;
       if (errSample.length < 5) errSample.push(String(e).slice(0, 200));

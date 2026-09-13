@@ -452,7 +452,8 @@ Deno.serve(async (req) => {
   const nalezeno = vse.length;
   let rotaceOffset: number | null = null;
   if (vse.length > MAX_URL) {
-    // Přednost (stranka / token) vždy. Ze šablon jen okno MAX_URL, posunuté dnem.
+    // Přednost (stranka / token) vždy. Ze šablon jen okno MAX_URL minus přednost, posunuté dnem.
+    // (Strop platí pro počet adres v dávce; druhá šance po ověřovací výzvě je fetch navíc, jako dřív.)
     // Řazení URL: select("blocks") nemá order, bez něj by okno nemělo stabilní konec.
     const prednost = vse.filter((v) => v.kde !== "sablona");
     const zbytek = vse.filter((v) => v.kde === "sablona")

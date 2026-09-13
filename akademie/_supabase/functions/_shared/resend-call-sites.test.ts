@@ -13,6 +13,7 @@ const MUST_IMPORT_GUARD = [
   "poukaz-vydat/core.ts",
   "grant-videokurz-z-appky/core.ts",
   "grant-videokurz-z-appky/index.ts",
+  "videokurz-onboarding/index.ts",
   "admin-api/index.ts",
   "_shared/koucink-onboarding.ts",
 ];
@@ -26,6 +27,7 @@ const SCAN_DIRS = [
   "affiliate-mesicni-report",
   "poukaz-vydat",
   "grant-videokurz-z-appky",
+  "videokurz-onboarding",
   "admin-api",
   "_shared",
 ];
