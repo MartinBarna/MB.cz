@@ -109,12 +109,38 @@ function suspendEmail(name: string | null, seg = "other") {
 
 async function sendMail(to: string, subject: string, html: string): Promise<boolean> {
   if (!RESEND_KEY) return false;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [to], subject, html }),
-  });
-  return res.ok;
+  // ⛔ [13. 9. 2026] try/catch: pad `fetch` (sit, DNS, timeout) shodil CELY beh cronu
+  // uprostred davky, takze zbyli klienti se ten den nezpracovali vubec. Neodeslany mail
+  // ma vratit false a nechat smycku dojet, ne vzit s sebou ostatni.
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [to], subject, html }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+// ⛔ Alert Martinovi jde PRIMO pres Resend, NE pres `sendIfAllowed`. Brana chrani
+// adresu zakaznika; kdyby na seznamu jednou skoncila Martinova adresa, prestal by se
+// dozvidat prave ta selhani, kvuli kterym tenhle alert existuje.
+// (Stejne zduvodneni jako u `poukaz-vydat`: "Guard chrani adresu kupce, ne Martinovu".)
+async function alertAdmin(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+  subject: string,
+  text: string,
+): Promise<boolean> {
+  let to = "fitness.barna@gmail.com";
+  try {
+    const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
+    const prvni = String(data?.value || "").split(",").map((s: string) => s.trim()).filter(Boolean)[0];
+    if (prvni) to = prvni;
+  } catch { /* zustava fallback */ }
+  return await sendMail(to, subject, `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`);
 }
 
 async function sendMailGuarded(
@@ -184,6 +210,26 @@ Deno.serve(async (req) => {
           status: "warned", warned_at: new Date().toISOString(), updated_at: new Date().toISOString(),
         }).eq("email", email);
         warned.push(email);
+        // ⛔⛔ [13. 9. 2026] SKIP NENI ODESLANI. Lhuta 7 dnu se rozjizdi tak jako tak
+        // (kdyby ne, neplatic by mel Academy zadarmo navzdy a cron by to zkousel denne),
+        // JENZE clovek se o varovani nedozvedel a za tyden prijde o pristup POTICHU.
+        // Presne ten vzor, ktery u poukazu znamenal zaplaceno a nedodano.
+        // ⇒ Aspon se to musi dozvedet Martin a ozvat se mu jinou cestou.
+        if (!out.sent) {
+          await alertAdmin(
+            admin,
+            `[VYRIDIT RUCNE] Varovani o splatce NEODESLO (${email})`,
+            `Klientovi ${email} se nepodarilo odeslat varovani o neuhrazene splatce.
+
+`
+              + `Duvod brany: ${out.reason}
+`
+              + `Lhuta uz bezi: za ${SUSPEND_AFTER_WARN_DAYS} dnu mu guard pozastavi pristup k Academy.
+
+`
+              + `Ozvi se mu jinou cestou (telefon, zprava). Jinak o pristup prijde, aniz by ho kdokoli varoval.`,
+          );
+        }
         try {
           await admin.from("email_events").insert({
             lead_id: null, step: 0, type: out.skipped ? "info" : "sent",
@@ -235,12 +281,32 @@ Deno.serve(async (req) => {
         }
       } catch { /* best-effort */ }
       const m = suspendEmail(name, seg);
-      await sendMailGuarded(admin, email, m.subject, m.html);
+      const outS = await sendMailGuarded(admin, email, m.subject, m.html);
       await admin.from("installment_status").update({
         status: "suspended", suspended_at: new Date().toISOString(), updated_at: new Date().toISOString(),
       }).eq("email", email);
       suspended.push(email);
-      try { await admin.from("email_events").insert({ lead_id: null, step: 0, type: "sent", detail: { track: "splatky-guard", kind: "suspend", email } }); } catch { /* log best-effort */ }
+      // ⛔⛔ [13. 9. 2026] Pozastaveni plati i bez mailu (splatka proste neprisla),
+      // ale vysledek odeslani se do dneska ZAHAZOVAL a do `email_events` se psalo "sent"
+      // i kdyz mail neodesel. Dve skody: cislo odeslanych lhalo a hlavne se to nikdo
+      // nedozvedel. Zopakovat uz to nejde, radek ma stav "suspended" a z dotazu vypadne
+      // (`in ("ok","warned")`), takze ta zprava je ztracena natrvalo.
+      if (!outS.sent) {
+        await alertAdmin(
+          admin,
+          `[VYRIDIT RUCNE] Pozastaveni Academy: zprava klientovi NEODESLA (${email})`,
+          `Klientovi ${email} byl prave pozastaven pristup k Academy za neuhrazenou splatku,
+`
+            + `ale zprava o tom mu NEODESLA.
+
+`
+            + `Duvod brany: ${outS.reason}
+
+`
+            + `Uz se nezopakuje (stav je "suspended" a z dotazu vypadl). Dej mu vedet jinou cestou.`,
+        );
+      }
+      try { await admin.from("email_events").insert({ lead_id: null, step: 0, type: outS.sent ? "sent" : "info", detail: { track: "splatky-guard", kind: "suspend", email, sent: outS.sent, skipped: outS.skipped, reason: outS.reason } }); } catch { /* log best-effort */ }
     }
   }
 

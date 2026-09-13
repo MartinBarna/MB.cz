@@ -250,9 +250,18 @@ Deno.serve(async (req) => {
       }, () => send(email, fill(tpl.subject, v), html));
       if (d.action === "skip") {
         // Označ, ať cron nezkouší totéž okno znovu. Unsub je trvalý.
-        await admin.from("pending_orders").update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);
+        // ⛔⛔ [13. 9. 2026] ALE NE KAŽDÝ SKIP JE TRVALÝ. `mailing-guard` vrací
+        // `suppression_load_failed`, když se mu nepodaří NAČÍST seznam odhlášených: třída
+        // `optional_reminder` má bránu fail-closed, takže jedna chyba dotazu vypadá stejně
+        // jako odhlášení. Spálit kvůli ní JEDINOU připomínku znamená, že člověk
+        // s nedokončenou objednávkou už nedostane nic. Stejný vzor jako u poukázky.
+        // ⇒ Vypaluje se jen důvod, který je opravdu trvalý; při pochybnosti radši znovu.
+        const trvalyDuvod = d.reason === "invalid_email" || d.reason === "hard_bounce" || d.reason === "hard_unsubscribe";
+        if (trvalyDuvod) {
+          await admin.from("pending_orders").update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);
+        }
         skipped++;
-        results.push({ order: p.order_id, skipped: d.reason });
+        results.push({ order: p.order_id, skipped: d.reason, spaleno: trvalyDuvod });
         continue;
       }
       await admin.from("pending_orders").update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);

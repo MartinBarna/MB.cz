@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
   );
   if (!ok) return json({ error: "bad_signature" }, 401);
 
-  let ev: { type?: string; data?: { email_id?: string; to?: string | string[]; click?: { link?: string } } };
+  let ev: { type?: string; data?: { email_id?: string; to?: string | string[]; click?: { link?: string }; bounce?: { type?: string; subType?: string; message?: string } } };
   try { ev = JSON.parse(payload); } catch { return json({ error: "bad_json" }, 400); }
 
   // ⭐⭐ [7. 9. 2026] `email.delivered` PŘIBYLO. Do té doby se sbíralo jen otevření, klik,
@@ -102,11 +102,24 @@ Deno.serve(async (req) => {
   // ani cloveka od bezpecnostniho skeneru, ktery proklika vsechny odkazy v mailu naraz.
   // IP ani user agent ZAMERNE neukladame (osobni udaj, k rozliseni odkazu netreba).
   const clickUrl = t === "click" ? String(ev?.data?.click?.link || "") : "";
+  // ⛔⛔ [13. 9. 2026] BOUNCE NENÍ JEN JEDEN. Resend (přes SES) rozlišuje `Permanent`
+  // (mrtvá adresa), `Transient` (dočasné, např. `MailboxFull`) a `Undetermined`.
+  // Do dneška se to nečetlo vůbec a KAŽDÝ bounce zmrazil lead natrvalo na
+  // `status='bounced'`. Člověk s přeplněnou schránkou tak přišel o veškeré maily
+  // a ručně se to nevrátí, protože o tom nikdo neví.
+  // ⚠️ Typ se ukládá i do `detail`: do dneška jsme o žádném z 22 bounců nevěděli,
+  //    jestli byl trvalý, takže se to nedalo ani zpětně spočítat.
+  const bounceTyp = t === "bounce" ? String(ev?.data?.bounce?.type || "") : "";
+  const bounceSub = t === "bounce" ? String(ev?.data?.bounce?.subType || "") : "";
+  // Fail-closed: zmrazíme při `Permanent`, `Undetermined` i když typ nepřišel vůbec.
+  // Jen výslovně dočasný bounce lead nechává na pokoji.
+  const prechodnyBounce = t === "bounce" && /^(transient|temporary)$/i.test(bounceTyp);
   const detail = {
     ...baseDetail,
     via: "resend-webhook",
     of: isTest ? "test" : "sent",
     ...(clickUrl ? { url: clickUrl } : {}),
+    ...(t === "bounce" ? { bounce_typ: bounceTyp, bounce_sub: bounceSub, prechodny: prechodnyBounce } : {}),
   };
 
   // dedup: open staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak.
@@ -133,7 +146,7 @@ Deno.serve(async (req) => {
 
   // bounce = nedorucitelna adresa, complaint = spam → stop mailingu.
   // Status menime JEN pri overenem sparovani na ostry 'sent' event (test/nesparovane nikdy).
-  if ((t === "bounce" || t === "complaint") && lead_id) {
+  if ((t === "bounce" || t === "complaint") && lead_id && !prechodnyBounce) {
     await admin.from("leads").update({
       status: t === "bounce" ? "bounced" : "unsubscribed",
       next_send_at: null,
