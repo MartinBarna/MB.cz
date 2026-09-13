@@ -132,10 +132,16 @@ async function resubscribe(token: string): Promise<{ ok: boolean; duvod?: string
 
 async function erase(token: string): Promise<boolean> {
   if (!token || token === 'test-no-op') return false;
-  const { data, error } = await admin().from('leads')
+  const a = admin();
+  const { data, error } = await a.from('leads')
     .delete().eq('unsubscribe_token', token).select('id');
   if (error) return false;
-  return (data?.length ?? 0) > 0;
+  if ((data?.length ?? 0) > 0) return true;
+  // Token z customer_contacts (uvítací mail videokurzu): GDPR výmaz musí umět i ten (revize 13. 9. 2026).
+  const { data: k, error: chybaK } = await a.from('customer_contacts')
+    .delete().eq('unsubscribe_token', token).select('email');
+  if (chybaK) return false;
+  return (k?.length ?? 0) > 0;
 }
 
 Deno.serve(async (req: Request) => {
