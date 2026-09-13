@@ -46,7 +46,7 @@
   <div class="card">
     <div class="brand">Martin Barna</div>
     <h1 id="ttl">Odhlásit odběr e-mailů?</h1>
-    <p id="msg">Klikni na tlačítko níže a už Ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, stačí si plán znovu stáhnout na webu.</p>
+    <p id="msg">Klikni na tlačítko níže a už ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, na téhle stránce se dá přihlásit zpátky.</p>
     <div id="act"></div>
     <p class="foot"><a href="https://martinbarna.cz">Zpět na martinbarna.cz</a></p>
   </div>
@@ -79,8 +79,10 @@
 
   function done() {
     show("Odhlášeno",
-      "Hotovo, už Ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, stačí si plán znovu stáhnout na webu.",
+      "Hotovo, už ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, tlačítko níže tě přihlásí zpátky.",
+      '<button class="btn" id="resub">Chci zase dostávat newsletter</button>' +
       '<a class="gdpr" href="#" id="eraseLink">Chci úplně smazat svoje data z databáze (GDPR)</a>');
+    document.getElementById("resub").addEventListener("click", resubscribe);
     document.getElementById("eraseLink").addEventListener("click", function (e) {
       e.preventDefault();
       // druhy krok proti nevratnemu omylu: erase je nevratny, chce vedomy druhy klik
@@ -105,11 +107,38 @@
     });
   }
 
+  // Znovupřihlášení: POST ?action=resubscribe. Rozjetá trať se sama nespustí (jen newsletter),
+  // stížnost na spam je trvalá a endpoint ji odmítne.
+  function resubscribe() {
+    var b = document.getElementById("resub");
+    if (b) { b.disabled = true; b.textContent = "Přihlašuji…"; }
+    post("resubscribe").then(function (res) {
+      if (res && res.ok) {
+        show("Jsi zpátky",
+          "Newsletter ti zase bude chodit. Rozjeté série se samy nespustí; když chceš plán zdarma, stáhni si ho na webu znovu.");
+      } else if (res && res.duvod === "spam_complaint") {
+        show("Tohle nejde",
+          "Tvůj poštovní program nám tuhle adresu nahlásil jako spam, takže ji znovu přihlásit nemůžeme. Kdyžtak nám napiš a vyřešíme to.");
+      } else {
+        show("Nepovedlo se to",
+          "Znovupřihlášení se teď nepodařilo. Zkus to prosím za chvíli znovu, nebo nám napiš.");
+      }
+    }).catch(function () {
+      show("Nepovedlo se to", "Něco se nepovedlo. Zkus to prosím za chvíli znovu, nebo nám napiš.");
+    });
+  }
+
   function render() {
     if (!token) { broken(); return; }
     show("Odhlásit odběr e-mailů?",
-      "Klikni na tlačítko níže a už Ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, stačí si plán znovu stáhnout na webu.",
-      '<button class="btn" id="go">Potvrdit odhlášení</button>');
+      "Klikni na tlačítko níže a už ti žádné marketingové e-maily nepřijdou. Kdyby sis to rozmyslel/a, na téhle stránce se dá přihlásit zpátky.",
+      '<button class="btn" id="go">Potvrdit odhlášení</button>' +
+      '<a class="gdpr" href="#" id="resubLink">Už jsem odhlášený a chci newsletter zpátky</a>');
+    document.getElementById("resubLink").addEventListener("click", function (e) {
+      e.preventDefault();
+      act.innerHTML = '<button class="btn" id="resub">Chci zase dostávat newsletter</button>';
+      document.getElementById("resub").addEventListener("click", resubscribe);
+    });
     var go = document.getElementById("go");
     go.addEventListener("click", function () {
       go.disabled = true;

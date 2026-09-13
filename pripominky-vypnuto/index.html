@@ -41,15 +41,37 @@
         <div class="znacka">Martin Barna</div>
         <h1 id="nadpis">Připomínky jsou vypnuté</h1>
         <p id="text">Už ti nebudeme posílat pošťouchnutí, když si den zapomeneš zapsat. Zapnout je můžeš kdykoliv v appce v Profilu.</p>
-        <a class="btn" href="https://tvujcoach.cz/client">Otevřít appku</a>
+        <div id="akce"><a class="btn" href="https://tvujcoach.cz/client">Otevřít appku</a></div>
     </div>
     <script>
-        // Edge funkce sem posílá `?stav=ok` po vypnutí a `?stav=neplatny`, když odkaz nesedí.
+        // Tři stavy: `?token=` (klik z mailu, od 13. 9. 2026 GET nic nevypíná, vypnutí se potvrdí
+        // tlačítkem = POST), `?stav=ok` (starší odkazy) a `?stav=neplatny`.
         // ⛔ U neplatného odkazu se schválně neříká, jestli takový účet existuje.
-        if (new URLSearchParams(location.search).get('stav') === 'neplatny') {
-            document.getElementById('nadpis').textContent = 'Ten odkaz nefunguje';
-            document.getElementById('text').textContent =
-                'Nejspíš je starý nebo se cestou zlomil. Připomínky si můžeš vypnout přímo v appce v Profilu.';
+        var q = new URLSearchParams(location.search);
+        var nadpis = document.getElementById('nadpis'), text = document.getElementById('text'), akce = document.getElementById('akce');
+        function neplatny() {
+            nadpis.textContent = 'Ten odkaz nefunguje';
+            text.textContent = 'Nejspíš je starý nebo se cestou zlomil. Připomínky si můžeš vypnout přímo v appce v Profilu.';
+        }
+        if (q.get('stav') === 'neplatny') neplatny();
+        var token = q.get('token');
+        if (token) {
+            nadpis.textContent = 'Vypnout připomínky zápisu?';
+            text.textContent = 'Klikni na tlačítko a appka ti přestane posílat pošťouchnutí k zápisu. Doklady a důležité zprávy k účtu chodí dál. Zapnout to jde kdykoliv v Profilu.';
+            akce.innerHTML = '<button class="btn" id="vypnout" style="border:0;cursor:pointer">Vypnout připomínky</button>';
+            document.getElementById('vypnout').addEventListener('click', function () {
+                var b = document.getElementById('vypnout'); b.disabled = true; b.textContent = 'Vypínám…';
+                fetch('https://kfkmghvhqwqtsalqjmrp.supabase.co/functions/v1/pripominky-vypnout?token=' + encodeURIComponent(token), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })
+                    .then(function (r) { return r.json().catch(function () { return {}; }); })
+                    .then(function (res) {
+                        if (res && res.ok) {
+                            nadpis.textContent = 'Připomínky jsou vypnuté';
+                            text.textContent = 'Už ti nebudeme posílat pošťouchnutí, když si den zapomeneš zapsat. Zapnout je můžeš kdykoliv v appce v Profilu.';
+                            akce.innerHTML = '<a class="btn" href="https://tvujcoach.cz/client">Otevřít appku</a>';
+                        } else { neplatny(); akce.innerHTML = ''; }
+                    })
+                    .catch(function () { b.disabled = false; b.textContent = 'Vypnout připomínky'; text.textContent = 'Něco se nepovedlo. Zkus to za chvíli znovu, nebo připomínky vypni v appce v Profilu.'; });
+            });
         }
     </script>
 <script src="/assets/scroll-top.js?v=g13" defer></script>
