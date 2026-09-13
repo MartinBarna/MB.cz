@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // LINK-CHECK: denní kontrola, že odkazy v mailech a na klíčových stránkách ŽIJÍ.
 //
 // ⛔ PROČ TO EXISTUJE. Od 22. do 27. 7. 2026 vracela tracking doména Resendu 400
@@ -63,6 +63,27 @@ const KLICOVE_STRANKY = [
   // se prodávat nejdražší produkt a nikde jinde to nekřikne. Hlídač na to je právě.
   "https://buy.stripe.com/4gM00ibnpgjMerK7dB3ks04",     // Academy 8 900 doživotně (Stripe)
 ];
+
+// ⛔ ODSTAVENÉ POKLADNY. Adresa se z kontroly NEMAŽE (kdyby ji někdo někam vrátil,
+// ať to křikne), ale její mrtvý produkt je OČEKÁVANÝ stav, ne porucha. Bez tohohle
+// rozlišení by detektor `jeMrtvyProdukt()` níž posílal poplach každý den a člověk
+// by si na něj zvykl. Falešný poplach je horší než ticho, viz komentář u alertu.
+const ODSTAVENE_POKLADNY = new Set<string>([
+  "https://form.simpleshop.cz/Xgl8g/buy/",   // Academy 8 900 doživotně, od 29. 7. 2026 nahrazeno Stripe
+]);
+
+// ⛔⛔ ODKAZY SCHOVANÉ ZA MERGE TOKENEM. Tohle je díra, kvůli které tenhle hlídač
+// hlásil zeleně, zatímco maily vodily lidi na zrušenou pokladnu SimpleShopu.
+// `urlyZeSablon()` čte jen adresy napsané v šabloně NATVRDO. Token `{{course_url}}`
+// se dosazuje až v odesílateli (konstanta `COURSE_URL` v edge funkci `drip-send`),
+// takže v šabloně žádná adresa není a hlídač o ní nevěděl. Změřeno 22. 8. 2026:
+// v tabulce `link_check` se `form.simpleshop.cz/3Vbl` nevyskytuje ANI JEDNOU.
+// ⇒ Kdo přidá do šablon nový token s adresou, přidá ho SEM.
+// ⭐ Kontroluje se jen token, který v nějaké šabloně opravdu je, takže až token
+//    ze šablon zmizí, tenhle seznam sám ztichne a nedělá falešný poplach.
+const TOKENY_S_ADRESOU_V_KODU: Record<string, string> = {
+  course_url: "https://form.simpleshop.cz/3Vbl/buy/",   // drip-send v62, konstanta COURSE_URL
+};
 // ✅ DETEKTOR OVĚŘEN 28. 7. 2026 KANÁRKEM, ne jen přečtením kódu.
 // Do seznamu se dočasně přidala schválně neexistující adresa
 // `martinbarna.cz/tahle-stranka-neexistuje-kanarek/`. Výsledek: HTTP 404, ok=false,
@@ -71,6 +92,15 @@ const KLICOVE_STRANKY = [
 // chodil každý den a člověk by si na něj zvykl.
 // ⚠️ Kdo sem bude sahat, ať si ten test zopakuje. Nula chyb může znamenat
 // „vše v pořádku" i „detektor je slepý", a rozdíl pozná jen kanárek.
+
+// ⛔ NAŠE cesty za penězi. Na nich se nic nesmí omlouvat jako „nelze ověřit":
+// mrtvá pokladna je nejdražší porucha ze všech a musí křičet. Úlevu pro 401/403
+// níž dostávají jen CIZÍ weby, které nás odmítají proto, že nejsme prohlížeč.
+const NASE_HOSTY = new Set([
+  "martinbarna.cz", "www.martinbarna.cz",
+  "tvujcoach.cz", "www.tvujcoach.cz",
+  "buy.stripe.com", "form.simpleshop.cz",
+]);
 
 const TIMEOUT_MS = 15000;
 const PAUZA_MS = 400;        // pauza mezi dvěma požadavky na TÝŽ host
@@ -93,12 +123,35 @@ function hostZ(url: string): string {
   try { return new URL(url).hostname; } catch { return "?"; }
 }
 
+// ⛔⛔ SLEDOVACÍ PARAMETRY ROZMNOŽUJÍ TÝŽ ODKAZ. Změřeno 1. 9. 2026 přímo
+// v `email_templates`: 352 různých adres, ale jen 119 různých STRÁNEK. Zbytek jsou
+// UTM varianty téhož cíle (`utm_source` 308×) a k tomu 135× i pomrvená dvojčata
+// `&amp;utm_...`, jak se do šablon dostal HTML zápis ampersandu.
+// ⇒ Kvůli tomu chodil od 29. 8. 2026 denně poplach „nalezeno 363, strop 200"
+//   a zbytek se TICHO odřízl (`vse.length = MAX_URL`), takže se nekontrolovalo to,
+//   co se nevešlo, a nikdo nevěděl co.
+// ⇒ A ještě hůř: každá UTM varianta je na WEDOSu VŽDY cache MISS
+//   ([[mb-wedos-pomaly-origin-a-utm-cache]]), takže 264 požadavků na martinbarna.cz
+//   si samo vyrábělo blokaci. 29. až 31. 8. bylo ze 200 odkazů 150 „nelze ověřit".
+// ⚠️ Netrackovací parametry (`plan`, `locale`, `tab`) v adrese ZŮSTÁVAJÍ, protože
+//    mění cíl. Ořezávají se jen ty, které o obsahu stránky nerozhodují.
+const SLEDOVACI_PARAMETRY = /^(amp;)?(utm_[a-z_]+|fbclid|gclid|mc_cid|mc_eid)=/i;
+
+function bezSledovani(url: string): string {
+  const q = url.indexOf("?");
+  if (q < 0) return url;
+  const zbyle = url.slice(q + 1).split("&").filter((p) => p && !SLEDOVACI_PARAMETRY.test(p));
+  return zbyle.length ? url.slice(0, q) + "?" + zbyle.join("&") : url.slice(0, q);
+}
+
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
 // Vysledek = přesně sloupce tabulky `link_check`. Nic navíc se do insertu nesmí dostat.
 type Vysledek = { url: string; kde: string; http_status: number | null; ok: boolean; poznamka: string | null };
 // Mereni = Vysledek + interní příznak, který do DB NEJDE (viz sestavení `radky`).
-type Mereni = Vysledek & { blokovano: boolean };
+// `opakovat` rozlišuje, jestli má smysl zkusit to za chvíli znovu. Výzva ochrany
+// a 429 ano (stav se mění), cizí anti-bot ne (ten nás odmítne vždycky).
+type Mereni = Vysledek & { blokovano: boolean; opakovat?: boolean };
 // Stav jednoho běhu: které hosty nás zablokovaly a u kterých už se čekalo na druhou šanci.
 type Stav = { blokovane: Set<string>; druhaSanceVycerpana: Set<string> };
 
@@ -134,10 +187,23 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
 }
 
 // Vytáhne URL ze šablon. Regex schválně nebere uvozovky, závorky a lomené závorky.
+// ⛔ ZÁVORKA NEUKONČUJE ADRESU. DOI odkazy je mají uvnitř
+// (…/S2468-1253(25)00090-1) a do 11. 9. 2026 se utnuly na první `)`, takže hlídka
+// každý den hlásila jako rozbitý odkaz, který žije. Zavírací závorka se urežává
+// až potom, a jen když nemá pár (to je případ `](url)` a `url(…)` v šabloně).
+function orezNevyvazeneZavorky(u: string): string {
+  let out = u;
+  while (out.endsWith(")") && (out.match(/\)/g) ?? []).length > (out.match(/\(/g) ?? []).length) {
+    out = out.slice(0, -1);
+  }
+  return out;
+}
+
 function urlyZeSablon(blob: string): string[] {
-  const nalezene = blob.match(/https?:\/\/[^"'\\ )<>\]}]+/g) ?? [];
+  const nalezene = blob.match(/https?:\/\/[^"'\\ <>\]}]+/g) ?? [];
   const cisté = nalezene
     .map((u) => u.replace(/[.,;:]+$/, ""))          // uřízni interpunkci na konci
+    .map(orezNevyvazeneZavorky)                      // závorka bez páru až teď
     .filter((u) => !u.includes("{{"))                // ⚠️ odkazy s merge proměnnou
     .filter((u) => !u.includes("unsubscribe_token")) //    nejdou ověřit naslepo
     .filter((u) => !/\.(png|jpg|jpeg|gif|svg|webp)$/i.test(u)); // obrázky neřešíme
@@ -165,6 +231,19 @@ function jeVyzvaOchrany(r: Response, telo: string): boolean {
   return chranenoKym.includes("wedos") || /wedos\.protection|security verification/i.test(telo);
 }
 
+// ⛔ MRTVÁ POKLADNA VRACÍ HTTP 200. Změřeno 22. 8. 2026: `form.simpleshop.cz/Xgl8g/buy/`
+// odpoví 200 a 1787 B s titulkem „Produkt se již neprodává.“. Stavový kód to nechytí,
+// vzor soft-404 taky ne (nejsou tam slova o nenalezené stránce) a strop 200 B už vůbec.
+// ⇒ Hlídač tu adresu deset dní po sobě zapsal jako `ok=true, poznamka=null`, doloženo
+//   v tabulce `link_check`. Věta výš „mrtvá pokladna je nejdražší porucha ze všech“
+//   byla do 22. 8. 2026 jen komentář, kód ji poznat neuměl.
+// ⚠️ Vzory pro Stripe jsou odhad podle jeho chybových stránek, NEOVĚŘENÉ mrtvým
+//   Stripe odkazem (žádný takový k dispozici nebyl). SimpleShop vzor ověřen měřením.
+function jeMrtvyProdukt(telo: string): boolean {
+  return /produkt se ji[žz] neprod[áa]v[áa]|produkt nebyl nalezen|formul[áa][řr] ji[žz] nen[íi] aktivn[íi]|no longer active|no longer accepting payments|this link is inactive/i
+    .test(telo);
+}
+
 // Jeden odchozí požadavek. Následuje přesměrování, hlídá i „soft 404" (200, ale
 // stránka je chybová). Hlavičky prohlížeče bere z PROHLIZEC_HLAVICKY, jinde se
 // odchozí požadavek na kontrolovaný odkaz nedělá.
@@ -184,11 +263,52 @@ async function jedenPokus(url: string, kde: string): Promise<Mereni> {
 
     if (jeVyzvaOchrany(r, telo)) {
       return {
-        url, kde, http_status: r.status, ok: false, blokovano: true,
+        url, kde, http_status: r.status, ok: false, blokovano: true, opakovat: true,
         poznamka: `NELZE OVĚŘIT: ochrana webu vrátila ověřovací stránku, ne obsah. HTTP ${r.status} | ${diagnostika(r, telo)}`,
       };
     }
+    // ⛔ HTTP 429 NENÍ ROZBITÝ ODKAZ, je to „moc požadavků z téhle IP". Patří do
+    // stejné přihrádky jako ověřovací výzva WEDOSu: odmítli NÁS, ne uživatele.
+    // Změřeno: Instagram vrací 429 na profilový odkaz z šablony každý den nejmíň
+    // od 14. 8. 2026, a hlídač z toho denně dělal „1 z 200 odkazů NEFUNGUJE".
+    // Týž odkaz i s celým UTM chvostem odpověděl 1. 9. 2026 z domácí linky
+    // HTTP 200 a 619 kB obsahu. ⇒ Odkaz žije, jen se nedá měřit z datacentra.
+    // Falešný poplach naučí adresáta mail ignorovat, což je horší než ticho.
+    if (r.status === 429) {
+      return {
+        url, kde, http_status: 429, ok: false, blokovano: true, opakovat: true,
+        poznamka: `NELZE OVĚŘIT: ${hostZ(url)} odmítl kontrolu kvůli množství požadavků (HTTP 429), stránka sama tím rozbitá NENÍ | ${diagnostika(r, telo)}`,
+      };
+    }
+    // ⛔ A totéž platí pro 401 a 403 z CIZÍHO webu: vydavatelé studií a úřady nás
+    // odmítají proto, že nejsme prohlížeč, ne proto, že by odkaz byl mrtvý. Změřeno
+    // 11. 9. 2026: doi.org i mayoclinic.org vrací 403 i z domácí linky a čistého
+    // Chrome UA. To je „nezměřeno", ne „nefunguje".
+    // ⚠ Na NAŠICH hostech (`NASE_HOSTY`) tahle úleva NEPLATÍ: tam je 403 porucha.
+    // ⚠ Opakování nemá smysl (`opakovat: false`), anti-bot nás odmítne i podruhé.
+    if (!r.ok && !NASE_HOSTY.has(hostZ(url)) && (r.status === 401 || r.status === 403)) {
+      return {
+        url, kde, http_status: r.status, ok: false, blokovano: true, opakovat: false,
+        poznamka: `NELZE OVĚŘIT: ${hostZ(url)} odmítá kontrolu bez prohlížeče (HTTP ${r.status}), stránka sama tím rozbitá NENÍ | ${diagnostika(r, telo)}`,
+      };
+    }
     if (!r.ok) return { url, kde, http_status: r.status, ok: false, blokovano: false, poznamka: `HTTP ${r.status} | ${diagnostika(r, telo)}` };
+
+    // Mrtvý produkt: pokladna odpoví 200 a normální stránkou, jen na ní stojí, že se
+    // produkt už neprodává. Musí se testovat PŘED soft-404, protože žádné z jeho slov
+    // neobsahuje a jinak by propadl jako zdravý odkaz.
+    if (jeMrtvyProdukt(telo)) {
+      if (ODSTAVENE_POKLADNY.has(url)) {
+        return {
+          url, kde, http_status: r.status, ok: true, blokovano: false,
+          poznamka: "odstavená pokladna: mrtvý produkt je tu OČEKÁVANÝ stav, viz ODSTAVENE_POKLADNY",
+        };
+      }
+      return {
+        url, kde, http_status: r.status, ok: false, blokovano: false,
+        poznamka: `MRTVÁ POKLADNA: HTTP ${r.status}, ale prodejce na stránce hlásí, že produkt se už neprodává | ${diagnostika(r, telo)}`,
+      };
+    }
 
     // Soft 404: server řekne 200, ale obsah je chybová stránka. Tohle by samotný
     // stavový kód nechytil a je to přesně ten tichý případ, kvůli kterému to stavíme.
@@ -224,7 +344,10 @@ async function zkontroluj(url: string, kde: string, stav: Stav): Promise<Mereni>
     };
   }
   let v = await jedenPokus(url, kde);
-  if (v.blokovano) {
+  // ⚠ Opakuje se jen to, co se může změnit (výzva ochrany, 429). U cizího anti-bota
+  // by opakování jen bralo čas a odepsat kvůli němu zbytek hosta by zalhalo: každý
+  // odkaz na něm se dá změřit zvlášť.
+  if (v.blokovano && v.opakovat) {
     // ⚠️ Druhá šance jen JEDNOU ZA HOST A BĚH. Kdyby se čekalo u každého odkazu,
     // 66 odkazů × RETRY_MS by přerostlo časový limit funkce a neuložilo by se NIC.
     // ⚠️ A nečekej od ní zázrak: celý běh jede z JEDNÉ odchozí IP, takže když ji
@@ -275,16 +398,46 @@ Deno.serve(async (req) => {
     await alertAdmin("Link-check: nepodařilo se načíst šablony", { chyba: chybaSablon.message });
     return json({ error: "db", detail: chybaSablon.message }, 500);
   }
-  const zeSablon = urlyZeSablon((sablony ?? []).map((s) => JSON.stringify(s.blocks)).join(" "));
+  const blobSablon = (sablony ?? []).map((s) => JSON.stringify(s.blocks)).join(" ");
+  const zeSablon = urlyZeSablon(blobSablon);
 
-  // 2) + klíčové stránky, bez duplicit
+  // 1b) adresy schované za merge tokenem (viz TOKENY_S_ADRESOU_V_KODU). Berou se jen
+  //     tokeny, které v šablonách OPRAVDU jsou, ať seznam po jejich vymýcení ztichne.
+  const zTokenu: { url: string; kde: string }[] = [];
+  const tokenyNalezene: string[] = [];
+  for (const [token, url] of Object.entries(TOKENY_S_ADRESOU_V_KODU)) {
+    if (!blobSablon.includes("{{" + token + "}}")) continue;
+    tokenyNalezene.push(token);
+    zTokenu.push({ url, kde: "token:" + token });
+  }
+  // Tokeny tvaru {{neco_url}}, ke kterým adresu NEZNÁME. Nemůžu je zkontrolovat,
+  // ale musí být VIDĚT v odpovědi, jinak se díra zase zamete pod koberec.
+  const nalezeneTokeny: string[] = blobSablon.match(/\{\{[a-z0-9_]+_url\}\}/gi) ?? [];
+  const tokenyBezAdresy = [...new Set(nalezeneTokeny.map((t) => t.slice(2, -2).toLowerCase()))]
+    .filter((t) => !(t in TOKENY_S_ADRESOU_V_KODU));
+
+  // 2) + klíčové stránky a adresy z tokenů, bez duplicit.
+  // ⚠️ Sjednocuje se na adresu BEZ sledovacích parametrů (viz `bezSledovani`) a ta se
+  // i doopravdy stahuje. Kontroluje se tak každá stránka jednou místo jednou za
+  // kampaň, a požadavek jde na adresu, kterou má WEDOS v cache.
   const vse: { url: string; kde: string }[] = [];
   const videno = new Set<string>();
-  for (const u of KLICOVE_STRANKY) { if (!videno.has(u)) { videno.add(u); vse.push({ url: u, kde: "stranka" }); } }
-  for (const u of zeSablon)        { if (!videno.has(u)) { videno.add(u); vse.push({ url: u, kde: "sablona" }); } }
+  const pridej = (url: string, kde: string) => {
+    const cista = bezSledovani(url);
+    if (videno.has(cista)) return;
+    videno.add(cista);
+    vse.push({ url: cista, kde });
+  };
+  for (const u of KLICOVE_STRANKY) pridej(u, "stranka");
+  for (const t of zTokenu)         pridej(t.url, t.kde);
+  for (const u of zeSablon)        pridej(u, "sablona");
+  const sloucenoDuplicit = KLICOVE_STRANKY.length + zTokenu.length + zeSablon.length - vse.length;
 
   if (vse.length > MAX_URL) {
-    await alertAdmin("Link-check: podezřele moc odkazů, kontrola zkrácena", { nalezeno: vse.length, strop: MAX_URL });
+    await alertAdmin("Link-check: podezřele moc odkazů, kontrola zkrácena", {
+      nalezeno: vse.length, strop: MAX_URL, slouceno_duplicit: sloucenoDuplicit,
+      co_to_znamena: "Přes strop se kontrola oříznula a na zbytek se dnes NESÁHLO. Tohle už NEJSOU UTM varianty téhož odkazu, ty se slučují; do šablon opravdu přibylo tolik různých stránek.",
+    });
     vse.length = MAX_URL;
   }
 
@@ -320,16 +473,30 @@ Deno.serve(async (req) => {
   // ochrana. Falešný poplach naučí adresáta mail ignorovat, což je horší než ticho.
   const blokovane = vysledky.filter((v) => v.blokovano);
   const rozbite = vysledky.filter((v) => !v.ok && !v.blokovano);
-  if (rozbite.length) {
-    await alertAdmin(`Link-check: ${rozbite.length} z ${vysledky.length} odkazů NEFUNGUJE`, {
-      rozbite: rozbite.slice(0, 12).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
+  // ⛔ NAŠE odkazy a CIZÍ zdroje se nesmí slévat do jednoho poplachu. Rozbitý náš
+  // odkaz je porucha na cestě za penězi; cizí vydavatel, který nám neodpověděl, je
+  // poznámka. Slité dohromady chodilo 8. až 11. 9. 2026 jako „9 z 200 NEFUNGUJE"
+  // každý den, ačkoli ani jeden z těch odkazů rozbitý nebyl.
+  const rozbiteNase = rozbite.filter((v) => NASE_HOSTY.has(hostZ(v.url)));
+  const rozbiteCizi = rozbite.filter((v) => !NASE_HOSTY.has(hostZ(v.url)));
+  if (rozbiteNase.length) {
+    await alertAdmin(`Link-check: ${rozbiteNase.length} NAŠICH odkazů NEFUNGUJE`, {
+      rozbite: rozbiteNase.slice(0, 12).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
+      celkem_kontrolovano: vysledky.length,
+      cizi_zdroje_bez_odpovedi: rozbiteCizi.length,
+      neovereno_kvuli_ochrane_webu: blokovane.length,
+    });
+  } else if (rozbiteCizi.length) {
+    await alertAdmin(`Link-check: naše odkazy OK, ${rozbiteCizi.length} cizích zdrojů neodpovědělo`, {
+      co_to_znamena: "Žádný náš odkaz není rozbitý. Tohle jsou odkazy na cizí weby (studie, úřady) a stojí za oční kontrolu, ne za poplach.",
+      zdroje: rozbiteCizi.slice(0, 12).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
       celkem_kontrolovano: vysledky.length,
       neovereno_kvuli_ochrane_webu: blokovane.length,
     });
   } else if (blokovane.length) {
     await alertAdmin(`Link-check: ${blokovane.length} odkazů se NEPODAŘILO OVĚŘIT (ochrana webu nás odmítá)`, {
       co_to_znamena: "Tyhle odkazy NEJSOU prokazatelně rozbité. Ochrana webu vrátila ověřovací stránku místo obsahu, takže kontrola u nich dnes neproběhla.",
-      co_s_tim: "Kontrola běží z IP datacentra a WEDOS Global Protection jim z velké části nedůvěřuje. Spravit to jde jen na straně WEDOSu (povolit naše IP nebo zmírnit ochranu), z appky ne.",
+      co_s_tim: "Kontrola běží z IP datacentra. U martinbarna.cz jim WEDOS Global Protection z velké části nedůvěřuje a spravit to jde jen na jeho straně (povolit naše IP nebo zmírnit ochranu), z appky ne. U sítí (Instagram, TikTok) jde o jejich vlastní strop požadavků, HTTP 429; tam se nedá dělat nic a je to v pořádku.",
       hosty: [...new Set(blokovane.map((v) => v.url.split("/")[2]))].join(", "),
       prvni: blokovane.slice(0, 3).map((v) => `${v.url} → ${v.poznamka}`).join(" | "),
       overeno_v_poradku: vysledky.filter((v) => v.ok).length,
@@ -342,10 +509,15 @@ Deno.serve(async (req) => {
     ok: true,
     run_at: runAt,
     kontrolovano: vysledky.length,
+    slouceno_duplicit: sloucenoDuplicit,
     v_poradku: vysledky.filter((v) => v.ok).length,
     rozbitych: rozbite.length,
     neovereno_kvuli_ochrane: blokovane.length,
-    preskoceno_s_promennou: "odkazy s {{ }} a unsubscribe tokenem se neověřují",
+    // ⛔ Tahle věta dřív říkala jen „odkazy s {{ }} se neověřují“ a tím se ta díra
+    //   zametla pod koberec. Teď je vidět, které tokeny se dohledaly a které ne.
+    tokeny_dohledane: tokenyNalezene,
+    tokeny_v_sablonach_bez_adresy: tokenyBezAdresy,
+    preskoceno_s_promennou: "adresy s {{ }} uvnitř se neověřují; tokeny s adresou v kódu jsou v TOKENY_S_ADRESOU_V_KODU",
     rozbite: rozbite.map((v) => ({ url: v.url, status: v.http_status, poznamka: v.poznamka })),
     blokovane_hosty: [...stav.blokovane],
   });
