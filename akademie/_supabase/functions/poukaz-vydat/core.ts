@@ -132,7 +132,10 @@ export type ProcessConfig = {
 };
 
 export type ProcessResult = {
-  status: 'ignored' | 'duplicate_mailed' | 'mailed' | 'retry';
+  /** ⛔ `mail_skipped` NENÍ `mailed`. Znamená: poukaz je vydaný a zaplacený, ale
+   *  mail kupci neodešel (send-policy), takže `mail_sent_at` zůstává NULL a poukaz
+   *  čeká na ruční vydání. Martinovi o tom šel mail i s PDF. */
+  status: 'ignored' | 'duplicate_mailed' | 'mailed' | 'mail_skipped' | 'retry';
   /** true = index.ts má vrátit 5xx, ať to Stripe zkusí znovu (nedokončená práce). */
   retry: boolean;
   reason?: string;
@@ -307,13 +310,46 @@ async function deliverVoucher(
     if (deps.guardMail) {
       const g = await deps.guardMail(to);
       if (g.action === 'skip') {
-        deps.logError('mailing-guard skip, poukaz vydán, mail neodeslán', {
+        // ⛔⛔ TADY SE ZAPLACENÝ POUKAZ TIŠE ZTRÁCEL (oprava 13. 9. 2026 po revizi).
+        // Původní kód volal `markMailSent` i při skipu a vracel `status: 'mailed'`.
+        // Důsledek: kupec s odmítanou adresou zaplatil, poukaz se odškrtl jako
+        // doručený, Stripe dostal 200 (takže událost nikdy nezopakoval) a ani
+        // ruční přehrání nepomohlo, protože `mailSentAt` vede na `duplicate_mailed`.
+        // Kód poukazu přitom existuje JEN v tom mailu a v PDF.
+        //
+        // ⛔ `markMailSent` se proto NEVOLÁ: poukaz zůstane otevřený a dohledatelný.
+        // ⭐ A hlavně se to musí někdo dozvědět. Tahle funkce nemá `alertAdmin`,
+        // ale má `sendMail`, tak jde celý poukaz i s PDF Martinovi, ať ho může
+        // vydat ručně. Guard chrání adresu kupce, ne Martinovu.
+        deps.logError('mailing-guard skip: poukaz VYDÁN, ale mail kupci NEODEŠEL', {
           eventId,
           voucherId,
           reason: g.reason,
+          buyerEmail: to,
         });
-        await deps.markMailSent(voucherId, deps.now());
-        return { status: 'mailed', retry: false, reason: 'mail skipped: ' + g.reason };
+
+        const alert = await deps.sendMail({
+          to: config.testRecipient,
+          subject: `[VYDAT RUČNĚ] Poukaz zaplacen, mail kupci nešel (${to})`,
+          fromLabel: config.mailFrom,
+          variantaMailText: `Tenhle poukaz je ZAPLACENÝ, ale mail kupci se neodeslal.\n\n`
+            + `Kupec: ${to}\nDůvod: ${g.reason}\nPoukaz: ${voucherId}\nStripe událost: ${eventId}\n\n`
+            + `Kód je v přiloženém PDF. Předej ho kupci sám (jinou cestou než mailem, `
+            + `protože z téhle adresy se maily vracejí).`,
+          recipientDisplayName: displayName,
+          validUntilCzech,
+          pdfBytes,
+          pdfFilename: `poukaz-${code}.pdf`,
+        });
+
+        // ⛔ Dokud o tom Martin neví, práce NENÍ hotová. Když neprojde ani alert,
+        // ať to Stripe zkusí znovu; poukaz je pořád otevřený, takže se nic
+        // nezdvojí. ⚠️ Naopak `retry` při ÚSPĚŠNÉM alertu by byla chyba: guard
+        // by skipl pokaždé a Stripe by točil donekonečna.
+        if (!alert.ok) {
+          return { status: 'retry', retry: true, reason: `mail skipped + alert failed: ${alert.error}` };
+        }
+        return { status: 'mail_skipped', retry: false, reason: 'mail skipped: ' + g.reason };
       }
     }
 

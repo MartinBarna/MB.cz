@@ -504,23 +504,61 @@ Deno.test('prázdné jméno obdarovaného → mail dostane "pro tebe"', async ()
   assertEquals(capturedName, 'pro tebe');
 });
 
-Deno.test('mailing-guard skip (bounce): poukaz se vydá, mail se neposílá, Stripe nedostane retry', async () => {
+// ⛔⛔ TENHLE TEST ZAKOTVOVAL VADU JAKO SPRÁVNÉ CHOVÁNÍ (přepsán 13. 9. 2026).
+// Původně tvrdil, že po skipu má být `mail_sent_at` vyplněné a druhý pokus má
+// vrátit `duplicate_mailed`. Jenže to znamená, že kupec zaplatil, poukaz se
+// odškrtl jako doručený a jeho kód (který existuje jen v tom mailu) nedostal
+// nikdo. Test procházel zeleně nad dírou za peníze.
+// ⇒ Zelený test není důkaz správnosti, je to jen důkaz shody s tím, co si o
+// správnosti myslel jeho autor.
+Deno.test('mailing-guard skip (bounce): poukaz ZŮSTANE nedoručený a Martin dostane PDF', async () => {
   const { deps, rows, mailCallsRef } = makeFakeDeps({ codesToReturn: ['MB-2026-BONG'] });
   deps.guardMail = async () => ({ action: 'skip', reason: 'hard_bounce' });
-  const result = await handleStripeEvent(checkoutEvent({ id: 'evt_bounce' }), deps, CONFIG);
-  assertEquals(result.status, 'mailed');
-  assertEquals(result.retry, false);
-  assertEquals(result.reason, 'mail skipped: hard_bounce');
-  assertEquals(mailCallsRef(), 0);
-  assertEquals(rows.size, 1);
-  assertEquals([...rows.values()][0].mail_sent_at, '2026-08-25T12:00:01.000Z');
 
-  let secondMail = false;
-  deps.sendMail = async () => {
-    secondMail = true;
-    return { ok: true };
+  const alertMaily: { to: string; subject: string }[] = [];
+  const puvodniSend = deps.sendMail;
+  deps.sendMail = async (input) => {
+    alertMaily.push({ to: input.to, subject: input.subject });
+    return await puvodniSend(input);
   };
+
+  const result = await handleStripeEvent(checkoutEvent({ id: 'evt_bounce' }), deps, CONFIG);
+  assertEquals(result.status, 'mail_skipped');
+  assertEquals(result.retry, false, 'Stripe nesmí točit: guard by skipl pokaždé');
+  assertEquals(result.reason, 'mail skipped: hard_bounce');
+  assertEquals(rows.size, 1);
+
+  // JÁDRO OPRAVY: poukaz se NESMÍ tvářit jako doručený.
+  assertEquals(
+    [...rows.values()][0].mail_sent_at,
+    null,
+    'mail_sent_at musí zůstat null, jinak poukaz zmizí a nejde ho ani přehrát',
+  );
+
+  // A někdo se to musí dozvědět, i s PDF, ze kterého jde kód vydat ručně.
+  assertEquals(alertMaily.length, 1, 'Martinovi musí přijít alert s poukazem');
+  assertEquals(alertMaily[0].to, CONFIG.testRecipient);
+  assert(
+    alertMaily[0].subject.includes('VYDAT RUČNĚ'),
+    'předmět musí říct, co má člověk udělat, ne jen že něco selhalo',
+  );
+
+  // Protože `mail_sent_at` zůstalo null, přehrání události se smí pokusit znovu
+  // (resume), místo aby narazilo na `duplicate_mailed`.
+  deps.guardMail = async () => ({ action: 'send', reason: 'ok' });
   const second = await handleStripeEvent(checkoutEvent({ id: 'evt_bounce' }), deps, CONFIG);
-  assertEquals(second.status, 'duplicate_mailed');
-  assert(!secondMail, 'skip už uzavřel doručení, retry nesmí poslat mail');
+  assertEquals(second.status, 'mailed', 'po opravě adresy musí jít poukaz doručit přehráním');
+  assertEquals(mailCallsRef() >= 2, true);
+});
+
+Deno.test('mailing-guard skip: když selže i alert Martinovi, ať to Stripe zkusí znovu', async () => {
+  const { deps, rows } = makeFakeDeps({ codesToReturn: ['MB-2026-BONG'] });
+  deps.guardMail = async () => ({ action: 'skip', reason: 'hard_bounce' });
+  deps.sendMail = async () => ({ ok: false, error: 'resend down' });
+
+  const result = await handleStripeEvent(checkoutEvent({ id: 'evt_alert_fail' }), deps, CONFIG);
+  // Dokud o tom nikdo neví, práce není hotová.
+  assertEquals(result.status, 'retry');
+  assertEquals(result.retry, true);
+  assertEquals([...rows.values()][0].mail_sent_at, null);
 });
