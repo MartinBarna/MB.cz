@@ -1610,6 +1610,34 @@
     ];
     var KDV={ okno:90, metrika:'weight' };   // výchozí pohled: váha za 90 dní
 
+    // ⭐ 14. 9. 2026 (Martin: „graf se ukazuje az od prvniho reportu, ne od dotazniku"):
+    // startovní bod ze vstupního dotazníku. Klientská sekce tohle uměla, admin ne, takže
+    // Martin viděl u klienta kratší křivku než klient sám. `client_detail` dotazník vrací
+    // rovnou s sebou (KDET.data.intake), nikam se nedotazujeme navíc.
+    // ⛔ Jen VÁHA A MÍRY. Kalorie, bílkoviny a dodržení dotazník nemá a `m.get` u nich vrátí
+    //    null, takže se bod sám přeskočí. Kroky v dotazníku jsou plán („kolik chodím"),
+    //    ne naměřený týden, proto se do grafu kroků schválně nedávají.
+    function kdIntakeBod(intake){
+      var d = intake && intake.data ? intake.data : null;
+      if(!d) return null;
+      var den = String(intake.created_at || '').slice(0, 10);
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(den)) return null;
+      var w = kliNum(d.vaha), pas = kliNum(d.mira_pas), boky = kliNum(d.mira_boky), prsa = kliNum(d.mira_prsa);
+      if(w==null && pas==null && boky==null && prsa==null) return null;
+      return { report_date: den, weight: w, measurements: { pas: pas, boky: boky, prsa: prsa }, source: 'intake-baseline' };
+    }
+    // Reporty + startovní bod z dotazníku v jedné řadě. Report ve stejný den vyhrává
+    // (je novější a úplnější), jinak se dotazník zařadí podle data.
+    function kdSlouceno(reps, intake){
+      var list = (reps || []).slice();
+      var base = kdIntakeBod(intake);
+      if(!base) return list;
+      for(var i=0;i<list.length;i++){ if(String(list[i].report_date).slice(0,10)===base.report_date) return list; }
+      list.push(base);
+      list.sort(function(a,b){ return String(a.report_date).localeCompare(String(b.report_date)); });
+      return list;
+    }
+
     // Body jedné metriky v okně. Report bez té hodnoty se přeskočí (ne nula, to by lhalo).
     function kdBody(reps, m, dnu){
       var hranice = dnu ? (Date.now() - dnu*86400000) : 0;
@@ -1695,19 +1723,22 @@
         +zt+cilTxt+'</div>';
     }
 
-    function kdVyvoj(reps, tg){
-      if(!reps || reps.length<2) return '';   // z jednoho reportu se trend udělat nedá
+    function kdVyvoj(reps, tg, intake){
+      // ⭐ Řada pro grafy i dlaždice = reporty PLUS startovní bod z dotazníku.
+      var rada = kdSlouceno(reps, intake);
+      if(rada.length<2) return '';   // z jednoho bodu se trend udělat nedá
+      var zDotazniku = rada.length > (reps||[]).length;
       var oknaTxt={30:'30 dní',90:'90 dní',0:'celá historie'};
-      var h='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📈 Vývoj <span class="muted" style="text-transform:none;font-weight:400;">('+reps.length+' reportů, '+esc(fmtDay(reps[0].report_date))+' až '+esc(fmtDay(reps[reps.length-1].report_date))+')</span></h4>'
+      var h='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📈 Vývoj <span class="muted" style="text-transform:none;font-weight:400;">('+(reps||[]).length+' reportů, '+esc(fmtDay(rada[0].report_date))+' až '+esc(fmtDay(rada[rada.length-1].report_date))+(zDotazniku?', start ze vstupního dotazníku':'')+')</span></h4>'
         +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;">'
         +'<div style="margin-bottom:10px;">'+[30,90,0].map(function(o){
             return '<button type="button" class="kdrod kdvokno'+(KDV.okno===o?' on':'')+'" data-okno="'+o+'">'+oknaTxt[o]+'</button>';
           }).join('')+'</div>'
-        +'<div class="kdtiles" id="kdTiles">'+KD_METRIKY.map(function(m){ return kdDlazdice(reps,m,KDV.okno,tg); }).join('')+'</div>'
+        +'<div class="kdtiles" id="kdTiles">'+KD_METRIKY.map(function(m){ return kdDlazdice(rada,m,KDV.okno,tg); }).join('')+'</div>'
         +'<div style="margin:14px 0 8px;">'+KD_METRIKY.map(function(m){
             return '<button type="button" class="kdrod kdvmet'+(KDV.metrika===m.id?' on':'')+'" data-met="'+m.id+'">'+esc(m.nazev)+'</button>';
           }).join('')+'</div>'
-        +'<div id="kdGrafBox">'+kdVyvojGraf(reps,tg)+'</div>'
+        +'<div id="kdGrafBox">'+kdVyvojGraf(rada,tg)+'</div>'
         +'</div>';
       return h;
     }
@@ -1720,8 +1751,11 @@
     // Překreslení bez nového dotazu na server: data už jsou v KDET.data.
     function kdVyvojPrekresli(){
       var reps=(KDET.data&&KDET.data.reports)||[], tg=(KDET.data&&KDET.data.targets)||{};
-      var t=document.getElementById('kdTiles'); if(t) t.innerHTML=KD_METRIKY.map(function(m){ return kdDlazdice(reps,m,KDV.okno,tg); }).join('');
-      var g=document.getElementById('kdGrafBox'); if(g) g.innerHTML=kdVyvojGraf(reps,tg);
+      // ⛔ Stejná sloučená řada jako při prvním vykreslení. Kdyby se tady vzaly jen `reports`,
+      //    graf by po přepnutí okna nebo metriky startovní bod z dotazníku tiše ztratil.
+      var rada=kdSlouceno(reps, (KDET.data&&KDET.data.intake)||null);
+      var t=document.getElementById('kdTiles'); if(t) t.innerHTML=KD_METRIKY.map(function(m){ return kdDlazdice(rada,m,KDV.okno,tg); }).join('');
+      var g=document.getElementById('kdGrafBox'); if(g) g.innerHTML=kdVyvojGraf(rada,tg);
     }
 
     // Telefon na klienta má web uložený JEDINĚ ve vstupním dotazníku
@@ -1851,7 +1885,7 @@
       // 📈 VÝVOJ: souhrn a graf z CELÉ historie. `client_detail` vrací všechny reporty
       // bez limitu, takže se nikam nedotazuje, jen se počítá z toho, co už v paměti je.
       // Tabulka pod tím zůstává, ta je na čtení jednoho týdne; tohle je na trend.
-      h+=kdVyvoj(d.reports||[], tg);
+      h+=kdVyvoj(d.reports||[], tg, d.intake||null);
       // reporty
       if(reps.length){
         h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Sport min</th><th>Plán příští t.</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
