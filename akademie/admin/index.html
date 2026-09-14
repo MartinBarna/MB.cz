@@ -777,7 +777,7 @@
         ALL=ov.j.rows||[];
         // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
         if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
+        renderStats(st.j); renderRows(); show('app'); otevriKlientaZHashe(); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
         sekInfo('kontakty',ALL.length+' kontaktů');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
@@ -1449,14 +1449,19 @@
         });
         $('kli').style.display='';
         loadSharedDocs();
-        // Deep link z mailu po odeslani reportu: /akademie/admin/#klient=<email> otevre rovnou
-        // detail toho klienta. Hash pak zahodime, at refresh detail neotevira porad dokola.
-        var hMatch=(location.hash||'').match(/klient=([^&]+)/);
-        if(hMatch){
-          try{ openKlient(decodeURIComponent(hMatch[1]).trim().toLowerCase()); }catch(e){}
-          history.replaceState(null,'',location.pathname+location.search);
-        }
       }).catch(function(){ cardFail('kli','kliBody'); });
+    }
+    // Deep link z mailu po odeslani reportu: /akademie/admin/#klient=<email> otevre rovnou
+    // detail toho klienta. Hash pak zahodime, at refresh detail neotevira porad dokola.
+    // ⛔ 14. 9. 2026 (Martin: „z mailu to dlouho nacita"): karta se otevira HNED po brane,
+    //    ne az v .then loadKlienti. Drive cekala na cely seznam koucinku vcetne dotazu do appky
+    //    (access-status, timeout 10 s), ackoli openKlient bere e-mail z adresy a seznam necte.
+    //    Overlay #kdet je mimo #app, takze jde ukazat driv nez tabulka.
+    function otevriKlientaZHashe(){
+      var hMatch=(location.hash||'').match(/klient=([^&]+)/);
+      if(!hMatch) return;
+      try{ openKlient(decodeURIComponent(hMatch[1]).trim().toLowerCase()); }catch(e){}
+      history.replaceState(null,'',location.pathname+location.search);
     }
     function loadSharedDocs(){
       // ⛔ OPRAVA 8. 8. 2026: řetěz neměl .catch() ani větev pro neúspěšnou odpověď, takže
