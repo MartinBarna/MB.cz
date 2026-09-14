@@ -746,7 +746,12 @@
       sb.auth.getSession().then(function(res){
         var s=res&&res.data&&res.data.session;
         if(!s){ if(tries<6){ return setTimeout(function(){getSessionRetry(tries+1);},350); } location.href='/akademie/prihlaseni/?next='+encodeURIComponent('/akademie/admin/'+(location.search||'')); return; }
-        token=s.access_token; mojeEmail=(s.user&&s.user.email)||''; load();
+        token=s.access_token; mojeEmail=(s.user&&s.user.email)||'';
+        // [14. 9. 2026, Grok revize R1] Karta klienta z mailu (#klient=) hned po session, souběžně
+        // s `overview` (26 tisíc mailových událostí + všechny účty). Overlay je mimo #app, takže jde
+        // ukázat i nad „Načítám admin…". Ne-admin dostane v kartě chybu a pak bránu, to je přijatelné.
+        otevriKlientaZHashe();
+        load();
       });
     }
     // ⛔ OPRAVA 8. 8. 2026: hláška „Tenhle účet nemá admin přístup" neřekla, KTERÝ účet
@@ -787,7 +792,7 @@
           registered:ALL.filter(function(r){ return !!r.registered; }).length,
           sent_total:ALL.reduce(function(n,r){ return n+(r.sent_count||0); },0)
         };
-        renderStats(st); renderRows(); show('app'); otevriKlientaZHashe(); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
+        renderStats(st); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
         sekInfo('kontakty',ALL.length+' kontaktů');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
@@ -1365,11 +1370,16 @@
       }).catch(function(){ /* fronta je pomůcka, výpadek nesmí shodit kartu Klienti */ });
     }
 
+    var kliGen=0;
     function loadKlienti(){
+      // Generace: pozdní odpověď appky ze starého načtení nesmí psát do nové tabulky (Grok revize R1).
+      var gen=++kliGen;
       // [14. 9. 2026] `bez_appky`: seznam nečeká na appku (timeout 10 s), stav Appka se dotáhne druhým voláním níž.
       api({action:'clients_list',bez_appky:true}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('kli','kliBody'); return; }
         var vsechny=o.j.rows||[], now=Date.now();
+        // Reporty se nenačetly: sloupce ukazují „?", ne nulu (chyba čtení není odpověď).
+        var repsUnknown=!!o.j.reports_incomplete;
         // `clients_list` vraci i UKONCENE klienty (pole `active`). Delime je tady, ne v datech:
         // Martin je chce mit dohledatelne, ne smazane, ale v hlavni tabulce prekazeji.
         var rows=vsechny.filter(function(r){ return r.active!==false; });
@@ -1403,15 +1413,15 @@
           var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
           var days=lastMs?Math.floor((now-lastMs)/86400000):null;
           // U byvaleho klienta varovani „dlouho neposlal report" nedava smysl, uz ho posilat nema.
-          var warn=(!jeByvaly&&(days==null||days>8))?' <b style="color:#F6CD63">⚠️</b>':'';
+          var warn=(!jeByvaly&&!repsUnknown&&(days==null||days>8))?' <b style="color:#F6CD63">⚠️</b>':'';
           return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
             +'<td>'+esc(r.name||'–')+'</td>'
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
             +'<td>'+(r.has_intake?'✅':'<span class="muted">–</span>')+'</td>'
             +'<td data-app="'+esc(r.email)+'">'+kliApp(r.app)+'</td>'
             +'<td>'+kliBalicek(r)+'</td>'
-            +'<td class="tcount">'+r.reports+'</td>'
-            +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
+            +'<td class="tcount">'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':r.reports)+'</td>'
+            +'<td>'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>'))+warn+'</td></tr>';
         }
         var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Balíček</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
         // 🚀 FRONTA: kdo vyplnil dotazník a ještě nemá z něj postavené zadání. Data vrací
@@ -1432,6 +1442,9 @@
           return !r.targets_at || String(r.targets_at) < String(r.intake_at);
         });
         var html='';
+        if(repsUnknown){
+          html+='<p style="margin:0 0 .6rem;font-size:.88rem;color:#F6CD63;">⚠️ Reporty se teď nenačetly, počty a datum posledního reportu neplatí. Obnov stránku.</p>';
+        }
         if(fronta.length){
           html+='<div style="background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.4);border-radius:10px;padding:12px;margin-bottom:1rem;">'
             +'<p style="margin:0 0 6px;font-size:.9rem;color:#F6CD63;"><b>🚀 Dotazníky ke zpracování ('+fronta.length+')</b></p>'
@@ -1464,6 +1477,7 @@
         var emaily=vsechny.map(function(r){ return r.email; }).filter(Boolean);
         if(emaily.length){
           api({action:'clients_app_status',emails:emaily}).then(function(s){
+            if(gen!==kliGen) return;
             if(!s.j||!s.j.ok) return;
             var stav={};
             (s.j.rows||[]).forEach(function(x){ if(x&&x.email) stav[String(x.email).toLowerCase()]=x.stav; });

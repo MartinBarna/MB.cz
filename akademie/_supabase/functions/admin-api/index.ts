@@ -319,9 +319,12 @@ async function fetchAllRows(pageQuery: (from: number, to: number) => any): Promi
 
 // auth.admin.listUsers je strankovane — jedna stranka (1000) by nad 1000 uctu tise orezavala data
 type AdminUser = { id: string; email?: string; last_sign_in_at?: string };
-// [14. 9. 2026] Cache na 60 s v ramci isolate + sdileni rozpracovaneho dotazu: start adminu vola
-// listAllUsers ze tri akci naraz (overview, clients_list, progress_overview) a kazda tahala vsechny
-// ucty znovu (Grok audit). Registrace, ktera se stane mezitim, se ukaze pri dalsim nacteni.
+// [14. 9. 2026] Cache na 60 s v ramci isolate, BEST-EFFORT: podle dokumentace Supabase obsluhuje
+// isolate jeden pozadavek naraz a tri souběžné akce pri startu adminu (overview, clients_list,
+// progress_overview) jdou spis na tri isolate, takze boot cache neusetri (Grok revize R1). Pomuze
+// az dalsimu nacteni do minuty na tehoz warm isolate. Registrace mezitim se ukaze pri dalsim nacteni.
+// ⛔ Chyba cteni se NEcachuje: `listUsers` vraci { data, error } a prazdne `data` po chybe by jinak
+//    60 s tvrdilo „nikdo neni registrovany" (dlazdice, sloupec Ucet, progres).
 const USERS_CACHE_MS = 60_000;
 let usersCache: { at: number; users: AdminUser[] } | null = null;
 let usersInflight: Promise<AdminUser[]> | null = null;
@@ -331,7 +334,8 @@ async function listAllUsers(admin: ReturnType<typeof createClient>): Promise<Adm
   usersInflight = (async () => {
     const users: AdminUser[] = [];
     for (let page = 1; page <= 10; page++) {
-      const { data } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+      const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+      if (error) throw new Error("listUsers: " + String(error.message ?? error));
       const batch = data?.users ?? [];
       users.push(...batch as typeof users);
       if (batch.length < 1000) break;
@@ -2163,6 +2167,9 @@ Deno.serve(async (req) => {
 
     // ================= KLIENTSKÁ SEKCE (osobní koučink) =================
     if (action === "clients_list") {
+      // Jen kvuli typum castecnych vysledku (catch vraci data: null ve stejnem tvaru jako then).
+      const reps_typ = null as { email: string; report_date: string }[] | null;
+      const cc_typ = null as { email: string; name: string | null }[] | null;
       const [ents, reps, intakes, users, cc, tgs] = await Promise.all([
         // ⛔ OPRAVA 27. 7. 2026: sloupec se jmenuje `granted_at`, ne `created_at`.
         // Kvůli tomu tenhle select vracel chybu, `ents.data` bylo null, seznam vyšel prázdný
@@ -2174,14 +2181,21 @@ Deno.serve(async (req) => {
         admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source,academy_po_3m").eq("product", "coaching"),
         // [14. 9. 2026] Strankovane: PostgREST vraci max 1000 radku a tydenni reporty ten strop casem
         // prelezou; bez strankovani by „Reportu" a „Posledni report" tise lhaly (Grok audit).
-        fetchAllRows((f, t) => admin.from("client_reports").select("email,report_date").order("id").range(f, t)).then((data) => ({ data, error: null })),
+        // ⛔ Chyba cteni reportu NENI „nula reportu" (CLAUDE.md 13): seznam z naroku dojde, sloupce
+        //    reportu dostanou „?" a odpoved nese `reports_incomplete` (Grok revize R1).
+        fetchAllRows((f, t) => admin.from("client_reports").select("email,report_date").order("id").range(f, t))
+          .then((data) => ({ data, error: null as unknown }))
+          .catch((e: unknown) => ({ data: null as typeof reps_typ, error: e })),
         // `created_at` kvůli frontě „dotazníky ke zpracování" v UI. Klient může poslat
         // dotazník víckrát, bereme ten nejnovější (viz `intakeAt` níž).
         admin.from("client_intake").select("email,created_at"),
         listAllUsers(admin),
-        fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name").order("email").range(f, t)).then((data) => ({ data, error: null })),
+        fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name").order("email").range(f, t))
+          .then((data) => ({ data, error: null as unknown }))
+          .catch((e: unknown) => ({ data: null as typeof cc_typ, error: e })),
         admin.from("client_targets").select("email,updated_at"),
       ]);
+      const repsUnknown = reps.error != null;
       const nameBy = new Map<string, string>();
       for (const c of cc.data ?? []) if (c.name) nameBy.set(low(c.email), String(c.name));
       const regSet = new Set(users.map((u: { email?: string }) => low(u.email)));
@@ -2219,7 +2233,10 @@ Deno.serve(async (req) => {
           // Přidělí ji Martin ručně, tohle je jediné trvalé místo, kde to uvidí.
           academy_po_3m: e.academy_po_3m === true,
           // "stripe" = koupil si sam z webu, "rucni" = zalozil Martin v adminu.
-          zdroj: String(e.source ?? "").startsWith("stripe-") ? "stripe" : "rucni", reports: rep?.count ?? 0, last_report: rep?.last ?? null, has_intake: intakeSet.has(k), intake_at: intakeAt.get(k) ?? null, targets_at: targetsAt.get(k) ?? null, app: "?" as string };
+          zdroj: String(e.source ?? "").startsWith("stripe-") ? "stripe" : "rucni",
+          // null = reporty se nenacetly (repsUnknown), UI ukaze „?", ne nulu
+          reports: repsUnknown ? null : (rep?.count ?? 0), last_report: repsUnknown ? null : (rep?.last ?? null),
+          has_intake: intakeSet.has(k), intake_at: intakeAt.get(k) ?? null, targets_at: targetsAt.get(k) ?? null, app: "?" as string };
       }).sort((a, b) => String(a.last_report ?? "").localeCompare(String(b.last_report ?? "")));
 
       // Stav appky Tvůj Coach. ⛔ NEBRAT z tabulky `tvujcoach_grants` — ta se zapisuje
@@ -2253,7 +2270,7 @@ Deno.serve(async (req) => {
           }
         } catch { /* seznam klientů musí dojít i bez appky */ }
       }
-      return json({ ok: true, rows });
+      return json({ ok: true, rows, reports_incomplete: repsUnknown, names_incomplete: cc.error != null });
     }
 
     // [14. 9. 2026] Stav appky Tvuj Coach zvlast od seznamu koucinku: tyz kanal (academy-grant,
@@ -2261,9 +2278,11 @@ Deno.serve(async (req) => {
     // zustane „?" (nikdy „nema", to by lhalo).
     if (action === "clients_app_status") {
       const emails = Array.isArray(body.emails)
-        ? (body.emails as unknown[]).map((e) => low(e)).filter((e) => e.includes("@")).slice(0, 500)
+        ? (body.emails as unknown[]).map((e) => low(e)).filter((e) => e.includes("@"))
         : [];
       if (!emails.length) return json({ ok: true, rows: [] });
+      // Strop nahlas, ne tichy orez: 501. klient by jinak zustal navzdy „?" (Grok revize R1).
+      if (emails.length > 500) return json({ ok: false, error: "too_many", max: 500, rows: [] });
       const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
       const gsec = gs?.value ? String(gs.value) : "";
       if (!gsec) return json({ ok: false, error: "no_secret", rows: [] });
