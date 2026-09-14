@@ -12,6 +12,8 @@
 //    znovu), ne 403 a ne „ok, sent: 0". Paměť: feedback-guard-secretu-pri-vypadku-db-je-403.
 // ⭐ Idempotence: kdo dostal výzvu v posledních 5 dnech (client_remind_sent), tu samou nedostane
 //    znovu, takže tři cronové běhy za sebou pošlou každému nejvýš jeden mail.
+// ⭐ Dvoutýdenní kadence pro jmenované klienty: app_config.client_remind_14d (CSV e-mailů).
+//    Jejich okno je 12 dní, takže neděli po týdnu vynechají a další termín jim vyjde za 14 dní.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
@@ -26,6 +28,11 @@ const CTA_URL = "https://martinbarna.cz/akademie/klient/";
 const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2Fakademie%2Fklient%2F";
 // Okno idempotence: výzva jednou za týden, tři běhy v jedné noci jsou od sebe 30 minut.
 const UZ_DOSTAL_DNI = 5;
+// ⭐ 14. 9. 2026 (Martin): JEDEN klient má chodit jednou za 14 dní, ostatní beze změny.
+// Seznam je v app_config.client_remind_14d (CSV e-mailů). Okno je 12 dní, ne 14: kdyby
+// nedělní běh spadl a mail odešel až v pondělí, čtrnáctý den by jinak vyšel o pár hodin
+// dřív a termín by se přeskočil až na další neděli. 12 dní neděli po týdnu nepustí (7 < 12).
+const UZ_DOSTAL_DNI_14D = 12;
 
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
@@ -186,13 +193,44 @@ Deno.serve(async (req: Request) => {
   if (opt.error) return json(chybaCteni("app_config.client_remind_optout", opt.error), 500);
   const optout = new Set(String(opt.data?.value ?? "").split(/[\s,;]+/).map((s) => low(s)).filter(Boolean));
 
+  // per-klient dvoutýdenní kadence (CSV e-mailů). ⛔ Chyba čtení = 500: kdyby se seznam
+  // nepřečetl, klient s dvoutýdenní kadencí by dostal mail každý týden a nikdo by to nepoznal.
+  const kad = await ctiSOpakovanim<{ data: Radek; error: unknown }>(() => admin.from("app_config").select("value").eq("key", "client_remind_14d").maybeSingle());
+  if (kad.error) return json(chybaCteni("app_config.client_remind_14d", kad.error), 500);
+  const kazdych14 = new Set(String(kad.data?.value ?? "").split(/[\s,;]+/).map((s) => low(s)).filter(Boolean));
+
   // kdo výzvu dostal v posledních dnech (opakovací běhy cronu, ruční doposlání): nedostane znovu
-  const uzCutoff = new Date(Date.now() - UZ_DOSTAL_DNI * 86400000).toISOString();
+  const uzCutoff = new Date(Date.now() - Math.max(UZ_DOSTAL_DNI, UZ_DOSTAL_DNI_14D) * 86400000).toISOString();
   // Klíč je e-mail + druh mailu (revize 14. 9.): kdo dostal v 03:00 pozvánku k registraci a do
   // 03:30 se zaregistroval, má výzvu k reportu dostat, ne čekat týden.
-  const uz = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; kind?: unknown }>; error: unknown }>(() => admin.from("client_remind_sent").select("email,kind").gte("sent_at", uzCutoff));
+  const uz = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; kind?: unknown; sent_at?: unknown }>; error: unknown }>(() => admin.from("client_remind_sent").select("email,kind,sent_at").gte("sent_at", uzCutoff));
   if (uz.error) return json(chybaCteni("client_remind_sent", uz.error), 500);
-  const uzDostal = new Set((uz.data ?? []).map((r) => low(r.email) + ":" + String(r.kind ?? "")));
+  // Nejnovější odeslání pro dvojici e-mail + druh mailu. Okno se pak měří podle kadence
+  // toho klienta: běžný 5 dní (tři běhy jedné noci), dvoutýdenní 12 dní.
+  const poslednePoslano = new Map<string, number>();
+  const poslednePoslanoKomukoli = new Map<string, number>();
+  for (const r of uz.data ?? []) {
+    const cas = Date.parse(String(r.sent_at ?? ""));
+    if (!Number.isFinite(cas)) continue; // nečitelné datum radši ignoruj, než aby mail zmizel
+    const email = low(r.email);
+    const klic = email + ":" + String(r.kind ?? "");
+    const drive = poslednePoslano.get(klic);
+    if (drive === undefined || cas > drive) poslednePoslano.set(klic, cas);
+    const driveK = poslednePoslanoKomukoli.get(email);
+    if (driveK === undefined || cas > driveK) poslednePoslanoKomukoli.set(email, cas);
+  }
+  // ⛔ U dvoutýdenní kadence se okno měří přes OBA druhy mailu dohromady. Kdyby se počítalo
+  //    zvlášť (jako u ostatních), klient by dostal v neděli pozvánku, do týdne se zaregistroval
+  //    a hned další neděli by mu přišla výzva k reportu: dva maily za osm dní místo za čtrnáct.
+  const uzDostalNedavno = (email: string, kind: string): boolean => {
+    if (kazdych14.has(email)) {
+      const casK = poslednePoslanoKomukoli.get(email);
+      return casK !== undefined && Date.now() - casK < UZ_DOSTAL_DNI_14D * 86400000;
+    }
+    const cas = poslednePoslano.get(email + ":" + kind);
+    if (cas === undefined) return false;
+    return Date.now() - cas < UZ_DOSTAL_DNI * 86400000;
+  };
 
   // oslovení z customer_contacts (křestní jméno v 5. pádu; bez jména padne na "Ahoj,")
   const { data: cc } = await admin.from("customer_contacts").select("email,name").in("email", clients);
@@ -208,10 +246,10 @@ Deno.serve(async (req: Request) => {
     ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
   ];
   // Opakovací běhy cronu: kdo tenhle druh mailu dostal v posledních dnech, nedostane ho znovu.
-  const uzDostali = kandidati.filter((t) => uzDostal.has(t.email + ":" + t.kind)).length;
+  const uzDostali = kandidati.filter((t) => uzDostalNedavno(t.email, t.kind)).length;
   const targets: { email: string; kind: "report" | "register" }[] = testEmail
     ? [{ email: testEmail, kind: testKind }]
-    : kandidati.filter((t) => !uzDostal.has(t.email + ":" + t.kind));
+    : kandidati.filter((t) => !uzDostalNedavno(t.email, t.kind));
 
   // Příloha ze storage (stáhne se jednou pro všechny; best effort, bez ní mail stejně odejde)
   async function priloha(soubor: string): Promise<{ filename: string; content: string } | null> {
