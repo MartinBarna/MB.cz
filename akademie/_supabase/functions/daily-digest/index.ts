@@ -43,12 +43,6 @@ Deno.serve(async (req) => {
     //    konzultace a balíčku se do řádku „Prodeje" NEZAPOČÍTAL. Den, kdy balíček
     //    koupilo deset lidí, vypadal v přehledu stejně jako den bez prodeje, takže
     //    Martin neměl z čeho poznat ani úspěch, ani výpadek doručení.
-    //    ⚠️ Nezaměňovat s počítadlem zakládajících členů níž (ř. ~64): tam je užší
-    //    filtr ZÁMĚRNÝ, do padesátky se kupci ostatních produktů počítat nesmí.
-    //    ⛔ ROZŠÍŘENO ZNOVU 7. 8. 2026 o `stripe-videokurz-upgrade` (upgrade z balíčku
-    //    na videokurz za 450 Kč). Tenhle seznam je natvrdo, takže KAŽDÝ nový `source`
-    //    v `academy-stripe-webhook` se sem musí doplnit ručně. Kdo na to zapomene,
-    //    vyrobí přesně tutéž tichou vadu jako 6. 8.: peníze přijdou, přehled mlčí.
     admin.from("entitlements").select("product").eq("active", true).in("source", ["simpleshop", "stripe-lifetime", "stripe-videokurz", "stripe-videokurz-upgrade", "stripe-konzultace", "stripe-balicek", "stripe-koucink"]).gte("granted_at", yStart.toISOString()),
     admin.from("withdrawals").select("status"),
     admin.from("referrals").select("status"),
@@ -56,7 +50,7 @@ Deno.serve(async (req) => {
     // NEMA (PK je email+product). Dotaz tise selhal, `count` vyslo null a radek nize
     // ho prebil nulou -> pocitadlo zakladajicich hlasilo jen rucni offset. Nebylo to
     // videt, protoze skutecny pocet byl taky 0. Tataz chyba byla 27. 7. opravena
-    // v admin-api, tady se prehledla. Detail: pamet `feedback-select-neexistujiciho-sloupce`.
+    // v `admin-api`, tady se prehledla. Detail: pamet `feedback-select-neexistujiciho-sloupce`.
     // ⚠️ Filtr na zdroj je ZAMERNY a musi zustat: do padesatky zakladajicich se pocitaji
     // jen DOZIVOTNI prodeje, ne mesicni clenstvi (source='stripe-monthly').
     // ⛔ ROZSIRENO 29. 7. 2026 o 'stripe-lifetime'. Dozivotni varianta se toho dne
@@ -92,7 +86,7 @@ Deno.serve(async (req) => {
   // Za NEnoveho se bere: (a) zdroj zacinajici `reaktivace-` nebo `import`,
   //                      (b) e-mail, ktery uz DRIV byl v `customer_contacts`.
   // ⚠️ Duplicitni radek v `leads` tohle NEPOZNA: `leads` ma e-mail unikatni a hromadne vlny
-  // stavajici radek prepisuji, takze zadny starsi radek se stejnou adresou nevznikne.
+  // stavajici radky prepisuji, takze zadny starsi radek se stejnou adresou nevznikne.
   // Zmereno 2. 9. 2026: u vsech 50 radku vlny bylo 0 starsich radku v `leads`, ale 50 z 50
   // adres bylo v `customer_contacts`. Registr znamych kontaktu je tedy jediny spolehlivy
   // znak, proto se ptame jeho, ne `leads`.
@@ -143,7 +137,7 @@ Deno.serve(async (req) => {
   // Od dneška posílá Resend i `email.delivered` (zapnuto v jeho dashboardu) a
   // `resend-webhook` ho ukládá jako `delivered`. Tady se z toho počítá poměr.
   // ⚠️ Poměr NENÍ 100 % ani ve zdravém stavu: `delivered` chodí se zpožděním a část
-  //    mailů odešlých k večeru se potvrdí až druhý den. Proto je to ČÍSLO V REPORTU,
+  //    mailů odeslých k večeru se potvrdí až druhý den. Proto je to ČÍSLO V REPORTU,
   //    ne alert při každém poklesu; křičí se, až když je potvrzených míň než polovina.
   // ⛔ Do 8. 9. bude poměr nízký ze zřejmého důvodu: `delivered` se sbírá teprve ode dneška,
   //    takže včerejší maily potvrzení nemají. První poctivé číslo je za 8. 9.
@@ -219,7 +213,6 @@ Deno.serve(async (req) => {
   //   1) honeypot `website` je vyplněný
   //   2) `t` = 0, tedy odesláno pod 3 vteřiny
   // Stačí jedna z nich, aby contact-send vyhodnotil submisi jako spam a mail neodeslal.
-  // Kdyby někdo v budoucnu jednu kontrolu zrušil, druhá pořád drží.
   const KANAREK_JMENO = "KANAREK-DIGEST";
   const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? SERVICE_ROLE;
   let kanarekOk = false;
@@ -587,46 +580,43 @@ Deno.serve(async (req) => {
   // (kfkmghvhqwqtsalqjmrp) a do toho radku se nikdy nezapocita. Proto vlastni radek,
   // ne rozsireni seznamu zdroju vys.
   //
-  // ⛔ PROC VEREJNA RPC A NE SERVICE-ROLE KLIC APPKY: primy dotaz do jeji DB by znamenal
-  // drzet v Academy plnou moc nad druhou databazi kvuli trem cislum. Vzorem je proto
-  // `verejna_cisla()`, kterou uz `anon` vola z webu: RPC `nova_predplatna_24h()` vraci
-  // POUZE souctY (basic, vip, celkem), zadnou adresu ani ID. Staci tedy VEREJNY anon klic
-  // appky, ktery uz je stejne v HTML na martinbarna.cz/tvuj-coach/ (soubor
-  // `tvuj-coach/index.html`, tamtez se z teze databaze tahaji ceny).
-  // ⇒ ZADNY NOVY SECRET SE NEZAKLADA. Klic jde prebit env `TC_SUPABASE_ANON_KEY`,
-  //   kdyby ho appka nekdy rotovala; bez nej se pouzije tentyz verejny klic jako na webu.
+  // ⛔ 7. 9. 2026: prime volani REST RPC `nova_predplatna_24h` s verejnym anon klicem
+  // padalo na HTTP 401, protoze ACL lock sebral `anon` EXECUTE. Vracet anon EXECUTE
+  // NEBUDEME. Cesta je TÁŽ jako u `tc_overview` a `access-status` vyse: edge
+  // `academy-grant` overi sdileny secret (`x-academy-secret` z `app_config.academy_grant_secret`)
+  // a pod service_role zavola tutiz RPC. Academy tedy porad NEDRZI service-role klic
+  // appky. ⛔ `TC_SUPABASE_ANON_KEY` se tu uz nepouziva.
   //
-  // ⚠️ DOKUD SE NEAPLIKUJE MIGRACE `20260902120000_nova_predplatna_24h.sql` v repu
-  // appky, vrati PostgREST 404 a radek poctive rekne „nedostupne". ⛔ Nula se misto
-  // toho zobrazit NESMI: veta „0 prodeju" je prave to, kvuli cemu tenhle blok vznikl.
-  const TC_URL = "https://kfkmghvhqwqtsalqjmrp.supabase.co/rest/v1/rpc/nova_predplatna_24h";
-  const TC_ANON = Deno.env.get("TC_SUPABASE_ANON_KEY") ??
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtma21naHZocXdxdHNhbHFqbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODA2NjQsImV4cCI6MjA5NTQ1NjY2NH0.8meIfIw51xCttJQa2WHMuX7ArbuCh4kK7t-ZWG7JSQA";
+  // ⚠️ Akce `predplatna-24h` musi byt nasazena v `academy-grant` DRIV nez tahle
+  // funkce, jinak appka vrati 404 (nezname akce). ⛔ Nula se misto chyby zobrazit
+  // NESMI: veta „0 prodeju" je prave to, kvuli cemu tenhle blok vznikl.
   let appkaPredplatna = "nedostupné (appka neodpověděla)";
   let appkaPocet: number | null = null;
   try {
-    const r = await fetch(TC_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": TC_ANON,
-        "Authorization": "Bearer " + TC_ANON,
-      },
-      body: "{}",
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (r.status === 404) appkaPredplatna = "nedostupné (appka zatím nemá RPC nova_predplatna_24h)";
-    else if (!r.ok) appkaPredplatna = "nedostupné (appka vrátila HTTP " + r.status + ")";
-    else {
-      const jj = await r.json().catch(() => null);
-      // ⛔ Cisla musi prijit jako cisla. Kdyz v odpovedi nejsou, je to porucha RPC,
-      // ne nula prodeju, a musi to byt videt.
-      const nc = Number(jj?.celkem), nb = Number(jj?.basic), nv = Number(jj?.vip);
-      if ([nc, nb, nv].every((x) => Number.isFinite(x))) {
-        appkaPocet = nc;
-        appkaPredplatna = nc + " (Basic " + nb + ", VIP " + nv + ")";
-      } else {
-        appkaPredplatna = "nedostupné (odpověď RPC nemá čísla)";
+    const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+    const gsec = gs?.value ? String(gs.value) : "";
+    if (!gsec) {
+      appkaPredplatna = "nedostupné (chybí academy_grant_secret)";
+    } else {
+      const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+        body: JSON.stringify({ action: "predplatna-24h" }),
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (r.status === 404) appkaPredplatna = "nedostupné (appka zatím nemá akci predplatna-24h)";
+      else if (!r.ok) appkaPredplatna = "nedostupné (appka vrátila HTTP " + r.status + ")";
+      else {
+        const jj = await r.json().catch(() => null);
+        // ⛔ Cisla musi prijit jako cisla. Kdyz v odpovedi nejsou, je to porucha,
+        // ne nula prodeju, a musi to byt videt.
+        const nc = Number(jj?.celkem), nb = Number(jj?.basic), nv = Number(jj?.vip);
+        if (jj && jj.ok === true && [nc, nb, nv].every((x) => Number.isFinite(x))) {
+          appkaPocet = nc;
+          appkaPredplatna = nc + " (Basic " + nb + ", VIP " + nv + ")";
+        } else {
+          appkaPredplatna = "nedostupné (odpověď academy-grant nemá čísla)";
+        }
       }
     }
   } catch (e) {

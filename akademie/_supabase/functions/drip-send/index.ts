@@ -1,84 +1,62 @@
-// Barna Academy - drip-send (email nurture / DRIP engine). Deno, deploy --no-verify-jwt.
-// Copy zije v DB (email_templates + app_config footer_*), aby sla menit bez redeploye.
-// Gender tokeny v copy: [[zena||muz]], [a] a [á]. Merge: dvojite-slozene-zavorky key. Viz README.md.
-// Rezimy POST JSON: dry:true | test_email+track+step+segment+name | prazdne (ostry beh).
-// Auth: hlavicka x-drip-secret == app_config drip_invoke_secret. Klice jen z env.
-// Pozn.: zdrojak je zamerne bez znaku uvozovek a zpetnych lomitek (kvuli snadnemu deployi).
+
+
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { maPreskocitKrok, PRESKOC_KROK_KDYZ_VLASTNI } from './preskoc.ts';
-// Rozhodovaci pravidla (koho stopnout, kam smi vest most, jaky odstup) zijou ve vlastnim
-// souboru, aby sla testovat bez nastartovani serveru. Viz `pravidla.test.ts`.
+
 import {
   mostBlokujeVlastnictvi,
   odstupDnu,
   shouldStop as pravidlaShouldStop,
   vyberMost,
 } from './pravidla.ts';
-// Vetveni mailu podle prvniho zapisu jidla v appce. Mapa je dnes PRAZDNA, tedy vypnuto;
-// dokud ji nekdo nenaplni, nize se neposle ani jeden dotaz do appky. Viz `aktivace.test.ts`.
+
 import {
   KROK_PODLE_ZAPISU,
-  maPreskocitPodleZapisu,
+  ODLOZ_MS,
+  cadenceOdIso,
+  nactiAktivniZOdpovedi,
+  mostBlokujeNeaktivitu,
+  OKNO_NEAKTIVITY_DNI,
+  oknoUplynulo,
+  rozhodniPodleZapisu,
   type StavZapisu,
-  trateSeSignalem,
+  trateProAppSignal,
+  varsSCadenceOd,
 } from './aktivace.ts';
-// VLASTNI mereni otevreni a prokliku. Prilepuje pixel a prepisuje odkazy az do HOTOVEHO
-// HTML, tesne pred odeslanim. ⛔ Nesaha na text mailu, na odhlasovaci ani auth odkazy.
-// Chybi-li `MAIL_TRACK_SECRET`, vrati HTML beze zmeny a mail odejde nezmereny. Viz `stopa.ts`.
+
 import { ostopkuj } from './stopa.ts';
 
-const NL = String.fromCharCode(10);   // newline
-const DQ = String.fromCharCode(34);   // double-quote char
+const NL = String.fromCharCode(10);   
+const DQ = String.fromCharCode(34);   
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const RESEND_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
-// ⛔ Secret na podpis mericich odkazu. Jen z env, nikdy v gitu. Kdyz chybi, mereni se
-// tise vypne (mail odejde spravne, jen se nezmeri). Nastaveni viz `mail-mereni-README.md`.
+
 const MAIL_TRACK_SECRET = Deno.env.get('MAIL_TRACK_SECRET') ?? '';
 const FROM = 'Martin Barna <news@martinbarna.cz>';
 const SITE = 'https://martinbarna.cz';
-// ⛔ 6. 8. 2026: bylo tu 'https://form.simpleshop.cz/3Vbl/buy/'. Martin SimpleShop
-// i Comgate pred par dny ZRUSIL, vsechno jde pres Stripe. Web uz na Stripe jel
-// (overeno na vsech sesti prodejnich strankach, nula vyskytu simpleshop/comgate),
-// ale maily posilaly lidi porad na SimpleShop, protoze tuhle konstantu nikdo
-// neprepsal. Formular tam navic vracel HTTP 200, takze to nevypadalo rozbite.
-// Tenhle odkaz pouziva 13 sablon pres {{course_url}}, takze zmena jednoho radku
-// spravi vsechny najednou. Je to tentyz odkaz, ktery je na /videokurz pod
-// tlacitkem na koupi kurzu.
-// ⛔ 1. 9. 2026: zdrazeni videokurzu na 1 490 znamena JINY platebni odkaz.
-//    Bylo tu '...dRmeVcbnpaZs5VedBZ3ks06' (pokladna na 800 Kc), zatimco
-//    COURSE_PRICE uz rikal 1490. Mail tedy sliboval jednu cenu a pokladna
-//    brala jinou. Cena a odkaz se od ted meni VZDY spolu, v jednom kroku.
+
 const COURSE_URL = 'https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs';
 const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
-// ⛔ 1. 9. 2026: 800 -> 1490 (Martinovo rozhodnuti o zdrazeni videokurzu).
-// Konstanta plni token {{course_price}} (53 sablon) a pocitaji se z ni {{discount_price}}
-// a {{discount2_price}} (dnes je nepouziva zadna sablona).
-// ⛔⛔ TATAZ KONSTANTA JE JESTE V `admin-api/index.ts` (nahled sablon v admin panelu).
-//    Kdo zmeni jen jednu, rozejde se mailing s nahledem. Nasazovat obe najednou
-//    a ve stejnem kroku jako cenu na `martinbarna.cz/videokurz` a ve Stripu,
-//    jinak mail slibuje jinou cenu, nez bere pokladna.
+
 const COURSE_PRICE = 1490;
 const DISCOUNT_CODE = 'ZACNI15';
 const DISCOUNT_PCT = 15;
-// druha (posledni) sleva - drzet v sablonach pres {{discount2_*}}, ne natvrdo
+
 const DISCOUNT2_CODE = 'JESTE20';
 const DISCOUNT2_PCT = 20;
 
 type Seg = 'zeny' | 'muzi' | 'other';
 const isFem = (seg: Seg) => seg === 'zeny';
 
-// 5. pad (osloveni): jen spolehliva pravidla ceske deklinace. Kdyz si nejsme jisti,
-// jmeno nechavame v 1. padu (= dosavadni chovani, nikdy nezhorsime). Zenska a
-// segmentove nejista jmena koncici souhlaskou se NEmeni (Dagmar, Ester, Miriam...).
 const VOK_EXC: Record<string, string> = {
   'jan': 'Jene', 'pavel': 'Pavle', 'karel': 'Karle', 'havel': 'Havle', 'pavol': 'Pavle',
   'zdenek': 'Zdenku', 'zdeněk': 'Zdeňku', 'zbynek': 'Zbynku', 'zbyněk': 'Zbyňku',
   'josef': 'Josefe', 'luboš': 'Luboši', 'lubos': 'Luboši', 'bartoloměj': 'Bartoloměji',
   'vavřinec': 'Vavřinče', 'vavrinec': 'Vavrinče', 'němec': 'Němče',
 };
-// bezna ceska/slovenska muzska jmena na SOUHLASKU -> sklonuj i bez segmentu 'muzi'
+
 const MALE_NAMES = new Set<string>([
   'martin','david','tomáš','tomas','lukáš','lukas','petr','jakub','ondřej','ondrej','marek','michal','michael',
   'filip','vojtěch','vojtech','patrik','patrick','radek','roman','adam','matěj','matej','štěpán','stepan','vít','vit',
@@ -94,7 +72,7 @@ const MALE_NAMES = new Set<string>([
   'radoslav','miloš','milos','bořek','borek','vladan','hubert','herbert','gustav','ferdinand','leopold','konrád','konrad',
   'arnold','zikmund','matouš','matous','kilián','kilian','mojmír','mojmir',
 ]);
-// zenska jmena na SOUHLASKU, ktera se nemeni -> NIKDY nesklonovat (i kdyby na 'muzi' seznamu)
+
 const FEMALE_NAMES = new Set<string>([
   'ester','dagmar','miriam','karin','karyn','nikol','ingrid','rút','rut','judit','edit','ráchel','rachel',
   'dolores','doris','agnes','mercedes','karmen','carmen','sarah','deborah','abigail','gwen','lilian','vivien',
@@ -106,30 +84,28 @@ function vokativ(fn: string, seg: Seg): string {
   if (!fn) return fn;
   const low = fn.toLowerCase();
   const last = low.slice(-1);
-  if (last === 'a') return fn.slice(0, -1) + 'o';                        // Jana->Jano, Honza->Honzo (oba rody)
-  if (VOK_VOWELS.includes(last)) return fn;                              // Lucie, Marie, Ivo, Jiri
-  if (FEMALE_NAMES.has(low)) return fn;                                  // pojistka: zenske jmeno na souhlasku
-  if (seg === 'zeny' && !isMaleName(low)) return fn;                     // zensky seznam + nezname jmeno -> nechat; jinak sklonuj mužsky (kryje i nezname muzske jmeno)
+  if (last === 'a') return fn.slice(0, -1) + 'o';                        
+  if (VOK_VOWELS.includes(last)) return fn;                              
+  if (FEMALE_NAMES.has(low)) return fn;                                  
+  if (seg === 'zeny' && !isMaleName(low)) return fn;                     
   if (low in VOK_EXC) return VOK_EXC[low];
-  if (low.endsWith('ek')) return fn.slice(0, -2) + 'ku';                 // Marek->Marku, Radek->Radku
-  if (low.endsWith('ch') || 'kgh'.includes(last)) return fn + 'u';       // Vojtech->Vojtechu, Patrik->Patriku
-  if ('szxj'.includes(last) || 'šžčř'.includes(last)) return fn + 'i';   // Tomas->Tomasi, Ondrej->Ondreji, Řehoř->Řehoři
-  if (low.endsWith('el')) return fn + 'i';                               // Daniel->Danieli, Marcel->Marceli
+  if (low.endsWith('ek')) return fn.slice(0, -2) + 'ku';                 
+  if (low.endsWith('ch') || 'kgh'.includes(last)) return fn + 'u';       
+  if ('szxj'.includes(last) || 'šžčř'.includes(last)) return fn + 'i';   
+  if (low.endsWith('el')) return fn + 'i';                               
   if (last === 'r') {
-    return VOK_VOWELS.includes(low.slice(-2, -1)) ? fn + 'e' : fn.slice(0, -1) + 'ře';  // Otakar->Otakare, Petr->Petře
+    return VOK_VOWELS.includes(low.slice(-2, -1)) ? fn + 'e' : fn.slice(0, -1) + 'ře';  
   }
-  if ('bdflmnptvw'.includes(last)) return fn + 'e';                      // Martin->Martine, David->Davide
-  return fn;                                                             // cokoliv jineho radsi nechat
+  if ('bdflmnptvw'.includes(last)) return fn + 'e';                      
+  return fn;                                                             
 }
 
 const esc = (s: string) =>
   s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(DQ).join('&quot;');
-// HTML atributy jsou v tomhle souboru v JEDNODUCHYCH uvozovkach (soubor zamerne neobsahuje znak ").
-// esc() apostrof neresi, takze do atributu se musi escapovat navic, jinak by text z nej vyskocil.
-const SQ = String.fromCharCode(39);   // single-quote char
+
+const SQ = String.fromCharCode(39);   
 const attr = (s: string) => esc(s).split(SQ).join('&#39;');
 
-// gender expanze: [[zena||muz]] a [a] (bez regexu)
 function gender(s: string, seg: Seg): string {
   let out = '', i = 0;
   while (true) {
@@ -141,7 +117,7 @@ function gender(s: string, seg: Seg): string {
     out += isFem(seg) ? s.slice(a + 2, sep) : s.slice(sep + 2, end);
     i = end + 2;
   }
-  // [á] = rad[á]/rád ap. (dlouhe pripony) — order-rescue ho uz podporuje, drz v synci
+  
   return out.split('[a]').join(isFem(seg) ? 'a' : '').split('[á]').join(isFem(seg) ? 'á' : 'ý');
 }
 function merge(s: string, vars: Record<string, string>): string {
@@ -158,7 +134,7 @@ function merge(s: string, vars: Record<string, string>): string {
   return out;
 }
 const fill = (s: string, seg: Seg, v: Record<string, string>) => merge(gender(s, seg), v);
-// pojistka: zadny nerozreseny token (vc. [á]) nesmi nikdy odejit v tele mailu
+
 const hasToken = (s: string) => s.includes('{{') || s.includes('[[') || s.includes(']]') || s.includes('[a]') || s.includes('[á]');
 
 function inlineToText(s: string): string {
@@ -188,16 +164,6 @@ type Block =
   | { t: 'ps'; html: string }
   | { t: 'img'; src: string; alt: string };
 
-// Pojistka pro typ bloku, ktery zadny renderer nezna.
-// Historie: 21. 8. 2026 pribyl do sablon typ `img`, oba renderery ho neznaly a propadl
-// do posledniho `return`. Ten sahl na `b.href` (HTML) a `b.html` (text), ktere obrazek
-// nema, takze mail spadl na hlasce "Cannot read properties of undefined (reading
-// 'indexOf')". Z te hlasky nesel poznat typ bloku a nez se prislo na pricinu, neodeslo
-// se 69 mailu 35 lidem. Zprava proto typ VYSLOVNE jmenuje.
-// NEMENIT na tiche preskoceni bloku: chybejici tlacitko v prodejnim mailu nikdo
-// nenahlasi, kdezto spadly mail se zapise do `email_events` jako `error`.
-// Parametr `never` je hlavni pojistka: kdo prida do `Block` novy typ a zapomene ho
-// osetrit v OBOU rendererech, neprojde uz `deno check`, tedy jeste pred nasazenim.
 function neznamyBlok(b: never): never {
   const typ = (b as { t?: unknown } | null)?.t;
   throw new Error('drip-send: neznamy typ bloku v sablone: ' + JSON.stringify(typ ?? null));
@@ -209,13 +175,13 @@ function renderHtml(blocks: Block[], seg: Seg, v: Record<string, string>): strin
     if (b.t === 'bullets')
       return `<ul style='margin:0 0 15px;padding-left:20px'>` +
         b.items.map((li) => `<li style='margin:0 0 8px'>${fill(li, seg, v)}</li>`).join('') + `</ul>`;
-    // Obrazek: sirka 100 % se stropem, aby na mobilu vyplnil a na desktopu nenafoukl.
-    // Vsechny styly inline, mailove klienty externi CSS ignoruji.
+    
+    
     if (b.t === 'img')
       return `<img src='${attr(fill(b.src, seg, v))}' alt='${attr(fill(b.alt, seg, v))}' width='100%' style='max-width:480px;height:auto;display:block;margin:16px auto;border-radius:8px'>`;
-    // Tlacitko jako tabulka s `bgcolor`: div/odkaz s barvou pozadi Outlook na Windows
-    // casto zahodi a zustane holy text. Barvy jsou z webu (zlata #EBB12C, tmavy text
-    // #1A1222, pilulka 50 px), tvar i barva tedy sedi s tlacitky na martinbarna.cz.
+    
+    
+    
     if (b.t === 'btn')
       return `<table role='presentation' cellpadding='0' cellspacing='0' border='0' style='margin:6px 0 20px'><tr>` +
         `<td class='mb-btn' bgcolor='#EBB12C' style='background-color:#EBB12C;border-radius:50px'>` +
@@ -234,28 +200,6 @@ function renderText(blocks: Block[], seg: Seg, v: Record<string, string>): strin
   }).join(NL + NL);
 }
 function wrapHtml(preheader: string, body: string, footerHtml: string): string {
-  // ⭐ VZHLED = ZIVY WEB martinbarna.cz (Martin 1. 9. 2026: „kovane cerne pozadi mailu, jako web“).
-  // Barvy jsou ODMERENE na zive homepage (`getComputedStyle` nad `:root` a body), ne odhadnute:
-  //   pozadi #0C0B10 · karta (--surface) #16131D · vyssi karta #1C1826 · zlata #EBB12C ·
-  //   svetlejsi zlata (odkazy) #F6CD63 · tmavy text na zlate #1A1222 · tlumena #A09AAD ·
-  //   linka rgba(255,255,255,.08) = po slozeni nad kartou zhruba #262231 · paticka webu #0A090D.
-  // Text v tele nechavam #F0EADF zamerne: TATAZ hodnota je natvrdo v desitkach sablon v DB
-  // (`<span style='color:#F0EADF'>` u mezinadpisu), takze zmena tady by je rozladila.
-  //
-  // „Kovane“ resi (a) jemny svisly prechod na pozadi kolem karty a (b) zlata vlasova linka
-  // pres horni hranu karty. ⛔ Zadny obrazek na pozadi: Gmail obrazky z martinbarna.cz
-  // netahne (proxy dostava 401, viz `mb-obrazky-v-mailech-hosting-blokuje-gmail`).
-  // ⛔ Prechod je JEN na vnejsim pozadi, kde neni zadny text. Na kartu se davat nesmi:
-  // gradient si Gmail v tmavem rezimu neprebarvi, ale text nad nim ano, a vznikl by tmavy
-  // text na tmavem podkladu (past z `mb-mail-dark-mode-fix`).
-  //
-  // DARK-MODE FIX (beze zmeny mechaniky z 22. 7. 2026): Gmail app v dark rezimu prebarvoval
-  // mail (zlata sla do hneda, tmava karta se invertovala na svetlou). Prebarveny strom
-  // oznacuje Outlook atributy [data-ogsc]/[data-ogsb], Apple Mail resi
-  // @media (prefers-color-scheme: dark). Barvy zamykame pres tridy .mb-* s !important.
-  // Poradi v `color-scheme` je nove `dark light` (mail JE tmavy, tedy tmave je preferovane);
-  // obe hodnoty ale zustavaji, aby si zadny klient nemyslel, ze si smi tmavy rezim dodelat sam.
-  // Inline styly zustavaji jako fallback pro klienty bez podpory <style> (Outlook Windows).
   const ZAMKY = `.mb-bg{background-color:#0C0B10!important}` +
     `.mb-card{background-color:#16131D!important}` +
     `.mb-rule{background-color:#EBB12C!important}` +
@@ -300,30 +244,12 @@ function wrapHtml(preheader: string, body: string, footerHtml: string): string {
     `</td></tr></table></td></tr></table></body></html>`;
 }
 
-// `extra` = volitelné proměnné z těla invoku (`vars`). Slouží mailům, které nesou
-// hodnoty známé až za běhu (částka refundu, název produktu…). Před tím uměl engine
-// jen pevný seznam a jakákoli neznámá {{proměnná}} shodila render výjimkou
-// `unresolved_token`, takže šablona vypadala hotově a mail nikdy neodešel.
-//
-// ⛔ BEZPEČNOSTNÍ PRAVIDLO: `extra` smí jen PŘIDÁVAT nové klíče. Vestavěné NIKDY
-// nepřepíše, při kolizi vyhrává vestavěná hodnota a zaloguje se varování.
-// Bez toho by chybný nebo kompromitovaný volající mohl podvrhnout `unsubscribe_url`
-// a odhlašovací odkaz je právní povinnost, ne kosmetika.
-function buildVars(
-  name: string,
-  seg: Seg,
-  unsub: string,
-  email: string,
-  extra: Record<string, unknown> | null,
-  cisla: Record<string, string>,
-): Record<string, string> {
-  // jmeno leada je user input: pryc s HTML a tokenovymi znaky, at nerozbije render ani markup
+function buildVars(name: string, seg: Seg, unsub: string, email: string, extra: Record<string, unknown> | null, cisla: Record<string, string>): Record<string, string> {
   const BADCH = '{}[]<>&' + DQ + String.fromCharCode(39);
   let clean = '';
   for (const ch of (name || '')) clean += BADCH.includes(ch) ? ' ' : ch;
   const parts = clean.trim().split(' ').filter((x) => x.length > 0);
   const t = parts[0] || '';
-  // osloveni v 5. padu (vokativ) — konzervativne, nejista jmena zustavaji v 1. padu
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : '', seg);
   const dprice = Math.round(COURSE_PRICE * (1 - DISCOUNT_PCT / 100));
   const d2price = Math.round(COURSE_PRICE * (1 - DISCOUNT2_PCT / 100));
@@ -335,14 +261,10 @@ function buildVars(
     course_price: String(COURSE_PRICE), discount_pct: String(DISCOUNT_PCT),
     discount_price: String(dprice), discount_code: DISCOUNT_CODE,
     discount2_pct: String(DISCOUNT2_PCT), discount2_price: String(d2price), discount2_code: DISCOUNT2_CODE,
-    email: email, email_url: encodeURIComponent(email),
-    unsubscribe_url: unsub,
-    ...cisla,            // ZAMERNE mezi vestavenymi: telo invoku je NESMI podvrhnout
+    email: email, email_url: encodeURIComponent(email), unsubscribe_url: unsub,
+    ...cisla,
   };
-
   if (!extra || typeof extra !== 'object') return vestavene;
-
-  // Pridavame POUZE klice, ktere vestavena mapa nema. Kolize se zahazuje a loguje.
   const pridane: Record<string, string> = {};
   for (const [k, val] of Object.entries(extra)) {
     if (Object.prototype.hasOwnProperty.call(vestavene, k)) {
@@ -352,13 +274,10 @@ function buildVars(
     if (val === null || val === undefined) continue;
     pridane[k] = String(val);
   }
-  // Poradi je zamerne: vestavene se rozbaluji POSLEDNI, takze pri jakemkoli prehlednuti
-  // nahore stejne vyhraji ony. Dve pojistky na tutez vec, protoze jde o unsubscribe_url.
   return { ...pridane, ...vestavene };
 }
 
 interface Tpl { subject: string; preheader: string; blocks: Block[]; wait_days: number | null; key: string }
-
 function renderEmail(tpl: Tpl, seg: Seg, v: Record<string, string>, footer: { html: string; text: string }) {
   const subject = fill(tpl.subject, seg, v);
   const html = wrapHtml(fill(tpl.preheader, seg, v), renderHtml(tpl.blocks, seg, v), fill(footer.html, seg, v));
@@ -370,625 +289,97 @@ function renderEmail(tpl: Tpl, seg: Seg, v: Record<string, string>, footer: { ht
 
 async function sendViaResend(to: string, subject: string, html: string, text: string, unsub: string, replyTo: string, archiveBcc: string): Promise<string> {
   if (!RESEND_KEY) throw new Error('missing_RESEND_API_KEY');
-  // archiveBcc = skryta kopie na Martinuv mail (app_config archive_bcc), at vidi vse co odejde.
-  // Nikdy neBCCujeme prijemce sameho na sebe (kdyby si Martin stahl vlastni lead-magnet).
   const bcc = archiveBcc && archiveBcc.toLowerCase() !== to.toLowerCase() ? [archiveBcc] : undefined;
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: FROM, to: [to], subject, html, text,
-      reply_to: replyTo || undefined,
-      bcc,
-      headers: { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
-    }),
+    body: JSON.stringify({ from: FROM, to: [to], subject, html, text, reply_to: replyTo || undefined, bcc, headers: { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' } }),
   });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error('resend_' + res.status + ':' + JSON.stringify(body));
   return (body as { id?: string }).id ?? '';
 }
 
-const json = (b: unknown, status = 200) =>
-  new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } });
+const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } });
 const normSeg = (s: unknown): Seg => (s === 'zeny' || s === 'muzi' ? s : 'other');
 
 Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') return json({ error: 'method-not-allowed' }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
-
   const { data: cfg } = await admin.from('app_config').select('value').eq('key', 'drip_invoke_secret').maybeSingle();
   const expected = cfg?.value ?? '';
-  const provided = req.headers.get('x-drip-secret') || '';   // jen hlavicka; ?secret= by koncil v lozich
+  const provided = req.headers.get('x-drip-secret') || '';
   if (!expected || provided !== expected) return json({ error: 'unauthorized' }, 401);
-
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
-
   const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy', 'navazujici_trate', 'pocet_potravin', 'pocet_receptu']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
-  const replyTo = fMap.reply_to_email ?? '';   // kam chodi odpovedi (ulozeno v app_config, ne v gitu)
-  const archiveBcc = fMap.archive_bcc ?? '';   // skryta kopie vsech ostrych sendu na Martinuv mail (prazdne = vypnuto)
-  // CISLA DATABAZE do mailu. Plni je edge `cisla-sync` (Academy cron, 4x denne) z RPC
-  // `verejna_cisla()` v DB appky. Hodnota je UZ ZAOKROUHLENA DOLU a pise se za slovem pres.
-  // FALLBACK NENI KOSMETIKA: kdyby klic v app_config chybel, `merge()` necha token v textu
-  //    a `hasToken()` shodi CELY mail na `unresolved_token`. Konstanty niz jsou proto
-  //    posledni zname overene minimum (zmereno 25. 8. 2026: 59 024 unikatnich nazvu, 148 receptu).
-  //    Zvedat je smi jen clovek, a jen po zelene z `kontrola:slib`.
-  const CISLA = {
-    pocet_potravin: (fMap.pocet_potravin ?? '').trim() || '50 000',
-    pocet_receptu:  (fMap.pocet_receptu  ?? '').trim() || '140',
-  };
-  // STAV MERENI do odpovedi behu. ⛔ Bez tohohle radku by se dalo mereni tise vypnout
-  // (smazany secret) nebo tise okleštit (zapnuty archive_bcc) a nikdo by to nepoznal,
-  // presne jako u Resendu, kde eventy chodily dal a odkazy byly mrtve.
-  const stopaStav = !MAIL_TRACK_SECRET
-    ? 'vypnuto_chybi_secret'
-    : (archiveBcc ? 'jen_odkazy_archive_bcc_zapnuty' : 'odkazy_i_pixel');
-  if (MAIL_TRACK_SECRET && archiveBcc) {
-    console.warn('[drip-send] archive_bcc je zapnuty -> mericí pixel se neprilepuje, meri se jen prokliky');
-  }
-  // BRANA: follow-up/transakcni tracky (non-onboarding) se posilaji jen kdyz je followups_enabled='true'.
-  // Absence/jina hodnota = drzet (test-first). Prepnuti ostro = 1 SQL update, bez redeploye.
+  const replyTo = fMap.reply_to_email ?? '';
+  const archiveBcc = fMap.archive_bcc ?? '';
+  const CISLA = { pocet_potravin: (fMap.pocet_potravin ?? '').trim() || '50 000', pocet_receptu: (fMap.pocet_receptu ?? '').trim() || '140' };
+  const stopaStav = !MAIL_TRACK_SECRET ? 'vypnuto_chybi_secret' : (archiveBcc ? 'jen_odkazy_archive_bcc_zapnuty' : 'odkazy_i_pixel');
+  if (MAIL_TRACK_SECRET && archiveBcc) console.warn('[drip-send] archive_bcc je zapnuty -> mericí pixel se neprilepuje, meri se jen prokliky');
   const followupsEnabled = (fMap.followups_enabled ?? '') === 'true';
-  // DENNI STROP: pojistka proti runaway odesilani (bug/flood), ne Resend Free limit —
-  // provoz jede na Resend Pro (50k/mes). 500/den necha rezervu pro transakcni maily
-  // (rescue/milniky/digest) a Auth SMTP. Cti z app_config drip_daily_cap (zmena = 1 SQL
-  // update bez redeploye); fallback 500. POZN: app_config drzi 2000 = fakticky vypnuto,
-  // snizeni na 500 je v security-fixes-2026-07.sql (ceka na schvaleni Martinem).
-  // DAILY_CAP je BACKSTOP PROTI SPLASENE SMYCCE, NE SKRTIC PROPUSTNOSTI.
-  // Porovnava se proti sentToday (soucet od pulnoci PRES VSECHNY BEHY, viz r. ~407),
-  // takze je to DENNI strop. Nemá nic spolecneho s RUN_DEADLINE_MS, ktery reze jednu davku
-  // (~166 mailu pri gap 600 ms). Jsou to DVE NEZAVISLE pojistky a nesmi se slevat dohromady:
-  // 20. 7. 2026 z jejich zameny vznikl zaver "cap se stejne nikdy neprojevi", coz by vedlo
-  // k jeho zruseni. Pri 24 bezich za den se denni strop projevi uz zhruba po sesti plnych davkach.
-  // Hodnota: 1000 (zvednuto z 500 dne 20. 7. kvuli fronte 291 lidi a longtail enrollu 150/den).
-  // Resend Pro nema denni limit, mesicni je 50 000 pri spotrebe ~4 100, spicka provozu 230/den.
   const DAILY_CAP = Math.max(1, Number(fMap.drip_daily_cap ?? '') || 500);
-  // PACING: Resend dokumentuje rate limit ~2 req/s. Smycka nize posilala bez rozestupu.
-  // 600 ms = ~1.7 req/s (rezerva pod limitem). Zmena = 1 SQL update app_config, bez redeploye.
-  // ⚠️ POZOR NA PRICINU, at se nesiri dal: incident 30. 6. 2026 (307 chyb) NEBYL rate limit,
-  // ale 'daily_quota_exceeded' na tehdejsim free tarifu. Prvnich 99 mailu proslo tempem
-  // 4-5/s BEZ chyby. Rate-limit chyba se za celou historii email_events nevyskytla ani
-  // jednou a engine jede 4-5/s od 1. 7. Tohle je tedy levna POJISTKA, ne oprava vady.
-  // Resend je dnes Pro: denni limit zadny, mesicni 50 000 (spotreba ~4 100 k 20. 7.).
   const SEND_GAP_MS = Math.max(0, Number(fMap.drip_send_gap_ms ?? '') || 600);
-  // POKUSY: kolikrat smi jeden krok jednoho leada selhat, nez ho odstavime. Bez stropu
-  // se lead s trvale nedorucitelnou adresou toci po 6 h donekonecna a kazdy beh z nej
-  // vyrabi error. Jistic ma od 20. 7. 2026 prah 10 chyb za den (driv 3) a po 3 h bez
-  // chyby se otevira sam, takze uz jedna mrtva adresa branu neshodi. Strop pokusu ale
-  // dava smysl dal: bez nej ten lead vyrabi chyby donekonecna.
   const MAX_TRIES = Math.max(1, Number(fMap.drip_max_tries ?? '') || 5);
-  // CLENSKE TRACKY = cili na ZAKAZNIKY, ne na leady. Seznam drzi 1:1 s komentarem nad
-  // shouldStop nize ("Clenske tracky (onboarding, milestone, reactivation, rescue) cili
-  // na zakazniky -> nikdy nestopovat"). Plati pro ne stejna ochrana i u stropu pokusu:
-  // nikoho z nich neodstavujeme, protoze to jsou lide, kteri zaplatili nebo prave plati.
-  // rescue-* je zachrana nedokoncene objednavky, tam je tiche vzdani se nejhorsi ze vsech.
-  // ⚠️ ZDROJ PRAVDY JE app_config.clenske_track_prefixy, NE tenhle soubor.
-  // Driv byl seznam natvrdo tady A JESTE jednou v daily-digest, spojeny jen komentarem
-  // "drz to shodne". To je prani, ne mechanismus: staci pridat track na jednom miste
-  // a seznamy se tise rozejdou. Ted ho obe funkce ctou z jednoho radku v DB, takze
-  // novy clensky track = jeden SQL update, bez redeploye a bez rizika rozjeti.
-  // Natvrdo psany seznam nize je uz jen zachrana pro pripad, ze klic z DB zmizi.
-  const CLENSKE_PREFIXY = String(fMap.clenske_track_prefixy ?? '')
-    .split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+  const CLENSKE_PREFIXY = String(fMap.clenske_track_prefixy ?? '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
   if (CLENSKE_PREFIXY.length === 0) CLENSKE_PREFIXY.push('onboarding', 'milestone', 'reactivation', 'rescue');
-  // MOSTY MEZI TRATEMI (Martin schvalil 6. 8. 2026: "pocitejme s tim obecne u mailingu").
-  // PROC: kdyz trat dojede posledni mail, engine jen zhasnul next_send_at a lead tam
-  // zustal lezet. Nikde to nekriklo. 6. 8. tak sedelo 53 lidi na poslednim kroku
-  // lead-magnetu, zatimco longtail-consumer mel 12 hotovych mailu a DVA lidi uvnitr.
-  // Zapis do longtailu se do te doby delal rucne SQL, tedy jen kdyz si nekdo vzpomnel.
-  // ⛔ TOHLE JE ODCHOZI MAIL. Fail-safe je NEPRESUNOUT: kdyz klic v app_config chybi
-  // nebo je rozbity, most se nepostavi a chova se to jako driv. Nikdy naopak.
-  // Format: {"zdrojova-trat":{"track":"cilova-trat","po_dnech":7}}
-  // Zmena = jeden SQL update app_config, bez redeploye (stejne jako clenske_track_prefixy).
   let MOSTY: Record<string, { track: string; po_dnech?: number }> = {};
-  try {
-    const raw = String(fMap.navazujici_trate ?? '').trim();
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) MOSTY = parsed;
-    }
-  } catch (e) {
-    console.warn('[drip-send] navazujici_trate: nevalidni JSON, mosty VYPNUTE: ' + String(e));
-    MOSTY = {};
-  }
+  try { const raw = String(fMap.navazujici_trate ?? '').trim(); if (raw) { const parsed = JSON.parse(raw); if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) MOSTY = parsed; } } catch (e) { console.warn('[drip-send] navazujici_trate: nevalidni JSON, mosty VYPNUTE: ' + String(e)); MOSTY = {}; }
   let lastSendAt = 0;
-  const pace = async () => {
-    const wait = lastSendAt + SEND_GAP_MS - Date.now();
-    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-    lastSendAt = Date.now();
-  };
-  // CASOVY STROP BEHU: s pacingem trva 200 mailu pres 2 minuty a beh by mohl spadnout
-  // na timeout edge funkce UPROSTRED odesilani. Radeji skoncime drive a zbytek dobere
-  // dalsi hodinovy beh (leady zustavaji splatne, nic se neztrati).
+  const pace = async () => { const wait = lastSendAt + SEND_GAP_MS - Date.now(); if (wait > 0) await new Promise((r) => setTimeout(r, wait)); lastSendAt = Date.now(); };
   const RUN_DEADLINE_MS = Math.max(10000, Number(fMap.drip_run_deadline_ms ?? '') || 100000);
   const runStart = Date.now();
-
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
     const k = track + ':' + step;
-    if (!tplCache.has(k)) {
-      const { data } = await admin.from('email_templates')
-        .select('subject,preheader,blocks,wait_days,key').eq('track', track).eq('step', step).maybeSingle();
-      tplCache.set(k, data ? { subject: data.subject, preheader: data.preheader, blocks: data.blocks as Block[], wait_days: data.wait_days, key: data.key } : null);
-    }
+    if (!tplCache.has(k)) { const { data } = await admin.from('email_templates').select('subject,preheader,blocks,wait_days,key').eq('track', track).eq('step', step).maybeSingle(); tplCache.set(k, data ? { subject: data.subject, preheader: data.preheader, blocks: data.blocks as Block[], wait_days: data.wait_days, key: data.key } : null); }
     return tplCache.get(k)!;
   };
-
-  // Volitelne promenne z tela invoku (`vars`). Pouzivaji je maily, ktere nesou hodnoty
-  // zname az za behu (castka refundu, nazev produktu). Detail a bezpecnostni pravidlo
-  // viz `buildVars`: vestavene klice se NIKDY neprepisuji.
-  //
-  // ⛔ POVOLENO JEN U JEDNOHO PRIJEMCE (`test_email` nebo `only_email`).
-  // Pri davkovem behu by se tataz castka dosadila VSEM lidem ve fronte, coz je presne
-  // ten druh tiche skody, kterou nikdo nezpozoruje, dokud nekomu neprijde cizi cislo.
-  const jeJedenPrijemce = (typeof body.test_email === 'string' && body.test_email.includes('@'))
-    || (typeof body.only_email === 'string' && body.only_email.includes('@'));
+  const jeJedenPrijemce = (typeof body.test_email === 'string' && body.test_email.includes('@')) || (typeof body.only_email === 'string' && body.only_email.includes('@'));
   let extraVars: Record<string, unknown> | null = null;
-  if (body.vars && typeof body.vars === 'object') {
-    if (jeJedenPrijemce) extraVars = body.vars as Record<string, unknown>;
-    else console.warn('[drip-send] vars: ZAHOZENY, davkovy beh nesmi dosazovat stejne hodnoty vsem');
-  }
-
-  // TEST
+  if (body.vars && typeof body.vars === 'object') { if (jeJedenPrijemce) extraVars = body.vars as Record<string, unknown>; else console.warn('[drip-send] vars: ZAHOZENY, davkovy beh nesmi dosazovat stejne hodnoty vsem'); }
   if (typeof body.test_email === 'string' && body.test_email.includes('@')) {
-    const track = String(body.track ?? 'existing-leadmagnet');
-    const step = Number(body.step ?? 0);
-    const seg = normSeg(body.segment);
-    const tpl = await getTpl(track, step);
+    const track = String(body.track ?? 'existing-leadmagnet'); const step = Number(body.step ?? 0); const seg = normSeg(body.segment); const tpl = await getTpl(track, step);
     if (!tpl) return json({ ok: false, mode: 'test', error: 'no_template:' + track + ':' + step }, 400);
-    try {
-      const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email), extraVars, CISLA);
-      const m = renderEmail(tpl, seg, v, footer);
-      const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo, '');
-      await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } });
-      return json({ ok: true, mode: 'test', provider_id: id, track, step });
-    } catch (e) {
-      return json({ ok: false, mode: 'test', error: String(e) }, 500);
-    }
+    try { const v = buildVars(String(body.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=test-no-op', String(body.test_email), extraVars, CISLA); const m = renderEmail(tpl, seg, v, footer); const id = await sendViaResend(String(body.test_email), '[TEST] ' + m.subject, m.html, m.text, v.unsubscribe_url, replyTo, ''); await admin.from('email_events').insert({ lead_id: null, step, type: 'test', provider_id: id, detail: { track, seg } }); return json({ ok: true, mode: 'test', provider_id: id, track, step }); } catch (e) { return json({ ok: false, mode: 'test', error: String(e) }, 500); }
   }
-
-  // ⭐⭐ JEDNORAZOVKA (21. 8. 2026): posli JEDEN mail konkretnimu cloveku a NESAHEJ
-  //    na jeho trat, krok ani `next_send_at`.
-  //
-  // PROC EXISTUJE: 91 % leadu (846 z 929) bezi na akvizicni trati a registrace
-  // v appce je z ni schvalne nevytrhne (konstanta AKVIZICNI v app-onboarding-hook).
-  // To je spravne, prepnuti by utnulo rozjetou prodejni serii na Academy. Mlcet je
-  // ale skoda: registrace je nejsilnejsi signal zajmu, jaky mame. Tahle vetev
-  // umi poslat jeden aktivacni mail k appce a nechat puvodni serii bezet dal.
-  //
-  // ⛔ Vetev konci `return`, takze hlavni odesilaci cesta niz zustava nedotcena.
-  // ⛔ IDEMPOTENCI NERESI TAHLE FUNKCE, ale volajici (razitko `tc-direct-registrace`
-  //    v `leads.meta`). Kdo sem zavola dvakrat, posle dva maily.
   if (typeof body.oneoff_email === 'string' && body.oneoff_email.includes('@')) {
-    const to = String(body.oneoff_email).trim().toLowerCase();
-    const track = String(body.track ?? '');
-    const step = Number(body.step ?? 0);
-    if (!track) return json({ ok: false, mode: 'oneoff', error: 'missing_track' }, 400);
-    const tpl = await getTpl(track, step);
-    if (!tpl) return json({ ok: false, mode: 'oneoff', error: 'no_template:' + track + ':' + step }, 400);
-    // ⛔ Odhlaseneho, bouncnuteho ani pauznuteho cloveka NEOSLOVUJEME. Jednorazovka
-    //    je porad obchodni mail a tyhle stavy znamenaji „nechte me byt".
-    //    Zaroven se tim bere jeho SKUTECNY unsubscribe_token, ne testovaci.
-    const { data: l } = await admin
-      .from('leads').select('id,name,segment,status,unsubscribe_token,vars').eq('email', to).maybeSingle();
-    if (!l) return json({ ok: false, mode: 'oneoff', error: 'lead_neexistuje' }, 404);
-    if (l.status !== 'active') return json({ ok: true, mode: 'oneoff', status: 'preskoceno', duvod: l.status });
-    try {
-      const seg = normSeg(body.segment ?? l.segment);
-      // [2026-09-05] Jednorazovka cte promenne z `vars[track]` leada (napr. cisla z /start),
-      //    stejne pravidlo jako davka: jen vlastni trat, nikdy plosne.
-      const oneoffVars = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars))
-        ? (l.vars as Record<string, unknown>)[track] as Record<string, unknown> | undefined
-        : undefined;
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, to, oneoffVars ?? null, CISLA);
-      const m = renderEmail(tpl, seg, v, footer);
-      // Jednorazovka jde skutecnemu cloveku, takze se meri stejne jako davkovy mail.
-      // ⚠️ V souhrnech je jeji odeslani typu `oneoff`, ne `sent`; kdo pocita open rate,
-      //    musi tenhle typ zapocitat do jmenovatele (akce `mail_mereni` v admin-api to dela).
-      const htmlOneoff = await ostopkuj(m.html, { track, step, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL);
-      const id = await sendViaResend(to, m.subject, htmlOneoff, m.text, v.unsubscribe_url, replyTo, '');
-      // ⛔ `key` MUSI byt v detailu. Do 1. 9. 2026 se tady zapisoval jen `track`, takze
-      //    837 z 8 369 odeslani za 30 dni nemelo sablonu a nesla dohledat. Nejvetsi vlna
-      //    mesice (poukazy 26. a 27. 8., 823 lidi) tim vypadla ze vsech vykonovych reportu:
-      //    dotazy nad `email_events` parujou sablonu pres `detail->>'key'`, ne pres krok.
-      await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track, key: tpl.key } });
-      return json({ ok: true, mode: 'oneoff', provider_id: id, track, step });
-    } catch (e) {
-      return json({ ok: false, mode: 'oneoff', error: String(e) }, 500);
-    }
+    const to = String(body.oneoff_email).trim().toLowerCase(); const track = String(body.track ?? ''); const step = Number(body.step ?? 0);
+    if (!track) return json({ ok: false, mode: 'oneoff', error: 'missing_track' }, 400); const tpl = await getTpl(track, step); if (!tpl) return json({ ok: false, mode: 'oneoff', error: 'no_template:' + track + ':' + step }, 404);
+    const { data: l } = await admin.from('leads').select('id,name,segment,status,unsubscribe_token,vars').eq('email', to).maybeSingle(); if (!l) return json({ ok: false, mode: 'oneoff', error: 'lead_neexistuje' }, 404); if (l.status !== 'active') return json({ ok: true, mode: 'oneoff', status: 'preskoceno', duvod: l.status });
+    try { const seg = normSeg(body.segment ?? l.segment); const oneoffVars = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars)) ? (l.vars as Record<string, unknown>)[track] as Record<string, unknown> | undefined : undefined; const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, to, oneoffVars ?? null, CISLA); const m = renderEmail(tpl, seg, v, footer); const htmlOneoff = await ostopkuj(m.html, { track, step, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL); const id = await sendViaResend(to, m.subject, htmlOneoff, m.text, v.unsubscribe_url, replyTo, ''); await admin.from('email_events').insert({ lead_id: l.id, step, type: 'oneoff', provider_id: id, detail: { track, key: tpl.key } }); return json({ ok: true, mode: 'oneoff', provider_id: id, track, step }); } catch (e) { return json({ ok: false, mode: 'oneoff', error: String(e) }, 500); }
   }
-
-  // due leady (only_email = zpracuj jen jeden konkretni lead -> bezpecny instant-send bez zavodu)
-  const limit = Number(body.limit ?? 200);
-  const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : '';
-  const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token,next_send_at,vars';
-  const dueBase = () => admin.from('leads').select(FIELDS)
-    .eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso)
-    .order('next_send_at', { ascending: true }).limit(limit);
-  // deno-lint-ignore no-explicit-any
-  let leads: any[] = [];
-  let poolInfo: Record<string, number> = {};
-  if (onlyEmail) {
-    const { data: due, error: dueErr } = await dueBase().eq('email', onlyEmail);
-    if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500);
-    leads = due ?? [];
-  } else {
-    // PRIORITA: follow-up/transakcni tracky (non-onboarding) PRED onboarding bulkem, aby je bulk
-    // nehladovel pod dennim stropem. Follow-upy jdou jen kdyz je otevrena BRANA (followupsEnabled).
-    const { data: onb, error: e1 } = await dueBase().ilike('track', 'onboarding%');
-    if (e1) return json({ error: 'db_due', detail: e1.message }, 500);
-    let nonOnb: any[] = [];   // deno-lint-ignore no-explicit-any
-    if (followupsEnabled) {
-      const { data: no, error: e2 } = await dueBase().not('track', 'ilike', 'onboarding%');
-      if (e2) return json({ error: 'db_due', detail: e2.message }, 500);
-      nonOnb = no ?? [];
-    }
-    // CERSTVE splatne onboarding kroky (48 h) pred starym backlogem: follow-upy novych leadu
-    // (z kampani) odchazeji vcas i behem doposilani fronty; zbytek denniho stropu dobira
-    // backlog od nejstarsiho. Bez toho by novy krok cekal za celou frontou.
-    const freshCut = Date.now() - 2 * 86400000;
-    const onbAll = onb ?? [];
-    const freshOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() >= freshCut);
-    const staleOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() < freshCut);
-    poolInfo = { followups: nonOnb.length, fresh_onboarding: freshOnb.length, backlog_onboarding: staleOnb.length };
-    leads = [...nonOnb, ...freshOnb, ...staleOnb];
-  }
-
-  // STOP-PO-NAKUPU (per track): prodejni track se stopne, kdyz prijemce UZ vlastni produkt,
-  // ktery mu track prodava (entitlements, active):
-  //  - akvizicni (lead-magnet*, existing-leadmagnet, nurture-*) a longtail-consumer prodavaji
-  //    vstup ne-majitelum -> stop pri JAKEMKOLI nakupu (videokurz/academy/coaching);
-  //    u akvizicnich je krok 0 slibeny freebie (PDF plan) -> posli vzdy, stop az od kroku 1
-  //  - longtail-trener, trener-kit a upsell-academy prodavaji Academy -> stop pri academy
-  //    (trener-kit krok 0 = slibeny kit zdarma -> posli vzdy, stop az od kroku 1)
-  //  - upsell-coaching prodava koucink -> stop pri coaching
-  //  - longtail-kupci = pece o kupce videokurzu + upgrade na Academy -> stop pri academy
-  // Clenske tracky (onboarding, milestone, reactivation, rescue) cili na zakazniky -> nikdy nestopovat.
-  // ⚠️ Expirace (28. 7. 2026, mesicni clenstvi Academy): za kupce se pocita jen ten,
-  // komu clenstvi PLATI. Bez teto podminky by expirovany mesicni clen zustal navzdy
-  // mezi kupci, prisel by o pristup a ZAROVEN by mu nikdy neprisla nabidka obnovy.
-  // NULL = dozivotni, tedy plati porad. Detail: pamet `mb-academy-pricing-mise`.
-  // ⛔ DRUHA POJISTKA: EX-KLIENTI KOUCINKU (8. 8. 2026).
-  // Prvni pojistka jsou enroll funkce (migrace `upsell_enroll_vylouceni_ex_koucink_klientu`
-  // z 8. 8.), ktere nikoho s koucink historii do upsell trati uz nezaradi. Tahle vrstva
-  // stoji az u ODESLANI: kdyby leada na `upsell-coaching` dostal kdokoli rucne nebo cestou,
-  // kterou dnes neznam, mail se stejne neposle.
-  // PROC to nejde pres `owns.coaching`: ten se plni jen z AKTIVNICH entitlementu. Offboard
-  // (`admin-api` akce `client_offboard`) coaching entitlement DEAKTIVUJE, takze ex-klient
-  // z `owns.coaching` druhy den zmizi a upsell by mu zacal chodit. Proto samostatny dotaz
-  // BEZ filtru `active`.
-  // Co se stalo bez teto vrstvy: klientce po 13 tydnech koucinku odesel mail
-  // "Videokurz mas. Chces pomoc i ode me osobne?". Detail: pamet `mb-koucink-offboard-automat`.
-  // ⚠️ Fail-safe je tu zamerne stejny jako jinde v teto funkci, tedy SMEREM K ODESLANI:
-  // kdyz dotaz selze, mnozina je prazdna a mail odejde. Prvni pojistka (enroll) drzi dal.
-  const { data: exCoachRows } = await admin.from('entitlements').select('email').eq('product', 'coaching');
-  const exCoaching = new Set<string>(
-    (exCoachRows ?? []).map((r: { email: string }) => String(r.email ?? '').toLowerCase()).filter(Boolean),
-  );
-
-  const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true)
-    .or('expires_at.is.null,expires_at.gt.' + new Date().toISOString())
-    .in('product', ['videokurz', 'academy', 'coaching', 'balicek']);
-  const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set(), balicek: new Set() };
-  for (const b of (buyersRows ?? []) as { email: string; product: string }[]) owns[b.product]?.add(b.email.toLowerCase());
-  // ⛔ `balicek` je v `owns` SCHVALNE: slouzi brance v `preskoc.ts`, aby se nabidka balicku
-  // neposlala tomu, kdo si ho uz koupil. Do otazky „je to uz zakaznik?" ale patrit NESMI,
-  // duvod je u `vlastniCokoli` v `pravidla.ts`.
-  // Samotna pravidla (koho stopnout na ktere trati) jsou v `pravidla.ts` a maji testy.
-  // Tady zustava jen tenka obalka, aby volani na trech mistech nize zustala beze zmeny.
-  const shouldStop = (track: string, step: number, em: string): boolean =>
-    pravidlaShouldStop(track, step, em, owns, exCoaching);
-
-  // ⭐ ZAPSAL UZ CLOVEK JIDLO V APPCE? (25. 8. 2026)
-  // Data o zapisech zijou v JINEM Supabase projektu (appka `kfkmghvhqwqtsalqjmrp`), takze
-  // se na ne nedotazeme SQL dotazem. Ptame se pres edge funkci appky `aktivace-stav`.
-  //
-  // ⛔ PROC PRES EDGE FUNKCI A NE PRIMO DO DB APPKY: primy dotaz by znamenal mit v Academy
-  //    service-role klic appky, tedy plnou moc nad druhou databazi kvuli jedne booleovske
-  //    otazce. Funkce appky si sama sahne do sve DB a vrati JEN seznam adres, ktere zapsaly.
-  // ⛔ PROC NE NOVY SECRET: pouziva se TENTYZ sdileny secret, kterym uz appka vola nas
-  //    `app-onboarding-hook` (`app_config.app_onboarding_secret`, v appce env
-  //    `ACADEMY_ONBOARDING_SECRET`). Nova hodnota by musela projit clovekem a to je
-  //    zbytecne riziko; duveryhodna dvojice je tataz, jen se otaci smer volani.
-  // ⛔ PTAME SE JEN NA LIDI, KTERYCH SE TO TYKA (lead na trati s vetvenym krokem). Adresy
-  //    ostatnich nikam neodchazeji. Kdyz je mapa `KROK_PODLE_ZAPISU` prazdna, neodejde
-  //    ani jeden pozadavek a funkce se chova presne jako pred touhle zmenou.
-  // ⚠️ FAIL-SAFE SMEREM K ODESLANI: cokoli selze (secret, sit, HTTP, tvar odpovedi) -> stav
-  //    `nevime` -> nic se nepreskoci. Zadrzeny mail nikde nekrici, zbytecny ano.
-  const APP_AKTIVACE_URL = 'https://kfkmghvhqwqtsalqjmrp.supabase.co/functions/v1/aktivace-stav';
-  const TRATE_SE_SIGNALEM = trateSeSignalem(KROK_PODLE_ZAPISU);
-  let zapsaliJidlo: Set<string> | null = null;   // null = nevime (vypnuto nebo selhalo)
-  let aktivaceStav = 'vypnuto';
-  if (TRATE_SE_SIGNALEM.size > 0) {
-    const ptameSeNa = [...new Set(
-      leads.filter((l: { track?: string }) => TRATE_SE_SIGNALEM.has(String(l.track || '')))
-        .map((l: { email: string }) => String(l.email ?? '').toLowerCase())
-        .filter((e: string) => e.includes('@')),
-    )];
-    if (ptameSeNa.length === 0) {
-      aktivaceStav = 'nikdo_na_vetvene_trati';
-    } else {
-      try {
-        const { data: hs } = await admin.from('app_config').select('value').eq('key', 'app_onboarding_secret').maybeSingle();
-        if (!hs?.value) {
-          aktivaceStav = 'chybi_secret';
-        } else {
-          const r = await fetch(APP_AKTIVACE_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-app-secret': String(hs.value) },
-            body: JSON.stringify({ emaily: ptameSeNa }),
-          });
-          const telo = await r.json().catch(() => ({}));
-          // Za odpoved se bere jen VYSLOVNE pole `zapsali`. Prazdne pole je platna odpoved
-          // („nikdo z nich nezapsal"), chybejici pole je selhani a musi skoncit v `nevime`.
-          if (r.ok && Array.isArray(telo?.zapsali)) {
-            zapsaliJidlo = new Set<string>(
-              (telo.zapsali as unknown[]).map((e) => String(e ?? '').toLowerCase()).filter(Boolean),
-            );
-            aktivaceStav = 'ok';
-          } else {
-            aktivaceStav = 'odpoved_' + r.status;
-          }
-        }
-      } catch (e) {
-        aktivaceStav = 'vyjimka_' + String(e).slice(0, 60);
-      }
-    }
-  }
-  const stavZapisu = (em: string): StavZapisu =>
-    zapsaliJidlo === null ? 'nevime' : (zapsaliJidlo.has(em.toLowerCase()) ? 'zapsal' : 'nezapsal');
-  const preskocitPodleZapisu = (track: string, step: number, em: string) =>
-    maPreskocitPodleZapisu(track, step, stavZapisu(em));
-
-  // MOST NA DALSI TRAT: vola se v jedinou chvili, kdy trat pro leada skoncila.
-  // Vraci nazev cilove trati (= lead byl prepsan), nebo null (= necha se dobehnout).
-  // ⛔ Ctyri pojistky, kazda umi most sama zrusit. Poradi je zamerne od nejlevnejsi:
-  //   1. neni definovany most -> nic (vychozi stav pro vsechny trate)
-  //   2. clovek uz vlastni to, co cilova trat prodava -> nic (tataz pravidla jako shouldStop)
-  //   3. cilova trat nema krok 0 -> nic (jinak bychom ho poslali do prazdna a on by ztichl
-  //      uplne stejne, jen o trat vedle a hur dohledatelne)
-  //   4. tuhle trat uz jednou dostal -> nic (bez toho by se dva mosty daly zacyklit
-  //      a clovek by dostaval tytez maily dokola)
-  // Odhlaseni a bounce resit nemusime: due fronta bere jen status='active'.
-  // Rozhodovaci cast je ODDELENA od zapisu schvalne: `dry` beh ji smi zavolat taky
-  // a ukazat, kam by kdo sel, aniz by cokoli prepsal. Bez toho by se most dal
-  // vyzkouset jedine naostro na zivych lidech.
-  // deno-lint-ignore no-explicit-any
-  const kamDal = async (l: any): Promise<string | null> => {
-    const cil = vyberMost(MOSTY, String(l.track || ''));
-    if (!cil) return null;
-    const em = String(l.email).toLowerCase();
-    // ⛔ Pta se ZAMERNE na krok 1, ne 0. Plny duvod je u `KROK_PRO_MOST` v `pravidla.ts`
-    // a hlida to test „dukaz, ze na kroku 0 by ochrana nesepnula".
-    if (mostBlokujeVlastnictvi(cil.track, em, owns, exCoaching)) return null;
-    if (!(await getTpl(cil.track, 0))) return null;
-    const { data: uzTamByl } = await admin.from('email_events')
-      .select('id').eq('lead_id', l.id).eq('type', 'sent').eq('detail->>track', cil.track).limit(1);
-    if ((uzTamByl ?? []).length > 0) return null;
-    return cil.track;
-  };
-  // deno-lint-ignore no-explicit-any
-  const mostNaDalsiTrat = async (l: any): Promise<string | null> => {
-    const cilTrack = await kamDal(l);
-    if (!cilTrack) return null;
-    // Odstup po poslednim mailu puvodni trate, at cloveku neprijdou dva maily po sobe.
-    // Fail-safe smeruje k CEKANI, ne k odeslani; duvod a historie vady jsou u `odstupDnu`
-    // v `pravidla.ts`, hlida to sada testu vcetne preklepu „sedm".
-    const poDnech = odstupDnu(MOSTY[String(l.track || '')]?.po_dnech);
-    await admin.from('leads').update({
-      track: cilTrack, step: 0,
-      next_send_at: new Date(Date.now() + poDnech * 86400000).toISOString(),
-      updated_at: nowIso,
-    }).eq('id', l.id);
-    // Stopa v logu: bez ni by prechod byl neviditelny a nikdo by nedohledal, proc
-    // clovek dostava maily z jine trate, nez do ktere se prihlasil.
-    // ⚠️ `track` v detailu je POVINNE, i kdyz je duplicitni k `z`: adminsky log sklada
-    // sloupec trate i predmet z `detail->>track` a bez nej se radek zobrazi prazdny.
-    await admin.from('email_events').insert({
-      lead_id: l.id, step: l.step, type: 'bridged',
-      detail: { track: l.track, z: l.track, na: cilTrack, po_dnech: poDnech },
-    });
-    return cilTrack;
-  };
-
-  // DRY
-  if (body.dry === true) {
-    const byStep: Record<string, number> = {};
-    const byBridge: Record<string, number> = {};
-    let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0, wouldSkipZapis = 0;
-    const byZapis: Record<string, number> = {};
-    for (const l of leads) {
-      // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
-      if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; }
-      // Preskoceni kroku, ktery prodava uz vlastneny produkt (viz preskoc.ts).
-      // V dry behu se jen zapocita, at je videt, kolik mailu oprava zadrzi, nez se nasadi.
-      if (maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns)) { wouldSkipOwns++; continue; }
-      // Vetveni podle prvniho zapisu (viz aktivace.ts). Dry beh je JEDINY zpusob, jak si
-      // dopad overit, aniz by se dotkl ziveho cloveka: ukaze pocet i rozpad po krocich.
-      const zapisDuvod = preskocitPodleZapisu(String(l.track || ''), l.step, String(l.email));
-      if (zapisDuvod) {
-        wouldSkipZapis++;
-        const k = l.track + '/step' + l.step + ':' + zapisDuvod;
-        byZapis[k] = (byZapis[k] ?? 0) + 1;
-        continue;
-      }
-      const tpl = await getTpl(l.track, l.step);
-      if (!tpl) {
-        const na = await kamDal(l);
-        if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; }
-        else invalid++;
-        continue;
-      }
-      // Posledni mail trate (wait_days = null): po jeho odeslani se rozhoduje o mostu.
-      if (tpl.wait_days == null) {
-        const na = await kamDal(l);
-        if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; }
-      }
-      const key = l.track + '/step' + l.step + ':' + tpl.key;
-      byStep[key] = (byStep[key] ?? 0) + 1; would++;
-    }
-    return json({ ok: true, mode: 'dry', stopa: stopaStav, followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), zapis_signal: aktivaceStav, would_skip_zapis: wouldSkipZapis, by_zapis: byZapis, by_step: byStep });
-  }
-
-  const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0);
-  const { count: sentToday } = await admin.from('email_events')
-    .select('id', { count: 'exact', head: true })
-    .eq('type', 'sent').gte('created_at', dayStart.toISOString());
-  const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
-
-  // LIVE
-  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, skippedOwns = 0, skippedZapis = 0, capped = false, timeUp = false;
-  const byStep: Record<string, number> = {};
-  const byBridge: Record<string, number> = {};
+  const limit = Number(body.limit ?? 200); const onlyEmail = typeof body.only_email === 'string' ? String(body.only_email).toLowerCase() : ''; const FIELDS = 'id,email,name,segment,track,step,unsubscribe_token,next_send_at,vars,created_at'; const dueBase = () => admin.from('leads').select(FIELDS).eq('status', 'active').not('next_send_at', 'is', null).lte('next_send_at', nowIso).order('next_send_at', { ascending: true }).limit(limit);
+  let leads: any[] = []; let poolInfo: Record<string, number> = {};
+  if (onlyEmail) { const { data: due, error: dueErr } = await dueBase().eq('email', onlyEmail); if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500); leads = due ?? []; } else { const { data: onb, error: e1 } = await dueBase().ilike('track', 'onboarding%'); if (e1) return json({ error: 'db_due', detail: e1.message }, 500); let nonOnb: any[] = []; if (followupsEnabled) { const { data: no, error: e2 } = await dueBase().not('track', 'ilike', 'onboarding%'); if (e2) return json({ error: 'db_due', detail: e2.message }, 500); nonOnb = no ?? []; } const freshCut = Date.now() - 2 * 86400000; const onbAll = onb ?? []; const freshOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() >= freshCut); const staleOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() < freshCut); poolInfo = { followups: nonOnb.length, fresh_onboarding: freshOnb.length, backlog_onboarding: staleOnb.length }; leads = [...nonOnb, ...freshOnb, ...staleOnb]; }
+  const { data: exCoachRows } = await admin.from('entitlements').select('email').eq('product', 'coaching'); const exCoaching = new Set<string>((exCoachRows ?? []).map((r: { email: string }) => String(r.email ?? '').toLowerCase()).filter(Boolean));
+  const { data: buyersRows } = await admin.from('entitlements').select('email,product').eq('active', true).or('expires_at.is.null,expires_at.gt.' + new Date().toISOString()).in('product', ['videokurz', 'academy', 'coaching', 'balicek']); const owns: Record<string, Set<string>> = { videokurz: new Set(), academy: new Set(), coaching: new Set(), balicek: new Set() }; for (const b of (buyersRows ?? []) as { email: string; product: string }[]) owns[b.product]?.add(b.email.toLowerCase());
+  const shouldStop = (track: string, step: number, em: string): boolean => pravidlaShouldStop(track, step, em, owns, exCoaching);
+  const APP_AKTIVACE_URL = 'https://kfkmghvhqwqtsalqjmrp.supabase.co/functions/v1/aktivace-stav'; const TRATE_SE_SIGNALEM = trateProAppSignal(KROK_PODLE_ZAPISU); let zapsaliAktivitu: Set<string> | null = null; let aktivaceStav = 'vypnuto';
+  if (TRATE_SE_SIGNALEM.size > 0) { const ptameSeNa = [...new Set(leads.filter((l: { track?: string }) => TRATE_SE_SIGNALEM.has(String(l.track || ''))).map((l: { email: string }) => String(l.email ?? '').toLowerCase()).filter((e: string) => e.includes('@')))]; if (ptameSeNa.length === 0) aktivaceStav = 'nikdo_na_vetvene_trati'; else { try { const { data: hs } = await admin.from('app_config').select('value').eq('key', 'app_onboarding_secret').maybeSingle(); if (!hs?.value) aktivaceStav = 'chybi_secret'; else { const r = await fetch(APP_AKTIVACE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-app-secret': String(hs.value) }, body: JSON.stringify({ emaily: ptameSeNa }) }); const telo = await r.json().catch(() => ({})); if (r.ok) { const aktivni = nactiAktivniZOdpovedi(telo); if (aktivni) { zapsaliAktivitu = aktivni; aktivaceStav = 'ok'; } else aktivaceStav = 'odpoved_' + r.status; } else aktivaceStav = 'odpoved_' + r.status; } } catch (e) { aktivaceStav = 'vyjimka_' + String(e).slice(0, 60); } } }
+  const stavZapisu = (em: string): StavZapisu => zapsaliAktivitu === null ? 'nevime' : (zapsaliAktivitu.has(em.toLowerCase()) ? 'zapsal' : 'nezapsal'); const akcePodleZapisu = (l: { track?: string; step: number; email: string; vars?: unknown; created_at?: unknown }) => { const od = cadenceOdIso(l.vars, l.created_at, nowIso); return rozhodniPodleZapisu(String(l.track || ''), l.step, stavZapisu(String(l.email)), KROK_PODLE_ZAPISU, { oknoUplynulo: oknoUplynulo(od, Date.parse(nowIso)) }); };
+  const kamDal = async (l: any): Promise<string | null> => { const cil = vyberMost(MOSTY, String(l.track || '')); if (!cil) return null; const em = String(l.email).toLowerCase(); if (mostBlokujeVlastnictvi(cil.track, em, owns, exCoaching)) return null; if (mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(em))) return null; if (!(await getTpl(cil.track, 0))) return null; const { data: uzTamByl } = await admin.from('email_events').select('id').eq('lead_id', l.id).eq('type', 'sent').eq('detail->>track', cil.track).limit(1); if ((uzTamByl ?? []).length > 0) return null; return cil.track; };
+  const mostNaDalsiTrat = async (l: any): Promise<string | null> => { const cilTrack = await kamDal(l); if (!cilTrack) return null; const poDnech = odstupDnu(MOSTY[String(l.track || '')]?.po_dnech); await admin.from('leads').update({ track: cilTrack, step: 0, next_send_at: new Date(Date.now() + poDnech * 86400000).toISOString(), updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'bridged', detail: { track: l.track, z: l.track, na: cilTrack, po_dnech: poDnech } }); return cilTrack; };
+  if (body.dry === true) { const byStep: Record<string, number> = {}; const byBridge: Record<string, number> = {}; let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0, wouldSkipZapis = 0; let wouldDelayZapis = 0, wouldPauseNeaktivita = 0, wouldRescueNeaktivita = 0, wouldSkipBridgeNeaktivita = 0; const byZapis: Record<string, number> = {}; for (const l of leads) { if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; } if (maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns)) { wouldSkipOwns++; continue; } const akce = akcePodleZapisu(l); const kCad = l.track + '/step' + l.step + ':' + akce.typ; if (akce.typ === 'preskoc') { wouldSkipZapis++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } if (akce.typ === 'odloz') { wouldDelayZapis++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } if (akce.typ === 'pauza') { wouldPauseNeaktivita++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } const tpl = await getTpl(l.track, akce.typ === 'rescue_krok' ? akce.step : l.step); if (akce.typ === 'rescue_pauza' || akce.typ === 'rescue_krok') { wouldRescueNeaktivita++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; if (!tpl) { wouldPauseNeaktivita++; continue; } const key = l.track + '/step' + (akce.typ === 'rescue_krok' ? akce.step : l.step) + ':' + tpl.key + ':rescue'; byStep[key] = (byStep[key] ?? 0) + 1; would++; continue; } if (!tpl) { const cil = vyberMost(MOSTY, String(l.track || '')); if (cil && mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(String(l.email).toLowerCase()))) wouldSkipBridgeNeaktivita++; const na = await kamDal(l); if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; } else invalid++; continue; } if (tpl.wait_days == null) { const cil = vyberMost(MOSTY, String(l.track || '')); if (cil && mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(String(l.email).toLowerCase()))) { wouldSkipBridgeNeaktivita++; wouldPauseNeaktivita++; } const na = await kamDal(l); if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; } } const key = l.track + '/step' + l.step + ':' + tpl.key; byStep[key] = (byStep[key] ?? 0) + 1; would++; } return json({ ok: true, mode: 'dry', stopa: stopaStav, followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), zapis_signal: aktivaceStav, would_skip_zapis: wouldSkipZapis, would_delay_zapis: wouldDelayZapis, would_pause_neaktivita: wouldPauseNeaktivita, would_rescue_neaktivita: wouldRescueNeaktivita, would_skip_bridge_neaktivita: wouldSkipBridgeNeaktivita, by_zapis: byZapis, by_step: byStep, okno_neaktivity_dni: OKNO_NEAKTIVITY_DNI }); }
+  const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0); const { count: sentToday } = await admin.from('email_events').select('id', { count: 'exact', head: true }).eq('type', 'sent').gte('created_at', dayStart.toISOString()); const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
+  let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, skippedOwns = 0, skippedZapis = 0, delayedZapis = 0, pausedNeaktivita = 0, rescuedNeaktivita = 0, capped = false, timeUp = false; const byStep: Record<string, number> = {}; const byBridge: Record<string, number> = {};
   for (const l of leads) {
-    if (sent >= remaining) { capped = true; break; }
-    if (Date.now() - runStart > RUN_DEADLINE_MS) { timeUp = true; break; }
-    const seg = normSeg(l.segment);
-    const tpl = await getTpl(l.track, l.step);
-    // Krok bez sablony = trat skoncila (nebo ji nekdo zkratil). Driv se tu jen zhasl termin.
-    if (!tpl) {
-      const na = await mostNaDalsiTrat(l);
-      if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; continue; }
-      await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue;
-    }
-    // STOP po nakupu = per-track pravidla (viz shouldStop vyse)
-    if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) {
-      await admin.from('leads').update({ status: 'purchased', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
-      await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_purchased', detail: { track: l.track } });
-      stopped++; continue;
-    }
-    const { data: already } = await admin.from('email_events')
-      .select('id').eq('lead_id', l.id).eq('step', l.step).eq('type', 'sent')
-      .eq('detail->>track', l.track).maybeSingle();   // dedupe per track (pri prerazeni leadu jinam se kroky nepreskakuji)
-    const advance = async () => {
-      const ns = l.step + 1;
-      // ⛔⛔ KDO SE ODHLASIL A PAK KOUPIL, DOSTANE JEN DORUCENI. Nic vic. (7. 8. 2026)
-      // `posliUvitani` v academy-stripe-webhook nastavuje `status: 'active'` bez podminky,
-      // takze nakup ODHLASENEHO cloveka ho vratil do rozesilky natrvalo: dostal nejen
-      // doruceni (spravne, to je plneni smlouvy), ale i upsell a vsechen budouci marketing.
-      // Ten webhook proto nove pri odhlasenem leadovi zapise do `vars` znacku
-      // `_byl_odhlaseny: true` a tady se podle ni po PRVNIM mailu trate lead vrati zpatky
-      // mezi odhlasene. ⇒ Zaplacene dostane, marketing uz ne.
-      // ⚠️ Znacka je na NEJVYSSI urovni `vars`, tedy vedle klicu trati. Kolize nehrozi,
-      //    protoze trate se jmenuji bez podtrzitka na zacatku a cte se vyhradne `vars[track]`.
-      // ⚠️ Kontroluje se `l.step === 0`, ne posledni krok. Zamerne: krok 0 je doruceni,
-      //    kroky 1 a 2 uz jsou „jak na to" a upsell, a ty odhlaseny clovek dostat nema.
-      const bylOdhlaseny = !!(l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars)
-        && (l.vars as Record<string, unknown>)._byl_odhlaseny);
-      if (bylOdhlaseny && l.step === 0 && String(l.track || '').startsWith('onboarding-nakup-')) {
-        await admin.from('leads').update({
-          status: 'unsubscribed', next_send_at: null, step: ns, updated_at: nowIso,
-        }).eq('id', l.id);
-        await admin.from('email_events').insert({
-          lead_id: l.id, step: l.step, type: 'stop_odhlaseny_kupec',
-          detail: { track: l.track, duvod: 'koupil po odhlaseni, doruceni odeslano, marketing ne' },
-        });
-        finished++;
-        return;
-      }
-      if (tpl.wait_days == null) {
-        // wait_days = null znamena POSLEDNI mail trate. Tady se rozhoduje, jestli
-        // clovek pokracuje jinam, nebo definitivne ztichne. Viz MOSTY vyse.
-        // ⛔ TEN `return` JE NOSNY, NESMAZAT. Most uz leada prepsal na cilovou trat
-        // a krok 0. Kdyby se pokracovalo dal, update nize by mu nastavil step = 8
-        // (dalsi krok PUVODNI trate) nad uz prepsanym leadem a clovek by v nove trati
-        // preskocil osm mailu z dvanacti. Track by se neprepsal, ale krok ano.
-        const na = await mostNaDalsiTrat(l);
-        if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; return; }
-        await admin.from('leads').update({ step: ns, next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++;
-      } else {
-        const next = new Date(Date.now() + tpl.wait_days * 86400000).toISOString();
-        await admin.from('leads').update({ step: ns, next_send_at: next, updated_at: nowIso }).eq('id', l.id);
-      }
-    };
-    // ⛔ NENABIZEJ, CO UZ CLOVEK MA. Bez teto branky dostal kupec balicku, ktery uz
-    // videokurz vlastni, mail "Kurz ti rekne proc" s nabidkou na koupi kurzu, ktery ma.
-    // ⚠️ MUSI se volat `advance()`, ne jen `continue`: krok 2 balicku je POSLEDNI mail
-    // trate (wait_days = null) a prave za nim se rozhoduje o mostu do dalsi trate.
-    // Holy `continue` by leada nechal navzdy viset na tomhle kroku a hodinova davka
-    // by ho brala donekonecna dokola.
-    const preskocProdukt = maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns);
-    if (preskocProdukt) {
-      await admin.from('email_events').insert({
-        lead_id: l.id, step: l.step, type: 'skip_owns_product',
-        detail: { track: l.track, key: tpl.key, produkt: preskocProdukt },
-      });
-      await advance(); skippedOwns++; continue;
-    }
-    // ⭐ VETVENI PODLE PRVNIHO ZAPISU JIDLA (viz aktivace.ts).
-    // ⚠️ Stejne jako o kus vyse se MUSI volat `advance()`, ne holy `continue`: kdyby byl
-    // vetveny krok POSLEDNI v trati (`wait_days = null`), holy `continue` by na nem leada
-    // nechal viset navzdy a hodinova davka by ho brala dokola. `advance()` navic korektne
-    // pusti most na navaznou trat, takze clovek nezustane trcet uprostred serie.
-    const zapisDuvod = preskocitPodleZapisu(String(l.track || ''), l.step, String(l.email));
-    if (zapisDuvod) {
-      await admin.from('email_events').insert({
-        lead_id: l.id, step: l.step, type: 'skip_podle_zapisu',
-        detail: { track: l.track, key: tpl.key, podminka: zapisDuvod, stav: stavZapisu(String(l.email)) },
-      });
-      await advance(); skippedZapis++; continue;
-    }
+    if (sent >= remaining) { capped = true; break; } if (Date.now() - runStart > RUN_DEADLINE_MS) { timeUp = true; break; } const seg = normSeg(l.segment); const dueTpl = await getTpl(l.track, l.step);
+    if (!dueTpl) { const na = await mostNaDalsiTrat(l); if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; continue; } await admin.from('leads').update({ next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; continue; }
+    let tpl = dueTpl;
+    if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { await admin.from('leads').update({ status: 'purchased', next_send_at: null, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_purchased', detail: { track: l.track } }); stopped++; continue; }
+    const { data: already } = await admin.from('email_events').select('id').eq('lead_id', l.id).eq('step', l.step).eq('type', 'sent').eq('detail->>track', l.track).maybeSingle(); const advance = async () => { const ns = l.step + 1; const bylOdhlaseny = !!(l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars) && (l.vars as Record<string, unknown>)._byl_odhlaseny); if (bylOdhlaseny && l.step === 0 && String(l.track || '').startsWith('onboarding-nakup-')) { await admin.from('leads').update({ status: 'unsubscribed', next_send_at: null, step: ns, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'stop_odhlaseny_kupec', detail: { track: l.track, duvod: 'koupil po odhlášení, doručení odesláno, marketing ne' } }); finished++; return; } if (tpl.wait_days == null) { const na = await mostNaDalsiTrat(l); if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; return; } const cilMostu = vyberMost(MOSTY, String(l.track || '')); if (cilMostu && mostBlokujeNeaktivitu(String(l.track || ''), cilMostu.track, stavZapisu(String(l.email)))) { await admin.from('leads').update({ status: 'paused', next_send_at: null, step: ns, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'paused_neaktivita', detail: { track: l.track, key: tpl.key, podminka: 'most_neaktivita', stav: stavZapisu(String(l.email)) } }); pausedNeaktivita++; return; } await admin.from('leads').update({ step: ns, next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; } else { const next = new Date(Date.now() + tpl.wait_days * 86400000).toISOString(); await admin.from('leads').update({ step: ns, next_send_at: next, updated_at: nowIso }).eq('id', l.id); } };
+    const preskocProdukt = maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns); if (preskocProdukt) { await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_owns_product', detail: { track: l.track, key: tpl.key, produkt: preskocProdukt } }); await advance(); skippedOwns++; continue; }
     if (already) { await advance(); skippedAlready++; continue; }
-    try {
-      // ZALOHA PRO OPAKOVANY POKUS: `vars` z tela invoku existuji jen jednou. Kdyz odeslani
-      // selze, dalsi pokus jede z hodinove davky, ktera zadne telo nema — a mail by spadl
-      // na `unresolved_token` uz navzdy (viz leads-vars.sql). Proto se ctou i z leada.
-      // ⛔ Vyhradne `l.vars[l.track]`, nikdy plosne: zaznam patrici jine trati nesmi
-      // prosaknout do mailu, ktery si nahodou pojmenoval promennou stejne.
-      const varsZLeada = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars))
-        ? (l.vars as Record<string, unknown>)[String(l.track)] as Record<string, unknown> | undefined
-        : undefined;
-      const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars ?? varsZLeada ?? null, CISLA);
-      const m = renderEmail(tpl, seg, v, footer);
-      // MERENI: az tady, nad hotovym HTML. Poradi je zamerne za `renderEmail`, protoze ten
-      // hlida nerozresene tokeny; mericí odkazy zadny token nenesou a kontrolu by jen matly.
-      // ⛔ `!archiveBcc`: kdyz jede archivni kopie, pixel se NEPRILEPUJE. Duvod je u
-      //    `ostopkuj` v `stopa.ts` (BCC kopie nese tentyz pixel a Gmail si ho predstahne).
-      const htmlSeStopou = await ostopkuj(m.html, { track: String(l.track), step: l.step, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL, !archiveBcc);
-      await pace();   // rozestup mezi volanimi Resendu, viz SEND_GAP_MS vyse
-      const id = await sendViaResend(l.email, m.subject, htmlSeStopou, m.text, v.unsubscribe_url, replyTo, archiveBcc);
-      const { error: logErr } = await admin.from('email_events')
-        .insert({ lead_id: l.id, step: l.step, type: 'sent', provider_id: id, detail: { track: l.track, key: tpl.key } });
-      if (logErr && !String(logErr.code).includes('23505')) throw new Error('log:' + logErr.message);
-      await advance(); sent++;
-      const k = l.track + '/step' + l.step + ':' + tpl.key; byStep[k] = (byStep[k] ?? 0) + 1;
-    } catch (e) {
-      errors++;
-      await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'error', detail: { track: l.track, error: String(e).slice(0, 400) } });
-      // STROP POKUSU: kolikrat uz tenhle lead na tomhle kroku a tracku selhal (vc. teto chyby).
-      // Po MAX_TRIES ho odstavime na status='paused' + next_send_at=null. 'paused' je v CHECK
-      // constraintu leads_status_check povoleny a enroll_* funkce ho spravne neseberou
-      // (hledaji status='active'). Bez tohohle se lead s mrtvou adresou toci navzdy
-      // a trvale vyrabi errory, ktere shodi jistic vsem ostatnim.
-      const { count: failCount } = await admin.from('email_events')
-        .select('id', { count: 'exact', head: true })
-        .eq('lead_id', l.id).eq('step', l.step).eq('type', 'error').eq('detail->>track', l.track);
-      // ⚠️ CLENSKE TRACKY SE NEVZDAVAJI NIKDY (viz CLENSKE_PREFIXY vyse). U follow-upu je
-      // odstaveni spravne, ale tyhle maily dostava clovek, ktery PRAVE ZAPLATIL nebo se
-      // o to prave pokousi. Tise ho odstavit znamena, ze nikdy nedostane pristup, za ktery
-      // zaplatil, a nikdo se to nedozvi. Radeji zkousime dal po 6 h donekonecna.
-      // Bezpecne to je proto, ze jistic onboarding ignoruje (filtr not ilike 'onboarding%'),
-      // takze tyhle opakovane chyby nikomu jinemu branu neshodi.
-      // Aby to nebylo tiche, po MAX_TRIES se JEDNOU zaloguje 'gave_up_warn' a denni digest
-      // z toho udela alert. Retry ale bezi dal.
-      const jeClensky = CLENSKE_PREFIXY.some((p) => String(l.track || '').startsWith(p));
-      if (jeClensky && (failCount ?? 0) >= MAX_TRIES) {
-        if ((failCount ?? 0) === MAX_TRIES) {
-          await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up_warn', detail: { track: l.track, tries: failCount ?? 0 } });
-        }
-        const retry = new Date(Date.now() + 6 * 3600000).toISOString();
-        await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
-      } else if ((failCount ?? 0) >= MAX_TRIES) {
-        await admin.from('leads').update({ status: 'paused', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
-        await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up', detail: { track: l.track, tries: failCount ?? 0 } });
-        gaveUp++;
-      } else {
-        const retry = new Date(Date.now() + 6 * 3600000).toISOString();
-        await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id);
-      }
-    }
+    const akce = akcePodleZapisu(l); let rescueThenPause = false; let krokSend = l.step; const pauzniNeaktivitu = async (krok: number, key: string, podminka: string) => { await admin.from('leads').update({ status: 'paused', next_send_at: null, step: krok, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: krok, type: 'paused_neaktivita', detail: { track: l.track, key, podminka, stav: stavZapisu(String(l.email)) } }); };
+    if (akce.typ === 'preskoc') { await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_podle_zapisu', detail: { track: l.track, key: tpl.key, podminka: akce.podminka, stav: stavZapisu(String(l.email)) } }); await advance(); skippedZapis++; continue; }
+    if (akce.typ === 'odloz') { const od = cadenceOdIso(l.vars, l.created_at, nowIso); const noveVars = varsSCadenceOd(l.vars, od); const next = new Date(Date.now() + ODLOZ_MS).toISOString(); await admin.from('leads').update({ next_send_at: next, vars: noveVars, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'odklad_neaktivita', detail: { track: l.track, key: tpl.key, podminka: akce.podminka, stav: stavZapisu(String(l.email)), od } }); delayedZapis++; continue; }
+    if (akce.typ === 'pauza') { await pauzniNeaktivitu(l.step, tpl.key, akce.podminka); pausedNeaktivita++; continue; }
+    if (akce.typ === 'rescue_krok') { const rtpl = await getTpl(l.track, akce.step); if (!rtpl) { await pauzniNeaktivitu(l.step, tpl.key, akce.podminka); pausedNeaktivita++; continue; } const { data: alreadyRescue } = await admin.from('email_events').select('id').eq('lead_id', l.id).eq('step', akce.step).eq('type', 'sent').eq('detail->>track', l.track).maybeSingle(); if (alreadyRescue) { await pauzniNeaktivitu(akce.step, rtpl.key, akce.podminka); pausedNeaktivita++; continue; } tpl = rtpl; krokSend = akce.step; rescueThenPause = true; } else if (akce.typ === 'rescue_pauza') rescueThenPause = true;
+    try { const varsZLeada = (l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars)) ? (l.vars as Record<string, unknown>)[String(l.track)] as Record<string, unknown> | undefined : undefined; const v = buildVars(String(l.name ?? ''), seg, SUPABASE_URL + '/functions/v1/unsubscribe?token=' + l.unsubscribe_token, String(l.email), extraVars ?? varsZLeada ?? null, CISLA); const m = renderEmail(tpl, seg, v, footer); const htmlSeStopou = await ostopkuj(m.html, { track: String(l.track), step: krokSend, key: tpl.key, lead_id: String(l.id) }, MAIL_TRACK_SECRET, SUPABASE_URL, !archiveBcc); await pace(); const id = await sendViaResend(l.email, m.subject, htmlSeStopou, m.text, v.unsubscribe_url, replyTo, archiveBcc); const sentDetail = rescueThenPause ? { track: l.track, key: tpl.key, cadence: 'rescue' } : { track: l.track, key: tpl.key }; const { error: logErr } = await admin.from('email_events').insert({ lead_id: l.id, step: krokSend, type: 'sent', provider_id: id, detail: sentDetail }); if (logErr && !String(logErr.code).includes('23505')) throw new Error('log:' + logErr.message); if (rescueThenPause) { const podminkaPauzy = akce.typ === 'rescue_krok' || akce.typ === 'rescue_pauza' ? akce.podminka : 'jen_kdyz_aktivni'; await pauzniNeaktivitu(krokSend, tpl.key, podminkaPauzy); rescuedNeaktivita++; } else await advance(); sent++; const k = l.track + '/step' + krokSend + ':' + tpl.key; byStep[k] = (byStep[k] ?? 0) + 1; } catch (e) { errors++; await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'error', detail: { track: l.track, error: String(e).slice(0, 400) } }); const { count: failCount } = await admin.from('email_events').select('id', { count: 'exact', head: true }).eq('lead_id', l.id).eq('step', l.step).eq('type', 'error').eq('detail->>track', l.track); const jeClensky = CLENSKE_PREFIXY.some((p) => String(l.track || '').startsWith(p)); if (jeClensky && (failCount ?? 0) >= MAX_TRIES) { if ((failCount ?? 0) === MAX_TRIES) await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up_warn', detail: { track: l.track, tries: failCount ?? 0 } }); const retry = new Date(Date.now() + 6 * 3600000).toISOString(); await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id); } else if ((failCount ?? 0) >= MAX_TRIES) { await admin.from('leads').update({ status: 'paused', next_send_at: null, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'gave_up', detail: { track: l.track, tries: failCount ?? 0 } }); gaveUp++; } else { const retry = new Date(Date.now() + 6 * 3600000).toISOString(); await admin.from('leads').update({ next_send_at: retry, updated_at: nowIso }).eq('id', l.id); } }
   }
-  return json({ ok: true, mode: 'live', stopa: stopaStav, followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, skipped_zapis: skippedZapis, zapis_signal: aktivaceStav, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), by_step: byStep });
+  return json({ ok: true, mode: 'live', stopa: stopaStav, followups_enabled: followupsEnabled, due: leads.length, sent, daily_cap: DAILY_CAP, send_gap_ms: SEND_GAP_MS, max_tries: MAX_TRIES, pools: poolInfo, sent_today_before: sentToday ?? 0, remaining_today: remaining, capped, time_up: timeUp, skipped_already: skippedAlready, stopped_bought: stopped, skipped_owns: skippedOwns, skipped_zapis: skippedZapis, delayed_zapis: delayedZapis, paused_neaktivita: pausedNeaktivita, rescued_neaktivita: rescuedNeaktivita, zapis_signal: aktivaceStav, finished, errors, gave_up: gaveUp, bridged, by_bridge: byBridge, mosty: Object.keys(MOSTY), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), okno_neaktivity_dni: OKNO_NEAKTIVITY_DNI, by_step: byStep });
 });

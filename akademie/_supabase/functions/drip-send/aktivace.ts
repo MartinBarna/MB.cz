@@ -1,103 +1,32 @@
-// VETVENI MAILU PODLE TOHO, JESTLI CLOVEK UZ ZAPSAL JIDLO V APPCE (pripraveno 25. 8. 2026).
-//
-// PROC TO VZNIKLO: 16 z 29 skutecnych zkusebek nezapsalo ANI JEDEN den (mereno 20. 8. 2026,
-// pamet `tvujcoach-hodnota-bez-checkinu`). Uzke hrdlo je AKTIVACE, ne cena. Aktivacni serie
-// proto potrebuje vedet, jestli uz clovek zapsal, a podle toho mail bud poslat, nebo vynechat.
-//
-// ⛔⛔ NENI TO JEN „EXIT PO PRVNIM ZAPISU". Zadani znelo „utni serii, kdyz clovek zapise",
-//    ale pri cteni ZIVYCH sablon (25. 8. 2026) vyslo najevo, ze podminka je OBOUSMERNA:
-//      - `tc-zkusebka/0` (tcz-0-den1) rika „Dneska zapis, co jis" -> je to nutkani a tomu,
-//        kdo uz zapsal, nema co delat;
-//      - `tc-zkusebka/1` (tcz-1-den3) ZACINA vetou „par dni zapisu za tebou, to zvladne min
-//        lidi, nez by sis myslel, tak dobra prace". To je TVRZENI O CLOVEKU, a u 16 z 29 lidi
-//        je NEPRAVDIVE. Jednosmerny „exit" by tuhle vadu nechal na miste.
-//    Proto se tu neresi „stop trate", ale „posli tenhle krok jen tomu, na koho sedi".
-//
-// ⛔ CO TENHLE SOUBOR ZAMERNE NEDELA: neutina celou trat. `tc-zkusebka` kroky 1 az 3 prodavaji
-//    BASIC, tedy hlavni prodavany plan (CLAUDE.md). Utnout je prave tomu, kdo appku zacal
-//    pouzivat, by zabilo prodej presne u nejnadejnejsi skupiny. Vynechava se JEDEN krok
-//    a trat bezi dal, uplne stejne jako v `preskoc.ts` (a stejnym mechanismem `advance()`,
-//    takze most na konci trate zustava funkcni).
-//
-// ⚠️ ZAMERNE NATVRDO V KODU, ne v `app_config`: stejne jako u `preskoc.ts` je to TVRZENI
-//    O OBSAHU konkretni sablony, ne provozni nastaveni. Kdo prepise sablonu, musi prepsat
-//    i tenhle radek, a v kodu to aspon vidi.
-//
-// Vlastni soubor kvuli testovatelnosti: `index.ts` vola `Deno.serve()` hned pri importu.
-// Testy: `aktivace.test.ts` (bez site, bez disku, bez env).
 
-/**
- * Co o cloveku vime. `nevime` je PLNOHODNOTNY stav, ne chyba: signal jde pres sit
- * do druheho Supabase projektu a ten vypadek nesmi nikoho pripravit o mail.
- */
+
 export type StavZapisu = 'zapsal' | 'nezapsal' | 'nevime';
-
-/**
- * Podminka kroku:
- *  - `jen_kdyz_nezapsal` = mail nutka k prvnimu zapisu -> komu uz zapsal, se PRESKOCI
- *  - `jen_kdyz_zapsal`   = mail TVRDI, ze clovek zapisuje -> kdo nezapsal, se PRESKOCI
- */
-export type Podminka = 'jen_kdyz_nezapsal' | 'jen_kdyz_zapsal';
-
-/**
- * Klic je `track/step`, hodnota je podminka toho konkretniho mailu.
- *
- * ⛔⛔ SCHVALNE PRAZDNA. Vyplnit ji znamena zmenit, co dostane ZIVY clovek, a to je
- *    obsahove rozhodnuti pod Martinovym jmenem, ne technicke. Dokud je mapa prazdna,
- *    cely mechanismus je vypnuty: `index.ts` nepusti ani jeden dotaz do appky
- *    a chova se presne jako dnes. Zapnuti = pridat radek + nasadit.
- *
- * KANDIDATI ZMERENI 25. 8. 2026 na zivych sablonach (`email_templates`), k rozhodnuti:
- *   'tc-zkusebka/0': 'jen_kdyz_nezapsal',
- *      tcz-0-den1 „Prvni den v appce: zacni jednim zapisem". Cely mail je nutkani.
- *      ⚠️ Chodi hned po registraci (`next_send_at = now()`), takze v praxi zabere jen
- *      u toho, kdo zapsal drive, nez ho vzal hodinovy cron. Zisk je maly.
- *   'tc-zkusebka/1': 'jen_kdyz_zapsal',
- *      tcz-1-den3 „par dni zapisu za tebou (...) dobra prace". ⛔ NEZAPINAT DRIV, nez
- *      pro nezapisujici vznikne NAHRADNI mail, jinak jim v serii vznikne dira (dostanou
- *      krok 0 a pak az krok 2). To uz je copy prace, ne mechanika.
- *   'tc-zkusebka/2': 'jen_kdyz_zapsal'?
- *      tcz-2-den7 „mas za sebou tyden a ceka te prvni tydenni check-in". Tvrzeni je
- *      mensi (o case, ne o vykonu) a mail je nositelem prodejniho argumentu pro Basic
- *      (prepocet cilu). Podle CLAUDE.md se NABIDKA nezahazuje -> spis PREPSAT nez vetvit.
- *   ⛔ `tc-zkusebka/3` (trenink) je neutralni, sedi na oba stavy. Nevetvit.
- *   ⛔ `tc-aktivace/0` sem NEPATRI: posila se vetvi `oneoff_email` z `app-onboarding-hook`
- *      v okamziku registrace, tedy driv, nez mohl kdokoli zapsat. Vetev `oneoff` navic
- *      touhle rozhodovaci smyckou vubec neprochazi.
- */
-export const KROK_PODLE_ZAPISU: Record<string, Podminka> = {};
-
-/**
- * Ktere trate maji aspon jeden vetveny krok. `index.ts` se podle toho pta appky JEN
- * na lidi, kterych se to tyka; nikoho jineho adresu ven neposila.
- * Prazdna mnozina = mechanismus vypnuty (zadne volani po siti).
- */
-export function trateSeSignalem(mapa: Record<string, Podminka> = KROK_PODLE_ZAPISU): Set<string> {
-  const out = new Set<string>();
-  for (const klic of Object.keys(mapa)) {
-    const i = klic.lastIndexOf('/');
-    if (i > 0) out.add(klic.slice(0, i));
-  }
-  return out;
-}
-
-/**
- * Vraci podminku, kvuli ktere se ma krok PRESKOCIT, nebo null (= posli normalne).
- *
- * ⛔ FAIL-SAFE JE ODESLAT, stejne jako vsude jinde v teto funkci. `nevime` (vypadek site,
- *    chybejici secret, timeout) proto vraci VZDY null. Opacna volba by pri vypadku appky
- *    tise zadrzela maily celych trati a nikdo by si toho nevsiml, protoze zadrzeny mail
- *    nikde nekrici. Radsi jeden mail navic nez ticho.
- */
-export function maPreskocitPodleZapisu(
-  track: string,
-  step: number,
-  stav: StavZapisu,
-  mapa: Record<string, Podminka> = KROK_PODLE_ZAPISU,
-): Podminka | null {
-  const podminka = mapa[String(track ?? '') + '/' + step];
-  if (!podminka) return null;
-  if (stav === 'nevime') return null;
-  if (podminka === 'jen_kdyz_nezapsal') return stav === 'zapsal' ? podminka : null;
-  return stav === 'nezapsal' ? podminka : null;
-}
+export type Podminka = 'jen_kdyz_nezapsal' | 'jen_kdyz_zapsal' | 'jen_kdyz_aktivni';
+export type AkceZapisu =
+  | { typ: 'posli' }
+  | { typ: 'preskoc'; podminka: Podminka }
+  | { typ: 'odloz'; podminka: Podminka }
+  | { typ: 'pauza'; podminka: Podminka }
+  | { typ: 'rescue_pauza'; podminka: Podminka }
+  | { typ: 'rescue_krok'; podminka: Podminka; step: number };
+export const OKNO_NEAKTIVITY_DNI = 7;
+export const ODLOZ_MS = 86400000;
+export const CADENCE_CREATED_MAX_DNI = 21;
+export const FREE_TC_TRATE: readonly string[] = ['tc-zkusebka', 'tc-free', 'tc-magnet', 'tc-start', 'tc-foods'];
+const LONGTAIL_PREFIXY: readonly string[] = ['longtail-', 'evergreen-'];
+export const KROK_PODLE_ZAPISU: Record<string, Podminka> = {
+  'tc-zkusebka/0': 'jen_kdyz_nezapsal','tc-zkusebka/1': 'jen_kdyz_zapsal','tc-zkusebka/2': 'jen_kdyz_aktivni',
+  'tc-free/2': 'jen_kdyz_aktivni','tc-free/3': 'jen_kdyz_aktivni','tc-free/4': 'jen_kdyz_aktivni','tc-free/5': 'jen_kdyz_aktivni','tc-free/6': 'jen_kdyz_aktivni','tc-free/7': 'jen_kdyz_aktivni','tc-free/8': 'jen_kdyz_aktivni','tc-free/9': 'jen_kdyz_aktivni','tc-free/10': 'jen_kdyz_aktivni','tc-free/11': 'jen_kdyz_aktivni','tc-magnet/2': 'jen_kdyz_aktivni','tc-magnet/3': 'jen_kdyz_aktivni','tc-magnet/4': 'jen_kdyz_aktivni','tc-magnet/5': 'jen_kdyz_aktivni','tc-start/1': 'jen_kdyz_aktivni',
+};
+export const RESCUE_KROK: Record<string, number> = { 'tc-zkusebka': 3 };
+export function trateSeSignalem(mapa: Record<string, Podminka> = KROK_PODLE_ZAPISU): Set<string> { const out = new Set<string>(); for (const klic of Object.keys(mapa)) { const i = klic.lastIndexOf('/'); if (i > 0) out.add(klic.slice(0, i)); } return out; }
+export function trateProAppSignal(mapa: Record<string, Podminka> = KROK_PODLE_ZAPISU): Set<string> { const out = trateSeSignalem(mapa); if (out.size === 0) return out; for (const t of FREE_TC_TRATE) out.add(t); return out; }
+export function klicKroku(track: string, step: number): string { return String(track ?? '') + '/' + step; }
+export function nactiAktivniZOdpovedi(telo: unknown): Set<string> | null { if (!telo || typeof telo !== 'object') return null; const t = telo as Record<string, unknown>; if (!Array.isArray(t.zapsali)) return null; const out = new Set<string>(); const pridej = (arr: unknown) => { if (!Array.isArray(arr)) return; for (const e of arr) { const s = String(e ?? '').trim().toLowerCase(); if (s.includes('@')) out.add(s); } }; pridej(t.zapsali); pridej(t.vazili); pridej(t.aktivni); return out; }
+export function cadenceOdIso(vars: unknown, createdAt: unknown, tedIso: string): string { const stare = (vars && typeof vars === 'object' && !Array.isArray(vars)) ? vars as Record<string, unknown> : null; const c = stare && stare._cadence && typeof stare._cadence === 'object' && !Array.isArray(stare._cadence) ? stare._cadence as Record<string, unknown> : null; if (c && typeof c.od === 'string' && Number.isFinite(Date.parse(c.od))) return c.od; const created = typeof createdAt === 'string' ? createdAt : (createdAt instanceof Date ? createdAt.toISOString() : ''); if (created && Number.isFinite(Date.parse(created)) && Number.isFinite(Date.parse(tedIso))) { const dni = (Date.parse(tedIso) - Date.parse(created)) / 86400000; if (dni >= 0 && dni <= CADENCE_CREATED_MAX_DNI) return created; } return tedIso; }
+export function oknoUplynulo(odIso: string, tedMs: number, oknoDni: number = OKNO_NEAKTIVITY_DNI): boolean { const t = Date.parse(odIso); if (!Number.isFinite(t) || !Number.isFinite(tedMs) || oknoDni < 0) return false; return (tedMs - t) >= oknoDni * 86400000; }
+export function varsSCadenceOd(vars: unknown, odIso: string): Record<string, unknown> { const stare = (vars && typeof vars === 'object' && !Array.isArray(vars)) ? { ...(vars as Record<string, unknown>) } : {}; const prev = (stare._cadence && typeof stare._cadence === 'object' && !Array.isArray(stare._cadence)) ? { ...(stare._cadence as Record<string, unknown>) } : {}; if (typeof prev.od === 'string' && Number.isFinite(Date.parse(prev.od))) return stare; stare._cadence = { ...prev, od: odIso }; return stare; }
+export function mostBlokujeNeaktivitu(zdrojTrack: string, cilTrack: string, stav: StavZapisu): boolean { if (stav !== 'nezapsal') return false; const z = String(zdrojTrack || ''); const c = String(cilTrack || ''); if (!FREE_TC_TRATE.some((t) => t === z)) return false; return LONGTAIL_PREFIXY.some((p) => c.indexOf(p) === 0); }
+export interface RozhodniCtx { oknoUplynulo?: boolean; rescueKrok?: Record<string, number>; }
+export function rozhodniPodleZapisu(track: string, step: number, stav: StavZapisu, mapa: Record<string, Podminka> = KROK_PODLE_ZAPISU, ctx: RozhodniCtx = {}): AkceZapisu { const podminka = mapa[klicKroku(track, step)]; if (!podminka) return { typ: 'posli' }; if (stav === 'nevime') return { typ: 'posli' }; if (podminka === 'jen_kdyz_nezapsal') return stav === 'zapsal' ? { typ: 'preskoc', podminka } : { typ: 'posli' }; if (stav === 'zapsal') return { typ: 'posli' }; if (!ctx.oknoUplynulo) return { typ: 'odloz', podminka }; if (podminka === 'jen_kdyz_zapsal') { const rescue = (ctx.rescueKrok ?? RESCUE_KROK)[String(track ?? '')]; if (typeof rescue === 'number' && rescue !== step) return { typ: 'rescue_krok', podminka, step: rescue }; if (typeof rescue === 'number' && rescue === step) return { typ: 'rescue_pauza', podminka }; return { typ: 'pauza', podminka }; } return { typ: 'rescue_pauza', podminka }; }
+export function maPreskocitPodleZapisu(track: string, step: number, stav: StavZapisu, mapa: Record<string, Podminka> = KROK_PODLE_ZAPISU, ctx: RozhodniCtx = {}): Podminka | null { const akce = rozhodniPodleZapisu(track, step, stav, mapa, ctx); if (akce.typ === 'posli') return null; return mapa[klicKroku(track, step)] ?? null; }
