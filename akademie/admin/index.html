@@ -1632,7 +1632,29 @@
       var list = (reps || []).slice();
       var base = kdIntakeBod(intake);
       if(!base) return list;
-      for(var i=0;i<list.length;i++){ if(String(list[i].report_date).slice(0,10)===base.report_date) return list; }
+      for(var i=0;i<list.length;i++){
+        if(String(list[i].report_date).slice(0,10)!==base.report_date) continue;
+        // Report ze stejného dne vyhrává, ALE co v něm chybí, doplní dotazník. Dřív se zahodil
+        // celý bod a s ním i míry, které report neměl (nález revize 14. 9. 2026).
+        // ⛔ Kopie řádku, ne zápis do něj: `reps` je KDET.data.reports, sdílený se zbytkem karty.
+        var r=list[i], mm=r.measurements||{}, bm=base.measurements||{};
+        var dW = (kliNum(r.weight)==null && base.weight!=null);
+        var dP = (kliNum(mm.pas)==null && bm.pas!=null);
+        var dB = (kliNum(mm.boky)==null && bm.boky!=null);
+        var dR = (kliNum(mm.prsa)==null && bm.prsa!=null);
+        if(dW||dP||dB||dR){
+          var kopie={}, kl;
+          for(kl in r){ if(Object.prototype.hasOwnProperty.call(r,kl)) kopie[kl]=r[kl]; }
+          var km={}; for(kl in mm){ if(Object.prototype.hasOwnProperty.call(mm,kl)) km[kl]=mm[kl]; }
+          if(dW) kopie.weight=base.weight;
+          if(dP) km.pas=bm.pas;
+          if(dB) km.boky=bm.boky;
+          if(dR) km.prsa=bm.prsa;
+          kopie.measurements=km;
+          list[i]=kopie;
+        }
+        return list;
+      }
       list.push(base);
       list.sort(function(a,b){ return String(a.report_date).localeCompare(String(b.report_date)); });
       return list;
@@ -1645,7 +1667,9 @@
       reps.forEach(function(r){
         var t=Date.parse(r.report_date); if(isNaN(t)||t<hranice) return;
         var v=m.get(r); if(v==null) return;
-        out.push({t:t, v:v, datum:r.report_date});
+        // `src` nese původ bodu: dlaždice podle něj pozná, že poslední hodnota je z dotazníku
+        // (odhad klienta), ne z reportu (změřeno), a nesmí se vydávat za aktuální stav.
+        out.push({t:t, v:v, datum:r.report_date, src:(r.source||'')});
       });
       out.sort(function(a,b){ return a.t-b.t; });
       return out;
@@ -1695,8 +1719,17 @@
       var prumerovat=(m.id==='kcal'||m.id==='protein'||m.id==='kroky'||m.id==='dodrz');
       var prum=function(a){ var s=0; a.forEach(function(p){ s+=p.v; }); return s/a.length; };
       var hodnota, popis;
+      // ⛔ 14. 9. 2026, nález revize: „aktuální" hodnota musí být z REPORTU, ne z dotazníku.
+      // Kdo pošle report a AŽ POTOM vyplní dotazník (nebo ho vyplní podruhé), měl by jinak
+      // v dlaždici svůj vlastní odhad jako poslední naměřenou hodnotu a změna by otočila
+      // znaménko: klient by „přibral" kilo, přestože podle reportů půl kila zhubl.
+      // Klientská sekce to řeší stejně (bere poslední report, ne poslední bod sloučené řady).
+      var posl=null;
+      for(var pi=b.length-1; pi>=0; pi--){ if(b[pi].src!=='intake-baseline'){ posl=b[pi]; break; } }
+      var jenDotaznik = (posl===null);
+      if(jenDotaznik) posl=b[b.length-1];   // klient zatím poslal jen dotazník: ukaž aspoň to
       if(prumerovat){ hodnota=Math.round(prum(b)); popis='Ø z '+b.length+(b.length===1?' reportu':' reportů'); }
-      else { hodnota=b[b.length-1].v; popis=fmtDay(b[b.length-1].datum); }
+      else { hodnota=posl.v; popis=fmtDay(posl.datum)+(jenDotaznik?' (dotazník)':''); }
       // ⚠️ U průměrovaných metrik se NESMÍ brát rozdíl krajních reportů: jeden slabý
       // týden na začátku nebo na konci by udělal „−12 000 kroků", i když se nic nezměnilo.
       // Porovnává se proto průměr druhé poloviny období proti první, a jen když je
@@ -1704,7 +1737,7 @@
       var zmena=null, zmenaPopis='';
       if(prumerovat){
         if(b.length>=4){ var pul=Math.floor(b.length/2); zmena=prum(b.slice(b.length-pul))-prum(b.slice(0,pul)); zmenaPopis=' vs dřív'; }
-      } else if(b.length>1){ zmena=b[b.length-1].v-b[0].v; }
+      } else if(b.length>1 && posl!==b[0]){ zmena=posl.v-b[0].v; }
       var zt='';
       if(zmena!=null && Math.abs(zmena)>(prumerovat?0.5:0.001)){
         var dobre = m.dolu ? (zmena<0) : (zmena>0);
@@ -1727,9 +1760,13 @@
       // ⭐ Řada pro grafy i dlaždice = reporty PLUS startovní bod z dotazníku.
       var rada = kdSlouceno(reps, intake);
       if(rada.length<2) return '';   // z jednoho bodu se trend udělat nedá
-      var zDotazniku = rada.length > (reps||[]).length;
+      // Popisek jen tehdy, když dotazník řadu OPRAVDU otevírá. Když ho klient vyplnil až po
+      // prvním reportu, leží uprostřed a „start" by lhal proti datu vedle něj.
+      var zDotazniku = rada.length && rada[0].source==='intake-baseline';
+      var pocetR = (reps||[]).length;
+      var slovoR = pocetR===1 ? ' report' : (pocetR<5 ? ' reporty' : ' reportů');
       var oknaTxt={30:'30 dní',90:'90 dní',0:'celá historie'};
-      var h='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📈 Vývoj <span class="muted" style="text-transform:none;font-weight:400;">('+(reps||[]).length+' reportů, '+esc(fmtDay(rada[0].report_date))+' až '+esc(fmtDay(rada[rada.length-1].report_date))+(zDotazniku?', start ze vstupního dotazníku':'')+')</span></h4>'
+      var h='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📈 Vývoj <span class="muted" style="text-transform:none;font-weight:400;">('+pocetR+slovoR+', '+esc(fmtDay(rada[0].report_date))+' až '+esc(fmtDay(rada[rada.length-1].report_date))+(zDotazniku?', start ze vstupního dotazníku':'')+')</span></h4>'
         +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;">'
         +'<div style="margin-bottom:10px;">'+[30,90,0].map(function(o){
             return '<button type="button" class="kdrod kdvokno'+(KDV.okno===o?' on':'')+'" data-okno="'+o+'">'+oknaTxt[o]+'</button>';
