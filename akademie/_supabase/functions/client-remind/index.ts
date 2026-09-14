@@ -17,6 +17,7 @@
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+import { emailySeznam } from "../_shared/mail-seznam.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -191,13 +192,15 @@ Deno.serve(async (req: Request) => {
   // ⛔ Chyba čtení = 500: bez opt-outu by mail přišel i tomu, kdo si ho vypnul.
   const opt = await ctiSOpakovanim<{ data: Radek; error: unknown }>(() => admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle());
   if (opt.error) return json(chybaCteni("app_config.client_remind_optout", opt.error), 500);
-  const optout = new Set(String(opt.data?.value ?? "").split(/[\s,;]+/).map((s) => low(s)).filter(Boolean));
+  // ⛔ Parsování přes `emailySeznam`, ne prostý split: `"a@x.cz"` s uvozovkami nebo
+  // `Jméno <a@x.cz>` se dřív neshodly a člověk, který si připomínky VYPNUL, by je dostával dál.
+  const optout = emailySeznam(opt.data?.value);
 
   // per-klient dvoutýdenní kadence (CSV e-mailů). ⛔ Chyba čtení = 500: kdyby se seznam
   // nepřečetl, klient s dvoutýdenní kadencí by dostal mail každý týden a nikdo by to nepoznal.
   const kad = await ctiSOpakovanim<{ data: Radek; error: unknown }>(() => admin.from("app_config").select("value").eq("key", "client_remind_14d").maybeSingle());
   if (kad.error) return json(chybaCteni("app_config.client_remind_14d", kad.error), 500);
-  const kazdych14 = new Set(String(kad.data?.value ?? "").split(/[\s,;]+/).map((s) => low(s)).filter(Boolean));
+  const kazdych14 = emailySeznam(kad.data?.value);
 
   // kdo výzvu dostal v posledních dnech (opakovací běhy cronu, ruční doposlání): nedostane znovu
   const uzCutoff = new Date(Date.now() - Math.max(UZ_DOSTAL_DNI, UZ_DOSTAL_DNI_14D) * 86400000).toISOString();
