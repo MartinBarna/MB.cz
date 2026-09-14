@@ -2170,6 +2170,11 @@ Deno.serve(async (req) => {
       // Jen kvuli typum castecnych vysledku (catch vraci data: null ve stejnem tvaru jako then).
       const reps_typ = null as { email: string; report_date: string }[] | null;
       const cc_typ = null as { email: string; name: string | null }[] | null;
+      // ⛔ Pad Auth API nesmi zhasnout celou tabulku klientu (Grok revize R2): sloupec Ucet dostane "?",
+      //    zbytek radku z naroku dojde. `overview` si throw nechava, tam jsou ucty v dlazdici i v brane.
+      const usersSafe = listAllUsers(admin)
+        .then((u) => ({ users: u, error: null as unknown }))
+        .catch((e: unknown) => ({ users: [] as Awaited<ReturnType<typeof listAllUsers>>, error: e }));
       const [ents, reps, intakes, users, cc, tgs] = await Promise.all([
         // ⛔ OPRAVA 27. 7. 2026: sloupec se jmenuje `granted_at`, ne `created_at`.
         // Kvůli tomu tenhle select vracel chybu, `ents.data` bylo null, seznam vyšel prázdný
@@ -2189,16 +2194,17 @@ Deno.serve(async (req) => {
         // `created_at` kvůli frontě „dotazníky ke zpracování" v UI. Klient může poslat
         // dotazník víckrát, bereme ten nejnovější (viz `intakeAt` níž).
         admin.from("client_intake").select("email,created_at"),
-        listAllUsers(admin),
+        usersSafe,
         fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name").order("email").range(f, t))
           .then((data) => ({ data, error: null as unknown }))
           .catch((e: unknown) => ({ data: null as typeof cc_typ, error: e })),
         admin.from("client_targets").select("email,updated_at"),
       ]);
       const repsUnknown = reps.error != null;
+      const usersUnknown = users.error != null;
       const nameBy = new Map<string, string>();
       for (const c of cc.data ?? []) if (c.name) nameBy.set(low(c.email), String(c.name));
-      const regSet = new Set(users.map((u: { email?: string }) => low(u.email)));
+      const regSet = new Set(users.users.map((u: { email?: string }) => low(u.email)));
       const repBy = new Map<string, { last: string; count: number }>();
       for (const r of reps.data ?? []) {
         const k = low(r.email); const cur = repBy.get(k);
@@ -2225,7 +2231,7 @@ Deno.serve(async (req) => {
       // roztřídit je do dvou tabulek je věc UI, ne dat.
       const rows = (ents.data ?? []).map((e) => {
         const k = low(e.email); const rep = repBy.get(k);
-        return { email: k, name: nameBy.get(k) ?? "", active: e.active === true, registered: regSet.has(k), since: e.granted_at,
+        return { email: k, name: nameBy.get(k) ?? "", active: e.active === true, registered: usersUnknown ? null : regSet.has(k), since: e.granted_at,
           // `plan` je null u nikoho, kdo prisel po migraci `koucink-stripe.sql` (ta dopsala
           // vsem stavajicim `gold`). Null se proto cte jako "nevime", ne jako Gold.
           plan: e.plan ?? null, months: e.months ?? null, expires_at: e.expires_at ?? null,
@@ -2270,7 +2276,7 @@ Deno.serve(async (req) => {
           }
         } catch { /* seznam klientů musí dojít i bez appky */ }
       }
-      return json({ ok: true, rows, reports_incomplete: repsUnknown, names_incomplete: cc.error != null });
+      return json({ ok: true, rows, reports_incomplete: repsUnknown, names_incomplete: cc.error != null, registered_incomplete: usersUnknown });
     }
 
     // [14. 9. 2026] Stav appky Tvuj Coach zvlast od seznamu koucinku: tyz kanal (academy-grant,

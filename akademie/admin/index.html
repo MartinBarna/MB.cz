@@ -1416,7 +1416,7 @@
           var warn=(!jeByvaly&&!repsUnknown&&(days==null||days>8))?' <b style="color:#F6CD63">⚠️</b>':'';
           return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
             +'<td>'+esc(r.name||'–')+'</td>'
-            +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
+            +'<td>'+(r.registered==null?'<span class="muted" title="Účty se teď nenačetly">?</span>':(r.registered?'✅':'<span class="muted">čeká na registraci</span>'))+'</td>'
             +'<td>'+(r.has_intake?'✅':'<span class="muted">–</span>')+'</td>'
             +'<td data-app="'+esc(r.email)+'">'+kliApp(r.app)+'</td>'
             +'<td>'+kliBalicek(r)+'</td>'
@@ -1436,14 +1436,20 @@
         // se starym dotaznikem sem nespadne.
         // Porovnani je retezcove. Funguje, protoze obe hodnoty vraci PostgREST jako ISO
         // 8601 v UTC (timestamptz); u timestamp bez zony by tise lhalo.
-        var fronta=rows.filter(function(r){
+        // ⛔ Při neznámých reportech se fronta NEUKAZUJE: `null > 0` je false, takže by do ní spadl
+        //    i klient, kterého už máš hotového (Grok revize R2). Radši nic než seznam, který lže.
+        var fronta=repsUnknown ? [] : rows.filter(function(r){
           if(!r.intake_at) return false;
           if(r.reports>0) return false;
           return !r.targets_at || String(r.targets_at) < String(r.intake_at);
         });
         var html='';
-        if(repsUnknown){
-          html+='<p style="margin:0 0 .6rem;font-size:.88rem;color:#F6CD63;">⚠️ Reporty se teď nenačetly, počty a datum posledního reportu neplatí. Obnov stránku.</p>';
+        var nedoslo=[];
+        if(repsUnknown) nedoslo.push('reporty (počty, datum posledního i fronta dotazníků)');
+        if(o.j.registered_incomplete) nedoslo.push('účty (sloupec Účet)');
+        if(o.j.names_incomplete) nedoslo.push('jména');
+        if(nedoslo.length){
+          html+='<p style="margin:0 0 .6rem;font-size:.88rem;color:#F6CD63;">⚠️ Nenačetlo se: '+nedoslo.join(', ')+'. Co je označené „?", teď neplatí. Obnov stránku.</p>';
         }
         if(fronta.length){
           html+='<div style="background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.4);border-radius:10px;padding:12px;margin-bottom:1rem;">'
@@ -1466,6 +1472,8 @@
             + '<div style="overflow-x:auto;opacity:.72;"><table>'+HLAVICKA+'<tbody>'+byvali.map(function(r){return radek(r,true);}).join('')+'</tbody></table></div>'
             + '</details>';
         }
+        // Starší volání už tabulku nepřepíše (Grok revize R2): novější `loadKlienti` zvedl `kliGen`.
+        if(gen!==kliGen) return;
         $('kliBody').innerHTML = '<div id="kliFronta"></div>' + html;
         loadFronta();
         $('kliBody').querySelectorAll('[data-kli]').forEach(function(a){
@@ -1478,7 +1486,11 @@
         if(emaily.length){
           api({action:'clients_app_status',emails:emaily}).then(function(s){
             if(gen!==kliGen) return;
-            if(!s.j||!s.j.ok) return;
+            if(!s.j||!s.j.ok){
+              // Sloupec Appka zůstane „?". Bez věty by to vypadalo, že se stav načítá donekonečna.
+              var hl=$('kliBody'); if(hl) hl.insertAdjacentHTML('afterbegin','<p style="margin:0 0 .6rem;font-size:.88rem;color:#F6CD63;">⚠️ Stav appky se teď nenačetl, sloupec Appka zůstává „?".</p>');
+              return;
+            }
             var stav={};
             (s.j.rows||[]).forEach(function(x){ if(x&&x.email) stav[String(x.email).toLowerCase()]=x.stav; });
             $('kliBody').querySelectorAll('[data-app]').forEach(function(td){
@@ -1498,8 +1510,13 @@
     function otevriKlientaZHashe(){
       var hMatch=(location.hash||'').match(/klient=([^&]+)/);
       if(!hMatch) return;
-      try{ openKlient(decodeURIComponent(hMatch[1]).trim().toLowerCase()); }catch(e){}
-      history.replaceState(null,'',location.pathname+location.search);
+      // ⛔ Hash se maže AŽ když karta opravdu došla (Grok revize R2). Dřív se mazal hned, takže
+      //    refresh během „Načítám admin…", pád načtení i přepnutí účtu odkaz z mailu ztratily
+      //    a nešlo se ke klientovi vrátit jinak než hledáním v tabulce.
+      try{
+        var pr=openKlient(decodeURIComponent(hMatch[1]).trim().toLowerCase());
+        if(pr&&pr.then) pr.then(function(ok){ if(ok) history.replaceState(null,'',location.pathname+location.search); });
+      }catch(e){}
     }
     function loadSharedDocs(){
       // ⛔ OPRAVA 8. 8. 2026: řetěz neměl .catch() ani větev pro neúspěšnou odpověď, takže
@@ -1565,15 +1582,18 @@
     function openKlient(email,name){
       KDET.email=email; KDET.name=name||''; KDET.data=null;
       $('kdet').classList.add('on'); $('kdetBody').innerHTML='<p class="muted">Načítám…</p>';
-      api({action:'client_detail',email:email}).then(function(o){
-        if(!o.j||!o.j.ok){ $('kdetBody').innerHTML='<p class="muted">Nepovedlo se načíst detail.</p>'; return; }
+      // Vrací promise: `otevriKlientaZHashe` podle ní pozná, že karta OPRAVDU došla, a teprve pak
+      // smaže `#klient=` z adresy (Grok revize R2). Volání z tabulky návratovou hodnotu ignorují.
+      return api({action:'client_detail',email:email}).then(function(o){
+        if(!o.j||!o.j.ok){ $('kdetBody').innerHTML='<p class="muted">Nepovedlo se načíst detail.</p>'; return false; }
         KDET.data=o.j;
         // Deep link z mailu (#klient=) volá openKlient bez jména. Server ho zná
         // z customer_contacts, tak ho doplníme PŘED vykreslením, ať maily a texty
         // pod kartou (uvítací mail, průvodce, koncept reportu) nejdou ven bez oslovení.
         if(!KDET.name && o.j.name) KDET.name=o.j.name;
         renderKlient();
-      }).catch(function(){ $('kdetBody').innerHTML='<p class="muted">Chyba spojení. Zavři a zkus znovu.</p>'; });
+        return true;
+      }).catch(function(){ $('kdetBody').innerHTML='<p class="muted">Chyba spojení. Zavři a zkus znovu.</p>'; return false; });
     }
     $('kdetX').addEventListener('click',function(){ $('kdet').classList.remove('on'); });
     // ---------- 📈 VÝVOJ KLIENTA (souhrn + graf) ----------
