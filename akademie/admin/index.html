@@ -770,14 +770,24 @@
     function load(){
       // api() si sám obnoví token a jednou zopakuje požadavek, takže 403, které dorazí sem,
       // už je opravdové „tenhle účet není admin", ne vypršelý token.
-      Promise.all([api({action:'stats'}),api({action:'overview'})]).then(function(out){
-        var st=out[0], ov=out[1];
-        if(st.status===401||st.status===403||ov.status===401||ov.status===403){ gateNeniAdmin(); return; }
-        if(!st.j.ok||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
+      // [14. 9. 2026] Jen `overview`: akce `stats` dělala na serveru TUTÉŽ těžkou práci podruhé
+      // (celé kontakty, leady, nároky, 26 tisíc mailových událostí, všechny účty) jen kvůli součtům.
+      // Dlaždice se počítají z řádků overview stejným pravidlem, jaké měl server (Grok audit b1).
+      api({action:'overview'}).then(function(ov){
+        if(ov.status===401||ov.status===403){ gateNeniAdmin(); return; }
+        if(!ov.j||!ov.j.ok){ show('gate'); $('gate').textContent='Nepovedlo se načíst data. Zkus obnovit stránku.'; return; }
         ALL=ov.j.rows||[];
-        // Počet lidí v lead-magnet DB: z backendu (leads_total), jinak spočítej z overview řádků (kdo má lead: zdroj).
-        if(st.j && st.j.leads_total==null){ st.j.leads_total = ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length; }
-        renderStats(st.j); renderRows(); show('app'); otevriKlientaZHashe(); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
+        var st={
+          contacts:ALL.length,
+          leads_total:ALL.filter(function(r){ return (r.sources||[]).some(function(s){ return String(s).indexOf('lead:')===0; }); }).length,
+          academy:ALL.filter(function(r){ return !!r.has_academy; }).length,
+          videokurz:ALL.filter(function(r){ return !!r.has_videokurz; }).length,
+          coaching:ALL.filter(function(r){ return !!r.has_coaching; }).length,
+          coaching_ex:ALL.filter(function(r){ return !r.has_coaching && (r.tags||[]).some(function(t){ return String(t)==='coaching-ex'; }); }).length,
+          registered:ALL.filter(function(r){ return !!r.registered; }).length,
+          sent_total:ALL.reduce(function(n,r){ return n+(r.sent_count||0); },0)
+        };
+        renderStats(st); renderRows(); show('app'); otevriKlientaZHashe(); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
         sekInfo('kontakty',ALL.length+' kontaktů');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
@@ -1356,7 +1366,8 @@
     }
 
     function loadKlienti(){
-      api({action:'clients_list'}).then(function(o){
+      // [14. 9. 2026] `bez_appky`: seznam nečeká na appku (timeout 10 s), stav Appka se dotáhne druhým voláním níž.
+      api({action:'clients_list',bez_appky:true}).then(function(o){
         if(!o.j||!o.j.ok){ cardFail('kli','kliBody'); return; }
         var vsechny=o.j.rows||[], now=Date.now();
         // `clients_list` vraci i UKONCENE klienty (pole `active`). Delime je tady, ne v datech:
@@ -1397,7 +1408,7 @@
             +'<td>'+esc(r.name||'–')+'</td>'
             +'<td>'+(r.registered?'✅':'<span class="muted">čeká na registraci</span>')+'</td>'
             +'<td>'+(r.has_intake?'✅':'<span class="muted">–</span>')+'</td>'
-            +'<td>'+kliApp(r.app)+'</td>'
+            +'<td data-app="'+esc(r.email)+'">'+kliApp(r.app)+'</td>'
             +'<td>'+kliBalicek(r)+'</td>'
             +'<td class="tcount">'+r.reports+'</td>'
             +'<td>'+(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>')+warn+'</td></tr>';
@@ -1449,6 +1460,19 @@
         });
         $('kli').style.display='';
         loadSharedDocs();
+        // Stav appky až DRUHÝM voláním: do té doby sloupec ukazuje „?", ne „nemá" (to by lhalo).
+        var emaily=vsechny.map(function(r){ return r.email; }).filter(Boolean);
+        if(emaily.length){
+          api({action:'clients_app_status',emails:emaily}).then(function(s){
+            if(!s.j||!s.j.ok) return;
+            var stav={};
+            (s.j.rows||[]).forEach(function(x){ if(x&&x.email) stav[String(x.email).toLowerCase()]=x.stav; });
+            $('kliBody').querySelectorAll('[data-app]').forEach(function(td){
+              var st=stav[String(td.getAttribute('data-app')||'').toLowerCase()];
+              if(st) td.innerHTML=kliApp(st);
+            });
+          }).catch(function(){});
+        }
       }).catch(function(){ cardFail('kli','kliBody'); });
     }
     // Deep link z mailu po odeslani reportu: /akademie/admin/#klient=<email> otevre rovnou

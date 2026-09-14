@@ -318,15 +318,32 @@ async function fetchAllRows(pageQuery: (from: number, to: number) => any): Promi
 }
 
 // auth.admin.listUsers je strankovane — jedna stranka (1000) by nad 1000 uctu tise orezavala data
-async function listAllUsers(admin: ReturnType<typeof createClient>) {
-  const users: { id: string; email?: string; last_sign_in_at?: string }[] = [];
-  for (let page = 1; page <= 10; page++) {
-    const { data } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
-    const batch = data?.users ?? [];
-    users.push(...batch as typeof users);
-    if (batch.length < 1000) break;
+type AdminUser = { id: string; email?: string; last_sign_in_at?: string };
+// [14. 9. 2026] Cache na 60 s v ramci isolate + sdileni rozpracovaneho dotazu: start adminu vola
+// listAllUsers ze tri akci naraz (overview, clients_list, progress_overview) a kazda tahala vsechny
+// ucty znovu (Grok audit). Registrace, ktera se stane mezitim, se ukaze pri dalsim nacteni.
+const USERS_CACHE_MS = 60_000;
+let usersCache: { at: number; users: AdminUser[] } | null = null;
+let usersInflight: Promise<AdminUser[]> | null = null;
+async function listAllUsers(admin: ReturnType<typeof createClient>): Promise<AdminUser[]> {
+  if (usersCache && Date.now() - usersCache.at < USERS_CACHE_MS) return usersCache.users;
+  if (usersInflight) return usersInflight;
+  usersInflight = (async () => {
+    const users: AdminUser[] = [];
+    for (let page = 1; page <= 10; page++) {
+      const { data } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+      const batch = data?.users ?? [];
+      users.push(...batch as typeof users);
+      if (batch.length < 1000) break;
+    }
+    usersCache = { at: Date.now(), users };
+    return users;
+  })();
+  try {
+    return await usersInflight;
+  } finally {
+    usersInflight = null;
   }
-  return users;
 }
 
 // =============================================================================
@@ -2029,7 +2046,8 @@ Deno.serve(async (req) => {
       const VK_TOTAL = 182;
       const [ulist2, prg, ents, lcCount] = await Promise.all([
         listAllUsers(admin),
-        admin.from("progress").select("user_id,lesson_id,completed_at").eq("completed", true),
+        // [14. 9. 2026] Strankovane: splnene lekce uz maji stovky radku a strop 1000 by tise orezal progres.
+        fetchAllRows((f, t) => admin.from("progress").select("user_id,lesson_id,completed_at").eq("completed", true).order("user_id").order("lesson_id").range(f, t)).then((data) => ({ data, error: null })),
         admin.from("entitlements").select("email,product").eq("active", true),
         admin.from("lesson_content").select("lesson_id", { count: "exact", head: true }).like("lesson_id", "m%"),
       ]);
@@ -2154,12 +2172,14 @@ Deno.serve(async (req) => {
         // koupit pres Stripe, takze Martin musi na seznamu poznat, KTERY balicek clovek ma,
         // do kdy ma zaplaceno a jestli si to koupil sam, nebo mu to zalozil rucne.
         admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source,academy_po_3m").eq("product", "coaching"),
-        admin.from("client_reports").select("email,report_date"),
+        // [14. 9. 2026] Strankovane: PostgREST vraci max 1000 radku a tydenni reporty ten strop casem
+        // prelezou; bez strankovani by „Reportu" a „Posledni report" tise lhaly (Grok audit).
+        fetchAllRows((f, t) => admin.from("client_reports").select("email,report_date").order("id").range(f, t)).then((data) => ({ data, error: null })),
         // `created_at` kvůli frontě „dotazníky ke zpracování" v UI. Klient může poslat
         // dotazník víckrát, bereme ten nejnovější (viz `intakeAt` níž).
         admin.from("client_intake").select("email,created_at"),
         listAllUsers(admin),
-        admin.from("customer_contacts").select("email,name"),
+        fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name").order("email").range(f, t)).then((data) => ({ data, error: null })),
         admin.from("client_targets").select("email,updated_at"),
       ]);
       const nameBy = new Map<string, string>();
@@ -2209,7 +2229,9 @@ Deno.serve(async (req) => {
       // jedním voláním pro celý seznam.
       // ⚠️ Best-effort: když appka nebo secret nejsou k dispozici, zůstane "?" a seznam
       // klientů se kvůli tomu nesmí rozbít. Prázdno by se tvářilo jako „nikdo nemá appku".
-      if (rows.length) {
+      // [14. 9. 2026] `bez_appky: true` = UI si stav appky dotahne druhym volanim (`clients_app_status`),
+      // seznam koucinku tak neceka na appku (timeout 10 s) a karta z mailu se otevre driv.
+      if (rows.length && body.bez_appky !== true) {
         try {
           const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
           const gsec = gs?.value ? String(gs.value) : "";
@@ -2232,6 +2254,35 @@ Deno.serve(async (req) => {
         } catch { /* seznam klientů musí dojít i bez appky */ }
       }
       return json({ ok: true, rows });
+    }
+
+    // [14. 9. 2026] Stav appky Tvuj Coach zvlast od seznamu koucinku: tyz kanal (academy-grant,
+    // access-status), jen ho UI vola az po vykresleni tabulky. Chyba appky = ok:false, sloupec
+    // zustane „?" (nikdy „nema", to by lhalo).
+    if (action === "clients_app_status") {
+      const emails = Array.isArray(body.emails)
+        ? (body.emails as unknown[]).map((e) => low(e)).filter((e) => e.includes("@")).slice(0, 500)
+        : [];
+      if (!emails.length) return json({ ok: true, rows: [] });
+      const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+      const gsec = gs?.value ? String(gs.value) : "";
+      if (!gsec) return json({ ok: false, error: "no_secret", rows: [] });
+      try {
+        const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
+          body: JSON.stringify({ action: "access-status", emails }),
+          signal: AbortSignal.timeout(10_000),
+        });
+        if (!r.ok) return json({ ok: false, error: "app_" + r.status, rows: [] });
+        const jj = await r.json().catch(() => null);
+        const rows = ((jj?.rows ?? []) as Array<{ email?: string; stav?: string }>)
+          .filter((x) => x?.email)
+          .map((x) => ({ email: low(x.email), stav: String(x.stav ?? "?") }));
+        return json({ ok: true, rows });
+      } catch {
+        return json({ ok: false, error: "app_unreachable", rows: [] });
+      }
     }
 
     if (action === "client_detail") {
@@ -2271,9 +2322,10 @@ Deno.serve(async (req) => {
       const [ents, reps, targets, cc] = await Promise.all([
         // ⚠️ `expires_at` kvůli časovaným nárokům (Stripe): propadlý klient do přehledu nepatří.
         admin.from("entitlements").select("email,active,expires_at").eq("product", "coaching"),
-        admin.from("client_reports").select("email,report_date,weight,measurements,nutrition,activity,scales").order("report_date", { ascending: true }),
+        // [14. 9. 2026] Strankovane (strop 1000 radku PostgREST); razeni report_date + id je deterministicke.
+        fetchAllRows((f, t) => admin.from("client_reports").select("email,report_date,weight,measurements,nutrition,activity,scales").order("report_date", { ascending: true }).order("id").range(f, t)).then((data) => ({ data, error: null })),
         admin.from("client_targets").select("*"),
-        admin.from("customer_contacts").select("email,name"),
+        fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name").order("email").range(f, t)).then((data) => ({ data, error: null })),
       ]);
       // `numeric` chodí z PostgREST jako string; null/undefined/prázdno = chybí, ne nula
       const num = (v: unknown): number | null => {
