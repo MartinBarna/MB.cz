@@ -5,6 +5,8 @@
 // fronta, odstoupeni, affiliate, chyby. Cisla pocita kod, zadne odhady.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { hlidkaCisla } from "./hlidky.ts";
+// 14. 9. 2026: chyba cteni neni odpoved (guard secretu s opakovanim, pri trvale chybe 500 misto 401).
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -17,10 +19,14 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: cfg } = await admin.from("app_config").select("key,value").in("key", ["drip_invoke_secret", "admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v"]);
-  const cmap = Object.fromEntries((cfg ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
-  const provided = req.headers.get("x-drip-secret") || "";
-  if (!cmap.drip_invoke_secret || provided !== cmap.drip_invoke_secret) return json({ error: "unauthorized" }, 401);
+  // Sedi / nesedi 401 / NEPRECTENO 500 (ne 401): secret se cte zvlast s opakovanim.
+  const brana = await overSecret(admin, req, { header: "x-drip-secret", statusOdmitnuti: 401 });
+  if (!brana.ok) return json(brana.body, brana.status);
+  // Zbytek konfigurace taky s opakovanim: prazdna mapa by poslala prehled s fallbacky (adresa, strop).
+  const cfgR = await ctiSOpakovanim<{ data: { key: string; value: string }[] | null; error: unknown }>(() =>
+    admin.from("app_config").select("key,value").in("key", ["admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v"]));
+  if (cfgR.error) return json(chybaCteni("app_config", cfgR.error), 500);
+  const cmap = Object.fromEntries((cfgR.data ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const to = String(cmap.admin_emails || "fitness.barna@gmail.com").split(",")[0].trim();
   // strop fronty z app_config (autotune cron ho zvedne po dojeti backlogu).
   // POZOR: driv tu stalo "Resend limit 100/den je pevny" — to platilo pro free tarif.

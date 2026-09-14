@@ -114,15 +114,22 @@ if (trateSeSignalem({}).size !== 0) {
   console.log('✓ prazdna mapa = zadny dotaz do appky');
 }
 
-// Pojistka proti tichemu zapnuti: ZIVA mapa je dnes prazdna, tedy mechanismus je vypnuty.
-// Az ji nekdo naplni, tenhle test spadne a donuti ho dopsat testy pro konkretni kroky
-// a projit copy tech sablon. Zmena tohohle radku je vedome rozhodnuti, ne uklid.
+// Pojistka proti tichemu vypnuti nebo prepsani: ZIVA mapa ma od nasazeni v75 (zachraneno do gitu
+// 14. 9. 2026) presne tyhle kroky. Kdo ji zmeni, meni chovani aktivacni serie skutecnym lidem,
+// a tenhle test ho donuti to udelat vedome (dopsat pripady a projit copy sablon).
+// Do 14. 9. tu stala opacna pojistka „mapa je prazdna": git byl o 18 kroku za produkci.
+const ZIVE_KLICE_OCEKAVANE = [
+  'tc-free/10', 'tc-free/11', 'tc-free/2', 'tc-free/3', 'tc-free/4', 'tc-free/5', 'tc-free/6', 'tc-free/7', 'tc-free/8', 'tc-free/9',
+  'tc-magnet/2', 'tc-magnet/3', 'tc-magnet/4', 'tc-magnet/5',
+  'tc-start/1',
+  'tc-zkusebka/0', 'tc-zkusebka/1', 'tc-zkusebka/2',
+];
 const ZIVE_KLICE = Object.keys(KROK_PODLE_ZAPISU).sort();
-if (ZIVE_KLICE.length !== 0) {
+if (JSON.stringify(ZIVE_KLICE) !== JSON.stringify(ZIVE_KLICE_OCEKAVANE)) {
   selhalo++;
-  console.error(`✗ KROK_PODLE_ZAPISU uz neni prazdna (${JSON.stringify(ZIVE_KLICE)}). Dopln testy pro tyhle kroky a uprav tuhle pojistku.`);
+  console.error(`✗ KROK_PODLE_ZAPISU se lisi od zive mapy v75 (${JSON.stringify(ZIVE_KLICE)}). Zmena kroku je vedome rozhodnuti: dopln pripady a uprav tuhle pojistku.`);
 } else {
-  console.log('✓ ziva mapa je prazdna, mechanismus je vypnuty (zadna zmena chovani po nasazeni)');
+  console.log('✓ ziva mapa drzi 18 kroku z v75 (zadna ticha zmena chovani po nasazeni)');
 }
 
 console.log(selhalo === 0 ? `\nHOTOVO: ${CASES.length + 3} kontrol, vse proslo.` : `\nSELHALO: ${selhalo}`);

@@ -10,6 +10,8 @@
 // Test rezim: POST {"test_email":"..."} posle oba maily s [TEST] na zadanou adresu, data NEMENI.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
+// 14. 9. 2026: chyba cteni neni odpoved (guard secretu i cteni splatek s opakovanim, pri trvale chybe 500).
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -167,10 +169,9 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: cfg } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
-  const secret = cfg?.value ? String(cfg.value) : "";
-  const provided = req.headers.get("x-drip-secret") || "";
-  if (!secret || provided !== secret) return json({ error: "unauthorized" }, 401);
+  // Sedi / nesedi 401 / NEPRECTENO 500 (ne 401): den se splatkami nesmi tise vypadnout.
+  const brana = await overSecret(admin, req, { header: "x-drip-secret" });
+  if (!brana.ok) return json(brana.body, brana.status);
 
   // Test rezim: oba maily na zadanou adresu, zadna zmena dat.
   const body = await req.json().catch(() => ({}));
@@ -186,11 +187,18 @@ Deno.serve(async (req) => {
   const warnCutoff = new Date(now - WARN_AFTER_DAYS * 86400000).toISOString();
   const suspendCutoff = new Date(now - SUSPEND_AFTER_WARN_DAYS * 86400000).toISOString();
 
-  const { data: rows } = await admin.from("installment_status")
-    .select("email,payments_n,last_paid_at,status,warned_at")
-    .gte("payments_n", 1).lt("payments_n", 3).in("status", ["ok", "warned"]);
+  // ⛔ Chyba cteni = 500, ne `checked: 0`: prazdno kvuli 504 by znamenalo, ze se ten den
+  //    nikdo nevaruje ani nepozastavi, a cron by hlasil uspech.
+  const rowsR = await ctiSOpakovanim<{ data: Array<{ email: string; payments_n: number; last_paid_at: string | null; status: string; warned_at: string | null }> | null; error: unknown }>(() =>
+    admin.from("installment_status")
+      .select("email,payments_n,last_paid_at,status,warned_at")
+      .gte("payments_n", 1).lt("payments_n", 3).in("status", ["ok", "warned"]));
+  if (rowsR.error) return json(chybaCteni("installment_status", rowsR.error), 500);
+  const rows = rowsR.data;
 
   const warned: string[] = [], suspended: string[] = [];
+  // Komu odesel mail, ale zapis noveho stavu selhal: pristi beh by ho varoval znovu.
+  const stavNezapsan: string[] = [];
   // Komu se nepodarilo poslat ani alert Martinovi. Vraci se v odpovedi behu,
   // aby to slo precist zvenci, kdyz Resend nefunguje v obou smerech.
   const alertySelhaly: string[] = [];
@@ -209,9 +217,10 @@ Deno.serve(async (req) => {
       const m = warnEmail(name, seg);
       const out = await sendMailGuarded(admin, email, m.subject, m.html);
       if (out.sent || out.skipped) {
-        await admin.from("installment_status").update({
+        const { error: updErr } = await admin.from("installment_status").update({
           status: "warned", warned_at: new Date().toISOString(), updated_at: new Date().toISOString(),
         }).eq("email", email);
+        if (updErr) { console.error("[splatky-guard] zapis stavu warned selhal, " + email); stavNezapsan.push(email); }
         warned.push(email);
         try {
           await admin.from("email_events").insert({
@@ -294,9 +303,10 @@ Deno.serve(async (req) => {
       } catch { /* best-effort */ }
       const m = suspendEmail(name, seg);
       const outS = await sendMailGuarded(admin, email, m.subject, m.html);
-      await admin.from("installment_status").update({
+      const { error: suspErr } = await admin.from("installment_status").update({
         status: "suspended", suspended_at: new Date().toISOString(), updated_at: new Date().toISOString(),
       }).eq("email", email);
+      if (suspErr) { console.error("[splatky-guard] zapis stavu suspended selhal, " + email); stavNezapsan.push(email); }
       suspended.push(email);
       // ⛔⛔ [13. 9. 2026] Pozastaveni plati i bez mailu (splatka proste neprisla),
       // ale vysledek odeslani se do dneska ZAHAZOVAL a do `email_events` se psalo "sent"
@@ -326,5 +336,5 @@ Deno.serve(async (req) => {
     }
   }
 
-  return json({ ok: true, checked: (rows ?? []).length, warned, suspended, alerty_selhaly: alertySelhaly });
+  return json({ ok: true, checked: (rows ?? []).length, warned, suspended, alerty_selhaly: alertySelhaly, stav_nezapsan: stavNezapsan });
 });

@@ -1,6 +1,7 @@
 
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { overSecret } from '../_shared/secret-guard.ts';
 import { maPreskocitKrok, PRESKOC_KROK_KDYZ_VLASTNI } from './preskoc.ts';
 
 import {
@@ -306,10 +307,9 @@ const normSeg = (s: unknown): Seg => (s === 'zeny' || s === 'muzi' ? s : 'other'
 Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') return json({ error: 'method-not-allowed' }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
-  const { data: cfg } = await admin.from('app_config').select('value').eq('key', 'drip_invoke_secret').maybeSingle();
-  const expected = cfg?.value ?? '';
-  const provided = req.headers.get('x-drip-secret') || '';
-  if (!expected || provided !== expected) return json({ error: 'unauthorized' }, 401);
+  // 14. 9. 2026: sedi / nesedi 401 / NEPRECTENO 500 (ne 401). Pri 504 brany drive vypadal cron jako cizi volajici.
+  const brana = await overSecret(admin, req, { header: 'x-drip-secret', statusOdmitnuti: 401 });
+  if (!brana.ok) return json(brana.body, brana.status);
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const nowIso = new Date().toISOString();
   const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy', 'navazujici_trate', 'pocet_potravin', 'pocet_receptu']);

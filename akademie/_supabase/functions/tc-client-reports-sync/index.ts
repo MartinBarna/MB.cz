@@ -11,6 +11,8 @@
 // Deploy: supabase functions deploy tc-client-reports-sync --no-verify-jwt
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { applySyncPlan, type TcReport } from "../admin-api/tc-report-sync.ts";
+// 14. 9. 2026: chyba čtení není odpověď (guard secretu i čtení s opakováním, při trvalé chybě 500).
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -41,13 +43,14 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: sec } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
-  const secret = sec?.value ? String(sec.value) : "";
-  const provided = req.headers.get("x-drip-secret") || "";
-  if (!secret || provided !== secret) return json({ error: "unauthorized" }, 401);
+  // Sedí / nesedí 401 / NEPŘEČTENO 500 (ne 401): cron to uvidí a opakovací běh to zkusí znovu.
+  const brana = await overSecret(admin, req, { header: "x-drip-secret" });
+  if (!brana.ok) return json(brana.body, brana.status);
 
-  const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
-  const gsec = gs?.value ? String(gs.value) : "";
+  const gs = await ctiSOpakovanim<{ data: { value?: unknown } | null; error: unknown }>(() =>
+    admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle());
+  if (gs.error) return json({ ok: false, ...chybaCteni("app_config.academy_grant_secret", gs.error) }, 500);
+  const gsec = gs.data?.value ? String(gs.data.value) : "";
   if (!gsec) return json({ ok: false, duvod: "chybi_secret" }, 500);
 
   const nyni = new Date().toISOString();
@@ -103,14 +106,22 @@ Deno.serve(async (req) => {
       const dates = reports.map((x) => String(x.report_date ?? x.week_start ?? "").slice(0, 10)).filter(Boolean);
       const existingByDate = new Map<string, string | null>();
       if (dates.length) {
-        const { data: exist } = await admin.from("client_reports")
-          .select("report_date,source").eq("email", email).in("report_date", dates);
-        for (const row of exist ?? []) {
+        // ⛔ Nepřečtené existující řádky NEJSOU „žádné řádky": prázdná mapa by pustila upsert
+        //    i přes chráněný zdroj (web, import-sheet). Při chybě se klient přeskočí.
+        const exist = await ctiSOpakovanim<{ data: { report_date?: unknown; source?: unknown }[] | null; error: unknown }>(() =>
+          admin.from("client_reports").select("report_date,source").eq("email", email).in("report_date", dates));
+        if (exist.error) {
+          clients_failed++;
+          continue;
+        }
+        for (const row of exist.data ?? []) {
           existingByDate.set(String(row.report_date), row.source == null ? null : String(row.source));
         }
       }
-      const { data: tgRow } = await admin.from("client_targets")
-        .select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle();
+      // Snímek zadání je doplněk řádku: při trvalé chybě jde null, upsert se kvůli tomu nezastaví.
+      const tg = await ctiSOpakovanim<{ data: Record<string, unknown> | null; error: unknown }>(() =>
+        admin.from("client_targets").select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle());
+      const tgRow = tg.error ? null : tg.data;
 
       const plan = applySyncPlan(email, reports, existingByDate, tgRow ?? null);
       if (plan.toUpsert.length) {

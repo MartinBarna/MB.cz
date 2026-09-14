@@ -9,6 +9,8 @@ import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 // ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a milestones/stopa.ts;
 //    hlida to test `drip-send/stopa.test.ts`.
 import { ostopkuj } from "./stopa.ts";
+// 14. 9. 2026: chyba cteni neni odpoved (guard secretu i fronta s opakovanim, pri trvale chybe 500).
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -179,8 +181,9 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: sec } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
-  if (!sec?.value || (req.headers.get("x-drip-secret") || "") !== sec.value) return json({ error: "unauthorized" }, 401);
+  // Sedi / nesedi 401 / NEPRECTENO 500 (ne 401).
+  const brana = await overSecret(admin, req, { header: "x-drip-secret" });
+  if (!brana.ok) return json(brana.body, brana.status);
 
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
 
@@ -210,18 +213,22 @@ Deno.serve(async (req) => {
   const now = Date.now();
   const from72 = new Date(now - 72 * 3600000).toISOString();
   const to3 = new Date(now - 3 * 3600000).toISOString();
-  const { data: pend } = await admin.from("pending_orders")
-    .select("order_id,email,product,name,created_at")
-    .eq("completed", false).is("reminded_at", null)
-    .gte("created_at", from72).lte("created_at", to3)
-    // ⛔⛔ [13. 9. 2026] Nacita se VIC radku, nez kolik se smi odeslat mailu, a strop
-    // se pocita az z ODESLANYCH (`if (sent >= MAX_PER_RUN) break` nize). Duvod: radek,
-    // ktery se preskoci (uz ma pristup, chybi sablona, docasny skip brany), drive
-    // spotreboval jedno z deseti mist. Ve spojeni s `order by created_at` to znamenalo,
-    // ze deset nejstarsich zaseknutych objednavek drzelo celou frontu, dokud jim
-    // neuteklo okno 72 h, a novejsi kosik nedostal jedinou sanci. `MAX_PER_RUN` mel
-    // byt strop na MAILY (viz komentar v hlavicce souboru), ne na prectene radky.
-    .order("created_at", { ascending: true }).limit(MAX_PER_RUN * 3);
+  // ⛔ Chyba cteni fronty = 500, ne `due: 0`: prazdno kvuli 504 by vypadalo jako klidny beh.
+  const pendR = await ctiSOpakovanim<{ data: Array<{ order_id: string; email: string; product: string; name: string | null; created_at: string }> | null; error: unknown }>(() =>
+    admin.from("pending_orders")
+      .select("order_id,email,product,name,created_at")
+      .eq("completed", false).is("reminded_at", null)
+      .gte("created_at", from72).lte("created_at", to3)
+      // ⛔⛔ [13. 9. 2026] Nacita se VIC radku, nez kolik se smi odeslat mailu, a strop
+      // se pocita az z ODESLANYCH (`if (sent >= MAX_PER_RUN) break` nize). Duvod: radek,
+      // ktery se preskoci (uz ma pristup, chybi sablona, docasny skip brany), drive
+      // spotreboval jedno z deseti mist. Ve spojeni s `order by created_at` to znamenalo,
+      // ze deset nejstarsich zaseknutych objednavek drzelo celou frontu, dokud jim
+      // neuteklo okno 72 h, a novejsi kosik nedostal jedinou sanci. `MAX_PER_RUN` mel
+      // byt strop na MAILY (viz komentar v hlavicce souboru), ne na prectene radky.
+      .order("created_at", { ascending: true }).limit(MAX_PER_RUN * 3));
+  if (pendR.error) return json(chybaCteni("pending_orders", pendR.error), 500);
+  const pend = pendR.data;
 
   let sent = 0, skipped = 0;
   const results: Record<string, unknown>[] = [];
@@ -232,9 +239,11 @@ Deno.serve(async (req) => {
     // Expirace: expirovane clenstvi se NEpocita jako "uz ma pristup", jinak by clovek,
     // kteremu mesicni Academy dobehla a znovu si objednava, nedostal zachranny mail.
     // NULL = dozivotni. Viz `mb-academy-pricing-mise`.
-    const { data: ent } = await admin.from("entitlements").select("email")
+    // ⛔ Nepřečtený nárok NENÍ „nemá přístup": clovek by dostal zachranny mail k necemu, co ma.
+    const { data: ent, error: entErr } = await admin.from("entitlements").select("email")
       .eq("email", email).eq("product", p.product).eq("active", true)
       .or("expires_at.is.null,expires_at.gt." + new Date().toISOString()).limit(1);
+    if (entErr) { skipped++; results.push({ order: p.order_id, error: "entitlements_neprecteno" }); continue; }
     if (ent && ent.length) {
       await admin.from("pending_orders").update({ completed: true }).eq("order_id", p.order_id);
       skipped++; continue;

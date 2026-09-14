@@ -11,6 +11,8 @@
 // TEST režim (obchází flag, nic nezapisuje): POST { test_email, name } -> jeden [TEST] mail.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
+// 14. 9. 2026: chyba čtení není odpověď (guard secretu i příjemci s opakováním, při trvalé chybě 500).
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -136,10 +138,9 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-  // --- auth ---
-  const { data: sec } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
-  const secret = sec?.value ?? "";
-  if (!secret || req.headers.get("x-drip-secret") !== secret) return json({ error: "unauthorized" }, 401);
+  // --- auth --- (sedí / nesedí 401 / NEPŘEČTENO 500, ne 401)
+  const brana = await overSecret(admin, req, { header: "x-drip-secret" });
+  if (!brana.ok) return json(brana.body, brana.status);
 
   let body: Record<string, unknown> = {};
   try { body = await req.json(); } catch { /* prázdné tělo OK */ }
@@ -158,23 +159,35 @@ Deno.serve(async (req) => {
   }
 
   // --- master přepínač (postaveno vypnuté) ---
-  const { data: en } = await admin.from("app_config").select("value").eq("key", "study_reminder_enabled").maybeSingle();
-  if (String(en?.value ?? "").toLowerCase() !== "true") return json({ ok: true, disabled: true, hint: "Zapni: app_config.study_reminder_enabled='true' + týdenní cron." });
+  // ⛔ Chyba čtení vypínače NENÍ „vypnuto": 500, ať cron nehlásí tichý úspěch.
+  const en = await ctiSOpakovanim<{ data: { value?: unknown } | null; error: unknown }>(() => admin.from("app_config").select("value").eq("key", "study_reminder_enabled").maybeSingle());
+  if (en.error) return json(chybaCteni("app_config.study_reminder_enabled", en.error), 500);
+  if (String(en.data?.value ?? "").toLowerCase() !== "true") return json({ ok: true, disabled: true, hint: "Zapni: app_config.study_reminder_enabled='true' + týdenní cron." });
 
   const now = Date.now();
   const thisWeek = weekKey(now);
 
   // --- data: členové Academy, jejich progres (completed_at), už odeslané tento týden ---
+  // ⛔ Každé čtení s opakováním a kontrolou chyby: prázdno kvůli 504 by znamenalo „nikdo"
+  //    (ents), nebo „nikdo ještě nedostal" (sent) = duplicitní maily. Raději 500.
+  type Radky<T> = { data: T[] | null; error: unknown };
   const [ulist, ents, prg, sent, leads] = await Promise.all([
     admin.auth.admin.listUsers({ page: 1, perPage: 1000 }),
     // Expirace: pripominky ke studiu jen platnym clenum (NULL = dozivotni). Viz `mb-academy-pricing-mise`.
-    admin.from("entitlements").select("email,product").eq("active", true)
-      .or("expires_at.is.null,expires_at.gt." + new Date().toISOString())
-      .eq("product", "academy"),
-    admin.from("progress").select("user_id,completed_at").eq("completed", true).not("lesson_id", "like", "vk-%"),
-    admin.from("study_reminder_sent").select("email").eq("week_key", thisWeek),
-    admin.from("leads").select("email,unsubscribe_token"),
+    ctiSOpakovanim<Radky<{ email?: unknown; product?: unknown }>>(() =>
+      admin.from("entitlements").select("email,product").eq("active", true)
+        .or("expires_at.is.null,expires_at.gt." + new Date().toISOString())
+        .eq("product", "academy")),
+    ctiSOpakovanim<Radky<{ user_id?: unknown; completed_at?: unknown }>>(() =>
+      admin.from("progress").select("user_id,completed_at").eq("completed", true).not("lesson_id", "like", "vk-%")),
+    ctiSOpakovanim<Radky<{ email?: unknown }>>(() => admin.from("study_reminder_sent").select("email").eq("week_key", thisWeek)),
+    ctiSOpakovanim<Radky<{ email?: unknown; unsubscribe_token?: unknown }>>(() => admin.from("leads").select("email,unsubscribe_token")),
   ]);
+  if (ulist.error) return json({ error: "auth_list_failed", detail: String(ulist.error.message ?? ulist.error).slice(0, 120) }, 500);
+  if (ents.error) return json(chybaCteni("entitlements", ents.error), 500);
+  if (prg.error) return json(chybaCteni("progress", prg.error), 500);
+  if (sent.error) return json(chybaCteni("study_reminder_sent", sent.error), 500);
+  if (leads.error) return json(chybaCteni("leads", leads.error), 500);
   const members = new Set((ents.data ?? []).map((e) => low(e.email)));
   const alreadySent = new Set((sent.data ?? []).map((s) => low(s.email)));
   // token pro 1-klik odhlášení (kupující mají lead řádek se stejným mechanismem jako ostatní maily)
@@ -215,8 +228,9 @@ Deno.serve(async (req) => {
         results.push({ email, skipped: d.reason, days: Math.round(days) });
         continue;
       }
-      await admin.from("study_reminder_sent").insert({ email, week_key: thisWeek });
-      sends++; results.push({ email, days: Math.round(days) });
+      // Zápis „posláno" hlídá duplicitu příštího běhu; když selže, musí to být v odpovědi vidět.
+      const { error: zErr } = await admin.from("study_reminder_sent").insert({ email, week_key: thisWeek });
+      sends++; results.push({ email, days: Math.round(days), ...(zErr ? { zapis_selhal: String(zErr.message ?? zErr).slice(0, 80) } : {}) });
     } catch (e) {
       results.push({ email, error: String(e).slice(0, 100) });
     }

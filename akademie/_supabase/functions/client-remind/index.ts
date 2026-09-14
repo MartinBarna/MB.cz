@@ -1,12 +1,20 @@
-// client-remind — pondělní ranní připomínka týdenního reportu klientům koučinku.
-// Volá pg_cron (client-remind-weekly, pondělí ráno) s hlavičkou x-drip-secret.
+// client-remind: nedělní připomínka týdenního reportu klientům koučinku.
+// Volá pg_cron (client-remind-weekly, neděle 01:00 UTC, opakování +30 a +60 min) s hlavičkou x-drip-secret.
 // Komu: aktivní entitlement 'coaching' mimo optout. Registrovaný dostane připomínku reportu
-// (pokud report nemá z posledních 3 dnů; kdo vyplnil o víkendu, mail nedostane).
+// (pokud report nemá z posledních 3 dnů; kdo vyplnil v týdnu, mail nedostane).
 // Neregistrovaný dostane výzvu k založení přístupu (bez účtu nemá report kam vyplnit).
 // Globální vypnutí: app_config.client_remind_enabled = 'false'.
 // Per-klient vypnutí: app_config.client_remind_optout = CSV e-mailů (zapisuje se v adminu).
+//
+// ⛔ 14. 9. 2026 (Martin: „nesmí se stávat"): chyba čtení NENÍ odpověď. Guard secretu i čtení
+//    příjemců jdou přes _shared/secret-guard.ts s opakováním; když DB nejde přečíst ani po
+//    třech pokusech, vrací se 500 (cron to uvidí v net._http_response a opakovací běh to zkusí
+//    znovu), ne 403 a ne „ok, sent: 0". Paměť: feedback-guard-secretu-pri-vypadku-db-je-403.
+// ⭐ Idempotence: kdo dostal výzvu v posledních 5 dnech (client_remind_sent), tu samou nedostane
+//    znovu, takže tři cronové běhy za sebou pošlou každému nejvýš jeden mail.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -16,26 +24,14 @@ const CTA_URL = "https://martinbarna.cz/akademie/klient/";
 // ?tab=up otevre rovnou zalozku "Vytvorit ucet" (prihlaseni/index.html startuje jinak na "Prihlasit se",
 // coz je u cloveka bez uctu slepa ulicka). &amp; kvuli platnosti HTML v href.
 const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2Fakademie%2Fklient%2F";
-
-// JEDNORÁZOVÁ zmínka o novém návodu klientské sekce (Martin rozhodl 11. 8. 2026: starý
-// návod neseděl s okénky v reportu, nahlásila to klientka).
-// ⛔ OKNO, ne přesný den. Kdyby pondělní běh vypadl (cron, výpadek, Resend), s podmínkou
-//    `dnes === "2026-08-18"` by se omluva neposlala NIKDY a nikdo by si toho nevšiml.
-//    Funkce běží 1× týdně, takže uvnitř okna proběhne právě jednou.
-// ⚠️ Ruční spuštění uvnitř okna by ji poslalo znovu; testovací režim jde jen na test adresu.
-// ⏰ Po 23. 8. 2026 je tenhle blok mrtvý kód a smaže se (i s druhou přílohou).
-// Okno posunuto 11. 8. z 18.-24. na 17.-23.: Martin chce omluvu v pondělním běhu 17. 8.
-// (cron jede po 01:00 UTC = 03:00 lokálně; porovnává se UTC datum, 17. 8. padne dovnitř,
-// další pondělí 24. 8. už je venku, jednorázovost drží).
-const NAVOD_OD = "2026-08-17";
-const NAVOD_DO = "2026-08-23";
-const NAVOD_SOUBOR = "klientska-sekce-navod.pdf";
+// Okno idempotence: výzva jednou za týden, tři běhy v jedné noci jsou od sebe 30 minut.
+const UZ_DOSTAL_DNI = 5;
 
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
 const low = (s: unknown) => String(s ?? "").trim().toLowerCase();
 
-// 5. pád — 1:1 pravidla z drip-send (nejistá jména zůstávají v 1. pádu, ženská na souhlásku se nemění)
+// 5. pád, 1:1 pravidla z drip-send (nejistá jména zůstávají v 1. pádu, ženská na souhlásku se nemění)
 const VOK_EXC: Record<string, string> = {
   "jan": "Jene", "pavel": "Pavle", "karel": "Karle", "havel": "Havle", "pavol": "Pavle",
   "zdenek": "Zdenku", "zdeněk": "Zdeňku", "zbynek": "Zbynku", "zbyněk": "Zbyňku",
@@ -65,19 +61,21 @@ function vokativ(fn: string): string {
   return fn;
 }
 
-function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean, sNavodem = false): string {
+function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean): string {
   const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
   const cta = (href: string, label: string) =>
     `<p style='margin:4px 0 18px'><a class='mb-btn' href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
   // POZOR na znění register varianty: 3 ze 4 prijemcu reporty POSILAJI, jen mimo web (vsech 31 zaznamu
   // v client_reports ma source='import-sheet'). Text proto NESMI tvrdit "bez pristupu mi neposles report",
   // to by klientovi lhalo tyden pote, co report poslal. Cil je presun kanalu, ne vycitka.
+  // Report varianta chodi v NEDELI (Martin 14. 9. 2026): reporty zpracovava v pondeli, vyplnit se da uz v nedeli.
   const telo = kind === "register"
     ? p("od teď mi svoje reporty posílej přes <strong>klientskou sekci</strong> na webu. Budeš v ní mít svoje grafy, historii i appku Tvůj Coach v ceně koučinku. Žádný Excel, nic neopisuješ.") +
       cta(REG_URL, "Vytvořit přístup") +
       p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Zabere to minutu. Registruj se e-mailem, na který ti přišel tenhle vzkaz, jiný ti sekci neotevře. Heslo si zvolíš při registraci.</span>") +
       p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Kdyby něco nefungovalo, odepiš mi na tenhle mail a vyřešíme to.</span>")
-    : p("nový týden, nová data 💪 Mrkni na váhu a hoď mi <strong>týdenní report</strong>. Zabere ~3 minuty a já ti podle něj doladím plán.") +
+    : p("týden je za tebou 💪 Zvaž se a hoď mi <strong>týdenní report</strong>. Zabere ~3 minuty a já ti podle něj doladím plán.") +
+      p("Reporty zpracovávám v pondělí. Vyplnit ho můžeš v klidu už v neděli, ať to v pondělí ráno mám.") +
       cta(CTA_URL, "Vyplnit report (3 min)") +
       (maPrilohu ? p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Nemusíš nic opisovat.</span>") : "") +
       p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Sečti si i <strong>celkové minuty sportu za týden</strong> (fitko, kardio i jiný pohyb dohromady), samotný počet tréninků mi o zátěži neřekne dost. Na konci reportu si naklikáš i plán kroků a minut na další týden, klidně jedním klikem „bude stejně\". Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>");
@@ -111,10 +109,6 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
     `<div class='mb-brand' style='border-left:3px solid #EBB12C;padding-left:10px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#EBB12C;margin:0 0 20px'>Martin Barna</div>` +
     p(osloveni ? "Ahoj " + osloveni + "," : "Ahoj,") +
     telo +
-    // Jednorázová zmínka o novém návodu. Až se blok bude mazat, smaž i konstanty nahoře.
-    (sNavodem
-      ? p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Ještě jedna věc: <strong>přepsal jsem návod ke klientské sekci</strong>. Ten starý neseděl s tím, co v reportu doopravdy vidíš, pár okének v něm chybělo. Omlouvám se, jestli tě to zdrželo. Nový je v příloze a najdeš ho i v sekci mezi dokumenty.</span>")
-      : "") +
     p("<strong>Be Effective!</strong><br>Martin") +
     `<hr style='border:none;border-top:1px solid #262232;margin:22px 0 14px'><div class='mb-mut' style='font-size:12px;color:#8F8A99'>Martin Barna · martinbarna.cz · připomínka pro klienty koučinku. Nechceš je? Odepiš mi na tenhle mail a vypnu ti je.</div>` +
     `</td></tr></table></td></tr></table></body></html>`;
@@ -124,11 +118,15 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: sec } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
-  if (!sec?.value || req.headers.get("x-drip-secret") !== sec.value) return json({ error: "forbidden" }, 403);
+  // Tři stavy: sedí / nesedí (403 jako dřív) / NEPŘEČTENO (500, cron zopakuje).
+  const brana = await overSecret(admin, req, { header: "x-drip-secret", statusOdmitnuti: 403 });
+  if (!brana.ok) return json(brana.body, brana.status);
 
-  const { data: flag } = await admin.from("app_config").select("value").eq("key", "client_remind_enabled").maybeSingle();
-  if (flag && String(flag.value).toLowerCase() === "false") return json({ ok: true, skipped: "disabled" });
+  type Radek = { value?: unknown } | null;
+  type Radky<T> = T[] | null;
+  const flag = await ctiSOpakovanim<{ data: Radek; error: unknown }>(() => admin.from("app_config").select("value").eq("key", "client_remind_enabled").maybeSingle());
+  if (flag.error) return json(chybaCteni("app_config.client_remind_enabled", flag.error), 500);
+  if (flag.data && String(flag.data.value).toLowerCase() === "false") return json({ ok: true, skipped: "disabled" });
   if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
 
   // TEST rezim: {"test_email":"..."} posle ukazku JEN na tuhle adresu a nikomu jinemu.
@@ -148,16 +146,19 @@ Deno.serve(async (req: Request) => {
 
   // klienti s aktivním coaching entitlementem
   // ⛔ Od 2. 9. 2026 může být koučinkový nárok ČASOVANÝ (zaplacené období přes Stripe).
-  // Bez podmínky na expiraci by bývalému klientovi chodila pondělní připomínka reportu
+  // Bez podmínky na expiraci by bývalému klientovi chodila připomínka reportu
   // dál, i když mu koučink skončil. Prázdná expirace = přístup bez konce, ten platí.
+  // ⛔ Chyba čtení = 500, ne „nikdo": prázdný seznam kvůli 504 by byl tichý úspěch.
   const nyni = new Date().toISOString();
-  const { data: ents } = await admin.from("entitlements").select("email")
-    .eq("product", "coaching").eq("active", true)
-    .or("expires_at.is.null,expires_at.gt." + nyni);
-  const clients = [...new Set((ents ?? []).map((e) => low(e.email)))].filter(Boolean);
+  const ents = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() =>
+    admin.from("entitlements").select("email")
+      .eq("product", "coaching").eq("active", true)
+      .or("expires_at.is.null,expires_at.gt." + nyni));
+  if (ents.error) return json(chybaCteni("entitlements", ents.error), 500);
+  const clients = [...new Set((ents.data ?? []).map((e) => low(e.email)))].filter(Boolean);
   if (!clients.length) return json({ ok: true, sent: 0 });
 
-  // jen registrovaní (bez účtu nemá report kdo vyplnit — ty řeší pozvánka, ne pondělní mail)
+  // jen registrovaní (bez účtu nemá report kdo vyplnit, ty řeší pozvánka, ne nedělní mail)
   // listUsers() chybu NEHAZI, vraci ji v error a data zustanou prazdna. Bez tehle kontroly by
   // vypadek auth API znamenal "nikdo nema ucet" -> vsech 9 klientu (i 5 aktivnich) by dostalo
   // vyzvu k registraci. Radeji neposlat nic nez rozeslat plosne spatny mail.
@@ -175,12 +176,21 @@ Deno.serve(async (req: Request) => {
 
   // kdo už report v posledních 3 dnech poslal, připomínku nedostane
   const cutoff = new Date(Date.now() - 3 * 86400000).toISOString().slice(0, 10);
-  const { data: recent } = await admin.from("client_reports").select("email").gte("report_date", cutoff);
-  const recentSet = new Set((recent ?? []).map((r) => low(r.email)));
+  const recent = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() => admin.from("client_reports").select("email").gte("report_date", cutoff));
+  if (recent.error) return json(chybaCteni("client_reports", recent.error), 500);
+  const recentSet = new Set((recent.data ?? []).map((r) => low(r.email)));
 
   // per-klient opt-out (klient odepsal, že připomínky nechce → admin ho zapíše do CSV)
-  const { data: opt } = await admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle();
-  const optout = new Set(String(opt?.value ?? "").split(/[\s,;]+/).map((s) => low(s)).filter(Boolean));
+  // ⛔ Chyba čtení = 500: bez opt-outu by mail přišel i tomu, kdo si ho vypnul.
+  const opt = await ctiSOpakovanim<{ data: Radek; error: unknown }>(() => admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle());
+  if (opt.error) return json(chybaCteni("app_config.client_remind_optout", opt.error), 500);
+  const optout = new Set(String(opt.data?.value ?? "").split(/[\s,;]+/).map((s) => low(s)).filter(Boolean));
+
+  // kdo výzvu dostal v posledních dnech (opakovací běhy cronu, ruční doposlání): nedostane znovu
+  const uzCutoff = new Date(Date.now() - UZ_DOSTAL_DNI * 86400000).toISOString();
+  const uz = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() => admin.from("client_remind_sent").select("email").gte("sent_at", uzCutoff));
+  if (uz.error) return json(chybaCteni("client_remind_sent", uz.error), 500);
+  const uzDostal = new Set((uz.data ?? []).map((r) => low(r.email)));
 
   // oslovení z customer_contacts (křestní jméno v 5. pádu; bez jména padne na "Ahoj,")
   const { data: cc } = await admin.from("customer_contacts").select("email,name").in("email", clients);
@@ -190,7 +200,7 @@ Deno.serve(async (req: Request) => {
     if (raw) nameBy.set(low(c.email), vokativ(raw.charAt(0).toUpperCase() + raw.slice(1)));
   }
 
-  const pool = clients.filter((e) => !optout.has(e));
+  const pool = clients.filter((e) => !optout.has(e) && !uzDostal.has(e));
   const targets: { email: string; kind: "report" | "register" }[] = testEmail
     ? [{ email: testEmail, kind: testKind }]
     : [
@@ -198,7 +208,7 @@ Deno.serve(async (req: Request) => {
         ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
       ];
 
-  // Přílohy ze storage (stáhnou se jednou pro všechny; best effort, bez nich mail stejně odejde)
+  // Příloha ze storage (stáhne se jednou pro všechny; best effort, bez ní mail stejně odejde)
   async function priloha(soubor: string): Promise<{ filename: string; content: string } | null> {
     try {
       const { data: pdf } = await admin.storage.from("client-docs").download("shared/" + soubor);
@@ -210,20 +220,12 @@ Deno.serve(async (req: Request) => {
     } catch (_e) { return null; /* příloha je bonus, ne blokace */ }
   }
   const ktNavod = await priloha("kaloricke-tabulky-navod.pdf");
-  let attachments: { filename: string; content: string }[] | undefined = ktNavod ? [ktNavod] : undefined;
-
-  // Jednorázové okno: přiložit i nový návod klientské sekce a zmínit ho v textu.
-  // ⛔ Datum bereme z hodin běhu, ne z parametru: parametr by šel omylem poslat kdykoli.
-  const dnes = new Date().toISOString().slice(0, 10);
-  const oknoNavodu = dnes >= NAVOD_OD && dnes <= NAVOD_DO;
-  const sekceNavod = oknoNavodu ? await priloha(NAVOD_SOUBOR) : null;
-  // Zmínku posíláme JEN když příloha opravdu je. Jinak by text sliboval přílohu,
-  // která v mailu není, a to je horší než nezmínit nic.
-  const zminNavod = !!sekceNavod;
-  if (sekceNavod) attachments = [...(attachments ?? []), sekceNavod];
+  const attachments: { filename: string; content: string }[] | undefined = ktNavod ? [ktNavod] : undefined;
 
   let sent = 0, skipped = 0;
   const errors: string[] = [];
+  // Odeslané maily, u kterých se nepovedl zápis do client_remind_sent: příští běh by je poslal znovu.
+  const zapisSelhal: string[] = [];
   for (const tgt of targets) {
     const isReg = tgt.kind === "register";
     try {
@@ -244,18 +246,26 @@ Deno.serve(async (req: Request) => {
         body: JSON.stringify({
           from: FROM,
           to: [tgt.email],
-          subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)" : "Pondělní report ✍️ (3 minuty)",
-          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!ktNavod && !isReg, zminNavod && !isReg),
+          subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)" : "Týdenní report ✍️ (3 minuty)",
+          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!ktNavod && !isReg),
           reply_to: "martin@martinbarna.cz",
           // Pri testu je bcc zbytecne (mail uz jde na Martina) a mate: prisel by dvakrat.
           ...(testEmail ? {} : { bcc: ["fitness.barna@gmail.com"] }),
           ...(attachments && !isReg ? { attachments } : {}),
         }),
       });
-      if (r.status === 200) sent++; else errors.push(tgt.email + ":" + r.status);
+      if (r.status === 200) {
+        sent++;
+        // Zápis „posláno" až po úspěšném odeslání (test režim se nezapisuje). Když zápis
+        // selže, mail odešel a příští běh ho může poslat znovu; proto se to hlásí v odpovědi.
+        if (!testEmail) {
+          const z = await ctiSOpakovanim(() => admin.from("client_remind_sent").insert({ email: tgt.email, kind: tgt.kind }).select("id"), 2);
+          if (z.error) { console.error("[client-remind] zapis client_remind_sent selhal: " + tgt.email); zapisSelhal.push(tgt.email); }
+        }
+      } else errors.push(tgt.email + ":" + r.status);
       await new Promise((res) => setTimeout(res, 550)); // Resend rate limit 2/s
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, okno_navodu: oknoNavodu, navod_prilozen: zminNavod, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, uz_dostali: testEmail ? 0 : clients.filter((e) => uzDostal.has(e)).length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, zapis_selhal: zapisSelhal, errors });
 });

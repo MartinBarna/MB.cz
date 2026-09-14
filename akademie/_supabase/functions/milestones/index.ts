@@ -10,6 +10,8 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a order-rescue/stopa.ts;
 //    hlida to test `drip-send/stopa.test.ts`.
 import { ostopkuj } from "./stopa.ts";
+// 14. 9. 2026: chyba cteni neni odpoved (guard secretu i cteni s opakovanim, pri trvale chybe 500).
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -197,8 +199,9 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method" }, 405);
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
 
-  const { data: sec } = await admin.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
-  if (!sec?.value || (req.headers.get("x-drip-secret") || "") !== sec.value) return json({ error: "unauthorized" }, 401);
+  // Sedi / nesedi 401 / NEPRECTENO 500 (ne 401).
+  const brana = await overSecret(admin, req, { header: "x-drip-secret" });
+  if (!brana.ok) return json(brana.body, brana.status);
 
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
 
@@ -222,30 +225,44 @@ Deno.serve(async (req) => {
   }
 
   // LIVE: spocitej progres vsech clenu videokurzu a posli nove dosazene milniky
+  // ⛔ Cteni s opakovanim a kontrolou chyby: prazdny `sent` kvuli 504 by poslal gratulaci znovu,
+  //    prazdne `ents` by znamenalo „nikdo". Radeji 500, cron to zopakuje.
+  type Radky<T> = { data: T[] | null; error: unknown };
   const [prg, ents, sent] = await Promise.all([
-    admin.from("progress").select("user_id,lesson_id").eq("completed", true).like("lesson_id", "vk-%"),
+    ctiSOpakovanim<Radky<{ user_id?: unknown; lesson_id?: unknown }>>(() =>
+      admin.from("progress").select("user_id,lesson_id").eq("completed", true).like("lesson_id", "vk-%")),
     // Expirace: milniky chodi jen platnym clenum (NULL = dozivotni). Viz `mb-academy-pricing-mise`.
-    admin.from("entitlements").select("email,product").eq("active", true)
-      .or("expires_at.is.null,expires_at.gt." + new Date().toISOString())
-      .in("product", ["videokurz", "academy"]),
-    admin.from("milestone_sent").select("email,milestone").eq("product", "videokurz"),
+    ctiSOpakovanim<Radky<{ email?: unknown; product?: unknown }>>(() =>
+      admin.from("entitlements").select("email,product").eq("active", true)
+        .or("expires_at.is.null,expires_at.gt." + new Date().toISOString())
+        .in("product", ["videokurz", "academy"])),
+    ctiSOpakovanim<Radky<{ email?: unknown; milestone?: unknown }>>(() =>
+      admin.from("milestone_sent").select("email,milestone").eq("product", "videokurz")),
   ]);
+  if (prg.error) return json(chybaCteni("progress", prg.error), 500);
+  if (ents.error) return json(chybaCteni("entitlements", ents.error), 500);
+  if (sent.error) return json(chybaCteni("milestone_sent", sent.error), 500);
   // auth uzivatele pres VSECHNY stranky (jen page 1 = tichy vypadek clenu nad 1000)
+  // ⛔ Chyba auth API = 500, ne „zadni uzivatele".
   type AuthUser = { id: string; email?: string; user_metadata?: Record<string, unknown> };
   const users: AuthUser[] = [];
   for (let page = 1; page <= 50; page++) {
     const { data: ud, error: uerr } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+    if (uerr) return json({ error: "auth_list_failed", detail: String(uerr.message ?? uerr).slice(0, 120) }, 500);
     const batch = (ud?.users ?? []) as AuthUser[];
     users.push(...batch);
-    if (uerr || batch.length < 1000) break;
+    if (batch.length < 1000) break;
   }
   // leads = zdroj odhlaseni/bounce + unsubscribe tokenu (strankovane po 1000)
+  // ⛔ Neuplny seznam = odhlaseny by dostal vk-complete s prodejnim blokem. Chyba = 500.
   const leadInfo = new Map<string, { id: string; status: string; token: string }>();
   for (let from = 0; ; from += 1000) {
-    const { data: lrows, error: lerr } = await admin.from("leads")
-      .select("id,email,status,unsubscribe_token").order("id").range(from, from + 999);
-    for (const l of lrows ?? []) leadInfo.set(low(l.email), { id: String(l.id ?? ""), status: String(l.status ?? ""), token: String(l.unsubscribe_token ?? "") });
-    if (lerr || (lrows ?? []).length < 1000) break;
+    const lr = await ctiSOpakovanim<Radky<{ id?: unknown; email?: unknown; status?: unknown; unsubscribe_token?: unknown }>>(() =>
+      admin.from("leads").select("id,email,status,unsubscribe_token").order("id").range(from, from + 999));
+    if (lr.error) return json(chybaCteni("leads", lr.error), 500);
+    const lrows = lr.data ?? [];
+    for (const l of lrows) leadInfo.set(low(l.email), { id: String(l.id ?? ""), status: String(l.status ?? ""), token: String(l.unsubscribe_token ?? "") });
+    if (lrows.length < 1000) break;
   }
   const members = new Set((ents.data ?? []).map((e) => low(e.email)));
   const already = new Set((sent.data ?? []).map((s) => low(s.email) + ":" + s.milestone));
@@ -283,6 +300,12 @@ Deno.serve(async (req) => {
 
   let sends = 0, marked = 0;
   const results: Record<string, unknown>[] = [];
+  // Zapis „posláno" drzi idempotenci; kdyz selze, mail odesel a pristi beh by ho poslal znovu,
+  // proto to musi byt v odpovedi videt.
+  const zapisMilnik = async (email: string, milestone: number) => {
+    const { error } = await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone });
+    if (error) { console.error("[milestones] zapis milestone_sent selhal: " + email + ":" + milestone); results.push({ email, milestone, zapis_selhal: String(error.message ?? error).slice(0, 80) }); }
+  };
   for (const u of users) {
     if (sends >= MAX_PER_RUN) break;
     const email = low(u.email);
@@ -298,23 +321,23 @@ Deno.serve(async (req) => {
     try {
       if (done >= VK_TOTAL && !already.has(email + ":100")) {
         await posliMilnik(email, leadId, tpl100, v, unsub, 100);
-        await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 100 });
+        await zapisMilnik(email, 100);
         // 50 uz neposilat nikdy (prekonano) — zapis bez mailu
         for (const nizsi of [30, 50]) {
-          if (!already.has(email + ":" + nizsi)) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: nizsi }); marked++; }
+          if (!already.has(email + ":" + nizsi)) { await zapisMilnik(email, nizsi); marked++; }
         }
         sends++; results.push({ email, milestone: 100, done });
       } else if (done >= HALF && !already.has(email + ":50")) {
         await posliMilnik(email, leadId, tpl50, v, unsub, 50);
-        await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 50 });
+        await zapisMilnik(email, 50);
         // 30 uz neposilat (prekonano) - zapis bez mailu, stejny vzor jako u 100 vs 50
-        if (!already.has(email + ":30")) { await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 }); marked++; }
+        if (!already.has(email + ":30")) { await zapisMilnik(email, 30); marked++; }
         sends++; results.push({ email, milestone: 50, done });
       } else if (done >= P30 && !already.has(email + ":30")) {
         // 30 % (55 lekci): vetsina lidi kurz nedokonci a necekame to. Zmereno 22. 8. 2026:
         // 100 % nemel NIKDO, 50 az 99 % dva lide, a sest lidi skoncilo na 1 az 3 lekcich.
         await posliMilnik(email, leadId, tpl30, v, unsub, 30);
-        await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone: 30 });
+        await zapisMilnik(email, 30);
         sends++; results.push({ email, milestone: 30, done });
       }
     } catch (e) {

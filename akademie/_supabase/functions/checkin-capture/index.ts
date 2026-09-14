@@ -4,6 +4,8 @@
 //         | GET ?stop=<reminder_token> (opt-out z připomínek).
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
+// 14. 9. 2026: chyba čtení není odpověď (guard secretu i příjemci s opakováním, při trvalé chybě 500).
+import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 import { analyzeCheckin, type Checkin } from "./analysis.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -92,21 +94,31 @@ Deno.serve(async (req) => {
 
   // ---- REMINDER MODE (týdenní cron) ----
   if (body.mode === "remind") {
-    const secret = req.headers.get("x-drip-secret") ?? "";
-    if (!cfg.drip_invoke_secret || secret !== cfg.drip_invoke_secret) return json({ error: "unauthorized" }, 401);
+    // Secret se čte znovu s opakováním (hromadné `.in` výš chybu zahazuje): sedí / nesedí 401 / NEPŘEČTENO 500.
+    const brana = await overSecret(admin, req, { header: "x-drip-secret" });
+    if (!brana.ok) return json(brana.body, brana.status);
     const now = Date.now();
     // kdo je v loopu: má aspoň 1 check-in, reminders zapnuté; připomeň, když poslední check-in 6–45 dní zpět
-    const { data: creds } = await admin.from("discount_credits").select("email,reminder_token").eq("reminders_off", false);
-    // [2026-07-14] koučink klienti mají vlastní klientskou sekci + pondělní report (client-remind)
+    // ⛔ Chyba čtení = 500, ne „nikdo". Prázdný `coachSet` kvůli 504 by koučinkovým klientům poslal
+    //    členský check-in navíc k nedělnímu reportu.
+    type Radky<T> = { data: T[] | null; error: unknown };
+    const creds = await ctiSOpakovanim<Radky<{ email?: unknown; reminder_token?: unknown }>>(() =>
+      admin.from("discount_credits").select("email,reminder_token").eq("reminders_off", false));
+    if (creds.error) return json(chybaCteni("discount_credits", creds.error), 500);
+    // [2026-07-14] koučink klienti mají vlastní klientskou sekci + nedělní report (client-remind)
     // — starý členský check-in by jim chodil duplicitně, tak je z připomínek vynecháváme
-    const { data: coachEnts } = await admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true);
-    const coachSet = new Set((coachEnts ?? []).map((e) => low(e.email)));
-    let sent = 0, skipped = 0; const MAX = 40;
-    for (const c of (creds ?? [])) {
+    const coachEnts = await ctiSOpakovanim<Radky<{ email?: unknown }>>(() =>
+      admin.from("entitlements").select("email").eq("product", "coaching").eq("active", true));
+    if (coachEnts.error) return json(chybaCteni("entitlements", coachEnts.error), 500);
+    const coachSet = new Set((coachEnts.data ?? []).map((e) => low(e.email)));
+    let sent = 0, skipped = 0, neprecteno = 0; const MAX = 40;
+    for (const c of (creds.data ?? [])) {
       if (sent >= MAX) break;
       const email = low(c.email);
       if (coachSet.has(email)) continue;
-      const { data: last } = await admin.from("member_checkins").select("created_at").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
+      const { data: last, error: lastErr } = await admin.from("member_checkins").select("created_at").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle();
+      // Nepřečtený poslední check-in není „žádný check-in": člověk se přeskočí a spočítá zvlášť.
+      if (lastErr) { neprecteno++; continue; }
       if (!last) continue;
       const days = (now - Date.parse(String(last.created_at))) / 86400000;
       if (days < 6 || days > 45) continue;
@@ -132,7 +144,7 @@ Deno.serve(async (req) => {
         sent++;
       } catch { /* skip */ }
     }
-    return json({ ok: true, mode: "remind", sent, skipped });
+    return json({ ok: true, mode: "remind", sent, skipped, neprecteno });
   }
 
   // ---- SUBMIT MODE (z /akademie/check-in/) ----
