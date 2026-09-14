@@ -188,9 +188,11 @@ Deno.serve(async (req: Request) => {
 
   // kdo výzvu dostal v posledních dnech (opakovací běhy cronu, ruční doposlání): nedostane znovu
   const uzCutoff = new Date(Date.now() - UZ_DOSTAL_DNI * 86400000).toISOString();
-  const uz = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() => admin.from("client_remind_sent").select("email").gte("sent_at", uzCutoff));
+  // Klíč je e-mail + druh mailu (revize 14. 9.): kdo dostal v 03:00 pozvánku k registraci a do
+  // 03:30 se zaregistroval, má výzvu k reportu dostat, ne čekat týden.
+  const uz = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; kind?: unknown }>; error: unknown }>(() => admin.from("client_remind_sent").select("email,kind").gte("sent_at", uzCutoff));
   if (uz.error) return json(chybaCteni("client_remind_sent", uz.error), 500);
-  const uzDostal = new Set((uz.data ?? []).map((r) => low(r.email)));
+  const uzDostal = new Set((uz.data ?? []).map((r) => low(r.email) + ":" + String(r.kind ?? "")));
 
   // oslovení z customer_contacts (křestní jméno v 5. pádu; bez jména padne na "Ahoj,")
   const { data: cc } = await admin.from("customer_contacts").select("email,name").in("email", clients);
@@ -200,13 +202,16 @@ Deno.serve(async (req: Request) => {
     if (raw) nameBy.set(low(c.email), vokativ(raw.charAt(0).toUpperCase() + raw.slice(1)));
   }
 
-  const pool = clients.filter((e) => !optout.has(e) && !uzDostal.has(e));
+  const pool = clients.filter((e) => !optout.has(e));
+  const kandidati: { email: string; kind: "report" | "register" }[] = [
+    ...pool.filter((e) => registered.has(e) && !recentSet.has(e)).map((email) => ({ email, kind: "report" as const })),
+    ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
+  ];
+  // Opakovací běhy cronu: kdo tenhle druh mailu dostal v posledních dnech, nedostane ho znovu.
+  const uzDostali = kandidati.filter((t) => uzDostal.has(t.email + ":" + t.kind)).length;
   const targets: { email: string; kind: "report" | "register" }[] = testEmail
     ? [{ email: testEmail, kind: testKind }]
-    : [
-        ...pool.filter((e) => registered.has(e) && !recentSet.has(e)).map((email) => ({ email, kind: "report" as const })),
-        ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
-      ];
+    : kandidati.filter((t) => !uzDostal.has(t.email + ":" + t.kind));
 
   // Příloha ze storage (stáhne se jednou pro všechny; best effort, bez ní mail stejně odejde)
   async function priloha(soubor: string): Promise<{ filename: string; content: string } | null> {
@@ -267,5 +272,5 @@ Deno.serve(async (req: Request) => {
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, uz_dostali: testEmail ? 0 : clients.filter((e) => uzDostal.has(e)).length, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, zapis_selhal: zapisSelhal, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, zapis_selhal: zapisSelhal, errors });
 });
