@@ -313,5 +313,5 @@ Deno.serve(async (req: Request) => {
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, zapis_selhal: zapisSelhal, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
 });
