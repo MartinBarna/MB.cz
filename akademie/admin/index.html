@@ -1646,11 +1646,13 @@
           var kopie={}, kl;
           for(kl in r){ if(Object.prototype.hasOwnProperty.call(r,kl)) kopie[kl]=r[kl]; }
           var km={}; for(kl in mm){ if(Object.prototype.hasOwnProperty.call(mm,kl)) km[kl]=mm[kl]; }
-          if(dW) kopie.weight=base.weight;
-          if(dP) km.pas=bm.pas;
-          if(dB) km.boky=bm.boky;
-          if(dR) km.prsa=bm.prsa;
+          var dopleno={};
+          if(dW){ kopie.weight=base.weight; dopleno.weight=true; }
+          if(dP){ km.pas=bm.pas; dopleno.pas=true; }
+          if(dB){ km.boky=bm.boky; dopleno.boky=true; }
+          if(dR){ km.prsa=bm.prsa; dopleno.prsa=true; }
           kopie.measurements=km;
+          kopie.dopleno=dopleno;   // které hodnoty pocházejí z dotazníku, ne z měření
           list[i]=kopie;
         }
         return list;
@@ -1667,9 +1669,12 @@
       reps.forEach(function(r){
         var t=Date.parse(r.report_date); if(isNaN(t)||t<hranice) return;
         var v=m.get(r); if(v==null) return;
-        // `src` nese původ bodu: dlaždice podle něj pozná, že poslední hodnota je z dotazníku
-        // (odhad klienta), ne z reportu (změřeno), a nesmí se vydávat za aktuální stav.
-        out.push({t:t, v:v, datum:r.report_date, src:(r.source||'')});
+        // `src` nese původ TÉHLE HODNOTY, ne celého řádku: dlaždice podle něj pozná, že jde
+        // o odhad z dotazníku, ne o změřený report, a nesmí ho vydávat za aktuální stav.
+        // ⛔ Per metriku schválně: report může mít vlastní váhu (naměřeno) a zároveň míry
+        //    doplněné z dotazníku téhož dne. Značka na celém řádku by jedno z toho zalhala.
+        var zDot = (r.source==='intake-baseline') || !!(r.dopleno && r.dopleno[m.id]);
+        out.push({t:t, v:v, datum:r.report_date, src:(zDot?'intake-baseline':'')});
       });
       out.sort(function(a,b){ return a.t-b.t; });
       return out;
@@ -1701,7 +1706,10 @@
       }
       s+='<polyline points="'+body2+'" fill="none" stroke="#F6CD63" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
       body.forEach(function(p){
-        s+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="3.2" fill="#0C0B10" stroke="#F6CD63" stroke-width="1.8"><title>'+esc(fmtDay(p.datum))+': '+kliCz(p.v)+' '+esc(jed)+'</title></circle>';
+        // Bod z dotazníku (odhad klienta) má prázdné kolečko s přerušovaným obrysem a říká to
+        // i v bublině. Bez toho graf tvrdil totéž o odhadu i o změřené hodnotě.
+        var zDot = (p.src==='intake-baseline');
+        s+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="'+(zDot?'4':'3.2')+'" fill="'+(zDot?'none':'#0C0B10')+'" stroke="'+(zDot?'#9c8f7a':'#F6CD63')+'" stroke-width="1.8"'+(zDot?' stroke-dasharray="2 2"':'')+'><title>'+esc(fmtDay(p.datum))+': '+kliCz(p.v)+' '+esc(jed)+(zDot?' (z dotazníku, odhad klienta)':'')+'</title></circle>';
       });
       s+='<text x="'+L+'" y="'+(H-6)+'" fill="#6d6879" font-size="10">'+esc(fmtDay(body[0].datum))+'</text>'
         +'<text x="'+(W-R)+'" y="'+(H-6)+'" text-anchor="end" fill="#6d6879" font-size="10">'+esc(fmtDay(body[body.length-1].datum))+'</text>'
@@ -1760,13 +1768,20 @@
       // ⭐ Řada pro grafy i dlaždice = reporty PLUS startovní bod z dotazníku.
       var rada = kdSlouceno(reps, intake);
       if(rada.length<2) return '';   // z jednoho bodu se trend udělat nedá
-      // Popisek jen tehdy, když dotazník řadu OPRAVDU otevírá. Když ho klient vyplnil až po
-      // prvním reportu, leží uprostřed a „start" by lhal proti datu vedle něj.
-      var zDotazniku = rada.length && rada[0].source==='intake-baseline';
+      // ⛔ Rozsah v nadpisu patří REPORTŮM. Kdyby se bral ze sloučené řady, druhé datum by
+      //    mohlo být datum dotazníku a nadpis by tvrdil, že poslední report je ze dne, kdy
+      //    žádný report nepřišel. Bod z dotazníku se místo toho pojmenuje zvlášť.
       var pocetR = (reps||[]).length;
       var slovoR = pocetR===1 ? ' report' : (pocetR<5 ? ' reporty' : ' reportů');
+      var bodDot = null;
+      for(var bi=0; bi<rada.length; bi++){ if(rada[bi].source==='intake-baseline'){ bodDot=rada[bi]; break; } }
+      var odR = pocetR ? fmtDay(reps[0].report_date) : (bodDot ? fmtDay(bodDot.report_date) : '');
+      var doR = pocetR ? fmtDay(reps[pocetR-1].report_date) : odR;
+      var popisDot = bodDot
+        ? (rada[0]===bodDot ? ', start ze vstupního dotazníku' : ', plus bod ze vstupního dotazníku '+fmtDay(bodDot.report_date))
+        : '';
       var oknaTxt={30:'30 dní',90:'90 dní',0:'celá historie'};
-      var h='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📈 Vývoj <span class="muted" style="text-transform:none;font-weight:400;">('+pocetR+slovoR+', '+esc(fmtDay(rada[0].report_date))+' až '+esc(fmtDay(rada[rada.length-1].report_date))+(zDotazniku?', start ze vstupního dotazníku':'')+')</span></h4>'
+      var h='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📈 Vývoj <span class="muted" style="text-transform:none;font-weight:400;">('+pocetR+slovoR+', '+esc(odR)+' až '+esc(doR)+esc(popisDot)+')</span></h4>'
         +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;">'
         +'<div style="margin-bottom:10px;">'+[30,90,0].map(function(o){
             return '<button type="button" class="kdrod kdvokno'+(KDV.okno===o?' on':'')+'" data-okno="'+o+'">'+oknaTxt[o]+'</button>';

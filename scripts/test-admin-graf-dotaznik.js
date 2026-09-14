@@ -1,6 +1,10 @@
-// Test oprav admin grafu na scenarich, ktere nasla revize.
+// Test grafu v karte klienta: startovni bod ze vstupniho dotazniku.
+// ⛔ Lezi ve `scripts/`, ne v `akademie/`: slozka akademie se NASAZUJE na web,
+//    takze test by byl verejne stazitelny (nalez revize 14. 9. 2026).
+// Data v testu jsou vymyslena, zadny klient.
+// Spusteni: node scripts/test-admin-graf-dotaznik.js
 const fs = require('fs');
-const CESTA = 'C:/Users/fitne/mb-wt-sef66-0914/akademie/admin/index.html';
+const CESTA = require('path').join(__dirname, '..', 'akademie', 'admin', 'index.html');
 const html = fs.readFileSync(CESTA, 'utf8');
 
 function vytahni(jmeno) {
@@ -40,7 +44,7 @@ console.log('  dlazdice vaha:', dl1);
 overit('ukazuje 71,4 z reportu, ne 73 z dotazniku', dl1.indexOf('71,4') >= 0 && dl1.indexOf('73') < 0);
 overit('zmena je zaporna (klient hubne)', dl1.indexOf('−0,6') >= 0 || dl1.indexOf('-0,6') >= 0);
 
-console.log('=== 2. JAKUB: dotaznik i report ze stejneho dne, report bez mer ===');
+console.log('=== 2. Dotaznik i report ze stejneho dne, report bez mer ===');
 const reps2 = [
   { report_date: '2026-09-01', weight: 64.5, measurements: { pas: null, boky: null } },
   { report_date: '2026-09-14', weight: 64.0, measurements: { pas: 74 } },
@@ -77,6 +81,23 @@ console.log('=== 5. Zadny dotaznik / prazdny / nesmyslne datum ===');
 overit('bez dotazniku vrati puvodni reporty', f.kdSlouceno(reps4, null).length === 2);
 overit('prazdna data nespadnou', f.kdSlouceno(reps4, { created_at: '2026-08-31', data: {} }).length === 2);
 overit('nesmyslne datum nespadne', f.kdSlouceno(reps4, { created_at: 'nesmysl', data: { vaha: '70' } }).length === 2);
+
+console.log('=== 6. NALEZ 2. KOLA REVIZE: doplneny bod se nesmi tvarit jako namereny ===');
+// Report bez vahy ve stejny den jako dotaznik. Dotaznik svou vahu doplni, ale je to ODHAD:
+// dlazdice musi ukazat posledni SKUTECNE namerenou vahu ze starsiho reportu, ne ten odhad.
+const reps6 = [
+  { report_date: '2026-08-25', weight: 70.0, measurements: { pas: 80 } },
+  { report_date: '2026-09-12', weight: null, measurements: { pas: 79 } },
+];
+const int6 = { created_at: '2026-09-12T08:00:00Z', data: { vaha: '72' } };
+const rada6 = f.kdSlouceno(reps6, int6);
+const body6 = f.kdBody(rada6, M[0], 90);
+const dl6 = text(f.kdDlazdice(rada6, M[0], 90, {}));
+console.log('  body vahy:', body6.map((p) => p.datum + '=' + p.v + (p.src ? '(z dotazniku)' : '')).join(', '));
+console.log('  dlazdice :', dl6);
+overit('doplnena vaha nese znacku z dotazniku', body6.some((p) => p.src === 'intake-baseline' && Number(p.v) === 72));
+overit('dlazdice ukazuje 70 z reportu, ne 72 z dotazniku', dl6.indexOf('70') >= 0 && dl6.indexOf('72') < 0);
+overit('pas z reportu zustal bez znacky (je namereny)', f.kdBody(rada6, M[1], 90).every((p) => !p.src));
 
 console.log(chyb ? '\nNEPROSLO: ' + chyb + ' kontrol' : '\nVSECHNY KONTROLY PROSLY');
 process.exit(chyb ? 1 : 0);
