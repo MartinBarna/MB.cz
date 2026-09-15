@@ -9,12 +9,14 @@ import { pripravFakta } from "./report-engine.mjs";
 import { applySyncPlan, type TcReport } from "./tc-report-sync.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s nákupem přes Stripe (`academy-stripe-webhook`).
 // Deploy admin-api proto veze i `_shared/koucink-onboarding.ts`.
-import { onboardKoucink } from "../_shared/koucink-onboarding.ts";
+import { onboardKoucink, posliUvitaciMail } from "../_shared/koucink-onboarding.ts";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { buildOffboardMail } from "./offboard-mail.ts";
 // Prevod terminu konzultace mezi ceskym casem a UTC + stav hovoru. Ciste funkce
 // ve vlastnim souboru, at jdou otestovat bez nastartovani serveru (`konzultace.test.ts`).
 import { isoNaPoleFormulare, stavHovoru, terminNaIso } from "./konzultace.ts";
+// Start koučinku: čistá validace data ve vlastním souboru, ať jde otestovat bez serveru.
+import { overStart } from "./start-klienta.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -2241,7 +2243,7 @@ Deno.serve(async (req) => {
         // ⭐ 2. 9. 2026: i `plan`, `months`, `expires_at` a `source`. Od te doby jde koucink
         // koupit pres Stripe, takze Martin musi na seznamu poznat, KTERY balicek clovek ma,
         // do kdy ma zaplaceno a jestli si to koupil sam, nebo mu to zalozil rucne.
-        admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source,academy_po_3m").eq("product", "coaching"),
+        admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source,academy_po_3m,start_at").eq("product", "coaching"),
         // [14. 9. 2026] Strankovane: PostgREST vraci max 1000 radku a tydenni reporty ten strop casem
         // prelezou; bez strankovani by „Reportu" a „Posledni report" tise lhaly (Grok audit).
         // ⛔ Chyba cteni reportu NENI „nula reportu" (CLAUDE.md 13): seznam z naroku dojde, sloupce
@@ -2296,6 +2298,9 @@ Deno.serve(async (req) => {
           // Diamond nového klienta: Academy mu po 3 zaplacených měsících zůstává napořád.
           // Přidělí ji Martin ručně, tohle je jediné trvalé místo, kde to uvidí.
           academy_po_3m: e.academy_po_3m === true,
+          // ⭐ Start koučinku (dávka 9). Nula dotazů navíc, je to týž select. Martin díky
+          //    tomu v tabulce vidí, komu start chybí, a nemusí otevírat kartu po kartě.
+          start_at: e.start_at ?? null,
           // "stripe" = koupil si sam z webu, "rucni" = zalozil Martin v adminu.
           zdroj: String(e.source ?? "").startsWith("stripe-") ? "stripe" : "rucni",
           // null = reporty se nenacetly (repsUnknown), UI ukaze „?", ne nulu
@@ -2370,7 +2375,7 @@ Deno.serve(async (req) => {
 
     if (action === "client_detail") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      const [reps, intake, notes, docsOwn, remindCfg, targets, contact] = await Promise.all([
+      const [reps, intake, notes, docsOwn, remindCfg, targets, contact, ent, konz] = await Promise.all([
         admin.from("client_reports").select("*").eq("email", email).order("report_date", { ascending: true }),
         admin.from("client_intake").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_notes").select("id,note,created_at").eq("email", email).order("created_at", { ascending: false }),
@@ -2381,11 +2386,44 @@ Deno.serve(async (req) => {
         // bez jména): bez tohohle šlo KDET.name prázdné a maily/průvodce/trénink chodily
         // ven bez oslovení. `customer_contacts` je tady jediný zdroj jména mimo dotazník.
         admin.from("customer_contacts").select("email,name").eq("email", email).maybeSingle(),
+        // ⭐ Start koučinku (dávka 9). Karta ho musí UKAZOVAT, ne jen umět uložit: vracející
+        //    se klient po offboardu a nové pozvánce má v řádku start klidně rok starý
+        //    a jediný, kdo to pozná, je ten, kdo ho vidí napsaný.
+        admin.from("entitlements").select("start_at,granted_at,expires_at,active")
+          .eq("email", email).eq("product", "coaching").limit(1).maybeSingle(),
+        // ⭐ Dotazník PŘED KONZULTACÍ (dávka 9, bod 2). Čte se service-rolí, klientovi se
+        //    nic nezpřístupňuje: `consultation_intake` má zapnuté RLS a ŽÁDNOU politiku,
+        //    takže z prohlížeče je nedostupná a jediná cesta k datům vede přes tuhle funkci.
+        //    Párování jen přes e-mail; obě tabulky mají adresy malými písmeny
+        //    (`intake-capture` je ukládá přes toLowerCase, ověřeno v DB 15. 9.).
+        // ⛔ Chyba čtení NENÍ „nevyplnil". Vrací se zvlášť `konz_chyba`, ať karta napíše
+        //    varování; prázdný blok by tvrdil něco, co nevíme (na Free plánu padá asi
+        //    1,35 % požadavků na 504).
+        admin.from("consultation_intake")
+          .select("id,created_at,goal,tried_before,typical_day,work_shifts,sleep_hours,activity,weight_kg,measurements,note,age,height_cm,sex,steps_per_day")
+          .eq("email", email).order("created_at", { ascending: false }).limit(3)
+          .then((r: { data: unknown; error: unknown }) => r, (e: unknown) => ({ data: null, error: e })),
       ]);
       const docs = (docsOwn.data ?? []).filter((o) => o.id)
         .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
       const remindOn = !String(remindCfg.data?.value ?? "").split(",").map((s) => low(s)).includes(email);
-      return json({ ok: true, reports: reps.data ?? [], intake: intake.data ?? null, notes: notes.data ?? [], docs, remind_on: remindOn, targets: targets.data ?? null, name: contact.data?.name ?? null });
+      const konzChyba = konz.error
+        ? String((konz.error as { message?: string }).message ?? konz.error).slice(0, 120)
+        : null;
+      return json({
+        ok: true,
+        reports: reps.data ?? [],
+        intake: intake.data ?? null,
+        notes: notes.data ?? [],
+        docs,
+        remind_on: remindOn,
+        targets: targets.data ?? null,
+        name: contact.data?.name ?? null,
+        start_at: ent.data?.start_at ?? null,
+        granted_at: ent.data?.granted_at ?? null,
+        konzultace_intake: konzChyba ? [] : ((konz.data as unknown[]) ?? []),
+        konz_chyba: konzChyba,
+      });
     }
 
     // Přehled VŠECH klientů koučinku na jedné obrazovce (Martin 3. 8. 2026: „nevidím
@@ -2549,6 +2587,28 @@ Deno.serve(async (req) => {
       const { error } = await admin.from("client_targets").upsert(row, { onConflict: "email" });
       if (error) return json({ error: error.message }, 500);
       return json({ ok: true });
+    }
+
+    // Start koučinku u UŽ pozvaného klienta (dávka 9, 15. 9. 2026).
+    //
+    // ⛔ PROČ SAMOSTATNÁ AKCE: bez ní by se datum dalo zadat jedině novou pozvánkou,
+    //    a ta pošle uvítací mail PODRUHÉ a přerazítkuje `granted_at`. Funkce, kterou by
+    //    nešlo použít přesně pro toho člověka, kvůli kterému vzniká, není funkce.
+    // ⛔ Prázdná hodnota tady znamená VYMAZAT start (na rozdíl od pozvánky, kde znamená
+    //    „nesahej"). Je to formulář, kde Martin vidí, co v poli je: co smaže, chce smazat.
+    if (action === "client_start_save") {
+      const email = low(body.email);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+      const prevod = overStart(body.start_at);
+      if (!prevod.ok) return json({ error: "start_at", duvod: prevod.duvod }, 400);
+      const { error, count } = await admin.from("entitlements")
+        .update({ start_at: prevod.start }, { count: "exact" })
+        .eq("email", email).eq("product", "coaching");
+      if (error) return json({ error: "db", detail: String(error.message ?? error).slice(0, 160) }, 500);
+      // ⛔ Nula změněných řádků NENÍ úspěch: znamená to, že ten člověk koučinkový nárok
+      //    nemá. Tiché „ok" by Martina nechalo věřit, že start uložil.
+      if (!count) return json({ error: "neni_klient" }, 404);
+      return json({ ok: true, start_at: prevod.start });
     }
 
     if (action === "client_remind_toggle") {
@@ -3551,10 +3611,18 @@ Deno.serve(async (req) => {
       //    přes Stripe nepřijde o své datum.
       const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
       if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
+      // ⭐ START KOUČINKU (dávka 9, 15. 9. 2026). Nepovinný: prázdné pole = na sloupec se
+      //    nesahá a `client-remind` padá na náhradu z `granted_at` jako dosud.
+      // ⛔ Vrací se DŮVOD, ne tiché ignorování: Martin musí poznat překlep TADY. Kdyby se
+      //    špatné datum zahodilo, myslel by si, že start uložil, a klient by mlčel jinak,
+      //    než čeká. Validace je v `start-klienta.ts` a má vlastní testy (31. 2., rok 2027).
+      const startPrevod = overStart(body.start_at);
+      if (!startPrevod.ok) return json({ error: "start_at", duvod: startPrevod.duvod }, 400);
       const vysledek = await onboardKoucink(admin, {
         email, name, osloveni, kind,
         source: "admin-klient-invite",
         plan: body.plan === "diamond" ? "diamond" : (body.plan === "gold" ? "gold" : undefined),
+        ...(startPrevod.start ? { startAt: startPrevod.start } : {}),
         resendKey: RESEND_KEY,
       });
       // ⛔⛔ `ok` ZNAMENÁ „NÁROK JE ZAPSANÝ", ne „mail odešel" (oprava po revizi 2. 9. 2026).
@@ -3573,7 +3641,40 @@ Deno.serve(async (req) => {
         mail_skip: vysledek.mail_skip ?? null,
         priloha: vysledek.priloha,
         app_grant: vysledek.app_grant,
+        start_at: startPrevod.start,
       });
+    }
+
+    // Doposlání uvítacího mailu BEZ dalšího zásahu do nároku („spadlo mu to do spamu").
+    //
+    // ⛔ POZVÁNKA NENÍ NÁHRADA ZA DOPOSLÁNÍ. `client_invite` přepíše `granted_at` (čímž
+    //    u klienta bez reportu znovu nastartuje ochrannou lhůtu `client-remind`), přidá
+    //    řádek do `tvujcoach_grants` a znovu volá `academy-grant`. Proto vlastní akce,
+    //    která pošle JEN mail a na nárok, appku ani CRM nesáhne.
+    // ⛔ Jde na JEDNU adresu, tu z těla požadavku. Žádná hromadná cesta tady není a nesmí být.
+    // ⛔ Prochází `guardSend` uvnitř `posliUvitaciMail` jako každý jiný odchozí mail:
+    //    odhlášený člověk ho nedostane a skok se zapíše do `mail_log`.
+    if (action === "client_welcome_resend") {
+      const email = low(body.email);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+      // ⛔ Chyba čtení NENÍ „není klient" (CLAUDE.md 13). Tři stavy zvlášť: chyba = 500,
+      //    prázdno = 404, řádek = rozhodne `active`. Kdyby se 504 četl jako „nemá nárok",
+      //    Martin by u živého klienta viděl „není klient" a hledal vinu jinde.
+      const { data: ent, error: entErr } = await admin.from("entitlements").select("active")
+        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      if (entErr) return json({ error: "db", detail: String(entErr.message ?? entErr).slice(0, 160) }, 500);
+      if (!ent) return json({ error: "neni_klient" }, 404);        // mail o koučinku nekoučinkovi ne
+      if (ent.active !== true) return json({ error: "ukonceny_klient" }, 409);
+      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+      if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
+      const r = await posliUvitaciMail(admin, {
+        email,
+        osloveni: String(body.osloveni ?? "").trim().slice(0, 60),
+        kind: body.kind === "stavajici" ? "stavajici" : "novy",
+        resendKey: RESEND_KEY,
+        path: "admin-api.client_welcome_resend",
+      });
+      return json({ ok: r.ok, mail_status: r.mail_status, mail_skip: r.mail_skip ?? null, priloha: r.priloha });
     }
 
     // Ukonceni koucinku: odebere klientskou sekci, s ni i appku Tvuj Coach, a posle mail

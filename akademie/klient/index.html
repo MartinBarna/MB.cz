@@ -1492,6 +1492,20 @@
       if(!hasIntake && res[1] !== null) el("intakeCta").style.display = ""; // při chybě nenutit dotazník stávajícímu klientovi
       renderTargets();
       renderDash(failed);
+      // Deep link z uvítacího mailu (15. 9. 2026): ?w=intake otevře průvodce vstupním
+      // dotazníkem rovnou, ať klient po přihlášení neklikal podruhé.
+      // Listener `btnIntake` se navěšuje o pár řádků níž, ale synchronně v téže funkci,
+      // takže v tomhle `.then()` už existuje.
+      // ⛔ JEN když dotazník ještě není vyplněný: vyplněnému klientovi by se otevřel
+      //    prázdný průvodce a mohl by si svoje odpovědi přepsat.
+      // ⛔ A jen když čtení dotazníku OPRAVDU došlo (res[1] !== null): po chybě 504 nevíme,
+      //    jestli dotazník má, a hádat směrem „nemá" je přesně ta tichá škoda, kvůli které
+      //    má podmínku i řádek výš.
+      try{
+        if(!hasIntake && res[1] !== null && new URLSearchParams(location.search).get("w") === "intake"){
+          var bi = el("btnIntake"); if(bi) bi.click();
+        }
+      }catch(e){}
     }).catch(function(){ renderDash(true); });
     renderDocs();
     renderFotky();

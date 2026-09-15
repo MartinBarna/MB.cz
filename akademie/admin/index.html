@@ -327,9 +327,12 @@
             <option value="gold">Gold</option>
             <option value="diamond">Diamond</option>
           </select>
+          <!-- Start koučinku (dávka 9, 15. 9. 2026). Nepovinný: prázdné pole = na sloupec
+               se nesahá a `client-remind` bere jako dosud datum pozvánky. -->
+          <input type="date" id="kiStart" title="Start koučinku (nepovinné)" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
           <button class="mlogbtn" id="kiSend">📨 Zapnout přístup + poslat mail</button>
         </div>
-        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména, zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.</p>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména, zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.<br>Start koučinku je nepovinný. Když ho vyplníš, první výzva k týdennímu reportu přijde klientovi až po prvním týdnu od startu; když ho necháš prázdný, systém bere datum pozvánky.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.7rem 0 .2rem;">
           <span class="muted" style="font-size:.85rem;font-weight:700;">📁 Dokument pro VŠECHNY klienty:</span>
           <input type="file" id="kiSharedFile" style="font-size:.82rem;color:#b7ab9b;max-width:250px;">
@@ -712,6 +715,29 @@
     // ⛔ ŽÁDNÁ DLOUHÁ POMLČKA. Volá to i nová fronta „Reporty ke zpracování", takze by
     // znak, který nemá být nikde, nově vyskočil v UI (revize 2. 9. 2026, nález h).
     function fmtDay(s){ if(!s) return '-'; return new Date(s).toLocaleDateString('cs-CZ'); }
+    // ================= START KOUČINKU (dávka 9, 15. 9. 2026) =================
+    // ⛔ Server vrací DŮVOD, proč datum neprošlo, a UI ho musí přeložit do věty. Tiché
+    //    „chyba" by Martina nechalo hádat, jestli je vadný e-mail, nebo datum.
+    function kdStartDuvod(d){
+      return d==='tvar_RRRR-MM-DD' ? 'zadej datum v kalendáři, ne ručně (čekám tvar 2026-09-20).'
+           : d==='datum_neexistuje' ? 'takové datum neexistuje (třeba 31. února).'
+           : d==='prilis_daleko_v_budoucnu' ? 'je víc než 90 dní v budoucnu, zkontroluj rok.'
+           : d==='prilis_stare' ? 'je víc než rok zpátky, zkontroluj rok.'
+           : 'nepodařilo se ho přečíst.';
+    }
+    // Kdy klientovi přijde PRVNÍ výzva k reportu, když start je zadaný. Musí držet krok
+    // s `PRVNI_VYZVA_PO_DNECH` v `client-remind/cerstvy-klient.ts` (dnes 6 dní) a se
+    // skutečností, že výzvy chodí v NEDĚLI ráno. Ukazuje se DŮSLEDEK, ne jen uložené datum:
+    // „Start 20. 9." Martinovi neřekne nic, „první výzva 27. 9." ano.
+    var START_PRVNI_VYZVA_PO_DNECH = 6;
+    function kdPrvniVyzva(startIso){
+      var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(startIso||'')); if(!m) return '';
+      var d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));
+      d.setUTCDate(d.getUTCDate()+START_PRVNI_VYZVA_PO_DNECH);
+      // Výzvy chodí jen v neděli, takže se posune na nejbližší neděli od prahu dál.
+      while(d.getUTCDay()!==0) d.setUTCDate(d.getUTCDate()+1);
+      return czDatum(d.toISOString().slice(0,10));
+    }
     // ⛔ OPRAVA 8. 8. 2026: `token` se nabíral JEDNOU při startu (`getSessionRetry`) a už se
     // nikdy neaktualizoval. supabase-js si session na pozadí obnovuje (`autoRefreshToken`),
     // ale admin dál posílal starý JWT. Access token platí hodinu, takže admin nechaný
@@ -1438,10 +1464,14 @@
             +'<td>'+(r.has_intake?'✅':'<span class="muted">–</span>')+'</td>'
             +'<td data-app="'+esc(r.email)+'">'+kliApp(r.app)+'</td>'
             +'<td>'+kliBalicek(r)+'</td>'
+            /* 🚩 Start koučinku (dávka 9). Nula dotazů navíc, jede v témže selectu.
+               Prázdno se hlásí jako „nezadán", ať je na první pohled vidět, u koho
+               `client-remind` pořád jede na náhradu z data pozvánky. */
+            +'<td style="white-space:nowrap;">'+(r.start_at?esc(czDatum(r.start_at)):'<span class="muted" title="Bez startu bere systém datum pozvánky">nezadán</span>')+'</td>'
             +'<td class="tcount">'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':r.reports)+'</td>'
             +'<td>'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>'))+warn+'</td></tr>';
         }
-        var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Balíček</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
+        var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Balíček</th><th>Start</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
         // 🚀 FRONTA: kdo vyplnil dotazník a ještě nemá z něj postavené zadání. Data vrací
         // `clients_list` (intake_at, targets_at). Podmínka je schválně „targets starší než
         // dotazník", ne jen „targets chybí": když klient pošle dotazník znovu (změnil se
@@ -1581,17 +1611,25 @@
     $('kiSend').addEventListener('click',function(){
       var b=$('kiSend'); if(b.disabled) return; // dvojklik = dvojitý mail klientovi
       var email=($('kiEmail').value||'').trim().toLowerCase(), name=($('kiName').value||'').trim(), vok=($('kiVok').value||'').trim(), kind=$('kiKind').value, plan=$('kiPlan').value;
+      var start=($('kiStart').value||'').trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast('Zadej platný e-mail'); return; }
       var what=kind==='stavajici'?'„Konec Excelu" (stávající klient)':'pozvánka s dotazníkem (nový klient)';
-      if(!confirm('Zapnout klientskou sekci pro '+email+' ('+(plan==='diamond'?'Diamond':'Gold')+') a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"')) return;
+      /* Start se do potvrzení VYPISUJE. Je to věta o tom, co komu odejde a od kdy se
+         klientovi počítá první report; překlep v datu se nejlíp chytá tady, ne v DB. */
+      var startTxt=start?('\nStart koučinku: '+czDatum(start)+', první výzva k reportu '+kdPrvniVyzva(start))
+                        :'\nStart koučinku: nezadán (systém bere datum pozvánky)';
+      if(!confirm('Zapnout klientskou sekci pro '+email+' ('+(plan==='diamond'?'Diamond':'Gold')+') a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"'+startTxt)) return;
       var origTxt=b.textContent; b.disabled=true; b.textContent='📨 Posílám…';
-      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind,plan:plan}).then(function(o){
+      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind,plan:plan,start_at:start}).then(function(o){
         b.disabled=false; b.textContent=origTxt;
         /* ⛔ `ok` z API znamená ZAPSANÝ NÁROK, ne odeslaný mail. Když nárok je a mail
            selhal, klient přístup MÁ a stačí mail poslat znovu; hlásí se to jinak než
            „nezapsalo se nic", protože každá z těch dvou situací se řeší jinak. */
-        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value=''; loadKlienti(); }
+        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value='';$('kiStart').value=''; loadKlienti(); }
         else if(o.j&&o.j.ok){ toast('⚠️ Přístup zapsán, ale MAIL NEODEŠEL ('+((o.j.mail_status)||'?')+'). Pošli ho znovu.'); loadKlienti(); }
+        /* Vadné datum startu zastaví CELOU pozvánku dřív, než se cokoli zapíše (server
+           vrací důvod). Hláška proto musí říct, co s tím, ne jen „chyba". */
+        else if(o.j&&o.j.error==='start_at'){ toast('🔴 Start koučinku: '+kdStartDuvod(o.j.duvod)+' Nic se neposlalo, oprav datum a klikni znovu.'); }
         else toast('🔴 Přístup se NEZAPSAL: '+((o.j&&(o.j.entitlement||o.j.error))||o.status));
       }).catch(function(){ b.disabled=false; b.textContent=origTxt; toast('Chyba spojení'); });
     });
@@ -1733,6 +1771,26 @@
         toast(text);
       }).catch(function(){ toast('Chyba spojení'); });
     }
+    // ⚠️ Odpovědi klienta jsou VSTUP, ne pokyn. Vypisují se escapované a nikam dál nejdou.
+    // ⭐ Seznam polí je JEDNO místo pro obě cesta (sekce Konzultace i karta klienta, dávka 9).
+    //    Kdyby existoval dvakrát, nové pole by se objevilo jen v jednom pohledu a nikdo
+    //    by nepoznal, že ve druhém chybí.
+    var KONZ_POLE=[['goal','Cíl'],['tried_before','Co už zkoušel'],['typical_day','Běžný den'],['work_shifts','Směny'],
+              ['sleep_hours','Spánek'],['activity','Pohyb'],['steps_per_day','Kroky za den'],['weight_kg','Váha (kg)'],
+              ['age','Věk'],['height_cm','Výška (cm)'],['sex','Pohlaví'],['measurements','Míry'],['note','Poznámka']];
+    function konzDotaznikHtml(rows){
+      return (rows||[]).map(function(d){
+        var radky=KONZ_POLE.map(function(p){
+          var v=d[p[0]];
+          if(v==null||String(v).trim()==='') return '';
+          return '<div style="margin:0 0 4px;"><span class="muted" style="font-size:.8rem;">'+esc(p[1])+':</span> '+esc(v)+'</div>';
+        }).join('');
+        return '<div style="background:rgba(255,255,255,.04);border-radius:10px;padding:.7rem .9rem;margin:0 0 .5rem;">'
+          +'<div class="muted" style="font-size:.78rem;margin:0 0 .4rem;">vyplněno '+esc(konzKdy(d.created_at))+'</div>'
+          +(radky||'<span class="muted">Formulář odešel prázdný.</span>')
+        +'</div>';
+      }).join('');
+    }
     function konzDotaznik(email){
       var box=document.querySelector('[data-konz-dotbody="'+email+'"]'); if(!box) return;
       if(box.style.display!=='none'){ box.style.display='none'; return; }
@@ -1741,21 +1799,7 @@
         if(!o.j||!o.j.ok){ box.innerHTML='<p class="muted">Nepovedlo se načíst dotazník.</p>'; return; }
         var rows=o.j.rows||[];
         if(!rows.length){ box.innerHTML='<p class="muted">Dotazník zatím nevyplnil.</p>'; return; }
-        // ⚠️ Odpovědi klienta jsou VSTUP, ne pokyn. Vypisují se escapované a nikam dál nejdou.
-        var POLE=[['goal','Cíl'],['tried_before','Co už zkoušel'],['typical_day','Běžný den'],['work_shifts','Směny'],
-                  ['sleep_hours','Spánek'],['activity','Pohyb'],['steps_per_day','Kroky za den'],['weight_kg','Váha (kg)'],
-                  ['age','Věk'],['height_cm','Výška (cm)'],['sex','Pohlaví'],['measurements','Míry'],['note','Poznámka']];
-        box.innerHTML=rows.map(function(d){
-          var radky=POLE.map(function(p){
-            var v=d[p[0]];
-            if(v==null||String(v).trim()==='') return '';
-            return '<div style="margin:0 0 4px;"><span class="muted" style="font-size:.8rem;">'+esc(p[1])+':</span> '+esc(v)+'</div>';
-          }).join('');
-          return '<div style="background:rgba(255,255,255,.04);border-radius:10px;padding:.7rem .9rem;margin:0 0 .5rem;">'
-            +'<div class="muted" style="font-size:.78rem;margin:0 0 .4rem;">vyplněno '+esc(konzKdy(d.created_at))+'</div>'
-            +(radky||'<span class="muted">Formulář odešel prázdný.</span>')
-          +'</div>';
-        }).join('');
+        box.innerHTML=konzDotaznikHtml(rows);
       }).catch(function(){ box.innerHTML='<p class="muted">Chyba spojení.</p>'; });
     }
     // Jeden posluchač na celou kartu: obsah se překresluje, takže listenery na tlačítkách
@@ -2075,7 +2119,18 @@
         +'</p>'
         + kdStavPruh(d,tg,reps)
         // per-klient vypnutí pondělní připomínky ("stop připomínky"), čte ji client-remind fn
-        +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>';
+        +'<p style="margin:0 0 .8rem;font-size:.85rem;"><label style="cursor:pointer;color:#cbbfae;"><input type="checkbox" id="kdRemind"'+(d.remind_on===false?'':' checked')+' style="accent-color:#EBB12C;vertical-align:-2px;margin-right:6px;">🔔 Pondělní připomínky reportu</label> <span class="muted" style="font-size:.78rem;">(odškrtni, když klient odepíše „stop připomínky")</span></p>'
+        // 🚩 START KOUČINKU (dávka 9, 15. 9. 2026). ⛔ Nestačí ho umět uložit v pozvánce:
+        // u klienta, který už pozvaný JE, by druhá pozvánka poslala uvítací mail podruhé.
+        // ⛔ Karta ho musí hlavně UKAZOVAT. Vracející se klient po offboardu a nové pozvánce
+        // má start klidně rok starý a pozná to jen ten, kdo ho vidí napsaný.
+        +'<div style="margin:0 0 .8rem;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">'
+        +'<span style="font-size:.85rem;color:#cbbfae;">🚩 Start koučinku:</span>'
+        +'<input type="date" id="kdStart" value="'+esc(d.start_at||'')+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.85rem;">'
+        +'<button class="mlogbtn" id="kdStartSave" style="padding:6px 12px;">Uložit start</button>'
+        +'<span class="muted" id="kdStartStat" style="font-size:.78rem;">'
+        +(d.start_at?('první výzva k reportu '+esc(kdPrvniVyzva(d.start_at))):'prázdné = systém bere datum pozvánky'+(d.granted_at?(' ('+esc(fmtDay(d.granted_at))+')'):''))
+        +'</span></div>';
       function kdTgIn(id,label,unit,ph){
         var v=tg[id]==null?'':String(tg[id]);
         return '<label style="display:block;font-size:.78rem;color:#8F8A99;">'+label+(unit?' <span style="color:#6d6879;">('+unit+')</span>':'')
@@ -2179,7 +2234,10 @@
           ['Režim',[['Práce',idata.prace],['Aktivita',idata.aktivita],['Kroky/den',idata.kroky],['Spánek',idata.spanek]]],
           ['Výchozí míry',KLI_MIRY.map(function(x){ return [x[1],idata['mira_'+x[0]]]; })],
           ['Poznámka',[['Vzkaz',idata.poznamka]]]];
-        h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📝 Vstupní dotazník ('+fmtDay(d.intake.created_at)+')</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;">';
+        // ⛔ Štítek „klientský" je tu kvůli dávce 9: pod tímhle blokem může být DRUHÝ dotazník
+        // se stejnými otázkami (ten před konzultací). Bez rozlišení si Martin splete, ze
+        // kterého čte váhu.
+        h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📝 Vstupní dotazník ('+fmtDay(d.intake.created_at)+') <span class="muted" style="text-transform:none;font-weight:400;">(klientský, vyplnil až po pozvánce)</span></h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;">';
         groups.forEach(function(g){
           var kv=g[1].filter(function(r){ return r[1]!=null&&String(r[1]).trim()!==''; });
           if(!kv.length) return;
@@ -2189,6 +2247,20 @@
         if(Array.isArray(idata.fotky)&&idata.fotky.length){
           h+='<p style="margin:.5rem 0 0;font-size:.85rem;">📷 Výchozí fotky: '+idata.fotky.map(function(p,pi){ return '<a href="#" data-kdoc="'+esc(p)+'" style="color:#F6CD63;">foto '+(pi+1)+'</a>'; }).join(' · ')+'</p>';
         }
+      }
+      // 📋 DOTAZNÍK PŘED KONZULTACÍ (dávka 9, 15. 9. 2026). Ukazuje se jen tomu, kdo
+      // konzultaci měl. Vykresluje se STEJNOU funkcí jako v sekci Konzultace, ať se ty
+      // dva pohledy nerozejdou (seznam polí je v KONZ_POLE, jedno místo).
+      // ⛔ Dvě sady stejných otázek pár dní po sobě jsou past na záměnu, proto má každý blok
+      //    v nadpisu vlastní štítek a u každé odpovědi je datum vyplnění.
+      // ⛔ Chyba čtení NENÍ „nevyplnil": server vrací `konz_chyba` zvlášť a karta napíše
+      //    varování. Prázdno by tvrdilo něco, co nevíme.
+      if(d.konz_chyba){
+        h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📋 Dotazník před konzultací</h4>'
+          +'<p style="color:#F6CD63;font-size:.85rem;margin:0 0 .5rem;">⚠️ Odpovědi z konzultace se nepodařilo načíst ('+esc(d.konz_chyba)+'). Zkus kartu otevřít znovu; neznamená to, že dotazník nevyplnil.</p>';
+      } else if((d.konzultace_intake||[]).length){
+        h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📋 Dotazník před konzultací <span class="muted" style="text-transform:none;font-weight:400;">(vyplnil PŘED hovorem, ne klientský dotazník výš)</span></h4>'
+          + konzDotaznikHtml(d.konzultace_intake);
       }
       // 🚀 ONBOARDING: tři varianty cílů z dotazníku, výběr jedné, propsání do zadání
       // i do appky a dva koncepty mailů. Logika je v `onboarding.js` a v enginu
@@ -2231,6 +2303,19 @@
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📁 Dokumenty pro tohoto klienta</h4>'
         +'<div id="kdDocsList">'+kdDocsListHtml(d)+'</div>'
         +'<div style="display:flex;gap:8px;align-items:center;margin:.5rem 0;"><input type="file" id="kdFile" style="font-size:.82rem;color:#b7ab9b;"><button class="mlogbtn" id="kdUp">Nahrát klientovi</button></div>';
+      // 📨 DOPOSLÁNÍ UVÍTACÍHO MAILU (dávka 9, 15. 9. 2026). „Spadlo mu to do spamu."
+      // ⛔ Pozvánka NENÍ náhrada: přepsala by `granted_at` (a tím znovu nastartovala
+      //    ochrannou lhůtu u klienta bez reportu), přidala řádek do `tvujcoach_grants`
+      //    a znovu volala `academy-grant`. Tahle akce pošle JEN mail, jednomu člověku.
+      h+='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📨 Uvítací mail</h4>'
+        +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px;">'
+        +'<p class="muted" style="margin:0 0 8px;font-size:.85rem;">Pošle klientovi ZNOVU týž uvítací mail. Přístup, balíček ani datum startu se nemění a do appky se nesahá. Použij, když mail nedorazil nebo spadl do spamu.</p>'
+        +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">'
+        +'<label style="font-size:.78rem;color:#8F8A99;">Oslovení <span style="color:#6d6879;">(5. pád)</span><br><input type="text" id="kdWelVok" value="'+esc(kliVok(KDET.name))+'" style="width:120px;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
+        +'<label style="font-size:.78rem;color:#8F8A99;">Která šablona<br><select id="kdWelKind" style="margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;">'
+        +'<option value="novy">Nový klient (vstupní dotazník)</option><option value="stavajici">Stávající klient (Konec Excelu)</option></select></label>'
+        +'<button class="mlogbtn" id="kdWelBtn">Poslat uvítací mail znovu</button>'
+        +'</div></div>';
       // Ukončení koučinku. Zavře klientskou sekci, odebere appku Tvůj Coach a pošle mail
       // s nabídkou, jak může pokračovat bez koučinku (TC předplatné, Academy s KLIENT20).
       // Kdo má zaplacenou Academy, o appku nepřijde, to hlídá server.
@@ -2317,6 +2402,46 @@
             $('kdet').classList.remove('on'); loadKlienti();
           } else { toast('Chyba: '+((o.j&&o.j.error)||o.status)); b.disabled=false; b.textContent='Ukončit koučink'; }
         }).catch(function(){ toast('Chyba spojení'); b.disabled=false; b.textContent='Ukončit koučink'; });
+      });
+      // 🚩 Uložení startu koučinku. ⛔ Prázdné pole tady start MAŽE (na rozdíl od pozvánky,
+      // kde znamená „nesahej"): Martin vidí, co v poli je, takže co smaže, chce smazat.
+      var kdStartSave=$('kdStartSave');
+      if(kdStartSave) kdStartSave.addEventListener('click',function(){
+        var b=kdStartSave; if(b.disabled) return;
+        var v=($('kdStart').value||'').trim();
+        if(!confirm(v?('Nastavit start koučinku pro '+email+' na '+czDatum(v)+'?\nPrvní výzva k týdennímu reportu mu pak přijde '+kdPrvniVyzva(v)+'.')
+                     :('Smazat start koučinku pro '+email+'?\nSystém pak bude brát datum pozvánky jako dosud.'))) return;
+        var t0=b.textContent; b.disabled=true; b.textContent='Ukládám…';
+        api({action:'client_start_save',email:email,start_at:v}).then(function(o){
+          b.disabled=false; b.textContent=t0;
+          if(o.j&&o.j.ok){
+            if(KDET.data) KDET.data.start_at=o.j.start_at||null;
+            $('kdStartStat').textContent=o.j.start_at?('první výzva k reportu '+kdPrvniVyzva(o.j.start_at)):'prázdné = systém bere datum pozvánky';
+            toast(o.j.start_at?('🚩 Start nastaven na '+czDatum(o.j.start_at)):'🚩 Start smazán');
+            loadKlienti();
+          }
+          else if(o.j&&o.j.error==='start_at') toast('Start koučinku: '+kdStartDuvod(o.j.duvod)+' Nic se neuložilo.');
+          else if(o.j&&o.j.error==='neni_klient') toast('Tenhle e-mail nemá koučinkový nárok, start nemá kam uložit.');
+          else toast('Chyba: '+((o.j&&o.j.error)||o.status));
+        }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
+      });
+      // 📨 Doposlání uvítacího mailu. ⛔ Tlačítko musí být `disabled` po dobu volání:
+      // dvojklik = dva stejné maily klientovi (stejně jako u pozvánky `kiSend`).
+      var kdWelBtn=$('kdWelBtn');
+      if(kdWelBtn) kdWelBtn.addEventListener('click',function(){
+        var b=kdWelBtn; if(b.disabled) return;
+        var vok=($('kdWelVok').value||'').trim(), kind=$('kdWelKind').value;
+        var sablona=kind==='stavajici'?'„Konec Excelu" (stávající klient)':'pozvánka s dotazníkem (nový klient)';
+        if(!confirm('Poslat uvítací mail ZNOVU na '+email+'?\nŠablona: '+sablona+'\nOslovení: „Ahoj '+(vok||'(bez jména)')+'"\n\nPřístup, balíček ani datum startu se nemění, klientovi přijde týž mail.')) return;
+        var t0=b.textContent; b.disabled=true; b.textContent='📨 Posílám…';
+        api({action:'client_welcome_resend',email:email,osloveni:vok,kind:kind}).then(function(o){
+          b.disabled=false; b.textContent=t0;
+          if(o.j&&o.j.ok) toast('📨 Uvítací mail odešel na '+email);
+          else if(o.j&&o.j.mail_skip) toast('🔕 Neposláno: '+o.j.mail_skip+' (nejspíš se odhlásil z mailů). Nic se neodeslalo.');
+          else if(o.j&&o.j.error==='neni_klient') toast('Tenhle e-mail nemá koučinkový nárok, uvítací mail o koučinku mu neposílám.');
+          else if(o.j&&o.j.error==='ukonceny_klient') toast('Klient je ukončený. Chceš-li ho vrátit, použij pozvánku, ne doposlání mailu.');
+          else toast('🔴 Mail NEODEŠEL ('+((o.j&&(o.j.error||o.j.mail_status))||o.status)+').');
+        }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
       });
       var kr=$('kdRemind'); if(kr) kr.addEventListener('change',function(){
         var on=kr.checked; kr.disabled=true;

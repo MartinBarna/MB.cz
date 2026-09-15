@@ -111,6 +111,13 @@ export type OnboardVstup = {
   expiresAt?: string;
   /** Diamond nového klienta: po 3 zaplacených měsících mu Academy zůstává napořád. Jen příznak pro Martina, žádný automat. */
   academyPo3m?: boolean;
+  /**
+   * Start koučinku ve tvaru „RRRR-MM-DD" (dávka 9, 15. 9. 2026). `undefined` nebo prázdno
+   * = na sloupec se NESAHÁ. ⛔ Opakovaná pozvánka bez data nesmí smazat start, který už
+   * je uložený; proto se posílá jen když opravdu přišel, ne přes `?? null`.
+   * Zapisuje se do `entitlements.start_at`, čte ho `client-remind`.
+   */
+  startAt?: string;
   stripe?: { customer?: string | null; paymentIntent?: string | null };
   /**
    * Poslat uvítací mail? Výchozí ano.
@@ -155,6 +162,9 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
       source: v.source,
       granted_at: new Date().toISOString(),
       ...(v.expiresAt !== undefined ? { expires_at: v.expiresAt } : {}),
+      // ⛔ Jen když přišel: pozvánka bez data nesmí přepsat start, který už v řádku je.
+      //    (Stejný důvod jako u `expires_at` o řádek výš, jen z druhé strany.)
+      ...(v.startAt ? { start_at: v.startAt } : {}),
       ...(v.plan ? { plan: v.plan } : {}),
       ...(v.months ? { months: Math.round(v.months) } : {}),
       ...(v.academyPo3m !== undefined ? { academy_po_3m: v.academyPo3m } : {}),
@@ -241,36 +251,89 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
     }
   }
 
+  const narok = entErr ? "chyba: " + entErr.message : "ok";
+
   if (v.uvitani === false) {
-    return { ok: true, entitlement: entErr ? "chyba: " + entErr.message : "ok", app_grant: gres, mail_status: 0, priloha: false };
+    return { ok: true, entitlement: narok, app_grant: gres, mail_status: 0, priloha: false };
   }
 
-  if (!v.resendKey) {
-    return { ok: false, entitlement: entErr ? "chyba: " + entErr.message : "ok", app_grant: gres, mail_status: 0, priloha: false };
-  }
+  // ⭐ 15. 9. 2026 (dávka 9): samotné odeslání mailu je od téhle chvíle vlastní funkce,
+  //    ať jde zavolat i bez zásahu do nároku (tlačítko „Poslat uvítací mail znovu" v adminu).
+  //    Chování se NEMĚNÍ, jen se přestěhovalo. Šablona zůstává JEDNA pro obě cesty.
+  const m = await posliUvitaciMail(admin, { email, osloveni, kind, resendKey: v.resendKey });
+  return {
+    ok: m.ok,
+    entitlement: narok,
+    app_grant: gres,
+    mail_status: m.mail_status,
+    priloha: m.priloha,
+    ...(m.mail_skip ? { mail_skip: m.mail_skip } : {}),
+  };
+}
+
+export type UvitaciMailVysledek = {
+  ok: boolean;
+  mail_status: number;
+  priloha: boolean;
+  /** Vyplněno, jen když mail zastavil `guardSend` (odhlášený člověk, blok). */
+  mail_skip?: string;
+};
+
+/**
+ * Pošle uvítací mail koučinku, a NIC JINÉHO: žádný nárok, žádná appka, žádné CRM.
+ *
+ * ⛔ PROČ EXISTUJE: doposlání mailu („spadlo mu to do spamu") se dřív dalo udělat jedině
+ *    novou pozvánkou, a ta udělá i všechno ostatní: přepíše `granted_at` (čímž u klienta
+ *    bez reportu znovu nastartuje ochrannou lhůtu), přidá řádek do `tvujcoach_grants`
+ *    a znovu volá `academy-grant`. Pozvánka tedy NENÍ náhrada za doposlání.
+ * ⛔ Prochází `guardSend` jako každý jiný odchozí mail: odhlášený člověk ho nedostane.
+ * ⭐ Šablona je jediná a je tady. Kdo mění text uvítacího mailu, mění ho na tomhle místě.
+ */
+export async function posliUvitaciMail(admin: any, v: {
+  email: string;
+  osloveni?: string;
+  kind?: "novy" | "stavajici";
+  resendKey: string;
+  /** Kam se odeslání zapíše v `mail_log`. Výchozí je pozvánka. */
+  path?: string;
+}): Promise<UvitaciMailVysledek> {
+  const email = String(v.email).trim().toLowerCase();
+  const osloveni = String(v.osloveni ?? "").trim().slice(0, 60);
+  const kind = v.kind === "stavajici" ? "stavajici" : "novy";
+
+  if (!v.resendKey) return { ok: false, mail_status: 0, priloha: false };
 
   const inviteGuard = await guardSend(admin, {
     email,
     mailClass: "client_operational",
     functionName: "admin-api",
-    path: "admin-api.client_invite",
+    path: v.path || "admin-api.client_invite",
   });
   if (inviteGuard.action === "skip") {
     await logMailSkip(admin, inviteGuard);
-    return {
-      ok: false,
-      entitlement: entErr ? "chyba: " + entErr.message : "ok",
-      app_grant: gres,
-      mail_status: 0,
-      priloha: false,
-      mail_skip: inviteGuard.reason,
-    };
+    return { ok: false, mail_status: 0, priloha: false, mail_skip: inviteGuard.reason };
   }
 
   const escd = (s: string) => String(s).replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c] as string));
   const ahoj = osloveni ? "Ahoj " + escd(osloveni) + "," : "Ahoj,";
   const CTA_URL = "https://martinbarna.cz/akademie/prihlaseni/?next=%2Fakademie%2Fklient%2F";
-  const btn = (label: string) => `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
+  // ⭐ OPRAVA 15. 9. 2026 (dávka 9): tlačítko „Vyplnit vstupní dotazník" vedlo na týž
+  //    `CTA_URL` jako „Otevřít moji sekci", tedy na přihlášení a pak na rozcestník klientské
+  //    sekce. Klient musel dotazník sám najít a kliknout na něj podruhé.
+  //    `?w=intake` uvnitř `next` otevře průvodce rovnou (`akademie/klient/index.html`).
+  // ⛔ NENÍ to `?tab=up` na přihlašovací stránce, a je to podstatný rozdíl proti
+  //    `client-remind`: tam jde `?tab=up` JEN lidem bez účtu (větev „register"), kdežto
+  //    uvítací mail dostane i člověk, který účet dávno má (kupec konzultace přecházející
+  //    do koučinku). Tomu by se otevřela záložka „Vytvořit účet" a systém by mu poslal
+  //    ještě mail s odkazem na nastavení hesla. Mail navíc místo mailu navíc.
+  //    Odkaz pro člověka BEZ účtu je proto malá věta pod tlačítkem, ne tlačítko samo.
+  // ⚠️ `next` je procentně zakódované i s otazníkem (%3F) a rovnítkem (%3D);
+  //    `prihlaseni/index.html` ho dekóduje a pustí dál jen cesty /akademie/ (ř. 143-144),
+  //    kontrola `jeKlient` na prefix /akademie/klient/ prochází i s dotazem za lomítkem.
+  const CTA_DOTAZNIK = "https://martinbarna.cz/akademie/prihlaseni/?next=%2Fakademie%2Fklient%2F%3Fw%3Dintake";
+  const tlacitko = (href: string, label: string) => `<p style='margin:4px 0 18px'><a href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
+  const btn = (label: string) => tlacitko(CTA_URL, label);
+  const btnDotaznik = (label: string) => tlacitko(CTA_DOTAZNIK, label);
   const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
   // ==========================================================================
   // ZMENA TEXTU 15. 9. 2026 (Martin). Dva sliby, ktere systém nedrzel, v OBOU vetvich:
@@ -306,7 +369,9 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
     inner = p(ahoj) +
       p("vítej v koučinku! Od teď na tvé formě pracujeme spolu. A aby byl plán od prvního dne přesně na tebe, potřebuju tě nejdřív poznat.") +
       p("Připravil jsem <strong>vstupní dotazník</strong>. Proklikáš ho krok za krokem za ~10 minut (cíle, zdraví, co rád jíš, kdy stíháš trénovat…). Nic se nedá zkazit, všechno jde později upravit:") +
-      btn("Vyplnit vstupní dotazník") +
+      btnDotaznik("Vyplnit vstupní dotazník") +
+      // ⚠️ V HTML atributu MUSÍ být `&amp;`, ne holé `&` (týž komentář má client-remind/index.ts).
+      `<p style='margin:-8px 0 16px;font-size:13px;color:#A09AAD'>Ještě nemáš na webu účet? <a href='https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2Fakademie%2Fklient%2F%3Fw%3Dintake' style='color:#EBB12C'>Založ si ho tady</a>, stačí e-mail a heslo.</p>` +
       `<p style='margin:0 0 8px'><strong>Co bude dál:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
       `<li style='margin:0 0 7px'>1️⃣ <strong>Připravím ti jídelníček, makra a trénink na míru</strong></li>` +
       `<li style='margin:0 0 7px'>2️⃣ V <strong>neděli ráno</strong> ti přijde výzva k týdennímu reportu (3 minuty klikání)</li>` +
@@ -346,8 +411,6 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
 
   return {
     ok: rs.status === 200,
-    entitlement: entErr ? "chyba: " + entErr.message : "ok",
-    app_grant: gres,
     mail_status: rs.status,
     priloha: !!attachments,
   };
