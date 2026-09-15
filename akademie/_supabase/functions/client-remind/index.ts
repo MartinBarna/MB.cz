@@ -361,5 +361,9 @@ Deno.serve(async (req: Request) => {
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: testEmail ? 0 : cerstviSet.size, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
+  // ⭐ cerstvi_klienti se hlasi i v TESTOVACIM rezimu (na rozdil od uz_dostali). test_email je
+  //    jediny zpusob, jak funkci spustit bez rozesilky klientum, takze je to jedina cesta, jak
+  //    si pred nedeli overit "ano, jeden se preskoci". Nic to neriskuje: v testu mail stejne
+  //    odejde vyhradne na zadanou adresu a do client_remind_sent se nezapisuje.
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: cerstviSet.size, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
 });
