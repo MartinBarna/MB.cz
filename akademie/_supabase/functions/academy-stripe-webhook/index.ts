@@ -2056,7 +2056,13 @@ Deno.serve(async (req) => {
               email: emailL,
               produkt: def.nazev,
               varianta: klic === "konzultace-vk" ? "2 190 Kč (videokurz už měl)" : "2 990 Kč (videokurz v ceně)",
-              co_delat: "Ozvi se mu, domluv termín a pošli dotazník před hovorem.",
+              // ⭐ 15. 9. 2026: alert nově vede na KONKRÉTNÍ místo, kde se ta práce dělá.
+              // Termín není poznámka do kalendáře: dokud není v adminu zadaný, systém
+              // tomu člověku drží prodejní maily na koučink. Bez téhle věty by Martin
+              // nevěděl, že se po hovoru čeká na jeho klik.
+              co_delat: "Ozvi se mu a domluv termín. Zadej termín hovoru v adminu "
+                + "(sekce Konzultace): https://martinbarna.cz/akademie/admin/#sek-konzultace "
+                + "Dokud tam termín není, prodejní maily na koučink se mu neposílají.",
             });
           }
 
