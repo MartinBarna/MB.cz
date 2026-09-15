@@ -3,8 +3,9 @@
 // Komu: aktivní entitlement 'coaching' mimo optout. Registrovaný dostane připomínku reportu
 // (pokud report nemá z posledních 3 dnů; kdo vyplnil v týdnu, mail nedostane).
 // Neregistrovaný dostane výzvu k založení přístupu (bez účtu nemá report kam vyplnit).
-// ⭐ Nový klient, který nikdy neposlal report, výzvu k reportu prvních 7 dní od pozvání
-//    nedostane (cerstvy-klient.ts). Upomínky k registraci se to netýká.
+// ⭐ Nový klient, který nikdy neposlal report, výzvu k reportu hned nedostane: rozhoduje
+//    `entitlements.start_at` (od 15. 9. 2026), a když chybí, náhrada „nárok mladší než
+//    7 dní" (cerstvy-klient.ts). Upomínky k registraci se to netýká.
 // Globální vypnutí: app_config.client_remind_enabled = 'false'.
 // Per-klient vypnutí: app_config.client_remind_optout = CSV e-mailů (zapisuje se v adminu).
 //
@@ -20,7 +21,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 import { emailySeznam } from "../_shared/mail-seznam.ts";
-import { jeCerstvyKlient } from "./cerstvy-klient.ts";
+import { preskocitVyzvuKReportu } from "./cerstvy-klient.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -161,8 +162,13 @@ Deno.serve(async (req: Request) => {
   // dál, i když mu koučink skončil. Prázdná expirace = přístup bez konce, ten platí.
   // ⛔ Chyba čtení = 500, ne „nikdo": prázdný seznam kvůli 504 by byl tichý úspěch.
   const nyni = new Date().toISOString();
-  const ents = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; granted_at?: unknown }>; error: unknown }>(() =>
-    admin.from("entitlements").select("email,granted_at")
+  // ⭐ 15. 9. 2026 (dávka 9): i `start_at`, den, kdy klient reálně začíná. Je to týž dotaz,
+  //    takže nepřibývá žádné další čtení do DB. ⛔ Sloupec MUSÍ existovat dřív, než se tahle
+  //    verze nasadí (migrace `davka9-start-koucinku-2026-09-15.sql`): bez něj vrátí PostgREST
+  //    chybu a mail nedostane NIKDO. Je to aspoň hlučné selhání, cron ho zapíše do
+  //    `net._http_response`, ale pořadí nasazení je migrace → funkce.
+  const ents = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; granted_at?: unknown; start_at?: unknown }>; error: unknown }>(() =>
+    admin.from("entitlements").select("email,granted_at,start_at")
       .eq("product", "coaching").eq("active", true)
       .or("expires_at.is.null,expires_at.gt." + nyni));
   if (ents.error) return json(chybaCteni("entitlements", ents.error), 500);
@@ -181,6 +187,24 @@ Deno.serve(async (req: Request) => {
     //    Pořadí řádků PostgREST nezaručuje, takže bez tohohle by mohl vyhrát ten NOVĚJŠÍ
     //    a klient by se ztišil. Nejstarší datum chybuje vždy směrem „mail radši odejde".
     if (drive === undefined || t < drive) grantOd.set(em, t);
+  }
+  // ⭐ Start koučinku, když ho Martin zadal (`entitlements.start_at`, dávka 9). Sloupec je
+  //    `date`, PostgREST ho vrací jako "2026-09-20"; doplní se na půlnoc UTC, ať to Date.parse
+  //    nečte jako místní čas. Pro nedělní běh v 01:00 UTC je to bezpečné, protože práh je
+  //    v DNECH, ne v hodinách (`PRVNI_VYZVA_PO_DNECH`).
+  // ⛔ Nečitelná hodnota se přeskočí a klient padá na náhradu z `granted_at`, ne do ticha.
+  // ⚠️ Stejně jako u `grantOd` se drží NEJSTARŠÍ datum: klíč `entitlements` je case sensitive,
+  //    takže „A@x.cz" a „a@x.cz" jsou dva řádky, které low() slije do jednoho. Nejstarší start
+  //    chybuje vždy směrem „mail radši odejde".
+  const startOd = new Map<string, number>();
+  for (const e of ents.data ?? []) {
+    const s = String(e.start_at ?? "").trim();
+    if (!s) continue;
+    const t = Date.parse(s.length === 10 ? s + "T00:00:00Z" : s);
+    if (!Number.isFinite(t)) continue;
+    const em = low(e.email);
+    const drive = startOd.get(em);
+    if (drive === undefined || t < drive) startOd.set(em, t);
   }
 
   // jen registrovaní (bez účtu nemá report kdo vyplnit, ty řeší pozvánka, ne nedělní mail)
@@ -278,19 +302,29 @@ Deno.serve(async (req: Request) => {
   }
 
   const pool = clients.filter((e) => !optout.has(e));
-  // ⭐ Ochranná lhůta po pozvání (cerstvy-klient.ts): nový klient, který nikdy neposlal report,
+  // ⭐ Ochranná lhůta po startu (cerstvy-klient.ts): nový klient, který nikdy neposlal report,
   //    výzvu k reportu ještě nedostane. ⛔ Týká se JEN druhu "report". Upomínka k registraci
   //    chodí dál: bez účtu nemá klient report kam vyplnit a odklad by ho jen zdržel.
+  // ⭐ 15. 9. 2026 (dávka 9): rozhoduje ZADANÝ start, a když chybí nebo je nečitelný, padá se
+  //    na starou náhradu z `granted_at`. Důvod se drží zvlášť, ať jde přeskočený klient
+  //    dohledat a ať se pozná, jestli se pole vůbec vyplňuje.
   const naReport = pool.filter((e) => registered.has(e) && !recentSet.has(e));
   const ted = Date.now();
-  const cerstviSet = new Set(naReport.filter((e) => jeCerstvyKlient(e, grantOd, nekdyReportoval, ted)));
+  const rozhodnuti = new Map<string, "start" | "narok">();
+  for (const e of naReport) {
+    const r = preskocitVyzvuKReportu(e, startOd, grantOd, nekdyReportoval, ted);
+    if (r.preskocit && r.duvod) rozhodnuti.set(e, r.duvod);
+  }
+  const cerstviSet = new Set(rozhodnuti.keys());
   // ⭐ Stopa do logu edge funkce (dashboard), ne jen do odpovědi. Přeskočení je JEDINÁ nová cesta,
   //    jak klient mail nedostane, a čítač cerstvi_klienti leží v net._http_response, kam se nikdo
   //    nedívá. Bez tohohle by se omylem přeskočený klient nedal dohledat. Adresy v logu už tu jsou
   //    (zápis client_remind_sent níž), takže to nic nového neotevírá.
   for (const em of cerstviSet) {
     const dni = ((ted - (grantOd.get(em) ?? ted)) / 86400000).toFixed(1);
-    console.log("[client-remind] cerstvy klient, vyzva k reportu preskocena: " + em + " (" + dni + " dne od naroku)");
+    const st = startOd.has(em) ? new Date(startOd.get(em) as number).toISOString().slice(0, 10) : "nezadan";
+    console.log("[client-remind] vyzva k reportu preskocena: " + em
+      + " (duvod " + rozhodnuti.get(em) + ", " + dni + " dne od naroku, start " + st + ")");
   }
   const kandidati: { email: string; kind: "report" | "register" }[] = [
     ...naReport.filter((e) => !cerstviSet.has(e)).map((email) => ({ email, kind: "report" as const })),
@@ -365,5 +399,10 @@ Deno.serve(async (req: Request) => {
   //    jediny zpusob, jak funkci spustit bez rozesilky klientum, takze je to jedina cesta, jak
   //    si pred nedeli overit "ano, jeden se preskoci". Nic to neriskuje: v testu mail stejne
   //    odejde vyhradne na zadanou adresu a do client_remind_sent se nezapisuje.
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: cerstviSet.size, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
+  // ⭐ `bez_startu` je levná hlídka (dávka 9): až budou mít klienti start vyplněný, bude to
+  //    nula. Když číslo poroste, pole se přestalo vyplňovat a systém tiše spadl zpátky
+  //    na náhradu z `granted_at`. Počítá se z `naReport`, tedy z lidí, kterých se práh týká.
+  const preskocenoPodleStartu = [...rozhodnuti.values()].filter((d) => d === "start").length;
+  const bezStartu = naReport.filter((e) => !startOd.has(e)).length;
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: cerstviSet.size, preskoceno_podle_startu: preskocenoPodleStartu, bez_startu: bezStartu, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
 });
