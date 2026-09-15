@@ -169,12 +169,18 @@ Deno.serve(async (req: Request) => {
   const clients = [...new Set((ents.data ?? []).map((e) => low(e.email)))].filter(Boolean);
   if (!clients.length) return json({ ok: true, sent: 0 });
   // Kdy byl nárok udělen. Je to okamžik kliknutí v adminu, ne start koučinku, ale jiné datum
-  // o začátku klienta v systému není. Klíč entitlements je email+product a čte se jen
-  // 'coaching', takže na jednu adresu připadá jeden řádek. Nečitelné datum se přeskočí.
+  // o začátku klienta v systému není. Nečitelné datum se přeskočí.
   const grantOd = new Map<string, number>();
   for (const e of ents.data ?? []) {
     const t = Date.parse(String(e.granted_at ?? ""));
-    if (Number.isFinite(t)) grantOd.set(low(e.email), t);
+    if (!Number.isFinite(t)) continue;
+    const em = low(e.email);
+    const drive = grantOd.get(em);
+    // ⛔ Drží se NEJSTARŠÍ nárok. Klíč entitlements je (email, product) a je case sensitive,
+    //    takže „A@x.cz" a „a@x.cz" jsou dva legitimní řádky, které low() slije do jednoho.
+    //    Pořadí řádků PostgREST nezaručuje, takže bez tohohle by mohl vyhrát ten NOVĚJŠÍ
+    //    a klient by se ztišil. Nejstarší datum chybuje vždy směrem „mail radši odejde".
+    if (drive === undefined || t < drive) grantOd.set(em, t);
   }
 
   // jen registrovaní (bez účtu nemá report kdo vyplnit, ty řeší pozvánka, ne nedělní mail)
@@ -199,14 +205,22 @@ Deno.serve(async (req: Request) => {
   if (recent.error) return json(chybaCteni("client_reports", recent.error), 500);
   const recentSet = new Set((recent.data ?? []).map((r) => low(r.email)));
 
-  // Kdo někdy poslal JAKÝKOLI report (web, import-sheet, sync z appky). Bez toho by se
+  // Kdo z klientů někdy poslal JAKÝKOLI report (web, import-sheet, sync z appky). Bez toho by se
   // převáděný klient z Excelu po nové pozvánce na týden ztišil, i když reporty posílá roky.
+  // ⛔ Filtr .in("email", clients) SCHVÁLNĚ, ne celá tabulka: PostgREST má strop „Max rows"
+  //    a při jeho překročení vrátí TIŠE jen prvních N řádků v nezaručeném pořadí. Adresa,
+  //    která by takhle vypadla, by se tvářila jako klient bez reportu a na týden by se ztišila.
+  //    Stejný tvar filtru, jaký má o pár řádků níž čtení customer_contacts nad týmž seznamem.
+  // ⚠️ .in() je case sensitive a seznam „clients" jsou adresy po low(). Celá tahle funkce stojí na tom,
+  //    že adresy jsou v DB malými písmeny (stejně to má customer_contacts i guardSend); adresa
+  //    psaná jinak by z množiny vypadla. Ověřeno 15. 9.: v entitlements ani client_reports
+  //    není žádná adresa mimo lowercase.
   // ⛔ Chyba čtení = 500 jako u ostatních čtení: prázdno po chybě by znamenalo „nikdo nikdy
   //    nereportoval" a na týden by ztišilo každého nového klienta, tiše a bez stopy.
-  const vsechnyReporty = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() =>
-    admin.from("client_reports").select("email"));
-  if (vsechnyReporty.error) return json(chybaCteni("client_reports(vse)", vsechnyReporty.error), 500);
-  const nekdyReportoval = new Set((vsechnyReporty.data ?? []).map((r) => low(r.email)));
+  const historieReportu = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() =>
+    admin.from("client_reports").select("email").in("email", clients));
+  if (historieReportu.error) return json(chybaCteni("client_reports(historie)", historieReportu.error), 500);
+  const nekdyReportoval = new Set((historieReportu.data ?? []).map((r) => low(r.email)));
 
   // per-klient opt-out (klient odepsal, že připomínky nechce → admin ho zapíše do CSV)
   // ⛔ Chyba čtení = 500: bez opt-outu by mail přišel i tomu, kdo si ho vypnul.
@@ -270,6 +284,14 @@ Deno.serve(async (req: Request) => {
   const naReport = pool.filter((e) => registered.has(e) && !recentSet.has(e));
   const ted = Date.now();
   const cerstviSet = new Set(naReport.filter((e) => jeCerstvyKlient(e, grantOd, nekdyReportoval, ted)));
+  // ⭐ Stopa do logu edge funkce (dashboard), ne jen do odpovědi. Přeskočení je JEDINÁ nová cesta,
+  //    jak klient mail nedostane, a čítač cerstvi_klienti leží v net._http_response, kam se nikdo
+  //    nedívá. Bez tohohle by se omylem přeskočený klient nedal dohledat. Adresy v logu už tu jsou
+  //    (zápis client_remind_sent níž), takže to nic nového neotevírá.
+  for (const em of cerstviSet) {
+    const dni = ((ted - (grantOd.get(em) ?? ted)) / 86400000).toFixed(1);
+    console.log("[client-remind] cerstvy klient, vyzva k reportu preskocena: " + em + " (" + dni + " dne od naroku)");
+  }
   const kandidati: { email: string; kind: "report" | "register" }[] = [
     ...naReport.filter((e) => !cerstviSet.has(e)).map((email) => ({ email, kind: "report" as const })),
     ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
