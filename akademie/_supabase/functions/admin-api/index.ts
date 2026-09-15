@@ -1115,17 +1115,26 @@ async function procNezarazen(admin: any, email: string): Promise<{ duvod: string
     admin.from("consultation_calls").select("termin_at").eq("email", email).maybeSingle(),
   ]);
   // Chyba čtení není odpověď: radši se přizná, než aby tvrdila konkrétní důvod.
-  if (ents.error || lead.error) return { duvod: "nevim_chyba_cteni" };
+  // ⚠️ Všechny čtyři dotazy, ne jen dva (nález R2-N1): bez `customer_contacts` se přeskočí
+  // větev `coaching-active` a bez `consultation_calls` by funkce tvrdila `ceka_na_hovor`
+  // z nepřečtených dat. `consultation_calls` chybí typicky proto, že neproběhla migrace.
+  if (ents.error || lead.error || cc.error) return { duvod: "nevim_chyba_cteni" };
   const naroky = (ents.data ?? []) as Array<{ product: string; active: boolean; expires_at: string | null }>;
+  // ⛔ DVĚ RŮZNÁ MĚŘÍTKA, PROTOŽE SQL MÁ TAKY DVĚ (nález R2-N2). CTE `reg` v enroll funkci
+  // řeší u videokurzu a Academy jen `active` a expiraci neřeší vůbec; nová podmínka
+  // pro konzultaci expiraci naopak řeší. Diagnostika musí říkat totéž co SQL, jinak by
+  // u člověka s aktivním, ale vypršelým videokurzem hlásila důvod, který nerozhodl.
+  const maAktivni = (p: string) => naroky.some((e) => e.product === p && e.active === true);
   const platny = (p: string) => naroky.some((e) =>
     e.product === p && e.active === true && (!e.expires_at || Date.parse(String(e.expires_at)) > Date.now()));
   if (naroky.some((e) => e.product === "coaching")) return { duvod: "ma_koucink" };
   if (((cc.data?.tags as string[]) ?? []).some((t) => String(t) === "coaching-active")) return { duvod: "ma_koucink" };
   if (platny("konzultace")) {
+    if (calls.error) return { duvod: "nevim_chyba_cteni" };
     const termin = Date.parse(String(calls.data?.termin_at ?? ""));
     if (!Number.isFinite(termin) || termin > Date.now()) return { duvod: "ceka_na_hovor" };
   }
-  if (!platny("videokurz") && !platny("academy")) return { duvod: "nema_videokurz_ani_academy" };
+  if (!maAktivni("videokurz") && !maAktivni("academy")) return { duvod: "nema_videokurz_ani_academy" };
   const l = lead.data as { id: string; track: string; status: string; next_send_at: string | null } | null;
   if (l) {
     const { data: uzDostal } = await admin.from("email_events")

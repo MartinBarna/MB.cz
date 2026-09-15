@@ -2055,7 +2055,6 @@ Deno.serve(async (req) => {
             }
           }
 
-
           // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
           // a domluvit termín. Bez tohohle upozornění by zákazník zaplatil 2 990 Kč
           // a čekal, dokud si toho někdo náhodou nevšimne v přehledu platieb.

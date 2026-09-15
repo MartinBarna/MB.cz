@@ -6,10 +6,10 @@ import { maPreskocitKrok, PRESKOC_KROK_KDYZ_VLASTNI } from './preskoc.ts';
 
 import {
   konzultaceVBehu,
-  maZnackuKonzultace,
   mostBlokujeVlastnictvi,
   odstupDnu,
   shouldStop as pravidlaShouldStop,
+  smiSeOdznackovat,
   varsBezZnackyKonzultace,
   varsSeZnackouKonzultace,
   vyberMost,
@@ -379,6 +379,9 @@ Deno.serve(async (req: Request) => {
     for (const r of (konzRows ?? []) as { email: string }[]) { const em = String(r.email ?? '').toLowerCase(); if (em && !poHovoru.has(em)) konzultaceCekaNaHovor.add(em); }
     konzBrana = 'ok:' + konzultaceCekaNaHovor.size;
   }
+  // ⛔ Rozliseni „mnozina je prazdna, protoze nikdo neceka" od „mnozina je prazdna,
+  // protoze dotaz selhal". Prvni dovoluje znacku smazat, druhe NE (viz `smiSeOdznackovat`).
+  const konzBranaOk = konzBrana.indexOf('ok:') === 0;
   const shouldStop = (track: string, step: number, em: string): boolean => pravidlaShouldStop(track, step, em, owns, exCoaching);
   const APP_AKTIVACE_URL = 'https://kfkmghvhqwqtsalqjmrp.supabase.co/functions/v1/aktivace-stav'; const TRATE_SE_SIGNALEM = trateProAppSignal(KROK_PODLE_ZAPISU); let zapsaliAktivitu: Set<string> | null = null; let aktivaceStav = 'vypnuto';
   if (TRATE_SE_SIGNALEM.size > 0) { const ptameSeNa = [...new Set(leads.filter((l: { track?: string }) => TRATE_SE_SIGNALEM.has(String(l.track || ''))).map((l: { email: string }) => String(l.email ?? '').toLowerCase()).filter((e: string) => e.includes('@')))]; if (ptameSeNa.length === 0) aktivaceStav = 'nikdo_na_vetvene_trati'; else { try { const { data: hs } = await admin.from('app_config').select('value').eq('key', 'app_onboarding_secret').maybeSingle(); if (!hs?.value) aktivaceStav = 'chybi_secret'; else { const r = await fetch(APP_AKTIVACE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-app-secret': String(hs.value) }, body: JSON.stringify({ emaily: ptameSeNa }) }); const telo = await r.json().catch(() => ({})); if (r.ok) { const aktivni = nactiAktivniZOdpovedi(telo); if (aktivni) { zapsaliAktivitu = aktivni; aktivaceStav = 'ok'; } else aktivaceStav = 'odpoved_' + r.status; } else aktivaceStav = 'odpoved_' + r.status; } } catch (e) { aktivaceStav = 'vyjimka_' + String(e).slice(0, 60); } } }
@@ -399,9 +402,12 @@ Deno.serve(async (req: Request) => {
     if (konzultaceVBehu(String(l.track || ''), String(l.email).toLowerCase(), konzultaceCekaNaHovor)) { const nextKonz = new Date(Date.now() + ODLOZ_MS).toISOString(); await admin.from('leads').update({ next_send_at: nextKonz, vars: varsSeZnackouKonzultace(l.vars, nowIso), updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'odklad_konzultace', detail: { track: l.track, key: tpl.key, duvod: 'ceka na konzultacni hovor s Martinem' } }); delayedKonzultace++; continue; }
     // ⛔ ZNACKA SE MUSI SMAZAT, JAKMILE CLOVEK UZ NECEKA. Bez toho by `newsletter_prijemci`
     // ignorovala jeho `next_send_at` napořád a posilala mu blog-newsletter i v den,
-    // kdy mu miri normalni mail z trate. Je to jediny zapis navic a jen u toho,
-    // kdo znacku opravdu ma (po hovoru, po refundu konzultace nebo po zruseni terminu).
-    if (maZnackuKonzultace(l.vars)) { const cisteVars = varsBezZnackyKonzultace(l.vars); await admin.from('leads').update({ vars: cisteVars, updated_at: nowIso }).eq('id', l.id); l.vars = cisteVars; await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'odklad_konzultace_konec', detail: { track: l.track, duvod: 'hovor probehl nebo narok skoncil, trat pokracuje' } }); odznackovanoKonzultace++; }
+    // kdy mu miri normalni mail z trate.
+    // ⛔ ROZHODUJE MNOZINA CEKAJICICH, NE TRAT (oprava po revizi R2). Pujcka do rozesilky
+    // cloveku docasne prepise `track` na `blog-newsletter` nebo `tydenik`, takze podminka
+    // podle trate by znacku smazala nekomu, kdo dal ceka, a zapsala o tom nepravdivou
+    // udalost. Pri chybe brany se nemaze vubec, viz `smiSeOdznackovat`.
+    if (smiSeOdznackovat(l.vars, String(l.email), konzultaceCekaNaHovor, konzBranaOk)) { const cisteVars = varsBezZnackyKonzultace(l.vars); await admin.from('leads').update({ vars: cisteVars, updated_at: nowIso }).eq('id', l.id); l.vars = cisteVars; await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'odklad_konzultace_konec', detail: { track: l.track, duvod: 'uz neni mezi cekajicimi (hovor probehl, termin zrusen nebo narok skoncil)' } }); odznackovanoKonzultace++; }
     const { data: already } = await admin.from('email_events').select('id').eq('lead_id', l.id).eq('step', l.step).eq('type', 'sent').eq('detail->>track', l.track).maybeSingle(); const advance = async () => { const ns = l.step + 1; const bylOdhlaseny = !!(l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars) && (l.vars as Record<string, unknown>)._byl_odhlaseny); if (bylOdhlaseny && l.step === 0 && String(l.track || '').startsWith('onboarding-nakup-')) { await admin.from('leads').update({ status: 'unsubscribed', next_send_at: null, step: ns, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'stop_odhlaseny_kupec', detail: { track: l.track, duvod: 'koupil po odhlášení, doručení odesláno, marketing ne' } }); finished++; return; } if (tpl.wait_days == null) { const na = await mostNaDalsiTrat(l); if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; return; } const cilMostu = vyberMost(MOSTY, String(l.track || '')); if (cilMostu && mostBlokujeNeaktivitu(String(l.track || ''), cilMostu.track, stavZapisu(String(l.email)))) { await admin.from('leads').update({ status: 'paused', next_send_at: null, step: ns, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'paused_neaktivita', detail: { track: l.track, key: tpl.key, podminka: 'most_neaktivita', stav: stavZapisu(String(l.email)) } }); pausedNeaktivita++; return; } await admin.from('leads').update({ step: ns, next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; } else { const next = new Date(Date.now() + tpl.wait_days * 86400000).toISOString(); await admin.from('leads').update({ step: ns, next_send_at: next, updated_at: nowIso }).eq('id', l.id); } };
     const preskocProdukt = maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns); if (preskocProdukt) { await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_owns_product', detail: { track: l.track, key: tpl.key, produkt: preskocProdukt } }); await advance(); skippedOwns++; continue; }
     if (already) { await advance(); skippedAlready++; continue; }

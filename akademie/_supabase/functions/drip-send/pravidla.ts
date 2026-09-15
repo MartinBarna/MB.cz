@@ -179,6 +179,39 @@ export function varsBezZnackyKonzultace(vars: unknown): Record<string, unknown> 
 }
 
 /**
+ * SMI SE ZNACKA SMAZAT? (oprava 15. 9. 2026 po revizi R2, nalez R2-S1.)
+ *
+ * ⛔ NE PODLE TRATE, ALE PODLE MNOZINY CEKAJICICH. Prvni verze mazala znacku vzdycky,
+ * kdyz `konzultaceVBehu` vratilo `false`, jenze to ma DVA duvody a jen jeden z nich
+ * znamena „uz neceka":
+ *   (a) clovek uz opravdu neceka (hovor probehl, termin zrusen, narok skoncil),
+ *   (b) lead PRAVE NENI na prodejni trati. To nastava uplne bezne: `newsletter_rozeslani`
+ *       i `tydenik_rozeslani` si leada PUJCI, prepisou mu `track` na `blog-newsletter`
+ *       nebo `tydenik` a nastavi `next_send_at = now()`. Drip-send ho pak vezme,
+ *       `konzultaceVBehu('blog-newsletter', …)` je spravne `false` a stara verze
+ *       znacku smazala, prestoze termin hovoru porad nebyl.
+ *
+ * ⛔ A NIKDY PRI CHYBE BRANY. Kdyz selze nektery ze dvou dotazu, je mnozina prazdna
+ * (vedomy fail-open) a `has()` vrati `false` VSEM. Bez teto podminky by jedina chyba
+ * dotazu nezustala u „dnes se neodklada", ale smazala by znacky vsem, kdo je maji.
+ * Fail-open ma znamenat „posli o mail navic", ne „zapis do dat".
+ *
+ * Nasledek stare verze byl tichy NEPRAVDIVY zaznam `odklad_konzultace_konec`
+ * s duvodem „hovor probehl" a clovek do dalsiho behu vypadl z blog-newsletteru,
+ * tedy presne to, kvuli cemu se nalez S1 opravoval.
+ */
+export function smiSeOdznackovat(
+  vars: unknown,
+  em: string,
+  konzultaceCekaNaHovor: Set<string>,
+  branaOk: boolean,
+): boolean {
+  if (!maZnackuKonzultace(vars)) return false;
+  if (!branaOk) return false;
+  return !konzultaceCekaNaHovor?.has(String(em ?? '').toLowerCase());
+}
+
+/**
  * ⛔ ZAMERNE KROK 1, NE 0. `shouldStop` ma pro akvizicni trate (lead-magnet*,
  * existing-leadmagnet, nurture-*) tvar `step > 0 && vlastniCokoli`, protoze KROK 0 je
  * slibeny freebie a ten se posila i tomu, kdo uz koupil. Pri volani s nulou by ochrana

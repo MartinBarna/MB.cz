@@ -8,6 +8,7 @@ import {
   mostBlokujeVlastnictvi,
   odstupDnu,
   shouldStop,
+  smiSeOdznackovat,
   TRATE_PAUZA_KONZULTACE,
   varsBezZnackyKonzultace,
   varsSeZnackouKonzultace,
@@ -191,6 +192,30 @@ zkontroluj('mazani nesmaze promenne trati', JSON.stringify(VARS_PO_HOVORU['upsel
 zkontroluj('mazani nesmaze _cadence', JSON.stringify(VARS_PO_HOVORU._cadence), JSON.stringify({ od: '2026-09-01T00:00:00Z' }));
 zkontroluj('mazani nad prazdnymi vars nespadne', JSON.stringify(varsBezZnackyKonzultace(null)), '{}');
 zkontroluj('pole misto objektu nespadne', JSON.stringify(varsBezZnackyKonzultace([1, 2])), '{}');
+
+// ---------- MAZANI ZNACKY: PODLE MNOZINY, NE PODLE TRATE (po revizi R2, R2-S1) ----------
+// ⛔ Stara verze mazala znacku pokazde, kdyz `konzultaceVBehu` vratilo `false`. To ma ale
+// DVA duvody a jen jeden znamena „uz neceka". Druhy je „lead prave neni na prodejni trati",
+// coz nastava bezne: rozesilka si leada PUJCI a prepise mu `track` na `blog-newsletter`
+// nebo `tydenik`. Pak se znacka smazala nekomu, kdo dal cekal, a zapsala se o tom
+// nepravdiva udalost „hovor probehl".
+const ZNACKA = { _konzultace_ceka: '2026-09-15T08:00:00Z' };
+const BEZ_ZNACKY = { _cadence: { od: '2026-09-01T00:00:00Z' } };
+const BRANA_OK = true, BRANA_CHYBA = false;
+zkontroluj('kdo uz neceka, o znacku prijde', smiSeOdznackovat(ZNACKA, JA, s(), BRANA_OK), true);
+zkontroluj('kdo POŘÁD ČEKÁ, znacku SI NECHA', smiSeOdznackovat(ZNACKA, JA, s(JA), BRANA_OK), false);
+// Kontrast k puvodni vade: lead pujceny do rozesilky uz neni na upsell trati, ale ceka dal.
+// Funkce se na trat vubec nepta, takze na tomhle scenari zalezi jen mnozina.
+zkontroluj('pujceny do rozesilky a porad ceka: NEMAZAT', smiSeOdznackovat(ZNACKA, JA, s(JA, NIKDO), BRANA_OK), false);
+zkontroluj('pujceny do rozesilky a uz neceka: smazat', smiSeOdznackovat(ZNACKA, JA, s(NIKDO), BRANA_OK), true);
+// ⛔ Druha polovina vady: pri chybe dotazu je mnozina prazdna (fail-open) a `has()` vrati
+// false VSEM. Bez teto podminky by jedina chyba dotazu smazala znacky vsem, kdo je maji,
+// tedy z fail-open „posli o mail navic" by se stal zapis do dat.
+zkontroluj('CHYBA BRANY: prazdna mnozina NESMI mazat', smiSeOdznackovat(ZNACKA, JA, s(), BRANA_CHYBA), false);
+zkontroluj('chyba brany nemaze ani kdyz je nekdo v mnozine', smiSeOdznackovat(ZNACKA, JA, s(NIKDO), BRANA_CHYBA), false);
+zkontroluj('kdo znacku nema, nema se co mazat', smiSeOdznackovat(BEZ_ZNACKY, JA, s(), BRANA_OK), false);
+zkontroluj('prazdne vars nespadnou', smiSeOdznackovat(null, JA, s(), BRANA_OK), false);
+zkontroluj('velka pismena v adrese nerozbiji shodu ani tady', smiSeOdznackovat(ZNACKA, 'Klient@Example.com', s(JA), BRANA_OK), false);
 
 console.log(selhalo === 0 ? `\nHOTOVO: ${kontrol} kontrol, vse proslo.` : `\nSELHALO: ${selhalo} z ${kontrol}`);
 if (selhalo > 0) Deno.exit(1);
