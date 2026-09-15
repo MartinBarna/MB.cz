@@ -194,25 +194,50 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
   // ⛔ OPRAVA 28. 7. 2026: tady dřív stálo `if (cc2 && !cc2.name) update(...)`, tedy
   // jméno se zapsalo JEN když kontakt už existoval. U nově pozvaného klienta žádný
   // neexistuje, takže se jméno TIŠE ZAHODILO a nikde to nekřiklo.
-  if (name) {
-    const { data: cc2 } = await admin.from("customer_contacts").select("email,name").eq("email", email).maybeSingle();
-    if (!cc2) {
-      await admin.from("customer_contacts").insert({
-        email, name, audience: "customer", source: v.source,
-        products: ["coaching"], tags: ["coaching-active"],
-      });
-    } else if (!cc2.name) {
-      await admin.from("customer_contacts").update({ name }).eq("email", email);
-    }
+  // U nákupu přes Stripe jméno běžně neznáme, ale kontakt má vzniknout tak jako tak,
+  // jinak klient v CRM chybí a Martin ho nemá kde vidět.
+  //
+  // ⭐ 15. 9. 2026: blok dělá tři věci navíc a každá má vlastní důvod.
+  //  1) ODEBÍRÁ TAG `konzultace`. Martin 15. 9.: „konzultace musí být rozlišitelná od
+  //     koučinku; když pak daný mail přidám do koučinku, zmizí z konzultace a přibude
+  //     v koučinku." Kdo se stal klientem, už do seznamu „komu zavolat po konzultaci"
+  //     nepatří, jinak ho tam Martin uvidí napořád a bude ho obvolávat podruhé.
+  //     ⚠️ Maže se JEN značka. Nárok `konzultace` v `entitlements` ani historie plateb
+  //     se nedotkne, takže je pořád vidět, že si konzultaci koupil.
+  //  2) RAZÍTKUJE `onboarding_sent_at`. `videokurz-onboarding` bere KAŽDÝ řádek se
+  //     `status='active' AND onboarding_sent_at IS NULL` a pošle mu uvítačku a migrační
+  //     mail k videokurzu. Bez razítka se do té fronty dostane i klient koučinku (živě
+  //     jich tam přes 400 čeká). Cron tu funkci dnes nevolá, ale je to nabitá zbraň.
+  //  3) DOPLŇUJE `coaching-active` a `coaching` i EXISTUJÍCÍMU kontaktu. Do teď se u něj
+  //     měnilo jen jméno, takže člověk převedený z konzultace zůstal v CRM se značkou
+  //     konzultace a bez koučinku.
+  const tedIso = new Date().toISOString();
+  const { data: cc } = await admin.from("customer_contacts")
+    .select("email,name,tags,products,onboarding_sent_at").eq("email", email).maybeSingle();
+  if (!cc) {
+    await admin.from("customer_contacts").insert({
+      email,
+      ...(name ? { name } : {}),
+      audience: "customer",
+      source: v.source,
+      products: ["coaching"],
+      tags: ["coaching-active"],
+      onboarding_sent_at: tedIso,
+    });
   } else {
-    // U nákupu přes Stripe jméno běžně neznáme, ale kontakt má vzniknout tak jako tak,
-    // jinak klient v CRM chybí a Martin ho nemá kde vidět.
-    const { data: cc3 } = await admin.from("customer_contacts").select("email").eq("email", email).maybeSingle();
-    if (!cc3) {
-      await admin.from("customer_contacts").insert({
-        email, audience: "customer", source: v.source,
-        products: ["coaching"], tags: ["coaching-active"],
-      });
+    const puvodniTagy: string[] = (cc.tags as string[]) ?? [];
+    const puvodniProdukty: string[] = (cc.products as string[]) ?? [];
+    const tagy = puvodniTagy.filter((t) => String(t) !== "konzultace");
+    if (!tagy.includes("coaching-active")) tagy.push("coaching-active");
+    const produkty = puvodniProdukty.includes("coaching") ? puvodniProdukty : [...puvodniProdukty, "coaching"];
+    const zmena: Record<string, unknown> = {};
+    if (name && !cc.name) zmena.name = name;
+    if (tagy.join("|") !== puvodniTagy.join("|")) zmena.tags = tagy;
+    if (produkty.length !== puvodniProdukty.length) zmena.products = produkty;
+    if (!cc.onboarding_sent_at) zmena.onboarding_sent_at = tedIso;
+    if (Object.keys(zmena).length > 0) {
+      zmena.updated_at = tedIso;
+      await admin.from("customer_contacts").update(zmena).eq("email", email);
     }
   }
 

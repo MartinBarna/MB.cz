@@ -1849,6 +1849,8 @@ Deno.serve(async (req) => {
         );
         let atribuce = "preskoceno";
         let bonusVideokurz = def.videokurzBonus ? "preskoceno" : "netyka-se";
+        // Stav zalozeni kontaktu v CRM jde do odpovedi funkce, at je v logu Stripu videt.
+        let crmKontakt = def.produkt === "konzultace" ? "preskoceno" : "netyka-se";
         // Stav dokladu jde do odpovědi funkce, ať je v logu Stripu vidět, jestli odešel.
         // ⚠️ Od 7. 8. 2026 se doklad týká VŠECH jednorázových produktů, ne jen balíčku,
         // takže tu už není `klic === "balicek" ? … : "netyka-se"`.
@@ -1914,6 +1916,66 @@ Deno.serve(async (req) => {
                 email: emailL, chyba: bonusVideokurz,
                 co_delat: "⛔ Přidej mu videokurz ručně v adminu. Konzultaci má, kurz ne, "
                   + "a uvítací mail mu ho slibuje.",
+              });
+            }
+          }
+
+          // ⭐ KUPEC KONZULTACE PATŘÍ DO CRM (15. 9. 2026, po ostrém testu s Mirkem).
+          // Do téhle chvíle psal webhook do `customer_contacts` VÝHRADNĚ koučinkovou větví
+          // (`onboardKoucink`). Zaplacená konzultace za 2 990 Kč nezaložila kontakt vůbec,
+          // takže Martin neměl seznam lidí, se kterými má po hovoru udělat follow-up.
+          // To je celý smysl toho produktu, takže to není kosmetika.
+          //
+          // ⛔ TAG JE `konzultace`, NIKDY `coaching-active`. `coaching-active` řídí kapacitu
+          //    koučinku, vyřazení z upsell front i segmenty rozesílek; konzultace je jedna
+          //    hodina, ne dlouhodobá spolupráce (`konzultace-produkt.sql`). Martin 15. 9. 2026:
+          //    „konzultace musí být rozlišitelná od koučinku; když pak daný mail přidám do
+          //    koučinku, zmizí z konzultace a přibude v koučinku." Odebrání tagu při pozvánce
+          //    do koučinku dělá `_shared/koucink-onboarding.ts`, ne tenhle soubor.
+          //
+          // ⛔ `onboarding_sent_at` SE MUSÍ ORAZÍTKOVAT. `videokurz-onboarding` bere KAŽDÝ
+          //    řádek se `status='active' AND onboarding_sent_at IS NULL` a pošle mu uvítačku
+          //    a migrační mail k videokurzu. Ta fronta má živě přes 400 řádků a nesmí růst
+          //    o lidi, kteří si koupili konzultaci a uvítací mail už dostali.
+          //
+          // ⚠️ U Stripu jméno kupce neznáme, řádek proto vzniká bez `name`. Není to vada,
+          //    jen to Martin uvidí v adminu jako kontakt bez jména (doplní se z dotazníku).
+          // ⚠️ Chyba se NESMÍ spolknout, ale taky nesmí shodit nákup: přístup i uvítací mail
+          //    jsou v pořádku, chybí jen řádek v CRM. Proto alert, ne pád.
+          if (def.produkt === "konzultace") {
+            try {
+              const ted = new Date().toISOString();
+              const { data: cc, error: ccErr } = await admin.from("customer_contacts")
+                .select("email,tags,products,onboarding_sent_at").eq("email", emailL).maybeSingle();
+              if (ccErr) throw new Error("cteni: " + ccErr.message);
+              if (!cc) {
+                const { error } = await admin.from("customer_contacts").insert({
+                  email: emailL, audience: "customer", source: def.source,
+                  products: ["konzultace"], tags: ["konzultace"], onboarding_sent_at: ted,
+                });
+                if (error) throw new Error("insert: " + error.message);
+                crmKontakt = "zalozen";
+              } else {
+                const tagy = (cc.tags as string[]) ?? [];
+                const produkty = (cc.products as string[]) ?? [];
+                const zmena: Record<string, unknown> = {};
+                if (!tagy.includes("konzultace")) zmena.tags = [...tagy, "konzultace"];
+                if (!produkty.includes("konzultace")) zmena.products = [...produkty, "konzultace"];
+                if (!cc.onboarding_sent_at) zmena.onboarding_sent_at = ted;
+                if (Object.keys(zmena).length === 0) crmKontakt = "uz-sedel";
+                else {
+                  zmena.updated_at = ted;
+                  const { error } = await admin.from("customer_contacts").update(zmena).eq("email", emailL);
+                  if (error) throw new Error("update: " + error.message);
+                  crmKontakt = "doplnen";
+                }
+              }
+            } catch (e) {
+              crmKontakt = "CHYBA: " + String(e).slice(0, 120);
+              await alertAdmin("ℹ️ Stripe: konzultace zaplacena, ale kontakt v CRM se nezaložil", {
+                email: emailL, chyba: String(e).slice(0, 200),
+                co_delat: "Přístup i uvítací mail jsou v pořádku, chybí jen řádek v CRM. "
+                  + "Přidej ho v adminu ručně, ať ti ten člověk nevypadne z follow-upu po hovoru.",
               });
             }
           }
@@ -2130,6 +2192,7 @@ Deno.serve(async (req) => {
           ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
           novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
           referral, atribuce, bonus_videokurz: bonusVideokurz, balicek_znovu: balicekZnovu,
+          crm_kontakt: crmKontakt,
           doklad,
         });
       }

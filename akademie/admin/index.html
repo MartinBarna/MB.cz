@@ -442,6 +442,7 @@
           <option value="">Všichni</option>
           <option value="coaching">Koučink: aktivní klienti</option>
           <option value="coaching-ex">Koučink: bývalí klienti</option>
+          <option value="konzultace">Konzultace: kupci</option>
           <option value="videokurz">Má videokurz</option>
           <option value="academy">Má Academy</option>
           <option value="lead">Lead-magnet (bez koupě)</option>
@@ -3091,6 +3092,12 @@
         ? (r.tags||[]).some(function(t){return String(t)==='coaching-active';})
         : !!r.has_coaching;
       if(f==='coaching-ex') return !r.has_coaching && (r.tags||[]).some(function(t){return String(t)==='coaching-ex';});
+      // [15. 9. 2026] Kupci konzultace. Bez téhle volby by značka `konzultace` byla jen
+      // dekorace v detailu kontaktu a Martin by pořád neměl seznam lidí k follow-upu.
+      // ⛔ Přesná shoda, žádný prefix: `coaching`/`coaching-ex` se sem nesmí připlést.
+      // Kdo se stal klientem koučinku, značku ztrácí (`_shared/koucink-onboarding.ts`),
+      // takže tenhle seznam ukazuje jen ty, kdo v koučinku ještě nejsou.
+      if(f==='konzultace') return (r.tags||[]).some(function(t){return String(t)==='konzultace';});
       if(f==='videokurz') return r.has_videokurz;
       if(f==='academy') return r.has_academy;
       if(f==='lead') return !r.has_academy&&!r.has_videokurz;
