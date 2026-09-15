@@ -272,6 +272,17 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
   const CTA_URL = "https://martinbarna.cz/akademie/prihlaseni/?next=%2Fakademie%2Fklient%2F";
   const btn = (label: string) => `<p style='margin:4px 0 18px'><a href='${CTA_URL}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
   const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
+  // ==========================================================================
+  // ZMENA TEXTU 15. 9. 2026 (Martin). Dva sliby, ktere systém nedrzel, v OBOU vetvich:
+  //  1) „Do 48 hodin ti nastavím jídelníček" byl cas, ktery se neda garantovat.
+  //     Prvni vetou koucinku nema byt termin, ktery muze padnout. Zustava CO klient
+  //     dostane, ne KDY. ⛔ Zadny novy casovy slib se sem nevraci.
+  //  2) Vyzva k tydennimu reportu chodi v NEDELI RANO (`client-remind`, crony 19, 47
+  //     a 48, 3:00 UTC), ne v pondeli. Mail tvrdil pondeli, takze klient mel v nedeli
+  //     v schrance vyzvu, o ktere mu Martin napsal, ze prijde az zitra. Odpoved na
+  //     report posila Martin v pondeli, nejpozdeji v utery dopoledne.
+  // ⚠️ Obe vetve (novy i stavajici) musi o reportu rikat totez, jinak se tise rozejdou.
+  // ==========================================================================
   let subject: string, inner: string;
   if (kind === "stavajici") {
     subject = "Konec Excelu 🎉 Tvoje klientská sekce je tady";
@@ -279,7 +290,7 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
       p("mám pro tebe upgrade naší spolupráce: od teď máš na mém webu <strong>vlastní klientskou sekci</strong>. Žádné vyplňování Excelu a posílání mailem, všechno na pár kliknutí, i z mobilu.") +
       `<p style='margin:0 0 8px'><strong>Co v ní najdeš:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
       `<li style='margin:0 0 7px'>📊 <strong>Grafy tvého pokroku</strong>: váha, míry, kroky… celá tvoje cesta na jednom místě</li>` +
-      `<li style='margin:0 0 7px'>📝 <strong>Pondělní report naklikáš za 3 minuty</strong>, provede tě to krok za krokem a kopie přijde nám oběma</li>` +
+      `<li style='margin:0 0 7px'>📝 <strong>Týdenní report naklikáš za 3 minuty</strong>, výzva ti přijde v neděli ráno, provede tě to krok za krokem a kopie přijde nám oběma</li>` +
       `<li style='margin:0 0 7px'>📁 <strong>Dokumenty ode mě</strong>: všechny podklady pohromadě, žádné hledání v mailech</li>` +
       `<li style='margin:0 0 7px'>📸 <strong>Appka Tvůj Coach v ceně</strong>: vyfotíš jídlo a máš spočítaná makra (coach.martinbarna.cz, stejný e-mail)</li>` +
       `<li style='margin:0 0 7px'>🎬 <strong>Videokurz (182 videí)</strong> máš v ceně koučinku</li>` +
@@ -295,9 +306,9 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
       p("Připravil jsem <strong>vstupní dotazník</strong>. Proklikáš ho krok za krokem za ~10 minut (cíle, zdraví, co rád jíš, kdy stíháš trénovat…). Nic se nedá zkazit, všechno jde později upravit:") +
       btn("Vyplnit vstupní dotazník") +
       `<p style='margin:0 0 8px'><strong>Co bude dál:</strong></p><ul style='margin:0 0 14px;padding-left:20px'>` +
-      `<li style='margin:0 0 7px'>1️⃣ Do <strong>48 hodin</strong> ti nastavím jídelníček, makra a trénink na míru</li>` +
-      `<li style='margin:0 0 7px'>2️⃣ Každé <strong>pondělí ráno</strong> ti přijde připomínka na týdenní report (3 minuty klikání)</li>` +
-      `<li style='margin:0 0 7px'>3️⃣ Já každý report projdu, upravím plán a ozvu se ti</li></ul>` +
+      `<li style='margin:0 0 7px'>1️⃣ <strong>Připravím ti jídelníček, makra a trénink na míru</strong></li>` +
+      `<li style='margin:0 0 7px'>2️⃣ V <strong>neděli ráno</strong> ti přijde výzva k týdennímu reportu (3 minuty klikání)</li>` +
+      `<li style='margin:0 0 7px'>3️⃣ Report ti projdu a ozvu se ti v pondělí, nejpozději v úterý dopoledne</li></ul>` +
       p("Ve tvé sekci najdeš i <strong>videokurz zdarma</strong> (182 videí), <strong>appku Tvůj Coach</strong> na zapisování jídla (vyfotíš a máš makra), dokumenty ode mě a grafy pokroku, které spolu budeme plnit.") +
       p("<strong>Be Effective!</strong><br>Martin");
   }
