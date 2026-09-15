@@ -92,5 +92,29 @@ check("okraje puvodniho textu se orezou", proAlert("  1,82  ", null) === 'nečit
 //    taky, Martin by v mailu videl &amp;lt; misto <.
 check("proAlert neescapuje (dela to esc v R())", proAlert("<b>", null) === 'nečitelné („<b>“)', proAlert("<b>", null));
 
+console.log("\nproAlert u ranní vahy: stejne ticho jako u novych poli, opraveno 15. 9. 2026");
+// ⚠️ Váha je v provozu od 30. 7. 2026 a měla tutéž tichou díru: kdo napsal „120 kilo" nebo
+//    hodnotu mimo rozsah, Martin v alertu neviděl nic. Převod váhy se NEMĚNIL, jen výpis.
+check(
+  '"82,5" -> "82.5 kg" (vypis se nezmenil)',
+  proAlert("82,5", vahaNaCislo("82,5"), "kg") === "82.5 kg",
+  proAlert("82,5", vahaNaCislo("82,5"), "kg"),
+);
+check(
+  '"120 kilo" -> necitelne, drive prazdno',
+  proAlert("120 kilo", vahaNaCislo("120 kilo"), "kg") === 'nečitelné („120 kilo“)',
+  proAlert("120 kilo", vahaNaCislo("120 kilo"), "kg"),
+);
+check(
+  '"700" mimo rozsah -> necitelne, drive prazdno',
+  proAlert("700", vahaNaCislo("700"), "kg") === 'nečitelné („700“)',
+  proAlert("700", vahaNaCislo("700"), "kg"),
+);
+check(
+  "nevyplnena vaha -> prazdno, radek v mailu nevznikne",
+  proAlert("", vahaNaCislo(""), "kg") === "",
+  proAlert("", vahaNaCislo(""), "kg"),
+);
+
 console.log(selhalo === 0 ? "\nVSE ZELENE\n" : "\n" + selhalo + " SELHANI\n");
 if (selhalo > 0) throw new Error(String(selhalo) + " selhani");

@@ -174,8 +174,10 @@ Deno.serve(async (req: Request) => {
       R("Kroky/den", proAlert(body.steps_per_day, steps)) +
       R("Věk", proAlert(body.age, age, "let")) +
       R("Výška", proAlert(body.height_cm, height, "cm")) +
+      // Pohlaví `proAlert` nepotřebuje: `select` na webu umí vyrobit jen "", "m" nebo "z",
+      // nečitelná hodnota by musela přijít z ručně složeného POSTu a tam je ticho v pořádku.
       R("Pohlaví", sex === "z" ? "žena" : sex === "m" ? "muž" : "") +
-      R("Ranní váha", weight === null ? "" : weight + " kg") +
+      R("Ranní váha", proAlert(body.weight_kg, weight, "kg")) +
       R("Míry (pas, boky)", odpovedi.measurements) +
       R("Co mám vědět předem", odpovedi.note) +
       R("Odkud přišel", attribution ? Object.keys(attribution).map((k) => k + "=" + attribution[k]).join(" · ") : "") +
