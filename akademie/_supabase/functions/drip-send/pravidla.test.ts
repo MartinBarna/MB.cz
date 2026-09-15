@@ -2,10 +2,12 @@
 // Spusteni: npx --yes deno@2 run akademie/_supabase/functions/drip-send/pravidla.test.ts
 // (bez jakychkoli --allow-*: test necte sit, disk ani promenne prostredi)
 import {
+  konzultaceVBehu,
   KROK_PRO_MOST,
   mostBlokujeVlastnictvi,
   odstupDnu,
   shouldStop,
+  TRATE_PAUZA_KONZULTACE,
   vlastniCokoli,
   vyberMost,
 } from './pravidla.ts';
@@ -136,6 +138,26 @@ zkontroluj('evergreen-kupci: EX-klient koucinku projde (trat koucink neprodava)'
 zkontroluj('most do evergreen-kupci se clenovi Academy zablokuje', mostBlokujeVlastnictvi('evergreen-kupci', JA, MA_ACADEMY, BEZ_EX), true);
 zkontroluj('most do evergreen-kupci majitele videokurzu pusti', mostBlokujeVlastnictvi('evergreen-kupci', JA, MA_VK, BEZ_EX), false);
 zkontroluj('evergreen-consumer se nestopuje nikdy (obsah pro vsechny, kroky resi preskoc.ts)', shouldStop('evergreen-consumer', 1, JA, MA_ACADEMY, JE_EX), false);
+
+// ---------- PAUZA PRED KONZULTACNIM HOVOREM (15. 9. 2026) ----------
+// Mnozina = lide se zaplacenou konzultaci, kterym hovor JESTE NEBYL (termin chybi
+// nebo je v budoucnu). Stavi ji `index.ts`, tady je jen dosazena.
+const CEKA_NA_HOVOR = s(JA);
+const NIKDO_NECEKA = s();
+zkontroluj('upsell-coaching se pred hovorem ODLOZI', konzultaceVBehu('upsell-coaching', JA, CEKA_NA_HOVOR), true);
+zkontroluj('upsell-academy se pred hovorem ODLOZI (vede ji tyz clovek)', konzultaceVBehu('upsell-academy', JA, CEKA_NA_HOVOR), true);
+zkontroluj('blog-newsletter se NEODKLADA (obsah, ne nabidka)', konzultaceVBehu('blog-newsletter', JA, CEKA_NA_HOVOR), false);
+zkontroluj('tydenik se NEODKLADA', konzultaceVBehu('tydenik', JA, CEKA_NA_HOVOR), false);
+zkontroluj('onboarding-nakup-konzultace se NEODKLADA (doruceni zaplaceneho)', konzultaceVBehu('onboarding-nakup-konzultace', JA, CEKA_NA_HOVOR), false);
+zkontroluj('longtail-consumer se NEODKLADA', konzultaceVBehu('longtail-consumer', JA, CEKA_NA_HOVOR), false);
+zkontroluj('kdo konzultaci nema, projde i na prodejni trati', konzultaceVBehu('upsell-coaching', NIKDO, CEKA_NA_HOVOR), false);
+zkontroluj('PRAZDNA MNOZINA = POSILEJ (fail-open pri vypadku dotazu)', konzultaceVBehu('upsell-coaching', JA, NIKDO_NECEKA), false);
+zkontroluj('velka pismena v adrese nerozbiji shodu', konzultaceVBehu('upsell-coaching', 'Klient@Example.com', CEKA_NA_HOVOR), true);
+zkontroluj('prazdny track nespadne a neodklada', konzultaceVBehu('', JA, CEKA_NA_HOVOR), false);
+zkontroluj('pauzuji se prave dve prodejni trate', TRATE_PAUZA_KONZULTACE.join(','), 'upsell-coaching,upsell-academy');
+// ⛔ KONTRAST PROTI `shouldStop`: tatáž situace se v ni NESMI projevit, jinak by se
+// z docasneho cekani stal trvaly `status='purchased'` a clovek by prisel i o newsletter.
+zkontroluj('shouldStop o konzultaci NIC NEVI (musi zustat na odkladu)', shouldStop('upsell-coaching', 0, JA, MA_VK, BEZ_EX), false);
 
 console.log(selhalo === 0 ? `\nHOTOVO: ${kontrol} kontrol, vse proslo.` : `\nSELHALO: ${selhalo} z ${kontrol}`);
 if (selhalo > 0) Deno.exit(1);

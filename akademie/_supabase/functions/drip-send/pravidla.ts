@@ -97,6 +97,41 @@ export function shouldStop(
 }
 
 /**
+ * PAUZA PRED KONZULTACNIM HOVOREM (15. 9. 2026).
+ *
+ * Kdo ma zaplacenou konzultaci a jeste si s Martinem nepromluvil, nesmi dostat mail
+ * z PRODEJNI trate: ta mu prodava presne to, o cem si s Martinem bude povidat.
+ *
+ * ⛔ NEPATRI do `shouldStop`. Ta je TRVALA: nastavi leadovi `status='purchased'`
+ * a `next_send_at=null`, cimz clovek vypadne i z blog-newsletteru a tydeniku (obe
+ * rozesilky berou jen `status='active'`). Tohle je DOCASNE cekani, resi se ODKLADEM
+ * o 24 h (`ODLOZ_MS` z `aktivace.ts`), stejnym vzorem jako `odklad_neaktivita`.
+ * Druhy den se to zkusi znovu a po hovoru mail proste odejde.
+ *
+ * ⚠️ Mnozina `konzultaceCekaNaHovor` se stavi v `index.ts`: aktivni a nevyprsely narok
+ * `konzultace` MINUS ti, kdo maji `consultation_calls.termin_at` v minulosti. Diky tomu
+ * tahle funkce necte DB ani cas a jde testovat bez site.
+ *
+ * ⚠️ FAIL-OPEN: kdyz nektery z tech dvou dotazu selze, mnozina je PRAZDNA a maily jdou
+ * dal. Opacna volba by pri vypadku jednoho dotazu ticho zadrzela maily vsem, a to je
+ * horsi nez jeden mail navic. Vedomy kompromis, stejny jako u `maPreskocitKrok`.
+ *
+ * ⛔ Obsahove trate (`blog-newsletter`, `tydenik`) se NEODKLADAJI: ticho pred hovorem
+ * vypada hur nez jeden clanek. A `onboarding-nakup-konzultace` uz vubec ne, to je
+ * doruceni zaplaceneho.
+ */
+export const TRATE_PAUZA_KONZULTACE: readonly string[] = ['upsell-coaching', 'upsell-academy'];
+
+export function konzultaceVBehu(
+  track: string,
+  em: string,
+  konzultaceCekaNaHovor: Set<string>,
+): boolean {
+  if (!TRATE_PAUZA_KONZULTACE.includes(String(track || ''))) return false;
+  return !!konzultaceCekaNaHovor?.has(String(em ?? '').toLowerCase());
+}
+
+/**
  * ⛔ ZAMERNE KROK 1, NE 0. `shouldStop` ma pro akvizicni trate (lead-magnet*,
  * existing-leadmagnet, nurture-*) tvar `step > 0 && vlastniCokoli`, protoze KROK 0 je
  * slibeny freebie a ten se posila i tomu, kdo uz koupil. Pri volani s nulou by ochrana
