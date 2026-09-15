@@ -49,3 +49,70 @@ export function jeCerstvyKlient(
   // Nárok datovaný do budoucna (překlep v datech) je tím spíš čerstvý, proto prostý rozdíl.
   return ted - od < START_GRACE_DNI * 86400000;
 }
+
+// ==========================================================================
+// ⭐ DÁVKA 9 (15. 9. 2026): zadaný START koučinku místo náhrady z `granted_at`.
+// `entitlements.start_at` (migrace `davka9-start-koucinku-2026-09-15.sql`) je den, kdy
+// klient reálně začíná. Martin ho zadává v adminu (pozvánka nebo karta klienta).
+// Náhrada `jeCerstvyKlient` výš zůstává beze změny a platí pro každého, kdo start nemá.
+// ==========================================================================
+
+/**
+ * Kolik dní od STARTU koučinku se výzva k reportu přeskakuje.
+ *
+ * Martinovo zadání zní „první výzva až po prvním týdnu od startu". Týden reportu je
+ * pondělí až neděle a report se vyplňuje v neděli ráno, takže práh rozhoduje takhle:
+ *   - 6 dní: klient, který startuje v PONDĚLÍ, reportuje hned tuhle neděli (den 6,
+ *     týden se právě uzavírá). Nedělní start posune výzvu o celý týden.
+ *   - 7 dní: pondělní start by čekal až na DRUHOU neděli, tedy 13. den, a u nedělního
+ *     startu by hranice padla na jedinou hodinu mezi půlnocí a během cronu v 01:00 UTC.
+ * Proto 6: dává celý den rezervy a nikoho nevyzve dřív, než má za sebou skoro celý týden.
+ *
+ * ⚠️ Hodnota je návrh stavěče, ne Martinovo rozhodnutí (15. 9. 2026). Až ji potvrdí,
+ *    mění se JEN tady a v hraničním testu; nikde jinde v kódu číslo není.
+ */
+export const PRVNI_VYZVA_PO_DNECH = 6;
+
+/**
+ * Start dál v budoucnu než tohle = skoro jistě překlep v roce (2027 místo 2026).
+ * Kdyby se bral vážně, klient by zmlkl na měsíce a nikdo by si toho nevšiml, protože
+ * mlčení se nikde nehlásí. Takový start se ignoruje a padá se na náhradu.
+ * ⛔ Pojistka je tady, ne jen ve validaci v adminu: do sloupce se dá zapsat i mimo admin
+ *    (ruční SQL) a past se nesmí zavřít jen na jednom konci.
+ */
+export const START_MAX_DNU_DOPREDU = 90;
+
+/**
+ * Smí klientovi přijít výzva k týdennímu reportu?
+ *
+ * Pořadí podmínek je schválně:
+ *   1) kdo někdy reportoval, tomu se nesahá (převáděný klient z Excelu posílá reporty roky),
+ *   2) zadaný a důvěryhodný `start_at` rozhoduje,
+ *   3) jinak se padá na starou náhradu z `granted_at` (`jeCerstvyKlient`).
+ *
+ * ⛔ Nečitelný ani chybějící start NENÍ důvod mail zadržet: vrací se stará cesta, ne ticho.
+ *
+ * @param email    adresa malými písmeny
+ * @param startOd  e-mail -> `entitlements.start_at` v ms (půlnoc UTC daného dne)
+ * @param grantOd  e-mail -> `entitlements.granted_at` v ms
+ * @param nekdyReportoval  e-maily s JAKÝMKOLI řádkem v `client_reports`
+ * @param ted      aktuální čas v ms; parametrem, ať je funkce deterministická
+ *
+ * @returns `preskocit` a DŮVOD: "start" (rozhodl zadaný start), "narok" (rozhodla náhrada),
+ *          "" (nepřeskakuje se, protože klient už někdy reportoval). Důvod jde do logu
+ *          i do čítačů v odpovědi, ať se přeskočený klient dá dohledat.
+ */
+export function preskocitVyzvuKReportu(
+  email: string,
+  startOd: Map<string, number>,
+  grantOd: Map<string, number>,
+  nekdyReportoval: Set<string>,
+  ted: number,
+): { preskocit: boolean; duvod: "start" | "narok" | "" } {
+  if (nekdyReportoval.has(email)) return { preskocit: false, duvod: "" };
+  const start = startOd.get(email);
+  if (start !== undefined && start - ted <= START_MAX_DNU_DOPREDU * 86400000) {
+    return { preskocit: ted < start + PRVNI_VYZVA_PO_DNECH * 86400000, duvod: "start" };
+  }
+  return { preskocit: jeCerstvyKlient(email, grantOd, nekdyReportoval, ted), duvod: "narok" };
+}
