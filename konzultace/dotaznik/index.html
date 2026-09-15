@@ -27,9 +27,12 @@
   .card { background:#fff; border:1px solid #ece3d8; border-radius:18px; padding:26px 24px; box-shadow:0 14px 40px rgba(0,0,0,.05); }
   label { display:block; font-size:.85rem; font-weight:600; color:#cabfb1; margin:16px 0 6px; }
   label:first-child { margin-top:0; }
-  input, textarea { width:100%; padding:12px 14px; border:1px solid #d9cdba; border-radius:11px; font-family:inherit; font-size:.96rem; background:#fdfbf7; color:var(--ink); }
-  input:focus, textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(235,177,44,.14); }
+  input, select, textarea { width:100%; padding:12px 14px; border:1px solid #d9cdba; border-radius:11px; font-family:inherit; font-size:.96rem; background:#fdfbf7; color:var(--ink); }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(235,177,44,.14); }
   textarea { min-height:88px; resize:vertical; }
+  /* Vek a vyska vedle sebe, at formular nenaroste o dva cele radky. Odsazeni shora ma
+     tahle trida, protoze label uvnitr sloupce je :first-child a margin si vynuluje. */
+  .dvojice { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
   .hint { font-size:.78rem; color:#9a8f7d; margin-top:4px; }
   .btn { width:100%; margin-top:22px; background:linear-gradient(145deg,#F6CD63,#EBB12C); color:#161616; font-weight:700; padding:15px; border-radius:50px; border:none; cursor:pointer; font-family:inherit; font-size:1rem; transition:.2s; box-shadow:0 14px 30px -10px rgba(235,177,44,.2); }
   .btn:hover { transform:translateY(-1px); box-shadow:0 18px 38px -10px rgba(235,177,44,.65); }
@@ -65,6 +68,28 @@
       <input id="email" type="email" autocomplete="email" placeholder="tvuj@email.cz" required>
       <p class="hint">Podle něj si dotazník spáruju s tvojí objednávkou.</p>
 
+      <!-- Věk, výška a pohlaví: bez nich se výdej odhadnout nedá a Martin šel na hovor bez čísel.
+           Všechna tři jsou NEPOVINNÁ a validuje je až server (`celeCislo` v `intake-capture`).
+           ⛔ Zdravotní pole se sem nedoplňují, viz komentář v `konzultace-dotaznik.sql`. -->
+      <div class="dvojice">
+        <div>
+          <label for="age">Věk</label>
+          <input id="age" type="text" inputmode="numeric" placeholder="např. 38">
+        </div>
+        <div>
+          <label for="height">Výška (cm)</label>
+          <input id="height" type="text" inputmode="numeric" placeholder="např. 182">
+        </div>
+      </div>
+
+      <label for="sex">Pohlaví</label>
+      <select id="sex">
+        <option value="">nevybráno</option>
+        <option value="m">muž</option>
+        <option value="z">žena</option>
+      </select>
+      <p class="hint">Podle věku, výšky a pohlaví ti na hovoru spočítám, kolik toho reálně můžeš jíst. Nikam dál ta čísla neposílám.</p>
+
       <label for="goal">Čeho chceš dosáhnout?</label>
       <textarea id="goal" placeholder="Klidně vlastními slovy."></textarea>
 
@@ -82,6 +107,10 @@
 
       <label for="activity">Jaký pohyb teď děláš a kolikrát týdně?</label>
       <textarea id="activity" placeholder="I „žádný" je odpověď, se kterou umím pracovat."></textarea>
+
+      <label for="steps">Kolik kroků denně naděláš?</label>
+      <input id="steps" type="text" inputmode="numeric" placeholder="např. 7000">
+      <p class="hint">Bez kroků ti výdej odhadnu jen hrubě. Stačí číslo z telefonu, klidně od oka.</p>
 
       <label for="weight">Ranní váha (kg)</label>
       <!-- ⛔ `type="text"`, NE `type="number"`. Čech napíše „82,5" s čárkou, a číselný input
@@ -140,6 +169,10 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: email,
+            age: val('age'),
+            height_cm: val('height'),
+            sex: val('sex'),
+            steps_per_day: val('steps'),
             goal: val('goal'),
             tried_before: val('tried'),
             typical_day: val('day'),
