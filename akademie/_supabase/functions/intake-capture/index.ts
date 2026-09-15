@@ -15,9 +15,12 @@
 //    a Martin by o tom nevěděl. Stejná logika, jakou jsme zvolili u nákupu za 2 190 Kč
 //    bez videokurzu: upozornit, ne zavřít dveře.
 //
+// ⛔ Složka má DVA soubory (`index.ts` + `cisla.ts`). Deploy musí nahrát oba,
+//    jinak funkce spadne na chybějícím importu. Viz paměť mb-deploy-kopiruje-jen-index-past.
 // Deploy --no-verify-jwt.
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { celeCislo, proAlert, vahaNaCislo } from "./cisla.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -42,14 +45,6 @@ const json = (b: unknown, status: number, origin: string) =>
 
 const clip = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
 const esc = (s: string) => s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-
-// Váha přijde z type="number", ale i tak se může přijít cokoli. Nesmyslné číslo radši
-// zahodíme než abychom uložili 700 kg a Martin podle toho počítal.
-function vahaNaCislo(v: unknown): number | null {
-  const n = Number(String(v ?? "").replace(",", ".").trim());
-  if (!Number.isFinite(n) || n < 25 || n > 350) return null;
-  return Math.round(n * 10) / 10;
-}
 
 // Z čeho poptávka přišla (mb_attr_v1 z webu). ⛔ Hodnoty pocházejí z URL parametrů,
 // tedy od návštěvníka. Bereme proto JEN známé klíče a tvrdě je zkracujeme, ať se do DB
@@ -100,6 +95,15 @@ Deno.serve(async (req: Request) => {
     note: clip(body.note, 2000),
   };
   const weight = vahaNaCislo(body.weight_kg);
+  // ⚠️ Nesmysl padá na `null` a do DB se uloží null, ale do alertu se přes `proAlert` vypíše
+  // i to, co člověk napsal. Jinak Martin nepozná „nevyplnil" od „vyplnil, ale zahodili jsme mu to".
+  // Věk, výška, pohlaví a kroky: všechno NEPOVINNÉ. Bez nich se výdej nedal odhadnout ani
+  // hrubě a Martin šel na placený hovor bez čísel. Meze jsou stejné jako ve vstupním
+  // dotazníku klienta, ať se ta dvě čísla dají porovnat.
+  const age = celeCislo(body.age, 15, 90);
+  const height = celeCislo(body.height_cm, 120, 230);
+  const sex = body.sex === "m" || body.sex === "z" ? body.sex : null;
+  const steps = celeCislo(body.steps_per_day, 0, 60000);
   const attribution = atribuce(body.attribution);
   const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim();
 
@@ -117,7 +121,17 @@ Deno.serve(async (req: Request) => {
   }
 
   const ins = await admin.from("consultation_intake")
-    .insert({ email, ...odpovedi, weight_kg: weight, ip: ip || null, attribution })
+    .insert({
+      email,
+      ...odpovedi,
+      weight_kg: weight,
+      age,
+      height_cm: height,
+      sex,
+      steps_per_day: steps,
+      ip: ip || null,
+      attribution,
+    })
     .select("id, created_at").single();
   if (ins.error || !ins.data) return json({ error: "db" }, 500, origin);
 
@@ -157,7 +171,13 @@ Deno.serve(async (req: Request) => {
       R("Práce a směny", odpovedi.work_shifts) +
       R("Spánek", odpovedi.sleep_hours) +
       R("Pohyb", odpovedi.activity) +
-      R("Ranní váha", weight === null ? "" : weight + " kg") +
+      R("Kroky/den", proAlert(body.steps_per_day, steps)) +
+      R("Věk", proAlert(body.age, age, "let")) +
+      R("Výška", proAlert(body.height_cm, height, "cm")) +
+      // Pohlaví `proAlert` nepotřebuje: `select` na webu umí vyrobit jen "", "m" nebo "z",
+      // nečitelná hodnota by musela přijít z ručně složeného POSTu a tam je ticho v pořádku.
+      R("Pohlaví", sex === "z" ? "žena" : sex === "m" ? "muž" : "") +
+      R("Ranní váha", proAlert(body.weight_kg, weight, "kg")) +
       R("Míry (pas, boky)", odpovedi.measurements) +
       R("Co mám vědět předem", odpovedi.note) +
       R("Odkud přišel", attribution ? Object.keys(attribution).map((k) => k + "=" + attribution[k]).join(" · ") : "") +
