@@ -612,7 +612,9 @@ Deno.serve(async (req) => {
         const t = Date.parse(String(c.termin_at ?? ""));
         terminBy.set(lowK(c.email), Number.isFinite(t) ? t : null);
       }
-      const leadBy = new Map<string, { id: number; track: string }>();
+      // ⚠️ `leads.id` a `email_events.lead_id` jsou UUID, ne cislo (overeno
+      // v information_schema). Behu to nevadilo (klient je `any`), ale typ lhal.
+      const leadBy = new Map<string, { id: string; track: string }>();
       for (const l of leadsC.data ?? []) leadBy.set(lowK(l.email), l);
       // Kdo uz upsell na koucink dostal: bud v trati je, nebo mu z ni uz mail odesel.
       let dostalUpsell = new Set<string>();
@@ -621,16 +623,26 @@ Deno.serve(async (req) => {
         const { data: ev, error: evErr } = await admin.from("email_events")
           .select("lead_id").eq("type", "sent").eq("detail->>track", "upsell-coaching").in("lead_id", ids);
         if (evErr) throw new Error("email_events: " + evErr.message);
-        const idNaMail = new Map<number, string>();
+        const idNaMail = new Map<string, string>();
         for (const [em, l] of leadBy) idNaMail.set(l.id, em);
-        dostalUpsell = new Set((ev ?? []).map((r: { lead_id: number }) => idNaMail.get(r.lead_id) ?? "").filter(Boolean));
+        dostalUpsell = new Set((ev ?? []).map((r: { lead_id: string }) => idNaMail.get(r.lead_id) ?? "").filter(Boolean));
       }
+      // ⚠️ [15. 9. 2026, nalez N4 revize R1] Digest bezi cron 4 v 5:30 UTC, enroll
+      // cron 11 az v 7:20 UTC. Kdo mel hovor vcera odpoledne, je v 5:30 jeste NEZARAZENY,
+      // i kdyz ho za dve hodiny zaradi cron sam. Bez teto hranice by radek jeden den
+      // falesne volal Martina k praci, kterou ma udelat automat, a takovy radek se
+      // po par opakovanich prestane cist. Bereme jen ty, u kterych uz aspon jeden
+      // enroll (7:20 UTC) po hovoru probehl.
+      const POSL_ENROLL_HOD = 7, POSL_ENROLL_MIN = 20;
+      const dnesniEnroll = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), POSL_ENROLL_HOD, POSL_ENROLL_MIN, 0);
+      const poslEnroll = dnesniEnroll <= nowK ? dnesniEnroll : dnesniEnroll - 86400000;
       const bezTerminu: string[] = [];
       const poHovoruBezUpsellu: string[] = [];
       for (const k of kupci) {
         const t = terminBy.has(k.email) ? terminBy.get(k.email) : null;
         if (t === null || t === undefined) { bezTerminu.push(escK(k.email)); continue; }
         if (t > nowK) continue;                       // termin je domluveny a jeste nebyl
+        if (t > poslEnroll) continue;                 // hovor byl, ale enroll od te doby jeste nebezel
         const l = leadBy.get(k.email);
         const vTrati = !!l && String(l.track ?? "").indexOf("upsell-") === 0;
         if (!vTrati && !dostalUpsell.has(k.email)) poHovoruBezUpsellu.push(escK(k.email));

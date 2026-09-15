@@ -3400,7 +3400,8 @@ Deno.serve(async (req) => {
       }
       const hovor = new Map<string, { termin_at: string | null; note: string | null }>();
       for (const c of callsRes.data ?? []) hovor.set(low(c.email), { termin_at: c.termin_at, note: c.note });
-      const leadBy = new Map<string, { id: number; track: string; step: number; status: string; next_send_at: string | null }>();
+      // ⚠️ `leads.id` a `email_events.lead_id` jsou UUID, ne cislo (overeno v information_schema).
+      const leadBy = new Map<string, { id: string; track: string; step: number; status: string; next_send_at: string | null }>();
       for (const l of leadsRes.data ?? []) leadBy.set(low(l.email), l);
       const dotazniku = new Map<string, { pocet: number; posledni: string | null }>();
       for (const i of intakeRes.data ?? []) {
@@ -3418,9 +3419,9 @@ Deno.serve(async (req) => {
           .select("lead_id").eq("type", "sent").eq("detail->>track", "upsell-coaching").in("lead_id", leadIds);
         if (evErr) chyby.push("email_events (" + evErr.message + ")");
         else {
-          const idNaMail = new Map<number, string>();
+          const idNaMail = new Map<string, string>();
           for (const [em, l] of leadBy) idNaMail.set(l.id, em);
-          upsellDostal = new Set((ev ?? []).map((r: { lead_id: number }) => idNaMail.get(r.lead_id) ?? "").filter(Boolean));
+          upsellDostal = new Set((ev ?? []).map((r: { lead_id: string }) => idNaMail.get(r.lead_id) ?? "").filter(Boolean));
         }
       }
       const tedMs = Date.now();

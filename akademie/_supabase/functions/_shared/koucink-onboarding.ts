@@ -276,7 +276,9 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
   // ZMENA TEXTU 15. 9. 2026 (Martin). Dva sliby, ktere systém nedrzel, v OBOU vetvich:
   //  1) „Do 48 hodin ti nastavím jídelníček" byl cas, ktery se neda garantovat.
   //     Prvni vetou koucinku nema byt termin, ktery muze padnout. Zustava CO klient
-  //     dostane, ne KDY. ⛔ Zadny novy casovy slib se sem nevraci.
+  //     dostane, ne KDY. ⛔ Nevraci se sem zadny slib o tom, ZA JAK DLOUHO bude plan
+  //     hotovy. Vetou o odpovedi na report (bod 3) se to neplete: tam Martin slibuje
+  //     vlastni praci v ryzmu, ktery uz drzi, a je to jeho vedome rozhodnuti z 15. 9. 2026.
   //  2) Vyzva k tydennimu reportu chodi v NEDELI RANO (`client-remind`, crony 19, 47
   //     a 48, 3:00 UTC), ne v pondeli. Mail tvrdil pondeli, takze klient mel v nedeli
   //     v schrance vyzvu, o ktere mu Martin napsal, ze prijde az zitra. Odpoved na
