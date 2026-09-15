@@ -1,3 +1,17 @@
+-- ⛔⛔⛔ ZASTARALE ZNENI `enroll_into_upsell_*`. NESPOUSTET TUHLE CAST (15. 9. 2026).
+-- Zive funkce jsou NOVEJSI nez tenhle soubor. Chybi mu ochrany z 8. 8. 2026 (byvali
+-- klienti koucinku), z 6. 9. 2026 (evergreen je koncova trat, "uz upsell jednou dostal")
+-- a od 15. 9. 2026 i BRANA KONZULTACE (kdo ceka na hovor s Martinem, nedostane nabidku
+-- koucinku) a parametr `p_email`. Kdo tenhle soubor spusti, VSECHNY je ticho smaze
+-- a nikde to nekrikne.
+--   Zdroj pravdy:  `konzultace-crm-2026-09-15.sql`
+--   Otisk pred zmenou: `zive-enroll-2026-09-15.sql`
+-- ⚠️ Tyto funkce definuji PET souboru v repu (tenhle, upsell-nevytrhavat.sql,
+--    upsell-sequences.sql, security-fixes-2026-07.sql, academy-cenik-expirace.sql).
+--    Soubory se NEMAZOU: nesou duvody a kontext jinych zmen, ktere se nikam nestehovaly.
+--    Pred jakymkoli zasahem do techto funkci se cte ZIVE znen z `pg_get_functiondef`,
+--    nikdy soubor v gitu (pamet `feedback-zive-sql-funkce-napred-pred-gitem`).
+
 -- ============================================================
 -- security-fixes-2026-07.sql — bezpečnostní a mailingové opravy v DB
 -- ------------------------------------------------------------

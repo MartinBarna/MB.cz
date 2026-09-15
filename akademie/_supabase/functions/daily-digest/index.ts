@@ -578,6 +578,95 @@ Deno.serve(async (req) => {
       ". Zbytek přehledu platí, jen o klientech dnes nevíš nic.");
   }
 
+  // --- 🗓️ KONZULTACE: co ceka na Martinuv klik ---------------------------
+  // ⛔ PRIBYLO 15. 9. 2026. Zaplacena konzultace ceka na DVA rucni kroky (zadat termin,
+  // po hovoru pustit upsell) a ani jeden z nich dosud nikde nekricel. Oba stavy jsou
+  // TICHE: nikde nespadne chyba, clovek jen lezi a nic se s nim nedeje.
+  // ⛔ Radky se ukazuji JEN kdyz je co resit (N > 0). Radek "0" kazdy den je sum a
+  //    po tydnu se prestane cist, tim padem by se ztratil i ten den, kdy tam neco je.
+  // ⚠️ Cely blok je v try/catch: kdyby spadl, digest se posle bez nej, ne vubec.
+  // ⛔ Chybu dotazu NESPOLKNOUT. Prazdny seznam po rozbitem dotazu vypada jako klid.
+  let konzultaceHtml = "";
+  try {
+    const lowK = (v: unknown) => String(v ?? "").trim().toLowerCase();
+    const escK = (s: string) => s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string));
+    const { data: konzEnts, error: konzErr } = await admin.from("entitlements")
+      .select("email,active,expires_at").eq("product", "konzultace");
+    if (konzErr) throw new Error("entitlements: " + konzErr.message);
+    const nowK = now.getTime();
+    type Kupec = { email: string; active: boolean; exp: string | null };
+    const kupci: Kupec[] = (konzEnts ?? [])
+      .map((r: { email: string; active: boolean | null; expires_at: string | null }): Kupec =>
+        ({ email: lowK(r.email), active: r.active === true, exp: r.expires_at }))
+      .filter((r: Kupec) => !!r.email && r.active && (!r.exp || Date.parse(String(r.exp)) > nowK));
+    if (kupci.length) {
+      const emaily = kupci.map((k: Kupec) => k.email);
+      const [callsC, leadsC] = await Promise.all([
+        admin.from("consultation_calls").select("email,termin_at").in("email", emaily),
+        admin.from("leads").select("id,email,track").in("email", emaily),
+      ]);
+      if (callsC.error) throw new Error("consultation_calls: " + callsC.error.message);
+      if (leadsC.error) throw new Error("leads: " + leadsC.error.message);
+      const terminBy = new Map<string, number | null>();
+      for (const c of callsC.data ?? []) {
+        const t = Date.parse(String(c.termin_at ?? ""));
+        terminBy.set(lowK(c.email), Number.isFinite(t) ? t : null);
+      }
+      // ⚠️ `leads.id` a `email_events.lead_id` jsou UUID, ne cislo (overeno
+      // v information_schema). Behu to nevadilo (klient je `any`), ale typ lhal.
+      const leadBy = new Map<string, { id: string; track: string }>();
+      for (const l of leadsC.data ?? []) leadBy.set(lowK(l.email), l);
+      // Kdo uz upsell na koucink dostal: bud v trati je, nebo mu z ni uz mail odesel.
+      let dostalUpsell = new Set<string>();
+      const ids = [...leadBy.values()].map((l) => l.id);
+      if (ids.length) {
+        const { data: ev, error: evErr } = await admin.from("email_events")
+          .select("lead_id").eq("type", "sent").eq("detail->>track", "upsell-coaching").in("lead_id", ids);
+        if (evErr) throw new Error("email_events: " + evErr.message);
+        const idNaMail = new Map<string, string>();
+        for (const [em, l] of leadBy) idNaMail.set(l.id, em);
+        dostalUpsell = new Set((ev ?? []).map((r: { lead_id: string }) => idNaMail.get(r.lead_id) ?? "").filter(Boolean));
+      }
+      // ⚠️ [15. 9. 2026, nalez N4 revize R1] Digest bezi cron 4 v 5:30 UTC, enroll
+      // cron 11 az v 7:20 UTC. Kdo mel hovor vcera odpoledne, je v 5:30 jeste NEZARAZENY,
+      // i kdyz ho za dve hodiny zaradi cron sam. Bez teto hranice by radek jeden den
+      // falesne volal Martina k praci, kterou ma udelat automat, a takovy radek se
+      // po par opakovanich prestane cist. Bereme jen ty, u kterych uz aspon jeden
+      // enroll (7:20 UTC) po hovoru probehl.
+      const POSL_ENROLL_HOD = 7, POSL_ENROLL_MIN = 20;
+      const dnesniEnroll = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), POSL_ENROLL_HOD, POSL_ENROLL_MIN, 0);
+      const poslEnroll = dnesniEnroll <= nowK ? dnesniEnroll : dnesniEnroll - 86400000;
+      const bezTerminu: string[] = [];
+      const poHovoruBezUpsellu: string[] = [];
+      for (const k of kupci) {
+        const t = terminBy.has(k.email) ? terminBy.get(k.email) : null;
+        if (t === null || t === undefined) { bezTerminu.push(escK(k.email)); continue; }
+        if (t > nowK) continue;                       // termin je domluveny a jeste nebyl
+        if (t > poslEnroll) continue;                 // hovor byl, ale enroll od te doby jeste nebezel
+        const l = leadBy.get(k.email);
+        const vTrati = !!l && String(l.track ?? "").indexOf("upsell-") === 0;
+        if (!vTrati && !dostalUpsell.has(k.email)) poHovoruBezUpsellu.push(escK(k.email));
+      }
+      const vypisK = (a: string[], max = 8) =>
+        ": " + a.slice(0, max).join(", ") + (a.length > max ? " a dalsi " + (a.length - max) : "");
+      const radky =
+        (bezTerminu.length ? row("Konzultace bez termínu", String(bezTerminu.length) + vypisK(bezTerminu)) : "") +
+        (poHovoruBezUpsellu.length ? row("Konzultace proběhla, upsell zatím nezařazen", String(poHovoruBezUpsellu.length) + vypisK(poHovoruBezUpsellu)) : "");
+      if (radky) {
+        konzultaceHtml =
+          `<h3 style="margin:18px 0 6px;font-size:15px">🗓️ Konzultace</h3>` +
+          `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
+          radky +
+          `</table>` +
+          `<p style="margin:6px 0 0;color:#666;font-size:13px">Termín zadáváš v adminu, sekce Konzultace. Dokud tam není, prodejní maily na koučink se tomu člověku neposílají.</p>`;
+      }
+    }
+  } catch (e) {
+    alerts += warn("🔴 KONZULTAČNÍ BLOK SE NEPOVEDLO SPOČÍTAT: " + String(e).slice(0, 140) +
+      ". Dnes tedy NEVÍŠ, jestli někdo čeká na termín hovoru nebo na upsell po konzultaci. " +
+      "Nula tam dnes neznamená klid, protože ten blok se vůbec nezobrazil.");
+  }
+
   // --- 📱 APPKA: nova aktivni predplatna za 24 h ---------------------
   // ⛔ PRIBYLO 2. 9. 2026. Do te doby cetl prehled jen Academy `entitlements`, takze den,
   // kdy appka Tvuj Coach prodala prvni dve predplatna, hlasil „0 prodeju". Radek
@@ -664,7 +753,7 @@ Deno.serve(async (req) => {
     row("Affiliate čeká na potvrzení", String(refPending)) +
     row("Zakládající členové Academy", founders + " / 50 · zbývá " + foundersLeft) +
     row("Odkazy v mailech a na webu", odkazyRadek) +
-    `</table>` + hlidkyHtml + koucinkHtml +
+    `</table>` + hlidkyHtml + konzultaceHtml + koucinkHtml +
     `<p style="margin:14px 0 4px;color:#666;font-size:13px">Leadi 7 dní: ${trendStr || "—"}</p>` +
     `<p style="margin:14px 0 0;font-size:13px"><a href="https://martinbarna.cz/akademie/admin/" style="color:#c45e00">Otevřít admin →</a></p></div>`;
 

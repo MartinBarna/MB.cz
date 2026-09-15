@@ -97,6 +97,121 @@ export function shouldStop(
 }
 
 /**
+ * PAUZA PRED KONZULTACNIM HOVOREM (15. 9. 2026).
+ *
+ * Kdo ma zaplacenou konzultaci a jeste si s Martinem nepromluvil, nesmi dostat mail
+ * z PRODEJNI trate: ta mu prodava presne to, o cem si s Martinem bude povidat.
+ *
+ * ⛔ NEPATRI do `shouldStop`. Ta je TRVALA: nastavi leadovi `status='purchased'`
+ * a `next_send_at=null`, cimz clovek vypadne i z blog-newsletteru a tydeniku (obe
+ * rozesilky berou jen `status='active'`). Tohle je DOCASNE cekani, resi se ODKLADEM
+ * o 24 h (`ODLOZ_MS` z `aktivace.ts`), stejnym vzorem jako `odklad_neaktivita`.
+ * Druhy den se to zkusi znovu a po hovoru mail proste odejde.
+ *
+ * ⚠️ Mnozina `konzultaceCekaNaHovor` se stavi v `index.ts`: aktivni a nevyprsely narok
+ * `konzultace` MINUS ti, kdo maji `consultation_calls.termin_at` v minulosti. Diky tomu
+ * tahle funkce necte DB ani cas a jde testovat bez site.
+ *
+ * ⚠️ FAIL-OPEN: kdyz nektery z tech dvou dotazu selze, mnozina je PRAZDNA a maily jdou
+ * dal. Opacna volba by pri vypadku jednoho dotazu ticho zadrzela maily vsem, a to je
+ * horsi nez jeden mail navic. Vedomy kompromis, stejny jako u `maPreskocitKrok`.
+ *
+ * ⛔ Obsahove trate (`blog-newsletter`, `tydenik`) se NEODKLADAJI: ticho pred hovorem
+ * vypada hur nez jeden clanek. A `onboarding-nakup-konzultace` uz vubec ne, to je
+ * doruceni zaplaceneho.
+ */
+export const TRATE_PAUZA_KONZULTACE: readonly string[] = ['upsell-coaching', 'upsell-academy'];
+
+export function konzultaceVBehu(
+  track: string,
+  em: string,
+  konzultaceCekaNaHovor: Set<string>,
+): boolean {
+  if (!TRATE_PAUZA_KONZULTACE.includes(String(track || ''))) return false;
+  return !!konzultaceCekaNaHovor?.has(String(em ?? '').toLowerCase());
+}
+
+/**
+ * ZNACKA V `leads.vars`, PODLE KTERE NEWSLETTER POZNA, ZE TENHLE ODKLAD NENI MAIL
+ * (pridano 15. 9. 2026 po revizi R1, nalez S1).
+ *
+ * ⛔ PROC VUBEC: `newsletter_prijemci` bere jen leady, kde `next_send_at is null`
+ * nebo `next_send_at > now() + 24 hodin` (pravidlo z 2. 9. 2026 „kdo ma naplanovany
+ * mail do 24 h, se nepujcuje"). Odklad o 24 h vznika DRIV, nez bezi rozesilka, takze
+ * ta podminka je pro nej VZDY nepravdiva a kupec konzultace by po celou dobu cekani
+ * na termin vypadl i z blog-newsletteru, tedy z OBSAHOVE trate. Pri zapomenutem
+ * terminu napořád. Ziva `newsletter_prijemci` proto dostava treti vetev na tuhle znacku.
+ *
+ * ⛔ PROC NE `next_send_at = NULL` (parkovani): retezec `next_send_at is null` cte
+ * DEVET zivych SQL funkci (blasty, mosty, enrolly, vraceni z rozesilek) a znamena
+ * v nich „tenhle clovek nema naplanovano, je volny". Zaparkovany lead by se stal
+ * koristi blastu i mostu, tedy presne ta ticha ztrata trate, pred kterou varuje
+ * komentar z 13. 8. 2026. Znacka nemeni vyznam zadneho existujiciho pole.
+ *
+ * ⚠️ Znacka se MUSI mazat, jakmile clovek uz neceka, jinak by newsletter ignoroval
+ * jeho `next_send_at` napořád. Maze ji tentyz beh drip-sendu (viz `index.ts`).
+ * ⚠️ Ostatni klice ve `vars` zustavaji nedotcene (jsou tam promenne trati i `_cadence`).
+ */
+export const VARS_KLIC_KONZULTACE = '_konzultace_ceka';
+
+function jenObjekt(vars: unknown): Record<string, unknown> {
+  return (vars && typeof vars === 'object' && !Array.isArray(vars))
+    ? { ...(vars as Record<string, unknown>) }
+    : {};
+}
+
+export function maZnackuKonzultace(vars: unknown): boolean {
+  const v = jenObjekt(vars)[VARS_KLIC_KONZULTACE];
+  return typeof v === 'string' && v !== '';
+}
+
+export function varsSeZnackouKonzultace(vars: unknown, odIso: string): Record<string, unknown> {
+  const out = jenObjekt(vars);
+  // Prvni odklad si drzi svoje datum: je z nej videt, jak dlouho uz clovek ceka.
+  if (!maZnackuKonzultace(out)) out[VARS_KLIC_KONZULTACE] = odIso;
+  return out;
+}
+
+export function varsBezZnackyKonzultace(vars: unknown): Record<string, unknown> {
+  const out = jenObjekt(vars);
+  delete out[VARS_KLIC_KONZULTACE];
+  return out;
+}
+
+/**
+ * SMI SE ZNACKA SMAZAT? (oprava 15. 9. 2026 po revizi R2, nalez R2-S1.)
+ *
+ * ⛔ NE PODLE TRATE, ALE PODLE MNOZINY CEKAJICICH. Prvni verze mazala znacku vzdycky,
+ * kdyz `konzultaceVBehu` vratilo `false`, jenze to ma DVA duvody a jen jeden z nich
+ * znamena „uz neceka":
+ *   (a) clovek uz opravdu neceka (hovor probehl, termin zrusen, narok skoncil),
+ *   (b) lead PRAVE NENI na prodejni trati. To nastava uplne bezne: `newsletter_rozeslani`
+ *       i `tydenik_rozeslani` si leada PUJCI, prepisou mu `track` na `blog-newsletter`
+ *       nebo `tydenik` a nastavi `next_send_at = now()`. Drip-send ho pak vezme,
+ *       `konzultaceVBehu('blog-newsletter', …)` je spravne `false` a stara verze
+ *       znacku smazala, prestoze termin hovoru porad nebyl.
+ *
+ * ⛔ A NIKDY PRI CHYBE BRANY. Kdyz selze nektery ze dvou dotazu, je mnozina prazdna
+ * (vedomy fail-open) a `has()` vrati `false` VSEM. Bez teto podminky by jedina chyba
+ * dotazu nezustala u „dnes se neodklada", ale smazala by znacky vsem, kdo je maji.
+ * Fail-open ma znamenat „posli o mail navic", ne „zapis do dat".
+ *
+ * Nasledek stare verze byl tichy NEPRAVDIVY zaznam `odklad_konzultace_konec`
+ * s duvodem „hovor probehl" a clovek do dalsiho behu vypadl z blog-newsletteru,
+ * tedy presne to, kvuli cemu se nalez S1 opravoval.
+ */
+export function smiSeOdznackovat(
+  vars: unknown,
+  em: string,
+  konzultaceCekaNaHovor: Set<string>,
+  branaOk: boolean,
+): boolean {
+  if (!maZnackuKonzultace(vars)) return false;
+  if (!branaOk) return false;
+  return !konzultaceCekaNaHovor?.has(String(em ?? '').toLowerCase());
+}
+
+/**
  * ⛔ ZAMERNE KROK 1, NE 0. `shouldStop` ma pro akvizicni trate (lead-magnet*,
  * existing-leadmagnet, nurture-*) tvar `step > 0 && vlastniCokoli`, protoze KROK 0 je
  * slibeny freebie a ten se posila i tomu, kdo uz koupil. Pri volani s nulou by ochrana

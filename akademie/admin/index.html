@@ -347,6 +347,23 @@
         </div>
       </details>
 
+      <!-- 🗓️ KONZULTACE (15. 9. 2026). Martin: „Chci to v adminu přehledně: zadám datum
+           a čas konzultace a vidím tam na rozklik dotazník."
+           ⛔ Termín NENÍ poznámka. Podle něj se řídí prodejní tratě: dokud hovor nebyl,
+           `enroll_into_upsell_*` člověka nezařadí a `drip-send` mu mail odloží.
+           ⛔ Konzultace je vlastní produkt, ne koučink. Kdo se stane klientem koučinku,
+           z tohohle seznamu zmizí (značku `konzultace` mu bere pozvánka do koučinku). -->
+      <details class="sek" id="sek-konzultace" open>
+        <summary>🗓️ Konzultace <span class="sekpop">termín hovoru, dotazník, upsell</span><span class="sekinfo" id="info-konzultace"></span></summary>
+        <div class="sek-in">
+          <div class="traf" id="konz" style="display:none;border-color:rgba(235,177,44,.45);">
+            <h3>🗓️ Konzultace: koho čeká hovor</h3>
+            <div class="sub">Zaplacené konzultace · zadej termín a systém podle něj drží nebo pustí nabídku koučinku</div>
+            <div id="konzBody"><p class="muted" style="padding:.8rem 0;">Načítám…</p></div>
+          </div>
+        </div>
+      </details>
+
       <details class="sek" id="sek-prodej" open>
         <summary>💰 Prodej a produkty <span class="sekpop">appka, trenéři, letáky, odměny</span><span class="sekinfo" id="info-prodej"></span></summary>
         <div class="sek-in">
@@ -442,6 +459,7 @@
           <option value="">Všichni</option>
           <option value="coaching">Koučink: aktivní klienti</option>
           <option value="coaching-ex">Koučink: bývalí klienti</option>
+          <option value="konzultace">Konzultace: kupci</option>
           <option value="videokurz">Má videokurz</option>
           <option value="academy">Má Academy</option>
           <option value="lead">Lead-magnet (bez koupě)</option>
@@ -792,7 +810,7 @@
           registered:ALL.filter(function(r){ return !!r.registered; }).length,
           sent_total:ALL.reduce(function(n,r){ return n+(r.sent_count||0); },0)
         };
-        renderStats(st); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost();
+        renderStats(st); renderRows(); show('app'); initSekce(); loadAiFlags(); loadTraf(); loadPulse(); loadProgress(); loadQueue(); loadContactMsgs(); loadQrStats(); loadTrenerFunnel(); loadCheckins(); loadReferrals(); loadAfil(); loadKlienti(); loadPrehled(); loadRozbory(); loadTcPrehled(); loadNavstevnost(); loadKonzultace();
         sekInfo('kontakty',ALL.length+' kontaktů');
         $('meta').textContent=ALL.length+' kontaktů · '+new Date().toLocaleString('cs-CZ');
       }).catch(function(){ show('gate'); $('gate').textContent='Chyba spojení. Zkus obnovit stránku.'; });
@@ -801,7 +819,7 @@
     // ---------- SEKCE: rozcestník, zapamatovaný stav, souhrn v nadpisu ----------
     // Karty jsou beze změny, sekce je jen obal. Sbalený stav se pamatuje v localStorage,
     // ať Martin nemusí po každém obnovení zavírat totéž.
-    var SEKCE=[['dnesek','🩺 Dnešek'],['navstevnost','👀 Návštěvnost'],['klienti','🤝 Klienti'],['prodej','💰 Prodej'],
+    var SEKCE=[['dnesek','🩺 Dnešek'],['navstevnost','👀 Návštěvnost'],['klienti','🤝 Klienti'],['konzultace','🗓️ Konzultace'],['prodej','💰 Prodej'],
                ['mailing','📬 Mailing'],['kontakty','👥 Kontakty'],['obsah','📈 Progres'],['novinky','🆕 Novinky']];
     // Souhrn do hlavičky sekce, ať je stav vidět i když je sekce sbalená.
     function sekInfo(id,text){ var el=$('info-'+id); if(el) el.textContent=text||''; }
@@ -1596,6 +1614,160 @@
       }).catch(function(){ $('kdetBody').innerHTML='<p class="muted">Chyba spojení. Zavři a zkus znovu.</p>'; return false; });
     }
     $('kdetX').addEventListener('click',function(){ $('kdet').classList.remove('on'); });
+    // ================= 🗓️ KONZULTACE (termín hovoru, dotazník, upsell) =================
+    // ⛔ TERMÍN JE BRÁNA. `consultation_calls.termin_at` čte SQL `enroll_into_upsell_*`
+    //    i `drip-send`: dokud je termín prázdný nebo v budoucnu, prodejní tratě se tomu
+    //    člověku NEPOSÍLAJÍ. Uložení termínu tedy není poznámka do kalendáře, je to
+    //    zásah do toho, co komu chodí. Proto je u tlačítka napsané, co se stane.
+    // ⛔ Zápis termínu je jediné místo, odkud se ta brána ovládá. Když se řádek nenačte,
+    //    karta to musí říct (cardFail), ne ukázat prázdno: prázdno vypadá jako „nikdo
+    //    si konzultaci nekoupil" a to je nerozeznatelné od pravdy.
+    var KONZ_ROWS=[];
+    function konzStavBadge(r){
+      if(r.stav==='probehlo') return '<span class="badge b-ok">proběhlo</span>';
+      if(r.stav==='naplanovano') return '<span class="badge b-tag">naplánováno</span>';
+      return '<span class="badge b-no">bez termínu</span>';
+    }
+    function konzKdy(iso){
+      if(!iso) return '–';
+      var d=new Date(iso);
+      return d.toLocaleDateString('cs-CZ')+' '+d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});
+    }
+    function renderKonz(){
+      if(!KONZ_ROWS.length){
+        $('konzBody').innerHTML='<p class="muted" style="padding:.8rem 0;">Zatím nikdo nemá zaplacenou konzultaci.</p>';
+        sekInfo('konzultace','nikdo');
+        return;
+      }
+      var bezTerminu=0, cekaUpsell=0;
+      var html=KONZ_ROWS.map(function(r,i){
+        if(r.stav==='bez_terminu') bezTerminu++;
+        if(r.stav==='probehlo' && !r.upsell_zarazen) cekaUpsell++;
+        var jmeno=r.name?esc(r.name):'<span class="muted">bez jména</span>';
+        var upsell=r.upsell_zarazen
+          ? '<span class="badge b-ok">zařazen</span>'
+          : '<span class="badge b-no">nezařazen</span>';
+        // Tlačítko upsellu jen tam, kde dává smysl: po hovoru a když člověk ještě zařazený není.
+        var upsellBtn=(r.stav==='probehlo'&&!r.upsell_zarazen)
+          ? ' <button class="mlogbtn" data-konz-upsell="'+esc(r.email)+'" style="padding:5px 10px;font-size:.78rem;">Spustit upsell teď</button>'
+          : '';
+        var dot=r.dotaznik_pocet
+          ? '<button class="mlogbtn" data-konz-dot="'+esc(r.email)+'" style="padding:5px 10px;font-size:.78rem;">📋 Dotazník ('+r.dotaznik_pocet+')</button>'
+          : '<span class="muted">nevyplnil</span>';
+        return '<div style="border-top:1px solid rgba(255,255,255,.08);padding:.8rem 0;">'
+          +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;">'
+            +'<strong>'+jmeno+'</strong> <span class="muted">'+esc(r.email)+'</span> '+konzStavBadge(r)
+            +' <span class="muted" style="font-size:.8rem;">zaplaceno '+fmtDay(r.granted_at)+'</span>'
+            +(r.active?'':' <span class="badge b-no">nárok neaktivní (refund?)</span>')
+          +'</div>'
+          +'<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.5rem 0 .2rem;">'
+            +'<span class="muted" style="font-size:.82rem;font-weight:700;">Termín hovoru:</span>'
+            +'<input type="date" data-konz-datum="'+i+'" value="'+esc(r.datum)+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.88rem;">'
+            +'<input type="time" data-konz-cas="'+i+'" value="'+esc(r.cas)+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.88rem;">'
+            +'<button class="mlogbtn" data-konz-uloz="'+i+'" style="padding:6px 12px;font-size:.82rem;">Uložit termín</button>'
+            +(r.termin_at?'<button class="mlogbtn" data-konz-zrus="'+i+'" style="padding:6px 12px;font-size:.82rem;background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.18);">Zrušit termín</button>':'')
+            +'<span class="muted" style="font-size:.8rem;">'+(r.termin_at?('uloženo: '+esc(konzKdy(r.termin_at))+' (český čas)'):'termín zatím není uložený')+'</span>'
+          +'</div>'
+          +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:.3rem 0 0;">'
+            +'<span class="muted" style="font-size:.82rem;">Upsell na koučink:</span> '+upsell+upsellBtn
+            +'<span style="margin-left:10px;"></span>'+dot
+            +(r.lead_track?'<span class="muted" style="font-size:.78rem;">trať: '+esc(r.lead_track)+' ('+esc(r.lead_status||'?')+')</span>':'')
+          +'</div>'
+          +'<div data-konz-dotbody="'+esc(r.email)+'" style="display:none;margin:.6rem 0 0;"></div>'
+        +'</div>';
+      }).join('');
+      $('konzBody').innerHTML=
+        '<p class="muted" style="margin:0 0 .2rem;font-size:.82rem;">Dokud termín není vyplněný (nebo je v budoucnu), systém tomu člověku NEPOSÍLÁ prodejní maily na koučink. Po termínu ho zařadí sám další ráno; tlačítkem to jde spustit hned.</p>'
+        +html;
+      sekInfo('konzultace',KONZ_ROWS.length+' · bez termínu '+bezTerminu+(cekaUpsell?' · po hovoru bez upsellu '+cekaUpsell:''));
+    }
+    function loadKonzultace(){
+      api({action:'konzultace_list'}).then(function(o){
+        if(!o.j||!o.j.ok){ cardFail('konz','konzBody'); return; }
+        $('konz').style.display='';
+        KONZ_ROWS=o.j.rows||[];
+        renderKonz();
+        // Dílčí výpadek se NESMÍ spolknout: chybějící sloupec není nula.
+        if((o.j.chyby||[]).length){
+          $('konzBody').insertAdjacentHTML('afterbegin',
+            '<p style="color:#F6CD63;font-size:.85rem;margin:0 0 .4rem;">⚠️ Část dat se nenačetla ('+esc((o.j.chyby||[]).join(', '))+'). Ber stavy níž jako neúplné.</p>');
+        }
+      }).catch(function(){ cardFail('konz','konzBody'); });
+    }
+    function konzUlozTermin(i,zrusit){
+      var r=KONZ_ROWS[i]; if(!r) return;
+      var datum=zrusit?'':((document.querySelector('[data-konz-datum="'+i+'"]')||{}).value||'');
+      var cas=zrusit?'':((document.querySelector('[data-konz-cas="'+i+'"]')||{}).value||'');
+      if(!zrusit&&(!datum||!cas)){ toast('Vyplň datum i čas'); return; }
+      var otazka=zrusit
+        ? 'Zrušit termín u '+r.email+'?\nSystém pak bude zase držet prodejní maily na koučink, dokud nezadáš nový termín.'
+        : 'Uložit termín '+datum+' '+cas+' (český čas) pro '+r.email+'?\nDo té doby se mu neposílají prodejní maily na koučink.';
+      if(!confirm(otazka)) return;
+      api({action:'konzultace_termin',email:r.email,datum:datum,cas:cas,smazat:!!zrusit}).then(function(o){
+        if(o.j&&o.j.ok){ toast(zrusit?'Termín zrušen':'Termín uložen'); loadKonzultace(); }
+        else toast('Neuložilo se: '+((o.j&&(o.j.duvod||o.j.detail||o.j.error))||o.status));
+      }).catch(function(){ toast('Chyba spojení'); });
+    }
+    function konzUpsell(email){
+      if(!confirm('Zařadit '+email+' do prodejní série na koučink?\nPrvní mail mu odejde při nejbližším běhu fronty.')) return;
+      api({action:'konzultace_upsell',email:email}).then(function(o){
+        if(o.j&&o.j.ok){ toast('Zařazen do upsellu'); loadKonzultace(); return; }
+        // ⛔ Odmítnutí není chyba a musí být čitelné: každý důvod se řeší jinak.
+        // O zařazení rozhoduje SQL funkce `enroll_into_upsell_coaching`; tyhle věty
+        // jen překládají její mlčení. Když v SQL přibude ochrana, přibude i důvod
+        // (server ho pošle) a sem patří věta k němu, ne nová podmínka.
+        var d=(o.j&&o.j.duvod)||'', tr=(o.j&&o.j.track)||'?';
+        var text=d==='ma_koucink'?'Nezařazeno: tenhle člověk už koučink má (nebo měl).'
+          :d==='ceka_na_hovor'?'Nezařazeno: konzultační hovor podle termínu ještě neproběhl. Ulož termín, který už je za námi.'
+          :d==='nema_videokurz_ani_academy'?'Nezařazeno: nemá platný videokurz ani Academy, série na nich stojí.'
+          :d==='uz_dostal'?'Nezařazeno: prodejní sérii na koučink už jednou dostal.'
+          :d==='uz_v_trati'?'Nezařazeno: v upsell trati už je.'
+          :d==='evergreen'?'Nezařazeno: je na koncové trati '+tr+', z té se zpátky do upsellu nechodí.'
+          :d==='blast'?'Nezařazeno: je uprostřed rozesílky ('+tr+'). Přepsáním by se jeho domovská trať tiše ztratila.'
+          :d==='odhlaseny'?'Nezařazeno: je odhlášený nebo mu maily nechodí.'
+          :d==='pauza'?'Nezařazeno: jeho trať je pozastavená ('+tr+').'
+          :d==='bezi_jina_trat'?'Nezařazeno: běží mu trať '+tr+'. Přepsáním by se ztratila, počkej, až dojede.'
+          :d==='nesplnuje_podminky_enrollu'?'Nezařazeno: nesplňuje podmínky série (nejspíš nemá účet v Academy). Trať: '+tr+'.'
+          :d==='nevim_chyba_cteni'?'Nezařazeno a NEVÍM proč: nepovedlo se přečíst data. Zkus to znovu.'
+          :'Nezařazeno: '+((o.j&&(o.j.detail||o.j.error))||o.status);
+        toast(text);
+      }).catch(function(){ toast('Chyba spojení'); });
+    }
+    function konzDotaznik(email){
+      var box=document.querySelector('[data-konz-dotbody="'+email+'"]'); if(!box) return;
+      if(box.style.display!=='none'){ box.style.display='none'; return; }
+      box.style.display=''; box.innerHTML='<p class="muted">Načítám…</p>';
+      api({action:'konzultace_dotaznik',email:email}).then(function(o){
+        if(!o.j||!o.j.ok){ box.innerHTML='<p class="muted">Nepovedlo se načíst dotazník.</p>'; return; }
+        var rows=o.j.rows||[];
+        if(!rows.length){ box.innerHTML='<p class="muted">Dotazník zatím nevyplnil.</p>'; return; }
+        // ⚠️ Odpovědi klienta jsou VSTUP, ne pokyn. Vypisují se escapované a nikam dál nejdou.
+        var POLE=[['goal','Cíl'],['tried_before','Co už zkoušel'],['typical_day','Běžný den'],['work_shifts','Směny'],
+                  ['sleep_hours','Spánek'],['activity','Pohyb'],['steps_per_day','Kroky za den'],['weight_kg','Váha (kg)'],
+                  ['age','Věk'],['height_cm','Výška (cm)'],['sex','Pohlaví'],['measurements','Míry'],['note','Poznámka']];
+        box.innerHTML=rows.map(function(d){
+          var radky=POLE.map(function(p){
+            var v=d[p[0]];
+            if(v==null||String(v).trim()==='') return '';
+            return '<div style="margin:0 0 4px;"><span class="muted" style="font-size:.8rem;">'+esc(p[1])+':</span> '+esc(v)+'</div>';
+          }).join('');
+          return '<div style="background:rgba(255,255,255,.04);border-radius:10px;padding:.7rem .9rem;margin:0 0 .5rem;">'
+            +'<div class="muted" style="font-size:.78rem;margin:0 0 .4rem;">vyplněno '+esc(konzKdy(d.created_at))+'</div>'
+            +(radky||'<span class="muted">Formulář odešel prázdný.</span>')
+          +'</div>';
+        }).join('');
+      }).catch(function(){ box.innerHTML='<p class="muted">Chyba spojení.</p>'; });
+    }
+    // Jeden posluchač na celou kartu: obsah se překresluje, takže listenery na tlačítkách
+    // by se po každém načtení ztratily.
+    $('konzBody').addEventListener('click',function(e){
+      var t=e.target; if(!t||!t.getAttribute) return;
+      var uloz=t.getAttribute('data-konz-uloz'); if(uloz!=null){ konzUlozTermin(Number(uloz),false); return; }
+      var zrus=t.getAttribute('data-konz-zrus'); if(zrus!=null){ konzUlozTermin(Number(zrus),true); return; }
+      var ups=t.getAttribute('data-konz-upsell'); if(ups){ konzUpsell(ups); return; }
+      var dot=t.getAttribute('data-konz-dot'); if(dot){ konzDotaznik(dot); return; }
+    });
+
     // ---------- 📈 VÝVOJ KLIENTA (souhrn + graf) ----------
     // Metriky, které jde sledovat v čase. `get` vytáhne hodnotu z jednoho reportu,
     // `dolu` = klesající hodnota je dobrá zpráva (barví se zeleně).
@@ -3091,6 +3263,12 @@
         ? (r.tags||[]).some(function(t){return String(t)==='coaching-active';})
         : !!r.has_coaching;
       if(f==='coaching-ex') return !r.has_coaching && (r.tags||[]).some(function(t){return String(t)==='coaching-ex';});
+      // [15. 9. 2026] Kupci konzultace. Bez téhle volby by značka `konzultace` byla jen
+      // dekorace v detailu kontaktu a Martin by pořád neměl seznam lidí k follow-upu.
+      // ⛔ Přesná shoda, žádný prefix: `coaching`/`coaching-ex` se sem nesmí připlést.
+      // Kdo se stal klientem koučinku, značku ztrácí (`_shared/koucink-onboarding.ts`),
+      // takže tenhle seznam ukazuje jen ty, kdo v koučinku ještě nejsou.
+      if(f==='konzultace') return (r.tags||[]).some(function(t){return String(t)==='konzultace';});
       if(f==='videokurz') return r.has_videokurz;
       if(f==='academy') return r.has_academy;
       if(f==='lead') return !r.has_academy&&!r.has_videokurz;

@@ -12,6 +12,9 @@ import { applySyncPlan, type TcReport } from "./tc-report-sync.ts";
 import { onboardKoucink } from "../_shared/koucink-onboarding.ts";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { buildOffboardMail } from "./offboard-mail.ts";
+// Prevod terminu konzultace mezi ceskym casem a UTC + stav hovoru. Ciste funkce
+// ve vlastnim souboru, at jdou otestovat bez nastartovani serveru (`konzultace.test.ts`).
+import { isoNaPoleFormulare, stavHovoru, terminNaIso } from "./konzultace.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -1091,6 +1094,61 @@ async function tcMost(admin: any, telo: Record<string, unknown>): Promise<
   }
   if (jj.ok === false) return { ok: false, duvod: String(jj.duvod ?? jj.error ?? "appka_odmitla") };
   return { ok: true, data: jj };
+}
+
+/**
+ * PROČ `enroll_into_upsell_coaching` nikoho nezařadila (15. 9. 2026, po revizi R1).
+ *
+ * ⛔ JEN ČTENÍ. Tahle funkce nesmí nikdy nic zapsat ani nikoho pustit dál: rozhoduje
+ *    SQL funkce, tohle je pouze překlad jejího mlčení do věty pro Martina. Kdyby se
+ *    z ní stala druhá brána, vznikla by přesně ta dvojí kopie pravidel, kvůli které
+ *    se tlačítko předělávalo.
+ * ⚠️ Pořadí je od nejsilnějšího důvodu k nejslabšímu, ať Martin dostane ten, který
+ *    opravdu rozhodl. Když nesedí nic, přizná se to místo vymýšlení.
+ */
+// deno-lint-ignore no-explicit-any
+async function procNezarazen(admin: any, email: string): Promise<{ duvod: string; track?: string | null }> {
+  const [ents, cc, lead, calls] = await Promise.all([
+    admin.from("entitlements").select("product,active,expires_at").eq("email", email),
+    admin.from("customer_contacts").select("tags").eq("email", email).maybeSingle(),
+    admin.from("leads").select("id,track,status,next_send_at").eq("email", email).maybeSingle(),
+    admin.from("consultation_calls").select("termin_at").eq("email", email).maybeSingle(),
+  ]);
+  // Chyba čtení není odpověď: radši se přizná, než aby tvrdila konkrétní důvod.
+  // ⚠️ Všechny čtyři dotazy, ne jen dva (nález R2-N1): bez `customer_contacts` se přeskočí
+  // větev `coaching-active` a bez `consultation_calls` by funkce tvrdila `ceka_na_hovor`
+  // z nepřečtených dat. `consultation_calls` chybí typicky proto, že neproběhla migrace.
+  if (ents.error || lead.error || cc.error) return { duvod: "nevim_chyba_cteni" };
+  const naroky = (ents.data ?? []) as Array<{ product: string; active: boolean; expires_at: string | null }>;
+  // ⛔ DVĚ RŮZNÁ MĚŘÍTKA, PROTOŽE SQL MÁ TAKY DVĚ (nález R2-N2). CTE `reg` v enroll funkci
+  // řeší u videokurzu a Academy jen `active` a expiraci neřeší vůbec; nová podmínka
+  // pro konzultaci expiraci naopak řeší. Diagnostika musí říkat totéž co SQL, jinak by
+  // u člověka s aktivním, ale vypršelým videokurzem hlásila důvod, který nerozhodl.
+  const maAktivni = (p: string) => naroky.some((e) => e.product === p && e.active === true);
+  const platny = (p: string) => naroky.some((e) =>
+    e.product === p && e.active === true && (!e.expires_at || Date.parse(String(e.expires_at)) > Date.now()));
+  if (naroky.some((e) => e.product === "coaching")) return { duvod: "ma_koucink" };
+  if (((cc.data?.tags as string[]) ?? []).some((t) => String(t) === "coaching-active")) return { duvod: "ma_koucink" };
+  if (platny("konzultace")) {
+    if (calls.error) return { duvod: "nevim_chyba_cteni" };
+    const termin = Date.parse(String(calls.data?.termin_at ?? ""));
+    if (!Number.isFinite(termin) || termin > Date.now()) return { duvod: "ceka_na_hovor" };
+  }
+  if (!maAktivni("videokurz") && !maAktivni("academy")) return { duvod: "nema_videokurz_ani_academy" };
+  const l = lead.data as { id: string; track: string; status: string; next_send_at: string | null } | null;
+  if (l) {
+    const { data: uzDostal } = await admin.from("email_events")
+      .select("id").eq("lead_id", l.id).eq("type", "sent").eq("detail->>track", "upsell-coaching").limit(1);
+    if ((uzDostal ?? []).length > 0) return { duvod: "uz_dostal" };
+    const t = String(l.track ?? "");
+    if (t.indexOf("upsell-") === 0) return { duvod: "uz_v_trati", track: t };
+    if (t.indexOf("evergreen-") === 0) return { duvod: "evergreen", track: t };
+    if (t === "tydenik" || t.indexOf("blast") === 0) return { duvod: "blast", track: t };
+    if (["unsubscribed", "bounced"].includes(String(l.status ?? ""))) return { duvod: "odhlaseny", track: t };
+    if (String(l.status ?? "") === "paused") return { duvod: "pauza", track: t };
+    if (l.next_send_at) return { duvod: "bezi_jina_trat", track: t };
+  }
+  return { duvod: "nesplnuje_podminky_enrollu", track: l?.track ?? null };
 }
 
 Deno.serve(async (req) => {
@@ -3304,6 +3362,176 @@ Deno.serve(async (req) => {
         meta: { typ: "trenink", provider: RD_PROVIDER, model: RD_MODEL, upozorneni, vstup, dnyPopis, vyloucene, otisk },
       });
       return json({ ok: true, texty, upozorneni, ulozeno: !insErr, model: RD_MODEL });
+    }
+
+    // =========================================================================
+    // KONZULTACE (15. 9. 2026). Martin: „Chci to v adminu přehledně: zadám datum
+    // a čas konzultace a vidím tam na rozklik dotazník."
+    //
+    // ⛔ TERMÍN JE BRÁNA, NE KOSMETIKA. Podle `consultation_calls.termin_at` se řídí
+    //    SQL `enroll_into_upsell_*` i `drip-send`: dokud hovor nebyl, prodejní tratě
+    //    se tomu člověku neposílají. Co Martin uloží tady, to hned mění, co komu chodí.
+    // ⛔ KONZULTACE NENÍ KOUČINK. Značka je `konzultace`, nikdy `coaching-active`.
+    //    Kdo se stane klientem, značku ztratí (`_shared/koucink-onboarding.ts`)
+    //    a z tohohle seznamu zmizí, přesně jak si to Martin přál.
+    // =========================================================================
+    if (action === "konzultace_list") {
+      // Základ jsou NÁROKY, ne značky: kdo zaplatil, ten sem patří, i kdyby se kontakt
+      // v CRM z jakéhokoli důvodu nezaložil. Značka `konzultace` je jen zobrazení.
+      const { data: ents, error: entsErr } = await admin.from("entitlements")
+        .select("email,active,granted_at,expires_at,source").eq("product", "konzultace")
+        .order("granted_at", { ascending: false });
+      // ⛔ Chyba dotazu NENÍ prázdný seznam. Prázdno by vypadalo jako „nikdo si konzultaci
+      //    nekoupil", což je nerozeznatelné od pravdy, a Martin by nikomu nezavolal.
+      if (entsErr) return json({ error: "db_entitlements", detail: entsErr.message }, 500);
+      const emaily = [...new Set((ents ?? []).map((r: { email: string }) => low(r.email)).filter(Boolean))];
+      if (emaily.length === 0) return json({ ok: true, rows: [], chyby: [] });
+
+      const [ccRes, callsRes, leadsRes, intakeRes] = await Promise.all([
+        admin.from("customer_contacts").select("email,name,tags").in("email", emaily),
+        admin.from("consultation_calls").select("email,termin_at,note,updated_at").in("email", emaily),
+        admin.from("leads").select("id,email,track,step,status,next_send_at").in("email", emaily),
+        admin.from("consultation_intake").select("email,created_at").in("email", emaily),
+      ]);
+      // Dílčí výpadek kartu neshodí, ale MUSÍ být vidět: sloupec, který se nenačetl,
+      // ukazuje „?", ne nulu. Chyba dotazu není odpověď dotazu.
+      const chyby: string[] = [];
+      if (ccRes.error) chyby.push("customer_contacts (" + ccRes.error.message + ")");
+      if (callsRes.error) chyby.push("consultation_calls (" + callsRes.error.message + ")");
+      if (leadsRes.error) chyby.push("leads (" + leadsRes.error.message + ")");
+      if (intakeRes.error) chyby.push("consultation_intake (" + intakeRes.error.message + ")");
+
+      const jmeno = new Map<string, string>();
+      const znacky = new Map<string, string[]>();
+      for (const c of ccRes.data ?? []) {
+        jmeno.set(low(c.email), String(c.name ?? ""));
+        znacky.set(low(c.email), ((c.tags as string[]) ?? []).map(String));
+      }
+      const hovor = new Map<string, { termin_at: string | null; note: string | null }>();
+      for (const c of callsRes.data ?? []) hovor.set(low(c.email), { termin_at: c.termin_at, note: c.note });
+      // ⚠️ `leads.id` a `email_events.lead_id` jsou UUID, ne cislo (overeno v information_schema).
+      const leadBy = new Map<string, { id: string; track: string; step: number; status: string; next_send_at: string | null }>();
+      for (const l of leadsRes.data ?? []) leadBy.set(low(l.email), l);
+      const dotazniku = new Map<string, { pocet: number; posledni: string | null }>();
+      for (const i of intakeRes.data ?? []) {
+        const e = low(i.email);
+        const d = dotazniku.get(e) ?? { pocet: 0, posledni: null };
+        d.pocet += 1;
+        if (!d.posledni || Date.parse(String(i.created_at)) > Date.parse(String(d.posledni))) d.posledni = String(i.created_at);
+        dotazniku.set(e, d);
+      }
+      // Kdo už upsell na koučink dostal. Ptáme se JEN na leady z tohohle seznamu.
+      let upsellDostal = new Set<string>();
+      const leadIds = [...leadBy.values()].map((l) => l.id);
+      if (leadIds.length) {
+        const { data: ev, error: evErr } = await admin.from("email_events")
+          .select("lead_id").eq("type", "sent").eq("detail->>track", "upsell-coaching").in("lead_id", leadIds);
+        if (evErr) chyby.push("email_events (" + evErr.message + ")");
+        else {
+          const idNaMail = new Map<string, string>();
+          for (const [em, l] of leadBy) idNaMail.set(l.id, em);
+          upsellDostal = new Set((ev ?? []).map((r: { lead_id: string }) => idNaMail.get(r.lead_id) ?? "").filter(Boolean));
+        }
+      }
+      const tedMs = Date.now();
+      const rows = (ents ?? []).map((e: { email: string; active: boolean; granted_at: string; expires_at: string | null; source: string | null }) => {
+        const em = low(e.email);
+        const h = hovor.get(em) ?? { termin_at: null, note: null };
+        const l = leadBy.get(em);
+        const dot = dotazniku.get(em) ?? { pocet: 0, posledni: null };
+        const vTrati = !!l && String(l.track ?? "").indexOf("upsell-") === 0;
+        return {
+          email: em,
+          name: jmeno.get(em) ?? "",
+          tags: znacky.get(em) ?? [],
+          ma_kontakt: jmeno.has(em),
+          active: e.active === true,
+          granted_at: e.granted_at,
+          expires_at: e.expires_at,
+          source: e.source,
+          termin_at: h.termin_at,
+          note: h.note,
+          ...isoNaPoleFormulare(h.termin_at),
+          stav: stavHovoru(h.termin_at, tedMs),
+          lead_track: l?.track ?? null,
+          lead_status: l?.status ?? null,
+          lead_next: l?.next_send_at ?? null,
+          dotaznik_pocet: dot.pocet,
+          dotaznik_posledni: dot.posledni,
+          upsell_zarazen: vTrati || upsellDostal.has(em),
+          upsell_dostal_mail: upsellDostal.has(em),
+        };
+      });
+      return json({ ok: true, rows, chyby });
+    }
+
+    // Uložení termínu. Datum a čas zadává Martin v ČESKÉM čase, ukládá se timestamptz.
+    // ⚠️ `smazat` termín NEMAŽE řádek, jen nuluje `termin_at`: poznámka zůstává a nic
+    //    se nenávratně neztrácí. Vynulovaný termín znamená „hovor ještě nebyl",
+    //    takže se prodejní tratě zase odloží. To je vědomé, ne vedlejší účinek.
+    if (action === "konzultace_termin") {
+      const email = low(body.email);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+      const poznamka = String(body.note ?? "").trim().slice(0, 500);
+      const tedIso = new Date().toISOString();
+      let terminIso: string | null = null;
+      if (body.smazat !== true) {
+        const prevod = terminNaIso(body.datum, body.cas);
+        // ⛔ Tichý neúspěch je u formuláře to nejhorší: Martin by si myslel, že termín
+        //    uložil, a systém by dál držel prodejní tratě. Vrací se DŮVOD.
+        if (!prevod.ok) return json({ error: "termin", duvod: prevod.duvod }, 400);
+        terminIso = prevod.iso;
+      }
+      const { error } = await admin.from("consultation_calls")
+        .upsert({ email, termin_at: terminIso, note: poznamka || null, updated_at: tedIso }, { onConflict: "email" });
+      if (error) return json({ error: "db", detail: error.message }, 500);
+      return json({ ok: true, email, termin_at: terminIso, stav: stavHovoru(terminIso) });
+    }
+
+    // Dotazník před konzultací, na rozklik. Všechny sloupce včetně těch doplněných
+    // 15. 9. 2026 (věk, výška, pohlaví, kroky): bez nich se nedá odhadnout výdej.
+    if (action === "konzultace_dotaznik") {
+      const email = low(body.email);
+      if (!email) return json({ error: "no_email" }, 400);
+      const { data, error } = await admin.from("consultation_intake")
+        .select("id,email,created_at,goal,tried_before,typical_day,work_shifts,sleep_hours,activity,weight_kg,measurements,note,age,height_cm,sex,steps_per_day")
+        .eq("email", email).order("created_at", { ascending: false }).limit(5);
+      if (error) return json({ error: "db", detail: error.message }, 500);
+      return json({ ok: true, rows: data ?? [] });
+    }
+
+    // „Spustit upsell teď". Martin 15. 9.: „někdy je vhodné hned po hovoru (hot lead)."
+    //
+    // ⛔⛔ ROZHODUJE SQL FUNKCE, NE TENHLE KÓD (oprava po revizi R1, nález V1).
+    // První verze si ochrany přepisovala v TypeScriptu a tři z nich vynechala:
+    // `leads.track like 'evergreen-%'`, `status='paused'` a „je uprostřed blastu nebo
+    // týdeníku". U poslední z nich stojí v SQL od 13. 8. 2026 komentář, že přepsání
+    // `track` člověku uprostřed blastu znamená TICHOU ztrátu jeho domovské tratě.
+    // Dvě kopie týchž pravidel se dřív nebo později rozejdou a nikde to nekřikne,
+    // proto tady žádná druhá kopie není: voláme `enroll_into_upsell_coaching`
+    // s `p_email`, což je TÁŽ funkce, kterou pouští noční cron 11, jen zúžená
+    // na jeden e-mail. Přidat ochranu do SQL = přidat ji i tomuhle tlačítku.
+    //
+    // ⚠️ Funkce vrací jen POČET zařazených, ne důvod. Když je nula, zjistíme důvod
+    //    ZVLÁŠŤ a JEN ČTENÍM (`procNezarazen` níž): diagnostika nikoho zařadit nemůže,
+    //    takže se nemá jak stát druhou branou. Slouží výhradně k tomu, aby Martin
+    //    v adminu viděl, co se stalo, místo hlášky „nic se nestalo".
+    // IDEMPOTENCE: druhé kliknutí vrátí `uz_v_trati`, funkce podruhé nic nezapíše.
+    if (action === "konzultace_upsell") {
+      const email = low(body.email);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+      const { data: pocet, error: rpcErr } = await admin.rpc("enroll_into_upsell_coaching", { p_limit: 1, p_email: email });
+      // ⛔ Chyba RPC NENÍ „nezařadil". Typicky znamená, že migrace s `p_email` ještě
+      //    neproběhla; tiché „nezařazeno" by Martina nechalo hledat vinu u klienta.
+      if (rpcErr) return json({ error: "rpc_enroll", detail: rpcErr.message }, 500);
+      if (Number(pocet ?? 0) > 0) {
+        const { data: l } = await admin.from("leads").select("id,track").eq("email", email).maybeSingle();
+        if (l?.id) {
+          await admin.from("email_events").insert({ lead_id: l.id, step: 0, type: "zarazen_rucne", detail: { track: "upsell-coaching", kdo: me, duvod: "po konzultaci, tlacitko v adminu" } });
+        }
+        return json({ ok: true, stav: "zarazen" });
+      }
+      return json({ ok: false, ...(await procNezarazen(admin, email)) });
     }
 
     if (action === "client_invite") {
