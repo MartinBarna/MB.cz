@@ -1666,7 +1666,7 @@
             +'<input type="time" data-konz-cas="'+i+'" value="'+esc(r.cas)+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.88rem;">'
             +'<button class="mlogbtn" data-konz-uloz="'+i+'" style="padding:6px 12px;font-size:.82rem;">Uložit termín</button>'
             +(r.termin_at?'<button class="mlogbtn" data-konz-zrus="'+i+'" style="padding:6px 12px;font-size:.82rem;background:rgba(255,255,255,.06);color:#ece4d9;border:1px solid rgba(255,255,255,.18);">Zrušit termín</button>':'')
-            +'<span class="muted" style="font-size:.8rem;">uloženo: '+esc(konzKdy(r.termin_at))+' (český čas)</span>'
+            +'<span class="muted" style="font-size:.8rem;">'+(r.termin_at?('uloženo: '+esc(konzKdy(r.termin_at))+' (český čas)'):'termín zatím není uložený')+'</span>'
           +'</div>'
           +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:.3rem 0 0;">'
             +'<span class="muted" style="font-size:.82rem;">Upsell na koučink:</span> '+upsell+upsellBtn
@@ -1713,12 +1713,22 @@
       api({action:'konzultace_upsell',email:email}).then(function(o){
         if(o.j&&o.j.ok){ toast('Zařazen do upsellu'); loadKonzultace(); return; }
         // ⛔ Odmítnutí není chyba a musí být čitelné: každý důvod se řeší jinak.
-        var d=(o.j&&o.j.duvod)||'';
+        // O zařazení rozhoduje SQL funkce `enroll_into_upsell_coaching`; tyhle věty
+        // jen překládají její mlčení. Když v SQL přibude ochrana, přibude i důvod
+        // (server ho pošle) a sem patří věta k němu, ne nová podmínka.
+        var d=(o.j&&o.j.duvod)||'', tr=(o.j&&o.j.track)||'?';
         var text=d==='ma_koucink'?'Nezařazeno: tenhle člověk už koučink má (nebo měl).'
+          :d==='ceka_na_hovor'?'Nezařazeno: konzultační hovor podle termínu ještě neproběhl. Ulož termín, který už je za námi.'
+          :d==='nema_videokurz_ani_academy'?'Nezařazeno: nemá platný videokurz ani Academy, série na nich stojí.'
           :d==='uz_dostal'?'Nezařazeno: prodejní sérii na koučink už jednou dostal.'
           :d==='uz_v_trati'?'Nezařazeno: v upsell trati už je.'
+          :d==='evergreen'?'Nezařazeno: je na koncové trati '+tr+', z té se zpátky do upsellu nechodí.'
+          :d==='blast'?'Nezařazeno: je uprostřed rozesílky ('+tr+'). Přepsáním by se jeho domovská trať tiše ztratila.'
           :d==='odhlaseny'?'Nezařazeno: je odhlášený nebo mu maily nechodí.'
-          :d==='bezi_jina_trat'?'Nezařazeno: běží mu trať '+((o.j&&o.j.track)||'?')+'. Přepsáním by se ztratila, počkej, až dojede.'
+          :d==='pauza'?'Nezařazeno: jeho trať je pozastavená ('+tr+').'
+          :d==='bezi_jina_trat'?'Nezařazeno: běží mu trať '+tr+'. Přepsáním by se ztratila, počkej, až dojede.'
+          :d==='nesplnuje_podminky_enrollu'?'Nezařazeno: nesplňuje podmínky série (nejspíš nemá účet v Academy). Trať: '+tr+'.'
+          :d==='nevim_chyba_cteni'?'Nezařazeno a NEVÍM proč: nepovedlo se přečíst data. Zkus to znovu.'
           :'Nezařazeno: '+((o.j&&(o.j.detail||o.j.error))||o.status);
         toast(text);
       }).catch(function(){ toast('Chyba spojení'); });
