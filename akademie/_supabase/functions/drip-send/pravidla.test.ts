@@ -4,10 +4,14 @@
 import {
   konzultaceVBehu,
   KROK_PRO_MOST,
+  maZnackuKonzultace,
   mostBlokujeVlastnictvi,
   odstupDnu,
   shouldStop,
   TRATE_PAUZA_KONZULTACE,
+  varsBezZnackyKonzultace,
+  varsSeZnackouKonzultace,
+  VARS_KLIC_KONZULTACE,
   vlastniCokoli,
   vyberMost,
 } from './pravidla.ts';
@@ -158,6 +162,35 @@ zkontroluj('pauzuji se prave dve prodejni trate', TRATE_PAUZA_KONZULTACE.join(',
 // ⛔ KONTRAST PROTI `shouldStop`: tatáž situace se v ni NESMI projevit, jinak by se
 // z docasneho cekani stal trvaly `status='purchased'` a clovek by prisel i o newsletter.
 zkontroluj('shouldStop o konzultaci NIC NEVI (musi zustat na odkladu)', shouldStop('upsell-coaching', 0, JA, MA_VK, BEZ_EX), false);
+
+// ---------- ZNACKA CEKANI VE `vars` (15. 9. 2026, po revizi R1, nalez S1) ----------
+// Bez znacky vypadne kupec konzultace i z blog-newsletteru: `newsletter_prijemci`
+// bere jen leady s `next_send_at is null` nebo `> now() + 24 h`, a odklad o 24 h
+// tou podminkou nikdy neprojde. Znacku cte ziva SQL funkce, takze jeji jmeno je smlouva.
+zkontroluj('klic znacky se nesmi zmenit (cte ho newsletter_prijemci)', VARS_KLIC_KONZULTACE, '_konzultace_ceka');
+const VARS_PRAZDNE = varsSeZnackouKonzultace(null, '2026-09-15T08:00:00Z');
+zkontroluj('znacka se zapise i do prazdnych vars', String(VARS_PRAZDNE['_konzultace_ceka']), '2026-09-15T08:00:00Z');
+zkontroluj('zapsanou znacku funkce pozna', maZnackuKonzultace(VARS_PRAZDNE), true);
+zkontroluj('prazdne vars znacku nemaji', maZnackuKonzultace(null), false);
+zkontroluj('cizi klic neni znacka', maZnackuKonzultace({ _cadence: { od: 'x' } }), false);
+zkontroluj('prazdny retezec se za znacku nepovazuje', maZnackuKonzultace({ _konzultace_ceka: '' }), false);
+// ⛔ Ostatni klice ve `vars` jsou promenne trati a `_cadence`. Kdyby je znackovani
+// prepsalo, clovek by dostal mail s prazdnymi promennymi nebo by se rozjela kadence.
+const VARS_PLNE = { 'upsell-coaching': { jmeno: 'Mirek' }, _cadence: { od: '2026-09-01T00:00:00Z' } };
+const VARS_SE_ZNACKOU = varsSeZnackouKonzultace(VARS_PLNE, '2026-09-15T08:00:00Z');
+zkontroluj('znackovani nesmaze promenne trati', JSON.stringify(VARS_SE_ZNACKOU['upsell-coaching']), JSON.stringify({ jmeno: 'Mirek' }));
+zkontroluj('znackovani nesmaze _cadence', JSON.stringify(VARS_SE_ZNACKOU._cadence), JSON.stringify({ od: '2026-09-01T00:00:00Z' }));
+zkontroluj('puvodni objekt se nemeni (zadna mutace vstupu)', maZnackuKonzultace(VARS_PLNE), false);
+// Druhy odklad si drzi PRVNI datum, at je videt, jak dlouho clovek ceka.
+const VARS_DRUHY_ODKLAD = varsSeZnackouKonzultace(VARS_SE_ZNACKOU, '2026-09-20T08:00:00Z');
+zkontroluj('opakovany odklad datum neprepise', String(VARS_DRUHY_ODKLAD['_konzultace_ceka']), '2026-09-15T08:00:00Z');
+// Mazani znacky: bez nej by newsletter ignoroval next_send_at napořád.
+const VARS_PO_HOVORU = varsBezZnackyKonzultace(VARS_SE_ZNACKOU);
+zkontroluj('po smazani uz znacka neni', maZnackuKonzultace(VARS_PO_HOVORU), false);
+zkontroluj('mazani nesmaze promenne trati', JSON.stringify(VARS_PO_HOVORU['upsell-coaching']), JSON.stringify({ jmeno: 'Mirek' }));
+zkontroluj('mazani nesmaze _cadence', JSON.stringify(VARS_PO_HOVORU._cadence), JSON.stringify({ od: '2026-09-01T00:00:00Z' }));
+zkontroluj('mazani nad prazdnymi vars nespadne', JSON.stringify(varsBezZnackyKonzultace(null)), '{}');
+zkontroluj('pole misto objektu nespadne', JSON.stringify(varsBezZnackyKonzultace([1, 2])), '{}');
 
 console.log(selhalo === 0 ? `\nHOTOVO: ${kontrol} kontrol, vse proslo.` : `\nSELHALO: ${selhalo} z ${kontrol}`);
 if (selhalo > 0) Deno.exit(1);

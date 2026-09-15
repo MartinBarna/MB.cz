@@ -132,6 +132,53 @@ export function konzultaceVBehu(
 }
 
 /**
+ * ZNACKA V `leads.vars`, PODLE KTERE NEWSLETTER POZNA, ZE TENHLE ODKLAD NENI MAIL
+ * (pridano 15. 9. 2026 po revizi R1, nalez S1).
+ *
+ * ⛔ PROC VUBEC: `newsletter_prijemci` bere jen leady, kde `next_send_at is null`
+ * nebo `next_send_at > now() + 24 hodin` (pravidlo z 2. 9. 2026 „kdo ma naplanovany
+ * mail do 24 h, se nepujcuje"). Odklad o 24 h vznika DRIV, nez bezi rozesilka, takze
+ * ta podminka je pro nej VZDY nepravdiva a kupec konzultace by po celou dobu cekani
+ * na termin vypadl i z blog-newsletteru, tedy z OBSAHOVE trate. Pri zapomenutem
+ * terminu napořád. Ziva `newsletter_prijemci` proto dostava treti vetev na tuhle znacku.
+ *
+ * ⛔ PROC NE `next_send_at = NULL` (parkovani): retezec `next_send_at is null` cte
+ * DEVET zivych SQL funkci (blasty, mosty, enrolly, vraceni z rozesilek) a znamena
+ * v nich „tenhle clovek nema naplanovano, je volny". Zaparkovany lead by se stal
+ * koristi blastu i mostu, tedy presne ta ticha ztrata trate, pred kterou varuje
+ * komentar z 13. 8. 2026. Znacka nemeni vyznam zadneho existujiciho pole.
+ *
+ * ⚠️ Znacka se MUSI mazat, jakmile clovek uz neceka, jinak by newsletter ignoroval
+ * jeho `next_send_at` napořád. Maze ji tentyz beh drip-sendu (viz `index.ts`).
+ * ⚠️ Ostatni klice ve `vars` zustavaji nedotcene (jsou tam promenne trati i `_cadence`).
+ */
+export const VARS_KLIC_KONZULTACE = '_konzultace_ceka';
+
+function jenObjekt(vars: unknown): Record<string, unknown> {
+  return (vars && typeof vars === 'object' && !Array.isArray(vars))
+    ? { ...(vars as Record<string, unknown>) }
+    : {};
+}
+
+export function maZnackuKonzultace(vars: unknown): boolean {
+  const v = jenObjekt(vars)[VARS_KLIC_KONZULTACE];
+  return typeof v === 'string' && v !== '';
+}
+
+export function varsSeZnackouKonzultace(vars: unknown, odIso: string): Record<string, unknown> {
+  const out = jenObjekt(vars);
+  // Prvni odklad si drzi svoje datum: je z nej videt, jak dlouho uz clovek ceka.
+  if (!maZnackuKonzultace(out)) out[VARS_KLIC_KONZULTACE] = odIso;
+  return out;
+}
+
+export function varsBezZnackyKonzultace(vars: unknown): Record<string, unknown> {
+  const out = jenObjekt(vars);
+  delete out[VARS_KLIC_KONZULTACE];
+  return out;
+}
+
+/**
  * ⛔ ZAMERNE KROK 1, NE 0. `shouldStop` ma pro akvizicni trate (lead-magnet*,
  * existing-leadmagnet, nurture-*) tvar `step > 0 && vlastniCokoli`, protoze KROK 0 je
  * slibeny freebie a ten se posila i tomu, kdo uz koupil. Pri volani s nulou by ochrana
