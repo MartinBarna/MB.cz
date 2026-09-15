@@ -3,6 +3,8 @@
 // Komu: aktivní entitlement 'coaching' mimo optout. Registrovaný dostane připomínku reportu
 // (pokud report nemá z posledních 3 dnů; kdo vyplnil v týdnu, mail nedostane).
 // Neregistrovaný dostane výzvu k založení přístupu (bez účtu nemá report kam vyplnit).
+// ⭐ Nový klient, který nikdy neposlal report, výzvu k reportu prvních 7 dní od pozvání
+//    nedostane (cerstvy-klient.ts). Upomínky k registraci se to netýká.
 // Globální vypnutí: app_config.client_remind_enabled = 'false'.
 // Per-klient vypnutí: app_config.client_remind_optout = CSV e-mailů (zapisuje se v adminu).
 //
@@ -18,6 +20,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 import { emailySeznam } from "../_shared/mail-seznam.ts";
+import { jeCerstvyKlient } from "./cerstvy-klient.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -158,13 +161,21 @@ Deno.serve(async (req: Request) => {
   // dál, i když mu koučink skončil. Prázdná expirace = přístup bez konce, ten platí.
   // ⛔ Chyba čtení = 500, ne „nikdo": prázdný seznam kvůli 504 by byl tichý úspěch.
   const nyni = new Date().toISOString();
-  const ents = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() =>
-    admin.from("entitlements").select("email")
+  const ents = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; granted_at?: unknown }>; error: unknown }>(() =>
+    admin.from("entitlements").select("email,granted_at")
       .eq("product", "coaching").eq("active", true)
       .or("expires_at.is.null,expires_at.gt." + nyni));
   if (ents.error) return json(chybaCteni("entitlements", ents.error), 500);
   const clients = [...new Set((ents.data ?? []).map((e) => low(e.email)))].filter(Boolean);
   if (!clients.length) return json({ ok: true, sent: 0 });
+  // Kdy byl nárok udělen. Je to okamžik kliknutí v adminu, ne start koučinku, ale jiné datum
+  // o začátku klienta v systému není. Klíč entitlements je email+product a čte se jen
+  // 'coaching', takže na jednu adresu připadá jeden řádek. Nečitelné datum se přeskočí.
+  const grantOd = new Map<string, number>();
+  for (const e of ents.data ?? []) {
+    const t = Date.parse(String(e.granted_at ?? ""));
+    if (Number.isFinite(t)) grantOd.set(low(e.email), t);
+  }
 
   // jen registrovaní (bez účtu nemá report kdo vyplnit, ty řeší pozvánka, ne nedělní mail)
   // listUsers() chybu NEHAZI, vraci ji v error a data zustanou prazdna. Bez tehle kontroly by
@@ -187,6 +198,15 @@ Deno.serve(async (req: Request) => {
   const recent = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() => admin.from("client_reports").select("email").gte("report_date", cutoff));
   if (recent.error) return json(chybaCteni("client_reports", recent.error), 500);
   const recentSet = new Set((recent.data ?? []).map((r) => low(r.email)));
+
+  // Kdo někdy poslal JAKÝKOLI report (web, import-sheet, sync z appky). Bez toho by se
+  // převáděný klient z Excelu po nové pozvánce na týden ztišil, i když reporty posílá roky.
+  // ⛔ Chyba čtení = 500 jako u ostatních čtení: prázdno po chybě by znamenalo „nikdo nikdy
+  //    nereportoval" a na týden by ztišilo každého nového klienta, tiše a bez stopy.
+  const vsechnyReporty = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() =>
+    admin.from("client_reports").select("email"));
+  if (vsechnyReporty.error) return json(chybaCteni("client_reports(vse)", vsechnyReporty.error), 500);
+  const nekdyReportoval = new Set((vsechnyReporty.data ?? []).map((r) => low(r.email)));
 
   // per-klient opt-out (klient odepsal, že připomínky nechce → admin ho zapíše do CSV)
   // ⛔ Chyba čtení = 500: bez opt-outu by mail přišel i tomu, kdo si ho vypnul.
@@ -244,8 +264,14 @@ Deno.serve(async (req: Request) => {
   }
 
   const pool = clients.filter((e) => !optout.has(e));
+  // ⭐ Ochranná lhůta po pozvání (cerstvy-klient.ts): nový klient, který nikdy neposlal report,
+  //    výzvu k reportu ještě nedostane. ⛔ Týká se JEN druhu "report". Upomínka k registraci
+  //    chodí dál: bez účtu nemá klient report kam vyplnit a odklad by ho jen zdržel.
+  const naReport = pool.filter((e) => registered.has(e) && !recentSet.has(e));
+  const ted = Date.now();
+  const cerstviSet = new Set(naReport.filter((e) => jeCerstvyKlient(e, grantOd, nekdyReportoval, ted)));
   const kandidati: { email: string; kind: "report" | "register" }[] = [
-    ...pool.filter((e) => registered.has(e) && !recentSet.has(e)).map((email) => ({ email, kind: "report" as const })),
+    ...naReport.filter((e) => !cerstviSet.has(e)).map((email) => ({ email, kind: "report" as const })),
     ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
   ];
   // Opakovací běhy cronu: kdo tenhle druh mailu dostal v posledních dnech, nedostane ho znovu.
@@ -313,5 +339,5 @@ Deno.serve(async (req: Request) => {
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: testEmail ? 0 : cerstviSet.size, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
 });
