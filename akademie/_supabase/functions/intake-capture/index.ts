@@ -20,7 +20,7 @@
 // Deploy --no-verify-jwt.
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { celeCislo, vahaNaCislo } from "./cisla.ts";
+import { celeCislo, proAlert, vahaNaCislo } from "./cisla.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -95,6 +95,8 @@ Deno.serve(async (req: Request) => {
     note: clip(body.note, 2000),
   };
   const weight = vahaNaCislo(body.weight_kg);
+  // ⚠️ Nesmysl padá na `null` a do DB se uloží null, ale do alertu se přes `proAlert` vypíše
+  // i to, co člověk napsal. Jinak Martin nepozná „nevyplnil" od „vyplnil, ale zahodili jsme mu to".
   // Věk, výška, pohlaví a kroky: všechno NEPOVINNÉ. Bez nich se výdej nedal odhadnout ani
   // hrubě a Martin šel na placený hovor bez čísel. Meze jsou stejné jako ve vstupním
   // dotazníku klienta, ať se ta dvě čísla dají porovnat.
@@ -169,9 +171,9 @@ Deno.serve(async (req: Request) => {
       R("Práce a směny", odpovedi.work_shifts) +
       R("Spánek", odpovedi.sleep_hours) +
       R("Pohyb", odpovedi.activity) +
-      R("Kroky/den", steps === null ? "" : String(steps)) +
-      R("Věk", age === null ? "" : age + " let") +
-      R("Výška", height === null ? "" : height + " cm") +
+      R("Kroky/den", proAlert(body.steps_per_day, steps)) +
+      R("Věk", proAlert(body.age, age, "let")) +
+      R("Výška", proAlert(body.height_cm, height, "cm")) +
       R("Pohlaví", sex === "z" ? "žena" : sex === "m" ? "muž" : "") +
       R("Ranní váha", weight === null ? "" : weight + " kg") +
       R("Míry (pas, boky)", odpovedi.measurements) +
