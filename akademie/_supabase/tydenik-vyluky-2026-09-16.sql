@@ -24,12 +24,22 @@
 --    je tedy skutecna nahrada a granty (`{postgres=X/postgres,service_role=X/postgres}`)
 --    zustavaji beze zmeny.
 --
--- ⚠️ NASLEDEK, KTERY MUSI VEDET SEF: okruh tydeniku se zuzi. Merenu 16. 9. 2026
---    odpoledne (tedy uz PO denni vlne newsletteru) vraci `tydenik_prijemci(4)`
---    pred zmenou 72 lidi, po zmene 7. Rozhodujici je podminka "zadny mail dnes"
---    (64 z tech 72 uz dnes mail dostalo). V pondeli rano, kdy tydenik doopravdy
---    jede (`5 6-16 * * 1`) a newsletter jeste nebezel (`40 8-14 * * *`), bude
---    odriznutych vyrazne min. Cislo 7 tedy NENI pondelni odhad.
+-- ⚠️ NASLEDEK, KTERY MUSI VEDET SEF: okruh tydeniku se zuzi.
+--    Mereno 16. 9. 2026 na `begin; ... ` bez `commit` proti produkci:
+--      pred zmenou  `tydenik_prijemci(4)` = 72
+--      po zmene     `tydenik_prijemci(4)` = 0
+--      bez pravidla "zadny mail dnes"     = 63 (v 18:00 UTC) az 64 (ve 20:53 UTC)
+--    Rozhodujici je podminka "zadny mail dnes": 64 az 65 z tech 72 uz dnes mail
+--    dostalo, protoze se merilo PO denni vlne newsletteru. Strukturalni vyluky
+--    (consent + 24 h + `blog-newsletter` + rodina) odrezavaji 8 az 9 lidi.
+--    ⚠️ Cisla se behem dne posouvaji, protoze okno 24 h se posouva s nimi; proto
+--       jsou uvedena i s casem mereni a proto je rozsah, ne jedno cislo.
+--    ⛔ NULA NENI PONDELNI ODHAD. V pondeli rano, kdy tydenik doopravdy jede
+--       (`5 6-16 * * 1`) a newsletter jeste nebezel (`40 8-14 * * *`), bude
+--       odriznutych vyrazne min. Prvni vlna v 06:05 UTC se zuzi malo, vlny
+--       od 08:05 UTC (tedy po newsletteru v 08:40) vyrazne.
+--    ⚠️ Opravena cisla po revizi R1 (nalez N-1): puvodne tu stalo "po zmene 7",
+--       coz neodpovidalo ani vlastnimu mereni, ani BUILDu.
 -- ============================================================================
 
 begin;
@@ -122,11 +132,24 @@ begin
     return jsonb_build_object('ok', false, 'duvod', 'chybi_drip_invoke_secret');
   end if;
 
+  -- ⛔⛔ [16. 9. 2026, revize R1, nalez N-3] TEST POSILA JEN NA MARTINOVU ADRESU.
+  --    Do ted se adresa brala z parametru `p_jen_email` (pres coalesce s Martinovou
+  --    adresou jako zalohou), takze
+  --    `tydenik_rozeslani(4, true, 120, 'kdokoli@example.com')` poslalo mail na
+  --    LIBOVOLNOU adresu a obeslo pritom `odhlaseni_trvale`, `withdrawals`, bounce
+  --    i `followups_gate_open()`: vetev `p_test` je nad vsemi branami. Byl to
+  --    otevreny mail relay. `newsletter_rozeslani` to ma opravene uz davno a jeji
+  --    komentar na tuhle past vyslovne ukazuje jmenem teto funkce.
+  --    ⚠️ Snizena sazba tim, ze `proacl` je jen postgres a service_role, tedy `anon`
+  --       ani `authenticated` funkci zavolat nemuzou. Zustavala to ale ziva mina
+  --       pro rucni beh z adminu.
+  --    ⭐ Test JEDNOHO leada se dela `p_test => false` + `p_jen_email`, coz projde
+  --       vsemi branami a posila pres `only_email`.
   if p_test then
     select net.http_post(
       url := v_url,
       headers := jsonb_build_object('Content-Type', 'application/json', 'x-drip-secret', v_secret),
-      body := jsonb_build_object('test_email', coalesce(p_jen_email, 'fitness.barna@gmail.com'),
+      body := jsonb_build_object('test_email', 'fitness.barna@gmail.com',
                                  'track', 'tydenik', 'step', p_cislo,
                                  'segment', 'other', 'name', ''),
       timeout_milliseconds := 60000
@@ -307,7 +330,16 @@ commit;
 --       where lower(email) like 'fitness.barna%'
 --          or lower(email) in ('ivanabarnova@seznam.cz','barnamaro@gmail.com','barnaxxx@seznam.cz');
 --      -- ceka se 0
--- 3) Signatury se nezdvojily:
+-- 3) Testovaci vetev uz neni otevrene rele (nalez N-3):
+--    ⚠️ Kontrola musi byt POZITIVNI, ne "neobsahuje parametr": `pg_get_functiondef`
+--       vraci i KOMENTARE v tele, a ten nad opravou tu past popisuje, takze
+--       hledani zakazaneho vzoru by bylo vzdycky "nalezeno" a lhalo by.
+--      select pg_get_functiondef(p.oid)
+--             like '%''test_email'', ''fitness.barna@gmail.com''%' as posila_jen_martinovi
+--        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+--       where n.nspname='public' and p.proname='tydenik_rozeslani';
+--      -- ceka se true
+-- 4) Signatury se nezdvojily:
 --      select p.oid::regprocedure, p.proacl from pg_proc p join pg_namespace n
 --        on n.oid = p.pronamespace where n.nspname='public'
 --       and p.proname in ('tydenik_prijemci','tydenik_rozeslani','newsletter_rozeslani');
