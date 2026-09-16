@@ -2235,15 +2235,31 @@ Deno.serve(async (req) => {
             //    upozornění zákazník zaplatil za hodinu a čekal by, dokud si toho
             //    někdo náhodou nevšimne v přehledu plateb. Tohle je celý nález A/N2.
             if (def.alertPoNakupu) {
+              // ⛔⛔ [R1, nález S-4] VĚTA O BRÁNĚ TU LHALA A BYLA TO LEŽ, NA KTEROU SE
+              //    DALO SPOLEHNOUT. U PRVNÍHO nákupu brána drží, protože
+              //    `consultation_calls.termin_at` je NULL (`enroll_into_upsell_*`:
+              //    `cc3.termin_at IS NULL OR cc3.termin_at > now()`).
+              //    U OPAKOVANÉHO nákupu je ale v té tabulce termín z PŘEDCHOZÍHO hovoru,
+              //    tedy v minulosti, a nic ho při druhém nákupu nemaže. Brána je proto
+              //    OTEVŘENÁ a `enroll_into_upsell_coaching` ho smí vzít hned druhý den.
+              //    Nová pojistka `ma_rozdelanou_dorucovaci_trat` ho nechrání, protože
+              //    opakovaný nákup schválně nespouští doručovací trať.
+              // ⛔ Termín se tady ZÁMĚRNĚ NEVYNULOVÁVÁ. Do `consultation_calls` píše
+              //    jediné místo (`admin-api`, akce `konzultace_termin`) a druhý
+              //    zapisovatel z webhooku by byl přesně ta třída chyby, kterou tahle
+              //    dávka jinde opravuje. Alert proto říká pravdu a pošle Martina
+              //    zavřít bránu ručně, což je jeden klik.
               await alertAdmin(def.alertPoNakupu + " (OPAKOVANÝ NÁKUP)", {
                 email: emailL,
                 produkt: def.nazev,
                 payment_intent: pi,
                 poznamka: "Konzultaci u tebe kupuje PODRUHÉ. Není to omyl ani duplicita, "
                   + "potvrzení mu odešlo a slíbilo, že se ozveš s termínem.",
-                co_delat: "Ozvi se mu a domluv termín. Zadej termín hovoru v adminu "
+                co_delat: "Ozvi se mu a domluv termín. Zadej ho v adminu "
                   + "(sekce Konzultace): https://martinbarna.cz/akademie/admin/#sek-konzultace "
-                  + "Dokud tam termín není, prodejní maily na koučink se mu neposílají.",
+                  + "⛔ Pozor, tady to funguje jinak než u prvního nákupu: brána prodejních "
+                  + "mailů je u něj OTEVŘENÁ, protože v systému má termín z minulého hovoru. "
+                  + "Zadáním nového termínu se zase zavře, tak to udělej hned.",
               });
             }
             // ⭐ PROVIZE I ZA DRUHOU PLATBU, ze stejného důvodu jako u balíčku níž.

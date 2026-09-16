@@ -129,6 +129,22 @@ check('NA5 v mailu druhe konzultace neni dlouha pomlcka ani cena', (() => {
   return !telo.includes(POMLCKA) && !/\d[\d\s]*Kč/.test(telo);
 })());
 
+// --- 4) S-4 (revize R1): alert u OPAKOVANEHO nakupu nesmi slibovat branu, ktera nedrzi
+// U prvniho nakupu je `consultation_calls.termin_at` NULL a brana drzi. U opakovaneho
+// je tam termin z PREDCHOZIHO hovoru, tedy v minulosti, takze brana je OTEVRENA.
+{
+  const i = zdroj.indexOf('} else if (klic !== "balicek") {');
+  const j = zdroj.indexOf('return json({', i);
+  const vetev = i > 0 && j > i ? zdroj.slice(i, j) : '';
+  check('S4a alert u opakovaneho nakupu uz NEtvrdi, ze se prodejni maily neposilaji',
+    vetev !== '' && !vetev.includes('prodejní maily na koučink se mu neposílají'));
+  check('S4b alert misto toho rika, ze brana je OTEVRENA a jak se zavre',
+    /brána prodejních/.test(vetev) && /OTEVŘENÁ/.test(vetev)
+    && /Zadáním nového termínu se zase zavře/.test(vetev));
+  check('S4c termin se z webhooku NEPREPISUJE (jediny zapisovatel je admin-api)',
+    !/consultation_calls/.test(vetev) || /ZÁMĚRNĚ NEVYNULOVÁVÁ/.test(zdroj));
+}
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo  (index: ${WEBHOOK})`);
