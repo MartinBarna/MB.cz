@@ -147,10 +147,14 @@ Deno.serve(async (req: Request): Promise<Response> => {
     buildPdf: (input) => buildVoucherPdf(input),
     sendMail: async (input) => {
       const r = await sendVoucherMail(RESEND_KEY, input);
-      // ⛔ Stopa jen u ODESLANEHO mailu a jen kupci: `core.ts` posila tymtez
-      //    `sendMail` i alert Martinovi, ale ten jde pres vlastni vetev s jinym
-      //    predmetem, takze sem chodi adresa prijemce poukazu (nebo testovaci
-      //    adresa, kdyz `POUKAZ_OSTRY !== '1'`).
+      // ⛔⛔ [R1, nalez S-2] PUVODNI KOMENTAR TADY LHAL. Tvrdil, ze alert Martinovi
+      //    jde "vlastni vetvi s jinym predmetem". Nejde: `core.ts` posila alert
+      //    (`guardMail` odmitl kupce) TYMTEZ `deps.sendMail` na `config.testRecipient`,
+      //    a stejne tak jde na Martinovu adresu cely poukaz, kdyz `POUKAZ_OSTRY !== '1'`.
+      //    Do stopy by se tedy dostala Martinova adresa a jeden bounce nebo jedna
+      //    stiznost by zmrazila jeho vlastni lead (v `leads` JE a je `active`).
+      //    ⇒ Filtr Martinovych adres drzi `zapisOdeslani` samo, viz `_shared/resend-odeslat.ts`.
+      //    Tady se proto vola bez podminky a helper si adresu posoudi.
       if (r.ok) await zapisOdeslani({ admin, via: 'poukaz-vydat', email: input.to }, r.providerId ?? '');
       return r;
     },

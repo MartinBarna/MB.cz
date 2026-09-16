@@ -271,6 +271,25 @@ async function send(admin: any, to: string, subject: string, html: string, bccCo
   return { status: r.ok ? 200 : r.status };
 }
 
+// ⛔ [R1, nalez N-4] "ODESLANO" SE NESMI RIKAT, KDYZ NIC NEODESLO.
+// Do R1 vracel handler `ok: true` i tehdy, kdyz `odesliPresResend` vratil
+// `{ok:false, status:0}` (pad site). Driv v tom miste `fetch` vyhodil vyjimku
+// a klient v prohlizeci videl, ze se neco nepovedlo; po zavedeni helperu uz
+// vyjimka nelita, takze by se ticho tvarilo jako uspech.
+// ⚠️ Zaznam v `client_reports` / `client_intake` je ulozeny PREDTIM, takze se
+//    nic neztraci. Odpoved jen prestane lhat: `ok:false` + `mail_error`.
+function vysledekMailu(
+  ...vysledky: Array<{ status: number }>
+): Record<string, unknown> {
+  const selhalo = vysledky.filter((v) => v.status !== 200).length;
+  return {
+    ok: selhalo === 0,
+    ...(selhalo ? { mail_error: "mail_neodeslan", selhalo } : {}),
+    mail_coach: vysledky[0]?.status ?? null,
+    ...(vysledky.length > 1 ? { mail_client: vysledky[1].status } : {}),
+  };
+}
+
 Deno.serve(async (req: Request) => {
   const C = cors(req);
   if (req.method === "OPTIONS") return new Response("ok", { headers: C });
@@ -381,7 +400,7 @@ Deno.serve(async (req: Request) => {
     const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled. Stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
     const s1 = await send(admin, COACH, subj, coachMail);
     const s2 = await send(admin, email, "Tvůj týdenní report ✓ (kopie)", clientMail, true);
-    return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
+    return json(vysledekMailu(s1, s2), C);
   }
 
   if (action === "intake") {
@@ -401,7 +420,7 @@ Deno.serve(async (req: Request) => {
       "Kopie dotazníku pro tvůj přehled. Martin Barna · martinbarna.cz");
     const s1 = await send(admin, COACH, `📝 Vstupní dotazník: ${name}`, coachMail);
     const s2 = await send(admin, email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail, true);
-    return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
+    return json(vysledekMailu(s1, s2), C);
   }
 
   if (action === "reference") {
@@ -422,7 +441,7 @@ Deno.serve(async (req: Request) => {
       `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-size:13px'>Kontakt: ${esc(email)}. Ozvi se, poděkuj a klidně popros o fotku před/po.</p>`;
     const s1 = await send(admin, COACH, `🌟 Souhlas s referencí: ${name}`, wrap("Martin Barna · reference", html, "Souhlas přišel z klientské sekce martinbarna.cz"));
     try { await admin.from("client_notes").insert({ email, note: "🌟 SOUHLAS S REFERENCÍ: „" + text.slice(0, 500) + "“ (" + pokrok + ")" }); } catch { /* best-effort */ }
-    return json({ ok: true, mail_coach: s1.status }, C);
+    return json(vysledekMailu(s1), C);
   }
 
   return json({ error: "unknown_action" }, C, 400);

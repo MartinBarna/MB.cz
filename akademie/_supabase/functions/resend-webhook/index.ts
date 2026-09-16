@@ -95,18 +95,66 @@ Deno.serve(async (req) => {
   const emailId = String(ev?.data?.email_id || "");
   if (!emailId) return json({ ok: true, ignored: "no_email_id" });
 
-  // dohledej puvodni event pres Resend id: 'sent' (ostry mail leadovi), 'test'
-  // ⭐⭐ [16. 9. 2026] a nove i `px_odeslano`. Tenhle typ pisou cesty MIMO drip
-  // (`client-remind`, `client-report`, `poukaz-vydat`, `study-reminder`, `milestones`,
-  // `splatky-guard`, `order-rescue`, `academy-stripe-webhook`), ktere do 16. 9. 2026
-  // odpoved Resendu vubec necetly a jejich maily se tedy NESLO sparovat.
-  // ⛔ Typ je u nich `px_odeslano`, ne `sent`, SCHVALNE: `sent` cte `email_summary`,
-  //    `daily-digest` i denni strop v `drip-send`. Viz `_shared/resend-odeslat.ts`.
-  const { data: orig } = await admin.from("email_events")
+  // ⛔⛔ TENHLE SEZNAM MUSI OBSAHOVAT KAZDY TYP, POD KTERYM SE NEKDE ZAPISUJE ODESLANI.
+  // Typ, ktery tu chybi, znamena presne to, co tahle davka opravuje: bounce se
+  // nesparuje, `leads.status` se nezmeni a adresa dostava vsechno dal. Revize R1
+  // to nasla u `konzultace_znovu_doruceno` a `balicek_znovu_doruceno` (nalez V-1).
+  // ⛔ Hlida to kontrola T1 v `_shared/resend-odeslat.test.ts`, ktera typy VYCTE
+  //    ZE ZDROJAKU vsech funkci, ne porovna retezec.
+  //
+  // Co je co:
+  //   `sent`      drip-send a spol., ostry mail leadovi
+  //   `test`      testovaci odeslani (nikdy nezmrazuje)
+  //   `px_odeslano` mail S MERICIM PIXELEM (`milestones`, `order-rescue`);
+  //                 `admin-api` ho pocita do jmenovatele otevrenosti
+  //   `odeslano`  vychozi typ `_shared/resend-odeslat.ts`, mail BEZ pixelu
+  //   `konzultace_znovu_doruceno` / `balicek_znovu_doruceno`
+  //               opakovany nakup; na techhle radcich stoji i IDEMPOTENCE
+  //               pres `detail->>payment_intent`, proto maji vlastni typ
+  const TYPY_ODESLANI = [
+    "sent",
+    "test",
+    "px_odeslano",
+    "odeslano",
+    "konzultace_znovu_doruceno",
+    "balicek_znovu_doruceno",
+  ];
+  const { data: orig, error: chybaOrig } = await admin.from("email_events")
     .select("lead_id,step,type,detail").eq("provider_id", emailId)
-    .in("type", ["sent", "test", "px_odeslano"]).limit(1).maybeSingle();
+    .in("type", TYPY_ODESLANI).limit(1).maybeSingle();
 
-  const isTest = orig?.type === "test";
+  // ⛔⛔ [R1, nalez S-6] CHYBA DOTAZU NENI ODPOVED DOTAZU. Timeout nebo 504 vypada
+  //    stejne jako "nenaslo se": clovek by se nezmrazil a Martinovi by prisel FALESNY
+  //    alert o nesparovanem bouncu. Resend webhook pri 5xx opakuje, takze spravna
+  //    reakce je PRIZNAT NEVIM a nechat ho prijit znovu.
+  //    (pamet `feedback-chyba-dotazu-neni-odpoved`: brana na 504 uz jednou poslala
+  //    platiciho VIP na paywall)
+  if (chybaOrig) {
+    console.error("[resend-webhook] cteni puvodniho odeslani selhalo: " + chybaOrig.message);
+    return json({ error: "orig_read_failed", retry: true }, 500);
+  }
+
+  const detailStopy = (orig?.detail && typeof orig.detail === "object")
+    ? (orig.detail as Record<string, unknown>)
+    : {};
+  // ⛔ [R1, nalez S-2] TESTOVACI ODESLANI SE POZNA I PODLE ZNACKY V `detail`.
+  //    Do R1 byl `isTest` pravda jen pro stary typ `test`, takze bounce na Martinovu
+  //    testovaci adresu (`client-remind` v testovacim rezimu) by zmrazil lead.
+  const isTest = orig?.type === "test" || detailStopy.test === true;
+
+  // ⛔⛔ [R1, nalez S-1] ADRESA, KTERA SE DOOPRAVDY ODRAZILA, JE V PAYLOADU RESENDU.
+  //    Resend vraci pro zasilku s `to` + `bcc` JEDNO `email_id`. `detail.email` je vzdy
+  //    PRIMARNI prijemce, takze bounce BCC kopie (Martinova archivni kopie u
+  //    `client-remind` a `client-report`) by zmrazil KLIENTA, ktery mail dostal
+  //    v poradku. U `complaint` by navic sel na trvaly seznam.
+  //    ⇒ Adresa z payloadu je zdroj pravdy. Kdyz se neshoduje se stopou, NEZMRAZUJE SE.
+  // ⚠️ `ev.data.to` byva pole, ale nemusi prijit vubec; prazdne pole = nevime,
+  //    a "nevime" se nesmi cist jako "neshoda" (to by zmrazeni vyplo uplne).
+  const doruceniRaw = ev?.data?.to;
+  const adresyZPayloadu = (Array.isArray(doruceniRaw) ? doruceniRaw : (doruceniRaw ? [doruceniRaw] : []))
+    .map((x: unknown) => String(x ?? "").trim().toLowerCase())
+    .filter((x: string) => x.length > 0);
+
   let lead_id = (!isTest && orig?.lead_id) ? (orig.lead_id as string) : null;
   // ⭐⭐ [16. 9. 2026] ZALOZNI PAROVANI PODLE ADRESY. Cesty mimo drip casto `lead_id`
   // neznaji (posilaji klientovi, kupci poukazu, dluznikovi splatky), takze stopa ma
@@ -114,17 +162,32 @@ Deno.serve(async (req) => {
   // z techto cest dal dostavala vsechno, presne jako pred opravou.
   // ⚠️ Hleda se JEN kdyz stopa adresu nese. Nikdy se nehada z jineho zdroje.
   let sparovanoPodle = lead_id ? "provider_id" : "nesparovano";
-  const adresaZeStopy = String(
-    (orig?.detail && typeof orig.detail === "object")
-      ? ((orig.detail as Record<string, unknown>).email ?? "")
-      : "",
-  ).trim().toLowerCase();
-  if (!lead_id && !isTest && adresaZeStopy) {
-    const { data: l } = await admin.from("leads").select("id").eq("email", adresaZeStopy).limit(1).maybeSingle();
+  const adresaZeStopy = String(detailStopy.email ?? "").trim().toLowerCase();
+  // `false` = payload adresu prinesl a NESEDI se stopou (typicky bounce BCC kopie).
+  // `true` = sedi, nebo payload adresu vubec neprinesl (pak se chovame jako dosud).
+  const adresaSedi = adresyZPayloadu.length === 0 || !adresaZeStopy
+    || adresyZPayloadu.includes(adresaZeStopy);
+
+  if (!lead_id && !isTest && adresaZeStopy && adresaSedi) {
+    const { data: l, error: chybaLeada } = await admin.from("leads")
+      .select("id").eq("email", adresaZeStopy).limit(1).maybeSingle();
+    // ⛔ [R1, S-6] Zase: chyba != nenaslo se. Radsi 500 a opakovani nez tichy omyl.
+    if (chybaLeada) {
+      console.error("[resend-webhook] dohledani leada podle adresy selhalo: " + chybaLeada.message);
+      return json({ error: "lead_lookup_failed", retry: true }, 500);
+    }
     if (l?.id) { lead_id = String(l.id); sparovanoPodle = "email"; }
+  } else if (!adresaSedi) {
+    sparovanoPodle = "adresa_nesedi";
+  }
+  // ⛔ [R1, S-1] Totez i pro parovani pres `provider_id`: kdyz payload rika, ze se
+  //    odrazila JINA adresa nez ta ve stope, je to kopie a lead se zmrazit nesmi.
+  if (lead_id && sparovanoPodle === "provider_id" && !adresaSedi) {
+    lead_id = null;
+    sparovanoPodle = "adresa_nesedi";
   }
   const step = orig?.step == null ? null : Number(orig.step);
-  const baseDetail = (orig?.detail && typeof orig.detail === "object") ? (orig.detail as Record<string, unknown>) : {};
+  const baseDetail = detailStopy;
   const track = String(baseDetail.track ?? "");
   // URL prokliku (jen u click) — bez ni nerozlisime klik na nabidku od kliku na "odhlasit se"
   // ani cloveka od bezpecnostniho skeneru, ktery proklika vsechny odkazy v mailu naraz.
@@ -149,6 +212,9 @@ Deno.serve(async (req) => {
     ...(clickUrl ? { url: clickUrl } : {}),
     ...(t === "bounce" ? { bounce_typ: bounceTyp, bounce_sub: bounceSub, prechodny: prechodnyBounce } : {}),
     sparovano_podle: sparovanoPodle,
+    // ⛔ [R1, S-1] Adresa z payloadu se uklada VZDY, kdyz prisla: bez ni nejde zpetne
+    //    rozhodnout, jestli se odrazil primarni prijemce, nebo jen BCC kopie.
+    ...(adresyZPayloadu.length ? { doruceno_na: adresyZPayloadu } : {}),
   };
 
   // dedup: open staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak.
@@ -217,7 +283,8 @@ Deno.serve(async (req) => {
   //    v DB jsou zdroj pravdy a zapis do nich bez leada je vysoka sazka; rozhodnuti
   //    patri Martinovi. Tohle je hlidka, ne automatika.
   if ((t === "bounce" || t === "complaint") && !lead_id && !isTest && !prechodnyBounce) {
-    await alertNesparovano(admin, t, emailId, adresaZeStopy, String(baseDetail.via ?? ""), bounceTyp);
+    await alertNesparovano(admin, t, emailId, adresaZeStopy, String(baseDetail.via ?? ""),
+      bounceTyp, sparovanoPodle, adresyZPayloadu);
   }
   return json({ ok: true, type: t, sparovano_podle: sparovanoPodle });
 });
@@ -229,17 +296,26 @@ Deno.serve(async (req) => {
 // deno-lint-ignore no-explicit-any
 async function alertNesparovano(
   admin: any, typ: string, emailId: string, adresa: string, via: string, bounceTyp: string,
+  duvod: string, doruceno: string[],
 ): Promise<void> {
   const hodinaZpet = new Date(Date.now() - 3600_000).toISOString();
-  const { data: nedavno } = await admin.from("email_events").select("id")
+  const { data: nedavno, error: chybaPojistky } = await admin.from("email_events").select("id")
     .eq("type", "alert_nesparovano").gte("created_at", hodinaZpet).limit(1);
-  const uzSlo = !!(nedavno && nedavno.length);
+  // ⛔ [R1, S-6] Chyba cteni pojistky NENI "nic se neposlalo". Kdyby se cetla jako false,
+  //    vypadne ochrana proti lavine a alerty se muzou sypat. Fail-closed: pri chybe
+  //    se alert NEPOSILA, jen se zapise radek. Ticho na jeden pripad je mensi skoda
+  //    nez sto mailu Martinovi.
+  const uzSlo = chybaPojistky ? true : !!(nedavno && nedavno.length);
+  if (chybaPojistky) {
+    console.error("[resend-webhook] cteni hodinove pojistky selhalo: " + chybaPojistky.message);
+  }
 
   const { error } = await admin.from("email_events").insert({
     lead_id: null, step: 0, type: "alert_nesparovano",
     detail: { via: "resend-webhook", udalost: typ, provider_id: emailId,
               email: adresa || null, zdrojova_funkce: via || null,
-              bounce_typ: bounceTyp || null, alert_odeslan: !uzSlo },
+              bounce_typ: bounceTyp || null, duvod, doruceno_na: doruceno.length ? doruceno : null,
+              alert_odeslan: !uzSlo, pojistka_necitelna: !!chybaPojistky },
   });
   if (error) console.error("[resend-webhook] zapis alert_nesparovano selhal: " + error.message);
   if (uzSlo || !RESEND_KEY) return;
@@ -252,21 +328,31 @@ async function alertNesparovano(
   } catch { /* zustava fallback */ }
 
   const popis = typ === "bounce" ? "odmítnutý mail (bounce)" : "stížnost na spam";
+  // ⛔ [R1, S-1] Dva různé důvody, dvě různé rady. „Adresa nesedí" znamená, že se
+  //    odrazila kopie (typicky BCC Martinovi), ne mail primárního příjemce; zmrazit
+  //    v tom případě klienta by byla škoda na platícím člověku.
+  const vysvetleni = duvod === "adresa_nesedi"
+    ? "Odrazila se <b>jiná adresa, než na kterou mail mířil</b>. Nejspíš skrytá kopie "
+      + "(BCC), takže se schválně nic nezmrazilo: příjemce mail nejspíš dostal v pořádku."
+    : "Nepodařilo se ho přiřadit k žádnému kontaktu, takže se sám od sebe nic nezastavilo.";
+  const coSTim = duvod === "adresa_nesedi"
+    ? "Zkontroluj schránku, na kterou ti chodí kopie. Klientův lead se nechal být."
+    : "Najdi tu adresu v adminu a zastav jí maily ručně. Dokud to nikdo neudělá, "
+      + "chodí jí všechno dál a kazí to doručitelnost ostatním.";
   await odesliPresResend(RESEND_KEY, {
     from: "Martin Barna <news@martinbarna.cz>",
     to: [komu],
     subject: "🔴 Resend: " + popis + ", který se nepodařilo přiřadit",
     html: `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.55;color:#222;max-width:560px">`
-      + `<p>Přišel <b>${popis}</b>, ale nepodařilo se ho přiřadit k žádnému kontaktu, `
-      + `takže se sám od sebe nic nezastavilo.</p>`
+      + `<p>Přišel <b>${popis}</b>. ${vysvetleni}</p>`
       + `<table cellpadding="5" style="border-collapse:collapse;font-size:14px">`
       + `<tr><td style="color:#666">Resend id</td><td><code>${emailId}</code></td></tr>`
       + `<tr><td style="color:#666">Adresa ze stopy</td><td>${adresa || "(žádná)"}</td></tr>`
+      + `<tr><td style="color:#666">Odrazilo se na</td><td>${doruceno.length ? doruceno.join(", ") : "(payload adresu neposlal)"}</td></tr>`
       + `<tr><td style="color:#666">Odesílající funkce</td><td>${via || "(neznámá)"}</td></tr>`
       + `<tr><td style="color:#666">Typ bounce</td><td>${bounceTyp || "(nepřišel)"}</td></tr>`
       + `</table>`
-      + `<p><b>Co s tím:</b> najdi tu adresu v adminu a zastav jí maily ručně. `
-      + `Dokud to nikdo neudělá, chodí jí všechno dál a kazí to doručitelnost ostatním.</p>`
+      + `<p><b>Co s tím:</b> ${coSTim}</p>`
       + `<p style="font-size:13px;color:#666">Další takový alert přijde nejdřív za hodinu, `
       + `ať se z toho nestane lavina. Všechny případy jsou v <code>email_events</code> `
       + `pod typem <code>alert_nesparovano</code>.</p></div>`,
