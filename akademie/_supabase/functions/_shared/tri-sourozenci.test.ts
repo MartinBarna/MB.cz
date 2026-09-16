@@ -41,7 +41,19 @@ check("A1b warn: alert NENI uvnitr podminky (8 mezer)", !sg.includes(NL + "     
 check("A2 suspend: vysledek odeslani se drzi v promenne", sg.includes("const outS = await sendMailGuarded("));
 check("A3 suspend: neodeslana zprava hlasi alertAdmin", sg.includes(NL + "      if (!outS.sent) {"));
 check("A4 suspend: email_events nelze natvrdo 'sent'", !/kind: "suspend", email \} \}\)/.test(sg) && sg.includes('type: outS.sent ? "sent" : "info"'));
-check("A5 sendMail ma try/catch kolem fetch", /try \{\s*const res = await fetch\("https:\/\/api\.resend\.com\/emails"/.test(sg));
+// ⭐ [16. 9. 2026] Zaruka zustava, jen se prestehovala: `sendMail` uz nevola `fetch`
+// primo, ale pres `_shared/resend-odeslat.ts`, ktery sit nikdy nehazi jako vyjimku.
+// Kontrola proto meri OBE strany, jinak by byla zelena nad kodem bez te pojistky.
+// ⚠️ Nepovinne cteni: pri kontrastnim behu (`ZDROJ` = stare zdrojaky) tenhle soubor
+//    jeste NEEXISTUJE a tvrdy `cti` by test SHODIL misto toho, aby ho nechal spravne
+//    spadnout. Prazdny retezec = kontrola A5b PADA, coz je presne ten kontrast.
+let ro = "";
+try { ro = cti("_shared/resend-odeslat.ts"); } catch { /* viz komentar vys */ }
+check("A5 sendMail nechava smycku dojet (pad site nehazi vyjimku)",
+  /const r = await odesliPresResend\(/.test(sg) && /return r\.ok;/.test(sg));
+check("A5b helper `odesliPresResend` ma try/catch kolem fetch",
+  /try \{\s*res = await fetch\("https:\/\/api\.resend\.com\/emails"/.test(ro)
+  && /return \{ ok: false, status: 0, providerId: "", chyba:/.test(ro));
 // Alert nesmi jit pres branu: Martinova adresa na seznamu by umlcela prave ty alerty.
 const telo = sg.split("async function alertAdmin(")[1] ?? "";
 const teloAlert = telo.split(NL + "}" + NL)[0];

@@ -44,3 +44,39 @@ npx --yes deno@2 run akademie/_supabase/functions/grant-videokurz-z-appky/core.t
 npx --yes deno@2 test --no-lock akademie/_supabase/functions/poukaz-vydat/__tests__/core.test.ts
 npx --yes deno@2 run --allow-read akademie/_supabase/functions/_shared/resend-call-sites.test.ts
 ```
+
+---
+
+## Doplněk 16. 9. 2026: `provider_id` a párování bouncu (nález V1)
+
+Tenhle inventář hlídá bránu (kdo smí dostat mail). K 16. 9. 2026 k němu přibyla
+druhá otázka: **kdo za sebou nechá stopu, podle které jde odmítnutý mail spárovat**.
+`resend-webhook` hledá původní odeslání podle `provider_id`, takže cesta, která
+odpověď Resendu nečte, nikdy nezastaví mrtvou adresu. Změřeno: ze 22 událostí
+`bounce` se 7 nespárovalo vůbec.
+
+Odesílání se proto sjednotilo do `_shared/resend-odeslat.ts`
+(`odesliPresResend` / `zapisOdeslani`).
+
+⛔ **Typ události je `px_odeslano`, ne `sent`.** `sent` čte `email_summary`,
+`daily-digest` i denní strop v `drip-send`; kdyby tyhle cesty psaly `sent`,
+ukusovaly by dripu z jeho stropu a nikde by to nekřiklo. Párování se místo toho
+rozšířilo v `resend-webhook`, který `px_odeslano` bere do seznamu typů.
+
+### Cesty, které stopu s `provider_id` mají (k 16. 9. 2026)
+
+`drip-send`, `admin-api`, `grant-videokurz-z-appky`, `videokurz-onboarding`
+(ty čtyři odjakživa) a nově `client-remind`, `client-report`, `poukaz-vydat`,
+`study-reminder`, `milestones`, `splatky-guard`, `order-rescue`
+a `academy-stripe-webhook` (doklad, opakované doručení balíčku, opakovaná konzultace).
+
+### Cesty, které stopu POŘÁD NEMAJÍ
+
+| Cesta | Komu píše | Proč zbyla |
+|---|---|---|
+| `_shared/koucink-onboarding.ts` | klientovi koučinku | sdílí ji `admin-api` i webhook, patří k ní vlastní revize |
+| `checkin-capture` (mode=remind) | klientovi | nebyla v zadání dávky 1 |
+| `simpleshop-webhook` | kupujícímu | nebyla v zadání dávky 1 |
+| `intake-capture`, `withdrawal` | odesílateli formuláře | nebyla v zadání dávky 1 |
+| `affiliate-mesicni-report` | partnerovi | nebyla v zadání dávky 1 |
+| `contact-send`, `ai-flags-notify`, `link-check`, `daily-digest`, `app-purchase-bridge` a všechny `alertAdmin` | Martinovi | ⛔ stopu mít NEMAJÍ: jeho adresa do `email_events` nepatří a jen by zašuměla čísla |

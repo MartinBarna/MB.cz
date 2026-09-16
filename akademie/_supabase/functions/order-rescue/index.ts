@@ -5,6 +5,12 @@
 // max 10 mailu na beh. Auth: x-drip-secret. TEST: {test_email, product, name}.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
+// ⭐ [16. 9. 2026] Odeslani pres spolecny helper, ktery si precte `id` z odpovedi
+// Resendu a zapise ho do `email_events`. Bez toho se bounce ani stiznost na spam
+// u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
+// ⛔ Stopa se tu NEZAPISUJE helperem: `order-rescue` uz svuj radek `px_odeslano`
+// pise samo a druhy by ho zdvojil. Helper jen vrati `provider_id` do toho zapisu.
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 // VLASTNI mereni otevreni a prokliku (protejsky: edge funkce mail-pixel a mail-klik).
 // ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a milestones/stopa.ts;
 //    hlida to test `drip-send/stopa.test.ts`.
@@ -167,14 +173,15 @@ function vars(name: string): Record<string, string> {
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : "", "");
   return { first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "" };
 }
-async function send(to: string, subject: string, html: string) {
+/** Vraci `provider_id` zasilky, aby se dalo dopsat do `px_odeslano`. */
+async function send(to: string, subject: string, html: string): Promise<string> {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
-  const r = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz" }),
-  });
+  const r = await odesliPresResend(
+    RESEND_KEY,
+    { from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz" },
+  );
   if (!r.ok) throw new Error("resend_" + r.status);
+  return r.providerId;
 }
 
 Deno.serve(async (req) => {
@@ -205,7 +212,7 @@ Deno.serve(async (req) => {
       mailClass: "optional_reminder",
       functionName: "order-rescue",
       path: "order-rescue",
-    }, () => send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v))));
+    }, async () => { await send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v))); });
     return json({ ok: true, mode: "test", mail: d.action, reason: d.reason });
   }
 
@@ -259,12 +266,13 @@ Deno.serve(async (req) => {
       const leadId = ld?.id ? String(ld.id) : null;
       const holeHtml = wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v));
       const html = await ostopkuj(holeHtml, { track: tpl.track, step: 0, key: String(tpl.key ?? ""), lead_id: leadId }, MAIL_TRACK_SECRET, SUPABASE_URL);
+      let providerId = "";
       const d = await sendIfAllowed(admin, {
         email,
         mailClass: "optional_reminder",
         functionName: "order-rescue",
         path: "order-rescue",
-      }, () => send(email, fill(tpl.subject, v), html));
+      }, async () => { providerId = await send(email, fill(tpl.subject, v), html); });
       if (d.action === "skip") {
         // ⛔⛔ [13. 9. 2026] Označ, ať cron nezkouší totéž okno znovu, ALE JEN KDYŽ
         // JE DŮVOD TRVALÝ. (Dřív tu stálo jen "unsub je trvalý" a označovalo se vždy.) `mailing-guard` vrací
@@ -288,9 +296,12 @@ Deno.serve(async (req) => {
       //    `daily-digest` ani denni strop v `drip-send`.
       // ⚠️ Chyba se jen loguje: `reminded_at` uz je zapsane a vyjimka by z uspesne
       //    odeslaneho mailu udelala chybu v `results`.
+      // ⛔ [16. 9. 2026] `provider_id` je jedina vec, podle ktere `resend-webhook`
+      //    pozna, ke komu patri bounce nebo stiznost na spam (nalez V1).
       const { error: evErr } = await admin.from("email_events").insert({
         lead_id: leadId, step: 0, type: "px_odeslano",
-        detail: { track: tpl.track, key: String(tpl.key ?? ""), fn: "order-rescue" },
+        provider_id: providerId || null,
+        detail: { track: tpl.track, key: String(tpl.key ?? ""), fn: "order-rescue", via: "order-rescue", email },
       });
       if (evErr) console.error("[order-rescue] zapis px_odeslano selhal: " + evErr.message);
       sent++; results.push({ order: p.order_id, product: p.product });

@@ -56,11 +56,18 @@ function bytesToBase64(bytes: Uint8Array): string {
   return btoa(bin);
 }
 
-/** Vrací true, jen když Resend zásilku PŘIJAL (vzor withdrawal-request). */
+/**
+ * Vrací true, jen když Resend zásilku PŘIJAL (vzor withdrawal-request).
+ * ⭐ [16. 9. 2026] Vrací navíc `providerId` (pole `id` z odpovědi Resendu).
+ * Bez něj se u téhle cesty nedá spárovat bounce ani stížnost na spam:
+ * `resend-webhook` hledá původní odeslání výhradně podle `provider_id` (nález V1).
+ * Zápis do `email_events` dělá volající v `index.ts`, ne tenhle modul: sem
+ * se schválně netahá klient databáze, ať zůstane testovatelný bez IO.
+ */
 export async function sendVoucherMail(
   resendApiKey: string,
   input: VoucherMailInput,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<{ ok: boolean; error?: string; providerId?: string }> {
   if (!resendApiKey) return { ok: false, error: 'missing RESEND_API_KEY' };
 
   const body = buildVoucherMailBody({
@@ -89,7 +96,14 @@ export async function sendVoucherMail(
       const errText = await res.text();
       return { ok: false, error: `Resend ${res.status}: ${errText}` };
     }
-    return { ok: true };
+    // ⚠️ Tělo odpovědi jde přečíst jen jednou a mail už odešel: když se to
+    // nepovede, vrací se `ok: true` s prázdným `providerId` a zakřičí to volající.
+    let providerId = '';
+    try {
+      const j = await res.json();
+      providerId = String((j as { id?: unknown })?.id ?? '');
+    } catch { /* viz komentář výš */ }
+    return { ok: true, providerId };
   } catch (e) {
     return { ok: false, error: String(e) };
   }

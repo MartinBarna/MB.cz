@@ -46,6 +46,13 @@ import {
   stavOpakovanehoNakupu,
   typUdalostiZnovu,
 } from "./opakovany-nakup.ts";
+// ⭐ [16. 9. 2026] Odeslání přes společný helper, který si přečte `id` z odpovědi
+// Resendu a zapíše ho do `email_events`. Bez toho se u těchhle tří zákaznických
+// cest (doklad, opakované doručení balíčku, opakovaná konzultace) nedá spárovat
+// bounce ani stížnost na spam a nic je nezastaví (nález V1).
+// ⛔ Alerty Martinovi (`alertAdmin`) přes helper NEJDOU schválně: jeho adresa do
+//    `email_events` nepatří a stopa by jen zašuměla čísla.
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s ruční pozvánkou v adminu (`admin-api`,
 // akce `client_invite`). Zaplacený klient musí dostat přesně totéž co ten ruční:
 // nárok, appku, kontakt v CRM a uvítací mail s odkazem na vstupní dotazník.
@@ -1548,10 +1555,9 @@ async function posliDoklad(email: string, obj: any, def: JednorazovyProdukt): Pr
     const castka = castkaText(Number(obj.amount_total ?? 0), String(obj.currency ?? "czk"));
     const cislo = String(obj.id ?? "").slice(-12).toUpperCase();
     const datum = datumCesky(new Date().toISOString());
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
+    const res = await odesliPresResend(
+      RESEND_KEY,
+      {
         from: "Martin Barna <news@martinbarna.cz>",
         to: [email],
         reply_to: "martin@martinbarna.cz",
@@ -1574,8 +1580,9 @@ async function posliDoklad(email: string, obj: any, def: JednorazovyProdukt): Pr
           + `Do 14 dnů můžeš od smlouvy odstoupit na `
           + `<a href="https://martinbarna.cz/odstoupeni/?product=${encodeURIComponent(def.produkt)}">martinbarna.cz/odstoupeni</a>.</p>`
           + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
-      }),
-    });
+      },
+      { admin, via: "academy-stripe-webhook.doklad", email, detail: { produkt: def.produkt } },
+    );
     return res.ok ? "ok" : "http-" + res.status;
   } catch (e) {
     // Doklad je doplněk, nikdy nesmí shodit doručení zaplaceného produktu.
@@ -2188,10 +2195,9 @@ Deno.serve(async (req) => {
             //    ne odhadem. Doručení proto jde mimo trať, přímo přes Resend.
             try {
               if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
-              const res = await fetch("https://api.resend.com/emails", {
-                method: "POST",
-                headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-                body: JSON.stringify({
+              const res = await odesliPresResend(
+                RESEND_KEY,
+                {
                   from: "Martin Barna <news@martinbarna.cz>",
                   to: [emailL],
                   reply_to: "martin@martinbarna.cz",
@@ -2203,13 +2209,16 @@ Deno.serve(async (req) => {
                     + `ne jako omyl: <b>termín ti napíšu e-mailem</b> a ozvu se co nejdřív.</p>`
                     + `<p>Kdyby to omyl byl, stačí odpovědět na tenhle e-mail a peníze ti pošlu zpátky.</p>`
                     + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
-                }),
-              });
+                },
+                {
+                  admin,
+                  via: "academy-stripe-webhook.konzultace_znovu",
+                  email: emailL,
+                  typ: typZnovu,
+                  detail: { track: def.welcome, payment_intent: pi },
+                },
+              );
               if (!res.ok) throw new Error("resend_" + res.status);
-              await admin.from("email_events").insert({
-                lead_id: null, step: 0, type: typZnovu,
-                detail: { track: def.welcome, payment_intent: pi, email: emailL },
-              });
               opakovanyNakup = "ok";
             } catch (e) {
               opakovanyNakup = "CHYBA: " + String(e).slice(0, 120);
@@ -2259,10 +2268,9 @@ Deno.serve(async (req) => {
               const btn = (href: string, text: string) =>
                 `<a href="${href}" style="display:inline-block;background:#EBB12C;color:#161616;`
                 + `font-weight:700;text-decoration:none;padding:13px 26px;border-radius:50px;margin:6px 8px 6px 0">${text}</a>`;
-              const res = await fetch("https://api.resend.com/emails", {
-                method: "POST",
-                headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-                body: JSON.stringify({
+              const res = await odesliPresResend(
+                RESEND_KEY,
+                {
                   from: "Martin Barna <news@martinbarna.cz>",
                   to: [emailL],
                   reply_to: "martin@martinbarna.cz",
@@ -2278,13 +2286,16 @@ Deno.serve(async (req) => {
                     + `<p>A hlavně: kdyby ti odkaz zase vypršel, <b>nekupuj to podruhé</b>. Stačí odpovědět `
                     + `na tenhle e-mail a pošlu ti nové zdarma. Ohledně toho druhého nákupu se ti ozvu.</p>`
                     + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
-                }),
-              });
+                },
+                {
+                  admin,
+                  via: "academy-stripe-webhook.balicek_znovu",
+                  email: emailL,
+                  typ: typZnovu,   // = "balicek_znovu_doruceno"
+                  detail: { track: "onboarding-nakup-balicek", payment_intent: pi },
+                },
+              );
               if (!res.ok) throw new Error("resend_" + res.status);
-              await admin.from("email_events").insert({
-                lead_id: null, step: 0, type: typZnovu,   // = "balicek_znovu_doruceno"
-                detail: { track: "onboarding-nakup-balicek", payment_intent: pi, email: emailL },
-              });
               opakovanyNakup = "ok";
               await alertAdmin("💸 Stripe: BALÍČEK koupen PODRUHÉ, odkazy odeslány znovu", {
                 email: emailL, payment_intent: pi,

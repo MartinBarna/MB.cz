@@ -10,6 +10,13 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a order-rescue/stopa.ts;
 //    hlida to test `drip-send/stopa.test.ts`.
 import { ostopkuj } from "./stopa.ts";
+// ⭐ [16. 9. 2026] Odeslani pres spolecny helper, ktery si precte `id` z odpovedi
+// Resendu a zapise ho do `email_events`. Bez toho se bounce ani stiznost na spam
+// u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
+// ⛔ Tady se stopa NEZAPISUJE helperem: `milestones` uz svuj radek `px_odeslano`
+// pise samo (je to jmenovatel open rate) a druhy radek by ho zdvojil. Helper proto
+// jen vrati `provider_id`, ktere se doplni do TOHO existujiciho zapisu.
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 // 14. 9. 2026: chyba cteni neni odpoved (guard secretu i cteni s opakovanim, pri trvale chybe 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
@@ -181,18 +188,19 @@ function vars(name: string): Record<string, string> {
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : "", "");
   return { first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "" };
 }
-async function send(to: string, subject: string, html: string, unsubUrl = "") {
+/** Vraci `provider_id` zasilky, aby se dalo dopsat do `px_odeslano`. */
+async function send(to: string, subject: string, html: string, unsubUrl = ""): Promise<string> {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
-  // RFC 8058 List-Unsubscribe hlavicky (kdyz mame token) — stejne jako drip-send
+  // RFC 8058 List-Unsubscribe hlavicky (kdyz mame token), stejne jako drip-send
   const headers = unsubUrl
     ? { "List-Unsubscribe": "<" + unsubUrl + ">", "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" }
     : undefined;
-  const r = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz", headers }),
-  });
+  const r = await odesliPresResend(
+    RESEND_KEY,
+    { from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz", headers },
+  );
   if (!r.ok) throw new Error("resend_" + r.status);
+  return r.providerId;
 }
 
 Deno.serve(async (req) => {
@@ -290,10 +298,13 @@ Deno.serve(async (req) => {
   ) => {
     const holeHtml = wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v), unsub);
     const html = await ostopkuj(holeHtml, { track: TRACK, step: milnik, key: String(tpl.key ?? ""), lead_id: leadId }, MAIL_TRACK_SECRET, SUPABASE_URL);
-    await send(email, fill(tpl.subject, v), html, unsub);
+    const providerId = await send(email, fill(tpl.subject, v), html, unsub);
+    // ⛔ [16. 9. 2026] `provider_id` je jedina vec, podle ktere `resend-webhook`
+    //    pozna, ke komu patri bounce nebo stiznost na spam (nalez V1).
     const { error } = await admin.from("email_events").insert({
       lead_id: leadId, step: milnik, type: "px_odeslano",
-      detail: { track: TRACK, key: String(tpl.key ?? ""), fn: "milestones" },
+      provider_id: providerId || null,
+      detail: { track: TRACK, key: String(tpl.key ?? ""), fn: "milestones", via: "milestones", email },
     });
     if (error) console.error("[milestones] zapis px_odeslano selhal: " + error.message);
   };

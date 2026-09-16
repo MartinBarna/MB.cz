@@ -11,6 +11,10 @@
 // TEST režim (obchází flag, nic nezapisuje): POST { test_email, name } -> jeden [TEST] mail.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
+// ⭐ [16. 9. 2026] Odeslani pres spolecny helper, ktery si precte `id` z odpovedi
+// Resendu a zapise ho do `email_events`. Bez toho se bounce ani stiznost na spam
+// u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 // 14. 9. 2026: chyba čtení není odpověď (guard secretu i příjemci s opakováním, při trvalé chybě 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
@@ -124,13 +128,15 @@ function emailHtml(name: string, unsub: string): string {
 </div></body></html>`;
 }
 
-async function send(to: string, subject: string, html: string) {
+// ⚠️ `admin` je nove PRVNI parametr, viz `_shared/resend-odeslat.ts`.
+// deno-lint-ignore no-explicit-any
+async function send(admin: any, to: string, subject: string, html: string) {
   if (!RESEND_KEY) throw new Error("no_resend_key");
-  const r = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html }),
-  });
+  const r = await odesliPresResend(
+    RESEND_KEY,
+    { from: FROM, to: [to], subject, html },
+    { admin, via: "study-reminder", email: to },
+  );
   if (!r.ok) throw new Error("resend_" + r.status);
 }
 
@@ -154,7 +160,7 @@ Deno.serve(async (req) => {
       mailClass: "optional_reminder",
       functionName: "study-reminder",
       path: "study-reminder",
-    }, () => send(String(body.test_email), "[TEST] Tento týden ses ještě neučil 🔥", emailHtml(name, testUnsub)));
+    }, () => send(admin, String(body.test_email), "[TEST] Tento týden ses ještě neučil 🔥", emailHtml(name, testUnsub)));
     return json({ ok: true, mode: "test", mail: d.action, reason: d.reason });
   }
 
@@ -222,7 +228,7 @@ Deno.serve(async (req) => {
         mailClass: "optional_reminder",
         functionName: "study-reminder",
         path: "study-reminder",
-      }, () => send(email, "Tento týden ses ještě neučil 🔥", emailHtml(name, unsub)));
+      }, () => send(admin, email, "Tento týden ses ještě neučil 🔥", emailHtml(name, unsub)));
       if (d.action === "skip") {
         skipped++;
         results.push({ email, skipped: d.reason, days: Math.round(days) });

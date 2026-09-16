@@ -4,6 +4,10 @@
 // dark-gold HTML mail Martinovi + kopii klientovi (Resend).
 // Deploy: supabase functions deploy client-report --no-verify-jwt
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// ⭐ [16. 9. 2026] Odeslani pres spolecny helper, ktery si precte `id` z odpovedi
+// Resendu a zapise ho do `email_events`. Bez toho se bounce ani stiznost na spam
+// u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -254,14 +258,17 @@ function intakeMail(name: string, d: any): string {
 
 // Martin chce kopii všech mailů, co chodí klientům (jako u mailingu) → BCC na jeho gmail.
 const BCC_COACH = "fitness.barna@gmail.com";
-async function send(to: string, subject: string, html: string, bccCoach = false) {
+// ⚠️ `admin` je nove PRVNI parametr: helper potrebuje klienta, aby mohl zapsat
+// stopu s `provider_id`. Bez ni se u tehle cesty bounce nesparuje (nalez V1).
+// deno-lint-ignore no-explicit-any
+async function send(admin: any, to: string, subject: string, html: string, bccCoach = false) {
   if (!RESEND_KEY) return { status: 0 };
-  const r = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: COACH, ...(bccCoach ? { bcc: [BCC_COACH] } : {}) }),
-  });
-  return { status: r.status };
+  const r = await odesliPresResend(
+    RESEND_KEY,
+    { from: FROM, to: [to], subject, html, reply_to: COACH, ...(bccCoach ? { bcc: [BCC_COACH] } : {}) },
+    { admin, via: "client-report", email: to },
+  );
+  return { status: r.ok ? 200 : r.status };
 }
 
 Deno.serve(async (req: Request) => {
@@ -372,8 +379,8 @@ Deno.serve(async (req: Request) => {
     const subj = `📊 Týdenní report: ${name}`;
     const coachMail = wrap("Martin Barna · týdenní report klienta", coachTodo(email, row, tgRow ?? null) + html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled. Stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
-    const s1 = await send(COACH, subj, coachMail);
-    const s2 = await send(email, "Tvůj týdenní report ✓ (kopie)", clientMail, true);
+    const s1 = await send(admin, COACH, subj, coachMail);
+    const s2 = await send(admin, email, "Tvůj týdenní report ✓ (kopie)", clientMail, true);
     return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
   }
 
@@ -392,8 +399,8 @@ Deno.serve(async (req: Request) => {
     const clientMail = wrap("Martin Barna · vstupní dotazník", html +
       `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! Martin</p>`,
       "Kopie dotazníku pro tvůj přehled. Martin Barna · martinbarna.cz");
-    const s1 = await send(COACH, `📝 Vstupní dotazník: ${name}`, coachMail);
-    const s2 = await send(email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail, true);
+    const s1 = await send(admin, COACH, `📝 Vstupní dotazník: ${name}`, coachMail);
+    const s2 = await send(admin, email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail, true);
     return json({ ok: true, mail_coach: s1.status, mail_client: s2.status }, C);
   }
 
@@ -413,7 +420,7 @@ Deno.serve(async (req: Request) => {
       sect("Jeho/její slova") + `<p class='mb-body' style='margin:0 0 12px;font-size:15px;color:#F0EADF'>„${esc(text)}“</p>` +
       sect("Pokrok z reportů") + `<p class='mb-body' style='margin:0 0 12px;font-size:14px;color:#F0EADF'>${pokrok}</p>` +
       `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-size:13px'>Kontakt: ${esc(email)}. Ozvi se, poděkuj a klidně popros o fotku před/po.</p>`;
-    const s1 = await send(COACH, `🌟 Souhlas s referencí: ${name}`, wrap("Martin Barna · reference", html, "Souhlas přišel z klientské sekce martinbarna.cz"));
+    const s1 = await send(admin, COACH, `🌟 Souhlas s referencí: ${name}`, wrap("Martin Barna · reference", html, "Souhlas přišel z klientské sekce martinbarna.cz"));
     try { await admin.from("client_notes").insert({ email, note: "🌟 SOUHLAS S REFERENCÍ: „" + text.slice(0, 500) + "“ (" + pokrok + ")" }); } catch { /* best-effort */ }
     return json({ ok: true, mail_coach: s1.status }, C);
   }

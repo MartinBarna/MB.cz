@@ -28,6 +28,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 import { verifyStripeSignature } from '../_shared/signature.ts';
 import { guardSend, logMailSkip } from '../_shared/mailing-guard.ts';
+// ⭐ [16. 9. 2026] Stopa o odeslani s `provider_id`. Bez ni se u poukazu
+// nedaji sparovat bounce ani stiznosti na spam (nalez V1).
+import { zapisOdeslani } from '../_shared/resend-odeslat.ts';
 import { handleStripeEvent, type CoreDeps, type ExistingVoucher, type StripeEvent } from './core.ts';
 import { generateVoucherCode } from './lib/codes.ts';
 import { buildVoucherPdf } from './lib/pdf.ts';
@@ -142,7 +145,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
       if (error) console.error('[poukaz-vydat] markStatus selhal:', id, status, error.message);
     },
     buildPdf: (input) => buildVoucherPdf(input),
-    sendMail: (input) => sendVoucherMail(RESEND_KEY, input),
+    sendMail: async (input) => {
+      const r = await sendVoucherMail(RESEND_KEY, input);
+      // ⛔ Stopa jen u ODESLANEHO mailu a jen kupci: `core.ts` posila tymtez
+      //    `sendMail` i alert Martinovi, ale ten jde pres vlastni vetev s jinym
+      //    predmetem, takze sem chodi adresa prijemce poukazu (nebo testovaci
+      //    adresa, kdyz `POUKAZ_OSTRY !== '1'`).
+      if (r.ok) await zapisOdeslani({ admin, via: 'poukaz-vydat', email: input.to }, r.providerId ?? '');
+      return r;
+    },
     async guardMail(to) {
       const d = await guardSend(admin, {
         email: to,

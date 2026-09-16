@@ -10,6 +10,10 @@
 // Test rezim: POST {"test_email":"..."} posle oba maily s [TEST] na zadanou adresu, data NEMENI.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
+// ⭐ [16. 9. 2026] Odeslani pres spolecny helper, ktery si precte `id` z odpovedi
+// Resendu a zapise ho do `email_events`. Bez toho se bounce ani stiznost na spam
+// u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
+import { odesliPresResend, type StopaOdeslani } from "../_shared/resend-odeslat.ts";
 // 14. 9. 2026: chyba cteni neni odpoved (guard secretu i cteni splatek s opakovanim, pri trvale chybe 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
@@ -109,21 +113,24 @@ function suspendEmail(name: string | null, seg = "other") {
   };
 }
 
-async function sendMail(to: string, subject: string, html: string): Promise<boolean> {
+// ⚠️ `stopa` je volitelna SCHVALNE: zakaznicky mail ji ma (jinak se nesparuje
+// bounce, nalez V1), alert Martinovi ne. Martinova adresa do `email_events` nepatri.
+async function sendMail(
+  to: string,
+  subject: string,
+  html: string,
+  stopa?: StopaOdeslani,
+): Promise<boolean> {
   if (!RESEND_KEY) return false;
-  // ⛔ [13. 9. 2026] try/catch: pad `fetch` (sit, DNS, timeout) shodil CELY beh cronu
-  // uprostred davky, takze zbyli klienti se ten den nezpracovali vubec. Neodeslany mail
-  // ma vratit false a nechat smycku dojet, ne vzit s sebou ostatni.
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [to], subject, html }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+  // ⛔ [13. 9. 2026] Pad `fetch` (sit, DNS, timeout) shodil CELY beh cronu uprostred
+  // davky, takze zbyli klienti se ten den nezpracovali vubec. Helper sit nikdy nehazi
+  // jako vyjimku, vraci `ok: false`, takze smycka dojede.
+  const r = await odesliPresResend(
+    RESEND_KEY,
+    { from: "Martin Barna <news@martinbarna.cz>", to: [to], subject, html },
+    stopa,
+  );
+  return r.ok;
 }
 
 // ⛔ Alert Martinovi jde PRIMO pres Resend, NE pres `sendIfAllowed`. Brana chrani
@@ -159,7 +166,7 @@ async function sendMailGuarded(
     functionName: "splatky-guard",
     path: "splatky-guard",
   }, async () => {
-    sent = await sendMail(to, subject, html);
+    sent = await sendMail(to, subject, html, { admin, via: "splatky-guard", email: to });
   });
   if (d.action === "skip") return { sent: false, skipped: true, reason: d.reason };
   return { sent, skipped: false, reason: d.reason };

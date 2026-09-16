@@ -21,6 +21,10 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 import { emailySeznam } from "../_shared/mail-seznam.ts";
+// ⭐ [16. 9. 2026] Odeslani pres spolecny helper, ktery si precte `id` z odpovedi
+// Resendu a zapise ho do `email_events`. Bez toho se bounce ani stiznost na spam
+// u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { preskocitVyzvuKReportu } from "./cerstvy-klient.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -368,10 +372,9 @@ Deno.serve(async (req: Request) => {
         skipped++;
         continue;
       }
-      const r = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const r = await odesliPresResend(
+        RESEND_KEY,
+        {
           from: FROM,
           to: [tgt.email],
           subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)" : "Týdenní report ✍️ (3 minuty)",
@@ -380,9 +383,13 @@ Deno.serve(async (req: Request) => {
           // Pri testu je bcc zbytecne (mail uz jde na Martina) a mate: prisel by dvakrat.
           ...(testEmail ? {} : { bcc: ["fitness.barna@gmail.com"] }),
           ...(attachments && !isReg ? { attachments } : {}),
-        }),
-      });
-      if (r.status === 200) {
+        },
+        // ⛔ Stopa se pise i v TESTOVACIM rezimu. Test chodi na Martinovu adresu,
+        //    takze `client_remind_sent` se nezapisuje (jinak by umlcel ostry mail),
+        //    ale kdyz Resend zasilku odmitne nebo se odrazi, chceme to videt stejne.
+        { admin, via: "client-remind", email: tgt.email, detail: { kind: tgt.kind, test: !!testEmail } },
+      );
+      if (r.ok) {
         sent++;
         // Zápis „posláno" až po úspěšném odeslání (test režim se nezapisuje). Když zápis
         // selže, mail odešel a příští běh ho může poslat znovu; proto se to hlásí v odpovědi.

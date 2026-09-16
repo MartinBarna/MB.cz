@@ -27,9 +27,15 @@
 //     ⚠️ Data pred 24. 7. 13:31 UTC URL nemaji vubec a maji jen prvni klik na mail,
 //     takze se s novejsimi NEDAJI scitat do jedne rady.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// ⭐ [16. 9. 2026] Alert Martinovi, když se bounce nebo stížnost nepodaří přiřadit
+// k žádnému leadovi. Do té doby to funkce tiše ignorovala a ta adresa dostávala
+// všechno dál (nález V1: ze 22 bounců se 7 nespárovalo vůbec).
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
+import { emailySeznam } from "../_shared/mail-seznam.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
 
@@ -89,12 +95,34 @@ Deno.serve(async (req) => {
   const emailId = String(ev?.data?.email_id || "");
   if (!emailId) return json({ ok: true, ignored: "no_email_id" });
 
-  // dohledej puvodni event pres Resend id — 'sent' (ostry mail leadovi) i 'test'
+  // dohledej puvodni event pres Resend id — 'sent' (ostry mail leadovi), 'test'
+  // ⭐⭐ [16. 9. 2026] a nove i `px_odeslano`. Tenhle typ pisou cesty MIMO drip
+  // (`client-remind`, `client-report`, `poukaz-vydat`, `study-reminder`, `milestones`,
+  // `splatky-guard`, `order-rescue`, `academy-stripe-webhook`), ktere do 16. 9. 2026
+  // odpoved Resendu vubec necetly a jejich maily se tedy NESLO sparovat.
+  // ⛔ Typ je u nich `px_odeslano`, ne `sent`, SCHVALNE: `sent` cte `email_summary`,
+  //    `daily-digest` i denni strop v `drip-send`. Viz `_shared/resend-odeslat.ts`.
   const { data: orig } = await admin.from("email_events")
-    .select("lead_id,step,type,detail").eq("provider_id", emailId).in("type", ["sent", "test"]).limit(1).maybeSingle();
+    .select("lead_id,step,type,detail").eq("provider_id", emailId)
+    .in("type", ["sent", "test", "px_odeslano"]).limit(1).maybeSingle();
 
   const isTest = orig?.type === "test";
-  const lead_id = (!isTest && orig?.lead_id) ? (orig.lead_id as string) : null;
+  let lead_id = (!isTest && orig?.lead_id) ? (orig.lead_id as string) : null;
+  // ⭐⭐ [16. 9. 2026] ZALOZNI PAROVANI PODLE ADRESY. Cesty mimo drip casto `lead_id`
+  // neznaji (posilaji klientovi, kupci poukazu, dluznikovi splatky), takze stopa ma
+  // `lead_id = null` a `detail.email`. Bez tohohle dohledani by mrtva adresa
+  // z techto cest dal dostavala vsechno, presne jako pred opravou.
+  // ⚠️ Hleda se JEN kdyz stopa adresu nese. Nikdy se nehada z jineho zdroje.
+  let sparovanoPodle = lead_id ? "provider_id" : "nesparovano";
+  const adresaZeStopy = String(
+    (orig?.detail && typeof orig.detail === "object")
+      ? ((orig.detail as Record<string, unknown>).email ?? "")
+      : "",
+  ).trim().toLowerCase();
+  if (!lead_id && !isTest && adresaZeStopy) {
+    const { data: l } = await admin.from("leads").select("id").eq("email", adresaZeStopy).limit(1).maybeSingle();
+    if (l?.id) { lead_id = String(l.id); sparovanoPodle = "email"; }
+  }
   const step = orig?.step == null ? null : Number(orig.step);
   const baseDetail = (orig?.detail && typeof orig.detail === "object") ? (orig.detail as Record<string, unknown>) : {};
   const track = String(baseDetail.track ?? "");
@@ -120,6 +148,7 @@ Deno.serve(async (req) => {
     of: isTest ? "test" : "sent",
     ...(clickUrl ? { url: clickUrl } : {}),
     ...(t === "bounce" ? { bounce_typ: bounceTyp, bounce_sub: bounceSub, prechodny: prechodnyBounce } : {}),
+    sparovano_podle: sparovanoPodle,
   };
 
   // dedup: open staci jednou za mail — pres (lead, step, track) u leadu, pres provider_id jinak.
@@ -178,5 +207,68 @@ Deno.serve(async (req) => {
       }
     }
   }
-  return json({ ok: true, type: t });
+
+  // ⛔⛔ [16. 9. 2026] NESPAROVANY BOUNCE NEBO STIZNOST UZ NESMI BYT TICHY.
+  // Do dneska se takova udalost jen zapsala do `email_events` a nic dalsiho se
+  // nestalo: `leads.status` zustal `active`, `mailing-guard.isHardBounce` tu adresu
+  // nikdy neodstrihl a chodilo ji vsechno dal. Zmereno 16. 9. 2026: ze 22 bouncu
+  // se 7 nesparovalo vubec.
+  // ⛔ Zmrazeni naslepo podle adresy tady NEDELAME. `odhlas_a_odstran` a triggery
+  //    v DB jsou zdroj pravdy a zapis do nich bez leada je vysoka sazka; rozhodnuti
+  //    patri Martinovi. Tohle je hlidka, ne automatika.
+  if ((t === "bounce" || t === "complaint") && !lead_id && !isTest && !prechodnyBounce) {
+    await alertNesparovano(admin, t, emailId, adresaZeStopy, String(baseDetail.via ?? ""), bounceTyp);
+  }
+  return json({ ok: true, type: t, sparovano_podle: sparovanoPodle });
 });
+
+// ⚠️ POJISTKA PROTI SMYCCE: alert jde mailem, takze kdyby se odrazil, prisel by dalsi
+// webhook, zase nesparovany, a dalsi alert. Proto se posila NEJVYS JEDEN ZA HODINU
+// a sam se zapisuje do `email_events` jako `alert_nesparovano` (to je zaroven stopa,
+// podle ktere se to da zpetne spocitat).
+// deno-lint-ignore no-explicit-any
+async function alertNesparovano(
+  admin: any, typ: string, emailId: string, adresa: string, via: string, bounceTyp: string,
+): Promise<void> {
+  const hodinaZpet = new Date(Date.now() - 3600_000).toISOString();
+  const { data: nedavno } = await admin.from("email_events").select("id")
+    .eq("type", "alert_nesparovano").gte("created_at", hodinaZpet).limit(1);
+  const uzSlo = !!(nedavno && nedavno.length);
+
+  const { error } = await admin.from("email_events").insert({
+    lead_id: null, step: 0, type: "alert_nesparovano",
+    detail: { via: "resend-webhook", udalost: typ, provider_id: emailId,
+              email: adresa || null, zdrojova_funkce: via || null,
+              bounce_typ: bounceTyp || null, alert_odeslan: !uzSlo },
+  });
+  if (error) console.error("[resend-webhook] zapis alert_nesparovano selhal: " + error.message);
+  if (uzSlo || !RESEND_KEY) return;
+
+  let komu = "fitness.barna@gmail.com";
+  try {
+    const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
+    const prvni = [...emailySeznam(data?.value)][0];
+    if (prvni) komu = prvni;
+  } catch { /* zustava fallback */ }
+
+  const popis = typ === "bounce" ? "odmítnutý mail (bounce)" : "stížnost na spam";
+  await odesliPresResend(RESEND_KEY, {
+    from: "Martin Barna <news@martinbarna.cz>",
+    to: [komu],
+    subject: "🔴 Resend: " + popis + ", který se nepodařilo přiřadit",
+    html: `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.55;color:#222;max-width:560px">`
+      + `<p>Přišel <b>${popis}</b>, ale nepodařilo se ho přiřadit k žádnému kontaktu, `
+      + `takže se sám od sebe nic nezastavilo.</p>`
+      + `<table cellpadding="5" style="border-collapse:collapse;font-size:14px">`
+      + `<tr><td style="color:#666">Resend id</td><td><code>${emailId}</code></td></tr>`
+      + `<tr><td style="color:#666">Adresa ze stopy</td><td>${adresa || "(žádná)"}</td></tr>`
+      + `<tr><td style="color:#666">Odesílající funkce</td><td>${via || "(neznámá)"}</td></tr>`
+      + `<tr><td style="color:#666">Typ bounce</td><td>${bounceTyp || "(nepřišel)"}</td></tr>`
+      + `</table>`
+      + `<p><b>Co s tím:</b> najdi tu adresu v adminu a zastav jí maily ručně. `
+      + `Dokud to nikdo neudělá, chodí jí všechno dál a kazí to doručitelnost ostatním.</p>`
+      + `<p style="font-size:13px;color:#666">Další takový alert přijde nejdřív za hodinu, `
+      + `ať se z toho nestane lavina. Všechny případy jsou v <code>email_events</code> `
+      + `pod typem <code>alert_nesparovano</code>.</p></div>`,
+  });
+}
