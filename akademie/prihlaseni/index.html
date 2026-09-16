@@ -364,7 +364,7 @@
               showOtpCodeRow(isResend);
               show('ok', isResend
                 ? '📧 Nový mail je na cestě na ' + email + '. Použij NEJNOVĚJŠÍ mail: odkaz, nebo opiš kód níž (mrkni i do spamu).'
-                : '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho, nebo níž opiš kód z mailu (mrkni i do spamu).');
+                : '📧 Hotovo! Poslali jsme ti přihlašovací odkaz na ' + email + '. Otevři ho, nebo níž opiš kód z mailu (mrkni i do spamu). Každé další odeslání ten předchozí odkaz i kód zruší.');
             }
             else if (need === 'videokurz') { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Nevadí: <a href="/akademie/videokurz/?preview=free" style="color:#F6CD63;font-weight:700;text-decoration:underline;">pusť si 11 lekcí zdarma rovnou tady →</a> (bez přihlášení). Přihlašovací odkaz zkus za chvíli znovu, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#F6CD63;">martin@martinbarna.cz</a>.'; }
             else { show('err', ''); msg.innerHTML = 'E-mail s odkazem se teď nepodařilo odeslat. Zkus to za chvíli znovu, přihlas se heslem, nebo napiš na <a href="mailto:martin@martinbarna.cz" style="color:#F6CD63;">martin@martinbarna.cz</a>.'; }
