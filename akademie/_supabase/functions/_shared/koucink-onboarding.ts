@@ -286,7 +286,14 @@ export type UvitaciMailVysledek = {
  *    novou pozvánkou, a ta udělá i všechno ostatní: přepíše `granted_at` (čímž u klienta
  *    bez reportu znovu nastartuje ochrannou lhůtu), přidá řádek do `tvujcoach_grants`
  *    a znovu volá `academy-grant`. Pozvánka tedy NENÍ náhrada za doposlání.
- * ⛔ Prochází `guardSend` jako každý jiný odchozí mail: odhlášený člověk ho nedostane.
+ * ⛔ Prochází `guardSend` jako každý jiný odchozí mail, ale POZOR na to, co to znamená:
+ *    třída je `client_operational` a ta v `STOP_ON_UNSUB` NENÍ. Trvale odhlášený klient
+ *    tenhle mail tedy DOSTANE (`decideSend` vrátí `send` s důvodem
+ *    `transactional_exception_unsub`) a je to záměr: provozní mail platícímu klientovi má jít
+ *    ven, stejně jako u pozvánky. Zastaví ho jedině **neplatná adresa** (`invalid_email`)
+ *    a **hard bounce** (`hard_bounce`), tedy mrtvá schránka.
+ *    ⚠️ Nepsat sem „odhlášený člověk ho nedostane": to tvrzení bylo mylné (revize R1, nález S3)
+ *    a posílalo by Martina při skipu hledat vinu u odhlášení místo u mrtvé adresy.
  * ⭐ Šablona je jediná a je tady. Kdo mění text uvítacího mailu, mění ho na tomhle místě.
  */
 export async function posliUvitaciMail(admin: any, v: {

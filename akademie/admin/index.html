@@ -738,6 +738,53 @@
       while(d.getUTCDay()!==0) d.setUTCDate(d.getUTCDate()+1);
       return czDatum(d.toISOString().slice(0,10));
     }
+    // Proč `guardSend` mail zastavil, větou. ⛔ Uvítací mail má třídu `client_operational`,
+    // která NENÍ v `STOP_ON_UNSUB`: trvale odhlášený klient ho dostane. Skip proto znamená
+    // hlavně mrtvou schránku, ne odhlášení (revize R1, nález S3, důkaz v `mailing-guard.ts`).
+    function kdMailSkipDuvod(r){
+      return r==='hard_bounce' ? 'adresa odmítá poštu (hard bounce), mail by se vrátil.'
+           : r==='invalid_email' ? 'neplatný e-mail, zkontroluj adresu klienta.'
+           : r==='hard_unsubscribe' ? 'klient je trvale odhlášený z mailů.'
+           : r==='suppression_load_failed' ? 'nepovedlo se ověřit, jestli adresa smí dostávat poštu. Zkus to znovu.'
+           : 'důvod „'+String(r)+'".';
+    }
+    // Kolik dní dopředu je start. Záporné = v minulosti, null = není datum.
+    function kdDniDoStartu(startIso){
+      var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(startIso||'')); if(!m) return null;
+      var dnes=new Date(); dnes=Date.UTC(dnes.getFullYear(),dnes.getMonth(),dnes.getDate());
+      return Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-dnes)/86400000);
+    }
+    // Od kolika dní dopředu se start v tabulce zvýrazní. ⛔ NENÍ to validační mez (ta je 90
+    // dní a nemění se): tohle je jen upozornění. Pojistka 90 dní chytí překlep v ROCE,
+    // ale ne v MĚSÍCI: „2026-12-20" místo „2026-09-20" projde a klient by mlčel tři měsíce
+    // (revize R1, nález S5). Jediná stopa by jinak byl čítač v odpovědi cronu, kam nikdo nekouká.
+    var START_UPOZORNIT_OD_DNI = 14;
+    // Věta pod polem startu v kartě klienta. TŘI stavy plus rozlišení, jestli start vůbec
+    // něco odloží. ⛔ Klientovi, který už někdy report poslal, zadaný start výzvu NEODKLÁDÁ:
+    // `preskocitVyzvuKReportu` má „kdo někdy reportoval, tomu se nesahá" jako PRVNÍ podmínku.
+    // Slibovat mu v UI odklad je tichý rozpor mezi tím, co Martin čte, a tím, co systém udělá
+    // (revize R1, nález S2).
+    // Buňka „Start" v tabulce klientů. ⛔ Start daleko v budoucnu se ZVÝRAZNÍ. Validace pustí
+    // všechno do 90 dní, takže překlep v MĚSÍCI („2026-12-20" místo „2026-09-20") projde
+    // a klient by tiše mlčel tři měsíce. Tohle je jediné místo, kde si toho Martin všimne
+    // bez čtení odpovědi cronu (revize R1, nález S5).
+    function kliStart(startIso){
+      if(!startIso) return '<span class="muted" title="Bez startu bere systém datum pozvánky">nezadán</span>';
+      var dni=kdDniDoStartu(startIso);
+      if(dni!=null&&dni>START_UPOZORNIT_OD_DNI){
+        return '<span style="color:#F6CD63;" title="Start je daleko v budoucnu. Zkontroluj měsíc, do té doby klientovi nechodí výzva k reportu.">🔜 '+esc(czDatum(startIso))+' (za '+dni+' dní)</span>';
+      }
+      return esc(czDatum(startIso));
+    }
+    function kdStartStatText(d){
+      if(d&&d.start_chyba) return '⚠️ start se teď nepodařilo načíst ('+String(d.start_chyba)+'). Neznamená to, že není zadaný, a proto se teď ukládat nedá.';
+      var reportu=((d&&d.reports)||[]).length;
+      if(d&&d.start_at){
+        if(reportu>0) return 'klient už reporty posílá, start výzvu neodkládá (drží se jen jako datum začátku)';
+        return 'první výzva k reportu '+kdPrvniVyzva(d.start_at);
+      }
+      return 'prázdné = systém bere datum pozvánky'+((d&&d.granted_at)?(' ('+fmtDay(d.granted_at)+')'):'');
+    }
     // ⛔ OPRAVA 8. 8. 2026: `token` se nabíral JEDNOU při startu (`getSessionRetry`) a už se
     // nikdy neaktualizoval. supabase-js si session na pozadí obnovuje (`autoRefreshToken`),
     // ale admin dál posílal starý JWT. Access token platí hodinu, takže admin nechaný
@@ -1420,7 +1467,17 @@
       var gen=++kliGen;
       // [14. 9. 2026] `bez_appky`: seznam nečeká na appku (timeout 10 s), stav Appka se dotáhne druhým voláním níž.
       api({action:'clients_list',bez_appky:true}).then(function(o){
-        if(!o.j||!o.j.ok){ cardFail('kli','kliBody'); return; }
+        /* ⛔⛔ Neúspěch NESMÍ vypadat jako „žádní klienti" (revize R1, nález V1). Server teď
+           u chyby čtení nároků vrací 500 s důvodem; tady se ten důvod VYPÍŠE a výslovně se
+           napíše, že to neznamená prázdnou databázi. `cardFail` by řekl jen „nepodařilo se". */
+        if(!o.j||!o.j.ok){
+          if(gen!==kliGen) return;
+          $('kli').style.display='';
+          $('kliBody').innerHTML='<p style="padding:.6rem 0;font-size:.88rem;color:#F6CD63;">⚠️ Seznam klientů se teď nepodařilo načíst'
+            +(o.j&&o.j.detail?' ('+esc(String(o.j.detail))+')':'')
+            +'. <b>Neznamená to, že žádní klienti nejsou.</b> Obnov stránku; kdyby to trvalo, zkontroluj, jestli proběhla poslední migrace.</p>';
+          return;
+        }
         var vsechny=o.j.rows||[], now=Date.now();
         // Reporty se nenačetly: sloupce ukazují „?", ne nulu (chyba čtení není odpověď).
         var repsUnknown=!!o.j.reports_incomplete;
@@ -1467,7 +1524,7 @@
             /* 🚩 Start koučinku (dávka 9). Nula dotazů navíc, jede v témže selectu.
                Prázdno se hlásí jako „nezadán", ať je na první pohled vidět, u koho
                `client-remind` pořád jede na náhradu z data pozvánky. */
-            +'<td style="white-space:nowrap;">'+(r.start_at?esc(czDatum(r.start_at)):'<span class="muted" title="Bez startu bere systém datum pozvánky">nezadán</span>')+'</td>'
+            +'<td style="white-space:nowrap;">'+kliStart(r.start_at)+'</td>'
             +'<td class="tcount">'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':r.reports)+'</td>'
             +'<td>'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>'))+warn+'</td></tr>';
         }
@@ -1616,7 +1673,10 @@
       var what=kind==='stavajici'?'„Konec Excelu" (stávající klient)':'pozvánka s dotazníkem (nový klient)';
       /* Start se do potvrzení VYPISUJE. Je to věta o tom, co komu odejde a od kdy se
          klientovi počítá první report; překlep v datu se nejlíp chytá tady, ne v DB. */
-      var startTxt=start?('\nStart koučinku: '+czDatum(start)+', první výzva k reportu '+kdPrvniVyzva(start))
+      /* ⛔ „pokud ještě žádný report neposlal" tam být MUSÍ (revize R1, nález S2): převáděný
+         klient z Excelu má v `client_reports` řádky a tomu zadaný start výzvu neodloží,
+         protože „kdo někdy reportoval, tomu se nesahá" je první podmínka na serveru. */
+      var startTxt=start?('\nStart koučinku: '+czDatum(start)+', první výzva k reportu '+kdPrvniVyzva(start)+' (pokud klient ještě žádný report neposlal)')
                         :'\nStart koučinku: nezadán (systém bere datum pozvánky)';
       if(!confirm('Zapnout klientskou sekci pro '+email+' ('+(plan==='diamond'?'Diamond':'Gold')+') a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"'+startTxt)) return;
       var origTxt=b.textContent; b.disabled=true; b.textContent='📨 Posílám…';
@@ -2126,10 +2186,12 @@
         // má start klidně rok starý a pozná to jen ten, kdo ho vidí napsaný.
         +'<div style="margin:0 0 .8rem;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">'
         +'<span style="font-size:.85rem;color:#cbbfae;">🚩 Start koučinku:</span>'
-        +'<input type="date" id="kdStart" value="'+esc(d.start_at||'')+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.85rem;">'
-        +'<button class="mlogbtn" id="kdStartSave" style="padding:6px 12px;">Uložit start</button>'
-        +'<span class="muted" id="kdStartStat" style="font-size:.78rem;">'
-        +(d.start_at?('první výzva k reportu '+esc(kdPrvniVyzva(d.start_at))):'prázdné = systém bere datum pozvánky'+(d.granted_at?(' ('+esc(fmtDay(d.granted_at))+')'):''))
+        // ⛔ Při chybě čtení se pole i tlačítko ZAMKNOU (revize R1, nález S1): prázdné pole
+        // po neúspěšném čtení není „start není zadaný" a uložení prázdna by ho SMAZALO.
+        +'<input type="date" id="kdStart" value="'+esc(d.start_at||'')+'"'+(d.start_chyba?' disabled':'')+' style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.85rem;">'
+        +'<button class="mlogbtn" id="kdStartSave"'+(d.start_chyba?' disabled':'')+' style="padding:6px 12px;">Uložit start</button>'
+        +'<span id="kdStartStat" class="'+(d.start_chyba?'':'muted')+'" style="font-size:.78rem;'+(d.start_chyba?'color:#F6CD63;':'')+'">'
+        +esc(kdStartStatText(d))
         +'</span></div>';
       function kdTgIn(id,label,unit,ph){
         var v=tg[id]==null?'':String(tg[id]);
@@ -2416,12 +2478,13 @@
           b.disabled=false; b.textContent=t0;
           if(o.j&&o.j.ok){
             if(KDET.data) KDET.data.start_at=o.j.start_at||null;
-            $('kdStartStat').textContent=o.j.start_at?('první výzva k reportu '+kdPrvniVyzva(o.j.start_at)):'prázdné = systém bere datum pozvánky';
+            $('kdStartStat').textContent=kdStartStatText(KDET.data||{start_at:o.j.start_at});
             toast(o.j.start_at?('🚩 Start nastaven na '+czDatum(o.j.start_at)):'🚩 Start smazán');
             loadKlienti();
           }
           else if(o.j&&o.j.error==='start_at') toast('Start koučinku: '+kdStartDuvod(o.j.duvod)+' Nic se neuložilo.');
           else if(o.j&&o.j.error==='neni_klient') toast('Tenhle e-mail nemá koučinkový nárok, start nemá kam uložit.');
+          else if(o.j&&o.j.error==='ukonceny_klient') toast('Klient je ukončený, start se mu neukládá. Když se vrací, pozvi ho znovu.');
           else toast('Chyba: '+((o.j&&o.j.error)||o.status));
         }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
       });
@@ -2437,7 +2500,10 @@
         api({action:'client_welcome_resend',email:email,osloveni:vok,kind:kind}).then(function(o){
           b.disabled=false; b.textContent=t0;
           if(o.j&&o.j.ok) toast('📨 Uvítací mail odešel na '+email);
-          else if(o.j&&o.j.mail_skip) toast('🔕 Neposláno: '+o.j.mail_skip+' (nejspíš se odhlásil z mailů). Nic se neodeslalo.');
+          /* ⛔ Důvod PŘELOŽIT, ne vypsat kód (revize R1, nález S3). Uvítací mail má provozní
+             třídu, kterou odhlášení NEZASTAVÍ; skip proto v praxi znamená mrtvou schránku.
+             Původní text „nejspíš se odhlásil z mailů" posílal Martina hledat úplně jinam. */
+          else if(o.j&&o.j.mail_skip) toast('🔕 Neposláno: '+kdMailSkipDuvod(o.j.mail_skip)+' Nic se neodeslalo.');
           else if(o.j&&o.j.error==='neni_klient') toast('Tenhle e-mail nemá koučinkový nárok, uvítací mail o koučinku mu neposílám.');
           else if(o.j&&o.j.error==='ukonceny_klient') toast('Klient je ukončený. Chceš-li ho vrátit, použij pozvánku, ne doposlání mailu.');
           else toast('🔴 Mail NEODEŠEL ('+((o.j&&(o.j.error||o.j.mail_status))||o.status)+').');

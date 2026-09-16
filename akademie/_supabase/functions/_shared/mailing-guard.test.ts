@@ -107,6 +107,15 @@ async function main(): Promise<void> {
     PATH_CLASS["admin-api.client_offboard.confirm"] === "client_operational");
   check("PATH_CLASS: offboard sales je marketing",
     PATH_CLASS["admin-api.client_offboard.sales"] === "marketing");
+  // Dávka 9 (15. 9. 2026): doposlání uvítacího mailu z karty klienta. Táž šablona i příjemce
+  // jako pozvánka, takže musí mít i tutéž třídu. ⛔ `classForPath` na neznámé cestě HÁZÍ
+  // výjimku, proto se tu ověřuje i ta (revize R1, nález S4).
+  check("PATH_CLASS: welcome resend je client_operational",
+    PATH_CLASS["admin-api.client_welcome_resend"] === "client_operational");
+  check("PATH_CLASS: resend má tutéž třídu jako pozvánka (jedna šablona, jeden příjemce)",
+    PATH_CLASS["admin-api.client_welcome_resend"] === PATH_CLASS["admin-api.client_invite"]);
+  check("classForPath zná welcome resend (neznámá cesta hodí výjimku)",
+    classForPath("admin-api.client_welcome_resend") === "client_operational");
   check("classForPath sedí na PATH_CLASS",
     classForPath("study-reminder") === "optional_reminder");
 

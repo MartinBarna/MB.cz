@@ -2260,6 +2260,22 @@ Deno.serve(async (req) => {
           .catch((e: unknown) => ({ data: null as typeof cc_typ, error: e })),
         admin.from("client_targets").select("email,updated_at"),
       ]);
+      // ⛔⛔ CHYBA ČTENÍ NÁROKŮ NENÍ „ŽÁDNÍ KLIENTI" (revize R1, nález V1, 15. 9. 2026).
+      // `ents` je JEDINÝ zdroj řádků téhle tabulky. Když select spadne, `ents.data` je null,
+      // `rows` vyjde prázdné a admin bez tohohle řádku napsal „zatím žádní klienti" s `ok: true`.
+      // Je to přesně nehoda z 27. 7. 2026 popsaná o pár řádků výš, jen z druhé strany: tam
+      // byl špatný název sloupce, tady by stačilo nasadit funkci PŘED migrací, která zakládá
+      // `start_at`, nebo nepřehozená PostgREST schema cache. Martin by hledal vinu u klientů.
+      // ⛔ Vrací se 500, ne částečný výsledek: bez nároků není co zobrazit ani „s otazníky".
+      //    Ostatní čtení (reporty, účty, jména) mají vlastní `*_incomplete`, protože ta jen
+      //    doplňují sloupce do řádků, které existují.
+      if (ents.error) {
+        return json({
+          error: "db",
+          co: "entitlements(clients_list)",
+          detail: String((ents.error as { message?: string }).message ?? ents.error).slice(0, 200),
+        }, 500);
+      }
       const repsUnknown = reps.error != null;
       const usersUnknown = users.error != null;
       const nameBy = new Map<string, string>();
@@ -2410,6 +2426,14 @@ Deno.serve(async (req) => {
       const konzChyba = konz.error
         ? String((konz.error as { message?: string }).message ?? konz.error).slice(0, 120)
         : null;
+      // ⛔ TŘI STAVY U STARTU, ne dva (revize R1, nález S1). Bez `start_chyba` by karta po
+      //    chybě čtení napsala „prázdné = systém bere datum pozvánky", tedy tvrzení o stavu,
+      //    který nezná. Následná škoda by byla horší než ta hláška: Martin vidí prázdné pole,
+      //    klikne „Uložit start" a prázdná hodnota start SMAŽE (v kartě prázdno znamená
+      //    „vymaž", na rozdíl od pozvánky). UI proto v tomhle stavu tlačítko zablokuje.
+      const startChyba = ent.error
+        ? String((ent.error as { message?: string }).message ?? ent.error).slice(0, 120)
+        : null;
       return json({
         ok: true,
         reports: reps.data ?? [],
@@ -2419,8 +2443,9 @@ Deno.serve(async (req) => {
         remind_on: remindOn,
         targets: targets.data ?? null,
         name: contact.data?.name ?? null,
-        start_at: ent.data?.start_at ?? null,
-        granted_at: ent.data?.granted_at ?? null,
+        start_at: startChyba ? null : (ent.data?.start_at ?? null),
+        granted_at: startChyba ? null : (ent.data?.granted_at ?? null),
+        start_chyba: startChyba,
         konzultace_intake: konzChyba ? [] : ((konz.data as unknown[]) ?? []),
         konz_chyba: konzChyba,
       });
@@ -2601,12 +2626,21 @@ Deno.serve(async (req) => {
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
       const prevod = overStart(body.start_at);
       if (!prevod.ok) return json({ error: "start_at", duvod: prevod.duvod }, 400);
+      // ⛔ Tři stavy odděleně, symetricky s `client_welcome_resend` (revize R1, nález N3):
+      //    chyba čtení = 500, prázdno = 404, ukončený klient = 409. Ukončenému se start
+      //    neukládá, i když by to `client-remind` (bere jen aktivní nároky) nepoznal:
+      //    dvě nové akce v jednom diffu se nesmí chovat na tutéž otázku různě.
+      const { data: entRow, error: entChyba } = await admin.from("entitlements").select("active")
+        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      if (entChyba) return json({ error: "db", detail: String(entChyba.message ?? entChyba).slice(0, 160) }, 500);
+      if (!entRow) return json({ error: "neni_klient" }, 404);
+      if (entRow.active !== true) return json({ error: "ukonceny_klient" }, 409);
       const { error, count } = await admin.from("entitlements")
         .update({ start_at: prevod.start }, { count: "exact" })
         .eq("email", email).eq("product", "coaching");
       if (error) return json({ error: "db", detail: String(error.message ?? error).slice(0, 160) }, 500);
-      // ⛔ Nula změněných řádků NENÍ úspěch: znamená to, že ten člověk koučinkový nárok
-      //    nemá. Tiché „ok" by Martina nechalo věřit, že start uložil.
+      // ⛔ Nula změněných řádků NENÍ úspěch: znamená to, že mezi čtením a zápisem řádek
+      //    zmizel. Tiché „ok" by Martina nechalo věřit, že start uložil.
       if (!count) return json({ error: "neni_klient" }, 404);
       return json({ ok: true, start_at: prevod.start });
     }
@@ -3652,8 +3686,10 @@ Deno.serve(async (req) => {
     //    řádek do `tvujcoach_grants` a znovu volá `academy-grant`. Proto vlastní akce,
     //    která pošle JEN mail a na nárok, appku ani CRM nesáhne.
     // ⛔ Jde na JEDNU adresu, tu z těla požadavku. Žádná hromadná cesta tady není a nesmí být.
-    // ⛔ Prochází `guardSend` uvnitř `posliUvitaciMail` jako každý jiný odchozí mail:
-    //    odhlášený člověk ho nedostane a skok se zapíše do `mail_log`.
+    // ⛔ Prochází `guardSend` uvnitř `posliUvitaciMail` a skip se zapíše do `mail_log`.
+    //    Třída je `client_operational`, takže TRVALE ODHLÁŠENÝ KLIENT TENHLE MAIL DOSTANE
+    //    (provozní mail platícímu klientovi má jít ven, stejně jako pozvánka). Zastaví ho
+    //    jen neplatná adresa a hard bounce, tedy mrtvá schránka (revize R1, nález S3).
     if (action === "client_welcome_resend") {
       const email = low(body.email);
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);

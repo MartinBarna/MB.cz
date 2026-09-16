@@ -37,6 +37,11 @@ export const PATH_CLASS = {
   "videokurz-onboarding": "purchase_delivery",
   "grant-videokurz-z-appky": "entitlement_delivery",
   "admin-api.client_invite": "client_operational",
+  // Doposlání téhož uvítacího mailu z karty klienta (dávka 9, 15. 9. 2026). Táž šablona,
+  // týž příjemce, tedy táž třída jako pozvánka. ⛔ Registr musí být ÚPLNÝ: `classForPath()`
+  // na neznámé cestě HÁZÍ výjimku, takže chybějící řádek je mina pro každého, kdo ji příště
+  // použije na odesílací cestě (revize R1, nález S4).
+  "admin-api.client_welcome_resend": "client_operational",
   "admin-api.client_offboard.confirm": "client_operational",
   "admin-api.client_offboard.sales": "marketing",
 } as const;
