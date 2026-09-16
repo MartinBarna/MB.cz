@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
   const emailId = String(ev?.data?.email_id || "");
   if (!emailId) return json({ ok: true, ignored: "no_email_id" });
 
-  // dohledej puvodni event pres Resend id — 'sent' (ostry mail leadovi), 'test'
+  // dohledej puvodni event pres Resend id: 'sent' (ostry mail leadovi), 'test'
   // ⭐⭐ [16. 9. 2026] a nove i `px_odeslano`. Tenhle typ pisou cesty MIMO drip
   // (`client-remind`, `client-report`, `poukaz-vydat`, `study-reminder`, `milestones`,
   // `splatky-guard`, `order-rescue`, `academy-stripe-webhook`), ktere do 16. 9. 2026

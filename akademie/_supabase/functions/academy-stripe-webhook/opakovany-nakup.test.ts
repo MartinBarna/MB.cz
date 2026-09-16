@@ -121,8 +121,12 @@ check('NA4 posliUvitani se ve vetvi opakovaneho nakupu NEVOLA (drip by mail pres
 check('NA5 v mailu druhe konzultace neni dlouha pomlcka ani cena', (() => {
   const i = zdroj.indexOf('Konzultace je zaplacená, ozvu se ti s termínem');
   const j = zdroj.indexOf('</div>`,', i);
-  const telo = i > 0 ? zdroj.slice(i, j) : 'x—x 2 990 Kč';
-  return !telo.includes('—') && !/\d[\d\s]*Kč/.test(telo);
+  // ⚠️ Dlouha pomlcka i cena jsou tu psane escapem, ne primo: soubor sam
+  //    NESMI obsahovat znak, ktery hlida. Fallback je zamerne 'spatny', aby
+  //    kontrola padla i tehdy, kdyz se predmet mailu v `index.ts` prejmenuje.
+  const POMLCKA = String.fromCharCode(0x2014);
+  const telo = i > 0 ? zdroj.slice(i, j) : 'x' + POMLCKA + 'x 2 990 Kč';
+  return !telo.includes(POMLCKA) && !/\d[\d\s]*Kč/.test(telo);
 })());
 
 const failures = cases.filter((c) => !c.pass).length;
