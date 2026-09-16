@@ -38,6 +38,14 @@ import {
   bezBonusuAppky,
   najdiBonusyAppky,
 } from "./refund-bonus.ts";
+// ⭐ Opakovaný nákup (16. 9. 2026): které produkty se smí koupit podruhé a co se
+// u nich má poslat. Čisté funkce vedle, ať se to dá otestovat bez startu serveru.
+import {
+  jeOpakovatelnyKlic,
+  maHlasitZvazVraceni,
+  stavOpakovanehoNakupu,
+  typUdalostiZnovu,
+} from "./opakovany-nakup.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s ruční pozvánkou v adminu (`admin-api`,
 // akce `client_invite`). Zaplacený klient musí dostat přesně totéž co ten ruční:
 // nárok, appku, kontakt v CRM a uvítací mail s odkazem na vstupní dotazník.
@@ -761,7 +769,12 @@ async function udelDozivotni(
   const predchoziPi: string | null = stavajici?.stripe_payment_intent ?? null;
 
   const bylDozivotni = !!stavajici && stavajici.active && stavajici.expires_at === null;
-  if (bylDozivotni) {
+  // ⛔ [16. 9. 2026] RADA „ZVAŽ VRÁCENÍ" NEPLATÍ U OPAKOVATELNÝCH PRODUKTŮ.
+  //    U balíčku a konzultace je druhý nákup normální prodej: další hodina,
+  //    nebo nové odkazy ke stažení po vypršení těch starých. Doručení a alert
+  //    „domluv termín" si u nich řeší větev opakovaného nákupu níž, tady by
+  //    tenhle text Martina jen navedl vracet peníze za něco, co dodal.
+  if (bylDozivotni && maHlasitZvazVraceni(def.produkt)) {
     await alertAdmin("Stripe: DRUHÝ doživotní nákup od téhož člověka", {
       email,
       produkt: def.nazev,
@@ -1570,6 +1583,64 @@ async function posliDoklad(email: string, obj: any, def: JednorazovyProdukt): Pr
   }
 }
 
+// --- KUPEC KONZULTACE DO CRM ------------------------------------------------
+// ⭐ Vytaženo z inline bloku 16. 9. 2026: volá to PRVNÍ nákup i OPAKOVANÝ, a dvě
+// kopie téže logiky se rozejdou při první úpravě.
+//
+// ⛔ TAG JE `konzultace`, NIKDY `coaching-active`. `coaching-active` řídí kapacitu
+//    koučinku, vyřazení z upsell front i segmenty rozesílek; konzultace je jedna
+//    hodina, ne dlouhodobá spolupráce (`konzultace-produkt.sql`). Martin 15. 9. 2026:
+//    „konzultace musí být rozlišitelná od koučinku; když pak daný mail přidám do
+//    koučinku, zmizí z konzultace a přibude v koučinku." Odebrání tagu při pozvánce
+//    do koučinku dělá `_shared/koucink-onboarding.ts`, ne tenhle soubor.
+//
+// ⛔ `onboarding_sent_at` SE MUSÍ ORAZÍTKOVAT. `videokurz-onboarding` bere KAŽDÝ
+//    řádek se `status='active' AND onboarding_sent_at IS NULL` a pošle mu uvítačku
+//    a migrační mail k videokurzu. Ta fronta nesmí růst o lidi, kteří si koupili
+//    konzultaci a uvítací mail už dostali.
+//    ⚠️ 16. 9. 2026 změřeno, že ta fronta je dnes PRÁZDNÁ a funkce nikdy nic
+//    neodeslala (nález B/N3 auditu mailových toků). Razítkovat se ale nepřestává:
+//    fronta je prázdná právě proto, že se razítkuje.
+//
+// ⚠️ U Stripu jméno kupce neznáme, řádek proto vzniká bez `name`. Není to vada,
+//    jen to Martin uvidí v adminu jako kontakt bez jména (doplní se z dotazníku).
+// ⚠️ Chyba se NESMÍ spolknout, ale taky nesmí shodit nákup: přístup i uvítací mail
+//    jsou v pořádku, chybí jen řádek v CRM. Proto alert, ne pád.
+async function zapisKonzultaciDoCrm(emailL: string, source: string): Promise<string> {
+  try {
+    const ted = new Date().toISOString();
+    const { data: cc, error: ccErr } = await admin.from("customer_contacts")
+      .select("email,tags,products,onboarding_sent_at").eq("email", emailL).maybeSingle();
+    if (ccErr) throw new Error("cteni: " + ccErr.message);
+    if (!cc) {
+      const { error } = await admin.from("customer_contacts").insert({
+        email: emailL, audience: "customer", source,
+        products: ["konzultace"], tags: ["konzultace"], onboarding_sent_at: ted,
+      });
+      if (error) throw new Error("insert: " + error.message);
+      return "zalozen";
+    }
+    const tagy = (cc.tags as string[]) ?? [];
+    const produkty = (cc.products as string[]) ?? [];
+    const zmena: Record<string, unknown> = {};
+    if (!tagy.includes("konzultace")) zmena.tags = [...tagy, "konzultace"];
+    if (!produkty.includes("konzultace")) zmena.products = [...produkty, "konzultace"];
+    if (!cc.onboarding_sent_at) zmena.onboarding_sent_at = ted;
+    if (Object.keys(zmena).length === 0) return "uz-sedel";
+    zmena.updated_at = ted;
+    const { error } = await admin.from("customer_contacts").update(zmena).eq("email", emailL);
+    if (error) throw new Error("update: " + error.message);
+    return "doplnen";
+  } catch (e) {
+    await alertAdmin("ℹ️ Stripe: konzultace zaplacena, ale kontakt v CRM se nezaložil", {
+      email: emailL, chyba: String(e).slice(0, 200),
+      co_delat: "Přístup i uvítací mail jsou v pořádku, chybí jen řádek v CRM. "
+        + "Přidej ho v adminu ručně, ať ti ten člověk nevypadne z follow-upu po hovoru.",
+    });
+    return "CHYBA: " + String(e).slice(0, 120);
+  }
+}
+
 // --- KOUČINK: zaplacené OBDOBÍ, ne doživotní přístup ------------------------
 // ⛔⛔ VLASTNÍ VĚTEV SCHVÁLNĚ, `udelDozivotni` se sem nepoužije. Ta funkce zapisuje
 // `expires_at: null` (doživotně) a chrání doživotní členy před degradací. U koučinku
@@ -2017,42 +2088,10 @@ Deno.serve(async (req) => {
           //    jen to Martin uvidí v adminu jako kontakt bez jména (doplní se z dotazníku).
           // ⚠️ Chyba se NESMÍ spolknout, ale taky nesmí shodit nákup: přístup i uvítací mail
           //    jsou v pořádku, chybí jen řádek v CRM. Proto alert, ne pád.
+          // ⭐ [16. 9. 2026] Tělo se přestěhovalo do `zapisKonzultaciDoCrm` výš, protože
+          //    ho volá i větev opakovaného nákupu. Dvě kopie téhle logiky by se rozešly.
           if (def.produkt === "konzultace") {
-            try {
-              const ted = new Date().toISOString();
-              const { data: cc, error: ccErr } = await admin.from("customer_contacts")
-                .select("email,tags,products,onboarding_sent_at").eq("email", emailL).maybeSingle();
-              if (ccErr) throw new Error("cteni: " + ccErr.message);
-              if (!cc) {
-                const { error } = await admin.from("customer_contacts").insert({
-                  email: emailL, audience: "customer", source: def.source,
-                  products: ["konzultace"], tags: ["konzultace"], onboarding_sent_at: ted,
-                });
-                if (error) throw new Error("insert: " + error.message);
-                crmKontakt = "zalozen";
-              } else {
-                const tagy = (cc.tags as string[]) ?? [];
-                const produkty = (cc.products as string[]) ?? [];
-                const zmena: Record<string, unknown> = {};
-                if (!tagy.includes("konzultace")) zmena.tags = [...tagy, "konzultace"];
-                if (!produkty.includes("konzultace")) zmena.products = [...produkty, "konzultace"];
-                if (!cc.onboarding_sent_at) zmena.onboarding_sent_at = ted;
-                if (Object.keys(zmena).length === 0) crmKontakt = "uz-sedel";
-                else {
-                  zmena.updated_at = ted;
-                  const { error } = await admin.from("customer_contacts").update(zmena).eq("email", emailL);
-                  if (error) throw new Error("update: " + error.message);
-                  crmKontakt = "doplnen";
-                }
-              }
-            } catch (e) {
-              crmKontakt = "CHYBA: " + String(e).slice(0, 120);
-              await alertAdmin("ℹ️ Stripe: konzultace zaplacena, ale kontakt v CRM se nezaložil", {
-                email: emailL, chyba: String(e).slice(0, 200),
-                co_delat: "Přístup i uvítací mail jsou v pořádku, chybí jen řádek v CRM. "
-                  + "Přidej ho v adminu ručně, ať ti ten člověk nevypadne z follow-upu po hovoru.",
-              });
-            }
+            crmKontakt = await zapisKonzultaciDoCrm(emailL, def.source);
           }
 
           // ⭐ RUČNÍ KROK NA MARTINOVI. U konzultace nestačí udělit přístup: musí se ozvat
@@ -2088,11 +2127,16 @@ Deno.serve(async (req) => {
           atribuce = await zapisAtribuciNakupu(emailL, def.produkt, cref.atribuce);
         }
 
-        // ⭐⭐ OPAKOVANÝ NÁKUP BALÍČKU: PENÍZE PŘIŠLY, TAK SE MUSÍ NĚCO POSLAT.
+        // ⭐⭐ OPAKOVANÝ NÁKUP: PENÍZE PŘIŠLY, TAK SE MUSÍ NĚCO POSLAT.
         // ⛔ Do 6. 8. 2026 viselo celé doručení uvnitř `if (novyDozivotni)`. Kdo si balíček
         //    koupil podruhé, zaplatil 349 Kč, dostal HTTP 200 a NIC JINÉHO. U tohohle
         //    produktu to není okrajový případ: odkazy platí 14 dní a nejrychlejší reakce
         //    člověka, kterému vypršely, je koupit to znovu za tři stovky, ne psát Martinovi.
+        // ⛔⛔ [16. 9. 2026] A PŘESNĚ TOTÉŽ PLATILO PRO DRUHOU KONZULTACI, jen se na to
+        //    nepřišlo, protože kupec konzultace je zatím jeden. Ten člověk nedostal ani
+        //    potvrzení, ani doklad, ani řádek v CRM, a hlavně Martinovi nepřišel alert
+        //    „ozvi se a domluv termín", takže by na zaplacenou hodinu nikdo nezavolal.
+        //    Seznam opakovatelných produktů je v `opakovany-nakup.ts`, ne tady.
         // ⛔⛔ A NESTAČILO BY jen vytáhnout `posliUvitani` z té podmínky ven. `posliUvitani`
         //    postaví leada na krok 0 trati a spustí `drip-send`, jenže ten má deduplikaci
         //    `lead_id + step + type='sent' + detail->>track` (drip-send:634). U druhého
@@ -2100,8 +2144,8 @@ Deno.serve(async (req) => {
         //    mimo trať, přímo přes Resend. (Ověřeno čtením drip-send, ne odhadem.)
         // ⚠️ Idempotence: Stripe tutéž událost běžně doručuje víckrát. Rozhoduje
         //    `payment_intent`, ne „má už přístup". Táž platba = mlčet, nová platba = poslat.
-        let balicekZnovu = klic === "balicek" && !novyDozivotni ? "neznamo" : "netyka-se";
-        if (klic === "balicek" && !novyDozivotni) {
+        let opakovanyNakup = stavOpakovanehoNakupu(klic, novyDozivotni);
+        if (jeOpakovatelnyKlic(klic) && !novyDozivotni) {
           const pi = typeof obj.payment_intent === "string"
             ? obj.payment_intent
             : (typeof obj.id === "string" ? obj.id : "");
@@ -2112,21 +2156,95 @@ Deno.serve(async (req) => {
           //    přehraná událost a NEODESLALO SE NIC. Martin to zaplatil naostro a nedostal
           //    ani mail, ani řádek v `email_events`. Pojistka porovnávala údaj sama se sebou.
           // Přehrání NĚKTERÉHO z opakovaných nákupů: stopa níž (ta se nepřepisuje).
+          // ⛔ Typ události se liší podle produktu (`opakovany-nakup.ts`). Balíček musí
+          //    dál hledat `balicek_znovu_doruceno`, jinak by se ztratila idempotence
+          //    historických řádků ze 7. 8. a 11. 8. 2026.
+          const typZnovu = typUdalostiZnovu(klic);
           const { data: jizPoslano } = await admin.from("email_events")
-            .select("id").eq("type", "balicek_znovu_doruceno").eq("detail->>payment_intent", pi).limit(1);
+            .select("id").eq("type", typZnovu).eq("detail->>payment_intent", pi).limit(1);
 
           if (!pi) {
             // Nemělo by nastat (`obj.id` je vždy), ale kdyby ano, člověk zaplatil a nedostal
             // nic. Tichý průchod je tady to nejhorší možné chování.
-            balicekZnovu = "preskoceno-chybi-payment-intent";
-            await alertAdmin("🔴 Stripe: BALÍČEK koupen znovu, ale CHYBÍ payment_intent", {
-              email: emailL, session: String(obj.id ?? ""),
-              co_delat: "⛔ Pošli mu soubory ručně. Zaplatil a automatika mu nic neposlala. "
+            opakovanyNakup = "preskoceno-chybi-payment-intent";
+            await alertAdmin("🔴 Stripe: OPAKOVANÝ NÁKUP, ale CHYBÍ payment_intent", {
+              email: emailL, produkt: def.nazev, session: String(obj.id ?? ""),
+              co_delat: "⛔ Dodej mu to ručně. Zaplatil a automatika mu nic neposlala. "
                 + "A zkontroluj provizi partnerovi: bez payment_intent se atribuce nespustila, "
                 + "kdyby nákup přišel přes affiliate kód, zapiš ji do referrals ručně.",
             });
           } else if (predchoziPi === pi || (jizPoslano ?? []).length > 0) {
-            balicekZnovu = "preskoceno-prehrana-udalost";
+            opakovanyNakup = "preskoceno-prehrana-udalost";
+          } else if (klic !== "balicek") {
+            // ⭐⭐ DRUHÁ KONZULTACE (16. 9. 2026). Další hodina s Martinem je normální
+            //    prodej, jen se nedodává souborem, ale termínem. Proto se posílá
+            //    potvrzení, doklad, zápis do CRM a hlavně alert Martinovi.
+            // ⛔⛔ NEJDE TU POUŽÍT `posliUvitani`. Ta funkce postaví leada na krok 0
+            //    uvítací tratě a spustí `drip-send`, jenže ten má deduplikaci
+            //    `lead_id + step + type='sent' + detail->>track`. U druhého nákupu ji
+            //    NAJDE, mail přeskočí a jen posune krok, takže by člověk zase nedostal
+            //    NIC, a navíc by se mu přepsala trať, na které zrovna je. Ověřeno
+            //    čtením `drip-send/index.ts` (řádek s `const { data: already }`),
+            //    ne odhadem. Doručení proto jde mimo trať, přímo přes Resend.
+            try {
+              if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
+              const res = await fetch("https://api.resend.com/emails", {
+                method: "POST",
+                headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  from: "Martin Barna <news@martinbarna.cz>",
+                  to: [emailL],
+                  reply_to: "martin@martinbarna.cz",
+                  subject: "Konzultace je zaplacená, ozvu se ti s termínem",
+                  html:
+                    `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px">`
+                    + `<p>Dobrý den,</p>`
+                    + `<p>objednávka na <b>konzultaci</b> u mě dorazila znovu. Beru to jako další hodinu, `
+                    + `ne jako omyl: <b>termín ti napíšu e-mailem</b> a ozvu se co nejdřív.</p>`
+                    + `<p>Kdyby to omyl byl, stačí odpovědět na tenhle e-mail a peníze ti pošlu zpátky.</p>`
+                    + `<p>Martin Barna<br>martinbarna.cz</p></div>`,
+                }),
+              });
+              if (!res.ok) throw new Error("resend_" + res.status);
+              await admin.from("email_events").insert({
+                lead_id: null, step: 0, type: typZnovu,
+                detail: { track: def.welcome, payment_intent: pi, email: emailL },
+              });
+              opakovanyNakup = "ok";
+            } catch (e) {
+              opakovanyNakup = "CHYBA: " + String(e).slice(0, 120);
+              await alertAdmin("🔴 Stripe: KONZULTACE koupena PODRUHÉ a potvrzení NEODEŠLO", {
+                email: emailL, chyba: String(e).slice(0, 200),
+                co_delat: "⛔ Napiš mu sám. Zaplatil a automatika mu neposlala nic.",
+              });
+            }
+            // ⛔ CRM, DOKLAD A ALERT JSOU MIMO `try`: platba proběhla i tehdy, když
+            //    potvrzovací mail selhal, a právě pak je alert nejdůležitější.
+            crmKontakt = await zapisKonzultaciDoCrm(emailL, def.source);
+            doklad = await posliDoklad(emailL, obj, def);
+            // ⭐ RUČNÍ KROK NA MARTINOVI, STEJNĚ JAKO U PRVNÍHO NÁKUPU. Bez tohohle
+            //    upozornění zákazník zaplatil za hodinu a čekal by, dokud si toho
+            //    někdo náhodou nevšimne v přehledu plateb. Tohle je celý nález A/N2.
+            if (def.alertPoNakupu) {
+              await alertAdmin(def.alertPoNakupu + " (OPAKOVANÝ NÁKUP)", {
+                email: emailL,
+                produkt: def.nazev,
+                payment_intent: pi,
+                poznamka: "Konzultaci u tebe kupuje PODRUHÉ. Není to omyl ani duplicita, "
+                  + "potvrzení mu odešlo a slíbilo, že se ozveš s termínem.",
+                co_delat: "Ozvi se mu a domluv termín. Zadej termín hovoru v adminu "
+                  + "(sekce Konzultace): https://martinbarna.cz/akademie/admin/#sek-konzultace "
+                  + "Dokud tam termín není, prodejní maily na koučink se mu neposílají.",
+              });
+            }
+            // ⭐ PROVIZE I ZA DRUHOU PLATBU, ze stejného důvodu jako u balíčku níž.
+            referral = await atribuujReferral(
+              emailL, def.produkt,
+              cref.kod || null,
+              pi || null,
+              obj,
+            );
+            // ⛔ ATRIBUCI TADY SCHVÁLNĚ NEZAPISUJEME, viz komentář u balíčku níž.
           } else {
             try {
               const podepis = async (soubor: string, jmenoProStazeni: string) => {
@@ -2164,17 +2282,17 @@ Deno.serve(async (req) => {
               });
               if (!res.ok) throw new Error("resend_" + res.status);
               await admin.from("email_events").insert({
-                lead_id: null, step: 0, type: "balicek_znovu_doruceno",
+                lead_id: null, step: 0, type: typZnovu,   // = "balicek_znovu_doruceno"
                 detail: { track: "onboarding-nakup-balicek", payment_intent: pi, email: emailL },
               });
-              balicekZnovu = "ok";
+              opakovanyNakup = "ok";
               await alertAdmin("💸 Stripe: BALÍČEK koupen PODRUHÉ, odkazy odeslány znovu", {
                 email: emailL, payment_intent: pi,
                 co_delat: "⛔ Vrať mu 349 Kč (Stripe → Payments → tahle platba → Refund, celou částku). "
                   + "Zaplatil dvakrát za totéž, soubory už dostal. Mail mu slíbil, že se ozveš.",
               });
             } catch (e) {
-              balicekZnovu = "CHYBA: " + String(e).slice(0, 120);
+              opakovanyNakup = "CHYBA: " + String(e).slice(0, 120);
               await alertAdmin("🔴 Stripe: BALÍČEK koupen PODRUHÉ a odkazy se NEODESLALY", {
                 email: emailL, chyba: String(e).slice(0, 200),
                 co_delat: "⛔ Pošli mu kuchařku a e-book ručně A vrať mu 349 Kč. Zaplatil a nedostal nic.",
@@ -2204,7 +2322,7 @@ Deno.serve(async (req) => {
         return json({
           ok: true, email: emailL, produkt: def.produkt, jednorazove: klic,
           novy: novyDozivotni, tc_grant: tcGrant, zruseno_mesicni: zruseneMesicni,
-          referral, atribuce, bonus_videokurz: bonusVideokurz, balicek_znovu: balicekZnovu,
+          referral, atribuce, bonus_videokurz: bonusVideokurz, opakovany_nakup: opakovanyNakup,
           crm_kontakt: crmKontakt,
           doklad,
         });
