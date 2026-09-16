@@ -2434,9 +2434,16 @@ Deno.serve(async (req) => {
       const startChyba = ent.error
         ? String((ent.error as { message?: string }).message ?? ent.error).slice(0, 120)
         : null;
+      // ⛔ Prázdné `reports` po chybě čtení NENÍ „nula reportů" (revize R2, nález R2-2).
+      //    Karta z toho počtu odvozuje, jestli zadaný start výzvu odloží; bez tohohle
+      //    příznaku by po 504 slíbila odklad i klientovi, který reportuje roky.
+      const reportsChyba = reps.error
+        ? String((reps.error as { message?: string }).message ?? reps.error).slice(0, 120)
+        : null;
       return json({
         ok: true,
         reports: reps.data ?? [],
+        reports_chyba: reportsChyba,
         intake: intake.data ?? null,
         notes: notes.data ?? [],
         docs,

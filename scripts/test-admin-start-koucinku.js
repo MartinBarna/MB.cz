@@ -58,6 +58,7 @@ const HELPERY = [
   funkce("kdDniDoStartu"),
   radek("    var START_UPOZORNIT_OD_DNI"),
   funkce("kliStart"),
+  funkce("kdStartDusledek"),
   funkce("kdStartStatText"),
   blok("var KONZ_POLE=", "\n    }", "konzDotaznikHtml"),
 ].join("\n");
@@ -119,16 +120,56 @@ console.log("\n=== 2. NÁLEZ S2: start neodkládá výzvu tomu, kdo už reportuj
 // ===========================================================================
 {
   const novy = volej("kdStartStatText(" + JSON.stringify({ start_at: "2026-09-21", reports: [] }) + ")");
-  overit("klient bez reportu: slíbí se datum první výzvy", /první výzva k reportu/.test(novy));
+  overit("klient bez reportu: slíbí se datum první výzvy", /[Pp]rvní výzva k týdennímu reportu/.test(novy));
 
   const reportujici = volej("kdStartStatText(" + JSON.stringify({ start_at: "2026-09-21", reports: [{ id: 1 }] }) + ")");
-  overit("klient s reportem: ⛔ ŽÁDNÝ slib o první výzvě", !/první výzva k reportu/.test(reportujici));
-  overit("klient s reportem: napíše se, že start výzvu neodkládá", /start výzvu neodkládá/.test(reportujici));
+  overit("klient s reportem: ⛔ ŽÁDNÝ slib o první výzvě", !/[Pp]rvní výzva/.test(reportujici));
+  overit("klient s reportem: napíše se, že start výzvu neodkládá", /výzvu neodkládá/.test(reportujici));
 
   // Totéž v potvrzení pozvánky: převáděný klient („stavajici") reporty posílá roky.
   const potvrzeni = blok("var startTxt=start?", ":'\\nStart koučinku: nezadán", "potvrzení pozvánky");
   overit("potvrzení pozvánky podmiňuje slib („pokud klient ještě žádný report neposlal\")",
     /pokud klient ještě žádný report neposlal/.test(potvrzeni));
+}
+
+// ===========================================================================
+console.log("\n=== 2b. NÁLEZ R2-1: potvrzení v KARTĚ slibuje totéž co věta pod polem ===");
+// ===========================================================================
+{
+  // ⛔ Po R1 byla opravená jen stavová věta, dialog u „Uložit start" sliboval odklad každému.
+  //    Na jedné obrazovce tak byl rozpor a Martin čte dialog právě ve chvíli rozhodnutí.
+  const bezReportu = volej("kdStartDusledek(" + JSON.stringify({ reports: [] }) + ",'2026-09-21')");
+  const sReportem = volej("kdStartDusledek(" + JSON.stringify({ reports: [{ id: 1 }] }) + ",'2026-09-21')");
+  overit("bez reportu: dialog slíbí datum první výzvy", /První výzva k týdennímu reportu/.test(bezReportu));
+  overit("s reportem: ⛔ ŽÁDNÝ slib o první výzvě", !/První výzva/.test(sReportem));
+  overit("s reportem: dialog řekne, že start výzvu neodkládá", /start mu výzvu neodkládá/.test(sReportem));
+
+  // Dialog a věta pod polem MUSÍ říkat totéž, tedy stát na jedné funkci.
+  const handler = blok("if(kdStartSave) kdStartSave.addEventListener", "b.textContent='Ukládám…';", "handler Uložit start");
+  overit("dialog v kartě volá kdStartDusledek", /kdStartDusledek\(KDET\.data,v\)/.test(handler));
+  overit("⛔ dialog už nevolá kdPrvniVyzva napřímo (to byl ten bezpodmínečný slib)",
+    !/kdPrvniVyzva\(v\)/.test(handler));
+  overit("kdStartStatText staví na téže funkci (jedno místo, ne dvě kopie)",
+    /return kdStartDusledek\(d,d\.start_at\)/.test(HTML));
+
+  // Mazání startu se dialogem nemění: tam se nic neslibuje.
+  overit("prázdný start: důsledek je prázdný (dialog o mazání slib nepotřebuje)",
+    volej("kdStartDusledek(" + JSON.stringify({ reports: [] }) + ",'')") === "");
+}
+
+// ===========================================================================
+console.log("\n=== 2c. NÁLEZ R2-2: neznámý počet reportů se nevydává za nulu ===");
+// ===========================================================================
+{
+  const chyba = { reports: [], reports_chyba: "timeout 504", start_at: "2026-09-21" };
+  const dusledek = volej("kdStartDusledek(" + JSON.stringify(chyba) + ",'2026-09-21')");
+  overit("⛔ při chybě čtení reportů se NESLIBUJE odklad", !/První výzva/.test(dusledek));
+  overit("⛔ ani se netvrdí opak („už reporty posílá\")", !/už reporty posílá/.test(dusledek));
+  overit("napíše se, že to nevíme", /nepodařilo načíst/.test(dusledek) && /nevím/.test(dusledek));
+  overit("stavová věta pod polem se chová stejně",
+    !/První výzva/.test(volej("kdStartStatText(" + JSON.stringify(chyba) + ")")));
+  overit("client_detail vrací reports_chyba jako třetí stav", /reports_chyba: reportsChyba,/.test(ADMIN_API));
+  overit("reports_chyba se plní z reps.error, ne z prázdna", /const reportsChyba = reps\.error/.test(ADMIN_API));
 }
 
 // ===========================================================================

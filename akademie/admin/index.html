@@ -776,13 +776,24 @@
       }
       return esc(czDatum(startIso));
     }
+    // ⛔⛔ JEDINÉ místo, kde se rozhoduje, co zadaný start UDĚLÁ. Volá to stavová věta pod polem
+    // I POTVRZOVACÍ DIALOG u tlačítka „Uložit start". Po revizi R1 byla opravená jen ta věta
+    // a dialog dál sliboval odklad každému; na jedné obrazovce tak vznikl rozpor a Martin čte
+    // dialog právě ve chvíli rozhodnutí (revize R2, nález R2-1). Proto je to jedna funkce:
+    // dvě kopie téhle podmínky se prokazatelně rozejdou.
+    // ⛔ Klientovi, který už někdy report poslal, start výzvu NEODKLÁDÁ: `preskocitVyzvuKReportu`
+    //    má „kdo někdy reportoval, tomu se nesahá" jako PRVNÍ podmínku.
+    // ⛔ A počet reportů se taky nemusí načíst. Prázdné pole po chybě čtení není „nula reportů"
+    //    (revize R2, nález R2-2); v tom stavu se nic neslibuje, řekne se, že to nevíme.
+    function kdStartDusledek(d,startIso){
+      if(!startIso) return '';
+      if(d&&d.reports_chyba) return 'Kolik reportů klient poslal, se teď nepodařilo načíst, takže nevím, jestli mu start první výzvu odloží.';
+      if(((d&&d.reports)||[]).length>0) return 'Klient už reporty posílá, start mu výzvu neodkládá (drží se jen jako datum začátku).';
+      return 'První výzva k týdennímu reportu mu pak přijde '+kdPrvniVyzva(startIso)+'.';
+    }
     function kdStartStatText(d){
       if(d&&d.start_chyba) return '⚠️ start se teď nepodařilo načíst ('+String(d.start_chyba)+'). Neznamená to, že není zadaný, a proto se teď ukládat nedá.';
-      var reportu=((d&&d.reports)||[]).length;
-      if(d&&d.start_at){
-        if(reportu>0) return 'klient už reporty posílá, start výzvu neodkládá (drží se jen jako datum začátku)';
-        return 'první výzva k reportu '+kdPrvniVyzva(d.start_at);
-      }
+      if(d&&d.start_at) return kdStartDusledek(d,d.start_at);
       return 'prázdné = systém bere datum pozvánky'+((d&&d.granted_at)?(' ('+fmtDay(d.granted_at)+')'):'');
     }
     // ⛔ OPRAVA 8. 8. 2026: `token` se nabíral JEDNOU při startu (`getSessionRetry`) a už se
@@ -2471,7 +2482,10 @@
       if(kdStartSave) kdStartSave.addEventListener('click',function(){
         var b=kdStartSave; if(b.disabled) return;
         var v=($('kdStart').value||'').trim();
-        if(!confirm(v?('Nastavit start koučinku pro '+email+' na '+czDatum(v)+'?\nPrvní výzva k týdennímu reportu mu pak přijde '+kdPrvniVyzva(v)+'.')
+        /* ⛔ Důsledek se počítá TOUTÉŽ funkcí jako věta pod polem (revize R2, nález R2-1).
+           Dřív tu byl slib „první výzva mu přijde <datum>" bez podmínky, takže dialog tvrdil
+           něco jiného než věta o kus výš a než co pak udělal server. */
+        if(!confirm(v?('Nastavit start koučinku pro '+email+' na '+czDatum(v)+'?\n'+kdStartDusledek(KDET.data,v))
                      :('Smazat start koučinku pro '+email+'?\nSystém pak bude brát datum pozvánky jako dosud.'))) return;
         var t0=b.textContent; b.disabled=true; b.textContent='Ukládám…';
         api({action:'client_start_save',email:email,start_at:v}).then(function(o){
