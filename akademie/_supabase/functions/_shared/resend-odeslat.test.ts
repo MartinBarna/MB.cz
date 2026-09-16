@@ -112,14 +112,16 @@ function podvrhniFetch(odpoved: { status: number; telo?: unknown; hodit?: boolea
   podvrhniFetch({ status: 422, telo: { message: 'invalid' } });
   const r = await odesliPresResend('klic', { to: ['a@b.cz'] }, { admin, via: 'test-fn', email: 'a@b.cz' });
   check('H11 odmitnuti Resendem: ok=false a status se vraci', !r.ok && r.status === 422, String(r.status));
-  // [R1, N-5] Nove se selhani zapisuje jako `type='error'`, aby ho videl zivy jistic
-  // `followups_circuit_breaker` (cron 3), ktery pocita prave `error` a pri `resend_429`
-  // nebo `quota_exceeded` zavira branu follow-upu.
-  check('H12 odmitnuti Resendem: zapise se PRAVE JEDEN radek typu `error`',
-    admin.zapsane.length === 1 && (admin.zapsane[0] ?? {}).type === 'error',
+  // [R2, R2-2] Typ je `odeslani_chyba`, NE `error`. `error` cte zivy jistic
+  // `followups_circuit_breaker` a zavrel by branu follow-upu kvuli 429 z cest,
+  // ktere nemaji pacing (`study-reminder`, `splatky-guard`, `client-report`).
+  check('H12 odmitnuti Resendem: zapise se PRAVE JEDEN radek typu `odeslani_chyba`',
+    admin.zapsane.length === 1 && (admin.zapsane[0] ?? {}).type === 'odeslani_chyba',
     String(admin.zapsane.length) + '/' + String((admin.zapsane[0] ?? {}).type));
+  check('H12c typ NENI `error` (jinak by jistic zavrel branu follow-upu)',
+    (admin.zapsane[0] ?? {}).type !== 'error');
   const de = ((admin.zapsane[0] ?? {}).detail ?? {}) as Record<string, unknown>;
-  check('H12b radek `error` nese `via`, status i text chyby (jinak se neda dohledat)',
+  check('H12b radek `odeslani_chyba` nese `via`, status i text chyby (jinak se neda dohledat)',
     de.via === 'test-fn' && de.status === 422 && String(de.error ?? '').includes('resend_422'),
     JSON.stringify(de));
 }
@@ -128,8 +130,8 @@ function podvrhniFetch(odpoved: { status: number; telo?: unknown; hodit?: boolea
   podvrhniFetch({ status: 0, hodit: true });
   const r = await odesliPresResend('klic', { to: ['a@b.cz'] }, { admin, via: 'test-fn', email: 'a@b.cz' });
   check('H13 pad site NEHAZI vyjimku (smycka cronu musi dojet)', !r.ok && r.status === 0);
-  check('H13b pad site se taky zapise jako `error`',
-    admin.zapsane.length === 1 && (admin.zapsane[0] ?? {}).type === 'error');
+  check('H13b pad site se taky zapise jako `odeslani_chyba`',
+    admin.zapsane.length === 1 && (admin.zapsane[0] ?? {}).type === 'odeslani_chyba');
 }
 {
   const r = await odesliPresResend('', { to: ['a@b.cz'] });
@@ -245,10 +247,42 @@ check('M2 cizi adresa se za Martinovu nepovazuje',
   !jeMartinovaAdresa('mirek.balaban@gmail.com') && !jeMartinovaAdresa('')
   && !jeMartinovaAdresa('barnamaro@gmail.com'));
 {
+  // ⛔⛔ [R2, R2-1] KONTRAST PROTI PUVODNI VERZI: ta pro Martinovu adresu NEZAPSALA
+  //    NIC (`ok === false && zapsane.length === 0`) a tim zahodila IDEMPOTENCNI radek
+  //    opakovaneho nakupu, na kterem stoji dedup podle `detail->>payment_intent`.
+  //    Nove radek vznika, jen bez adresy. Tahle kontrola by na verzi z R1 PADLA.
   const admin = fakeAdmin();
-  const ok = await zapisOdeslani({ admin, via: 'poukaz-vydat', email: 'fitness.barna@gmail.com' }, 're_x');
-  check('M3 pro Martinovu adresu se stopa NEZAPISUJE (jinak by mu bounce zmrazil vlastni lead)',
-    ok === false && admin.zapsane.length === 0, String(admin.zapsane.length));
+  const ok = await zapisOdeslani({
+    admin, via: 'academy-stripe-webhook.balicek_znovu', email: 'fitness.barna@gmail.com',
+    leadId: 'nejake-id', typ: 'balicek_znovu_doruceno', detail: { payment_intent: 'pi_test' },
+  }, 're_x');
+  const z = admin.zapsane[0] ?? {};
+  const d = (z.detail ?? {}) as Record<string, unknown>;
+  check('M3 pro Martinovu adresu radek VZNIKNE (nese idempotenci opakovaneho nakupu)',
+    ok === true && admin.zapsane.length === 1, String(admin.zapsane.length));
+  check('M3b ale BEZ adresy (podle ni se dohledava lead, a Martin lead ma)',
+    d.email === null && d.komu === 'martin', JSON.stringify(d));
+  check('M3c idempotencni klic v radku zustava', d.payment_intent === 'pi_test');
+  check('M3d typ a provider_id zustavaji, aby se dal radek dohledat',
+    z.type === 'balicek_znovu_doruceno' && z.provider_id === 're_x');
+  check('M3e `lead_id` se u Martina nezapisuje (jinak by parovani obeslo `detail.email`)',
+    z.lead_id === null, String(z.lead_id));
+}
+{
+  // [R2, R2-3] Zasilka s BCC se musi poznat ze stopy.
+  const admin = fakeAdmin();
+  podvrhniFetch({ status: 200, telo: { id: 're_bcc' } });
+  await odesliPresResend('klic', { to: ['klient@x.cz'], bcc: ['fitness.barna@gmail.com'] },
+    { admin, via: 'client-report', email: 'klient@x.cz' });
+  const d = ((admin.zapsane[0] ?? {}).detail ?? {}) as Record<string, unknown>;
+  check('M5 stopa zasilky s BCC nese `bcc: true`', d.bcc === true, JSON.stringify(d));
+  const admin2 = fakeAdmin();
+  podvrhniFetch({ status: 200, telo: { id: 're_nobcc' } });
+  await odesliPresResend('klic', { to: ['klient@x.cz'] },
+    { admin: admin2, via: 'client-report', email: 'klient@x.cz' });
+  const d2 = ((admin2.zapsane[0] ?? {}).detail ?? {}) as Record<string, unknown>;
+  check('M6 stopa zasilky bez BCC priznak nema', d2.bcc === undefined, JSON.stringify(d2));
+  globalThis.fetch = puvodniFetch;
 }
 check('M4 webhook cte znacku `detail.test` jako testovaci odeslani',
   /orig\?\.type === "test" \|\| detailStopy\.test === true/.test(rw));
@@ -264,6 +298,18 @@ check('S1c prazdny payload NENI neshoda (jinak by zmrazeni vyplo uplne)',
 check('S6a chyba cteni puvodniho odeslani vraci 500, ne falesny alert',
   /if \(chybaOrig\) \{/.test(rw) && /"orig_read_failed"/.test(rw));
 check('S6b chyba dohledani leada vraci 500', /"lead_lookup_failed"/.test(rw));
+// [R2, R2-4] 500 jen tam, kde chyba dotazu rozhoduje o zmrazeni. U `delivered`,
+// `open` a `click` by trvala chybovost mohla vest Resend k vypnuti endpointu.
+check('R24a fail-closed 500 je podmineny typem udalosti',
+  /const rozhodujeOZmrazeni = t === "bounce" \|\| t === "complaint";/.test(rw));
+check('R24b oba `return 500` jsou za tou podminkou',
+  /if \(rozhodujeOZmrazeni\) return json\(\{ error: "orig_read_failed"/.test(rw)
+  && /if \(rozhodujeOZmrazeni\) return json\(\{ error: "lead_lookup_failed"/.test(rw));
+check('R24c neuspesne cteni stopy neni tiche ani pri 200',
+  /cteni_stopy_selhalo/.test(rw));
+check('R23a webhook si vsimne, ze zasilka mela BCC',
+  /baseDetail\.bcc === true \? \{ mela_bcc: true \}/.test(rw)
+  && /mela_bcc: melaBcc/.test(rw));
 check('S6c chyba cteni hodinove pojistky je fail-closed (alert se NEposle)',
   /const uzSlo = chybaPojistky \? true :/.test(rw));
 

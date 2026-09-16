@@ -110,21 +110,35 @@ export type StopaOdeslani = {
  */
 export async function zapisOdeslani(stopa: StopaOdeslani, providerId: string): Promise<boolean> {
   const email = String(stopa.email ?? "").trim().toLowerCase();
-  // ⛔ [R1, S-2] Martinova adresa do `email_events` nepatri, viz komentar u seznamu vys.
-  //    Vraci se `false` (nic se nezapsalo), ne chyba: je to spravne chovani, ne selhani.
-  if (jeMartinovaAdresa(email)) return false;
+  // ⛔⛔ [R2, nalez R2-1] MARTINOVA ADRESA SE VYNECHAVA, ALE RADEK VZNIKA.
+  //    Prvni verze (R1) pro Martinovu adresu NEZAPSALA NIC, a to bylo spatne: tentyz
+  //    radek nese u opakovaneho nakupu IDEMPOTENCI (dedup podle `detail->>payment_intent`
+  //    v `academy-stripe-webhook`). Martin je pritom jediny, kdo tuhle cestu zkousi
+  //    penezi, takze se pojistka ztracela presne na uctu, kde se testuje, a smoke
+  //    dotaz po jeho testu nic nevratil.
+  //    ⭐ Staci vynechat ADRESU: `resend-webhook` paruje vyhradne podle `detail.email`,
+  //    takze bez ni se nema zmrazeni ceho chytit, a stopa i idempotence zustanou.
+  //    Stejne to uz delal `zapisChybu`; helper si tim prestava odporovat.
+  const jeMartin = jeMartinovaAdresa(email);
   if (!providerId) {
     console.error(
-      `[resend-odeslat] ${stopa.via}: Resend nevratil id, bounce se u ${email} NESPARUJE`,
+      `[resend-odeslat] ${stopa.via}: Resend nevratil id, bounce se u ${jeMartin ? "(martin)" : email} NESPARUJE`,
     );
   }
   if (!stopa.admin || typeof stopa.admin.from !== "function") return false;
   const { error } = await stopa.admin.from("email_events").insert({
-    lead_id: stopa.leadId ?? null,
+    lead_id: jeMartin ? null : (stopa.leadId ?? null),
     step: stopa.step ?? 0,
     type: stopa.typ ?? "odeslano",
     provider_id: providerId || null,
-    detail: { via: stopa.via, email, ...(stopa.detail ?? {}) },
+    detail: {
+      via: stopa.via,
+      // ⛔ U Martina `null`, ne jeho adresa: podle tohohle pole se dohledava lead
+      //    a `fitness.barna@gmail.com` v `leads` JE a je `active`.
+      email: jeMartin ? null : email,
+      komu: jeMartin ? "martin" : "zakaznik",
+      ...(stopa.detail ?? {}),
+    },
   });
   if (error) {
     console.error(`[resend-odeslat] ${stopa.via}: zapis stopy selhal: ` + error.message);
@@ -134,19 +148,29 @@ export async function zapisOdeslani(stopa: StopaOdeslani, providerId: string): P
 }
 
 /**
- * Zapíše NEODESLÁNÍ do `email_events` jako `type='error'` (R1, nález N-5).
+ * Zapíše NEODESLÁNÍ do `email_events` jako `type='odeslani_chyba'`.
  *
- * ⛔ `detail.track` MUSÍ být neprázdné a nesmí začínat na `onboarding`, jinak
- *    `followups_circuit_breaker` řádek úplně ignoruje
- *    (`coalesce(detail->>'track','') <> '' and not ilike 'onboarding%'`).
- *    Bere se proto `via`, tedy jméno odesílající funkce. Kdo předá vlastní `track`
- *    (opakované doručení předává `onboarding-nakup-…`), ten jistič schválně míjí:
- *    doručení zaplaceného zboží nemá zavírat marketingovou bránu.
- * ⚠️ NÁSLEDEK, KTERÝ MUSÍ BÝT VIDĚT: deset neodeslaných mailů z těchto cest za den
- *    (práh `v_thr_err`) zavře bránu follow-upů, tři chyby `resend_429:` taky,
- *    jediná `quota_exceeded` okamžitě. To je záměr, ne vedlejší účinek.
- * ⚠️ Martinova adresa se ani sem nepíše (S-2), ale řádek vzniká: kdyby selhávaly
- *    jen alerty, je to pořád porucha, kterou chceme vidět.
+ * ⛔⛔ TYP NENÍ `error` A JE TO ROZHODNUTÍ, NE PŘEKLEP (R2, nález R2-2).
+ *    Živý jistič `followups_circuit_breaker` (cron 3) čte `type='error'` a zavírá
+ *    `followups_enabled` při třech chybách `resend_429:`, jedné `quota_exceeded`
+ *    nebo deseti jiných chybách za den. Do téhle dávky psal `resend_429:` jedině
+ *    `drip-send`, který má pacing 600 ms. Z nových zapisovatelů má pacing jen
+ *    `client-remind` (550 ms); `study-reminder`, `splatky-guard` ani `client-report`
+ *    ho NEMAJÍ, a `study-reminder` jede ve středu v těsné smyčce přes celý seznam
+ *    studentů proti výchozímu limitu Resendu 2 požadavky za sekundu.
+ *    ⇒ Jedna dávka bez pacingu by si vyrobila tři 429 a zastavila prodejní i pečující
+ *    maily celé Academy. Tuhle možnost systém předtím neměl a nesmí vzniknout jako
+ *    vedlejší účinek měření. Vlastní typ ji zavírá.
+ *    ⚠️ CENA: jistič tyhle cesty dál NEVIDÍ, stejně jako před touhle dávkou.
+ *       Nález N-5 z R1 tím zůstává vědomě NEŘEŠENÝ, viz BUILD, sekce „Po R2".
+ *       Správná cesta je doplnit pacing a teprve pak typ sjednotit.
+ * ⚠️ Řádek je přesto k něčemu: vidí ho `daily-digest` a `admin-pulse` jen tehdy,
+ *    když se na něj někdo podívá dotazem, ale hlavně jde dohledat
+ *    (`select detail->>'via', count(*) from email_events where type='odeslani_chyba' …`).
+ * ⚠️ `detail.track` se plní z `via` a zůstává, aby se typ dal někdy sjednotit
+ *    s `error` bez dalšího zásahu.
+ * ⚠️ Martinova adresa se ani sem nepíše, ale řádek vzniká: kdyby selhávaly jen
+ *    alerty, je to pořád porucha, kterou chceme vidět.
  */
 async function zapisChybu(stopa: StopaOdeslani | undefined, status: number, chyba: string): Promise<void> {
   if (!stopa?.admin || typeof stopa.admin.from !== "function") return;
@@ -155,7 +179,7 @@ async function zapisChybu(stopa: StopaOdeslani | undefined, status: number, chyb
   const { error } = await stopa.admin.from("email_events").insert({
     lead_id: stopa.leadId ?? null,
     step: stopa.step ?? 0,
-    type: "error",
+    type: "odeslani_chyba",
     detail: {
       via: stopa.via,
       track: String((stopa.detail ?? {}).track ?? stopa.via),
@@ -215,6 +239,23 @@ export async function odesliPresResend(
     const j = await res.json();
     providerId = String((j as { id?: unknown })?.id ?? "");
   } catch { /* viz komentář výš */ }
-  if (stopa) await zapisOdeslani(stopa, providerId);
+  if (stopa) {
+    // ⛔⛔ [R2, nalez R2-3] ZASILKA S BCC SE MUSI POZNAT ZE STOPY.
+    //    `resend-webhook` porovnava adresu ze stopy s `ev.data.to` z payloadu, jenze
+    //    `to` je obrazem HLAVICKY To a skrytou kopii neobsahuje. U zasilky
+    //    `to: [klient]` + `bcc: [Martin]` proto obe adresy SEDNOU a bounce Martinovy
+    //    kopie zmrazi klienta uplne stejne jako pred opravou. Vetev `adresa_nesedi`
+    //    se dnesnim kodem nema jak spustit.
+    //    ⭐ Tohle je zatim jen SIGNAL, ne oprava: `detail.bcc` rekne, ze zasilka
+    //    skrytou kopii mela, takze u prvniho realneho bouncu pujde z dat rozhodnout,
+    //    jestli se odrazil prijemce, nebo kopie. Nalez S-1 tim NENI uzavreny.
+    const maBcc = Array.isArray(payload.bcc)
+      ? payload.bcc.length > 0
+      : !!payload.bcc;
+    await zapisOdeslani(
+      maBcc ? { ...stopa, detail: { ...(stopa.detail ?? {}), bcc: true } } : stopa,
+      providerId,
+    );
+  }
   return { ok: true, status: res.status, providerId };
 }

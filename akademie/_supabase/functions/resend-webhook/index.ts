@@ -129,9 +129,19 @@ Deno.serve(async (req) => {
   //    reakce je PRIZNAT NEVIM a nechat ho prijit znovu.
   //    (pamet `feedback-chyba-dotazu-neni-odpoved`: brana na 504 uz jednou poslala
   //    platiciho VIP na paywall)
+  // ⛔⛔ [R2, nalez R2-4] FAIL-CLOSED JEN TAM, KDE ROZHODUJE O ZMRAZENI.
+  //    Puvodne se 500 vracelo u VSECH typu udalosti. Jenze u `delivered`, `open`
+  //    a `click` nesparovani zadnou skodu nedela, zatimco brana Supabase Academy
+  //    shazuje zhruba 1,35 % pozadavku na 504. Chybovost endpointu by tim vyskocila
+  //    z prakticky nuly na jednotky procent a Resend si endpoint, ktery dlouhodobe
+  //    vraci chyby, muze sam vypnout. Pak by neprisly ani bouncy, tedy presne to,
+  //    co ta pojistka chrani.
+  //    ⭐ U `bounce` a `complaint` 500 zustava: tam chyba dotazu rozhoduje o tom,
+  //    jestli se nekomu zmrazi ucet, a Resend pozadavek zopakuje.
+  const rozhodujeOZmrazeni = t === "bounce" || t === "complaint";
   if (chybaOrig) {
     console.error("[resend-webhook] cteni puvodniho odeslani selhalo: " + chybaOrig.message);
-    return json({ error: "orig_read_failed", retry: true }, 500);
+    if (rozhodujeOZmrazeni) return json({ error: "orig_read_failed", retry: true }, 500);
   }
 
   const detailStopy = (orig?.detail && typeof orig.detail === "object")
@@ -174,7 +184,8 @@ Deno.serve(async (req) => {
     // ⛔ [R1, S-6] Zase: chyba != nenaslo se. Radsi 500 a opakovani nez tichy omyl.
     if (chybaLeada) {
       console.error("[resend-webhook] dohledani leada podle adresy selhalo: " + chybaLeada.message);
-      return json({ error: "lead_lookup_failed", retry: true }, 500);
+      // ⛔ [R2, R2-4] Stejne rozliseni jako vys: 500 jen u bouncu a stiznosti.
+      if (rozhodujeOZmrazeni) return json({ error: "lead_lookup_failed", retry: true }, 500);
     }
     if (l?.id) { lead_id = String(l.id); sparovanoPodle = "email"; }
   } else if (!adresaSedi) {
@@ -212,6 +223,12 @@ Deno.serve(async (req) => {
     ...(clickUrl ? { url: clickUrl } : {}),
     ...(t === "bounce" ? { bounce_typ: bounceTyp, bounce_sub: bounceSub, prechodny: prechodnyBounce } : {}),
     sparovano_podle: sparovanoPodle,
+    // ⛔ [R2, R2-4] Kdyz se cteni nepodarilo a udalost o zmrazeni nerozhoduje,
+    //    zapise se, co jde, a vrati 200. Ale MUSI byt videt, ze se to stalo.
+    ...(chybaOrig ? { cteni_stopy_selhalo: String(chybaOrig.message).slice(0, 120) } : {}),
+    // ⛔ [R2, R2-3] Zasilka mela skrytou kopii (Martinuv archiv). U bouncu to
+    //    znamena, ze se mohla odrazit kopie, ne prijemce. Signal, ne dukaz.
+    ...(baseDetail.bcc === true ? { mela_bcc: true } : {}),
     // ⛔ [R1, S-1] Adresa z payloadu se uklada VZDY, kdyz prisla: bez ni nejde zpetne
     //    rozhodnout, jestli se odrazil primarni prijemce, nebo jen BCC kopie.
     ...(adresyZPayloadu.length ? { doruceno_na: adresyZPayloadu } : {}),
@@ -284,7 +301,7 @@ Deno.serve(async (req) => {
   //    patri Martinovi. Tohle je hlidka, ne automatika.
   if ((t === "bounce" || t === "complaint") && !lead_id && !isTest && !prechodnyBounce) {
     await alertNesparovano(admin, t, emailId, adresaZeStopy, String(baseDetail.via ?? ""),
-      bounceTyp, sparovanoPodle, adresyZPayloadu);
+      bounceTyp, sparovanoPodle, adresyZPayloadu, baseDetail.bcc === true);
   }
   return json({ ok: true, type: t, sparovano_podle: sparovanoPodle });
 });
@@ -296,7 +313,7 @@ Deno.serve(async (req) => {
 // deno-lint-ignore no-explicit-any
 async function alertNesparovano(
   admin: any, typ: string, emailId: string, adresa: string, via: string, bounceTyp: string,
-  duvod: string, doruceno: string[],
+  duvod: string, doruceno: string[], melaBcc: boolean,
 ): Promise<void> {
   const hodinaZpet = new Date(Date.now() - 3600_000).toISOString();
   const { data: nedavno, error: chybaPojistky } = await admin.from("email_events").select("id")
@@ -315,6 +332,7 @@ async function alertNesparovano(
     detail: { via: "resend-webhook", udalost: typ, provider_id: emailId,
               email: adresa || null, zdrojova_funkce: via || null,
               bounce_typ: bounceTyp || null, duvod, doruceno_na: doruceno.length ? doruceno : null,
+              mela_bcc: melaBcc,
               alert_odeslan: !uzSlo, pojistka_necitelna: !!chybaPojistky },
   });
   if (error) console.error("[resend-webhook] zapis alert_nesparovano selhal: " + error.message);
@@ -349,6 +367,7 @@ async function alertNesparovano(
       + `<tr><td style="color:#666">Resend id</td><td><code>${emailId}</code></td></tr>`
       + `<tr><td style="color:#666">Adresa ze stopy</td><td>${adresa || "(žádná)"}</td></tr>`
       + `<tr><td style="color:#666">Odrazilo se na</td><td>${doruceno.length ? doruceno.join(", ") : "(payload adresu neposlal)"}</td></tr>`
+      + `<tr><td style="color:#666">Skrytá kopie</td><td>${melaBcc ? "ANO, zásilka měla BCC (mohla se odrazit kopie, ne příjemce)" : "ne"}</td></tr>`
       + `<tr><td style="color:#666">Odesílající funkce</td><td>${via || "(neznámá)"}</td></tr>`
       + `<tr><td style="color:#666">Typ bounce</td><td>${bounceTyp || "(nepřišel)"}</td></tr>`
       + `</table>`
