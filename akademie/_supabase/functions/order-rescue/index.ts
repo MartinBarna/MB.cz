@@ -173,15 +173,42 @@ function vars(name: string): Record<string, string> {
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : "", "");
   return { first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "" };
 }
-/** Vraci `provider_id` zasilky, aby se dalo dopsat do `px_odeslano`. */
-async function send(to: string, subject: string, html: string): Promise<string> {
-  if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
+/**
+ * Vraci `provider_id` zasilky (aby se dalo dopsat do `px_odeslano`) A STATUS.
+ *
+ * ⛔ [17. 9. 2026, nalez A/N10] Driv tahle funkce pri neuspechu HAZELA vyjimku a volajici
+ *    z ni uz nepoznal, JESTLI mail odesel. To ted rozhoduje o tom, jestli se razitko
+ *    `reminded_at` vrati zpet (a cron to za dve hodiny zkusi znovu), nebo zustane.
+ *    Proto se vraci cely vysledek, ne jen ID.
+ */
+async function send(to: string, subject: string, html: string): Promise<{ ok: boolean; status: number; providerId: string; chyba: string }> {
+  if (!RESEND_KEY) return { ok: false, status: 0, providerId: "", chyba: "missing_RESEND_API_KEY" };
   const r = await odesliPresResend(
     RESEND_KEY,
     { from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz" },
   );
-  if (!r.ok) throw new Error("resend_" + r.status);
-  return r.providerId;
+  return { ok: r.ok, status: r.status, providerId: r.providerId, chyba: r.chyba ?? "" };
+}
+
+/**
+ * Alert Martinovi. ⛔ Nejde pres `sendIfAllowed`: brana chrani adresu zakaznika, ne
+ * Martinovu, a kdyby jeho adresa skoncila na seznamu, prestal by se dozvidat prave
+ * ta selhani, kvuli kterym alert existuje. (Tyz vzor jako `splatky-guard`.)
+ */
+async function alertMartinovi(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+  subject: string,
+  text: string,
+): Promise<boolean> {
+  let to = "fitness.barna@gmail.com";
+  try {
+    const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
+    const prvni = String(data?.value || "").split(",").map((s: string) => s.trim()).filter(Boolean)[0];
+    if (prvni) to = prvni;
+  } catch { /* zustava fallback */ }
+  const r = await send(to, subject, `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`);
+  return r.ok;
 }
 
 Deno.serve(async (req) => {
@@ -205,6 +232,9 @@ Deno.serve(async (req) => {
     const tpl = await getTpl(String(body.product || "videokurz"));
     if (!tpl) return json({ error: "no_template" }, 400);
     const v = vars(String(body.name ?? ""));
+    // ⭐ [17. 9. 2026] Vysledek testovaciho odeslani se vraci v odpovedi. Driv se
+    //    zahazoval a "ok: true" znamenalo jen "brana pustila", ne "mail odesel".
+    let testOdpoved: { ok: boolean; status: number } | null = null;
     // ⛔ TEST rezim se ZAMERNE nemeri: nahled Martinovi by vyrobil otevreni a proklik
     //    bez odpovidajiciho odeslani a nafoukl by statistiku trate.
     const d = await sendIfAllowed(admin, {
@@ -212,8 +242,10 @@ Deno.serve(async (req) => {
       mailClass: "optional_reminder",
       functionName: "order-rescue",
       path: "order-rescue",
-    }, async () => { await send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v))); });
-    return json({ ok: true, mode: "test", mail: d.action, reason: d.reason });
+    }, async () => { testOdpoved = await send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v))); });
+    // ⚠️ Pretypovani: TypeScript neumi videt prirazeni uvnitr callbacku a zuzil by typ na `never`.
+    const to = testOdpoved as { ok: boolean; status: number } | null;
+    return json({ ok: true, mode: "test", mail: d.action, reason: d.reason, odeslano: to?.ok ?? null, status: to?.status ?? null });
   }
 
   // LIVE: objednavky 3-72 h stare, nedokoncene, bez pripominky
@@ -267,12 +299,27 @@ Deno.serve(async (req) => {
       const holeHtml = wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v));
       const html = await ostopkuj(holeHtml, { track: tpl.track, step: 0, key: String(tpl.key ?? ""), lead_id: leadId }, MAIL_TRACK_SECRET, SUPABASE_URL);
       let providerId = "";
+      // ⛔⛔ [17. 9. 2026, nález A/N10] RAZÍTKO SE PÍŠE PŘED ODESLÁNÍM A JEHO CHYBA SE ČTE.
+      //    Do 17. 9. se `reminded_at` zapisovalo AŽ PO odeslání a návratová hodnota se
+      //    zahazovala. Když update selhal (504 brány Supabase, o kterém je celý
+      //    `tvujcoach-supabase-504-opakovani`), mail už odešel, razítko chybělo a cron
+      //    každé dvě hodiny poslal totéž znovu, až 36krát za okno 72 h.
+      //    ⇒ Politika je stejná jako u `client-remind` (Martin 17. 9.: raději nikdy mail navíc):
+      //      zapiš, pak pošli; výslovné odmítnutí Resendu razítko vrátí, nejistota ho nechá.
+      let razitkoChyba = "";
+      let odeslani: { ok: boolean; status: number; providerId: string; chyba: string } | null = null;
       const d = await sendIfAllowed(admin, {
         email,
         mailClass: "optional_reminder",
         functionName: "order-rescue",
         path: "order-rescue",
-      }, async () => { providerId = await send(email, fill(tpl.subject, v), html); });
+      }, async () => {
+        const { error: razErr } = await admin.from("pending_orders")
+          .update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);
+        if (razErr) { razitkoChyba = razErr.message; return; } // ⛔ bez razítka NEODESÍLAT
+        odeslani = await send(email, fill(tpl.subject, v), html);
+        providerId = odeslani.providerId;
+      });
       if (d.action === "skip") {
         // ⛔⛔ [13. 9. 2026] Označ, ať cron nezkouší totéž okno znovu, ALE JEN KDYŽ
         // JE DŮVOD TRVALÝ. (Dřív tu stálo jen "unsub je trvalý" a označovalo se vždy.) `mailing-guard` vrací
@@ -289,7 +336,43 @@ Deno.serve(async (req) => {
         results.push({ order: p.order_id, skipped: d.reason, spaleno: trvalyDuvod });
         continue;
       }
-      await admin.from("pending_orders").update({ reminded_at: new Date().toISOString() }).eq("order_id", p.order_id);
+      // Razítko se zapsalo? Když ne, mail vůbec neodešel a další běh to zkusí znovu.
+      if (razitkoChyba) {
+        console.error("[order-rescue] RAZITKO reminded_at NEZAPSANO, mail NEODESLAN: " + p.order_id + " " + razitkoChyba);
+        skipped++;
+        results.push({ order: p.order_id, razitko: "SELHALO", odeslano: false, detail: razitkoChyba.slice(0, 120) });
+        continue;
+      }
+      const o = odeslani as { ok: boolean; status: number; providerId: string; chyba: string } | null;
+      if (!o || !o.ok) {
+        // ⛔ DVA RŮZNÉ STAVY, NE JEDEN.
+        //  a) HTTP >= 400: Resend zásilku VÝSLOVNĚ odmítl, mail jistě neodešel
+        //     => razítko zpět na null, ať to cron za dvě hodiny zkusí znovu (okno 72 h).
+        //  b) status 0 (síť, DNS, timeout, chybějící klíč): NEVÍME
+        //     => razítko ZŮSTANE (mail se neopakuje) a Martin dostane alert.
+        const stav = o?.status ?? 0;
+        if (stav >= 400) {
+          const { error: zpetErr } = await admin.from("pending_orders")
+            .update({ reminded_at: null }).eq("order_id", p.order_id);
+          if (zpetErr) console.error("[order-rescue] VRACENI razitka selhalo: " + p.order_id + " " + zpetErr.message);
+          results.push({ order: p.order_id, odeslano: false, status: stav, razitko: zpetErr ? "ZUSTALO" : "VRACENO" });
+        } else {
+          const doslo = await alertMartinovi(
+            admin,
+            "[VYRIDIT RUCNE] order-rescue: nejiste odeslani (" + email + ")",
+            "Objednavka " + p.order_id + " (" + p.product + "), adresa " + email + ".\n\n"
+              + "Zachranny mail se nepodarilo odeslat: " + (o?.chyba || "sit nebo timeout") + ".\n"
+              + "Stav: NEVIME, jestli mail odesel. Razitko reminded_at zustava zapsane,\n"
+              + "takze zadny dalsi beh cronu ho uz neposle.\n\n"
+              + "Co s tim: kdyz clovek nic nedostal a objednavka je porad nedokoncena,\n"
+              + "smaz mu reminded_at (order_id=" + p.order_id + ") a nech to na dalsim behu.",
+          );
+          if (!doslo) console.error("[order-rescue] ALERT MARTINOVI NEODESEL: " + p.order_id);
+          results.push({ order: p.order_id, odeslano: "nejiste", status: stav, alert: doslo });
+        }
+        skipped++;
+        continue;
+      }
       // ⛔ Jmenovatel pro open a click rate. `order-rescue` do `email_events` historicky
       //    nezapisovala nic, takze bez tohohle by otevrenost vychazela proti nule odeslanych.
       //    Typ je `px_odeslano`, ne `sent`, aby se nezmenila cisla v `email_summary`,

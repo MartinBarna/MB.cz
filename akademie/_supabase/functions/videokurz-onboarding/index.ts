@@ -202,6 +202,19 @@ Deno.serve(async (req: Request) => {
   const list = rows ?? [];
   let sent = 0, skipped = 0, errors = 0;
   const errSample: string[] = [];
+  // ⛔⛔ [17. 9. 2026, nalez A/N10] Razitko `onboarding_sent_at` se pise PRED odeslanim
+  //    a jeho chyba se cte. Driv se zapisovalo az po odeslani a navratova hodnota se
+  //    zahazovala: kdyz update selhal (504 brany Supabase), mail uz odesel, razitko
+  //    chybelo a dalsi beh poslal tomu cloveku uvitaci mail znovu.
+  //    ⇒ Politika je stejna jako u `client-remind` a `order-rescue` (Martin 17. 9.:
+  //      radeji nikdy mail navic): zapis, pak posli. Vyslovne odmitnuti Resendu razitko
+  //      VRATI (dalsi beh to zkusi znovu), nejistota (sit, timeout) ho NECHA.
+  // ⚠️ Alert Martinovi tu SCHVALNE NENI, na rozdil od `order-rescue`. Tahle funkce nema
+  //    cron (overeno 17. 9. v `cron.job` i v `.github/workflows`), spousti ji clovek rucne
+  //    pres POST {live:true} a odpoved si precte hned. Alert by psal tomu, kdo se diva.
+  const razitkoSelhalo: string[] = [];
+  const odeslaniNejiste: string[] = [];
+  const razitkoVraceno: string[] = [];
   for (const r of list) {
     const variant = variantOf(r.tags as string[]);
     const m = buildEmail(variant, String(r.email), String(r.name ?? ''), String(r.unsubscribe_token));
@@ -214,10 +227,38 @@ Deno.serve(async (req: Request) => {
         functionName: 'videokurz-onboarding',
         path: 'videokurz-onboarding',
       }, async () => {
-        const id = await sendViaResend(String(r.email), m.subject, m.html, m.text, m.unsub);
-        await admin.from('customer_contacts').update({ onboarding_sent_at: nowIso, last_emailed_at: nowIso, updated_at: nowIso }).eq('email', r.email);
-        await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding', provider_id: id, detail: { variant, table: 'customer_contacts' } });
-        sent++;
+        // 1) RAZITKO NAPRED. Bez nej se neodesila: kdyz update selze, dalsi beh by
+        //    poslal tentyz mail znovu a nikdo by to nepoznal.
+        const { error: razErr } = await admin.from('customer_contacts')
+          .update({ onboarding_sent_at: nowIso, last_emailed_at: nowIso, updated_at: nowIso }).eq('email', r.email);
+        if (razErr) {
+          console.error('[videokurz-onboarding] RAZITKO onboarding_sent_at NEZAPSANO, mail NEODESLAN: ' + r.email + ' ' + razErr.message);
+          razitkoSelhalo.push(String(r.email));
+          return; // ⛔ NEODESILAT
+        }
+        // 2) Teprve ted odeslani.
+        try {
+          const id = await sendViaResend(String(r.email), m.subject, m.html, m.text, m.unsub);
+          await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding', provider_id: id, detail: { variant, table: 'customer_contacts' } });
+          sent++;
+        } catch (e) {
+          // ⛔ DVA RUZNE STAVY. `sendViaResend` hazi 'resend_<status>:…' jen tehdy, kdyz
+          //    Resend zasilku VYSLOVNE odmitl (mail jiste neodesel) => razitko zpet.
+          //    Pad `fetch` (sit, DNS, timeout) hazi cokoli jineho => NEVIME, razitko zustava.
+          const zprava = String(e);
+          if (zprava.includes('resend_')) {
+            const { error: zpetErr } = await admin.from('customer_contacts')
+              .update({ onboarding_sent_at: null }).eq('email', r.email);
+            if (zpetErr) {
+              console.error('[videokurz-onboarding] VRACENI razitka selhalo: ' + r.email + ' ' + zpetErr.message);
+              odeslaniNejiste.push(String(r.email));
+            } else razitkoVraceno.push(String(r.email));
+          } else {
+            console.error('[videokurz-onboarding] NEJISTE ODESLANI, razitko zustava: ' + r.email + ' ' + zprava.slice(0, 160));
+            odeslaniNejiste.push(String(r.email));
+          }
+          throw e; // at se to zapocita do `errors` a do `onboarding_error` jako dosud
+        }
       });
       if (d.action === 'skip') {
         skipped++;
@@ -234,5 +275,8 @@ Deno.serve(async (req: Request) => {
       await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding_error', detail: { variant, error: String(e).slice(0, 300) } });
     }
   }
-  return json({ ok: true, mode: 'live', attempted: list.length, sent, skipped, errors, error_sample: errSample });
+  return json({
+    ok: true, mode: 'live', attempted: list.length, sent, skipped, errors, error_sample: errSample,
+    razitko_selhalo: razitkoSelhalo, razitko_vraceno: razitkoVraceno, odeslani_nejiste: odeslaniNejiste,
+  });
 });
