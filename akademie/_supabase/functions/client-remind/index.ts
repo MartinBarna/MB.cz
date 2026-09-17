@@ -15,6 +15,15 @@
 //    znovu), ne 403 a ne „ok, sent: 0". Paměť: feedback-guard-secretu-pri-vypadku-db-je-403.
 // ⭐ Idempotence: kdo dostal výzvu v posledních 5 dnech (client_remind_sent), tu samou nedostane
 //    znovu, takže tři cronové běhy za sebou pošlou každému nejvýš jeden mail.
+// ⛔⛔ 17. 9. 2026 (nález V3): pořadí je ZAPIŠ, PAK POŠLI. Řádek v `client_remind_sent` se
+//    REZERVUJE před odesláním a unikátní index v DB (`client_remind_sent_unique_den`, migrace
+//    `client-remind-idempotence-2026-09-17.sql`) ten závod rozhoduje: kdo prohraje vložení,
+//    neodesílá. Do 17. 9. se zapisovalo AŽ PO odeslání a selhaný zápis znamenal, že opakovací
+//    běh poslal mail podruhé. Martin 17. 9.: „raději nikdy mail navíc."
+//    ⛔ Pořadí má cenu: když odeslání selže, mail nedojde. Výslovné odmítnutí Resendu
+//    (HTTP >= 400) rezervaci uvolní, nejistota (síť, timeout) ji nechá a pošle alert Martinovi.
+//    ⛔ MIGRACE MUSÍ BÝT NASAZENÁ DŘÍV NEŽ TAHLE VERZE: bez sloupce `sent_ok` skončí update
+//    chybou (jen se zaloguje) a bez unikátního indexu rezervace nic nezaručuje.
 // ⭐ Dvoutýdenní kadence pro jmenované klienty: app_config.client_remind_14d (CSV e-mailů).
 //    Jejich okno je 12 dní, takže neděli po týdnu vynechají a další termín jim vyjde za 14 dní.
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -75,6 +84,66 @@ function vokativ(fn: string): string {
   if (last === "r") return VOK_VOWELS.includes(l.slice(-2, -1)) ? fn + "e" : fn.slice(0, -1) + "ře";
   if ("bdflmnptvw".includes(last)) return fn + "e";
   return fn;
+}
+
+/**
+ * ⛔⛔ REZERVACE MÍSTA PŘED ODESLÁNÍM (17. 9. 2026, nález V3).
+ *
+ * Martinovo rozhodnutí k politice `client_operational`: „RADĚJI NIKDY MAIL NAVÍC."
+ * ⇒ pořadí je ZAPIŠ, PAK POŠLI. Do 17. 9. se zapisovalo AŽ PO odeslání, takže když
+ * zápis selhal (504 brány Supabase), opakovací běh o 30 minut později poslal týž mail
+ * znovu, a nikdo se to nedozvěděl: `zapis_selhal` končí v `net._http_response`.
+ *
+ * Vrací:
+ *   "ok"       rezervace je moje, smím poslat
+ *   "obsazeno" řádek už existuje (jiný z trojice cronů, nebo můj dřívější běh) => NEPOSÍLÁM
+ *   "chyba"    zápis se nepovedl z jiného důvodu => NEPOSÍLÁM, zkusí to běh za 30 minut
+ *
+ * ⛔ ŽÁDNÉ OPAKOVÁNÍ ZÁPISU (`ctiSOpakovanim`) tu schválně není. Při 504 by druhý pokus
+ *    mohl narazit na řádek, který uložil ten první, vrátil by 23505 a vypadalo by to jako
+ *    „má to někdo jiný". Jeden pokus je čitelný: buď mám rezervaci, nebo nemám.
+ * ⛔ `upsert ... on conflict do nothing` tu být NEMŮŽE: index je partial a Postgres ho
+ *    bez zopakované podmínky nedovodí (42P10), PostgREST podmínku poslat neumí.
+ *    Změřeno 17. 9. 2026 na živé DB. Detail v `client-remind-idempotence-2026-09-17.sql`.
+ */
+async function rezervuj(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+  email: string,
+  kind: string,
+): Promise<{ stav: "ok" | "obsazeno" | "chyba"; detail: string }> {
+  const { error } = await admin.from("client_remind_sent").insert({ email, kind });
+  if (!error) return { stav: "ok", detail: "" };
+  const kod = String((error as { code?: unknown }).code ?? "");
+  if (kod === "23505") return { stav: "obsazeno", detail: kod };
+  return { stav: "chyba", detail: String((error as { message?: unknown }).message ?? error).slice(0, 160) };
+}
+
+/**
+ * Alert Martinovi. ⛔ Jde PŘÍMO přes Resend, NE přes `guardSend`: brána chrání adresu
+ * klienta, ne Martinovu, a kdyby jeho adresa jednou skončila na seznamu, přestal by se
+ * dozvídat právě ta selhání, kvůli kterým alert existuje. (Týž vzor jako `splatky-guard`.)
+ * ⛔ Bez `stopa`: Martinova adresa do `email_events` nepatří (`resend-odeslat.ts`).
+ */
+async function alertMartinovi(
+  // deno-lint-ignore no-explicit-any
+  admin: any,
+  subject: string,
+  text: string,
+): Promise<boolean> {
+  let to = "fitness.barna@gmail.com";
+  try {
+    const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
+    const prvni = String(data?.value || "").split(",").map((s: string) => s.trim()).filter(Boolean)[0];
+    if (prvni) to = prvni;
+  } catch { /* zůstává fallback */ }
+  const r = await odesliPresResend(RESEND_KEY, {
+    from: FROM,
+    to: [to],
+    subject,
+    html: `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`,
+  });
+  return r.ok;
 }
 
 function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean): string {
@@ -356,8 +425,21 @@ Deno.serve(async (req: Request) => {
 
   let sent = 0, skipped = 0;
   const errors: string[] = [];
-  // Odeslané maily, u kterých se nepovedl zápis do client_remind_sent: příští běh by je poslal znovu.
-  const zapisSelhal: string[] = [];
+  // ⛔ Nová jména polí (17. 9. 2026). Staré `zapis_selhal` znamenalo „mail ODEŠEL, ale zápis ne"
+  //    (tedy hrozí mail navíc). Od pořadí „zapiš, pak pošli" jsou stavy jiné:
+  //  - `rezervace_selhala`: zápis nevyšel, mail NEODEŠEL, běh za 30 minut to zkusí znovu,
+  //  - `prohrany_zavod`:    řádek už měl někdo jiný (druhý cron), mail vědomě NEODEŠEL,
+  //  - `odeslani_nejiste`:  rezervace drží, ale odeslání skončilo v nejistotě (síť, timeout).
+  //                         Mail se NEOPAKUJE (Martin: raději nikdy mail navíc) a řádek má
+  //                         `sent_ok=false`, ať to jde v DB najít.
+  //  - `uvolneno_po_odmitnuti`: Resend zásilku výslovně odmítl (HTTP >= 400), mail jistě
+  //                         neodešel, rezervace se smazala a opakovací běh ji zkusí znovu.
+  const rezervaceSelhala: string[] = [];
+  const odeslaniNejiste: string[] = [];
+  const uvolnenoPoOdmitnuti: string[] = [];
+  let prohranyZavod = 0;
+  // Alerty Martinovi, které samy neodešly. Cron nemá retry, ať to aspoň jde přečíst z odpovědi.
+  const alertySelhaly: string[] = [];
   for (const tgt of targets) {
     const isReg = tgt.kind === "register";
     try {
@@ -371,6 +453,20 @@ Deno.serve(async (req: Request) => {
         await logMailSkip(admin, d);
         skipped++;
         continue;
+      }
+      // ⛔⛔ REZERVACE PŘED ODESLÁNÍM. Tři crony (19, 47, 48) běží 30 minut po sobě a
+      //    do 17. 9. je dělil jen přečtený stav; unikátní index v DB teď dělá závod
+      //    rozhodnutelným: kdo prohraje vložení, neposílá.
+      let rezervovano = false;
+      if (!testEmail) {
+        const rez = await rezervuj(admin, tgt.email, tgt.kind);
+        if (rez.stav === "obsazeno") { prohranyZavod++; continue; }
+        if (rez.stav === "chyba") {
+          console.error("[client-remind] REZERVACE SELHALA, mail neodeslan: " + tgt.email + " " + rez.detail);
+          rezervaceSelhala.push(tgt.email);
+          continue; // ⛔ neposílat: bez rezervace by mail mohl odejít i z dalšího běhu
+        }
+        rezervovano = true;
       }
       const r = await odesliPresResend(
         RESEND_KEY,
@@ -391,13 +487,47 @@ Deno.serve(async (req: Request) => {
       );
       if (r.ok) {
         sent++;
-        // Zápis „posláno" až po úspěšném odeslání (test režim se nezapisuje). Když zápis
-        // selže, mail odešel a příští běh ho může poslat znovu; proto se to hlásí v odpovědi.
-        if (!testEmail) {
-          const z = await ctiSOpakovanim(() => admin.from("client_remind_sent").insert({ email: tgt.email, kind: tgt.kind }).select("id"), 2);
-          if (z.error) { console.error("[client-remind] zapis client_remind_sent selhal: " + tgt.email); zapisSelhal.push(tgt.email); }
+      } else {
+        errors.push(tgt.email + ":" + r.status);
+        if (rezervovano) {
+          // ⛔ DVA RŮZNÉ STAVY, NE JEDEN.
+          //  a) HTTP >= 400: Resend zásilku VÝSLOVNĚ odmítl, mail jistě neodešel
+          //     => rezervaci uvolnit, ať ji běh za 30 minut zkusí znovu.
+          //  b) status 0 (síť, DNS, timeout): NEVÍME, jestli mail odešel
+          //     => rezervace zůstane a mail se neopakuje (Martin: raději nikdy mail navíc),
+          //        řádek dostane `sent_ok=false` a Martin dostane alert, ať rozhodne člověk.
+          if (r.status >= 400) {
+            const { error: delErr } = await admin.from("client_remind_sent")
+              .delete().eq("email", tgt.email).eq("kind", tgt.kind)
+              .gte("sent_at", new Date(Date.now() - 3600000).toISOString());
+            if (delErr) {
+              console.error("[client-remind] UVOLNENI REZERVACE SELHALO: " + tgt.email + " " + delErr.message);
+              odeslaniNejiste.push(tgt.email); // řádek drží, mail neodešel: ať to jde najít
+            } else uvolnenoPoOdmitnuti.push(tgt.email);
+          } else {
+            odeslaniNejiste.push(tgt.email);
+            const { error: updErr } = await admin.from("client_remind_sent")
+              .update({ sent_ok: false }).eq("email", tgt.email).eq("kind", tgt.kind)
+              .gte("sent_at", new Date(Date.now() - 3600000).toISOString());
+            if (updErr) console.error("[client-remind] zapis sent_ok=false selhal: " + tgt.email + " " + updErr.message);
+            const doslo = await alertMartinovi(
+              admin,
+              "[VYRIDIT RUCNE] client-remind: nejiste odeslani (" + tgt.email + ")",
+              "Klientovi " + tgt.email + " se nepodarilo odeslat " + (isReg ? "vyzvu k registraci" : "vyzvu k tydennimu reportu") + ".\n\n"
+                + "Duvod: " + (r.chyba ?? "sit nebo timeout") + " (HTTP status " + r.status + ").\n"
+                + "Stav: NEVIME, jestli mail odesel. Rezervace v client_remind_sent zustava\n"
+                + "a ma sent_ok=false, takze zadny dalsi beh ten mail uz neposle.\n\n"
+                + "Co s tim: kdyz klient nic nedostal, posli mu to rucne, nebo smaz jeho radek\n"
+                + "z client_remind_sent (email=" + tgt.email + ", kind=" + tgt.kind + ") a nech to\n"
+                + "na opakovacim behu cronu. Tohle rozhodnuti je schvalne na cloveku:\n"
+                + "Martin 17. 9. 2026: 'radeji nikdy mail navic'.",
+            );
+            // ⛔ Když neprojde ani alert, nesmí to zapadnout: cron nemá retry, tak aspoň
+            //    do logu funkce a do odpovědi (týž vzor jako `splatky-guard`).
+            if (!doslo) { console.error("[client-remind] ALERT MARTINOVI NEODESEL: " + tgt.email); alertySelhaly.push(tgt.email); }
+          }
         }
-      } else errors.push(tgt.email + ":" + r.status);
+      }
       await new Promise((res) => setTimeout(res, 550)); // Resend rate limit 2/s
     } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
   }
@@ -411,5 +541,5 @@ Deno.serve(async (req: Request) => {
   //    na náhradu z `granted_at`. Počítá se z `naReport`, tedy z lidí, kterých se práh týká.
   const preskocenoPodleStartu = [...rozhodnuti.values()].filter((d) => d === "start").length;
   const bezStartu = naReport.filter((e) => !startOd.has(e)).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: cerstviSet.size, preskoceno_podle_startu: preskocenoPodleStartu, bez_startu: bezStartu, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, zapis_selhal: zapisSelhal, errors });
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: cerstviSet.size, preskoceno_podle_startu: preskocenoPodleStartu, bez_startu: bezStartu, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, prohrany_zavod: prohranyZavod, rezervace_selhala: rezervaceSelhala, odeslani_nejiste: odeslaniNejiste, uvolneno_po_odmitnuti: uvolnenoPoOdmitnuti, alerty_selhaly: alertySelhaly, errors });
 });
