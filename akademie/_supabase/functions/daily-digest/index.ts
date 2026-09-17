@@ -4,7 +4,7 @@
 // Shrnuje VCEREJSEK + aktualni stav: leadi, maily, prodeje (simpleshop),
 // fronta, odstoupeni, affiliate, chyby. Cisla pocita kod, zadne odhady.
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { hlidkaCisla } from "./hlidky.ts";
+import { hlidkaCisla, hlidkaClientRemind } from "./hlidky.ts";
 // 14. 9. 2026: chyba cteni neni odpoved (guard secretu s opakovanim, pri trvale chybe 500 misto 401).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
   if (!brana.ok) return json(brana.body, brana.status);
   // Zbytek konfigurace taky s opakovanim: prazdna mapa by poslala prehled s fallbacky (adresa, strop).
   const cfgR = await ctiSOpakovanim<{ data: { key: string; value: string }[] | null; error: unknown }>(() =>
-    admin.from("app_config").select("key,value").in("key", ["admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v"]));
+    admin.from("app_config").select("key,value").in("key", ["admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v", "client_remind_hlidka"]));
   if (cfgR.error) return json(chybaCteni("app_config", cfgR.error), 500);
   const cmap = Object.fromEntries((cfgR.data ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const to = String(cmap.admin_emails || "fitness.barna@gmail.com").split(",")[0].trim();
@@ -436,10 +436,17 @@ Deno.serve(async (req) => {
   // kanarka, ktera se sama prihlasuje testovacim uctem kazde 2 h.
   const hlidkaCislaR = hlidkaCisla(cmap.pocet_cisel_mereno_v, now.getTime());
   if (hlidkaCislaR.alertText) alerts += warn(hlidkaCislaR.alertText);
+  // ⛔ [17. 9. 2026, nález V3] Nedělní připomínka klientům koučinku: verdikt píše SQL
+  //    hlídka `client_remind_hlidka()` (cron, neděle 04:00 UTC) a TENHLE mail je jediné
+  //    místo, kde se z něj stane něco, co Martin uvidí. Bez tohohle řádku by hlídka
+  //    psala do tabulky, kam se nikdo nedívá, což je přesně ta vada, kterou opravuje.
+  const hlidkaRemindR = hlidkaClientRemind(cmap.client_remind_hlidka, now.getTime());
+  if (hlidkaRemindR.alertText) alerts += warn(hlidkaRemindR.alertText);
   const hlidkyHtml =
     `<h3 style="margin:18px 0 6px;font-size:15px">🔭 Hlídky</h3>` +
     `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
     row("Čísla", hlidkaCislaR.radek) +
+    row("Klienti koučinku", hlidkaRemindR.radek) +
     `</table>`;
 
   // --- 🤝 KOUČINK: co dnes potřebuje Martinovu ruku -----------------------
