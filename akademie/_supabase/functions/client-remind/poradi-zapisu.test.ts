@@ -38,29 +38,41 @@ check("prohrany zavod NEODESILA (po 'obsazeno' nasleduje continue)",
 check("chyba zapisu NEODESILA (po 'chyba' nasleduje continue)",
   /rez\.stav === "chyba"\)\s*\{[\s\S]{0,400}?continue;/.test(SRC));
 
-// ⛔⛔ [R1, nalez N1] HRANICE JE 500, NE 400. `status: 0` (chybejici RESEND_API_KEY, sit,
-//    DNS) znamena, ze se pozadavek vubec neodeslal => mail JISTE nedosel => rezervace se
-//    MUSI uvolnit. Puvodni verze ji nechala naporad a klient by se do rozesilky uz nevratil.
-check("nejistota zacina az u 500", SRC.includes("if (r.status >= 500) {"));
-// KONTRAST: stary prah uz v kodu byt nesmi.
+// ⛔⛔ [R1 nalez N1, R2 nalez R2-2] ROZHODUJE, JESTLI TELO MOHLO DOJIT NA RESEND.
+//    `status: 0` ma dve pricny: `missing_RESEND_API_KEY` (pozadavek se ani nesestavil,
+//    JISTE neodeslano) a `sit:…` (pad fetch, telo uz na Resendu byt MOHLO).
+check("nejistota je 5xx NEBO chyba 'sit:'",
+  SRC.includes('const teloMohloDojit = r.status >= 500 || String(r.chyba ?? "").startsWith("sit:");'));
+// KONTRAST: obe stare verze prahu uz v kodu byt nesmi.
 check("stary prah 400 je pryc", !SRC.includes("if (r.status >= 400) {"));
+check("prah jen podle statusu (R1) je pryc", !SRC.includes("if (r.status >= 500) {"));
 
-const poHranici = SRC.split("if (r.status >= 500) {")[1] ?? "";
+const poHranici = SRC.split("if (teloMohloDojit) {")[1] ?? "";
 const vetevNejistoty = poHranici.split("} else {")[0] ?? "";
 const vetevNeodeslano = poHranici.split("} else {")[1] ?? "";
-check("pri nejistote (5xx) se rezervace NEMAZE",
+check("pri nejistote se rezervace NEMAZE",
   vetevNejistoty.length > 0 && !vetevNejistoty.includes("uvolniRezervaci("));
 check("pri nejistote se zapisuje sent_ok=false", vetevNejistoty.includes("oznacNejiste("));
 check("pri nejistote jde alert Martinovi", vetevNejistoty.includes("posliAlertNejistoty("));
-check("status 0 a 4xx rezervaci UVOLNI", vetevNeodeslano.includes("uvolniRezervaci("));
+check("jiste neodeslani rezervaci UVOLNI", vetevNeodeslano.includes("uvolniRezervaci("));
 // ⛔ [R1, nalez N2] Kdyz se uvolneni nepovede, radek drzi a mail neodesel: hlidka to musi videt.
 check("selhane uvolneni oznaci sent_ok=false a alertuje",
   vetevNeodeslano.includes("oznacNejiste(") && vetevNeodeslano.includes("posliAlertNejistoty("));
+
+// ⛔⛔ [R2, nalez R2-1] Uvolnena rezervace nesmi byt ticha. Stopu pise helper
+//    (`odesliPresResend` -> `email_events` type 'odeslani_chyba'), a hlidka ji cte.
+//    Kdyz se odsud prestane volat helper, oslepne hlidka, aniz by cokoli spadlo.
+check("odeslani jde pres helper, ktery pise stopu o chybe",
+  SRC.includes("await odesliPresResend(") && SRC.includes("{ admin, via: \"client-remind\", email: tgt.email"));
 
 // ⛔ [R1, nalez N2] Vyjimka po rezervaci taky musi skoncit sent_ok=false, ne jen v poli.
 const vetevCatch = SRC.split("} catch (e) {")[1] ?? "";
 check("vyjimka po rezervaci oznaci sent_ok=false",
   vetevCatch.includes("oznacNejiste(") && vetevCatch.includes("posliAlertNejistoty("));
+// ⛔ [R2, nalez R2-6] Uklid po vyjimce ma vlastni try: jinak by vyjimka z uklidu
+//    shodila celou smycku a zbyli klienti by se ten den nezpracovali vubec.
+check("uklid po vyjimce ma vlastni try", /if \(rezervovano\) \{[\s\S]{0,160}?try \{/.test(SRC));
+check("selhany uklid se zaloguje", SRC.includes("UKLID PO VYJIMCE SELHAL"));
 
 // ⛔ [R1, nalez N5] Strop alertu: jeden vypadek site nesmi poslat 19 stejnych mailu.
 check("alerty maji strop", SRC.includes("const MAX_ALERTU = 3;") && SRC.includes("alertuPotlaceno++"));

@@ -20,10 +20,12 @@
 //    `client-remind-idempotence-2026-09-17.sql`) ten závod rozhoduje: kdo prohraje vložení,
 //    neodesílá. Do 17. 9. se zapisovalo AŽ PO odeslání a selhaný zápis znamenal, že opakovací
 //    běh poslal mail podruhé. Martin 17. 9.: „raději nikdy mail navíc."
-//    ⛔ Pořadí má cenu: když odeslání selže, mail nedojde. Proto se rozlišuje, jestli Resend
-//    zásilku NEPŘIJAL (status 0 nebo 4xx ⇒ rezervace se uvolní a běh za 30 minut to zkusí
-//    znovu), nebo jestli ji přijmout MOHL (status >= 500 ⇒ rezervace zůstane, `sent_ok=false`
-//    a alert Martinovi). Hranice je 500, ne 400: viz revize R1, nález N1.
+//    ⛔ Pořadí má cenu: když odeslání selže, mail nedojde. Proto se rozlišuje, jestli tělo
+//    mailu mohlo na Resend dojít. NEMOHLO (chybějící klíč, 4xx) ⇒ rezervace se uvolní a běh
+//    za 30 minut to zkusí znovu. MOHLO (status >= 500 nebo chyba `sit:…`) ⇒ rezervace
+//    zůstane, `sent_ok=false` a alert Martinovi. Revize R1 nález N1, R2 nález R2-2.
+//    ⛔ Uvolněná rezervace není tichá: `odesliPresResend` zakládá `email_events`
+//    `type='odeslani_chyba'` a nedělní hlídka je čte (R2, nález R2-1).
 //    ⛔ MIGRACE MUSÍ BÝT NASAZENÁ DŘÍV NEŽ TAHLE VERZE: bez sloupce `sent_ok` skončí update
 //    chybou (jen se zaloguje) a bez unikátního indexu rezervace nic nezaručuje.
 // ⛔ 17. 9. 2026 (nález V2): TESTOVACÍ režim má vlastní paměť pod klíčem `test:<druh>`
@@ -127,6 +129,18 @@ async function rezervuj(
 /**
  * Uvolní rezervaci, když je JISTÉ, že mail neodešel (R1, nález N1).
  * Mazání je omezené na poslední hodinu, ať se nesmaže starší legitimní řádek.
+ *
+ * ⛔⛔ [R2, nález R2-1] UVOLNĚNÍ MUSÍ NECHAT STOPU, JINAK JE TICHÉ.
+ *    Smazaný řádek po sobě v `client_remind_sent` nezanechá nic, takže kdyby selhalo
+ *    odeslání VŠEM (špatný klíč, 401 u všech), tabulka by byla prázdná a hlídka by
+ *    spadla do větve „funkce běžela a nikomu nemá co poslat" a řekla OK. To je incident
+ *    ze 14. 9. 2026, jen jinou cestou.
+ *    ⭐ Stopa existuje a píše ji `odesliPresResend`: každé neúspěšné odeslání zakládá
+ *    v `email_events` řádek `type='odeslani_chyba'` s `detail.via='client-remind'`
+ *    (`_shared/resend-odeslat.ts`, funkce `zapisChybu`). Je to zdroj NEZÁVISLÝ na těle
+ *    odpovědi cronu, a hlídka `client_remind_hlidka()` ho čte právě proto.
+ *    ⛔ Kdo tady přestane volat helper (nebo mu přestane předávat `stopa`), oslepí tím
+ *    hlídku, aniž by cokoli spadlo.
  */
 async function uvolniRezervaci(
   // deno-lint-ignore no-explicit-any
@@ -595,17 +609,21 @@ Deno.serve(async (req: Request) => {
       } else {
         errors.push(tgt.email + ":" + r.status);
         if (rezervovano) {
-          // ⛔⛔ HRANICE JE 500, NE 400 (R1, nález N1). Původní verze brala `status: 0`
-          //    (chybějící RESEND_API_KEY, DNS, odmítnuté spojení) jako „nevíme" a rezervaci
-          //    nechala napořád. Jenže bez klíče se žádný požadavek ani neodeslal, takže to
-          //    JISTĚ nedošlo, a klient by se do rozesílky už nikdy nevrátil. To je tichá
-          //    ztráta mailu, tedy přesně ta vada, kterou tahle dávka opravuje, jen naopak.
-          //  a) status 0 nebo 4xx: Resend zásilku NEPŘIJAL, mail jistě neodešel
-          //     => rezervaci uvolnit, ať ji běh za 30 minut zkusí znovu.
-          //  b) status >= 500: tělo už na Resendu bylo a mohl ho přijmout, NEVÍME
-          //     => rezervace zůstane se `sent_ok=false`, mail se neopakuje
-          //        (Martin: raději nikdy mail navíc) a rozhodne člověk podle alertu.
-          if (r.status >= 500) {
+          // ⛔⛔ ROZHODUJE, JESTLI TĚLO MAILU MOHLO DOJÍT NA RESEND (R1 nález N1, R2 nález R2-2).
+          //    Verze z R1 dělila jen podle statusu (hranice 500) a `status: 0` brala vždy jako
+          //    jisté neodeslání. Jenže `status: 0` má DVĚ různé příčiny, které helper rozlišuje
+          //    textem chyby (`_shared/resend-odeslat.ts`):
+          //      - `missing_RESEND_API_KEY`: požadavek se ani nesestavil => JISTĚ neodešlo,
+          //      - `sit:…`: spadl `fetch`, ale tělo už na Resendu být MOHLO (spojení se může
+          //        rozpadnout až při čtení odpovědi; `fetch` tam nemá timeout ani AbortController).
+          //    ⇒ NEJISTOTA = `status >= 500` NEBO chyba začínající `sit:`. Všechno ostatní
+          //      (chybějící klíč, 4xx včetně 401, 422, 429) je jisté neodeslání.
+          //  a) jisté neodeslání => rezervaci uvolnit, ať ji běh za 30 minut zkusí znovu.
+          //  b) nejistota => rezervace zůstane se `sent_ok=false`, mail se neopakuje
+          //     (Martin: raději nikdy mail navíc) a rozhodne člověk podle alertu.
+          // ⚠️ Tímhle mizí poslední cesta v téhle dávce, která uměla poslat mail dvakrát.
+          const teloMohloDojit = r.status >= 500 || String(r.chyba ?? "").startsWith("sit:");
+          if (teloMohloDojit) {
             odeslaniNejiste.push(tgt.email);
             await oznacNejiste(admin, tgt.email, tgt.kind);
             await posliAlertNejistoty(tgt.email, tgt.kind, isReg, r.status, r.chyba ?? "");
@@ -628,10 +646,18 @@ Deno.serve(async (req: Request) => {
       // ⛔ [R1, nález N2] Rezervace zůstala a mail nejspíš neodešel. Samotný push do pole
       //    nestačil: hlídka čte `sent_ok` v DB, a bez tohohle zápisu by nad takovým řádkem
       //    ohlásila klidné OK. Alert jde stejnou cestou jako u ostatních nejistot.
+      // ⛔ [R2, nález R2-6] Vlastní `try`: `oznacNejiste` i `posliAlertNejistoty` sahají
+      //    do DB a na Resend. Bez něj by výjimka z ÚKLIDU shodila celou smyčku a zbylí
+      //    klienti by se ten den nezpracovali vůbec. Přesně ten druh pojistky, který
+      //    tahle dávka zavádí jinde.
       if (rezervovano) {
         odeslaniNejiste.push(tgt.email);
-        await oznacNejiste(admin, tgt.email, tgt.kind);
-        await posliAlertNejistoty(tgt.email, tgt.kind, tgt.kind === "register", 0, "vyjimka po rezervaci: " + String(e).slice(0, 120));
+        try {
+          await oznacNejiste(admin, tgt.email, tgt.kind);
+          await posliAlertNejistoty(tgt.email, tgt.kind, tgt.kind === "register", 0, "vyjimka po rezervaci: " + String(e).slice(0, 120));
+        } catch (e2) {
+          console.error("[client-remind] UKLID PO VYJIMCE SELHAL: " + tgt.email + " " + String(e2).slice(0, 120));
+        }
       }
     }
   }

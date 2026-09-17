@@ -242,18 +242,23 @@ Deno.serve(async (req: Request) => {
           await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding', provider_id: id, detail: { variant, table: 'customer_contacts' } });
           sent++;
         } catch (e) {
-          // ⛔⛔ HRANICE JE 500, NE "obsahuje resend_" (R1, nalez N1). Puvodni test
-          //    `zprava.includes('resend_')` nechal razitko u KAZDE jine chyby, tedy i u
-          //    `missing_RESEND_API_KEY` a u padu `fetch`. Bez klice se pritom zadny pozadavek
-          //    ani neodeslal, takze mail JISTE nedosel a razitko ho umlcelo naporad.
-          //  a) status 0 (chybejici klic, sit, DNS) nebo 4xx: Resend zasilku NEPRIJAL
-          //     => razitko zpet, dalsi beh to zkusi znovu.
-          //  b) status >= 500: telo uz na Resendu bylo a mohl ho prijmout, NEVIME
-          //     => razitko zustava a mail se neopakuje.
+          // ⛔⛔ ROZHODUJE, JESTLI TELO MAILU MOHLO DOJIT NA RESEND (R1 nalez N1, R2 nalez R2-2).
+          //    Puvodni test `zprava.includes('resend_')` nechal razitko u KAZDE jine chyby,
+          //    tedy i u `missing_RESEND_API_KEY` a u padu `fetch`. Verze z R1 delila jen podle
+          //    statusu a brala kazdou chybu bez statusu jako jiste neodeslani, jenze pad
+          //    `fetch` muze nastat az pri cteni odpovedi, kdyz telo uz na Resendu bylo.
+          //  a) `resend_NNN` s NNN < 500 nebo `missing_RESEND_API_KEY` (pozadavek se ani
+          //     nesestavil): Resend zasilku NEPRIJAL => razitko zpet, dalsi beh to zkusi znovu.
+          //  b) `resend_NNN` s NNN >= 500 nebo pad `fetch` bez statusu: telo uz na Resendu
+          //     byt MOHLO, NEVIME => razitko zustava a mail se neopakuje.
+          // ⚠️ Stopa po neuspechu vznika v `email_events` jako `onboarding_error` (vnejsi
+          //    catch nize), takze vracene razitko neni tiche.
           const zprava = String(e);
           const mStav = /resend_(\d{3})/.exec(zprava);
           const stavOdeslani = mStav ? Number(mStav[1]) : 0;
-          if (stavOdeslani < 500) {
+          const chybiKlic = zprava.includes('missing_RESEND_API_KEY');
+          const teloMohloDojit = stavOdeslani >= 500 || (!mStav && !chybiKlic);
+          if (!teloMohloDojit) {
             const { error: zpetErr } = await admin.from('customer_contacts')
               .update({ onboarding_sent_at: null }).eq('email', r.email);
             if (zpetErr) {

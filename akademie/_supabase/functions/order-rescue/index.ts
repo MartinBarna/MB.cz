@@ -356,16 +356,37 @@ Deno.serve(async (req) => {
       }
       const o = odeslani as { ok: boolean; status: number; providerId: string; chyba: string } | null;
       if (!o || !o.ok) {
-        // ⛔⛔ HRANICE JE 500, NE 400 (R1, nález N1). Původní verze brala `status: 0`
-        //    (chybějící RESEND_API_KEY, DNS, odmítnuté spojení) jako „nevíme" a razítko
-        //    nechala. Objednávka by se pak z okna 72 h už nikdy nevrátila, a při chybějícím
-        //    klíči by selhal i alert, protože jde týmž `send()`. Tichá ztráta mailu za peníze.
-        //  a) status 0 nebo 4xx: Resend zásilku NEPŘIJAL, mail jistě neodešel
-        //     => razítko zpět na null, ať to cron za dvě hodiny zkusí znovu (okno 72 h).
-        //  b) status >= 500: tělo už na Resendu bylo a mohl ho přijmout, NEVÍME
-        //     => razítko ZŮSTANE (mail se neopakuje) a Martin dostane alert.
+        // ⛔⛔ ROZHODUJE, JESTLI TĚLO MAILU MOHLO DOJÍT NA RESEND (R1 nález N1, R2 nález R2-2).
+        //    Verze z R1 dělila jen podle statusu. Jenže `status: 0` má DVĚ různé příčiny,
+        //    které helper rozlišuje textem chyby (`_shared/resend-odeslat.ts`):
+        //      - `missing_RESEND_API_KEY`: požadavek se ani nesestavil => JISTĚ neodešlo,
+        //      - `sit:…`: spadl `fetch`, ale tělo už na Resendu být MOHLO.
+        //    ⇒ NEJISTOTA = `status >= 500` NEBO chyba začínající `sit:`.
+        //  a) jisté neodeslání => razítko zpět na null, ať to cron za dvě hodiny zkusí
+        //     znovu (okno 72 h). Zároveň se zapíše stopa do `email_events` (viz níž).
+        //  b) nejistota => razítko ZŮSTANE (mail se neopakuje) a Martin dostane alert.
+        // ⚠️ Při chybějícím klíči by selhal i alert, jde týmž `send()`. Proto u toho stavu
+        //    žádný alert nečekáme a spoléhá se na stopu v DB.
         const stav = o?.status ?? 0;
-        if (stav < 500) {
+        const teloMohloDojit = stav >= 500 || String(o?.chyba ?? "").startsWith("sit:");
+        // ⛔⛔ [R2, nález R2-1] STOPA PO NEÚSPĚCHU. `order-rescue` předává helperu odeslání
+        //    BEZ `stopa` (svůj řádek `px_odeslano` si píše samo a druhý by ho zdvojil),
+        //    takže helper po neúspěchu nezapíše nic. Bez tohohle řádku by vrácené razítko
+        //    nezanechalo v DB žádný důkaz a trvalá 4xx by byla úplně tichá.
+        //    ⚠️ Typ je `odeslani_chyba`, stejný jako píše helper: sjednocené dohledávání
+        //    (`select detail->>'via', count(*) from email_events where type='odeslani_chyba'`).
+        //    ⛔ Ne `error`: ten typ čte živý jistič `followups_circuit_breaker` a zavíral by
+        //    kvůli téhle cestě prodejní maily celé Academy (viz komentář v `resend-odeslat.ts`).
+        const { error: stopaErr } = await admin.from("email_events").insert({
+          lead_id: leadId, step: 0, type: "odeslani_chyba",
+          detail: {
+            via: "order-rescue", track: tpl.track, email, status: stav,
+            error: String(o?.chyba ?? "").slice(0, 180),
+            razitko: teloMohloDojit ? "zustava" : "vraceno",
+          },
+        });
+        if (stopaErr) console.error("[order-rescue] zapis odeslani_chyba selhal: " + stopaErr.message);
+        if (!teloMohloDojit) {
           const { error: zpetErr } = await admin.from("pending_orders")
             .update({ reminded_at: null }).eq("order_id", p.order_id);
           if (zpetErr) {

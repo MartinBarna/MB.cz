@@ -53,6 +53,9 @@ declare
   v_hodnota       text;
   v_klic          text;
   v_pole          jsonb;
+  v_chyb_dnes     int;
+  v_targets       int;
+  v_sent          int;
 begin
   -- Mimo neděli se nic nezapisuje: přepsat nedělní verdikt pondělním „nic se nedělo"
   -- by hlídku umlčelo přesně v okamžiku, kdy má křičet.
@@ -92,6 +95,25 @@ begin
     v_json := null;  -- nečitelné tělo není důvod hlídku shodit
   end;
 
+  -- ⛔⛔ [R2, nález R2-1] DRUHÝ, NEZÁVISLÝ ZDROJ: stopa neúspěšných odeslání v DB.
+  --    Když funkce odeslání JISTĚ nedokončila (chybějící klíč, 401, 422), rezervaci
+  --    UVOLNÍ, takže v `client_remind_sent` nezbude ani řádek a hlídka by spadla do větve
+  --    „funkce běžela a nikomu nemá co poslat" a řekla OK. Přesně tak vypadal incident
+  --    ze 14. 9. 2026, jen jinou cestou. `odesliPresResend` ale po každém neúspěchu zakládá
+  --    `email_events` s `type='odeslani_chyba'`, a ten řádek smazání rezervace nepřežije.
+  --    ⚠️ Nezávislost je tu to podstatné: tenhle údaj nestojí ani na těle odpovědi cronu,
+  --       ani na `client_remind_sent`. Kdyby se rozbily oba, tohle pořád křičí.
+  select count(*) into v_chyb_dnes
+    from public.email_events
+   where type = 'odeslani_chyba'
+     and created_at >= date_trunc('day', now())
+     and detail->>'via' = 'client-remind';
+
+  -- Čísla z těla odpovědi, na kterých stojí pravidlo „mělo komu psát, a neposlalo nikomu".
+  -- ⛔ Schválně nezávisle na jménech seznamů: kdo přejmenuje pole, tohle pravidlo nerozbije.
+  v_targets := case when jsonb_typeof(v_json -> 'targets') = 'number' then (v_json->>'targets')::int else null end;
+  v_sent    := case when jsonb_typeof(v_json -> 'sent') = 'number' then (v_json->>'sent')::int else null end;
+
   -- ---------------------------------------------------------------------
   -- VERDIKT. Pořadí je schválně: nejdřív stavy, kdy je ticho SPRÁVNĚ.
   -- ---------------------------------------------------------------------
@@ -107,6 +129,20 @@ begin
     v_stav := 'POPLACH';
     v_text := v_nejistych || ' z ' || v_radku_dnes || ' mailu skoncilo v NEJISTOTE (sent_ok=false). '
       || 'Ten mail se uz sam neopakuje. Podivej se do client_remind_sent, kind a email, a rozhodni.';
+  elsif v_targets is not null and v_targets > 0 and coalesce(v_sent, 0) = 0 then
+    -- ⛔⛔ [R2, nález R2-1] MĚLA KOMU PSÁT A NEPOSLALA NIKOMU. Nejostřejší podoba selhání:
+    --    špatný nebo chybějící Resend klíč, 401 nebo 422 u všech. Rezervace se uvolní,
+    --    tabulka zůstane prázdná a bez tohohle pravidla by verdikt zněl OK.
+    --    ⛔ Pravidlo je VÝŠ než „řádky existují": i kdyby jeden řádek zbyl, `sent=0` nad
+    --      neprázdným seznamem příjemců znamená, že nedostal nikdo.
+    v_stav := 'POPLACH';
+    v_text := 'ROZESILKA SELHALA CELA: funkce mela ' || v_targets || ' prijemcu a neodeslala NIKOMU (sent=0). '
+      || 'Zkontroluj RESEND_API_KEY a email_events (type=odeslani_chyba, detail->>via=client-remind).';
+  elsif v_chyb_dnes > 0 and v_radku_dnes = 0 then
+    -- Táž situace poznaná z DB, když tělo odpovědi nejde přečíst nebo chybí.
+    v_stav := 'POPLACH';
+    v_text := 'ROZESILKA SELHALA: ' || v_chyb_dnes || ' zaznamu odeslani_chyba a NULA radku '
+      || 'v client_remind_sent. Nikdo nedostal nic. Zkontroluj RESEND_API_KEY a email_events.';
   elsif v_radku_dnes > 0 then
     v_stav := 'OK';
     -- ⚠️ [R1, nález N2] Radek je REZERVACE, ne doklad o odeslani. `sent_ok=true` je to
@@ -143,20 +179,37 @@ begin
   -- ⛔ [N3] `jsonb_typeof` PŘED `jsonb_array_length`: nad skalárem skončí funkce chybou
   --    22023 a NEZAPÍŠE do `app_config` nic, takže by hlídku shodil její vlastní vstup
   --    a poplach by přišel až po osmi dnech z kontroly čerstvosti.
-  foreach v_klic in array array['rezervace_selhala', 'odeslani_nejiste', 'alerty_selhaly'] loop
+  -- ⛔ [R2, nález R2-1] `uvolneno_neodeslano` a `errors` PŘEBÍJEJÍ VERDIKT (dřív jen text).
+  --    Bylo to nekonzistentní: `alerty_selhaly` (Martin se nedozvěděl o jednom klientovi)
+  --    poplach spustilo, ale `uvolneno_neodeslano` (klienti prokazatelně nedostali NIC) ne.
+  --    A po posledním cronu ve 02:00 UTC už „další běh to zkusí znovu" neplatí: hlídka běží
+  --    ve 04:00, tedy až potom.
+  foreach v_klic in array array['rezervace_selhala', 'odeslani_nejiste', 'alerty_selhaly', 'uvolneno_neodeslano', 'errors'] loop
     v_pole := v_json -> v_klic;
     if jsonb_typeof(v_pole) = 'array' and jsonb_array_length(v_pole) > 0 then
       v_stav := 'POPLACH';
       v_text := v_text || ' | POZOR: posledni beh hlasi ' || v_klic || '=' || (v_pole::text) || ' ('
         || case v_klic
-             when 'rezervace_selhala' then 'tem lidem mail NEODESEL, dalsi beh to zkusi znovu'
-             when 'odeslani_nejiste'  then 'rezervace drzi a NEVIME, jestli mail odesel; sam se uz neopakuje'
-             else 'Martinovi se nepodarilo poslat ani alert, takze o tom jinak nevi'
+             when 'rezervace_selhala'   then 'tem lidem mail NEODESEL, dalsi beh to zkusi znovu'
+             when 'odeslani_nejiste'    then 'rezervace drzi a NEVIME, jestli mail odesel; sam se uz neopakuje'
+             when 'alerty_selhaly'      then 'Martinovi se nepodarilo poslat ani alert, takze o tom jinak nevi'
+             when 'uvolneno_neodeslano' then 'Resend zasilku NEPRIJAL, mail neodesel a rezervace se uvolnila'
+             else 'chyby odeslani'
            end || ').';
+    elsif v_pole is not null and jsonb_typeof(v_pole) <> 'array' then
+      -- ⛔ [R2, nález R2-3] Nečitelný ČERVENÝ signál nesmí zmizet potichu. Po opravě N3
+      --    hlídka nespadne, ale skalár místo pole se dřív jen ignoroval a verdikt byl OK.
+      --    Změna tvaru odpovědi je sama o sobě důvod se podívat.
+      v_stav := 'POPLACH';
+      v_text := v_text || ' | POZOR: pole ' || v_klic || ' ma NEOCEKAVANY TVAR ('
+        || jsonb_typeof(v_pole) || ': ' || left(v_pole::text, 60)
+        || '), neumim ho precist. Zmenil se tvar odpovedi client-remind?';
     end if;
   end loop;
-  if jsonb_typeof(v_json -> 'errors') = 'array' and jsonb_array_length(v_json -> 'errors') > 0 then
-    v_text := v_text || ' | chyby odeslani: ' || ((v_json -> 'errors')::text);
+  -- Stopa v DB je nezávislá na těle odpovědi, proto se hlásí vždycky, když existuje.
+  if v_chyb_dnes > 0 and v_text not like '%odeslani_chyba%' then
+    v_text := v_text || ' | v email_events je dnes ' || v_chyb_dnes
+      || ' zaznamu odeslani_chyba z client-remind.';
   end if;
   -- Potlačené alerty nejsou poplach samy o sobě, ale patří k němu: Martin uvidí jen tři.
   if jsonb_typeof(v_json -> 'alerty_potlaceno') = 'number' and (v_json->>'alerty_potlaceno')::int > 0 then
