@@ -478,13 +478,21 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
   Deno.env.get("STRIPE_ONETIME_LINKS") ??
     // ostrý odkaz, plná cena 8 900 („Barna Academy doživotní přístup")
     "plink_1TyQXwBq3rKubW9k1ywUSITs=academy-lifetime," +
-    // ⭐ UPGRADE Z VIDEOKURZU za 8 100 (`price_1TyUNl…`). Dodává se ÚPLNĚ TOTÉŽ,
-    // proto vede na týž klíč katalogu: doživotní přístup, appka na rok, uvítačka,
-    // a započítá se do padesátky zakládajících. Kupující je zakládající člen jako
-    // každý jiný, jen zaplatil o 800 míň za videokurz, který už má.
+    // ⭐⭐ UPGRADE Z VIDEOKURZU za 7 410 Kč (`price_1UGeO7Bq3rKubW9kQAvseq1q`, odkaz
+    // `buy.stripe.com/7sY14m4Z19Vo2J2eG33ks0r`), od 17. 9. 2026, produkt `prod_UyNGi6oRQPZLOe`,
+    // potvrzení na /dekuji-academy/. Rozhodnutí Martina 17. 9.: odečet se počítá z DNEŠNÍ
+    // ceny videokurzu, tedy 8 900 minus 1 490 = 7 410, a platí pro všechny. Nahrazuje
+    // odečet 8 100, který počítal ze staré ceny kurzu 800 Kč.
+    // Dodává se ÚPLNĚ TOTÉŽ jako za plných 8 900, proto týž klíč katalogu: doživotní
+    // přístup, appka na rok, uvítačka, započítání do padesátky zakládajících.
+    "plink_1UGeRQBq3rKubW9koXCY9M2F=academy-lifetime," +
+    // ⭐ STARŠÍ UPGRADE Z VIDEOKURZU za 8 100 (`price_1TyUNl…`). Týž klíč katalogu,
+    // dodává úplně totéž, jen za starou částku (8 900 minus tehdejších 800 za kurz).
     // ⚠️ Vznikl NÁHRADOU za slevový kód UPGRADE800, který u ceny s daní v ceně
     // počítal jinak, než ukazoval (sleva 533,33 místo 800). Samostatná cena tuhle
     // třídu chyby vylučuje: není co přepočítávat.
+    // ⛔ [17. 9. 2026] ZŮSTÁVÁ AKTIVNÍ A NESMÍ SE ODSUD SMAZAT: vede na něj spousta už
+    //    rozeslaných mailů. Kdo ho odsud vyhodí, tomu platba přes něj tiše propadne.
     "plink_1TyUPQBq3rKubW9kj5P2YjCB=academy-lifetime," +
     // ⭐ ODEČET PRO MĚSÍČNÍ ČLENY: 5 930 Kč = 8 900 minus tři zaplacené měsíce (3 × 990).
     // Odkaz `buy.stripe.com/fZu5kCgHJaZs97q7dB3ks0k`, cena `price_1UB9yuBq3rKubW9kuwqMzNmY`

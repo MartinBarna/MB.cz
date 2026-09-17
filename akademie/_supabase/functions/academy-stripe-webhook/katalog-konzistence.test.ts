@@ -76,6 +76,21 @@ check('K8 zadny odkaz nevede na neexistujici klic katalogu', sirotci.length === 
 check('K9 odkaz na upgrade je namapovany',
   mapovani.some((m) => m.klic === 'videokurz-upgrade'), JSON.stringify(mapovani.map((m) => m.klic)));
 
+// --- 3b) ODECET Z VIDEOKURZU: OBA ODKAZY MUSI BYT V MAPE (17. 9. 2026) ---
+// Martin 17. 9. rozhodl, ze Academy pro majitele videokurzu stoji 7 410 Kc (8 900 minus
+// dnesni cena kurzu 1 490). Ve Stripu vznikl NOVY odkaz, u existujiciho se cena vymenit neda.
+// Presne tohle se 1. 9. zapomnelo u videokurzu a pet dni tise propadaly zaplacene nakupy,
+// proto to hlida test a ne jen komentar. [[mb-nova-cena-znamena-novy-platebni-odkaz-na-pet-mist]]
+const ODECET_7410 = 'plink_1UGeRQBq3rKubW9koXCY9M2F';
+const ODECET_8100 = 'plink_1TyUPQBq3rKubW9kj5P2YjCB';
+check('K9a novy odkaz s odectem (7 410 Kc) je v mape a vede na academy-lifetime',
+  mapovani.some((m) => m.odkaz === ODECET_7410 && m.klic === 'academy-lifetime'),
+  JSON.stringify(mapovani.filter((m) => m.klic === 'academy-lifetime')));
+// Stary odkaz se NESMI vyhodit: vede na nej spousta uz rozeslanych mailu.
+check('K9b stary odkaz s odectem (8 100 Kc) v mape zustava kvuli rozeslanym mailum',
+  mapovani.some((m) => m.odkaz === ODECET_8100 && m.klic === 'academy-lifetime'),
+  JSON.stringify(mapovani.filter((m) => m.klic === 'academy-lifetime')));
+
 // --- 4) POJISTKA PROTI NASAZENI PLACEHOLDERU ---
 // Nesmi spadnout ted (ID jeste neexistuje), ale musi KRICET, az se bude nasazovat.
 const maPlaceholder = /plink_DOPLNIT_UPGRADE_450/.test(zdrojWebhook);
