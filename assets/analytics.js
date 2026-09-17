@@ -154,7 +154,11 @@
       // ale Meta i Google se učí, že ten nákup nemá cenu. Nejhorší druh tiché chyby,
       // protože reklamy pak optimalizují proti nejdražším produktům.
       // `4gM00ibnpgjMerK7dB3ks04` = Academy doživotně 8 900 Kč (plink_1TyQXw…).
-      // `9B6aEW6356Jc4Ra55t3ks05` = Academy doživotně po odečtu videokurzu, 8 100 Kč.
+      // `7sY14m4Z19Vo2J2eG33ks0r` = Academy doživotně po odečtu videokurzu, 7 410 Kč
+      //    (plink_1UGeRQ…), od 17. 9. 2026: 8 900 minus dnešní cena kurzu 1 490.
+      // `9B6aEW6356Jc4Ra55t3ks05` = TÁŽ věc za STAROU částku 8 100 Kč (plink_1TyUPQ…),
+      //    odečet ze staré ceny kurzu 800. Na webu už nikde není, ale žije v rozeslaných
+      //    mailech a odkaz je dál aktivní, takže se dál měří na 8 100: tolik se opravdu zaplatí.
       // `bJe9AS3UXgjMcjC8hF3ks00` = Academy měsíčně 990 Kč (hodnota = první platba).
       // `7sYeVc6356Jc4Ra8hF3ks0h` = Videokurz výživy 1 490 Kč (plink_1UAy87…), od 1. 9. 2026.
       // `3cIaEWezBebE2J22Xl3ks0i` = doplatek z balíčku 349 na videokurz, 1 140 Kč (plink_1UAyAO…).
@@ -166,6 +170,7 @@
       //    ⚠️ Dva různé `id` schválně: dodává se totéž, ale reklamy se musí učit na skutečně
       //    zaplacené částce. Slít je do jednoho by u poloviny nákupů měřilo o 800 Kč vedle.
       var c = href.indexOf('4gM00ibnpgjMerK7dB3ks04') !== -1 ? { id: 'academy', name: 'Barna Academy', val: 8900 }
+            : href.indexOf('7sY14m4Z19Vo2J2eG33ks0r') !== -1 ? { id: 'academy-upgrade', name: 'Barna Academy (odečet videokurzu)', val: 7410 }
             : href.indexOf('9B6aEW6356Jc4Ra55t3ks05') !== -1 ? { id: 'academy-upgrade', name: 'Barna Academy (odečet videokurzu)', val: 8100 }
             : href.indexOf('bJe9AS3UXgjMcjC8hF3ks00') !== -1 ? { id: 'academy-mesicne', name: 'Barna Academy měsíčně', val: 990 }
             : href.indexOf('7sYeVc6356Jc4Ra8hF3ks0h') !== -1 ? { id: 'videokurz', name: 'Videokurz výživy', val: 1490 }

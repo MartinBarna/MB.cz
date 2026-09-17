@@ -286,11 +286,30 @@ console.log('\n5) Academy: ?ref=KRISTINA10 da Stripe odkazum na akademii vlastni
   overit('client_reference_id = KRISTINA10', url.searchParams.get('client_reference_id') === 'KRISTINA10');
   overit('vlastni parametry odkazu zustavaji', url.searchParams.get('locale') === 'cs');
 
-  // Odkaz Academy s odectem videokurzu je tatáz cesta, jen levnejsi produkt.
+  // Odkaz Academy s odectem videokurzu je tataz cesta, jen levnejsi produkt.
+  // Od 17. 9. 2026 plati odkaz na 7 410 Kc; stary na 8 100 Kc zustava aktivni kvuli
+  // uz rozeslanym mailum, takze musi kupon partnera nest OBA.
+  const ODECET_7410 = 'https://buy.stripe.com/7sY14m4Z19Vo2J2eG33ks0r';
+  const ODECET_8100 = 'https://buy.stripe.com/9B6aEW6356Jc4Ra55t3ks05';
   const b = nactiReferral({ query: '?ref=KRISTINA10' });
-  const cil2 = new URL(klikniAPreskoc(b, 'https://buy.stripe.com/9B6aEW6356Jc4Ra55t3ks05'));
-  overit('Academy s odectem taky nese kupon partnera',
+  const cil2 = new URL(klikniAPreskoc(b, ODECET_8100));
+  overit('Academy s odectem 8 100 (stary odkaz) nese kupon partnera',
     cil2.searchParams.get('prefilled_promo_code') === 'KRISTINA10');
+
+  const b2 = nactiReferral({ query: '?ref=KRISTINA10' });
+  const cil3 = klikniAPreskoc(b2, ODECET_7410);
+  overit('Academy s odectem 7 410 (novy odkaz) modal vubec otevre', cil3 !== null,
+    'bez radku v referral.js by doporucitel prisel o provizi a nikde by to nekriklo');
+  overit('Academy s odectem 7 410 nese kupon partnera',
+    cil3 !== null && new URL(cil3).searchParams.get('prefilled_promo_code') === 'KRISTINA10');
+
+  // Hodnota pro reklamy: bez radku v analytics.js spadne novy odkaz do `stripe-other`
+  // s hodnotou 0 a Meta i Google se uci, ze nejdrazsi nakup nema cenu.
+  const analyticsSrc = fs.readFileSync('assets/analytics.js', 'utf8');
+  overit('analytics.js zna novy odkaz 7 410 a hlasi val: 7410',
+    /7sY14m4Z19Vo2J2eG33ks0r'\) !== -1 \? \{ id: 'academy-upgrade'[^}]*val: 7410 \}/.test(analyticsSrc));
+  overit('analytics.js dal zna stary odkaz 8 100 a hlasi val: 8100',
+    /9B6aEW6356Jc4Ra55t3ks05'\) !== -1 \? \{ id: 'academy-upgrade'[^}]*val: 8100 \}/.test(analyticsSrc));
 
   // Mesicni clenstvi je v `buyInfo` VEDOME vynechane (obchodni rozhodnuti, jestli se
   // za predplatne vyplaci odmena). Test to drzi zapsane, at se to nezmeni omylem.

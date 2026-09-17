@@ -111,7 +111,10 @@
     }
     if (href.indexOf('simpleshop.cz/Xgl8g') >= 0) return { url: href, prod: 'academy' };
     if (href.indexOf('4gM00ibnpgjMerK7dB3ks04') >= 0) return { url: href, prod: 'academy', stripe: true };
-    // Odkaz s odečtem videokurzu (8 100 Kč) dodává TÝŽ produkt, jen levněji, proto stejný `prod`.
+    // Odkazy s odečtem videokurzu dodávají TÝŽ produkt, jen levněji, proto stejný `prod`.
+    // 7 410 Kč (plink_1UGeRQ…) je od 17. 9. 2026 ten živý; 8 100 Kč (plink_1TyUPQ…) je starší
+    // částka, která dál chodí v rozeslaných mailech, takže tu MUSÍ zůstat taky.
+    if (href.indexOf('7sY14m4Z19Vo2J2eG33ks0r') >= 0) return { url: href, prod: 'academy', stripe: true };
     if (href.indexOf('9B6aEW6356Jc4Ra55t3ks05') >= 0) return { url: href, prod: 'academy', stripe: true };
     /* ⭐⭐ KOUČINK GOLD A DIAMOND (2. 9. 2026), šest odkazů, 1/3/6 měsíců.
        ⛔ ŠEST ŽIVÝCH ID JE V `KOUCINK_ODKAZY` výš. Táž ID musí být i v `koucing/index.html`
