@@ -15,12 +15,18 @@
 //    a Martin by o tom nevěděl. Stejná logika, jakou jsme zvolili u nákupu za 2 190 Kč
 //    bez videokurzu: upozornit, ne zavřít dveře.
 //
-// ⛔ Složka má DVA soubory (`index.ts` + `cisla.ts`). Deploy musí nahrát oba,
+// ⛔⛔ IDEMPOTENCE (17. 9. 2026, nález D/N14): opakované odeslání TÉHOŽ dotazníku
+//    z téže adresy do 24 h se zapíše, ale Martinovi už druhý mail nepošle. Rozhoduje
+//    OTISK ODPOVĚDÍ (`otisk.ts`), ne čas: opravený dotazník se k Martinovi dostat MUSÍ,
+//    čte si ho před placeným hovorem. Vyžaduje migraci `intake-otisk-2026-09-17.sql`.
+//
+// ⛔ Složka má TŘI soubory (`index.ts` + `cisla.ts` + `otisk.ts`). Deploy musí nahrát všechny,
 //    jinak funkce spadne na chybějícím importu. Viz paměť mb-deploy-kopiruje-jen-index-past.
 // Deploy --no-verify-jwt.
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { celeCislo, proAlert, vahaNaCislo } from "./cisla.ts";
+import { otiskOdpovedi } from "./otisk.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -120,9 +126,14 @@ Deno.serve(async (req: Request) => {
     if (!ipErr && (ipCnt ?? 0) >= IP_DAY_MAX) return json({ error: "rate-limit" }, 429, origin);
   }
 
+  // ⛔ Otisk se počítá PŘED zápisem, ať ho řádek nese od začátku. Prázdný otisk
+  //    (kryptografie nedostupná) znamená „neporovnávám", ne „duplicita".
+  const obsahHash = await otiskOdpovedi({ ...odpovedi, weight_kg: weight, age, height_cm: height, sex, steps_per_day: steps });
+
   const ins = await admin.from("consultation_intake")
     .insert({
       email,
+      obsah_hash: obsahHash || null,
       ...odpovedi,
       weight_kg: weight,
       age,
@@ -153,6 +164,31 @@ Deno.serve(async (req: Request) => {
           `<td style="padding:6px 0"><b>${esc(val)}</b></td></tr>` : "";
   const kdy = new Date(ins.data.created_at)
     .toLocaleString("cs-CZ", { timeZone: "Europe/Prague", dateStyle: "long", timeStyle: "short" });
+
+  // ⛔⛔ [17. 9. 2026, nález D/N14] DUPLICITNÍ ODESLÁNÍ UŽ NEPOSÍLÁ DRUHÝ MAIL.
+  //    Hledá se STARŠÍ řádek téže adresy s TÝMŽ otiskem za posledních 24 h. Když existuje,
+  //    je to tentýž dotazník poslaný podruhé (dvojklik, návrat v prohlížeči) a Martinovi
+  //    nemá co říct navíc. Jiný obsah = nová informace = mail odejde.
+  //    ⛔ Chyba čtení NENÍ „je to duplicita": při nečitelné odpovědi se mail POŠLE.
+  //      Radši mail navíc než ztracený dotazník před placeným hovorem (2 990 Kč).
+  //      To je vědomě opačná volba než u `client-remind`, protože tady je cena
+  //      nedoručení vyšší než cena duplicity a Martin je jediný příjemce.
+  let duplicita = false;
+  if (obsahHash) {
+    const { data: drive, error: dupErr } = await admin.from("consultation_intake")
+      .select("id")
+      .eq("email", email)
+      .eq("obsah_hash", obsahHash)
+      .neq("id", ins.data.id)
+      .gt("created_at", since)
+      .limit(1);
+    if (dupErr) console.error("[intake-capture] kontrola duplicity selhala, mail posilam: " + dupErr.message);
+    else duplicita = Boolean(drive && drive.length);
+  }
+  if (duplicita) {
+    console.log("[intake-capture] duplicitni odeslani (stejny obsah do 24 h), mail Martinovi se neposila: " + email);
+    return json({ ok: true, id: ins.data.id, duplicita: true }, 200, origin);
+  }
 
   // Alert Martinovi S VYPSANÝMI ODPOVĚĎMI. Tohle je hlavní výstup celé funkce: Martin si to
   // přečte před hovorem. Odkaz do DB by mu nepomohl, tam se dívat nebude.
