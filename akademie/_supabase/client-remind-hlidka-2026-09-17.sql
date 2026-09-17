@@ -56,6 +56,7 @@ declare
   v_chyb_dnes     int;
   v_targets       int;
   v_sent          int;
+  v_skipped       int;
 begin
   -- Mimo neděli se nic nezapisuje: přepsat nedělní verdikt pondělním „nic se nedělo"
   -- by hlídku umlčelo přesně v okamžiku, kdy má křičet.
@@ -111,8 +112,18 @@ begin
 
   -- Čísla z těla odpovědi, na kterých stojí pravidlo „mělo komu psát, a neposlalo nikomu".
   -- ⛔ Schválně nezávisle na jménech seznamů: kdo přejmenuje pole, tohle pravidlo nerozbije.
+  -- ⛔⛔ [R3, nález R3-1] `skipped` PATŘÍ DO TÉHOŽ VÝPOČTU. Cíl, který zastaví `mailing-guard`
+  --    (hard bounce, neplatná adresa), se počítá do `targets` a nepočítá do `sent`, takže
+  --    „mělo komu psát a neposlalo nikomu" vycházelo i u úplně zdravého běhu. Třída
+  --    `client_operational` odhlášení propouští, ale hard bounce zastavuje, a v `leads` je
+  --    15 adres se stavem `bounced` nebo `complained`: stačilo, aby v posledním z trojice
+  --    běhů zbyl jediný cíl a byl to odražený klient, a Martin dostal v neděli ráno poplach
+  --    o tom, že celá rozesílka selhala, přestože se nestalo nic.
+  --    ⚠️ Paměť `feedback-poplach-hlidky-neni-diagnoza`: hlídka, která jednou vykřikne
+  --       neprávem, se příště přečte hůř. U hlídky s prvním ostrým během v neděli je to drahé.
   v_targets := case when jsonb_typeof(v_json -> 'targets') = 'number' then (v_json->>'targets')::int else null end;
   v_sent    := case when jsonb_typeof(v_json -> 'sent') = 'number' then (v_json->>'sent')::int else null end;
+  v_skipped := case when jsonb_typeof(v_json -> 'skipped') = 'number' then (v_json->>'skipped')::int else 0 end;
 
   -- ---------------------------------------------------------------------
   -- VERDIKT. Pořadí je schválně: nejdřív stavy, kdy je ticho SPRÁVNĚ.
@@ -129,14 +140,17 @@ begin
     v_stav := 'POPLACH';
     v_text := v_nejistych || ' z ' || v_radku_dnes || ' mailu skoncilo v NEJISTOTE (sent_ok=false). '
       || 'Ten mail se uz sam neopakuje. Podivej se do client_remind_sent, kind a email, a rozhodni.';
-  elsif v_targets is not null and v_targets > 0 and coalesce(v_sent, 0) = 0 then
+  elsif v_targets is not null and (v_targets - coalesce(v_skipped, 0)) > 0 and coalesce(v_sent, 0) = 0 then
     -- ⛔⛔ [R2, nález R2-1] MĚLA KOMU PSÁT A NEPOSLALA NIKOMU. Nejostřejší podoba selhání:
     --    špatný nebo chybějící Resend klíč, 401 nebo 422 u všech. Rezervace se uvolní,
     --    tabulka zůstane prázdná a bez tohohle pravidla by verdikt zněl OK.
     --    ⛔ Pravidlo je VÝŠ než „řádky existují": i kdyby jeden řádek zbyl, `sent=0` nad
     --      neprázdným seznamem příjemců znamená, že nedostal nikdo.
+    --    ⛔ [R3] Počítá se `targets - skipped`: koho zastavila brána, ten legitimně nic
+    --      nedostal a poplach kvůli němu by byl falešný.
     v_stav := 'POPLACH';
-    v_text := 'ROZESILKA SELHALA CELA: funkce mela ' || v_targets || ' prijemcu a neodeslala NIKOMU (sent=0). '
+    v_text := 'ROZESILKA SELHALA CELA: funkce mela ' || v_targets || ' prijemcu, '
+      || coalesce(v_skipped, 0) || ' zastavila brana a zbylym neodeslala NIKOMU (sent=0). '
       || 'Zkontroluj RESEND_API_KEY a email_events (type=odeslani_chyba, detail->>via=client-remind).';
   elsif v_chyb_dnes > 0 and v_radku_dnes = 0 then
     -- Táž situace poznaná z DB, když tělo odpovědi nejde přečíst nebo chybí.
