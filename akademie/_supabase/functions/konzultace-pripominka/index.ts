@@ -14,12 +14,20 @@
 // ⛔ ROZHODUJE JEDEN ZDROJ PRAVDY: `consultation_calls.termin_at`, který zadává Martin
 //    v adminu. Nic se tu neodhaduje z plateb ani z dotazníku.
 // ⛔ IDEMPOTENCE JE NA RAZÍTKU TERMÍNU, ne na čase odeslání. Viz komentář ve `vyber.ts`.
-// ⚠️ TEXTY MAILŮ JSOU NÁVRH KE KONTROLE ŠÉFA (Martinův hlas), označené `⚠️ NÁVRH`.
+// ⭐ TEXTY MAILŮ SCHVÁLIL ŠÉF 17. 9. 2026. ⛔ Neměnit je bez dalšího schválení:
+//    je to text pod Martinovým jménem a prošel anti-AI průchodem.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
-import { coPoslat, type Druh, prazskeDatum, type Radek, sloupecRazitka } from "./vyber.ts";
+import {
+  coPoslat,
+  type Druh,
+  neposilatKlientovi,
+  prazskeDatum,
+  type Radek,
+  sloupecRazitka,
+} from "./vyber.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -55,7 +63,9 @@ function obal(body: string): string {
     `<p style="margin:14px 0 0;font-size:12px;color:#999">Martin Barna · <a href="https://martinbarna.cz" style="color:#c45e00">martinbarna.cz</a> · odpovědět můžeš rovnou na tenhle e-mail</p></div>`;
 }
 
-// ⚠️ NÁVRH TEXTU KE KONTROLE ŠÉFA (Martinův hlas, česky, tykání, bez ceny).
+// ⭐ SCHVÁLENO ŠÉFEM 17. 9. 2026 (Martinův hlas, česky, tykání, bez ceny).
+// ⛔ Změna tohohle textu už není úprava kódu, ale nový text pod Martinovým jménem:
+//    patří přes šéfa a přes anti-AI průchod z `HLAS-MARTINA.md`.
 // ⛔ Text je SCHVÁLNĚ bez rodu: žádné příčestí minulé („zadal", „vyplnil"), protože
 //    rod klienta tahle funkce nezná a 3. 8. 2026 už jednou přišel mail celý v mužském
 //    rodě klientce (viz `admin-api`, offboard). Kdo sem přidá větu s příčestím, musí
@@ -91,8 +101,8 @@ function mailKlientovi(terminIso: string, druh: Druh, maDotaznik: boolean) {
  * ⚠️ Bez `stopa`: Martinova adresa do `email_events` nepatří, viz `resend-odeslat.ts`.
  */
 // deno-lint-ignore no-explicit-any
-async function souhrnMartinovi(admin: any, radky: string[]): Promise<boolean> {
-  if (!RESEND_KEY || !radky.length) return false;
+async function souhrnMartinovi(admin: any, radky: string[], nedoslo: string[]): Promise<boolean> {
+  if (!RESEND_KEY || (!radky.length && !nedoslo.length)) return false;
   let to = ALERT_FALLBACK;
   try {
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
@@ -103,10 +113,21 @@ async function souhrnMartinovi(admin: any, radky: string[]): Promise<boolean> {
     from: FROM,
     to: [to],
     reply_to: REPLY_TO,
-    subject: "🗓️ Připomínka: konzultační hovory",
+    // ⛔⛔ [17. 9. 2026, nález R1/N2] NEDORUČENÉ PATŘÍ DO PŘEDMĚTU, ne do HTTP odpovědi.
+    //    Předtím skončil přeskočený klient jen v poli `preskoceno` v JSON odpovědi funkce,
+    //    kterou u cronu nečte NIKDO (`net._http_response`). Kupec zaplacené konzultace by
+    //    přišel o připomínku a Martin by se to z mailu, který čte, nedozvěděl.
+    subject: (nedoslo.length ? "⛔ " : "🗓️ ") + "Připomínka: konzultační hovory" +
+      (nedoslo.length ? " (" + nedoslo.length + " nedošlo)" : ""),
     html: obal(
-      `<p>Nadcházející konzultace:</p><ul>${radky.map((x) => `<li>${x}</li>`).join("")}</ul>` +
-        `<p style="font-size:13px;color:#666">Termíny zadáváš v adminu, sekce Konzultace. Klient dostal tentýž den svoji připomínku.</p>`,
+      (nedoslo.length
+        ? `<p style="padding:10px 14px;background:#fdecec;border-radius:10px"><b>Připomínka NEODEŠLA</b>, i když termín zadaný je. Ozvi se jinak:</p>` +
+          `<ul>${nedoslo.map((x) => `<li>${x}</li>`).join("")}</ul>`
+        : "") +
+        (radky.length
+          ? `<p>Nadcházející konzultace:</p><ul>${radky.map((x) => `<li>${x}</li>`).join("")}</ul>`
+          : "") +
+        `<p style="font-size:13px;color:#666">Termíny zadáváš v adminu, sekce Konzultace. Komu připomínka odešla, dostal ji dnes.</p>`,
     ),
   });
   return r.ok;
@@ -146,7 +167,15 @@ Deno.serve(async (req) => {
       ok: true,
       mode: "dry",
       den: prazskeDatum(nowMs),
-      kandidati: kandidati.map((k) => ({ email: k.r.email, termin_at: k.r.termin_at, druh: k.druh })),
+      // ⚠️ Suchý běh musí říct totéž co ostrý, jinak je to jiný program: proto je tu
+      //    i důvod, proč by se na tu adresu neposlalo (`neposilat`). Bránu `sendIfAllowed`
+      //    suchý běh nevolá, takže bounce ani odhlášení z něj poznat NEJDE.
+      kandidati: kandidati.map((k) => ({
+        email: k.r.email,
+        termin_at: k.r.termin_at,
+        druh: k.druh,
+        neposilat: neposilatKlientovi(String(k.r.email)),
+      })),
     });
   }
 
@@ -156,10 +185,30 @@ Deno.serve(async (req) => {
   //    chybu zápisu razítka zahazují, takže se duplicitní mail nedá ani poznat.
   const razitkoNezapsano: string[] = [];
   const proMartina: string[] = [];
+  // ⛔ [R1, nález N2] Komu připomínka NEODEŠLA. Jde to Martinovi do mailu, ne jen do
+  //    odpovědi funkce. Razítko se u nich SCHVÁLNĚ nezapisuje: kdyby se adresa mezitím
+  //    spravila, má to příští běh zkusit znovu. ⚠️ Cena: u trvale odhlášeného se týž řádek
+  //    zopakuje i ráno v den hovoru. To je dobře: to je poslední chvíle, kdy s tím Martin
+  //    může něco dělat, a déle než dva dny se to opakovat nemůže.
+  const nedoslo: string[] = [];
 
   for (const { r, druh } of kandidati) {
     const email = String(r.email);
     const terminIso = String(r.termin_at);
+    const kdyText = `${esc(datum(terminIso))} v ${esc(cas(terminIso))}`;
+
+    // ⛔⛔ [R1, nález N3] Martinovy a testovací adresy ven JEŠTĚ PŘED branou.
+    //    Guard řeší odhlášení a bounce, ne to, že si Martin založí testovací termín na
+    //    svoji adresu a dostane mail psaný pro klienta. Seznam je jeden, sdílený
+    //    (`jeMartinovaAdresa`), viz `vyber.ts`.
+    const tichoDuvod = neposilatKlientovi(email);
+    if (tichoDuvod) {
+      preskoceno.push(email + ":" + tichoDuvod);
+      // Do souhrnu jde jen jako informace, ne jako „ozvi se mu": u Martinovy vlastní
+      // adresy není komu se ozvat.
+      proMartina.push(`${esc(email)} · ${kdyText} · přeskočeno: ${esc(tichoDuvod)}`);
+      continue;
+    }
 
     // Vyplněný dotazník mění JEDEN odstavec mailu. Chyba čtení = neví se, takže se bere
     // varianta „dotazník nemám": pobídka navíc je menší škoda než mlčení u člověka,
@@ -194,16 +243,25 @@ Deno.serve(async (req) => {
 
     if (d.action === "skip") {
       preskoceno.push(email + ":" + d.reason);
+      // ⛔ [R1, nález N2] Tohle je platící zákazník, který o svůj termín přišel.
+      //    Brána ho zastavila správně (hard bounce nebo trvalé odhlášení), ale někdo se
+      //    mu ozvat MUSÍ, a jediný, kdo se to může dozvědět, je Martin.
+      nedoslo.push(
+        `${esc(email)} · ${kdyText} · brána: ${esc(d.reason)} (${druh === "rano" ? "hovor dnes" : "hovor zítra"})`,
+      );
       continue;
     }
     if (!sent) {
       // ⛔ Razítko se NEZAPISUJE, když mail neodešel: příští běh to má zkusit znovu.
       selhalo.push(email);
+      nedoslo.push(
+        `${esc(email)} · ${kdyText} · Resend mail nepřijal (${druh === "rano" ? "hovor dnes" : "hovor zítra"})`,
+      );
       continue;
     }
     odeslano.push(email + ":" + druh);
     proMartina.push(
-      `${esc(email)} · ${esc(datum(terminIso))} v ${esc(cas(terminIso))} · ` +
+      `${esc(email)} · ${kdyText} · ` +
         (maDotaznik ? "dotazník má" : "dotazník zatím nevyplněný") +
         ` (${druh === "rano" ? "dnes" : "zítra"})`,
     );
@@ -219,7 +277,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  const souhrn = await souhrnMartinovi(admin, proMartina);
+  const souhrn = await souhrnMartinovi(admin, proMartina, nedoslo);
 
   return json({
     ok: true,
@@ -228,6 +286,7 @@ Deno.serve(async (req) => {
     odeslano,
     preskoceno,
     selhalo,
+    nedoslo,
     razitko_nezapsano: razitkoNezapsano,
     souhrn_martinovi: souhrn,
   });

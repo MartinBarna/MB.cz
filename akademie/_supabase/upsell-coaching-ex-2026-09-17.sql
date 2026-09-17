@@ -1,25 +1,42 @@
 -- ============================================================================
 -- UPSELL KOUCINKU: byvaly klient (`coaching-ex`) do prodejni trati NEPATRI
 -- 17. 9. 2026, 73. sef, davka 2b. Nalez D/N11 auditu mailovych toku.
+-- ⭐ VERZE PO REVIZI R1 (nalez N1). PRVNI VERZE TEHLE MIGRACE BY BYLA REGRESE ZA PENIZE.
 --
 -- ROZHODNUTI MARTINA (17. 9. 2026, otazka 12b): u byvaleho klienta koucinku
 -- "bezny marketing dal ANO, prodejni trat na koucink NE".
 --
--- ⛔ MIGRACE JE PSANA NAD ZIVYM ZNENIM, ne nad souborem v gitu.
---    Otisk: `zive-enroll-upsell-coaching-2026-09-17.sql` (stazeno tesne pred psanim,
---    `pg_get_functiondef`). Zmereno: zive telo je BAJT PO BAJTU shodne se snimkem
---    z 16. 9., takze se nad nim da stavet bez prekvapeni.
---    (`feedback-zive-sql-funkce-napred-pred-gitem`)
+-- ⛔⛔ CO SE STALO A PROC TU TENHLE ODSTAVEC JE (nalez R1/N1, 17. 9. 2026):
+--    Prvni verze migrace byla psana nad otiskem porizenym v 09:23 prazskeho casu.
+--    Migrace V7 (`enroll-rozdelana-trat-2026-09-16.sql`) sla naostro kolem 09:3x,
+--    tedy MEZI otiskem a napsanim migrace, a pridala do tela posledni podminku
+--    `AND NOT public.ma_rozdelanou_dorucovaci_trat(r2.email)`.
+--    `create or replace` je UPLNA NAHRADA TELA, takze spusteni te prvni verze by tu
+--    branu TISE SMAZALO a vratilo stav, kvuli kteremu 15. 9. prisel jediny kupec
+--    konzultace o kroky 1 a 2 SVE ZAPLACENE dorucovaci trate. Dnes se to tyka 4 lidi
+--    (`select count(*) from leads l where public.ma_rozdelanou_dorucovaci_trat(l.email)`).
+--    Nasel to az nezavisly revizor; muj vlastni "otisk" tu vadu ZAKRYVAL, protoze
+--    vypadal jako dukaz.
+--    ⭐ POUCENI DO PRISTE: otisk plati jen v tom tahu, ve kterem vznikl. Kdyz mezi
+--      otiskem a migraci uplyne hodina prace, STAHUJE SE ZNOVU. A kontrola po nasazeni
+--      nesmi hlidat jen to, co PRIDAVAM, ale i to, co tam UZ BYLO (viz kontrola a2).
+--
+-- ⛔ MIGRACE JE PSANA NAD ZIVYM ZNENIM Z 17. 9. 2026 08:01:25 UTC (10:01 prazskeho casu).
+--    Otisk: `zive-enroll-upsell-coaching-2026-09-17.sql`, porizeny v temze tahu.
+--    Rozdil proti zivemu telu je PRESNE JEDEN blok: brana `coaching-ex` (overeno diffem,
+--    +18 radku, -1 radek, nic jineho).
+--    Brana V7 `ma_rozdelanou_dorucovaci_trat` v tele ZUSTAVA.
 --
 -- ⛔ SIGNATURA SE NEMENI (`integer, text`), takze `create or replace` JE skutecna
 --    nahrada a granty zustavaji (`feedback-create-or-replace-neni-nahrada`).
 --    Cil proacl: {postgres=X/postgres,service_role=X/postgres}
---    ⚠️ Kdyby nekdo mezitim funkci DROPnul a vytvoril znovu s jinym poctem parametru,
---       tahle migrace by vyrobila DRUHOU variantu. Proto kontrola (b) na konci.
 --
 -- ⚠️ CO SE NEMENI: nic neubira z bezneho marketingu. `newsletter_prijemci`,
 --    `tydenik_prijemci`, `enroll_into_longtail` ani `enroll_into_nurture_videokurz`
 --    znacku `coaching-ex` neznaji a znat nemaji. Meni se JEDINA funkce.
+-- ⚠️ ⛔ NEZ TOHLE SPUSTIS, ZNOVU SI OVER, ZE ZIVE TELO SEDI S OTISKEM:
+--    select pg_get_functiondef('public.enroll_into_upsell_coaching(integer,text)'::regprocedure);
+--    Kdyz se od otisku lisi, migrace se NESPOUSTI a pise se znovu nad novym telem.
 -- ============================================================================
 
 begin;
@@ -89,6 +106,12 @@ BEGIN
         AND r2.email NOT IN (SELECT lower(email) FROM leads WHERE track = 'tydenik' OR track LIKE 'blast%')
         -- OBECNE: nikoho, komu bezi jakakoli jina sekvence nez upsell
         AND r2.email NOT IN (SELECT lower(email) FROM leads WHERE next_send_at IS NOT NULL AND track NOT LIKE 'upsell-%')
+        -- ⛔⛔ [16. 9. 2026] ROZDELANA DORUCOVACI TRAT (nalez V7). Radek nad timhle
+        --    stoji na `next_send_at IS NOT NULL`, ktery rozesilka po odeslani zhasne;
+        --    v tom okne je clovek pro nej neviditelny. Tohle se diva na odeslane kroky,
+        --    takze okno nema. Bez teho pravidla prisel 15. 9. jediny kupec konzultace
+        --    o kroky 1 a 2 sve zaplacene doruci trate.
+        AND NOT public.ma_rozdelanou_dorucovaci_trat(r2.email)
     )
     SELECT email FROM elig LIMIT greatest(1, p_limit)
   LOOP
@@ -110,10 +133,20 @@ commit;
 
 -- ---------------------------------------------------------------------------
 -- KONTROLA PO SPUSTENI (jen cteni, nic nemeni):
---   a) brana je v tele:
+--   a) NOVA brana je v tele:
 --      select position('coaching-ex' in pg_get_functiondef(p.oid)) > 0
 --        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
---       where n.nspname='public' and p.proname='enroll_into_upsell_coaching';
+--       where n.nspname='public' and p.proname='enroll_into_upsell_coaching';   -- ocekavano t
+--   a2) ⛔⛔ STARA brana V7 tam PORAD JE. Tahle kontrola v prvni verzi CHYBELA
+--       a jeji absence by stala 4 lidi jejich zaplacenou dorucovaci trat:
+--      select pg_get_functiondef(p.oid) like '%ma_rozdelanou_dorucovaci_trat%'
+--         and pg_get_functiondef(p.oid) like '%coaching-ex%' as obe_brany
+--        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+--       where n.nspname='public' and p.proname='enroll_into_upsell_coaching';   -- ocekavano t
+--   a3) a brana na konzultacni termin taky:
+--      select position('consultation_calls' in pg_get_functiondef(p.oid)) > 0
+--        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+--       where n.nspname='public' and p.proname='enroll_into_upsell_coaching';   -- ocekavano t
 --   b) funkce je porad JEN JEDNA a jen jedna signatura:
 --      select p.oid::regprocedure::text, p.proacl::text from pg_proc p
 --        join pg_namespace n on n.oid = p.pronamespace
@@ -121,14 +154,16 @@ commit;
 --      -- ocekavano prave jeden radek:
 --      --   enroll_into_upsell_coaching(integer,text)
 --      --   {postgres=X/postgres,service_role=X/postgres}
---   c) `enroll_into_upsell_academy` znacku `coaching-ex` ZNAT NEMA (zamerne):
---      select position('coaching-ex' in pg_get_functiondef(p.oid)) = 0
+--   c) `enroll_into_upsell_academy` znacku `coaching-ex` ZNAT NEMA (zamerne),
+--      ale branu V7 mit MUSI:
+--      select position('coaching-ex' in pg_get_functiondef(p.oid)) = 0 as bez_ex,
+--             position('ma_rozdelanou_dorucovaci_trat' in pg_get_functiondef(p.oid)) > 0 as s_v7
 --        from pg_proc p join pg_namespace n on n.oid = p.pronamespace
---       where n.nspname='public' and p.proname='enroll_into_upsell_academy';   -- ocekavano t
+--       where n.nspname='public' and p.proname='enroll_into_upsell_academy';   -- ocekavano t, t
 --   d) SUCHY TEST: funkce s cizim e-mailem nezaradi nikoho.
 --      select public.enroll_into_upsell_coaching(1, 'neexistuje@example.com');   -- ocekavano 0
 --      ⛔ NEspoustet s existujicim e-mailem, funkce ZAPISUJE do `leads`.
---   e) kolik lidi brana vylucuje (melo by sedet s cislem v hlavicce):
+--   e) kolik lidi nova brana vylucuje (melo by sedet s cislem v hlavicce, tedy 5):
 --      select count(*) from customer_contacts cc
 --       where cc.tags && array['coaching-ex']
 --         and lower(cc.email) in (

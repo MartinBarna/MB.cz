@@ -4,6 +4,8 @@
 // Oddělené od `index.ts` schválně: tohle je jediné místo, kde se rozhoduje,
 // a dá se otestovat bez sítě, bez Deno permissions a bez DB (`vyber.test.ts`).
 
+import { jeMartinovaAdresa } from "../_shared/resend-odeslat.ts";
+
 export type Radek = {
   email: string;
   termin_at: string | null;
@@ -72,4 +74,30 @@ export function coPoslat(r: Radek, nowMs: number): Druh | null {
 /** Sloupec, do kterého se po odeslání zapíše razítko. */
 export function sloupecRazitka(druh: Druh): "pripominka_den_pred_pro" | "pripominka_rano_pro" {
   return druh === "den_pred" ? "pripominka_den_pred_pro" : "pripominka_rano_pro";
+}
+
+/**
+ * Adresy, na které klientská připomínka NESMÍ odejít, i kdyby v `consultation_calls` byly.
+ *
+ * ⛔ [17. 9. 2026, nález R1/N3] V první verzi tohle nebylo a tvrzení „Martinovi to nechodí"
+ *    platilo jen NÁHODOU: v tabulce je dneska jediný řádek s cizí adresou. Jakmile si
+ *    Martin založí testovací termín na svoji adresu (a přesně tak se tahle funkce bude
+ *    zkoušet), dostane mail psaný pro klienta.
+ * ⭐ Martinovy adresy se poznávají JEDINÝM společným seznamem `jeMartinovaAdresa`
+ *    ze `_shared/resend-odeslat.ts` (pokrývá `martin@martinbarna.cz` i všechny
+ *    `fitness.barna+znacka@…`). ⛔ Nekopírovat ho sem: druhá kopie se rozejde.
+ * ⚠️ `example.com` a `example.org` jsou podle RFC 2606 vyhrazené pro příklady, takže
+ *    za nimi NIKDY nestojí skutečný zákazník. Doručit se tam stejně nedá.
+ * ⚠️ Rodinné adresy z `newsletter_prijemci` (trvalý free, nemailovat) tu SCHVÁLNĚ nejsou:
+ *    tohle je provozní mail o zaplacené konzultaci, ne marketing. Kdyby si konzultaci
+ *    koupil někdo z rodiny, termín se mu připomenout MÁ.
+ *
+ * Vrací důvod (jde do souhrnu Martinovi), nebo null.
+ */
+export function neposilatKlientovi(email: string): string | null {
+  const e = String(email ?? "").trim().toLowerCase();
+  if (!e) return "prazdna_adresa";
+  if (jeMartinovaAdresa(e)) return "martinova_adresa";
+  if (e.endsWith("@example.com") || e.endsWith("@example.org")) return "testovaci_domena";
+  return null;
 }

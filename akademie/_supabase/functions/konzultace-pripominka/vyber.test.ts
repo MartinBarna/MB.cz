@@ -3,7 +3,14 @@
 //
 // ⭐ KAŽDÝ TEST MÁ KONTRAST: ke každému „pošle se" je i „nepošle se", jinak by prošla
 //    i funkce, která vrací pořád totéž (pravidlo `feedback-zeleny-test-neni-dukaz-spravnosti`).
-import { coPoslat, denPo, prazskeDatum, type Radek, sloupecRazitka } from "./vyber.ts";
+import {
+  coPoslat,
+  denPo,
+  neposilatKlientovi,
+  prazskeDatum,
+  type Radek,
+  sloupecRazitka,
+} from "./vyber.ts";
 
 let selhalo = 0;
 function check(nazev: string, podminka: boolean, detail = ""): void {
@@ -76,6 +83,22 @@ function main(): void {
   console.log("\n== razítko míří do správného sloupce ==");
   check("den_pred", sloupecRazitka("den_pred") === "pripominka_den_pred_pro");
   check("KONTRAST: rano", sloupecRazitka("rano") === "pripominka_rano_pro");
+
+  console.log("\n== komu se klientsky mail NIKDY neposila (R1, nalez N3) ==");
+  check("Martinova hlavni adresa", neposilatKlientovi("martin@martinbarna.cz") === "martinova_adresa");
+  check("fitness.barna@gmail.com", neposilatKlientovi("fitness.barna@gmail.com") === "martinova_adresa");
+  check("znackovana varianta +konzultace",
+    neposilatKlientovi("fitness.barna+konzultace@gmail.com") === "martinova_adresa");
+  check("velka pismena a mezery kolem", neposilatKlientovi("  Martin@MartinBarna.cz ") === "martinova_adresa");
+  check("vyhrazena testovaci domena", neposilatKlientovi("kdokoli@example.com") === "testovaci_domena");
+  check("prazdna adresa", neposilatKlientovi("") === "prazdna_adresa");
+  check("KONTRAST: bezny zakaznik projde", neposilatKlientovi("novak@seznam.cz") === null);
+  check("KONTRAST: jina adresa na martinbarna.cz projde",
+    neposilatKlientovi("info@martinbarna.cz") === null);
+  check("KONTRAST: podobna adresa, ktera Martinova NENI",
+    neposilatKlientovi("fitness.barnova@gmail.com") === null);
+  check("KONTRAST: rodinna adresa projde, je to provozni mail o zaplacene sluzbe",
+    neposilatKlientovi("ivanabarnova@seznam.cz") === null);
 
   console.log(selhalo === 0 ? "\nVSE ZELENE\n" : `\n${selhalo} SELHANI\n`);
   if (selhalo > 0) throw new Error(String(selhalo) + " selhani");

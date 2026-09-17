@@ -1,18 +1,36 @@
 -- ZACHRANA ZIVEHO ZNENI (17. 9. 2026, 73. sef, stavec MB.cz, davka 2b)
--- Porizeno doslovne z produkcni DB Academy (uhmrpfsdcujbhbtumqye) pred psanim migrace
--- `upsell-coaching-ex-2026-09-17.sql`:
+-- ⛔⛔ TENHLE SOUBOR BYL 17. 9. PREPSAN PO REVIZI R1. PRVNI VERZE BYLA ZASTARALA
+--    UZ V OKAMZIKU, KDY VZNIKLA, A MIGRACE NAD NI BY SMAZALA ZIVOU BRANU.
+--    Co se stalo: prvni otisk jsem poridil v 07:23 UTC (09:23 prazskeho casu)
+--    a v tu chvili `enroll_into_upsell_coaching` branu V7
+--    (`ma_rozdelanou_dorucovaci_trat`) opravdu NEMELA. Migrace V7
+--    (`enroll-rozdelana-trat-2026-09-16.sql`) sla naostro BEHEM me prace, kolem 09:3x
+--    prazskeho casu, tedy MEZI otiskem a napsanim migrace. `create or replace` je uplna
+--    nahrada tela, takze moje migrace by tu branu tise odstranila a vratila stav,
+--    kvuli kteremu 15. 9. prisel jediny kupec konzultace o kroky 1 a 2 SVE ZAPLACENE
+--    dorucovaci trate. Nasel to az nezavisly revizor (nalez R1/N1).
+--    ⭐ POUCENI: otisk zivyho zneni plati JEN v tom tahu, ve kterem vznikl. Kdyz mezi
+--    otiskem a migraci uplyne hodina prace, stahuje se ZNOVU a diff se dela proti
+--    cerstvemu. `feedback-zive-sql-funkce-napred-pred-gitem` mluvi o gitu, tohle je
+--    jeho horsi varianta: zastaraly otisk vypada jako dukaz.
+--
+-- Porizeno doslovne z produkcni DB Academy (uhmrpfsdcujbhbtumqye) v 2026-09-17 08:01:25 UTC (10:01 prazskeho casu):
 --   select p.oid::regprocedure, p.proacl, pg_get_functiondef(p.oid) from pg_proc p
 --     join pg_namespace n on n.oid = p.pronamespace
---    where n.nspname='public' and p.proname in ('enroll_into_upsell_coaching','koucink_kapacita');
+--    where n.nspname='public' and p.proname in ('enroll_into_upsell_coaching',
+--          'koucink_kapacita','ma_rozdelanou_dorucovaci_trat');
 --
--- ⛔ ZIVE SQL FUNKCE BYVAJI NAPRED PRED GITEM (`feedback-zive-sql-funkce-napred-pred-gitem`),
---    proto se stahuje ZNOVU, i kdyz `zive-enroll-2026-09-16.sql` existuje.
--- ⭐ ZMERENO 17. 9. 2026: `enroll_into_upsell_coaching` je BAJT PO BAJTU SHODNA
---    se snimkem z 16. 9. (`diff` bez rozdilu). Zadna zmena "dnes rano" tedy v TEHLE
---    funkci neprobehla; kdo cekal jinou vychozi verzi, hledal jinde.
+-- ⛔ PRAVIDLO 8 (CLAUDE.md): `enroll_into_upsell_coaching` ma JEDINOU variantu signatury
+--    (integer,text), proacl {postgres=X/postgres,service_role=X/postgres}.
+-- ⭐ ZMERENO v temze tahu: branu V7 maji VSECHNY CTYRI `enroll_into_*`
+--    (longtail, nurture_videokurz, upsell_academy, upsell_coaching) a `coaching-ex`
+--    zatim ani jedna. `select count(*) from leads l where
+--    public.ma_rozdelanou_dorucovaci_trat(l.email)` = 4 lide, to je dnesni velikost obeti.
 -- ⚠️ `koucink_kapacita()` je tu jako DRUHE MISTO, ktere cte `app_config.koucink_kapacita`
 --    (prvni je `_shared/koucink-onboarding.ts`). Obe pocitaji obsazenost STEJNE,
 --    takze zmena stropu je JEDEN update, ne dva. Viz BUILD, nalez D/N5.
+-- ⚠️ `ma_rozdelanou_dorucovaci_trat(text)` je tu proto, aby bylo videt, CO ta brana dela:
+--    je STABLE a jen cte. Migrace davky 2b se ji nedotyka, jen ji musi zachovat.
 --
 -- Nic se odsud nenasazuje automaticky; je to referencni bod pro diff a navrat.
 
@@ -66,6 +84,12 @@ BEGIN
         AND r2.email NOT IN (SELECT lower(email) FROM leads WHERE track = 'tydenik' OR track LIKE 'blast%')
         -- OBECNE: nikoho, komu bezi jakakoli jina sekvence nez upsell
         AND r2.email NOT IN (SELECT lower(email) FROM leads WHERE next_send_at IS NOT NULL AND track NOT LIKE 'upsell-%')
+        -- ⛔⛔ [16. 9. 2026] ROZDELANA DORUCOVACI TRAT (nalez V7). Radek nad timhle
+        --    stoji na `next_send_at IS NOT NULL`, ktery rozesilka po odeslani zhasne;
+        --    v tom okne je clovek pro nej neviditelny. Tohle se diva na odeslane kroky,
+        --    takze okno nema. Bez teho pravidla prisel 15. 9. jediny kupec konzultace
+        --    o kroky 1 a 2 sve zaplacene dorucovaci trate.
+        AND NOT public.ma_rozdelanou_dorucovaci_trat(r2.email)
     )
     SELECT email FROM elig LIMIT greatest(1, p_limit)
   LOOP
@@ -79,8 +103,29 @@ BEGIN
     v_count := v_count + 1;
   END LOOP;
   RETURN v_count;
-END; $function$
-;
+END; $function$;
+
+-- ==== ma_rozdelanou_dorucovaci_trat(text)
+-- proacl: {postgres=X/postgres,service_role=X/postgres}
+CREATE OR REPLACE FUNCTION public.ma_rozdelanou_dorucovaci_trat(p_email text)
+ RETURNS boolean
+ LANGUAGE sql
+ STABLE
+ SET search_path TO 'public'
+AS $function$
+  select exists (
+    select 1
+      from public.email_events ev
+      join public.leads l on l.id = ev.lead_id
+     where lower(l.email) = lower(p_email)
+       and ev.type = 'sent'
+       and ev.detail->>'track' like 'onboarding-%'
+       and ev.created_at > now() - interval '21 days'
+       and exists (select 1 from public.email_templates t
+                    where t.track = ev.detail->>'track'
+                      and t.step > ev.step)
+  )
+$function$;
 
 -- ==== koucink_kapacita()
 -- proacl: {postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}
@@ -112,6 +157,4 @@ AS $function$
         or (expires_at is null and source like 'stripe%')
       )
   ) c;
-$function$
-
-;
+$function$;
