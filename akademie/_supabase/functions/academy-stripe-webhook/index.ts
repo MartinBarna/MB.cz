@@ -132,45 +132,77 @@ function rozlouceniTrack(expiraceIso: string | null): string {
 // nepozná. Ale komentář u volání počítá s tím, že se sem jednou dostane zrušení
 // s dojezdem, a v ten den by `posliUvitani` našlo chybějící šablonu, poslalo alert
 // „měsíční člen nedostal uvítací e-mail" (text o něčem úplně jiném) a zákazníkovi,
-// kterému se právě vrátily peníze, by NEODEŠLO NIC.
-// ⚠️ Co se NEDĚJE: lead NEUVÍZNE. `posliUvitani` se při chybějící šabloně vrací JEŠTĚ
+// kterému se právě vrátily peníze, by NEODEŠLO NIC a nikdo by nevěděl proč.
+// ⚠️ Co se neděje: lead NEUVÍZNE. `posliUvitani` se při chybějící šabloně vrací JEŠTĚ
 //    PŘED zápisem do `leads`, takže se nikomu nepřepíše trať na `rozlouceni-*`
 //    (ta je přitom v `newsletter_prijemci` vyloučená, uvíznutí by bylo trvalé).
-//    Ověřeno čtením `posliUvitani` 17. 9. 2026.
 //
-// ⭐ BRÁNA: dojezdová trať se vybere JEN tehdy, když pro ni šablona opravdu je.
-//    Jinak se pošle `hned` a Martin dostane alert, že text sedí jen zhruba.
-// ⚠️ CENA TOHO ROZHODNUTÍ: věta „Přístup se tím uzavřel." v `hned` je u dojezdu
-//    NEPŘESNÁ. Vědomě: potvrzení o vrácení peněz je to hlavní, co ten mail nese,
-//    a mlčení u refundu je horší než jedna nepřesná věta, o které Martin do minuty ví
-//    a může se ozvat. ⛔ SPRÁVNÉ ŘEŠENÍ zůstává dopsat šablonu `rozlouceni-refund-dojezd`
+// ⭐⭐ ROZHODNUTÍ ŠÉFA 17. 9. 2026: U DOJEZDU SE NEPOSÍLÁ NIC.
+//    Původní verze téhle brány posílala místo chybějící šablony verzi `hned` s tím, že
+//    jedna nepřesná věta je menší škoda než mlčení. Šéf rozhodl OPAČNĚ a má na to důvod:
+//    věta „Přístup se tím uzavřel." je u dojezdu NEPRAVDIVÁ, a nepravda v mailu
+//    o vrácení peněz je horší než žádný mail. Navíc by člověka odstřihla od přístupu,
+//    který mu ještě běží, takže by ho přestal používat.
+//    ⇒ Vrací se PRÁZDNÝ řetězec (= neposílej nic) a Martin dostane alert se vším,
+//    co potřebuje k ručně napsanému mailu: adresa, částka, produkt, do kdy přístup běží.
+//    ⚠️ Cena: zákazník nedostane potvrzení o vrácení peněz automaticky. Proto ten alert
+//       NENÍ „F.Y.I.", ale úkol, a je to v něm napsané.
+// ⛔ SPRÁVNÉ ŘEŠENÍ zůstává dopsat šablonu `rozlouceni-refund-dojezd`
 //    (tokeny `castka`, `produkt`, `varianta`, `znovu_odkaz`, `pristup_do`); text píše
 //    Martin, ne kód. Až vznikne, tahle brána ji začne používat sama, bez deploye.
 // ⛔ CHYBA ČTENÍ NENÍ ODPOVĚĎ (CLAUDE.md 13): když se na `email_templates` nedá sáhnout
-//    (504 brány), NEVÍME, jestli šablona je. Tehdy taky `hned`, ale s jiným alertem,
-//    ať se ta dvě selhání nesmíchají.
-async function vyberRozlouceniTrack(expiraceIso: string | null): Promise<string> {
+//    (504 brány), NEVÍME, jestli šablona je. Také ticho, ale JINÝ alert, ať se ta dvě
+//    selhání nesmíchají: popáté „šablona chybí" už nikdo nečte, když ve skutečnosti
+//    pokaždé spadla síť.
+
+/** Podklady do alertu, když rozlučkový mail neodešle automat a Martin ho píše ručně. */
+type RozlouceniInfo = {
+  email: string;
+  castka: string;
+  produkt: string;
+  varianta: string;
+  pristupDo: string;
+};
+
+/**
+ * Vrátí trať rozlučkového mailu, nebo PRÁZDNÝ ŘETĚZEC = neposílat nic.
+ * ⛔ Volající MUSÍ prázdnou hodnotu ošetřit: `posliUvitani("")` by se zeptalo na šablonu
+ *    trati se jménem `""`, nenašlo ji a poslalo třetí, matoucí alert.
+ */
+async function vyberRozlouceniTrack(expiraceIso: string | null, info: RozlouceniInfo): Promise<string> {
   const chtena = rozlouceniTrack(expiraceIso);
   if (chtena !== ROZLOUCENI_DOJEZD) return chtena;
   const { data, error } = await admin
     .from("email_templates").select("track")
     .eq("track", ROZLOUCENI_DOJEZD).eq("step", 0).maybeSingle();
+  const spolecne = {
+    email: info.email,
+    castka: info.castka,
+    produkt: info.produkt + " (" + info.varianta + ")",
+    pristup_do: info.pristupDo,
+  };
   if (error) {
-    await alertAdmin("Stripe: nešlo ověřit rozlučkovou šablonu, poslal jsem verzi „hned“", {
-      track_chtena: ROZLOUCENI_DOJEZD, chyba: String(error.message ?? error).slice(0, 200),
-      co_delat: "Mail o vrácení peněz ODEŠEL, ale větu o konci přístupu ověř: přístup "
-        + "zákazníkovi ještě doběhne. Napiš mu to.",
+    await alertAdmin("🔴 Stripe: rozlučkový mail NEODESLÁN, nešlo ověřit šablonu", {
+      ...spolecne,
+      chyba: String(error.message ?? error).slice(0, 200),
+      co_delat: "⛔ Zákazníkovi NIC NEODEŠLO a peníze už má zpátky. Napiš mu sám: "
+        + "částka, produkt a že přístup mu běží do uvedeného data. "
+        + "⚠️ Tohle NENÍ „šablona chybí“: na `email_templates` se nedalo sáhnout, "
+        + "takže může existovat. Zkus to znovu až po opravení spojení.",
     });
-    return ROZLOUCENI_HNED;
+    return "";
   }
   if (data) return ROZLOUCENI_DOJEZD;
-  await alertAdmin("Stripe: rozlučková šablona s dojezdem chybí, poslal jsem verzi „hned“", {
-    track_chybi: ROZLOUCENI_DOJEZD,
-    co_delat: "Mail o vrácení peněz ODEŠEL, ale tvrdí, že přístup skončil hned. "
-      + "Zákazníkovi ještě běží. Ozvi se mu a dopiš šablonu `rozlouceni-refund-dojezd` "
+  await alertAdmin("🔴 Stripe: rozlučkový mail NEODESLÁN, chybí šablona `rozlouceni-refund-dojezd`", {
+    ...spolecne,
+    co_delat: "⛔ Zákazníkovi NIC NEODEŠLO a peníze už má zpátky. Napiš mu sám: "
+      + "částka, produkt a že přístup mu běží do uvedeného data. "
+      + "⚠️ Verze `rozlouceni-refund-hned` se SCHVÁLNĚ nepoužila: tvrdí, že přístup už "
+      + "skončil, což by byla nepravda (rozhodnutí šéfa 17. 9. 2026). "
+      + "Trvalá oprava: dopsat šablonu `rozlouceni-refund-dojezd` "
       + "(tokeny castka, produkt, varianta, znovu_odkaz, pristup_do).",
   });
-  return ROZLOUCENI_HNED;
+  return "";
 }
 
 // ⛔⛔ ROZLUČKOVÁ ŠABLONA MÁ VLASTNÍ PROMĚNNÉ A VOLAJÍCÍ JE MUSÍ POSLAT.
@@ -2990,11 +3022,11 @@ Deno.serve(async (req) => {
       // přesto dynamická, ať to sedí i kdyby se sem někdy dostalo zrušení s dojezdem.
       // ⛔ [17. 9. 2026] Přes `vyberRozlouceniTrack()`, ne přes `rozlouceniTrack()`:
       //    dojezdová šablona v DB NENÍ a holý výběr by u prvního takového refundu
-      //    znamenal, že zákazníkovi neodejde nic. Viz komentář u té funkce.
+      //    znamenal, že `posliUvitani` pošle alert o něčem jiném. Viz komentář u té funkce.
       // ⛔ `vars` NENÍ volitelná ozdoba, bez nich mail neodejde. Viz `castkaText`.
       // U sporu je v `obj` Dispute (má `amount`, nemá `amount_refunded`), proto ten fallback.
       try {
-        await posliUvitani(ent.email, await vyberRozlouceniTrack(konecIso), {
+        const rozlouceniVars = {
           castka: castkaText(vraceno > 0 ? vraceno : castka, String(obj.currency ?? "czk")),
           // ⛔ Název i varianta jdou Z KATALOGU podle `source`, ne natvrdo. Jinak by
           // kupující videokurzu dostal mail o vrácení „Barna Academy, doživotní přístup",
@@ -3007,7 +3039,20 @@ Deno.serve(async (req) => {
           varianta: variantaProduktu,
           znovu_odkaz: "https://martinbarna.cz/akademie/#cena",
           pristup_do: datumCesky(konecIso),
+        };
+        // ⛔⛔ [Šéf 17. 9. 2026] PRÁZDNÁ TRAŤ = NEPOSÍLAT NIC a nechat to na Martinovi.
+        //    Týká se jedině větve s dojezdem bez šablony (a chyby čtení). Alert už odešel
+        //    ZEVNITŘ `vyberRozlouceniTrack` a nese všechno, co Martin k ručnímu mailu
+        //    potřebuje. ⛔ Nevolat `posliUvitani("")`: zeptalo by se na šablonu traťi se
+        //    jménem `""` a poslalo třetí, matoucí alert o „chybějící šabloně".
+        const rozlouceniTrat = await vyberRozlouceniTrack(konecIso, {
+          email: ent.email,
+          castka: rozlouceniVars.castka,
+          produkt: rozlouceniVars.produkt,
+          varianta: rozlouceniVars.varianta,
+          pristupDo: rozlouceniVars.pristup_do,
         });
+        if (rozlouceniTrat) await posliUvitani(ent.email, rozlouceniTrat, rozlouceniVars);
       } catch { /* best-effort, nikdy nesmí shodit odebrání přístupu */ }
 
       // 3b) DOŽIVOTNÍ MĚL V CENĚ APPKU NA ROK ⇒ při vrácení peněz se odebírá taky.

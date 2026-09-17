@@ -90,7 +90,14 @@ function main(): void {
   check("znackovana varianta +konzultace",
     neposilatKlientovi("fitness.barna+konzultace@gmail.com") === "martinova_adresa");
   check("velka pismena a mezery kolem", neposilatKlientovi("  Martin@MartinBarna.cz ") === "martinova_adresa");
-  check("vyhrazena testovaci domena", neposilatKlientovi("kdokoli@example.com") === "testovaci_domena");
+  check("vyhrazena domena example.com", neposilatKlientovi("kdokoli@example.com") === "testovaci_domena");
+  check("vyhrazena domena example.net (doplnila revize R2)",
+    neposilatKlientovi("kdokoli@example.net") === "testovaci_domena");
+  check("vyhrazena TLD .invalid", neposilatKlientovi("kdokoli@neco.invalid") === "testovaci_domena");
+  check("KONTRAST: bezna domena s example ve jmenu projde",
+    neposilatKlientovi("kdokoli@examplemarket.cz") === null);
+  check("KONTRAST: .cz domena konci jinak nez vyhrazena TLD",
+    neposilatKlientovi("kdokoli@testovani.cz") === null);
   check("prazdna adresa", neposilatKlientovi("") === "prazdna_adresa");
   check("KONTRAST: bezny zakaznik projde", neposilatKlientovi("novak@seznam.cz") === null);
   check("KONTRAST: jina adresa na martinbarna.cz projde",

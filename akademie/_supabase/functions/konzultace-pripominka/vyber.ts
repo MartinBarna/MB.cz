@@ -86,8 +86,10 @@ export function sloupecRazitka(druh: Druh): "pripominka_den_pred_pro" | "pripomi
  * ⭐ Martinovy adresy se poznávají JEDINÝM společným seznamem `jeMartinovaAdresa`
  *    ze `_shared/resend-odeslat.ts` (pokrývá `martin@martinbarna.cz` i všechny
  *    `fitness.barna+znacka@…`). ⛔ Nekopírovat ho sem: druhá kopie se rozejde.
- * ⚠️ `example.com` a `example.org` jsou podle RFC 2606 vyhrazené pro příklady, takže
- *    za nimi NIKDY nestojí skutečný zákazník. Doručit se tam stejně nedá.
+ * ⚠️ Vyhrazené domény z RFC 2606 (`example.com/net/org`, TLD `.test`, `.example`,
+ *    `.invalid`, `.localhost`): za nimi NIKDY nestojí skutečný zákazník a doručit se
+ *    tam stejně nedá. ⭐ Seznam doplnila revize R2: předtím tu byly jen `example.com`
+ *    a `example.org`, takže testovací adresa v `example.net` by prošla.
  * ⚠️ Rodinné adresy z `newsletter_prijemci` (trvalý free, nemailovat) tu SCHVÁLNĚ nejsou:
  *    tohle je provozní mail o zaplacené konzultaci, ne marketing. Kdyby si konzultaci
  *    koupil někdo z rodiny, termín se mu připomenout MÁ.
@@ -98,6 +100,7 @@ export function neposilatKlientovi(email: string): string | null {
   const e = String(email ?? "").trim().toLowerCase();
   if (!e) return "prazdna_adresa";
   if (jeMartinovaAdresa(e)) return "martinova_adresa";
-  if (e.endsWith("@example.com") || e.endsWith("@example.org")) return "testovaci_domena";
+  if (/@(?:[^@]*\.)?example\.(?:com|net|org)$/.test(e)) return "testovaci_domena";
+  if (/\.(?:test|example|invalid|localhost)$/.test(e)) return "testovaci_domena";
   return null;
 }

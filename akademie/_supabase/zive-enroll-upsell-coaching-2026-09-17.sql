@@ -1,18 +1,27 @@
 -- ZACHRANA ZIVEHO ZNENI (17. 9. 2026, 73. sef, stavec MB.cz, davka 2b)
--- ⛔⛔ TENHLE SOUBOR BYL 17. 9. PREPSAN PO REVIZI R1. PRVNI VERZE BYLA ZASTARALA
---    UZ V OKAMZIKU, KDY VZNIKLA, A MIGRACE NAD NI BY SMAZALA ZIVOU BRANU.
---    Co se stalo: prvni otisk jsem poridil v 07:23 UTC (09:23 prazskeho casu)
---    a v tu chvili `enroll_into_upsell_coaching` branu V7
---    (`ma_rozdelanou_dorucovaci_trat`) opravdu NEMELA. Migrace V7
---    (`enroll-rozdelana-trat-2026-09-16.sql`) sla naostro BEHEM me prace, kolem 09:3x
---    prazskeho casu, tedy MEZI otiskem a napsanim migrace. `create or replace` je uplna
---    nahrada tela, takze moje migrace by tu branu tise odstranila a vratila stav,
---    kvuli kteremu 15. 9. prisel jediny kupec konzultace o kroky 1 a 2 SVE ZAPLACENE
---    dorucovaci trate. Nasel to az nezavisly revizor (nalez R1/N1).
---    ⭐ POUCENI: otisk zivyho zneni plati JEN v tom tahu, ve kterem vznikl. Kdyz mezi
---    otiskem a migraci uplyne hodina prace, stahuje se ZNOVU a diff se dela proti
---    cerstvemu. `feedback-zive-sql-funkce-napred-pred-gitem` mluvi o gitu, tohle je
---    jeho horsi varianta: zastaraly otisk vypada jako dukaz.
+-- ⛔⛔ TENHLE SOUBOR BYL 17. 9. PREPSAN DVAKRAT. Obe opravy sem patri, protoze obe
+--    ukazuji, jak snadno se z "otisku" stane vzpominka:
+--
+--    1) PO REVIZI R1 (nalez N1): prvni otisk jsem poridil v 07:23 UTC (09:23 prazskeho
+--       casu) a v tu chvili `enroll_into_upsell_coaching` branu V7
+--       (`ma_rozdelanou_dorucovaci_trat`) opravdu NEMELA. Migrace V7
+--       (`enroll-rozdelana-trat-2026-09-16.sql`) sla naostro BEHEM me prace, kolem 09:3x,
+--       tedy MEZI otiskem a napsanim migrace. `create or replace` je uplna nahrada tela,
+--       takze moje migrace by tu branu tise odstranila a vratila stav, kvuli kteremu
+--       15. 9. prisel jediny kupec konzultace o kroky 1 a 2 sve zaplacene doruci trate.
+--       ⭐ POUCENI: otisk plati JEN v tom tahu, ve kterem vznikl.
+--
+--    2) PO REVIZI R2 (nalez N5): pri prepisu podle R1 jsem v celem souboru hromadne
+--       opravil preklep "doruci" na "dorucovaci". Jenze to slovo je UVNITR TELA FUNKCE,
+--       v komentari, ktery tam napsal nekdo jiny. Otisk tim prestal byt otiskem: proti
+--       zive DB se lisil o jedno slovo a `diff` proti nemu by uz nikdy nesedel.
+--       ⭐ POUCENI: do tela otisku se NESAHA. Ani kvuli preklepu, ani kvuli diakritice,
+--       ani kvuli formatovani. Kdyz se preklep ma opravit, opravuje se v DB migraci,
+--       a otisk se pak stahne znovu.
+--       ⚠️ Tela nize jsou proto BAJT PO BAJTU to, co vratil `pg_get_functiondef`.
+--       Zkontrolovat to jde takhle (vraci t, kdyz soubor sedi se zivou DB):
+--         select pg_get_functiondef('public.enroll_into_upsell_coaching(integer,text)'::regprocedure)
+--                like '%sve zaplacene doruci trate%';
 --
 -- Porizeno doslovne z produkcni DB Academy (uhmrpfsdcujbhbtumqye) v 2026-09-17 08:01:25 UTC (10:01 prazskeho casu):
 --   select p.oid::regprocedure, p.proacl, pg_get_functiondef(p.oid) from pg_proc p
@@ -88,7 +97,7 @@ BEGIN
         --    stoji na `next_send_at IS NOT NULL`, ktery rozesilka po odeslani zhasne;
         --    v tom okne je clovek pro nej neviditelny. Tohle se diva na odeslane kroky,
         --    takze okno nema. Bez teho pravidla prisel 15. 9. jediny kupec konzultace
-        --    o kroky 1 a 2 sve zaplacene dorucovaci trate.
+        --    o kroky 1 a 2 sve zaplacene doruci trate.
         AND NOT public.ma_rozdelanou_dorucovaci_trat(r2.email)
     )
     SELECT email FROM elig LIMIT greatest(1, p_limit)
