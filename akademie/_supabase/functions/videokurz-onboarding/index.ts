@@ -207,8 +207,8 @@ Deno.serve(async (req: Request) => {
   //    zahazovala: kdyz update selhal (504 brany Supabase), mail uz odesel, razitko
   //    chybelo a dalsi beh poslal tomu cloveku uvitaci mail znovu.
   //    ⇒ Politika je stejna jako u `client-remind` a `order-rescue` (Martin 17. 9.:
-  //      radeji nikdy mail navic): zapis, pak posli. Vyslovne odmitnuti Resendu razitko
-  //      VRATI (dalsi beh to zkusi znovu), nejistota (sit, timeout) ho NECHA.
+  //      radeji nikdy mail navic): zapis, pak posli. Kdyz Resend zasilku NEPRIJAL
+  //      (status 0 nebo 4xx), razitko se VRATI; jen u 5xx, kde mail prijmout mohl, ZUSTANE.
   // ⚠️ Alert Martinovi tu SCHVALNE NENI, na rozdil od `order-rescue`. Tahle funkce nema
   //    cron (overeno 17. 9. v `cron.job` i v `.github/workflows`), spousti ji clovek rucne
   //    pres POST {live:true} a odpoved si precte hned. Alert by psal tomu, kdo se diva.
@@ -242,11 +242,18 @@ Deno.serve(async (req: Request) => {
           await admin.from('email_events').insert({ lead_id: null, step: 0, type: 'onboarding', provider_id: id, detail: { variant, table: 'customer_contacts' } });
           sent++;
         } catch (e) {
-          // ⛔ DVA RUZNE STAVY. `sendViaResend` hazi 'resend_<status>:…' jen tehdy, kdyz
-          //    Resend zasilku VYSLOVNE odmitl (mail jiste neodesel) => razitko zpet.
-          //    Pad `fetch` (sit, DNS, timeout) hazi cokoli jineho => NEVIME, razitko zustava.
+          // ⛔⛔ HRANICE JE 500, NE "obsahuje resend_" (R1, nalez N1). Puvodni test
+          //    `zprava.includes('resend_')` nechal razitko u KAZDE jine chyby, tedy i u
+          //    `missing_RESEND_API_KEY` a u padu `fetch`. Bez klice se pritom zadny pozadavek
+          //    ani neodeslal, takze mail JISTE nedosel a razitko ho umlcelo naporad.
+          //  a) status 0 (chybejici klic, sit, DNS) nebo 4xx: Resend zasilku NEPRIJAL
+          //     => razitko zpet, dalsi beh to zkusi znovu.
+          //  b) status >= 500: telo uz na Resendu bylo a mohl ho prijmout, NEVIME
+          //     => razitko zustava a mail se neopakuje.
           const zprava = String(e);
-          if (zprava.includes('resend_')) {
+          const mStav = /resend_(\d{3})/.exec(zprava);
+          const stavOdeslani = mStav ? Number(mStav[1]) : 0;
+          if (stavOdeslani < 500) {
             const { error: zpetErr } = await admin.from('customer_contacts')
               .update({ onboarding_sent_at: null }).eq('email', r.email);
             if (zpetErr) {

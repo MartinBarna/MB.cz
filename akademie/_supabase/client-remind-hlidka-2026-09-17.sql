@@ -51,6 +51,8 @@ declare
   v_stav          text;
   v_text          text;
   v_hodnota       text;
+  v_klic          text;
+  v_pole          jsonb;
 begin
   -- Mimo neděli se nic nezapisuje: přepsat nedělní verdikt pondělním „nic se nedělo"
   -- by hlídku umlčelo přesně v okamžiku, kdy má křičet.
@@ -107,14 +109,22 @@ begin
       || 'Ten mail se uz sam neopakuje. Podivej se do client_remind_sent, kind a email, a rozhodni.';
   elsif v_radku_dnes > 0 then
     v_stav := 'OK';
-    v_text := 'odeslano ' || v_radku_dnes || ' pripominek (' || v_klientu || ' aktivnich klientu)';
+    -- ⚠️ [R1, nález N2] Radek je REZERVACE, ne doklad o odeslani. `sent_ok=true` je to
+    --    nejlepsi, co o nem vim; skutecne cervene stavy prebiji seznamy z tela odpovedi niz.
+    v_text := v_radku_dnes || ' radku v client_remind_sent, vsechny se sent_ok=true ('
+      || v_klientu || ' aktivnich klientu)';
   elsif v_odpovedi > 0 then
     -- Funkce běžela a vědomě neposlala nikomu (všichni už reportovali, čerství klienti,
     -- optout). To je legitimní stav, ne porucha, ale patří k němu číslo z odpovědi.
     v_stav := 'OK';
-    v_text := 'funkce bezela ' || v_odpovedi || 'x a nikomu nemela co poslat'
-      || coalesce(' (targets=' || (v_json->>'targets') || ', sent=' || (v_json->>'sent')
-                  || ', uz_dostali=' || (v_json->>'uz_dostali') || ')', '');
+    -- ⚠️ [R1, nález N4] Když tělo odpovědi nejde přečíst, VÍME jen to, že funkce doběhla.
+    --    Tvrzení „nikomu neměla co poslat" pak není z čeho odvodit, a tak se to napíše.
+    v_text := case when v_json is null
+      then 'funkce bezela ' || v_odpovedi || 'x, ale TELO ODPOVEDI NESLO PRECIST (nevim, komu co slo)'
+      else 'funkce bezela ' || v_odpovedi || 'x a nikomu nemela co poslat'
+        || coalesce(' (targets=' || (v_json->>'targets') || ', sent=' || (v_json->>'sent')
+                    || ', uz_dostali=' || (v_json->>'uz_dostali') || ')', '')
+    end;
   else
     v_stav := 'POPLACH';
     v_text := 'NEDELNI PRIPOMINKA NEPROBEHLA: ' || v_klientu || ' aktivnich klientu, '
@@ -122,14 +132,35 @@ begin
       || 'Zkontroluj crony 19, 47 a 48 a zavolej funkci rucne.';
   end if;
 
-  -- Přílepky, které nemění verdikt, ale patří k němu.
-  if v_json ? 'rezervace_selhala' and jsonb_array_length(coalesce(v_json->'rezervace_selhala', '[]'::jsonb)) > 0 then
-    v_text := v_text || ' | POZOR: posledni beh hlasi rezervace_selhala='
-      || (v_json->>'rezervace_selhala') || ' (tem lidem mail NEODESEL).';
-    v_stav := 'POPLACH';
+  -- ---------------------------------------------------------------------
+  -- ČERVENÁ POLE Z TĚLA ODPOVĚDI (R1, nálezy N2 a N3)
+  --
+  -- ⛔⛔ Řádek v `client_remind_sent` je od dávky 2 REZERVACE, ne doklad o odeslání.
+  --    Funkce zná tři stavy, ve kterých rezervace drží a mail neodešel, a `sent_ok`
+  --    u nich nemusí stihnout klesnout na false (zápis `sent_ok=false` může sám selhat
+  --    na 504, což je přesně ten výpadek, kvůli kterému celá dávka vznikla).
+  --    ⇒ Tyhle seznamy z odpovědi jsou DRUHÝ, nezávislý zdroj a přebíjejí `OK`.
+  -- ⛔ [N3] `jsonb_typeof` PŘED `jsonb_array_length`: nad skalárem skončí funkce chybou
+  --    22023 a NEZAPÍŠE do `app_config` nic, takže by hlídku shodil její vlastní vstup
+  --    a poplach by přišel až po osmi dnech z kontroly čerstvosti.
+  foreach v_klic in array array['rezervace_selhala', 'odeslani_nejiste', 'alerty_selhaly'] loop
+    v_pole := v_json -> v_klic;
+    if jsonb_typeof(v_pole) = 'array' and jsonb_array_length(v_pole) > 0 then
+      v_stav := 'POPLACH';
+      v_text := v_text || ' | POZOR: posledni beh hlasi ' || v_klic || '=' || (v_pole::text) || ' ('
+        || case v_klic
+             when 'rezervace_selhala' then 'tem lidem mail NEODESEL, dalsi beh to zkusi znovu'
+             when 'odeslani_nejiste'  then 'rezervace drzi a NEVIME, jestli mail odesel; sam se uz neopakuje'
+             else 'Martinovi se nepodarilo poslat ani alert, takze o tom jinak nevi'
+           end || ').';
+    end if;
+  end loop;
+  if jsonb_typeof(v_json -> 'errors') = 'array' and jsonb_array_length(v_json -> 'errors') > 0 then
+    v_text := v_text || ' | chyby odeslani: ' || ((v_json -> 'errors')::text);
   end if;
-  if v_json ? 'errors' and jsonb_array_length(coalesce(v_json->'errors', '[]'::jsonb)) > 0 then
-    v_text := v_text || ' | chyby odeslani: ' || (v_json->>'errors');
+  -- Potlačené alerty nejsou poplach samy o sobě, ale patří k němu: Martin uvidí jen tři.
+  if jsonb_typeof(v_json -> 'alerty_potlaceno') = 'number' and (v_json->>'alerty_potlaceno')::int > 0 then
+    v_text := v_text || ' | alertu potlaceno stropem: ' || (v_json->>'alerty_potlaceno') || '.';
   end if;
 
   -- Formát hodnoty čte `daily-digest/hlidky.ts` (`hlidkaClientRemind`).

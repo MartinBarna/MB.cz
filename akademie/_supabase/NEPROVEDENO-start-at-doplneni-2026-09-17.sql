@@ -1,6 +1,6 @@
 -- =============================================================================
 -- ⛔⛔ NEPROVEDENO. TENHLE SKRIPT SE NESPUSTIL A SPUSTIT HO MÁ ŠÉF PO MARTINOVĚ GO.
---    Mění data 18 platících klientů koučinku a mění chování nedělní rozesílky.
+--    Mění data 16 platících klientů koučinku a mění chování nedělní rozesílky.
 --
 -- K ČEMU TO JE (dávka 2, 17. 9. 2026, nález V4)
 -- Dávka 9 zavedla, že „nový klient nedostane výzvu k reportu hned" rozhoduje
@@ -9,7 +9,8 @@
 --       from entitlements where product='coaching' group by active;
 --     -- active=true : n=19, bez_startu=18
 --     -- active=false: n=2,  bez_startu=2
--- Tedy 18 z 19 padá na starou náhradu z `granted_at`. Není to vada kódu, je to vada
+-- Tedy 18 z 19 padá na starou náhradu z `granted_at` (a z těch 18 jsou dva Martinovy
+-- testovací účty, takže skript zasáhne 16). Není to vada kódu, je to vada
 -- provozu: pole se nevyplňuje. Funkce to sama hlásí polem `bez_startu`, jenže to
 -- končí v `net._http_response`, kam se nikdo nedívá.
 --
@@ -18,8 +19,8 @@
 -- z něj znamená „start byl ten den, co jsem ho založil", což u části klientů není
 -- pravda (někoho zakládal dopředu, někoho zpětně). Skutečná data má Martin v hlavě
 -- a v konverzacích, ne v systému.
--- ⇒ ⭐ LEPŠÍ CESTA, KTEROU DOPORUČUJI: Martin projde 18 řádků a doplní skutečné
---    starty ručně (v adminu na kartě klienta, dávka 9 na to má pole). Je jich 18,
+-- ⇒ ⭐ LEPŠÍ CESTA, KTEROU DOPORUČUJI: Martin projde 16 řádků a doplní skutečné
+--    starty ručně (v adminu na kartě klienta, dávka 9 na to má pole). Je jich 16,
 --    zabere to pár minut a výsledek bude PRAVDA, ne odhad. Tenhle skript je záchrana
 --    pro případ, že se mu do toho nechce, a pak platí, co je napsané níž.
 --
@@ -55,16 +56,22 @@
 -- KROK 1: ZÁLOHA. ⛔ Bez ní se skript nespouští. Záloha JE osobní údaj, takže
 --         hned RLS a revoke (jinak by byla přes PostgREST veřejně čitelná).
 -- -----------------------------------------------------------------------------
+-- ⛔ [R1, nález N7] Záloha bere PŘESNĚ TO, co UPDATE mění, tedy i s výlukou testovacích
+--    řádků. Dřív brala všech 18 a kontrola po zásahu by pak neseděla s očekáváním.
+--    Aktivních koučinkových nároků bez `start_at` je 18, ale update jich změní 16
+--    (dva jsou Martinovy testovací účty).
 -- create table if not exists public.zaloha_entitlements_start_at_2026_09_17 as
 --   select e.email, e.product, e.source, e.granted_at, e.start_at, now() as zalohovano_v
 --     from public.entitlements e
---    where e.product = 'coaching' and e.active = true and e.start_at is null;
+--    where e.product = 'coaching' and e.active = true and e.start_at is null
+--      and coalesce(e.source, '') <> 'test-claude'
+--      and lower(e.email) not like 'fitness.barna%';
 --
 -- alter table public.zaloha_entitlements_start_at_2026_09_17 enable row level security;
 -- revoke all on table public.zaloha_entitlements_start_at_2026_09_17 from public, anon, authenticated;
 -- grant select on table public.zaloha_entitlements_start_at_2026_09_17 to service_role;
 --
--- -- Kontrola zálohy (čekám 18 řádků a RLS = true):
+-- -- Kontrola zálohy (čekám 16 řádků a RLS = true):
 -- select count(*) from public.zaloha_entitlements_start_at_2026_09_17;
 -- select relrowsecurity from pg_class where relname = 'zaloha_entitlements_start_at_2026_09_17';
 -- select has_table_privilege('anon', 'public.zaloha_entitlements_start_at_2026_09_17', 'SELECT'); -- čekám false
@@ -93,10 +100,19 @@
 -- -----------------------------------------------------------------------------
 -- KROK 3: NÁVRAT, kdyby se to nepovedlo nebo Martin řekl zpátky.
 -- -----------------------------------------------------------------------------
+-- ⛔ [R1, nález N8] Podmínka na dosazenou hodnotu je POVINNÁ. Bez ní by návrat smazal
+--    i start, který Martin mezitím vyplnil ručně (a ruční vyplnění je doporučená cesta).
+--    Vrací se tedy jen řádky, které pořád nesou přesně to, co tenhle skript dosadil.
 -- update public.entitlements e
 --    set start_at = z.start_at
 --   from public.zaloha_entitlements_start_at_2026_09_17 z
---  where e.email = z.email and e.product = z.product;
+--  where e.email = z.email and e.product = z.product
+--    and e.start_at is not distinct from (e.granted_at at time zone 'UTC')::date;
+--
+-- -- Kontrola, co návrat NEVRÁTIL (ruční zásahy, které zůstávají):
+-- select e.email, e.start_at from public.entitlements e
+--   join public.zaloha_entitlements_start_at_2026_09_17 z on z.email = e.email and z.product = e.product
+--  where e.start_at is not null;
 --
 -- -- Úklid zálohy (až po Martinově potvrzení, že je vše v pořádku):
 -- -- drop table if exists public.zaloha_entitlements_start_at_2026_09_17;

@@ -35,10 +35,18 @@ console.log("\n== order-rescue: reminded_at pred odeslanim ==");
   check("zahozeny update razitka je pryc",
     !/\n      await admin\.from\("pending_orders"\)\.update\(\{ reminded_at: new Date\(\)/.test(rescue));
   check("bez razitka se NEODESILA", rescue.includes("if (razErr) { razitkoChyba = razErr.message; return; }"));
-  check("vyslovne odmitnuti (>= 400) razitko VRATI", /if \(stav >= 400\) \{[\s\S]{0,260}?reminded_at: null/.test(rescue));
-  const vetevNejistoty = rescue.split("if (stav >= 400)")[1]?.split("} else {")[1] ?? "";
-  check("nejistota razitko NEVRACI", vetevNejistoty.length > 0 && !vetevNejistoty.slice(0, 1400).includes("reminded_at: null"));
-  check("nejistota posle alert Martinovi", vetevNejistoty.includes("alertMartinovi("));
+  // ⛔⛔ [R1, nalez N1] HRANICE JE 500, NE 400: status 0 (chybejici klic, sit, DNS)
+  //    znamena JISTE neodeslani, razitko se musi vratit.
+  check("status 0 a 4xx razitko VRATI", /if \(stav < 500\) \{[\s\S]{0,260}?reminded_at: null/.test(rescue));
+  check("stary prah 400 je pryc", !rescue.includes("if (stav >= 400)"));
+  const vetevNejistoty = rescue.split("if (stav < 500) {")[1]?.split("} else {")[1] ?? "";
+  check("nejistota (5xx) razitko NEVRACI", vetevNejistoty.length > 0 && !vetevNejistoty.slice(0, 1400).includes("reminded_at: null"));
+  check("nejistota posle alert Martinovi", vetevNejistoty.includes("alertSeStropem("));
+  // ⛔ [R1, nalez N2] Kdyz se razitko nepovede vratit, cron uz objednavku nikdy nevezme.
+  const vetevVraceni = rescue.split("if (stav < 500) {")[1]?.split("} else {")[0] ?? "";
+  check("selhane vraceni razitka alertuje", vetevVraceni.includes("alertSeStropem("));
+  // ⛔ [R1, nalez N5] Strop alertu (cron jede kazde dve hodiny, az deset mailu na beh).
+  check("alerty maji strop", rescue.includes("const MAX_ALERTU = 3;") && rescue.includes("alertuPotlaceno++"));
   const teloAlertu = rescue.split("async function alertMartinovi(")[1]?.split("\nDeno.serve")[0] ?? "";
   check("alert nejde pres branu", teloAlertu.length > 0 && !teloAlertu.includes("sendIfAllowed"));
 }
@@ -52,10 +60,13 @@ console.log("\n== videokurz-onboarding: onboarding_sent_at pred odeslanim ==");
     "razitko@" + iRazitko + " send@" + iSend);
   check("chyba razitka se cte", onboard.includes("const { error: razErr } = await admin.from('customer_contacts')"));
   check("bez razitka se NEODESILA", /razitkoSelhalo\.push\(String\(r\.email\)\);\s*\r?\n\s*return;/.test(onboard));
-  check("vyslovne odmitnuti Resendu razitko VRATI",
-    /zprava\.includes\('resend_'\)\) \{[\s\S]{0,260}?onboarding_sent_at: null/.test(onboard));
-  const vetevNejistoty = onboard.split("if (zprava.includes('resend_'))")[1]?.split("} else {")[1] ?? "";
-  check("nejistota razitko NEVRACI", vetevNejistoty.length > 0 && !vetevNejistoty.slice(0, 900).includes("onboarding_sent_at: null"));
+  // ⛔⛔ [R1, nalez N1] Puvodni test `zprava.includes('resend_')` nechal razitko
+  //    i u `missing_RESEND_API_KEY` a u padu fetch, tedy u JISTEHO neodeslani.
+  check("status se cte z chyby a hranice je 500",
+    /stavOdeslani < 500\) \{[\s\S]{0,260}?onboarding_sent_at: null/.test(onboard));
+  check("stary test 'obsahuje resend_' je pryc", !onboard.includes("if (zprava.includes('resend_'))"));
+  const vetevNejistoty = onboard.split("if (stavOdeslani < 500) {")[1]?.split("} else {")[1] ?? "";
+  check("nejistota (5xx) razitko NEVRACI", vetevNejistoty.length > 0 && !vetevNejistoty.slice(0, 900).includes("onboarding_sent_at: null"));
   check("chyba se dal pocita do errors (rethrow)", onboard.includes("throw e; // at se to zapocita"));
   check("stavy jdou videt v odpovedi",
     onboard.includes("razitko_selhalo: razitkoSelhalo") && onboard.includes("odeslani_nejiste: odeslaniNejiste"));

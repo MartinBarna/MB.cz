@@ -271,6 +271,17 @@ Deno.serve(async (req) => {
 
   let sent = 0, skipped = 0;
   const results: Record<string, unknown>[] = [];
+  // ⛔ [R1, nález N5] STROP ALERTŮ. Při výpadku sítě by z jednoho běhu odešlo až deset
+  //    stejných mailů Martinovi (a cron jede každé dvě hodiny). Dál se už jen počítá
+  //    a celé číslo je v odpovědi.
+  const MAX_ALERTU = 3;
+  let alertuPoslano = 0;
+  let alertuPotlaceno = 0;
+  const alertSeStropem = async (subject: string, text: string): Promise<boolean> => {
+    if (alertuPoslano >= MAX_ALERTU) { alertuPotlaceno++; return false; }
+    alertuPoslano++;
+    return await alertMartinovi(admin, subject, text);
+  };
   for (const p of pend ?? []) {
     if (sent >= MAX_PER_RUN) break; // strop je na odeslane maily, ne na prectene radky
     const email = low(p.email);
@@ -345,20 +356,35 @@ Deno.serve(async (req) => {
       }
       const o = odeslani as { ok: boolean; status: number; providerId: string; chyba: string } | null;
       if (!o || !o.ok) {
-        // ⛔ DVA RŮZNÉ STAVY, NE JEDEN.
-        //  a) HTTP >= 400: Resend zásilku VÝSLOVNĚ odmítl, mail jistě neodešel
+        // ⛔⛔ HRANICE JE 500, NE 400 (R1, nález N1). Původní verze brala `status: 0`
+        //    (chybějící RESEND_API_KEY, DNS, odmítnuté spojení) jako „nevíme" a razítko
+        //    nechala. Objednávka by se pak z okna 72 h už nikdy nevrátila, a při chybějícím
+        //    klíči by selhal i alert, protože jde týmž `send()`. Tichá ztráta mailu za peníze.
+        //  a) status 0 nebo 4xx: Resend zásilku NEPŘIJAL, mail jistě neodešel
         //     => razítko zpět na null, ať to cron za dvě hodiny zkusí znovu (okno 72 h).
-        //  b) status 0 (síť, DNS, timeout, chybějící klíč): NEVÍME
+        //  b) status >= 500: tělo už na Resendu bylo a mohl ho přijmout, NEVÍME
         //     => razítko ZŮSTANE (mail se neopakuje) a Martin dostane alert.
         const stav = o?.status ?? 0;
-        if (stav >= 400) {
+        if (stav < 500) {
           const { error: zpetErr } = await admin.from("pending_orders")
             .update({ reminded_at: null }).eq("order_id", p.order_id);
-          if (zpetErr) console.error("[order-rescue] VRACENI razitka selhalo: " + p.order_id + " " + zpetErr.message);
+          if (zpetErr) {
+            // ⛔ Razítko drží a mail neodešel. Tohle je jediný stav téhle větve, o kterém
+            //    se nikdo jinak nedozví, proto tady alert JE (R1, nález N2).
+            console.error("[order-rescue] VRACENI razitka selhalo: " + p.order_id + " " + zpetErr.message);
+            await alertSeStropem(
+              "[VYRIDIT RUCNE] order-rescue: razitko drzi, mail neodesel (" + email + ")",
+              "Objednavka " + p.order_id + " (" + p.product + "), adresa " + email + ".\n\n"
+                + "Zachranny mail Resend NEPRIJAL (status " + stav + ": " + (o?.chyba || "") + "),\n"
+                + "takze jiste neodesel. Vraceni razitka reminded_at ale taky selhalo:\n"
+                + zpetErr.message.slice(0, 160) + "\n\n"
+                + "Dusledek: cron uz tu objednavku nikdy nevezme. Smaz jí reminded_at rucne\n"
+                + "(order_id=" + p.order_id + "), dokud je v okne 72 h.",
+            );
+          }
           results.push({ order: p.order_id, odeslano: false, status: stav, razitko: zpetErr ? "ZUSTALO" : "VRACENO" });
         } else {
-          const doslo = await alertMartinovi(
-            admin,
+          const doslo = await alertSeStropem(
             "[VYRIDIT RUCNE] order-rescue: nejiste odeslani (" + email + ")",
             "Objednavka " + p.order_id + " (" + p.product + "), adresa " + email + ".\n\n"
               + "Zachranny mail se nepodarilo odeslat: " + (o?.chyba || "sit nebo timeout") + ".\n"
@@ -392,5 +418,5 @@ Deno.serve(async (req) => {
       results.push({ order: p.order_id, error: String(e).slice(0, 100) });
     }
   }
-  return json({ ok: true, due: (pend ?? []).length, sent, skipped, results });
+  return json({ ok: true, due: (pend ?? []).length, sent, skipped, alerty_potlaceno: alertuPotlaceno, results });
 });

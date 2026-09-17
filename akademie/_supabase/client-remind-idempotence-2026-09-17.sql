@@ -65,9 +65,13 @@ create unique index if not exists client_remind_sent_unique_den
   on public.client_remind_sent (email, kind, den)
   where kind in ('report', 'register');
 
--- Nová verze funkce rezervaci při výslovném odmítnutí Resendu maže, aby ji opakovací
--- běh mohl zkusit znovu. Bez tohohle grantu by smazání tiše selhalo a klient by
--- v ten týden nedostal nic.
+-- Nová verze funkce rezervaci maže, když je jisté, že mail neodešel, aby ji opakovací
+-- běh mohl zkusit znovu.
+-- ⚠️ [R1, nález N6] Tenhle příkaz je NO-OP: změřeno 17. 9. 2026, že `service_role` má
+--    na `client_remind_sent` DELETE i UPDATE už z výchozích práv Supabase. Původní
+--    zdůvodnění („bez tohohle grantu by smazání tiše selhalo") bylo NEPRAVDIVÉ.
+--    Řádek zůstává jako výslovná deklarace, co funkce potřebuje, ať se právo neztratí
+--    při příštím úklidu grantů; ale nikdo si z něj nesmí odvodit, že bez něj DELETE nejde.
 grant delete on table public.client_remind_sent to service_role;
 
 -- Kontrola po zásahu (čekám unikátní partial index a sloupce den, sent_ok):

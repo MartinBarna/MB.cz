@@ -8,6 +8,9 @@
 // a přesně ten tam odhalil alert schovaný uvnitř podmínky.
 // ⚠️ Statický test ověřuje TVAR kódu, ne chování za běhu. Chování ověřuje rollback test
 //    nad živou DB (viz BUILD-maily-davka2a.md) a nedělní běh.
+// ⚠️ [R1] Revizor upozornil, že takový test zezelená i nad kódem s vadou, kterou pozná
+//    jen z toho, co v kódu NENÍ. Proto má skoro každá kontrola i KONTRAST: tvrzení, že
+//    starý (vadný) tvar v souboru už není.
 // ============================================================================
 const SRC = await Deno.readTextFile(new URL("./index.ts", import.meta.url));
 
@@ -35,16 +38,36 @@ check("prohrany zavod NEODESILA (po 'obsazeno' nasleduje continue)",
 check("chyba zapisu NEODESILA (po 'chyba' nasleduje continue)",
   /rez\.stav === "chyba"\)\s*\{[\s\S]{0,400}?continue;/.test(SRC));
 
-// ⛔ Jadro rozhodnuti: uvolnit rezervaci smi JEN vyslovne odmitnuti Resendu.
-check("rezervace se uvolnuje jen pri HTTP >= 400", /if \(r\.status >= 400\) \{[\s\S]{0,200}?\.delete\(\)/.test(SRC));
-// KONTRAST: pri nejistote (status 0) se NEMAZE, jen se znacka sent_ok a alertuje.
-const vetevNejistoty = SRC.split("if (r.status >= 400)")[1]?.split("} else {")[1] ?? "";
-check("pri nejistote se rezervace NEMAZE", vetevNejistoty.length > 0 && !vetevNejistoty.slice(0, 1200).includes(".delete()"));
-check("pri nejistote se zapisuje sent_ok=false", vetevNejistoty.includes("sent_ok: false"));
-check("pri nejistote jde alert Martinovi", vetevNejistoty.includes("alertMartinovi("));
+// ⛔⛔ [R1, nalez N1] HRANICE JE 500, NE 400. `status: 0` (chybejici RESEND_API_KEY, sit,
+//    DNS) znamena, ze se pozadavek vubec neodeslal => mail JISTE nedosel => rezervace se
+//    MUSI uvolnit. Puvodni verze ji nechala naporad a klient by se do rozesilky uz nevratil.
+check("nejistota zacina az u 500", SRC.includes("if (r.status >= 500) {"));
+// KONTRAST: stary prah uz v kodu byt nesmi.
+check("stary prah 400 je pryc", !SRC.includes("if (r.status >= 400) {"));
+
+const poHranici = SRC.split("if (r.status >= 500) {")[1] ?? "";
+const vetevNejistoty = poHranici.split("} else {")[0] ?? "";
+const vetevNeodeslano = poHranici.split("} else {")[1] ?? "";
+check("pri nejistote (5xx) se rezervace NEMAZE",
+  vetevNejistoty.length > 0 && !vetevNejistoty.includes("uvolniRezervaci("));
+check("pri nejistote se zapisuje sent_ok=false", vetevNejistoty.includes("oznacNejiste("));
+check("pri nejistote jde alert Martinovi", vetevNejistoty.includes("posliAlertNejistoty("));
+check("status 0 a 4xx rezervaci UVOLNI", vetevNeodeslano.includes("uvolniRezervaci("));
+// ⛔ [R1, nalez N2] Kdyz se uvolneni nepovede, radek drzi a mail neodesel: hlidka to musi videt.
+check("selhane uvolneni oznaci sent_ok=false a alertuje",
+  vetevNeodeslano.includes("oznacNejiste(") && vetevNeodeslano.includes("posliAlertNejistoty("));
+
+// ⛔ [R1, nalez N2] Vyjimka po rezervaci taky musi skoncit sent_ok=false, ne jen v poli.
+const vetevCatch = SRC.split("} catch (e) {")[1] ?? "";
+check("vyjimka po rezervaci oznaci sent_ok=false",
+  vetevCatch.includes("oznacNejiste(") && vetevCatch.includes("posliAlertNejistoty("));
+
+// ⛔ [R1, nalez N5] Strop alertu: jeden vypadek site nesmi poslat 19 stejnych mailu.
+check("alerty maji strop", SRC.includes("const MAX_ALERTU = 3;") && SRC.includes("alertuPotlaceno++"));
+check("potlacene alerty jsou videt v odpovedi", SRC.includes("alerty_potlaceno: alertuPotlaceno"));
 
 // Alert nesmi jit pres branu: Martinova adresa na seznamu by umlcela prave ty alerty.
-const teloAlertu = SRC.split("async function alertMartinovi(")[1]?.split("\nfunction ")[0] ?? "";
+const teloAlertu = SRC.split("async function alertMartinovi(")[1]?.split("function mailHtml(")[0] ?? "";
 check("alertMartinovi nejde pres guardSend", teloAlertu.length > 0 && !teloAlertu.includes("guardSend"));
 check("alertMartinovi nepise stopu do email_events (Martinova adresa)",
   teloAlertu.includes("odesliPresResend(RESEND_KEY, {") && !teloAlertu.includes("admin, via:"));
@@ -63,7 +86,9 @@ console.log("\n== client-remind: testovaci rezim ma vlastni pamet (nalez V2) =="
 check("testovaci klic je oddeleny (test:<druh>)", SRC.includes('const testKlic = "test:" + testKind;'));
 // KONTRAST: test NESMI psat ostry druh, jinak by umlcel nedelni mail klientovi.
 check("test NEZAPISUJE ostry druh", !/testEmail\)\s*\{[\s\S]{0,300}?insert\(\{ email: tgt\.email, kind: tgt\.kind \}\)/.test(SRC));
-check("test zapisuje pod testKlic", SRC.includes("insert({ email: tgt.email, kind: testKlic })"));
+check("test zapisuje pod testKlic", SRC.includes("kind: testKlic })"));
+// ⛔ [R1, nalez N9] Testovaci zapis musi adresu snizit, jinak v tabulce vzniknou dve varianty.
+check("testovaci zapis adresu snizuje", SRC.includes("insert({ email: low(tgt.email), kind: testKlic })"));
 check("hodinova pojistka existuje", SRC.includes("test_jiz_odeslan_v_posledni_hodine") && SRC.includes("3600_000"));
 check("pojistka jde vedome prebit", SRC.includes("body?.test_znovu === true") && SRC.includes("test_znovu"));
 check("pojistka se pta na testKlic, ne na ostry druh",
