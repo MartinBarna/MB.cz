@@ -20,6 +20,9 @@ import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+// Adresa pro odpoved cloveka. ⛔ NENI to `from`: odesila se z rozesilaci adresy
+// `news@martinbarna.cz`, kterou Martin necte. Viz komentar u `sendMail`.
+const REPLY_TO = "martin@martinbarna.cz";
 
 const WARN_AFTER_DAYS = 33;        // 30 dni cyklus + 3 dny tolerance
 const SUSPEND_AFTER_WARN_DAYS = 7; // tyden na napravu po upozorneni
@@ -89,6 +92,10 @@ function wrap(body: string): string {
     `<p style="margin:14px 0 0;font-size:12px;color:#999">Martin Barna · Barna Academy · <a href="https://martinbarna.cz" style="color:#c45e00">martinbarna.cz</a> · odpovědět můžeš rovnou na tenhle e-mail</p></div>`;
 }
 
+// ⛔⛔ [17. 9. 2026, nalez A/N8] CENA `3 000 Kc` JE V TEXTU NATVRDO a neni ani
+// v `pricing_plans`, ani v `email_templates`. Kdo meni splatkovy cenik, MUSI zmenit
+// tenhle radek a funkci znovu nasadit; nikde jinde to nekrikne.
+// Viz `tvujcoach-cenik-zmena-checklist` a tabulka cen v BUILD-maily-davka2b.md.
 function warnEmail(name: string | null, seg = "other") {
   return {
     subject: "Splátka za Barna Academy neproběhla",
@@ -127,7 +134,15 @@ async function sendMail(
   // jako vyjimku, vraci `ok: false`, takze smycka dojede.
   const r = await odesliPresResend(
     RESEND_KEY,
-    { from: "Martin Barna <news@martinbarna.cz>", to: [to], subject, html },
+    // ⛔ [17. 9. 2026, nalez A/N7] `reply_to` NENI KOSMETIKA. Oba texty vyslovne zvou
+    // k odpovedi ("odepis mi rovnou na tenhle e-mail", "napis mi na tenhle e-mail"),
+    // ale odesilatel je `news@martinbarna.cz`, tedy rozesilaci adresa. Bez `reply_to`
+    // padala odpoved dluznika prave tam. Adresa je stejna jako u ostatnich cest, kde
+    // se ceka odpoved cloveka (`order-rescue`, `poukaz-vydat`, `koucink-onboarding`,
+    // `academy-stripe-webhook`): `martin@martinbarna.cz`.
+    // ⚠️ Plati i pro alert Martinovi (`alertAdmin` jede touhle funkci). Tam je to
+    //    neskodne a spis uzitecne: odpoved na alert dojde do te same schranky.
+    { from: "Martin Barna <news@martinbarna.cz>", to: [to], subject, html, reply_to: REPLY_TO },
     stopa,
   );
   return r.ok;

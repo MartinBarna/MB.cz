@@ -1,4 +1,4 @@
-// client-report — backend klientské sekce koučinku (spec: _zdroje/klientska-sekce-plan.md).
+// client-report: backend klientské sekce koučinku (spec: _zdroje/klientska-sekce-plan.md).
 // POST {action:'report'|'intake', data:{...}} + Authorization: Bearer <JWT klienta>.
 // Brána: entitlement 'coaching'. Uloží do client_reports/client_intake a pošle
 // dark-gold HTML mail Martinovi + kopii klientovi (Resend).
@@ -32,11 +32,20 @@ const json = (b: unknown, c: Record<string, string>, status = 200) =>
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const num = (v: unknown): number | null => {
-  if (v == null || String(v).trim() === "") return null; // Number("") === 0 — prázdno není nula
+  if (v == null || String(v).trim() === "") return null; // Number("") === 0, a prázdno není nula
   const n = Number(String(v).replace(",", "."));
   return Number.isFinite(n) && n >= 0 ? Math.round(n * 10) / 10 : null; // 0 je validní hodnota (kroky, fitko)
 };
-const czk = (n: number | null) => n == null ? "—" : String(n).replace(".", ",");
+// ⛔⛔ [17. 9. 2026, nález V5 / D-N8] DLOUHÁ POMLČKA (U+2014) TADY BYLA 13× A CHODILA
+// KLIENTOVI (kopie týdenního reportu, předmět „Tvůj týdenní report ✓ (kopie)“).
+// Pravidlo z CLAUDE.md zní „nikde v textu pro lidi“. V tabulce ale nejde o oddělovač
+// myšlenek, nýbrž o chybějící hodnotu, takže se to ŘÍKÁ, ne škobrtne o znak:
+//   • číselná buňka → krátká pomlčka „–“ (kterou pravidlo u položky a hodnoty dovoluje),
+//   • slovní buňka a škála → slovo „neuvedeno“, protože „–/5“ se čte jako chyba.
+// ⚠️ Kdo sem přidá další buňku, bere si zástupnou hodnotu ODSUD, ne nový znak.
+const CHYBI_CISLO = "–";
+const CHYBI_SLOVO = "neuvedeno";
+const czk = (n: number | null) => n == null ? CHYBI_CISLO : String(n).replace(".", ",");
 
 // ---------- mail obal (1:1 s drip stylem) ----------
 // DARK-MODE FIX (drz 1:1 s drip-send): color-scheme 'light dark' + zamky barev pres tridy .mb-*.
@@ -103,11 +112,15 @@ function delta(cur: number | null, prev: number | null, downGood = true): string
   return ` <span class='${good ? "mb-good" : "mb-warn"}' style='color:${col};font-size:13px;font-weight:700'>${arrow} ${d > 0 ? "+" : "−"}${czk(Math.abs(d))}</span>`;
 }
 function dots(v: number | null): string {
-  if (!v) return "<span class='mb-mut' style='color:#8F8A99'>—</span>";
+  if (!v) return "<span class='mb-mut' style='color:#8F8A99'>" + CHYBI_CISLO + "</span>";
   let s = "";
   for (let i = 1; i <= 5; i++) s += `<span class='${i <= v ? "mb-gold" : "mb-doff"}' style='color:${i <= v ? "#EBB12C" : "#3a3450"};font-weight:800'>●</span>`;
   return `<span style='letter-spacing:3px'>${s}</span>`;
 }
+
+// Škála 1 až 5 pro člověka. Chybějící hodnota se ŘEKNE slovem; „–/5“ by vypadalo rozbitě.
+// deno-lint-ignore no-explicit-any
+const skala = (v: any): string => v ? esc(v) + "/5" : CHYBI_SLOVO;
 
 // pořadí = týdenní priorita (Martin: hruď, pas, boky, zadek, stehna zaberou celé tělo), zbytek volitelný
 const MIRY: [string, string][] = [
@@ -145,7 +158,7 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
       b += `<tr><td class='mb-body' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${label}</td>` +
         `<td class='mb-w' align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#fff;font-weight:700'>${czk(cur)}</td>` +
         `<td class='mb-mut' align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${czk(pr)}</td>` +
-        `<td align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b'>${delta(cur, pr) || "<span class='mb-mut' style='color:#8F8A99'>—</span>"}</td></tr>`;
+        `<td align='right' style='padding:7px 8px;border-bottom:1px solid #211d2b'>${delta(cur, pr) || "<span class='mb-mut' style='color:#8F8A99'>" + CHYBI_CISLO + "</span>"}</td></tr>`;
     }
     b += `</table>`;
   } else {
@@ -183,12 +196,12 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
   const prevAct = (prev && prev.activity) || {};
   b += sect("Aktivity") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' class='mb-body' style='font-size:14px;color:#F0EADF'>` +
     `<tr><td style='padding:4px 0'>🚶 Kroky (Ø/den)</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${czk(num(a.kroky))}${delta(num(a.kroky), num(prevAct.kroky), false)}</td></tr>` +
-    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" : "—"}</td></tr>` +
-    `<tr><td style='padding:4px 0'>⏱️ Sport celkem (min/týden)</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${num(a.sport_min) != null ? czk(num(a.sport_min)) : "—"}${delta(num(a.sport_min), num(prevAct.sport_min), false)}</td></tr>` +
-    `<tr><td style='padding:4px 0'>🏃 Kardio</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.kardio || "—")}</td></tr>` +
-    `<tr><td style='padding:4px 0'>⚽ Další</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.dalsi || "—")}</td></tr></table>`;
+    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" : CHYBI_SLOVO}</td></tr>` +
+    `<tr><td style='padding:4px 0'>⏱️ Sport celkem (min/týden)</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${num(a.sport_min) != null ? czk(num(a.sport_min)) : CHYBI_CISLO}${delta(num(a.sport_min), num(prevAct.sport_min), false)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>🏃 Kardio</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.kardio || CHYBI_SLOVO)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>⚽ Další</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.dalsi || CHYBI_SLOVO)}</td></tr></table>`;
 
-  // plán z minulého reportu vs. realita — jen když si ho klient minule nastavil
+  // plán z minulého reportu vs. realita, jen když si ho klient minule nastavil
   const prevPlan = prevAct.plan_next;
   if (prevPlan && (num(prevPlan.kroky) != null || num(prevPlan.sport_min) != null)) {
     const planOk = (planV: number | null, realV: number | null) =>
@@ -210,11 +223,11 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
   // škály
   const s = r.scales || {};
   b += sect("Pocity (1–5)") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' class='mb-body' style='font-size:14px;color:#F0EADF'>` +
-    `<tr><td style='padding:4px 0;width:44%'>Únava</td><td>${dots(s.unava)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.unava || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Hlad</td><td>${dots(s.hlad)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.hlad || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Síla</td><td>${dots(s.sila)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.sila || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Spánek</td><td>${dots(s.spanek_kvalita)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.spanek_h ? czk(num(s.spanek_h)) + " h · " : ""}${s.spanek_kvalita || "—"}/5</td></tr>` +
-    `<tr><td style='padding:4px 0'>Dodržení plánu</td><td>${dots(s.dodrzeni)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.dodrzeni || "—"}/5</td></tr></table>`;
+    `<tr><td style='padding:4px 0;width:44%'>Únava</td><td>${dots(s.unava)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${skala(s.unava)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>Hlad</td><td>${dots(s.hlad)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${skala(s.hlad)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>Síla</td><td>${dots(s.sila)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${skala(s.sila)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>Spánek</td><td>${dots(s.spanek_kvalita)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${s.spanek_h ? czk(num(s.spanek_h)) + " h · " : ""}${skala(s.spanek_kvalita)}</td></tr>` +
+    `<tr><td style='padding:4px 0'>Dodržení plánu</td><td>${dots(s.dodrzeni)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${skala(s.dodrzeni)}</td></tr></table>`;
 
   // slovně
   const t = r.notes || {};
@@ -370,7 +383,7 @@ Deno.serve(async (req: Request) => {
       .select("kcal,protein,kroky,sport_min,treninky").eq("email", email).maybeSingle();
     const row = {
       email,
-      // datum v Europe/Prague — report odeslaný po půlnoci CZ nesmí dostat včerejší (UTC) datum
+      // datum v Europe/Prague: report odeslaný po půlnoci CZ nesmí dostat včerejší (UTC) datum
       report_date: new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Prague" }).format(new Date()),
       weight: num(data.weight),
       measurements: data.measurements ?? {},
@@ -384,7 +397,7 @@ Deno.serve(async (req: Request) => {
       targets: tgRow ?? null,
       source: "web",
     };
-    // předchozí + první report pro šipky (bez dnešního — re-submit v tentýž den je update)
+    // předchozí + první report pro šipky (bez dnešního, re-submit v tentýž den je update)
     const { data: histAll } = await admin.from("client_reports").select("weight,measurements,activity,report_date")
       .eq("email", email).order("report_date", { ascending: true });
     const hist = (histAll ?? []).filter((h) => h.report_date < row.report_date);
@@ -416,7 +429,13 @@ Deno.serve(async (req: Request) => {
       `sekce Onboarding z něj spočítá varianty cílů a připraví koncept uvítacího mailu.</p>`;
     const coachMail = wrap("Martin Barna · vstupní dotazník", todo + html, `Dotazník od ${esc(email)} · klientská sekce martinbarna.cz`);
     const clientMail = wrap("Martin Barna · vstupní dotazník", html +
-      `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Do 48 hodin ti nastavím plán na míru a ozvu se. Be Effective! Martin</p>`,
+      // ⛔⛔ [17. 9. 2026, nález D/N7] Věta „Do 48 hodin ti nastavím plán na míru“ je PRYČ.
+      // 15. 9. 2026 ji Martin nechal odstranit z uvítacího mailu koučinku
+      // (`_shared/koucink-onboarding.ts`, důvod: ten čas se nedá garantovat), ale tady
+      // přežila. A právě sem ten uvítací mail posílá: klient viděl obě verze v jednom týdnu.
+      // ⛔ NEVRACET ŽÁDNÝ SLIB O TOM, ZA JAK DLOUHO bude plán hotový. Zůstává CO přijde.
+      // ⚠️ NÁVRH TEXTU KE KONTROLE ŠÉFA (Martinův hlas).
+      `<p class='mb-ps' style='margin:16px 0 0;color:#A09AAD;font-style:italic;font-size:14px'>Díky! Mám všechno, co potřebuju. Sestavím ti plán na míru a ozvu se. Be Effective! Martin</p>`,
       "Kopie dotazníku pro tvůj přehled. Martin Barna · martinbarna.cz");
     const s1 = await send(admin, COACH, `📝 Vstupní dotazník: ${name}`, coachMail);
     const s2 = await send(admin, email, "Tvůj vstupní dotazník ✓ (kopie)", clientMail, true);
