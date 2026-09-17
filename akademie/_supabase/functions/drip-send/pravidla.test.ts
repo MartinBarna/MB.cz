@@ -61,7 +61,7 @@ zkontroluj('trener-kit krok 0 je slibeny kit, projde i clenovi Academy', shouldS
 
 // ---------- ACADEMY-VK-SERIE: docasna serie pro majitele videokurzu bez Academy (C1, 1. 9. 2026) ----------
 // Trat prodava Academy, takze se stopuje na Academy a NE na videokurzu: videokurz ma
-// z definice kazdy, komu tahle serie chodi (je to duvod, proc ma cenu 8 100 misto 8 900).
+// z definice kazdy, komu tahle serie chodi (je to duvod, proc ma cenu 7 410 misto 8 900).
 zkontroluj('academy-vk-serie stopne clena Academy uz na kroku 0 (zadny freebie tam neni)', shouldStop('academy-vk-serie', 0, JA, MA_ACADEMY, BEZ_EX), true);
 zkontroluj('academy-vk-serie stopne clena Academy i na poslednim kroku', shouldStop('academy-vk-serie', 2, JA, MA_ACADEMY, BEZ_EX), true);
 zkontroluj('academy-vk-serie majitele videokurzu NEstopne (to je cele jeji publikum)', shouldStop('academy-vk-serie', 1, JA, MA_VK, BEZ_EX), false);
