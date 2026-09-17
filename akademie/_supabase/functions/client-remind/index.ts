@@ -471,6 +471,10 @@ Deno.serve(async (req: Request) => {
   const alertySelhaly: string[] = [];
   for (const tgt of targets) {
     const isReg = tgt.kind === "register";
+    // ⛔ `rezervovano` je ZÁMĚRNĚ mimo `try`: když spadne cokoli mezi rezervací a
+    //    odesláním, řádek v `client_remind_sent` už existuje a mail neodešel. Bez tohohle
+    //    by to byla tichá ztráta mailu, přesně ta vada, kterou celá dávka opravuje.
+    let rezervovano = false;
     try {
       const d = await guardSend(admin, {
         email: tgt.email,
@@ -486,7 +490,6 @@ Deno.serve(async (req: Request) => {
       // ⛔⛔ REZERVACE PŘED ODESLÁNÍM. Tři crony (19, 47, 48) běží 30 minut po sobě a
       //    do 17. 9. je dělil jen přečtený stav; unikátní index v DB teď dělá závod
       //    rozhodnutelným: kdo prohraje vložení, neposílá.
-      let rezervovano = false;
       if (!testEmail) {
         const rez = await rezervuj(admin, tgt.email, tgt.kind);
         if (rez.stav === "obsazeno") { prohranyZavod++; continue; }
@@ -567,7 +570,11 @@ Deno.serve(async (req: Request) => {
         }
       }
       await new Promise((res) => setTimeout(res, 550)); // Resend rate limit 2/s
-    } catch (e) { errors.push(tgt.email + ":" + String(e).slice(0, 40)); }
+    } catch (e) {
+      errors.push(tgt.email + ":" + String(e).slice(0, 40));
+      // Rezervace zůstala a mail nejspíš neodešel: ať to jde najít a ať to uvidí hlídka.
+      if (rezervovano) odeslaniNejiste.push(tgt.email);
+    }
   }
   const pocet = (k: string) => targets.filter((x) => x.kind === k).length;
   // ⭐ cerstvi_klienti se hlasi i v TESTOVACIM rezimu (na rozdil od uz_dostali). test_email je
