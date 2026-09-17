@@ -1,0 +1,112 @@
+-- =============================================================================
+-- ⛔⛔ NEPROVEDENO. TENHLE SKRIPT SE NESPUSTIL A SPUSTIT HO MÁ ŠÉF PO MARTINOVĚ GO.
+--    Mění data 18 platících klientů koučinku a mění chování nedělní rozesílky.
+--
+-- K ČEMU TO JE (dávka 2, 17. 9. 2026, nález V4)
+-- Dávka 9 zavedla, že „nový klient nedostane výzvu k reportu hned" rozhoduje
+-- `entitlements.start_at`. Změřeno 17. 9. 2026 na živé DB:
+--     select active, count(*) n, count(*) filter (where start_at is null) bez
+--       from entitlements where product='coaching' group by active;
+--     -- active=true : n=19, bez_startu=18
+--     -- active=false: n=2,  bez_startu=2
+-- Tedy 18 z 19 padá na starou náhradu z `granted_at`. Není to vada kódu, je to vada
+-- provozu: pole se nevyplňuje. Funkce to sama hlásí polem `bez_startu`, jenže to
+-- končí v `net._http_response`, kam se nikdo nedívá.
+--
+-- ⛔⛔ CO SI MARTIN MUSÍ UVĚDOMIT, NEŽ ŘEKNE ANO
+-- `granted_at` NENÍ start koučinku. Je to okamžik kliknutí v adminu. Doplnit start
+-- z něj znamená „start byl ten den, co jsem ho založil", což u části klientů není
+-- pravda (někoho zakládal dopředu, někoho zpětně). Skutečná data má Martin v hlavě
+-- a v konverzacích, ne v systému.
+-- ⇒ ⭐ LEPŠÍ CESTA, KTEROU DOPORUČUJI: Martin projde 18 řádků a doplní skutečné
+--    starty ručně (v adminu na kartě klienta, dávka 9 na to má pole). Je jich 18,
+--    zabere to pár minut a výsledek bude PRAVDA, ne odhad. Tenhle skript je záchrana
+--    pro případ, že se mu do toho nechce, a pak platí, co je napsané níž.
+--
+-- CO SE ZMĚNÍ V CHOVÁNÍ (změřeno k okamžiku 2026-09-20 01:00 UTC, první ostrý běh)
+-- Práh se počítá jinak: dnes „granted_at + 7 dní", po doplnění „půlnoc UTC dne
+-- založení + 6 dní". Nové okno končí DŘÍV (až o půldruhého dne).
+-- Klientů koučinku, kterých se práh vůbec týká (nikdy neposlali žádný report), je 7.
+-- Z nich se mění JEDINÝ:
+--     granted 2026-09-14 12:00 UTC: dnes by výzvu 20. 9. NEDOSTAL, po doplnění DOSTANE.
+-- Ostatních 6 dopadne stejně (5 už mimo lhůtu, 1 má `start_at` zadaný).
+-- ⚠️ Je to posun k „mail radši odejde". Klient bude 20. 9. klientem 6 dní, takže
+--    výzva k reportu dává smysl; ale je to ZMĚNA, ne oprava, a patří Martinovi.
+--
+-- ⚠️ Testovací řádky (`source='test-claude'`, Martinova adresa) se schválně NEMĚNÍ:
+--    doplnit jim start by znamenalo tvářit se, že je to klient.
+--
+-- Paměť: feedback-zalozni-tabulka-bez-rls-je-verejna (záloha bez RLS je veřejná).
+-- =============================================================================
+
+-- -----------------------------------------------------------------------------
+-- KROK 0: NÁHLED. Spustit SAMOSTATNĚ a poslat Martinovi. Nic nemění.
+-- -----------------------------------------------------------------------------
+-- select e.email, e.source, e.granted_at,
+--        (e.granted_at at time zone 'UTC')::date as start_ktery_doplnim,
+--        (select count(*) from public.client_reports r where lower(r.email) = lower(e.email)) as reportu
+--   from public.entitlements e
+--  where e.product = 'coaching' and e.active = true and e.start_at is null
+--    and coalesce(e.source, '') <> 'test-claude'
+--    and lower(e.email) not like 'fitness.barna%'
+--  order by e.granted_at desc;
+
+-- -----------------------------------------------------------------------------
+-- KROK 1: ZÁLOHA. ⛔ Bez ní se skript nespouští. Záloha JE osobní údaj, takže
+--         hned RLS a revoke (jinak by byla přes PostgREST veřejně čitelná).
+-- -----------------------------------------------------------------------------
+-- create table if not exists public.zaloha_entitlements_start_at_2026_09_17 as
+--   select e.email, e.product, e.source, e.granted_at, e.start_at, now() as zalohovano_v
+--     from public.entitlements e
+--    where e.product = 'coaching' and e.active = true and e.start_at is null;
+--
+-- alter table public.zaloha_entitlements_start_at_2026_09_17 enable row level security;
+-- revoke all on table public.zaloha_entitlements_start_at_2026_09_17 from public, anon, authenticated;
+-- grant select on table public.zaloha_entitlements_start_at_2026_09_17 to service_role;
+--
+-- -- Kontrola zálohy (čekám 18 řádků a RLS = true):
+-- select count(*) from public.zaloha_entitlements_start_at_2026_09_17;
+-- select relrowsecurity from pg_class where relname = 'zaloha_entitlements_start_at_2026_09_17';
+-- select has_table_privilege('anon', 'public.zaloha_entitlements_start_at_2026_09_17', 'SELECT'); -- čekám false
+
+-- -----------------------------------------------------------------------------
+-- KROK 2: SAMOTNÉ DOPLNĚNÍ. Teprve až krok 1 sedí.
+-- ⚠️ `start_at` je typ `date`, proto přetypování na UTC datum.
+-- ⚠️ Podmínka `start_at is null` je i v UPDATE (ne jen v záloze): kdyby mezitím
+--    někdo start zadal ručně, tenhle skript mu ho nesmí přepsat.
+-- -----------------------------------------------------------------------------
+-- update public.entitlements e
+--    set start_at = (e.granted_at at time zone 'UTC')::date
+--  where e.product = 'coaching'
+--    and e.active = true
+--    and e.start_at is null
+--    and coalesce(e.source, '') <> 'test-claude'
+--    and lower(e.email) not like 'fitness.barna%';
+--
+-- -- Kontrola po zásahu (čekám bez_startu = 0 mimo testovací řádky):
+-- select count(*) filter (where start_at is null) bez_startu, count(*) celkem
+--   from public.entitlements
+--  where product = 'coaching' and active = true
+--    and coalesce(source, '') <> 'test-claude'
+--    and lower(email) not like 'fitness.barna%';
+
+-- -----------------------------------------------------------------------------
+-- KROK 3: NÁVRAT, kdyby se to nepovedlo nebo Martin řekl zpátky.
+-- -----------------------------------------------------------------------------
+-- update public.entitlements e
+--    set start_at = z.start_at
+--   from public.zaloha_entitlements_start_at_2026_09_17 z
+--  where e.email = z.email and e.product = z.product;
+--
+-- -- Úklid zálohy (až po Martinově potvrzení, že je vše v pořádku):
+-- -- drop table if exists public.zaloha_entitlements_start_at_2026_09_17;
+
+-- -----------------------------------------------------------------------------
+-- KDE SE V KÓDU BERE NÁHRADA ZA CHYBĚJÍCÍ `start_at`
+--   `functions/client-remind/cerstvy-klient.ts`:
+--     - `preskocitVyzvuKReportu()` nejdřív pustí každého, kdo někdy poslal report,
+--     - pak rozhodne zadaný `start_at` (práh `PRVNI_VYZVA_PO_DNECH = 6`),
+--     - jinak padá na `jeCerstvyKlient()` (práh `START_GRACE_DNI = 7` od `granted_at`).
+--   ⛔ Chybějící ani nečitelný start NIKDY nezpůsobí ticho: vrací se stará cesta.
+--   ⚠️ Start dál než `START_MAX_DNU_DOPREDU = 90` dní v budoucnu se ignoruje (překlep v roce).
+-- -----------------------------------------------------------------------------
