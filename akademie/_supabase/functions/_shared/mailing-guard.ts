@@ -280,8 +280,38 @@ export async function logMailSkip(
       " reason=" + decision.reason,
   );
   if (!admin || typeof admin.from !== "function") return;
+  // ⛔⛔ [17. 9. 2026, nález A/N1] ZÁPIS UŽ NENÍ V TICHÉM `catch {}`.
+  //    Do 17. 9. tu stálo `catch { /* best-effort */ }` a za celou dobu od nasazení brány
+  //    (7. 9. 2026) nebyl v `email_events` s `track='mailing-guard'` ANI JEDEN řádek.
+  //    Z dat nešlo poznat, jestli brána nikoho nezastavila, nebo jestli zápis vůbec
+  //    neprochází: selhání nezanechalo stopu ani v logu funkce.
+  //    ⇒ Chyba se hlásí hlasitě do `console.error`. ⛔ Odeslání se NIKDY nezastaví:
+  //      evidence skipu nesmí shodit dávku (proto `try` kolem celku zůstává).
+  // ⭐ Zapisuje se na DVĚ místa a je to záměr, ne duplicita:
+  //    - `mail_skip_log` je vlastní tabulka (migrace `mail-skip-log-2026-09-17.sql`),
+  //      kde jde skip dohledat bez prohledávání `detail` v `email_events`,
+  //    - řádek v `email_events` zůstává, protože na něj koukají existující dotazy
+  //      (`detail->>'skipped'='true'`) a mizet by neměl bez rozhodnutí.
   try {
-    await admin.from("email_events").insert({
+    const { error: skipErr } = await admin.from("mail_skip_log").insert({
+      email: decision.email || null,
+      lead_id: decision.leadId,
+      fn: decision.functionName,
+      path: decision.path,
+      mail_class: decision.mailClass,
+      reason: decision.reason,
+    });
+    if (skipErr) {
+      console.error(
+        "[mailing-guard] ZAPIS SKIPU DO mail_skip_log SELHAL: " + skipErr.message +
+          " (fn=" + decision.functionName + " reason=" + decision.reason + ")",
+      );
+    }
+  } catch (e) {
+    console.error("[mailing-guard] ZAPIS SKIPU DO mail_skip_log SPADL: " + String(e).slice(0, 160));
+  }
+  try {
+    const { error: evErr } = await admin.from("email_events").insert({
       lead_id: decision.leadId,
       step: 0,
       type: "info",
@@ -294,8 +324,9 @@ export async function logMailSkip(
         path: decision.path,
       },
     });
-  } catch {
-    /* best-effort: skip nesmí shodit odesílací cestu */
+    if (evErr) console.error("[mailing-guard] ZAPIS SKIPU DO email_events SELHAL: " + evErr.message);
+  } catch (e) {
+    console.error("[mailing-guard] ZAPIS SKIPU DO email_events SPADL: " + String(e).slice(0, 160));
   }
 }
 

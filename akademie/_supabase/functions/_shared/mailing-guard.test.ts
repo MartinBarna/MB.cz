@@ -10,6 +10,7 @@ import {
   isHardUnsubscribe,
   jePlatnyEmail,
   loadSuppression,
+  logMailSkip,
   normalizeEmail,
   sendIfAllowed,
   shouldCreateMarketingLead,
@@ -325,6 +326,44 @@ async function main(): Promise<void> {
     decide(PATH_CLASS["affiliate-mesicni-report"], snap({ leadStatus: "bounced" })).action === "skip");
   check("LOCK: client-remind bounce skip",
     decide(PATH_CLASS["client-remind"], snap({ leadStatus: "bounced" })).action === "skip");
+
+  // === A/N1: skip musi nechat citelnou stopu, a chyba zapisu se nesmi ztratit ====
+  // Falesny admin: pamatuje si, do kterych tabulek se psalo, a umi zapis shodit.
+  function fakeAdmin(chybne: string[] = []) {
+    const zapsano: { tabulka: string; radek: Record<string, unknown> }[] = [];
+    return {
+      zapsano,
+      from(tabulka: string) {
+        return {
+          insert(radek: Record<string, unknown>) {
+            zapsano.push({ tabulka, radek });
+            return Promise.resolve(
+              chybne.includes(tabulka) ? { error: { message: "simulovana chyba " + tabulka } } : { error: null },
+            );
+          },
+        };
+      },
+    };
+  }
+  const rozhodnutiSkip = decide("optional_reminder", snap({ email: "a@x.cz", inOdhlaseniTrvale: true }));
+  const a1 = fakeAdmin();
+  await logMailSkip(a1, rozhodnutiSkip);
+  check("A/N1 skip se zapise do mail_skip_log", a1.zapsano.some((z) => z.tabulka === "mail_skip_log"));
+  check("A/N1 skip se zapise i do email_events (stary dotaz zustava)",
+    a1.zapsano.some((z) => z.tabulka === "email_events"));
+  const radekSkip = a1.zapsano.find((z) => z.tabulka === "mail_skip_log")?.radek ?? {};
+  check("A/N1 radek nese duvod, tridu i funkci",
+    radekSkip.reason === rozhodnutiSkip.reason && radekSkip.mail_class === rozhodnutiSkip.mailClass &&
+      radekSkip.fn === rozhodnutiSkip.functionName,
+    JSON.stringify(radekSkip));
+
+  // KONTRAST: kdyz zapis do mail_skip_log selze, druhy zapis se stejne provede
+  // a odeslani se nezastavi (logMailSkip nesmi hodit vyjimku).
+  const a2 = fakeAdmin(["mail_skip_log"]);
+  let spadlo = false;
+  try { await logMailSkip(a2, rozhodnutiSkip); } catch { spadlo = true; }
+  check("A/N1 chyba zapisu skipu NESHODI odesilaci cestu", !spadlo);
+  check("A/N1 pri chybe se stejne zkusi email_events", a2.zapsano.some((z) => z.tabulka === "email_events"));
 
   console.log(selhalo === 0 ? "\nVSE ZELENE\n" : `\n${selhalo} SELHANI\n`);
   if (selhalo > 0) throw new Error(String(selhalo) + " selhani");
