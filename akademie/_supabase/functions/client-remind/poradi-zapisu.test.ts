@@ -58,5 +58,19 @@ const teloRezervace = SRC.split("async function rezervuj(")[1]?.split("\n}")[0] 
 check("rezervace se NEOPAKUJE", teloRezervace.length > 0 && !teloRezervace.includes("ctiSOpakovanim"));
 check("rezervace pozna 23505 jako obsazeno", teloRezervace.includes('"23505"'));
 
+console.log("\n== client-remind: testovaci rezim ma vlastni pamet (nalez V2) ==");
+
+check("testovaci klic je oddeleny (test:<druh>)", SRC.includes('const testKlic = "test:" + testKind;'));
+// KONTRAST: test NESMI psat ostry druh, jinak by umlcel nedelni mail klientovi.
+check("test NEZAPISUJE ostry druh", !/testEmail\)\s*\{[\s\S]{0,300}?insert\(\{ email: tgt\.email, kind: tgt\.kind \}\)/.test(SRC));
+check("test zapisuje pod testKlic", SRC.includes("insert({ email: tgt.email, kind: testKlic })"));
+check("hodinova pojistka existuje", SRC.includes("test_jiz_odeslan_v_posledni_hodine") && SRC.includes("3600_000"));
+check("pojistka jde vedome prebit", SRC.includes("body?.test_znovu === true") && SRC.includes("test_znovu"));
+check("pojistka se pta na testKlic, ne na ostry druh",
+  SRC.includes('poslednePoslano.get(low(testEmail) + ":" + testKlic)'));
+// Test na adresu klienta nesmi ovlivnit dvoutydenni kadenci.
+check("testovaci radky nejdou do mapy 'kdykoli komukoli'",
+  /if \(!String\(r\.kind \?\? ""\)\.startsWith\("test:"\)\) \{[\s\S]{0,300}?poslednePoslanoKomukoli\.set/.test(SRC));
+
 console.log(selhalo === 0 ? "\nVSE ZELENE\n" : "\n" + selhalo + " SELHANI\n");
 if (selhalo > 0) Deno.exit(1);

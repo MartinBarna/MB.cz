@@ -24,6 +24,9 @@
 //    (HTTP >= 400) rezervaci uvolní, nejistota (síť, timeout) ji nechá a pošle alert Martinovi.
 //    ⛔ MIGRACE MUSÍ BÝT NASAZENÁ DŘÍV NEŽ TAHLE VERZE: bez sloupce `sent_ok` skončí update
 //    chybou (jen se zaloguje) a bez unikátního indexu rezervace nic nezaručuje.
+// ⛔ 17. 9. 2026 (nález V2): TESTOVACÍ režim má vlastní paměť pod klíčem `test:<druh>`
+//    a pojistku „jednou za hodinu"; vědomě se přebíjí `{"test_email":"…","test_znovu":true}`.
+//    Vyžaduje migraci `client-remind-test-klice-2026-09-17.sql` (rozšířený CHECK na `kind`).
 // ⭐ Dvoutýdenní kadence pro jmenované klienty: app_config.client_remind_14d (CSV e-mailů).
 //    Jejich okno je 12 dní, takže neděli po týdnu vynechají a další termín jim vyjde za 14 dní.
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -219,6 +222,12 @@ Deno.serve(async (req: Request) => {
   const body = await req.json().catch(() => ({} as Record<string, unknown>));
   const testEmail = typeof body?.test_email === "string" && body.test_email.includes("@") ? body.test_email.trim() : null;
   const testKind: "report" | "register" = body?.test_kind === "register" ? "register" : "report";
+  // ⭐ [17. 9. 2026, nález V2] Test má vlastní paměť a vlastní pojistku.
+  //    Do 17. 9. testovací běh přeskakoval kontrolu „už dostal nedávno" A nezapisoval nic,
+  //    takže každé další spuštění poslalo další mail a nezbyla po něm stopa. Klíč je ODDĚLENÝ
+  //    (`test:report`), aby test nikdy neumlčel ostrý nedělní mail klientovi.
+  const testZnovu = body?.test_znovu === true;
+  const testKlic = "test:" + testKind;
   // OSTRY rezim spousti VYHRADNE cron s prazdnym telem {}. Cokoliv jineho nez prazdne telo
   // nebo platny {"test_email":"...@..."} = chyba, ne tichy ostry rozesil. Whitelist (ne "obsahuje
   // test") schvalne: chyti i {"email":...}, {"to":...}, {"testEmail":...} atd. Presne takhle odesel
@@ -350,8 +359,13 @@ Deno.serve(async (req: Request) => {
     const klic = email + ":" + String(r.kind ?? "");
     const drive = poslednePoslano.get(klic);
     if (drive === undefined || cas > drive) poslednePoslano.set(klic, cas);
-    const driveK = poslednePoslanoKomukoli.get(email);
-    if (driveK === undefined || cas > driveK) poslednePoslanoKomukoli.set(email, cas);
+    // ⛔ Testovací řádky (`test:*`) do „kdykoli komukoli" NEPATŘÍ. Ta mapa hlídá dvoutýdenní
+    //    kadenci ostrých mailů; kdyby se do ní počítal test, jedno Martinovo zkoušení na
+    //    adresu klienta by mu na 12 dní ztišilo skutečnou výzvu, a to úplně tiše.
+    if (!String(r.kind ?? "").startsWith("test:")) {
+      const driveK = poslednePoslanoKomukoli.get(email);
+      if (driveK === undefined || cas > driveK) poslednePoslanoKomukoli.set(email, cas);
+    }
   }
   // ⛔ U dvoutýdenní kadence se okno měří přes OBA druhy mailu dohromady. Kdyby se počítalo
   //    zvlášť (jako u ostatních), klient by dostal v neděli pozvánku, do týdne se zaregistroval
@@ -405,6 +419,21 @@ Deno.serve(async (req: Request) => {
   ];
   // Opakovací běhy cronu: kdo tenhle druh mailu dostal v posledních dnech, nedostane ho znovu.
   const uzDostali = kandidati.filter((t) => uzDostalNedavno(t.email, t.kind)).length;
+  // ⭐ [17. 9. 2026, nález V2] HODINOVÁ POJISTKA TESTU. Smoke test se pouští jednou a výsledek
+  //    se čte z odpovědi, ne z doručené schránky. Druhé spuštění do hodiny se zastaví a řekne,
+  //    jak ho vědomě přebít. ⛔ Hodina, ne den: test se opakuje legitimně (oprava šablony,
+  //    druhý druh mailu), jen ne omylem dvakrát za sebou.
+  const testPoslednePoslano = testEmail ? (poslednePoslano.get(low(testEmail) + ":" + testKlic) ?? 0) : 0;
+  const testUzSel = testPoslednePoslano > Date.now() - 3600_000;
+  if (testEmail && testUzSel && !testZnovu) {
+    return json({
+      ok: true,
+      mode: "test",
+      skipped: "test_jiz_odeslan_v_posledni_hodine",
+      naposledy: new Date(testPoslednePoslano).toISOString(),
+      hint: 'opakovat lze pres {"test_email":"…","test_znovu":true}',
+    });
+  }
   const targets: { email: string; kind: "report" | "register" }[] = testEmail
     ? [{ email: testEmail, kind: testKind }]
     : kandidati.filter((t) => !uzDostalNedavno(t.email, t.kind));
@@ -481,12 +510,21 @@ Deno.serve(async (req: Request) => {
           ...(attachments && !isReg ? { attachments } : {}),
         },
         // ⛔ Stopa se pise i v TESTOVACIM rezimu. Test chodi na Martinovu adresu,
-        //    takze `client_remind_sent` se nezapisuje (jinak by umlcel ostry mail),
-        //    ale kdyz Resend zasilku odmitne nebo se odrazi, chceme to videt stejne.
+        //    do `client_remind_sent` se od 17. 9. 2026 zapisuje pod ODDELENYM klicem
+        //    `test:<druh>` (nalez V2), takze ostry mail neumlci, ale opakovany smoke
+        //    test uz nezustane bez pameti. Kdyz Resend zasilku odmitne, chceme to videt.
         { admin, via: "client-remind", email: tgt.email, detail: { kind: tgt.kind, test: !!testEmail } },
       );
       if (r.ok) {
         sent++;
+        // ⭐ [17. 9. 2026, nález V2] Stopa po TESTU. Zapisuje se AŽ PO odeslání (na rozdíl od
+        //    ostrého běhu): test nemá co rezervovat, protože nesoutěží s jiným během, a když
+        //    se odeslání nepovede, má jít zopakovat hned. Klíč je `test:<druh>`, takže tenhle
+        //    řádek NIKDY neumlčí ostrý nedělní mail.
+        if (testEmail) {
+          const { error: tErr } = await admin.from("client_remind_sent").insert({ email: tgt.email, kind: testKlic });
+          if (tErr) console.error("[client-remind] zapis stopy testu selhal: " + tErr.message);
+        }
       } else {
         errors.push(tgt.email + ":" + r.status);
         if (rezervovano) {
@@ -535,7 +573,8 @@ Deno.serve(async (req: Request) => {
   // ⭐ cerstvi_klienti se hlasi i v TESTOVACIM rezimu (na rozdil od uz_dostali). test_email je
   //    jediny zpusob, jak funkci spustit bez rozesilky klientum, takze je to jedina cesta, jak
   //    si pred nedeli overit "ano, jeden se preskoci". Nic to neriskuje: v testu mail stejne
-  //    odejde vyhradne na zadanou adresu a do client_remind_sent se nezapisuje.
+  //    odejde vyhradne na zadanou adresu a do client_remind_sent se zapisuje pod klicem
+  //    `test:<druh>`, ktery ostrou kontrolu "uz dostal nedavno" nikdy netrefi.
   // ⭐ `bez_startu` je levná hlídka (dávka 9): až budou mít klienti start vyplněný, bude to
   //    nula. Když číslo poroste, pole se přestalo vyplňovat a systém tiše spadl zpátky
   //    na náhradu z `granted_at`. Počítá se z `naReport`, tedy z lidí, kterých se práh týká.
