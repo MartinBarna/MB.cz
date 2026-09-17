@@ -80,6 +80,10 @@ Deno.serve(async (req: Request) => {
   //      se jedním SELECTem zjistí, které řádky ten otisk nesou. Co nese náš
   //      otisk, je naše a pošle se. Zbytek se nechá příštímu běhu. Když spadne
   //      i ověření, je to stav NEVIM a hlásí se jinak než „nezabráno".
+  //    ⛔ A když zápis spadne a ověření NIC nenajde, odchází `ok:true` s důvodem
+  //      `zapis-spadl-otisk-nenalezen` a s hláškou té chyby, ne se zdravě
+  //      vypadajícím „zabral to jiný běh" (revize R2, nález N1). Kdyby se ty dvě
+  //      cesty slily, ztratila by se právě ta chyba, kvůli které tenhle kód je.
   //
   // ⛔ Když mail neodejde (odmítnutí Resendu I výjimka z `fetch`), značka se
   //    VRACÍ, jinak by se bezpečnostní upozornění tiše ztratilo. Když selže
@@ -109,7 +113,14 @@ Deno.serve(async (req: Request) => {
     mojeIds = (zabrane ?? []).map((r: { id: string }) => r.id);
   } else {
     // ⛔ Jen tady, po chybě zápisu. Ptáme se na PŘESNOU hodnotu, kterou jsme
-    // zapisovali, takže cizí razítko se za naše vydávat nemůže.
+    // zapisovali, takže cizí razítko se za naše skoro jistě vydávat nemůže.
+    // ⚠️ „Skoro": otisk je `toISOString()`, tedy jen milisekundy, a v téhle
+    // funkci je jeden otisk na CELÝ běh. Dva překryté běhy téže instance, které
+    // by startovaly ve stejné milisekundě, by měly otisk shodný a ověření by si
+    // mohlo nárokovat cizí řádky. Chce to běh delší než 15 minut, shodu na
+    // milisekundu a k tomu 504, takže to nechávám být, ale netvrdím, že to nejde
+    // (revize R2, nález N4). Sesterská `access-expiry-mail` tenhle problém nemá:
+    // každý její dotaz je omezený i `.eq("user_id", …)` nad unikátním indexem.
     const { data: overene, error: overErr } = await admin.from("ai_flags")
       .select("id")
       .in("id", vsechnyIds)
@@ -130,6 +141,19 @@ Deno.serve(async (req: Request) => {
   const mojeSet = new Set(mojeIds);
   const posilame = flags.filter((f: { id: string }) => mojeSet.has(f.id));
   if (!posilame.length) {
+    // ⛔ DVĚ RŮZNÉ CESTY SEM, A NESMÍ SE SLÍT (revize R2, nález N1). Do R2 odcházelo
+    // v obou případech `ok:true` s důvodem „zabral to jiný běh", takže po spadlém
+    // zápisu nezůstala v odpovědi ani stopa a běh vypadal jako zdravý. To je
+    // zmenšená verze přesně té vady, kterou celá tahle dávka opravuje.
+    if (rezErr) {
+      return json({
+        ok: true,
+        sent: 0,
+        reason: "zapis-spadl-otisk-nenalezen",
+        zapis_chyba: rezErr.message,
+        ids: vsechnyIds,
+      });
+    }
     return json({ ok: true, sent: 0, reason: "flagy mezitim zabral jiny beh teze instance" });
   }
 
@@ -177,7 +201,10 @@ Deno.serve(async (req: Request) => {
       error: "resend",
       // 0 = `fetch` vůbec neprošel (výjimka), ne odpověď serveru.
       status: r ? r.status : 0,
-      znacka_vracena: !vratErr,
+      // ⛔ `vraceni_potvrzeno:false` znamená „NEVÍME", ne „nevrátilo se": chyba
+      // zápisu není důkaz, že se nezapsalo (504 z brány). Původní jméno
+      // `znacka_vracena` slibovalo znalost, kterou nikdo nemá (revize R2, nález N3).
+      vraceni_potvrzeno: !vratErr,
       ...(vratErr ? { vraceni_chyba: vratErr.message } : {}),
     }, 500);
   }
