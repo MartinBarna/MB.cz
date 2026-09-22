@@ -25,10 +25,28 @@
 --    Dělá to `client_invite` (viz `admin-api`), ať na to nikdo nemusí myslet.
 --
 -- STAVY (sloupec `stav`)
---   rezervovano   právě se zpracovává; nikdo jiný na něj nesmí
---   hotovo        doběhlo (mail odešel, nebo se vědomě neposílal)
---   opakovat      nic nedokončeného nezůstalo viset, další běh to zkusí znovu
---   chyba_nejiste mail MOHL odejít; automat to NEOPAKUJE, rozhodne člověk
+--   rezervovano    právě se zpracovává; nikdo jiný na něj nesmí
+--   hotovo         doběhlo (mail odešel, nebo se vědomě neposílal)
+--   opakovat       NIC se nezavřelo, další běh zkusí celý postup znovu
+--   opakovat_mail  přístup UŽ JE ZAVŘENÝ, chybí jen rozloučení; další běh pošle
+--                  POUZE mail a `ukonciPristup` už nevolá
+--   chyba_nejiste  mail MOHL odejít; automat to NEOPAKUJE, rozhodne člověk
+--   vzdano         vyčerpaný strop pokusů; automat se o to už nepokouší
+--
+-- ⛔⛔ `opakovat_mail` JE OPRAVA TICHÉ ZTRÁTY (revize R1, nález V1). Bez něj platilo:
+--    mail spadne na 4xx (nebo chybí klíč), razítko jde na `opakovat`, další běh znovu
+--    zavolá `ukonciPristup`, ten vrátí `uz_ukoncen` (nárok je přece vypnutý), kód to
+--    přečte jako „zavřel to někdo jinde" a mail PŘESKOČÍ. Člověk zůstal zavřený,
+--    rozloučení nedostal nikdy a alert nešel, protože alerty byly jen u 5xx.
+--
+-- ⛔ `pokusy` a `vzdano` (nález S4): fronta `opakovat` neměla strop. Trvale špatný
+--    kupón nebo mrtvý Resend by znamenal donekonečna opakovaný pokus a u promo kódu
+--    i nové a nové kódy ve Stripu.
+--
+-- ⛔ `updated_at` (nález V2): podle něj se pozná ZASEKNUTÁ rezervace. Když edge funkci
+--    zabije timeout cronu (120 s) nebo strop běhu, `catch` v kódu se neprovede a řádek
+--    zůstane v `rezervovano` NAVŽDY. Další běh takového člověka jen přeskočil jako
+--    „má ho někdo jiný". Rezervace starší než 30 minut se proto bere jako opuštěná.
 --
 -- Spouští se ručně přes MCP apply_migration v DB Academy (uhmrpfsdcujbhbtumqye).
 -- =============================================================================
@@ -44,7 +62,14 @@ create table if not exists public.koucink_konec_sent (
   -- takže bez tohohle sloupce nejde zpětně říct, co přesně klient dostal.
   ma_academy boolean,
   duvod text,
+  -- Kolikrát se automat o tohohle člověka pokusil. Strop drží kód (`MAX_POKUSU`),
+  -- po něm stav `vzdano` a alert. Bez počítadla nemá fronta `opakovat` konec.
+  pokusy integer not null default 0,
   created_at timestamptz not null default now(),
+  -- ⛔ ZAPISUJE HO KÓD PŘI KAŽDÉ ZMĚNĚ STAVU, žádný trigger. Podle něj se pozná
+  --    zaseknutá rezervace; kdyby ho aktualizoval jen `created_at`, opuštěný řádek
+  --    by se po první změně stavu tvářil jako čerstvý.
+  updated_at timestamptz not null default now(),
   sent_at timestamptz,
   -- false = řádek existuje, ale odeslání se neprokázalo (přeskočeno bránou,
   -- nebo skončilo v nejistotě). Stejná sémantika jako `client_remind_sent.sent_ok`.
@@ -68,7 +93,11 @@ create index if not exists koucink_konec_sent_stav_idx
 comment on table public.koucink_konec_sent is
   'Razitko automatu konec koucinku. Radek vznika PRED prvnim nevratnym krokem; stav opakovat = fronta na dalsi beh.';
 comment on column public.koucink_konec_sent.stav is
-  'rezervovano | hotovo | opakovat | chyba_nejiste';
+  'rezervovano | hotovo | opakovat | opakovat_mail | chyba_nejiste | vzdano';
+comment on column public.koucink_konec_sent.pokusy is
+  'Kolikrat se automat pokusil. Po MAX_POKUSU stav vzdano a alert Martinovi.';
+comment on column public.koucink_konec_sent.updated_at is
+  'Posledni zmena stavu. Rezervace starsi nez 30 minut se bere jako opustena.';
 comment on column public.koucink_konec_sent.sent_ok is
   'false = odeslani se neprokazalo (brana skip, nebo nejistota). Mail se NEOPAKUJE, resi to Martin.';
 
@@ -101,6 +130,9 @@ on conflict (key) do nothing;
 --   select indexname, indexdef from pg_indexes where tablename = 'koucink_konec_sent';
 --   select relrowsecurity from pg_class where relname = 'koucink_konec_sent';
 --   select key, value from public.app_config where key like 'koucink_%' order by key;
+--   select column_name from information_schema.columns
+--    where table_schema='public' and table_name='koucink_konec_sent' order by ordinal_position;
+--   (cekam mimo jine `pokusy` a `updated_at`)
 --
 -- Návrat:
 --   drop table if exists public.koucink_konec_sent;

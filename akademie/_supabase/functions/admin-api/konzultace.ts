@@ -3,7 +3,7 @@
 //
 // PROC VLASTNI SOUBOR: `index.ts` vola na konci `Deno.serve()`, takze ho test
 // nemuze naimportovat, aniz by nastartoval server. Stejny vzor uz v repu je
-// (`drip-send/pravidla.ts`, `admin-api/offboard-mail.ts`). Tady nic necte DB,
+// (`drip-send/pravidla.ts`, `_shared/offboard-mail.ts`). Tady nic necte DB,
 // vsechno jsou cisté funkce nad retezci a cislem.
 //
 // ⛔ MARTIN ZADAVA CAS V CESKEM CASE (Europe/Prague), databaze uklada timestamptz.

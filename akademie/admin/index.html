@@ -1723,8 +1723,13 @@
         /* ⛔ `ok` z API znamená ZAPSANÝ NÁROK, ne odeslaný mail. Když nárok je a mail
            selhal, klient přístup MÁ a stačí mail poslat znovu; hlásí se to jinak než
            „nezapsalo se nic", protože každá z těch dvou situací se řeší jinak. */
-        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value='';$('kiStart').value='';$('kiKonec').value=''; loadKlienti(); }
-        else if(o.j&&o.j.ok){ toast('⚠️ Přístup zapsán, ale MAIL NEODEŠEL ('+((o.j.mail_status)||'?')+'). Pošli ho znovu.'); loadKlienti(); }
+        /* ⛔ `varovani` se NESMÍ spolknout (revize R1, nález S8): znamená, že po
+           tomhle klientovi zůstalo razítko z minulého konce. Automat ho sice
+           druhou vrstvou nezavře (ověřuje si živý stav nároku), ale Martin to
+           má vědět hned, ne až z alertu. */
+        var varovani = (o.j&&o.j.varovani) ? ' ⚠️ '+o.j.varovani : '';
+        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email+varovani); $('kiEmail').value='';$('kiName').value='';$('kiVok').value='';$('kiStart').value='';$('kiKonec').value=''; loadKlienti(); }
+        else if(o.j&&o.j.ok){ toast('⚠️ Přístup zapsán, ale MAIL NEODEŠEL ('+((o.j.mail_status)||'?')+'). Pošli ho znovu.'+varovani); loadKlienti(); }
         /* Vadné datum startu zastaví CELOU pozvánku dřív, než se cokoli zapíše (server
            vrací důvod). Hláška proto musí říct, co s tím, ne jen „chyba". */
         else if(o.j&&o.j.error==='start_at'){ toast('🔴 Start koučinku: '+kdStartDuvod(o.j.duvod)+' Nic se neposlalo, oprav datum a klikni znovu.'); }
@@ -2501,8 +2506,22 @@
         // Radši nepošleme nic než mail ve špatném rodě. Tichý fallback na mužský rod byl
         // přesně ta vada, kvůli které tenhle přepínač vznikl (u tichého odchodu mail není).
         if(!tiche && rod!=='z' && rod!=='m'){ toast('Vyber prosím rod (žena/muž), bez něj mail neodesílám.'); return; }
-        var co=tiche?'BEZ mailu' : 'a HNED poslat rozlučkový mail (oslovení: „Ahoj '+(vok||'(bez jména)')+'", psaný pro '+(rod==='z'?'ŽENU':'MUŽE')+'). Kdo nemá zaplacenou Academy, dostane v něm jednorázový kód na roční VIP se slevou 20 %, platný 14 dní';
-        if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, odebere se přístup do appky Tvůj Coach, '+co+'.\n\nData ani účet se nemažou.')) return;
+        /* ⛔ DIALOG SE VĚTVÍ PODLE ACADEMY (revize R1, nález S9). Do teď sliboval
+           odebrání appky VŽDYCKY, i tomu, komu ji server nechává, takže Martin
+           potvrzoval něco, co se nestalo, a mail i toast pak říkaly něco jiného.
+           ⛔ TŘI STAVY: má / nemá / NEVÍM. Při chybě čtení se netvrdí ani jedno,
+           protože dialog je poslední místo, kde jde zásah zastavit. */
+        var ma=(KDET.data||{}).ma_academy;
+        var oAppce = ma===true
+          ? 'Appka Tvůj Coach mu ZŮSTÁVÁ (má zaplacenou Academy), převede se na roční přístup'
+          : (ma===false
+            ? 'odebere se přístup do appky Tvůj Coach'
+            : '⚠️ nepodařilo se zjistit, jestli má zaplacenou Academy, takže NEVÍM, jestli o appku přijde (server to vyhodnotí sám a Academy mu appku nechá)');
+        var oNabidce = ma===true
+          ? 'Nabídku VIP nedostane, appku už má.'
+          : 'Když Academy nemá, dostane jednorázový kód na roční VIP se slevou 20 %, platný 14 dní.';
+        var co=tiche?'BEZ mailu' : 'a HNED poslat rozlučkový mail (oslovení: „Ahoj '+(vok||'(bez jména)')+'", psaný pro '+(rod==='z'?'ŽENU':'MUŽE')+')';
+        if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, '+oAppce+', '+co+'.\n'+(tiche?'':oNabidce+'\n')+'\nData ani účet se nemažou.')) return;
         b.disabled=true; b.textContent='Ukončuji…';
         api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche,rod:rod}).then(function(o){
           if(o.j&&o.j.ok){
@@ -2519,14 +2538,26 @@
             var pozn = o.j.mel_academy
               ? ' Appku si nechává, má zaplacenou Academy (mail mu to tak i říká).'
               : (o.j.promo ? (' Dostal kód na roční VIP: '+o.j.promo+' (platí 14 dní).') : '');
-            var mailText = tiche ? '' : (o.j.mail_ok===false ? ' ⚠️ MAIL NEODEŠEL (Resend '+(o.j.mail_status||'?')+'), pošli mu ho jinak.' : ' Mail odešel.');
-            toast('🚪 Koučink ukončen.'+mailText+pozn);
+            /* ⛔ Po neodeslaném mailu UŽ NENÍ SLEPÁ ULIČKA (revize R1, nález V1):
+               razítko je v `opakovat_mail`, takže automat to zkusí znovu a druhé
+               kliknutí na tohle tlačítko pošle POUZE mail. Do teď tady stálo
+               „pošli mu ho jinak", jenže jiná cesta neexistovala. */
+            var mailText = tiche ? '' : (o.j.mail_ok===false
+              ? ' ⚠️ MAIL NEODEŠEL (Resend '+(o.j.mail_status||'?')+'). Klikni na tlačítko ještě jednou, pošle se jen mail; jinak ho zkusí automat.'
+              : ' Mail odešel.');
+            var varText = o.j.varovani ? ' ⚠️ '+o.j.varovani : '';
+            toast('🚪 Koučink ukončen.'+mailText+pozn+varText);
             $('kdet').classList.remove('on'); loadKlienti();
           }
           // ⛔ DVA STAVY, KDE SE NIC NEZMĚNILO, a Martin to musí poznat: jinak by
           // si myslel, že klient ukončený je, a už se k tomu nevrátil.
           else if(o.j&&o.j.error==='promo_selhalo'){
             toast('Slevový kód se nepodařilo založit ve Stripu, takže jsem NIC neukončil ani neposlal. Zkontroluj kupón a klíč. Detail: '+(o.j.detail||''));
+            b.disabled=false; b.textContent='Ukončit koučink';
+          }
+          /* ⛔ Chyba čtení konfigurace NENÍ „kupón není nastavený" (nález S10). */
+          else if(o.j&&o.j.error==='kupon_neprecten'){
+            toast('Nastavení se teď nepodařilo přečíst, takže jsem radši NIC neukončil. Zkus to za chvíli znovu.');
             b.disabled=false; b.textContent='Ukončit koučink';
           }
           else if(o.j&&o.j.error==='appka_neodpovedela'){

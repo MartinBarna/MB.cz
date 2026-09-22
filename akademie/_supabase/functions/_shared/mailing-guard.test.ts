@@ -108,6 +108,18 @@ async function main(): Promise<void> {
     PATH_CLASS["admin-api.client_offboard.confirm"] === "client_operational");
   check("PATH_CLASS: offboard sales je marketing",
     PATH_CLASS["admin-api.client_offboard.sales"] === "marketing");
+  // Automat „konec koučinku" (22. 9. 2026). Týž mail a týž příjemce jako ruční odchod,
+  // tedy i tytéž dvě třídy.
+  // ⛔ KOTVA TU MUSÍ BÝT (revize R1, nález N15): `classForPath` na neznámé cestě HÁZÍ
+  //    výjimku, takže smazání klíče by automat shodilo AŽ ZA BĚHU, uprostřed odchodu
+  //    klienta, a test by mlčel. Statická kontrola je levnější než ten incident.
+  check("PATH_CLASS: koucink-konec confirm je client_operational",
+    PATH_CLASS["koucink-konec.confirm"] === "client_operational");
+  check("PATH_CLASS: koucink-konec sales je marketing",
+    PATH_CLASS["koucink-konec.sales"] === "marketing");
+  check("classForPath zná obě cesty automatu",
+    classForPath("koucink-konec.confirm") === "client_operational" &&
+      classForPath("koucink-konec.sales") === "marketing");
   // Dávka 9 (15. 9. 2026): doposlání uvítacího mailu z karty klienta. Táž šablona i příjemce
   // jako pozvánka, takže musí mít i tutéž třídu. ⛔ `classForPath` na neznámé cestě HÁZÍ
   // výjimku, proto se tu ověřuje i ta (revize R1, nález S4).
@@ -322,6 +334,14 @@ async function main(): Promise<void> {
     decide(PATH_CLASS["admin-api.client_offboard.confirm"], snap({ inOdhlaseniTrvale: true })).action === "send");
   check("LOCK: offboard sales unsub skip",
     decide(PATH_CLASS["admin-api.client_offboard.sales"], snap({ inOdhlaseniTrvale: true })).action === "skip");
+  // ⛔ Automat se musí chovat STEJNĚ jako ruční odchod: potvrzení o konci přístupu
+  //    dostane i odhlášený, prodejní blok ne.
+  check("LOCK: koucink-konec confirm unsub KEEP",
+    decide(PATH_CLASS["koucink-konec.confirm"], snap({ inOdhlaseniTrvale: true })).action === "send");
+  check("LOCK: koucink-konec sales unsub skip",
+    decide(PATH_CLASS["koucink-konec.sales"], snap({ inOdhlaseniTrvale: true })).action === "skip");
+  check("LOCK: koucink-konec confirm bounce skip",
+    decide(PATH_CLASS["koucink-konec.confirm"], snap({ leadStatus: "bounced" })).action === "skip");
   check("LOCK: affiliate bounce skip",
     decide(PATH_CLASS["affiliate-mesicni-report"], snap({ leadStatus: "bounced" })).action === "skip");
   check("LOCK: client-remind bounce skip",

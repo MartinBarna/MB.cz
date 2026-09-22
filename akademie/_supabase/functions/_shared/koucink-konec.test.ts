@@ -83,8 +83,29 @@ check("nárok BEZ data konce NEVYBRAT", !vybrane.includes("bezdata@x.cz"));
 check("nečitelné datum se bere jako BEZ data", !vybrane.includes("rozbitedatum@x.cz"));
 check("vybrán přesně jeden", v.kUkonceni.length === 1, JSON.stringify(vybrane));
 check("počítadla hlásí, proč se nikdo další nevybral",
-  v.bezData === 2 && v.vGraci === 2 && v.vOptout === 1,
-  `bezData=${v.bezData} vGraci=${v.vGraci} vOptout=${v.vOptout}`);
+  v.bezData === 2 && v.vGraci === 1 && v.predKoncem === 1 && v.vOptout === 1,
+  `bezData=${v.bezData} vGraci=${v.vGraci} predKoncem=${v.predKoncem} vOptout=${v.vOptout}`);
+// ⛔⛔ DVĚ RŮZNÉ SITUACE, DVĚ RŮZNÁ ČÍSLA (revize R1, nález N12). Do revize padal
+//    do `vGraci` i člověk, kterému koučink v klidu běží, takže běh nanečisto hlásil
+//    „v ochranné lhůtě" o někom, kdo v ní vůbec není. Číslo, které měří něco jiného,
+//    než tvrdí jeho popisek, je horší než žádné.
+check("`vGraci` je JEN po konci, ne před ním", v.vGraci === 1);
+check("`predKoncem` je běžící období", v.predKoncem === 1);
+{
+  // Kontrast: bez jediného běžícího období musí `predKoncem` být nula.
+  const jenPoKonci = vyberKeUkonceni(
+    [{ email: "a@x.cz", active: true, expires_at: new Date(TED - 2 * DEN).toISOString() }],
+    { tedMs: TED, graceDny: 7 },
+  );
+  check("samé skončené: predKoncem = 0", jenPoKonci.predKoncem === 0 && jenPoKonci.vGraci === 1,
+    `vGraci=${jenPoKonci.vGraci} predKoncem=${jenPoKonci.predKoncem}`);
+  const jenBezici = vyberKeUkonceni(
+    [{ email: "a@x.cz", active: true, expires_at: new Date(TED + 40 * DEN).toISOString() }],
+    { tedMs: TED, graceDny: 7 },
+  );
+  check("samé běžící: vGraci = 0", jenBezici.vGraci === 0 && jenBezici.predKoncem === 1,
+    `vGraci=${jenBezici.vGraci} predKoncem=${jenBezici.predKoncem}`);
+}
 
 // Grace jako páka: s grací 0 spadne dovnitř i včerejší konec.
 const v0 = vyberKeUkonceni(radky, { tedMs: TED, graceDny: 0 });

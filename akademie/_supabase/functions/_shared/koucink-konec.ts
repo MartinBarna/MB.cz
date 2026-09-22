@@ -97,8 +97,16 @@ export type VyberVysledek = {
   kUkonceni: KoucinkRadek[];
   /** Aktivní nároky BEZ data konce. Automat se jich netýká a je to vidět. */
   bezData: number;
-  /** Po konci, ale ještě v ochranné lhůtě. */
+  /**
+   * Konec UŽ MINUL, ale ještě běží ochranná lhůta.
+   * ⛔ Nepočítá se sem konec v budoucnu (revize R1, nález N12): dřív obě skupiny
+   *    padaly do jednoho čísla a běh nanečisto hlásil „v ochranné lhůtě" i o lidech,
+   *    kterým koučink v klidu běží. Číslo, které měří něco jiného, než tvrdí jeho
+   *    popisek, je horší než žádné.
+   */
   vGraci: number;
+  /** Konec je teprve před nimi. Běžný stav živého klienta. */
+  predKoncem: number;
   /** Vyňatí Martinem. */
   vOptout: number;
 };
@@ -122,7 +130,7 @@ export function vyberKeUkonceni(radky: KoucinkRadek[], opts: VyberOpts): VyberVy
   );
   const mez = opts.tedMs - Math.max(0, opts.graceDny) * 86400000;
   const kUkonceni: KoucinkRadek[] = [];
-  let bezData = 0, vGraci = 0, vOptout = 0;
+  let bezData = 0, vGraci = 0, predKoncem = 0, vOptout = 0;
   for (const r of radky) {
     if (!r || r.active !== true) continue;
     const email = String(r.email ?? "").trim().toLowerCase();
@@ -130,12 +138,17 @@ export function vyberKeUkonceni(radky: KoucinkRadek[], opts: VyberOpts): VyberVy
     if (!r.expires_at) { bezData++; continue; }
     const konec = Date.parse(String(r.expires_at));
     if (!Number.isFinite(konec)) { bezData++; continue; }
-    if (konec > mez) { vGraci++; continue; }
+    if (konec > mez) {
+      // Dvě různé situace, dvě různá čísla: „období běží" a „skončilo, ale čekáme".
+      if (konec > opts.tedMs) predKoncem++;
+      else vGraci++;
+      continue;
+    }
     if (optout.has(email)) { vOptout++; continue; }
     if (orazitkovane.has(email)) continue;
     kUkonceni.push({ ...r, email });
   }
-  return { kUkonceni, bezData, vGraci, vOptout };
+  return { kUkonceni, bezData, vGraci, predKoncem, vOptout };
 }
 
 // -----------------------------------------------------------------------------
@@ -151,6 +164,14 @@ export const PROMO_PREFIX = "VIP-";
 export const PROMO_DELKA = 6;
 /** Jak dlouho kód platí. Martin 22. 9. 2026: čtrnáct dní. */
 export const PROMO_PLATNOST_DNI = 14;
+
+// ⛔ TIMEOUTY NA VOLÁNÍ VEN (revize R1, nález V2). Cron utne HTTP po 120 s a
+//    Supabase Free dává funkci 150 s; jedno visící volání jinak sežere celý běh,
+//    funkci zabijí uprostřed člověka a razítko zůstane v `rezervovano` navždy.
+//    Čísla jsou úmyslně nízká: Stripe i most do appky běžně odpovídají do vteřiny,
+//    takže patnáct a dvacet vteřin je už jasná porucha, ne pomalá síť.
+export const VYCHOZI_TIMEOUT_STRIPE_MS = 15_000;
+export const VYCHOZI_TIMEOUT_APPKA_MS = 20_000;
 
 /**
  * Vyrobí kód tvaru `VIP-XXXXXX`.
@@ -217,7 +238,7 @@ export type PromoVysledek =
  */
 export async function vytvorPromoKod(
   stripeKey: string,
-  opts: { couponId: string; email: string; tedMs?: number; pokusy?: number },
+  opts: { couponId: string; email: string; tedMs?: number; pokusy?: number; timeoutMs?: number },
 ): Promise<PromoVysledek> {
   if (!stripeKey) return { ok: false, chyba: "chybi_stripe_klic" };
   if (!opts.couponId) return { ok: false, chyba: "chybi_coupon_id" };
@@ -240,6 +261,10 @@ export async function vytvorPromoKod(
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams(form).toString(),
+        // ⛔ TVRDÝ TIMEOUT (revize R1, nález V2). Bez něj visící Stripe sežere celý
+        //    rozpočet běhu cronu, ten HTTP utne po 120 s, `catch` se neprovede
+        //    a razítko zůstane v `rezervovano` navždy.
+        signal: AbortSignal.timeout(opts.timeoutMs ?? VYCHOZI_TIMEOUT_STRIPE_MS),
       });
     } catch (e) {
       return { ok: false, chyba: "sit:" + String(e).slice(0, 160) };
@@ -293,6 +318,7 @@ export async function maZaplacenouAcademy(admin: Admin, email: string, tedMs: nu
 async function zavolejAppku(
   grantSecret: string,
   payload: Record<string, unknown>,
+  timeoutMs = VYCHOZI_TIMEOUT_APPKA_MS,
 ): Promise<{ ok: boolean; result: string }> {
   if (!grantSecret) return { ok: false, result: "no-secret" };
   let r: Response;
@@ -301,6 +327,10 @@ async function zavolejAppku(
       method: "POST",
       headers: { "Content-Type": "application/json", "x-academy-secret": grantSecret },
       body: JSON.stringify(payload),
+      // ⛔ TVRDÝ TIMEOUT (revize R1, nález V2). Neodpovídající most do appky dřív
+      //    dokázal viset až do zabití celé funkce. Vypršení se čte jako
+      //    „appka neodpověděla", tedy nárok se NEMĚNÍ a jde alert.
+      signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (e) {
     return { ok: false, result: "fetch-fail:" + String(e).slice(0, 80) };
@@ -331,7 +361,7 @@ async function zavolejAppku(
  */
 export async function ukonciPristup(
   admin: Admin,
-  opts: { email: string; grantSecret: string; tedMs?: number },
+  opts: { email: string; grantSecret: string; tedMs?: number; timeoutMs?: number },
 ): Promise<UkonceniVysledek> {
   const email = String(opts.email ?? "").trim().toLowerCase();
   const ted = opts.tedMs ?? Date.now();
@@ -358,7 +388,7 @@ export async function ukonciPristup(
   const payload = maAcademy
     ? { email, action: "set-expiry", expires_at: new Date(ted + 365 * 864e5).toISOString(), source: "academy" }
     : { email, action: "revoke", source: "koucink-konec" };
-  const app = await zavolejAppku(opts.grantSecret, payload);
+  const app = await zavolejAppku(opts.grantSecret, payload, opts.timeoutMs);
   try {
     await admin.from("tvujcoach_grants").insert({
       email, action: maAcademy ? "set-expiry" : "revoke", result: app.result, source: "koucink-konec",

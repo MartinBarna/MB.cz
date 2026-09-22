@@ -48,6 +48,21 @@ function check(nazev: string, podminka: boolean, detail = ""): void {
   }
 }
 
+/**
+ * „`a` stoji v textu PRED `b`" jako jedna kontrola.
+ *
+ * ⛔⛔ OBA KUSY SE MUSI NAJIT. `indexOf` vraci -1, takze naivni
+ *    `text.indexOf(a) < text.indexOf(b)` je PRAVDA i tehdy, kdyz `a` v souboru
+ *    UZ VUBEC NENI. Prave to je stav, ktery tyhle kontroly maji chytat: nekdo
+ *    tu radku pri refaktoru smaze. Chyceno vlastni mutaci (M22, 22. 9. 2026),
+ *    kde smazani deadlinu behu nechalo test zeleny.
+ */
+function predTim(nazev: string, text: string, a: string, b: string): void {
+  const ia = text.indexOf(a);
+  const ib = text.indexOf(b);
+  check(nazev, ia >= 0 && ib >= 0 && ia < ib, "a@" + ia + " b@" + ib);
+}
+
 async function walk(rel: string): Promise<string[]> {
   const out: string[] = [];
   const base = new URL(rel + "/", ROOT);
@@ -99,15 +114,57 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
 //    `koucink-konec` zavolal Resend sam, jeho maily by uz nikdy nikdo nezastavil.
 {
   const kk = await Deno.readTextFile(new URL("koucink-konec/index.ts", ROOT));
+  const kkCore = await Deno.readTextFile(new URL("koucink-konec/core.ts", ROOT));
   check("koucink-konec nevola Resend primo", !kk.includes(RESEND));
+  check("core nevola Resend primo", !kkCore.includes(RESEND));
   check("koucink-konec posila pres helper", kk.includes("odesliPresResend"));
   // ⛔ Brana PRED stavbou mailu, stejne jako u rucniho odchodu.
-  check("koucink-konec ma guard pred stavbou mailu",
-    kk.indexOf("koucink-konec.confirm") < kk.indexOf("buildOffboardMail({"));
+  // ⛔ Po refaktoru (nalez S11) uz cesta brany neni v `index.ts`, ale v `core.ts`:
+  //    `index.ts` jen predava `path` do `guardSend`. Kontrola proto meri poradi
+  //    tam, kde se rozhoduje, a zvlast overi, ze obe cesty vubec existuji.
+  check("core zna obe cesty brany",
+    kkCore.includes('"koucink-konec.confirm"') && kkCore.includes('"koucink-konec.sales"'));
+  predTim("core: brana PRED stavbou mailu", kkCore, '"koucink-konec.confirm"', "deps.posliMail(email,");
+  check("index predava cestu brany do guardSend",
+    kk.includes("guardSend(admin, { email, mailClass: trida, functionName: \"koucink-konec\", path })"));
   // ⛔ Razitko PRED prvnim nevratnym krokem (Martin 17. 9.: radeji nikdy mail navic).
-  check("koucink-konec zabira razitko pred zavrenim pristupu",
-    kk.indexOf("const zabrano = await zaber(email)") > 0 &&
-    kk.indexOf("const zabrano = await zaber(email)") < kk.indexOf("await ukonciPristup(admin,"));
+  //    Po refaktoru (revize R1, nalez S11) rozhoduje `core.ts`, takze `index.ts`
+  //    uz `ukonciPristup` nevola primo: predava ho jako zavislost. Kontrola proto
+  //    meri poradi TAM, kde se ted rozhoduje.
+  predTim("koucink-konec: index jen zapojuje, nerozhoduje", kk,
+    "await zaber(email, deps)", "zpracujJednoho(email, zabrano, deps)");
+  predTim("core: zavreni pristupu az po promo kodu", kkCore, "deps.zalozPromo(email)", "deps.ukonciPristup(email)");
+  predTim("core: mail az po zavreni pristupu", kkCore, "deps.ukonciPristup(email)", "deps.posliMail(email,");
+  // ⛔⛔ [revize R1, nalez V1] Jiste neodeslani po ZAVRENEM pristupu musi koncit
+  //    stavem `opakovat_mail`, ne `opakovat`. Druhy pokus jinak znovu sahne na narok,
+  //    dostane `uz_ukoncen` a mail preskoci NAVZDY.
+  check("core: jiste neodeslani konci na opakovat_mail",
+    kkCore.includes('stav: "opakovat_mail"'));
+  check("core: `opakovat_mail` preskakuje zavirani pristupu",
+    kkCore.includes('const jenMail = zabrano.predchozi === "opakovat_mail";') &&
+      kkCore.includes("if (!jenMail) {"));
+
+  // ⛔⛔ [revize R1, nalez V2] TVRDE TIMEOUTY NA VOLANI VEN.
+  //    Cron utne HTTP po 120 s a Supabase Free da funkci 150 s. Jedno visici
+  //    volani sezere cely beh, funkci zabiji UPROSTRED cloveka, `catch` se
+  //    neprovede a razitko zustane v `rezervovano`. Pojistka na zaseknute
+  //    rezervace to sice dozene, ale az za pul hodiny, tedy v praxi az zitra.
+  //    Kontrola je STATICKA schvalne: chovani se bez site otestovat neda,
+  //    ale zmizeni `AbortSignal` ano, a prave to se stane pri prvnim refaktoru.
+  const sdilene = await Deno.readTextFile(new URL("_shared/koucink-konec.ts", ROOT));
+  check("Stripe ma tvrdy timeout",
+    /fetch\("https:\/\/api\.stripe\.com[\s\S]{0,600}?AbortSignal\.timeout\(/.test(sdilene));
+  check("most do appky ma tvrdy timeout",
+    /academy-grant[\s\S]{0,600}?AbortSignal\.timeout\(/.test(sdilene));
+  check("timeouty jsou pojmenovane konstanty, ne cisla v tele",
+    sdilene.includes("VYCHOZI_TIMEOUT_STRIPE_MS") && sdilene.includes("VYCHOZI_TIMEOUT_APPKA_MS"));
+  // ⚠️ `odesliPresResend` tvrdy timeout NEMA a je sdileny s dvanacti funkcemi,
+  //    takze se v teto davce nemeni. Misto nej drzi rozpoctu `DEADLINE_MS`
+  //    v `koucink-konec/index.ts`, ktery je pod limitem cronu.
+  check("beh ma deadline pod limitem cronu (120 s)",
+    /const DEADLINE_MS = (\d[\d_]*)/.test(kk) &&
+      Number(RegExp.$1.replace(/_/g, "")) < 120000);
+  predTim("deadline se kontroluje PRED zabranim cloveka", kk, "doslo_na_cas = true", "await zaber(email, deps)");
 }
 
 const ALLOW_WITHOUT_LOCAL_GUARD = new Set([
@@ -134,8 +191,7 @@ check("grant index má 2 Resend fecthy (alert + posliMail)", grantIndex.length =
 check("grant core importuje guard (customer send)", true);
 
 const koucink = await Deno.readTextFile(new URL("_shared/koucink-onboarding.ts", ROOT));
-check("koucink-onboarding volá guardSend před Resendem",
-  koucink.indexOf("guardSend") < koucink.indexOf(RESEND));
+predTim("koucink-onboarding vola guardSend pred Resendem", koucink, "guardSend", RESEND);
 
 const offboard = await Deno.readTextFile(new URL("admin-api/index.ts", ROOT));
 const salesAt = offboard.lastIndexOf('path: "admin-api.client_offboard.sales"');

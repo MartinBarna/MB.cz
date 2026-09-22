@@ -21,6 +21,7 @@ Politika: `_shared/mailing-guard.ts` (Martin LOCK 7. 9. 2026)
 | 8 | grant-videokurz-z-appky (zákazník) | `grant-videokurz-z-appky/index.ts` `posliMail` | entitlement_delivery | `decideSend` v `core.ts` před `posliMail` |
 | 9a | admin-api client_invite | `_shared/koucink-onboarding.ts` | client_operational | `guardSend` před fetch |
 | 9b | admin-api client_offboard | `admin-api/index.ts` | confirm = client_operational, sales = marketing | confirm skip = žádný mail; sales skip = mail bez prodejního bloku |
+| 10 | koucink-konec (automat) | `koucink-konec/index.ts` | confirm = client_operational, sales = marketing | `guardSend` před stavbou mailu, rozhodování v `koucink-konec/core.ts` |
 
 ## Call sites mimo customer send (v týchž složkách, bez marketing guardu)
 
@@ -39,13 +40,24 @@ Politika: `_shared/mailing-guard.ts` (Martin LOCK 7. 9. 2026)
 
 ```
 npx --yes deno@2 run akademie/_supabase/functions/_shared/mailing-guard.test.ts
-npx --yes deno@2 run akademie/_supabase/functions/admin-api/offboard-mail.test.ts
+npx --yes deno@2 run akademie/_supabase/functions/_shared/offboard-mail.test.ts
 npx --yes deno@2 run akademie/_supabase/functions/grant-videokurz-z-appky/core.test.ts
 npx --yes deno@2 test --no-lock akademie/_supabase/functions/poukaz-vydat/__tests__/core.test.ts
 npx --yes deno@2 run --allow-read akademie/_supabase/functions/_shared/resend-call-sites.test.ts
 ```
 
 ---
+
+## Doplněk 22. 9. 2026: rozloučení po konci koučinku
+
+Šablona rozlučkového mailu se přestěhovala z `admin-api/offboard-mail.ts` do
+`_shared/offboard-mail.ts`, protože ji staví DVĚ funkce: ruční odchod z admina
+a automat `koucink-konec`. Obě jdou přes `guardSend` a obě odesílají přes
+`_shared/resend-odeslat.ts`, takže `admin-api` už na Resend nevolá přímo.
+
+⛔ Počet přímých `fetch` na Resend v rozsahu proto KLESL z devíti na osm a je to
+posun k lepšímu, ne ztráta cesty. Kdo to číslo zvyšuje, přidává cestu mimo
+helper a musí napsat proč.
 
 ## Doplněk 16. 9. 2026: `provider_id` a párování bouncu (nález V1)
 
