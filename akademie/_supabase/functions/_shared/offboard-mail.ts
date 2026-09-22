@@ -111,7 +111,7 @@ export function buildOffboardInner(input: OffboardMailInput): string {
   const kod = escd(kodRaw);
   const sales = maNabidnoutVip(input)
     ? p(vt(
-        "Jestli sis na appku " + rd("zvykl", "zvykla") + ", můžeš v ní pokračovat sám za sebe.",
+        "Jestli sis na appku " + rd("zvykl", "zvykla") + ", můžeš v ní pokračovat " + rd("sám", "sama") + " za sebe.",
         "Jestli ti appka sedla, můžeš v ní pokračovat dál.",
       ) + " Mám pro tebe roční <strong>VIP</strong> se <strong>slevou 20 %</strong>, jen pro moje klienty. Kód je <strong>" + kod + "</strong> a platí čtrnáct dní, pak zmizí.") +
       btn(vipOdkaz(kodRaw), "Chci VIP na rok se slevou") +

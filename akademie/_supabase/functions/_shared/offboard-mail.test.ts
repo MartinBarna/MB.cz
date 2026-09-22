@@ -76,6 +76,20 @@ check("odkaz je na pokladnu appky s ročním VIP",
   vipOdkaz(KOD).startsWith("https://tvujcoach.cz/koupit?plan=vip-rok&promo=" + KOD));
 check("žena: dala / věděla",
   buildOffboardInner(ZENA).includes("dala") && buildOffboardInner(ZENA).includes("věděla"));
+// ⛔ CELÝ MAIL, NE JEN PRVNÍ ODSTAVEC. Rozloučení Jany Kaločayové 3. 8. 2026 bylo
+//    v mužském rodě a tenhle kontrolní bod je tu proto, aby se to nestalo znovu
+//    v NOVĚ PŘIDANÉ větě. Vyhledání prošlo poprvé 22. 9. 2026 a rovnou něco našlo:
+//    „můžeš v ní pokračovat sám za sebe" stálo v ženské větvi taky.
+{
+  const z = buildOffboardInner(ZENA);
+  const MUZSKE = ["dal", "věděl", "měl", "vrátil", "zvykl", "chtěl", "sám", "můj klient"];
+  for (const tvar of MUZSKE) {
+    check("žena: nikde `" + tvar + "` v mužském tvaru",
+      !new RegExp("[^a-záčďéěíňóřšťúůýž]" + tvar + "[^a-záčďéěíňóřšťúůýžy]", "i").test(z), tvar);
+  }
+  check("žena: `sama za sebe`", z.includes("sama za sebe"));
+  check("muž: `sám za sebe`", buildOffboardInner(MUZ).includes("sám za sebe"));
+}
 check("muž: dal / věděl",
   s.includes("dal") && s.includes("věděl") && !s.includes("věděla"));
 check("osloveni v HTML", s.includes("Ahoj Milane,"));
