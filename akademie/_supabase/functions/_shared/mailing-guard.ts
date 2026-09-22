@@ -44,6 +44,11 @@ export const PATH_CLASS = {
   "admin-api.client_welcome_resend": "client_operational",
   "admin-api.client_offboard.confirm": "client_operational",
   "admin-api.client_offboard.sales": "marketing",
+  // Automat „konec koučinku" (22. 9. 2026). Týž mail a týž příjemce jako u ručního
+  // odchodu z admina, tedy i tytéž dvě třídy: potvrzení o konci přístupu jde i po
+  // odhlášení, prodejní blok ne.
+  "koucink-konec.confirm": "client_operational",
+  "koucink-konec.sales": "marketing",
 } as const;
 
 export type GuardPath = keyof typeof PATH_CLASS;
