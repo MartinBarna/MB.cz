@@ -23,7 +23,8 @@ import {
   maZaplacenouAcademy,
   overKonecKoucinku,
   ukonciPristup,
-  vytvorPromoKod,
+  vygenerujPromoKod,
+  zajistiPromoKod,
 } from "../_shared/koucink-konec.ts";
 // Prevod terminu konzultace mezi ceskym casem a UTC + stav hovoru. Ciste funkce
 // ve vlastnim souboru, at jdou otestovat bez nastartovani serveru (`konzultace.test.ts`).
@@ -3871,11 +3872,27 @@ Deno.serve(async (req) => {
       //    znamená „přístup UŽ je zavřený, chybí jen rozloučení". Bez tohohle čtení
       //    spadlo druhé kliknutí na `uz_ukoncen` a mail se nedal poslat NIKDY:
       //    tlačítko hlásilo „pošli mu ho jinak", ale jiná cesta neexistovala.
-      // ⛔ Chyba čtení není „razítko nemá": při chybě se pokračuje běžnou cestou,
-      //    kde `ukonciPristup` stejně vrátí `uz_ukoncen` a nic se nerozbije.
-      const { data: razitkoRow } = await admin.from("koucink_konec_sent")
-        .select("stav,promo_code,ma_academy").eq("email", email).maybeSingle();
-      const jenDoposlat = String(razitkoRow?.stav ?? "") === "opakovat_mail";
+      // ⛔⛔ CHYBA ČTENÍ RAZÍTKA JE 500, NE „razítko nemá" (revize R2, nález S4).
+      //    Do R2 se `error` zahazoval, takže výpadek `koucink_konec_sent` vypadal
+      //    jako prázdno: `jenDoposlat` bylo false, `ukonciPristup` vrátil
+      //    „už je ukončený" a Martin dostal hlášku „nic se neposlalo" nad klientem,
+      //    kterému rozloučení pořád chybělo. Chyba čtení není odpověď (CLAUDE.md 13).
+      const { data: razitkoRow, error: razitkoErr } = await admin.from("koucink_konec_sent")
+        .select("stav,promo_code,ma_academy,pokusy").eq("email", email).maybeSingle();
+      if (razitkoErr) {
+        return json({
+          error: "razitko_neprecteno",
+          detail: String(razitkoErr.message ?? razitkoErr).slice(0, 160),
+          hint: "koucink_konec_sent se nepodarilo precist; NIC se nezavrelo, zkus to za chvili znovu",
+        }, 500);
+      }
+      const razitkoStav = String(razitkoRow?.stav ?? "");
+      const jenDoposlat = razitkoStav === "opakovat_mail";
+      // ⛔ ROZDĚLANÁ PRÁCE JE I `opakovat` a `rezervovano` (revize R2, nález S5).
+      //    Uložený kód se použije u KAŽDÉHO z nich, ne jen u `opakovat_mail`.
+      //    Stav `opakovat` s vyplněným kódem vzniká, když Stripe prošel a appka ne;
+      //    založit druhý kód by ve Stripu nechalo nepoužitou slevu.
+      const rozdelano = jenDoposlat || razitkoStav === "opakovat" || razitkoStav === "rezervovano";
 
       // Promo kód na roční VIP jen tomu, komu appka opravdu skončí a komu smí jít
       // prodejní blok. Kdo má Academy, appku si nechává a nabídka by mu lhala.
@@ -3884,7 +3901,7 @@ Deno.serve(async (req) => {
         : await maZaplacenouAcademy(admin, email);
       // ⛔ Kód z razítka se POUŽIJE, nezakládá se druhý (nález S4). Jinak by každé
       //    kliknutí nechalo ve Stripu další nepoužitý kód.
-      let promoKod = jenDoposlat ? String(razitkoRow?.promo_code ?? "") : "";
+      let promoKod = rozdelano ? String(razitkoRow?.promo_code ?? "") : "";
       if (posleMail && salesDecision?.action === "send" && !maAcademyPred && !promoKod) {
         // ⛔ TŘI STAVY U ČTENÍ KUPÓNU (nález S10). Výpadek `app_config` se nesmí
         //    číst jako „kupón není nastavený": to jsou dvě různé situace s dvěma
@@ -3907,7 +3924,22 @@ Deno.serve(async (req) => {
           //    z odpovědi (`varovani`), ne až od klienta.
           console.warn("client_offboard: koucink_vip_coupon_id je prazdne, mail jde bez nabidky VIP");
         } else {
-          const p = await vytvorPromoKod(STRIPE_PROMO_KEY, { couponId, email });
+          // ⛔⛔ KÓD SE VYLOSUJE A ULOŽÍ DŘÍV, NEŽ SE O NĚM DOZVÍ STRIPE (revize R2,
+          //    nález V2), stejně jako v automatu. Pád mezi voláním Stripu a zápisem
+          //    řádku by jinak nechal ve Stripu kód, o kterém nevíme, a další
+          //    kliknutí by založilo další. `zajistiPromoKod` je se stejným textem
+          //    idempotentní, takže opakování kód nezdvojí.
+          const kod = vygenerujPromoKod();
+          try {
+            await admin.from("koucink_konec_sent").upsert({
+              email,
+              stav: rozdelano ? razitkoStav : "rezervovano",
+              promo_code: kod,
+              duvod: "promo_pending:rucne",
+              updated_at: new Date().toISOString(),
+            }, { onConflict: "email" });
+          } catch { /* zápis se ověří návratem Stripu níž */ }
+          const p = await zajistiPromoKod(STRIPE_PROMO_KEY, { couponId, email, kod });
           if (!p.ok) {
             // ⛔ KUPÓN JE NASTAVENÝ A PŘESTO SELHAL: to je porucha, ne konfigurace.
             //    Mail slibuje slevu; s kódem, který ve Stripu není, by člověk
@@ -3919,6 +3951,33 @@ Deno.serve(async (req) => {
             }, 502);
           }
           promoKod = p.kod;
+        }
+      }
+
+      // ⛔⛔ JEDEN ZÁMEK PRO TLAČÍTKO I PRO CRON (revize R2, nález S6). Do R2 admin
+      //    stav jen PŘEČETL, takže když si cron mezitím týž řádek převzal, oba
+      //    došly k odeslání a klient dostal rozloučení DVAKRÁT. Okno je krátké,
+      //    ale v kódu bylo. Podmíněný `update` s počtem řádků ten závod rozhoduje
+      //    stejně jako `prevezmi` v automatu: kdo prohraje, neodesílá.
+      // ⚠️ Zamyká se JEN rozdělaná práce. U čerstvého odchodu (žádné razítko, nebo
+      //    `hotovo` po dřívějším ukončení) se zamykat nemá co; tam drží pořadí
+      //    `ukonciPristup`, který na už ukončeném nároku vrátí `uz_ukoncen`.
+      if (rozdelano) {
+        const { count: zamek, error: zamekErr } = await admin.from("koucink_konec_sent")
+          .update({ stav: "rezervovano", updated_at: new Date().toISOString() }, { count: "exact" })
+          .eq("email", email).eq("stav", razitkoStav);
+        if (zamekErr) {
+          return json({
+            error: "razitko_neprecteno",
+            detail: String(zamekErr.message ?? zamekErr).slice(0, 160),
+            hint: "razitko se nepodarilo zamknout; NIC se nezavrelo",
+          }, 500);
+        }
+        if (!zamek) {
+          return json({
+            error: "prave_zpracovava_automat",
+            hint: "tenhle klient je prave v rukou automatu; pockej par minut a zkus to znovu",
+          }, 409);
         }
       }
 
@@ -3949,28 +4008,40 @@ Deno.serve(async (req) => {
         return json({ error: "db", detail: u.detail ?? "narok se nevypnul", tvujcoach: u.tvujcoach }, 500);
       }
 
-      // Razítko do společné historie odchodů. Automat podle něj pozná, že rozloučení
-      // už proběhlo, a nepošle druhé. ⛔ Při nové pozvánce se maže (`client_invite`),
-      // jinak by se vracejícímu klientovi automat podruhé nikdy neozval.
-      try {
-        await admin.from("koucink_konec_sent").upsert({
-          email,
-          stav: "hotovo",
-          duvod: "rucne_z_adminu" + (tiche ? ":tiche" : ""),
-          promo_code: promoKod || null,
-          ma_academy: u.maAcademy,
-          sent_at: new Date().toISOString(),
-          sent_ok: posleMail,
-          updated_at: new Date().toISOString(),
-        }, { onConflict: "email" });
-      } catch { /* razítko je evidence, odchod z koučinku to neshodí */ }
+      // ⛔⛔ RAZÍTKO `hotovo` AŽ PO PROKÁZANÉM ODESLÁNÍ (revize R2, nález S4).
+      //    Do R2 se psalo PŘED odesláním se `sent_ok: posleMail`, tedy podle
+      //    ÚMYSLU, ne podle výsledku. Chybějící `RESEND_API_KEY` se pak vracel
+      //    hláškou, kterou admin četl jako úspěch, razítko zůstalo `hotovo`
+      //    a automat ten řádek už nikdy nevzal. Rozloučení zmizelo.
+      // ⇒ Dokud mail neodešel, razítko drží `rezervovano` (u rozdělané práce ho
+      //   tam dal zámek výš) nebo se zakládá jako `rezervovano`.
+      const nyni = () => new Date().toISOString();
+      async function zapisRazitko(pole: Record<string, unknown>): Promise<void> {
+        try {
+          await admin.from("koucink_konec_sent").upsert({
+            email,
+            promo_code: promoKod || null,
+            ma_academy: u.maAcademy,
+            updated_at: nyni(),
+            ...pole,
+          }, { onConflict: "email" });
+        } catch { /* razítko je evidence, odchod z koučinku to neshodí */ }
+      }
 
-      if (tiche) return json({ ok: true, mail: "preskocen", tvujcoach: u.tvujcoach, mel_academy: u.maAcademy });
+      // Tichý odchod je vědomé rozhodnutí „bez mailu", ne selhání: uzavírá se hned.
+      if (tiche) {
+        await zapisRazitko({ stav: "hotovo", duvod: "rucne_z_adminu:tiche", sent_at: nyni(), sent_ok: false });
+        return json({ ok: true, mail: "preskocen", mail_ok: null, mail_duvod: "tiche", tvujcoach: u.tvujcoach, mel_academy: u.maAcademy });
+      }
       if (confirmDecision && confirmDecision.action === "skip") {
         await logMailSkip(admin, confirmDecision);
+        await zapisRazitko({ stav: "hotovo", duvod: "mail_preskocen:" + confirmDecision.reason, sent_at: nyni(), sent_ok: false });
         return json({
           ok: true,
           mail: "preskocen",
+          // ⛔ `null` = mail se vědomě neposílal. `false` by znamenalo „měl a nešel".
+          mail_ok: null,
+          mail_duvod: "brana:" + confirmDecision.reason,
           mail_reason: confirmDecision.reason,
           tvujcoach: u.tvujcoach,
           mel_academy: u.maAcademy,
@@ -3979,7 +4050,18 @@ Deno.serve(async (req) => {
       if (salesDecision && salesDecision.action === "skip") await logMailSkip(admin, salesDecision);
 
       const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-      if (!RESEND_KEY) return json({ ok: true, mail: "no_resend", tvujcoach: u.tvujcoach, mel_academy: u.maAcademy });
+      if (!RESEND_KEY) {
+        // ⛔ Přístup je zavřený a mail JISTĚ neodešel: týž stav jako Resend 4xx.
+        await zapisRazitko({ stav: "opakovat_mail", duvod: "rucne_z_adminu:no_resend", sent_ok: false });
+        return json({
+          ok: true,
+          mail: "no_resend",
+          mail_ok: false,
+          mail_duvod: "chybi_RESEND_API_KEY",
+          tvujcoach: u.tvujcoach,
+          mel_academy: u.maAcademy,
+        });
+      }
 
       // ⚠️ Zamerne tu NENI zadna cena. Ceny appky uz jsou natvrdo v sablonach
       // v `email_templates` a pri zmene cenika se na ne zapomina. Tenhle mail proto
@@ -4007,23 +4089,21 @@ Deno.serve(async (req) => {
         },
         { admin, via: "admin-api.client_offboard", email, detail: { track: "koucink-konec", ma_academy: u.maAcademy } },
       );
-      if (!rs.ok) {
+      if (rs.ok) {
+        await zapisRazitko({ stav: "hotovo", duvod: "rucne_z_adminu", sent_at: nyni(), sent_ok: true });
+      } else {
         // ⛔⛔ PŘÍSTUP JE ZAVŘENÝ A ROZLOUČENÍ NEODEŠLO (revize R1, nález V1).
         //    Razítko jde na `opakovat_mail`, což znamená dvě věci: automat to
         //    zkusí poslat znovu a UŽ NESÁHNE na nárok, a druhé kliknutí na tlačítko
         //    v adminu mail pošle místo hlášky „už je ukončený".
         //    Rozdíl proti `chyba_nejiste`: tam mail MOHL odejít a opakovat se nesmí.
         const teloMohloDojit = rs.status >= 500 || String(rs.chyba ?? "").startsWith("sit:");
-        try {
-          await admin.from("koucink_konec_sent").update({
-            stav: teloMohloDojit ? "chyba_nejiste" : "opakovat_mail",
-            sent_ok: false,
-            duvod: "rucne_z_adminu:resend_" + rs.status,
-            promo_code: promoKod || null,
-            ma_academy: u.maAcademy,
-            updated_at: new Date().toISOString(),
-          }).eq("email", email);
-        } catch { /* evidence */ }
+        await zapisRazitko({
+          stav: teloMohloDojit ? "chyba_nejiste" : "opakovat_mail",
+          duvod: "rucne_z_adminu:resend_" + rs.status,
+          sent_at: nyni(),
+          sent_ok: false,
+        });
       }
       return json({
         ok: true,

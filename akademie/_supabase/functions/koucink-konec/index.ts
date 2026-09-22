@@ -45,11 +45,18 @@ import {
   maZaplacenouAcademy,
   ukonciPristup,
   vyberKeUkonceni,
-  vytvorPromoKod,
+  vygenerujPromoKod,
+  zajistiPromoKod,
   type KoucinkRadek,
 } from "../_shared/koucink-konec.ts";
 import { buildOffboardMail } from "../_shared/offboard-mail.ts";
-import { type BehDeps, MAX_POKUSU, type RazitkoRadek, zaber, zpracujJednoho } from "./core.ts";
+import {
+  type BehDeps,
+  type RazitkoRadek,
+  razitkaDoFronty,
+  zaber,
+  zpracujJednoho,
+} from "./core.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -155,7 +162,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (naroky.error) return json(chybaCteni("entitlements", naroky.error), 500);
 
   const razitka = await ctiSOpakovanim<{ data: RazitkoRadek[] | null; error: unknown }>(() =>
-    admin.from("koucink_konec_sent").select("email,stav,promo_code,pokusy,updated_at,duvod")
+    admin.from("koucink_konec_sent").select("email,stav,promo_code,pokusy,updated_at,duvod,sent_ok")
   );
   if (razitka.error) return json(chybaCteni("koucink_konec_sent", razitka.error), 500);
   const vsechnaRazitka = razitka.data ?? [];
@@ -167,15 +174,20 @@ Deno.serve(async (req: Request): Promise<Response> => {
     jizOrazitkovane: vsechnaRazitka.map((r) => low(r.email)),
   });
 
-  // ⛔ FRONTA NA OPAKOVÁNÍ JE VLASTNÍ SEZNAM, NE DRUHÝ POHLED NA `entitlements`.
-  //    Jakmile se nárok jednou vypne, z výběru výš vypadne navždy. Kdyby po tom
-  //    selhalo odeslání, člověk by zůstal zavřený bez rozloučení a nikdo by to
-  //    nevěděl. Práci proto řídí razítko, ne nárok.
-  // ⛔ Vyčerpaný strop pokusů se do fronty nebere (`core.zaber` by ho stejně
-  //    přepnul na `vzdano`); tady se jen nemrhá časem běhu.
-  const kOpakovani = vsechnaRazitka
-    .filter((r) => (r.stav === "opakovat" || r.stav === "opakovat_mail") && Number(r.pokusy ?? 0) < MAX_POKUSU)
-    .map((r) => low(r.email));
+  // ⛔⛔ FRONTA MUSÍ DO `zaber` PUSTIT VŠECHNO, CO SI ZASLOUŽÍ ROZHODNUTÍ
+  //    (revize R2, nálezy V1 a V2). Do R2 brala jen `opakovat` a `opakovat_mail`
+  //    s `pokusy < 5`, takže DVĚ POJISTKY Z R1 BYLY V PROVOZU MRTVÉ:
+  //      1. opuštěná `rezervovano` (po zabití běhu timeoutem cronu) se nikdy
+  //         nedostala k pravidlu „starší 30 minut", protože `zaber` se pro ni
+  //         nezavolal. Člověk zůstal viset navždy, bez alertu.
+  //      2. řádek s `pokusy >= 5` fronta VYHODILA, takže `zaber` ho nikdy
+  //         nepřepnul na `vzdano` a alert „vzdávám to" nešel. Komentář u filtru
+  //         tvrdil, že „`zaber` je stejně přepne". Nepřepnul, nedostal se k nim.
+  //    ⇒ Filtruje se JEN to, co je opravdu uzavřené. O všem ostatním rozhoduje
+  //      `zaber`, tedy jedno místo, které jde otestovat.
+  const zRazitek = razitkaDoFronty(vsechnaRazitka, { tedMs: Date.now() });
+  const kOpakovani = zRazitek.emaily;
+  const nadStropem = zRazitek.nadStropem;
   // ⭐ Opakování má PŘEDNOST před novými: rozdělaná práce (typicky zavřený přístup
   //    bez rozloučení) je horší stav než čekající nový člověk.
   const celaFronta = [...kOpakovani, ...vyber.kUkonceni.map((r) => r.email)];
@@ -192,6 +204,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
     v_optout: vyber.vOptout,
     k_ukonceni: vyber.kUkonceni.length,
     k_opakovani: kOpakovani.length,
+    nad_stropem: nadStropem,
+    zaseknutych: zRazitek.zaseknutych,
     ma_kupon: !!couponId,
   };
 
@@ -241,7 +255,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     },
     async ctiRazitko(email) {
       const { data, error } = await admin.from("koucink_konec_sent")
-        .select("email,stav,promo_code,pokusy,updated_at,duvod").eq("email", email).maybeSingle();
+        .select("email,stav,promo_code,pokusy,updated_at,duvod,sent_ok").eq("email", email).maybeSingle();
       if (error) return { radek: null, chyba: String((error as { message?: unknown }).message ?? error).slice(0, 160) };
       return { radek: (data as RazitkoRadek | null) ?? null, chyba: "" };
     },
@@ -273,8 +287,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
     },
     // deno-lint-ignore no-explicit-any
     logSkip: (decision) => logMailSkip(admin, decision as any),
-    async zalozPromo(email) {
-      const p = await vytvorPromoKod(STRIPE_PROMO_KEY, { couponId, email, timeoutMs: STRIPE_TIMEOUT_MS });
+    // ⛔ Losování je VLASTNÍ krok: jádro si kód uloží DŘÍV, než se o něm dozví
+    //    Stripe, takže opakování po pádu sítě kód nezdvojí (nález V2).
+    vylosujKod: () => vygenerujPromoKod(),
+    async zalozPromo(email, kod) {
+      const p = await zajistiPromoKod(STRIPE_PROMO_KEY, { couponId, email, kod, timeoutMs: STRIPE_TIMEOUT_MS });
       return p.ok ? { ok: true, kod: p.kod } : { ok: false, chyba: p.chyba };
     },
     ukonciPristup: (email) => ukonciPristup(admin, { email, grantSecret, timeoutMs: APPKA_TIMEOUT_MS }),
@@ -328,16 +345,29 @@ Deno.serve(async (req: Request): Promise<Response> => {
       else if (v.vysledek === "chyba_nejiste") nejiste.push(email);
       else preskoceno.push({ email, duvod: v.duvod });
     } catch (e) {
-      // ⛔ Výjimka po zabrání razítka nesmí nechat řádek viset v `rezervovano`:
-      //    tam by ho vzala až pojistka na zaseknuté rezervace o třicet minut
-      //    později, tedy v praxi až zítra.
+      // ⛔ Výjimka po zabrání razítka nesmí nechat řádek viset v `rezervovano`.
+      // ⛔⛔ A NESMÍ PŘEPSAT `opakovat_mail` NA `opakovat` (revize R2, nález S7).
+      //    U toho stavu je přístup ZAVŘENÝ a chybí jen rozloučení; kdyby se z něj
+      //    stalo obyčejné opakování, další běh by sáhl na nárok, dostal
+      //    „už je ukončený" a mail by zahodil. Zachovává se, odkud se vzal.
+      const navrat = zabrano.predchozi === "opakovat_mail" ? "opakovat_mail" : "opakovat";
       await deps.nastavRazitko(email, {
-        stav: "opakovat",
+        stav: navrat,
         duvod: "vyjimka:" + String(e).slice(0, 140),
         updated_at: new Date().toISOString(),
       });
-      opakovat.push({ email, duvod: "vyjimka" });
+      if (navrat === "opakovat_mail") opakovatMail.push({ email, duvod: "vyjimka" });
+      else opakovat.push({ email, duvod: "vyjimka" });
       console.error("[koucink-konec] vyjimka u " + email + ": " + String(e).slice(0, 300));
+      // ⛔ Výjimka uprostřed nevratné práce se nesmí schovat do JSONu, do kterého
+      //    se nikdo nedívá (týž důvod jako u `zapis_selhal` v `client-remind`).
+      await alert(
+        "🔴 Konec koučinku: výjimka uprostřed zpracování",
+        "Klient: " + email + "\nStav razítka: " + navrat + "\nChyba: " + String(e).slice(0, 300) +
+          "\n\nAutomat to zkusí znovu při dalším běhu. Když se to opakuje, je to vada kódu,\n" +
+          "ne stav toho klienta.",
+        email,
+      );
     }
     await pockej(PAUZA_MS);
   }
@@ -359,16 +389,20 @@ Deno.serve(async (req: Request): Promise<Response> => {
     );
   }
 
-  // ⭐ Kupón nenastavený (revize R1, nález S5). Hlásí se JEN když by ho někdo
-  //    potřeboval, a jen jednou týdně, ať se z toho nestane denní šum.
-  if (!couponId && (vyber.kUkonceni.length > 0 || kOpakovani.length > 0) && pondeli) {
+  // ⚠️ Alert o nenastaveném kupónu se posílá z JÁDRA, u každého člověka, kterého
+  //    se to týká, a KAŽDÝ BĚH (revize R2, nález V2). Dřív byl tady a jen
+  //    v pondělí; po pěti dnech bez pondělí zmizel a člověk zůstal otevřený
+  //    v tichu. Strop `MAX_ALERTU` drží, aby se z toho nestala rozesílka.
+
+  // ⛔ Nedoběhnutý běh se nesmí schovat do JSONu (revize R2, nález N9). `doslo_na_cas`
+  //    znamená, že fronta je delší, než se stihne, a ta se sama nezkrátí.
+  if (doslo_na_cas) {
     await alert(
-      "⚠️ Koučink: kupón na roční VIP není nastavený",
-      "app_config.koucink_vip_coupon_id je prázdné, takže promo kód nemá z čeho vzniknout.\n" +
-        "Automat proto nikoho nezavírá: rozloučení bez funkčního kódu by slíbilo slevu,\n" +
-        "kterou pokladna nezná.\n\n" +
-        "Založ kupón ve Stripu (20 %, duration once, jen roční VIP) a jeho id vlož do\n" +
-        "app_config.koucink_vip_coupon_id.",
+      "⚠️ Konec koučinku: běh nestihl celou frontu",
+      "Běh se zastavil na časovém rozpočtu (" + DEADLINE_MS + " ms) a " +
+        Math.max(0, celaFronta.length - hotovo.length) + " lidí zůstalo na zítřek.\n\n" +
+        "Jednou je to v pořádku (fronta se dožene). Když to přijde několik dní po sobě,\n" +
+        "něco visí: nejspíš odesílání mailů, které tvrdý timeout nemá.",
     );
   }
 

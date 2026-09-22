@@ -2542,9 +2542,14 @@
                razítko je v `opakovat_mail`, takže automat to zkusí znovu a druhé
                kliknutí na tohle tlačítko pošle POUZE mail. Do teď tady stálo
                „pošli mu ho jinak", jenže jiná cesta neexistovala. */
-            var mailText = tiche ? '' : (o.j.mail_ok===false
-              ? ' ⚠️ MAIL NEODEŠEL (Resend '+(o.j.mail_status||'?')+'). Klikni na tlačítko ještě jednou, pošle se jen mail; jinak ho zkusí automat.'
-              : ' Mail odešel.');
+            /* ⛔⛔ TŘI STAVY MAILU, NE DVA (revize R2, nález S4). Do R2 se za úspěch
+               bralo cokoli, co není `mail_ok === false`, takže chybějící klíč
+               Resendu i mail zastavený bránou hlásily „Mail odešel.".
+               `null` = vědomě se neposílal, `false` = měl a nešel, `true` = odešel. */
+            var mailText;
+            if (o.j.mail_ok===true) mailText=' Mail odešel.';
+            else if (o.j.mail_ok===false) mailText=' ⚠️ MAIL NEODEŠEL ('+(o.j.mail_duvod||('Resend '+(o.j.mail_status||'?')))+'). Klikni na tlačítko ještě jednou, pošle se jen mail; jinak ho zkusí automat.';
+            else mailText=' Mail se neposílal ('+(o.j.mail_duvod||'bez důvodu')+').';
             var varText = o.j.varovani ? ' ⚠️ '+o.j.varovani : '';
             toast('🚪 Koučink ukončen.'+mailText+pozn+varText);
             $('kdet').classList.remove('on'); loadKlienti();
@@ -2558,6 +2563,16 @@
           /* ⛔ Chyba čtení konfigurace NENÍ „kupón není nastavený" (nález S10). */
           else if(o.j&&o.j.error==='kupon_neprecten'){
             toast('Nastavení se teď nepodařilo přečíst, takže jsem radši NIC neukončil. Zkus to za chvíli znovu.');
+            b.disabled=false; b.textContent='Ukončit koučink';
+          }
+          /* ⛔ Výpadek čtení razítka NENÍ „razítko nemá" (revize R2, nález S4). */
+          else if(o.j&&o.j.error==='razitko_neprecteno'){
+            toast('Historii odchodů se teď nepodařilo přečíst, takže jsem radši NIC neukončil. Zkus to za chvíli znovu.');
+            b.disabled=false; b.textContent='Ukončit koučink';
+          }
+          /* ⛔ Souběh s automatem (nález S6): jeden zámek, kdo prohraje, neodesílá. */
+          else if(o.j&&o.j.error==='prave_zpracovava_automat'){
+            toast('Tohohle klienta právě zpracovává automat. Počkej pár minut a zkus to znovu, ať mu rozloučení nepřijde dvakrát.');
             b.disabled=false; b.textContent='Ukončit koučink';
           }
           else if(o.j&&o.j.error==='appka_neodpovedela'){

@@ -224,61 +224,99 @@ export type PromoVysledek =
   | { ok: true; kod: string; id: string }
   | { ok: false; chyba: string };
 
+/** Najde kód ve Stripu podle jeho textu. `null` = není, `undefined` = nepodařilo se zjistit. */
+async function najdiPromoKod(
+  stripeKey: string,
+  kod: string,
+  timeoutMs: number,
+): Promise<{ id: string } | null | undefined> {
+  let res: Response;
+  try {
+    res = await fetch(
+      "https://api.stripe.com/v1/promotion_codes?limit=1&code=" + encodeURIComponent(kod),
+      { headers: { Authorization: "Bearer " + stripeKey }, signal: AbortSignal.timeout(timeoutMs) },
+    );
+  } catch {
+    return undefined;
+  }
+  if (!res.ok) return undefined;
+  try {
+    const j = await res.json() as { data?: { id?: unknown }[] };
+    const prvni = Array.isArray(j.data) ? j.data[0] : undefined;
+    return prvni ? { id: String(prvni.id ?? "") } : null;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
- * Založí ve Stripu jednorázový promo kód pro jednoho bývalého klienta.
+ * Zajistí, že ve Stripu existuje promo kód S PŘESNĚ TÍMHLE TEXTEM, a vrátí ho.
+ *
+ * ⛔⛔ KÓD SI URČUJE VOLAJÍCÍ, NE TAHLE FUNKCE (revize R2, nález V2). Do R2 se kód
+ *    losoval až tady, takže pád sítě mezi `POST /v1/promotion_codes` a uložením
+ *    řádku znamenal, že kód ve Stripu VZNIKL, my jsme o něm nevěděli a další běh
+ *    založil DALŠÍ. Pět pokusů = až pět nepoužitých slev viset ve Stripu.
+ *    ⇒ Volající kód vylosuje, ULOŽÍ SI HO a teprve pak volá sem. Opakování se
+ *      stejným textem je tím pádem idempotentní: buď ho tu najdeme, nebo založíme.
  *
  * ⛔⛔ SELHÁNÍ SE NEPOLYKÁ A MAIL BEZ KÓDU NEJDE. Mail slibuje slevu; kdyby odešel
  *    s kódem, který ve Stripu není, člověk ho zadá v pokladně, uvidí „neplatný
  *    kód" a nekoupí nic. Volající proto při `ok: false` neodesílá a alertuje.
- * ⚠️ Kolize kódu (`code` už existuje) vrací Stripe jako 400 se slovy „already
- *    exists". Jeden pokus navíc s novým kódem je levný; cokoli jiného (špatný
- *    kupón, chybějící právo na zápis) se opakováním nespraví.
- * ⚠️ Pád sítě se NEOPAKUJE: kód mohl ve Stripu vzniknout a druhý pokus by založil
- *    druhý. Vrací se chyba a rozhodne další běh.
+ *
+ * ⚠️ `already exists` po neúspěšném GET znamená, že kód existuje a jen jsme ho
+ *    nepřečetli. Bere se jako úspěch: text kódu je to jediné, co potřebujeme.
  */
-export async function vytvorPromoKod(
+export async function zajistiPromoKod(
   stripeKey: string,
-  opts: { couponId: string; email: string; tedMs?: number; pokusy?: number; timeoutMs?: number },
+  opts: { couponId: string; email: string; kod: string; tedMs?: number; timeoutMs?: number },
 ): Promise<PromoVysledek> {
   if (!stripeKey) return { ok: false, chyba: "chybi_stripe_klic" };
   if (!opts.couponId) return { ok: false, chyba: "chybi_coupon_id" };
-  const pokusy = Math.max(1, opts.pokusy ?? 2);
-  let posledni = "";
-  for (let i = 0; i < pokusy; i++) {
-    const kod = vygenerujPromoKod();
-    const form = promoForm({
-      couponId: opts.couponId,
-      kod,
-      expiresAt: promoPlatnostDo(opts.tedMs ?? Date.now()),
-      email: opts.email,
+  const kod = String(opts.kod ?? "").trim();
+  if (!kod) return { ok: false, chyba: "chybi_kod" };
+  const timeoutMs = opts.timeoutMs ?? VYCHOZI_TIMEOUT_STRIPE_MS;
+
+  // 1) Nemáme ho ve Stripu už z minula? (Opakovaný pokus po pádu sítě.)
+  const nalez = await najdiPromoKod(stripeKey, kod, timeoutMs);
+  if (nalez) return { ok: true, kod, id: nalez.id };
+  // `undefined` = nevíme. Pokračujeme na POST; při kolizi se to pozná z odpovědi.
+
+  const form = promoForm({
+    couponId: opts.couponId,
+    kod,
+    expiresAt: promoPlatnostDo(opts.tedMs ?? Date.now()),
+    email: opts.email,
+  });
+  let res: Response;
+  try {
+    res = await fetch("https://api.stripe.com/v1/promotion_codes", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + stripeKey,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams(form).toString(),
+      // ⛔ TVRDÝ TIMEOUT (revize R1, nález V2). Bez něj visící Stripe sežere celý
+      //    rozpočet běhu cronu, ten HTTP utne po 120 s, `catch` se neprovede
+      //    a razítko zůstane v `rezervovano` navždy.
+      signal: AbortSignal.timeout(timeoutMs),
     });
-    let res: Response;
-    try {
-      res = await fetch("https://api.stripe.com/v1/promotion_codes", {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + stripeKey,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams(form).toString(),
-        // ⛔ TVRDÝ TIMEOUT (revize R1, nález V2). Bez něj visící Stripe sežere celý
-        //    rozpočet běhu cronu, ten HTTP utne po 120 s, `catch` se neprovede
-        //    a razítko zůstane v `rezervovano` navždy.
-        signal: AbortSignal.timeout(opts.timeoutMs ?? VYCHOZI_TIMEOUT_STRIPE_MS),
-      });
-    } catch (e) {
-      return { ok: false, chyba: "sit:" + String(e).slice(0, 160) };
-    }
-    const telo = await res.text().catch(() => "");
-    if (res.ok) {
-      let id = "";
-      try { id = String((JSON.parse(telo) as { id?: unknown }).id ?? ""); } catch { /* id je bonus */ }
-      return { ok: true, kod, id };
-    }
-    posledni = "stripe_" + res.status + ":" + telo.slice(0, 160);
-    if (!(res.status === 400 && telo.includes("already exists"))) break;
+  } catch (e) {
+    // ⛔ Neopakuje se: kód mohl vzniknout. Příští běh ho najde GETem výš.
+    return { ok: false, chyba: "sit:" + String(e).slice(0, 160) };
   }
-  return { ok: false, chyba: posledni || "stripe_neznama_chyba" };
+  const telo = await res.text().catch(() => "");
+  if (res.ok) {
+    let id = "";
+    try { id = String((JSON.parse(telo) as { id?: unknown }).id ?? ""); } catch { /* id je bonus */ }
+    return { ok: true, kod, id };
+  }
+  if (res.status === 400 && telo.includes("already exists")) {
+    // Kód tam je, jen ho GET nepřečetl. To je přesně stav, kvůli kterému tahle
+    // funkce dostává text kódu zvenčí.
+    return { ok: true, kod, id: "" };
+  }
+  return { ok: false, chyba: "stripe_" + res.status + ":" + telo.slice(0, 160) };
 }
 
 // -----------------------------------------------------------------------------

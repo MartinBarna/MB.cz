@@ -90,6 +90,27 @@ create unique index if not exists koucink_konec_sent_email_unique
 create index if not exists koucink_konec_sent_stav_idx
   on public.koucink_konec_sent (stav);
 
+-- ⛔⛔ SLOUPCE SE DOPLŇUJÍ I ZVLÁŠŤ (revize R2, nález N8). `create table if not
+--    exists` na existující tabulce NIC nepřidá, takže kdyby v DB už ležela verze
+--    z dřívějšího spuštění (bez `pokusy` a `updated_at`), migrace by prošla,
+--    `comment on column` níž by spadl na chybějícím sloupci a automat by se
+--    o zaseknuté rezervace ani o strop pokusů neopřel.
+--    ⚠️ `add column if not exists` je levný no-op, když sloupce existují.
+alter table public.koucink_konec_sent
+  add column if not exists pokusy integer not null default 0;
+alter table public.koucink_konec_sent
+  add column if not exists updated_at timestamptz not null default now();
+alter table public.koucink_konec_sent
+  add column if not exists promo_code text;
+alter table public.koucink_konec_sent
+  add column if not exists ma_academy boolean;
+alter table public.koucink_konec_sent
+  add column if not exists duvod text;
+alter table public.koucink_konec_sent
+  add column if not exists sent_at timestamptz;
+alter table public.koucink_konec_sent
+  add column if not exists sent_ok boolean;
+
 comment on table public.koucink_konec_sent is
   'Razitko automatu konec koucinku. Radek vznika PRED prvnim nevratnym krokem; stav opakovat = fronta na dalsi beh.';
 comment on column public.koucink_konec_sent.stav is

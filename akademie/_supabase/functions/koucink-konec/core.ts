@@ -51,17 +51,27 @@ export type RazitkoRadek = {
   pokusy?: number | null;
   updated_at?: string | null;
   duvod?: string | null;
+  /** `true` = odeslání se prokázalo. `false` i `null` = rozloučení chybí. */
+  sent_ok?: boolean | null;
+};
+
+export type Zabrano = {
+  stav: "ok";
+  /** Ze kterého stavu se člověk převzal. Prázdno = nový řádek. */
+  predchozi: "" | "opakovat" | "opakovat_mail" | "zaseknute";
+  /** Kód už jednou vylosovaný a uložený. Nový se losovat NESMÍ. */
+  promo: string;
+  pokusy: number;
+  /**
+   * Prokázalo se u tohohle razítka odeslání?
+   * ⛔ `true` JEN když mail opravdu odešel. `false` i `null` znamenají
+   *    „rozloučení chybí" a rozhodují o tom, jestli se má doposlat (nález V1).
+   */
+  sentOk: boolean | null;
 };
 
 export type ZaberVysledek =
-  | {
-    stav: "ok";
-    /** Ze kterého stavu se člověk převzal. Prázdno = nový řádek. */
-    predchozi: "" | "opakovat" | "opakovat_mail" | "zaseknute";
-    /** Kód už jednou založený ve Stripu. Nový se zakládat NESMÍ. */
-    promo: string;
-    pokusy: number;
-  }
+  | Zabrano
   | { stav: "obsazeno"; duvod: string }
   | { stav: "vzdano"; pokusy: number }
   | { stav: "chyba"; detail: string };
@@ -96,8 +106,18 @@ export type BehDeps = {
   maAcademy: (email: string) => Promise<boolean>;
   brana: (email: string, trida: "client_operational" | "marketing", path: string) => Promise<BranaRozhodnuti>;
   logSkip: (decision: unknown) => Promise<void>;
-  /** Založí promo kód ve Stripu. Volá se JEN když razítko žádný nenese. */
-  zalozPromo: (email: string) => Promise<PromoVysledekJadro>;
+  /**
+   * Vylosuje text promo kódu. ⛔ SAMOSTATNÝ KROK, protože kód se musí ULOŽIT
+   *    DŘÍV, než se o něm dozví Stripe (nález V2): pád mezi voláním Stripu
+   *    a zápisem řádku jinak znamená kód, o kterém nevíme, a další běh založí
+   *    další.
+   */
+  vylosujKod: () => string;
+  /**
+   * Zajistí, že kód s tímhle textem ve Stripu existuje. Idempotentní: opakování
+   * se stejným textem kód nezdvojí.
+   */
+  zalozPromo: (email: string, kod: string) => Promise<PromoVysledekJadro>;
   ukonciPristup: (email: string) => Promise<UkonceniVysledek>;
   posliMail: (
     email: string,
@@ -126,24 +146,83 @@ export type BehDeps = {
  *    Spoléhat na úspěšné smazání je slabší pojistka než se zeptat na živý stav.
  * ⛔ Chyba čtení NENÍ odpověď: vrací se `nevim` a člověk se nechá na další běh.
  */
-export function platiJeste(
+export type RozhodnutiOPrevzatem =
+  /** Nárok se nepodařilo přečíst. Nesahat na nic, nechat na další běh. */
+  | "nevim"
+  /** Je zase klient. Rozdělaná práce se ZAHODÍ, ne dokončí. */
+  | "znovu_klient"
+  /** Přístup je zavřený, ale rozloučení chybí. Poslat POUZE mail. */
+  | "dokonci_mail"
+  /** Přístup je zavřený a rozloučení už proběhlo. Jen uzavřít razítko. */
+  | "uzavri_bez_mailu"
+  /** Běžná cesta: zavřít přístup a poslat rozloučení. */
+  | "zavri";
+
+/**
+ * Co se má stát s člověkem, kterého běh převzal z minula?
+ *
+ * ⛔⛔ PROČ TO NENÍ JEN „platí / neplatí" (revize R2, nález V1): u převzaté
+ *    ZASEKNUTÉ rezervace i u řádku, kterému `narok_neprecten` přepsal stav, je
+ *    nárok vypnutý a rozloučení CHYBÍ. Předchozí verze to obojí uzavřela jako
+ *    `zavren_jinde`, tedy bez mailu a bez alertu. Přitom „zavřel to admin, a ten
+ *    mail poslal sám" a „zavřel to automat a mail nedošel" jsou dvě různé věci.
+ *    Rozlišuje je `sentOk`: odeslání se prokázalo jen tehdy, když je `true`.
+ *
+ * ⛔ Chyba čtení NENÍ odpověď: vrací se `nevim`.
+ * ⚠️ Ruční odchod z admina po sobě nechává razítko `hotovo`, a ten se do téhle
+ *    funkce nikdy nedostane (`zaber` uzavřené stavy nepřebírá). Neaktivní nárok
+ *    u PŘEVZATÉHO řádku proto znamená práci automatu, ne admina.
+ */
+export function rozhodniOPrevzatem(
   narok: { active: boolean | null; expiresAt: string | null },
-  opts: { jenMail: boolean; tedMs: number; graceDny: number },
-): "plati" | "nevim" | "znovu_klient" | "zavren_jinde" {
+  opts: { predchozi: "opakovat" | "opakovat_mail" | "zaseknute"; sentOk: boolean | null; tedMs: number; graceDny: number },
+): RozhodnutiOPrevzatem {
   if (narok.active === null) return "nevim";
-  if (opts.jenMail) {
-    // Chybí jen rozloučení. Když je nárok zase aktivní, je z něj znovu klient
-    // a rozloučení by přišlo uprostřed spolupráce.
-    return narok.active ? "znovu_klient" : "plati";
+  // Nárok je zase aktivní: člověk se vrátil, ať už byla rozdělaná jakákoli práce.
+  if (narok.active) {
+    if (opts.predchozi === "opakovat_mail") return "znovu_klient";
+    // Aktivní nárok bez konce nebo s koncem v budoucnu = nové období.
+    if (!narok.expiresAt) return "znovu_klient";
+    const konec = Date.parse(String(narok.expiresAt));
+    if (!Number.isFinite(konec)) return "znovu_klient";
+    const mez = opts.tedMs - Math.max(0, opts.graceDny) * 86400000;
+    return konec <= mez ? "zavri" : "znovu_klient";
   }
-  // Přístup se teprve má zavřít. Neaktivní nárok = zavřel ho někdo jiný.
-  if (!narok.active) return "zavren_jinde";
-  // Aktivní nárok bez konce nebo s koncem v budoucnu = nové období.
-  if (!narok.expiresAt) return "znovu_klient";
-  const konec = Date.parse(String(narok.expiresAt));
-  if (!Number.isFinite(konec)) return "znovu_klient";
-  const mez = opts.tedMs - Math.max(0, opts.graceDny) * 86400000;
-  return konec <= mez ? "plati" : "znovu_klient";
+  // Nárok je vypnutý. Rozhoduje jediná otázka: odešlo už rozloučení?
+  return opts.sentOk === true ? "uzavri_bez_mailu" : "dokonci_mail";
+}
+
+/**
+ * Kdo z razítek patří do fronty běhu.
+ *
+ * ⛔⛔ TOHLE JE ČISTÁ FUNKCE SCHVÁLNĚ (revize R2, nálezy V1 a V2). Dokud tenhle
+ *    výběr žil uvnitř `Deno.serve()`, nešel otestovat, a přesně v něm byly DVĚ
+ *    mrtvé pojistky z R1: fronta brala jen `opakovat` a `opakovat_mail` s
+ *    `pokusy < 5`, takže `zaber` se pro opuštěnou `rezervovano` ani pro řádek nad
+ *    stropem NIKDY nezavolal. Mutace, které vypínaly pravidla uvnitř `zaber`,
+ *    zůstávaly zelené, protože testy volaly `zaber` napřímo a frontu neviděly.
+ *
+ * ⛔ Filtruje se JEN to, co je opravdu uzavřené. O všem ostatním rozhoduje
+ *    `zaber`, tedy jedno místo, které jde otestovat.
+ * ⛔ Řádek nad stropem do fronty PATŘÍ: `zaber` ho přepne na `vzdano` a pošle
+ *    alert. Kdyby ho fronta vyhodila, `vzdano` by se nezapsalo nikdy.
+ */
+export function razitkaDoFronty(
+  razitka: RazitkoRadek[],
+  opts: { tedMs: number },
+): { emaily: string[]; nadStropem: number; zaseknutych: number } {
+  const emaily: string[] = [];
+  let nadStropem = 0, zaseknutych = 0;
+  for (const r of razitka) {
+    const email = String(r?.email ?? "").trim().toLowerCase();
+    if (!email) continue;
+    const stav = String(r.stav ?? "");
+    if (STAVY_UZAVRENE.includes(stav as StavRazitka)) continue;
+    if (Number(r.pokusy ?? 0) >= MAX_POKUSU) nadStropem++;
+    if (stav === "opakovat" || stav === "opakovat_mail") { emaily.push(email); continue; }
+    if (stav === "rezervovano" && jeZaseknute(r, opts.tedMs)) { zaseknutych++; emaily.push(email); continue; }
+  }
+  return { emaily, nadStropem, zaseknutych };
 }
 
 /**
@@ -162,7 +241,7 @@ export function platiJeste(
  */
 export async function zaber(email: string, deps: BehDeps): Promise<ZaberVysledek> {
   const vloz = await deps.vlozRazitko(email);
-  if (vloz.ok) return { stav: "ok", predchozi: "", promo: "", pokusy: 1 };
+  if (vloz.ok) return { stav: "ok", predchozi: "", promo: "", pokusy: 1, sentOk: null };
   if (vloz.kod !== "23505") return { stav: "chyba", detail: vloz.detail };
 
   const { radek, chyba } = await deps.ctiRazitko(email);
@@ -216,6 +295,10 @@ export async function zaber(email: string, deps: BehDeps): Promise<ZaberVysledek
     predchozi: zaseknute ? "zaseknute" : (stav as "opakovat" | "opakovat_mail"),
     promo: String(radek.promo_code ?? ""),
     pokusy: pokusy + 1,
+    // ⛔ Jen `true` znamená „rozloučení už odešlo". `null` i `false` se čtou jako
+    //    „chybí" (nález V1): u zaseknuté rezervace je to jediné, podle čeho jde
+    //    poznat, jestli se má mail doposlat.
+    sentOk: radek.sent_ok === true ? true : (radek.sent_ok === false ? false : null),
   };
 }
 
@@ -256,21 +339,58 @@ export type VysledekJednoho = {
  */
 export async function zpracujJednoho(
   email: string,
-  zabrano: { predchozi: "" | "opakovat" | "opakovat_mail" | "zaseknute"; promo: string },
+  zabrano: { predchozi: "" | "opakovat" | "opakovat_mail" | "zaseknute"; promo: string; pokusy?: number; sentOk?: boolean | null },
   deps: BehDeps,
 ): Promise<VysledekJednoho> {
   const ted = () => new Date(deps.ted()).toISOString();
-  const jenMail = zabrano.predchozi === "opakovat_mail";
+  // ⛔ JEDINÝ ZDROJ PRAVDY JE `rozhodniOPrevzatem` (revize R2). Dřív se `jenMail`
+  //    odvozoval i tady z `predchozi`, takže ta hodnota existovala dvakrát a jedna
+  //    z kopií byla mrtvá: mutace, která ji vypnula, testy nezčervenala. U nového
+  //    člověka (`predchozi === ""`) se rozhodnutí nevolá a zůstává `false`.
+  let jenMail = false;
 
   // --- 0) PLATÍ ROZDĚLANÁ PRÁCE JEŠTĚ? (jen u řádků z minula) ---------------
   if (zabrano.predchozi !== "") {
     const narok = await deps.stavNaroku(email);
-    const platnost = platiJeste(narok, { jenMail, tedMs: deps.ted(), graceDny: deps.graceDny });
-    if (platnost === "nevim") {
-      await deps.nastavRazitko(email, { stav: "opakovat", duvod: "narok_neprecten", updated_at: ted() });
-      return { email, vysledek: "opakovat", duvod: "narok_neprecten" };
+    const rozhodnuti = rozhodniOPrevzatem(narok, {
+      predchozi: zabrano.predchozi,
+      sentOk: zabrano.sentOk ?? null,
+      tedMs: deps.ted(),
+      graceDny: deps.graceDny,
+    });
+    if (rozhodnuti === "nevim") {
+      // ⛔⛔ PŘEDCHOZÍ STAV SE ZACHOVÁ (revize R2, nález V3). Do R2 se sem psalo
+      //    natvrdo `opakovat`, čímž se z `opakovat_mail` stalo obyčejné opakování:
+      //    další běh pak sáhl na nárok, dostal „už je ukončený" a rozloučení
+      //    zahodil. Chyba ČTENÍ nesmí měnit stav práce.
+      const navrat = zabrano.predchozi === "opakovat_mail" ? "opakovat_mail" : "opakovat";
+      await deps.nastavRazitko(email, { stav: navrat, duvod: "narok_neprecten", updated_at: ted() });
+      await deps.alert(
+        "⚠️ Konec koučinku: nárok se nepodařilo přečíst",
+        "Klient: " + email + "\nRozdělaná práce: " + zabrano.predchozi +
+          "\n\nAutomat NIC neudělal a stav nechal beze změny. Když se to opakuje,\n" +
+          "je to porucha čtení `entitlements`, ne stav toho klienta.",
+        email,
+      );
+      return { email, vysledek: navrat === "opakovat_mail" ? "opakovat_mail" : "opakovat", duvod: "narok_neprecten" };
     }
-    if (platnost === "znovu_klient") {
+    if (rozhodnuti === "uzavri_bez_mailu") {
+      // Přístup je zavřený a rozloučení už prokazatelně odešlo. Není co dělat.
+      await deps.nastavRazitko(email, {
+        stav: "hotovo",
+        duvod: "uz_odeslano",
+        sent_ok: true,
+        updated_at: ted(),
+      });
+      return { email, vysledek: "preskoceno", duvod: "uz_odeslano" };
+    }
+    if (rozhodnuti === "dokonci_mail") {
+      // ⛔⛔ TOHLE JE OPRAVA V1: přístup je zavřený, rozloučení CHYBÍ. Dřív to
+      //    skončilo jako `zavren_jinde` (bez mailu a bez alertu), takže převzatá
+      //    zaseknutá rezervace člověka umlčela navždy.
+      jenMail = true;
+    }
+    if (rozhodnuti === "znovu_klient") {
       // ⛔ Rozdělaná práce se ZAHODÍ, ne dokončí. Ten člověk je zase klient.
       await deps.nastavRazitko(email, {
         stav: "hotovo",
@@ -287,15 +407,6 @@ export async function zpracujJednoho(
       );
       return { email, vysledek: "preskoceno", duvod: "znovu_klient" };
     }
-    if (platnost === "zavren_jinde") {
-      await deps.nastavRazitko(email, {
-        stav: "hotovo",
-        duvod: "zavren_jinde:rucne",
-        sent_ok: false,
-        updated_at: ted(),
-      });
-      return { email, vysledek: "preskoceno", duvod: "zavren_jinde" };
-    }
   }
 
   const maAcademy = await deps.maAcademy(email);
@@ -307,16 +418,62 @@ export async function zpracujJednoho(
 
   // --- 2) PROMO KÓD ---------------------------------------------------------
   let promo = zabrano.promo;
-  if (chceSales && !promo) {
+  if (chceSales) {
     // ⛔ BEZ KUPÓNU SE NIC NEZAVÍRÁ (nález S5). Dřív se to dostalo až do Stripu,
     //    ten vrátil `chybi_coupon_id`, razítko šlo na `opakovat` a s každým dnem
     //    ubyl jeden pokus ze stropu. Ptát se Stripu na něco, co víme dopředu,
     //    nemá smysl.
     if (!deps.maKupon) {
-      await deps.nastavRazitko(email, { stav: "opakovat", duvod: "bez_kuponu", updated_at: ted() });
+      // ⛔⛔ TENHLE POKUS SE NEPOČÍTÁ (revize R2, nález V2). Kupón je Martinova
+      //    konfigurace, ne porucha klienta: kdyby se odečítal ze stropu pěti
+      //    pokusů, po pěti dnech by člověk skončil ve `vzdano` a automat by ho
+      //    po doplnění kupónu už nikdy nevzal. Pokusy se proto vrací zpět.
+      await deps.nastavRazitko(email, {
+        stav: "opakovat",
+        duvod: "bez_kuponu",
+        pokusy: Math.max(0, (zabrano.pokusy ?? 1) - 1),
+        updated_at: ted(),
+      });
+      // ⛔ Alert KAŽDÝ BĚH, ne jednou týdně: bez kupónu se nikomu nic nezavírá
+      //    a ticho by vypadalo jako „nikdo neskončil".
+      await deps.alert(
+        "⚠️ Konec koučinku: kupón na roční VIP není nastavený",
+        "Klient ceka: " + email + "\n\n" +
+          "`app_config.koucink_vip_coupon_id` je prázdné, takže promo kód nemá z čeho\n" +
+          "vzniknout. Automat proto NIKOHO nezavírá: rozloučení bez funkčního kódu by\n" +
+          "slíbilo slevu, kterou pokladna nezná.\n\n" +
+          "Založ kupón ve Stripu (20 %, duration once, jen roční VIP) a jeho id vlož do\n" +
+          "`app_config.koucink_vip_coupon_id`. Pak to automat dokončí sám.",
+        "bez_kuponu",
+      );
       return { email, vysledek: "opakovat", duvod: "bez_kuponu" };
     }
-    const p = await deps.zalozPromo(email);
+    if (!promo) {
+      // ⛔⛔ KÓD SE VYLOSUJE A ULOŽÍ DŘÍV, NEŽ SE O NĚM DOZVÍ STRIPE (nález V2).
+      //    Opačné pořadí znamenalo, že pád sítě mezi voláním Stripu a zápisem
+      //    řádku nechal ve Stripu kód, o kterém nevíme, a další pokus založil
+      //    další. Takhle je opakování idempotentní: `zalozPromo` se stejným
+      //    textem kód nezdvojí.
+      // ⛔ Návrat zápisu se ČTE. Když se kód neuloží, Stripe se nevolá vůbec.
+      const kod = deps.vylosujKod();
+      const ulozeno = await deps.nastavRazitko(email, {
+        promo_code: kod,
+        duvod: "promo_pending",
+        updated_at: ted(),
+      });
+      if (!ulozeno) {
+        await deps.alert(
+          "🔴 Konec koučinku: promo kód se nepodařilo uložit",
+          "Klient: " + email + "\n\nZápis do `koucink_konec_sent` selhal, takže jsem Stripe\n" +
+            "vůbec nevolal. NIC se nezavřelo a mail NEODESEL.\n" +
+            "Bez uloženého kódu by další pokus založil ve Stripu další nepoužitou slevu.",
+          email,
+        );
+        return { email, vysledek: "opakovat", duvod: "promo_neulozen" };
+      }
+      promo = kod;
+    }
+    const p = await deps.zalozPromo(email, promo);
     if (!p.ok) {
       await deps.nastavRazitko(email, { stav: "opakovat", duvod: "promo:" + p.chyba, updated_at: ted() });
       await deps.alert(
@@ -332,8 +489,6 @@ export async function zpracujJednoho(
       return { email, vysledek: "opakovat", duvod: "promo:" + p.chyba };
     }
     promo = p.kod;
-    // ⛔ Kód se ukládá HNED a příští pokus ho POUŽIJE, nezakládá nový.
-    await deps.nastavRazitko(email, { promo_code: promo, updated_at: ted() });
   }
 
   // --- 3) + 4) APPKA A NÁROK ------------------------------------------------

@@ -133,16 +133,28 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   //    meri poradi TAM, kde se ted rozhoduje.
   predTim("koucink-konec: index jen zapojuje, nerozhoduje", kk,
     "await zaber(email, deps)", "zpracujJednoho(email, zabrano, deps)");
-  predTim("core: zavreni pristupu az po promo kodu", kkCore, "deps.zalozPromo(email)", "deps.ukonciPristup(email)");
+  // ⛔⛔ [revize R2, nalez V1 a V2] FRONTU SESTAVUJE JADRO, ne `index.ts`.
+  //    Dokud ten vyber zil uvnitr `Deno.serve()`, neslo ho otestovat, a prave
+  //    v nem byly dve mrtve pojistky z R1: zaseknuta rezervace a strop pokusu
+  //    se do `zaber` vubec nedostaly. Mutace uvnitr `zaber` proto zustavaly zelene.
+  check("frontu sestavuje jadro", kk.includes("razitkaDoFronty(vsechnaRazitka"));
+  check("index uz frontu nefiltruje sam",
+    !kk.includes('r.stav === "opakovat" || r.stav === "opakovat_mail"'));
+  check("razitka se ctou i se `sent_ok` (podle nej se pozna chybejici rozlouceni)",
+    kk.includes("promo_code,pokusy,updated_at,duvod,sent_ok"));
+  predTim("core: zavreni pristupu az po promo kodu", kkCore, "deps.zalozPromo(email, promo)", "deps.ukonciPristup(email)");
   predTim("core: mail az po zavreni pristupu", kkCore, "deps.ukonciPristup(email)", "deps.posliMail(email,");
   // ⛔⛔ [revize R1, nalez V1] Jiste neodeslani po ZAVRENEM pristupu musi koncit
   //    stavem `opakovat_mail`, ne `opakovat`. Druhy pokus jinak znovu sahne na narok,
   //    dostane `uz_ukoncen` a mail preskoci NAVZDY.
   check("core: jiste neodeslani konci na opakovat_mail",
     kkCore.includes('stav: "opakovat_mail"'));
-  check("core: `opakovat_mail` preskakuje zavirani pristupu",
-    kkCore.includes('const jenMail = zabrano.predchozi === "opakovat_mail";') &&
-      kkCore.includes("if (!jenMail) {"));
+  // ⛔ `jenMail` se od R2 zapina i u prevzate zaseknute rezervace s vypnutym
+  //    narokem (rozhodnuti `dokonci_mail`), proto `let`, ne `const`.
+  check("core: doposlani mailu preskakuje zavirani pristupu",
+    kkCore.includes("let jenMail = false;") && kkCore.includes("if (!jenMail) {"));
+  check("core: zavreny pristup bez odeslani konci doposlanim mailu",
+    kkCore.includes('rozhodnuti === "dokonci_mail"') && kkCore.includes("jenMail = true;"));
 
   // ⛔⛔ [revize R1, nalez V2] TVRDE TIMEOUTY NA VOLANI VEN.
   //    Cron utne HTTP po 120 s a Supabase Free da funkci 150 s. Jedno visici
