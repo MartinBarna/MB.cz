@@ -116,6 +116,7 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   const kk = await Deno.readTextFile(new URL("koucink-konec/index.ts", ROOT));
   const kkCore = await Deno.readTextFile(new URL("koucink-konec/core.ts", ROOT));
   const sdilene = await Deno.readTextFile(new URL("_shared/koucink-konec.ts", ROOT));
+  const adm = await Deno.readTextFile(new URL("admin-api/index.ts", ROOT));
   check("koucink-konec nevola Resend primo", !kk.includes(RESEND));
   check("core nevola Resend primo", !kkCore.includes(RESEND));
   check("koucink-konec posila pres helper", kk.includes("odesliPresResend"));
@@ -141,8 +142,42 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   check("frontu sestavuje jadro", kk.includes("razitkaDoFronty(vsechnaRazitka"));
   check("index uz frontu nefiltruje sam",
     !kk.includes('r.stav === "opakovat" || r.stav === "opakovat_mail"'));
-  check("razitka se ctou i se `sent_ok` (podle nej se pozna chybejici rozlouceni)",
-    kk.includes("promo_code,pokusy,updated_at,duvod,sent_ok"));
+  check("razitka se ctou i se `mail_stav` (podle nej se pozna chybejici rozlouceni)",
+    kk.includes("promo_code,pokusy,updated_at,duvod,mail_stav"));
+  // ⛔⛔ [revize R4] STAV MAILU JE VLASTNI SLOUPEC, ne odvozenina ze stavu prace.
+  //    Do R4 tutez informaci nesly dve mista (stav prace `opakovat_mail` a boolean
+  //    `sent_ok`) a kdyz jedno zmizelo, vyznam druheho se ticho previatil.
+  // ⚠️ Hleda se v KODU, ne v komentarich: ty stare nazvy se v komentarich schvalne
+  //    zminuji, aby bylo poznat, proti cemu se to opravovalo.
+  const kkKod = kkCore.split(String.fromCharCode(10))
+    .filter((l) => !l.trim().startsWith("*") && !l.trim().startsWith("//"))
+    .join(String.fromCharCode(10));
+  check("stavy prace uz nenesou informaci o mailu",
+    !kkKod.includes('"opakovat_mail"') && !kkKod.includes('"chyba_nejiste"'));
+  check("typ stavu prace ma jen ctyri hodnoty",
+    kkCore.includes('export type StavRazitka = "rezervovano" | "opakovat" | "hotovo" | "vzdano";'));
+  check("rozhodnuti se ptá jen na `mailStav`",
+    kkCore.includes("opts: { mailStav: MailStav; tedMs: number; graceDny: number }"));
+  // ⛔⛔ RAZITKO `posilam` PRED VOLANIM RESENDU. Kdyz se ten zapis nepovede,
+  //    Resend se NEVOLA; kdyz se nepovede zapis vysledku, radek v nem zustane
+  //    a po lhute se cte jako `nejiste`. Druhy mail z toho nevznikne nikdy.
+  predTim("core: `posilam` se zapisuje PRED odeslanim", kkCore, 'mail("posilam"', "deps.posliMail(email,");
+  check("core: bez zapisu `posilam` se Resend nevola",
+    kkCore.includes("const zacatek = await deps.nastavRazitko(email, mail(\"posilam\"") &&
+      kkCore.includes('duvod: "posilam_neulozeno"'));
+  check("`sent_ok` je jen odvozenina", kkCore.includes("sent_ok: stav === \"odeslano\""));
+  // ⛔ [revize R4, nalez S5] Potvrzeni je soucast POZADAVKU, ne jen dialogu.
+  check("admin vyzaduje serverove potvrzeni u nejisteho mailu",
+    adm.includes('body.potvrzeno !== true') && adm.includes('error: "potrebuje_potvrzeni"'));
+  // ⛔ [revize R4, nalez S3] Zapis razitka v adminu cte chybu; supabase-js nehazi.
+  check("admin cte chybu zapisu razitka",
+    adm.includes("const { error: zapErr } = await admin.from(\"koucink_konec_sent\").upsert("));
+  // ⛔ [revize R4, nalez N6] Bez `updated_at` ve selectu se stari rezervace nepozna.
+  check("admin cte `updated_at` razitka",
+    adm.includes('.select("stav,promo_code,ma_academy,pokusy,updated_at,mail_stav")'));
+  // ⛔ [revize R4] GET promo kodu ma filtr `active=true`.
+  check("promo kod se hleda s filtrem active=true",
+    sdilene.includes("promotion_codes?limit=1&active=true&code="));
   // ⛔⛔ [revize R3, nalez S3] ZAMEK NESMI STAT NA `count: "exact"`.
   //    Dokumentace PostgREST popisuje `Prefer: count=` u CTENI; ze u PATCH vrati
   //    pocet zmenenych radku, nikde netvrdi. `.select()` vraci aktualizovane
@@ -153,7 +188,6 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   //    podminku PORAD. Vylucovacim ho dela az podminka na stari v TEMZE UPDATE.
   check("prevezmi pridava podminku na stari u zaseknute rezervace",
     kk.includes('if (jenZaseknute) q = q.lt("updated_at"'));
-  const adm = await Deno.readTextFile(new URL("admin-api/index.ts", ROOT));
   check("admin zamek taky nepouziva count:exact u razitka",
     !/koucink_konec_sent[\s\S]{0,400}?\{ count: "exact" \}/.test(adm));
   check("admin zamyka podminenym updatem se `select`",
@@ -170,8 +204,10 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
     adm.includes("const rezervaceZaseknuta = razitkoStav ===") && adm.includes("ZASEKNUTO_PO_MS"));
   // ⛔⛔ [revize R3, nalez S5] Doposlat jde i z `chyba_nejiste`, protoze prave
   //    tam alert Martina posila. Do R3 ta cesta v kodu nebyla.
-  check("admin umi doposlat i z `chyba_nejiste`",
-    adm.includes('razitkoStav === "opakovat_mail" || razitkoStav === "chyba_nejiste"'));
+  // ⛔ [revize R4] Doposlat jde podle STAVU MAILU, ne podle stavu prace.
+  check("admin umi doposlat podle stavu mailu",
+    adm.includes('const doposlatelne = ["odmitnuto", "nejiste", "posilam"];') &&
+      adm.includes("doposlatelne.includes(razitkoMail)"));
 
   // ⛔⛔ [revize R3, nalez S6] PROMO KOD SE OVERUJE NA `active`.
   //    Stripe archivuje kody, kdyz prestane platit jejich kupon; archivovany kod
@@ -195,8 +231,13 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   // ⛔⛔ [revize R1, nalez V1] Jiste neodeslani po ZAVRENEM pristupu musi koncit
   //    stavem `opakovat_mail`, ne `opakovat`. Druhy pokus jinak znovu sahne na narok,
   //    dostane `uz_ukoncen` a mail preskoci NAVZDY.
-  check("core: jiste neodeslani konci na opakovat_mail",
-    kkCore.includes('stav: "opakovat_mail"'));
+  // ⛔⛔ [revize R1 nalez V1, prepsano v R4] Jiste neodeslani (Resend 4xx,
+  //    chybejici klic) MUSI zustat rozeznatelne od nejistoty, jinak se rozlouceni
+  //    bud ztrati, nebo odejde podruhe.
+  check("core: jiste neodeslani konci na `odmitnuto`",
+    kkCore.includes('mail("odmitnuto"'));
+  check("core: nejistota konci na `nejiste`", kkCore.includes('mail("nejiste"'));
+  check("core: uspech konci na `odeslano`", kkCore.includes('mail("odeslano"'));
   // ⛔ `jenMail` se od R2 zapina i u prevzate zaseknute rezervace s vypnutym
   //    narokem (rozhodnuti `dokonci_mail`), proto `let`, ne `const`.
   check("core: doposlani mailu preskakuje zavirani pristupu",

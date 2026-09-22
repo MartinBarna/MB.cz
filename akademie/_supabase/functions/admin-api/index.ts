@@ -2446,7 +2446,7 @@ Deno.serve(async (req) => {
         admin.from("entitlements").select("active,expires_at")
           .eq("email", email).eq("product", "academy").limit(1).maybeSingle(),
         // Stav razítka odchodu (kvůli doposlání po nejistotě).
-        admin.from("koucink_konec_sent").select("stav").eq("email", email).maybeSingle(),
+        admin.from("koucink_konec_sent").select("stav,mail_stav").eq("email", email).maybeSingle(),
       ]);
       const docs = (docsOwn.data ?? []).filter((o) => o.id)
         .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
@@ -2497,6 +2497,8 @@ Deno.serve(async (req) => {
         //    odcházelo a skončilo v nejistotě, a zeptá se, než ho pošle znovu
         //    (revize R3, nález S5).
         konec_stav: razKonec.error ? null : String(razKonec.data?.stav ?? ""),
+        // ⛔ Podle TOHOHLE se karta ptá, než pošle rozloučení znovu (revize R4).
+        konec_mail_stav: razKonec.error ? null : String(razKonec.data?.mail_stav ?? "neposlano"),
         konzultace_intake: konzChyba ? [] : ((konz.data as unknown[]) ?? []),
         konz_chyba: konzChyba,
       });
@@ -3886,7 +3888,7 @@ Deno.serve(async (req) => {
       //    „už je ukončený" a Martin dostal hlášku „nic se neposlalo" nad klientem,
       //    kterému rozloučení pořád chybělo. Chyba čtení není odpověď (CLAUDE.md 13).
       const { data: razitkoRow, error: razitkoErr } = await admin.from("koucink_konec_sent")
-        .select("stav,promo_code,ma_academy,pokusy").eq("email", email).maybeSingle();
+        .select("stav,promo_code,ma_academy,pokusy,updated_at,mail_stav").eq("email", email).maybeSingle();
       if (razitkoErr) {
         return json({
           error: "razitko_neprecteno",
@@ -3895,6 +3897,8 @@ Deno.serve(async (req) => {
         }, 500);
       }
       const razitkoStav = String(razitkoRow?.stav ?? "");
+      // ⛔ Co se stalo s mailem, říká VLASTNÍ sloupec, ne stav práce (revize R4).
+      const razitkoMail = String(razitkoRow?.mail_stav ?? "neposlano");
       // ⛔ ČERSTVÁ REZERVACE PATŘÍ BĚŽÍCÍMU AUTOMATU (revize R3, nálezy V1 a N8).
       //    Zámek `rezervovano` → `rezervovano` svou vlastní podmínku splní POŘÁD,
       //    takže by prošel i tehdy, když cron toho člověka právě zpracovává, a oba
@@ -3909,15 +3913,26 @@ Deno.serve(async (req) => {
           hint: "razitko je cerstve rezervovane, automat na nem prave pracuje; pockej par minut",
         }, 409);
       }
-      // ⛔ DOPOSLAT JDE I Z `chyba_nejiste` (revize R3, nález S5). Alert u toho
-      //    stavu Martina posílá do admina, ale tlačítko tu cestu nemělo: skončilo
-      //    na „už je ukončený". Je to VĚDOMÉ rozhodnutí člověka (mail mohl odejít),
-      //    proto se na něj UI ptá zvlášť.
-      const jenDoposlat = razitkoStav === "opakovat_mail" || razitkoStav === "chyba_nejiste";
+      // ⛔ DOPOSLAT ZNAMENÁ „přístup je zavřený, chybí jen mail" (revize R4).
+      //    Pozná se to ze stavu MAILU, ne ze stavu práce: `odmitnuto` je jisté
+      //    neodeslání, `nejiste` mohl odejít, `posilam` uvízl uprostřed.
+      const doposlatelne = ["odmitnuto", "nejiste", "posilam"];
+      const jenDoposlat = doposlatelne.includes(razitkoMail);
+      // ⛔⛔ DOPOSLÁNÍ PO NEJISTOTĚ CHCE SERVEROVÉ POTVRZENÍ (revize R4, nález S5).
+      //    Do R4 se na to ptal jen `confirm()` v prohlížeči, takže přímé volání
+      //    akce dialog přeskočilo a mail mohl odejít podruhé bez jediné brzdy.
+      //    Potvrzení je součást POŽADAVKU, ne UI.
+      if ((razitkoMail === "nejiste" || razitkoMail === "posilam") && !tiche && body.potvrzeno !== true) {
+        return json({
+          error: "potrebuje_potvrzeni",
+          mail_stav: razitkoMail,
+          hint: "rozlouceni uz jednou odchazelo a nevime, jestli doslo; posli znovu s potvrzeno=true",
+        }, 409);
+      }
       // ⛔ ROZDĚLANÁ PRÁCE JE I `opakovat` a opuštěné `rezervovano` (nález S5 z R2).
-      //    Uložený kód se použije u KAŽDÉHO z nich, ne jen u `opakovat_mail`.
-      //    Stav `opakovat` s vyplněným kódem vzniká, když Stripe prošel a appka ne;
-      //    založit druhý kód by ve Stripu nechalo nepoužitou slevu.
+      //    Uložený kód se použije u KAŽDÉHO z nich. Stav `opakovat` s vyplněným
+      //    kódem vzniká, když Stripe prošel a appka ne; založit druhý kód by ve
+      //    Stripu nechalo nepoužitou slevu.
       const rozdelano = jenDoposlat || razitkoStav === "opakovat" || rezervaceZaseknuta;
 
       // ⛔⛔ ZÁMEK JAKO PRVNÍ ZÁPIS (revize R3, nález V2). Do R3 se nejdřív upsertl
@@ -4077,26 +4092,42 @@ Deno.serve(async (req) => {
       // ⇒ Dokud mail neodešel, razítko drží `rezervovano` (u rozdělané práce ho
       //   tam dal zámek výš) nebo se zakládá jako `rezervovano`.
       const nyni = () => new Date().toISOString();
-      async function zapisRazitko(pole: Record<string, unknown>): Promise<void> {
+      /**
+       * ⛔⛔ NÁVRAT SE ČTE (revize R4, nález S3). Do R4 tu byl `await` v `try/catch`
+       *    bez čtení `{ error }`. supabase-js chybu NEHÁZÍ (`shouldThrowOnError`
+       *    je vypnuté), takže `catch` nechytil ani chybu zápisu, ani pád sítě:
+       *    po odeslaném mailu mohl řádek zůstat rozpracovaný a cron by druhý den
+       *    poslal znovu.
+       * Vrací `false`, když se zápis nepovedl. Volající se rozhodne sám.
+       */
+      async function zapisRazitko(pole: Record<string, unknown>): Promise<boolean> {
         try {
-          await admin.from("koucink_konec_sent").upsert({
+          const { error: zapErr } = await admin.from("koucink_konec_sent").upsert({
             email,
             promo_code: promoKod || null,
             ma_academy: u.maAcademy,
             updated_at: nyni(),
             ...pole,
           }, { onConflict: "email" });
-        } catch { /* razítko je evidence, odchod z koučinku to neshodí */ }
+          if (zapErr) {
+            console.error("client_offboard: zapis razitka selhal: " + zapErr.message);
+            return false;
+          }
+          return true;
+        } catch (e) {
+          console.error("client_offboard: zapis razitka spadl: " + String(e).slice(0, 160));
+          return false;
+        }
       }
 
       // Tichý odchod je vědomé rozhodnutí „bez mailu", ne selhání: uzavírá se hned.
       if (tiche) {
-        await zapisRazitko({ stav: "hotovo", duvod: "rucne_z_adminu:tiche", sent_at: nyni(), sent_ok: false });
+        await zapisRazitko({ stav: "hotovo", duvod: "rucne_z_adminu:tiche", mail_stav: "neposlano", sent_ok: false });
         return json({ ok: true, mail: "preskocen", mail_ok: null, mail_duvod: "tiche", tvujcoach: u.tvujcoach, mel_academy: u.maAcademy });
       }
       if (confirmDecision && confirmDecision.action === "skip") {
         await logMailSkip(admin, confirmDecision);
-        await zapisRazitko({ stav: "hotovo", duvod: "mail_preskocen:" + confirmDecision.reason, sent_at: nyni(), sent_ok: false });
+        await zapisRazitko({ stav: "hotovo", duvod: "mail_preskocen:" + confirmDecision.reason, mail_stav: "neposlano", sent_ok: false });
         return json({
           ok: true,
           mail: "preskocen",
@@ -4113,7 +4144,7 @@ Deno.serve(async (req) => {
       const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
       if (!RESEND_KEY) {
         // ⛔ Přístup je zavřený a mail JISTĚ neodešel: týž stav jako Resend 4xx.
-        await zapisRazitko({ stav: "opakovat_mail", duvod: "rucne_z_adminu:no_resend", sent_ok: false });
+        await zapisRazitko({ stav: "opakovat", duvod: "rucne_z_adminu:no_resend", mail_stav: "odmitnuto", sent_ok: false });
         return json({
           ok: true,
           mail: "no_resend",
@@ -4151,7 +4182,21 @@ Deno.serve(async (req) => {
         { admin, via: "admin-api.client_offboard", email, detail: { track: "koucink-konec", ma_academy: u.maAcademy } },
       );
       if (rs.ok) {
-        await zapisRazitko({ stav: "hotovo", duvod: "rucne_z_adminu", sent_at: nyni(), sent_ok: true });
+        const ulozeno = await zapisRazitko({
+          stav: "hotovo", duvod: "rucne_z_adminu", mail_stav: "odeslano", sent_at: nyni(), sent_ok: true,
+        });
+        // ⛔ Neuložené razítko po odeslaném mailu znamená, že automat ten řádek
+        //    může vzít znovu. Martin to musí vidět hned v odpovědi.
+        if (!ulozeno) {
+          return json({
+            ok: true,
+            mail_status: rs.status,
+            mail_ok: true,
+            varovani: "razitko_se_neulozilo: mail ODESEL, ale evidence ne; nastav mail_stav='odeslano' rucne",
+            tvujcoach: u.tvujcoach,
+            mel_academy: u.maAcademy,
+          });
+        }
       } else {
         // ⛔⛔ PŘÍSTUP JE ZAVŘENÝ A ROZLOUČENÍ NEODEŠLO (revize R1, nález V1).
         //    Razítko jde na `opakovat_mail`, což znamená dvě věci: automat to
@@ -4160,7 +4205,10 @@ Deno.serve(async (req) => {
         //    Rozdíl proti `chyba_nejiste`: tam mail MOHL odejít a opakovat se nesmí.
         const teloMohloDojit = rs.status >= 500 || String(rs.chyba ?? "").startsWith("sit:");
         await zapisRazitko({
-          stav: teloMohloDojit ? "chyba_nejiste" : "opakovat_mail",
+          // ⛔ Stav PRÁCE i stav MAILU zvlášť: `nejiste` automat nechá být,
+          //    `odmitnuto` se smí poslat znovu.
+          stav: teloMohloDojit ? "hotovo" : "opakovat",
+          mail_stav: teloMohloDojit ? "nejiste" : "odmitnuto",
           duvod: "rucne_z_adminu:resend_" + rs.status,
           sent_at: nyni(),
           sent_ok: false,

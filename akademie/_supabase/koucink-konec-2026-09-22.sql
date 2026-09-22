@@ -24,20 +24,34 @@
 --    skončí, MUSÍ mít starý řádek smazaný, jinak ho automat podruhé nezavře.
 --    Dělá to `client_invite` (viz `admin-api`), ať na to nikdo nemusí myslet.
 --
--- STAVY (sloupec `stav`)
---   rezervovano    právě se zpracovává; nikdo jiný na něj nesmí
---   hotovo         doběhlo (mail odešel, nebo se vědomě neposílal)
---   opakovat       NIC se nezavřelo, další běh zkusí celý postup znovu
---   opakovat_mail  přístup UŽ JE ZAVŘENÝ, chybí jen rozloučení; další běh pošle
---                  POUZE mail a `ukonciPristup` už nevolá
---   chyba_nejiste  mail MOHL odejít; automat to NEOPAKUJE, rozhodne člověk
---   vzdano         vyčerpaný strop pokusů; automat se o to už nepokouší
+-- ⛔⛔ DVA NEZÁVISLÉ SLOUPCE, NE JEDEN PŘETÍŽENÝ (revize R4).
+--    `stav` odpovídá na otázku „co má automat dělat dál",
+--    `mail_stav` na otázku „co se stalo s rozloučením".
+--    Do R4 to nesl jeden boolean `sent_ok` plus dva zvláštní stavy práce
+--    (`opakovat_mail`, `chyba_nejiste`), takže tatáž hodnota `false` znamenala
+--    jednou „jistě neodešlo, pošli znovu" a podruhé „mohl odejít, neposílej".
+--    Rozlišoval je stav práce, a jakmile ten z jakéhokoli důvodu zmizel
+--    (pád běhu, selhaný zápis), význam `false` se tiše převrátil: buď se
+--    ztratilo rozloučení, které jistě nedošlo, nebo naopak odešel druhý mail.
 --
--- ⛔⛔ `opakovat_mail` JE OPRAVA TICHÉ ZTRÁTY (revize R1, nález V1). Bez něj platilo:
---    mail spadne na 4xx (nebo chybí klíč), razítko jde na `opakovat`, další běh znovu
---    zavolá `ukonciPristup`, ten vrátí `uz_ukoncen` (nárok je přece vypnutý), kód to
---    přečte jako „zavřel to někdo jinde" a mail PŘESKOČÍ. Člověk zůstal zavřený,
---    rozloučení nedostal nikdy a alert nešel, protože alerty byly jen u 5xx.
+-- STAVY PRÁCE (sloupec `stav`)
+--   rezervovano  právě se zpracovává; nikdo jiný na něj nesmí
+--   opakovat     další běh to zkusí znovu
+--   hotovo       automat s tímhle člověkem skončil
+--   vzdano       vyčerpaný strop pokusů; automat se o to už nepokouší
+--
+-- STAVY MAILU (sloupec `mail_stav`)
+--   neposlano  nikdy se nezkoušelo
+--   posilam    razítko PŘED voláním Resendu. ⛔ Když se TENHLE zápis nepovede,
+--              Resend se NEVOLÁ. A když se nepovede zápis VÝSLEDKU, řádek v něm
+--              zůstane; po 30 minutách se čte jako `nejiste`, takže druhý mail
+--              z toho nevznikne nikdy.
+--   odmitnuto  Resend zásilku VÝSLOVNĚ odmítl (4xx, chybějící klíč). Mail jistě
+--              neodešel, takže se smí poslat znovu.
+--   nejiste    5xx, `sit:`, nebo `posilam` starší než 30 minut bez výsledku.
+--              Mail MOHL odejít. ⛔ Automat NEPOSÍLÁ, rozhoduje člověk
+--              (Martin 17. 9. 2026: „raději nikdy mail navíc").
+--   odeslano   Resend zásilku přijal a máme `provider_id`.
 --
 -- ⛔ `pokusy` a `vzdano` (nález S4): fronta `opakovat` neměla strop. Trvale špatný
 --    kupón nebo mrtvý Resend by znamenal donekonečna opakovaný pokus a u promo kódu
@@ -71,9 +85,12 @@ create table if not exists public.koucink_konec_sent (
   --    by se po první změně stavu tvářil jako čerstvý.
   updated_at timestamptz not null default now(),
   sent_at timestamptz,
-  -- false = řádek existuje, ale odeslání se neprokázalo (přeskočeno bránou,
-  -- nebo skončilo v nejistotě). Stejná sémantika jako `client_remind_sent.sent_ok`.
-  sent_ok boolean
+  -- ⛔ ODVOZENINA z `mail_stav`, ne zdroj pravdy (revize R4). Zůstává jen proto,
+  -- aby se v SQL dalo rychle filtrovat „komu rozloučení prokazatelně odešlo",
+  -- a rovná se `mail_stav = 'odeslano'`. NIC se podle ní nerozhoduje.
+  sent_ok boolean,
+  -- Co se stalo s rozloučením. Zdroj pravdy, viz hlavička souboru.
+  mail_stav text not null default 'neposlano'
 );
 
 -- ⛔ ÚPLNÝ unikátní index NAD SLOUPCEM, ne partial a ne nad výrazem. Dva důvody:
@@ -89,6 +106,11 @@ create unique index if not exists koucink_konec_sent_email_unique
 
 create index if not exists koucink_konec_sent_stav_idx
   on public.koucink_konec_sent (stav);
+
+-- ⛔ Dohledání lidí, kterým rozloučení chybí nebo skončilo v nejistotě. Je to
+--    první dotaz, který Martin potřebuje, když se něco pokazí.
+create index if not exists koucink_konec_sent_mail_stav_idx
+  on public.koucink_konec_sent (mail_stav);
 
 -- ⛔⛔ SLOUPCE SE DOPLŇUJÍ I ZVLÁŠŤ (revize R2, nález N8). `create table if not
 --    exists` na existující tabulce NIC nepřidá, takže kdyby v DB už ležela verze
@@ -110,17 +132,21 @@ alter table public.koucink_konec_sent
   add column if not exists sent_at timestamptz;
 alter table public.koucink_konec_sent
   add column if not exists sent_ok boolean;
+alter table public.koucink_konec_sent
+  add column if not exists mail_stav text not null default 'neposlano';
 
 comment on table public.koucink_konec_sent is
   'Razitko automatu konec koucinku. Radek vznika PRED prvnim nevratnym krokem; stav opakovat = fronta na dalsi beh.';
 comment on column public.koucink_konec_sent.stav is
-  'rezervovano | hotovo | opakovat | opakovat_mail | chyba_nejiste | vzdano';
+  'CO MA AUTOMAT DELAT: rezervovano | opakovat | hotovo | vzdano. O mailu nerika nic, ten ma vlastni sloupec.';
+comment on column public.koucink_konec_sent.mail_stav is
+  'CO SE STALO S ROZLOUCENIM: neposlano | posilam | odmitnuto (jiste neodeslo, smi se poslat znovu) | nejiste (mohl odejit, automat NEPOSILA) | odeslano. Radek, ktery uvizne v posilam, se po 30 minutach cte jako nejiste.';
 comment on column public.koucink_konec_sent.pokusy is
   'Kolikrat se automat pokusil. Po MAX_POKUSU stav vzdano a alert Martinovi.';
 comment on column public.koucink_konec_sent.updated_at is
   'Posledni zmena stavu. Rezervace starsi nez 30 minut se bere jako opustena.';
 comment on column public.koucink_konec_sent.sent_ok is
-  'TRI stavy: true = odeslani se prokazalo; null = nikdy se neposilalo (lze doposlat); false = nekdo se pokusil a vysledek se neprokazal (automat NEOPAKUJE, resi clovek). Sam o sobe mail nezastavi, zastavi ho az uzavreny stav.';
+  'ODVOZENINA z mail_stav (= mail_stav to odeslano). Nic se podle ni nerozhoduje, je jen na rychle filtrovani v SQL.';
 
 -- Automat běží service-rolí a musí umět razítko i MAZAT (návrat klienta).
 grant select, insert, update, delete on table public.koucink_konec_sent to service_role;
@@ -146,6 +172,24 @@ values
   ('koucink_konec_optout', ''),
   ('koucink_vip_coupon_id', '')
 on conflict (key) do nothing;
+
+-- ⛔ DOČIŠTĚNÍ PO STARŠÍ VERZI (kdyby tabulka z doby před R4 už v DB ležela).
+--    Převede starý přetížený zápis na nové sloupce. Na čerstvé tabulce je to no-op.
+--    ⚠️ `opakovat_mail` a `chyba_nejiste` jako hodnoty `stav` od R4 neexistují.
+update public.koucink_konec_sent
+   set mail_stav = case
+         when sent_ok is true then 'odeslano'
+         when stav = 'opakovat_mail' then 'odmitnuto'
+         when stav = 'chyba_nejiste' then 'nejiste'
+         when sent_ok is false then 'nejiste'
+         else 'neposlano'
+       end
+ where mail_stav = 'neposlano'
+   and (sent_ok is not null or stav in ('opakovat_mail', 'chyba_nejiste'));
+
+update public.koucink_konec_sent
+   set stav = case when stav = 'opakovat_mail' then 'opakovat' else 'hotovo' end
+ where stav in ('opakovat_mail', 'chyba_nejiste');
 
 -- Kontrola po zásahu (čekám tabulku, unikátní index, RLS a 4 řádky konfigurace):
 --   select indexname, indexdef from pg_indexes where tablename = 'koucink_konec_sent';

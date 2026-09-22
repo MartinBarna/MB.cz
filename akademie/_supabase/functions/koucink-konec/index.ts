@@ -164,7 +164,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (naroky.error) return json(chybaCteni("entitlements", naroky.error), 500);
 
   const razitka = await ctiSOpakovanim<{ data: RazitkoRadek[] | null; error: unknown }>(() =>
-    admin.from("koucink_konec_sent").select("email,stav,promo_code,pokusy,updated_at,duvod,sent_ok")
+    admin.from("koucink_konec_sent").select("email,stav,promo_code,pokusy,updated_at,duvod,mail_stav")
   );
   if (razitka.error) return json(chybaCteni("koucink_konec_sent", razitka.error), 500);
   const vsechnaRazitka = razitka.data ?? [];
@@ -247,7 +247,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     graceDny,
     async vlozRazitko(email) {
       const { error } = await admin.from("koucink_konec_sent")
-        .insert({ email, stav: "rezervovano", pokusy: 1, updated_at: new Date().toISOString() });
+        .insert({ email, stav: "rezervovano", pokusy: 1, mail_stav: "neposlano", updated_at: new Date().toISOString() });
       if (!error) return { ok: true, kod: "", detail: "" };
       return {
         ok: false,
@@ -257,7 +257,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     },
     async ctiRazitko(email) {
       const { data, error } = await admin.from("koucink_konec_sent")
-        .select("email,stav,promo_code,pokusy,updated_at,duvod,sent_ok").eq("email", email).maybeSingle();
+        .select("email,stav,promo_code,pokusy,updated_at,duvod,mail_stav").eq("email", email).maybeSingle();
       if (error) return { radek: null, chyba: String((error as { message?: unknown }).message ?? error).slice(0, 160) };
       return { radek: (data as RazitkoRadek | null) ?? null, chyba: "" };
     },
@@ -340,7 +340,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   const hotovo: string[] = [];
   const opakovat: { email: string; duvod: string }[] = [];
-  const opakovatMail: { email: string; duvod: string }[] = [];
+  const odmitnuto: { email: string; duvod: string }[] = [];
   const preskoceno: { email: string; duvod: string }[] = [];
   const nejiste: string[] = [];
   const vzdano: string[] = [];
@@ -362,29 +362,27 @@ Deno.serve(async (req: Request): Promise<Response> => {
       const v = await zpracujJednoho(email, zabrano, deps);
       if (v.vysledek === "hotovo" || v.vysledek === "hotovo_bez_mailu") hotovo.push(email);
       else if (v.vysledek === "opakovat") opakovat.push({ email, duvod: v.duvod });
-      else if (v.vysledek === "opakovat_mail") opakovatMail.push({ email, duvod: v.duvod });
-      else if (v.vysledek === "chyba_nejiste") nejiste.push(email);
+      else if (v.vysledek === "odmitnuto") odmitnuto.push({ email, duvod: v.duvod });
+      else if (v.vysledek === "nejiste") nejiste.push(email);
       else preskoceno.push({ email, duvod: v.duvod });
     } catch (e) {
       // ⛔ Výjimka po zabrání razítka nesmí nechat řádek viset v `rezervovano`.
-      // ⛔⛔ A NESMÍ PŘEPSAT `opakovat_mail` NA `opakovat` (revize R2, nález S7).
-      //    U toho stavu je přístup ZAVŘENÝ a chybí jen rozloučení; kdyby se z něj
-      //    stalo obyčejné opakování, další běh by sáhl na nárok, dostal
-      //    „už je ukončený" a mail by zahodil. Zachovává se, odkud se vzal.
-      const navrat = zabrano.predchozi === "opakovat_mail" ? "opakovat_mail" : "opakovat";
+      // ⛔⛔ NA `mail_stav` SE NESAHÁ (revize R4). Do R4 tu bylo potřeba ručně
+      //    zachovávat stav práce `opakovat_mail`, protože nesl informaci o mailu.
+      //    Od R4 je stav mailu vlastní sloupec: výjimka mění jen práci, a jestli
+      //    řádek uvízl v `posilam`, uzavře ho po lhůtě rozhodnutí `nejiste`.
       await deps.nastavRazitko(email, {
-        stav: navrat,
+        stav: "opakovat",
         duvod: "vyjimka:" + String(e).slice(0, 140),
         updated_at: new Date().toISOString(),
       });
-      if (navrat === "opakovat_mail") opakovatMail.push({ email, duvod: "vyjimka" });
-      else opakovat.push({ email, duvod: "vyjimka" });
+      opakovat.push({ email, duvod: "vyjimka" });
       console.error("[koucink-konec] vyjimka u " + email + ": " + String(e).slice(0, 300));
       // ⛔ Výjimka uprostřed nevratné práce se nesmí schovat do JSONu, do kterého
       //    se nikdo nedívá (týž důvod jako u `zapis_selhal` v `client-remind`).
       await alert(
         "🔴 Konec koučinku: výjimka uprostřed zpracování",
-        "Klient: " + email + "\nStav razítka: " + navrat + "\nChyba: " + String(e).slice(0, 300) +
+        "Klient: " + email + "\nStav práce: opakovat\nChyba: " + String(e).slice(0, 300) +
           "\n\nAutomat to zkusí znovu při dalším běhu. Když se to opakuje, je to vada kódu,\n" +
           "ne stav toho klienta.",
         email,
@@ -432,7 +430,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     ...prehled,
     hotovo: hotovo.length,
     opakovat,
-    opakovat_mail: opakovatMail,
+    odmitnuto,
     preskoceno,
     odeslani_nejiste: nejiste,
     vzdano,

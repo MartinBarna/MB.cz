@@ -254,9 +254,10 @@ export type PromoVysledek =
  *    for a promotion code becomes invalid, all of its promotion codes become
  *    permanently inactive"), a takový kód v pokladně slevu nedá. Mail by slíbil
  *    slevu a člověk by v pokladně viděl, že kód neplatí.
- * ⚠️ Filtr `active=true` se schválně NEPOSÍLÁ: potřebujeme rozeznat „kód není"
- *    od „kód je, ale je archivovaný". To jsou dva různé závěry (založit nový text
- *    versus zkusit POST) a filtr by je slil do jednoho prázdného seznamu.
+ * ⚠️ Filtr `active=true` se POSÍLÁ (revize R4). Prázdný seznam tím znamená
+ *    „aktivní kód s tímhle textem není", a to je celá otázka. Rozdíl „není vůbec"
+ *    versus „je, ale archivovaný" se pozná až z odpovědi na POST (`already
+ *    exists`), takže se kvůli němu nemusí filtrovat ručně v kódu.
  */
 async function najdiPromoKod(
   stripeKey: string,
@@ -266,7 +267,11 @@ async function najdiPromoKod(
   let res: Response;
   try {
     res = await fetch(
-      "https://api.stripe.com/v1/promotion_codes?limit=1&code=" + encodeURIComponent(kod),
+      // ⛔ FILTR `active=true` (revize R4). Prázdný seznam pak znamená „aktivní
+      //    kód s tímhle textem neexistuje", což je přesně otázka, na kterou se
+      //    ptáme. Rozdíl „není vůbec" versus „je, ale archivovaný" rozhodne až
+      //    POST: `already exists` znamená, že text je obsazený neaktivním kódem.
+      "https://api.stripe.com/v1/promotion_codes?limit=1&active=true&code=" + encodeURIComponent(kod),
       { headers: { Authorization: "Bearer " + stripeKey }, signal: AbortSignal.timeout(timeoutMs) },
     );
   } catch {
@@ -276,6 +281,8 @@ async function najdiPromoKod(
   try {
     const j = await res.json() as { data?: { id?: unknown; active?: unknown }[] };
     const prvni = Array.isArray(j.data) ? j.data[0] : undefined;
+    // ⛔ `active` se čte i přes filtr: kdyby Stripe filtr někdy ignoroval, pořád
+    //    se nesmí použít archivovaný kód.
     return prvni ? { id: String(prvni.id ?? ""), active: prvni.active === true } : null;
   } catch {
     return undefined;
@@ -296,8 +303,10 @@ async function najdiPromoKod(
  *    s kódem, který ve Stripu není, člověk ho zadá v pokladně, uvidí „neplatný
  *    kód" a nekoupí nic. Volající proto při `ok: false` neodesílá a alertuje.
  *
- * ⚠️ `already exists` po neúspěšném GET znamená, že kód existuje a jen jsme ho
- *    nepřečetli. Bere se jako úspěch: text kódu je to jediné, co potřebujeme.
+ * ⚠️ `already exists` po prázdném GET znamená, že text je obsazený NEAKTIVNÍM
+ *    kódem. Nebere se jako úspěch (to byla vada do R3): ověří se druhým GETem
+ *    a když aktivní kód pořád není, vrací se `kod_neaktivni` a volající si
+ *    vylosuje nový text.
  */
 export async function zajistiPromoKod(
   stripeKey: string,

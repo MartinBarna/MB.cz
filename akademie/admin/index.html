@@ -2525,12 +2525,19 @@
            `chyba_nejiste` znamená, že mail MOHL odejít: automat ho proto nikdy
            neopakuje a rozhoduje člověk. Tlačítko tu cestu od R3 má, ale nesmí
            ji udělat mlčky, jinak z „radši nikdy mail navíc" zbude jen heslo. */
-        if(!tiche && (KDET.data||{}).konec_stav==='chyba_nejiste'){
+        /* ⛔ Stav MAILU, ne stav práce (revize R4). `nejiste` i `posilam` znamenají
+           „mohl odejít"; `posilam` navíc, že předchozí pokus uvízl uprostřed. */
+        var mailStav=(KDET.data||{}).konec_mail_stav;
+        var potvrzeno=false;
+        if(!tiche && (mailStav==='nejiste' || mailStav==='posilam')){
           if(!confirm('POZOR: tomuhle klientovi UŽ jednou rozloučení odcházelo a nevíme, jestli došlo.\n\nMail možná už dostal. Poslat ho znovu?\n\nZkontroluj si radši Resend, než to potvrdíš.')) return;
+          /* ⛔⛔ Potvrzení je součást POŽADAVKU, ne jen dialogu (nález S5 z R4):
+             server ho vyžaduje, takže přímé volání akce brzdu nepřeskočí. */
+          potvrzeno=true;
         }
         if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, '+oAppce+', '+co+'.\n'+(tiche?'':oNabidce+'\n')+'\nData ani účet se nemažou.')) return;
         b.disabled=true; b.textContent='Ukončuji…';
-        api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche,rod:rod}).then(function(o){
+        api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche,rod:rod,potvrzeno:potvrzeno}).then(function(o){
           if(o.j&&o.j.ok){
             if(o.j.uz_ukoncen){
               // Byvali klienti jsou od 27. 7. v seznamu videt a jdou otevrit, takze na uz
@@ -2578,6 +2585,11 @@
             b.disabled=false; b.textContent='Ukončit koučink';
           }
           /* ⛔ Souběh s automatem (nález S6): jeden zámek, kdo prohraje, neodesílá. */
+          /* ⛔ Server chce potvrzení u mailu, který mohl odejít (nález S5 z R4). */
+          else if(o.j&&o.j.error==='potrebuje_potvrzeni'){
+            toast('Tomuhle klientovi rozloučení už jednou odcházelo a nevíme, jestli došlo. Otevři kartu znovu, ať se můžu zeptat, než ho pošlu podruhé.');
+            b.disabled=false; b.textContent='Ukončit koučink';
+          }
           else if(o.j&&o.j.error==='prave_zpracovava_automat'){
             toast('Tohohle klienta právě zpracovává automat. Počkej pár minut a zkus to znovu, ať mu rozloučení nepřijde dvakrát.');
             b.disabled=false; b.textContent='Ukončit koučink';

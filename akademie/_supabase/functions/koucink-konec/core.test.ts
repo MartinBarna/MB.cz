@@ -9,6 +9,8 @@
 //   S4 fronta `opakovat` bez stropu.
 import {
   jeZaseknute,
+  mailStavZRadku,
+  type MailStav,
   MAX_POKUSU,
   razitkaDoFronty,
   rozhodniOPrevzatem,
@@ -32,6 +34,7 @@ type Stopa = {
   razitka: Map<string, RazitkoRadek>;
   zapisy: Record<string, unknown>[];
   alerty: string[];
+  alertyTelo: string[];
   volano: string[];
 };
 
@@ -49,8 +52,9 @@ function mockDeps(opts: {
   narok?: { active: boolean | null; expiresAt: string | null };
   graceDny?: number;
   zapisSelze?: boolean;
+  zapisSelzeOd?: number;
 } = {}): { deps: BehDeps; stopa: Stopa } {
-  const stopa: Stopa = { razitka: new Map(), zapisy: [], alerty: [], volano: [] };
+  const stopa: Stopa = { razitka: new Map(), zapisy: [], alerty: [], alertyTelo: [], volano: [] };
   if (opts.razitko) {
     stopa.razitka.set(EMAIL, {
       email: EMAIL,
@@ -68,7 +72,7 @@ function mockDeps(opts: {
     vlozRazitko: (email) => {
       stopa.volano.push("vloz");
       if (stopa.razitka.has(email)) return Promise.resolve({ ok: false, kod: "23505", detail: "duplicate" });
-      stopa.razitka.set(email, { email, stav: "rezervovano", promo_code: null, pokusy: 1, updated_at: new Date(TED).toISOString() });
+      stopa.razitka.set(email, { email, stav: "rezervovano", promo_code: null, pokusy: 1, mail_stav: "neposlano", updated_at: new Date(TED).toISOString() });
       return Promise.resolve({ ok: true, kod: "", detail: "" });
     },
     ctiRazitko: (email) => Promise.resolve({ radek: stopa.razitka.get(email) ?? null, chyba: "" }),
@@ -88,9 +92,12 @@ function mockDeps(opts: {
     nastavRazitko: (email, pole) => {
       stopa.zapisy.push({ email, ...pole });
       if (opts.zapisSelze) return Promise.resolve(false);
+      // `zapisSelzeOd: 2` = první zápis projde, druhý a další selžou. Tím jde
+      // oddělit „nešlo zapsat `posilam`" od „nešel zapsat výsledek".
+      if (opts.zapisSelzeOd && stopa.zapisy.length >= opts.zapisSelzeOd) return Promise.resolve(false);
       // ⚠️ Řádek se zakládá i tehdy, když ho test předem nevložil: `zpracujJednoho`
       //    se v testech volá i bez `zaber`, ale v provozu už razítko vždycky existuje.
-      const r = stopa.razitka.get(email) ?? { email, stav: "rezervovano", promo_code: null, pokusy: 1 };
+      const r = stopa.razitka.get(email) ?? { email, stav: "rezervovano", promo_code: null, pokusy: 1, mail_stav: "neposlano" };
       stopa.razitka.set(email, { ...r, ...(pole as Partial<RazitkoRadek>) });
       return Promise.resolve(true);
     },
@@ -126,12 +133,19 @@ function mockDeps(opts: {
       stopa.volano.push("posliMail:" + (o.promoKod || "bez-kodu") + ":" + (o.includeSales ? "sales" : "bez-sales"));
       return Promise.resolve(opts.mail ?? { ok: true, status: 200 });
     },
-    alert: (predmet) => { stopa.alerty.push(predmet); return Promise.resolve(); },
+    alert: (predmet, text) => {
+      stopa.alerty.push(predmet);
+      // ⚠️ Těla se sbírají zvlášť: u některých vad je rozdíl právě ve VĚTĚ,
+      //    kterou Martin v alertu přečte, ne v jeho předmětu.
+      stopa.alertyTelo.push(String(text ?? ""));
+      return Promise.resolve();
+    },
   };
   return { deps, stopa };
 }
 
 const posledniStav = (stopa: Stopa) => String(stopa.razitka.get(EMAIL)?.stav ?? "");
+const posledniMail = (stopa: Stopa) => String(stopa.razitka.get(EMAIL)?.mail_stav ?? "");
 
 // =============================================================================
 console.log("\n== zaber: kdo se smí vzít ==");
@@ -147,8 +161,9 @@ console.log("\n== zaber: kdo se smí vzít ==");
   check("hotový se NEZABERE", z.stav === "obsazeno", JSON.stringify(z));
 }
 {
-  const { deps } = mockDeps({ razitko: { stav: "chyba_nejiste" } });
-  check("chyba_nejiste se NEZABERE", (await zaber(EMAIL, deps)).stav === "obsazeno");
+  // ⛔ `hotovo` je uzavřená práce bez ohledu na to, co říká `mail_stav`.
+  const { deps } = mockDeps({ razitko: { stav: "hotovo", mail_stav: "nejiste" } });
+  check("hotovo s nejistým mailem se NEZABERE", (await zaber(EMAIL, deps)).stav === "obsazeno");
 }
 {
   const { deps } = mockDeps({ razitko: { stav: "vzdano" } });
@@ -163,9 +178,18 @@ console.log("\n== zaber: kdo se smí vzít ==");
   check("pokusy se zvedly", z.stav === "ok" && z.pokusy === 2);
 }
 {
-  const { deps } = mockDeps({ razitko: { stav: "opakovat_mail" } });
+  // ⛔ Stav mailu se ze `zaber` předává dál; podle NĚJ se pak rozhoduje.
+  const { deps } = mockDeps({ razitko: { stav: "opakovat", mail_stav: "odmitnuto" } });
   const z = await zaber(EMAIL, deps);
-  check("opakovat_mail se zabere a je to poznat", z.stav === "ok" && z.predchozi === "opakovat_mail");
+  check("zabraný řádek nese stav mailu", z.stav === "ok" && z.mailStav === "odmitnuto", JSON.stringify(z));
+}
+{
+  const { deps } = mockDeps({ razitko: { stav: "opakovat", mail_stav: "nesmysl" } });
+  const z = await zaber(EMAIL, deps);
+  check("neznámý stav mailu se čte jako `neposlano`", z.stav === "ok" && z.mailStav === "neposlano");
+  check("mailStavZRadku: prázdno i nesmysl jsou `neposlano`",
+    mailStavZRadku(null) === "neposlano" && mailStavZRadku("xxx") === "neposlano" &&
+      mailStavZRadku("odeslano") === "odeslano");
 }
 
 // =============================================================================
@@ -180,18 +204,18 @@ console.log("\n== V1 a V2: co patří do fronty běhu ==");
   });
   const vstup: RazitkoRadek[] = [
     r("opakovat@x.cz", "opakovat"),
-    r("mail@x.cz", "opakovat_mail"),
+    r("mail@x.cz", "opakovat", { mail_stav: "odmitnuto" }),
     r("cerstve@x.cz", "rezervovano", { updated_at: new Date(TED - 60_000).toISOString() }),
     r("zaseknute@x.cz", "rezervovano", { updated_at: new Date(TED - ZASEKNUTO_PO_MS - 60_000).toISOString() }),
     r("hotovo@x.cz", "hotovo"),
-    r("nejiste@x.cz", "chyba_nejiste"),
+    r("nejiste@x.cz", "hotovo", { mail_stav: "nejiste" }),
     r("vzdano@x.cz", "vzdano"),
     r("nadstropem@x.cz", "opakovat", { pokusy: MAX_POKUSU }),
     r("PREKLEP@x.cz", "opakovat"),
   ];
   const f = razitkaDoFronty(vstup, { tedMs: TED });
   check("`opakovat` do fronty patří", f.emaily.includes("opakovat@x.cz"));
-  check("`opakovat_mail` do fronty patří", f.emaily.includes("mail@x.cz"));
+  check("`opakovat` s odmítnutým mailem do fronty patří", f.emaily.includes("mail@x.cz"));
   // ⛔ TOHLE JE NÁLEZ V1: bez téhle řádky se pojistka na zaseknuté rezervace
   //    v provozu NIKDY nespustí, protože `zaber` se pro ně nezavolá.
   check("opuštěné `rezervovano` do fronty PATŘÍ", f.emaily.includes("zaseknute@x.cz"), f.emaily.join(","));
@@ -331,8 +355,9 @@ console.log("\n== V1: mail spadl po zavřeném přístupu ==");
   // ⛔⛔ TOHLE JE TEN NÁLEZ. Resend 422 = tělo JISTĚ neodešlo, ale přístup už je pryč.
   const { deps, stopa } = mockDeps({ mail: { ok: false, status: 422, chyba: "resend_422:invalid" } });
   const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "" }, deps);
-  check("razítko jde na `opakovat_mail`, ne na `opakovat`",
-    v.vysledek === "opakovat_mail" && posledniStav(stopa) === "opakovat_mail", posledniStav(stopa));
+  check("mail jde na `odmitnuto`, práce na `opakovat`",
+    v.vysledek === "odmitnuto" && posledniMail(stopa) === "odmitnuto" && posledniStav(stopa) === "opakovat",
+    posledniStav(stopa) + "/" + posledniMail(stopa));
   // ⛔ Do revize tu alert NEBYL: alertovalo se jen u 5xx.
   check("alert jde HNED", stopa.alerty.some((a) => a.includes("rozloučení NEODESLO")), JSON.stringify(stopa.alerty));
   check("kód se uchová na příště", String(stopa.razitka.get(EMAIL)?.promo_code) === "VIP-KOD1");
@@ -342,28 +367,30 @@ console.log("\n== V1: mail spadl po zavřeném přístupu ==");
   //    a NESMÍ znovu sahat na nárok. Před opravou vracel `ukonciPristup`
   //    `uz_ukoncen`, kód to četl jako „zavřel to někdo jinde" a mail přeskočil.
   const { deps, stopa } = mockDeps({ narok: { active: false, expiresAt: null } });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "opakovat_mail", promo: "VIP-ULOZENY" }, deps);
+  const v = await zpracujJednoho(EMAIL, { predchozi: "opakovat", promo: "VIP-ULOZENY", mailStav: "odmitnuto" }, deps);
   check("opakování: `ukonciPristup` se NEVOLÁ", !stopa.volano.includes("ukonciPristup"), stopa.volano.join(","));
   check("opakování: mail se POŠLE", stopa.volano.some((x) => x.startsWith("posliMail:VIP-ULOZENY")), stopa.volano.join(","));
-  check("opakování: promo kód se nezakládá znovu", !stopa.volano.includes("zalozPromo"));
-  check("opakování: skončí `hotovo`", v.vysledek === "hotovo");
+  // ⛔ Uložený kód při doposlání Stripe vůbec neřeší (revize R4): pád Stripu
+  //    nesmí zablokovat rozloučení člověku, který přístup už nemá.
+  check("opakování: Stripe se vůbec nevolá", !stopa.volano.some((x) => x.startsWith("zalozPromo")));
+  check("opakování: skončí `hotovo` a `odeslano`", v.vysledek === "hotovo" && posledniMail(stopa) === "odeslano");
 }
 {
   // Nejistota (5xx) je JINÝ případ: mail mohl odejít, opakovat se nesmí.
   const { deps, stopa } = mockDeps({ mail: { ok: false, status: 503, chyba: "resend_503:" } });
   const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "" }, deps);
-  check("5xx končí na `chyba_nejiste`", v.vysledek === "chyba_nejiste" && posledniStav(stopa) === "chyba_nejiste");
-  check("a NE na `opakovat_mail`", posledniStav(stopa) !== "opakovat_mail");
+  check("5xx končí na `nejiste`", v.vysledek === "nejiste" && posledniMail(stopa) === "nejiste");
+  check("a práce je uzavřená", posledniStav(stopa) === "hotovo");
 }
 {
   const { deps, stopa } = mockDeps({ mail: { ok: false, status: 0, chyba: "sit:timeout" } });
   await zpracujJednoho(EMAIL, { predchozi: "", promo: "" }, deps);
-  check("pád sítě se taky bere jako nejistota", posledniStav(stopa) === "chyba_nejiste");
+  check("pád sítě se taky bere jako nejistota", posledniMail(stopa) === "nejiste");
 }
 {
   const { deps, stopa } = mockDeps({ mail: { ok: false, status: 0, chyba: "missing_RESEND_API_KEY" } });
   const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "" }, deps);
-  check("chybějící klíč je JISTÉ neodeslání", v.vysledek === "opakovat_mail" && posledniStav(stopa) === "opakovat_mail");
+  check("chybějící klíč je JISTÉ neodeslání", v.vysledek === "odmitnuto" && posledniMail(stopa) === "odmitnuto");
 }
 
 console.log("\n== S5: bez kupónu se nezavírá nic ==");
@@ -411,34 +438,52 @@ console.log("\n== V2: zápis promo kódu se nesmí zahodit ==");
 {
   // Uložený kód se při dalším pokusu POUŽIJE, nový se nelosuje.
   const { deps, stopa } = mockDeps();
-  await zpracujJednoho(EMAIL, { predchozi: "opakovat", promo: "VIP-ULOZENY", sentOk: null }, deps);
+  await zpracujJednoho(EMAIL, { predchozi: "opakovat", promo: "VIP-ULOZENY", mailStav: "neposlano" }, deps);
   check("uložený kód se nelosuje znovu", !stopa.volano.includes("vylosujKod"), stopa.volano.join(","));
   check("ale Stripe se o něm ujistí (idempotentně)", stopa.volano.includes("zalozPromo:VIP-ULOZENY"));
 }
 
 console.log("\n== S4: zápis koncového stavu se ověřuje ==");
 {
-  // ⛔⛔ Když se `hotovo` neuloží, zůstane `rezervovano`, další běh ho po půl
-  //    hodině převezme jako zaseknutý a mail by odešel PODRUHÉ.
+  // ⛔⛔ TOHLE JE JÁDRO R4: když se nepovede zapsat `posilam`, Resend se NEVOLÁ.
+  //    Bez toho zápisu by se po selhání dalšího kroku nedalo poznat, jestli mail
+  //    odešel, a automat by riskoval druhý.
   const { deps, stopa } = mockDeps({ zapisSelze: true });
-  // Promo se v téhle větvi neřeší: Academy znamená mail bez kódu.
-  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", sentOk: null }, { ...deps, maAcademy: () => Promise.resolve(true) });
-  check("odeslaný mail + neuložené razítko = alert", v.vysledek === "hotovo" &&
-    stopa.alerty.some((a) => a.includes("razítko se neuložilo")), JSON.stringify(stopa.alerty));
+  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", mailStav: "neposlano" },
+    { ...deps, maAcademy: () => Promise.resolve(true) });
+  check("neuložené `posilam`: Resend se NEVOLÁ", !stopa.volano.some((x) => x.startsWith("posliMail")),
+    stopa.volano.join(","));
+  check("neuložené `posilam`: `opakovat`", v.vysledek === "opakovat" && v.duvod === "posilam_neulozeno");
+  check("neuložené `posilam`: alert", stopa.alerty.some((a) => a.includes("začínám posílat")));
 }
 {
-  const { deps, stopa } = mockDeps({ zapisSelze: true, mail: { ok: false, status: 503, chyba: "resend_503:" } });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", sentOk: null }, { ...deps, maAcademy: () => Promise.resolve(true) });
-  check("nejisté odeslání + neuložené razítko = alert navíc", v.vysledek === "chyba_nejiste" &&
-    stopa.alerty.some((a) => a.includes("nepodařilo zapsat")), JSON.stringify(stopa.alerty));
+  // ⛔ Zápis VÝSLEDKU selže až po odeslání. Řádek zůstane v `posilam` a po
+  //    ochranné lhůtě se čte jako `nejiste`: druhý mail z toho nevznikne.
+  const { deps, stopa } = mockDeps({ zapisSelzeOd: 2 });
+  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", mailStav: "neposlano" },
+    { ...deps, maAcademy: () => Promise.resolve(true) });
+  check("mail odešel, výsledek se nezapsal: hlásí `hotovo`", v.vysledek === "hotovo");
+  check("řádek zůstal v `posilam`", posledniMail(stopa) === "posilam", posledniMail(stopa));
+  check("a alert to říká", stopa.alerty.some((a) => a.includes("razítko se neuložilo")), JSON.stringify(stopa.alerty));
+  // ⛔ A tohle je ta pojistka: takový řádek se po lhůtě čte jako nejistota.
+  check("po lhůtě je z toho `nejiste`, ne druhý mail",
+    rozhodniOPrevzatem({ active: false, expiresAt: null }, { mailStav: "posilam", tedMs: TED, graceDny: 7 }) ===
+      "nejiste_rozhodne_clovek");
+}
+{
+  const { deps, stopa } = mockDeps({ zapisSelzeOd: 2, mail: { ok: false, status: 503, chyba: "resend_503:" } });
+  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", mailStav: "neposlano" },
+    { ...deps, maAcademy: () => Promise.resolve(true) });
+  check("nejisté odeslání + neuložený výsledek = alert to řekne v těle", v.vysledek === "nejiste" &&
+    stopa.alertyTelo.some((a) => a.includes("zůstal v `posilam`")), JSON.stringify(stopa.alerty));
 }
 {
   // Rozdělaná práce s `sent_ok: false` se NEDOPOSÍLÁ, uzavře se jako nejistá.
   const { deps, stopa } = mockDeps({ narok: { active: false, expiresAt: null } });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "zaseknute", promo: "VIP-X", sentOk: false }, deps);
-  check("nejistota z minula se NEOPAKUJE", v.vysledek === "chyba_nejiste" &&
+  const v = await zpracujJednoho(EMAIL, { predchozi: "zaseknute", promo: "VIP-X", mailStav: "nejiste" }, deps);
+  check("nejistota z minula se NEOPAKUJE", v.vysledek === "nejiste" &&
     !stopa.volano.some((x) => x.startsWith("posliMail")), stopa.volano.join(","));
-  check("a uzavře se jako `chyba_nejiste`", posledniStav(stopa) === "chyba_nejiste");
+  check("a uzavře se jako `hotovo` + `nejiste`", posledniStav(stopa) === "hotovo" && posledniMail(stopa) === "nejiste");
   check("s alertem, který popisuje cestu přes admin",
     stopa.alerty.some((a) => a.includes("skončilo v nejistotě")));
 }
@@ -450,7 +495,7 @@ console.log("\n== S6: archivovaný promo kód ==");
   const { deps, stopa } = mockDeps({
     promoPodlePokusu: [{ ok: false, chyba: "kod_neaktivni" }, { ok: true, kod: "VIP-KOD2" }],
   });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", sentOk: null }, deps);
+  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", mailStav: "neposlano" }, deps);
   check("archivovaný kód: vylosuje se nový", stopa.volano.filter((x) => x === "vylosujKod").length === 2,
     stopa.volano.join(","));
   check("archivovaný kód: mail jde s NOVÝM kódem",
@@ -463,7 +508,7 @@ console.log("\n== S6: archivovaný promo kód ==");
   const { deps, stopa } = mockDeps({
     promoPodlePokusu: [{ ok: false, chyba: "kod_neaktivni" }, { ok: false, chyba: "kod_neaktivni" }],
   });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", sentOk: null }, deps);
+  const v = await zpracujJednoho(EMAIL, { predchozi: "", promo: "", mailStav: "neposlano" }, deps);
   check("dvě kolize za sebou = vzdát a nezavírat", v.vysledek === "opakovat" &&
     !stopa.volano.includes("ukonciPristup"), stopa.volano.join(","));
   check("a jen dva pokusy o Stripe", stopa.volano.filter((x) => x.startsWith("zalozPromo")).length === 2);
@@ -494,44 +539,54 @@ console.log("\n== selhání promo kódu a appky ==");
 console.log("\n== S8: rozdělaná práce vráceného klienta ==");
 const roz = (
   narok: { active: boolean | null; expiresAt: string | null },
-  predchozi: "opakovat" | "opakovat_mail" | "zaseknute",
-  sentOk: boolean | null = null,
-) => rozhodniOPrevzatem(narok, { predchozi, sentOk, tedMs: TED, graceDny: 7 });
+  mailStav: MailStav = "neposlano",
+) => rozhodniOPrevzatem(narok, { mailStav, tedMs: TED, graceDny: 7 });
 
-check("chyba čtení je `nevim`", roz({ active: null, expiresAt: null }, "opakovat") === "nevim");
-check("jen mail + aktivní nárok = vrátil se", roz({ active: true, expiresAt: null }, "opakovat_mail") === "znovu_klient");
-check("jen mail + neaktivní nárok = doposlat", roz({ active: false, expiresAt: null }, "opakovat_mail") === "dokonci_mail");
+check("chyba čtení je `nevim`", roz({ active: null, expiresAt: null }) === "nevim");
+check("jen mail + aktivní nárok = vrátil se", roz({ active: true, expiresAt: null }, "odmitnuto") === "znovu_klient");
+check("jen mail + neaktivní nárok = doposlat", roz({ active: false, expiresAt: null }, "odmitnuto") === "dokonci_mail");
 check("zavírání + nový konec v budoucnu = vrátil se",
-  roz({ active: true, expiresAt: new Date(TED + 60 * 86400000).toISOString() }, "opakovat") === "znovu_klient");
-check("zavírání + aktivní bez konce = vrátil se", roz({ active: true, expiresAt: null }, "opakovat") === "znovu_klient");
+  roz({ active: true, expiresAt: new Date(TED + 60 * 86400000).toISOString() }) === "znovu_klient");
+check("zavírání + aktivní bez konce = vrátil se", roz({ active: true, expiresAt: null }) === "znovu_klient");
 check("zavírání + starý konec = zavřít",
-  roz({ active: true, expiresAt: new Date(TED - 30 * 86400000).toISOString() }, "opakovat") === "zavri");
+  roz({ active: true, expiresAt: new Date(TED - 30 * 86400000).toISOString() }) === "zavri");
 
 // ⛔⛔ JÁDRO OPRAVY V1 (revize R2): vypnutý nárok NEZNAMENÁ „hotovo bez mailu".
 //    Do R2 se to obojí slilo do `zavren_jinde`, takže převzatá zaseknutá rezervace
 //    člověka umlčela navždy: přístup pryč, rozloučení nikdy, alert žádný.
 //    Rozhoduje `sentOk`, a jen `true` se počítá jako prokázané odeslání.
-check("zaseknuté + vypnutý nárok + mail NEodešel = doposlat",
-  roz({ active: false, expiresAt: null }, "zaseknute", null) === "dokonci_mail");
-// ⛔⛔ TŘI STAVY `sent_ok`, NE DVA (revize R3, nález S4). `false` znamená
-//    „někdo se pokusil a výsledek se neprokázal", tedy typicky větev 5xx nebo
-//    `sit:`, kde mail MOHL odejít. Slít ho s `null` znamená poslat druhý mail
-//    pokaždé, když se zápis stavu nepovedl.
-check("zaseknuté + vypnutý nárok + sent_ok false = rozhodne člověk",
-  roz({ active: false, expiresAt: null }, "zaseknute", false) === "nejiste_rozhodne_clovek");
-check("zaseknuté + vypnutý nárok + sent_ok null = doposlat (nikdy se neposílalo)",
-  roz({ active: false, expiresAt: null }, "zaseknute", null) === "dokonci_mail");
-// ⛔ `opakovat_mail` je VÝSLOVNÉ „jistě neodešlo" (Resend 4xx, chybějící klíč),
-//    a jeho vlastní `sent_ok: false` ho nesmí přebít, jinak by se rozloučení
-//    nedoposlalo nikdy.
-check("opakovat_mail se `sent_ok: false` NEPŘEBÍJÍ",
-  roz({ active: false, expiresAt: null }, "opakovat_mail", false) === "dokonci_mail");
-check("zaseknuté + vypnutý nárok + mail UŽ odešel = jen uzavřít",
-  roz({ active: false, expiresAt: null }, "zaseknute", true) === "uzavri_bez_mailu");
-check("opakovat + vypnutý nárok + mail neodešel = doposlat",
-  roz({ active: false, expiresAt: null }, "opakovat", null) === "dokonci_mail");
-check("zaseknuté + aktivní nárok po konci = zavřít",
-  roz({ active: true, expiresAt: new Date(TED - 30 * 86400000).toISOString() }, "zaseknute") === "zavri");
+check("vypnutý nárok + `neposlano` = doposlat",
+  roz({ active: false, expiresAt: null }, "neposlano") === "dokonci_mail");
+// ⛔⛔ TABULKA STAV MAILU × STAV NÁROKU (revize R4). Rozhoduje JEN `mail_stav`,
+//    ne to, odkud řádek přišel. Do R4 tutéž informaci nesly dvě různá místa
+//    (stav práce a boolean `sent_ok`), a když jedno zmizelo, význam druhého se
+//    tiše převrátil.
+{
+  const VYPNUTY = { active: false, expiresAt: null };
+  const PO_KONCI = { active: true, expiresAt: new Date(TED - 30 * 86400000).toISOString() };
+  const BEZI = { active: true, expiresAt: new Date(TED + 60 * 86400000).toISOString() };
+  const tabulka: [MailStav, string, string][] = [
+    // mail_stav, nárok vypnutý, nárok po konci
+    ["neposlano", "dokonci_mail", "zavri"],
+    ["odmitnuto", "dokonci_mail", "zavri"],
+    ["posilam", "nejiste_rozhodne_clovek", "nejiste_rozhodne_clovek"],
+    ["nejiste", "nejiste_rozhodne_clovek", "nejiste_rozhodne_clovek"],
+    ["odeslano", "uzavri_bez_mailu", "znovu_klient"],
+  ];
+  for (const [ms, prVypnuty, prPoKonci] of tabulka) {
+    check("tabulka: " + ms + " + vypnutý nárok = " + prVypnuty, roz(VYPNUTY, ms) === prVypnuty, roz(VYPNUTY, ms));
+    check("tabulka: " + ms + " + nárok po konci = " + prPoKonci, roz(PO_KONCI, ms) === prPoKonci, roz(PO_KONCI, ms));
+  }
+  // Běžící období je vždycky „vrátil se", ať se s mailem stalo cokoli.
+  for (const [ms] of tabulka) {
+    if (ms === "posilam" || ms === "nejiste") continue; // ty rozhoduje člověk
+    check("tabulka: " + ms + " + běžící období = znovu_klient", roz(BEZI, ms) === "znovu_klient", roz(BEZI, ms));
+  }
+  // ⛔ Chyba čtení nároku přebíjí všechno: nesmí se sáhnout na nic.
+  for (const [ms] of tabulka) {
+    check("tabulka: " + ms + " + nečitelný nárok = nevim", roz({ active: null, expiresAt: null }, ms) === "nevim");
+  }
+}
 {
   // ⛔ KONTRAST: razítko z minulého konce zůstalo (smazání při pozvánce selhalo)
   //    a člověk je zase klient. Nesmí dostat rozloučení uprostřed spolupráce.
@@ -559,27 +614,32 @@ console.log("\n== V3: chyba čtení nároku nesmí zahodit rozdělané rozlouče
   check("a jde alert", stopa.alerty.some((a) => a.includes("nárok se nepodařilo přečíst")));
 }
 {
-  // ⛔⛔ TOHLE JE NÁLEZ V3. Do R2 se sem psalo natvrdo `opakovat`, čímž se
-  //    z `opakovat_mail` stalo obyčejné opakování: další běh sáhl na nárok,
-  //    dostal „už je ukončený" a rozloučení zahodil navždy.
-  const { deps, stopa } = mockDeps({ narok: { active: null, expiresAt: null } });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "opakovat_mail", promo: "VIP-X" }, deps);
-  check("nečitelný nárok u `opakovat_mail` ZACHOVÁ `opakovat_mail`",
-    v.vysledek === "opakovat_mail" && posledniStav(stopa) === "opakovat_mail", posledniStav(stopa));
+  // ⛔⛔ TOHLE BYL NÁLEZ V3 a od R4 je nezajímavý ze správného důvodu: stav mailu
+  //    je vlastní sloupec, takže chyba čtení nároku na něj NEMÁ JAK sáhnout.
+  //    Do R2 se sem psalo natvrdo `opakovat`, čímž se ze stavu práce, který nesl
+  //    informaci o mailu, stalo obyčejné opakování a rozloučení se ztratilo.
+  const { deps, stopa } = mockDeps({
+    razitko: { stav: "opakovat", mail_stav: "odmitnuto" },
+    narok: { active: null, expiresAt: null },
+  });
+  const v = await zpracujJednoho(EMAIL, { predchozi: "opakovat", promo: "VIP-X", mailStav: "odmitnuto" }, deps);
+  check("nečitelný nárok nechá práci na `opakovat`", v.vysledek === "opakovat" && posledniStav(stopa) === "opakovat");
+  check("a stavu MAILU se vůbec nedotkne", posledniMail(stopa) === "odmitnuto", posledniMail(stopa));
+  check("žádný zápis nenese `mail_stav`", !stopa.zapisy.some((z) => "mail_stav" in z), JSON.stringify(stopa.zapisy));
   check("a mail se teď neposílá", !stopa.volano.some((x) => x.startsWith("posliMail")));
   check("a nesahá se na nárok", !stopa.volano.includes("ukonciPristup"));
 }
 {
   // Doposlání po zaseknuté rezervaci: přístup pryč, rozloučení chybí.
   const { deps, stopa } = mockDeps({ narok: { active: false, expiresAt: null } });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "zaseknute", promo: "VIP-ULOZENY", sentOk: null }, deps);
+  const v = await zpracujJednoho(EMAIL, { predchozi: "zaseknute", promo: "VIP-ULOZENY", mailStav: "neposlano" }, deps);
   check("zaseknuté s vypnutým nárokem POŠLE mail",
     v.vysledek === "hotovo" && stopa.volano.some((x) => x.startsWith("posliMail:VIP-ULOZENY")), stopa.volano.join(","));
   check("a na nárok už nesáhne", !stopa.volano.includes("ukonciPristup"));
 }
 {
   const { deps, stopa } = mockDeps({ narok: { active: false, expiresAt: null } });
-  const v = await zpracujJednoho(EMAIL, { predchozi: "zaseknute", promo: "VIP-X", sentOk: true }, deps);
+  const v = await zpracujJednoho(EMAIL, { predchozi: "zaseknute", promo: "VIP-X", mailStav: "odeslano" }, deps);
   check("zaseknuté s prokázaným odesláním jen uzavře",
     v.vysledek === "preskoceno" && v.duvod === "uz_odeslano" && !stopa.volano.some((x) => x.startsWith("posliMail")));
 }
